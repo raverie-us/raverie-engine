@@ -107,8 +107,9 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
   // Walk all attributes and search for any RuntimeClones
   forRange(Property* prop, thisType->GetProperties())
   {
-    bool isResource = prop->PropertyType->IsA(ZilchTypeId(Resource));
-    if(isResource && prop->HasAttribute(cRuntimeClone))
+    Type* propertyType = prop->PropertyType;
+    bool isResource = propertyType->IsA(ZilchTypeId(Resource));
+    if(isResource && prop->HasAttribute(cRuntimeClone) && prop->Set != nullptr)
     {
       Any val = prop->GetValue(this);
       
@@ -117,6 +118,37 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
         // Clone the resource and assign it to the property
         Handle runtimeClone = resource->Clone();
         prop->SetValue(this, runtimeClone);
+      }
+    }
+
+    // If this is any generic handle to an object that has a default constructor and a get/set
+    // and the object is currently null, then create it (CogPath, custom objects, etc)
+    BoundType* boundPropertyType = Type::GetBoundType(propertyType);
+    if (boundPropertyType)
+    {
+      bool isProperty =
+        prop->HasAttribute(PropertyAttribute) ||
+        prop->HasAttribute(PropertyAttributes::cEditable) ||
+        prop->HasAttribute(PropertyAttributes::cSerialized);
+
+      bool isGetSetProperty =
+        isProperty &&
+        prop->Get &&
+        prop->Set;
+
+      bool isHandleWithDefaultConstructor =
+        boundPropertyType->CopyMode == TypeCopyMode::ReferenceType &&
+        boundPropertyType->CreatableInScript &&
+        boundPropertyType->GetDefaultConstructor() != nullptr;
+
+      if (isGetSetProperty && isHandleWithDefaultConstructor)
+      {
+        Any currentObject = prop->GetValue(this);
+        if (currentObject.IsNull())
+        {
+          Handle newObject = ZilchAllocateUntyped(boundPropertyType);
+          prop->SetValue(this, newObject);
+        }
       }
     }
   }
