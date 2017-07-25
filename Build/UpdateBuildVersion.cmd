@@ -44,7 +44,6 @@ echo #define ZeroRevisionId 0 >> %TempFile%
 echo #define ZeroShortChangeSet 0 >> %TempFile%
 echo #define ZeroChangeSet 0 >> %TempFile%
 echo #define ZeroChangeSetDate "" >> %TempFile%
-echo #define ZeroBranchName "" >> %TempFile%
 goto :TryCopyTempFile
 
 
