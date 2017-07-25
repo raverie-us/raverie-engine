@@ -1749,7 +1749,7 @@ public:
     }
   }
 
-  void OnRemove(MouseEvent* event)
+  void OnRemove(ObjectEvent* event)
   {
     mEditor->SetResource(nullptr);
 
