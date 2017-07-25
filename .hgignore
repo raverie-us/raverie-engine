@@ -16,7 +16,6 @@ BuildVersion.inl
 Tools/GeometryProcessor.exe
 WindowsBuild/
 *.dblite
-Tools/
 DevTools/
 Extensions/Editor/tinyxml2.cpp
 Extensions/Editor/tinyxml2.h
