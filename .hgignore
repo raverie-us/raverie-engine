@@ -13,7 +13,6 @@ syntax: glob
 LocalBuildEnvironment.cmd
 LocalPaths.props
 BuildVersion.inl
-Tools/GeometryProcessor.exe
 WindowsBuild/
 *.dblite
 DevTools/
