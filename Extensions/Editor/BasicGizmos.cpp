@@ -944,7 +944,7 @@ ZilchDefineType(ScaleGizmo, builder, type)
 
   //outputs of gizmo modified
   ZilchBindField(mDirection);
-  ZilchBindFieldProperty(mChangeInScale);
+  ZilchBindField(mChangeInScale);
 }
 
 //******************************************************************************
