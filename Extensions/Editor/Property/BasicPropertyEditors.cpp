@@ -393,6 +393,7 @@ public:
 
     // Tooltip handlers to display individual enum value descriptions
     ConnectThisTo(mSelectBox, Events::ListBoxOpened, OnListBoxOpen);
+    ConnectThisTo(mSelectBox, Events::MouseHover, OnSelectedItemHover);
     ConnectThisTo(mSelectorButton, Events::MouseHover, OnButtonMouseHover);
   }
 
@@ -451,11 +452,19 @@ public:
     ConnectThisTo(*mSelectBox->mListBox, Events::MouseHover, OnListMouseHover);
   }
 
+  void OnSelectedItemHover(MouseEvent* event)
+  {
+    StringBuilder toolTip;
+    GetSelectedToolTip(&toolTip);
+    CreateToolTip(toolTip.ToString( ), mSelectBox);
+  }
+
   void OnListMouseHover(MouseEvent* event)
   {
     StringBuilder toolTip;
-    GetListToolTip(&toolTip);
-    CreateToolTip(toolTip.ToString( ), mSelectBox->mListBox);
+    Rect placement = GetListToolTip(&toolTip);
+
+    CreateToolTip(toolTip.ToString( ), mSelectBox->mListBox, placement);
   }
 
   void OnButtonMouseHover(MouseEvent* event)
@@ -465,7 +474,8 @@ public:
     CreateToolTip(toolTip.ToString( ), mSelectorButton->GetHoverButton( ));
   }
 
-  void CreateToolTip(StringParam toolTipText, Widget* source)
+  void CreateToolTip(StringParam toolTipText, Widget* source,
+    const Rect& screenRect = Rect::NullRect( ))
   {
     if(toolTipText.Empty( ))
       return;
@@ -479,7 +489,12 @@ public:
     mToolTip->SetColor(color);
 
     ToolTipPlacement placement;
-    placement.SetScreenRect(GetScreenRect( ));
+
+    if(screenRect.IsValid())
+      placement.SetScreenRect(screenRect);
+    else
+      placement.SetScreenRect(GetScreenRect( ));
+
     placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
       IndicatorSide::Bottom, IndicatorSide::Top);
 
@@ -504,14 +519,28 @@ public:
     *toolTip << valueDescription;
   }
 
-  void GetListToolTip(StringBuilder* toolTip)
+  void GetSelectedToolTip(StringBuilder* toolTip)
   {
-    // Make sure the highlighted item is valid
-    int index = mSelectBox->mListBox->GetHighlightItem( );
+    // Make sure the selected item is valid
+    int index = mSelectBox->GetSelectedItem();
     if(index == -1 || uint(index) > mSelectBox->mDataSource->GetCount( ))
       return;
 
     GetEnumToolTip(index, toolTip);
+  }
+
+  Rect GetListToolTip(StringBuilder* toolTip)
+  {
+    ListBox* listBox = mSelectBox->mListBox;
+
+    // Make sure the highlighted item is valid
+    int index = listBox->GetHighlightItem( );
+    if(index == -1 || uint(index) > mSelectBox->mDataSource->GetCount( ))
+      return Rect::NullRect();
+
+    GetEnumToolTip(index, toolTip);
+
+    return listBox->GetSelectedWidgetUnsafe(index)->GetScreenRect( );
   }
 
   void GetButtonToolTip(StringBuilder* toolTip)

@@ -357,7 +357,7 @@ Vec2 Widget::ToScreen(Vec2Param localPoint)
   return Vec2(screenPoint.x, screenPoint.y);
 }
 
-Vec3 Widget::GetScreenPosition()
+Vec3 Widget::GetScreenPosition() const
 {
   if(mParent)
     return mTranslation + mParent->GetScreenPosition();
@@ -372,7 +372,7 @@ Rect Widget::GetRectInParent()
   return local;
 }
 
-Rect Widget::GetLocalRect()
+Rect Widget::GetLocalRect() const
 {
   if(mOrigin == DisplayOrigin::Center)
     return Rect::PointAndSize(mSize * 0.5f, mSize);
@@ -380,7 +380,7 @@ Rect Widget::GetLocalRect()
     return Rect::PointAndSize(Vec2::cZero, mSize);
 }
 
-Rect Widget::GetScreenRect()
+Rect Widget::GetScreenRect() const
 {
   Vec3 screenPos = GetScreenPosition();
   Rect rect = GetLocalRect();

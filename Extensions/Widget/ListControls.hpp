@@ -43,6 +43,8 @@ public:
 
   int GetHighlightItem( ) { return mHighlightItem; }
 
+  const Text* GetSelectedWidgetUnsafe(int index) { return mTextBlocks[index].second; }
+
   uint GetCount(){return mDataSource->GetCount();}
   void HighlightItem(int index);
   void SetDataSource(ListSource* source);

@@ -109,6 +109,16 @@ ZilchDefineType(Rect, builder, type)
   ZilchBindMethod(Bottom);
 }
 
+Rect Rect::NullRect( )
+{
+  Rect r;
+  r.X = 0.0f;
+  r.Y = 0.0f;
+  r.SizeX = 0.0f;
+  r.SizeY = 0.0f;
+  return r;
+}
+
 Rect Rect::CenterAndSize(Vec2Param point, Vec2Param size)
 {
   Vec2 halfSize = size / 2.0f;
@@ -139,6 +149,11 @@ Rect Rect::MinAndMax(Vec2Param min, Vec2Param max)
   r.SizeX = (max.x - min.x);
   r.SizeY = (max.y - min.y);
   return r;
+}
+
+bool Rect::IsValid( ) const
+{
+  return (SizeX * SizeY > 0.0f);
 }
 
 void Rect::SetTranslation(Vec2Param translation)
