@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header">
+      <UniqueIdentifier>{b64bb4fe-9c77-4d73-adf1-f76f925c2138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{0c2cbabe-7802-4beb-80c2-0184760d09bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stack Walker">
+      <UniqueIdentifier>{5fc3e4b5-b82c-42bd-8384-72291fb35916}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectoryWatcher.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadSync.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="CrashHandler.cpp" />
+    <ClCompile Include="StackWalker.cpp">
+      <Filter>Stack Walker</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsError.cpp">
+      <Filter>Header</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugClassMap.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="FpControl.cpp" />
+    <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="PlatformStandard.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="ExternalLibrary.cpp" />
+    <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="DebugSymbolInformation.cpp" />
+    <ClCompile Include="Socket.cpp" />
+    <ClCompile Include="WString.cpp" />
+    <ClCompile Include="CommandLineSupport.cpp" />
+    <ClCompile Include="ConsoleListeners.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Windows.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadIo.hpp" />
+    <ClInclude Include="StackWalker.hpp">
+      <Filter>Stack Walker</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsError.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="WString.hpp" />
+  </ItemGroup>
+</Project>

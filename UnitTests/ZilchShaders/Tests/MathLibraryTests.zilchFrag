@@ -1,0 +1,298 @@
+struct TestAllPrimiteTypes[Type, BoolType, IntegerType]
+{
+    function Test(value : Type)
+    {
+        var result = false;
+        //result = Math.AnyNonZero(value);
+        //result = Math.AllNonZero(value);
+    }
+}
+
+struct TestBooleanTypes[BoolType]
+{
+    function Test(value : BoolType)
+    {
+        var boolResult = Boolean();
+        boolResult = Math.AnyNonZero(value);
+        boolResult = Math.AllNonZero(value);
+    }
+}
+
+struct TestIntegerTypes[IntegerType, BoolType]
+{
+    function Test(value : IntegerType)
+    {
+        var minVal = value;
+        var maxVal = value;
+        var intType = IntegerType();
+        var boolType = BoolType();
+        var boolResult = Boolean();
+        
+        value = Math.Abs(value);
+        boolResult = Math.AnyNonZero(value);
+        boolResult = Math.AllNonZero(value);
+        //intType = Math.CountBits(value);
+        value = Math.Clamp(value, minVal, maxVal);
+        value = Math.Max(value, minVal);
+        value = Math.Min(value, maxVal);
+        intType = Math.Sign(value);
+    }
+}
+
+// Functions splatted across all Real types (not all of these work with matrices in glsl 1.3)
+struct TestAllRealTypes[RealType, BoolType, IntegerType]
+{
+    function Test(value : RealType, result : BoolType, intType : IntegerType)
+    {
+        var a = value;
+        var b = value;
+        var c = value;
+        var t = 1.0;
+        var start = value;
+        var end = value;
+        var minVal = value;
+        var maxVal = value;
+        var places = 2;
+        var numBase : Integer = 5;
+        var epsilon : Real = 0.1;
+        var boolResult : Boolean = false;
+        
+        a = Math.Abs(a);
+        a = Math.ACos(a);
+        //boolResult = Math.AnyNonZero(a);
+        //boolResult = Math.AllNonZero(a);
+        a = Math.ASin(a);
+        a = Math.ATan(a);
+        a = Math.ATan2(a, b);
+        a = Math.Ceil(a);
+        a = Math.Ceil(a, places);
+        a = Math.Ceil(a, places, numBase);
+        a = Math.Clamp(a, minVal, maxVal);
+        a = Math.Cos(a);
+        a = Math.Cosh(a);
+        a = Math.Exp(a);
+        a = Math.Exp2(a);
+        a = Math.Floor(a);
+        a = Math.Floor(a, places);
+        a = Math.Floor(a, places, numBase);
+        a = Math.FMod(a, b);
+        a = Math.Frac(a);
+        a = Math.Lerp(start, end, t);
+        a = Math.Lerp(start, end, a);
+        a = Math.Log(a);
+        a = Math.Log10(a);
+        a = Math.Log2(a);
+        a = Math.Max(a, b);
+        a = Math.Min(a, b);
+        a = Math.Pow(a, b);
+        a = Math.Round(a);
+        a = Math.Round(a, places);
+        a = Math.Round(a, places, numBase);
+        a = Math.RSqrt(a);
+        a = Math.Saturate(a);
+        a = Math.Sin(a);
+        a = Math.Sinh(a);
+        //a = Math.SmoothStep(minVal, maxVal, t);
+        a = Math.SmoothStep(minVal, maxVal, a);
+        a = Math.Sqrt(a);
+        a = Math.Step(a, b);
+        a = Math.Tan(a);
+        a = Math.Tanh(a);
+        a = Math.ToDegrees(a);
+        a = Math.ToRadians(a);
+        a = Math.Truncate(a);
+        a = Math.Truncate(a, places);
+        a = Math.Truncate(a, places, numBase);
+        //result = Math.ApproximatelyEqual(a, b, epsilon);
+    }
+}
+
+// Shared functions across all Real vector types
+struct VectorMathTests[Type]
+{
+    function Test()
+    {
+        var x = Type();
+        var y = Type();
+        var z = Type();
+        
+        var count = x.Count;
+        var axis = Type.GetAxis(0);
+        var zero = Type.Zero;
+        // Errors for now
+        //z = Type.PositiveMax;
+        //z = Type.PositiveValueClosestToZero;
+        //z = Type.NegativeValueClosestToZero;
+        //z = Type.NegativeMin;
+        
+        z = Math.ProjectOnVector(x, y);
+        z = Math.ProjectOnPlane(x, y);
+        z = Math.ReflectAcrossPlane(x, y);
+        z = Math.ReflectAcrossVector(x, y);
+        z = Math.Refract(x, y, 0.1);
+        
+        var dotVal = Math.Dot(x, y);
+        var lengthVal = Math.Length(x);
+        var lengthSqVal = Math.LengthSq(x);
+        var distVal = Math.Distance(x, y);
+        var distSqVal = Math.DistanceSq(x, y);
+        x = Math.Normalize(x);
+    }
+}
+
+// Tests all functions on Real2s (including unique and shared functions)
+struct Real2Tests
+{
+    function Test()
+    {
+        var x = Real2();
+        var y = Real2();
+        var z = Real2();
+        
+        var r2 = Real2();
+        var xAxis = Real2.XAxis;
+        var yAxis = Real2.YAxis;
+        
+        var val = Math.AngleBetween(xAxis, yAxis);
+        z = Math.Slerp(xAxis, yAxis, 0.5);
+        z = Math.RotateTowards(xAxis, yAxis, 1.5);
+        
+        VectorMathTests[Real2]();
+        TestAllRealTypes[Real2, Integer2, Boolean2]();
+    }
+}
+
+// Tests all functions on Real3s (including unique and shared functions)
+struct Real3Tests
+{
+    function Test()
+    {
+        var x = Real3();
+        var y = Real3();
+        var z = Real3();
+        var xAxis = Real3.XAxis;
+        var yAxis = Real3.YAxis;
+        var zAxis = Real3.ZAxis;
+        
+        z = Math.Cross(x, y);
+        var val = Math.AngleBetween(xAxis, yAxis);
+        z = Math.Slerp(xAxis, yAxis, 0.5);
+        z = Math.RotateTowards(xAxis, yAxis, 1.5);
+        val = Math.Angle2D(xAxis);
+        val = Math.SignedAngle(xAxis, zAxis, yAxis);
+        
+        
+        VectorMathTests[Real3]();
+        TestAllRealTypes[Real3, Integer3, Boolean3]();
+    }
+}
+
+// Tests all functions on Real4s (including unique and shared functions)
+struct Real4Tests
+{
+    function Test()
+    {
+        var x = Real4();
+        var y = Real4();
+        var z = Real4();
+        var xAxis = Real4.XAxis;
+        var yAxis = Real4.YAxis;
+        var zAxis = Real4.ZAxis;
+        var wAxis = Real4.WAxis;
+        
+        var val = Math.AngleBetween(xAxis, yAxis);
+        // Not implemented yet!
+        //z = Math.Slerp(xAxis, yAxis, 0.5);
+        //z = Math.RotateTowards(xAxis, yAxis, 1.5);
+        
+        VectorMathTests[Real4]();
+        TestAllRealTypes[Real4, Integer4, Boolean4]();
+    }
+}
+
+// Shared tests across all matrix types. The vector type is the type of vector the matrix can be multiplied with.
+struct MatrixMathTests[MatrixType, VectorType]
+{
+    function Test()
+    {
+        var a = MatrixType();
+        var v = VectorType();
+        // Test Count, GetByIndex and SetByIndex
+        for(var i = 0; i < a.Count; ++i)
+            a.SetByIndex(i, a.GetByIndex(i) + i);
+        // Test indexing
+        for(var y = 0; y < a.CountY; ++y)
+        {
+            for(var x = 0; x < a.CountX; ++x)
+            {
+                var temp = a[y][x];
+                a[y][x] = a[x][y];
+                a[x][y] = temp;
+            }
+        }
+        
+        // Test just one of the permutations of members guaranteed on all matrices
+        var val = a.M01;
+        
+        var transposed = Math.Transpose(a);
+        var result = Math.Multiply(a, v);
+    }
+}
+
+// Some functions are only bound on square matrices, test those.
+struct SquareMatrixMathTests[MatrixType, VectorType, PointVectorType]
+{
+    function Test()
+    {
+        var m = MatrixType();
+        var resultPoint = PointVectorType();
+        resultPoint = Math.MultiplyPoint(m, PointVectorType());
+        resultPoint = Math.MultiplyNormal(m, PointVectorType());
+        var determinant = Math.Determinant(m);
+        
+    }
+}
+
+struct MathLibraryTests
+{
+    function TestMatrices()
+    {
+        MatrixMathTests[Real2x2, Real2]();
+        MatrixMathTests[Real2x3, Real3]();
+        MatrixMathTests[Real2x4, Real4]();
+        MatrixMathTests[Real3x2, Real2]();
+        MatrixMathTests[Real3x3, Real3]();
+        MatrixMathTests[Real3x4, Real4]();
+        MatrixMathTests[Real4x2, Real2]();
+        MatrixMathTests[Real4x3, Real3]();
+        MatrixMathTests[Real4x4, Real4]();
+        
+        SquareMatrixMathTests[Real2x2, Real2, Real]();
+        SquareMatrixMathTests[Real3x3, Real3, Real2]();
+        SquareMatrixMathTests[Real4x4, Real4, Real3]();
+    }
+    
+    function Main()
+    {
+        var e = Math.E;
+        var pi = Math.Pi;
+        
+        //var bool1Test = TestBooleanTypes[Boolean]();
+        //var bool2Test = TestBooleanTypes[Boolean2]();
+        //var bool3Test = TestBooleanTypes[Boolean3]();
+        //var bool4Test = TestBooleanTypes[Boolean4]();
+        //
+        //var int1Test = TestIntegerTypes[Integer, Boolean]();
+        //var int2Test = TestIntegerTypes[Integer2, Boolean2]();
+        //var int3Test = TestIntegerTypes[Integer3, Boolean3]();
+        //var int4Test = TestIntegerTypes[Integer4, Boolean4]();
+        
+        // Real's have different tests
+        var realTest = TestAllRealTypes[Real, Boolean, Integer]();
+        Real2Tests();
+        Real3Tests();
+        Real4Tests();
+        
+        //this.TestMatrices();
+    }
+}

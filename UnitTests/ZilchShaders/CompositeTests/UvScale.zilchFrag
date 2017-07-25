@@ -1,0 +1,13 @@
+[Pixel]
+struct UvScale
+{
+    [Input]
+    var Scale : Real2 = Real2(1.0, 1.0);
+    [Input][Output]
+    var Uv : Real2;
+    
+    function Main()
+    {
+        this.Uv *= this.Scale;
+    }
+}

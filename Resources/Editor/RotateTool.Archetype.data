@@ -1,0 +1,20 @@
+[Version:1]
+Cog 
+{
+	var Name = "RotateTool"
+	var LinkId = 1
+	GizmoCreator 
+	{
+		var GizmoArchetype = "5745f8161b6b36b9:ObjectRotateGizmo"
+	}
+	ObjectRotateTool 
+	{
+		var Grab = GizmoGrabMode.Hold
+		var Basis = GizmoBasis.World
+		var Pivot = GizmoPivot.Average
+		var Snapping = false
+		var SnapDistance = 15
+		var AffectTranslation = true
+    var ChangeInRotation = 0
+	}
+}

@@ -1,0 +1,130 @@
+
+class FibRange
+{
+  // These only kick in at iterations of >= 2
+  var GrandParent : Integer = 0;
+  var Parent : Integer = 1;
+
+  // This will be immediately computed when we reach iteration 2
+  var Me : Integer = 0;
+
+  var Iteration : Integer = 0;
+  var MaxIterations : Integer = 0;
+  
+  var IsNotEmpty : Boolean
+  {
+    get { return this.Iteration < this.MaxIterations; }
+  }
+
+  var All : FibRange
+  {
+    get { return this; }
+  }
+
+  var Current : Integer
+  {
+    get
+    {
+      // Base cases
+      if (this.Iteration == 0)
+      {
+        return 0;
+      }
+      if (this.Iteration == 1)
+      {
+        return 1;
+      }
+      return this.Me;
+    }
+  }
+
+  function MoveNext()
+  {
+    ++this.Iteration;
+    if (this.Iteration >= 2)
+    {
+      this.Me = this.Parent + this.GrandParent;
+      this.GrandParent = this.Parent;
+      this.Parent = this.Me;
+    }
+  }
+
+  constructor(iterations : Integer)
+  {
+    this.MaxIterations = iterations;
+
+    Console.WriteLine("Constructed!");
+  }
+
+  destructor()
+  {
+    Console.WriteLine("Destructed!");
+  }
+}
+
+class CtorDtor
+{
+  var DebugText : String = null;
+
+  constructor(text : String)
+  {
+    this.DebugText = text;
+    Console.WriteLine("Constructor: `this.DebugText`");
+  }
+
+  destructor()
+  {
+    Console.WriteLine("Destructor: `this.DebugText`");
+  }
+}
+
+class Program
+{
+  [Static]
+  function Main() : Integer
+  {
+    Console.WriteLine("Before");
+
+    var j = 0;
+
+    while (j < 10)
+    {
+      var b = new Array[DoubleReal]();
+      ++j;
+    }
+
+    new CtorDtor("OutOfScope");
+
+    scope
+    {
+      new CtorDtor("InScope");
+    }
+
+    var h = 0;
+    loop
+    {
+      ++h;
+      Console.WriteLine(h);
+    }
+
+    do
+    {
+      var b = new Array[DoubleReal]();
+      Console.Write("DoWhile: ");
+      ++j;
+      break;
+      Console.WriteLine(j);
+      var c = new Array[DoubleReal]();
+    }
+    while (j < 50)
+
+    foreach (var i in new FibRange(20))
+    {
+      Console.WriteLine(i);
+    }
+
+    Console.WriteLine("After");
+
+    return 0;
+  }
+}

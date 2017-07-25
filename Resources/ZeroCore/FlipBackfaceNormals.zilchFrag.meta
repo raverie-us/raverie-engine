@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "FlipBackfaceNormals"
+		var ResourceId = 0x58f48a7536f644a6
+	}
+}

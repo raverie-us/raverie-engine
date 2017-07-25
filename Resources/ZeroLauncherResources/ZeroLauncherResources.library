@@ -1,0 +1,8 @@
+[Version:1]
+ContentLibrary 
+{
+	var Name = "ZeroLauncherResources"
+	var LibraryId = 0x5498570a83d25ea1
+	var SourceControlType = ""
+	var ReadOnly = false
+}

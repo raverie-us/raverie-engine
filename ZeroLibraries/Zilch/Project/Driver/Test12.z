@@ -1,0 +1,44 @@
+
+class UnitTest12
+{
+  [Static]
+  function Test12() : Integer
+  {
+    var array = Array[Real3]();
+    array.Push(Real3(53.4, 1, -45));
+    array.Resize(5);
+    array[1] = array[0];
+    array[2] += array[0];
+    array[3] = array[0] * 5;
+    array[4] = array[2].Y.XXX;
+    
+    array[array[4].X as Integer] += UnitTest12.GetTemporaryArray()[1];
+
+    var map = HashMap[String, Integer]();
+    map["Hello"] = 5;
+    map["World"] = 9;
+    map["Hello"] += 100;
+
+    var total = 0.0;
+
+    foreach (var val in array)
+    {
+      total += val.X + val.Y + val.Z;
+    }
+
+    total += map["Hello"] + map["World"];
+
+    return total as Integer;
+  }
+  
+  [Static]
+  function GetTemporaryArray() : Array[Real3]
+  {
+    return Array[Real3]()
+    {
+      Real3(0, 1, 2),
+      Real3(3, 4, 5),
+      Real3(6, 7, 8)
+    };
+  }
+}

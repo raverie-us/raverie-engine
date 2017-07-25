@@ -1,0 +1,18 @@
+
+struct SVGeometryVertex1
+{
+  [Input][Output] var ApiPerspectivePosition : Real4;
+  [Input][Output] var PrimitiveId : Integer;
+}
+
+[Geometry(maxVertices : 3)]
+struct SVGeometry1
+{
+    [Input][Output] var PrimitiveId : Integer;
+    
+    function Main(input : TriangleInput[SVGeometryVertex1], output : PointOutput[SVGeometryVertex1])
+    {
+      ++this.PrimitiveId;
+      output.Append(input[0], 0);
+    }
+}

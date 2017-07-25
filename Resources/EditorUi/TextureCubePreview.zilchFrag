@@ -1,0 +1,63 @@
+///////////////////////////////////////////////////////////////////////////////
+///
+/// Authors: Joshua Claeys
+/// Copyright 2016, DigiPen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
+[Pixel]
+struct TextureCubePreview
+{
+  // Skybox texture
+  [Input] var SpriteSource : SamplerCube;
+  
+  // We use the Uv to determine the sample direction for the cube map
+  [Input] var Uv : Real2;
+  
+  // XY is the mouse movement
+  // Z is the zoom
+  // W is the auto-rotate value
+  [Input] var SkyboxPreviewInput : Real4;
+  
+  // Used to calculate LOD
+  [Input] var TextureViewResolution : Real2;
+  
+  // Final color
+  [Output] var Color : Real4 = Real4(1, 0, 1, 1);
+
+  function Main()
+  {
+    // Build a direction vector from the UV
+    var sampleDirection = Real3(this.Uv.X, 1.0 - this.Uv.Y, 0);
+    sampleDirection -= Real3(0.5);
+    sampleDirection.Z = -0.5 + -this.SkyboxPreviewInput.Z * 0.15;
+    sampleDirection = Math.Normalize(sampleDirection);
+    
+    // Rotation around the Y
+    var yRotate = this.SkyboxPreviewInput.W * 0.125 + -this.SkyboxPreviewInput.X * 0.005;
+    var yRotateMatrix = Real4x4(0);
+    yRotateMatrix.M00 =  Math.Cos(yRotate);
+    yRotateMatrix.M20 =  Math.Sin(yRotate);
+    yRotateMatrix.M02 = -Math.Sin(yRotate);
+    yRotateMatrix.M22 =  Math.Cos(yRotate);
+    yRotateMatrix.M11 =  1;
+    
+    // Rotation around the X
+    var xRotate = -this.SkyboxPreviewInput.Y * 0.005;
+    var xRotateMatrix = Real4x4(0);
+    xRotateMatrix.M00 =  1;
+    xRotateMatrix.M11 =  Math.Cos(xRotate);
+    xRotateMatrix.M12 =  Math.Sin(xRotate);
+    xRotateMatrix.M21 = -Math.Sin(xRotate);
+    xRotateMatrix.M22 =  Math.Cos(xRotate);
+    
+    // Apply the final transformation to the sample direction
+    var finalRotation = Math.Multiply(yRotateMatrix, xRotateMatrix);
+    sampleDirection = Math.MultiplyNormal(finalRotation, sampleDirection);
+    
+    // We want a larger LOD the smaller the resolution is
+    var lod = 1.0 / Math.Length(this.TextureViewResolution) * 130.0;
+    
+    // Sample the final color
+    this.Color = this.SpriteSource.SampleLod(sampleDirection, lod);
+  }
+}

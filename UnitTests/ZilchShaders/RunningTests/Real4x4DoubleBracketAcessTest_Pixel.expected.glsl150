@@ -1,0 +1,112 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct Real4x4DoubleBracketAcessTest
+{
+  vec4 Target0;
+  vec4 Target1;
+  vec4 Target2;
+  vec4 Target3;
+  mat4x4 Matrix;
+};
+
+struct Real4x4DoubleBracketAcessTest_Pixel
+{
+  float Time;
+  vec4 Target0;
+  vec4 Target1;
+  vec4 Target2;
+  vec4 Target3;
+};
+
+//----- Forward Declarations -----
+void _Real4x4DoubleBracketAcessTestPreConstructor(inout Real4x4DoubleBracketAcessTest self);
+Real4x4DoubleBracketAcessTest _Real4x4DoubleBracketAcessTestConstructor();
+void _Real4x4DoubleBracketAcessTestMain(inout Real4x4DoubleBracketAcessTest self);
+
+void _Real4x4DoubleBracketAcessTest_PixelPreConstructor(inout Real4x4DoubleBracketAcessTest_Pixel self);
+Real4x4DoubleBracketAcessTest_Pixel _Real4x4DoubleBracketAcessTest_PixelConstructor();
+void _Real4x4DoubleBracketAcessTest_PixelMain(inout Real4x4DoubleBracketAcessTest_Pixel self);
+void CopyInputs(inout Real4x4DoubleBracketAcessTest_Pixel self);
+void CopyOutputs(inout Real4x4DoubleBracketAcessTest_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- Real4x4DoubleBracketAcessTest Functions -----
+void _Real4x4DoubleBracketAcessTestPreConstructor(inout Real4x4DoubleBracketAcessTest self)
+{
+  self.Target0 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target1 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target2 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target3 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Matrix = mat4x4(float(1), float(2), float(3), float(4), float(5), float(6), float(7), float(8), float(9), float(10), float(11), float(12), float(13), float(14), float(15), float(16));
+}
+
+Real4x4DoubleBracketAcessTest _Real4x4DoubleBracketAcessTestConstructor()
+{
+  Real4x4DoubleBracketAcessTest self;
+  _Real4x4DoubleBracketAcessTestPreConstructor(self);
+  return self;
+}
+
+void _Real4x4DoubleBracketAcessTestMain(inout Real4x4DoubleBracketAcessTest self)
+{
+  self.Target0 = vec4(self.Matrix[0][0], self.Matrix[0][1], self.Matrix[0][2], self.Matrix[0][3]);
+  self.Target1 = vec4(self.Matrix[1][0], self.Matrix[1][1], self.Matrix[1][2], self.Matrix[1][3]);
+  self.Target2 = vec4(self.Matrix[2][0], self.Matrix[2][1], self.Matrix[2][2], self.Matrix[2][3]);
+  self.Target3 = vec4(self.Matrix[3][0], self.Matrix[3][1], self.Matrix[3][2], self.Matrix[3][3]);
+}
+
+//----- Real4x4DoubleBracketAcessTest_Pixel Functions -----
+void _Real4x4DoubleBracketAcessTest_PixelPreConstructor(inout Real4x4DoubleBracketAcessTest_Pixel self)
+{
+  self.Time = float(0.0);
+  self.Target0 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target1 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target2 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target3 = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+Real4x4DoubleBracketAcessTest_Pixel _Real4x4DoubleBracketAcessTest_PixelConstructor()
+{
+  Real4x4DoubleBracketAcessTest_Pixel self;
+  _Real4x4DoubleBracketAcessTest_PixelPreConstructor(self);
+  return self;
+}
+
+void _Real4x4DoubleBracketAcessTest_PixelMain(inout Real4x4DoubleBracketAcessTest_Pixel self)
+{
+  Real4x4DoubleBracketAcessTest _real4x4doublebracketacesstest = _Real4x4DoubleBracketAcessTestConstructor();
+  _Real4x4DoubleBracketAcessTestMain(_real4x4doublebracketacesstest);
+  self.Target0 = _real4x4doublebracketacesstest.Target0;
+  self.Target1 = _real4x4doublebracketacesstest.Target1;
+  self.Target2 = _real4x4doublebracketacesstest.Target2;
+  self.Target3 = _real4x4doublebracketacesstest.Target3;
+}
+
+//----- Real4x4DoubleBracketAcessTest_Pixel Final Shader Functions -----
+void CopyInputs(inout Real4x4DoubleBracketAcessTest_Pixel self)
+{
+  self.Time = Time;
+}
+
+void CopyOutputs(inout Real4x4DoubleBracketAcessTest_Pixel self)
+{
+  outputs[0] = self.Target0; 
+  outputs[1] = self.Target1; 
+  outputs[2] = self.Target2; 
+  outputs[3] = self.Target3; 
+}
+
+//----- Main -----
+void main(void)
+{
+  Real4x4DoubleBracketAcessTest_Pixel real4x4doublebracketacesstest_pixel = _Real4x4DoubleBracketAcessTest_PixelConstructor(); 
+  CopyInputs(real4x4doublebracketacesstest_pixel);
+  _Real4x4DoubleBracketAcessTest_PixelMain(real4x4doublebracketacesstest_pixel);
+  CopyOutputs(real4x4doublebracketacesstest_pixel);
+}
+

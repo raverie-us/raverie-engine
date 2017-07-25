@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "ForwardPass"
+		var ResourceId = 0x595cfd305de5b025
+	}
+}

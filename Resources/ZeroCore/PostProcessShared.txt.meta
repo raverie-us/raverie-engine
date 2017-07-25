@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	TextBuilder 
+	{
+		var Name = "PostProcessShared"
+		var ResourceId = 0x513714da8004d28d
+	}
+}

@@ -1,0 +1,61 @@
+// Shader input attribute definitions
+// [BuiltInInput]  Input comes from predefined data given by the graphics engine
+// [StageInput]    Input comes from the previous hardware stage (mesh -> vertex -> geometry -> pixel)
+// [FragmentInput] Input comes from a previous fragment in the same stage
+// [PropertyInput] Input comes from this fragment
+// [Input]         Input auto resolves from any of the previous in the order
+//                 [FragmentInput][StageInput][BuiltInInput][PropertyInput]
+//
+// Pixel fragment Example:
+// [FragmentInput][StageInput] var ViewNormal : Real3;
+// Input will come from a previous pixel fragment that outputs ViewNormal
+// otherwise, input will come from the vertex shader
+
+[Pixel]
+struct %RESOURCENAME%
+{
+	// BuiltIn utility
+	// Time incrementing every frame
+	[BuiltInInput] var FrameTime : Real;
+	// Time incrementing when TimeSpace is active
+	[BuiltInInput] var LogicTime : Real;
+	// NearPlane from the Camera (positive value)
+	[BuiltInInput] var NearPlane : Real;
+	// FarPlane from the Camera (positive value)
+	[BuiltInInput] var FarPlane : Real;
+	// Pixel size of the viewport created by CameraViewport
+	[BuiltInInput] var ViewportSize : Real2;
+	// 1.0 / ViewportSize
+	[BuiltInInput] var InverseViewportSize : Real2;
+	// World position from the object's Transform (non-streamed objects)
+	[BuiltInInput] var ObjectWorldPosition : Real3;
+
+	// BuiltIn transformations
+	// Position transforms
+	[BuiltInInput] var LocalToWorld : Real4x4;
+	[BuiltInInput] var WorldToLocal : Real4x4;
+	[BuiltInInput] var LocalToView : Real4x4;
+	[BuiltInInput] var ViewToLocal : Real4x4;
+	[BuiltInInput] var LocalToPerspective : Real4x4;
+	// Normal/tangents transforms (inverse transpose)
+	[BuiltInInput] var LocalToWorldNormal : Real3x3;
+	[BuiltInInput] var WorldToLocalNormal : Real3x3;
+	[BuiltInInput] var LocalToViewNormal : Real3x3;
+	[BuiltInInput] var ViewToLocalNormal : Real3x3;
+	// View and perspective transforms
+	[BuiltInInput] var WorldToView : Real4x4;
+	[BuiltInInput] var ViewToWorld : Real4x4;
+	[BuiltInInput] var ViewToPerspective : Real4x4;
+	[BuiltInInput] var PerspectiveToView : Real4x4;
+
+	// Common vertex inputs
+	[FragmentInput][StageInput] var ViewPosition : Real3;
+	[FragmentInput][StageInput] var ViewNormal : Real3;
+	[FragmentInput][StageInput] var ViewTangent : Real3;
+	[FragmentInput][StageInput] var ViewBitangent : Real3;
+	[FragmentInput][StageInput] var Uv : Real2;
+
+	function Main()
+	{
+	}
+}

@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "LightPass"
+		var ResourceId = 0x581a43177a8e5b82
+	}
+}

@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "TemplateZilchTool"
+		var ResourceId = 0x842233d11662d28e
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Tool"
+		var Description = "Custom tool that can be accessed in the Tools menu"
+		var SortWeight = 30
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

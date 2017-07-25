@@ -1,0 +1,87 @@
+#include "Precompiled.hpp"
+using namespace Zilch;
+
+class UnitTest11
+{
+public:
+  Integer Result;
+
+  UnitTest11() :
+    Result(89034)
+  {
+  }
+
+  bool X(bool val, cstr text)
+  {
+    this->Result += text[0] * 139345663;
+    this->Result *= 3;
+    return val;
+  }
+};
+
+Integer Test11()
+{
+  UnitTest11 test;
+  
+  // OR
+  // Short circuit (evaluate all and hit condition)
+  if (test.X(false, "a") || test.X(false, "b") || test.X(true, "c"))
+  {
+    test.Result += 340926;
+  }
+
+  // Short circuit (evaluate all and don't hit condition)
+  if (test.X(false, "d") || test.X(false, "e") || test.X(false, "f"))
+  {
+    test.Result += 733;
+  }
+
+  // Short circuit (evaluate first and hit condition)
+  if (test.X(true, "g") || test.X(true, "h") || test.X(true, "i"))
+  {
+    test.Result += 54234;
+  }
+
+  // Short circuit (evaluate first & second and hit condition)
+  if (test.X(false, "j") || test.X(true, "k") || test.X(true, "l"))
+  {
+    test.Result += 17890932;
+  }
+
+  // AND
+  // Short circuit (evaluate all and don't hit condition)
+  if (test.X(true, "m") && test.X(true, "n") && test.X(false, "o"))
+  {
+    test.Result += 1356;
+  }
+
+  // Short circuit (evaluate all and hit condition)
+  if (test.X(true, "p") && test.X(true, "q") && test.X(true, "r"))
+  {
+    test.Result += 5789;
+  }
+
+  // Short circuit (evaluate first and don't hit condition)
+  if (test.X(false, "s") && test.X(false, "t") && test.X(false, "u"))
+  {
+    test.Result += 9013;
+  }
+
+  // Short circuit (evaluate first & second and don't hit condition)
+  if (test.X(true, "v") && test.X(false, "w") && test.X(false, "x"))
+  {
+    test.Result += 15390;
+  }
+
+  // MIXED OR/AND
+  if ((test.X(false, "A") || test.X(false, "B") || (test.X(true, "C") && test.X(false, "D"))) || (test.X(true, "E") && (test.X(false, "F") || test.X(false, "G"))))
+  {
+    test.Result += 289036;
+  }
+  if ((test.X(false, "H") && test.X(false, "I") || (test.X(true, "J") && test.X(false, "K"))) && (test.X(true, "L") || (test.X(false, "M") || test.X(false, "N"))))
+  {
+    test.Result += 894359;
+  }
+
+  return test.Result;
+}

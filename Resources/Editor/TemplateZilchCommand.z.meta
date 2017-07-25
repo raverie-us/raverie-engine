@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "TemplateZilchCommand"
+		var ResourceId = 0x142323d166c2d28e
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Command"
+		var Description = "Custom command that runs in the editor"
+		var SortWeight = 20
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

@@ -1,0 +1,19 @@
+// MemberNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  constructor()
+  {
+  }
+}
+
+class Guy
+{
+  function Foo()
+  {
+    var a = new Animal();
+    a.V = 5;
+  }
+}

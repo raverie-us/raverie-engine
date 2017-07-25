@@ -1,0 +1,21 @@
+[Version:1]
+Cog 
+{
+	var Name = "ScaleTool"
+	var LinkId = 1
+	GizmoCreator 
+	{
+		var GizmoArchetype = "54c73a2d19b7cc96:ObjectScaleGizmo"
+	}
+	ObjectScaleTool 
+	{
+		var Grab = GizmoGrabMode.Hold
+		var Basis = GizmoBasis.Local
+		var Pivot = GizmoPivot.Average
+		var Snapping = false
+		var SnapDistance = 1
+		var SnapMode = GizmoSnapMode.WorldGrid
+		var AffectTranslation = true
+		var ChangeInScale = Real3{1, 1, 1}
+	}
+}

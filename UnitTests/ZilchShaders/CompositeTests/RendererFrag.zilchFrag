@@ -1,0 +1,14 @@
+[Pixel]
+struct RendererFrag
+{
+    [Input]
+    var Color : Real4;
+    
+    [Output]
+    var Target0 : Real4;
+    
+    function Main()
+    {
+        this.Target0 = this.Color;
+    }
+}

@@ -1,0 +1,16 @@
+// FunctionBodyNotComplete
+
+class Animal
+{
+  var Number : Integer = 9;
+
+  function TestFn() : Real
+  {
+    return 1.0;
+  
+  // Getting rid of this will result in 'ClassBodyNotComplete', makes sense...
+  function AnotherFn() : Real
+  {
+    return 1.0;
+  }
+}

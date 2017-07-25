@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Production|Win32">
+      <Configuration>Production</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Production|x64">
+      <Configuration>Production</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{394FB6B6-5F68-4B17-94BC-9D37E84E7553}</ProjectGuid>
+    <RootNamespace>Testbed</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the environment paths needed to find all our different repositories-->
+  <Import Project="$(SolutionDir)\Paths.props"/>
+  <!--Import the property sheets-->
+  <ImportGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZILCH_SOURCE)\Project\Zilch.$(Configuration).props" Condition="exists('$(ZILCH_SOURCE)\Project\Zilch.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Set as a static library with no character set for all configurations of win32 and x64-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <!--Add LTCG for release in win32 and x64-->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32' OR '$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project\Zilch\;$(SKUGO_SOURCE)\Cpp\Host\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!--Because zilch doesn't currently have constant folding it'll act like precise mode,
+     	  not fpfast mode so make sure the unit tests run in precise mode-->
+      <FloatingPointModel>Precise</FloatingPointModel>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Common\Common.vcxproj">
+      <Project>{3a62ce69-835e-4d16-86c2-5326625a18bc}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Math\Math.vcxproj">
+      <Project>{767a1157-b18f-478e-b580-f6f624f9282a}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Platform\Platform.vcxproj">
+      <Project>{c26bf2c8-d6c3-441a-83aa-9ba656cdf41c}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Platform\Windows\WindowsPlatform.vcxproj">
+      <Project>{dbe8e33a-7e70-402c-bcf6-d1efee93fa76}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\Zilch\Zilch.vcxproj">
+      <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScopeTests.z" />
+    <None Include="Test.z" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

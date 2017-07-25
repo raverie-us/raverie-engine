@@ -1,0 +1,30 @@
+
+UnidentifiedSymbol - Add standard characters that are allowed (page)
+ - Reason
+
+Split VariableNameNotFound into two errors
+ - One for missing (hitting : = ;)
+ - One for keywords or invalid identifiers / symbols (generate contex like status!)
+
+ClassNameNotFound
+FunctionNameNotFound
+ - One for missing (hitting { ;)
+ - One for keywords or invalid identifiers / symbols (generate contex like status!)
+
+ IndexerIndicesNotFound
+  - ']'
+ 
+Blanket check the NotFound to add context for missing
+
+Any error that deals with a name must be split 
+
+Change all 'NotComplete' to 'Invalid'
+
+got to 'FunctionCallNamedArgumentNotFound' (need to do it)
+
+-----------------------------------------------------------------
+
+type declaration (Integer, delegate (), etc)
+ - The SyntaxType (after the : )
+
+type specifier ':'

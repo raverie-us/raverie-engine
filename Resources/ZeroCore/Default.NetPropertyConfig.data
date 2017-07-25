@@ -1,0 +1,22 @@
+[Version:1]
+NetPropertyConfig 
+{
+	var BasicNetType = BasicNetType.Real
+	var UseDeltaThreshold = false
+	var DeltaThreshold = 1
+	var SerializationMode = SerializationMode.All
+	var UseHalfFloats = false
+	var UseQuantization = false
+	var QuantizationRangeMin = -1
+	var QuantizationRangeMax = 1
+	var UseInterpolation = false
+	var InterpolationCurve = CurveType.CatmulRom
+	var SampleTimeOffset = 0.100000001
+	var ExtrapolationLimit = 1
+	var UseConvergence = false
+	var EventOnConvergenceStateChange = false
+	var ActiveConvergenceWeight = 0.100000001
+	var RestingConvergenceDuration = 0.0500000007
+	var ConvergenceInterval = 1
+	var SnapThreshold = 10
+}

@@ -1,0 +1,103 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct FlowControl
+{
+  int Data;
+};
+
+//----- Forward Declarations -----
+void _FlowControlPreConstructor(inout FlowControl self);
+FlowControl _FlowControlConstructor();
+void _FlowControlIfStatements(inout FlowControl self);
+void _FlowControlWhileNode(inout FlowControl self);
+void _FlowControlDoWhileNode(inout FlowControl self);
+void _FlowControlContinueBreakReturn(inout FlowControl self);
+float _FlowControlReturnValue(inout FlowControl self);
+void _FlowControlForNode(inout FlowControl self);
+void _FlowControlMain(inout FlowControl self);
+
+//----- Global Variable Declarations -----
+//----- FlowControl Functions -----
+void _FlowControlPreConstructor(inout FlowControl self)
+{
+  self.Data = 0;
+}
+
+FlowControl _FlowControlConstructor()
+{
+  FlowControl self;
+  _FlowControlPreConstructor(self);
+  return self;
+}
+
+void _FlowControlIfStatements(inout FlowControl self)
+{
+  if(true)
+  {
+    int _a = 0;
+    self.Data = _a;
+  }
+  else if(true)
+  {
+    int _b = 0;
+    self.Data = _b;
+  }
+  else
+  {
+    int _c = 0;
+    self.Data = _c;
+  }
+}
+
+void _FlowControlWhileNode(inout FlowControl self)
+{
+  while(false)
+  {
+    self.Data = 0;
+    ++self.Data;
+  }
+}
+
+void _FlowControlDoWhileNode(inout FlowControl self)
+{
+  do
+  {
+    self.Data = 0;
+  }
+  while(false);
+}
+
+void _FlowControlContinueBreakReturn(inout FlowControl self)
+{
+  while(true)
+  {
+    continue;
+    break;
+    return;
+  }
+}
+
+float _FlowControlReturnValue(inout FlowControl self)
+{
+  return 0.0f;
+}
+
+void _FlowControlForNode(inout FlowControl self)
+{
+  for(int _i = 0; _i < 12; ++_i)
+  {
+    self.Data = 0;
+  }
+  for(self.Data = 0; self.Data < 12; ++self.Data)
+  {
+    self.Data += 12;
+  }
+}
+
+void _FlowControlMain(inout FlowControl self)
+{
+  _FlowControlIfStatements(self);
+}
+

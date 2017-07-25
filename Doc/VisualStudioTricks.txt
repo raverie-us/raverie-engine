@@ -1,0 +1,9 @@
+To clean-up your solution directory (getting rid of ipch, sdf, suo, etc...):
+	Go to Tools->Options->TextEditor->C/C++->Advanced
+	Under Fallback Location set "Always Use Fallback Location" to True while leaving "Fallback Location" empty
+	This makes VS pick a temp location to store these files
+	It'll prompt you about this every run (unless you check the "don't remind me" button)
+	
+To see who is including what right click on a C++ file and go to C/C++->Advanced and turn on Show Includes
+	When you compile you should get a hierarchical set of includes (hierarchy is denoted by tabs)
+	Do note that VS is bad about noticing this flag changed so you have to modify the file before any changes take effect (both turning on/off the flag)

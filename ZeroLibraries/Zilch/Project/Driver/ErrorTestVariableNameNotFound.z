@@ -1,0 +1,6 @@
+// VariableNameNotFound
+
+class Animal
+{
+  var : Integer = 9;
+}

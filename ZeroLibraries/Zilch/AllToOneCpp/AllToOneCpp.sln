@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllToOneCpp", "AllToOneCpp\AllToOneCpp.csproj", "{663F9562-9B5E-4FA6-A67D-88193F978297}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZilchToOneCpp", "ZilchToOneCpp\ZilchToOneCpp.csproj", "{A4952CE1-D6A7-4A99-9211-DECDF8A51AD1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{663F9562-9B5E-4FA6-A67D-88193F978297}.Debug|x86.ActiveCfg = Debug|x86
+		{663F9562-9B5E-4FA6-A67D-88193F978297}.Debug|x86.Build.0 = Debug|x86
+		{663F9562-9B5E-4FA6-A67D-88193F978297}.Release|x86.ActiveCfg = Release|x86
+		{663F9562-9B5E-4FA6-A67D-88193F978297}.Release|x86.Build.0 = Release|x86
+		{A4952CE1-D6A7-4A99-9211-DECDF8A51AD1}.Debug|x86.ActiveCfg = Debug|x86
+		{A4952CE1-D6A7-4A99-9211-DECDF8A51AD1}.Debug|x86.Build.0 = Debug|x86
+		{A4952CE1-D6A7-4A99-9211-DECDF8A51AD1}.Release|x86.ActiveCfg = Release|x86
+		{A4952CE1-D6A7-4A99-9211-DECDF8A51AD1}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

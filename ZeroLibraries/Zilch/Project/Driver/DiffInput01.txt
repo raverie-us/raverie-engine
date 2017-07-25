@@ -1,0 +1,54 @@
+[Version:"1"]
+Cog [Id:"697cbe79f75a89bc"][Inherit:"Living:098098a"][OrderOverride]
+{
+  var Name = "Bob"
+  
+  Archetyped
+  {
+    var Archetype = "Person:8fb809808ba890"
+    var ModifiedFromArchetype = true
+  }
+  Transform
+  {
+    var Translation = Vec3{8, -8, 0.0100000054}
+    var Scale = Vec3{1, 1, 1}
+    var Rotation = Quat{0, 0, 0, 1}
+  }
+  CameraViewport
+  {
+    var Camera = CogPath
+    {
+      var Path = ""
+      var ResolvedNullErrorOccurred = false
+      var ResolvedCog = 4294967293
+      var PathPreference0 = CogPathPreference.CogRelative
+    }
+  }
+  ArrayTest
+  {
+    var Indices = Array{5, 15, 3, 9}
+    var Resources = Array
+    {
+      Resource
+      {
+        var ResourceId = 0x576db809ad9ee6c8
+        var Type = "ColorGradient"
+        var Name = "Dinkle"
+        var Location = "Dinkle.ColorGradient.data"
+      }
+      Resource
+      {
+        var ResourceId = 0x556530780432200d
+        var Type = "Level"
+        var Name = "Level"
+        var Location = "Level.data"
+      }
+    }
+  }
+  Hierarchy
+  {
+    Cog [Id:"527cbe79f75a89b5"]
+    {
+    }
+  }
+}

@@ -1,0 +1,90 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct template_TemplateHelper_Real2_Real_
+{
+  int Dummy;
+};
+
+struct template_TemplateHelper_TemplateHelper_Real2_Real__Real_
+{
+  int Dummy;
+};
+
+struct SimpleTemplates
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _template_TemplateHelper_Real2_Real_PreConstructor(inout template_TemplateHelper_Real2_Real_ self);
+template_TemplateHelper_Real2_Real_ _template_TemplateHelper_Real2_Real_Constructor();
+void _template_TemplateHelper_Real2_Real_Test(inout template_TemplateHelper_Real2_Real_ self);
+
+void _template_TemplateHelper_TemplateHelper_Real2_Real__Real_PreConstructor(inout template_TemplateHelper_TemplateHelper_Real2_Real__Real_ self);
+template_TemplateHelper_TemplateHelper_Real2_Real__Real_ _template_TemplateHelper_TemplateHelper_Real2_Real__Real_Constructor();
+void _template_TemplateHelper_TemplateHelper_Real2_Real__Real_Test(inout template_TemplateHelper_TemplateHelper_Real2_Real__Real_ self);
+
+void _SimpleTemplatesPreConstructor(inout SimpleTemplates self);
+SimpleTemplates _SimpleTemplatesConstructor();
+void _SimpleTemplatesMain(inout SimpleTemplates self);
+
+//----- Global Variable Declarations -----
+//----- TemplateHelper[Real2, Real] Functions -----
+void _template_TemplateHelper_Real2_Real_PreConstructor(inout template_TemplateHelper_Real2_Real_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TemplateHelper_Real2_Real_ _template_TemplateHelper_Real2_Real_Constructor()
+{
+  template_TemplateHelper_Real2_Real_ self;
+  _template_TemplateHelper_Real2_Real_PreConstructor(self);
+  return self;
+}
+
+void _template_TemplateHelper_Real2_Real_Test(inout template_TemplateHelper_Real2_Real_ self)
+{
+  vec2 _a = vec2(0.0, 0.0);
+}
+
+//----- TemplateHelper[TemplateHelper[Real2, Real], Real] Functions -----
+void _template_TemplateHelper_TemplateHelper_Real2_Real__Real_PreConstructor(inout template_TemplateHelper_TemplateHelper_Real2_Real__Real_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TemplateHelper_TemplateHelper_Real2_Real__Real_ _template_TemplateHelper_TemplateHelper_Real2_Real__Real_Constructor()
+{
+  template_TemplateHelper_TemplateHelper_Real2_Real__Real_ self;
+  _template_TemplateHelper_TemplateHelper_Real2_Real__Real_PreConstructor(self);
+  return self;
+}
+
+void _template_TemplateHelper_TemplateHelper_Real2_Real__Real_Test(inout template_TemplateHelper_TemplateHelper_Real2_Real__Real_ self)
+{
+  template_TemplateHelper_Real2_Real_ _a = _template_TemplateHelper_Real2_Real_Constructor();
+}
+
+//----- SimpleTemplates Functions -----
+void _SimpleTemplatesPreConstructor(inout SimpleTemplates self)
+{
+  self.Dummy = 0;
+}
+
+SimpleTemplates _SimpleTemplatesConstructor()
+{
+  SimpleTemplates self;
+  _SimpleTemplatesPreConstructor(self);
+  return self;
+}
+
+void _SimpleTemplatesMain(inout SimpleTemplates self)
+{
+  template_TemplateHelper_Real2_Real_ _helper = _template_TemplateHelper_Real2_Real_Constructor();
+  template_TemplateHelper_TemplateHelper_Real2_Real__Real_ _helper3 = _template_TemplateHelper_TemplateHelper_Real2_Real__Real_Constructor();
+  _template_TemplateHelper_Real2_Real_Test(_helper);
+  _template_TemplateHelper_TemplateHelper_Real2_Real__Real_Test(_helper3);
+}
+

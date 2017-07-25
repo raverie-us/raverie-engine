@@ -1,0 +1,8 @@
+class Program
+{
+  function Main() : any
+  {
+    Console.WriteLine("wtf");
+    return 0;
+  }
+}

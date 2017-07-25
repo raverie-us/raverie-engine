@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="SimpleDataFiles"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="Copy Data File"
+			DisplayName="Copy Data File"
+			CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)\$(InputFileName)&quot; &gt; nul"
+			Outputs="&quot;$(OutDir)\$(InputFileName)&quot;"
+			FileExtensions="*.bin;*.xml;*.fx;*.swf;*.dll;*.exe;*.lua;*.dds;*.png;*.mat;*.txt;*.data;*.wav;*.frag"
+			ExecutionDescription="Copying data file $(InputFileName)"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

@@ -1,0 +1,1346 @@
+[Version:1]
+Object 
+{
+	var Commands = Array
+	{
+		Command
+		{
+			var Name = "About"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "Add"
+			var Description = "Add a new content item to the project"
+			var Shortcut = "Ctrl+N"
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "AddComponent"
+			var Description = "Add component to object"
+			var Shortcut = "Ctrl+M"
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "AlignCameraToSelectedCamera"
+			var Description = "Aligns the editor camera to the selected camera"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Camera"
+			}
+		}
+		Command
+		{
+			var Name = "AlignSelectedCameraToCamera"
+			var Description = "Aligns the selected camera to the editor's camera"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Camera"
+			}
+		}
+		Command
+		{
+			var Name = "Animator"
+			var Description = "Show the Animator Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "ArchiveProject"
+			var Description = "Archive a project into a file"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Project"
+			}
+		}
+		Command
+		{
+			var Name = "BackupProject"
+			var Description = "Back up project to time stamped archive"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Project"
+			}
+		}
+		Command
+		{
+			var Name = "BroadPhaseTracker"
+			var Description = "Used to compare broad phase performance"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "Browser"
+			var Description = "Show the Browser Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "BuildVersion"
+			var Description = "Print this version date and revision number in the console and copies them to the clipboard"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "CenterSelected"
+			var Description = "Center the object in the view"
+			var Shortcut = "F"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "ClearObjectStore"
+			var Description = "Clear the Object Store on this computer"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "CommandListViewer"
+			var Description = "Show the Command List Viewer"
+			var Shortcut = "Alt+Shift+H"
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "Console"
+			var Description = "Toggle the Console Window"
+			var Shortcut = "Tilde"
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "Controls"
+			var Description = "Show the Controls Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+				"Help"
+			}
+		}
+		Command
+		{
+			var Name = "Copy"
+			var Description = "Copy objects to clipboard"
+			var Shortcut = "Ctrl+C"
+			var Tags = Array
+			{
+				"Edit"
+			}
+		}
+		Command
+		{
+			var Name = "CrashEngine"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateBlockTower"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateCamera"
+			var Description = "Create Camera"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateCube"
+			var Description = "Create Cube"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateCylinder"
+			var Description = "Create Cylinder"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateDirectionalLight"
+			var Description = "Create DirectionalLight"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateDirectionalLightShadows"
+			var Description = "Create DirectionalLightShadows"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateGrid"
+			var Description = "Create Grid"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreatePointLight"
+			var Description = "Create PointLight"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreatePyramid"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateSphere"
+			var Description = "Create Sphere"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateSplineParticleSystem"
+			var Description = "Create SplineParticleSystem"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateSprite"
+			var Description = "Create Sprite"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateSpriteParticles"
+			var Description = "Create SpriteParticles"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateSpriteText"
+			var Description = "Create SpriteText"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateTeeter"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateTower"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateTransform"
+			var Description = "Create Transform"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateWall"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreateWedge"
+			var Description = "Create Wedge"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "CreationTool"
+			var Description = "Enables the CreationTool tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "Cut"
+			var Description = "Cut selected objects and save them to clipboard"
+			var Shortcut = "Ctrl+X"
+			var Tags = Array
+			{
+				"Edit"
+			}
+		}
+		Command
+		{
+			var Name = "DebugShaderTranslation"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "Delete"
+			var Description = "Delete selected objects"
+			var Shortcut = "Del"
+			var Tags = Array
+			{
+				"Edit"
+			}
+		}
+		Command
+		{
+			var Name = "DetachSelected"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "DisableAutoProjectScreenshot"
+			var Description = "Disables automatically taking a project screen shot every time you save. Use the 'TakeProjectScreenshot' command to take the screen shot manually."
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "DumpMemoryDebuggerStats"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "Duplicate"
+			var Description = "Duplicate select objects"
+			var Shortcut = "Ctrl+D"
+			var Tags = Array
+			{
+				"Edit"
+			}
+		}
+		Command
+		{
+			var Name = "EditColorScheme"
+			var Description = "Edit color scheme"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "EditCommands"
+			var Description = "Displays all custom Commands for editing."
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "EnableAutoProjectScreenshot"
+			var Description = "Enables automatically taking a project screen shot every time you save."
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "Exit"
+			var Description = "Exit the editor"
+			var Shortcut = "Alt+F4"
+			var Tags = Array
+			{
+				"File"
+			}
+		}
+		Command
+		{
+			var Name = "ExportAndPlayGame"
+			var Description = "Export the game and play it"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Export"
+			}
+		}
+		Command
+		{
+			var Name = "ExportContent"
+			var Description = "Export content to a folder for an installer"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Export"
+			}
+		}
+		Command
+		{
+			var Name = "ExportContentPackage"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "ExportGame"
+			var Description = "Export game to a standalone exe"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Export"
+			}
+		}
+		Command
+		{
+			var Name = "ExportHeightMapToObj"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "ExportTypeList"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "FindAll"
+			var Description = "Show the Find/Replace Window to search all documents"
+			var Shortcut = "Ctrl+Shift+F"
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "FindNext"
+			var Description = "Show the Find/Replace Window to search the current document"
+			var Shortcut = "Ctrl+F"
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "FixArchetypeTransforms"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "ForceCompileAllShaders"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "FrameSelected"
+			var Description = "Center and frame the object in the view"
+			var Shortcut = "FF"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "GoToDefinition"
+			var Description = "Using the current cursor in the current open script we will attempt to go to the definition of that type, member, or variable"
+			var Shortcut = "F12"
+			var Tags = Array
+			{
+				"Script"
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "Graph"
+			var Description = "Displays a graph"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "GroupSelected"
+			var Description = "Create a transform at the center of the selected objects and parent them to it"
+			var Shortcut = "Ctrl+G"
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "HeightMapTool"
+			var Description = "Enables the HeightMapTool tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "Help"
+			var Description = "Display documentation for the engine"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+				"Help"
+			}
+		}
+		Command
+		{
+			var Name = "HideSelected"
+			var Description = "Hide selected objects"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Hide"
+			}
+		}
+		Command
+		{
+			var Name = "ImportContentPackage"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "ImportGroup"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "ImportHeightMap"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "ImportSpriteSheet"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "JointTool2D"
+			var Description = "Enables the JointTool tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "JointTool3D"
+			var Description = "Enables the JointTool tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "Library"
+			var Description = "Show the Library Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "ManipulatorTool"
+			var Description = "Enables the Manipulator Tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "Market"
+			var Description = "Show the Zero Market where you can download content for your projects"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "Memory"
+			var Description = "Displays a memory graph"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "Mode2D"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "Mode3D"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "MoveToLookPoint"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "NewProject"
+			var Description = "Create a new project"
+			var Shortcut = "Ctrl+Shift+N"
+			var Tags = Array
+			{
+				"Project"
+				"File"
+			}
+		}
+		Command
+		{
+			var Name = "NextSelection"
+			var Description = ""
+			var Shortcut = "Alt+Right"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "Objects"
+			var Description = "Show the Objects Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "OnExportCommandsList"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "OpenProject"
+			var Description = "Open a project"
+			var Shortcut = "Ctrl+O"
+			var Tags = Array
+			{
+				"Project"
+				"File"
+			}
+		}
+		Command
+		{
+			var Name = "OpenTestWidgets"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "OperationHistory"
+			var Description = "Show the Operation Queue"
+			var Shortcut = "Ctrl+Shift+O"
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "ParentToPrimary"
+			var Description = "Parents all selected objects to the primary selected object (highlighted in orange)"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "ParentingTool"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "Paste"
+			var Description = "Paste objects on clipboard to space"
+			var Shortcut = "Ctrl+V"
+			var Tags = Array
+			{
+				"Edit"
+			}
+		}
+		Command
+		{
+			var Name = "PauseGame"
+			var Description = "Pause / resume the game"
+			var Shortcut = "F6"
+			var Tags = Array
+			{
+				"Game"
+			}
+		}
+		Command
+		{
+			var Name = "Performance"
+			var Description = "Displays a performance graph"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "PlayGame"
+			var Description = "Play the game with the current level"
+			var Shortcut = "F5"
+			var Tags = Array
+			{
+				"Game"
+			}
+		}
+		Command
+		{
+			var Name = "PlayNewGame"
+			var Description = "Play game in additional window"
+			var Shortcut = "Ctrl+F5"
+			var Tags = Array
+			{
+				"Game"
+			}
+		}
+		Command
+		{
+			var Name = "PreviousSelection"
+			var Description = ""
+			var Shortcut = "Alt+Left"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "Properties"
+			var Description = "Show the Property Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "Redo"
+			var Description = "Redo last undo operation"
+			var Shortcut = "Ctrl+Y"
+			var Tags = Array
+			{
+				"Edit"
+			}
+		}
+		Command
+		{
+			var Name = "ReloadProject"
+			var Description = "Reload the current project"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Project"
+			}
+		}
+		Command
+		{
+			var Name = "ReplaceAll"
+			var Description = "Show the Find/Replace Window to replace in all documents"
+			var Shortcut = "Ctrl+Shift+H"
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "ReplaceNext"
+			var Description = "Show the Find/Replace Window to replace in the current document"
+			var Shortcut = "Ctrl+H"
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "ReportBug"
+			var Description = "Report a bug to our website"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "ResetCamera"
+			var Description = "Resets the camera to look at the origin"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Camera"
+			}
+		}
+		Command
+		{
+			var Name = "ResetTransform"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "Restart"
+			var Description = "Restart the editor"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"File"
+			}
+		}
+		Command
+		{
+			var Name = "RotateTool"
+			var Description = "Enables the Rotate Tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "RunUnitTests"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "SaveProject"
+			var Description = "Save project and all resources"
+			var Shortcut = "Ctrl+S"
+			var Tags = Array
+			{
+				"Project"
+				"File"
+			}
+		}
+		Command
+		{
+			var Name = "ScaleTool"
+			var Description = "Enables the Scale Tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "SelectAll"
+			var Description = "Select all in scene"
+			var Shortcut = "Shift+A"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectAllInTree"
+			var Description = "Select all in tree"
+			var Shortcut = "Shift+E"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectChild"
+			var Description = "Select the first child"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectEditorConfig"
+			var Description = "Show the Editor Config in the Property Window"
+			var Shortcut = "Shift+E"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectGame"
+			var Description = "Select space"
+			var Shortcut = "Shift+G"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectNone"
+			var Description = "Select no objects"
+			var Shortcut = "Shift+D"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectParent"
+			var Description = "Select parent of current object"
+			var Shortcut = "Shift+W"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectProject"
+			var Description = "Show the Project in the Property Window"
+			var Shortcut = "Shift+P"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectRoot"
+			var Description = "Select root of tree"
+			var Shortcut = "Shift+Q"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectSibling"
+			var Description = "Select the next sibling"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectSpace"
+			var Description = "Select the space"
+			var Shortcut = "Shift+S"
+			var Tags = Array
+			{
+				"Select"
+			}
+		}
+		Command
+		{
+			var Name = "SelectTool"
+			var Description = "Picks objects in the scene."
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "ShowContentOutput"
+			var Description = "Show the project's content output folder"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Project"
+			}
+		}
+		Command
+		{
+			var Name = "ShowCoreLibrary"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "ShowProjectFolder"
+			var Description = "Show the folder the project is located in the file system"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Project"
+			}
+		}
+		Command
+		{
+			var Name = "SoundNodeGraph"
+			var Description = "Show the Sound Node Graph Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+				"Sound"
+			}
+		}
+		Command
+		{
+			var Name = "SpringTools"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "StepGame"
+			var Description = "Step the game forward one frame"
+			var Shortcut = "F7"
+			var Tags = Array
+			{
+				"Game"
+			}
+		}
+		Command
+		{
+			var Name = "StopGame"
+			var Description = "Stop the game"
+			var Shortcut = "F8"
+			var Tags = Array
+			{
+				"Game"
+			}
+		}
+		Command
+		{
+			var Name = "StressTest"
+			var Description = "Stress test the engine by doing a bunch of random stuff"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Editor"
+			}
+		}
+		Command
+		{
+			var Name = "TakeProjectScreenshot"
+			var Description = "Takes a screen shot for the project. Disables automatically taking a project screen shot every time you save."
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "TheVoid"
+			var Description = "Opens the Void"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"File"
+			}
+		}
+		Command
+		{
+			var Name = "TileEditor2D"
+			var Description = "Enables the TileEditor2D tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "ToggleFullScreen"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Command
+		{
+			var Name = "Tools"
+			var Description = "Show the Tools Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Command
+		{
+			var Name = "TranslateTool"
+			var Description = "Enables the Translate Tool"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Tool"
+			}
+		}
+		Command
+		{
+			var Name = "Undo"
+			var Description = "Undo last operation"
+			var Shortcut = "Ctrl+Z"
+			var Tags = Array
+			{
+				"Edit"
+			}
+		}
+		Command
+		{
+			var Name = "UnhideAll"
+			var Description = "Unhide all objects"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Hide"
+			}
+		}
+		Command
+		{
+			var Name = "UnhideSelected"
+			var Description = "Unhide selected objects"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Hide"
+			}
+		}
+		Command
+		{
+			var Name = "VolumeMeter"
+			var Description = "Show the Volume Meter Window"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+				"Sound"
+			}
+		}
+		Command
+		{
+			var Name = "WriteBuildInfo"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+	}
+}

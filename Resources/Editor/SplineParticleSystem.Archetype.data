@@ -1,0 +1,208 @@
+[Version:1]
+Cog 
+{
+	var Name = ""
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Vec3{0, 4.70745564, -13.4630165}
+		var Scale = Vec3{1, 1, 1}
+		var Rotation = Quat{0, 0, 0, 1}
+	}
+	HierarchySpline 
+	{
+		var Closed = false
+		var SplineType = SplineType.CatmulRom
+		var Error = 0.00999999978
+		var DebugDrawSpline = true
+		var SplineColor = Vec4{0, 0, 0, 1}
+	}
+	SpriteParticleSystem 
+		{
+			var Visible = true
+			var ViewCulling = true
+			var VisibilityEvents = true
+			var Material = "582c50d330d372c3:AdditiveSprite"
+			var ChildMode = SystemChildMode.Independent
+			var SystemSpace = SystemSpace.WorldSpace
+			var DrawOrder = 0
+			var Tint = Vec4{1, 1, 1, 1}
+			var WarmUpTime = 0
+			var GeometryMode = ParticleGeometry.Billboarded
+			var SortMode = ParticleSortMode.Youngest
+			var ParticleAnimation = ParticleAnimation.Single
+			var SpriteSource = "5274db4c2e7c11f9:Circle"
+			var VelocityScale = 1
+			var LengthScale = 1
+			var SystemSize = Vec3{1, 1, 1}
+		}
+		SplineParticleEmitter 
+		{
+			var Active = true
+			var EmitCount = 0
+			var EmitRate = 25
+			var EmitVariance = 0
+			var Size = 0.100000001
+			var SizeVariance = 0.5
+			var Lifetime = 5.85068321
+			var LifetimeVariance = 0.200000003
+			var Spin = 0
+			var SpinVariance = 50
+			var RandomSpin = true
+			var Fill = 1
+			var EmitterVelocityPercent = 0
+			var StartVelocity = Vec3{0, 0, 0}
+			var RandomVelocity = Vec3{2, 2, 2}
+			var TangentVelocity = Vec3{0, 0, 0}
+			var EmitterSize = Vec3{0, 0, 0}
+			var FastMovingEmitter = false
+			var EmitRadius = 0
+			var SpawnT = 0.5
+			var SpawnTVariance = 0.5
+			var ClampT = false
+			var TargetSplineCog = CogPath
+			{
+				var Path = "."
+				var ErrorOnResolveToNull = false
+				var ErrorOnPathCantCompute = false
+				var ErrorOnDirectLinkFail = false
+				var UpdateCogOnPathChange = true
+				var UpdatePathOnCogChange = true
+				var UpdateCogOnInitialize = true
+				var ResolvedNullErrorOccurred = false
+				var ResolvedCog = 1
+				var PathPreference0 = CogPathPreference.CogRelative
+				var PathPreference1 = CogPathPreference.SpaceRelative
+				var PathPreference2 = CogPathPreference.Absolute
+			}
+		}
+		SplineParticleAnimator 
+		{
+			var Speed = 3
+			var AutoCalculateLifetime = true
+			var Helix = false
+			var HelixRadius = 0.5
+			var HelixWaveLength = 3
+			var HelixOffset = 0
+			var Mode = SplineAnimatorMode.Exact
+			var SpringFrequencyHz = 6
+			var SpringDampingRatio = 0.200000003
+		}
+	Hierarchy 
+	{
+		Cog 
+		{
+			var Name = "ControlPoint"
+			var LinkId = 2
+			Transform 
+			{
+				var Translation = Vec3{0, 2.42455292, 0}
+				var Scale = Vec3{0.100000001, 0.100000001, 0.100000001}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Model 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "583afb5e7bf75e18:ZeroMaterial"
+				var Mesh = "4de0354322b345ae:Cube"
+			}
+		}
+		Cog 
+		{
+			var Name = "ControlPoint"
+			var LinkId = 3
+			Transform 
+			{
+				var Translation = Vec3{0, 4.46769285, 0}
+				var Scale = Vec3{0.100000001, 0.100000001, 0.100000001}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Model 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "583afb5e7bf75e18:ZeroMaterial"
+				var Mesh = "4de0354322b345ae:Cube"
+			}
+		}
+		Cog 
+		{
+			var Name = "ControlPoint"
+			var LinkId = 4
+			Transform 
+			{
+				var Translation = Vec3{0, 4.48811913, 3.84854507}
+				var Scale = Vec3{0.100000001, 0.100000001, 0.100000001}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Model 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "583afb5e7bf75e18:ZeroMaterial"
+				var Mesh = "4de0354322b345ae:Cube"
+			}
+		}
+		Cog 
+		{
+			var Name = "ControlPoint"
+			var LinkId = 5
+			Transform 
+			{
+				var Translation = Vec3{0, 2.42157555, 3.84854507}
+				var Scale = Vec3{0.100000001, 0.100000001, 0.100000001}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Model 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "583afb5e7bf75e18:ZeroMaterial"
+				var Mesh = "4de0354322b345ae:Cube"
+			}
+		}
+		Cog 
+		{
+			var Name = "ControlPoint"
+			var LinkId = 6
+			Transform 
+			{
+				var Translation = Vec3{4.24651241, 4.50166416, 3.84854507}
+				var Scale = Vec3{0.100000001, 0.100000001, 0.100000001}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Model 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "583afb5e7bf75e18:ZeroMaterial"
+				var Mesh = "4de0354322b345ae:Cube"
+			}
+		}
+		Cog 
+		{
+			var Name = "ControlPoint"
+			var LinkId = 7
+			Transform 
+			{
+				var Translation = Vec3{4.24651241, 2.42157555, 0.2665627}
+				var Scale = Vec3{0.100000001, 0.100000001, 0.100000001}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Model 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "583afb5e7bf75e18:ZeroMaterial"
+				var Mesh = "4de0354322b345ae:Cube"
+			}
+		}
+	}
+}

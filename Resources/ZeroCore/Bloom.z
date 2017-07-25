@@ -1,0 +1,125 @@
+// Makes overly bright elements in a scene appear to glow.
+[RunInEditor]
+class Bloom : ZilchComponent
+{
+  // If effect is applied to the scene.
+  [Property] var Active : Boolean = true;
+  // Scales the intesity of the bloom.
+  [Property] var Intensity : Real = 0.1;
+  // The minimum luminance needed to invoke bloom.
+  [Property] var Threshold : Real = 1.0;
+  // If this bloom level is applied.
+  // Bloom1 (1/2 res, the most concentrated) to Bloom5 (1/32 res, the most spread out).
+  [Property] var Bloom1 : Boolean = true;
+  // If this bloom level is applied.
+  [Property] var Bloom2 : Boolean = true;
+  // If this bloom level is applied.
+  [Property] var Bloom3 : Boolean = true;
+  // If this bloom level is applied.
+  [Property] var Bloom4 : Boolean = true;
+  // If this bloom level is applied.
+  [Property] var Bloom5 : Boolean = true;
+  // If output should be replace with just the result that's added to the scene for visualizing the effect.
+  [Property] var DebugBuffer : Boolean = false;
+  
+  function AddRenderTasks(event : RenderTasksEvent, lightBuffer : RenderTarget)
+  {
+    if (this.Active == false)
+      return;
+    
+    var bufferSize = lightBuffer.Texture.Size;
+    var bloomSamplerSettings = SamplerSettings() {Filtering = TextureFiltering.Bilinear};
+    
+    var bloom0 = event.GetRenderTarget(bufferSize, TextureFormat.RGB16f, bloomSamplerSettings);
+    var bloom1 = event.GetRenderTarget((bufferSize * 0.5) as Integer2, TextureFormat.RGB16f, bloomSamplerSettings);
+    var bloom2 = event.GetRenderTarget((bufferSize * 0.25) as Integer2, TextureFormat.RGB16f, bloomSamplerSettings);
+    var bloom3 = event.GetRenderTarget((bufferSize * 0.125) as Integer2, TextureFormat.RGB16f, bloomSamplerSettings);
+    var bloom4 = event.GetRenderTarget((bufferSize * 0.0625) as Integer2, TextureFormat.RGB16f, bloomSamplerSettings);
+    var bloom5 = event.GetRenderTarget((bufferSize * 0.03125) as Integer2, TextureFormat.RGB16f, bloomSamplerSettings);
+    
+    // The bright pass separates sufficiently bright parts of the image from the rest
+    var bloomBrightPass = BloomBrightPass();
+    bloomBrightPass.Texture = lightBuffer.Texture;
+    bloomBrightPass.Intensity = this.Intensity;
+    bloomBrightPass.Threshold = this.Threshold;
+    event.AddRenderTaskPostProcess(bloom0, bloomBrightPass);
+    
+    // Progressive downsample and blur
+    // This pass takes the "brightness buffer" from the bright pass, and
+    // creates a "mip chain" of lower resolution textures. Before each
+    // downsample to the next lower-res, a separable blur filter is applied.
+    // The blur's radius increases as the resolution becomes lower, since
+    // wide-ranged blurs look better and they become less expensive the
+    // smaller the target is.
+    DownsampleAndBlur[Filter13TapPartialKarisAverage, SeparableBlurRadius5].Call(event, bloom0, bloom1);
+    DownsampleAndBlur[Filter13Tap, SeparableBlurRadius10].Call(event, bloom1, bloom2);
+    DownsampleAndBlur[Filter13Tap, SeparableBlurRadius15].Call(event, bloom2, bloom3);
+    DownsampleAndBlur[Filter13Tap, SeparableBlurRadius20].Call(event, bloom3, bloom4);
+    DownsampleAndBlur[Filter13Tap, SeparableBlurRadius25].Call(event, bloom4, bloom5);
+    
+    // In order to remove the effect of any single bloom level and
+    // still do a progressive upsample, clear the unused levels
+    // so that they add nothing to the final output
+    if (!this.Bloom1)
+      event.AddRenderTaskClearTarget(bloom1, Real4(0.0));
+    if (!this.Bloom2)
+      event.AddRenderTaskClearTarget(bloom2, Real4(0.0));
+    if (!this.Bloom3)
+      event.AddRenderTaskClearTarget(bloom3, Real4(0.0));
+    if (!this.Bloom4)
+      event.AddRenderTaskClearTarget(bloom4, Real4(0.0));
+    if (!this.Bloom5)
+      event.AddRenderTaskClearTarget(bloom5, Real4(0.0));
+    
+    if (this.DebugBuffer)
+      event.AddRenderTaskClearTarget(lightBuffer, Real4(0.0, 0.0, 0.0, 1.0));
+    
+    // Progressive upsample
+    // This pass accumulates all the blurred bloom buffers that are
+    // going to be used and adds them to the light buffer.
+    this.Upsample(event, bloom5, bloom4);
+    this.Upsample(event, bloom4, bloom3);
+    this.Upsample(event, bloom3, bloom2);
+    this.Upsample(event, bloom2, bloom1);
+    this.Upsample(event, bloom1, lightBuffer);
+    
+    bloom0.Release();
+    bloom1.Release();
+    bloom2.Release();
+    bloom3.Release();
+    bloom4.Release();
+    bloom5.Release();
+  }
+  
+  function Upsample(event : RenderTasksEvent, target0 : RenderTarget, target1 : RenderTarget)
+  {
+    var upsampleSettings = RenderSettings();
+    upsampleSettings.ColorTarget = target1;
+    
+    upsampleSettings.BlendSettings.BlendMode = BlendMode.Separate;
+    upsampleSettings.BlendSettings.BlendEquation = BlendEquation.Add;
+    upsampleSettings.BlendSettings.SourceFactor = BlendFactor.One;
+    upsampleSettings.BlendSettings.DestFactor = BlendFactor.One;
+    upsampleSettings.BlendSettings.SourceFactorAlpha = BlendFactor.Zero;
+    upsampleSettings.BlendSettings.DestFactorAlpha = BlendFactor.One;
+    
+    var copyTarget = CopyTarget();    
+    copyTarget.Texture = target0.Texture;
+    event.AddRenderTaskPostProcess(upsampleSettings, copyTarget);
+  }
+}
+
+// Template for different combinations of downsample filters and blur radius sizes.
+struct DownsampleAndBlur[FilterType, BlurType]
+{
+  // Uses a filter intended for downsampling to copy input to output and then blurs the output.
+  [Static]
+  function Call(event : RenderTasksEvent, input : RenderTarget, output : RenderTarget)
+  {
+    var filter = FilterType();
+    filter.Texture = input.Texture;
+    filter.InverseTextureSize = Real2(1.0) / input.Texture.Size;
+    event.AddRenderTaskPostProcess(output, filter);
+    BlurTexture[BlurType].Call(event, output);
+  }
+}

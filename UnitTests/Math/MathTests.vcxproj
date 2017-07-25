@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Production|Win32">
+      <Configuration>Production</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8BF52976-E92A-45E5-9C04-93C553C3D791}</ProjectGuid>
+    <RootNamespace>MathTests</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the environment paths needed to find all our different repositories-->
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|Win32'" Label="Configuration">
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\UnitTests\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DisableSpecificWarnings>4723</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <ImageHasSafeExceptionHandlers Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="GenericVectorTests.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MathTests.cpp" />
+    <ClCompile Include="Matrix2Tests.cpp" />
+    <ClCompile Include="Matrix3Tests.cpp" />
+    <ClCompile Include="Matrix4Tests.cpp" />
+    <ClCompile Include="QuaternionTests.cpp" />
+    <ClCompile Include="RandomTests.cpp" />
+    <ClCompile Include="RootSolverTests.cpp" />
+    <ClCompile Include="Vector2Tests.cpp" />
+    <ClCompile Include="Vector3Tests.cpp" />
+    <ClCompile Include="Vector4Tests.cpp" />
+    <ClCompile Include="WeightedTableTests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Math\Math.vcxproj">
+      <Project>{767a1157-b18f-478e-b580-f6f624f9282a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Common\Common.vcxproj">
+      <Project>{3a62ce69-835e-4d16-86c2-5326625a18bc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ZeroLibraries\Platform\Platform.vcxproj">
+      <Project>{c26bf2c8-d6c3-441a-83aa-9ba656cdf41c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ZeroLibraries\Platform\Windows\WindowsPlatform.vcxproj">
+      <Project>{dbe8e33a-7e70-402c-bcf6-d1efee93fa76}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\CppUnitLite2\CppUnitLite2.vcxproj">
+      <Project>{c9544704-7ec3-4e3b-b989-edc0685f7fc4}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">
+    <Link>
+      <AdditionalLibraryDirectories>$(ZeroStandardLibrariesSource)\External\MemoryDebugger;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">
+    <Copy_Data_File Include="$(ZeroStandardLibrariesSource)\External\MemoryDebugger\MemoryDebugger.dll">
+      <FileType>Document</FileType>
+    </Copy_Data_File>
+    <Copy_Data_File Include="$(ZeroStandardLibrariesSource)\External\MemoryDebugger\MemoryDebugger.pdb">
+      <FileType>Document</FileType>
+    </Copy_Data_File>
+  </ItemGroup>
+  <ImportGroup>
+    <Import Project="$(ZeroSource)\Projects\Win32Shared\SimpleDataFiles.targets" />
+  </ImportGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

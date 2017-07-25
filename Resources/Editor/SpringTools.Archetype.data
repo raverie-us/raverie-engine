@@ -1,0 +1,13 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	MouseCapture = 
+	{
+	},
+	SpringTools = 
+	{
+	},
+},

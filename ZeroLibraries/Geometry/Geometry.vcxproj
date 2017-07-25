@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{787F598D-F96E-48F5-8075-25D31FC7ED60}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Aabb.cpp" />
+    <ClCompile Include="Clipper.cpp" />
+    <ClCompile Include="ClosestPoint.cpp" />
+    <ClCompile Include="ConvexMesh.cpp" />
+    <ClCompile Include="ConvexMeshDecomposition.cpp" />
+    <ClCompile Include="ConvexMeshShape.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="Epa.cpp" />
+    <ClCompile Include="ExtendedCollision.cpp" />
+    <ClCompile Include="ExtendedIntersection.cpp" />
+    <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="FrustumIntersection.cpp" />
+    <ClCompile Include="GeometryStandard.cpp" />
+    <ClCompile Include="Gjk.cpp" />
+    <ClCompile Include="Hull2D.cpp" />
+    <ClCompile Include="Hull3D.cpp" />
+    <ClCompile Include="Intersection.cpp" />
+    <ClCompile Include="Intersection2D.cpp" />
+    <ClCompile Include="LineTests.cpp" />
+    <ClCompile Include="Mpr.cpp" />
+    <ClCompile Include="ObbIntersection.cpp" />
+    <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="PointQueries.cpp" />
+    <ClCompile Include="GeodesicSphere.cpp" />
+    <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="Polygon.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="RayTests.cpp" />
+    <ClCompile Include="SegmentTests.cpp" />
+    <ClCompile Include="Shape2D.cpp" />
+    <ClCompile Include="ShapeHelpers.cpp" />
+    <ClCompile Include="Shapes.cpp" />
+    <ClCompile Include="Simplex.cpp" />
+    <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="ToString.cpp" />
+    <ClCompile Include="TrapezoidMap.cpp" />
+    <ClCompile Include="Triangulator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Aabb.hpp" />
+    <ClInclude Include="Clipper.hpp" />
+    <ClInclude Include="ConvexMesh.hpp" />
+    <ClInclude Include="ConvexMeshDecomposition.hpp" />
+    <ClInclude Include="ConvexMeshShape.hpp" />
+    <ClInclude Include="DebugDraw.hpp" />
+    <ClInclude Include="Epa.hpp" />
+    <ClInclude Include="ExtendedCollision.hpp" />
+    <ClInclude Include="ExtendedIntersection.hpp" />
+    <ClInclude Include="Frustum.hpp" />
+    <ClInclude Include="GeometryStandard.hpp" />
+    <ClInclude Include="Gjk.hpp" />
+    <ClInclude Include="Hull2D.hpp" />
+    <ClInclude Include="Hull3D.hpp" />
+    <ClInclude Include="IndexPool.hpp" />
+    <ClInclude Include="Intersection.hpp" />
+    <ClInclude Include="GeodesicSphere.hpp" />
+    <ClInclude Include="Geometry.hpp" />
+    <ClInclude Include="Mpr.hpp" />
+    <ClInclude Include="Plane.hpp" />
+    <ClInclude Include="Polygon.hpp" />
+    <ClInclude Include="Shape2D.hpp" />
+    <ClInclude Include="ShapeHelpers.hpp" />
+    <ClInclude Include="Shapes.hpp" />
+    <ClInclude Include="Simplex.hpp" />
+    <ClInclude Include="Solids.hpp" />
+    <ClInclude Include="Sphere.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="ToString.hpp" />
+    <ClInclude Include="TrapezoidMap.hpp" />
+    <ClInclude Include="Triangulator.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DebugPrimitives.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

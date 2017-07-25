@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "MultiConvexMeshEditorLevel"
+		var ResourceId = 0x5909355ba08ead9e
+		var LoaderType = "Level"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

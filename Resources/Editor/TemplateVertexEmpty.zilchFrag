@@ -1,0 +1,7 @@
+[Vertex]
+struct %RESOURCENAME%
+{
+	function Main()
+	{
+	}
+}

@@ -1,0 +1,18 @@
+[Pixel]
+struct MemberAccess
+{
+    [Static]
+    var StaticInt : Integer = 0;
+    var InstanceInt : Integer = 1;
+    
+    constructor()
+    {
+        this.InstanceInt = MemberAccess.StaticInt;
+    }
+    
+    function Main()
+    {
+        var staticVal = MemberAccess.StaticInt;
+        var instanceVal = this.InstanceInt;
+    }
+}

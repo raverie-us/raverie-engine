@@ -1,0 +1,117 @@
+struct SamplerHelper
+{
+    [Static]
+    function ConvertUvCoordinate(uv : Real2) : Real2
+    {
+        Shader.AddInlineShaderCode("glsl", 130, 450, "`uv.Y` = `1.0 - uv.Y`");
+        return uv;
+    }
+
+    [Static]
+    function ConvertUvCoordinate(uv : Real3) : Real3
+    {
+        Shader.AddInlineShaderCode("glsl", 130, 450, "`uv.X` = `-uv.X`");
+        return uv;
+    }
+}
+
+[Intrinsic(language : "glsl", typeName : "sampler2D", propertyType : "Texture", storageQualifier : "uniform", refType : "in", nonCopyable : true, forcedStatic : true)]
+struct Sampler2d
+{
+    function Sample(uv : Real2) : Real4
+    {
+        var result = Real4();
+        uv = SamplerHelper.ConvertUvCoordinate(uv);
+        Shader.AddInlineShaderCode("glsl", "`result` = texture(`this`, `uv`)");
+        return result;
+    }
+
+    function Sample(uv : Real2, ddx : Real2, ddy : Real2) : Real4
+    {
+        var result = Real4();
+        uv = SamplerHelper.ConvertUvCoordinate(uv);
+        Shader.AddInlineShaderCode("glsl", "`result` = textureGrad(`this`, `uv`, `ddx`, `ddy`)");
+        return result;
+    }
+
+    function SampleLod(uv : Real2, lod : Real) : Real4
+    {
+        var result = Real4();
+        uv = SamplerHelper.ConvertUvCoordinate(uv);
+        Shader.AddInlineShaderCode("glsl", "`result` = textureLod(`this`, `uv`, `lod`)");
+        return result;
+    }
+
+    function SampleSize(lod : Integer) : Integer2
+    {
+        var result = Integer2();
+        Shader.AddInlineShaderCode("glsl", "`result` = textureSize(`this`, `lod`)");
+        return result;
+    }
+}
+
+[Intrinsic(language : "glsl", typeName : "sampler3D", propertyType : "Texture3d", storageQualifier : "uniform", refType : "in", nonCopyable : true, forcedStatic : true)]
+struct Sampler3d
+{
+    function Sample(uv : Real3) : Real4
+    {
+        var result = Real4();
+        uv.XY = SamplerHelper.ConvertUvCoordinate(uv.XY);
+        Shader.AddInlineShaderCode("glsl", "`result` = texture(`this`, `uv`)");
+        return result;
+    }
+}
+
+[Intrinsic(language : "glsl", typeName : "samplerCube", propertyType : "Texture", storageQualifier : "uniform", refType : "in", nonCopyable : true, forcedStatic : true)]
+struct SamplerCube
+{
+    function Sample(uv : Real3) : Real4
+    {
+        var result = Real4();
+        uv = SamplerHelper.ConvertUvCoordinate(uv);
+        Shader.AddInlineShaderCode("glsl", "`result` = texture(`this`, `uv`)");
+        return result;
+    }
+
+    function SampleLod(uv : Real3, lod : Real) : Real4
+    {
+        var result = Real4();
+        uv = SamplerHelper.ConvertUvCoordinate(uv);
+        Shader.AddInlineShaderCode("glsl", "`result` = textureLod(`this`, `uv`, `lod`)");
+        return result;
+    }
+
+    function SampleSize(lod : Integer) : Integer2
+    {
+        var result = Integer2();
+        Shader.AddInlineShaderCode("glsl", "`result` = textureSize(`this`, `lod`)");
+        return result;
+    }
+}
+
+[Intrinsic(language : "glsl", typeName : "sampler2DShadow", propertyType : "Texture", storageQualifier : "uniform", refType : "in", nonCopyable : true, forcedStatic : true)]
+struct SamplerShadow2d
+{
+    function Sample(uv : Real3) : Real
+    {
+        var result = Real();
+        uv.XY = SamplerHelper.ConvertUvCoordinate(uv.XY);
+        Shader.AddInlineShaderCode("glsl", 130, 420, "`result` = texture(`this`, `uv`)");
+        return result;
+    }
+
+    function SampleLod(uv : Real3, lod : Real) : Real
+    {
+        var result = Real();
+        uv.XY = SamplerHelper.ConvertUvCoordinate(uv.XY);
+        Shader.AddInlineShaderCode("glsl", "`result` = textureLod(`this`, `uv`, `lod`)");
+        return result;
+    }
+
+    function SampleSize(lod : Integer) : Integer2
+    {
+        var result = Integer2();
+        Shader.AddInlineShaderCode("glsl", "`result` = textureSize(`this`, `lod`)");
+        return result;
+    }
+}

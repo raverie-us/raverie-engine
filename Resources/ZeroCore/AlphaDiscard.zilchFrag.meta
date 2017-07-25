@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "AlphaDiscard"
+		var ResourceId = 0x58f4edb8dc5abc41
+	}
+}

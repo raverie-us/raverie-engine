@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{c9ed6820-d11f-4dda-b0bb-b88978482d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Peer">
+      <UniqueIdentifier>{68c0f87e-8408-4bc3-bb4c-35a1a874f854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{5463736f-99b5-446f-8d6a-ff5daaa63a02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replicator">
+      <UniqueIdentifier>{fee6f1c4-ace5-4342-bf17-ae2d5ae7378d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{d0ce4a6e-36aa-43ad-aa18-1a04a04238d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enums">
+      <UniqueIdentifier>{ee0f7ca9-09f8-4337-b5ca-1603a6927d61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Peer\PeerLink">
+      <UniqueIdentifier>{f9ce1484-c209-472f-9dd9-27d4841a8f69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Peer\PeerLink\LinkInbox">
+      <UniqueIdentifier>{8dd8a851-e9da-4403-9b41-f0c6b050b357}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Peer\PeerLink\LinkOutbox">
+      <UniqueIdentifier>{f931b5e8-1f0f-4907-a72e-ab083f7b111d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Peer\PeerLink\MessageChannel">
+      <UniqueIdentifier>{ac82555a-a2e5-4007-8283-92448cf9df36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet\Message">
+      <UniqueIdentifier>{fccd599e-cdd3-4890-ae51-4710c4924210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BandwidthStats">
+      <UniqueIdentifier>{ff285f81-da27-418b-83ed-7ad188f05b3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet\Message\ProtocolMessageData">
+      <UniqueIdentifier>{1f98e0ab-a3ec-455d-90e8-3ea67f92e87c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replicator\ReplicatorLink">
+      <UniqueIdentifier>{6ee52f08-8e33-4303-a24d-ea4c135ae091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replicator\Replica">
+      <UniqueIdentifier>{b21737ac-fe2d-4b77-9ffa-5eee8c3afa68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replicator\Route">
+      <UniqueIdentifier>{2b00c5c8-7c74-4d9b-bec2-4b069348c4db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replicator\ReplicaStream">
+      <UniqueIdentifier>{e279c247-62f6-4ac6-960a-b7566ca44852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replicator\ReplicaChannel">
+      <UniqueIdentifier>{40af8a17-43aa-4e53-a293-7ac289b91c08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replicator\ReplicaProperty">
+      <UniqueIdentifier>{74ed4f40-7b23-4afc-b390-7b16212c6aef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replicator\ReplicaConfig">
+      <UniqueIdentifier>{4153ef93-5e54-46fe-a70f-f2d03817018e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkInbox.cpp">
+      <Filter>Peer\PeerLink\LinkInbox</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkOutbox.cpp">
+      <Filter>Peer\PeerLink\LinkOutbox</Filter>
+    </ClCompile>
+    <ClCompile Include="Peer.cpp">
+      <Filter>Peer</Filter>
+    </ClCompile>
+    <ClCompile Include="PeerLink.cpp">
+      <Filter>Peer\PeerLink</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Packet\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageChannel.cpp">
+      <Filter>Peer\PeerLink\MessageChannel</Filter>
+    </ClCompile>
+    <ClCompile Include="ProtocolMessageData.cpp">
+      <Filter>Packet\Message\ProtocolMessageData</Filter>
+    </ClCompile>
+    <ClCompile Include="Replicator.cpp">
+      <Filter>Plugins\Replicator</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplicatorLink.cpp">
+      <Filter>Plugins\Replicator\ReplicatorLink</Filter>
+    </ClCompile>
+    <ClCompile Include="Replica.cpp">
+      <Filter>Plugins\Replicator\Replica</Filter>
+    </ClCompile>
+    <ClCompile Include="Route.cpp">
+      <Filter>Plugins\Replicator\Route</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplicaStream.cpp">
+      <Filter>Plugins\Replicator\ReplicaStream</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplicaChannel.cpp">
+      <Filter>Plugins\Replicator\ReplicaChannel</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplicaProperty.cpp">
+      <Filter>Plugins\Replicator\ReplicaProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="DashStandard.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Peer.hpp">
+      <Filter>Peer</Filter>
+    </ClInclude>
+    <ClInclude Include="PeerLink.hpp">
+      <Filter>Peer\PeerLink</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.hpp">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="BandwidthStats.hpp">
+      <Filter>BandwidthStats</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.hpp">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.hpp">
+      <Filter>Packet\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkInbox.hpp">
+      <Filter>Peer\PeerLink\LinkInbox</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkOutbox.hpp">
+      <Filter>Peer\PeerLink\LinkOutbox</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageConfig.hpp">
+      <Filter>Packet\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageChannel.hpp">
+      <Filter>Peer\PeerLink\MessageChannel</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketConfig.hpp">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtocolMessageData.hpp">
+      <Filter>Packet\Message\ProtocolMessageData</Filter>
+    </ClInclude>
+    <ClInclude Include="Replicator.hpp">
+      <Filter>Plugins\Replicator</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplicatorLink.hpp">
+      <Filter>Plugins\Replicator\ReplicatorLink</Filter>
+    </ClInclude>
+    <ClInclude Include="Replica.hpp">
+      <Filter>Plugins\Replicator\Replica</Filter>
+    </ClInclude>
+    <ClInclude Include="Route.hpp">
+      <Filter>Plugins\Replicator\Route</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplicaStream.hpp">
+      <Filter>Plugins\Replicator\ReplicaStream</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplicaChannel.hpp">
+      <Filter>Plugins\Replicator\ReplicaChannel</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplicaProperty.hpp">
+      <Filter>Plugins\Replicator\ReplicaProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplicaConfig.hpp">
+      <Filter>Plugins\Replicator\ReplicaConfig</Filter>
+    </ClInclude>
+    <ClInclude Include="DashStandard.hpp" />
+  </ItemGroup>
+</Project>

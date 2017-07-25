@@ -1,0 +1,27 @@
+[Version:1]
+Cog 
+{
+	var Name = "Sprite"
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Vec3{0, 0, 0}
+		var Scale = Vec3{1, 1, 1}
+		var Rotation = Quat{0, 0, 0, 1}
+	}
+	Sprite 
+	{
+		var Visible = true
+		var ViewCulling = true
+		var VisibilityEvents = true
+		var Material = "582c575af53d18c9:AlphaSprite"
+		var VertexColor = Vec4{1, 1, 1, 1}
+		var GeometryMode = SpriteGeometryMode.ZPlane
+		var SpriteSource = "5586f579ca73ecc2:SquareBordered"
+		var FlipX = false
+		var FlipY = false
+		var AnimationActive = true
+		var AnimationSpeed = 1
+		var StartFrame = 0
+	}
+}

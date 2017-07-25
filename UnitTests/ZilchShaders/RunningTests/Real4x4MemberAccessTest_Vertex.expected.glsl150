@@ -1,0 +1,109 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+in vec3 attNormal;
+in vec3 attPosition;
+in vec2 attUv;
+
+//----- Struct Definitions -----
+struct BasicVertexFrag
+{
+  vec3 Normal;
+  vec3 Position;
+  vec2 Uv;
+  vec4 ApiPerspectivePosition;
+};
+
+struct Real4x4MemberAccessTest_Vertex
+{
+  float Time;
+  vec3 Normal;
+  vec3 Position;
+  vec2 Uv;
+  vec4 ApiPerspectivePosition;
+};
+
+//----- Forward Declarations -----
+void _BasicVertexFragPreConstructor(inout BasicVertexFrag self);
+BasicVertexFrag _BasicVertexFragConstructor();
+void _BasicVertexFragMain(inout BasicVertexFrag self);
+
+void _Real4x4MemberAccessTest_VertexPreConstructor(inout Real4x4MemberAccessTest_Vertex self);
+Real4x4MemberAccessTest_Vertex _Real4x4MemberAccessTest_VertexConstructor();
+void _Real4x4MemberAccessTest_VertexMain(inout Real4x4MemberAccessTest_Vertex self);
+void CopyInputs(inout Real4x4MemberAccessTest_Vertex self);
+void CopyOutputs(inout Real4x4MemberAccessTest_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- BasicVertexFrag Functions -----
+void _BasicVertexFragPreConstructor(inout BasicVertexFrag self)
+{
+  self.Normal = vec3(0.0, 0.0, 0.0);
+  self.Position = vec3(0.0, 0.0, 0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+BasicVertexFrag _BasicVertexFragConstructor()
+{
+  BasicVertexFrag self;
+  _BasicVertexFragPreConstructor(self);
+  return self;
+}
+
+void _BasicVertexFragMain(inout BasicVertexFrag self)
+{
+  self.ApiPerspectivePosition = vec4(self.Position, float(1));
+}
+
+//----- Real4x4MemberAccessTest_Vertex Functions -----
+void _Real4x4MemberAccessTest_VertexPreConstructor(inout Real4x4MemberAccessTest_Vertex self)
+{
+  self.Time = float(0.0);
+  self.Normal = vec3(0.0, 0.0, 0.0);
+  self.Position = vec3(0.0, 0.0, 0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+Real4x4MemberAccessTest_Vertex _Real4x4MemberAccessTest_VertexConstructor()
+{
+  Real4x4MemberAccessTest_Vertex self;
+  _Real4x4MemberAccessTest_VertexPreConstructor(self);
+  return self;
+}
+
+void _Real4x4MemberAccessTest_VertexMain(inout Real4x4MemberAccessTest_Vertex self)
+{
+  BasicVertexFrag _basicvertexfrag = _BasicVertexFragConstructor();
+  _basicvertexfrag.Normal = self.Normal;
+  _basicvertexfrag.Position = self.Position;
+  _basicvertexfrag.Uv = self.Uv;
+  _BasicVertexFragMain(_basicvertexfrag);
+  self.ApiPerspectivePosition = _basicvertexfrag.ApiPerspectivePosition;
+}
+
+//----- Real4x4MemberAccessTest_Vertex Final Shader Functions -----
+void CopyInputs(inout Real4x4MemberAccessTest_Vertex self)
+{
+  self.Time = Time;
+  self.Normal = attNormal;
+  self.Position = attPosition;
+  self.Uv = attUv;
+}
+
+void CopyOutputs(inout Real4x4MemberAccessTest_Vertex self)
+{
+  gl_Position = self.ApiPerspectivePosition;
+}
+
+//----- Main -----
+void main(void)
+{
+  Real4x4MemberAccessTest_Vertex real4x4memberaccesstest_vertex = _Real4x4MemberAccessTest_VertexConstructor(); 
+  CopyInputs(real4x4memberaccesstest_vertex);
+  _Real4x4MemberAccessTest_VertexMain(real4x4memberaccesstest_vertex);
+  CopyOutputs(real4x4memberaccesstest_vertex);
+}
+

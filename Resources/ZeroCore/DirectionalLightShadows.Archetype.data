@@ -1,0 +1,97 @@
+[Version:1]
+Cog 
+{
+	var Name = "DirectionalLight"
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Real3{0, 0, 0}
+		var Scale = Real3{1, 1, 1}
+		var Rotation = Quaternion{0, 0, 0, 1}
+	}
+	SelectionIcon 
+	{
+		var Visible = true
+		var VisibilityEvents = true
+		var Material = "56581e2bb81777be:DebugDrawOnTop"
+		var SpriteSource = "58f8e4be736f5ea2:LightIcon"
+		var ViewScale = 1
+		var OverrideSelections = true
+	}
+	Model 
+	{
+		var Visible = true
+		var ViewCulling = false
+		var VisibilityEvents = true
+		var OverrideBoundingBox = false
+		var LocalAabbCenter = Real3{0, 0, 0}
+		var LocalAabbHalfExtents = Real3{1, 1, 1}
+		var GroupSortValue = 0
+		var Material = "580267aabbf7843e:DirectionalLightShadows"
+		var Mesh = "59040f1e835d03e1:Triangle"
+	}
+	DirectionalLight 
+	{
+		var LightColor = Real4{1, 1, 1, 1}
+		var LightIntensity = 1
+	}
+	CameraViewport 
+	{
+		var RenderInEditor = true
+		var RenderInGame = true
+		var RenderToViewport = false
+		var ForwardViewportEvents = false
+		var RenderOrder = -1
+		var NormalizedSize = Real2{1, 1}
+		var NormalizedOffset = Real2{0, 0}
+		var CameraPath = CogPath
+		{
+			var Path = "."
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var ResolvedCog = 1
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var RendererPath = CogPath
+		{
+			var Path = "."
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var ResolvedCog = 1
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var Resolution = Real2{1, 1}
+		var ViewportScaling = ViewportScaling.Fill
+		var MarginColor = Real4{0, 0, 0, 1}
+	}
+	Camera 
+	{
+		var NearPlane = 0.100000001
+		var FarPlane = 100
+		var PerspectiveMode = PerspectiveMode.Orthographic
+		var FieldOfView = 45
+		var Size = 64
+	}
+	ShadowRenderer 
+	{
+		var ResolutionValue = ShadowResolution.High
+		var NormalOffsetBias = 0.100000001
+	}
+	Hierarchy 
+	{
+	}
+}

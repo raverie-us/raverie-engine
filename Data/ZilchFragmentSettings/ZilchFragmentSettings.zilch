@@ -1,0 +1,74 @@
+struct SystemValueSettings
+{
+  function AddVertexSystemValues(settings : ShaderSystemValueSettings)
+  {
+     // Add perspective position
+     var perspectivePositionSV = settings.AddSystemValue(ShaderStageType.Vertex, "ApiPerspectivePosition", "Real4");
+     var glslPerspectivePositionSV = perspectivePositionSV.AddLanguageSystemValue("glsl");
+     glslPerspectivePositionSV.SetOutput("vec4", "gl_Position", "");
+     glslPerspectivePositionSV.Forced = true;
+     
+     // Add VertexId
+     var vertexIdSV = settings.AddSystemValue(ShaderStageType.Vertex, "VertexId", "Integer");
+     var glslVertexIdSV = vertexIdSV.AddLanguageSystemValue("glsl");
+     glslVertexIdSV.SetInput("int", "gl_VertexID", "");
+  }
+  
+  // All inputs in the geometry's vertex stage that come from some built-in that needs an index should hardcode the index as i.
+  // For example, ApiPerspectivePosition reads from gl_in[i].gl_Position.
+  function AddGeometryVertexSystemValues(settings : ShaderSystemValueSettings)
+  {
+    // Add perspective position
+    var perspectivePosition = settings.AddSystemValue(ShaderStageType.GeometryVertex, "ApiPerspectivePosition", "Real4");
+    var glslPerspectivePosition = perspectivePosition.AddLanguageSystemValue("glsl");
+    glslPerspectivePosition.SetInput("vec4", "gl_in[i].gl_Position", "");
+    glslPerspectivePosition.SetOutput("vec4", "gl_Position", "");
+    glslPerspectivePosition.Forced = true;
+    
+    // Add PrimitiveId as an output. PrimitiveId is weird and is input as a primitive but output per-vertex.
+    var primitiveIdSV = settings.AddSystemValue(ShaderStageType.GeometryVertex, "PrimitiveId", "Integer");
+    var glslPrimitiveIdSV = primitiveIdSV.AddLanguageSystemValue("glsl");
+    // For glsl, primitiveID's input and output names are different
+    glslPrimitiveIdSV.SetOutput("int", "gl_PrimitiveID", "");
+    // Hlsl doesn't differentiate the input/output for primitiveID
+    var hlslPrimitiveIdSV = primitiveIdSV.AddLanguageSystemValue("hlsl");
+    hlslPrimitiveIdSV.SetOutput("uint", "PrimitiveId", "SV_PrimitiveID");
+  }
+  
+  // The primitive stage cannot have any outputs as geometry shaders can only output through vertices.
+  function AddGeometryPrimitiveSystemValues(settings : ShaderSystemValueSettings)
+  {
+    // Add PrimitiveId. PrimitiveId is only an input for the primitive stage, the output is part of the vertex stage.
+    var primitiveIdSV = settings.AddSystemValue(ShaderStageType.GeometryPrimitive, "PrimitiveId", "Integer");
+    var glslPrimitiveIdSV = primitiveIdSV.AddLanguageSystemValue("glsl");
+    // For glsl, primitiveID's input and output names are different
+    glslPrimitiveIdSV.SetInput("int", "gl_PrimitiveIDIn", "");
+    // Hlsl doesn't differentiate the input/output for primitiveID
+    var hlslPrimitiveIdSV = primitiveIdSV.AddLanguageSystemValue("hlsl");
+    hlslPrimitiveIdSV.SetInput("uint", "PrimitiveId", "SV_PrimitiveID");
+  }
+  
+  function AddPixelSystemValues(settings : ShaderSystemValueSettings)
+  {
+     // Add PrimitiveId (only available in glsl 150 and up)
+     var primitiveIdSV = settings.AddSystemValue(ShaderStageType.Pixel, "PrimitiveId", "Integer");
+     var glslPrimitiveIdSV = primitiveIdSV.AddLanguageSystemValue("glsl");
+     glslPrimitiveIdSV.SetInput("integer", "gl_PrimitiveID", "");
+     glslPrimitiveIdSV.MinVersion = 150;
+     
+     // Add Pixel depth as the pixel's overriden depth value
+     var depthSV = settings.AddSystemValue(ShaderStageType.Pixel, "PixelDepth", "Real");
+     var glslDepthSV = depthSV.AddLanguageSystemValue("glsl");
+     glslDepthSV.SetOutput("float", "gl_FragDepth", "");
+     var hlslDepthSV = depthSV.AddLanguageSystemValue("hlsl");
+     hlslDepthSV.SetOutput("float", "Depth", "SV_Depth");
+  }
+
+  function Main(settings : ShaderSystemValueSettings)
+  {
+     this.AddVertexSystemValues(settings);
+     this.AddGeometryPrimitiveSystemValues(settings);
+     this.AddGeometryVertexSystemValues(settings);
+     this.AddPixelSystemValues(settings);
+  }
+}

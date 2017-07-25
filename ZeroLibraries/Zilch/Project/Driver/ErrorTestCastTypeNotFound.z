@@ -1,0 +1,11 @@
+// CastTypeNotFound
+
+class Animal
+{
+  var Variable : Integer = 21;
+
+  function TestFn() : Real
+  {
+	return 5 as ;
+  }
+}

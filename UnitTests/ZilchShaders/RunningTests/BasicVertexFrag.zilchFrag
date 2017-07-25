@@ -1,0 +1,20 @@
+[Vertex]
+struct BasicVertexFrag
+{
+    
+    [Input]
+    var Normal : Real3;
+    [Input]
+    var Position : Real3;
+    [Input]
+    var Uv : Real2;
+    
+    
+    [Output]
+    var ApiPerspectivePosition : Real4;
+    
+    function Main()
+    {
+        this.ApiPerspectivePosition = Real4(this.Position, 1);
+    }
+}

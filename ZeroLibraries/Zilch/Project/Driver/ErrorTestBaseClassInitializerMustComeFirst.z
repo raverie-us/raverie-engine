@@ -1,0 +1,19 @@
+//SkipTest
+
+class Animal
+{
+  constructor()
+  {
+  }
+}
+
+class Cat : Animal
+{
+  constructor() : this(5), base()
+  {
+  }
+
+  constructor(i : Integer) 
+  {
+  }
+}

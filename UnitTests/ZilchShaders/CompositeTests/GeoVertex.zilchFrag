@@ -1,0 +1,25 @@
+
+[Vertex]
+struct GeoVertex
+{
+    [Input][Output] var Data0 : Real2;
+    [Input][Output] var Data1 : Real2;
+    [Input][Output] var Data2 : Real2;
+    [Input][Output] var Data3 : Real2;
+    [Input][Output] var Data4 : Real2;
+    [Input][Output] var Data5 : Real2;
+    [Input][Output] var Data6 : Real2;
+    [Input][Output] var Data7 : Real2;
+    [Input] var Data8 : Real2;
+    [Input] var Data9 : Real2;
+    [Input] var Data10 : Real2;
+    [Input] var Data11 : Real2;
+    [Input] var Data12 : Real2;
+    [Input] var Data13 : Real2;
+    [Input] var Data14 : Real2;
+    [Input] var Data15 : Real2;
+    
+    function Main()
+    {
+    }
+}

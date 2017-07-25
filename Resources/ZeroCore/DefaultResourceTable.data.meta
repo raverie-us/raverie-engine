@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DefaultResourceTable"
+		var ResourceId = 0x51e9a089780c2060
+		var LoaderType = "ResourceTable"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Default"
+		var Description = "Empty Resource Table"
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

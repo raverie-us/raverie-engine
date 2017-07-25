@@ -1,0 +1,5 @@
+[Version:1]
+Animation 
+{
+	var Duration = 0
+}

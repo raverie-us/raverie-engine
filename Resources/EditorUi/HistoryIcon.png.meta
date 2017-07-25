@@ -1,0 +1,21 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "HistoryIcon"
+		var ResourceId = 0x581a4d3da92ba160
+		var AtlasId = 0x5274cf95e4a661fd
+		var FrameSizeX = 18
+		var FrameSizeY = 18
+		var FrameCount = 1
+		var FrameDelay = 0
+		var OriginX = 0
+		var OriginY = 0
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+}

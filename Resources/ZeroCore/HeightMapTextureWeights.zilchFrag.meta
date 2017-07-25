@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "HeightMapTextureWeights"
+		var ResourceId = 0x58f4fa1ed41caa29
+	}
+}

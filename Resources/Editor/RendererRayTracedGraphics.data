@@ -1,0 +1,14 @@
+Cog =
+{
+	Named =
+	{
+		string Name = "Renderer",
+	},
+		RayTracedGraphicsProvider =
+	{
+	},
+	RayTracedRenderer =
+	{
+	},
+}
+

@@ -1,0 +1,41 @@
+[Version:1]
+Cog
+{
+	var Name = "Cylinder"
+	var LinkId = 1
+	Transform
+	{
+		var Translation = Vec3{0, 0, 0}
+		var Scale = Vec3{1, 1, 1}
+		var Rotation = Quat{0, 0, 0, 1}
+	}
+	Model
+	{
+		var Visible = true
+		var ViewCulling = true
+		var VisibilityEvents = true
+		var Material = "583afb5e7bf75e18:ZeroMaterial"
+		var Mesh = "4de0354322b3572e:Cylinder"
+	}
+	RigidBody
+	{
+		var Velocity = Vec3{0, 0, 0}
+		var AngularVelocity = Vec3{0, 0, 0}
+		var DynamicState = RigidBodyDynamicState.Dynamic
+		var AllowSleep = true
+		var Asleep = false
+		var RotationLocked = false
+		var Mode2D = Mode2DStates.InheritFromSpace
+	}
+	CylinderCollider
+	{
+		var Ghost = false
+		var SendsEvents = true
+		var Material = "4de020863e872da8:DefaultPhysicsMaterial"
+		var CollisionGroup = "4e740859314e5515:DefaultGroup"
+		var Offset = Vec3{0, 0, 0}
+		var Radius = 0.5
+		var Height = 1
+		var Direction = AxisDirection.Y
+	}
+}

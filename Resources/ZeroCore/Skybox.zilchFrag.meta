@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "Skybox"
+		var ResourceId = 0x581d5404ab1dff31
+	}
+}

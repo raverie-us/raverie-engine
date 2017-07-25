@@ -1,0 +1,14 @@
+// OnlyOneDestructorAllowed
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  destructor()
+  {
+  }
+
+  destructor()
+  {
+  }
+}

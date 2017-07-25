@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{172480CF-88DA-4510-801F-68884B1B9070}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories Condition="'$(Platform)'=='Win32'">$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\Systems;$(ZERO_SOURCE)\Extensions;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ShowIncludes>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="CheckBox.cpp" />
+    <ClCompile Include="Command.cpp" />
+    <ClCompile Include="Composite.cpp" />
+    <ClCompile Include="Constants.cpp" />
+    <ClCompile Include="ContextMenu.cpp" />
+    <ClCompile Include="EditText.cpp" />
+    <ClCompile Include="Events.cpp" />
+    <ClCompile Include="ImageWidget.cpp" />
+    <ClCompile Include="LabeledTextBox.cpp" />
+    <ClCompile Include="LayoutProxy.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Modal.cpp" />
+    <ClCompile Include="MultiManager.cpp" />
+    <ClCompile Include="PopUp.cpp" />
+    <ClCompile Include="SearchView.cpp" />
+    <ClCompile Include="SelectorButton.cpp" />
+    <ClCompile Include="SimpleAnimation.cpp" />
+    <ClCompile Include="TagWidgets.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="Slider.cpp" />
+    <ClCompile Include="TextBox.cpp" />
+    <ClCompile Include="TextureView.cpp" />
+    <ClCompile Include="Toolbar.cpp" />
+    <ClCompile Include="ToolTip.cpp" />
+    <ClCompile Include="Widget.cpp" />
+    <ClCompile Include="WidgetManager.cpp" />
+    <ClCompile Include="RootWidget.cpp" />
+    <ClCompile Include="Manipulator.cpp" />
+    <ClCompile Include="Controls.cpp" />
+    <ClCompile Include="ListControls.cpp" />
+    <ClCompile Include="MultiDock.cpp" />
+    <ClCompile Include="ScrollArea.cpp" />
+    <ClCompile Include="WidgetMath.cpp" />
+    <ClCompile Include="WidgetStandard.cpp" />
+    <ClCompile Include="WidgetTest.cpp">
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ShowIncludes>
+    </ClCompile>
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Viewport.cpp" />
+    <ClCompile Include="Layout.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Button.hpp" />
+    <ClInclude Include="CheckBox.hpp" />
+    <ClInclude Include="Command.hpp" />
+    <ClInclude Include="CommandBinding.hpp" />
+    <ClInclude Include="Composite.hpp" />
+    <ClInclude Include="ContextMenu.hpp" />
+    <ClInclude Include="EditText.hpp" />
+    <ClInclude Include="Events.hpp" />
+    <ClInclude Include="ImageWidget.hpp" />
+    <ClInclude Include="LabeledTextBox.hpp" />
+    <ClInclude Include="LayoutProxy.hpp" />
+    <ClInclude Include="MainWindow.hpp" />
+    <ClInclude Include="Modal.hpp" />
+    <ClInclude Include="MultiManager.hpp" />
+    <ClInclude Include="SearchView.hpp" />
+    <ClInclude Include="SelectorButton.hpp" />
+    <ClInclude Include="TagWidgets.hpp" />
+    <ClInclude Include="Text.hpp" />
+    <ClInclude Include="Slider.hpp" />
+    <ClInclude Include="TextBox.hpp" />
+    <ClInclude Include="TextureView.hpp" />
+    <ClInclude Include="ToolTip.hpp" />
+    <ClInclude Include="Utility.hpp" />
+    <ClInclude Include="PopUp.hpp" />
+    <ClInclude Include="SimpleAnimation.hpp" />
+    <ClInclude Include="Toolbar.hpp" />
+    <ClInclude Include="Widget.hpp" />
+    <ClInclude Include="WidgetManager.hpp" />
+    <ClInclude Include="RootWidget.hpp" />
+    <ClInclude Include="Constants.hpp" />
+    <ClInclude Include="Manipulator.hpp" />
+    <ClInclude Include="Controls.hpp" />
+    <ClInclude Include="ListControls.hpp" />
+    <ClInclude Include="MultiDock.hpp" />
+    <ClInclude Include="ScrollArea.hpp" />
+    <ClInclude Include="WidgetMath.hpp" />
+    <ClInclude Include="WidgetStandard.hpp" />
+    <ClInclude Include="WidgetTest.hpp" />
+    <ClInclude Include="Window.hpp" />
+    <ClInclude Include="Viewport.hpp" />
+    <ClInclude Include="Layout.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

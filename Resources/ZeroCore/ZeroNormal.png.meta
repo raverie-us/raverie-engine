@@ -1,0 +1,25 @@
+[Version:1]
+ImageContent 
+{
+	TextureBuilder 
+	{
+		var Name = "ZeroNormal"
+		var ResourceId = 0x5827b28df61127a4
+		var Type = TextureType.Texture2D
+		var Compression = TextureCompression.BC5
+		var AddressingX = TextureAddressing.Repeat
+		var AddressingY = TextureAddressing.Repeat
+		var Filtering = TextureFiltering.Trilinear
+		var Anisotropy = TextureAnisotropy.x16
+		var MipMapping = TextureMipMapping.PreGenerated
+		var PremultipliedAlpha = false
+		var GammaCorrection = false
+	}
+	TextureInfo 
+	{
+		var FileType = "png"
+		var LoadFormat = "RGBA8"
+		var Dimensions = "2048 x 2048"
+		var Size = "5.333 MB"
+	}
+}

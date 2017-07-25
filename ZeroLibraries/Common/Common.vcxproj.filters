@@ -1,0 +1,379 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Diagnostic">
+      <UniqueIdentifier>{4f92cab6-8959-4472-b202-cdddb7974491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers">
+      <UniqueIdentifier>{2a61faa7-b0e9-4c87-9d0c-105e3ac11128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{40e36b12-ea6e-4543-9769-dfa453f9f6c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{7e224da2-21ad-40c5-9bd3-fd30f898394e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StlBinding">
+      <UniqueIdentifier>{5b291295-5419-4072-b744-0996b235c5a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Regex">
+      <UniqueIdentifier>{63b08720-f787-4a8f-b71b-6f169a6b3929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="String">
+      <UniqueIdentifier>{49f3fcb1-b426-4b78-8394-4debd4b46cf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lexer">
+      <UniqueIdentifier>{fc2ab41e-68ba-4eb9-833d-9322fb4d59c0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Diagnostic\Diagnostic.cpp">
+      <Filter>Diagnostic</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Block.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Graph.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Heap.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Pool.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Stack.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Misc.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Atomic.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Containers\ByteBuffer.cpp">
+      <Filter>Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="String\String.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="String\StringBuilder.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="String\StringConversion.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="String\ToString.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="Diagnostic\Console.cpp">
+      <Filter>Diagnostic</Filter>
+    </ClCompile>
+    <ClCompile Include="String\StringUtility.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="Regex\RegexNo.cpp">
+      <Filter>Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="String\CharacterTraits.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Regex\Regex.cpp">
+      <Filter>Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="String\StringRange.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="Containers\BitStream.cpp">
+      <Filter>Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp" />
+    <ClCompile Include="Lexer\Lexer.cpp">
+      <Filter>Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Status.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Functor.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\HalfFloat.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Callback.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="String\Rune.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="$(N3DS_SOURCE)/StandardLibraries/TimeNP1.cpp" />
+    <ClCompile Include="$(N3DS_SOURCE)\StandardLibraries\AtomicNP1.cpp" />
+    <ClCompile Include="Guid.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonStandard.cpp" />
+    <ClCompile Include="Utility\Variant.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Diagnostic\Diagnostic.hpp">
+      <Filter>Diagnostic</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\Algorithm.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\Allocator.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\Array.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\ContainerCommon.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\Hashing.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\HashMap.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\HashSet.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\InList.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\Precompiled.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\SlotMap.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\TypeTraits.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Block.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Graph.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Heap.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Pool.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Stack.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ZeroAllocator.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\EnumDeclaration.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ForEachRange.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Misc.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Standard.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Typedefs.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="StlBinding\Array.hpp">
+      <Filter>StlBinding</Filter>
+    </ClInclude>
+    <ClInclude Include="StlBinding\Associative.hpp">
+      <Filter>StlBinding</Filter>
+    </ClInclude>
+    <ClInclude Include="StlBinding\String.hpp">
+      <Filter>StlBinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\UnsortedMap.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ConditionalRange.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Regex\Regex.hpp">
+      <Filter>Regex</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Atomic.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Memory.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Status.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\ByteBuffer.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="String\FixedString.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="String\String.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="String\StringBuilder.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="String\StringConversion.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="String\ToString.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="Diagnostic\Console.hpp">
+      <Filter>Diagnostic</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\LocalStackAllocator.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\BlockArray.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\CyclicArray.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\OwnedArray.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\UniquePointer.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="String\StringUtility.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="NullPtr.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="String\CharacterTraits.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\BitField.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.hpp" />
+    <ClInclude Include="Utility\BitMath.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\BitTypes.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Log2.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="String\StringRange.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\ArrayMap.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\ArraySet.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\SortedArray.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Guid.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\BitStream.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\IdStore.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\IdSequence.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\UintN.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ItemCache.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="CommonStandard.hpp" />
+    <ClInclude Include="Utility\MaxSizeof.hpp" />
+    <ClInclude Include="VirtualAny.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Lexer\Lexer.hpp">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Functor.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\HashedContainer.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="String\Rune.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\HashedContainer.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="String\Rune.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\HashedContainer.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="String\Rune.hpp">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\OrderedHashMap.hpp">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\HalfFloat.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Functor.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Callback.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\OrderedHashSet.hpp" />
+    <ClInclude Include="Utility\Variant.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ByteEnum.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\NativeType.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.hpp" />
+    <ClInclude Include="Utility\VariantConfig.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="ZeroVisualizers.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Lexer\Lexer.inl">
+      <Filter>Lexer</Filter>
+    </None>
+    <None Include="Utility\Variant.inl">
+      <Filter>Utility</Filter>
+    </None>
+    <None Include="Utility\BasicNativeTypes.inl">
+      <Filter>Utility</Filter>
+    </None>
+    <None Include="Containers\BitStream.inl">
+      <Filter>Containers</Filter>
+    </None>
+  </ItemGroup>
+</Project>

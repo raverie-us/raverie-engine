@@ -1,0 +1,554 @@
+DefinitionSet = 
+{
+	ImageDefinition Cog =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Transform =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Model =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition BoxCollider =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 16 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition SphereCollider =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 16 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition StaticMeshCollider =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 16 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition CylinderCollider =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 16 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Connection =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 16 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition SoundEmitter =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Microphone =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Camera =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Light =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Sprite =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition SpriteSource =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Edit =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition LinearParticleAnimator =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition SphericalParticleEmitter =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+		
+	ImageDefinition SpriteParticleSystem =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition ObjectSystem =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition ParticleWander =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition ParticleTwister =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition ParticleAttractor =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition ParticleCollisionPlane =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+		
+	ImageDefinition HeightMap =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+		
+	ImageDefinition Space =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition RigidBody =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition PhysicsDebug =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition RemoveX =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Plus =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Minus =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition ArrowRight =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition ArrowDown =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition ArrowLeft =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition ArrowUp =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Spin =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 128, 208 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition FolderIcon =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition ItemIcon =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Lock =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Eye =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition Dot =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition LargeDot =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition KeyFrame =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 100, 0 ],
+		float[] Uv1 = [ 9 , 9 ],
+	},
+	
+	ImageDefinition AnimPlay =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 0 ],
+		float[] Uv1 = [ 19 , 19 ],
+	},
+	
+	ImageDefinition AnimPlayLeft =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 20, 0 ],
+		float[] Uv1 = [ 19 , 19 ],
+	},
+	
+	ImageDefinition AnimPause =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 40, 0 ],
+		float[] Uv1 = [ 13 , 16 ],
+	},
+	
+	ImageDefinition AnimPlus =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 60, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition AnimRewindFull =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 60 ],
+		float[] Uv1 = [ 28 , 15 ],
+	},
+	
+	ImageDefinition AnimRewind =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 20, 20 ],
+		float[] Uv1 = [ 20 , 15 ],
+	},
+	
+	ImageDefinition AnimFastForward =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 20 ],
+		float[] Uv1 = [ 20 , 15 ],
+	},
+	
+	ImageDefinition AnimFastForwardFull =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 40 ],
+		float[] Uv1 = [ 28 , 15 ],
+	},
+	
+	ImageDefinition AnimatorSnappingXDisabled =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 40, 40 ],
+		float[] Uv1 = [ 24 , 16 ],
+	},
+	
+	ImageDefinition AnimatorSnappingX =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 40, 60 ],
+		float[] Uv1 = [ 24 , 16 ],
+	},
+	
+    ImageDefinition AnimatorSnappingEnabled =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 40, 60 ],
+		float[] Uv1 = [ 13 , 15 ],
+	},
+	
+	ImageDefinition AnimatorSnappingDisabled =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 40, 40 ],
+		float[] Uv1 = [ 13 , 15 ],
+	},
+    
+	ImageDefinition AnimatorSnappingYDisabled =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 67, 40 ],
+		float[] Uv1 = [ 24 , 16 ],
+	},
+	
+	ImageDefinition AnimatorSnappingY =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 67, 60 ],
+		float[] Uv1 = [ 24 , 16 ],
+	},
+	
+	ImageDefinition AnimatorAutoFocusDisabled =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition AnimatorAutoFocus =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 100 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition OnionSkinningDisabled =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 20, 80 ],
+		float[] Uv1 = [ 18 , 16 ],
+	},
+	
+	ImageDefinition OnionSkinning =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 20, 100 ],
+		float[] Uv1 = [ 18 , 16 ],
+	},
+	
+	ImageDefinition AnimatorAutoKeyDisabled =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 40, 80 ],
+		float[] Uv1 = [ 18 , 9 ],
+	},
+	
+	ImageDefinition AnimatorAutoKey =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 40, 100 ],
+		float[] Uv1 = [ 18 , 9 ],
+	},
+	
+	ImageDefinition AnimatorCreateKeyDisabled =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 60, 80 ],
+		float[] Uv1 = [ 8 , 13 ],
+	},
+	
+	ImageDefinition AnimatorCreateKey =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 60, 100 ],
+		float[] Uv1 = [ 8 , 13 ],
+	},
+	
+	ImageDefinition InvalidObjectTrack =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition InvalidSubTrack =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 18 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition LinearTangents =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 100, 40 ],
+		float[] Uv1 = [ 27 , 16 ],
+	},
+	
+	ImageDefinition SplitTangents =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 100, 60 ],
+		float[] Uv1 = [ 26 , 14 ],
+	},
+	
+	ImageDefinition WeightedTangents =
+	{
+		string Texture = "AnimatorIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 100, 80 ],
+		float[] Uv1 = [ 26 , 16 ],
+	},
+}

@@ -1,0 +1,26 @@
+struct Animal
+{
+  var Variable : Integer = 9;
+  var FooVar : Foo = Foo();
+  constructor()
+  {
+  }
+}
+
+struct Foo
+{
+  constructor()
+  {
+  }
+
+  var BarVar : Bar = Bar();
+}
+
+struct Bar
+{
+  constructor()
+  {
+  }
+
+  var AnimalVar : Animal = Animal();
+}

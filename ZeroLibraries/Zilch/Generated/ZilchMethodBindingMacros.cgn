@@ -1,0 +1,127 @@
+// All the permutations we'd like to evaluate
+permute Intrinsic: int[0,2];
+permute Instance : bool;
+permute Overload : bool;
+permute NamedParameters : bool;
+permute As : bool;
+
+
+handler <? NamedParameters ?>
+{
+  NamedParameters = "NamedParameter";
+  NamedParametersArg = ", NamedParameters";
+  NamedParametersValue = "NamedParameters";
+}
+
+handler <? !NamedParameters ?>
+{
+  NamedParameters = "";
+  NamedParametersArg = "";
+  NamedParametersValue = "Zilch::String()";
+}
+
+handler <? Overload ?>
+{
+  Overload = "Overload";
+  Signature = "ReturnType ($ClassValueOnInstance$*) (__VA_ARGS__)";
+  OverloadParam = ", ReturnType, ...";
+  OverloadArg = ", ReturnType, __VA_ARGS__";
+}
+
+handler <? !Overload ?>
+{
+  Overload = "";
+  Signature = "ZilchTypeOf($MethodPtr$)";
+  OverloadParam = "";
+  OverloadArg = "";
+}
+
+handler <? Instance ?>
+{
+  Kind = "Instance";
+  ShortKind = "";
+  // Special case handling for Instance methods that are Internal (no Class needed)
+  ClassValueOnInstance = "$ClassValue$::";
+}
+
+handler <? !Instance ?>
+{
+  Kind = "Static";
+  ShortKind = "Static";
+  ClassValueOnInstance = "";
+}
+
+handler <? As ?>
+{
+  As = "As";
+  AsNameArg = ", Name";
+  AsNameValue = "Name";
+}
+
+handler <? !As ?>
+{
+  As = "";
+  AsNameArg = "";
+  AsNameValue = "#Method";
+}
+
+handler <? All ?>
+{
+  MethodPtr = "&$ClassValue$::Method";
+}
+
+handler <? Intrinsic == 0 ?>
+{
+  Intrinsic = "Internal";
+  ShortIntrinsic = "";
+  ClassArg = "";
+  ClassValue = "ZilchSelf";
+  OwnerArgs = "";
+  OwnerValues = "builder, type, ";
+}
+
+handler <? Intrinsic == 1 ?>
+{
+  Intrinsic = "External";
+  ShortIntrinsic = "External";
+  ClassArg = "NamespaceAndClass, ";
+  ClassValue = "NamespaceAndClass";
+  OwnerArgs = "";
+  OwnerValues = "builder, type, ";
+}
+
+handler <? Intrinsic == 2 ?>
+{
+  Intrinsic = "Custom";
+  ShortIntrinsic = "Custom";
+  ClassArg = "NamespaceAndClass, ";
+  ClassValue = "NamespaceAndClass";
+  OwnerArgs = "ZilchBuilder, ZilchType, ";
+  OwnerValues = "ZilchBuilder, ZilchType, ";
+}
+
+// If this can be done as shorthand...
+handler <? ((Intrinsic == 0) || Instance) ?>
+{
+  Shorthand = "";
+}
+
+// There is no shorthand.. remove the entire shorthand macro
+handler <? !((Intrinsic == 0) || Instance) ?>
+{
+  "\$Shorthand\$.*\r\n" = "";
+}
+
+handler <? All ?>
+{
+  // Clear empty lines
+  "(\s*\r\n){1,}" = "\r\n";
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+#define ZilchBind$Intrinsic$$Kind$$NamedParameters$Method$Overload$$As$($OwnerArgs$$ClassArg$Method$AsNameArg$$NamedParametersArg$$OverloadParam$) \
+  ZilchBindMethodHelper($OwnerValues$$Kind$, $MethodPtr$, $AsNameValue$, $NamedParametersValue$, $Signature$)
+$Shorthand$#define ZilchBind$ShortIntrinsic$$ShortKind$$NamedParameters$Method$Overload$$As$($OwnerArgs$$ClassArg$Method$AsNameArg$$NamedParametersArg$$OverloadParam$) \
+$Shorthand$  ZilchBind$Intrinsic$$Kind$Method$Overload$$As$($OwnerArgs$$ClassArg$Method$AsNameArg$$NamedParametersArg$$OverloadArg$)

@@ -1,0 +1,19 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+		"581cffd64d449122:Opaque"
+		"580269d9a1d6b870:ShadowCasters"
+	}
+	HeightMapTextureWeights 
+	{
+	}
+	HeightMapAlbedoMap 
+	{
+		var Texture0 = "58269ef7734c0e55:Grey"
+		var Texture1 = "58269ef7734c0e55:Grey"
+		var Texture2 = "58269ef7734c0e55:Grey"
+		var Texture3 = "58269ef7734c0e55:Grey"
+	}
+}

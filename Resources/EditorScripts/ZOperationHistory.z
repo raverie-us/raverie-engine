@@ -1,0 +1,272 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Main operation history script-side manager.
+////////////////////////////////////////////////////////////////////////////////
+class ZOperationHistory : ZilchComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  
+  [Property] var StatusText : CogPath;
+  [Property] var UndoView : CogPath;
+  [Property] var RedoView : CogPath;
+  [Property] var ScrollBar : CogPath;
+  
+  var EntryCount : Integer = 0;
+  
+  var IntendedScrollBarSizeX : Real = 0.0;
+  var CurrentScrollBarSizeX : Real = 0.0;
+  
+  var NextRowColor : Integer = 0;
+  var RowColor : Array[Real4] = new Array[Real4]();
+  
+  var TotalViewLength : Real = 0.0;
+  
+  var OriginalWidgetSpan : Real = 0.0;
+  var MaxFontSize : Integer = 128;
+  var MaxStatusTextSize : Real2 = Real2(300, 35);
+  
+  
+  /******************************************************************************/
+  function Initialize(init : CogInitializer)
+  {
+      // Save original scrollbar-indicator thickness
+    this.IntendedScrollBarSizeX = this.ScrollBar.Cog.UiWidget.Size.X;
+      // Save original window span on the minor axis
+    var windowWidget = this.Owner.Parent.UiWidget;
+    this.OriginalWidgetSpan = Math.Min(windowWidget.Size.X, windowWidget.Size.Y);
+    
+      // Alternating histroy row colors.
+    var color1 = 61.0/255.0;
+    var color2 = 66.0/255.0;
+    
+    this.RowColor.Add(Real4(color1, color1, color1, 1));
+    this.RowColor.Add(Real4(color2, color2, color2, 1));
+    
+    Zero.Connect(this.Owner, Events.HistoryEntryUpdate, this.OnEntryListUpdate);
+    Zero.Connect(this.Owner.Parent, Events.AreaChanged, this.OnWindowResize);
+    
+    this.UpdateStatusText();
+  }
+
+  /******************************************************************************/
+  function GetNextRowColor() : Real4
+  {
+    var color = this.RowColor[this.NextRowColor];
+    this.NextRowColor = (this.NextRowColor + 1) % 2;
+    
+    return color;
+  }
+  
+  /******************************************************************************/
+  // Expects a number from 0 to 1.
+  function SetVerticalScrollPosition(verticalScrollPercentage : Real)
+  {
+    if(verticalScrollPercentage < 0 || verticalScrollPercentage > 1) throw Exception("Expected a value between 0 and 1");
+    
+    var offset = Real2(0, -verticalScrollPercentage * this.GetVerticalScrollDistance());
+    this.UiWidget.LocalTranslation = offset;
+  }
+  
+  /******************************************************************************/
+  function GetVerticalScrollDistance() : Real
+  {
+      // Total distance (on the Y-axis) the scrollbar indicator can travel.
+    return Math.Max(0, this.TotalViewLength - this.UiWidget.ParentWidget.Size.Y);
+  }
+  
+  /******************************************************************************/
+  // Update the history row colors and size the view according to the number of rows.
+  function OnEntryListUpdate(event : ZilchEvent)
+  {
+    this.EntryCount = 0;
+    this.NextRowColor = 0;
+    
+    foreach(var row in this.UndoView.Cog.Children)
+    {
+      ++this.EntryCount;
+      row.ZHistoryEntry.UpdateColor(this.GetNextRowColor());
+    }
+    
+    foreach(var row in this.RedoView.Cog.Children)
+    {
+      ++this.EntryCount;
+      row.ZHistoryEntry.UpdateColor(this.GetNextRowColor());
+    }
+    
+    this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;
+      // maintain room for the scrollbar on the x axis
+    this.UiWidget.Size = Real2(this.UiWidget.ParentWidget.Size.X - this.CurrentScrollBarSizeX, this.TotalViewLength);
+    
+    this.UpdateStatusText();
+  }
+  
+  /******************************************************************************/
+  function OnWindowResize(event : AreaEvent)
+  {
+    this.UpdateStatusText();
+  }
+  
+  /******************************************************************************/
+  // Update the size and position of the status text.
+  function UpdateStatusText()
+  {
+      // A couple of useful handles.
+    var statusCog = this.StatusText.Cog;
+    var statusText = statusCog.SpriteText;
+    
+      // No longer necessary to display the status text.
+    if(this.EntryCount != 0)
+    {
+      statusCog.UiWidget.Active = false;
+      statusCog.SpriteText.Visible = false;
+      return;
+    }
+    
+      // Determine the current window-span on the minor axis
+    var windowWidget = this.Owner.Parent.UiWidget;
+    var minorSpan = Math.Min(windowWidget.Size.X, windowWidget.Size.Y);
+    
+      // Calulate the new font size.
+    var sizeRatio = minorSpan / this.OriginalWidgetSpan;
+    statusText.FontSize = (sizeRatio * this.MaxFontSize) as Integer;
+    
+      // Reset to max allowed status text size.
+    statusCog.Area.Size = this.MaxStatusTextSize;
+    
+      // Size down from the max size to the actual size needed.
+    statusCog.UiWidget.SizeToContents;
+    
+      // Center the text in the window and z-sort it to the front.
+    statusCog.Transform.Translation = Real3(windowWidget.Size.X / 2, -windowWidget.Size.Y / 2, 1);
+  }
+  
+  /******************************************************************************/
+  var ChildCount : Integer
+  {
+    get { return this.EntryCount; }
+  }
+  
+  /******************************************************************************/
+  // Size of the current view vs. the required view size, if all history rows could be displayed.
+  var ScrollRatio : Real
+  {
+    get
+    {
+      if(this.TotalViewLength <= this.UiWidget.ParentWidget.Size.Y)
+      {
+          // scroll bar & well should not be visible
+        this.CurrentScrollBarSizeX = 0.0;
+        return 0.0;
+      }
+      
+      this.CurrentScrollBarSizeX = this.IntendedScrollBarSizeX;
+      return this.UiWidget.ParentWidget.Size.Y / this.TotalViewLength;
+    }
+      
+  }
+  
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Cog children reverse-range and range to array helpers.
+////////////////////////////////////////////////////////////////////////////////
+class ZUtilities
+{
+  [Extension(typeid(Cog))]
+  var ChildrenArray : Array[Cog]
+  {
+    get
+    {
+      var self = this as Cog;
+      
+      return RangeToArrayCog.Convert(self.Children);
+    }
+    
+  }
+  
+  [Extension(typeid(Cog))]
+  var ChildrenReversed : ReverseArrayRange[Array[Cog], Cog]
+  {
+    get
+    {
+      var self = this as Cog;
+      return ReverseArrayRange[Array[Cog], Cog](self.ChildrenArray);
+    }
+    
+  }
+    
+}
+
+class RangeToArrayCog
+{
+  [Static]
+  function Convert(input : HierarchyListRange) : Array[Cog]
+  {
+    var array = Array[Cog]();
+    foreach (var value in input)
+    {
+      array.Add(value);
+    }
+    
+    return array;
+  }
+  
+}
+
+// Temporarily remove. This currently causes a memory leak in zilch.
+//class RangeToArray[RangeType, ElementType]
+//{
+//  [Static]
+//  function Convert(input : RangeType) : Array[ElementType]
+//  {
+//    var array = Array[ElementType]();
+//    foreach (var value in input)
+//    {
+//      array.Add(value);
+//    }
+//    
+//    return array;
+//  }
+//  
+//}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Required implementation methods of a range.
+////////////////////////////////////////////////////////////////////////////////
+class ReverseArrayRange[ArrayType, ElementType]
+{
+  var Array : ArrayType;
+  var Index : Integer;
+  
+  constructor(array : ArrayType)
+  {
+    this.Array = array;
+    this.Index = this.Array.LastIndex;
+  }
+  
+  var All : ReverseArrayRange[ArrayType, ElementType]
+  {
+    get { return this; }
+  }
+  
+  var Current : ElementType
+  {
+    get { return this.Array[this.Index]; }
+  }
+  
+  function MoveNext()
+  {
+    --this.Index;
+  }
+  
+  var IsNotEmpty : Boolean
+  {
+    get { return this.Index >= 0; }
+  }
+  
+  var First : ElementType
+  {
+    get { return this.Array[this.Array.LastIndex]; }
+  }
+  
+}

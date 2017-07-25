@@ -1,0 +1,11 @@
+// IndexerNotComplete
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    b[5;
+  }
+}

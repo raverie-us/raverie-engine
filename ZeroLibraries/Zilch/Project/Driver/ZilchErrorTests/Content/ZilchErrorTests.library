@@ -1,0 +1,7 @@
+ContentLibrary = 
+{
+	string Name = "ZilchErrorTests",
+	uint64 LibraryId = 53d97314cdb4a137,
+	string SourceControlType = "",
+	bool ReadOnly = false,
+},

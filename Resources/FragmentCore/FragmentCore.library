@@ -1,0 +1,8 @@
+[Version:1]
+ContentLibrary 
+{
+	var Name = "FragmentCore"
+	var LibraryId = 0x58f234e77ae358ec
+	var SourceControlType = ""
+	var ReadOnly = true
+}

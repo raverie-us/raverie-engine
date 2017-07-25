@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DefaultSoundTag"
+		var ResourceId = 0x551c2d5a29ce571d
+		var LoaderType = "SoundTag"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Default"
+		var Description = ""
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

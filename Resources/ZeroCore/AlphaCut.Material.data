@@ -1,0 +1,21 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+		"58f4ed78bda39ec5:AlphaCut"
+		"580269d9a1d6b870:ShadowCasters"
+	}
+	AlphaDiscard 
+	{
+		var Texture = "58269ef7734c0e55:Grey"
+		var Threshold = 0.5
+	}
+	FlipBackfaceNormals 
+	{
+	}
+	AlbedoMap 
+	{
+		var AlbedoMap = "58269ef7734c0e55:Grey"
+	}
+}

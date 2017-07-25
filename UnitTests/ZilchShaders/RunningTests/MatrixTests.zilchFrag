@@ -1,0 +1,161 @@
+[Pixel]
+struct Real4x4MemberAccessTest
+{
+    [Output] var Target0 : Real4;
+    [Output] var Target1 : Real4;
+    [Output] var Target2 : Real4;
+    [Output] var Target3 : Real4;
+    
+    var Matrix : Real4x4 = Real4x4( 1,  2,  3,  4,
+                                    5,  6,  7,  8,
+                                    9, 10, 11, 12,
+                                   13, 14, 15, 16);
+
+    [Main]
+    function Main()
+    {
+        this.Target0 = Real4(this.Matrix.M00, this.Matrix.M01, this.Matrix.M02, this.Matrix.M03);
+        this.Target1 = Real4(this.Matrix.M10, this.Matrix.M11, this.Matrix.M12, this.Matrix.M13);
+        this.Target2 = Real4(this.Matrix.M20, this.Matrix.M21, this.Matrix.M22, this.Matrix.M23);
+        this.Target3 = Real4(this.Matrix.M30, this.Matrix.M31, this.Matrix.M32, this.Matrix.M33);
+    }
+}
+
+[Pixel]
+struct Real4x4RowAccessTest
+{
+    [Output] var Target0 : Real4;
+    [Output] var Target1 : Real4;
+    [Output] var Target2 : Real4;
+    [Output] var Target3 : Real4;
+    
+    var Matrix : Real4x4 = Real4x4( 1,  2,  3,  4,
+                                    5,  6,  7,  8,
+                                    9, 10, 11, 12,
+                                   13, 14, 15, 16);
+
+    [Main]
+    function Main()
+    {
+        this.Target0 = this.Matrix[0];
+        this.Target1 = this.Matrix[1];
+        this.Target2 = this.Matrix[2];
+        this.Target3 = this.Matrix[3];
+    }
+}
+
+[Pixel]
+struct Real4x4DoubleBracketAcessTest
+{
+    [Output] var Target0 : Real4;
+    [Output] var Target1 : Real4;
+    [Output] var Target2 : Real4;
+    [Output] var Target3 : Real4;
+    
+    var Matrix : Real4x4 = Real4x4( 1,  2,  3,  4,
+                                    5,  6,  7,  8,
+                                    9, 10, 11, 12,
+                                   13, 14, 15, 16);
+
+    [Main]
+    function Main()
+    {
+        this.Target0 = Real4(this.Matrix[0][0], this.Matrix[0][1], this.Matrix[0][2], this.Matrix[0][3]);
+        this.Target1 = Real4(this.Matrix[1][0], this.Matrix[1][1], this.Matrix[1][2], this.Matrix[1][3]);
+        this.Target2 = Real4(this.Matrix[2][0], this.Matrix[2][1], this.Matrix[2][2], this.Matrix[2][3]);
+        this.Target3 = Real4(this.Matrix[3][0], this.Matrix[3][1], this.Matrix[3][2], this.Matrix[3][3]);
+    }
+}
+
+[Pixel]
+struct Real4x4MultiplyTests
+{
+    [Output] var Target0 : Real4;
+    [Output] var Target1 : Real4;
+    [Output] var Target2 : Real4;
+    [Output] var Target3 : Real4;
+    
+    var Matrix : Real4x4 = Real4x4( 1,  2,  3,  4,
+                                    5,  6,  7,  8,
+                                    9, 10, 11, 12,
+                                   13, 14, 15, 16);
+
+    [Main]
+    function Main()
+    {
+        this.Target0 = Math.Multiply(this.Matrix, Real4(1, 1, 1, 1));
+        this.Target1 = Math.Multiply(this.Matrix, Real4(1, 2, 3, 4));
+        this.Target2 = Math.Multiply(this.Matrix, Real4(-0.5, 1.7, -1.1, 0.1));
+        this.Target3 = Math.Multiply(this.Matrix, Real4(0));
+    }
+}
+
+[Pixel]
+struct Real4x4MultiplyPointTests
+{
+    [Output] var Target0 : Real4;
+    [Output] var Target1 : Real4;
+    [Output] var Target2 : Real4;
+    [Output] var Target3 : Real4;
+    
+    var Matrix : Real4x4 = Real4x4( 1,  2,  3,  4,
+                                    5,  6,  7,  8,
+                                    9, 10, 11, 12,
+                                   13, 14, 15, 16);
+
+    [Main]
+    function Main()
+    {
+        this.Target0 = Real4(Math.MultiplyPoint(this.Matrix, Real3(1, 1, 1)), 1);
+        this.Target1 = Real4(Math.MultiplyPoint(this.Matrix, Real3(1, 2, 3)), 1);
+        this.Target2 = Real4(Math.MultiplyPoint(this.Matrix, Real3(-0.5, 1.7, -1.1)), 1);
+        this.Target3 = Real4(Math.MultiplyPoint(this.Matrix, Real3(0)), 1);
+    }
+}
+
+[Pixel]
+struct Real4x4MultiplyNormalTests
+{
+    [Output] var Target0 : Real4;
+    [Output] var Target1 : Real4;
+    [Output] var Target2 : Real4;
+    [Output] var Target3 : Real4;
+    
+    var Matrix : Real4x4 = Real4x4( 1,  2,  3,  4,
+                                    5,  6,  7,  8,
+                                    9, 10, 11, 12,
+                                   13, 14, 15, 16);
+
+    [Main]
+    function Main()
+    {
+        this.Target0 = Real4(Math.MultiplyNormal(this.Matrix, Real3(1, 1, 1)), 1);
+        this.Target1 = Real4(Math.MultiplyNormal(this.Matrix, Real3(1, 2, 3)), 1);
+        this.Target2 = Real4(Math.MultiplyNormal(this.Matrix, Real3(-0.5, 1.7, -1.1)), 1);
+        this.Target3 = Real4(Math.MultiplyNormal(this.Matrix, Real3(0)), 1);
+    }
+}
+
+[Pixel]
+struct Real4x4TransposeTests
+{
+    [Output] var Target0 : Real4;
+    [Output] var Target1 : Real4;
+    [Output] var Target2 : Real4;
+    [Output] var Target3 : Real4;
+    
+    var Matrix : Real4x4 = Real4x4( 1,  2,  3,  4,
+                                    5,  6,  7,  8,
+                                    9, 10, 11, 12,
+                                   13, 14, 15, 16);
+
+    [Main]
+    function Main()
+    {
+        var transpose = Math.Transpose(this.Matrix);
+        this.Target0 = transpose[0];
+        this.Target1 = transpose[1];
+        this.Target2 = transpose[2];
+        this.Target3 = transpose[3];
+    }
+}

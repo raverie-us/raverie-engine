@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "GeometryPass"
+		var ResourceId = 0x581d8fde71463e53
+	}
+}

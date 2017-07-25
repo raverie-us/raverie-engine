@@ -1,0 +1,28 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+		"581a791e8fa9287a:Lights"
+	}
+	FullscreenTriangle 
+	{
+	}
+	GeometryInput 
+	{
+		var GeometryBuffer0 = "null"
+		var GeometryBuffer1 = "null"
+	}
+	ShadowMapping 
+	{
+		var LightTransform = Real4x4{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+		var ShadowBuffer = "58269ef7734c0e55:Grey"
+		var NormalOffsetBias = 0.100000001
+	}
+	DirectionalLightFragment 
+	{
+		var ShadowFactor = 1
+		var LightIntensity = 1
+		var LightDirection = Real3{0, -1, 0}
+	}
+}

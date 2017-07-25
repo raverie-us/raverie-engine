@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "ColorMap"
+		var ResourceId = 0x563452c7a0b54d6f
+	}
+}

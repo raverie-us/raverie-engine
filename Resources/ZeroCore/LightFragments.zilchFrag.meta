@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "LightFragments"
+		var ResourceId = 0x580645f9a739cfa0
+	}
+}

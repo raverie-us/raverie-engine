@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "AlbedoMap"
+		var ResourceId = 0x583a9eb5653006a0
+	}
+}

@@ -1,0 +1,11 @@
+GameSession =
+{
+	DefaultGameSetup =
+	{
+		string StartingSpaceName = "Space",
+		string StartingLevelName = "Level",
+	},
+  NetPeer =
+  {
+  },
+},

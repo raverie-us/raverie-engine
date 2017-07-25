@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Included">
+      <UniqueIdentifier>{d5c5aa2c-2d49-4f7d-b24c-b86f7e8c9126}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsSpace.cpp" />
+    <ClCompile Include="Font.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="Definition.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsEngine.cpp" />
+    <ClCompile Include="Graphical.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="RenderQueues.cpp" />
+    <ClCompile Include="RenderTasks.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="FontPattern.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="DebugGraphical.cpp" />
+    <ClCompile Include="GraphicsRaycastProvider.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialFactory.cpp" />
+    <ClCompile Include="ZilchFragment.cpp" />
+    <ClCompile Include="MaterialBlock.cpp" />
+    <ClCompile Include="ZilchShaderGenerator.cpp" />
+    <ClCompile Include="RenderGroup.cpp" />
+    <ClCompile Include="PixelBuffer.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedModel.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="PerspectiveTransforms.cpp" />
+    <ClCompile Include="SpriteSource.cpp" />
+    <ClCompile Include="Atlas.cpp">
+      <Filter>Included</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="GraphicalEntry.cpp" />
+    <ClCompile Include="RendererThread.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleAnimator.cpp" />
+    <ClCompile Include="ParticleAnimators.cpp" />
+    <ClCompile Include="ParticleEmitter.cpp" />
+    <ClCompile Include="ParticleEmitters.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="SpriteSystem.cpp" />
+    <ClCompile Include="UtilityStructures.cpp" />
+    <ClCompile Include="TextureData.cpp" />
+    <ClCompile Include="TextureUtilities.cpp" />
+    <ClCompile Include="HeightMapModel.cpp" />
+    <ClCompile Include="SelectionIcon.cpp" />
+    <ClCompile Include="ResourceLists.cpp" />
+    <ClCompile Include="GraphicsStandard.cpp" />
+    <ClCompile Include="RenderSettings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsSpace.hpp" />
+    <ClInclude Include="Font.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="FontPattern.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="Definition.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.hpp" />
+    <ClInclude Include="Graphical.hpp" />
+    <ClInclude Include="Renderer.hpp" />
+    <ClInclude Include="RenderQueues.hpp" />
+    <ClInclude Include="RenderTasks.hpp" />
+    <ClInclude Include="Model.hpp" />
+    <ClInclude Include="Mesh.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Material.hpp" />
+    <ClInclude Include="Texture.hpp" />
+    <ClInclude Include="TextureLoader.hpp" />
+    <ClInclude Include="ForwardDeclarations.hpp" />
+    <ClInclude Include="RenderTarget.hpp" />
+    <ClInclude Include="ViewportInterface.hpp" />
+    <ClInclude Include="DebugGraphical.hpp" />
+    <ClInclude Include="GraphicsRaycastProvider.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialFactory.hpp" />
+    <ClInclude Include="ZilchFragment.hpp" />
+    <ClInclude Include="MaterialBlock.hpp" />
+    <ClInclude Include="ZilchShaderGenerator.hpp" />
+    <ClInclude Include="RenderGroup.hpp" />
+    <ClInclude Include="PixelBuffer.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedModel.hpp" />
+    <ClInclude Include="Skeleton.hpp" />
+    <ClInclude Include="PerspectiveTransforms.hpp" />
+    <ClInclude Include="SpriteSource.hpp" />
+    <ClInclude Include="Atlas.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="FileElements.hpp">
+      <Filter>Included</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.hpp" />
+    <ClInclude Include="GraphicalEntry.hpp" />
+    <ClInclude Include="RendererThread.hpp" />
+    <ClInclude Include="Enumerations.hpp" />
+    <ClInclude Include="UtilityStructures.hpp" />
+    <ClInclude Include="GraphicsStandard.hpp" />
+    <ClInclude Include="ParticleSystem.hpp" />
+    <ClInclude Include="Particle.hpp" />
+    <ClInclude Include="ParticleAnimator.hpp" />
+    <ClInclude Include="ParticleAnimators.hpp" />
+    <ClInclude Include="ParticleEmitter.hpp" />
+    <ClInclude Include="ParticleEmitters.hpp" />
+    <ClInclude Include="SpriteSystem.hpp" />
+    <ClInclude Include="VisibilityFlag.hpp" />
+    <ClInclude Include="TextureData.hpp" />
+    <ClInclude Include="TextureUtilities.hpp" />
+    <ClInclude Include="HeightMapModel.hpp" />
+    <ClInclude Include="SelectionIcon.hpp" />
+    <ClInclude Include="ResourceLists.hpp" />
+    <ClInclude Include="RenderSettings.hpp" />
+  </ItemGroup>
+</Project>

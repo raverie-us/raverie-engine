@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DefaultCollisionTable"
+		var ResourceId = 0x4e66a5c0b9dc59b9
+		var LoaderType = "CollisionTable"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Default"
+		var Description = ""
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

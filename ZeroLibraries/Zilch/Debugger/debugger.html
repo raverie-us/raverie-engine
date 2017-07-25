@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="dockspawn/dock-manager.css">
+    <link rel="stylesheet" href="dockspawn/debugger.css">
+    <script src="dockspawn/dockspawn.js" type="text/javascript"></script>
+    
+    <link rel="stylesheet" href="codemirror/codemirror.css">
+    <link rel="stylesheet" href="codemirror/themes/3024-day.css">
+    <link rel="stylesheet" href="codemirror/themes/3024-night.css">
+    <link rel="stylesheet" href="codemirror/themes/ambiance.css">
+    <link rel="stylesheet" href="codemirror/themes/base16-dark.css">
+    <link rel="stylesheet" href="codemirror/themes/base16-light.css">
+    <link rel="stylesheet" href="codemirror/themes/blackboard.css">
+    <link rel="stylesheet" href="codemirror/themes/cobalt.css">
+    <link rel="stylesheet" href="codemirror/themes/dark-zero.css">
+    <link rel="stylesheet" href="codemirror/themes/eclipse.css">
+    <link rel="stylesheet" href="codemirror/themes/elegant.css">
+    <link rel="stylesheet" href="codemirror/themes/erlang-dark.css">
+    <link rel="stylesheet" href="codemirror/themes/lesser-dark.css">
+    <link rel="stylesheet" href="codemirror/themes/mbo.css">
+    <link rel="stylesheet" href="codemirror/themes/mdn-like.css">
+    <link rel="stylesheet" href="codemirror/themes/midnight.css">
+    <link rel="stylesheet" href="codemirror/themes/monokai.css">
+    <link rel="stylesheet" href="codemirror/themes/neat.css">
+    <link rel="stylesheet" href="codemirror/themes/night.css">
+    <link rel="stylesheet" href="codemirror/themes/paraiso-dark.css">
+    <link rel="stylesheet" href="codemirror/themes/paraiso-light.css">
+    <link rel="stylesheet" href="codemirror/themes/pastel-on-dark.css">
+    <link rel="stylesheet" href="codemirror/themes/rubyblue.css">
+    <link rel="stylesheet" href="codemirror/themes/solarized.css">
+    <link rel="stylesheet" href="codemirror/themes/the-matrix.css">
+    <link rel="stylesheet" href="codemirror/themes/tomorrow-night-eighties.css">
+    <link rel="stylesheet" href="codemirror/themes/twilight.css">
+    <link rel="stylesheet" href="codemirror/themes/vibrant-ink.css">
+    <link rel="stylesheet" href="codemirror/themes/xq-dark.css">
+    <link rel="stylesheet" href="codemirror/themes/xq-light.css">
+    <script src="codemirror/codemirror.js"></script>
+    <script src="codemirror/modes/zilch.js"></script>
+    <script src="codemirror/addons/selection/active-line.js"></script>
+    <script src="codemirror/addons/edit/matchbrackets.js"></script>
+    
+    <link rel="stylesheet" href="hovertree/hovertree.css" type="text/css"/>
+    <script src="hovertree/hovertree.js"></script>
+    
+    <link rel="stylesheet" href="jquery/zero/jquery-ui-1.10.4.custom.css" type="text/css"/>
+    <script src="jquery/jquery-1.10.2.js"></script>
+    <script src="jquery/jquery-ui-1.10.4.custom.js"></script>
+    <script src="jquery/jquery.event.drag-2.2.js"></script>
+    
+    <link rel="stylesheet" href="slickgrid/slick.grid.css" type="text/css"/>
+    <link rel="stylesheet" href="slickgrid/slick.tree.css" type="text/css"/>
+    <link rel="stylesheet" href="slickgrid/debugger.css" type="text/css"/>
+    <script src="slickgrid/slick.core.js"></script>
+    <script src="slickgrid/slick.grid.js"></script>
+    <script src="slickgrid/slick.editors.js"></script>
+    <script src="slickgrid/slick.dataview.js"></script>
+    <script src="slickgrid/slick.tree.js"></script>
+
+    <style>
+    @font-face
+    {
+      font-family: "Inconsolata";
+      font-style: normal;
+      font-weight: normal;
+      src: local("Inconsolata"), url("http://themes.googleusercontent.com/static/fonts/inconsolata/v3/BjAYBlHtW3CJxDcjzrnZCIbN6UDyHWBl620a-IRfuBk.woff") format("woff");
+    }
+    
+    .CodeMirror
+    {
+      width: 100%;
+      height: 100%;
+      font-family: Inconsolata;
+      font-size: 15px;
+    }
+    
+    .local-variable-hover
+    {
+      cursor: hand;
+      cursor: pointer;
+      border-style: solid;
+      border-width: 1px;
+      border-color: #FFF;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+    }
+    
+    .breakpoints
+    {
+      width: .8em;
+    }
+    
+    input
+    {
+      background-color: #646464;
+      color: #FFFFFF;
+      font-family: 'Verdana', sans-serif;
+      font-size: 11px;
+      font-weight: normal;
+      line-height: 1.2em;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #2E2E2E;
+      height: 15px;
+    }
+    
+    input:hover
+    {
+      border-color: #3E3E3E;
+    }
+    
+    input:focus
+    {
+      border-color: #3287EA;
+    }
+    
+    /*
+    input::-moz-selection
+    {
+        background:rgba(255, 255, 125, 0.99);
+        color:#032764;
+    }
+    input::-webkit-selection
+    {
+        background:rgba(255, 255, 125, 0.99);
+        color:#032764;
+    }
+    input::selection
+    {
+        background:rgba(255, 255, 125, 0.99);
+        color:#032764;
+    }
+    
+    ::selection
+    {
+      background: #FF8C00;
+    }
+    
+    ::-moz-selection
+    {
+      background: #FF8C00;
+    }
+    */
+    
+    </style>
+  </head>
+
+  <body>
+    <div class="header" id="connect-header">
+      <div class="header-align header-title">Zilch Debugger</div>
+      <div class="header-align header-description">Yup, it's a debugger.</div>
+      <input class="header-align" type="text" id="remote-host" value="localhost" />
+      <input class="header-align" type="text" id="remote-port" value="8000"/>
+      <button class="header-align" id="connect" autocomplete="off">Connect</button>
+    </div>
+    <div class="header" id="debugger-header">
+      <button class="header-align" id="resume" autocomplete="off">Resume</button>
+      <button class="header-align" id="pause" autocomplete="off">Pause</button>
+      <button class="header-align" id="step-in" autocomplete="off">Step In</button>
+      <button class="header-align" id="step-over" autocomplete="off">Step Over</button>
+      <button class="header-align" id="step-out" autocomplete="off">Step Out</button>
+    </div>
+    
+    <div id="content-host">
+      
+    </div>
+    <script>
+      $(function()
+      {
+        var isTabActive = true;
+        var autoOpened = getParameterByName("auto", true);
+        var connectedOnce = false;
+        
+        var pageHiddenName = "hidden";
+        
+        function onTabActivityChanged(evt)
+        {
+          var evtMap =
+          {
+            focus:    true,
+            focusin:  true,
+            pageshow: true,
+            blur:     false,
+            focusout: false,
+            pagehide: false
+          };
+          
+          evt = evt || window.event;
+          if (evt.type in evtMap)
+            isTabActive = evtMap[evt.type];
+          else
+            isTabActive = this[pageHiddenName] ? false : true;
+        }
+        
+        // Standards:
+        if (pageHiddenName in document)
+          document.addEventListener("visibilitychange", onTabActivityChanged);
+        else if ((pageHiddenName = "mozHidden") in document)
+          document.addEventListener("mozvisibilitychange", onTabActivityChanged);
+        else if ((pageHiddenName = "webkitHidden") in document)
+          document.addEventListener("webkitvisibilitychange", onTabActivityChanged);
+        else if ((pageHiddenName = "msHidden") in document)
+          document.addEventListener("msvisibilitychange", onTabActivityChanged);
+        // IE 9 and lower:
+        else if ('onfocusin' in document)
+          document.onfocusin = document.onfocusout = onTabActivityChanged;
+        // All others:
+        else
+          window.onpageshow = window.onpagehide = window.onfocus = window.onblur = onTabActivityChanged;
+        
+        // Run first time visibility checks
+        if (document[pageHiddenName] !== undefined )
+          onTabActivityChanged({type: document[pageHiddenName] ? "blur" : "focus"});
+        
+        var keys =
+        {
+          CANCEL: 3,
+          HELP: 6,
+          BACK_SPACE: 8,
+          TAB: 9,
+          CLEAR: 12,
+          RETURN: 13,
+          ENTER: 14,
+          SHIFT: 16,
+          CONTROL: 17,
+          ALT: 18,
+          PAUSE: 19,
+          CAPS_LOCK: 20,
+          ESCAPE: 27,
+          SPACE: 32,
+          PAGE_UP: 33,
+          PAGE_DOWN: 34,
+          END: 35,
+          HOME: 36,
+          LEFT: 37,
+          UP: 38,
+          RIGHT: 39,
+          DOWN: 40,
+          PRINTSCREEN: 44,
+          INSERT: 45,
+          DELETE: 46,
+          0: 48,
+          1: 49,
+          2: 50,
+          3: 51,
+          4: 52,
+          5: 53,
+          6: 54,
+          7: 55,
+          8: 56,
+          9: 57,
+          SEMICOLON: 59,
+          EQUALS: 61,
+          A: 65,
+          B: 66,
+          C: 67,
+          D: 68,
+          E: 69,
+          F: 70,
+          G: 71,
+          H: 72,
+          I: 73,
+          J: 74,
+          K: 75,
+          L: 76,
+          M: 77,
+          N: 78,
+          O: 79,
+          P: 80,
+          Q: 81,
+          R: 82,
+          S: 83,
+          T: 84,
+          U: 85,
+          V: 86,
+          W: 87,
+          X: 88,
+          Y: 89,
+          Z: 90,
+          CONTEXT_MENU: 93,
+          NUMPAD0: 96,
+          NUMPAD1: 97,
+          NUMPAD2: 98,
+          NUMPAD3: 99,
+          NUMPAD4: 100,
+          NUMPAD5: 101,
+          NUMPAD6: 102,
+          NUMPAD7: 103,
+          NUMPAD8: 104,
+          NUMPAD9: 105,
+          MULTIPLY: 106,
+          ADD: 107,
+          SEPARATOR: 108,
+          SUBTRACT: 109,
+          DECIMAL: 110,
+          DIVIDE: 111,
+          F1: 112,
+          F2: 113,
+          F3: 114,
+          F4: 115,
+          F5: 116,
+          F6: 117,
+          F7: 118,
+          F8: 119,
+          F9: 120,
+          F10: 121,
+          F11: 122,
+          F12: 123,
+          F13: 124,
+          F14: 125,
+          F15: 126,
+          F16: 127,
+          F17: 128,
+          F18: 129,
+          F19: 130,
+          F20: 131,
+          F21: 132,
+          F22: 133,
+          F23: 134,
+          F24: 135,
+          NUM_LOCK: 144,
+          SCROLL_LOCK: 145,
+          COMMA: 188,
+          PERIOD: 190,
+          SLASH: 191,
+          BACK_QUOTE: 192,
+          OPEN_BRACKET: 219,
+          BACK_SLASH: 220,
+          CLOSE_BRACKET: 221,
+          QUOTE: 222,
+          META: 224
+        };
+      
+        function getParameterByName(name, defaultValue)
+        {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? defaultValue : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        
+        var messageHandlers = {};
+        var dockManager = null;
+        var explorerSlickGrid = null;
+        var outputSlickGrid = null;
+        var outputMaxItems = 50;
+        var outputUpdateInterval = -1;
+        var outputText = '';
+        var outputNewItems = [];
+        var outputIdCounter = outputMaxItems;
+        var callsSlickGrid = null;
+        var callsRows = [];
+        
+        var explorer = null;
+        var output = null;
+        var calls = null;
+        var autos = null;
+        var breakpoints = null;
+        
+        // Map the code data (stringified) to the code mirror object
+        var codeMirrorObjectsByCodeData = {};
+        
+        // Map the code data (stringified) to the functions to execute when a code mirror object is created
+        // Examples include SetExecutionPoint (if the file wasn't open on our end, we need to request it)
+        var delayedCodeMirrorFunctionsToExecute = {};
+        
+        var queryId = 0;
+        var hoverGridsByQueryId = {};
+        
+        function updateOutput()
+        {
+          var dataView = outputSlickGrid.getData();
+          dataView.beginUpdate();
+          dataView.setItems(outputNewItems.slice(0));
+          dataView.endUpdate();
+          outputUpdateInterval = -1;
+        }
+        
+        function showCodeMirrorLocation(codeMirror, rowLine)
+        {
+          var actualLine = rowLine - 1;
+          codeMirror.scrollIntoView(actualLine, 40);
+          codeMirror.setCursor(actualLine);
+        }
+        
+        function getDockNodeForContainer(container)
+        {
+          var rootDockNode = dockManager.context.model.rootNode;
+          
+          var dockNodeStack = [rootDockNode];
+          while (dockNodeStack.length != 0)
+          {
+            var dockNode = dockNodeStack.pop();
+            
+            if (dockNode.container == container)
+              return dockNode;
+            
+            dockNodeStack = dockNodeStack.concat(dockNode.children);
+          }
+          
+          return null;
+        }
+        
+        function gutterClickBreakpoint(codeMirror, lineNumber)
+        {
+          var action = null;
+          var info = codeMirror.lineInfo(lineNumber);
+          if (info && info.gutterMarkers && info.gutterMarkers["breakpoints"])
+          {
+            // Clear the gutter marker
+            codeMirror.setGutterMarker(lineNumber, "breakpoints", null);
+            action = "Remove";
+          }
+          else
+          {
+            var marker = $('<div style="color:#822;font-size:150%;position:absolute;top:-5px">&#x25CF;</div>').get(0);
+            codeMirror.setGutterMarker(lineNumber, "breakpoints", marker);
+            action = "Add";
+          }
+          
+          var message =
+          {
+            MessageType: "ChangeBreakpoint",
+            CodeData: codeMirror.codeData,
+            Line: lineNumber + 1,
+            Action: action
+          };
+          
+          window.socket.sendJson(message);
+        };
+
+        function createWindow(documentNode, dockMode, size, id, caption)
+        {
+          var windowDiv = $('<div id="' + id + '" caption="' + caption + '" class="general-window"></div>').appendTo('#content-host');
+          var element = windowDiv[0];
+          
+          var container = new dockspawn.PanelContainer(element, dockManager);
+          var node = dockManager["dock" + dockMode](documentNode, container, size);
+          
+          container.resizeOriginal = container.resize;
+          
+          container.resize = function(width, height)
+          {
+            container.resizeOriginal(width, height);
+            if (container.onResize)
+              container.onResize(width, height);
+          };
+          
+          var result = 
+          {
+            query: windowDiv,
+            element: element,
+            container: container,
+            node: node
+          };
+          
+          return result;
+        };
+        
+        function sendExpressionQuery(codeData, expression)
+        {
+          var ourQueryId = queryId;
+          ++queryId;
+          var message =
+          {
+            MessageType: "QueryExpression",
+            CodeData: codeData,
+            QueryId: ourQueryId,
+            Expression: expression
+          };
+          
+          window.socket.sendJson(message);
+          return ourQueryId;
+        };
+        
+        function createCodePanel(id, caption, code, codeData)
+        {
+          var documentNode = dockManager.context.model.documentManagerNode;
+          
+          var result = createWindow(documentNode, "Fill", 1.0, id, caption);
+          result.query.addClass("editor-host");
+          
+          var codeMirror = CodeMirror(result.element,
+          {
+            lineNumbers: true,
+            styleActiveLine: true,
+            matchBrackets: true,
+            theme: "dark-zero",
+            value: code,
+            tabSize: 4,
+            indentUnit: 4,
+            readOnly: true,
+            gutters: ["CodeMirror-linenumbers", "breakpoints", "execution"]
+          });
+          
+          codeMirror.panelContainer = result.container;
+          
+          var codeDataStr = JSON.stringify(codeData);
+          
+          codeMirror.codeData = codeData;
+          codeMirrorObjectsByCodeData[codeDataStr] = codeMirror;
+          
+          codeMirror.on("gutterClick", gutterClickBreakpoint);
+          
+          // mouseover does not go through the typical 'on' channels
+          //CodeMirror.on(codeMirror.getWrapperElement(), 'mouseover', function(e)
+          //{
+          //  var pos = codeMirror.coordsChar({ left: e.clientX, top: e.clientY });
+          //  var index = codeMirror.indexFromPos(pos);
+          //  var text = codeMirror.getValue();
+          //  
+          //  console.log(text[index]);
+          //});
+          
+          var keywords =
+          {
+            "any" : true,
+            "and" : true,
+            "as" : true,
+            "base" : true,
+            "break" : true,
+            "class" : true,
+            "constructor" : true,
+            "continue" : true,
+            "debug" : true,
+            "delegate" : true,
+            "delete" : true,
+            "destructor" : true,
+            "do" : true,
+            "else" : true,
+            "enum" : true,
+            "false" : true,
+            "flags" : true,
+            "for" : true,
+            "foreach" : true,
+            "function" : true,
+            "get" : true,
+            "if" : true,
+            "loop" : true,
+            "new" : true,
+            "not" : true,
+            "null" : true,
+            "or" : true,
+            "ref" : true,
+            "return" : true,
+            "sends" : true,
+            "set" : true,
+            "struct" : true,
+            "throw" : true,
+            "true" : true,
+            "typeid" : true,
+            "typeof" : true,
+            "var" : true,
+            "while" : true,
+            "abstract" : true,
+            "alias" : true,
+            "alignof" : true,
+            "assert" : true,
+            "auto" : true,
+            "case" : true,
+            "catch" : true,
+            "checked" : true,
+            "const" : true,
+            "default" : true,
+            "dynamic" : true,
+            "explicit" : true,
+            "export" : true,
+            "extern" : true,
+            "finally" : true,
+            "fixed" : true,
+            "friend" : true,
+            "global" : true,
+            "goto" : true,
+            "immutable" : true,
+            "implicit" : true,
+            "import" : true,
+            "in" : true,
+            "include" : true,
+            "inline" : true,
+            "interface" : true,
+            "internal" : true,
+            "is" : true,
+            "local" : true,
+            "lock" : true,
+            "module" : true,
+            "mutable" : true,
+            "namespace" : true,
+            "operator" : true,
+            "out" : true,
+            "override" : true,
+            "package" : true,
+            "params" : true,
+            "partial" : true,
+            "positional" : true,
+            "private" : true,
+            "protected" : true,
+            "public" : true,
+            "readonly" : true,
+            "register" : true,
+            "require" : true,
+            "scope" : true,
+            "sealed" : true,
+            "signed" : true,
+            "sizeof" : true,
+            "stackalloc" : true,
+            "static" : true,
+            "switch" : true,
+            "timeout" : true,
+            "try" : true,
+            "typedef" : true,
+            "typename" : true,
+            "unchecked" : true,
+            "unsafe" : true,
+            "unsigned" : true,
+            "using" : true,
+            "virtual" : true,
+            "volatile" : true,
+            "where" : true,
+            "yield" : true
+          };
+          
+          function getLocalVariableStringOrNull(e)
+          {
+            var node = e.target || e.srcElement;
+            
+            var text = $(node).text();
+            
+            // If this is a keyword, then it can't be a local variable!
+            if (keywords[text])
+              return null;
+            
+            var localVariable = /^[a-z][a-zA-Z0-9_]*$/;
+            if (localVariable.test(text) == false)
+              return null;
+            
+            return text;
+          }
+          
+          CodeMirror.on(codeMirror.getWrapperElement(), "mouseover", function(e)
+          {
+            var node = e.target || e.srcElement;
+            
+            if (getLocalVariableStringOrNull(e) != null)
+            {
+              $(node).addClass('local-variable-hover');
+              
+              $(node).one('mouseleave', function(e)
+              {
+                $(this).removeClass('local-variable-hover');
+              });
+            }
+          });
+          
+          codeMirror.on('mousedown', function(cm, e)
+          {
+            if (event.which != 1)
+              return;
+             
+            var localVariable = getLocalVariableStringOrNull(e);
+            if (localVariable == null)
+              return;
+            
+            // We stopped propegation, but simulate clicking on the document (closes hover grids)
+            var mouseDownEvent = document.createEvent("MouseEvents");
+            mouseDownEvent.initMouseEvent("mousedown", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+            document.dispatchEvent(mouseDownEvent);
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Prevent scroll wheel scrolling. The user can still scroll using the
+            // scrollbar, but that will incur a click and auto close the hover tree
+            $('.CodeMirror-scroll').css('overflow', 'hidden');
+            
+            var expression = localVariable;
+            
+            var ourQueryId = sendExpressionQuery(codeMirror.codeData, expression);
+            
+            function onExpand(parentGridDom, gridDom, rowIndex, row, expandedRowIndices, expandedRows)
+            {
+              var path = expression;
+              for (var i = 0; i < expandedRows.length; ++i)
+              {
+                var row = expandedRows[i];
+                path += '.' + row.property;
+              }
+              
+              var ourQueryId = sendExpressionQuery(codeMirror.codeData, path);
+              hoverGridsByQueryId[ourQueryId] = gridDom;
+              
+              (function(ourQueryId)
+              {
+                gridDom.on("remove", function ()
+                {
+                  delete hoverGridsByQueryId[ourQueryId];
+                });
+              })(ourQueryId);
+            }
+            
+            // Get the cursor coordinates relative to the page
+            var gridDom = createHoverGrid(
+            {
+              left: e.pageX,
+              top: e.pageY,
+              expanderCallback: onExpand,
+              cellModifiedCallback: null
+            });
+            
+            hoverGridsByQueryId[ourQueryId] = gridDom;
+            
+            // When the element is removed, we want to unlock scrolling
+            (function(ourQueryId)
+            {
+              gridDom.on("remove", function ()
+              {
+                delete hoverGridsByQueryId[ourQueryId];
+                $('.CodeMirror-scroll').css('overflow', 'auto');
+              });
+            })(ourQueryId);
+          });
+          
+          var container = result.container;
+          container.resizeHeat = 0;
+          container.onResize = function(width, height)
+          {
+            container.resizeHeat = 3;
+          };
+          
+          var onTimerTick = function()
+          {
+            if (container.resizeHeat > 0)
+            {
+              --container.resizeHeat;
+              if (container.resizeHeat == 0)
+              {
+                codeMirror.refresh();
+              }
+            }
+          };
+          
+          var interval = setInterval(onTimerTick, 16);
+          
+          result.codeMirror = codeMirror;
+          
+          var requestUndockOriginal = dockManager.requestUndock;
+          dockManager.requestUndock = function(container)
+          {
+            requestUndockOriginal.call(this, container);
+            if (container == result.container)
+            {
+              delete codeMirrorObjectsByCodeData[codeDataStr];
+              clearInterval(interval);
+            }
+          };
+          
+          var requestRemoveOriginal = dockManager.requestRemove;
+          dockManager.requestRemove = function(container)
+          {
+            requestRemoveOriginal.call(this, container);
+            if (container == result.container)
+            {
+              delete codeMirrorObjectsByCodeData[codeDataStr];
+              clearInterval(interval);
+            }
+          };
+          
+          var delayedFunctions = delayedCodeMirrorFunctionsToExecute[codeDataStr];
+          if (delayedFunctions)
+          {
+            for (var i = 0; i < delayedFunctions.length; ++i)
+            {
+              var delayedFunctionObject = delayedFunctions[i];
+              delayedFunctionObject.func(codeMirror, delayedFunctionObject.userData);
+            }
+            
+            delete delayedCodeMirrorFunctionsToExecute[codeDataStr];
+          }
+          return result;
+        };
+        
+        function viewCode(codeData)
+        {
+          var codeMirror = codeMirrorObjectsByCodeData[JSON.stringify(codeData)];
+          if (codeMirror)
+          {
+            var foundDockNode = getDockNodeForContainer(codeMirror.panelContainer);
+            if (foundDockNode)
+              foundDockNode.parent.container.setActiveChild(foundDockNode.container);
+          }
+          else
+          {
+            var message =
+            {
+              MessageType: "ViewExplorerItem",
+              CodeData: codeData
+            };
+            
+            window.socket.sendJson(message);
+          }
+        }
+        
+        function createDockArea()
+        {
+          var windowDiv = $('<div id="debugger_dock_manager" class="debugger-dock-manager"></div>').appendTo('#content-host');
+          var divDockManager = windowDiv[0];
+          
+          // Convert a div to the dock manager.  Panels can then be docked on to it
+          dockManager = new dockspawn.DockManager(divDockManager);
+          dockManager.initialize();
+          
+          // Let the dock manager element fill in the entire screen
+          var onResized = function(e)
+          {
+            dockManager.resize(window.innerWidth - (divDockManager.clientLeft + divDockManager.offsetLeft), window.innerHeight - (divDockManager.clientTop + divDockManager.offsetTop));
+          };
+          window.onresize = onResized;
+          onResized(null);
+
+          var documentNode = dockManager.context.model.documentManagerNode;
+
+          explorer    = createWindow(documentNode, "Left", 0.2, "explorer", "Explorer");
+          output      = createWindow(documentNode, "Down", 0.2, "output", "Output");
+          calls       = createWindow(output.node, "Fill", 1.0, "calls", "Calls");
+          autos       = createWindow(output.node, "Fill", 1.0, "autos", "Autos");
+          breakpoints = createWindow(output.node, "Fill", 1.0, "breakpoints", "Breakpoints");
+          
+          /***************************** EXPLORER *****************************/
+          
+          // Fill the explorer area with a tree
+          var explorerColumns =
+          [
+            {id: 'name', name: 'Name', field: 'name'},
+          ];
+          
+          var explorerOptions =
+          {
+            enableCellNavigation: true,
+            enableColumnReorder: false,
+            editable: false,
+            rowHeight: 20,
+            forceFitColumns: true,
+            headerHeight: 0
+          };
+          
+          explorerSlickGrid = new Slick.Grid(explorer.query, new Slick.Data.DataView(), explorerColumns, explorerOptions);
+          explorer.container.onResize = function(width, height)
+          {
+            explorerSlickGrid.resizeCanvas();
+          };
+          
+          initTreeGrid(explorerSlickGrid, null);
+          removeColumnHeader(explorerSlickGrid, explorer.query);
+          
+          // When we double click a row (the expander handles the event early)
+          explorerSlickGrid.onDblClick.subscribe(function(e, args)
+          {
+            var dataView = args.grid.getData();
+            var row = dataView.getItem(args.row);
+            if (row.codeData)
+              viewCode(row.codeData);
+          });
+          
+          /***************************** OUTPUT *****************************/
+          var outputColumns =
+          [
+            { id: 'text', name: 'Text', field: 'text' },
+            { id: 'location', name: 'Location', field: 'location', maxWidth: 200 },
+          ];
+          
+          var outputOptions =
+          {
+            enableCellNavigation: true,
+            enableColumnReorder: true,
+            editable: false,
+            rowHeight: 20,
+            forceFitColumns: true,
+            headerHeight: 0
+          };
+          
+          outputSlickGrid = new Slick.Grid(output.query, new Slick.Data.DataView(), outputColumns, outputOptions);
+          output.container.onResize = function(width, height)
+          {
+            outputSlickGrid.resizeCanvas();
+          };
+          
+          initTreeGrid(outputSlickGrid, null);
+          removeColumnHeader(outputSlickGrid, output.query);
+          
+          // When we click on the output grid, suspend any updates (so we can properly mouse down)
+          output.query.mousedown(function()
+          {
+            clearTimeout(outputUpdateInterval);
+            outputUpdateInterval = setTimeout(updateOutput, 1000);
+          });
+          
+          // When we double click a row we want to go to that location in code
+          outputSlickGrid.onDblClick.subscribe(function(e, args)
+          {
+            var dataView = args.grid.getData();
+            var row = dataView.getItem(args.row);
+            
+            if (row.codeData)
+            {
+              runCodeMirrorFunction(row.codeData, showCodeMirrorLocation, row.line);
+            }
+          });
+          
+          updateOutput();
+          output.query.find('slick-viewport').scrollTop(99999999);
+          
+          /***************************** CALL STACK *****************************/
+          var callsColumns =
+          [
+            { id: 'text', name: 'Text', field: 'text' },
+            { id: 'language', name: 'Language', field: 'language', maxWidth: 200 },
+          ];
+          
+          var callsOptions =
+          {
+            enableCellNavigation: true,
+            enableColumnReorder: true,
+            editable: false,
+            rowHeight: 20,
+            forceFitColumns: true,
+            headerHeight: 0
+          };
+          
+          callsSlickGrid = new Slick.Grid(calls.query, callsRows, callsColumns, callsOptions);
+          calls.container.onResize = function(width, height)
+          {
+            callsSlickGrid.resizeCanvas();
+          };
+          
+          removeColumnHeader(callsSlickGrid, calls.query);
+          
+          // When we double click a row we want to go to that location in code
+          callsSlickGrid.onDblClick.subscribe(function(e, args)
+          {
+            var items = args.grid.getData();
+            var row = items[args.row];
+            
+            if (row.codeData)
+            {
+              runCodeMirrorFunction(row.codeData, showCodeMirrorLocation, row.line);
+            }
+          });
+        };
+        
+        function clearHostArea()
+        {
+          window.onresize = null;
+          $("#content-host").empty();
+        };
+        
+        function attemptConnection()
+        {
+          $("#connect").prop("disabled", true);
+          
+          var host = $("#remote-host").val();
+          var port = $("#remote-port").val();
+          
+          var socket = new WebSocket("ws://" + host + ":" + port);
+          window.socket = socket;
+          
+          socket.onopen = function()
+          {
+            connectedOnce = true;
+            $("#connect-header").hide();
+            $("#debugger-header").show();
+            createDockArea();
+          };
+          
+          socket.sendJson = function(object)
+          {
+            var json = JSON.stringify(object, null, "  ");
+            socket.send(json);
+            //console.log('SENT:\n' + json);
+          };
+          
+          socket.onmessage = function (event)
+          {
+            //console.log('RECV:\n' + event.data);
+            var message = JSON.parse(event.data);
+            var handlerFunction = messageHandlers[message.MessageType];
+            
+            handlerFunction(message);
+          };
+          
+          socket.onclose = function()
+          {
+            clearHostArea();
+            $("#debugger-header").hide();
+            $("#connect-header").show();
+            
+            if (connectedOnce && autoOpened)
+            {
+              window.close();
+            }
+            else
+            {
+              alert("Connection closed or failed");
+            }
+            
+            $("#connect").prop("disabled", false);
+          };
+        };
+        
+        function sendSimpleCommand(command)
+        {
+            window.socket.sendJson({ MessageType: command });
+        };
+        
+        messageHandlers["UpdateExplorer"] = function(message)
+        {
+          var rows = [];
+          
+          // Hash set of which stringified code data we now have
+          // We want to know which windows we should close because they no longer exist
+          var newCodeData = {};
+          
+          function depthFirstVisit(node, parentRow)
+          {
+            var pathSplit = node.Name.split('\\');
+            var caption = pathSplit[pathSplit.length - 1];
+            
+            var row =
+            {
+              id: node.Id,
+              name: caption,
+              codeData: node.CodeData,
+              parent: parentRow
+            };
+            
+            // If we have code data...
+            if (node.CodeData)
+            {
+              var codeDataStr = JSON.stringify(node.CodeData);
+              if (newCodeData[codeDataStr])
+                console.log("Two or more rows in the explorer contain the same code data!");
+              
+              newCodeData[codeDataStr] = true;
+            }
+            
+            rows.push(row);
+            
+            if (node.Children)
+            {
+              for (var i = 0; i < node.Children.length; ++i)
+              {
+                var childNode = node.Children[i];
+                depthFirstVisit(childNode, row);
+              }
+            }
+          }
+          
+          for (var i = 0; i < message.Roots.length; ++i)
+          {
+            var root = message.Roots[i];
+            depthFirstVisit(root, null);
+          }
+          
+          var dataView = explorerSlickGrid.getData();
+          
+          // Get the items that are currently in the tree
+          var oldRows = dataView.getItems();
+          
+          // Loop through all the old rows, see which code data no longer exists
+          for (var i = 0; i < oldRows.length; ++i)
+          {
+            var oldRow = oldRows[i];
+            if (!oldRow.codeData)
+              continue;
+            
+            var oldCodeDataStr = JSON.stringify(oldRow.codeData);
+            
+            // If we no longer have this row...
+            if (!newCodeData[oldCodeDataStr])
+            {
+              // Close the window for that code object
+              var codeMirror = codeMirrorObjectsByCodeData[oldCodeDataStr];
+              if (codeMirror)
+              {
+                // Close out of the window, it no longer exists!
+                dockManager.requestRemove(codeMirror.panelContainer);
+              }
+            }
+          }
+          
+          dataView.beginUpdate();
+          dataView.setItems(rows);
+          dataView.endUpdate();
+        };
+        
+        function runCodeMirrorFunction(codeData, func, userData)
+        {
+          // Bring this code-mirror to the front
+          // If it doesn't exist, it will be created
+          viewCode(codeData);
+        
+          var codeDataStr = JSON.stringify(codeData);
+          var codeMirror = codeMirrorObjectsByCodeData[codeDataStr];
+          if (codeMirror)
+          {
+            func(codeMirror, userData);
+          }
+          else
+          {
+            var functionArray = delayedCodeMirrorFunctionsToExecute[codeDataStr];
+            if (!functionArray)
+            {
+              functionArray = [];
+              delayedCodeMirrorFunctionsToExecute[codeDataStr] = functionArray;
+            }
+            
+            functionArray.push({ func: func, userData: userData });
+          }
+        }
+        
+        messageHandlers["ShowCodeEntry"] = function(message)
+        {
+          // If this is a file path, we only want to show the name
+          // This also works fine if it's just a name!
+          var pathSplit = message.Origin.split('\\');
+          var caption = pathSplit[pathSplit.length - 1];
+          createCodePanel("codestuff", caption, message.Code, message.CodeData);
+        };
+        
+        messageHandlers["SetExecutionPoint"] = function(message)
+        {
+          function setExecutionPoint(codeMirror)
+          {
+            codeMirror.clearGutter("execution");
+
+            var marker = $('<div style="color:#FBB117;left:-10px;position:absolute;;top:-1px">&#8680;</div>').get(0);
+            var actualLine = message.Line - 1;
+            codeMirror.setGutterMarker(actualLine, "execution", marker);
+            showCodeMirrorLocation(codeMirror, message.Line);
+            if (isTabActive == false)
+              alert("Execution has been paused\nThis popup exists to focus on the debugger's browser tab");
+          }
+          
+          runCodeMirrorFunction(message.CodeData, setExecutionPoint);
+          
+          // We want to show the call stack at this execution point
+          for (var i = 0; i < message.CallStack.length; ++i)
+          {
+            var call = message.CallStack[i];
+            var row =
+            {
+              id: i,
+              text: call.Text,
+              language: call.Language,
+              codeData: call.CodeData,
+              line: call.Line
+            };
+            callsRows.push(row);
+          }
+          callsSlickGrid.invalidate();
+        };
+        
+        messageHandlers["ClearExecutionPoint"] = function(message)
+        {
+          // Loop through all code mirror objects and clear the execution gutters
+          for (var key in codeMirrorObjectsByCodeData)
+          {
+            var codeMirror = codeMirrorObjectsByCodeData[key];
+            codeMirror.clearGutter("execution");
+          }
+          
+          // Clear the call stack
+          callsRows.length = 0;
+          callsSlickGrid.invalidate();
+        };
+        
+        messageHandlers["Output"] = function(message)
+        {
+          var dataView = outputSlickGrid.getData();
+          
+          outputText += message.Text;
+          
+          var outputTextSplit = outputText.split('\n');
+          outputText = outputTextSplit[outputTextSplit.length - 1];
+          
+          for (var i = 0; i < outputTextSplit.length - 1; ++i)
+          {
+            var row = { id: outputIdCounter, text: outputTextSplit[i] };
+            ++outputIdCounter;
+            
+            if (message.Origin)
+            {
+              var pathSplit = message.Origin.split('\\');
+              row.location = pathSplit[pathSplit.length - 1];
+              row.codeData = message.CodeData;
+              row.line = message.Line;
+            }
+            else
+            {
+              row.location = '';
+            }
+            
+            outputNewItems.push(row);
+          }
+          
+          if (outputNewItems.length > outputMaxItems)
+          {
+            // Remove the first element from the array
+            outputNewItems.splice(0, outputNewItems.length - outputMaxItems);
+          }
+          
+          if (outputUpdateInterval == -1)
+          {
+            outputUpdateInterval = setTimeout(updateOutput, 300);
+          }
+        };
+        
+        messageHandlers["QueryResult"] = function(message)
+        {
+          var hoverGrid = hoverGridsByQueryId[message.QueryId];
+          
+          if (hoverGrid && hoverGrid.is(":visible"))
+          {
+            var columns =
+            [
+              { name: 'property' },
+              { name: 'value' }
+            ];
+            
+            var rows = [];
+            
+            for (var i = 0; i < message.Values.length; ++i)
+            {
+              var entry = message.Values[i];
+              rows.push({ property: entry.Property, value: entry.Value, expandable: entry.Expandable });
+            }
+            
+            fillHoverGrid(hoverGrid, columns, rows);
+            
+            delete hoverGridsByQueryId[message.QueryId];
+          }
+        };
+        
+        $("#connect").button().on("click", attemptConnection);
+        $("#resume").button().on("click", function() {sendSimpleCommand("Resume")});
+        $("#pause").button().on("click", function() {sendSimpleCommand("Pause")});
+        $("#step-in").button().on("click", function() {sendSimpleCommand("StepIn")});
+        $("#step-out").button().on("click", function() {sendSimpleCommand("StepOut")});
+        $("#step-over").button().on("click", function() {sendSimpleCommand("StepOver")});
+        
+        $("#debugger-header").hide();
+        
+        $("#remote-host").val(getParameterByName("host", "localhost"));
+        $("#remote-port").val(getParameterByName("port", "8000"));
+        
+        if (autoOpened)
+          $("#connect").click();
+          
+        function onKeyDown(e)
+        {
+          var key = (e.which || e.keyCode);
+          
+          if (e.altKey)
+          {
+            // Left / Step Out
+            if (key == keys.LEFT)
+            {
+              $("#step-out").click();
+              e.preventDefault();
+            }
+            
+            // Right / Step In
+            if (key == keys.RIGHT)
+            {
+              $("#step-in").click();
+              e.preventDefault();
+            }
+            
+            // Down / Step Over
+            if (key == keys.DOWN)
+            {
+              $("#step-over").click();
+              e.preventDefault();
+            }
+          }
+          
+          // Resume
+          if (key == keys.F5)
+          {
+            $("#resume").click();
+            e.preventDefault();
+          }
+          
+          // Step Over
+          if (key == keys.F10)
+          {
+            $("#step-over").click();
+            e.preventDefault();
+          }
+          
+          // Step out or in
+          if (key == keys.F11)
+          {
+            if (e.shiftKey)
+              $("#step-out").click();
+            else
+              $("#step-in").click();
+            e.preventDefault();
+          }
+        };
+        $(document).on("keydown", onKeyDown);
+      });
+    </script>
+
+  </body>
+</html>

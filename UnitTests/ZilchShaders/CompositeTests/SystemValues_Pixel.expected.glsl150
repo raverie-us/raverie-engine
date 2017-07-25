@@ -1,0 +1,88 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct PixelSystemValues
+{
+  int PrimitiveId;
+};
+
+struct SystemValues_Pixel
+{
+  float Time;
+  int PrimitiveId;
+};
+
+//----- Forward Declarations -----
+void _PixelSystemValuesPreConstructor(inout PixelSystemValues self);
+PixelSystemValues _PixelSystemValuesConstructor();
+void _PixelSystemValuesMain(inout PixelSystemValues self);
+
+void _SystemValues_PixelPreConstructor(inout SystemValues_Pixel self);
+SystemValues_Pixel _SystemValues_PixelConstructor();
+void _SystemValues_PixelMain(inout SystemValues_Pixel self);
+void CopyInputs(inout SystemValues_Pixel self);
+void CopyOutputs(inout SystemValues_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- PixelSystemValues Functions -----
+void _PixelSystemValuesPreConstructor(inout PixelSystemValues self)
+{
+  self.PrimitiveId = int(0);
+}
+
+PixelSystemValues _PixelSystemValuesConstructor()
+{
+  PixelSystemValues self;
+  _PixelSystemValuesPreConstructor(self);
+  return self;
+}
+
+void _PixelSystemValuesMain(inout PixelSystemValues self)
+{
+}
+
+//----- SystemValues_Pixel Functions -----
+void _SystemValues_PixelPreConstructor(inout SystemValues_Pixel self)
+{
+  self.Time = float(0.0);
+  self.PrimitiveId = int(0);
+}
+
+SystemValues_Pixel _SystemValues_PixelConstructor()
+{
+  SystemValues_Pixel self;
+  _SystemValues_PixelPreConstructor(self);
+  return self;
+}
+
+void _SystemValues_PixelMain(inout SystemValues_Pixel self)
+{
+  PixelSystemValues _pixelsystemvalues = _PixelSystemValuesConstructor();
+  _pixelsystemvalues.PrimitiveId = self.PrimitiveId;
+  _PixelSystemValuesMain(_pixelsystemvalues);
+}
+
+//----- SystemValues_Pixel Final Shader Functions -----
+void CopyInputs(inout SystemValues_Pixel self)
+{
+  self.Time = Time;
+  self.PrimitiveId = gl_PrimitiveID;
+}
+
+void CopyOutputs(inout SystemValues_Pixel self)
+{
+}
+
+//----- Main -----
+void main(void)
+{
+  SystemValues_Pixel systemvalues_pixel = _SystemValues_PixelConstructor(); 
+  CopyInputs(systemvalues_pixel);
+  _SystemValues_PixelMain(systemvalues_pixel);
+  CopyOutputs(systemvalues_pixel);
+}
+

@@ -1,0 +1,276 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+in vec2 psInUv;
+uniform vec2 UvScale_Scale;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct SamplerHelper
+{
+  int Dummy;
+};
+
+struct Diffuse
+{
+  float Time;
+  vec2 Uv;
+  vec4 Color;
+};
+
+struct SinTime
+{
+  float Time;
+};
+
+struct UvScale
+{
+  vec2 Scale;
+  vec2 Uv;
+};
+
+struct RendererFrag
+{
+  vec4 Color;
+  vec4 Target0;
+};
+
+struct Diffuse_SinTime_UvScale_RendererFrag_Pixel
+{
+  float Time;
+  vec2 Uv;
+  vec4 Target0;
+  vec2 UvScale_Scale;
+};
+
+//----- Forward Declarations -----
+void _SamplerHelperPreConstructor(inout SamplerHelper self);
+SamplerHelper _SamplerHelperConstructor();
+vec2 _SamplerHelperConvertUvCoordinate(vec2 _uv);
+vec3 _SamplerHelperConvertUvCoordinate(vec3 _uv);
+
+vec4 _sampler2DSample(vec2 _uv, in sampler2D self);
+vec4 _sampler2DSample(vec2 _uv, vec2 _ddx, vec2 _ddy, in sampler2D self);
+vec4 _sampler2DSampleLod(vec2 _uv, float _lod, in sampler2D self);
+ivec2 _sampler2DSampleSize(int _lod, in sampler2D self);
+
+void _DiffusePreConstructor(inout Diffuse self);
+Diffuse _DiffuseConstructor();
+void _DiffuseMain(inout Diffuse self);
+
+void _SinTimePreConstructor(inout SinTime self);
+SinTime _SinTimeConstructor();
+void _SinTimeMain(inout SinTime self);
+
+void _UvScalePreConstructor(inout UvScale self);
+UvScale _UvScaleConstructor();
+void _UvScaleMain(inout UvScale self);
+
+void _RendererFragPreConstructor(inout RendererFrag self);
+RendererFrag _RendererFragConstructor();
+void _RendererFragMain(inout RendererFrag self);
+
+void _Diffuse_SinTime_UvScale_RendererFrag_PixelPreConstructor(inout Diffuse_SinTime_UvScale_RendererFrag_Pixel self);
+Diffuse_SinTime_UvScale_RendererFrag_Pixel _Diffuse_SinTime_UvScale_RendererFrag_PixelConstructor();
+void _Diffuse_SinTime_UvScale_RendererFrag_PixelMain(inout Diffuse_SinTime_UvScale_RendererFrag_Pixel self);
+void CopyInputs(inout Diffuse_SinTime_UvScale_RendererFrag_Pixel self);
+void CopyOutputs(inout Diffuse_SinTime_UvScale_RendererFrag_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+uniform sampler2D _DiffuseDiffuse;
+
+//----- SamplerHelper Functions -----
+void _SamplerHelperPreConstructor(inout SamplerHelper self)
+{
+  self.Dummy = 0;
+}
+
+SamplerHelper _SamplerHelperConstructor()
+{
+  SamplerHelper self;
+  _SamplerHelperPreConstructor(self);
+  return self;
+}
+
+vec2 _SamplerHelperConvertUvCoordinate(vec2 _uv)
+{
+  _uv.y = 1.0f - _uv.y;
+  return _uv;
+}
+
+vec3 _SamplerHelperConvertUvCoordinate(vec3 _uv)
+{
+  _uv.x = -_uv.x;
+  return _uv;
+}
+
+//----- Sampler2d Functions -----
+vec4 _sampler2DSample(vec2 _uv, in sampler2D self)
+{
+  vec4 _result = vec4(0.0, 0.0, 0.0, 0.0);
+  _uv = _SamplerHelperConvertUvCoordinate(_uv);
+  _result = texture(self, _uv);
+  return _result;
+}
+
+vec4 _sampler2DSample(vec2 _uv, vec2 _ddx, vec2 _ddy, in sampler2D self)
+{
+  vec4 _result = vec4(0.0, 0.0, 0.0, 0.0);
+  _uv = _SamplerHelperConvertUvCoordinate(_uv);
+  _result = textureGrad(self, _uv, _ddx, _ddy);
+  return _result;
+}
+
+vec4 _sampler2DSampleLod(vec2 _uv, float _lod, in sampler2D self)
+{
+  vec4 _result = vec4(0.0, 0.0, 0.0, 0.0);
+  _uv = _SamplerHelperConvertUvCoordinate(_uv);
+  _result = textureLod(self, _uv, _lod);
+  return _result;
+}
+
+ivec2 _sampler2DSampleSize(int _lod, in sampler2D self)
+{
+  ivec2 _result = ivec2(0, 0);
+  _result = textureSize(self, _lod);
+  return _result;
+}
+
+//----- Diffuse Functions -----
+void _DiffusePreConstructor(inout Diffuse self)
+{
+  self.Time = float(0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.Color = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+Diffuse _DiffuseConstructor()
+{
+  Diffuse self;
+  _DiffusePreConstructor(self);
+  return self;
+}
+
+void _DiffuseMain(inout Diffuse self)
+{
+  self.Color = _sampler2DSample(self.Uv * self.Time, _DiffuseDiffuse);
+}
+
+//----- SinTime Functions -----
+void _SinTimePreConstructor(inout SinTime self)
+{
+  self.Time = float(0.0);
+}
+
+SinTime _SinTimeConstructor()
+{
+  SinTime self;
+  _SinTimePreConstructor(self);
+  return self;
+}
+
+void _SinTimeMain(inout SinTime self)
+{
+  // * this.Scale;
+  self.Time = sin(self.Time);
+}
+
+//----- UvScale Functions -----
+void _UvScalePreConstructor(inout UvScale self)
+{
+  self.Scale = vec2(1.0f, 1.0f);
+  self.Uv = vec2(0.0, 0.0);
+}
+
+UvScale _UvScaleConstructor()
+{
+  UvScale self;
+  _UvScalePreConstructor(self);
+  return self;
+}
+
+void _UvScaleMain(inout UvScale self)
+{
+  self.Uv *= self.Scale;
+}
+
+//----- RendererFrag Functions -----
+void _RendererFragPreConstructor(inout RendererFrag self)
+{
+  self.Color = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target0 = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+RendererFrag _RendererFragConstructor()
+{
+  RendererFrag self;
+  _RendererFragPreConstructor(self);
+  return self;
+}
+
+void _RendererFragMain(inout RendererFrag self)
+{
+  self.Target0 = self.Color;
+}
+
+//----- Diffuse_SinTime_UvScale_RendererFrag_Pixel Functions -----
+void _Diffuse_SinTime_UvScale_RendererFrag_PixelPreConstructor(inout Diffuse_SinTime_UvScale_RendererFrag_Pixel self)
+{
+  self.Time = float(0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.Target0 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.UvScale_Scale = vec2(0.0, 0.0);
+}
+
+Diffuse_SinTime_UvScale_RendererFrag_Pixel _Diffuse_SinTime_UvScale_RendererFrag_PixelConstructor()
+{
+  Diffuse_SinTime_UvScale_RendererFrag_Pixel self;
+  _Diffuse_SinTime_UvScale_RendererFrag_PixelPreConstructor(self);
+  return self;
+}
+
+void _Diffuse_SinTime_UvScale_RendererFrag_PixelMain(inout Diffuse_SinTime_UvScale_RendererFrag_Pixel self)
+{
+  Diffuse _diffuse = _DiffuseConstructor();
+  _diffuse.Time = self.Time;
+  _diffuse.Uv = self.Uv;
+  _DiffuseMain(_diffuse);
+  
+  SinTime _sintime = _SinTimeConstructor();
+  _sintime.Time = self.Time;
+  _SinTimeMain(_sintime);
+  
+  UvScale _uvscale = _UvScaleConstructor();
+  _uvscale.Scale = self.UvScale_Scale;
+  _uvscale.Uv = self.Uv;
+  _UvScaleMain(_uvscale);
+  
+  RendererFrag _rendererfrag = _RendererFragConstructor();
+  _rendererfrag.Color = _diffuse.Color;
+  _RendererFragMain(_rendererfrag);
+  self.Target0 = _rendererfrag.Target0;
+}
+
+//----- Diffuse_SinTime_UvScale_RendererFrag_Pixel Final Shader Functions -----
+void CopyInputs(inout Diffuse_SinTime_UvScale_RendererFrag_Pixel self)
+{
+  self.Time = Time;
+  self.Uv = psInUv;
+  self.UvScale_Scale = UvScale_Scale;
+}
+
+void CopyOutputs(inout Diffuse_SinTime_UvScale_RendererFrag_Pixel self)
+{
+  outputs[0] = self.Target0; 
+}
+
+//----- Main -----
+void main(void)
+{
+  Diffuse_SinTime_UvScale_RendererFrag_Pixel diffuse_sintime_uvscale_rendererfrag_pixel = _Diffuse_SinTime_UvScale_RendererFrag_PixelConstructor(); 
+  CopyInputs(diffuse_sintime_uvscale_rendererfrag_pixel);
+  _Diffuse_SinTime_UvScale_RendererFrag_PixelMain(diffuse_sintime_uvscale_rendererfrag_pixel);
+  CopyOutputs(diffuse_sintime_uvscale_rendererfrag_pixel);
+}
+

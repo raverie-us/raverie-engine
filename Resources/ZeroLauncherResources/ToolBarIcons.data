@@ -1,0 +1,809 @@
+DefinitionSet =
+{
+	//---------------------------------------------------------------------- Row 1
+	ImageDefinition Save =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 0 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Cut =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 28, 0 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Copy =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 56, 0 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Paste =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 84, 0 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Undo =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 0 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Redo =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 140, 0 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	//---------------------------------------------------------------------- Row 2
+	ImageDefinition SelectTool =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 28 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition TranslateGizmo =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 28, 28 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition RotateGizmo =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 56, 28 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition ScaleGizmo =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 84, 28 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition ManipulatorGizmo =
+	{
+		string Texture = "ObjectIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 98, 97 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition TaskGear =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 140, 28 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition TaskGearBackground =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 168, 28 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	//---------------------------------------------------------------------- Row 3
+	ImageDefinition TileEditor2D =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 56 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition HeightMapTool =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 28, 56 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition JointTool =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 56, 56 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition CreationTool =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 84, 56 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition TaskDownload =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 140, 56 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition TaskDownloadCenter =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 1,
+		float[] Uv0 = [ 140, 56 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition TheVoid =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 168, 140 ],
+		float[] Uv1 = [ 56 , 28 ],
+	},
+	
+	//---------------------------------------------------------------------- Row 4
+	ImageDefinition ToolGroup =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 84 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition WindowGroup =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 28, 84 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition ExpandIcon =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 57, 109 ],
+		float[] Uv1 = [ 26 , 3 ],
+	},
+	
+	ImageDefinition BugIcon =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 84, 84 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition QuestionMarkIcon =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 84 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition UpArrowGreen =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 140, 84 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition UpChevronGreen =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 168, 84 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition UpArrowOrange =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 196, 84 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition UpChevronOrange =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 224, 84 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	//---------------------------------------------------------------------- Row 5
+	ImageDefinition PlayGame =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition PauseGame =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 28, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition StopGame =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 56, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition StepGame =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 84, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition AddResource =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition DownArrowGreen =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 140, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition DownChevronGreen =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 168, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition DownArrowOrange =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 196, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition DownChevronOrange =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 224, 112 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	//---------------------------------------------------------------------- Row 6
+	ImageDefinition ZeroCommandDropdown =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 140 ],
+		float[] Uv1 = [ 56 , 28 ],
+	},
+	
+	ImageDefinition TheVoidFull = 
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 140 ],
+		float[] Uv1 = [ 56 , 28 ],
+	}, 
+	
+	//---------------------------------------------------------------------- Row 7
+	ImageDefinition Console =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 168 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Properties =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 28, 168 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Tree =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 56, 168 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Library =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 84, 168 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Animator =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 168 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Performance =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 140, 168 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition Memory =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 168, 168 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition FindReplace =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 196, 168 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	//------------------------------------------------------------------------ Old
+	ImageDefinition AddFile =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Folder =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Grabber =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 112 ],
+		float[] Uv1 = [ 6 , 16 ],
+	},
+
+	//---------------------------------------------------------------------- Row 2
+	ImageDefinition Connector =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 16 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Tools =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 16 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	//---------------------------------------------------------------------- Row 3
+	ImageDefinition Left =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Right =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Down =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Up =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition DoubleUp =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition DoubleDown =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition BigPlus =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition BigMinus =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 32 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	//---------------------------------------------------------------------- Row 4
+	ImageDefinition CirclePlay =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition CirclePause =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition CircleStop =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition CircleRecord =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition CircleNext =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition CircleRewind =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition CircleFastForward =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition BigPlay =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 48 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	//---------------------------------------------------------------------- Row 5
+	ImageDefinition GreenHexagon =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition RedHexagon =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition BlueHexagon =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition GreenHexagonPlus =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition QuickSave =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition QuickLoad =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition NameTag =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Refresh =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 64 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	//---------------------------------------------------------------------- Row 6
+	ImageDefinition Planet =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition PlanetPlus =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition PlanetX =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition CautionTriangle =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition InfoCircle =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition MusicNote =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition ThreeBars =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 80 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	//---------------------------------------------------------------------- Row 7
+	ImageDefinition NoSymbol =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 96 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition BlankDocument =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 96 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition RedX =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 96 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition BluePlus =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 96 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition RedConnector =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 96 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Pencil =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 96 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition MagnifyingGlass =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 96 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Brush =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 96 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	//---------------------------------------------------------------------- Row 8
+	ImageDefinition SaveContent =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 112  ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition CrateBluePlus =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 112 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition EditContent =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 112  ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Crate =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 112 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition Speaker =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 80, 112 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition MutedSpeaker =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 112 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+
+	ImageDefinition BulletPoints =
+	{
+		string Texture = "ToolBarIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 112 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+}

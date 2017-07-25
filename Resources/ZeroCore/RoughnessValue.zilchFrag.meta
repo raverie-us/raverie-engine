@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "RoughnessValue"
+		var ResourceId = 0x583a94b369bf2e19
+	}
+}

@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "ZSoundNodeGraphScript"
+		var ResourceId = 0x58a227eef7b008a2
+	}
+}

@@ -1,0 +1,22 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+		"581a791e8fa9287a:Lights"
+	}
+	FullscreenTriangle 
+	{
+	}
+	GeometryInput 
+	{
+		var GeometryBuffer0 = "null"
+		var GeometryBuffer1 = "null"
+	}
+	DirectionalLightFragment 
+	{
+		var ShadowFactor = 1
+		var LightIntensity = 1
+		var LightDirection = Real3{0, -1, 0}
+	}
+}

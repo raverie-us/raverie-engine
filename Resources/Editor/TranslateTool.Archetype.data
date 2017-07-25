@@ -1,0 +1,19 @@
+[Version:1]
+Cog 
+{
+	var Name = "TranslateTool"
+	var LinkId = 1
+	GizmoCreator 
+	{
+		var GizmoArchetype = "52fd859a84ab45c6:ObjectTranslateGizmo"
+	}
+	ObjectTranslateTool 
+	{
+		var Grab = GizmoGrabMode.Hold
+		var Basis = GizmoBasis.World
+		var Pivot = GizmoPivot.Average
+		var Snapping = false
+		var SnapDistance = 0.25
+		var SnapMode = GizmoSnapMode.WorldGrid
+	}
+}

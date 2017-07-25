@@ -1,0 +1,20 @@
+// Boiler plate vertex shader fragment used in generated shaders for Sprites, SpriteTexts, and internal debug drawing.
+[Vertex][CoreVertex]
+struct StreamedVertex
+{
+  [BuiltInInput] var ViewToPerspective : Real4x4;
+
+  [StageInput] var LocalPosition : Real3;
+  [StageInput][Output] var Uv : Real2;
+  [StageInput][Output] var UvAux : Real2;
+  [StageInput][Output] var Color : Real4;
+
+  [Output] var ViewPosition : Real3;
+  [Output] var PerspectivePosition : Real4;
+
+  function Main()
+  {
+    this.ViewPosition = this.LocalPosition;
+    this.PerspectivePosition = Math.Multiply(this.ViewToPerspective, Real4(this.LocalPosition, 1.0));
+  }
+}

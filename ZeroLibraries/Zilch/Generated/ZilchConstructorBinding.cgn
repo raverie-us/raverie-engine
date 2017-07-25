@@ -1,0 +1,80 @@
+// All the permutations we'd like to evaluate
+permute Arguments alias n : int[-1,6];
+
+handler <? All ?>
+{
+  ZilchArguments        = <? Utilities.RepeatNumeric("  DelegateParameter& p# = parameters.PushBack();\r\n  p#.ParameterType = ZilchTypeId(Arg#);", "\r\n", 0, n) ?>;
+  Arguments             = <? Utilities.RepeatNumeric("arg#", ", ", 0, n) ?>;
+  ArgumentTypeNames     = <? Utilities.RepeatNumeric("typename Arg#", ", ", 0, n) ?>;
+  BoundReadArguments    = <? Utilities.RepeatNumeric("  Arg# arg# = call.Get<Arg#>(#);", "\r\n", 0, n) ?>;
+  ArgumentTypes         = <? Utilities.RepeatNumeric("Arg#", ", ", 0, n) ?>;
+  
+  // Clear empty lines
+  "(\s*\r\n){2,}" = "\r\n";
+  
+  // Turn commas in the form of [,] into an actual comma, if it's needed
+  "(\[,]){2,}"  = "[,]";
+  "\[,]>"       = ">";
+  "\[,]"        = ", ";
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+template <typename Class[,]$ArgumentTypeNames$>
+static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
+{
+
+$BoundReadArguments$
+  
+  Handle& handle = call.GetHandle(Call::This);
+  byte* data = handle.Dereference();
+  new (data) Class($Arguments$);
+  
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+}
+
+template <typename Class[,]$ArgumentTypeNames$>
+static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
+{
+  BoundFn boundFunction = BoundConstructorVirtual<Class[,]$ArgumentTypes$>;
+  
+  ParameterArray parameters;
+$ZilchArguments$
+  ParseParameterArrays(parameters, spaceDelimitedNames);
+  
+  return builder.AddBoundConstructor
+  (
+    classBoundType,
+    boundFunction,
+    parameters
+  );
+}
+
+template <typename Class[,]$ArgumentTypeNames$>
+static void BoundConstructor(Call& call, ExceptionReport& report)
+{
+
+$BoundReadArguments$
+  
+  Handle& handle = call.GetHandle(Call::This);
+  byte* data = handle.Dereference();
+  new (data) Class($Arguments$);
+}
+
+template <typename Class[,]$ArgumentTypeNames$>
+static Function* FromConstructor(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
+{
+  BoundFn boundFunction = BoundConstructor<Class[,]$ArgumentTypes$>;
+  
+  ParameterArray parameters;
+$ZilchArguments$
+  ParseParameterArrays(parameters, spaceDelimitedNames);
+  
+  return builder.AddBoundConstructor
+  (
+    classBoundType,
+    boundFunction,
+    parameters
+  );
+}

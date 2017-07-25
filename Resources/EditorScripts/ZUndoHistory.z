@@ -1,0 +1,68 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Undo history view manager.
+////////////////////////////////////////////////////////////////////////////////
+class ZUndoHistory : ZilchComponent
+{
+    // History row cogs are of this archetype.
+  [Property] var ArchetypeEntry : Archetype = Archetype.HistoryEntry;
+  
+  
+  /******************************************************************************/
+  function Initialize(init : CogInitializer)
+  {
+      // If a new history view window has just been opened, then populate the undo
+      // view with rows corresponding to the current undo history.
+    var operationRange = Zero.Editor.OperationQueue.Commands;
+    foreach(var operation in operationRange) 
+    {
+      this.AddEntry(operation);
+    }
+    
+    Zero.Connect(Zero.Editor.OperationQueue, Events.OperationQueued, this.OnOperationQueued);
+    Zero.Connect(Zero.Editor.OperationQueue, Events.OperationUndo, this.OnOperationUndo);
+    Zero.Connect(this.Owner, Events.OperationRedone, this.OnOperationRedone);
+  }
+  
+  /******************************************************************************/
+  // Initialize a new history row.
+  function AddEntry(operation : Operation)
+  {
+    var undoViewCog = this.Owner;
+    
+    var entryCog = this.Space.Create(this.ArchetypeEntry);
+      
+    var entry = entryCog.ZHistoryEntry;
+    entry.OperationData = operation;
+    //entry.HistoryInfo.Name = operation.Name;
+    entry.RowName.SpriteText.Text = operation.Name;
+    
+    entryCog.AttachTo(undoViewCog);
+  }
+  
+  /******************************************************************************/
+  // Create a new history row if an undoable operation has been made.
+  function OnOperationQueued(event : OperationQueueEvent)
+  {
+    this.AddEntry(event.Operation);
+  }
+  
+  /******************************************************************************/
+  // When a row is undone, move it to the redo view.
+  function OnOperationUndo(event : OperationQueueEvent)
+  {
+    if(!this.Owner.Children.IsNotEmpty)
+      return;
+
+    var front = this.Owner.ChildrenReversed.Current.ZHistoryEntry;
+    if(front.OperationData == event.Operation)
+      front.ChangeHistoryView(true, this.Owner.Parent.ZOperationHistory.RedoView.Cog, Events.OperationUndone);
+  }
+  
+  /******************************************************************************/
+  // When an operation is redone place it last in the list of rows in the undo view.
+  function OnOperationRedone(event : ChangedHistoryView)
+  {
+    event.HistoryEntry.AttachTo(this.Owner);
+  }
+  
+}

@@ -1,0 +1,313 @@
+// The weights used for the blur were derived from Pascal's Triangle using the following method:
+//
+//   1) If the blur radius is an integer r, find the row of Pascal's
+//       Triangle that has 2r + 3 entries.
+//
+//   2) Ignore the 1s on either side of the row (so that there are only
+//       2r + 1 entries). This is because the 1s result in weights that
+//       are too small to be significant.
+//
+//   3) Divide each entry by the sum of all entries (putting them in the
+//       range of [0, 1].
+//
+//   4) Because the weights are symmetrical, we only need the entries
+//       starting with the center and descending to one side (so that there
+//       are only r + 1 entries)
+//
+//   5) Finally, assume that any weights less than 0.000001 are 0, and
+//       do not need to be included. This may result in the array of weights
+//       having a size of less than r + 1.
+//
+// There is no particular reason to use Pascal Weights over Gaussian Weights,
+// other than that Pascal Weights are relatively simple to manually compute.
+struct SeparableBlur
+{
+  [Static] var WeightStride : Integer = 18;
+  
+  [Static] var PascalWeights : FixedArray[Real, 90] = FixedArray[Real, 90]()
+  {
+    // Radius 5
+    0.225696, 0.193453, 0.120908, 0.053737, 0.016121, 0.002931,
+    0.0     , 0.0     , 0.0     , 0.0     , 0.0     , 0.0     ,
+    0.0     , 0.0     , 0.0     , 0.0     , 0.0     , 0.0     ,
+    
+    // Radius 10
+    0.168188, 0.154172, 0.118594, 0.076239, 0.040661, 0.017789,
+    0.006279, 0.001744, 0.000367, 0.000055, 0.000005, 0.0     ,
+    0.0     , 0.0     , 0.0     , 0.0     , 0.0     , 0.0     ,
+    
+    // Radius 15
+    0.139950, 0.131718, 0.109765, 0.080879, 0.052572, 0.030041,
+    0.015020, 0.006531, 0.002449, 0.000784, 0.000211, 0.000047,
+    0.000008, 0.000001, 0.0     , 0.0     , 0.0     , 0.0     ,
+    
+    // Radius 20
+    0.122386, 0.116823, 0.101585, 0.080421, 0.057903, 0.037860,
+    0.022436, 0.012019, 0.005802, 0.002514, 0.000973, 0.000335,
+    0.000101, 0.000027, 0.000006, 0.000001, 0.0     , 0.0     ,
+    
+    // Radius 25
+    0.112275, 0.107957, 0.095962, 0.078826, 0.059799, 0.041859,
+    0.027006, 0.016035, 0.008746, 0.004373, 0.001999, 0.000833,
+    0.000315, 0.000108, 0.000033, 0.000009, 0.000002, 0.0
+  };
+  
+  [Static] var StepCounts : FixedArray[Integer, 5] = FixedArray[Integer, 5]()
+  {
+    5, 10, 13, 15, 16
+  };
+
+  [Static]
+  function Call(texture : ref Sampler2d, inverseTargetSize : Real2, uv : Real2, vertical : Boolean, radiusIndex : Integer) : Real4
+  {
+    var startIndex = SeparableBlur.WeightStride * radiusIndex;
+    
+    // Initialize the color average with the weighted target pixel color
+    var color = texture.Sample(uv) * SeparableBlur.PascalWeights[startIndex];
+    
+    var stepDir = Math.Lerp(Real2(1.0, 0.0), Real2(0.0, 1.0), vertical as Real);
+    var pixelStep = stepDir * inverseTargetSize;
+    
+    // For each pair of pixels in the blur radius, add their weighted color to the color average
+    var stepCount = SeparableBlur.StepCounts[radiusIndex];
+    for (var i = 1; i <= stepCount; ++i)
+    {
+      color += texture.Sample(uv - pixelStep * i) * SeparableBlur.PascalWeights[startIndex + i];
+      color += texture.Sample(uv + pixelStep * i) * SeparableBlur.PascalWeights[startIndex + i];
+    }
+    
+    // Output the weighted color average
+    return color;
+  }
+
+  [Static]
+  function Call(texture : ref Sampler2d, inverseTargetSize : Real2, uv : Real2, vertical : Boolean, radiusIndex : Integer, geometryBuffer0 : ref Sampler2d, threshold : Real) : Real4
+  {
+    var depth = GeometryPass.GetDepth(geometryBuffer0.Sample(uv));
+    
+    var startIndex = SeparableBlur.WeightStride * radiusIndex;
+    
+    // Initialize the color average with the weighted target pixel color
+    var color = texture.Sample(uv) * SeparableBlur.PascalWeights[startIndex];
+    var weights = SeparableBlur.PascalWeights[startIndex];
+    
+    var stepDir = Math.Lerp(Real2(1.0, 0.0), Real2(0.0, 1.0), vertical as Real);
+    var pixelStep = stepDir * inverseTargetSize;
+    
+    // For each pair of pixels in the blur radius, add their weighted color to the color average
+    var stepCount = SeparableBlur.StepCounts[radiusIndex];
+    for (var i = 1; i <= stepCount; ++i)
+    {
+      var backUv = uv - pixelStep * i;
+      var frontUv = uv + pixelStep * i;
+      
+      var backDepth = GeometryPass.GetDepth(geometryBuffer0.Sample(backUv));
+      var frontDepth = GeometryPass.GetDepth(geometryBuffer0.Sample(frontUv));
+      
+      var backWeight = SeparableBlur.PascalWeights[startIndex + i] * Math.Step(Math.Abs(depth - backDepth), threshold);
+      var frontWeight = SeparableBlur.PascalWeights[startIndex + i] * Math.Step(Math.Abs(depth - frontDepth), threshold);
+      
+      color += texture.Sample(backUv) * backWeight;
+      color += texture.Sample(frontUv) * frontWeight;
+      weights += backWeight + frontWeight;
+    }
+    
+    color /= weights;
+    
+    // Output the weighted color average
+    return color;
+  }
+}
+
+// Once templated shader fragments are implemented, these fragments could be
+// consolidated into one templated fragment. For now, there is a fragment
+// for each blur radius from 5 to 25, in increments of 5.
+
+// Blur filter with radius of 5 pixels
+[Pixel][PostProcess]
+struct SeparableBlurRadius5
+{
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 0);
+  }
+}
+
+// Blur filter with radius of 10 pixels
+[Pixel][PostProcess]
+struct SeparableBlurRadius10
+{
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  
+  [Output] var Target0 : Real4;
+
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 1);
+  }
+}
+
+// Blur filter with radius of 15 pixels
+[Pixel][PostProcess]
+struct SeparableBlurRadius15
+{
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 2);
+  }
+}
+
+// Blur filter with radius of 20 pixels
+[Pixel][PostProcess]
+struct SeparableBlurRadius20
+{
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 3);
+  }
+}
+
+// Blur filter with radius of 25 pixels
+[Pixel][PostProcess]
+struct SeparableBlurRadius25
+{
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 4);
+  }
+}
+
+// A bilateral filter is similiar to a standard separable blur
+// except that it also preserves edges by using depth info.
+// https://en.wikipedia.org/wiki/Bilateral_filter
+
+// Blur filter with radius of 5 pixels
+[Pixel][PostProcess]
+struct BilateralBlurRadius5
+{
+  [BuiltInInput] var FarPlane : Real;
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var DepthThreshold : Real;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 0, &this.GeometryBuffer0, this.DepthThreshold / this.FarPlane);
+  }
+}
+
+// Blur filter with radius of 10 pixels
+[Pixel][PostProcess]
+struct BilateralBlurRadius10
+{
+  [BuiltInInput] var FarPlane : Real;
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var DepthThreshold : Real;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 1, &this.GeometryBuffer0, this.DepthThreshold / this.FarPlane);
+  }
+}
+
+// Blur filter with radius of 15 pixels
+[Pixel][PostProcess]
+struct BilateralBlurRadius15
+{
+  [BuiltInInput] var FarPlane : Real;
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var DepthThreshold : Real;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 2, &this.GeometryBuffer0, this.DepthThreshold / this.FarPlane);
+  }
+}
+
+// Blur filter with radius of 20 pixels
+[Pixel][PostProcess]
+struct BilateralBlurRadius20
+{
+  [BuiltInInput] var FarPlane : Real;
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var DepthThreshold : Real;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 3, &this.GeometryBuffer0, this.DepthThreshold / this.FarPlane);
+  }
+}
+
+// Blur filter with radius of 25 pixels
+[Pixel][PostProcess]
+struct BilateralBlurRadius25
+{
+  [BuiltInInput] var FarPlane : Real;
+  [StageInput] var Uv : Real2;
+  [Input] var InverseTextureSize : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var Vertical : Boolean;
+  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var DepthThreshold : Real;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = SeparableBlur.Call(&this.Texture, this.InverseTextureSize, this.Uv, this.Vertical, 4, &this.GeometryBuffer0, this.DepthThreshold / this.FarPlane);
+  }
+}

@@ -1,0 +1,13 @@
+// DuplicateLocalVariableName
+
+class Animal
+{
+  function Foo(i : Integer)
+  {
+    var i = true;
+
+    // Alternative
+    var this = 5;
+    var i = false;
+  }
+}

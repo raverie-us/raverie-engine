@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CA0735F3-8CE7-4663-BFE5-96FEF5EA0880}</ProjectGuid>
+    <RootNamespace>Sound</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SimpleSound.cpp" />
+    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SoundAttenuator.cpp" />
+    <ClCompile Include="SoundCue.cpp" />
+    <ClCompile Include="SoundEmitter.cpp" />
+    <ClCompile Include="SoundFilterNode.cpp" />
+    <ClCompile Include="SoundInstance.cpp" />
+    <ClCompile Include="SoundListener.cpp" />
+    <ClCompile Include="SoundNodeGraph.cpp" />
+    <ClCompile Include="SoundSpace.cpp" />
+    <ClCompile Include="SoundStandard.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
+    <ClCompile Include="SoundTag.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="SimpleSound.hpp" />
+    <ClInclude Include="Sound.hpp" />
+    <ClInclude Include="SoundAttenuator.hpp" />
+    <ClInclude Include="SoundCue.hpp" />
+    <ClInclude Include="SoundEmitter.hpp" />
+    <ClInclude Include="SoundFilterNode.hpp" />
+    <ClInclude Include="SoundInstance.hpp" />
+    <ClInclude Include="SoundListener.hpp" />
+    <ClInclude Include="SoundNodeGraph.hpp" />
+    <ClInclude Include="SoundSpace.hpp" />
+    <ClInclude Include="SoundStandard.hpp" />
+    <ClInclude Include="SoundSystem.hpp" />
+    <ClInclude Include="SoundTag.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(ZeroLibraries)\AudioEngine\AudioEngine.vcxproj">
+      <Project>{fa3c580e-8e06-466a-8eb1-34bb2efed4fa}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

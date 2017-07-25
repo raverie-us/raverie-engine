@@ -1,0 +1,109 @@
+Here's one great debate:
+ - All classes / structs / pods go onto the heap (yes, Pods are reference counted)
+   * Makes implementing closures easier since there's no "boxing" or copied up-values to speak of
+ - All classes / structs go in the heap, only Pods go into the stack
+   * Now pods must be boxed, however, by keeping structs in the heap, getting references to them in C++ is easy
+ - Classes go onto the heap, but structs stay on the stack
+   * (C# way) Makes the concept of "value-types" more generic (pods / structs are the same), though boxing becomes more of an issue
+ - Classes / structs have no preference, rather, it's the user who chooses
+   * (C++ way) This is rather generic
+   
+Errors are very verbose
+  Error Line    - Tell the user where the error occurred
+  Error Message - Clearly explains the error to the person as if in a conversation
+  Examples      - Give an example of where the problem is clearly identified (use the most common examples, or more than one for complexities)
+  Suggestions   - Suggest to the user how to fix the problem
+  Contextual    - Give any information that's contextual to their problem (for example, if it can't match a function, list all the overloads)
+  Reasoning     - Not always used, however, this gives an reason for why the language was built this way
+
+A C++ style error might be: 
+
+Another error that's specific to this language would be:
+
+152> struct Foo : Bar
+153> {
+154>    PlayerObj Player;
+155> }
+
+Error Line: 154
+Error Message: Structs can only contain value-types such as structs or plain-old-data types (ints, floats, etc).
+Examples:
+    class ExampleClass
+    {
+    }
+
+    struct ExampleStruct
+    {
+        // This will result in an error
+        ExampleClass Member;
+    }
+Suggestions: Do not include any reference types in your 
+Contextual: Struct Foo attempted to aggrigate ExampleClass.
+Reasoning: In Zilch, the purpose of a struct i
+
+Written in C++
+We really should be able to get a reference to an object inside C++ (and make it strong, normal, or weak)
+ - Should we only allow copying from or to the struct? Or should we make them literally the same?
+ - Some kind of templated type that wraps the struct, allows you to access the same members, but internally
+   manages the reference to the object (has extra methods for weak/normal/strong, etc)
+ - Since internally it would store a pointer, that pointer could easily go null and cause a proper error
+ - Allows for interoperability with C++
+ - This basically accounts for "heavy" userdata, since it can be an entire struct
+ - But what about light userdata or inheriting from C++ classes? (what about binding for that matter?)
+ - The language will have the ability to create an external class definition (as an object)
+ - By creating the external type definition, it will bind the class definition to the language
+ - When pushing a pointer / creating a reference, we can simply just pass in a type definition
+ - The language will actually use a base version (or brother) of the type definition internally
+
+ - Check out the Impossably fast delegates, and use that style to store the binding
+   (even use the same function call style internally, just to be generic and easy to work with)
+ 
+Compiled to byte code
+
+If the object is dynamic, "." means the member can either exist or not
+
+If the object is dynamic, "->" means the member MUST exist
+
+If the object is not dynamic, "." means the member MUST exist
+
+If the object is not dynamic, "->" means the member MUST exist (for generic purposes)
+
+Things to remember, when looking up a function, var can take the place of any argument (and we should
+also let derived types take the place too)
+
+Example:
+
+Cat derives from Animal
+
+class Farm
+{
+    void Add(Animal animal);
+}
+
+Cat c = Cat();
+
+var f = Farm();
+
+f->Add(c);  // Compiler error, no method found called "Add", (find other similar methods, or) did you mean to use . ?
+            // Requires the type to be explitly defined (only on dynamic classes)
+
+f.Add(c);   // Compiles, but will do a runtime lookup (and will find Add, but has to do a function hash comparison)
+            // Only allowed on types that are marked dynamic
+            // For generic-ness, we should just internally cast each one of the types to the signature (it will fail anyways)
+
+Certain keywords are really just Type aliases (var - Variable, int Int32, etc)
+ - we aught to try and keep all types as 1 word (instead of doing "as" style casting, we can do float(3) style)
+
+All strings are hashed and placed into the string pool (and are reference counted)
+ - obviously, constant strings would not die
+ - If doing this upon creation, it literally makes it so string comparisons are just reference comparisons
+
+All objects can be implicitly converted to Object, as well as Variable
+
+Variable can be implicitly converted to all objects (specialty)
+
+Variable type also allows variadic indexing, as well as variadic function calls
+
+Multiple inheritence
+
+

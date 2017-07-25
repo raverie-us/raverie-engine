@@ -1,0 +1,148 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct Quat
+{
+  vec4 Data;
+};
+
+struct Matrix
+{
+  mat4x4 Data;
+};
+
+struct GetterSetters
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _QuatPreConstructor(inout Quat self);
+Quat _QuatConstructor();
+Quat _QuatGetZero(inout Quat self);
+Quat _QuatGetSZero();
+Quat _MatrixGetQuatZero(inout Matrix self);
+Quat _MathGetSQuatZero();
+Quat _MatrixGetMSQuatZero();
+
+void _MatrixPreConstructor(inout Matrix self);
+Matrix _MatrixConstructor();
+Matrix _MatrixGetSZero();
+Matrix _MatrixGetZero(inout Matrix self);
+
+void _GetterSettersPreConstructor(inout GetterSetters self);
+GetterSetters _GetterSettersConstructor();
+void _GetterSettersMain(inout GetterSetters self);
+Quat _QuatGetIdentity(inout Quat self);
+Quat _QuatGetSIdentity();
+
+//----- Global Variable Declarations -----
+//----- Quat Functions -----
+void _QuatPreConstructor(inout Quat self)
+{
+  self.Data = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+Quat _QuatConstructor()
+{
+  Quat self;
+  _QuatPreConstructor(self);
+  return self;
+}
+
+Quat _QuatGetZero(inout Quat self)
+{
+  Quat _result = _QuatConstructor();
+  _result.Data = vec4(0, 0, 0, 0);
+  return _result;
+}
+
+Quat _QuatGetSZero()
+{
+  Quat _result = _QuatConstructor();
+  _result.Data = vec4(0, 0, 0, 0);
+  return _result;
+}
+
+Quat _MatrixGetQuatZero(inout Matrix self)
+{
+  return _QuatGetSZero();
+}
+
+Quat _MathGetSQuatZero()
+{
+  return _QuatGetSZero();
+}
+
+Quat _MatrixGetMSQuatZero()
+{
+  return _QuatGetSZero();
+}
+
+//----- Matrix Functions -----
+void _MatrixPreConstructor(inout Matrix self)
+{
+  self.Data = mat4x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+}
+
+Matrix _MatrixConstructor()
+{
+  Matrix self;
+  _MatrixPreConstructor(self);
+  return self;
+}
+
+Matrix _MatrixGetSZero()
+{
+  Matrix _result = _MatrixConstructor();
+  return _result;
+}
+
+Matrix _MatrixGetZero(inout Matrix self)
+{
+  return _MatrixGetSZero();
+}
+
+//----- GetterSetters Functions -----
+void _GetterSettersPreConstructor(inout GetterSetters self)
+{
+  self.Dummy = 0;
+}
+
+GetterSetters _GetterSettersConstructor()
+{
+  GetterSetters self;
+  _GetterSettersPreConstructor(self);
+  return self;
+}
+
+void _GetterSettersMain(inout GetterSetters self)
+{
+  Quat _q1 = _QuatConstructor();
+  Quat _q2 = _QuatGetZero(_q1);
+  Quat _q3 = _QuatGetSZero();
+  Quat _q4 = _MathGetSQuatZero();
+  Quat _q5 = _MatrixGetMSQuatZero();
+  
+  Matrix _m1 = _MatrixConstructor();
+  Matrix _m2 = _MatrixGetZero(_m1);
+  Matrix _m3 = _MatrixGetSZero();
+  Quat _q6 = _MatrixGetQuatZero(_m1);
+  
+  Quat _q7 = _QuatGetSIdentity();
+  Quat _q8 = _QuatGetIdentity(_q7);
+}
+
+Quat _QuatGetIdentity(inout Quat self)
+{
+  return _QuatGetSIdentity();
+}
+
+Quat _QuatGetSIdentity()
+{
+  Quat _result = _QuatConstructor();
+  _result.Data = vec4(float(0), float(0), float(0), float(1));
+  return _result;
+}
+

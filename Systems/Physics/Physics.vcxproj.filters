@@ -1,0 +1,855 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Components">
+      <UniqueIdentifier>{325ce1ca-d80b-4411-b29a-6f61022f29ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Collider">
+      <UniqueIdentifier>{75036269-ade7-42cc-a3a1-c58c135c0caa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Collider\ColliderTypes">
+      <UniqueIdentifier>{56ffe3e0-da8f-435e-9d66-bbe0fc6cab11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Collider\ColliderTypes\Mesh">
+      <UniqueIdentifier>{faaf459a-09bb-42dd-94d1-8676e85b9983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\RigidBody">
+      <UniqueIdentifier>{1c634155-c7be-47c7-8e00-ef59200de490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\PhysicsSpace">
+      <UniqueIdentifier>{9086e148-2214-405d-915e-061aab00701d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Effects">
+      <UniqueIdentifier>{07e762a6-2130-4511-b39d-8bc0209aee5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Debug">
+      <UniqueIdentifier>{f4d68ea3-5ca1-4666-af6a-0c0a145158c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Controller">
+      <UniqueIdentifier>{7d8caf68-fbf9-4751-b39a-e35d381e100f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Region">
+      <UniqueIdentifier>{4f0c442d-2f03-45e6-b6af-823e65c189f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{4cefaf4d-94dd-40da-9589-16216a3f7f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{9a8d0fd1-2976-4cb3-8c23-d84bde0198dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{f0051a1d-e59d-4d41-a137-9ddfa52173bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{b4496c27-cda3-4a9f-a855-bb0c36ef6cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints">
+      <UniqueIdentifier>{c13f4004-bfe0-4c4a-b0f0-7214a81bc86d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SpringSystem">
+      <UniqueIdentifier>{d5adb065-288b-4aae-89ad-30f18a6349a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints\AddOns">
+      <UniqueIdentifier>{50aeb7da-12e1-45ee-8ddb-2ca06a7fe6a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints\Atoms">
+      <UniqueIdentifier>{823ef393-53f7-4dc5-a6c5-f56a74610731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints\Contacts">
+      <UniqueIdentifier>{946d0709-e313-4f5d-9fe4-138d62ab4449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints\Fragments">
+      <UniqueIdentifier>{3cc04b2a-2569-4d9d-9e9d-980d7bcb88c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{b2fb3e16-b5c3-4e1e-b925-5a8349ba7ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints\Molecules">
+      <UniqueIdentifier>{707a5d90-93ea-4577-82e2-1723bb7f8db3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Queues">
+      <UniqueIdentifier>{2b28f6e1-a136-48b3-9a3b-6b633e8bfb15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BroadPhase">
+      <UniqueIdentifier>{81093d2d-e7ee-4963-9fd5-7ac1921d6f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resolution">
+      <UniqueIdentifier>{bffd2b94-efd5-4089-9318-b13497aa57dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resolution\Solvers">
+      <UniqueIdentifier>{d8c0a5ff-08a0-4848-9dc3-19bf9b91f4e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Integration">
+      <UniqueIdentifier>{5201ea79-8635-43c9-8cb6-1d9998ac31d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NarrowPhase">
+      <UniqueIdentifier>{4b97ef0c-53da-4e01-b16b-fa1b858a1665}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NarrowPhase\CollisionManager">
+      <UniqueIdentifier>{140a54f9-2411-4012-a9e2-95d6ab29d650}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints\CoreJoints">
+      <UniqueIdentifier>{89e0dcb9-8b0a-4cb4-8b2f-443dbd2748b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints\MiscJoints">
+      <UniqueIdentifier>{ac6f8309-50ca-4315-b70a-4f786e777928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Constraints\CoreJoints2d">
+      <UniqueIdentifier>{e4713d3b-5c6a-464d-865f-8b889096a4ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\CollisionGroups">
+      <UniqueIdentifier>{2e97713d-c2c1-42ba-ada1-c8a3348ece97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\MassOverride">
+      <UniqueIdentifier>{f0bdbdb8-ff6b-4b36-af50-46a8ed53dc83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Car">
+      <UniqueIdentifier>{2a4bc7bb-54cd-4930-b297-a2c933557f3c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ContactManager.cpp">
+      <Filter>Resolution</Filter>
+    </ClCompile>
+    <ClCompile Include="Island.cpp">
+      <Filter>Resolution</Filter>
+    </ClCompile>
+    <ClCompile Include="IslandManager.cpp">
+      <Filter>Resolution</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsPairs.cpp">
+      <Filter>Resolution</Filter>
+    </ClCompile>
+    <ClCompile Include="Analyzer.cpp">
+      <Filter>BroadPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="RayCast.cpp">
+      <Filter>BroadPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="CylinderCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="EllipsoidCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Components\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSpace.cpp">
+      <Filter>Components\PhysicsSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="DragEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Region.cpp">
+      <Filter>Components\Region</Filter>
+    </ClCompile>
+    <ClCompile Include="Integrators.cpp">
+      <Filter>Integration</Filter>
+    </ClCompile>
+    <ClCompile Include="Manifold.cpp">
+      <Filter>NarrowPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>NarrowPhase\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvexMesh.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsMaterial.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsEvents.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsEngine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\ConstraintHelpers.cpp">
+      <Filter>Components\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\ConstraintAtoms.cpp">
+      <Filter>Components\Constraints\Atoms</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\Contact.cpp">
+      <Filter>Components\Constraints\Contacts</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\ConstraintFragments.cpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\BasicSolver.cpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\GenericBasicSolver.cpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\IConstraintSolver.cpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\NormalSolver.cpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldTransformation.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsNode.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\ConstraintMolecules.cpp">
+      <Filter>Components\Constraints\Molecules</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsQueueManager.cpp">
+      <Filter>Utilities\Queues</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsQueues.cpp">
+      <Filter>Utilities\Queues</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreActions.cpp">
+      <Filter>Utilities\Queues</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicActions.cpp">
+      <Filter>Utilities\Queues</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\ThreadedSolver.cpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="WindEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvexMeshCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Masses.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintRanges.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\WeldJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\StickJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsMesh.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\RevoluteJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ThrustEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\PrismaticJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\JointSpring.cpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\PositionJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\JointMotor.cpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\Joint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\JointLimit.cpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\GearJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\FixedAngleJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\WheelJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\JointData.cpp">
+      <Filter>Components\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\LinearAxisJoint.cpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\ManipulatorJoint.cpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\PhyGunJoint.cpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\PrismaticJoint2d.cpp">
+      <Filter>Components\Constraints\CoreJoints2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\RevoluteJoint2d.cpp">
+      <Filter>Components\Constraints\CoreJoints2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\WheelJoint2d.cpp">
+      <Filter>Components\Constraints\CoreJoints2d</Filter>
+    </ClCompile>
+    <ClCompile Include="JointEvents.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\PulleyJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="JointCreator.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="MassOverride.cpp">
+      <Filter>Components\MassOverride</Filter>
+    </ClCompile>
+    <ClCompile Include="VortexEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="IgnoreSpaceEffects.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="TorqueEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsCar.cpp">
+      <Filter>Components\Car</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsCarWheel.cpp">
+      <Filter>Components\Car</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComposition.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="BuoyancyEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyMassCalculations.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsEventManager.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeCollisionHelpers.cpp">
+      <Filter>NarrowPhase\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshFilterRange.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\JointConfigOverride.cpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\RelativeVelocityJoint.cpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\JointDebugDrawConfig.cpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\UniversalJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="InternalEdgeCorrection.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericPhysicsMesh.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshDebug.cpp">
+      <Filter>Components\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsRaycastProvider.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicMotor.cpp">
+      <Filter>Components\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\UprightJoint.cpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="GjkDebug.cpp">
+      <Filter>Components\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicDirectionEffects.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPointEffects.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionFilterBlocks.cpp">
+      <Filter>Resources\CollisionGroups</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeOfImpactDebug.cpp">
+      <Filter>Components\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeOfImpact.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCollisionEventTracker.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSolverConfig.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\PositionCorrectionFragments.cpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClCompile>
+    <ClCompile Include="SpringSystem.cpp">
+      <Filter>Components\SpringSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiConvexMesh.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiConvexMeshCollider.cpp">
+      <Filter>Components\Collider\ColliderTypes\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Joints\CustomJoint.cpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomPhysicsEffect.cpp">
+      <Filter>Components\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsMeshBoundData.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentInspectors.cpp">
+      <Filter>Components\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsStandard.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDrawHelpers.cpp">
+      <Filter>Components\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionTable.cpp">
+      <Filter>Resources\CollisionGroups</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionGroup.cpp">
+      <Filter>Resources\CollisionGroups</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionFilter.cpp">
+      <Filter>Resources\CollisionGroups</Filter>
+    </ClCompile>
+    <ClCompile Include="ContactPoint.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ContactManager.hpp">
+      <Filter>Resolution</Filter>
+    </ClInclude>
+    <ClInclude Include="Island.hpp">
+      <Filter>Resolution</Filter>
+    </ClInclude>
+    <ClInclude Include="IslandManager.hpp">
+      <Filter>Resolution</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsPairs.hpp">
+      <Filter>Resolution</Filter>
+    </ClInclude>
+    <ClInclude Include="Analyzer.hpp">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="RayCast.hpp">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.hpp">
+      <Filter>Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="CylinderCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="EllipsoidCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.hpp">
+      <Filter>Components\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSpace.hpp">
+      <Filter>Components\PhysicsSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="DragEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugFlags.hpp">
+      <Filter>Components\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Region.hpp">
+      <Filter>Components\Region</Filter>
+    </ClInclude>
+    <ClInclude Include="Integrators.hpp">
+      <Filter>Integration</Filter>
+    </ClInclude>
+    <ClInclude Include="Manifold.hpp">
+      <Filter>NarrowPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.hpp">
+      <Filter>NarrowPhase\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvexMesh.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsMaterial.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointEvents.hpp">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsEvents.hpp">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsEngine.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsStandard.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointList.hpp">
+      <Filter>Components\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ConstraintHelpers.hpp">
+      <Filter>Components\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointEnums.hpp">
+      <Filter>Components\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointIncludes.hpp">
+      <Filter>Components\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ConstraintAtoms.hpp">
+      <Filter>Components\Constraints\Atoms</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ConstraintAtomDefines.hpp">
+      <Filter>Components\Constraints\Atoms</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\Contact.hpp">
+      <Filter>Components\Constraints\Contacts</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\TemplatedFragments.hpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ConstraintFragments.hpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\SerializationFragments.hpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\BasicSolver.hpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\GenericBasicSolver.hpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\IConstraintSolver.hpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\NormalSolver.hpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldTransformation.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsNode.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ConstraintMolecules.hpp">
+      <Filter>Components\Constraints\Molecules</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsQueues.hpp">
+      <Filter>Utilities\Queues</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsQueueManager.hpp">
+      <Filter>Utilities\Queues</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreActions.hpp">
+      <Filter>Utilities\Queues</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicActions.hpp">
+      <Filter>Utilities\Queues</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ThreadedSolver.hpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\SolverFragments.hpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ThreadedFragments.hpp">
+      <Filter>Resolution\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="WindEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvexMeshCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Masses.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintRanges.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\WeldJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\StickJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\RevoluteJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsMesh.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\PrismaticJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ThrustEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\PositionJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointSpring.hpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\Joint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointMotor.hpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\GearJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointLimit.hpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\FixedAngleJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\WheelJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointData.hpp">
+      <Filter>Components\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\PhyGunJoint.hpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\LinearAxisJoint.hpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ManipulatorJoint.hpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\RevoluteJoint2d.hpp">
+      <Filter>Components\Constraints\CoreJoints2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\PrismaticJoint2d.hpp">
+      <Filter>Components\Constraints\CoreJoints2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\WheelJoint2d.hpp">
+      <Filter>Components\Constraints\CoreJoints2d</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\PulleyJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="JointCreator.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="MassOverride.hpp">
+      <Filter>Components\MassOverride</Filter>
+    </ClInclude>
+    <ClInclude Include="VortexEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="IgnoreSpaceEffects.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeCollision.hpp">
+      <Filter>NarrowPhase\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TorqueEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsCar.hpp">
+      <Filter>Components\Car</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsCarWheel.hpp">
+      <Filter>Components\Car</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComposition.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="BuoyancyEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="BodyMassCalculations.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsEventManager.hpp">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeCollisionHelpers.hpp">
+      <Filter>NarrowPhase\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleShapeCollision.hpp">
+      <Filter>NarrowPhase\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ComplexShapeCollision.hpp">
+      <Filter>NarrowPhase\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshFilterRange.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointConfigOverride.hpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\RelativeVelocityJoint.hpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\JointDebugDrawConfig.hpp">
+      <Filter>Components\Constraints\AddOns</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\UniversalJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\DebugDrawFragments.hpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClInclude>
+    <ClInclude Include="InternalEdgeCorrection.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericPhysicsMesh.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshDebug.hpp">
+      <Filter>Components\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsRaycastProvider.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMotor.hpp">
+      <Filter>Components\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\UprightJoint.hpp">
+      <Filter>Components\Constraints\CoreJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="GjkDebug.hpp">
+      <Filter>Components\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicDirectionEffects.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicPointEffects.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionFilterBlocks.hpp">
+      <Filter>Resources\CollisionGroups</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeOfImpactDebug.hpp">
+      <Filter>Components\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeOfImpact.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCollisionEventTracker.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\PositionCorrectionFragments.hpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSolverConfig.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="SpringSystem.hpp">
+      <Filter>Components\SpringSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\ConstraintFragmentsSse.hpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiConvexMesh.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiConvexMeshCollider.hpp">
+      <Filter>Components\Collider\ColliderTypes\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Joints\CustomJoint.hpp">
+      <Filter>Components\Constraints\MiscJoints</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomPhysicsEffect.hpp">
+      <Filter>Components\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardDeclarations.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsMeshBoundData.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentInspectors.hpp">
+      <Filter>Components\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDrawHelpers.hpp">
+      <Filter>Components\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionTable.hpp">
+      <Filter>Resources\CollisionGroups</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionGroup.hpp">
+      <Filter>Resources\CollisionGroups</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionFilter.hpp">
+      <Filter>Resources\CollisionGroups</Filter>
+    </ClInclude>
+    <ClInclude Include="ContactPoint.hpp">
+      <Filter>Event</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

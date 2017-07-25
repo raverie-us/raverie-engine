@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "TextureCubePreview"
+		var ResourceId = 0x5336d7df32a35811
+	}
+}

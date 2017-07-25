@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "ViewportHud"
+		var ResourceId = 0x5442fd87a8a8afbc
+		var LoaderType = "DefinitionSet"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

@@ -1,0 +1,13 @@
+[Version:1]
+BinaryContent 
+{
+	BinaryBuilder 
+	{
+		var Name = "HalfBoxRight"
+		var ResourceId = 0x5198b0e40d5ebaeb
+		var LoaderType = "PhysicsMesh"
+		var Version = 0
+		var FilterTag = "TileMesh"
+		var ResourceOwner = ""
+	}
+}

@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "TemplateRenderPass"
+		var ResourceId = 0x582103bf74552e85
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Render Pass"
+		var Description = "Sample RenderPass fragment"
+		var SortWeight = 100
+		var Category = "Render Pass"
+		var CategorySortWeight = 50
+	}
+}

@@ -1,0 +1,95 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct SVPixel1
+{
+  int PrimitiveId;
+  float PixelDepth;
+};
+
+struct SystemValues3_Pixel
+{
+  float Time;
+  int PrimitiveId;
+  float PixelDepth;
+};
+
+//----- Forward Declarations -----
+void _SVPixel1PreConstructor(inout SVPixel1 self);
+SVPixel1 _SVPixel1Constructor();
+void _SVPixel1Main(inout SVPixel1 self);
+
+void _SystemValues3_PixelPreConstructor(inout SystemValues3_Pixel self);
+SystemValues3_Pixel _SystemValues3_PixelConstructor();
+void _SystemValues3_PixelMain(inout SystemValues3_Pixel self);
+void CopyInputs(inout SystemValues3_Pixel self);
+void CopyOutputs(inout SystemValues3_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- SVPixel1 Functions -----
+void _SVPixel1PreConstructor(inout SVPixel1 self)
+{
+  self.PrimitiveId = int(0);
+  self.PixelDepth = float(0.0);
+}
+
+SVPixel1 _SVPixel1Constructor()
+{
+  SVPixel1 self;
+  _SVPixel1PreConstructor(self);
+  return self;
+}
+
+void _SVPixel1Main(inout SVPixel1 self)
+{
+  self.PixelDepth = float(self.PrimitiveId);
+}
+
+//----- SystemValues3_Pixel Functions -----
+void _SystemValues3_PixelPreConstructor(inout SystemValues3_Pixel self)
+{
+  self.Time = float(0.0);
+  self.PrimitiveId = int(0);
+  self.PixelDepth = float(0.0);
+}
+
+SystemValues3_Pixel _SystemValues3_PixelConstructor()
+{
+  SystemValues3_Pixel self;
+  _SystemValues3_PixelPreConstructor(self);
+  return self;
+}
+
+void _SystemValues3_PixelMain(inout SystemValues3_Pixel self)
+{
+  SVPixel1 _svpixel1 = _SVPixel1Constructor();
+  _svpixel1.PrimitiveId = self.PrimitiveId;
+  _SVPixel1Main(_svpixel1);
+  self.PixelDepth = _svpixel1.PixelDepth;
+}
+
+//----- SystemValues3_Pixel Final Shader Functions -----
+void CopyInputs(inout SystemValues3_Pixel self)
+{
+  self.Time = Time;
+  self.PrimitiveId = gl_PrimitiveID;
+}
+
+void CopyOutputs(inout SystemValues3_Pixel self)
+{
+  gl_FragDepth = self.PixelDepth;
+}
+
+//----- Main -----
+void main(void)
+{
+  SystemValues3_Pixel systemvalues3_pixel = _SystemValues3_PixelConstructor(); 
+  CopyInputs(systemvalues3_pixel);
+  _SystemValues3_PixelMain(systemvalues3_pixel);
+  CopyOutputs(systemvalues3_pixel);
+}
+

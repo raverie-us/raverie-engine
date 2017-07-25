@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Default"
+		var ResourceId = 0x74f23adc1a810b95
+		var LoaderType = "NetPropertyConfig"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Default"
+		var Description = ""
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

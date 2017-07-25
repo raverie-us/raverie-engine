@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "ZVolumeMeter"
+		var ResourceId = 0x59550284bd55be92
+	}
+}

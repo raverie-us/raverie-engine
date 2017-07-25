@@ -1,0 +1,18 @@
+{
+        "auto_complete": true,
+        "auto_complete_selector": "source",
+        "auto_complete_triggers":
+        [
+                {
+                        "characters": "."
+                },
+                {
+                        "characters": "("
+                }
+        ],
+
+        "extensions":
+        [
+                "zilch"
+        ]
+}

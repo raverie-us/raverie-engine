@@ -1,0 +1,110 @@
+@font-face
+{
+  font-family: "Inconsolata";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Inconsolata"), url("http://themes.googleusercontent.com/static/fonts/inconsolata/v3/BjAYBlHtW3CJxDcjzrnZCIbN6UDyHWBl620a-IRfuBk.woff") format("woff");
+}
+
+.hovertree
+{
+  font-family: Inconsolata;
+  color: #DDD;
+  display: inline-block;
+  padding: 0px;
+  margin: 0px;
+  font-size: 0px;
+  line-height: 0px;
+  overflow: hidden;
+  vertical-align: top;
+  white-space: nowrap;
+  position: absolute;
+  background: #444;
+  min-width: 80px;
+  min-height: 20px;
+  max-height: 400px;
+  overflow-y: scroll;
+  box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+}
+
+.hovertree .loading-icon
+{
+  background-image: url(loading.gif);
+  width: 16px;
+  height: 16px;
+  display: table;
+  margin: 0 auto;
+}
+
+.hovertree-loading
+{
+  height: 20px;
+}
+
+.hovertree .column
+{
+  display: inline-block;
+  padding: 0px;
+  margin: 0px;
+}
+
+.hovertree .cell-base
+{
+  padding: 0px;
+  margin: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  line-height: 16px;
+  min-width: 10px;
+  max-width: 300px;
+  height: 20px;
+}
+
+.hovertree .cell
+{
+  min-width: 80px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.hovertree .expander
+{
+  text-align: center;
+  cursor: pointer;
+}
+
+.hovertree .editable
+{
+  height: 20px;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  resize: none;
+}
+
+.hovertree textarea:-moz-read-only /* For Firefox */
+{
+  background-color: #BBB;
+}
+
+.hovertree textarea:read-only
+{ 
+  background-color: #BBB;
+}
+
+.hovertree .row-odd
+{
+  background: #333;
+}
+
+.hovertree
+{
+  border: 1px solid #000;
+}
+
+.hovertree .cell-inner-horizontal,.cell-right-most
+{
+  border-left: 1px solid #000;
+}

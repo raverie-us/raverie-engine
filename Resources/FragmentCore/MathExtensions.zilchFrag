@@ -1,0 +1,834 @@
+[Implements]
+struct MathLengthSq
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function LengthSq(value : Real2) : Real
+  {
+    return Math.Dot(value, value);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function LengthSq(value : Real3) : Real
+  {
+    return Math.Dot(value, value);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function LengthSq(value : Real4) : Real
+  {
+    return Math.Dot(value, value);
+  }
+}
+
+[Implements]
+struct MathDistanceSq
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function DistanceSq(real20 : Real2, real21 : Real2) : Real
+  {
+    var vector = real20 - real21;
+    return Math.LengthSq(vector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function DistanceSq(real30 : Real3, real31 : Real3) : Real
+  {
+    var vector = real30 - real31;
+    return Math.LengthSq(vector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function DistanceSq(real40 : Real4, real41 : Real4) : Real
+  {
+    var vector = real40 - real41;
+    return Math.LengthSq(vector);
+  }
+}
+
+[Implements]
+struct MathReflectAcrossVector
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function ReflectAcrossVector(toBeReflected : Real2, vector : Real2) : Real2
+  {
+    return Math.ReflectAcrossPlane(-toBeReflected, vector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ReflectAcrossVector(toBeReflected : Real3, vector : Real3) : Real3
+  {
+    return Math.ReflectAcrossPlane(-toBeReflected, vector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ReflectAcrossVector(toBeReflected : Real4, vector : Real4) : Real4
+  {
+    return Math.ReflectAcrossPlane(-toBeReflected, vector);
+  }
+}
+
+[Implements]
+struct MathProjectOnVector
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnVector(toBeProjected : Real2, normalizedVector : Real2) : Real2
+  {
+    return normalizedVector * Math.Dot(toBeProjected, normalizedVector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnVector(toBeProjected : Real3, normalizedVector : Real3) : Real3
+  {
+    return normalizedVector * Math.Dot(toBeProjected, normalizedVector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnVector(toBeProjected : Real4, normalizedVector : Real4) : Real4
+  {
+    return normalizedVector * Math.Dot(toBeProjected, normalizedVector);
+  }
+}
+
+[Implements]
+struct MathProjectOnPlane
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnPlane(toBeProjected : Real2, planeNormal : Real2) : Real2
+  {
+    return toBeProjected - Math.ProjectOnVector(toBeProjected, planeNormal);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnPlane(toBeProjected : Real3, planeNormal : Real3) : Real3
+  {
+    return toBeProjected - Math.ProjectOnVector(toBeProjected, planeNormal);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnPlane(toBeProjected : Real4, planeNormal : Real4) : Real4
+  {
+    return toBeProjected - Math.ProjectOnVector(toBeProjected, planeNormal);
+  }
+}
+
+[Implements]
+struct MathAngleBetween
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function AngleBetween(real20 : Real2, real21 : Real2) : Real
+  {
+    var dotVal = Math.Dot(real20, real21);
+    dotVal = Math.Clamp(dotVal, -1.0, 1.0);
+    return Math.ACos(dotVal);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AngleBetween(real30 : Real3, real31 : Real3) : Real
+  {
+    var dotVal = Math.Dot(real30, real31);
+    dotVal = Math.Clamp(dotVal, -1.0, 1.0);
+    return Math.ACos(dotVal);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AngleBetween(real40 : Real4, real41 : Real4) : Real
+  {
+    var dotVal = Math.Dot(real40, real41);
+    dotVal = Math.Clamp(dotVal, -1.0, 1.0);
+    return Math.ACos(dotVal);
+  }
+}
+
+[Implements]
+struct MathRotateTowards
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function RotateTowards(p0 : Real2, p1 : Real2, maxRadians : Real) : Real2
+  {
+    return MathGenericRotateTowards[Real2].RotateTowards(p0, p1, maxRadians);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function RotateTowards(p0 : Real3, p1 : Real3, maxRadians : Real) : Real3
+  {
+    return MathGenericRotateTowards[Real3].RotateTowards(p0, p1, maxRadians);
+  }
+}
+
+[Implements]
+struct MathGetAxis
+{
+  [Static][Extension(typeid(Real2))][Implements]
+  function GetAxis(value : Integer) : Real2
+  {
+    var axis = Real2();
+    axis[value] = 1;
+    return axis;
+  }
+  [Static][Extension(typeid(Real3))][Implements]
+  function GetAxis(value : Integer) : Real3
+  {
+    var axis = Real3();
+    axis[value] = 1;
+    return axis;
+  }
+  [Static][Extension(typeid(Real4))][Implements]
+  function GetAxis(value : Integer) : Real4
+  {
+    var axis = Real4();
+    axis[value] = 1;
+    return axis;
+  }
+}
+
+[Implements]
+struct MathSaturate
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Saturate(value : Real) : Real
+  {
+    return Math.Clamp(value, Real(0), Real(1));
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Saturate(value : Real2) : Real2
+  {
+    return Math.Clamp(value, Real2(0), Real2(1));
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Saturate(value : Real3) : Real3
+  {
+    return Math.Clamp(value, Real3(0), Real3(1));
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Saturate(value : Real4) : Real4
+  {
+    return Math.Clamp(value, Real4(0), Real4(1));
+  }
+}
+
+[Implements]
+struct MathCeilPlaces
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real, places : Integer) : Real
+  {
+    return Math.Ceil(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real2, places : Integer) : Real2
+  {
+    return Math.Ceil(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real3, places : Integer) : Real3
+  {
+    return Math.Ceil(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real4, places : Integer) : Real4
+  {
+    return Math.Ceil(value, places, 10);
+  }
+}
+
+[Implements]
+struct MathCeilPlacesBase
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real, places : Integer, numericalBase : Integer) : Real
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Ceil(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real2, places : Integer, numericalBase : Integer) : Real2
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Ceil(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real3, places : Integer, numericalBase : Integer) : Real3
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Ceil(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real4, places : Integer, numericalBase : Integer) : Real4
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Ceil(value / scale) * scale;
+  }
+}
+
+[Implements]
+struct MathFloorPlaces
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Floor(value : Real, places : Integer) : Real
+  {
+    return Math.Floor(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Floor(value : Real2, places : Integer) : Real2
+  {
+    return Math.Floor(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Floor(value : Real3, places : Integer) : Real3
+  {
+    return Math.Floor(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Floor(value : Real4, places : Integer) : Real4
+  {
+    return Math.Floor(value, places, 10);
+  }
+}
+
+[Implements]
+struct MathFloorPlacesBase
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Floor(value : Real, places : Integer, numericalBase : Integer) : Real
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Floor(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Floor(value : Real2, places : Integer, numericalBase : Integer) : Real2
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Floor(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Floor(value : Real3, places : Integer, numericalBase : Integer) : Real3
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Floor(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Floor(value : Real4, places : Integer, numericalBase : Integer) : Real4
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Floor(value / scale) * scale;
+  }
+}
+
+[Implements]
+struct MathRoundPlaces
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real, places : Integer) : Real
+  {
+    return Math.Round(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real2, places : Integer) : Real2
+  {
+    return Math.Round(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real3, places : Integer) : Real3
+  {
+    return Math.Round(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real4, places : Integer) : Real4
+  {
+    return Math.Round(value, places, 10);
+  }
+}
+
+[Implements]
+struct MathRoundPlacesBase
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real, places : Integer, numericalBase : Integer) : Real
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Round(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real2, places : Integer, numericalBase : Integer) : Real2
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Round(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real3, places : Integer, numericalBase : Integer) : Real3
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Round(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real4, places : Integer, numericalBase : Integer) : Real4
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Round(value / scale) * scale;
+  }
+}
+
+[Implements]
+struct MathTruncatePlaces
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real, places : Integer) : Real
+  {
+    return Math.Truncate(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real2, places : Integer) : Real2
+  {
+    return Math.Truncate(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real3, places : Integer) : Real3
+  {
+    return Math.Truncate(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real4, places : Integer) : Real4
+  {
+    return Math.Truncate(value, places, 10);
+  }
+}
+
+[Implements]
+struct MathTruncatePlacesBase
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real, places : Integer, numericalBase : Integer) : Real
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Truncate(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real2, places : Integer, numericalBase : Integer) : Real2
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Truncate(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real3, places : Integer, numericalBase : Integer) : Real3
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Truncate(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real4, places : Integer, numericalBase : Integer) : Real4
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Truncate(value / scale) * scale;
+  }
+}
+
+[Implements]
+struct MathFMod
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function FMod(numerator : Real, denominator : Real) : Real
+  {
+    return numerator - denominator * Math.Truncate(numerator / denominator);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function FMod(numerator : Real2, denominator : Real2) : Real2
+  {
+    return numerator - denominator * Math.Truncate(numerator / denominator);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function FMod(numerator : Real3, denominator : Real3) : Real3
+  {
+    return numerator - denominator * Math.Truncate(numerator / denominator);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function FMod(numerator : Real4, denominator : Real4) : Real4
+  {
+    return numerator - denominator * Math.Truncate(numerator / denominator);
+  }
+}
+
+[Implements]
+struct MathLog10
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Log10(value : Real) : Real
+  {
+    return Math.Log(value) / Math.Log(10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Log10(value : Real2) : Real2
+  {
+    return Math.Log(value) / Math.Log(10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Log10(value : Real3) : Real3
+  {
+    return Math.Log(value) / Math.Log(10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Log10(value : Real4) : Real4
+  {
+    return Math.Log(value) / Math.Log(10);
+  }
+}
+
+[Implements]
+struct MathMatrixGetByIndex
+{
+  [Extension(typeid(Real2x2))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real2x3))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real2x4))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real3x2))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real3x4))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real4x2))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real4x3))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    return this[indexY][indexX];
+  }
+}
+
+[Implements]
+struct MathMatrixSetByIndex
+{
+  [Extension(typeid(Real2x2))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+  [Extension(typeid(Real2x3))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+  [Extension(typeid(Real2x4))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+  [Extension(typeid(Real3x2))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+  [Extension(typeid(Real3x4))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+  [Extension(typeid(Real4x2))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+  [Extension(typeid(Real4x3))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var indexX = index % this.CountX;
+    var indexY = index / this.CountX;
+    this[indexY][indexX] = value;
+  }
+}
+
+[Implements]
+struct MathMultiplyPointNoDivide
+{
+  // Multiplies the given vector as a point without performing the homogeneous division
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPointNoDivide(by : Real2x2, the : Real) : Real
+  {
+    var promotedVector = Real2(the, 1);
+    return Math.Multiply(by, promotedVector).X;
+  }
+  // Multiplies the given vector as a point without performing the homogeneous division
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPointNoDivide(by : Real3x3, the : Real2) : Real2
+  {
+    var promotedVector = Real3(the, 1);
+    return Math.Multiply(by, promotedVector).XY;
+  }
+  // Multiplies the given vector as a point without performing the homogeneous division
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPointNoDivide(by : Real4x4, the : Real3) : Real3
+  {
+    var promotedVector = Real4(the, 1);
+    return Math.Multiply(by, promotedVector).XYZ;
+  }
+}
+
+[Implements]
+struct MathMultiplyNormal
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyNormal(by : Real2x2, the : Real) : Real
+  {
+    var promotedVector = Real2(the, 0);
+    return Math.Multiply(by, promotedVector).X;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyNormal(by : Real3x3, the : Real2) : Real2
+  {
+    var promotedVector = Real3(the, 0);
+    return Math.Multiply(by, promotedVector).XY;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyNormal(by : Real4x4, the : Real3) : Real3
+  {
+    var promotedVector = Real4(the, 0);
+    return Math.Multiply(by, promotedVector).XYZ;
+  }
+}
+
+[Implements]
+struct MathMultiplyPoint
+{
+  // Multiplies the given vector as a point while performing the homogeneous division
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPoint(by : Real2x2, the : Real) : Real
+  {
+    var promotedVector = Real2(the, 1);
+    var transformedVector = Math.Multiply(by, promotedVector);
+    var result = transformedVector.X / transformedVector.Y;
+    return result;
+  }
+  // Multiplies the given vector as a point while performing the homogeneous division
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPoint(by : Real3x3, the : Real2) : Real2
+  {
+    var promotedVector = Real3(the, 1);
+    var transformedVector = Math.Multiply(by, promotedVector);
+    var result = transformedVector.XY / transformedVector.Z;
+    return result;
+  }
+  // Multiplies the given vector as a point while performing the homogeneous division
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPoint(by : Real4x4, the : Real3) : Real3
+  {
+    var promotedVector = Real4(the, 1);
+    var transformedVector = Math.Multiply(by, promotedVector);
+    var result = transformedVector.XYZ / transformedVector.W;
+    return result;
+  }
+}
+struct MathVectorSlerp
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Slerp(start : Real2, end : Real2, t : Real) : Real2
+  {
+    var dotVal = Math.Dot(start, end);
+    var theta = Math.ACos(dotVal) * t;
+    
+    var relativeVec = Real2();
+    // If end is the negative of start, no direction is better to interpolate than
+    // another, so generate a random perpendicular vector to rotate towards
+    if(dotVal == -1.0)
+      relativeVec = Real2(-start.Y, start.X);
+    else
+      relativeVec = end - start * dotVal;
+    // Attempt normalize (zero vectors and start == end)
+    relativeVec = Math.Normalize(relativeVec);
+    return (start * Math.Cos(theta)) + (relativeVec * Math.Sin(theta));
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Slerp(start : Real3, end : Real3, t : Real) : Real3
+  {
+    var normalizedStart = Math.Normalize(start);
+    var normalizedEnd = Math.Normalize(end);
+    
+    var dotVal = Math.Dot(normalizedStart, normalizedEnd);
+    // Safeguard for non-normalized and slight floating point errors
+    dotVal = Math.Clamp(dotVal, -1.0, 1.0);
+    var theta = Math.ACos(dotVal) * t;
+    
+    var relativeVec = Real3();
+    // If end is the negative of start, no direction is better to interpolate than
+    // another, so generate a random perpendicular vector to rotate towards
+    if(dotVal == -1.0)
+    {
+      // Unfortunately, a 3d perpendicular vector is not as simple, so try doing the 2d
+      // perpendicular with [x,y], but if x is zero then switch to [y,z] instead
+      if(normalizedStart.X != 0.0)
+        relativeVec = Real3(-normalizedStart.Y, normalizedStart.X, normalizedStart.Z);
+      else
+        relativeVec = Real3(normalizedStart.X, -normalizedStart.Z, normalizedStart.Y);
+    }
+    else
+      relativeVec = normalizedEnd - normalizedStart * dotVal;
+    // Attempt normalize (zero vectors and start == end)
+    relativeVec = Math.Normalize(relativeVec);
+    return (normalizedStart * Math.Cos(theta)) + (relativeVec * Math.Sin(theta));
+  }
+}
+
+struct MathSignedAngle
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function SignedAngle(p0 : Real3, p1 : Real3, up : Real3) : Real
+  {
+    // Get the right vector
+    var right = Math.Cross(p0, up);
+    right = Math.Normalize(right);
+    
+    // Get the forward and right dot products
+    var forwardDot = Math.Clamp(Math.Dot(p0, p1), -1.0, 1.0);
+    var rightDot = Math.Clamp(Math.Dot(right, p1), -1.0, 1.0);
+    
+    // Get the actual angle from the forward dot product
+    var finalAngle = Math.ACos(forwardDot);
+    
+    // If we're actually on the left side...
+    if(rightDot > 0.0)
+    {
+      // Compute the real final angle given the quadrant it's in (kinda like atan2)
+      finalAngle = -finalAngle;
+    }
+    
+    // Return the finally computed angle
+    return finalAngle;
+  }
+}
+
+struct MathAngle2D
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Angle2D(value : Real3) : Real
+  {
+    return Math.ATan2(value.Y, value.X);
+  }
+}
+
+
+struct MathGenericRotateTowards[VectorType]
+{
+  [Static]
+  function RotateTowards(p0 : VectorType, p1 : VectorType, maxRadians : Real) : VectorType
+  {
+    var p0Norm = Math.Normalize(p0);
+    var p1Norm = Math.Normalize(p1);
+    var angleEpsilon = 0.0000001;
+    
+    var angle = Math.AngleBetween(p0, p1);
+    
+    if(angle > Math.Pi)
+    {
+      angle -= 2.0 * Math.Pi;
+    }
+    
+    angle = Math.Abs(angle);
+    if(angle > angleEpsilon)
+    {
+      var t = maxRadians / angle;
+      if(t > 1.0)
+      {
+        t = 1.0;
+      }
+      return Math.Slerp(p0, p1, t);
+    }
+    else
+    {
+      return p1;
+    }
+  }
+}
+
+
+struct MathMatrixDeterminant
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Determinant(value : Real2x2) : Real
+  {
+    return value.M00 * value.M11 - value.M01 * value.M10;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Determinant(value : Real3x3) : Real
+  {
+    return (value.M00 * value.M11 * value.M22 + value.M10 * value.M21 * value.M02 + value.M01 * value.M12 * value.M20) 
+         - (value.M02 * value.M11 * value.M20 + value.M10 * value.M01 * value.M22 + value.M00 * value.M21 * value.M12);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Determinant(value : Real4x4) : Real
+  {
+    var det  = value.M03 * value.M12 * value.M21 * value.M30 - value.M02 * value.M13 * value.M21 * value.M30;
+    det += value.M01 * value.M13 * value.M22 * value.M30 - value.M03 * value.M11 * value.M22 * value.M30;
+    det += value.M02 * value.M11 * value.M23 * value.M30 - value.M01 * value.M12 * value.M23 * value.M30;
+    det += value.M02 * value.M13 * value.M20 * value.M31 - value.M03 * value.M12 * value.M20 * value.M31;
+    det += value.M03 * value.M10 * value.M22 * value.M31 - value.M00 * value.M13 * value.M22 * value.M31;
+    det += value.M00 * value.M12 * value.M23 * value.M31 - value.M02 * value.M10 * value.M23 * value.M31;
+    det += value.M03 * value.M11 * value.M20 * value.M32 - value.M01 * value.M13 * value.M20 * value.M32;
+    det += value.M00 * value.M13 * value.M21 * value.M32 - value.M03 * value.M10 * value.M21 * value.M32;
+    det += value.M01 * value.M10 * value.M23 * value.M32 - value.M00 * value.M11 * value.M23 * value.M32;
+    det += value.M01 * value.M12 * value.M20 * value.M33 - value.M02 * value.M11 * value.M20 * value.M33;
+    det += value.M02 * value.M10 * value.M21 * value.M33 - value.M00 * value.M12 * value.M21 * value.M33;
+    det += value.M00 * value.M11 * value.M22 * value.M33 - value.M01 * value.M10 * value.M22 * value.M33;
+    return det;
+  }
+}
+

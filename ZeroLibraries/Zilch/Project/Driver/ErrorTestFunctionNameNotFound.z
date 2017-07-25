@@ -1,0 +1,10 @@
+// FunctionNameNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function ()
+  {
+  }
+}

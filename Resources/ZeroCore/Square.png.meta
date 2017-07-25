@@ -1,0 +1,21 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "Square"
+		var ResourceId = 0x5275aa4d802dd6dc
+		var AtlasId = 0x5274cf95e4a661fd
+		var FrameSizeX = 64
+		var FrameSizeY = 64
+		var FrameCount = 1
+		var FrameDelay = 0.0833332986
+		var OriginX = 32
+		var OriginY = 32
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{8, 8, 8, 8}
+		var Fill = SpriteFill.NineSlice
+	}
+}

@@ -1,0 +1,6 @@
+// VariableTypeNotFound
+
+class Animal
+{
+  var Variable : = 9;
+}

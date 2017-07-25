@@ -1,0 +1,112 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct Real4x4MultiplyTests
+{
+  vec4 Target0;
+  vec4 Target1;
+  vec4 Target2;
+  vec4 Target3;
+  mat4x4 Matrix;
+};
+
+struct Real4x4MultiplyPointTests_Pixel
+{
+  float Time;
+  vec4 Target0;
+  vec4 Target1;
+  vec4 Target2;
+  vec4 Target3;
+};
+
+//----- Forward Declarations -----
+void _Real4x4MultiplyTestsPreConstructor(inout Real4x4MultiplyTests self);
+Real4x4MultiplyTests _Real4x4MultiplyTestsConstructor();
+void _Real4x4MultiplyTestsMain(inout Real4x4MultiplyTests self);
+
+void _Real4x4MultiplyPointTests_PixelPreConstructor(inout Real4x4MultiplyPointTests_Pixel self);
+Real4x4MultiplyPointTests_Pixel _Real4x4MultiplyPointTests_PixelConstructor();
+void _Real4x4MultiplyPointTests_PixelMain(inout Real4x4MultiplyPointTests_Pixel self);
+void CopyInputs(inout Real4x4MultiplyPointTests_Pixel self);
+void CopyOutputs(inout Real4x4MultiplyPointTests_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- Real4x4MultiplyTests Functions -----
+void _Real4x4MultiplyTestsPreConstructor(inout Real4x4MultiplyTests self)
+{
+  self.Target0 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target1 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target2 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target3 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Matrix = mat4x4(float(1), float(2), float(3), float(4), float(5), float(6), float(7), float(8), float(9), float(10), float(11), float(12), float(13), float(14), float(15), float(16));
+}
+
+Real4x4MultiplyTests _Real4x4MultiplyTestsConstructor()
+{
+  Real4x4MultiplyTests self;
+  _Real4x4MultiplyTestsPreConstructor(self);
+  return self;
+}
+
+void _Real4x4MultiplyTestsMain(inout Real4x4MultiplyTests self)
+{
+  self.Target0 = (vec4(float(1), float(1), float(1), float(1)) * self.Matrix);
+  self.Target1 = (vec4(float(1), float(2), float(3), float(4)) * self.Matrix);
+  self.Target2 = (vec4(-0.5f, 1.7f, -1.1f, 0.1f) * self.Matrix);
+  self.Target3 = (vec4(float(0)) * self.Matrix);
+}
+
+//----- Real4x4MultiplyPointTests_Pixel Functions -----
+void _Real4x4MultiplyPointTests_PixelPreConstructor(inout Real4x4MultiplyPointTests_Pixel self)
+{
+  self.Time = float(0.0);
+  self.Target0 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target1 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target2 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target3 = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+Real4x4MultiplyPointTests_Pixel _Real4x4MultiplyPointTests_PixelConstructor()
+{
+  Real4x4MultiplyPointTests_Pixel self;
+  _Real4x4MultiplyPointTests_PixelPreConstructor(self);
+  return self;
+}
+
+void _Real4x4MultiplyPointTests_PixelMain(inout Real4x4MultiplyPointTests_Pixel self)
+{
+  Real4x4MultiplyTests _real4x4multiplytests = _Real4x4MultiplyTestsConstructor();
+  _Real4x4MultiplyTestsMain(_real4x4multiplytests);
+  self.Target0 = _real4x4multiplytests.Target0;
+  self.Target1 = _real4x4multiplytests.Target1;
+  self.Target2 = _real4x4multiplytests.Target2;
+  self.Target3 = _real4x4multiplytests.Target3;
+}
+
+//----- Real4x4MultiplyPointTests_Pixel Final Shader Functions -----
+void CopyInputs(inout Real4x4MultiplyPointTests_Pixel self)
+{
+  self.Time = Time;
+}
+
+void CopyOutputs(inout Real4x4MultiplyPointTests_Pixel self)
+{
+  outputs[0] = self.Target0; 
+  outputs[1] = self.Target1; 
+  outputs[2] = self.Target2; 
+  outputs[3] = self.Target3; 
+}
+
+//----- Main -----
+void main(void)
+{
+  Real4x4MultiplyPointTests_Pixel real4x4multiplypointtests_pixel = _Real4x4MultiplyPointTests_PixelConstructor(); 
+  CopyInputs(real4x4multiplypointtests_pixel);
+  _Real4x4MultiplyPointTests_PixelMain(real4x4multiplypointtests_pixel);
+  CopyOutputs(real4x4multiplypointtests_pixel);
+}
+

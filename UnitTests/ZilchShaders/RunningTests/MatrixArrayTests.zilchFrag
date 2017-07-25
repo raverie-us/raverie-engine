@@ -1,0 +1,32 @@
+[Pixel]
+struct MatrixFixedArrayTest
+{
+    [Output] var Target0 : Real4;
+    [Output] var Target1 : Real4;
+    [Output] var Target2 : Real4;
+    [Output] var Target3 : Real4;
+    
+    [Input]
+    var Matrices : FixedArray[Real4x4, 4] = FixedArray[Real4x4, 4]()
+    {
+    Real4x4(0), Real4x4(1), Real4x4(2), Real4x4(7)
+    };
+    
+    [Input]
+    var TestM : Real4x4;
+
+    [Main]
+    function Main()
+    {
+        //this.Target0 = Real4(this.Matrix.M00, this.Matrix.M01, this.Matrix.M02, this.Matrix.M03);
+        //this.Target1 = Real4(this.Matrix.M10, this.Matrix.M11, this.Matrix.M12, this.Matrix.M13);
+        //this.Target2 = Real4(this.Matrix.M20, this.Matrix.M21, this.Matrix.M22, this.Matrix.M23);
+        //this.Target3 = Real4(this.Matrix.M30, this.Matrix.M31, this.Matrix.M32, this.Matrix.M33);
+        this.Target0 = this.Matrices[0][0];
+        this.Target1 = this.Matrices[1][0];
+        this.Target2 = this.Matrices[2][0];
+        this.Target3 = this.Matrices[3][0];
+        this.Target0 = this.TestM[1];
+    }
+}
+

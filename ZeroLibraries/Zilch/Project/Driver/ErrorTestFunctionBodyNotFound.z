@@ -1,0 +1,8 @@
+// FunctionBodyNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function TestFn() : Real
+}

@@ -1,0 +1,35 @@
+Menus menus =
+{
+    Menu =
+	{
+		string Name = "Project",
+		string Description = "",
+		Array Entries = 
+		[
+		  "New",
+		  "Open",
+		]
+	},
+	Menu =
+	{
+		string Name = "Settings",
+		string Description = "",
+		Array Entries = 
+		[
+		  "Configuration",
+		  "Reconnect",
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Main",
+		string Description = "",
+		Array Entries = 
+		[
+          "Project",
+		  "Settings",
+		]
+	},	
+	
+},

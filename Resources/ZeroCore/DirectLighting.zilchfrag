@@ -1,0 +1,66 @@
+// Data required to run direct lighting calculations.
+struct DirectLightingInputs
+{
+  var ViewNormal : Real3;
+  var ViewDirection : Real3;
+  
+  var LightDirection : Real3;
+  var LightColor : Real3;
+  var LightRadius : Real;
+  var LightDistance : Real;
+  
+  var Albedo : Real3;
+  var Metallic : Real;
+  var Roughness : Real;
+  var Specular : Real;
+  
+  var RenderDiffuse : Boolean;
+  var RenderSpecular : Boolean;
+}
+
+// Physically based lighting calculations for dynamic lights.
+struct DirectLighting
+{
+  [Static]
+  function Compute(inputs : DirectLightingInputs) : Real3
+  {
+    // Get view and light directions
+    var n = inputs.ViewNormal;
+    var l = inputs.LightDirection;
+    var v = inputs.ViewDirection;
+    var h = Math.Normalize(v + l);
+    var alpha = inputs.Roughness * inputs.Roughness;
+    
+    // Sample brdf's
+    var diffuse = Brdf.DiffuseDisney(n, l, v, h, inputs.Roughness);
+    // Specular factors
+    var f = Brdf.SpecularFSchlick(v, h);
+    var d = Brdf.SpecularDTrowbridgeReitzGgx(n, h, alpha);
+    var g = Brdf.SpecularGSmithGgx(n, l, v, h, alpha);
+    
+    // NDF normalization for area lights
+    var alphaPrime = Math.Saturate(alpha + inputs.LightRadius / (2.0 * inputs.LightDistance));
+    d *= Math.Pow(alpha / alphaPrime, 2.0);
+    
+    // Brdf denominator
+    var normalization = 1.0 / (4.0 * Math.Max(Math.Dot(n, v), 0.001));
+    
+    // Final specular, represented as a scale and bias to F0
+    var brdfSpecular = Real2(1.0 - f, f) * (d * g * normalization);
+    
+    // Diffuse calculation
+    var diffuseColor = inputs.LightColor * inputs.Albedo * diffuse;
+    
+    // Specular calculation
+    var metallicSpecular = inputs.LightColor * (inputs.Albedo * brdfSpecular.X + brdfSpecular.YYY);
+    var dialectricSpecular = inputs.LightColor * (Real3(0.1) * brdfSpecular.X + brdfSpecular.YYY);
+    
+    // For debugging
+    diffuseColor *= inputs.RenderDiffuse as Real;
+    metallicSpecular *= inputs.RenderSpecular as Real;
+    dialectricSpecular *= inputs.RenderSpecular as Real;
+    
+    // Linear combination between dialectric and metallic colors
+    return Math.Lerp(diffuseColor + dialectricSpecular * inputs.Specular, metallicSpecular, inputs.Metallic);
+  }
+}

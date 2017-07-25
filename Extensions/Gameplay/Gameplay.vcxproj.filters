@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{699c68df-573c-40d3-9d66-b07869e8d260}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{9283f564-a59c-4bab-a58f-7c7e37c98467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{386d223b-6aa9-433b-adc5-84f29187b288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WebBrowser">
+      <UniqueIdentifier>{b6b4d442-ffeb-4d4f-9a96-b8ab0c5d88c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TileMap">
+      <UniqueIdentifier>{be4aa260-d64a-41fc-ac98-bc1f1df28a4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ZilchZero">
+      <UniqueIdentifier>{47acc0ac-f829-49df-9d50-77fecdf6f426}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Reactive.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultGame.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraViewport.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomContext.hpp">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingSquares.hpp">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseCapture.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SplineParticles.hpp">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="WebBrowser.hpp">
+      <Filter>WebBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="WebBrowserWidget.hpp">
+      <Filter>WebBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="WebBrowserChrome.hpp">
+      <Filter>WebBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="ReactiveViewport.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.hpp">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMapSource.hpp">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMapSourceLoadPattern.hpp">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MarketWidget.hpp">
+      <Filter>WebBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayStandard.hpp" />
+    <ClInclude Include="Zero.hpp">
+      <Filter>ZilchZero</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingCubes.hpp">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Orientation.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="CsgExternalSerialization.hpp">
+      <Filter>Misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Reactive.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultGame.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraViewport.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomContext.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayGame.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingSquares.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseCapture.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SplineParticles.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="WebBrowser.cpp">
+      <Filter>WebBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="WebBrowserWidget.cpp">
+      <Filter>WebBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="WebBrowserChrome.cpp">
+      <Filter>WebBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="WebBrowserNo.cpp">
+      <Filter>WebBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="ReactiveViewport.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMapSource.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MarketWidget.cpp">
+      <Filter>WebBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayStandard.cpp" />
+    <ClCompile Include="Zero.cpp">
+      <Filter>ZilchZero</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingCubes.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Orientation.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

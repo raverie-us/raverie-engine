@@ -1,0 +1,33 @@
+class ZUiFillViewport : ZilchComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  [Dependency] var UiRootWidget : UiRootWidget;
+  
+  [Property] var Active : Boolean = true;
+  [Property] var CameraViewport : CogPath = CogPath();
+  [Property] var Camera : CogPath = CogPath();
+  
+  function Initialize(init : CogInitializer)
+  {
+    if(this.Active)
+      Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    var cameraViewport = this.CameraViewport.Cog.CameraViewport;
+    var cameraCog = this.Camera.Cog;
+    var camera = cameraCog.Camera;
+    
+    // Size ourself to the viewport size
+    var viewportSize = cameraViewport.ViewportResolution;
+    this.UiWidget.Size = viewportSize;
+    
+    // Center the camera
+    var cameraPos = cameraCog.Transform.Translation;
+    cameraPos.X = viewportSize.X * 0.5;
+    cameraPos.Y = -viewportSize.Y * 0.5;
+    cameraCog.Transform.Translation = cameraPos;
+  }
+  
+}

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\ZeroEngine.cpp">
+      <Filter>Zero</Filter>
+    </ClCompile>
+    <ClCompile Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\Core.cpp">
+      <Filter>Zero</Filter>
+    </ClCompile>
+    <ClCompile Include="%NAME%.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="%NAME%Precompiled.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\ZeroEngine.hpp">
+      <Filter>Zero</Filter>
+    </ClInclude>
+    <ClInclude Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\Core.hpp">
+      <Filter>Zero</Filter>
+    </ClInclude>
+    <ClInclude Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\Zilch.hpp">
+      <Filter>Zero</Filter>
+    </ClInclude>
+    <ClInclude Include="%NAME%.hpp">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="%NAME%Precompiled.hpp">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Zero">
+      <UniqueIdentifier>{383bdb07-6f79-4944-85cd-b13856f5d65e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin">
+      <UniqueIdentifier>{54948aa7-0f0e-4833-80ac-e6f3967be802}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

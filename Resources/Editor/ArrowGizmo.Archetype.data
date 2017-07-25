@@ -1,0 +1,59 @@
+[Version:1]
+Cog 
+{
+	var Name = "ArrowGizmo"
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Vec3{0, 0, 0}
+		var Scale = Vec3{1, 1, 1}
+		var Rotation = Quat{0, 0, 0, 1}
+	}
+	Orientation 
+	{
+		var GlobalUp = Vec3{0, 1, 0}
+		var LocalOrientationBasis = Quat{0, -0.707106769, 0, 0.707106769}
+		var DefaultBases = OrientationBases.ForwardXUpY
+	}
+	MouseCapture 
+	{
+	}
+	Gizmo 
+	{
+		var Active = true
+		var ForwardEventsToChildren = true
+	}
+	GizmoDrag 
+	{
+		var DragMode = GizmoDragMode.Line
+		var LineDirection = Vec3{1, 0, 0}
+		var PlaneNormal = Vec3{0, 1, 0}
+		var NormalInWorld = false
+		var GrabMode = GizmoGrabMode.Hold
+		var AutoDrag = true
+		var DragDistance = 6
+	}
+	ArrowGizmo 
+	{
+		var MouseInput = true
+		var PickingPriority = 0
+		var Color = Vec4{1, 0, 0, 0.400000006}
+		var HoverColor = Vec4{1, 1, 0, 0.400000006}
+		var ViewScaled = true
+		var UseParentAsViewScaleOrigin = false
+		var DrawOnTop = true
+		var HeadSize = 0.280000001
+		var Length = 2.79999995
+		var SelectRadius = 0.25
+		var HeadType = ArrowHeadType.Arrow
+		var DualHeads = false
+		var FilledHeads = true
+		var LineDrawWidth = 2
+	}
+	TranslateGizmo 
+	{
+		var UpdateMode = UpdateMode.TranslateSelf
+		var SnapMode = GizmoSnapMode.None
+		var SnapDistance = 0.25
+	}
+}

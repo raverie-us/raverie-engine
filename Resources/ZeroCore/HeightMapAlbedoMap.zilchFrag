@@ -1,0 +1,23 @@
+// Albedo input for lighting opaque geometry.
+// Output values are mapped from a weighted blend textures over the surface.
+[Pixel]
+struct HeightMapAlbedoMap
+{
+  [FragmentInput][StageInput] var Uv : Real2;
+  [FragmentInput] var HeightMapTextureWeights : Real4;
+  
+  [Input] var Texture0 : Sampler2d;
+  [Input] var Texture1 : Sampler2d;
+  [Input] var Texture2 : Sampler2d;
+  [Input] var Texture3 : Sampler2d;
+  
+  [Output] var Albedo : Real3;
+  
+  function Main()
+  {
+    this.Albedo += this.Texture0.Sample(this.Uv).XYZ * this.HeightMapTextureWeights.X;
+    this.Albedo += this.Texture1.Sample(this.Uv).XYZ * this.HeightMapTextureWeights.Y;
+    this.Albedo += this.Texture2.Sample(this.Uv).XYZ * this.HeightMapTextureWeights.Z;
+    this.Albedo += this.Texture3.Sample(this.Uv).XYZ * this.HeightMapTextureWeights.W;
+  }
+}

@@ -1,0 +1,8 @@
+[Version:1]
+ContentLibrary 
+{
+	var Name = "Loading"
+	var LibraryId = 0x4f7eb7981a2650ae
+	var SourceControlType = ""
+	var ReadOnly = true
+}

@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DefaultNoAttenuation"
+		var ResourceId = 0x57ca8a6ad262efe5
+		var LoaderType = "SoundAttenuator"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "No Attenuation"
+		var Description = "Settings For No Attenuation"
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

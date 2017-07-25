@@ -1,0 +1,169 @@
+Menus menus =
+{
+	Menu =
+	{
+		string Name = "Project",
+		string Description = "",
+		Array Entries = 
+		[
+		  "NewProject",
+		  "ArchiveProject",
+		  "OpenProject",
+		  "SaveProject",
+		  "ShowProjectFolder",
+		  "Divider",
+		  "PlayGame",
+		  "ExportGame",
+		  "Divider",
+		  "Exit"
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Edit",
+		string Description = "",
+		Array Entries =
+		[
+		  "Undo",
+		  "Redo",
+		  "Divider",
+		  "Cut",
+		  "Copy",
+		  "Paste",
+		  "Divider",
+		  "Duplicate",
+		  "Delete",	
+		  "Divider",
+		  "FindAll",
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Create",
+		string Description = "",
+		Array Entries = 
+		[
+		  "CreateTransform",
+		  "CreateCube",
+		  "CreateSphere",
+		  "CreateCamera",
+		  "Divider",
+		  "CreateSprite",
+		  "CreateSpriteText",
+		  "Divider",
+		  "CreateDirectionalLight"
+		  "CreatePointLight",
+		  "Divider",
+		  "CreateSpriteParticles"
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Select",
+		string Description = "",
+		Array Entries = 
+		[
+		  "PreviousSelection",
+		  "NextSelection",
+		  "Divider",
+		  "SelectNone",
+		  "SelectAll",
+		  "Divider",
+		  "SelectAllInTree",
+		  "SelectRoot",
+		  "SelectParent",
+		  "Divider",
+		  "CenterSelected",
+		  "FrameSelected",
+		  "Divider",
+		  "GroupSelected",
+		  "Divider",
+		  "SelectGame",
+		  "SelectSpace",
+		  "SelectProject",
+		  "SelectEditorConfig",
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Game",
+		string Description = "",
+		Array Entries = 
+		[
+		  "PlayGame",
+		  "StopGame",
+		  "StepGame",
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Resources",
+		string Description = "",
+		Array Entries = 
+		[
+		  "Add",
+		  "ImportGroup",
+		  "ImportSpriteSheet",
+		  "Divider",
+		  "ImportContentPackage",
+		  "ExportContentPackage",
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Windows",
+		string Description = "",
+		Array Entries = 
+		[
+		  "Properties",
+		  "Library",
+		  "Console",
+		  "Objects",
+		  "CommandListViewer",
+          "OperationHistory",
+		  "Tools",
+          "Performance",
+          "VolumeMeter",
+          "SoundNodeGraph",
+		  "Divider",
+		  "ToggleFullScreen"
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Help",
+		string Description = "",
+		Array Entries = 
+		[
+		  "Help",
+		  "ReportBug",
+		  "Controls",
+		  "Divider",
+		  "About",
+		]
+	},
+	
+	Menu =
+	{
+		string Name = "Main",
+		string Description = "",
+		Array Entries = 
+		[
+		  "Project",
+		  "Edit",
+		  "Create",
+		  "Select",
+		  "Resources",
+		  "Windows",
+		  "Help"
+		]
+	},
+	
+},

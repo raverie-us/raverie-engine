@@ -1,0 +1,6 @@
+// BlockCommentNotComplete
+
+class Animal
+{
+  var Vari/*able : Integer = 9;
+}

@@ -1,0 +1,1 @@
+SConscript("SConstruct.py", variant_dir = "B", src_dir = "../../", duplicate = 0)

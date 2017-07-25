@@ -1,0 +1,14 @@
+// InvalidBinaryOperationSameTypes
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    var value1 = true + false;
+
+    // Alternative
+    var value1 = null * null;
+  }
+}

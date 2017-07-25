@@ -1,0 +1,154 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+in vec2 psInData0;
+in vec2 psInData2;
+in vec2 psInData4;
+in vec2 psInData6;
+uniform vec2 GeoPixel_Data8;
+uniform vec2 GeoPixel_Data10;
+uniform vec2 GeoPixel_Data12;
+uniform vec2 GeoPixel_Data14;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct GeoPixel
+{
+  vec2 Data0;
+  vec2 Data1;
+  vec2 Data2;
+  vec2 Data3;
+  vec2 Data4;
+  vec2 Data5;
+  vec2 Data6;
+  vec2 Data7;
+  vec2 Data8;
+  vec2 Data9;
+  vec2 Data10;
+  vec2 Data11;
+  vec2 Data12;
+  vec2 Data13;
+  vec2 Data14;
+  vec2 Data15;
+};
+
+struct GeoVertexGeometryPixel_Pixel
+{
+  float Time;
+  vec2 Data0;
+  vec2 Data2;
+  vec2 Data4;
+  vec2 Data6;
+  vec2 GeoPixel_Data8;
+  vec2 GeoPixel_Data10;
+  vec2 GeoPixel_Data12;
+  vec2 GeoPixel_Data14;
+};
+
+//----- Forward Declarations -----
+void _GeoPixelPreConstructor(inout GeoPixel self);
+GeoPixel _GeoPixelConstructor();
+void _GeoPixelMain(inout GeoPixel self);
+
+void _GeoVertexGeometryPixel_PixelPreConstructor(inout GeoVertexGeometryPixel_Pixel self);
+GeoVertexGeometryPixel_Pixel _GeoVertexGeometryPixel_PixelConstructor();
+void _GeoVertexGeometryPixel_PixelMain(inout GeoVertexGeometryPixel_Pixel self);
+void CopyInputs(inout GeoVertexGeometryPixel_Pixel self);
+void CopyOutputs(inout GeoVertexGeometryPixel_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- GeoPixel Functions -----
+void _GeoPixelPreConstructor(inout GeoPixel self)
+{
+  self.Data0 = vec2(0.0, 0.0);
+  self.Data1 = vec2(0.0, 0.0);
+  self.Data2 = vec2(0.0, 0.0);
+  self.Data3 = vec2(0.0, 0.0);
+  self.Data4 = vec2(0.0, 0.0);
+  self.Data5 = vec2(0.0, 0.0);
+  self.Data6 = vec2(0.0, 0.0);
+  self.Data7 = vec2(0.0, 0.0);
+  self.Data8 = vec2(0.0, 0.0);
+  self.Data9 = vec2(0.0, 0.0);
+  self.Data10 = vec2(0.0, 0.0);
+  self.Data11 = vec2(0.0, 0.0);
+  self.Data12 = vec2(0.0, 0.0);
+  self.Data13 = vec2(0.0, 0.0);
+  self.Data14 = vec2(0.0, 0.0);
+  self.Data15 = vec2(0.0, 0.0);
+}
+
+GeoPixel _GeoPixelConstructor()
+{
+  GeoPixel self;
+  _GeoPixelPreConstructor(self);
+  return self;
+}
+
+void _GeoPixelMain(inout GeoPixel self)
+{
+}
+
+//----- GeoVertexGeometryPixel_Pixel Functions -----
+void _GeoVertexGeometryPixel_PixelPreConstructor(inout GeoVertexGeometryPixel_Pixel self)
+{
+  self.Time = float(0.0);
+  self.Data0 = vec2(0.0, 0.0);
+  self.Data2 = vec2(0.0, 0.0);
+  self.Data4 = vec2(0.0, 0.0);
+  self.Data6 = vec2(0.0, 0.0);
+  self.GeoPixel_Data8 = vec2(0.0, 0.0);
+  self.GeoPixel_Data10 = vec2(0.0, 0.0);
+  self.GeoPixel_Data12 = vec2(0.0, 0.0);
+  self.GeoPixel_Data14 = vec2(0.0, 0.0);
+}
+
+GeoVertexGeometryPixel_Pixel _GeoVertexGeometryPixel_PixelConstructor()
+{
+  GeoVertexGeometryPixel_Pixel self;
+  _GeoVertexGeometryPixel_PixelPreConstructor(self);
+  return self;
+}
+
+void _GeoVertexGeometryPixel_PixelMain(inout GeoVertexGeometryPixel_Pixel self)
+{
+  GeoPixel _geopixel = _GeoPixelConstructor();
+  _geopixel.Data0 = self.Data0;
+  _geopixel.Data2 = self.Data2;
+  _geopixel.Data4 = self.Data4;
+  _geopixel.Data6 = self.Data6;
+  _geopixel.Data8 = self.GeoPixel_Data8;
+  _geopixel.Data10 = self.GeoPixel_Data10;
+  _geopixel.Data12 = self.GeoPixel_Data12;
+  _geopixel.Data14 = self.GeoPixel_Data14;
+  _GeoPixelMain(_geopixel);
+}
+
+//----- GeoVertexGeometryPixel_Pixel Final Shader Functions -----
+void CopyInputs(inout GeoVertexGeometryPixel_Pixel self)
+{
+  self.Time = Time;
+  self.Data0 = psInData0;
+  self.Data2 = psInData2;
+  self.Data4 = psInData4;
+  self.Data6 = psInData6;
+  self.GeoPixel_Data8 = GeoPixel_Data8;
+  self.GeoPixel_Data10 = GeoPixel_Data10;
+  self.GeoPixel_Data12 = GeoPixel_Data12;
+  self.GeoPixel_Data14 = GeoPixel_Data14;
+}
+
+void CopyOutputs(inout GeoVertexGeometryPixel_Pixel self)
+{
+}
+
+//----- Main -----
+void main(void)
+{
+  GeoVertexGeometryPixel_Pixel geovertexgeometrypixel_pixel = _GeoVertexGeometryPixel_PixelConstructor(); 
+  CopyInputs(geovertexgeometrypixel_pixel);
+  _GeoVertexGeometryPixel_PixelMain(geovertexgeometrypixel_pixel);
+  CopyOutputs(geovertexgeometrypixel_pixel);
+}
+

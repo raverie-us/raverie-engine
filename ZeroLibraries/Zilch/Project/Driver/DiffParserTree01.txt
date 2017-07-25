@@ -1,0 +1,259 @@
+Root
+| Attribute
+| | [
+| | Version
+| | :
+| | Value
+| | | \"1\"
+| | ]
+| Object
+| | Cog
+| | Attribute
+| | | [
+| | | Id
+| | | :
+| | | Value
+| | | | \"697cbe79f75a89bc\"
+| | | ]
+| | Attribute
+| | | [
+| | | Inherit
+| | | :
+| | | Value
+| | | | \"Living:098098a\"
+| | | ]
+| | Attribute
+| | | [
+| | | OrderOverride
+| | | ]
+| | {
+| | Property
+| | | var
+| | | Name
+| | | =
+| | | Value
+| | | | \"Bob\"
+| | Value
+| | | Object
+| | | | Archetyped
+| | | | {
+| | | | Property
+| | | | | var
+| | | | | Archetype
+| | | | | =
+| | | | | Value
+| | | | | | \"Person:8fb809808ba890\"
+| | | | Property
+| | | | | var
+| | | | | ModifiedFromArchetype
+| | | | | =
+| | | | | Value
+| | | | | | true
+| | | | }
+| | Value
+| | | Object
+| | | | Transform
+| | | | {
+| | | | Property
+| | | | | var
+| | | | | Translation
+| | | | | =
+| | | | | Value
+| | | | | | Object
+| | | | | | | Vec3
+| | | | | | | {
+| | | | | | | Value
+| | | | | | | | 8
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | -8
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 0.0100000054
+| | | | | | | }
+| | | | Property
+| | | | | var
+| | | | | Scale
+| | | | | =
+| | | | | Value
+| | | | | | Object
+| | | | | | | Vec3
+| | | | | | | {
+| | | | | | | Value
+| | | | | | | | 1
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 1
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 1
+| | | | | | | }
+| | | | Property
+| | | | | var
+| | | | | Rotation
+| | | | | =
+| | | | | Value
+| | | | | | Object
+| | | | | | | Quat
+| | | | | | | {
+| | | | | | | Value
+| | | | | | | | 0
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 0
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 0
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 1
+| | | | | | | }
+| | | | }
+| | Value
+| | | Object
+| | | | CameraViewport
+| | | | {
+| | | | Property
+| | | | | var
+| | | | | Camera
+| | | | | =
+| | | | | Value
+| | | | | | Object
+| | | | | | | CogPath
+| | | | | | | {
+| | | | | | | Property
+| | | | | | | | var
+| | | | | | | | Path
+| | | | | | | | =
+| | | | | | | | Value
+| | | | | | | | | \"\"
+| | | | | | | Property
+| | | | | | | | var
+| | | | | | | | ResolvedNullErrorOccurred
+| | | | | | | | =
+| | | | | | | | Value
+| | | | | | | | | false
+| | | | | | | Property
+| | | | | | | | var
+| | | | | | | | ResolvedCog
+| | | | | | | | =
+| | | | | | | | Value
+| | | | | | | | | 4294967293
+| | | | | | | Property
+| | | | | | | | var
+| | | | | | | | PathPreference0
+| | | | | | | | =
+| | | | | | | | Value
+| | | | | | | | | CogPathPreference.CogRelative
+| | | | | | | }
+| | | | }
+| | Value
+| | | Object
+| | | | ArrayTest
+| | | | {
+| | | | Property
+| | | | | var
+| | | | | Indices
+| | | | | =
+| | | | | Value
+| | | | | | Object
+| | | | | | | Array
+| | | | | | | {
+| | | | | | | Value
+| | | | | | | | 5
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 15
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 3
+| | | | | | | ,
+| | | | | | | Value
+| | | | | | | | 9
+| | | | | | | }
+| | | | Property
+| | | | | var
+| | | | | Resources
+| | | | | =
+| | | | | Value
+| | | | | | Object
+| | | | | | | Array
+| | | | | | | {
+| | | | | | | Value
+| | | | | | | | Object
+| | | | | | | | | Resource
+| | | | | | | | | {
+| | | | | | | | | Property
+| | | | | | | | | | var
+| | | | | | | | | | ResourceId
+| | | | | | | | | | =
+| | | | | | | | | | Value
+| | | | | | | | | | | 0x576db809ad9ee6c8
+| | | | | | | | | Property
+| | | | | | | | | | var
+| | | | | | | | | | Type
+| | | | | | | | | | =
+| | | | | | | | | | Value
+| | | | | | | | | | | \"ColorGradient\"
+| | | | | | | | | Property
+| | | | | | | | | | var
+| | | | | | | | | | Name
+| | | | | | | | | | =
+| | | | | | | | | | Value
+| | | | | | | | | | | \"Dinkle\"
+| | | | | | | | | Property
+| | | | | | | | | | var
+| | | | | | | | | | Location
+| | | | | | | | | | =
+| | | | | | | | | | Value
+| | | | | | | | | | | \"Dinkle.ColorGradient.data\"
+| | | | | | | | | }
+| | | | | | | Value
+| | | | | | | | Object
+| | | | | | | | | Resource
+| | | | | | | | | {
+| | | | | | | | | Property
+| | | | | | | | | | var
+| | | | | | | | | | ResourceId
+| | | | | | | | | | =
+| | | | | | | | | | Value
+| | | | | | | | | | | 0x556530780432200d
+| | | | | | | | | Property
+| | | | | | | | | | var
+| | | | | | | | | | Type
+| | | | | | | | | | =
+| | | | | | | | | | Value
+| | | | | | | | | | | \"Level\"
+| | | | | | | | | Property
+| | | | | | | | | | var
+| | | | | | | | | | Name
+| | | | | | | | | | =
+| | | | | | | | | | Value
+| | | | | | | | | | | \"Level\"
+| | | | | | | | | Property
+| | | | | | | | | | var
+| | | | | | | | | | Location
+| | | | | | | | | | =
+| | | | | | | | | | Value
+| | | | | | | | | | | \"Level.data\"
+| | | | | | | | | }
+| | | | | | | }
+| | | | }
+| | Value
+| | | Object
+| | | | Hierarchy
+| | | | {
+| | | | Value
+| | | | | Object
+| | | | | | Cog
+| | | | | | Attribute
+| | | | | | | [
+| | | | | | | Id
+| | | | | | | :
+| | | | | | | Value
+| | | | | | | | \"527cbe79f75a89b5\"
+| | | | | | | ]
+| | | | | | {
+| | | | | | }
+| | | | }
+| | }

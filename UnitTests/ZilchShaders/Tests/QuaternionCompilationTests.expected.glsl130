@@ -1,0 +1,302 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct template_MathGenericRotateTowards_Quaternion_
+{
+  int Dummy;
+};
+
+struct QuatMathExtensions
+{
+  int Dummy;
+};
+
+struct QuaternionCompilationTests
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _template_MathGenericRotateTowards_Quaternion_PreConstructor(inout template_MathGenericRotateTowards_Quaternion_ self);
+template_MathGenericRotateTowards_Quaternion_ _template_MathGenericRotateTowards_Quaternion_Constructor();
+vec4 _template_MathGenericRotateTowards_Quaternion_RotateTowards(vec4 _p0, vec4 _p1, float _maxRadians);
+
+void _QuatMathExtensionsPreConstructor(inout QuatMathExtensions self);
+QuatMathExtensions _QuatMathExtensionsConstructor();
+float _MathAngleBetween(vec4 _a, vec4 _b);
+vec4 _MathConjugate(vec4 _value);
+float _MathDot(vec4 _lhs, vec4 _rhs);
+vec4 _MathInvert(vec4 _value);
+float _MathLength(vec4 _value);
+float _MathLengthSq(vec4 _value);
+vec4 _MathMultiply(vec4 _by, vec4 _the);
+vec3 _MathMultiply(vec4 _by, vec3 _the);
+vec4 _MathNormalize(vec4 _value);
+vec4 _MathRotationQuaternionBetween(vec3 _start, vec3 _end);
+vec4 _MathRotateTowards(vec4 _p0, vec4 _p1, float _maxRadians);
+vec4 _MathSlerp(vec4 _start, vec4 _end, float _t);
+vec4 _MathToQuaternion(vec3 _axis, float _radians);
+mat3x3 _MathToReal3x3(vec4 _rotation);
+
+void _QuaternionCompilationTestsPreConstructor(inout QuaternionCompilationTests self);
+QuaternionCompilationTests _QuaternionCompilationTestsConstructor();
+void _QuaternionCompilationTestsMain(inout QuaternionCompilationTests self);
+
+//----- Global Variable Declarations -----
+//----- MathGenericRotateTowards[Quaternion] Functions -----
+void _template_MathGenericRotateTowards_Quaternion_PreConstructor(inout template_MathGenericRotateTowards_Quaternion_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MathGenericRotateTowards_Quaternion_ _template_MathGenericRotateTowards_Quaternion_Constructor()
+{
+  template_MathGenericRotateTowards_Quaternion_ self;
+  _template_MathGenericRotateTowards_Quaternion_PreConstructor(self);
+  return self;
+}
+
+vec4 _template_MathGenericRotateTowards_Quaternion_RotateTowards(vec4 _p0, vec4 _p1, float _maxRadians)
+{
+  vec4 _p0Norm = _MathNormalize(_p0);
+  vec4 _p1Norm = _MathNormalize(_p1);
+  float _angleEpsilon = 0.0000001f;
+  
+  float _angle = _MathAngleBetween(_p0, _p1);
+  
+  if(_angle > 3.141592653589793238462643383f)
+  {
+    _angle -= 2.0f * 3.141592653589793238462643383f;
+  }
+  
+  _angle = abs(_angle);
+  if(_angle > _angleEpsilon)
+  {
+    float _t = _maxRadians / _angle;
+    if(_t > 1.0f)
+    {
+      _t = 1.0f;
+    }
+    return _MathSlerp(_p0, _p1, _t);
+  }
+  else
+  {
+    return _p1;
+  }
+}
+
+//----- QuatMathExtensions Functions -----
+void _QuatMathExtensionsPreConstructor(inout QuatMathExtensions self)
+{
+  self.Dummy = 0;
+}
+
+QuatMathExtensions _QuatMathExtensionsConstructor()
+{
+  QuatMathExtensions self;
+  _QuatMathExtensionsPreConstructor(self);
+  return self;
+}
+
+float _MathAngleBetween(vec4 _a, vec4 _b)
+{
+  _a = _MathNormalize(_a);
+  _b = _MathNormalize(_b);
+  float _dot = _MathDot(_a, _b);
+  
+  _dot = clamp(_dot, -1.0f, 1.0f);
+  // Quaternions are a 2-1 mapping, so we could get a rotation that is 400 degrees
+  // instead of 40 degrees, to fix this we can simply abs the dot product. This works
+  // out because we convert our initial [0,360] range to [0,180] then scale up by 2 (2-1 mapping).
+  float _correctedDot = abs(_dot);
+  float _angle = 2.0f * acos(_correctedDot);
+  return _angle;
+}
+
+vec4 _MathConjugate(vec4 _value)
+{
+  return vec4(-_value.xyz, _value.w);
+}
+
+float _MathDot(vec4 _lhs, vec4 _rhs)
+{
+  vec4 _lhsV4 = _lhs.xyzw;
+  vec4 _rhsV4 = _rhs.xyzw;
+  return dot(_lhsV4, _rhsV4);
+}
+
+vec4 _MathInvert(vec4 _value)
+{
+  vec4 _result = _MathConjugate(_value);
+  return _MathNormalize(_result);
+}
+
+float _MathLength(vec4 _value)
+{
+  return length(_value.xyzw);
+}
+
+float _MathLengthSq(vec4 _value)
+{
+  return _MathDot(_value, _value);
+}
+
+vec4 _MathMultiply(vec4 _by, vec4 _the)
+{
+  float _w = _by.w * _the.w - dot(_by.xyz, _the.xyz);
+  vec3 _v3 = _the.xyz * _by.w + _by.xyz * _the.w + cross(_by.xyz, _the.xyz);
+  return vec4(_v3, _w);
+}
+
+vec3 _MathMultiply(vec4 _by, vec3 _the)
+{
+  vec4 _promotedVector = vec4(_the, 0.0f);
+  vec4 _conjugate = _MathConjugate(_by);
+  vec4 _rotationResult = _MathMultiply(_MathMultiply(_by, _promotedVector), _conjugate);
+  return _rotationResult.xyz;
+}
+
+vec4 _MathNormalize(vec4 _value)
+{
+  vec4 _v4 = normalize(_value.xyzw);
+  return vec4(_v4.x, _v4.y, _v4.z, _v4.w);
+}
+
+vec4 _MathRotationQuaternionBetween(vec3 _start, vec3 _end)
+{
+  // Normalize both quaternions to ensure accuracy
+  _start = normalize(_start);
+  _end = normalize(_end);
+  
+  // Find the axis to rotate about
+  vec3 _axis = cross(_start, _end);
+  // The length of this axis is sin(theta). If there was no valid
+  // axis then fallback on the identity quaternion.
+  float _length = length(_axis);
+  if(_length == float(0))
+  {
+    return vec4(0.0, 0.0, 0.0, 1.0);
+  }
+  
+  // Get a normalized axis to rotate about
+  _axis = normalize(_axis);
+  // Compute the angle of rotation and generate the quaternion from the axis angle
+  float _dot = dot(_start, _end);
+  float _angle = acos(_dot);
+  return _MathToQuaternion(_axis, _angle);
+}
+
+vec4 _MathRotateTowards(vec4 _p0, vec4 _p1, float _maxRadians)
+{
+  return _template_MathGenericRotateTowards_Quaternion_RotateTowards(_p0, _p1, _maxRadians);
+}
+
+vec4 _MathSlerp(vec4 _start, vec4 _end, float _t)
+{
+  // Quaternion Interpolation With Extra Spins, pp. 96f, 461f
+  // Jack Morrison, Graphics Gems III, AP Professional
+  float _slerpEpsilon = 0.00001f;
+  float _cosTheta = _MathDot(_start, _end);
+  
+  //Check to ensure that the shortest path is taken (cosine of the angle between 
+  //the two quaternions is positive). This is done by storing the sign of the angle
+  // and using that to flip various values.
+  float _sign = float(sign(_cosTheta));
+  _cosTheta *= _sign;
+  
+  float _startVal = 1.0f - _t;
+  float _endVal = _t;
+  if(1.0f - _cosTheta > _slerpEpsilon)
+  {
+    float _theta = acos(_cosTheta);
+    float _sinTheta = sin(_theta);
+    _startVal = sin((1.0f - _t) * _theta) / _sinTheta;
+    _endVal = sin(_t * _theta) / _sinTheta;
+  }
+  
+  // Apply the sign
+  _endVal *= _sign;
+  
+  return vec4(_startVal * _start.x + _endVal * _end.x, _startVal * _start.y + _endVal * _end.y, _startVal * _start.z + _endVal * _end.z, _startVal * _start.w + _endVal * _end.w);
+}
+
+vec4 _MathToQuaternion(vec3 _axis, float _radians)
+{
+  float _alpha = _radians * 0.5f;
+  float _sinAlpha = sin(_alpha);
+  vec4 _result = vec4(_axis * _sinAlpha, cos(_alpha));
+  return _result;
+}
+
+mat3x3 _MathToReal3x3(vec4 _rotation)
+{
+  //     |       2     2                                |
+  //     | 1 - 2Y  - 2Z    2XY - 2ZW      2XZ + 2YW     |
+  //     |                                              |
+  //     |                       2     2                |
+  // M = | 2XY + 2ZW       1 - 2X  - 2Z   2YZ - 2XW     |
+  //     |                                              |
+  //     |                                      2     2 |
+  //     | 2XZ - 2YW       2YZ + 2XW      1 - 2X  - 2Y  |
+  //     |                                              |
+  float _xx = _rotation.x * _rotation.x;
+  float _xy = _rotation.x * _rotation.y;
+  float _xz = _rotation.x * _rotation.z;
+  float _yy = _rotation.y * _rotation.y;
+  float _yz = _rotation.y * _rotation.z;
+  float _zz = _rotation.z * _rotation.z;
+  float _zw = _rotation.z * _rotation.w;
+  float _yw = _rotation.y * _rotation.w;
+  float _xw = _rotation.x * _rotation.w;
+  
+  mat3x3 _result = mat3x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  _result[0][0] = 1.0f - 2.0f * (_yy + _zz);
+  _result[0][1] = 2.0f * (_xy - _zw);
+  _result[0][2] = 2.0f * (_xz + _yw);
+  
+  _result[1][0] = 2.0f * (_xy + _zw);
+  _result[1][1] = 1.0f - 2.0f * (_xx + _zz);
+  _result[1][2] = 2.0f * (_yz - _xw);
+  
+  _result[2][0] = 2.0f * (_xz - _yw);
+  _result[2][1] = 2.0f * (_yz + _xw);
+  _result[2][2] = 1.0f - 2.0f * (_xx + _yy);
+  return _result;
+}
+
+//----- QuaternionCompilationTests Functions -----
+void _QuaternionCompilationTestsPreConstructor(inout QuaternionCompilationTests self)
+{
+  self.Dummy = 0;
+}
+
+QuaternionCompilationTests _QuaternionCompilationTestsConstructor()
+{
+  QuaternionCompilationTests self;
+  _QuaternionCompilationTestsPreConstructor(self);
+  return self;
+}
+
+void _QuaternionCompilationTestsMain(inout QuaternionCompilationTests self)
+{
+  vec4 _q = vec4(0.0, 0.0, 0.0, 1.0);
+  _q = vec4(0.0, 0.0, 0.0, 1.0);
+  _q.x = 1.0f;
+  _q.y = 1.0f;
+  _q.z = 1.0f;
+  _q.w = 1.0f;
+  _q.xyzw = _q.xxyy;
+  _q[0] = _q[1];
+  _q[0] = _q[1];
+  4;
+  
+  _MathToQuaternion(vec3(float(0), float(1), float(0)), 0.0f);
+  _q = _MathNormalize(_q);
+  _q = _MathInvert(_q);
+  _MathMultiply(vec4(0.0, 0.0, 0.0, 1.0), vec4(0.0, 0.0, 0.0, 1.0));
+  _MathMultiply(vec4(0.0, 0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
+  _MathRotateTowards(_q, _q, float(5));
+  _MathSlerp(_q, _q, 1.0f);
+}
+

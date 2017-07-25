@@ -1,0 +1,19 @@
+struct TemplateHelper[Type1, Type2]
+{
+    function Test()
+    {
+        var a = Type1();
+    }
+}
+
+[Pixel]
+struct SimpleTemplates
+{
+    function Main()
+    {
+        var helper = TemplateHelper[Real2, Real]();
+        var helper3 = TemplateHelper[TemplateHelper[Real2, Real], Real]();
+        helper.Test();
+        helper3.Test();
+    }
+}

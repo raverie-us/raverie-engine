@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F1597A26-9F2D-473A-827C-0CE8C758763D}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <!--For all Win32 projects setup the precompiled header-->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="BandwidthStats.hpp" />
+    <ClInclude Include="DashStandard.hpp" />
+    <ClInclude Include="Enums.hpp" />
+    <ClInclude Include="MessageChannel.hpp" />
+    <ClInclude Include="LinkInbox.hpp" />
+    <ClInclude Include="LinkOutbox.hpp" />
+    <ClInclude Include="Message.hpp" />
+    <ClInclude Include="MessageConfig.hpp" />
+    <ClInclude Include="PacketConfig.hpp" />
+    <ClInclude Include="Peer.hpp" />
+    <ClInclude Include="PeerLink.hpp" />
+    <ClInclude Include="Packet.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="ProtocolMessageData.hpp" />
+    <ClInclude Include="Replica.hpp" />
+    <ClInclude Include="ReplicaChannel.hpp" />
+    <ClInclude Include="ReplicaConfig.hpp" />
+    <ClInclude Include="ReplicaProperty.hpp" />
+    <ClInclude Include="ReplicaStream.hpp" />
+    <ClInclude Include="Replicator.hpp" />
+    <ClInclude Include="ReplicatorLink.hpp" />
+    <ClInclude Include="Route.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DashStandard.cpp" />
+    <ClCompile Include="MessageChannel.cpp" />
+    <ClCompile Include="LinkInbox.cpp" />
+    <ClCompile Include="LinkOutbox.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="Peer.cpp" />
+    <ClCompile Include="PeerLink.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ProtocolMessageData.cpp" />
+    <ClCompile Include="Replica.cpp" />
+    <ClCompile Include="ReplicaChannel.cpp" />
+    <ClCompile Include="ReplicaProperty.cpp" />
+    <ClCompile Include="ReplicaStream.cpp" />
+    <ClCompile Include="Replicator.cpp" />
+    <ClCompile Include="ReplicatorLink.cpp" />
+    <ClCompile Include="Route.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

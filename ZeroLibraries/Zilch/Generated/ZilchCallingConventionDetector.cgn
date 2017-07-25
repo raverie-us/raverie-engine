@@ -1,0 +1,64 @@
+// We want to permute conventions first so that they are all grouped together
+permute Instance : bool;
+permute Return : bool;
+permute Arguments alias n : int[-1,4];
+permute Convention : array System.String[] =
+<?
+{
+  "CDecl",
+  "StdCall",
+  "FastCall",
+  "ThisCall",
+}
+?>;
+
+handler <? Instance ?>
+{
+  ClassTypeName         = "typename Class";
+  InstancePtr           = "Class::";
+}
+
+handler <? !Instance ?>
+{
+  ClassTypeName         = "";
+  InstancePtr           = "";
+}
+
+handler <? Return ?>
+{
+  ReturnTypeName        = "typename Return";
+  ReturnType            = "Return";
+}
+
+handler <? !Return ?>
+{
+  ReturnTypeName        = "";
+  ReturnType            = "void";
+}
+
+handler <? All ?>
+{
+  ArgumentTypeNames     = <? Utilities.RepeatNumeric("typename Arg#", ", ", 0, n) ?>;
+  ArgumentTypes         = <? Utilities.RepeatNumeric("Arg#", ", ", 0, n) ?>;
+  Convention            = <? Convention ?>;
+  
+  // Turn commas in the form of [,] into an actual comma, if it's needed
+  "(\[,]){2,}"  = "[,]";
+  "\[,]>"       = ">";
+  "<\[,]"       = "<";
+  "\[,]"        = ", ";
+  
+  // Clear empty lines
+  "(\s*\r\n){2,}" = "\r\n";
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+#ifdef Zilch$Convention$
+template <typename Ignored[,]$ClassTypeName$[,]$ReturnTypeName$[,]$ArgumentTypeNames$>
+StaticConvention<CallingConvention::$Convention$> DetectCallingConvention($ReturnType$ (Zilch$Convention$ $InstancePtr$*)($ArgumentTypes$))
+{
+  return StaticConvention<CallingConvention::$Convention$>();
+}
+#endif

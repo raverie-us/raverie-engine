@@ -1,0 +1,16 @@
+[Version:1]
+TextContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Ui"
+		}
+	}
+	ZilchScriptBuilder 
+	{
+		var Name = "ZUiHighlight"
+		var ResourceId = 0x569f15ea32786611
+	}
+}

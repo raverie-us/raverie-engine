@@ -1,0 +1,37 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct MemberAccess
+{
+  int InstanceInt;
+};
+
+//----- Forward Declarations -----
+void _MemberAccessPreConstructor(inout MemberAccess self);
+MemberAccess _MemberAccessConstructor();
+void _MemberAccessMain(inout MemberAccess self);
+
+//----- Global Variable Declarations -----
+int _MemberAccessStaticInt = 0;
+
+//----- MemberAccess Functions -----
+void _MemberAccessPreConstructor(inout MemberAccess self)
+{
+  self.InstanceInt = 1;
+}
+
+MemberAccess _MemberAccessConstructor()
+{
+  MemberAccess self;
+  _MemberAccessPreConstructor(self);
+  self.InstanceInt = _MemberAccessStaticInt;
+  return self;
+}
+
+void _MemberAccessMain(inout MemberAccess self)
+{
+  int _staticVal = _MemberAccessStaticInt;
+  int _instanceVal = self.InstanceInt;
+}
+

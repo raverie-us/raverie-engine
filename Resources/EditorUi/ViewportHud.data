@@ -1,0 +1,106 @@
+DefinitionSet = 
+{
+	ImageDefinition Mode3D =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 16 ],
+		float[] Uv1 = [ 40 , 14 ],
+	},
+	
+	ImageDefinition Mode2D =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 32 ],
+		float[] Uv1 = [ 40 , 14 ],
+	},
+	
+	ImageDefinition LightingOff =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition LightingOn =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition RendererIcon =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 16 ],
+		float[] Uv1 = [ 15 , 15 ],
+	},
+	
+	ImageDefinition CameraOptions =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 0 ],
+		float[] Uv1 = [ 16 , 16 ],
+	},
+	
+	ImageDefinition ViewportButtonExpand =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 16, 48 ],
+		float[] Uv1 = [ 7 , 4 ],
+	},
+	
+	ImageDefinition Perspective =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 32 ],
+		float[] Uv1 = [ 13 , 14 ],
+	},
+	
+	ImageDefinition Orthographic =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 48 ],
+		float[] Uv1 = [ 13 , 14 ],
+	},
+	
+	ImageDefinition ViewportGridIconOn =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 48 ],
+		float[] Uv1 = [ 15 , 15 ],
+	},
+	
+	ImageDefinition ViewportGridIconOff =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 48, 0 ],
+		float[] Uv1 = [ 15 , 15 ],
+	},
+	
+	ImageDefinition ViewportMenuRetract =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 48 ],
+		float[] Uv1 = [ 12 , 7 ],
+	},
+	
+	ImageDefinition ViewportMenuExpand =
+	{
+		string Texture = "ViewportHud",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 56 ],
+		float[] Uv1 = [ 12 , 7 ],
+	},
+}

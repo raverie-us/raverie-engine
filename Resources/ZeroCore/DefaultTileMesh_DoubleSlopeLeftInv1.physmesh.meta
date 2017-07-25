@@ -1,0 +1,13 @@
+[Version:1]
+BinaryContent 
+{
+	BinaryBuilder 
+	{
+		var Name = "DoubleSlopeLeftInv1"
+		var ResourceId = 0x519882849e57da12
+		var LoaderType = "PhysicsMesh"
+		var Version = 0
+		var FilterTag = "TileMesh"
+		var ResourceOwner = ""
+	}
+}

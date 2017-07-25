@@ -1,0 +1,10 @@
+// LoopBodyNotComplete
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    loop
+    {

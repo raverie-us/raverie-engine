@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DirectionalLight"
+		var ResourceId = 0x581a79008d1b94fe
+		var LoaderType = "Material"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

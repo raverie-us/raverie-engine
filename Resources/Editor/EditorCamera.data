@@ -1,0 +1,78 @@
+Cog  =
+{
+	Named =
+	{
+		string Name = "EditorCamera",
+	},
+	Transform =
+	{
+		Vec3 Translation = [0, 0, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	CameraViewport =
+	{
+		bool RenderInEditor = true,
+		bool RenderInGame = false,
+		bool RenderToViewport = true,
+		bool ForwardViewportEvents = false,
+		uint RenderOrder = 0,
+		Vec2 NormalizedSize = [1, 1],
+		Vec2 NormalizedOffset = [0, 0],
+		CogPath CameraPath =
+		{
+			string Path = ".",
+			bool ErrorOnResolveToNull = false,
+			bool ErrorOnPathCantCompute = false,
+			bool ErrorOnDirectLinkFail = false,
+			bool UpdateCogOnPathChange = true,
+			bool UpdatePathOnCogChange = true,
+			bool UpdateCogOnInitialize = true,
+			bool ResolvedNullErrorOccurred = false,
+			uint ResolvedCog = 1,
+			CogPathPreference PathPreference0 = CogRelative,
+			CogPathPreference PathPreference1 = SpaceRelative,
+			CogPathPreference PathPreference2 = Absolute,
+		},
+		CogPath RendererPath =
+		{
+			string Path = ".",
+			bool ErrorOnResolveToNull = false,
+			bool ErrorOnPathCantCompute = false,
+			bool ErrorOnDirectLinkFail = false,
+			bool UpdateCogOnPathChange = true,
+			bool UpdatePathOnCogChange = true,
+			bool UpdateCogOnInitialize = true,
+			bool ResolvedNullErrorOccurred = false,
+			uint ResolvedCog = 1,
+			CogPathPreference PathPreference0 = CogRelative,
+			CogPathPreference PathPreference1 = SpaceRelative,
+			CogPathPreference PathPreference2 = Absolute,
+		},
+		Vec2 Resolution = [1920, 1080],
+		ViewportScaling ViewportScaling = Fill,
+		Vec4 MarginColor = [0, 0, 0, 1],
+	}
+	Camera =
+	{
+		Facing Facing = NegativeZ,
+		float NearPlane = 0.5,
+		float FarPlane = 500,
+		PerspectiveMode PerspectiveMode = Perspective,
+		float FieldOfView = 45,
+		float Size = 20,
+	},
+	DefaultRenderer =
+	{
+		Vec4 ClearColor = [0.125, 0.125, 0.125, 1],
+		bool DrawDebug = true,
+	},
+	EditorCameraController =
+	{
+		ControlMode ControlMode = Orbit,
+		float LookDistance = 50,
+		float VerticalAngle = 0,
+		float HorizontalAngle = 0,
+		Vec3 LookTarget = [0, 0, 0],
+	},
+}

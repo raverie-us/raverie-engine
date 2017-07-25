@@ -1,0 +1,365 @@
+[Version:1]
+Cog 
+{
+	var Name = "ObjectTranslateGizmo"
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Vec3{0, 0, 0}
+		var Scale = Vec3{1, 1, 1}
+		var Rotation = Quat{0, 0, 0, 1}
+	}
+	Gizmo 
+	{
+		var Active = true
+		var ForwardEventsToChildren = true
+	}
+	TranslateGizmo 
+	{
+		var UpdateMode = UpdateMode.TranslateSelf
+		var Snapping = false
+		var SnapMode = GizmoSnapMode.RelativeUnits
+		var SnapDistance = 0.25
+	}
+	ObjectTranslateGizmo 
+	{
+		var Basis = GizmoBasis.World
+		var Pivot = GizmoPivot.Average
+		var DuplicateOnCtrlDrag = true
+	}
+	Hierarchy 
+	{
+		Cog [Id:0x58cb29d5175c342f]
+		{
+			var Name = "CenterSquare"
+			var LinkId = 2
+			Transform 
+			{
+				var Translation = Vec3{0, 0, 0}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			MouseCapture 
+			{
+			}
+			Gizmo 
+			{
+				var Active = true
+				var ForwardEventsToChildren = true
+			}
+			GizmoDrag 
+			{
+				var DragMode = GizmoDragMode.ViewPlane
+				var LineDirection = Vec3{1, 0, 0}
+				var PlaneNormal = Vec3{0, 1, 0}
+				var NormalInWorld = false
+				var GrabMode = GizmoGrabMode.Hold
+				var AutoDrag = true
+				var DragDistance = 0
+			}
+			SquareGizmo 
+			{
+				var MouseInput = true
+				var PickingPriority = 1
+				var Color = Vec4{0.800000012, 0.800000012, 0.800000012, 0.999899983}
+				var HoverColor = Vec4{1, 1, 0, 1}
+				var ViewScaled = true
+				var UseParentAsViewScaleOrigin = true
+				var DrawOnTop = true
+				var Size = Vec3{0.5, 0.5, 0.5}
+				var SnapDistance = 0.25
+				var ViewAligned = true
+				var Filled = false
+				var Bordered = false
+			}
+		}
+		Cog [Id:0x58cb29d5175c3435]
+		{
+			var Name = "XY"
+			var LinkId = 3
+			Transform 
+			{
+				var Translation = Vec3{1, 1, 0}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			MouseCapture 
+			{
+			}
+			Gizmo 
+			{
+				var Active = true
+				var ForwardEventsToChildren = true
+			}
+			GizmoDrag 
+			{
+				var DragMode = GizmoDragMode.Plane
+				var LineDirection = Vec3{1, 0, 0}
+				var PlaneNormal = Vec3{0, 0, 1}
+				var NormalInWorld = false
+				var GrabMode = GizmoGrabMode.Hold
+				var AutoDrag = true
+				var DragDistance = 0
+			}
+			SquareGizmo 
+			{
+				var MouseInput = true
+				var PickingPriority = 0
+				var Color = Vec4{0, 0, 1, 0.400000006}
+				var HoverColor = Vec4{1, 1, 0, 0.400000006}
+				var ViewScaled = true
+				var UseParentAsViewScaleOrigin = true
+				var DrawOnTop = true
+				var Size = Vec3{0.400000006, 0.400000006, 0}
+				var SnapDistance = 0.25
+				var ViewAligned = false
+				var Filled = true
+				var Bordered = true
+			}
+		}
+		Cog [Id:0x58cb29d5175c3437]
+		{
+			var Name = "YZ"
+			var LinkId = 4
+			Transform 
+			{
+				var Translation = Vec3{0, 1, 1}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			MouseCapture 
+			{
+			}
+			Gizmo 
+			{
+				var Active = true
+				var ForwardEventsToChildren = true
+			}
+			GizmoDrag 
+			{
+				var DragMode = GizmoDragMode.Plane
+				var LineDirection = Vec3{1, 0, 0}
+				var PlaneNormal = Vec3{1, 0, 0}
+				var NormalInWorld = false
+				var GrabMode = GizmoGrabMode.Hold
+				var AutoDrag = true
+				var DragDistance = 0
+			}
+			SquareGizmo 
+			{
+				var MouseInput = true
+				var PickingPriority = 0
+				var Color = Vec4{1, 0, 0, 0.400000006}
+				var HoverColor = Vec4{1, 1, 0, 0.400000006}
+				var ViewScaled = true
+				var UseParentAsViewScaleOrigin = true
+				var DrawOnTop = true
+				var Size = Vec3{0, 0.400000006, 0.400000006}
+				var SnapDistance = 0.25
+				var ViewAligned = false
+				var Filled = true
+				var Bordered = true
+			}
+		}
+		Cog [Id:0x58cb29d5175c3439]
+		{
+			var Name = "XZ"
+			var LinkId = 5
+			Transform 
+			{
+				var Translation = Vec3{1, 0, 1}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			MouseCapture 
+			{
+			}
+			Gizmo 
+			{
+				var Active = true
+				var ForwardEventsToChildren = true
+			}
+			GizmoDrag 
+			{
+				var DragMode = GizmoDragMode.Plane
+				var LineDirection = Vec3{1, 0, 0}
+				var PlaneNormal = Vec3{0, 1, 0}
+				var NormalInWorld = false
+				var GrabMode = GizmoGrabMode.Hold
+				var AutoDrag = true
+				var DragDistance = 0
+			}
+			SquareGizmo 
+			{
+				var MouseInput = true
+				var PickingPriority = 0
+				var Color = Vec4{0, 1, 0, 0.400000006}
+				var HoverColor = Vec4{1, 1, 0, 0.400000006}
+				var ViewScaled = true
+				var UseParentAsViewScaleOrigin = true
+				var DrawOnTop = true
+				var Size = Vec3{0.400000006, 0, 0.400000006}
+				var SnapDistance = 0.25
+				var ViewAligned = false
+				var Filled = true
+				var Bordered = true
+			}
+		}
+		Cog [Id:0x58cb29d5175c343a]
+		{
+			var Name = "XAxis"
+			var LinkId = 6
+			Transform 
+			{
+				var Translation = Vec3{0, 0, 0}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Orientation 
+			{
+				var GlobalUp = Vec3{0, 1, 0}
+				var LocalOrientationBasis = Quat{0, -0.707106769, 0, 0.707106769}
+				var DefaultBases = OrientationBases.ForwardXUpY
+			}
+			MouseCapture 
+			{
+			}
+			Gizmo 
+			{
+				var Active = true
+				var ForwardEventsToChildren = true
+			}
+			GizmoDrag 
+			{
+				var DragMode = GizmoDragMode.Line
+				var LineDirection = Vec3{0.624843001, 0.516138017, -0.585810006}
+				var PlaneNormal = Vec3{0, 1, 0}
+				var NormalInWorld = false
+				var GrabMode = GizmoGrabMode.Hold
+				var AutoDrag = true
+				var DragDistance = 0
+			}
+			ArrowGizmo 
+			{
+				var MouseInput = true
+				var PickingPriority = 0
+				var Color = Vec4{1, 0, 0, 0.400000006}
+				var HoverColor = Vec4{1, 1, 0, 0.400000006}
+				var ViewScaled = true
+				var UseParentAsViewScaleOrigin = false
+				var DrawOnTop = true
+				var HeadSize = 0.280000001
+				var Length = 2.79999995
+				var SelectRadius = 0.25
+				var HeadType = ArrowHeadType.Arrow
+				var DualHeads = false
+				var FilledHeads = true
+				var LineDrawWidth = 2
+			}
+		}
+		Cog [Id:0x58cb29d5175c343c]
+		{
+			var Name = "YAxis"
+			var LinkId = 7
+			Transform 
+			{
+				var Translation = Vec3{0, 0, 0}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Orientation 
+			{
+				var GlobalUp = Vec3{0, 1, 0}
+				var LocalOrientationBasis = Quat{0.707106769, -0, 0, 0.707106769}
+				var DefaultBases = OrientationBases.ForwardYUpZ
+			}
+			MouseCapture 
+			{
+			}
+			Gizmo 
+			{
+				var Active = true
+				var ForwardEventsToChildren = true
+			}
+			GizmoDrag 
+			{
+				var DragMode = GizmoDragMode.Line
+				var LineDirection = Vec3{0, 1, 0}
+				var PlaneNormal = Vec3{0, 1, 0}
+				var NormalInWorld = false
+				var GrabMode = GizmoGrabMode.Hold
+				var AutoDrag = true
+				var DragDistance = 0
+			}
+			ArrowGizmo 
+			{
+				var MouseInput = true
+				var PickingPriority = 0
+				var Color = Vec4{0, 1, 0, 0.400000006}
+				var HoverColor = Vec4{1, 1, 0, 0.400000006}
+				var ViewScaled = true
+				var UseParentAsViewScaleOrigin = false
+				var DrawOnTop = true
+				var HeadSize = 0.280000001
+				var Length = 2.79999995
+				var SelectRadius = 0.25
+				var HeadType = ArrowHeadType.Arrow
+				var DualHeads = false
+				var FilledHeads = true
+				var LineDrawWidth = 2
+			}
+		}
+		Cog [Id:0x58cb29d5175c343e]
+		{
+			var Name = "ZAxis"
+			var LinkId = 8
+			Transform 
+			{
+				var Translation = Vec3{0, 0, 0}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Orientation 
+			{
+				var GlobalUp = Vec3{0, 1, 0}
+				var LocalOrientationBasis = Quat{0, 1, 0, -0}
+				var DefaultBases = OrientationBases.ForwardZUpY
+			}
+			MouseCapture 
+			{
+			}
+			Gizmo 
+			{
+				var Active = true
+				var ForwardEventsToChildren = true
+			}
+			GizmoDrag 
+			{
+				var DragMode = GizmoDragMode.Line
+				var LineDirection = Vec3{0, 0, 1}
+				var PlaneNormal = Vec3{0, 1, 0}
+				var NormalInWorld = false
+				var GrabMode = GizmoGrabMode.Hold
+				var AutoDrag = true
+				var DragDistance = 0
+			}
+			ArrowGizmo 
+			{
+				var MouseInput = true
+				var PickingPriority = 0
+				var Color = Vec4{0, 0, 1, 0.400000006}
+				var HoverColor = Vec4{1, 1, 0, 0.400000006}
+				var ViewScaled = true
+				var UseParentAsViewScaleOrigin = false
+				var DrawOnTop = true
+				var HeadSize = 0.280000001
+				var Length = 2.79999995
+				var SelectRadius = 0.25
+				var HeadType = ArrowHeadType.Arrow
+				var DualHeads = false
+				var FilledHeads = true
+				var LineDrawWidth = 2
+			}
+		}
+	}
+}

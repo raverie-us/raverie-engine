@@ -1,0 +1,115 @@
+struct Matrix
+{
+    var Data : Real4x4;
+    
+    [Static]
+    var SZero : Matrix
+    {
+      get
+      {
+          var result = Matrix();
+          return result;
+      }
+    }
+    
+    var Zero : Matrix
+    {
+      get
+      {
+          return Matrix.SZero;
+      }
+    }
+}
+
+struct Quat
+{
+    var Data : Real4;
+    
+    var Zero : Quat
+    {
+      get
+      {
+          var result = Quat();
+          result.Data = Real4.Zero;
+          return result;
+      }
+    }
+    [Static]
+    var SZero : Quat
+    {
+      get
+      {
+          var result = Quat();
+          result.Data = Real4.Zero;
+          return result;
+      }
+    }
+    
+    [Extension(typeid(Matrix))]
+    var QuatZero : Quat
+    {
+        get
+        {
+            return Quat.SZero;
+        }
+    } 
+    
+    [Static][Extension(typeid(Math))]
+    var SQuatZero : Quat
+    {
+        get
+        {
+            return Quat.SZero;
+        }
+    } 
+    
+    [Static][Extension(typeid(Matrix))]
+    var MSQuatZero : Quat
+    {
+        get
+        {
+            return Quat.SZero;
+        }
+    }
+}
+
+[Pixel]
+struct GetterSetters
+{
+    [Extension(typeid(Quat))]
+    var Identity : Quat
+    {
+        get
+        {
+            return Quat.SIdentity;
+        }
+    }
+    
+    [Static][Extension(typeid(Quat))]
+    var SIdentity : Quat
+    {
+        get
+        {
+            var result = Quat();
+            result.Data = Real4(0, 0, 0, 1);
+            return result;
+        }
+    }
+    
+    function Main()
+    {
+        var q1 = Quat();
+        var q2 = q1.Zero;
+        var q3 = Quat.SZero;
+        var q4 = Math.SQuatZero;
+        var q5 = Matrix.MSQuatZero;
+        
+        var m1 = Matrix();
+        var m2 = m1.Zero;
+        var m3 = Matrix.SZero;
+        var q6 = m1.QuatZero;
+        
+        var q7 = Quat.SIdentity;
+        var q8 = q7.Identity;
+    }
+}

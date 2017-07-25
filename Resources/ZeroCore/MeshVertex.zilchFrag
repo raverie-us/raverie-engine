@@ -1,0 +1,34 @@
+// Boiler plate vertex shader fragment used in generated shaders for Models and HeightMapModels.
+[Vertex][CoreVertex]
+struct MeshVertex
+{
+  [BuiltInInput] var LocalToView : Real4x4;
+  [BuiltInInput] var LocalToViewNormal : Real3x3;
+  [BuiltInInput] var LocalToPerspective : Real4x4;
+
+  [StageInput] var LocalPosition : Real3;
+  [StageInput] var LocalTangent : Real3;
+  [StageInput] var LocalBitangent : Real3;
+  [StageInput] var LocalNormal : Real3;
+
+  [StageInput][Output] var Uv : Real2;
+
+  [Output] var ViewPosition : Real3;
+  [Output] var ViewNormal : Real3;
+  [Output] var ViewTangent : Real3;
+  [Output] var ViewBitangent : Real3;
+
+  [Output] var PerspectivePosition : Real4;
+
+  function Main()
+  {
+    // Viewspace outputs for pixel shaders
+    this.ViewPosition = Math.MultiplyPoint(this.LocalToView, this.LocalPosition);
+    this.ViewNormal = Math.Normalize(Math.Multiply(this.LocalToViewNormal, this.LocalNormal));
+    this.ViewTangent = Math.Normalize(Math.Multiply(this.LocalToViewNormal, this.LocalTangent));
+    this.ViewBitangent = Math.Normalize(Math.Multiply(this.LocalToViewNormal, this.LocalBitangent));
+
+    // Perspective output for graphics api
+    this.PerspectivePosition = Math.Multiply(this.LocalToPerspective, Real4(this.LocalPosition, 1.0));
+  }
+}

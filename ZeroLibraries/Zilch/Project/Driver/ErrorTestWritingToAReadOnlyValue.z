@@ -1,0 +1,11 @@
+// WritingToAReadOnlyValue
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    9 = 8;
+  }
+}

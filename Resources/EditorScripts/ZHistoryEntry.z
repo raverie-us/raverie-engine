@@ -1,0 +1,271 @@
+
+////////////////////////////////////////////////////////////////////////////////
+//  Event structure referencing which cog needs to switch from/to undo/redo
+//  views and vice verse.
+////////////////////////////////////////////////////////////////////////////////
+class ChangedHistoryView : ZilchEvent
+{
+  var HistoryEntry : Cog;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Controller for all functionlity related to a history entry row.
+////////////////////////////////////////////////////////////////////////////////
+class ZHistoryEntry : ZilchComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  
+    // Denotes the current parent and undone state.
+  var IsUndone : Boolean;
+  
+    // Current expand/collapse state.
+  var IsExpanded : Boolean;
+  
+    // Potential parent(s).
+  var UndoView : Cog = null;
+  var RedoView : Cog = null;
+  
+    // Different cogs composing a single history row.
+  var Icon : Cog;
+  var HistoryInfo : Cog;
+  var RowName : Cog;
+  var ChildBG : Cog;
+  var ChildContainer : Cog;
+  
+  var UiOriginalSize : Real2;
+  
+    // Data for the operation that needs to be undone/redone.
+  var OperationData : Operation;
+  
+  var ExpandArrow : SpriteSource = SpriteSource.HistoryArrowRight;
+  var CollapseArrow : SpriteSource = SpriteSource.HistoryArrowDown;
+  
+    // Owning cog is of this archetype.
+  [Property] var ArchetypeEntry : Archetype = Archetype.HistoryEntry;
+  
+    // Animation time used for sizing and/or highlighting a row.
+  [Property] var AnimateTime : Real = 0.2;
+  
+  
+  sends OperationUndone : ChangedHistoryView;
+  sends OperationRedone : ChangedHistoryView;
+  sends HistoryEntryUpdate : ZilchEvent;
+  
+  
+  /******************************************************************************/
+  function Initialize(init : CogInitializer)
+  {
+    this.IsUndone = false;
+    this.IsExpanded = false;
+    
+    this.HistoryInfo = this.Owner.Children.Current;
+    this.Icon = this.HistoryInfo.FindChildByName("Icon");
+    this.RowName = this.HistoryInfo.FindChildByName("Text");
+    this.ChildBG = this.Owner.FindChildByName("ChildrenBG");
+    this.ChildContainer = this.ChildBG.Children.Current;
+    
+    this.UiOriginalSize = this.UiWidget.Size;
+    
+    Zero.Connect(this.Owner, Events.Attached, this.OnAttached);
+    
+    Zero.Connect(this.Icon, Events.LeftMouseUp, this.OnLeftClickExpand);
+    Zero.Connect(this.RowName, Events.LeftMouseUp, this.OnLeftMouseUp);
+  }
+  
+  /******************************************************************************/
+  // Stand in for 'Initialize' of potential parent(s).
+  function OnAttached(event : HierarchyEvent)
+  {
+      // Cannot be done in 'Initialize' as 'OperationData' is not valid, yet.
+    if(!this.OperationData.Children.IsNotEmpty)
+      this.Icon.UiWidget.Visible = false;
+
+      // Already initialized.
+    if(this.UndoView != null)
+      return;
+      
+    this.UndoView = this.Owner.Parent;
+    this.RedoView = this.UndoView.Parent.FindChildByName("RedoView");
+    
+    this.Owner.DispatchUp(Events.HistoryEntryUpdate, ZilchEvent());
+  }
+  
+  /******************************************************************************/
+  // If this operation is a batch then create children rows for all operations
+  // in this batch.
+  function CreateChildrenEntries() : Integer
+  {
+      // Don't create the children if they are already present.
+    if(this.ChildContainer.Children.IsNotEmpty)
+      return 0;
+    
+    var childCount = 0;
+    foreach(var operation in this.OperationData.Children)
+    {
+      ++childCount;
+      
+      var entry = this.Space.Create(this.ArchetypeEntry);
+      
+      var entryManager = entry.ZHistoryEntry;
+      entryManager.OperationData = operation;
+      //entryManager.HistoryInfo.Name = operation.Name;
+      entryManager.RowName.SpriteText.Text = operation.Name;
+      
+      entry.AttachTo(this.ChildContainer);
+    }
+
+    return childCount;
+  }
+  
+  /******************************************************************************/
+  // Remove all children rows.
+  function DestroyChildrenEntries()
+  {
+    foreach(var child in this.ChildContainer.Children)
+    {
+      child.Destroy();
+    }
+    
+  }
+  
+  /******************************************************************************/
+  // Change this row's parent depending on its undone state.
+  function ChangeHistoryView(moveToRedoView : Boolean, dispatcher : Cog, eventName: String)
+  {
+    this.IsUndone = moveToRedoView;
+        
+    var changedViewEvent = ChangedHistoryView();
+    changedViewEvent.HistoryEntry = this.Owner;
+    this.Owner.Detach();
+    
+    dispatcher.DispatchEvent(eventName, changedViewEvent);
+  }
+  
+  /******************************************************************************/
+  // Excute undo/redo command
+  function OnLeftMouseUp(event : ViewportMouseEvent)
+  {
+    if(this.IsUndone)
+    {
+      var operationValid = Zero.Editor.OperationQueue.Redo(this.OperationData);
+      if(!operationValid)
+        return;
+      
+      foreach(var cog in this.RedoView.ChildrenArray)
+      {
+        var entry = cog.ZHistoryEntry;
+        entry.ChangeHistoryView(false, entry.UndoView, Events.OperationRedone);
+        
+          // Redo all operations up to AND including this row.
+        if(entry == this)
+          return;
+      }
+
+    }
+    else
+    {
+      var reverseRange  = this.UndoView.ChildrenReversed;
+      
+        // Undo this row if (and only if) clicking on this AND every row after is already undone.
+      if(reverseRange.First == this.Owner)
+      {
+        //this.ChangeHistoryView(true, this.RedoView, Events.OperationUndone);
+        Zero.Editor.OperationQueue.Undo();
+        return; 
+      }
+      
+      var operationValid = Zero.Editor.OperationQueue.Undo(this.OperationData);
+      if(!operationValid)
+        return;
+      
+      foreach(var cog in reverseRange)
+      {
+        var entry = cog.ZHistoryEntry;
+        
+          // Undo all operations up to, but NOT including this row.
+        if(entry == this)
+          return;
+        
+        entry.ChangeHistoryView(true, entry.RedoView, Events.OperationUndone);
+        
+      }
+      
+    }
+    
+  }
+
+  /******************************************************************************/
+  // Resize this row to display the children rows of this batch.
+  function OnLeftClickExpand(event : ViewportMouseEvent)
+  {
+    if(!this.Icon.UiWidget.Visible)
+      return;
+    
+    if(!this.IsExpanded)
+    {
+      this.IsExpanded = true;
+      this.Icon.Sprite.SpriteSource = this.CollapseArrow;
+      
+      var childCount = this.CreateChildrenEntries();
+
+      var seq = this.AnimateSize(childCount * this.UiOriginalSize.Y);
+      Action.Call(seq, this.AfterExpand);
+    }
+    else
+    {
+      this.IsExpanded = false;
+      this.Icon.Sprite.SpriteSource = this.ExpandArrow;
+      
+      this.UiWidget.SizePolicyY = UiSizePolicy.Fixed;
+
+      this.Owner.Actions.Cancel();
+      var seq = this.AnimateSize(0);
+      Action.Call(seq, this.AfterCollapse);
+    }
+    
+    event.HandledEvent = true;
+  }
+  
+  /******************************************************************************/
+  function AnimateSize(additionalSizeY : Real) : ActionSet
+  {
+    additionalSizeY += this.UiOriginalSize.Y;
+    var size = Real2(this.UiOriginalSize.X, additionalSizeY);
+    
+    var seq = Action.Sequence(this.Owner.Actions);
+    Action.Property(seq, @this.UiWidget.Size, size, this.AnimateTime, Ease.QuadOut);
+    
+    return seq;
+  }
+  
+  /******************************************************************************/
+  // Resizing helper.  Let the UI determine the size of this row.
+  function AfterExpand()
+  {
+    this.UiWidget.SizePolicyY = UiSizePolicy.Auto;
+  }
+  
+  /******************************************************************************/
+  // Cleanup helper.
+  function AfterCollapse()
+  {
+    this.DestroyChildrenEntries();
+  }
+  
+  /******************************************************************************/
+  // Make all children rows of this row this row the same color as this row.
+  function UpdateColor(color : Real4)
+  {
+    this.HistoryInfo.UiWidget.LocalColor = color;
+    this.ChildBG.UiWidget.LocalColor = color;
+    this.ChildContainer.UiWidget.LocalColor = color;
+    
+    foreach(var row in this.ChildContainer.Children)
+    {
+      row.ZHistoryEntry.HistoryInfo.UiWidget.LocalColor = color;
+    }
+    
+  }
+  
+}

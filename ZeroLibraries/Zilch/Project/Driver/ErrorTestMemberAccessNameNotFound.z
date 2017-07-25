@@ -1,0 +1,24 @@
+// MemberAccessNameNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+  
+  constructor()
+  {
+  }
+
+  function Foo()
+  {
+  }
+}
+
+class Dude
+{
+  function Bar()
+  {
+    var a : Animal = local Animal();
+
+    a.;
+  }
+}

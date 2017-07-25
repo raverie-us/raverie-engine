@@ -1,0 +1,15 @@
+// Specular input for lighting opaque geometry.
+// Output values are mapped from a texture over the surface.
+[Pixel]
+struct SpecularMap
+{
+  [FragmentInput][StageInput] var Uv : Real2;
+  [Input] var SpecularMap : Sampler2d;
+  
+  [Output] var Specular : Real;
+  
+  function Main()
+  {
+    this.Specular = this.SpecularMap.Sample(this.Uv).X;
+  }
+}

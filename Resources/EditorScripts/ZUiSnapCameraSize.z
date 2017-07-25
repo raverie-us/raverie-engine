@@ -1,0 +1,79 @@
+[RunInEditor]
+class ZUiSnapCameraSize : ZilchComponent
+{
+  [Property] var Active : Boolean = true;
+  [Property] var ZoomSpeed : Real = 0.01;
+  
+  
+  [Property] var Zoom : Real = 1.0;
+  var CurrentZoom : Real;
+  
+  var IgnoreEvents : Boolean = false;
+  
+  function Initialize(init : CogInitializer)
+  {
+      Zero.Connect(this.Owner, Events.CameraControllerUpdated, this.OnCameraControllerUpdated);
+      Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+      Zero.Connect(this.Space, Events.MouseScroll, this.OnMouseScroll);
+      Zero.Connect(this.Space, Events.KeyDown, this.OnKeyDown);
+      this.CurrentZoom = this.Zoom;
+  }
+
+  function OnKeyDown(event : KeyboardEvent)
+  {
+    
+  }
+
+  function OnMouseScroll(event : ViewportMouseEvent)
+  {
+    this.CurrentZoom += -event.Scroll.Y * this.ZoomSpeed;
+    
+    if(event.CtrlPressed)
+      this.CurrentZoom = 1.0;
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    this.UpdateCamera(this.Owner.CameraViewport.ViewportResolution);
+  }
+
+  function OnCameraControllerUpdated(event : Event)
+  {
+    if(this.IgnoreEvents)
+      return;
+      
+    if(this.Owner.EditorCameraController.ControlMode == ControlMode.ZPlane)
+    {
+        var viewportSize = this.Owner.CameraViewport.ViewportResolution;
+        this.UpdateCamera(viewportSize);
+    }
+    
+    this.IgnoreEvents = true;
+    var lookTarget = this.Owner.EditorCameraController.LookTarget;
+    lookTarget.XY = Math.Floor(lookTarget.XY);
+    this.Owner.EditorCameraController.LookTarget = lookTarget;
+    this.IgnoreEvents = false;
+  }
+  
+  function UpdateCamera(viewportResolution : Real2)
+  {
+    if(this.Active)
+    {
+        this.Owner.Camera.Size = viewportResolution.Y;
+         
+         
+        //var pos = this.Owner.Transform.Translation;
+        //pos = Math.Floor(pos);
+        //
+        //// Add a half pixel offset if the width is odd
+        //var widthEven = (viewportResolution.X % 2 == 0);
+        //if(!widthEven)
+        //{
+        //    pos += Real3(0.5, 0, 0);
+        //}
+        //
+        //// Set the final clamped position
+        //this.Owner.Transform.Translation = pos;
+    }
+  }
+}

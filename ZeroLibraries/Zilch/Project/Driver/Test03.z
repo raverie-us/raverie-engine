@@ -1,0 +1,9 @@
+class UnitTest03
+{
+  // Test the fibonacci's sequence (tests integers, recursion, and if-statements)
+  [Static]
+  function Test03() : Integer
+  {
+    return CustomMath.Factorial(n : 10);
+  }
+}

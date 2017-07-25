@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "AdditiveSprite"
+		var ResourceId = 0x582c50d330d372c3
+		var LoaderType = "Material"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = ""
+		var Description = "A material template"
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

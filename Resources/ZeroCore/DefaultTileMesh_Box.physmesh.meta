@@ -1,0 +1,13 @@
+[Version:1]
+BinaryContent 
+{
+	BinaryBuilder 
+	{
+		var Name = "Box"
+		var ResourceId = 0x5198bea43a477360
+		var LoaderType = "PhysicsMesh"
+		var Version = 0
+		var FilterTag = "TileMesh"
+		var ResourceOwner = ""
+	}
+}

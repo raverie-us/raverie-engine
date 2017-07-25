@@ -1,0 +1,65 @@
+Array Shaders = 
+[
+	{
+		string ShaderName = "Diffuse_SinTime_UvScale_RendererFrag",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Diffuse",
+			"SinTime",
+			"UvScale",
+			"RendererFrag",
+		],
+	},
+  {
+		string ShaderName = "GeoVertexGeometryPixel",
+		Array FragmentNames = 
+		[
+			"GeoVertex",
+			"GeoGeometry",
+			"GeoPixel",
+		],
+	},
+  {
+    string ShaderName = "SystemValues",
+    Array FragmentNames = 
+    [
+      "VertexSystemValues",
+      "PixelSystemValues",
+    ],
+  },
+  {
+    string ShaderName = "SystemValues1",
+    Array FragmentNames = 
+    [
+      "SVVertex1",
+      "SVPixel1",
+    ],
+  },
+  {
+    string ShaderName = "SystemValues2",
+    Array FragmentNames = 
+    [
+      "SVVertex2",
+      "SVPixel2",
+    ],
+  },
+  {
+    string ShaderName = "SystemValues3",
+    Array FragmentNames = 
+    [
+      "SVVertex1",
+      "SVGeometry1",
+      "SVPixel1",
+    ],
+  },
+  {
+    string ShaderName = "SystemValues4",
+    Array FragmentNames = 
+    [
+      "SVVertex2",
+      "SVGeometry2",
+      "SVPixel2",
+    ],
+  },
+],

@@ -1,0 +1,70 @@
+class Beer
+{
+  [Static]
+  function GetBottlePhrase(count : Integer) : String
+  {
+    if (count == 1)
+    {
+      return " bottle";
+    }
+    else
+    {
+      return " bottles";
+    }
+  }
+  
+  [Static]
+  function MakeSong(builder : StringBuilder)
+  {
+    for (var i = 99; i > 0; 0)
+    {
+      var phrase1 = Beer.GetBottlePhrase(count : i);
+
+      builder.Write(i);
+      builder.Write(phrase1);
+      builder.WriteLine(" of beer on the wall,");
+
+      builder.Write(i);
+      builder.Write(phrase1);
+      builder.WriteLine(" of beer,");
+
+      builder.WriteLine("Take one down,");
+      builder.WriteLine("Pass it around,");
+
+      --i;
+      var phrase2 = Beer.GetBottlePhrase(count : i);
+
+      builder.Write(i);
+      builder.Write(phrase2);
+
+      // Why does this breakkkk ;-;
+      //builder.Append(input : Beer.GetBottlePhrase(count : i));
+
+      builder.WriteLine(" of beer on the wall.");
+      builder.WriteLine();
+    }
+    return;
+  }
+}
+
+class UnitTest08
+{
+  // Test interfacing with a bound type, and test the string type
+  [Static]
+  function Test08() : String
+  {
+    var builder : StringBuilder = new StringBuilder();
+
+    // User handles (should make a unit test for it!)
+    //var b2 : ref StringBuilder = StringBuilder.MakeNew();
+    //b2.AppendLine(input : "LOL HAHAHHA");
+
+    Beer.MakeSong(builder : builder);
+
+    var result = builder.ToString();
+
+    delete builder;
+
+    return result;
+  }
+}

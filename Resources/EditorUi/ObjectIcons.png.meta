@@ -1,0 +1,25 @@
+[Version:1]
+ImageContent 
+{
+	TextureBuilder 
+	{
+		var Name = "ObjectIcons"
+		var ResourceId = 0x4df5d3b6b733d5f0
+		var Type = TextureType.Texture2D
+		var Compression = TextureCompression.None
+		var AddressingX = TextureAddressing.Clamp
+		var AddressingY = TextureAddressing.Clamp
+		var Filtering = TextureFiltering.Nearest
+		var Anisotropy = TextureAnisotropy.x1
+		var MipMapping = TextureMipMapping.None
+		var PremultipliedAlpha = false
+		var GammaCorrection = false
+	}
+	TextureInfo 
+	{
+		var FileType = "png"
+		var LoadFormat = "RGBA8"
+		var Dimensions = "128 x 128"
+		var Size = "0.063 MB"
+	}
+}

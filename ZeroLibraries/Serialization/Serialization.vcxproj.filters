@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{a5373a02-f037-453c-a327-91048c9deb34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{f3fd90f2-7eca-406f-b8fe-7147ebd4f7a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializers">
+      <UniqueIdentifier>{e90d9379-d27f-4262-b5d8-1f10f3ff5600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializers\Text">
+      <UniqueIdentifier>{015db4ce-2e39-4a03-a3fb-32a5ce911fdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializers\Binary">
+      <UniqueIdentifier>{1d6c3ad8-50bf-42e0-ace1-7ef099e6913c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializers\DataTree">
+      <UniqueIdentifier>{bf72ec42-acfc-45e9-9f74-cc7b83b74e9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Simple">
+      <UniqueIdentifier>{4d5de791-45a7-4a33-b9b7-52d500672e0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Policies">
+      <UniqueIdentifier>{67b7bd4f-30fb-4453-a035-9730fad2e17f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializers\Default">
+      <UniqueIdentifier>{29c2c7de-71ca-49a3-8a41-f049bab70d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{ce5ae685-f8e7-41e0-a22e-09c405725651}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Serialization.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Serializers\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Binary.cpp">
+      <Filter>Serializers\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTree.cpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTreeNode.cpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Simple.cpp">
+      <Filter>Simple</Filter>
+    </ClCompile>
+    <ClCompile Include="Tokenizer.cpp">
+      <Filter>Serializers\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializationUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="LegacyDataTreeParser.cpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClCompile>
+    <ClCompile Include="OldDataTreeParser.cpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTreeTokenizer.cpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTreeParser.cpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaSerialization.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializationStandard.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Serialization.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="StdContainers.hpp">
+      <Filter>Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="ZeroContainers.hpp">
+      <Filter>Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.hpp">
+      <Filter>Serializers\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Binary.hpp">
+      <Filter>Serializers\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTree.hpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTreeNode.hpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple.hpp">
+      <Filter>Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="Tokenizer.hpp">
+      <Filter>Serializers\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultSerializer.hpp">
+      <Filter>Serializers\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializationUtility.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializationBuilder.hpp">
+      <Filter>Serializers</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumSerialization.hpp">
+      <Filter>Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="FundamentalTypes.hpp">
+      <Filter>Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializationTraits.hpp">
+      <Filter>Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializationStandard.hpp" />
+    <ClInclude Include="LegacyDataTreeParser.hpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClInclude>
+    <ClInclude Include="OldDataTreeParser.hpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTreeTokenizer.hpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTreeParser.hpp">
+      <Filter>Serializers\DataTree</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaSerialization.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MathSerialization.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

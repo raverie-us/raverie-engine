@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{6849a49b-d440-47b9-938c-fc47de40294d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{bf816f5a-43e9-4e42-ba67-f4977c1a4e5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Extension">
+      <UniqueIdentifier>{90465734-ec97-415a-babe-c34bc0fe3d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intersection">
+      <UniqueIdentifier>{68dc9f05-48e0-4431-87ed-2d1b6011c8ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Hulling Algorithms">
+      <UniqueIdentifier>{0d16d4f9-ff9b-4adf-90eb-e4ca25381097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intersection\Algorithms">
+      <UniqueIdentifier>{087f3df0-55c1-4ab1-9a76-8d6ece09614d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Extension\Shapes">
+      <UniqueIdentifier>{905ff700-9c55-4734-a3cb-40d6b5ebc38e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ConstructiveSolidGeometry">
+      <UniqueIdentifier>{a90508d7-2865-433d-a6b0-878181d4484d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugDraw">
+      <UniqueIdentifier>{f1a05068-5fd2-4493-816c-1ee495aeacaa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ClosestPoint.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumIntersection.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="ObbIntersection.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="PointQueries.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="GeodesicSphere.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendedIntersection.cpp">
+      <Filter>Extension</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection2D.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Hull3D.cpp">
+      <Filter>Geometry\Hulling Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="Hull2D.cpp">
+      <Filter>Geometry\Hulling Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="Mpr.cpp">
+      <Filter>Intersection\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="Gjk.cpp">
+      <Filter>Intersection\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendedCollision.cpp">
+      <Filter>Extension</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeHelpers.cpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Shapes.cpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Aabb.cpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvexMeshShape.cpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="LineTests.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="SegmentTests.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTests.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>ConstructiveSolidGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape2D.cpp">
+      <Filter>ConstructiveSolidGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvexMesh.cpp">
+      <Filter>Geometry\Hulling Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="Clipper.cpp">
+      <Filter>ConstructiveSolidGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="TrapezoidMap.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Simplex.cpp" />
+    <ClCompile Include="Triangulator.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Epa.cpp">
+      <Filter>Intersection\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvexMeshDecomposition.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryStandard.cpp" />
+    <ClCompile Include="ToString.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Intersection.hpp">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="GeodesicSphere.hpp">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.hpp">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendedIntersection.hpp">
+      <Filter>Extension</Filter>
+    </ClInclude>
+    <ClInclude Include="Hull3D.hpp">
+      <Filter>Geometry\Hulling Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="Hull2D.hpp">
+      <Filter>Geometry\Hulling Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvexMesh.hpp">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Mpr.hpp">
+      <Filter>Intersection\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="Gjk.hpp">
+      <Filter>Intersection\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendedCollision.hpp">
+      <Filter>Extension</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.hpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.hpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.hpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeHelpers.hpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Shapes.hpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Aabb.hpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvexMeshShape.hpp">
+      <Filter>Extension\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.hpp">
+      <Filter>ConstructiveSolidGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape2D.hpp">
+      <Filter>ConstructiveSolidGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Clipper.hpp">
+      <Filter>ConstructiveSolidGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Epa.hpp">
+      <Filter>Intersection\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="TrapezoidMap.hpp">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexPool.hpp" />
+    <ClInclude Include="Simplex.hpp" />
+    <ClInclude Include="Triangulator.hpp">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryStandard.hpp" />
+    <ClInclude Include="DebugDraw.hpp">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="Solids.hpp">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvexMeshDecomposition.hpp">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ToString.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DebugPrimitives.inl">
+      <Filter>DebugDraw</Filter>
+    </None>
+  </ItemGroup>
+</Project>

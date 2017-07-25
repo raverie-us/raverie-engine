@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DefaultCurve"
+		var ResourceId = 0x4f16dfae49806add
+		var LoaderType = "SampleCurve"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Default"
+		var Description = ""
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

@@ -1,0 +1,109 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+in vec3 attNormal;
+in vec3 attPosition;
+in vec2 attUv;
+
+//----- Struct Definitions -----
+struct BasicVertexFrag
+{
+  vec3 Normal;
+  vec3 Position;
+  vec2 Uv;
+  vec4 ApiPerspectivePosition;
+};
+
+struct QuaternionTransformsTests_Vertex
+{
+  float Time;
+  vec3 Normal;
+  vec3 Position;
+  vec2 Uv;
+  vec4 ApiPerspectivePosition;
+};
+
+//----- Forward Declarations -----
+void _BasicVertexFragPreConstructor(inout BasicVertexFrag self);
+BasicVertexFrag _BasicVertexFragConstructor();
+void _BasicVertexFragMain(inout BasicVertexFrag self);
+
+void _QuaternionTransformsTests_VertexPreConstructor(inout QuaternionTransformsTests_Vertex self);
+QuaternionTransformsTests_Vertex _QuaternionTransformsTests_VertexConstructor();
+void _QuaternionTransformsTests_VertexMain(inout QuaternionTransformsTests_Vertex self);
+void CopyInputs(inout QuaternionTransformsTests_Vertex self);
+void CopyOutputs(inout QuaternionTransformsTests_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- BasicVertexFrag Functions -----
+void _BasicVertexFragPreConstructor(inout BasicVertexFrag self)
+{
+  self.Normal = vec3(0.0, 0.0, 0.0);
+  self.Position = vec3(0.0, 0.0, 0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+BasicVertexFrag _BasicVertexFragConstructor()
+{
+  BasicVertexFrag self;
+  _BasicVertexFragPreConstructor(self);
+  return self;
+}
+
+void _BasicVertexFragMain(inout BasicVertexFrag self)
+{
+  self.ApiPerspectivePosition = vec4(self.Position, float(1));
+}
+
+//----- QuaternionTransformsTests_Vertex Functions -----
+void _QuaternionTransformsTests_VertexPreConstructor(inout QuaternionTransformsTests_Vertex self)
+{
+  self.Time = float(0.0);
+  self.Normal = vec3(0.0, 0.0, 0.0);
+  self.Position = vec3(0.0, 0.0, 0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+QuaternionTransformsTests_Vertex _QuaternionTransformsTests_VertexConstructor()
+{
+  QuaternionTransformsTests_Vertex self;
+  _QuaternionTransformsTests_VertexPreConstructor(self);
+  return self;
+}
+
+void _QuaternionTransformsTests_VertexMain(inout QuaternionTransformsTests_Vertex self)
+{
+  BasicVertexFrag _basicvertexfrag = _BasicVertexFragConstructor();
+  _basicvertexfrag.Normal = self.Normal;
+  _basicvertexfrag.Position = self.Position;
+  _basicvertexfrag.Uv = self.Uv;
+  _BasicVertexFragMain(_basicvertexfrag);
+  self.ApiPerspectivePosition = _basicvertexfrag.ApiPerspectivePosition;
+}
+
+//----- QuaternionTransformsTests_Vertex Final Shader Functions -----
+void CopyInputs(inout QuaternionTransformsTests_Vertex self)
+{
+  self.Time = Time;
+  self.Normal = attNormal;
+  self.Position = attPosition;
+  self.Uv = attUv;
+}
+
+void CopyOutputs(inout QuaternionTransformsTests_Vertex self)
+{
+  gl_Position = self.ApiPerspectivePosition;
+}
+
+//----- Main -----
+void main(void)
+{
+  QuaternionTransformsTests_Vertex quaterniontransformstests_vertex = _QuaternionTransformsTests_VertexConstructor(); 
+  CopyInputs(quaterniontransformstests_vertex);
+  _QuaternionTransformsTests_VertexMain(quaterniontransformstests_vertex);
+  CopyOutputs(quaterniontransformstests_vertex);
+}
+

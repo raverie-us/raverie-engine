@@ -1,0 +1,25 @@
+[Version:1]
+ImageContent 
+{
+	TextureBuilder 
+	{
+		var Name = "Black"
+		var ResourceId = 0x5826e695131c0f51
+		var Type = TextureType.Texture2D
+		var Compression = TextureCompression.None
+		var AddressingX = TextureAddressing.Repeat
+		var AddressingY = TextureAddressing.Repeat
+		var Filtering = TextureFiltering.Nearest
+		var Anisotropy = TextureAnisotropy.x1
+		var MipMapping = TextureMipMapping.None
+		var PremultipliedAlpha = false
+		var GammaCorrection = false
+	}
+	TextureInfo 
+	{
+		var FileType = "png"
+		var LoadFormat = "RGBA8"
+		var Dimensions = "16 x 16"
+		var Size = "0.001 MB"
+	}
+}

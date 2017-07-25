@@ -1,0 +1,70 @@
+//----------------- Tool Specific Events (Connect to this.Owner)
+// Events.GetToolInfo    - Called when the tool is selected - Access to SelectTool 
+// Events.ToolActivate   - Called when the tool is selected
+// Events.ToolDeactivate - Called when the tool is deselected
+// Events.ToolDraw       - Called every frame while the tool is selected
+
+//----------------- Input Events (Connect to this.Owner)
+// Events.LeftMouseDown
+// Events.LeftMouseUp
+// Events.RightMouseDown
+// Events.RightMouseUp
+// Events.MiddleMouseDown
+// Events.DoubleClick
+// Events.OnMouseScroll
+// Events.MouseMove
+// Events.KeyUp
+// Events.KeyDown
+
+//----------------- If you want to do a mouse drag, 
+// Events.MouseDragStart
+// Events.MouseDragMove
+// Events.MouseDragEnd
+
+[Tool(autoRegister:true)]
+class %RESOURCENAME% : ZilchComponent
+{
+	function Initialize(init : CogInitializer)
+	{
+		// We connect to this.Owner becase we will get all events forwarded to us when we're the active tool
+		Zero.Connect(this.Owner, Events.LeftMouseDown, this.OnLeftMouseDown);
+	}
+
+	function OnLeftMouseDown(event : ViewportMouseEvent)
+	{
+		// The space that was clicked in
+		var targetSpace = event.CameraViewport.Space;
+		
+		// The ray from the mouse into the world
+		var mouseRay = event.WorldRay;
+		
+		// Find the first object that was clicked on
+		var castResult = targetSpace.PhysicsSpace.CastRayFirst(mouseRay);
+		var clickedObject = castResult.ObjectHit;
+		
+		if(clickedObject != null)
+		{
+			// Undo / redo is handled through our operation queue object
+			var queue = Zero.Editor.OperationQueue;
+			
+			// Lets the Editor know that we're going to start modifying objects.
+			// Any objects modified between this and the 'EndBatch' call will
+			// all be undone at once with ctrl+z
+			queue.BeginBatch();
+			
+			// Before modifying the properties of an object, call this to save
+			// the state of the object so that changed can be recorded once EndBatch is called.
+			queue.SaveObjectState(clickedObject);
+			
+			// Make the object 5% bigger
+			clickedObject.Transform.Scale *= 1.05;
+			
+			// We've finished modifying objects. Now when you press ctrl+z, the object should back to its previous scale
+			queue.EndBatch();
+			
+			// This tells the Editor not to do what it would normally do with this event.
+			// In the case of LeftMouseDown, the editor would attempt to select an object.
+			event.HandledEvent = true;
+		}
+	}
+}

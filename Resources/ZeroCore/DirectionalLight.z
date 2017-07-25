@@ -1,0 +1,47 @@
+// Data needed for rendering a directional light.
+// Usage with DeferredRenderer expects a Model on this object with the
+// 'DirectionalLight' Material and 'Triangle' Mesh.
+// Shadow mapping requires CameraViewport, Camera, and ShadowRenderer components to be configured.
+// And, if using DeferredRenderer, the Model's Material set to 'DirectionalLightShadows'.
+[RunInEditor]
+class DirectionalLight : ZilchComponent
+{
+  [Dependency] var Transform : Transform;
+  
+  // Color used in lighting calculations.
+  [Property] var LightColor : Real4
+  {
+    get { return Real4(this.LightColorValue, 1.0); }
+    set { this.LightColorValue = value.XYZ; }
+  }
+  
+  // Arbitrary scaler for the resultant lighting calculations.
+  [Property][ShaderInput("DirectionalLightFragment")] var LightIntensity : Real
+  {
+    get { return this.LightIntensityValue; }
+    set { this.LightIntensityValue = Math.Max(value, 0.0); }
+  }
+  
+  [ShaderInput("DirectionalLightFragment")] var LightDirection : Real3;
+  [ShaderInput("LightPass", "LightColor")] var LightColorValue : Real3 = Real3(1.0);
+  var LightIntensityValue : Real = 1.0;
+  
+  function Initialize(init : CogInitializer)
+  {
+    this.LightDirection = this.Transform.TransformNormal(-Real3.ZAxis);
+    Zero.Connect(this.Owner, Events.TransformUpdated, this.OnTransformUpdated);
+  }
+
+  function OnTransformUpdated(event : ObjectEvent)
+  {
+    this.LightDirection = this.Transform.TransformNormal(-Real3.ZAxis);
+  }
+
+  function DebugDraw()
+  {
+    var position = this.Transform.WorldTranslation;
+    var direction = this.Transform.TransformNormal(-Real3.ZAxis);
+    var arrow = DebugLine(position, position + direction * 5.0, 1.0) {Color = Real4(1.0, 1.0, 0.0, 1.0)};
+    DebugDraw.Add(arrow);
+  }
+}

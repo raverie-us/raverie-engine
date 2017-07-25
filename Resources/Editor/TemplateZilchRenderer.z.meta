@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "TemplateZilchRenderer"
+		var ResourceId = 0x56db3256058fd9bb
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Renderer"
+		var Description = "Custom rendering pipeline"
+		var SortWeight = 40
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

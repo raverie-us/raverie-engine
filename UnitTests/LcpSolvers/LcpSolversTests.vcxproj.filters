@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{76145b46-5817-482c-a39c-aaa45926eb54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{1a3c650a-7150-457a-be79-af1196cdd5c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Suites">
+      <UniqueIdentifier>{11516f59-8296-411a-bab8-b15c36c341e8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockVectorTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="ConjugateGradientTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussSeidelTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="JacobiTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="TestContainers.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BlockMatrixSuite.hpp">
+      <Filter>Suites</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3Suite.hpp">
+      <Filter>Suites</Filter>
+    </ClInclude>
+    <ClInclude Include="FormatErrorCallbacks.hpp">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixGenerators.hpp">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="TestBlockMath.hpp">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="TestContainers.hpp">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="LcpStandard.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+[Version:1]
+ContentLibrary 
+{
+	var Name = "EditorScripts"
+	var LibraryId = 0x580e189afbc779f3
+	var SourceControlType = ""
+	var ReadOnly = true
+}

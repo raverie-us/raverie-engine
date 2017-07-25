@@ -1,0 +1,12 @@
+// InvalidBinaryOperationDifferentTypes
+
+class Animal
+{
+  var Variable : Integer = 9;
+  var Number : Boolean = true;
+
+  function Foo()
+  {
+    var foo = this.Variable % this.Number;
+  }
+}

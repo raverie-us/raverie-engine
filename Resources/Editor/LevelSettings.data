@@ -1,0 +1,38 @@
+[Version:1]
+Cog 
+{
+	var Name = "LevelSettings"
+	var LinkId = 1
+	GravityEffect 
+	{
+		var Active = true
+		var WakeUpOnChange = false
+		var LocalSpaceDirection = true
+		var Strength = 10
+		var Direction = Vec3{0, -1, 0}
+	}
+	DragEffect 
+	{
+		var Active = true
+		var WakeUpOnChange = false
+		var LinearDamping = 0.200000003
+		var AngularDamping = 0.100000001
+		var LinearDrag = 0
+		var AngularDrag = 0
+	}
+	GridDraw 
+	{
+		var Active = true
+		var HalfCellOffset = false
+		var CellSize = 1
+		var Axis = GridAxis.YAxis
+		var Lines = 100
+		var DrawAxisOrigins = true
+		var AlwaysDrawInEditor = true
+		var DrawInGame = false
+		var GridColor = Vec4{0.5, 0.5, 0.5, 0.400000006}
+		var GridHighlight = Vec4{0, 0, 0, 0.400000006}
+		var HighlightInterval = 10
+		var FollowEditorCamera = false
+	}
+}

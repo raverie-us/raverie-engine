@@ -1,0 +1,21 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "SoundNodeGraph__0000_Background"
+		var ResourceId = 0x58a22d11dd76843e
+		var AtlasId = 0x5274cf95e4a661fd
+		var FrameSizeX = 128
+		var FrameSizeY = 128
+		var FrameCount = 1
+		var FrameDelay = 0.0833333358
+		var OriginX = 64
+		var OriginY = 64
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+}

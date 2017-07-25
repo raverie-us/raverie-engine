@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FA3C580E-8E06-466A-8EB1-34BB2EFED4FA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>AudioEngine</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AdditiveSynthNode.cpp" />
+    <ClCompile Include="Attenuator.cpp" />
+    <ClCompile Include="AudioInputOutput.cpp" />
+    <ClCompile Include="AudioSystemInterface.cpp" />
+    <ClCompile Include="AudioSystemInternal.cpp" />
+    <ClCompile Include="DynamicsProcessorNode.cpp" />
+    <ClCompile Include="Emitter.cpp" />
+    <ClCompile Include="EqualizerNode.cpp" />
+    <ClCompile Include="FileAccess.cpp" />
+    <ClCompile Include="FileDecoder.cpp" />
+    <ClCompile Include="FilterNodes.cpp" />
+    <ClCompile Include="Filters.cpp" />
+    <ClCompile Include="InputNode.cpp" />
+    <ClCompile Include="Interpolator.cpp" />
+    <ClCompile Include="ListenerNode.cpp" />
+    <ClCompile Include="LockFreeQueue.cpp" />
+    <ClCompile Include="Modifiers.cpp" />
+    <ClCompile Include="pa_ringbuffer.cpp" />
+    <ClCompile Include="pa_win_util.cpp" />
+    <ClCompile Include="PitchNode.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="RecordNode.cpp" />
+    <ClCompile Include="ReverbNodes.cpp" />
+    <ClCompile Include="SoundAssets.cpp" />
+    <ClCompile Include="SoundInstances.cpp" />
+    <ClCompile Include="SoundNode.cpp" />
+    <ClCompile Include="stb_vorbis.cpp" />
+    <ClCompile Include="Tags.cpp" />
+    <ClCompile Include="VolumeNodes.cpp" />
+    <ClCompile Include="WindowsDeviceAccess.cpp" />
+    <ClCompile Include="WindowsMIDI.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AdditiveSynthNode.h" />
+    <ClInclude Include="Attenuator.h" />
+    <ClInclude Include="AudioInputOutput.h" />
+    <ClInclude Include="AudioSystemInterface.h" />
+    <ClInclude Include="AudioSystemInternal.h" />
+    <ClInclude Include="Definitions.h" />
+    <ClInclude Include="DeviceNotifier.h" />
+    <ClInclude Include="DynamicsProcessorNode.h" />
+    <ClInclude Include="Emitter.h" />
+    <ClInclude Include="EqualizerNode.h" />
+    <ClInclude Include="FileAccess.h" />
+    <ClInclude Include="FileDecoder.h" />
+    <ClInclude Include="FilterNodes.h" />
+    <ClInclude Include="Filters.h" />
+    <ClInclude Include="InputNode.h" />
+    <ClInclude Include="Interpolator.h" />
+    <ClInclude Include="ListenerNode.h" />
+    <ClInclude Include="LockFreeQueue.hpp" />
+    <ClInclude Include="MIDI.h" />
+    <ClInclude Include="Modifiers.h" />
+    <ClInclude Include="pa_memorybarrier.h" />
+    <ClInclude Include="pa_ringbuffer.h" />
+    <ClInclude Include="pa_util.h" />
+    <ClInclude Include="PitchNode.h" />
+    <ClInclude Include="portaudio.h" />
+    <ClInclude Include="Precompiled.h" />
+    <ClInclude Include="RecordNode.h" />
+    <ClInclude Include="ReverbNodes.h" />
+    <ClInclude Include="SoundAssets.h" />
+    <ClInclude Include="SoundInstances.h" />
+    <ClInclude Include="SoundNode.h" />
+    <ClInclude Include="stb_vorbis.h" />
+    <ClInclude Include="Tags.h" />
+    <ClInclude Include="VolumeNodes.h" />
+    <ClInclude Include="WindowsDeviceAccess.h" />
+    <ClInclude Include="WindowsMIDI.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="portaudio_x86.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

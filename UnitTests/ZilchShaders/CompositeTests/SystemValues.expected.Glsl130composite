@@ -1,0 +1,33 @@
+[Vertex]
+struct SystemValues_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVOutput] var ApiPerspectivePosition : Real4;
+  [SVInput] var VertexId : Integer;
+
+  [Main]
+  function Main()
+  {
+    var vertexsystemvalues = VertexSystemValues();
+    vertexsystemvalues.VertexId = this.VertexId;
+    vertexsystemvalues.Main();
+  }
+}
+[Pixel]
+struct SystemValues_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Fragment Properties
+  [Uniform][Input] var PixelSystemValues_PrimitiveId : Integer;
+
+  [Main]
+  function Main()
+  {
+    var pixelsystemvalues = PixelSystemValues();
+    pixelsystemvalues.PrimitiveId = this.PixelSystemValues_PrimitiveId;
+    pixelsystemvalues.Main();
+  }
+}

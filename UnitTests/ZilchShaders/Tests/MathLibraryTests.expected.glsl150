@@ -1,0 +1,2626 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct MathMatrixSetByIndex
+{
+  int Dummy;
+};
+
+struct MathMatrixGetByIndex
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real2x2_Real2_
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real2x3_Real3_
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real2x4_Real4_
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real3x2_Real2_
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real3x3_Real3_
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real3x4_Real4_
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real4x2_Real2_
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real4x3_Real3_
+{
+  int Dummy;
+};
+
+struct template_MatrixMathTests_Real4x4_Real4_
+{
+  int Dummy;
+};
+
+struct MathMuliplyPoint
+{
+  int Dummy;
+};
+
+struct MathMuliplyNormal
+{
+  int Dummy;
+};
+
+struct MathMatrixDeterminant
+{
+  int Dummy;
+};
+
+struct template_SquareMatrixMathTests_Real2x2_Real2_Real_
+{
+  int Dummy;
+};
+
+struct template_SquareMatrixMathTests_Real3x3_Real3_Real2_
+{
+  int Dummy;
+};
+
+struct template_SquareMatrixMathTests_Real4x4_Real4_Real3_
+{
+  int Dummy;
+};
+
+struct MathCeilPlacesBase
+{
+  int Dummy;
+};
+
+struct MathCeilPlaces
+{
+  int Dummy;
+};
+
+struct MathFloorPlacesBase
+{
+  int Dummy;
+};
+
+struct MathFloorPlaces
+{
+  int Dummy;
+};
+
+struct MathFMod
+{
+  int Dummy;
+};
+
+struct MathLog10
+{
+  int Dummy;
+};
+
+struct MathRoundPlacesBase
+{
+  int Dummy;
+};
+
+struct MathRoundPlaces
+{
+  int Dummy;
+};
+
+struct MathSaturate
+{
+  int Dummy;
+};
+
+struct MathTruncatePlacesBase
+{
+  int Dummy;
+};
+
+struct MathTruncatePlaces
+{
+  int Dummy;
+};
+
+struct template_TestAllRealTypes_Real_Boolean_Integer_
+{
+  int Dummy;
+};
+
+struct MathAngleBetween
+{
+  int Dummy;
+};
+
+struct MathVectorSlerp
+{
+  int Dummy;
+};
+
+struct template_MathGenericRotateTowards_Real2_
+{
+  int Dummy;
+};
+
+struct template_MathGenericRotateTowards_Real3_
+{
+  int Dummy;
+};
+
+struct MathRotateTowards
+{
+  int Dummy;
+};
+
+struct MathGetAxis
+{
+  int Dummy;
+};
+
+struct MathProjectOnVector
+{
+  int Dummy;
+};
+
+struct MathProjectOnPlane
+{
+  int Dummy;
+};
+
+struct MathReflectAcrossVector
+{
+  int Dummy;
+};
+
+struct MathLengthSq
+{
+  int Dummy;
+};
+
+struct MathDistanceSq
+{
+  int Dummy;
+};
+
+struct template_VectorMathTests_Real2_
+{
+  int Dummy;
+};
+
+struct template_TestAllRealTypes_Real2_Integer2_Boolean2_
+{
+  int Dummy;
+};
+
+struct Real2Tests
+{
+  int Dummy;
+};
+
+struct MathAngle2D
+{
+  int Dummy;
+};
+
+struct MathSignedAngle
+{
+  int Dummy;
+};
+
+struct template_VectorMathTests_Real3_
+{
+  int Dummy;
+};
+
+struct template_TestAllRealTypes_Real3_Integer3_Boolean3_
+{
+  int Dummy;
+};
+
+struct Real3Tests
+{
+  int Dummy;
+};
+
+struct template_VectorMathTests_Real4_
+{
+  int Dummy;
+};
+
+struct template_TestAllRealTypes_Real4_Integer4_Boolean4_
+{
+  int Dummy;
+};
+
+struct Real4Tests
+{
+  int Dummy;
+};
+
+struct MathLibraryTests
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _MathMatrixSetByIndexPreConstructor(inout MathMatrixSetByIndex self);
+MathMatrixSetByIndex _MathMatrixSetByIndexConstructor();
+void _mat2x2SetByIndex(int _index, float _value, inout mat2x2 self);
+void _mat2x3SetByIndex(int _index, float _value, inout mat2x3 self);
+void _mat2x4SetByIndex(int _index, float _value, inout mat2x4 self);
+void _mat3x2SetByIndex(int _index, float _value, inout mat3x2 self);
+void _mat3x3SetByIndex(int _index, float _value, inout mat3x3 self);
+void _mat3x4SetByIndex(int _index, float _value, inout mat3x4 self);
+void _mat4x2SetByIndex(int _index, float _value, inout mat4x2 self);
+void _mat4x3SetByIndex(int _index, float _value, inout mat4x3 self);
+void _mat4x4SetByIndex(int _index, float _value, inout mat4x4 self);
+
+void _MathMatrixGetByIndexPreConstructor(inout MathMatrixGetByIndex self);
+MathMatrixGetByIndex _MathMatrixGetByIndexConstructor();
+float _mat2x2GetByIndex(int _index, inout mat2x2 self);
+float _mat2x3GetByIndex(int _index, inout mat2x3 self);
+float _mat2x4GetByIndex(int _index, inout mat2x4 self);
+float _mat3x2GetByIndex(int _index, inout mat3x2 self);
+float _mat3x3GetByIndex(int _index, inout mat3x3 self);
+float _mat3x4GetByIndex(int _index, inout mat3x4 self);
+float _mat4x2GetByIndex(int _index, inout mat4x2 self);
+float _mat4x3GetByIndex(int _index, inout mat4x3 self);
+float _mat4x4GetByIndex(int _index, inout mat4x4 self);
+
+void _template_MatrixMathTests_Real2x2_Real2_PreConstructor(inout template_MatrixMathTests_Real2x2_Real2_ self);
+template_MatrixMathTests_Real2x2_Real2_ _template_MatrixMathTests_Real2x2_Real2_Constructor();
+void _template_MatrixMathTests_Real2x2_Real2_Test(inout template_MatrixMathTests_Real2x2_Real2_ self);
+
+void _template_MatrixMathTests_Real2x3_Real3_PreConstructor(inout template_MatrixMathTests_Real2x3_Real3_ self);
+template_MatrixMathTests_Real2x3_Real3_ _template_MatrixMathTests_Real2x3_Real3_Constructor();
+void _template_MatrixMathTests_Real2x3_Real3_Test(inout template_MatrixMathTests_Real2x3_Real3_ self);
+
+void _template_MatrixMathTests_Real2x4_Real4_PreConstructor(inout template_MatrixMathTests_Real2x4_Real4_ self);
+template_MatrixMathTests_Real2x4_Real4_ _template_MatrixMathTests_Real2x4_Real4_Constructor();
+void _template_MatrixMathTests_Real2x4_Real4_Test(inout template_MatrixMathTests_Real2x4_Real4_ self);
+
+void _template_MatrixMathTests_Real3x2_Real2_PreConstructor(inout template_MatrixMathTests_Real3x2_Real2_ self);
+template_MatrixMathTests_Real3x2_Real2_ _template_MatrixMathTests_Real3x2_Real2_Constructor();
+void _template_MatrixMathTests_Real3x2_Real2_Test(inout template_MatrixMathTests_Real3x2_Real2_ self);
+
+void _template_MatrixMathTests_Real3x3_Real3_PreConstructor(inout template_MatrixMathTests_Real3x3_Real3_ self);
+template_MatrixMathTests_Real3x3_Real3_ _template_MatrixMathTests_Real3x3_Real3_Constructor();
+void _template_MatrixMathTests_Real3x3_Real3_Test(inout template_MatrixMathTests_Real3x3_Real3_ self);
+
+void _template_MatrixMathTests_Real3x4_Real4_PreConstructor(inout template_MatrixMathTests_Real3x4_Real4_ self);
+template_MatrixMathTests_Real3x4_Real4_ _template_MatrixMathTests_Real3x4_Real4_Constructor();
+void _template_MatrixMathTests_Real3x4_Real4_Test(inout template_MatrixMathTests_Real3x4_Real4_ self);
+
+void _template_MatrixMathTests_Real4x2_Real2_PreConstructor(inout template_MatrixMathTests_Real4x2_Real2_ self);
+template_MatrixMathTests_Real4x2_Real2_ _template_MatrixMathTests_Real4x2_Real2_Constructor();
+void _template_MatrixMathTests_Real4x2_Real2_Test(inout template_MatrixMathTests_Real4x2_Real2_ self);
+
+void _template_MatrixMathTests_Real4x3_Real3_PreConstructor(inout template_MatrixMathTests_Real4x3_Real3_ self);
+template_MatrixMathTests_Real4x3_Real3_ _template_MatrixMathTests_Real4x3_Real3_Constructor();
+void _template_MatrixMathTests_Real4x3_Real3_Test(inout template_MatrixMathTests_Real4x3_Real3_ self);
+
+void _template_MatrixMathTests_Real4x4_Real4_PreConstructor(inout template_MatrixMathTests_Real4x4_Real4_ self);
+template_MatrixMathTests_Real4x4_Real4_ _template_MatrixMathTests_Real4x4_Real4_Constructor();
+void _template_MatrixMathTests_Real4x4_Real4_Test(inout template_MatrixMathTests_Real4x4_Real4_ self);
+
+void _MathMuliplyPointPreConstructor(inout MathMuliplyPoint self);
+MathMuliplyPoint _MathMuliplyPointConstructor();
+float _MathMultiplyPoint(mat2x2 _by, float _the);
+vec2 _MathMultiplyPoint(mat3x3 _by, vec2 _the);
+vec3 _MathMultiplyPoint(mat4x4 _by, vec3 _the);
+
+void _MathMuliplyNormalPreConstructor(inout MathMuliplyNormal self);
+MathMuliplyNormal _MathMuliplyNormalConstructor();
+float _MathMultiplyNormal(mat2x2 _by, float _the);
+vec2 _MathMultiplyNormal(mat3x3 _by, vec2 _the);
+vec3 _MathMultiplyNormal(mat4x4 _by, vec3 _the);
+
+void _MathMatrixDeterminantPreConstructor(inout MathMatrixDeterminant self);
+MathMatrixDeterminant _MathMatrixDeterminantConstructor();
+float _MathDeterminant(mat2x2 _value);
+float _MathDeterminant(mat3x3 _value);
+float _MathDeterminant(mat4x4 _value);
+
+void _template_SquareMatrixMathTests_Real2x2_Real2_Real_PreConstructor(inout template_SquareMatrixMathTests_Real2x2_Real2_Real_ self);
+template_SquareMatrixMathTests_Real2x2_Real2_Real_ _template_SquareMatrixMathTests_Real2x2_Real2_Real_Constructor();
+void _template_SquareMatrixMathTests_Real2x2_Real2_Real_Test(inout template_SquareMatrixMathTests_Real2x2_Real2_Real_ self);
+
+void _template_SquareMatrixMathTests_Real3x3_Real3_Real2_PreConstructor(inout template_SquareMatrixMathTests_Real3x3_Real3_Real2_ self);
+template_SquareMatrixMathTests_Real3x3_Real3_Real2_ _template_SquareMatrixMathTests_Real3x3_Real3_Real2_Constructor();
+void _template_SquareMatrixMathTests_Real3x3_Real3_Real2_Test(inout template_SquareMatrixMathTests_Real3x3_Real3_Real2_ self);
+
+void _template_SquareMatrixMathTests_Real4x4_Real4_Real3_PreConstructor(inout template_SquareMatrixMathTests_Real4x4_Real4_Real3_ self);
+template_SquareMatrixMathTests_Real4x4_Real4_Real3_ _template_SquareMatrixMathTests_Real4x4_Real4_Real3_Constructor();
+void _template_SquareMatrixMathTests_Real4x4_Real4_Real3_Test(inout template_SquareMatrixMathTests_Real4x4_Real4_Real3_ self);
+
+void _MathCeilPlacesBasePreConstructor(inout MathCeilPlacesBase self);
+MathCeilPlacesBase _MathCeilPlacesBaseConstructor();
+float _MathCeil(float _value, int _places, int _numericalBase);
+vec2 _MathCeil(vec2 _value, int _places, int _numericalBase);
+vec3 _MathCeil(vec3 _value, int _places, int _numericalBase);
+vec4 _MathCeil(vec4 _value, int _places, int _numericalBase);
+
+void _MathCeilPlacesPreConstructor(inout MathCeilPlaces self);
+MathCeilPlaces _MathCeilPlacesConstructor();
+float _MathCeil(float _value, int _places);
+vec2 _MathCeil(vec2 _value, int _places);
+vec3 _MathCeil(vec3 _value, int _places);
+vec4 _MathCeil(vec4 _value, int _places);
+
+void _MathFloorPlacesBasePreConstructor(inout MathFloorPlacesBase self);
+MathFloorPlacesBase _MathFloorPlacesBaseConstructor();
+float _MathFloor(float _value, int _places, int _numericalBase);
+vec2 _MathFloor(vec2 _value, int _places, int _numericalBase);
+vec3 _MathFloor(vec3 _value, int _places, int _numericalBase);
+vec4 _MathFloor(vec4 _value, int _places, int _numericalBase);
+
+void _MathFloorPlacesPreConstructor(inout MathFloorPlaces self);
+MathFloorPlaces _MathFloorPlacesConstructor();
+float _MathFloor(float _value, int _places);
+vec2 _MathFloor(vec2 _value, int _places);
+vec3 _MathFloor(vec3 _value, int _places);
+vec4 _MathFloor(vec4 _value, int _places);
+
+void _MathFModPreConstructor(inout MathFMod self);
+MathFMod _MathFModConstructor();
+float _MathFMod(float _numerator, float _denominator);
+vec2 _MathFMod(vec2 _numerator, vec2 _denominator);
+vec3 _MathFMod(vec3 _numerator, vec3 _denominator);
+vec4 _MathFMod(vec4 _numerator, vec4 _denominator);
+
+void _MathLog10PreConstructor(inout MathLog10 self);
+MathLog10 _MathLog10Constructor();
+float _MathLog10(float _value);
+vec2 _MathLog10(vec2 _value);
+vec3 _MathLog10(vec3 _value);
+vec4 _MathLog10(vec4 _value);
+
+void _MathRoundPlacesBasePreConstructor(inout MathRoundPlacesBase self);
+MathRoundPlacesBase _MathRoundPlacesBaseConstructor();
+float _MathRound(float _value, int _places, int _numericalBase);
+vec2 _MathRound(vec2 _value, int _places, int _numericalBase);
+vec3 _MathRound(vec3 _value, int _places, int _numericalBase);
+vec4 _MathRound(vec4 _value, int _places, int _numericalBase);
+
+void _MathRoundPlacesPreConstructor(inout MathRoundPlaces self);
+MathRoundPlaces _MathRoundPlacesConstructor();
+float _MathRound(float _value, int _places);
+vec2 _MathRound(vec2 _value, int _places);
+vec3 _MathRound(vec3 _value, int _places);
+vec4 _MathRound(vec4 _value, int _places);
+
+void _MathSaturatePreConstructor(inout MathSaturate self);
+MathSaturate _MathSaturateConstructor();
+float _MathSaturate(float _value);
+vec2 _MathSaturate(vec2 _value);
+vec3 _MathSaturate(vec3 _value);
+vec4 _MathSaturate(vec4 _value);
+
+void _MathTruncatePlacesBasePreConstructor(inout MathTruncatePlacesBase self);
+MathTruncatePlacesBase _MathTruncatePlacesBaseConstructor();
+float _MathTruncate(float _value, int _places, int _numericalBase);
+vec2 _MathTruncate(vec2 _value, int _places, int _numericalBase);
+vec3 _MathTruncate(vec3 _value, int _places, int _numericalBase);
+vec4 _MathTruncate(vec4 _value, int _places, int _numericalBase);
+
+void _MathTruncatePlacesPreConstructor(inout MathTruncatePlaces self);
+MathTruncatePlaces _MathTruncatePlacesConstructor();
+float _MathTruncate(float _value, int _places);
+vec2 _MathTruncate(vec2 _value, int _places);
+vec3 _MathTruncate(vec3 _value, int _places);
+vec4 _MathTruncate(vec4 _value, int _places);
+
+void _template_TestAllRealTypes_Real_Boolean_Integer_PreConstructor(inout template_TestAllRealTypes_Real_Boolean_Integer_ self);
+template_TestAllRealTypes_Real_Boolean_Integer_ _template_TestAllRealTypes_Real_Boolean_Integer_Constructor();
+void _template_TestAllRealTypes_Real_Boolean_Integer_Test(float _value, bool _result, int _intType, inout template_TestAllRealTypes_Real_Boolean_Integer_ self);
+
+void _MathAngleBetweenPreConstructor(inout MathAngleBetween self);
+MathAngleBetween _MathAngleBetweenConstructor();
+float _MathAngleBetween(vec2 _real20, vec2 _real21);
+float _MathAngleBetween(vec3 _real30, vec3 _real31);
+float _MathAngleBetween(vec4 _real40, vec4 _real41);
+
+void _MathVectorSlerpPreConstructor(inout MathVectorSlerp self);
+MathVectorSlerp _MathVectorSlerpConstructor();
+vec2 _MathSlerp(vec2 _start, vec2 _end, float _t);
+vec3 _MathSlerp(vec3 _start, vec3 _end, float _t);
+
+void _template_MathGenericRotateTowards_Real2_PreConstructor(inout template_MathGenericRotateTowards_Real2_ self);
+template_MathGenericRotateTowards_Real2_ _template_MathGenericRotateTowards_Real2_Constructor();
+vec2 _template_MathGenericRotateTowards_Real2_RotateTowards(vec2 _p0, vec2 _p1, float _maxRadians);
+
+void _template_MathGenericRotateTowards_Real3_PreConstructor(inout template_MathGenericRotateTowards_Real3_ self);
+template_MathGenericRotateTowards_Real3_ _template_MathGenericRotateTowards_Real3_Constructor();
+vec3 _template_MathGenericRotateTowards_Real3_RotateTowards(vec3 _p0, vec3 _p1, float _maxRadians);
+
+void _MathRotateTowardsPreConstructor(inout MathRotateTowards self);
+MathRotateTowards _MathRotateTowardsConstructor();
+vec2 _MathRotateTowards(vec2 _p0, vec2 _p1, float _maxRadians);
+vec3 _MathRotateTowards(vec3 _p0, vec3 _p1, float _maxRadians);
+
+void _MathGetAxisPreConstructor(inout MathGetAxis self);
+MathGetAxis _MathGetAxisConstructor();
+vec2 _vec2GetAxis(int _value);
+vec3 _vec3GetAxis(int _value);
+vec4 _vec4GetAxis(int _value);
+
+void _MathProjectOnVectorPreConstructor(inout MathProjectOnVector self);
+MathProjectOnVector _MathProjectOnVectorConstructor();
+vec2 _MathProjectOnVector(vec2 _toBeProjected, vec2 _normalizedVector);
+vec3 _MathProjectOnVector(vec3 _toBeProjected, vec3 _normalizedVector);
+vec4 _MathProjectOnVector(vec4 _toBeProjected, vec4 _normalizedVector);
+
+void _MathProjectOnPlanePreConstructor(inout MathProjectOnPlane self);
+MathProjectOnPlane _MathProjectOnPlaneConstructor();
+vec2 _MathProjectOnPlane(vec2 _toBeProjected, vec2 _planeNormal);
+vec3 _MathProjectOnPlane(vec3 _toBeProjected, vec3 _planeNormal);
+vec4 _MathProjectOnPlane(vec4 _toBeProjected, vec4 _planeNormal);
+
+void _MathReflectAcrossVectorPreConstructor(inout MathReflectAcrossVector self);
+MathReflectAcrossVector _MathReflectAcrossVectorConstructor();
+vec2 _MathReflectAcrossVector(vec2 _toBeReflected, vec2 _vector);
+vec3 _MathReflectAcrossVector(vec3 _toBeReflected, vec3 _vector);
+vec4 _MathReflectAcrossVector(vec4 _toBeReflected, vec4 _vector);
+
+void _MathLengthSqPreConstructor(inout MathLengthSq self);
+MathLengthSq _MathLengthSqConstructor();
+float _MathLengthSq(vec2 _value);
+float _MathLengthSq(vec3 _value);
+float _MathLengthSq(vec4 _value);
+
+void _MathDistanceSqPreConstructor(inout MathDistanceSq self);
+MathDistanceSq _MathDistanceSqConstructor();
+float _MathDistanceSq(vec2 _real20, vec2 _real21);
+float _MathDistanceSq(vec3 _real30, vec3 _real31);
+float _MathDistanceSq(vec4 _real40, vec4 _real41);
+
+void _template_VectorMathTests_Real2_PreConstructor(inout template_VectorMathTests_Real2_ self);
+template_VectorMathTests_Real2_ _template_VectorMathTests_Real2_Constructor();
+void _template_VectorMathTests_Real2_Test(inout template_VectorMathTests_Real2_ self);
+
+void _template_TestAllRealTypes_Real2_Integer2_Boolean2_PreConstructor(inout template_TestAllRealTypes_Real2_Integer2_Boolean2_ self);
+template_TestAllRealTypes_Real2_Integer2_Boolean2_ _template_TestAllRealTypes_Real2_Integer2_Boolean2_Constructor();
+void _template_TestAllRealTypes_Real2_Integer2_Boolean2_Test(vec2 _value, ivec2 _result, bvec2 _intType, inout template_TestAllRealTypes_Real2_Integer2_Boolean2_ self);
+
+void _Real2TestsPreConstructor(inout Real2Tests self);
+Real2Tests _Real2TestsConstructor();
+void _Real2TestsTest(inout Real2Tests self);
+
+void _MathAngle2DPreConstructor(inout MathAngle2D self);
+MathAngle2D _MathAngle2DConstructor();
+float _MathAngle2D(vec3 _value);
+
+void _MathSignedAnglePreConstructor(inout MathSignedAngle self);
+MathSignedAngle _MathSignedAngleConstructor();
+float _MathSignedAngle(vec3 _p0, vec3 _p1, vec3 _up);
+
+void _template_VectorMathTests_Real3_PreConstructor(inout template_VectorMathTests_Real3_ self);
+template_VectorMathTests_Real3_ _template_VectorMathTests_Real3_Constructor();
+void _template_VectorMathTests_Real3_Test(inout template_VectorMathTests_Real3_ self);
+
+void _template_TestAllRealTypes_Real3_Integer3_Boolean3_PreConstructor(inout template_TestAllRealTypes_Real3_Integer3_Boolean3_ self);
+template_TestAllRealTypes_Real3_Integer3_Boolean3_ _template_TestAllRealTypes_Real3_Integer3_Boolean3_Constructor();
+void _template_TestAllRealTypes_Real3_Integer3_Boolean3_Test(vec3 _value, ivec3 _result, bvec3 _intType, inout template_TestAllRealTypes_Real3_Integer3_Boolean3_ self);
+
+void _Real3TestsPreConstructor(inout Real3Tests self);
+Real3Tests _Real3TestsConstructor();
+void _Real3TestsTest(inout Real3Tests self);
+
+void _template_VectorMathTests_Real4_PreConstructor(inout template_VectorMathTests_Real4_ self);
+template_VectorMathTests_Real4_ _template_VectorMathTests_Real4_Constructor();
+void _template_VectorMathTests_Real4_Test(inout template_VectorMathTests_Real4_ self);
+
+void _template_TestAllRealTypes_Real4_Integer4_Boolean4_PreConstructor(inout template_TestAllRealTypes_Real4_Integer4_Boolean4_ self);
+template_TestAllRealTypes_Real4_Integer4_Boolean4_ _template_TestAllRealTypes_Real4_Integer4_Boolean4_Constructor();
+void _template_TestAllRealTypes_Real4_Integer4_Boolean4_Test(vec4 _value, ivec4 _result, bvec4 _intType, inout template_TestAllRealTypes_Real4_Integer4_Boolean4_ self);
+
+void _Real4TestsPreConstructor(inout Real4Tests self);
+Real4Tests _Real4TestsConstructor();
+void _Real4TestsTest(inout Real4Tests self);
+
+void _MathLibraryTestsPreConstructor(inout MathLibraryTests self);
+MathLibraryTests _MathLibraryTestsConstructor();
+void _MathLibraryTestsTestMatrices(inout MathLibraryTests self);
+void _MathLibraryTestsMain(inout MathLibraryTests self);
+
+//----- Global Variable Declarations -----
+//----- MathMatrixSetByIndex Functions -----
+void _MathMatrixSetByIndexPreConstructor(inout MathMatrixSetByIndex self)
+{
+  self.Dummy = 0;
+}
+
+MathMatrixSetByIndex _MathMatrixSetByIndexConstructor()
+{
+  MathMatrixSetByIndex self;
+  _MathMatrixSetByIndexPreConstructor(self);
+  return self;
+}
+
+void _mat2x2SetByIndex(int _index, float _value, inout mat2x2 self)
+{
+  int _indexX = _index % 2;
+  int _indexY = _index / 2;
+  self[_indexY][_indexX] = _value;
+}
+
+void _mat2x3SetByIndex(int _index, float _value, inout mat2x3 self)
+{
+  int _indexX = _index % 3;
+  int _indexY = _index / 3;
+  self[_indexY][_indexX] = _value;
+}
+
+void _mat2x4SetByIndex(int _index, float _value, inout mat2x4 self)
+{
+  int _indexX = _index % 4;
+  int _indexY = _index / 4;
+  self[_indexY][_indexX] = _value;
+}
+
+void _mat3x2SetByIndex(int _index, float _value, inout mat3x2 self)
+{
+  int _indexX = _index % 2;
+  int _indexY = _index / 2;
+  self[_indexY][_indexX] = _value;
+}
+
+void _mat3x3SetByIndex(int _index, float _value, inout mat3x3 self)
+{
+  int _indexX = _index % 3;
+  int _indexY = _index / 3;
+  self[_indexY][_indexX] = _value;
+}
+
+void _mat3x4SetByIndex(int _index, float _value, inout mat3x4 self)
+{
+  int _indexX = _index % 4;
+  int _indexY = _index / 4;
+  self[_indexY][_indexX] = _value;
+}
+
+void _mat4x2SetByIndex(int _index, float _value, inout mat4x2 self)
+{
+  int _indexX = _index % 2;
+  int _indexY = _index / 2;
+  self[_indexY][_indexX] = _value;
+}
+
+void _mat4x3SetByIndex(int _index, float _value, inout mat4x3 self)
+{
+  int _indexX = _index % 3;
+  int _indexY = _index / 3;
+  self[_indexY][_indexX] = _value;
+}
+
+void _mat4x4SetByIndex(int _index, float _value, inout mat4x4 self)
+{
+  int _indexX = _index % 4;
+  int _indexY = _index / 4;
+  self[_indexY][_indexX] = _value;
+}
+
+//----- MathMatrixGetByIndex Functions -----
+void _MathMatrixGetByIndexPreConstructor(inout MathMatrixGetByIndex self)
+{
+  self.Dummy = 0;
+}
+
+MathMatrixGetByIndex _MathMatrixGetByIndexConstructor()
+{
+  MathMatrixGetByIndex self;
+  _MathMatrixGetByIndexPreConstructor(self);
+  return self;
+}
+
+float _mat2x2GetByIndex(int _index, inout mat2x2 self)
+{
+  int _indexX = _index % 2;
+  int _indexY = _index / 2;
+  return self[_indexY][_indexX];
+}
+
+float _mat2x3GetByIndex(int _index, inout mat2x3 self)
+{
+  int _indexX = _index % 3;
+  int _indexY = _index / 3;
+  return self[_indexY][_indexX];
+}
+
+float _mat2x4GetByIndex(int _index, inout mat2x4 self)
+{
+  int _indexX = _index % 4;
+  int _indexY = _index / 4;
+  return self[_indexY][_indexX];
+}
+
+float _mat3x2GetByIndex(int _index, inout mat3x2 self)
+{
+  int _indexX = _index % 2;
+  int _indexY = _index / 2;
+  return self[_indexY][_indexX];
+}
+
+float _mat3x3GetByIndex(int _index, inout mat3x3 self)
+{
+  int _indexX = _index % 3;
+  int _indexY = _index / 3;
+  return self[_indexY][_indexX];
+}
+
+float _mat3x4GetByIndex(int _index, inout mat3x4 self)
+{
+  int _indexX = _index % 4;
+  int _indexY = _index / 4;
+  return self[_indexY][_indexX];
+}
+
+float _mat4x2GetByIndex(int _index, inout mat4x2 self)
+{
+  int _indexX = _index % 2;
+  int _indexY = _index / 2;
+  return self[_indexY][_indexX];
+}
+
+float _mat4x3GetByIndex(int _index, inout mat4x3 self)
+{
+  int _indexX = _index % 3;
+  int _indexY = _index / 3;
+  return self[_indexY][_indexX];
+}
+
+float _mat4x4GetByIndex(int _index, inout mat4x4 self)
+{
+  int _indexX = _index % 4;
+  int _indexY = _index / 4;
+  return self[_indexY][_indexX];
+}
+
+//----- MatrixMathTests[Real2x2, Real2] Functions -----
+void _template_MatrixMathTests_Real2x2_Real2_PreConstructor(inout template_MatrixMathTests_Real2x2_Real2_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real2x2_Real2_ _template_MatrixMathTests_Real2x2_Real2_Constructor()
+{
+  template_MatrixMathTests_Real2x2_Real2_ self;
+  _template_MatrixMathTests_Real2x2_Real2_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real2x2_Real2_Test(inout template_MatrixMathTests_Real2x2_Real2_ self)
+{
+  mat2x2 _a = mat2x2(0.0, 0.0, 0.0, 0.0);
+  vec2 _v = vec2(0.0, 0.0);
+  
+  for(int _i = 0; _i < 4; ++_i)
+  {
+    _mat2x2SetByIndex(_i, _mat2x2GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 2; ++_y)
+  {
+    for(int _x = 0; _x < 2; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat2x2 _transposed = transpose(_a);
+  vec2 _result = (_v * _a);
+}
+
+//----- MatrixMathTests[Real2x3, Real3] Functions -----
+void _template_MatrixMathTests_Real2x3_Real3_PreConstructor(inout template_MatrixMathTests_Real2x3_Real3_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real2x3_Real3_ _template_MatrixMathTests_Real2x3_Real3_Constructor()
+{
+  template_MatrixMathTests_Real2x3_Real3_ self;
+  _template_MatrixMathTests_Real2x3_Real3_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real2x3_Real3_Test(inout template_MatrixMathTests_Real2x3_Real3_ self)
+{
+  mat2x3 _a = mat2x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec3 _v = vec3(0.0, 0.0, 0.0);
+  
+  for(int _i = 0; _i < 6; ++_i)
+  {
+    _mat2x3SetByIndex(_i, _mat2x3GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 2; ++_y)
+  {
+    for(int _x = 0; _x < 3; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat3x2 _transposed = transpose(_a);
+  vec2 _result = (_v * _a);
+}
+
+//----- MatrixMathTests[Real2x4, Real4] Functions -----
+void _template_MatrixMathTests_Real2x4_Real4_PreConstructor(inout template_MatrixMathTests_Real2x4_Real4_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real2x4_Real4_ _template_MatrixMathTests_Real2x4_Real4_Constructor()
+{
+  template_MatrixMathTests_Real2x4_Real4_ self;
+  _template_MatrixMathTests_Real2x4_Real4_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real2x4_Real4_Test(inout template_MatrixMathTests_Real2x4_Real4_ self)
+{
+  mat2x4 _a = mat2x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec4 _v = vec4(0.0, 0.0, 0.0, 0.0);
+  
+  for(int _i = 0; _i < 8; ++_i)
+  {
+    _mat2x4SetByIndex(_i, _mat2x4GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 2; ++_y)
+  {
+    for(int _x = 0; _x < 4; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat4x2 _transposed = transpose(_a);
+  vec2 _result = (_v * _a);
+}
+
+//----- MatrixMathTests[Real3x2, Real2] Functions -----
+void _template_MatrixMathTests_Real3x2_Real2_PreConstructor(inout template_MatrixMathTests_Real3x2_Real2_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real3x2_Real2_ _template_MatrixMathTests_Real3x2_Real2_Constructor()
+{
+  template_MatrixMathTests_Real3x2_Real2_ self;
+  _template_MatrixMathTests_Real3x2_Real2_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real3x2_Real2_Test(inout template_MatrixMathTests_Real3x2_Real2_ self)
+{
+  mat3x2 _a = mat3x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec2 _v = vec2(0.0, 0.0);
+  
+  for(int _i = 0; _i < 6; ++_i)
+  {
+    _mat3x2SetByIndex(_i, _mat3x2GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 3; ++_y)
+  {
+    for(int _x = 0; _x < 2; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat2x3 _transposed = transpose(_a);
+  vec3 _result = (_v * _a);
+}
+
+//----- MatrixMathTests[Real3x3, Real3] Functions -----
+void _template_MatrixMathTests_Real3x3_Real3_PreConstructor(inout template_MatrixMathTests_Real3x3_Real3_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real3x3_Real3_ _template_MatrixMathTests_Real3x3_Real3_Constructor()
+{
+  template_MatrixMathTests_Real3x3_Real3_ self;
+  _template_MatrixMathTests_Real3x3_Real3_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real3x3_Real3_Test(inout template_MatrixMathTests_Real3x3_Real3_ self)
+{
+  mat3x3 _a = mat3x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec3 _v = vec3(0.0, 0.0, 0.0);
+  
+  for(int _i = 0; _i < 9; ++_i)
+  {
+    _mat3x3SetByIndex(_i, _mat3x3GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 3; ++_y)
+  {
+    for(int _x = 0; _x < 3; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat3x3 _transposed = transpose(_a);
+  vec3 _result = (_v * _a);
+}
+
+//----- MatrixMathTests[Real3x4, Real4] Functions -----
+void _template_MatrixMathTests_Real3x4_Real4_PreConstructor(inout template_MatrixMathTests_Real3x4_Real4_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real3x4_Real4_ _template_MatrixMathTests_Real3x4_Real4_Constructor()
+{
+  template_MatrixMathTests_Real3x4_Real4_ self;
+  _template_MatrixMathTests_Real3x4_Real4_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real3x4_Real4_Test(inout template_MatrixMathTests_Real3x4_Real4_ self)
+{
+  mat3x4 _a = mat3x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec4 _v = vec4(0.0, 0.0, 0.0, 0.0);
+  
+  for(int _i = 0; _i < 12; ++_i)
+  {
+    _mat3x4SetByIndex(_i, _mat3x4GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 3; ++_y)
+  {
+    for(int _x = 0; _x < 4; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat4x3 _transposed = transpose(_a);
+  vec3 _result = (_v * _a);
+}
+
+//----- MatrixMathTests[Real4x2, Real2] Functions -----
+void _template_MatrixMathTests_Real4x2_Real2_PreConstructor(inout template_MatrixMathTests_Real4x2_Real2_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real4x2_Real2_ _template_MatrixMathTests_Real4x2_Real2_Constructor()
+{
+  template_MatrixMathTests_Real4x2_Real2_ self;
+  _template_MatrixMathTests_Real4x2_Real2_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real4x2_Real2_Test(inout template_MatrixMathTests_Real4x2_Real2_ self)
+{
+  mat4x2 _a = mat4x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec2 _v = vec2(0.0, 0.0);
+  
+  for(int _i = 0; _i < 8; ++_i)
+  {
+    _mat4x2SetByIndex(_i, _mat4x2GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 4; ++_y)
+  {
+    for(int _x = 0; _x < 2; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat2x4 _transposed = transpose(_a);
+  vec4 _result = (_v * _a);
+}
+
+//----- MatrixMathTests[Real4x3, Real3] Functions -----
+void _template_MatrixMathTests_Real4x3_Real3_PreConstructor(inout template_MatrixMathTests_Real4x3_Real3_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real4x3_Real3_ _template_MatrixMathTests_Real4x3_Real3_Constructor()
+{
+  template_MatrixMathTests_Real4x3_Real3_ self;
+  _template_MatrixMathTests_Real4x3_Real3_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real4x3_Real3_Test(inout template_MatrixMathTests_Real4x3_Real3_ self)
+{
+  mat4x3 _a = mat4x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec3 _v = vec3(0.0, 0.0, 0.0);
+  
+  for(int _i = 0; _i < 12; ++_i)
+  {
+    _mat4x3SetByIndex(_i, _mat4x3GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 4; ++_y)
+  {
+    for(int _x = 0; _x < 3; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat3x4 _transposed = transpose(_a);
+  vec4 _result = (_v * _a);
+}
+
+//----- MatrixMathTests[Real4x4, Real4] Functions -----
+void _template_MatrixMathTests_Real4x4_Real4_PreConstructor(inout template_MatrixMathTests_Real4x4_Real4_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MatrixMathTests_Real4x4_Real4_ _template_MatrixMathTests_Real4x4_Real4_Constructor()
+{
+  template_MatrixMathTests_Real4x4_Real4_ self;
+  _template_MatrixMathTests_Real4x4_Real4_PreConstructor(self);
+  return self;
+}
+
+void _template_MatrixMathTests_Real4x4_Real4_Test(inout template_MatrixMathTests_Real4x4_Real4_ self)
+{
+  mat4x4 _a = mat4x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec4 _v = vec4(0.0, 0.0, 0.0, 0.0);
+  
+  for(int _i = 0; _i < 16; ++_i)
+  {
+    _mat4x4SetByIndex(_i, _mat4x4GetByIndex(_i, _a) + float(_i), _a);
+  }
+  
+  for(int _y = 0; _y < 4; ++_y)
+  {
+    for(int _x = 0; _x < 4; ++_x)
+    {
+      float _temp = _a[_y][_x];
+      _a[_y][_x] = _a[_x][_y];
+      _a[_x][_y] = _temp;
+    }
+  }
+  
+  
+  float _val = _a[0][1];
+  
+  mat4x4 _transposed = transpose(_a);
+  vec4 _result = (_v * _a);
+}
+
+//----- MathMuliplyPoint Functions -----
+void _MathMuliplyPointPreConstructor(inout MathMuliplyPoint self)
+{
+  self.Dummy = 0;
+}
+
+MathMuliplyPoint _MathMuliplyPointConstructor()
+{
+  MathMuliplyPoint self;
+  _MathMuliplyPointPreConstructor(self);
+  return self;
+}
+
+float _MathMultiplyPoint(mat2x2 _by, float _the)
+{
+  vec2 _promotedVector = vec2(_the, float(1));
+  return (_promotedVector * _by).x;
+}
+
+vec2 _MathMultiplyPoint(mat3x3 _by, vec2 _the)
+{
+  vec3 _promotedVector = vec3(_the, float(1));
+  return (_promotedVector * _by).xy;
+}
+
+vec3 _MathMultiplyPoint(mat4x4 _by, vec3 _the)
+{
+  vec4 _promotedVector = vec4(_the, float(1));
+  return (_promotedVector * _by).xyz;
+}
+
+//----- MathMuliplyNormal Functions -----
+void _MathMuliplyNormalPreConstructor(inout MathMuliplyNormal self)
+{
+  self.Dummy = 0;
+}
+
+MathMuliplyNormal _MathMuliplyNormalConstructor()
+{
+  MathMuliplyNormal self;
+  _MathMuliplyNormalPreConstructor(self);
+  return self;
+}
+
+float _MathMultiplyNormal(mat2x2 _by, float _the)
+{
+  vec2 _promotedVector = vec2(_the, float(0));
+  return (_promotedVector * _by).x;
+}
+
+vec2 _MathMultiplyNormal(mat3x3 _by, vec2 _the)
+{
+  vec3 _promotedVector = vec3(_the, float(0));
+  return (_promotedVector * _by).xy;
+}
+
+vec3 _MathMultiplyNormal(mat4x4 _by, vec3 _the)
+{
+  vec4 _promotedVector = vec4(_the, float(0));
+  return (_promotedVector * _by).xyz;
+}
+
+//----- MathMatrixDeterminant Functions -----
+void _MathMatrixDeterminantPreConstructor(inout MathMatrixDeterminant self)
+{
+  self.Dummy = 0;
+}
+
+MathMatrixDeterminant _MathMatrixDeterminantConstructor()
+{
+  MathMatrixDeterminant self;
+  _MathMatrixDeterminantPreConstructor(self);
+  return self;
+}
+
+float _MathDeterminant(mat2x2 _value)
+{
+  return _value[0][0] * _value[1][1] - _value[0][1] * _value[1][0];
+}
+
+float _MathDeterminant(mat3x3 _value)
+{
+  return _value[0][0] * _value[1][1] * _value[2][2] + _value[1][0] * _value[2][1] * _value[0][2] + _value[0][1] * _value[1][2] * _value[2][0] - (_value[0][2] * _value[1][1] * _value[2][0] + _value[1][0] * _value[0][1] * _value[2][2] + _value[0][0] * _value[2][1] * _value[1][2]);
+}
+
+float _MathDeterminant(mat4x4 _value)
+{
+  float _det = _value[0][3] * _value[1][2] * _value[2][1] * _value[3][0] - _value[0][2] * _value[1][3] * _value[2][1] * _value[3][0];
+  _det += _value[0][1] * _value[1][3] * _value[2][2] * _value[3][0] - _value[0][3] * _value[1][1] * _value[2][2] * _value[3][0];
+  _det += _value[0][2] * _value[1][1] * _value[2][3] * _value[3][0] - _value[0][1] * _value[1][2] * _value[2][3] * _value[3][0];
+  _det += _value[0][2] * _value[1][3] * _value[2][0] * _value[3][1] - _value[0][3] * _value[1][2] * _value[2][0] * _value[3][1];
+  _det += _value[0][3] * _value[1][0] * _value[2][2] * _value[3][1] - _value[0][0] * _value[1][3] * _value[2][2] * _value[3][1];
+  _det += _value[0][0] * _value[1][2] * _value[2][3] * _value[3][1] - _value[0][2] * _value[1][0] * _value[2][3] * _value[3][1];
+  _det += _value[0][3] * _value[1][1] * _value[2][0] * _value[3][2] - _value[0][1] * _value[1][3] * _value[2][0] * _value[3][2];
+  _det += _value[0][0] * _value[1][3] * _value[2][1] * _value[3][2] - _value[0][3] * _value[1][0] * _value[2][1] * _value[3][2];
+  _det += _value[0][1] * _value[1][0] * _value[2][3] * _value[3][2] - _value[0][0] * _value[1][1] * _value[2][3] * _value[3][2];
+  _det += _value[0][1] * _value[1][2] * _value[2][0] * _value[3][3] - _value[0][2] * _value[1][1] * _value[2][0] * _value[3][3];
+  _det += _value[0][2] * _value[1][0] * _value[2][1] * _value[3][3] - _value[0][0] * _value[1][2] * _value[2][1] * _value[3][3];
+  _det += _value[0][0] * _value[1][1] * _value[2][2] * _value[3][3] - _value[0][1] * _value[1][0] * _value[2][2] * _value[3][3];
+  return _det;
+}
+
+//----- SquareMatrixMathTests[Real2x2, Real2, Real] Functions -----
+void _template_SquareMatrixMathTests_Real2x2_Real2_Real_PreConstructor(inout template_SquareMatrixMathTests_Real2x2_Real2_Real_ self)
+{
+  self.Dummy = 0;
+}
+
+template_SquareMatrixMathTests_Real2x2_Real2_Real_ _template_SquareMatrixMathTests_Real2x2_Real2_Real_Constructor()
+{
+  template_SquareMatrixMathTests_Real2x2_Real2_Real_ self;
+  _template_SquareMatrixMathTests_Real2x2_Real2_Real_PreConstructor(self);
+  return self;
+}
+
+void _template_SquareMatrixMathTests_Real2x2_Real2_Real_Test(inout template_SquareMatrixMathTests_Real2x2_Real2_Real_ self)
+{
+  mat2x2 _m = mat2x2(0.0, 0.0, 0.0, 0.0);
+  float _resultPoint = float(0.0);
+  _resultPoint = _MathMultiplyPoint(_m, float(0.0));
+  _resultPoint = _MathMultiplyNormal(_m, float(0.0));
+  float _determinant = _MathDeterminant(_m);
+}
+
+//----- SquareMatrixMathTests[Real3x3, Real3, Real2] Functions -----
+void _template_SquareMatrixMathTests_Real3x3_Real3_Real2_PreConstructor(inout template_SquareMatrixMathTests_Real3x3_Real3_Real2_ self)
+{
+  self.Dummy = 0;
+}
+
+template_SquareMatrixMathTests_Real3x3_Real3_Real2_ _template_SquareMatrixMathTests_Real3x3_Real3_Real2_Constructor()
+{
+  template_SquareMatrixMathTests_Real3x3_Real3_Real2_ self;
+  _template_SquareMatrixMathTests_Real3x3_Real3_Real2_PreConstructor(self);
+  return self;
+}
+
+void _template_SquareMatrixMathTests_Real3x3_Real3_Real2_Test(inout template_SquareMatrixMathTests_Real3x3_Real3_Real2_ self)
+{
+  mat3x3 _m = mat3x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec2 _resultPoint = vec2(0.0, 0.0);
+  _resultPoint = _MathMultiplyPoint(_m, vec2(0.0, 0.0));
+  _resultPoint = _MathMultiplyNormal(_m, vec2(0.0, 0.0));
+  float _determinant = _MathDeterminant(_m);
+}
+
+//----- SquareMatrixMathTests[Real4x4, Real4, Real3] Functions -----
+void _template_SquareMatrixMathTests_Real4x4_Real4_Real3_PreConstructor(inout template_SquareMatrixMathTests_Real4x4_Real4_Real3_ self)
+{
+  self.Dummy = 0;
+}
+
+template_SquareMatrixMathTests_Real4x4_Real4_Real3_ _template_SquareMatrixMathTests_Real4x4_Real4_Real3_Constructor()
+{
+  template_SquareMatrixMathTests_Real4x4_Real4_Real3_ self;
+  _template_SquareMatrixMathTests_Real4x4_Real4_Real3_PreConstructor(self);
+  return self;
+}
+
+void _template_SquareMatrixMathTests_Real4x4_Real4_Real3_Test(inout template_SquareMatrixMathTests_Real4x4_Real4_Real3_ self)
+{
+  mat4x4 _m = mat4x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec3 _resultPoint = vec3(0.0, 0.0, 0.0);
+  _resultPoint = _MathMultiplyPoint(_m, vec3(0.0, 0.0, 0.0));
+  _resultPoint = _MathMultiplyNormal(_m, vec3(0.0, 0.0, 0.0));
+  float _determinant = _MathDeterminant(_m);
+}
+
+//----- MathCeilPlacesBase Functions -----
+void _MathCeilPlacesBasePreConstructor(inout MathCeilPlacesBase self)
+{
+  self.Dummy = 0;
+}
+
+MathCeilPlacesBase _MathCeilPlacesBaseConstructor()
+{
+  MathCeilPlacesBase self;
+  _MathCeilPlacesBasePreConstructor(self);
+  return self;
+}
+
+float _MathCeil(float _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return ceil(_value / _scale) * _scale;
+}
+
+vec2 _MathCeil(vec2 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return ceil(_value / _scale) * _scale;
+}
+
+vec3 _MathCeil(vec3 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return ceil(_value / _scale) * _scale;
+}
+
+vec4 _MathCeil(vec4 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return ceil(_value / _scale) * _scale;
+}
+
+//----- MathCeilPlaces Functions -----
+void _MathCeilPlacesPreConstructor(inout MathCeilPlaces self)
+{
+  self.Dummy = 0;
+}
+
+MathCeilPlaces _MathCeilPlacesConstructor()
+{
+  MathCeilPlaces self;
+  _MathCeilPlacesPreConstructor(self);
+  return self;
+}
+
+float _MathCeil(float _value, int _places)
+{
+  return _MathCeil(_value, _places, 10);
+}
+
+vec2 _MathCeil(vec2 _value, int _places)
+{
+  return _MathCeil(_value, _places, 10);
+}
+
+vec3 _MathCeil(vec3 _value, int _places)
+{
+  return _MathCeil(_value, _places, 10);
+}
+
+vec4 _MathCeil(vec4 _value, int _places)
+{
+  return _MathCeil(_value, _places, 10);
+}
+
+//----- MathFloorPlacesBase Functions -----
+void _MathFloorPlacesBasePreConstructor(inout MathFloorPlacesBase self)
+{
+  self.Dummy = 0;
+}
+
+MathFloorPlacesBase _MathFloorPlacesBaseConstructor()
+{
+  MathFloorPlacesBase self;
+  _MathFloorPlacesBasePreConstructor(self);
+  return self;
+}
+
+float _MathFloor(float _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return floor(_value / _scale) * _scale;
+}
+
+vec2 _MathFloor(vec2 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return floor(_value / _scale) * _scale;
+}
+
+vec3 _MathFloor(vec3 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return floor(_value / _scale) * _scale;
+}
+
+vec4 _MathFloor(vec4 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return floor(_value / _scale) * _scale;
+}
+
+//----- MathFloorPlaces Functions -----
+void _MathFloorPlacesPreConstructor(inout MathFloorPlaces self)
+{
+  self.Dummy = 0;
+}
+
+MathFloorPlaces _MathFloorPlacesConstructor()
+{
+  MathFloorPlaces self;
+  _MathFloorPlacesPreConstructor(self);
+  return self;
+}
+
+float _MathFloor(float _value, int _places)
+{
+  return _MathFloor(_value, _places, 10);
+}
+
+vec2 _MathFloor(vec2 _value, int _places)
+{
+  return _MathFloor(_value, _places, 10);
+}
+
+vec3 _MathFloor(vec3 _value, int _places)
+{
+  return _MathFloor(_value, _places, 10);
+}
+
+vec4 _MathFloor(vec4 _value, int _places)
+{
+  return _MathFloor(_value, _places, 10);
+}
+
+//----- MathFMod Functions -----
+void _MathFModPreConstructor(inout MathFMod self)
+{
+  self.Dummy = 0;
+}
+
+MathFMod _MathFModConstructor()
+{
+  MathFMod self;
+  _MathFModPreConstructor(self);
+  return self;
+}
+
+float _MathFMod(float _numerator, float _denominator)
+{
+  return _numerator - _denominator * trunc(_numerator / _denominator);
+}
+
+vec2 _MathFMod(vec2 _numerator, vec2 _denominator)
+{
+  return _numerator - _denominator * trunc(_numerator / _denominator);
+}
+
+vec3 _MathFMod(vec3 _numerator, vec3 _denominator)
+{
+  return _numerator - _denominator * trunc(_numerator / _denominator);
+}
+
+vec4 _MathFMod(vec4 _numerator, vec4 _denominator)
+{
+  return _numerator - _denominator * trunc(_numerator / _denominator);
+}
+
+//----- MathLog10 Functions -----
+void _MathLog10PreConstructor(inout MathLog10 self)
+{
+  self.Dummy = 0;
+}
+
+MathLog10 _MathLog10Constructor()
+{
+  MathLog10 self;
+  _MathLog10PreConstructor(self);
+  return self;
+}
+
+float _MathLog10(float _value)
+{
+  return log(_value) / log(float(10));
+}
+
+vec2 _MathLog10(vec2 _value)
+{
+  return log(_value) / log(float(10));
+}
+
+vec3 _MathLog10(vec3 _value)
+{
+  return log(_value) / log(float(10));
+}
+
+vec4 _MathLog10(vec4 _value)
+{
+  return log(_value) / log(float(10));
+}
+
+//----- MathRoundPlacesBase Functions -----
+void _MathRoundPlacesBasePreConstructor(inout MathRoundPlacesBase self)
+{
+  self.Dummy = 0;
+}
+
+MathRoundPlacesBase _MathRoundPlacesBaseConstructor()
+{
+  MathRoundPlacesBase self;
+  _MathRoundPlacesBasePreConstructor(self);
+  return self;
+}
+
+float _MathRound(float _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return round(_value / _scale) * _scale;
+}
+
+vec2 _MathRound(vec2 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return round(_value / _scale) * _scale;
+}
+
+vec3 _MathRound(vec3 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return round(_value / _scale) * _scale;
+}
+
+vec4 _MathRound(vec4 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return round(_value / _scale) * _scale;
+}
+
+//----- MathRoundPlaces Functions -----
+void _MathRoundPlacesPreConstructor(inout MathRoundPlaces self)
+{
+  self.Dummy = 0;
+}
+
+MathRoundPlaces _MathRoundPlacesConstructor()
+{
+  MathRoundPlaces self;
+  _MathRoundPlacesPreConstructor(self);
+  return self;
+}
+
+float _MathRound(float _value, int _places)
+{
+  return _MathRound(_value, _places, 10);
+}
+
+vec2 _MathRound(vec2 _value, int _places)
+{
+  return _MathRound(_value, _places, 10);
+}
+
+vec3 _MathRound(vec3 _value, int _places)
+{
+  return _MathRound(_value, _places, 10);
+}
+
+vec4 _MathRound(vec4 _value, int _places)
+{
+  return _MathRound(_value, _places, 10);
+}
+
+//----- MathSaturate Functions -----
+void _MathSaturatePreConstructor(inout MathSaturate self)
+{
+  self.Dummy = 0;
+}
+
+MathSaturate _MathSaturateConstructor()
+{
+  MathSaturate self;
+  _MathSaturatePreConstructor(self);
+  return self;
+}
+
+float _MathSaturate(float _value)
+{
+  return clamp(_value, float(float(0)), float(float(1)));
+}
+
+vec2 _MathSaturate(vec2 _value)
+{
+  return clamp(_value, vec2(float(0)), vec2(float(1)));
+}
+
+vec3 _MathSaturate(vec3 _value)
+{
+  return clamp(_value, vec3(float(0)), vec3(float(1)));
+}
+
+vec4 _MathSaturate(vec4 _value)
+{
+  return clamp(_value, vec4(float(0)), vec4(float(1)));
+}
+
+//----- MathTruncatePlacesBase Functions -----
+void _MathTruncatePlacesBasePreConstructor(inout MathTruncatePlacesBase self)
+{
+  self.Dummy = 0;
+}
+
+MathTruncatePlacesBase _MathTruncatePlacesBaseConstructor()
+{
+  MathTruncatePlacesBase self;
+  _MathTruncatePlacesBasePreConstructor(self);
+  return self;
+}
+
+float _MathTruncate(float _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return trunc(_value / _scale) * _scale;
+}
+
+vec2 _MathTruncate(vec2 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return trunc(_value / _scale) * _scale;
+}
+
+vec3 _MathTruncate(vec3 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return trunc(_value / _scale) * _scale;
+}
+
+vec4 _MathTruncate(vec4 _value, int _places, int _numericalBase)
+{
+  float _scale = pow(float(_numericalBase), float(_places));
+  return trunc(_value / _scale) * _scale;
+}
+
+//----- MathTruncatePlaces Functions -----
+void _MathTruncatePlacesPreConstructor(inout MathTruncatePlaces self)
+{
+  self.Dummy = 0;
+}
+
+MathTruncatePlaces _MathTruncatePlacesConstructor()
+{
+  MathTruncatePlaces self;
+  _MathTruncatePlacesPreConstructor(self);
+  return self;
+}
+
+float _MathTruncate(float _value, int _places)
+{
+  return _MathTruncate(_value, _places, 10);
+}
+
+vec2 _MathTruncate(vec2 _value, int _places)
+{
+  return _MathTruncate(_value, _places, 10);
+}
+
+vec3 _MathTruncate(vec3 _value, int _places)
+{
+  return _MathTruncate(_value, _places, 10);
+}
+
+vec4 _MathTruncate(vec4 _value, int _places)
+{
+  return _MathTruncate(_value, _places, 10);
+}
+
+//----- TestAllRealTypes[Real, Boolean, Integer] Functions -----
+void _template_TestAllRealTypes_Real_Boolean_Integer_PreConstructor(inout template_TestAllRealTypes_Real_Boolean_Integer_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TestAllRealTypes_Real_Boolean_Integer_ _template_TestAllRealTypes_Real_Boolean_Integer_Constructor()
+{
+  template_TestAllRealTypes_Real_Boolean_Integer_ self;
+  _template_TestAllRealTypes_Real_Boolean_Integer_PreConstructor(self);
+  return self;
+}
+
+void _template_TestAllRealTypes_Real_Boolean_Integer_Test(float _value, bool _result, int _intType, inout template_TestAllRealTypes_Real_Boolean_Integer_ self)
+{
+  float _a = _value;
+  float _b = _value;
+  float _c = _value;
+  float _t = 1.0f;
+  float _start = _value;
+  float _end = _value;
+  float _minVal = _value;
+  float _maxVal = _value;
+  int _places = 2;
+  int _numBase = 5;
+  float _epsilon = 0.1f;
+  bool _boolResult = false;
+  
+  _a = abs(_a);
+  _a = acos(_a);
+  
+  
+  _a = asin(_a);
+  _a = atan(_a);
+  _a = atan(_a, _b);
+  _a = ceil(_a);
+  _a = _MathCeil(_a, _places);
+  _a = _MathCeil(_a, _places, _numBase);
+  _a = clamp(_a, _minVal, _maxVal);
+  _a = cos(_a);
+  _a = cosh(_a);
+  _a = exp(_a);
+  _a = exp2(_a);
+  _a = floor(_a);
+  _a = _MathFloor(_a, _places);
+  _a = _MathFloor(_a, _places, _numBase);
+  _a = _MathFMod(_a, _b);
+  _a = fract(_a);
+  _a = mix(_start, _end, _t);
+  _a = mix(_start, _end, _a);
+  _a = log(_a);
+  _a = _MathLog10(_a);
+  _a = log2(_a);
+  _a = max(_a, _b);
+  _a = min(_a, _b);
+  _a = pow(_a, _b);
+  _a = round(_a);
+  _a = _MathRound(_a, _places);
+  _a = _MathRound(_a, _places, _numBase);
+  _a = inversesqrt(_a);
+  _a = _MathSaturate(_a);
+  _a = sin(_a);
+  _a = sinh(_a);
+  
+  _a = smoothstep(_minVal, _maxVal, _a);
+  _a = sqrt(_a);
+  _a = step(_a, _b);
+  _a = tan(_a);
+  _a = tanh(_a);
+  _a = degrees(_a);
+  _a = radians(_a);
+  _a = trunc(_a);
+  _a = _MathTruncate(_a, _places);
+  _a = _MathTruncate(_a, _places, _numBase);
+}
+
+//----- MathAngleBetween Functions -----
+void _MathAngleBetweenPreConstructor(inout MathAngleBetween self)
+{
+  self.Dummy = 0;
+}
+
+MathAngleBetween _MathAngleBetweenConstructor()
+{
+  MathAngleBetween self;
+  _MathAngleBetweenPreConstructor(self);
+  return self;
+}
+
+float _MathAngleBetween(vec2 _real20, vec2 _real21)
+{
+  float _dotVal = dot(_real20, _real21);
+  _dotVal = clamp(_dotVal, -1.0f, 1.0f);
+  return acos(_dotVal);
+}
+
+float _MathAngleBetween(vec3 _real30, vec3 _real31)
+{
+  float _dotVal = dot(_real30, _real31);
+  _dotVal = clamp(_dotVal, -1.0f, 1.0f);
+  return acos(_dotVal);
+}
+
+float _MathAngleBetween(vec4 _real40, vec4 _real41)
+{
+  float _dotVal = dot(_real40, _real41);
+  _dotVal = clamp(_dotVal, -1.0f, 1.0f);
+  return acos(_dotVal);
+}
+
+//----- MathVectorSlerp Functions -----
+void _MathVectorSlerpPreConstructor(inout MathVectorSlerp self)
+{
+  self.Dummy = 0;
+}
+
+MathVectorSlerp _MathVectorSlerpConstructor()
+{
+  MathVectorSlerp self;
+  _MathVectorSlerpPreConstructor(self);
+  return self;
+}
+
+vec2 _MathSlerp(vec2 _start, vec2 _end, float _t)
+{
+  float _dotVal = dot(_start, _end);
+  float _theta = acos(_dotVal) * _t;
+  
+  vec2 _relativeVec = vec2(0.0, 0.0);
+  // If end is the negative of start, no direction is better to interpolate than
+  // another, so generate a random perpendicular vector to rotate towards
+  if(_dotVal == -1.0f)
+  {
+    _relativeVec = vec2(-_start.y, _start.x);
+  }
+  else
+  {
+    _relativeVec = _end - _start * _dotVal;
+  }
+  // Attempt normalize (zero vectors and start == end)
+  _relativeVec = normalize(_relativeVec);
+  return _start * cos(_theta) + _relativeVec * sin(_theta);
+}
+
+vec3 _MathSlerp(vec3 _start, vec3 _end, float _t)
+{
+  vec3 _normalizedStart = normalize(_start);
+  vec3 _normalizedEnd = normalize(_end);
+  
+  float _dotVal = dot(_normalizedStart, _normalizedEnd);
+  // Safeguard for non-normalized and slight floating point errors
+  _dotVal = clamp(_dotVal, -1.0f, 1.0f);
+  float _theta = acos(_dotVal) * _t;
+  
+  vec3 _relativeVec = vec3(0.0, 0.0, 0.0);
+  // If end is the negative of start, no direction is better to interpolate than
+  // another, so generate a random perpendicular vector to rotate towards
+  if(_dotVal == -1.0f)
+  {
+    // Unfortunately, a 3d perpendicular vector is not as simple, so try doing the 2d
+    // perpendicular with [x,y], but if x is zero then switch to [y,z] instead
+    if(_normalizedStart.x != 0.0f)
+    {
+      _relativeVec = vec3(-_normalizedStart.y, _normalizedStart.x, _normalizedStart.z);
+    }
+    else
+    {
+      _relativeVec = vec3(_normalizedStart.x, -_normalizedStart.z, _normalizedStart.y);
+    }
+  }
+  else
+  {
+    _relativeVec = _normalizedEnd - _normalizedStart * _dotVal;
+  }
+  // Attempt normalize (zero vectors and start == end)
+  _relativeVec = normalize(_relativeVec);
+  return _normalizedStart * cos(_theta) + _relativeVec * sin(_theta);
+}
+
+//----- MathGenericRotateTowards[Real2] Functions -----
+void _template_MathGenericRotateTowards_Real2_PreConstructor(inout template_MathGenericRotateTowards_Real2_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MathGenericRotateTowards_Real2_ _template_MathGenericRotateTowards_Real2_Constructor()
+{
+  template_MathGenericRotateTowards_Real2_ self;
+  _template_MathGenericRotateTowards_Real2_PreConstructor(self);
+  return self;
+}
+
+vec2 _template_MathGenericRotateTowards_Real2_RotateTowards(vec2 _p0, vec2 _p1, float _maxRadians)
+{
+  vec2 _p0Norm = normalize(_p0);
+  vec2 _p1Norm = normalize(_p1);
+  float _angleEpsilon = 0.0000001f;
+  
+  float _angle = _MathAngleBetween(_p0, _p1);
+  
+  if(_angle > 3.141592653589793238462643383f)
+  {
+    _angle -= 2.0f * 3.141592653589793238462643383f;
+  }
+  
+  _angle = abs(_angle);
+  if(_angle > _angleEpsilon)
+  {
+    float _t = _maxRadians / _angle;
+    if(_t > 1.0f)
+    {
+      _t = 1.0f;
+    }
+    return _MathSlerp(_p0, _p1, _t);
+  }
+  else
+  {
+    return _p1;
+  }
+}
+
+//----- MathGenericRotateTowards[Real3] Functions -----
+void _template_MathGenericRotateTowards_Real3_PreConstructor(inout template_MathGenericRotateTowards_Real3_ self)
+{
+  self.Dummy = 0;
+}
+
+template_MathGenericRotateTowards_Real3_ _template_MathGenericRotateTowards_Real3_Constructor()
+{
+  template_MathGenericRotateTowards_Real3_ self;
+  _template_MathGenericRotateTowards_Real3_PreConstructor(self);
+  return self;
+}
+
+vec3 _template_MathGenericRotateTowards_Real3_RotateTowards(vec3 _p0, vec3 _p1, float _maxRadians)
+{
+  vec3 _p0Norm = normalize(_p0);
+  vec3 _p1Norm = normalize(_p1);
+  float _angleEpsilon = 0.0000001f;
+  
+  float _angle = _MathAngleBetween(_p0, _p1);
+  
+  if(_angle > 3.141592653589793238462643383f)
+  {
+    _angle -= 2.0f * 3.141592653589793238462643383f;
+  }
+  
+  _angle = abs(_angle);
+  if(_angle > _angleEpsilon)
+  {
+    float _t = _maxRadians / _angle;
+    if(_t > 1.0f)
+    {
+      _t = 1.0f;
+    }
+    return _MathSlerp(_p0, _p1, _t);
+  }
+  else
+  {
+    return _p1;
+  }
+}
+
+//----- MathRotateTowards Functions -----
+void _MathRotateTowardsPreConstructor(inout MathRotateTowards self)
+{
+  self.Dummy = 0;
+}
+
+MathRotateTowards _MathRotateTowardsConstructor()
+{
+  MathRotateTowards self;
+  _MathRotateTowardsPreConstructor(self);
+  return self;
+}
+
+vec2 _MathRotateTowards(vec2 _p0, vec2 _p1, float _maxRadians)
+{
+  return _template_MathGenericRotateTowards_Real2_RotateTowards(_p0, _p1, _maxRadians);
+}
+
+vec3 _MathRotateTowards(vec3 _p0, vec3 _p1, float _maxRadians)
+{
+  return _template_MathGenericRotateTowards_Real3_RotateTowards(_p0, _p1, _maxRadians);
+}
+
+//----- MathGetAxis Functions -----
+void _MathGetAxisPreConstructor(inout MathGetAxis self)
+{
+  self.Dummy = 0;
+}
+
+MathGetAxis _MathGetAxisConstructor()
+{
+  MathGetAxis self;
+  _MathGetAxisPreConstructor(self);
+  return self;
+}
+
+vec2 _vec2GetAxis(int _value)
+{
+  vec2 _axis = vec2(0.0, 0.0);
+  _axis[_value] = float(1);
+  return _axis;
+}
+
+vec3 _vec3GetAxis(int _value)
+{
+  vec3 _axis = vec3(0.0, 0.0, 0.0);
+  _axis[_value] = float(1);
+  return _axis;
+}
+
+vec4 _vec4GetAxis(int _value)
+{
+  vec4 _axis = vec4(0.0, 0.0, 0.0, 0.0);
+  _axis[_value] = float(1);
+  return _axis;
+}
+
+//----- MathProjectOnVector Functions -----
+void _MathProjectOnVectorPreConstructor(inout MathProjectOnVector self)
+{
+  self.Dummy = 0;
+}
+
+MathProjectOnVector _MathProjectOnVectorConstructor()
+{
+  MathProjectOnVector self;
+  _MathProjectOnVectorPreConstructor(self);
+  return self;
+}
+
+vec2 _MathProjectOnVector(vec2 _toBeProjected, vec2 _normalizedVector)
+{
+  return _normalizedVector * dot(_toBeProjected, _normalizedVector);
+}
+
+vec3 _MathProjectOnVector(vec3 _toBeProjected, vec3 _normalizedVector)
+{
+  return _normalizedVector * dot(_toBeProjected, _normalizedVector);
+}
+
+vec4 _MathProjectOnVector(vec4 _toBeProjected, vec4 _normalizedVector)
+{
+  return _normalizedVector * dot(_toBeProjected, _normalizedVector);
+}
+
+//----- MathProjectOnPlane Functions -----
+void _MathProjectOnPlanePreConstructor(inout MathProjectOnPlane self)
+{
+  self.Dummy = 0;
+}
+
+MathProjectOnPlane _MathProjectOnPlaneConstructor()
+{
+  MathProjectOnPlane self;
+  _MathProjectOnPlanePreConstructor(self);
+  return self;
+}
+
+vec2 _MathProjectOnPlane(vec2 _toBeProjected, vec2 _planeNormal)
+{
+  return _toBeProjected - _MathProjectOnVector(_toBeProjected, _planeNormal);
+}
+
+vec3 _MathProjectOnPlane(vec3 _toBeProjected, vec3 _planeNormal)
+{
+  return _toBeProjected - _MathProjectOnVector(_toBeProjected, _planeNormal);
+}
+
+vec4 _MathProjectOnPlane(vec4 _toBeProjected, vec4 _planeNormal)
+{
+  return _toBeProjected - _MathProjectOnVector(_toBeProjected, _planeNormal);
+}
+
+//----- MathReflectAcrossVector Functions -----
+void _MathReflectAcrossVectorPreConstructor(inout MathReflectAcrossVector self)
+{
+  self.Dummy = 0;
+}
+
+MathReflectAcrossVector _MathReflectAcrossVectorConstructor()
+{
+  MathReflectAcrossVector self;
+  _MathReflectAcrossVectorPreConstructor(self);
+  return self;
+}
+
+vec2 _MathReflectAcrossVector(vec2 _toBeReflected, vec2 _vector)
+{
+  return reflect(-_toBeReflected, _vector);
+}
+
+vec3 _MathReflectAcrossVector(vec3 _toBeReflected, vec3 _vector)
+{
+  return reflect(-_toBeReflected, _vector);
+}
+
+vec4 _MathReflectAcrossVector(vec4 _toBeReflected, vec4 _vector)
+{
+  return reflect(-_toBeReflected, _vector);
+}
+
+//----- MathLengthSq Functions -----
+void _MathLengthSqPreConstructor(inout MathLengthSq self)
+{
+  self.Dummy = 0;
+}
+
+MathLengthSq _MathLengthSqConstructor()
+{
+  MathLengthSq self;
+  _MathLengthSqPreConstructor(self);
+  return self;
+}
+
+float _MathLengthSq(vec2 _value)
+{
+  return dot(_value, _value);
+}
+
+float _MathLengthSq(vec3 _value)
+{
+  return dot(_value, _value);
+}
+
+float _MathLengthSq(vec4 _value)
+{
+  return dot(_value, _value);
+}
+
+//----- MathDistanceSq Functions -----
+void _MathDistanceSqPreConstructor(inout MathDistanceSq self)
+{
+  self.Dummy = 0;
+}
+
+MathDistanceSq _MathDistanceSqConstructor()
+{
+  MathDistanceSq self;
+  _MathDistanceSqPreConstructor(self);
+  return self;
+}
+
+float _MathDistanceSq(vec2 _real20, vec2 _real21)
+{
+  vec2 _vector = _real20 - _real21;
+  return _MathLengthSq(_vector);
+}
+
+float _MathDistanceSq(vec3 _real30, vec3 _real31)
+{
+  vec3 _vector = _real30 - _real31;
+  return _MathLengthSq(_vector);
+}
+
+float _MathDistanceSq(vec4 _real40, vec4 _real41)
+{
+  vec4 _vector = _real40 - _real41;
+  return _MathLengthSq(_vector);
+}
+
+//----- VectorMathTests[Real2] Functions -----
+void _template_VectorMathTests_Real2_PreConstructor(inout template_VectorMathTests_Real2_ self)
+{
+  self.Dummy = 0;
+}
+
+template_VectorMathTests_Real2_ _template_VectorMathTests_Real2_Constructor()
+{
+  template_VectorMathTests_Real2_ self;
+  _template_VectorMathTests_Real2_PreConstructor(self);
+  return self;
+}
+
+void _template_VectorMathTests_Real2_Test(inout template_VectorMathTests_Real2_ self)
+{
+  vec2 _x = vec2(0.0, 0.0);
+  vec2 _y = vec2(0.0, 0.0);
+  vec2 _z = vec2(0.0, 0.0);
+  
+  int _count = 2;
+  vec2 _axis = _vec2GetAxis(0);
+  vec2 _zero = vec2(0, 0);
+  
+  
+  
+  
+  
+  
+  _z = _MathProjectOnVector(_x, _y);
+  _z = _MathProjectOnPlane(_x, _y);
+  _z = reflect(_x, _y);
+  _z = _MathReflectAcrossVector(_x, _y);
+  _z = refract(_x, _y, 0.1f);
+  
+  float _dotVal = dot(_x, _y);
+  float _lengthVal = length(_x);
+  float _lengthSqVal = _MathLengthSq(_x);
+  float _distVal = distance(_x, _y);
+  float _distSqVal = _MathDistanceSq(_x, _y);
+  _x = normalize(_x);
+}
+
+//----- TestAllRealTypes[Real2, Integer2, Boolean2] Functions -----
+void _template_TestAllRealTypes_Real2_Integer2_Boolean2_PreConstructor(inout template_TestAllRealTypes_Real2_Integer2_Boolean2_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TestAllRealTypes_Real2_Integer2_Boolean2_ _template_TestAllRealTypes_Real2_Integer2_Boolean2_Constructor()
+{
+  template_TestAllRealTypes_Real2_Integer2_Boolean2_ self;
+  _template_TestAllRealTypes_Real2_Integer2_Boolean2_PreConstructor(self);
+  return self;
+}
+
+void _template_TestAllRealTypes_Real2_Integer2_Boolean2_Test(vec2 _value, ivec2 _result, bvec2 _intType, inout template_TestAllRealTypes_Real2_Integer2_Boolean2_ self)
+{
+  vec2 _a = _value;
+  vec2 _b = _value;
+  vec2 _c = _value;
+  float _t = 1.0f;
+  vec2 _start = _value;
+  vec2 _end = _value;
+  vec2 _minVal = _value;
+  vec2 _maxVal = _value;
+  int _places = 2;
+  int _numBase = 5;
+  float _epsilon = 0.1f;
+  bool _boolResult = false;
+  
+  _a = abs(_a);
+  _a = acos(_a);
+  
+  
+  _a = asin(_a);
+  _a = atan(_a);
+  _a = atan(_a, _b);
+  _a = ceil(_a);
+  _a = _MathCeil(_a, _places);
+  _a = _MathCeil(_a, _places, _numBase);
+  _a = clamp(_a, _minVal, _maxVal);
+  _a = cos(_a);
+  _a = cosh(_a);
+  _a = exp(_a);
+  _a = exp2(_a);
+  _a = floor(_a);
+  _a = _MathFloor(_a, _places);
+  _a = _MathFloor(_a, _places, _numBase);
+  _a = _MathFMod(_a, _b);
+  _a = fract(_a);
+  _a = mix(_start, _end, _t);
+  _a = mix(_start, _end, _a);
+  _a = log(_a);
+  _a = _MathLog10(_a);
+  _a = log2(_a);
+  _a = max(_a, _b);
+  _a = min(_a, _b);
+  _a = pow(_a, _b);
+  _a = round(_a);
+  _a = _MathRound(_a, _places);
+  _a = _MathRound(_a, _places, _numBase);
+  _a = inversesqrt(_a);
+  _a = _MathSaturate(_a);
+  _a = sin(_a);
+  _a = sinh(_a);
+  
+  _a = smoothstep(_minVal, _maxVal, _a);
+  _a = sqrt(_a);
+  _a = step(_a, _b);
+  _a = tan(_a);
+  _a = tanh(_a);
+  _a = degrees(_a);
+  _a = radians(_a);
+  _a = trunc(_a);
+  _a = _MathTruncate(_a, _places);
+  _a = _MathTruncate(_a, _places, _numBase);
+}
+
+//----- Real2Tests Functions -----
+void _Real2TestsPreConstructor(inout Real2Tests self)
+{
+  self.Dummy = 0;
+}
+
+Real2Tests _Real2TestsConstructor()
+{
+  Real2Tests self;
+  _Real2TestsPreConstructor(self);
+  return self;
+}
+
+void _Real2TestsTest(inout Real2Tests self)
+{
+  vec2 _x = vec2(0.0, 0.0);
+  vec2 _y = vec2(0.0, 0.0);
+  vec2 _z = vec2(0.0, 0.0);
+  
+  vec2 _r2 = vec2(0.0, 0.0);
+  vec2 _xAxis = vec2(1, 0);
+  vec2 _yAxis = vec2(0, 1);
+  
+  float _val = _MathAngleBetween(_xAxis, _yAxis);
+  _z = _MathSlerp(_xAxis, _yAxis, 0.5f);
+  _z = _MathRotateTowards(_xAxis, _yAxis, 1.5f);
+  
+  _template_VectorMathTests_Real2_Constructor();
+  _template_TestAllRealTypes_Real2_Integer2_Boolean2_Constructor();
+}
+
+//----- MathAngle2D Functions -----
+void _MathAngle2DPreConstructor(inout MathAngle2D self)
+{
+  self.Dummy = 0;
+}
+
+MathAngle2D _MathAngle2DConstructor()
+{
+  MathAngle2D self;
+  _MathAngle2DPreConstructor(self);
+  return self;
+}
+
+float _MathAngle2D(vec3 _value)
+{
+  return atan(_value.y, _value.x);
+}
+
+//----- MathSignedAngle Functions -----
+void _MathSignedAnglePreConstructor(inout MathSignedAngle self)
+{
+  self.Dummy = 0;
+}
+
+MathSignedAngle _MathSignedAngleConstructor()
+{
+  MathSignedAngle self;
+  _MathSignedAnglePreConstructor(self);
+  return self;
+}
+
+float _MathSignedAngle(vec3 _p0, vec3 _p1, vec3 _up)
+{
+  // Get the right vector
+  vec3 _right = cross(_p0, _up);
+  _right = normalize(_right);
+  
+  // Get the forward and right dot products
+  float _forwardDot = clamp(dot(_p0, _p1), -1.0f, 1.0f);
+  float _rightDot = clamp(dot(_right, _p1), -1.0f, 1.0f);
+  
+  // Get the actual angle from the forward dot product
+  float _finalAngle = acos(_forwardDot);
+  
+  // If we're actually on the left side...
+  if(_rightDot > 0.0f)
+  {
+    // Compute the real final angle given the quadrant it's in (kinda like atan2)
+    _finalAngle = -_finalAngle;
+  }
+  
+  // Return the finally computed angle
+  return _finalAngle;
+}
+
+//----- VectorMathTests[Real3] Functions -----
+void _template_VectorMathTests_Real3_PreConstructor(inout template_VectorMathTests_Real3_ self)
+{
+  self.Dummy = 0;
+}
+
+template_VectorMathTests_Real3_ _template_VectorMathTests_Real3_Constructor()
+{
+  template_VectorMathTests_Real3_ self;
+  _template_VectorMathTests_Real3_PreConstructor(self);
+  return self;
+}
+
+void _template_VectorMathTests_Real3_Test(inout template_VectorMathTests_Real3_ self)
+{
+  vec3 _x = vec3(0.0, 0.0, 0.0);
+  vec3 _y = vec3(0.0, 0.0, 0.0);
+  vec3 _z = vec3(0.0, 0.0, 0.0);
+  
+  int _count = 3;
+  vec3 _axis = _vec3GetAxis(0);
+  vec3 _zero = vec3(0, 0, 0);
+  
+  
+  
+  
+  
+  
+  _z = _MathProjectOnVector(_x, _y);
+  _z = _MathProjectOnPlane(_x, _y);
+  _z = reflect(_x, _y);
+  _z = _MathReflectAcrossVector(_x, _y);
+  _z = refract(_x, _y, 0.1f);
+  
+  float _dotVal = dot(_x, _y);
+  float _lengthVal = length(_x);
+  float _lengthSqVal = _MathLengthSq(_x);
+  float _distVal = distance(_x, _y);
+  float _distSqVal = _MathDistanceSq(_x, _y);
+  _x = normalize(_x);
+}
+
+//----- TestAllRealTypes[Real3, Integer3, Boolean3] Functions -----
+void _template_TestAllRealTypes_Real3_Integer3_Boolean3_PreConstructor(inout template_TestAllRealTypes_Real3_Integer3_Boolean3_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TestAllRealTypes_Real3_Integer3_Boolean3_ _template_TestAllRealTypes_Real3_Integer3_Boolean3_Constructor()
+{
+  template_TestAllRealTypes_Real3_Integer3_Boolean3_ self;
+  _template_TestAllRealTypes_Real3_Integer3_Boolean3_PreConstructor(self);
+  return self;
+}
+
+void _template_TestAllRealTypes_Real3_Integer3_Boolean3_Test(vec3 _value, ivec3 _result, bvec3 _intType, inout template_TestAllRealTypes_Real3_Integer3_Boolean3_ self)
+{
+  vec3 _a = _value;
+  vec3 _b = _value;
+  vec3 _c = _value;
+  float _t = 1.0f;
+  vec3 _start = _value;
+  vec3 _end = _value;
+  vec3 _minVal = _value;
+  vec3 _maxVal = _value;
+  int _places = 2;
+  int _numBase = 5;
+  float _epsilon = 0.1f;
+  bool _boolResult = false;
+  
+  _a = abs(_a);
+  _a = acos(_a);
+  
+  
+  _a = asin(_a);
+  _a = atan(_a);
+  _a = atan(_a, _b);
+  _a = ceil(_a);
+  _a = _MathCeil(_a, _places);
+  _a = _MathCeil(_a, _places, _numBase);
+  _a = clamp(_a, _minVal, _maxVal);
+  _a = cos(_a);
+  _a = cosh(_a);
+  _a = exp(_a);
+  _a = exp2(_a);
+  _a = floor(_a);
+  _a = _MathFloor(_a, _places);
+  _a = _MathFloor(_a, _places, _numBase);
+  _a = _MathFMod(_a, _b);
+  _a = fract(_a);
+  _a = mix(_start, _end, _t);
+  _a = mix(_start, _end, _a);
+  _a = log(_a);
+  _a = _MathLog10(_a);
+  _a = log2(_a);
+  _a = max(_a, _b);
+  _a = min(_a, _b);
+  _a = pow(_a, _b);
+  _a = round(_a);
+  _a = _MathRound(_a, _places);
+  _a = _MathRound(_a, _places, _numBase);
+  _a = inversesqrt(_a);
+  _a = _MathSaturate(_a);
+  _a = sin(_a);
+  _a = sinh(_a);
+  
+  _a = smoothstep(_minVal, _maxVal, _a);
+  _a = sqrt(_a);
+  _a = step(_a, _b);
+  _a = tan(_a);
+  _a = tanh(_a);
+  _a = degrees(_a);
+  _a = radians(_a);
+  _a = trunc(_a);
+  _a = _MathTruncate(_a, _places);
+  _a = _MathTruncate(_a, _places, _numBase);
+}
+
+//----- Real3Tests Functions -----
+void _Real3TestsPreConstructor(inout Real3Tests self)
+{
+  self.Dummy = 0;
+}
+
+Real3Tests _Real3TestsConstructor()
+{
+  Real3Tests self;
+  _Real3TestsPreConstructor(self);
+  return self;
+}
+
+void _Real3TestsTest(inout Real3Tests self)
+{
+  vec3 _x = vec3(0.0, 0.0, 0.0);
+  vec3 _y = vec3(0.0, 0.0, 0.0);
+  vec3 _z = vec3(0.0, 0.0, 0.0);
+  vec3 _xAxis = vec3(1, 0, 0);
+  vec3 _yAxis = vec3(0, 1, 0);
+  vec3 _zAxis = vec3(0, 0, 1);
+  
+  _z = cross(_x, _y);
+  float _val = _MathAngleBetween(_xAxis, _yAxis);
+  _z = _MathSlerp(_xAxis, _yAxis, 0.5f);
+  _z = _MathRotateTowards(_xAxis, _yAxis, 1.5f);
+  _val = _MathAngle2D(_xAxis);
+  _val = _MathSignedAngle(_xAxis, _zAxis, _yAxis);
+  
+  
+  _template_VectorMathTests_Real3_Constructor();
+  _template_TestAllRealTypes_Real3_Integer3_Boolean3_Constructor();
+}
+
+//----- VectorMathTests[Real4] Functions -----
+void _template_VectorMathTests_Real4_PreConstructor(inout template_VectorMathTests_Real4_ self)
+{
+  self.Dummy = 0;
+}
+
+template_VectorMathTests_Real4_ _template_VectorMathTests_Real4_Constructor()
+{
+  template_VectorMathTests_Real4_ self;
+  _template_VectorMathTests_Real4_PreConstructor(self);
+  return self;
+}
+
+void _template_VectorMathTests_Real4_Test(inout template_VectorMathTests_Real4_ self)
+{
+  vec4 _x = vec4(0.0, 0.0, 0.0, 0.0);
+  vec4 _y = vec4(0.0, 0.0, 0.0, 0.0);
+  vec4 _z = vec4(0.0, 0.0, 0.0, 0.0);
+  
+  int _count = 4;
+  vec4 _axis = _vec4GetAxis(0);
+  vec4 _zero = vec4(0, 0, 0, 0);
+  
+  
+  
+  
+  
+  
+  _z = _MathProjectOnVector(_x, _y);
+  _z = _MathProjectOnPlane(_x, _y);
+  _z = reflect(_x, _y);
+  _z = _MathReflectAcrossVector(_x, _y);
+  _z = refract(_x, _y, 0.1f);
+  
+  float _dotVal = dot(_x, _y);
+  float _lengthVal = length(_x);
+  float _lengthSqVal = _MathLengthSq(_x);
+  float _distVal = distance(_x, _y);
+  float _distSqVal = _MathDistanceSq(_x, _y);
+  _x = normalize(_x);
+}
+
+//----- TestAllRealTypes[Real4, Integer4, Boolean4] Functions -----
+void _template_TestAllRealTypes_Real4_Integer4_Boolean4_PreConstructor(inout template_TestAllRealTypes_Real4_Integer4_Boolean4_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TestAllRealTypes_Real4_Integer4_Boolean4_ _template_TestAllRealTypes_Real4_Integer4_Boolean4_Constructor()
+{
+  template_TestAllRealTypes_Real4_Integer4_Boolean4_ self;
+  _template_TestAllRealTypes_Real4_Integer4_Boolean4_PreConstructor(self);
+  return self;
+}
+
+void _template_TestAllRealTypes_Real4_Integer4_Boolean4_Test(vec4 _value, ivec4 _result, bvec4 _intType, inout template_TestAllRealTypes_Real4_Integer4_Boolean4_ self)
+{
+  vec4 _a = _value;
+  vec4 _b = _value;
+  vec4 _c = _value;
+  float _t = 1.0f;
+  vec4 _start = _value;
+  vec4 _end = _value;
+  vec4 _minVal = _value;
+  vec4 _maxVal = _value;
+  int _places = 2;
+  int _numBase = 5;
+  float _epsilon = 0.1f;
+  bool _boolResult = false;
+  
+  _a = abs(_a);
+  _a = acos(_a);
+  
+  
+  _a = asin(_a);
+  _a = atan(_a);
+  _a = atan(_a, _b);
+  _a = ceil(_a);
+  _a = _MathCeil(_a, _places);
+  _a = _MathCeil(_a, _places, _numBase);
+  _a = clamp(_a, _minVal, _maxVal);
+  _a = cos(_a);
+  _a = cosh(_a);
+  _a = exp(_a);
+  _a = exp2(_a);
+  _a = floor(_a);
+  _a = _MathFloor(_a, _places);
+  _a = _MathFloor(_a, _places, _numBase);
+  _a = _MathFMod(_a, _b);
+  _a = fract(_a);
+  _a = mix(_start, _end, _t);
+  _a = mix(_start, _end, _a);
+  _a = log(_a);
+  _a = _MathLog10(_a);
+  _a = log2(_a);
+  _a = max(_a, _b);
+  _a = min(_a, _b);
+  _a = pow(_a, _b);
+  _a = round(_a);
+  _a = _MathRound(_a, _places);
+  _a = _MathRound(_a, _places, _numBase);
+  _a = inversesqrt(_a);
+  _a = _MathSaturate(_a);
+  _a = sin(_a);
+  _a = sinh(_a);
+  
+  _a = smoothstep(_minVal, _maxVal, _a);
+  _a = sqrt(_a);
+  _a = step(_a, _b);
+  _a = tan(_a);
+  _a = tanh(_a);
+  _a = degrees(_a);
+  _a = radians(_a);
+  _a = trunc(_a);
+  _a = _MathTruncate(_a, _places);
+  _a = _MathTruncate(_a, _places, _numBase);
+}
+
+//----- Real4Tests Functions -----
+void _Real4TestsPreConstructor(inout Real4Tests self)
+{
+  self.Dummy = 0;
+}
+
+Real4Tests _Real4TestsConstructor()
+{
+  Real4Tests self;
+  _Real4TestsPreConstructor(self);
+  return self;
+}
+
+void _Real4TestsTest(inout Real4Tests self)
+{
+  vec4 _x = vec4(0.0, 0.0, 0.0, 0.0);
+  vec4 _y = vec4(0.0, 0.0, 0.0, 0.0);
+  vec4 _z = vec4(0.0, 0.0, 0.0, 0.0);
+  vec4 _xAxis = vec4(1, 0, 0, 0);
+  vec4 _yAxis = vec4(0, 1, 0, 0);
+  vec4 _zAxis = vec4(0, 0, 1, 0);
+  vec4 _wAxis = vec4(0, 0, 0, 1);
+  
+  float _val = _MathAngleBetween(_xAxis, _yAxis);
+  
+  // Not implemented yet!
+  //z = Math.Slerp(xAxis, yAxis, 0.5);
+  //z = Math.RotateTowards(xAxis, yAxis, 1.5);
+  _template_VectorMathTests_Real4_Constructor();
+  _template_TestAllRealTypes_Real4_Integer4_Boolean4_Constructor();
+}
+
+//----- MathLibraryTests Functions -----
+void _MathLibraryTestsPreConstructor(inout MathLibraryTests self)
+{
+  self.Dummy = 0;
+}
+
+MathLibraryTests _MathLibraryTestsConstructor()
+{
+  MathLibraryTests self;
+  _MathLibraryTestsPreConstructor(self);
+  return self;
+}
+
+void _MathLibraryTestsTestMatrices(inout MathLibraryTests self)
+{
+  _template_MatrixMathTests_Real2x2_Real2_Constructor();
+  _template_MatrixMathTests_Real2x3_Real3_Constructor();
+  _template_MatrixMathTests_Real2x4_Real4_Constructor();
+  _template_MatrixMathTests_Real3x2_Real2_Constructor();
+  _template_MatrixMathTests_Real3x3_Real3_Constructor();
+  _template_MatrixMathTests_Real3x4_Real4_Constructor();
+  _template_MatrixMathTests_Real4x2_Real2_Constructor();
+  _template_MatrixMathTests_Real4x3_Real3_Constructor();
+  _template_MatrixMathTests_Real4x4_Real4_Constructor();
+  
+  _template_SquareMatrixMathTests_Real2x2_Real2_Real_Constructor();
+  _template_SquareMatrixMathTests_Real3x3_Real3_Real2_Constructor();
+  _template_SquareMatrixMathTests_Real4x4_Real4_Real3_Constructor();
+}
+
+void _MathLibraryTestsMain(inout MathLibraryTests self)
+{
+  float _e = 2.7182818284590452353602874713526f;
+  float _pi = 3.141592653589793238462643383f;
+  
+  
+  //var bool1Test = TestBooleanTypes[Boolean]();
+  //var bool2Test = TestBooleanTypes[Boolean2]();
+  //var bool3Test = TestBooleanTypes[Boolean3]();
+  //var bool4Test = TestBooleanTypes[Boolean4]();
+  //
+  //var int1Test = TestIntegerTypes[Integer, Boolean]();
+  //var int2Test = TestIntegerTypes[Integer2, Boolean2]();
+  //var int3Test = TestIntegerTypes[Integer3, Boolean3]();
+  //var int4Test = TestIntegerTypes[Integer4, Boolean4]();
+  // Real's have different tests
+  template_TestAllRealTypes_Real_Boolean_Integer_ _realTest = _template_TestAllRealTypes_Real_Boolean_Integer_Constructor();
+  _Real2TestsConstructor();
+  _Real3TestsConstructor();
+  _Real4TestsConstructor();
+}
+

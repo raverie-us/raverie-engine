@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Baumgarte"
+		var ResourceId = 0x52a967fb4cda91cb
+		var LoaderType = "PhysicsSolverConfig"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Baumgarte"
+		var Description = ""
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

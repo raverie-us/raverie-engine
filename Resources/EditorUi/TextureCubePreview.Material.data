@@ -1,0 +1,14 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+	}
+	TextureCubePreview 
+	{
+		var SpriteSource = "58269ef7734c0e55:Grey"
+		var Uv = Real2{0, 0}
+		var SkyboxPreviewInput = Real4{0, 0, 0, 0}
+		var TextureViewResolution = Real2{0, 0}
+	}
+}

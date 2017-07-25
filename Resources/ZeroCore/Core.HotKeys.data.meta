@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Core.HotKeys"
+		var ResourceId = 0x564b3640b4d46c4b
+		var LoaderType = "HotKeyDataSet"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "HeightMapAlbedoValue"
+		var ResourceId = 0x58a930a47db933a7
+	}
+}

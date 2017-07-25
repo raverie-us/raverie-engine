@@ -1,0 +1,14 @@
+// Uses the alpha of a texture to determine if a pixel should not be processed/discarded.
+[Pixel]
+struct AlphaDiscard
+{
+  [FragmentInput][StageInput] var Uv : Real2;
+  [PropertyInput] var Texture : Sampler2d;
+  [PropertyInput] var Threshold : Real = 0.5;
+  
+  function Main()
+  {
+    if (this.Texture.Sample(this.Uv).W < this.Threshold)
+      Shader.Discard();
+  }
+}

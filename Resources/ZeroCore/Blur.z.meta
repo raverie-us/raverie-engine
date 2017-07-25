@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "Blur"
+		var ResourceId = 0x58132fbc2f461269
+	}
+}

@@ -1,0 +1,108 @@
+// Data required to run indirect lighting calculations.
+struct ImageBasedLightingInputs
+{
+  var WorldNormal : Real3;
+  var WorldViewDirection : Real3;
+  
+  var Albedo : Real3;
+  var Metallic : Real;
+  var Roughness : Real;
+  var Specular : Real;
+  
+  var RenderDiffuse : Boolean;
+  var RenderSpecular : Boolean;
+}
+
+// Indirect lighting using an image (skybox).
+// The texture used for the skybox must use PreGenerated mip mapping for correct results,
+// which stores pre-computed integrals in the mip levels for the purpose of lighting.
+[Pixel][PostProcess]
+struct ImageBasedLighting
+{
+  [BuiltInInput] var PerspectiveToView : Real4x4;
+  [BuiltInInput] var ViewToWorld : Real4x4;
+  [BuiltInInput] var ViewportSize : Real2;
+  
+  [StageInput] var Uv : Real2;
+  [StageInput] var PerspectivePosition : Real4;
+  
+  [Input] var DitherTexture : Sampler2d;
+  [Input] var EnvironmentBrdfLut : Sampler2d;
+  [Input] var Skybox : SamplerCube;
+  [Input] var Intensity : Real = 1.0;
+  
+  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var GeometryBuffer1 : Sampler2d;
+  
+  [Input] var RenderDiffuse : Boolean = true;
+  [Input] var RenderSpecular : Boolean = true;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    // Get values from geometry buffers
+    var geometrySample0 = this.GeometryBuffer0.Sample(this.Uv);
+    var geometrySample1 = this.GeometryBuffer1.Sample(this.Uv);
+    
+    var viewNormal = GeometryPass.GetNormal(geometrySample0);
+    var viewPosition = Math.Multiply(this.PerspectiveToView, this.PerspectivePosition);
+    var viewDirection = Math.Normalize(-viewPosition.XYZ / viewPosition.W);
+    
+    var iblInputs = ImageBasedLightingInputs();
+    iblInputs.WorldNormal = Math.MultiplyNormal(this.ViewToWorld, viewNormal);
+    iblInputs.WorldViewDirection = Math.MultiplyNormal(this.ViewToWorld, viewDirection);
+    iblInputs.Albedo = GeometryPass.GetAlbedo(geometrySample1);
+    iblInputs.Metallic = GeometryPass.GetMetallic(geometrySample1);
+    iblInputs.Roughness = GeometryPass.GetRoughness(geometrySample0);
+    iblInputs.Specular = GeometryPass.GetSpecular(geometrySample1);
+    iblInputs.RenderDiffuse = this.RenderDiffuse;
+    iblInputs.RenderSpecular = this.RenderSpecular;
+    
+    var color = ImageBasedLighting.Compute(iblInputs, &this.Skybox, &this.EnvironmentBrdfLut);
+    
+    // Remove color banding
+    color = Utility.ApplyDither(color, &this.DitherTexture, this.Uv, this.ViewportSize);
+    
+    this.Target0 = Real4(color * this.Intensity, 1.0);
+  }
+  
+  [Static]
+  function Compute(inputs : ImageBasedLightingInputs, skybox : ref SamplerCube, brdfLut : ref Sampler2d) : Real3
+  {
+    // Directions for sampling cubemap
+    var diffuseDirection = inputs.WorldNormal;
+    var specularDirection = Math.ReflectAcrossVector(inputs.WorldViewDirection, inputs.WorldNormal);
+    
+    // Cubemap details
+    var textureSize = skybox.SampleSize(0).X;
+    var maxLod = Math.Log2(textureSize);
+    
+    // Diffuse calculation
+    var envDiffuse = skybox.SampleLod(diffuseDirection, maxLod).XYZ;
+    var diffuseColor = envDiffuse * inputs.Albedo;
+    
+    // Sample lod for specular is based on roughness unless screen space derivitives
+    // are large enough then we sample with that mip level to prevent aliasing
+    var dx = Shader.Ddx(specularDirection * textureSize);
+    var dy = Shader.Ddy(specularDirection * textureSize);
+    var mipLevel = Math.Sqrt(Math.Max(Math.LengthSq(dx), Math.LengthSq(dy)));
+    mipLevel = 0.5 * Math.Log2(mipLevel) - 1.0;
+    var sampleLod = Math.Max(inputs.Roughness * maxLod, mipLevel);
+    var envSpecular = skybox.SampleLod(specularDirection, sampleLod).XYZ;
+    
+    // Specular calculation using split sum approximation
+    var dotnv = Math.Saturate(Math.Dot(inputs.WorldNormal, inputs.WorldViewDirection));
+    var brdfSpec = brdfLut.Sample(Real2(dotnv, inputs.Roughness)).XY;
+    var metallicSpecular = envSpecular * (inputs.Albedo * brdfSpec.X + brdfSpec.YYY);
+    var dialectricSpecular = envSpecular * (Real3(0.10) * brdfSpec.X + brdfSpec.YYY);
+    
+    // For debugging
+    diffuseColor *= inputs.RenderDiffuse as Real;
+    metallicSpecular *= inputs.RenderSpecular as Real;
+    dialectricSpecular *= inputs.RenderSpecular as Real;
+    
+    // Linear combination between dialectric and metallic colors
+    return Math.Lerp(diffuseColor + dialectricSpecular * inputs.Specular, metallicSpecular, inputs.Metallic);
+  }
+}

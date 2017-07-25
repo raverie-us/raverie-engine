@@ -1,0 +1,11 @@
+// Color input for generic use. Color is not used in lighting, see Albedo.
+// Output values are constant over the surface.
+[Pixel]
+struct ColorValue
+{
+  [Input][Output] var Color : Real4 = Real4(1.0);
+
+  function Main()
+  {
+  }
+}

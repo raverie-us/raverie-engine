@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="System">
+      <UniqueIdentifier>{fc75caad-9a39-4e9b-9170-e342d5020f2f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundCue.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundEmitter.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSpace.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleSound.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundInstance.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundTag.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundAttenuator.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundFilterNode.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundListener.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundNodeGraph.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundStandard.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundCue.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundEmitter.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundStandard.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSpace.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleSound.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundInstance.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundTag.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundAttenuator.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundFilterNode.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundListener.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundNodeGraph.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

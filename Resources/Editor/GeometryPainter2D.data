@@ -1,0 +1,14 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "GeometryPainter2D",
+	},
+	GeometryPainter2D = 
+	{
+	},
+},

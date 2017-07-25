@@ -1,0 +1,16 @@
+[Version:1]
+TextContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"OperationHistory"
+		}
+	}
+	ZilchScriptBuilder 
+	{
+		var Name = "ZHistoryEntry"
+		var ResourceId = 0x58257b371a304fd2
+	}
+}

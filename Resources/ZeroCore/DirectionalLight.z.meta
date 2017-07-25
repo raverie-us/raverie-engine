@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "DirectionalLight"
+		var ResourceId = 0x581a41f433ea0c30
+	}
+}

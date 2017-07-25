@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "ForwardRenderer"
+		var ResourceId = 0x595cc0b58a579ce5
+	}
+}

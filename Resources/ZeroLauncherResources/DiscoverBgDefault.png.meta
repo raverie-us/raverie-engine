@@ -1,0 +1,25 @@
+[Version:1]
+ImageContent 
+{
+	TextureBuilder 
+	{
+		var Name = "DiscoverBgDefault"
+		var ResourceId = 0x55614ef845997424
+		var Type = TextureType.Texture2D
+		var Compression = TextureCompression.None
+		var AddressingX = TextureAddressing.Clamp
+		var AddressingY = TextureAddressing.Clamp
+		var Filtering = TextureFiltering.Trilinear
+		var Anisotropy = TextureAnisotropy.x2
+		var MipMapping = TextureMipMapping.PreGenerated
+		var PremultipliedAlpha = false
+		var GammaCorrection = false
+	}
+	TextureInfo 
+	{
+		var FileType = "png"
+		var LoadFormat = "RGBA8"
+		var Dimensions = "640 x 328"
+		var Size = "1.068 MB"
+	}
+}

@@ -1,0 +1,21 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "DefaultTile",
+	},
+	Archetyped = 
+	{
+		string Name = "526cb806ab2a41b8:DefaultTile",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [5.88948, 0.336403, -10.2429],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+},

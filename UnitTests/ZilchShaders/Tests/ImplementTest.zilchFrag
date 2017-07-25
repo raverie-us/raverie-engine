@@ -1,0 +1,44 @@
+// Test a static method on a type that can't be constructed
+struct MathImplements
+{
+    [Static][Extension(typeid(Math))][Implements]
+    function Log10(value : Real) : Real
+    {
+        return Math.Log(value) / Math.Log(10.0);
+    }
+}
+
+// Test a static method on a struct type
+struct Real3Implements
+{
+    [Static][Extension(typeid(Real3))][Implements]
+    function GetAxis(value : Integer) : Real3
+    { 
+        var result = Real3();
+        result[value] = 1.0;
+        return result;
+    }
+}
+
+// Test an instance function on a struct type
+struct Real3x3Implements
+{
+    [Extension(typeid(Real3x3))][Implements]
+    function GetByIndex(index : Integer) : Real
+    {
+        return this[index / 3][index % 3];
+    }
+}
+
+[Pixel]
+struct ImplementTest
+{
+    function Main()
+    {
+        var log10 = Math.Log10(1.0);
+        
+        var m = Real3x3(); 
+        var r = m.GetByIndex(0);
+        var v = Real3.GetAxis(0);
+    }
+}

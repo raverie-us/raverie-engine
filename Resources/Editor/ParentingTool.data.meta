@@ -1,0 +1,19 @@
+[Version:1]
+DataContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Tool"
+		}
+	}
+	DataBuilder 
+	{
+		var Name = "ParentingTool"
+		var ResourceId = 0x52a32630a51b4389
+		var LoaderType = "Cog"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

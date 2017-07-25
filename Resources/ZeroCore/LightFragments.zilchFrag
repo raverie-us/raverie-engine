@@ -1,0 +1,58 @@
+// Outputs lighting values used by LightPass for a point light source.
+[Pixel]
+struct PointLightFragment
+{
+  [BuiltInInput] var WorldToView : Real4x4;
+  [BuiltInInput] var ObjectWorldPosition : Real3;
+  
+  [StageInput] var PerspectivePosition : Real4;
+  
+  [FragmentInput] var GeoNormal : Real3;
+  [FragmentInput] var GeoPosition : Real3;
+  
+  [Input] var FalloffRadius : Real = 1.0;
+  
+  [Input][Output] var LightIntensity : Real = 1.0;
+  [Input][Output] var LightRadius : Real = 0.0;
+  [Output] var LightDirection : Real3;
+  [Output] var LightDistance : Real;
+  
+  function Main()
+  {
+    var viewPosition = this.GeoPosition;
+    var viewDirection = Math.Normalize(-viewPosition);
+    var lightPosition = Math.MultiplyPoint(this.WorldToView, this.ObjectWorldPosition);
+    
+    var reflection = Math.ReflectAcrossVector(viewDirection, this.GeoNormal);
+    var toLight = lightPosition - viewPosition;
+    var centerToRay = reflection * Math.Dot(toLight, reflection) - toLight;
+    var closestPoint = toLight + centerToRay * Math.Saturate(this.LightRadius / Math.Length(centerToRay));
+    
+    var falloffDistance = Math.Length(toLight);
+    var falloff = Math.Saturate(1.0 - Math.Pow(falloffDistance / this.FalloffRadius, 4.0));
+    falloff = (falloff * falloff) / (falloffDistance * falloffDistance + 1.0);
+    
+    this.LightDirection = Math.Normalize(closestPoint);
+    this.LightIntensity *= falloff;
+    
+    this.LightDistance = Math.Length(closestPoint);
+  }
+}
+
+// Outputs lighting values used by LightPass for a directional light source.
+[Pixel]
+struct DirectionalLightFragment
+{
+  [BuiltInInput] var WorldToView : Real4x4;
+  
+  [Input] var ShadowFactor : Real = 1.0;
+  
+  [Input][Output] var LightIntensity : Real = 1.0;
+  [Input][Output] var LightDirection : Real3 = Real3(0.0 , -1.0, 0.0);
+  
+  function Main()
+  {
+    this.LightIntensity *= this.ShadowFactor;
+    this.LightDirection = Math.Normalize(-Math.MultiplyNormal(this.WorldToView, this.LightDirection));
+  }
+}

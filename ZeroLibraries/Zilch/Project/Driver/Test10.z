@@ -1,0 +1,58 @@
+// This is only a compilation test (we should probably make a unit test to call the function with the implicit return)
+
+class Robot
+{
+  var Nuts : Integer = 0;
+  var Bolts : Integer = 0;
+
+  constructor()
+  {
+    this.Bolts += 1;
+  }
+
+  function ImplicitReturn()
+  {
+    this.Nuts += 4;
+    this.Bolts -= 1;
+  }
+
+  function ExplicitReturn()
+  {
+    this.Nuts -= 1;
+    this.Bolts += 3;
+    return;
+  }
+
+  function AllPathsReturn() : Integer
+  {
+    if (this.Nuts > this.Bolts)
+    {
+      this.Nuts += 7;
+      this.Bolts -= 2;
+      return 2;
+    }
+    else
+    {
+      this.Nuts += 5;
+      this.Bolts -= 6;
+      return 1;
+    }
+  }
+}
+
+class UnitTest10
+{
+  [Static]
+  function Test10() : Integer
+  {
+    var bot = new Robot();
+
+    var result = 33;
+
+    bot.ExplicitReturn();
+    bot.ImplicitReturn();
+    result += bot.AllPathsReturn();
+
+    return result + bot.Nuts * bot.Bolts;
+  }
+}

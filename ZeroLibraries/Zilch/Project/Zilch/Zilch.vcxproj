@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <!--<Import Project="$(BuildsPath)\ProjectConfigurations.props" />-->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Production|Win32">
+      <Configuration>Production</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Production|x64">
+      <Configuration>Production</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F3973B0B-D2AB-4F7D-8E81-FE0DC7CDE27D}</ProjectGuid>
+    <RootNamespace>TSParse</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the property sheets-->
+  <ImportGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZILCH_SOURCE)\Project\Zilch.$(Configuration).props" Condition="exists('$(ZILCH_SOURCE)\Project\Zilch.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Set as a static library with no character set for all configurations of win32 and x64-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <!--Add LTCG for release in win32 and x64-->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32' OR '$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <!--Setup precompiled headers for win32 and x64-->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Zilch.hpp</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4457;4456;4244</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Any.cpp" />
+    <ClCompile Include="ArrayClass.cpp" />
+    <ClCompile Include="Base64.cpp" />
+    <ClCompile Include="Composition.cpp" />
+    <ClCompile Include="ConsoleClass.cpp" />
+    <ClCompile Include="DataDrivenLexer.cpp" />
+    <ClCompile Include="Delegate.cpp" />
+    <ClCompile Include="Events.cpp" />
+    <ClCompile Include="FileStreamClass.cpp" />
+    <ClCompile Include="FilePathClass.cpp" />
+    <ClCompile Include="Handle.cpp" />
+    <ClCompile Include="Binding.cpp" />
+    <ClCompile Include="CodeLocation.cpp" />
+    <ClCompile Include="Wrapper.cpp" />
+    <ClCompile Include="MultiPrimitive.cpp" />
+    <ClCompile Include="Zilch.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Debugging.cpp" />
+    <ClCompile Include="Documentation.cpp" />
+    <ClCompile Include="ErrorDatabase.cpp" />
+    <ClCompile Include="CompilationErrors.cpp" />
+    <ClCompile Include="ExecutableState.cpp" />
+    <ClCompile Include="Formatter.cpp" />
+    <ClCompile Include="GrammarConstants.cpp" />
+    <ClCompile Include="HandleManager.cpp" />
+    <ClCompile Include="HashContainer.cpp" />
+    <ClCompile Include="Json.cpp" />
+    <ClCompile Include="Library.cpp" />
+    <ClCompile Include="DestructibleBuffer.cpp" />
+    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="Members.cpp" />
+    <ClCompile Include="Plugin.cpp" />
+    <ClCompile Include="ProcessClass.cpp" />
+    <ClCompile Include="RandomClass.cpp" />
+    <ClCompile Include="Sha1.cpp" />
+    <ClCompile Include="Shared.cpp" />
+    <ClCompile Include="StaticLibrary.cpp" />
+    <ClCompile Include="StreamInterface.cpp" />
+    <ClCompile Include="StubCode.cpp" />
+    <ClCompile Include="TemplateBinding.cpp" />
+    <ClCompile Include="Opcode.cpp" />
+    <ClCompile Include="OverloadResolver.cpp" />
+    <ClCompile Include="Project.cpp" />
+    <ClCompile Include="StringBuilderClass.cpp" />
+    <ClCompile Include="StringConstants.cpp" />
+    <ClCompile Include="SyntaxTreeHelpers.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Tokenizer.cpp" />
+    <ClCompile Include="Traits.cpp" />
+    <ClCompile Include="Type.cpp" />
+    <ClCompile Include="Function.cpp" />
+    <ClCompile Include="SyntaxTree.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="CodeGenerator.cpp" />
+    <ClCompile Include="Syntaxer.cpp" />
+    <ClCompile Include="VirtualMachine.cpp" />
+    <ClCompile Include="WebSocket.cpp" />
+    <ClCompile Include="Setup.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Any.hpp" />
+    <ClInclude Include="ArrayClass.hpp" />
+    <ClInclude Include="Base64.hpp" />
+    <ClInclude Include="Binding.hpp" />
+    <ClInclude Include="CodeLocation.hpp" />
+    <ClInclude Include="MultiPrimitive.hpp" />
+    <ClInclude Include="RangeBinding.hpp" />
+    <ClInclude Include="DataDrivenLexer.hpp" />
+    <ClInclude Include="Wrapper.hpp" />
+    <ClInclude Include="Zilch.hpp" />
+    <ClInclude Include="Composition.hpp" />
+    <ClInclude Include="ConsoleClass.hpp" />
+    <ClInclude Include="Core.hpp" />
+    <ClInclude Include="Debugging.hpp" />
+    <ClInclude Include="Delegate.hpp" />
+    <ClInclude Include="Documentation.hpp" />
+    <ClInclude Include="ErrorDatabase.hpp" />
+    <ClInclude Include="CompilationErrors.hpp" />
+    <ClInclude Include="Events.hpp" />
+    <ClInclude Include="ExecutableState.hpp" />
+    <ClInclude Include="FileStreamClass.hpp" />
+    <ClInclude Include="FilePathClass.hpp" />
+    <ClInclude Include="Formatter.hpp" />
+    <ClInclude Include="ForwardDeclarations.hpp" />
+    <ClInclude Include="General.hpp" />
+    <ClInclude Include="GrammarConstants.hpp" />
+    <ClInclude Include="HandleManager.hpp" />
+    <ClInclude Include="HashContainer.hpp" />
+    <ClInclude Include="InstructionsEnum.inl" />
+    <ClInclude Include="Json.hpp" />
+    <ClInclude Include="Library.hpp" />
+    <ClInclude Include="LocalBuild.hpp" />
+    <ClInclude Include="DestructibleBuffer.hpp" />
+    <ClInclude Include="Matrix.hpp" />
+    <ClInclude Include="Members.hpp" />
+    <ClInclude Include="Plugin.hpp" />
+    <ClInclude Include="ProcessClass.hpp" />
+    <ClInclude Include="RandomClass.hpp" />
+    <ClInclude Include="Range.hpp" />
+    <ClInclude Include="Sha1.hpp" />
+    <ClInclude Include="Shared.hpp" />
+    <ClInclude Include="StaticLibrary.hpp" />
+    <ClInclude Include="StreamInterface.hpp" />
+    <ClInclude Include="StubCode.hpp" />
+    <ClInclude Include="TemplateBinding.hpp" />
+    <ClInclude Include="OverloadResolver.hpp" />
+    <ClInclude Include="Project.hpp" />
+    <ClInclude Include="SharedReference.hpp" />
+    <ClInclude Include="StringBuilderClass.hpp" />
+    <ClInclude Include="StringConstants.hpp" />
+    <ClInclude Include="SyntaxTreeHelpers.hpp" />
+    <ClInclude Include="Timer.hpp" />
+    <ClInclude Include="Token.hpp" />
+    <ClInclude Include="Tokenizer.hpp" />
+    <ClInclude Include="Handle.hpp" />
+    <ClInclude Include="Traits.hpp" />
+    <ClInclude Include="Type.hpp" />
+    <ClInclude Include="Function.hpp" />
+    <ClInclude Include="SyntaxTree.hpp" />
+    <ClInclude Include="Parser.hpp" />
+    <ClInclude Include="CodeGenerator.hpp" />
+    <ClInclude Include="Opcode.hpp" />
+    <ClInclude Include="Syntaxer.hpp" />
+    <ClInclude Include="UntypedBlockArray.hpp" />
+    <ClInclude Include="VirtualMachine.hpp" />
+    <ClInclude Include="WebSocket.hpp" />
+    <ClInclude Include="Setup.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DataDrivenLexer.inl" />
+    <None Include="VirtualTableBinding.inl" />
+    <None Include="DebuggingGeneric.inl" />
+    <None Include="DebuggingWindows.inl" />
+    <None Include="ConstructorBinding.inl" />
+    <None Include="ErrorDatabaseEnum.inl" />
+    <None Include="ErrorDatabaseSetup.inl" />
+    <None Include="MethodBinding.inl" />
+    <None Include="TokenReader.inl" />
+    <None Include="VirtualMethodBinding.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

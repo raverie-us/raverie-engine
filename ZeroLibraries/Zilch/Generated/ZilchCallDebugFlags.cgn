@@ -1,0 +1,11 @@
+permute Index : int[0,30];
+
+handler <? All ?>
+{
+  Index = <? Index.ToString() ?>;
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+      Parameter$Index$ = 1 << $Index$,

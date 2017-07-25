@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "AlphaBlend"
+		var ResourceId = 0x56dc0b2bbc86c4cb
+		var LoaderType = "RenderGroup"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

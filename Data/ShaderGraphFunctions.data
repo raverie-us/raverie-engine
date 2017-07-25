@@ -1,0 +1,240 @@
+// Basic operations
+//floatN add(floatN A, floatN B);
+//floatN add(floatN A, floatN B, floatN C);
+//floatN add(floatN A, floatN B, floatN C, floatN D);
+//floatN subtract(floatN A, floatN B);
+//floatN subtract(floatN A, floatN B, floatN C);
+//floatN subtract(floatN A, floatN B, floatN C, floatN D);
+//floatN multiply(floatN A, floatN B);
+//floatN multiply(floatN A, floatN B, floatN C);
+//floatN multiply(floatN A, floatN B, floatN C, floatN D);
+//floatN multiply(floatN A, float B);
+//floatN divide(floatN A, floatN B);
+//floatN divide(floatN A, floatN B, floatN C);
+//floatN divide(floatN A, floatN B, floatN C, floatN D);
+//floatN divide(floatN A, float B);
+
+//operator add +
+//operator subtract -
+//operator divide /
+//operator multiply *
+
+// Basic Functions
+
+/// Returns the absolute value of a scalar or vector.
+floatN abs(floatN In);
+
+/// Returns the arccosine of a in the range [0,pi], expecting a to be in the range [-1,+1].
+floatN acos(floatN In);
+
+/// Returns true if a boolean scalar or all components of a boolean vector are true.
+//bool all(boolN In);
+
+/// Returns true if a boolean scalar or any component of a boolean vector is true.
+//bool any(boolN In);
+
+/// Returns the arcsine of a in the range [-pi/2,+pi/2], expecting a to be in the range [-1,+1].
+floatN asin(floatN In);
+
+/// atan2 calculates the arctangent of y/x. atan2 is well defined for every point other than the origin, even if x equals 0 and y does not equal 0.
+floatN atan2(floatN X, floatN Y);
+
+/// Returns the arctangent of x in the range of -pi/2 to pi/2 radians.
+floatN atan(floatN In);
+
+//intN bitCount(intN In);
+//intN bitfieldExtract(intN A, int B, int C);
+//uintN bitfieldExtract(uintN A, int B, int C);
+//intN bitfieldInsert(intN A, int B, int C, int D);
+//uintN bitfieldInsert(uintN A, uint B, int C, int D);
+//intN bitfieldReverse(intN In);
+//uintN bitfieldReverse(uintN In);
+
+/// Returns the ceiling or smallest integer not less than a scalar or each vector component.
+floatN ceil(floatN In);
+
+/// Returns x clamped to the range [a,b] as follows:
+///   1) Returns a if x is less than a; else
+///   2) Returns b if x is greater than b; else
+///   3) Returns x otherwise.
+/// For vectors, the returned vector contains the clamped result of each element of the vector x clamped using the respective element of vectors a and b.
+floatN clamp(floatN Val, floatN Min, floatN Max);
+floatN clamp(floatN Val, float Min, float Max);
+
+/// Kills the current pixel output if any component of the given vector, or the given scalar, is negative.
+void clip(floatN In);
+
+/// Returns the hyperbolic cosine of a.
+floatN cosh(floatN In);
+
+/// Returns the cosine of a in radians. The return value is in the range [-1,+1].
+floatN cos(floatN In);
+
+/// Returns the cross product of three-component vectors a and b. The result is a three-component vector.
+float3 cross(float3 A, float3 B);
+
+/// Returns approximate partial derivative of a with respect to the window-space (horizontal) x coordinate.
+floatN ddx(floatN In);
+
+/// Returns approximate partial derivative of a with respect to the window-space (vertical) y coordinate.
+floatN ddy(floatN In);
+
+/// Returns the scalar or vector converted from radians to degrees.
+floatN degrees(floatN In);
+
+/// Returns the determinant of the square matrix.
+//float determinant(floatNxN In);
+
+/// Returns the Euclidean distance from a first point A to a second point B.
+float distance(floatN A, floatN B);
+
+/// Returns the scalar dot product of two same-typed vectors A and B.
+float dot(floatN A, floatN B);
+
+/// Returns the base-2 exponential.
+floatN exp2(floatN In);
+
+/// Returns the base-e exponential.
+floatN exp(floatN In);
+
+/// Returns a (peturbed) normal as-is if a vertex's eye-space position vector points in the opposite direction of a geometric normal, otherwise return the negated version of the (peturbed) normal.
+//floatN faceforward(floatN N, floatN I, floatN Ng);
+
+/// Returns the bit number of the least significant bit (value of 1) in the bitfield x. If no bits have the value 1 then -1 is returned.
+//intN findLSB(intN In);
+//intN findLSB(uintN In);
+
+/// Returns the bit number of the most significant bit (value of 1) in the bitfield x. If the number is negative then the position of the first zero bit is returned. If no bits have the value 1 (or 0 in the negative case) then -1 is returned.
+//intN findMSB(intN In);
+//intN findMSB(uintN In);
+
+//intN floatToIntBits(floatN In);
+//intN floatToRawIntBits(floatN In);
+
+/// Returns the floor or largest integer not greater than a scalar or each vector component.
+floatN floor(floatN In);
+
+/// Returns the remainder of 'Num' divided by 'Den' with the same sign as x. If y is zero, the result is implementation-defined because of division by zero.
+floatN fmod(floatN Num, float Den);
+
+/// Returns the fractional portion of a scalar or each vector component.
+floatN frac(floatN In);
+
+/// This function decomposes x into two parts: a mantissa between 0.5 and 1 (returned by the function) and an exponent output as e.
+/// If the value x is zero, both parts of the result are zero.
+//floatN frexp(floatN In, out floatN e);
+
+/// Returns sum of approximate window-space partial derivatives magnitudes.
+floatN fwidth(floatN In);
+
+//floatN intBitsToFloat(intN x);
+
+/// Returns the inverse of the input matrix.
+//floatNxN inverse(floatNxN In);
+
+/// Returns whether or not a scalar or each vector component is a finite value. Infinity and not-a-number (NaN) values are not finite.
+//boolN isfinite(floatN In);
+
+/// Returns whether or not a scalar or each vector component is a (negative or positive) infinite value. Finite and not-a-number (NaN) values are not infinite.
+//boolN isinf(floatN In);
+
+/// Returns whether or not a scalar or each vector component is not-a-number (NaN) Finite and infinite values are not NaN.
+//boolN isnan(floatN In);
+
+/// Returns 'X' times 2 raised to the power 'N'.
+floatN ldexp(floatN X, floatN N);
+
+/// Returns the Euclidean length of a vector.
+float length(floatN In);
+
+/// Returns the linear interpolation of 'A' and 'B' based on weight 'T'.
+floatN lerp(floatN A, floatN B, floatN T);
+floatN lerp(floatN A, floatN B, float T);
+
+/// float4 lit(float NdotL, float NdotH, float m);
+
+/// Returns the base-10 logarithm.
+floatN log10(floatN In);
+
+/// Returns the base-2 logarithm.
+floatN log2(floatN In);
+
+/// Returns the natural logarithm.
+floatN log(floatN In);
+
+/// Returns the maximum of two same-typed scalars a and b or the respective components of two same-typed vectors a and b. The result is a three-component vector.
+floatN max(floatN A, floatN B);
+
+/// Returns the minimum of two same-typed scalars a and b or the respective components of two same-typed vectors a and b. The result is a three-component vector.
+floatN min(floatN A, floatN B);
+
+/// Decompose a float into integer and fractional parts.
+// floatN modf(floatN In, out floatN i);
+
+//float4 mul(floatNxN M, floatN V);
+
+/// Returns the normalized version of a vector, meaning a vector in the same direction as the original vector but with a Euclidean length of one.
+floatN normalize(floatN In);
+
+/// Returns 'Val' to the power 'Exp'.
+floatN pow(floatN Val, floatN Exp);
+
+/// Returns the scalar or vector converted from degrees to radians.
+floatN radians(floatN In);
+
+/// Returns the reflectiton vector given an incidence vector i and a normal vector n. The resulting vector is the identical number of components as the two input vectors.
+/// The normal vector n should be normalized. If n is normalized, the output vector will have the same length as the input incidence vector i.
+floatN reflect(floatN A, floatN B);
+
+/// Returns a refraction vector given an incidence vector, a normal vector for a surface, and a ratio of indices of refraction at the surface's interface.
+/// The incidence vector 'I' and normal vector 'N' should be normalized.
+float3 refract(float3 I, float3 N, float Eta);
+
+/// Returns the rounded value of a scalar or vector.
+floatN round(floatN In);
+
+/// Returns an approximation to the reciprocal square root of a.
+floatN rsqrt(floatN In);
+
+/// Returns x saturated to the range [0,1] as follows:
+///   1) Returns 0 if x is less than 0; else
+///   2) Returns 1 if x is greater than 1; else
+///   3) Returns x otherwise.
+floatN saturate(floatN In);
+
+/// Returns positive one, zero, or negative one for each of the components of x based on the component's sign.
+///   1) Returns -1 component if the respective component of x is negative.
+///   2) Returns 0 component if the respective component of x is zero.
+///   3) Returns 1 component if the respective component of x is positive.
+///   4) Ideally, NaN returns NaN.
+floatN sign(floatN In);
+
+/// Outputs to 'S' the sine of 'In' in radians, and outputs to 'C' the cosine of 'In' in radians. The output values are in the range [-1,+1].
+//void sincos(floatN In, out floatN S, out floatN C);
+
+/// Returns the hyperbolic sine of 'In'.
+floatN sinh(floatN In);
+
+/// Returns the sine of 'In' in radians. The return value is in the range [-1,+1].
+floatN sin(floatN In);
+
+/// Interpolates smoothly from 0 to 1 based on x compared to a and b.
+///   1) Returns 0 if x < a < b or x > a > b
+///   1) Returns 1 if x < b < a or x > b > a
+///   3) Returns a value in the range [0,1] for the domain [a,b].
+floatN smoothstep(floatN A, floatN B, floatN X);
+
+/// Returns the square root of 'In'.
+floatN sqrt(floatN In);
+
+/// Implements a step function returning one for each component of x that is greater than or equal to the corresponding component in the reference vector a, and zero otherwise.
+floatN step(floatN A, floatN X);
+
+/// Returns the hyperbolic tangent of 'In'.
+floatN tanh(floatN In);
+
+/// Returns the tangent of 'In' in radians.
+floatN tan(floatN In);
+
+/// Returns the integral value nearest to but no larger in magnitude than 'In'.
+floatN trunc(floatN In);

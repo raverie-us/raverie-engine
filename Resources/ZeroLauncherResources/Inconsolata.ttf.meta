@@ -1,0 +1,9 @@
+[Version:1]
+FontContent 
+{
+	FontBuilder 
+	{
+		var Name = "Inconsolata"
+		var ResourceId = 0x4e532933f85a9cc8
+	}
+}

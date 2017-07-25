@@ -1,0 +1,44 @@
+[Vertex]
+struct QuaternionRotationsTests_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageInput] var Normal : Real3;
+  [StageInput] var Position : Real3;
+  [StageInput] var Uv : Real2;
+  [SVOutput] var ApiPerspectivePosition : Real4;
+
+  [Main]
+  function Main()
+  {
+    var basicvertexfrag = BasicVertexFrag();
+    basicvertexfrag.Normal = this.Normal;
+    basicvertexfrag.Position = this.Position;
+    basicvertexfrag.Uv = this.Uv;
+    basicvertexfrag.Main();
+    this.ApiPerspectivePosition = basicvertexfrag.ApiPerspectivePosition;
+  }
+}
+[Pixel]
+struct QuaternionRotationsTests_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [Main]
+  function Main()
+  {
+    var quaternionrotations = QuaternionRotations();
+    quaternionrotations.Main();
+    this.Target0 = quaternionrotations.Target0;
+    this.Target1 = quaternionrotations.Target1;
+    this.Target2 = quaternionrotations.Target2;
+    this.Target3 = quaternionrotations.Target3;
+  }
+}

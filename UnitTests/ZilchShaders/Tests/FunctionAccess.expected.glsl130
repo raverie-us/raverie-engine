@@ -1,0 +1,112 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct FunctionAccess
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _FunctionAccessPreConstructor(inout FunctionAccess self);
+FunctionAccess _FunctionAccessConstructor();
+void _FunctionAccessStaticFnNoReturn();
+void _FunctionAccessStaticFnNoReturn(float _value);
+void _FunctionAccessStaticFnNoReturn(float _value1, vec2 _value2);
+float _FunctionAccessStaticFnWithReturn();
+float _FunctionAccessStaticFnWithReturn(float _value);
+float _FunctionAccessStaticFnWithReturn(float _value1, vec2 _value2);
+void _FunctionAccessInstanceFnNoReturn(inout FunctionAccess self);
+void _FunctionAccessInstanceFnNoReturn(float _value, inout FunctionAccess self);
+void _FunctionAccessInstanceFnNoReturn(float _value1, vec2 _value2, inout FunctionAccess self);
+float _FunctionAccessInstanceFnWithReturn(inout FunctionAccess self);
+float _FunctionAccessInstanceFnWithReturn(float _value, inout FunctionAccess self);
+float _FunctionAccessInstanceFnWithReturn(float _value1, vec2 _value2, inout FunctionAccess self);
+void _FunctionAccessMain(inout FunctionAccess self);
+
+//----- Global Variable Declarations -----
+//----- FunctionAccess Functions -----
+void _FunctionAccessPreConstructor(inout FunctionAccess self)
+{
+  self.Dummy = 0;
+}
+
+FunctionAccess _FunctionAccessConstructor()
+{
+  FunctionAccess self;
+  _FunctionAccessPreConstructor(self);
+  return self;
+}
+
+void _FunctionAccessStaticFnNoReturn()
+{
+}
+
+void _FunctionAccessStaticFnNoReturn(float _value)
+{
+}
+
+void _FunctionAccessStaticFnNoReturn(float _value1, vec2 _value2)
+{
+}
+
+float _FunctionAccessStaticFnWithReturn()
+{
+  return 1.0f;
+}
+
+float _FunctionAccessStaticFnWithReturn(float _value)
+{
+  return _value;
+}
+
+float _FunctionAccessStaticFnWithReturn(float _value1, vec2 _value2)
+{
+  return _value1;
+}
+
+void _FunctionAccessInstanceFnNoReturn(inout FunctionAccess self)
+{
+}
+
+void _FunctionAccessInstanceFnNoReturn(float _value, inout FunctionAccess self)
+{
+}
+
+void _FunctionAccessInstanceFnNoReturn(float _value1, vec2 _value2, inout FunctionAccess self)
+{
+}
+
+float _FunctionAccessInstanceFnWithReturn(inout FunctionAccess self)
+{
+  return 1.0f;
+}
+
+float _FunctionAccessInstanceFnWithReturn(float _value, inout FunctionAccess self)
+{
+  return _value;
+}
+
+float _FunctionAccessInstanceFnWithReturn(float _value1, vec2 _value2, inout FunctionAccess self)
+{
+  return _value1;
+}
+
+void _FunctionAccessMain(inout FunctionAccess self)
+{
+  float _result = 0.0f;
+  _FunctionAccessStaticFnNoReturn();
+  _FunctionAccessStaticFnNoReturn(1.0f);
+  _FunctionAccessStaticFnNoReturn(2.0f, vec2(1.0f, 2.0f));
+  _result = _FunctionAccessStaticFnWithReturn();
+  _result = _FunctionAccessStaticFnWithReturn(2.0f);
+  _result = _FunctionAccessStaticFnWithReturn(2.0f, vec2(1.0f, 2.0f));
+  
+  _FunctionAccessInstanceFnNoReturn(self);
+  _FunctionAccessInstanceFnNoReturn(1.0f, self);
+  _FunctionAccessInstanceFnNoReturn(2.0f, vec2(1.0f, 2.0f), self);
+  _result = _FunctionAccessInstanceFnWithReturn(self);
+  _result = _FunctionAccessInstanceFnWithReturn(2.0f, self);
+  _result = _FunctionAccessInstanceFnWithReturn(2.0f, vec2(1.0f, 2.0f), self);
+}
+

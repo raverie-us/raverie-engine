@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectName>Win32Editor</ProjectName>
+    <ProjectGuid>{F5630AC8-F0C7-4B26-A2C0-BECCBD633B97}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|Win32'" Label="Configuration">
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|x64'" Label="Configuration">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Production|x64'">false</LinkIncremental>
+    <TargetName Condition="'$(Platform)'=='Win32'">ZeroEditor</TargetName>
+  </PropertyGroup>
+  <!--If the RunVld environmental variable is defined then add a #define to the project-->
+  <ItemDefinitionGroup Condition="'$(RunVld)'!=''">
+    <ClCompile>
+      <PreprocessorDefinitions>RunVld;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\Extensions;$(ZERO_SOURCE)\External\GLEW\include;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4302</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\ZeroLibraries\AudioEngine;$(ZERO_SOURCE)\External\GLEW\lib;$(ZERO_SOURCE)\External\freetype\lib;$(ZERO_SOURCE)\External\WinHid\lib;$(ZERO_SOURCE)\External\CEF\lib;C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <DelayLoadDLLs>freetype28.dll;dbghelp.dll;portaudio_x86.dll;libcef.dll;</DelayLoadDLLs>
+      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;portaudio_x86.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>CALL CreateBuildInfo.cmd $(ProjectName) "$(ZeroSource)" "$(ZERO_OUTPUT)" &gt; $(OutDir)BuildInfo.data
+MKDIR "$(SolutionDir)\Data\ZilchCustomPluginShared\$(OS)-$(PlatformShortName)"
+COPY /Y "$(TargetDir)\$(TargetName).lib" "$(SolutionDir)\Data\ZilchCustomPluginShared\$(OS)-$(PlatformShortName)\$(TargetName).lib"
+"$(SolutionDir)\Tools\ZilchToOneCpp.exe" -Zero "$(SolutionDir)\." "$(SolutionDir)\Data\ZilchCustomPluginShared\$(OS)-$(PlatformShortName)\Zilch.hpp"
+XCOPY /Q /E /Y "$(ZERO_SOURCE)\External\CEF\bin" "$(OutDir)"
+COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSubProcess.exe"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <PostBuildEvent>
+      <Message>Create a build info data file. Copy the stub .lib (for dll/plugins) to Data. Output the Zilch 'all' hpp to Data.</Message>
+    </PostBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <Manifest>
+      <AdditionalManifestFiles>$(ZERO_SOURCE)\Build\ZeroEngine.manifest</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+    <PostBuildEvent>
+      <Message>Create a build info data file. Copy the stub .lib (for dll/plugins) to Data. Output the Zilch 'all' hpp to Data.</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Message>Create a build info data file. Copy the stub .lib (for dll/plugins) to Data. Output the Zilch 'all' hpp to Data.</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <DelayLoadDLLs>freetype28.dll;dbghelp.dll;</DelayLoadDLLs>
+      <AdditionalDependencies>libcurl.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        call CreateBuildInfo.cmd $(ProjectName) &gt; $(OutDir)BuildInfo.data
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Win32Shared\Importer.cpp" />
+    <ClCompile Include="Exporter.cpp" />
+    <ClCompile Include="Startup.cpp" />
+    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ZeroCrashCallbacks.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Win32Shared\Importer.hpp" />
+    <ClInclude Include="..\Win32Shared\resource.h" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="ZeroCrashCallbacks.hpp" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">
+    <Link>
+      <AdditionalLibraryDirectories>$(ZeroSource)\External\MemoryDebugger;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">
+    <Copy_Data_File Include="$(ZeroSource)\External\MemoryDebugger\MemoryDebugger.dll">
+      <FileType>Document</FileType>
+    </Copy_Data_File>
+    <!--<Copy_Data_File Include="$(ZeroSource)\External\MemoryDebugger\MemoryDebugger.pdb">
+      <FileType>Document</FileType>
+    </Copy_Data_File>-->
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(USEMEMORYTRACKER)'!=''">
+    <Link>
+      <AdditionalLibraryDirectories>$(ZeroSource)\External\MemoryTracker;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup Condition="'$(USEMEMORYTRACKER)'!=''">
+    <Copy_Data_File Include="$(ZeroSource)\External\MemoryTracker\MemoryTracker.dll">
+      <FileType>Document</FileType>
+    </Copy_Data_File>
+    <!--<Copy_Data_File Include="$(ZeroSource)\External\MemoryTracker\MemoryTracker.pdb">
+      <FileType>Document</FileType>
+    </Copy_Data_File>-->
+  </ItemGroup>
+  <ItemGroup>
+    <Copy_Data_File Include="..\..\External\Freetype\bin\freetype28.dll" />
+    <Copy_Data_File Include="..\..\External\Freetype\bin\zlib1.dll" />
+    <Copy_Data_File Include="..\Win32Shared\ErrorDialog.exe" />
+    <Copy_Data_File Include="..\..\External\PortAudio\portaudio_x86.dll" />
+    <Copy_Data_File Include="..\Win32Shared\Configuration.data" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ZeroLibraries\AudioEngine\AudioEngine.vcxproj">
+      <Project>{fa3c580e-8e06-466a-8eb1-34bb2efed4fa}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroExtensionLibrariesSource)\Dash\Dash.vcxproj">
+      <Project>{f1597a26-9f2d-473a-827c-0ce8c758763d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroExtensionLibrariesSource)\Geometry\Geometry.vcxproj">
+      <Project>{787f598d-f96e-48f5-8075-25d31fc7ed60}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Platform\Platform.vcxproj">
+      <Project>{c26bf2c8-d6c3-441a-83aa-9ba656cdf41c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Platform\Windows\WindowsPlatform.vcxproj">
+      <Project>{dbe8e33a-7e70-402c-bcf6-d1efee93fa76}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Extensions\UiWidget\UiWidget.vcxproj">
+      <Project>{feb98436-b132-4e39-a774-8dbde6ce12d6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Extensions\ZilchShaders\ZilchShaders.vcxproj">
+      <Project>{34f0e1c6-c7fc-405f-9bf3-2cdbf6bbaaf7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\OpenglRenderer\OpenglRenderer.vcxproj">
+      <Project>{b12cf952-9a77-4d6e-80a6-798699763451}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\Startup\Startup.vcxproj">
+      <Project>{d435e236-c996-4e7d-a4d6-dcdc20cc835d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\ZilchScript\ZilchScript.vcxproj">
+      <Project>{175480cf-83df-4510-801f-68824c1b9f70}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ZeroLibraries\Zilch\Project\Zilch\Zilch.vcxproj">
+      <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Extensions\CodeTranslator\CodeTranslator.vcxproj">
+      <Project>{4d8cbd5b-3bff-4f91-b7fd-64f1bb832ff7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Extensions\Editor\Editor.vcxproj">
+      <Project>{172480cf-88da-4510-801f-68884c1b9f70}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Extensions\Gameplay\Gameplay.vcxproj">
+      <Project>{3e095f86-7c87-4c15-806c-8dfb596bd948}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Extensions\Widget\Widget.vcxproj">
+      <Project>{172480cf-88da-4510-801f-68884b1b9070}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Common\Common.vcxproj">
+      <Project>{3a62ce69-835e-4d16-86c2-5326625a18bc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Math\Math.vcxproj">
+      <Project>{767a1157-b18f-478e-b580-f6f624f9282a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroExtensionLibrariesSource)\Serialization\Serialization.vcxproj">
+      <Project>{35d4371c-b7a6-4fc4-aba3-0be750125ce3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroExtensionLibrariesSource)\SpatialPartition\SpatialPartition.vcxproj">
+      <Project>{4ac67c2f-24e2-46e1-98b5-049b819ee958}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroExtensionLibrariesSource)\Support\Support.vcxproj">
+      <Project>{767a1057-b18f-478e-b480-f6f624f9282a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\Content\Content.vcxproj">
+      <Project>{e19019f5-9c2c-4329-aab5-db28e39cc0f2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\Engine\Engine.vcxproj">
+      <Project>{b45f9232-8734-48ea-ac16-29f41866d676}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\Graphics\Graphics.vcxproj">
+      <Project>{0657486a-fe2e-454e-8aa2-750eafb0faf2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroExtensionLibrariesSource)\Meta\Meta.vcxproj">
+      <Project>{b45f9232-8734-47ea-ac16-29f418d6d676}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\Networking\Networking.vcxproj">
+      <Project>{a0359e52-6512-4c5c-916b-f70b35e49242}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\Physics\Physics.vcxproj">
+      <Project>{b1397fe7-b02a-4689-8f19-719bf0e70e7c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\Sound\Sound.vcxproj">
+      <Project>{ca0735f3-8ce7-4663-bfe5-96fef5ea0880}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Systems\WindowsShell\WindowsShellSystem.vcxproj">
+      <Project>{fae35cec-66e1-4c73-bc88-1a001610440a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ChromeSubProcess\ChromeSubProcess.vcxproj">
+      <Project>{fad16d53-662c-47c1-9a7a-c0653d25c070}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Win32Shared\ZeroEditor.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup>
+    <Import Project="..\Win32Shared\SimpleDataFiles.targets" />
+  </ImportGroup>
+</Project>

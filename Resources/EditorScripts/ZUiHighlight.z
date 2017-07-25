@@ -1,0 +1,106 @@
+enum ZUiHighlightMouseMode {Enter, EnterHierarchy, Hover}
+enum ZUiHighlightColorMode {Local, Hierarchy}
+
+class ZUiHighlight : ZilchComponent
+{
+    [Dependency] var UiWidget : UiWidget;
+    
+    [Property] var Active : Boolean = true;
+    
+    // Mouse interaction
+    [Property] var MouseMode : ZUiHighlightMouseMode = ZUiHighlightMouseMode.Enter;
+    [Property] var MouseOverCog : CogPath = CogPath();
+    [Property] var HighlightCog : CogPath = CogPath();
+    
+    // Colors
+    [Property] var ColorMode : ZUiHighlightColorMode = ZUiHighlightColorMode.Local;
+    [Property] var MouseHoverColor : Real4 = Real4(1);
+    [Property] var MouseDownColor : Real4 = Real4(1);
+    [Property] var AnimateTime : Real = 0.0;
+    
+    var OriginalColor : Real4;
+    
+    function Initialize(init : CogInitializer)
+    {
+        // Confirm that both objects are valid
+        var mouseOverCog = this.MouseOverCog.Cog;
+        var highlightCog = this.HighlightCog.Cog;
+        
+        if(mouseOverCog == null || highlightCog == null)
+            return;
+        
+        // Store the original color so we know what to go back to when the mouse leaves
+        if(this.ColorMode == ZUiHighlightColorMode.Local)
+            this.OriginalColor = highlightCog.UiWidget.LocalColor;
+        else
+            this.OriginalColor = highlightCog.UiWidget.HierarchyColor;
+        
+        // Connect to the correct events
+        if(this.MouseMode == ZUiHighlightMouseMode.Enter)
+        {
+            Zero.Connect(mouseOverCog, Events.MouseEnter, this.OnMouseEnter);
+            Zero.Connect(mouseOverCog, Events.MouseExit, this.OnMouseExit);
+        }
+        else if(this.MouseMode == ZUiHighlightMouseMode.EnterHierarchy)
+        {
+            Zero.Connect(mouseOverCog, Events.MouseEnterHierarchy, this.OnMouseEnter);
+            Zero.Connect(mouseOverCog, Events.MouseExitHierarchy, this.OnMouseExit);
+        }
+        else
+        {
+            Zero.Connect(mouseOverCog, "MouseHover", this.OnMouseEnter);
+            Zero.Connect(mouseOverCog, Events.MouseExit, this.OnMouseExit);
+        }
+        
+        Zero.Connect(mouseOverCog, Events.LeftMouseDown, this.OnLeftMouseDown);
+        Zero.Connect(mouseOverCog, Events.LeftMouseUp, this.OnLeftMouseUp);
+    }
+
+    function OnMouseEnter(event : ViewportMouseEvent)
+    {
+        this.SetColor(this.MouseHoverColor);
+    }
+    
+    function OnLeftMouseDown(event : ViewportMouseEvent)
+    {
+        this.SetColor(this.MouseDownColor);
+    }
+    
+    function OnLeftMouseUp(event : ViewportMouseEvent)
+    {
+        this.SetColor(this.MouseHoverColor);
+    }
+    
+    function OnMouseExit(event : ViewportMouseEvent)
+    {
+      if(this.UiWidget.HasFocus == false)
+        this.SetColor(this.OriginalColor);
+    }
+    
+    function SetColor(color : Real4)
+    {
+        if(this.Active == false)
+            return;
+        
+        var highlightCog = this.HighlightCog.Cog;
+        
+        var prop : Property[Real4] = null;
+        if(this.ColorMode == ZUiHighlightColorMode.Local)
+            prop = @highlightCog.UiWidget.LocalColor;
+        else
+            prop = @highlightCog.UiWidget.HierarchyColor;
+            
+        var seq = Action.Sequence(highlightCog.Actions);
+        Action.Property(seq, prop, color, this.AnimateTime, Ease.QuadOut);
+    }
+    
+    function SimulateClick()
+    {
+        var currColor = this.HighlightCog.Cog.UiWidget.LocalColor;
+        this.SetColor(this.MouseDownColor);
+        
+        var seq = Action.Sequence(this.Owner.Actions);
+        Action.Delay(seq, 0.1);
+        Action.Property(seq, @this.HighlightCog.Cog.UiWidget.LocalColor, currColor, this.AnimateTime, Ease.QuadOut);
+    }
+}

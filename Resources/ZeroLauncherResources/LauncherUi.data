@@ -1,0 +1,247 @@
+DefinitionSet = 
+{
+	ImageDefinition OptionsIcon =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 1, 1 ],
+		float[] Uv1 = [ 24 , 20 ],
+	},
+	
+	ImageDefinition DiscoverBgDefault =
+	{
+		string Texture = "DiscoverBgDefault",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 0 ],
+		float[] Uv1 = [ 640 , 328 ],
+	},
+	
+	TextDefinition MainTabText =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 30,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition SubTabText =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 18,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	//-------------------------------------------------------------- Icons
+	ImageDefinition OpenFolderIcon =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 114, 18 ],
+		float[] Uv1 = [ 12 , 12 ],
+	},
+	
+	ImageDefinition DownloadIcon =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 65, 17 ],
+		float[] Uv1 = [ 20 , 20 ],
+	},
+	
+	ImageDefinition BackIcon =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 64 ],
+		float[] Uv1 = [ 24 , 24 ],
+	},
+	
+	ImageDefinition XIcon =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 33, 41 ],
+		float[] Uv1 = [ 20 , 20 ],
+	},
+	
+	//--------------------------------------------------------------- Eula
+	TextDefinition EulaButton =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 20,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	//---------------------------------------------------- Launcher Button
+	TextDefinition LaunchButtonTitle =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 30,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition LaunchButtonBuild =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 14,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	ImageDefinition LauncherButtonBackground =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 28, 1 ],
+		float[] Uv1 = [ 3 , 48 ],
+	},
+	
+	//---------------------------------------------------- Release Page
+	TextDefinition ReleaseNotesTitle =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 36,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition ReleaseNotesBuild =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 18,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition ReleaseNotesText =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 12,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition ReleaseNotesTextBold =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 10,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	//---------------------------------------------------- Projects Page
+	ImageDefinition FavoriteIcon =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 33, 2 ],
+		float[] Uv1 = [ 14 , 12 ],
+	},
+	
+	ImageDefinition RemoveProject =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 33, 41 ],
+		float[] Uv1 = [ 20 , 20 ],
+	},
+	
+	TextDefinition ProjectNameText =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 18,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition ProjectDate =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 12,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition ProjectBuild =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 14,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition ProjectBuildState =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 10,
+		float[] FontColor = [1,1,1,1],
+	},	
+	
+	//---------------------------------------------------- Discover Page
+	TextDefinition TileTitleText =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 30,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition TileTitleTextMedium =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 20,
+		float[] FontColor = [1,1,1,1],
+	},
+	TextDefinition TileTitleTextSmall =
+	{
+		string FontName = "NotoSans-Bold",
+		float FontSize = 14,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	//---------------------------------------------------- Dev Updates
+	TextDefinition DevUpdateTitle =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 30,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition DevUpdateDate =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 18,
+		float[] FontColor = [1,1,1,1],
+	},
+	
+	TextDefinition DevUpdateText =
+	{
+		string FontName = "NotoSans-Regular",
+		float FontSize = 11,
+		float[] FontColor = [1,1,1,1],
+	},
+  DefinitionSet ActiveProjectName = 
+	{
+		TextDefinition Text =
+		{
+			string FontName = "NotoSans-Regular",
+			float FontSize = 24,
+			float[] FontColor = [.925,.925,.925,1],
+		},
+		
+		SlicedDefinition Background =
+		{
+			string Texture = "EditorUi",
+			float[] Uv0 = [ 2 , 58 ],
+			float[] Uv1 = [ 24 , 24 ],
+			float[] Slices = [ 18, 3, 3, 3 ] ,
+		},
+		
+		SlicedDefinition BackgroundFocus =
+		{
+			string Texture = "EditorUi",
+			float[] Uv0 = [ 30 , 58 ],
+			float[] Uv1 = [ 24 , 24 ],
+			float[] Slices = [ 18, 3, 3, 3 ] ,
+		},
+	},
+	
+	//---------------------------------------------------- Build Selector
+	ImageDefinition BuildSelectArrow =
+	{
+		string Texture = "LauncherUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 1, 22 ],
+		float[] Uv1 = [ 10 , 5 ],
+	},
+}

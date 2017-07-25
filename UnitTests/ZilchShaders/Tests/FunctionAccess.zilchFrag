@@ -1,0 +1,71 @@
+[Pixel]
+struct FunctionAccess
+{
+    [Static]
+    function StaticFnNoReturn()
+    {
+    }
+    [Static]
+    function StaticFnNoReturn(value : Real)
+    {
+    }
+    [Static]
+    function StaticFnNoReturn(value1 : Real, value2 : Real2)
+    {
+    }
+    [Static]
+    function StaticFnWithReturn() : Real
+    {
+        return 1.0;
+    }
+    [Static]
+    function StaticFnWithReturn(value : Real) : Real
+    {
+        return value;
+    }
+    [Static]
+    function StaticFnWithReturn(value1 : Real, value2 : Real2) : Real
+    {
+        return value1;
+    }
+    
+    function InstanceFnNoReturn()
+    {
+    }
+    function InstanceFnNoReturn(value : Real)
+    {
+    }
+    function InstanceFnNoReturn(value1 : Real, value2 : Real2)
+    {
+    }
+    function InstanceFnWithReturn() : Real
+    {
+        return 1.0;
+    }
+    function InstanceFnWithReturn(value : Real) : Real
+    {
+        return value;
+    }
+    function InstanceFnWithReturn(value1 : Real, value2 : Real2) : Real
+    {
+        return value1;
+    }
+    
+    function Main()
+    {
+        var result = 0.0;
+        FunctionAccess.StaticFnNoReturn();
+        FunctionAccess.StaticFnNoReturn(1.0);
+        FunctionAccess.StaticFnNoReturn(2.0, Real2(1.0, 2.0));
+        result = FunctionAccess.StaticFnWithReturn();
+        result = FunctionAccess.StaticFnWithReturn(2.0);
+        result = FunctionAccess.StaticFnWithReturn(2.0, Real2(1.0, 2.0));
+        
+        this.InstanceFnNoReturn();
+        this.InstanceFnNoReturn(1.0);
+        this.InstanceFnNoReturn(2.0, Real2(1.0, 2.0));
+        result = this.InstanceFnWithReturn();
+        result = this.InstanceFnWithReturn(2.0);
+        result = this.InstanceFnWithReturn(2.0, Real2(1.0, 2.0));
+    }
+}

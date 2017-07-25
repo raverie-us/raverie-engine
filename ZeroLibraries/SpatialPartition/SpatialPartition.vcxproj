@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4AC67C2F-24E2-46E1-98B5-049B819EE958}</ProjectGuid>
+    <RootNamespace>SpatialPartition</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BoundingBoxBroadPhase.cpp" />
+    <ClCompile Include="BoundingSphereBroadPhase.cpp" />
+    <ClCompile Include="BroadPhaseCreator.cpp" />
+    <ClCompile Include="BroadPhasePackage.cpp" />
+    <ClCompile Include="BroadPhaseTracker.cpp" />
+    <ClCompile Include="DynamicAabbTreeBroadPhase.cpp" />
+    <ClCompile Include="NSquaredBroadPhase.cpp" />
+    <ClCompile Include="SapBroadPhase.cpp" />
+    <ClCompile Include="SpatialPartitionStandard.cpp" />
+    <ClCompile Include="StaticAabbTreeBroadPhase.cpp" />
+    <ClCompile Include="AvlDynamicAabbTreeBroadPhase.cpp" />
+    <ClCompile Include="BroadPhase.cpp" />
+    <ClCompile Include="ProxyCast.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseDynamicAabbTree.hpp" />
+    <ClInclude Include="BaseDynamicAabbTreeBroadPhase.hpp" />
+    <ClInclude Include="BaseNSquared.hpp" />
+    <ClInclude Include="BoundingBoxBroadPhase.hpp" />
+    <ClInclude Include="BoundingSphereBroadPhase.hpp" />
+    <ClInclude Include="BroadPhaseCreator.hpp" />
+    <ClInclude Include="BroadPhasePackage.hpp" />
+    <ClInclude Include="BroadPhaseRanges.hpp" />
+    <ClInclude Include="BroadPhaseRangeTransformations.hpp" />
+    <ClInclude Include="BroadPhaseTracker.hpp" />
+    <ClInclude Include="DynamicAabbTree.hpp" />
+    <ClInclude Include="DynamicAabbTreeBroadPhase.hpp" />
+    <ClInclude Include="DynamicTreeHelpers.hpp" />
+    <ClInclude Include="NSquaredBroadPhase.hpp" />
+    <ClInclude Include="Sap.hpp" />
+    <ClInclude Include="SapContainers.hpp" />
+    <ClInclude Include="SapBroadPhase.hpp" />
+    <ClInclude Include="SimpleCastCallbacks.hpp" />
+    <ClInclude Include="BoundingBox.hpp" />
+    <ClInclude Include="BoundingSphere.hpp" />
+    <ClInclude Include="NSquared.hpp" />
+    <ClInclude Include="AabbTreeMethods.hpp" />
+    <ClInclude Include="AabbTreeNode.hpp" />
+    <ClInclude Include="StaticAabbTree.hpp" />
+    <ClInclude Include="StaticAabbTreeBroadPhase.hpp" />
+    <ClInclude Include="AvlDynamicAabbTree.hpp" />
+    <ClInclude Include="AvlDynamicAabbTreeBroadPhase.hpp" />
+    <ClInclude Include="BroadPhase.hpp" />
+    <ClInclude Include="BroadPhaseProxy.hpp" />
+    <ClInclude Include="SpatialPartitionStandard.hpp" />
+    <ClInclude Include="ProxyCast.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AabbTreeMethods.inl" />
+    <None Include="AabbTreeNode.inl" />
+    <None Include="BaseDynamicAabbTree.inl" />
+    <None Include="BaseDynamicAabbTreeBroadPhase.inl" />
+    <None Include="BaseNSquared.inl" />
+    <None Include="AvlDynamicAabbTree.inl" />
+    <None Include="DynamicAabbTree.inl" />
+    <None Include="Sap.inl" />
+    <None Include="StaticAabbTree.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

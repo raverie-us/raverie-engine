@@ -1,0 +1,68 @@
+// Outputs scene depth to a texture to use in shadow mapping.
+[RunInEditor]
+class ShadowRenderer : ZilchComponent
+{
+  // Preset sizes for the shadow map's texture size.
+  [Editable] var Resolution : ShadowResolution
+  {
+    get { return this.ResolutionValue; }
+    set
+    {
+      this.ResolutionValue = value;
+      this.SetShadowResolution();
+    }
+  }
+  
+  [Serialized] var ResolutionValue : ShadowResolution = ShadowResolution.High;
+  var ShadowResolution : Integer = 0;
+  
+  [ShaderInput("ShadowMapping", "LightTransform")] var LightTransform : Real4x4;
+  [ShaderInput("ShadowMapping", "ShadowBuffer")] var ShadowBuffer : Texture;
+  // Offsets the pixel position along the surface normal for depth test to prevent self shadowing, in world units.
+  [Property][ShaderInput("ShadowMapping", "NormalOffsetBias")] var NormalOffsetBias : Real = 0.1;
+  
+  function Initialize(init : CogInitializer)
+  {
+    this.SetShadowResolution();
+    Zero.Connect(this.Owner, Events.RenderTasksUpdate, this.OnRenderTasksUpdate);
+  }
+
+  function OnRenderTasksUpdate(event : RenderTasksEvent)
+  {
+    this.LightTransform = event.CameraViewportCog.CameraViewport.WorldToPerspective;
+    this.ShadowBuffer = event.CameraViewportCog.CameraViewport.FinalTexture;
+    
+    var samplerSettings = SamplerSettings();
+    samplerSettings.Filtering = TextureFiltering.Bilinear;
+    samplerSettings.CompareMode = TextureCompareMode.Enabled;
+    samplerSettings.CompareFunc = TextureCompareFunc.LessEqual;
+    var depth = event.GetFinalTarget(Integer2(this.ShadowResolution), TextureFormat.Depth32, samplerSettings);
+    
+    var shadowSettings = RenderSettings();
+    shadowSettings.DepthTarget = depth;
+    
+    shadowSettings.DepthSettings.DepthMode = DepthMode.Write;
+    shadowSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+    
+    event.AddRenderTaskClearTarget(depth, 1.0);
+    event.AddRenderTaskRenderPass(shadowSettings, RenderGroup.ShadowCasters, NoPixelOutput());
+  }
+  
+  function SetShadowResolution()
+  {
+    if (this.ResolutionValue == ShadowResolution.Low)
+      this.ShadowResolution = 1024;
+    else if (this.ResolutionValue == ShadowResolution.Medium)
+      this.ShadowResolution = 2048;
+    else if (this.ResolutionValue == ShadowResolution.High)
+      this.ShadowResolution = 4096;
+  }
+}
+
+// Sizes for shadow map.
+enum ShadowResolution
+{
+  Low,
+  Medium,
+  High
+}

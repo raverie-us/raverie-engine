@@ -1,0 +1,307 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B1397FE7-B02A-4689-8F19-719BF0E70E7C}</ProjectGuid>
+    <RootNamespace>Physics</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BasicActions.cpp" />
+    <ClCompile Include="BasicDirectionEffects.cpp" />
+    <ClCompile Include="BasicPointEffects.cpp" />
+    <ClCompile Include="BodyMassCalculations.cpp" />
+    <ClCompile Include="BuoyancyEffect.cpp" />
+    <ClCompile Include="CollisionTable.cpp" />
+    <ClCompile Include="ComponentInspectors.cpp" />
+    <ClCompile Include="CollisionFilter.cpp" />
+    <ClCompile Include="CollisionFilterBlocks.cpp" />
+    <ClCompile Include="ConstraintRanges.cpp" />
+    <ClCompile Include="CoreActions.cpp" />
+    <ClCompile Include="ContactManager.cpp" />
+    <ClCompile Include="CustomPhysicsEffect.cpp" />
+    <ClCompile Include="CollisionGroup.cpp" />
+    <ClCompile Include="DebugDrawHelpers.cpp" />
+    <ClCompile Include="DynamicMotor.cpp" />
+    <ClCompile Include="FlowEffect.cpp" />
+    <ClCompile Include="GenericPhysicsMesh.cpp" />
+    <ClCompile Include="GjkDebug.cpp" />
+    <ClCompile Include="HeightMapCollider.cpp" />
+    <ClCompile Include="IgnoreSpaceEffects.cpp" />
+    <ClCompile Include="InternalEdgeCorrection.cpp" />
+    <ClCompile Include="Island.cpp" />
+    <ClCompile Include="IslandManager.cpp" />
+    <ClCompile Include="JointCreator.cpp" />
+    <ClCompile Include="JointEvents.cpp" />
+    <ClCompile Include="Joints\BasicSolver.cpp" />
+    <ClCompile Include="Joints\PositionCorrectionFragments.cpp" />
+    <ClCompile Include="Joints\CustomJoint.cpp" />
+    <ClCompile Include="Joints\UniversalJoint.cpp" />
+    <ClCompile Include="Joints\JointConfigOverride.cpp" />
+    <ClCompile Include="Joints\ConstraintAtoms.cpp" />
+    <ClCompile Include="Joints\ConstraintFragments.cpp" />
+    <ClCompile Include="Joints\ConstraintHelpers.cpp" />
+    <ClCompile Include="Joints\ConstraintMolecules.cpp" />
+    <ClCompile Include="Joints\Contact.cpp" />
+    <ClCompile Include="Joints\FixedAngleJoint.cpp" />
+    <ClCompile Include="Joints\GearJoint.cpp" />
+    <ClCompile Include="Joints\GenericBasicSolver.cpp" />
+    <ClCompile Include="Joints\IConstraintSolver.cpp" />
+    <ClCompile Include="Joints\Joint.cpp" />
+    <ClCompile Include="Joints\JointData.cpp" />
+    <ClCompile Include="Joints\JointDebugDrawConfig.cpp" />
+    <ClCompile Include="Joints\JointLimit.cpp" />
+    <ClCompile Include="Joints\LinearAxisJoint.cpp" />
+    <ClCompile Include="Joints\ManipulatorJoint.cpp" />
+    <ClCompile Include="Joints\JointMotor.cpp" />
+    <ClCompile Include="Joints\NormalSolver.cpp" />
+    <ClCompile Include="Joints\PhyGunJoint.cpp" />
+    <ClCompile Include="Joints\PositionJoint.cpp" />
+    <ClCompile Include="Joints\PrismaticJoint.cpp" />
+    <ClCompile Include="Joints\PrismaticJoint2d.cpp" />
+    <ClCompile Include="Joints\PulleyJoint.cpp" />
+    <ClCompile Include="Joints\RelativeVelocityJoint.cpp" />
+    <ClCompile Include="Joints\RevoluteJoint.cpp" />
+    <ClCompile Include="Joints\RevoluteJoint2d.cpp" />
+    <ClCompile Include="Joints\JointSpring.cpp" />
+    <ClCompile Include="Joints\StickJoint.cpp" />
+    <ClCompile Include="Joints\ThreadedSolver.cpp">
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ShowIncludes>
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">true</ShowIncludes>
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ShowIncludes>
+    </ClCompile>
+    <ClCompile Include="Joints\UprightJoint.cpp" />
+    <ClCompile Include="Joints\WeldJoint.cpp" />
+    <ClCompile Include="Joints\WheelJoint.cpp" />
+    <ClCompile Include="Joints\WheelJoint2d.cpp" />
+    <ClCompile Include="Masses.cpp" />
+    <ClCompile Include="MassOverride.cpp" />
+    <ClCompile Include="MeshDebug.cpp" />
+    <ClCompile Include="MeshFilterRange.cpp" />
+    <ClCompile Include="CustomCollisionEventTracker.cpp" />
+    <ClCompile Include="MultiConvexMesh.cpp" />
+    <ClCompile Include="MultiConvexMeshCollider.cpp" />
+    <ClCompile Include="PhysicsCar.cpp" />
+    <ClCompile Include="PhysicsCarWheel.cpp" />
+    <ClCompile Include="PhysicsComposition.cpp" />
+    <ClCompile Include="PhysicsEventManager.cpp" />
+    <ClCompile Include="PhysicsMeshBoundData.cpp" />
+    <ClCompile Include="PhysicsNode.cpp" />
+    <ClCompile Include="PhysicsPairs.cpp" />
+    <ClCompile Include="Analyzer.cpp" />
+    <ClCompile Include="PhysicsQueueManager.cpp" />
+    <ClCompile Include="PhysicsQueues.cpp" />
+    <ClCompile Include="PhysicsRaycastProvider.cpp" />
+    <ClCompile Include="PhysicsSolverConfig.cpp" />
+    <ClCompile Include="PhysicsStandard.cpp" />
+    <ClCompile Include="ContactPoint.cpp" />
+    <ClCompile Include="RayCast.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="CapsuleCollider.cpp" />
+    <ClCompile Include="CylinderCollider.cpp" />
+    <ClCompile Include="EllipsoidCollider.cpp" />
+    <ClCompile Include="ShapeCollisionHelpers.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="ConvexMeshCollider.cpp" />
+    <ClCompile Include="SpringSystem.cpp" />
+    <ClCompile Include="ThrustEffect.cpp" />
+    <ClCompile Include="MeshCollider.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="PhysicsSpace.cpp" />
+    <ClCompile Include="DragEffect.cpp" />
+    <ClCompile Include="PhysicsEffect.cpp" />
+    <ClCompile Include="Region.cpp" />
+    <ClCompile Include="Integrators.cpp" />
+    <ClCompile Include="Manifold.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="TimeOfImpact.cpp" />
+    <ClCompile Include="TimeOfImpactDebug.cpp" />
+    <ClCompile Include="TorqueEffect.cpp" />
+    <ClCompile Include="ConvexMesh.cpp" />
+    <ClCompile Include="PhysicsMaterial.cpp" />
+    <ClCompile Include="PhysicsMesh.cpp" />
+    <ClCompile Include="PhysicsEvents.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PhysicsEngine.cpp" />
+    <ClCompile Include="VortexEffect.cpp" />
+    <ClCompile Include="WindEffect.cpp" />
+    <ClCompile Include="WorldTransformation.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BasicActions.hpp" />
+    <ClInclude Include="BasicDirectionEffects.hpp" />
+    <ClInclude Include="BasicPointEffects.hpp" />
+    <ClInclude Include="BodyMassCalculations.hpp" />
+    <ClInclude Include="BuoyancyEffect.hpp" />
+    <ClInclude Include="CollisionTable.hpp" />
+    <ClInclude Include="ComponentInspectors.hpp" />
+    <ClInclude Include="CollisionFilter.hpp" />
+    <ClInclude Include="CollisionFilterBlocks.hpp" />
+    <ClInclude Include="ComplexShapeCollision.hpp" />
+    <ClInclude Include="ConstraintRanges.hpp" />
+    <ClInclude Include="CoreActions.hpp" />
+    <ClInclude Include="ContactManager.hpp" />
+    <ClInclude Include="CustomPhysicsEffect.hpp" />
+    <ClInclude Include="CollisionGroup.hpp" />
+    <ClInclude Include="DebugDrawHelpers.hpp" />
+    <ClInclude Include="DynamicMotor.hpp" />
+    <ClInclude Include="FlowEffect.hpp" />
+    <ClInclude Include="ForwardDeclarations.hpp" />
+    <ClInclude Include="GenericPhysicsMesh.hpp" />
+    <ClInclude Include="GjkDebug.hpp" />
+    <ClInclude Include="HeightMapCollider.hpp" />
+    <ClInclude Include="IgnoreSpaceEffects.hpp" />
+    <ClInclude Include="InternalEdgeCorrection.hpp" />
+    <ClInclude Include="Island.hpp" />
+    <ClInclude Include="IslandManager.hpp" />
+    <ClInclude Include="JointCreator.hpp" />
+    <ClInclude Include="Joints\BasicSolver.hpp" />
+    <ClInclude Include="Joints\ConstraintFragmentsSse.hpp" />
+    <ClInclude Include="Joints\DebugDrawFragments.hpp" />
+    <ClInclude Include="Joints\PositionCorrectionFragments.hpp" />
+    <ClInclude Include="Joints\CustomJoint.hpp" />
+    <ClInclude Include="Joints\UniversalJoint.hpp" />
+    <ClInclude Include="Joints\JointConfigOverride.hpp" />
+    <ClInclude Include="Joints\ConstraintAtomDefines.hpp" />
+    <ClInclude Include="Joints\ConstraintAtoms.hpp" />
+    <ClInclude Include="Joints\ConstraintFragments.hpp" />
+    <ClInclude Include="Joints\ConstraintHelpers.hpp" />
+    <ClInclude Include="Joints\ConstraintMolecules.hpp" />
+    <ClInclude Include="Joints\Contact.hpp" />
+    <ClInclude Include="Joints\FixedAngleJoint.hpp" />
+    <ClInclude Include="Joints\GearJoint.hpp" />
+    <ClInclude Include="Joints\GenericBasicSolver.hpp" />
+    <ClInclude Include="Joints\IConstraintSolver.hpp" />
+    <ClInclude Include="Joints\Joint.hpp" />
+    <ClInclude Include="Joints\JointData.hpp" />
+    <ClInclude Include="Joints\JointDebugDrawConfig.hpp" />
+    <ClInclude Include="Joints\JointEnums.hpp" />
+    <ClInclude Include="Joints\JointIncludes.hpp" />
+    <ClInclude Include="Joints\JointList.hpp" />
+    <ClInclude Include="Joints\JointLimit.hpp" />
+    <ClInclude Include="Joints\LinearAxisJoint.hpp" />
+    <ClInclude Include="Joints\ManipulatorJoint.hpp" />
+    <ClInclude Include="Joints\JointMotor.hpp" />
+    <ClInclude Include="Joints\NormalSolver.hpp" />
+    <ClInclude Include="Joints\PhyGunJoint.hpp" />
+    <ClInclude Include="Joints\PositionJoint.hpp" />
+    <ClInclude Include="Joints\PrismaticJoint.hpp" />
+    <ClInclude Include="Joints\PrismaticJoint2d.hpp" />
+    <ClInclude Include="Joints\PulleyJoint.hpp" />
+    <ClInclude Include="Joints\RelativeVelocityJoint.hpp" />
+    <ClInclude Include="Joints\RevoluteJoint.hpp" />
+    <ClInclude Include="Joints\RevoluteJoint2d.hpp" />
+    <ClInclude Include="Joints\SerializationFragments.hpp" />
+    <ClInclude Include="Joints\SolverFragments.hpp" />
+    <ClInclude Include="Joints\JointSpring.hpp" />
+    <ClInclude Include="Joints\StickJoint.hpp" />
+    <ClInclude Include="Joints\TemplatedFragments.hpp" />
+    <ClInclude Include="Joints\ThreadedFragments.hpp" />
+    <ClInclude Include="Joints\ThreadedSolver.hpp" />
+    <ClInclude Include="Joints\UprightJoint.hpp" />
+    <ClInclude Include="Joints\WeldJoint.hpp" />
+    <ClInclude Include="Joints\WheelJoint.hpp" />
+    <ClInclude Include="Joints\WheelJoint2d.hpp" />
+    <ClInclude Include="Masses.hpp" />
+    <ClInclude Include="MassOverride.hpp" />
+    <ClInclude Include="MeshDebug.hpp" />
+    <ClInclude Include="MeshFilterRange.hpp" />
+    <ClInclude Include="CustomCollisionEventTracker.hpp" />
+    <ClInclude Include="MultiConvexMesh.hpp" />
+    <ClInclude Include="MultiConvexMeshCollider.hpp" />
+    <ClInclude Include="PhysicsCar.hpp" />
+    <ClInclude Include="PhysicsCarWheel.hpp" />
+    <ClInclude Include="PhysicsComposition.hpp" />
+    <ClInclude Include="PhysicsEventManager.hpp" />
+    <ClInclude Include="PhysicsMeshBoundData.hpp" />
+    <ClInclude Include="PhysicsNode.hpp" />
+    <ClInclude Include="PhysicsPairs.hpp" />
+    <ClInclude Include="Analyzer.hpp" />
+    <ClInclude Include="PhysicsQueueManager.hpp" />
+    <ClInclude Include="PhysicsQueues.hpp" />
+    <ClInclude Include="PhysicsRaycastProvider.hpp" />
+    <ClInclude Include="PhysicsSolverConfig.hpp" />
+    <ClInclude Include="ContactPoint.hpp" />
+    <ClInclude Include="RayCast.hpp" />
+    <ClInclude Include="Collider.hpp" />
+    <ClInclude Include="BoxCollider.hpp" />
+    <ClInclude Include="CapsuleCollider.hpp" />
+    <ClInclude Include="CylinderCollider.hpp" />
+    <ClInclude Include="EllipsoidCollider.hpp" />
+    <ClInclude Include="ShapeCollision.hpp" />
+    <ClInclude Include="ShapeCollisionHelpers.hpp" />
+    <ClInclude Include="SimpleShapeCollision.hpp" />
+    <ClInclude Include="SphereCollider.hpp" />
+    <ClInclude Include="ConvexMeshCollider.hpp" />
+    <ClInclude Include="SpringSystem.hpp" />
+    <ClInclude Include="ThrustEffect.hpp" />
+    <ClInclude Include="MeshCollider.hpp" />
+    <ClInclude Include="RigidBody.hpp" />
+    <ClInclude Include="PhysicsSpace.hpp" />
+    <ClInclude Include="DragEffect.hpp" />
+    <ClInclude Include="PhysicsEffect.hpp" />
+    <ClInclude Include="DebugFlags.hpp" />
+    <ClInclude Include="Region.hpp" />
+    <ClInclude Include="Integrators.hpp" />
+    <ClInclude Include="Manifold.hpp" />
+    <ClInclude Include="CollisionManager.hpp" />
+    <ClInclude Include="ConvexMesh.hpp" />
+    <ClInclude Include="PhysicsMaterial.hpp" />
+    <ClInclude Include="PhysicsMesh.hpp" />
+    <ClInclude Include="Joints\JointEvents.hpp" />
+    <ClInclude Include="PhysicsEvents.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="PhysicsEngine.hpp" />
+    <ClInclude Include="PhysicsStandard.hpp" />
+    <ClInclude Include="TimeOfImpact.hpp" />
+    <ClInclude Include="TimeOfImpactDebug.hpp" />
+    <ClInclude Include="TorqueEffect.hpp" />
+    <ClInclude Include="VortexEffect.hpp" />
+    <ClInclude Include="WindEffect.hpp" />
+    <ClInclude Include="WorldTransformation.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

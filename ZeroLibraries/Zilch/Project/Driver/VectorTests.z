@@ -1,0 +1,26 @@
+class VectorTests
+{
+  [Static]
+  function Vec2Abs() : Real2
+  {
+    var v = local Real2(-2.0,30.0);
+    var ret = Math.Abs(v);
+    return ret;
+  }
+  
+  [Static]
+  function Vec3Abs() : Real3
+  {
+    var v = local Real3(-1.5,8.3,-27.5);
+    var ret = Math.Abs(v);
+    return ret;
+  }
+  
+  [Static]
+  function Vec4Abs() : Real4
+  {
+    var v = local Real4(-1.5,8.3,-27.5,54.32);
+    var ret = Math.Abs(v);
+    return ret;
+  }
+}

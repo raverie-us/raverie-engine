@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>SlickGrid example 1: Basic grid</title>
+  <link rel="stylesheet" href="jquery/zero/jquery-ui-1.10.4.custom.css" type="text/css"/>
+  <link rel="stylesheet" href="slickgrid/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="slickgrid/debugger.css" type="text/css"/>
+  <style>
+    .slickgrid-loading-icon
+    {
+      background-image: url(loading.gif);
+      width: 16px;
+      height: 16px;
+      display: table;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+<div id="myGrid" class="debugger-data-grid" style="width:600px;height:500px;"></div>
+
+<script src="jquery/jquery-1.10.2.js"></script>
+<script src="jquery/jquery-ui-1.10.4.custom.js"></script>
+<script src="jquery/jquery.event.drag-2.2.js"></script>
+
+<script src="slickgrid/slick.core.js"></script>
+<script src="slickgrid/slick.grid.js"></script>
+<script src="slickgrid/slick.editors.js"></script>
+<script src="slickgrid/slick.dataview.js"></script>
+<script src="slickgrid/slick.tree.js"></script>
+
+<script>
+  var data = [];
+  $(function ()
+  {
+    var columns =
+    [
+      {id: "expression", name: "Expression", field: "expression"},
+      {id: "type", name: "Type", field: "type"},
+      {id: "value", name: "Value", field: "value", editor: Slick.Editors.Text},
+    ];
+    
+    data[0] =
+    {
+      id: 'b',
+      expression: 'bob',
+      type: 'Animal',
+      value: 'Cat'
+    };
+    
+    data[1] =
+    {
+      id: '1',
+      loading: true,
+      parent: data[0]
+    };
+    
+    data[2] =
+    {
+      id: '2',
+      expression: 'bob',
+      type: 'Animal',
+      value: 'Cat'
+    };
+
+    var options =
+    {
+      enableCellNavigation: true,
+      enableColumnReorder: false,
+      editable: true,
+      rowHeight: 20,
+      forceFitColumns: true
+    };
+    
+    var dataView = new Slick.Data.DataView();
+    dataView.beginUpdate();
+    dataView.setItems(data);
+    dataView.endUpdate();
+    
+    var grid = new Slick.Grid("#myGrid", dataView, columns, options);
+    
+    function expanderCallback(grid, row, rowIndex, expanded)
+    {
+      console.log("row clicked " + rowIndex + ' ' + expanded + ' id ' + row.id);
+    }
+   
+    initTreeGrid(grid, expanderCallback);
+    
+    grid.invalidate();
+    grid.render();
+    //setInterval(function()
+    //{
+    //  
+    //  data[2].expandable = true;
+    //  
+    //  grid.setData(data, false);
+    //  grid.render();
+    //}, 1300);
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+	/*
+	function GetPoints(numKills : Int32, numStomps : Int32, checkpoints : Int32, scalar : Real32) : Int32
+	{
+		var pointsPerStomp : Int32 := 10;
+
+		var killPoints  : Int32 := numKills * 5;
+		var stompPoints : Int32 := numStomps * pointsPerStomp;
+		var checkPoints : Int32 := checkpoints / 2;
+
+		var totalPoints : Int32 := ((killPoints + stompPoints + checkPoints) as Real32 * scalar) as Int32;
+
+		if (totalPoints > 3)
+		{
+			totalPoints := 3;
+		}
+
+		return totalPoints;
+	}
+	*/
+
+	/*
+	function DoPlayerPointsStuff() : Int32
+	{
+		var test : Int32 := 6;
+
+		test := 3;
+
+		test *= 3;
+
+		if (test > 8)
+		{
+			test := 1;
+		}
+
+		return test;
+		//return GetPoints(numKills: 3, numStomps: 2, checkpoints: 10, scalar: 1.24) * 2;
+	}
+	*/
+
+
+	function Factorial(num : Int32) : Int32
+	{
+		if (num <= 1)
+		{
+			return 1;
+		}
+
+		return num * Factorial(num: num - 1);
+	}
+
+	function DoFactorial() : Int32
+	{
+		return Factorial(num: 11);
+	}

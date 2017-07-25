@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3A62CE69-835E-4D16-86C2-5326625A18BC}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <!--If the USEMEMORYDEBUGGER environmental variable is defined then add a #define to use the debugger and link it in-->
+  <ItemDefinitionGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">
+    <ClCompile>
+      <PreprocessorDefinitions>UseMemoryDebugger;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ZeroSource)\External\MemoryDebugger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(USEMEMORYTRACKER)'!=''">
+    <ClCompile>
+      <PreprocessorDefinitions>UseMemoryTracker;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ZeroSource)\External\MemoryTracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CommonStandard.cpp" />
+    <ClCompile Include="Containers\BitStream.cpp" />
+    <ClCompile Include="Containers\ByteBuffer.cpp" />
+    <ClCompile Include="Diagnostic\Console.cpp" />
+    <ClCompile Include="Diagnostic\Diagnostic.cpp" />
+    <ClCompile Include="Guid.cpp" />
+    <ClCompile Include="Lexer\Lexer.cpp" />
+    <ClCompile Include="Memory\Block.cpp" />
+    <ClCompile Include="Memory\Graph.cpp" />
+    <ClCompile Include="Memory\Heap.cpp" />
+    <ClCompile Include="Memory\Pool.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Memory\Stack.cpp" />
+    <ClCompile Include="String\CharacterTraits.cpp" />
+    <ClCompile Include="String\Rune.cpp" />
+    <ClCompile Include="String\String.cpp" />
+    <ClCompile Include="String\StringBuilder.cpp" />
+    <ClCompile Include="String\StringConversion.cpp" />
+    <ClCompile Include="String\StringRange.cpp" />
+    <ClCompile Include="String\StringUtility.cpp" />
+    <ClCompile Include="String\ToString.cpp" />
+    <ClCompile Include="Regex\Regex.cpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'!=''">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Regex\RegexNo.cpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'==''">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'!=''">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(N3DS_SOURCE)/StandardLibraries/TimeNP1.cpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'==''">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Utility\Atomic.cpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'!=''">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(N3DS_SOURCE)\StandardLibraries\AtomicNP1.cpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'==''">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Utility\Callback.cpp" />
+    <ClCompile Include="Utility\Functor.cpp" />
+    <ClCompile Include="Utility\HalfFloat.cpp" />
+    <ClCompile Include="Utility\Misc.cpp" />
+    <ClCompile Include="Utility\Status.cpp" />
+    <ClCompile Include="Utility\Variant.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Singleton.hpp" />
+    <ClInclude Include="Utility\ByteEnum.hpp" />
+    <ClInclude Include="CommonStandard.hpp" />
+    <ClInclude Include="Containers\ArrayMap.hpp" />
+    <ClInclude Include="Containers\ArraySet.hpp" />
+    <ClInclude Include="Containers\BitStream.hpp" />
+    <ClInclude Include="Containers\BlockArray.hpp" />
+    <ClInclude Include="Containers\ByteBuffer.hpp" />
+    <ClInclude Include="Containers\CyclicArray.hpp" />
+    <ClInclude Include="Containers\HashedContainer.hpp" />
+    <ClInclude Include="Containers\OrderedHashMap.hpp" />
+    <ClInclude Include="Containers\OrderedHashSet.hpp" />
+    <ClInclude Include="Containers\OwnedArray.hpp" />
+    <ClInclude Include="Containers\SortedArray.hpp" />
+    <ClInclude Include="Containers\UnsortedMap.hpp" />
+    <ClInclude Include="Diagnostic\Console.hpp" />
+    <ClInclude Include="Diagnostic\Diagnostic.hpp" />
+    <ClInclude Include="Containers\Algorithm.hpp" />
+    <ClInclude Include="Containers\Allocator.hpp" />
+    <ClInclude Include="Containers\Array.hpp" />
+    <ClInclude Include="Containers\ContainerCommon.hpp" />
+    <ClInclude Include="Containers\Hashing.hpp" />
+    <ClInclude Include="Containers\HashMap.hpp" />
+    <ClInclude Include="Containers\HashSet.hpp" />
+    <ClInclude Include="Containers\InList.hpp" />
+    <ClInclude Include="Containers\Precompiled.hpp" />
+    <ClInclude Include="Containers\SlotMap.hpp" />
+    <ClInclude Include="Containers\TypeTraits.hpp" />
+    <ClInclude Include="Lexer\Lexer.hpp" />
+    <ClInclude Include="Memory\Block.hpp" />
+    <ClInclude Include="Memory\Graph.hpp" />
+    <ClInclude Include="Memory\Heap.hpp" />
+    <ClInclude Include="Memory\LocalStackAllocator.hpp" />
+    <ClInclude Include="Memory\Memory.hpp" />
+    <ClInclude Include="Memory\Pool.hpp" />
+    <ClInclude Include="Memory\Stack.hpp" />
+    <ClInclude Include="Memory\ZeroAllocator.hpp" />
+    <ClInclude Include="NullPtr.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="Regex\Regex.hpp" />
+    <ClInclude Include="String\CharacterTraits.hpp" />
+    <ClInclude Include="String\FixedString.hpp" />
+    <ClInclude Include="String\Rune.hpp" />
+    <ClInclude Include="String\String.hpp" />
+    <ClInclude Include="String\StringBuilder.hpp" />
+    <ClInclude Include="String\StringConversion.hpp" />
+    <ClInclude Include="String\StringRange.hpp" />
+    <ClInclude Include="String\StringUtility.hpp" />
+    <ClInclude Include="String\ToString.hpp" />
+    <ClInclude Include="Time.hpp" />
+    <ClInclude Include="Utility\BitField.hpp" />
+    <ClInclude Include="Utility\BitMath.hpp" />
+    <ClInclude Include="Utility\BitTypes.hpp" />
+    <ClInclude Include="Utility\Callback.hpp" />
+    <ClInclude Include="Utility\ConditionalRange.hpp" />
+    <ClInclude Include="Utility\EnumDeclaration.hpp" />
+    <ClInclude Include="Utility\Functor.hpp" />
+    <ClInclude Include="Utility\Guid.hpp" />
+    <ClInclude Include="Utility\HalfFloat.hpp" />
+    <ClInclude Include="Utility\IdSequence.hpp" />
+    <ClInclude Include="Utility\IdStore.hpp" />
+    <ClInclude Include="Utility\ItemCache.hpp" />
+    <ClInclude Include="Utility\Log2.hpp" />
+    <ClInclude Include="Utility\MaxSizeof.hpp" />
+    <ClInclude Include="Utility\NativeType.hpp" />
+    <ClInclude Include="Utility\Status.hpp" />
+    <ClInclude Include="Utility\ForEachRange.hpp" />
+    <ClInclude Include="Utility\Atomic.hpp" />
+    <ClInclude Include="Utility\Misc.hpp" />
+    <ClInclude Include="Utility\Standard.hpp" />
+    <ClInclude Include="Utility\Typedefs.hpp" />
+    <ClInclude Include="StlBinding\Array.hpp" />
+    <ClInclude Include="StlBinding\Associative.hpp" />
+    <ClInclude Include="StlBinding\String.hpp" />
+    <ClInclude Include="Utility\UintN.hpp" />
+    <ClInclude Include="Utility\UniquePointer.hpp" />
+    <ClInclude Include="Utility\Variant.hpp" />
+    <ClInclude Include="Utility\VariantConfig.hpp" />
+    <ClInclude Include="VirtualAny.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="ZeroVisualizers.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Containers\BitStream.inl" />
+    <None Include="Lexer\Lexer.inl" />
+    <None Include="Utility\BasicNativeTypes.inl" />
+    <None Include="Utility\Variant.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

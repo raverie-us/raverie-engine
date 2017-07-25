@@ -1,0 +1,93 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+#include "windows.h"
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MAIN                ICON                    "ZeroIcon.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+IDB_BANNER              BITMAP                  "Banner.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+IDR_PACK             PACK                  "Pack.bin"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_CONFIGDIALOG DIALOGEX 0, 0, 281, 219
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Zero"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Play",IDOK,152,198,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,224,198,50,14
+    GROUPBOX        "Configuration",IDC_STATIC,7,106,267,82
+    CONTROL         "",IDC_FULLSCREEN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,122,154,16,10
+    COMBOBOX        IDC_RES,122,138,79,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Resolution:",IDC_STATIC,59,138,55,12
+    RTEXT           "Fullscreen:",IDC_STATIC,59,154,55,12
+    RTEXT           "Aspect:",IDC_STATIC,59,122,55,12
+    RTEXT           "Quality:",IDC_STATIC,59,170,55,12
+    COMBOBOX        IDC_ASPECT,122,120,79,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_QUALITY,122,170,79,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         134,IDC_BANNER,"Static",SS_BITMAP | SS_REALSIZEIMAGE,7,7,267,92
+END
+
+IDD_EULA DIALOGEX 0, 0, 296, 178
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "End-user license agreement"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Accept",IDOK,183,157,50,14
+    PUSHBUTTON      "Decline",IDCANCEL,239,157,50,14
+    EDITTEXT        IDC_EDITEULA,7,7,282,147,ES_MULTILINE | ES_READONLY | WS_VSCROLL
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "DigiPen"
+            VALUE "FileDescription", "ZeroEngine"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "ZeroEngine.exe"
+            VALUE "LegalCopyright", "Copyright (C) 2012"
+            VALUE "OriginalFilename", "ZeroEngine.exe"
+            VALUE "ProductName", "ZeroEngine"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

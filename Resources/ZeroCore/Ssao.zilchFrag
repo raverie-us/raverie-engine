@@ -1,0 +1,113 @@
+// Tests a hemisphere of points, aligned with a pixel's surface,
+// against the scenes depth values to determine how occluded the pixel is.
+// http://john-chapman-graphics.blogspot.com/2013/01/ssao-tutorial.html
+[Pixel][PostProcess]
+struct SsaoFragment
+{
+  [BuiltInInput] var FarPlane : Real;
+  
+  [BuiltInInput] var ViewToPerspective : Real4x4;
+  [BuiltInInput] var PerspectiveToView : Real4x4;
+  
+  [StageInput] var Uv : Real2;
+  [StageInput] var PerspectivePosition : Real4;
+  
+  [Input] var TargetSize : Real2;
+  [Input] var SsaoRandom4x4 : Sampler2d;
+  [Input] var GeometryBuffer0 : Sampler2d;
+  
+  [Input] var Radius : Real = 1.0;
+  [Input] var Intensity : Real = 1.0;
+  
+  [Output] var Target0 : Real4;
+  
+  var Kernal : FixedArray[Real3, 32] = FixedArray[Real3, 32]()
+  {
+    Real3(-0.0616282, 0.0501193, 0.0621818),
+    Real3(-0.0266748,-0.0659515, 0.0751954),
+    Real3(-0.0941047,-0.0515226, 0.0115902),
+    Real3(-0.0606945, 0.0619802, 0.0740601),
+    Real3( 0.0330368, 0.1067610, 0.0488668),
+    Real3( 0.0885578, 0.0922208, 0.0313381),
+    Real3( 0.0441425, 0.0701350, 0.1166210),
+    Real3( 0.1341950, 0.0161297, 0.0783936),
+    Real3( 0.0487178,-0.0693273, 0.1487510),
+    Real3( 0.1765110, 0.0067487, 0.0640407),
+    Real3( 0.1283010, 0.0580066, 0.1508420),
+    Real3(-0.2203750, 0.0472335, 0.0231211),
+    Real3( 0.1580840, 0.1724180, 0.0839711),
+    Real3(-0.0723442,-0.1183550, 0.2342800),
+    Real3( 0.2842490,-0.0209549, 0.0861435),
+    Real3(-0.1856620,-0.1914580, 0.1857380),
+    Real3( 0.2360060, 0.2036270, 0.1677980),
+    Real3( 0.0237278, 0.1104040, 0.3678210),
+    Real3(-0.1619300, 0.2435590, 0.2976310),
+    Real3(-0.4500640, 0.0217133, 0.0296611),
+    Real3( 0.2556950,-0.3140670, 0.2715390),
+    Real3(-0.0463555, 0.0906747, 0.5154270),
+    Real3(-0.3383820,-0.0281134, 0.4515160),
+    Real3( 0.1788830,-0.4207860, 0.3980940),
+    Real3( 0.2229250,-0.1962280, 0.5774170),
+    Real3(-0.1936630, 0.1956490, 0.6372180),
+    Real3(-0.4740140, 0.5330160, 0.1996870),
+    Real3(-0.2336700, 0.5304080, 0.5354300),
+    Real3( 0.2361020, 0.7592780, 0.2682200),
+    Real3(-0.1388160,-0.8797800, 0.0250268),
+    Real3( 0.4725890, 0.8170580, 0.0373964),
+    Real3( 0.5970740,-0.0263238, 0.8017540)
+  };
+
+  function Main()
+  {
+    var geometrySample0 = this.GeometryBuffer0.Sample(this.Uv);
+    var viewNormal = GeometryPass.GetNormal(geometrySample0);
+    var viewPosition = GeometryPass.ReconstructViewPosition(geometrySample0, this.PerspectiveToView, this.PerspectivePosition, this.FarPlane);
+    viewPosition += viewNormal * 0.1;
+    var fragmentDepth = GeometryPass.GetDepth(geometrySample0) * this.FarPlane;
+    
+    // Repeat 4x4 sample over the screen
+    var randScale = this.TargetSize / 4.0;
+    // Sample random texture for hemisphere rotation
+    // Texture contains values on the x/y unit circle mapped to [0, 1]
+    var randSample = this.SsaoRandom4x4.Sample(this.Uv * randScale).XY;
+    // Remap sample to [-1, 1]
+    var randDir = Real3(randSample * 2.0 - Real2(1.0), 0.0);
+    
+    // Build change of basis for hemisphere, kernal is in +Z
+    var tangent = Math.Normalize(randDir - viewNormal * Math.Dot(randDir, viewNormal));
+    var bitangent = Math.Cross(viewNormal, tangent);
+    var kernalToView = Real3x3(tangent.X, bitangent.X, viewNormal.X,
+                               tangent.Y, bitangent.Y, viewNormal.Y,
+                               tangent.Z, bitangent.Z, viewNormal.Z);
+    
+    var occlusion = 0.0;
+    
+    for (var i = 0; i < 32; ++i)
+    {
+      var samplePos = Real4(viewPosition + Math.Multiply(kernalToView, this.Kernal[i]) * this.Radius, 1.0);
+      var sampleUv = Math.Multiply(this.ViewToPerspective, samplePos);
+      sampleUv.XY = (sampleUv.XY / sampleUv.W) * 0.5 + Real2(0.5);
+      sampleUv.Y = 1.0 - sampleUv.Y;
+      
+      // Assumes sample depths not on opaque geometry will be far plane value
+      var comparisonDepth = GeometryPass.GetDepth(this.GeometryBuffer0.Sample(sampleUv.XY)) * this.FarPlane;
+      
+      // Check if sample is behind the depth value
+      var depthTest = Math.Step(comparisonDepth, -samplePos.Z);
+      // Check if depth value is too far back
+      // If depth value is too far forward result will just be no occlusion (prevents bad artifacts at high view angles)
+      var rangeTest = Math.Step(fragmentDepth - comparisonDepth, this.Radius);
+      
+      occlusion += depthTest * rangeTest;
+    }
+    
+    occlusion /= 32.0;
+    
+    // Storing inverse of occlusion so that results can be directly multiplied with the lighting
+    var accessibility = Math.Pow(1.0 - occlusion, this.Intensity);
+    
+    // Splatting result to rgb channels in case greyscale is desired
+    // A single channel target can be used in the renderer for optimal memory usage
+    this.Target0 = Real4(accessibility.XXX, 1.0);
+  }
+}

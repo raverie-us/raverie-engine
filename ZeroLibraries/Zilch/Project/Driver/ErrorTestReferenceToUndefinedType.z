@@ -1,0 +1,11 @@
+// ReferenceToUndefinedType
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Main()
+  {
+    var value = Monkey.Bananas;
+  }
+}

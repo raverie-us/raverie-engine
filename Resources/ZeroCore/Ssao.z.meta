@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "Ssao"
+		var ResourceId = 0x583e502f137ac8a9
+	}
+}

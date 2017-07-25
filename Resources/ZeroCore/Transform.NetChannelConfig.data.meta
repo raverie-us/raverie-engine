@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Transform"
+		var ResourceId = 0x56f22bdc957a8572
+		var LoaderType = "NetChannelConfig"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Transform"
+		var Description = "Optimized for transform properties"
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

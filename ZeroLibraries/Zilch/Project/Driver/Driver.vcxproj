@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Production|Win32">
+      <Configuration>Production</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Production|x64">
+      <Configuration>Production</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{794CB6B6-5268-48F7-94BC-2D07E83E0556}</ProjectGuid>
+    <RootNamespace>Driver</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the environment paths needed to find all our different repositories-->
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <!--Import the property sheets-->
+  <ImportGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZILCH_SOURCE)\Project\Zilch.$(Configuration).props" Condition="exists('$(ZILCH_SOURCE)\Project\Zilch.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Set as a static library with no character set for all configurations of win32 and x64-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <!--Add LTCG for release in win32 and x64-->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32' OR '$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project\Zilch\;$(SKUGO_SOURCE)\Cpp\Host\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!--Because zilch doesn't currently have constant folding it'll act like precise mode,
+     	  not fpfast mode so make sure the unit tests run in precise mode-->
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <StackReserveSize Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">4194304</StackReserveSize>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CustomMath.cpp" />
+    <ClCompile Include="DiffTest01.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Test01.cpp" />
+    <ClCompile Include="Test02.cpp" />
+    <ClCompile Include="Test03.cpp" />
+    <ClCompile Include="Test04.cpp" />
+    <ClCompile Include="Test05.cpp" />
+    <ClCompile Include="Test06.cpp" />
+    <ClCompile Include="Test07.cpp" />
+    <ClCompile Include="Test08.cpp" />
+    <ClCompile Include="Test09.cpp" />
+    <ClCompile Include="Test10.cpp" />
+    <ClCompile Include="Stress.cpp" />
+    <ClCompile Include="Test11.cpp" />
+    <ClCompile Include="Test12.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CustomMath.z" />
+    <None Include="ErrorTestAttributeNotComplete.z" />
+    <None Include="ErrorTestAttributesNotAttached.z" />
+    <None Include="ErrorTestAttributeTypeNotFound.z" />
+    <None Include="ErrorTestBaseClassInitializerMustComeFirst.z" />
+    <None Include="ErrorTestBaseClassInitializerRequiresBaseClassInheritance.z" />
+    <None Include="ErrorTestBaseInitializerRequired.z" />
+    <None Include="ErrorTestCannotCreateType.z" />
+    <None Include="ErrorTestLinkerLibraryNotFound.z" />
+    <None Include="ErrorTestLinkLibraryNotFound.z" />
+    <None Include="ErrorTestCompositionCycleDetected.z" />
+    <None Include="ErrorTestBinaryOperatorRightOperandNotFound.z" />
+    <None Include="ErrorTestBlockCommentNotComplete.z" />
+    <None Include="ErrorTestBlockCommentNotFound.z" />
+    <None Include="ErrorTestBreakCountMustBeGreaterThanZero.z" />
+    <None Include="ErrorTestBreakLoopNotFound.z" />
+    <None Include="ErrorTestCastTypeNotFound.z" />
+    <None Include="ErrorTestClassBodyNotComplete.z" />
+    <None Include="ErrorTestClassBodyNotFound.z" />
+    <None Include="ErrorTestClassNameNotFound.z" />
+    <None Include="ErrorTestConditionMustBeABooleanType.z" />
+    <None Include="ErrorTestConstructorCallNotFound.z" />
+    <None Include="ErrorTestContainerLiteralExpectedExpression.z" />
+    <None Include="ErrorTestContainerLiteralNotComplete.z" />
+    <None Include="ErrorTestContinueLoopNotFound.z" />
+    <None Include="ErrorTestCreatedTypeNotFound.z" />
+    <None Include="ErrorTestDelegateReturnTypeNotFound.z" />
+    <None Include="ErrorTestDoWhileConditionalExpressionNotComplete.z" />
+    <None Include="ErrorTestDoWhileConditionalExpressionNotFound.z" />
+    <None Include="ErrorTestDuplicateLocalVariableName.z" />
+    <None Include="ErrorTestForLoopExpressionsNotComplete.z" />
+    <None Include="ErrorTestForLoopExpressionsNotFound.z" />
+    <None Include="ErrorTestFunctionArgumentListNotComplete.z" />
+    <None Include="ErrorTestFunctionArgumentListNotFound.z" />
+    <None Include="ErrorTestFunctionBodyNotComplete.z" />
+    <None Include="ErrorTestFunctionBodyNotFound.z" />
+    <None Include="ErrorTestFunctionCallNamedArgumentNotFound.z" />
+    <None Include="ErrorTestFunctionCallNotComplete.z" />
+    <None Include="ErrorTestFunctionCallOnNonCallableType.z" />
+    <None Include="ErrorTestFunctionNameNotFound.z" />
+    <None Include="ErrorTestFunctionParameterNotFound.z" />
+    <None Include="ErrorTestFunctionReturnTypeNotFound.z" />
+    <None Include="ErrorTestGroupingOperatorNotComplete.z" />
+    <None Include="ErrorTestIfConditionalExpressionNotComplete.z" />
+    <None Include="ErrorTestIfConditionalExpressionNotFound.z" />
+    <None Include="ErrorTestIndexerIndicesNotFound.z" />
+    <None Include="ErrorTestIndexerNotComplete.z" />
+    <None Include="ErrorTestInvalidBinaryOperation.z" />
+    <None Include="ErrorTestInvalidEscapeInStringLiteral.z" />
+    <None Include="ErrorTestInvalidUnaryOperation.z" />
+    <None Include="ErrorTestLocalVariableReferenceNotFound.z" />
+    <None Include="ErrorTestLoopBodyNotComplete.z" />
+    <None Include="ErrorTestLoopBodyNotFound.z" />
+    <None Include="ErrorTestMemberAccessNameNotFound.z" />
+    <None Include="ErrorTestMemberNotFound.z" />
+    <None Include="ErrorTestOnlyOneDestructorAllowed.z" />
+    <None Include="ErrorTestParameterTypeNotFound.z" />
+    <None Include="ErrorTestParameterTypeSpecifierNotFound.z" />
+    <None Include="ErrorTestParsingNotComplete.z" />
+    <None Include="ErrorTestReferenceToUndefinedType.z" />
+    <None Include="ErrorTestReturnTypeMismatch.z" />
+    <None Include="ErrorTestReturnValueNotFound.z" />
+    <None Include="ErrorTestReturnValueUnexpected.z" />
+    <None Include="ErrorTestStatementSeparatorNotFound.z" />
+    <None Include="ErrorTestTemplateArgumentNotFound.z" />
+    <None Include="ErrorTestTemplateTypeArgumentsNotComplete.z" />
+    <None Include="ErrorTestUnableToResolveFunction.z" />
+    <None Include="ErrorTestUnaryOperatorOperandNotFound.z" />
+    <None Include="ErrorTestUnidentifiedSymbol.z" />
+    <None Include="ErrorTestUnused05.z" />
+    <None Include="ErrorTestVariableInitializationNotComplete.z" />
+    <None Include="ErrorTestVariableInitialValueNotFound.z" />
+    <None Include="ErrorTestVariableMustBeInitialized.z" />
+    <None Include="ErrorTestVariableNameNotFound.z" />
+    <None Include="ErrorTestVariableTypeMismatch.z" />
+    <None Include="ErrorTestVariableTypeNotFound.z" />
+    <None Include="ErrorTestWhileConditionalExpressionNotComplete.z" />
+    <None Include="ErrorTestWhileConditionalExpressionNotFound.z" />
+    <None Include="ErrorTestWritingToAReadOnlyValue.z" />
+    <None Include="Quaternion.z" />
+    <None Include="Test01.z" />
+    <None Include="Test10.z" />
+    <None Include="Test02.z" />
+    <None Include="Test03.z" />
+    <None Include="Test04.z" />
+    <None Include="Test05.z" />
+    <None Include="Test06.z" />
+    <None Include="Test07.z" />
+    <None Include="Test08.z" />
+    <None Include="Test09.z" />
+    <None Include="Test11.z" />
+    <None Include="Test12.z" />
+    <None Include="ValueUnitTests.z" />
+    <None Include="VectorTests.z" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Common\Common.vcxproj">
+      <Project>{3a62ce69-835e-4d16-86c2-5326625a18bc}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Math\Math.vcxproj">
+      <Project>{767a1157-b18f-478e-b580-f6f624f9282a}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Platform\Platform.vcxproj">
+      <Project>{c26bf2c8-d6c3-441a-83aa-9ba656cdf41c}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Platform\Windows\WindowsPlatform.vcxproj">
+      <Project>{dbe8e33a-7e70-402c-bcf6-d1efee93fa76}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\Zilch\Zilch.vcxproj">
+      <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CustomMath.hpp" />
+    <ClInclude Include="Diff.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="Stress.hpp" />
+    <ClInclude Include="StringRepresentations.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="DiffParserDebug01.txt" />
+    <Text Include="DiffParserTree01.txt" />
+    <Text Include="DiffTokenDebug01.txt" />
+    <Text Include="DiffTokenTree01.txt" />
+    <Text Include="DiffInput01.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

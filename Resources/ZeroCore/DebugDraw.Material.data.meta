@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DebugDraw"
+		var ResourceId = 0x564a44b7f62c1d67
+		var LoaderType = "Material"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

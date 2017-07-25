@@ -1,0 +1,10 @@
+DefinitionSet =
+{
+	ImageDefinition White =
+	{
+		string Texture = "White",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 0 ],
+		float[] Uv1 = [ 4 , 4 ],
+	},
+}

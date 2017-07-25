@@ -1,0 +1,8 @@
+[Version:1]
+ContentLibrary 
+{
+	var Name = "Graphics"
+	var LibraryId = 0x580256a12b879f9b
+	var SourceControlType = ""
+	var ReadOnly = false
+}

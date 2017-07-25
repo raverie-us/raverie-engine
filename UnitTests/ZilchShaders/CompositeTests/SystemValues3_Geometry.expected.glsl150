@@ -1,0 +1,267 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+layout(triangles) in;
+uniform float Time;
+layout(points, max_vertices = 3) out;
+
+//----- Struct Definitions -----
+struct SVGeometryVertex1
+{
+  vec4 ApiPerspectivePosition;
+  int PrimitiveId;
+};
+
+struct SystemValues3_Geometry_Output
+{
+  vec4 ApiPerspectivePosition;
+  int PrimitiveId;
+};
+
+struct SystemValues3_Geometry_Input
+{
+  vec4 ApiPerspectivePosition;
+};
+
+struct template_PointOutput_SystemValues3_Geometry_Output_
+{
+  int Dummy;
+};
+
+struct template_PointOutput_SVGeometryVertex1_
+{
+  int Dummy;
+};
+
+struct SVGeometry1
+{
+  int PrimitiveId;
+};
+
+struct SystemValues3_Geometry
+{
+  float Time;
+  int PrimitiveId;
+};
+
+//----- Forward Declarations -----
+void _SVGeometryVertex1PreConstructor(inout SVGeometryVertex1 self);
+SVGeometryVertex1 _SVGeometryVertex1Constructor();
+
+void _SystemValues3_Geometry_OutputPreConstructor(inout SystemValues3_Geometry_Output self);
+SystemValues3_Geometry_Output _SystemValues3_Geometry_OutputConstructor();
+
+void _SystemValues3_Geometry_InputPreConstructor(inout SystemValues3_Geometry_Input self);
+SystemValues3_Geometry_Input _SystemValues3_Geometry_InputConstructor();
+
+template_PointOutput_SystemValues3_Geometry_Output_ _template_PointOutput_SystemValues3_Geometry_Output_Constructor();
+void _template_PointOutput_SystemValues3_Geometry_Output_Append(SystemValues3_Geometry_Output systemvalues3_geometry_output, int index, template_PointOutput_SystemValues3_Geometry_Output_ self);
+
+template_PointOutput_SVGeometryVertex1_ _template_PointOutput_SVGeometryVertex1_Constructor();
+void _template_PointOutput_SVGeometryVertex1_Append(SVGeometryVertex1 svgeometryvertex1, int index, template_PointOutput_SVGeometryVertex1_ self);
+
+void _SVGeometry1PreConstructor(inout SVGeometry1 self);
+SVGeometry1 _SVGeometry1Constructor();
+void _SVGeometry1Main(SVGeometryVertex1[3] _input, template_PointOutput_SVGeometryVertex1_ _output, inout SVGeometry1 self);
+
+void _SystemValues3_GeometryPreConstructor(inout SystemValues3_Geometry self);
+SystemValues3_Geometry _SystemValues3_GeometryConstructor();
+void EmitVertexHelper(inout SVGeometryVertex1 _fragmentOutput, inout SystemValues3_Geometry_Output _compositeOutput);
+void _SystemValues3_GeometryMain(SystemValues3_Geometry_Input[3] _input, template_PointOutput_SystemValues3_Geometry_Output_ _output, inout SystemValues3_Geometry self);
+void CopyInputs(inout SystemValues3_Geometry_Input[3] inputs, inout SystemValues3_Geometry self);
+void CloneVertex(int i, inout SystemValues3_Geometry_Output finalOutput);
+void WriteVertex(SystemValues3_Geometry_Output finalOutput);
+void WriteToVertex(int index, SystemValues3_Geometry_Output fragmentOutput);
+void EmitVertexHelper(inout SystemValues3_Geometry_Output _fragmentOutput, inout SystemValues3_Geometry_Output _compositeOutput);
+void CloneVertex(int i, inout SVGeometryVertex1 finalOutput);
+void WriteVertex(SVGeometryVertex1 finalOutput);
+void WriteToVertex(int index, SVGeometryVertex1 fragmentOutput);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- SVGeometryVertex1 Functions -----
+void _SVGeometryVertex1PreConstructor(inout SVGeometryVertex1 self)
+{
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.PrimitiveId = int(0);
+}
+
+SVGeometryVertex1 _SVGeometryVertex1Constructor()
+{
+  SVGeometryVertex1 self;
+  _SVGeometryVertex1PreConstructor(self);
+  return self;
+}
+
+//----- SystemValues3_Geometry_Output Functions -----
+void _SystemValues3_Geometry_OutputPreConstructor(inout SystemValues3_Geometry_Output self)
+{
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.PrimitiveId = int(0);
+}
+
+SystemValues3_Geometry_Output _SystemValues3_Geometry_OutputConstructor()
+{
+  SystemValues3_Geometry_Output self;
+  _SystemValues3_Geometry_OutputPreConstructor(self);
+  return self;
+}
+
+//----- SystemValues3_Geometry_Input Functions -----
+void _SystemValues3_Geometry_InputPreConstructor(inout SystemValues3_Geometry_Input self)
+{
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+SystemValues3_Geometry_Input _SystemValues3_Geometry_InputConstructor()
+{
+  SystemValues3_Geometry_Input self;
+  _SystemValues3_Geometry_InputPreConstructor(self);
+  return self;
+}
+
+//----- PointOutput[SystemValues3_Geometry_Output] Functions -----
+template_PointOutput_SystemValues3_Geometry_Output_ _template_PointOutput_SystemValues3_Geometry_Output_Constructor()
+{
+  template_PointOutput_SystemValues3_Geometry_Output_ self;
+  return self;
+}
+
+void _template_PointOutput_SystemValues3_Geometry_Output_Append(SystemValues3_Geometry_Output systemvalues3_geometry_output, int index, template_PointOutput_SystemValues3_Geometry_Output_ self)
+{
+  WriteToVertex(index, systemvalues3_geometry_output);
+  EmitVertex();
+}
+
+//----- PointOutput[SVGeometryVertex1] Functions -----
+template_PointOutput_SVGeometryVertex1_ _template_PointOutput_SVGeometryVertex1_Constructor()
+{
+  template_PointOutput_SVGeometryVertex1_ self;
+  return self;
+}
+
+void _template_PointOutput_SVGeometryVertex1_Append(SVGeometryVertex1 svgeometryvertex1, int index, template_PointOutput_SVGeometryVertex1_ self)
+{
+  WriteToVertex(index, svgeometryvertex1);
+  EmitVertex();
+}
+
+//----- SVGeometry1 Functions -----
+void _SVGeometry1PreConstructor(inout SVGeometry1 self)
+{
+  self.PrimitiveId = int(0);
+}
+
+SVGeometry1 _SVGeometry1Constructor()
+{
+  SVGeometry1 self;
+  _SVGeometry1PreConstructor(self);
+  return self;
+}
+
+void _SVGeometry1Main(SVGeometryVertex1[3] _input, template_PointOutput_SVGeometryVertex1_ _output, inout SVGeometry1 self)
+{
+  ++self.PrimitiveId;
+  _template_PointOutput_SVGeometryVertex1_Append(_input[0], 0, _output);
+}
+
+//----- SystemValues3_Geometry Functions -----
+void _SystemValues3_GeometryPreConstructor(inout SystemValues3_Geometry self)
+{
+  self.Time = float(0.0);
+  self.PrimitiveId = int(0);
+}
+
+SystemValues3_Geometry _SystemValues3_GeometryConstructor()
+{
+  SystemValues3_Geometry self;
+  _SystemValues3_GeometryPreConstructor(self);
+  return self;
+}
+
+void EmitVertexHelper(inout SVGeometryVertex1 _fragmentOutput, inout SystemValues3_Geometry_Output _compositeOutput)
+{
+  _compositeOutput.ApiPerspectivePosition = _fragmentOutput.ApiPerspectivePosition;
+  _compositeOutput.PrimitiveId = _fragmentOutput.PrimitiveId;
+}
+
+void _SystemValues3_GeometryMain(SystemValues3_Geometry_Input[3] _input, template_PointOutput_SystemValues3_Geometry_Output_ _output, inout SystemValues3_Geometry self)
+{
+  // Copy composite inputs into fragment inputs
+  SVGeometryVertex1[3] _fragmentInput = SVGeometryVertex1[3](_SVGeometryVertex1Constructor(), _SVGeometryVertex1Constructor(), _SVGeometryVertex1Constructor());
+  for(int _i = 0; _i < _input.length(); ++_i)
+  {
+    _fragmentInput[_i].ApiPerspectivePosition = _input[_i].ApiPerspectivePosition;
+  }
+  // Create the fragment output type
+  template_PointOutput_SVGeometryVertex1_ _fragmentOutput = _template_PointOutput_SVGeometryVertex1_Constructor();
+  
+  SVGeometry1 _svgeometry1 = _SVGeometry1Constructor();
+  _svgeometry1.PrimitiveId = self.PrimitiveId;
+  _SVGeometry1Main(_fragmentInput, _fragmentOutput, _svgeometry1);
+}
+
+//----- SystemValues3_Geometry Final Shader Functions -----
+void CopyInputs(inout SystemValues3_Geometry_Input[3] inputs, inout SystemValues3_Geometry self)
+{
+  self.Time = Time;
+  self.PrimitiveId = gl_PrimitiveIDIn;
+  for(int i = 0; i < 3; ++i)
+  {
+    inputs[i].ApiPerspectivePosition = gl_in[i].gl_Position;
+  }
+}
+
+void CloneVertex(int i, inout SystemValues3_Geometry_Output finalOutput)
+{
+  // Copy input to output
+  finalOutput.ApiPerspectivePosition = gl_in[i].gl_Position;
+}
+
+void WriteVertex(SystemValues3_Geometry_Output finalOutput)
+{
+  gl_Position = finalOutput.ApiPerspectivePosition;
+  gl_PrimitiveID = finalOutput.PrimitiveId;
+}
+
+void WriteToVertex(int index, SystemValues3_Geometry_Output fragmentOutput)
+{
+  SystemValues3_Geometry_Output finalOutput;
+  CloneVertex(index, finalOutput);
+  EmitVertexHelper(fragmentOutput, finalOutput);
+  WriteVertex(finalOutput);
+}
+
+void EmitVertexHelper(inout SystemValues3_Geometry_Output _fragmentOutput, inout SystemValues3_Geometry_Output _compositeOutput)
+{
+}
+
+void CloneVertex(int i, inout SVGeometryVertex1 finalOutput)
+{
+  // Copy input to output
+}
+
+void WriteVertex(SVGeometryVertex1 finalOutput)
+{
+}
+
+void WriteToVertex(int index, SVGeometryVertex1 fragmentOutput)
+{
+  SystemValues3_Geometry_Output finalOutput;
+  CloneVertex(index, finalOutput);
+  EmitVertexHelper(fragmentOutput, finalOutput);
+  WriteVertex(finalOutput);
+}
+
+//----- Main -----
+void main(void)
+{
+  // Construct input/output types
+  SystemValues3_Geometry_Input[3] inputs; 
+  template_PointOutput_SystemValues3_Geometry_Output_ template_pointoutput_systemvalues3_geometry_output_ = _template_PointOutput_SystemValues3_Geometry_Output_Constructor(); 
+  // Construct the shader type
+  SystemValues3_Geometry systemvalues3_geometry = _SystemValues3_GeometryConstructor(); 
+
+  CopyInputs(inputs, systemvalues3_geometry);
+  _SystemValues3_GeometryMain(inputs, template_pointoutput_systemvalues3_geometry_output_, systemvalues3_geometry);
+}
+

@@ -1,0 +1,20 @@
+syntax: glob
+AudioEngine.sdf
+AudioEngine.v12.suo
+AudioEngine.v11.suo
+Debug/*
+AudioEngine.opensdf
+ipch/*
+AudioTest/Release/*
+Release/*
+LocalPaths.props
+.vs/AudioEngine/v14/.suo
+AudioEngine.VC.db
+AudioEngine.VC.VC.opendb
+*.orig
+AudioTest/AudioTestOutput.txt
+AudioTest/RecordedOutput.wav
+
+*.wav
+*.docx
+*.ogg

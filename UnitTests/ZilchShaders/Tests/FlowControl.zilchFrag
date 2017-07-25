@@ -1,0 +1,75 @@
+[Pixel]
+struct FlowControl
+{
+    var Data : Integer = 0;
+    
+    function IfStatements()
+    {
+        if(true)
+        {
+            var a = 0;
+            this.Data = a;
+        }
+        else if(true)
+        {
+            var b = 0;
+            this.Data = b;
+        }
+        else
+        {
+            var c = 0;
+            this.Data = c;
+        }
+    }
+    
+    function WhileNode()
+    {
+        while(false)
+        {
+            this.Data = 0;
+            ++this.Data;
+        }
+    }
+    
+    function DoWhileNode()
+    {
+        do
+        {
+            this.Data = 0;
+        }
+        while(false)
+    }
+    
+    function ContinueBreakReturn()
+    {
+        while(true)
+        {
+            continue;
+            break;
+            return;
+        }
+    }
+    
+    function ReturnValue() : Real
+    {
+        return 0.0;
+    }
+    
+    function ForNode()
+    {
+        for(var i = 0; i < 12; ++i)
+        {
+            this.Data = 0;
+        }
+        for(this.Data = 0; this.Data < 12; ++this.Data)
+        {
+            this.Data += 12;
+        }
+    }
+    
+    function Main()
+    {
+        this.IfStatements();
+        
+    }
+}

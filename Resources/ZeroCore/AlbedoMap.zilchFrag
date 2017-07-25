@@ -1,0 +1,15 @@
+// Albedo input for lighting opaque geometry.
+// Output values are mapped from a texture over the surface.
+[Pixel]
+struct AlbedoMap
+{
+  [FragmentInput][StageInput] var Uv : Real2;
+  [Input] var AlbedoMap : Sampler2d;
+  
+  [Output] var Albedo : Real3;
+  
+  function Main()
+  {
+    this.Albedo = this.AlbedoMap.Sample(this.Uv).XYZ;
+  }
+}

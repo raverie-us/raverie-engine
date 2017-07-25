@@ -1,0 +1,12 @@
+[Version:1]
+CollisionTable 
+{
+	var RegisteredGroups = Array
+	{
+		"4e740859314e5515:DefaultGroup"
+	}
+	var CollisionFilters = Array
+	{
+	}
+	var AutoRegister = true
+}

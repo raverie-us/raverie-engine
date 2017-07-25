@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ClosestPointTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshGenerationTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="PointContainmentTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="RayAndSegmentTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangulatorTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="MprTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Hull3dTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="UnitTestCommon.hpp">
+      <Filter>Test</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

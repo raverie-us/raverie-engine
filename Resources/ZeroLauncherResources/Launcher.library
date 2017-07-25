@@ -1,0 +1,7 @@
+ContentLibrary = 
+{
+	string Name = "Launcher",
+	uint64 LibraryId = 548df00c48eb9059,
+	string SourceControlType = "",
+	bool ReadOnly = false,
+},

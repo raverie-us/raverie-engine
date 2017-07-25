@@ -1,0 +1,376 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+layout(triangles) in;
+uniform float Time;
+uniform float GeoGeometry_FrameTime;
+in vec2[3] gsInData1;
+in vec2[3] gsInData4;
+in vec2[3] gsInData0;
+in vec2[3] gsInData2;
+in vec2[3] gsInData3;
+in vec2[3] gsInData6;
+layout(triangle_strip, max_vertices = 9) out;
+out vec2 psInData8;
+out vec2 psInData4;
+out vec2 psInData12;
+out vec2 psInData0;
+out vec2 psInData2;
+out vec2 psInData6;
+
+//----- Struct Definitions -----
+struct GeoData
+{
+  vec2 Data0;
+  vec2 Data1;
+  vec2 Data2;
+  vec2 Data3;
+  vec2 Data4;
+  vec2 Data5;
+  vec2 Data6;
+  vec2 Data7;
+  vec2 Data8;
+  vec2 Data9;
+  vec2 Data10;
+  vec2 Data11;
+  vec2 Data12;
+  vec2 Data13;
+  vec2 Data14;
+  vec2 Data15;
+};
+
+struct GeoVertexGeometryPixel_Geometry_Output
+{
+  vec2 Data8;
+  vec2 Data4;
+  vec2 Data12;
+  vec2 Data0;
+  vec2 Data2;
+  vec2 Data6;
+  vec4 ApiPerspectivePosition;
+};
+
+struct GeoVertexGeometryPixel_Geometry_Input
+{
+  vec2 Data1;
+  vec2 Data4;
+  vec2 Data0;
+  vec2 Data2;
+  vec2 Data3;
+  vec2 Data6;
+};
+
+struct template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_
+{
+  int Dummy;
+};
+
+struct template_TriangleOutput_GeoData_
+{
+  int Dummy;
+};
+
+struct GeoGeometry
+{
+  float FrameTime;
+};
+
+struct GeoVertexGeometryPixel_Geometry
+{
+  float Time;
+  float GeoGeometry_FrameTime;
+  vec2 Data1;
+  vec2 Data8;
+  vec2 Data4;
+  vec2 Data12;
+  vec2 Data0;
+  vec2 Data2;
+  vec2 Data3;
+  vec2 Data6;
+};
+
+//----- Forward Declarations -----
+void _GeoDataPreConstructor(inout GeoData self);
+GeoData _GeoDataConstructor();
+
+void _GeoVertexGeometryPixel_Geometry_OutputPreConstructor(inout GeoVertexGeometryPixel_Geometry_Output self);
+GeoVertexGeometryPixel_Geometry_Output _GeoVertexGeometryPixel_Geometry_OutputConstructor();
+
+void _GeoVertexGeometryPixel_Geometry_InputPreConstructor(inout GeoVertexGeometryPixel_Geometry_Input self);
+GeoVertexGeometryPixel_Geometry_Input _GeoVertexGeometryPixel_Geometry_InputConstructor();
+
+template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_ _template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_Constructor();
+void _template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_Append(GeoVertexGeometryPixel_Geometry_Output geovertexgeometrypixel_geometry_output, int index, template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_ self);
+
+template_TriangleOutput_GeoData_ _template_TriangleOutput_GeoData_Constructor();
+void _template_TriangleOutput_GeoData_Append(GeoData geodata, int index, template_TriangleOutput_GeoData_ self);
+
+void _GeoGeometryPreConstructor(inout GeoGeometry self);
+GeoGeometry _GeoGeometryConstructor();
+void _GeoGeometryMain(GeoData[3] _inputs, template_TriangleOutput_GeoData_ _output, inout GeoGeometry self);
+
+void _GeoVertexGeometryPixel_GeometryPreConstructor(inout GeoVertexGeometryPixel_Geometry self);
+GeoVertexGeometryPixel_Geometry _GeoVertexGeometryPixel_GeometryConstructor();
+void EmitVertexHelper(inout GeoData _fragmentOutput, inout GeoVertexGeometryPixel_Geometry_Output _compositeOutput);
+void _GeoVertexGeometryPixel_GeometryMain(GeoVertexGeometryPixel_Geometry_Input[3] _input, template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_ _output, inout GeoVertexGeometryPixel_Geometry self);
+void CloneVertex(int index, inout GeoVertexGeometryPixel_Geometry_Output finalOutput);
+void WriteVertex(GeoVertexGeometryPixel_Geometry_Output finalOutput);
+void WriteToVertex(int index, GeoVertexGeometryPixel_Geometry_Output fragmentOutput);
+void EmitVertexHelper(inout GeoVertexGeometryPixel_Geometry_Output _fragmentOutput, inout GeoVertexGeometryPixel_Geometry_Output _compositeOutput);
+void CloneVertex(int index, inout GeoData finalOutput);
+void WriteVertex(GeoData finalOutput);
+void WriteToVertex(int index, GeoData fragmentOutput);
+
+//----- Global Variable Declarations -----
+//----- GeoData Functions -----
+void _GeoDataPreConstructor(inout GeoData self)
+{
+  self.Data0 = vec2(0.0, 0.0);
+  self.Data1 = vec2(0.0, 0.0);
+  self.Data2 = vec2(0.0, 0.0);
+  self.Data3 = vec2(0.0, 0.0);
+  self.Data4 = vec2(0.0, 0.0);
+  self.Data5 = vec2(0.0, 0.0);
+  self.Data6 = vec2(0.0, 0.0);
+  self.Data7 = vec2(0.0, 0.0);
+  self.Data8 = vec2(0.0, 0.0);
+  self.Data9 = vec2(0.0, 0.0);
+  self.Data10 = vec2(0.0, 0.0);
+  self.Data11 = vec2(0.0, 0.0);
+  self.Data12 = vec2(0.0, 0.0);
+  self.Data13 = vec2(0.0, 0.0);
+  self.Data14 = vec2(0.0, 0.0);
+  self.Data15 = vec2(0.0, 0.0);
+}
+
+GeoData _GeoDataConstructor()
+{
+  GeoData self;
+  _GeoDataPreConstructor(self);
+  return self;
+}
+
+//----- GeoVertexGeometryPixel_Geometry_Output Functions -----
+void _GeoVertexGeometryPixel_Geometry_OutputPreConstructor(inout GeoVertexGeometryPixel_Geometry_Output self)
+{
+  self.Data8 = vec2(0.0, 0.0);
+  self.Data4 = vec2(0.0, 0.0);
+  self.Data12 = vec2(0.0, 0.0);
+  self.Data0 = vec2(0.0, 0.0);
+  self.Data2 = vec2(0.0, 0.0);
+  self.Data6 = vec2(0.0, 0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+GeoVertexGeometryPixel_Geometry_Output _GeoVertexGeometryPixel_Geometry_OutputConstructor()
+{
+  GeoVertexGeometryPixel_Geometry_Output self;
+  _GeoVertexGeometryPixel_Geometry_OutputPreConstructor(self);
+  return self;
+}
+
+//----- GeoVertexGeometryPixel_Geometry_Input Functions -----
+void _GeoVertexGeometryPixel_Geometry_InputPreConstructor(inout GeoVertexGeometryPixel_Geometry_Input self)
+{
+  self.Data1 = vec2(0.0, 0.0);
+  self.Data4 = vec2(0.0, 0.0);
+  self.Data0 = vec2(0.0, 0.0);
+  self.Data2 = vec2(0.0, 0.0);
+  self.Data3 = vec2(0.0, 0.0);
+  self.Data6 = vec2(0.0, 0.0);
+}
+
+GeoVertexGeometryPixel_Geometry_Input _GeoVertexGeometryPixel_Geometry_InputConstructor()
+{
+  GeoVertexGeometryPixel_Geometry_Input self;
+  _GeoVertexGeometryPixel_Geometry_InputPreConstructor(self);
+  return self;
+}
+
+//----- TriangleOutput[GeoVertexGeometryPixel_Geometry_Output] Functions -----
+template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_ _template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_Constructor()
+{
+  template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_ self;
+  return self;
+}
+
+void _template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_Append(GeoVertexGeometryPixel_Geometry_Output geovertexgeometrypixel_geometry_output, int index, template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_ self)
+{
+  WriteToVertex(index, geovertexgeometrypixel_geometry_output);
+  EmitVertex();
+}
+
+//----- TriangleOutput[GeoData] Functions -----
+template_TriangleOutput_GeoData_ _template_TriangleOutput_GeoData_Constructor()
+{
+  template_TriangleOutput_GeoData_ self;
+  return self;
+}
+
+void _template_TriangleOutput_GeoData_Append(GeoData geodata, int index, template_TriangleOutput_GeoData_ self)
+{
+  WriteToVertex(index, geodata);
+  EmitVertex();
+}
+
+//----- GeoGeometry Functions -----
+void _GeoGeometryPreConstructor(inout GeoGeometry self)
+{
+  self.FrameTime = float(0.0);
+}
+
+GeoGeometry _GeoGeometryConstructor()
+{
+  GeoGeometry self;
+  _GeoGeometryPreConstructor(self);
+  return self;
+}
+
+void _GeoGeometryMain(GeoData[3] _inputs, template_TriangleOutput_GeoData_ _output, inout GeoGeometry self)
+{
+  _template_TriangleOutput_GeoData_Append(_inputs[0], 0, _output);
+  _template_TriangleOutput_GeoData_Append(_inputs[1], 1, _output);
+  _template_TriangleOutput_GeoData_Append(_inputs[2], 2, _output);
+}
+
+//----- GeoVertexGeometryPixel_Geometry Functions -----
+void _GeoVertexGeometryPixel_GeometryPreConstructor(inout GeoVertexGeometryPixel_Geometry self)
+{
+  self.Time = float(0.0);
+  self.GeoGeometry_FrameTime = float(0.0);
+  self.Data1 = vec2(0.0, 0.0);
+  self.Data8 = vec2(0.0, 0.0);
+  self.Data4 = vec2(0.0, 0.0);
+  self.Data12 = vec2(0.0, 0.0);
+  self.Data0 = vec2(0.0, 0.0);
+  self.Data2 = vec2(0.0, 0.0);
+  self.Data3 = vec2(0.0, 0.0);
+  self.Data6 = vec2(0.0, 0.0);
+}
+
+GeoVertexGeometryPixel_Geometry _GeoVertexGeometryPixel_GeometryConstructor()
+{
+  GeoVertexGeometryPixel_Geometry self;
+  _GeoVertexGeometryPixel_GeometryPreConstructor(self);
+  return self;
+}
+
+void EmitVertexHelper(inout GeoData _fragmentOutput, inout GeoVertexGeometryPixel_Geometry_Output _compositeOutput)
+{
+  _compositeOutput.Data0 = _fragmentOutput.Data0;
+  _compositeOutput.Data4 = _fragmentOutput.Data4;
+  _compositeOutput.Data8 = _fragmentOutput.Data8;
+  _compositeOutput.Data12 = _fragmentOutput.Data12;
+}
+
+void _GeoVertexGeometryPixel_GeometryMain(GeoVertexGeometryPixel_Geometry_Input[3] _input, template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_ _output, inout GeoVertexGeometryPixel_Geometry self)
+{
+  // Copy composite inputs into fragment inputs
+  GeoData[3] _fragmentInput;
+  for(int _i = 0; _i < _input.length(); ++_i)
+  {
+    _fragmentInput[_i].Data0 = _input[_i].Data0;
+    _fragmentInput[_i].Data1 = _input[_i].Data1;
+    _fragmentInput[_i].Data2 = _input[_i].Data2;
+    _fragmentInput[_i].Data3 = _input[_i].Data3;
+  }
+  // Create the fragment output type
+  template_TriangleOutput_GeoData_ _fragmentOutput = _template_TriangleOutput_GeoData_Constructor();
+  
+  GeoGeometry _geogeometry = _GeoGeometryConstructor();
+  _geogeometry.FrameTime = self.GeoGeometry_FrameTime;
+  _GeoGeometryMain(_fragmentInput, _fragmentOutput, _geogeometry);
+}
+
+void CloneVertex(int index, inout GeoVertexGeometryPixel_Geometry_Output finalOutput)
+{
+  // Copy input to output
+  finalOutput.Data4 = gsInData4[index];
+  finalOutput.Data0 = gsInData0[index];
+  finalOutput.Data2 = gsInData2[index];
+  finalOutput.Data6 = gsInData6[index];
+  finalOutput.ApiPerspectivePosition = gl_in[index].gl_Position;
+}
+
+void WriteVertex(GeoVertexGeometryPixel_Geometry_Output finalOutput)
+{
+  psInData8 = finalOutput.Data8;
+  psInData4 = finalOutput.Data4;
+  psInData12 = finalOutput.Data12;
+  psInData0 = finalOutput.Data0;
+  psInData2 = finalOutput.Data2;
+  psInData6 = finalOutput.Data6;
+  gl_Position = finalOutput.ApiPerspectivePosition;
+}
+
+void WriteToVertex(int index, GeoVertexGeometryPixel_Geometry_Output fragmentOutput)
+{
+  GeoVertexGeometryPixel_Geometry_Output finalOutput;
+  CloneVertex(index, finalOutput);
+  EmitVertexHelper(fragmentOutput, finalOutput);
+  WriteVertex(finalOutput);
+}
+
+void EmitVertexHelper(inout GeoVertexGeometryPixel_Geometry_Output _fragmentOutput, inout GeoVertexGeometryPixel_Geometry_Output _compositeOutput)
+{
+  _compositeOutput.Data8 = _fragmentOutput.Data8;
+  _compositeOutput.Data4 = _fragmentOutput.Data4;
+  _compositeOutput.Data12 = _fragmentOutput.Data12;
+  _compositeOutput.Data0 = _fragmentOutput.Data0;
+  _compositeOutput.Data2 = _fragmentOutput.Data2;
+  _compositeOutput.Data6 = _fragmentOutput.Data6;
+  _compositeOutput.ApiPerspectivePosition = _fragmentOutput.ApiPerspectivePosition;
+}
+
+void CloneVertex(int index, inout GeoData finalOutput)
+{
+  // Copy input to output
+  finalOutput.Data0 = gsInData0[index];
+  finalOutput.Data1 = gsInData1[index];
+  finalOutput.Data4 = gsInData4[index];
+}
+
+void WriteVertex(GeoData finalOutput)
+{
+  psInData0 = finalOutput.Data0;
+  psInData4 = finalOutput.Data4;
+  psInData8 = finalOutput.Data8;
+  psInData12 = finalOutput.Data12;
+}
+
+void WriteToVertex(int index, GeoData fragmentOutput)
+{
+  GeoVertexGeometryPixel_Geometry_Output finalOutput;
+  CloneVertex(index, finalOutput);
+  EmitVertexHelper(fragmentOutput, finalOutput);
+  WriteVertex(finalOutput);
+}
+
+//----- Copy Inputs/Outputs -----
+void CopyInputs(inout GeoVertexGeometryPixel_Geometry_Input[3] inputs, inout GeoVertexGeometryPixel_Geometry self)
+{
+  self.Time = Time;
+  self.GeoGeometry_FrameTime = GeoGeometry_FrameTime;
+  for(int i = 0; i < 3; ++i)
+  {
+    inputs[i].Data1 = gsInData1[i];
+    inputs[i].Data4 = gsInData4[i];
+    inputs[i].Data0 = gsInData0[i];
+    inputs[i].Data2 = gsInData2[i];
+    inputs[i].Data3 = gsInData3[i];
+    inputs[i].Data6 = gsInData6[i];
+  }
+}
+
+
+//----- Main -----
+void main(void)
+{
+  // Construct input/output types
+  GeoVertexGeometryPixel_Geometry_Input[3] inputs; 
+  template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_ template_triangleoutput_geovertexgeometrypixel_geometry_output_ = _template_TriangleOutput_GeoVertexGeometryPixel_Geometry_Output_Constructor(); 
+  // Construct the shader type
+  GeoVertexGeometryPixel_Geometry geovertexgeometrypixel_geometry = _GeoVertexGeometryPixel_GeometryConstructor(); 
+
+  CopyInputs(inputs, geovertexgeometrypixel_geometry);
+  _GeoVertexGeometryPixel_GeometryMain(inputs, template_triangleoutput_geovertexgeometrypixel_geometry_output_, geovertexgeometrypixel_geometry);
+}

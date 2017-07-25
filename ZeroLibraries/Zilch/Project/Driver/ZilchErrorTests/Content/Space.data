@@ -1,0 +1,43 @@
+Space =
+{
+  TimeSpace =
+  {
+    float TimeScale = 1,
+    float Framerate = 60,
+    float FramelossCap = 0.5,
+  },
+  GraphicsSpace =
+  {
+    float SpritePixelsPerUnit = 64,
+    bool SpriteSmoothing = true,
+    bool PixelSnapping = false,
+  },
+  ActionSpace =
+  {
+  },
+  PhysicsSpace =
+  {
+    bool AllowSleep = true,
+    bool Mode2D = false,
+    bool Deterministic = true,
+    uint SubStepCount = 1,
+    string CollisionFilterName = "4e66a5c0b9dc59b9:DefaultCollisionTable",
+    BroadPhase =
+    {
+      bool RefineRayCast = false,
+      bool Tracking = false,
+      DynamicAabbTreeBroadPhase =
+      {
+        BroadPhase Type = Dynamic,
+      },
+      StaticAabbTreeBroadPhase =
+      {
+        BroadPhase Type = Static,
+        PartitionMethods PartitionMethod = MinimizeVolumeSum,
+      },
+    },
+  },
+  SoundSpace =
+  {
+  },
+},

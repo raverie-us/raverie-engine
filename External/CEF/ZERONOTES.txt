@@ -1,0 +1,19 @@
+To get a new CEF build:
+
+ 1. Go to https://cefbuilds.com/ and download a build for Windows 32bit (or 64bit in the future)
+ 2. Extract the build (named "cef_binary_..."), navigate to the directory in cmd, and run "cmake ./"
+ 3. Open the cef.sln, select all projects except ALL_BUILD and ZERO_CHECK, and open their properties
+ 4. In the Debug configuration, change C/C++ -> Code Generation -> Runtime Library to Multi-threaded Debug DLL (/MDd)
+ 5. Build in both Debug and Release
+ 6. Clear out the Zero "External\CEF" folder
+ 7. Copy the README.txt and LICENSE.txt into "External\CEF"
+ 8. Copy the "include" folder from "cef_binary_..." into "External\CEF"
+ 9. Create "External\CEF\lib"
+10. Copy "cef_binary_...\Release\libcef.lib" to "External\CEF\lib"
+11. Copy "cef_binary_...\libcef_dll\Debug\libcef_dll_wrapper.lib" to "External\CEF\lib\libcef_dll_wrapper_debug.lib"
+12. Copy "cef_binary_...\libcef_dll\Release\libcef_dll_wrapper.lib" to "External\CEF\lib\libcef_dll_wrapper_release.lib"
+13. Create "External\CEF\bin"
+14. Copy all files except *.lib from "cef_binary_...\Release" to "External\CEF\bin"
+15. Copy all files from "cef_binary_...\Resources" to "External\CEF\bin"
+
+If we want to allow a debug version of CEF in the future, we could setup separate directories for the bin (and lib to be consistent)

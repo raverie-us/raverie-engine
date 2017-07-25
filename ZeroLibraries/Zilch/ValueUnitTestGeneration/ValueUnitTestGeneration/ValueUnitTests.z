@@ -1,0 +1,508 @@
+
+/******************************* Struct Types *******************************/
+struct StructStatic
+{
+  [Static] var X : Integer = 9863321;
+  [Static] var Y : Integer = 98234756;
+  [Static] var Z : Integer = 88371435;
+  
+  [Static] var PX : Integer { get { return StructStatic.X; } set { StructStatic.X = value; } }
+  [Static] var PY : Integer { get { return StructStatic.Y; } set { StructStatic.Y = value; } }
+  [Static] var PZ : Integer { get { return StructStatic.Z; } set { StructStatic.Z = value; } }
+  
+  [Static]
+  function Function() : Integer
+  {
+    return 98234756;
+  }
+  
+  [Static]
+  function PassThrough(value : Integer) : Integer
+  {
+    return value;
+  }
+}
+
+struct StructNoConstructor
+{
+  var X : Integer = 9863321;
+  var Y : Integer = 98234756;
+  var Z : Integer = 88371435;
+  
+  var PX : Integer { get { return this.X; } set { this.X = value; } }
+  var PY : Integer { get { return this.Y; } set { this.Y = value; } }
+  var PZ : Integer { get { return this.Z; } set { this.Z = value; } }
+  
+  function Function() : Integer
+  {
+    return 98234756;
+  }
+  
+  function PassThrough(value : Integer) : Integer
+  {
+    return value;
+  }
+}
+
+struct StructDefaultConstructor
+{
+  var X : Integer;
+  var Y : Integer;
+  var Z : Integer;
+  
+  var PX : Integer { get { return this.X; } set { this.X = value; } }
+  var PY : Integer { get { return this.Y; } set { this.Y = value; } }
+  var PZ : Integer { get { return this.Z; } set { this.Z = value; } }
+  
+  constructor()
+  {
+    this.X = 9863321;
+    this.Y = 98234756;
+    this.Z = 88371435;
+  }
+  
+  function Function() : Integer
+  {
+    return 98234756;
+  }
+  
+  function PassThrough(value : Integer) : Integer
+  {
+    return value;
+  }
+}
+
+struct StructParameterConstructor
+{
+  var X : Integer;
+  var Y : Integer;
+  var Z : Integer;
+  
+  var PX : Integer { get { return this.X; } set { this.X = value; } }
+  var PY : Integer { get { return this.Y; } set { this.Y = value; } }
+  var PZ : Integer { get { return this.Z; } set { this.Z = value; } }
+  
+  constructor(x : Integer, y : Integer, z : Integer)
+  {
+    this.X = x;
+    this.Y = y;
+    this.Z = z;
+  }
+  
+  function Function() : Integer
+  {
+    return 98234756;
+  }
+  
+  function PassThrough(value : Integer) : Integer
+  {
+    return value;
+  }
+}
+
+struct StructInheritedNoConstructor : StructNoConstructor
+{
+}
+
+struct StructInheritedDefaultConstructor : StructDefaultConstructor
+{
+}
+
+struct StructInheritedParameterConstructor : StructParameterConstructor
+{
+}
+
+struct StructInheritedOverwrittenConstructor : StructParameterConstructor
+{
+  constructor() : base(9863321, 98234756, 88371435)
+  {
+  }
+}
+
+struct StructComposition
+{
+  constructor()
+  {
+    // Direct initialization of fields
+    this.SDC0 = local StructNoConstructor();
+    this.SDC1 = local StructDefaultConstructor();
+    this.SDC2 = local StructParameterConstructor(9863321, 98234756, 88371435);
+    this.SDC3 = local StructInheritedNoConstructor();
+    this.SDC4 = local StructInheritedDefaultConstructor();
+    this.SDC5 = local StructInheritedParameterConstructor(9863321, 98234756, 88371435);
+    this.SDC6 = local StructInheritedOverwrittenConstructor();
+    
+    // Use property setters to initialize SDS fields
+    this.PSS0 = StructNoConstructor();
+    this.PSS1 = StructDefaultConstructor();
+    this.PSS2 = StructParameterConstructor(9863321, 98234756, 88371435);
+    this.PSS3 = StructInheritedNoConstructor();
+    this.PSS4 = StructInheritedDefaultConstructor();
+    this.PSS5 = StructInheritedParameterConstructor(9863321, 98234756, 88371435);
+    this.PSS6 = StructInheritedOverwrittenConstructor();
+  }
+  
+  // Struct types that are default constructed
+  var SDC0 : StructNoConstructor;
+  var SDC1 : StructDefaultConstructor;
+  var SDC2 : StructParameterConstructor;
+  var SDC3 : StructInheritedNoConstructor;
+  var SDC4 : StructInheritedDefaultConstructor;
+  var SDC5 : StructInheritedParameterConstructor;
+  var SDC6 : StructInheritedOverwrittenConstructor;
+  
+  // Struct types that are pre-constructed
+  var SPC0 : StructNoConstructor                   = StructNoConstructor();
+  var SPC1 : StructDefaultConstructor              = StructDefaultConstructor();
+  var SPC2 : StructParameterConstructor            = StructParameterConstructor(9863321, 98234756, 88371435);
+  var SPC3 : StructInheritedNoConstructor          = StructInheritedNoConstructor();
+  var SPC4 : StructInheritedDefaultConstructor     = StructInheritedDefaultConstructor();
+  var SPC5 : StructInheritedParameterConstructor   = StructInheritedParameterConstructor(9863321, 98234756, 88371435);
+  var SPC6 : StructInheritedOverwrittenConstructor = StructInheritedOverwrittenConstructor();
+  
+  // Struct types that are constructed by properties
+  var SPG0 : StructNoConstructor                   { get { return local StructNoConstructor();                                            } }
+  var SPG1 : StructDefaultConstructor              { get { return local StructDefaultConstructor();                                       } }
+  var SPG2 : StructParameterConstructor            { get { return local StructParameterConstructor(9863321, 98234756, 88371435);          } }
+  var SPG3 : StructInheritedNoConstructor          { get { return local StructInheritedNoConstructor();                                   } }
+  var SPG4 : StructInheritedDefaultConstructor     { get { return local StructInheritedDefaultConstructor();                              } }
+  var SPG5 : StructInheritedParameterConstructor   { get { return local StructInheritedParameterConstructor(9863321, 98234756, 88371435); } }
+  var SPG6 : StructInheritedOverwrittenConstructor { get { return local StructInheritedOverwrittenConstructor();                          } }
+  
+  // Struct types that are default constructed via property setters
+  var SDS0 : StructNoConstructor;
+  var SDS1 : StructDefaultConstructor;
+  var SDS2 : StructParameterConstructor;
+  var SDS3 : StructInheritedNoConstructor;
+  var SDS4 : StructInheritedDefaultConstructor;
+  var SDS5 : StructInheritedParameterConstructor;
+  var SDS6 : StructInheritedOverwrittenConstructor;
+  
+  // Setters that we use to initialize the above parameters
+  var PSS0 : StructNoConstructor                   { set { this.SDS0 = value; } }
+  var PSS1 : StructDefaultConstructor              { set { this.SDS1 = value; } }
+  var PSS2 : StructParameterConstructor            { set { this.SDS2 = value; } }
+  var PSS3 : StructInheritedNoConstructor          { set { this.SDS3 = value; } }
+  var PSS4 : StructInheritedDefaultConstructor     { set { this.SDS4 = value; } }
+  var PSS5 : StructInheritedParameterConstructor   { set { this.SDS5 = value; } }
+  var PSS6 : StructInheritedOverwrittenConstructor { set { this.SDS6 = value; } }
+
+  // -------------- Ref Members -------------- //
+  
+  // References to struct types that are constructed by properties
+  var RPG0 : ref StructNoConstructor                   { get { return new StructNoConstructor();                                            } }
+  var RPG1 : ref StructDefaultConstructor              { get { return new StructDefaultConstructor();                                       } }
+  var RPG2 : ref StructParameterConstructor            { get { return new StructParameterConstructor(9863321, 98234756, 88371435);          } }
+  var RPG3 : ref StructInheritedNoConstructor          { get { return new StructInheritedNoConstructor();                                   } }
+  var RPG4 : ref StructInheritedDefaultConstructor     { get { return new StructInheritedDefaultConstructor();                              } }
+  var RPG5 : ref StructInheritedParameterConstructor   { get { return new StructInheritedParameterConstructor(9863321, 98234756, 88371435); } }
+  var RPG6 : ref StructInheritedOverwrittenConstructor { get { return new StructInheritedOverwrittenConstructor();                          } }
+}
+
+/******************************* Class Types *******************************/
+class ClassStatic
+{
+  [Static] var X : Integer = 9863321;
+  [Static] var Y : Integer = 98234756;
+  [Static] var Z : Integer = 88371435;
+  
+  [Static] var PX : Integer { get { return ClassStatic.X; } set { ClassStatic.X = value; } }
+  [Static] var PY : Integer { get { return ClassStatic.Y; } set { ClassStatic.Y = value; } }
+  [Static] var PZ : Integer { get { return ClassStatic.Z; } set { ClassStatic.Z = value; } }
+  
+  [Static]
+  function Function() : Integer
+  {
+    return 98234756;
+  }
+  
+  [Static]
+  function PassThrough(value : Integer) : Integer
+  {
+    return value;
+  }
+}
+
+class ClassNoConstructor
+{
+  var X : Integer = 9863321;
+  var Y : Integer = 98234756;
+  var Z : Integer = 88371435;
+  
+  var PX : Integer { get { return this.X; } set { this.X = value; } }
+  var PY : Integer { get { return this.Y; } set { this.Y = value; } }
+  var PZ : Integer { get { return this.Z; } set { this.Z = value; } }
+  
+  function Function() : Integer
+  {
+    return 98234756;
+  }
+  
+  function PassThrough(value : Integer) : Integer
+  {
+    return value;
+  }
+}
+
+class ClassDefaultConstructor
+{
+  var X : Integer;
+  var Y : Integer;
+  var Z : Integer;
+  
+  var PX : Integer { get { return this.X; } set { this.X = value; } }
+  var PY : Integer { get { return this.Y; } set { this.Y = value; } }
+  var PZ : Integer { get { return this.Z; } set { this.Z = value; } }
+  
+  constructor()
+  {
+    this.X = 9863321;
+    this.Y = 98234756;
+    this.Z = 88371435;
+  }
+  
+  function Function() : Integer
+  {
+    return 98234756;
+  }
+  
+  function PassThrough(value : Integer) : Integer
+  {
+    return value;
+  }
+}
+
+class ClassParameterConstructor
+{
+  var X : Integer;
+  var Y : Integer;
+  var Z : Integer;
+  
+  var PX : Integer { get { return this.X; } set { this.X = value; } }
+  var PY : Integer { get { return this.Y; } set { this.Y = value; } }
+  var PZ : Integer { get { return this.Z; } set { this.Z = value; } }
+  
+  constructor(x : Integer, y : Integer, z : Integer)
+  {
+    this.X = x;
+    this.Y = y;
+    this.Z = z;
+  }
+  
+  function Function() : Integer
+  {
+    return 98234756;
+  }
+  
+  function PassThrough(value : Integer) : Integer
+  {
+    return value;
+  }
+}
+
+class ClassInheritedNoConstructor : ClassNoConstructor
+{
+}
+
+class ClassInheritedDefaultConstructor : ClassDefaultConstructor
+{
+}
+
+class ClassInheritedParameterConstructor : ClassParameterConstructor
+{
+}
+
+class ClassInheritedOverwrittenConstructor : ClassParameterConstructor
+{
+  constructor() : base(9863321, 98234756, 88371435)
+  {
+  }
+}
+
+class ClassComposition
+{
+  constructor()
+  {
+    // Direct initialization of struct fields
+    this.SDC0 = StructNoConstructor();
+    this.SDC1 = StructDefaultConstructor();
+    this.SDC2 = StructParameterConstructor(9863321, 98234756, 88371435);
+    this.SDC3 = StructInheritedNoConstructor();
+    this.SDC4 = StructInheritedDefaultConstructor();
+    this.SDC5 = StructInheritedParameterConstructor(9863321, 98234756, 88371435);
+    this.SDC6 = StructInheritedOverwrittenConstructor();
+    
+    // Direct initialization of ref fields
+    this.RDC0 = new StructNoConstructor();
+    this.RDC1 = new StructDefaultConstructor();
+    this.RDC2 = new StructParameterConstructor(9863321, 98234756, 88371435);
+    this.RDC3 = new StructInheritedNoConstructor();
+    this.RDC4 = new StructInheritedDefaultConstructor();
+    this.RDC5 = new StructInheritedParameterConstructor(9863321, 98234756, 88371435);
+    this.RDC6 = new StructInheritedOverwrittenConstructor();
+    
+    // Use property setters to initialize SDS fields
+    this.PSS0 = StructNoConstructor();
+    this.PSS1 = StructDefaultConstructor();
+    this.PSS2 = StructParameterConstructor(9863321, 98234756, 88371435);
+    this.PSS3 = StructInheritedNoConstructor();
+    this.PSS4 = StructInheritedDefaultConstructor();
+    this.PSS5 = StructInheritedParameterConstructor(9863321, 98234756, 88371435);
+    this.PSS6 = StructInheritedOverwrittenConstructor();
+    
+    // Direct initialization of class fields
+    this.CDC0 = ClassNoConstructor();
+    this.CDC1 = ClassDefaultConstructor();
+    this.CDC2 = ClassParameterConstructor(9863321, 98234756, 88371435);
+    this.CDC3 = ClassInheritedNoConstructor();
+    this.CDC4 = ClassInheritedDefaultConstructor();
+    this.CDC5 = ClassInheritedParameterConstructor(9863321, 98234756, 88371435);
+    this.CDC6 = ClassInheritedOverwrittenConstructor();
+    
+    // Use property setters to initialize CDS fields
+    this.PSC0 = ClassNoConstructor();
+    this.PSC1 = ClassDefaultConstructor();
+    this.PSC2 = ClassParameterConstructor(9863321, 98234756, 88371435);
+    this.PSC3 = ClassInheritedNoConstructor();
+    this.PSC4 = ClassInheritedDefaultConstructor();
+    this.PSC5 = ClassInheritedParameterConstructor(9863321, 98234756, 88371435);
+    this.PSC6 = ClassInheritedOverwrittenConstructor();
+  }
+  
+  // -------------- Struct Members -------------- //
+  
+  // Struct types that are default constructed
+  var SDC0 : StructNoConstructor;
+  var SDC1 : StructDefaultConstructor;
+  var SDC2 : StructParameterConstructor;
+  var SDC3 : StructInheritedNoConstructor;
+  var SDC4 : StructInheritedDefaultConstructor;
+  var SDC5 : StructInheritedParameterConstructor;
+  var SDC6 : StructInheritedOverwrittenConstructor;
+  
+  // Struct types that are pre-constructed
+  var SPC0 : StructNoConstructor                   = StructNoConstructor();
+  var SPC1 : StructDefaultConstructor              = StructDefaultConstructor();
+  var SPC2 : StructParameterConstructor            = StructParameterConstructor(9863321, 98234756, 88371435);
+  var SPC3 : StructInheritedNoConstructor          = StructInheritedNoConstructor();
+  var SPC4 : StructInheritedDefaultConstructor     = StructInheritedDefaultConstructor();
+  var SPC5 : StructInheritedParameterConstructor   = StructInheritedParameterConstructor(9863321, 98234756, 88371435);
+  var SPC6 : StructInheritedOverwrittenConstructor = StructInheritedOverwrittenConstructor();
+  
+  // Struct types that are constructed by properties
+  var SPG0 : StructNoConstructor                   { get { return local StructNoConstructor();                                            } }
+  var SPG1 : StructDefaultConstructor              { get { return local StructDefaultConstructor();                                       } }
+  var SPG2 : StructParameterConstructor            { get { return local StructParameterConstructor(9863321, 98234756, 88371435);          } }
+  var SPG3 : StructInheritedNoConstructor          { get { return local StructInheritedNoConstructor();                                   } }
+  var SPG4 : StructInheritedDefaultConstructor     { get { return local StructInheritedDefaultConstructor();                              } }
+  var SPG5 : StructInheritedParameterConstructor   { get { return local StructInheritedParameterConstructor(9863321, 98234756, 88371435); } }
+  var SPG6 : StructInheritedOverwrittenConstructor { get { return local StructInheritedOverwrittenConstructor();                          } }
+  
+  // Struct types that are default constructed via property setters
+  var SDS0 : StructNoConstructor;
+  var SDS1 : StructDefaultConstructor;
+  var SDS2 : StructParameterConstructor;
+  var SDS3 : StructInheritedNoConstructor;
+  var SDS4 : StructInheritedDefaultConstructor;
+  var SDS5 : StructInheritedParameterConstructor;
+  var SDS6 : StructInheritedOverwrittenConstructor;
+  
+  // Setters that we use to initialize the above parameters
+  var PSS0 : StructNoConstructor                   { set { this.SDS0 = value; } }
+  var PSS1 : StructDefaultConstructor              { set { this.SDS1 = value; } }
+  var PSS2 : StructParameterConstructor            { set { this.SDS2 = value; } }
+  var PSS3 : StructInheritedNoConstructor          { set { this.SDS3 = value; } }
+  var PSS4 : StructInheritedDefaultConstructor     { set { this.SDS4 = value; } }
+  var PSS5 : StructInheritedParameterConstructor   { set { this.SDS5 = value; } }
+  var PSS6 : StructInheritedOverwrittenConstructor { set { this.SDS6 = value; } }
+  
+  // -------------- Ref Members -------------- //
+  
+  // References to struct types that are default constructed
+  var RDC0 : ref StructNoConstructor;
+  var RDC1 : ref StructDefaultConstructor;
+  var RDC2 : ref StructParameterConstructor;
+  var RDC3 : ref StructInheritedNoConstructor;
+  var RDC4 : ref StructInheritedDefaultConstructor;
+  var RDC5 : ref StructInheritedParameterConstructor;
+  var RDC6 : ref StructInheritedOverwrittenConstructor;
+  
+  // References to struct types that are pre-constructed
+  var RPC0 : ref StructNoConstructor                   = new StructNoConstructor();
+  var RPC1 : ref StructDefaultConstructor              = new StructDefaultConstructor();
+  var RPC2 : ref StructParameterConstructor            = new StructParameterConstructor(9863321, 98234756, 88371435);
+  var RPC3 : ref StructInheritedNoConstructor          = new StructInheritedNoConstructor();
+  var RPC4 : ref StructInheritedDefaultConstructor     = new StructInheritedDefaultConstructor();
+  var RPC5 : ref StructInheritedParameterConstructor   = new StructInheritedParameterConstructor(9863321, 98234756, 88371435);
+  var RPC6 : ref StructInheritedOverwrittenConstructor = new StructInheritedOverwrittenConstructor();
+  
+  // References to struct types that are constructed by properties
+  var RPG0 : ref StructNoConstructor                   { get { return new StructNoConstructor();                                            } }
+  var RPG1 : ref StructDefaultConstructor              { get { return new StructDefaultConstructor();                                       } }
+  var RPG2 : ref StructParameterConstructor            { get { return new StructParameterConstructor(9863321, 98234756, 88371435);          } }
+  var RPG3 : ref StructInheritedNoConstructor          { get { return new StructInheritedNoConstructor();                                   } }
+  var RPG4 : ref StructInheritedDefaultConstructor     { get { return new StructInheritedDefaultConstructor();                              } }
+  var RPG5 : ref StructInheritedParameterConstructor   { get { return new StructInheritedParameterConstructor(9863321, 98234756, 88371435); } }
+  var RPG6 : ref StructInheritedOverwrittenConstructor { get { return new StructInheritedOverwrittenConstructor();                          } }
+  
+  // -------------- Class Members -------------- //
+  
+  // Class types that are default constructed
+  var CDC0 : ClassNoConstructor;
+  var CDC1 : ClassDefaultConstructor;
+  var CDC2 : ClassParameterConstructor;
+  var CDC3 : ClassInheritedNoConstructor;
+  var CDC4 : ClassInheritedDefaultConstructor;
+  var CDC5 : ClassInheritedParameterConstructor;
+  var CDC6 : ClassInheritedOverwrittenConstructor;
+  
+  // Class types that are pre constructed
+  var CPC0 : ClassNoConstructor                   = ClassNoConstructor();
+  var CPC1 : ClassDefaultConstructor              = ClassDefaultConstructor();
+  var CPC2 : ClassParameterConstructor            = ClassParameterConstructor(9863321, 98234756, 88371435);
+  var CPC3 : ClassInheritedNoConstructor          = ClassInheritedNoConstructor();
+  var CPC4 : ClassInheritedDefaultConstructor     = ClassInheritedDefaultConstructor();
+  var CPC5 : ClassInheritedParameterConstructor   = ClassInheritedParameterConstructor(9863321, 98234756, 88371435);
+  var CPC6 : ClassInheritedOverwrittenConstructor = ClassInheritedOverwrittenConstructor();
+  
+  // Class types that are constructed by properties
+  var CPG0 : ClassNoConstructor                   { get { return new ClassNoConstructor();                                            } }
+  var CPG1 : ClassDefaultConstructor              { get { return new ClassDefaultConstructor();                                       } }
+  var CPG2 : ClassParameterConstructor            { get { return new ClassParameterConstructor(9863321, 98234756, 88371435);          } }
+  var CPG3 : ClassInheritedNoConstructor          { get { return new ClassInheritedNoConstructor();                                   } }
+  var CPG4 : ClassInheritedDefaultConstructor     { get { return new ClassInheritedDefaultConstructor();                              } }
+  var CPG5 : ClassInheritedParameterConstructor   { get { return new ClassInheritedParameterConstructor(9863321, 98234756, 88371435); } }
+  var CPG6 : ClassInheritedOverwrittenConstructor { get { return new ClassInheritedOverwrittenConstructor();                          } }
+  
+  // Class types that are default constructed via property setters
+  var CDS0 : ClassNoConstructor;
+  var CDS1 : ClassDefaultConstructor;
+  var CDS2 : ClassParameterConstructor;
+  var CDS3 : ClassInheritedNoConstructor;
+  var CDS4 : ClassInheritedDefaultConstructor;
+  var CDS5 : ClassInheritedParameterConstructor;
+  var CDS6 : ClassInheritedOverwrittenConstructor;
+  
+  // Setters that we use to initialize the above parameters
+  var PSC0 : ClassNoConstructor                   { set { this.CDS0 = value; } }
+  var PSC1 : ClassDefaultConstructor              { set { this.CDS1 = value; } }
+  var PSC2 : ClassParameterConstructor            { set { this.CDS2 = value; } }
+  var PSC3 : ClassInheritedNoConstructor          { set { this.CDS3 = value; } }
+  var PSC4 : ClassInheritedDefaultConstructor     { set { this.CDS4 = value; } }
+  var PSC5 : ClassInheritedParameterConstructor   { set { this.CDS5 = value; } }
+  var PSC6 : ClassInheritedOverwrittenConstructor { set { this.CDS6 = value; } }
+}
+
+class SuperComposition
+{
+  var ClassComposition            : ClassComposition  = ClassComposition();
+  var StructComposition           : StructComposition = StructComposition();
+  [Static] var ClassComposition   : ClassComposition  = ClassComposition();
+  [Static] var StructComposition  : StructComposition = StructComposition();
+}
+
+class AccessorUnitTests
+{
+  // Tests go here
+
+}

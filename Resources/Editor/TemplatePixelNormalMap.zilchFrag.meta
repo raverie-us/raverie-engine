@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "TemplatePixelNormalMap"
+		var ResourceId = 0x582ff65c347c8805
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Pixel Normal Map"
+		var Description = "Sample Pixel fragment with normal mapping"
+		var SortWeight = 100
+		var Category = "Pixel"
+		var CategorySortWeight = 10
+	}
+}

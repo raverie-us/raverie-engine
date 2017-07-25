@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="System">
+      <UniqueIdentifier>{2e246e0c-3df1-473c-aae8-41b72b32301f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{f2715a7d-60bc-4a70-94b9-ec5a844ee04d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ContentTypes">
+      <UniqueIdentifier>{31b3657d-d80d-4e52-939b-4e967cb4b55e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{4e355df1-881b-45c3-80ea-90a207b18158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support">
+      <UniqueIdentifier>{5d073069-d996-436e-8705-e8997640059f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ContentTypes\Image">
+      <UniqueIdentifier>{5669ca26-041c-4661-9dfe-4795cdaf0cc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ContentTypes\Mesh">
+      <UniqueIdentifier>{f6ff3204-5e6b-48e7-8355-70c4440eb537}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ContentStandard.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentSystem.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioContent.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DataContent.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryContent.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentItem.hpp">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentLibrary.hpp">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentComposition.hpp">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentUtility.hpp">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorContent.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="TextContent.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryContent.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildOptions.hpp">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="ImportOptions.hpp">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseBuilders.hpp">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="TagsContent.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="RichAnimation.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageContent.hpp">
+      <Filter>ContentTypes\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureBuilder.hpp">
+      <Filter>ContentTypes\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteBuilder.hpp">
+      <Filter>ContentTypes\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchPluginContent.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="SupportComponents.hpp">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshBuilder.hpp">
+      <Filter>ContentTypes\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshEntry.hpp">
+      <Filter>ContentTypes\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentEnumerations.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="FileExtensionManager.hpp">
+      <Filter>ContentTypes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ContentSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioContent.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="DataContent.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryContent.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentItem.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentLibrary.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentComposition.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentUtility.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorContent.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="TextContent.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryContent.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="SupportComponents.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="ImportOptions.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseBuilders.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="TagsContent.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="RichAnimation.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageContent.cpp">
+      <Filter>ContentTypes\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureBuilder.cpp">
+      <Filter>ContentTypes\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteBuilder.cpp">
+      <Filter>ContentTypes\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchPluginContent.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentStandard.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshBuilder.cpp">
+      <Filter>ContentTypes\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="FileExtensionManager.cpp">
+      <Filter>ContentTypes</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

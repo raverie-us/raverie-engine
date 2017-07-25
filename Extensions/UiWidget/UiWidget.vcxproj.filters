@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{06de69c9-2166-4b61-93b3-3e55b6e40535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Layout">
+      <UniqueIdentifier>{505ba057-5cd0-4971-a4da-3e17a5cdc6d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{9546ba84-a338-44d0-96ac-c3048e589838}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="UiWidget.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UiLayout.hpp">
+      <Filter>Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="UiRootWidget.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="UiStackLayout.hpp">
+      <Filter>Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="UiFillLayout.hpp">
+      <Filter>Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="UiDockLayout.hpp">
+      <Filter>Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="UiWidgetStandard.hpp" />
+    <ClInclude Include="UiWidgetEvents.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UiRootInputRouter.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UiRenderer.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="UiRootWidget.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UiWidget.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UiLayout.cpp">
+      <Filter>Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="UiStackLayout.cpp">
+      <Filter>Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="UiFillLayout.cpp">
+      <Filter>Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="UiDockLayout.cpp">
+      <Filter>Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="UiWidgetEvents.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UiRootInputRouter.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UiRenderer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UiWidgetStandard.cpp" />
+  </ItemGroup>
+</Project>

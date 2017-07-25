@@ -1,0 +1,109 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+in vec3 attNormal;
+in vec3 attPosition;
+in vec2 attUv;
+
+//----- Struct Definitions -----
+struct BasicVertexFrag
+{
+  vec3 Normal;
+  vec3 Position;
+  vec2 Uv;
+  vec4 ApiPerspectivePosition;
+};
+
+struct QuatSimple1_Vertex
+{
+  float Time;
+  vec3 Normal;
+  vec3 Position;
+  vec2 Uv;
+  vec4 ApiPerspectivePosition;
+};
+
+//----- Forward Declarations -----
+void _BasicVertexFragPreConstructor(inout BasicVertexFrag self);
+BasicVertexFrag _BasicVertexFragConstructor();
+void _BasicVertexFragMain(inout BasicVertexFrag self);
+
+void _QuatSimple1_VertexPreConstructor(inout QuatSimple1_Vertex self);
+QuatSimple1_Vertex _QuatSimple1_VertexConstructor();
+void _QuatSimple1_VertexMain(inout QuatSimple1_Vertex self);
+void CopyInputs(inout QuatSimple1_Vertex self);
+void CopyOutputs(inout QuatSimple1_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- BasicVertexFrag Functions -----
+void _BasicVertexFragPreConstructor(inout BasicVertexFrag self)
+{
+  self.Normal = vec3(0.0, 0.0, 0.0);
+  self.Position = vec3(0.0, 0.0, 0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+BasicVertexFrag _BasicVertexFragConstructor()
+{
+  BasicVertexFrag self;
+  _BasicVertexFragPreConstructor(self);
+  return self;
+}
+
+void _BasicVertexFragMain(inout BasicVertexFrag self)
+{
+  self.ApiPerspectivePosition = vec4(self.Position, float(1));
+}
+
+//----- QuatSimple1_Vertex Functions -----
+void _QuatSimple1_VertexPreConstructor(inout QuatSimple1_Vertex self)
+{
+  self.Time = float(0.0);
+  self.Normal = vec3(0.0, 0.0, 0.0);
+  self.Position = vec3(0.0, 0.0, 0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+QuatSimple1_Vertex _QuatSimple1_VertexConstructor()
+{
+  QuatSimple1_Vertex self;
+  _QuatSimple1_VertexPreConstructor(self);
+  return self;
+}
+
+void _QuatSimple1_VertexMain(inout QuatSimple1_Vertex self)
+{
+  BasicVertexFrag _basicvertexfrag = _BasicVertexFragConstructor();
+  _basicvertexfrag.Normal = self.Normal;
+  _basicvertexfrag.Position = self.Position;
+  _basicvertexfrag.Uv = self.Uv;
+  _BasicVertexFragMain(_basicvertexfrag);
+  self.ApiPerspectivePosition = _basicvertexfrag.ApiPerspectivePosition;
+}
+
+//----- QuatSimple1_Vertex Final Shader Functions -----
+void CopyInputs(inout QuatSimple1_Vertex self)
+{
+  self.Time = Time;
+  self.Normal = attNormal;
+  self.Position = attPosition;
+  self.Uv = attUv;
+}
+
+void CopyOutputs(inout QuatSimple1_Vertex self)
+{
+  gl_Position = self.ApiPerspectivePosition;
+}
+
+//----- Main -----
+void main(void)
+{
+  QuatSimple1_Vertex quatsimple1_vertex = _QuatSimple1_VertexConstructor(); 
+  CopyInputs(quatsimple1_vertex);
+  _QuatSimple1_VertexMain(quatsimple1_vertex);
+  CopyOutputs(quatsimple1_vertex);
+}
+

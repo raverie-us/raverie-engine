@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "AlphaCut"
+		var ResourceId = 0x58f4ed78bda39ec5
+		var LoaderType = "RenderGroup"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

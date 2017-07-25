@@ -1,0 +1,64 @@
+// Math equations used in physically based lighting calculations that make up the various
+// parts of a Cook-Torrance Microfacet BRDF (Bidirectional Reflectance Distribution Function),
+// which follows the general form of
+//
+//   Diffuse + SpecularD * SpecularF * SpecularG / NormalizationFactor
+//
+// Inputs
+//
+//   n - surface normal
+//   l - light direction (from surface towards light position)
+//   v - view direction (from surface towards view position)
+//   h - half vector between l and v
+//   alpha - surface roughness value squared
+struct Brdf
+{
+  // Diffuse equation
+  [Static]
+  function DiffuseDisney(n : Real3, l : Real3, v : Real3, h : Real3, alpha : Real) : Real
+  {
+    var dotnl = Math.Saturate(Math.Dot(n, l));
+    var dotnv = Math.Saturate(Math.Dot(n, v));
+    var dotlh = Math.Saturate(Math.Dot(l, h));
+    
+    var fd90 = 0.5 + 2.0 * dotlh * dotlh * alpha;
+    var diffuse = dotnl / Math.Pi;
+    diffuse *= 1.0 + (fd90 - 1.0) * Math.Pow(1.0 - dotnl, 5.0);
+    diffuse *= 1.0 + (fd90 - 1.0) * Math.Pow(1.0 - dotnv, 5.0);
+    return diffuse;
+  }
+  
+  // SpecularD equation - NDF (Normalized Distribution Function)
+  [Static]
+  function SpecularDTrowbridgeReitzGgx(n : Real3, h : Real3, alpha : Real) : Real
+  {
+    var dotnh = Math.Saturate(Math.Dot(n, h));
+    
+    var distribution = alpha / (Math.Pi * Math.Pow(dotnh * dotnh * (alpha - 1.0) + 1.0, 2.0));
+    return distribution;
+  }
+  
+  // SpecularF equation - Fresnel
+  [Static]
+  function SpecularFSchlick(v : Real3, h : Real3) : Real
+  {
+    var dotvh = Math.Saturate(Math.Dot(v, h));
+    
+    var schlick = Math.Pow(1.0 - dotvh, 5.0);
+    return schlick;
+  }
+  
+  // SpecularG equation - Geometric Attenuation
+  [Static]
+  function SpecularGSmithGgx(n : Real3, l : Real3, v : Real3, h : Real3, alpha : Real) : Real
+  {
+    var dotnl = Math.Saturate(Math.Dot(n, l));
+    var dotnv = Math.Saturate(Math.Dot(n, v));
+    dotnv = Math.Max(dotnv, 0.001);
+    
+    var k = alpha / 2.0;
+    var attenuation = dotnv / Math.Lerp(dotnv, 1.0, k);
+    attenuation *= dotnl / Math.Lerp(dotnl, 1.0, k);
+    return attenuation;
+  }
+}

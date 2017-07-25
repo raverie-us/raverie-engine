@@ -1,0 +1,1307 @@
+[Version:1]
+HotKeyDataSet 
+{
+	var Command = Array
+	{
+		Object
+		{
+			var Name = "Add"
+			var Description = "Add a new content item to the project"
+			var IconName = "AddResource"
+			var Function = "Editor.AddResource"
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = "Ctrl + N"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 78
+		}
+		Object
+		{
+			var Name = "AddComponent"
+			var Description = "Add component to object"
+			var IconName = ""
+			var Function = ""
+			var Tags = ""
+			var DevOnly = false
+			var BindingStr = "Ctrl + M"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 77
+		}
+		Object
+		{
+			var Name = "AlignCameraToSelectedCamera"
+			var Description = "Aligns the editor camera to the selected camera"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Camera"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "AlignSelectedCameraToCamera"
+			var Description = "Aligns the selected camera to the editor's camera"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Camera"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Animator"
+			var Description = "Show the Animator Window"
+			var IconName = "Animator"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ArchiveProject"
+			var Description = "Archive a project into a file"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Project"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "BackupProject"
+			var Description = "Back up project to time stamped archive"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Project"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "BakeLighting"
+			var Description = "Takes models and lights marked for baking and computes new lighting textures for them"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Editor Graphics"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "BroadPhaseTracker"
+			var Description = "Used to compare broad phase performance"
+			var IconName = "Performance"
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "BuildVersion"
+			var Description = "Print this version date and revision number in the console and copies them to the clipboard"
+			var IconName = "Console"
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "CenterSelected"
+			var Description = "Center the object in the view"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "F"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 70
+		}
+		Object
+		{
+			var Name = "ClearObjectStore"
+			var Description = "Clear the Object Store on this computer"
+			var IconName = "ClearObjectStore"
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "CommandListViewer"
+			var Description = "Show the Command List Viewer"
+			var IconName = "CommandListViewer"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = "Alt + Shift + H"
+			var Modifier1 = 151
+			var Modifier2 = 150
+			var MainKey = 72
+		}
+		Object
+		{
+			var Name = "Connector"
+			var Description = "Show the Connector Window"
+			var IconName = "Connector"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Console"
+			var Description = "Show the Console Window"
+			var IconName = "Console"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = "~"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 148
+		}
+		Object
+		{
+			var Name = "Controls"
+			var Description = "Show the Controls Window"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Editor Help"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Copy"
+			var Description = "Copy objects to clipboard"
+			var IconName = "Copy"
+			var Function = ""
+			var Tags = "Edit"
+			var DevOnly = false
+			var BindingStr = "Ctrl + C"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 67
+		}
+		Object
+		{
+			var Name = "CreationTool"
+			var Description = "Enables the CreationTool tool"
+			var IconName = "CreationTool"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Cut"
+			var Description = "Cut selected objects and save them to clipboard"
+			var IconName = "Cut"
+			var Function = ""
+			var Tags = "Edit"
+			var DevOnly = false
+			var BindingStr = "Ctrl + X"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 88
+		}
+		Object
+		{
+			var Name = "Delete"
+			var Description = "Delete selected objects"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Edit"
+			var DevOnly = false
+			var BindingStr = "Delete"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 144
+		}
+		Object
+		{
+			var Name = "DisableAutoProjectScreenshot"
+			var Description = "Disables automatically taking a project screen shot every time you save. Use the 'TakeProjectScreenshot' command to take the screen shot manually."
+			var IconName = ""
+			var Function = ""
+			var Tags = ""
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Duplicate"
+			var Description = "Duplicate select objects"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Edit"
+			var DevOnly = false
+			var BindingStr = "Ctrl + D"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 68
+		}
+		Object
+		{
+			var Name = "EditColorScheme"
+			var Description = "Edit color scheme"
+			var IconName = "CautionTriangle"
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "EditCommands"
+			var Description = "Displays all custom Commands for editing."
+			var IconName = ""
+			var Function = ""
+			var Tags = ""
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "EditorConfig"
+			var Description = "Show the Editor Config in the Property Window"
+			var IconName = "Properties"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = "Ctrl + P"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 80
+		}
+		Object
+		{
+			var Name = "EnableAutoProjectScreenshot"
+			var Description = "Enables automatically taking a project screen shot every time you save."
+			var IconName = ""
+			var Function = ""
+			var Tags = ""
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Exit"
+			var Description = "Exit the editor"
+			var IconName = ""
+			var Function = ""
+			var Tags = "File"
+			var DevOnly = false
+			var BindingStr = "Alt + F4"
+			var Modifier1 = 151
+			var Modifier2 = 0
+			var MainKey = 135
+		}
+		Object
+		{
+			var Name = "ExportAndPlayGame"
+			var Description = "Export the game and play it"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Export"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ExportContent"
+			var Description = "Export content to a folder for an installer"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Export"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ExportGame"
+			var Description = "Export game to a standalone exe"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Export"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "FindAll"
+			var Description = "Show the Find/Replace Window to search all documents"
+			var IconName = "FindReplace"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = "Ctrl + Shift + F"
+			var Modifier1 = 152
+			var Modifier2 = 150
+			var MainKey = 70
+		}
+		Object
+		{
+			var Name = "FindNext"
+			var Description = "Show the Find/Replace Window to search the current document"
+			var IconName = "FindReplace"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = "Ctrl + F"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 70
+		}
+		Object
+		{
+			var Name = "FrameSelected"
+			var Description = "Center and frame the object in the view"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "FF"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "GeometryPainter2D"
+			var Description = "Enables the GeometryPainter2D tool"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "GeometryPointManipulator"
+			var Description = "Enables the GeometryPointManipulator tool"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "GoToDefinition"
+			var Description = "Using the current cursor in the current open script we will attempt to go to the definition of that type, member, or variable"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Editor Script"
+			var DevOnly = false
+			var BindingStr = "F12"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 143
+		}
+		Object
+		{
+			var Name = "Graph"
+			var Description = "Displays a graph"
+			var IconName = "Performance"
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "GroupSelected"
+			var Description = "Create a transform at the center of the selected objects and parent them to it"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = "Ctrl + G"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 71
+		}
+		Object
+		{
+			var Name = "HeightMapTool"
+			var Description = "Enables the HeightMapTool tool"
+			var IconName = "HeightMapTool"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "HideSelected"
+			var Description = "Hide selected objects"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Hide"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "JoinChat"
+			var Description = "Join chat"
+			var IconName = "GreenHexagon"
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "JointTool2D"
+			var Description = "Enables the JointTool tool"
+			var IconName = "JointTool"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "JointTool3D"
+			var Description = "Enables the JointTool tool"
+			var IconName = "JointTool"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Library"
+			var Description = "Show the Library Window"
+			var IconName = "Library"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Lobby"
+			var Description = "Show the Lobby Window"
+			var IconName = "Properties"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ManipulatorTool"
+			var Description = "Enables the Manipulator Tool"
+			var IconName = "ManipulatorGizmo"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Memory"
+			var Description = "Displays a memory graph"
+			var IconName = "Memory"
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "MergeGeometricShapes"
+			var Description = "Merges any selected geometric shapes together. All selected shapes must be on the same layer"
+			var IconName = "Performance"
+			var Function = ""
+			var Tags = "Geometry"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "NewProject"
+			var Description = "Create a new project"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Project File"
+			var DevOnly = false
+			var BindingStr = "Ctrl + Shift + N"
+			var Modifier1 = 152
+			var Modifier2 = 150
+			var MainKey = 78
+		}
+		Object
+		{
+			var Name = "NextSelection"
+			var Description = ""
+			var IconName = ""
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Alt + Right"
+			var Modifier1 = 151
+			var Modifier2 = 0
+			var MainKey = 131
+		}
+		Object
+		{
+			var Name = "Objects"
+			var Description = "Show the Objects Window"
+			var IconName = "Tree"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "OpenProject"
+			var Description = "Open a project"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Project File"
+			var DevOnly = false
+			var BindingStr = "Ctrl + O"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 79
+		}
+		Object
+		{
+			var Name = "OperationHistory"
+			var Description = "Show the Operation Queue"
+			var IconName = "OperationHistory"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = "Ctrl + Shift + O"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ParentToPrimary"
+			var Description = "Parents all selected objects to the primary selected object (highlighted in orange)"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Paste"
+			var Description = "Paste objects on clipboard to space"
+			var IconName = "Paste"
+			var Function = ""
+			var Tags = "Edit"
+			var DevOnly = false
+			var BindingStr = "Ctrl + V"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 86
+		}
+		Object
+		{
+			var Name = "PauseGame"
+			var Description = "Pause / resume the game"
+			var IconName = "PauseGame"
+			var Function = "Editor.PauseGame"
+			var Tags = "Game"
+			var DevOnly = false
+			var BindingStr = "F6"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 137
+		}
+		Object
+		{
+			var Name = "Performance"
+			var Description = "Displays a performance graph"
+			var IconName = "Performance"
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "PlayGame"
+			var Description = "Play the game with the current level"
+			var IconName = "PlayGame"
+			var Function = "Editor.PlaySingleGame"
+			var Tags = "Game"
+			var DevOnly = false
+			var BindingStr = "F5"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 136
+		}
+		Object
+		{
+			var Name = "PlayNewGame"
+			var Description = "Play game in additional window"
+			var IconName = "PlayGame"
+			var Function = "Editor.PlayNewGame"
+			var Tags = "Game"
+			var DevOnly = false
+			var BindingStr = "Ctrl + F5"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 136
+		}
+		Object
+		{
+			var Name = "PreviousSelection"
+			var Description = ""
+			var IconName = ""
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Alt + Left"
+			var Modifier1 = 151
+			var Modifier2 = 0
+			var MainKey = 130
+		}
+		Object
+		{
+			var Name = "Properties"
+			var Description = "Show the Property Window"
+			var IconName = "Properties"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Redo"
+			var Description = "Redo last undo operation"
+			var IconName = "Redo"
+			var Function = ""
+			var Tags = "Edit"
+			var DevOnly = false
+			var BindingStr = "Ctrl + Y"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 89
+		}
+		Object
+		{
+			var Name = "Reference"
+			var Description = "Open reference website"
+			var IconName = "InfoCircle"
+			var Function = ""
+			var Tags = "Help"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ReloadProject"
+			var Description = "Reload the current project"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Project"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ReplaceAll"
+			var Description = "Show the Find/Replace Window to replace in all documents"
+			var IconName = "FindReplace"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = "Ctrl + Shift + H"
+			var Modifier1 = 152
+			var Modifier2 = 150
+			var MainKey = 72
+		}
+		Object
+		{
+			var Name = "ReplaceNext"
+			var Description = "Show the Find/Replace Window to replace in the current document"
+			var IconName = "FindReplace"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = "Ctrl + H"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 72
+		}
+		Object
+		{
+			var Name = "ReportBug"
+			var Description = "Report a bug to our website"
+			var IconName = "BugIcon"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "RequestSupport"
+			var Description = "Request support from the Zero Engine team"
+			var IconName = "QuestionMarkIcon"
+			var Function = ""
+			var Tags = "Editor Help Support"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ResetCamera"
+			var Description = "Resets the camera to look at the origin"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Camera"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Restart"
+			var Description = "Restart the editor"
+			var IconName = ""
+			var Function = ""
+			var Tags = "File"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "RotateTool"
+			var Description = "Enables the Rotate Tool"
+			var IconName = "RotateGizmo"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "SaveProject"
+			var Description = "Save project and all resources"
+			var IconName = "Save"
+			var Function = ""
+			var Tags = "Project File"
+			var DevOnly = false
+			var BindingStr = "Ctrl + S"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 83
+		}
+		Object
+		{
+			var Name = "ScaleTool"
+			var Description = "Enables the Scale Tool"
+			var IconName = "ScaleGizmo"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "SelectAll"
+			var Description = "Select all in scene"
+			var IconName = "BigPlus"
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Shift + A"
+			var Modifier1 = 150
+			var Modifier2 = 0
+			var MainKey = 65
+		}
+		Object
+		{
+			var Name = "SelectAllInTree"
+			var Description = "Select all in tree"
+			var IconName = "DoubleDown"
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Shift + E"
+			var Modifier1 = 150
+			var Modifier2 = 0
+			var MainKey = 69
+		}
+		Object
+		{
+			var Name = "SelectChild"
+			var Description = "Select the first child"
+			var IconName = "Down"
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "SelectGame"
+			var Description = "Select space"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Shift + G"
+			var Modifier1 = 150
+			var Modifier2 = 0
+			var MainKey = 71
+		}
+		Object
+		{
+			var Name = "SelectNone"
+			var Description = "Select no objects"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Shift + D"
+			var Modifier1 = 150
+			var Modifier2 = 0
+			var MainKey = 68
+		}
+		Object
+		{
+			var Name = "SelectParent"
+			var Description = "Select parent of current object"
+			var IconName = "Up"
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Shift + W"
+			var Modifier1 = 150
+			var Modifier2 = 0
+			var MainKey = 87
+		}
+		Object
+		{
+			var Name = "SelectRoot"
+			var Description = "Select root of tree"
+			var IconName = "DoubleUp"
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Shift + Q"
+			var Modifier1 = 150
+			var Modifier2 = 0
+			var MainKey = 81
+		}
+		Object
+		{
+			var Name = "SelectSibling"
+			var Description = "Select the next sibling"
+			var IconName = "Right"
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "SelectSpace"
+			var Description = "Select the space"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = false
+			var BindingStr = "Shift + S"
+			var Modifier1 = 150
+			var Modifier2 = 0
+			var MainKey = 83
+		}
+		Object
+		{
+			var Name = "SelectTool"
+			var Description = "Picks objects in the scene."
+			var IconName = "SelectTool"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "SetAsStartingLevel"
+			var Description = "Set Current Level as starting level"
+			var IconName = "BigPlay"
+			var Function = ""
+			var Tags = "Game"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ShowContentOutput"
+			var Description = "Show the project's content output folder"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Project"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ShowCoreLibrary"
+			var Description = ""
+			var IconName = ""
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "ShowProjectFolder"
+			var Description = "Show the folder the project is located in the file system"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Project"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "StepGame"
+			var Description = "Step the game forward one frame"
+			var IconName = "StepGame"
+			var Function = "Editor.StepGame"
+			var Tags = "Game"
+			var DevOnly = false
+			var BindingStr = "F7"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "StopGame"
+			var Description = "Stop the game"
+			var IconName = "StopGame"
+			var Function = "Editor.StopGame"
+			var Tags = "Game"
+			var DevOnly = false
+			var BindingStr = "F8"
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "StressTest"
+			var Description = "Stress test the engine by doing a bunch of random stuff"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Editor"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "SubtractGeometryShapeFromAll"
+			var Description = "Uses a geometry shape as a cookie cutter and cuts holes out of every other shape that it touches"
+			var IconName = "Performance"
+			var Function = ""
+			var Tags = "Geometry"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "TakeProjectScreenshot"
+			var Description = "Takes a screen shot for the project. Disables automatically taking a project screen shot every time you save."
+			var IconName = ""
+			var Function = ""
+			var Tags = ""
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "TheVoid"
+			var Description = "Opens the Void"
+			var IconName = "TheVoid"
+			var Function = ""
+			var Tags = "File"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "TileEditor2D"
+			var Description = "Enables the TileEditor2D tool"
+			var IconName = "TileEditor2D"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Tools"
+			var Description = "Show the Tools Window"
+			var IconName = "Tools"
+			var Function = ""
+			var Tags = "Windows"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "TranslateTool"
+			var Description = "Enables the Translate Tool"
+			var IconName = "TranslateGizmo"
+			var Function = ""
+			var Tags = "Tool"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Tweakables"
+			var Description = "Select the Tweakables object"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Select"
+			var DevOnly = true
+			var BindingStr = "Shift + T"
+			var Modifier1 = 150
+			var Modifier2 = 0
+			var MainKey = 84
+		}
+		Object
+		{
+			var Name = "UnHideSelected"
+			var Description = "Unhide selected objects"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Hide"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+		Object
+		{
+			var Name = "Undo"
+			var Description = "Undo last operation"
+			var IconName = "Undo"
+			var Function = ""
+			var Tags = "Edit"
+			var DevOnly = false
+			var BindingStr = "Ctrl + Z"
+			var Modifier1 = 152
+			var Modifier2 = 0
+			var MainKey = 90
+		}
+		Object
+		{
+			var Name = "UnhideAll"
+			var Description = "Unhide all objects"
+			var IconName = ""
+			var Function = ""
+			var Tags = "Hide"
+			var DevOnly = false
+			var BindingStr = ""
+			var Modifier1 = 0
+			var Modifier2 = 0
+			var MainKey = 0
+		}
+	}
+}

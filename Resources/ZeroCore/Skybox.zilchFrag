@@ -1,0 +1,22 @@
+// Renders a cubemap texture to the output based on the view direction.
+[Pixel][PostProcess]
+struct Skybox
+{
+  [BuiltInInput] var PerspectiveToView : Real4x4;
+  [BuiltInInput] var ViewToWorld : Real4x4;
+  
+  [StageInput] var PerspectivePosition : Real4;
+  
+  [Input] var Skybox : SamplerCube;
+
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    var viewPosition = Math.Multiply(this.PerspectiveToView, this.PerspectivePosition);
+    var viewDirection = Math.Normalize(viewPosition.XYZ / viewPosition.W);
+    var worldDirection = Math.MultiplyNormal(this.ViewToWorld, viewDirection);
+    
+    this.Target0 = this.Skybox.SampleLod(worldDirection, 0.0);
+  }
+}

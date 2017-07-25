@@ -1,0 +1,18 @@
+[Pixel]
+struct Diffuse
+{
+    [Input]
+    var Time : Real;
+    [Input]
+    var Diffuse : Sampler2d;
+    [Input]
+    var Uv : Real2;
+    
+    [Output]
+    var Color : Real4;
+    
+    function Main()
+    {
+        this.Color = this.Diffuse.Sample(this.Uv * this.Time);
+    }
+}

@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DefaultSpace"
+		var ResourceId = 0x4e39ae0ad564493d
+		var LoaderType = "Space"
+		var Version = 0
+		var ShowInEditor = false
+	}
+}

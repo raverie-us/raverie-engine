@@ -1,0 +1,30 @@
+// Albedo input for lighting opaque geometry.
+// Output values are a weighted blend of constants over the surface.
+[Pixel]
+struct HeightMapAlbedoValue
+{  
+  [Input] var AlbedoValue0 : Real4 = Real4(1.0);
+  [Input] var AlbedoValue1 : Real4 = Real4(1.0);
+  [Input] var AlbedoValue2 : Real4 = Real4(1.0);
+  [Input] var AlbedoValue3 : Real4 = Real4(1.0);
+  [Input] var GammaCorrect : Boolean = true;
+  
+  [FragmentInput][StageInput] var Uv : Real2;
+  [FragmentInput] var HeightMapTextureWeights : Real4;
+  
+  [Output] var Albedo : Real3;
+  
+  function GammaCorrectColor(color : Real3) : Real3
+  {
+    var power = Math.Lerp(Real3(1.0), Real3(2.2), this.GammaCorrect as Real);
+    return Math.Pow(color, power);
+  }
+  
+  function Main()
+  {
+    this.Albedo += this.GammaCorrectColor(this.AlbedoValue0.XYZ) * this.HeightMapTextureWeights.X;
+    this.Albedo += this.GammaCorrectColor(this.AlbedoValue1.XYZ) * this.HeightMapTextureWeights.Y;
+    this.Albedo += this.GammaCorrectColor(this.AlbedoValue2.XYZ) * this.HeightMapTextureWeights.Z;
+    this.Albedo += this.GammaCorrectColor(this.AlbedoValue3.XYZ) * this.HeightMapTextureWeights.W;
+  }
+}

@@ -1,0 +1,186 @@
+// Extension methods to implement quaternions in shaders
+struct QuatMathExtensions
+{
+  // Returns the angle between two Quaternions in radians.
+  [Static][Extension(typeid(Math))][Implements]
+  function AngleBetween(a : Quaternion, b : Quaternion) : Real
+  {
+    a = Math.Normalize(a);
+    b = Math.Normalize(b);
+    var dot = Math.Dot(a, b);
+    
+    dot = Math.Clamp(dot, -1.0, 1.0);
+    // Quaternions are a 2-1 mapping, so we could get a rotation that is 400 degrees
+    // instead of 40 degrees, to fix this we can simply abs the dot product. This works
+    // out because we convert our initial [0,360] range to [0,180] then scale up by 2 (2-1 mapping).
+    var correctedDot = Math.Abs(dot);
+    var angle = 2.0 * Math.ACos(correctedDot);
+    return angle;
+  }
+  
+  [Static][Extension(typeid(Math))]
+  function Conjugate(value : Quaternion) : Quaternion
+  {
+    return Quaternion(-value.XYZ, value.W);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Dot(lhs : Quaternion, rhs : Quaternion) : Real
+  {
+    var lhsV4 = lhs.XYZW;
+    var rhsV4 = rhs.XYZW;
+    return Math.Dot(lhsV4, rhsV4);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Invert(value : Quaternion) : Quaternion
+  {
+    var result = Math.Conjugate(value);
+    return Math.Normalize(result);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Length(value : Quaternion) : Real
+  {
+    return Math.Length(value.XYZW);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function LengthSq(value : Quaternion) : Real
+  {
+    return Math.Dot(value, value);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Multiply(by : Quaternion, the : Quaternion) : Quaternion
+  {
+    var w = by.W * the.W - Math.Dot(by.XYZ, the.XYZ);
+    var v3 = by.W * the.XYZ + the.W * by.XYZ + Math.Cross(by.XYZ, the.XYZ);
+    return Quaternion(v3, w);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Multiply(by : Quaternion, the : Real3) : Real3
+  {
+    var promotedVector = Quaternion(the, 0.0);
+    var conjugate = Math.Conjugate(by);
+    var rotationResult = Math.Multiply(Math.Multiply(by, promotedVector), conjugate);
+    return rotationResult.XYZ;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Normalize(value : Quaternion) : Quaternion
+  {
+    var v4 = Math.Normalize(value.XYZW);
+    return Quaternion(v4.X, v4.Y, v4.Z, v4.W);
+  }
+  
+  // Generates the quaternion that rotates from 'start' to 'end'.
+  [Static][Extension(typeid(Math))][Implements]
+  function RotationQuaternionBetween(start : Real3, end : Real3) : Quaternion
+  {
+    // Normalize both quaternions to ensure accuracy
+    start = Math.Normalize(start);
+    end = Math.Normalize(end);
+    
+    // Find the axis to rotate about
+    var axis = Math.Cross(start, end);
+    // The length of this axis is sin(theta). If there was no valid
+    // axis then fallback on the identity quaternion.
+    var length = Math.Length(axis);
+    if(length == 0)
+      return Quaternion.Identity;
+    
+    // Get a normalized axis to rotate about
+    axis = Math.Normalize(axis);
+    // Compute the angle of rotation and generate the quaternion from the axis angle
+    var dot = Math.Dot(start, end);
+    var angle = Math.ACos(dot);
+    return Math.ToQuaternion(axis, angle);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function RotateTowards(p0 : Quaternion, p1 : Quaternion, maxRadians : Real) : Quaternion
+  {
+    return MathGenericRotateTowards[Quaternion].RotateTowards(p0, p1, maxRadians);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Slerp(start : Quaternion, end : Quaternion, t : Real) : Quaternion
+  {
+    // Quaternion Interpolation With Extra Spins, pp. 96f, 461f
+    // Jack Morrison, Graphics Gems III, AP Professional
+    var slerpEpsilon = 0.00001;
+    var cosTheta = Math.Dot(start, end); 
+
+    //Check to ensure that the shortest path is taken (cosine of the angle between 
+    //the two quaternions is positive). This is done by storing the sign of the angle
+    // and using that to flip various values.
+    var sign = Math.Sign(cosTheta) as Real;
+    cosTheta *= sign;
+
+    var startVal = 1.0 - t;
+    var endVal = t;
+    if((1.0 - cosTheta) > slerpEpsilon)
+    {
+      var theta = Math.ACos(cosTheta);
+      var sinTheta = Math.Sin(theta);
+      startVal = Math.Sin((1.0 - t) * theta) / sinTheta;
+      endVal = Math.Sin(t * theta) / sinTheta;
+    }
+
+    // Apply the sign
+    endVal *= sign;
+
+    return Quaternion(startVal * start.X + endVal * end.X,
+                      startVal * start.Y + endVal * end.Y,
+                      startVal * start.Z + endVal * end.Z,
+                      startVal * start.W + endVal * end.W);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function ToQuaternion(axis : Real3, radians : Real) : Quaternion
+  {
+    var alpha = radians * 0.5;
+    var sinAlpha = Math.Sin(alpha);
+    var result = Quaternion(axis * sinAlpha, Math.Cos(alpha));
+    return result;
+  }
+  
+  [Static][Extension(typeid(Math))]
+  function ToReal3x3(rotation : Quaternion) : Real3x3
+  {
+    //     |       2     2                                |
+    //     | 1 - 2Y  - 2Z    2XY - 2ZW      2XZ + 2YW     |
+    //     |                                              |
+    //     |                       2     2                |
+    // M = | 2XY + 2ZW       1 - 2X  - 2Z   2YZ - 2XW     |
+    //     |                                              |
+    //     |                                      2     2 |
+    //     | 2XZ - 2YW       2YZ + 2XW      1 - 2X  - 2Y  |
+    //     |                                              |
+    var xx = rotation.X * rotation.X;
+    var xy = rotation.X * rotation.Y;
+    var xz = rotation.X * rotation.Z;
+    var yy = rotation.Y * rotation.Y;
+    var yz = rotation.Y * rotation.Z;
+    var zz = rotation.Z * rotation.Z;
+    var zw = rotation.Z * rotation.W;
+    var yw = rotation.Y * rotation.W;
+    var xw = rotation.X * rotation.W;
+    
+    var result = Real3x3();
+    result.M00 = 1.0 - 2.0 * (yy + zz);
+    result.M01 = 2.0 * (xy - zw);
+    result.M02 = 2.0 * (xz + yw);
+    
+    result.M10 = 2.0 * (xy + zw);
+    result.M11 = 1.0 - 2.0 * (xx + zz);
+    result.M12 = 2.0 * (yz - xw);
+    
+    result.M20 = 2.0 * (xz - yw);
+    result.M21 = 2.0 * (yz + xw);
+    result.M22 = 1.0 - 2.0 * (xx + yy);
+    return result;
+  }
+}

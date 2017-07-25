@@ -1,0 +1,21 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "HistoryArrowRight"
+		var ResourceId = 0x588891bf87b01407
+		var AtlasId = 0x5274cf95e4a661fd
+		var FrameSizeX = 16
+		var FrameSizeY = 16
+		var FrameCount = 1
+		var FrameDelay = 0
+		var OriginX = 0
+		var OriginY = 0
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+}

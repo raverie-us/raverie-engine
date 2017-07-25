@@ -1,0 +1,18 @@
+// ForLoopExpressionsNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    for (;;)
+    {
+    }
+
+    // Alternative
+    for
+    {
+    }
+  }
+}

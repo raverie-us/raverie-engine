@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <link rel="stylesheet" href="hovertree/hovertree.css" type="text/css"/>
+    <script src="jquery/jquery-1.10.2.js"></script>
+    <script src="hovertree/hovertree.js"></script>
+  </head>
+
+  <body>
+    hello
+    <button id="open">Open</button>
+    
+    <script>
+      // Run on jquery startup
+      $(function()
+      {
+        var columns =
+        [
+          { name: 'property' },
+          { name: 'value' }
+        ];
+        
+        var rows =
+        [
+          { property: 'Lives',                  value: '3', expandable: true, value_editable: true },
+          { property: 'NumberOfPixelsPerUnit',  value: '96', value_editable: true },
+          { property: 'CurrentWeapon',          value: '{Impact Hammer} Some super long thing of text this is silly Some super long thing of text this is silly', expandable: true },
+          { property: 'Health',                 value: '93.5', value_editable: true }
+        ];
+        
+        $('#open').click(function(e)
+        {
+          function onExpand(parentGridDom, gridDom, rowIndex, row, expandedRowIndices, expandedRows)
+          {
+            console.log("Row expanded: " + rowIndex + " with key " + row.property);
+            console.log(expandedRowIndices);
+            
+            var path = '';
+            for (var i = 0; i < expandedRows.length; ++i)
+            {
+              var row = expandedRows[i];
+              path += row.property + '.';
+            }
+            console.log(path);
+            
+            var delay = gridDom.delay(1000 * Math.random());
+            if (Math.random() > 0.8)
+            {
+              delay.queue(function() { closeHoverGrid(gridDom); });
+            }
+            else
+            {
+              delay.queue(function() { fillHoverGrid(gridDom, columns, rows, onExpand); });
+            }
+          }
+          
+          function onCellModified(gridDom, columnIndex, column, rowIndex, row, value)
+          {
+            console.log("MODIFIED: " + value + " : " + row.value);
+          }
+  
+          var gridDom = createHoverGrid(
+          {
+            left: 80,
+            top: 40,
+            expanderCallback: onExpand,
+            cellModifiedCallback: onCellModified
+          });
+          
+          gridDom.delay(300).queue().push(function()
+          {
+            fillHoverGrid(gridDom, columns, rows);
+          });
+        });
+      });
+    </script>
+
+  </body>
+</html>

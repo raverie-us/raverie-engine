@@ -1,0 +1,9 @@
+// VariableTypeMismatch
+
+class Animal
+{
+  var Variable1 : Integer = 9.0;
+
+  // Alternative (there are many...)
+  var Variable2 : Boolean = null;
+}

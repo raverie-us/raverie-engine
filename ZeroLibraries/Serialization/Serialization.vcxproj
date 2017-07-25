@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{35D4371C-B7A6-4FC4-ABA3-0BE750125CE3}</ProjectGuid>
+    <RootNamespace>Serialization</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="DataTreeParser.cpp" />
+    <ClCompile Include="DataTreeTokenizer.cpp" />
+    <ClCompile Include="OldDataTreeParser.cpp" />
+    <ClCompile Include="LegacyDataTreeParser.cpp" />
+    <ClCompile Include="MetaSerialization.cpp" />
+    <ClCompile Include="Serialization.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SerializationStandard.cpp" />
+    <ClCompile Include="SerializationUtility.cpp" />
+    <ClCompile Include="Simple.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="Tokenizer.cpp" />
+    <ClCompile Include="Binary.cpp" />
+    <ClCompile Include="DataTree.cpp" />
+    <ClCompile Include="DataTreeNode.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DataTreeParser.hpp" />
+    <ClInclude Include="DataTreeTokenizer.hpp" />
+    <ClInclude Include="DefaultSerializer.hpp" />
+    <ClInclude Include="OldDataTreeParser.hpp" />
+    <ClInclude Include="LegacyDataTreeParser.hpp" />
+    <ClInclude Include="MathSerialization.hpp" />
+    <ClInclude Include="MetaSerialization.hpp" />
+    <ClInclude Include="Serialization.hpp" />
+    <ClInclude Include="SerializationBuilder.hpp" />
+    <ClInclude Include="SerializationStandard.hpp" />
+    <ClInclude Include="SerializationTraits.hpp" />
+    <ClInclude Include="Simple.hpp" />
+    <ClInclude Include="FundamentalTypes.hpp" />
+    <ClInclude Include="EnumSerialization.hpp" />
+    <ClInclude Include="StdContainers.hpp" />
+    <ClInclude Include="SerializationUtility.hpp" />
+    <ClInclude Include="ZeroContainers.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="Text.hpp" />
+    <ClInclude Include="Tokenizer.hpp" />
+    <ClInclude Include="Binary.hpp" />
+    <ClInclude Include="DataTree.hpp" />
+    <ClInclude Include="DataTreeNode.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

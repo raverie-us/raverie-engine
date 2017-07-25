@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B45F9232-8734-48EA-AC16-29F41866D676}</ProjectGuid>
+    <RootNamespace>Zero</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ShowIncludes>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>call "$(ZERO_SOURCE)\Build\UpdateBuildVersion" "$(ZERO_SOURCE)"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>"$(ZERO_SOURCE)\Build\UpdateBuildVersion" "$(ZERO_SOURCE)"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Action\MetaAction.cpp" />
+    <ClCompile Include="AnimationGraphEvents.cpp" />
+    <ClCompile Include="AnimationNode.cpp" />
+    <ClCompile Include="ArchetypeRebuilder.cpp" />
+    <ClCompile Include="Area.cpp" />
+    <ClCompile Include="BasicActions.cpp" />
+    <ClCompile Include="CogMeta.cpp" />
+    <ClCompile Include="ComponentMeta.cpp" />
+    <ClCompile Include="EngineBindingExtensions.cpp" />
+    <ClCompile Include="CogHelpers.cpp" />
+    <ClCompile Include="CogId.cpp" />
+    <ClCompile Include="CogInitializer.cpp" />
+    <ClCompile Include="CogPath.cpp" />
+    <ClCompile Include="CogRange.cpp" />
+    <ClCompile Include="CogRestoreState.cpp" />
+    <ClCompile Include="CogSelection.cpp" />
+    <ClCompile Include="ColorGradient.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Cog.cpp" />
+    <ClCompile Include="CogSerialization.cpp" />
+    <ClCompile Include="DataSource.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="DocumentResource.cpp" />
+    <ClCompile Include="CogOperations.cpp" />
+    <ClCompile Include="EditorSettings.cpp" />
+    <ClCompile Include="EngineObject.cpp" />
+    <ClCompile Include="EngineStandard.cpp" />
+    <ClCompile Include="Environment.cpp" />
+    <ClCompile Include="EventDirectoryWatcher.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HeightMap.cpp" />
+    <ClCompile Include="HeightMapSource.cpp" />
+    <ClCompile Include="HierarchyRange.cpp" />
+    <ClCompile Include="HotKeyManager.cpp" />
+    <ClCompile Include="JoystickSystem.cpp" />
+    <ClCompile Include="LauncherConfiguration.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="ErrorContext.cpp" />
+    <ClCompile Include="EngineLibraryExtensions.cpp" />
+    <ClCompile Include="MetaOperations.cpp" />
+    <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Noise.cpp" />
+    <ClCompile Include="ObjectLoader.cpp" />
+    <ClCompile Include="ObjectSaver.cpp" />
+    <ClCompile Include="Operation.cpp" />
+    <ClCompile Include="OsWindow.cpp" />
+    <ClCompile Include="PropertyTrack.cpp" />
+    <ClCompile Include="RaycastProvider.cpp" />
+    <ClCompile Include="ResourcePropertyOperations.cpp" />
+    <ClCompile Include="SampleCurve.cpp" />
+    <ClCompile Include="Documentation.cpp" />
+    <ClCompile Include="GamePadSystem.cpp" />
+    <ClCompile Include="JobSystem.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="CogMetaComposition.cpp" />
+    <ClCompile Include="ObjectStore.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="EngineEvents.cpp" />
+    <ClCompile Include="Archetype.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Factory.cpp" />
+    <ClCompile Include="Project.cpp" />
+    <ClCompile Include="BuildVersion.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ResourceLibrary.cpp" />
+    <ClCompile Include="ResourceSystem.cpp" />
+    <ClCompile Include="ResourceTable.cpp" />
+    <ClCompile Include="ScriptDebugEngine.cpp" />
+    <ClCompile Include="HierarchySpline.cpp" />
+    <ClCompile Include="Spline.cpp" />
+    <ClCompile Include="System.cpp" />
+    <ClCompile Include="Tweakables.cpp" />
+    <ClCompile Include="SceneGraph.cpp" />
+    <ClCompile Include="SystemObjectManager.cpp" />
+    <ClCompile Include="TextResource.cpp" />
+    <ClCompile Include="ThreadDispatch.cpp" />
+    <ClCompile Include="Tracker.cpp" />
+    <ClCompile Include="Space.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="ObjectLink.cpp" />
+    <ClCompile Include="Configuration.cpp" />
+    <ClCompile Include="EditorSupport.cpp" />
+    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Hierarchy.cpp" />
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="AnimationGraph.cpp" />
+    <ClCompile Include="Action\Action.cpp" />
+    <ClCompile Include="Action\ActionSystem.cpp" />
+    <ClCompile Include="OsShell.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="TransformSupport.cpp" />
+    <ClCompile Include="ZilchAction.cpp" />
+    <ClCompile Include="ZilchResource.cpp" />
+    <ClCompile Include="ZilchManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Action\ActionEase.hpp" />
+    <ClInclude Include="Action\MetaAction.hpp" />
+    <ClInclude Include="AnimationGraphEvents.hpp" />
+    <ClInclude Include="AnimationNode.hpp" />
+    <ClInclude Include="ArchetypeRebuilder.hpp" />
+    <ClInclude Include="Area.hpp" />
+    <ClInclude Include="CogMeta.hpp" />
+    <ClInclude Include="ComponentMeta.hpp" />
+    <ClInclude Include="EngineBindingExtensions.hpp" />
+    <ClInclude Include="CogHelpers.hpp" />
+    <ClInclude Include="CogId.hpp" />
+    <ClInclude Include="CogInitializer.hpp" />
+    <ClInclude Include="CogMetaComposition.hpp" />
+    <ClInclude Include="CogPath.hpp" />
+    <ClInclude Include="CogRange.hpp" />
+    <ClInclude Include="CogRestoreState.hpp" />
+    <ClInclude Include="CogSelection.hpp" />
+    <ClInclude Include="ColorGradient.hpp" />
+    <ClInclude Include="Component.hpp" />
+    <ClInclude Include="ComponentHierarchy.hpp" />
+    <ClInclude Include="Cog.hpp" />
+    <ClInclude Include="CogSerialization.hpp" />
+    <ClInclude Include="DataSource.hpp" />
+    <ClInclude Include="DebugDraw.hpp" />
+    <ClInclude Include="DocumentResource.hpp" />
+    <ClInclude Include="CogOperations.hpp" />
+    <ClInclude Include="EditorSettings.hpp" />
+    <ClInclude Include="EngineObject.hpp" />
+    <ClInclude Include="Environment.hpp" />
+    <ClInclude Include="EventDirectoryWatcher.hpp" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Gradient.hpp" />
+    <ClInclude Include="HeightMapSource.hpp" />
+    <ClInclude Include="HierarchyRange.hpp" />
+    <ClInclude Include="ErrorContext.hpp" />
+    <ClInclude Include="HotKeyManager.hpp" />
+    <ClInclude Include="LauncherConfiguration.hpp" />
+    <ClInclude Include="EngineLibraryExtensions.hpp" />
+    <ClInclude Include="MetaOperations.hpp" />
+    <ClInclude Include="Mouse.hpp" />
+    <ClInclude Include="ObjectLoader.hpp" />
+    <ClInclude Include="ObjectSaver.hpp" />
+    <ClInclude Include="Operation.hpp" />
+    <ClInclude Include="OsWindow.hpp" />
+    <ClInclude Include="PropertyTrack.hpp" />
+    <ClInclude Include="ResourceLoaderTemplates.hpp" />
+    <ClInclude Include="HeightMap.hpp" />
+    <ClInclude Include="JoystickSystem.hpp" />
+    <ClInclude Include="Level.hpp" />
+    <ClInclude Include="Noise.hpp" />
+    <ClInclude Include="RaycastProvider.hpp" />
+    <ClInclude Include="ResourcePropertyOperations.hpp" />
+    <ClInclude Include="SampleCurve.hpp" />
+    <ClInclude Include="Documentation.hpp" />
+    <ClInclude Include="GamePadSystem.hpp" />
+    <ClInclude Include="JobSystem.hpp" />
+    <ClInclude Include="ResourceSystem.hpp" />
+    <ClInclude Include="ScriptDebugEngine.hpp" />
+    <ClInclude Include="ResourceTable.hpp" />
+    <ClInclude Include="HierarchySpline.hpp" />
+    <ClInclude Include="Spline.hpp" />
+    <ClInclude Include="Tweakables.hpp" />
+    <ClInclude Include="SceneGraph.hpp" />
+    <ClInclude Include="SystemObjectManager.hpp" />
+    <ClInclude Include="Keyboard.hpp" />
+    <ClInclude Include="ObjectStore.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="EngineEvents.hpp" />
+    <ClInclude Include="Archetype.hpp" />
+    <ClInclude Include="Engine.hpp" />
+    <ClInclude Include="Factory.hpp" />
+    <ClInclude Include="Project.hpp" />
+    <ClInclude Include="BuildVersion.hpp" />
+    <ClInclude Include="ResourceManager.hpp" />
+    <ClInclude Include="ResourceLibrary.hpp" />
+    <ClInclude Include="System.hpp" />
+    <ClInclude Include="TextResource.hpp" />
+    <ClInclude Include="ThreadDispatch.hpp" />
+    <ClInclude Include="Tracker.hpp" />
+    <ClInclude Include="Space.hpp" />
+    <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="ObjectLink.hpp" />
+    <ClInclude Include="Configuration.hpp" />
+    <ClInclude Include="EditorSupport.hpp" />
+    <ClInclude Include="Time.hpp" />
+    <ClInclude Include="Hierarchy.hpp" />
+    <ClInclude Include="Animation.hpp" />
+    <ClInclude Include="AnimationGraph.hpp" />
+    <ClInclude Include="EngineContainers.hpp" />
+    <ClInclude Include="EngineMath.hpp" />
+    <ClInclude Include="EngineStandard.hpp" />
+    <ClInclude Include="Action\Action.hpp" />
+    <ClInclude Include="Action\BasicActions.hpp" />
+    <ClInclude Include="Action\ActionGenerator.hpp" />
+    <ClInclude Include="Action\ActionSystem.hpp" />
+    <ClInclude Include="OsShell.hpp" />
+    <ClInclude Include="Resource.hpp" />
+    <ClInclude Include="TransformSupport.hpp" />
+    <ClInclude Include="ZilchAction.hpp" />
+    <ClInclude Include="ZilchResource.hpp" />
+    <ClInclude Include="ZilchManager.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AnimationNode.inl" />
+    <None Include="PropertyTrack.inl" />
+    <None Include="Tweakables.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

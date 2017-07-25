@@ -1,0 +1,25 @@
+[Version:1]
+ImageContent 
+{
+	TextureBuilder 
+	{
+		var Name = "ToolBarIcons"
+		var ResourceId = 0x4e6eb9ea4c903690
+		var Type = TextureType.Texture2D
+		var Compression = TextureCompression.None
+		var AddressingX = TextureAddressing.Clamp
+		var AddressingY = TextureAddressing.Clamp
+		var Filtering = TextureFiltering.Trilinear
+		var Anisotropy = TextureAnisotropy.x16
+		var MipMapping = TextureMipMapping.PreGenerated
+		var PremultipliedAlpha = false
+		var GammaCorrection = false
+	}
+	TextureInfo 
+	{
+		var FileType = "png"
+		var LoadFormat = "RGBA8"
+		var Dimensions = "128 x 128"
+		var Size = "0.083 MB"
+	}
+}

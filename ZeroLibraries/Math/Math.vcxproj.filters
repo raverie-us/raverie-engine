@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Vector">
+      <UniqueIdentifier>{6b5cd893-c644-46b9-ac10-502d6ef9bc18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Matrix">
+      <UniqueIdentifier>{a78e2b00-7e10-4627-be30-6b9abbd40dda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quaternion">
+      <UniqueIdentifier>{2927244d-dfea-4844-bd4b-3de02595b741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{8469b13f-75d5-43da-8887-3a882fe829b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Numerical">
+      <UniqueIdentifier>{8048cee6-9383-4b92-9044-6532616a4680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Euler">
+      <UniqueIdentifier>{a82011b5-71a8-4927-8bf1-d925ada25512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Simd">
+      <UniqueIdentifier>{6f816e14-3236-4c95-a4ed-03f01ac65cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Random">
+      <UniqueIdentifier>{f39ddfe9-ad33-47c7-9b48-2dec9ce3f9cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Curves">
+      <UniqueIdentifier>{ee9775fb-94b7-4182-bfd1-e8c5986ec338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Solvers">
+      <UniqueIdentifier>{d303a29c-48d2-40ce-a486-4012f75e888b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BlockMath">
+      <UniqueIdentifier>{cc2fbb17-12ba-431a-b2a9-5a318c026ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WeightedTable">
+      <UniqueIdentifier>{32b15917-281a-494a-ae32-ab2fd6507eb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Color">
+      <UniqueIdentifier>{a631f6e2-0944-45dc-b7a5-566fd33d6efd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector4.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Quaternion</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Reals.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Numerical.cpp">
+      <Filter>Math\Numerical</Filter>
+    </ClCompile>
+    <ClCompile Include="EulerAngles.cpp">
+      <Filter>Euler</Filter>
+    </ClCompile>
+    <ClCompile Include="EulerOrder.cpp">
+      <Filter>Euler</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Random</Filter>
+    </ClCompile>
+    <ClCompile Include="Curve.cpp">
+      <Filter>Curves</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix2.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockVector3.cpp">
+      <Filter>BlockMath</Filter>
+    </ClCompile>
+    <ClCompile Include="IntVector2.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="DecomposedMatrix4.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="IntVector3.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="IntVector4.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="BoolVector2.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="BoolVector3.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="BoolVector4.cpp">
+      <Filter>Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendableMath.cpp" />
+    <ClCompile Include="ToString.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Vector2.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3.hpp">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4.hpp">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.hpp">
+      <Filter>Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixStorage.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Reals.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Numerical.hpp">
+      <Filter>Math\Numerical</Filter>
+    </ClInclude>
+    <ClInclude Include="EulerAngles.hpp">
+      <Filter>Euler</Filter>
+    </ClInclude>
+    <ClInclude Include="EulerOrder.hpp">
+      <Filter>Euler</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.hpp">
+      <Filter>Random</Filter>
+    </ClInclude>
+    <ClInclude Include="MathStandard.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SimVectors.hpp">
+      <Filter>Simd</Filter>
+    </ClInclude>
+    <ClInclude Include="SimMath.hpp">
+      <Filter>Simd</Filter>
+    </ClInclude>
+    <ClInclude Include="SimConversion.hpp">
+      <Filter>Simd</Filter>
+    </ClInclude>
+    <ClInclude Include="SimMatrix3.hpp">
+      <Filter>Simd</Filter>
+    </ClInclude>
+    <ClInclude Include="SimMatrix4.hpp">
+      <Filter>Simd</Filter>
+    </ClInclude>
+    <ClInclude Include="Curve.hpp">
+      <Filter>Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix2.hpp">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="ConjugateGradient.hpp">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleCgPolicies.hpp">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="IntVector2.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockVector3.hpp">
+      <Filter>BlockMath</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussSeidelSolver.hpp">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexPolicies.hpp">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="JacobiSolver.hpp">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorCallbacks.hpp">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericVector.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="WeightedProbabilityTable.hpp">
+      <Filter>WeightedTable</Filter>
+    </ClInclude>
+    <ClInclude Include="DecomposedMatrix4.hpp">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorHashPolicy.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorDefinitions.hpp">
+      <Filter>Color</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteColor.hpp">
+      <Filter>Color</Filter>
+    </ClInclude>
+    <ClInclude Include="IntVector3.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="IntVector4.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="BoolVector2.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="BoolVector3.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="BoolVector4.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendableMath.hpp" />
+    <ClInclude Include="SharedVectorFunctions.hpp">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="ToString.hpp" />
+    <ClInclude Include="MathImports.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimVectors.inl">
+      <Filter>Simd</Filter>
+    </None>
+    <None Include="SimVectorSpecific.inl">
+      <Filter>Simd</Filter>
+    </None>
+    <None Include="SimMatrix3.inl">
+      <Filter>Simd</Filter>
+    </None>
+    <None Include="SimMatrix4.inl">
+      <Filter>Simd</Filter>
+    </None>
+    <None Include="GenericVector.inl">
+      <Filter>Vector</Filter>
+    </None>
+    <None Include="Vector3.inl">
+      <Filter>Vector</Filter>
+    </None>
+    <None Include="BasicNativeTypesMath.inl">
+      <Filter>Math</Filter>
+    </None>
+  </ItemGroup>
+</Project>

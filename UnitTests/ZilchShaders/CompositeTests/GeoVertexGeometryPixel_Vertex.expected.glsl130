@@ -1,0 +1,216 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+uniform vec2 GeoVertex_Data0;
+uniform vec2 GeoVertex_Data1;
+uniform vec2 GeoVertex_Data2;
+uniform vec2 GeoVertex_Data3;
+uniform vec2 GeoVertex_Data4;
+uniform vec2 GeoVertex_Data5;
+uniform vec2 GeoVertex_Data6;
+uniform vec2 GeoVertex_Data7;
+uniform vec2 GeoVertex_Data8;
+uniform vec2 GeoVertex_Data9;
+uniform vec2 GeoVertex_Data10;
+uniform vec2 GeoVertex_Data11;
+uniform vec2 GeoVertex_Data12;
+uniform vec2 GeoVertex_Data13;
+uniform vec2 GeoVertex_Data14;
+uniform vec2 GeoVertex_Data15;
+out vec2 psInData0;
+out vec2 psInData2;
+out vec2 psInData4;
+out vec2 psInData6;
+
+//----- Struct Definitions -----
+struct GeoVertex
+{
+  vec2 Data0;
+  vec2 Data1;
+  vec2 Data2;
+  vec2 Data3;
+  vec2 Data4;
+  vec2 Data5;
+  vec2 Data6;
+  vec2 Data7;
+  vec2 Data8;
+  vec2 Data9;
+  vec2 Data10;
+  vec2 Data11;
+  vec2 Data12;
+  vec2 Data13;
+  vec2 Data14;
+  vec2 Data15;
+};
+
+struct GeoVertexGeometryPixel_Vertex
+{
+  float Time;
+  vec4 ApiPerspectivePosition;
+  vec2 Data0;
+  vec2 Data2;
+  vec2 Data4;
+  vec2 Data6;
+  vec2 GeoVertex_Data0;
+  vec2 GeoVertex_Data1;
+  vec2 GeoVertex_Data2;
+  vec2 GeoVertex_Data3;
+  vec2 GeoVertex_Data4;
+  vec2 GeoVertex_Data5;
+  vec2 GeoVertex_Data6;
+  vec2 GeoVertex_Data7;
+  vec2 GeoVertex_Data8;
+  vec2 GeoVertex_Data9;
+  vec2 GeoVertex_Data10;
+  vec2 GeoVertex_Data11;
+  vec2 GeoVertex_Data12;
+  vec2 GeoVertex_Data13;
+  vec2 GeoVertex_Data14;
+  vec2 GeoVertex_Data15;
+};
+
+//----- Forward Declarations -----
+void _GeoVertexPreConstructor(inout GeoVertex self);
+GeoVertex _GeoVertexConstructor();
+void _GeoVertexMain(inout GeoVertex self);
+
+void _GeoVertexGeometryPixel_VertexPreConstructor(inout GeoVertexGeometryPixel_Vertex self);
+GeoVertexGeometryPixel_Vertex _GeoVertexGeometryPixel_VertexConstructor();
+void _GeoVertexGeometryPixel_VertexMain(inout GeoVertexGeometryPixel_Vertex self);
+void CopyInputs(inout GeoVertexGeometryPixel_Vertex self);
+void CopyOutputs(inout GeoVertexGeometryPixel_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- GeoVertex Functions -----
+void _GeoVertexPreConstructor(inout GeoVertex self)
+{
+  self.Data0 = vec2(0.0, 0.0);
+  self.Data1 = vec2(0.0, 0.0);
+  self.Data2 = vec2(0.0, 0.0);
+  self.Data3 = vec2(0.0, 0.0);
+  self.Data4 = vec2(0.0, 0.0);
+  self.Data5 = vec2(0.0, 0.0);
+  self.Data6 = vec2(0.0, 0.0);
+  self.Data7 = vec2(0.0, 0.0);
+  self.Data8 = vec2(0.0, 0.0);
+  self.Data9 = vec2(0.0, 0.0);
+  self.Data10 = vec2(0.0, 0.0);
+  self.Data11 = vec2(0.0, 0.0);
+  self.Data12 = vec2(0.0, 0.0);
+  self.Data13 = vec2(0.0, 0.0);
+  self.Data14 = vec2(0.0, 0.0);
+  self.Data15 = vec2(0.0, 0.0);
+}
+
+GeoVertex _GeoVertexConstructor()
+{
+  GeoVertex self;
+  _GeoVertexPreConstructor(self);
+  return self;
+}
+
+void _GeoVertexMain(inout GeoVertex self)
+{
+}
+
+//----- GeoVertexGeometryPixel_Vertex Functions -----
+void _GeoVertexGeometryPixel_VertexPreConstructor(inout GeoVertexGeometryPixel_Vertex self)
+{
+  self.Time = float(0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Data0 = vec2(0.0, 0.0);
+  self.Data2 = vec2(0.0, 0.0);
+  self.Data4 = vec2(0.0, 0.0);
+  self.Data6 = vec2(0.0, 0.0);
+  self.GeoVertex_Data0 = vec2(0.0, 0.0);
+  self.GeoVertex_Data1 = vec2(0.0, 0.0);
+  self.GeoVertex_Data2 = vec2(0.0, 0.0);
+  self.GeoVertex_Data3 = vec2(0.0, 0.0);
+  self.GeoVertex_Data4 = vec2(0.0, 0.0);
+  self.GeoVertex_Data5 = vec2(0.0, 0.0);
+  self.GeoVertex_Data6 = vec2(0.0, 0.0);
+  self.GeoVertex_Data7 = vec2(0.0, 0.0);
+  self.GeoVertex_Data8 = vec2(0.0, 0.0);
+  self.GeoVertex_Data9 = vec2(0.0, 0.0);
+  self.GeoVertex_Data10 = vec2(0.0, 0.0);
+  self.GeoVertex_Data11 = vec2(0.0, 0.0);
+  self.GeoVertex_Data12 = vec2(0.0, 0.0);
+  self.GeoVertex_Data13 = vec2(0.0, 0.0);
+  self.GeoVertex_Data14 = vec2(0.0, 0.0);
+  self.GeoVertex_Data15 = vec2(0.0, 0.0);
+}
+
+GeoVertexGeometryPixel_Vertex _GeoVertexGeometryPixel_VertexConstructor()
+{
+  GeoVertexGeometryPixel_Vertex self;
+  _GeoVertexGeometryPixel_VertexPreConstructor(self);
+  return self;
+}
+
+void _GeoVertexGeometryPixel_VertexMain(inout GeoVertexGeometryPixel_Vertex self)
+{
+  GeoVertex _geovertex = _GeoVertexConstructor();
+  _geovertex.Data0 = self.GeoVertex_Data0;
+  _geovertex.Data1 = self.GeoVertex_Data1;
+  _geovertex.Data2 = self.GeoVertex_Data2;
+  _geovertex.Data3 = self.GeoVertex_Data3;
+  _geovertex.Data4 = self.GeoVertex_Data4;
+  _geovertex.Data5 = self.GeoVertex_Data5;
+  _geovertex.Data6 = self.GeoVertex_Data6;
+  _geovertex.Data7 = self.GeoVertex_Data7;
+  _geovertex.Data8 = self.GeoVertex_Data8;
+  _geovertex.Data9 = self.GeoVertex_Data9;
+  _geovertex.Data10 = self.GeoVertex_Data10;
+  _geovertex.Data11 = self.GeoVertex_Data11;
+  _geovertex.Data12 = self.GeoVertex_Data12;
+  _geovertex.Data13 = self.GeoVertex_Data13;
+  _geovertex.Data14 = self.GeoVertex_Data14;
+  _geovertex.Data15 = self.GeoVertex_Data15;
+  _GeoVertexMain(_geovertex);
+  self.Data0 = _geovertex.Data0;
+  self.Data2 = _geovertex.Data2;
+  self.Data4 = _geovertex.Data4;
+  self.Data6 = _geovertex.Data6;
+}
+
+//----- GeoVertexGeometryPixel_Vertex Final Shader Functions -----
+void CopyInputs(inout GeoVertexGeometryPixel_Vertex self)
+{
+  self.Time = Time;
+  self.GeoVertex_Data0 = GeoVertex_Data0;
+  self.GeoVertex_Data1 = GeoVertex_Data1;
+  self.GeoVertex_Data2 = GeoVertex_Data2;
+  self.GeoVertex_Data3 = GeoVertex_Data3;
+  self.GeoVertex_Data4 = GeoVertex_Data4;
+  self.GeoVertex_Data5 = GeoVertex_Data5;
+  self.GeoVertex_Data6 = GeoVertex_Data6;
+  self.GeoVertex_Data7 = GeoVertex_Data7;
+  self.GeoVertex_Data8 = GeoVertex_Data8;
+  self.GeoVertex_Data9 = GeoVertex_Data9;
+  self.GeoVertex_Data10 = GeoVertex_Data10;
+  self.GeoVertex_Data11 = GeoVertex_Data11;
+  self.GeoVertex_Data12 = GeoVertex_Data12;
+  self.GeoVertex_Data13 = GeoVertex_Data13;
+  self.GeoVertex_Data14 = GeoVertex_Data14;
+  self.GeoVertex_Data15 = GeoVertex_Data15;
+}
+
+void CopyOutputs(inout GeoVertexGeometryPixel_Vertex self)
+{
+  gl_Position = self.ApiPerspectivePosition;
+  psInData0 = self.Data0;
+  psInData2 = self.Data2;
+  psInData4 = self.Data4;
+  psInData6 = self.Data6;
+}
+
+//----- Main -----
+void main(void)
+{
+  GeoVertexGeometryPixel_Vertex geovertexgeometrypixel_vertex = _GeoVertexGeometryPixel_VertexConstructor(); 
+  CopyInputs(geovertexgeometrypixel_vertex);
+  _GeoVertexGeometryPixel_VertexMain(geovertexgeometrypixel_vertex);
+  CopyOutputs(geovertexgeometrypixel_vertex);
+}
+

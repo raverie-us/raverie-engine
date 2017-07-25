@@ -1,0 +1,98 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+in vec2 attUv;
+out vec2 psInUv;
+
+//----- Struct Definitions -----
+struct BasicVertexFrag
+{
+  vec2 Uv;
+  vec4 ProjectedPosition;
+};
+
+struct Diffuse_SinTime_UvScale_RendererFrag_Vertex
+{
+  float Time;
+  vec2 Uv;
+  vec4 ApiPerspectivePosition;
+};
+
+//----- Forward Declarations -----
+void _BasicVertexFragPreConstructor(inout BasicVertexFrag self);
+BasicVertexFrag _BasicVertexFragConstructor();
+void _BasicVertexFragMain(inout BasicVertexFrag self);
+
+void _Diffuse_SinTime_UvScale_RendererFrag_VertexPreConstructor(inout Diffuse_SinTime_UvScale_RendererFrag_Vertex self);
+Diffuse_SinTime_UvScale_RendererFrag_Vertex _Diffuse_SinTime_UvScale_RendererFrag_VertexConstructor();
+void _Diffuse_SinTime_UvScale_RendererFrag_VertexMain(inout Diffuse_SinTime_UvScale_RendererFrag_Vertex self);
+void CopyInputs(inout Diffuse_SinTime_UvScale_RendererFrag_Vertex self);
+void CopyOutputs(inout Diffuse_SinTime_UvScale_RendererFrag_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- BasicVertexFrag Functions -----
+void _BasicVertexFragPreConstructor(inout BasicVertexFrag self)
+{
+  self.Uv = vec2(0.0, 0.0);
+  self.ProjectedPosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+BasicVertexFrag _BasicVertexFragConstructor()
+{
+  BasicVertexFrag self;
+  _BasicVertexFragPreConstructor(self);
+  return self;
+}
+
+void _BasicVertexFragMain(inout BasicVertexFrag self)
+{
+  self.Uv *= 0.5f;
+  self.ProjectedPosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+//----- Diffuse_SinTime_UvScale_RendererFrag_Vertex Functions -----
+void _Diffuse_SinTime_UvScale_RendererFrag_VertexPreConstructor(inout Diffuse_SinTime_UvScale_RendererFrag_Vertex self)
+{
+  self.Time = float(0.0);
+  self.Uv = vec2(0.0, 0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+Diffuse_SinTime_UvScale_RendererFrag_Vertex _Diffuse_SinTime_UvScale_RendererFrag_VertexConstructor()
+{
+  Diffuse_SinTime_UvScale_RendererFrag_Vertex self;
+  _Diffuse_SinTime_UvScale_RendererFrag_VertexPreConstructor(self);
+  return self;
+}
+
+void _Diffuse_SinTime_UvScale_RendererFrag_VertexMain(inout Diffuse_SinTime_UvScale_RendererFrag_Vertex self)
+{
+  BasicVertexFrag _basicvertexfrag = _BasicVertexFragConstructor();
+  _basicvertexfrag.Uv = self.Uv;
+  _BasicVertexFragMain(_basicvertexfrag);
+  self.Uv = _basicvertexfrag.Uv;
+}
+
+//----- Diffuse_SinTime_UvScale_RendererFrag_Vertex Final Shader Functions -----
+void CopyInputs(inout Diffuse_SinTime_UvScale_RendererFrag_Vertex self)
+{
+  self.Time = Time;
+  self.Uv = attUv;
+}
+
+void CopyOutputs(inout Diffuse_SinTime_UvScale_RendererFrag_Vertex self)
+{
+  psInUv = self.Uv;
+  gl_Position = self.ApiPerspectivePosition;
+}
+
+//----- Main -----
+void main(void)
+{
+  Diffuse_SinTime_UvScale_RendererFrag_Vertex diffuse_sintime_uvscale_rendererfrag_vertex = _Diffuse_SinTime_UvScale_RendererFrag_VertexConstructor(); 
+  CopyInputs(diffuse_sintime_uvscale_rendererfrag_vertex);
+  _Diffuse_SinTime_UvScale_RendererFrag_VertexMain(diffuse_sintime_uvscale_rendererfrag_vertex);
+  CopyOutputs(diffuse_sintime_uvscale_rendererfrag_vertex);
+}
+

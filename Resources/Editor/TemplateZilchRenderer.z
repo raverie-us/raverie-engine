@@ -1,0 +1,55 @@
+[RunInEditor]
+class %RESOURCENAME% : ZilchComponent
+{
+	[Property] var ClearColor : Real4 = Real4(0, 0, 0, 1);
+	[Property] var DrawDebug : Boolean = true;
+
+	function Initialize(init : CogInitializer)
+	{
+		Zero.Connect(this.Owner, Events.RenderTasksUpdate, this.OnRenderTasksUpdate);
+	}
+
+	function OnRenderTasksUpdate(event : RenderTasksEvent)
+	{
+		var size = event.ViewportSize;
+		var color = event.GetFinalTarget(size, TextureFormat.RGBA8);
+		var depth = event.GetRenderTarget(size, TextureFormat.Depth32);
+
+		var renderSettings = RenderSettings() {CullMode = CullMode.BackFace};
+		renderSettings.ColorTarget = color;
+		renderSettings.DepthTarget = depth;
+		renderSettings.CullMode = CullMode.BackFace;
+
+		renderSettings.DepthSettings.DepthMode = DepthMode.Write;
+		renderSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+
+		var renderPass = ColorOutput();
+		renderPass.Color = Real4(1.0, 0.0, 0.0, 1.0);
+
+		event.AddRenderTaskClearTarget(renderSettings, this.ClearColor, 1.0);
+		event.AddRenderTaskRenderPass(renderSettings, RenderGroup.Opaque, renderPass);
+
+		if (this.DrawDebug)
+		{
+			var debugSettings = RenderSettings();
+			debugSettings.ColorTarget = color;
+			debugSettings.DepthTarget = depth;
+			debugSettings.CullMode = CullMode.Disabled;
+
+			debugSettings.BlendSettings.BlendMode = BlendMode.Separate;
+			debugSettings.BlendSettings.BlendEquation = BlendEquation.Add;
+			debugSettings.BlendSettings.SourceFactor = BlendFactor.SourceAlpha;
+			debugSettings.BlendSettings.DestFactor = BlendFactor.InvSourceAlpha;
+			debugSettings.BlendSettings.SourceFactorAlpha = BlendFactor.One;
+			debugSettings.BlendSettings.DestFactorAlpha = BlendFactor.One;
+
+			debugSettings.DepthSettings.DepthMode = DepthMode.Read;
+			debugSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+
+			event.AddRenderTaskRenderPass(debugSettings, RenderGroup.DebugDraw, ColorOutput());
+
+			debugSettings.DepthSettings.DepthMode = DepthMode.Disabled;
+			event.AddRenderTaskRenderPass(debugSettings, RenderGroup.DebugDrawOnTop, ColorOutput());
+		}
+	}
+}

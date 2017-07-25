@@ -1,0 +1,148 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct Real2Extensions
+{
+  int Dummy;
+};
+
+struct MyHelper
+{
+  int Data;
+};
+
+struct MyHelperExtensions
+{
+  int Dummy;
+};
+
+struct ExtensionMethods
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _Real2ExtensionsPreConstructor(inout Real2Extensions self);
+Real2Extensions _Real2ExtensionsConstructor();
+vec2 _vec2Flip(inout vec2 self);
+vec2 _vec2Flip(bool _counterClockwise, inout vec2 self);
+vec2 _vec2Add(vec2 _real20, vec2 _real21);
+
+void _MyHelperPreConstructor(inout MyHelper self);
+MyHelper _MyHelperConstructor();
+
+void _MyHelperExtensionsPreConstructor(inout MyHelperExtensions self);
+MyHelperExtensions _MyHelperExtensionsConstructor();
+void _MyHelperIncrement(inout MyHelper self);
+MyHelper _MyHelperGetInstance();
+
+void _ExtensionMethodsPreConstructor(inout ExtensionMethods self);
+ExtensionMethods _ExtensionMethodsConstructor();
+float _MathMyCross2d(vec2 _real20, vec2 _real21);
+void _ExtensionMethodsMain(inout ExtensionMethods self);
+
+//----- Global Variable Declarations -----
+//----- Real2Extensions Functions -----
+void _Real2ExtensionsPreConstructor(inout Real2Extensions self)
+{
+  self.Dummy = 0;
+}
+
+Real2Extensions _Real2ExtensionsConstructor()
+{
+  Real2Extensions self;
+  _Real2ExtensionsPreConstructor(self);
+  return self;
+}
+
+vec2 _vec2Flip(inout vec2 self)
+{
+  return vec2(-self.y, self.x);
+}
+
+vec2 _vec2Flip(bool _counterClockwise, inout vec2 self)
+{
+  if(_counterClockwise)
+  {
+    return vec2(self.y, -self.x);
+  }
+  else
+  {
+    return vec2(-self.y, self.x);
+  }
+}
+
+vec2 _vec2Add(vec2 _real20, vec2 _real21)
+{
+  return _real20 + _real21;
+}
+
+//----- MyHelper Functions -----
+void _MyHelperPreConstructor(inout MyHelper self)
+{
+  self.Data = int(0);
+}
+
+MyHelper _MyHelperConstructor()
+{
+  MyHelper self;
+  _MyHelperPreConstructor(self);
+  return self;
+}
+
+//----- MyHelperExtensions Functions -----
+void _MyHelperExtensionsPreConstructor(inout MyHelperExtensions self)
+{
+  self.Dummy = 0;
+}
+
+MyHelperExtensions _MyHelperExtensionsConstructor()
+{
+  MyHelperExtensions self;
+  _MyHelperExtensionsPreConstructor(self);
+  return self;
+}
+
+void _MyHelperIncrement(inout MyHelper self)
+{
+  self.Data += 1;
+}
+
+MyHelper _MyHelperGetInstance()
+{
+  MyHelper _result = _MyHelperConstructor();
+  _result.Data = 0;
+  return _result;
+}
+
+//----- ExtensionMethods Functions -----
+void _ExtensionMethodsPreConstructor(inout ExtensionMethods self)
+{
+  self.Dummy = 0;
+}
+
+ExtensionMethods _ExtensionMethodsConstructor()
+{
+  ExtensionMethods self;
+  _ExtensionMethodsPreConstructor(self);
+  return self;
+}
+
+float _MathMyCross2d(vec2 _real20, vec2 _real21)
+{
+  return _real20.x * _real21.y + _real20.y * _real21.x;
+}
+
+void _ExtensionMethodsMain(inout ExtensionMethods self)
+{
+  vec2 _vec = vec2(float(1), float(0));
+  vec2 _v1 = _vec2Flip(_vec);
+  vec2 _v2 = _vec2Flip(true, _vec);
+  float _value = _MathMyCross2d(_v1, _v2);
+  
+  MyHelper _helper = _MyHelperConstructor();
+  _MyHelperIncrement(_helper);
+  _helper = _MyHelperGetInstance();
+}
+

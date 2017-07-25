@@ -1,0 +1,18 @@
+[Version:1]
+DataContent 
+{
+	RichAnimationBuilder 
+	{
+		var Name = "TemplateRichAnimation"
+		var ResourceId = 0x544be126b1156274
+		var PreviewArchetype = ""
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Rich Animation"
+		var Description = ""
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

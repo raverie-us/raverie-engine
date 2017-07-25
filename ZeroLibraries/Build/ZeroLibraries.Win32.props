@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(N3DS_SOURCE)\Build\Np1.props" Condition="exists('$(N3DS_SOURCE)\Build\Np1.props')" Label="Np1Platform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>$(ZERO_OUTPUT)\Out\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(ZERO_OUTPUT)\Int\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(ZERO_SHARED_WARNINGS)'!=''">
+    <ClCompile>
+      <PreprocessorDefinitions>ZeroSharedWarnings;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PreprocessorDefinitions>CURL_STATICLIB;WIN32;_CRT_SECURE_NO_WARNINGS;ZeroExportDll;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName)$(Configuration)$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+	<Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4099,4221 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

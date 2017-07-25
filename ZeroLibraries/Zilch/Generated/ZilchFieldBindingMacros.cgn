@@ -1,0 +1,104 @@
+// All the permutations we'd like to evaluate
+permute Intrinsic: int[0,2];
+permute Instance : bool;
+permute As : bool;
+permute IoMode: int[0,2];
+
+handler <? Instance ?>
+{
+  Kind = "Instance";
+  ShortKind = "";
+}
+
+handler <? !Instance ?>
+{
+  Kind = "Static";
+  ShortKind = "Static";
+}
+
+handler <? As ?>
+{
+  As = "As";
+  AsNameArg = ", Name";
+  AsNameValue = "Name";
+}
+
+handler <? !As ?>
+{
+  As = "";
+  AsNameArg = "";
+  AsNameValue = "#Field";
+}
+
+handler <? Intrinsic == 0 ?>
+{
+  Intrinsic = "Internal";
+  ShortIntrinsic = "";
+  FieldArg = "Field";
+  FieldPtr = "&ZilchSelf::Field";
+  OwnerArgs = "";
+  OwnerValues = "builder, type, ";
+}
+
+handler <? Intrinsic == 1 ?>
+{
+  Intrinsic = "External";
+  ShortIntrinsic = "External";
+  FieldArg = "NamespaceAndClass, Field";
+  FieldPtr = "&NamespaceAndClass::Field";
+  OwnerArgs = "";
+  OwnerValues = "builder, type, ";
+}
+
+handler <? Intrinsic == 2 ?>
+{
+  Intrinsic = "Custom";
+  ShortIntrinsic = "Custom";
+  FieldArg = "NamespaceAndClass, Field";
+  FieldPtr = "&NamespaceAndClass::Field";
+  OwnerArgs = "ZilchBuilder, ZilchType, ";
+  OwnerValues = "ZilchBuilder, ZilchType, ";
+}
+
+handler <? IoMode == 0 ?>
+{
+  IoMode = "Get";
+}
+
+handler <? IoMode == 1 ?>
+{
+  IoMode = "Set";
+}
+
+handler <? IoMode == 2 ?>
+{
+  IoMode = "GetSet";
+}
+
+// If this can be done as shorthand...
+handler <? ((Intrinsic == 0) || Instance) ?>
+{
+  Shorthand = "";
+}
+
+// There is no shorthand.. remove the entire shorthand macro
+handler <? !((Intrinsic == 0) || Instance) ?>
+{
+  "\$Shorthand\$.*" = "";
+}
+
+handler <? All ?>
+{
+  // Clear empty lines
+  "(\s*\r\n){2,}" = "\r\n";
+  
+  // Turn commas in the form of [,] into an actual comma, if it's needed
+  "(\[,]){2,}"  = "[,]";
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+#define ZilchBind$Intrinsic$$Kind$Field$IoMode$$As$($OwnerArgs$$FieldArg$$AsNameArg$)                                                                                     ZilchBindFieldHelper($OwnerValues$$Kind$, $FieldPtr$, $AsNameValue$, $IoMode$)
+$Shorthand$#define ZilchBind$ShortIntrinsic$$ShortKind$Field$IoMode$$As$($OwnerArgs$$FieldArg$$AsNameArg$)                                                                                     ZilchBind$Intrinsic$$Kind$Field$IoMode$$As$($OwnerArgs$$FieldArg$$AsNameArg$)
+

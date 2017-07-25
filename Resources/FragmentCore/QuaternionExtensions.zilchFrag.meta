@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "QuaternionExtensions"
+		var ResourceId = 0x58e318de48042aad
+	}
+}

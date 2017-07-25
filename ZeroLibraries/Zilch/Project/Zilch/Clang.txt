@@ -1,0 +1,2 @@
+clang -std=c++11 -I "C:\Sandbox\Zero\Libraries" -I "C:\Sandbox\Zero\Libraries\Common" *.cpp
+

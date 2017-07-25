@@ -1,0 +1,15 @@
+// Color input for generic use. Color is not used in lighting, see Albedo.
+// Output values are mapped from a texture over the surface.
+[Pixel]
+struct ColorMap
+{
+  [FragmentInput][StageInput] var Uv : Real2;
+  [Input] var Texture : Sampler2d;
+
+  [Output] var Color : Real4;
+
+  function Main()
+  {
+    this.Color = this.Texture.Sample(this.Uv);
+  }
+}

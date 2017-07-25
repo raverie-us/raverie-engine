@@ -1,0 +1,194 @@
+// Outputs all information about scene geometry into two buffers.
+[Pixel][RenderPass]
+struct GeometryPass
+{
+  [BuiltInInput] var FarPlane : Real;
+  
+  [Input] var PerspectivePosition : Real4;
+  
+  [Input] var ViewPosition : Real3;
+  [Input] var ViewNormal : Real3;
+  
+  [Input] var Albedo : Real3 = Real3(1.0, 0.0, 0.0);
+  [Input] var Metallic : Real = 0.0;
+  [Input] var Roughness : Real = 1.0;
+  [Input] var Specular : Real = 0.5;
+  
+  // Normal, Depth, Roughness
+  [Output] var Target0 : Real4;
+  // Albedo, Metallic, Specular
+  [Output] var Target1 : Real4;
+  
+  function Main()
+  {
+    this.ViewNormal = Math.Normalize(this.ViewNormal);
+    
+    // The magnitude of the normal's Z can be easily recomputed since the normal is unit length
+    // but the sign would be unknown, so we borrow the sign bit from roughness since it will not use it.
+    // zSign will be -1 if ViewNormal.Z is negative, otherwise it will be 1.
+    var zSign = 1.0 - 2.0 * Math.Step(this.ViewNormal.Z, 0.0);
+    // Making sure roughness is never completely 0 has two purposes,
+    // 0 behaves poorly in lighting calculations and we need to make sure we have the sign value for the normal.
+    this.Roughness = Math.Clamp(this.Roughness, 0.001, 1.0) * zSign;
+    
+    var metallicSpecular = Utility.PackX(Math.Saturate(this.Metallic));
+    metallicSpecular += Utility.PackY(Math.Saturate(this.Specular));
+    
+    this.Target0 = Real4(this.ViewNormal.XY, -this.ViewPosition.Z / this.FarPlane, this.Roughness);
+    this.Target1 = Real4(this.Albedo, metallicSpecular);
+  }
+  
+  [Static]
+  function GetNormal(geometrySample0 : Real4) : Real3
+  {
+    var normal = Real3(geometrySample0.XY, 0.0);
+    // zSign will be -1 if geometrySample0.W is negative, otherwise it will be 1.
+    var zSign = 1.0 - 2.0 * Math.Step(geometrySample0.W, 0.0);
+    normal.Z = Math.Sqrt(Math.Max(1.0 - Math.LengthSq(normal.XY), 0.0)) * zSign;
+    return normal;
+  }
+  
+  [Static]
+  function GetDepth(geometrySample0 : Real4) : Real
+  {
+    return geometrySample0.Z;
+  }
+  
+  [Static]
+  function GetRoughness(geometrySample0 : Real4) : Real
+  {
+    return Math.Abs(geometrySample0.W);
+  }
+  
+  [Static]
+  function GetAlbedo(geometrySample1 : Real4) : Real3
+  {
+    return geometrySample1.XYZ;
+  }
+  
+  [Static]
+  function GetMetallic(geometrySample1 : Real4) : Real
+  {
+    return Utility.UnpackX(geometrySample1.W);
+  }
+  
+  [Static]
+  function GetSpecular(geometrySample1 : Real4) : Real
+  {
+    return Utility.UnpackY(geometrySample1.W);
+  }
+  
+  [Static]
+  function ReconstructViewPosition(geometrySample0 : Real4, perspectiveToView : Real4x4, perspectivePosition : Real4, farPlane : Real) : Real3
+  {
+    // Get the Z coordinate of ViewPosition.
+    var depth = GeometryPass.GetDepth(geometrySample0);
+    var viewZ = -depth * farPlane;
+    
+    // Transform the current pixel to view space for a reference point.
+    var viewPosition = Math.Multiply(perspectiveToView, perspectivePosition);
+    viewPosition /= viewPosition.W;
+    
+    // Set Z to the NDC space -1 to get a near plane point along the same line of perspective.
+    // This allows us to get the correct view ray whether the projection used is orthographic or perspective.
+    perspectivePosition.Z = -perspectivePosition.W;
+    var viewStart = Math.Multiply(perspectiveToView, perspectivePosition);
+    viewStart /= viewStart.W;
+    var viewRay = Math.Normalize(viewPosition.XYZ - viewStart.XYZ);
+    
+    // Since viewStart.Z is equal to the near plane distance, we want to scale viewRay so that
+    // the Z coordinate of (viewStart + viewRay) is equal to viewZ, giving us the original ViewPosition from the GeometryPass.
+    var zDistanceFromNear = viewZ - viewStart.Z;
+    viewRay *= (zDistanceFromNear / viewRay.Z);
+    return viewStart.XYZ + viewRay;
+  }
+}
+
+// Samples geometry buffers and outputs values for other fragments to use.
+// GeometryBuffer inputs are expected to be set globally.
+[Pixel]
+struct GeometryInput
+{
+  [BuiltInInput] var FarPlane : Real;
+  [BuiltInInput] var PerspectiveToView : Real4x4;
+  
+  [StageInput] var PerspectivePosition : Real4;
+  
+  [PropertyInput] var GeometryBuffer0 : Sampler2d;
+  [PropertyInput] var GeometryBuffer1 : Sampler2d;
+  
+  [Output] var GeoNormal : Real3;
+  [Output] var GeoDepth : Real;
+  [Output] var GeoRoughness : Real;
+  [Output] var GeoAlbedo : Real3;
+  [Output] var GeoMetallic : Real;
+  [Output] var GeoSpecular : Real;
+  [Output] var GeoPosition : Real3;
+  
+  function Main()
+  {
+    var screenUv = this.PerspectivePosition.XY / this.PerspectivePosition.W;
+    screenUv = (screenUv + Real2(1.0, -1.0)) * Real2(0.5, -0.5);
+    
+    var geometrySample0 = this.GeometryBuffer0.Sample(screenUv);
+    var geometrySample1 = this.GeometryBuffer1.Sample(screenUv);
+    
+    this.GeoNormal = GeometryPass.GetNormal(geometrySample0);
+    this.GeoDepth = GeometryPass.GetDepth(geometrySample0);
+    this.GeoRoughness = GeometryPass.GetRoughness(geometrySample0);
+    this.GeoAlbedo = GeometryPass.GetAlbedo(geometrySample1);
+    this.GeoMetallic = GeometryPass.GetMetallic(geometrySample1);
+    this.GeoSpecular = GeometryPass.GetSpecular(geometrySample1);
+    
+    this.GeoRoughness = Math.Max(this.GeoRoughness, 0.05);
+    
+    this.GeoPosition = GeometryPass.ReconstructViewPosition(geometrySample0, this.PerspectiveToView, this.PerspectivePosition, this.FarPlane);
+  }
+}
+
+// Used to visualize individual elements from the geometry buffers.
+[Pixel][PostProcess]
+struct GeometryDebug
+{
+  [BuiltInInput] var ViewToWorld : Real4x4;
+  
+  [StageInput] var Uv : Real2;
+  
+  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var GeometryBuffer1 : Sampler2d;
+  
+  [Input] var ShowNormal : Boolean = false;
+  [Input] var ShowDepth : Boolean = false;
+  [Input] var ShowRoughness : Boolean = false;
+  [Input] var ShowAlbedo : Boolean = false;
+  [Input] var ShowMetallic : Boolean = false;
+  [Input] var ShowSpecular : Boolean = false;
+  
+  [Output] var Target0 : Real4;
+
+  function Main()
+  {
+    var geometrySample0 = this.GeometryBuffer0.Sample(this.Uv);
+    var geometrySample1 = this.GeometryBuffer1.Sample(this.Uv);
+    
+    var normal = GeometryPass.GetNormal(geometrySample0);
+    var depth = GeometryPass.GetDepth(geometrySample0);
+    var roughness = GeometryPass.GetRoughness(geometrySample0);
+    var albedo = GeometryPass.GetAlbedo(geometrySample1);
+    var metallic = GeometryPass.GetMetallic(geometrySample1);
+    var specular = GeometryPass.GetSpecular(geometrySample1);
+    
+    normal = Math.MultiplyNormal(this.ViewToWorld, normal);
+    normal = normal * Real3(0.5) + Real3(0.5);
+    
+    var normalColor = normal * (this.ShowNormal as Real);
+    var depthColor = depth.XXX * (this.ShowDepth as Real);
+    var roughnessColor = roughness.XXX * (this.ShowRoughness as Real);
+    var albedoColor = albedo * (this.ShowAlbedo as Real);
+    var metallicColor = metallic.XXX * (this.ShowMetallic as Real);
+    var specularColor = specular.XXX * (this.ShowSpecular as Real);
+    
+    var outputColor = normalColor + depthColor + roughnessColor + albedoColor + metallicColor + specularColor;
+    this.Target0 = Real4(outputColor, 1.0);
+  }
+}

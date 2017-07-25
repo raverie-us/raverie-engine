@@ -1,0 +1,11 @@
+[Pixel]
+struct SinTime
+{
+    //[Input] var Scale : Real;
+    [Input][Output] var Time : Real;
+    
+    function Main()
+    {
+        this.Time = Math.Sin(this.Time);// * this.Scale;
+    }
+}

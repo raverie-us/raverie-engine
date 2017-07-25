@@ -1,0 +1,11 @@
+DataContent = 
+{
+	DataBuilder = 
+	{
+		string Name = "Game",
+		uint64 ResourceId = 53d97314cdb4d76a,
+		string LoaderType = "GameSession",
+		uint Version = 0,
+		bool ShowInEditor = true,
+	},
+},

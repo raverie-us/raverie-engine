@@ -1,0 +1,93 @@
+class UnitTest05
+{
+  // Test the while loop, do while loop, for loop, loop, continue, break, unary operators
+  [Static]
+  function Test05() : Integer
+  {
+    var i = 0.0 as Integer;
+    var j = true as Integer;
+    var real = 35.263;
+
+    while (i < 17)
+    {
+      ++i;
+
+      if (i >= 3)
+      {
+        ++j;
+        continue;
+      }
+
+      ++real;
+      ++i;
+      ++i;
+    }
+
+    while (i < 30)
+    {
+      ++i;
+
+      if (i >= 22)
+      {
+        break;
+      }
+
+      ++i;
+    }
+
+    i += 62;
+
+    var flipFlop = true;
+
+    do
+    {
+      flipFlop = !flipFlop;
+
+      if (i > 19)
+      {
+        --i;
+      }
+      else if (flipFlop)
+      {
+        --i;
+        ++j;
+        --real;
+      }
+      else
+      {
+        continue;
+      }
+
+      ++j;
+    }
+    while (i != 16)
+    
+    for (var k = 1; k < 7 + j; ++k)
+    {
+      ++i;
+
+      if (i % 3 == 0)
+      {
+        continue;
+      }
+
+      if (i % 2 == 0)
+      {
+        i += j;
+      }
+    }
+
+    loop
+    {
+      if (i > 9000 - j)
+      {
+        break;
+      }
+
+      ++i;
+      i += i + real as Integer;
+    }
+
+    return i + ~j / real as Integer;
+  }
+}

@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "PostVertex"
+		var ResourceId = 0x563cf10a72ea861e
+	}
+}

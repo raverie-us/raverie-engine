@@ -1,0 +1,17 @@
+permute Index : int[0,1000];
+
+handler <? All ?>
+{
+  Index = <? Index.ToString() ?>;
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+virtual size_t Get$Index$()
+{
+  StaticDebugIsVirtual = true;
+  this->InstanceDebugIsVirtual = true;
+  return $Index$;
+}
+

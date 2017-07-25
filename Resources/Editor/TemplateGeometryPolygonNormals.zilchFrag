@@ -1,0 +1,33 @@
+struct %RESOURCENAME%InOut
+{
+	[Input][Output] var ViewPosition : Real3;
+	[Input][Output] var ViewNormal : Real3;
+}
+
+[Geometry(maxVertices : 3)]
+struct %RESOURCENAME%
+{
+	function Main(input : TriangleInput[%RESOURCENAME%InOut], output : TriangleOutput[%RESOURCENAME%InOut])
+	{
+		// Copy input
+		var vertices = FixedArray[%RESOURCENAME%InOut, 3]();
+		vertices[0] = input[0];
+		vertices[1] = input[1];
+		vertices[2] = input[2];
+
+		// Assign new normal
+		var p1p0 = vertices[1].ViewPosition - vertices[0].ViewPosition;
+		var p2p0 = vertices[2].ViewPosition - vertices[0].ViewPosition;
+		var normal = Math.Normalize(Math.Cross(p1p0, p2p0));
+
+		vertices[0].ViewNormal = normal;
+		vertices[1].ViewNormal = normal;
+		vertices[2].ViewNormal = normal;
+
+		// Output triangle
+		output.Append(vertices[0], 0);
+		output.Append(vertices[1], 1);
+		output.Append(vertices[2], 2);
+		output.Restart();
+	}
+}

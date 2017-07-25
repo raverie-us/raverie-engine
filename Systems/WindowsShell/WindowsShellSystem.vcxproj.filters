@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="System">
+      <UniqueIdentifier>{e7a6f790-b2fd-43eb-8772-efa1b1807ddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shell">
+      <UniqueIdentifier>{e0362cf1-b823-4654-bec0-1afcd3ffc61e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Extensions">
+      <UniqueIdentifier>{c39692e0-92f4-4fd5-a117-4c9e0da41838}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Launcher.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsShell.cpp">
+      <Filter>Shell</Filter>
+    </ClCompile>
+    <ClCompile Include="WinUtility.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="RawInput.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="ComPort.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="RcInput.cpp">
+      <Filter>Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsShellSystemStandard.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsSystem.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Launcher.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="WinUtility.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsShell.hpp">
+      <Filter>Shell</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceDef.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="RawInput.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="ComPort.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="RcInput.hpp">
+      <Filter>Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsShellSystemStandard.hpp" />
+    <ClInclude Include="WinInputs.inl">
+      <Filter>System</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="MercurialSourceControl.cpp">
+      <Filter>SourceControl</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceControl.cpp">
+      <Filter>SourceControl</Filter>
+    </ClCompile>
+    <ClCompile Include="SvnSourceControl.cpp">
+      <Filter>SourceControl</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="LocalModifications.cpp" />
+    <ClCompile Include="MetaComposition.cpp" />
+    <ClCompile Include="MetaDatabase.cpp" />
+    <ClCompile Include="MetaEditorExtensions.cpp" />
+    <ClCompile Include="MetaSelection.cpp" />
+    <ClCompile Include="Notification.cpp" />
+    <ClCompile Include="Precompiled.cpp" />
+    <ClCompile Include="PropertyHandle.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="MetaStandard.cpp" />
+    <ClCompile Include="MetaMath.cpp" />
+    <ClCompile Include="MetaHandles.cpp" />
+    <ClCompile Include="MetaLibraryExtensions.cpp" />
+    <ClCompile Include="MetaBindingExtensions.cpp" />
+    <ClCompile Include="MetaArray.cpp" />
+    <ClCompile Include="ThreadSafeReferenceCounted.cpp" />
+    <ClCompile Include="CommonHandleManagers.cpp" />
+    <ClCompile Include="NativeTypeConversion.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SourceControl.hpp">
+      <Filter>SourceControl</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.hpp" />
+    <ClInclude Include="LocalModifications.hpp" />
+    <ClInclude Include="MetaComposition.hpp" />
+    <ClInclude Include="MetaDatabase.hpp" />
+    <ClInclude Include="MetaEditorExtensions.hpp" />
+    <ClInclude Include="MetaSelection.hpp" />
+    <ClInclude Include="MetaStandard.hpp" />
+    <ClInclude Include="Notification.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="PropertyHandle.hpp" />
+    <ClInclude Include="Tags.hpp" />
+    <ClInclude Include="Object.hpp" />
+    <ClInclude Include="MetaMath.hpp" />
+    <ClInclude Include="VariantTypes.inl" />
+    <ClInclude Include="ObjectRestoreState.hpp" />
+    <ClInclude Include="MetaHandles.hpp" />
+    <ClInclude Include="MetaLibraryExtensions.hpp" />
+    <ClInclude Include="MetaBindingExtensions.hpp" />
+    <ClInclude Include="MetaArray.hpp" />
+    <ClInclude Include="ZeroMetaArray.hpp" />
+    <ClInclude Include="ThreadSafeReferenceCounted.hpp" />
+    <ClInclude Include="ProxyObject.hpp" />
+    <ClInclude Include="HandleManagers.hpp" />
+    <ClInclude Include="CommonHandleManagers.hpp" />
+    <ClInclude Include="NativeTypeConversion.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SimpleResourceFactory.hpp" />
+    <ClInclude Include="PropertyHandle.hpp">
+      <Filter>Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleResourceFactory.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SourceControl">
+      <UniqueIdentifier>{51441020-bcb1-4fa4-8d0a-38dcd0b3a70e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

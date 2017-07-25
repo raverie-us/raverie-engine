@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{34F0E1C6-C7FC-405F-9BF3-2CDBF6BBAAF7}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseShaderTranslator.hpp" />
+    <ClInclude Include="CodeRangeMapping.hpp" />
+    <ClInclude Include="Compositor.hpp" />
+    <ClInclude Include="ForwardDeclarations.hpp" />
+    <ClInclude Include="GlslTranslator.hpp" />
+    <ClInclude Include="ShaderAttributes.hpp" />
+    <ClInclude Include="ShaderErrors.hpp" />
+    <ClInclude Include="GenericTranslation.hpp" />
+    <ClInclude Include="GlslTranslation.hpp" />
+    <ClInclude Include="LibraryTranslationHelpers.hpp" />
+    <ClInclude Include="LibraryTranslator.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="ShaderCodeBuilder.hpp" />
+    <ClInclude Include="ShaderIntrinsicTypes.hpp" />
+    <ClInclude Include="ShaderType.hpp" />
+    <ClInclude Include="Translator.hpp" />
+    <ClInclude Include="ShaderLibrary.hpp" />
+    <ClInclude Include="ShaderProject.hpp" />
+    <ClInclude Include="SimpleZilchShaderGenerator.hpp" />
+    <ClInclude Include="TranslatorContext.hpp" />
+    <ClInclude Include="ZilchShaderSettingsLibrary.hpp" />
+    <ClInclude Include="ZilchShaderSharedSettings.hpp" />
+    <ClInclude Include="ZilchShadersStandard.hpp" />
+    <ClInclude Include="ZilchTypeCollector.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CodeRangeMapping.cpp" />
+    <ClCompile Include="Compositor.cpp" />
+    <ClCompile Include="GlslTranslator.cpp" />
+    <ClCompile Include="ShaderAttributes.cpp" />
+    <ClCompile Include="ShaderErrors.cpp" />
+    <ClCompile Include="GenericTranslation.cpp" />
+    <ClCompile Include="GlslTranslation.cpp" />
+    <ClCompile Include="LibraryTranslationHelpers.cpp" />
+    <ClCompile Include="LibraryTranslator.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ShaderCodeBuilder.cpp" />
+    <ClCompile Include="ShaderIntrinsicTypes.cpp" />
+    <ClCompile Include="ShaderType.cpp" />
+    <ClCompile Include="Translator.cpp" />
+    <ClCompile Include="ShaderLibrary.cpp" />
+    <ClCompile Include="ShaderProject.cpp" />
+    <ClCompile Include="SimpleZilchShaderGenerator.cpp" />
+    <ClCompile Include="TranslatorContext.cpp" />
+    <ClCompile Include="ZilchShaderSettingsLibrary.cpp" />
+    <ClCompile Include="ZilchShaderSharedSettings.cpp" />
+    <ClCompile Include="ZilchShadersStandard.cpp" />
+    <ClCompile Include="ZilchTypeCollector.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

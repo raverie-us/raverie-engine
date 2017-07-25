@@ -1,0 +1,28 @@
+[Version:1]
+ImageContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"SelectionIcon"
+		}
+	}
+	SpriteSourceBuilder 
+	{
+		var Name = "SelectIcon"
+		var ResourceId = 0x58f8e4be736fa133
+		var AtlasId = 0x5274cf95e4a661fd
+		var FrameSizeX = 30
+		var FrameSizeY = 30
+		var FrameCount = 1
+		var FrameDelay = 0.0833333358
+		var OriginX = 15
+		var OriginY = 15
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+}

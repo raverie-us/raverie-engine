@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Default"
+		var ResourceId = 0x56f22bdc94800e65
+		var LoaderType = "NetChannelConfig"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Default"
+		var Description = ""
+		var SortWeight = 10
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Build">
+      <UniqueIdentifier>{da22bd7a-c220-4336-8a0b-d12c47781fa2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SConstruct.py">
+      <Filter>Build</Filter>
+    </None>
+  </ItemGroup>
+</Project>

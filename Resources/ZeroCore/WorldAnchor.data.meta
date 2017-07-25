@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "WorldAnchor"
+		var ResourceId = 0x4d9dd7c8161060ee
+		var LoaderType = "Cog"
+		var Version = 0
+		var ShowInEditor = false
+	}
+}

@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DefaultHeightMapMaterial"
+		var ResourceId = 0x57bb74a7debfd486
+		var LoaderType = "Material"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

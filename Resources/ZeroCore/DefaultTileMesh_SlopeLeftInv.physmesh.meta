@@ -1,0 +1,13 @@
+[Version:1]
+BinaryContent 
+{
+	BinaryBuilder 
+	{
+		var Name = "SlopeLeftInv"
+		var ResourceId = 0x5198b94ac018d384
+		var LoaderType = "PhysicsMesh"
+		var Version = 0
+		var FilterTag = "TileMesh"
+		var ResourceOwner = ""
+	}
+}

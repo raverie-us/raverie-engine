@@ -1,0 +1,25 @@
+[Pixel]
+struct QuaternionCompilationTests
+{
+    function Main()
+    {
+      var q = Quaternion();
+      q = Quaternion.Identity;
+      q.X = 1.0;
+      q.Y = 1.0;
+      q.Z = 1.0;
+      q.W = 1.0;
+      q.XYZW = q.XXYY;
+      q[0] = q[1];
+      q.Set(0, q.Get(1));
+      q.Count;
+      
+      Math.ToQuaternion(Real3(0, 1, 0), 0.0);
+      q = Math.Normalize(q);
+      q = Math.Invert(q);
+      Math.Multiply(Quaternion(), Quaternion());
+      Math.Multiply(Quaternion(), Real3());
+      Math.RotateTowards(q, q, 5);
+      Math.Slerp(q, q, 1.0);
+    }
+}

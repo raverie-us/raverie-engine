@@ -1,0 +1,70 @@
+// Boiler plate vertex shader fragment used in generated shaders for SkinnedModels.
+[Vertex][CoreVertex]
+struct SkinnedMeshVertex
+{
+  [Input] var LocalToView : Real4x4;
+  [Input] var LocalToViewNormal : Real3x3;
+  [Input] var LocalToPerspective : Real4x4;
+  [Input] var BoneTransforms : FixedArray[Real4x4, 80];
+
+  [Input] var LocalPosition : Real3;
+  [Input] var LocalNormal : Real3;
+  [Input] var LocalTangent : Real3;
+  [Input] var LocalBitangent : Real3;
+  [Input] var BoneIndices : Integer4;
+  [Input] var BoneWeights : Real4;
+
+  [Input][Output] var Uv : Real2;
+
+  [Output] var ViewPosition : Real3;
+  [Output] var ViewNormal : Real3;
+  [Output] var ViewTangent : Real3;
+  [Output] var ViewBitangent : Real3;
+
+  [Output] var PerspectivePosition : Real4;
+
+  function Main()
+  {
+    var boneTransform0 = this.BoneTransforms[this.BoneIndices.X];
+    var boneTransform1 = this.BoneTransforms[this.BoneIndices.Y];
+    var boneTransform2 = this.BoneTransforms[this.BoneIndices.Z];
+    var boneTransform3 = this.BoneTransforms[this.BoneIndices.W];
+
+    // Weighted transforms for mesh skinning
+    var position = Real3(0.0);
+    position += Math.MultiplyPoint(boneTransform0, this.LocalPosition) * this.BoneWeights.X;
+    position += Math.MultiplyPoint(boneTransform1, this.LocalPosition) * this.BoneWeights.Y;
+    position += Math.MultiplyPoint(boneTransform2, this.LocalPosition) * this.BoneWeights.Z;
+    position += Math.MultiplyPoint(boneTransform3, this.LocalPosition) * this.BoneWeights.W;
+
+    var normal = Real3(0.0);
+    normal += Math.MultiplyNormal(boneTransform0, this.LocalNormal) * this.BoneWeights.X;
+    normal += Math.MultiplyNormal(boneTransform1, this.LocalNormal) * this.BoneWeights.Y;
+    normal += Math.MultiplyNormal(boneTransform2, this.LocalNormal) * this.BoneWeights.Z;
+    normal += Math.MultiplyNormal(boneTransform3, this.LocalNormal) * this.BoneWeights.W;
+    normal = Math.Normalize(normal);
+
+    var tangent = Real3(0.0);
+    tangent += Math.MultiplyNormal(boneTransform0, this.LocalTangent) * this.BoneWeights.X;
+    tangent += Math.MultiplyNormal(boneTransform1, this.LocalTangent) * this.BoneWeights.Y;
+    tangent += Math.MultiplyNormal(boneTransform2, this.LocalTangent) * this.BoneWeights.Z;
+    tangent += Math.MultiplyNormal(boneTransform3, this.LocalTangent) * this.BoneWeights.W;
+    tangent = Math.Normalize(tangent);
+
+    var bitangent = Real3(0.0);
+    bitangent += Math.MultiplyNormal(boneTransform0, this.LocalBitangent) * this.BoneWeights.X;
+    bitangent += Math.MultiplyNormal(boneTransform1, this.LocalBitangent) * this.BoneWeights.Y;
+    bitangent += Math.MultiplyNormal(boneTransform2, this.LocalBitangent) * this.BoneWeights.Z;
+    bitangent += Math.MultiplyNormal(boneTransform3, this.LocalBitangent) * this.BoneWeights.W;
+    bitangent = Math.Normalize(bitangent);
+
+    // Viewspace outputs for pixel shaders
+    this.ViewPosition = Math.MultiplyPoint(this.LocalToView, position);
+    this.ViewNormal = Math.Normalize(Math.Multiply(this.LocalToViewNormal, normal));
+    this.ViewTangent = Math.Normalize(Math.Multiply(this.LocalToViewNormal, tangent));
+    this.ViewBitangent = Math.Normalize(Math.Multiply(this.LocalToViewNormal, bitangent));
+
+    // Perspective output for graphics api
+    this.PerspectivePosition = Math.Multiply(this.LocalToPerspective, Real4(position, 1.0));
+  }
+}

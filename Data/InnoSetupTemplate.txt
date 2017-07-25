@@ -1,0 +1,46 @@
+; Zero Engine Export Installer
+; Use this file with Inno Setup to create an installer for your exported game and its content
+
+#define ApplicationName "%PROJECTNAME%"
+; This is the name of the folder that the application gets put in, change as needed
+#define ApplicationGroupName ApplicationName
+; If you would like spaces in your applications name replace the visual name definition
+#define ApplicationNameVisual ApplicationName
+#define ApplicationExeName "ZeroEditor.exe"
+#define ApplicationInstallerName ApplicationName + "InstallerSetup"
+; To change your icon replace this define with the path to your custom icon
+; {app} is the pathto the exported folder this file is located in
+#define IconFile "{app}\ZeroEditor.exe"
+#define ExePath  "{app}\ZeroEditor.exe"
+
+[Setup]
+AppName={#ApplicationName}
+AppVersion=1.0
+AppId=%GUID%
+DefaultDirName={pf}\{#ApplicationName}
+DefaultGroupName={#ApplicationGroupName}
+UninstallDisplayName={#ApplicationName}
+UninstallDisplayIcon={app}\{#IconFile}
+Compression=lzma2
+SolidCompression=yes
+OutputBaseFilename={#ApplicationInstallerName}
+OutputDir=.
+PrivilegesRequired=none
+; Place your license file here as needed and comment in the below line
+;LicenseFile=
+
+[Files]
+; All files located in the exported content folder, exclude this setup file itself
+Source: "*.*"; Excludes: "{#ApplicationInstallerName}.iss,InnoSetupTemplate.txt"; DestDir: "{app}"; Flags:replacesameversion recursesubdirs;
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked;
+
+[Icons]
+Name: "{group}\{#ApplicationName}"; Filename: "{#IconFile}";
+Name: "{commondesktop}\{#ApplicationNameVisual}"; Filename: "{#IconFile}"; Tasks: desktopicon
+Name: "{group}\Uninstall {#ApplicationNameVisual}"; Filename: {uninstallexe}
+
+[Run]
+Filename: "{#ExePath}"; Description: "Launch application"; Flags: postinstall nowait skipifsilent

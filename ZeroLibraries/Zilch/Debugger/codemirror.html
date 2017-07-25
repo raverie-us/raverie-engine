@@ -1,0 +1,107 @@
+<!doctype html>
+
+<title>CodeMirror: Theme Demo</title>
+<meta charset="utf-8"/>
+
+<link rel="stylesheet" href="codemirror.css">
+<link rel="stylesheet" href="code-themes/3024-day.css">
+<link rel="stylesheet" href="code-themes/3024-night.css">
+<link rel="stylesheet" href="code-themes/ambiance.css">
+<link rel="stylesheet" href="code-themes/base16-dark.css">
+<link rel="stylesheet" href="code-themes/base16-light.css">
+<link rel="stylesheet" href="code-themes/blackboard.css">
+<link rel="stylesheet" href="code-themes/cobalt.css">
+<link rel="stylesheet" href="code-themes/eclipse.css">
+<link rel="stylesheet" href="code-themes/elegant.css">
+<link rel="stylesheet" href="code-themes/erlang-dark.css">
+<link rel="stylesheet" href="code-themes/lesser-dark.css">
+<link rel="stylesheet" href="code-themes/mbo.css">
+<link rel="stylesheet" href="code-themes/mdn-like.css">
+<link rel="stylesheet" href="code-themes/midnight.css">
+<link rel="stylesheet" href="code-themes/monokai.css">
+<link rel="stylesheet" href="code-themes/neat.css">
+<link rel="stylesheet" href="code-themes/night.css">
+<link rel="stylesheet" href="code-themes/paraiso-dark.css">
+<link rel="stylesheet" href="code-themes/paraiso-light.css">
+<link rel="stylesheet" href="code-themes/pastel-on-dark.css">
+<link rel="stylesheet" href="code-themes/rubyblue.css">
+<link rel="stylesheet" href="code-themes/solarized.css">
+<link rel="stylesheet" href="code-themes/the-matrix.css">
+<link rel="stylesheet" href="code-themes/tomorrow-night-eighties.css">
+<link rel="stylesheet" href="code-themes/twilight.css">
+<link rel="stylesheet" href="code-themes/vibrant-ink.css">
+<link rel="stylesheet" href="code-themes/xq-dark.css">
+<link rel="stylesheet" href="code-themes/xq-light.css">
+<script src="codemirror.js"></script>
+<script src="code-modes/javascript.js"></script>
+<script src="code-addons/selection/active-line.js"></script>
+<script src="code-addons/edit/matchbrackets.js"></script>
+
+
+<textarea id="code" name="code">
+function findSequence(goal) {
+  function find(start, history) {
+    if (start == goal)
+      return history;
+    else if (start > goal)
+      return null;
+    else
+      return find(start + 5, "(" + history + " + 5)") ||
+             find(start * 3, "(" + history + " * 3)");
+  }
+  return find(1, "1");
+}
+</textarea>
+
+<p>Select a theme: <select onchange="selectTheme()" id=select size="2">
+    <option selected>default</option>
+    <option>3024-day</option>
+    <option>3024-night</option>
+    <option>ambiance</option>
+    <option>base16-dark</option>
+    <option>base16-light</option>
+    <option>blackboard</option>
+    <option>cobalt</option>
+    <option>eclipse</option>
+    <option>elegant</option>
+    <option>erlang-dark</option>
+    <option>lesser-dark</option>
+    <option>mbo</option>
+    <option>mdn-like</option>
+    <option>midnight</option>
+    <option>monokai</option>
+    <option>neat</option>
+    <option>night</option>
+    <option>paraiso-dark</option>
+    <option>paraiso-light</option>
+    <option>pastel-on-dark</option>
+    <option>rubyblue</option>
+    <option>solarized dark</option>
+    <option>solarized light</option>
+    <option>the-matrix</option>
+    <option>tomorrow-night-eighties</option>
+    <option>twilight</option>
+    <option>vibrant-ink</option>
+    <option>xq-dark</option>
+    <option>xq-light</option>
+</select>
+</p>
+
+<script>
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+    lineNumbers: true,
+    styleActiveLine: true,
+    matchBrackets: true
+  });
+  var input = document.getElementById("select");
+  function selectTheme() {
+    var theme = input.options[input.selectedIndex].innerHTML;
+    editor.setOption("theme", theme);
+  }
+  var choice = document.location.search &&
+               decodeURIComponent(document.location.search.slice(1));
+  if (choice) {
+    input.value = choice;
+    editor.setOption("theme", choice);
+  }
+</script>

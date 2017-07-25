@@ -1,0 +1,19 @@
+[Version:1]
+DataContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Gizmo"
+		}
+	}
+	DataBuilder 
+	{
+		var Name = "ArrowGizmo"
+		var ResourceId = 0x55fd8460bf199d0e
+		var LoaderType = "Cog"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

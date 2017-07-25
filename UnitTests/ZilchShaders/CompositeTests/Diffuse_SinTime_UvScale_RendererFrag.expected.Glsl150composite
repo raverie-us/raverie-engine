@@ -1,0 +1,52 @@
+[Vertex]
+struct Diffuse_SinTime_UvScale_RendererFrag_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageOutput][StageInput] var Uv : Real2;
+  [SVOutput] var ApiPerspectivePosition : Real4;
+
+  [Main]
+  function Main()
+  {
+    var basicvertexfrag = BasicVertexFrag();
+    basicvertexfrag.Uv = this.Uv;
+    basicvertexfrag.Main();
+    this.Uv = basicvertexfrag.Uv;
+  }
+}
+[Pixel]
+struct Diffuse_SinTime_UvScale_RendererFrag_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageInput] var Uv : Real2;
+  [StageOutput] var Target0 : Real4;
+  // Fragment Properties
+  [Uniform][Input] var UvScale_Scale : Real2;
+
+  [Main]
+  function Main()
+  {
+    var diffuse = Diffuse();
+    diffuse.Time = this.Time;
+    diffuse.Uv = this.Uv;
+    diffuse.Main();
+
+    var sintime = SinTime();
+    sintime.Time = this.Time;
+    sintime.Main();
+
+    var uvscale = UvScale();
+    uvscale.Scale = this.UvScale_Scale;
+    uvscale.Uv = this.Uv;
+    uvscale.Main();
+
+    var rendererfrag = RendererFrag();
+    rendererfrag.Color = diffuse.Color;
+    rendererfrag.Main();
+    this.Target0 = rendererfrag.Target0;
+  }
+}

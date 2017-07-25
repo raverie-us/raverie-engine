@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="PhysicsTracer">
+      <UniqueIdentifier>{1f442882-14b3-4160-9b14-d053818cf41c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsTracer">
+      <UniqueIdentifier>{ca0a31ec-90af-41ce-be23-bfa39805d060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{b8973121-5f5c-4140-9f93-631155f38b87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RayTracer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTracedPhysicsProvider.cpp">
+      <Filter>PhysicsTracer</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTracedGraphicsProvider.cpp">
+      <Filter>GraphicsTracer</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTraceProperties.cpp">
+      <Filter>GraphicsTracer</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTracedRenderer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTraceInitialize.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RayTracedPhysicsProvider.hpp">
+      <Filter>PhysicsTracer</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="RayTracer.hpp">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="RayTracedGraphicsProvider.hpp">
+      <Filter>GraphicsTracer</Filter>
+    </ClInclude>
+    <ClInclude Include="RayTraceProperties.hpp">
+      <Filter>GraphicsTracer</Filter>
+    </ClInclude>
+    <ClInclude Include="RayTracedRenderer.hpp">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="RayTraceInitialize.hpp">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

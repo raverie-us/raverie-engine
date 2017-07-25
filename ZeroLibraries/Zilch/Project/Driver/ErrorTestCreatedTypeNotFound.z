@@ -1,0 +1,18 @@
+// CreatedTypeNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  constructor()
+  {
+  }
+}
+
+class Guy
+{
+  function Foo()
+  {
+    var a : ref Animal = new ();
+  }
+}

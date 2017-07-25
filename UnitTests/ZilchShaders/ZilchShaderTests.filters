@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Glsl.cpp" />
+    <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="CompositorBuilder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Glsl.hpp" />
+    <ClInclude Include="Helpers.hpp" />
+    <ClInclude Include="CompositorBuilder.hpp" />
+  </ItemGroup>
+</Project>

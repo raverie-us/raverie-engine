@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "DefaultAnimation"
+		var ResourceId = 0x4f8ebbde619389d0
+		var LoaderType = "Animation"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

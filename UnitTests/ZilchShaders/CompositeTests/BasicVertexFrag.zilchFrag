@@ -1,0 +1,15 @@
+[Vertex]
+struct BasicVertexFrag
+{
+    [Input][Output]
+    var Uv : Real2;
+	
+	[Output]
+	var ProjectedPosition : Real4;
+    
+    function Main()
+    {
+        this.Uv *= 0.5;
+		this.ProjectedPosition = Real4();
+    }
+}

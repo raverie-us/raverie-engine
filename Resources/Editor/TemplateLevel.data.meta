@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "TemplateLevel"
+		var ResourceId = 0x4e3aa3bb03b6c98d
+		var LoaderType = "Level"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "3D Level"
+		var Description = "Simple 3D Level"
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

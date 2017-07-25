@@ -1,0 +1,120 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct MathImplements
+{
+  int Dummy;
+};
+
+struct Real3x3Implements
+{
+  int Dummy;
+};
+
+struct Real3Implements
+{
+  int Dummy;
+};
+
+struct ImplementTest
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _MathImplementsPreConstructor(inout MathImplements self);
+MathImplements _MathImplementsConstructor();
+float _MathLog10(float _value);
+
+void _Real3x3ImplementsPreConstructor(inout Real3x3Implements self);
+Real3x3Implements _Real3x3ImplementsConstructor();
+float _mat3x3GetByIndex(int _index, inout mat3x3 self);
+
+void _Real3ImplementsPreConstructor(inout Real3Implements self);
+Real3Implements _Real3ImplementsConstructor();
+vec3 _vec3GetAxis(int _value);
+
+void _ImplementTestPreConstructor(inout ImplementTest self);
+ImplementTest _ImplementTestConstructor();
+void _ImplementTestMain(inout ImplementTest self);
+
+//----- Global Variable Declarations -----
+//----- MathImplements Functions -----
+void _MathImplementsPreConstructor(inout MathImplements self)
+{
+  self.Dummy = 0;
+}
+
+MathImplements _MathImplementsConstructor()
+{
+  MathImplements self;
+  _MathImplementsPreConstructor(self);
+  return self;
+}
+
+float _MathLog10(float _value)
+{
+  return log(_value) / log(10.0f);
+}
+
+//----- Real3x3Implements Functions -----
+void _Real3x3ImplementsPreConstructor(inout Real3x3Implements self)
+{
+  self.Dummy = 0;
+}
+
+Real3x3Implements _Real3x3ImplementsConstructor()
+{
+  Real3x3Implements self;
+  _Real3x3ImplementsPreConstructor(self);
+  return self;
+}
+
+float _mat3x3GetByIndex(int _index, inout mat3x3 self)
+{
+  return self[_index / 3][_index % 3];
+}
+
+//----- Real3Implements Functions -----
+void _Real3ImplementsPreConstructor(inout Real3Implements self)
+{
+  self.Dummy = 0;
+}
+
+Real3Implements _Real3ImplementsConstructor()
+{
+  Real3Implements self;
+  _Real3ImplementsPreConstructor(self);
+  return self;
+}
+
+vec3 _vec3GetAxis(int _value)
+{
+  vec3 _result = vec3(0.0, 0.0, 0.0);
+  _result[_value] = 1.0f;
+  return _result;
+}
+
+//----- ImplementTest Functions -----
+void _ImplementTestPreConstructor(inout ImplementTest self)
+{
+  self.Dummy = 0;
+}
+
+ImplementTest _ImplementTestConstructor()
+{
+  ImplementTest self;
+  _ImplementTestPreConstructor(self);
+  return self;
+}
+
+void _ImplementTestMain(inout ImplementTest self)
+{
+  float _log10 = _MathLog10(1.0f);
+  
+  mat3x3 _m = mat3x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  float _r = _mat3x3GetByIndex(0, _m);
+  vec3 _v = _vec3GetAxis(0);
+}
+

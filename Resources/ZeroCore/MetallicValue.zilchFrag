@@ -1,0 +1,14 @@
+// Metallic input for lighting opaque geometry.
+// Output values are constant over the surface.
+[Pixel]
+struct MetallicValue
+{
+  [Input] var MetallicValue : Real = 0.0;
+  
+  [Output] var Metallic : Real;
+  
+  function Main()
+  {
+    this.Metallic = Math.Saturate(this.MetallicValue);
+  }
+}

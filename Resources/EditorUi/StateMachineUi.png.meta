@@ -1,0 +1,25 @@
+[Version:1]
+ImageContent 
+{
+	TextureBuilder 
+	{
+		var Name = "StateMachineUi"
+		var ResourceId = 0x519b11525b6561e5
+		var Type = TextureType.Texture2D
+		var Compression = TextureCompression.None
+		var AddressingX = TextureAddressing.Clamp
+		var AddressingY = TextureAddressing.Clamp
+		var Filtering = TextureFiltering.Nearest
+		var Anisotropy = TextureAnisotropy.x1
+		var MipMapping = TextureMipMapping.None
+		var PremultipliedAlpha = false
+		var GammaCorrection = false
+	}
+	TextureInfo 
+	{
+		var FileType = "png"
+		var LoadFormat = "RGBA8"
+		var Dimensions = "256 x 256"
+		var Size = "0.250 MB"
+	}
+}

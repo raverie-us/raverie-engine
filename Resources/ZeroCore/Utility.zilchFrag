@@ -1,0 +1,178 @@
+struct Utility
+{
+  [Static]
+  function NdcToScreenUv(ndc : Real2) : Real2
+  {
+    return (ndc + Real2(1.0, -1.0)) * Real2(0.5, -0.5);
+  }
+  
+  [Static]
+  function NdcToScreenUv(ndc : Real3) : Real3
+  {
+    return (ndc + Real3(1.0, -1.0, 1.0)) * Real3(0.5, -0.5, 0.5);
+  }
+  
+  [Static]
+  function GammaToLinear(gammaColor : Real3) : Real3
+  {
+    return Math.Pow(gammaColor, Real3(2.2));
+  }
+  
+  [Static]
+  function LinearToGamma(linearColor : Real3) : Real3
+  {
+    return Math.Pow(linearColor, Real3(1.0 / 2.2));
+  }
+  
+  // Applying a dither, or type of noise, can signicantly reduse artifacts like color banding
+  [Static]
+  function ApplyDither(linearColor : Real3, dither : ref Sampler2d, targetUv : Real2, targetSize : Real2) : Real3
+  {
+    var ditherSize = dither.SampleSize(0);
+    var ditherSample = dither.Sample(targetUv * targetSize / ditherSize).X / 256.0;
+    
+    // Apply dither in gamma space where the numerical truncation will take place
+    var gammaColor = Utility.LinearToGamma(linearColor);
+    gammaColor = Math.Max(gammaColor - Real3(ditherSample), Real3(0.0));
+    linearColor = Utility.GammaToLinear(gammaColor);
+    
+    return linearColor;
+  }
+  
+  // Computes relative luminance from linear color using luminosity function:
+  //   L = 0.2126R + 0.7152G + 0.0722B
+  // https://en.wikipedia.org/wiki/Relative_luminance
+  [Static]
+  function Luminance(linearColor : Real3) : Real
+  {
+    return Math.Dot(linearColor, Real3(0.2126, 0.7152, 0.0722));
+  }
+  
+  // Pack up to three reals in the range [0, 1] into a single value
+  // https://uncommoncode.wordpress.com/2012/11/07/float-packing-in-shaders-encoding-multiple-components-in-one-float
+  // Usage:
+  //   packed = Utility.PackX(valueX)
+  //   packed += Utility.PackY(valueY)
+  //   packed += Utility.PackZ(valueZ)
+  //   -------------------------------
+  //   valueX = Utility.UnpackX(packed)
+  //   valueY = Utility.UnpackY(packed)
+  //   valueZ = Utility.UnpackZ(packed)
+  [Static] var PackPrecision : Real = 128.0;
+  [Static] var PackPrecisionPlus1 : Real = Utility.PackPrecision + 1.0;
+  
+  [Static]
+  function PackX(input : Real) : Real
+  {
+    return Math.Floor(input * Utility.PackPrecision + 0.5);
+  }
+  
+  [Static]
+  function PackY(input : Real) : Real
+  {
+    return Math.Floor(input * Utility.PackPrecision + 0.5) * Utility.PackPrecisionPlus1;
+  }
+  
+  [Static]
+  function PackZ(input : Real) : Real
+  {
+    return Math.Floor(input * Utility.PackPrecision + 0.5) * Utility.PackPrecisionPlus1 * Utility.PackPrecisionPlus1;
+  }
+  
+  [Static]
+  function UnpackX(input : Real) : Real
+  {
+    return Math.FMod(input, Utility.PackPrecisionPlus1) / Utility.PackPrecision;
+  }
+  
+  [Static]
+  function UnpackY(input : Real) : Real
+  {
+    return Math.FMod(Math.Floor(input / Utility.PackPrecisionPlus1), Utility.PackPrecisionPlus1) / Utility.PackPrecision;
+  }
+  
+  [Static]
+  function UnpackZ(input : Real) : Real
+  {
+    return Math.Floor(input / (Utility.PackPrecisionPlus1 * Utility.PackPrecisionPlus1)) / Utility.PackPrecision;
+  }
+}
+
+[Vertex]
+struct FullscreenTriangle
+{
+  [Output] var PerspectivePosition : Real4;
+  
+  function Main()
+  {
+    var index = 0;
+    Shader.AddInlineShaderCode("glsl", "`index` = gl_VertexID");
+    
+    // Indices 0, 1, 2 create triangle points (-1, -1), (-1, 3), (3, -1) respectively.
+    var x = (index / 2) * 4.0 - 1.0;
+    var y = (index % 2) * 4.0 - 1.0;
+    
+    // Clockwise triangle at the far plane for directional lights
+    // because DeferredRenderer draws lights with front face culling and reverse depth test.
+    this.PerspectivePosition = Real4(x, y, 0.999999, 1.0);
+  }
+}
+
+[Pixel][RenderPass]
+struct ColorOutput
+{
+  [Input] var Color : Real4 = Real4(0.0);
+  [Output] var Target0 : Real4;
+  function Main()
+  {
+    this.Target0 = this.Color;
+  }
+}
+
+[Pixel][RenderPass]
+struct NoPixelOutput
+{
+  function Main() {}
+}
+
+[Pixel][PostProcess]
+struct CopyTarget
+{
+  [StageInput] var Uv : Real2;
+  [Input] var Texture : Sampler2d;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = this.Texture.Sample(this.Uv);
+  }
+}
+
+[Pixel][PostProcess]
+struct CopyTargetSingleChannel
+{
+  [StageInput] var Uv : Real2;
+  [Input] var Texture : Sampler2d;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = Real4(this.Texture.Sample(this.Uv).XXX, 1.0);
+  }
+}
+
+[Pixel][PostProcess]
+struct CopyValue
+{
+  [StageInput] var Uv : Real2;
+  [Input] var Color : Real4;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    this.Target0 = this.Color;
+  }
+}

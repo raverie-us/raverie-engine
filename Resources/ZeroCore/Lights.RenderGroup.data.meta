@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Lights"
+		var ResourceId = 0x581a791e8fa9287a
+		var LoaderType = "RenderGroup"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

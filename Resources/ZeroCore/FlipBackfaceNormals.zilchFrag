@@ -1,0 +1,13 @@
+// Makes double sided geometry always have outward facing normals.
+[Pixel]
+struct FlipBackfaceNormals
+{
+  [StageInput] var ViewPosition : Real3;
+  [FragmentInput][StageInput][Output] var ViewNormal : Real3;
+  
+  function Main()
+  {
+    var cosAngle = Math.Dot(this.ViewNormal, Math.Normalize(-this.ViewPosition));
+    this.ViewNormal = Math.Lerp(this.ViewNormal, -this.ViewNormal, Math.Step(cosAngle, 0.0));
+  }
+}

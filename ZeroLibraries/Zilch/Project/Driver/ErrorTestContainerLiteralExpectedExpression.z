@@ -1,0 +1,15 @@
+class Animal
+{
+  var Variable : Integer = 9;
+
+  [Static]
+  function Foo()
+  {
+  }
+  
+  [Static]
+  function Bar()
+  {
+    var test = new Array[Integer]() [ * ];
+  }
+}

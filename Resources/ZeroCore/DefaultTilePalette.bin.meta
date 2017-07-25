@@ -1,0 +1,21 @@
+[Version:1]
+BinaryContent 
+{
+	ResourceTemplate 
+	{
+		var DisplayName = "Default"
+		var Description = ""
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+	BinaryBuilder 
+	{
+		var Name = "DefaultTilePalette"
+		var ResourceId = 0x59325dce73343170
+		var LoaderType = "TilePaletteSource"
+		var Version = 0
+		var FilterTag = ""
+		var ResourceOwner = ""
+	}
+}

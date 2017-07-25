@@ -1,0 +1,21 @@
+[Version:1]
+DataContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Archetype"
+			"Cog"
+			"Gizmo"
+		}
+	}
+	DataBuilder 
+	{
+		var Name = "TranslateGizmo"
+		var ResourceId = 0x55fd85d684a945c6
+		var LoaderType = "Cog"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

@@ -1,0 +1,21 @@
+[Vertex]
+struct VertexSystemValues
+{
+    [Input] var VertexId : Integer;
+    
+    function Main()
+    {
+        
+    }
+}
+
+[Pixel]
+struct PixelSystemValues
+{
+    [Input] var PrimitiveId : Integer;
+
+    function Main()
+    {
+        
+    }
+}

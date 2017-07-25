@@ -1,0 +1,9 @@
+//SkipTest
+
+class Animal
+{
+  constructor()
+  {
+    var t = new BoundType();
+  }
+}

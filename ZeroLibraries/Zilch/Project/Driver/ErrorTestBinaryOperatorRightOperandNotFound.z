@@ -1,0 +1,11 @@
+// BinaryOperatorRightOperandNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function TestFn() : Real
+  {
+    return 1.0 + ;
+  }
+}

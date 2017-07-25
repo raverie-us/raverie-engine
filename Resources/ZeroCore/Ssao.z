@@ -1,0 +1,73 @@
+// Darkens occluded areas of the scene.
+// This implementation requires data from DeferredRenderer's GeometryPass.
+[RunInEditor]
+class Ssao : ZilchComponent
+{
+  // If effect is applied to the scene.
+  [Property] var Active : Boolean = true;
+  // Radius in world units that can affect a pixel.
+  [Property] var Radius : Real = 1.0;
+  // Exponent used to alter the intensity of occlusion results.
+  [Property] var Intensity : Real = 1.0;
+  // Threshold used in world units when doing edge safe blur on occlusion results.
+  [Property] var BlurDepthThreshold : Real = 0.05;
+  // Output only the occlusion results so effect can be viewed in isolation.
+  [Property] var DebugBuffer : Boolean = false;
+  
+  function AddRenderTasks(event : RenderTasksEvent, lightBuffer : RenderTarget, depthStencil : RenderTarget, geometryBuffer0 : RenderTarget)
+  {
+    if (!this.Active)
+      return;
+    
+    var targetSize = lightBuffer.Texture.Size;
+    var occlusionBuffer = event.GetRenderTarget(targetSize, TextureFormat.R8);
+    
+    // Clear to no occlusion
+    event.AddRenderTaskClearTarget(occlusionBuffer, Real4(1.0));
+    
+    var ssaoSettings = RenderSettings();
+    ssaoSettings.ColorTarget = occlusionBuffer;
+    ssaoSettings.DepthTarget = depthStencil;
+    
+    // Only process opaque pixels
+    ssaoSettings.DepthSettings.StencilMode = StencilMode.Enabled;
+    ssaoSettings.DepthSettings.StencilCompareFunc = TextureCompareFunc.Equal;
+    ssaoSettings.DepthSettings.StencilFailOp = StencilOp.Keep;
+    ssaoSettings.DepthSettings.DepthFailOp = StencilOp.Keep;
+    ssaoSettings.DepthSettings.DepthPassOp = StencilOp.Keep;
+    ssaoSettings.DepthSettings.StencilTestValue = 1 as Byte;
+    
+    var ssao = SsaoFragment();
+    ssao.TargetSize = targetSize;
+    ssao.SsaoRandom4x4 = Texture.SsaoRandom4x4;
+    ssao.GeometryBuffer0 = geometryBuffer0.Texture;
+    ssao.Radius = this.Radius;
+    ssao.Intensity = this.Intensity;
+    
+    // Accumulate occlusion
+    event.AddRenderTaskPostProcess(ssaoSettings, ssao);
+    
+    // Edge safe blur on occlusion buffer
+    BlurTextureEdgeSafe[BilateralBlurRadius5].Call(event, occlusionBuffer, geometryBuffer0, this.BlurDepthThreshold);
+    
+    var copySettings = RenderSettings();
+    copySettings.ColorTarget = lightBuffer;
+    
+    // For viewing just the occlusionBuffer, overwrite the lightBuffer instead of multiplying together
+    if (this.DebugBuffer == false)
+    {
+      copySettings.BlendSettings.BlendMode = BlendMode.Enabled;
+      copySettings.BlendSettings.BlendEquation = BlendEquation.Add;
+      copySettings.BlendSettings.SourceFactor = BlendFactor.Zero;
+      copySettings.BlendSettings.DestFactor = BlendFactor.SourceColor;
+    }
+    
+    // Multiply the lightBuffer with the occlusionBuffer
+    var copyTarget = CopyTargetSingleChannel();
+    copyTarget.Texture = occlusionBuffer.Texture;
+    
+    event.AddRenderTaskPostProcess(copySettings, copyTarget);
+    
+    occlusionBuffer.Release();
+  }
+}

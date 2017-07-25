@@ -1,0 +1,142 @@
+DefinitionSet =
+{
+  //---------------------------------------------------------------------- Row 1
+	ImageDefinition Warning =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0 , 0 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition Archetype =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32 , 0 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition LargeNoSymbol =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64 , 0 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition Error =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96 , 0 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	//---------------------------------------------------------------------- Row 2
+	ImageDefinition LargeCrate =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96 , 32 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition LargeFolder =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32 , 32 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition LargeMagnifyingGlass =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64 , 32 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition Level =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96 , 32 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	//---------------------------------------------------------------------- Row 3
+	ImageDefinition Disk =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0 , 0 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+
+	ImageDefinition LargeSwap =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32 , 64 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition Script =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64 , 64 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+	
+	ImageDefinition ScriptSource =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64 , 64 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+	
+	ImageDefinition Sound =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96 , 64 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	//---------------------------------------------------------------------- Row 4
+	ImageDefinition LargeNameTag =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 96 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition PhysicsMaterial =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 32, 96 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+
+	ImageDefinition ZeroEngine =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 64, 96 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+	
+	ImageDefinition LargeEmpty =
+	{
+		string Texture = "LargeIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 96, 96 ],
+		float[] Uv1 = [ 32 , 32 ],
+	},
+}

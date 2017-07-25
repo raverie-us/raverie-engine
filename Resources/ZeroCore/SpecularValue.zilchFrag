@@ -1,0 +1,14 @@
+// Specular input for lighting opaque geometry.
+// Output values are constant over the surface.
+[Pixel]
+struct SpecularValue
+{
+  [Input] var SpecularValue : Real = 0.5;
+  
+  [Output] var Specular : Real;
+  
+  function Main()
+  {
+    this.Specular = this.SpecularValue;
+  }
+}

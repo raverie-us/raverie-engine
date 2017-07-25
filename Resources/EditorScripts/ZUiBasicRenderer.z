@@ -1,0 +1,86 @@
+[RunInEditor]
+class ZUiBasicRenderer : ZilchComponent
+{
+  [Property] var ClearColor : Real4 = Real4(0, 0, 0, 1);
+  [Property] var DrawDebug : Boolean = true;
+  [Property] var DrawOpaque : Boolean = false;
+  [Property] var DrawAlphaBlend : Boolean = false;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Owner, Events.RenderTasksUpdate, this.OnRenderTasksUpdate);
+  }
+  
+  function RenderUi(event : RenderTasksEvent, color : RenderTarget, depth : RenderTarget)
+  {
+    // Find all root widgets
+    foreach(var root in this.Space.AllObjects)
+    {
+      if(root.UiRootWidget != null)
+      {
+        // Update layouts before rendering
+        root.UiRootWidget.Update();
+        
+        if(root.UiRenderer != null)
+          root.UiRenderer.Render(event, color, depth, ColorOutput());
+      }
+    }
+  }
+
+  function OnRenderTasksUpdate(event : RenderTasksEvent)
+  {
+    var size = event.ViewportSize;
+    var color = event.GetFinalTarget(size, TextureFormat.RGB8);
+    var depth = event.GetRenderTarget(size, TextureFormat.Depth24Stencil8);
+    
+    event.AddRenderTaskClearTarget(color, depth, this.ClearColor, 1.0, 0);
+    
+    // Settings used to render opaque objects
+    var opaqueSettings = RenderSettings();
+    opaqueSettings.ColorTarget = color;
+    opaqueSettings.DepthTarget = depth;
+    opaqueSettings.DepthSettings.DepthMode = DepthMode.Write;
+    opaqueSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+    opaqueSettings.CullMode = CullMode.BackFace;
+    
+    // Settings used to render alpha objects
+    var alphaSettings = RenderSettings();
+    alphaSettings.ColorTarget = color;
+    alphaSettings.DepthTarget = depth;
+    alphaSettings.DepthSettings.DepthMode = DepthMode.Read;
+    alphaSettings.BlendSettings.BlendMode = BlendMode.Enabled;
+    alphaSettings.BlendSettings.SourceFactor = BlendFactor.SourceAlpha;
+    alphaSettings.BlendSettings.DestFactor = BlendFactor.InvSourceAlpha;
+    alphaSettings.CullMode = CullMode.Disabled;
+    
+    var renderPass = ColorOutput();
+    
+    // Render opaque objects
+    if(this.DrawOpaque)
+      event.AddRenderTaskRenderPass(opaqueSettings, RenderGroup.Opaque, renderPass);
+    
+    // Render alpha blended objects (Sprites, Particles, etc..)
+    if(this.DrawAlphaBlend)
+      event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.AlphaBlend, renderPass);
+      
+    // Render the ZSorted objects (SpriteText, etc...)
+    //event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.ZSort, renderPass);
+    
+    // Render debug draw
+    if (this.DrawDebug)
+        event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.DebugDraw, renderPass);
+    
+    // Render the Ui
+    this.RenderUi(event, color, depth);
+    
+    if(this.DrawDebug && this.Space.IsEditorMode)
+    {
+      event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.DebugDraw, renderPass);
+      
+      var renderSettings = RenderSettings();
+      renderSettings.ColorTarget = color;
+      renderSettings.DepthTarget = depth;
+      event.AddRenderTaskRenderPass(renderSettings, RenderGroup.DebugDrawOnTop, renderPass);
+    }
+  }
+}

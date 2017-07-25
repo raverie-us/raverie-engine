@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "TemplateGeometryPolygonNormals"
+		var ResourceId = 0x582edc5f15e5658a
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Geometry Polygon Normals"
+		var Description = "Sample Geometry shader fragment"
+		var SortWeight = 100
+		var Category = "Geometry"
+		var CategorySortWeight = 30
+	}
+}

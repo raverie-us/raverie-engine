@@ -1,0 +1,14 @@
+// DoWhileConditionalExpressionNotComplete
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    do
+    {
+    }
+    while (true
+  }
+}

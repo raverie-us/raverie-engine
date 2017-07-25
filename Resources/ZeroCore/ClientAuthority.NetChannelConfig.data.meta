@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "ClientAuthority"
+		var ResourceId = 0x561a2a63cf72e447
+		var LoaderType = "NetChannelConfig"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Client Authority"
+		var Description = "Client has authority over this channel"
+		var SortWeight = 100
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

@@ -1,0 +1,60 @@
+[Version:1]
+GeometryContent 
+{
+	GeometryImport 
+	{
+		var OriginOffset = Real3{0, 0, 0}
+		var ScaleFactor = 1
+		var ChangeBasis = false
+		var XBasisTo = BasisType.PositiveX
+		var YBasisTo = BasisType.PositiveY
+		var ZBasisTo = BasisType.PositiveZ
+	}
+	MeshBuilder 
+	{
+		var GenerateSmoothNormals = false
+		var SmoothingAngleDegreesThreshold = 0
+		var GenerateTangentSpace = true
+		var InvertUvYAxis = true
+		var FlipWindingOrder = false
+		var FlipNormals = false
+		var Meshes = Array
+		{
+			Object
+			{
+				var Name = "ViewCube.Bottom"
+				var ResourceId = 0x57a93a5ca4ebaa97
+			}
+			Object
+			{
+				var Name = "ViewCube.Right"
+				var ResourceId = 0x57a93a5ca4ebaacd
+			}
+			Object
+			{
+				var Name = "ViewCube.Top"
+				var ResourceId = 0x57a93a5ca4ebaad5
+			}
+			Object
+			{
+				var Name = "ViewCube.Left"
+				var ResourceId = 0x57a93a5ca4ebaadc
+			}
+			Object
+			{
+				var Name = "ViewCube.Front"
+				var ResourceId = 0x57a93a5ca4ebaae2
+			}
+			Object
+			{
+				var Name = "ViewCube.Back"
+				var ResourceId = 0x57a93a5ca4ebaae9
+			}
+			Object
+			{
+				var Name = "ViewCube.Case"
+				var ResourceId = 0x57a93a5ca4ebaaf0
+			}
+		}
+	}
+}

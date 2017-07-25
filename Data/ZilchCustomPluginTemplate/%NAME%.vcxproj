@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="%NAME%Version.props"/>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{11111111-1111-1111-1111-111111111111}</ProjectGuid>
+    <RootNamespace>%NAME%</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetExt>.$(OS)-$(PlatformShortName)-$(ZeroVersion)-zilchPlugin</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetExt>.$(OS)-$(PlatformShortName)-$(ZeroVersion)-zilchPlugin</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir);Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>%NAME%Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\ZeroEditor.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(TargetPath)" "$(ProjectDir)..\$(TargetFileName)"
+PUSHD "$(ProjectDir)..\"
+COPY /B "$(TargetName).ZilchPluginSource.data"+
+POPD
+</Command>
+      <Message>Copy the dll to the Zero Project's "Content" directory, and touch the content data file</Message>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>MOVE "$(OutDir)\$(ProjectName).pdb" "$(OutDir)\$(ProjectName)-%RANDOM%-%TIME:~6,5%.pdb" &gt;nul 2&gt;&amp;1
+DEL /F /Q "$(OutDir)\$(ProjectName)-*.pdb" &gt;nul 2&gt;&amp;1
+EXIT 0
+</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>This is due to an issue where the pdb file gets locked for an unknown reason (possibly by Zero or VS)</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(ProjectDir);Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>%NAME%Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\ZeroEditor.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(TargetPath)" "$(ProjectDir)..\$(TargetFileName)"
+PUSHD "$(ProjectDir)..\"
+COPY /B "$(TargetName).ZilchPluginSource.data"+
+POPD
+</Command>
+      <Message>Copy the dll to the Zero Project's "Content" directory, and touch the content data file</Message>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>MOVE "$(OutDir)\$(ProjectName).pdb" "$(OutDir)\$(ProjectName)-%RANDOM%-%TIME:~6,5%.pdb" &gt;nul 2&gt;&amp;1
+DEL /F /Q "$(OutDir)\$(ProjectName)-*.pdb" &gt;nul 2&gt;&amp;1
+EXIT 0
+</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>This is due to an issue where the pdb file gets locked for an unknown reason (possibly by Zero or VS)</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="%NAME%.cpp" />
+    <ClCompile Include="%NAME%Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="%NAME%.hpp" />
+    <ClInclude Include="%NAME%Precompiled.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\ZeroEngine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\ZeroEngine.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\Core.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\Core.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\Zilch.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="ZeroVisualizers.natvis" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

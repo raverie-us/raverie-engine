@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomMath.cpp">
+      <Filter>Test Sanity\Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="Test01.cpp">
+      <Filter>Test Sanity\Test01</Filter>
+    </ClCompile>
+    <ClCompile Include="Test02.cpp">
+      <Filter>Test Sanity\Test02</Filter>
+    </ClCompile>
+    <ClCompile Include="Test03.cpp">
+      <Filter>Test Sanity\Test03</Filter>
+    </ClCompile>
+    <ClCompile Include="Test04.cpp">
+      <Filter>Test Sanity\Test04</Filter>
+    </ClCompile>
+    <ClCompile Include="Test05.cpp">
+      <Filter>Test Sanity\Test05</Filter>
+    </ClCompile>
+    <ClCompile Include="Test06.cpp">
+      <Filter>Test Sanity\Test06</Filter>
+    </ClCompile>
+    <ClCompile Include="Test07.cpp">
+      <Filter>Test Sanity\Test07</Filter>
+    </ClCompile>
+    <ClCompile Include="Test08.cpp">
+      <Filter>Test Sanity\Test08</Filter>
+    </ClCompile>
+    <ClCompile Include="Test09.cpp">
+      <Filter>Test Sanity\Test09</Filter>
+    </ClCompile>
+    <ClCompile Include="Test10.cpp">
+      <Filter>Test Sanity\Test10</Filter>
+    </ClCompile>
+    <ClCompile Include="Stress.cpp">
+      <Filter>Test Stress</Filter>
+    </ClCompile>
+    <ClCompile Include="Test11.cpp">
+      <Filter>Test Sanity\Test11</Filter>
+    </ClCompile>
+    <ClCompile Include="Test12.cpp">
+      <Filter>Test Sanity\Test12</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="DiffTest01.cpp">
+      <Filter>Test Diff\Test01</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CustomMath.z">
+      <Filter>Test Sanity\Dependencies</Filter>
+    </None>
+    <None Include="Test10.z">
+      <Filter>Test Sanity\Test10</Filter>
+    </None>
+    <None Include="Test01.z">
+      <Filter>Test Sanity\Test01</Filter>
+    </None>
+    <None Include="Test02.z">
+      <Filter>Test Sanity\Test02</Filter>
+    </None>
+    <None Include="Test03.z">
+      <Filter>Test Sanity\Test03</Filter>
+    </None>
+    <None Include="Test04.z">
+      <Filter>Test Sanity\Test04</Filter>
+    </None>
+    <None Include="Test05.z">
+      <Filter>Test Sanity\Test05</Filter>
+    </None>
+    <None Include="Test06.z">
+      <Filter>Test Sanity\Test06</Filter>
+    </None>
+    <None Include="Test07.z">
+      <Filter>Test Sanity\Test07</Filter>
+    </None>
+    <None Include="Test08.z">
+      <Filter>Test Sanity\Test08</Filter>
+    </None>
+    <None Include="Test09.z">
+      <Filter>Test Sanity\Test09</Filter>
+    </None>
+    <None Include="Quaternion.z">
+      <Filter>Test Units</Filter>
+    </None>
+    <None Include="ValueUnitTests.z">
+      <Filter>Test Units</Filter>
+    </None>
+    <None Include="Test11.z">
+      <Filter>Test Sanity\Test11</Filter>
+    </None>
+    <None Include="VectorTests.z">
+      <Filter>Test Units</Filter>
+    </None>
+    <None Include="ErrorTestWritingToAReadOnlyValue.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestWhileConditionalExpressionNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestWhileConditionalExpressionNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestVariableTypeNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestVariableTypeMismatch.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestVariableNameNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestVariableMustBeInitialized.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestVariableInitialValueNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestVariableInitializationNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestUnused05.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestUnidentifiedSymbol.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestUnaryOperatorOperandNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestUnableToResolveFunction.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestTemplateTypeArgumentsNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestTemplateArgumentNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestStatementSeparatorNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestReturnValueUnexpected.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestReturnValueNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestReturnTypeMismatch.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestReferenceToUndefinedType.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestParsingNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestParameterTypeSpecifierNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestParameterTypeNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestOnlyOneDestructorAllowed.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestMemberNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestMemberAccessNameNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestLoopBodyNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestLoopBodyNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestLocalVariableReferenceNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestInvalidUnaryOperation.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestInvalidEscapeInStringLiteral.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestInvalidBinaryOperation.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestIndexerNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestIndexerIndicesNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestIfConditionalExpressionNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestIfConditionalExpressionNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestGroupingOperatorNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionReturnTypeNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionParameterNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionNameNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionCallOnNonCallableType.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionCallNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionCallNamedArgumentNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionBodyNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionBodyNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionArgumentListNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestFunctionArgumentListNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestForLoopExpressionsNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestForLoopExpressionsNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestDuplicateLocalVariableName.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestDoWhileConditionalExpressionNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestDoWhileConditionalExpressionNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestDelegateReturnTypeNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestCreatedTypeNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestContinueLoopNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestContainerLiteralNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestContainerLiteralExpectedExpression.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestConstructorCallNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestConditionMustBeABooleanType.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestClassNameNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestClassBodyNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestClassBodyNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestCastTypeNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestBreakLoopNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestBreakCountMustBeGreaterThanZero.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestBlockCommentNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestBlockCommentNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestBinaryOperatorRightOperandNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestCompositionCycleDetected.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestLinkLibraryNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestLinkerLibraryNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestAttributeNotComplete.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestAttributesNotAttached.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="Test12.z">
+      <Filter>Test Sanity\Test12</Filter>
+    </None>
+    <None Include="ErrorTestAttributeTypeNotFound.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestCannotCreateType.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestBaseClassInitializerMustComeFirst.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestBaseClassInitializerRequiresBaseClassInheritance.z">
+      <Filter>Test Errors</Filter>
+    </None>
+    <None Include="ErrorTestBaseInitializerRequired.z">
+      <Filter>Test Errors</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4b8f1363-ef47-4cf1-a26e-39cf7aa911e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Errors">
+      <UniqueIdentifier>{aba235e9-244d-4afc-a77d-d00c25dfe6c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity">
+      <UniqueIdentifier>{2e3dc723-14d1-47e9-94db-e15f5a1feecf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Dependencies">
+      <UniqueIdentifier>{eae74bf9-56ac-4df5-b4bf-d2515830c005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test01">
+      <UniqueIdentifier>{e238cff0-42b5-4a45-90ec-5ed5de43877e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test02">
+      <UniqueIdentifier>{501d5106-a3a0-4f57-8870-97cfd3c4bc55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test03">
+      <UniqueIdentifier>{9c9e62fe-20ac-4a7c-90bb-a052e5451ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test04">
+      <UniqueIdentifier>{f2408cae-168e-4697-9240-acf5f38fc74c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test05">
+      <UniqueIdentifier>{2d3bc683-3c28-4786-9e69-3457fdd0be71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test06">
+      <UniqueIdentifier>{9d81c424-30c0-4a89-9868-09cf8d657964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test07">
+      <UniqueIdentifier>{a1828d2e-1d6e-4425-a632-c83d7a750d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test08">
+      <UniqueIdentifier>{50ecab96-b2a1-4704-82c0-9730f5f45a1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test09">
+      <UniqueIdentifier>{75e33bec-b6c7-4c2b-b37e-1b4fb7650d26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test10">
+      <UniqueIdentifier>{43b103ca-7e90-453f-9f55-2f8fb3e933d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Stress">
+      <UniqueIdentifier>{02911399-e777-4e89-addb-f4f15ff0196c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Units">
+      <UniqueIdentifier>{331d6bee-01a6-477f-9ea1-a8b6ebfde1c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test11">
+      <UniqueIdentifier>{260221d0-d177-4eca-8da0-020daf29bba4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Sanity\Test12">
+      <UniqueIdentifier>{ebdeac68-f411-46da-9a9b-3b72cda63ba5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Diff">
+      <UniqueIdentifier>{088dcef0-d2e6-4473-b00e-5c013c8d9edb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Diff\Test01">
+      <UniqueIdentifier>{4d62d881-6793-44ed-9e5f-e1073f3c0236}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CustomMath.hpp">
+      <Filter>Test Sanity\Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="Stress.hpp">
+      <Filter>Test Stress</Filter>
+    </ClInclude>
+    <ClInclude Include="StringRepresentations.hpp">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Diff.hpp">
+      <Filter>Test Diff</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="DiffInput01.txt">
+      <Filter>Test Diff\Test01</Filter>
+    </Text>
+    <Text Include="DiffTokenDebug01.txt">
+      <Filter>Test Diff\Test01</Filter>
+    </Text>
+    <Text Include="DiffTokenTree01.txt">
+      <Filter>Test Diff\Test01</Filter>
+    </Text>
+    <Text Include="DiffParserDebug01.txt">
+      <Filter>Test Diff\Test01</Filter>
+    </Text>
+    <Text Include="DiffParserTree01.txt">
+      <Filter>Test Diff\Test01</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

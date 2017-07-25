@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "ApiPerspectiveOutput"
+		var ResourceId = 0x56d9e858ec618936
+	}
+}

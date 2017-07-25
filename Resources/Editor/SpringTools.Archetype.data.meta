@@ -1,0 +1,19 @@
+[Version:1]
+DataContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Tool"
+		}
+	}
+	DataBuilder 
+	{
+		var Name = "SpringTools"
+		var ResourceId = 0x55cdc4c811457112
+		var LoaderType = "Cog"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

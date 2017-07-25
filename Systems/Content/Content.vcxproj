@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E19019F5-9C2C-4329-AAB5-DB28E39CC0F2}</ProjectGuid>
+    <RootNamespace>Zero</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="BinaryContent.hpp" />
+    <ClInclude Include="BuildOptions.hpp" />
+    <ClInclude Include="ContentEnumerations.hpp" />
+    <ClInclude Include="ContentStandard.hpp" />
+    <ClInclude Include="ContentSystem.hpp" />
+    <ClInclude Include="FileExtensionManager.hpp" />
+    <ClInclude Include="ImportOptions.hpp" />
+    <ClInclude Include="MeshBuilder.hpp" />
+    <ClInclude Include="MeshEntry.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="AudioContent.hpp" />
+    <ClInclude Include="DataContent.hpp" />
+    <ClInclude Include="GeometryContent.hpp" />
+    <ClInclude Include="ImageContent.hpp" />
+    <ClInclude Include="ContentItem.hpp" />
+    <ClInclude Include="ContentLibrary.hpp" />
+    <ClInclude Include="ContentComposition.hpp" />
+    <ClInclude Include="ContentUtility.hpp" />
+    <ClInclude Include="BaseBuilders.hpp" />
+    <ClInclude Include="RichAnimation.hpp" />
+    <ClInclude Include="SpriteBuilder.hpp" />
+    <ClInclude Include="SupportComponents.hpp" />
+    <ClInclude Include="TagsContent.hpp" />
+    <ClInclude Include="TextContent.hpp" />
+    <ClInclude Include="TextureBuilder.hpp" />
+    <ClInclude Include="VectorContent.hpp" />
+    <ClInclude Include="ZilchPluginContent.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BinaryContent.cpp" />
+    <ClCompile Include="ContentStandard.cpp" />
+    <ClCompile Include="ContentSystem.cpp" />
+    <ClCompile Include="FileExtensionManager.cpp" />
+    <ClCompile Include="ImportOptions.cpp" />
+    <ClCompile Include="MeshBuilder.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="AudioContent.cpp" />
+    <ClCompile Include="DataContent.cpp" />
+    <ClCompile Include="GeometryContent.cpp" />
+    <ClCompile Include="ImageContent.cpp" />
+    <ClCompile Include="ContentItem.cpp" />
+    <ClCompile Include="ContentLibrary.cpp" />
+    <ClCompile Include="ContentComposition.cpp" />
+    <ClCompile Include="ContentUtility.cpp" />
+    <ClCompile Include="BaseBuilders.cpp" />
+    <ClCompile Include="RichAnimation.cpp" />
+    <ClCompile Include="SpriteBuilder.cpp" />
+    <ClCompile Include="SupportComponents.cpp" />
+    <ClCompile Include="TagsContent.cpp" />
+    <ClCompile Include="TextContent.cpp" />
+    <ClCompile Include="TextureBuilder.cpp" />
+    <ClCompile Include="VectorContent.cpp" />
+    <ClCompile Include="ZilchPluginContent.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

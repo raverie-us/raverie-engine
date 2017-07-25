@@ -1,0 +1,14 @@
+// ConstructorCallNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+}
+
+class Dude
+{
+  function Foo()
+  {
+    var a : Animal = new Animal;
+  }
+}

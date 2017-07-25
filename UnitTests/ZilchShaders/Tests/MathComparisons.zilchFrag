@@ -1,0 +1,24 @@
+struct TestComparisons[Type, BoolType]
+{
+    function Test(value : Type)
+    {
+        var result : BoolType = BoolType();
+        result = value < value;
+        result = value <= value;
+        result = value > value;
+        result = value >= value;
+    }
+}
+
+[Pixel]
+struct MathComparisonTests
+{
+    function Main()
+    {
+        TestComparisons[Real2, Boolean2]();
+        TestComparisons[Real3, Boolean3]();
+        TestComparisons[Real4, Boolean4]();
+        
+        //TestComparisons[Real2x2, Boolean2x2]();
+    }
+}

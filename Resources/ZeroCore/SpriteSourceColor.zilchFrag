@@ -1,0 +1,16 @@
+// Samples built in texture atlas for a specific sprite frame.
+// Undefined results if not used with Sprites or SpriteTexts.
+[Pixel]
+struct SpriteSourceColor
+{
+  [BuiltInInput] var SpriteSource : Sampler2d;
+
+  [FragmentInput][StageInput] var Uv : Real2;
+  [FragmentInput][StageInput][Output] var Color : Real4;
+
+  function Main()
+  {
+    // Multiply sample with vertex color.
+    this.Color = this.SpriteSource.Sample(this.Uv) * this.Color;
+  }
+}

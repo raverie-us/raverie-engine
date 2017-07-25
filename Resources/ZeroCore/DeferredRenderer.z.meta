@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "DeferredRenderer"
+		var ResourceId = 0x581e51d746bad16f
+	}
+}

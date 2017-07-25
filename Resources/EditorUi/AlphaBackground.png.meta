@@ -1,0 +1,25 @@
+[Version:1]
+ImageContent 
+{
+	TextureBuilder 
+	{
+		var Name = "AlphaBackground"
+		var ResourceId = 0x5273a83b84879f24
+		var Type = TextureType.Texture2D
+		var Compression = TextureCompression.None
+		var AddressingX = TextureAddressing.Repeat
+		var AddressingY = TextureAddressing.Repeat
+		var Filtering = TextureFiltering.Nearest
+		var Anisotropy = TextureAnisotropy.x1
+		var MipMapping = TextureMipMapping.None
+		var PremultipliedAlpha = true
+		var GammaCorrection = false
+	}
+	TextureInfo 
+	{
+		var FileType = "png"
+		var LoadFormat = "RGBA8"
+		var Dimensions = "2 x 2"
+		var Size = "0.000 MB"
+	}
+}

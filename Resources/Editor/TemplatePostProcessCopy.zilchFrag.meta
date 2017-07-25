@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "TemplatePostProcessCopy"
+		var ResourceId = 0x582100edd84fc449
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Post Process Copy"
+		var Description = "Sample PostProcess fragment"
+		var SortWeight = 100
+		var Category = "Post Process"
+		var CategorySortWeight = 40
+	}
+}

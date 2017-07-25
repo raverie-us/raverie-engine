@@ -1,0 +1,13 @@
+// WhileConditionalExpressionNotComplete
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    while (variable < 10 
+    {
+    }
+  }
+}

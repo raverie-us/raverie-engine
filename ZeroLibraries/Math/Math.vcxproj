@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{767A1157-B18F-478E-B580-F6F624F9282A}</ProjectGuid>
+    <RootNamespace>Math</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <!--For all Win32 projects setup the precompiled header-->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BoolVector2.cpp" />
+    <ClCompile Include="BoolVector3.cpp" />
+    <ClCompile Include="BoolVector4.cpp" />
+    <ClCompile Include="Curve.cpp" />
+    <ClCompile Include="DecomposedMatrix4.cpp" />
+    <ClCompile Include="IntVector3.cpp" />
+    <ClCompile Include="IntVector4.cpp" />
+    <ClCompile Include="ExtendableMath.cpp" />
+    <ClCompile Include="Matrix2.cpp" />
+    <ClCompile Include="IntVector2.cpp" />
+    <ClCompile Include="BlockVector3.cpp" />
+    <ClCompile Include="Random.cpp" />
+    <ClCompile Include="ToString.cpp" />
+    <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="Vector4.cpp" />
+    <ClCompile Include="Matrix3.cpp" />
+    <ClCompile Include="Matrix4.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="Math.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Reals.cpp" />
+    <ClCompile Include="Numerical.cpp" />
+    <ClCompile Include="EulerAngles.cpp" />
+    <ClCompile Include="EulerOrder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BoolVector2.hpp" />
+    <ClInclude Include="BoolVector3.hpp" />
+    <ClInclude Include="BoolVector4.hpp" />
+    <ClInclude Include="ByteColor.hpp" />
+    <ClInclude Include="ColorDefinitions.hpp" />
+    <ClInclude Include="ConjugateGradient.hpp" />
+    <ClInclude Include="Curve.hpp" />
+    <ClInclude Include="DecomposedMatrix4.hpp" />
+    <ClInclude Include="ExtendableMath.hpp" />
+    <ClInclude Include="IntVector2.hpp" />
+    <ClInclude Include="BlockVector3.hpp" />
+    <ClInclude Include="GenericVector.hpp" />
+    <ClInclude Include="ErrorCallbacks.hpp" />
+    <ClInclude Include="GaussSeidelSolver.hpp" />
+    <ClInclude Include="IndexPolicies.hpp" />
+    <ClInclude Include="IntVector3.hpp" />
+    <ClInclude Include="IntVector4.hpp" />
+    <ClInclude Include="JacobiSolver.hpp" />
+    <ClInclude Include="MathImports.hpp" />
+    <ClInclude Include="MathStandard.hpp" />
+    <ClInclude Include="Matrix2.hpp" />
+    <ClInclude Include="SharedVectorFunctions.hpp" />
+    <ClInclude Include="SimConversion.hpp" />
+    <ClInclude Include="SimMath.hpp" />
+    <ClInclude Include="SimMatrix4.hpp" />
+    <ClInclude Include="SimMatrix3.hpp" />
+    <ClInclude Include="SimpleCgPolicies.hpp" />
+    <ClInclude Include="SimVectors.hpp" />
+    <ClInclude Include="ToString.hpp" />
+    <ClInclude Include="Vector2.hpp" />
+    <ClInclude Include="Vector3.hpp" />
+    <ClInclude Include="Vector4.hpp" />
+    <ClInclude Include="Matrix3.hpp" />
+    <ClInclude Include="Matrix4.hpp" />
+    <ClInclude Include="Quaternion.hpp" />
+    <ClInclude Include="Math.hpp" />
+    <ClInclude Include="MatrixStorage.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="Reals.hpp" />
+    <ClInclude Include="Numerical.hpp" />
+    <ClInclude Include="EulerAngles.hpp" />
+    <ClInclude Include="EulerOrder.hpp" />
+    <ClInclude Include="Random.hpp" />
+    <ClInclude Include="VectorHashPolicy.hpp" />
+    <ClInclude Include="WeightedProbabilityTable.hpp" />
+  </ItemGroup>
+  <!--Inl files (They don't get included in building)-->
+  <ItemGroup>
+    <None Include="BasicNativeTypesMath.inl" />
+    <None Include="GenericVector.inl" />
+    <None Include="SimMatrix4.inl" />
+    <None Include="SimMatrix3.inl" />
+    <None Include="SimVectors.inl" />
+    <None Include="SimVectorSpecific.inl" />
+    <None Include="Vector3.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

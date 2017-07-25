@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\PortAudio">
+      <UniqueIdentifier>{32c3476c-abb3-4ff7-b4d5-60f0d9e75630}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Nodes">
+      <UniqueIdentifier>{822b0b4a-0c31-4168-9e57-bf08e9c1022b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PlatformSpecific">
+      <UniqueIdentifier>{647218a7-4af1-4b19-9434-0422255586c3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FileAccess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Modifiers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystemInternal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystemInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundAssets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tags.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_vorbis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pa_ringbuffer.cpp">
+      <Filter>Source Files\PortAudio</Filter>
+    </ClCompile>
+    <ClCompile Include="pa_win_util.cpp">
+      <Filter>Source Files\PortAudio</Filter>
+    </ClCompile>
+    <ClCompile Include="Attenuator.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Emitter.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundInstances.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FilterNodes.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="InputNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioInputOutput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileDecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsDeviceAccess.cpp">
+      <Filter>Source Files\PlatformSpecific</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsMIDI.cpp">
+      <Filter>Source Files\PlatformSpecific</Filter>
+    </ClCompile>
+    <ClCompile Include="LockFreeQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenerNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumeNodes.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="PitchNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="EqualizerNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="ReverbNodes.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="AdditiveSynthNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicsProcessorNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FileAccess.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Modifiers.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pa_memorybarrier.h">
+      <Filter>Source Files\PortAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="pa_ringbuffer.h">
+      <Filter>Source Files\PortAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="pa_util.h">
+      <Filter>Source Files\PortAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="portaudio.h">
+      <Filter>Source Files\PortAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystemInternal.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystemInterface.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundAssets.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tags.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceNotifier.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Attenuator.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Emitter.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundInstances.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FilterNodes.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_vorbis.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioInputOutput.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileDecoder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MIDI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsMIDI.h">
+      <Filter>Source Files\PlatformSpecific</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsDeviceAccess.h">
+      <Filter>Source Files\PlatformSpecific</Filter>
+    </ClInclude>
+    <ClInclude Include="LockFreeQueue.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeNodes.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="PitchNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="EqualizerNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="ReverbNodes.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="AdditiveSynthNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicsProcessorNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="portaudio_x86.lib">
+      <Filter>Resource Files</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

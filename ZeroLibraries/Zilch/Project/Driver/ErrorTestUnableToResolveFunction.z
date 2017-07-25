@@ -1,0 +1,22 @@
+// UnableToResolveFunction
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function DoubleIt(input : Integer)
+  {
+  }
+
+  function DoubleIt(input : Real)
+  {
+  }
+
+  function Main()
+  {
+    this.DoubleIt(input : null);
+
+    // Alternative (name mismatch)
+    this.DoubleIt(gggg : 3);
+  }
+}

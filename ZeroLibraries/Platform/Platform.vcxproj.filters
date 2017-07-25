@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="CrashHandler.hpp" />
+    <ClInclude Include="Utilities.hpp" />
+    <ClInclude Include="Debug.hpp" />
+    <ClInclude Include="DirectoryWatcher.hpp" />
+    <ClInclude Include="File.hpp" />
+    <ClInclude Include="FileSystem.hpp" />
+    <ClInclude Include="FpControl.hpp" />
+    <ClInclude Include="PlatformStandard.hpp" />
+    <ClInclude Include="PrivateImplementation.hpp" />
+    <ClInclude Include="Process.hpp" />
+    <ClInclude Include="Resolution.hpp" />
+    <ClInclude Include="Socket.hpp" />
+    <ClInclude Include="Thread.hpp" />
+    <ClInclude Include="ThreadSync.hpp" />
+    <ClInclude Include="Timer.hpp" />
+    <ClInclude Include="ExternalLibrary.hpp" />
+    <ClInclude Include="PlatformSelector.hpp" />
+    <ClInclude Include="SocketEnums.hpp" />
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="FilePath.hpp" />
+    <ClInclude Include="Registry.hpp" />
+    <ClInclude Include="DebugSymbolInformation.hpp" />
+    <ClInclude Include="Lock.hpp" />
+    <ClInclude Include="SocketConstants.hpp" />
+    <ClInclude Include="FileEvents.hpp" />
+    <ClInclude Include="IpAddress.hpp" />
+    <ClInclude Include="OsHandle.hpp" />
+    <ClInclude Include="UnicodeUtility.hpp" />
+    <ClInclude Include="CommandLineSupport.hpp" />
+    <ClInclude Include="TimerBlock.hpp" />
+    <ClInclude Include="ConsoleListeners.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{e379d808-0ef3-43a1-b9b8-ff53a27fa7a7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="FilePath.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="FileEvents.cpp" />
+    <ClCompile Include="IpAddress.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="UnicodeUtility.cpp" />
+    <ClCompile Include="Process.cpp" />
+  </ItemGroup>
+</Project>

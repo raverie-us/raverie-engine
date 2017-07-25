@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <script src="jquery/jquery-1.10.2.js"></script>
+    <script src="external2.js"></script>
+  </head>
+
+  <body>
+    hello
+    <button id="open">Open</button>
+    <iframe id="iframe" sandbox="allow-same-origin allow-scripts" src="file://external.txt"></iframe>
+    <script>
+      // Run on jquery startup
+      $(function()
+      {
+        document.domain = "test";
+        //alert(documentation.toString());
+        //console.log(document.getElementById('iframe'));
+        //console.log(document.getElementById('iframe').contentWindow);
+        //console.log(document.getElementById('iframe').contentWindow.document);
+        //console.log(document.getElementById('iframe').contentWindow.document.body);
+        //console.log(document.getElementById('iframe').contentWindow.document.body.innerHTML);
+        
+        var frameQuery = $('#iframe');
+        frameQuery.load(function()
+        {
+            alert('load the iframe');
+            //alert(frameQuery.contents().find('html').html());
+            alert(document.getElementById('iframe').contentWindow.document.body.innerHTML);
+        });
+        
+        
+        //alert(document.getElementById('iframe').contentWindow.document.body.innerHTML);
+        //alert($('#iframe').contents().text());
+      });
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,93 @@
+
+
+[Pixel]
+struct QuaternionSimpleTests1
+{
+  [Output] var Target0 : Real4;
+  [Output] var Target1 : Real4;
+  [Output] var Target2 : Real4;
+  [Output] var Target3 : Real4;
+  
+  function Main()
+    {
+      var q1 = Math.Normalize(Quaternion(1, 2, 3, 4));
+      var q2 = Math.Normalize(Quaternion(2, 3, 5, 7));
+      
+      var dot = Math.Dot(q1, q2);
+      var length = Math.Length(q1);
+      var lengthSq = Math.LengthSq(q1);
+      var angle = Math.AngleBetween(q1, q2);
+      
+      this.Target0 = Math.Normalize(q1).XYZW;
+      this.Target1 = Real4(dot, length, lengthSq, angle);
+      this.Target2 = Math.Conjugate(q2).XYZW;
+      this.Target3 = Math.Invert(q2).XYZW;
+    }
+}
+
+[Pixel]
+struct QuaternionRotations
+{
+  [Output] var Target0 : Real4;
+  [Output] var Target1 : Real4;
+  [Output] var Target2 : Real4;
+  [Output] var Target3 : Real4;
+  
+  function Main()
+    {
+      var q1 = Math.ToQuaternion(Real3(0, 1, 0), 0.1);
+      var q2 = Math.ToQuaternion(Real3(1, 0, 0), 1.13);
+      
+      var dot = Math.Dot(q1, q2);
+      var length = Math.Length(q1);
+      var lengthSq = Math.LengthSq(q1);
+      
+      this.Target0 = q1.XYZW;
+      this.Target1 = Math.RotationQuaternionBetween(Real3(0, 1, 0), Real3(1, 3, 0)).XYZW;
+      this.Target2 = Math.RotateTowards(q1, q2, 0.5).XYZW;
+      this.Target3 = Math.Slerp(q1, q2, 0.5).XYZW;
+    }
+}
+
+[Pixel]
+struct QuaternionTransforms
+{
+  [Output] var Target0 : Real4;
+  [Output] var Target1 : Real4;
+  [Output] var Target2 : Real4;
+  [Output] var Target3 : Real4;
+  
+  function Main()
+    {
+      var q1 = Math.ToQuaternion(Real3(0, 1, 0), 0.1);
+      var q2 = Math.ToQuaternion(Real3(1, 0, 0), 1.13);
+      var v = Real3(1, 1, 1);
+      
+      var dot = Math.Dot(q1, q2);
+      var length = Math.Length(q1);
+      var lengthSq = Math.LengthSq(q1);
+      
+      this.Target0 = Math.Multiply(q1, q2).XYZW;
+      this.Target1 = Math.Multiply(q2, q1).XYZW;
+      this.Target2 = Real4(Math.Multiply(q1, v), 0);
+      this.Target3 = Real4(Math.Multiply(q2, v), 0);
+    }
+}
+
+[Pixel]
+struct QuaternionToReal3x3
+{
+  [Output] var Target0 : Real4;
+  [Output] var Target1 : Real4;
+  [Output] var Target2 : Real4;
+  
+  function Main()
+    {
+      var q1 = Math.ToQuaternion(Real3(0, 1, 0), 0.1);
+      var m = Math.ToReal3x3(q1);
+      
+      this.Target0 = Real4(m[0], 0);
+      this.Target1 = Real4(m[1], 0);
+      this.Target2 = Real4(m[2], 0);
+    }
+}

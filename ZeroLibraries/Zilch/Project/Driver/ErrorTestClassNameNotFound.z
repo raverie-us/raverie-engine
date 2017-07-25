@@ -1,0 +1,6 @@
+// ClassNameNotFound
+
+class 
+{
+  var Variable : Integer = 9;
+}

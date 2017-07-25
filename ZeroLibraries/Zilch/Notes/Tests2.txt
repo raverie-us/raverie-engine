@@ -1,0 +1,39 @@
+class Foobar
+{
+	function Fib(num : Int32) : Int32
+	{
+		if (num <= 1)
+		{
+			return num;
+		}
+
+		return Fib(num: num - 1) + Fib(num: num - 2);
+	}
+
+	function DoFib() : Int32
+	{
+		return Fib(num: 36);
+	}
+}
+
+class Foobar
+{
+	function Test() : Int32
+	{
+		var test : Int32 := 5;
+
+		while (test < 88)
+		{
+			test += 3;
+
+			if (test < 55)
+			{
+				var foo : Real32 := 1.0;
+
+				test -= (foo as Int32);
+			}
+		}
+
+		return test; // 89!!!!
+	}
+}

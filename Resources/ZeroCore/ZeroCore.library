@@ -1,0 +1,8 @@
+[Version:1]
+ContentLibrary 
+{
+	var Name = "ZeroCore"
+	var LibraryId = 0x4e14429cee668219
+	var SourceControlType = ""
+	var ReadOnly = true
+}

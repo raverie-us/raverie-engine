@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "MeshVertex"
+		var ResourceId = 0x56326c9acde0bd0d
+	}
+}

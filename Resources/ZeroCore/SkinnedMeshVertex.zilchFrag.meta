@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "SkinnedMeshVertex"
+		var ResourceId = 0x56cd68b22c324be6
+	}
+}

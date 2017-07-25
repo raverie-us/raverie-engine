@@ -1,0 +1,67 @@
+class UiSliderEvent : ZilchEvent
+{
+  var SliderPercentage : Real;
+}
+
+class ZUiSlider : ZilchComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  //[Property] var Handle : CogPath;
+  var Handle : Cog;
+  
+  sends UiSliderChanged : UiSliderEvent;
+  
+  function Initialize(init : CogInitializer)
+  {
+    this.Handle = this.Owner.FindChildByName("Handle");
+    
+    Zero.Connect(this.Owner, Events.LeftMouseDown, this.OnLeftMouseDown);
+    Zero.Connect(this.Handle, Events.MouseDragMove, this.OnMouseDragMove);
+    
+  }
+
+  function OnLeftMouseDown(event : ViewportMouseEvent)
+  {
+    event.HandledEvent = true;
+    this.Handle.MouseCapture.Capture(event);
+    this.MoveHandleToMouse(event);
+  }
+
+  function OnMouseDragMove(event : ViewportMouseEvent)
+  {
+    this.MoveHandleToMouse(event);
+  }
+  
+  function MoveHandleToMouse(event : ViewportMouseEvent)
+  {
+    // Bring the mouse position into local space
+    var mouseWorldPos = event.ToWorldZPlane(0);
+    var mousePosLocal = this.UiWidget.WorldToLocal(mouseWorldPos);
+    
+    var handle = this.Handle.UiWidget;
+    var currHandlePos = handle.LocalTranslation;
+    currHandlePos.Y = mousePosLocal.Y;
+    
+    // Clamp
+    var max = this.UiWidget.Size.Y - handle.Size.Y;
+    currHandlePos.Y = Math.Clamp(currHandlePos.Y, 0, max);
+    
+    // Set the final position
+    handle.LocalTranslation = currHandlePos;
+    
+    // Send an event to for the changes
+    var eventToSend = UiSliderEvent();
+    eventToSend.SliderPercentage = 1.0 - (currHandlePos.Y / max);
+    this.Owner.DispatchEvent(Events.UiSliderChanged, eventToSend);
+  }
+  
+  function SetHandlePosition(percent : Real)
+  {
+    var handle = this.Handle.UiWidget;
+    var max = this.UiWidget.Size.Y - handle.Size.Y;
+    var position = max * percent;
+    var currHandlePos = handle.LocalTranslation;
+    currHandlePos.Y = position;
+    handle.LocalTranslation = currHandlePos;
+  }
+}

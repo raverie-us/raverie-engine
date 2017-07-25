@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "SpriteSourceColor"
+		var ResourceId = 0x56dc098bf83c2d4f
+	}
+}

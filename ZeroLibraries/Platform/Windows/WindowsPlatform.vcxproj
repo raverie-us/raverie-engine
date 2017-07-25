@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DBE8E33A-7E70-402C-BCF6-D1EFEE93FA76}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the environment paths needed to find all our different repositories-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CommandLineSupport.cpp" />
+    <ClCompile Include="ConsoleListeners.cpp" />
+    <ClCompile Include="CrashHandler.cpp" />
+    <ClCompile Include="DebugClassMap.cpp" />
+    <ClCompile Include="DebugSymbolInformation.cpp" />
+    <ClCompile Include="DirectoryWatcher.cpp" />
+    <ClCompile Include="ExternalLibrary.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="FpControl.cpp" />
+    <ClCompile Include="PlatformStandard.cpp" />
+    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="Socket.cpp" />
+    <ClCompile Include="StackWalker.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadSync.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="WindowsError.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="WString.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="StackWalker.hpp" />
+    <ClInclude Include="ThreadIo.hpp" />
+    <ClInclude Include="WindowsError.hpp" />
+    <ClInclude Include="Windows.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="WString.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

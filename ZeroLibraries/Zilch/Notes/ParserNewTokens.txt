@@ -1,0 +1,246 @@
+tokens.AddToken("abstract",		"Abstract");
+tokens.AddToken("alias",		"Alias");
+tokens.AddToken("alignof",		"Alignof");
+tokens.AddToken("as",			"As");
+tokens.AddToken("assert",		"Assert");
+tokens.AddToken("auto",			"Auto");
+tokens.AddToken("base",			"Base");
+tokens.AddToken("break",		"Break");
+tokens.AddToken("case",			"Case");
+tokens.AddToken("catch",		"Catch");
+tokens.AddToken("checked",		"Checked");
+tokens.AddToken("class",		"Class");
+tokens.AddToken("const",		"Const");
+tokens.AddToken("continue",		"Continue");
+tokens.AddToken("default",		"Default");
+tokens.AddToken("delegate",		"Delegate");
+tokens.AddToken("delete",		"Delete");
+tokens.AddToken("do",			"Do");
+tokens.AddToken("dynamic",		"Dynamic");
+tokens.AddToken("else",			"Else");
+tokens.AddToken("enum",			"Enum");
+tokens.AddToken("event",		"Event");
+tokens.AddToken("explicit",		"Explicit");
+tokens.AddToken("export",		"Export");
+tokens.AddToken("extern",		"Extern");
+tokens.AddToken("false",		"False");
+tokens.AddToken("finally",		"Finally");
+tokens.AddToken("fixed",		"Fixed");
+tokens.AddToken("for",			"For");
+tokens.AddToken("foreach",		"Foreach");
+tokens.AddToken("friend",		"Friend");
+tokens.AddToken("function",		"Function");
+tokens.AddToken("get",			"Get");
+tokens.AddToken("global",		"Global");
+tokens.AddToken("goto",			"Goto");
+tokens.AddToken("if",			"If");
+tokens.AddToken("immutable",	"Immutable");
+tokens.AddToken("implicit",		"Implicit");
+tokens.AddToken("import",		"Import");
+tokens.AddToken("in",			"In");
+tokens.AddToken("include",		"Include");
+tokens.AddToken("inline",		"Inline");
+tokens.AddToken("interface",	"Interface");
+tokens.AddToken("internal",		"Internal");
+tokens.AddToken("is",			"Is");
+tokens.AddToken("lock",			"Lock");
+tokens.AddToken("loop",			"Loop");
+tokens.AddToken("module",		"Module");
+tokens.AddToken("mutable",		"Mutable");
+tokens.AddToken("namespace",	"Namespace");
+tokens.AddToken("new",			"New");
+tokens.AddToken("null",			"Null");
+tokens.AddToken("operator",		"Operator");
+tokens.AddToken("out",			"Out");
+tokens.AddToken("override",		"Override");
+tokens.AddToken("package",		"Package");
+tokens.AddToken("params",		"Params");
+tokens.AddToken("partial",		"Partial");
+tokens.AddToken("private",		"Private");
+tokens.AddToken("protected",	"Protected");
+tokens.AddToken("public",		"Public");
+tokens.AddToken("readonly",		"Readonly");
+tokens.AddToken("ref",			"Ref");
+tokens.AddToken("register",		"Register");
+tokens.AddToken("require",		"Require");
+tokens.AddToken("return",		"Return");
+tokens.AddToken("sealed",		"Sealed");
+tokens.AddToken("set",			"Set");
+tokens.AddToken("signed",		"Signed");
+tokens.AddToken("sizeof",		"Sizeof");
+tokens.AddToken("stackalloc",	"Stackalloc");
+tokens.AddToken("static",		"Static");
+tokens.AddToken("struct",		"Struct");
+tokens.AddToken("switch",		"Switch");
+tokens.AddToken("this",			"This");
+tokens.AddToken("throw",		"Throw");
+tokens.AddToken("true",			"True");
+tokens.AddToken("try",			"Try");
+tokens.AddToken("typedef",		"Typedef");
+tokens.AddToken("typeid",		"Typeid");
+tokens.AddToken("typename",		"Typename");
+tokens.AddToken("typeof",		"Typeof");
+tokens.AddToken("unchecked",	"Unchecked");
+tokens.AddToken("unsafe",		"Unsafe");
+tokens.AddToken("unsigned",		"Unsigned");
+tokens.AddToken("using",		"Using");
+tokens.AddToken("var",			"Var");
+tokens.AddToken("virtual",		"Virtual");
+tokens.AddToken("volatile",		"Volatile");
+tokens.AddToken("where",		"Where");
+tokens.AddToken("while",		"While");
+tokens.AddToken("yield",		"Yield");
+
+
+
+
+
+Identifier           = {ID Head}{ID Tail}*
+StringLiteral        = '"' ( {String Chars} | '\' {String Escapable} )* '"'
+CharacterLiteral     = ''  ( {String Chars} | '\' {Character Escapable} ) ''
+IntegerLiteral       = {Number}+
+RealLiteral          = {Number}+ '.' {Number}+
+
+
+
+Abstract             = 'abstract'
+Alias                = 'alias'
+Alignof              = 'alignof'
+As                   = 'as'
+Assert               = 'assert'
+Auto                 = 'auto'
+Base                 = 'base'
+Break                = 'break'
+Case                 = 'case'
+Catch                = 'catch'
+Checked              = 'checked'
+Class                = 'class'
+Const                = 'const'
+Continue             = 'continue'
+Default              = 'default'
+Delegate             = 'delegate'
+Delete               = 'delete'
+Do                   = 'do'
+Dynamic              = 'dynamic'
+Else                 = 'else'
+Enumeration          = 'enum'
+Event                = 'event'
+Explicit             = 'explicit'
+Export               = 'export'
+Extern               = 'extern'
+False                = 'false'
+Finally              = 'finally'
+Fixed                = 'fixed'
+For                  = 'for'
+Foreach              = 'foreach'
+Friend               = 'friend'
+Function             = 'function'
+Get                  = 'get'
+Global               = 'global'
+Goto                 = 'goto'
+If                   = 'if'
+Immutable            = 'immutable'
+Implicit             = 'implicit'
+Import               = 'import'
+In                   = 'in'
+Include              = 'include'
+Inline               = 'inline'
+Interface            = 'interface'
+Internal             = 'internal'
+Is                   = 'is'
+Lock                 = 'lock'
+Loop                 = 'loop'
+Module               = 'module'
+Mutable              = 'mutable'
+Namespace            = 'namespace'
+New                  = 'new'
+Null                 = 'null'
+Operator             = 'operator'
+Out                  = 'out'
+Override             = 'override'
+Package              = 'package'
+Params               = 'params'
+Partial              = 'partial'
+Private              = 'private'
+Protected            = 'protected'
+Public               = 'public'
+Readonly             = 'readonly'
+Ref                  = 'ref'
+Register             = 'register'
+Require              = 'require'
+Return               = 'return'
+Sealed               = 'sealed'
+Set                  = 'set'
+Signed               = 'signed'
+Sizeof               = 'sizeof'
+Stackalloc           = 'stackalloc'
+Static               = 'static'
+Struct               = 'struct'
+Switch               = 'switch'
+This                 = 'this'
+Throw                = 'throw'
+True                 = 'true'
+Try                  = 'try'
+Typedef              = 'typedef'
+Typeid               = 'typeid'
+Typename             = 'typename'
+Typeof               = 'typeof'
+Unchecked            = 'unchecked'
+Unsafe               = 'unsafe'
+Unsigned             = 'unsigned'
+Using                = 'using'
+Variable             = 'var'
+Virtual              = 'virtual'
+Volatile             = 'volatile'
+Where                = 'where'
+While                = 'while'
+Yield                = 'yield'
+Access               = '.'
+ExplicitAccess       = '->'
+TypeAndNameQualifier = ':'
+ArgumentSeparator    = ','
+Assignment           = ':='
+SubtractAssignment   = '-='
+AddAssignment        = '+='
+DivideAssignment     = '/='
+MultiplyAssignment   = '*='
+ModuloAssignment     = '%='
+ExponentAssignment   = '^='
+LeftShiftAssignment  = '<<='
+RightShiftAssignment = '>>='
+BitwiseXorAssignment = '$='
+BitwiseOrAssignment  = '|='
+BitwiseAndAssignment = '&='
+Equality             = '='
+Inequality           = '!='
+LessThan             = '<'
+LessThanOrEqualTo    = '<='
+GreaterThan          = '>'
+GreaterThanOrEqualTo = '>='
+Minus                = '-'
+Plus                 = '+'
+Divide               = '/'
+Multiply             = '*'
+Modulo               = '%'
+Exponent             = '^'
+Decrement            = '--'
+Increment            = '++'
+BitshiftLeft         = '<<'
+BitshiftRight        = '>>'
+BitwiseXor           = '$'
+BitwiseOr            = '|'
+BitwiseAnd           = '&'
+BitwiseNot           = '~'
+LogicalOr            = '||'
+LogicalAnd           = '&&'
+LogicalNot           = '!'
+StatementSeparator   = ';'
+BeginIndex           = '['
+EndIndex             = ']'
+BeginParenthasis     = '('
+EndParenthasis       = ')'
+BeginScope           = '{'
+EndScope             = '}'
+Comment Line         = '//'
+Comment Start        = '/*'
+Comment End          = '*/'

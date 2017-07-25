@@ -1,0 +1,16 @@
+// Used internally in generated shaders to handle different math conventions between graphics API's.
+// Math done in shaders should be in Zero's convention, where perspective.XYZ / perspective.W maps
+// NDC space as [-1,-1,-1] to [1,1,1] and positive x/y/z are right/top/forward.
+[Vertex][Protected]
+struct ApiPerspectiveOutput
+{
+  [BuiltInInput] var ZeroPerspectiveToApiPerspective : Real4x4;
+
+  [Input] var PerspectivePosition : Real4;
+  [Output] var ApiPerspectivePosition : Real4;
+
+  function Main()
+  {
+    this.ApiPerspectivePosition = Math.Multiply(this.ZeroPerspectiveToApiPerspective, this.PerspectivePosition);
+  }
+}

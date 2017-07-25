@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="IRC">
+      <UniqueIdentifier>{475348c6-3499-4d5f-9da7-2b4641f7748d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sockets">
+      <UniqueIdentifier>{59e877ab-d7fd-43fe-b39f-562ffb300af5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{120a66f8-6a82-4587-9e37-ddc9ad2a4f9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{0d167df4-3351-463e-b690-8d702f111db4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{175b5739-8455-4efe-8dd2-a12007f43f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WebRequest">
+      <UniqueIdentifier>{ce2ea89d-3b13-4b82-9785-c09d3ee5429a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetPeer">
+      <UniqueIdentifier>{a4623d09-7aa7-459f-87e8-f075f75f5e8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BitStreamExtended">
+      <UniqueIdentifier>{d46357bb-2945-42ed-9069-e51348dc2ad2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetEvents">
+      <UniqueIdentifier>{780c976f-7366-4e61-a6a7-1678a4659d30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetObject">
+      <UniqueIdentifier>{1fc45357-ddba-4c27-af9d-4a489efd28eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetSpace">
+      <UniqueIdentifier>{1bce2ebd-8b26-489e-8ef2-222ee525deee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventBundle">
+      <UniqueIdentifier>{734abfe0-0070-428e-a0cb-546e891e8d8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetTypes">
+      <UniqueIdentifier>{8155ff8e-2ac0-4352-97a4-c5552ae7a511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetUser">
+      <UniqueIdentifier>{8f7598e1-b3f7-4e3b-9136-5d8805b08e69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetChannel">
+      <UniqueIdentifier>{b0795ef7-0c54-4720-b8d5-695c261cd818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetProperty">
+      <UniqueIdentifier>{cd90aab6-19e2-40cc-a82f-0b6627dd2ad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetHost">
+      <UniqueIdentifier>{e8320df6-c51a-4322-9d95-ae8155bb554f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MasterServer">
+      <UniqueIdentifier>{2cb69de5-b40a-4799-bfe5-fbdf44f1e36c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetDiscovery">
+      <UniqueIdentifier>{acadda31-b3da-4437-bc63-401b3f83a305}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IRCClient.hpp">
+      <Filter>IRC</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPSocket.hpp">
+      <Filter>Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="SendableEvent.hpp">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleSocket.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WebRequest.hpp">
+      <Filter>WebRequest</Filter>
+    </ClInclude>
+    <ClInclude Include="NetPeer.hpp">
+      <Filter>NetPeer</Filter>
+    </ClInclude>
+    <ClInclude Include="NetObject.hpp">
+      <Filter>NetObject</Filter>
+    </ClInclude>
+    <ClInclude Include="NetEvents.hpp">
+      <Filter>NetEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="NetSpace.hpp">
+      <Filter>NetSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="BitStreamExtended.hpp">
+      <Filter>BitStreamExtended</Filter>
+    </ClInclude>
+    <ClInclude Include="EventBundle.hpp">
+      <Filter>EventBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="NetTypes.hpp">
+      <Filter>NetTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="NetUser.hpp">
+      <Filter>NetUser</Filter>
+    </ClInclude>
+    <ClInclude Include="NetChannel.hpp">
+      <Filter>NetChannel</Filter>
+    </ClInclude>
+    <ClInclude Include="NetProperty.hpp">
+      <Filter>NetProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="NetHost.hpp">
+      <Filter>NetHost</Filter>
+    </ClInclude>
+    <ClInclude Include="PingManager.hpp">
+      <Filter>NetDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="NetPeerConnectionInterface.hpp">
+      <Filter>NetDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="NetPeerMessageInterface.hpp">
+      <Filter>NetDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="PendingHostPing.hpp">
+      <Filter>NetDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="NetDiscoveryInterface.hpp">
+      <Filter>NetDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="InternetHostDiscovery.hpp">
+      <Filter>NetDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="LanHostDiscovery.hpp">
+      <Filter>NetDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="NetHostRecord.hpp">
+      <Filter>MasterServer</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkingStandard.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="IRCClient.cpp">
+      <Filter>IRC</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPSocket.cpp">
+      <Filter>Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="SendableEvent.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleSocket.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="WebRequest.cpp">
+      <Filter>WebRequest</Filter>
+    </ClCompile>
+    <ClCompile Include="NetPeer.cpp">
+      <Filter>NetPeer</Filter>
+    </ClCompile>
+    <ClCompile Include="NetObject.cpp">
+      <Filter>NetObject</Filter>
+    </ClCompile>
+    <ClCompile Include="NetEvents.cpp">
+      <Filter>NetEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="NetSpace.cpp">
+      <Filter>NetSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="BitStreamExtended.cpp">
+      <Filter>BitStreamExtended</Filter>
+    </ClCompile>
+    <ClCompile Include="EventBundle.cpp">
+      <Filter>EventBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="NetTypes.cpp">
+      <Filter>NetTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="NetUser.cpp">
+      <Filter>NetUser</Filter>
+    </ClCompile>
+    <ClCompile Include="NetChannel.cpp">
+      <Filter>NetChannel</Filter>
+    </ClCompile>
+    <ClCompile Include="NetProperty.cpp">
+      <Filter>NetProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="NetHost.cpp">
+      <Filter>NetHost</Filter>
+    </ClCompile>
+    <ClCompile Include="PingManager.cpp">
+      <Filter>NetDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="NetPeerConnectionInterface.cpp">
+      <Filter>NetDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="PendingHostPing.cpp">
+      <Filter>NetDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="NetDiscoveryInterface.cpp">
+      <Filter>NetDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="InternetHostDiscovery.cpp">
+      <Filter>NetDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="LanHostDiscovery.cpp">
+      <Filter>NetDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="NetHostRecord.cpp">
+      <Filter>MasterServer</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkingStandard.cpp" />
+  </ItemGroup>
+</Project>

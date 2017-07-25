@@ -1,0 +1,47 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "SquareGizmo",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [18.9623, 10.956, 9.14132],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	MouseCapture = 
+	{
+	},
+	Gizmo = 
+	{
+		bool Active = true,
+		bool ForwardEventsToChildren = true,
+	},
+	GizmoDrag = 
+	{
+		GizmoDragMode DragMode = Plane,
+		Vec3 LineDirection = [1, 0, 0],
+		Vec3 PlaneNormal = [0, 0, 1],
+		bool NormalInWorld = false,
+		GizmoGrabMode GrabMode = Hold,
+	},
+	SquareGizmo = 
+	{
+		bool MouseInput = true,
+		int PickingPriority = 0,
+		Vec4 Color = [0, 0.639216, 1, 0.55],
+		Vec4 HoverColor = [0, 0.968627, 1, 0.4],
+		bool ViewScaled = true,
+    bool UseParentAsViewScaleOrigin = false,
+		bool DrawOnTop = true,
+		Vec3 Size = [0.2, 0.2, 0.2],
+		float SnapDistance = 0.25,
+		bool ViewAligned = true,
+		bool Filled = true,
+	},
+},

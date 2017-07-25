@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "TemplatePixelAnnotatedInput"
+		var ResourceId = 0x5820019e4c7381d9
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Pixel Annotated"
+		var Description = "Empty fragment with all built in input annotated"
+		var SortWeight = 100
+		var Category = "Pixel"
+		var CategorySortWeight = 10
+	}
+}

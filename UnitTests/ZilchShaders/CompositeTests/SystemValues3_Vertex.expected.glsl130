@@ -1,0 +1,94 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+
+//----- Struct Definitions -----
+struct SVVertex1
+{
+  int VertexId;
+  vec4 ApiPerspectivePosition;
+};
+
+struct SystemValues3_Vertex
+{
+  float Time;
+  vec4 ApiPerspectivePosition;
+  int VertexId;
+};
+
+//----- Forward Declarations -----
+void _SVVertex1PreConstructor(inout SVVertex1 self);
+SVVertex1 _SVVertex1Constructor();
+void _SVVertex1Main(inout SVVertex1 self);
+
+void _SystemValues3_VertexPreConstructor(inout SystemValues3_Vertex self);
+SystemValues3_Vertex _SystemValues3_VertexConstructor();
+void _SystemValues3_VertexMain(inout SystemValues3_Vertex self);
+void CopyInputs(inout SystemValues3_Vertex self);
+void CopyOutputs(inout SystemValues3_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- SVVertex1 Functions -----
+void _SVVertex1PreConstructor(inout SVVertex1 self)
+{
+  self.VertexId = int(0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+SVVertex1 _SVVertex1Constructor()
+{
+  SVVertex1 self;
+  _SVVertex1PreConstructor(self);
+  return self;
+}
+
+void _SVVertex1Main(inout SVVertex1 self)
+{
+  self.ApiPerspectivePosition = vec4(float(self.VertexId));
+}
+
+//----- SystemValues3_Vertex Functions -----
+void _SystemValues3_VertexPreConstructor(inout SystemValues3_Vertex self)
+{
+  self.Time = float(0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.VertexId = int(0);
+}
+
+SystemValues3_Vertex _SystemValues3_VertexConstructor()
+{
+  SystemValues3_Vertex self;
+  _SystemValues3_VertexPreConstructor(self);
+  return self;
+}
+
+void _SystemValues3_VertexMain(inout SystemValues3_Vertex self)
+{
+  SVVertex1 _svvertex1 = _SVVertex1Constructor();
+  _svvertex1.VertexId = self.VertexId;
+  _SVVertex1Main(_svvertex1);
+  self.ApiPerspectivePosition = _svvertex1.ApiPerspectivePosition;
+}
+
+//----- SystemValues3_Vertex Final Shader Functions -----
+void CopyInputs(inout SystemValues3_Vertex self)
+{
+  self.Time = Time;
+  self.VertexId = gl_VertexID;
+}
+
+void CopyOutputs(inout SystemValues3_Vertex self)
+{
+  gl_Position = self.ApiPerspectivePosition;
+}
+
+//----- Main -----
+void main(void)
+{
+  SystemValues3_Vertex systemvalues3_vertex = _SystemValues3_VertexConstructor(); 
+  CopyInputs(systemvalues3_vertex);
+  _SystemValues3_VertexMain(systemvalues3_vertex);
+  CopyOutputs(systemvalues3_vertex);
+}
+

@@ -1,0 +1,54 @@
+[Version:1]
+Cog 
+{
+	var Name = "NodeLine"
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Real3{0, 0, 0}
+		var Scale = Real3{1, 1, 1}
+		var Rotation = Quaternion{0, 0, 0, 1}
+	}
+	Sprite 
+	{
+		var Visible = true
+		var ViewCulling = true
+		var VisibilityEvents = true
+		var Material = "582c575af53d18c9:AlphaSprite"
+		var VertexColor = Real4{0.485000014, 0.485000014, 0.485000014, 1}
+		var GeometryMode = SpriteGeometryMode.ZPlane
+		var SpriteSource = "5275aa4d802dd6dc:Square"
+		var FlipX = false
+		var FlipY = false
+		var AnimationActive = true
+		var AnimationSpeed = 1
+		var StartFrame = 0
+	}
+	Area 
+	{
+		var Size = Real2{2, 1}
+		var Origin = Location.TopLeft
+	}
+	UiWidget 
+	{
+		var Active = true
+		var Visible = true
+		var Interactive = true
+		var InLayout = false
+		var ClipChildren = false
+		var CanTakeFocus = false
+		var LocalColor = Real4{1, 1, 1, 1}
+		var HierarchyColor = Real4{1, 1, 1, 1}
+		var SizePolicyX = UiSizePolicy.Fixed
+		var SizePolicyY = UiSizePolicy.Fixed
+		var FlexSize = Real2{1, 1}
+		var AbsoluteMinSize = Real2{1, 1}
+		var VerticalAlignment = UiVerticalAlignment.Top
+		var HorizontalAlignment = UiHorizontalAlignment.Left
+		var MarginLeft = 0
+		var MarginTop = 0
+		var MarginRight = 0
+		var MarginBottom = 0
+		var DockMode = UiDockMode.Left
+	}
+}

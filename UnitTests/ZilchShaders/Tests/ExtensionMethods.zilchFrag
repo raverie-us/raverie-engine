@@ -1,0 +1,76 @@
+// Test extension methods on a struct type
+struct Real2Extensions
+{
+    // Test an instance function that takes no parameters
+    [Extension(typeid(Real2))]
+    function Flip() : Real2
+    {
+      return Real2(-this.Y, this.X);
+    }
+    
+    // Test an instance function that takes 1 parameter
+    [Extension(typeid(Real2))]
+    function Flip(counterClockwise : Boolean) : Real2
+    {
+      if(counterClockwise)
+        return Real2(this.Y, -this.X);
+      else
+        return Real2(-this.Y, this.X);
+    }
+    
+    // Test a static function
+    [Static][Extension(typeid(Real2))]
+    function Add(real20 : Real2, real21 : Real2) : Real2
+    {
+        return real20 + real21;
+    }
+}
+
+// Make a class to test extensions on
+struct MyHelper
+{
+    var Data : Integer;
+}
+
+// Test extension methods on a class
+struct MyHelperExtensions
+{
+    // Test an instance function
+    [Extension(typeid(MyHelper))]
+    function Increment()
+    {
+        this.Data += 1;
+    }
+    
+    // Test a static function
+    [Static][Extension(typeid(MyHelper))]
+    function GetInstance() : MyHelper
+    {
+        var result = MyHelper();
+        result.Data = 0;
+        return result;
+    }
+}
+
+[Pixel]
+struct ExtensionMethods
+{
+    // Just for kicks, test an extension method on a static type not in this library
+    [Static][Extension(typeid(Math))]
+    function MyCross2d(real20 : Real2, real21 : Real2) : Real
+    {
+      return real20.X * real21.Y + real20.Y * real21.X;
+    }
+    
+    function Main()
+    {
+        var vec = Real2(1, 0);
+        var v1 = vec.Flip();
+        var v2 = vec.Flip(true);
+        var value = Math.MyCross2d(v1, v2);
+        
+        var helper = MyHelper();
+        helper.Increment();
+        helper = MyHelper.GetInstance();
+    }
+}

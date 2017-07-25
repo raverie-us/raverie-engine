@@ -1,0 +1,12 @@
+// ReturnTypeMismatch
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo() : Real3
+  {
+    var test = 55;
+    return test; // Cannot implicitly convert Integer to Real
+  }
+}

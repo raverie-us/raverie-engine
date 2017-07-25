@@ -1,0 +1,56 @@
+Container ranges / array binding
+Handle as a handle object - outline all cases
+Binding (less macros, no Internal External stuff, except maybe in type declaration)
+Property (Get/Set) binding
+
+experiment with hot loading
+
+untyped block array needs to properly copy construct
+
+right now, function modifications work (still need to copy variables over)
+
+We do a first pass through patching direct functions
+
+OLD:  function OnLogicUpdate(event : UpdateEvent)
+NEW:  function OnLogicUpdate(event : UpdateEvent)
+
+Then for any functions that didn't map back, we do another pass looking for raw compatible overloads (and implicitly convertable to)
+
+All passes on this level must ALSO add the new function in to the library
+
+OLD:  function OnLogicUpdate(event : UpdateEvent)
+NEW:  function OnLogicUpdate(event : Event)
+
+FAILS (AND IT SHOULD):
+OLD:  function OnLogicUpdate(event : Event)
+NEW:  function OnLogicUpdate(event : UpdateEvent)
+
+Finally, we do a pass looking for functions that could be compatible but require code generation
+ - but we should allow down-casting... I think
+
+OLD:  function OnLogicUpdate(event : Event)
+      {
+        // Ideally:
+        var p0 = event as UpdateEvent;
+        if (p0 == null)
+        {
+          return; // Log it here?
+        }
+        this.[NEW]OnLogicUpdate(p0);
+      }
+      
+NEW:  function ComputeStuff(a : Real, b : Integer)
+OLD:  function ComputeStuff(a : Real, b : Real, c : String)
+
+if the function was virtual, do we want to reassign it to a base class function (if non pure) instead of just wiping it?
+ - maybe make it call the base version...
+
+All new functions need to be added to the library (we're basically merging the library with the other one)
+ - We don't need to modify the library that's newly compiled, just the old one (and the old one needs to now store a 'patch' reference
+
+We also need to merge types
+
+lastly, we want to make some sort of special code you can do for patching that, when code is added, we will run it
+ - ideally new lines of code (or changed lines of code)
+ - adding new connect statements to Initialize
+ - how do we disconnect? just remove the function :P

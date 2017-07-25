@@ -1,0 +1,15 @@
+// BreakLoopNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    var i = 10;
+    if (i < 3)
+    {
+      break;
+    }
+  }
+}

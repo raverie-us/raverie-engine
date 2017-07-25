@@ -1,0 +1,149 @@
+struct Brain
+{
+  var Thoughts : Integer = 1000;
+  var ThinkSpeed : Real = 1.0;
+  
+  // Default constructor
+  constructor()
+  {
+  }
+
+  function SuperCharge(parent : Animal)
+  {
+    this.ThinkSpeed *= 40.0;
+    parent.OneUp();
+    return;
+  }
+
+  function ProcessThoughts(time : Real)
+  {
+    this.Thoughts += (this.ThinkSpeed * time) as Integer;
+    this.ThinkSpeed *= 0.9;
+    return;
+  }
+}
+
+class Animal
+{
+  var Lives : Integer = 9;
+  var Health : Real = 100.0;
+  var IsOnGround : Boolean = false;
+
+  // Default constructor
+  constructor()
+  {
+  }
+
+  var LoclMemberBrain : Brain = local Brain();
+  var HeapMemberBrain : ref Brain = new Brain();
+
+  //copy(from : ref Animal)
+  //{
+  //  this.Lives = that.Lives;
+  //}
+  //
+  //assign(from : ref Animal)
+  //{
+  //  this.Lives = that.Lives;
+  //}
+
+  destructor()
+  {
+    delete this.HeapMemberBrain;
+    return;
+  }
+
+  function Jump() : Animal
+  {
+    this.IsOnGround = false;
+    return this;
+  }
+
+  function TakeDamage(damage : Real)
+  {
+    this.Health -= damage;
+
+    this.LoclMemberBrain.SuperCharge(parent : this);
+    this.HeapMemberBrain.SuperCharge(parent : this);
+
+    if (this.Health < 0.0)
+    {
+      --this.Lives;
+      this.Health = 100.0;
+    }
+    return;
+  }
+
+  function OneUp()
+  {
+    ++this.Lives;
+    return;
+  }
+
+  function GetTotalHealth() : Real
+  {
+    var totalHealth = (this.Lives as Real) * 100.0 + this.Health;
+    return totalHealth;
+  }
+}
+
+class UnitTest06
+{
+  // Test a local object, heap object, local delegate, heap delegate, this, pre-constructors
+  [Static]
+  function Test06() : Integer
+  {
+    var locl = new Animal();
+    var heap = new Animal();
+
+    var val = 3;
+
+    if (locl == heap)
+    {
+      ++val;
+    }
+
+    if (locl != heap)
+    {
+      val += 9;
+    }
+
+    var loclDelegate = locl.TakeDamage;
+    var heapDelegate = heap.TakeDamage;
+
+    for (var i = 0; i < 10; ++i)
+    {
+      loclDelegate(damage : 51.235);
+      heapDelegate(damage : 65.653);
+    }
+
+    locl.Jump().Jump().Jump();
+    heap.Jump().Jump().Jump();
+
+    var loclloclMemberDelegate = locl.LoclMemberBrain.ProcessThoughts;
+    var loclheapMemberDelegate = locl.HeapMemberBrain.ProcessThoughts;
+    var heaploclMemberDelegate = heap.LoclMemberBrain.ProcessThoughts;
+    var heapheapMemberDelegate = heap.HeapMemberBrain.ProcessThoughts;
+
+    loclloclMemberDelegate(time : 0.23);
+    loclheapMemberDelegate(time : 0.20);
+    heaploclMemberDelegate(time : 0.37);
+    heapheapMemberDelegate(time : 0.89);
+
+    locl.LoclMemberBrain.SuperCharge(parent : heap);
+    locl.HeapMemberBrain.SuperCharge(parent : heap);
+    heap.LoclMemberBrain.SuperCharge(parent : heap);
+    heap.HeapMemberBrain.SuperCharge(parent : heap);
+
+    var result = (locl.GetTotalHealth() + heap.GetTotalHealth()) as Integer +
+      locl.LoclMemberBrain.Thoughts +
+      locl.HeapMemberBrain.Thoughts +
+      heap.LoclMemberBrain.Thoughts +
+      heap.HeapMemberBrain.Thoughts;
+    
+    delete locl;
+    delete heap;
+    
+    return result + val;
+  }
+}

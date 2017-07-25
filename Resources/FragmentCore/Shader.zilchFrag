@@ -1,0 +1,78 @@
+struct DdxExtensions
+{
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Ddx(value : Real) : Real
+  {
+    var result = 0.0;
+    Shader.AddInlineShaderCode("glsl", "`result` = dFdx(`value`)");
+    return result;
+  }
+
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Ddx(value : Real2) : Real2
+  {
+    var result = Real2();
+    Shader.AddInlineShaderCode("glsl", "`result` = dFdx(`value`)");
+    return result;
+  }
+
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Ddx(value : Real3) : Real3
+  {
+    var result = Real3();
+    Shader.AddInlineShaderCode("glsl", "`result` = dFdx(`value`)");
+    return result;
+  }
+
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Ddx(value : Real4) : Real4
+  {
+    var result = Real4();
+    Shader.AddInlineShaderCode("glsl", "`result` = dFdx(`value`)");
+    return result;
+  }
+}
+
+struct DdyExtensions
+{
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Ddy(value : Real) : Real
+  {
+    var result = 0.0;
+    Shader.AddInlineShaderCode("glsl", "`result` = dFdy(`value`)");
+    return result;
+  }
+  
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Ddy(value : Real2) : Real2
+  {
+    var result = Real2();
+    Shader.AddInlineShaderCode("glsl", "`result` = dFdy(`value`)");
+    return result;
+  }
+  
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Ddy(value : Real3) : Real3
+  {
+    var result = Real3();
+    Shader.AddInlineShaderCode("glsl", "`result` = dFdy(`value`)");
+    return result;
+  }
+  
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Ddy(value : Real4) : Real4
+  {
+    var result = Real4();
+    Shader.AddInlineShaderCode("glsl", "`result` = dFdy(`value`)");
+    return result;
+  }
+}
+
+struct DiscardExtensions
+{
+  [Static][Extension(typeid(Shader))][PixelIntrinsic]
+  function Discard()
+  {
+    Shader.AddInlineShaderCode("glsl", "discard");
+  }
+}

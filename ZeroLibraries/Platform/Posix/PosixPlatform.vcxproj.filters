@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{b76ab166-aec8-4ad1-ad20-2bf6ab7429ce}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="FpControl.cpp" />
+    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadSync.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="Socket.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGl.hpp" />
+    <ClInclude Include="Shared.hpp" />
+  </ItemGroup>
+</Project>

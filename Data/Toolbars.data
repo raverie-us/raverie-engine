@@ -1,0 +1,107 @@
+Menus menus =
+{
+	Menu =
+	{
+		string Name = "PrimaryToolbar",
+		Array Entries = 
+		[
+		  "SaveProject",
+		]
+	},	
+
+
+	Menu =
+	{
+		string Name = "ResourceToolbar",
+		Array Entries = 
+		[
+		  "Add",
+		]
+	},	
+
+	Menu =
+	{
+		string Name = "PrimaryToolsToolbar",
+		Array Entries = 
+		[
+		  "SelectTool",
+		  "TranslateTool",
+		  "RotateTool",
+		  "ScaleTool",
+		  "ManipulatorTool",
+		]
+	},
+
+	Menu =
+	{
+		string Name = "EditToolsToolbar",
+		Array Entries = 
+		[
+		  "TileEditor2D",
+		  "HeightMapTool",
+		  "JointTool",
+		  "CreationTool",
+		  "Divider",
+		  "Divider",
+		  "Divider",
+		]
+	},	
+	
+	Menu =
+	{
+		string Name = "AdditionalToolsToolbar",
+		stirng Icon = "ToolGroup",
+		Array Entries = 
+		[
+		  //"GeometryPainter2D",
+		  //"GeometryPointManipulator",
+		]
+	},	
+	
+	Menu =
+	{	
+		string Name = "WindowsToolbar",
+		Array Entries = 
+		[
+		  "Animator",
+		  "WindowsGroup",
+		]
+	}
+	
+	Menu =
+	{
+		string Name = "WindowsGroup",
+		stirng Icon = "WindowGroup",
+		Array Entries = 
+		[
+		  "Console",
+		  "Properties",
+		  "Objects",
+		  "Library",
+		  "FindAll",
+		]
+	}
+	
+	Menu =
+	{	
+		string Name = "GameToolbar",
+		Array Entries = 
+		[
+			"PlayGame",
+			"PauseGame",
+			"StepGame",
+			"StopGame",
+		]
+	}
+	
+	Menu =
+	{	
+		string Name = "HelpToolbar",
+		Array Entries = 
+		[
+			"Market",
+			"Divider",
+			"ReportBug",
+		]
+	}
+},	

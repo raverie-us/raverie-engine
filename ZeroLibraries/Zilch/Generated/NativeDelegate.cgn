@@ -1,0 +1,165 @@
+permute Arguments alias n : int[-1, 5];
+
+handler <? All ?>
+{
+  Arguments             = <? Utilities.RepeatNumeric("arg#", ", ", 0, n) ?>;
+  ArgumentTypeNames     = <? Utilities.RepeatNumeric("typename Arg#", ", ", 0, n) ?>;
+  ArgumentTypes         = <? Utilities.RepeatNumeric("Arg#", ", ", 0, n) ?>;
+  Parameters            = <? Utilities.RepeatNumeric("Arg# arg#", ", ", 0, n) ?>;
+  Voids                 = <? Utilities.RepeatNumeric("void", ", ", 0, 5 - n) ?>;
+  
+  // Turn commas in the form of [,] into an actual comma, if it's needed
+  "(\[,]){2,}"  = "[,]";
+  "\[,]>"       = ">";
+  "\(\[,]"      = "(";
+  "\[,]"        = ", ";
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+
+  // Wraps up static and instance functions into a single class that can be invoked
+  template <typename ReturnType[,]$ArgumentTypeNames$>
+  class NativeDelegate<ReturnType[,]$ArgumentTypes$[,]$Voids$>
+  {
+  public:
+    // Since the static function can be taken directly (no template type for the class type)
+    // then we can just directly typedef the signature
+    typedef ReturnType (*StaticFn)($Parameters$);
+    
+    // The wrapper function (which we boil all signatures down to) is what we actually invoke
+    typedef ReturnType (*WrapperFn)($Parameters$[,]void* userData);
+
+    // Typedef the array of delegates
+    typedef NativeDelegateArray<ReturnType[,]$ArgumentTypes$> Array;
+
+    // Construct an empty native delegate
+    // Invoking this delegate will result in a hard crash
+    NativeDelegate() :
+      UserData(nullptr),
+      Wrapper(nullptr)
+    {
+    }
+
+    // Construct a native delegate from a static function
+    template <StaticFn Function>
+    static NativeDelegate FromStatic()
+    {
+      NativeDelegate delegate;
+      delegate.Wrapper = WrapStaticFunction<Function>;
+      return delegate;
+    }
+    
+    // Construct a native delegate from a static function that also takes user-data
+    template <WrapperFn Function>
+    static NativeDelegate FromStaticWithUserData(void* userData)
+    {
+      NativeDelegate delegate;
+      delegate.Wrapper = Function;
+      delegate.UserData = userData;
+      return delegate;
+    }
+
+    // Construct a native delegate from an instance/member function
+    template <typename ClassType, ReturnType (ClassType::*Function)($Parameters$)>
+    static NativeDelegate FromInstance(ClassType* thisPointer)
+    {
+      NativeDelegate delegate;
+      delegate.Wrapper = WrapInstanceFunction<ClassType, decltype(Function), Function>;
+      delegate.UserData = thisPointer;
+      return delegate;
+    }
+    
+    // Test to see if we have a valid callback set
+    bool IsValid()
+    {
+      return this->Wrapper != nullptr;
+    }
+
+    // Invoke the native delegate (calls both static and instance methods)
+    ReturnType operator()($Parameters$)
+    {
+      return this->Wrapper($Arguments$[,]this->UserData);
+    }
+
+  private:
+
+    // This will always take on the same signature as the 'WrapperFn'
+    template <StaticFn Function>
+    static ReturnType WrapStaticFunction($Parameters$[,]void* userData)
+    {
+      // Just directly call the static function (user-data is ignored!)
+      return Function($Arguments$);
+    }
+
+    // This will always take on the same signature as the 'WrapperFn'
+    template <typename ClassType, typename FunctionType, FunctionType Function>
+    static ReturnType WrapInstanceFunction($Parameters$[,]void* userData)
+    {
+      // Get the this pointer for the class
+      ClassType* self = (ClassType*)userData;
+
+      // Invoke the instance member function and pass in all the arguments
+      return (self->*Function)($Arguments$);
+    }
+
+  public:
+
+    // The this pointer is wrapped up inside this, and for static functions it will typically be null
+    void* UserData;
+
+    // The function we actually invoke (which in turn calls our functions)
+    WrapperFn Wrapper;
+  };
+
+  // An array of delegates that can be invoked (useful for callback lists / events)
+  template <typename ReturnType[,]$ArgumentTypeNames$>
+  class NativeDelegateArray<ReturnType[,]$ArgumentTypes$[,]$Voids$> : public Array<NativeDelegate<ReturnType[,]$ArgumentTypeNames$> >
+  {
+  public:
+
+    // Invokes all stored delegates, discarding each of the return values
+    void operator()($Parameters$)
+    {
+      // Loop through all native delegates
+      for (size_t i = 0; i < this->size(); ++i)
+      {
+        // Grab the current delegate
+        value_type& delegate = (*this)[i];
+
+        // Invoke the delegate (discarding the return value)
+        delegate($Arguments$);
+      }
+    }
+    
+    // Invokes all stored delegates and puts the resulting return values into a given array
+    void operator()($Parameters$[,]Array<ReturnType>& returnValues)
+    {
+      // Loop through all native delegates
+      for (size_t i = 0; i < this->size(); ++i)
+      {
+        // Grab the current delegate
+        value_type& delegate = (*this)[i];
+
+        // Invoke the delegate and store the return value
+        ReturnType result = delegate($Arguments$);
+
+        // Add the result of this delegate's return to it
+        returnValues.push_back(result);
+      }
+    }
+    
+    // Removes all callbacks for the given instance pointer or user-data
+    void RemoveByInstance(void* userDataOrThisPointer)
+    {
+      // Loop through all delegates
+      for (size_t i = 0; i < size();)
+      {
+        if ((*this)[i].UserData == userDataOrThisPointer)
+          this->eraseAt(i);
+        else
+          ++i;
+      }
+    }
+  };

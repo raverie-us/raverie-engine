@@ -1,0 +1,12 @@
+
+[Pixel]
+struct SVPixel1
+{
+    [Input] var PrimitiveId : Integer;
+    [Output] var PixelDepth : Real;
+    
+    function Main()
+    {
+      this.PixelDepth = this.PrimitiveId as Real;
+    }
+}

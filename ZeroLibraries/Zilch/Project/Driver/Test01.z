@@ -1,0 +1,36 @@
+class UnitTest01
+{
+  // Binary operators, local variables, constants, casting, and function returns
+  [Static]
+  function Test01() : Real
+  {
+    var i1 : Integer = ((5 * 3) / 2);
+    var i2 : Integer = (3 + i1) << (2 + (3 - 1));
+    var i3 : Integer = ((99 % 24) >> 1) | (22 & 33);
+    var i4 : Integer = (i1 $ i2) ^ 2;
+
+    var r1 : Real = ((5.12 * 3.35) / 2.3);
+    var r2 : Real = (3.92 + r1) / (2.32 + (3.1 - 16.2));
+    var r3 : Real = ((99.2 % 24.35) * 1.12) / (22.01 - 33.32);
+    var r4 : Real = (r1 + r2) ^ 2.2;
+
+    i1 += r1 as Integer;
+    i2 -= r2 as Integer;
+    i3 *= r3 as Integer;
+    i4 /= r4 as Integer;
+    i1 %= r1 as Integer;
+    i2 ^= r2 as Integer;
+    i3 |= r3 as Integer;
+    i4 &= r4 as Integer;
+    i1 $= r1 as Integer;
+
+    r1 += i1 as Real;
+    r2 -= i2 as Real;
+    r3 *= i3 as Real;
+    r4 /= i4 as Real;
+    r1 %= i1 as Real;
+    r2 ^= i2 as Real;
+
+    return r1 + r2 + r3 + r4 + i1 as Real + i2 as Real + i3 as Real + i4 as Real;
+  }
+}

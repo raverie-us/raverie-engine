@@ -1,0 +1,18 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "CreationTool",
+	},
+	Archetyped = 
+	{
+		string Name = "52a18630a5a34389:CreationTool",
+	},
+	CreationTool = 
+	{
+	},
+},

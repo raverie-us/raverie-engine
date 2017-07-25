@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "ShadowCasters"
+		var ResourceId = 0x580269d9a1d6b870
+		var LoaderType = "RenderGroup"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

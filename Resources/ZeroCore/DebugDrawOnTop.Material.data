@@ -1,0 +1,11 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+		"565802cf02d081da:DebugDrawOnTop"
+	}
+	SpriteSourceColor 
+	{
+	}
+}

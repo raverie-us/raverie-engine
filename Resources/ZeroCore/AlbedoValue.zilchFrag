@@ -1,0 +1,16 @@
+// Albedo input for lighting opaque geometry.
+// Output values are constant over the surface.
+[Pixel]
+struct AlbedoValue
+{
+  [Input] var AlbedoValue : Real4 = Real4(1.0);
+  [Input] var GammaCorrect : Boolean = true;
+  
+  [Output] var Albedo : Real3;
+  
+  function Main()
+  {
+    var power = Math.Lerp(Real3(1.0), Real3(2.2), this.GammaCorrect as Real);
+    this.Albedo = Math.Pow(this.AlbedoValue.XYZ, power);
+  }
+}

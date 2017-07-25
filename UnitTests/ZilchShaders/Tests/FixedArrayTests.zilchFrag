@@ -1,0 +1,41 @@
+[Pixel]
+struct FixedArrayFrag
+{
+    [Input]
+    var InputArray : FixedArray[Integer, 3] = FixedArray[Integer, 3](){0, 1, 2};
+    var InstanceArray : FixedArray[Real, 4] = FixedArray[Real, 4](){1.0, 2.0, 3.0, 4.0};
+    [Static]
+    var StaticArray : FixedArray[Real2, 2] = FixedArray[Real2, 2](){Real2(1.0, 1.0), Real2(2.0, 2.0)};
+    
+    var DefaultConstructedArray : FixedArray[Integer, 7] = FixedArray[Integer, 7]();
+    
+    function TestFn(array : FixedArray[Integer, 3]) : FixedArray[Integer, 3]
+    {
+        var size = array.Count;
+        array[1] = array[0];
+        return array;
+    }
+    
+    function TestFn(array : FixedArray[Real, 4]) : FixedArray[Real, 4]
+    {
+        var size = array.Count;
+        array[1] = array[0];
+        return array;
+    }
+    
+    function TestFn(array : FixedArray[Real2, 2]) : FixedArray[Real2, 2]
+    {
+        var size = array.Count;
+        array[1] = array[0];
+        return array;
+    }
+    
+    function Main()
+    {
+        this.TestFn(this.InputArray);
+        this.TestFn(this.InstanceArray);
+        this.TestFn(FixedArrayFrag.StaticArray);
+        
+        var stackArray = FixedArray[Integer2, 3]();
+    }
+}

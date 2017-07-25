@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A0359E52-6512-4C5C-916B-F70B35E49242}</ProjectGuid>
+    <RootNamespace>Networking</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <!--Always include the curl lib-->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\External\Curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="BitStreamExtended.hpp" />
+    <ClInclude Include="EventBundle.hpp" />
+    <ClInclude Include="InternetHostDiscovery.hpp" />
+    <ClInclude Include="LanHostDiscovery.hpp" />
+    <ClInclude Include="NetDiscoveryInterface.hpp" />
+    <ClInclude Include="NetHost.hpp" />
+    <ClInclude Include="IRCClient.hpp" />
+    <ClInclude Include="NetChannel.hpp" />
+    <ClInclude Include="NetEvents.hpp" />
+    <ClInclude Include="NetHostRecord.hpp" />
+    <ClInclude Include="NetObject.hpp" />
+    <ClInclude Include="NetPeer.hpp" />
+    <ClInclude Include="NetPeerConnectionInterface.hpp" />
+    <ClInclude Include="NetPeerMessageInterface.hpp" />
+    <ClInclude Include="NetProperty.hpp" />
+    <ClInclude Include="NetUser.hpp" />
+    <ClInclude Include="NetSpace.hpp" />
+    <ClInclude Include="NetTypes.hpp" />
+    <ClInclude Include="NetworkingStandard.hpp" />
+    <ClInclude Include="PendingHostPing.hpp" />
+    <ClInclude Include="PingManager.hpp" />
+    <ClInclude Include="SimpleSocket.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="SendableEvent.hpp" />
+    <ClInclude Include="TCPSocket.hpp" />
+    <ClInclude Include="WebRequest.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BitStreamExtended.cpp" />
+    <ClCompile Include="EventBundle.cpp" />
+    <ClCompile Include="InternetHostDiscovery.cpp" />
+    <ClCompile Include="LanHostDiscovery.cpp" />
+    <ClCompile Include="NetDiscoveryInterface.cpp" />
+    <ClCompile Include="NetHost.cpp" />
+    <ClCompile Include="IRCClient.cpp" />
+    <ClCompile Include="NetChannel.cpp" />
+    <ClCompile Include="NetEvents.cpp" />
+    <ClCompile Include="NetHostRecord.cpp" />
+    <ClCompile Include="NetObject.cpp" />
+    <ClCompile Include="NetPeer.cpp" />
+    <ClCompile Include="NetPeerConnectionInterface.cpp" />
+    <ClCompile Include="NetProperty.cpp" />
+    <ClCompile Include="NetUser.cpp" />
+    <ClCompile Include="NetSpace.cpp" />
+    <ClCompile Include="NetTypes.cpp" />
+    <ClCompile Include="NetworkingStandard.cpp" />
+    <ClCompile Include="PendingHostPing.cpp" />
+    <ClCompile Include="PingManager.cpp" />
+    <ClCompile Include="SimpleSocket.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SendableEvent.cpp" />
+    <ClCompile Include="TCPSocket.cpp" />
+    <ClCompile Include="WebRequest.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

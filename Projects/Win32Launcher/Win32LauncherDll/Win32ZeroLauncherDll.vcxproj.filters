@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Precompiled.cpp" />
+    <ClCompile Include="VersionSelector.cpp" />
+    <ClCompile Include="LauncherStartup.cpp" />
+    <ClCompile Include="LauncherTasks.cpp" />
+    <ClCompile Include="LauncherWindow.cpp" />
+    <ClCompile Include="BuildsMenu.cpp">
+      <Filter>Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="RecentProjectsMenu.cpp">
+      <Filter>Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscoverMenu.cpp">
+      <Filter>Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Standalone.cpp" />
+    <ClCompile Include="NewProjectMenu.cpp">
+      <Filter>Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="ActiveProjectMenu.cpp">
+      <Filter>Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildStatus.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsMenu.cpp">
+      <Filter>Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Eula.cpp" />
+    <ClCompile Include="DeveloperNotes.cpp" />
+    <ClCompile Include="ProjectCache.cpp" />
+    <ClCompile Include="Launcher.cpp" />
+    <ClCompile Include="LauncherCrashCallbacks.cpp" />
+    <ClCompile Include="LauncherComponents.cpp" />
+    <ClCompile Include="LauncherDllStandard.cpp" />
+    <ClCompile Include="Exporter.cpp" />
+    <ClCompile Include="ExtraModals.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DllMain.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="Standalone.hpp" />
+    <ClInclude Include="VersionSelector.hpp" />
+    <ClInclude Include="LauncherTasks.hpp" />
+    <ClInclude Include="LauncherWindow.hpp" />
+    <ClInclude Include="BuildsMenu.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="RecentProjectsMenu.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscoverMenu.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="NewProjectMenu.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="ActiveProjectMenu.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildStatus.hpp">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsMenu.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="TagFiltering.hpp" />
+    <ClInclude Include="Eula.hpp" />
+    <ClInclude Include="DeveloperNotes.hpp" />
+    <ClInclude Include="MiscHelpers.hpp" />
+    <ClInclude Include="ProjectCache.hpp" />
+    <ClInclude Include="Launcher.hpp" />
+    <ClInclude Include="LauncherCrashCallbacks.hpp" />
+    <ClInclude Include="LauncherComponents.hpp" />
+    <ClInclude Include="LauncherDllStandard.hpp" />
+    <ClInclude Include="LauncherStartup.hpp" />
+    <ClInclude Include="ForwardDeclarations.hpp" />
+    <ClInclude Include="ExtraModals.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Menus">
+      <UniqueIdentifier>{f3733c52-53f7-4320-8b30-beeb68ee9293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{eaa2bef5-d364-4965-9285-912fe6728db0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

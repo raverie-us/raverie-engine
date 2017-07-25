@@ -1,0 +1,29 @@
+// PostProcess fragments are intended to be constructed in script
+// and passed directly to the AddRenderTaskPostProcess method.
+[Pixel][PostProcess]
+struct %RESOURCENAME%
+{
+	[StageInput] var Uv : Real2;
+	[Input] var Texture : Sampler2d;
+
+	[Output] var Target0 : Real4;
+
+	function Main()
+	{
+		var textureSize = this.Texture.SampleSize(0);
+		var pixelStep = Real2(1.0) / textureSize;
+
+		var output = Real4(0.0);
+		for (var y = -3; y <= 3; ++y)
+		{
+			for (var x = -3; x <= 3; ++x)
+			{
+				var uv = this.Uv + Real2(x, y) * pixelStep;
+				output += this.Texture.Sample(uv);
+			}
+		}
+		output /= 49.0;
+
+		this.Target0 = output;
+	}
+}

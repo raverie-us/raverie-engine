@@ -1,0 +1,11 @@
+// LocalVariableReferenceNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    var test : Integer = derp;
+  }
+}

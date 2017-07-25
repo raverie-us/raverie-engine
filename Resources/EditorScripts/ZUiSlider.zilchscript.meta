@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "ZUiSlider"
+		var ResourceId = 0x595c99fc5e60af11
+	}
+}

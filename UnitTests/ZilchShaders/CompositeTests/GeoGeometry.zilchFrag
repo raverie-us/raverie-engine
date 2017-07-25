@@ -1,0 +1,34 @@
+struct GeoData
+{
+    [Input][Output] var Data0 : Real2;
+    [Input][Output] var Data1 : Real2;
+    [Input] var Data2 : Real2;
+    [Input] var Data3 : Real2;
+    [Output] var Data4 : Real2;
+    [Output] var Data5 : Real2;
+    var Data6 : Real2;
+    var Data7 : Real2;
+    [Input][Output] var Data8 : Real2;
+    [Input][Output] var Data9 : Real2;
+    [Input] var Data10 : Real2;
+    [Input] var Data11 : Real2;
+    [Output]var Data12 : Real2;
+    [Output]var Data13 : Real2;
+    var Data14 : Real2;
+    var Data15 : Real2;
+}
+
+[Geometry(maxVertices : 9)]
+struct GeoGeometry
+{
+    // Utility inputs
+    [Input] var FrameTime : Real;
+    
+    [Main]
+    function Main(inputs : TriangleInput[GeoData], output : TriangleOutput[GeoData])
+    {
+        output.Append(inputs[0], 0);
+        output.Append(inputs[1], 1);
+        output.Append(inputs[2], 2);
+    }
+}

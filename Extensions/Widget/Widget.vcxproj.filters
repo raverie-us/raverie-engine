@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{00c2271b-3100-4fd0-a891-81201d2d7e79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{bfb2b478-a4be-432b-b52e-bd9688616fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Basic">
+      <UniqueIdentifier>{4a8fed4d-5e5f-47dc-9d30-acf1c2192c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\DataControls">
+      <UniqueIdentifier>{aff3cc0d-c9d7-4ac2-875c-ff804b1d8ba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Viewport">
+      <UniqueIdentifier>{cb4e570c-3b6b-4415-8b62-4aef94a86db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Layout">
+      <UniqueIdentifier>{a95690dc-5922-406a-9918-facde66fc4fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{0d629b60-9319-4d72-bcb5-d01361210bc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Toolbar">
+      <UniqueIdentifier>{a1a1041a-80f1-4baf-901e-140cc4b98ce9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Containers">
+      <UniqueIdentifier>{e5573280-267a-4d47-88e7-59d10ea5af6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command">
+      <UniqueIdentifier>{96360bc2-f16b-485b-857f-e7f1820dae5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\PopUp">
+      <UniqueIdentifier>{5bd7b3bf-1d20-4634-9a0c-014dd2772413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Search">
+      <UniqueIdentifier>{03db7781-88cf-4a51-b71d-c3ba3f7eba82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{2f956e68-2d84-4fb4-b59f-655e8c2d8cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Modal">
+      <UniqueIdentifier>{52e447d2-e987-4a33-9417-ff9ea4b8fed3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Composite.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Widget.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="ListControls.cpp">
+      <Filter>Widgets\DataControls</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiDock.cpp">
+      <Filter>Widgets\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollArea.cpp">
+      <Filter>Widgets\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Widgets\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Widgets\Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="Layout.cpp">
+      <Filter>Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Toolbar.cpp">
+      <Filter>Widgets\Toolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleAnimation.cpp">
+      <Filter>Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUp.cpp">
+      <Filter>Widgets\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="ContextMenu.cpp">
+      <Filter>Widgets\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchView.cpp">
+      <Filter>Widgets\Search</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetTest.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="TextBox.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckBox.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="Slider.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="EditText.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageWidget.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureView.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="Events.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="RootWidget.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Manipulator.cpp">
+      <Filter>Widgets\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetMath.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolTip.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiManager.cpp">
+      <Filter>Widgets\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectorButton.cpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="Constants.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TagWidgets.cpp">
+      <Filter>Widgets\Search</Filter>
+    </ClCompile>
+    <ClCompile Include="Modal.cpp">
+      <Filter>Widgets\Modal</Filter>
+    </ClCompile>
+    <ClCompile Include="LayoutProxy.cpp">
+      <Filter>Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="LabeledTextBox.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetStandard.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Composite.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="ListControls.hpp">
+      <Filter>Widgets\DataControls</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiDock.hpp">
+      <Filter>Widgets\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollArea.hpp">
+      <Filter>Widgets\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.hpp">
+      <Filter>Widgets\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.hpp">
+      <Filter>Widgets\Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="Layout.hpp">
+      <Filter>Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Toolbar.hpp">
+      <Filter>Widgets\Toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.hpp">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleAnimation.hpp">
+      <Filter>Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUp.hpp">
+      <Filter>Widgets\PopUp</Filter>
+    </ClInclude>
+    <ClInclude Include="ContextMenu.hpp">
+      <Filter>Widgets\PopUp</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchView.hpp">
+      <Filter>Widgets\Search</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetTest.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBox.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckBox.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="Slider.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetManager.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EditText.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageWidget.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureView.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="RootWidget.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Manipulator.hpp">
+      <Filter>Widgets\PopUp</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetMath.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolTip.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandBinding.hpp">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.hpp">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiManager.hpp">
+      <Filter>Widgets\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectorButton.hpp">
+      <Filter>Widgets\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="TagWidgets.hpp">
+      <Filter>Widgets\Search</Filter>
+    </ClInclude>
+    <ClInclude Include="Modal.hpp">
+      <Filter>Widgets\Modal</Filter>
+    </ClInclude>
+    <ClInclude Include="LayoutProxy.hpp">
+      <Filter>Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="LabeledTextBox.hpp">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetStandard.hpp" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,128 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct template_TestComparisons_Real2_Boolean2_
+{
+  int Dummy;
+};
+
+struct template_TestComparisons_Real3_Boolean3_
+{
+  int Dummy;
+};
+
+struct template_TestComparisons_Real4_Boolean4_
+{
+  int Dummy;
+};
+
+struct MathComparisonTests
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _template_TestComparisons_Real2_Boolean2_PreConstructor(inout template_TestComparisons_Real2_Boolean2_ self);
+template_TestComparisons_Real2_Boolean2_ _template_TestComparisons_Real2_Boolean2_Constructor();
+void _template_TestComparisons_Real2_Boolean2_Test(vec2 _value, inout template_TestComparisons_Real2_Boolean2_ self);
+
+void _template_TestComparisons_Real3_Boolean3_PreConstructor(inout template_TestComparisons_Real3_Boolean3_ self);
+template_TestComparisons_Real3_Boolean3_ _template_TestComparisons_Real3_Boolean3_Constructor();
+void _template_TestComparisons_Real3_Boolean3_Test(vec3 _value, inout template_TestComparisons_Real3_Boolean3_ self);
+
+void _template_TestComparisons_Real4_Boolean4_PreConstructor(inout template_TestComparisons_Real4_Boolean4_ self);
+template_TestComparisons_Real4_Boolean4_ _template_TestComparisons_Real4_Boolean4_Constructor();
+void _template_TestComparisons_Real4_Boolean4_Test(vec4 _value, inout template_TestComparisons_Real4_Boolean4_ self);
+
+void _MathComparisonTestsPreConstructor(inout MathComparisonTests self);
+MathComparisonTests _MathComparisonTestsConstructor();
+void _MathComparisonTestsMain(inout MathComparisonTests self);
+
+//----- Global Variable Declarations -----
+//----- TestComparisons[Real2, Boolean2] Functions -----
+void _template_TestComparisons_Real2_Boolean2_PreConstructor(inout template_TestComparisons_Real2_Boolean2_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TestComparisons_Real2_Boolean2_ _template_TestComparisons_Real2_Boolean2_Constructor()
+{
+  template_TestComparisons_Real2_Boolean2_ self;
+  _template_TestComparisons_Real2_Boolean2_PreConstructor(self);
+  return self;
+}
+
+void _template_TestComparisons_Real2_Boolean2_Test(vec2 _value, inout template_TestComparisons_Real2_Boolean2_ self)
+{
+  bvec2 _result = bvec2(false, false);
+  _result = lessThan(_value, _value);
+  _result = lessThanEqual(_value, _value);
+  _result = greaterThan(_value, _value);
+  _result = greaterThanEqual(_value, _value);
+}
+
+//----- TestComparisons[Real3, Boolean3] Functions -----
+void _template_TestComparisons_Real3_Boolean3_PreConstructor(inout template_TestComparisons_Real3_Boolean3_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TestComparisons_Real3_Boolean3_ _template_TestComparisons_Real3_Boolean3_Constructor()
+{
+  template_TestComparisons_Real3_Boolean3_ self;
+  _template_TestComparisons_Real3_Boolean3_PreConstructor(self);
+  return self;
+}
+
+void _template_TestComparisons_Real3_Boolean3_Test(vec3 _value, inout template_TestComparisons_Real3_Boolean3_ self)
+{
+  bvec3 _result = bvec3(false, false, false);
+  _result = lessThan(_value, _value);
+  _result = lessThanEqual(_value, _value);
+  _result = greaterThan(_value, _value);
+  _result = greaterThanEqual(_value, _value);
+}
+
+//----- TestComparisons[Real4, Boolean4] Functions -----
+void _template_TestComparisons_Real4_Boolean4_PreConstructor(inout template_TestComparisons_Real4_Boolean4_ self)
+{
+  self.Dummy = 0;
+}
+
+template_TestComparisons_Real4_Boolean4_ _template_TestComparisons_Real4_Boolean4_Constructor()
+{
+  template_TestComparisons_Real4_Boolean4_ self;
+  _template_TestComparisons_Real4_Boolean4_PreConstructor(self);
+  return self;
+}
+
+void _template_TestComparisons_Real4_Boolean4_Test(vec4 _value, inout template_TestComparisons_Real4_Boolean4_ self)
+{
+  bvec4 _result = bvec4(false, false, false, false);
+  _result = lessThan(_value, _value);
+  _result = lessThanEqual(_value, _value);
+  _result = greaterThan(_value, _value);
+  _result = greaterThanEqual(_value, _value);
+}
+
+//----- MathComparisonTests Functions -----
+void _MathComparisonTestsPreConstructor(inout MathComparisonTests self)
+{
+  self.Dummy = 0;
+}
+
+MathComparisonTests _MathComparisonTestsConstructor()
+{
+  MathComparisonTests self;
+  _MathComparisonTestsPreConstructor(self);
+  return self;
+}
+
+void _MathComparisonTestsMain(inout MathComparisonTests self)
+{
+  _template_TestComparisons_Real2_Boolean2_Constructor();
+  _template_TestComparisons_Real3_Boolean3_Constructor();
+  _template_TestComparisons_Real4_Boolean4_Constructor();
+}
+

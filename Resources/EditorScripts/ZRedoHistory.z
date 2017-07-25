@@ -1,0 +1,93 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Redo history view manager.
+////////////////////////////////////////////////////////////////////////////////
+class ZRedoHistory : ZilchComponent
+{
+    // This row's current color.
+  var RowColor : Array[Real4] = new Array[Real4]();
+  
+    // History row cogs are of this archetype.
+  [Property] var ArchetypeEntry : Archetype = Archetype.HistoryEntry;
+  
+  
+  sends RedoRowsCleared : ZilchEvent;
+  
+  
+  /******************************************************************************/
+  function Initialize(init : CogInitializer)
+  {
+      // If a new history view window has just been opened, then populate the redo
+      // view with rows corresponding to the current redo history.
+    var operationRange = Zero.Editor.OperationQueue.RedoCommands.All;
+    foreach(var operation in operationRange) 
+    {
+      this.AddEntry(operation);
+    }
+    
+    Zero.Connect(Zero.Editor.OperationQueue, Events.OperationQueued, this.OnOperationQueued);
+    Zero.Connect(Zero.Editor.OperationQueue, Events.OperationRedo, this.OnOperationRedo);
+    Zero.Connect(this.Owner, Events.OperationUndone, this.OnOperationUndone);
+  }
+  
+  /******************************************************************************/
+  // Initialize a new history row.
+  function AddEntry(operation : Operation)
+  {
+    var redoViewCog = this.Owner;
+    
+    var entryCog = this.Space.Create(this.ArchetypeEntry);
+    
+    var entry = entryCog.ZHistoryEntry;
+    entry.OperationData = operation;
+    //entry.HistoryInfo.Name = operation.Name;
+    entry.RowName.SpriteText.Text = operation.Name;
+    
+    entryCog.AttachTo(redoViewCog);
+    
+      // If not the very first added entry then place the row at the top/front.
+    if(this.Owner.Children.Current != entryCog)
+      entryCog.PlaceBeforeSibling(this.Owner.Children.Current);
+  }
+  
+  /******************************************************************************/
+  // If a new operation was added to the undo view, then all rows in the redo
+  // view are invalidated.
+  function OnOperationQueued(event : OperationQueueEvent)
+  {
+    Zero.Editor.OperationQueue.ClearRedo();
+      
+    foreach(var cog in this.Owner.Children)
+    {
+      cog.Destroy();
+    }
+    
+    this.Owner.DispatchEvent(Events.RedoRowsCleared, ZilchEvent());
+  }
+  
+  /******************************************************************************/
+  // When a row is redone, move it to the undo view.
+  function OnOperationRedo(event : OperationQueueEvent)
+  {
+    if(!this.Owner.Children.IsNotEmpty)
+      return;
+    
+    var front = this.Owner.Children.Current.ZHistoryEntry;
+    if(front.OperationData == event.Operation)
+      front.ChangeHistoryView(false, this.Owner.Parent.ZOperationHistory.UndoView.Cog, Events.OperationRedone);
+  }
+
+  /******************************************************************************/
+  // When an operation is undone place it first in the list of rows in the redo view.
+  function OnOperationUndone(event : ChangedHistoryView)
+  {
+    event.HistoryEntry.AttachTo(this.Owner);
+    
+      // First row to be added to the redo view, so no need to place it before
+      // any others.
+    if(this.Owner.Children.Current == event.HistoryEntry)
+      return;
+      
+    event.HistoryEntry.PlaceBeforeSibling(this.Owner.Children.Current);
+  }
+  
+}

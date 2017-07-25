@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{cb4a6b87-3d33-455d-907d-7437138db30c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenglRenderer.hpp" />
+    <ClInclude Include="StreamedVertexBuffer.hpp" />
+    <ClInclude Include="OpenglRendererStandard.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenglRenderer.cpp" />
+    <ClCompile Include="StreamedVertexBuffer.cpp" />
+    <ClCompile Include="OpenglRendererStandard.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LoadingShader.inl" />
+  </ItemGroup>
+</Project>

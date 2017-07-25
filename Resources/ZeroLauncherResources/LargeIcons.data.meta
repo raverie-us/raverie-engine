@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "LargeIcons"
+		var ResourceId = 0x4e2ee06fc1c86d1c
+		var LoaderType = "DefinitionSet"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

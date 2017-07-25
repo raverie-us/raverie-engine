@@ -1,0 +1,52 @@
+struct %RESOURCENAME%Input
+{
+	[Input] var ViewPosition : Real3;
+}
+
+struct %RESOURCENAME%Output
+{
+	[Output] var PerspectivePosition : Real4;
+	[Output] var Uv : Real2;
+}
+
+[Geometry(maxVertices : 6)]
+struct %RESOURCENAME%
+{
+	[BuiltInInput] var ViewToPerspective : Real4x4;
+	[PropertyInput] var Width : Real = 0.1;
+
+	function Main(input : PointInput[%RESOURCENAME%Input], output : TriangleOutput[%RESOURCENAME%Output])
+	{
+		// Create corners of a view aligned quad
+		var corners = FixedArray[Real3, 4]();
+		corners[0] = input[0].ViewPosition + Real3(-this.Width,  this.Width, 0); // TopLeft
+		corners[1] = input[0].ViewPosition + Real3(-this.Width, -this.Width, 0); // BottomLeft
+		corners[2] = input[0].ViewPosition + Real3( this.Width, -this.Width, 0); // BottomRight
+		corners[3] = input[0].ViewPosition + Real3( this.Width,  this.Width, 0); // TopRight
+
+		// Output vertex position and uv
+		var vertices = FixedArray[%RESOURCENAME%Output, 4]();
+
+		vertices[0].PerspectivePosition = Math.Multiply(this.ViewToPerspective, Real4(corners[0], 1.0));
+		vertices[1].PerspectivePosition = Math.Multiply(this.ViewToPerspective, Real4(corners[1], 1.0));
+		vertices[2].PerspectivePosition = Math.Multiply(this.ViewToPerspective, Real4(corners[2], 1.0));
+		vertices[3].PerspectivePosition = Math.Multiply(this.ViewToPerspective, Real4(corners[3], 1.0));
+
+		vertices[0].Uv = Real2(0, 0);
+		vertices[1].Uv = Real2(0, 1);
+		vertices[2].Uv = Real2(1, 1);
+		vertices[3].Uv = Real2(1, 0);
+
+		// First triangle
+		output.Append(vertices[0], 0);
+		output.Append(vertices[1], 0);
+		output.Append(vertices[2], 0);
+		output.Restart();
+
+		// Second triangle
+		output.Append(vertices[2], 0);
+		output.Append(vertices[3], 0);
+		output.Append(vertices[0], 0);
+		output.Restart();
+	}
+}

@@ -1,0 +1,17 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "JointTool",
+	},
+	MouseCapture = 
+	{
+	},
+	JointTool = 
+	{
+	},
+},

@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "MathExtensions"
+		var ResourceId = 0x58f234e77ae268e7
+	}
+}

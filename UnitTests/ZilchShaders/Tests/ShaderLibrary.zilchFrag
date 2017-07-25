@@ -1,0 +1,30 @@
+[Pixel]
+struct ShaderLibrary
+{
+    [Input]
+    var Uv : Real2;
+    [Input]
+    var Sampler : Sampler2d;
+    
+    [Static]
+    function SamplerFunctionCall(sampler : ref Sampler2d, uv : Real2) : Real4
+    {
+      return sampler.Sample(uv);
+    }
+    
+    function Discard()
+    {
+      Shader.Discard();
+    }
+    
+    function Main()
+    {
+        var ddx = Shader.Ddx(this.Uv);
+        var ddy = Shader.Ddy(this.Uv);
+        
+        //var result = ShaderLibrary.SamplerFunctionCall(this.Sampler, this.Uv);
+        var result = this.Sampler.Sample(this.Uv);
+        // only 1.3
+        var resultDdx = this.Sampler.Sample(this.Uv, ddx, ddy);
+    }
+}

@@ -1,0 +1,11 @@
+// LinkerLibraryNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    var f = CustomMath.Fib(n : 3);
+  }
+}

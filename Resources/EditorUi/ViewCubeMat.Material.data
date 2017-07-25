@@ -1,0 +1,24 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+		"581cffd64d449122:Opaque"
+	}
+	AlbedoMap 
+	{
+		var AlbedoMap = "593f9b6d05c5e166:ViewCubeAlbedo"
+	}
+	MetallicMap 
+	{
+		var MetallicMap = "593f9b6d05c44ff9:ViewCubeMetallic"
+	}
+	RoughnessMap 
+	{
+		var RoughnessMap = "593f9b6d05c4ba8a:ViewCubeRoughness"
+	}
+	SpecularValue 
+	{
+		var SpecularValue = 0.5
+	}
+}

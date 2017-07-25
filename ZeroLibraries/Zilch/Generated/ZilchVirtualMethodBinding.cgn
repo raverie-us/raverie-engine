@@ -1,0 +1,110 @@
+// All the permutations we'd like to evaluate
+permute Return : bool;
+permute Arguments alias n : int[-1,6];
+
+handler <? Return ?>
+{
+  ReturnTypeName        = "typename Return";
+  ReturnType            = "Return";
+  Return                = "Return";
+  ZilchReturnType       = "ZilchTypeId(Return)";
+  BoundReadReturn       = "call.Get<Return>(Call::Return)";
+}
+
+handler <? !Return ?>
+{
+  ReturnTypeName        = "";
+  ReturnType            = "void";
+  Return                = "";
+  ZilchReturnType       = "ZilchTypeId(void)";
+  BoundReadReturn       = "";
+}
+
+handler <? All ?>
+{
+  ZilchArguments        = <? Utilities.RepeatNumeric("  DelegateParameter& p# = parameters.PushBack();\r\n  p#.ParameterType = ZilchTypeId(Arg#);", "\r\n", 0, n) ?>;
+  Arguments             = <? Utilities.RepeatNumeric("arg#", ", ", 0, n) ?>;
+  ArgumentTypeNames     = <? Utilities.RepeatNumeric("typename Arg#", ", ", 0, n) ?>;
+  BoundWriteArguments   = <? Utilities.RepeatNumeric("  call.Set<Arg#>(#, arg#);", "\r\n", 0, n) ?>;
+  ArgumentTypes         = <? Utilities.RepeatNumeric("Arg#", ", ", 0, n) ?>;
+  ArgumentParameters    = <? Utilities.RepeatNumeric("Arg# arg#", ", ", 0, n) ?>;
+  
+  // Clear empty lines
+  "(\s*\r\n){2,}" = "\r\n";
+  
+  // Turn commas in the form of [,] into an actual comma, if it's needed
+  "(\[,]){2,}"  = "[,]";
+  "\[,]>"       = ">";
+  "\[,]"        = ", ";
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+template <typename FunctionType, FunctionType function, typename Class[,]$ReturnTypeName$[,]$ArgumentTypeNames$>
+$ReturnType$ VirtualThunk$Return$($ArgumentParameters$)
+{
+  byte* virtualTable = *(byte**)this;
+  byte* typePointer = virtualTable - sizeof(BoundType*) - sizeof(ExecutableState*);
+  byte* executableStatePointer = virtualTable - sizeof(ExecutableState*);
+  
+  BoundType* type = *(BoundType**)typePointer;
+  ExecutableState* state = *(ExecutableState**)(executableStatePointer);
+  
+  GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
+  Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
+  ErrorIf(functionToCall == nullptr,
+    "There was no function found by the guid, what happened?");
+  
+  HandleManagers& managers = HandleManagers::GetInstance();
+  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  
+  Handle thisHandle;
+  thisHandle.Manager = pointerManager;
+  thisHandle.Type = type;
+  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  
+  Call call(functionToCall, state);
+  call.SetHandle(Call::This, thisHandle);
+
+$BoundWriteArguments$
+
+  ExceptionReport report;
+  call.Invoke(report);
+  
+  return $BoundReadReturn$;
+}
+
+template <typename FunctionType, FunctionType function, typename Class[,]$ReturnTypeName$[,]$ArgumentTypeNames$>
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, $ReturnType$ (Class::*)($ArgumentTypes$))
+{
+  BoundFn boundFunction = BoundInstance$Return$<FunctionType, function, Class[,]$Return$[,]$ArgumentTypes$>;
+  
+  ZilchAutoVal(thunk, (&VirtualThunk$Return$<FunctionType, function, Class, $ReturnType$[,]$ArgumentTypes$>));
+  
+  ParameterArray parameters;
+$ZilchArguments$
+  ParseParameterArrays(parameters, spaceDelimitedNames);
+
+  NativeVirtualInfo nativeVirtual;
+  nativeVirtual.Index = TypeBinding::GetVirtualMethodIndex(function);
+  nativeVirtual.Thunk = (TypeBinding::VirtualTableFn)thunk;
+  nativeVirtual.Guid = TypeBinding::GetFunctionUniqueId<FunctionType, function>();
+  
+  Function* functionRef = builder.AddBoundFunction
+  (
+    classBoundType,
+    name,
+    boundFunction,
+    parameters,
+    $ZilchReturnType$,
+    FunctionOptions::Virtual,
+    nativeVirtual
+  );
+  
+  ++classBoundType->BoundNativeVirtualCount;
+  ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
+    "The number of bound virtual functions must never exceed the actual v-table count");
+
+  return functionRef;
+}

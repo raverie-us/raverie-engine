@@ -1,0 +1,6 @@
+// DelegateReturnTypeNotFound
+
+class Animal
+{
+  var Variable : delegate () : = 9;
+}

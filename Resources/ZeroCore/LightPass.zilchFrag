@@ -1,0 +1,55 @@
+// Output results of direct lighting using scene data from the GeometryPass.
+[Pixel][RenderPass]
+struct LightPass
+{
+  [BuiltInInput] var ViewportSize : Real2;
+  
+  [StageInput] var PerspectivePosition : Real4;
+  
+  [FragmentInput] var GeoNormal : Real3;
+  [FragmentInput] var GeoRoughness : Real;
+  [FragmentInput] var GeoAlbedo : Real3;
+  [FragmentInput] var GeoMetallic : Real;
+  [FragmentInput] var GeoSpecular : Real;
+  [FragmentInput] var GeoPosition : Real3;
+  
+  [Input] var DitherTexture : Sampler2d;
+  
+  [Input] var LightDirection : Real3 = Real3(0.0, 1.0, 0.0);
+  [Input] var LightColor : Real3 = Real3(1.0);
+  [Input] var LightIntensity : Real = 1.0;
+  
+  [Input] var LightRadius : Real = 0.0;
+  [Input] var LightDistance : Real = 1.0;
+  
+  [Input] var RenderDiffuse : Boolean = true;
+  [Input] var RenderSpecular : Boolean = true;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    var screenUv = Utility.NdcToScreenUv(this.PerspectivePosition.XY / this.PerspectivePosition.W);
+    
+    var directInputs = DirectLightingInputs();
+    directInputs.ViewNormal = this.GeoNormal;
+    directInputs.ViewDirection = Math.Normalize(-this.GeoPosition);
+    directInputs.LightDirection = this.LightDirection;
+    directInputs.LightColor = this.LightColor;
+    directInputs.LightRadius = this.LightRadius;
+    directInputs.LightDistance = this.LightDistance;
+    directInputs.Albedo = this.GeoAlbedo;
+    directInputs.Metallic = this.GeoMetallic;
+    directInputs.Roughness = this.GeoRoughness;
+    directInputs.Specular = this.GeoSpecular;
+    directInputs.RenderDiffuse = this.RenderDiffuse;
+    directInputs.RenderSpecular = this.RenderSpecular;
+    
+    var color = DirectLighting.Compute(directInputs);
+    
+    // Remove color banding
+    color = Utility.ApplyDither(color, &this.DitherTexture, screenUv, this.ViewportSize);
+    color *= this.LightIntensity;
+    this.Target0 = Real4(color, 1.0);
+  }
+}

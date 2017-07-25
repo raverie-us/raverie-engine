@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "Blur"
+		var ResourceId = 0x58132fbc2f47938d
+	}
+}

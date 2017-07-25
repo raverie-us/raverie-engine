@@ -1,0 +1,44 @@
+[Pixel]
+struct TypeReplacements
+{
+    function BasicTypes()
+    {
+        var a = Integer();
+        var b = Real();
+        var c = Boolean();
+        
+        var i2 = Integer2();
+        var i3 = Integer3();
+        var i4 = Integer4();
+        var r2 = Real2();
+        var r3 = Real3();
+        var r4 = Real4();
+        var b2 = Boolean2();
+        var b3 = Boolean3();
+        var b4 = Boolean4();
+        
+        //var i22 = Integer2x2();
+        //var i23 = Integer2x3();
+        //var i24 = Integer2x4();
+        //var i32 = Integer3x2();
+        //var i33 = Integer3x3();
+        //var i34 = Integer3x4();
+        //var i42 = Integer4x2();
+        //var i43 = Integer4x3();
+        //var i44 = Integer4x4();
+        
+        var r22 = Real2x2();
+        var r23 = Real2x3();
+        var r24 = Real2x4();
+        var r32 = Real3x2();
+        var r33 = Real3x3();
+        var r34 = Real3x4();
+        var r42 = Real4x2();
+        var r43 = Real4x3();
+        var r44 = Real4x4();
+    }
+	
+	function Main()
+    {
+    }
+}

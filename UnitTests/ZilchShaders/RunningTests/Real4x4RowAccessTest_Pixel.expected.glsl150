@@ -1,0 +1,112 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct Real4x4RowAccessTest
+{
+  vec4 Target0;
+  vec4 Target1;
+  vec4 Target2;
+  vec4 Target3;
+  mat4x4 Matrix;
+};
+
+struct Real4x4RowAccessTest_Pixel
+{
+  float Time;
+  vec4 Target0;
+  vec4 Target1;
+  vec4 Target2;
+  vec4 Target3;
+};
+
+//----- Forward Declarations -----
+void _Real4x4RowAccessTestPreConstructor(inout Real4x4RowAccessTest self);
+Real4x4RowAccessTest _Real4x4RowAccessTestConstructor();
+void _Real4x4RowAccessTestMain(inout Real4x4RowAccessTest self);
+
+void _Real4x4RowAccessTest_PixelPreConstructor(inout Real4x4RowAccessTest_Pixel self);
+Real4x4RowAccessTest_Pixel _Real4x4RowAccessTest_PixelConstructor();
+void _Real4x4RowAccessTest_PixelMain(inout Real4x4RowAccessTest_Pixel self);
+void CopyInputs(inout Real4x4RowAccessTest_Pixel self);
+void CopyOutputs(inout Real4x4RowAccessTest_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- Real4x4RowAccessTest Functions -----
+void _Real4x4RowAccessTestPreConstructor(inout Real4x4RowAccessTest self)
+{
+  self.Target0 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target1 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target2 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target3 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Matrix = mat4x4(float(1), float(2), float(3), float(4), float(5), float(6), float(7), float(8), float(9), float(10), float(11), float(12), float(13), float(14), float(15), float(16));
+}
+
+Real4x4RowAccessTest _Real4x4RowAccessTestConstructor()
+{
+  Real4x4RowAccessTest self;
+  _Real4x4RowAccessTestPreConstructor(self);
+  return self;
+}
+
+void _Real4x4RowAccessTestMain(inout Real4x4RowAccessTest self)
+{
+  self.Target0 = self.Matrix[0];
+  self.Target1 = self.Matrix[1];
+  self.Target2 = self.Matrix[2];
+  self.Target3 = self.Matrix[3];
+}
+
+//----- Real4x4RowAccessTest_Pixel Functions -----
+void _Real4x4RowAccessTest_PixelPreConstructor(inout Real4x4RowAccessTest_Pixel self)
+{
+  self.Time = float(0.0);
+  self.Target0 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target1 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target2 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Target3 = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+Real4x4RowAccessTest_Pixel _Real4x4RowAccessTest_PixelConstructor()
+{
+  Real4x4RowAccessTest_Pixel self;
+  _Real4x4RowAccessTest_PixelPreConstructor(self);
+  return self;
+}
+
+void _Real4x4RowAccessTest_PixelMain(inout Real4x4RowAccessTest_Pixel self)
+{
+  Real4x4RowAccessTest _real4x4rowaccesstest = _Real4x4RowAccessTestConstructor();
+  _Real4x4RowAccessTestMain(_real4x4rowaccesstest);
+  self.Target0 = _real4x4rowaccesstest.Target0;
+  self.Target1 = _real4x4rowaccesstest.Target1;
+  self.Target2 = _real4x4rowaccesstest.Target2;
+  self.Target3 = _real4x4rowaccesstest.Target3;
+}
+
+//----- Real4x4RowAccessTest_Pixel Final Shader Functions -----
+void CopyInputs(inout Real4x4RowAccessTest_Pixel self)
+{
+  self.Time = Time;
+}
+
+void CopyOutputs(inout Real4x4RowAccessTest_Pixel self)
+{
+  outputs[0] = self.Target0; 
+  outputs[1] = self.Target1; 
+  outputs[2] = self.Target2; 
+  outputs[3] = self.Target3; 
+}
+
+//----- Main -----
+void main(void)
+{
+  Real4x4RowAccessTest_Pixel real4x4rowaccesstest_pixel = _Real4x4RowAccessTest_PixelConstructor(); 
+  CopyInputs(real4x4rowaccesstest_pixel);
+  _Real4x4RowAccessTest_PixelMain(real4x4rowaccesstest_pixel);
+  CopyOutputs(real4x4rowaccesstest_pixel);
+}
+

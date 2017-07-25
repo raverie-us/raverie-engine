@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Loading"
+		var ResourceId = 0x581bfa33085e40b7
+		var LoaderType = "DefinitionSet"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

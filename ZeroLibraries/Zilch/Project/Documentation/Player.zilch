@@ -1,0 +1,16 @@
+class Player
+{
+  var Health : Real = 100;
+
+  [Static]
+  function SayHello()
+  {
+    Console.WriteLine("Hello world!");
+  }
+
+  function TakeDamage(amount : Real)
+  {
+    this.Health -= amount;
+    Console.WriteLine("Ouch! I've got `this.Health` health left!");
+  }
+}

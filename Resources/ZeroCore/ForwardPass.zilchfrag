@@ -1,0 +1,175 @@
+// Does all lighting calculations at the time of rendering scene geometry.
+// Allows one directional light to be used.
+[Pixel][RenderPass]
+struct ForwardPass
+{
+  [BuiltInInput] var ViewToWorld : Real4x4;
+  [BuiltInInput] var WorldToView : Real4x4;
+  [BuiltInInput] var ViewportSize : Real2;
+  
+  [StageInput] var PerspectivePosition : Real4;
+  [FragmentInput][StageInput] var ViewPosition : Real3;
+  
+  [Input] var Albedo : Real3 = Real3(1.0, 0.0, 0.0);
+  [Input] var ViewNormal : Real3 = Real3(0.0, 0.0, 1.0);
+  [Input] var Metallic : Real = 0.0;
+  [Input] var Roughness : Real = 1.0;
+  [Input] var Specular : Real = 0.5;
+  
+  [Input] var DitherTexture : Sampler2d;
+  [Input] var EnvironmentBrdfLut : Sampler2d;
+  [Input] var Skybox : SamplerCube;
+  [Input] var IndirectIntensity : Real = 1.0;
+  [Input] var RenderDiffuse : Boolean = true;
+  [Input] var RenderSpecular : Boolean = true;
+  
+  [Input] var DirectLightColor : Real3 = Real3(1.0);
+  [Input] var DirectLightDirection : Real3 = Real3(0.0, -1.0, 0.0);
+  [Input] var DirectLightIntensity : Real = 1.0;
+  
+  [Output] var Target0 : Real4;
+
+  function Main()
+  {
+    this.Roughness = Math.Clamp(this.Roughness, 0.001, 1.0);
+    this.Metallic = Math.Saturate(this.Metallic);
+    this.Specular = Math.Saturate(this.Specular);
+    
+    var screenUv = Utility.NdcToScreenUv(this.PerspectivePosition.XY / this.PerspectivePosition.W);
+    var viewDirection = Math.Normalize(-this.ViewPosition);
+    
+    // Indirect lighting
+    var indirectInputs = ImageBasedLightingInputs();
+    indirectInputs.WorldNormal = Math.MultiplyNormal(this.ViewToWorld, this.ViewNormal);
+    indirectInputs.WorldViewDirection = Math.MultiplyNormal(this.ViewToWorld, viewDirection);
+    indirectInputs.Albedo = this.Albedo;
+    indirectInputs.Metallic = this.Metallic;
+    indirectInputs.Roughness = this.Roughness;
+    indirectInputs.Specular = this.Specular;
+    indirectInputs.RenderDiffuse = this.RenderDiffuse;
+    indirectInputs.RenderSpecular = this.RenderSpecular;
+    
+    var indirectColor = ImageBasedLighting.Compute(indirectInputs, &this.Skybox, &this.EnvironmentBrdfLut);
+    
+    // Direct lighting
+    var directInputs = DirectLightingInputs();
+    directInputs.ViewNormal = this.ViewNormal;
+    directInputs.ViewDirection = viewDirection;
+    directInputs.LightDirection = Math.Normalize(-Math.MultiplyNormal(this.WorldToView, this.DirectLightDirection));
+    directInputs.LightColor = this.DirectLightColor;
+    directInputs.LightRadius = 0.0;
+    directInputs.LightDistance = 1.0;
+    directInputs.Albedo = this.Albedo;
+    directInputs.Metallic = this.Metallic;
+    directInputs.Roughness = this.Roughness;
+    directInputs.Specular = this.Specular;
+    directInputs.RenderDiffuse = this.RenderDiffuse;
+    directInputs.RenderSpecular = this.RenderSpecular;
+    
+    var directColor = DirectLighting.Compute(directInputs);
+    
+    // Remove color banding
+    indirectColor = Utility.ApplyDither(indirectColor, &this.DitherTexture, screenUv, this.ViewportSize);
+    directColor = Utility.ApplyDither(directColor, &this.DitherTexture, screenUv, this.ViewportSize);
+    
+    indirectColor *= this.IndirectIntensity;
+    directColor *= this.DirectLightIntensity;
+    
+    this.Target0 = Real4(indirectColor + directColor, 1.0);
+  }
+}
+
+// Does all lighting calculations at the time of rendering scene geometry.
+// Allows one directional light with shadows to be used.
+[Pixel][RenderPass]
+struct ForwardPassShadows
+{
+  [BuiltInInput] var ViewToWorld : Real4x4;
+  [BuiltInInput] var WorldToView : Real4x4;
+  [BuiltInInput] var ViewportSize : Real2;
+  
+  [StageInput] var PerspectivePosition : Real4;
+  [FragmentInput][StageInput] var ViewPosition : Real3;
+  
+  [Input] var Albedo : Real3 = Real3(1.0, 0.0, 0.0);
+  [Input] var ViewNormal : Real3 = Real3(0.0, 0.0, 1.0);
+  [Input] var Metallic : Real = 0.0;
+  [Input] var Roughness : Real = 1.0;
+  [Input] var Specular : Real = 0.5;
+  
+  [Input] var DitherTexture : Sampler2d;
+  [Input] var EnvironmentBrdfLut : Sampler2d;
+  [Input] var Skybox : SamplerCube;
+  [Input] var IndirectIntensity : Real = 1.0;
+  [Input] var RenderDiffuse : Boolean = true;
+  [Input] var RenderSpecular : Boolean = true;
+  
+  [Input] var DirectLightColor : Real3 = Real3(1.0);
+  [Input] var DirectLightDirection : Real3 = Real3(0.0, -1.0, 0.0);
+  [Input] var DirectLightIntensity : Real = 1.0;
+  
+  [Input] var LightTransform : Real4x4;
+  [Input] var ShadowBuffer : SamplerShadow2d;
+  [Input] var NormalOffsetBias : Real = 0.1;
+  
+  [Output] var Target0 : Real4;
+
+  function Main()
+  {
+    this.Roughness = Math.Clamp(this.Roughness, 0.001, 1.0);
+    this.Metallic = Math.Saturate(this.Metallic);
+    this.Specular = Math.Saturate(this.Specular);
+    
+    var screenUv = Utility.NdcToScreenUv(this.PerspectivePosition.XY / this.PerspectivePosition.W);
+    var viewDirection = Math.Normalize(-this.ViewPosition);
+    
+    // Indirect lighting
+    var indirectInputs = ImageBasedLightingInputs();
+    indirectInputs.WorldNormal = Math.MultiplyNormal(this.ViewToWorld, this.ViewNormal);
+    indirectInputs.WorldViewDirection = Math.MultiplyNormal(this.ViewToWorld, viewDirection);
+    indirectInputs.Albedo = this.Albedo;
+    indirectInputs.Metallic = this.Metallic;
+    indirectInputs.Roughness = this.Roughness;
+    indirectInputs.Specular = this.Specular;
+    indirectInputs.RenderDiffuse = this.RenderDiffuse;
+    indirectInputs.RenderSpecular = this.RenderSpecular;
+    
+    var indirectColor = ImageBasedLighting.Compute(indirectInputs, &this.Skybox, &this.EnvironmentBrdfLut);
+    
+    // Direct lighting
+    var directInputs = DirectLightingInputs();
+    directInputs.ViewNormal = this.ViewNormal;
+    directInputs.ViewDirection = viewDirection;
+    directInputs.LightDirection = Math.Normalize(-Math.MultiplyNormal(this.WorldToView, this.DirectLightDirection));
+    directInputs.LightColor = this.DirectLightColor;
+    directInputs.LightRadius = 0.0;
+    directInputs.LightDistance = 1.0;
+    directInputs.Albedo = this.Albedo;
+    directInputs.Metallic = this.Metallic;
+    directInputs.Roughness = this.Roughness;
+    directInputs.Specular = this.Specular;
+    directInputs.RenderDiffuse = this.RenderDiffuse;
+    directInputs.RenderSpecular = this.RenderSpecular;
+    
+    var directColor = DirectLighting.Compute(directInputs);
+    
+    // Remove color banding
+    indirectColor = Utility.ApplyDither(indirectColor, &this.DitherTexture, screenUv, this.ViewportSize);
+    directColor = Utility.ApplyDither(directColor, &this.DitherTexture, screenUv, this.ViewportSize);
+    
+    indirectColor *= this.IndirectIntensity;
+    directColor *= this.DirectLightIntensity;
+    
+    // Shadows
+    var viewPosition = this.ViewPosition + this.ViewNormal * this.NormalOffsetBias;
+    var worldPosition = Math.MultiplyPoint(this.ViewToWorld, viewPosition);
+    var shadowPosition = Math.Multiply(this.LightTransform, Real4(worldPosition, 1.0));
+    
+    var uv = Utility.NdcToScreenUv(shadowPosition.XYZ / shadowPosition.W);
+    
+    var shadowFactor = ShadowMapping.ComputePcf5x5(uv, &this.ShadowBuffer);
+    directColor *= shadowFactor;
+    
+    this.Target0 = Real4(indirectColor + directColor, 1.0);
+  }
+}

@@ -1,0 +1,158 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct Operators
+{
+  int Data;
+};
+
+//----- Forward Declarations -----
+void _OperatorsPreConstructor(inout Operators self);
+Operators _OperatorsConstructor();
+void _OperatorsUnaryOps(inout Operators self);
+void _OperatorsPrecedence(inout Operators self);
+void _OperatorsBinaryOps(inout Operators self);
+void _OperatorsBitOperands(inout Operators self);
+void _OperatorsBooleanOps(bool _a, bool _b, inout Operators self);
+void _OperatorsComparisonOps(float _a, float _b, inout Operators self);
+void _OperatorsAssignment(inout Operators self);
+void _OperatorsBinaryVectorOps(inout Operators self);
+void _OperatorsMain(inout Operators self);
+
+//----- Global Variable Declarations -----
+//----- Operators Functions -----
+void _OperatorsPreConstructor(inout Operators self)
+{
+  self.Data = 0;
+}
+
+Operators _OperatorsConstructor()
+{
+  Operators self;
+  _OperatorsPreConstructor(self);
+  return self;
+}
+
+void _OperatorsUnaryOps(inout Operators self)
+{
+  int _a = 0;
+  ++_a;
+  --_a;
+  _a = -_a;
+  _a = +_a;
+  
+  
+  float _value = float(_a);
+}
+
+void _OperatorsPrecedence(inout Operators self)
+{
+  int _a = 0;
+  int _b = 0;
+  int _c = 1;
+  int _r = 1;
+  
+  _r = _a * _b * _c;
+  _r = _a * _b * _c;
+  _r = _a * (_b * _c);
+  _r = _a / _b / _c;
+  _r = _a / _b / _c;
+  _r = _a / (_b / _c);
+  _r = -_a + _b;
+  _r = -(_a + _b);
+  _r = _a / (_b * _c);
+  _r = _a / -(_b * _c);
+  _r = _a / _b * _c;
+  //a * b / b % b;
+  //(a != b || false) && true | b ^ b & b != b == false;
+  return;
+}
+
+void _OperatorsBinaryOps(inout Operators self)
+{
+  float _a = 0.0f;
+  float _b = 1.0f;
+  
+  float _c = _a * _b;
+  float _d = _a / _b;
+  //a % b;
+  _a + _b;
+  _a - _b;
+  
+  
+  float _dummy = 0.0f;
+  _dummy = _a + _b - _c;
+  _dummy = _a + (_b - _c);
+  _dummy = _a + _b * _c;
+  _dummy = _a * _b + _c;
+  _dummy = (_a + _b) * _c;
+  _dummy = _a * (_b + _c);
+  _dummy = (_a + _b) / _c + (_a - _b) * _c;
+}
+
+void _OperatorsBitOperands(inout Operators self)
+{
+  int _a = 0;
+  int _b = 1;
+  ~_a;
+  //a << b;
+  //a >> b;
+  //a & b;
+  //a ^ b;
+  //a | b;
+  _a &= _b;
+  _a ^= _b;
+  _a |= _b;
+}
+
+void _OperatorsBooleanOps(bool _a, bool _b, inout Operators self)
+{
+  _a || _b;
+  _a && _b;
+}
+
+void _OperatorsComparisonOps(float _a, float _b, inout Operators self)
+{
+  bool _result = _a < _b;
+  _result = _a <= _b;
+  _result = _a >= _b;
+  _result = _a > _b;
+  _result = _a == _b;
+  _result = _a != _b;
+}
+
+void _OperatorsAssignment(inout Operators self)
+{
+  int _a = 0;
+  int _b = 1;
+  _a = _b;
+  _a -= _b;
+  _a += _b;
+  _a *= _b;
+  _a /= _b;
+  //a %= b;
+  return;
+}
+
+void _OperatorsBinaryVectorOps(inout Operators self)
+{
+  vec3 _a = vec3(0.0f, 1.0f, 2.0f);
+  vec3 _b = vec3(1.0f, 2.0f, 3.0f);
+  vec3 _dummy = _a + _b;
+  _dummy = _a - _b;
+  _dummy = _a / _b;
+  _dummy = _a * _b;
+  
+  _a -= _b;
+  _a += _b;
+  _a /= _b;
+  _a *= _b;
+}
+
+void _OperatorsMain(inout Operators self)
+{
+  _OperatorsUnaryOps(self);
+  _OperatorsBinaryOps(self);
+}
+

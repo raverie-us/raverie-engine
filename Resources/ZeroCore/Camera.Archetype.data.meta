@@ -1,0 +1,19 @@
+[Version:1]
+DataContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Archetype"
+		}
+	}
+	DataBuilder 
+	{
+		var Name = "Camera"
+		var ResourceId = 0x5772df7ce598bf0a
+		var LoaderType = "Cog"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

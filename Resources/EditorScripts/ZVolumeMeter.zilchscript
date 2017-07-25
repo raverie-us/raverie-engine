@@ -1,0 +1,124 @@
+// Sets the position of the peak volume bar
+class ZPeakVolumeBar : ZilchComponent
+{
+  var Bar : Cog;
+  var WidgetSize : Real;
+  var MaxMove : Real;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    
+    this.WidgetSize = this.Owner.UiWidget.Size.Y;
+    this.MaxMove = this.WidgetSize / 200.0;
+    this.Bar = this.Owner.FindChildByName("PeakVolumeBar");
+    
+    this.Bar.UiWidget.LocalTranslation = Real2(-5, this.WidgetSize);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    // Translate from floating point to decibels
+    var decibels = this.ToDecibels(Audio.PeakOutputLevel);
+    // What percentage of the decibel scale is this?
+    var percent = decibels / -42.0;
+    if (percent > 1.0)
+      percent = 1.0;
+      
+    // Y position is the percentage 
+    var position = this.WidgetSize * percent;
+    
+    // Is the bar moving down? (0 is at the top)
+    if (position > this.Bar.UiWidget.LocalTranslation.Y)
+    {
+      // Make it go down slowly
+      var difference = position - this.Bar.UiWidget.LocalTranslation.Y;
+      if (difference > this.MaxMove)
+        position = this.Bar.UiWidget.LocalTranslation.Y + this.MaxMove;
+    }
+      
+    // Set the position of the bar
+    this.Bar.UiWidget.LocalTranslation = Real2(-5, position);
+  }
+    
+  function ToDecibels(volume : Real) : Real
+  {
+    if (volume == 0.0)
+      return -100.0;
+    
+    return 20.0 * Math.Log10(volume);
+  }
+}
+
+class ZVolumeBarSegments : ZilchComponent
+{
+  // The decibel level at which the bar will change color
+  [Property] var DecibelLimit : Real = 0;
+  // The color the bar should use
+  [Property] var Color : Real4 = Real4(0.05, 0.36, 0.08, 1.0);
+  
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  { 
+    var decibels = this.ToDecibels(Audio.RMSOutputLevel);
+      
+    // If the decibels are higher than the limit, set to custom color
+    if (decibels >= this.DecibelLimit)
+    {
+       this.Owner.UiWidget.LocalColor = this.Color;
+    }
+    // Otherwise, set to white
+    else
+    {
+       this.Owner.UiWidget.LocalColor = Real4(1,1,1,1);
+    }
+  }
+  
+  function ToDecibels(volume : Real) : Real
+  {
+    if (volume == 0.0)
+        return -100.0;
+    
+    return 20.0 * Math.Log10(volume);
+  }
+}
+
+class ZVolumeSlider : ZilchComponent
+{
+  [Dependency] var Slider : ZUiSlider;
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Owner, Events.UiSliderChanged, this.OnVolumeChange);
+    
+    var volume = Audio.SystemVolume;
+    var decibels = this.ToDecibels(volume);
+    decibels -= 12;
+    decibels *= -1;
+    var percent = decibels / 48.0;
+    this.Slider.SetHandlePosition(percent);
+  }
+
+  function OnVolumeChange(event : UiSliderEvent)
+  {
+    var decibels = (1.0 - event.SliderPercentage) * -48.0;
+    decibels += 12;
+    
+    var volume = Math.Pow(10.0, decibels / 20.0);
+    
+    Audio.SystemVolume = volume;
+  }
+    
+  function ToDecibels(volume : Real) : Real
+  {
+    if (volume == 0.0)
+      return -100.0;
+    
+    var decibels = 20.0 * Math.Log10(volume);
+    
+    return decibels;
+  }
+}

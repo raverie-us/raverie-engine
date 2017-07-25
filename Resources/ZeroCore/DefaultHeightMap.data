@@ -1,0 +1,22 @@
+Cog =
+{
+	LinkId =
+	{
+		uint Id = 418,
+	},
+	Transform =
+	{
+		float[] Translation = [0, 0, 0],
+		float[] Scale = [1, 1, 1],
+		float[] Rotation = [0, 0, 0, 1],
+	},
+	HeightMap =
+	{
+	},
+	HeightMapModel =
+	{
+	},
+	HeightMapCollider =
+	{
+	},
+},

@@ -1,0 +1,794 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "ViewCube",
+	},
+	Archetyped = 
+	{
+		string Name = "57a9348b1d78cb68:ViewCube",
+		bool ModifiedFromArchetype = false,
+	},
+	Transform = 
+	{
+		Vec3 Translation = [0, 0, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	Hierarchy = 
+	{
+		Cog:57a9367e5c5f376a = 
+		{
+			LinkId = 
+			{
+				uint Id = 2,
+			},
+			Named = 
+			{
+				string Name = "Back",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Model = 
+			{
+				bool Visible = true,
+				bool ViewCulling = true,
+				bool VisibilityEvents = true,
+				string Material = "57a9318ffce03582:ViewCubeMat",
+				string Mesh = "57a93a5ca4ebaae9:ViewCube.Back",
+			},
+			BoxCollider = 
+			{
+				bool Ghost = false,
+				bool SendsEvents = true,
+				string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+				string CollisionGroup = "4e740859314e5515:DefaultGroup",
+				Vec3 Offset = [0, 0, -0.400000006],
+				Vec3 HalfSize = [0.300000012, 0.300000012, 0.100000001],
+			},
+		},
+		Cog:57a9367e5c5f3771 = 
+		{
+			LinkId = 
+			{
+				uint Id = 3,
+			},
+			Named = 
+			{
+				string Name = "Bottom",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Model = 
+			{
+				bool Visible = true,
+				bool ViewCulling = true,
+				bool VisibilityEvents = true,
+				string Material = "57a9318ffce03582:ViewCubeMat",
+				string Mesh = "57a93a5ca4ebaa97:ViewCube.Bottom",
+			},
+			BoxCollider = 
+			{
+				bool Ghost = false,
+				bool SendsEvents = true,
+				string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+				string CollisionGroup = "4e740859314e5515:DefaultGroup",
+				Vec3 Offset = [0, -0.400000006, 0],
+				Vec3 HalfSize = [0.300000012, 0.100000001, 0.300000012],
+			},
+		},
+		Cog:57a9367e5c5f3773 = 
+		{
+			LinkId = 
+			{
+				uint Id = 4,
+			},
+			Named = 
+			{
+				string Name = "Case",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Model = 
+			{
+				bool Visible = true,
+				bool ViewCulling = true,
+				bool VisibilityEvents = true,
+				string Material = "57a9318ffce03582:ViewCubeMat",
+				string Mesh = "57a93a5ca4ebaaf0:ViewCube.Case",
+			},
+		},
+		Cog:57a9367e5c5f3774 = 
+		{
+			LinkId = 
+			{
+				uint Id = 5,
+			},
+			Named = 
+			{
+				string Name = "Front",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Model = 
+			{
+				bool Visible = true,
+				bool ViewCulling = true,
+				bool VisibilityEvents = true,
+				string Material = "57a9318ffce03582:ViewCubeMat",
+				string Mesh = "57a93a5ca4ebaae2:ViewCube.Front",
+			},
+			BoxCollider = 
+			{
+				bool Ghost = false,
+				bool SendsEvents = true,
+				string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+				string CollisionGroup = "4e740859314e5515:DefaultGroup",
+				Vec3 Offset = [0, 0, 0.400000006],
+				Vec3 HalfSize = [0.300000012, 0.300000012, 0.100000001],
+			},
+		},
+		Cog:57a9367e5c5f3776 = 
+		{
+			LinkId = 
+			{
+				uint Id = 6,
+			},
+			Named = 
+			{
+				string Name = "Left",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Model = 
+			{
+				bool Visible = true,
+				bool ViewCulling = true,
+				bool VisibilityEvents = true,
+				string Material = "57a9318ffce03582:ViewCubeMat",
+				string Mesh = "57a93a5ca4ebaadc:ViewCube.Left",
+			},
+			BoxCollider = 
+			{
+				bool Ghost = false,
+				bool SendsEvents = true,
+				string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+				string CollisionGroup = "4e740859314e5515:DefaultGroup",
+				Vec3 Offset = [0.400000006, 0, 0],
+				Vec3 HalfSize = [0.100000001, 0.300000012, 0.300000012],
+			},
+		},
+		Cog:57a9367e5c5f3778 = 
+		{
+			LinkId = 
+			{
+				uint Id = 7,
+			},
+			Named = 
+			{
+				string Name = "Right",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Model = 
+			{
+				bool Visible = true,
+				bool ViewCulling = true,
+				bool VisibilityEvents = true,
+				string Material = "57a9318ffce03582:ViewCubeMat",
+				string Mesh = "57a93a5ca4ebaacd:ViewCube.Right",
+			},
+			BoxCollider = 
+			{
+				bool Ghost = false,
+				bool SendsEvents = true,
+				string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+				string CollisionGroup = "4e740859314e5515:DefaultGroup",
+				Vec3 Offset = [-0.400000006, 0, 0],
+				Vec3 HalfSize = [0.100000001, 0.300000012, 0.300000012],
+			},
+		},
+		Cog:57a9367e5c5f3779 = 
+		{
+			LinkId = 
+			{
+				uint Id = 8,
+			},
+			Named = 
+			{
+				string Name = "Top",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Model = 
+			{
+				bool Visible = true,
+				bool ViewCulling = true,
+				bool VisibilityEvents = true,
+				string Material = "57a9318ffce03582:ViewCubeMat",
+				string Mesh = "57a93a5ca4ebaad5:ViewCube.Top",
+			},
+			BoxCollider = 
+			{
+				bool Ghost = false,
+				bool SendsEvents = true,
+				string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+				string CollisionGroup = "4e740859314e5515:DefaultGroup",
+				Vec3 Offset = [0, 0.400000006, 0],
+				Vec3 HalfSize = [0.300000012, 0.100000001, 0.300000012],
+			},
+		},
+		Cog:57a936e76b6987b6 = 
+		{
+			LinkId = 
+			{
+				uint Id = 9,
+			},
+			Named = 
+			{
+				string Name = "SubSections",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Hierarchy = 
+			{
+				Cog:57a936e76b698889 = 
+				{
+					LinkId = 
+					{
+						uint Id = 10,
+					},
+					Named = 
+					{
+						string Name = "Corner",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0.400000006, 0.400000006, -0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698926 = 
+				{
+					LinkId = 
+					{
+						uint Id = 11,
+					},
+					Named = 
+					{
+						string Name = "Corner",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0.400000006, -0.400000006, -0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b6989a7 = 
+				{
+					LinkId = 
+					{
+						uint Id = 12,
+					},
+					Named = 
+					{
+						string Name = "Corner",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [-0.400000006, -0.400000006, -0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698a24 = 
+				{
+					LinkId = 
+					{
+						uint Id = 13,
+					},
+					Named = 
+					{
+						string Name = "Corner",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [-0.400000006, 0.400000006, -0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698cba = 
+				{
+					LinkId = 
+					{
+						uint Id = 14,
+					},
+					Named = 
+					{
+						string Name = "Corner",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [-0.400000006, 0.400000006, 0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698d39 = 
+				{
+					LinkId = 
+					{
+						uint Id = 15,
+					},
+					Named = 
+					{
+						string Name = "Corner",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0.400000006, 0.400000006, 0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698db7 = 
+				{
+					LinkId = 
+					{
+						uint Id = 16,
+					},
+					Named = 
+					{
+						string Name = "Corner",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [-0.400000006, -0.400000006, 0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698e35 = 
+				{
+					LinkId = 
+					{
+						uint Id = 17,
+					},
+					Named = 
+					{
+						string Name = "Corner",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0.400000006, -0.400000006, 0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698aa1 = 
+				{
+					LinkId = 
+					{
+						uint Id = 18,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0.400000006, 0, -0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.300000012, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698b20 = 
+				{
+					LinkId = 
+					{
+						uint Id = 19,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [-0.400000006, 0, -0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.300000012, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698bae = 
+				{
+					LinkId = 
+					{
+						uint Id = 20,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0, 0.400000006, -0.400000006],
+						Vec3 HalfSize = [0.300000012, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698c2f = 
+				{
+					LinkId = 
+					{
+						uint Id = 21,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0, -0.400000006, -0.400000006],
+						Vec3 HalfSize = [0.300000012, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698eb0 = 
+				{
+					LinkId = 
+					{
+						uint Id = 22,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [-0.400000006, 0, 0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.300000012, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698f35 = 
+				{
+					LinkId = 
+					{
+						uint Id = 23,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0.400000006, 0, 0.400000006],
+						Vec3 HalfSize = [0.100000001, 0.300000012, 0.100000001],
+					},
+				},
+				Cog:57a936e76b698fb3 = 
+				{
+					LinkId = 
+					{
+						uint Id = 24,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0, 0.400000006, 0.400000006],
+						Vec3 HalfSize = [0.300000012, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b69902f = 
+				{
+					LinkId = 
+					{
+						uint Id = 25,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0, -0.400000006, 0.400000006],
+						Vec3 HalfSize = [0.300000012, 0.100000001, 0.100000001],
+					},
+				},
+				Cog:57a936e76b6990aa = 
+				{
+					LinkId = 
+					{
+						uint Id = 26,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [-0.400000006, 0.400000006, 0],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.300000012],
+					},
+				},
+				Cog:57a936e76b699126 = 
+				{
+					LinkId = 
+					{
+						uint Id = 27,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0.400000006, 0.400000006, 0],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.300000012],
+					},
+				},
+				Cog:57a936e76b6991a1 = 
+				{
+					LinkId = 
+					{
+						uint Id = 28,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [-0.400000006, -0.400000006, 0],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.300000012],
+					},
+				},
+				Cog:57a936e76b699228 = 
+				{
+					LinkId = 
+					{
+						uint Id = 29,
+					},
+					Named = 
+					{
+						string Name = "Edge",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					BoxCollider = 
+					{
+						bool Ghost = false,
+						bool SendsEvents = true,
+						string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+						string CollisionGroup = "4e740859314e5515:DefaultGroup",
+						Vec3 Offset = [0.400000006, -0.400000006, 0],
+						Vec3 HalfSize = [0.100000001, 0.100000001, 0.300000012],
+					},
+				},
+			},
+		},
+	},
+},

@@ -1,0 +1,22 @@
+[Version:1]
+ColorScheme 
+{
+	var Default = Real4{1, 1, 1, 1}
+	var Background = Real4{0.168627456, 0.168627456, 0.168627456, 1}
+	var Selection = Real4{0.333333343, 0.250980407, 0.286274523, 1}
+	var LineSelection = Real4{0.211764723, 0.211764723, 0.211764723, 1}
+	var Comment = Real4{0.415686309, 0.866666734, 0.447058856, 1}
+	var StringLiteral = Real4{1, 0.611764729, 0.611764729, 1}
+	var Number = Real4{0.843137324, 0.529411793, 0.988235354, 1}
+	var Keyword = Real4{0.0352941193, 0.82745105, 0.968627512, 1}
+	var Operator = Real4{0.713725507, 0.713725507, 0.713725507, 1}
+	var ClassName = Real4{0.968627512, 0.458823562, 0.0352941193, 1}
+	var FunctionName = Real4{0.521568656, 0.498039246, 0.984313786, 1}
+	var SpecialWords = Real4{0.956862807, 1, 0.13333334, 1}
+	var Error = Real4{1, 0, 0.149019614, 1}
+	var Whitespace = Real4{0.384313762, 0.384313762, 0.384313762, 1}
+	var Directive = Real4{0.627451003, 0.509803951, 0.741176486, 1}
+	var Gutter = Real4{0.117647067, 0.117647067, 0.117647067, 1}
+	var GutterText = Real4{1, 1, 1, 1}
+	var Link = Real4{0.482352972, 0.482352972, 0.945098102, 1}
+}

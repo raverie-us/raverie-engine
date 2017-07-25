@@ -1,0 +1,48 @@
+
+body {
+  background-color: #323232;
+  font-family: 'Verdana', sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 0px;
+  overflow: hidden;
+  position:fixed;
+  width: 100%;
+}
+
+.header {
+  background-color: #000;
+  color: #888;
+  width: 100%;
+  overflow: auto;
+}
+
+.header-align {
+  display: inline-block;
+}
+
+.header-title {
+  font-family: 'Verdana', sans-serif;
+  font-size: 22px;
+  padding: 15px;
+}
+
+.header-description {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding: 15px;
+}
+
+.debugger-dock-manager {
+  background-color: #323232;
+  clear: both;
+}
+
+.general-window
+{
+  height: 100%;
+  background-color: #424242;
+}
+
+.activeline {background: #e8f2ff !important;}

@@ -1,0 +1,99 @@
+class ZSoundNodeGraphScript : ZilchComponent
+{
+  [Dependency] var Capture : MouseCapture;
+  [Dependency] var Transform : Transform;
+  
+  var ObjectList : Array[Cog] = Array[Cog]();
+  var WaitFrames : Integer = 20;
+  var FrameCount : Integer = 0;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    Zero.Connect(this.Owner, Events.LeftMouseDown, this.OnMouseDown);
+    Zero.Connect(this.Owner, Events.LeftMouseUp, this.OnMouseUp);
+    Zero.Connect(this.Owner, Events.MouseDragMove, this.OnMouseMove);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    ++this.FrameCount;
+    
+    if (this.FrameCount >= this.WaitFrames)
+    {
+      this.FrameCount = 0;
+      this.RefreshGraph();
+    }
+  }
+  
+  function OnMouseDown(event : ViewportMouseEvent)
+  {
+    this.Capture.Capture(event);
+  }
+  
+  function OnMouseUp(event : ViewportMouseEvent)
+  {
+    this.Capture.ReleaseCapture();
+  }
+  
+  function OnMouseMove(event : ViewportMouseEvent)
+  {
+    var position = this.Owner.UiWidget.LocalTranslation;
+    position.X += event.Movement.X;
+    position.Y += event.Movement.Y;
+    this.Owner.UiWidget.LocalTranslation = position;
+  }
+  
+  function RefreshGraph()
+  {
+    // Remove any existing node objects
+    foreach(var object in this.ObjectList)
+      object.Destroy();
+    this.ObjectList.Clear();
+    
+    foreach(var info in Audio.GetNodeGraphInfo())
+    {
+      var thisPosition = Real3(info.Position.X, info.Position.Y, 1);
+      
+      var color = Real4(105.0/255.0, 178.0/255.0, 255.0/255.0, 1.0);
+      if (info.Name == "Space")
+          color = Real4(255.0/255.0, 62.0/255.0, 63.0/255.0, 1.0);
+      else if (info.Name == "Listener")
+          color = Real4(171.0/255.0, 105.0/255.0, 255.0/255.0, 1.0);
+      else if (info.Name == "Emitter")
+          color = Real4(46.0/255.0, 170.0/255.0, 43.0/255.0, 1.0);
+      else if (info.Name == "SoundInstance")
+          color = Real4(255.0/255.0, 167.0/255.0, 75.0/255.0, 1.0);
+      else if (info.Name == "EmitterAttenuator")
+          color = Real4(155.0/255.0, 255.0/255.0, 120.0/255.0, 1.0);
+      else if (info.Name == "CueAttenuator")
+          color = Real4(254.0/255.0, 236.0/255.0, 117.0/255.0, 1.0);
+      
+      var node = this.Space.CreateAtPosition(Archetype.SoundNodeIcon, thisPosition);
+      node.FindChildByName("CircleHighlight").Sprite.VertexColor = color;
+      node.FindChildByName("BoxHighlight").Sprite.VertexColor = color;
+      node.FindChildByName("Text").SpriteText.Text = info.Name;
+      node.AttachTo(this.Owner);
+      this.ObjectList.Push(node);
+        
+      // Add the connection lines
+      foreach(var otherInfo in info.Connections)
+      {
+        var otherPosition = Real3(otherInfo.Position.X, otherInfo.Position.Y + 47, 0);
+        
+        var distance = thisPosition - otherPosition;
+        var linePosition = thisPosition + otherPosition;
+        linePosition = linePosition / 2.0;
+        
+        var line = this.Space.CreateAtPosition(Archetype.SoundNodeLine, thisPosition + Real3(0,-23,0));
+        if (info.HasOutput == true)
+          line.Sprite.VertexColor = Real4(0.9098, 0.4902, 0.0, 1.0);
+        line.AttachTo(this.Owner);
+        this.ObjectList.Push(line);
+        
+        line.Transform.Scale = Real3(1,Math.Distance(thisPosition, otherPosition),1);
+        line.Transform.RotateAnglesWorld(Real3(0.0,0.0, -Math.ATan2(distance.X, distance.Y)));
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+// ReadingFromAWriteOnlyValue
+
+class Animal
+{
+  var RemoteLives : Integer
+  {
+    set { }
+  }
+  
+  function ApplyDamage()
+  {
+    // Cannot read (set only)
+    var t : Integer = this.RemoteLives;
+  }
+}

@@ -1,0 +1,353 @@
+[Version:1]
+Cog 
+{
+	var Name = "HistoryEntry"
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Vec3{0, 0, 0}
+		var Scale = Vec3{1, 1, 1}
+		var Rotation = Quat{0, 0, 0, 1}
+	}
+	Area 
+	{
+		var Size = Vec2{282, 20}
+		var Origin = Location.TopLeft
+	}
+	Sprite 
+	{
+		var Visible = true
+		var ViewCulling = true
+		var VisibilityEvents = true
+		var Material = "56dcc7b15f51207d:DefaultSpriteMaterial"
+		var VertexColor = Vec4{0.258823544, 0.258823544, 0.258823544, 1}
+		var GeometryMode = SpriteGeometryMode.ZPlane
+		var SpriteSource = "5275aa4d802dd6dc:Square"
+		var FlipX = false
+		var FlipY = false
+		var AnimationActive = true
+		var AnimationSpeed = 1
+		var StartFrame = 0
+	}
+	UiWidget 
+	{
+		var Active = true
+		var Visible = true
+		var Interactive = true
+		var InLayout = true
+		var ClipChildren = true
+		var CanTakeFocus = false
+		var LocalColor = Vec4{0.258823544, 0.258823544, 0.258823544, 1}
+		var HierarchyColor = Vec4{1, 1, 1, 1}
+		var SizePolicyX = UiSizePolicy.Flex
+		var SizePolicyY = UiSizePolicy.Fixed
+		var FlexSize = Vec2{1, 1}
+		var AbsoluteMinSize = Vec2{1, 1}
+		var VerticalAlignment = UiVerticalAlignment.Top
+		var HorizontalAlignment = UiHorizontalAlignment.Left
+		var MarginLeft = 0
+		var MarginTop = 0
+		var MarginRight = 0
+		var MarginBottom = 0
+		var DockMode = UiDockMode.Left
+	}
+	UiStackLayout 
+	{
+		var PaddingLeft = 0
+		var PaddingTop = 0
+		var PaddingRight = 0
+		var PaddingBottom = 0
+		var StackDirection = UiStackLayoutDirection.TopToBottom
+		var Spacing = Vec2{0, 0}
+	}
+	ZHistoryEntry 
+	{
+		var ArchetypeEntry = "582d2a7ffc50d5f7:HistoryEntry"
+		var AnimateTime = 0.200000003
+	}
+	Hierarchy 
+	{
+		Cog [Id:0x582a247dd582a9f1]
+		{
+			var Name = "OperationName"
+			var LinkId = 2
+			Transform 
+			{
+				var Translation = Vec3{0, 0, 0}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Area 
+			{
+				var Size = Vec2{282, 20}
+				var Origin = Location.TopLeft
+			}
+			Sprite 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "56dcc7b15f51207d:DefaultSpriteMaterial"
+				var VertexColor = Vec4{0.25999999, 0.25999999, 0.25999999, 1}
+				var GeometryMode = SpriteGeometryMode.ZPlane
+				var SpriteSource = "5275aa4d802dd6dc:Square"
+				var FlipX = false
+				var FlipY = false
+				var AnimationActive = true
+				var AnimationSpeed = 1
+				var StartFrame = 0
+			}
+			UiWidget 
+			{
+				var Active = true
+				var Visible = true
+				var Interactive = true
+				var InLayout = true
+				var ClipChildren = false
+				var CanTakeFocus = false
+				var LocalColor = Vec4{0.25999999, 0.25999999, 0.25999999, 1}
+				var HierarchyColor = Vec4{1, 1, 1, 1}
+				var SizePolicyX = UiSizePolicy.Flex
+				var SizePolicyY = UiSizePolicy.Fixed
+				var FlexSize = Vec2{1, 1}
+				var AbsoluteMinSize = Vec2{1, 1}
+				var VerticalAlignment = UiVerticalAlignment.Top
+				var HorizontalAlignment = UiHorizontalAlignment.Left
+				var MarginLeft = 0
+				var MarginTop = 0
+				var MarginRight = 0
+				var MarginBottom = 0
+				var DockMode = UiDockMode.Left
+			}
+			UiStackLayout 
+			{
+				var PaddingLeft = 0
+				var PaddingTop = 0
+				var PaddingRight = 0
+				var PaddingBottom = 0
+				var StackDirection = UiStackLayoutDirection.LeftToRight
+				var Spacing = Vec2{0, 0}
+			}
+			Hierarchy 
+			{
+				Cog [Id:0x582d2ae9df2d6d53]
+				{
+					var Name = "Icon"
+					var LinkId = 3
+					Transform 
+					{
+						var Translation = Vec3{0, -2, 0}
+						var Scale = Vec3{1, 1, 1}
+						var Rotation = Quat{0, 0, 0, 1}
+					}
+					Area 
+					{
+						var Size = Vec2{16, 16}
+						var Origin = Location.TopLeft
+					}
+					UiWidget 
+					{
+						var Active = true
+						var Visible = true
+						var Interactive = true
+						var InLayout = true
+						var ClipChildren = false
+						var CanTakeFocus = false
+						var LocalColor = Vec4{1, 1, 1, 1}
+						var HierarchyColor = Vec4{1, 1, 1, 1}
+						var SizePolicyX = UiSizePolicy.Fixed
+						var SizePolicyY = UiSizePolicy.Fixed
+						var FlexSize = Vec2{1, 1}
+						var AbsoluteMinSize = Vec2{1, 1}
+						var VerticalAlignment = UiVerticalAlignment.Top
+						var HorizontalAlignment = UiHorizontalAlignment.Left
+						var MarginLeft = 2
+						var MarginTop = 2
+						var MarginRight = 3
+						var MarginBottom = 0
+						var DockMode = UiDockMode.Left
+					}
+					Sprite 
+					{
+						var Visible = true
+						var ViewCulling = true
+						var VisibilityEvents = true
+						var Material = "56dcc7b15f51207d:DefaultSpriteMaterial"
+						var VertexColor = Vec4{1, 1, 1, 1}
+						var GeometryMode = SpriteGeometryMode.ZPlane
+						var SpriteSource = "588891bf87b01407:HistoryArrowRight"
+						var FlipX = false
+						var FlipY = false
+						var AnimationActive = true
+						var AnimationSpeed = 1
+						var StartFrame = 0
+					}
+				}
+				Cog [Id:0x582d2ae9df2d6d59]
+				{
+					var Name = "Text"
+					var LinkId = 4
+					Transform 
+					{
+						var Translation = Vec3{20, 0, 0}
+						var Scale = Vec3{1, 1, 1}
+						var Rotation = Quat{0, 0, 0, 1}
+					}
+					Area 
+					{
+						var Size = Vec2{257, 15}
+						var Origin = Location.TopLeft
+					}
+					UiWidget 
+					{
+						var Active = true
+						var Visible = true
+						var Interactive = true
+						var InLayout = true
+						var ClipChildren = false
+						var CanTakeFocus = false
+						var LocalColor = Vec4{1, 1, 1, 1}
+						var HierarchyColor = Vec4{1, 1, 1, 1}
+						var SizePolicyX = UiSizePolicy.Flex
+						var SizePolicyY = UiSizePolicy.Fixed
+						var FlexSize = Vec2{1, 1}
+						var AbsoluteMinSize = Vec2{1, 1}
+						var VerticalAlignment = UiVerticalAlignment.Center
+						var HorizontalAlignment = UiHorizontalAlignment.Left
+						var MarginLeft = 0
+						var MarginTop = 1
+						var MarginRight = 0
+						var MarginBottom = 0
+						var DockMode = UiDockMode.Left
+					}
+					SpriteText 
+					{
+						var Visible = true
+						var ViewCulling = true
+						var VisibilityEvents = true
+						var Material = "56dcc7b15f51207d:DefaultSpriteMaterial"
+						var VertexColor = Vec4{1, 1, 1, 1}
+						var GeometryMode = SpriteGeometryMode.ZPlane
+						var Font = "57343753bb4eaaec:NotoSans-Regular"
+						var FontSize = 11
+						var Text = "Created Archetype"
+						var TextAlign = TextAlign.Left
+						var PixelsPerUnit = 1
+					}
+				}
+			}
+		}
+		Cog [Id:0x58256fcded3f655e]
+		{
+			var Name = "ChildrenBG"
+			var LinkId = 5
+			Transform 
+			{
+				var Translation = Vec3{0, -18, 0}
+				var Scale = Vec3{1, 1, 1}
+				var Rotation = Quat{0, 0, 0, 1}
+			}
+			Area 
+			{
+				var Size = Vec2{267, 0}
+				var Origin = Location.TopLeft
+			}
+			UiWidget 
+			{
+				var Active = true
+				var Visible = true
+				var Interactive = true
+				var InLayout = true
+				var ClipChildren = false
+				var CanTakeFocus = false
+				var LocalColor = Vec4{1, 1, 1, 0}
+				var HierarchyColor = Vec4{1, 1, 1, 1}
+				var SizePolicyX = UiSizePolicy.Flex
+				var SizePolicyY = UiSizePolicy.Auto
+				var FlexSize = Vec2{1, 1}
+				var AbsoluteMinSize = Vec2{0, 0}
+				var VerticalAlignment = UiVerticalAlignment.Top
+				var HorizontalAlignment = UiHorizontalAlignment.Left
+				var MarginLeft = 0
+				var MarginTop = 0
+				var MarginRight = 0
+				var MarginBottom = 0
+				var DockMode = UiDockMode.Left
+			}
+			UiStackLayout 
+			{
+				var PaddingLeft = 0
+				var PaddingTop = 0
+				var PaddingRight = 0
+				var PaddingBottom = 0
+				var StackDirection = UiStackLayoutDirection.TopToBottom
+				var Spacing = Vec2{2, 0}
+			}
+      Sprite 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "56dcc7b15f51207d:DefaultSpriteMaterial"
+				var VertexColor = Vec4{0.25999999, 0.25999999, 0.25999999, 1}
+				var GeometryMode = SpriteGeometryMode.ZPlane
+				var SpriteSource = "5275aa4d802dd6dc:Square"
+				var FlipX = false
+				var FlipY = false
+				var AnimationActive = true
+				var AnimationSpeed = 1
+				var StartFrame = 0
+			}
+			Hierarchy 
+			{
+				Cog [Id:0x588bf870fca44015]
+				{
+					var Name = "Children"
+					var LinkId = 6
+					Transform 
+					{
+						var Translation = Vec3{0, 0, 0}
+						var Scale = Vec3{1, 1, 1}
+						var Rotation = Quat{0, 0, 0, 1}
+					}
+					Area 
+					{
+						var Size = Vec2{267, 0}
+						var Origin = Location.TopLeft
+					}
+					UiWidget 
+					{
+						var Active = true
+						var Visible = true
+						var Interactive = true
+						var InLayout = true
+						var ClipChildren = false
+						var CanTakeFocus = false
+						var LocalColor = Vec4{1, 1, 1, 0}
+						var HierarchyColor = Vec4{1, 1, 1, 1}
+						var SizePolicyX = UiSizePolicy.Flex
+						var SizePolicyY = UiSizePolicy.Auto
+						var FlexSize = Vec2{1, 1}
+						var AbsoluteMinSize = Vec2{0, 0}
+						var VerticalAlignment = UiVerticalAlignment.Top
+						var HorizontalAlignment = UiHorizontalAlignment.Left
+						var MarginLeft = 0
+						var MarginTop = 0
+						var MarginRight = 0
+						var MarginBottom = 0
+						var DockMode = UiDockMode.Left
+					}
+					UiStackLayout 
+					{
+						var PaddingLeft = 15
+						var PaddingTop = 0
+						var PaddingRight = 0
+						var PaddingBottom = 0
+						var StackDirection = UiStackLayoutDirection.TopToBottom
+						var Spacing = Vec2{2, 0}
+					}
+				}
+			}
+		}
+	}
+}

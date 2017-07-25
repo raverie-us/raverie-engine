@@ -1,0 +1,14 @@
+// Roughness input for lighting opaque geometry.
+// Output values are constant over the surface.
+[Pixel]
+struct RoughnessValue
+{
+  [Input] var RoughnessValue : Real = 0.0;
+  
+  [Output] var Roughness : Real;
+  
+  function Main()
+  {
+    this.Roughness = Math.Saturate(this.RoughnessValue);
+  }
+}

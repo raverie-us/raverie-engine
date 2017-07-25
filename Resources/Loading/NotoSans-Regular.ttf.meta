@@ -1,0 +1,9 @@
+[Version:1]
+FontContent 
+{
+	FontBuilder 
+	{
+		var Name = "NotoSans-Regular"
+		var ResourceId = 0x57343753bb4eaaec
+	}
+}

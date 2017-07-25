@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Put this file in %USERPROFILE%\My Documents\Visual Studio 2013\Visualizers\-->
+<!--This will not work if  you have 'Edit and Continue' enabled in Visual Studio-->
+<!--To debug in 2015 go to Tools/Options -> Debugging/OutputWindow -> GeneralOutputSettings and turn on Natvis diagnostic messages-->
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="Math::Vector2">
+    <DisplayString>({x}, {y})</DisplayString>
+    <Expand>
+      <Item Name="x">x</Item>
+      <Item Name="y">y</Item>
+      <Item Name="LengthSq">x * x + y * y</Item>
+    </Expand>
+  </Type>
+  <Type Name="Math::Vector3">
+    <DisplayString>({x}, {y}, {z})</DisplayString>
+    <Expand>
+      <Item Name="x">x</Item>
+      <Item Name="y">y</Item>
+      <Item Name="z">z</Item>
+      <Item Name="LengthSq">x * x + y * y + z * z</Item>
+    </Expand>
+  </Type>
+  <Type Name="Math::Vector4">
+    <DisplayString>({x}, {y}, {z}, {w})</DisplayString>
+    <Expand>
+      <Item Name="x">x</Item>
+      <Item Name="y">y</Item>
+      <Item Name="z">z</Item>
+      <Item Name="w">w</Item>
+      <Item Name="LengthSq">x * x + y * y + z * z + w * w</Item>
+    </Expand>
+  </Type>
+  <Type Name="Math::Matrix2">
+    <DisplayString>{array}</DisplayString>
+    <Expand>
+      <Synthetic Name="v0">
+        <DisplayString>({m00}, {m01})</DisplayString>
+      </Synthetic>
+      <Synthetic Name="v1">
+        <DisplayString>({m10}, {m11})</DisplayString>
+      </Synthetic>
+    </Expand>
+  </Type>
+  <Type Name="Math::Matrix3">
+    <DisplayString>{array}</DisplayString>
+    <Expand>
+      <Synthetic Name="v0">
+        <DisplayString>({m00}, {m01}, {m02})</DisplayString>
+      </Synthetic>
+      <Synthetic Name="v1">
+        <DisplayString>({m10}, {m11}, {m12})</DisplayString>
+      </Synthetic>
+      <Synthetic Name="v2">
+        <DisplayString>({m20}, {m21}, {m22})</DisplayString>
+      </Synthetic>
+    </Expand>
+  </Type>
+  <Type Name="Math::Matrix4">
+    <DisplayString>{array}</DisplayString>
+    <Expand>
+      <Synthetic Name="v0">
+        <DisplayString>({m00}, {m01}, {m02}, {m03})</DisplayString>
+      </Synthetic>
+      <Synthetic Name="v1">
+        <DisplayString>({m10}, {m11}, {m12}, {m13})</DisplayString>
+      </Synthetic>
+      <Synthetic Name="v2">
+        <DisplayString>({m20}, {m21}, {m22}, {m23})</DisplayString>
+      </Synthetic>
+      <Synthetic Name="v3">
+        <DisplayString>({m30}, {m31}, {m32}, {m33})</DisplayString>
+      </Synthetic>
+    </Expand>
+  </Type>
+  <Type Name="Zero::String">
+    <DisplayString>{mNode->Data, s}</DisplayString>
+    <Expand>
+      <Item Name="Data">mNode->Data</Item>
+      <Item Name="Size">mNode->Size</Item>
+      <Item Name="RefCount">mNode->RefCount</Item>
+      <Item Name="HashCode">mNode->HashCode</Item>
+      <!--Display each element so we can see things like /n-->
+      <Synthetic Name="ArrayData">
+        <Expand>
+          <Item Name="Size">mNode->Size</Item>
+          <ArrayItems>
+            <Size>mNode->Size</Size>
+            <ValuePointer>mNode->Data</ValuePointer>
+          </ArrayItems>
+        </Expand>
+      </Synthetic>
+    </Expand>
+  </Type>
+  <Type Name="Zero::Pair&lt;*&gt;">
+    <DisplayString>({first}, {second})</DisplayString>
+  </Type>
+  <Type Name="Zero::StringRange">
+    <DisplayString>{mBegin,[mEnd - mBegin] }</DisplayString>
+    <Expand>
+      <Item Name="Size">mEnd - mBegin</Item>
+    </Expand>
+  </Type>
+  <Type Name="Zero::FixedString&lt;*&gt;">
+    <DisplayString>{mData, s}</DisplayString>
+    <Expand>
+      <Item Name="Data">mData</Item>
+      <Item Name="Size">mSize</Item>
+    </Expand>
+  </Type>
+  <Type Name="Zero::HashedContainer&lt;*&gt;::Node">
+    <DisplayString>{Value}</DisplayString>
+    <Expand>
+      <Item Name="Data">Value</Item>
+    </Expand>
+  </Type>
+  <Type Name="Zero::HashMap&lt;*&gt;">
+    <AlternativeType Name="Zero::HashSet&lt;*&gt;" />
+    <DisplayString>Map[{mSize}]</DisplayString>
+    <Expand>
+      <Item Name="Capacity">mTableSize</Item>
+      <Item Name="Size">mSize</Item>
+      <CustomListItems>
+        <Variable Name="index" InitialValue="0" />
+        <!--Walk over all valid items-->
+        <Loop>
+          <!--Skip empty buckets-->
+          <Loop Condition="mTable[index].next == 0">
+            <Exec>++index</Exec>
+            <Break Condition="index >= mTableSize" />
+          </Loop>
+          <Break Condition="index >= mTableSize" />
+          <Item>mTable[index]</Item>
+          <Exec>++index</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+  <Type Name="Zero::Array&lt;*&gt;::range">
+    <AlternativeType Name="Zero::PodArray&lt;*&gt;::range" />
+    <DisplayString>ArrayRange[{mEnd - mBegin}]</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>mEnd - mBegin</Size>
+        <ValuePointer>mBegin</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="Zero::Array&lt;*&gt;">
+    <AlternativeType Name="Zero::PodArray&lt;*&gt;" />
+    <DisplayString>Array[{mSize}]</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>mSize</Size>
+        <ValuePointer>mData</ValuePointer>
+      </ArrayItems>
+      <Item Name="Capacity">mCapacity</Item>
+    </Expand>
+  </Type>
+  <Type Name="Zero::FixedArray&lt;*,*&gt;">
+    <AlternativeType Name="Zero::PodArray&lt;*&gt;" />
+    <DisplayString>Array[{mSize}]</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>mSize</Size>
+        <ValuePointer>mData</ValuePointer>
+      </ArrayItems>
+      <Item Name="Capacity">$T2</Item>
+    </Expand>
+  </Type>
+  <Type Name="Zero::BlockArray&lt;*&gt;">
+    <AlternativeType Name="Zero::PodBlockArray&lt;*&gt;" />
+    <DisplayString>BlockArray[{mSize}]</DisplayString>
+    <Expand>
+      <IndexListItems>
+        <Size>mSize</Size>
+        <ValueNode>mData[$i >> ShiftSize][($i) &amp; BucketMask]</ValueNode>
+      </IndexListItems>
+      <Item Name="Capacity">mCapacity</Item>
+    </Expand>
+  </Type>
+  <Type Name="Zero::BlockArray&lt;*&gt;::iterator">
+    <AlternativeType Name="Zero::PodBlockArray&lt;*&gt;::iterator" />
+    <DisplayString>{mBlockArray->mData[mCurrentIndex >> mBlockArray->ShiftSize][mCurrentIndex &amp; mBlockArray->BucketMask]}</DisplayString>
+  </Type>
+  <Type Name="Zero::BlockArray&lt;*&gt;::range">
+    <AlternativeType Name="Zero::PodBlockArray&lt;*&gt;::range" />
+    <DisplayString>BlockArrayRange[{mEndIndex - mCurrentIndex}]</DisplayString>
+    <Expand>
+      <IndexListItems>
+        <Size>mEndIndex - mCurrentIndex</Size>
+        <ValueNode>mBlockArray->mData[(mCurrentIndex + $i) >> mBlockArray->ShiftSize][(mCurrentIndex + $i) &amp; mBlockArray->BucketMask]</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+  <!--Can't do any fancy visualization for the link because it doesn't
+	    know how to get back to the list or if it's a dummy and so on-->
+  <Type Name="Zero::Link&lt;*&gt;">
+    <DisplayString>InListLink</DisplayString>
+  </Type>
+  <Type Name="Zero::BaseInList&lt;*,*,*&gt;">
+    <DisplayString>BaseInList</DisplayString>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="node" InitialValue="mHeader.Next" />
+        <Loop>
+          <!--Break if the node is equal to the header (have to convert the node to a link)-->
+          <Break Condition="((Link&lt;$T1&gt;*)((char*)node + (size_t)$T3)) == &amp;mHeader"/>
+          <Item>node</Item>
+          <!--Go to the next node (have to convert the obj* to the link)-->
+          <Exec>node = ((Link&lt;$T1&gt;*)((char*)node + (size_t)$T3))->Next</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+  <!-- Make the basic display string for all components their derived type names -->
+  <Type Name="Zero::Component">
+    <DisplayString>$(Type)</DisplayString>
+  </Type>
+  <!-- Make Cogs display their object name -->
+  <Type Name="Zero::Cog">
+    <DisplayString>Name: {mName}</DisplayString>
+  </Type>
+  <!-- Expand the pointer in references by default -->
+  <Type Name="Zero::Reference&lt;*&gt;">
+    <Expand>
+      <ExpandedItem>Pointer</ExpandedItem>
+    </Expand>
+  </Type>
+</AutoVisualizer>

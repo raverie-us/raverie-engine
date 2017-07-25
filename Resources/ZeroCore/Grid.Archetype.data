@@ -1,0 +1,28 @@
+Cog = 
+{
+	Named = 
+	{
+		string Name = "Grid",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [0, 0, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	GridDraw = 
+	{
+		bool Active = true,
+		bool HalfCellOffset = false,
+		float CellSize = 1,
+		GridAxis Axis = YAxis,
+		int Lines = 100,
+		bool DrawAxisOrigins = true,
+		bool AlwaysDrawInEditor = true,
+		bool DrawInGame = false,
+		Vec4 GridColor = [0.5, 0.5, 0.5, 0.4],
+		Vec4 GridHighlight = [0, 0, 0, 0.4],
+		int HighlightInterval = 10,
+		bool FollowEditorCamera = false,
+	},
+},

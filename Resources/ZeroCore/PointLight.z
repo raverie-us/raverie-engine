@@ -1,0 +1,65 @@
+// Data needed for rendering a point light.
+// Usage with DeferredRenderer expects a Model on this object with the
+// 'PointLight' Material and 'Sphere' Mesh.
+// No default usage with ForwardRenderer.
+[RunInEditor]
+class PointLight : ZilchComponent
+{
+  [Dependency] var Transform : Transform;
+  
+  // Color used in lighting calculations.
+  [Property] var LightColor : Real4
+  {
+    get { return Real4(this.LightColorValue, 1.0); }
+    set { this.LightColorValue = value.XYZ; }
+  }
+  
+  // Combined with area light falloff and represents total emittance of the light.
+  [Property][ShaderInput("PointLightFragment")] var LightIntensity : Real
+  {
+    get { return this.LightIntensityValue; }
+    set { this.LightIntensityValue = Math.Max(value, 0.0); }
+  }
+  
+  // Distance at which the light's effect is completely faded.
+  // Does not affect apparent brightness of the light.
+  [Property][ShaderInput("PointLightFragment")] var FalloffRadius : Real
+  {
+    get { return this.FalloffRadiusValue; }
+    set
+    {
+      this.FalloffRadiusValue = Math.Max(value, 0.1);
+      this.LightRadiusValue = Math.Min(this.LightRadiusValue, this.FalloffRadiusValue);
+      // Don't have access to other components in serialization.
+      if (this.Transform != null)
+        this.Transform.WorldScale = Real3(this.FalloffRadiusValue * 2.0);
+    }
+  }
+  
+  // Physical radius of the sphere of light.
+  // Affects the shape of specular reflection.
+  [Property][ShaderInput("PointLightFragment")] var LightRadius : Real
+  {
+    get { return this.LightRadiusValue; }
+    set { this.LightRadiusValue = Math.Clamp(value, 0.0, this.FalloffRadiusValue); }
+  }
+  
+  [ShaderInput("LightPass", "LightColor")] var LightColorValue : Real3 = Real3(1.0);
+  var LightIntensityValue : Real = 1.0;
+  var FalloffRadiusValue : Real = 10.0;
+  var LightRadiusValue : Real = 0.0;
+  
+  function Initialize(init : CogInitializer)
+  {
+    this.Transform.WorldScale = Real3(this.FalloffRadiusValue * 2.0);
+  }
+  
+  function DebugDraw()
+  {
+    var position = this.Transform.WorldTranslation;
+    var lightSphere = DebugSphere(position, this.LightRadius) {Color = Real4(0.5, 0.5, 0.0, 1.0)};
+    var falloffSphere = DebugSphere(position, this.FalloffRadius) {Color = Real4(1.0, 1.0, 0.0, 1.0)};
+    DebugDraw.Add(lightSphere);
+    DebugDraw.Add(falloffSphere);
+  }
+}

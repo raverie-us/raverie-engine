@@ -1,0 +1,11 @@
+// ReturnValueNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo() : Real
+  {
+    return;
+  }
+}

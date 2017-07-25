@@ -1,0 +1,47 @@
+[Version:1]
+Cog 
+{
+  ObjectLink 
+  {
+    var ObjectA = CogPath
+    {
+      var Path = ""
+      var ErrorOnResolveToNull = false
+      var ErrorOnPathCantCompute = false
+      var ErrorOnDirectLinkFail = false
+      var UpdateCogOnPathChange = true
+      var UpdatePathOnCogChange = true
+      var UpdateCogOnInitialize = true
+      var ResolvedNullErrorOccurred = false
+      var ResolvedCog = 4294967293
+      var PathPreference0 = CogPathPreference.CogRelative
+      var PathPreference1 = CogPathPreference.SpaceRelative
+      var PathPreference2 = CogPathPreference.Absolute
+    }
+    var ObjectB = CogPath
+    {
+      var Path = ""
+      var ErrorOnResolveToNull = false
+      var ErrorOnPathCantCompute = false
+      var ErrorOnDirectLinkFail = false
+      var UpdateCogOnPathChange = true
+      var UpdatePathOnCogChange = true
+      var UpdateCogOnInitialize = true
+      var ResolvedNullErrorOccurred = false
+      var ResolvedCog = 4294967293
+      var PathPreference0 = CogPathPreference.CogRelative
+      var PathPreference1 = CogPathPreference.SpaceRelative
+      var PathPreference2 = CogPathPreference.Absolute
+    }
+    var LocalointA = Vec3{0, 0, 0}
+    var LocalointB = Vec3{0, 0, 0}
+  }
+  SelectionIcon 
+  {
+    var Visible = true
+    var Material = "56581e2bb81777be:DebugDrawOnTop"
+    var SpriteSource = "58f8e4be736f19fe:ConnectionIcon"
+    var ViewScale = 1
+    var OverrideSelections = true
+  }
+}

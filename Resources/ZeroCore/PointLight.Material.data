@@ -1,0 +1,17 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+		"581a791e8fa9287a:Lights"
+	}
+	GeometryInput 
+	{
+	}
+	PointLightFragment 
+	{
+		var FalloffRadius = 1
+		var LightIntensity = 1
+		var LightRadius = 0
+	}
+}

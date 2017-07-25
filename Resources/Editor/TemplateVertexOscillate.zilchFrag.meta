@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "TemplateVertexOscillate"
+		var ResourceId = 0x582ff77c61d9f11f
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Vertex Oscillate"
+		var Description = "Oscillates vertices over time"
+		var SortWeight = 100
+		var Category = "Vertex"
+		var CategorySortWeight = 20
+	}
+}

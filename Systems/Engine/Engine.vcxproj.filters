@@ -1,0 +1,685 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Composition">
+      <UniqueIdentifier>{212a9b1f-aa7b-4b40-8265-85c6f99a5d77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{1f5294e0-8f48-4104-9e97-e8610a9c7b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{61ed03d7-8ee5-467d-b20b-20cc00a4006e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents">
+      <UniqueIdentifier>{9c5ee8ec-c696-4b4f-901c-801c368f245d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\Space">
+      <UniqueIdentifier>{7c9e5425-29aa-42b0-9a32-86dffff41e34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\Transform">
+      <UniqueIdentifier>{4a5b5974-12cd-422e-99d6-19e34899fad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\Time">
+      <UniqueIdentifier>{e7032fd8-2e20-41b2-8639-276f51eaaa46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\Hierarchy">
+      <UniqueIdentifier>{5f2a64f8-c590-4a5d-ad46-a86e879c702b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{7409b00e-629b-4e85-a589-790b6c60042a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Action">
+      <UniqueIdentifier>{81233900-c4cd-4dba-8138-72cdf8f834d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{a0b45e0d-3ac2-452c-9adc-5135bc49f7f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\ObjectLink">
+      <UniqueIdentifier>{fa33bb69-d833-4f0c-9a2c-6539e58a5143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\PropertyConnection">
+      <UniqueIdentifier>{642efe7a-92d5-460d-a15d-bc2b1e705c32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{d9906753-2f01-4bce-b6ea-ec69c4f69095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configiration">
+      <UniqueIdentifier>{b7effbfb-fa62-4a6e-aa6d-9ad3158e1e6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gamepad">
+      <UniqueIdentifier>{a8d0b18a-b9af-4dc8-81aa-32106097f0a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\Curve">
+      <UniqueIdentifier>{652a68ee-537e-409d-9285-7870e0cb0d52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shell">
+      <UniqueIdentifier>{67954d18-53a4-4976-898d-378cb7deed42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\HeightMap">
+      <UniqueIdentifier>{96c90674-ee7e-4999-8d51-3e3f22738a69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\ColorGradient">
+      <UniqueIdentifier>{5699ee72-c21b-4f13-aa4a-68ae83d53952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raycast">
+      <UniqueIdentifier>{dd80ff2f-840e-482a-9cf2-fa72ddb87355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\ResourceTable">
+      <UniqueIdentifier>{8d70ba1e-6cd4-4e4f-bb77-d8bdba1f94d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{04b28895-e1bb-4399-9c23-24a9a60d1d89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tweakables">
+      <UniqueIdentifier>{110e40e8-1601-4bc4-b87a-a45cdf69319f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{6d3d504c-5b44-4af7-8c14-6efcbd141b0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\AnimationGraph">
+      <UniqueIdentifier>{29b453c5-4a4b-4fd3-a34a-d021edde0d8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Operation">
+      <UniqueIdentifier>{67a12853-f8fc-482d-9485-313bf292144e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\HotKeys">
+      <UniqueIdentifier>{1715f1c6-7f11-4ab3-b3f7-b59969a53644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugDraw">
+      <UniqueIdentifier>{58ea2c75-3e75-4a02-8b84-4e63b93b955c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{5b7201e6-f6f8-48b2-8a5f-b01b3d7e0bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineComponents\Spline">
+      <UniqueIdentifier>{589b8438-31a6-4acd-b19a-1191cee991ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Zilch">
+      <UniqueIdentifier>{122bd345-73a3-4478-a0d0-598b897f54e1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Component.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="Archetype.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Factory.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Tracker.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Space.cpp">
+      <Filter>EngineComponents\Space</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>EngineComponents\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Configuration.cpp">
+      <Filter>Configiration</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>EngineComponents\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Hierarchy.cpp">
+      <Filter>EngineComponents\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\Action.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\ActionSystem.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectLink.cpp">
+      <Filter>EngineComponents\ObjectLink</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformSupport.cpp">
+      <Filter>EngineComponents\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Documentation.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Action\MetaAction.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="TextResource.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="CogInitializer.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectStore.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemObjectManager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadDispatch.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="JobSystem.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceSystem.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePadSystem.cpp">
+      <Filter>Gamepad</Filter>
+    </ClCompile>
+    <ClCompile Include="SampleCurve.cpp">
+      <Filter>EngineComponents\Curve</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Shell</Filter>
+    </ClCompile>
+    <ClCompile Include="OsShell.cpp">
+      <Filter>Shell</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineEvents.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMap.cpp">
+      <Filter>EngineComponents\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Noise.cpp">
+      <Filter>EngineComponents\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildVersion.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>EngineComponents\Space</Filter>
+    </ClCompile>
+    <ClCompile Include="JoystickSystem.cpp">
+      <Filter>Gamepad</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorGradient.cpp">
+      <Filter>EngineComponents\ColorGradient</Filter>
+    </ClCompile>
+    <ClCompile Include="RaycastProvider.cpp">
+      <Filter>Raycast</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapSource.cpp">
+      <Filter>EngineComponents\HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="CogId.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyRange.cpp">
+      <Filter>EngineComponents\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTable.cpp">
+      <Filter>EngineComponents\ResourceTable</Filter>
+    </ClCompile>
+    <ClCompile Include="DocumentResource.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="EventDirectoryWatcher.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Area.cpp">
+      <Filter>EngineComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="CogPath.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertyTrack.cpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>EngineComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorContext.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Tweakables.cpp">
+      <Filter>Tweakables</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Shell</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchetypeRebuilder.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="CogSelection.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorSupport.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorSettings.cpp">
+      <Filter>Configiration</Filter>
+    </ClCompile>
+    <ClCompile Include="Project.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcePropertyOperations.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationNode.cpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationGraph.cpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationGraphEvents.cpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptDebugEngine.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="OsWindow.cpp">
+      <Filter>Shell</Filter>
+    </ClCompile>
+    <ClCompile Include="LauncherConfiguration.cpp">
+      <Filter>Configiration</Filter>
+    </ClCompile>
+    <ClCompile Include="CogMetaComposition.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="CogRange.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="CogHelpers.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="CogRestoreState.cpp">
+      <Filter>Operation</Filter>
+    </ClCompile>
+    <ClCompile Include="Operation.cpp">
+      <Filter>Operation</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaOperations.cpp">
+      <Filter>Operation</Filter>
+    </ClCompile>
+    <ClCompile Include="CogOperations.cpp">
+      <Filter>Operation</Filter>
+    </ClCompile>
+    <ClCompile Include="HotKeyManager.cpp">
+      <Filter>EngineComponents\HotKeys</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectLoader.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectSaver.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="CogSerialization.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="DataSource.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchySpline.cpp">
+      <Filter>EngineComponents\Spline</Filter>
+    </ClCompile>
+    <ClCompile Include="Spline.cpp">
+      <Filter>EngineComponents\Spline</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineStandard.cpp" />
+    <ClCompile Include="Precompiled.cpp" />
+    <ClCompile Include="ZilchAction.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchManager.cpp">
+      <Filter>Zilch</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchResource.cpp">
+      <Filter>Zilch</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineLibraryExtensions.cpp" />
+    <ClCompile Include="EngineBindingExtensions.cpp" />
+    <ClCompile Include="ResourceLibrary.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicActions.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineObject.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Cog.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMeta.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+    <ClCompile Include="CogMeta.cpp">
+      <Filter>Composition</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Component.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="Archetype.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="System.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Tracker.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Space.hpp">
+      <Filter>EngineComponents\Space</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.hpp">
+      <Filter>EngineComponents\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Configuration.hpp">
+      <Filter>Configiration</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.hpp">
+      <Filter>EngineComponents\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Hierarchy.hpp">
+      <Filter>EngineComponents\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.hpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineContainers.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineMath.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Action\Action.hpp">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="Action\ActionGenerator.hpp">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="Action\ActionSystem.hpp">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectLink.hpp">
+      <Filter>EngineComponents\ObjectLink</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformSupport.hpp">
+      <Filter>EngineComponents\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Documentation.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Action\MetaAction.hpp">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="TextResource.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="CogInitializer.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectStore.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemObjectManager.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadDispatch.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceSystem.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePadSystem.hpp">
+      <Filter>Gamepad</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleCurve.hpp">
+      <Filter>EngineComponents\Curve</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.hpp">
+      <Filter>Shell</Filter>
+    </ClInclude>
+    <ClInclude Include="OsShell.hpp">
+      <Filter>Shell</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineEvents.hpp">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildVersion.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMap.hpp">
+      <Filter>EngineComponents\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Noise.hpp">
+      <Filter>EngineComponents\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.hpp">
+      <Filter>EngineComponents\Space</Filter>
+    </ClInclude>
+    <ClInclude Include="JoystickSystem.hpp">
+      <Filter>Gamepad</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorGradient.hpp">
+      <Filter>EngineComponents\ColorGradient</Filter>
+    </ClInclude>
+    <ClInclude Include="RaycastProvider.hpp">
+      <Filter>Raycast</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceLoaderTemplates.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapSource.hpp">
+      <Filter>EngineComponents\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="CogId.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptDebugEngine.hpp">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyRange.hpp">
+      <Filter>EngineComponents\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceTable.hpp">
+      <Filter>EngineComponents\ResourceTable</Filter>
+    </ClInclude>
+    <ClInclude Include="Action\ActionEase.hpp">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="DocumentResource.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="EventDirectoryWatcher.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Area.hpp">
+      <Filter>EngineComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="CogPath.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyTrack.hpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.hpp">
+      <Filter>EngineComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorContext.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Tweakables.hpp">
+      <Filter>Tweakables</Filter>
+    </ClInclude>
+    <ClInclude Include="OsWindow.hpp">
+      <Filter>Shell</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.hpp">
+      <Filter>Shell</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchetypeRebuilder.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="CogSelection.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorSupport.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorSettings.hpp">
+      <Filter>Configiration</Filter>
+    </ClInclude>
+    <ClInclude Include="Project.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcePropertyOperations.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationNode.hpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationGraph.hpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationGraphEvents.hpp">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="LauncherConfiguration.hpp">
+      <Filter>Configiration</Filter>
+    </ClInclude>
+    <ClInclude Include="CogRange.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="CogHelpers.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentHierarchy.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="CogRestoreState.hpp">
+      <Filter>Operation</Filter>
+    </ClInclude>
+    <ClInclude Include="Operation.hpp">
+      <Filter>Operation</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaOperations.hpp">
+      <Filter>Operation</Filter>
+    </ClInclude>
+    <ClInclude Include="CogOperations.hpp">
+      <Filter>Operation</Filter>
+    </ClInclude>
+    <ClInclude Include="HotKeyManager.hpp">
+      <Filter>EngineComponents\HotKeys</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDraw.hpp">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectLoader.hpp">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSaver.hpp">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="CogSerialization.hpp">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="DataSource.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchySpline.hpp">
+      <Filter>EngineComponents\Spline</Filter>
+    </ClInclude>
+    <ClInclude Include="Spline.hpp">
+      <Filter>EngineComponents\Spline</Filter>
+    </ClInclude>
+    <ClInclude Include="CogMetaComposition.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineStandard.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="ZilchAction.hpp">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchManager.hpp">
+      <Filter>Zilch</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchResource.hpp">
+      <Filter>Zilch</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineLibraryExtensions.hpp" />
+    <ClInclude Include="EngineBindingExtensions.hpp" />
+    <ClInclude Include="ResourceLibrary.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Action\BasicActions.hpp">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="Gradient.hpp">
+      <Filter>EngineComponents\ColorGradient</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineObject.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Cog.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMeta.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+    <ClInclude Include="CogMeta.hpp">
+      <Filter>Composition</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PropertyTrack.inl">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </None>
+    <None Include="Tweakables.inl">
+      <Filter>Tweakables</Filter>
+    </None>
+    <None Include="AnimationNode.inl">
+      <Filter>EngineComponents\AnimationGraph</Filter>
+    </None>
+  </ItemGroup>
+</Project>

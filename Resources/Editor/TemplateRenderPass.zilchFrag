@@ -1,0 +1,16 @@
+// RenderPass fragments are intended to be constructed in script
+// and passed directly to the AddRenderTaskRenderPass method.
+// RenderPass fragment code is implicitely appended to the end
+// of Materials in the compositing of the final shaders programs.
+[Pixel][RenderPass]
+struct %RESOURCENAME%
+{
+	[Input] var Color : Real4 = Real4(1.0, 0.0, 0.0, 1.0);
+
+	[Output] var Target0 : Real4;
+
+	function Main()
+	{
+		this.Target0 = this.Color;
+	}
+}

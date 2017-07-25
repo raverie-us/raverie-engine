@@ -1,0 +1,56 @@
+[Version:1]
+Cog 
+{
+	var Name = "RingGizmo"
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Vec3{0, 0, 0}
+		var Scale = Vec3{1, 1, 1}
+		var Rotation = Quat{0, 0, 0, 1}
+	}
+	Gizmo 
+	{
+		var Active = true
+		var ForwardEventsToChildren = true
+	}
+	Orientation 
+	{
+		var GlobalUp = Vec3{0, 1, 0}
+		var LocalOrientationBasis = Quat{0, 1, 0, -0}
+		var DefaultBases = OrientationBases.ForwardZUpY
+	}
+	MouseCapture 
+	{
+	}
+	GizmoDrag 
+	{
+		var DragMode = GizmoDragMode.Plane
+		var LineDirection = Vec3{-0.68454802, 0.728968024, 0}
+		var PlaneNormal = Vec3{1, 0, 0}
+		var NormalInWorld = false
+		var GrabMode = GizmoGrabMode.Hold
+		var AutoDrag = true
+		var DragDistance = 0
+	}
+	RingGizmo 
+	{
+		var MouseInput = true
+		var PickingPriority = 0
+		var Color = Vec4{1, 0, 0, 1}
+		var HoverColor = Vec4{0.920000017, 1, 0, 1}
+		var ViewScaled = true
+		var UseParentAsViewScaleOrigin = false
+		var DrawOnTop = true
+		var Radius = 2
+		var SelectRadius = 0.100000001
+		var DragRadiansPerPixel = 0.00999999978
+		var BackShade = false
+		var ViewAligned = false
+		var GrabArrowColor = Vec4{1, 1, 0, 1}
+		var GrabArrowLength = 1.60000002
+		var GrabArrowHeadSize = 0.119999997
+		var GrabArrowViewScaled = true
+		var GrabArrowOnTop = true
+	}
+}

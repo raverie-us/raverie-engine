@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "SpecularValue"
+		var ResourceId = 0x583b4e3115434b55
+	}
+}

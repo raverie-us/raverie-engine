@@ -1,0 +1,19 @@
+class UnitTest09
+{
+  [Static]
+  var Counter : Integer = 0;
+
+  [Static]
+  function RunMe()
+  {
+    ++UnitTest09.Counter;
+  }
+
+  // Test calling delegates
+  [Static]
+  function Test09() : Integer
+  {
+    CallBack.CallMe5Times(UnitTest09.RunMe);
+    return UnitTest09.Counter;
+  }
+}

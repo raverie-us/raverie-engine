@@ -1,0 +1,10 @@
+class UnitTest07
+{
+  // Test calling a function within another function call
+  [Static]
+  function Test07() : Integer
+  {
+    return CustomMath.Fib(n : CustomMath.Factorial(n : 4)) + CustomMath.Factorial(n : CustomMath.Fib(n : 3));
+    //return CustomMath.Double(n : CustomMath.Triple(n : 20));
+  }
+}

@@ -1,0 +1,10 @@
+// ContinueLoopNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+  function Foo()
+  {
+    continue;
+  }
+}

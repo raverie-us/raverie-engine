@@ -1,0 +1,15 @@
+// Metallic input for lighting opaque geometry.
+// Output values are mapped from a texture over the surface.
+[Pixel]
+struct MetallicMap
+{
+  [FragmentInput][StageInput] var Uv : Real2;
+  [Input] var MetallicMap : Sampler2d;
+  
+  [Output] var Metallic : Real;
+  
+  function Main()
+  {
+    this.Metallic = this.MetallicMap.Sample(this.Uv).X;
+  }
+}

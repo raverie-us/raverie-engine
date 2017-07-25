@@ -1,0 +1,88 @@
+[Vertex]
+struct SystemValues4_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVOutput][GsOut] var ApiPerspectivePosition : Real4;
+  [StageOutput][GsOut] var PrimitiveId : Integer;
+  [StageOutput][GsOut][SVInput] var VertexId : Integer;
+
+  [Main]
+  function Main()
+  {
+    var svvertex2 = SVVertex2();
+    svvertex2.VertexId = this.VertexId;
+    svvertex2.Main();
+    this.ApiPerspectivePosition = svvertex2.ApiPerspectivePosition;
+    this.PrimitiveId = svvertex2.PrimitiveId;
+    this.VertexId = svvertex2.VertexId;
+  }
+}
+[Pixel]
+struct SystemValues4_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVInput] var PrimitiveId : Integer;
+  [StageInput] var ApiPerspectivePosition : Real4;
+  [StageInput] var VertexId : Integer;
+
+  [Main]
+  function Main()
+  {
+    var svpixel2 = SVPixel2();
+    svpixel2.PrimitiveId = this.PrimitiveId;
+    svpixel2.ApiPerspectivePosition = this.ApiPerspectivePosition;
+    svpixel2.VertexId = this.VertexId;
+    svpixel2.Main();
+  }
+}
+struct SystemValues4_Geometry_Input
+{
+  [SVInput] var ApiPerspectivePosition : Real4;
+  [StageInput] var PrimitiveId : Integer;
+  [StageInput] var VertexId : Integer;
+}
+struct SystemValues4_Geometry_Output
+{
+  [SVOutput][StageOutput][GsOut] var ApiPerspectivePosition : Real4;
+  [SVOutput][GsOut] var PrimitiveId : Integer;
+  [StageOutput][GsOut] var VertexId : Integer;
+}
+[Geometry(maxVertices : 3)]
+struct SystemValues4_Geometry
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVInput] var PrimitiveId : Integer;
+
+  [Static][NoMangle]
+  function EmitVertexHelper(fragmentOutput : ref SVGeometryVertex2, compositeOutput : ref SystemValues4_Geometry_Output)
+  {
+    compositeOutput.ApiPerspectivePosition = fragmentOutput.ApiPerspectivePosition;
+    compositeOutput.PrimitiveId = fragmentOutput.PrimitiveId;
+    compositeOutput.VertexId = fragmentOutput.VertexId;
+  }
+
+  [Main]
+  function Main(input : TriangleInput[SystemValues4_Geometry_Input], output : PointOutput[SystemValues4_Geometry_Output])
+  {
+    // Copy composite inputs into fragment inputs
+    var fragmentInput = TriangleInput[SVGeometryVertex2]();
+    for(var i = 0; i < input.Count; ++i)
+    {
+      fragmentInput[i].ApiPerspectivePosition = input[i].ApiPerspectivePosition;
+      fragmentInput[i].PrimitiveId = input[i].PrimitiveId;
+      fragmentInput[i].VertexId = input[i].VertexId;
+    }
+    // Create the fragment output type
+    var fragmentOutput = GeometryStreamMover[PointOutput[SystemValues4_Geometry_Output], PointOutput[SVGeometryVertex2]].Move(output);
+
+    var svgeometry2 = SVGeometry2();
+    svgeometry2.PrimitiveId = this.PrimitiveId;
+    svgeometry2.Main(fragmentInput, fragmentOutput);
+  }
+}

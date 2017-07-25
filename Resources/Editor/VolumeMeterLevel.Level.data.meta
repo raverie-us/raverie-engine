@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "VolumeMeterLevel"
+		var ResourceId = 0x5955a245ffd86f57
+		var LoaderType = "Level"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "PointLight"
+		var ResourceId = 0x580644d674646690
+		var LoaderType = "Material"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

@@ -1,0 +1,198 @@
+// Does indirect and direct lighting calculations when rendering opaque objects.
+// Direct lighting in ForwardPass only accounts for a single directional light.
+[RunInEditor]
+class ForwardRenderer : ZilchComponent
+{
+  // If DebugDraw RenderGroups are drawn in edit mode.
+  [Property] var EditorDebugDraw : Boolean = true;
+  // If DebugDraw RenderGroups are drawn in play mode.
+  [Property] var GameDebugDraw : Boolean = true;
+  // Toggles diffuse light output.
+  [Property] var RenderDiffuse : Boolean = true;
+  // Toggles specular light output.
+  [Property] var RenderSpecular : Boolean = true;
+  // If skybox should be used for the background, uses ClearColor for background if false.
+  [Property] var RenderSkybox : Boolean = true;
+  // Cubemap Texture to use for indirect lighting and/or scene background. Undefined behavior if null or not a cubemap.
+  [Property] var Skybox : Texture = Texture.SimpleSkybox;
+  // Color for the background if not using the skybox.
+  [Property] var ClearColor : Real4 = Real4(0.0, 0.0, 0.0, 1.0);
+  // Toggles output of dynamic area lights.
+  [Property] var DirectLighting : Boolean = true;
+  // Toggles output of the image-based lighting pass that uses the skybox.
+  [Property] var IndirectLighting : Boolean = true;
+  // Arbitrary scalar for the output of IndirectLighting.
+  [Property] var IndirectIntensity : Real = 1.0;
+  // If a filmic tonemap should be used when converting lighting results from linear to gamma for monitor display.
+  [Property] var ToneMap : Boolean = true;
+  // Path to object with DirectionalLight component to use for direct lighting.
+  [Property] var DirectionalLight : CogPath = CogPath();
+
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Owner, Events.RenderTasksUpdate, this.OnRenderTasksUpdate);
+  }
+
+  function OnRenderTasksUpdate(event : RenderTasksEvent)
+  {
+    var viewportSize = event.ViewportSize;
+    var final = event.GetFinalTarget(viewportSize, TextureFormat.RGBA8);
+    
+    var colorTarget = event.GetRenderTarget(viewportSize, TextureFormat.RGBA16f);
+    var depthTarget = event.GetRenderTarget(viewportSize, TextureFormat.Depth32);
+    
+    var clearColor = Math.Pow(this.ClearColor, Real4(2.2.XXX, 1.0));
+    event.AddRenderTaskClearTarget(colorTarget, depthTarget, clearColor, 1.0);
+    
+    if (this.RenderSkybox)
+    {
+      var skybox = Skybox();
+      skybox.Skybox = this.Skybox;
+    
+      event.AddRenderTaskPostProcess(colorTarget, skybox);
+    }
+    
+    var forwardSettings = RenderSettings();
+    forwardSettings.ColorTarget = colorTarget;
+    forwardSettings.DepthTarget = depthTarget;
+    forwardSettings.CullMode = CullMode.BackFace;
+    forwardSettings.DepthSettings.DepthMode = DepthMode.Write;
+    forwardSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+    
+    // Get state of directional light
+    var activeLight = false;
+    var lightShadows = false;
+    var light = this.DirectionalLight.Cog;
+    if (light != null && light.DirectionalLight != null)
+    {
+      activeLight = true;
+      lightShadows = light.ShadowRenderer != null;
+    }
+    
+    if (activeLight && lightShadows)
+    {
+      var forwardPassShadows = ForwardPassShadows();
+      forwardPassShadows.EnvironmentBrdfLut = Texture.EnvironmentBrdfLut;
+      forwardPassShadows.DitherTexture = Texture.BlueNoise;
+      forwardPassShadows.Skybox = this.Skybox;
+      forwardPassShadows.IndirectIntensity = this.IndirectIntensity;
+      forwardPassShadows.RenderDiffuse = this.RenderDiffuse;
+      forwardPassShadows.RenderSpecular = this.RenderSpecular;
+      
+      forwardPassShadows.DirectLightColor = light.DirectionalLight.LightColor.XYZ;
+      forwardPassShadows.DirectLightDirection = light.DirectionalLight.LightDirection;
+      forwardPassShadows.DirectLightIntensity = light.DirectionalLight.LightIntensity;
+      
+      forwardPassShadows.LightTransform = light.ShadowRenderer.LightTransform;
+      forwardPassShadows.ShadowBuffer = light.ShadowRenderer.ShadowBuffer;
+      forwardPassShadows.NormalOffsetBias = light.ShadowRenderer.NormalOffsetBias;
+      
+      forwardPassShadows.DirectLightIntensity *= this.DirectLighting as Real;
+      forwardPassShadows.IndirectIntensity *= this.IndirectLighting as Real;
+      
+      event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.Opaque, forwardPassShadows);
+      
+      forwardSettings.CullMode = CullMode.Disabled;
+      event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.AlphaCut, forwardPassShadows);
+    }
+    else
+    {
+      var forwardPass = ForwardPass();
+      forwardPass.EnvironmentBrdfLut = Texture.EnvironmentBrdfLut;
+      forwardPass.DitherTexture = Texture.BlueNoise;
+      forwardPass.Skybox = this.Skybox;
+      forwardPass.IndirectIntensity = this.IndirectIntensity;
+      forwardPass.RenderDiffuse = this.RenderDiffuse;
+      forwardPass.RenderSpecular = this.RenderSpecular;
+      
+      forwardPass.DirectLightIntensity = 0.0;
+      
+      if (activeLight)
+      {
+        forwardPass.DirectLightColor = light.DirectionalLight.LightColor.XYZ;
+        forwardPass.DirectLightDirection = light.DirectionalLight.LightDirection;
+        forwardPass.DirectLightIntensity = light.DirectionalLight.LightIntensity;
+      }
+      
+      forwardPass.DirectLightIntensity *= this.DirectLighting as Real;
+      forwardPass.IndirectIntensity *= this.IndirectLighting as Real;
+      
+      event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.Opaque, forwardPass);
+      
+      forwardSettings.CullMode = CullMode.Disabled;
+      event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.AlphaCut, forwardPass);
+    }
+    
+    // Additive materials
+    var alphaSettings = RenderSettings();
+    alphaSettings.ColorTarget = colorTarget;
+    alphaSettings.DepthTarget = depthTarget;
+    alphaSettings.CullMode = CullMode.Disabled;
+    alphaSettings.BlendSettings.BlendMode = BlendMode.Separate;
+    alphaSettings.BlendSettings.BlendEquation = BlendEquation.Add;
+    alphaSettings.BlendSettings.SourceFactor = BlendFactor.SourceAlpha;
+    alphaSettings.BlendSettings.DestFactor = BlendFactor.One;
+    alphaSettings.BlendSettings.SourceFactorAlpha = BlendFactor.One;
+    alphaSettings.BlendSettings.DestFactorAlpha = BlendFactor.One;
+    alphaSettings.DepthSettings.DepthMode = DepthMode.Read;
+    alphaSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+    event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.AdditiveBlend, ColorOutput());
+    
+    // Bloom
+    if (this.Owner.Bloom != null)
+      this.Owner.Bloom.AddRenderTasks(event, colorTarget);
+    
+    // Bring final lighting to gamma space for monitor display
+    this.LinearToGamma(event, colorTarget, final);
+    
+    // Alpha materials
+    alphaSettings.ColorTarget = final;
+    alphaSettings.BlendSettings.DestFactor = BlendFactor.InvSourceAlpha;
+    event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.AlphaBlend, ColorOutput());
+    
+    this.DrawDebugObjects(event, final, depthTarget);
+  }
+  
+  function LinearToGamma(event : RenderTasksEvent, inputBuffer : RenderTarget, outputBuffer : RenderTarget)
+  {
+    if (this.ToneMap)
+    {
+      var filmicToneMap = FilmicTonemap();
+      filmicToneMap.Texture = inputBuffer.Texture;
+      event.AddRenderTaskPostProcess(outputBuffer, filmicToneMap);
+    }
+    else
+    {
+      var toGamma = ToGamma();
+      toGamma.Texture = inputBuffer.Texture;
+      event.AddRenderTaskPostProcess(outputBuffer, toGamma);
+    }
+  }
+  
+  function DrawDebugObjects(event : RenderTasksEvent, color : RenderTarget, depth : RenderTarget)
+  {
+    if (!this.EditorDebugDraw && this.Space.IsEditorMode || !this.GameDebugDraw && !this.Space.IsEditorMode)
+      return;
+    
+    var debugSettings = RenderSettings();
+    debugSettings.ColorTarget = color;
+    debugSettings.DepthTarget = depth;
+    
+    debugSettings.CullMode = CullMode.Disabled;
+    
+    debugSettings.BlendSettings.BlendMode = BlendMode.Separate;
+    debugSettings.BlendSettings.BlendEquation = BlendEquation.Add;
+    debugSettings.BlendSettings.SourceFactor = BlendFactor.SourceAlpha;
+    debugSettings.BlendSettings.DestFactor = BlendFactor.InvSourceAlpha;
+    debugSettings.BlendSettings.SourceFactorAlpha = BlendFactor.One;
+    debugSettings.BlendSettings.DestFactorAlpha = BlendFactor.One;
+    
+    debugSettings.DepthSettings.DepthMode = DepthMode.Read;
+    debugSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+    
+    event.AddRenderTaskRenderPass(debugSettings, RenderGroup.DebugDraw, ColorOutput());
+    
+    debugSettings.DepthSettings.DepthMode = DepthMode.Disabled;
+    event.AddRenderTaskRenderPass(debugSettings, RenderGroup.DebugDrawOnTop, ColorOutput());
+  }
+}

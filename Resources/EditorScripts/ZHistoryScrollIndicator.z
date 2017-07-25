@@ -1,0 +1,150 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Main controller for scrolling the operation history view.
+////////////////////////////////////////////////////////////////////////////////
+class ZHistoryScrollIndicator : ZilchComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  [Dependency] var MouseCapture : MouseCapture;
+  
+    // The operation history view.
+  [Property] var ScrollAreaObject : CogPath;
+  
+  var IsGrabbed : Boolean = false;
+  var GrabOffest : Real3;
+  
+  var OriginalSize : Real2;
+  
+  var ScrollPercentage : Real = 0;
+  
+  
+  /******************************************************************************/
+  function Initialize(init : CogInitializer)
+  {
+    this.OriginalSize = this.Owner.UiWidget.Size;
+    
+    Zero.Connect(this.Owner, Events.MouseDown, this.OnMouseDown);
+    Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+    Zero.Connect(this.Owner, Events.MouseDragMove, this.OnMouseMove);
+    
+    Zero.Connect(this.ScrollAreaObject.Cog, Events.AreaChanged, this.OnAreaChanged);
+    Zero.Connect(this.ScrollAreaObject.Cog, Events.MouseScroll, this.OnMouseScroll);
+    
+    Zero.Connect(this.ScrollAreaObject.Cog.ZOperationHistory.UndoView.Cog, Events.ChildAttached, this.OnChildrenModified);
+    Zero.Connect(this.ScrollAreaObject.Cog.ZOperationHistory.RedoView.Cog, Events.RedoRowsCleared, this.OnChildrenModified);
+    
+    this.UpdateSize();
+  }
+  
+  /******************************************************************************/
+  function WorldMousePosition(viewport : CameraViewport) : Real3
+  {
+    return viewport.ScreenToWorldPlane(
+      Zero.Mouse.ClientPosition,
+      this.UiWidget.RootWidget.Owner.Transform.TransformNormal(Real3.ZAxis),
+      this.Owner.Transform.WorldTranslation);
+  }
+   
+  /******************************************************************************/
+  // Determine the size of the scroll bar indicator.
+  function UpdateSize()
+  {
+    var operationHistory = this.ScrollAreaObject.Cog.ZOperationHistory;
+    var scrollRatio = operationHistory.ScrollRatio;
+    
+      // No need to show the scroll bar (or make space for it, [ie. "hide" it]) if there is nothing to scroll.
+    if(scrollRatio == 0.0)
+    {
+      this.UiWidget.Size = Real2(0, 0);
+      this.UiWidget.ParentWidget.Size = Real2(0, this.UiWidget.ParentWidget.Size.Y);
+      return;
+    }
+    
+      // "Unhide" scroll bar.
+    var newSize = Math.Max(1.0, this.UiWidget.ParentWidget.Size.Y * scrollRatio);
+    this.UiWidget.Size = Real2(this.OriginalSize.X, newSize);
+    this.UiWidget.ParentWidget.Size = this.UiWidget.Size;
+  }
+  
+  /******************************************************************************/
+  function OnAreaChanged(event : AreaEvent)
+  {
+    this.UpdateSize();
+  }
+  
+  /******************************************************************************/
+  function OnChildrenModified(event : Event)
+  {
+    this.UpdateSize();
+  }
+  
+  /******************************************************************************/
+  function OnMouseScroll(event : ViewportMouseEvent)
+  {
+      // Nothing to scroll.
+    if(this.UiWidget.Size.Y == 0.0)
+      return;
+    
+    var scrollAmount = 0.0;
+    var childrenCount = this.ScrollAreaObject.Cog.ZOperationHistory.ChildCount;
+    
+    if(childrenCount > 0)
+      scrollAmount = 1.0 / childrenCount * 2;
+
+    this.ScrollPercentage += scrollAmount * -event.Scroll.Y;
+    
+    this.ApplyScroll();
+  }
+  
+  /******************************************************************************/
+  function OnMouseMove(event : ViewportMouseEvent)
+  {
+    if(!this.IsGrabbed)
+      return;
+    
+    var parentWidget = this.Owner.Parent.UiWidget;
+    var parentTop = parentWidget.RootTranslation;
+    var parentBottom = parentWidget.RootTranslation + parentWidget.Size;
+    var worldTop = parentWidget.RootToWorld(parentTop);
+    var worldBottom = parentWidget.RootToWorld(parentBottom);
+    
+    var lengthOfScrollArea = Math.Abs(worldTop.Y - worldBottom.Y - this.UiWidget.Size.Y);
+    
+      // Move the top-left position (origin) of the scroll bar to the current mouse position.
+      // Then offset by grab point in scroll bar to match exact position.
+    var worldPos = this.WorldMousePosition(event.CameraViewport) - this.GrabOffest;
+
+    var scrollPercentage = (worldTop.Y - worldPos.Y) / lengthOfScrollArea;
+    this.ScrollPercentage = scrollPercentage;
+    
+    this.ApplyScroll();
+  }
+  
+  /******************************************************************************/
+  function OnMouseUp(event : ViewportMouseEvent)
+  {
+    this.MouseCapture.ReleaseCapture();
+    this.IsGrabbed = false;
+  }
+  
+  /******************************************************************************/
+  function OnMouseDown(event : ViewportMouseEvent)
+  {
+    this.MouseCapture.Capture(event);
+    this.IsGrabbed = true;
+
+    this.GrabOffest = this.WorldMousePosition(event.CameraViewport) - this.Owner.Transform.WorldTranslation;
+  }
+  
+  /******************************************************************************/
+  // Determine the amount to scroll up/down the operation histroy view.
+  function ApplyScroll()
+  {
+    this.ScrollPercentage = Math.Clamp(this.ScrollPercentage, 0, 1);
+    var parentWidget = this.Owner.Parent.UiWidget;
+    
+    this.UiWidget.LocalTranslation = Real2(0, (parentWidget.Size.Y - this.UiWidget.Size.Y) * this.ScrollPercentage);
+    
+    this.ScrollAreaObject.Cog.ZOperationHistory.SetVerticalScrollPosition(this.ScrollPercentage);
+  }
+  
+}

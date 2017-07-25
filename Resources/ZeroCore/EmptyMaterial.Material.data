@@ -1,0 +1,7 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+	}
+}

@@ -1,0 +1,15 @@
+// Boiler plate vertex shader fragment used in generated shaders for post processes.
+[Vertex][Protected]
+struct PostVertex
+{
+  [Input] var LocalPosition : Real3;
+
+  [Input][Output] var Uv : Real2;
+
+  [Output] var PerspectivePosition : Real4;
+
+  function Main()
+  {
+    this.PerspectivePosition = Real4(this.LocalPosition, 1.0);
+  }
+}

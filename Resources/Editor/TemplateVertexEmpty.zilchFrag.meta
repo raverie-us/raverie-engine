@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "TemplateVertexEmpty"
+		var ResourceId = 0x58207e14e6bbd586
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Vertex Empty"
+		var Description = "Empty fragment"
+		var SortWeight = 100
+		var Category = "Vertex"
+		var CategorySortWeight = 20
+	}
+}

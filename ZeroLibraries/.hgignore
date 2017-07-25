@@ -1,0 +1,11 @@
+syntax: glob
+*.tlog
+*.lastbuildstate
+*.pdb
+*.unsuccessfulbuild
+*.log
+*.idb
+*.user
+
+subinclude:AudioEngine/.hgignore
+subinclude:Zilch/.hgignore

@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Library">
+      <UniqueIdentifier>{25d4a9a2-6f75-46da-b903-6aa91b87d288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\SweepAndPrune">
+      <UniqueIdentifier>{6af4b59b-2f8c-4678-828a-c96fed25268b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\NSquared">
+      <UniqueIdentifier>{740406b5-e4e5-4bdb-a519-ac6b34ad120f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\BspTree">
+      <UniqueIdentifier>{6379cf65-2b02-4dee-a002-a932bee32706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\KDTree">
+      <UniqueIdentifier>{bda33063-4315-4c26-9f7c-d2e1637fa6ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\HHDB">
+      <UniqueIdentifier>{c9a197ea-2aba-430a-b9d2-13f61816a908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\AabbTree">
+      <UniqueIdentifier>{1ff007d4-a6a6-4e53-8174-30a8e9acfb2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\AabbTree\StaticAabbTree">
+      <UniqueIdentifier>{415b6edd-dc0e-4912-ba68-77d5061f3713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\AabbTree\DynamicAabbTree">
+      <UniqueIdentifier>{031c2274-ea65-4043-917f-e08a0a9679c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{3c24c625-6c96-4fd3-adaa-b992de3ee412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BroadPhase">
+      <UniqueIdentifier>{904ca3a4-d1e7-4e69-9049-2924454ee8b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BroadPhase\BroadPhases">
+      <UniqueIdentifier>{0d5c2c93-8874-4f1e-9ec7-12c56e9fe41e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BroadPhase\Interface">
+      <UniqueIdentifier>{515d3e93-1b42-4f8e-8b1e-e8b142603bac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{b3e96e53-4b73-4937-8c71-138ee09ef008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RayCasting">
+      <UniqueIdentifier>{0af0d4b1-34ff-40be-b64c-c60d1076d64d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BroadPhase\Tracker">
+      <UniqueIdentifier>{2a19c96d-275c-4185-891a-d5bc7c12e5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BroadPhase\BroadPhases\DynamicAabbTrees">
+      <UniqueIdentifier>{a64ff3b9-f43d-404c-90c7-3e77cfb413d9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ProxyCast.cpp">
+      <Filter>Core\RayCasting</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBoxBroadPhase.cpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphereBroadPhase.cpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClCompile>
+    <ClCompile Include="NSquaredBroadPhase.cpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClCompile>
+    <ClCompile Include="SapBroadPhase.cpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClCompile>
+    <ClCompile Include="BroadPhasePackage.cpp">
+      <Filter>BroadPhase\Tracker</Filter>
+    </ClCompile>
+    <ClCompile Include="BroadPhaseTracker.cpp">
+      <Filter>BroadPhase\Tracker</Filter>
+    </ClCompile>
+    <ClCompile Include="BroadPhase.cpp">
+      <Filter>BroadPhase\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="BroadPhaseCreator.cpp">
+      <Filter>BroadPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="AvlDynamicAabbTreeBroadPhase.cpp">
+      <Filter>BroadPhase\BroadPhases\DynamicAabbTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicAabbTreeBroadPhase.cpp">
+      <Filter>BroadPhase\BroadPhases\DynamicAabbTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticAabbTreeBroadPhase.cpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialPartitionStandard.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AabbTreeMethods.hpp">
+      <Filter>Library\AabbTree</Filter>
+    </ClInclude>
+    <ClInclude Include="AabbTreeNode.hpp">
+      <Filter>Library\AabbTree</Filter>
+    </ClInclude>
+    <ClInclude Include="ProxyCast.hpp">
+      <Filter>Core\RayCasting</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBoxBroadPhase.hpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphereBroadPhase.hpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClInclude>
+    <ClInclude Include="NSquaredBroadPhase.hpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticAabbTree.hpp">
+      <Filter>Library\AabbTree\StaticAabbTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseNSquared.hpp">
+      <Filter>Library\NSquared</Filter>
+    </ClInclude>
+    <ClInclude Include="Sap.hpp">
+      <Filter>Library\SweepAndPrune</Filter>
+    </ClInclude>
+    <ClInclude Include="SapContainers.hpp">
+      <Filter>Library\SweepAndPrune</Filter>
+    </ClInclude>
+    <ClInclude Include="SapBroadPhase.hpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClInclude>
+    <ClInclude Include="NSquared.hpp">
+      <Filter>Library\NSquared</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.hpp">
+      <Filter>Library\NSquared</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.hpp">
+      <Filter>Library\NSquared</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhasePackage.hpp">
+      <Filter>BroadPhase\Tracker</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhaseTracker.hpp">
+      <Filter>BroadPhase\Tracker</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhase.hpp">
+      <Filter>BroadPhase\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhaseCreator.hpp">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhaseRangeTransformations.hpp">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhaseProxy.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhaseRanges.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleCastCallbacks.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AvlDynamicAabbTree.hpp">
+      <Filter>Library\AabbTree\DynamicAabbTree</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicAabbTree.hpp">
+      <Filter>Library\AabbTree\DynamicAabbTree</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicTreeHelpers.hpp">
+      <Filter>Library\AabbTree\DynamicAabbTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDynamicAabbTree.hpp">
+      <Filter>Library\AabbTree\DynamicAabbTree</Filter>
+    </ClInclude>
+    <ClInclude Include="AvlDynamicAabbTreeBroadPhase.hpp">
+      <Filter>BroadPhase\BroadPhases\DynamicAabbTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicAabbTreeBroadPhase.hpp">
+      <Filter>BroadPhase\BroadPhases\DynamicAabbTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDynamicAabbTreeBroadPhase.hpp">
+      <Filter>BroadPhase\BroadPhases\DynamicAabbTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticAabbTreeBroadPhase.hpp">
+      <Filter>BroadPhase\BroadPhases</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialPartitionStandard.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AabbTreeMethods.inl">
+      <Filter>Library\AabbTree</Filter>
+    </None>
+    <None Include="StaticAabbTree.inl">
+      <Filter>Library\AabbTree\StaticAabbTree</Filter>
+    </None>
+    <None Include="AabbTreeNode.inl">
+      <Filter>Library\AabbTree</Filter>
+    </None>
+    <None Include="BaseNSquared.inl">
+      <Filter>Library\NSquared</Filter>
+    </None>
+    <None Include="Sap.inl">
+      <Filter>Library\SweepAndPrune</Filter>
+    </None>
+    <None Include="AvlDynamicAabbTree.inl">
+      <Filter>Library\AabbTree\DynamicAabbTree</Filter>
+    </None>
+    <None Include="DynamicAabbTree.inl">
+      <Filter>Library\AabbTree\DynamicAabbTree</Filter>
+    </None>
+    <None Include="BaseDynamicAabbTree.inl">
+      <Filter>Library\AabbTree\DynamicAabbTree</Filter>
+    </None>
+    <None Include="BaseDynamicAabbTreeBroadPhase.inl">
+      <Filter>BroadPhase\BroadPhases\DynamicAabbTrees</Filter>
+    </None>
+  </ItemGroup>
+</Project>

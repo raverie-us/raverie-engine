@@ -1,0 +1,23 @@
+[Version:1]
+NetChannelConfig 
+{
+	var DetectOutgoingChanges = true
+	var AcceptIncomingChanges = true
+	var EventOnOutgoingPropertyChange = false
+	var EventOnIncomingPropertyChange = false
+	var AuthorityMode = AuthorityMode.Fixed
+	var AuthorityDefault = Authority.Server
+	var AllowRelay = true
+	var AllowNapping = true
+	var AwakeDuration = 10
+	var DetectionMode = DetectionMode.Manumatic
+	var AwakeDetectionInterval = 1
+	var NapDetectionInterval = 2
+	var ReplicateOnOnline = true
+	var ReplicateOnChange = true
+	var ReplicateOnOffline = true
+	var SerializationMode = SerializationMode.Changed
+	var ReliabilityMode = ReliabilityMode.Unreliable
+	var TransferMode = TransferMode.Sequenced
+	var AccurateTimestampOnChange = false
+}

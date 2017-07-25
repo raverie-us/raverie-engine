@@ -1,0 +1,57 @@
+// Compares a pixel depth with a depth buffer rendered from the a light's perspective
+// to determine if the pixel is visible to the light.
+[Pixel]
+struct ShadowMapping
+{
+  [BuiltInInput] var PerspectiveToView : Real4x4;
+  [BuiltInInput] var ViewToWorld : Real4x4;
+  
+  [StageInput] var PerspectivePosition : Real4;
+  
+  [FragmentInput] var GeoNormal : Real3;
+  [FragmentInput] var GeoPosition : Real3;
+  
+  [Input] var LightTransform : Real4x4;
+  [Input] var ShadowBuffer : SamplerShadow2d;
+  [Input] var NormalOffsetBias : Real = 0.1;
+  
+  [Output] var ShadowFactor : Real;
+  
+  function Main()
+  {
+    var viewPosition = this.GeoPosition + this.GeoNormal * this.NormalOffsetBias;
+    var worldPosition = Math.MultiplyPoint(this.ViewToWorld, viewPosition);
+    var shadowPosition = Math.Multiply(this.LightTransform, Real4(worldPosition, 1.0));
+    
+    var uv = shadowPosition.XYZ / shadowPosition.W;
+    uv = uv * Real3(0.5, -0.5, 0.5) + Real3(0.5);
+    
+    this.ShadowFactor = ShadowMapping.ComputePcf5x5(uv, &this.ShadowBuffer);
+  }
+  
+  [Static]
+  function ComputePcf5x5(uv : Real3, shadowBuffer : ref SamplerShadow2d) : Real
+  {
+    var shadowFactor = 0.0;
+    
+    var step = Real2(1.0) / shadowBuffer.SampleSize(0);
+    for (var v = -2; v <= 2; ++v)
+    {
+      for (var u = -2; u <= 2; ++u)
+      {
+        shadowFactor += shadowBuffer.Sample(uv + Real3(Real2(u, v) * step, 0.0));
+      }
+    }
+    shadowFactor /= 25.0;
+    
+    // Apply inverse gamma so that when scene is brought to gamma space
+    // the shadow interpolation looks perceptively linear
+    shadowFactor = Math.Pow(shadowFactor, 2.2);
+    
+    // If outside the shadow map then we want the ShadowFactor to be 1.0 (fully lit)
+    var outsideShadow = uv.X < 0.0 || uv.Y < 0.0 || uv.X > 1.0 || uv.Y > 1.0;
+    shadowFactor = Math.Max(shadowFactor, (outsideShadow as Real));
+    
+    return shadowFactor;
+  }
+}

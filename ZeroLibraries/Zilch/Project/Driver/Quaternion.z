@@ -1,0 +1,84 @@
+class QuatTests
+{
+  [Static]
+  function TestEqual(q1 : Quaternion, q2 : Quaternion) : Boolean
+  {
+    if(q1.X != q2.X || q1.Y != q2.Y ||
+       q1.Z != q2.Z || q1.W != q2.W)
+    {
+      return false;
+    }
+    return true;
+  }
+  
+  [Static]
+  function QuatNormalizeTest1() : Quaternion
+  {
+    var q1 = local Quaternion(1.0,2.0,3.0,4.0);
+
+    var ret = Math.Normalize(q1);
+
+    return ret;
+  }
+  
+  [Static]
+  function QuatInvertTest1() : Quaternion
+  {
+    var q1 = local Quaternion(4.0,4.0,2.0,6.0);
+
+    var ret = Math.Invert(q1);
+
+    return ret;
+  }
+  
+  [Static]
+  function QuatInvertTest2() : Quaternion
+  {
+    var q1 = local Quaternion(1.0,0.0,0.0,0.0);
+
+    var ret = Math.Invert(q1);
+
+    return ret;
+  }
+  
+  [Static]
+  function QuatInvertTest3() : Quaternion
+  {
+    var q1 = local Quaternion(2.0,-3.0,5.0,7.0);
+
+    var ret = Math.Invert(q1);
+
+    return ret;
+  }
+  
+  [Static]
+  function QuatSlerpTest() : Quaternion
+  {
+    var q1 = local Quaternion(0.0,0.0,0.70710678118654752440084436210485,0.70710678118654752440084436210485);
+    var q2 = local Quaternion(0.0,0.0,0.0,1.0);
+    //var ret = Math.Slerp(start : q1,end : q2, t : 0.75);
+    var ret = Math.Slerp(q1, q2, 0.75);
+    return ret;
+  }
+  
+  [Static]
+  function QuatTransformQuat() : Quaternion
+  {
+    var q1 = local Quaternion(-1.0,-2.0,-3.0,-4.0);
+    var q2 = local Quaternion(6.0,8.0,10.0,12.0);
+    //var ret = Math.Transform(the : q2, by : q1);
+    var ret = Math.Transform(q2, q1);
+    return ret;
+  }
+  
+  [Static]
+  function QuatTransformVec3() : Real3
+  {
+    var q = local Quaternion(1.0,0.0,0.0,0.0);
+    var v = local Real3(1.0,1.0,1.0);
+    var ret = Math.Transform(the : v, by : q);
+    return ret;
+  }
+  
+}
+

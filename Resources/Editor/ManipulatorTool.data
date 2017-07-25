@@ -1,0 +1,21 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "ManipulatorTool",
+	},
+	Archetyped = 
+	{
+		string Name = "52a18d3355a347a9:ManipulatorTool",
+	},
+	MouseCapture = 
+	{
+	},
+	ManipulatorTool = 
+	{
+	},
+},

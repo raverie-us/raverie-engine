@@ -1,0 +1,161 @@
+// The bloom "bright pass" takes an input image and separates sufficiently
+// bright parts from the rest. A part of the image is sufficiently bright
+// if its luminance value exceeds the user-defined threshold.
+[Pixel][PostProcess]
+struct BloomBrightPass
+{
+  [BuiltInInput] var ViewportSize : Real2;
+  [StageInput] var Uv : Real2;
+  
+  [Input] var Texture : Sampler2d;
+  [Input] var Intensity : Real;
+  [Input] var Threshold : Real;
+  
+  [Output] var Target0 : Real4;
+
+  function Main()
+  {
+    var color = this.Texture.Sample(this.Uv).XYZ;
+    
+    // Get the luminance of the color (see the Utility fragment file for details on this function)
+    var luminance = Utility.Luminance(color);
+    
+    // Calculate the intensity of the bloom that is triggered. If the
+    // luminance falls bellow the threshold, no bloom is triggered.
+    var intensity = this.Intensity * Math.Max(luminance - this.Threshold, 0.0);
+    
+    // Output the color scaled by intensity
+    this.Target0 = Real4(color * intensity, 1.0);
+  }
+}
+
+// Filters for downsampling bloom buffers
+// Next Generation Post Processing in Call of Duty Advanced Warfare, Jorge Jimenez, Siggraph 2014
+// http://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare
+// http://graphicrants.blogspot.com/2013/12/tone-mapping.html
+[Pixel][PostProcess]
+struct Filter13Tap
+{
+  [StageInput] var Uv : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var InverseTextureSize : Real2;
+  
+  [Output] var Target0 : Real4;
+  
+  [Static] var PixelOffsets : FixedArray[Real2, 13] = FixedArray[Real2, 13]()
+  {
+    // Indeces of tap locations
+    // 0-------1-------2
+    // |   |   |   |   |
+    // |---9------10---|
+    // |   |   |   |   |
+    // 3-------4-------5
+    // |   |   |   |   |
+    // |--11---|--12---|
+    // |   |   |   |   |
+    // 6-------7-------8
+    Real2(-2.0, -2.0), Real2(0.0, -2.0), Real2(2.0, -2.0),
+    Real2(-2.0,  0.0), Real2(0.0,  0.0), Real2(2.0,  0.0),
+    Real2(-2.0,  2.0), Real2(0.0,  2.0), Real2(2.0,  2.0),
+    
+    Real2(-1.0, -1.0), Real2(1.0, -1.0),
+    Real2(-1.0,  1.0), Real2(1.0,  1.0)
+  };
+  
+  // The five 2x2 samples that are individually 
+  [Static] var Indeces0 : FixedArray[Integer, 4] = FixedArray[Integer, 4]() {0, 1, 3, 4};
+  [Static] var Indeces1 : FixedArray[Integer, 4] = FixedArray[Integer, 4]() {1, 2, 4, 5};
+  [Static] var Indeces2 : FixedArray[Integer, 4] = FixedArray[Integer, 4]() {3, 4, 6, 7};
+  [Static] var Indeces3 : FixedArray[Integer, 4] = FixedArray[Integer, 4]() {4, 5, 7, 8};
+  [Static] var Indeces4 : FixedArray[Integer, 4] = FixedArray[Integer, 4]() {9, 10, 11, 12};
+  
+  function Main()
+  {
+    var samples : FixedArray[Real3, 13] = FixedArray[Real3, 13]();
+    for (var i = 0; i < 13; ++i)
+    {
+      var pixelOffset = Filter13Tap.PixelOffsets[i] * this.InverseTextureSize;
+      samples[i] = this.Texture.Sample(this.Uv + pixelOffset).XYZ;
+    }
+    
+    var average0 = Real3(0.0);
+    var average1 = Real3(0.0);
+    var average2 = Real3(0.0);
+    var average3 = Real3(0.0);
+    var average4 = Real3(0.0);
+    
+    for (var i = 0; i < 4; ++i)
+    {
+      average0 += samples[Filter13Tap.Indeces0[i]];
+      average1 += samples[Filter13Tap.Indeces1[i]];
+      average2 += samples[Filter13Tap.Indeces2[i]];
+      average3 += samples[Filter13Tap.Indeces3[i]];
+      average4 += samples[Filter13Tap.Indeces4[i]];
+    }
+    
+    // Whole equation has been multiplied by 0.25 (instead of dividing every average individually by 4)
+    var average = average4 * 0.125 + (average0 + average1 + average2 + average3) * 0.03125;
+    
+    this.Target0 = Real4(average, 1.0);
+  }
+}
+
+// Filter for the first bloom downsample to mitigate flickering
+[Pixel][PostProcess]
+struct Filter13TapPartialKarisAverage
+{
+  [StageInput] var Uv : Real2;
+  [Input] var Texture : Sampler2d;
+  [Input] var InverseTextureSize : Real2;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    // Get the samples and compute the luminance weights
+    var samples : FixedArray[Real3, 13] = FixedArray[Real3, 13]();
+    var weights : FixedArray[Real, 13] = FixedArray[Real, 13]();
+    for (var i = 0; i < 13; ++i)
+    {
+      var pixelOffset = Filter13Tap.PixelOffsets[i] * this.InverseTextureSize;
+      samples[i] = this.Texture.Sample(this.Uv + pixelOffset).XYZ;
+      weights[i] = 1.0 / (1.0 + Utility.Luminance(samples[i]));
+    }
+    
+    var average0 = Real3(0.0);
+    var average1 = Real3(0.0);
+    var average2 = Real3(0.0);
+    var average3 = Real3(0.0);
+    var average4 = Real3(0.0);
+    
+    var weightSum0 = 0.0;
+    var weightSum1 = 0.0;
+    var weightSum2 = 0.0;
+    var weightSum3 = 0.0;
+    var weightSum4 = 0.0;
+    
+    for (var i = 0; i < 4; ++i)
+    {
+      average0 += samples[Filter13Tap.Indeces0[i]] * weights[Filter13Tap.Indeces0[i]];
+      average1 += samples[Filter13Tap.Indeces1[i]] * weights[Filter13Tap.Indeces1[i]];
+      average2 += samples[Filter13Tap.Indeces2[i]] * weights[Filter13Tap.Indeces2[i]];
+      average3 += samples[Filter13Tap.Indeces3[i]] * weights[Filter13Tap.Indeces3[i]];
+      average4 += samples[Filter13Tap.Indeces4[i]] * weights[Filter13Tap.Indeces4[i]];
+      weightSum0 += weights[Filter13Tap.Indeces0[i]];
+      weightSum1 += weights[Filter13Tap.Indeces1[i]];
+      weightSum2 += weights[Filter13Tap.Indeces2[i]];
+      weightSum3 += weights[Filter13Tap.Indeces3[i]];
+      weightSum4 += weights[Filter13Tap.Indeces4[i]];
+    }
+    
+    average0 /= weightSum0;
+    average1 /= weightSum1;
+    average2 /= weightSum2;
+    average3 /= weightSum3;
+    average4 /= weightSum4;
+    
+    var average = average4 * 0.5 + (average0 + average1 + average2 + average3) * 0.125;
+    
+    this.Target0 = Real4(average, 1.0);
+  }
+}

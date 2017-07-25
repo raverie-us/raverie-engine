@@ -1,0 +1,14 @@
+// ConditionMustBeABooleanType
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    var i = 5;
+    while (i)
+    {
+    }
+  }
+}

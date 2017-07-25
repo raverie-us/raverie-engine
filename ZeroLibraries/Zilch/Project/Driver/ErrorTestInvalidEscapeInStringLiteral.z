@@ -1,0 +1,9 @@
+// InvalidEscapeInStringLiteral
+
+class Program
+{
+  function static Main()
+  {
+    Console.WriteLine("blah \kblah"
+  }
+}

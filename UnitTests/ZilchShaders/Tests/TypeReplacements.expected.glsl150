@@ -1,0 +1,70 @@
+#version 150
+//----- Shader Inputs/Outputs -----
+
+//----- Struct Definitions -----
+struct TypeReplacements
+{
+  int Dummy;
+};
+
+//----- Forward Declarations -----
+void _TypeReplacementsPreConstructor(inout TypeReplacements self);
+TypeReplacements _TypeReplacementsConstructor();
+void _TypeReplacementsBasicTypes(inout TypeReplacements self);
+void _TypeReplacementsMain(inout TypeReplacements self);
+
+//----- Global Variable Declarations -----
+//----- TypeReplacements Functions -----
+void _TypeReplacementsPreConstructor(inout TypeReplacements self)
+{
+  self.Dummy = 0;
+}
+
+TypeReplacements _TypeReplacementsConstructor()
+{
+  TypeReplacements self;
+  _TypeReplacementsPreConstructor(self);
+  return self;
+}
+
+void _TypeReplacementsBasicTypes(inout TypeReplacements self)
+{
+  int _a = int(0);
+  float _b = float(0.0);
+  bool _c = bool(false);
+  
+  ivec2 _i2 = ivec2(0, 0);
+  ivec3 _i3 = ivec3(0, 0, 0);
+  ivec4 _i4 = ivec4(0, 0, 0, 0);
+  vec2 _r2 = vec2(0.0, 0.0);
+  vec3 _r3 = vec3(0.0, 0.0, 0.0);
+  vec4 _r4 = vec4(0.0, 0.0, 0.0, 0.0);
+  bvec2 _b2 = bvec2(false, false);
+  bvec3 _b3 = bvec3(false, false, false);
+  bvec4 _b4 = bvec4(false, false, false, false);
+  
+  
+  //var i22 = Integer2x2();
+  //var i23 = Integer2x3();
+  //var i24 = Integer2x4();
+  //var i32 = Integer3x2();
+  //var i33 = Integer3x3();
+  //var i34 = Integer3x4();
+  //var i42 = Integer4x2();
+  //var i43 = Integer4x3();
+  //var i44 = Integer4x4();
+  mat2x2 _r22 = mat2x2(0.0, 0.0, 0.0, 0.0);
+  mat2x3 _r23 = mat2x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  mat2x4 _r24 = mat2x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  mat3x2 _r32 = mat3x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  mat3x3 _r33 = mat3x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  mat3x4 _r34 = mat3x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  mat4x2 _r42 = mat4x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  mat4x3 _r43 = mat4x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  mat4x4 _r44 = mat4x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+}
+
+void _TypeReplacementsMain(inout TypeReplacements self)
+{
+}
+

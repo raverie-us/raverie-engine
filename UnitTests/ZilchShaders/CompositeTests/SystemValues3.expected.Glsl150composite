@@ -1,0 +1,77 @@
+[Vertex]
+struct SystemValues3_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVOutput][GsOut] var ApiPerspectivePosition : Real4;
+  [SVInput] var VertexId : Integer;
+
+  [Main]
+  function Main()
+  {
+    var svvertex1 = SVVertex1();
+    svvertex1.VertexId = this.VertexId;
+    svvertex1.Main();
+    this.ApiPerspectivePosition = svvertex1.ApiPerspectivePosition;
+  }
+}
+[Pixel]
+struct SystemValues3_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVInput] var PrimitiveId : Integer;
+  [SVOutput] var PixelDepth : Real;
+
+  [Main]
+  function Main()
+  {
+    var svpixel1 = SVPixel1();
+    svpixel1.PrimitiveId = this.PrimitiveId;
+    svpixel1.Main();
+    this.PixelDepth = svpixel1.PixelDepth;
+  }
+}
+struct SystemValues3_Geometry_Input
+{
+  [SVInput] var ApiPerspectivePosition : Real4;
+}
+struct SystemValues3_Geometry_Output
+{
+  [SVOutput] var ApiPerspectivePosition : Real4;
+  [SVOutput][GsOut] var PrimitiveId : Integer;
+}
+[Geometry(maxVertices : 3)]
+struct SystemValues3_Geometry
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVInput] var PrimitiveId : Integer;
+
+  [Static][NoMangle]
+  function EmitVertexHelper(fragmentOutput : ref SVGeometryVertex1, compositeOutput : ref SystemValues3_Geometry_Output)
+  {
+    compositeOutput.ApiPerspectivePosition = fragmentOutput.ApiPerspectivePosition;
+    compositeOutput.PrimitiveId = fragmentOutput.PrimitiveId;
+  }
+
+  [Main]
+  function Main(input : TriangleInput[SystemValues3_Geometry_Input], output : PointOutput[SystemValues3_Geometry_Output])
+  {
+    // Copy composite inputs into fragment inputs
+    var fragmentInput = TriangleInput[SVGeometryVertex1]();
+    for(var i = 0; i < input.Count; ++i)
+    {
+      fragmentInput[i].ApiPerspectivePosition = input[i].ApiPerspectivePosition;
+    }
+    // Create the fragment output type
+    var fragmentOutput = GeometryStreamMover[PointOutput[SystemValues3_Geometry_Output], PointOutput[SVGeometryVertex1]].Move(output);
+
+    var svgeometry1 = SVGeometry1();
+    svgeometry1.PrimitiveId = this.PrimitiveId;
+    svgeometry1.Main(fragmentInput, fragmentOutput);
+  }
+}

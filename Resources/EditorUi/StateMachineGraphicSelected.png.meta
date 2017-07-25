@@ -1,0 +1,15 @@
+ImageContent = 
+{
+	TextureBuilder = 
+	{
+		string Name = "StateMachineGraphicSelected",
+		uint64 ResourceId = 51bfbbfff2dd91c8,
+		string Layer = "",
+		OutputTextureFormat Format = RGBA8,
+		FixPowerOf2 FixPowerOf2 = Auto,
+		ImageFilter ResizeFilter = Cubic,
+		bool GenerateMipMaps = true,
+		bool NormalizeMips = false,
+		ImageFilter MipFilter = Cubic,
+	},
+},

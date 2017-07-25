@@ -1,0 +1,16 @@
+[Version:1]
+TextContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"OperationHistory"
+		}
+	}
+	ZilchScriptBuilder 
+	{
+		var Name = "ZHistoryScrollIndicator"
+		var ResourceId = 0x583bef37a8395817
+	}
+}

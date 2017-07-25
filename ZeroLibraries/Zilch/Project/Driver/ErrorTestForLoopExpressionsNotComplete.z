@@ -1,0 +1,13 @@
+// ForLoopExpressionsNotComplete
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function Foo()
+  {
+    for (j; i < 10; ++i
+    {
+    }
+  }
+}

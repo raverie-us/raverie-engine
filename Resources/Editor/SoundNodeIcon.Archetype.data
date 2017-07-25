@@ -1,0 +1,306 @@
+[Version:1]
+Cog 
+{
+	var Name = "SoundNodeIcon"
+	var LinkId = 1
+	Transform 
+	{
+		var Translation = Real3{221.410751, -118.086723, 0}
+		var Scale = Real3{1, 1, 1}
+		var Rotation = Quaternion{0, 0, 0, 1}
+	}
+	Area 
+	{
+		var Size = Real2{78, 28}
+		var Origin = Location.Center
+	}
+	UiWidget 
+	{
+		var Active = true
+		var Visible = true
+		var Interactive = true
+		var InLayout = false
+		var ClipChildren = false
+		var CanTakeFocus = false
+		var LocalColor = Real4{1, 1, 1, 1}
+		var HierarchyColor = Real4{1, 1, 1, 1}
+		var SizePolicyX = UiSizePolicy.Fixed
+		var SizePolicyY = UiSizePolicy.Fixed
+		var FlexSize = Real2{1, 1}
+		var AbsoluteMinSize = Real2{1, 1}
+		var VerticalAlignment = UiVerticalAlignment.Top
+		var HorizontalAlignment = UiHorizontalAlignment.Left
+		var MarginLeft = 0
+		var MarginTop = 0
+		var MarginRight = 0
+		var MarginBottom = 0
+		var DockMode = UiDockMode.Left
+	}
+	Hierarchy 
+	{
+		Cog [Id:0x59555f1a09240a15]
+		{
+			var Name = "Box"
+			var LinkId = 2
+			Transform 
+			{
+				var Translation = Real3{0, 0, 1.39999998}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			Sprite 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "582c575af53d18c9:AlphaSprite"
+				var VertexColor = Real4{0.207843155, 0.207843155, 0.207843155, 1}
+				var GeometryMode = SpriteGeometryMode.ZPlane
+				var SpriteSource = "5275aa4d802dd6dc:Square"
+				var FlipX = false
+				var FlipY = false
+				var AnimationActive = true
+				var AnimationSpeed = 1
+				var StartFrame = 0
+			}
+			Area 
+			{
+				var Size = Real2{78, 28}
+				var Origin = Location.Center
+			}
+			UiWidget 
+			{
+				var Active = true
+				var Visible = true
+				var Interactive = true
+				var InLayout = false
+				var ClipChildren = false
+				var CanTakeFocus = false
+				var LocalColor = Real4{1, 1, 1, 1}
+				var HierarchyColor = Real4{1, 1, 1, 1}
+				var SizePolicyX = UiSizePolicy.Auto
+				var SizePolicyY = UiSizePolicy.Auto
+				var FlexSize = Real2{1, 1}
+				var AbsoluteMinSize = Real2{1, 1}
+				var VerticalAlignment = UiVerticalAlignment.Top
+				var HorizontalAlignment = UiHorizontalAlignment.Left
+				var MarginLeft = 0
+				var MarginTop = 0
+				var MarginRight = 0
+				var MarginBottom = 0
+				var DockMode = UiDockMode.Left
+			}
+		}
+		Cog [Id:0x59555f1a09240a1c]
+		{
+			var Name = "Text"
+			var LinkId = 3
+			Transform 
+			{
+				var Translation = Real3{0, 0, 1.60000002}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			SpriteText 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "582c575af53d18c9:AlphaSprite"
+				var VertexColor = Real4{1, 1, 1, 1}
+				var GeometryMode = SpriteGeometryMode.ZPlane
+				var Font = "57343753bb4eaaec:NotoSans-Regular"
+				var FontSize = 8
+				var Text = "Attenuation Node"
+				var Align = TextAlign.Center
+				var PixelsPerUnit = 1
+			}
+			Area 
+			{
+				var Size = Real2{75, 20}
+				var Origin = Location.Center
+			}
+			UiWidget 
+			{
+				var Active = true
+				var Visible = true
+				var Interactive = true
+				var InLayout = false
+				var ClipChildren = false
+				var CanTakeFocus = false
+				var LocalColor = Real4{1, 1, 1, 1}
+				var HierarchyColor = Real4{1, 1, 1, 1}
+				var SizePolicyX = UiSizePolicy.Auto
+				var SizePolicyY = UiSizePolicy.Auto
+				var FlexSize = Real2{1, 1}
+				var AbsoluteMinSize = Real2{1, 1}
+				var VerticalAlignment = UiVerticalAlignment.Top
+				var HorizontalAlignment = UiHorizontalAlignment.Left
+				var MarginLeft = 0
+				var MarginTop = 0
+				var MarginRight = 0
+				var MarginBottom = 0
+				var DockMode = UiDockMode.Left
+			}
+		}
+		Cog [Id:0x59555f1a09240a1e]
+		{
+			var Name = "CircleHighlight"
+			var LinkId = 4
+			Transform 
+			{
+				var Translation = Real3{0, 0, 1}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			Sprite 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "582c575af53d18c9:AlphaSprite"
+				var VertexColor = Real4{0.411764741, 0.698039234, 1, 1}
+				var GeometryMode = SpriteGeometryMode.ZPlane
+				var SpriteSource = "58a22d11dd76ef3e:SoundNodeGraph__0001_BGHighLight"
+				var FlipX = false
+				var FlipY = false
+				var AnimationActive = false
+				var AnimationSpeed = 1
+				var StartFrame = 0
+			}
+			Area 
+			{
+				var Size = Real2{100, 100}
+				var Origin = Location.Center
+			}
+			UiWidget 
+			{
+				var Active = true
+				var Visible = true
+				var Interactive = true
+				var InLayout = false
+				var ClipChildren = false
+				var CanTakeFocus = false
+				var LocalColor = Real4{1, 1, 1, 1}
+				var HierarchyColor = Real4{1, 1, 1, 1}
+				var SizePolicyX = UiSizePolicy.Fixed
+				var SizePolicyY = UiSizePolicy.Fixed
+				var FlexSize = Real2{1, 1}
+				var AbsoluteMinSize = Real2{1, 1}
+				var VerticalAlignment = UiVerticalAlignment.Top
+				var HorizontalAlignment = UiHorizontalAlignment.Left
+				var MarginLeft = 0
+				var MarginTop = 0
+				var MarginRight = 0
+				var MarginBottom = 0
+				var DockMode = UiDockMode.Left
+			}
+		}
+		Cog [Id:0x59555f1a09240a20]
+		{
+			var Name = "Circle"
+			var LinkId = 5
+			Transform 
+			{
+				var Translation = Real3{0, 0, 1.10000002}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			Sprite 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "582c575af53d18c9:AlphaSprite"
+				var VertexColor = Real4{0.504999995, 0.504999995, 0.504999995, 1}
+				var GeometryMode = SpriteGeometryMode.ZPlane
+				var SpriteSource = "58a22d11dd76843e:SoundNodeGraph__0000_Background"
+				var FlipX = false
+				var FlipY = false
+				var AnimationActive = false
+				var AnimationSpeed = 1
+				var StartFrame = 0
+			}
+			Area 
+			{
+				var Size = Real2{100, 100}
+				var Origin = Location.Center
+			}
+			UiWidget 
+			{
+				var Active = true
+				var Visible = true
+				var Interactive = true
+				var InLayout = false
+				var ClipChildren = false
+				var CanTakeFocus = false
+				var LocalColor = Real4{1, 1, 1, 1}
+				var HierarchyColor = Real4{1, 1, 1, 1}
+				var SizePolicyX = UiSizePolicy.Auto
+				var SizePolicyY = UiSizePolicy.Auto
+				var FlexSize = Real2{1, 1}
+				var AbsoluteMinSize = Real2{1, 1}
+				var VerticalAlignment = UiVerticalAlignment.Top
+				var HorizontalAlignment = UiHorizontalAlignment.Left
+				var MarginLeft = 0
+				var MarginTop = 0
+				var MarginRight = 0
+				var MarginBottom = 0
+				var DockMode = UiDockMode.Left
+			}
+		}
+		Cog [Id:0x59555f1a09240a22]
+		{
+			var Name = "BoxHighlight"
+			var LinkId = 6
+			Transform 
+			{
+				var Translation = Real3{0, 0, 1.20000005}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			Sprite 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var Material = "582c575af53d18c9:AlphaSprite"
+				var VertexColor = Real4{0.329411775, 0.556862772, 0.800000072, 1}
+				var GeometryMode = SpriteGeometryMode.ZPlane
+				var SpriteSource = "5275aa4d802dd6dc:Square"
+				var FlipX = false
+				var FlipY = false
+				var AnimationActive = true
+				var AnimationSpeed = 1
+				var StartFrame = 0
+			}
+			Area 
+			{
+				var Size = Real2{80, 30}
+				var Origin = Location.Center
+			}
+			UiWidget 
+			{
+				var Active = true
+				var Visible = true
+				var Interactive = true
+				var InLayout = false
+				var ClipChildren = false
+				var CanTakeFocus = false
+				var LocalColor = Real4{1, 1, 1, 1}
+				var HierarchyColor = Real4{1, 1, 1, 1}
+				var SizePolicyX = UiSizePolicy.Auto
+				var SizePolicyY = UiSizePolicy.Auto
+				var FlexSize = Real2{1, 1}
+				var AbsoluteMinSize = Real2{1, 1}
+				var VerticalAlignment = UiVerticalAlignment.Top
+				var HorizontalAlignment = UiHorizontalAlignment.Left
+				var MarginLeft = 0
+				var MarginTop = 0
+				var MarginRight = 0
+				var MarginBottom = 0
+				var DockMode = UiDockMode.Left
+			}
+		}
+	}
+}

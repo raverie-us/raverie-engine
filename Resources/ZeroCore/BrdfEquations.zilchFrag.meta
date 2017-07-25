@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "BrdfEquations"
+		var ResourceId = 0x58132fbc2f406fdd
+	}
+}

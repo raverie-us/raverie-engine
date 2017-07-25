@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FEB98436-B132-4E39-A774-8DBDE6CE12D6}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>UiWidget</RootNamespace>
+    <ProjectName>UiWidget</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\Systems;$(ZERO_SOURCE)\Extensions;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="UiDockLayout.hpp" />
+    <ClInclude Include="UiFillLayout.hpp" />
+    <ClInclude Include="UiRenderer.hpp" />
+    <ClInclude Include="UiRootInputRouter.hpp" />
+    <ClInclude Include="UiLayout.hpp" />
+    <ClInclude Include="UiRootWidget.hpp" />
+    <ClInclude Include="UiStackLayout.hpp" />
+    <ClInclude Include="UiWidget.hpp" />
+    <ClInclude Include="UiWidgetEvents.hpp" />
+    <ClInclude Include="UiWidgetStandard.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UiDockLayout.cpp" />
+    <ClCompile Include="UiFillLayout.cpp" />
+    <ClCompile Include="UiLayout.cpp" />
+    <ClCompile Include="UiRenderer.cpp" />
+    <ClCompile Include="UiRootInputRouter.cpp" />
+    <ClCompile Include="UiRootWidget.cpp" />
+    <ClCompile Include="UiStackLayout.cpp" />
+    <ClCompile Include="UiWidget.cpp" />
+    <ClCompile Include="UiWidgetEvents.cpp" />
+    <ClCompile Include="UiWidgetStandard.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

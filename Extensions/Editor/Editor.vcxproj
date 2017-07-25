@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{172480CF-88DA-4510-801F-68884C1B9F70}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AddRemoveListBox.cpp" />
+    <ClCompile Include="AddWindow.cpp" />
+    <ClCompile Include="AnimationControls.cpp" />
+    <ClCompile Include="AnimationEditor.cpp" />
+    <ClCompile Include="AnimationEditorData.cpp" />
+    <ClCompile Include="AnimationGraph.cpp" />
+    <ClCompile Include="AnimationScrubber.cpp" />
+    <ClCompile Include="AnimationSettings.cpp" />
+    <ClCompile Include="AnimationTrackView.cpp" />
+    <ClCompile Include="ArchiveProjectCommands.cpp" />
+    <ClCompile Include="BackgroundTask.cpp" />
+    <ClCompile Include="BasicGizmos.cpp" />
+    <ClCompile Include="BroadPhaseEditor.cpp" />
+    <ClCompile Include="BugReport.cpp" />
+    <ClCompile Include="CogCommand.cpp" />
+    <ClCompile Include="HeightMapStateManager.cpp" />
+    <ClCompile Include="HeightMapUndoRedo.cpp" />
+    <ClCompile Include="ItemList.cpp" />
+    <ClCompile Include="EditorCameraMouseDrag.cpp" />
+    <ClCompile Include="UndoPropertyInterface.cpp" />
+    <ClCompile Include="CollisionTableEditor.cpp" />
+    <ClCompile Include="ColorGradientEditor.cpp" />
+    <ClCompile Include="ColorPicker.cpp" />
+    <ClCompile Include="ColorScheme.cpp" />
+    <ClCompile Include="ConsoleUi.cpp" />
+    <ClCompile Include="AppCommands.cpp" />
+    <ClCompile Include="ContentPackage.cpp" />
+    <ClCompile Include="ContentPackageItem.cpp" />
+    <ClCompile Include="ContentPackageImporter.cpp" />
+    <ClCompile Include="ContentUploader.cpp" />
+    <ClCompile Include="CreationCommands.cpp" />
+    <ClCompile Include="DocumentationCommands.cpp" />
+    <ClCompile Include="Downloads.cpp" />
+    <ClCompile Include="BackgroundTaskUi.cpp" />
+    <ClCompile Include="EditorDrop.cpp" />
+    <ClCompile Include="EditorGraphs.cpp" />
+    <ClCompile Include="EditorProject.cpp" />
+    <ClCompile Include="EditorStandard.cpp" />
+    <ClCompile Include="EditorTools.cpp" />
+    <ClCompile Include="EditorViewportMenu.cpp" />
+    <ClCompile Include="ErrorList.cpp" />
+    <ClCompile Include="GraphicsCommands.cpp" />
+    <ClCompile Include="Gizmo.cpp" />
+    <ClCompile Include="GizmoDrag.cpp" />
+    <ClCompile Include="GroupImport.cpp" />
+    <ClCompile Include="CurveEditor.cpp" />
+    <ClCompile Include="Document.cpp" />
+    <ClCompile Include="EditorCommands.cpp" />
+    <ClCompile Include="EditorCameraController.cpp" />
+    <ClCompile Include="CommandSelector.cpp" />
+    <ClCompile Include="EditorImport.cpp" />
+    <ClCompile Include="EditorMain.cpp" />
+    <ClCompile Include="EditorUtility.cpp" />
+    <ClCompile Include="ExtraWidgets.cpp" />
+    <ClCompile Include="FindDialog.cpp" />
+    <ClCompile Include="HeightMapImporter.cpp" />
+    <ClCompile Include="HotKeyEditor.cpp" />
+    <ClCompile Include="ContentLogic.cpp" />
+    <ClCompile Include="EditorViewport.cpp" />
+    <ClCompile Include="ClothTools.cpp" />
+    <ClCompile Include="GraphWidget.cpp" />
+    <ClCompile Include="GridDraw.cpp" />
+    <ClCompile Include="HeightMapDebugging.cpp" />
+    <ClCompile Include="JointTools.cpp" />
+    <ClCompile Include="LauncherCommunicationEvent.cpp" />
+    <ClCompile Include="LibraryView.cpp" />
+    <ClCompile Include="Loading.cpp" />
+    <ClCompile Include="MainPropertyView.cpp" />
+    <ClCompile Include="NetOperations.cpp" />
+    <ClCompile Include="NetPropertyIcon.cpp" />
+    <ClCompile Include="ObjectTransformTools.cpp" />
+    <ClCompile Include="RotationBasisGizmos.cpp" />
+    <ClCompile Include="Scintilla\lexers\LexCPP.cxx" />
+    <ClCompile Include="Scintilla\lexers\LexPython.cxx" />
+    <ClCompile Include="Scintilla\lexlib\Accessor.cxx" />
+    <ClCompile Include="Scintilla\lexlib\CharacterSet.cxx" />
+    <ClCompile Include="Scintilla\lexlib\LexerBase.cxx" />
+    <ClCompile Include="Scintilla\lexlib\LexerModule.cxx" />
+    <ClCompile Include="Scintilla\lexlib\LexerNoExceptions.cxx" />
+    <ClCompile Include="Scintilla\lexlib\LexerSimple.cxx" />
+    <ClCompile Include="Scintilla\lexlib\PropSetSimple.cxx" />
+    <ClCompile Include="Scintilla\lexlib\StyleContext.cxx" />
+    <ClCompile Include="Scintilla\lexlib\WordList.cxx" />
+    <ClCompile Include="Scintilla\ScintillaPlatformZero.cpp" />
+    <ClCompile Include="Scintilla\src\AutoComplete.cxx" />
+    <ClCompile Include="Scintilla\src\CallTip.cxx" />
+    <ClCompile Include="Scintilla\src\Catalogue.cxx" />
+    <ClCompile Include="Scintilla\src\CellBuffer.cxx" />
+    <ClCompile Include="Scintilla\src\CharClassify.cxx" />
+    <ClCompile Include="Scintilla\src\ContractionState.cxx" />
+    <ClCompile Include="Scintilla\src\Decoration.cxx" />
+    <ClCompile Include="Scintilla\src\ExternalLexer.cxx" />
+    <ClCompile Include="Scintilla\src\Indicator.cxx" />
+    <ClCompile Include="Scintilla\src\KeyMap.cxx" />
+    <ClCompile Include="Scintilla\src\LineMarker.cxx" />
+    <ClCompile Include="Scintilla\src\PerLine.cxx" />
+    <ClCompile Include="Scintilla\src\PositionCache.cxx" />
+    <ClCompile Include="Scintilla\src\RESearch.cxx" />
+    <ClCompile Include="Scintilla\src\RunStyles.cxx" />
+    <ClCompile Include="Scintilla\src\ScintillaBase.cxx" />
+    <ClCompile Include="Scintilla\src\ScintillaDocument.cxx" />
+    <ClCompile Include="Scintilla\src\ScintillaEditor.cxx" />
+    <ClCompile Include="Scintilla\src\Selection.cxx" />
+    <ClCompile Include="Scintilla\src\Style.cxx" />
+    <ClCompile Include="Scintilla\src\UniConversion.cxx" />
+    <ClCompile Include="Scintilla\src\ViewStyle.cxx" />
+    <ClCompile Include="Scintilla\src\XPM.cxx" />
+    <ClCompile Include="MessageBox.cpp" />
+    <ClCompile Include="MetaDrop.cpp" />
+    <ClCompile Include="MultiConvexMeshEditor.cpp" />
+    <ClCompile Include="MultiPropertyInterface.cpp" />
+    <ClCompile Include="NotificationUi.cpp" />
+    <ClCompile Include="ObjectView.cpp" />
+    <ClCompile Include="OnionSkinning.cpp" />
+    <ClCompile Include="OrientationGizmoViewport.cpp" />
+    <ClCompile Include="PreviewWidget.cpp" />
+    <ClCompile Include="PreviewWidgets.cpp" />
+    <ClCompile Include="PropertyInterface.cpp" />
+    <ClCompile Include="Property\BasicPropertyEditors.cpp" />
+    <ClCompile Include="Property\EnginePropertyEditors.cpp" />
+    <ClCompile Include="Property\GraphView.cpp" />
+    <ClCompile Include="Property\PropertyWidget.cpp" />
+    <ClCompile Include="Property\PropertyWidgetObject.cpp" />
+    <ClCompile Include="Property\PropertyWidgets.cpp" />
+    <ClCompile Include="Property\TileView.cpp" />
+    <ClCompile Include="Property\PropertyView.cpp" />
+    <ClCompile Include="Property\TreeView.cpp" />
+    <ClCompile Include="Property\VariantEditor.cpp" />
+    <ClCompile Include="ResourceCommands.cpp" />
+    <ClCompile Include="ResourceEditors.cpp" />
+    <ClCompile Include="ResourceOperations.cpp" />
+    <ClCompile Include="SampleCurveEditor.cpp" />
+    <ClCompile Include="Scratchboard.cpp" />
+    <ClCompile Include="ScriptEditor.cpp" />
+    <ClCompile Include="EditorSearchProviders.cpp" />
+    <ClCompile Include="ScrollingGraph.cpp" />
+    <ClCompile Include="SelectionHistory.cpp" />
+    <ClCompile Include="SimpleBackgroundTasks.cpp" />
+    <ClCompile Include="SpriteEditor.cpp" />
+    <ClCompile Include="SpriteImporter.cpp" />
+    <ClCompile Include="StressTest.cpp" />
+    <ClCompile Include="ResourceTableEditor.cpp" />
+    <ClCompile Include="ContentStore.cpp" />
+    <ClCompile Include="EditorHotspots.cpp" />
+    <ClCompile Include="TextEditor.cpp" />
+    <ClCompile Include="TextEditorHotspot.cpp" />
+    <ClCompile Include="TileEditor2D.cpp" />
+    <ClCompile Include="TilePaletteProperty.cpp" />
+    <ClCompile Include="TilePaletteSource.cpp" />
+    <ClCompile Include="TilePaletteView.cpp" />
+    <ClCompile Include="Tool.cpp" />
+    <ClCompile Include="ToolControl.cpp" />
+    <ClCompile Include="Tools.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="TransformGizmos.cpp" />
+    <ClCompile Include="TransformTools.cpp" />
+    <ClCompile Include="TreeViewSearch.cpp" />
+    <ClCompile Include="WatchView.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AddRemoveListBox.hpp" />
+    <ClInclude Include="AddWindow.hpp" />
+    <ClInclude Include="AllCommands.hpp" />
+    <ClInclude Include="AnimationControls.hpp" />
+    <ClInclude Include="AnimationEditor.hpp" />
+    <ClInclude Include="AnimationEditorData.hpp" />
+    <ClInclude Include="AnimationGraph.hpp" />
+    <ClInclude Include="AnimationScrubber.hpp" />
+    <ClInclude Include="AnimationSettings.hpp" />
+    <ClInclude Include="AnimationTrackView.hpp" />
+    <ClInclude Include="BackgroundTask.hpp" />
+    <ClInclude Include="BasicGizmos.hpp" />
+    <ClInclude Include="ColorScheme.hpp" />
+    <ClInclude Include="EditorCameraMouseDrag.hpp" />
+    <ClInclude Include="EditorMain.hpp" />
+    <ClInclude Include="EditorStandard.hpp" />
+    <ClInclude Include="HeightMapStateManager.hpp" />
+    <ClInclude Include="HeightMapUndoRedo.hpp" />
+    <ClInclude Include="ItemList.hpp" />
+    <ClInclude Include="MetaCompositionWrapper.hpp" />
+    <ClInclude Include="RotationBasisGizmos.hpp" />
+    <ClInclude Include="BroadPhaseEditor.hpp" />
+    <ClInclude Include="BugReport.hpp" />
+    <ClInclude Include="CogCommand.hpp" />
+    <ClInclude Include="TileLayout.hpp" />
+    <ClInclude Include="UndoPropertyInterface.hpp" />
+    <ClInclude Include="CollisionTableEditor.hpp" />
+    <ClInclude Include="ColorGradientEditor.hpp" />
+    <ClInclude Include="ColorPicker.hpp" />
+    <ClInclude Include="ConsoleUi.hpp" />
+    <ClInclude Include="ContentPackage.hpp" />
+    <ClInclude Include="ContentUploader.hpp" />
+    <ClInclude Include="ContentPackageItem.hpp" />
+    <ClInclude Include="ContentPackageImporter.hpp" />
+    <ClInclude Include="Downloads.hpp" />
+    <ClInclude Include="BackgroundTaskUi.hpp" />
+    <ClInclude Include="EditorDrop.hpp" />
+    <ClInclude Include="EditorProject.hpp" />
+    <ClInclude Include="EditorScriptObject.hpp" />
+    <ClInclude Include="EditorViewportMenu.hpp" />
+    <ClInclude Include="ErrorList.hpp" />
+    <ClInclude Include="Gizmo.hpp" />
+    <ClInclude Include="GizmoDrag.hpp" />
+    <ClInclude Include="GraphicsCommands.hpp" />
+    <ClInclude Include="HeightMapImporter.hpp" />
+    <ClInclude Include="HotKeyEditor.hpp" />
+    <ClInclude Include="LauncherCommunicationEvent.hpp" />
+    <ClInclude Include="NetOperations.hpp" />
+    <ClInclude Include="NetPropertyIcon.hpp" />
+    <ClInclude Include="ObjectTransformTools.hpp" />
+    <ClInclude Include="Scintilla\include\ILexer.h" />
+    <ClInclude Include="Scintilla\include\Platform.h" />
+    <ClInclude Include="Scintilla\include\SciLexer.h" />
+    <ClInclude Include="Scintilla\include\Scintilla.h" />
+    <ClInclude Include="Scintilla\include\ScintillaWidget.h" />
+    <ClInclude Include="Scintilla\lexlib\Accessor.h" />
+    <ClInclude Include="Scintilla\lexlib\CharacterSet.h" />
+    <ClInclude Include="Scintilla\lexlib\LexAccessor.h" />
+    <ClInclude Include="Scintilla\lexlib\LexerBase.h" />
+    <ClInclude Include="Scintilla\lexlib\LexerModule.h" />
+    <ClInclude Include="Scintilla\lexlib\LexerNoExceptions.h" />
+    <ClInclude Include="Scintilla\lexlib\LexerSimple.h" />
+    <ClInclude Include="Scintilla\lexlib\OptionSet.h" />
+    <ClInclude Include="Scintilla\lexlib\Precompiled.hpp" />
+    <ClInclude Include="Scintilla\lexlib\PropSetSimple.h" />
+    <ClInclude Include="Scintilla\lexlib\SparseState.h" />
+    <ClInclude Include="Scintilla\lexlib\StyleContext.h" />
+    <ClInclude Include="Scintilla\lexlib\WordList.h" />
+    <ClInclude Include="Scintilla\ScintillaPrecompiled.hpp" />
+    <ClInclude Include="Scintilla\ScintillaPlatformZero.hpp" />
+    <ClInclude Include="Scintilla\src\AutoComplete.h" />
+    <ClInclude Include="Scintilla\src\CallTip.h" />
+    <ClInclude Include="Scintilla\src\Catalogue.h" />
+    <ClInclude Include="Scintilla\src\CellBuffer.h" />
+    <ClInclude Include="Scintilla\src\CharClassify.h" />
+    <ClInclude Include="Scintilla\src\ContractionState.h" />
+    <ClInclude Include="Scintilla\src\Decoration.h" />
+    <ClInclude Include="Scintilla\src\ExternalLexer.h" />
+    <ClInclude Include="Scintilla\src\FontQuality.h" />
+    <ClInclude Include="Scintilla\src\Indicator.h" />
+    <ClInclude Include="Scintilla\src\KeyMap.h" />
+    <ClInclude Include="Scintilla\src\LineMarker.h" />
+    <ClInclude Include="Scintilla\src\Partitioning.h" />
+    <ClInclude Include="Scintilla\src\PerLine.h" />
+    <ClInclude Include="Scintilla\src\PositionCache.h" />
+    <ClInclude Include="Scintilla\src\Precompiled.hpp" />
+    <ClInclude Include="Scintilla\src\RESearch.h" />
+    <ClInclude Include="Scintilla\src\RunStyles.h" />
+    <ClInclude Include="Scintilla\src\ScintillaBase.h" />
+    <ClInclude Include="Scintilla\src\ScintillaDocument.h" />
+    <ClInclude Include="Scintilla\src\ScintillaEditor.h" />
+    <ClInclude Include="Scintilla\src\Selection.h" />
+    <ClInclude Include="Scintilla\src\SplitVector.h" />
+    <ClInclude Include="Scintilla\src\Style.h" />
+    <ClInclude Include="Scintilla\src\SVector.h" />
+    <ClInclude Include="Scintilla\src\UniConversion.h" />
+    <ClInclude Include="Scintilla\src\ViewStyle.h" />
+    <ClInclude Include="Scintilla\src\XPM.h" />
+    <ClInclude Include="MultiConvexMeshEditor.hpp" />
+    <ClInclude Include="OnionSkinning.hpp" />
+    <ClInclude Include="EditorHotspots.hpp" />
+    <ClInclude Include="SimpleBackgroundTasks.hpp" />
+    <ClInclude Include="TextEditor.hpp" />
+    <ClInclude Include="TextEditorHotspot.hpp" />
+    <ClInclude Include="TransformGizmos.hpp" />
+    <ClInclude Include="TransformTools.hpp" />
+    <ClInclude Include="TreeViewFilter.hpp" />
+    <ClInclude Include="GroupImport.hpp" />
+    <ClInclude Include="CurveEditor.hpp" />
+    <ClInclude Include="Document.hpp" />
+    <ClInclude Include="EditorCommands.hpp" />
+    <ClInclude Include="EditorCameraController.hpp" />
+    <ClInclude Include="CommandSelector.hpp" />
+    <ClInclude Include="EditorImport.hpp" />
+    <ClInclude Include="EditorSearchProviders.hpp" />
+    <ClInclude Include="EditorUtility.hpp" />
+    <ClInclude Include="Export.hpp" />
+    <ClInclude Include="ExtraWidgets.hpp" />
+    <ClInclude Include="LibraryView.hpp" />
+    <ClInclude Include="MainPropertyView.hpp" />
+    <ClInclude Include="MultiPropertyInterface.hpp" />
+    <ClInclude Include="ResourceEditors.hpp" />
+    <ClInclude Include="ResourceOperations.hpp" />
+    <ClInclude Include="SelectionHistory.hpp" />
+    <ClInclude Include="OrientationGizmoViewport.hpp" />
+    <ClInclude Include="FindDialog.hpp" />
+    <ClInclude Include="ContentLogic.hpp" />
+    <ClInclude Include="EditorViewport.hpp" />
+    <ClInclude Include="ClothTools.hpp" />
+    <ClInclude Include="GraphWidget.hpp" />
+    <ClInclude Include="GridDraw.hpp" />
+    <ClInclude Include="HeightMapDebugging.hpp" />
+    <ClInclude Include="HeightMapTool.hpp" />
+    <ClInclude Include="JointTools.hpp" />
+    <ClInclude Include="Loading.hpp" />
+    <ClInclude Include="MessageBox.hpp" />
+    <ClInclude Include="MetaDrop.hpp" />
+    <ClInclude Include="NotificationUi.hpp" />
+    <ClInclude Include="ObjectView.hpp" />
+    <ClInclude Include="PropertyInterface.hpp" />
+    <ClInclude Include="Property\BasicPropertyEditors.hpp" />
+    <ClInclude Include="Property\DataBaseTemplate.hpp" />
+    <ClInclude Include="Property\GraphView.hpp" />
+    <ClInclude Include="Property\PropertyWidget.hpp" />
+    <ClInclude Include="Property\PropertyWidgetObject.hpp" />
+    <ClInclude Include="Property\PropertyWidgets.hpp" />
+    <ClInclude Include="Property\TileView.hpp" />
+    <ClInclude Include="Property\PropertyView.hpp" />
+    <ClInclude Include="Property\TreeView.hpp" />
+    <ClInclude Include="Property\VariantEditor.hpp" />
+    <ClInclude Include="SampleCurveEditor.hpp" />
+    <ClInclude Include="Scratchboard.hpp" />
+    <ClInclude Include="ScriptEditor.hpp" />
+    <ClInclude Include="ScrollingGraph.hpp" />
+    <ClInclude Include="SpriteEditor.hpp" />
+    <ClInclude Include="SpriteImporter.hpp" />
+    <ClInclude Include="StressTest.hpp" />
+    <ClInclude Include="ResourceTableEditor.hpp" />
+    <ClInclude Include="ContentStore.hpp" />
+    <ClInclude Include="TileEditor2D.hpp" />
+    <ClInclude Include="TilePaletteProperty.hpp" />
+    <ClInclude Include="TilePaletteSource.hpp" />
+    <ClInclude Include="TilePaletteView.hpp" />
+    <ClInclude Include="PreviewWidget.hpp" />
+    <ClInclude Include="Tool.hpp" />
+    <ClInclude Include="ToolControl.hpp" />
+    <ClInclude Include="Tools.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="Editor.hpp" />
+    <ClInclude Include="TreeViewSearch.hpp" />
+    <ClInclude Include="WatchView.hpp" />
+    <ClCompile Include="HeightMapTool.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,9 @@
+class UnitTest02
+{
+  // Test the fibonacci's sequence (tests integers, recursion, and if-statements)
+  [Static]
+  function Test02() : Integer
+  {
+    return CustomMath.Fib(n : 24);
+  }
+}

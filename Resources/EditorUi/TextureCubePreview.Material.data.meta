@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "TextureCubePreview"
+		var ResourceId = 0x58077fa529821024
+		var LoaderType = "Material"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

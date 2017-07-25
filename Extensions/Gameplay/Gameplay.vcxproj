@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3E095F86-7C87-4C15-806C-8DFB596BD948}</ProjectGuid>
+    <RootNamespace>Gameplay</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Win32.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Win32.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\Extensions;$(ZERO_SOURCE)\External\CEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="CsgExternalSerialization.hpp" />
+    <ClInclude Include="DefaultGame.hpp" />
+    <ClInclude Include="CameraViewport.hpp" />
+    <ClInclude Include="GameplayStandard.hpp" />
+    <ClInclude Include="MarchingCubes.hpp" />
+    <ClInclude Include="MarchingSquares.hpp" />
+    <ClInclude Include="MarketWidget.hpp" />
+    <ClInclude Include="MouseCapture.hpp" />
+    <ClInclude Include="Orientation.hpp" />
+    <ClInclude Include="PlayGame.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="RandomContext.hpp" />
+    <ClInclude Include="Reactive.hpp" />
+    <ClInclude Include="ReactiveViewport.hpp" />
+    <ClInclude Include="SplineParticles.hpp" />
+    <ClInclude Include="TileMap.hpp" />
+    <ClInclude Include="TileMapSource.hpp" />
+    <ClInclude Include="TileMapSourceLoadPattern.hpp" />
+    <ClInclude Include="WebBrowser.hpp" />
+    <ClInclude Include="WebBrowserChrome.hpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="WebBrowserWidget.hpp" />
+    <ClInclude Include="Zero.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DefaultGame.cpp" />
+    <ClCompile Include="CameraViewport.cpp" />
+    <ClCompile Include="GameplayStandard.cpp" />
+    <ClCompile Include="MarchingCubes.cpp" />
+    <ClCompile Include="MarchingSquares.cpp" />
+    <ClCompile Include="MarketWidget.cpp" />
+    <ClCompile Include="MouseCapture.cpp" />
+    <ClCompile Include="Orientation.cpp" />
+    <ClCompile Include="PlayGame.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="RandomContext.cpp" />
+    <ClCompile Include="Reactive.cpp" />
+    <ClCompile Include="ReactiveViewport.cpp" />
+    <ClCompile Include="SplineParticles.cpp" />
+    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TileMapSource.cpp" />
+    <ClCompile Include="WebBrowser.cpp" />
+    <ClCompile Include="WebBrowserChrome.cpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="WebBrowserNo.cpp">
+      <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'==''">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="WebBrowserWidget.cpp" />
+    <ClCompile Include="Zero.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

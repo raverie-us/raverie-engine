@@ -1,0 +1,15 @@
+[Version:1]
+ResourceTable 
+{
+	var ResourceType = "String"
+	var EntryList = Array
+	{
+		Object
+		{
+			var Name = "Name1"
+			var Value = "Value1"
+			var Weight = 1
+		}
+	}
+	var MaxWeight = 1
+}

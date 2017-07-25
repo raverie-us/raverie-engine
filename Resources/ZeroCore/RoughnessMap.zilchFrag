@@ -1,0 +1,15 @@
+// Roughness input for lighting opaque geometry.
+// Output values are mapped from a texture over the surface.
+[Pixel]
+struct RoughnessMap
+{
+  [FragmentInput][StageInput] var Uv : Real2;
+  [Input] var RoughnessMap : Sampler2d;
+  
+  [Output] var Roughness : Real;
+  
+  function Main()
+  {
+    this.Roughness = this.RoughnessMap.Sample(this.Uv).X;
+  }
+}

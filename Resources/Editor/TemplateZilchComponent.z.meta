@@ -1,0 +1,17 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "TemplateZilchComponent"
+		var ResourceId = 0xc4a333b146c2d28e
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Component"
+		var Description = "Adds logic to compositions"
+		var SortWeight = 10
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

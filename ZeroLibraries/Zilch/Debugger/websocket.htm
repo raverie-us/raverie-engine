@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <body>
+  <h1>Websocket Test</h1>
+  <script>
+    var socket = new WebSocket("ws://localhost:8000");
+    
+    socket.onopen = function()
+    {
+      socket.send('{ "foo": 5, "bar": "test" }');
+      alert("Message is sent...");
+    };
+    
+    socket.onmessage = function (evt) 
+    { 
+      var received_msg = evt.data;
+      alert("Message is received: " + received_msg);
+      //var obj = JSON.parse(received_msg);
+      //alert("Message is received: " + obj.butts);
+    };
+    
+    socket.onclose = function()
+    { 
+      alert("Connection closed or failed"); 
+    };
+  </script>
+
+  </body>
+</html> 

@@ -1,0 +1,148 @@
+[Vertex]
+struct GeoVertexGeometryPixel_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVOutput][GsOut] var ApiPerspectivePosition : Real4;
+  [StageOutput][GsOut] var Data0 : Real2;
+  [StageOutput][GsOut] var Data1 : Real2;
+  [StageOutput][GsOut] var Data2 : Real2;
+  [StageOutput][GsOut] var Data3 : Real2;
+  [StageOutput][GsOut] var Data4 : Real2;
+  [StageOutput][GsOut] var Data6 : Real2;
+  // Fragment Properties
+  [Uniform][Input] var GeoVertex_Data0 : Real2;
+  [Uniform][Input] var GeoVertex_Data1 : Real2;
+  [Uniform][Input] var GeoVertex_Data2 : Real2;
+  [Uniform][Input] var GeoVertex_Data3 : Real2;
+  [Uniform][Input] var GeoVertex_Data4 : Real2;
+  [Uniform][Input] var GeoVertex_Data5 : Real2;
+  [Uniform][Input] var GeoVertex_Data6 : Real2;
+  [Uniform][Input] var GeoVertex_Data7 : Real2;
+  [Uniform][Input] var GeoVertex_Data8 : Real2;
+  [Uniform][Input] var GeoVertex_Data9 : Real2;
+  [Uniform][Input] var GeoVertex_Data10 : Real2;
+  [Uniform][Input] var GeoVertex_Data11 : Real2;
+  [Uniform][Input] var GeoVertex_Data12 : Real2;
+  [Uniform][Input] var GeoVertex_Data13 : Real2;
+  [Uniform][Input] var GeoVertex_Data14 : Real2;
+  [Uniform][Input] var GeoVertex_Data15 : Real2;
+
+  [Main]
+  function Main()
+  {
+    var geovertex = GeoVertex();
+    geovertex.Data0 = this.GeoVertex_Data0;
+    geovertex.Data1 = this.GeoVertex_Data1;
+    geovertex.Data2 = this.GeoVertex_Data2;
+    geovertex.Data3 = this.GeoVertex_Data3;
+    geovertex.Data4 = this.GeoVertex_Data4;
+    geovertex.Data5 = this.GeoVertex_Data5;
+    geovertex.Data6 = this.GeoVertex_Data6;
+    geovertex.Data7 = this.GeoVertex_Data7;
+    geovertex.Data8 = this.GeoVertex_Data8;
+    geovertex.Data9 = this.GeoVertex_Data9;
+    geovertex.Data10 = this.GeoVertex_Data10;
+    geovertex.Data11 = this.GeoVertex_Data11;
+    geovertex.Data12 = this.GeoVertex_Data12;
+    geovertex.Data13 = this.GeoVertex_Data13;
+    geovertex.Data14 = this.GeoVertex_Data14;
+    geovertex.Data15 = this.GeoVertex_Data15;
+    geovertex.Main();
+    this.Data0 = geovertex.Data0;
+    this.Data1 = geovertex.Data1;
+    this.Data2 = geovertex.Data2;
+    this.Data3 = geovertex.Data3;
+    this.Data4 = geovertex.Data4;
+    this.Data6 = geovertex.Data6;
+  }
+}
+[Pixel]
+struct GeoVertexGeometryPixel_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageInput] var Data0 : Real2;
+  [StageInput] var Data2 : Real2;
+  [StageInput] var Data4 : Real2;
+  [StageInput] var Data6 : Real2;
+  [StageInput] var Data8 : Real2;
+  [StageInput] var Data12 : Real2;
+  // Fragment Properties
+  [Uniform][Input] var GeoPixel_Data10 : Real2;
+  [Uniform][Input] var GeoPixel_Data14 : Real2;
+
+  [Main]
+  function Main()
+  {
+    var geopixel = GeoPixel();
+    geopixel.Data0 = this.Data0;
+    geopixel.Data2 = this.Data2;
+    geopixel.Data4 = this.Data4;
+    geopixel.Data6 = this.Data6;
+    geopixel.Data8 = this.Data8;
+    geopixel.Data10 = this.GeoPixel_Data10;
+    geopixel.Data12 = this.Data12;
+    geopixel.Data14 = this.GeoPixel_Data14;
+    geopixel.Main();
+  }
+}
+struct GeoVertexGeometryPixel_Geometry_Input
+{
+  [SVInput] var ApiPerspectivePosition : Real4;
+  [StageInput] var Data0 : Real2;
+  [StageInput] var Data1 : Real2;
+  [StageInput] var Data2 : Real2;
+  [StageInput] var Data3 : Real2;
+  [StageInput] var Data4 : Real2;
+  [StageInput] var Data6 : Real2;
+}
+struct GeoVertexGeometryPixel_Geometry_Output
+{
+  [SVOutput] var ApiPerspectivePosition : Real4;
+  [StageOutput][GsOut] var Data0 : Real2;
+  [StageOutput][GsOut] var Data2 : Real2;
+  [StageOutput][GsOut] var Data4 : Real2;
+  [StageOutput][GsOut] var Data6 : Real2;
+  [StageOutput][GsOut] var Data8 : Real2;
+  [StageOutput][GsOut] var Data12 : Real2;
+}
+[Geometry(maxVertices : 9)]
+struct GeoVertexGeometryPixel_Geometry
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Fragment Properties
+  [Uniform][Input] var GeoGeometry_FrameTime : Real;
+
+  [Static][NoMangle]
+  function EmitVertexHelper(fragmentOutput : ref GeoData, compositeOutput : ref GeoVertexGeometryPixel_Geometry_Output)
+  {
+    compositeOutput.Data0 = fragmentOutput.Data0;
+    compositeOutput.Data4 = fragmentOutput.Data4;
+    compositeOutput.Data8 = fragmentOutput.Data8;
+    compositeOutput.Data12 = fragmentOutput.Data12;
+  }
+
+  [Main]
+  function Main(input : TriangleInput[GeoVertexGeometryPixel_Geometry_Input], output : TriangleOutput[GeoVertexGeometryPixel_Geometry_Output])
+  {
+    // Copy composite inputs into fragment inputs
+    var fragmentInput = TriangleInput[GeoData]();
+    for(var i = 0; i < input.Count; ++i)
+    {
+      fragmentInput[i].Data0 = input[i].Data0;
+      fragmentInput[i].Data1 = input[i].Data1;
+      fragmentInput[i].Data2 = input[i].Data2;
+      fragmentInput[i].Data3 = input[i].Data3;
+    }
+    // Create the fragment output type
+    var fragmentOutput = GeometryStreamMover[TriangleOutput[GeoVertexGeometryPixel_Geometry_Output], TriangleOutput[GeoData]].Move(output);
+
+    var geogeometry = GeoGeometry();
+    geogeometry.FrameTime = this.GeoGeometry_FrameTime;
+    geogeometry.Main(fragmentInput, fragmentOutput);
+  }
+}

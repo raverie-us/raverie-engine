@@ -1,0 +1,127 @@
+// All the permutations we'd like to evaluate
+permute Kind : array System.String[] =
+<?
+{
+  "Static",
+  "Instance",
+  "InstanceConst",
+}
+?>;
+permute Return : bool;
+permute Arguments alias n : int[-1,6];
+
+handler <? Kind == "Instance" || Kind == "InstanceConst" ?>
+{
+  ClassTypeName         = "typename Class";
+  Class                 = "Class";
+  InstancePtr           = "Class::";
+  BoundReadSelfHandle   = "Class* self = (Class*)call.GetHandle(Call::This).Dereference();";
+  InvokeFunction        = "(self->*function)";
+  MethodType            = "Instance";
+  ZilchFunctionOptions  = "FunctionOptions::None";
+}
+
+handler <? Kind == "Instance" ?>
+{
+  Const                 = "";
+}
+
+handler <? Kind == "InstanceConst" ?>
+{
+  Const                 = "const";
+  
+  // Remove the extra binding functions, this is annoying...
+  // This only exists because the const version (one function needs to be outputted, not both)
+  // This is a lazy match against two comments we put in
+  "(?s)//BeginBound.*?//EndBound" = "";
+}
+
+handler <? Kind == "Static" ?>
+{
+  Const                 = "";
+  ClassTypeName         = "";
+  Class                 = "";
+  InstancePtr           = "";
+  BoundReadSelfHandle   = "";
+  InvokeFunction        = "function";
+  MethodType            = "Static";
+  ZilchFunctionOptions  = "FunctionOptions::Static";
+}
+
+handler <? Return ?>
+{
+  ReturnTypeName        = "typename Return";
+  ReturnType            = "Return";
+  Return                = "Return";
+  ZilchReturnType       = "ZilchTypeId(Return)";
+  StoreResult           = "Return result = ";
+  BoundWriteResult      = "if (report.HasThrownExceptions()) return; call.Set<Return>(Call::Return, result);";
+}
+
+handler <? !Return ?>
+{
+  ReturnTypeName        = "";
+  ReturnType            = "void";
+  Return                = "";
+  ZilchReturnType       = "ZilchTypeId(void)";
+  StoreResult           = "";
+  BoundWriteResult      = "";
+}
+
+handler <? All ?>
+{
+  ZilchArguments        = <? Utilities.RepeatNumeric("  DelegateParameter& p# = parameters.PushBack();\r\n  p#.ParameterType = ZilchTypeId(Arg#);", "\r\n", 0, n) ?>;
+  Arguments             = <? Utilities.RepeatNumeric("arg#", ", ", 0, n) ?>;
+  ArgumentTypeNames     = <? Utilities.RepeatNumeric("typename Arg#", ", ", 0, n) ?>;
+  BoundReadArguments    = <? Utilities.RepeatNumeric("  byte* arg#Ptr = call.GetArgumentPointer<ZilchBindingType(Arg#)>(#);", "\r\n", 0, n) ?>;
+  BoundCastArguments    = <? Utilities.RepeatNumeric("  ZilchBindingType(Arg#) arg# = call.CastArgumentPointer<ZilchBindingType(Arg#)>(arg#Ptr);", "\r\n", 0, n) ?>;
+  ArgumentTypes         = <? Utilities.RepeatNumeric("Arg#", ", ", 0, n) ?>;
+  ExceptionCheck        = <? Utilities.RepeatNumeric("  if (report.HasThrownExceptions()) return;", "\r\n", 0, Math.Min(n, 0)) ?>;
+  
+  // Clear empty lines
+  "(\s*\r\n){2,}" = "\r\n";
+  
+  // Turn commas in the form of [,] into an actual comma, if it's needed
+  "(\[,]){2,}"  = "[,]";
+  "\[,]>"       = ">";
+  "\[,]"        = ", ";
+}
+
+// Everything below this point is considered part of the source,
+// starting with the first line after 'source%'
+source%
+//BeginBound
+template <typename FunctionType, FunctionType function[,]$ClassTypeName$[,]$ReturnTypeName$[,]$ArgumentTypeNames$>
+static void Bound$MethodType$$Return$(Call& call, ExceptionReport& report)
+{
+$BoundReadArguments$
+$ExceptionCheck$  
+$BoundCastArguments$
+  
+  $BoundReadSelfHandle$
+  
+  $StoreResult$$InvokeFunction$($Arguments$);
+  
+  $BoundWriteResult$
+}
+//EndBound
+
+template <typename FunctionType, FunctionType function[,]$ClassTypeName$[,]$ReturnTypeName$[,]$ArgumentTypeNames$>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, $ReturnType$ ($InstancePtr$*)($ArgumentTypes$) $Const$)
+{
+  BoundFn boundFunction = Bound$MethodType$$Return$<FunctionType, function[,]$Class$[,]$Return$[,]$ArgumentTypes$>;
+  
+  ParameterArray parameters;
+$ZilchArguments$
+  ParseParameterArrays(parameters, spaceDelimitedNames);
+  
+  return builder.AddBoundFunction
+  (
+    classBoundType,
+    name,
+    boundFunction,
+    parameters,
+    $ZilchReturnType$,
+    $ZilchFunctionOptions$
+  );
+}

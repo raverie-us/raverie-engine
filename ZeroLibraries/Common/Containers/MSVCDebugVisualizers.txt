@@ -1,0 +1,325 @@
+;In 
+;2008 C:\Program Files\Microsoft Visual Studio 9.0\Common7\Packages\Debugger
+;2010 C:\Program Files\Microsoft Visual Studio 10.0\Common7\Packages\Debugger
+;64bit C:\Program Files (x86)\ ..
+
+;Add the following to autoexp.dat in the [Visualizer] section (after the STL containers)
+
+;------------------------------------------------------------------------------
+;  Zero custom types
+;------------------------------------------------------------------------------
+
+
+;------------------------------------------------------------------------------
+;  Math Types
+;------------------------------------------------------------------------------
+
+Math::Vector3{
+	preview ( #( "(", $e.x, ", ", $e.y , ", ", $e.z,")") )
+	children ( 
+		#(
+			#(x: $e.x),  
+			#(y: $e.y), 
+			#(z: $e.z),
+			#(lengthSq: $e.x * $e.x + $e.y * $e.y +  $e.z * $e.z)
+		)
+	)	   
+}
+
+
+Math::Vector4{
+	preview ( #( "(", $e.x, ", ", $e.y, ", ", $e.z, ", ", $e.w, ")") )
+	children ( 
+		#(
+		   #(x: $e.x),  
+		   #(y: $e.y), 
+		   #(z: $e.z),
+		   #(w: $e.w)
+		)	 
+    )	
+}
+
+Math::Matrix3{
+	children ( 
+		#(
+		   #(v0: (*(Math::Vector3*)&$e.m00)),
+		   #(v1: (*(Math::Vector3*)&$e.m10)),
+		   #(v2: (*(Math::Vector3*)&$e.m20))
+		)	 
+    )
+}
+
+Math::Matrix4{
+	children ( 
+		#(
+		   #(v0: (*(Math::Vector4*)&$e.m00)),
+		   #(v1: (*(Math::Vector4*)&$e.m10)),
+		   #(v2: (*(Math::Vector4*)&$e.m20)),
+		   #(v3: (*(Math::Vector4*)&$e.m30))
+		)	 
+    )
+}
+
+Math::Matrix3{
+	children ( 
+		#(
+		   #(v0: (*(Math::Vector3*)&$e.m00)),
+		   #(v1: (*(Math::Vector3*)&$e.m10)),
+		   #(v2: (*(Math::Vector3*)&$e.m20))
+		)	 
+    )
+}
+
+Math::Matrix4{
+	children ( 
+		#(
+		   #(v0: (*(Math::Vector4*)&$e.m00)),
+		   #(v1: (*(Math::Vector4*)&$e.m10)),
+		   #(v2: (*(Math::Vector4*)&$e.m20)),
+		   #(v3: (*(Math::Vector4*)&$e.m30))
+		)	 
+    )
+}
+
+;------------------------------------------------------------------------------
+;  Zero::pair
+;------------------------------------------------------------------------------
+
+
+Zero::pair<*>{
+	preview ( #( "(", $e.first, ",", $e.second , ")"))
+}
+
+
+;------------------------------------------------------------------------------
+;  Zero::String
+;------------------------------------------------------------------------------
+Zero::String{
+	preview		([$e.mNode->Data,s])
+	stringview	([$e.mNode->Data,s])
+	children (  #([Impl]: [$c,!]) )
+}
+
+
+;------------------------------------------------------------------------------
+;  Zero::StringRange
+;------------------------------------------------------------------------------
+Zero::StringRange{
+	preview		([$e.begin,s])
+	stringview	([$e.begin,s])
+	children (  #([Impl]: [$c,!]) )
+}
+
+;------------------------------------------------------------------------------
+;  Zero::FixedString
+;------------------------------------------------------------------------------
+Zero::FixedString<*>{
+	preview		([$e.mData,s])
+	stringview	([$e.mData,s])
+	children (  #([Impl]: [$c,!]) )
+}
+
+
+
+;------------------------------------------------------------------------------
+;  Zero::HashMap
+;------------------------------------------------------------------------------
+
+Zero::HashMap<*>{
+    preview(
+		#( "Map[", $e.mSize, "]" )
+	)
+
+    children(
+        #(
+	   [Impl]: [$c,!],
+            #array (
+                expr: &$c.mTable[$i],
+                size: $c.mTableSize
+            ) : #(
+                #array (
+                    expr: &$e,
+                    size: $e.next != 0
+                ) : $e.Value
+            )
+        )
+    )
+}
+
+;------------------------------------------------------------------------------
+;  Zero::HashSet
+;------------------------------------------------------------------------------
+
+Zero::HashSet<*>{
+    preview(
+		#( "Map[", $e.mSize, "]" )
+	)
+
+    children(
+        #(
+	   [Impl]: [$c,!],
+            #array (
+                expr: &$c.mTable[$i],
+                size: $c.mTableSize
+            ) : #(
+                #array (
+                    expr: &$e,
+                    size: $e.next != 0
+                ) : $e.Value
+            )
+        )
+    )
+}
+
+
+
+;------------------------------------------------------------------------------
+;  Zero::Array
+;------------------------------------------------------------------------------
+Zero::Array<*>|Zero::PodArray<*>{
+	children
+	(
+		#(
+			[Impl]: [$c,!],
+			#array
+			(
+			expr :		($e.mData)[$i],
+			size :		$e.mSize
+			)
+		)
+	)
+	preview
+	(
+		#( "Array[", $e.mSize, "]" )
+	)
+}
+
+Zero::Array<*>::range|Zero::PodArray<*>::range{
+  preview
+  (
+		#(
+      "ArrayRange[",
+			$e.end - $e.begin,
+      "]"
+		)
+	)
+  children
+  (
+		#(
+			#array(
+        expr: *($i + $e.begin),
+				size: $e.end - $e.begin
+			)
+		)
+	)
+}
+
+
+
+;------------------------------------------------------------------------------
+;  Zero::BlockArray
+;------------------------------------------------------------------------------
+Zero::BlockArray<*>{
+	preview
+  (
+		#(
+			"BlockArray[",
+			$e.mSize,
+			"]"
+		)
+	)
+  children
+	(
+		#(
+			#array(
+        expr: $e.mData[$i >> $e.ShiftSize][$i & $e.BucketMask],
+				size: $e.mSize
+			)
+		)
+	)
+}
+
+Zero::BlockArray<*>::iterator{
+  preview
+  (
+		#(
+      $e.mBlockArray->mData[($e.mCurrentIndex) >> $e.mBlockArray->ShiftSize][($e.mCurrentIndex) & $e.mBlockArray->BucketMask]
+		)
+	)
+}
+  
+Zero::BlockArray<*>::range{
+  preview
+  (
+		#(
+      "BlockArrayRange[",
+			$e.mEndIndex - $e.mCurrentIndex,
+      "]"
+		)
+	)
+  children
+  (
+		#(
+			#array(
+        expr: $e.mBlockArray->mData[($i + $e.mCurrentIndex) >> $e.mBlockArray->ShiftSize][($i + $e.mCurrentIndex) & $e.mBlockArray->BucketMask],
+				size: $e.mEndIndex - $e.mCurrentIndex
+			)
+		)
+	)
+}
+;------------------------------------------------------------------------------
+;  Zero::InList
+;------------------------------------------------------------------------------
+Zero::InList<*>{
+	children
+	(
+		#list
+		(
+			head : $e.header.Next,
+			skip : $e.header.Prev->Next,
+			next : Next
+		)
+	)
+	preview
+	(
+		#( "InList" )
+	)
+}
+
+;------------------------------------------------------------------------------
+;  Zero::Link
+;------------------------------------------------------------------------------
+Zero::Link<*>{
+	children
+	(
+		#list
+		(
+			head : $e.Next,
+			next : Next
+		)
+	)
+	preview
+	(
+		#( "InListLink" )
+	)
+}
+
+
+;------------------------------------------------------------------------------
+;  Zero::InDList
+;------------------------------------------------------------------------------
+Zero::InDList<*>{
+	children
+	(
+		#list
+		(
+			head : $e.header.Next,
+			skip : $e.header.Prev->Next,
+			next : Next
+		)
+	)
+	preview
+	(
+		#( "InList" )
+	)
+}

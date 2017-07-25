@@ -1,0 +1,18 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "SelectTool",
+	},
+	Archetyped = 
+	{
+		string Name = "5481899dff395b7a:SelectTool",
+	},
+	SelectTool = 
+	{
+	},
+},

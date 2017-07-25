@@ -1,0 +1,44 @@
+[Vertex]
+struct Real4x4MultiplyNormalTests_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageInput] var Normal : Real3;
+  [StageInput] var Position : Real3;
+  [StageInput] var Uv : Real2;
+  [SVOutput] var ApiPerspectivePosition : Real4;
+
+  [Main]
+  function Main()
+  {
+    var basicvertexfrag = BasicVertexFrag();
+    basicvertexfrag.Normal = this.Normal;
+    basicvertexfrag.Position = this.Position;
+    basicvertexfrag.Uv = this.Uv;
+    basicvertexfrag.Main();
+    this.ApiPerspectivePosition = basicvertexfrag.ApiPerspectivePosition;
+  }
+}
+[Pixel]
+struct Real4x4MultiplyNormalTests_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [Main]
+  function Main()
+  {
+    var real4x4multiplytests = Real4x4MultiplyTests();
+    real4x4multiplytests.Main();
+    this.Target0 = real4x4multiplytests.Target0;
+    this.Target1 = real4x4multiplytests.Target1;
+    this.Target2 = real4x4multiplytests.Target2;
+    this.Target3 = real4x4multiplytests.Target3;
+  }
+}

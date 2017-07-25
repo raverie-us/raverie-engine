@@ -1,0 +1,82 @@
+
+float4x4 WorldViewProjection : WorldViewProjection;
+float4x4 World : World;
+float4x4 WorldView : WorldView;
+float2 InvScreenDim = float2(1/800.0f, 1/600.0f);
+float2 ScreenDim = float2(800.0f, 600.0f);
+float FarClip = 500;
+
+float4x4 WorldFrustumNearPositions;
+float4x4 WorldFrustumVectors;
+
+sampler2D Color0;
+sampler2D Color1;
+
+struct VsInput
+{
+  float3 Position : POSITION;
+  float2 Tex0 : TEXCOORD0;
+  float Index : TEXCOORD1;
+};
+
+struct VsOutput
+{
+  float4 Position : POSITION;
+  float2 Tex0  : TEXCOORD0;
+  float3 WorldFrustumNearPosition : TEXCOORD1;
+  float3 WorldFrustumVector : TEXCOORD2;
+  
+  float Index : TEXCOORD3;
+};
+
+VsOutput VertexShader0( VsInput In )
+{
+  VsOutput Out;
+  Out.Position = float4(In.Position.xyz,1);
+  Out.Tex0 = In.Tex0;
+  Out.WorldFrustumNearPosition = WorldFrustumNearPositions[(int)In.Index].xyz;
+  Out.WorldFrustumVector = WorldFrustumVectors[(int)In.Index].xyz;
+  
+  Out.Index = In.Index;
+  return Out;
+}
+
+static const float2 samplerOffsets[4] = {float2(-1,-1), float2(1,-1), float2(1,1),  float2(-1,1)};
+
+float4 AverageSample4x4(float2 tex)
+{
+  float4 average = float4(0,0,0,0);
+
+  //Average 4x4 block from Color0
+  for(int i=0;i<4;++i)
+    average += tex2D(Color0, tex + samplerOffsets[i] * InvScreenDim);
+  average = average * 0.25f;
+  return average;
+}
+
+// Samples the 'w' component of the geobuffer
+// Screen coords must be in [0, 1] coordinate space
+// Returns depth in [0, 1], where 0 is the near plane and 1 is the far plane
+float GetNormalizedDepth(sampler2D geoBuffer, float2 screenCoords)
+{
+  return -tex2D(geoBuffer, screenCoords).w;
+}
+
+float DepthBlur(float2 uv, float2 offset)
+{
+    const int NumberOfSamples = 4;
+    float refDef = tex2D(Color1, uv).w;
+    float sum = 0;
+    float samples = 0.0;
+    float maxDepth = 0.3 / FarClip;
+    for(int i = -NumberOfSamples; i <= NumberOfSamples; ++i)
+    {
+        float2 offUv = uv + offset * i;
+        float testDepth = tex2D(Color1, offUv).w;
+        float coef = abs(testDepth - refDef) < maxDepth;
+        sum += tex2D(Color0, offUv).r * coef;
+        samples += coef;
+    }
+
+    return sum / samples;
+}

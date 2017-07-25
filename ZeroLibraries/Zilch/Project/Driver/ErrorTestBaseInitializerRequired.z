@@ -1,0 +1,13 @@
+class Animal
+{
+  constructor()
+  {
+  }
+}
+
+class Cat : Animal
+{
+  constructor()
+  {
+  }
+}

@@ -1,0 +1,12 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Default"
+		var ResourceId = 0x5274cf95e4a661fd
+		var LoaderType = "Atlas"
+		var Version = 0
+		var ShowInEditor = true
+	}
+}

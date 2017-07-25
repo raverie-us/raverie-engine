@@ -1,0 +1,1153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{26ef0be5-5d96-4b7c-af13-3eca02c4db63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataEditors">
+      <UniqueIdentifier>{18aaba35-032f-4c92-a4db-73316381f60c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{5db66cf7-5c23-4956-a8f0-8dcf597cdaee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{5cded2e0-6fea-4e62-853e-2654266d372b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorCore">
+      <UniqueIdentifier>{c95faa2b-4414-4218-90f1-843a3db66f0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Operation">
+      <UniqueIdentifier>{f88203b9-201e-4e7a-b1af-09a47eb98f12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Automation">
+      <UniqueIdentifier>{2d19c0e0-4da1-47cc-a57e-dd92dba6b83e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi">
+      <UniqueIdentifier>{39e1f0a8-9d20-403e-af6c-73c6a5b89e64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\Loading">
+      <UniqueIdentifier>{dc205dba-3997-4870-8a4c-b967414ad3e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\Notification">
+      <UniqueIdentifier>{dcafa46b-5bd5-42c2-9473-b7022e637ee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\Find">
+      <UniqueIdentifier>{744f334d-aabb-4c41-b7cb-21c664dbd8e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor3d">
+      <UniqueIdentifier>{243a1f19-7f81-43dc-8abd-d5aceb317378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeightMap">
+      <UniqueIdentifier>{c07103d4-f106-4416-bd4e-03908003dfb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\Animator">
+      <UniqueIdentifier>{11236095-15d5-44c8-baa6-62961078db41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TileMap">
+      <UniqueIdentifier>{41c097f5-2829-47c1-97e9-bc0313bcbcf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\TextEdit">
+      <UniqueIdentifier>{cf3efc24-081e-4068-a4a2-5cea1c971e11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\EditorWindows">
+      <UniqueIdentifier>{b41eb9f1-6028-4dec-adef-0100c7143762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\Support">
+      <UniqueIdentifier>{dd21fff4-e505-41b8-9b9f-daa43e228aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{c5603f7d-eab1-4a4d-ad01-d444c95a0a92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\ResourceEditors">
+      <UniqueIdentifier>{a40a36b9-dbf2-48a2-b98e-486b8e098732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\ResourceEditors\Sprite">
+      <UniqueIdentifier>{3f804bc9-997e-4ad1-be89-2813824e7d3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\Animator\Editors">
+      <UniqueIdentifier>{6aef8ff5-9c4e-4e2c-a781-3f9bf604aea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\CurveEditor">
+      <UniqueIdentifier>{8b4f3965-4215-4ef2-a23b-7e34743e46a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataEditors\PropertyWidgets">
+      <UniqueIdentifier>{900b08ef-3766-4c0b-8f03-30b7d7702d31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\PreviewWidget">
+      <UniqueIdentifier>{e46eeb28-223c-4b77-8af4-f73026b163e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graph">
+      <UniqueIdentifier>{efdc43b9-ee27-4093-8023-346f90a9d530}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands\Searching">
+      <UniqueIdentifier>{c1c10f01-7ee4-496c-b209-967f4cbf16d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Testing">
+      <UniqueIdentifier>{e488b8e3-4891-4b60-841e-6c7588aae004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Operations">
+      <UniqueIdentifier>{b05a1ee5-4949-4088-9a7f-eb334698c404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ContentImporting">
+      <UniqueIdentifier>{4a6aaf94-aae0-45d0-8272-7bb1681e6b8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Downloads">
+      <UniqueIdentifier>{6a1a1fba-9032-46ae-bda6-123a19d6ba2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BackgroundTask">
+      <UniqueIdentifier>{1507e66a-976c-458a-96fb-66c1be39552a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\AnimationGraph">
+      <UniqueIdentifier>{e9c1515c-0b09-4e87-9212-57b70d803029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderGraph">
+      <UniqueIdentifier>{b9019c82-1f85-4bc2-b63a-c9d1edaf8a3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor3d\EditorViewport">
+      <UniqueIdentifier>{1fe320bd-c7ef-48e1-8e46-280ea1ee18e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\NodeGraph">
+      <UniqueIdentifier>{dd58164b-b5ba-47b9-a3a6-9e3e77cf4d97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LogicGraph">
+      <UniqueIdentifier>{b73bd4d9-232a-408c-821a-98c8dc83c6f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gizmo">
+      <UniqueIdentifier>{ab75ee83-08db-4472-ad19-55d344d312fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorUi\Network">
+      <UniqueIdentifier>{60b4bb0d-f7aa-4079-8829-c8cfe833a5f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Operation\CustomOperations">
+      <UniqueIdentifier>{180a30c1-1910-45cb-b04e-63496772a65b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scintilla">
+      <UniqueIdentifier>{6dbd9b2f-32da-4ed4-9a6e-bfef139ca186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scintilla\Source">
+      <UniqueIdentifier>{b57f1fec-2323-4aa8-b92b-01933d5b0ac0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scintilla\Source\ZeroPlatform">
+      <UniqueIdentifier>{0d7bf2c6-19b4-419c-9e26-876c0b3d0f03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scintilla\Source\Interfaces">
+      <UniqueIdentifier>{f2675841-6e48-4f7d-8ac3-ad48456f8a66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scintilla\Source\Lexerlib">
+      <UniqueIdentifier>{909b9dc5-5018-4a51-b7b4-547dafaa000c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scintilla\Source\Lexers">
+      <UniqueIdentifier>{ed310ad4-5b05-48bd-bee5-fb0315a87a8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scintilla\Source\ScintillaCore">
+      <UniqueIdentifier>{e713b8c2-46df-4357-b417-35212569d61a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ClothTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>EditorCore</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCameraController.cpp">
+      <Filter>Editor3d</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="JointTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUtility.cpp">
+      <Filter>EditorCore</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolControl.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Loading.cpp">
+      <Filter>EditorUi\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="BroadPhaseEditor.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaDrop.cpp">
+      <Filter>EditorUi\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\TreeView.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\GraphView.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\VariantEditor.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\PropertyView.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="FindDialog.cpp">
+      <Filter>EditorUi\Find</Filter>
+    </ClCompile>
+    <ClCompile Include="NotificationUi.cpp">
+      <Filter>EditorUi\Notification</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorMain.cpp">
+      <Filter>EditorCore</Filter>
+    </ClCompile>
+    <ClCompile Include="GridDraw.cpp">
+      <Filter>Editor3d</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapTool.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapDebugging.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\BasicPropertyEditors.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\EnginePropertyEditors.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationEditor.cpp">
+      <Filter>EditorUi\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="TileEditor2D.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\TileView.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionTableEditor.cpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorGradientEditor.cpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEditor.cpp">
+      <Filter>EditorUi\TextEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Document.cpp">
+      <Filter>EditorUi\TextEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="AddRemoveListBox.cpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPicker.cpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorList.cpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtraWidgets.cpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageBox.cpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTableEditor.cpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollingGraph.cpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="StressTest.cpp">
+      <Filter>Automation</Filter>
+    </ClCompile>
+    <ClCompile Include="WatchView.cpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphWidget.cpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleUi.cpp">
+      <Filter>EditorUi\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="Scratchboard.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteEditor.cpp">
+      <Filter>Resources\ResourceEditors\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteImporter.cpp">
+      <Filter>Resources\ResourceEditors\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="TilePaletteView.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="TilePaletteSource.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorProject.cpp">
+      <Filter>EditorCore</Filter>
+    </ClCompile>
+    <ClCompile Include="BugReport.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
+    <ClCompile Include="LibraryView.cpp">
+      <Filter>EditorUi\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertyInterface.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationSettings.cpp">
+      <Filter>EditorUi\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationControls.cpp">
+      <Filter>EditorUi\Animator\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationGraph.cpp">
+      <Filter>EditorUi\Animator\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationScrubber.cpp">
+      <Filter>EditorUi\Animator\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationTrackView.cpp">
+      <Filter>EditorUi\Animator\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationEditorData.cpp">
+      <Filter>EditorUi\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="SampleCurveEditor.cpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="OrientationGizmoViewport.cpp">
+      <Filter>Editor3d</Filter>
+    </ClCompile>
+    <ClCompile Include="CurveEditor.cpp">
+      <Filter>EditorUi\CurveEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\PropertyWidgets.cpp">
+      <Filter>DataEditors\PropertyWidgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\PropertyWidget.cpp">
+      <Filter>DataEditors\PropertyWidgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Property\PropertyWidgetObject.cpp">
+      <Filter>DataEditors\PropertyWidgets</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiPropertyInterface.cpp">
+      <Filter>EditorCore</Filter>
+    </ClCompile>
+    <ClCompile Include="TilePaletteProperty.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="PreviewWidget.cpp">
+      <Filter>EditorUi\PreviewWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="PreviewWidgets.cpp">
+      <Filter>EditorUi\PreviewWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="MainPropertyView.cpp">
+      <Filter>EditorCore</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorGraphs.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchiveProjectCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CreationCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandSelector.cpp">
+      <Filter>Commands\Searching</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorSearchProviders.cpp">
+      <Filter>Commands\Searching</Filter>
+    </ClCompile>
+    <ClCompile Include="AppCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectView.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionHistory.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
+    <ClCompile Include="AddWindow.cpp">
+      <Filter>Resources\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentLogic.cpp">
+      <Filter>Resources\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorImport.cpp">
+      <Filter>Resources\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupImport.cpp">
+      <Filter>Resources\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceOperations.cpp">
+      <Filter>Resources\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorDrop.cpp">
+      <Filter>Resources\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentStore.cpp">
+      <Filter>ContentImporting</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentPackage.cpp">
+      <Filter>ContentImporting</Filter>
+    </ClCompile>
+    <ClCompile Include="Downloads.cpp">
+      <Filter>Downloads</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundTaskUi.cpp">
+      <Filter>BackgroundTask</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundTask.cpp">
+      <Filter>BackgroundTask</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentPackage.cpp">
+      <Filter>ContentImporting</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentPackageItem.cpp">
+      <Filter>ContentImporting</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentUploader.cpp">
+      <Filter>ContentImporting</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentPackage.cpp" />
+    <ClCompile Include="ContentPackageImporter.cpp">
+      <Filter>ContentImporting</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentPackage.cpp">
+      <Filter>ContentImporting</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceEditors.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="DocumentationCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeViewSearch.cpp">
+      <Filter>DataEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorViewport.cpp">
+      <Filter>Editor3d\EditorViewport</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorViewportMenu.cpp">
+      <Filter>Editor3d\EditorViewport</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiConvexMeshEditor.cpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="OnionSkinning.cpp">
+      <Filter>EditorUi\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorHotspots.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleBackgroundTasks.cpp">
+      <Filter>BackgroundTask</Filter>
+    </ClCompile>
+    <ClCompile Include="CogCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Gizmo.cpp">
+      <Filter>Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicGizmos.cpp">
+      <Filter>Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformGizmos.cpp">
+      <Filter>Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="GizmoDrag.cpp">
+      <Filter>Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="NetPropertyIcon.cpp">
+      <Filter>EditorUi\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="NetOperations.cpp">
+      <Filter>Operation\CustomOperations</Filter>
+    </ClCompile>
+    <ClCompile Include="HotKeyEditor.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTransformTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="RotationBasisGizmos.cpp">
+      <Filter>Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorStandard.cpp" />
+    <ClCompile Include="LauncherCommunicationEvent.cpp">
+      <Filter>EditorCore</Filter>
+    </ClCompile>
+    <ClCompile Include="TextEditorHotspot.cpp">
+      <Filter>Scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="TextEditor.cpp">
+      <Filter>Scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorScheme.cpp">
+      <Filter>Scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexers\LexCPP.cxx">
+      <Filter>Scintilla\Source\Lexers</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexers\LexPython.cxx">
+      <Filter>Scintilla\Source\Lexers</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\LexerBase.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\LexerModule.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\LexerNoExceptions.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\LexerSimple.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\PropSetSimple.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\StyleContext.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\WordList.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\Accessor.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\lexlib\CharacterSet.cxx">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\AutoComplete.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\CallTip.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\Catalogue.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\CellBuffer.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\CharClassify.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\ContractionState.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\Decoration.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\ExternalLexer.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\Indicator.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\KeyMap.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\LineMarker.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\PerLine.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\PositionCache.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\RESearch.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\RunStyles.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\ScintillaBase.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\ScintillaDocument.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\ScintillaEditor.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\Selection.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\Style.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\UniConversion.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\ViewStyle.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\ScintillaPlatformZero.cpp">
+      <Filter>Scintilla\Source\ZeroPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="Scintilla\src\XPM.cxx">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UndoPropertyInterface.cpp">
+      <Filter>EditorCore</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapImporter.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemList.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCameraMouseDrag.cpp">
+      <Filter>Editor3d\EditorViewport</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapUndoRedo.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapStateManager.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClothTools.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Precompiled.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCameraController.hpp">
+      <Filter>Editor3d</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCommands.hpp">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="JointTools.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorUtility.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolControl.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Loading.hpp">
+      <Filter>EditorUi\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaDrop.hpp">
+      <Filter>EditorUi\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhaseEditor.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\TreeView.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\GraphView.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\VariantEditor.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\DataBaseTemplate.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\PropertyView.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="FindDialog.hpp">
+      <Filter>EditorUi\Find</Filter>
+    </ClInclude>
+    <ClInclude Include="NotificationUi.hpp">
+      <Filter>EditorUi\Notification</Filter>
+    </ClInclude>
+    <ClInclude Include="Export.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="GridDraw.hpp">
+      <Filter>Editor3d</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapTool.hpp">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapDebugging.hpp">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\BasicPropertyEditors.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationEditor.hpp">
+      <Filter>EditorUi\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="TileEditor2D.hpp">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\TileView.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionTableEditor.hpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorGradientEditor.hpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEditor.hpp">
+      <Filter>EditorUi\TextEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Document.hpp">
+      <Filter>EditorUi\TextEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="AddRemoveListBox.hpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPicker.hpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorList.hpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtraWidgets.hpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageBox.hpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceTableEditor.hpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollingGraph.hpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="StressTest.hpp">
+      <Filter>Automation</Filter>
+    </ClInclude>
+    <ClInclude Include="WatchView.hpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphWidget.hpp">
+      <Filter>EditorUi\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleUi.hpp">
+      <Filter>EditorUi\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratchboard.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteImporter.hpp">
+      <Filter>Resources\ResourceEditors\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteEditor.hpp">
+      <Filter>Resources\ResourceEditors\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="TilePaletteView.hpp">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TilePaletteSource.hpp">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorProject.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="BugReport.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="LibraryView.hpp">
+      <Filter>EditorUi\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyInterface.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationSettings.hpp">
+      <Filter>EditorUi\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationControls.hpp">
+      <Filter>EditorUi\Animator\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationGraph.hpp">
+      <Filter>EditorUi\Animator\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationScrubber.hpp">
+      <Filter>EditorUi\Animator\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationTrackView.hpp">
+      <Filter>EditorUi\Animator\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationEditorData.hpp">
+      <Filter>EditorUi\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleCurveEditor.hpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="OrientationGizmoViewport.hpp">
+      <Filter>Editor3d</Filter>
+    </ClInclude>
+    <ClInclude Include="CurveEditor.hpp">
+      <Filter>EditorUi\CurveEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\PropertyWidgetObject.hpp">
+      <Filter>DataEditors\PropertyWidgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\PropertyWidgets.hpp">
+      <Filter>DataEditors\PropertyWidgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Property\PropertyWidget.hpp">
+      <Filter>DataEditors\PropertyWidgets</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiPropertyInterface.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="TilePaletteProperty.hpp">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="PreviewWidget.hpp">
+      <Filter>EditorUi\PreviewWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPropertyView.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="AllCommands.hpp">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandSelector.hpp">
+      <Filter>Commands\Searching</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorSearchProviders.hpp">
+      <Filter>Commands\Searching</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectView.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionHistory.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupImport.hpp">
+      <Filter>Resources\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="AddWindow.hpp">
+      <Filter>Resources\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentLogic.hpp">
+      <Filter>Resources\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorImport.hpp">
+      <Filter>Resources\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceOperations.hpp">
+      <Filter>Resources\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorDrop.hpp">
+      <Filter>Resources\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentStore.hpp">
+      <Filter>ContentImporting</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentPackage.hpp">
+      <Filter>ContentImporting</Filter>
+    </ClInclude>
+    <ClInclude Include="Downloads.hpp">
+      <Filter>Downloads</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundTaskUi.hpp">
+      <Filter>BackgroundTask</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundTask.hpp">
+      <Filter>BackgroundTask</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentPackage.hpp">
+      <Filter>ContentImporting</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentPackageItem.hpp">
+      <Filter>ContentImporting</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentUploader.hpp">
+      <Filter>ContentImporting</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentPackage.hpp" />
+    <ClInclude Include="ContentPackageImporter.hpp">
+      <Filter>ContentImporting</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentPackage.hpp">
+      <Filter>ContentImporting</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceEditors.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeViewSearch.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeViewFilter.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorViewport.hpp">
+      <Filter>Editor3d\EditorViewport</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorViewportMenu.hpp">
+      <Filter>Editor3d\EditorViewport</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiConvexMeshEditor.hpp">
+      <Filter>Resources\ResourceEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="OnionSkinning.hpp">
+      <Filter>EditorUi\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorHotspots.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleBackgroundTasks.hpp">
+      <Filter>BackgroundTask</Filter>
+    </ClInclude>
+    <ClInclude Include="CogCommand.hpp">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Gizmo.hpp">
+      <Filter>Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicGizmos.hpp">
+      <Filter>Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformGizmos.hpp">
+      <Filter>Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmoDrag.hpp">
+      <Filter>Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformTools.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="NetPropertyIcon.hpp">
+      <Filter>EditorUi\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetOperations.hpp">
+      <Filter>Operation\CustomOperations</Filter>
+    </ClInclude>
+    <ClInclude Include="HotKeyEditor.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTransformTools.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsCommands.hpp">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="RotationBasisGizmos.hpp">
+      <Filter>Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorStandard.hpp" />
+    <ClInclude Include="EditorScriptObject.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="LauncherCommunicationEvent.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorScheme.hpp">
+      <Filter>Scintilla</Filter>
+    </ClInclude>
+    <ClInclude Include="TextEditorHotspot.hpp">
+      <Filter>Scintilla</Filter>
+    </ClInclude>
+    <ClInclude Include="TextEditor.hpp">
+      <Filter>Scintilla</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\LexAccessor.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\LexerBase.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\LexerModule.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\LexerNoExceptions.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\LexerSimple.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\OptionSet.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\Precompiled.hpp">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\PropSetSimple.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\SparseState.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\StyleContext.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\WordList.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\Accessor.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\lexlib\CharacterSet.h">
+      <Filter>Scintilla\Source\Lexerlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\AutoComplete.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\CallTip.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\Catalogue.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\CellBuffer.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\CharClassify.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\ContractionState.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\Decoration.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\ExternalLexer.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\FontQuality.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\Indicator.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\KeyMap.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\LineMarker.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\Partitioning.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\PerLine.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\PositionCache.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\Precompiled.hpp">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\RESearch.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\RunStyles.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\ScintillaBase.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\ScintillaDocument.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\ScintillaEditor.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\Selection.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\SplitVector.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\Style.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\SVector.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\UniConversion.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\ViewStyle.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\src\XPM.h">
+      <Filter>Scintilla\Source\ScintillaCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\include\ILexer.h">
+      <Filter>Scintilla\Source\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\include\Platform.h">
+      <Filter>Scintilla\Source\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\include\SciLexer.h">
+      <Filter>Scintilla\Source\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\include\Scintilla.h">
+      <Filter>Scintilla\Source\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\include\ScintillaWidget.h">
+      <Filter>Scintilla\Source\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\ScintillaPlatformZero.hpp">
+      <Filter>Scintilla\Source\ZeroPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="Scintilla\ScintillaPrecompiled.hpp">
+      <Filter>Scintilla\Source\ZeroPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorMain.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaCompositionWrapper.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoPropertyInterface.hpp">
+      <Filter>EditorCore</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapImporter.hpp">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TileLayout.hpp">
+      <Filter>DataEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemList.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCameraMouseDrag.hpp">
+      <Filter>Editor3d\EditorViewport</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapUndoRedo.hpp">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapStateManager.hpp">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

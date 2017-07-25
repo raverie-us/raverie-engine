@@ -1,0 +1,37 @@
+[Vertex]
+struct SystemValues1_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVOutput] var ApiPerspectivePosition : Real4;
+  [SVInput] var VertexId : Integer;
+
+  [Main]
+  function Main()
+  {
+    var svvertex1 = SVVertex1();
+    svvertex1.VertexId = this.VertexId;
+    svvertex1.Main();
+    this.ApiPerspectivePosition = svvertex1.ApiPerspectivePosition;
+  }
+}
+[Pixel]
+struct SystemValues1_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVOutput] var PixelDepth : Real;
+  // Fragment Properties
+  [Uniform][Input] var SVPixel1_PrimitiveId : Integer;
+
+  [Main]
+  function Main()
+  {
+    var svpixel1 = SVPixel1();
+    svpixel1.PrimitiveId = this.SVPixel1_PrimitiveId;
+    svpixel1.Main();
+    this.PixelDepth = svpixel1.PixelDepth;
+  }
+}

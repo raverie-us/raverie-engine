@@ -1,0 +1,20 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "ZeroMaterial"
+		var ResourceId = 0x583afb5e7bf75e18
+		var LoaderType = "Material"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = ""
+		var Description = "A material template"
+		var SortWeight = 10
+		var Category = ""
+		var CategorySortWeight = 100
+	}
+}

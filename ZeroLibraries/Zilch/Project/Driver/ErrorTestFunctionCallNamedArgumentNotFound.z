@@ -1,0 +1,16 @@
+// FunctionCallNamedArgumentNotFound
+
+class Animal
+{
+  var Variable : Integer = 9;
+
+  function TestA(count : Real, something : Real) : Real
+  {
+    return count + something;
+  }
+
+  function TestB() : Real
+  {
+    return this.TestA(count : 5.0, something : );
+  }
+}

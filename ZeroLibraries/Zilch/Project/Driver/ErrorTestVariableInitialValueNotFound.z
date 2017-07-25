@@ -1,0 +1,6 @@
+// VariableInitialValueNotFound
+
+class Animal
+{
+  var Variable : Integer = ;
+}

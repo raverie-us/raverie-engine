@@ -1,0 +1,13 @@
+[Command(autoRegister:true)]
+class %RESOURCENAME% : ZilchComponent
+{
+	function Initialize(init : CogInitializer)
+	{
+		Zero.Connect(this.Owner, Events.CommandExecute, this.OnCommandExecute);
+	}
+
+	function OnCommandExecute(event : CommandEvent)
+	{
+		Console.WriteLine("%RESOURCENAME% Command Executed");
+	}
+}

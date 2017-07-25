@@ -1,0 +1,20 @@
+[Version:1]
+Cog 
+{
+	var Name = ""
+	ZeroTemplate 
+	{
+		var SKU = "Template2dProject"
+		var VersionId = "0"
+		var DisplayName = "EMPTY 2D\nPROJECT"
+		var Author = "DigiPen"
+		var Description = "A template project for 2d games."
+		var Date = "3/30/2015"
+		var SortPriority = 1
+		var Tags = "Testing, Stuff"
+		var TemplatePath = "Templates/./Template2dProject"
+		var TemplateFileName = "Template2dProject.zerotemplate"
+		var IconUrl = "Template2dPreview.png"
+		var PreviewUrl = ""
+	}
+}

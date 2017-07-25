@@ -1,0 +1,104 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+flat in int psInPrimitiveId;
+in vec4 psInApiPerspectivePosition;
+flat in int psInVertexId;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct SVPixel2
+{
+  int PrimitiveId;
+  vec4 ApiPerspectivePosition;
+  int VertexId;
+};
+
+struct SystemValues2_Pixel
+{
+  float Time;
+  int PrimitiveId;
+  vec4 ApiPerspectivePosition;
+  int VertexId;
+};
+
+//----- Forward Declarations -----
+void _SVPixel2PreConstructor(inout SVPixel2 self);
+SVPixel2 _SVPixel2Constructor();
+void _SVPixel2Main(inout SVPixel2 self);
+
+void _SystemValues2_PixelPreConstructor(inout SystemValues2_Pixel self);
+SystemValues2_Pixel _SystemValues2_PixelConstructor();
+void _SystemValues2_PixelMain(inout SystemValues2_Pixel self);
+void CopyInputs(inout SystemValues2_Pixel self);
+void CopyOutputs(inout SystemValues2_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- SVPixel2 Functions -----
+void _SVPixel2PreConstructor(inout SVPixel2 self)
+{
+  self.PrimitiveId = int(0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.VertexId = int(0);
+}
+
+SVPixel2 _SVPixel2Constructor()
+{
+  SVPixel2 self;
+  _SVPixel2PreConstructor(self);
+  return self;
+}
+
+void _SVPixel2Main(inout SVPixel2 self)
+{
+  self.ApiPerspectivePosition = vec4(float(self.PrimitiveId));
+}
+
+//----- SystemValues2_Pixel Functions -----
+void _SystemValues2_PixelPreConstructor(inout SystemValues2_Pixel self)
+{
+  self.Time = float(0.0);
+  self.PrimitiveId = int(0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.VertexId = int(0);
+}
+
+SystemValues2_Pixel _SystemValues2_PixelConstructor()
+{
+  SystemValues2_Pixel self;
+  _SystemValues2_PixelPreConstructor(self);
+  return self;
+}
+
+void _SystemValues2_PixelMain(inout SystemValues2_Pixel self)
+{
+  SVPixel2 _svpixel2 = _SVPixel2Constructor();
+  _svpixel2.PrimitiveId = self.PrimitiveId;
+  _svpixel2.ApiPerspectivePosition = self.ApiPerspectivePosition;
+  _svpixel2.VertexId = self.VertexId;
+  _SVPixel2Main(_svpixel2);
+}
+
+//----- SystemValues2_Pixel Final Shader Functions -----
+void CopyInputs(inout SystemValues2_Pixel self)
+{
+  self.Time = Time;
+  self.PrimitiveId = psInPrimitiveId;
+  self.ApiPerspectivePosition = psInApiPerspectivePosition;
+  self.VertexId = psInVertexId;
+}
+
+void CopyOutputs(inout SystemValues2_Pixel self)
+{
+}
+
+//----- Main -----
+void main(void)
+{
+  SystemValues2_Pixel systemvalues2_pixel = _SystemValues2_PixelConstructor(); 
+  CopyInputs(systemvalues2_pixel);
+  _SystemValues2_PixelMain(systemvalues2_pixel);
+  CopyOutputs(systemvalues2_pixel);
+}
+
