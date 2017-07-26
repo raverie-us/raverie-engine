@@ -118,7 +118,9 @@ void WriteBuildInfo()
   builder.AppendFormat("PatchVersion %d\n", GetPatchVersion());
   builder.AppendFormat("RevisionId %d\n", GetRevisionNumber());
   builder.AppendFormat("Platform \"%s\"\n", GetPlatformString());
-  builder.AppendFormat("ExperimentalBranchName \"%s\"\n", GetExperimentalBranchName());
+  cstr experimentalBranchName = GetExperimentalBranchName();
+  if(experimentalBranchName != nullptr)
+    builder.AppendFormat("ExperimentalBranchName \"%s\"\n", experimentalBranchName);
   builder.AppendFormat("ShortChangeSet \"%s\"\n", GetShortChangeSetString());
   builder.AppendFormat("ChangeSet \"%s\"\n", GetChangeSetString());
   builder.AppendFormat("ChangeSetDate \"%s\"\n", GetChangeSetDateString());

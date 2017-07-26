@@ -199,6 +199,22 @@ bool ZeroTemplate::TestBuildId(const BuildId& buildId)
   return foundMatch;
 }
 
+bool ZeroTemplate::IsMoreExactRangeThan(const BuildId& buildId, ZeroTemplate* otherTemplate)
+{
+  // Find the best build range for 'this' template. If one doesn't exist then this is not a more exact range.
+  BuildIdRange* myBuildRange = FindBestBuildRange(buildId);
+  if(myBuildRange == nullptr)
+    return false;
+
+  // Find the best build range for the 'other' template. If it doesn't exist then 'this' is the better range.
+  BuildIdRange* otherBuildRange = otherTemplate->FindBestBuildRange(buildId);
+  if(otherBuildRange == nullptr)
+    return true;
+
+  // Otherwise, check which build has the sooner min.
+  return !myBuildRange->mMin.IsOlderThan(otherBuildRange->mMin);
+}
+
 bool ZeroTemplate::ParseVersionId(StringParam versionId, BuildIdList& buildIds)
 {
   // Split on ',' and parse each remaining string as a range/individual id value.
@@ -283,6 +299,16 @@ bool ZeroTemplate::ParseVersionId(StringParam versionId, BuildId& buildId)
   }
 
   return true;
+}
+
+ZeroTemplate::BuildIdRange* ZeroTemplate::FindBestBuildRange(const BuildId& buildId)
+{
+  for(size_t i = 0; i < mBuildIds.Size(); ++i)
+  {
+    if(TestBuildId(buildId, mBuildIds[i]))
+      return &mBuildIds[i];
+  }
+  return nullptr;
 }
 
 bool ZeroTemplate::TestBuildId(const BuildId& buildId, BuildIdRange& buildIdRange)
