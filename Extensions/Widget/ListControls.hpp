@@ -41,10 +41,6 @@ public:
   int GetSelectedItem(){return mSelectedItem;}
   Vec2 GetSizeWithItems(float width, int itemCount);
 
-  int GetHighlightItem( ) { return mHighlightItem; }
-
-  const Text* GetSelectedWidgetUnsafe(int index) { return mTextBlocks[index].second; }
-
   uint GetCount(){return mDataSource->GetCount();}
   void HighlightItem(int index);
   void SetDataSource(ListSource* source);
@@ -59,9 +55,6 @@ public:
   void SetBorderColor(Vec4Param color);
   Vec4 GetBorderColor();
 
-  bool mCustomBorderColor;
-
-private: 
   //Events
   void OnScrollUpdate(ObjectEvent* object);
   void OnMouseMove(MouseEvent* event);
@@ -74,6 +67,9 @@ private:
   void OnKeyDown(KeyboardEvent* event);
 
   int IndexFromPosition(Vec2Param localPosition);
+
+  bool mCustomBorderColor;
+
   ListSource* mDataSource;
   Element* mBackground;
   Element* mBorder;
@@ -139,7 +135,6 @@ public:
   ListSource* mDataSource;
   int mSelectedItem;
   bool mScrollToSelected;
-
 };
 
 //------------------------------------------------------------- String Combo Box

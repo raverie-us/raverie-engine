@@ -395,6 +395,9 @@ public:
     ConnectThisTo(mSelectBox, Events::ListBoxOpened, OnListBoxOpen);
     ConnectThisTo(mSelectBox, Events::MouseHover, OnSelectedItemHover);
     ConnectThisTo(mSelectorButton, Events::MouseHover, OnButtonMouseHover);
+
+    //forRange(TextButton* button, mSelectorButton->mButtons.All( ))
+    //  ConnectThisTo(button, Events::MouseEnter, OnButtonMouseEnter);
   }
 
   void Refresh() override
@@ -449,6 +452,13 @@ public:
 
   void OnListBoxOpen(Event* event)
   {
+    //int entryCount = mSelectBox->mListBox->mTextBlocks.Size( );
+    //for(int i = 0; i < entryCount; ++i)
+    //{
+    //  Element* entry = mSelectBox->mListBox->mTextBlocks[i].first;
+    //  ConnectThisTo(entry, Events::MouseHover, OnListMouseEnter);
+    //}
+
     ConnectThisTo(*mSelectBox->mListBox, Events::MouseHover, OnListMouseHover);
   }
 
@@ -461,21 +471,54 @@ public:
 
   void OnListMouseHover(MouseEvent* event)
   {
-    StringBuilder toolTip;
-    Rect placement = GetListToolTip(&toolTip);
+    int index = mSelectBox->mListBox->mHighlightItem;
+    if(index == -1 || uint(index) > mSelectBox->mDataSource->GetCount( ))
+      return;
 
-    CreateToolTip(toolTip.ToString( ), mSelectBox->mListBox, placement);
+    StringBuilder toolTip;
+    Element* entry = mSelectBox->mListBox->mTextBlocks[index].first;
+
+    GetEnumToolTip(mStrings[index], &toolTip);
+    CreateToolTip(toolTip.ToString( ), mSelectBox->mListBox, entry->GetScreenRect());
   }
 
   void OnButtonMouseHover(MouseEvent* event)
   {
+    int index = mSelectorButton->mHoverItem;
+    if(index == -1 || uint(index) > mSelectorButton->mButtons.Size( ))
+      return;
+
     StringBuilder toolTip;
-    GetButtonToolTip(&toolTip);
-    CreateToolTip(toolTip.ToString( ), mSelectorButton->GetHoverButton( ));
+    TextButton* button = mSelectorButton->mButtons[index];
+
+    GetEnumToolTip(mStrings[index], &toolTip);
+    CreateToolTip(toolTip.ToString( ), mSelectorButton);
   }
 
-  void CreateToolTip(StringParam toolTipText, Widget* source,
-    const Rect& screenRect = Rect::NullRect( ))
+  //void OnListMouseEnter(MouseEvent* event)
+  //{
+  //  StringBuilder toolTip;
+  //  // Known to be of type 'Element' as that is how the event connection was setup.
+  //  Element* entry = (Element*)event->Source;
+  //  // 'mHighlightItem' known to be a valid index as only a MouseEnter on a valid
+  //  // ListBox item can trigger this event-handler method.
+  //  String text = mStrings[mSelectBox->mListBox->mHighlightItem];
+
+  //  GetEnumToolTip(text, &toolTip);
+  //  CreateToolTip(toolTip.ToString( ), mSelectBox->mListBox, entry->GetScreenRect());
+  //}
+
+  //void OnButtonMouseEnter(MouseEvent* event)
+  //{
+  //  StringBuilder toolTip;
+  //  // Known to be of type 'TextButton' as that is how the event connection was setup.
+  //  TextButton* button = (TextButton*)event->Source;
+
+  //  GetEnumToolTip(button->mButtonText->mText, &toolTip);
+  //  CreateToolTip(toolTip.ToString( ), event->Source);
+  //}
+
+  void CreateToolTip(StringParam toolTipText, Widget* source, RectParam screenRect = Rect::cZero)
   {
     if(toolTipText.Empty( ))
       return;
@@ -490,10 +533,10 @@ public:
 
     ToolTipPlacement placement;
 
-    if(screenRect.IsValid())
-      placement.SetScreenRect(screenRect);
-    else
+    if(screenRect == Rect::cZero)
       placement.SetScreenRect(GetScreenRect( ));
+    else
+      placement.SetScreenRect(screenRect);
 
     placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
       IndicatorSide::Bottom, IndicatorSide::Top);
@@ -501,13 +544,11 @@ public:
     mToolTip->SetArrowTipTranslation(placement);
   }
 
-  void GetEnumToolTip(int enumIndex, StringBuilder* toolTip)
+  void GetEnumToolTip(StringParam enumString, StringBuilder* toolTip)
   {
     EnumDoc* enumDoc = Z::gDocumentation->mEnumAndFlagMap.FindValue(mEnumType->Name, nullptr);
     if(enumDoc == nullptr)
       return;
-
-    String enumString = mStrings.Strings[enumIndex];
 
     String valueDescription = enumDoc->mEnumValues.FindValue(enumString, "");
     if(valueDescription.Empty( ))
@@ -526,31 +567,7 @@ public:
     if(index == -1 || uint(index) > mSelectBox->mDataSource->GetCount( ))
       return;
 
-    GetEnumToolTip(index, toolTip);
-  }
-
-  Rect GetListToolTip(StringBuilder* toolTip)
-  {
-    ListBox* listBox = mSelectBox->mListBox;
-
-    // Make sure the highlighted item is valid
-    int index = listBox->GetHighlightItem( );
-    if(index == -1 || uint(index) > mSelectBox->mDataSource->GetCount( ))
-      return Rect::NullRect();
-
-    GetEnumToolTip(index, toolTip);
-
-    return listBox->GetSelectedWidgetUnsafe(index)->GetScreenRect( );
-  }
-
-  void GetButtonToolTip(StringBuilder* toolTip)
-  {
-    // Make sure the highlighted item is valid
-    int index = mSelectorButton->GetHoverItem();
-    if(index == -1)
-      return;
-
-    GetEnumToolTip(index, toolTip);
+    GetEnumToolTip(mStrings[index], toolTip);
   }
 
   void UpdateTransform() override

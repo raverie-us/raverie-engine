@@ -80,6 +80,8 @@ Thickness Thickness::operator+(const Thickness& rhs)
 
 //------------------------------------------------------------------------- Rect
 
+const Rect Rect::cZero = Rect::CenterAndSize(Vec2(0,0), Vec2(0,0));
+
 ZilchDefineType(Rect, builder, type)
 {
   type->CreatableInScript = true;
@@ -109,13 +111,13 @@ ZilchDefineType(Rect, builder, type)
   ZilchBindMethod(Bottom);
 }
 
-Rect Rect::NullRect( )
+Rect Rect::PointAndSize(Vec2Param point, Vec2Param size)
 {
   Rect r;
-  r.X = 0.0f;
-  r.Y = 0.0f;
-  r.SizeX = 0.0f;
-  r.SizeY = 0.0f;
+  r.X = point.x;
+  r.Y = point.y;
+  r.SizeX = size.x;
+  r.SizeY = size.y;
   return r;
 }
 
@@ -131,16 +133,6 @@ Rect Rect::CenterAndSize(Vec2Param point, Vec2Param size)
   return r;
 }
 
-Rect Rect::PointAndSize(Vec2Param point, Vec2Param size)
-{
-  Rect r;
-  r.X = point.x;
-  r.Y = point.y;
-  r.SizeX = size.x;
-  r.SizeY = size.y;
-  return r;
-}
-
 Rect Rect::MinAndMax(Vec2Param min, Vec2Param max)
 {
   Rect r;
@@ -151,9 +143,14 @@ Rect Rect::MinAndMax(Vec2Param min, Vec2Param max)
   return r;
 }
 
-bool Rect::IsValid( ) const
+bool Rect::operator==(RectParam rhs) const
 {
-  return (SizeX * SizeY > 0.0f);
+  bool result = Math::Abs(X - rhs.X) < Math::Epsilon();
+  result &= Math::Abs(Y - rhs.Y) < Math::Epsilon( );
+  result &= Math::Abs(SizeX - rhs.SizeX) < Math::Epsilon( );
+  result &= Math::Abs(SizeY - rhs.SizeY) < Math::Epsilon( );
+
+  return result;
 }
 
 void Rect::SetTranslation(Vec2Param translation)

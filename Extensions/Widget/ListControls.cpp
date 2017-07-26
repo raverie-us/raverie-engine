@@ -546,7 +546,7 @@ void ComboBox::OpenList()
 
   Vec2 sizeOfBox = Vec2(mSize.x - ListBoxPadding.Size().x, cTextCellHeight);
   if(mDataSource)
-    sizeOfBox.y = float(mDataSource->GetCount()) * cTextCellHeight;;
+    sizeOfBox.y = float(mDataSource->GetCount()) * cTextCellHeight;
   sizeOfBox = ExpandSizeByThickness(ListBoxPadding, sizeOfBox);
 
   const float cMaxListSize = cTextCellHeight * 12;

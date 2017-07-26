@@ -40,10 +40,6 @@ public:
   /// Get the index of the Button being hovered over by the mouse
   int GetHoverItem( ) { return mHoverItem; }
 
-  /// Get the Button being hovered over by the mouse, if there is one.
-  TextButton* GetHoverButton( ) { return (mHoverItem != -1) ? mButtons[mHoverItem] : nullptr;  }
-
-private:
   void CreateButton(StringParam name);
 
   /// Event response.
