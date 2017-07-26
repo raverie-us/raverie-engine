@@ -49,6 +49,7 @@ void DebugGraphical::AddToSpace()
 ZilchDefineType(DebugGraphicalPrimitive, builder, type)
 {
   ZeroBindComponent();
+  type->AddAttribute(ObjectAttributes::cHidden);
 }
 
 void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
@@ -95,6 +96,7 @@ void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode, ViewBlock& vie
 ZilchDefineType(DebugGraphicalThickLine, builder, type)
 {
   ZeroBindComponent();
+  type->AddAttribute(ObjectAttributes::cHidden);
 }
 
 void DebugGraphicalThickLine::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
@@ -106,6 +108,7 @@ void DebugGraphicalThickLine::ExtractFrameData(FrameNode& frameNode, FrameBlock&
 ZilchDefineType(DebugGraphicalText, builder, type)
 {
   ZeroBindComponent();
+  type->AddAttribute(ObjectAttributes::cHidden);
 }
 
 void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
