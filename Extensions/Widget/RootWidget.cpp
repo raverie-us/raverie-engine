@@ -385,7 +385,7 @@ void SendHierarchyEvents(cstr op,
 void RootWidget::RootChangeFocus(Widget* newFocus, FocusMode::Type focusMode)
 {
   Widget* oldFocus = mFocus;
-
+  MarkAsNeedsUpdate();
   //Do not change it the object is already the focus object
   if(oldFocus != newFocus)
   {
