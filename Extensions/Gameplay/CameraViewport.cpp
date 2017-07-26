@@ -59,7 +59,7 @@ void CameraViewport::Serialize(Serializer& stream)
   SerializeNameDefault(mRenderInEditor, false);
   SerializeNameDefault(mRenderInGame, true);
   SerializeNameDefault(mRenderToViewport, true);
-  SerializeNameDefault(mForwardViewportEvents, false);
+  SerializeNameDefault(mForwardViewportEvents, true);
   SerializeNameDefault(mRenderOrder, 0);
   SerializeNameDefault(mNormalizedSize, Vec2(1, 1));
   SerializeNameDefault(mNormalizedOffset, Vec2(0, 0));
