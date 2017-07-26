@@ -500,7 +500,7 @@ TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(Cog* metaCog, St
 
 void VersionSelector::FindDownloadedTemplates()
 {
-  // Check the dll install directory
+  // Check the dll install directory.
   String dllDownloadDir = mConfig->GetOwner()->has(MainConfig)->ApplicationDirectory;
   String packagedTemplates = FilePath::Combine(dllDownloadDir, "Templates");
   FindDownloadedTemplatesRecursive(packagedTemplates);
@@ -584,7 +584,7 @@ void VersionSelector::UpdateTemplateListing(GetTemplateListingTaskJob* templates
     {
       ZeroTemplate* localZeroTemplate = localTemplate->GetZeroTemplate(true);
       localTemplate->mIsOnServer = true;
-      localTemplate->mIsDifferentFromServer = (serverZeroTemplate->mDate == localZeroTemplate->mDate);
+      localTemplate->mIsDifferentFromServer = (serverZeroTemplate->mDate != localZeroTemplate->mDate);
       continue;
     }
 
