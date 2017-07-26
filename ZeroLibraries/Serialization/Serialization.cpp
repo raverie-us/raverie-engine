@@ -38,7 +38,6 @@ PolymorphicInfo::PolymorphicInfo() :
   mTypeName(nullptr),
   mFieldName(nullptr),
   mFlags(0),
-  mRuntimeType(nullptr),
   mUniqueNodeId(PolymorphicNode::cInvalidUniqueNodeId)
 {
 
@@ -113,11 +112,11 @@ void Serializer::StartPolymorphic(cstr typeName, PolymorphicSaveFlags::Enum flag
 }
 
 //******************************************************************************
-void Serializer::StartPolymorphic(BoundType* runtimeType)
+void Serializer::StartPolymorphic(HandleParam object)
 {
   PolymorphicInfo info;
-  info.mTypeName = runtimeType->Name.c_str();
-  info.mRuntimeType = runtimeType;
+  info.mTypeName = object.StoredType->Name.c_str();
+  info.mObject = object;
   StartPolymorphicInternal(info);
 }
 

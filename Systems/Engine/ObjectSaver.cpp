@@ -138,43 +138,41 @@ void ObjectSaver::SaveProperties(Object* object, Object* propertyPathParent, Pro
       BoundType* objectType = ZilchVirtualTypeId(object);
       forRange(Property* metaProperty, objectType->GetProperties())
       {
-        // Skip properties that aren't serialized (disabled until meta refactor)
+        // Skip properties that aren't serialized (disabled until full meta serialization refactor)
         //if(!metaProperty->Flags.IsSet(PropertyFlags::Serialized))
           //continue;
 
         BoundType* propertyType = Type::GetBoundType(metaProperty->PropertyType);
-
-        // If it's not a value type, check to see if 
+        
         if(propertyType &&
-           propertyType->HasAttribute(PropertyAttributes::cAsPropertyUseCustomSerialization) &&
-           !propertyType->GetProperties().Empty())
+           propertyType->HasAttribute(SerializationAttributes::cSerializationPrimitive) == false)
         {
           path.AddPropertyToPath(metaProperty);
-
+          
           Any objectValue = metaProperty->GetValue(object);
           Object* subObject = objectValue.Get<Object*>();
-
+          
           forRange(Property* subProperty, propertyType->GetProperties())
           {
             path.AddPropertyToPath(subProperty);
-
+            
             if(objectState->IsPropertyModified(path))
             {
               InnerStart(propertyType->Name.c_str(), metaProperty->Name.c_str(), 0);
               InnerStart(propertyType->Name.c_str(), nullptr, StructureType::Object, true);
-
+              
               path.PopEntry();
-
+              
               SaveProperties(subObject, object, path, onlyModifiedProperties);
-
+              
               InnerEnd(nullptr, StructureType::Object);
-
+              
               break;
             }
-
+            
             path.PopEntry();
           }
-
+        
           path.PopEntry();
         }
         else
@@ -255,7 +253,7 @@ void ObjectSaver::BuildPolymorphicInfo(PolymorphicInfo& info, Object* object,
 
   // Set up serialization info
   info.mTypeName = objectType->Name.c_str();
-  info.mRuntimeType = objectType;
+  info.mObject = object;
 
   //if(patching)
   {

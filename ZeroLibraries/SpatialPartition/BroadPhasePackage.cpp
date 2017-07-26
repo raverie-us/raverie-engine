@@ -38,7 +38,7 @@ void BroadPhasePackage::Serialize(Serializer& stream)
 
 void BroadPhasePackage::SaveToStream(Serializer& stream)
 {
-  stream.StartPolymorphic(ZilchVirtualTypeId(this));
+  stream.StartPolymorphic(this);
 
   //Serialize flags
   SerializeName(mRefineRayCast);
@@ -49,8 +49,7 @@ void BroadPhasePackage::SaveToStream(Serializer& stream)
   IBroadPhase* broadPhase = mBroadPhases[BroadPhase::Dynamic];
   if(broadPhase != nullptr)
   {
-    BoundType* type = ZilchVirtualTypeId(broadPhase);
-    stream.StartPolymorphic(type);
+    stream.StartPolymorphic(broadPhase);
     broadPhase->Serialize(stream);
     stream.EndPolymorphic();
   }
@@ -58,8 +57,7 @@ void BroadPhasePackage::SaveToStream(Serializer& stream)
   broadPhase = mBroadPhases[BroadPhase::Static];
   if(broadPhase != nullptr)
   {
-    BoundType* type = ZilchVirtualTypeId(broadPhase);
-    stream.StartPolymorphic(type);
+    stream.StartPolymorphic(broadPhase);
     broadPhase->Serialize(stream);
     stream.EndPolymorphic(); 
   }

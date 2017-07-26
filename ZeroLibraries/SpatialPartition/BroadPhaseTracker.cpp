@@ -108,7 +108,7 @@ void BroadPhaseTracker::Initialize()
 
 void BroadPhaseTracker::SaveToStream(Serializer& stream)
 {
-  stream.StartPolymorphic(ZilchVirtualTypeId(this));
+  stream.StartPolymorphic(this);
 
   //Serialize flags
   SerializeName(mRefineRayCast);
@@ -121,8 +121,7 @@ void BroadPhaseTracker::SaveToStream(Serializer& stream)
   for(uint i = 0; i < broadPhases.Size(); ++i)
   {
     IBroadPhase* broadPhase = broadPhases[i]->mBroadPhase;
-    BoundType* type = ZilchVirtualTypeId(broadPhase);
-    stream.StartPolymorphic(type);
+    stream.StartPolymorphic(broadPhase);
     broadPhase->Serialize(stream);
     stream.EndPolymorphic();
   }
@@ -132,8 +131,7 @@ void BroadPhaseTracker::SaveToStream(Serializer& stream)
   for(uint i = 0; i < broadPhases.Size(); ++i)
   {
     IBroadPhase* broadPhase = broadPhases[i]->mBroadPhase;
-    BoundType* type = ZilchVirtualTypeId(broadPhase);
-    stream.StartPolymorphic(type);
+    stream.StartPolymorphic(broadPhase);
     broadPhase->Serialize(stream);
     stream.EndPolymorphic();
   }

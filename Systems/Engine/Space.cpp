@@ -435,8 +435,7 @@ void Space::SaveLevelFile(StringParam filename)
     CogSavingContext context;
     saver.SetSerializationContext(&context);
 
-    
-    saver.StartPolymorphic(ZilchTypeId(Level));
+    saver.StartPolymorphic(mLevelLoaded);
     CogSerialization::SaveSpaceToStream(saver, this);
     saver.EndPolymorphic();
   }

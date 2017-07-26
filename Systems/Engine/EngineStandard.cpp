@@ -143,21 +143,21 @@ ZilchDefineStaticLibrary(EngineLibrary)
   // Meta Components
   ZilchInitializeType(CogMetaComposition);
   ZilchInitializeType(CogMetaDataInheritance);
+  ZilchInitializeType(CogMetaDisplay);
+  ZilchInitializeType(CogMetaSerialization);
+  ZilchInitializeType(CogMetaOperations);
+  ZilchInitializeType(CogMetaTransform);
+  ZilchInitializeType(CogArchetypeExtension);
+  ZilchInitializeType(CogSerializationFilter);
+  ZilchInitializeType(CogPathMetaSerialization);
   ZilchInitializeType(ComponentMetaDataInheritance);
-  ZilchInitializeType(CogMetaDataInheritance);
   ZilchInitializeType(DataResourceInheritance);
   ZilchInitializeType(ResourceMetaSerialization);
-  ZilchInitializeType(CogPathMetaSerialization);
   ZilchInitializeType(EngineMetaComposition);
   ZilchInitializeType(HierarchyComposition);
-  ZilchInitializeType(CogMetaTransform);
-  ZilchInitializeType(CogSerializationFilter);
   ZilchInitializeType(MetaResource);
-  ZilchInitializeType(CogMetaOperations);
   ZilchInitializeType(ComponentMetaOperations);
-  ZilchInitializeType(CogArchetypeExtension);
   ZilchInitializeType(ResourceMetaOperations);
-  ZilchInitializeType(CogMetaDisplay);
 
   // Events
   ZilchInitializeType(CogPathEvent);

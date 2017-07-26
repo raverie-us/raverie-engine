@@ -589,7 +589,7 @@ String SaveObjectToString(Object* object)
   TextSaver saver;
   saver.OpenBuffer(); 
 
-  saver.StartPolymorphic(ZilchVirtualTypeId(object));
+  saver.StartPolymorphic(object);
   object->Serialize(saver);
   saver.EndPolymorphic();
 

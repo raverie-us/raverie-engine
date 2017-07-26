@@ -47,7 +47,6 @@ ZilchDefineType(CogPath, builder, type)
 
   type->Add(new CogPathMetaSerialization());
   type->CreatableInScript = true;
-  type->AddAttribute(PropertyAttributes::cAsPropertyUseCustomSerialization);
 
   ZeroBindDocumented();
   ZilchBindGetterSetter(Path);
@@ -906,26 +905,27 @@ Cog* CogPath::GetDirectCog()
 void CogPath::SetCog(Cog* to)
 {
   Cog* previousCog = mSharedNode->mResolvedCog;
-  mSharedNode->mResolvedCog = to;
+  CogPathNode* node = mSharedNode;
+  node->mResolvedCog = to;
 
   if(GetUpdatePathOnCogChange())
   {
-    Cog* from = mSharedNode->mRelativeTo;
+    Cog* from = node->mRelativeTo;
   
     Status status;
     status.IgnoreMessage = (GetErrorOnPathCantCompute() == false);
-    String newPath = ComputePath(status, from, to, mSharedNode->mPathPreference0, mSharedNode->mPathPreference1, mSharedNode->mPathPreference2);
+    String newPath = ComputePath(status, from, to, node->mPathPreference0, node->mPathPreference1, node->mPathPreference2);
 
     if(OperationQueue::IsListeningForSideEffects() && !OperationQueue::sSideEffectContextStack.Empty())
-      OperationQueue::RegisterSideEffect(this, "Path", mSharedNode->mPath);
+      OperationQueue::RegisterSideEffect(this, "Path", node->mPath);
 
     if(status.Succeeded())
     {
-      mSharedNode->mPath = newPath;
+      node->mPath = newPath;
     }
     else
     {
-      mSharedNode->mPath.Clear();
+      node->mPath.Clear();
       if (!status.Message.Empty())
         DoNotifyException("Cog Path", status.Message);
     }
@@ -955,7 +955,14 @@ Cog* CogPath::GetCog()
 
 void CogPath::SetPath(StringParam path)
 {
-  mSharedNode->mPath = path;
+  CogPathNode* node = mSharedNode;
+
+  // Don't do anything if the path is already set. If you have duplicate names, this could cause
+  // the cog path to resolve to the wrong object
+  if (node->mPath == path)
+    return;
+
+  node->mPath = path;
 
   if (GetUpdateCogOnPathChange())
     Refresh();
@@ -1179,7 +1186,7 @@ namespace Serialization
       stream.SerializeFieldDefault("Path", value.mPath, String());
       SerializeBits(stream, value.mFlags, CogPathFlags::Names, 0,
         CogPathFlags::UpdateCogOnPathChange | CogPathFlags::UpdatePathOnCogChange | CogPathFlags::UpdateCogOnInitialize);
-      stream.SerializeFieldDefault("ResolvedCog", value.mResolvedCog, CogId());
+      stream.SerializeFieldDefault("Cog", value.mResolvedCog, CogId(), "ResolvedCog");
       if (!stream.EnumField("CogPathPreference", "PathPreference0", (uint&)value.mPathPreference0, ZilchTypeId(CogPathPreference::Enum)))
         value.mPathPreference0 = CogPathPreference::CogRelative;
       if (!stream.EnumField("CogPathPreference", "PathPreference1", (uint&)value.mPathPreference1, ZilchTypeId(CogPathPreference::Enum)))

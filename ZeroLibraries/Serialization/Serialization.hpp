@@ -164,7 +164,7 @@ struct PolymorphicInfo
   BitField<PolymorphicSaveFlags::Enum> mFlags;
 
   /// Generally used in place of the type name for binary serialization.
-  BoundType* mRuntimeType;
+  Handle mObject;
 };
 
 //------------------------------------------------------------------- Serializer
@@ -205,7 +205,7 @@ public:
   /// Polymorphic Serialization Interface.
   void StartPolymorphic(cstr typeName);
   void StartPolymorphic(cstr typeName, PolymorphicSaveFlags::Enum flags);
-  void StartPolymorphic(BoundType* runtimeType);
+  void StartPolymorphic(HandleParam object);
   void StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId);
   void StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId,
                                    PolymorphicSaveFlags::Enum flags);
@@ -352,8 +352,7 @@ void Serializer::SerializeFieldRename(cstr oldFieldName, type& instance)
 template<typename type>
 void Serializer::SerializePolymorphic(type& instance)
 {
-  BoundType* type = ZilchVirtualTypeId(&instance);
-  StartPolymorphic(type);
+  StartPolymorphic(instance);
   instance.Serialize(*this);
   EndPolymorphic();
 }

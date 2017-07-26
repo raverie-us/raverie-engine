@@ -53,7 +53,9 @@ void Archetype::Save(StringParam filename)
     if(status.Succeeded())
     {
       saver.SetSerializationContext(&savingContext);
+      CogMetaSerialization::sSaveContextIds = false;
       saver.SaveDefinition(archetypeObject);
+      CogMetaSerialization::sSaveContextIds = true;
       saver.Close();
 
       // We need to clear all cached data for us and Archetypes that reference us
