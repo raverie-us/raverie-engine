@@ -201,6 +201,14 @@ BuildUpdateState::Enum BuildId::CheckForUpdate(const BuildId& rhs) const
   return BuildUpdateState::Same;
 }
 
+bool BuildId::IsOlderThan(const BuildId& rhs) const
+{
+  BuildUpdateState::Enum upgradeState = CheckForUpdate(rhs);
+  if(upgradeState == BuildUpdateState::Newer || upgradeState == BuildUpdateState::NewerBreaking)
+    return true;
+  return false;
+}
+
 //-------------------------------------------------------------------ZeroBuild
 const String ZeroBuild::mExtension = "zerobuild";
 const String ZeroBuild::mDeprecatedTag = "Deprecated";

@@ -1077,6 +1077,32 @@ void VersionSelector::FindTemplateWithTags(const BuildId& buildId, TagSet& activ
   TemplatePackageTagPolicy policy;
   policy.mBuildId = buildId;
   FilterDataSetWithTags(activeTags, rejectionTags, activeSearch, mTemplates, results, resultTags, policy);
+
+  // There's a chance that two projects with the same SKU could match the given build. This typically
+  // happens with an installed template (such as the ones shipped with the launcher's installer).
+  // In this case we want to only display the build that has the best matching range.
+  HashMap<String, TemplateProject*> uniqueTemplates;
+  for(size_t i = 0; i < results.Size(); ++i)
+  {
+    TemplateProject* currentProject = results[i];
+    ZeroTemplate* currentTemplate = currentProject->GetZeroTemplate(false);
+    // If we haven't seen a project with this SKU already then add this template project as the best result for now
+    if(!uniqueTemplates.ContainsKey(currentTemplate->mSKU))
+    {
+      uniqueTemplates.Insert(currentTemplate->mSKU, currentProject);
+      continue;
+    }
+
+    // Log a warning
+    ZPrint("Project template conflict of SKU '%s'. Picking latest version", currentTemplate->mSKU.c_str());
+    // Get the previous template project for this SKU and determine which one is a more exact range
+    ZeroTemplate* previousTemplate = uniqueTemplates[currentTemplate->mSKU]->GetZeroTemplate(false);
+    if(currentTemplate->IsMoreExactRangeThan(buildId, previousTemplate))
+      uniqueTemplates[currentTemplate->mSKU] = currentProject;
+  }
+
+  results.Clear();
+  results.Insert(results.End(), uniqueTemplates.Values());
 }
 
 WarningLevel::Enum VersionSelector::CheckVersionForProject(ZeroBuild* standalone, CachedProject* cachedProject, String& warningString, bool warnForUpgrading)
