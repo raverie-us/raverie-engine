@@ -66,6 +66,11 @@ String ZilchPluginSource::GetCurrentVersionDirectory()
   return FilePath::Combine(GetVersionsDirectory(), ZilchPluginBuilder::GetSharedLibraryPlatformBuildName());
 }
 
+ZilchPluginLibrary* ZilchPluginSource::GetLibrary() const
+{
+  return ZilchPluginLibraryManager::FindOrNull(Name);
+}
+
 void CopyGeneratedSource(StringParam destFileName, StringParam code)
 {
   if(FileExists(destFileName))
@@ -163,7 +168,7 @@ void ZilchPluginSource::ForceCopyPluginDependencies()
     "  template <typename ClassType>                                            \n"
     "  void Connect                                                             \n"
     "  (                                                                        \n"
-    "    ZeroEngine::ZeroObject* sender,                                        \n"
+    "    ZeroEngine::Object* sender,                                            \n"
     "    const Zilch::String& eventName,                                        \n"
     "    const Zilch::String& functionName,                                     \n"
     "    ClassType* receiver                                                    \n"
@@ -220,7 +225,12 @@ void ZilchPluginSource::ForceCopyPluginDependencies()
   zeroStubber.HppFooter = BuildString(zeroStubber.HppFooter, hppAttributes.ToString());
   zeroStubber.CppFooter = BuildString(zeroStubber.CppFooter, cppAttributes.ToString());
 
-  String zeroNamespace = zeroStubber.Generate(MetaDatabase::GetInstance()->mNativeLibraries);
+  // We need to make the Zero engine header, but we want to
+  // remove the Zilch Core library from the array on meta database
+  Array<LibraryRef> nativeLibrariesWithoutCore = MetaDatabase::GetInstance()->mNativeLibraries;
+  nativeLibrariesWithoutCore.EraseValueError(coreLibrary);
+
+  String zeroNamespace = zeroStubber.Generate(nativeLibrariesWithoutCore);
 
   String zeroHppFileName = FilePath::CombineWithExtension(destVersionDir, zeroNamespace, ".hpp");
   String zeroCppFileName = FilePath::CombineWithExtension(destVersionDir, zeroNamespace, ".cpp");
@@ -543,8 +553,7 @@ bool ZilchPluginSourceManager::IsCompilingPlugins()
 
 void ZilchPluginSourceManager::OnResourceEvent(ResourceEvent* event)
 {
-  ZilchPluginSource* resource = Type::DynamicCast<ZilchPluginSource*>(event->EventResource);
-  ReturnIf(resource == nullptr,, "Unexpected resource type in ZilchPluginSourceManager (it should only ever be a ZilchPluginSource)");
+  ZilchPluginSource* resource = Type::DebugOnlyDynamicCast<ZilchPluginSource*>(event->EventResource);
 
   // If the resource was added (may be at load time, or may be the first time of adding in the editor)
   // Only do this if its in the editor with a content item
@@ -563,6 +572,14 @@ void ZilchPluginSourceManager::OnResourceEvent(ResourceEvent* event)
     else
       resource->CompileRelease();
   }
+
+  if (ZilchPluginLibrary* libraryResource = resource->GetLibrary())
+  {
+    ResourceLibrary* library = resource->mResourceLibrary;
+    library->mSwapPlugins[libraryResource].mCompileStatus = ZilchCompileStatus::Modified;
+    library->PluginsModified();
+    ZilchManager::GetInstance()->Compile();
+  }
 }
 
 //-------------------------------------------------------------------ZilchPluginLibrary
@@ -571,7 +588,7 @@ ZilchDefineType(ZilchPluginLibrary, builder, type)
 
 }
 
-String ZilchPluginLibrary::GetSharedLibraryPath()
+String ZilchPluginLibrary::GetSharedLibraryPath() const
 {
   // If for some reason the 'SharedLibraryPath' was not set on loading, then try and use the resource library location
   if(SharedLibraryPath.Empty())
@@ -580,21 +597,25 @@ String ZilchPluginLibrary::GetSharedLibraryPath()
   return SharedLibraryPath;
 }
 
+Resource* ZilchPluginLibrary::GetOriginResource() const
+{
+  Resource* zilchPluginOrigin = GetSource();
+  if (zilchPluginOrigin == nullptr)
+    zilchPluginOrigin = const_cast<ZilchPluginLibrary*>(this);
+  return zilchPluginOrigin;
+}
+
+ZilchPluginSource* ZilchPluginLibrary::GetSource() const
+{
+  return ZilchPluginSourceManager::FindOrNull(Name);
+}
+
 ZilchPluginLibrary::ZilchPluginLibrary()
 {
 }
 
 ZilchPluginLibrary::~ZilchPluginLibrary()
 {
-}
-
-void ZilchPluginLibrary::AddToProject(Project& project)
-{
-  Resource* zilchPluginOrigin = ZilchPluginSourceManager::FindOrNull(Name);
-  if(zilchPluginOrigin == nullptr)
-    zilchPluginOrigin = this;
-
-  project.PluginFiles.PushBack(PluginEntry(GetSharedLibraryPath(), zilchPluginOrigin));
 }
 
 //-------------------------------------------------------------------ZilchPluginLibraryLoader
@@ -634,9 +655,18 @@ ZilchPluginLibraryManager::~ZilchPluginLibraryManager()
 
 void ZilchPluginLibraryManager::OnResourceEvent(ResourceEvent* event)
 {
-  // Mark the script manager as modified so we will recompile scripts
-  // METAREFACTOR
-  //ZilchScriptManager::GetInstance()->mCompileStatus = ZilchCompileStatus::Modified;
+  ZilchPluginLibrary* libraryResource = Type::DebugOnlyDynamicCast<ZilchPluginLibrary*>(event->EventResource);
+  ResourceLibrary* library = libraryResource->mResourceLibrary;
+  
+  if (event->RemoveMode != RemoveMode::None)
+  {
+    library->mSwapPlugins.Erase(libraryResource);
+  }
+  else
+  {
+    library->mSwapPlugins[libraryResource].mCompileStatus = ZilchCompileStatus::Modified;
+  }
+  library->PluginsModified();
 }
 
 }//namespace Zero

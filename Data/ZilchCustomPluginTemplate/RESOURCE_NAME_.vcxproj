@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="%NAME%Version.props"/>
+  <Import Project="RESOURCE_NAME_Version.props"/>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -13,7 +13,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{11111111-1111-1111-1111-111111111111}</ProjectGuid>
-    <RootNamespace>%NAME%</RootNamespace>
+    <RootNamespace>RESOURCE_NAME_</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -59,7 +59,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>%NAME%Precompiled.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>RESOURCE_NAME_Precompiled.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -93,7 +93,7 @@ EXIT 0
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>%NAME%Precompiled.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>RESOURCE_NAME_Precompiled.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -120,15 +120,15 @@ EXIT 0
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="%NAME%.cpp" />
-    <ClCompile Include="%NAME%Precompiled.cpp">
+    <ClCompile Include="RESOURCE_NAME_.cpp" />
+    <ClCompile Include="RESOURCE_NAME_Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="%NAME%.hpp" />
-    <ClInclude Include="%NAME%Precompiled.hpp" />
+    <ClInclude Include="RESOURCE_NAME_.hpp" />
+    <ClInclude Include="RESOURCE_NAME_Precompiled.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\ZeroEngine.cpp" />

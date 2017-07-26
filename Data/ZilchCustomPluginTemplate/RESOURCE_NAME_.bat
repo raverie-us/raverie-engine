@@ -3,4 +3,4 @@ REM If we launch Zero from Visual Studio, and then run another 'sln' from Zero i
 REM pass through all environmental variables, which we may want to clear or change
 PUSHD "%~dp0"
 SET VisualStudioVersion=
-"%NAME%.sln"
+"RESOURCE_NAME_.sln"

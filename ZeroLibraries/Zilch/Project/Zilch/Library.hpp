@@ -115,9 +115,6 @@ namespace Zilch
     // Store any properties created by the types (includes members)
     Array<Property*> OwnedProperties;
 
-    // All the plugins that were loaded when this library was created
-    Array<UniquePointer<Plugin> > OwnedPlugins;
-
     // Types sorted with base classes coming before derived classes
     // Useful for code generation with languages that require
     // base classes to be defined prior to derived classes (e.g. C++)
@@ -153,9 +150,9 @@ namespace Zilch
 
     // Whether this library was built in tolerant mode or not
     bool TolerantMode;
-
-    // Whether this library came from a plugin
-    bool CreatedByPlugin;
+    
+    // If we loaded a plugin that created this library (otherwise null)
+    Plugin* Plugin;
 
   private:
 
@@ -210,7 +207,7 @@ namespace Zilch
       Asserts = 4,
       RemoveOuterBrackets = 8,
       NoMultipleInvalidCharacters = 16,
-      IgnoreScopeResolution = 32
+      SkipPastScopeResolution = 32
     };
 
     typedef unsigned Flags;
@@ -297,15 +294,6 @@ namespace Zilch
 
     // Set the original source code entries that this library is being built from
     void SetEntries(const Array<CodeEntry>& entries);
-
-    // Returns a pointer to the plugin if it is able to be loaded, or null if it failed to load
-    // The plugin's lifetime will be associated with the library we are building (deleted when it dies)
-    // All plugins loaded should have the '.zilchPlugin' extension (a shared object or dynamic linked library)
-    // It may fail to load if the path specified isn't accessible, isn't a valid shared library,
-    // or doesn't export the CreateZilchPlugin function
-    // Loading a plugin will attempt to make a local/temporary copy so that dyanmic reloading can be done (on certain platforms)
-    // This ideally prevents our program from locking the plugin file
-    Plugin* LoadPlugin(Status& status, StringParam pluginFile, void* userData = nullptr);
 
     // Add a function to the library and bound type (pass nullptr for thisType if the function is static)
     Function* AddBoundFunction

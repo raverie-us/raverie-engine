@@ -123,15 +123,22 @@ void ZilchScript::GetLibraries(Array<LibraryRef>& libraries)
 }
 
 //**************************************************************************************************
+// @TrevorS: Isn't this the same logic as AddDependencies on ResourceLibrary/ZilchManager?
 void ZilchScript::GetLibrariesRecursive(Array<LibraryRef>& libraries, ResourceLibrary* library)
 {
   forRange(ResourceLibrary* dependency, library->Dependencies.All())
     GetLibrariesRecursive(libraries, dependency);
 
-  if (library->mCurrentScriptLibrary != nullptr)
-    libraries.PushBack(library->mCurrentScriptLibrary);
-  if (library->mCurrentFragmentLibrary != nullptr)
-    libraries.PushBack(library->mCurrentFragmentLibrary);
+  forRange(SwapLibrary& swapPlugin, library->mSwapPlugins.Values())
+  {
+    if (swapPlugin.mCurrentLibrary != nullptr)
+      libraries.PushBack(swapPlugin.mCurrentLibrary);
+  }
+
+  if (library->mSwapScript.mCurrentLibrary != nullptr)
+    libraries.PushBack(library->mSwapScript.mCurrentLibrary);
+  if (library->mSwapFragment.mCurrentLibrary != nullptr)
+    libraries.PushBack(library->mSwapFragment.mCurrentLibrary);
 }
 
 //------------------------------------------------------------- ZilchScriptLoader
@@ -238,7 +245,7 @@ String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
 
   // Replace the component name
   Replacement& nameReplacement = replacements.PushBack();
-  nameReplacement.MatchString = "%RESOURCENAME%";
+  nameReplacement.MatchString = "RESOURCE_NAME_";
   nameReplacement.ReplaceString = resourceAdd.Name;
 
   // Replace the tabs with spaces

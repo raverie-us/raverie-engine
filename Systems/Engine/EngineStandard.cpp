@@ -17,7 +17,6 @@ ZilchDefineRange(HierarchyList::range);
 ZilchDefineRange(Space::range);
 ZilchDefineRange(SpaceMap::valueRange);
 ZilchDefineRange(ObjectLinkRange);
-ZilchDefineRange(MetaSelection::range);
 ZilchDefineRange(JoystickRange);
 ZilchDefineRange(CogHashSetRange);
 ZilchDefineRange(ResourceTableEntryList::range);
@@ -101,7 +100,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);
-  ZilchInitializeRangeAs(MetaSelection::range, "MetaSelectionRange");
   ZilchInitializeRange(JoystickRange);
   ZilchInitializeRange(CogHashSetRange);
   ZilchInitializeRangeAs(ResourceTableEntryList::range, "ResourceTableEntryRange");

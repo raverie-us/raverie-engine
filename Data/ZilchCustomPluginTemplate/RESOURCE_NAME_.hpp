@@ -4,13 +4,13 @@
 // For auto binding specifically, visit: http://zilch.digipen.edu/home/AutomaticBinding.html
 
 // An example component being bound to the engine
-class %NAME% : public ZeroEngine::ZilchComponent
+class RESOURCE_NAME_ : public ZeroEngine::ZilchComponent
 {
 public:
   ZilchDeclareType(Zilch::TypeCopyMode::ReferenceType);
   
-  %NAME%();
-  ~%NAME%();
+  RESOURCE_NAME_();
+  ~RESOURCE_NAME_();
   
   void Initialize(ZeroEngine::CogInitializer* initializer);
   
@@ -31,7 +31,7 @@ private:
 };
 
 // An example of a custom event that we can send
-class %NAME%Event : public ZeroEngine::ZilchEvent
+class RESOURCE_NAME_Event : public ZeroEngine::ZilchEvent
 {
 public:
   ZilchDeclareType(Zilch::TypeCopyMode::ReferenceType);

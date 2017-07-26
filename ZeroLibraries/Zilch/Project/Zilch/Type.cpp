@@ -328,6 +328,64 @@ namespace Zilch
     return result;
   }
 
+  //***************************************************************************
+  bool Type::IsRawSame(Type* a, Type* b)
+  {
+    // If the two pointers are exactly the same, then of course its the same!
+    if (a == b)
+    {
+      // Early out and return that they are the same :D
+      return true;
+    }
+
+    Type* aType = ZilchVirtualTypeId(a);
+    Type* bType = ZilchVirtualTypeId(b);
+    
+    // Obviously if one is a BoundType and the other is a DelegateType, they should not be the same
+    if (aType != bType)
+    {
+      return false;
+    }
+
+    DelegateType* aDelegateType = Type::DirectDynamicCast<DelegateType*>(a);
+    DelegateType* bDelegateType = Type::DirectDynamicCast<DelegateType*>(b);
+
+    // If both are delegate types, then we must do a special parameter and return type comparison
+    if (aDelegateType && bDelegateType)
+    {
+      return IsRawSame(aDelegateType, bDelegateType);
+    }
+
+    // We got here so we know they aren't the same
+    return false;
+  }
+
+  //***************************************************************************
+  bool Type::IsRawSame(DelegateType* a, DelegateType* b)
+  {
+    // Make sure we have the same number of parameters
+    if (a->Parameters.Size() != b->Parameters.Size())
+      return false;
+
+    // Make sure the returns are the same type (or non existant type for none)
+    if (!Type::IsRawSame(a->Return, b->Return))
+      return false;
+
+    // Loop through and compare each of the parameters
+    for (size_t i = 0; i < a->Parameters.Size(); ++i)
+    {
+      // Grab the two parameters
+      const DelegateParameter& aParameter = a->Parameters[i];
+      const DelegateParameter& bParameter = b->Parameters[i];
+
+      // Compare the types
+      if (!Type::IsRawSame(aParameter.ParameterType, bParameter.ParameterType))
+        return false;
+    }
+
+    // If we got here, then it must match!
+    return true;
+  }
 
   //***************************************************************************
   bool Type::BoundIsA(BoundType* type, BoundType* base)
@@ -725,6 +783,7 @@ namespace Zilch
     PostDestructor(nullptr),
     ToStringFunction(DefaultTypeToString),
     GetEventHandlerFunction(nullptr),
+    GetBindingVirtualType(nullptr),
     PreConstructor(nullptr),
     Destructor(nullptr),
     SpecialType(SpecialType::Standard),
@@ -998,10 +1057,29 @@ namespace Zilch
       return true;
 
     if (this->AssertOnInvalidBinding)
-      this->AssertOnInvalidBinding(prependedMessage);
+    {
+      if (this->AssertOnInvalidBinding != &IgnoreOnInvalidBinding)
+        this->AssertOnInvalidBinding(prependedMessage);
+    }
     else
+    {
       Error("%sA type was not bound or initialized properly", prependedMessage);
+    }
     return false;
+  }
+
+  //***************************************************************************
+  bool BoundType::HasNativeBinding()
+  {
+    return this->AssertOnInvalidBinding != nullptr;
+  }
+
+  //***************************************************************************
+  BoundType* BoundType::GetBindingVirtualTypeFromInstance(const void* memory)
+  {
+    if (this->GetBindingVirtualType)
+      return this->GetBindingVirtualType((const byte*)memory);
+    return this;
   }
 
   //***************************************************************************
@@ -1620,7 +1698,7 @@ namespace Zilch
     for (size_t i = 0; i < functions.Size(); ++i)
     {
       // If the type of each function exactly matches
-      if (Type::IsSame(functions[i]->FunctionType, function->FunctionType))
+      if (Type::IsRawSame(functions[i]->FunctionType, function->FunctionType))
       {
         result = AddMemberResult::AlreadyExists;
         break;
@@ -1649,7 +1727,7 @@ namespace Zilch
     for (size_t i = 0; i < constructors.Size(); ++i)
     {
       // If the type of each function exactly matches
-      if (Type::IsSame(constructors[i]->FunctionType, function->FunctionType))
+      if (Type::IsRawSame(constructors[i]->FunctionType, function->FunctionType))
       {
         result = AddMemberResult::AlreadyExists;
         break;
@@ -1964,5 +2042,10 @@ namespace Zilch
   ParameterArray::range DelegateType::GetParameters()
   {
     return this->Parameters.All();
+  }
+
+  //***************************************************************************
+  void IgnoreOnInvalidBinding(const char*)
+  {
   }
 }

@@ -1031,15 +1031,16 @@ void RegisterEditorTileViewWidgets()
   previewFactory->Creators["PhysicsSolverConfig"] = PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
 
   //Simple resource types
-  previewFactory->Creators["ZilchScript"] =     PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["ZilchFragment"] =   PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["TextBlock"] =       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["Level"] =           PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<LevelPreview>);
-  previewFactory->Creators["Sound"] =           PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
-  previewFactory->Creators["SoundCue"] =        PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundCuePreview>);
-  previewFactory->Creators["SoundTag"] =        PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
-  previewFactory->Creators["SoundAttenuator"] = PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
-  previewFactory->Creators["RenderGroup"] =     PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<RenderGroupPreview>);
+  previewFactory->Creators["ZilchScript"] =       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
+  previewFactory->Creators["ZilchFragment"] =     PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
+  previewFactory->Creators["TextBlock"] =         PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
+  previewFactory->Creators["ZilchPluginSource"] = PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
+  previewFactory->Creators["Level"] =             PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<LevelPreview>);
+  previewFactory->Creators["Sound"] =             PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
+  previewFactory->Creators["SoundCue"] =          PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundCuePreview>);
+  previewFactory->Creators["SoundTag"] =          PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
+  previewFactory->Creators["SoundAttenuator"] =   PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<SoundPreview>);
+  previewFactory->Creators["RenderGroup"] =       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<RenderGroupPreview>);
 
   previewFactory->Creators["NetPropertyConfig"] = PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<NetworkingPreview>);
   previewFactory->Creators["NetChannelConfig"] =  PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<NetworkingPreview>);

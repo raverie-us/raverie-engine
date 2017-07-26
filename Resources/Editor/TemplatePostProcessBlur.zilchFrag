@@ -1,7 +1,7 @@
 // PostProcess fragments are intended to be constructed in script
 // and passed directly to the AddRenderTaskPostProcess method.
 [Pixel][PostProcess]
-struct %RESOURCENAME%
+struct RESOURCE_NAME_
 {
 	[StageInput] var Uv : Real2;
 	[Input] var Texture : Sampler2d;

@@ -33,6 +33,7 @@ public:
   String GetCodeDirectory();
   String GetVersionsDirectory();
   String GetCurrentVersionDirectory();
+  ZilchPluginLibrary* GetLibrary() const;
 
   // Copies the library and header files to the plugin shared directory
   // We pretty much litter this function in every call to open the plugin (ide, folder, upon loading, etc)
@@ -106,11 +107,12 @@ public:
 
   ZilchPluginLibrary();
   ~ZilchPluginLibrary();
-
-  void AddToProject(Project& project) override;
   
   String SharedLibraryPath;
-  String GetSharedLibraryPath();
+  String GetSharedLibraryPath() const override;
+  Resource* GetOriginResource() const override;
+
+  ZilchPluginSource* GetSource() const;
 };
 
 //-------------------------------------------------------------------ZilchPluginLibraryLoader

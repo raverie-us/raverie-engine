@@ -12,7 +12,7 @@
 // otherwise, input will come from the vertex shader
 
 [Vertex]
-struct %RESOURCENAME%
+struct RESOURCE_NAME_
 {
 	// BuiltIn utility
 	// Time incrementing every frame

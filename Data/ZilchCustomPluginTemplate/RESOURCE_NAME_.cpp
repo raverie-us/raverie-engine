@@ -1,7 +1,7 @@
-#include "%NAME%Precompiled.hpp"
+#include "RESOURCE_NAME_Precompiled.hpp"
 
 //***************************************************************************
-ZilchDefineType(%NAME%, builder, type)
+ZilchDefineType(RESOURCE_NAME_, builder, type)
 {
   // This is required for component binding
   ZilchBindDestructor();
@@ -19,9 +19,9 @@ ZilchDefineType(%NAME%, builder, type)
 }
 
 //***************************************************************************
-%NAME%::%NAME%()
+RESOURCE_NAME_::RESOURCE_NAME_()
 {
-  Zilch::Console::WriteLine("%NAME%::%NAME% (Constructor)");
+  Zilch::Console::WriteLine("RESOURCE_NAME_::RESOURCE_NAME_ (Constructor)");
   // Initialize our default values here (we automatically zero the memory first)
   // In the future we'll support a newer compiler with member initialization
   mHealth = 100.0f;
@@ -29,23 +29,23 @@ ZilchDefineType(%NAME%, builder, type)
 }
 
 //***************************************************************************
-%NAME%::~%NAME%()
+RESOURCE_NAME_::~RESOURCE_NAME_()
 {
-  Zilch::Console::WriteLine("%NAME%::~%NAME% (Destructor)");
+  Zilch::Console::WriteLine("RESOURCE_NAME_::~RESOURCE_NAME_ (Destructor)");
   // Always check for null if you are intending
   // to destroy any cogs that you 'own'
 }
 
 //***************************************************************************
-void %NAME%::Initialize(ZeroEngine::CogInitializer* initializer)
+void RESOURCE_NAME_::Initialize(ZeroEngine::CogInitializer* initializer)
 {
-  Zilch::Console::WriteLine("%NAME%::Initialize");
+  Zilch::Console::WriteLine("RESOURCE_NAME_::Initialize");
   
   ZeroConnectThisTo(this->GetSpace(), "LogicUpdate", "OnLogicUpdate");
 }
 
 //***************************************************************************
-void %NAME%::OnLogicUpdate(ZeroEngine::UpdateEvent* event)
+void RESOURCE_NAME_::OnLogicUpdate(ZeroEngine::UpdateEvent* event)
 {
   // Do we have a Model component?
   ZeroEngine::Model* model = this->GetOwner()->has(ZeroEngine::Model);
@@ -56,13 +56,13 @@ void %NAME%::OnLogicUpdate(ZeroEngine::UpdateEvent* event)
   // We could also replace this with ZilchEvent to send basic events
   // Note: ZilchAllocate should be used for any type that is
   // typically allocated within Zilch, such as a CastFilter
-  Zilch::HandleOf<%NAME%Event> toSend = ZilchAllocate(%NAME%Event);
+  Zilch::HandleOf<RESOURCE_NAME_Event> toSend = ZilchAllocate(RESOURCE_NAME_Event);
   toSend->mLives = mLives;
-  this->GetOwner()->DispatchEvent("%NAME%Update", toSend);
+  this->GetOwner()->DispatchEvent("RESOURCE_NAME_Update", toSend);
 }
 
 //***************************************************************************
-Zilch::String %NAME%::Speak()
+Zilch::String RESOURCE_NAME_::Speak()
 {
   Zilch::String text("Hello World");
   Zilch::Console::WriteLine(text);
@@ -70,13 +70,13 @@ Zilch::String %NAME%::Speak()
 }
 
 //***************************************************************************
-float %NAME%::GetHealth()
+float RESOURCE_NAME_::GetHealth()
 {
   return mHealth;
 }
 
 //***************************************************************************
-void %NAME%::SetHealth(float value)
+void RESOURCE_NAME_::SetHealth(float value)
 {
   if (value < 0)
     value = 0;
@@ -87,7 +87,7 @@ void %NAME%::SetHealth(float value)
 }
 
 //***************************************************************************
-ZilchDefineType(%NAME%Event, builder, type)
+ZilchDefineType(RESOURCE_NAME_Event, builder, type)
 {
   // This is required for event binding
   ZilchBindDestructor();

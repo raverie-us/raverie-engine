@@ -948,6 +948,15 @@ bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
     return false;
   }
 
+  // Check the resource manager for custom validation
+  Status status;
+  manager->ValidateName(status, resourceName);
+  if (status.Failed())
+  {
+    CreateNameToolTip(status.Message);
+    return false;
+  }
+
   if(!finalValidation && resourceName.SizeInBytes() < 2)
   {
     RemoveNameToolTip();
@@ -956,16 +965,7 @@ bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
 
   // Check to make sure it doesn't contain any invalid characters and meets our resource name
   // requirements
-  Status status;
   if (!IsValidFilename(resourceName, status))
-  {
-    CreateNameToolTip(status.Message);
-    return false;
-  }
-
-  // Check the resource manager for custom validation
-  manager->ValidateName(status, resourceName);
-  if (status.Failed())
   {
     CreateNameToolTip(status.Message);
     return false;

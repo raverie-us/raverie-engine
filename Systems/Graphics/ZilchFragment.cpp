@@ -35,7 +35,7 @@ void AddResourceLibraries(Array<Zilch::LibraryRef>& libraries, ResourceLibrary* 
   forRange(ResourceLibrary* dependency, library->Dependencies.All())
     AddResourceLibraries(libraries, dependency);
 
-  libraries.PushBack(library->mCurrentFragmentLibrary);
+  libraries.PushBack(library->mSwapFragment.mCurrentLibrary);
 }
 
 void ZilchFragment::GetLibraries(Array<Zilch::LibraryRef>& libraries)
@@ -54,10 +54,10 @@ void ZilchFragment::GetLibrariesRecursive(Array<LibraryRef>& libraries, Resource
   forRange(ResourceLibrary* dependency, library->Dependencies.All())
     GetLibrariesRecursive(libraries, dependency);
 
-  if(library->mCurrentFragmentLibrary != nullptr)
+  if(library->mSwapFragment.mCurrentLibrary != nullptr)
   {
     GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
-    Zilch::LibraryRef wrapperLibrary = library->mCurrentFragmentLibrary;
+    Zilch::LibraryRef wrapperLibrary = library->mSwapFragment.mCurrentLibrary;
     ZilchShaderLibrary* internalFragmentLibrary = graphicsEngine->mShaderGenerator->GetInternalLibrary(wrapperLibrary);
     ErrorIf(internalFragmentLibrary == nullptr, "Didn't find an internal library for a wrapper library");
     libraries.PushBack(internalFragmentLibrary->mZilchLibrary);
@@ -147,7 +147,7 @@ String ZilchFragmentManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
   // Replace the fragment name where needed
   Replacements replacements;
   Replacement& nameReplacement = replacements.PushBack();
-  nameReplacement.MatchString = "%RESOURCENAME%";
+  nameReplacement.MatchString = "RESOURCE_NAME_";
   nameReplacement.ReplaceString = resourceAdd.Name;
 
   // Replace the tabs with spaces

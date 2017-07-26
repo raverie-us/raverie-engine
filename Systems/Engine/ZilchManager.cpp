@@ -69,19 +69,15 @@ CompileResult::Enum ZilchManager::Compile()
   forRange(ResourceLibrary* resourceLibrary, compileEvent.mModifiedLibraries.All())
     resourceLibrary->Commit();
 
-  if(mPendingScriptProjectLibrary)
-  {
-    mCurrentScriptProjectLibrary = mPendingScriptProjectLibrary;
-    mPendingScriptProjectLibrary = nullptr;
-  }
-
-  if(mPendingFragmentProjectLibrary)
+  // @TrevorS: Refactor this to remove a global dependence on a single library.  if(mPendingFragmentProjectLibrary)
   {
     mCurrentFragmentProjectLibrary = mPendingFragmentProjectLibrary;
     mPendingFragmentProjectLibrary = nullptr;
   }
 
   this->DispatchEvent(Events::ScriptsCompiledPostPatch, &compileEvent);
+
+  MetaDatabase::GetInstance()->ClearRemovedLibraries();
 
   mPendingLibraries.Clear();
 

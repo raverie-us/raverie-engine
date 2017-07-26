@@ -46,12 +46,10 @@ public:
 
   // The last library we properly built (set inside CompileLoadedScriptsIntoLibrary)
   // Once this library becomes in use by an executable state, we CANNOT update it, or any ZilchMeta types
-  LibraryRef mCurrentScriptProjectLibrary;
   LibraryRef mCurrentFragmentProjectLibrary;
-
-  LibraryRef mPendingScriptProjectLibrary;
   LibraryRef mPendingFragmentProjectLibrary;
 
+  // @TrevorS: We need to remove libraries from here if we remove them from the project.
   HashSet<ResourceLibrary*> mPendingLibraries;
 };
 

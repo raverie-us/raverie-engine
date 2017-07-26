@@ -298,8 +298,8 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Arr
   // Add all fragments
   forRange (Resource* resource, fragments.All())
   {
-    // Templates shouldn't be compiled. They contain invalid strings (%RESOURCENAME%) that are
-    // replaced when a new resource is created from the template
+    // Templates shouldn't be compiled. They contain potentially invalid code and identifiers
+    // such as RESOURCE_NAME_ that are replaced when a new resource is created from the template
     if (resource->GetResourceTemplate())
       continue;
 
@@ -370,13 +370,13 @@ bool ZilchShaderGenerator::Commit(ZilchCompileEvent* e)
   // Remove all old libraries
   forRange(ResourceLibrary* library, e->mModifiedLibraries.All())
   {
-    Library* pendingLibrary = library->mPendingFragmentLibrary;
+    Library* pendingLibrary = library->mSwapFragment.mPendingLibrary;
     if(pendingLibrary)
     {
       ZilchShaderLibraryRef internalPendingLibrary = mPendingToPendingInternal.FindValue(pendingLibrary, nullptr);
       ErrorIf(internalPendingLibrary == nullptr, "Invalid pending library");
 
-      mCurrentToInternal.Erase(library->mCurrentFragmentLibrary);
+      mCurrentToInternal.Erase(library->mSwapFragment.mCurrentLibrary);
       mCurrentToInternal.Insert(pendingLibrary, internalPendingLibrary);
       mPendingToPendingInternal.Erase(pendingLibrary);
     }

@@ -100,6 +100,9 @@ namespace Zilch
     // Before we run initializers, let the user setup anything they want
     this->SetupBinding(*this->Builder);
 
+    // Make sure the user properly initialized all types that we did ZilchTypeId for
+    NativeBindingList::ValidateTypes();
+
     // Create the library and store it for everyone to be able to access
     this->Library = this->Builder->CreateLibrary();
 

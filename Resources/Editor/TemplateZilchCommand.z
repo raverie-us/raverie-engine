@@ -1,5 +1,5 @@
 [Command(autoRegister:true)]
-class %RESOURCENAME% : ZilchComponent
+class RESOURCE_NAME_ : ZilchComponent
 {
 	function Initialize(init : CogInitializer)
 	{
@@ -8,6 +8,6 @@ class %RESOURCENAME% : ZilchComponent
 
 	function OnCommandExecute(event : CommandEvent)
 	{
-		Console.WriteLine("%RESOURCENAME% Command Executed");
+		Console.WriteLine("RESOURCE_NAME_ Command Executed");
 	}
 }

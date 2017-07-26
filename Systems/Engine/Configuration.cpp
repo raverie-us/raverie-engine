@@ -22,7 +22,6 @@ DefineEvent(RecentProjectsUpdated);
 ZilchDefineType(MainConfig, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
   ZeroBindDocumented();
   ZilchBindFieldGetterProperty(ApplicationName);
   ZilchBindGetterProperty(BuildDate);
@@ -56,7 +55,6 @@ void MainConfig::Serialize(Serializer& stream)
 ZilchDefineType(EditorConfig, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
 }
@@ -71,7 +69,6 @@ void EditorConfig::Serialize(Serializer& stream)
 ZilchDefineType(ContentConfig, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
@@ -89,7 +86,6 @@ void ContentConfig::Serialize(Serializer& stream)
 ZilchDefineType(UserConfig, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZilchBindFieldProperty(UserName);
   ZilchBindFieldProperty(UserEmail);
@@ -117,7 +113,6 @@ void UserConfig::Serialize(Serializer& stream)
 ZilchDefineType(DeveloperConfig, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
   ZilchBindFieldProperty(mDoubleEscapeQuit);
   ZilchBindFieldProperty(mProxyObjectsInPreviews);
   ZilchBindFieldProperty(mCanModifyReadOnlyResources);
@@ -140,7 +135,6 @@ void DeveloperConfig::Serialize(Serializer& stream)
 ZilchDefineType(ZilchPluginConfig, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
   ZeroBindDocumented();
   ZilchBindFieldProperty(mAttemptedIdeToolsInstall);
   type->AddAttribute(ObjectAttributes::cCore);
@@ -164,7 +158,6 @@ void ZilchPluginConfig::Serialize(Serializer& stream)
 ZilchDefineType(TextEditorConfig, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
   ZilchBindFieldProperty(TabWidth);
@@ -206,7 +199,6 @@ uint RecentProjects::mAbsoluteMaxRecentProjects = 50;
 ZilchDefineType(RecentProjects, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
   ZeroBindSetup(SetupMode::DefaultSerialization);
 }
 
@@ -361,7 +353,6 @@ void RecentProjects::RemoveMissingProjects()
 ZilchDefineType(BuildInfo, builder, type)
 {
   ZeroBindComponent();
-  ZilchBindDefaultConstructor();
 }
 
 void BuildInfo::Serialize(Serializer& stream)

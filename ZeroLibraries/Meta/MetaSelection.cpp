@@ -33,7 +33,6 @@ ZilchDefineType(MetaSelection, builder, type)
   ZilchBindMethod(Replace);
   ZilchBindMethod(Contains);
   ZilchBindMethod(FinalSelectionChanged);
-  ZilchBindMethod(FinalSelectionChanged);
   ZilchBindGetterSetterProperty(Primary);
 
   ZeroBindEvent(Events::SelectionChanged, Event);

@@ -155,6 +155,12 @@ void ZilchPluginBuilder::BuildContent(BuildOptions& buildOptions)
   }
 
   CopyFile(destFile, sourceFile);
+
+  Resource* resource = Z::gResources->GetResource(mOwner->mRuntimeResource);
+  if (resource)
+  {
+    resource->SendModified();
+  }
 }
 
 void ZilchPluginBuilder::BuildListing(ResourceListing& listing)
@@ -197,8 +203,7 @@ ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
 
   // Some templates require generated guids which we will create and replace
   static const String ReplaceGuid("{11111111-1111-1111-1111-111111111111}");
-  static const String ReplaceName("%NAME%");
-  static const String ReplaceIncludeGuard("%UPPERCASENAME%");
+  static const String ReplaceName("RESOURCE_NAME_");
 
   String includeGuard = pluginName.ToUpper();
   String guid = GenerateGuid();
@@ -218,7 +223,6 @@ ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
     // This could probably be done more efficiently
     data = data.Replace(ReplaceName, pluginName);
     data = data.Replace(ReplaceGuid, guid);
-    data = data.Replace(ReplaceIncludeGuard, includeGuard);
 
     WriteToFile(outputFile.Data(), (byte*)data.Data(), data.SizeInBytes());
   }

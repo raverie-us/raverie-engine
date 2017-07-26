@@ -576,7 +576,7 @@ namespace Zilch
         // A special case is if we're dealing with a native type generated from a plugin library
         // Because plugins can potentially inherit from stub generated types which don't invoke actual destructors
         Library* typeLibrary = type->SourceLibrary;
-        if (typeLibrary->CreatedByPlugin)
+        if (typeLibrary->Plugin != nullptr)
         {
           bool foundNonStubDestructor = false;
 
@@ -589,7 +589,7 @@ namespace Zilch
             if (type == nullptr)
               break;
 
-            if (type->SourceLibrary->CreatedByPlugin == false)
+            if (type->SourceLibrary->Plugin == nullptr)
             {
               foundNonStubDestructor = true;
               break;

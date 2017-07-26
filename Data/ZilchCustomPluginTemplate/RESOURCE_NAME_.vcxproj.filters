@@ -7,10 +7,10 @@
     <ClCompile Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\Core.cpp">
       <Filter>Zero</Filter>
     </ClCompile>
-    <ClCompile Include="%NAME%.cpp">
+    <ClCompile Include="RESOURCE_NAME_.cpp">
       <Filter>Plugin</Filter>
     </ClCompile>
-    <ClCompile Include="%NAME%Precompiled.cpp">
+    <ClCompile Include="RESOURCE_NAME_Precompiled.cpp">
       <Filter>Plugin</Filter>
     </ClCompile>
   </ItemGroup>
@@ -24,10 +24,10 @@
     <ClInclude Include="Versions\$(OS)-$(PlatformShortName)-$(ZeroVersion)\Zilch.hpp">
       <Filter>Zero</Filter>
     </ClInclude>
-    <ClInclude Include="%NAME%.hpp">
+    <ClInclude Include="RESOURCE_NAME_.hpp">
       <Filter>Plugin</Filter>
     </ClInclude>
-    <ClInclude Include="%NAME%Precompiled.hpp">
+    <ClInclude Include="RESOURCE_NAME_Precompiled.hpp">
       <Filter>Plugin</Filter>
     </ClInclude>
   </ItemGroup>

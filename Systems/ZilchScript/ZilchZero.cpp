@@ -14,6 +14,8 @@ namespace Zero
 ZilchDefineType(ZilchComponent, builder, type)
 {
   ZeroBindComponent();
+  type->Sealed = false;
+
   type->Add(new MetaSerialization());
 
   // Temporary solution so that ZilchComponent cannot be added on Cog in the property grid
@@ -255,6 +257,8 @@ void ZilchComponent::Delete()
 //**************************************************************************************************
 ZilchDefineType(ZilchEvent, builder, type)
 {
+  type->Sealed = false;
+
   // If ZilchEvent's created in Zilch were using the same handle manager as C++ Events, they
   // would leak. So, we want just ZilchEvents to be reference counted. We're using HeapManager
   // over ReferenceCountedHandleManager because manually deleting it could be useful.
@@ -284,6 +288,8 @@ void ZilchEvent::Delete()
 //**************************************************************************************************
 ZilchDefineType(ZilchObject, builder, type)
 {
+  type->Sealed = false;
+
   type->CreatableInScript = true;
 
   ZilchBindMethod(DispatchEvent);
