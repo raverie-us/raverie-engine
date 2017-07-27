@@ -173,6 +173,7 @@ NetPeer::NetPeer()
     mInternetSameIpHostRecordLimit(0),
     mMasterServerSubscriptions(),
     mHostLists(),
+    mPendingCancelHostRequests(false),
     mPublishElapsedTime(0),
     mPingManager(this),
     mLanHostDiscovery(this),
@@ -311,6 +312,16 @@ void NetPeer::OnEngineUpdate(UpdateEvent* event)
   // Not open or is open offline?
   if(!IsOpen() || mIsOpenOffline)
     return;
+
+  // Has a pending cancel host requests?
+  if(mPendingCancelHostRequests)
+  {
+    // Handle canceling host requests
+    mLanHostDiscovery.CancelRefreshes();
+    mInternetHostDiscovery.CancelRefreshes();
+
+    mPendingCancelHostRequests = false;
+  }
 
   // Handle pending host ping requests as needed
   //HandlePendingHostPings(); //OLD WAY: TODO
@@ -661,8 +672,7 @@ bool NetPeer::RefreshHostList(Network::Enum network, bool getExtraHostInfo, bool
 
 void NetPeer::CancelHostRequests()
 {
-  mLanHostDiscovery.CancelRefreshes();
-  mInternetHostDiscovery.CancelRefreshes();
+  mPendingCancelHostRequests = true;
 }
 
 //
