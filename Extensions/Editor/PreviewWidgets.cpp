@@ -182,7 +182,7 @@ public:
     {
       if (CameraViewport* cameraViewport = cameraObject->has(CameraViewport))
       {
-        cameraViewport->SetResolutionOrAspect(mSize);
+        cameraViewport->SetResolutionOrAspect(Math::ToIntVec2(mSize));
       }
     }
   }
