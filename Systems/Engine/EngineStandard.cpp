@@ -93,6 +93,8 @@ Cog* ZeroStartupSettings::LoadConfig()
 //**************************************************************************************************
 ZilchDefineStaticLibrary(EngineLibrary)
 {
+  builder.CreatableInScriptDefault = false;
+
   // Ranges
   ZilchInitializeRange(HierarchyNameRange);
   ZilchInitializeRange(HierarchyRange);
