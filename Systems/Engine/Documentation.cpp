@@ -14,9 +14,10 @@ namespace Zero
 
 ZilchDefineType(DocumentationLibrary, builder, type)
 {
+  type->HandleManager = ZilchManagerId(PointerManager);
 }
 
-/////////////////////////////////////////////pl///////////////////////////
+////////////////////////////////////////////////////////////////////////
 // Helpers
 ////////////////////////////////////////////////////////////////////////
 String ReplaceTypeIfTemplated(StringParam typeString)
@@ -120,13 +121,6 @@ void CommandDoc::Serialize(Serializer& stream)
 ////////////////////////////////////////////////////////////////////////
 // CommandDocList
 ////////////////////////////////////////////////////////////////////////
-template<> struct Zero::Serialization::Trait<CommandDocList>
-{
-
-  enum { Type = StructureType::Object };
-  static inline cstr TypeName() { return "CommandList"; }
-};
-
 bool CommandCompareFn(CommandDoc *lhs, CommandDoc *rhs)
 {
   return lhs->mName < rhs->mName;
