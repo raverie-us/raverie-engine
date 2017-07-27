@@ -149,21 +149,46 @@ public:
   bool IsOpen() const;
 
   /// Opens the peer with the specified network role, port, and retry settings.
-  /// If the peer is opened in offline mode (Role::Offline), the API will act as a pass-through
-  /// and simulate all applicable network events locally. Always succeeds.
-  /// If binding is unsuccessful, the port increments and tries again for the given number of retries.
+  /// For the given number of retries, if binding is unsuccessful, the port number is incremented and binding is attempted again.
   /// Specify port 0 to indicate any available port should be used.
   /// Returns true if successful, else false.
   bool Open(Role::Enum role, uint port, uint retries);
+  /// Opens the peer with the specified network role and port settings.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool Open(Role::Enum role, uint port);
+  /// Opens the peer with the specified network role on any available port.
+  /// Returns true if successful, else false.
   bool Open(Role::Enum role);
+  /// Opens the peer as a client with the specified network port and retry settings.
+  /// For the given number of retries, if binding is unsuccessful, the port number is incremented and binding is attempted again.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool OpenClient(uint port, uint retries);
+  /// Opens the peer as a client with the specified network port.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool OpenClient(uint port);
+  /// Opens the peer as a client on any available port.
+  /// Returns true if successful, else false.
   bool OpenClient();
+  /// Opens the peer as a server with the specified network port.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool OpenServer(uint port);
+  /// Opens the peer as a server on any available port.
+  /// Returns true if successful, else false.
   bool OpenServer();
+  /// Opens the peer as a master server with the specified network port.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool OpenMasterServer(uint port);
+  /// Opens the peer as a master server on any available port.
+  /// Returns true if successful, else false.
   bool OpenMasterServer();
+  /// Opens the peer in offline mode.
+  /// In offline mode, the peer will act as a pass-through and simulate all applicable network events locally.
+  /// Always succeeds and returns true.
   bool OpenOffline();
 
   /// Closes the peer (safe to call multiple times).
