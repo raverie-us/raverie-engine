@@ -21,7 +21,8 @@ extern const String cSerializationPrimitive;
 }
 
 // See SerializationAttributes::cSerializationPrimitive
-#define ZeroBindSerializationPrimitive(type) ZilchTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)
+#define ZeroBindSerializationPrimitive() type->AddAttribute(SerializationAttributes::cSerializationPrimitive)
+#define ZeroBindSerializationPrimitiveExternal(type) ZilchTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)
 
 //------------------------------------------------------------------------------- Meta Serialization
 class MetaSerialization : public ReferenceCountedEventObject

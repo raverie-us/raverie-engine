@@ -79,6 +79,9 @@ ZilchDefineType(Cog, builder, type)
 
   type->AddAttribute(ObjectAttributes::cStoreLocalModifications);
 
+  // When serialized as a property, Cogs save out the CogId
+  ZeroBindSerializationPrimitive();
+
   ZeroBindDocumented();
 
   ZilchBindDefaultConstructor();

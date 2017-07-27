@@ -29,16 +29,16 @@ ZilchDefineStaticLibrary(SerializationLibrary)
   ZilchInitializeType(MetaStringSerialization);
   ZilchInitializeType(EnumMetaSerialization);
 
-  ZeroBindSerializationPrimitive(Integer);
-  ZeroBindSerializationPrimitive(String);
-  ZeroBindSerializationPrimitive(Boolean);
-  ZeroBindSerializationPrimitive(Real);
-  ZeroBindSerializationPrimitive(Real2);
-  ZeroBindSerializationPrimitive(Real3);
-  ZeroBindSerializationPrimitive(Real4);
-  ZeroBindSerializationPrimitive(Mat3);
-  ZeroBindSerializationPrimitive(Mat4);
-  ZeroBindSerializationPrimitive(Quat);
+  ZeroBindSerializationPrimitiveExternal(Integer);
+  ZeroBindSerializationPrimitiveExternal(String);
+  ZeroBindSerializationPrimitiveExternal(Boolean);
+  ZeroBindSerializationPrimitiveExternal(Real);
+  ZeroBindSerializationPrimitiveExternal(Real2);
+  ZeroBindSerializationPrimitiveExternal(Real3);
+  ZeroBindSerializationPrimitiveExternal(Real4);
+  ZeroBindSerializationPrimitiveExternal(Mat3);
+  ZeroBindSerializationPrimitiveExternal(Mat4);
+  ZeroBindSerializationPrimitiveExternal(Quat);
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
