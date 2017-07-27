@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ErrorOutput">
+      <UniqueIdentifier>{bff59d12-ed48-4e04-b897-d061025e4ce4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Win32\TestResultDebugOut.cpp">
+      <Filter>ErrorOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="TestResultStdErr.cpp">
+      <Filter>ErrorOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="ExceptionHandler.cpp" />
+    <ClCompile Include="Failure.cpp" />
+    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="TestException.cpp" />
+    <ClCompile Include="TestRegistry.cpp" />
+    <ClCompile Include="TestResult.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Win32\TestResultDebugOut.h">
+      <Filter>ErrorOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="TestResultStdErr.h">
+      <Filter>ErrorOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="CppUnitLite2.h" />
+    <ClInclude Include="ExceptionHandler.h" />
+    <ClInclude Include="Failure.h" />
+    <ClInclude Include="Test.h" />
+    <ClInclude Include="TestException.h" />
+    <ClInclude Include="TestMacros.h" />
+    <ClInclude Include="TestRegistry.h" />
+    <ClInclude Include="TestResult.h" />
+  </ItemGroup>
+</Project>

@@ -1,4 +1,3 @@
-#define ZeroExperimentalBranchName "BraveCobra"
-#define ZeroMajorVersion 0
+#define ZeroMajorVersion 1
 #define ZeroMinorVersion 0
 #define ZeroPatchVersion 0

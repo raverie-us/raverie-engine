@@ -21,7 +21,6 @@ Extensions/Editor/tinyxml2.h
 Build/Output/ZeroEngineSetup.exe
 Build/Output
 BuildOutput
-test.cmd
 Install/
 CMakeBuilds/
 *.cd
@@ -35,10 +34,6 @@ Data/ContentStore/
 Data/ZilchCustomPluginShared/Zilch.hpp
 Data/ZilchCustomPluginShared/ZeroEditor.lib
 Data/ZilchCustomPluginShared/
-UnitTests/CppUnitLite2/
-UnitTests/Serialization/Debug/CppUnitLite2.lib
-UnitTests/Serialization/Release/CppUnitLite2.lib
-UnitTests/Serialization/Production/CppUnitLite2.lib
 
 Extensions/UiWidget/Debug/*
 *.opendb

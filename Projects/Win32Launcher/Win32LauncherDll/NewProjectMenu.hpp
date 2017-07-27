@@ -32,8 +32,6 @@ public:
   void UpdatePreviewImage();
 
   Element* mBackground;
-  Element* mBorder;
-  MultiLineText* mTitle;
   TextureView* mImage;
 
   TemplateProject* mTemplateProject;
