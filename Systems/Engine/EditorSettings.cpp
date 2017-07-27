@@ -22,7 +22,7 @@ ZilchDefineType(EditorSettings, builder, type)
   
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
-  
+  ZeroBindDocumented();
   ZilchBindFieldProperty(mViewCube);
   ZilchBindGetterSetterProperty(ViewCubeSize)->Add(new EditorRange(sViewCubeMinSize, sViewCubeMaxSize, 0.01f));
   ZilchBindFieldProperty(mScriptReloadEditor);
