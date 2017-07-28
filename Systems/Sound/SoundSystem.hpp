@@ -93,10 +93,16 @@ public:
 
   unsigned mCounter;
   InList<SoundSpace> mSpaces;
-  Audio::AudioSystemInterface* mAudioSystem;
   HandleOf<SoundInstance> mPreviewInstance;
   String mAudioMessage;
   SoundNodeGraph NodeGraph;
+  HandleOf<SoundNode> mOutputNode;
+
+private:
+  Audio::AudioSystemInterface* mAudioSystem;
+
+  friend class AudioSettings;
+  friend class AudioStatics;
 };
 
 System* CreateSoundSystem();
