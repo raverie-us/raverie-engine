@@ -24,6 +24,7 @@ ZilchDefineType(ProjectSettings, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
+  ZeroBindDocumented();
   type->AddAttribute(ObjectAttributes::cCore);
 
   ZilchBindFieldGetter(ProjectName);
@@ -32,6 +33,7 @@ ZilchDefineType(ProjectSettings, builder, type)
   ZilchBindFieldGetter(EditorContentFolder);
 
   ZilchBindFieldProperty(ProjectOwner);
+  ZilchBindFieldProperty(AutoTakeProjectScreenshot);
 }
 
 //******************************************************************************

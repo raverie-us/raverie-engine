@@ -17,17 +17,17 @@ goto :NoSourceControl
 
 REM Run the mercurial commit information extraction step
 :MercurialPresent
-call UpdateBuildVersion.hg.cmd %1 %TempFile%
+call %BuildFolder%\UpdateBuildVersion.hg.cmd %1 %TempFile%
 goto :Finish
 
 REM Run the git commit information extraction step
 :GitPresent
-call UpdateBuildVersion.git.cmd %1 %TempFile%
+call %BuildFolder%\UpdateBuildVersion.git.cmd %1 %TempFile%
 goto :Finish
 
 REM Run a backup information extraction step (uses stub info)
 :NoSourceControl
-call UpdateBuildVersion.none.cmd %1 %TempFile%
+call %BuildFolder%\UpdateBuildVersion.none.cmd %1 %TempFile%
 goto :Finish
 
 :Finish
