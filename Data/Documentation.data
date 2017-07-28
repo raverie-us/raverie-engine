@@ -16047,6 +16047,67 @@ DocumentationLibrary
 		}
 		Object
 		{
+			var Name = "EditorSettings"
+			var BaseClass = "Component"
+			var Library = "EngineLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+				"Component"
+			}
+			var Properties = Array
+			{
+				Property
+				{
+					var Name = "AutoUpdateContentChanges"
+					var Type = "Boolean"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ScriptReloadEditor"
+					var Type = "ScriptReloadMethod"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ScriptReloadGame"
+					var Type = "ScriptReloadMethod"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ViewCube"
+					var Type = "Boolean"
+					var Description = "Show/hide the orientation view cube."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ViewCubeSize"
+					var Type = "Real"
+					var Description = "Size in pixels of the viewport the view cube is shown in."
+					var ReadOnly = false
+					var Static = false
+				}
+			}
+			var Methods = Array
+			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
 			var Name = "EllipsoidCollider"
 			var BaseClass = "Collider"
 			var Library = "PhysicsLibrary"
@@ -75288,6 +75349,27 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var ReadOnly = false
 					var Static = false
 				}
+			}
+			var Methods = Array
+			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
+			var Name = "ZilchScript"
+			var BaseClass = "ZilchDocumentResource"
+			var Library = "ZilchScriptLibrary"
+			var Description = "Zilch script file Resource."
+			var Tags = Array
+			{
+				"Resource"
+			}
+			var Properties = Array
+			{
 			}
 			var Methods = Array
 			{
