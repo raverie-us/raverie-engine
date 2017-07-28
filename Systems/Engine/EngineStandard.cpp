@@ -353,7 +353,10 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(EventDirectoryWatcher);
   ZilchInitializeType(Job);
   ZilchInitializeType(DocumentationLibrary);
-  ZilchInitializeType(ProxyObject<Component>);
+  ZilchInitializeTypeAs(ProxyObject<Component>, "ComponentProxy");
+
+  if(!Engine::sInLauncher)
+    ZilchInitializeTypeAs(LauncherProjectInfoProxy, "LauncherProjectInfo");
 
   ZilchInitializeType(ZilchLibraryResource);
   ZilchInitializeType(ZilchDocumentResource);

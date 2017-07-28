@@ -104,6 +104,7 @@ public:
   // If engine has resources for display of loading
   bool mHaveLoadingResources;
 
+  static bool sInLauncher;
 private:
 
   friend class Space;

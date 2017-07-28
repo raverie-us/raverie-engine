@@ -189,4 +189,10 @@ public:
   int mFrameRate;
 };
 
+class LauncherProjectInfoProxy : public ProxyObject<Component>
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+};
+
 }//namespace Zero

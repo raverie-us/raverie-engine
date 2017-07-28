@@ -127,7 +127,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeType(ParticleCollisionHeightmap);
   ZilchInitializeType(ParticleEmitter);
   ZilchInitializeType(ParticleSystem);
-  ZilchInitializeType(ProxyObject<MaterialBlock>);
+  ZilchInitializeTypeAs(ProxyObject<MaterialBlock>, "MaterialBlockProxy");
   ZilchInitializeType(RenderGroup);
   ZilchInitializeType(RenderGroupList);
   ZilchInitializeType(RenderSettings);
