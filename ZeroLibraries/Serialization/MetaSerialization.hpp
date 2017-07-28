@@ -11,15 +11,29 @@ namespace Zero
 
 struct PolymorphicNode;
 
+namespace SerializationAttributes
+{
+// If it's not a primitive type, serialization will assume it can never be a modified property.
+// Only its child properties can be modified.
+// This was used to avoid checking if Transform.Translation.X is modified. It can never be
+// modified because it's a primitive. Only Transform.Translation can be modified.
+extern const String cSerializationPrimitive;
+}
+
+// See SerializationAttributes::cSerializationPrimitive
+#define ZeroBindSerializationPrimitive() type->AddAttribute(SerializationAttributes::cSerializationPrimitive)
+#define ZeroBindSerializationPrimitiveExternal(type) ZilchTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)
+
 //------------------------------------------------------------------------------- Meta Serialization
 class MetaSerialization : public ReferenceCountedEventObject
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  
+
+  virtual void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer);
+
   virtual bool SerializePrimitiveProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer);
   virtual bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer);
-  virtual void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer);
 
   // The default serialize object assumes that the value inherits from Zero's Object class
   virtual void SerializeObject(AnyParam object, Serializer& serializer);
@@ -27,6 +41,8 @@ public:
   // Set the value of an any to a default value
   // This function MUST at least initialize the type of the any
   virtual void SetDefault(Type* type, Any& any);
+
+  virtual void AddCustomAttributes(HandleParam object, TextSaver* saver){}
 
   // Overload this if the value can be converted from a string and return true
   virtual bool ConvertFromString(StringParam input, Any& output);

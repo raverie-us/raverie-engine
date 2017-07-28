@@ -62,6 +62,7 @@ JointCreator::JointCreator()
 
 ZilchDefineType(JointCreator, builder, type)
 {
+  type->CreatableInScript = true;
   ZilchBindDestructor();
   ZilchBindDefaultConstructor();
   ZeroBindDocumented();

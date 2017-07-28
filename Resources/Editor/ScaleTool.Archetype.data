@@ -16,6 +16,5 @@ Cog
 		var SnapDistance = 1
 		var SnapMode = GizmoSnapMode.WorldGrid
 		var AffectTranslation = true
-		var ChangeInScale = Real3{1, 1, 1}
 	}
 }

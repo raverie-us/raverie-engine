@@ -25,10 +25,10 @@ ZilchDefineType(CameraViewport, builder, type)
   ZilchBindGetterSetterProperty(ResolutionOrAspect);
   ZilchBindGetterSetterProperty(RenderToViewport)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mForwardViewportEvents)->ZeroFilterEquality(mRenderToViewport, bool, true);;
-  ZilchBindFieldProperty(mNormalizedSize)->ZeroFilterEquality(mRenderToViewport, bool, true);
-  ZilchBindFieldProperty(mNormalizedOffset)->ZeroFilterEquality(mRenderToViewport, bool, true);
   ZilchBindFieldProperty(mViewportScaling)->ZeroFilterEquality(mRenderToViewport, bool, true);
   ZilchBindFieldProperty(mMarginColor)->ZeroFilterEquality(mRenderToViewport, bool, true);
+  ZilchBindFieldProperty(mNormalizedSize)->ZeroFilterEquality(mRenderToViewport, bool, true);
+  ZilchBindFieldProperty(mNormalizedOffset)->ZeroFilterEquality(mRenderToViewport, bool, true);
 
   ZilchBindMethod(ViewportTakeFocus);
   ZilchBindGetter(ViewportHasFocus);
@@ -58,16 +58,16 @@ void CameraViewport::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mRenderInEditor, false);
   SerializeNameDefault(mRenderInGame, true);
-  SerializeNameDefault(mRenderToViewport, true);
-  SerializeNameDefault(mForwardViewportEvents, false);
   SerializeNameDefault(mRenderOrder, 0);
-  SerializeNameDefault(mNormalizedSize, Vec2(1, 1));
-  SerializeNameDefault(mNormalizedOffset, Vec2(0, 0));
   stream.SerializeFieldDefault("CameraPath", mCameraPath, CogPath("."), "Camera");
   stream.SerializeFieldDefault("RendererPath", mRendererPath, CogPath("."), "Renderer");
-  SerializeNameDefault(mResolution, Vec2(1920, 1080));
+  SerializeNameDefault(mResolutionOrAspect, IntVec2(1920, 1080));
+  SerializeNameDefault(mRenderToViewport, true);
+  SerializeNameDefault(mForwardViewportEvents, true);
   SerializeEnumNameDefault(ViewportScaling, mViewportScaling, ViewportScaling::Fill);
-  SerializeNameDefault(mMarginColor, Vec4(0, 0, 0, 1));
+  SerializeNameDefault(mMarginColor, Vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  SerializeNameDefault(mNormalizedSize, Vec2(1.0f));
+  SerializeNameDefault(mNormalizedOffset, Vec2(0.0f));
 }
 
 void CameraViewport::Initialize(CogInitializer& initializer)
@@ -123,7 +123,7 @@ Vec2 CameraViewport::GetViewportSize()
   if (viewport != nullptr)
     return viewport->GetSize();
   else
-    return GetResolutionOrAspect();
+    return Math::ToVec2(GetResolutionOrAspect());
 }
 
 void CameraViewport::SendSortEvent(GraphicalSortEvent* event)
@@ -171,14 +171,14 @@ void CameraViewport::SetRenderToViewport(bool render)
   CheckSetup();
 }
 
-Vec2 CameraViewport::GetResolutionOrAspect()
+IntVec2 CameraViewport::GetResolutionOrAspect()
 {
-  return mResolution;
+  return mResolutionOrAspect;
 }
 
-void CameraViewport::SetResolutionOrAspect(Vec2 resolution)
+void CameraViewport::SetResolutionOrAspect(IntVec2 resolution)
 {
-  mResolution = Math::Max(resolution, Vec2(1.0f));
+  mResolutionOrAspect = Math::Max(resolution, IntVec2(1, 1));
 }
 
 Mat4 CameraViewport::GetWorldToView()
@@ -487,7 +487,7 @@ void CameraViewport::ConfigureViewport()
   {
     float viewportRatio = viewportSize.x / viewportSize.y;
         
-    Vec2 targetSize = SnapToPixels(mResolution);
+    Vec2 targetSize = Math::ToVec2(mResolutionOrAspect);
     float targetRatio = targetSize.x / targetSize.y;
         
     Vec2 scaleAspect;
@@ -501,12 +501,12 @@ void CameraViewport::ConfigureViewport()
   }
   else if (mViewportScaling == ViewportScaling::Exact)
   {
-    scaledSize = Math::Min(SnapToPixels(mResolution), viewportSize);
+    scaledSize = Math::Min(Math::ToVec2(mResolutionOrAspect), viewportSize);
     scaledOffset = viewportOffset + SnapToPixels(Vec3((viewportSize - scaledSize) * 0.5f, 0.0f));
   }
   else if (mViewportScaling == ViewportScaling::LargestMultiple)
   {
-    Vec2 targetSize = SnapToPixels(mResolution);
+    Vec2 targetSize = Math::ToVec2(mResolutionOrAspect);
     float multiple = Math::Min(viewportSize.x / targetSize.x, viewportSize.y / targetSize.y);
     multiple = Math::Max(Math::Floor(multiple), 1.0f);
     scaledSize = Math::Min(targetSize * multiple, viewportSize);

@@ -255,6 +255,7 @@ namespace Zero
   {
   public:
     ZilchDeclareType(TypeCopyMode::ReferenceType);
+
     ~DocumentationLibrary();
 
     void Serialize(Serializer& stream);

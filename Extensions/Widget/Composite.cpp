@@ -330,6 +330,8 @@ Widget* Find(StringParam name, UiTraversal::Enum traversalType, size_t& index, W
   return nullptr;
 }
 
+//---------------------------------------------------------------------- Helpers
+
 // Find any child widget by name
 Widget* FindWidgetByName(StringParam name, UiTraversal::Enum traversalType, size_t index, Widget* parent)
 {

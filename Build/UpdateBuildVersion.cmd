@@ -4,50 +4,33 @@ SET BuildFolder=%ZERO_SOURCE%\Build
 SET BuildVersionIdsFolder=%BuildFolder%\BuildVersionIds
 SET TempFile=%BuildFolder%\BuildVersion.temp
 
-REM Determine if there's a mercurial repository here, if not then fall back on a base implementation
+REM Check if mercurial exists
 call hg status > nul
-if NOT %errorlevel% == 0 goto :NoMercurialPresent
+if %errorlevel% == 0 goto :MercurialPresent
 
-REM Always add a pragma once to the top of this file
-echo #pragma once > %TempFile%
+REM otherwise, check if git exists
+call git status > nul
+if %errorlevel% == 0 goto :GitPresent
 
-REM Capture the branch name
-SET cmd=call hg log -q -r ^"max(parents())^" --template ^"{branch}^"
-FOR /F "tokens=*" %%i IN (' %cmd% ') DO SET BranchName=%%i
+REM otherwise, fallback on having no source control
+goto :NoSourceControl
 
-REM If the build id file for this branch doesn't exist then define the
-REM experimental branch name as the current branch and use the backup build id file
-SET BuildIdBranchFileName="%BuildVersionIdsFolder%\%BranchName%.txt"
+REM Run the mercurial commit information extraction step
+:MercurialPresent
+call %BuildFolder%\UpdateBuildVersion.hg.cmd %1 %TempFile%
+goto :Finish
 
-IF NOT EXIST %BuildIdBranchFileName% (
-  echo Build id file did not exist, using backup
-  echo #define ZeroExperimentalBranchName "%BranchName%" >> %TempFile%
-  SET BuildIdBranchFileName="%BuildVersionIdsFolder%\Backup.txt"
-)
+REM Run the git commit information extraction step
+:GitPresent
+call %BuildFolder%\UpdateBuildVersion.git.cmd %1 %TempFile%
+goto :Finish
 
-echo Branch Id Filename is %BuildIdBranchFileName%
+REM Run a backup information extraction step (uses stub info)
+:NoSourceControl
+call %BuildFolder%\UpdateBuildVersion.none.cmd %1 %TempFile%
+goto :Finish
 
-REM Always write out the build id file contents
-type %BuildIdBranchFileName% >> %TempFile%
-
-REM Write out the various identifiers from the current revision's node (Branch, Changset, Revision, etc...)
-call hg log -q -r "max(parents())" --style "%BuildFolder%\BuildVersion.style" >> %TempFile%
-goto :TryCopyTempFile
-
-REM Mercurial wasn't present so just copy the backup file and some default values for the changeset
-:NoMercurialPresent
-echo No mercurial present, copying backup file with default values
-
-echo #pragma once > %TempFile%
-type %BuildVersionIdsFolder%\Backup.txt >> %TempFile%
-echo #define ZeroRevisionId 0 >> %TempFile%
-echo #define ZeroShortChangeSet 0 >> %TempFile%
-echo #define ZeroChangeSet 0 >> %TempFile%
-echo #define ZeroChangeSetDate "" >> %TempFile%
-goto :TryCopyTempFile
-
-
-:TryCopyTempFile
+:Finish
 REM Only copy this file over the one in source if it's different or doesn't exist.
 REM Do this to prevent always rebuilding.
 fc %TempFile% "%ZERO_SOURCE%\Systems\Engine\BuildVersion.inl" > nul

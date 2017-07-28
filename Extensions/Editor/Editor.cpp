@@ -1043,13 +1043,9 @@ void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibrar
 
   EditorSettings* settings = Z::gEngine->GetConfigCog()->has(EditorSettings);
 
-  // Editor game session
-  if(settings->mScriptReloadEditor == ScriptReloadMethod::ReInitializeObjects)
-  {
-    // Re-Initialize all components in the editors game session
-    GameSession* game = GetEditGameSession();
-    ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
-  }
+  // Re-Initialize all components in the editors game session
+  GameSession* game = GetEditGameSession();
+  ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
 
   // Running game sessions
   if(settings->mScriptReloadGame == ScriptReloadMethod::ReInitializeObjects)

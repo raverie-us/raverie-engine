@@ -98,7 +98,7 @@ void OsMouseEvent::Serialize(Serializer& stream)
   }
   else
   {
-    stream.StartPolymorphic(ZilchTypeId(OsMouseEvent));
+    stream.StartPolymorphic(this);
   }
 
   SerializeNameDefault(ShiftPressed, false);

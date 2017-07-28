@@ -275,6 +275,9 @@ ZilchDefineType(Resource, builder, type)
   type->Add(new ResourceDisplayFunctions());
   type->Add(new ResourceMetaOperations());
 
+  // When serialized as a property, Resources save out a resource id and name
+  ZeroBindSerializationPrimitive();
+
   ZeroBindDocumented();
   ZilchBindFieldGetterProperty(Name);
   type->ToStringFunction = ResourceToString;

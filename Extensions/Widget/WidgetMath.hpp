@@ -64,9 +64,14 @@ struct Thickness
 };
 
 //------------------------------------------------------------------------- Rect
+struct Rect;
+typedef const Rect& RectParam;
+
 struct Rect
 {
   ZilchDeclareType(TypeCopyMode::ValueType);
+
+  static const Rect cZero;
 
   static Rect PointAndSize(Vec2Param point, Vec2Param size);
   static Rect CenterAndSize(Vec2Param point, Vec2Param size);
@@ -76,6 +81,8 @@ struct Rect
   float Y;
   float SizeX;
   float SizeY;
+
+  bool operator==(RectParam rhs) const;
 
   Vec2 GetPosition() const { return Vec2(X, Y); }
   Vec2 GetSize() const { return Vec2(SizeX, SizeY); }

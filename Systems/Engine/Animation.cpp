@@ -183,6 +183,11 @@ Animation::~Animation()
   Unload();
 }
 
+Animation* Animation::CreateRuntime()
+{
+  return AnimationManager::CreateRuntime();
+}
+
 void Animation::Save(StringParam filename)
 {
   SaveToDataFile(*this, filename, DataFileFormat::Text);
@@ -201,7 +206,7 @@ void Animation::Serialize(Serializer& stream)
   }
   else
   {
-    SerializeName(mDuration);
+    SerializeNameDefault(mDuration, 0.0f);
 
     // Walk through each object track
     PolymorphicNode objectNode;

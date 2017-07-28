@@ -40,10 +40,8 @@ public:
   /// Get the index of the Button being hovered over by the mouse
   int GetHoverItem( ) { return mHoverItem; }
 
-  /// Get the Button being hovered over by the mouse, if there is one.
-  TextButton* GetHoverButton( ) { return (mHoverItem != -1) ? mButtons[mHoverItem] : nullptr;  }
+  ListSource* GetDataSource( );
 
-private:
   void CreateButton(StringParam name);
 
   /// Event response.
@@ -55,6 +53,9 @@ private:
   void DeSelectButton(TextButton* button);
   void DeselectAll();
 
+  HandleOf<ToolTip> mToolTip;
+
+  ListSource* mDataSource;
   Array<TextButton*> mButtons;
   int mSelectedItem;
   int mHoverItem;

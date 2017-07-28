@@ -52,8 +52,8 @@ public:
   void RebuildObject(HandleParam object) override;
 };
 
-//----------------------------------------------------------- Cog Meta Transform
-// Gizmos use this interface to transform objects.
+//------------------------------------------------------------------------------- Cog Meta Transform
+/// Gizmos use this interface to transform objects.
 class CogMetaTransform : public MetaTransform
 {
 public:
@@ -62,15 +62,15 @@ public:
   MetaTransformInstance GetInstance(HandleParam object) override;
 };
 
-//------------------------------------------------------ Cog Archetype Extension
-// Used to give a custom editor for Archetype on Cog instead of the usual resource selector.
+//-------------------------------------------------------------------------- Cog Archetype Extension
+/// Used to give a custom editor for Archetype on Cog instead of the usual resource selector.
 class CogArchetypeExtension : public EditorPropertyExtension
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 };
 
-//------------------------------------------------------------- Cog Meta Display
+//--------------------------------------------------------------------------------- Cog Meta Display
 class CogMetaDisplay : public MetaDisplay
 {
 public:
@@ -78,6 +78,24 @@ public:
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
+};
+
+//--------------------------------------------------------------------------------- Cog Meta Display
+/// When saving a Cog as a property (such as in CogPath), we want to save out the CogId,
+/// not the full definition of the Cog.
+class CogMetaSerialization : public MetaSerialization
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value,
+                                  Serializer& serializer) override;
+  void AddCustomAttributes(HandleParam object, TextSaver* saver) override;
+
+  /// ContextIds are currently only for levels, so when saving out an Archetype definition, this
+  /// will be set to false, and context id's won't be assigned. This means that CogPaths must
+  /// have a unique path within an Archetype.
+  static bool sSaveContextIds;
 };
 
 }//namespace Zero

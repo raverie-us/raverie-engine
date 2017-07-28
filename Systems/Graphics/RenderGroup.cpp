@@ -57,7 +57,7 @@ RenderGroupManager::RenderGroupManager(BoundType* resourceType)
 {
   AddLoader("RenderGroup", new TextDataFileLoader<RenderGroupManager>());
 
-  DefaultResourceName = "DefaultRenderGroup";
+  DefaultResourceName = "Opaque";
 
   mCategory = "Graphics";
   mCanAddFile = true;

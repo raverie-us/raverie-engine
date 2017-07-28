@@ -114,7 +114,7 @@ namespace Audio
       gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetReleaseMsec,
       (DynamicsProcessorNode*)GetSiblingNode(), release));
     else if (Filter)
-      Filter->SetReleaseMsec(release);
+      Filter->SetReleaseMSec(release);
   }
 
   //************************************************************************************************

@@ -592,8 +592,6 @@ ZilchDefineType(ObjectScaleTool, builder, type)
 
   ZilchBindFieldProperty(mAffectTranslation);
 
-  ZilchBindFieldGetter(mChangeInScale);
-
   ZeroBindTag(Tags::Tool);
 }
 
@@ -608,38 +606,12 @@ void ObjectScaleTool::Serialize(Serializer& stream)
   ObjectTransformTool::Serialize(stream);
   SerializeEnumName(GizmoSnapMode, mSnapMode);
   SerializeName(mAffectTranslation);
-  SerializeName(mChangeInScale);
 }
 
 /******************************************************************************/
 void ObjectScaleTool::Initialize(CogInitializer& initializer)
 {
   ObjectTransformTool::Initialize(initializer);
-}
-
-/******************************************************************************/
-void ObjectScaleTool::OnFrameUpdate(UpdateEvent* event)
-{
-  ObjectTransformTool::OnFrameUpdate(event);
-
-  Cog* gizmo = mGizmo.ToCog( );
-  if(gizmo == nullptr)
-    return;
-
-  ObjectTransformGizmo* transformGizmo = mGizmo.ToCog( )->has(ObjectTransformGizmo);
-  int count = transformGizmo->GetObjectCount( );
-
-  if(count == 1)
-  {
-    ObjectTransformState object = transformGizmo->GetObjectStateAtIndex(0);
-
-    mChangeInScale = object.EndScale - object.StartScale;
-  }
-  else
-  {
-    mChangeInScale = gizmo->has(ScaleGizmo)->mChangeInScale - Vec3(1,1,1);
-  }
-
 }
 
 /******************************************************************************/
@@ -697,12 +669,6 @@ void ObjectScaleTool::SetSnapMode(GizmoSnapMode::Enum mode)
 }
 
 /******************************************************************************/
-Vec3 ObjectScaleTool::GetChangeInScale( )
-{
-  return mChangeInScale;
-}
-
-/******************************************************************************/
 void ObjectScaleTool::CopyPropertiesToGizmo()
 {
   Cog* gizmo = mGizmo.ToCog( );
@@ -716,8 +682,6 @@ void ObjectScaleTool::CopyPropertiesToGizmo()
   scaleGizmo->mSnapping = mSnapping;
   scaleGizmo->mSnapDistance = mSnapDistance;
   scaleGizmo->mSnapMode = mSnapMode;
-
-  scaleGizmo->mChangeInScale = mChangeInScale;
 
   ObjectScaleGizmo* objectGizmo = gizmo->has(ObjectScaleGizmo);
 
@@ -734,8 +698,6 @@ ZilchDefineType(ObjectRotateTool, builder, type)
   ZilchBindGetterSetterProperty(SnapAngle);
   ZilchBindFieldProperty(mAffectTranslation);
 
-  ZilchBindFieldGetterProperty(mChangeInRotation);
-
   ZeroBindTag(Tags::Tool);
 }
 
@@ -749,37 +711,12 @@ void ObjectRotateTool::Serialize(Serializer& stream)
 {
   ObjectTransformTool::Serialize(stream);
   SerializeName(mAffectTranslation);
-  SerializeName(mChangeInRotation);
 }
 
 /******************************************************************************/
 void ObjectRotateTool::Initialize(CogInitializer& initializer)
 {
   ObjectTransformTool::Initialize(initializer);
-}
-
-/******************************************************************************/
-void ObjectRotateTool::OnFrameUpdate(UpdateEvent* event)
-{
-  ObjectTransformTool::OnFrameUpdate(event);
-
-  Cog* gizmo = mGizmo.ToCog( );
-  if(gizmo == nullptr)
-    return;
-
-  ObjectTransformGizmo* transformGizmo = mGizmo.ToCog( )->has(ObjectTransformGizmo);
-  int count = transformGizmo->GetObjectCount( );
-
-  if(count == 1)
-  {
-    ObjectTransformState object = transformGizmo->GetObjectStateAtIndex(0);
-    mChangeInRotation = Quat::AngleBetween(object.EndRotation, object.StartRotation);
-  }
-  else
-  {
-    mChangeInRotation = gizmo->has(RotateGizmo)->mChangeInRotation;
-  }
-
 }
 
 /******************************************************************************/

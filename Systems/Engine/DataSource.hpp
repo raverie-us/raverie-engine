@@ -325,6 +325,7 @@ public:
   virtual uint GetCount() = 0;
   virtual void Selected(DataIndex index);
   virtual String GetStringValueAt(DataIndex index) = 0;
+  virtual String GetDescriptionAt(DataIndex index) { return ""; };
 };
 
 //---------------------------------------------------------- Container To String
@@ -356,6 +357,7 @@ public:
   }
 
   containerType* mData;
+
   void SetSource(containerType* data){mData = data;}
   virtual bool IsCollection(){return true;}
   virtual uint GetCount(){return mData->Size();}
@@ -369,6 +371,7 @@ public:
   {
     return mConverter.Convert( (*mData)[ (uint)index.Id] );
   }
+
 };
 
 //---------------------------------------------------------------- String Source
@@ -401,27 +404,38 @@ public:
   //Default constructor.
   EnumSource();
 
+  ~EnumSource();
+
   // Constructor (takes in a pointer to a null terminated array of c-strings)
-  EnumSource(const cstr* names);
+  EnumSource(const cstr enumName, const cstr* names, bool selfClean = false);
 
   // Constructor (takes in a pointer to an array of c-strings, and a size)
-  EnumSource(const cstr* names, size_t size);
+  EnumSource(const cstr enumName, const cstr* names, size_t size, bool selfClean = false);
 
   // Set the enum source
-  void SetEnum(const cstr* names, size_t size);
+  void SetEnum(const cstr enumName, const cstr* names, size_t size, bool selfClean = false);
 
   // Set Enum (takes in a pointer to a null terminated array of c-strings)
-  void SetEnum(const cstr* names);
+  void SetEnum(const cstr enumName, const cstr* names, bool selfClean = false);
+
+  // Retrieve enum descriptions, if available.
+  //   NOTE: Assumes 'mNames' has been populated.
+  void FillOutDescriptions(const cstr enumName);
 
   // Get the number of elements in the enum
-  virtual uint GetCount() override;
+  uint GetCount() override;
 
   // Get the name at a particular index
-  virtual String GetStringValueAt(DataIndex index) override;
+  String GetStringValueAt(DataIndex index) override;
+  // Get the description (documentation) for the corresponding enum at the same index
+  String GetDescriptionAt(DataIndex index) override;
 
 private:
-  // Store the names and the size of the array
+  // Denotes if the destructor should delete [] 'mNames'
+  bool mSelfClean;
+  // Store the names, descriptions, and the size of the arrays
   const cstr* mNames;
+  Array<String> mDescriptions;
   size_t mSize;
 };
 
