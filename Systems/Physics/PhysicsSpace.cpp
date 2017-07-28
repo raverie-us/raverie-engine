@@ -165,8 +165,10 @@ ZilchDefineType(PhysicsSpace, builder, type)
   ZilchBindOverloadedMethod(CastFrustum, ZilchInstanceOverload(CastResultsRange, const Frustum&, uint, CastFilter&));
   ZilchBindOverloadedMethod(CastCollider, ZilchInstanceOverload(CastResultsRange, Vec3Param, Collider*, CastFilter&));
   // Event Dispatching in Region
-  ZilchBindMethod(DispatchWithinSphere);
-  ZilchBindMethod(DispatchWithinAabb);
+  ZilchBindOverloadedMethod(DispatchWithinSphere, ZilchInstanceOverload(void, const Sphere&, StringParam, Event*));
+  ZilchBindOverloadedMethod(DispatchWithinSphere, ZilchInstanceOverload(void, const Sphere&, CastFilter&, StringParam, Event*));
+  ZilchBindOverloadedMethod(DispatchWithinAabb, ZilchInstanceOverload(void, const Aabb&, StringParam, Event*));
+  ZilchBindOverloadedMethod(DispatchWithinAabb, ZilchInstanceOverload(void, const Aabb&, CastFilter&, StringParam, Event*));
 
   // Extra collider detection methods
   ZilchBindMethod(SweepCollider);
@@ -1217,29 +1219,42 @@ SweepResultRange PhysicsSpace::SweepCollider(Collider* collider, Vec3Param veloc
   return range;
 }
 
+
 void PhysicsSpace::DispatchWithinSphere(const Sphere& sphere, StringParam eventName, Event* toSend)
 {
-  CastResults results(100);
-  CastSphere(sphere, results);
-  CastResults::range r = results.All();
-  while(!r.Empty())
+  CastFilter filter;
+  DispatchWithinSphere(sphere, filter, eventName, toSend);
+}
+
+void PhysicsSpace::DispatchWithinSphere(const Sphere& sphere, CastFilter& filter, StringParam eventName, Event* toSend)
+{
+  CastResultsRange results = CastSphere(sphere, 100, filter);
+  while(!results.Empty())
   {
-    Cog* object = r.Front().GetCollider()->GetOwner();
+    CastResult& result = results.Front();
+    results.PopFront();
+
+    Cog* object = result.GetObjectHit();
     object->DispatchEvent(eventName, toSend);
-    r.PopFront();
   }
 }
 
 void PhysicsSpace::DispatchWithinAabb(const Aabb& aabb, StringParam eventName, Event* toSend)
 {
-  CastResults results(100);
-  CastAabb(aabb, results);
-  CastResults::range r = results.All();
-  while(!r.Empty())
+  CastFilter filter;
+  DispatchWithinAabb(aabb, filter, eventName, toSend);
+}
+
+void PhysicsSpace::DispatchWithinAabb(const Aabb& aabb, CastFilter& filter, StringParam eventName, Event* toSend)
+{
+  CastResultsRange results = CastAabb(aabb, 100, filter);
+  while(!results.Empty())
   {
-    Cog* object = r.Front().GetCollider()->GetOwner();
+    CastResult& result = results.Front();
+    results.PopFront();
+
+    Cog* object = result.GetObjectHit();
     object->DispatchEvent(eventName, toSend);
-    r.PopFront();
   }
 }
 

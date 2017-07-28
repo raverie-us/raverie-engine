@@ -63,6 +63,7 @@ void ZeroDoNotify(StringParam title, StringParam message, StringParam icon, Noti
 }
 
 //-------------------------------------------------------------------Engine
+bool Engine::sInLauncher = false;
 //******************************************************************************
 ZilchDefineType(Engine, builder, type)
 {

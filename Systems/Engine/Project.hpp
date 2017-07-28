@@ -93,6 +93,7 @@ public:
   String ContentFolder;
   /// Editor specific content (screen shot, editor settings, etc...)
   String EditorContentFolder;
+  /// Should a screenshot of the project be taken every time the project is saved.
   bool AutoTakeProjectScreenshot;
 
   /// Project File Path
@@ -187,6 +188,12 @@ public:
   int GetFrameRate();
   void SetFrameRate(int frameRate);
   int mFrameRate;
+};
+
+class LauncherProjectInfoProxy : public ProxyObject<Component>
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
 };
 
 }//namespace Zero

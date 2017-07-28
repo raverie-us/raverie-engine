@@ -112,6 +112,14 @@ void Serializer::StartPolymorphic(cstr typeName, PolymorphicSaveFlags::Enum flag
 }
 
 //******************************************************************************
+void Serializer::StartPolymorphic(BoundType* objectType)
+{
+  Handle object;
+  object.StoredType = objectType;
+  StartPolymorphic(object);
+}
+
+//******************************************************************************
 void Serializer::StartPolymorphic(HandleParam object)
 {
   PolymorphicInfo info;

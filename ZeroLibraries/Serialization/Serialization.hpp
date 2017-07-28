@@ -205,6 +205,7 @@ public:
   /// Polymorphic Serialization Interface.
   void StartPolymorphic(cstr typeName);
   void StartPolymorphic(cstr typeName, PolymorphicSaveFlags::Enum flags);
+  void StartPolymorphic(BoundType* objectType);
   void StartPolymorphic(HandleParam object);
   void StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId);
   void StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId,
@@ -352,7 +353,8 @@ void Serializer::SerializeFieldRename(cstr oldFieldName, type& instance)
 template<typename type>
 void Serializer::SerializePolymorphic(type& instance)
 {
-  StartPolymorphic(instance);
+  BoundType* type = ZilchVirtualTypeId(&instance);
+  StartPolymorphic(type);
   instance.Serialize(*this);
   EndPolymorphic();
 }

@@ -25,7 +25,6 @@ ZilchDefineType(EditorSettings, builder, type)
   ZeroBindDocumented();
   ZilchBindFieldProperty(mViewCube);
   ZilchBindGetterSetterProperty(ViewCubeSize)->Add(new EditorRange(sViewCubeMinSize, sViewCubeMaxSize, 0.01f));
-  ZilchBindFieldProperty(mScriptReloadEditor);
   ZilchBindFieldProperty(mScriptReloadGame);
   ZilchBindFieldProperty(mAutoUpdateContentChanges);
 }
@@ -41,7 +40,6 @@ void EditorSettings::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mViewCube, true);
   SerializeNameDefault(mViewCubeSize, 0.15f);
-  SerializeEnumNameDefault(ScriptReloadMethod, mScriptReloadEditor, ScriptReloadMethod::ReInitializeObjects);
   SerializeEnumNameDefault(ScriptReloadMethod, mScriptReloadGame, ScriptReloadMethod::PatchObjects);
   SerializeNameDefault(mAutoUpdateContentChanges, true);
 }
