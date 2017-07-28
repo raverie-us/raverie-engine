@@ -9,10 +9,74 @@
 namespace Zero
 {
 
+namespace SerializationAttributes
+{
+const String cSerializationPrimitive("SerializationPrimitive");
+}
+
 //------------------------------------------------------------------------------- Meta Serialization
 //**************************************************************************************************
 ZilchDefineType(MetaSerialization, builder, type)
 {
+}
+
+//**************************************************************************************************
+void MetaSerialization::SerializeProperty(HandleParam instance, Property* property, Serializer& serializer)
+{
+  BoundType* propertyType = Type::GetBoundType(property->PropertyType);
+
+  Any value;
+  if (serializer.GetMode() == SerializerMode::Saving)
+  {
+    value = property->GetValue(instance);
+  }
+  else if (serializer.GetMode() == SerializerMode::Loading)
+  {
+    // If it's a reference type, attempt to get the already allocated object
+    if (propertyType->CopyMode == TypeCopyMode::ReferenceType)
+      value = property->GetValue(instance);
+    else
+      value.DefaultConstruct(propertyType);
+  }
+
+  // Checking to see if it's a serialization primitive or not is odd here. MetaSerialization
+  // should be split up into MetaPrimitiveSerialization and MetaObjectSerialization
+  // The String check is a hack until this change
+  if (propertyType->CopyMode == TypeCopyMode::ReferenceType)
+  {
+    bool serialized = SerializeReferenceProperty(propertyType, property->Name.c_str(), value, serializer);
+
+    // Set the object back in case we allocated it
+    if (serialized)
+      property->SetValue(instance, value);
+  }
+  else
+  {
+    bool serialized = SerializePrimitiveProperty(propertyType, property->Name.c_str(), value, serializer);
+
+    // Check if it has a rename
+    if (MetaPropertyRename* rename = property->Has<MetaPropertyRename>())
+      serialized = SerializePrimitiveProperty(propertyType, rename->mOldName.c_str(), value, serializer);
+
+    // If the value was not found use the default
+    // value off of the property
+    if (!serialized)
+    {
+      MetaSerializedProperty* metaDefault = property->Has<MetaSerializedProperty>();
+      if (metaDefault)
+      {
+        // Even though we failed to read the property, someone set up a valid default so set the property!
+        value = metaDefault->mDefault;
+        serialized = true;
+      }
+    }
+
+    // We only set the property if we properly read a value, or we had a valid default
+    // If neither is true, we actually just leave the property as it was
+    // (assuming it is already initialized to its own default)
+    if (serialized)
+      property->SetValue(instance, value);
+  }
 }
 
 //**************************************************************************************************
@@ -47,65 +111,6 @@ bool MetaSerialization::SerializeReferenceProperty(BoundType* propertyType, cstr
   }
 
   return false;
-}
-
-//**************************************************************************************************
-void MetaSerialization::SerializeProperty(HandleParam instance, Property* property, Serializer& serializer)
-{
-  BoundType* propertyType = Type::GetBoundType(property->PropertyType);
-
-  Any value;
-  if(serializer.GetMode() == SerializerMode::Saving)
-  {
-    value = property->GetValue(instance);
-  }
-  else if(serializer.GetMode() == SerializerMode::Loading)
-  {
-    // If it's a reference type, attempt to get the already allocated object
-    if (propertyType->CopyMode == TypeCopyMode::ReferenceType)
-      value = property->GetValue(instance);
-    else
-      value.DefaultConstruct(propertyType);
-  }
-
-  // Checking to see if it's a serialization primitive or not is odd here. MetaSerialization
-  // should be split up into MetaPrimitiveSerialization and MetaObjectSerialization
-  // The String check is a hack until this change
-  if (propertyType->CopyMode == TypeCopyMode::ReferenceType)
-  {
-    bool serialized = SerializeReferenceProperty(propertyType, property->Name.c_str(), value, serializer);
-
-    // Set the object back in case we allocated it
-    if(serialized)
-      property->SetValue(instance, value);
-  }
-  else
-  {
-    bool serialized = SerializePrimitiveProperty(propertyType, property->Name.c_str(), value, serializer);
-
-    // Check if it has a rename
-    if (MetaPropertyRename* rename = property->Has<MetaPropertyRename>())
-      serialized = SerializePrimitiveProperty(propertyType, rename->mOldName.c_str(), value, serializer);
-
-    // If the value was not found use the default
-    // value off of the property
-    if (!serialized)
-    {
-      MetaSerializedProperty* metaDefault = property->Has<MetaSerializedProperty>();
-      if (metaDefault)
-      {
-        // Even though we failed to read the property, someone set up a valid default so set the property!
-        value = metaDefault->mDefault;
-        serialized = true;
-      }
-    }
-
-    // We only set the property if we properly read a value, or we had a valid default
-    // If neither is true, we actually just leave the property as it was
-    // (assuming it is already initialized to its own default)
-    if (serialized)
-      property->SetValue(instance, value);
-  }
 }
 
 //**************************************************************************************************

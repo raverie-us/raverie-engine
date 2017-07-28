@@ -99,6 +99,8 @@ public:
   Animation();
   ~Animation();
 
+  static Animation* CreateRuntime();
+
   /// Resource Interface.
   void Save(StringParam filename) override;
   void Serialize(Serializer& stream);

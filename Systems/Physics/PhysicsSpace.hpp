@@ -245,10 +245,14 @@ public:
   SweepResultRange SweepCollider(Collider* collider, Vec3Param velocity, real dt, CastFilter& filter);
 
   //------------------------------------------------------------- Collision Shape Events
-  /// Dispatches an event to all objects within the given sphere.
+  /// Dispatches an event to all objects within the given sphere. Uses the default cast filter.
   void DispatchWithinSphere(const Sphere& sphere, StringParam eventName, Event* toSend);
-  /// Dispatches an event to all objects within the given aabb.
+  /// Dispatches an event to all objects within the given sphere using the provided cast filter.
+  void DispatchWithinSphere(const Sphere& sphere, CastFilter& filter, StringParam eventName, Event* toSend);
+  /// Dispatches an event to all objects within the given aabb. Uses the default cast filter.
   void DispatchWithinAabb(const Aabb& aabb, StringParam eventName, Event* toSend);
+  /// Dispatches an event to all objects within the given aabb using the provided cast filter.
+  void DispatchWithinAabb(const Aabb& aabb, CastFilter& filter, StringParam eventName, Event* toSend);
 
   /// The number of iterations the physics space will take every frame.
   /// Used to achieve higher accuracy and increase visual results.

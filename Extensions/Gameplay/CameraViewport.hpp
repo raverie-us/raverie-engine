@@ -56,9 +56,9 @@ public:
   CogPath mRendererPath;
 
   /// Target resolution, or the aspect ratio when used with specific viewport scaling modes.
-  void SetResolutionOrAspect(Vec2 resolution);
-  Vec2 GetResolutionOrAspect();
-  Vec2 mResolution;
+  void SetResolutionOrAspect(IntVec2 resolution);
+  IntVec2 GetResolutionOrAspect();
+  IntVec2 mResolutionOrAspect;
 
   /// If the rendering result in FinalTexture should also be placed on the UI viewport.
   bool GetRenderToViewport();

@@ -1,9 +1,9 @@
 [Version:1]
-Object 
+EventList 
 {
 	var Events = Array
 	{
-		Event
+		Object
 		{
 			var Name = "AcquireBasicNetHostInfo"
 			var Type = "AcquireNetHostInfo"
@@ -14,7 +14,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AcquireExtraNetHostInfo"
 			var Type = "AcquireNetHostInfo"
@@ -25,7 +25,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AnimationBlendEnded"
 			var Type = "AnimationGraphEvent"
@@ -36,7 +36,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AnimationEnded"
 			var Type = "AnimationGraphEvent"
@@ -47,7 +47,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AnimationLooped"
 			var Type = "AnimationGraphEvent"
@@ -58,7 +58,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AreaChanged"
 			var Type = "AreaEvent"
@@ -69,7 +69,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CastFilterCallback"
 			var Type = "CastFilterEvent"
@@ -80,7 +80,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "OperationRedone"
 			var Type = "ChangedHistoryView"
@@ -91,7 +91,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "OperationUndone"
 			var Type = "ChangedHistoryView"
@@ -102,7 +102,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AllObjectsInitialized"
 			var Type = "CogInitializerEvent"
@@ -113,7 +113,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CogPathCogChanged"
 			var Type = "CogPathEvent"
@@ -124,7 +124,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CollisionEnded"
 			var Type = "CollisionEvent"
@@ -135,7 +135,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CollisionPersisted"
 			var Type = "CollisionEvent"
@@ -146,7 +146,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CollisionStarted"
 			var Type = "CollisionEvent"
@@ -157,7 +157,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GroupCollisionEnded"
 			var Type = "CollisionGroupEvent"
@@ -168,7 +168,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GroupCollisionPersisted"
 			var Type = "CollisionGroupEvent"
@@ -179,7 +179,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GroupCollisionStarted"
 			var Type = "CollisionGroupEvent"
@@ -190,7 +190,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CommandExecute"
 			var Type = "CommandEvent"
@@ -201,7 +201,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ConnectionCompleted"
 			var Type = "ConnectionEvent"
@@ -212,7 +212,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ConnectionFailed"
 			var Type = "ConnectionEvent"
@@ -223,7 +223,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "Disconnected"
 			var Type = "ConnectionEvent"
@@ -234,7 +234,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ComputeCustomJointInfo"
 			var Type = "CustomJointEvent"
@@ -245,7 +245,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ApplyCustomPhysicsEffect"
 			var Type = "CustomPhysicsEffectEvent"
@@ -256,7 +256,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CustomPhysicsEffectPrecalculatePhase"
 			var Type = "CustomPhysicsEffectEvent"
@@ -267,7 +267,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AnimationPostUpdate"
 			var Type = "Event"
@@ -278,7 +278,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CameraControllerUpdated"
 			var Type = "Event"
@@ -289,7 +289,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ChildrenOrderChanged"
 			var Type = "Event"
@@ -300,7 +300,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "EditSpaces"
 			var Type = "Event"
@@ -311,7 +311,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GizmoObjectsDuplicated"
 			var Type = "Event"
@@ -322,7 +322,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseDragEnd"
 			var Type = "Event"
@@ -333,7 +333,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RotationBasisGizmoBegin"
 			var Type = "Event"
@@ -344,7 +344,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RotationBasisGizmoEnd"
 			var Type = "Event"
@@ -355,7 +355,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RotationBasisGizmoModified"
 			var Type = "Event"
@@ -366,7 +366,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SelectionChanged"
 			var Type = "Event"
@@ -377,7 +377,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SelectionFinal"
 			var Type = "Event"
@@ -388,7 +388,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ToolActivate"
 			var Type = "Event"
@@ -399,7 +399,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ToolDeactivate"
 			var Type = "Event"
@@ -410,7 +410,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ToolDraw"
 			var Type = "Event"
@@ -421,7 +421,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GameFocusIn"
 			var Type = "GameEvent"
@@ -432,7 +432,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GameFocusOut"
 			var Type = "GameEvent"
@@ -443,7 +443,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GameLoad"
 			var Type = "GameEvent"
@@ -454,7 +454,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GameQuit"
 			var Type = "GameEvent"
@@ -465,7 +465,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GameRequestQuit"
 			var Type = "GameEvent"
@@ -476,7 +476,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GameSetup"
 			var Type = "GameEvent"
@@ -487,7 +487,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GameStarted"
 			var Type = "GameEvent"
@@ -498,7 +498,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "LevelStarted"
 			var Type = "GameEvent"
@@ -509,7 +509,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ButtonDown"
 			var Type = "GamepadEvent"
@@ -520,7 +520,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ButtonUp"
 			var Type = "GamepadEvent"
@@ -531,7 +531,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GamepadStickFlicked"
 			var Type = "GamepadEvent"
@@ -542,7 +542,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GizmoPreDrag"
 			var Type = "GizmoEvent"
@@ -553,7 +553,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseEnterGizmo"
 			var Type = "GizmoEvent"
@@ -564,7 +564,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseEnterGizmoHierarchy"
 			var Type = "GizmoEvent"
@@ -575,7 +575,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseExitGizmo"
 			var Type = "GizmoEvent"
@@ -586,7 +586,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseExitGizmoHierarchy"
 			var Type = "GizmoEvent"
@@ -597,7 +597,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GizmoModified"
 			var Type = "GizmoUpdateEvent"
@@ -608,7 +608,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "EnterView"
 			var Type = "GraphicalEvent"
@@ -619,7 +619,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "EnterViewAny"
 			var Type = "GraphicalEvent"
@@ -630,7 +630,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ExitView"
 			var Type = "GraphicalEvent"
@@ -641,7 +641,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ExitViewAll"
 			var Type = "GraphicalEvent"
@@ -652,7 +652,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GraphicalSort"
 			var Type = "GraphicalSortEvent"
@@ -663,7 +663,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "Closing"
 			var Type = "HandleableEvent"
@@ -674,7 +674,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "Attached"
 			var Type = "HierarchyEvent"
@@ -685,7 +685,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ChildAttached"
 			var Type = "HierarchyEvent"
@@ -696,7 +696,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ChildDetached"
 			var Type = "HierarchyEvent"
@@ -707,7 +707,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "Detached"
 			var Type = "HierarchyEvent"
@@ -718,7 +718,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JointExceedImpulseLimit"
 			var Type = "JointEvent"
@@ -729,7 +729,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JointLowerLimitReached"
 			var Type = "JointEvent"
@@ -740,7 +740,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JointUpperLimitReached"
 			var Type = "JointEvent"
@@ -751,7 +751,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JoystickButtonDown"
 			var Type = "JoystickEvent"
@@ -762,7 +762,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JoystickButtonUp"
 			var Type = "JoystickEvent"
@@ -773,7 +773,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JoystickFound"
 			var Type = "JoystickEvent"
@@ -784,7 +784,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JoystickLost"
 			var Type = "JoystickEvent"
@@ -795,7 +795,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JoystickUpdated"
 			var Type = "JoystickEvent"
@@ -806,7 +806,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "HoverKeyDown"
 			var Type = "KeyboardEvent"
@@ -817,7 +817,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "HoverKeyPreview"
 			var Type = "KeyboardEvent"
@@ -828,7 +828,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "HoverKeyRepeated"
 			var Type = "KeyboardEvent"
@@ -839,7 +839,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "HoverKeyUp"
 			var Type = "KeyboardEvent"
@@ -850,7 +850,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "KeyDown"
 			var Type = "KeyboardEvent"
@@ -861,7 +861,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "KeyRepeated"
 			var Type = "KeyboardEvent"
@@ -872,7 +872,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "KeyUp"
 			var Type = "KeyboardEvent"
@@ -883,7 +883,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "TextTyped"
 			var Type = "KeyboardTextEvent"
@@ -894,7 +894,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MetaDrop"
 			var Type = "MetaDropEvent"
@@ -905,7 +905,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MetaDropTest"
 			var Type = "MetaDropEvent"
@@ -916,7 +916,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MetaDropUpdate"
 			var Type = "MetaDropEvent"
@@ -927,7 +927,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MIDIModWheel"
 			var Type = "MidiEvent"
@@ -938,7 +938,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MIDINoteOff"
 			var Type = "MidiEvent"
@@ -949,7 +949,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MIDINoteOn"
 			var Type = "MidiEvent"
@@ -960,7 +960,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MIDIOtherControl"
 			var Type = "MidiEvent"
@@ -971,7 +971,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MIDIPitchWheel"
 			var Type = "MidiEvent"
@@ -982,7 +982,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MIDIVolume"
 			var Type = "MidiEvent"
@@ -993,7 +993,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "DoubleClick"
 			var Type = "MouseEvent"
@@ -1004,7 +1004,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "LeftClick"
 			var Type = "MouseEvent"
@@ -1015,7 +1015,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "LeftMouseDown"
 			var Type = "MouseEvent"
@@ -1026,7 +1026,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "LeftMouseUp"
 			var Type = "MouseEvent"
@@ -1037,7 +1037,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MiddleClick"
 			var Type = "MouseEvent"
@@ -1048,7 +1048,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MiddleMouseDown"
 			var Type = "MouseEvent"
@@ -1059,7 +1059,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MiddleMouseUp"
 			var Type = "MouseEvent"
@@ -1070,7 +1070,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseDown"
 			var Type = "MouseEvent"
@@ -1081,7 +1081,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseEnter"
 			var Type = "MouseEvent"
@@ -1092,7 +1092,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseEnterHierarchy"
 			var Type = "MouseEvent"
@@ -1103,7 +1103,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseEnterPreview"
 			var Type = "MouseEvent"
@@ -1114,7 +1114,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseExit"
 			var Type = "MouseEvent"
@@ -1125,7 +1125,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseExitHierarchy"
 			var Type = "MouseEvent"
@@ -1136,7 +1136,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseHold"
 			var Type = "MouseEvent"
@@ -1147,7 +1147,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseHover"
 			var Type = "MouseEvent"
@@ -1158,7 +1158,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseMove"
 			var Type = "MouseEvent"
@@ -1169,7 +1169,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseScroll"
 			var Type = "MouseEvent"
@@ -1180,7 +1180,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseUp"
 			var Type = "MouseEvent"
@@ -1191,7 +1191,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseUpdate"
 			var Type = "MouseEvent"
@@ -1202,7 +1202,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RightClick"
 			var Type = "MouseEvent"
@@ -1213,7 +1213,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RightMouseDown"
 			var Type = "MouseEvent"
@@ -1224,7 +1224,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RightMouseUp"
 			var Type = "MouseEvent"
@@ -1235,7 +1235,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetChannelIncomingPropertyChanged"
 			var Type = "NetChannelPropertyChange"
@@ -1246,7 +1246,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetChannelIncomingPropertyInitialized"
 			var Type = "NetChannelPropertyChange"
@@ -1257,7 +1257,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetChannelIncomingPropertyUninitialized"
 			var Type = "NetChannelPropertyChange"
@@ -1268,7 +1268,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetChannelOutgoingPropertyChanged"
 			var Type = "NetChannelPropertyChange"
@@ -1279,7 +1279,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetChannelOutgoingPropertyInitialized"
 			var Type = "NetChannelPropertyChange"
@@ -1290,7 +1290,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetChannelOutgoingPropertyUninitialized"
 			var Type = "NetChannelPropertyChange"
@@ -1301,7 +1301,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetEventReceived"
 			var Type = "NetEventReceived"
@@ -1312,7 +1312,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetEventSent"
 			var Type = "NetEventSent"
@@ -1323,7 +1323,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetGameStarted"
 			var Type = "NetGameStarted"
@@ -1334,7 +1334,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetHostListDiscovered"
 			var Type = "NetHostListUpdate"
@@ -1345,7 +1345,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetHostListRefreshed"
 			var Type = "NetHostListUpdate"
@@ -1356,7 +1356,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetHostRecordDiscovered"
 			var Type = "NetHostRecordEvent"
@@ -1367,7 +1367,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetHostRecordExpired"
 			var Type = "NetHostRecordEvent"
@@ -1378,7 +1378,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetHostRecordUpdate"
 			var Type = "NetHostRecordEvent"
@@ -1389,7 +1389,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetHostDiscovered"
 			var Type = "NetHostUpdate"
@@ -1400,7 +1400,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetHostRefreshed"
 			var Type = "NetHostUpdate"
@@ -1411,7 +1411,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetLevelStarted"
 			var Type = "NetLevelStarted"
@@ -1422,7 +1422,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetLinkConnected"
 			var Type = "NetLinkConnected"
@@ -1433,7 +1433,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetLinkDisconnected"
 			var Type = "NetLinkDisconnected"
@@ -1444,7 +1444,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetGameOffline"
 			var Type = "NetObjectOffline"
@@ -1455,7 +1455,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetObjectOffline"
 			var Type = "NetObjectOffline"
@@ -1466,7 +1466,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetSpaceOffline"
 			var Type = "NetObjectOffline"
@@ -1477,7 +1477,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetUserOffline"
 			var Type = "NetObjectOffline"
@@ -1488,7 +1488,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetGameOnline"
 			var Type = "NetObjectOnline"
@@ -1499,7 +1499,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetObjectOnline"
 			var Type = "NetObjectOnline"
@@ -1510,7 +1510,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetSpaceOnline"
 			var Type = "NetObjectOnline"
@@ -1521,7 +1521,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetUserOnline"
 			var Type = "NetObjectOnline"
@@ -1532,7 +1532,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerClosed"
 			var Type = "NetPeerClosed"
@@ -1543,7 +1543,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerOpened"
 			var Type = "NetPeerOpened"
@@ -1554,7 +1554,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerReceivedConnectRequest"
 			var Type = "NetPeerReceivedConnectRequest"
@@ -1565,7 +1565,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerReceivedConnectResponse"
 			var Type = "NetPeerReceivedConnectResponse"
@@ -1576,7 +1576,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerReceivedUserAddRequest"
 			var Type = "NetPeerReceivedUserAddRequest"
@@ -1587,7 +1587,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerReceivedUserAddResponse"
 			var Type = "NetPeerReceivedUserAddResponse"
@@ -1598,7 +1598,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerSentConnectRequest"
 			var Type = "NetPeerSentConnectRequest"
@@ -1609,7 +1609,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerSentConnectResponse"
 			var Type = "NetPeerSentConnectResponse"
@@ -1620,7 +1620,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerSentUserAddRequest"
 			var Type = "NetPeerSentUserAddRequest"
@@ -1631,7 +1631,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetPeerSentUserAddResponse"
 			var Type = "NetPeerSentUserAddResponse"
@@ -1642,7 +1642,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetUserAcquiredObjectOwnership"
 			var Type = "NetUserAcquiredObjectOwnership"
@@ -1653,7 +1653,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetUserLostObjectOwnership"
 			var Type = "NetUserLostObjectOwnership"
@@ -1664,7 +1664,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NetUserOwnerChanged"
 			var Type = "NetUserOwnerChanged"
@@ -1675,7 +1675,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AllParticlesDead"
 			var Type = "ObjectEvent"
@@ -1686,7 +1686,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CogDelayedDestroy"
 			var Type = "ObjectEvent"
@@ -1697,7 +1697,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CogDestroy"
 			var Type = "ObjectEvent"
@@ -1708,7 +1708,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CogNameChanged"
 			var Type = "ObjectEvent"
@@ -1719,7 +1719,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GamepadUpdated"
 			var Type = "ObjectEvent"
@@ -1730,7 +1730,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GamepadsUpdated"
 			var Type = "ObjectEvent"
@@ -1741,7 +1741,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GizmoTargetSet"
 			var Type = "ObjectEvent"
@@ -1752,7 +1752,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "JoysticksChanged"
 			var Type = "ObjectEvent"
@@ -1763,7 +1763,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "NeedMoreSamples"
 			var Type = "ObjectEvent"
@@ -1774,7 +1774,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ParticlesExhausted"
 			var Type = "ObjectEvent"
@@ -1785,7 +1785,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "PhysicsUpdateFinished"
 			var Type = "ObjectEvent"
@@ -1796,7 +1796,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RigidBodyAwoke"
 			var Type = "ObjectEvent"
@@ -1807,7 +1807,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RigidBodySlept"
 			var Type = "ObjectEvent"
@@ -1818,7 +1818,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "TransformUpdated"
 			var Type = "ObjectEvent"
@@ -1829,7 +1829,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ObjectLinkChanged"
 			var Type = "ObjectLinkEvent"
@@ -1840,7 +1840,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ObjectLinkPointChanged"
 			var Type = "ObjectLinkPointChangedEvent"
@@ -1851,7 +1851,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "OperationQueued"
 			var Type = "OperationQueueEvent"
@@ -1862,7 +1862,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "OperationRedo"
 			var Type = "OperationQueueEvent"
@@ -1873,7 +1873,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "OperationUndo"
 			var Type = "OperationQueueEvent"
@@ -1884,7 +1884,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ParticlesSpawned"
 			var Type = "ParticleEvent"
@@ -1895,7 +1895,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GroupCollisionPreSolve"
 			var Type = "PreSolveEvent"
@@ -1906,7 +1906,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "ReceivedData"
 			var Type = "ReceivedDataEvent"
@@ -1917,7 +1917,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RenderTasksUpdate"
 			var Type = "RenderTasksEvent"
@@ -1928,7 +1928,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RingGizmoModified"
 			var Type = "RingGizmoEvent"
@@ -1939,7 +1939,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RotationBasisAabbQuery"
 			var Type = "RotationBasisGizmoAabbQueryEvent"
@@ -1950,7 +1950,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AddedInstanceToTag"
 			var Type = "SoundEvent"
@@ -1961,7 +1961,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "AudioInterpolationDone"
 			var Type = "SoundEvent"
@@ -1972,7 +1972,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SoundNodeDisconnected"
 			var Type = "SoundEvent"
@@ -1983,7 +1983,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "TagHasNoInstances"
 			var Type = "SoundEvent"
@@ -1994,7 +1994,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MusicBar"
 			var Type = "SoundInstanceEvent"
@@ -2005,7 +2005,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MusicBeat"
 			var Type = "SoundInstanceEvent"
@@ -2016,7 +2016,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MusicCustomTime"
 			var Type = "SoundInstanceEvent"
@@ -2027,7 +2027,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MusicEighthNote"
 			var Type = "SoundInstanceEvent"
@@ -2038,7 +2038,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MusicHalfNote"
 			var Type = "SoundInstanceEvent"
@@ -2049,7 +2049,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MusicQuarterNote"
 			var Type = "SoundInstanceEvent"
@@ -2060,7 +2060,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MusicWholeNote"
 			var Type = "SoundInstanceEvent"
@@ -2071,7 +2071,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SoundCuePostPlay"
 			var Type = "SoundInstanceEvent"
@@ -2082,7 +2082,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SoundCuePrePlay"
 			var Type = "SoundInstanceEvent"
@@ -2093,7 +2093,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SoundInstancePlayed"
 			var Type = "SoundInstanceEvent"
@@ -2104,7 +2104,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SoundLooped"
 			var Type = "SoundInstanceEvent"
@@ -2115,7 +2115,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SoundStopped"
 			var Type = "SoundInstanceEvent"
@@ -2126,7 +2126,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "QuerySpline"
 			var Type = "SplineEvent"
@@ -2137,7 +2137,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SplineModified"
 			var Type = "SplineEvent"
@@ -2148,7 +2148,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SocketError"
 			var Type = "TextErrorEvent"
@@ -2159,7 +2159,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "GetToolInfo"
 			var Type = "ToolUiEvent"
@@ -2170,7 +2170,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "UiFocusGained"
 			var Type = "UiFocusEvent"
@@ -2181,7 +2181,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "UiFocusGainedHierarchy"
 			var Type = "UiFocusEvent"
@@ -2192,7 +2192,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "UiFocusGainedPreview"
 			var Type = "UiFocusEvent"
@@ -2203,7 +2203,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "UiFocusLost"
 			var Type = "UiFocusEvent"
@@ -2214,7 +2214,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "UiFocusLostHierarchy"
 			var Type = "UiFocusEvent"
@@ -2225,7 +2225,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "UiFocusReset"
 			var Type = "UiFocusEvent"
@@ -2236,7 +2236,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "UiSliderChanged"
 			var Type = "UiSliderEvent"
@@ -2247,7 +2247,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "PostTransformUpdate"
 			var Type = "UiTransformUpdateEvent"
@@ -2258,7 +2258,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "PreTransformUpdate"
 			var Type = "UiTransformUpdateEvent"
@@ -2269,7 +2269,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "CurrentInputDeviceChanged"
 			var Type = "UpdateEvent"
@@ -2280,7 +2280,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "EngineUpdate"
 			var Type = "UpdateEvent"
@@ -2291,7 +2291,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "FrameUpdate"
 			var Type = "UpdateEvent"
@@ -2302,7 +2302,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "LogicUpdate"
 			var Type = "UpdateEvent"
@@ -2313,7 +2313,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseDragMove"
 			var Type = "ViewportMouseEvent"
@@ -2324,7 +2324,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "MouseDragStart"
 			var Type = "ViewportMouseEvent"
@@ -2335,7 +2335,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "SelectToolPreSelect"
 			var Type = "ViewportMouseEvent"
@@ -2346,7 +2346,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserConsoleMessage"
 			var Type = "WebBrowserConsoleEvent"
@@ -2357,7 +2357,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserCursorChanged"
 			var Type = "WebBrowserCursorEvent"
@@ -2368,7 +2368,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserDownloadStarted"
 			var Type = "WebBrowserDownloadEvent"
@@ -2379,7 +2379,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserDownloadUpdated"
 			var Type = "WebBrowserDownloadEvent"
@@ -2390,7 +2390,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserPointQuery"
 			var Type = "WebBrowserPointQueryEvent"
@@ -2401,7 +2401,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserPopup"
 			var Type = "WebBrowserPopupCreateEvent"
@@ -2412,7 +2412,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserStatusChanged"
 			var Type = "WebBrowserTextEvent"
@@ -2423,7 +2423,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserTitleChanged"
 			var Type = "WebBrowserTextEvent"
@@ -2434,7 +2434,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebBrowserUrlChanged"
 			var Type = "WebBrowserUrlEvent"
@@ -2445,7 +2445,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "WebResponse"
 			var Type = "WebResponseEvent"
@@ -2456,7 +2456,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "HistoryEntryUpdate"
 			var Type = "ZilchEvent"
@@ -2467,7 +2467,7 @@ Object
 			{
 			}
 		}
-		Event
+		Object
 		{
 			var Name = "RedoRowsCleared"
 			var Type = "ZilchEvent"

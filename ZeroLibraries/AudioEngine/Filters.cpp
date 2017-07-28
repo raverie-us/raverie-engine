@@ -956,7 +956,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float DynamicsProcessor::CompressorGain(const float value)
+  float DynamicsProcessor::CompressorGain(const float detectorValue)
   {
     float slope;
 
@@ -966,8 +966,8 @@ namespace Audio
       slope = mCompressorRatio;
 
     // Soft-knee with detection value in range?
-    if (mKneeWidth > 0 && value > (mThresholdDB - mHalfKnee)
-      && value < (mThresholdDB + mHalfKnee))
+    if (mKneeWidth > 0 && detectorValue > (mThresholdDB - mHalfKnee)
+      && detectorValue < (mThresholdDB + mHalfKnee))
     {
       // Set up for Lagrange interpolation
       double x[2], y[2];
@@ -981,10 +981,10 @@ namespace Audio
       y[0] = 0;
       y[1] = slope;
 
-      slope = (float)LagrangeInterpolation(x, y, 2, value);
+      slope = (float)LagrangeInterpolation(x, y, 2, detectorValue);
     }
 
-    float gain = slope * (mThresholdDB - value);
+    float gain = slope * (mThresholdDB - detectorValue);
 
     if (gain > 0)
       gain = 0;
@@ -993,7 +993,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float DynamicsProcessor::ExpanderGain(const float value)
+  float DynamicsProcessor::ExpanderGain(const float detectorValue)
   {
     float slope;
 
@@ -1003,8 +1003,8 @@ namespace Audio
       slope = mExpanderRatio;
 
     // Soft-knee with detection value in range?
-    if (mKneeWidth > 0 && value > (mThresholdDB - mHalfKnee)
-      && value < (mThresholdDB + mHalfKnee))
+    if (mKneeWidth > 0 && detectorValue > (mThresholdDB - mHalfKnee)
+      && detectorValue < (mThresholdDB + mHalfKnee))
     {
       // Set up for Lagrange interpolation
       double x[2], y[2];
@@ -1018,10 +1018,10 @@ namespace Audio
       y[0] = slope;
       y[1] = 0;
 
-      slope = (float)LagrangeInterpolation(x, y, 2, value);
+      slope = (float)LagrangeInterpolation(x, y, 2, detectorValue);
     }
 
-    float gain = slope * (mThresholdDB - value);
+    float gain = slope * (mThresholdDB - detectorValue);
 
     if (gain > 0)
       gain = 0;
@@ -1039,7 +1039,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void DynamicsProcessor::SetReleaseMsec(const float release)
+  void DynamicsProcessor::SetReleaseMSec(const float release)
   {
     mReleaseMSec = release;
 
@@ -1051,8 +1051,16 @@ namespace Audio
   void DynamicsProcessor::SetRatio(const float ratio)
   {
     mRatio = ratio;
-    mCompressorRatio = 1.0f / ratio;
-    mExpanderRatio = mCompressorRatio - 1.0f;
+    if (ratio == 0)
+    {
+      mCompressorRatio = 1.0f;
+      mExpanderRatio = -1.0f;
+    }
+    else
+    {
+      mCompressorRatio = 1.0f - (1.0f / ratio);
+      mExpanderRatio = (1.0f / ratio) - 1.0f;
+    }
   }
 
   //************************************************************************************************

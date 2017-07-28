@@ -18,6 +18,7 @@ ZilchDefineType(DefaultGameSetup, builder, type)
 {
   ZeroBindComponent();
   ZeroBindDependency(GameSession);
+  ZeroBindDocumented();
   ZeroBindSetup(SetupMode::CallSetDefaults);
 
   EditorResource* editorResource = new EditorResource();

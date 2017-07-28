@@ -402,6 +402,8 @@ void TextSaver::StartPolymorphicInternal(const PolymorphicInfo& info)
   }
   else
   {
+    ErrorIf(strcmp(info.mTypeName, "BoundType") == 0, "StartPolymorphic was passed a BoundType*"
+                                                      "instead of an object instance.");
     mStream << info.mTypeName;
 
     // Add a space to separate the type with attributes. This isn't really needed,
@@ -417,6 +419,13 @@ void TextSaver::StartPolymorphicInternal(const PolymorphicInfo& info)
       SaveAttribute(SerializationAttributes::LocallyAdded);
     if(orderOverride)
       SaveAttribute(SerializationAttributes::ChildOrderOverride);
+
+    Handle object = info.mObject;
+    if(object.StoredType)
+    {
+      if (MetaSerialization* metaSerialization = object.StoredType->HasInherited<MetaSerialization>())
+        metaSerialization->AddCustomAttributes(object, this);
+    }
   }
 
   mStream << "\n";

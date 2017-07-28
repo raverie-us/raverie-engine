@@ -512,7 +512,7 @@ void AnimationEditor::ObjectSelected(Cog* cog)
 
       // Set the new viewport
       EditorViewport* editorViewport = Type::DynamicCast<EditorViewport*>(widget);
-      ErrorIf(editorViewport == nullptr, "Widget found was not an EditorViewport.");
+      ReturnIf(editorViewport == nullptr, , "Widget found was not an EditorViewport.");
 
       Viewport* viewport = editorViewport->GetReactiveViewport();
 

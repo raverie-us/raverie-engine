@@ -93,10 +93,10 @@ void SendableEvent::Save(SendableEvent* event, Serializer& stream)
 {
   // Get the meta class for the event
   BoundType* eventType = ZilchVirtualTypeId(event);
-
+  
   // Make sure that the meta class exists
   ErrorIf(eventType == nullptr, "The event that's being serialized has no meta class, which means that InitializeMetaOfType was never called");
-
+  
   // Save the type name so we can read it on the other end
   stream.StartPolymorphic(eventType);
 

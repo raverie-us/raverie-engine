@@ -57,6 +57,7 @@ ZilchDefineType(EditorConfig, builder, type)
 {
   ZeroBindComponent();
   ZilchBindDefaultConstructor();
+  ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
 }
@@ -72,6 +73,7 @@ ZilchDefineType(ContentConfig, builder, type)
 {
   ZeroBindComponent();
   ZilchBindDefaultConstructor();
+  ZeroBindDocumented();
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
@@ -90,6 +92,7 @@ ZilchDefineType(UserConfig, builder, type)
 {
   ZeroBindComponent();
   ZilchBindDefaultConstructor();
+  ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZilchBindFieldProperty(UserName);
   ZilchBindFieldProperty(UserEmail);
@@ -118,6 +121,7 @@ ZilchDefineType(DeveloperConfig, builder, type)
 {
   ZeroBindComponent();
   ZilchBindDefaultConstructor();
+  ZeroBindDocumented();
   ZilchBindFieldProperty(mDoubleEscapeQuit);
   ZilchBindFieldProperty(mProxyObjectsInPreviews);
   ZilchBindFieldProperty(mCanModifyReadOnlyResources);

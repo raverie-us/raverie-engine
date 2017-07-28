@@ -1786,11 +1786,12 @@ void RichAnimationBuilder::BuildContent(BuildOptions& buildOptions)
   richAnimation.Initialize();
 
   // Bake the rich animation to a normal animation file
-  Animation animation;
-  richAnimation.BakeToAnimation(&animation);
+  HandleOf<Animation> animationHandle = Animation::CreateRuntime();
+  Animation* animation = animationHandle;
+  richAnimation.BakeToAnimation(animation);
 
   // Save the normal animation
-  bool success = SaveToDataFile(animation, destFile);
+  bool success = SaveToDataFile(*animation, destFile);
 
   if(!success)
   {

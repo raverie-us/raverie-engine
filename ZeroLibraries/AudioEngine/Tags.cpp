@@ -710,7 +710,7 @@ namespace Audio
         if (!instance->CompressorFilter)
           instance->CompressorFilter = new DynamicsProcessor();
 
-        instance->CompressorFilter->SetReleaseMsec(value);
+        instance->CompressorFilter->SetReleaseMSec(value);
       }
     }
   }
