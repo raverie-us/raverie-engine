@@ -14,7 +14,6 @@ namespace Zero
 
 ZilchDefineType(DocumentationLibrary, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
 }
 
 ////////////////////////////////////////////////////////////////////////
