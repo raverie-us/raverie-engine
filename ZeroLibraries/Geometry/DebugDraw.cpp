@@ -97,7 +97,10 @@ ZilchDefineType(Box, builder, type)
   ZilchBindFieldProperty(mHalfExtents);
   ZilchBindFieldProperty(mRotation);
 
-  ZilchBindGetterSetterProperty(Corners); // Not implemented
+  //ZilchBindGetterSetterProperty(Corners); // Not implemented
+
+  // Temporarily bound only on types that implement it
+  ZilchBindGetterSetterProperty(Filled);
 }
 
 
@@ -183,6 +186,9 @@ ZilchDefineType(Line, builder, type)
 
   ZilchBindGetterSetterProperty(DualHeads);
   ZilchBindGetterSetterProperty(BoxHeads);
+
+  // Temporarily bound only on types that implement it
+  ZilchBindGetterSetterProperty(Filled);
 }
 
 
@@ -216,6 +222,9 @@ ZilchDefineType(Obb, builder, type)
   ZilchBindFieldProperty(mRotation);
 
   ZilchBindGetterSetterProperty(Corners);
+
+  // Temporarily bound only on types that implement it
+  ZilchBindGetterSetterProperty(Filled);
 }
 
 
@@ -263,6 +272,9 @@ ZilchDefineType(Triangle, builder, type)
   ZilchBindFieldProperty(mPoint0);
   ZilchBindFieldProperty(mPoint1);
   ZilchBindFieldProperty(mPoint2);
+
+  // Temporarily bound only on types that implement it
+  ZilchBindGetterSetterProperty(Filled);
 }
 
 //----------------------------------------------------------- Debug Draw Helpers
@@ -1190,9 +1202,16 @@ void Sphere::GetVertices(const DebugViewData& viewData, DebugVertexArray& vertic
 
 void Triangle::GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices)
 {
-  AddLine(vertices, mColor, mPoint0, mPoint1);
-  AddLine(vertices, mColor, mPoint1, mPoint2);
-  AddLine(vertices, mColor, mPoint2, mPoint0);
+  if (GetFilled())
+  {
+    AddTriangle(vertices, mColor, mPoint0, mPoint1, mPoint2);
+  }
+  else
+  {
+    AddLine(vertices, mColor, mPoint0, mPoint1);
+    AddLine(vertices, mColor, mPoint1, mPoint2);
+    AddLine(vertices, mColor, mPoint2, mPoint0);
+  }
 }
 
 //-------------------------------------------------------------------- DebugDraw
