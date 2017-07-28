@@ -183,14 +183,16 @@ void ListSource::Selected(DataIndex index)
 }
 
 // Constructor (takes in a pointer to a null terminated array of c-strings)
-EnumSource::EnumSource(const cstr* names)
+EnumSource::EnumSource(const cstr enumName, const cstr* names, bool selfClean)
 {
-  SetEnum(names);
+  SetEnum(enumName, names, selfClean);
 }
 
 // Set Enum (takes in a pointer to a null terminated array of c-strings)
-void EnumSource::SetEnum(const cstr* names)
+void EnumSource::SetEnum(const cstr enumName, const cstr* names, bool selfClean)
 {
+  mSelfClean = selfClean;
+
   // Store the names
   mNames = names;
 
@@ -208,31 +210,69 @@ void EnumSource::SetEnum(const cstr* names)
     ++mSize;
     ++start;
   }
+
+  FillOutDescriptions(enumName);
 }
 
 EnumSource::EnumSource()
 {
+  mSelfClean = false;
   mNames = nullptr;
   mSize = 0;
 }
 
-// Constructor (takes in a pointer to an array of c-strings, and a size)
-EnumSource::EnumSource(const cstr* names, size_t size)
+EnumSource::~EnumSource( )
 {
-  // Store the names
-  mNames = names;
+  if(mSelfClean)
+  {
+    delete [] mNames;
+    mNames = 0;
+  }
 
-  // Store the size
-  mSize = size;
 }
 
-void EnumSource::SetEnum(const cstr* names, size_t size)
+// Constructor (takes in a pointer to an array of c-strings, and a size)
+EnumSource::EnumSource(const cstr enumName, const cstr* names, size_t size, bool selfClean)
 {
+  mSelfClean = selfClean;
+
   // Store the names
   mNames = names;
 
   // Store the size
   mSize = size;
+
+  FillOutDescriptions(enumName);
+}
+
+void EnumSource::SetEnum(const cstr enumName, const cstr* names, size_t size, bool selfClean)
+{
+  mSelfClean = selfClean;
+
+  // Store the names
+  mNames = names;
+
+  // Store the size
+  mSize = size;
+
+  FillOutDescriptions(enumName);
+}
+
+void EnumSource::FillOutDescriptions(const cstr enumName)
+{
+  int size = (int)mSize;
+  EnumDoc* enumDoc = Z::gDocumentation->mEnumAndFlagMap.FindValue(enumName, nullptr);
+  if(enumDoc == nullptr)
+  {
+    for(int i = 0; i < size; ++i)
+      mDescriptions.PushBack("");
+  }
+  else
+  {
+    for(int i = 0; i < size; ++i)
+      mDescriptions.PushBack(enumDoc->mEnumValues.FindValue(mNames[i], ""));
+  }
+
 }
 
 // Get the number of elements in the enum
@@ -247,6 +287,12 @@ String EnumSource::GetStringValueAt(DataIndex index)
 {
   ErrorIf(index.Id > GetCount(), "Indexing past the bounds of a static array");
   return mNames[index.Id];
+}
+
+// Get the description (documentation) for the corresponding enum at the same index
+String EnumSource::GetDescriptionAt(DataIndex index)
+{
+  return mDescriptions[(uint)index.Id];
 }
 
 // Add spaces to any enum with names that are upper cammel case

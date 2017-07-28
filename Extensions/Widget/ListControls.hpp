@@ -19,6 +19,7 @@ namespace Events
   DeclareEvent(ItemSelected);
   DeclareEvent(ItemDoubleClicked);
   DeclareEvent(ListBoxOpened);
+  DeclareEvent(ListEntriesChanged);
 }
 
 const int cNoItemSelected = -1;
@@ -61,6 +62,7 @@ public:
   void OnMouseClick(MouseEvent* event);
   void OnMouseExit(MouseEvent* event);
   void OnMouseEnter(MouseEvent* event);
+  void OnMouseEnterItem(MouseEvent* event);
   void OnDoubleClick(MouseEvent* event);
   void DataModified(DataEvent* event);
   void DataDestroyed(DataEvent* event);
@@ -69,6 +71,8 @@ public:
   int IndexFromPosition(Vec2Param localPosition);
 
   bool mCustomBorderColor;
+
+  HandleOf<ToolTip> mToolTip;
 
   ListSource* mDataSource;
   Element* mBackground;
@@ -113,6 +117,7 @@ public:
   int GetSelectedItem( ) { return mSelectedItem; }
 
   void OnMouseDown(MouseEvent* event);
+  void OnMouseEnter(MouseEvent* event);
   void OnItemSelected(ObjectEvent* event);
   void OnListFocusLost(FocusEvent* event);
   void OnListFocusReset(FocusEvent* event);

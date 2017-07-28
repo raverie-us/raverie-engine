@@ -349,12 +349,12 @@ public:
   // Storing a pointer to this is safe because when meta is changed, the entire property grid
   // is torn down and rebuilt. This should never point at a destroyed type.
   BoundType* mEnumType;
-  StringSource mStrings;
+  EnumSource mEnums;
 
   // Map each enum index value to a list index
   // needed for pulls downs.
-  HashMap<int, int> EnumIndexToListIndex;
-  Array<int> EnumIndexes;
+  HashMap<int, int> mEnumIndexToListIndex;
+  Array<int> mEnumIndexes;
 
   // Most recent tool tip displayed.
   HandleOf<ToolTip> mToolTip;
@@ -368,6 +368,11 @@ public:
     mEnumType = Type::GetBoundType(initializer.Property->PropertyType);
 
     PropertyArray& allProperties = mEnumType->AllProperties;
+
+    // +1 to end the array with a nullptr
+    int byteCount = (allProperties.Size( )+1)*sizeof(cstr);
+    cstr* names = new cstr[byteCount];
+
     for(size_t i = 0; i < allProperties.Size(); ++i)
     {
       Property* prop = allProperties[i];
@@ -375,29 +380,27 @@ public:
       // This should be a static property (all enum values are) so pass in null for an
       // instance and then convert the any to an integer (not unsigned since negative enum values are valid)
       int enumValue = prop->GetValue(nullptr).Get<int>();
-      EnumIndexToListIndex[enumValue] = i;
-      EnumIndexes.PushBack(enumValue);
-      mStrings.Strings.PushBack(enumString);
+      mEnumIndexToListIndex[enumValue] = i;
+      mEnumIndexes.PushBack(enumValue);
+
+      *(names+i) = prop->Name.Data( );
     }
 
-    mSelectBox->SetListSource(&mStrings);
+    // Mark the end of the data with a nullptr.
+    *(names+allProperties.Size( )) = nullptr;
+    // Send over the data.  Cleanup will happen in EnumSource destructor.
+    mEnums.SetEnum(mEnumType->Name.c_str(), names, true);
+      
+    mSelectBox->SetListSource(&mEnums);
 
     mSelectorButton = new SelectorButton(this);
-    mSelectorButton->CreateButtons(&mStrings);
+    mSelectorButton->CreateButtons(&mEnums);
     mSelectorButton->SetActive(false);
 
     Refresh();
 
     ConnectThisTo(mSelectBox, Events::ItemSelected, OnIndexChanged);
     ConnectThisTo(mSelectorButton, Events::ItemSelected, OnSelectorIndexChanged);
-
-    // Tooltip handlers to display individual enum value descriptions
-    ConnectThisTo(mSelectBox, Events::ListBoxOpened, OnListBoxOpen);
-    ConnectThisTo(mSelectBox, Events::MouseHover, OnSelectedItemHover);
-    ConnectThisTo(mSelectorButton, Events::MouseHover, OnButtonMouseHover);
-
-    //forRange(TextButton* button, mSelectorButton->mButtons.All( ))
-    //  ConnectThisTo(button, Events::MouseEnter, OnButtonMouseEnter);
   }
 
   void Refresh() override
@@ -417,7 +420,7 @@ public:
       // Convert the enum index to a list index
       // guard against the index from being an invalid index
       uint enumIndex = state.Value.Get<uint>();
-      uint listIndex = EnumIndexToListIndex.FindValue(enumIndex, 0);
+      uint listIndex = mEnumIndexToListIndex.FindValue(enumIndex, 0);
       mSelectBox->SetSelectedItem(listIndex, false);
       mSelectorButton->SetSelectedItem(listIndex, false);
     }
@@ -442,132 +445,12 @@ public:
   void IndexChanged(uint selectedIndex)
   {
     //Convert the list index to the enum index value
-    uint enumIndex = EnumIndexes[selectedIndex];
+    uint enumIndex = mEnumIndexes[selectedIndex];
 
     Any newValue = enumIndex;
     CommitValue(newValue);
     if(mProperty->HasAttribute(PropertyAttributes::cInvalidatesObject))
       mGrid->Invalidate();
-  }
-
-  void OnListBoxOpen(Event* event)
-  {
-    //int entryCount = mSelectBox->mListBox->mTextBlocks.Size( );
-    //for(int i = 0; i < entryCount; ++i)
-    //{
-    //  Element* entry = mSelectBox->mListBox->mTextBlocks[i].first;
-    //  ConnectThisTo(entry, Events::MouseHover, OnListMouseEnter);
-    //}
-
-    ConnectThisTo(*mSelectBox->mListBox, Events::MouseHover, OnListMouseHover);
-  }
-
-  void OnSelectedItemHover(MouseEvent* event)
-  {
-    StringBuilder toolTip;
-    GetSelectedToolTip(&toolTip);
-    CreateToolTip(toolTip.ToString( ), mSelectBox);
-  }
-
-  void OnListMouseHover(MouseEvent* event)
-  {
-    int index = mSelectBox->mListBox->mHighlightItem;
-    if(index == -1 || uint(index) > mSelectBox->mDataSource->GetCount( ))
-      return;
-
-    StringBuilder toolTip;
-    Element* entry = mSelectBox->mListBox->mTextBlocks[index].first;
-
-    GetEnumToolTip(mStrings[index], &toolTip);
-    CreateToolTip(toolTip.ToString( ), mSelectBox->mListBox, entry->GetScreenRect());
-  }
-
-  void OnButtonMouseHover(MouseEvent* event)
-  {
-    int index = mSelectorButton->mHoverItem;
-    if(index == -1 || uint(index) > mSelectorButton->mButtons.Size( ))
-      return;
-
-    StringBuilder toolTip;
-    TextButton* button = mSelectorButton->mButtons[index];
-
-    GetEnumToolTip(mStrings[index], &toolTip);
-    CreateToolTip(toolTip.ToString( ), mSelectorButton);
-  }
-
-  //void OnListMouseEnter(MouseEvent* event)
-  //{
-  //  StringBuilder toolTip;
-  //  // Known to be of type 'Element' as that is how the event connection was setup.
-  //  Element* entry = (Element*)event->Source;
-  //  // 'mHighlightItem' known to be a valid index as only a MouseEnter on a valid
-  //  // ListBox item can trigger this event-handler method.
-  //  String text = mStrings[mSelectBox->mListBox->mHighlightItem];
-
-  //  GetEnumToolTip(text, &toolTip);
-  //  CreateToolTip(toolTip.ToString( ), mSelectBox->mListBox, entry->GetScreenRect());
-  //}
-
-  //void OnButtonMouseEnter(MouseEvent* event)
-  //{
-  //  StringBuilder toolTip;
-  //  // Known to be of type 'TextButton' as that is how the event connection was setup.
-  //  TextButton* button = (TextButton*)event->Source;
-
-  //  GetEnumToolTip(button->mButtonText->mText, &toolTip);
-  //  CreateToolTip(toolTip.ToString( ), event->Source);
-  //}
-
-  void CreateToolTip(StringParam toolTipText, Widget* source, RectParam screenRect = Rect::cZero)
-  {
-    if(toolTipText.Empty( ))
-      return;
-
-    ToolTipColor::Enum color = ToolTipColor::Default;
-
-    mToolTip.SafeDestroy();
-
-    mToolTip = new ToolTip(source);
-    mToolTip->SetText(toolTipText);
-    mToolTip->SetColor(color);
-
-    ToolTipPlacement placement;
-
-    if(screenRect == Rect::cZero)
-      placement.SetScreenRect(GetScreenRect( ));
-    else
-      placement.SetScreenRect(screenRect);
-
-    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
-      IndicatorSide::Bottom, IndicatorSide::Top);
-
-    mToolTip->SetArrowTipTranslation(placement);
-  }
-
-  void GetEnumToolTip(StringParam enumString, StringBuilder* toolTip)
-  {
-    EnumDoc* enumDoc = Z::gDocumentation->mEnumAndFlagMap.FindValue(mEnumType->Name, nullptr);
-    if(enumDoc == nullptr)
-      return;
-
-    String valueDescription = enumDoc->mEnumValues.FindValue(enumString, "");
-    if(valueDescription.Empty( ))
-      return;
-
-    *toolTip << "Value : ";
-    *toolTip << enumString;
-    *toolTip << "\n\n";
-    *toolTip << valueDescription;
-  }
-
-  void GetSelectedToolTip(StringBuilder* toolTip)
-  {
-    // Make sure the selected item is valid
-    int index = mSelectBox->GetSelectedItem();
-    if(index == -1 || uint(index) > mSelectBox->mDataSource->GetCount( ))
-      return;
-
-    GetEnumToolTip(mStrings[index], toolTip);
   }
 
   void UpdateTransform() override

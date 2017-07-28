@@ -17,6 +17,7 @@ namespace Events
   DefineEvent(ItemSelected);
   DefineEvent(ItemDoubleClicked);
   DefineEvent(ListBoxOpened);
+  DefineEvent(ListEntriesChanged);
 }
 
 const float cTextCellHeight = Pixels(15);
@@ -214,6 +215,9 @@ void ListBox::UpdateTransform()
     mTextBlocks.PopBack();
   }
 
+  Event e;
+  DispatchBubble(Events::ListEntriesChanged, &e);
+
   //Set the client size
   float listAreaSize = cTextCellHeight * float(dataCount);
 
@@ -382,8 +386,20 @@ void ListBox::OnMouseMove(MouseEvent* event)
   Vec2 localPosition = mClient->ToLocal(event->Position);
   int index = IndexFromPosition(localPosition);
   
-  if(index < int(mDataSource->GetCount()))
+  if(index < int(mDataSource->GetCount( )))
+  {
     mHighlightItem = index;
+
+    if(index != -1)
+    {
+      mToolTip.SafeDestroy( );
+      mToolTip = new ToolTip(this);
+
+      StringBuilder toolTipText;
+      if(GetToolTipText(index, mDataSource, &toolTipText))
+        mToolTip->SetTextAndPlace(toolTipText.ToString(), mTextBlocks[index].first->GetScreenRect( ));
+    }
+  }
 
   this->MarkAsNeedsUpdate();
 }
@@ -509,6 +525,7 @@ ComboBox::ComboBox(Composite* parent)
   mText->SetTranslation(Vec3(borderThickness.TopLeft()));
 
   ConnectThisTo(this, Events::LeftMouseDown, OnMouseDown);
+  ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::FocusGained, OnFocusGained);
   ConnectThisTo(this, Events::FocusLost, OnFocusLost);
@@ -605,6 +622,19 @@ void ComboBox::OnMouseDown(MouseEvent* event)
   else
     mListBox.SafeDestroy();
 }
+
+void ComboBox::OnMouseEnter(MouseEvent* event)
+{
+  if(mSelectedItem == -1 || uint(mSelectedItem) > mDataSource->GetCount( ))
+    return;
+
+  ToolTip* toolTip = new ToolTip(this);
+
+  StringBuilder toolTipText;
+  if(GetToolTipText(mSelectedItem, mDataSource, &toolTipText))
+    toolTip->SetTextAndPlace(toolTipText.ToString( ), this->GetScreenRect( ));
+}
+
 
 void ComboBox::OnItemSelected(ObjectEvent* event)
 {
