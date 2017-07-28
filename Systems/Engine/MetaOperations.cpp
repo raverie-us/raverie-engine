@@ -464,7 +464,7 @@ void AddRemoveComponentOperation::SaveComponentToBuffer()
   TextSaver saver;
   saver.OpenBuffer();
 
-  saver.StartPolymorphic(componentInstance);
+  saver.StartPolymorphic(componentInstance.StoredType);
   metaSerialize->SerializeObject(componentInstance, saver);
   saver.EndPolymorphic();
 

@@ -265,7 +265,7 @@ void KeyboardEvent::Serialize(Serializer& stream)
 {
   if(stream.GetMode() == SerializerMode::Saving)
   {
-    stream.StartPolymorphic(this);
+    stream.StartPolymorphic(ZilchTypeId(KeyboardEvent));
 
     SerializeNameDefault(ShiftPressed, false);
     SerializeNameDefault(AltPressed, false);

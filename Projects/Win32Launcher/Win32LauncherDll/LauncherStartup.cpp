@@ -151,6 +151,8 @@ Cog* ZeroLauncherStartupSettings::LoadConfig()
 
 void LauncherStartup::InitializeLibraries(ZeroStartupSettings& settings)
 {
+  Engine::sInLauncher = true;
+
   // Initialize all of zero's libraries
   ZeroStartup::InitializeLibraries(settings);
   // Take care of our remaining libraries

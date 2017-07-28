@@ -939,7 +939,6 @@ namespace Zilch
     type->CopyMode = copyMode;
     type->Size = size;
     type->RawNativeVirtualCount = nativeVirtualCount;
-    type->CreatableInScript = this->CreatableInScriptDefault;
     
     // This maps the type by name within the library
     this->AddNativeBoundType(type);
@@ -966,6 +965,8 @@ namespace Zilch
       indirectionType->SourceLibrary = this->BuiltLibrary.Object;
       type->IndirectType = indirectionType;
     }
+
+    type->CreatableInScript = this->CreatableInScriptDefault;
 
     // Make sure to store a strong reference, since we now own the type
     this->BuiltLibrary->OwnedTypes.PushBack(type);

@@ -77,6 +77,7 @@ void Archetype::Save(StringParam filename)
 //**************************************************************************************************
 void Archetype::UpdateContentItem(ContentItem* contentItem)
 {
+  ClearDataTreeCache();
   mContentItem = contentItem;
   mLoadPath = contentItem->GetFullPath();
   Cog* ignore = mCachedObject;

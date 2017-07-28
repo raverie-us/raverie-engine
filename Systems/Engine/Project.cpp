@@ -400,4 +400,10 @@ void FrameRateSettings::SetFrameRate(int frameRate)
   mFrameRate = Math::Max(frameRate, 1);
 }
 
+ZilchDefineType(LauncherProjectInfoProxy, builder, type)
+{
+  ZeroBindComponent();
+  type->AddAttribute(ObjectAttributes::cCore);
+}
+
 }//namespace Zero
