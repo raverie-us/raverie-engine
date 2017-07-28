@@ -22,11 +22,7 @@ Cog
 	{
 		var RenderInEditor = false
 		var RenderInGame = true
-		var RenderToViewport = true
-		var ForwardViewportEvents = false
 		var RenderOrder = 0
-		var NormalizedSize = Real2{1, 1}
-		var NormalizedOffset = Real2{0, 0}
 		var CameraPath = CogPath
 		{
 			var Path = "."
@@ -57,9 +53,13 @@ Cog
 			var PathPreference1 = CogPathPreference.SpaceRelative
 			var PathPreference2 = CogPathPreference.Absolute
 		}
-		var Resolution = Real2{1920, 1080}
+		var ResolutionOrAspect = Integer2{1920, 1080}
+		var RenderToViewport = true
+		var ForwardViewportEvents = true
 		var ViewportScaling = ViewportScaling.Letterbox
 		var MarginColor = Real4{0, 0, 0, 1}
+		var NormalizedSize = Real2{1, 1}
+		var NormalizedOffset = Real2{0, 0}
 	}
 	Camera 
 	{
