@@ -778,7 +778,6 @@ public:
   float                             mInternetHostPublishInterval;    ///< Controls how often the internet discoverable peer sends a host record message to its master server subscriptions.
   Array<IpAddress>                  mMasterServerSubscriptions;      ///< Master servers this peer has subscribed to.
   NetHostsMap                       mHostLists;                      ///< Network host lists.
-  bool                              mPendingCancelHostRequests;      ///< Pending request to cancel host requests
   float                             mPublishElapsedTime;             ///< [Server] how much time has elapsed since it last published a record.
   float                             mInternetHostListTimeout;        ///< [Client/Server] Determines the amount of time the client is willing to wait to get a host list from master server.
   float                             mBasicHostInfoTimeout;           ///< [Client/Server] Determines the amount of time the client is willing to wait for.
@@ -787,7 +786,7 @@ public:
   PingManager                       mPingManager;                    ///< [Client/Server/MtrSrv] Ping manager is capable of sending and receiving pings.
   uint                              mNextManagerId;                  ///< Ping managers need an id to be unique. We use this to prescribe unique ids.
 
-  // Data for master server
+  // Data for master server.
   float                             mInternetHostRecordLifetime;     ///< Controls the lifetime of every host record stored on the master server.
   uint                              mInternetSameIpHostRecordLimit;  ///< Controls how many host records from the same IP address may be stored on the master server (used to prevent flood attacks).
   HashMap<String, uint>             mIpAddressServerCounts;          ///< Keeps track of how many servers there are per IP address.
@@ -796,7 +795,7 @@ public:
   bool                              mIsOpenMasterServer;             ///< Is peer open in MasterServer mode?
   RecieptIpMap                      mReceiptRecipients;              ///< A Map the server uses to determine which peer links to terminate.
 
-  // Host discovery
+  /// Host Discovery.
   InternetHostDiscovery             mInternetHostDiscovery;          ///< A class which uses the net peer to discover internet hosts.
   LanHostDiscovery                  mLanHostDiscovery;               ///< A class which uses the net peer to discover LAN hosts.
 };
