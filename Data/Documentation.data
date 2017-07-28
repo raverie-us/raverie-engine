@@ -16047,6 +16047,67 @@ DocumentationLibrary
 		}
 		Object
 		{
+			var Name = "EditorSettings"
+			var BaseClass = "Component"
+			var Library = "EngineLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+				"Component"
+			}
+			var Properties = Array
+			{
+				Property
+				{
+					var Name = "AutoUpdateContentChanges"
+					var Type = "Boolean"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ScriptReloadEditor"
+					var Type = "ScriptReloadMethod"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ScriptReloadGame"
+					var Type = "ScriptReloadMethod"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ViewCube"
+					var Type = "Boolean"
+					var Description = "Show/hide the orientation view cube."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ViewCubeSize"
+					var Type = "Real"
+					var Description = "Size in pixels of the viewport the view cube is shown in."
+					var ReadOnly = false
+					var Static = false
+				}
+			}
+			var Methods = Array
+			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
 			var Name = "EllipsoidCollider"
 			var BaseClass = "Collider"
 			var Library = "PhysicsLibrary"
@@ -16328,7 +16389,7 @@ DocumentationLibrary
 				{
 					var Name = "IsEmpty"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if the event bundle is empty (doesn't contain any events), else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -23500,7 +23561,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsValid"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if this is a non-empty IPv4/IPv6 address, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -49558,7 +49619,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsNapping"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if the net channel is currently napping (performing change detection on longer intervals), else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -49566,7 +49627,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsScheduled"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if this net channel is scheduled for change observation, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50727,7 +50788,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsClient"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is client, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50735,7 +50796,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsClientAndMine"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is client and the net object is conceptually owned by a user added by our local peer, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50743,7 +50804,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsClientButNotMine"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is client and the net object is not conceptually owned by a user added by our local peer, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50751,7 +50812,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsClientOrOffline"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is client or offline, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50759,7 +50820,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsClientOrServer"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is client or server, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50767,7 +50828,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsMine"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if the net object is conceptually owned by a user added by our local peer, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50775,7 +50836,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsNapping"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if all net channels on this net object are napping (performing change detection on longer intervals), else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50783,7 +50844,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsNotMine"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if the net object is not conceptually owned by a user added by our local peer, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50791,7 +50852,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsNotOwnedByAUser"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if the net object is not conceptually owned by a user, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50799,7 +50860,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsOffline"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is offline, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50807,7 +50868,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsOfflineAndMine"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is offline and the net object is conceptually owned by a user added by our local peer, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50815,7 +50876,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsOfflineButNotMine"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is offline and the net object is not conceptually owned by a user added by our local peer, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50823,7 +50884,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsOnline"
 					var Type = "Boolean"
-					var Description = "Is online? (Between the NetObjectOnline/Offline scope?)."
+					var Description = "Returns true if the net object is online, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50831,7 +50892,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsOwnedByAUser"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if the net object is conceptually owned by a user, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50839,7 +50900,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsServer"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is server, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50847,7 +50908,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsServerAndMine"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is server and the net object is conceptually owned by a user added by our local peer, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50855,7 +50916,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsServerButNotMine"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is server and the net object is not conceptually owned by a user added by our local peer, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -50863,7 +50924,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsServerOrOffline"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if our open peer's network role is server or offline, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -51590,7 +51651,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "IsOpen"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Returns true if the peer is open, else false."
 					var ReadOnly = true
 					var Static = false
 				}
@@ -75288,6 +75349,27 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var ReadOnly = false
 					var Static = false
 				}
+			}
+			var Methods = Array
+			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
+			var Name = "ZilchScript"
+			var BaseClass = "ZilchDocumentResource"
+			var Library = "ZilchScriptLibrary"
+			var Description = "Zilch script file Resource."
+			var Tags = Array
+			{
+				"Resource"
+			}
+			var Properties = Array
+			{
 			}
 			var Methods = Array
 			{
