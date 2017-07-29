@@ -786,7 +786,7 @@ public:
   PingManager                       mPingManager;                    ///< [Client/Server/MtrSrv] Ping manager is capable of sending and receiving pings.
   uint                              mNextManagerId;                  ///< Ping managers need an id to be unique. We use this to prescribe unique ids.
 
-  // Data for master server.
+  // Data for master server
   float                             mInternetHostRecordLifetime;     ///< Controls the lifetime of every host record stored on the master server.
   uint                              mInternetSameIpHostRecordLimit;  ///< Controls how many host records from the same IP address may be stored on the master server (used to prevent flood attacks).
   HashMap<String, uint>             mIpAddressServerCounts;          ///< Keeps track of how many servers there are per IP address.
@@ -795,7 +795,7 @@ public:
   bool                              mIsOpenMasterServer;             ///< Is peer open in MasterServer mode?
   RecieptIpMap                      mReceiptRecipients;              ///< A Map the server uses to determine which peer links to terminate.
 
-  /// Host Discovery.
+  // Host discovery
   InternetHostDiscovery             mInternetHostDiscovery;          ///< A class which uses the net peer to discover internet hosts.
   LanHostDiscovery                  mLanHostDiscovery;               ///< A class which uses the net peer to discover LAN hosts.
 };
