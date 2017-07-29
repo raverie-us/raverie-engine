@@ -391,6 +391,9 @@ void ObjectTransformTool::OnKeyDown(KeyboardEvent* e)
 void ObjectTransformTool::UpdateGrabState(GizmoGrabMode::Enum state)
 {
   Cog* gizmo = mGizmo.ToCog( );
+  if(gizmo == nullptr)
+    return;
+
   forRange(Cog& child, gizmo->GetChildren( ))
   {
     GizmoDrag* drag;
@@ -650,7 +653,8 @@ void ObjectScaleTool::SetSnapDistance(float distance)
   mSnapDistance = distance;
 
   Cog* gizmo = mGizmo.ToCog( );
-  if(gizmo) gizmo->has(ScaleGizmo)->mSnapDistance = distance;
+  if(gizmo)
+    gizmo->has(ScaleGizmo)->mSnapDistance = distance;
 }
 
 /******************************************************************************/
