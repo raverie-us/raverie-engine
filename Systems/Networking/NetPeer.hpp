@@ -141,6 +141,11 @@ public:
   // Peer Interface
   //
 
+  /// Current peer identifier information display string.
+  /// Provided for logging and debugging convenience.
+  /// Contains the peer's local IP address, network role, and net peer ID.
+  String GetInfo() const;
+
   /// Returns the peer's permanent GUID.
   /// This GUID will never change for the lifetime of this peer.
   Guid GetGuid() const;
