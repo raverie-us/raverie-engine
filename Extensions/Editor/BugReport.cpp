@@ -14,13 +14,9 @@ BugReporter::BugReporter(Composite* parent) :
   this->SetLayout(CreateStackLayout());
   mMinSize = Vec2(500, 600);
 
-  new Label(this, cText, "Name:");
+  new Label(this, cText, "ZeroHub Username:");
   mUserName = new TextBox(this);
   mUserName->SetEditable(true);
-
-  new Label(this, cText, "Email:");
-  mUserEmail = new TextBox(this);
-  mUserEmail->SetEditable(true);
 
   new Label(this, cText, "Title:");
   mTitle = new TextBox(this);
@@ -81,7 +77,6 @@ void BugReporter::Reset()
 {
   mSent = false;
   mUserName->SetText(String());
-  mUserEmail->SetText(String());
   mTitle->SetText(String());
   mExpected->SetAllText(String());
   mHappened->SetAllText(String());
@@ -161,7 +156,6 @@ void BugReporter::OnSend(Event* event)
   BugReportJob* job = new BugReportJob();
 
   job->mUserName = mUserName->GetText();
-  job->mEmail = mUserEmail->GetText();
   job->mTitle = mTitle->GetText();
   job->mRepro = mRepro->GetAllText();
   job->mExpected = mExpected->GetAllText();
@@ -213,7 +207,6 @@ int BugReportJob::Execute()
 
   request.AddField("Key", "kcy43UsUp4Rz/X0OFnCHDmgZECqB9NZbUTdx7chShJA=");
   request.AddField("UserName", mUserName);
-  request.AddField("UserEmail", mEmail);
   request.AddField("Title", mTitle);
   request.AddField("Repro", mRepro);
   request.AddField("Expected", mExpected);
@@ -222,7 +215,6 @@ int BugReportJob::Execute()
   request.AddField("ChangeSet", GetChangeSetString());
   request.AddField("Platform", GetPlatformString());
   request.AddField("BuildVersionName", GetBuildVersionName());
-  request.AddField("Computer", BuildString(Os::ComputerName(), " - ", Os::UserName()));
 
   ProjectSettings* project = mProject.has(ProjectSettings);
   if(project)
