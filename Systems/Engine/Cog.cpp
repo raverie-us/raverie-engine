@@ -75,8 +75,12 @@ ZilchDefineType(Cog, builder, type)
   type->Add(new CogSerializationFilter());
   type->Add(new CogMetaOperations());
   type->Add(new CogMetaDisplay());
+  type->Add(new CogMetaSerialization());
 
   type->AddAttribute(ObjectAttributes::cStoreLocalModifications);
+
+  // When serialized as a property, Cogs save out the CogId
+  ZeroBindSerializationPrimitive();
 
   ZeroBindDocumented();
 
@@ -362,14 +366,6 @@ void Cog::Serialize(Serializer& stream)
     SerializeName(mName);
   }
 
-  //If the object Id is valid this object may be reference
-  //so save out the id as a component.
-  if (!(mObjectId == cInvalidCogId) && context)
-  {
-    uint linkId = context->ToContextId(mObjectId.Id);
-    stream.SerializeField("LinkId", linkId);
-  }
-
   // We only want to save hidden and locked
   if (mFlags.IsSet(CogFlags::EditorViewportHidden | CogFlags::Locked))
   {
@@ -409,8 +405,8 @@ void Cog::Serialize(Serializer& stream)
       LocalModifications* modifications = LocalModifications::GetInstance();
 
       PolymorphicInfo info;
-      info.mRuntimeType = ZilchTypeId(Hierarchy);
-      info.mTypeName = info.mRuntimeType->Name.c_str();
+      info.mObject = hierarchy;
+      info.mTypeName = info.mObject.StoredType->Name.c_str();
 
       bool validChildId = (mChildId != PolymorphicNode::cInvalidUniqueNodeId);
       if (validChildId && modifications->IsChildOrderModified(this))

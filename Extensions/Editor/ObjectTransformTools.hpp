@@ -149,8 +149,6 @@ public:
   void Serialize(Serializer& stream);
   void Initialize(CogInitializer& initializer);
 
-  void OnFrameUpdate(UpdateEvent* event) override;
-
   GizmoDragMode::Enum GetDragMode( );
 
   bool GetSnapping( );
@@ -169,7 +167,6 @@ public:
 public:
   GizmoSnapMode::Enum mSnapMode;
   bool mAffectTranslation;
-  Vec3 mChangeInScale;
 };
 
 //---------------------------------------------------------- ObjectScaleTool ---
@@ -183,8 +180,6 @@ public:
   void Serialize(Serializer& stream);
   void Initialize(CogInitializer& initializer);
 
-  void OnFrameUpdate(UpdateEvent* event) override;
-
   bool GetSnapping( );
   void SetSnapping(bool snapping);
 
@@ -195,7 +190,6 @@ public:
   
 public:
   bool mAffectTranslation;
-  float mChangeInRotation;
 };
 
 }// end namespace Zero

@@ -14,6 +14,7 @@ namespace Zero
 
 namespace Events
 {
+  DefineEvent(ResourceNewlyCreated);
   DefineEvent(ResourceAdded);
   DefineEvent(ResourceModified);
   DefineEvent(ResourceRemoved);

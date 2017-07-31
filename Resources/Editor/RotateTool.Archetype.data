@@ -15,6 +15,5 @@ Cog
 		var Snapping = false
 		var SnapDistance = 15
 		var AffectTranslation = true
-    var ChangeInRotation = 0
 	}
 }

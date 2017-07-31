@@ -239,12 +239,12 @@ public:
 
   //Coordinates
   Rect GetRectInParent();
-  Rect GetLocalRect();
-  Rect GetScreenRect();
+  Rect GetLocalRect() const;
+  Rect GetScreenRect() const;
   Vec2 ToLocal(Vec2Param screenPoint);
   Vec3 ToLocal(Vec3Param screenPoint);
   Vec2 ToScreen(Vec2Param localPoint);
-  Vec3 GetScreenPosition();
+  Vec3 GetScreenPosition() const;
   bool Contains(Vec2 screenPoint);
 
   //Layout functions

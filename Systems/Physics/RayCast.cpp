@@ -36,6 +36,8 @@ Cog* CastFilterEvent::GetObject()
 //-------------------------------------------------------------------CastFilter
 ZilchDefineType(CastFilter, builder, type)
 {
+  type->CreatableInScript = true;
+
   ZeroBindDocumented();
   ZilchBindGetterSetterProperty(CollisionGroup);
 

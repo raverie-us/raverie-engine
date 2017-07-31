@@ -74,6 +74,8 @@ private:
 
 };
 
+//---------------------------------------------------------------------- Helpers
+
 DeclareEnum3(UiTraversal, DirectDescendantsOnly, DepthFirst, BreadthFirst);
 
 // Find any child widget by class

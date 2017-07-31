@@ -63,6 +63,8 @@ public:
 
   // What kind of a change is updating from this to rhs. 
   BuildUpdateState::Enum CheckForUpdate(const BuildId& rhs) const;
+  // Is 'this' build older than 'rhs'.
+  bool IsOlderThan(const BuildId& rhs) const;
 
   String mExperimentalBranchName;
   String mPlatform;

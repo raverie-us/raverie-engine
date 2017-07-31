@@ -95,6 +95,9 @@ namespace Serialization
       if(cogId.Slot != cInvalidObjectRawId)
         contextId = savingContext->ToContextId(contextId);
 
+      if (!CogMetaSerialization::sSaveContextIds)
+        contextId = cInvalidObjectRawId;
+
       // Save as Int
       return stream.FundamentalField(fieldName, contextId);
     }

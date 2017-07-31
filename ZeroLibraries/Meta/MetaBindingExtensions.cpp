@@ -37,7 +37,6 @@ const String cHidden("Hidden");
 const String cInvalidatesObject("InvalidatesObject");
 const String cShaderInput("ShaderInput");
 const String cLocalModificationOverride("LocalModificationOverride");
-const String cAsPropertyUseCustomSerialization("AsPropertyUseCustomSerialization");
 const String cSerialized("Serialized");
 const String cDependency("Dependency");
 const String cEditable("Editable");

@@ -64,7 +64,7 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
   {
     forRange(MaterialBlockHandle block, mMaterialBlocks.All())
     {
-      stream.StartPolymorphic(block.StoredType);
+      stream.StartPolymorphic(block);
       block->Serialize(stream);
       stream.EndPolymorphic();
     }

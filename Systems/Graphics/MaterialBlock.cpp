@@ -10,6 +10,7 @@ ZilchDefineType(ProxyObject<MaterialBlock>, builder, type)
 
 ZilchDefineType(MaterialBlock, builder, type)
 {
+  type->CreatableInScript = true;
   ZilchBindDefaultCopyDestructor();
 
   type->Add(new CogComponentMeta(type));

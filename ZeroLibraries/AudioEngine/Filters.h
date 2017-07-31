@@ -356,7 +356,7 @@ namespace Audio
     float GetAttackMSec() { return mAttackMSec; }
     void SetAttackMSec(const float attack);
     float GetReleaseMSec() { return mReleaseMSec; }
-    void SetReleaseMsec(const float release);
+    void SetReleaseMSec(const float release);
     float GetRatio() { return mRatio; }
     void SetRatio(const float ratio);
     float GetOutputGain() { return mOutputGainDB; }
@@ -367,8 +367,8 @@ namespace Audio
     void SetType(const ProcessorTypes type) { mProcessorType = type; }
 
   private:
-    float CompressorGain(const float value);
-    float ExpanderGain(const float value);
+    float CompressorGain(const float detectorValue);
+    float ExpanderGain(const float detectorValue);
 
     float mInputGainDB;
     float mThresholdDB;

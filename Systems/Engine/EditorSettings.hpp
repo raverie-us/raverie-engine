@@ -37,7 +37,6 @@ public:
   real mViewCubeSize;
   bool mAutoUpdateContentChanges;
 
-  ScriptReloadMethod::Enum mScriptReloadEditor;
   ScriptReloadMethod::Enum mScriptReloadGame;
 };
 

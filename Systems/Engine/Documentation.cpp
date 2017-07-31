@@ -16,12 +16,17 @@ ZilchDefineType(DocumentationLibrary, builder, type)
 {
 }
 
-/////////////////////////////////////////////pl///////////////////////////
+////////////////////////////////////////////////////////////////////////
 // Helpers
 ////////////////////////////////////////////////////////////////////////
 String ReplaceTypeIfTemplated(StringParam typeString)
 {
-  if (typeString.Contains("["))
+  // if the whole type is inside brackets, just remove the brackets,
+  if (typeString.StartsWith("[") && typeString.EndsWith("]"))
+  {
+    return typeString.SubString(typeString.Begin() + 1, typeString.End() - 1);
+  }
+  else if (typeString.Contains("["))
   {
     return BuildString(typeString.SubString(typeString.Begin(), typeString.FindFirstOf("[").Begin()), "[T]");
   }
@@ -115,13 +120,6 @@ void CommandDoc::Serialize(Serializer& stream)
 ////////////////////////////////////////////////////////////////////////
 // CommandDocList
 ////////////////////////////////////////////////////////////////////////
-template<> struct Zero::Serialization::Trait<CommandDocList>
-{
-
-  enum { Type = StructureType::Object };
-  static inline cstr TypeName() { return "CommandList"; }
-};
-
 bool CommandCompareFn(CommandDoc *lhs, CommandDoc *rhs)
 {
   return lhs->mName < rhs->mName;
@@ -644,7 +642,7 @@ void DocumentationLibrary::LoadFromMeta()
 
       // if we have a baseType, save it
       if (metaType->BaseType)
-        classDoc->mBaseClass = metaType->BaseType->Name;
+        classDoc->mBaseClass = ReplaceTypeIfTemplated(metaType->BaseType->Name);
 
       mClasses.PushBack(classDoc);
       mClassMap[classDoc->mName] = classDoc;

@@ -24,6 +24,7 @@ ZilchDefineType(ProjectSettings, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
+  ZeroBindDocumented();
   type->AddAttribute(ObjectAttributes::cCore);
 
   ZilchBindFieldGetter(ProjectName);
@@ -32,6 +33,7 @@ ZilchDefineType(ProjectSettings, builder, type)
   ZilchBindFieldGetter(EditorContentFolder);
 
   ZilchBindFieldProperty(ProjectOwner);
+  ZilchBindFieldProperty(AutoTakeProjectScreenshot);
 }
 
 //******************************************************************************
@@ -398,6 +400,12 @@ int FrameRateSettings::GetFrameRate()
 void FrameRateSettings::SetFrameRate(int frameRate)
 {
   mFrameRate = Math::Max(frameRate, 1);
+}
+
+ZilchDefineType(LauncherProjectInfoProxy, builder, type)
+{
+  ZeroBindComponent();
+  type->AddAttribute(ObjectAttributes::cCore);
 }
 
 }//namespace Zero

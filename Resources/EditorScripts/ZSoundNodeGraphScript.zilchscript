@@ -55,19 +55,21 @@ class ZSoundNodeGraphScript : ZilchComponent
     {
       var thisPosition = Real3(info.Position.X, info.Position.Y, 1);
       
-      var color = Real4(105.0/255.0, 178.0/255.0, 255.0/255.0, 1.0);
+      var color = Real4(0.4118, 0.698, 1.0, 1.0);
       if (info.Name == "Space")
-          color = Real4(255.0/255.0, 62.0/255.0, 63.0/255.0, 1.0);
+          color = Real4(1.0, 0.2431, 0.247, 1.0);
       else if (info.Name == "Listener")
-          color = Real4(171.0/255.0, 105.0/255.0, 255.0/255.0, 1.0);
+          color = Real4(0.6706, 0.4118, 1.0, 1.0);
       else if (info.Name == "Emitter")
-          color = Real4(46.0/255.0, 170.0/255.0, 43.0/255.0, 1.0);
+          color = Real4(0.1804, 0.6667, 0.1686, 1.0);
       else if (info.Name == "SoundInstance")
-          color = Real4(255.0/255.0, 167.0/255.0, 75.0/255.0, 1.0);
+          color = Real4(1.0, 0.6549, 0.2941, 1.0);
       else if (info.Name == "EmitterAttenuator")
-          color = Real4(155.0/255.0, 255.0/255.0, 120.0/255.0, 1.0);
+          color = Real4(0.6078, 1.0, 0.4706, 1.0);
       else if (info.Name == "CueAttenuator")
-          color = Real4(254.0/255.0, 236.0/255.0, 117.0/255.0, 1.0);
+          color = Real4(0.9961, 0.9255, 0.4588, 1.0);
+      else if (info.Name == "AudioOutput")
+          color = Real4(0.4157, 0.2118, 0.2118, 1.0);
       
       var node = this.Space.CreateAtPosition(Archetype.SoundNodeIcon, thisPosition);
       node.FindChildByName("CircleHighlight").Sprite.VertexColor = color;

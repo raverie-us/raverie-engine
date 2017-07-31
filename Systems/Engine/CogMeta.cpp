@@ -233,4 +233,45 @@ String CogMetaDisplay::GetDebugText(HandleParam object)
   return GetName(object);
 }
 
+//--------------------------------------------------------------------------------- Cog Meta Display
+bool CogMetaSerialization::sSaveContextIds = true;
+
+//**************************************************************************************************
+ZilchDefineType(CogMetaSerialization, builder, type)
+{
+}
+
+//**************************************************************************************************
+bool CogMetaSerialization::SerializeReferenceProperty(BoundType* propertyType, cstr fieldName,
+                                                      Any& value, Serializer& serializer)
+{
+  Cog* cog = value.Get<Cog*>();
+  ReturnIf(cog == nullptr, false, "Cog should never be null here");
+
+  CogId id = cog->GetId();
+  serializer.SerializeFieldDefault(fieldName, id, CogId());
+  return true;
+}
+
+//**************************************************************************************************
+void CogMetaSerialization::AddCustomAttributes(HandleParam object, TextSaver* saver)
+{
+  if (sSaveContextIds == false)
+    return;
+
+  static String sContextId = "ContextId";
+
+  if (Cog* cog = object.Get<Cog*>())
+  {
+    CogSavingContext* context = static_cast<CogSavingContext*>(saver->GetSerializationContext());
+    CogId id = cog->GetId();
+
+    if(context && id != cInvalidCogId)
+    {
+      uint linkId = context->ToContextId(id.Id);
+      saver->SaveAttribute(sContextId, ToString(linkId));
+    }
+  }
+}
+
 }//namespace Zero
