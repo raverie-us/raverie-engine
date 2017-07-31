@@ -91,6 +91,8 @@ public:
   CollisionTableManager(BoundType* resourceType);
   CollisionTable* CreateNewResourceInternal(StringParam name) override;
 
+  /// A new collision table was created. Load all existing groups.
+  void OnTableCreated(ResourceEvent* event);
   /// Manage a new CollisionGroup being created (to add to all existing tables)
   void OnCollisionGroupAdded(ResourceEvent* event);
   /// Manage a new CollisionGroup being removed (to remove from all existing tables)

@@ -202,6 +202,10 @@ void MetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateAction::En
     if (componentType->HasAttribute(ObjectAttributes::cCore))
       continue;
 
+    // Cannot add hidden types
+    if (componentType->HasAttribute(ObjectAttributes::cHidden))
+      continue;
+
     // If we aren't return all types, we need to check if it can even be added 
     if(action == EnumerateAction::AllAddableToObject)
     {

@@ -457,8 +457,17 @@ CollisionTableManager::CollisionTableManager(BoundType* resourceType)
   mCanDuplicate = true;
 
   CollisionGroupManager* manager = CollisionGroupManager::GetInstance();
+  ConnectThisTo(this, Events::ResourceNewlyCreated, OnTableCreated);
   ConnectThisTo(manager, Events::ResourceAdded, OnCollisionGroupAdded);
   ConnectThisTo(manager, Events::ResourceRemoved, OnCollisionGroupRemoved);
+}
+
+void CollisionTableManager::OnTableCreated(ResourceEvent* event)
+{
+  // Load all of the existing collision groups into the table
+  CollisionTable* table = (CollisionTable*)event->EventResource;
+  table->LoadExistingGroups();
+  table->ReconfigureGroups();
 }
 
 CollisionTable* CollisionTableManager::CreateNewResourceInternal(StringParam name)

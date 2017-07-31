@@ -773,7 +773,7 @@ public:
     if(to != nullptr)
     {
       if(AreTwoNamesTheSame(to))
-        DoNotifyException("Cog Path", "Two objects have the same name (in the same space or under the same parent) so the CogPath may resolve to an incorrect object");
+        DoNotifyWarning("Cog Path", "Two objects have the same name (in the same space or under the same parent) so the CogPath may resolve to an incorrect object");
 
       //mValue.SetCog(to);
 

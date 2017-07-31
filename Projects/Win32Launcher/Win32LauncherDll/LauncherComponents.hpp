@@ -85,6 +85,8 @@ public:
   bool ParseVersionId();
   /// Test if this project can run with the given build id
   bool TestBuildId(const BuildId& buildId);
+  /// Returns if 'this' template contains a more exact matching build range than the 'other' template.
+  bool IsMoreExactRangeThan(const BuildId& buildId, ZeroTemplate* otherTemplate);
   
   /// The unique name of this template (versions aside)
   String mSKU;
@@ -144,6 +146,9 @@ private:
   /// If there is no branch then a major version id is required. Afterward, ids are optional in the
   /// order of minor, patch, and revision id. All id strings must strictly by integer values.
   static bool ParseVersionId(StringParam versionId, BuildId& buildId);
+
+  /// Returns the first build id range that matches the given build. Returns null if one doesn't exist.
+  BuildIdRange* FindBestBuildRange(const BuildId& buildId);
 
   /// Tests if the given build id is "contained" with the id range. If the id range doesn't have a 
   /// max value then it is assumed to be unbounded up to branch/major version changes.

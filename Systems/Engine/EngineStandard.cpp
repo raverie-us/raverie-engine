@@ -92,6 +92,8 @@ Cog* ZeroStartupSettings::LoadConfig()
 //**************************************************************************************************
 ZilchDefineStaticLibrary(EngineLibrary)
 {
+  builder.CreatableInScriptDefault = false;
+
   // Ranges
   ZilchInitializeRange(HierarchyNameRange);
   ZilchInitializeRange(HierarchyRange);
@@ -141,21 +143,21 @@ ZilchDefineStaticLibrary(EngineLibrary)
   // Meta Components
   ZilchInitializeType(CogMetaComposition);
   ZilchInitializeType(CogMetaDataInheritance);
+  ZilchInitializeType(CogMetaDisplay);
+  ZilchInitializeType(CogMetaSerialization);
+  ZilchInitializeType(CogMetaOperations);
+  ZilchInitializeType(CogMetaTransform);
+  ZilchInitializeType(CogArchetypeExtension);
+  ZilchInitializeType(CogSerializationFilter);
+  ZilchInitializeType(CogPathMetaSerialization);
   ZilchInitializeType(ComponentMetaDataInheritance);
-  ZilchInitializeType(CogMetaDataInheritance);
   ZilchInitializeType(DataResourceInheritance);
   ZilchInitializeType(ResourceMetaSerialization);
-  ZilchInitializeType(CogPathMetaSerialization);
   ZilchInitializeType(EngineMetaComposition);
   ZilchInitializeType(HierarchyComposition);
-  ZilchInitializeType(CogMetaTransform);
-  ZilchInitializeType(CogSerializationFilter);
   ZilchInitializeType(MetaResource);
-  ZilchInitializeType(CogMetaOperations);
   ZilchInitializeType(ComponentMetaOperations);
-  ZilchInitializeType(CogArchetypeExtension);
   ZilchInitializeType(ResourceMetaOperations);
-  ZilchInitializeType(CogMetaDisplay);
 
   // Events
   ZilchInitializeType(CogPathEvent);
@@ -349,7 +351,10 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(EventDirectoryWatcher);
   ZilchInitializeType(Job);
   ZilchInitializeType(DocumentationLibrary);
-  ZilchInitializeType(ProxyObject<Component>);
+  ZilchInitializeTypeAs(ProxyObject<Component>, "ComponentProxy");
+
+  if(!Engine::sInLauncher)
+    ZilchInitializeTypeAs(LauncherProjectInfoProxy, "LauncherProjectInfo");
 
   ZilchInitializeType(ZilchLibraryResource);
   ZilchInitializeType(ZilchDocumentResource);

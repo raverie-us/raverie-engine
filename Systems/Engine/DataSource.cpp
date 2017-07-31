@@ -11,10 +11,10 @@ namespace Zero
 
 namespace CommonColumns
 {
-  const String Name = "Name";
-  const String Type = "Type";
-  const String Icon = "Icon";
-  const String ToolTip = "ToolTip";
+const String Name = "Name";
+const String Type = "Type";
+const String Icon = "Icon";
+const String ToolTip = "ToolTip";
 }
 
 namespace Events
@@ -42,23 +42,23 @@ ZilchDefineType(DataReplaceEvent, builder, type)
 }
 
 //------------------------------------------------------------- Data Base Source
-DataSource::~DataSource()
+DataSource::~DataSource( )
 {
   DataEvent e;
   mDispatcher.Dispatch(Events::DataDestroyed, &e);
 }
 
 void DataSource::CanMove(Status& status, DataEntry* source,
-                         DataEntry* destination, InsertMode::Type insertMode)
+  DataEntry* destination, InsertMode::Type insertMode)
 {
   status.State = StatusState::Failure;
   status.Context = InsertError::NotSupported;
 }
 
 bool DataSource::Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMove,
-                      InsertMode::Type insertMode)
+  InsertMode::Type insertMode)
 {
-  forRange(DataIndex& index, indicesToMove.All())
+  forRange(DataIndex& index, indicesToMove.All( ))
   {
     DataEntry* selectedEntry = ToEntry(index);
     Move(destinationEntry, selectedEntry, insertMode);
@@ -67,7 +67,6 @@ bool DataSource::Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMo
   return true;
 }
 
-//------------------------------------------------------------------ List Source
 //-------------------------------------------------------------------ArrayDataSource
 u32 ArrayDataSource::DataEntryToArrayIndex(DataEntry* entry)
 {
@@ -86,7 +85,7 @@ u32 ArrayDataSource::DataIndexToArrayIndex(DataIndex dataIndex)
   return index - 1;
 }
 
-DataEntry* ArrayDataSource::GetRoot()
+DataEntry* ArrayDataSource::GetRoot( )
 {
   return (DataEntry*)RootIndex;
 }
@@ -115,7 +114,7 @@ uint ArrayDataSource::ChildCount(DataEntry* dataEntry)
   //only the root has children, no one else does
   u64 index = (u64)dataEntry;
   if(index == RootIndex)
-    return GetArraySize();
+    return GetArraySize( );
   return 0;
 }
 
@@ -159,18 +158,18 @@ bool ArrayDataSource::SetData(DataEntry* dataEntry, const Any& any, StringParam 
 }
 
 //-------------------------------------------------------------------ListSource
-ListSource::ListSource()
+ListSource::ListSource( )
 {
 
 };
 
-ListSource::~ListSource()
+ListSource::~ListSource( )
 {
   DataEvent e;
   mDispatcher.Dispatch(Events::DataDestroyed, &e);
 }
 
-void ListSource::Modified()
+void ListSource::Modified( )
 {
   DataEvent e;
   mDispatcher.Dispatch(Events::DataModified, &e);
@@ -182,75 +181,10 @@ void ListSource::Selected(DataIndex index)
   mDispatcher.Dispatch(Events::DataActivated, &e);
 }
 
-// Constructor (takes in a pointer to a null terminated array of c-strings)
-EnumSource::EnumSource(const cstr* names)
-{
-  SetEnum(names);
-}
+//----------------------------------------------- Add Spaces To Upper Camel Case
 
-// Set Enum (takes in a pointer to a null terminated array of c-strings)
-void EnumSource::SetEnum(const cstr* names)
-{
-  // Store the names
-  mNames = names;
-
-  // We need to compute the size of the array
-  // Start off assuming there are no elements
-  mSize = 0;
-
-  // Start off at the first name
-  const cstr* start = mNames;
-
-  // Compute the size by looping until we find the null terminator
-  while (*start != nullptr)
-  {
-    // Increment the size and start
-    ++mSize;
-    ++start;
-  }
-}
-
-EnumSource::EnumSource()
-{
-  mNames = nullptr;
-  mSize = 0;
-}
-
-// Constructor (takes in a pointer to an array of c-strings, and a size)
-EnumSource::EnumSource(const cstr* names, size_t size)
-{
-  // Store the names
-  mNames = names;
-
-  // Store the size
-  mSize = size;
-}
-
-void EnumSource::SetEnum(const cstr* names, size_t size)
-{
-  // Store the names
-  mNames = names;
-
-  // Store the size
-  mSize = size;
-}
-
-// Get the number of elements in the enum
-uint EnumSource::GetCount()
-{
-  // Return the computed size
-  return mSize;
-}
-
-// Get the name at a particular index
-String EnumSource::GetStringValueAt(DataIndex index)
-{
-  ErrorIf(index.Id > GetCount(), "Indexing past the bounds of a static array");
-  return mNames[index.Id];
-}
-
-// Add spaces to any enum with names that are upper cammel case
-String AddSpacesToUpperCamelCase::Transform(StringParam input)
+// Add spaces to any enum with names that are upper camel case
+String AddSpacesToUpperCamelCase::Convert(cstr input)
 {
   // A string builder lets us efficiently add characters together
   StringBuilder builder;
@@ -260,30 +194,96 @@ String AddSpacesToUpperCamelCase::Transform(StringParam input)
   bool wasCaps = true;
 
   // Loop through all the input
-  while (!strRange.Empty())
+  while(!strRange.Empty( ))
   {
     // Is the current character upper-case?
-    bool isCaps = (strRange.IsCurrentRuneUpper());
+    bool isCaps = (strRange.IsCurrentRuneUpper( ));
 
     // If the previous character was not upper case, and the
     // current character is upper case, then we need to add a space
-    if (wasCaps == false && isCaps == true)
+    if(wasCaps == false && isCaps == true)
     {
       // Add the space to the string builder
       builder.Append(' ');
     }
 
     // Add the character that we're on to the string builder
-    builder.Append(strRange.Front());
+    builder.Append(strRange.Front( ));
 
     // Roll over the caps value to the next loop
     wasCaps = isCaps;
 
-    strRange.PopFront();
+    strRange.PopFront( );
   }
 
   // Return the string builder's string
-  return builder.ToString();
+  return builder.ToString( );
 }
 
+//------------------------------------------------------------------ Enum Source
+
+EnumSource::EnumSource( )
+{
+  mEnumType = nullptr;
 }
+
+// Set Enum (takes in a pointer to a null terminated array of c-strings)
+void EnumSource::BuildFromMeta(BoundType* enumType)
+{
+  mEnumType = enumType;
+
+  PropertyArray& allProperties = mEnumType->AllProperties;
+  for(size_t i = 0; i < allProperties.Size( ); ++i)
+  {
+    Property* prop = allProperties[i];
+    String enumString = prop->Name;
+    mNames.PushBack(prop->Name);
+  }
+
+  FillOutDescriptions( );
+}
+
+void EnumSource::FillOutDescriptions( )
+{
+  int size = (int)mNames.Size( );
+  String enumName = mEnumType->Name.c_str( );
+
+  mDescriptions.Reserve(size);
+
+  EnumDoc* enumDoc = Z::gDocumentation->mEnumAndFlagMap.FindValue(enumName, nullptr);
+  if(enumDoc == nullptr)
+  {
+    for(int i = 0; i < size; ++i)
+      mDescriptions.PushBack("");
+  }
+  else
+  {
+    for(int i = 0; i < size; ++i)
+      mDescriptions.PushBack(enumDoc->mEnumValues.FindValue(mNames[i], ""));
+  }
+
+}
+
+// Get the number of elements in the enum
+uint EnumSource::GetCount( )
+{
+  // Return the computed size
+  return mNames.Size( );
+}
+
+// Get the name at a particular index
+String EnumSource::GetStringValueAt(DataIndex index)
+{
+  ErrorIf(index.Id > GetCount( ), "Indexing past the bounds of a static array");
+  return mNames[(uint)index.Id];
+}
+
+// Get the description (documentation) for the corresponding enum at the same index
+String EnumSource::GetDescriptionAt(DataIndex index)
+{
+  ErrorIf(index.Id > GetCount( ), "Indexing past the bounds of a static array");
+  return mDescriptions[(uint)index.Id];
+}
+
+
+}  // namespace Zero

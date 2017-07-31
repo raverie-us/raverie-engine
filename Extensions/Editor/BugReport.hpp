@@ -29,7 +29,6 @@ public:
   void OnUpdate(UpdateEvent* event);
   
   TextBox* mUserName;
-  TextBox* mUserEmail;
   TextBox* mTitle;
   TextButton* mSend;
   TextEditor* mExpected;
@@ -53,7 +52,6 @@ public:
   String mFileName;
   CogId mProject;
   String mUserName;
-  String mEmail;
   String mTitle;
   String mRepro;
   String mExpected;

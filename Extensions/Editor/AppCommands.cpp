@@ -8,6 +8,11 @@ void OpenHelp()
   Os::SystemOpenNetworkFile("https://help.zeroengine.io");
 }
 
+void OpenZeroHub()
+{
+  Os::SystemOpenNetworkFile("https://www.zeroengine.io");
+}
+
 void ExitEditor()
 {
   Z::gEditor->RequestQuit(false);
@@ -232,6 +237,7 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   //commands->AddCommand("HostZilchDebugger", BindCommandFunction(HostZilchDebugger));
   //commands->AddCommand("RunZilchDebugger", BindCommandFunction(RunZilchDebugger));
   commands->AddCommand("Help", BindCommandFunction(OpenHelp));
+  commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub));
 }
 
 }

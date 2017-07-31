@@ -1,78 +1,73 @@
-Cog  =
+[Version:1]
+Cog 
 {
-	Named =
+	var Name = "EditorCamera"
+	var LinkId = 1
+	Transform 
 	{
-		string Name = "EditorCamera",
-	},
-	Transform =
-	{
-		Vec3 Translation = [0, 0, 0],
-		Vec3 Scale = [1, 1, 1],
-		Quat Rotation = [0, 0, 0, 1],
-	},
-	CameraViewport =
-	{
-		bool RenderInEditor = true,
-		bool RenderInGame = false,
-		bool RenderToViewport = true,
-		bool ForwardViewportEvents = false,
-		uint RenderOrder = 0,
-		Vec2 NormalizedSize = [1, 1],
-		Vec2 NormalizedOffset = [0, 0],
-		CogPath CameraPath =
-		{
-			string Path = ".",
-			bool ErrorOnResolveToNull = false,
-			bool ErrorOnPathCantCompute = false,
-			bool ErrorOnDirectLinkFail = false,
-			bool UpdateCogOnPathChange = true,
-			bool UpdatePathOnCogChange = true,
-			bool UpdateCogOnInitialize = true,
-			bool ResolvedNullErrorOccurred = false,
-			uint ResolvedCog = 1,
-			CogPathPreference PathPreference0 = CogRelative,
-			CogPathPreference PathPreference1 = SpaceRelative,
-			CogPathPreference PathPreference2 = Absolute,
-		},
-		CogPath RendererPath =
-		{
-			string Path = ".",
-			bool ErrorOnResolveToNull = false,
-			bool ErrorOnPathCantCompute = false,
-			bool ErrorOnDirectLinkFail = false,
-			bool UpdateCogOnPathChange = true,
-			bool UpdatePathOnCogChange = true,
-			bool UpdateCogOnInitialize = true,
-			bool ResolvedNullErrorOccurred = false,
-			uint ResolvedCog = 1,
-			CogPathPreference PathPreference0 = CogRelative,
-			CogPathPreference PathPreference1 = SpaceRelative,
-			CogPathPreference PathPreference2 = Absolute,
-		},
-		Vec2 Resolution = [1920, 1080],
-		ViewportScaling ViewportScaling = Fill,
-		Vec4 MarginColor = [0, 0, 0, 1],
+		var Translation = Real3{0, 0, 0}
+		var Scale = Real3{1, 1, 1}
+		var Rotation = Quaternion{0, 0, 0, 1}
 	}
-	Camera =
+	CameraViewport 
 	{
-		Facing Facing = NegativeZ,
-		float NearPlane = 0.5,
-		float FarPlane = 500,
-		PerspectiveMode PerspectiveMode = Perspective,
-		float FieldOfView = 45,
-		float Size = 20,
-	},
-	DefaultRenderer =
+		var RenderInEditor = true
+		var RenderInGame = false
+		var RenderOrder = 0
+		var CameraPath = CogPath
+		{
+			var Path = "."
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var ResolvedCog = 1
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var RendererPath = CogPath
+		{
+			var Path = ":/Renderer"
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var ResolvedCog = 2
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var ResolutionOrAspect = Integer2{1920, 1080}
+		var RenderToViewport = true
+		var ForwardViewportEvents = true
+		var ViewportScaling = ViewportScaling.Fill
+		var MarginColor = Real4{0, 0, 0, 1}
+		var NormalizedSize = Real2{1, 1}
+		var NormalizedOffset = Real2{0, 0}
+	}
+	Camera 
 	{
-		Vec4 ClearColor = [0.125, 0.125, 0.125, 1],
-		bool DrawDebug = true,
-	},
-	EditorCameraController =
+		var NearPlane = 0.5
+		var FarPlane = 500
+		var PerspectiveMode = PerspectiveMode.Perspective
+		var FieldOfView = 45
+		var Size = 20
+	}
+	EditorCameraController 
 	{
-		ControlMode ControlMode = Orbit,
-		float LookDistance = 50,
-		float VerticalAngle = 0,
-		float HorizontalAngle = 0,
-		Vec3 LookTarget = [0, 0, 0],
-	},
+		var ControlMode = ControlMode.Orbit
+		var Previous3DMode = ControlMode.Orbit
+		var LookDistance = 50
+		var VerticalAngle = 0
+		var HorizontalAngle = 0
+		var LookTarget = Real3{0, 0, 0}
+		var MoveSensitivity = 1
+	}
 }

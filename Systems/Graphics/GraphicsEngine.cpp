@@ -144,7 +144,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   ErrorIf(mRendererThread.IsValid() == false, "RendererThread failed to initialize.");
   mRendererThread.Resume();
 
-  mVerticalSync = true;
+  mVerticalSync = false;
 }
 
 void GraphicsEngine::Update()

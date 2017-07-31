@@ -59,10 +59,6 @@ extern const String cShaderInput;
 // used for things like 'Transform::Translation'. When we revert an object's modifications,
 // we still want it to stay in the same location.
 extern const String cLocalModificationOverride;
-// When this is bound as a property, ignore its child properties and save in a custom way
-// Can each of my sub properties be independently locally modified? This was added for
-// saving out local modifications to CogPath.
-extern const String cAsPropertyUseCustomSerialization;
 // Should this property be serialized. This is implied by Zilch::PropertyAttribute,
 // but this is also added by ZeroSerialize.
 extern const String cSerialized;

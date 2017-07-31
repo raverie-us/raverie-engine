@@ -55,6 +55,7 @@ void MainConfig::Serialize(Serializer& stream)
 ZilchDefineType(EditorConfig, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
 }
@@ -69,6 +70,7 @@ void EditorConfig::Serialize(Serializer& stream)
 ZilchDefineType(ContentConfig, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindDocumented();
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
@@ -86,6 +88,7 @@ void ContentConfig::Serialize(Serializer& stream)
 ZilchDefineType(UserConfig, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZilchBindFieldProperty(UserName);
   ZilchBindFieldProperty(UserEmail);
@@ -113,6 +116,7 @@ void UserConfig::Serialize(Serializer& stream)
 ZilchDefineType(DeveloperConfig, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindDocumented();
   ZilchBindFieldProperty(mDoubleEscapeQuit);
   ZilchBindFieldProperty(mProxyObjectsInPreviews);
   ZilchBindFieldProperty(mCanModifyReadOnlyResources);

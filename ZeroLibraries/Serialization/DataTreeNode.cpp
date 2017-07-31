@@ -268,6 +268,11 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
 
   if(mNodeType == DataNodeType::Object)
   {
+    // Copy attributes
+    mAttributes.Reserve(mAttributes.Size() + patchNode->mAttributes.Size());
+    forRange(DataAttribute& attribute, patchNode->mAttributes.All())
+      mAttributes.PushBack(attribute);
+
     bool childOrderOverride = patchNode->mFlags.IsSet(DataNodeFlags::ChildOrderOverride);
 
     // Copy over the flag to the final node as the patch node will be destroyed

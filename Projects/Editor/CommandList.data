@@ -1,9 +1,9 @@
 [Version:1]
-Object 
+CommandList 
 {
 	var Commands = Array
 	{
-		Command
+		Object
 		{
 			var Name = "About"
 			var Description = ""
@@ -12,7 +12,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Add"
 			var Description = "Add a new content item to the project"
@@ -22,7 +22,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "AddComponent"
 			var Description = "Add component to object"
@@ -31,7 +31,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "AlignCameraToSelectedCamera"
 			var Description = "Aligns the editor camera to the selected camera"
@@ -41,7 +41,7 @@ Object
 				"Camera"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "AlignSelectedCameraToCamera"
 			var Description = "Aligns the selected camera to the editor's camera"
@@ -51,7 +51,7 @@ Object
 				"Camera"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Animator"
 			var Description = "Show the Animator Window"
@@ -61,7 +61,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ArchiveProject"
 			var Description = "Archive a project into a file"
@@ -71,7 +71,7 @@ Object
 				"Project"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "BackupProject"
 			var Description = "Back up project to time stamped archive"
@@ -81,7 +81,7 @@ Object
 				"Project"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "BroadPhaseTracker"
 			var Description = "Used to compare broad phase performance"
@@ -91,7 +91,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Browser"
 			var Description = "Show the Browser Window"
@@ -101,7 +101,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "BuildVersion"
 			var Description = "Print this version date and revision number in the console and copies them to the clipboard"
@@ -111,7 +111,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CenterSelected"
 			var Description = "Center the object in the view"
@@ -121,7 +121,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ClearObjectStore"
 			var Description = "Clear the Object Store on this computer"
@@ -131,7 +131,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CommandListViewer"
 			var Description = "Show the Command List Viewer"
@@ -141,7 +141,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Console"
 			var Description = "Toggle the Console Window"
@@ -151,7 +151,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Controls"
 			var Description = "Show the Controls Window"
@@ -162,7 +162,7 @@ Object
 				"Help"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Copy"
 			var Description = "Copy objects to clipboard"
@@ -172,7 +172,7 @@ Object
 				"Edit"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CrashEngine"
 			var Description = ""
@@ -181,7 +181,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateBlockTower"
 			var Description = ""
@@ -190,7 +190,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateCamera"
 			var Description = "Create Camera"
@@ -199,7 +199,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateCube"
 			var Description = "Create Cube"
@@ -208,7 +208,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateCylinder"
 			var Description = "Create Cylinder"
@@ -217,7 +217,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateDirectionalLight"
 			var Description = "Create DirectionalLight"
@@ -226,7 +226,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateDirectionalLightShadows"
 			var Description = "Create DirectionalLightShadows"
@@ -235,7 +235,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateGrid"
 			var Description = "Create Grid"
@@ -244,7 +244,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreatePointLight"
 			var Description = "Create PointLight"
@@ -253,7 +253,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreatePyramid"
 			var Description = ""
@@ -262,7 +262,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateSphere"
 			var Description = "Create Sphere"
@@ -271,7 +271,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateSplineParticleSystem"
 			var Description = "Create SplineParticleSystem"
@@ -280,7 +280,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateSprite"
 			var Description = "Create Sprite"
@@ -289,7 +289,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateSpriteParticles"
 			var Description = "Create SpriteParticles"
@@ -298,7 +298,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateSpriteText"
 			var Description = "Create SpriteText"
@@ -307,7 +307,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateTeeter"
 			var Description = ""
@@ -316,7 +316,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateTower"
 			var Description = ""
@@ -325,7 +325,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateTransform"
 			var Description = "Create Transform"
@@ -334,7 +334,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateWall"
 			var Description = ""
@@ -343,7 +343,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreateWedge"
 			var Description = "Create Wedge"
@@ -352,7 +352,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "CreationTool"
 			var Description = "Enables the CreationTool tool"
@@ -362,7 +362,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Cut"
 			var Description = "Cut selected objects and save them to clipboard"
@@ -372,7 +372,7 @@ Object
 				"Edit"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "DebugShaderTranslation"
 			var Description = ""
@@ -381,7 +381,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Delete"
 			var Description = "Delete selected objects"
@@ -391,7 +391,7 @@ Object
 				"Edit"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "DetachSelected"
 			var Description = ""
@@ -400,7 +400,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "DisableAutoProjectScreenshot"
 			var Description = "Disables automatically taking a project screen shot every time you save. Use the 'TakeProjectScreenshot' command to take the screen shot manually."
@@ -409,7 +409,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "DumpMemoryDebuggerStats"
 			var Description = ""
@@ -418,7 +418,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Duplicate"
 			var Description = "Duplicate select objects"
@@ -428,7 +428,7 @@ Object
 				"Edit"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "EditColorScheme"
 			var Description = "Edit color scheme"
@@ -438,7 +438,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "EditCommands"
 			var Description = "Displays all custom Commands for editing."
@@ -447,7 +447,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "EnableAutoProjectScreenshot"
 			var Description = "Enables automatically taking a project screen shot every time you save."
@@ -456,7 +456,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Exit"
 			var Description = "Exit the editor"
@@ -466,7 +466,7 @@ Object
 				"File"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ExportAndPlayGame"
 			var Description = "Export the game and play it"
@@ -476,7 +476,7 @@ Object
 				"Export"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ExportContent"
 			var Description = "Export content to a folder for an installer"
@@ -486,7 +486,7 @@ Object
 				"Export"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ExportContentPackage"
 			var Description = ""
@@ -495,7 +495,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ExportGame"
 			var Description = "Export game to a standalone exe"
@@ -505,7 +505,7 @@ Object
 				"Export"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ExportHeightMapToObj"
 			var Description = ""
@@ -514,7 +514,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ExportTypeList"
 			var Description = ""
@@ -523,7 +523,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "FindAll"
 			var Description = "Show the Find/Replace Window to search all documents"
@@ -533,7 +533,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "FindNext"
 			var Description = "Show the Find/Replace Window to search the current document"
@@ -543,7 +543,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "FixArchetypeTransforms"
 			var Description = ""
@@ -552,7 +552,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ForceCompileAllShaders"
 			var Description = ""
@@ -561,7 +561,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "FrameSelected"
 			var Description = "Center and frame the object in the view"
@@ -571,7 +571,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "GoToDefinition"
 			var Description = "Using the current cursor in the current open script we will attempt to go to the definition of that type, member, or variable"
@@ -582,7 +582,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Graph"
 			var Description = "Displays a graph"
@@ -592,7 +592,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "GroupSelected"
 			var Description = "Create a transform at the center of the selected objects and parent them to it"
@@ -602,7 +602,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "HeightMapTool"
 			var Description = "Enables the HeightMapTool tool"
@@ -612,7 +612,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Help"
 			var Description = "Display documentation for the engine"
@@ -623,7 +623,7 @@ Object
 				"Help"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "HideSelected"
 			var Description = "Hide selected objects"
@@ -633,7 +633,7 @@ Object
 				"Hide"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ImportContentPackage"
 			var Description = ""
@@ -642,7 +642,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ImportGroup"
 			var Description = ""
@@ -651,7 +651,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ImportHeightMap"
 			var Description = ""
@@ -660,7 +660,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ImportSpriteSheet"
 			var Description = ""
@@ -669,9 +669,9 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
-			var Name = "JointTool2D"
+			var Name = "JointTool"
 			var Description = "Enables the JointTool tool"
 			var Shortcut = ""
 			var Tags = Array
@@ -679,17 +679,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
-		{
-			var Name = "JointTool3D"
-			var Description = "Enables the JointTool tool"
-			var Shortcut = ""
-			var Tags = Array
-			{
-				"Tool"
-			}
-		}
-		Command
+		Object
 		{
 			var Name = "Library"
 			var Description = "Show the Library Window"
@@ -699,7 +689,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ManipulatorTool"
 			var Description = "Enables the Manipulator Tool"
@@ -709,7 +699,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Market"
 			var Description = "Show the Zero Market where you can download content for your projects"
@@ -719,7 +709,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Memory"
 			var Description = "Displays a memory graph"
@@ -729,7 +719,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Mode2D"
 			var Description = ""
@@ -738,7 +728,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Mode3D"
 			var Description = ""
@@ -747,7 +737,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "MoveToLookPoint"
 			var Description = ""
@@ -756,7 +746,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "NewProject"
 			var Description = "Create a new project"
@@ -767,7 +757,7 @@ Object
 				"File"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "NextSelection"
 			var Description = ""
@@ -777,7 +767,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Objects"
 			var Description = "Show the Objects Window"
@@ -787,7 +777,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "OnExportCommandsList"
 			var Description = ""
@@ -796,7 +786,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "OpenProject"
 			var Description = "Open a project"
@@ -807,7 +797,7 @@ Object
 				"File"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "OpenTestWidgets"
 			var Description = ""
@@ -816,7 +806,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "OperationHistory"
 			var Description = "Show the Operation Queue"
@@ -826,7 +816,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ParentToPrimary"
 			var Description = "Parents all selected objects to the primary selected object (highlighted in orange)"
@@ -836,7 +826,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ParentingTool"
 			var Description = ""
@@ -845,7 +835,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Paste"
 			var Description = "Paste objects on clipboard to space"
@@ -855,7 +845,7 @@ Object
 				"Edit"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "PauseGame"
 			var Description = "Pause / resume the game"
@@ -865,7 +855,7 @@ Object
 				"Game"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Performance"
 			var Description = "Displays a performance graph"
@@ -875,7 +865,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "PlayGame"
 			var Description = "Play the game with the current level"
@@ -885,7 +875,7 @@ Object
 				"Game"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "PlayNewGame"
 			var Description = "Play game in additional window"
@@ -895,7 +885,7 @@ Object
 				"Game"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "PreviousSelection"
 			var Description = ""
@@ -905,7 +895,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Properties"
 			var Description = "Show the Property Window"
@@ -915,7 +905,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Redo"
 			var Description = "Redo last undo operation"
@@ -925,7 +915,7 @@ Object
 				"Edit"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ReloadProject"
 			var Description = "Reload the current project"
@@ -935,7 +925,7 @@ Object
 				"Project"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ReplaceAll"
 			var Description = "Show the Find/Replace Window to replace in all documents"
@@ -945,7 +935,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ReplaceNext"
 			var Description = "Show the Find/Replace Window to replace in the current document"
@@ -955,7 +945,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ReportBug"
 			var Description = "Report a bug to our website"
@@ -965,7 +955,16 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
+		{
+			var Name = "ResaveAllResources"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Object
 		{
 			var Name = "ResetCamera"
 			var Description = "Resets the camera to look at the origin"
@@ -975,7 +974,7 @@ Object
 				"Camera"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ResetTransform"
 			var Description = ""
@@ -984,7 +983,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Restart"
 			var Description = "Restart the editor"
@@ -994,7 +993,7 @@ Object
 				"File"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "RotateTool"
 			var Description = "Enables the Rotate Tool"
@@ -1004,7 +1003,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "RunUnitTests"
 			var Description = ""
@@ -1013,7 +1012,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SaveProject"
 			var Description = "Save project and all resources"
@@ -1024,7 +1023,7 @@ Object
 				"File"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ScaleTool"
 			var Description = "Enables the Scale Tool"
@@ -1034,7 +1033,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectAll"
 			var Description = "Select all in scene"
@@ -1044,7 +1043,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectAllInTree"
 			var Description = "Select all in tree"
@@ -1054,7 +1053,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectChild"
 			var Description = "Select the first child"
@@ -1064,7 +1063,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectEditorConfig"
 			var Description = "Show the Editor Config in the Property Window"
@@ -1074,7 +1073,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectGame"
 			var Description = "Select space"
@@ -1084,7 +1083,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectNone"
 			var Description = "Select no objects"
@@ -1094,7 +1093,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectParent"
 			var Description = "Select parent of current object"
@@ -1104,7 +1103,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectProject"
 			var Description = "Show the Project in the Property Window"
@@ -1114,7 +1113,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectRoot"
 			var Description = "Select root of tree"
@@ -1124,7 +1123,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectSibling"
 			var Description = "Select the next sibling"
@@ -1134,7 +1133,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectSpace"
 			var Description = "Select the space"
@@ -1144,7 +1143,7 @@ Object
 				"Select"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SelectTool"
 			var Description = "Picks objects in the scene."
@@ -1154,7 +1153,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ShowContentOutput"
 			var Description = "Show the project's content output folder"
@@ -1164,7 +1163,7 @@ Object
 				"Project"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ShowCoreLibrary"
 			var Description = ""
@@ -1174,7 +1173,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ShowProjectFolder"
 			var Description = "Show the folder the project is located in the file system"
@@ -1184,7 +1183,7 @@ Object
 				"Project"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SoundNodeGraph"
 			var Description = "Show the Sound Node Graph Window"
@@ -1195,7 +1194,7 @@ Object
 				"Sound"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "SpringTools"
 			var Description = ""
@@ -1204,7 +1203,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "StepGame"
 			var Description = "Step the game forward one frame"
@@ -1214,7 +1213,7 @@ Object
 				"Game"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "StopGame"
 			var Description = "Stop the game"
@@ -1224,7 +1223,7 @@ Object
 				"Game"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "StressTest"
 			var Description = "Stress test the engine by doing a bunch of random stuff"
@@ -1234,7 +1233,7 @@ Object
 				"Editor"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "TakeProjectScreenshot"
 			var Description = "Takes a screen shot for the project. Disables automatically taking a project screen shot every time you save."
@@ -1243,17 +1242,7 @@ Object
 			{
 			}
 		}
-		Command
-		{
-			var Name = "TheVoid"
-			var Description = "Opens the Void"
-			var Shortcut = ""
-			var Tags = Array
-			{
-				"File"
-			}
-		}
-		Command
+		Object
 		{
 			var Name = "TileEditor2D"
 			var Description = "Enables the TileEditor2D tool"
@@ -1263,7 +1252,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "ToggleFullScreen"
 			var Description = ""
@@ -1272,7 +1261,7 @@ Object
 			{
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Tools"
 			var Description = "Show the Tools Window"
@@ -1282,7 +1271,7 @@ Object
 				"Windows"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "TranslateTool"
 			var Description = "Enables the Translate Tool"
@@ -1292,7 +1281,7 @@ Object
 				"Tool"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "Undo"
 			var Description = "Undo last operation"
@@ -1302,7 +1291,7 @@ Object
 				"Edit"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "UnhideAll"
 			var Description = "Unhide all objects"
@@ -1312,7 +1301,7 @@ Object
 				"Hide"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "UnhideSelected"
 			var Description = "Unhide selected objects"
@@ -1322,7 +1311,7 @@ Object
 				"Hide"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "VolumeMeter"
 			var Description = "Show the Volume Meter Window"
@@ -1333,7 +1322,7 @@ Object
 				"Sound"
 			}
 		}
-		Command
+		Object
 		{
 			var Name = "WriteBuildInfo"
 			var Description = ""

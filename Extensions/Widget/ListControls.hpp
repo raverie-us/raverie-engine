@@ -19,6 +19,7 @@ namespace Events
   DeclareEvent(ItemSelected);
   DeclareEvent(ItemDoubleClicked);
   DeclareEvent(ListBoxOpened);
+  DeclareEvent(ListEntriesChanged);
 }
 
 const int cNoItemSelected = -1;
@@ -41,8 +42,6 @@ public:
   int GetSelectedItem(){return mSelectedItem;}
   Vec2 GetSizeWithItems(float width, int itemCount);
 
-  int GetHighlightItem( ) { return mHighlightItem; }
-
   uint GetCount(){return mDataSource->GetCount();}
   void HighlightItem(int index);
   void SetDataSource(ListSource* source);
@@ -57,21 +56,24 @@ public:
   void SetBorderColor(Vec4Param color);
   Vec4 GetBorderColor();
 
-  bool mCustomBorderColor;
-
-private: 
   //Events
   void OnScrollUpdate(ObjectEvent* object);
   void OnMouseMove(MouseEvent* event);
   void OnMouseClick(MouseEvent* event);
   void OnMouseExit(MouseEvent* event);
   void OnMouseEnter(MouseEvent* event);
+  void OnMouseEnterItem(MouseEvent* event);
   void OnDoubleClick(MouseEvent* event);
   void DataModified(DataEvent* event);
   void DataDestroyed(DataEvent* event);
   void OnKeyDown(KeyboardEvent* event);
 
   int IndexFromPosition(Vec2Param localPosition);
+
+  bool mCustomBorderColor;
+
+  HandleOf<ToolTip> mToolTip;
+
   ListSource* mDataSource;
   Element* mBackground;
   Element* mBorder;
@@ -115,6 +117,7 @@ public:
   int GetSelectedItem( ) { return mSelectedItem; }
 
   void OnMouseDown(MouseEvent* event);
+  void OnMouseEnter(MouseEvent* event);
   void OnItemSelected(ObjectEvent* event);
   void OnListFocusLost(FocusEvent* event);
   void OnListFocusReset(FocusEvent* event);
@@ -137,7 +140,6 @@ public:
   ListSource* mDataSource;
   int mSelectedItem;
   bool mScrollToSelected;
-
 };
 
 //------------------------------------------------------------- String Combo Box

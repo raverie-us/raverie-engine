@@ -49,8 +49,8 @@ public:
     mModifier2 = Keys::Unknown;
     mMainKey = Keys::Unknown;
 
-    ConnectThisTo(this, Events::KeyDown, OnKeyDown);
-    ConnectThisTo(this, Events::KeyUp, OnKeyUp);
+    //ConnectThisTo(this, Events::KeyDown, OnKeyDown);
+    //ConnectThisTo(this, Events::KeyUp, OnKeyUp);
   }
 
   void GetVariant(Any& variant)
@@ -67,8 +67,6 @@ public:
 
   void OnKeyDown(KeyboardEvent* event)
   {
-    return;
-
     //if(mainKey == Keys::Unknown && event->Key >= Keys::A && event->Key <= Keys::Backslash)
     //  mainKey = event->Key;
     //if(modifier1 == Keys::Unknown && event->Key >= Keys::Up && event->Key <= Keys::NumPad9)
@@ -121,8 +119,6 @@ public:
 
   void OnKeyUp(KeyboardEvent* event)
   {
-    return;
-
     if(!event->mKeyboard->KeyIsDown(Keys::Control) && !event->mKeyboard->KeyIsDown(Keys::Shift) && !event->mKeyboard->KeyIsDown(Keys::Alt))
     {
       mModifier1 = Keys::Unknown;
@@ -169,27 +165,25 @@ public:
 
   void Edit( )
   {
-    String text;
-    BuildBindingString(text);
+    //String text;
+    //BuildBindingString(text);
 
-    TextBox* edit = new TextBox(this);
-    edit->SetTranslation(Vec3(0, 0, 0));
-    edit->SetText(text);
-    edit->SetSize(this->GetSize());
-    edit->SetEditable(true);
-    edit->TakeFocus();
+    //TextBox* edit = new TextBox(this);
+    //edit->SetTranslation(Vec3(0, 0, 0));
+    //edit->SetText(text);
+    //edit->SetSize(this->GetSize());
+    //edit->SetEditable(true);
+    //edit->TakeFocus();
 
-    ConnectThisTo(edit->mEditTextField, Events::TextBoxChanged, OnTextBoxChanged);
-    ConnectThisTo(edit->mEditTextField, Events::FocusLost, OnTextLostFocus);
+    //ConnectThisTo(edit->mEditTextField, Events::TextBoxChanged, OnTextBoxChanged);
+    //ConnectThisTo(edit->mEditTextField, Events::FocusLost, OnTextLostFocus);
 
-    mEdit = edit;
+    //mEdit = edit;
   }
 
   void OnTextBoxChanged(ObjectEvent* event)
   {
-    return;
-
-    InPlaceTextEditor::OnTextBoxChanged(event);
+    //InPlaceTextEditor::OnTextBoxChanged(event);
   }
 
   void OnTextLostFocus(FocusEvent* event)
@@ -197,7 +191,7 @@ public:
     //mModifier1 = Keys::Unknown;
     //mModifier2 = Keys::Unknown;
 
-    InPlaceTextEditor::OnTextLostFocus(event);
+    //InPlaceTextEditor::OnTextLostFocus(event);
   }
 
 };
@@ -522,10 +516,10 @@ DataEntry* HotKeyCommands::GetChild(DataEntry* dataEntry, uint index, DataEntry*
 /******************************************************************************/
 bool HotKeyCommands::IsExpandable(DataEntry* dataEntry)
 {
-  //  //only the root is expandable
-  //DataEntry* root = mSet;
-  //if(dataEntry == root)
-  //  return true;
+    //only the root is expandable
+  DataEntry* root = mSet;
+  if(dataEntry == root)
+    return true;
 
   return false;
 }

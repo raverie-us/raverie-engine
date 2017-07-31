@@ -174,8 +174,16 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     // Serialize the objects name
     stream.SerializeFieldDefault("Name", gameObject->mName, String(""));
 
-    // Serialize the link id
+    // Serialize the link id (old method of link ids)
     stream.SerializeFieldDefault("LinkId", localContextId, localContextId);
+
+    // Check for a link id attribute
+    static String sContextId = "ContextId";
+    forRange(DataAttribute& attribute, cogNode.mAttributes->All())
+    {
+      if(attribute.mName == sContextId)
+        ToValue(attribute.mValue, localContextId);
+    }
 
     while(stream.GetPolymorphic(componentNode))
     {

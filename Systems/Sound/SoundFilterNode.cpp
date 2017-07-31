@@ -1931,6 +1931,7 @@ ZilchDefineType(AdsrEnvelope, builder, type)
 {
   ZilchBindDefaultConstructor();
   ZeroBindDocumented();
+  type->CreatableInScript = true;
 
   ZilchBindField(DelayTime);
   ZilchBindField(AttackTime);

@@ -72,7 +72,7 @@ FindTextDialog::FindTextDialog(Composite* parent) : Composite(parent)
   // Create a search mode combo box
   new Label(this, cText, "Search Mode:");
   mSearchMode       = new ComboBox(this);
-  mSearchModeSource.SetEnum(SearchMode::Names);
+  mSearchModeSource.SetSource(SearchMode::Names);
   mSearchMode->SetListSource(&mSearchModeSource);
   ConnectThisTo(mSearchMode, Events::ItemSelected, SearchModeChanged);
 
@@ -97,13 +97,13 @@ FindTextDialog::FindTextDialog(Composite* parent) : Composite(parent)
   // Create a look-in combo box
   new Label(this, cText, "Look in:");
   mLookIn       = new ComboBox(this);
-  mLookInSource.SetEnum(LookIn::Names);
+  mLookInSource.SetSource(LookIn::Names);
   mLookIn->SetListSource(&mLookInSource);
 
   // Create a direction combo box
   mDirectionLabel  = new Label(this, cText, "Direction:");
   mDirection       = new ComboBox(this);
-  mDirectionSource.SetEnum(Direction::Names);
+  mDirectionSource.SetSource(Direction::Names);
   mDirection->SetListSource(&mDirectionSource);
 
   // Populate the char-mode array
@@ -120,7 +120,7 @@ FindTextDialog::FindTextDialog(Composite* parent) : Composite(parent)
   // Create a regex-flavor combo box
   mRegexFlavorLabel = new Label(this, cText, "Regex Flavor:");
   mRegexFlavor      = new ComboBox(this);
-  mRegexFlavorSource.SetEnum(RegexFlavor::Names);
+  mRegexFlavorSource.SetSource(RegexFlavor::Names);
   mRegexFlavor->SetListSource(&mRegexFlavorSource);
   mRegexFlavor->SetActive(false);
   mRegexFlavorLabel->SetActive(false);
