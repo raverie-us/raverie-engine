@@ -71,6 +71,10 @@ public:
   HashSet<String> mAllowedClassAttributes;
   HashSet<String> mAllowedFunctionAttributes;
   HashSet<String> mAllowedGetSetAttributes;
+
+  // We ignore duplicate exceptions until the version is incrmented
+  HashSet<String> mDuplicateExceptions;
+  int mLastExceptionVersion;
 };
 
 }//namespace Zero

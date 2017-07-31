@@ -308,6 +308,7 @@ void GraphicsEngine::StartProgress(Event* event)
   mShowProgressJob->mTargetPercent = 0.0f;
   mShowProgressJob->mProgressWidth = loadingTexture->mWidth;
   mShowProgressJob->mProgressText.Clear();
+  mShowProgressJob->mPerJobTimer.Reset();
   mShowProgressJob->Unlock();
 
   mShowProgressJob->Start();

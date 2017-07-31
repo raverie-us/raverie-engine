@@ -251,6 +251,7 @@ public:
   bool mSplashMode;
   float mSplashFade;
   Timer mTimer;
+  Timer mPerJobTimer;
 };
 
 } // namespace Zero

@@ -99,7 +99,8 @@ void ZilchFragmentLoader::ReloadFromFile(Resource* resource, ResourceEntry& entr
 ImplementResourceManager(ZilchFragmentManager, ZilchFragment);
 
 ZilchFragmentManager::ZilchFragmentManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+  : ResourceManager(resourceType),
+    mLastExceptionVersion(-1)
 {
   mCategory = "Code";
   mCanAddFile = true;
@@ -177,12 +178,24 @@ void ZilchFragmentManager::DispatchScriptError(StringParam eventId, StringParam 
 
   ZilchDocumentResource* resource = (ZilchDocumentResource*)location.CodeUserData;
 
-  DebugEngineEvent e;
-  e.Handled = false;
-  e.Script = resource;
-  e.Message = shortMessage;
-  e.Location = location;
-  Z::gResources->DispatchEvent(eventId, &e);
+  if (mLastExceptionVersion != ZilchManager::GetInstance()->mVersion)
+  {
+    mLastExceptionVersion = ZilchManager::GetInstance()->mVersion;
+    mDuplicateExceptions.Clear();
+  }
+
+  bool isDuplicate = mDuplicateExceptions.Contains(fullMessage);
+  mDuplicateExceptions.Insert(fullMessage);
+
+  if (!isDuplicate)
+  {
+    DebugEngineEvent e;
+    e.Handled = false;
+    e.Script = resource;
+    e.Message = shortMessage;
+    e.Location = location;
+    Z::gResources->DispatchEvent(eventId, &e);
+  }
 
   Console::Print(Filter::DefaultFilter, "%s", fullMessage.c_str());
 }

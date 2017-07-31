@@ -132,7 +132,7 @@ Object* CogRestoreState::RestoreObject()
   if(Cog* parent = mParent)
   {
     // Attach to the old parent
-    object->AttachTo(parent);
+    object->AttachToPreserveLocal(parent);
 
     // The parent object needs to know that we were locally added
     if(oldObject == nullptr)

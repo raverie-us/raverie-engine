@@ -242,7 +242,7 @@ void RelativeAttach(Transform* child, Transform* parent)
   child->SetRotation(Math::ToQuaternion(rotation));
   child->SetScale(scale);
   child->SetTranslation(translation);
-  child->GetOwner()->AttachTo(parent->GetOwner());
+  child->GetOwner()->AttachToPreserveLocal(parent->GetOwner());
 }
 
 }//namespace Zero

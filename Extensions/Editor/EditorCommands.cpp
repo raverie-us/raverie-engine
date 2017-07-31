@@ -226,7 +226,7 @@ void LoadObjectFromClipboard(Editor* editor, Space* space)
           object->mChildId = PolymorphicNode::cInvalidUniqueNodeId;
 
           // Attach it to the new parent
-          object->AttachTo(sharedParent);
+          object->AttachToPreserveLocal(sharedParent);
         }
 
         // The child objects that were pasted don't need to be moved in any way

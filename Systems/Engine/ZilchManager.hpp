@@ -51,6 +51,11 @@ public:
 
   // @TrevorS: We need to remove libraries from here if we remove them from the project.
   HashSet<ResourceLibrary*> mPendingLibraries;
+
+  // Every time we recompile libraries we increment a version globally.
+  // This lets us know elsewhere that anything related to types or scripts have changed.
+  // For example: We prevent duplicate exceptions until this version changes.
+  int mVersion;
 };
 
 }//namespace Zero

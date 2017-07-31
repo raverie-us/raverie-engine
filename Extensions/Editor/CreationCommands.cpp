@@ -127,7 +127,7 @@ void CreatePyramid(Space* space, Vec3Param pos, Vec3Param scale, uint levels, ui
       {
         Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(x,y,z), orientation, boxSize);
         cog->ClearArchetype();
-        cog->AttachToRelative(root);
+        cog->AttachTo(root);
       }
     }
   }
@@ -153,13 +153,13 @@ void CreateTeeter(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint
   Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(0,halfSize.y,0) + pos, 
     orientation, Vec3(size.x,size.y,size.x));
   cog->ClearArchetype();
-  cog->AttachToRelative(root);
+  cog->AttachTo(root);
 
 
   cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(0,size.y + halfSize.x,0) + pos, 
     orientation, Vec3(size.y * 2,size.x,size.x));
   cog->ClearArchetype();
-  cog->AttachToRelative(root);
+  cog->AttachTo(root);
 
   float newGround = size.y + size.x;
 
@@ -170,7 +170,7 @@ void CreateTeeter(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint
       Vec3(-size.y + halfSize.z ,newGround + halfSize.z + size.z * float(i) ,0) + pos, 
       orientation, Vec3(size.z,size.z,size.z));
     cog->ClearArchetype();
-    cog->AttachToRelative(root);
+    cog->AttachTo(root);
   }
 
   float big = size.z * float(levels);
@@ -179,7 +179,7 @@ void CreateTeeter(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint
     Vec3(size.y + -halfSize.z ,newGround + big * 0.5f ,0) + pos, 
     orientation, Vec3(size.z,big,size.z));
   cog->ClearArchetype();
-  cog->AttachToRelative(root);
+  cog->AttachTo(root);
 
   queue->EndBatch();
 }
@@ -209,7 +209,7 @@ void CreateTower(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint 
         Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(x,y,z) + pos, 
           orientation, Vec3(size.x,size.x,size.x));
         cog->ClearArchetype();
-        cog->AttachToRelative(root);
+        cog->AttachTo(root);
       }
     }
   }
@@ -243,7 +243,7 @@ void CreateWall(Space* space, Vec3Param pos, Vec3Param size, uint height, uint w
       Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(x,y,0) + pos, 
         orientation, size);
       cog->ClearArchetype();
-      cog->AttachToRelative(root);
+      cog->AttachTo(root);
     }
   }
 
@@ -292,14 +292,14 @@ void CreateBlockTower(Space* space, Vec3Param pos, Vec3Param size, uint height, 
         Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, 
           Vec3(x,y,0), orientation, scale);
         cog->ClearArchetype();
-        cog->AttachToRelative(root);
+        cog->AttachTo(root);
       }
       else
       {
         Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, 
           Vec3(0,y,x), orientation, scale);
         cog->ClearArchetype();
-        cog->AttachToRelative(root);
+        cog->AttachTo(root);
       }
     }
   }

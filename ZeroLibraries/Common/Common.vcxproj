@@ -171,6 +171,7 @@
     <ClInclude Include="Utility\Log2.hpp" />
     <ClInclude Include="Utility\MaxSizeof.hpp" />
     <ClInclude Include="Utility\NativeType.hpp" />
+    <ClInclude Include="Utility\PointerCast.hpp" />
     <ClInclude Include="Utility\Status.hpp" />
     <ClInclude Include="Utility\ForEachRange.hpp" />
     <ClInclude Include="Utility\Atomic.hpp" />

@@ -119,10 +119,10 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(FindRoot);
   ZilchBindGetter(Children);
 
+  ZilchBindMethod(AttachToPreserveLocal);
   ZilchBindMethod(AttachTo);
-  ZilchBindMethod(AttachToRelative);
+  ZilchBindMethod(DetachPreserveLocal);
   ZilchBindMethod(Detach);
-  ZilchBindMethod(DetachRelative);
 
   ZilchBindMethod(FindChildByName);
   ZilchBindMethod(FindAllChildrenByName);
@@ -324,7 +324,7 @@ Cog* Cog::Clone()
     Cog* clonedObject = CreateFromString(GetSpace(), stringData);
 
     if (Cog* parent = GetParent())
-      clonedObject->AttachTo(parent);
+      clonedObject->AttachToPreserveLocal(parent);
 
     return clonedObject;
   }
@@ -1002,7 +1002,7 @@ uint Cog::GetChildCount()
 }
 
 //**************************************************************************************************
-void Cog::AttachTo(Cog* parent)
+void Cog::AttachToPreserveLocal(Cog* parent)
 {
   if (parent == nullptr)
   {
@@ -1046,7 +1046,7 @@ void Cog::AttachTo(Cog* parent)
 
   // Deal with already having a parent
   if (GetParent() != parent)
-    Detach();
+    DetachPreserveLocal();
 
   if (mHierarchyParent == nullptr)
   {
@@ -1098,7 +1098,7 @@ void Cog::AttachTo(Cog* parent)
 }
 
 //**************************************************************************************************
-void Cog::AttachToRelative(Cog* parent)
+void Cog::AttachTo(Cog* parent)
 {
   if (parent == nullptr || parent == this)
     return;
@@ -1112,7 +1112,7 @@ void Cog::AttachToRelative(Cog* parent)
   // If the child has no Transform, there's no relative attachment needed
   if (childTransform == nullptr)
   {
-    AttachTo(parent);
+    AttachToPreserveLocal(parent);
     return;
   }
 
@@ -1132,7 +1132,7 @@ void Cog::AttachToRelative(Cog* parent)
   relativeTransformation.Decompose(&scale, &rotation, &translation);
 
   // Attach the child
-  AttachTo(parent);
+  AttachToPreserveLocal(parent);
 
   // Set his new transformation
   //if the child wants to be in world after the attachment, don't reset
@@ -1147,7 +1147,7 @@ void Cog::AttachToRelative(Cog* parent)
 }
 
 //**************************************************************************************************
-void Cog::Detach()
+void Cog::DetachPreserveLocal()
 {
   Cog* parent = mHierarchyParent;
   if (parent == nullptr)
@@ -1203,7 +1203,7 @@ void Cog::Detach()
 }
 
 //**************************************************************************************************
-void Cog::DetachRelative()
+void Cog::Detach()
 {
   // Can't do anything if there's nothing to detach from
   if (mHierarchyParent == nullptr)
@@ -1216,7 +1216,7 @@ void Cog::DetachRelative()
   Transform* childTransform = this->has(Transform);
   if (childTransform == nullptr)
   {
-    Detach();
+    DetachPreserveLocal();
     return;
   }
 
@@ -1229,7 +1229,7 @@ void Cog::DetachRelative()
   childTransformation.Decompose(&scale, &rotation, &translation);
 
   // Detach the child
-  Detach();
+  DetachPreserveLocal();
 
   // Set his new transformation
   childTransform->SetScale(scale);
@@ -1434,7 +1434,7 @@ void Cog::ReplaceChild(Cog* oldChild, Cog* newChild)
   }
 
   // Attach the new child
-  newChild->AttachTo(this);
+  newChild->AttachToPreserveLocal(this);
 
   // Move to same location
   // When we attached the new child, it was added to the child list,
@@ -1442,7 +1442,7 @@ void Cog::ReplaceChild(Cog* oldChild, Cog* newChild)
   hierarchy->Children.Erase(newChild);
   hierarchy->Children.InsertAfter(oldChild, newChild);
 
-  oldChild->Detach();
+  oldChild->DetachPreserveLocal();
 
   Event eventToSend;
   DispatchEvent(Events::ChildrenOrderChanged, &eventToSend);

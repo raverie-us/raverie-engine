@@ -141,7 +141,15 @@ void ZilchPluginBuilder::Generate(ContentInitializer& initializer)
 
 void ZilchPluginBuilder::BuildContent(BuildOptions& buildOptions)
 {
+  // This must run before the template early out so that we output the data file
+  // to the content output directory and the template plugin stops thinking it needs
+  // to build every time we run Zero.
   DataBuilder::BuildContent(buildOptions);
+
+  // Don't build the resource template plugin.
+  // This stops a stub dll from getting into our Editor resources directory.
+  if (mOwner->has(ResourceTemplate))
+    return;
 
   String sharedLibraryFileName = GetSharedLibraryFileName();
   String destFile = FilePath::Combine(buildOptions.OutputPath, sharedLibraryFileName);

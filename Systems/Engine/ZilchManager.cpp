@@ -32,9 +32,9 @@ ZilchCompileEvent::ZilchCompileEvent(HashSet<ResourceLibrary*>& modifiedLibrarie
 
 //------------------------------------------------------------------------------------ Zilch Manager
 //**************************************************************************************************
-ZilchManager::ZilchManager()
+ZilchManager::ZilchManager() :
+  mVersion(0)
 {
-
 }
 
 //**************************************************************************************************
@@ -54,6 +54,8 @@ CompileResult::Enum ZilchManager::Compile()
   if(mPendingLibraries.Empty())
     return CompileResult::CompilationNotRequired;
 
+  ++mVersion;
+
   // Since we binary cache archetypes (in a way that is NOT saving the data tree, but rather a 'known serialization format'
   // then if we moved any properties around in any script it would completely destroy how the archetypes were cached
   // The simplest solution is to clear the cache
@@ -69,7 +71,8 @@ CompileResult::Enum ZilchManager::Compile()
   forRange(ResourceLibrary* resourceLibrary, compileEvent.mModifiedLibraries.All())
     resourceLibrary->Commit();
 
-  // @TrevorS: Refactor this to remove a global dependence on a single library.  if(mPendingFragmentProjectLibrary)
+  // @TrevorS: Refactor this to remove a global dependence on a single library.
+  if(mPendingFragmentProjectLibrary)
   {
     mCurrentFragmentProjectLibrary = mPendingFragmentProjectLibrary;
     mPendingFragmentProjectLibrary = nullptr;

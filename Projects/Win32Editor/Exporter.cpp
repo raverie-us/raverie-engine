@@ -212,8 +212,6 @@ void BuildContent(ProjectSettings* project);
 
 void Exporter::BeginExport()
 {
-  //Z::gEngine->LoadingStart();
-
   // Save all resources and build them so the 
   // output directory is up to date
   Editor* editor = Z::gEditor;

@@ -158,10 +158,10 @@ void SetNetObjectParentProperty(const Variant& value, Variant& propertyData)
     if(currentParent != newParent)
     {
       // Detach from old parent
-      owner->Detach();
+      owner->DetachPreserveLocal();
 
       // Attach to new parent
-      owner->AttachTo(newParent);
+      owner->AttachToPreserveLocal(newParent);
     }
   }
   // Parent Cleared?
@@ -171,7 +171,7 @@ void SetNetObjectParentProperty(const Variant& value, Variant& propertyData)
     if(currentParent)
     {
       // Detach from parent
-      owner->Detach();
+      owner->DetachPreserveLocal();
     }
   }
 }

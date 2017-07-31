@@ -169,7 +169,8 @@ void ZilchScriptLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 ImplementResourceManager(ZilchScriptManager, ZilchScript);
 
 ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+  : ResourceManager(resourceType),
+    mLastExceptionVersion(-1)
 {
   //mDebugger.AddProject(&mProject);
   //EventConnect(&mDebugger, Events::DebuggerPause, OnDebuggerPause);
@@ -393,14 +394,27 @@ void ZilchScriptManager::CheckDependencies(BoundType* classType, Property* prope
 
 void ZilchScriptManager::DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location)
 {
+  ZilchScriptManager* instance = ZilchScriptManager::GetInstance();
   Resource* resource = (Resource*)location.CodeUserData;
 
-  DebugEngineEvent e;
-  e.Handled = false;
-  e.Script = Type::DynamicCast<DocumentResource*>(resource);
-  e.Message = shortMessage;
-  e.Location = location;
-  Z::gResources->DispatchEvent(eventId, &e);
+  if (instance->mLastExceptionVersion != ZilchManager::GetInstance()->mVersion)
+  {
+    instance->mLastExceptionVersion = ZilchManager::GetInstance()->mVersion;
+    instance->mDuplicateExceptions.Clear();
+  }
+
+  bool isDuplicate = instance->mDuplicateExceptions.Contains(fullMessage);
+  instance->mDuplicateExceptions.Insert(fullMessage);
+
+  if (!isDuplicate)
+  {
+    DebugEngineEvent e;
+    e.Handled = false;
+    e.Script = Type::DynamicCast<DocumentResource*>(resource);
+    e.Message = shortMessage;
+    e.Location = location;
+    Z::gResources->DispatchEvent(eventId, &e);
+  }
 
   Console::Print(Filter::DefaultFilter, "%s", fullMessage.c_str());
 }
