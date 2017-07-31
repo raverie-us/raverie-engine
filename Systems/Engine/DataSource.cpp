@@ -248,6 +248,8 @@ void EnumSource::FillOutDescriptions( )
   int size = (int)mNames.Size( );
   String enumName = mEnumType->Name.c_str( );
 
+  mDescriptions.Reserve(size);
+
   EnumDoc* enumDoc = Z::gDocumentation->mEnumAndFlagMap.FindValue(enumName, nullptr);
   if(enumDoc == nullptr)
   {
