@@ -20,6 +20,24 @@ Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(float, ToolTipWrapWidth, 280.0f, cLocation);
 }
 
+
+// Fill out necessary tooltip information for a Composite, if available.
+bool GetToolTipText(int index, ListSource* source, StringBuilder* toolTipText)
+{
+  String valueDescription = source->GetDescriptionAt(index);
+
+  // No need for a tool tip if there is no description.
+  if(valueDescription.Empty( ))
+    return false;
+
+  *toolTipText << source->GetStringValueAt(index);
+  *toolTipText << "\n\n";
+  *toolTipText << valueDescription;
+
+  return true;
+}
+
+
 //----------------------------------------------------------- Tool Tip Placement
 //******************************************************************************
 ToolTipPlacement::ToolTipPlacement()
@@ -240,6 +258,21 @@ Text* ToolTip::SetText(StringParam text)
   // Set it as the content
   SetContent(textObject);
   return textObject;
+}
+
+//******************************************************************************
+void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
+{
+  SetText(text);
+  SetColor(ToolTipColor::Default);
+
+  ToolTipPlacement placement;
+  placement.SetScreenRect(placementRect);
+
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
+    IndicatorSide::Bottom, IndicatorSide::Top);
+
+  SetArrowTipTranslation(placement);
 }
 
 //******************************************************************************

@@ -50,6 +50,7 @@ namespace Zero
         continue;
 
       CommandDoc* currDoc = new CommandDoc();
+      
       commandListDoc.PushBack(currDoc);
 
       currDoc->mName = currCommand->Name;
@@ -63,7 +64,26 @@ namespace Zero
     }
     commandDocs.Sort();
 
-    SaveToDataFile(commandDocs, fileName);
+    Status status;
+
+    TextSaver saver;
+    saver.Open(status, fileName.c_str());
+
+    if (status.Failed())
+    {
+      Error("Unable to save command list file: %s\n", fileName);
+      return;
+    }
+
+    saver.StartPolymorphic("CommandList");
+
+    saver.SerializeField("Commands", commandDocs.mCommands);
+
+    saver.EndPolymorphic();
+
+    saver.Close();
+
+    //SaveToDataFile(commandDocs, fileName);
   }
 
   void SaveListOfCommands()
@@ -97,7 +117,26 @@ namespace Zero
 
     allTheEvents.Sort();
 
-    SaveToDataFile(allTheEvents, fileName);
+    Status status;
+    TextSaver saver;
+
+    saver.Open(status, fileName.c_str());
+
+    if (status.Failed())
+    {
+      Error("Unable to save command list file: %s\n", fileName);
+      return;
+    }
+
+    saver.StartPolymorphic("EventList");
+
+    saver.SerializeField("Events", allTheEvents.mEvents);
+
+    saver.EndPolymorphic();
+
+    saver.Close();
+
+    //SaveToDataFile(allTheEvents, fileName);
   }
 
   void SaveEventList()

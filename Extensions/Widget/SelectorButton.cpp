@@ -36,6 +36,8 @@ SelectorButton::SelectorButton(Composite* parent)
 {
   SetLayout(CreateStackLayout(LayoutDirection::LeftToRight ,Pixels(2,2),
                               Thickness::cZero));
+
+  mDataSource = nullptr;
   mSelectedItem = 0;
   mHoverItem = -1;
 
@@ -76,6 +78,8 @@ void SelectorButton::CreateButtons(const cstr* names, uint count)
 //******************************************************************************
 void SelectorButton::CreateButtons(ListSource* source)
 {
+  mDataSource = source;
+
   // Clear any old buttons
   Clear();
 
@@ -101,6 +105,12 @@ void SelectorButton::SetSelectedItem(int index, bool sendEvent)
 int SelectorButton::GetSelectedItem()
 {
   return mSelectedItem;
+}
+
+//******************************************************************************
+ListSource* SelectorButton::GetDataSource( )
+{
+  return mDataSource;
 }
 
 //******************************************************************************
@@ -132,6 +142,14 @@ void SelectorButton::OnMouseHover(MouseEvent* event)
     if(mButtons[i]->mMouseOver)
     {
       mHoverItem = i;
+
+      mToolTip.SafeDestroy( );
+      mToolTip = new ToolTip(this);
+
+      StringBuilder toolTipText;
+      if(GetToolTipText(i, mDataSource, &toolTipText))
+        mToolTip->SetTextAndPlace(toolTipText.ToString( ), this->GetScreenRect( ));
+
       break;
     }
 

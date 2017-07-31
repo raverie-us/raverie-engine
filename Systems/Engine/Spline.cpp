@@ -42,6 +42,7 @@ ZilchDefineType(SplineControlPoint, builder, type)
   ZilchBindDestructor();
   ZilchBindDefaultConstructor();
   ZilchBindConstructor(Vec3Param);
+  type->CreatableInScript = true;
 }
 
 SplineControlPoint::SplineControlPoint()
@@ -154,6 +155,7 @@ ZilchDefineType(SplineBakedPoint, builder, type)
   ZilchBindDestructor();
   ZilchBindDefaultConstructor();
   ZilchBindConstructor(Vec3Param);
+  type->CreatableInScript = true;
 }
 
 SplineBakedPoint::SplineBakedPoint()
@@ -209,6 +211,7 @@ ZilchDefineType(SplineSampleData, builder, type)
 {
   ZilchBindDestructor();
   ZilchBindDefaultConstructor();
+  type->CreatableInScript = true;
   ZilchBindMember(mWorldPoint);
   ZilchBindMember(mWorldTangent);
 }

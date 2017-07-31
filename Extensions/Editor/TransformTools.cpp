@@ -803,8 +803,6 @@ ZilchDefineType(ManipulatorTool, builder, type)
   ZeroBindTag(Tags::Tool);
   ZilchBindFieldProperty(mSizeBoxCollider);
   ZilchBindFieldProperty(mScalingMode);
-  ZilchBindFieldProperty(mSnapping);
-  ZilchBindGetterSetterProperty(SnapDistance);
 }
 
 //******************************************************************************

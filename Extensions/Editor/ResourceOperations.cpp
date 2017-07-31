@@ -151,6 +151,11 @@ Resource* AddNewResource(ResourceManager* resourceManager, ResourceAdd& resource
 
     //Load the new resource
     resourceAdd.SourceResource = LoadResourceFromNewContentItem(resourceManager, newContentItem, resourceAdd.SourceResource);
+
+    // Notify the resource system and the relevant resource manage that a new resource was created
+    ResourceEvent toSend(resourceManager, resourceAdd.SourceResource);
+    Z::gResources->DispatchEvent(Events::ResourceNewlyCreated, &toSend);
+    resourceManager->DispatchEvent(Events::ResourceNewlyCreated, &toSend);
   }
   else
   {

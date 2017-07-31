@@ -31,6 +31,8 @@ struct ResourceAdd;
 // Events
 namespace Events
 {
+  // Sent when a new resource is created (not duplicated)
+  DeclareEvent(ResourceNewlyCreated);
   DeclareEvent(ResourceAdded);
   DeclareEvent(ResourceModified);
   DeclareEvent(ResourceRemoved);

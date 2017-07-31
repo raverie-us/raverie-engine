@@ -14,6 +14,7 @@ String ResourceTable::mStringType = "String";
 //-------------------------------------------------------------------ResourceTableEntry
 ZilchDefineType(ResourceTableEntry, builder, type)
 {
+  type->CreatableInScript = true;
   ZilchBindDefaultCopyDestructor();
   ZeroBindDocumented();
 

@@ -12,6 +12,9 @@
 namespace Zero
 {
 
+// Fill out necessary tooltip information for a Composite, if available.
+bool GetToolTipText(int index, ListSource* source, StringBuilder* toolTipText);
+
 //----------------------------------------------------------- Tool Tip Placement
 DeclareEnum4(IndicatorSide, Left, Top, Right, Bottom);
 
@@ -59,6 +62,10 @@ public:
 
   /// Creates a text object and sets it as the content.
   Text* SetText(StringParam text);
+
+  /// Simple compound setter.  Calls 'SetText' with the additional ability
+  /// to set the tooltip's position.
+  void SetTextAndPlace(StringParam text, RectParam placementRect);
 
   /// Sets the arrow to point at the giving screen position.
   /// Returns whether or not the tooltip will be off the screen at all.
