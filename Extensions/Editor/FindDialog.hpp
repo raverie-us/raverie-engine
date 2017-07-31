@@ -233,18 +233,18 @@ private:
 
   // What search mode are we in? (find next, find all, replace next, replace all...)
   ComboBox* mSearchMode;
-  EnumSourceSpaced mSearchModeSource;
+  CStrSourceSpaced mSearchModeSource;
 
   // What files are we looking in?
   ComboBox* mLookIn;
-  EnumSourceSpaced mLookInSource;
+  CStrSourceSpaced mLookInSource;
 
   // Store the direction label
   Label* mDirectionLabel;
 
   // The search direction
   ComboBox* mDirection;
-  EnumSource mDirectionSource;
+  CStrSourceStd mDirectionSource;
 
   // Whether we're normally searching, searching with extended characters, or using regular expressions
   ComboBox* mCharacterMode;
@@ -255,7 +255,7 @@ private:
 
   // The flavor of regular expression that we're using (only available when char-mode is regex)
   ComboBox* mRegexFlavor;
-  EnumSource mRegexFlavorSource;
+  CStrSourceStd mRegexFlavorSource;
 
   // Match an entire word only
   TextCheckBox* mMatchWholeWord;
