@@ -279,11 +279,11 @@ bool LoadEditorContent(Cog* configCog)
 
   ShowBuiltInResource<RenderGroupManager>("AdditiveBlend");
   ShowBuiltInResource<RenderGroupManager>("AlphaBlend");
-  ShowBuiltInResource<RenderGroupManager>("AlphaCut");
   ShowBuiltInResource<RenderGroupManager>("DebugDraw");
   ShowBuiltInResource<RenderGroupManager>("DebugDrawOnTop");
   ShowBuiltInResource<RenderGroupManager>("Lights");
   ShowBuiltInResource<RenderGroupManager>("Opaque");
+  ShowBuiltInResource<RenderGroupManager>("OpaqueDoubleSided");
   ShowBuiltInResource<RenderGroupManager>("ShadowCasters");
   ShowBuiltInResource<RenderGroupManager>("ZSort");
 

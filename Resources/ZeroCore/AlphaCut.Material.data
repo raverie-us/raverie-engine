@@ -3,7 +3,7 @@ Material
 {
 	var RenderGroups = Array
 	{
-		"58f4ed78bda39ec5:AlphaCut"
+		"58f4ed78bda39ec5:OpaqueDoubleSided"
 		"580269d9a1d6b870:ShadowCasters"
 	}
 	AlphaDiscard 
