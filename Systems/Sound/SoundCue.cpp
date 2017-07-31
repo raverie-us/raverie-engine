@@ -128,8 +128,8 @@ void SoundEntry::Preview()
     instance->Play(false, nullptr, nullptr, false);
     // Save the SoundInstance
     Z::gSound->mPreviewInstance = instance;
-    // Connect it to the audio engine's output node
-    Z::gSound->mAudioSystem->AddNodeToOutput(instance->mSoundNode->mNode);
+    // Connect it to the audio system's output node
+    Z::gSound->mOutputNode->AddInputNode(instance->mSoundNode);
   }
   else
   {
@@ -453,7 +453,7 @@ void SoundCue::Preview()
   if (instance)
   {
     // Connect it to the audio system's output 
-    Z::gSound->mAudioSystem->AddNodeToOutput(instance->mSoundNode->mNode);
+    Z::gSound->mOutputNode->AddInputNode(instance->mSoundNode);
   }
 }
 

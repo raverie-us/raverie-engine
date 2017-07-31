@@ -76,13 +76,12 @@ private:
   unsigned mNodeHeight;
   int mMaxLevel;
 
-
   void CreateInfo(Audio::SoundNode* node, Audio::SoundNode* outputNode, int level);
   void CheckForCollision(NodeInfoListType& list, float& minXpos);
   void AddSpacePadding(NodePrintInfo* node, float addToXPos);
   void FirstPassPositioning(Array<NodeInfoListType>& infoByLevel, int largestLevel);
-  void SecondPassPositioning(Array<NodeInfoListType> &infoByLevel, int largestLevel, float& minXpos);
-  void PositionCleanUp(Array<NodeInfoListType> &infoByLevel, int largestLevel, float& minXpos);
+  void SecondPassPositioning(Array<NodeInfoListType>& infoByLevel, int largestLevel, float& minXpos);
+  void PositionCleanUp(Array<NodeInfoListType>& infoByLevel, int largestLevel, float& minXpos);
 };
 
 }

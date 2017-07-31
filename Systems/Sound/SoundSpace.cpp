@@ -56,7 +56,7 @@ SoundSpace::SoundSpace() :
 SoundSpace::~SoundSpace()
 {
   // Remove this space from the system's list
-  mSoundSystem->mSpaces.Erase(this);
+  Z::gSound->mSpaces.Erase(this);
   // Remove the output node from the audio system
   if (mInputNode && mInputNode->mNode)
   {
@@ -79,19 +79,19 @@ SoundSpace::~SoundSpace()
 //**************************************************************************************************
 void SoundSpace::Initialize(CogInitializer& config)
 {
-  // Store pointers to the sound system and audio system
-  mSoundSystem = Z::gEngine->has(SoundSystem);
-  mAudioSystem = mSoundSystem->mAudioSystem;
   // Add this space to the system's list
-  mSoundSystem->mSpaces.PushBack(this);
+  Z::gSound->mSpaces.PushBack(this);
   // Are we in editor mode?
-  mEditorMode = ((Space*)this->GetOwner())->IsEditorMode();
+  mEditorMode = GetOwner()->IsEditorMode();
 
   // Create the input node
   mSpaceNodeID = Z::gSound->mCounter++;
   mInputNode = new SoundNode();
   Status status;
-  mInputNode->SetNode(new Audio::CombineAndPauseNode(status, "Space", mSpaceNodeID, 
+  String name("Space");
+  if (mEditorMode)
+    name = "EditorSpace";
+  mInputNode->SetNode(new Audio::CombineAndPauseNode(status, name, mSpaceNodeID, 
     &mNodeInterface), status);
 
   if (status.Failed())
@@ -103,7 +103,7 @@ void SoundSpace::Initialize(CogInitializer& config)
 
   // Create the volume node as the output node
   mOutputNode = new SoundNode();
-  mVolumeNode = new Audio::VolumeNode(status, "Space", mSpaceNodeID, &mNodeInterface);
+  mVolumeNode = new Audio::VolumeNode(status, name, mSpaceNodeID, &mNodeInterface);
   mOutputNode->SetNode(mVolumeNode, status);
 
   if (status.Failed())
@@ -114,7 +114,7 @@ void SoundSpace::Initialize(CogInitializer& config)
   mOutputNode->mCanReplace = false;
   mOutputNode->mCanRemove = false;
 
-  mAudioSystem->AddNodeToOutput(mOutputNode->mNode);
+  Z::gSound->mOutputNode->AddInputNode(mOutputNode);
 }
 
 //**************************************************************************************************
