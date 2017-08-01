@@ -75,14 +75,12 @@ public:
 //Internals
   InList<SoundEmitter> mEmitters;
   InList<SoundListener> mListeners;
-  Audio::AudioSystemInterface* mAudioSystem;
   Link<SoundSpace> link;
 
   void Update();
   InList<SoundListener>* GetListeners();
 
 private:
-  SoundSystem* mSoundSystem;
   Audio::PitchNode* mPitchNode;
   Audio::VolumeNode* mVolumeNode;
   float mVolume;

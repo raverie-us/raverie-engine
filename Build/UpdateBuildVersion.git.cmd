@@ -10,7 +10,7 @@ SET BuildIdBranchFileName="%BuildVersionIdsFolder%\default.txt"
 REM Extract the "revision id" from git. This is number of commits from HEAD to the root of the repo
 SET cmd=git rev-list --count HEAD
 FOR /F "tokens=*" %%i IN (' %cmd% ') DO SET RevisionId=%%i
-SET RevisionIdDefine=#define RevisionId %RevisionId%
+SET RevisionIdDefine=#define ZeroRevisionId %RevisionId%
 
 REM Output a pragma once, the version id file, and the revision id
 @echo #pragma once > %TempFile%

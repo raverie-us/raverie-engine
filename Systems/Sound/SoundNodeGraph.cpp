@@ -36,6 +36,10 @@ SoundNodeGraph::~SoundNodeGraph()
 // Adds new NodePrintInfo to the map
 void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* outputNode, int level)
 {
+  // If this is an editor space, skip it and its parents
+  if (node->Name == "EditorSpace")
+    return;
+
   // Keep track of the highest level
   if (level > mMaxLevel)
     mMaxLevel = level;
@@ -478,25 +482,19 @@ NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
   float minXpos(0.0f);
   mNodeMap.Clear();
 
-  // Go through all current spaces
-  forRange(SoundSpace& space, Z::gSound->mSpaces.All())
-  {
-    // Don't print the editor spaces
-    if (((Space*)space.GetOwner())->IsEditorMode())
-      continue;
-
-    // Don't print spaces with no graph
-    if (!space.mInputNode->GetHasInputs())
-      continue;
-
-    // Add all nodes in this space
-    CreateInfo(space.mInputNode->mNode, nullptr, 0);
-  }
+  // Create all node info objects, starting with the system's output node
+  CreateInfo(Z::gSound->mOutputNode->mNode, nullptr, 0);
 
   // Sort nodes by level
   Array<Array<NodePrintInfo*>> infoByLevel(mMaxLevel + 1);
   forRange(NodePrintInfo* nodeInfo, mNodeMap.Values())
+  {
+    // Skip space nodes with no parents
+    if (nodeInfo->mName == "Space" && nodeInfo->mParents.Empty())
+      continue;
+
     infoByLevel[nodeInfo->mLevel].PushBack(nodeInfo);
+  }
 
   // Find first level with the most nodes
   int largestLevel(0);
@@ -527,10 +525,6 @@ NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
       }
     }
   }
-
-  // Add additional room between spaces
-  for (unsigned i = 1; i < infoByLevel[0].Size(); ++i)
-    AddSpacePadding(infoByLevel[0][i], i * mNodeWidth * 0.75f);
 
   // If there are already node objects in the list, delete them and clear the list
   forRange(NodePrintInfo* info, mNodeInfoList.All())

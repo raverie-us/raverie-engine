@@ -93,7 +93,7 @@ class ForwardRenderer : ZilchComponent
       event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.Opaque, forwardPassShadows);
       
       forwardSettings.CullMode = CullMode.Disabled;
-      event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.AlphaCut, forwardPassShadows);
+      event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.OpaqueDoubleSided, forwardPassShadows);
     }
     else
     {
@@ -120,7 +120,7 @@ class ForwardRenderer : ZilchComponent
       event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.Opaque, forwardPass);
       
       forwardSettings.CullMode = CullMode.Disabled;
-      event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.AlphaCut, forwardPass);
+      event.AddRenderTaskRenderPass(forwardSettings, RenderGroup.OpaqueDoubleSided, forwardPass);
     }
     
     // Additive materials

@@ -80,6 +80,8 @@ SoundSystem::~SoundSystem()
     mPreviewInstance = nullptr;
   }
 
+  mOutputNode->mNode = nullptr;
+
   Zero::Status status;
   mAudioSystem->StopSystem(status);
   ErrorIf(status.Failed(), status.Message.c_str());
@@ -99,6 +101,11 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
     DoNotifyWarning("Audio Error", status.Message);
 
   mAudioMessage = status.Message;
+
+  SoundNode* node = new SoundNode();
+  node->SetNode(new Audio::CombineNode(status, "AudioOutput", mCounter++, nullptr), status);
+  mAudioSystem->AddNodeToOutput(node->mNode);
+  mOutputNode = node;
   
   InitializeResourceManager(SoundManager);
   SoundManager::GetInstance()->SetSystem(mAudioSystem);
