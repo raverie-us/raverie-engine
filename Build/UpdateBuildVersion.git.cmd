@@ -1,7 +1,7 @@
 @echo off
 
 SET ZERO_SOURCE=%~1
-SET TempFile=%~2
+SET TempFile=%2
 SET BuildFolder=%ZERO_SOURCE%\Build
 SET BuildVersionIdsFolder=%BuildFolder%\BuildVersionIds
 REM Hardcode to the default build info file. Branch information is not part of a commit node in git.

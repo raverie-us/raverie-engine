@@ -1,8 +1,0 @@
-[Version:1]
-ContentLibrary 
-{
-	var Name = "Core"
-	var LibraryId = 0x591bab5516b57bad
-	var SourceControlType = ""
-	var ReadOnly = false
-}

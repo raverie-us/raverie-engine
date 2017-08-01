@@ -111,10 +111,10 @@ ZilchDefineType(NetObject, builder, type)
       netUserOwnerUserIdProperty->AddAttribute(PropertyAttributes::cHidden);
       netUserOwnerPeerIdProperty->AddAttribute(PropertyAttributes::cHidden);
     }*/
-    // ZilchBindMethod(SetNetUserOwnerUpById);
     ZilchBindMethod(SetNetUserOwnerUp);
-    // ZilchBindMethod(SetNetUserOwnerDownById);
+    // ZilchBindMethod(SetNetUserOwnerUpById);
     ZilchBindMethod(SetNetUserOwnerDown);
+    // ZilchBindMethod(SetNetUserOwnerDownById);
   }
 
   // Bind network dispatch interface
@@ -1830,6 +1830,26 @@ void NetObject::SetNetUserOwner(Cog* cog)
   SetNetUserOwnerUserId(netUserId);
 }
 
+void NetObject::SetNetUserOwnerUp(Cog* cog)
+{
+  NetUserId netUserId = 0;
+
+  // Valid cog?
+  if(cog)
+  {
+    // Get net user ID
+    NetUser* netUser = cog->has(NetUser);
+    if(!netUser) // Unable?
+    {
+      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
+      return;
+    }
+    netUserId = netUser->mNetUserId;
+  }
+
+  // Set net user owner
+  SetNetUserOwnerUpById(netUserId);
+}
 void NetObject::SetNetUserOwnerUpById(NetUserId netUserId)
 {
   // Get net peer
@@ -1856,7 +1876,8 @@ void NetObject::SetNetUserOwnerUpById(NetUserId netUserId)
     parentNetObject->SetNetUserOwnerUpById(netUserId);
   }
 }
-void NetObject::SetNetUserOwnerUp(Cog* cog)
+
+void NetObject::SetNetUserOwnerDown(Cog* cog)
 {
   NetUserId netUserId = 0;
 
@@ -1874,9 +1895,8 @@ void NetObject::SetNetUserOwnerUp(Cog* cog)
   }
 
   // Set net user owner
-  SetNetUserOwnerUpById(netUserId);
+  SetNetUserOwnerDownById(netUserId);
 }
-
 void NetObject::SetNetUserOwnerDownById(NetUserId netUserId)
 {
   // Get net peer
@@ -1908,26 +1928,6 @@ void NetObject::SetNetUserOwnerDownById(NetUserId netUserId)
       }
     }
   }
-}
-void NetObject::SetNetUserOwnerDown(Cog* cog)
-{
-  NetUserId netUserId = 0;
-
-  // Valid cog?
-  if(cog)
-  {
-    // Get net user ID
-    NetUser* netUser = cog->has(NetUser);
-    if(!netUser) // Unable?
-    {
-      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
-      return;
-    }
-    netUserId = netUser->mNetUserId;
-  }
-
-  // Set net user owner
-  SetNetUserOwnerDownById(netUserId);
 }
 
 void NetObject::HandleNetUserOwnerChanged(NetUserId previousNetUserOwnerUserId)

@@ -64,7 +64,8 @@ namespace Zero
   NetDiscoveryInterface::NetDiscoveryInterface(NetPeer* netPeer)
   : NetPeerConnectionInterface(netPeer),
     mDiscoveryMode(NetDiscoveryMode::Idle),
-    mPingManager(netPeer)
+    mPingManager(netPeer),
+    mPendingCancelRefreshes(false)
   {
   }
 
@@ -75,9 +76,24 @@ namespace Zero
 
     // Do custom logic that Specific implementations of net discovery might have
     OnEngineUpdate(event);
+
+    // Pending cancel refreshes request?
+    // (Frame delayed until now to avoid possible infinite recursion)
+    if(mPendingCancelRefreshes)
+    {
+      CancelRefreshesNow();
+      mPendingCancelRefreshes = false;
+    }
   }
 
   void NetDiscoveryInterface::CancelRefreshes()
+  {
+    // Delay the cancel refreshes request until next frame
+    // (This avoids a possible infinite recursion scenario)
+    mPendingCancelRefreshes = true;
+  }
+
+  void NetDiscoveryInterface::CancelRefreshesNow()
   {
     if(mOpenHostRequests.Size() > 0)
     {

@@ -36,6 +36,7 @@ ZilchDefineEnum(SpriteOrigin);
 ZilchDefineEnum(TileEditor2DSubToolType);
 ZilchDefineEnum(SpringSubTools);
 ZilchDefineEnum(ImportMode);
+ZilchDefineEnum(PlayGameOptions);
 
 ZilchDefineType(MetaCompositionWrapper, builder, type)
 {
@@ -73,6 +74,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeEnum(TileEditor2DSubToolType);
   ZilchInitializeEnum(SpringSubTools);
   ZilchInitializeEnum(ImportMode);
+  ZilchInitializeEnum(PlayGameOptions);
 
   // Events
   ZilchInitializeType(BackgroundTaskEvent);

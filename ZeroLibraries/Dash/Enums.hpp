@@ -13,18 +13,24 @@ namespace Zero
 // Peer Enums
 //
 
-/// Peer transport layer protocol
+/// Peer transport layer protocol.
+/// <param name="Unspecified">Unspecified transport layer protocol.</param>
+/// <param name="Tcp">Transmission control protocol.</param>
+/// <param name="Udp">User datagram protocol.</param>
 DeclareEnum3(TransportProtocol,
-  Unspecified, /// Unspecified transport layer protocol
-  Tcp,         /// Transmission control protocol
-  Udp);        /// User datagram protocol
+  Unspecified,
+  Tcp,
+  Udp);
 
-/// Peer incoming connect response mode
+/// Peer incoming connect response mode.
+/// <param name="Accept">Accepts all appropriate incoming connection requests.</param>
+/// <param name="Deny">Denies all appropriate incoming connection requests.</param>
+/// <param name="Custom">Notifies the user of all appropriate incoming connection requests,
+///                      call PeerLink::RespondToConnectRequest() ASAP to accept or deny them.</param>
 DeclareEnum3(ConnectResponseMode,
-  Accept,  /// Accepts all appropriate incoming connection requests
-  Deny,    /// Denies all appropriate incoming connection requests
-  Custom); /// Notifies the user of all appropriate incoming connection requests,
-           /// call PeerLink::RespondToConnectRequest() ASAP to accept or deny them
+  Accept,
+  Deny,
+  Custom);
 
 /// Transmission direction
 DeclareEnum3(TransmissionDirection,
@@ -47,18 +53,18 @@ DeclareEnum4(LinkStatus,
 DeclareEnum9(LinkState,
   Unspecified, /// Unspecified specific link state
 
-  /// LinkStatus::Disconnected
+  // LinkStatus::Disconnected
   Disconnected,                    /// Disconnected from the remote peer (default state)
   SentDisconnectNotice,            /// Sent a disconnect notice, awaiting their ACK or ((RTT/2) * disconnect attempt factor) timeout before being disconnected
   ReceivedDisconnectNotice,        /// Received a disconnect notice, waiting ((RTT/2) * disconnect attempt factor) for probable ACKing before being disconnected
   SentNegativeConnectResponse,     /// Sent a negative connect response, awaiting their ACK or ((RTT/2) * connect attempt factor) timeout before being disconnected
   ReceivedNegativeConnectResponse, /// Received a negative connect response, waiting ((RTT/2) * connect attempt factor) for probable ACKing before being disconnected
 
-  /// LinkStatus::AttemptingConnection
+  // LinkStatus::AttemptingConnection
   SentConnectRequest,     /// Sent a connect request, awaiting their connect response or ((RTT/2) * connect attempt factor) timeout before being disconnected
   ReceivedConnectRequest, /// Received an appropriate connect request, they're awaiting our connect response or ((RTT/2) * connect attempt factor) timeout before being disconnected
 
-  /// LinkStatus::Connected
+  // LinkStatus::Connected
   Connected); /// Connected to the remote peer, may send or receive a disconnect notice by request, latency (latency limit), or timeout ((RTT/2) * timeout factor)
 
 /// Link connect response
