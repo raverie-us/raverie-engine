@@ -58,6 +58,7 @@ namespace Audio
     static AudioData GetFileData(Zero::Status& status, const Zero::String& fileName);
 
     static void ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName);
+
     // Allocates memory for decodedSamples
     static void OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samplesPerChannel);
 
@@ -66,12 +67,13 @@ namespace Audio
   private:
     static SamplesFromFile* ReadFile(Zero::Status& status, const Zero::String& fileName, 
       const bool streaming);
-    static void GetWavData(Zero::File* file, AudioData& data);
-    static void GetOggData(stb_vorbis* OggStream, AudioData& data);
     static void ReadWavFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
       Zero::StringParam fileName);
     static void ReadOggFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
       Zero::StringParam fileName);
+
+    static void GetWavData(Zero::File* file, AudioData& data);
+    static void GetOggData(stb_vorbis* OggStream, AudioData& data);
 
     // 20 ms of audio data at 48000 samples per second
     static const unsigned FrameSize = 960;

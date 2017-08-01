@@ -464,9 +464,35 @@ namespace Audio
       return;
     }
     
-    if (data.SampleRate != 48000)
+    if (data.SampleRate != SAMPLE_RATE)
     {
-      // Resample the file
+      double ratio = data.SampleRate / SAMPLE_RATE;
+      unsigned newFrames = (unsigned)(audioFrames * ratio);
+
+      for (unsigned channel = 0; channel < data.Channels; ++channel)
+      {
+        float* newSamples = new float[newFrames];
+        float* oldSamples = samplesPerChannel[channel];
+        unsigned oldIndex(0), newIndex(0);
+        double resampleIndex(0);
+
+        while (oldIndex + 1 < audioFrames && newIndex < newFrames)
+        {
+          float firstSample = oldSamples[oldIndex];
+          float secondSample = oldSamples[oldIndex + 1];
+
+          newSamples[newIndex] = firstSample + (float)((secondSample - firstSample) * (resampleIndex - oldIndex));
+
+          ++newIndex;
+          resampleIndex += ratio;
+          oldIndex = (unsigned)resampleIndex;
+        }
+
+        delete[] samplesPerChannel[channel];
+        samplesPerChannel[channel] = newSamples;
+      }
+
+      audioFrames = newFrames;
     }
 
     // Create the buffer for encoded packets
