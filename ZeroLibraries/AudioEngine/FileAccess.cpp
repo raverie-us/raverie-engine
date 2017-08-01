@@ -362,10 +362,14 @@ namespace Audio
     audioFrames = data.TotalSamples / data.Channels;
 
     // Create the buffer for reading in data from the file
-    short* inputSamples = new short[data.TotalSamples];
+    short* inputBuffer = new short[data.TotalSamples];
 
     // Read in the audio data (file will be in correct position after GetWavData)
-    file.Read(status, (byte*)inputSamples, data.TotalDataSize);
+    file.Read(status, (byte*)inputBuffer, data.TotalDataSize);
+
+    float* floatSamples = new float[data.TotalSamples];
+    for (unsigned i = 0; i < data.TotalSamples; ++i)
+      floatSamples[i] = (float)inputBuffer[i] / MAXSHORT;
     
     if (data.SampleRate != 48000)
     {
@@ -395,8 +399,8 @@ namespace Audio
     }
     else
     {
-      short* buffer(nullptr);
-      short finalBuffer[FRAME_SIZE] = { 0 };
+      float* buffer(nullptr);
+      float finalBuffer[FRAME_SIZE] = { 0 };
 
       // Encode the samples, in chunks of FRAME_SIZE
       for (unsigned inputIndex = 0; inputIndex < data.TotalSamples; inputIndex += FRAME_SIZE * 2)
@@ -404,13 +408,13 @@ namespace Audio
         if (inputIndex + (FRAME_SIZE * 2) > data.TotalSamples)
         {
           buffer = finalBuffer;
-          memcpy(buffer, inputSamples + inputIndex, (data.TotalSamples - inputIndex) * sizeof(short));
+          memcpy(buffer, floatSamples + inputIndex, (data.TotalSamples - inputIndex) * sizeof(short));
         }
         else
-          buffer = inputSamples + inputIndex;
+          buffer = floatSamples + inputIndex;
 
         // Encode a packet for this channel
-        packetHeader.Size = opus_encode(encoder, buffer, FRAME_SIZE, encodedPacket, MAX_PACKET_SIZE);
+        packetHeader.Size = opus_encode_float(encoder, buffer, FRAME_SIZE, encodedPacket, MAX_PACKET_SIZE);
         // If there was an error, set the status 
         if (packetHeader.Size < 0)
         {
@@ -431,7 +435,7 @@ namespace Audio
     }
   }
 
-  void FileAccess::OpenFile(Zero::Status& status, Zero::StringParam fileName, short*& decodedSamples, unsigned& channels, unsigned& samples)
+  void FileAccess::OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samples)
   {
     // Open the file
     Zero::File inputFile;
@@ -459,7 +463,7 @@ namespace Audio
     samples = fileHeader.Samples;
 
     // Create the buffer for the interleaved decoded samples
-    decodedSamples = new short[fileHeader.Samples * fileHeader.Channels];
+    decodedSamples = new float[fileHeader.Samples * fileHeader.Channels];
 
     // Create buffer for reading in a packet from the file
     unsigned char packet[MAX_PACKET_SIZE];
@@ -484,7 +488,7 @@ namespace Audio
       // Read in the packet, using the size from the header
       inputFile.Read(status, (byte*)packet, packetHeader.Size);
 
-      frameSize = opus_decode(decoder, packet, packetHeader.Size, decodedSamples + samplesRead, FRAME_SIZE, 0);
+      frameSize = opus_decode_float(decoder, packet, packetHeader.Size, decodedSamples + samplesRead, FRAME_SIZE, 0);
 
       ErrorIf(frameSize < 0);
 
@@ -537,9 +541,13 @@ namespace Audio
 
     ProcessFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.wav", "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd");
 
-    short* sampleBuffer(nullptr);
+    float* floatSamples(nullptr);
     unsigned channels, samples;
-    OpenFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd", sampleBuffer, channels, samples);
+    OpenFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd", floatSamples, channels, samples);
+
+    short* shortSamples = new short[samples];
+    for (unsigned i = 0; i < samples; ++i)
+      shortSamples[i] = (short)(floatSamples[i] * MAXSHORT);
 
     Zero::File outFile;
     outFile.Open("C:\\Users\\Andrea Ellinger\\Desktop\\RunOutput.wav", Zero::FileMode::Write, Zero::FileAccessPattern::Sequential);
@@ -549,9 +557,10 @@ namespace Audio
     outFile.Write((byte*)&fmtChunkData, sizeof(fmtChunkData));
     outFile.Write((byte*)&dataChunkHeader, sizeof(dataChunkHeader));
 
-    outFile.Write((byte*)sampleBuffer, samples * sizeof(short));
+    outFile.Write((byte*)shortSamples, samples * sizeof(short));
 
-    delete[] sampleBuffer;
+    delete[] floatSamples;
+    delete[] shortSamples;
   }
 
 }
