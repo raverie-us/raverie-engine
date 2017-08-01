@@ -59,7 +59,7 @@ namespace Audio
 
     static void ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName);
     // Allocates memory for decodedSamples
-    static void OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samples);
+    static void OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samplesPerChannel);
 
     static void RunTest();
 

@@ -301,7 +301,6 @@ namespace Audio
 
 #define FRAME_SIZE 960 // 20 ms of audio data
 #define SAMPLE_RATE 48000
-#define MAX_FRAME_SIZE (6 * 960)
 #define MAX_PACKET_SIZE (3 * 1276)
 
 
@@ -309,7 +308,7 @@ namespace Audio
   {
     const char Name[4] = { 'Z','E','R','O' };
     short Channels;
-    unsigned Samples;
+    unsigned SamplesPerChannel;
   };
 
   struct PacketHeader
@@ -367,9 +366,17 @@ namespace Audio
     // Read in the audio data (file will be in correct position after GetWavData)
     file.Read(status, (byte*)inputBuffer, data.TotalDataSize);
 
-    float* floatSamples = new float[data.TotalSamples];
-    for (unsigned i = 0; i < data.TotalSamples; ++i)
-      floatSamples[i] = (float)inputBuffer[i] / MAXSHORT;
+    // Create a buffer of samples for each channel
+    float** samplesPerChannel = new float*[data.Channels];
+    for (unsigned i = 0; i < data.Channels; ++i)
+      samplesPerChannel[i] = new float[audioFrames];
+
+    // Translate the data into floats and split into channel buffers
+    for (unsigned i = 0; i < audioFrames; ++i)
+    {
+      for (unsigned j = 0; j < data.Channels; ++j)
+        samplesPerChannel[j][i] = (float)inputBuffer[(i * data.Channels) + j] / MAXSHORT;
+    }
     
     if (data.SampleRate != 48000)
     {
@@ -382,7 +389,7 @@ namespace Audio
     // Set up the file header
     FileHeader fileHeader;
     fileHeader.Channels = data.Channels;
-    fileHeader.Samples = data.TotalSamples;
+    fileHeader.SamplesPerChannel = audioFrames;
 
     // Write the header to the output file
     outputFile.Write((byte*)&fileHeader, sizeof(fileHeader));
@@ -390,8 +397,11 @@ namespace Audio
     // Create the packet header object
     PacketHeader packetHeader;
 
-     int error;
-    OpusEncoder* encoder = opus_encoder_create(SAMPLE_RATE, 2, OPUS_APPLICATION_AUDIO, &error);
+    int error;
+    // Create an opus encoder for each channel
+    OpusEncoder** encodersPerChannel = new OpusEncoder*[data.Channels];
+    for (unsigned i = 0; i < data.Channels; ++i)
+      encodersPerChannel[i] = opus_encoder_create(SAMPLE_RATE, 1, OPUS_APPLICATION_AUDIO, &error);
 
     if (error < 0)
     {
@@ -399,43 +409,48 @@ namespace Audio
     }
     else
     {
+      // Current buffer position for encoding
       float* buffer(nullptr);
+      // Used on the final frame to keep the same frame size
       float finalBuffer[FRAME_SIZE] = { 0 };
 
       // Encode the samples, in chunks of FRAME_SIZE
-      for (unsigned inputIndex = 0; inputIndex < data.TotalSamples; inputIndex += FRAME_SIZE * 2)
+      for (unsigned inputIndex = 0; inputIndex < audioFrames; inputIndex += FRAME_SIZE)
       {
-        if (inputIndex + (FRAME_SIZE * 2) > data.TotalSamples)
+        for (unsigned channel = 0; channel < data.Channels; ++channel)
         {
-          buffer = finalBuffer;
-          memcpy(buffer, floatSamples + inputIndex, (data.TotalSamples - inputIndex) * sizeof(short));
+          if (inputIndex + FRAME_SIZE > audioFrames)
+          {
+            buffer = finalBuffer;
+            memcpy(buffer, samplesPerChannel[channel] + inputIndex, (audioFrames - inputIndex) * sizeof(float));
+          }
+          else
+            buffer = samplesPerChannel[channel] + inputIndex;
+
+          // Encode a packet for this channel
+          packetHeader.Size = opus_encode_float(encodersPerChannel[channel], buffer, FRAME_SIZE, encodedPacket, MAX_PACKET_SIZE);
+          // If there was an error, set the status 
+          if (packetHeader.Size < 0)
+          {
+            status.SetFailed(Zero::String::Format("Encode failed: %s\n", opus_strerror(packetHeader.Size)));
+            break;
+          }
+
+          ErrorIf(packetHeader.Size > MAX_PACKET_SIZE);
+
+          // Set the channel number on the header
+          packetHeader.Channel = data.Channels;
+
+          // Write the header to the file
+          outputFile.Write((byte*)&packetHeader, sizeof(packetHeader));
+          // Write the encoded packet to the file
+          outputFile.Write((byte*)encodedPacket, packetHeader.Size);
         }
-        else
-          buffer = floatSamples + inputIndex;
-
-        // Encode a packet for this channel
-        packetHeader.Size = opus_encode_float(encoder, buffer, FRAME_SIZE, encodedPacket, MAX_PACKET_SIZE);
-        // If there was an error, set the status 
-        if (packetHeader.Size < 0)
-        {
-          status.SetFailed(Zero::String::Format("Encode failed: %s\n", opus_strerror(packetHeader.Size)));
-          break;
-        }
-
-        ErrorIf(packetHeader.Size > MAX_PACKET_SIZE);
-
-        // Set the channel number on the header
-        packetHeader.Channel = 0;
-
-        // Write the header to the file
-        outputFile.Write((byte*)&packetHeader, sizeof(packetHeader));
-        // Write the encoded packet to the file
-        outputFile.Write((byte*)encodedPacket, packetHeader.Size);
       }
     }
   }
 
-  void FileAccess::OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samples)
+  void FileAccess::OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samplesPerChannel)
   {
     // Open the file
     Zero::File inputFile;
@@ -460,39 +475,56 @@ namespace Audio
 
     // Set the variables
     channels = fileHeader.Channels;
-    samples = fileHeader.Samples;
+    samplesPerChannel = fileHeader.SamplesPerChannel;
+
+    // Create a buffer per channel for decoded frames
+    float** decodedFramePerChannel = new float*[channels];
+    for (unsigned i = 0; i < channels; ++i)
+      decodedFramePerChannel[i] = new float[FRAME_SIZE];
 
     // Create the buffer for the interleaved decoded samples
-    decodedSamples = new float[fileHeader.Samples * fileHeader.Channels];
+    decodedSamples = new float[fileHeader.SamplesPerChannel * fileHeader.Channels];
 
     // Create buffer for reading in a packet from the file
     unsigned char packet[MAX_PACKET_SIZE];
 
     int error;
-    OpusDecoder* decoder = opus_decoder_create(SAMPLE_RATE, 2, &error);
+    // Create a decoder for each channel
+    OpusDecoder** decodersPerChannel = new OpusDecoder*[channels];
+    for (unsigned i = 0; i < channels; ++i)
+      decodersPerChannel[i] = opus_decoder_create(SAMPLE_RATE, 1, &error);
 
     PacketHeader packetHeader;
     unsigned decodedBufferIndex(0);
     unsigned samplesRead(0);
+    int frameSize(0);
 
-    while (samplesRead < samples)
+    while (samplesRead < samplesPerChannel)
     {
-      int frameSize(0);
+      for (unsigned channel = 0; channel < channels; ++channel)
+      {
+        // Read in the packet header
+        inputFile.Read(status, (byte*)&packetHeader, sizeof(packetHeader));
 
-      // Read in the packet header
-      inputFile.Read(status, (byte*)&packetHeader, sizeof(packetHeader));
+        ErrorIf(packetHeader.Name[0] != 'p' || packetHeader.Name[1] != 'a');
+        ErrorIf(packetHeader.Size > MAX_PACKET_SIZE);
 
-      ErrorIf(packetHeader.Name[0] != 'p' || packetHeader.Name[1] != 'a');
-      ErrorIf(packetHeader.Size > MAX_PACKET_SIZE);
+        // Read in the packet, using the size from the header
+        inputFile.Read(status, (byte*)packet, packetHeader.Size);
 
-      // Read in the packet, using the size from the header
-      inputFile.Read(status, (byte*)packet, packetHeader.Size);
+        frameSize = opus_decode_float(decodersPerChannel[channel], packet, packetHeader.Size, decodedFramePerChannel[channel], FRAME_SIZE, 0);
 
-      frameSize = opus_decode_float(decoder, packet, packetHeader.Size, decodedSamples + samplesRead, FRAME_SIZE, 0);
+        ErrorIf(frameSize < 0);
+      }
 
-      ErrorIf(frameSize < 0);
+      for (int i = 0; i < frameSize && decodedBufferIndex < samplesPerChannel * channels; ++i)
+      {
+        for (unsigned channel = 0; channel < channels; ++channel, ++decodedBufferIndex)
+          decodedSamples[decodedBufferIndex] = decodedFramePerChannel[channel][i];
+      }
 
-      samplesRead += frameSize * 2;
+
+      samplesRead += frameSize;
     }
 
   }
@@ -545,8 +577,8 @@ namespace Audio
     unsigned channels, samples;
     OpenFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd", floatSamples, channels, samples);
 
-    short* shortSamples = new short[samples];
-    for (unsigned i = 0; i < samples; ++i)
+    short* shortSamples = new short[samples * channels];
+    for (unsigned i = 0; i < samples * channels; ++i)
       shortSamples[i] = (short)(floatSamples[i] * MAXSHORT);
 
     Zero::File outFile;
@@ -557,7 +589,7 @@ namespace Audio
     outFile.Write((byte*)&fmtChunkData, sizeof(fmtChunkData));
     outFile.Write((byte*)&dataChunkHeader, sizeof(dataChunkHeader));
 
-    outFile.Write((byte*)shortSamples, samples * sizeof(short));
+    outFile.Write((byte*)shortSamples, samples * channels * sizeof(short));
 
     delete[] floatSamples;
     delete[] shortSamples;
