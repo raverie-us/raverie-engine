@@ -113,28 +113,7 @@ namespace Zilch
   //***************************************************************************
   bool DelegateTypePolicy::Equal(DelegateType* a, DelegateType* b) const
   {
-    // Make sure we have the same number of parameters
-    if (a->Parameters.Size() != b->Parameters.Size())
-      return false;
-
-    // Make sure the returns are the same type (or non existant type for none)
-    if (a->Return != b->Return)
-      return false;
-
-    // Loop through and compare each of the parameters
-    for (size_t i = 0; i < a->Parameters.Size(); ++i)
-    {
-      // Grab the two parameters
-      const DelegateParameter& aParameter = a->Parameters[i];
-      const DelegateParameter& bParameter = b->Parameters[i];
-
-      // Compare the types
-      if (aParameter.ParameterType != bParameter.ParameterType)
-        return false;
-    }
-
-    // If we got here, then it must match!
-    return true;
+    return Type::IsRawSame(a, b);
   }
 
   //***************************************************************************
@@ -174,7 +153,9 @@ namespace Zilch
     if (func != nullptr)
     {
       // Add the function to the bound type
-      owner->AddRawFunction(func);
+      AddMemberResult::Enum result = owner->AddRawFunction(func);
+      ErrorIf(result == AddMemberResult::AlreadyExists,
+        "The function already existed (most likely it was bound twice)");
     }
 
     // Return the function that was created
@@ -257,8 +238,9 @@ namespace Zilch
     // If the function is valid...
     if (func != nullptr)
     {
-      // Add the function to the bound type
-      owner->Constructors.PushBack(func);
+      AddMemberResult::Enum result = owner->AddRawConstructor(func);
+      ErrorIf(result == AddMemberResult::AlreadyExists,
+        "The constructor already existed (most likely it was bound twice)");
     }
 
     // Return the function that was created
@@ -672,7 +654,7 @@ namespace Zilch
   {
     // Get a reference to the core library
     Core& core = Core::GetInstance();
-
+    
     // If the type is native, then we want this constructor to call SetNativeTypeFullyConstructed on the handle manager
     BoundFn invokedFunction = function;
     if (owner->Native)
@@ -991,6 +973,7 @@ namespace Zilch
         base->IsInitializedAssert(message.c_str());
       }
       type->HandleManager = base->HandleManager;
+      type->GetBindingVirtualType = base->GetBindingVirtualType;
     }
 
     this->AddNativeBoundType(type);
@@ -1089,7 +1072,7 @@ namespace Zilch
     String identifier = ident;
 
     // If the identifier Contains the scope resolution operator from C++, take everything after it
-    if ((flags & TokenCheck::IgnoreScopeResolution) == 0)
+    if ((flags & TokenCheck::SkipPastScopeResolution) == 0)
     {
       // If we found the scope resolution operator...
       static const String ScopeResolution("::");
@@ -1241,13 +1224,6 @@ namespace Zilch
 
     // Get the fixed identifier of the builder and return it
     String fixedIdentifier = builder.ToString();
-
-    // This just helps reduce memory and increase string comparison performance
-    // If the 'fixed' version is exactly the same as the original, just return
-    // the original and destroy the 'fixed' allocation
-    if (identifier == fixedIdentifier)
-      return identifier;
-
     return fixedIdentifier;
   }
 
@@ -1267,83 +1243,6 @@ namespace Zilch
   void LibraryBuilder::SetEntries(const Array<CodeEntry>& entries)
   {
     this->BuiltLibrary->Entries = entries;
-  }
-  
-  //***************************************************************************
-  Plugin* LibraryBuilder::LoadPlugin(Status& status, StringParam pluginFile, void* userData)
-  {
-    // In order to not lock the library and support dynamic reloading, we make a copy of any plugin files
-    // Ideally we want to load the same libraries and not duplicate code loading,
-    // therefore we use the hash of the library to uniquely identify it
-    File file;
-    file.Open(pluginFile, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential, Zero::FileShare::Read, &status);
-    if (status.Failed())
-    {
-      status.SetFailed("We failed to open the plugin file for Read only access (does it exist or is there permission?)");
-      return nullptr;
-    }
-
-    // If the file is empty, then skip it
-    if (file.CurrentFileSize() == 0)
-    {
-      status.SetFailed("The plugin file was empty");
-      return nullptr;
-    }
-
-    // Get the hash of the shared library and then close the file
-    String sha1Hash = Sha1Builder::GetHashStringFromFile(file);
-    file.Close();
-
-    // Copy the library to a new temporary location
-    StringRange pluginName = Zero::FilePath::GetFileNameWithoutExtension(pluginFile);
-    String fileName = BuildString(pluginName, ".", sha1Hash, ".zilchPlugin");
-    String pluginLocation = Zero::FilePath::Combine(Zero::GetTemporaryDirectory(), fileName);
-    
-    // Only copy if the file doesn't already exist
-    if (Zero::FileExists(pluginLocation) == false)
-    {
-      // If we fail to copy the file, then just load the plugin directly...
-      if (Zero::CopyFile(pluginLocation, pluginFile) == false)
-        pluginLocation = pluginFile;
-    }
-    
-    // Attempt to load the plugin file
-    ExternalLibrary lib;
-    lib.Load(status, pluginLocation.c_str());
-    if (status.Failed())
-      return nullptr;
-
-    // If we failed to load the library, then early out
-    if (lib.IsValid() == false)
-    {
-      status.SetFailed("The plugin dynamic/shared library was not a valid library and could not be loaded");
-      return nullptr;
-    }
-
-    // Look for the create plugin functionality, early out if we don't find it
-    CreateZilchPluginFn createPlugin = (CreateZilchPluginFn)lib.GetFunctionByName("CreateZilchPlugin");
-    if (createPlugin == nullptr)
-    {
-      status.SetFailed("The 'CreateZilchPlugin' function was not exported within the dll (did you use the ZeroExport macro?)");
-      return nullptr;
-    }
-
-    // Finally, attempt to create a plugin (the user should return us a plugin at this point)
-    Plugin* plugin = createPlugin();
-    if (plugin == nullptr)
-    {
-      status.SetFailed("We found the 'CreateZilchPlugin' function and called it, but it returned null so no plugin was created");
-      return nullptr;
-    }
-
-    // We successfully loaded the plugin
-    plugin->UserData = userData;
-
-    // For now, we'll just keep the code loaded forever until we get a good mechanism for releasing plugins
-    lib.mUnloadOnDestruction = false;
-    UniquePointer<Plugin> ownedPlugin(plugin);
-    this->BuiltLibrary->OwnedPlugins.PushBack(ZeroMove(ownedPlugin));
-    return plugin;
   }
 
   //***************************************************************************
@@ -1603,7 +1502,7 @@ namespace Zilch
     UserData(nullptr),
     GeneratedDefinitionStubCode(false),
     TolerantMode(false),
-    CreatedByPlugin(false)
+    Plugin(nullptr)
   {
   }
   
@@ -1710,10 +1609,19 @@ namespace Zilch
     // First, release all components
     this->ClearComponents();
 
-    ZilchForEach(Plugin* plugin, this->OwnedPlugins)
+    // If this library was made via a plugin, then the library now manages the plugin and will delete it
+    if (this->Plugin)
     {
-      if (plugin->FullCompilationInitialized)
-        plugin->Uninitialize();
+      this->Plugin->UninitializeSafe();
+
+      ExternalLibrary* sharedLibrary = this->Plugin->SharedLibrary;
+
+      // We need to delete the plugin first because the destructor is virutal and is defined
+      // within the external library's loaded code
+      delete this->Plugin;
+
+      // Now we can delete the external library
+      delete sharedLibrary;
     }
 
     for (size_t i = 0; i < this->OwnedTypes.Size(); ++i)

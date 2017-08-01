@@ -1323,20 +1323,29 @@ int TextEditor::GetCursorFromScreenPosition(Vec2Param screenPos)
   return SendEditor(SCI_POSITIONFROMPOINTCLOSE, (int)localPos.x, (int)localPos.y);
 }
 
-void TextEditor::SetAnnotation(int lineNumber, StringParam errorMessage)
+void TextEditor::SetAnnotation(int lineNumber, StringParam errorMessage, bool goToLine)
 {
   String wrappedMessage = WordWrap(errorMessage, 80);
 
-  AnnotationLines.Insert(lineNumber);
-  //ANNOTATION_STANDARD //ANNOTATION_BOXED
-  SendEditor(SCI_ANNOTATIONSETVISIBLE, ANNOTATION_STANDARD);
-  SendEditor(SCI_ANNOTATIONSETTEXT, lineNumber, (long)wrappedMessage.c_str());
-  SendEditor(SCI_ANNOTATIONSETSTYLE, lineNumber, SCE_ERROR);
+  // Don't set annotations on this line if we already have one there with the same text
+  String& existingMessage = AnnotationLines[lineNumber];
+  if (existingMessage != wrappedMessage)
+  {
+    existingMessage = wrappedMessage;
 
-  //Go to one past the line, otherwise we might not be able to
-  //see the annotations that are after the current line
-  GoToLine(lineNumber + 1);
-  //SendEditor(SCI_SCROLLCARET);
+    //ANNOTATION_STANDARD //ANNOTATION_BOXED
+    SendEditor(SCI_ANNOTATIONSETVISIBLE, ANNOTATION_STANDARD);
+    SendEditor(SCI_ANNOTATIONSETTEXT, lineNumber, (long)wrappedMessage.c_str());
+    SendEditor(SCI_ANNOTATIONSETSTYLE, lineNumber, SCE_ERROR);
+  }
+
+  if (goToLine)
+  {
+    //Go to one past the line, otherwise we might not be able to
+    //see the annotations that are after the current line
+    GoToLine(lineNumber + 1);
+    //SendEditor(SCI_SCROLLCARET);
+  }
 }
 
 void TextEditor::ReplaceSelection(StringParam text, bool sendEvents)

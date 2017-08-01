@@ -201,6 +201,7 @@ void ResourceSystem::UnloadAll()
   mResourceManagers.Clear();
 
   DeleteObjectsInContainer(mLoaderMap);
+  MetaDatabase::GetInstance()->ClearRemovedLibraries();
 }
 
 Resource* ResourceSystem::GetResourceByTypeAndName(StringParam resourceType, 

@@ -59,12 +59,12 @@ ZilchDefineType(AreaEvent, builder, type)
 
 ZilchDefineType(Area, builder, type)
 {
+  ZeroBindComponent();
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::CallSetDefaults);
   ZeroBindEvent(Events::AreaChanged, AreaEvent);
   ZeroBindDependency(Transform);
  
-  ZilchBindDefaultConstructor();
   ZilchBindGetterSetterProperty(Origin)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetter(TopLeft);
   ZilchBindGetter(TopCenter);

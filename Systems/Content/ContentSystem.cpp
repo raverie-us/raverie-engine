@@ -694,6 +694,8 @@ void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild,
   if(toBuild.Empty())
     return;
 
+  Z::gEngine->LoadingStart();
+
   BuildOptions buildOptions;
   ContentLibrary* library = toBuild[0]->mLibrary;
 
@@ -703,12 +705,14 @@ void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild,
   {
     //Process from this contentItem down.
     ContentItem* contentItem = toBuild[i];
+    Z::gEngine->LoadingUpdate("Loading", package.Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
 
     contentItem->BuildContent(buildOptions);
 
     if(buildOptions.Failure)
     {
       status.SetFailed(buildOptions.Message);
+      Z::gEngine->LoadingFinish();
       return;
     }
 
@@ -721,6 +725,7 @@ void ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild,
 
   package.EditorProcessing.Swap(buildOptions.EditorProcessing);
 
+  Z::gEngine->LoadingFinish();
 }
 
 void ContentSystem::BuildContentItem(Status& status, ContentItem* contentItem, 

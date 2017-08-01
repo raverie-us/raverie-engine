@@ -231,7 +231,6 @@ Editor::Editor(Composite* parent)
   mDesyncWindow = nullptr;
   mBugReporter = nullptr;
   mCodeTranslatorListener = nullptr;
-  mFirstCompile = false;
   mProjectDirectoryWatcher = nullptr;
   mSimpleDebuggerListener = nullptr;
 
@@ -939,6 +938,10 @@ void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue,
     Component* component = r.Back();
     BoundType* componentType = ZilchVirtualTypeId(component);
 
+    // NOTE: We could attempt to optimize this by only removing the components that were modified
+    // however we have to be very careful because any non-modified component could possibly get a handle
+    // to a modified component e.g. via GetComponentByName then the handle will become garbage
+    
     // Remove proxies in case they were replaced by the actual script type
     bool isProxy = componentType->HasAttribute(ObjectAttributes::cProxy);
     bool isZilchComponent = componentType->IsA(zilchComponentType);
@@ -999,24 +1002,11 @@ void RevertSpaceModifiedState(GameSession* game,
 
 void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
 {
-  // If this is a first compile, defer to when script compilation is finished
-  if(ZilchManager::GetInstance()->mCurrentScriptProjectLibrary == nullptr)
-  {
-    mFirstCompile = true;
-    return;
-  }
-
   TearDownZilchStateOnGames(e->mModifiedLibraries);
 }
 
 void Editor::OnScriptsCompiledPostPatch(ZilchCompileEvent* e)
 {
-  if(mFirstCompile)
-  {
-    TearDownZilchStateOnGames(e->mModifiedLibraries);
-    mFirstCompile = false;
-  }
-
   //ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
   //
   //// Patch anything that was not reinitialized if the compilation was successful

@@ -37,6 +37,7 @@ namespace Zilch
   //***************************************************************************
   void NativeBindingList::ValidateTypes()
   {
+#if ZeroDebug
     NativeBindingList& self = GetInstance();
     self.Lock.Lock();
 
@@ -46,6 +47,7 @@ namespace Zilch
     }
 
     self.Lock.Unlock();
+#endif
   }
 
   //***************************************************************************

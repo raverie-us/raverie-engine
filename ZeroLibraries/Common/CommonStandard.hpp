@@ -113,6 +113,7 @@ public:
 #include "Utility/Functor.hpp"
 #include "Utility/HalfFloat.hpp"
 #include "Utility/Callback.hpp"
+#include "Utility/PointerCast.hpp"
 #include "Lexer/Lexer.hpp"
 #include "Utility/Guid.hpp"
 #include "Utility/NativeType.hpp"

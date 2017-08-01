@@ -3,7 +3,7 @@
 // RenderPass fragment code is implicitely appended to the end
 // of Materials in the compositing of the final shaders programs.
 [Pixel][RenderPass]
-struct %RESOURCENAME%
+struct RESOURCE_NAME_
 {
 	[Input] var Color : Real4 = Real4(1.0, 0.0, 0.0, 1.0);
 

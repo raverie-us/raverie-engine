@@ -3703,7 +3703,7 @@ namespace Zilch
     ZilchInitializeExternalTypeAs(StreamOrigin::Enum, "StreamOrigin");
     ZilchInitializeExternalType(ProcessStartInfo);
 
-    ZilchInitializeTypeAs(Zilch::Library, "ZilchLibrary");
+    ZilchInitializeTypeAs(Zilch::Library, "Library");
     ZilchInitializeType(ReflectionObject);
     ZilchInitializeType(Type);
     ZilchInitializeType(AnyType);

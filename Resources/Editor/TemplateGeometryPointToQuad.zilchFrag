@@ -1,21 +1,21 @@
-struct %RESOURCENAME%Input
+struct RESOURCE_NAME_Input
 {
 	[Input] var ViewPosition : Real3;
 }
 
-struct %RESOURCENAME%Output
+struct RESOURCE_NAME_Output
 {
 	[Output] var PerspectivePosition : Real4;
 	[Output] var Uv : Real2;
 }
 
 [Geometry(maxVertices : 6)]
-struct %RESOURCENAME%
+struct RESOURCE_NAME_
 {
 	[BuiltInInput] var ViewToPerspective : Real4x4;
 	[PropertyInput] var Width : Real = 0.1;
 
-	function Main(input : PointInput[%RESOURCENAME%Input], output : TriangleOutput[%RESOURCENAME%Output])
+	function Main(input : PointInput[RESOURCE_NAME_Input], output : TriangleOutput[RESOURCE_NAME_Output])
 	{
 		// Create corners of a view aligned quad
 		var corners = FixedArray[Real3, 4]();
@@ -25,7 +25,7 @@ struct %RESOURCENAME%
 		corners[3] = input[0].ViewPosition + Real3( this.Width,  this.Width, 0); // TopRight
 
 		// Output vertex position and uv
-		var vertices = FixedArray[%RESOURCENAME%Output, 4]();
+		var vertices = FixedArray[RESOURCE_NAME_Output, 4]();
 
 		vertices[0].PerspectivePosition = Math.Multiply(this.ViewToPerspective, Real4(corners[0], 1.0));
 		vertices[1].PerspectivePosition = Math.Multiply(this.ViewToPerspective, Real4(corners[1], 1.0));

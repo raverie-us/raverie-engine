@@ -187,6 +187,11 @@ namespace Zilch
     // Check if two types are of the same type
     static bool IsSame(Type* a, Type* b);
 
+    // Check if the type is exactly the same (pointer wise)
+    // For delegate types, this will compare each parameter with IsRawSame
+    static bool IsRawSame(Type* a, Type* b);
+    static bool IsRawSame(DelegateType* a, DelegateType* b);
+
     // Check if a type is derived from a given base
     static bool BoundIsA(BoundType* type, BoundType* base);
 
@@ -209,6 +214,28 @@ namespace Zilch
 
       // If the cast is safe...
       if (BoundIsA(baseClassPointer->ZilchGetDerivedType(), ZilchTypeId(Derived)))
+      {
+        // Get the base class pointer
+        return static_cast<Derived>(baseClassPointer);
+      }
+
+      // Otherwise the cast failed, return a null pointer
+      return nullptr;
+    }
+
+    // Dynamically cast a base type into a derived type without walking the inheritance chain (must be exact)
+    template <typename Derived, typename Base>
+    static Derived DirectDynamicCast(Base baseClassPointer)
+    {
+      // If the passed in pointer was null, then return null
+      if (baseClassPointer == nullptr)
+      {
+        // We can't possibly cast it or know what it even is...
+        return nullptr;
+      }
+
+      // If the cast is safe...
+      if (baseClassPointer->ZilchGetDerivedType() == ZilchTypeId(Derived))
       {
         // Get the base class pointer
         return static_cast<Derived>(baseClassPointer);
@@ -324,6 +351,9 @@ namespace Zilch
   // Retrieves the event handler for an object (or null if this object cannot send/receive events)
   typedef EventHandler* (*GetEventHandlerFn)(const BoundType* type, const byte* data);
 
+  // Get the virtual type of a direct object pointer
+  typedef BoundType* (*BindingVirtualTypeFn)(const byte* memory);
+
   namespace SpecialType
   {
     enum Enum
@@ -370,6 +400,9 @@ namespace Zilch
   // This is only used for native type binding
   // (an assert we can give to the user to give them feedback if they forgot to bind a type)
   typedef void (*BoundTypeAssertFn)(const char* prependedMessage);
+
+  // A special flag that lets us ignore the bound type assert
+  void IgnoreOnInvalidBinding(const char*);
 
   // Allows us to walk through filtered members of a BoundType (including up the inheritance chain if the option is specified)
   template <typename MemberType = Member>
@@ -648,6 +681,12 @@ namespace Zilch
     // Returns true if it is initialized, false if it is not
     bool IsInitializedAssert(const char* prependedMessage = "");
 
+    // Whether this type has a cooresponding native type (if it was made via binding)
+    bool HasNativeBinding();
+
+    // Get the virtual type from an instance of an object (not a Handle!)
+    BoundType* GetBindingVirtualTypeFromInstance(const void* memory);
+
     // Binding for reflection (internally bound in Zilch)
     MemberRange<GetterSetter> GetGetterSetters();
     MemberRange<GetterSetter> GetGetterSetters(Members::Enum options);
@@ -790,6 +829,10 @@ namespace Zilch
 
     // A user provided function that retrieves an event handler from an instance of this type
     GetEventHandlerFn GetEventHandlerFunction;
+
+    // A user provided function that takes the memory of an object and retrieves the virtual type if possible
+    // This function is inheirted by derived objects (if they have none set)
+    BindingVirtualTypeFn GetBindingVirtualType;
 
     // A bound type could be an enum, flags, or just a regular old type
     // This is important because it affects what operators can be applied to the object

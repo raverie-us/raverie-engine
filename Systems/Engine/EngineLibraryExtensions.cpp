@@ -55,6 +55,7 @@ void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* use
   BoundType* componentType = ZilchTypeId(Component);
   BoundType* boundType = e->Type;
 
+  // @TrevorS: Is this necessary anymore? I believe HandleManagers are inherited.
   if(boundType->IsA(componentType))
     boundType->HandleManager = componentType->HandleManager;
 

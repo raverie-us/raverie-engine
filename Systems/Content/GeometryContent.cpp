@@ -325,7 +325,6 @@ ZilchDefineType(PhysicsMeshBuilder, builder, type)
   ZeroBindDependency(GeometryContent);
   ZeroBindDependency(MeshBuilder);
   
-  ZilchBindDefaultConstructor();
   ZilchBindGetterSetterProperty(MeshBuilt);
 
   type->CreatableInScript = false;

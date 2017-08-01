@@ -176,7 +176,7 @@ Cog* CreateCogFromGraph(Space* space, SceneGraphSource* source, SceneGraphNode* 
 
     //If parent object is provided attach to it
     if(parentObject)
-      object->AttachTo(parentObject);
+      object->AttachToPreserveLocal(parentObject);
   }
   else
   {

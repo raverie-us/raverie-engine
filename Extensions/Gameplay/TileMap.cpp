@@ -560,7 +560,7 @@ void TileMap::OnAllObjectsInitialized(CogInitializerEvent* event)
 
     transform->UpdateAll();
 
-    cog->AttachTo(GetOwner());
+    cog->AttachToPreserveLocal(GetOwner());
   }
 
   Cog* owner = GetOwner();

@@ -65,6 +65,9 @@ ZilchDefineStaticLibrary(GameplayLibrary)
 
   ZilchInitializeTypeAs(ZeroStatic, "Zero");
 
+  // @trevor.sundberg: The Gameplay and Editor libraries are co-dependent
+  ZilchTypeId(Editor)->AssertOnInvalidBinding = &IgnoreOnInvalidBinding;
+
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 

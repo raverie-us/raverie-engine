@@ -54,6 +54,10 @@ public:
 
   /// Helper to dispatch script errors.
   void DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const Zilch::CodeLocation& location);
+
+  // We ignore duplicate exceptions until the version is incrmented
+  HashSet<String> mDuplicateExceptions;
+  int mLastExceptionVersion;
 };
 
 }//namespace Zero

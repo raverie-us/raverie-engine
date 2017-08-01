@@ -211,7 +211,7 @@ public:
   //------------------------------------------------------------ Annotations
 
   //Set an annotation.
-  void SetAnnotation(int lineNumber, StringParam message);
+  void SetAnnotation(int lineNumber, StringParam message, bool goToLine = true);
   //Clear all annotations
   void ClearAnnotations();
 
@@ -300,7 +300,7 @@ public:
   ScintillaZero* mScintilla;
   ScintillaWidget* mScinWidget;
 
-  HashSet<int> AnnotationLines;
+  HashMap<int, String> AnnotationLines;
 
   uint mTime;
   uint mTickTime;

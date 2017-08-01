@@ -115,7 +115,7 @@ void OnionSkinning::CreateObjects()
 
     // Attach to our parent if we're not a root object
     if(Cog* parent = selected->GetParent())
-      newObject->AttachTo(parent);
+      newObject->AttachToPreserveLocal(parent);
 
     // We don't want it to show up in the editor or be selectable
     newObject->mFlags.SetFlag(CogFlags::Transient | CogFlags::Locked | CogFlags::ObjectViewHidden);

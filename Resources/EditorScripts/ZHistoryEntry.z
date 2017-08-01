@@ -112,7 +112,7 @@ class ZHistoryEntry : ZilchComponent
       //entryManager.HistoryInfo.Name = operation.Name;
       entryManager.RowName.SpriteText.Text = operation.Name;
       
-      entry.AttachTo(this.ChildContainer);
+      entry.AttachToPreserveLocal(this.ChildContainer);
     }
 
     return childCount;
@@ -137,7 +137,7 @@ class ZHistoryEntry : ZilchComponent
         
     var changedViewEvent = ChangedHistoryView();
     changedViewEvent.HistoryEntry = this.Owner;
-    this.Owner.Detach();
+    this.Owner.DetachPreserveLocal();
     
     dispatcher.DispatchEvent(eventName, changedViewEvent);
   }

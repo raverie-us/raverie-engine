@@ -226,16 +226,6 @@ public:
   /// removal operations to the mReInitializeQueue so they can all be
   /// re-added at a later point.
   void TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibraries);
-  
-  /// We tear down live Zilch objects and proxies that should become live
-  /// objects. This is usually done on PreScriptCompile. However, the first
-  /// time scripts are compiled, if we do it on PreScriptCompile, we wouldn't
-  /// remove proxies (as we won't know anything about Zilch types yet).
-  /// Because of this, on the first compile, we tear down the zilch state
-  /// when the scripts have finished compiling.
-  /// Currently, this is only to fix an issue with RunInEditor scripts
-  /// on the GameSession. 
-  bool mFirstCompile;
 
   /// The easiest way to re-initialize all script components is to use
   /// operations to remove, then undo to re-add them.

@@ -356,9 +356,9 @@ void AttachOperation::Undo()
 
   // Detach the object
   if(mRelativeAttach)
-    object->DetachRelative();
-  else
     object->Detach();
+  else
+    object->DetachPreserveLocal();
 
   object->PlaceInHierarchy(mOldObjectLocation);
 
@@ -379,9 +379,9 @@ void AttachOperation::Redo()
 
   // Attach the object
   if(mRelativeAttach)
-    object->AttachToRelative(parent);
-  else
     object->AttachTo(parent);
+  else
+    object->AttachToPreserveLocal(parent);
 
   // Store the new child id if we haven't already
   if(mNewChildId == PolymorphicNode::cInvalidUniqueNodeId)
@@ -453,9 +453,9 @@ void DetachOperation::Undo()
 
   // Attach the object
   if(mRelativeDetach)
-    object->AttachToRelative(parent);
-  else
     object->AttachTo(parent);
+  else
+    object->AttachToPreserveLocal(parent);
 
   // Restore data
   object->mChildId = mOldChildId;
@@ -492,9 +492,9 @@ void DetachOperation::Redo()
 
   // Detach the object
   if(mRelativeDetach)
-    object->DetachRelative();
-  else
     object->Detach();
+  else
+    object->DetachPreserveLocal();
 
   // We should mark the Transform, as modified so that the object is re-created at its current
   // position, rotation, and scale (instead of what's in the Archetype)

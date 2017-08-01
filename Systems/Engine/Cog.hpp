@@ -214,13 +214,13 @@ public:
   uint GetChildCount();
 
   /// Attach to a parent object.
+  void AttachToPreserveLocal(Cog* parent);
+  /// Attach to a parent object and compute the new transfo;rm so that the objects are relative
   void AttachTo(Cog* parent);
-  /// Attach to a parent object and compute the new transform so that the objects are relative
-  void AttachToRelative(Cog* parent);
   /// Detach from a parent object.
-  void Detach();
+  void DetachPreserveLocal();
   /// Detach from a parent object and compute the new transform so that the objects are relative
-  void DetachRelative();
+  void Detach();
 
   /// Find a child object with the given name
   Cog* FindChildByName(StringParam name);
