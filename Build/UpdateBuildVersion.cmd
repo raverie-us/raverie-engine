@@ -2,32 +2,32 @@ echo off
 SET ZERO_SOURCE=%~1
 SET BuildFolder=%ZERO_SOURCE%\Build
 SET BuildVersionIdsFolder=%BuildFolder%\BuildVersionIds
-SET TempFile=%BuildFolder%\BuildVersion.temp
-
-REM Check if mercurial exists
-call hg status > nul
-if %errorlevel% == 0 goto :MercurialPresent
+SET TempFile="%BuildFolder%\BuildVersion.temp"
 
 REM otherwise, check if git exists
 call git status > nul
 if %errorlevel% == 0 goto :GitPresent
+
+REM Check if mercurial exists
+call hg status > nul
+if %errorlevel% == 0 goto :MercurialPresent
 
 REM otherwise, fallback on having no source control
 goto :NoSourceControl
 
 REM Run the mercurial commit information extraction step
 :MercurialPresent
-call %BuildFolder%\UpdateBuildVersion.hg.cmd %1 %TempFile%
+call "%BuildFolder%\UpdateBuildVersion.hg.cmd" %1 %TempFile%
 goto :Finish
 
 REM Run the git commit information extraction step
 :GitPresent
-call %BuildFolder%\UpdateBuildVersion.git.cmd %1 %TempFile%
+call "%BuildFolder%\UpdateBuildVersion.git.cmd" %1 %TempFile%
 goto :Finish
 
 REM Run a backup information extraction step (uses stub info)
 :NoSourceControl
-call %BuildFolder%\UpdateBuildVersion.none.cmd %1 %TempFile%
+call "%BuildFolder%\UpdateBuildVersion.none.cmd" %1 %TempFile%
 goto :Finish
 
 :Finish
