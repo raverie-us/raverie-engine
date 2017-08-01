@@ -292,10 +292,10 @@ namespace Audio
   //************************************************************************************************
   void OggDecoder::ReopenStreamingFile()
   {
-    int error;
-    OggData = stb_vorbis_open_filename(const_cast<char*>(FileName.c_str()), &error, nullptr);
-
-    ErrorIf(!OggData, "Audio Engine: Problem re-opening streaming OGG file");
+//     int error;
+//     OggData = stb_vorbis_open_filename(const_cast<char*>(FileName.c_str()), &error, nullptr);
+// 
+//     ErrorIf(!OggData, "Audio Engine: Problem re-opening streaming OGG file");
   }
 
   //************************************************************************************************

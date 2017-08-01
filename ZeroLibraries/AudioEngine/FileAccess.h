@@ -72,6 +72,11 @@ namespace Audio
       Zero::StringParam fileName);
     static void ReadOggFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
       Zero::StringParam fileName);
+
+    // 20 ms of audio data at 48000 samples per second
+    static const unsigned FrameSize = 960;
+    // Recommended max packet size
+    static const unsigned MaxPacketSize = 4000;
   };
 
 

@@ -102,20 +102,20 @@ namespace Audio
       && (riffHeader.riff_chunk[1] == 'G' || riffHeader.riff_chunk[1] == 'g'))
     {
       // Close the file so we can open it through stb_vorbis
-      delete file;
-
-      // Open the file in ogg format
-      int error;
-      stb_vorbis* OggStream = stb_vorbis_open_filename(fileName.c_str(), &error, nullptr);
-      if (!OggStream)
-      {
-        status.SetFailed(Zero::String::Format("Couldn't open file %s: stb_vorbis error %d.", 
-          fileName.c_str(), error));
-        // Don't need to call close because the stream is null
-        return data;
-      }
-
-      GetOggData(OggStream, data);
+//       delete file;
+// 
+//       // Open the file in ogg format
+//       int error;
+//       stb_vorbis* OggStream = stb_vorbis_open_filename(fileName.c_str(), &error, nullptr);
+//       if (!OggStream)
+//       {
+//         status.SetFailed(Zero::String::Format("Couldn't open file %s: stb_vorbis error %d.", 
+//           fileName.c_str(), error));
+//         // Don't need to call close because the stream is null
+//         return data;
+//       }
+// 
+//       GetOggData(OggStream, data);
     }
     else
     {
@@ -298,10 +298,7 @@ namespace Audio
 
 
 
-
-#define FRAME_SIZE 960 // 20 ms of audio data
 #define SAMPLE_RATE 48000
-#define MAX_PACKET_SIZE (3 * 1276)
 
 
   struct FileHeader
@@ -318,6 +315,60 @@ namespace Audio
     unsigned Size;
   };
 
+//   const static float Normalize16Bit = 1 << 15;
+//   const static float Normalize24Bit = 1 << 23;
+
+  // Assumes memory is allocated for samplesPerChannel
+  bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount, const unsigned channelCount, const unsigned bytesPerSample)
+  {
+    // 16 bit data can just be read as shorts
+    if (bytesPerSample == 2)
+    {
+      short* input = (short*)inputBuffer;
+
+      for (unsigned inputIndex = 0, sampleIndex = 0; inputIndex < totalSampleCount; ++sampleIndex)
+      {
+        for (unsigned channel = 0; channel < channelCount; ++channel, ++inputIndex)
+          samplesPerChannel[channel][sampleIndex] = (float)input[inputIndex] / Normalize16Bit;
+      }
+
+      return true;
+    }
+    // 24 bit data
+    else if (bytesPerSample == 3)
+    {
+      for (unsigned index = 0, sampleIndex = 0; index < totalSampleCount * bytesPerSample; ++sampleIndex)
+      {
+        for (unsigned channel = 0; channel < channelCount; index += bytesPerSample, ++channel)
+        {
+          // Get first byte
+          int sample = inputBuffer[index];
+          // Get next two bytes
+          memcpy(&sample, inputBuffer + index, sizeof(char) * 3);
+          // Account for negative numbers
+          if (sample & 0x800000)
+            sample |= 0xff000000;
+          else
+            sample &= 0x00ffffff;
+
+          samplesPerChannel[channel][sampleIndex] = (float)sample / Normalize24Bit;
+        }
+      }
+
+      return true;
+    }
+    else
+      return false;
+  }
+
+  // Assumes memory is allocated for samplesPerChannel
+  bool OggToFloat(stb_vorbis* oggStream, byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount, const unsigned channelCount)
+  {
+
+    int samplesRead = stb_vorbis_get_samples_float(oggStream, channelCount, samplesPerChannel, totalSampleCount / channelCount);
+
+    return true;
+  }
 
   void FileAccess::ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName)
   {
@@ -347,35 +398,70 @@ namespace Audio
 
     AudioData data;
     unsigned audioFrames;
+    byte* inputBuffer;
+    float** samplesPerChannel;
 
-    // Check WAV ID - if not WAVE, set status and return
-    if (header.wave_fmt[0] != 'W' || header.wave_fmt[1] != 'A')
+    // RIFF file
+    if (header.riff_chunk[0] == 'R' && header.riff_chunk[1] == 'I')
     {
-      status.SetFailed(Zero::String::Format("File %s is an unreadable format", inputName.c_str()));
-      return;
+      // Check WAV ID - if not WAVE, set status and return
+      if (header.wave_fmt[0] != 'W' || header.wave_fmt[1] != 'A')
+      {
+        status.SetFailed(Zero::String::Format("File %s is an unreadable format", inputName.c_str()));
+        return;
+      }
+
+      // Get the data about the file
+      GetWavData(&file, data);
+
+      audioFrames = data.TotalSamples / data.Channels;
+
+      // Create the buffer for reading in data from the file
+      inputBuffer = new byte[data.TotalDataSize];
+
+      // Read in the audio data (file will be in correct position after GetWavData)
+      file.Read(status, inputBuffer, data.TotalDataSize);
+
+      // Create a buffer of samples for each channel
+      samplesPerChannel = new float*[data.Channels];
+      for (unsigned i = 0; i < data.Channels; ++i)
+        samplesPerChannel[i] = new float[audioFrames];
+
+      PcmToFloat(inputBuffer, samplesPerChannel, data.TotalSamples, data.Channels, data.BytesPerSample);
     }
-
-    // Get the data about the file
-    GetWavData(&file, data);
-
-    audioFrames = data.TotalSamples / data.Channels;
-
-    // Create the buffer for reading in data from the file
-    short* inputBuffer = new short[data.TotalSamples];
-
-    // Read in the audio data (file will be in correct position after GetWavData)
-    file.Read(status, (byte*)inputBuffer, data.TotalDataSize);
-
-    // Create a buffer of samples for each channel
-    float** samplesPerChannel = new float*[data.Channels];
-    for (unsigned i = 0; i < data.Channels; ++i)
-      samplesPerChannel[i] = new float[audioFrames];
-
-    // Translate the data into floats and split into channel buffers
-    for (unsigned i = 0; i < audioFrames; ++i)
+    // OGG file
+    else if ((header.riff_chunk[0] == 'O' || header.riff_chunk[0] == 'o') && (header.riff_chunk[1] == 'G' || header.riff_chunk[1] == 'g'))
     {
-      for (unsigned j = 0; j < data.Channels; ++j)
-        samplesPerChannel[j][i] = (float)inputBuffer[(i * data.Channels) + j] / MAXSHORT;
+      // Reset to beginning of file
+      file.Seek(0);
+
+      size_t fileSize = (size_t)file.CurrentFileSize();
+
+      // Create the buffer for reading in data from the file
+      inputBuffer = new byte[fileSize];
+
+      // Read in the audio data 
+      file.Read(status, inputBuffer, fileSize);
+
+      // Create the vorbis stream
+      int error;
+      stb_vorbis* oggStream = stb_vorbis_open_memory((unsigned char*)inputBuffer, fileSize, &error, nullptr);
+
+      GetOggData(oggStream, data);
+
+      audioFrames = data.TotalSamples / data.Channels;
+
+      // Create a buffer of samples for each channel
+      samplesPerChannel = new float*[data.Channels];
+      for (unsigned i = 0; i < data.Channels; ++i)
+        samplesPerChannel[i] = new float[audioFrames];
+
+      int samplesRead = stb_vorbis_get_samples_float(oggStream, data.Channels, samplesPerChannel, data.TotalSamples / data.Channels);
+    }
+    else
+    {
+      status.SetFailed(Zero::String::Format("File %s was not in WAV or OGG format", outputName.c_str()));
+      return;
     }
     
     if (data.SampleRate != 48000)
@@ -384,7 +470,7 @@ namespace Audio
     }
 
     // Create the buffer for encoded packets
-    unsigned char encodedPacket[MAX_PACKET_SIZE];
+    unsigned char encodedPacket[MaxPacketSize];
 
     // Set up the file header
     FileHeader fileHeader;
@@ -412,14 +498,14 @@ namespace Audio
       // Current buffer position for encoding
       float* buffer(nullptr);
       // Used on the final frame to keep the same frame size
-      float finalBuffer[FRAME_SIZE] = { 0 };
+      float finalBuffer[FrameSize] = { 0 };
 
       // Encode the samples, in chunks of FRAME_SIZE
-      for (unsigned inputIndex = 0; inputIndex < audioFrames; inputIndex += FRAME_SIZE)
+      for (unsigned inputIndex = 0; inputIndex < audioFrames; inputIndex += FrameSize)
       {
         for (unsigned channel = 0; channel < data.Channels; ++channel)
         {
-          if (inputIndex + FRAME_SIZE > audioFrames)
+          if (inputIndex + FrameSize > audioFrames)
           {
             buffer = finalBuffer;
             memcpy(buffer, samplesPerChannel[channel] + inputIndex, (audioFrames - inputIndex) * sizeof(float));
@@ -428,7 +514,7 @@ namespace Audio
             buffer = samplesPerChannel[channel] + inputIndex;
 
           // Encode a packet for this channel
-          packetHeader.Size = opus_encode_float(encodersPerChannel[channel], buffer, FRAME_SIZE, encodedPacket, MAX_PACKET_SIZE);
+          packetHeader.Size = opus_encode_float(encodersPerChannel[channel], buffer, FrameSize, encodedPacket, MaxPacketSize);
           // If there was an error, set the status 
           if (packetHeader.Size < 0)
           {
@@ -436,7 +522,7 @@ namespace Audio
             break;
           }
 
-          ErrorIf(packetHeader.Size > MAX_PACKET_SIZE);
+          ErrorIf(packetHeader.Size > MaxPacketSize);
 
           // Set the channel number on the header
           packetHeader.Channel = data.Channels;
@@ -480,13 +566,13 @@ namespace Audio
     // Create a buffer per channel for decoded frames
     float** decodedFramePerChannel = new float*[channels];
     for (unsigned i = 0; i < channels; ++i)
-      decodedFramePerChannel[i] = new float[FRAME_SIZE];
+      decodedFramePerChannel[i] = new float[FrameSize];
 
     // Create the buffer for the interleaved decoded samples
     decodedSamples = new float[fileHeader.SamplesPerChannel * fileHeader.Channels];
 
     // Create buffer for reading in a packet from the file
-    unsigned char packet[MAX_PACKET_SIZE];
+    unsigned char packet[MaxPacketSize];
 
     int error;
     // Create a decoder for each channel
@@ -507,12 +593,12 @@ namespace Audio
         inputFile.Read(status, (byte*)&packetHeader, sizeof(packetHeader));
 
         ErrorIf(packetHeader.Name[0] != 'p' || packetHeader.Name[1] != 'a');
-        ErrorIf(packetHeader.Size > MAX_PACKET_SIZE);
+        ErrorIf(packetHeader.Size > MaxPacketSize);
 
         // Read in the packet, using the size from the header
         inputFile.Read(status, (byte*)packet, packetHeader.Size);
 
-        frameSize = opus_decode_float(decodersPerChannel[channel], packet, packetHeader.Size, decodedFramePerChannel[channel], FRAME_SIZE, 0);
+        frameSize = opus_decode_float(decodersPerChannel[channel], packet, packetHeader.Size, decodedFramePerChannel[channel], FrameSize, 0);
 
         ErrorIf(frameSize < 0);
       }
@@ -571,7 +657,7 @@ namespace Audio
 
     file.Close();
 
-    ProcessFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.wav", "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd");
+    ProcessFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.ogg", "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd");
 
     float* floatSamples(nullptr);
     unsigned channels, samples;
