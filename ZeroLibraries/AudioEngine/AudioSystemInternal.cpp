@@ -86,6 +86,8 @@ namespace Audio
     // For low frequency channel (uses audio system in constructor)
     LowPass = new LowPassFilter();
     LowPass->SetCutoffFrequency(120.0f);
+
+    FileAccess::RunTest();
   }
 
   //************************************************************************************************

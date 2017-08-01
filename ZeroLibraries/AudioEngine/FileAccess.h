@@ -57,15 +57,21 @@ namespace Audio
     // in the AudioData object must be deleted or closed (depending on format) if it is not used.
     static AudioData GetFileData(Zero::Status& status, const Zero::String& fileName);
 
+    static void ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName);
+    // Allocates memory for decodedSamples
+    static void OpenFile(Zero::Status& status, Zero::StringParam fileName, short*& decodedSamples, unsigned& channels, unsigned& samples);
+
+    static void RunTest();
+
   private:
     static SamplesFromFile* ReadFile(Zero::Status& status, const Zero::String& fileName, 
       const bool streaming);
     static void GetWavData(Zero::File* file, AudioData& data);
     static void GetOggData(stb_vorbis* OggStream, AudioData& data);
     static void ReadWavFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
-      const Zero::String& fileName);
+      Zero::StringParam fileName);
     static void ReadOggFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
-      const Zero::String& fileName);
+      Zero::StringParam fileName);
   };
 
 

@@ -42,6 +42,16 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <Lib>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
     <ClCompile>
@@ -106,6 +116,11 @@
     <ClInclude Include="LockFreeQueue.hpp" />
     <ClInclude Include="MIDI.h" />
     <ClInclude Include="Modifiers.h" />
+    <ClInclude Include="opus.h" />
+    <ClInclude Include="opus_custom.h" />
+    <ClInclude Include="opus_defines.h" />
+    <ClInclude Include="opus_multistream.h" />
+    <ClInclude Include="opus_types.h" />
     <ClInclude Include="pa_memorybarrier.h" />
     <ClInclude Include="pa_ringbuffer.h" />
     <ClInclude Include="pa_util.h" />
@@ -124,6 +139,7 @@
     <ClInclude Include="WindowsMIDI.h" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="opus.lib" />
     <Library Include="portaudio_x86.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

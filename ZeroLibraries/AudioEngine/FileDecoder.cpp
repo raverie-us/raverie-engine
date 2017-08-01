@@ -528,5 +528,4 @@ namespace Audio
       DecodingData, DecodingData->SamplesToDecode));
     WaitingForDecoder = true;
   }
-
 }

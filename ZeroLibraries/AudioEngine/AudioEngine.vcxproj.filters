@@ -22,6 +22,9 @@
     <Filter Include="Source Files\PlatformSpecific">
       <UniqueIdentifier>{647218a7-4af1-4b19-9434-0422255586c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Opus">
+      <UniqueIdentifier>{13f85e25-019e-49d4-bd99-79cceeb85a2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileAccess.cpp">
@@ -227,10 +230,28 @@
     <ClInclude Include="DynamicsProcessorNode.h">
       <Filter>Source Files\Nodes</Filter>
     </ClInclude>
+    <ClInclude Include="opus.h">
+      <Filter>Source Files\Opus</Filter>
+    </ClInclude>
+    <ClInclude Include="opus_custom.h">
+      <Filter>Source Files\Opus</Filter>
+    </ClInclude>
+    <ClInclude Include="opus_defines.h">
+      <Filter>Source Files\Opus</Filter>
+    </ClInclude>
+    <ClInclude Include="opus_multistream.h">
+      <Filter>Source Files\Opus</Filter>
+    </ClInclude>
+    <ClInclude Include="opus_types.h">
+      <Filter>Source Files\Opus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="portaudio_x86.lib">
       <Filter>Resource Files</Filter>
+    </Library>
+    <Library Include="opus.lib">
+      <Filter>Source Files\Opus</Filter>
     </Library>
   </ItemGroup>
 </Project>

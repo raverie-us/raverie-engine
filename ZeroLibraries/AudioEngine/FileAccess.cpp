@@ -7,6 +7,7 @@
 
 #include "Precompiled.h"
 #include "stb_vorbis.h"
+#include "opus.h"
 
 namespace Audio
 {
@@ -288,6 +289,269 @@ namespace Audio
 
     // Set the vorbis stream on the data object
     audioData->DecodingData->SetFile((stb_vorbis*)data.FilePointer);
+  }
+
+
+
+
+
+
+
+
+
+#define FRAME_SIZE 960 // 20 ms of audio data
+#define SAMPLE_RATE 48000
+#define MAX_FRAME_SIZE (6 * 960)
+#define MAX_PACKET_SIZE (3 * 1276)
+
+
+  struct FileHeader
+  {
+    const char Name[4] = { 'Z','E','R','O' };
+    short Channels;
+    unsigned Samples;
+  };
+
+  struct PacketHeader
+  {
+    const char Name[4] = { 'p','a','c','k' };
+    short Channel;
+    unsigned Size;
+  };
+
+
+  void FileAccess::ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName)
+  {
+    // Open the input file
+    Zero::File file;
+    file.Open(inputName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+    // If didn't open successfully, set the status and return
+    if (!file.IsOpen())
+    {
+      status.SetFailed(Zero::String::Format("Couldn't open input file %s", inputName.c_str()));
+      return;
+    }
+
+    // Open the output file
+    Zero::File outputFile;
+    outputFile.Open(outputName, Zero::FileMode::Write, Zero::FileAccessPattern::Sequential);
+    // If didn't open successfully, set the status and return
+    if (!file.IsOpen())
+    {
+      status.SetFailed(Zero::String::Format("Couldn't create output file %s", outputName.c_str()));
+      return;
+    }
+
+    // Read in the header from the input file
+    WavRiffHeader header;
+    file.Read(status, (byte*)(&header), sizeof(header));
+
+    AudioData data;
+    unsigned audioFrames;
+
+    // Check WAV ID - if not WAVE, set status and return
+    if (header.wave_fmt[0] != 'W' || header.wave_fmt[1] != 'A')
+    {
+      status.SetFailed(Zero::String::Format("File %s is an unreadable format", inputName.c_str()));
+      return;
+    }
+
+    // Get the data about the file
+    GetWavData(&file, data);
+
+    audioFrames = data.TotalSamples / data.Channels;
+
+    // Create the buffer for reading in data from the file
+    short* inputSamples = new short[data.TotalSamples];
+
+    // Read in the audio data (file will be in correct position after GetWavData)
+    file.Read(status, (byte*)inputSamples, data.TotalDataSize);
+    
+    if (data.SampleRate != 48000)
+    {
+      // Resample the file
+    }
+
+    // Create the buffer for encoded packets
+    unsigned char encodedPacket[MAX_PACKET_SIZE];
+
+    // Set up the file header
+    FileHeader fileHeader;
+    fileHeader.Channels = data.Channels;
+    fileHeader.Samples = data.TotalSamples;
+
+    // Write the header to the output file
+    outputFile.Write((byte*)&fileHeader, sizeof(fileHeader));
+
+    // Create the packet header object
+    PacketHeader packetHeader;
+
+     int error;
+    OpusEncoder* encoder = opus_encoder_create(SAMPLE_RATE, 2, OPUS_APPLICATION_AUDIO, &error);
+
+    if (error < 0)
+    {
+      status.SetFailed(Zero::String::Format("Error %s\n", opus_strerror(error)));
+    }
+    else
+    {
+      short* buffer(nullptr);
+      short finalBuffer[FRAME_SIZE] = { 0 };
+
+      // Encode the samples, in chunks of FRAME_SIZE
+      for (unsigned inputIndex = 0; inputIndex < data.TotalSamples; inputIndex += FRAME_SIZE * 2)
+      {
+        if (inputIndex + (FRAME_SIZE * 2) > data.TotalSamples)
+        {
+          buffer = finalBuffer;
+          memcpy(buffer, inputSamples + inputIndex, (data.TotalSamples - inputIndex) * sizeof(short));
+        }
+        else
+          buffer = inputSamples + inputIndex;
+
+        // Encode a packet for this channel
+        packetHeader.Size = opus_encode(encoder, buffer, FRAME_SIZE, encodedPacket, MAX_PACKET_SIZE);
+        // If there was an error, set the status 
+        if (packetHeader.Size < 0)
+        {
+          status.SetFailed(Zero::String::Format("Encode failed: %s\n", opus_strerror(packetHeader.Size)));
+          break;
+        }
+
+        ErrorIf(packetHeader.Size > MAX_PACKET_SIZE);
+
+        // Set the channel number on the header
+        packetHeader.Channel = 0;
+
+        // Write the header to the file
+        outputFile.Write((byte*)&packetHeader, sizeof(packetHeader));
+        // Write the encoded packet to the file
+        outputFile.Write((byte*)encodedPacket, packetHeader.Size);
+      }
+    }
+  }
+
+  void FileAccess::OpenFile(Zero::Status& status, Zero::StringParam fileName, short*& decodedSamples, unsigned& channels, unsigned& samples)
+  {
+    // Open the file
+    Zero::File inputFile;
+    inputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+    // If failed, set the status and return
+    if (!inputFile.IsOpen())
+    {
+      status.SetFailed(Zero::String::Format("Couldn't open input file %s", fileName.c_str()));
+      return;
+    }
+
+    // Create the file header object
+    FileHeader fileHeader;
+    // Read in the header from the file
+    inputFile.Read(status, (byte*)&fileHeader, sizeof(fileHeader));
+    // If the file is not in the correct format, set the status and return
+    if (fileHeader.Name[0] != 'Z' || fileHeader.Name[1] != 'E')
+    {
+      status.SetFailed(Zero::String::Format("File %s is in an incorrect format", fileName.c_str()));
+      return;
+    }
+
+    // Set the variables
+    channels = fileHeader.Channels;
+    samples = fileHeader.Samples;
+
+    // Create the buffer for the interleaved decoded samples
+    decodedSamples = new short[fileHeader.Samples * fileHeader.Channels];
+
+    // Create buffer for reading in a packet from the file
+    unsigned char packet[MAX_PACKET_SIZE];
+
+    int error;
+    OpusDecoder* decoder = opus_decoder_create(SAMPLE_RATE, 2, &error);
+
+    PacketHeader packetHeader;
+    unsigned decodedBufferIndex(0);
+    unsigned samplesRead(0);
+
+    while (samplesRead < samples)
+    {
+      int frameSize(0);
+
+      // Read in the packet header
+      inputFile.Read(status, (byte*)&packetHeader, sizeof(packetHeader));
+
+      ErrorIf(packetHeader.Name[0] != 'p' || packetHeader.Name[1] != 'a');
+      ErrorIf(packetHeader.Size > MAX_PACKET_SIZE);
+
+      // Read in the packet, using the size from the header
+      inputFile.Read(status, (byte*)packet, packetHeader.Size);
+
+      frameSize = opus_decode(decoder, packet, packetHeader.Size, decodedSamples + samplesRead, FRAME_SIZE, 0);
+
+      ErrorIf(frameSize < 0);
+
+      samplesRead += frameSize * 2;
+    }
+
+  }
+
+  void FileAccess::RunTest()
+  {
+    Zero::File file;
+    file.Open("C:\\Users\\Andrea Ellinger\\Desktop\\Run.wav", Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+    ErrorIf(!file.IsOpen());
+
+    Zero::Status status;
+    WavRiffHeader header;
+    file.Read(status, (byte*)(&header), sizeof(header));
+
+    // Read in the next chunk header
+    WavChunkHeader fmtChunkHeader;
+    file.Read(status, (byte*)(&fmtChunkHeader), sizeof(fmtChunkHeader));
+    // If this isn't the fmt chunk, keep looking
+    while (fmtChunkHeader.chunk_name[0] != 'f' || fmtChunkHeader.chunk_name[1] != 'm'
+      || fmtChunkHeader.chunk_name[2] != 't')
+    {
+      file.Seek(fmtChunkHeader.chunk_size, Zero::FileOrigin::Current);
+      file.Read(status, (byte*)(&fmtChunkHeader), sizeof(fmtChunkHeader));
+    }
+
+    // Read in the fmt chunk data
+    WavFmtData fmtChunkData;
+    file.Read(status, (byte*)(&fmtChunkData), sizeof(fmtChunkData));
+
+    // If the chunk size is larger than the WavFmtData struct, skip ahead
+    if (fmtChunkHeader.chunk_size > sizeof(fmtChunkData))
+      file.Seek(fmtChunkHeader.chunk_size - sizeof(fmtChunkData), Zero::FileOrigin::Current);
+
+    // Get the data chunk header
+    WavChunkHeader dataChunkHeader;
+    file.Read(status, (byte*)(&dataChunkHeader), sizeof(dataChunkHeader));
+    // If this isn't the data chunk, keep looking
+    while (dataChunkHeader.chunk_name[0] != 'd' || dataChunkHeader.chunk_name[1] != 'a'
+      || dataChunkHeader.chunk_name[2] != 't')
+    {
+      file.Seek(dataChunkHeader.chunk_size, Zero::FileOrigin::Current);
+      file.Read(status, (byte*)(&dataChunkHeader), sizeof(dataChunkHeader));
+    }
+
+    file.Close();
+
+    ProcessFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.wav", "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd");
+
+    short* sampleBuffer(nullptr);
+    unsigned channels, samples;
+    OpenFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd", sampleBuffer, channels, samples);
+
+    Zero::File outFile;
+    outFile.Open("C:\\Users\\Andrea Ellinger\\Desktop\\RunOutput.wav", Zero::FileMode::Write, Zero::FileAccessPattern::Sequential);
+
+    outFile.Write((byte*)&header, sizeof(header));
+    outFile.Write((byte*)&fmtChunkHeader, sizeof(fmtChunkHeader));
+    outFile.Write((byte*)&fmtChunkData, sizeof(fmtChunkData));
+    outFile.Write((byte*)&dataChunkHeader, sizeof(dataChunkHeader));
+
+    outFile.Write((byte*)sampleBuffer, samples * sizeof(short));
+
+    delete[] sampleBuffer;
   }
 
 }
