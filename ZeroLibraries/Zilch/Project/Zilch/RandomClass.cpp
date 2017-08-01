@@ -10,6 +10,8 @@ namespace Zilch
   //***************************************************************************
   ZilchDefineType(Random, builder, type)
   {
+    type->AddAttribute(ImportDocumentation);
+
     ZilchFullBindDestructor(builder, type, Random);
     ZilchFullBindConstructor(builder, type, Random, nullptr, uint);
     ZilchFullBindConstructor(builder, type, Random, nullptr);
