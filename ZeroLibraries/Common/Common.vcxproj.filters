@@ -358,6 +358,9 @@
     <ClInclude Include="Utility\VariantConfig.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\PointerCast.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="ZeroVisualizers.natvis" />

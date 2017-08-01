@@ -104,6 +104,8 @@ GameSession::~GameSession()
 //******************************************************************************
 void GameSession::Initialize(CogInitializer& initializer)
 {
+  mCreationFlags = initializer.Flags;
+
   if(!IsEditorMode())
     ZPrintFilter(Filter::DefaultFilter, "---------------- Begin Game ----------------\n");
 

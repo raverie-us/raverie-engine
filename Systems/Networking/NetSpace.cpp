@@ -348,7 +348,7 @@ void NetSpace::FulfillDelayedAttachments(Cog* delayedParentObject)
     }
 
     // Attach ready child object to delayed parent object
-    readyChildObject->AttachTo(delayedParentObject);
+    readyChildObject->AttachToPreserveLocal(delayedParentObject);
 
     // Remove from ready child map
     mReadyChildMap.EraseValue(readyChild);

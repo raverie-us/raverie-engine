@@ -1,5 +1,5 @@
 [Vertex]
-struct %RESOURCENAME%
+struct RESOURCE_NAME_
 {
 	[BuiltInInput] var FrameTime : Real;
 	[BuiltInInput] var ViewToPerspective : Real4x4;

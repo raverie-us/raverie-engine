@@ -141,7 +141,15 @@ void ZilchPluginBuilder::Generate(ContentInitializer& initializer)
 
 void ZilchPluginBuilder::BuildContent(BuildOptions& buildOptions)
 {
+  // This must run before the template early out so that we output the data file
+  // to the content output directory and the template plugin stops thinking it needs
+  // to build every time we run Zero.
   DataBuilder::BuildContent(buildOptions);
+
+  // Don't build the resource template plugin.
+  // This stops a stub dll from getting into our Editor resources directory.
+  if (mOwner->has(ResourceTemplate))
+    return;
 
   String sharedLibraryFileName = GetSharedLibraryFileName();
   String destFile = FilePath::Combine(buildOptions.OutputPath, sharedLibraryFileName);
@@ -155,6 +163,12 @@ void ZilchPluginBuilder::BuildContent(BuildOptions& buildOptions)
   }
 
   CopyFile(destFile, sourceFile);
+
+  Resource* resource = Z::gResources->GetResource(mOwner->mRuntimeResource);
+  if (resource)
+  {
+    resource->SendModified();
+  }
 }
 
 void ZilchPluginBuilder::BuildListing(ResourceListing& listing)
@@ -197,8 +211,7 @@ ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
 
   // Some templates require generated guids which we will create and replace
   static const String ReplaceGuid("{11111111-1111-1111-1111-111111111111}");
-  static const String ReplaceName("%NAME%");
-  static const String ReplaceIncludeGuard("%UPPERCASENAME%");
+  static const String ReplaceName("RESOURCE_NAME_");
 
   String includeGuard = pluginName.ToUpper();
   String guid = GenerateGuid();
@@ -218,7 +231,6 @@ ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
     // This could probably be done more efficiently
     data = data.Replace(ReplaceName, pluginName);
     data = data.Replace(ReplaceGuid, guid);
-    data = data.Replace(ReplaceIncludeGuard, includeGuard);
 
     WriteToFile(outputFile.Data(), (byte*)data.Data(), data.SizeInBytes());
   }

@@ -3,6 +3,8 @@
 namespace Zero
 {
 
+static const float cAcceptableLoadtime = 0.15f;
+
 OsInt RendererThreadMain(void* rendererThreadJobQueue)
 {
   RendererThreadJobQueue* jobQueue = (RendererThreadJobQueue*)rendererThreadJobQueue;
@@ -294,6 +296,7 @@ ShowProgressJob::ShowProgressJob(RendererThreadJobQueue* jobQueue)
 void ShowProgressJob::OnExecute()
 {
   mTimer.Update();
+  mPerJobTimer.Update();
 
   if (mSplashMode)
   {
@@ -303,23 +306,37 @@ void ShowProgressJob::OnExecute()
     // Fade in
     else
       mSplashFade = Math::Min(mSplashFade + 0.02f, 1.0f);
+
+    Z::gRenderer->ShowProgress(this);
   }
   else
   {
     // Increases current percent every run so that progress always smoothly completes
     mCurrentPercent = Math::Min((mProgressWidth * mCurrentPercent + 16.0f) / mProgressWidth, mTargetPercent);
-  }
 
-  Z::gRenderer->ShowProgress(this);
+    // It's OK if the UI freezes for a small acceptable amount of time
+    // During this time we don't show the loading screen (for example, when creating a script or material)
+    if (mPerJobTimer.Time() >= cAcceptableLoadtime)
+      Z::gRenderer->ShowProgress(this);
+  }
 }
 
 bool ShowProgressJob::OnShouldRun()
 {
   // Allows job to complete its behavior before actually terminating
   if (mSplashMode)
+  {
     return mSplashFade > 0.0f;
+  }
   else
+  {
+    // If we complete the job within the acceptable load time, then don't
+    // worry about the current percentage, just exit out early!
+    if (mTargetPercent >= 1.0f && mPerJobTimer.Time() < cAcceptableLoadtime)
+      return false;
+
     return mCurrentPercent < mTargetPercent;
+  }
 }
 
 } // namespace Zero

@@ -374,6 +374,78 @@ public:
 
 };
 
+//---------------------------------------------------------------- cstr ToString
+struct CStrToString
+{
+  String Convert(cstr input) { return ToString(input); }
+};
+
+//----------------------------------------------- Add Spaces To Upper Camel Case
+struct AddSpacesToUpperCamelCase
+{
+  String Convert(cstr input);
+};
+
+//---------------------------------------------------------- const cstr[] Source
+template<typename StringConverter>
+class CStrSource : public ListSource
+{
+public:
+  CStrSource( ) { mData = nullptr; }
+
+  // Takes in a pointer to a null terminated array of c-strings.
+  CStrSource(const cstr data[])
+  {
+    SetSource(data);
+  }
+
+  // Takes in a pointer to a null terminated array of c-strings.
+  void SetSource(const cstr data[])
+  {
+    // Store the names
+    mData = data;
+
+    // Need to compute the size of the array;
+    // start off assuming there are no elements.
+    mSize = 0;
+
+    // Start off at the first name
+    const cstr* start = mData;
+
+    // Compute the size by looping until we find the null terminator
+    while(*start != nullptr)
+    {
+      // Increment the size and start
+      ++mSize;
+      ++start;
+    }
+
+  }
+
+  String GetStringValueAt(DataIndex index) override
+  {
+    return mConverter.Convert(mData[(uint)index.Id]);
+  }
+
+  inline String operator[](uint index) { return GetStringValueAt(index); }
+
+  uint Size( ) { return mSize; }
+  uint GetCount( ) override { return mSize; }
+
+  bool Empty( ) { return (mSize == 0); }
+
+ 
+public:
+  size_t mSize;
+  const cstr* mData;
+  StringConverter mConverter;
+
+};
+
+typedef CStrSource<CStrToString> CStrSourceStd;
+typedef CStrSource<AddSpacesToUpperCamelCase> CStrSourceSpaced;
+
+
 //---------------------------------------------------------------- String Source
 class StringSource : public ContainerSource< Array<String> >
 {
@@ -397,77 +469,31 @@ public:
 };
 
 //------------------------------------------------------------------ Enum Source
-// A source provider for enums
+/// A source provider for enums.
 class EnumSource : public ListSource
 {
 public:
-  //Default constructor.
   EnumSource();
 
-  ~EnumSource();
+  /// Build the enum info from the meta type.
+  void BuildFromMeta(BoundType* enumType);
 
-  // Constructor (takes in a pointer to a null terminated array of c-strings)
-  EnumSource(const cstr enumName, const cstr* names, bool selfClean = false);
+  /// Retrieve enum descriptions, if available.
+  void FillOutDescriptions();
 
-  // Constructor (takes in a pointer to an array of c-strings, and a size)
-  EnumSource(const cstr enumName, const cstr* names, size_t size, bool selfClean = false);
+  /// Get the number of elements in the enum.
+  uint GetCount( ) override;
 
-  // Set the enum source
-  void SetEnum(const cstr enumName, const cstr* names, size_t size, bool selfClean = false);
-
-  // Set Enum (takes in a pointer to a null terminated array of c-strings)
-  void SetEnum(const cstr enumName, const cstr* names, bool selfClean = false);
-
-  // Retrieve enum descriptions, if available.
-  //   NOTE: Assumes 'mNames' has been populated.
-  void FillOutDescriptions(const cstr enumName);
-
-  // Get the number of elements in the enum
-  uint GetCount() override;
-
-  // Get the name at a particular index
+  /// Get the enum name at a particular index.
   String GetStringValueAt(DataIndex index) override;
-  // Get the description (documentation) for the corresponding enum at the same index
+  /// Get the description (documentation) for the corresponding enum at the same index.
   String GetDescriptionAt(DataIndex index) override;
 
 private:
-  // Denotes if the destructor should delete [] 'mNames'
-  bool mSelfClean;
   // Store the names, descriptions, and the size of the arrays
-  const cstr* mNames;
+  BoundType* mEnumType;
+  Array<String> mNames;
   Array<String> mDescriptions;
-  size_t mSize;
 };
-
-//----------------------------------------------- Add Spaces To Upper Camel Case
-struct AddSpacesToUpperCamelCase
-{
-  String Transform(StringParam input);
-};
-
-//------------------------------------------------------ Enum Source Transformed
-// A source provider for enums
-template <typename StringTransformer>
-class EnumSourceTransformed : public EnumSource
-{
-public:
-  EnumSourceTransformed()
-  {
-  }
-
-  // Get the name at a particular index
-  virtual String GetStringValueAt(DataIndex index) override
-  {
-    return mTransformer.Transform(EnumSource::GetStringValueAt(index));
-  }
-
-private:
-
-  // Store the string transformer
-  StringTransformer mTransformer;
-};
-
-// Type-defines
-typedef EnumSourceTransformed<AddSpacesToUpperCamelCase> EnumSourceSpaced;
 
 }//namespace Zero

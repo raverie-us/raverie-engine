@@ -35,7 +35,7 @@ void AddResourceLibraries(Array<Zilch::LibraryRef>& libraries, ResourceLibrary* 
   forRange(ResourceLibrary* dependency, library->Dependencies.All())
     AddResourceLibraries(libraries, dependency);
 
-  libraries.PushBack(library->mCurrentFragmentLibrary);
+  libraries.PushBack(library->mSwapFragment.mCurrentLibrary);
 }
 
 void ZilchFragment::GetLibraries(Array<Zilch::LibraryRef>& libraries)
@@ -54,10 +54,10 @@ void ZilchFragment::GetLibrariesRecursive(Array<LibraryRef>& libraries, Resource
   forRange(ResourceLibrary* dependency, library->Dependencies.All())
     GetLibrariesRecursive(libraries, dependency);
 
-  if(library->mCurrentFragmentLibrary != nullptr)
+  if(library->mSwapFragment.mCurrentLibrary != nullptr)
   {
     GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
-    Zilch::LibraryRef wrapperLibrary = library->mCurrentFragmentLibrary;
+    Zilch::LibraryRef wrapperLibrary = library->mSwapFragment.mCurrentLibrary;
     ZilchShaderLibrary* internalFragmentLibrary = graphicsEngine->mShaderGenerator->GetInternalLibrary(wrapperLibrary);
     ErrorIf(internalFragmentLibrary == nullptr, "Didn't find an internal library for a wrapper library");
     libraries.PushBack(internalFragmentLibrary->mZilchLibrary);
@@ -99,7 +99,8 @@ void ZilchFragmentLoader::ReloadFromFile(Resource* resource, ResourceEntry& entr
 ImplementResourceManager(ZilchFragmentManager, ZilchFragment);
 
 ZilchFragmentManager::ZilchFragmentManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+  : ResourceManager(resourceType),
+    mLastExceptionVersion(-1)
 {
   mCategory = "Code";
   mCanAddFile = true;
@@ -147,7 +148,7 @@ String ZilchFragmentManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
   // Replace the fragment name where needed
   Replacements replacements;
   Replacement& nameReplacement = replacements.PushBack();
-  nameReplacement.MatchString = "%RESOURCENAME%";
+  nameReplacement.MatchString = "RESOURCE_NAME_";
   nameReplacement.ReplaceString = resourceAdd.Name;
 
   // Replace the tabs with spaces
@@ -177,12 +178,24 @@ void ZilchFragmentManager::DispatchScriptError(StringParam eventId, StringParam 
 
   ZilchDocumentResource* resource = (ZilchDocumentResource*)location.CodeUserData;
 
-  DebugEngineEvent e;
-  e.Handled = false;
-  e.Script = resource;
-  e.Message = shortMessage;
-  e.Location = location;
-  Z::gResources->DispatchEvent(eventId, &e);
+  if (mLastExceptionVersion != ZilchManager::GetInstance()->mVersion)
+  {
+    mLastExceptionVersion = ZilchManager::GetInstance()->mVersion;
+    mDuplicateExceptions.Clear();
+  }
+
+  bool isDuplicate = mDuplicateExceptions.Contains(fullMessage);
+  mDuplicateExceptions.Insert(fullMessage);
+
+  if (!isDuplicate)
+  {
+    DebugEngineEvent e;
+    e.Handled = false;
+    e.Script = resource;
+    e.Message = shortMessage;
+    e.Location = location;
+    Z::gResources->DispatchEvent(eventId, &e);
+  }
 
   Console::Print(Filter::DefaultFilter, "%s", fullMessage.c_str());
 }

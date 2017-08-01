@@ -124,6 +124,11 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeType(BinaryBuilder);
   ZilchInitializeType(GeneratedArchetype);
 
+  // @trevor.sundberg: The content and engine libraries are co-dependent, and since
+  // content references the Archetype type, we get an error that it hasn't yet been
+  // initialized since Content is initialized first. This prevents the assert:
+  ZilchTypeId(Archetype)->AssertOnInvalidBinding = &IgnoreOnInvalidBinding;
+
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
 

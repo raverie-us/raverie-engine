@@ -199,20 +199,6 @@ namespace Zilch
     LibraryRef IncompleteLibrary;
   };
 
-  class ZeroShared PluginEntry
-  {
-  public:
-    PluginEntry();
-    PluginEntry(StringParam path, void* userData = nullptr);
-
-    // The file or directory that the plugin exists at
-    String Path;
-
-    // Any user data we wisht to attach
-    // This gets attached to the plugin, and possibly even the library depending on the plugin's implementation
-    void* UserData;
-  };
-
   // The project Contains all the files that are being compiled together
   class ZeroShared Project : public CompilationErrors
   {
@@ -258,7 +244,7 @@ namespace Zilch
     );
 
     // Compiles the project into a single library and also returns the syntax tree
-    LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut, BuildReason::Enum reason);
+    LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut);
 
     // Compiles the project into a single library
     LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation);
@@ -288,12 +274,6 @@ namespace Zilch
     // any other local variables within the function, then we use this counter as a unique id
     size_t VariableUniqueIdCounter;
 
-    // We will automatically attempt to load plugins from these directories
-    Array<PluginEntry> PluginDirectories;
-
-    // We will also attempt to load these specific plugin files
-    Array<PluginEntry> PluginFiles;
-
     // Setup the location and the name for a found definition
     void InitializeDefinitionInfo(CodeDefinition& resultOut, ReflectionObject* object);
 
@@ -304,9 +284,6 @@ namespace Zilch
 
     // Internal function called by the above 'GetDefinitionInfo'
     void GetDefinitionInfoInternal(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, CodeDefinition& resultOut);
-
-    // Loads all the plugins into the given library builder
-    void LoadPlugins(LibraryBuilder& builder, Module& dependencies, BuildReason::Enum reason);
 
     // Get auto complete information (but doesn't parse it into completions)
     void GetAutoCompleteInfoInternal(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, AutoCompleteInfo& resultOut);

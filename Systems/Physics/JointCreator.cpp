@@ -142,7 +142,7 @@ Cog* JointCreator::AttachInternal(ConnectionInfo& info, StringParam jointName)
     Cog* commonParent = FindCommonParent(cogA, cogB);
 
     if(commonParent != nullptr)
-      cog->AttachTo(commonParent);
+      cog->AttachToPreserveLocal(commonParent);
   }
 
   Joint* joint = cog->has(Joint);

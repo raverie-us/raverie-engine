@@ -1,5 +1,5 @@
 [Pixel]
-struct %RESOURCENAME%
+struct RESOURCE_NAME_
 {
 	function Main()
 	{

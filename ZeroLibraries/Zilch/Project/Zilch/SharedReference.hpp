@@ -366,13 +366,23 @@ namespace Zilch
     // Store the list of weak references to our object
     // (they will not keep us alive, but we will null them out if we die)
     WeakInList WeakReferences;
+
+    size_t RefCount() const
+    {
+      size_t count = 0;
+      forRange(SharedType& child, const_cast<RefLink*>(this)->SharedReferences.All())
+      {
+        ++count;
+      }
+      return count;
+    }
   };
 
 // A macro that creates an intrusive reference link
 // This is typically placed at the end of your class
-#define ZilchRefLink(type)                           \
-  public:                                            \
-  typedef ::Zilch::RefLink<const type> RefLinkType;  \
+#define ZilchRefLink(type)                                        \
+  public:                                                         \
+  typedef ::Zilch::RefLink<const type> RefLinkType;               \
   mutable RefLinkType Referencers;
 
 // If a particular object is going to be used as a referencer,

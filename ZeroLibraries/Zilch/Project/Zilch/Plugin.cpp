@@ -28,10 +28,7 @@ namespace Zilch
   
   //***************************************************************************
   BuildEvent::BuildEvent() :
-    BuildingProject(nullptr),
-    Dependencies(nullptr),
-    Builder(nullptr),
-    Reason(BuildReason::FullCompilation)
+    Dependencies(nullptr)
   {
   }
   
@@ -45,13 +42,6 @@ namespace Zilch
     }
 
     return nullptr;
-  }
-  
-  //***************************************************************************
-  void BuildEvent::AddPluginDependency(LibraryRef library)
-  {
-    library->CreatedByPlugin = true;
-    this->Dependencies->PushBack(library);
   }
   
   //***************************************************************************
@@ -71,8 +61,9 @@ namespace Zilch
 
   //***************************************************************************
   Plugin::Plugin() :
-    FullCompilationInitialized(false),
-    UserData(nullptr)
+    Initialized(false),
+    UserData(nullptr),
+    SharedLibrary(nullptr)
   {
   }
 
@@ -87,13 +78,144 @@ namespace Zilch
   }
   
   //***************************************************************************
-  void Plugin::Initialize(BuildEvent* event)
+  void Plugin::Initialize()
   {
   }
   
   //***************************************************************************
   void Plugin::Uninitialize()
   {
+  }
+
+  //***************************************************************************
+  LibraryRef Plugin::LoadFromFile(Status& status, Module& dependencies, StringParam filePath, void* userData)
+  {
+    // In order to not lock the library and support dynamic reloading, we make a copy of any plugin files
+    // Ideally we want to load the same libraries and not duplicate code loading,
+    // therefore we use the hash of the library to uniquely identify it
+    File file;
+    file.Open(filePath, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential, Zero::FileShare::Read, &status);
+    if (status.Failed())
+    {
+      status.SetFailed("We failed to open the plugin file for Read only access (does it exist or is there permission?)");
+      return nullptr;
+    }
+
+    // If the file is empty, then skip it
+    if (file.CurrentFileSize() == 0)
+    {
+      status.SetFailed("The plugin file was empty");
+      return nullptr;
+    }
+
+    // Get the hash of the shared library and then close the file
+    String sha1Hash = Sha1Builder::GetHashStringFromFile(file);
+    file.Close();
+
+    // Copy the library to a new temporary location
+    StringRange pluginName = Zero::FilePath::GetFileNameWithoutExtension(filePath);
+    String fileName = BuildString(pluginName, ".", sha1Hash, ".zilchPlugin");
+    String pluginLocation = Zero::FilePath::Combine(Zero::GetTemporaryDirectory(), fileName);
+
+    // Only copy if the file doesn't already exist
+    if (Zero::FileExists(pluginLocation) == false)
+    {
+      // If we fail to copy the file, then just load the plugin directly...
+      if (Zero::CopyFile(pluginLocation, filePath) == false)
+        pluginLocation = filePath;
+    }
+
+    // Attempt to load the plugin file
+    UniquePointer<ExternalLibrary> lib = new ExternalLibrary();
+    lib->Load(status, pluginLocation.c_str());
+    if (status.Failed())
+      return nullptr;
+
+    // If we failed to load the library, then early out
+    if (lib->IsValid() == false)
+    {
+      status.SetFailed("The plugin dynamic/shared library was not a valid library and could not be loaded");
+      return nullptr;
+    }
+
+    // Look for the create plugin functionality, early out if we don't find it
+    CreateZilchPluginFn createPlugin = (CreateZilchPluginFn)lib->GetFunctionByName("CreateZilchPlugin");
+    if (createPlugin == nullptr)
+    {
+      status.SetFailed("The 'CreateZilchPlugin' function was not exported within the dll (did you use the ZeroExport macro?)");
+      return nullptr;
+    }
+
+    // Finally, attempt to create a plugin (the user should return us a plugin at this point)
+    Plugin* plugin = createPlugin();
+    if (plugin == nullptr)
+    {
+      status.SetFailed("We found the 'CreateZilchPlugin' function and called it, but it returned null so no plugin was created");
+      return nullptr;
+    }
+
+    // We successfully loaded the plugin
+    plugin->UserData = userData;
+    plugin->SharedLibrary = lib.Release();
+
+    BuildEvent buildEvent;
+    buildEvent.Dependencies = &dependencies;
+    plugin->PreBuild(&buildEvent);
+
+    LibraryRef pluginLibrary = plugin->GetLibrary();
+    pluginLibrary->Plugin = plugin;
+    return pluginLibrary;
+  }
+
+  //***************************************************************************
+  void Plugin::LoadFromDirectory(Status& status, Module& dependencies, Array<LibraryRef>& pluginsOut, StringParam directory, void* userData)
+  {
+    // Walk through all the files in the directory looking for anything ending with .zilchPlugin
+    static const String PluginExtension("zilchPlugin");
+
+    Zero::FileRange range(directory);
+    while (range.Empty() == false)
+    {
+      // If this file has the .zilchPlugin extension
+      Zero::FileEntry fileEntry = range.frontEntry();
+      String filePath = fileEntry.GetFullPath();
+      if (Zero::FilePath::GetExtension(fileEntry.mFileName) == PluginExtension)
+      {
+        // Attempt to load the plugin (this may fail!)
+        LibraryRef pluginLibrary = LoadFromFile(status, dependencies, filePath, userData);
+
+        // If we successfully created a plugin, then output it
+        if (pluginLibrary != nullptr)
+          pluginsOut.PushBack(pluginLibrary);
+      }
+      range.PopFront();
+    }
+  }
+
+  //***************************************************************************
+  void Plugin::InitializeSafe()
+  {
+    if (this->Initialized)
+      return;
+
+    this->Initialize();
+    this->Initialized = true;
+  }
+
+  //***************************************************************************
+  void Plugin::UninitializeSafe()
+  {
+    if (!this->Initialized)
+      return;
+
+    this->Uninitialize();
+    this->Initialized = false;
+  }
+
+  //***************************************************************************
+  bool Plugin::IsInitialized()
+  {
+    return this->Initialized;
   }
   
   //***************************************************************************
@@ -206,14 +328,14 @@ namespace Zilch
     // Because some of the types that we have bound already exist within the Zero or Zilch namespace
     // then when we generate code for them, we want to redirect them to use the special type names specified here
     this->TypeToCppName.Insert(ZilchTypeId(Any), NativeName("Any", "const Zilch::Any&", "Zilch::Any"));
+    this->TypeToCppName.Insert(ZilchTypeId(Handle), NativeName("Handle", "const Zilch::Handle&", "Zilch::Handle"));
+    this->TypeToCppName.Insert(ZilchTypeId(Delegate), NativeName("Delegate", "const Zilch::Delegate&", "Zilch::Delegate"));
 
     this->TypeToCppName.Insert(ZilchTypeId(Member), NativeName("Member", "Zilch::Member*", "Zilch::HandleOf<Zilch::Member>"));
     this->TypeToCppName.Insert(ZilchTypeId(Property), NativeName("Property", "Zilch::Property*", "Zilch::HandleOf<Zilch::Property>"));
     this->TypeToCppName.Insert(ZilchTypeId(GetterSetter), NativeName("GetterSetter", "Zilch::GetterSetter*", "Zilch::HandleOf<Zilch::GetterSetter>"));
     this->TypeToCppName.Insert(ZilchTypeId(Field), NativeName("Field", "Zilch::Field*", "Zilch::HandleOf<Zilch::Field>"));
     this->TypeToCppName.Insert(ZilchTypeId(Function), NativeName("Function", "Zilch::Function*", "Zilch::HandleOf<Zilch::Function>"));
-
-    this->TypeToCppName.Insert(ZilchTypeId(Delegate), NativeName("Delegate", "const Zilch::Delegate&", "Zilch::Delegate"));
 
     this->TypeToCppName.Insert(ZilchTypeId(Void), NativeName("Void", "void", "void"));
 
@@ -301,7 +423,7 @@ namespace Zilch
     else
     {
       // Otherwise this is a value type, so just always take it by value
-      nativeNameResult.Parameter = name;
+      nativeNameResult.Parameter = BuildString("const ", name, "&");
       nativeNameResult.Return = name;
     }
     
@@ -359,9 +481,17 @@ namespace Zilch
   }
 
   //***************************************************************************
+  String GetCoreNamespace()
+  {
+    // Define types if this is not the Core library (which has already defined its types)
+    static const String CoreNamespace = Core::GetInstance().GetLibrary()->GetPluginNamespace();
+    return CoreNamespace;
+  }
+
+  //***************************************************************************
   String NativeStubCode::GenerateHpp()
   {
-    String nameDefine = this->Namespace.ToUpper();
+    String nameDefine = this->Filename.ToUpper();
 
     ZilchCodeBuilder builder;
 
@@ -391,10 +521,7 @@ namespace Zilch
       builder.WriteLineIndented();
     }
 
-    // Declare types if this is not the Core library (which has already declared its types within Zilch.hpp)
-    static const String CoreNamespace = Core::GetInstance().GetLibrary()->GetPluginNamespace();
-
-    if (this->Namespace != CoreNamespace)
+    if (this->Namespace != GetCoreNamespace())
     {
       builder.Write("namespace ");
       builder.Write(this->Namespace);
@@ -448,6 +575,8 @@ namespace Zilch
         builder.Write("typedef ");
         builder.Write(baseName);
         builder.Write(" ZilchBase;");
+        builder.WriteLineIndented();
+        builder.Write("Zilch::BoundType* ZilchGetDerivedType() const { return ZilchTypeId(ZilchSelf)->GetBindingVirtualTypeFromInstance(this); }");
         builder.WriteLineIndented();
         builder.WriteLineIndented();
 
@@ -564,7 +693,7 @@ namespace Zilch
 
     // Declare HookUpLibrary function
     builder.Write("bool HookUp");
-    builder.Write(this->Namespace);
+    builder.Write(this->Filename);
     builder.WriteLineIndented("(Zilch::BuildEvent* event);");
     builder.WriteLineIndented();
 
@@ -615,10 +744,7 @@ namespace Zilch
       builder.WriteLineIndented();
     }
 
-    // Define types if this is not the Core library (which has already defined its types)
-    static const String CoreNamespace = Core::GetInstance().GetLibrary()->GetPluginNamespace();
-
-    if (this->Namespace != CoreNamespace)
+    if (this->Namespace != GetCoreNamespace())
     {
       builder.Write("namespace ");
       builder.Write(this->Namespace);
@@ -891,7 +1017,7 @@ namespace Zilch
     // Define HookUpLibrary function
     builder.WriteLineIndented();
     builder.Write("bool HookUp");
-    builder.Write(this->Namespace);
+    builder.Write(this->Filename);
     builder.Write("(Zilch::BuildEvent* event)");
     builder.BeginScope(ScopeType::Function);
     builder.WriteLineIndented();
@@ -904,6 +1030,7 @@ namespace Zilch
     ZilchForEach(const LibraryRef& library, *this->Libraries)
     {
       builder.BeginScope(ScopeType::Block);
+      builder.WriteLineIndented();
 
       builder.Write("const char* libraryName = \"");
       builder.Write(library->Name);
@@ -916,61 +1043,75 @@ namespace Zilch
 
       builder.WriteLineIndented("mangler.MangleLibrary(library);");
 
-      builder.BeginScope(ScopeType::Block);
-    }
-
-    ZilchForEach(BoundType* type, this->TypesInDependencyOrder)
-    {
-      if (this->Namespace == CoreNamespace)
+      // Loop through all types created in this library
+      ZilchForEach(Type* type, library->OwnedTypes)
       {
-        // Ignore non-native bound types in the Core library (these types don't have a corresponding C++ type)
-        if (type->Native == false)
+        // Only consider bound types...
+        BoundType* boundType = Type::DynamicCast<BoundType*>(type);
+        if (boundType == nullptr)
           continue;
-      }
 
-      bool isValueType = Type::IsValueType(type);
-      String typeName = this->GetCppTypeName(type).Class;
-
-      String qualifiedTypeName = String::Format("%s::%s", this->Namespace.c_str(), typeName.c_str());
-
-      builder.Write("type = Zilch::PatchLibraryType");
-      builder.Write("< ");
-      builder.Write(qualifiedTypeName);
-      builder.Write(" >");
-      builder.Write("(library, \"");
-      builder.Write(type->Name);
-      builder.WriteLineIndented("\");");
-
-      // Assign defined functions if this is not the Core library
-      if (this->Namespace != CoreNamespace)
-      {
-        builder.Write("if (type != nullptr)");
-        builder.BeginScope(ScopeType::Block);
-        builder.WriteLineIndented();
-
-        FunctionArray functions = type->AllFunctions;
-
-        if (type->Sealed == false || isValueType)
-          functions.Append(type->Constructors.All());
-
-        for (size_t j = 0; j < functions.Size(); ++j)
+        if (this->Namespace == GetCoreNamespace())
         {
-          Function* function = functions[j];
-        
-          builder.Write(this->Namespace);
-          builder.Write("::_");
-          builder.Write(function->Hash);
-          builder.Write(" = mangler.FindFunction(");
-          builder.Write(function->Hash);
-          builder.Write(", \"");
-          builder.Write(function->Name);
-          builder.WriteLineIndented("\", type->Name);");
+          // Ignore non-native bound types in the Core library (these types don't have a corresponding C++ type)
+          if (boundType->Native == false)
+            continue;
         }
 
-        builder.EndScope();
-        builder.WriteLineIndented();
-        builder.WriteLineIndented();
+        bool isValueType = Type::IsValueType(type);
+        String typeName = this->GetCppTypeName(type).Class;
+
+        String qualifiedTypeName = String::Format("%s::%s", this->Namespace.c_str(), typeName.c_str());
+
+        bool shouldPatchType =
+          this->Namespace == GetCoreNamespace() && boundType->HasNativeBinding() ||
+          this->Namespace != GetCoreNamespace();
+
+        if (shouldPatchType)
+        {
+          builder.Write("type = Zilch::PatchLibraryType");
+          builder.Write("< ");
+          builder.Write(qualifiedTypeName);
+          builder.Write(" >");
+          builder.Write("(library, \"");
+          builder.Write(boundType->Name);
+          builder.WriteLineIndented("\");");
+        }
+
+        // Assign defined functions if this is not the Core library
+        if (this->Namespace != GetCoreNamespace())
+        {
+          builder.Write("if (type != nullptr)");
+          builder.BeginScope(ScopeType::Block);
+          builder.WriteLineIndented();
+
+          FunctionArray functions = boundType->AllFunctions;
+
+          if (boundType->Sealed == false || isValueType)
+            functions.Append(boundType->Constructors.All());
+
+          for (size_t j = 0; j < functions.Size(); ++j)
+          {
+            Function* function = functions[j];
+
+            builder.Write(this->Namespace);
+            builder.Write("::_");
+            builder.Write(function->Hash);
+            builder.Write(" = mangler.FindFunction(");
+            builder.Write(function->Hash);
+            builder.Write(", \"");
+            builder.Write(function->Name);
+            builder.WriteLineIndented("\", type->Name);");
+          }
+
+          builder.EndScope();
+          builder.WriteLineIndented();
+          builder.WriteLineIndented();
+        }
       }
+
+      builder.EndScope();
+      builder.WriteLineIndented();
     }
 
     builder.WriteLineIndented();
@@ -1003,11 +1144,17 @@ namespace Zilch
       if (this->Namespace.Empty())
       {
         this->Namespace = library->GetPluginNamespace();
+        this->Filename = this->Namespace;
         continue;
       }
 
       ErrorIf(library->GetPluginNamespace() != this->Namespace,
         "All the libraries in the array must have the same namespace");
+    }
+
+    if (this->Filename == GetCoreNamespace())
+    {
+      this->Filename = "Core";
     }
 
     ComputeTypesInDependencyOrder(libraries, this->LibrarySet, this->TypesInDependencyOrder);

@@ -323,12 +323,12 @@ namespace Zilch
       return Any();
 
     // There are no arguments to copy to the stack (other than the this)
-    ExceptionReport& report = state->GetCallingReport();
     Call call(this->Get, state);
     if (this->IsStatic == false)
       call.SetHandle(Call::This, thisHandle);
 
     // Finally invoke the function and get our result back
+    ExceptionReport report;
     call.Invoke(report);
 
     if (report.HasThrownExceptions())
@@ -371,7 +371,6 @@ namespace Zilch
     }
 
     // Now call the function by copying all the arguments to the Zilch stack
-    ExceptionReport& report = state->GetCallingReport();
     Call call(this->Set, state);
     if (this->IsStatic == false)
       call.SetHandle(Call::This, thisHandle);
@@ -385,6 +384,7 @@ namespace Zilch
     value.StoredType->GenericCopyConstruct(stackParameter, argumentData);
 
     // Finally invoke the function and get our result back
+    ExceptionReport report;
     call.Invoke(report);
     return;
   }

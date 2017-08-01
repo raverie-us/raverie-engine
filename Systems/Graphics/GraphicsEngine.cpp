@@ -308,6 +308,7 @@ void GraphicsEngine::StartProgress(Event* event)
   mShowProgressJob->mTargetPercent = 0.0f;
   mShowProgressJob->mProgressWidth = loadingTexture->mWidth;
   mShowProgressJob->mProgressText.Clear();
+  mShowProgressJob->mPerJobTimer.Reset();
   mShowProgressJob->Unlock();
 
   mShowProgressJob->Start();
@@ -1030,14 +1031,18 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
 {
   forRange (ResourceLibrary* modifiedLibrary, event->mModifiedLibraries.All())
   {
-    if (!modifiedLibrary->HasPendingFragmentLibrary())
+    if (!modifiedLibrary->mSwapFragment.HasPendingLibrary())
       continue;
 
-    ZilchShaderLibraryRef currentLibrary = mShaderGenerator->GetCurrentInternalLibrary(modifiedLibrary->mCurrentFragmentLibrary);
-    ZilchFragmentTypeMap& currentFragmentTypes = mShaderGenerator->mFragmentTypes;
+    ZilchShaderLibraryRef currentLibrary =
+      mShaderGenerator->GetCurrentInternalLibrary(modifiedLibrary->mSwapFragment.mCurrentLibrary);
+    ZilchFragmentTypeMap& currentFragmentTypes =
+      mShaderGenerator->mFragmentTypes;
 
-    ZilchShaderLibraryRef pendingLibrary = mShaderGenerator->GetPendingInternalLibrary(modifiedLibrary->mPendingFragmentLibrary);
-    ZilchFragmentTypeMap& pendingFragmentTypes = mShaderGenerator->mPendingFragmentTypes[modifiedLibrary->mPendingFragmentLibrary];
+    ZilchShaderLibraryRef pendingLibrary =
+      mShaderGenerator->GetPendingInternalLibrary(modifiedLibrary->mSwapFragment.mPendingLibrary);
+    ZilchFragmentTypeMap& pendingFragmentTypes =
+      mShaderGenerator->mPendingFragmentTypes[modifiedLibrary->mSwapFragment.mPendingLibrary];
 
     // Find removed types
     if (currentLibrary != nullptr)
@@ -1133,8 +1138,8 @@ void GraphicsEngine::OnScriptsCompiledCommit(ZilchCompileEvent* event)
   // After fragment libraries are committed component shader inputs can be processed
   forRange (ResourceLibrary* modifiedLibrary, event->mModifiedLibraries.All())
   {
-    if (modifiedLibrary->HasPendingScriptLibrary())
-      ProcessModifiedScripts(modifiedLibrary->mPendingScriptLibrary);
+    if (modifiedLibrary->mSwapScript.HasPendingLibrary())
+      ProcessModifiedScripts(modifiedLibrary->mSwapScript.mPendingLibrary);
   }
 }
 

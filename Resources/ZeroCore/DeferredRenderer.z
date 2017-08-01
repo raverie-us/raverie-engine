@@ -65,7 +65,7 @@ class DeferredRenderer : ZilchComponent
     event.AddRenderTaskRenderPass(geometryPassSettings, RenderGroup.Opaque, GeometryPass());
     
     geometryPassSettings.CullMode = CullMode.Disabled;
-    event.AddRenderTaskRenderPass(geometryPassSettings, RenderGroup.AlphaCut, GeometryPass());
+    event.AddRenderTaskRenderPass(geometryPassSettings, RenderGroup.OpaqueDoubleSided, GeometryPass());
     
     // Lighting
     var lightBuffer = event.GetRenderTarget(viewportSize, TextureFormat.RGBA16f);

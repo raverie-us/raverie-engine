@@ -1,5 +1,5 @@
 [RunInEditor]
-class %RESOURCENAME% : ZilchComponent
+class RESOURCE_NAME_ : ZilchComponent
 {
 	[Property] var ClearColor : Real4 = Real4(0, 0, 0, 1);
 	[Property] var DrawDebug : Boolean = true;

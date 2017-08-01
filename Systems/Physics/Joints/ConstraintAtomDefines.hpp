@@ -66,13 +66,12 @@
     ObjectLinkPointUpdatedHelper(anchor, edgeIndex, localPoint);                      \
   }
 
-#define BindAnchorAccessors(defaults)                       \
+#define BindAnchorAccessors(defaults)                                       \
   ZilchBindGetterSetterProperty(LocalPointA)->ZeroSerialize(defaults);      \
   ZilchBindGetterSetterProperty(LocalPointB)->ZeroSerialize(defaults);      \
   ZilchBindMethod(SetWorldPoints);                                          \
-  ZilchBindGetterSetterProperty(WorldPointA);               \
-  ZilchBindGetterSetterProperty(WorldPointB);               \
-  ZilchBindMethod(SetWorldPoints); 
+  ZilchBindGetterSetterProperty(WorldPointA);                               \
+  ZilchBindGetterSetterProperty(WorldPointB);
 
 #define DeclareAxisAccessors(ConstraintType, axes)          \
   /* The locally defined axis on object A.*/                \

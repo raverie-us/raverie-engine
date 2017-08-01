@@ -1,16 +1,16 @@
-struct %RESOURCENAME%InOut
+struct RESOURCE_NAME_InOut
 {
 	[Input][Output] var ViewPosition : Real3;
 	[Input][Output] var ViewNormal : Real3;
 }
 
 [Geometry(maxVertices : 3)]
-struct %RESOURCENAME%
+struct RESOURCE_NAME_
 {
-	function Main(input : TriangleInput[%RESOURCENAME%InOut], output : TriangleOutput[%RESOURCENAME%InOut])
+	function Main(input : TriangleInput[RESOURCE_NAME_InOut], output : TriangleOutput[RESOURCE_NAME_InOut])
 	{
 		// Copy input
-		var vertices = FixedArray[%RESOURCENAME%InOut, 3]();
+		var vertices = FixedArray[RESOURCE_NAME_InOut, 3]();
 		vertices[0] = input[0];
 		vertices[1] = input[1];
 		vertices[2] = input[2];

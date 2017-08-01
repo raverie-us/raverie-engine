@@ -138,6 +138,9 @@ void MetaDatabase::RemoveLibrary(LibraryParam library)
         mEventMap.Erase(eventName);
     }
   }
+
+  mRemovedLibraries.Append(library);
+  mLibraries.EraseValue(library);
 }
 
 //**************************************************************************************************
@@ -153,6 +156,12 @@ void MetaDatabase::ReleaseDefaults()
   {
     prop.mDefault = Any();
   }
+}
+
+//**************************************************************************************************
+void MetaDatabase::ClearRemovedLibraries()
+{
+  mRemovedLibraries.Clear();
 }
 
 }//namespace Zero

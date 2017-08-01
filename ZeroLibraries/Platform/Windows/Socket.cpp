@@ -155,8 +155,6 @@ public:
   /// If initialized once (reference count of one), decrements the reference count and uninitializes the socket library
   void Uninitialize(Status& status)
   {
-    Zero::TimerBlock block("Uninitializing Socket Library.");
-
     // Not initialized?
     if(mReferenceCount == 0)
     {
@@ -178,7 +176,7 @@ public:
       //
       // Uninitialize Socket Library
       //
-      //ZPrint("Uninitializing Socket Library...\n");
+      ZPrint("Uninitializing Socket Library...\n");
       if(WSACleanup() == SOCKET_ERROR) // Unable?
       {
         FailOnLastError(status);

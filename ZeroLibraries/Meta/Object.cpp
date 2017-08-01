@@ -10,8 +10,16 @@
 
 namespace Zero
 {
+// @TrevorS: Move this to be filled out automatically in my binding!
+BoundType* ObjectBindingVirtualTypeFn(const byte* memory)
+{
+  const Object* object = (const Object*)memory;
+  return object->ZilchGetDerivedType();
+}
+
 ZilchDefineType(Object, builder, type)
 {
+  type->GetBindingVirtualType = &ObjectBindingVirtualTypeFn;
 }
 
 Memory::Heap* sGeneralPool = NULL;

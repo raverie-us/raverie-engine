@@ -14,7 +14,9 @@ class ZilchLibraryResource : public Resource
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  virtual void AddToProject(Project& project) = 0;
+
+  virtual String GetSharedLibraryPath() const = 0;
+  virtual Resource* GetOriginResource() const = 0;
 };
 
 //----------------------------------------------------------------------------------- Zilch Document

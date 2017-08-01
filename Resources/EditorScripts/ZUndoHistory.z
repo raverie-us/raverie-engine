@@ -36,7 +36,7 @@ class ZUndoHistory : ZilchComponent
     //entry.HistoryInfo.Name = operation.Name;
     entry.RowName.SpriteText.Text = operation.Name;
     
-    entryCog.AttachTo(undoViewCog);
+    entryCog.AttachToPreserveLocal(undoViewCog);
   }
   
   /******************************************************************************/
@@ -62,7 +62,7 @@ class ZUndoHistory : ZilchComponent
   // When an operation is redone place it last in the list of rows in the undo view.
   function OnOperationRedone(event : ChangedHistoryView)
   {
-    event.HistoryEntry.AttachTo(this.Owner);
+    event.HistoryEntry.AttachToPreserveLocal(this.Owner);
   }
   
 }

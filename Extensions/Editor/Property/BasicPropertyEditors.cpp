@@ -368,11 +368,6 @@ public:
     mEnumType = Type::GetBoundType(initializer.Property->PropertyType);
 
     PropertyArray& allProperties = mEnumType->AllProperties;
-
-    // +1 to end the array with a nullptr
-    int byteCount = (allProperties.Size( )+1)*sizeof(cstr);
-    cstr* names = new cstr[byteCount];
-
     for(size_t i = 0; i < allProperties.Size(); ++i)
     {
       Property* prop = allProperties[i];
@@ -382,14 +377,9 @@ public:
       int enumValue = prop->GetValue(nullptr).Get<int>();
       mEnumIndexToListIndex[enumValue] = i;
       mEnumIndexes.PushBack(enumValue);
-
-      *(names+i) = prop->Name.Data( );
     }
 
-    // Mark the end of the data with a nullptr.
-    *(names+allProperties.Size( )) = nullptr;
-    // Send over the data.  Cleanup will happen in EnumSource destructor.
-    mEnums.SetEnum(mEnumType->Name.c_str(), names, true);
+    mEnums.BuildFromMeta(mEnumType);
       
     mSelectBox->SetListSource(&mEnums);
 

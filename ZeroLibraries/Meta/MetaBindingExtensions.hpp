@@ -403,8 +403,8 @@ public:
     type->Add(new ZeroMetaArray<arrayType>());                                        \
   }
 
-#define ZeroInitializeArrayTypeAs(arrayType, name)  \
-  ZilchInitializeType(ZeroMetaArray<arrayType>);    \
+#define ZeroInitializeArrayTypeAs(arrayType, name)                          \
+  ZilchInitializeTypeAs(ZeroMetaArray<arrayType>, "ZeroMetaArray" name);    \
   ZilchInitializeExternalTypeAs(arrayType, name);
 
 //---------------------------------------------------------------------------------- Property Rename

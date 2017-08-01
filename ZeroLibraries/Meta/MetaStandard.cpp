@@ -9,6 +9,9 @@
 namespace Zero
 {
 
+// Ranges
+ZilchDefineRange(MetaSelection::range);
+
 // METAREFACTOR - move to platform meta library
 ZilchDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, type)
 {
@@ -52,6 +55,9 @@ ZeroDefineArrayType(Array<Revision>);
 ZilchDefineStaticLibrary(MetaLibrary)
 {
   builder.CreatableInScriptDefault = false;
+
+  // Ranges
+  ZilchInitializeRangeAs(MetaSelection::range, "MetaSelectionRange");
   
   // Enums
   ZilchInitializeEnum(SendsEvents);

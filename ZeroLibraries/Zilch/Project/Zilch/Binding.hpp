@@ -1082,8 +1082,10 @@ namespace Zilch
       Error(message.c_str());
       return;
     }
-    type->Name = initializingTypeName;
-    type->TemplateBaseName = initializingTypeName;
+    String typeName = initializingTypeName;
+    typeName = LibraryBuilder::FixIdentifier(typeName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
+    type->Name = typeName;
+    type->TemplateBaseName = typeName;
     type->Size = sizeof(InitializingType);
     type->RawNativeVirtualCount = TypeBinding::GetVirtualTableCount<InitializingType>();
     LibraryBuilder& builder = *library.GetBuilder();

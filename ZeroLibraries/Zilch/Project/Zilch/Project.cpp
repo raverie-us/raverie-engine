@@ -217,19 +217,6 @@ namespace Zilch
     ResolvedType(nullptr)
   {
   }
-  
-  //***************************************************************************
-  PluginEntry::PluginEntry() :
-    UserData(nullptr)
-  {
-  }
-
-  //***************************************************************************
-  PluginEntry::PluginEntry(StringParam path, void* userData) :
-    Path(path),
-    UserData(userData)
-  {
-  }
 
   //***************************************************************************
   Project::Project() :
@@ -306,8 +293,6 @@ namespace Zilch
   void Project::Clear()
   {
     this->Entries.Clear();
-    this->PluginDirectories.Clear();
-    this->PluginFiles.Clear();
   }
 
   //***************************************************************************
@@ -483,81 +468,9 @@ namespace Zilch
     // Return true if it succeeded, or false if there was a syntax error
     return !this->WasError;
   }
-
-  void Project::LoadPlugins(LibraryBuilder& builder, Module& dependencies, BuildReason::Enum reason)
-  {
-    Array<Plugin*> loadedPlugins;
-
-    // Load all individual plugins
-    ZilchForEach(PluginEntry& pluginFile, this->PluginFiles)
-    {
-      Status status;
-      Plugin* plugin = builder.LoadPlugin(status, pluginFile.Path, pluginFile.UserData);
-      if (plugin != nullptr)
-        loadedPlugins.Append(plugin);
-      
-      CodeLocation location;
-      location.Origin = pluginFile.Path;
-
-      if (status.Failed())
-        this->Raise(location, ErrorCode::PluginLoadingFailed, status.Message.c_str());
-    }
-    
-    // Load all plugins found within these directories
-    ZilchForEach(PluginEntry& pluginDirectory, this->PluginDirectories)
-    {
-      static const String PluginExtension("zilchPlugin");
-
-      // Walk through all the files in the directory looking for anything ending with .zilchPlugin
-      Zero::FileRange range(pluginDirectory.Path);
-      while (range.Empty() == false)
-      {
-        // If this file has the .zilchPlugin extension
-        Zero::FileEntry fileEntry = range.frontEntry();
-        String filePath = fileEntry.GetFullPath();
-        if (Zero::FilePath::GetExtension(fileEntry.mFileName) == PluginExtension)
-        {
-          // Attempt to load the plugin (this may fail!)
-          Status status;
-          Plugin* plugin = builder.LoadPlugin(status, filePath, pluginDirectory.UserData);
-
-          // If we successfully created a plugin, then output it
-          if (plugin != nullptr)
-            loadedPlugins.PushBack(plugin);
-
-          CodeLocation location;
-          location.Origin = filePath;
-
-          if (status.Failed())
-            this->Raise(location, ErrorCode::PluginLoadingFailed, status.Message.c_str());
-        }
-        range.PopFront();
-      }
-    }
-
-    BuildEvent buildEvent;
-    buildEvent.BuildingProject = this;
-    buildEvent.Dependencies = &dependencies;
-    buildEvent.Builder = &builder;
-    buildEvent.Reason = reason;
-    
-    ZilchForEach(Plugin* loadedPlugin, loadedPlugins)
-    {
-      loadedPlugin->PreBuild(&buildEvent);
-    }
-
-    if (reason == BuildReason::FullCompilation)
-    {
-      ZilchForEach(Plugin* loadedPlugin, loadedPlugins)
-      {
-        loadedPlugin->Initialize(&buildEvent);
-        loadedPlugin->FullCompilationInitialized = true;
-      }
-    }
-  }
   
   //***************************************************************************
-  LibraryRef Project::Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut, BuildReason::Enum reason)
+  LibraryRef Project::Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut)
   {
     // We're about to generate a library so we need a builder
     LibraryBuilder builder(libraryName);
@@ -568,9 +481,6 @@ namespace Zilch
     preEvent.Builder = &builder;
     preEvent.BuildingProject = this;
     EventSend(this, Events::PreParser, &preEvent);
-
-    // Loads plugins into the library builder
-    this->LoadPlugins(builder, dependencies, reason);
 
     // Let the library know what source was used to build it
     builder.SetEntries(this->Entries);
@@ -611,7 +521,7 @@ namespace Zilch
   {
     // The syntax tree holds a more intuitive representation of the parsed program and is easy to traverse
     SyntaxTree syntaxTree;
-    return this->Compile(libraryName, dependencies, evaluation, syntaxTree, BuildReason::FullCompilation);
+    return this->Compile(libraryName, dependencies, evaluation, syntaxTree);
   }
   
   //***************************************************************************
@@ -775,7 +685,7 @@ namespace Zilch
     // Compile the entirety of the project and get the syntax tree out of it
     // We MUST store the library or all the resources will be released
     SyntaxTree syntaxTree;
-    resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, BuildReason::DefinitionQuery);
+    resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree);
 
     // Get all the syntax nodes under the cursor
     Array<SyntaxNode*> nodes;
@@ -1378,9 +1288,6 @@ namespace Zilch
 
     // We're about to generate a library so we need a builder
     LibraryBuilder builder("CodeCompletion");
-
-    // Loads plugins into the library builder
-    this->LoadPlugins(builder, dependencies, BuildReason::AutoComplete);
 
     // The parser parses the list of tokens into a syntax tree
     Parser parser(*this);

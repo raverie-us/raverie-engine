@@ -124,15 +124,22 @@ void ZilchScript::GetLibraries(Array<LibraryRef>& libraries)
 }
 
 //**************************************************************************************************
+// @TrevorS: Isn't this the same logic as AddDependencies on ResourceLibrary/ZilchManager?
 void ZilchScript::GetLibrariesRecursive(Array<LibraryRef>& libraries, ResourceLibrary* library)
 {
   forRange(ResourceLibrary* dependency, library->Dependencies.All())
     GetLibrariesRecursive(libraries, dependency);
 
-  if (library->mCurrentScriptLibrary != nullptr)
-    libraries.PushBack(library->mCurrentScriptLibrary);
-  if (library->mCurrentFragmentLibrary != nullptr)
-    libraries.PushBack(library->mCurrentFragmentLibrary);
+  forRange(SwapLibrary& swapPlugin, library->mSwapPlugins.Values())
+  {
+    if (swapPlugin.mCurrentLibrary != nullptr)
+      libraries.PushBack(swapPlugin.mCurrentLibrary);
+  }
+
+  if (library->mSwapScript.mCurrentLibrary != nullptr)
+    libraries.PushBack(library->mSwapScript.mCurrentLibrary);
+  if (library->mSwapFragment.mCurrentLibrary != nullptr)
+    libraries.PushBack(library->mSwapFragment.mCurrentLibrary);
 }
 
 //------------------------------------------------------------- ZilchScriptLoader
@@ -163,7 +170,8 @@ void ZilchScriptLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 ImplementResourceManager(ZilchScriptManager, ZilchScript);
 
 ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+  : ResourceManager(resourceType),
+    mLastExceptionVersion(-1)
 {
   //mDebugger.AddProject(&mProject);
   //EventConnect(&mDebugger, Events::DebuggerPause, OnDebuggerPause);
@@ -239,7 +247,7 @@ String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
 
   // Replace the component name
   Replacement& nameReplacement = replacements.PushBack();
-  nameReplacement.MatchString = "%RESOURCENAME%";
+  nameReplacement.MatchString = "RESOURCE_NAME_";
   nameReplacement.ReplaceString = resourceAdd.Name;
 
   // Replace the tabs with spaces
@@ -387,14 +395,27 @@ void ZilchScriptManager::CheckDependencies(BoundType* classType, Property* prope
 
 void ZilchScriptManager::DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location)
 {
+  ZilchScriptManager* instance = ZilchScriptManager::GetInstance();
   Resource* resource = (Resource*)location.CodeUserData;
 
-  DebugEngineEvent e;
-  e.Handled = false;
-  e.Script = Type::DynamicCast<DocumentResource*>(resource);
-  e.Message = shortMessage;
-  e.Location = location;
-  Z::gResources->DispatchEvent(eventId, &e);
+  if (instance->mLastExceptionVersion != ZilchManager::GetInstance()->mVersion)
+  {
+    instance->mLastExceptionVersion = ZilchManager::GetInstance()->mVersion;
+    instance->mDuplicateExceptions.Clear();
+  }
+
+  bool isDuplicate = instance->mDuplicateExceptions.Contains(fullMessage);
+  instance->mDuplicateExceptions.Insert(fullMessage);
+
+  if (!isDuplicate)
+  {
+    DebugEngineEvent e;
+    e.Handled = false;
+    e.Script = Type::DynamicCast<DocumentResource*>(resource);
+    e.Message = shortMessage;
+    e.Location = location;
+    Z::gResources->DispatchEvent(eventId, &e);
+  }
 
   Console::Print(Filter::DefaultFilter, "%s", fullMessage.c_str());
 }

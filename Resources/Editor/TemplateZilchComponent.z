@@ -1,4 +1,4 @@
-class %RESOURCENAME% : ZilchComponent
+class RESOURCE_NAME_ : ZilchComponent
 {
 	function Initialize(init : CogInitializer)
 	{

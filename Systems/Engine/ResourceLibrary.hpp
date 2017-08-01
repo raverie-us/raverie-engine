@@ -124,6 +124,23 @@ class ResourcePackageDisplay : public MetaDisplay
   String GetDebugText(HandleParam object) override;
 };
 
+// Keeps the current library that we have already built and one that is pending with newer code.
+class SwapLibrary
+{
+public:
+  SwapLibrary();
+
+  LibraryRef GetNewestLibrary();
+  bool HasPendingLibrary();
+  void Commit();
+  void Unload();
+
+  LibraryRef mCurrentLibrary;
+  LibraryRef mPendingLibrary;
+
+  // Is the library up to date or are there modifications?
+  ZilchCompileStatus::Enum mCompileStatus;
+};
 
 //--------------------------------------------------------------------------------- Resource Library
 /// A Resource Library is a set of resources loaded from a
@@ -161,8 +178,9 @@ public:
   // Attempts to compile this resource library if it was modified
   // Note that this function will call Compile if a dependent resource library requires it
   // Also remember that this function does not handle things that need to happen globally
-  bool CompileScripts(HashSet<ResourceLibrary*>& modifiedLibraries);
-  bool CompileFragments(HashSet<ResourceLibrary*>& modifiedLibraries);
+  bool CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrariesOut);
+  bool CompileFragments(HashSet<ResourceLibrary*>& modifiedLibrariesOut);
+  bool CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrariesOut);
 
   void OnScriptProjectPreParser(ParseEvent* e);
 
@@ -186,22 +204,15 @@ public:
   Array<ZilchDocumentResource*> mFragments;
   Array<ZilchLibraryResource*> mPlugins;
 
+  // The plugins that this resource library has built (may be empty if none exist or haven't been compiled yet)
+  OrderedHashMap<ZilchLibraryResource*, SwapLibrary> mSwapPlugins;
+
   // The library that this resource library has built (may be null if it hasn't compiled yet)
-  LibraryRef mCurrentScriptLibrary;
-  LibraryRef mPendingScriptLibrary;
-  LibraryRef GetNewestScriptLibrary();
-  bool HasPendingScriptLibrary();
+  // If this is set to 'Compiled', it also implies that the Fragment status is compiled as well
+  SwapLibrary mSwapScript;
 
   // The fragment library that this resource library has built (may be null if it hasn't compiled yet)
-  LibraryRef mCurrentFragmentLibrary;
-  LibraryRef mPendingFragmentLibrary;
-  LibraryRef GetNewestFragmentLibrary();
-  bool HasPendingFragmentLibrary();
-
-  // All the libraries that this resource library produces (includes script and plugins)
-  Array<LibraryRef> mCurrentScriptLibraries;
-  Array<LibraryRef> mPendingScriptLibraries;
-  const Array<LibraryRef>& GetNewestScriptLibraries();
+  SwapLibrary mSwapFragment;
 
   // All loaded resources. These handles are the ones in charge of keeping the Resources in this
   // library alive.
@@ -216,10 +227,6 @@ public:
   static bool IsLibraryUnloading() { return sLibraryUnloading; }
 
 private:
-  // Is the library up to date or are there modifications?
-  // If this is set to 'Compiled', it also implies that the Fragment status is compiled as well
-  ZilchCompileStatus::Enum mScriptCompileStatus;
-  ZilchCompileStatus::Enum mFragmentCompileStatus;
   // Used to detect incorrect removal of non-runtime resources
   static bool sLibraryUnloading;
 };
