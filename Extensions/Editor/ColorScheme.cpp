@@ -41,8 +41,9 @@ ZilchDefineType(ColorScheme, builder, type)
   ZilchBindFieldProperty(Number);
   ZilchBindFieldProperty(Keyword);
   ZilchBindFieldProperty(Operator);
-  ZilchBindFieldProperty(ClassName);
-  ZilchBindFieldProperty(FunctionName);
+  // until we have a zilch lexer setup that colors the class/function names these fields should not be exposed as a property since they currently have no effect
+  ZilchBindField(ClassName);
+  ZilchBindField(FunctionName);
   ZilchBindFieldProperty(SpecialWords);
   ZilchBindFieldProperty(Error);
   ZilchBindFieldProperty(Whitespace);
