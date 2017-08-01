@@ -42,7 +42,7 @@ class ZRedoHistory : ZilchComponent
     //entry.HistoryInfo.Name = operation.Name;
     entry.RowName.SpriteText.Text = operation.Name;
     
-    entryCog.AttachTo(redoViewCog);
+    entryCog.AttachToPreserveLocal(redoViewCog);
     
       // If not the very first added entry then place the row at the top/front.
     if(this.Owner.Children.Current != entryCog)
@@ -80,7 +80,7 @@ class ZRedoHistory : ZilchComponent
   // When an operation is undone place it first in the list of rows in the redo view.
   function OnOperationUndone(event : ChangedHistoryView)
   {
-    event.HistoryEntry.AttachTo(this.Owner);
+    event.HistoryEntry.AttachToPreserveLocal(this.Owner);
     
       // First row to be added to the redo view, so no need to place it before
       // any others.

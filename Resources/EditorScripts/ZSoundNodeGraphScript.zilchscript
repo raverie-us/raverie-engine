@@ -75,7 +75,7 @@ class ZSoundNodeGraphScript : ZilchComponent
       node.FindChildByName("CircleHighlight").Sprite.VertexColor = color;
       node.FindChildByName("BoxHighlight").Sprite.VertexColor = color;
       node.FindChildByName("Text").SpriteText.Text = info.Name;
-      node.AttachTo(this.Owner);
+      node.AttachToPreserveLocal(this.Owner);
       this.ObjectList.Push(node);
         
       // Add the connection lines
@@ -90,7 +90,7 @@ class ZSoundNodeGraphScript : ZilchComponent
         var line = this.Space.CreateAtPosition(Archetype.SoundNodeLine, thisPosition + Real3(0,-23,0));
         if (info.HasOutput == true)
           line.Sprite.VertexColor = Real4(0.9098, 0.4902, 0.0, 1.0);
-        line.AttachTo(this.Owner);
+        line.AttachToPreserveLocal(this.Owner);
         this.ObjectList.Push(line);
         
         line.Transform.Scale = Real3(1,Math.Distance(thisPosition, otherPosition),1);
