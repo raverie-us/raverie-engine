@@ -12,6 +12,9 @@
 /// Basic net host information size (must fit within a single packet).
 static const Bytes BasicNetHostInfoMaxSize = 480;
 
+/// Peer closed string used in GetInfo returned whenever the net peer is closed
+static const String cPeerClosed = "[Peer Closed]";
+
 namespace Zero
 {
 
@@ -60,6 +63,7 @@ ZilchDefineType(NetPeer, builder, type)
 
   // Bind peer interface
   //ZilchBindGetterProperty(Guid)->AddAttribute(cHiddenAttribute);
+  ZilchBindGetterProperty(Info);
   ZilchBindCustomGetterProperty(IsOpen);
   ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum, uint, uint));
   ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum, uint));
@@ -668,6 +672,39 @@ void NetPeer::CancelHostRequests()
 //
 // Peer Interface
 //
+
+String NetPeer::GetInfo() const
+{
+  if(!IsOpen())
+    return cPeerClosed;
+
+  // Build info string
+  StringBuilder stringBuilder;
+
+  // Write IP address
+  const IpAddress& localIpv4Address = GetLocalIpv4Address();
+  stringBuilder.AppendFormat("(%s)", localIpv4Address.GetString().c_str());
+
+  // Write network role
+  Role::Enum role = NetPeer::GetRole();
+  stringBuilder.AppendFormat(" [%s", Role::Names[role]);
+
+  // Has a non-zero net peer ID?
+  // (We don't bother writing 0 if the net peer hasn't been assigned a net peer ID)
+  NetPeerId netPeerId = GetNetPeerId();
+  if(netPeerId)
+  {
+    // (Only clients should have non-zero net peer IDs)
+    Assert(role == Role::Client);
+
+    // Write net peer ID
+    stringBuilder.AppendFormat(" #%u]", netPeerId);
+  }
+  else
+    stringBuilder.Append("]");
+
+  return stringBuilder.ToString();
+}
 
 Guid NetPeer::GetGuid() const
 {
