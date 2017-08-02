@@ -145,5 +145,4 @@ namespace Zilch
   ZilchDefineExternalBaseType(String,         TypeCopyMode::ReferenceType,  builder, type) {}
   ZilchDefineExternalBaseType(DoubleReal,     TypeCopyMode::ValueType,      builder, type) {}
   ZilchDefineExternalBaseType(DoubleInteger,  TypeCopyMode::ValueType,      builder, type) {}
-  ZilchDefineExternalBaseType(Zero::Rune,     TypeCopyMode::ValueType, builder, type) {}
 }

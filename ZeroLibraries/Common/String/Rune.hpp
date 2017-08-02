@@ -37,7 +37,7 @@ struct IsChar<signed char>
 class Rune;
 typedef const Rune& RuneParam;
 
-class Rune
+class ZeroShared Rune
 {
 public:
   static const size_t Invalid = 0xffffffff;

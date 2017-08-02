@@ -2958,7 +2958,6 @@ namespace Zilch
     ZilchInitializeExternalType(String);
     ZilchInitializeExternalType(DoubleReal);
     ZilchInitializeExternalType(DoubleInteger);
-    ZilchInitializeExternalType(Zero::Rune);
     ZilchInitializeType(Enum);
 
     // Setup all the primitive types

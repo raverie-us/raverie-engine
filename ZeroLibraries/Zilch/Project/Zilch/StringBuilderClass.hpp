@@ -31,6 +31,9 @@ namespace Zilch
     Zero::Rune mValue;
   };
 
+  // Zero::Runes are converted to and treated as Zilch::Runes
+  ZilchDeclareDefineImplicitRedirectType(Zero::Rune, Zilch::Rune, ZeroShared);
+
   // String builder is a convenient way to concatenate strings
   class ZeroShared StringBuilderExtended : public StringBuilder
   {
