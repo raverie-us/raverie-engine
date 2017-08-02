@@ -143,12 +143,13 @@ void SelectorButton::OnMouseHover(MouseEvent* event)
     {
       mHoverItem = i;
 
-      mToolTip.SafeDestroy( );
-      mToolTip = new ToolTip(this);
-
       StringBuilder toolTipText;
       if(GetToolTipText(i, mDataSource, &toolTipText))
+      {
+        mToolTip.SafeDestroy( );
+        mToolTip = new ToolTip(this);
         mToolTip->SetTextAndPlace(toolTipText.ToString( ), this->GetScreenRect( ));
+      }
 
       break;
     }
