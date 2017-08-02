@@ -78,7 +78,7 @@
       <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;portaudio_x86.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>CALL CreateBuildInfo.cmd $(ProjectName) "$(ZeroSource)" "$(ZERO_OUTPUT)" &gt; $(OutDir)BuildInfo.data
+      <Command>CALL CreateBuildInfo.cmd $(ProjectName) "$(ZeroSource)" "$(ZERO_OUTPUT)" &gt; "$(OutDir)BuildInfo.data"
 MKDIR "$(SolutionDir)\Data\ZilchCustomPluginShared\$(OS)-$(PlatformShortName)"
 COPY /Y "$(TargetDir)\$(TargetName).lib" "$(SolutionDir)\Data\ZilchCustomPluginShared\$(OS)-$(PlatformShortName)\$(TargetName).lib"
 "$(SolutionDir)\Tools\ZilchToOneCpp.exe" -Zero "$(SolutionDir)\." "$(SolutionDir)\Data\ZilchCustomPluginShared\$(OS)-$(PlatformShortName)\Zilch.hpp"
@@ -138,7 +138,7 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     </Link>
     <PostBuildEvent>
       <Command>
-        call CreateBuildInfo.cmd $(ProjectName) &gt; $(OutDir)BuildInfo.data
+        call CreateBuildInfo.cmd $(ProjectName) &gt; "$(OutDir)BuildInfo.data"
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
