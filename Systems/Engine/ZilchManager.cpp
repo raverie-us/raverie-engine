@@ -54,8 +54,6 @@ CompileResult::Enum ZilchManager::Compile()
   if(mPendingLibraries.Empty())
     return CompileResult::CompilationNotRequired;
 
-  ++mVersion;
-
   // Since we binary cache archetypes (in a way that is NOT saving the data tree, but rather a 'known serialization format'
   // then if we moved any properties around in any script it would completely destroy how the archetypes were cached
   // The simplest solution is to clear the cache

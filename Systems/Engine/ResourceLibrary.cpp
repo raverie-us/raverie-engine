@@ -450,6 +450,8 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   if(mSwapScript.mCompileStatus == ZilchCompileStatus::Compiled)
     return true;
 
+  ++ZilchManager::GetInstance()->mVersion;
+
   // Scripts cannot compile if fragments do not compile
   if(CompileFragments(modifiedLibrariesOut) == false)
     return false;
