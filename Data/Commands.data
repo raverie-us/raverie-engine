@@ -448,7 +448,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "ReportBug",
-		string Description = "Report a bug to our website",
+		string Description = "Report a bug",
 		string IconName = "BugIcon",
 		string Tags = "Windows",
 	},
