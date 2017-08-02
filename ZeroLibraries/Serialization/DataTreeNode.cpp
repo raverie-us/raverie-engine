@@ -503,6 +503,8 @@ bool DataNode::IsArray()
 //******************************************************************************
 void DataNode::ClearPatchState()
 {
+  mRemovedChildren.Clear();
+  mFlags.ClearFlag(DataNodeFlags::LocallyAdded);
   mPatchState = PatchState::None;
   forRange(DataNode& child, GetChildren())
     child.ClearPatchState();
@@ -850,6 +852,10 @@ bool PatchDataTree(DataNode*& node, DataTreeLoader* loader, DataTreeContext& c, 
 // file version is the same as the zero engine version
 uint GetFileVersion(StringRange fileData)
 {
+  // Skip whitespace
+  while (CharacterUtilities::IsWhiteSpace(fileData.Front()))
+    fileData.PopFront();
+
   // If there's no start of an attribute as the first character of the file,
   // it's in the old format
   if(fileData.Front() != '[')
