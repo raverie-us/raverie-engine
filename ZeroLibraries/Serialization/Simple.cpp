@@ -17,47 +17,30 @@ String GetTypeInFile(StringParam fileName)
   Status status;
   File file;
   bool loaded = file.Open(fileName.c_str(), FileMode::Read, FileAccessPattern::Sequential);
-  if(!loaded)
+  if (!loaded)
   {
-    ErrorIf(true, "Failed to load file. Could not open file %s", 
+    ErrorIf(true, "Failed to load file. Could not open file %s",
       fileName.c_str());
     return String();
   }
-  
-  const uint bufferSize = 512;
-  char buffer[bufferSize];
-  file.Read(status, (byte*)buffer, bufferSize);
 
-  //Eat leading whitespace
-  uint startPos = 0;
-  while(startPos < bufferSize && IsSpace(Rune(buffer[startPos])))
-    ++startPos;
+  String buffer = ReadFileIntoString(fileName);
 
-  // Skip file version
-  if(startPos < bufferSize && buffer[startPos] == '[')
+  static const Regex regefx("\\[[^\\]]*\\]\\s*([a-zA-Z_][a-zA-Z_0-9]*)");
+
+  Matches matches;
+  regefx.Search(buffer, matches);
+
+  // We should have the entire string match and then the group
+  // that contains only the identifier (2 matches)
+  if (matches.Size() == 2)
   {
-    // Eat until we finish the attribute
-    while(startPos < bufferSize)
-    {
-      if(buffer[startPos] == ']')
-      {
-        // Skip the new line
-        startPos += 2;
-        break;
-      }
-      ++startPos;
-    }
+    String typeName = matches[1];
+    return typeName;
   }
 
-  //Find end of text
-  uint pos = startPos;
-  while(pos < bufferSize && !IsSpace(Rune(buffer[pos])))
-    ++pos;
-
-  //Null terminate
-  buffer[pos] = '\0';
-
-  return String(buffer+startPos);
+  Error("Unable to find type name in file");
+  return String();
 }
 
 Serializer* GetLoaderStreamDataBlock(Status& status, DataBlock block, DataFileFormat::Enum format)
