@@ -1399,6 +1399,16 @@ namespace Zilch
     // Grab the rest of the data
     const AnyConversionOpcode& op = (const AnyConversionOpcode&) opcode;
     const Any& any = GetOperand<Any>(ourFrame, ourFrame, op.ToConvert);
+    
+    // Safeguard against an invalid any type, otherwise this will crash
+    if (any.StoredType == nullptr)
+    {
+      // Throw an exception to let the user know the conversion was invalid
+      state->ThrowException(report, "Cannot cast a null any type");
+
+      // Jump back since we just threw an exception
+      longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);
+    }
 
     // If we can't directly convert the any into this type...
     Shared& shared = Shared::GetInstance();
