@@ -83,6 +83,18 @@ namespace Audio
     InterpolatingObject* GetInterpolatorThreaded();
     // Releases an interpolator object that was in use
     void ReleaseInterpolatorThreaded(InterpolatingObject* object);
+    // Sets the threaded variable for the minimum volume threshold.
+    void SetMinVolumeThresholdThreaded(const float volume);
+    // Adds a tag to the system
+    void AddTag(TagObject* tag, bool threaded);
+    // Removes a tag from the system
+    void RemoveTag(TagObject* tag, bool threaded);
+    // Adds a tag to the list to delete
+    void DelayDeleteTag(TagObject* tag, bool threaded);
+    // Adds a non-threaded sound asset to the system
+    void AddAsset(SoundAssetNode* asset);
+    // Removes a non-threaded sound asset from the system
+    void RemoveAsset(SoundAssetNode* asset);
 
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
@@ -104,18 +116,8 @@ namespace Audio
     ExternalSystemInterface* ExternalInterface;
     // If a SoundInstance is below this threshold it will keep its place but not process any audio.
     float MinimumVolumeThresholdThreaded;
-    // Sets the threaded variable for the minimum volume threshold.
-    void SetMinVolumeThresholdThreaded(const float volume);
-    // Adds a tag to the system
-    void AddTag(TagObject* tag, bool threaded);
-    // Removes a tag from the system
-    void RemoveTag(TagObject* tag, bool threaded);
-    // Adds a tag to the list to delete
-    void DelayDeleteTag(TagObject* tag, bool threaded);
-    // Adds a non-threaded sound asset to the system
-    void AddAsset(SoundAssetNode* asset);
-    // Removes a non-threaded sound asset from the system
-    void RemoveAsset(SoundAssetNode* asset);
+
+    static const unsigned SampleRate = 48000;
     
     AudioChannelsManager ChannelsManager;
     AudioInputOutput AudioIO;

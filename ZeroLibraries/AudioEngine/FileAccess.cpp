@@ -34,6 +34,20 @@ namespace Audio
     unsigned short bits_per_sample;
   };
 
+  struct FileHeader
+  {
+    const char Name[4] = { 'Z','E','R','O' };
+    short Channels;
+    unsigned SamplesPerChannel;
+  };
+
+  struct PacketHeader
+  {
+    const char Name[4] = { 'p','a','c','k' };
+    short Channel;
+    unsigned Size;
+  };
+
   //------------------------------------------------------------------------------------- Audio Data
 
   //************************************************************************************************
@@ -301,19 +315,6 @@ namespace Audio
 #define SAMPLE_RATE 48000
 
 
-  struct FileHeader
-  {
-    const char Name[4] = { 'Z','E','R','O' };
-    short Channels;
-    unsigned SamplesPerChannel;
-  };
-
-  struct PacketHeader
-  {
-    const char Name[4] = { 'p','a','c','k' };
-    short Channel;
-    unsigned Size;
-  };
 
 //   const static float Normalize16Bit = 1 << 15;
 //   const static float Normalize24Bit = 1 << 23;
@@ -466,7 +467,7 @@ namespace Audio
     
     if (data.SampleRate != SAMPLE_RATE)
     {
-      double ratio = data.SampleRate / SAMPLE_RATE;
+      double ratio = (double)data.SampleRate / SAMPLE_RATE;
       unsigned newFrames = (unsigned)(audioFrames * ratio);
 
       for (unsigned channel = 0; channel < data.Channels; ++channel)
@@ -551,7 +552,7 @@ namespace Audio
           ErrorIf(packetHeader.Size > MaxPacketSize);
 
           // Set the channel number on the header
-          packetHeader.Channel = data.Channels;
+          packetHeader.Channel = channel;
 
           // Write the header to the file
           outputFile.Write((byte*)&packetHeader, sizeof(packetHeader));
@@ -564,80 +565,38 @@ namespace Audio
 
   void FileAccess::OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samplesPerChannel)
   {
-    // Open the file
-    Zero::File inputFile;
-    inputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
-    // If failed, set the status and return
-    if (!inputFile.IsOpen())
-    {
-      status.SetFailed(Zero::String::Format("Couldn't open input file %s", fileName.c_str()));
-      return;
-    }
-
-    // Create the file header object
-    FileHeader fileHeader;
-    // Read in the header from the file
-    inputFile.Read(status, (byte*)&fileHeader, sizeof(fileHeader));
-    // If the file is not in the correct format, set the status and return
-    if (fileHeader.Name[0] != 'Z' || fileHeader.Name[1] != 'E')
-    {
-      status.SetFailed(Zero::String::Format("File %s is in an incorrect format", fileName.c_str()));
-      return;
-    }
-
-    // Set the variables
-    channels = fileHeader.Channels;
-    samplesPerChannel = fileHeader.SamplesPerChannel;
-
-    // Create a buffer per channel for decoded frames
-    float** decodedFramePerChannel = new float*[channels];
-    for (unsigned i = 0; i < channels; ++i)
-      decodedFramePerChannel[i] = new float[FrameSize];
-
-    // Create the buffer for the interleaved decoded samples
-    decodedSamples = new float[fileHeader.SamplesPerChannel * fileHeader.Channels];
-
-    // Create buffer for reading in a packet from the file
-    unsigned char packet[MaxPacketSize];
-
-    int error;
-    // Create a decoder for each channel
-    OpusDecoder** decodersPerChannel = new OpusDecoder*[channels];
-    for (unsigned i = 0; i < channels; ++i)
-      decodersPerChannel[i] = opus_decoder_create(SAMPLE_RATE, 1, &error);
-
-    PacketHeader packetHeader;
-    unsigned decodedBufferIndex(0);
-    unsigned samplesRead(0);
-    int frameSize(0);
-
-    while (samplesRead < samplesPerChannel)
-    {
-      for (unsigned channel = 0; channel < channels; ++channel)
-      {
-        // Read in the packet header
-        inputFile.Read(status, (byte*)&packetHeader, sizeof(packetHeader));
-
-        ErrorIf(packetHeader.Name[0] != 'p' || packetHeader.Name[1] != 'a');
-        ErrorIf(packetHeader.Size > MaxPacketSize);
-
-        // Read in the packet, using the size from the header
-        inputFile.Read(status, (byte*)packet, packetHeader.Size);
-
-        frameSize = opus_decode_float(decodersPerChannel[channel], packet, packetHeader.Size, decodedFramePerChannel[channel], FrameSize, 0);
-
-        ErrorIf(frameSize < 0);
-      }
-
-      for (int i = 0; i < frameSize && decodedBufferIndex < samplesPerChannel * channels; ++i)
-      {
-        for (unsigned channel = 0; channel < channels; ++channel, ++decodedBufferIndex)
-          decodedSamples[decodedBufferIndex] = decodedFramePerChannel[channel][i];
-      }
-
-
-      samplesRead += frameSize;
-    }
+//     FileDecoder decoder(status, fileName, false);
+//     if (status.Failed())
+//       return;
+// 
+//     // Set the variables
+//     channels = decoder.Header.Channels;
+//     samplesPerChannel = decoder.Header.SamplesPerChannel;
+// 
+//     // Create the buffer for the interleaved decoded samples
+//     decodedSamples = new float[samplesPerChannel * channels];
+//     
+//     DecodedPacket* packet(nullptr);
+// 
+//     decoder.DecodeNextPacket();
+//     decoder.DecodedPacketQueue.Read(packet);
+// 
+//     unsigned bufferIndex(0);
+// 
+//     while (packet)
+//     {
+//       for (unsigned i = 0; i < packet->SampleCount && bufferIndex < samplesPerChannel * channels; ++i)
+//       {
+//         for (unsigned channel = 0; channel < channels; ++channel, ++bufferIndex)
+//           decodedSamples[bufferIndex] = packet->Samples[channel][i];
+//       }
+// 
+//       delete packet;
+//       packet = nullptr;
+// 
+//       decoder.DecodeNextPacket();
+//       decoder.DecodedPacketQueue.Read(packet);
+//     }
 
   }
 

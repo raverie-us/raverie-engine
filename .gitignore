@@ -34,3 +34,5 @@ Data/ZilchCustomPluginShared/
 ZeroDevTools/
 Extensions/UiWidget/Debug/*
 AudioTest/*
+*.psess
+*.vsp

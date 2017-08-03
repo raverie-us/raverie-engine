@@ -13,7 +13,7 @@ namespace Audio
   //----------------------------------------------------------------------------------- File Decoder
 
   //************************************************************************************************
-  FileDecoder::FileDecoder(AudioFileTypes type, const unsigned channels, const unsigned rate, 
+  FileDecoderOld::FileDecoderOld(AudioFileTypes type, const unsigned channels, const unsigned rate, 
       const unsigned sampleBytes, const unsigned sampleCount, const unsigned dataBytes) :
     RawSamples(nullptr),
     BytesInBuffer(0),
@@ -36,15 +36,94 @@ namespace Audio
       StreamedBufferSizeInBytes *= BytesPerSample;
   }
 
+//   FileDecoder::FileDecoder(Zero::Status& status, Zero::StringParam fileName, const bool streaming) :
+//     FileSize(0),
+//     PacketHeaderSize(sizeof(PacketHeader)),
+//     Streaming(streaming)
+//   {
+//     InputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+//     if (!InputFile.IsOpen())
+//     {
+//       status.SetFailed(Zero::String::Format("Unable to open audio file %s", fileName.c_str()));
+//       return;
+//     }
+// 
+//     FileSize = (size_t)InputFile.CurrentFileSize();
+// 
+//     InputFile.Read(status, (byte*)&Header, sizeof(Header));
+// 
+//     int error;
+//     for (short i = 0; i < Header.Channels; ++i)
+//       Decoders[i] = opus_decoder_create(48000, 1, &error);
+// 
+//     ErrorIf(error < 0);
+//   }
+
   //************************************************************************************************
-  FileDecoder::~FileDecoder()
+  FileDecoderOld::~FileDecoderOld()
   {
     if (RawSamples)
       delete[] RawSamples;
   }
+// 
+//   FileDecoder::~FileDecoder()
+//   {
+//     for (short i = 0; i < Header.Channels; ++i)
+//       opus_decoder_destroy(Decoders[i]);
+// 
+//     // DecodedPacketQueue will delete any remaining objects in its list
+//   }
+// 
+//   void FileDecoder::DecodeNextPacket()
+//   {
+//     if (!InputFile.IsOpen())
+//       return;
+// 
+//     Zero::Status status;
+//     DecodedPacket* packet = new DecodedPacket();
+// 
+//     packet->Samples = new float[Header.SamplesPerChannel * Header.Channels];
+// 
+//     PacketHeader packetHeader;
+// 
+//     for (short i = 0; i < Header.Channels; ++i)
+//     {
+//       InputFile.Read(status, (byte*)&packetHeader, PacketHeaderSize);
+// 
+//       ErrorIf(packetHeader.Name[0] != 'p' || packetHeader.Name[1] != 'a');
+//       ErrorIf(packetHeader.Size > FileAccess::MaxPacketSize);
+//       ErrorIf(packetHeader.Channel != i);
+// 
+//       InputFile.Read(status, PacketBuffer, packetHeader.Size);
+// 
+//       int frameSize = opus_decode_float(Decoders[packetHeader.Channel], PacketBuffer, packetHeader.Size, DecodedPackets[i], FileAccess::FrameSize, 0);
+// 
+//       ErrorIf(frameSize < 0);
+// 
+//       packet->SampleCount = (unsigned)frameSize;
+//     }
+// 
+//     for (unsigned sample = 0; sample < packet->SampleCount; ++sample)
+//     {
+//       for (short channel = 0; channel < Header.Channels; ++channel)
+//       {
+//         packet->Samples[(sample * channel) + channel] = DecodedPackets[channel][sample];
+//       }
+//     }
+// 
+//     DecodedPacketQueue.Write(packet);
+// 
+//     if (InputFile.Tell() >= FileSize)
+//     {
+//       if (!Streaming)
+//         InputFile.Close();
+//       else
+//         InputFile.Seek(sizeof(Header), Zero::FileOrigin::Begin);
+//     }
+//   }
 
   //************************************************************************************************
-  void FileDecoder::DecodeNextSamples(unsigned howManySamples)
+  void FileDecoderOld::DecodeNextSamples(unsigned howManySamples)
   {
     LockObject.Lock();
     FinishedDecoding = false;
@@ -75,7 +154,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void FileDecoder::SetStreaming(const Zero::String& fileName, const Zero::FilePosition beginPosition)
+  void FileDecoderOld::SetStreaming(const Zero::String& fileName, const Zero::FilePosition beginPosition)
   {
     Streaming = true;
     FileDataBeginPosition = beginPosition;
@@ -307,7 +386,7 @@ namespace Audio
   //------------------------------------------------------------------------------ Samples From File
 
   //************************************************************************************************
-  SamplesFromFile::SamplesFromFile(FileDecoder* decoder) :
+  SamplesFromFile::SamplesFromFile(FileDecoderOld* decoder) :
     DecodedSamples(nullptr),
     LastAvailableIndex(0),
     DecodingData(decoder),
@@ -385,7 +464,7 @@ namespace Audio
     {
       WaitingForDecoder = true;
 
-      gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextSamples, DecodingData,
+      gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoderOld::DecodeNextSamples, DecodingData,
         DecodingData->SamplesToDecode));
     }
   }
@@ -451,7 +530,7 @@ namespace Audio
             // Clear the buffer before it's reused
             buffer->Clear();
             // Send another task to the decoding thread
-            gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextSamples, 
+            gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoderOld::DecodeNextSamples, 
               DecodingData, DecodingData->SamplesToDecode));
           }
           else
@@ -494,7 +573,7 @@ namespace Audio
       // Mark that we are now waiting
       WaitingForDecoder = true;
       // Send another task to the decoding thread
-      gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextSamples, 
+      gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoderOld::DecodeNextSamples, 
         DecodingData, DecodingData->SamplesToDecode));
     }
   }
@@ -524,7 +603,7 @@ namespace Audio
     DecodingData->ResetStreamingFile();
 
     // Send another task to the decoding thread
-    gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextSamples, 
+    gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoderOld::DecodeNextSamples, 
       DecodingData, DecodingData->SamplesToDecode));
     WaitingForDecoder = true;
   }

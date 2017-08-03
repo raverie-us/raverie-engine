@@ -41,6 +41,8 @@ namespace Audio
     unsigned WavFormat;
   };
 
+
+
   //------------------------------------------------------------------------------------ File Access
 
   // Object to handle reading data from files and storing it. Also handles streaming from files. 
@@ -64,6 +66,11 @@ namespace Audio
 
     static void RunTest();
 
+    // 20 ms of audio data at 48000 samples per second
+    static const unsigned FrameSize = 960;
+    // Recommended max packet size
+    static const unsigned MaxPacketSize = 4000;
+
   private:
     static SamplesFromFile* ReadFile(Zero::Status& status, const Zero::String& fileName, 
       const bool streaming);
@@ -74,11 +81,6 @@ namespace Audio
 
     static void GetWavData(Zero::File* file, AudioData& data);
     static void GetOggData(stb_vorbis* OggStream, AudioData& data);
-
-    // 20 ms of audio data at 48000 samples per second
-    static const unsigned FrameSize = 960;
-    // Recommended max packet size
-    static const unsigned MaxPacketSize = 4000;
   };
 
 

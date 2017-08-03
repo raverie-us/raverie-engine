@@ -76,10 +76,17 @@ void SoundBuilder::Serialize(Serializer& stream)
 
 void SoundBuilder::BuildContent(BuildOptions& options)
 {
+  Status status;
+  String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
+  String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, ".snd"));
+  Audio::FileAccess::ProcessFile(status, sourceFile, destFile);
+
+  return;
+
   String filename = mOwner->Filename;
   String extension = FilePath::GetExtension(filename);
 
-  Status status;
+  //Status status;
   Audio::AudioData data = Audio::FileAccess::GetFileData(status, mOwner->GetFullPath());
   data.CloseFile();
 

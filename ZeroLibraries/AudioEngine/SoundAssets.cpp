@@ -92,6 +92,26 @@ namespace Audio
 
   //-------------------------------------------------------------------------- Sound Asset From File
 
+  struct FileHeader
+  {
+    const char Name[4] = { 'Z','E','R','O' };
+    short Channels;
+    unsigned SamplesPerChannel;
+  };
+
+  struct PacketHeader
+  {
+    const char Name[4] = { 'p','a','c','k' };
+    short Channel;
+    unsigned Size;
+  };
+
+  struct DecodedPacket
+  {
+    unsigned FrameCount;
+    float* Samples;
+  };
+
   //************************************************************************************************
   SoundAssetFromFile::SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, 
     const bool streaming, ExternalNodeInterface* extInt, const bool isThreaded) :
@@ -100,10 +120,13 @@ namespace Audio
     Streaming(streaming),
     FileLength(0),
     Channels(0),
-    FileData(nullptr),
-    SampleRate(0),
+    //FileData(nullptr),
+    //SampleRate(0),
     FrameCount(0),
-    Type(Other_Type)
+    //Type(Other_Type),
+    DecodingCheck(this),
+    UndecodedIndex(0),
+    Samples(nullptr)
   {
     if (!Threaded)
     {
@@ -112,35 +135,79 @@ namespace Audio
       {
         FileLength = ((SoundAssetFromFile*)ThreadedAsset)->FileLength;
         Channels = ((SoundAssetFromFile*)ThreadedAsset)->Channels;
-        SampleRate = ((SoundAssetFromFile*)ThreadedAsset)->SampleRate;
+        //SampleRate = ((SoundAssetFromFile*)ThreadedAsset)->SampleRate;
         FrameCount = ((SoundAssetFromFile*)ThreadedAsset)->FrameCount;
-        Type = ((SoundAssetFromFile*)ThreadedAsset)->Type;
+        //Type = ((SoundAssetFromFile*)ThreadedAsset)->Type;
       }
     }
     else
     {
-      if (!streaming)
-        FileData = FileAccess::LoadAudioFile(status, fileName);
-      else
-        FileData = FileAccess::StartStream(status, fileName);
+//       if (!streaming)
+//         FileData = FileAccess::LoadAudioFile(status, fileName);
+//       else
+//         FileData = FileAccess::StartStream(status, fileName);
+// 
+//       if (status.Failed())
+//         return;
+// 
+//       FileLength = (float)(FileData->DecodingData->TotalSamples / FileData->DecodingData->Channels)
+//         / FileData->DecodingData->SampleRate;
+//       Channels = FileData->DecodingData->Channels;
+//       SampleRate = FileData->DecodingData->SampleRate;
+//       FrameCount = FileData->DecodingData->FrameCount;
+//       Type = FileData->GetFileType();
 
+
+      // Remember that this constructor happens on the game thread
+
+      // TODO read from buffer as well as from file
+
+      InputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+      if (!InputFile.IsOpen())
+      {
+        status.SetFailed(Zero::String::Format("Unable to open audio file %s", fileName.c_str()));
+        return;
+      }
+
+      FileHeader header;
+      InputFile.Read(status, (byte*)&header, sizeof(header));
       if (status.Failed())
         return;
 
-      FileLength = (float)(FileData->DecodingData->TotalSamples / FileData->DecodingData->Channels)
-        / FileData->DecodingData->SampleRate;
-      Channels = FileData->DecodingData->Channels;
-      SampleRate = FileData->DecodingData->SampleRate;
-      FrameCount = FileData->DecodingData->FrameCount;
-      Type = FileData->GetFileType();
+      ErrorIf(header.Name[0] != 'Z');
+
+      int error;
+      for (short i = 0; i < header.Channels; ++i)
+      {
+        Decoders[i] = opus_decoder_create(48000, 1, &error);
+        if (error < 0)
+        {
+          status.SetFailed(Zero::String::Format("Error creating audio decoder: %s", opus_strerror(error)));
+        }
+      }
+
+      FileLength = (float)header.SamplesPerChannel / gAudioSystem->SampleRate;
+      Channels = header.Channels;
+      FrameCount = header.SamplesPerChannel;
+
+      Samples = new float[FrameCount * Channels];
+
+      // TODO Need to not do this on the game thread!!
+      gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&SoundAssetFromFile::DecodeNextPacket, this));
     }
   }
 
   //************************************************************************************************
   SoundAssetFromFile::~SoundAssetFromFile()
   {
-    if (FileData)
-      delete FileData;
+//     if (FileData)
+//       delete FileData;
+
+
+    if (Samples)
+      delete[] Samples;
+
+    // TODO Need to destroy encoders when done with them
   }
 
   //************************************************************************************************
@@ -150,10 +217,12 @@ namespace Audio
       return FrameData();
 
     FrameData data;
-    data.HowManyChannels = FileData->DecodingData->Channels;
+    data.HowManyChannels = Channels;
+
+    CheckForDecodedPacket();
 
     // Past end of file, return zeros
-    if (frameIndex >= FileData->DecodingData->FrameCount)
+    if (frameIndex >= FrameCount || frameIndex >= UndecodedIndex)
     {
       memset(data.Samples, 0, data.HowManyChannels * sizeof(float));
 
@@ -161,11 +230,13 @@ namespace Audio
     }
 
     // Translate from frames to sample location
-    unsigned sampleIndex = frameIndex * data.HowManyChannels;
+    unsigned sampleIndex = frameIndex * Channels;
 
     // Get samples for all channels 
-    for (unsigned i = 0; i < data.HowManyChannels; ++i)
-      data.Samples[i] = (*FileData)[sampleIndex + i];
+    memcpy(data.Samples, Samples + sampleIndex, Channels * sizeof(float));
+
+//     for (unsigned i = 0; i < data.HowManyChannels; ++i)
+//       data.Samples[i] = Samples[sampleIndex + i];
 
     return data;
   }
@@ -178,28 +249,37 @@ namespace Audio
       return;
 
     // Translate from frames to sample location
-    unsigned sampleIndex = frameIndex * FileData->DecodingData->Channels;
+    unsigned sampleIndex = frameIndex * Channels;
 
-    for (unsigned i = 0; i < numberOfSamples && sampleIndex <= FileData->DecodingData->TotalSamples; 
-      ++i, ++sampleIndex)
-    {
-      buffer[i] = (*FileData)[sampleIndex];
-    }
+    CheckForDecodedPacket();
+
+    unsigned samples = numberOfSamples;
+    if (sampleIndex + numberOfSamples >= UndecodedIndex)
+      samples = UndecodedIndex - sampleIndex;
+
+    memcpy(buffer, Samples + sampleIndex, samples * sizeof(float));
+
+    if (samples < numberOfSamples)
+      memset(buffer + samples, 0, (numberOfSamples - samples) * sizeof(float));
+
+//     for (unsigned i = 0; i < numberOfSamples && sampleIndex <= FileData->DecodingData->TotalSamples; 
+//       ++i, ++sampleIndex)
+//     {
+//       buffer[i] = (*FileData)[sampleIndex];
+//     }
   }
 
   //************************************************************************************************
   unsigned SoundAssetFromFile::GetSampleRate()
   {
-    return SampleRate;
+    //return SampleRate;
+    return 0;
   }
 
   //************************************************************************************************
   unsigned SoundAssetFromFile::GetNumberOfSamples()
   {
-    if (Threaded)
-      return FileData->DecodingData->TotalSamples;
-    else
-      return FrameCount * Channels;
+    return FrameCount * Channels;
   }
 
   //************************************************************************************************
@@ -217,7 +297,8 @@ namespace Audio
   //************************************************************************************************
   void SoundAssetFromFile::ResetStreamingFile()
   {
-    FileData->ResetStreamingFile();
+    // TODO
+    //FileData->ResetStreamingFile();
   }
 
   //************************************************************************************************
@@ -235,7 +316,7 @@ namespace Audio
   //************************************************************************************************
   Audio::AudioFileTypes SoundAssetFromFile::GetFileType()
   {
-    return Type;
+    return AudioFileTypes::Other_Type;
   }
 
   //************************************************************************************************
@@ -252,8 +333,9 @@ namespace Audio
       else
       {
         HasStreamingInstance = true;
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SamplesFromFile::ReopenStreamingFile, 
-          ((SoundAssetFromFile*)ThreadedAsset)->FileData));
+        // TODO
+//         gAudioSystem->AddTask(Zero::CreateFunctor(&SamplesFromFile::ReopenStreamingFile, 
+//           ((SoundAssetFromFile*)ThreadedAsset)->FileData));
         return true;
       }
     }
@@ -265,8 +347,92 @@ namespace Audio
     if (HasStreamingInstance)
     {
       HasStreamingInstance = false;
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SamplesFromFile::CloseStreamingFile, 
-        ((SoundAssetFromFile*)ThreadedAsset)->FileData));
+      // TODO
+//       gAudioSystem->AddTask(Zero::CreateFunctor(&SamplesFromFile::CloseStreamingFile, 
+//         ((SoundAssetFromFile*)ThreadedAsset)->FileData));
+    }
+  }
+
+  void SoundAssetFromFile::DecodeNextPacket()
+  {
+    // Remember that this function happens on the decoding thread
+
+    if (!InputFile.IsOpen())
+      return;
+
+    Zero::Status status;
+
+    PacketHeader header;
+    int frames;
+
+    for (unsigned i = 0; i < Channels; ++i)
+    {
+      InputFile.Read(status, (byte*)&header, sizeof(header));
+      if (status.Failed())
+      {
+        if (!Streaming)
+        {
+          InputFile.Close();
+          return;
+        }
+        else
+        {
+          InputFile.Seek(sizeof(FileHeader), Zero::FileOrigin::Begin);
+          InputFile.Read(status, (byte*)&header, sizeof(header));
+          if (status.Failed())
+          {
+            InputFile.Close();
+            return;
+          }
+        }
+      }
+
+      ErrorIf(header.Name[0] != 'p' || header.Name[1] != 'a');
+      ErrorIf(header.Size > MaxPacketSize);
+      ErrorIf(header.Channel != i);
+
+      InputFile.Read(status, PacketBuffer, header.Size);
+
+      frames = opus_decode_float(Decoders[header.Channel], PacketBuffer, header.Size, DecodedPackets[i], FrameSize, 0);
+
+      ErrorIf(frames < 0, Zero::String::Format("Opus error: %s", opus_strerror(frames)).c_str());
+    }
+
+    DecodedPacket* newPacket = new DecodedPacket();
+    newPacket->FrameCount = frames;
+    newPacket->Samples = new float[newPacket->FrameCount * Channels];
+
+    for (unsigned frame = 0; frame < newPacket->FrameCount; ++frame)
+    {
+      for (unsigned channel = 0; channel < Channels; ++channel)
+        newPacket->Samples[(frame * channel) + channel] = DecodedPackets[channel][frame];
+    }
+
+    DecodedPacketQueue.Write(newPacket);
+
+    if (AtomicCheckEqualityPointer(DecodingCheck, nullptr))
+      delete this;
+  }
+
+  void SoundAssetFromFile::CheckForDecodedPacket()
+  {
+    if (AtomicCheckEqualityPointer(DecodingCheck, this))
+    {
+      DecodedPacket* packet;
+      if (DecodedPacketQueue.Read(packet))
+      {
+        // TODO Need to handle streaming
+
+        memcpy(Samples + UndecodedIndex, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
+        UndecodedIndex += packet->FrameCount * Channels;
+
+        if (UndecodedIndex < FrameCount * Channels)
+        {
+          gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&SoundAssetFromFile::DecodeNextPacket, this));
+        }
+        else
+          AtomicSetPointer((void**)&DecodingCheck, nullptr);
+      }
     }
   }
 

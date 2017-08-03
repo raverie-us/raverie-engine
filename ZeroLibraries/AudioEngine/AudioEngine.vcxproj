@@ -46,7 +46,7 @@
       <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">opusDebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <Lib>
@@ -139,7 +139,6 @@
     <ClInclude Include="WindowsMIDI.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="opus.lib" />
     <Library Include="portaudio_x86.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

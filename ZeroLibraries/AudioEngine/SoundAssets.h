@@ -12,6 +12,8 @@
 
 #define WAVE_VOLUME 0.5f
 
+struct OpusDecoder;
+
 namespace Audio
 {
   //------------------------------------------------------------------------------------- Frame Data
@@ -92,12 +94,15 @@ namespace Audio
   //-------------------------------------------------------------------------- Sound Asset From File
 
   class SamplesFromFile;
+  struct DecodedPacket;
 
   class SoundAssetFromFile : public SoundAssetNode
   {
   public:
     SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, const bool streaming,
       ExternalNodeInterface* externalInterface, const bool isThreaded = false);
+    
+    // TODO remove functions that aren't returning anything useful
 
     // Returns the samples for the audio frame at the specified index
     FrameData GetFrame(const unsigned frameIndex) override;
@@ -132,18 +137,37 @@ namespace Audio
     // The number of channels in the audio data
     unsigned Channels;
     // The sample rate of the audio data
-    unsigned SampleRate;
+    //unsigned SampleRate;
     // The number of audio frames in the audio data
     unsigned FrameCount;
     // Pointer to the object used to access and decode the audio data
-    SamplesFromFile* FileData;
+    //SamplesFromFile* FileData;
     // The type of the file
-    AudioFileTypes Type;
+    //AudioFileTypes Type;
 
     // Returns false if this is a streaming asset and there is already an instance associated with it
     bool OkayToAddInstance() override;
     // Resets the HasStreamingInstance variable
     void RemoveInstance() override;
+
+    // 20 ms of audio data at 48000 samples per second
+    static const unsigned FrameSize = 960;
+    // Recommended max packet size
+    static const unsigned MaxPacketSize = 4000;
+
+    Zero::File InputFile;
+    OpusDecoder* Decoders[MaxChannels];
+    unsigned char PacketBuffer[MaxPacketSize];
+    float DecodedPackets[MaxChannels][FrameSize];
+    unsigned UndecodedIndex;
+    float* Samples;
+  
+    // TODO Fix this so it doesn't need to be included in the interface header
+    LockFreeQueue<DecodedPacket*> DecodedPacketQueue;
+
+    void DecodeNextPacket();
+    void CheckForDecodedPacket();
+    SoundAssetFromFile* DecodingCheck;
   };
 
 

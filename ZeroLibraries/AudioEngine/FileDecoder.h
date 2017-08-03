@@ -10,6 +10,8 @@
 #ifndef FILEDECODE_H
 #define FILEDECODE_H
 
+#include "opus.h"
+
 struct stb_vorbis;
 
 namespace Audio
@@ -27,13 +29,48 @@ namespace Audio
     float Samples[MaxChannels];
   };
 
+//   struct DecodedPacket
+//   {
+//     unsigned SampleCount;
+//     float* Samples;
+//   };
+// 
+//   struct FileHeader
+//   {
+//     const char Name[4] = { 'Z','E','R','O' };
+//     short Channels;
+//     unsigned SamplesPerChannel;
+//   };
+// 
+//   class FileDecoder
+//   {
+//   public:
+//     FileDecoder(Zero::Status& status, Zero::StringParam fileName, const bool streaming);
+//     ~FileDecoder();
+// 
+//     void DecodeNextPacket();
+// 
+//     FileHeader Header;
+// 
+//     LockFreeQueue<DecodedPacket*> DecodedPacketQueue;
+// 
+//   private:
+//     bool Streaming;
+//     Zero::File InputFile;
+//     OpusDecoder* Decoders[MaxChannels];
+//     size_t FileSize;
+//     size_t PacketHeaderSize;
+//     unsigned char PacketBuffer[FileAccess::MaxPacketSize];
+//     float DecodedPackets[MaxChannels][FileAccess::FrameSize];
+//   };
+
   // Base class for threaded decoding of audio files
-  class FileDecoder
+  class FileDecoderOld
   {
   public:
-    FileDecoder(AudioFileTypes type, const unsigned channels, const unsigned rate, 
+    FileDecoderOld(AudioFileTypes type, const unsigned channels, const unsigned rate, 
       const unsigned sampleBytes, const unsigned sampleCount, const unsigned dataBytes);
-    virtual ~FileDecoder();
+    virtual ~FileDecoderOld();
 
     // Decodes the specified number of samples (should be on a separate thread)
     void DecodeNextSamples(unsigned howManySamples);
@@ -104,12 +141,12 @@ namespace Audio
   const static float Normalize24Bit = (1 << 23) - 1;
 
   // Decodes WAV files
-  class WavDecoder : public FileDecoder
+  class WavDecoder : public FileDecoderOld
   {
   public:
     WavDecoder(const unsigned channels, const unsigned rate, const unsigned sampleBytes,
       const unsigned sampleCount, const unsigned dataBytes) :
-      FileDecoder(WAV_Type, channels, rate, sampleBytes, sampleCount, dataBytes),
+      FileDecoderOld(WAV_Type, channels, rate, sampleBytes, sampleCount, dataBytes),
       DecodingIndex(0)
     {}
 
@@ -130,12 +167,12 @@ namespace Audio
   //------------------------------------------------------------------------------------ Ogg Decoder
 
   // Decodes Ogg files
-  class OggDecoder : public FileDecoder
+  class OggDecoder : public FileDecoderOld
   {
   public:
     OggDecoder(const unsigned channels, const unsigned rate, const unsigned sampleBytes,
       const unsigned sampleCount, const unsigned dataBytes) :
-      FileDecoder(OGG_Type, channels, rate, sampleBytes, sampleCount, dataBytes),
+      FileDecoderOld(OGG_Type, channels, rate, sampleBytes, sampleCount, dataBytes),
       OggData(nullptr),
       SampleArray(nullptr),
       SamplesRead(0),
@@ -172,7 +209,7 @@ namespace Audio
   class SamplesFromFile
   {
   public:
-    SamplesFromFile(FileDecoder* decoder);
+    SamplesFromFile(FileDecoderOld* decoder);
     ~SamplesFromFile();
 
     // Returns the audio sample at the specified index
@@ -190,7 +227,7 @@ namespace Audio
     // Resets the streaming file to the beginning
     void ResetStreamingFile();
     // Pointer to the object used for decoding raw audio data
-    FileDecoder* DecodingData;
+    FileDecoderOld* DecodingData;
 
   private:
     // Buffer of decoded audio samples 
