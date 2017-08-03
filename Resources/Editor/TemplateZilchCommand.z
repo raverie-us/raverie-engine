@@ -1,4 +1,4 @@
-[Command(autoRegister:true)]
+[Command(autoRegister:true)][RunInEditor]
 class RESOURCE_NAME_ : ZilchComponent
 {
 	function Initialize(init : CogInitializer)

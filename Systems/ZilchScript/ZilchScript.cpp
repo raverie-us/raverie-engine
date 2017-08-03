@@ -199,9 +199,9 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::UnhandledException, ZeroZilchExceptionCallback);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::FatalError, ZeroZilchFatalErrorCallback);
 
-  mAllowedClassAttributes.Insert("RunInEditor");
-  mAllowedClassAttributes.Insert("Tool");
-  mAllowedClassAttributes.Insert("Command");
+  mAllowedClassAttributes.Insert(ObjectAttributes::cRunInEditor);
+  mAllowedClassAttributes.Insert(ObjectAttributes::cTool);
+  mAllowedClassAttributes.Insert(ObjectAttributes::cCommand);
   mAllowedClassAttributes.Insert(ObjectAttributes::cGizmo);
   mAllowedClassAttributes.Insert(ObjectAttributes::cComponentInterface);
   

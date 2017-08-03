@@ -37,6 +37,8 @@ extern const String cResourceInterface;
 extern const String cComponentInterface;
 // Used to specify that this component has a gizmo (via the archetype parameter)
 extern const String cGizmo;
+extern const String cCommand;
+extern const String cTool;
 
 }//namespace ObjectFlags
 
