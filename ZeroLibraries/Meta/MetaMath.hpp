@@ -62,6 +62,7 @@ void ToValue(StringRange range, Vec2& value);
 void ToValue(StringRange range, Vec3& value);
 void ToValue(StringRange range, Vec4& value);
 void ToValue(StringRange range, Quat& value);
+void ToValue(StringRange range, Mat2& value);
 void ToValue(StringRange range, Mat3& value);
 void ToValue(StringRange range, Mat4& value);
 

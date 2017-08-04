@@ -173,6 +173,21 @@ ZilchDefineType(PrimitiveMetaSerialization<Integer>, builder, type)
 }
 
 //**************************************************************************************************
+ZilchDefineType(PrimitiveMetaSerialization<Integer2>, builder, type)
+{
+}
+
+//**************************************************************************************************
+ZilchDefineType(PrimitiveMetaSerialization<Integer3>, builder, type)
+{
+}
+
+//**************************************************************************************************
+ZilchDefineType(PrimitiveMetaSerialization<Integer4>, builder, type)
+{
+}
+
+//**************************************************************************************************
 ZilchDefineType(PrimitiveMetaSerialization<String>, builder, type)
 {
 }
@@ -199,6 +214,11 @@ ZilchDefineType(PrimitiveMetaSerialization<Real3>, builder, type)
 
 //**************************************************************************************************
 ZilchDefineType(PrimitiveMetaSerialization<Real4>, builder, type)
+{
+}
+
+//**************************************************************************************************
+ZilchDefineType(PrimitiveMetaSerialization<Mat2>, builder, type)
 {
 }
 
