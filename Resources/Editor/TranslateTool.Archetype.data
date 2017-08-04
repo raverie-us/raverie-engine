@@ -2,7 +2,6 @@
 Cog 
 {
 	var Name = "TranslateTool"
-	var LinkId = 1
 	GizmoCreator 
 	{
 		var GizmoArchetype = "52fd859a84ab45c6:ObjectTranslateGizmo"
@@ -15,5 +14,8 @@ Cog
 		var Snapping = false
 		var SnapDistance = 0.25
 		var SnapMode = GizmoSnapMode.WorldGrid
+		var CopySelection = "Ctrl + Drag"
+		var SnapToSurface = "V + Drag (Center Square)"
+		var TempSnapping = "Shift (Hold)"
 	}
 }

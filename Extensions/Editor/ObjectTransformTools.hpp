@@ -136,6 +136,16 @@ public:
 
 public:
   GizmoSnapMode::Enum mSnapMode;
+
+  /// Duplicate all objects in the current selection.  Then, make the duplicates
+  /// the current selection and target of the TranslateTool.
+  String mCopySelection;
+  /// Snap the center of the translate tool to the surface being hovered over
+  /// by the mouse cursor, thereby affecting all target-objects of the TranslateTool.
+  String mSnapToSurface;
+  /// While held, temporarily switch the state of 'Snapping' to the opposite
+  /// of its current state.
+  String mTempSnapping;
 };
 
 //---------------------------------------------------------- ObjectScaleTool ---
@@ -167,6 +177,13 @@ public:
 public:
   GizmoSnapMode::Enum mSnapMode;
   bool mAffectTranslation;
+
+  /// When dragging one of the three main axes, scale by the drag amount on the
+  /// other two, non-drag axes, and not the drag axis itself.
+  String mOffAxesScale;
+  /// While held, temporarily switch the state of 'Snapping' to the opposite
+  /// of its current state.
+  String mTempSnapping;
 };
 
 //---------------------------------------------------------- ObjectScaleTool ---
@@ -190,6 +207,10 @@ public:
   
 public:
   bool mAffectTranslation;
+
+  /// While held, temporarily switch the state of 'Snapping' to the opposite
+  /// of its current state.
+  String mTempSnapping;
 };
 
 }// end namespace Zero

@@ -2,7 +2,6 @@
 Cog 
 {
 	var Name = "ScaleTool"
-	var LinkId = 1
 	GizmoCreator 
 	{
 		var GizmoArchetype = "54c73a2d19b7cc96:ObjectScaleGizmo"
@@ -16,5 +15,7 @@ Cog
 		var SnapDistance = 1
 		var SnapMode = GizmoSnapMode.WorldGrid
 		var AffectTranslation = true
+		var OffAxesScale = "Ctrl + Drag"
+		var TempSnapping = "Shift (Hold)"
 	}
 }

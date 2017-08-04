@@ -457,12 +457,35 @@ Space* ObjectTransformTool::GetSpaceFromSelection(MetaSelection* selection)
 ZilchDefineType(ObjectTranslateTool, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindTag(Tags::Tool);
+  ZeroBindDocumented( );
 
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapDistance);
   ZilchBindGetterSetterProperty(SnapMode);
 
-  ZeroBindTag(Tags::Tool);
+  ReflectionObject* copyObject = ZilchBindFieldGetterProperty(mCopySelection);
+  ReflectionObject* snapObject = ZilchBindFieldGetterProperty(mSnapToSurface);
+  ReflectionObject* tempObject = ZilchBindFieldGetterProperty(mTempSnapping);
+
+  copyObject->AddAttribute(PropertyAttributes::cReadOnly);
+  snapObject->AddAttribute(PropertyAttributes::cReadOnly);
+  tempObject->AddAttribute(PropertyAttributes::cReadOnly);
+
+  StringBuilder copyString;
+  copyString << "Duplicate all objects in the current selection.  Then, make ";
+  copyString << "the duplicates the current selection and target of the TranslateTool.";
+  copyObject->Description = ZilchDocumentString(copyString.ToString( ));
+
+  StringBuilder snapString;
+  snapString << "When dragging one of the three main axes, scale by the drag ";
+  snapString << "amount on the other two, non-drag axes, and not the drag axis itself.";
+  snapObject->Description = ZilchDocumentString(snapString.ToString( ));
+
+  StringBuilder tempString;
+  tempString << "While held, temporarily switch the state of 'Snapping' to the ";
+  tempString << "opposite of its current state.";
+  tempObject->Description = ZilchDocumentString(tempString.ToString( ));
 }
 
 /******************************************************************************/
@@ -475,6 +498,10 @@ void ObjectTranslateTool::Serialize(Serializer& stream)
 {
   ObjectTransformTool::Serialize(stream);
   SerializeEnumName(GizmoSnapMode, mSnapMode);
+
+  SerializeName(mCopySelection);
+  SerializeName(mSnapToSurface);
+  SerializeName(mTempSnapping);
 }
 
 /******************************************************************************/
@@ -588,6 +615,8 @@ void ObjectTranslateTool::CopyPropertiesToGizmo()
 ZilchDefineType(ObjectScaleTool, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindTag(Tags::Tool);
+  ZeroBindDocumented( );
 
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapDistance);
@@ -595,7 +624,21 @@ ZilchDefineType(ObjectScaleTool, builder, type)
 
   ZilchBindFieldProperty(mAffectTranslation);
 
-  ZeroBindTag(Tags::Tool);
+  ReflectionObject* axesObject = ZilchBindFieldGetterProperty(mOffAxesScale);
+  ReflectionObject* snapObject = ZilchBindFieldGetterProperty(mTempSnapping);
+
+  axesObject->AddAttribute(PropertyAttributes::cReadOnly);
+  snapObject->AddAttribute(PropertyAttributes::cReadOnly);
+
+  StringBuilder axesString;
+  axesString << "When dragging one of the three main axes, scale by the drag ";
+  axesString << "amount on the other two, non-drag axes, and not the drag axis itself.";
+  axesObject->Description = ZilchDocumentString(axesString.ToString());
+
+  StringBuilder snapString;
+  snapString << "While held, temporarily switch the state of 'Snapping' to the ";
+  snapString << "opposite of its current state.";
+  snapObject->Description = ZilchDocumentString(snapString.ToString());
 }
 
 /******************************************************************************/
@@ -609,6 +652,9 @@ void ObjectScaleTool::Serialize(Serializer& stream)
   ObjectTransformTool::Serialize(stream);
   SerializeEnumName(GizmoSnapMode, mSnapMode);
   SerializeName(mAffectTranslation);
+
+  SerializeName(mOffAxesScale);
+  SerializeName(mTempSnapping);
 }
 
 /******************************************************************************/
@@ -698,11 +744,22 @@ void ObjectScaleTool::CopyPropertiesToGizmo()
 ZilchDefineType(ObjectRotateTool, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindTag(Tags::Tool);
+  ZeroBindDocumented();
+
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapAngle);
   ZilchBindFieldProperty(mAffectTranslation);
 
-  ZeroBindTag(Tags::Tool);
+
+  ReflectionObject* snapObject = ZilchBindFieldGetterProperty(mTempSnapping);
+
+  snapObject->AddAttribute(PropertyAttributes::cReadOnly);
+
+  StringBuilder snapString;
+  snapString << "While held, temporarily switch the state of 'Snapping' to the ";
+  snapString << "opposite of its current state.";
+  snapObject->Description = ZilchDocumentString(snapString.ToString( ));
 }
 
 /******************************************************************************/
@@ -715,6 +772,8 @@ void ObjectRotateTool::Serialize(Serializer& stream)
 {
   ObjectTransformTool::Serialize(stream);
   SerializeName(mAffectTranslation);
+
+  SerializeName(mTempSnapping);
 }
 
 /******************************************************************************/
