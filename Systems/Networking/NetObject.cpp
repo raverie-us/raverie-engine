@@ -184,7 +184,7 @@ void NetObject::Initialize(CogInitializer& initializer)
   if(!netPeer) // Unable?
   {
     // (This can happen if the user forgot to add a net peer component to their game session)
-    DoNotifyError("Invalid NetObject GameSession",
+    DoNotifyWarning("Invalid NetObject GameSession",
                   String::Format("Unable to initialize NetObject - NetObject '%s' was created in the GameSession '%s' which does not have a NetPeer component."
                                  " Please add a NetPeer component to the GameSession.",
                                  owner->GetDescription().c_str(), gameSession->GetDescription().c_str()));
