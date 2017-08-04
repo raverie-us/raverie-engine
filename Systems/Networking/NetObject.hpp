@@ -313,12 +313,12 @@ public:
   void SetNetUserOwner(Cog* cog);
 
   /// [Server/Offline] Sets the owning network user on this object and up the tree on each parent recursively (pre-order traversal).
-  void SetNetUserOwnerUpById(NetUserId netUserId);
   void SetNetUserOwnerUp(Cog* cog);
+  void SetNetUserOwnerUpById(NetUserId netUserId);
 
   /// [Server/Offline] Sets the owning network user on this object and down the tree on all children recursively (pre-order traversal).
-  void SetNetUserOwnerDownById(NetUserId netUserId);
   void SetNetUserOwnerDown(Cog* cog);
+  void SetNetUserOwnerDownById(NetUserId netUserId);
 
   /// Handles a change in network ownership, dispatches events accordingly.
   void HandleNetUserOwnerChanged(NetUserId previousNetUserOwnerUserId);

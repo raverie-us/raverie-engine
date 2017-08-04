@@ -1220,7 +1220,6 @@ namespace Zilch
   ZilchDeclareExternalType(String);
   ZilchDeclareExternalType(DoubleReal);
   ZilchDeclareExternalType(DoubleInteger);
-  ZilchDeclareExternalType(Zero::Rune);
 
   // All the redirection types
   ZilchDeclareDefineImplicitRedirectType(char,                Integer, ZeroShared);

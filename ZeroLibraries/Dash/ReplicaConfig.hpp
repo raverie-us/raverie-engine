@@ -468,13 +468,26 @@ struct PairSortPolicy<Variant, DataType>
   /// Sorts according to key (Variant type then hash)
   bool operator()(const value_type& lhs, const key_type& rhs) const
   {
-    return lhs.first.mNativeType == rhs.mNativeType
-        && lhs.first.Hash() < rhs.Hash();
+    // Compare each variant's native type ID
+    NativeTypeId lhsNativeTypeId = lhs.first.GetNativeTypeId();
+    NativeTypeId rhsNativeTypeId = rhs.GetNativeTypeId();
+
+    if(lhsNativeTypeId < rhsNativeTypeId)
+      return true;
+    else if(lhsNativeTypeId > rhsNativeTypeId)
+      return false;
+    else // Same native type ID?
+    {
+      // Compare each variant's hash value
+      size_t lhsHashValue = lhs.first.Hash();
+      size_t rhsHashValue = rhs.Hash();
+
+      return lhsHashValue < rhsHashValue;
+    }
   }
   bool operator()(const value_type& lhs, const value_type& rhs) const
   {
-    return lhs.first.mNativeType == rhs.first.mNativeType
-        && lhs.first.Hash() < rhs.first.Hash();
+    return operator()(lhs, rhs.first);
   }
 
   /// Equates according to key (Variant value)

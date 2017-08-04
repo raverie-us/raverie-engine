@@ -141,6 +141,11 @@ public:
   // Peer Interface
   //
 
+  /// Current peer identifier information display string.
+  /// Provided for logging and debugging convenience.
+  /// Contains the peer's local IP address, network role, and net peer ID.
+  String GetInfo() const;
+
   /// Returns the peer's permanent GUID.
   /// This GUID will never change for the lifetime of this peer.
   Guid GetGuid() const;
@@ -149,21 +154,46 @@ public:
   bool IsOpen() const;
 
   /// Opens the peer with the specified network role, port, and retry settings.
-  /// If the peer is opened in offline mode (Role::Offline), the API will act as a pass-through
-  /// and simulate all applicable network events locally. Always succeeds.
-  /// If binding is unsuccessful, the port increments and tries again for the given number of retries.
+  /// For the given number of retries, if binding is unsuccessful, the port number is incremented and binding is attempted again.
   /// Specify port 0 to indicate any available port should be used.
   /// Returns true if successful, else false.
   bool Open(Role::Enum role, uint port, uint retries);
+  /// Opens the peer with the specified network role and port settings.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool Open(Role::Enum role, uint port);
+  /// Opens the peer with the specified network role on any available port.
+  /// Returns true if successful, else false.
   bool Open(Role::Enum role);
+  /// Opens the peer as a client with the specified network port and retry settings.
+  /// For the given number of retries, if binding is unsuccessful, the port number is incremented and binding is attempted again.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool OpenClient(uint port, uint retries);
+  /// Opens the peer as a client with the specified network port.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool OpenClient(uint port);
+  /// Opens the peer as a client on any available port.
+  /// Returns true if successful, else false.
   bool OpenClient();
+  /// Opens the peer as a server with the specified network port.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool OpenServer(uint port);
+  /// Opens the peer as a server on any available port.
+  /// Returns true if successful, else false.
   bool OpenServer();
+  /// Opens the peer as a master server with the specified network port.
+  /// Specify port 0 to indicate any available port should be used.
+  /// Returns true if successful, else false.
   bool OpenMasterServer(uint port);
+  /// Opens the peer as a master server on any available port.
+  /// Returns true if successful, else false.
   bool OpenMasterServer();
+  /// Opens the peer in offline mode.
+  /// In offline mode, the peer will act as a pass-through and simulate all applicable network events locally.
+  /// Always succeeds and returns true.
   bool OpenOffline();
 
   /// Closes the peer (safe to call multiple times).
@@ -761,7 +791,7 @@ public:
   PingManager                       mPingManager;                    ///< [Client/Server/MtrSrv] Ping manager is capable of sending and receiving pings.
   uint                              mNextManagerId;                  ///< Ping managers need an id to be unique. We use this to prescribe unique ids.
 
-  // Data for master server.
+  // Data for master server
   float                             mInternetHostRecordLifetime;     ///< Controls the lifetime of every host record stored on the master server.
   uint                              mInternetSameIpHostRecordLimit;  ///< Controls how many host records from the same IP address may be stored on the master server (used to prevent flood attacks).
   HashMap<String, uint>             mIpAddressServerCounts;          ///< Keeps track of how many servers there are per IP address.
@@ -770,7 +800,7 @@ public:
   bool                              mIsOpenMasterServer;             ///< Is peer open in MasterServer mode?
   RecieptIpMap                      mReceiptRecipients;              ///< A Map the server uses to determine which peer links to terminate.
 
-  /// Host Discovery.
+  // Host discovery
   InternetHostDiscovery             mInternetHostDiscovery;          ///< A class which uses the net peer to discover internet hosts.
   LanHostDiscovery                  mLanHostDiscovery;               ///< A class which uses the net peer to discover LAN hosts.
 };

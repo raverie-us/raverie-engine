@@ -130,8 +130,8 @@ public:
   //
   // Data
   //
-  ArraySet<IpAddress>         mRespondingHosts; // An array containing the IpAddress of All hosts who responded.
-  ArraySet<IpAddress>         mExpectedHosts;   // An array containing a list of IPs who we expect a response from.
+  ArraySet<IpAddress> mRespondingHosts; ///< An array containing the IpAddress of All hosts who responded.
+  ArraySet<IpAddress> mExpectedHosts;   ///< An array containing a list of IPs who we expect a response from.
 };
 
 /// NetDiscoveryInterface.
@@ -175,8 +175,11 @@ public:
   /// Updates the network discovery process.
   void Update(UpdateEvent* event);
 
-  /// A function which cancels All refreshes.
+  /// A function which cancels all refreshes (delayed until next frame).
   void CancelRefreshes();
+
+  /// A function which cancels all refreshes now.
+  void CancelRefreshesNow();
 
   /// Will cancel if a refresh is already going.
   void CancelIfNotIdle();
@@ -221,20 +224,21 @@ public:
   void EndSingleRefresh(SingleHostRequest* hostRequest);
 
   //
-  //  NetPeerMessageInterface
+  // NetPeerMessageInterface
   //
 
   /// Default implementation receives peer messages for our PingManager. (be sure to call this in overloaded functions)
   virtual bool ReceivePeerMessage(IpAddress const& theirIpAddress, Message& peerMessage) override;
 
   //
-  //  Data
+  // Data
   //
-  NetDiscoveryMode::Enum                  mDiscoveryMode;       // Some modes cancel others.
-  PingManager                             mPingManager;         // Tool for NetHostDiscovery to use to communicate with others.
-  Array<OpenHostRequestPtr>               mOpenHostRequests;    // Open host request list.
-  ArrayMap<IpAddress, RespondingHostData> mRespondingHostData;  // Array of host data for those who responded. this is for both multi and single host requests to use.
-  HashMap<IpAddress, SingleHostRequest*>  mSingleHostRequests;  // Map of single host requests for easy access.
+  NetDiscoveryMode::Enum                  mDiscoveryMode;          ///< Some modes cancel others.
+  PingManager                             mPingManager;            ///< Tool for NetHostDiscovery to use to communicate with others.
+  Array<OpenHostRequestPtr>               mOpenHostRequests;       ///< Open host request list.
+  ArrayMap<IpAddress, RespondingHostData> mRespondingHostData;     ///< Array of host data for those who responded. this is for both multi and single host requests to use.
+  HashMap<IpAddress, SingleHostRequest*>  mSingleHostRequests;     ///< Map of single host requests for easy access.
+  bool                                    mPendingCancelRefreshes; ///< Pending cancel refreshes request? (Frame delayed to avoid possible infinite recursion)
 };
 
 } // namespace Zero

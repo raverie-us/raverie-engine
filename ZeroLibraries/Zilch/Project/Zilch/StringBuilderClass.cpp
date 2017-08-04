@@ -350,8 +350,7 @@ namespace Zilch
     ZilchFullBindDestructor(builder, type, Rune);
     ZilchBindGetterSetter(Value);
   }
-  // Zero::Runes are converted to and treated as Zilch::Runes
-  ZilchDeclareDefineImplicitRedirectType(Zero::Rune, Zilch::Rune, ZeroShared);
+
   //***************************************************************************
   Rune::Rune()
   {

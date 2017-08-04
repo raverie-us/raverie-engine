@@ -250,7 +250,7 @@ public:
   typedef Array<HandleOf<GameSession> > GameArray;
   typedef GameArray::range GameRange;
   void DisplayGameSession(StringParam name, GameSession* gameSession);
-  GameSession* PlayGame(PlayGameOptions::Type options);
+  GameSession* PlayGame(PlayGameOptions::Enum options, bool takeFocus = true, bool startGame = true);
   GameSession* PlaySingleGame();
   GameSession* PlayNewGame();
   void ZoomOnGame(GameSession* gameSession);

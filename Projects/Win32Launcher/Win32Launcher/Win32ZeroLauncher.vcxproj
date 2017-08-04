@@ -56,7 +56,7 @@
     </Link>
     <PostBuildEvent>
       <Command>
-        call CreateBuildInfo.cmd $(ProjectName) "$(ZeroSource)" "$(ZERO_OUTPUT)" &gt; $(OutDir)BuildInfo.data
+        call CreateBuildInfo.cmd $(ProjectName) "$(ZeroSource)" "$(ZERO_OUTPUT)" &gt; "$(OutDir)BuildInfo.data"
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

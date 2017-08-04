@@ -196,6 +196,7 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(DisplayGameSession);
   ZilchBindMethod(ExecuteCommand);
   ZilchBindMethod(SelectPrimary);
+  ZilchBindMethod(PlayGame);
   ZilchBindMethod(PlaySingleGame);
   ZilchBindMethod(PlayNewGame);
   ZilchBindMethod(PauseGame);
@@ -1204,7 +1205,7 @@ void Editor::DisplayGameSession(StringParam name, GameSession* gameSession)
   mGames.PushBack(gameSession);
 }
 
-GameSession* Editor::PlayGame(PlayGameOptions::Type options)
+GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, bool startGame)
 {
   // Is there a level to start on?
   Level* playLevel = GetStartingLevel();
@@ -1245,12 +1246,13 @@ GameSession* Editor::PlayGame(PlayGameOptions::Type options)
 
   // Create a GameWidget that will contain the GameSession
   GameWidget* gameWidget = new GameWidget(this);
-  gameWidget->TakeFocus();
+  if(takeFocus)
+    gameWidget->TakeFocus();
   gameWidget->SetName("Game");
 
   // Attach the gameWidget as a tab to the main window
   Window* main = this->GetCenterWindow();
-  main->AttachAsTab(gameWidget);
+  main->AttachAsTab(gameWidget, takeFocus);
   main->UpdateTransformExternal();
 
   // Create the game session
@@ -1264,8 +1266,8 @@ GameSession* Editor::PlayGame(PlayGameOptions::Type options)
   // Store the game on the editor
   mGames.PushBack(game);
 
-  // Start the game
-  game->Start();
+  if(startGame)
+    game->Start();
 
   return game;
 }

@@ -20,6 +20,10 @@ static const char cTotalBytesToReadUTF8[256] = {
     2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
     3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4
 };
+
+// any character value above this value is in the UTF8 code point space
+const int cUnicodeRangeStart = 0xC0;
+
 // the offset values are bit shifted by 6 positions so the markers do no line up with the start of each byte
 static const int cOffsetsFromUTF8[5] = { 0x00000000,  // bytes read will (should) never be 0
                                          0x00000000,  // 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
@@ -32,7 +36,7 @@ size_t UnpackUtf8RuneIntoBufferInternal(Rune uft8Rune, byte(&utf8Bytes)[4]);
 bool IsLower(Rune rune)
 {
 // temporary fix for windows lack of any real UTF8 support
-  if (rune.value > 0xC0)
+  if (rune.value > cUnicodeRangeStart)
     return false;
   return islower(rune.value);
 }
@@ -40,7 +44,7 @@ bool IsLower(Rune rune)
 bool IsUpper(Rune rune)
 {
 // temporary fix for windows lack of any real UTF8 support
-  if (rune.value > 0xC0)
+  if (rune.value > cUnicodeRangeStart)
     return false;
   return isupper(rune.value);
 }
@@ -48,7 +52,7 @@ bool IsUpper(Rune rune)
 bool IsWhiteSpace(Rune rune)
 {
 // temporary fix for windows lack of any real UTF8 support
-  if(rune.value > 0xC0)
+  if(rune.value > cUnicodeRangeStart)
     return false;
   return isspace(rune.value);
 }
@@ -56,7 +60,7 @@ bool IsWhiteSpace(Rune rune)
 bool IsAlphaNumeric(Rune rune)
 {
   // temporary fix for windows lack of any real UTF8 support
-  if (rune.value > 0xC0)
+  if (rune.value > cUnicodeRangeStart)
     return false;
   return isalnum(rune.value);
 }

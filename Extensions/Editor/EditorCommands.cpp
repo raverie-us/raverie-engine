@@ -723,6 +723,8 @@ void FocusOnSelectedObjects()
 void CameraFocusSpace(Space* space, Cog* cameraObject, EditFocusMode::Enum focusMode)
 {
   MetaSelection* activeSelection = Z::gEditor->GetSelection();
+  if (activeSelection->Empty())
+    return;
   Aabb aabb = GetAabb(activeSelection);
   CameraFocusSpace(space, cameraObject, aabb, focusMode);
 }
