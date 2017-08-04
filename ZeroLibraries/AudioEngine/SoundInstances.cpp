@@ -23,10 +23,8 @@ namespace Audio
       CrossFadeStartFrame(0),
       CrossFadeResampleIndex(0),
       PitchShifting(false),
-      ResampleFactor(0.0f),
       FrameCount(0),
       Stopping(false),
-      Resampling(false),
       Pausing(false),
       InterpolatingVolume(false),
       InterpolatingPitch(false),
@@ -41,12 +39,8 @@ namespace Audio
     }
     ~SoundInstanceNodeData();
 
-    // If true, sound is being resampled. 
-    bool Resampling;
     // If resampling, the non-integer index. 
     double ResampleIndex;
-    // If resampling, the amount to advance the index by. 
-    float ResampleFactor;
     // Index of the current audio frame. 
     unsigned FrameIndex;
     // If true, sound is cross-fading for seamless looping. 
@@ -132,9 +126,9 @@ namespace Audio
     EighthsPerBeat(0),
     EighthNoteCount(0),
     StartTime(0),
-    EndTime((float)parentAsset->GetNumberOfFrames() / (float)parentAsset->GetSampleRate()),
+    EndTime((float)parentAsset->GetNumberOfFrames() / gAudioSystem->SampleRate),
     LoopStartTime(0),
-    LoopEndTime((float)parentAsset->GetNumberOfFrames() / (float)parentAsset->GetSampleRate()),
+    LoopEndTime((float)parentAsset->GetNumberOfFrames() / gAudioSystem->SampleRate),
     LoopTailTime(0),
     NotifyTime(0),
     CustomNotifySent(false),
@@ -164,17 +158,10 @@ namespace Audio
     {
       Data = new SoundInstanceNodeData;
 
-      Data->TimeIncrement = 1.0 / (double)Asset->GetSampleRate();
+      Data->TimeIncrement = 1.0 / (double)gAudioSystem->SampleRate;
       Data->FrameIndex = 0;
       Data->ResampleIndex = Data->FrameIndex;
       Data->EndFrame = Asset->GetNumberOfFrames() - 1;
-
-      // If the asset's sample rate is different from the system, store the resample factor
-      if (Asset->GetSampleRate() != gAudioSystem->SystemSampleRate)
-      {
-        Data->ResampleFactor = (float)Asset->GetSampleRate() / (float)(gAudioSystem->SystemSampleRate);
-        Data->Resampling = true;
-      }
 
       // Set volume ramp if not paused
       if (!Paused)
@@ -312,7 +299,7 @@ namespace Audio
     if (!Threaded)
     {
       StartTime = startTime;
-      if (StartTime < 0.0f || StartTime * Asset->GetSampleRate() >= Asset->GetNumberOfFrames())
+      if (StartTime < 0.0f || StartTime * gAudioSystem->SampleRate >= Asset->GetNumberOfFrames())
         StartTime = 0.0f;
 
       if (GetSiblingNode())
@@ -321,7 +308,7 @@ namespace Audio
     }
     else
     {
-      Data->StartFrame = (unsigned)(startTime * Asset->GetSampleRate());
+      Data->StartFrame = (unsigned)(startTime * gAudioSystem->SampleRate);
 
       if (Data->FrameIndex < Data->StartFrame)
         Data->FrameIndex = Data->StartFrame;
@@ -342,8 +329,8 @@ namespace Audio
       EndTime = endTime;
       if (EndTime < 0.0f)
         EndTime = 0.0f;
-      else if (EndTime * Asset->GetSampleRate() >= Asset->GetNumberOfFrames())
-        EndTime = (float)Asset->GetNumberOfFrames() / (float)Asset->GetSampleRate();
+      else if (EndTime * gAudioSystem->SampleRate >= Asset->GetNumberOfFrames())
+        EndTime = (float)Asset->GetNumberOfFrames() / (float)gAudioSystem->SampleRate;
 
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetEndTime,
@@ -351,7 +338,7 @@ namespace Audio
     }
     else
     {
-      Data->EndFrame = (unsigned)(endTime * Asset->GetSampleRate());
+      Data->EndFrame = (unsigned)(endTime * gAudioSystem->SampleRate);
       if (Data->EndFrame >= Asset->GetNumberOfFrames())
         Data->EndFrame = Asset->GetNumberOfFrames() - 1;
     }
@@ -369,7 +356,7 @@ namespace Audio
     if (!Threaded)
     {
       LoopStartTime = time;
-      if (LoopStartTime < 0.0f || LoopStartTime * Asset->GetSampleRate() >= Asset->GetNumberOfFrames())
+      if (LoopStartTime < 0.0f || LoopStartTime * gAudioSystem->SampleRate >= Asset->GetNumberOfFrames())
         LoopStartTime = 0.0f;
 
       if (GetSiblingNode())
@@ -378,7 +365,7 @@ namespace Audio
     }
     else
     {
-      Data->LoopStartFrame = (unsigned)(time * Asset->GetSampleRate());
+      Data->LoopStartFrame = (unsigned)(time *gAudioSystem->SampleRate);
     }
   }
 
@@ -396,8 +383,8 @@ namespace Audio
       LoopEndTime = time;
       if (LoopEndTime < 0.0f)
         LoopEndTime = 0.0f;
-      else if (LoopEndTime * Asset->GetSampleRate() >= Asset->GetNumberOfFrames())
-        LoopEndTime = (float)Asset->GetNumberOfFrames() / (float)Asset->GetSampleRate();
+      else if (LoopEndTime * gAudioSystem->SampleRate >= Asset->GetNumberOfFrames())
+        LoopEndTime = (float)Asset->GetNumberOfFrames() / (float)gAudioSystem->SampleRate;
 
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetLoopEndTime,
@@ -405,7 +392,7 @@ namespace Audio
     }
     else
     {
-      Data->LoopEndFrame = (unsigned)(time * Asset->GetSampleRate());
+      Data->LoopEndFrame = (unsigned)(time * gAudioSystem->SampleRate);
     }
   }
 
@@ -430,7 +417,7 @@ namespace Audio
     }
     else
     {
-      Data->LoopTailFrames = (unsigned)(time * Asset->GetSampleRate());
+      Data->LoopTailFrames = (unsigned)(time * gAudioSystem->SampleRate);
     }
   }
 
@@ -512,7 +499,7 @@ namespace Audio
       }
       else
       {
-        if (!Data->PitchShifting && !Data->Resampling)
+        if (!Data->PitchShifting)
           Data->ResampleIndex = Data->FrameIndex;
 
         Data->PitchShifting = true;
@@ -570,7 +557,7 @@ namespace Audio
         Asset->GetBuffer(Data->CrossFadeSamples.Data(), Data->FrameIndex, Data->CrossFadeSamples.Size());
       }
 
-      Data->FrameIndex = (unsigned)(seconds * Asset->GetSampleRate());
+      Data->FrameIndex = (unsigned)(seconds * gAudioSystem->SampleRate);
       if (Data->FrameIndex > Data->EndFrame)
         Data->FrameIndex = Data->EndFrame;
       else if (Data->FrameIndex < Data->StartFrame)
@@ -795,8 +782,8 @@ namespace Audio
 
     FrameData thisFrame = Asset->GetFrame(Data->FrameIndex);
 
-    // Not resampling or pitch shifting
-    if (!Data->Resampling && !Data->PitchShifting)
+    // Not pitch shifting
+    if (!Data->PitchShifting)
     {
       ++Data->FrameIndex;
 
@@ -805,18 +792,6 @@ namespace Audio
     }
     else
     {
-      float factor;
-
-      // Not resampling, are pitch shifting
-      if (!Data->Resampling && Data->PitchShifting)
-        factor = PitchFactor;
-      // Resampling & pitch shifting
-      else if (Data->Resampling && Data->PitchShifting)
-        factor = PitchFactor * Data->ResampleFactor;
-      // Resampling, not pitch shifting
-      else
-        factor = Data->ResampleFactor;
-
       // Add the interpolated value to the samples
       FrameData nextFrame = Asset->GetFrame(Data->FrameIndex + 1);
       for (unsigned i = 0; i < thisFrame.HowManyChannels; ++i)
@@ -824,7 +799,7 @@ namespace Audio
           * (Data->ResampleIndex - Data->FrameIndex));
 
       // Advance the indexes
-      Data->ResampleIndex += factor;
+      Data->ResampleIndex += PitchFactor;
       Data->FrameIndex = (unsigned)Data->ResampleIndex;
 
       // Check for handling interpolating pitch
@@ -842,7 +817,7 @@ namespace Audio
 
       // Check if we need to handle cross-fading
       if (Data->CrossFading)
-        ApplyCrossFade(thisFrame, factor);
+        ApplyCrossFade(thisFrame, PitchFactor);
     }
 
     // Check for reaching the end of the file or the loop end point
@@ -886,8 +861,8 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::SkipForward(const unsigned howManyFrames)
   {
-    // Not resampling or pitch shifting
-    if (!Data->Resampling && !Data->PitchShifting)
+    // Not pitch shifting
+    if (!Data->PitchShifting)
     {
       Data->FrameIndex += howManyFrames;
 
@@ -908,31 +883,14 @@ namespace Audio
 
       if (!Data->InterpolatingPitch)
       {
-        // Not resampling, are pitch shifting
-        if (!Data->Resampling && Data->PitchShifting)
-          totalAdvance = PitchFactor * howManyFrames;
-        // Resampling & pitch shifting
-        else if (Data->Resampling && Data->PitchShifting)
-          totalAdvance = Data->ResampleFactor * PitchFactor * howManyFrames;
-        // Resampling, not pitch shifting
-        else
-          totalAdvance = Data->ResampleFactor * howManyFrames;
+        totalAdvance = PitchFactor * howManyFrames;
       }
       else
       {
         // When interpolating need to go through every frame
         for (unsigned i = 0; i < howManyFrames; ++i)
         {
-          float factor;
-
-          // Not resampling, are pitch shifting
-          if (!Data->Resampling)
-            factor = PitchFactor;
-          // Resampling & pitch shifting
-          else
-            factor = Data->ResampleFactor * PitchFactor;
-
-          totalAdvance += factor;
+          totalAdvance += PitchFactor;
           PitchFactor = Data->PitchValues.NextValue();
         }
 

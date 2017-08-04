@@ -24,7 +24,6 @@
 #include "Emitter.h"
 #include "Attenuator.h"
 #include "InputNode.h"
-#include "LockFreeQueue.hpp"
 #include "SoundAssets.h"
 #include "SoundInstances.h"
 #include "Tags.h"

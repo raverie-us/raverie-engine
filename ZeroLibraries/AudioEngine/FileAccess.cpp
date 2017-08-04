@@ -67,109 +67,109 @@ namespace Audio
   //------------------------------------------------------------------------------------ File Access
 
   //************************************************************************************************
-  SamplesFromFile* FileAccess::LoadAudioFile(Zero::Status &status, const Zero::String &fileName)
-  {
-    return ReadFile(status, fileName, false);
-  }
-
-  //************************************************************************************************
-  SamplesFromFile* FileAccess::StartStream(Zero::Status &status, const Zero::String &fileName)
-  {
-    return ReadFile(status, fileName, true);
-  }
-
-  //************************************************************************************************
-  AudioData FileAccess::GetFileData(Zero::Status& status, const Zero::String& fileName)
-  {
-    AudioData data;
-    data.Type = Type_Other;
-
-    Zero::File* file = new Zero::File;
-    file->Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
-
-    if (!file->IsOpen())
-    {
-      status.SetFailed(Zero::String::Format("Couldn't open file %s", fileName.c_str()));
-      delete file;
-      return data;
-    }
-
-    // Read in initial chunk header
-    WavRiffHeader riffHeader;
-    file->Read(status, (byte*)(&riffHeader), sizeof(riffHeader));
-
-    // WAV file
-    if (riffHeader.riff_chunk[0] == 'R')
-    {
-      // Check the WAVE ID
-      if (riffHeader.wave_fmt[0] != 'W' || riffHeader.wave_fmt[1] != 'A')
-      {
-        status.SetFailed(Zero::String::Format("File %s is an unreadable format.", fileName.c_str()));
-        delete file;
-        return data;
-      }
-
-      GetWavData(file, data);
-    }
-    // OGG file
-    else if ((riffHeader.riff_chunk[0] == 'O' || riffHeader.riff_chunk[0] == 'o')
-      && (riffHeader.riff_chunk[1] == 'G' || riffHeader.riff_chunk[1] == 'g'))
-    {
-      // Close the file so we can open it through stb_vorbis
-//       delete file;
+//   SamplesFromFile* FileAccess::LoadAudioFile(Zero::Status &status, const Zero::String &fileName)
+//   {
+//     return ReadFile(status, fileName, false);
+//   }
 // 
-//       // Open the file in ogg format
-//       int error;
-//       stb_vorbis* OggStream = stb_vorbis_open_filename(fileName.c_str(), &error, nullptr);
-//       if (!OggStream)
+//   //************************************************************************************************
+//   SamplesFromFile* FileAccess::StartStream(Zero::Status &status, const Zero::String &fileName)
+//   {
+//     return ReadFile(status, fileName, true);
+//   }
+// 
+//   //************************************************************************************************
+//   AudioData FileAccess::GetFileData(Zero::Status& status, const Zero::String& fileName)
+//   {
+//     AudioData data;
+//     data.Type = Type_Other;
+// 
+//     Zero::File* file = new Zero::File;
+//     file->Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+// 
+//     if (!file->IsOpen())
+//     {
+//       status.SetFailed(Zero::String::Format("Couldn't open file %s", fileName.c_str()));
+//       delete file;
+//       return data;
+//     }
+// 
+//     // Read in initial chunk header
+//     WavRiffHeader riffHeader;
+//     file->Read(status, (byte*)(&riffHeader), sizeof(riffHeader));
+// 
+//     // WAV file
+//     if (riffHeader.riff_chunk[0] == 'R')
+//     {
+//       // Check the WAVE ID
+//       if (riffHeader.wave_fmt[0] != 'W' || riffHeader.wave_fmt[1] != 'A')
 //       {
-//         status.SetFailed(Zero::String::Format("Couldn't open file %s: stb_vorbis error %d.", 
-//           fileName.c_str(), error));
-//         // Don't need to call close because the stream is null
+//         status.SetFailed(Zero::String::Format("File %s is an unreadable format.", fileName.c_str()));
+//         delete file;
 //         return data;
 //       }
 // 
-//       GetOggData(OggStream, data);
-    }
-    else
-    {
-      status.SetFailed(Zero::String::Format("File %s is an unreadable format. Only WAV and OGG files are supported.", 
-        fileName.c_str()));
-
-      delete file;
-    }
-
-    return data;
-  }
-
-  //************************************************************************************************
-  SamplesFromFile* FileAccess::ReadFile(Zero::Status& status, const Zero::String& fileName, 
-    const bool streaming)
-  {
-    AudioData data = GetFileData(status, fileName);
-    SamplesFromFile* audioData(nullptr);
-    if (status.Failed())
-      return audioData;
-
-    if (data.Type == Type_WAV)
-    {
-      audioData = new SamplesFromFile(new WavDecoder(data.Channels, data.SampleRate, data.BytesPerSample,
-        data.TotalSamples, data.TotalDataSize));
-
-      ReadWavFile(data, audioData, streaming, fileName);
-    }
-    else if (data.Type == Type_OGG)
-    {
-      audioData = new SamplesFromFile(new OggDecoder(data.Channels, data.SampleRate, data.BytesPerSample,
-        data.TotalSamples, data.TotalDataSize));
-
-      ReadOggFile(data, audioData, streaming, fileName);
-    }
-    else
-      status.SetFailed("Unsupported file type. Files must be in WAV or OGG format.");
-
-    return audioData;
-  }
+//       GetWavData(file, data);
+//     }
+//     // OGG file
+//     else if ((riffHeader.riff_chunk[0] == 'O' || riffHeader.riff_chunk[0] == 'o')
+//       && (riffHeader.riff_chunk[1] == 'G' || riffHeader.riff_chunk[1] == 'g'))
+//     {
+//       // Close the file so we can open it through stb_vorbis
+// //       delete file;
+// // 
+// //       // Open the file in ogg format
+// //       int error;
+// //       stb_vorbis* OggStream = stb_vorbis_open_filename(fileName.c_str(), &error, nullptr);
+// //       if (!OggStream)
+// //       {
+// //         status.SetFailed(Zero::String::Format("Couldn't open file %s: stb_vorbis error %d.", 
+// //           fileName.c_str(), error));
+// //         // Don't need to call close because the stream is null
+// //         return data;
+// //       }
+// // 
+// //       GetOggData(OggStream, data);
+//     }
+//     else
+//     {
+//       status.SetFailed(Zero::String::Format("File %s is an unreadable format. Only WAV and OGG files are supported.", 
+//         fileName.c_str()));
+// 
+//       delete file;
+//     }
+// 
+//     return data;
+//   }
+// 
+//   //************************************************************************************************
+//   SamplesFromFile* FileAccess::ReadFile(Zero::Status& status, const Zero::String& fileName, 
+//     const bool streaming)
+//   {
+//     AudioData data = GetFileData(status, fileName);
+//     SamplesFromFile* audioData(nullptr);
+//     if (status.Failed())
+//       return audioData;
+// 
+//     if (data.Type == Type_WAV)
+//     {
+//       audioData = new SamplesFromFile(new WavDecoder(data.Channels, data.SampleRate, data.BytesPerSample,
+//         data.TotalSamples, data.TotalDataSize));
+// 
+//       ReadWavFile(data, audioData, streaming, fileName);
+//     }
+//     else if (data.Type == Type_OGG)
+//     {
+//       audioData = new SamplesFromFile(new OggDecoder(data.Channels, data.SampleRate, data.BytesPerSample,
+//         data.TotalSamples, data.TotalDataSize));
+// 
+//       ReadOggFile(data, audioData, streaming, fileName);
+//     }
+//     else
+//       status.SetFailed("Unsupported file type. Files must be in WAV or OGG format.");
+// 
+//     return audioData;
+//   }
 
   //************************************************************************************************
   void FileAccess::GetWavData(Zero::File* file, AudioData& data)
@@ -230,80 +230,80 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void FileAccess::ReadWavFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
-    const Zero::String& fileName)
-  {
-    Zero::File* WavStream = (Zero::File*)data.FilePointer;
-
-    unsigned bufferSize;
-    // If not streaming, buffer size is the size of all the audio data
-    if (!streaming)
-      bufferSize = data.TotalDataSize;
-    else
-    {
-      // If streaming, set to streamed buffer size
-      bufferSize = audioData->DecodingData->StreamedBufferSizeInBytes;
-
-      // Set the data for streaming
-      audioData->DecodingData->SetStreaming(fileName, WavStream->Tell());
-    }
-
-    // Create buffer
-    byte* buffer = new byte[bufferSize];
-
-    // If not streaming, read the file data into the buffer
-    if (!streaming)
-    {
-      Zero::Status status;
-      WavStream->Read(status, buffer, bufferSize);
-    }
-
-    // Add the buffer to the audio data object
-    audioData->SetBuffer(buffer, bufferSize);
-
-    // Close the file (will be reopened if needed for streaming)
-    delete WavStream;
-    data.FilePointer = nullptr;
-  }
+//   void FileAccess::ReadWavFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
+//     const Zero::String& fileName)
+//   {
+//     Zero::File* WavStream = (Zero::File*)data.FilePointer;
+// 
+//     unsigned bufferSize;
+//     // If not streaming, buffer size is the size of all the audio data
+//     if (!streaming)
+//       bufferSize = data.TotalDataSize;
+//     else
+//     {
+//       // If streaming, set to streamed buffer size
+//       bufferSize = audioData->DecodingData->StreamedBufferSizeInBytes;
+// 
+//       // Set the data for streaming
+//       audioData->DecodingData->SetStreaming(fileName, WavStream->Tell());
+//     }
+// 
+//     // Create buffer
+//     byte* buffer = new byte[bufferSize];
+// 
+//     // If not streaming, read the file data into the buffer
+//     if (!streaming)
+//     {
+//       Zero::Status status;
+//       WavStream->Read(status, buffer, bufferSize);
+//     }
+// 
+//     // Add the buffer to the audio data object
+//     audioData->SetBuffer(buffer, bufferSize);
+// 
+//     // Close the file (will be reopened if needed for streaming)
+//     delete WavStream;
+//     data.FilePointer = nullptr;
+//   }
 
   //************************************************************************************************
-  void FileAccess::ReadOggFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
-    const Zero::String& fileName)
-  {
-    if (!streaming)
-    {
-      // Close the vorbis file
-      stb_vorbis_close((stb_vorbis*)data.FilePointer);
-      data.FilePointer = nullptr;
-
-      // Open the file for reading
-      Zero::File file;
-      file.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
-      // Create the buffer
-      size_t size = (size_t)file.CurrentFileSize();
-      byte* buffer = new byte[size];
-      // Read the entire file into the buffer
-      Zero::Status status;
-      file.Read(status, buffer, size);
-
-      // Create a vorbis stream from the buffer
-      int error;
-      data.FilePointer = stb_vorbis_open_memory(buffer, size, &error, nullptr);
-      // Add the buffer to the data object
-      audioData->SetBuffer(buffer, size);
-    }
-    else
-    {
-      // Set the data for streaming
-      audioData->DecodingData->SetStreaming(fileName, 0);
-
-      // Set the buffer on the audio data object to null (won't be used)
-      audioData->SetBuffer(nullptr, 0);
-    }
-
-    // Set the vorbis stream on the data object
-    audioData->DecodingData->SetFile((stb_vorbis*)data.FilePointer);
-  }
+//   void FileAccess::ReadOggFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
+//     const Zero::String& fileName)
+//   {
+//     if (!streaming)
+//     {
+//       // Close the vorbis file
+//       stb_vorbis_close((stb_vorbis*)data.FilePointer);
+//       data.FilePointer = nullptr;
+// 
+//       // Open the file for reading
+//       Zero::File file;
+//       file.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+//       // Create the buffer
+//       size_t size = (size_t)file.CurrentFileSize();
+//       byte* buffer = new byte[size];
+//       // Read the entire file into the buffer
+//       Zero::Status status;
+//       file.Read(status, buffer, size);
+// 
+//       // Create a vorbis stream from the buffer
+//       int error;
+//       data.FilePointer = stb_vorbis_open_memory(buffer, size, &error, nullptr);
+//       // Add the buffer to the data object
+//       audioData->SetBuffer(buffer, size);
+//     }
+//     else
+//     {
+//       // Set the data for streaming
+//       audioData->DecodingData->SetStreaming(fileName, 0);
+// 
+//       // Set the buffer on the audio data object to null (won't be used)
+//       audioData->SetBuffer(nullptr, 0);
+//     }
+// 
+//     // Set the vorbis stream on the data object
+//     audioData->DecodingData->SetFile((stb_vorbis*)data.FilePointer);
+//   }
 
 
 
@@ -316,8 +316,8 @@ namespace Audio
 
 
 
-//   const static float Normalize16Bit = 1 << 15;
-//   const static float Normalize24Bit = 1 << 23;
+  const static float Normalize16Bit = 1 << 15;
+  const static float Normalize24Bit = 1 << 23;
 
   // Assumes memory is allocated for samplesPerChannel
   bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount, const unsigned channelCount, const unsigned bytesPerSample)
@@ -371,8 +371,11 @@ namespace Audio
     return true;
   }
 
-  void FileAccess::ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName)
+  AudioData FileAccess::ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName)
   {
+    AudioData data;
+    data.Channels = 0;
+
     // Open the input file
     Zero::File file;
     file.Open(inputName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
@@ -380,7 +383,7 @@ namespace Audio
     if (!file.IsOpen())
     {
       status.SetFailed(Zero::String::Format("Couldn't open input file %s", inputName.c_str()));
-      return;
+      return data;
     }
 
     // Open the output file
@@ -390,14 +393,13 @@ namespace Audio
     if (!file.IsOpen())
     {
       status.SetFailed(Zero::String::Format("Couldn't create output file %s", outputName.c_str()));
-      return;
+      return data;
     }
 
     // Read in the header from the input file
     WavRiffHeader header;
     file.Read(status, (byte*)(&header), sizeof(header));
 
-    AudioData data;
     unsigned audioFrames;
     byte* inputBuffer;
     float** samplesPerChannel;
@@ -409,7 +411,7 @@ namespace Audio
       if (header.wave_fmt[0] != 'W' || header.wave_fmt[1] != 'A')
       {
         status.SetFailed(Zero::String::Format("File %s is an unreadable format", inputName.c_str()));
-        return;
+        return data;
       }
 
       // Get the data about the file
@@ -462,7 +464,7 @@ namespace Audio
     else
     {
       status.SetFailed(Zero::String::Format("File %s was not in WAV or OGG format", outputName.c_str()));
-      return;
+      return data;
     }
     
     if (data.SampleRate != SAMPLE_RATE)
@@ -561,10 +563,12 @@ namespace Audio
         }
       }
     }
+
+    return data;
   }
 
-  void FileAccess::OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samplesPerChannel)
-  {
+//   void FileAccess::OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samplesPerChannel)
+//   {
 //     FileDecoder decoder(status, fileName, false);
 //     if (status.Failed())
 //       return;
@@ -597,73 +601,73 @@ namespace Audio
 //       decoder.DecodeNextPacket();
 //       decoder.DecodedPacketQueue.Read(packet);
 //     }
+// 
+//   }
 
-  }
-
-  void FileAccess::RunTest()
-  {
-    Zero::File file;
-    file.Open("C:\\Users\\Andrea Ellinger\\Desktop\\Run.wav", Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
-    ErrorIf(!file.IsOpen());
-
-    Zero::Status status;
-    WavRiffHeader header;
-    file.Read(status, (byte*)(&header), sizeof(header));
-
-    // Read in the next chunk header
-    WavChunkHeader fmtChunkHeader;
-    file.Read(status, (byte*)(&fmtChunkHeader), sizeof(fmtChunkHeader));
-    // If this isn't the fmt chunk, keep looking
-    while (fmtChunkHeader.chunk_name[0] != 'f' || fmtChunkHeader.chunk_name[1] != 'm'
-      || fmtChunkHeader.chunk_name[2] != 't')
-    {
-      file.Seek(fmtChunkHeader.chunk_size, Zero::FileOrigin::Current);
-      file.Read(status, (byte*)(&fmtChunkHeader), sizeof(fmtChunkHeader));
-    }
-
-    // Read in the fmt chunk data
-    WavFmtData fmtChunkData;
-    file.Read(status, (byte*)(&fmtChunkData), sizeof(fmtChunkData));
-
-    // If the chunk size is larger than the WavFmtData struct, skip ahead
-    if (fmtChunkHeader.chunk_size > sizeof(fmtChunkData))
-      file.Seek(fmtChunkHeader.chunk_size - sizeof(fmtChunkData), Zero::FileOrigin::Current);
-
-    // Get the data chunk header
-    WavChunkHeader dataChunkHeader;
-    file.Read(status, (byte*)(&dataChunkHeader), sizeof(dataChunkHeader));
-    // If this isn't the data chunk, keep looking
-    while (dataChunkHeader.chunk_name[0] != 'd' || dataChunkHeader.chunk_name[1] != 'a'
-      || dataChunkHeader.chunk_name[2] != 't')
-    {
-      file.Seek(dataChunkHeader.chunk_size, Zero::FileOrigin::Current);
-      file.Read(status, (byte*)(&dataChunkHeader), sizeof(dataChunkHeader));
-    }
-
-    file.Close();
-
-    ProcessFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.ogg", "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd");
-
-    float* floatSamples(nullptr);
-    unsigned channels, samples;
-    OpenFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd", floatSamples, channels, samples);
-
-    short* shortSamples = new short[samples * channels];
-    for (unsigned i = 0; i < samples * channels; ++i)
-      shortSamples[i] = (short)(floatSamples[i] * MAXSHORT);
-
-    Zero::File outFile;
-    outFile.Open("C:\\Users\\Andrea Ellinger\\Desktop\\RunOutput.wav", Zero::FileMode::Write, Zero::FileAccessPattern::Sequential);
-
-    outFile.Write((byte*)&header, sizeof(header));
-    outFile.Write((byte*)&fmtChunkHeader, sizeof(fmtChunkHeader));
-    outFile.Write((byte*)&fmtChunkData, sizeof(fmtChunkData));
-    outFile.Write((byte*)&dataChunkHeader, sizeof(dataChunkHeader));
-
-    outFile.Write((byte*)shortSamples, samples * channels * sizeof(short));
-
-    delete[] floatSamples;
-    delete[] shortSamples;
-  }
+//   void FileAccess::RunTest()
+//   {
+//     Zero::File file;
+//     file.Open("C:\\Users\\Andrea Ellinger\\Desktop\\Run.wav", Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+//     ErrorIf(!file.IsOpen());
+// 
+//     Zero::Status status;
+//     WavRiffHeader header;
+//     file.Read(status, (byte*)(&header), sizeof(header));
+// 
+//     // Read in the next chunk header
+//     WavChunkHeader fmtChunkHeader;
+//     file.Read(status, (byte*)(&fmtChunkHeader), sizeof(fmtChunkHeader));
+//     // If this isn't the fmt chunk, keep looking
+//     while (fmtChunkHeader.chunk_name[0] != 'f' || fmtChunkHeader.chunk_name[1] != 'm'
+//       || fmtChunkHeader.chunk_name[2] != 't')
+//     {
+//       file.Seek(fmtChunkHeader.chunk_size, Zero::FileOrigin::Current);
+//       file.Read(status, (byte*)(&fmtChunkHeader), sizeof(fmtChunkHeader));
+//     }
+// 
+//     // Read in the fmt chunk data
+//     WavFmtData fmtChunkData;
+//     file.Read(status, (byte*)(&fmtChunkData), sizeof(fmtChunkData));
+// 
+//     // If the chunk size is larger than the WavFmtData struct, skip ahead
+//     if (fmtChunkHeader.chunk_size > sizeof(fmtChunkData))
+//       file.Seek(fmtChunkHeader.chunk_size - sizeof(fmtChunkData), Zero::FileOrigin::Current);
+// 
+//     // Get the data chunk header
+//     WavChunkHeader dataChunkHeader;
+//     file.Read(status, (byte*)(&dataChunkHeader), sizeof(dataChunkHeader));
+//     // If this isn't the data chunk, keep looking
+//     while (dataChunkHeader.chunk_name[0] != 'd' || dataChunkHeader.chunk_name[1] != 'a'
+//       || dataChunkHeader.chunk_name[2] != 't')
+//     {
+//       file.Seek(dataChunkHeader.chunk_size, Zero::FileOrigin::Current);
+//       file.Read(status, (byte*)(&dataChunkHeader), sizeof(dataChunkHeader));
+//     }
+// 
+//     file.Close();
+// 
+//     ProcessFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.ogg", "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd");
+// 
+//     float* floatSamples(nullptr);
+//     unsigned channels, samples;
+//     OpenFile(status, "C:\\Users\\Andrea Ellinger\\Desktop\\Run.snd", floatSamples, channels, samples);
+// 
+//     short* shortSamples = new short[samples * channels];
+//     for (unsigned i = 0; i < samples * channels; ++i)
+//       shortSamples[i] = (short)(floatSamples[i] * MAXSHORT);
+// 
+//     Zero::File outFile;
+//     outFile.Open("C:\\Users\\Andrea Ellinger\\Desktop\\RunOutput.wav", Zero::FileMode::Write, Zero::FileAccessPattern::Sequential);
+// 
+//     outFile.Write((byte*)&header, sizeof(header));
+//     outFile.Write((byte*)&fmtChunkHeader, sizeof(fmtChunkHeader));
+//     outFile.Write((byte*)&fmtChunkData, sizeof(fmtChunkData));
+//     outFile.Write((byte*)&dataChunkHeader, sizeof(dataChunkHeader));
+// 
+//     outFile.Write((byte*)shortSamples, samples * channels * sizeof(short));
+// 
+//     delete[] floatSamples;
+//     delete[] shortSamples;
+//   }
 
 }

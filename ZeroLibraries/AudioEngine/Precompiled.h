@@ -16,7 +16,6 @@
 
 #include "portaudio.h"
 #include "pa_ringbuffer.h"
-#include "LockFreeQueue.hpp"
 
 #include "Definitions.h"
 #include "SoundNode.h"
@@ -44,6 +43,7 @@
 #include "MIDI.h"
 #include "Modifiers.h"
 #include "FileAccess.h"
+#include "LockFreeQueue.hpp"
 #include "FileDecoder.h"
 #include "AudioSystemInterface.h"
 #include "AudioSystemInternal.h"

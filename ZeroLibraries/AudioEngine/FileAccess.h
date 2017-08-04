@@ -49,22 +49,22 @@ namespace Audio
   class FileAccess
   {
   public:
-    // Calls functions to determine file type and read file. Sets failed info if file 
-    // type is unsupported, and passes to other functions.
-    static SamplesFromFile* LoadAudioFile(Zero::Status& status, const Zero::String& fileName);
-    // Sets up an audio file to stream from disk, allocating memory for samples. Sets failed 
-    // info if file type is unsupported, and passes to other functions.
-    static SamplesFromFile* StartStream(Zero::Status& status, const Zero::String& fileName);
-    // Opens an audio file, determines its type, and reads in the audio data. The FilePointer
-    // in the AudioData object must be deleted or closed (depending on format) if it is not used.
-    static AudioData GetFileData(Zero::Status& status, const Zero::String& fileName);
+//     // Calls functions to determine file type and read file. Sets failed info if file 
+//     // type is unsupported, and passes to other functions.
+//     static SamplesFromFile* LoadAudioFile(Zero::Status& status, const Zero::String& fileName);
+//     // Sets up an audio file to stream from disk, allocating memory for samples. Sets failed 
+//     // info if file type is unsupported, and passes to other functions.
+//     static SamplesFromFile* StartStream(Zero::Status& status, const Zero::String& fileName);
+//     // Opens an audio file, determines its type, and reads in the audio data. The FilePointer
+//     // in the AudioData object must be deleted or closed (depending on format) if it is not used.
+//     static AudioData GetFileData(Zero::Status& status, const Zero::String& fileName);
 
-    static void ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName);
+    static AudioData ProcessFile(Zero::Status& status, Zero::StringParam inputName, Zero::StringParam outputName);
 
     // Allocates memory for decodedSamples
-    static void OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samplesPerChannel);
-
-    static void RunTest();
+//     static void OpenFile(Zero::Status& status, Zero::StringParam fileName, float*& decodedSamples, unsigned& channels, unsigned& samplesPerChannel);
+// 
+//     static void RunTest();
 
     // 20 ms of audio data at 48000 samples per second
     static const unsigned FrameSize = 960;
@@ -72,12 +72,12 @@ namespace Audio
     static const unsigned MaxPacketSize = 4000;
 
   private:
-    static SamplesFromFile* ReadFile(Zero::Status& status, const Zero::String& fileName, 
-      const bool streaming);
-    static void ReadWavFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
-      Zero::StringParam fileName);
-    static void ReadOggFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
-      Zero::StringParam fileName);
+//     static SamplesFromFile* ReadFile(Zero::Status& status, const Zero::String& fileName, 
+//       const bool streaming);
+//     static void ReadWavFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
+//       Zero::StringParam fileName);
+//     static void ReadOggFile(AudioData& data, SamplesFromFile* audioData, bool streaming, 
+//       Zero::StringParam fileName);
 
     static void GetWavData(Zero::File* file, AudioData& data);
     static void GetOggData(stb_vorbis* OggStream, AudioData& data);

@@ -92,26 +92,6 @@ namespace Audio
 
   //-------------------------------------------------------------------------- Sound Asset From File
 
-  struct FileHeader
-  {
-    const char Name[4] = { 'Z','E','R','O' };
-    short Channels;
-    unsigned SamplesPerChannel;
-  };
-
-  struct PacketHeader
-  {
-    const char Name[4] = { 'p','a','c','k' };
-    short Channel;
-    unsigned Size;
-  };
-
-  struct DecodedPacket
-  {
-    unsigned FrameCount;
-    float* Samples;
-  };
-
   //************************************************************************************************
   SoundAssetFromFile::SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, 
     const bool streaming, ExternalNodeInterface* extInt, const bool isThreaded) :
@@ -120,13 +100,10 @@ namespace Audio
     Streaming(streaming),
     FileLength(0),
     Channels(0),
-    //FileData(nullptr),
-    //SampleRate(0),
     FrameCount(0),
-    //Type(Other_Type),
-    DecodingCheck(this),
     UndecodedIndex(0),
-    Samples(nullptr)
+    Samples(nullptr),
+    Decoder(nullptr)
   {
     if (!Threaded)
     {
@@ -135,77 +112,33 @@ namespace Audio
       {
         FileLength = ((SoundAssetFromFile*)ThreadedAsset)->FileLength;
         Channels = ((SoundAssetFromFile*)ThreadedAsset)->Channels;
-        //SampleRate = ((SoundAssetFromFile*)ThreadedAsset)->SampleRate;
         FrameCount = ((SoundAssetFromFile*)ThreadedAsset)->FrameCount;
-        //Type = ((SoundAssetFromFile*)ThreadedAsset)->Type;
       }
     }
     else
     {
-//       if (!streaming)
-//         FileData = FileAccess::LoadAudioFile(status, fileName);
-//       else
-//         FileData = FileAccess::StartStream(status, fileName);
-// 
-//       if (status.Failed())
-//         return;
-// 
-//       FileLength = (float)(FileData->DecodingData->TotalSamples / FileData->DecodingData->Channels)
-//         / FileData->DecodingData->SampleRate;
-//       Channels = FileData->DecodingData->Channels;
-//       SampleRate = FileData->DecodingData->SampleRate;
-//       FrameCount = FileData->DecodingData->FrameCount;
-//       Type = FileData->GetFileType();
-
-
       // Remember that this constructor happens on the game thread
 
       // TODO read from buffer as well as from file
 
-      InputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
-      if (!InputFile.IsOpen())
-      {
-        status.SetFailed(Zero::String::Format("Unable to open audio file %s", fileName.c_str()));
-        return;
-      }
+      Decoder = new FileDecoder(status, fileName, streaming);
 
-      FileHeader header;
-      InputFile.Read(status, (byte*)&header, sizeof(header));
-      if (status.Failed())
-        return;
-
-      ErrorIf(header.Name[0] != 'Z');
-
-      int error;
-      for (short i = 0; i < header.Channels; ++i)
-      {
-        Decoders[i] = opus_decoder_create(48000, 1, &error);
-        if (error < 0)
-        {
-          status.SetFailed(Zero::String::Format("Error creating audio decoder: %s", opus_strerror(error)));
-        }
-      }
-
-      FileLength = (float)header.SamplesPerChannel / gAudioSystem->SampleRate;
-      Channels = header.Channels;
-      FrameCount = header.SamplesPerChannel;
+      FileLength = (float)Decoder->Header.SamplesPerChannel / gAudioSystem->SampleRate;
+      Channels = Decoder->Header.Channels;
+      FrameCount = Decoder->Header.SamplesPerChannel;
 
       Samples = new float[FrameCount * Channels];
-
-      // TODO Need to not do this on the game thread!!
-      gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&SoundAssetFromFile::DecodeNextPacket, this));
     }
   }
 
   //************************************************************************************************
   SoundAssetFromFile::~SoundAssetFromFile()
   {
-//     if (FileData)
-//       delete FileData;
-
-
     if (Samples)
       delete[] Samples;
+
+    if (Decoder)
+      delete Decoder;
 
     // TODO Need to destroy encoders when done with them
   }
@@ -235,8 +168,7 @@ namespace Audio
     // Get samples for all channels 
     memcpy(data.Samples, Samples + sampleIndex, Channels * sizeof(float));
 
-//     for (unsigned i = 0; i < data.HowManyChannels; ++i)
-//       data.Samples[i] = Samples[sampleIndex + i];
+    ErrorIf(data.Samples[0] > 1.0f || data.Samples[0] < -1.0f);
 
     return data;
   }
@@ -261,19 +193,6 @@ namespace Audio
 
     if (samples < numberOfSamples)
       memset(buffer + samples, 0, (numberOfSamples - samples) * sizeof(float));
-
-//     for (unsigned i = 0; i < numberOfSamples && sampleIndex <= FileData->DecodingData->TotalSamples; 
-//       ++i, ++sampleIndex)
-//     {
-//       buffer[i] = (*FileData)[sampleIndex];
-//     }
-  }
-
-  //************************************************************************************************
-  unsigned SoundAssetFromFile::GetSampleRate()
-  {
-    //return SampleRate;
-    return 0;
   }
 
   //************************************************************************************************
@@ -314,12 +233,6 @@ namespace Audio
   }
 
   //************************************************************************************************
-  Audio::AudioFileTypes SoundAssetFromFile::GetFileType()
-  {
-    return AudioFileTypes::Other_Type;
-  }
-
-  //************************************************************************************************
   bool SoundAssetFromFile::OkayToAddInstance()
   {
     // Not streaming, can play multiple instances
@@ -353,67 +266,6 @@ namespace Audio
     }
   }
 
-  void SoundAssetFromFile::DecodeNextPacket()
-  {
-    // Remember that this function happens on the decoding thread
-
-    if (!InputFile.IsOpen())
-      return;
-
-    Zero::Status status;
-
-    PacketHeader header;
-    int frames;
-
-    for (unsigned i = 0; i < Channels; ++i)
-    {
-      InputFile.Read(status, (byte*)&header, sizeof(header));
-      if (status.Failed())
-      {
-        if (!Streaming)
-        {
-          InputFile.Close();
-          return;
-        }
-        else
-        {
-          InputFile.Seek(sizeof(FileHeader), Zero::FileOrigin::Begin);
-          InputFile.Read(status, (byte*)&header, sizeof(header));
-          if (status.Failed())
-          {
-            InputFile.Close();
-            return;
-          }
-        }
-      }
-
-      ErrorIf(header.Name[0] != 'p' || header.Name[1] != 'a');
-      ErrorIf(header.Size > MaxPacketSize);
-      ErrorIf(header.Channel != i);
-
-      InputFile.Read(status, PacketBuffer, header.Size);
-
-      frames = opus_decode_float(Decoders[header.Channel], PacketBuffer, header.Size, DecodedPackets[i], FrameSize, 0);
-
-      ErrorIf(frames < 0, Zero::String::Format("Opus error: %s", opus_strerror(frames)).c_str());
-    }
-
-    DecodedPacket* newPacket = new DecodedPacket();
-    newPacket->FrameCount = frames;
-    newPacket->Samples = new float[newPacket->FrameCount * Channels];
-
-    for (unsigned frame = 0; frame < newPacket->FrameCount; ++frame)
-    {
-      for (unsigned channel = 0; channel < Channels; ++channel)
-        newPacket->Samples[(frame * channel) + channel] = DecodedPackets[channel][frame];
-    }
-
-    DecodedPacketQueue.Write(newPacket);
-
-    if (AtomicCheckEqualityPointer(DecodingCheck, nullptr))
-      delete this;
-  }
-
   void SoundAssetFromFile::CheckForDecodedPacket()
   {
     if (AtomicCheckEqualityPointer(DecodingCheck, this))
@@ -424,6 +276,12 @@ namespace Audio
         // TODO Need to handle streaming
 
         memcpy(Samples + UndecodedIndex, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
+
+        for (unsigned i = UndecodedIndex; i < UndecodedIndex + packet->FrameCount * Channels; ++i)
+        {
+          ErrorIf(Samples[i] > 1.0f || Samples[i] < -1.0f);
+        }
+
         UndecodedIndex += packet->FrameCount * Channels;
 
         if (UndecodedIndex < FrameCount * Channels)
@@ -432,6 +290,8 @@ namespace Audio
         }
         else
           AtomicSetPointer((void**)&DecodingCheck, nullptr);
+
+        delete packet;
       }
     }
   }
@@ -494,12 +354,6 @@ namespace Audio
     const unsigned numberOfSamples)
   {
     memset(buffer, 0, sizeof(float) * numberOfSamples);
-  }
-
-  //************************************************************************************************
-  unsigned GeneratedWaveSoundAsset::GetSampleRate()
-  {
-    return gAudioSystem->SystemSampleRate;
   }
 
   //************************************************************************************************
