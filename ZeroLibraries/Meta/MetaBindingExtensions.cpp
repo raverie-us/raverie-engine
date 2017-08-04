@@ -35,7 +35,8 @@ const String cTool("Tool");
 namespace PropertyAttributes
 {
 
-const String cHidden("Hidden");
+const String cReadOnly("ReadOnly");
+const String cCore("Core");
 const String cInvalidatesObject("InvalidatesObject");
 const String cShaderInput("ShaderInput");
 const String cLocalModificationOverride("LocalModificationOverride");
