@@ -38,7 +38,9 @@ public:
   ~PropertyWidgetObject();
 
   /// Composite Interface.
-  void UpdateTransform();
+  void UpdateTransform() override;
+  void ReleaseHandles() override;
+
   void LayoutChildren(bool animate = false);
 
   bool IsObjectWidget() override {return true;}

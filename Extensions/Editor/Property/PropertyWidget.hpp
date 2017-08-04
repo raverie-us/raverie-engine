@@ -56,6 +56,11 @@ public:
   /// Composite interface.
   void UpdateTransform();
 
+  /// When scripts are compiled, all old types are going to become garbage. We invalidate the
+  /// property grid by destroying the whole tree, but the problem is that widgets are delay
+  /// destructed. So we need to release all handles immediately, before the types are freed.
+  virtual void ReleaseHandles(){}
+
   /// Called when the property grid refreshes.
   virtual void Refresh() {}
   virtual String GetToolTip(ToolTipColor::Enum* color){return String();}

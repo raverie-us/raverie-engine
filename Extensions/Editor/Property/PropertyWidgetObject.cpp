@@ -418,6 +418,16 @@ void PropertyWidgetObject::UpdateTransform()
 }
 
 //******************************************************************************
+void PropertyWidgetObject::ReleaseHandles()
+{
+  if(mNode)
+    mNode->mObject = Handle();
+
+  forRange(PropertyWidget& child, ChildWidgets.All())
+    child.ReleaseHandles();
+}
+
+//******************************************************************************
 void PropertyWidgetObject::LayoutChildren(bool animate)
 {
   bool isRoot = (mParentWidgetObject == nullptr);
