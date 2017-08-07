@@ -631,7 +631,7 @@ ZilchDefineType(ObjectScaleTool, builder, type)
   snapObject->AddAttribute(PropertyAttributes::cReadOnly);
 
   StringBuilder axesString;
-  axesString << "When dragging one of the three main axes, scale by the drag ";
+  axesString << "When dragging one of the three main axes - scale by the drag ";
   axesString << "amount on the other two, non-drag axes, and not the drag axis itself.";
   axesObject->Description = ZilchDocumentString(axesString.ToString());
 
