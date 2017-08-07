@@ -14,7 +14,7 @@ namespace Math
 
 typedef Zero::Array<Math::Vector3> Vec3Array;
 
-DeclareEnum3(CurveType, Linear, BSpline, CatmulRom);
+DeclareEnum3(CurveType, Linear, BSpline, CatmullRom);
 
 //------------------------------------------------------------------------ Curve
 /// A generic curve object that can switched between different spline types.
@@ -86,7 +86,7 @@ private:
   };
 
   //------------------------------------------------------- Catmul-Rom Policy
-  struct CatmulRomPolicy
+  struct CatmullRomPolicy
   {
     static const Mat4& GetBasis();
     static Vec4 GetParam(real t);

@@ -31,7 +31,7 @@ public:
   /// Does the spline loop back on itself?
   bool GetClosed() const;
   void SetClosed(bool closed);
-  /// The kind of spline (Linear, BSpline, CatmulRom).
+  /// The kind of spline (Linear, BSpline, CatmullRom).
   /// Determines how the control points affect the curve.
   SplineType::Enum GetSplineType() const;
   void SetSplineType(SplineType::Enum splineType);

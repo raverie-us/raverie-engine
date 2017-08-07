@@ -11,7 +11,7 @@ namespace Zero
 
 class Spline;
 
-DeclareEnum3(SplineType, Linear, BSpline, CatmulRom);
+DeclareEnum3(SplineType, Linear, BSpline, CatmullRom);
 
 namespace Events
 {
@@ -137,7 +137,7 @@ public:
   /// Create a new copy of this spline
   Spline* Clone() const;
 
-  /// The kind of spline (Linear, BSpline, CatmulRom).
+  /// The kind of spline (Linear, BSpline, CatmullRom).
   /// Determines how the control points affect the curve.
   SplineType::Enum GetSplineType() const;
   void SetSplineType(SplineType::Enum splineType);

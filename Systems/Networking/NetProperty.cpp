@@ -471,7 +471,7 @@ void NetPropertyConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mQuantizationRangeMin, Variant(DefaultFloatQuantizationRangeMin));
   SerializeNameDefault(mQuantizationRangeMax, Variant(DefaultFloatQuantizationRangeMax));
   SerializeNameDefault(mUseInterpolation, false);
-  SerializeEnumNameDefault(Math::CurveType, mInterpolationCurve, Math::CurveType::CatmulRom);
+  SerializeEnumNameDefault(Math::CurveType, mInterpolationCurve, Math::CurveType::CatmullRom);
   SerializeNameDefault(mSampleTimeOffset, float(0.1));
   SerializeNameDefault(mExtrapolationLimit, float(1));
   SerializeNameDefault(mUseConvergence, false);

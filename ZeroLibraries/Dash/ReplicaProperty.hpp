@@ -331,7 +331,7 @@ public:
   /// Controls the type of curve to use when interpolating a replica property's authoritative values to be sampled later locally
   /// (Only used with arithmetic replica property primitive-component types)
   /// (Cannot be modified after the replica property type has been made valid)
-  void SetInterpolationCurve(Math::CurveType::Enum interpolationCurve = Math::CurveType::CatmulRom);
+  void SetInterpolationCurve(Math::CurveType::Enum interpolationCurve = Math::CurveType::CatmullRom);
   Math::CurveType::Enum GetInterpolationCurve() const;
 
   /// Controls the time offset from now to sample a replica property's interpolated authoritative values
