@@ -588,11 +588,19 @@ Level* Space::AddObjectsFromLevel(Level* level)
     String levelMessage = String::Format("Loading Level From File %s", levelPath.c_str());
     PushErrorContext(levelMessage.c_str());
 
-    // Load from Level resource
     Status status;
     ObjectLoader stream;
-    stream.OpenFile(status, levelPath);
-    if(status.Succeeded())
+
+    if(level->mCacheTree != nullptr)
+    {
+      stream.SetRoot(level->mCacheTree);
+    }
+    else
+    {
+      stream.OpenFile(status, levelPath);
+    }
+
+    if (status.Succeeded())
     {
       //Read Level Node
       PolymorphicNode node;
@@ -608,6 +616,8 @@ Level* Space::AddObjectsFromLevel(Level* level)
       String message = String::Format("Failed to load level '%s' %s", level->Name.c_str(), status.Message.c_str());
       DoNotifyErrorWithContext(message);
     }
+
+    level->mCacheTree = stream.TakeOwnershipOfRoot();
   }
 
   ObjectEvent event(this);
