@@ -25,9 +25,9 @@ namespace Zilch
     void Close();
     void CloseStreams();
 
-    FileStream* GetStandardError();
-    FileStream* GetStandardInput();
-    FileStream* GetStandardOutput();
+    HandleOf<FileStream> GetStandardError();
+    HandleOf<FileStream> GetStandardInput();
+    HandleOf<FileStream> GetStandardOutput();
     
     bool mRedirectStandardError;
     bool mRedirectStandardInput;
