@@ -417,10 +417,17 @@ void GameSession::InternalAdd(Space* space)
 //******************************************************************************
 void GameSession::InternalRenamed(Space* space)
 {
-  mTrackedSpaces.EraseEqualValues(space);
+  // If the space is in the tracked spaces map, remove and reinsert it.
+  // (It's possible for a space to be renamed during initialization, before it's
+  // been added to the tracked spaces map).
+  size_t index = mTrackedSpaces.FindIndex(space);
+  if(index != SpaceMap::ArrayType::InvalidIndex)
+  {
+    mTrackedSpaces.mArray.EraseAt(index);
 
-  String newName = space->GetName();
-  mTrackedSpaces.Insert(newName, space);
+    String newName = space->GetName();
+    mTrackedSpaces.Insert(newName, space);
+  }
 }
 
 //******************************************************************************
