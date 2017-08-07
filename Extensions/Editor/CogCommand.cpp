@@ -53,7 +53,7 @@ ZilchDefineType(CogCommandManager, builder, type)
 
 //******************************************************************************
 CogCommandManager::CogCommandManager() :
-  EditorScriptObjects<CogCommand>(Tags::Command)
+  EditorScriptObjects<CogCommand>(ObjectAttributes::cCommand)
 {
   mCommands = CommandManager::GetInstance();
 }

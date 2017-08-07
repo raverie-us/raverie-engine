@@ -1,3 +1,4 @@
+[RunInEditor]
 class ZUiFillViewport : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;

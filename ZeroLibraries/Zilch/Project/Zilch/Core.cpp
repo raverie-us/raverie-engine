@@ -3696,12 +3696,6 @@ namespace Zilch
       f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / booleanType->Size, nullptr, boundType));
     }
   
-    ZilchInitializeExternalTypeAs(Members::Enum, "Members");
-    ZilchInitializeExternalTypeAs(FileMode::Enum, "FileMode");
-    ZilchInitializeExternalTypeAs(StreamCapabilities::Enum, "StreamCapabilities");
-    ZilchInitializeExternalTypeAs(StreamOrigin::Enum, "StreamOrigin");
-    ZilchInitializeExternalType(ProcessStartInfo);
-
     ZilchInitializeTypeAs(Zilch::Library, "Library");
     ZilchInitializeType(ReflectionObject);
     ZilchInitializeType(Type);
@@ -3710,6 +3704,13 @@ namespace Zilch
     ZilchInitializeType(DelegateType);
     ZilchInitializeType(BoundType);
     ZilchInitializeType(DelegateParameter);
+
+    ZilchInitializeExternalTypeAs(Members::Enum, "Members");
+    ZilchInitializeExternalTypeAs(FileMode::Enum, "FileMode");
+    ZilchInitializeExternalTypeAs(StreamCapabilities::Enum, "StreamCapabilities");
+    ZilchInitializeExternalTypeAs(StreamOrigin::Enum, "StreamOrigin");
+    ZilchInitializeExternalType(ProcessStartInfo);
+
     ZilchInitializeType(Console);
     ZilchInitializeType(Exception);
     ZilchInitializeType(EventHandler);

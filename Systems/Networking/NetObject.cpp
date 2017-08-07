@@ -184,7 +184,7 @@ void NetObject::Initialize(CogInitializer& initializer)
   if(!netPeer) // Unable?
   {
     // (This can happen if the user forgot to add a net peer component to their game session)
-    DoNotifyError("Invalid NetObject GameSession",
+    DoNotifyWarning("Invalid NetObject GameSession",
                   String::Format("Unable to initialize NetObject - NetObject '%s' was created in the GameSession '%s' which does not have a NetPeer component."
                                  " Please add a NetPeer component to the GameSession.",
                                  owner->GetDescription().c_str(), gameSession->GetDescription().c_str()));
@@ -225,6 +225,7 @@ void NetObject::Initialize(CogInitializer& initializer)
   //
 
   // Connect event handlers
+  ConnectThisTo(owner, Events::CogNameChanged,           OnCogNameChanged);
   ConnectThisTo(owner, Events::Attached,                 OnAttached);
   ConnectThisTo(owner, Events::Detached,                 OnDetached);
   ConnectThisTo(owner, Events::RegisterCppNetProperties, OnRegisterCppNetProperties);
@@ -442,6 +443,20 @@ void NetObject::OnDestroy(uint flags)
   TakeNetObjectOffline();
 }
 
+void NetObject::OnCogNameChanged(Event* event)
+{
+
+  // Is server?
+  if(IsServer())
+  {
+    // Replicate name changes now (if any)
+    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+      netObjectChannel->ReplicateNow();
+    else
+      Assert(false);
+  }
+}
+
 void NetObject::OnAttached(HierarchyEvent* event)
 {
   // Get owner
@@ -515,6 +530,14 @@ void NetObject::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   netObjectChannel->GetNetChannelType()->SetAcceptIncomingChanges(true);
   netObjectChannel->GetNetChannelType()->SetEventOnOutgoingPropertyChange(false);
   netObjectChannel->GetNetChannelType()->SetEventOnIncomingPropertyChange(true);
+
+  // Add name net property (replicates object name changes)
+  NetProperty* nameProperty = netObjectChannel->AddBasicNetProperty("Name", Variant(this), NativeTypeOf(String), SerializeKnownExtendedVariant, GetNetObjectNameProperty, SetNetObjectNameProperty);
+  if(!nameProperty) // Unable?
+  {
+    DoNotifyError("Unable to Add Built-In C++ NetProperties", String::Format("Unable to add built-in 'Name' NetProperty to the 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
+    return;
+  }
 
   // Add parent net property (replicates parent changes)
   NetProperty* parentProperty = netObjectChannel->AddBasicNetProperty("Parent", Variant(this), NativeTypeOf(NetObjectId), SerializeKnownExtendedVariant, GetNetObjectParentProperty, SetNetObjectParentProperty);

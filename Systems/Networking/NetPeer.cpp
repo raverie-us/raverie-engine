@@ -4156,7 +4156,7 @@ bool NetPeer::CreateReplicas(const CreateContext& createContext, const ReplicaTy
   if(!space)
   {
     // Create cog of specified archetype (must be a space archetype)
-    cog = static_cast<Cog*>(owner->CreateNamedSpace(archetype->Name, archetype));
+    cog = static_cast<Cog*>(owner->CreateSpace(archetype));
     if(!cog) // Unable?
     {
       DoNotifyError("Unable to create NetSpace", "Unable to create Cog of specified Archetype");
@@ -4188,7 +4188,7 @@ bool NetPeer::CreateReplicas(const CreateContext& createContext, const ReplicaTy
   else
   {
     // Create cog of specified archetype in specified space (must be an object archetype)
-    cog = space->CreateNamed(archetype->ResourceIdName, archetype->Name);
+    cog = space->Create(archetype);
     if(!cog) // Unable?
     {
       DoNotifyError("Unable to create NetObject", "Unable to create Cog of specified Archetype");

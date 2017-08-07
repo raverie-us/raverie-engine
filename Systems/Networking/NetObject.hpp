@@ -38,6 +38,9 @@ public:
   /// Uninitializes the component.
   void OnDestroy(uint flags) override;
 
+  /// Called after setting a new cog name.
+  void OnCogNameChanged(Event* event);
+
   /// Called when attached to another object.
   void OnAttached(HierarchyEvent* event);
   void OnDetached(HierarchyEvent* event);

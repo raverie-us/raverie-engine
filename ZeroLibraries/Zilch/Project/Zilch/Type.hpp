@@ -211,9 +211,15 @@ namespace Zilch
         // We can't possibly cast it or know what it even is...
         return nullptr;
       }
+      
+      BoundType* fromType = baseClassPointer->ZilchGetDerivedType();
+      fromType->IsInitializedAssert();
+      
+      BoundType* toType = ZilchTypeId(Derived);
+      toType->IsInitializedAssert();
 
       // If the cast is safe...
-      if (BoundIsA(baseClassPointer->ZilchGetDerivedType(), ZilchTypeId(Derived)))
+      if (BoundIsA(fromType, toType))
       {
         // Get the base class pointer
         return static_cast<Derived>(baseClassPointer);

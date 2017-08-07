@@ -933,7 +933,8 @@ namespace Zilch
       /* Implementation of the 'get type' specialization */                                                                                           \
       static ZZ::BoundType* (ZilchStaticType(SelfType)::GetType)()                                                                                    \
       {                                                                                                                                               \
-        return (CustomBoundType);                                                                                                                     \
+        static BoundType* type = (CustomBoundType);                                                                                                   \
+        return type;                                                                                                                                  \
       }                                                                                                                                               \
       /* Read our object representation from either stack data or handle data */                                                                      \
       static typename ZilchStaticType(SelfType)::ReadType (ZilchStaticType(SelfType)::Read)(byte* from)                                               \

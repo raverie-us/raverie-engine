@@ -77,6 +77,15 @@ struct Policy<Quat>
 };
 
 template<>
+struct Policy<Mat2>
+{
+  static inline bool Serialize(Serializer& stream, cstr fieldName, Mat2& value)
+  {
+    return stream.ArrayField("Real2x2", fieldName, (byte*)&value, BasicArrayType::Float, 4, sizeof(float));
+  }
+};
+
+template<>
 struct Policy<Mat3>
 {
   static inline bool Serialize(Serializer& stream, cstr fieldName, Mat3& value)

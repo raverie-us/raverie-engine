@@ -40,10 +40,18 @@ void MetaLibraryExtensions::AddExtensionsPostCompilation(LibraryBuilder& builder
 //**************************************************************************************************
 void MetaLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* userData)
 {
-  ProcessComponent(*e->Builder, e->Type);
+  BoundType* type = e->Type;
+  ProcessComponent(*e->Builder, type);
+
+  // Command and Tool attributes imply RunInEditor
+  if (type->HasAttribute(ObjectAttributes::cCommand) || type->HasAttribute(ObjectAttributes::cTool))
+  {
+    if(!type->HasAttribute(ObjectAttributes::cRunInEditor))
+      type->AddAttribute(ObjectAttributes::cRunInEditor);
+  }
 
   // Check for renamed properties
-  forRange(Property* property, e->Type->GetProperties(Members::Instance))
+  forRange(Property* property, type->GetProperties(Members::Instance))
   {
     if (Attribute* attribute = property->HasAttribute(PropertyAttributes::cRenamedFrom))
       AddPropertyRenamedAttribute(e, property, attribute);

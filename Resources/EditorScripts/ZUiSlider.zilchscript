@@ -3,6 +3,7 @@ class UiSliderEvent : ZilchEvent
   var SliderPercentage : Real;
 }
 
+[RunInEditor]
 class ZUiSlider : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;

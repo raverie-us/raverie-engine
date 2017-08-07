@@ -392,12 +392,13 @@ void ListBox::OnMouseMove(MouseEvent* event)
 
     if(index != -1)
     {
-      mToolTip.SafeDestroy( );
-      mToolTip = new ToolTip(this);
-
       StringBuilder toolTipText;
       if(GetToolTipText(index, mDataSource, &toolTipText))
-        mToolTip->SetTextAndPlace(toolTipText.ToString(), mTextBlocks[index].first->GetScreenRect( ));
+      {
+        mToolTip.SafeDestroy( );
+        mToolTip = new ToolTip(this);
+        mToolTip->SetTextAndPlace(toolTipText.ToString( ), mTextBlocks[index].first->GetScreenRect( ));
+      }
     }
   }
 
@@ -628,11 +629,13 @@ void ComboBox::OnMouseEnter(MouseEvent* event)
   if(mSelectedItem == -1 || uint(mSelectedItem) > mDataSource->GetCount( ))
     return;
 
-  ToolTip* toolTip = new ToolTip(this);
-
   StringBuilder toolTipText;
   if(GetToolTipText(mSelectedItem, mDataSource, &toolTipText))
+  {
+    ToolTip* toolTip = new ToolTip(this);
     toolTip->SetTextAndPlace(toolTipText.ToString( ), this->GetScreenRect( ));
+  }
+
 }
 
 

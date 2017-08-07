@@ -1465,7 +1465,7 @@ namespace Zilch
       new (outputHandle) Handle();
     }
     // Check to see if this type inherits from the other type
-    else if (Type::GenericIsA(op.ToType, toConvert.StoredType))
+    else if (Type::GenericIsA(toConvert.StoredType, op.ToType))
     {
       // Copy the handle over, it's now the down-casted type!
       new (outputHandle) Handle(toConvert);

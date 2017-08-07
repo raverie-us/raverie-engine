@@ -33,9 +33,7 @@ namespace Audio
     // Add to the list of nodes
     if (!Threaded)
     {
-      if (!gAudioSystem->AddSoundNode(this, false))
-        status.SetFailed(Zero::String::Format("Too many SoundNodes, couldn't create new %s", 
-          name.c_str()));
+      gAudioSystem->AddSoundNode(this, false);
     }
     else
     {
@@ -436,17 +434,17 @@ namespace Audio
     if (gAudioSystem->MixVersionNumber == Version)
     {
       // Check for errors 
-      Zero::String* message(nullptr);
+      Zero::String message;
       if (InProcess)
-        message = new Zero::String("Loop in sound node structure, disconnected node");
+        message = Zero::String("Loop in sound node structure, disconnected node");
       else if (outputBuffer->Size() != MixedOutput.Size())
-        message = new Zero::String("Mismatch in buffer size requests on sound node, disconnected node");
+        message = Zero::String("Mismatch in buffer size requests on sound node, disconnected node");
       else if (numberOfChannels != NumMixedChannels)
-        message = new Zero::String("Mismatch in channel requests on sound node, disconnected node");
-      if (message)
+        message = Zero::String("Mismatch in channel requests on sound node, disconnected node");
+      if (!message.Empty())
       {
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEvent, 
-            gAudioSystem->ExternalInterface, Notify_Error, (void*)message));
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioError, 
+            gAudioSystem->ExternalInterface, message));
 
         if (GetSiblingNode())
           gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::DisconnectOnlyThis, 
@@ -517,15 +515,17 @@ namespace Audio
 
       // Get output
       hasOutput = GetOutputSamples(&MixedOutput, numberOfChannels, listener, true);
+
+      // If the output state has changed, notify the non-threaded node
+      if (ValidOutputLastMix != hasOutput && GetSiblingNode())
+          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
+            GetSiblingNode(), ValidOutputLastMix));
+
       ValidOutputLastMix = hasOutput;
 
       // Copy mixed samples to output buffer if there is real data
       if (hasOutput)
         memcpy(outputBuffer->Data(), MixedOutput.Data(), sizeof(float) * outputBuffer->Size());
-
-      if (GetSiblingNode())
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix, 
-          GetSiblingNode(), ValidOutputLastMix));
 
       // Mark as finished
       InProcess = false;

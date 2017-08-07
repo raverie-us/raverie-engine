@@ -78,6 +78,11 @@ void PropertyView::Invalidate()
 {
   this->MarkAsNeedsUpdate();
 
+  // We need to release handles in case of meta changing. See the comment
+  // above PropertyWidget::ReleaseHandles
+  if(mRoot)
+    mRoot->ReleaseHandles();
+
   // Destroy the tree
   SafeDestroy(mRoot);
 

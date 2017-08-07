@@ -1,4 +1,3 @@
-
 ////////////////////////////////////////////////////////////////////////////////
 //  Event structure referencing which cog needs to switch from/to undo/redo
 //  views and vice verse.
@@ -8,10 +7,10 @@ class ChangedHistoryView : ZilchEvent
   var HistoryEntry : Cog;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 //  Controller for all functionlity related to a history entry row.
 ////////////////////////////////////////////////////////////////////////////////
+[RunInEditor]
 class ZHistoryEntry : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;

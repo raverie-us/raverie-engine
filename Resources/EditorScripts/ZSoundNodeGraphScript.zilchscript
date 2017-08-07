@@ -1,3 +1,4 @@
+[RunInEditor]
 class ZSoundNodeGraphScript : ZilchComponent
 {
   [Dependency] var Capture : MouseCapture;

@@ -252,7 +252,7 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
 
   // Keep track of the current hit object and the last hit object
   Handle objectHit;
-  Handle oldOver = reactiveSpace->mOver.ToCog();
+  Cog* oldOverObject = reactiveSpace->mOver.ToCog();
 
   // As long as someone else didn't handle this mouse event (blocked by another reactive in a different viewport)
   // We need to still update, but act as if we just lost any reactive object
@@ -268,13 +268,14 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
     for(size_t i = 0; i < results.mSize; ++i)
     {
       RayCastEntry& result = results.mEntries[i];
-      Handle newObject(result.HitCog);
+      Cog* newCog = result.HitCog;
+      Handle newObject(newCog);
       //DebugPrint("Hit: %s\n", newObject->GetName().c_str());
 
       objectHit = newObject;
 
       //we only care about this object if it is an active reactive object.
-      Reactive* reactive = newObject.IsNotNull() ? newObject.Get<Cog*>()->has(Reactive) : nullptr;
+      Reactive* reactive = newCog != nullptr ? newCog->has(Reactive) : nullptr;
       if(reactive && reactive->mActive)
       {
         //store the mouse position info on the reactive component
@@ -282,29 +283,25 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
         this->mReactiveHitNormal = result.HitWorldNormal;
         this->mReactiveHitDistance = result.T;
 
-        // Create a reactive event that adds extra data to the mouse event
-        ViewportMouseEvent viewportEvent(e);
-        InitViewportEvent(viewportEvent);
-
-        //objectHit = newObject;
         // If we hit a new object and we were hitting an old object,
         // we need to send a mouse enter to the new object and
         // a mouse exit to the old object
-        if(oldOver != newObject)
+        if(oldOverObject != newCog)
         {
-          EventDispatcher* newDispatcher = (newObject.Get<Object*>())->GetDispatcher( );
-
-          if(newDispatcher)
-            newDispatcher->Dispatch(Events::MouseEnterPreview, &viewportEvent);
-
           // Always make sure that, before we dispatch mouse exit, we release the 'over' object
           // so that any script checking for the hover object will not think its this
-          reactiveSpace->mOver = newObject.Get<Cog*>();
+          reactiveSpace->mOver = newCog;
 
-          if(Object* oldOverObject = oldOver.Get<Object*>())
-            oldOverObject->GetDispatcher()->Dispatch(Events::MouseExit, &viewportEvent);
+          // Create the event to send out what cog has been entered
+          ViewportMouseEvent viewportEvent(e);
+          InitViewportEvent(viewportEvent);
 
-          newDispatcher->Dispatch(Events::MouseEnter, &viewportEvent);
+          newCog->DispatchEvent(Events::MouseEnterPreview, &viewportEvent);
+
+          if(oldOverObject != nullptr)
+            oldOverObject->DispatchEvent(Events::MouseExit, &viewportEvent);
+
+          newCog->DispatchEvent(Events::MouseEnter, &viewportEvent);
 
           return;
         }
@@ -323,7 +320,7 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
     // Always make sure that, before we dispatch mouse exit, we release the 'over' object
     // so that any script checking for the hover object will not think its this
     reactiveSpace->mOver = CogId();
-    if(Object* oldOverObject = oldOver.Get<Object*>())
+    if(oldOverObject != nullptr)
     {
       ViewportMouseEvent viewportEvent(e);
       InitViewportEvent(viewportEvent);

@@ -355,6 +355,8 @@ bool EditorScriptObjects<DataType>::IsAutoRegister(BoundType* componentType)
       if(parameter.Name == mAutoRegister && parameter.BooleanValue)
         return true;
     }
+
+    break;
   }
 
   return false;

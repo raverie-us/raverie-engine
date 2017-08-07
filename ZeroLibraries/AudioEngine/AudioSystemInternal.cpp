@@ -7,7 +7,7 @@
 
 #include "Precompiled.h"
 
-#define MAXNODES 2048
+#define MAXNODES 10000
 
 namespace Audio
 {
@@ -189,9 +189,8 @@ namespace Audio
       double timeDiff = (double)(clock() - time) / CLOCKS_PER_SEC;
       if (timeDiff > maxTime)
       {
-        Zero::String* string = new Zero::String("Mix took too long (informational message, not an error)");
-        AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEvent, 
-          ExternalInterface, Notify_Error, (void*)string));
+        AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioError, 
+          ExternalInterface, Zero::String("Mix took too long (informational message, not an error)")));
       }
 #endif
 
@@ -400,7 +399,7 @@ namespace Audio
   {
     int counter(0);
     Zero::Functor* function;
-    while (counter < MaxTasksToReadThreaded && TasksForMixThread.Read(function))
+    while (counter < MaxTasksToRead && TasksForMixThread.Read(function))
     {
       function->Execute();
       delete function;
@@ -446,16 +445,17 @@ namespace Audio
       ++NodeCount;
       NodeList.PushBack(node);
 
+#ifdef _DEBUG  
       if (NodeCount >= MAXNODES)
-        return false;
-      else
-        return true;
+        ExternalInterface->SendAudioError("Number of SoundNodes over limit");
+#endif
     }
     else
     {
       NodeListThreaded.PushBack(node);
-      return true;
     }
+
+    return true;
   }
 
   //************************************************************************************************

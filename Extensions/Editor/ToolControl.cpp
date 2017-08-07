@@ -225,7 +225,7 @@ Space* ToolData::GetSpace()
 //---------------------------------------------------------- Tool Object Manager
 //******************************************************************************
 ToolObjectManager::ToolObjectManager(ToolControl* toolControl) :
-  EditorScriptObjects<ToolData>("Tool")
+  EditorScriptObjects<ToolData>(ObjectAttributes::cTool)
 {
   mToolControl = toolControl;
 }

@@ -76,6 +76,29 @@ void SetNetChannelAuthorityProperty(const Variant& value, Variant& propertyData)
 }
 
 //
+// NetObject Name Property Getter / Setter
+//
+
+Variant GetNetObjectNameProperty(const Variant& propertyData)
+{
+  // Get associated property instance data
+  NetObject* netObject = propertyData.GetOrError<NetObject*>();
+  Cog*       owner     = netObject->GetOwner();
+
+  // Return the object's name
+  return Variant(owner->GetName());
+}
+void SetNetObjectNameProperty(const Variant& value, Variant& propertyData)
+{
+  // Get associated property instance data
+  NetObject* netObject = propertyData.GetOrError<NetObject*>();
+  Cog*       owner     = netObject->GetOwner();
+
+  // Set the object's name
+  owner->SetName(value.GetOrError<String>());
+}
+
+//
 // NetObject Parent Property Getter / Setter
 //
 

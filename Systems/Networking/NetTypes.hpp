@@ -102,6 +102,14 @@ Variant GetNetChannelAuthorityProperty(const Variant& propertyData);
 void SetNetChannelAuthorityProperty(const Variant& value, Variant& propertyData);
 
 //
+// NetObject Name Property Getter / Setter
+//
+
+// Serialized Data Type: String
+Variant GetNetObjectNameProperty(const Variant& propertyData);
+void SetNetObjectNameProperty(const Variant& value, Variant& propertyData);
+
+//
 // NetObject Parent Property Getter / Setter
 //
 

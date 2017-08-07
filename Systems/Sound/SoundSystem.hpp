@@ -88,6 +88,7 @@ public:
   float VolumeToDecibels(float volume);
   float DecibelsToVolume(float decibels);
   void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioError(const Zero::String message) override;
   NodeInfoListType::range GetNodeInfoList();
   void SendEventOnAllSpaces(StringParam eventType, Event& eventToSend);
 

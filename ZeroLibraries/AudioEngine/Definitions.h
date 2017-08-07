@@ -63,8 +63,6 @@ namespace Audio
     Notify_AssetUnreferenced,
     // Sound asset has finished and been deleted. 
     Notify_AssetRemoved,
-    // System error (will have error string associated with it) 
-    Notify_Error,
     // The custom input node needs another buffer of samples 
     Notify_NeedInputSamples,
     // An interpolation has finished 

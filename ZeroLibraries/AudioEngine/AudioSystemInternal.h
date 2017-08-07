@@ -163,9 +163,9 @@ namespace Audio
     // For low frequency channel on 5.1 or 7.1 mix 
     // Must be pointer because relies on audio system in constructor
     LowPassFilter* LowPass;
-    // Maximum number of tasks to execute on one update
-    static const unsigned MaxTasksToRead = 300;
-    static const unsigned MaxTasksToReadThreaded = 100;
+    // Maximum number of tasks to execute on one update (to prevent the possibility
+    // of infinite loops, even though that would be rare)
+    static const unsigned MaxTasksToRead = 10000;
     // Tasks for the mix thread from the main thread
     LockFreeQueue<Zero::Functor*> TasksForMixThread;
     // Tasks for the main thread from the mix thread

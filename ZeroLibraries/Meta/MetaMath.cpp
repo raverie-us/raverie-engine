@@ -45,6 +45,7 @@ void ToValue(StringRange range, Quat& value){ToValue<4>(range, &value.x);}
 void ToValue(StringRange range, IntVec2& value){ToValue<2>(range, &value.x);}
 void ToValue(StringRange range, IntVec3& value){ToValue<3>(range, &value.x);}
 void ToValue(StringRange range, IntVec4& value){ToValue<4>(range, &value.x);}
+void ToValue(StringRange range, Mat2& value){ToValue<4>(range, value.array);}
 void ToValue(StringRange range, Mat3& value){ToValue<9>(range, value.array);}
 void ToValue(StringRange range, Mat4& value){ToValue<16>(range, value.array);}
 

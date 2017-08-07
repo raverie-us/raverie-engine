@@ -152,7 +152,7 @@ namespace Audio
     float BypassPercent;
     // If true, this is a node which generates audio
     bool Generator;
-
+    
     friend class AudioSystemInternal;
     friend class AudioSystemInterface;
     friend class SoundInstanceNode;
