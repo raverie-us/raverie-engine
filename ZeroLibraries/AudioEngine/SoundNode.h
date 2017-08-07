@@ -146,13 +146,15 @@ namespace Audio
     bool Collapse;
     // If true, this node had valid audio output during the last mix
     bool ValidOutputLastMix;
+    // Keeps track of the previous state of ValidOutputLastMix to know when to send notification
+    bool PreviousOutputState;
     // If true, this node has listener-specific data (such as an emitter)
     bool ListenerDependent;
     // The percentage of output that shouldn't be affected by this node
     float BypassPercent;
     // If true, this is a node which generates audio
     bool Generator;
-
+    
     friend class AudioSystemInternal;
     friend class AudioSystemInterface;
     friend class SoundInstanceNode;

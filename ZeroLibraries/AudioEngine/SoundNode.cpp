@@ -27,15 +27,14 @@ namespace Audio
     Name(name),
     NodeID(ID),
     ValidOutputLastMix(false),
+    PreviousOutputState(false),
     ListenerDependent(listenerDependent),
     Generator(generator)
   {
     // Add to the list of nodes
     if (!Threaded)
     {
-      if (!gAudioSystem->AddSoundNode(this, false))
-        status.SetFailed(Zero::String::Format("Too many SoundNodes, couldn't create new %s", 
-          name.c_str()));
+      gAudioSystem->AddSoundNode(this, false);
     }
     else
     {
@@ -476,9 +475,13 @@ namespace Audio
         {
           ValidOutputLastMix = true;
 
-          if (GetSiblingNode())
-            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
-              GetSiblingNode(), ValidOutputLastMix));
+          if (ValidOutputLastMix != PreviousOutputState)
+          {
+            if (GetSiblingNode())
+              gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
+                GetSiblingNode(), ValidOutputLastMix));
+            PreviousOutputState = ValidOutputLastMix;
+          }
         }
         // Copy mixed samples to output buffer if there is real data
         if (hasOutput)
@@ -523,9 +526,13 @@ namespace Audio
       if (hasOutput)
         memcpy(outputBuffer->Data(), MixedOutput.Data(), sizeof(float) * outputBuffer->Size());
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix, 
-          GetSiblingNode(), ValidOutputLastMix));
+      if (ValidOutputLastMix != PreviousOutputState)
+      {
+        if (GetSiblingNode())
+          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
+            GetSiblingNode(), ValidOutputLastMix));
+        PreviousOutputState = ValidOutputLastMix;
+      }
 
       // Mark as finished
       InProcess = false;

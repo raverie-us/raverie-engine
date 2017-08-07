@@ -7,7 +7,7 @@
 
 #include "Precompiled.h"
 
-#define MAXNODES 2048
+#define MAXNODES 10000
 
 namespace Audio
 {
@@ -400,7 +400,7 @@ namespace Audio
   {
     int counter(0);
     Zero::Functor* function;
-    while (counter < MaxTasksToReadThreaded && TasksForMixThread.Read(function))
+    while (counter < MaxTasksToRead && TasksForMixThread.Read(function))
     {
       function->Execute();
       delete function;
@@ -446,16 +446,20 @@ namespace Audio
       ++NodeCount;
       NodeList.PushBack(node);
 
+#ifdef _DEBUG  
       if (NodeCount >= MAXNODES)
-        return false;
-      else
-        return true;
+      {
+        Zero::String* message = new Zero::String("Number of SoundNodes over max limit");
+        ExternalInterface->SendAudioEvent(Notify_Error, (void*)message);
+      }
+#endif
     }
     else
     {
       NodeListThreaded.PushBack(node);
-      return true;
     }
+
+    return true;
   }
 
   //************************************************************************************************
