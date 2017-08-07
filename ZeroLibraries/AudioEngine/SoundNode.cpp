@@ -27,7 +27,6 @@ namespace Audio
     Name(name),
     NodeID(ID),
     ValidOutputLastMix(false),
-    PreviousOutputState(false),
     ListenerDependent(listenerDependent),
     Generator(generator)
   {
@@ -435,17 +434,17 @@ namespace Audio
     if (gAudioSystem->MixVersionNumber == Version)
     {
       // Check for errors 
-      Zero::String* message(nullptr);
+      Zero::String message;
       if (InProcess)
-        message = new Zero::String("Loop in sound node structure, disconnected node");
+        message = Zero::String("Loop in sound node structure, disconnected node");
       else if (outputBuffer->Size() != MixedOutput.Size())
-        message = new Zero::String("Mismatch in buffer size requests on sound node, disconnected node");
+        message = Zero::String("Mismatch in buffer size requests on sound node, disconnected node");
       else if (numberOfChannels != NumMixedChannels)
-        message = new Zero::String("Mismatch in channel requests on sound node, disconnected node");
-      if (message)
+        message = Zero::String("Mismatch in channel requests on sound node, disconnected node");
+      if (!message.Empty())
       {
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEvent, 
-            gAudioSystem->ExternalInterface, Notify_Error, (void*)message));
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioError, 
+            gAudioSystem->ExternalInterface, message));
 
         if (GetSiblingNode())
           gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::DisconnectOnlyThis, 
@@ -475,13 +474,9 @@ namespace Audio
         {
           ValidOutputLastMix = true;
 
-          if (ValidOutputLastMix != PreviousOutputState)
-          {
-            if (GetSiblingNode())
-              gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
-                GetSiblingNode(), ValidOutputLastMix));
-            PreviousOutputState = ValidOutputLastMix;
-          }
+          if (GetSiblingNode())
+            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
+              GetSiblingNode(), ValidOutputLastMix));
         }
         // Copy mixed samples to output buffer if there is real data
         if (hasOutput)
@@ -520,19 +515,17 @@ namespace Audio
 
       // Get output
       hasOutput = GetOutputSamples(&MixedOutput, numberOfChannels, listener, true);
+
+      // If the output state has changed, notify the non-threaded node
+      if (ValidOutputLastMix != hasOutput && GetSiblingNode())
+          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
+            GetSiblingNode(), ValidOutputLastMix));
+
       ValidOutputLastMix = hasOutput;
 
       // Copy mixed samples to output buffer if there is real data
       if (hasOutput)
         memcpy(outputBuffer->Data(), MixedOutput.Data(), sizeof(float) * outputBuffer->Size());
-
-      if (ValidOutputLastMix != PreviousOutputState)
-      {
-        if (GetSiblingNode())
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
-            GetSiblingNode(), ValidOutputLastMix));
-        PreviousOutputState = ValidOutputLastMix;
-      }
 
       // Mark as finished
       InProcess = false;

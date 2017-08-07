@@ -37,6 +37,7 @@ namespace Audio
   {
   public:
     virtual void SendAudioEvent(const AudioEventType eventType, void* data) = 0;
+    virtual void SendAudioError(const Zero::String message) = 0;
   };
 
   //------------------------------------------------------------------------ External Node Interface

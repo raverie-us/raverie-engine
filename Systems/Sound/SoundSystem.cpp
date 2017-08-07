@@ -176,11 +176,6 @@ void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * d
 {
   if (eventType == Audio::Notify_AudioClipping)
     DoNotifyWarning("Audio Error", "Audio is too loud and is being clipped. Reduce volume or number of sounds to avoid audio problems.");
-  else if (eventType == Audio::Notify_Error)
-  {
-    DoNotifyWarning("Audio Error", ((String*)data)->c_str());
-    delete (String*)data;
-  }
   else if (eventType == Audio::Notify_MidiNoteOn)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
@@ -223,6 +218,12 @@ void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * d
     SendEventOnAllSpaces(Events::MIDIOtherControl, event);
     delete (Audio::MidiData*)data;
   }
+}
+
+//**************************************************************************************************
+void SoundSystem::SendAudioError(const Zero::String message)
+{
+  DoNotifyWarning("Audio Error", message.c_str());
 }
 
 //**************************************************************************************************
