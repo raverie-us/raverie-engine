@@ -45,8 +45,6 @@ ZilchDefineType(Sound, builder, type)
 
   ZilchBindGetterProperty(Length);
   ZilchBindGetterProperty(Channels);
-  ZilchBindGetterProperty(SampleCount);
-  ZilchBindGetterProperty(SampleRate);
 }
 
 //**************************************************************************************************
@@ -94,33 +92,6 @@ int Sound::GetChannels()
     return mSoundAsset->GetChannels();
   else
     return 0;
-}
-
-//**************************************************************************************************
-int Sound::GetSampleCount()
-{
-  if (mSoundAsset)
-    return mSoundAsset->GetNumberOfSamples();
-  else
-    return 0;
-}
-
-//**************************************************************************************************
-int Sound::GetSampleRate()
-{
-  // TODO
-//   if (mSoundAsset)
-//     return mSoundAsset->GetSampleRate();
-//   else
-    return 0;
-}
-
-//**************************************************************************************************
-AudioFileFormats::Enum Sound::GetFormat()
-{
-  //TODO
-
-  return AudioFileFormats::WAV;
 }
 
 //**************************************************************************************************

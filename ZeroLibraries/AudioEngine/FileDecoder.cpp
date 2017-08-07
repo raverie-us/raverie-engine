@@ -7,15 +7,17 @@
 
 #include "Precompiled.h"
 #include "stb_vorbis.h"
+#include "opus.h"
 
 namespace Audio
 {
   //----------------------------------------------------------------------------------- File Decoder
 
   //************************************************************************************************
-  FileDecoder::FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming) :
+  FileDecoder::FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming, SoundAssetFromFile* asset) :
     Streaming(streaming),
-    DecodingCheck(this)
+    Decoding(this),
+    Asset(asset)
   {
     InputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
     if (!InputFile.IsOpen())
@@ -24,14 +26,19 @@ namespace Audio
       return;
     }
 
-    InputFile.Read(status, (byte*)&Header, sizeof(Header));
+    FileHeader header;
+
+    InputFile.Read(status, (byte*)&header, sizeof(header));
     if (status.Failed())
       return;
 
-    ErrorIf(Header.Name[0] != 'Z');
+    ErrorIf(header.Name[0] != 'Z');
+
+    SamplesPerChannel = header.SamplesPerChannel;
+    Channels = header.Channels;
 
     int error;
-    for (short i = 0; i < Header.Channels; ++i)
+    for (short i = 0; i < Channels; ++i)
     {
       Decoders[i] = opus_decoder_create(48000, 1, &error);
       if (error < 0)
@@ -56,7 +63,8 @@ namespace Audio
     // TODO also could be from memory instead of a file
     if (!InputFile.IsOpen())
     {
-      if (AtomicCheckEqualityPointer(DecodingCheck, nullptr))
+      // If the asset is null, should delete
+      if (AtomicCheckEqualityPointer(Asset, nullptr))
         delete this;
 
       return;
@@ -67,7 +75,7 @@ namespace Audio
     int frames;
 
     // Get a packet for each channel
-    for (short i = 0; i < Header.Channels; ++i)
+    for (short i = 0; i < Channels; ++i)
     {
       // Read in the packet header
       InputFile.Read(status, (byte*)&packHead, sizeof(packHead));
@@ -79,8 +87,8 @@ namespace Audio
         {
           InputFile.Close();
 
-          // If the DecodingCheck pointer is still this object, set it to NULL
-          if (AtomicCompareExchangePointer((void*)DecodingCheck, nullptr, (void*)this)))))))
+          // Set the decoding marker to null
+          AtomicSetPointer((void**)&Decoding, (void*)nullptr);
 
           return;
         }
@@ -93,6 +101,7 @@ namespace Audio
           if (status.Failed())
           {
             InputFile.Close();
+            AtomicSetPointer((void**)&Decoding, (void*)nullptr);
             return;
           }
         }
@@ -116,21 +125,21 @@ namespace Audio
     // Set the number of frames
     newPacket->FrameCount = frames;
     // Create the buffer for the samples
-    newPacket->Samples = new float[newPacket->FrameCount * Header.Channels];
+    newPacket->Samples = new float[newPacket->FrameCount * Channels];
 
     // Step through each frame of samples
     for (unsigned frame = 0, index = 0; frame < newPacket->FrameCount; ++frame)
     {
       // Copy this sample from the decoded packets to the DecodedPacket sample buffer
-      for (short channel = 0; channel < Header.Channels; ++channel, ++index)
+      for (short channel = 0; channel < Channels; ++channel, ++index)
         newPacket->Samples[index] = DecodedPackets[channel][frame];
     }
 
     // Add the DecodedPacket object to the queue
     DecodedPacketQueue.Write(newPacket);
 
-    // If the pointer is now NULL, the asset has been destroyed
-    if (AtomicCheckEqualityPointer(DecodingCheck, nullptr))
+    // If the asset is null, should delete
+    if (AtomicCheckEqualityPointer(Asset, nullptr))
       delete this;
   }
 

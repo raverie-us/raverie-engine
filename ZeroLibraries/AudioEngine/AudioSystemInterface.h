@@ -74,6 +74,9 @@ namespace Audio
     // Changes the overall system volume
     void SetVolume(const float volume);
 
+    // Returns the sample rate used by the audio system
+    unsigned GetSampleRate();
+
     // Returns the number of channels used in the system's output
     unsigned GetOutputChannels();
 

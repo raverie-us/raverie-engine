@@ -82,6 +82,12 @@ namespace Audio
   }
 
   //************************************************************************************************
+  unsigned AudioSystemInterface::GetSampleRate()
+  {
+    return System->SampleRate;
+  }
+
+  //************************************************************************************************
   unsigned AudioSystemInterface::GetOutputChannels()
   {
     return System->SystemChannelsThreaded;

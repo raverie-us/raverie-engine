@@ -42,8 +42,8 @@
 
 #include "MIDI.h"
 #include "Modifiers.h"
-#include "FileAccess.h"
 #include "LockFreeQueue.hpp"
+#include "FileEncoder.h"
 #include "FileDecoder.h"
 #include "AudioSystemInterface.h"
 #include "AudioSystemInternal.h"

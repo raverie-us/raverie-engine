@@ -121,11 +121,11 @@ namespace Audio
 
       // TODO read from buffer as well as from file
 
-      Decoder = new FileDecoder(status, fileName, streaming);
+      Decoder = new FileDecoder(status, fileName, streaming, this);
 
-      FileLength = (float)Decoder->Header.SamplesPerChannel / gAudioSystem->SampleRate;
-      Channels = Decoder->Header.Channels;
-      FrameCount = Decoder->Header.SamplesPerChannel;
+      FileLength = (float)Decoder->SamplesPerChannel / AudioSystemInternal::SampleRate;
+      Channels = Decoder->Channels;
+      FrameCount = Decoder->SamplesPerChannel;
 
       Samples = new float[FrameCount * Channels];
     }
@@ -138,7 +138,12 @@ namespace Audio
       delete[] Samples;
 
     if (Decoder)
-      delete Decoder;
+    {
+      AtomicSetPointer((void**)Decoder->Asset, (void*)nullptr);
+
+      if (AtomicCheckEqualityPointer(Decoder->Decoding, nullptr))
+        delete Decoder;
+    }
 
     // TODO Need to destroy encoders when done with them
   }
@@ -268,10 +273,13 @@ namespace Audio
 
   void SoundAssetFromFile::CheckForDecodedPacket()
   {
-    if (AtomicCheckEqualityPointer(DecodingCheck, this))
+    if (!Decoder)
+      return;
+
+    if (AtomicCheckEqualityPointer(Decoder->Decoding, Decoder))
     {
       DecodedPacket* packet;
-      if (DecodedPacketQueue.Read(packet))
+      if (Decoder->DecodedPacketQueue.Read(packet))
       {
         // TODO Need to handle streaming
 
@@ -286,10 +294,8 @@ namespace Audio
 
         if (UndecodedIndex < FrameCount * Channels)
         {
-          gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&SoundAssetFromFile::DecodeNextPacket, this));
+          gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, Decoder));
         }
-        else
-          AtomicSetPointer((void**)&DecodingCheck, nullptr);
 
         delete packet;
       }

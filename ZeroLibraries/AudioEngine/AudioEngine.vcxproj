@@ -68,8 +68,8 @@
     <ClCompile Include="DynamicsProcessorNode.cpp" />
     <ClCompile Include="Emitter.cpp" />
     <ClCompile Include="EqualizerNode.cpp" />
-    <ClCompile Include="FileAccess.cpp" />
     <ClCompile Include="FileDecoder.cpp" />
+    <ClCompile Include="FileEncoder.cpp" />
     <ClCompile Include="FilterNodes.cpp" />
     <ClCompile Include="Filters.cpp" />
     <ClCompile Include="InputNode.cpp" />
@@ -106,8 +106,8 @@
     <ClInclude Include="DynamicsProcessorNode.h" />
     <ClInclude Include="Emitter.h" />
     <ClInclude Include="EqualizerNode.h" />
-    <ClInclude Include="FileAccess.h" />
     <ClInclude Include="FileDecoder.h" />
+    <ClInclude Include="FileEncoder.h" />
     <ClInclude Include="FilterNodes.h" />
     <ClInclude Include="Filters.h" />
     <ClInclude Include="InputNode.h" />

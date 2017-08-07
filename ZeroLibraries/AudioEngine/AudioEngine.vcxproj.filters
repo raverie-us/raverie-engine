@@ -30,9 +30,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FileAccess.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Modifiers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,9 +81,6 @@
     <ClCompile Include="AudioInputOutput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileDecoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WindowsDeviceAccess.cpp">
       <Filter>Source Files\PlatformSpecific</Filter>
     </ClCompile>
@@ -123,11 +117,14 @@
     <ClCompile Include="stb_vorbis.cpp">
       <Filter>Source Files\Vorbis</Filter>
     </ClCompile>
+    <ClCompile Include="FileEncoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileDecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileAccess.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Modifiers.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -191,9 +188,6 @@
     <ClInclude Include="AudioInputOutput.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileDecoder.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="MIDI.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -247,6 +241,12 @@
     </ClInclude>
     <ClInclude Include="stb_vorbis.h">
       <Filter>Source Files\Vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="FileEncoder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileDecoder.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
