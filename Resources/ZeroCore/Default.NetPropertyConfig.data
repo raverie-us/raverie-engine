@@ -10,7 +10,7 @@ NetPropertyConfig
 	var QuantizationRangeMin = -1
 	var QuantizationRangeMax = 1
 	var UseInterpolation = false
-	var InterpolationCurve = CurveType.CatmulRom
+	var InterpolationCurve = CurveType.CatmullRom
 	var SampleTimeOffset = 0.100000001
 	var ExtrapolationLimit = 1
 	var UseConvergence = false
