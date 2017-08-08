@@ -870,7 +870,9 @@ Status Editor::SaveAll(bool showNotify)
     projectCog->has(ProjectSettings)->Save();
 
   // Scripts need to be fully compiling before we run
-  if(ZilchManager::GetInstance()->Compile() == CompileResult::CompilationFailed)
+  ZilchManager* zilchManager = ZilchManager::GetInstance();
+  zilchManager->TriggerCompileExternally();
+  if(zilchManager->mLastCompileResult == CompileResult::CompilationFailed)
     return Status(StatusState::Failure, "Failed to compile Zilch Scripts");
 
   if(showNotify)

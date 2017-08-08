@@ -205,8 +205,6 @@ void ResourceLibrary::Add(Resource* resource, bool isNew)
   resource->mResourceLibrary = this;
   Resources.PushBack(resource);
 
-  bool codeModified = false;
-
   // Filter zilch resources into their appropriate containers
   ErrorIf(sScriptType == nullptr || sFragmentType == nullptr, "Script and Fragment types must be set");
   BoundType* resourceType = ZilchVirtualTypeId(resource);
@@ -214,25 +212,17 @@ void ResourceLibrary::Add(Resource* resource, bool isNew)
   {
     mScripts.PushBack((ZilchDocumentResource*)resource);
     ScriptsModified();
-    codeModified = true;
   }
   else if(resourceType->IsA(sFragmentType))
   {
     mFragments.PushBack((ZilchDocumentResource*)resource);
     FragmentsModified();
-    codeModified = true;
   }
   else if(resourceType->IsA(ZilchTypeId(ZilchLibraryResource)))
   {
     mPlugins.PushBack((ZilchLibraryResource*)resource);
     PluginsModified();
-    codeModified = true;
   }
-
-  // If this is a newly added resource and it's one
-  // of the special ones that will invoke a recompile
-  if (isNew && codeModified)
-    ZilchManager::GetInstance()->Compile();
   
   // Resource was added
   ResourceEvent e;
@@ -251,21 +241,17 @@ void ResourceLibrary::Remove(Resource* resource)
 
   Resources.EraseValueError(resourceHandle);
 
-  bool codeModified = false;
-
   // Remove zilch resources from their containers
   BoundType* resourceType = ZilchVirtualTypeId(resource);
   if(resourceType->IsA(sScriptType))
   {
     mScripts.EraseValue((ZilchDocumentResource*)resource);
     ScriptsModified();
-    codeModified = true;
   }
   else if(resourceType->IsA(sFragmentType))
   {
     mFragments.EraseValue((ZilchDocumentResource*)resource);
     FragmentsModified();
-    codeModified = true;
   }
   else if(resourceType->IsA(ZilchTypeId(ZilchLibraryResource)))
   {
@@ -274,14 +260,6 @@ void ResourceLibrary::Remove(Resource* resource)
     mSwapPlugins[libraryResource].Unload();
     mSwapPlugins.Erase(libraryResource);
     PluginsModified();
-    codeModified = true;
-  }
-
-  // If we're removing a resource that affects compilation,
-  // then we need to perform a recompile here
-  if (codeModified)
-  {
-    ZilchManager::GetInstance()->Compile();
   }
 
   delete resource;
@@ -368,6 +346,7 @@ void ResourceLibrary::Unload()
 void ResourceLibrary::ScriptsModified()
 {
   mSwapScript.mCompileStatus = ZilchCompileStatus::Modified;
+  ZilchManager::GetInstance()->mShouldAttemptCompile = true;
 
   // All dependents must be recompiled, so mark them as modified
   forRange(ResourceLibrary* dependent, Dependents.All())
@@ -379,6 +358,7 @@ void ResourceLibrary::FragmentsModified()
 {
   mSwapScript.mCompileStatus = ZilchCompileStatus::Modified;
   mSwapFragment.mCompileStatus = ZilchCompileStatus::Modified;
+  ZilchManager::GetInstance()->mShouldAttemptCompile = true;
 
   // All dependents must be recompiled, so mark them as modified
   forRange(ResourceLibrary* dependent, Dependents.All())
@@ -450,6 +430,8 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   if(mSwapScript.mCompileStatus == ZilchCompileStatus::Compiled)
     return true;
 
+  // Currently the version is used to detect duplicate errors
+  // Since scripts are changing, we definately want to show duplicate errors.
   ++ZilchManager::GetInstance()->mVersion;
 
   // Scripts cannot compile if fragments do not compile

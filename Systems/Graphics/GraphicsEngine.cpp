@@ -752,7 +752,7 @@ void GraphicsEngine::OnResourcesAdded(ResourceEvent* event)
   // If added ZilchFragments
   if (mModifiedFragmentFiles.Empty() == false)
   {
-    ZilchManager::GetInstance()->Compile();
+    ZilchManager::GetInstance()->TriggerCompileExternally();
   }
   else
   {

@@ -14,7 +14,6 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(GeneralEngine);
   DeclareEvent(ScriptInitialize);
 }//namespace Events
 
