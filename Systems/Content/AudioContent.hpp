@@ -19,8 +19,28 @@ public:
   AudioContent();
 };
 
-const String WaveResourceName = "Sound";
 const String SoundExtension = ".snd";
+
+class SoundInfo : public ContentComponent
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  SoundInfo() :
+    mFileLength(0),
+    mAudioChannels(0)
+  {}
+
+  void Serialize(Serializer& stream) override;
+
+  /// The length of the audio file, in seconds.
+  float GetFileLength() { return mFileLength; }
+  /// The number of audio channels in the file.
+  int GetAudioChannels() { return mAudioChannels; }
+
+  float mFileLength;
+  int mAudioChannels;
+};
 
 class SoundBuilder : public DirectBuilderComponent
 {
@@ -30,16 +50,10 @@ public:
   /// If true, the sound file will be streamed from disk at runtime instead of loaded into memory. 
   /// Streaming files can’t be played multiple times simultaneously and can't use loop tails.
   bool Streamed;
-  /// The length of the audio file, in seconds.
-  float GetFileLength() { return mFileLength; }
-  /// The number of audio channels in the file.
-  int GetAudioChannels() { return mAudioChannels; }
 
   SoundBuilder() :
-    DirectBuilderComponent(0, SoundExtension, WaveResourceName), 
-    Streamed(false),
-    mFileLength(0),
-    mAudioChannels(0)
+    DirectBuilderComponent(0, SoundExtension, "Sound"), 
+    Streamed(false)
   {}
 
   //BuilderComponent Interface
@@ -49,10 +63,6 @@ public:
   bool NeedsBuilding(BuildOptions& options) override;
   void CopyFile(BuildOptions& options);
   void BuildListing(ResourceListing& listing) override;
-
-private:
-  float mFileLength;
-  int mAudioChannels;
 
 };
 

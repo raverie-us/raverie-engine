@@ -147,4 +147,54 @@ namespace Audio
     System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetUseHighLatency, System, useHigh));
   }
 
+  //------------------------------------------------------------------------------------- Audio File
+
+  //************************************************************************************************
+  AudioFile::~AudioFile()
+  {
+    Close();
+  }
+
+  //************************************************************************************************
+  void AudioFile::OpenFile(Zero::Status& status, Zero::StringParam fileName)
+  {
+    if (Data)
+    {
+      status.SetFailed("Already open, call Close before opening another file");
+    }
+    else
+    {
+      Data = new AudioFileData();
+
+      *Data = FileEncoder::OpenFile(status, fileName);
+
+      if (status.Succeeded())
+      {
+        Channels = Data->Channels;
+        FileLength = (float)Data->SamplesPerChannel / (float)Data->SampleRate;
+      }
+    }
+  }
+
+  //************************************************************************************************
+  void AudioFile::WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName)
+  {
+    if (Data->FileData)
+      FileEncoder::WriteFile(status, outputFileName, *Data);
+    else
+      status.SetFailed("No input file was opened");
+  }
+
+  //************************************************************************************************
+  void AudioFile::Close()
+  {
+    if (Data)
+    {
+      if (Data->FileData)
+        delete[] Data->FileData;
+
+      delete Data;
+    }
+  }
+
 }

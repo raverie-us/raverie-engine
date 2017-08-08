@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "AudioEngine/FileEncoder.h"
+#include "AudioEngine/AudioSystemInterface.h"
 
 namespace Zero
 {
@@ -21,6 +21,24 @@ AudioContent::AudioContent()
   EditMode = ContentEditMode::ContentItem;
 }
 
+//---------------------------------------------------------------------- Sound Info
+
+ZilchDefineType(SoundInfo, builder, type)
+{
+  ZeroBindComponent();
+  ZeroBindDependency(AudioContent);
+  ZeroBindExpanded();
+
+  ZilchBindGetterProperty(FileLength);
+  ZilchBindGetterProperty(AudioChannels);
+}
+
+void SoundInfo::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(mFileLength, 0.0f);
+  SerializeNameDefault(mAudioChannels, 0);
+}
+
 //---------------------------------------------------------------------- Factory
 
 ContentItem* MakeAudioContent(ContentInitializer& initializer)
@@ -28,6 +46,9 @@ ContentItem* MakeAudioContent(ContentInitializer& initializer)
   AudioContent* content = new AudioContent();
 
   content->Filename = initializer.Filename;
+
+  SoundInfo* info = new SoundInfo();
+  content->AddComponent(info);
 
   SoundBuilder* builder = new SoundBuilder();
   builder->Generate(initializer);
@@ -41,11 +62,10 @@ ZilchDefineType(SoundBuilder, builder, type)
 {
   ZeroBindDependency(AudioContent);
   ZeroBindDocumented();
+  ZeroBindExpanded();
 
   ZilchBindFieldProperty(Name);
   ZilchBindFieldProperty(Streamed);
-  ZilchBindGetterProperty(FileLength);
-  ZilchBindGetterProperty(AudioChannels);
 }
 
 void SoundBuilder::Generate(ContentInitializer& initializer)
@@ -61,30 +81,35 @@ void SoundBuilder::Serialize(Serializer& stream)
   SerializeName(Name);
   SerializeName(mResourceId);
   SerializeNameDefault(Streamed, false);
-  SerializeNameDefault(mFileLength, 0.0f);
-  SerializeNameDefault(mAudioChannels, 0);
 }
 
 void SoundBuilder::BuildContent(BuildOptions& options)
 {
   Status status;
   String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
-  String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, ".snd"));
+  String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, SoundExtension));
 
-  Audio::AudioFileData fileData = Audio::FileEncoder::ProcessFile(status, sourceFile, destFile);
+  Audio::AudioFile audioFile;
+  audioFile.OpenFile(status, sourceFile);
 
   if (status.Succeeded())
   {
-    mFileLength = (float)fileData.SamplesPerChannel / (float)fileData.SampleRate;
-    mAudioChannels = fileData.Channels;
-  }
-  
-  // This should probably be handled differently. The properties need to be saved because the object
-  // is serialized before it is loaded, but BuildContent won't be called next time the engine starts,
-  // so if we don't save the properties now they'll be lost.
-  mOwner->SaveMetaFile();
+    SoundInfo* info = mOwner->has(SoundInfo);
+    if (info)
+    {
+      info->mFileLength = audioFile.FileLength;
+      info->mAudioChannels = audioFile.Channels;
+    }
 
-  SetFileToCurrentTime(destFile);
+    // This should probably be handled differently. The properties need to be saved because the object
+    // is serialized before it is loaded, but BuildContent won't be called next time the engine starts,
+    // so if we don't save the properties now they'll be lost.
+    mOwner->SaveMetaFile();
+
+    audioFile.WriteEncodedFile(status, destFile);
+  }
+  else
+    DoNotifyWarning("Error Processing Audio File", status.Message);
 }
 
 bool SoundBuilder::NeedsBuilding(BuildOptions& options)
@@ -95,7 +120,7 @@ bool SoundBuilder::NeedsBuilding(BuildOptions& options)
 void SoundBuilder::CopyFile(BuildOptions& options)
 {
   String filename = mOwner->Filename;
-  String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, ".snd"));
+  String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, SoundExtension));
   String sourceFile = FilePath::Combine(options.SourcePath, filename);
 
   // Copy the file over.
@@ -121,6 +146,7 @@ void CreateAudioContent(ContentSystem* system)
 {
   AddContent<AudioContent>(system);
   AddContentComponent<SoundBuilder>(system);
+  AddContentComponent<SoundInfo>(system);
 
   ContentTypeEntry audioContent(ZilchTypeId(AudioContent), MakeAudioContent);
   system->CreatorsByExtension["wav"] = audioContent;

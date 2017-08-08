@@ -12,19 +12,34 @@
 
 namespace Audio
 {
+  enum FileTypes { WAV_Type, Ogg_Type, Other_Type };
+
+  // Define data type that equals a byte. 
+  typedef unsigned char byte;
+
   //-------------------------------------------------------------------------------- Audio File Data
 
-  struct AudioFileData
+  class AudioFileData
   {
+  public:
+
     AudioFileData() :
       SamplesPerChannel(0),
       Channels(0),
-      SampleRate(0)
+      SampleRate(0),
+      Type(Other_Type),
+      FileData(nullptr),
+      BytesPerSample(0),
+      FileSize(0)
     {}
 
     unsigned SamplesPerChannel;
     unsigned Channels;
     unsigned SampleRate;
+    unsigned BytesPerSample;
+    unsigned FileSize;
+    FileTypes Type;
+    byte* FileData;
   };
 
   //----------------------------------------------------------------------------------- File Encoder
@@ -32,6 +47,11 @@ namespace Audio
   class FileEncoder
   {
   public:
+
+    static AudioFileData OpenFile(Zero::Status& status, Zero::StringParam fileName);
+    static void WriteFile(Zero::Status& status, Zero::StringParam outputFileName, 
+      AudioFileData& fileData);
+
     static AudioFileData ProcessFile(Zero::Status& status, Zero::StringParam inputName,
       Zero::StringParam outputName);
 
@@ -43,9 +63,6 @@ namespace Audio
     static AudioFileData ReadOgg(Zero::Status& status, Zero::File& file, Zero::StringParam fileName,
       float**& buffersPerChannel);
   };
-
-  // Define data type that equals a byte. 
-  typedef unsigned char byte;
 
   // 20 ms of audio data at 48000 samples per second
   static const unsigned FrameSize = 960;

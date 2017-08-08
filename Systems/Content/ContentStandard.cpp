@@ -118,6 +118,7 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeType(TextureEntry);
   ZilchInitializeType(TextureInfo);
   ZilchInitializeType(SoundBuilder);
+  ZilchInitializeType(SoundInfo);
   ZilchInitializeType(BinaryContent);
   ZilchInitializeType(BinaryBuilder);
   ZilchInitializeType(GeneratedArchetype);

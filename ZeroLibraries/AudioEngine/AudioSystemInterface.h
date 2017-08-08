@@ -107,6 +107,35 @@ namespace Audio
     AudioSystemInternal *System;
 
   };
+
+  //------------------------------------------------------------------------------------- Audio File
+
+  class AudioFileData;
+
+  class AudioFile
+  {
+  public:
+    AudioFile() : 
+      Channels(0), 
+      FileLength(0),
+      Data(nullptr) {}
+    ~AudioFile();
+
+    // Opens an audio file and reads its data into a buffer so it's ready for encoding
+    void OpenFile(Zero::Status& status, Zero::StringParam fileName);
+    // Encodes the audio data and writes it out to a new file
+    void WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName);
+    // Deletes the current audio data
+    void Close();
+
+    // Number of channels of audio data in the opened file
+    unsigned Channels;
+    // Length, in seconds, of the opened audio file
+    float FileLength;
+
+  private:
+    AudioFileData* Data;
+  };
 }
 
 #endif
