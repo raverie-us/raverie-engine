@@ -240,18 +240,26 @@ public:
   ///////Primary equal operator for strings///////
   friend bool operator==(const String& left, const String& right)
   {
+#if defined(ZeroStringPooling)
+    return left.mNode == right.mNode;
+#else
     return StringNode::isEqual(left.mNode, right.mNode);
+#endif
   }
 
   ///////Less than operators///////////
   friend bool operator<(const String& left, const String& right)
   {
+    if (left.mNode == right.mNode)
+      return false;
     return strcmp(left.c_str(), right.c_str()) < 0;
   }
 
   ///////Greater than operators///////////
   friend bool operator>(const String& left, const String& right)
   {
+    if (left.mNode == right.mNode)
+      return false;
     return strcmp(right.c_str(), left.c_str()) < 0;
   }
 

@@ -12,7 +12,7 @@
 namespace Zero
 {
 
-bool StringStartsWith0x(StringRange hexString)
+bool StringStartsWith0x(const StringRange& hexString)
 {
   return (hexString.SizeInBytes() > 1 && hexString.Data()[0] == '0' && hexString.Data()[1] == 'x');
 }
@@ -20,34 +20,35 @@ bool StringStartsWith0x(StringRange hexString)
 #define TextTrue "true"
 #define TextFalse "false"
 
-StringRange StripHex0x(StringRange hexString)
+StringRange StripHex0x(const StringRange& hexString)
 {
   if(StringStartsWith0x(hexString))
   {
-    hexString.PopFront();
-    hexString.PopFront();
+    return StringRange(hexString.mOriginalString, hexString.mBegin + 2, hexString.mEnd);
   }
 
   return hexString;
 }
 
-Guid ReadHexString(StringRange range)
+Guid ReadHexString(const StringRange& originalRange)
 {
   // Skip the "0x" if it exists
-  range = StripHex0x(range);
+  StringRange range = StripHex0x(originalRange);
 
+  cstr begin = range.mBegin;
+  cstr end = range.mEnd;
   u64 result = 0;
-  for(int i = 0; !range.Empty(); range.PopBack(), ++i)
+  for(int i = 0; begin != end; --end, ++i)
   {
     // Process the string in reverse
-    Rune r = range.Back();
+    char r = end[-1];
     u64 val = 0;
     if(r >= '0' && r <= '9')
-      val = r.value - '0';
+      val = r - '0';
     else if(r >= 'a' && r <= 'f')
-      val = r.value - 'a' + 10;
+      val = r - 'a' + 10;
     else if(r >= 'A' && r <= 'F')
-      val = r.value - 'A' + 10;
+      val = r - 'A' + 10;
     result += val << i * 4;
   }
   return (Guid)result;
