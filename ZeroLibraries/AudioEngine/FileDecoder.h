@@ -14,6 +14,8 @@ struct OpusDecoder;
 
 namespace Audio
 {
+  //--------------------------------------------------------------------------------- Decoded Packet
+
   struct DecodedPacket
   {
     DecodedPacket() : Samples(nullptr) {}
@@ -30,6 +32,7 @@ namespace Audio
   public:
     FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming,
       SoundAssetFromFile* asset);
+    ~FileDecoder();
 
     void DecodeNextPacket();
 

@@ -70,20 +70,21 @@ void SoundBuilder::BuildContent(BuildOptions& options)
   Status status;
   String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
   String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, ".snd"));
-  unsigned samples, channels, sampleRate;
 
-  Audio::FileEncoder::ProcessFile(status, sourceFile, destFile, samples, channels, sampleRate);
+  Audio::AudioFileData fileData = Audio::FileEncoder::ProcessFile(status, sourceFile, destFile);
 
   if (status.Succeeded())
   {
-    mFileLength = (float)samples / (float)sampleRate;
-    mAudioChannels = channels;
+    mFileLength = (float)fileData.SamplesPerChannel / (float)fileData.SampleRate;
+    mAudioChannels = fileData.Channels;
   }
   
   // This should probably be handled differently. The properties need to be saved because the object
   // is serialized before it is loaded, but BuildContent won't be called next time the engine starts,
   // so if we don't save the properties now they'll be lost.
   mOwner->SaveMetaFile();
+
+  SetFileToCurrentTime(destFile);
 }
 
 bool SoundBuilder::NeedsBuilding(BuildOptions& options)

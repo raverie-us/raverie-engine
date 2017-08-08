@@ -123,6 +123,11 @@ namespace Audio
 
       Decoder = new FileDecoder(status, fileName, streaming, this);
 
+      if (status.Failed())
+      {
+        // TODO failed state
+      }
+
       FileLength = (float)Decoder->SamplesPerChannel / AudioSystemInternal::SampleRate;
       Channels = Decoder->Channels;
       FrameCount = Decoder->SamplesPerChannel;
@@ -144,8 +149,6 @@ namespace Audio
       if (AtomicCheckEqualityPointer(Decoder->Decoding, nullptr))
         delete Decoder;
     }
-
-    // TODO Need to destroy encoders when done with them
   }
 
   //************************************************************************************************
@@ -172,8 +175,6 @@ namespace Audio
 
     // Get samples for all channels 
     memcpy(data.Samples, Samples + sampleIndex, Channels * sizeof(float));
-
-    ErrorIf(data.Samples[0] > 1.0f || data.Samples[0] < -1.0f);
 
     return data;
   }
@@ -271,34 +272,30 @@ namespace Audio
     }
   }
 
+  //************************************************************************************************
   void SoundAssetFromFile::CheckForDecodedPacket()
   {
     if (!Decoder)
       return;
 
-    if (AtomicCheckEqualityPointer(Decoder->Decoding, Decoder))
+    DecodedPacket* packet;
+    if (Decoder->DecodedPacketQueue.Read(packet))
     {
-      DecodedPacket* packet;
-      if (Decoder->DecodedPacketQueue.Read(packet))
+      // TODO Need to handle streaming
+
+      if ((packet->FrameCount * Channels) + UndecodedIndex >= FrameCount)
+        packet->FrameCount = (FrameCount - UndecodedIndex) / Channels;
+
+      memcpy(Samples + UndecodedIndex, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
+
+      UndecodedIndex += packet->FrameCount * Channels;
+
+      if (UndecodedIndex < FrameCount * Channels)
       {
-        // TODO Need to handle streaming
-
-        memcpy(Samples + UndecodedIndex, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
-
-        for (unsigned i = UndecodedIndex; i < UndecodedIndex + packet->FrameCount * Channels; ++i)
-        {
-          ErrorIf(Samples[i] > 1.0f || Samples[i] < -1.0f);
-        }
-
-        UndecodedIndex += packet->FrameCount * Channels;
-
-        if (UndecodedIndex < FrameCount * Channels)
-        {
-          gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, Decoder));
-        }
-
-        delete packet;
+        gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, Decoder));
       }
+
+      delete packet;
     }
   }
 
@@ -365,13 +362,13 @@ namespace Audio
   //************************************************************************************************
   unsigned GeneratedWaveSoundAsset::GetNumberOfSamples()
   {
-    return gAudioSystem->SystemSampleRate;
+    return AudioSystemInternal::SampleRate;
   }
   //************************************************************************************************
 
   unsigned GeneratedWaveSoundAsset::GetNumberOfFrames()
   {
-    return gAudioSystem->SystemSampleRate;
+    return AudioSystemInternal::SampleRate;
   }
 
   //************************************************************************************************
@@ -405,7 +402,7 @@ namespace Audio
       }
       else
         FrequencyInterpolator->SetValues(Frequency, newFrequency,
-          (unsigned)(time * gAudioSystem->SystemSampleRate));
+          (unsigned)(time * AudioSystemInternal::SampleRate));
     }
   }
 

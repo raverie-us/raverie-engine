@@ -19,7 +19,6 @@ namespace Audio
   AudioSystemInternal::AudioSystemInternal(ExternalSystemInterface* extInterface) : 
     ExternalInterface(extInterface), 
     MinimumVolumeThresholdThreaded(0.015f),
-    SystemSampleRate(44100),
     ShuttingDownThreaded(false), 
     SystemVolumeThreaded(1.0f),
     SystemChannelsThreaded(2),
@@ -163,7 +162,7 @@ namespace Audio
 
 #ifdef _DEBUG 
     double maxTime = (double)AudioIO.OutputBufferSizeThreaded / (double)AudioIO.OutputChannelsThreaded 
-      / (double)SystemSampleRate;
+      / (double)SampleRate;
 #endif
     
     bool running = true;

@@ -6,7 +6,7 @@ AudioContent
 		var Name = "DefaultSound"
 		var ResourceId = 0x4e1bda59a3a9f650
 		var Streamed = false
-		var FileLength = 0.5
+		var FileLength = 0.499979168
 		var AudioChannels = 1
 	}
 }

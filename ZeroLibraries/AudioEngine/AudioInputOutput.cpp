@@ -200,7 +200,7 @@ namespace Audio
     const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(OutputParameters.device);
 
     OutputParameters.suggestedLatency = deviceInfo->defaultLowOutputLatency;
-    gAudioSystem->SystemSampleRate = (unsigned)deviceInfo->defaultSampleRate;
+    // TODO AudioSystemInternal::SampleRate = (unsigned)deviceInfo->defaultSampleRate;
 
     // Set the variables that depend on the number of output channels
     OutputParameters.channelCount = deviceInfo->maxOutputChannels;
@@ -213,16 +213,16 @@ namespace Audio
     messageString << OutputChannelsThreaded << " output channels, ";
     messageString << gAudioSystem->SystemChannelsThreaded << " mix channels, ";
     messageString << OutputParameters.suggestedLatency << " latency, ";
-    messageString << gAudioSystem->SystemSampleRate << " sample rate";
+    messageString << AudioSystemInternal::SampleRate << " sample rate";
 
     ZPrint("API             : %s\n", deviceInfo->name);
     ZPrint("Output channels : %d\n", OutputChannelsThreaded);
     ZPrint("Mix channels    : %d\n", gAudioSystem->SystemChannelsThreaded);
     ZPrint("Latency         : %f\n", OutputParameters.suggestedLatency);
-    ZPrint("Sample rate     : %d\n", gAudioSystem->SystemSampleRate);
+    ZPrint("Sample rate     : %d\n", AudioSystemInternal::SampleRate);
 
     // Check device settings
-    result = Pa_IsFormatSupported(NULL, &OutputParameters, (double)gAudioSystem->SystemSampleRate);
+    result = Pa_IsFormatSupported(NULL, &OutputParameters, (double)AudioSystemInternal::SampleRate);
     if (result != paFormatIsSupported)
     {
       // Parameters were not supported - set error string and return
@@ -382,7 +382,7 @@ namespace Audio
       &Stream,
       NULL, // No input
       &OutputParameters,
-      gAudioSystem->SystemSampleRate,
+      AudioSystemInternal::SampleRate,
       CallbackFrameSizeThreaded,
       paClipOff,  // Won't check for clipping
       PACallback,

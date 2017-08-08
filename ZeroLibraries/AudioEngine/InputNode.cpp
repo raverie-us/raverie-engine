@@ -17,12 +17,9 @@ namespace Audio
     SoundNode(status, name, ID, extInt, false, true, isThreaded), 
     WaitingForSamples(false), 
     Channels(1), 
-    SampleRate(gAudioSystem->SystemSampleRate), 
+    SampleRate(AudioSystemInternal::SampleRate),
     TotalSamplesInBuffers(0), 
-    SamplesInExtraBuffers(0),
-    Resampling(false), 
-    ResampleFrameFactor(1.0f),
-    ResampleFrameIndex(0)
+    SamplesInExtraBuffers(0)
   {
     SetMinimumBufferSize();
 
@@ -66,18 +63,13 @@ namespace Audio
     if (!Threaded && GetSiblingNode())
       gAudioSystem->AddTask(Zero::CreateFunctor(&InputNode::SetNumberOfChannels, (InputNode*)GetSiblingNode(), channels));
     else if (Threaded)
-    {
       SamplesThisFrame.Resize(channels);
-
-      //if (Resampling)
-      //  ResampleFactor = (float)SampleRate / (float)gAudioSystem->SystemSampleRate * Channels;
-    }
   }
 
   //************************************************************************************************
   unsigned InputNode::GetSystemSampleRate()
   {
-    return gAudioSystem->SystemSampleRate;
+    return AudioSystemInternal::SampleRate;
   }
 
   //************************************************************************************************
@@ -85,28 +77,6 @@ namespace Audio
   {
     return Channels;
   }
-
-  //************************************************************************************************
-  //void InputNode::SetSampleRate(unsigned rate)
-  //{
-  //  SampleRate = rate;
-
-  //  if (rate == gAudioSystem->SystemSampleRate)
-  //    Resampling = false;
-  //  else
-  //  {
-  //    Resampling = true;
-  //    ResampleFrameFactor = (float)rate / (float)gAudioSystem->SystemSampleRate;
-  //  }
-
-  //  SetMinimumBufferSize();
-
-  //  if (!Threaded)
-  //  {
-  //    if (GetSiblingNode())
-  //      gAudioSystem->AddTask(Zero::CreateFunctor(&InputNode::SetSampleRate, (InputNode*)GetSiblingNode(), rate));
-  //  }
-  //}
 
   //************************************************************************************************
   void InputNode::AddBufferToList(InputNode::SampleBuffer* newBuffer)
@@ -136,9 +106,6 @@ namespace Audio
     // Channels/SystemChannels accounts for differences in channels.
     MinimumBufferSize = gAudioSystem->MixBufferSizeThreaded * Channels 
       / gAudioSystem->SystemChannelsThreaded * 4;
-
-    if (Resampling)
-      MinimumBufferSize = (unsigned)((float)MinimumBufferSize * ResampleFrameFactor);
 
     // Make sure the size is a multiple of the number of channels
     MinimumBufferSize -= MinimumBufferSize % Channels;
@@ -176,50 +143,16 @@ namespace Audio
     {
       memcpy(SamplesThisFrame.Data(), samples->Buffer + (samples->FrameIndex * Channels), sizeof(float) * Channels);
 
-      if (Resampling)
-      {
-        unsigned prevIndex = samples->FrameIndex;
-        unsigned sampleIndex = samples->FrameIndex * Channels;
+      // Reduce number of samples available
+      TotalSamplesInBuffers -= Channels;
 
-        // If the next frame is within this buffer
-        if (sampleIndex + Channels + Channels <= samples->BufferSize)
-        {
-          for (unsigned j = 0; j < Channels; ++j)
-          {
-            SamplesThisFrame[j] += (samples->Buffer[sampleIndex + Channels + j] - SamplesThisFrame[j]) 
-              * (float)(ResampleFrameIndex - samples->FrameIndex);
-          }
-
-          // Advance the resample index with the factor
-          ResampleFrameIndex += ResampleFrameFactor;
-          // Set the sample buffer index
-          samples->FrameIndex = (int)ResampleFrameIndex;
-        }
-        else
-        {
-          ResampleFrameIndex += ResampleFrameFactor;
-          ResampleFrameIndex = ResampleFrameIndex - samples->FrameIndex;
-          //ResampleFrameIndex -= (int)ResampleIndex;
-        }
-
-        //TotalSamplesInBuffers -= (samples->FrameIndex - prevIndex) * Channels;
-        TotalSamplesInBuffers = SamplesInExtraBuffers + samples->BufferSize - (samples->FrameIndex * Channels);
-      }
-      else
-      {
-        // Reduce number of samples available
-        TotalSamplesInBuffers -= Channels;
-
-        // Advance sample buffer index by the number of samples in this frame
-        ++samples->FrameIndex;
-      }
+      // Advance sample buffer index by the number of samples in this frame
+      ++samples->FrameIndex;
         
 
       // Check if we've reached the end of this buffer
       if (samples->FrameIndex * Channels >= samples->BufferSize)
       {
-        ResampleFrameIndex -= (int)ResampleFrameIndex;
-
         // Remove buffer from list and delete
         BufferList.PopFront();
         Zero::SafeDelete(samples);
@@ -246,19 +179,6 @@ namespace Audio
           {
             // Get the next buffer
             samples = &BufferList.Front();
-
-            if (Resampling)
-            {
-              //for (unsigned j = 0; j < Channels; ++j)
-              //  SamplesThisFrame[j] += (float)((samples.Buffer[samples.Index + j] - SamplesThisFrame[j]) * (ResampleIndex - samples.Index));
-
-              //// Advance the resample index with the factor
-              //ResampleIndex += ResampleFactor;
-              //// Set the sample buffer index
-              //samples.Index = (unsigned)ResampleIndex;
-
-              //TotalSamplesInBuffers -= samples.Index;
-            }
           }
         }
       }
@@ -274,8 +194,6 @@ namespace Audio
         memcpy(outputBufferPosition, frame.Samples, sizeof(float) * numberOfChannels);
       }
     }
-
-    //printf("Processed %d samples %d\n", outputBufferSize, TotalSamplesInBuffers);
 
     if (!WaitingForSamples && TotalSamplesInBuffers <= MinimumSamplesNeededInBuffers)
     {

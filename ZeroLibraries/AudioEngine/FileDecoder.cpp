@@ -14,7 +14,8 @@ namespace Audio
   //----------------------------------------------------------------------------------- File Decoder
 
   //************************************************************************************************
-  FileDecoder::FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming, SoundAssetFromFile* asset) :
+  FileDecoder::FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming, 
+      SoundAssetFromFile* asset) :
     Streaming(streaming),
     Decoding(this),
     Asset(asset)
@@ -32,7 +33,11 @@ namespace Audio
     if (status.Failed())
       return;
 
-    ErrorIf(header.Name[0] != 'Z');
+    if (header.Name[0] != 'Z' || header.Name[1] != 'E')
+    {
+      status.SetFailed(Zero::String::Format("Audio file %s is an incorrect format", fileName.c_str()));
+      return;
+    }
 
     SamplesPerChannel = header.SamplesPerChannel;
     Channels = header.Channels;
@@ -55,6 +60,14 @@ namespace Audio
     gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, this));
   }
 
+  //************************************************************************************************
+  FileDecoder::~FileDecoder()
+  {
+    for (short i = 0; i < Channels; ++i)
+      opus_decoder_destroy(Decoders[i]);
+  }
+
+  //************************************************************************************************
   void FileDecoder::DecodeNextPacket()
   {
     // Remember that this function happens on the decoding thread
@@ -115,7 +128,8 @@ namespace Audio
       InputFile.Read(status, PacketBuffer, packHead.Size);
 
       // Decode the packet
-      frames = opus_decode_float(Decoders[packHead.Channel], PacketBuffer, packHead.Size, DecodedPackets[i], FrameSize, 0);
+      frames = opus_decode_float(Decoders[packHead.Channel], PacketBuffer, packHead.Size, 
+        DecodedPackets[i], FrameSize, 0);
 
       ErrorIf(frames < 0, Zero::String::Format("Opus error: %s", opus_strerror(frames)).c_str());
     }
@@ -132,7 +146,11 @@ namespace Audio
     {
       // Copy this sample from the decoded packets to the DecodedPacket sample buffer
       for (short channel = 0; channel < Channels; ++channel, ++index)
+      {
         newPacket->Samples[index] = DecodedPackets[channel][frame];
+
+        ErrorIf(newPacket->Samples[index] < -1.0f || newPacket->Samples[index] > 1.0f);
+      }
     }
 
     // Add the DecodedPacket object to the queue

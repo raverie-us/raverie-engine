@@ -98,8 +98,6 @@ namespace Audio
 
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
-    // Samples per second in audio output.
-    unsigned SystemSampleRate;
     // Size of the system mix buffer.
     unsigned MixBufferSizeThreaded;
     // Used to lock for swapping pointers to buffers.

@@ -12,6 +12,38 @@
 
 namespace Audio
 {
+  //-------------------------------------------------------------------------------- Audio File Data
+
+  struct AudioFileData
+  {
+    AudioFileData() :
+      SamplesPerChannel(0),
+      Channels(0),
+      SampleRate(0)
+    {}
+
+    unsigned SamplesPerChannel;
+    unsigned Channels;
+    unsigned SampleRate;
+  };
+
+  //----------------------------------------------------------------------------------- File Encoder
+
+  class FileEncoder
+  {
+  public:
+    static AudioFileData ProcessFile(Zero::Status& status, Zero::StringParam inputName,
+      Zero::StringParam outputName);
+
+  private:
+    static AudioFileData ReadWav(Zero::Status& status, Zero::File& file, Zero::StringParam fileName, 
+      float**& buffersPerChannel);
+    static bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount, 
+      const unsigned channelCount, const unsigned bytesPerSample);
+    static AudioFileData ReadOgg(Zero::Status& status, Zero::File& file, Zero::StringParam fileName,
+      float**& buffersPerChannel);
+  };
+
   // Define data type that equals a byte. 
   typedef unsigned char byte;
 
@@ -19,19 +51,6 @@ namespace Audio
   static const unsigned FrameSize = 960;
   // Recommended max packet size
   static const unsigned MaxPacketSize = 4000;
-
-  //----------------------------------------------------------------------------------- File Encoder
-
-  class FileEncoder
-  {
-  public:
-    static void ProcessFile(Zero::Status& status, Zero::StringParam inputName,
-      Zero::StringParam outputName, unsigned& samplesPerChannel, unsigned& channels, unsigned& sampleRate);
-
-  private:
-    static bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount, 
-      const unsigned channelCount, const unsigned bytesPerSample);
-  };
 
   struct FileHeader
   {
