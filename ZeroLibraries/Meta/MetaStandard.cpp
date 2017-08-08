@@ -129,7 +129,7 @@ ZilchDefineStaticLibrary(MetaLibrary)
 
   // Events
   ZilchInitializeType(Event);
-  ZilchInitializeType(MetaTypeEvent);
+  ZilchInitializeType(MetaModifiedEvent);
   ZilchInitializeType(SelectionChangedEvent);
   ZilchInitializeType(NotifyEvent);
   ZilchInitializeType(PropertyEvent);
