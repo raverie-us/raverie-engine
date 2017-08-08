@@ -41,6 +41,7 @@ ZilchDefineType(SoundBuilder, builder, type)
 {
   ZeroBindDependency(AudioContent);
   ZeroBindDocumented();
+  ZeroBindExpanded();
 
   ZilchBindFieldProperty(Name);
   ZilchBindFieldProperty(Streamed);
@@ -93,6 +94,11 @@ void SoundBuilder::BuildContent(BuildOptions& options)
   mFileLength = (float)data.TotalSamples / (float)data.SampleRate / (float)data.Channels;
   mAudioChannels = data.Channels;
   mSampleRate = data.SampleRate;
+
+  // This should probably be handled differently. The properties need to be saved because the object
+  // is serialized before it is loaded, but BuildContent won't be called next time the engine starts,
+  // so if we don't save the properties now they'll be lost.
+  mOwner->SaveMetaFile();
   
   if (data.Type == Audio::Type_OGG)
   {
@@ -162,11 +168,6 @@ void SoundBuilder::BuildContent(BuildOptions& options)
       }
     }
   }
-
-  // This should probably be handled differently. The properties need to be saved because the object
-  // is serialized before it is loaded, but BuildContent won't be called next time the engine starts,
-  // so if we don't save the properties now they'll be lost.
-  mOwner->SaveMetaFile();
 }
 
 bool SoundBuilder::NeedsBuilding(BuildOptions& options)
