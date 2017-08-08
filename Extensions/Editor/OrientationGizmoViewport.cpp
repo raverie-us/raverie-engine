@@ -30,6 +30,8 @@ OrientationGizmoViewport::OrientationGizmoViewport(EditorViewport* editorViewpor
   {
     Any clearColor(Vec4::cZero);
     renderer->SetProperty("ClearColor", clearColor);
+    Texture* skybox = TextureManager::FindOrNull("WhiteSkybox");
+    renderer->SetProperty("Skybox", skybox);
   }
 
   CameraViewport* cameraViewport = HasOrAdd<CameraViewport>(mCamera);
