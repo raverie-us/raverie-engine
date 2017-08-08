@@ -358,6 +358,26 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
   BoundType* componentType = mComponentType;
   MetaComposition* composition = mComposition;
 
+  LocalModifications* modifications = LocalModifications::GetInstance();
+
+  // Lets say you have an Archetype with the Model Component. The Model's Material property is set
+  // to the Dirt Material. If you locally remove the Model Component and then revert it, it should
+  // come back with the Dirt Material still set. If instead of reverting we add a new Model from
+  // the 'Add Component' button, it would have the default property values (not the Dirt Material).
+  // Unless you re-upload to Archetype, when you run the game, the instance in the game will have
+  // the Dirt Material again, instead of the default it shows in the editor. Because of this,
+  // instead of actually adding a new Model, we're going to revert the locally removed one.
+  if (mMode == ComponentOperation::Add && modifications->IsChildLocallyRemoved(object, componentType))
+  {
+    modifications->ChildAdded(object, componentType);
+
+    // Rebuild the object to reflect the changes
+    MetaDataInheritance* inheritance = object.StoredType->HasInherited<MetaDataInheritance>();
+    inheritance->RebuildObject(object);
+
+    return;
+  }
+
   // Create the object
   Handle componentInstance;
   if (componentType)
@@ -436,7 +456,7 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
     // a valid CogId. Now that it has been added to the Cog, lets get a new, proper handle to it.
     // This should change once we change Component handles.
     Handle component = composition->GetComponent(object, componentType);
-    LocalModifications::GetInstance()->RestoreObjectState(component, mRemovedObjectState);
+    modifications->RestoreObjectState(component, mRemovedObjectState);
   }
 
   ComponentAdded(object);

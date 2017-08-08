@@ -501,6 +501,14 @@ bool LocalModifications::IsChildLocallyAdded(HandleParam object, ObjectState::Ch
 }
 
 //**************************************************************************************************
+bool LocalModifications::IsChildLocallyRemoved(HandleParam object, ObjectState::ChildIdParam childId)
+{
+  if (ObjectState* objectState = GetObjectState(object, false, false))
+    return objectState->IsChildLocallyRemoved(childId);
+  return false;
+}
+
+//**************************************************************************************************
 bool LocalModifications::IsObjectLocallyAdded(HandleParam object, bool recursivelyCheckParents)
 {
   BoundType* objectType = object.StoredType;
