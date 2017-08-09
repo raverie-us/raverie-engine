@@ -162,6 +162,9 @@ BuildId CachedProject::GetBuildId() const
 void CachedProject::SetBuildId(const BuildId& buildId)
 {
   mLauncherInfo->SetBuildId(buildId);
+
+  // Legacy, set the engine version in old project file formats
+  SetProjectPropertyValue("ProjectEngineRevision", ToString(buildId.mRevisionId));
 }
 
 String CachedProject::GetDisplayString(bool showPlatform) const
