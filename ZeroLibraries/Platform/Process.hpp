@@ -13,7 +13,7 @@
 
 namespace Zero
 {
-class ProcessStartInfo
+class ZeroShared ProcessStartInfo
 {
 public:
   ProcessStartInfo();
@@ -31,7 +31,7 @@ public:
 //---------------------------------------------------------------------- Process
 /// Process class used for managing external processes and redirecting their stdio.
 /// Used to launch and monitor various external programs, compilers and tools.
-class Process
+class ZeroShared Process
 {
 public:
   Process();
