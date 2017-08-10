@@ -133,6 +133,9 @@ namespace Audio
       return;
     }
 
+    // Make sure the volume of the audio is below the max
+    Normalize(buffersPerChannel, data.SamplesPerChannel, data.Channels);
+
     // If the sample rates don't match, resample the audio
     if (data.SampleRate != AudioSystemInternal::SampleRate)
     {
@@ -287,6 +290,34 @@ namespace Audio
     }
     else
       return false;
+  }
+
+  //************************************************************************************************
+  void FileEncoder::Normalize(float** samplesPerChannel, const unsigned frames, const unsigned channels)
+  {
+    float maxVolume(0.0f);
+
+    for (unsigned i = 0; i < frames; ++i)
+    {
+      for (unsigned j = 0; j < channels; ++j)
+      {
+        if (Math::Abs(samplesPerChannel[j][i]) > maxVolume)
+          maxVolume = Math::Abs(samplesPerChannel[j][i]);
+      }
+    }
+
+    if (maxVolume > MaxVolume)
+    {
+      float multiplier = MaxVolume / maxVolume;
+
+      for (unsigned i = 0; i < frames; ++i)
+      {
+        for (unsigned j = 0; j < channels; ++j)
+        {
+          samplesPerChannel[j][i] *= multiplier;
+        }
+      }
+    }
   }
 
   //************************************************************************************************

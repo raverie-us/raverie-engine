@@ -88,9 +88,6 @@ namespace Audio
         return;
       }
     }
-
-    // TODO Need to not do this on the game thread!!
-    gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, this));
   }
 
   //************************************************************************************************

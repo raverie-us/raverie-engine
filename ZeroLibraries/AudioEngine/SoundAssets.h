@@ -139,6 +139,9 @@ namespace Audio
 
     unsigned UndecodedSamplesIndex;
     float* Samples;
+    unsigned PreviousBufferSamples;
+    float* NextStreamedSamples;
+    bool NeedSecondBuffer;
 
     void CheckForDecodedPacket();
   };

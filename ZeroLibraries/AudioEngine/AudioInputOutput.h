@@ -79,8 +79,8 @@ namespace Audio
     void StopInputStream();
     // Starts or re-starts the output stream with the specified latency values
     void RestartStream(const bool lowLatency, Zero::Status& status);
-    // Returns the base buffer size for the current latency
-    unsigned GetBaseBufferSize();
+
+    unsigned GetBufferSize(unsigned sampleRate);
 
     // Size of the buffer for input data
     static const unsigned InputBufferSize = 8192;

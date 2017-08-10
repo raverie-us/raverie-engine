@@ -58,6 +58,7 @@ namespace Audio
       AudioFileData& data);
     static bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount,
       const unsigned channelCount, const unsigned bytesPerSample);
+    static void Normalize(float** samplesPerChannel, const unsigned frames, const unsigned channels);
     static unsigned Resample(unsigned fileSampleRate, unsigned channels, unsigned samplesPerChannel,
       float**& buffersPerChannel);
     static void EncodeFile(Zero::Status& status, Zero::File& outputFile, AudioFileData& data, 
@@ -68,6 +69,8 @@ namespace Audio
   static const unsigned FrameSize = 960;
   // Recommended max packet size
   static const unsigned MaxPacketSize = 4000;
+
+  static const float MaxVolume = 0.9f;
 
   struct FileHeader
   {

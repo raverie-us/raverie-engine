@@ -112,7 +112,9 @@ namespace Audio
     FrameCount(0),
     UndecodedSamplesIndex(0),
     Samples(nullptr),
-    Decoder(nullptr)
+    Decoder(nullptr),
+    PreviousBufferSamples(0),
+    NeedSecondBuffer(true)
   {
     if (!Threaded)
     {
@@ -139,7 +141,20 @@ namespace Audio
       Channels = Decoder->Channels;
       FrameCount = Decoder->SamplesPerChannel;
 
-      Samples = new float[FrameCount * Channels];
+      if (!Streaming)
+      {
+        Samples = new float[FrameCount * Channels];
+
+        // TODO Need to not do this on the game thread!!
+        gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, Decoder));
+      }
+      else
+      {
+        Samples = new float[FrameSize * Channels];
+        memset(Samples, 0, sizeof(float) * FrameSize * Channels);
+
+        NextStreamedSamples = new float[FrameSize * Channels];
+      }
     }
   }
 
@@ -173,15 +188,42 @@ namespace Audio
     // Translate from frames to sample location
     unsigned sampleIndex = frameIndex * Channels;
 
-    if (sampleIndex > UndecodedSamplesIndex || UndecodedSamplesIndex - sampleIndex < AudioSystemInternal::SampleRate * Channels / 2)
-      CheckForDecodedPacket();
-
-    // Past end of file, return zeros
-    if (frameIndex >= FrameCount || sampleIndex >= UndecodedSamplesIndex)
+    if (!Streaming)
     {
-      memset(data.Samples, 0, data.HowManyChannels * sizeof(float));
+      if (sampleIndex > UndecodedSamplesIndex || UndecodedSamplesIndex - sampleIndex < AudioSystemInternal::SampleRate * Channels / 2)
+        CheckForDecodedPacket();
 
-      return data;
+      // Past end of file, return zeros
+      if (frameIndex >= FrameCount || sampleIndex >= UndecodedSamplesIndex)
+      {
+        memset(data.Samples, 0, data.HowManyChannels * sizeof(float));
+
+        return data;
+      }
+    }
+    else
+    {
+      sampleIndex -= PreviousBufferSamples;
+
+      if (sampleIndex >= FrameSize * Channels)
+      {
+        memcpy(Samples, NextStreamedSamples, sizeof(float) * FrameSize * Channels);
+
+        PreviousBufferSamples += FrameSize * Channels;
+        sampleIndex -= FrameSize * Channels;
+
+        NeedSecondBuffer = true;
+
+        if (sampleIndex >= FrameSize * Channels)
+        {
+          memset(data.Samples, 0, data.HowManyChannels * sizeof(float));
+
+          return data;
+        }
+      }
+
+      if (NeedSecondBuffer)
+        CheckForDecodedPacket();
     }
 
     // Get samples for all channels 
@@ -198,6 +240,12 @@ namespace Audio
   {
     if (!Threaded)
       return;
+
+    if (Streaming)
+    {
+      memset(buffer, 0, numberOfSamples * sizeof(float));
+      return;
+    }
 
     // Translate from frames to sample location
     unsigned sampleIndex = frameIndex * Channels;
@@ -250,6 +298,10 @@ namespace Audio
       return;
 
     Decoder->ResetStream();
+
+    PreviousBufferSamples = 0;
+    NeedSecondBuffer = true;
+    memset(Samples, 0, sizeof(float) * FrameSize * Channels);
   }
 
   //************************************************************************************************
@@ -281,9 +333,9 @@ namespace Audio
       else
       {
         HasStreamingInstance = true;
-        gAudioSystem->AddTask(Zero::CreateFunctor(&FileDecoder::OpenStream, 
-          ((SoundAssetFromFile*)ThreadedAsset)->Decoder));
+
         // TODO shouldn't do this on game thread
+        ((SoundAssetFromFile*)ThreadedAsset)->Decoder->OpenStream();
         gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, ((SoundAssetFromFile*)ThreadedAsset)->Decoder));
         return true;
       }
@@ -301,6 +353,10 @@ namespace Audio
       HasStreamingInstance = false;
       gAudioSystem->AddTask(Zero::CreateFunctor(&FileDecoder::CloseStream,
         ((SoundAssetFromFile*)ThreadedAsset)->Decoder));
+
+      ((SoundAssetFromFile*)ThreadedAsset)->PreviousBufferSamples = 0;
+      ((SoundAssetFromFile*)ThreadedAsset)->NeedSecondBuffer = true;
+      memset(((SoundAssetFromFile*)ThreadedAsset)->Samples, 0, sizeof(float) * FrameSize * Channels);
     }
   }
 
@@ -313,28 +369,41 @@ namespace Audio
     if (!Decoder)
       return;
 
+    if (Streaming && !NeedSecondBuffer)
+      return;
+
     DecodedPacket* packet;
     if (Decoder->DecodedPacketQueue.Read(packet))
     {
-      // TODO Need to handle streaming
-
-      unsigned undecodedFrames = UndecodedSamplesIndex / Channels;
-
-      if (packet->FrameCount + undecodedFrames >= FrameCount)
-        packet->FrameCount = FrameCount - undecodedFrames;
-
-      memcpy(Samples + UndecodedSamplesIndex, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
-
-      for (unsigned i = 0; i < packet->FrameCount * Channels; ++i)
+      if (!Streaming)
       {
-        ErrorIf(Samples[UndecodedSamplesIndex + i] < -1.0f || Samples[UndecodedSamplesIndex + i] > 1.0f);
+        unsigned undecodedFrames = UndecodedSamplesIndex / Channels;
+
+        if (packet->FrameCount + undecodedFrames >= FrameCount)
+          packet->FrameCount = FrameCount - undecodedFrames;
+
+        memcpy(Samples + UndecodedSamplesIndex, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
+
+        for (unsigned i = 0; i < packet->FrameCount * Channels; ++i)
+        {
+          ErrorIf(Samples[UndecodedSamplesIndex + i] < -1.0f || Samples[UndecodedSamplesIndex + i] > 1.0f);
+        }
+
+        UndecodedSamplesIndex += packet->FrameCount * Channels;
+
+        if (UndecodedSamplesIndex < FrameCount * Channels)
+        {
+          gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, Decoder));
+        }
       }
-
-      UndecodedSamplesIndex += packet->FrameCount * Channels;
-
-      if (UndecodedSamplesIndex < FrameCount * Channels)
+      else
       {
-        gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, Decoder));
+        memcpy(NextStreamedSamples, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
+
+        if (PreviousBufferSamples + (FrameSize * Channels) < FrameCount * Channels)
+          gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, Decoder));
+
+        NeedSecondBuffer = false;
       }
 
       delete packet;
