@@ -310,10 +310,12 @@ public:
   NetUserId GetNetUserOwnerUserId() const;
   /// Returns the network user this object conceptually belongs to, else nullptr.
   Cog* GetNetUserOwner() const;
+  /// Path to the network user this object conceptually belongs to, else empty cog path.
+  CogPath GetNetUserOwnerPath() const;
 
   /// [Server/Offline] Sets the owning network user on this object.
-  void SetNetUserOwnerUserId(NetUserId netUserId);
   void SetNetUserOwner(Cog* cog);
+  void SetNetUserOwnerUserById(NetUserId netUserId);
 
   /// [Server/Offline] Sets the owning network user on this object and up the tree on each parent recursively (pre-order traversal).
   void SetNetUserOwnerUp(Cog* cog);

@@ -29,25 +29,18 @@ ZilchDefineType(NetUser, builder, type)
   // Bind setup (can be added in the editor)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
+  // Bind member properties
+  ZilchBindFieldGetterProperty(mNetUserId);
+  ZilchBindFieldGetterProperty(mNetPeerId);
+
   // Bind ownership interface
   ZilchBindCustomGetterProperty(AddedByMyPeer);
   ZilchBindMethod(AddedByPeer);
   ZilchBindMethod(FindOwnedNetObjectByNameInSpace);
   ZilchBindMethod(FindOwnedNetObjectByName);
-  ZilchBindGetterProperty(OwnedNetObjects);
+  ZilchBindGetter(OwnedNetObjects);
   ZilchBindGetterProperty(OwnedNetObjectCount);
   ZilchBindMethodProperty(ReleaseOwnedNetObjects);
-
-  // Bind member properties
-  ReflectionObject* netUserIdProperty = ZilchBindFieldGetterProperty(mNetUserId);
-  ReflectionObject* netPeerIdProperty = ZilchBindFieldGetterProperty(mNetPeerId);
-  /* METAREFACTOR - DevConfig
-  if(!Z::gEngine->GetConfigCog()->has(DeveloperConfig)) // Not a developer?
-  {
-    // Hide from property grid
-    netUserIdProperty->AddAttribute(PropertyAttributes::cHidden);
-    netPeerIdProperty->AddAttribute(PropertyAttributes::cHidden);
-  }*/
 }
 
 NetUser::NetUser()
@@ -283,7 +276,7 @@ void NetUser::ReleaseOwnedNetObjects()
         continue;
 
       // Clear net user owner
-      netObject->SetNetUserOwnerUserId(NetUserId(0));
+      netObject->SetNetUserOwnerUserById(NetUserId(0));
     }
     mOwnedNetObjects.Clear();
   }

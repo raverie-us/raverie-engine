@@ -62,16 +62,8 @@ ZilchDefineType(NetObject, builder, type)
   ZilchBindGetterProperty(OnlineTimePassed);
   ZilchBindGetterProperty(LastChangeTimePassed);
   ZilchBindGetterProperty(OfflineTimePassed);
+  ZilchBindGetterProperty(NetObjectId);
   ZilchBindCustomGetterProperty(IsOnline);
-  ReflectionObject* netObjectIdProperty = ZilchBindGetterProperty(NetObjectId);
-
-  /* METAREFACTOR - config
-  if(!Z::gEngine->GetConfigCog()->has(DeveloperConfig)) // Not a developer?
-  {
-    // Hide from property grid
-    netObjectIdProperty->AddAttribute(PropertyAttributes::cHidden);
-  }
-  */
   ZilchBindCustomGetterProperty(IsNapping);
   ZilchBindMethodProperty(SelectRemote);
   ZilchBindMethodProperty(ReplicateNow);
@@ -91,7 +83,6 @@ ZilchDefineType(NetObject, builder, type)
     ZilchBindCustomGetter(IsOwnedByAUser);
     ZilchBindCustomGetter(IsNotOwnedByAUser);
     ZilchBindMethod(IsOwnedByUser);
-    // ZilchBindMethod(IsOwnedByUserId);
     ZilchBindMethod(IsOwnedByPeer);
     ZilchBindCustomGetterProperty(IsMine);
     ZilchBindCustomGetter(IsNotMine);
@@ -101,20 +92,12 @@ ZilchDefineType(NetObject, builder, type)
     ZilchBindCustomGetter(IsServerButNotMine);
     ZilchBindCustomGetter(IsOfflineAndMine);
     ZilchBindCustomGetter(IsOfflineButNotMine);
-    ZilchBindGetterSetterProperty(NetUserOwner);
-    ReflectionObject* netUserOwnerUserIdProperty = ZilchBindGetterProperty(NetUserOwnerUserId);
-    ReflectionObject* netUserOwnerPeerIdProperty = ZilchBindGetterProperty(NetUserOwnerPeerId);
-    /* METAREFACTOR - DevConfig
-    if(!Z::gEngine->GetConfigCog()->has(DeveloperConfig)) // Not a developer?
-    {
-      // Hide from property grid
-      netUserOwnerUserIdProperty->AddAttribute(PropertyAttributes::cHidden);
-      netUserOwnerPeerIdProperty->AddAttribute(PropertyAttributes::cHidden);
-    }*/
+    ZilchBindGetterSetter(NetUserOwner);
+    ZilchBindGetterProperty(NetUserOwnerPath);
+    ZilchBindGetterProperty(NetUserOwnerUserId);
+    ZilchBindGetterProperty(NetUserOwnerPeerId);
     ZilchBindMethod(SetNetUserOwnerUp);
-    // ZilchBindMethod(SetNetUserOwnerUpById);
     ZilchBindMethod(SetNetUserOwnerDown);
-    // ZilchBindMethod(SetNetUserOwnerDownById);
   }
 
   // Bind network dispatch interface
@@ -127,10 +110,8 @@ ZilchDefineType(NetObject, builder, type)
   // Bind channel configuration interface
   ZilchBindGetterSetterProperty(AutomaticChannel);
 
-  // METAREFACTOR handle CreateMetaForContainer - needs to be bound as pointer with MetaContainer and container interface (think Zilch Ranges)
   // Bind property info interface
-  //BoundType* containerType = CreateMetaForContainer<NetPropertyInfoArray>("NetProperties");
-  ZilchBindFieldProperty(mNetPropertyInfos); // METAREFACTOR array
+  ZilchBindFieldProperty(mNetPropertyInfos);
 }
 
 NetObject::NetObject()
@@ -1100,7 +1081,7 @@ void NetObject::HandleNetObjectOffline()
   if(IsServerOrOffline())
   {
     // Clear net user owner
-    SetNetUserOwnerUserId(NetUserId(0));
+    SetNetUserOwnerUserById(NetUserId(0));
   }
 
   // Is client or server, and was cog initialized?
@@ -1800,8 +1781,34 @@ Cog* NetObject::GetNetUserOwner() const
 
   return netPeer->GetUser(GetNetUserOwnerUserId());
 }
+CogPath NetObject::GetNetUserOwnerPath() const
+{
+  CogPath netUserOwnerCogPath;
+  netUserOwnerCogPath.SetCog(GetNetUserOwner());
+  return netUserOwnerCogPath;
+}
 
-void NetObject::SetNetUserOwnerUserId(NetUserId netUserId)
+void NetObject::SetNetUserOwner(Cog* cog)
+{
+  NetUserId netUserId = 0;
+
+  // Valid cog?
+  if(cog)
+  {
+    // Get net user ID
+    NetUser* netUser = cog->has(NetUser);
+    if(!netUser) // Unable?
+    {
+      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
+      return;
+    }
+    netUserId = netUser->mNetUserId;
+  }
+
+  // Set net user owner
+  SetNetUserOwnerUserById(netUserId);
+}
+void NetObject::SetNetUserOwnerUserById(NetUserId netUserId)
 {
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
@@ -1831,26 +1838,6 @@ void NetObject::SetNetUserOwnerUserId(NetUserId netUserId)
     // Handle the net user owner change
     HandleNetUserOwnerChanged(previousNetUserOwnerUserId);
   }
-}
-void NetObject::SetNetUserOwner(Cog* cog)
-{
-  NetUserId netUserId = 0;
-
-  // Valid cog?
-  if(cog)
-  {
-    // Get net user ID
-    NetUser* netUser = cog->has(NetUser);
-    if(!netUser) // Unable?
-    {
-      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
-      return;
-    }
-    netUserId = netUser->mNetUserId;
-  }
-
-  // Set net user owner
-  SetNetUserOwnerUserId(netUserId);
 }
 
 void NetObject::SetNetUserOwnerUp(Cog* cog)
@@ -1888,7 +1875,7 @@ void NetObject::SetNetUserOwnerUpById(NetUserId netUserId)
   }
 
   // Set net user owner on this object
-  SetNetUserOwnerUserId(netUserId);
+  SetNetUserOwnerUserById(netUserId);
 
   // Has parent net object?
   Cog*       parentCog       = GetOwner()->GetParent();
@@ -1935,7 +1922,7 @@ void NetObject::SetNetUserOwnerDownById(NetUserId netUserId)
   }
 
   // Set net user owner on this object
-  SetNetUserOwnerUserId(netUserId);
+  SetNetUserOwnerUserById(netUserId);
 
   // For all child net objects
   Hierarchy* hierarchy = GetOwner()->has(Hierarchy);
