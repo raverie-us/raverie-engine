@@ -31,21 +31,29 @@ void RestoreCogPathLinks(HandleParam object, Cog* owner, CogInitializer& initial
   // Cog paths and some certain properties need to have a special resolve phase called on them
   forRange (Property* property, objectType->GetProperties())
   {
+    BoundType* propertyType = Type::DirectDynamicCast<BoundType*>(property->PropertyType);
+
+    if (propertyType == nullptr || propertyType->CopyMode != TypeCopyMode::ReferenceType)
+      continue;
+
     if(property->HasAttribute(PropertyAttribute) ||
        property->HasAttribute(PropertyAttributes::cEditable) ||
        property->HasAttribute(PropertyAttributes::cSerialized))
     {
       Any value = property->GetValue(object);
-      if(property->PropertyType == cogPathType)
+      if(propertyType == cogPathType)
       {
-        CogPath* cogPath = value.Get<CogPath*>( );
+        CogPath* cogPath = value.Get<CogPath*>();
         if(cogPath != nullptr)
           cogPath->RestoreLink(initializer, owner, property->Name);
       }
       else
       {
-        Handle subObject = value.ToHandle( );
-        if(subObject.IsNotNull( ))
+        Handle subObject = value.ToHandle();
+
+        // Native types must handle this manually
+        bool isNative = (subObject.StoredType && subObject.StoredType->Native);
+        if(!isNative && subObject.IsNotNull())
           RestoreCogPathLinks(subObject, owner, initializer);
       }
     }
