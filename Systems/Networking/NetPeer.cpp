@@ -41,7 +41,6 @@ ZilchDefineType(NetPeer, builder, type)
   // Bind host interface
   ZilchBindGetterSetterProperty(LanDiscoverable);
   ZilchBindGetterSetterProperty(InternetDiscoverable);
-  //ZilchBindGetterSetterProperty(FacilitateInternetConnections);
   ZilchBindGetterSetterProperty(HostPortRangeStart);
   ZilchBindGetterSetterProperty(HostPortRangeEnd);
   ZilchBindGetterSetterProperty(HostPingInterval);
@@ -62,9 +61,8 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindMethod(CancelHostRequests);
 
   // Bind peer interface
-  //ZilchBindGetterProperty(Guid)->AddAttribute(cHiddenAttribute);
-  ZilchBindGetterProperty(Info);
-  ZilchBindCustomGetterProperty(IsOpen);
+  ZilchBindGetterProperty(Info)->Add(new EditInGameFilter);
+  ZilchBindCustomGetterProperty(IsOpen)->Add(new EditInGameFilter);
   ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum, uint, uint));
   ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum, uint));
   ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum));
@@ -73,26 +71,23 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindOverloadedMethod(OpenClient, ZilchInstanceOverload(bool));
   ZilchBindOverloadedMethod(OpenServer, ZilchInstanceOverload(bool, uint));
   ZilchBindOverloadedMethod(OpenServer, ZilchInstanceOverload(bool));
-  //ZilchBindOverloadedMethod(OpenMasterServer, ZilchInstanceOverload(bool, uint));
-  //ZilchBindOverloadedMethod(OpenMasterServer, ZilchInstanceOverload(bool));
   ZilchBindOverloadedMethod(OpenOffline, ZilchInstanceOverload(bool));
   ZilchBindMethod(Close);
-  ZilchBindGetterProperty(NetPeerId);
-  ZilchBindGetterProperty(Ipv4Address);
-  ZilchBindGetterProperty(Ipv4Host);
-  ZilchBindGetterProperty(Ipv4Port);
-  ZilchBindGetterProperty(Ipv6Address);
-  ZilchBindGetterProperty(Ipv6Host);
-  ZilchBindGetterProperty(Ipv6Port);
-  //ZilchBindGetterProperty(CreationDuration)->AddAttribute(cHiddenAttribute);
-  ZilchBindGetterProperty(NetObjectCount);
-  ZilchBindGetterProperty(NetUserCount);
-  ZilchBindGetterProperty(NetSpaceCount);
+  ZilchBindGetterProperty(NetPeerId)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv4Address)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv4Host)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv4Port)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv6Address)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv6Host)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv6Port)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetSpaceCount)->Add(new EditInGameFilter);
   ZilchBindGetterSetterProperty(FrameFillWarning);
   ZilchBindGetterSetterProperty(FrameFillSkip);
 
   // Bind link interface
-  ZilchBindGetterProperty(LinkCount);
+  ZilchBindGetterProperty(LinkCount)->Add(new EditInGameFilter);
   ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&, EventBundle*));
   ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&, Event*));
   ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&));
@@ -105,12 +100,9 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint, EventBundle*));
   ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint, Event*));
   ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint));
-  // ZilchBindMethod(GetLinkCreationDuration);
   ZilchBindMethod(GetLinkCreationDirection);
   ZilchBindMethod(GetLinkStatus);
   ZilchBindMethod(GetLinkState);
-  // ZilchBindMethod(GetLinkStateDuration);
-  // ZilchBindMethod(GetLinkGuid);
   ZilchBindMethod(GetLinkIpAddress);
   ZilchBindMethod(GetOurIpAddressFromLink);
   ZilchBindMethod(GetLinkInternetProtocol);
@@ -121,13 +113,10 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindOverloadedMethod(AddUser, ZilchInstanceOverload(bool, Event*));
   ZilchBindOverloadedMethod(AddUser, ZilchInstanceOverload(bool));
   ZilchBindMethod(GetUser);
-  ZilchBindGetterProperty(UsersAddedByMyPeer);
+  ZilchBindGetter(UsersAddedByMyPeer);
   ZilchBindMethod(GetUsersAddedByPeer);
-  ZilchBindGetterProperty(Users);
-  ZilchBindGetterProperty(UserCount);
-  // ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, NetUserId, EventBundle*));
-  // ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, NetUserId, Event*));
-  // ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, NetUserId));
+  ZilchBindGetter(Users);
+  ZilchBindGetterProperty(UserCount)->Add(new EditInGameFilter);
   ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*, EventBundle*));
   ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*, Event*));
   ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*));
@@ -232,11 +221,10 @@ void NetPeer::Serialize(Serializer& stream)
 {
   // Serialize as net object
   NetObject::Serialize(stream);
-  
+
   // Serialize host settings
   SerializeNameDefault(mLanDiscoverable, GetLanDiscoverable());
   SerializeNameDefault(mInternetDiscoverable, GetInternetDiscoverable());
-  //SerializeNameDefault(mFacilitateInternetConnections, GetFacilitateInternetConnections());
   SerializeNameDefault(mHostPortRangeStart, GetHostPortRangeStart());
   SerializeNameDefault(mHostPortRangeEnd, GetHostPortRangeEnd());
   SerializeNameDefault(mHostPingInterval, GetHostPingInterval());
@@ -248,11 +236,10 @@ void NetPeer::Serialize(Serializer& stream)
   SerializeNameDefault(mFrameFillWarning, GetFrameFillWarning());
   SerializeNameDefault(mFrameFillSkip, GetFrameFillSkip());
 
-  //Serialize peer timeouts
-  SerializeNameDefault(mInternetHostListTimeout, GetInternetHostListTimeout() );
+  // Serialize peer timeouts
+  SerializeNameDefault(mInternetHostListTimeout, GetInternetHostListTimeout());
   SerializeNameDefault(mBasicHostInfoTimeout, GetBasicHostInfoTimeout());
   SerializeNameDefault(mExtraHostInfoTimeout, GetExtraHostInfoTimeout());
-
 }
 void NetPeer::Initialize(CogInitializer& initializer)
 {
@@ -262,11 +249,6 @@ void NetPeer::Initialize(CogInitializer& initializer)
   // Is editor or preview mode?
   if(owner->IsEditorOrPreviewMode())
     return;
-
-  // Use accurate timestamps by default
-  SetAccurateTimestampOnOnline(true);
-  SetAccurateTimestampOnChange(true);
-  SetAccurateTimestampOnOffline(true);
 
   // Initialize as net object
   NetObject::Initialize(initializer);

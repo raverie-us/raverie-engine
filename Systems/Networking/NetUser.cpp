@@ -30,17 +30,17 @@ ZilchDefineType(NetUser, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   // Bind member properties
-  ZilchBindFieldGetterProperty(mNetUserId);
-  ZilchBindFieldGetterProperty(mNetPeerId);
+  ZilchBindFieldGetterProperty(mNetUserId)->Add(new EditInGameFilter);
+  ZilchBindFieldGetterProperty(mNetPeerId)->Add(new EditInGameFilter);
 
   // Bind ownership interface
-  ZilchBindCustomGetterProperty(AddedByMyPeer);
+  ZilchBindCustomGetterProperty(AddedByMyPeer)->Add(new EditInGameFilter);
   ZilchBindMethod(AddedByPeer);
   ZilchBindMethod(FindOwnedNetObjectByNameInSpace);
   ZilchBindMethod(FindOwnedNetObjectByName);
   ZilchBindGetter(OwnedNetObjects);
-  ZilchBindGetterProperty(OwnedNetObjectCount);
-  ZilchBindMethodProperty(ReleaseOwnedNetObjects);
+  ZilchBindGetterProperty(OwnedNetObjectCount)->Add(new EditInGameFilter);
+  ZilchBindMethodProperty(ReleaseOwnedNetObjects)->Add(new EditInGameFilter);
 }
 
 NetUser::NetUser()
@@ -93,11 +93,6 @@ void NetUser::Initialize(CogInitializer& initializer)
 
   // Connect event handlers
   ConnectThisTo(owner, Events::RegisterCppNetProperties, OnRegisterCppNetProperties);
-
-  // Use accurate timestamps by default
-  SetAccurateTimestampOnOnline(true);
-  SetAccurateTimestampOnChange(true);
-  SetAccurateTimestampOnOffline(true);
 
   // Initialize as net object
   NetObject::Initialize(initializer);

@@ -30,8 +30,8 @@ ZilchDefineType(NetSpace, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   // Bind space interface
-  ZilchBindGetterProperty(NetObjectCount);
-  ZilchBindGetterProperty(NetUserCount);
+  ZilchBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
 }
 
 NetSpace::NetSpace()
@@ -55,11 +55,6 @@ void NetSpace::Initialize(CogInitializer& initializer)
   // Is editor or preview mode?
   if(owner->IsEditorOrPreviewMode())
     return;
-
-  // Use accurate timestamps by default
-  SetAccurateTimestampOnOnline(true);
-  SetAccurateTimestampOnChange(true);
-  SetAccurateTimestampOnOffline(true);
 
   // Initialize as net object
   NetObject::Initialize(initializer);
