@@ -200,7 +200,7 @@ namespace Audio
     const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(OutputParameters.device);
 
     OutputParameters.suggestedLatency = deviceInfo->defaultLowOutputLatency;
-    // TODO AudioSystemInternal::SampleRate = (unsigned)deviceInfo->defaultSampleRate;
+    OutputSampleRate = (unsigned)deviceInfo->defaultSampleRate;
 
     // Set the variables that depend on the number of output channels
     OutputParameters.channelCount = deviceInfo->maxOutputChannels;
@@ -236,6 +236,13 @@ namespace Audio
 
     // Set the message string
     status.Message = messageString.ToString();
+
+    BufferBaseSize = 128;
+    while (BufferBaseSize < (unsigned)(SmallBufferMultiplier * OutputSampleRate))
+      BufferBaseSize *= 2;
+    BufferLargeSize = 512;
+    while (BufferLargeSize < (unsigned)(LargeBufferMultiplier * OutputSampleRate))
+      BufferLargeSize *= 2;
 
     RestartStream(true, status);
 
@@ -366,12 +373,17 @@ namespace Audio
   }
 
   //************************************************************************************************
-  unsigned AudioInputOutput::GetBaseBufferSize()
+  unsigned AudioInputOutput::GetBufferSize(unsigned sampleRate)
   {
-    if (LowLatency)
-      return BufferBaseSize;
-    else
-      return BufferLargeSize;
+    unsigned size = 128;
+    float multiplier = SmallBufferMultiplier;
+    if (!LowLatency)
+      multiplier = LargeBufferMultiplier;
+
+    while (size < (unsigned)(multiplier * sampleRate))
+      size *= 2;
+
+    return size;
   }
 
   //************************************************************************************************

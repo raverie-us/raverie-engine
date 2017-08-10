@@ -52,16 +52,16 @@ namespace Audio
     static void WriteFile(Zero::Status& status, Zero::StringParam outputFileName, 
       AudioFileData& fileData);
 
-    static AudioFileData ProcessFile(Zero::Status& status, Zero::StringParam inputName,
-      Zero::StringParam outputName);
-
   private:
-    static AudioFileData ReadWav(Zero::Status& status, Zero::File& file, Zero::StringParam fileName, 
-      float**& buffersPerChannel);
-    static bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount, 
+    static void ReadWav(Zero::Status& status, Zero::File& file, AudioFileData& data);
+    static void ReadOgg(Zero::Status& status, Zero::File& file, Zero::StringParam fileName,
+      AudioFileData& data);
+    static bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount,
       const unsigned channelCount, const unsigned bytesPerSample);
-    static AudioFileData ReadOgg(Zero::Status& status, Zero::File& file, Zero::StringParam fileName,
+    static unsigned Resample(unsigned fileSampleRate, unsigned channels, unsigned samplesPerChannel,
       float**& buffersPerChannel);
+    static void EncodeFile(Zero::Status& status, Zero::File& outputFile, AudioFileData& data, 
+      float** buffersPerChannel);
   };
 
   // 20 ms of audio data at 48000 samples per second
@@ -78,6 +78,8 @@ namespace Audio
 
   struct PacketHeader
   {
+    PacketHeader() : Channel(0), Size(0) {}
+
     const char Name[4] = { 'p','a','c','k' };
     short Channel;
     unsigned Size;

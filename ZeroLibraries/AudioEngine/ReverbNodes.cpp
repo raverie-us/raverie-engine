@@ -26,6 +26,9 @@ namespace Audio
   //************************************************************************************************
   ReverbNode::~ReverbNode()
   {
+    if (!Threaded)
+      return;
+
     forRange(Reverb* filter, FiltersPerListener.Values())
       delete filter;
   }
@@ -137,6 +140,9 @@ namespace Audio
   //************************************************************************************************
   void ReverbNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (FiltersPerListener.FindValue(listener, nullptr))
     {
       delete FiltersPerListener[listener];

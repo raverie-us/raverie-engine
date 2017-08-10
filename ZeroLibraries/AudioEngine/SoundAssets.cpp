@@ -42,25 +42,31 @@ namespace Audio
   //************************************************************************************************
   void SoundAssetNode::SetExternalInterface(ExternalNodeInterface* extInt)
   {
-    if (!Threaded)
-    {
-      ExternalData = extInt;
+    if (Threaded)
+      return;
 
-      // If interface is now null and is not referenced, can delete now
-      if (!extInt && ReferenceCount == 0)
-        delete this;
-    }
+    ExternalData = extInt;
+
+    // If interface is now null and is not referenced, can delete now
+    if (!extInt && ReferenceCount == 0)
+      delete this;
   }
 
   //************************************************************************************************
   bool SoundAssetNode::IsPlaying()
   {
+    if (Threaded)
+      return false;
+
     return ReferenceCount > 0;
   }
 
   //************************************************************************************************
   bool SoundAssetNode::AddReference()
   {
+    if (Threaded)
+      return false;
+
     // Check if it's okay to add another instance to this asset
     if (OkayToAddInstance())
     {
@@ -74,6 +80,9 @@ namespace Audio
   //************************************************************************************************
   void SoundAssetNode::ReleaseReference()
   {
+    if (Threaded)
+      return;
+
     if (ReferenceCount == 0)
       Error("Trying to release reference on an unreferenced sound asset");
 
@@ -101,7 +110,7 @@ namespace Audio
     FileLength(0),
     Channels(0),
     FrameCount(0),
-    UndecodedIndex(0),
+    UndecodedSamplesIndex(0),
     Samples(nullptr),
     Decoder(nullptr)
   {
@@ -118,8 +127,6 @@ namespace Audio
     else
     {
       // Remember that this constructor happens on the game thread
-
-      // TODO read from buffer as well as from file
 
       Decoder = new FileDecoder(status, fileName, streaming, this);
 
@@ -139,15 +146,18 @@ namespace Audio
   //************************************************************************************************
   SoundAssetFromFile::~SoundAssetFromFile()
   {
-    if (Samples)
-      delete[] Samples;
-
-    if (Decoder)
+    if (!Threaded)
     {
-      AtomicSetPointer((void**)Decoder->Asset, (void*)nullptr);
+      if (Samples)
+        delete[] Samples;
 
-      if (AtomicCheckEqualityPointer(Decoder->Decoding, nullptr))
-        delete Decoder;
+      if (Decoder)
+      {
+        AtomicSetPointer((void**)Decoder->Asset, (void*)nullptr);
+
+        if (AtomicCheckEqualityPointer(Decoder->Decoding, nullptr))
+          delete Decoder;
+      }
     }
   }
 
@@ -160,21 +170,24 @@ namespace Audio
     FrameData data;
     data.HowManyChannels = Channels;
 
-    CheckForDecodedPacket();
+    // Translate from frames to sample location
+    unsigned sampleIndex = frameIndex * Channels;
+
+    if (sampleIndex > UndecodedSamplesIndex || UndecodedSamplesIndex - sampleIndex < AudioSystemInternal::SampleRate * Channels / 2)
+      CheckForDecodedPacket();
 
     // Past end of file, return zeros
-    if (frameIndex >= FrameCount || frameIndex >= UndecodedIndex)
+    if (frameIndex >= FrameCount || sampleIndex >= UndecodedSamplesIndex)
     {
       memset(data.Samples, 0, data.HowManyChannels * sizeof(float));
 
       return data;
     }
 
-    // Translate from frames to sample location
-    unsigned sampleIndex = frameIndex * Channels;
-
     // Get samples for all channels 
     memcpy(data.Samples, Samples + sampleIndex, Channels * sizeof(float));
+
+    ErrorIf(data.Samples[0] < -1.0f || data.Samples[0] > 1.0f);
 
     return data;
   }
@@ -189,16 +202,27 @@ namespace Audio
     // Translate from frames to sample location
     unsigned sampleIndex = frameIndex * Channels;
 
-    CheckForDecodedPacket();
+    if (sampleIndex > UndecodedSamplesIndex || UndecodedSamplesIndex - sampleIndex < AudioSystemInternal::SampleRate * Channels / 2)
+      CheckForDecodedPacket();
 
     unsigned samples = numberOfSamples;
-    if (sampleIndex + numberOfSamples >= UndecodedIndex)
-      samples = UndecodedIndex - sampleIndex;
+    if (sampleIndex + numberOfSamples >= UndecodedSamplesIndex)
+    {
+      if (sampleIndex < UndecodedSamplesIndex)
+        samples = UndecodedSamplesIndex - sampleIndex;
+      else
+        samples = 0;
+    }
 
     memcpy(buffer, Samples + sampleIndex, samples * sizeof(float));
 
     if (samples < numberOfSamples)
       memset(buffer + samples, 0, (numberOfSamples - samples) * sizeof(float));
+
+    for (unsigned i = 0; i < numberOfSamples; ++i)
+    {
+      ErrorIf(buffer[i] < -1.0f || buffer[i] > 1.0f);
+    }
   }
 
   //************************************************************************************************
@@ -222,8 +246,10 @@ namespace Audio
   //************************************************************************************************
   void SoundAssetFromFile::ResetStreamingFile()
   {
-    // TODO
-    //FileData->ResetStreamingFile();
+    if (!Threaded)
+      return;
+
+    Decoder->ResetStream();
   }
 
   //************************************************************************************************
@@ -241,6 +267,9 @@ namespace Audio
   //************************************************************************************************
   bool SoundAssetFromFile::OkayToAddInstance()
   {
+    if (Threaded)
+      return false;
+
     // Not streaming, can play multiple instances
     if (!Streaming)
       return true;
@@ -252,9 +281,10 @@ namespace Audio
       else
       {
         HasStreamingInstance = true;
-        // TODO
-//         gAudioSystem->AddTask(Zero::CreateFunctor(&SamplesFromFile::ReopenStreamingFile, 
-//           ((SoundAssetFromFile*)ThreadedAsset)->FileData));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&FileDecoder::OpenStream, 
+          ((SoundAssetFromFile*)ThreadedAsset)->Decoder));
+        // TODO shouldn't do this on game thread
+        gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, ((SoundAssetFromFile*)ThreadedAsset)->Decoder));
         return true;
       }
     }
@@ -263,18 +293,23 @@ namespace Audio
   //************************************************************************************************
   void SoundAssetFromFile::RemoveInstance()
   {
+    if (Threaded)
+      return;
+
     if (HasStreamingInstance)
     {
       HasStreamingInstance = false;
-      // TODO
-//       gAudioSystem->AddTask(Zero::CreateFunctor(&SamplesFromFile::CloseStreamingFile, 
-//         ((SoundAssetFromFile*)ThreadedAsset)->FileData));
+      gAudioSystem->AddTask(Zero::CreateFunctor(&FileDecoder::CloseStream,
+        ((SoundAssetFromFile*)ThreadedAsset)->Decoder));
     }
   }
 
   //************************************************************************************************
   void SoundAssetFromFile::CheckForDecodedPacket()
   {
+    if (!Threaded)
+      return;
+
     if (!Decoder)
       return;
 
@@ -283,14 +318,21 @@ namespace Audio
     {
       // TODO Need to handle streaming
 
-      if ((packet->FrameCount * Channels) + UndecodedIndex >= FrameCount)
-        packet->FrameCount = (FrameCount - UndecodedIndex) / Channels;
+      unsigned undecodedFrames = UndecodedSamplesIndex / Channels;
 
-      memcpy(Samples + UndecodedIndex, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
+      if (packet->FrameCount + undecodedFrames >= FrameCount)
+        packet->FrameCount = FrameCount - undecodedFrames;
 
-      UndecodedIndex += packet->FrameCount * Channels;
+      memcpy(Samples + UndecodedSamplesIndex, packet->Samples, sizeof(float) * packet->FrameCount * Channels);
 
-      if (UndecodedIndex < FrameCount * Channels)
+      for (unsigned i = 0; i < packet->FrameCount * Channels; ++i)
+      {
+        ErrorIf(Samples[UndecodedSamplesIndex + i] < -1.0f || Samples[UndecodedSamplesIndex + i] > 1.0f);
+      }
+
+      UndecodedSamplesIndex += packet->FrameCount * Channels;
+
+      if (UndecodedSamplesIndex < FrameCount * Channels)
       {
         gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextPacket, Decoder));
       }
@@ -356,7 +398,11 @@ namespace Audio
   void GeneratedWaveSoundAsset::GetBuffer(float* buffer, const unsigned frameIndex, 
     const unsigned numberOfSamples)
   {
-    memset(buffer, 0, sizeof(float) * numberOfSamples);
+    if (!Threaded)
+      return;
+
+    for (unsigned i = 0; i < numberOfSamples; ++i)
+      buffer[i] = GetFrame(i).Samples[0];
   }
 
   //************************************************************************************************

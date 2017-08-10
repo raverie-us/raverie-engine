@@ -336,6 +336,9 @@ namespace Audio
   void EmitterNode::CalculateData(EmitterDataPerListener* data, Math::Vec3& relativePosition,
     ListenerNode* listener, const unsigned numberOfChannels)
   {
+    if (!Threaded)
+      return;
+
     // Save reference for ease of use
     EmitterDataPerListener& listenerData = *data;
 

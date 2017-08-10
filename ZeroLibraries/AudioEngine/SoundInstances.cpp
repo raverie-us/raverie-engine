@@ -740,6 +740,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::AddAttenuatedOutputToTag(TagObject* tag)
   {
+    if (!Threaded)
+      return;
+
     if (!ValidOutputLastMix)
       return;
 
@@ -762,6 +765,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::GetNextFrame(FrameData &frameData)
   {
+    if (!Threaded)
+      return;
+
     // If paused, just fill in zeros for sample values
     if (Paused)
     {
@@ -861,6 +867,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::SkipForward(const unsigned howManyFrames)
   {
+    if (!Threaded)
+      return;
+
     // Not pitch shifting
     if (!Data->PitchShifting)
     {
@@ -917,6 +926,9 @@ namespace Audio
           Data->CrossFadeSamples.Resize(Data->CrossFadeFrameIndex * Asset->GetChannels());
       }
     }
+
+    // Get a frame to ensure the asset is up-to-date
+    Asset->GetFrame(Data->FrameIndex);
 
     // Check for reaching the end of the file or the loop end point
     CheckForEnd();
@@ -976,6 +988,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::CheckForEnd()
   {
+    if (!Threaded)
+      return;
+
     // If we reached the end 
     if (Data->FrameIndex >= Data->EndFrame)
     {
@@ -1082,6 +1097,9 @@ namespace Audio
   //************************************************************************************************
   bool SoundInstanceNode::BelowMinimumVolume(unsigned frames)
   {
+    if (!Threaded)
+      return false;
+
     // Determine overall volume at the beginning and end of the mix
     float volume1(Volume);
     float volume2(Volume);
@@ -1111,6 +1129,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::ApplyCrossFade(FrameData& frame, float resampleFactor)
   {
+    if (!Threaded)
+      return;
+
     unsigned sampleIndex = Data->CrossFadeFrameIndex * frame.HowManyChannels;
 
     // Check if we need more samples
@@ -1176,6 +1197,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::IncreaseCrossFadeBuffer(unsigned channels, unsigned sampleIndex)
   {
+    if (!Threaded)
+      return;
+
     // Get a second of new samples
     unsigned newSamples = AudioSystemInternal::SampleRate * channels;
 
@@ -1198,6 +1222,9 @@ namespace Audio
   //************************************************************************************************
   ThreadedVolumeModifier* SoundInstanceNode::GetAvailableVolumeMod()
   {
+    if (!Threaded)
+      return nullptr;
+
     for (unsigned i = 0; i < Data->VolumeModList.Size(); ++i)
     {
       if (!Data->VolumeModList[i]->Active)
@@ -1224,6 +1251,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::MusicNotifications()
   {
+    if (!Threaded)
+      return;
+
     // If there is a custom notification time set and we've hit that time
     if (NotifyTime > 0 && !CustomNotifySent && CurrentTime >= NotifyTime)
     {
@@ -1314,6 +1344,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::ResetMusicBeats()
   {
+    if (!Threaded)
+      return;
+
     if (SecondsPerEighth == 0)
       return;
 
@@ -1369,6 +1402,9 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::DisconnectThisAndAllInputs()
   {
+    if (Threaded)
+      return;
+
     SoundNode::DisconnectThisAndAllInputs();
 
     if (GetSiblingNode())

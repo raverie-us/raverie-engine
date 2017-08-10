@@ -164,6 +164,9 @@ namespace Audio
   //************************************************************************************************
   void SoundNode::ReplaceWith(SoundNode* replacementNode)
   {
+    if (Threaded)
+      return;
+
     // Remove this node as an output from all inputs and add to replacement node
     while (!Inputs.Empty())
     {
@@ -333,6 +336,9 @@ namespace Audio
   //************************************************************************************************
   void SoundNode::SetExternalInterface(ExternalNodeInterface* externalData)
   {
+    if (Threaded)
+      return;
+
     // Check if the external data is null
     if (!externalData)
     {
@@ -391,6 +397,9 @@ namespace Audio
   //************************************************************************************************
   void SoundNode::SendEventToExternalData(const AudioEventType eventType, void* data)
   {
+    if (Threaded)
+      return;
+
     // If the interface exists, send the event
     if (ExternalData)
       ExternalData->SendAudioEvent(eventType, data);
@@ -402,6 +411,9 @@ namespace Audio
   //************************************************************************************************
   float SoundNode::GetAttenuatedVolume()
   {
+    if (!Threaded)
+      return 0.0f;
+
     float volume(1.0f);
     bool gotData(false);
     forRange(SoundNode* node, Outputs.All())
@@ -538,6 +550,9 @@ namespace Audio
   bool SoundNode::AccumulateInputSamples(const unsigned howManySamples, const unsigned numberOfChannels, 
     ListenerNode* listener)
   {
+    if (!Threaded)
+      return false;
+
     // Reset buffer
     InputSamples.Resize(howManySamples);
     memset(InputSamples.Data(), 0, sizeof(float) * howManySamples);
@@ -595,6 +610,9 @@ namespace Audio
   //************************************************************************************************
   void SoundNode::AddBypass(BufferType* outputBuffer)
   {
+    if (!Threaded)
+      return;
+
     // If some of the node's output should be bypassed, adjust the output buffer 
     // with a percentage of the input buffer
     if (BypassPercent > 0.0f)
@@ -610,6 +628,9 @@ namespace Audio
   //************************************************************************************************
   void SoundNode::CheckIfDisconnected()
   {
+    if (Threaded)
+      return;
+
     // Check if this node is now disconnected
     if (Inputs.Empty() && Outputs.Empty())
     {
@@ -628,6 +649,9 @@ namespace Audio
   //************************************************************************************************
   void SoundNode::OkayToDelete()
   {
+    if (Threaded)
+      return;
+
     // If there is still an external interface, set the flag to delete when it's removed
     if (ExternalData)
       DeleteMe = true;
@@ -677,6 +701,9 @@ namespace Audio
   //************************************************************************************************
   void SimpleCollapseNode::CollapseNode()
   {
+    if (Threaded)
+      return;
+
     // If node has inputs, don't collapse
     if (HasInputs())
       return;

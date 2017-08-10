@@ -32,6 +32,9 @@ namespace Audio
   //************************************************************************************************
   InputNode::~InputNode()
   {
+    if (!Threaded)
+      return;
+
     while (!BufferList.Empty())
     {
       SampleBuffer& data = BufferList.Front();
@@ -81,6 +84,9 @@ namespace Audio
   //************************************************************************************************
   void InputNode::AddBufferToList(InputNode::SampleBuffer* newBuffer)
   {
+    if (!Threaded)
+      return;
+
     if (!BufferList.Empty())
       SamplesInExtraBuffers += newBuffer->BufferSize;
     BufferList.PushBack(newBuffer);

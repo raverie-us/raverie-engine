@@ -46,6 +46,9 @@ namespace Audio
 
   //----------------------------------------------------------------------------- Audio Input Output
 
+  static const float SmallBufferMultiplier = 0.01f;
+  static const float LargeBufferMultiplier = 0.04f;
+
   class AudioInputOutput
   {
   public:
@@ -93,13 +96,15 @@ namespace Audio
     unsigned OutputChannelsThreaded;
     // Size of the output buffer
     unsigned OutputBufferSizeThreaded;
+    // Sample rate of the output device
+    unsigned OutputSampleRate;
 
     static const unsigned NumOutputBuffers = 3;
 
   private:
-    static const unsigned BufferBaseSize = 512;
-    static const unsigned BufferLargeSize = 2048;
-    
+    unsigned BufferBaseSize;
+    unsigned BufferLargeSize;
+
     // Index for current output writing buffer, used for mixing output
     int WriteBufferThreaded;
     // Array of three buffers for output

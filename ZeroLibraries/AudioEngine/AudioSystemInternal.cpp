@@ -57,7 +57,7 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::StartSystem(Zero::Status &status)
   {
-    MixBufferSizeThreaded = AudioIO.GetBaseBufferSize() * SystemChannelsThreaded;
+    MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
 
     // Initialize Port Audio, and quit if it didn't work
     AudioIO.Initialize(status);
@@ -430,7 +430,7 @@ namespace Audio
   void AudioSystemInternal::SetSystemChannelsThreaded(const unsigned channels)
   {
     SystemChannelsThreaded = channels;
-    MixBufferSizeThreaded = AudioIO.GetBaseBufferSize() * channels;
+    MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * channels;
     BufferForOutput.Resize(MixBufferSizeThreaded);
   }
 
@@ -520,7 +520,7 @@ namespace Audio
 
     AudioIO.RestartStream(!useHighLatency, status);
 
-    MixBufferSizeThreaded = AudioIO.GetBaseBufferSize() * SystemChannelsThreaded;
+    MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
     BufferForOutput.Resize(MixBufferSizeThreaded);
   }
 

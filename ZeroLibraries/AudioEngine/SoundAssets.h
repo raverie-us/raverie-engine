@@ -137,7 +137,7 @@ namespace Audio
 
     FileDecoder* Decoder;
 
-    unsigned UndecodedIndex;
+    unsigned UndecodedSamplesIndex;
     float* Samples;
 
     void CheckForDecodedPacket();

@@ -18,24 +18,55 @@ namespace Audio
       SoundAssetFromFile* asset) :
     Streaming(streaming),
     Decoding(this),
-    Asset(asset)
+    Asset(asset),
+    InputFileData(nullptr),
+    DataIndex(0),
+    FileName(fileName)
   {
-    InputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
-    if (!InputFile.IsOpen())
+    Zero::File inputFile;
+    inputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+    if (!inputFile.IsOpen())
     {
       status.SetFailed(Zero::String::Format("Unable to open audio file %s", fileName.c_str()));
       return;
     }
 
-    FileHeader header;
-
-    InputFile.Read(status, (byte*)&header, sizeof(header));
-    if (status.Failed())
+    long long size = inputFile.CurrentFileSize();
+    if (size < sizeof(FileHeader))
+    {
+      status.SetFailed(Zero::String::Format("Unable to read from audio file %s", fileName.c_str()));
       return;
+    }
+
+    DataSize = (unsigned)size;
+
+    if (!Streaming)
+    {
+      InputFileData = new byte[DataSize];
+      inputFile.Read(status, InputFileData, DataSize);
+    }
+    else
+    {
+      InputFileData = new byte[MaxPacketSize];
+      inputFile.Read(status, InputFileData, sizeof(FileHeader));
+    }
+
+    if (status.Failed())
+    {
+      delete[] InputFileData;
+      InputFileData = nullptr;
+      return;
+    }
+
+    FileHeader header;
+    memcpy(&header, InputFileData, sizeof(header));
+    DataIndex += sizeof(header);
 
     if (header.Name[0] != 'Z' || header.Name[1] != 'E')
     {
       status.SetFailed(Zero::String::Format("Audio file %s is an incorrect format", fileName.c_str()));
+      delete[] InputFileData;
+      InputFileData = nullptr;
       return;
     }
 
@@ -52,6 +83,8 @@ namespace Audio
 
         // TODO some sort of failed state so it doesn't try to do anything else with this asset
 
+        delete[] InputFileData;
+        InputFileData = nullptr;
         return;
       }
     }
@@ -65,6 +98,9 @@ namespace Audio
   {
     for (short i = 0; i < Channels; ++i)
       opus_decoder_destroy(Decoders[i]);
+
+    if (InputFileData)
+      delete[] InputFileData;
   }
 
   //************************************************************************************************
@@ -72,9 +108,8 @@ namespace Audio
   {
     // Remember that this function happens on the decoding thread
 
-    // If the file isn't open, can't do anything
-    // TODO also could be from memory instead of a file
-    if (!InputFile.IsOpen())
+    // If no data, can't do anything
+    if (!InputFileData || DataIndex >= DataSize || (Streaming && !InputFile.IsOpen()))
     {
       // If the asset is null, should delete
       if (AtomicCheckEqualityPointer(Asset, nullptr))
@@ -83,61 +118,105 @@ namespace Audio
       return;
     }
 
-    Zero::Status status;
-    PacketHeader packHead;
     int frames;
+    Zero::Status status;
 
     // Get a packet for each channel
     for (short i = 0; i < Channels; ++i)
     {
+      PacketHeader packHead;
+
       // Read in the packet header
-      InputFile.Read(status, (byte*)&packHead, sizeof(packHead));
-      // Check if the read failed
-      if (status.Failed())
+      if (!Streaming)
+        memcpy(&packHead, InputFileData + DataIndex, sizeof(packHead));
+      else
+        InputFile.Read(status, (byte*)&packHead, sizeof(packHead));
+
+      // Move the data index forward
+      DataIndex += sizeof(packHead);
+
+      if (packHead.Size == 0 || (packHead.Name[0] != 'p' || packHead.Name[1] != 'a'))
+        frames = 0;
+      else
       {
-        // If not streaming, close the file and return
         if (!Streaming)
-        {
-          InputFile.Close();
-
-          // Set the decoding marker to null
-          AtomicSetPointer((void**)&Decoding, (void*)nullptr);
-
-          return;
-        }
-        // Otherwise, reset to the beginning of the file and try again
-        // TODO change this when streaming implemented?
+          frames = opus_decode_float(Decoders[i], InputFileData + DataIndex, packHead.Size,
+            DecodedPackets[i], FrameSize, 0);
         else
         {
-          InputFile.Seek(sizeof(FileHeader), Zero::FileOrigin::Begin);
-          InputFile.Read(status, (byte*)&packHead, sizeof(packHead));
-          if (status.Failed())
-          {
-            InputFile.Close();
-            AtomicSetPointer((void**)&Decoding, (void*)nullptr);
-            return;
-          }
+          InputFile.Read(status, InputFileData, packHead.Size);
+
+          frames = opus_decode_float(Decoders[i], InputFileData, packHead.Size,
+            DecodedPackets[i], FrameSize, 0);
         }
       }
 
-      ErrorIf(packHead.Name[0] != 'p' || packHead.Name[1] != 'a');
-      ErrorIf(packHead.Size > MaxPacketSize);
-      ErrorIf(packHead.Channel != i);
+      ErrorIf(frames < FrameSize);
 
-      // Read in the packet from the file
-      InputFile.Read(status, PacketBuffer, packHead.Size);
+      // Move the data index forward
+      DataIndex += packHead.Size;
 
-      // Decode the packet
-      frames = opus_decode_float(Decoders[packHead.Channel], PacketBuffer, packHead.Size, 
-        DecodedPackets[i], FrameSize, 0);
-
-      ErrorIf(frames < 0, Zero::String::Format("Opus error: %s", opus_strerror(frames)).c_str());
+      ErrorIf(DataIndex >= DataSize);
     }
 
+    // Add the decoded packets to the queue
+    QueueDecodedPackets(frames);
+
+    // If we've reached the end of the file, delete the data and stop decoding
+    if (DataIndex >= DataSize && !Streaming)
+    {
+      delete[] InputFileData;
+      InputFileData = nullptr;
+
+      // Set the decoding marker to null
+      AtomicSetPointer((void**)&Decoding, (void*)nullptr);
+    }
+
+    // If the asset is null, should delete
+    if (AtomicCheckEqualityPointer(Asset, nullptr))
+      delete this;
+  }
+
+  //************************************************************************************************
+  bool FileDecoder::StreamIsOpen()
+  {
+    return InputFile.IsOpen();
+  }
+
+  //************************************************************************************************
+  void FileDecoder::ResetStream()
+  {
+    if (!InputFile.IsOpen())
+      return;
+
+    InputFile.Seek(sizeof(FileHeader));
+    DataIndex = sizeof(FileHeader);
+
+    // TODO read in buffer
+  }
+
+  //************************************************************************************************
+  void FileDecoder::CloseStream()
+  {
+    if (InputFile.IsOpen())
+      InputFile.Close();
+  }
+
+  //************************************************************************************************
+  void FileDecoder::OpenStream()
+  {
+    InputFile.Open(FileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+
+    ResetStream();
+  }
+
+  //************************************************************************************************
+  void FileDecoder::QueueDecodedPackets(int numberOfFrames)
+  {
     // Create the DecodedPacket object
     DecodedPacket* newPacket = new DecodedPacket();
     // Set the number of frames
-    newPacket->FrameCount = frames;
+    newPacket->FrameCount = numberOfFrames;
     // Create the buffer for the samples
     newPacket->Samples = new float[newPacket->FrameCount * Channels];
 
@@ -155,10 +234,6 @@ namespace Audio
 
     // Add the DecodedPacket object to the queue
     DecodedPacketQueue.Write(newPacket);
-
-    // If the asset is null, should delete
-    if (AtomicCheckEqualityPointer(Asset, nullptr))
-      delete this;
   }
 
 }

@@ -35,6 +35,10 @@ namespace Audio
     ~FileDecoder();
 
     void DecodeNextPacket();
+    bool StreamIsOpen();
+    void ResetStream();
+    void CloseStream();
+    void OpenStream();
 
     LockFreeQueue<DecodedPacket*> DecodedPacketQueue;
 
@@ -44,11 +48,16 @@ namespace Audio
     unsigned SamplesPerChannel;
 
   private:
-    Zero::File InputFile;
+    byte* InputFileData;
+    unsigned DataIndex;
+    unsigned DataSize;
     OpusDecoder* Decoders[MaxChannels];
-    unsigned char PacketBuffer[MaxPacketSize];
     float DecodedPackets[MaxChannels][FrameSize];
     bool Streaming;
+    Zero::String FileName;
+    Zero::File InputFile;
+
+    void QueueDecodedPackets(int numberOfFrames);
   };
 }
 
