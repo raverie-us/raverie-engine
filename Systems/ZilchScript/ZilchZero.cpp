@@ -149,7 +149,7 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
       bool isHandleWithDefaultConstructor =
         boundPropertyType->CopyMode == TypeCopyMode::ReferenceType &&
         boundPropertyType->CreatableInScript &&
-        boundPropertyType->GetDefaultConstructor() != nullptr;
+        boundPropertyType->IsDefaultConstructable();
 
       if (isGetSetProperty && isHandleWithDefaultConstructor)
       {

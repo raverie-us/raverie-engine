@@ -1075,6 +1075,27 @@ namespace Zilch
   }
 
   //***************************************************************************
+  bool BoundType::IsDefaultConstructable()
+  {
+    const FunctionArray* constructors = this->GetOverloadedInheritedConstructors();
+    if (constructors != nullptr && constructors->Empty() == false)
+    {
+      Function* defaultConstructor = BoundType::GetDefaultConstructor(constructors);
+      if (defaultConstructor != nullptr)
+      {
+        return true;
+      }
+    }
+    // Otherwise, we have no constructors (this is ok so long as we aren't native!)
+    else if (this->Native == false)
+    {
+      return true;
+    }
+
+    return false;
+  }
+
+  //***************************************************************************
   BoundType* BoundType::GetBindingVirtualTypeFromInstance(const void* memory)
   {
     if (this->GetBindingVirtualType)
