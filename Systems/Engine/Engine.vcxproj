@@ -56,6 +56,7 @@
     <ClCompile Include="AnimationNode.cpp" />
     <ClCompile Include="ArchetypeRebuilder.cpp" />
     <ClCompile Include="Area.cpp" />
+    <ClCompile Include="AsyncProcess.cpp" />
     <ClCompile Include="BasicActions.cpp" />
     <ClCompile Include="CogMeta.cpp" />
     <ClCompile Include="ComponentMeta.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="AnimationNode.hpp" />
     <ClInclude Include="ArchetypeRebuilder.hpp" />
     <ClInclude Include="Area.hpp" />
+    <ClInclude Include="AsyncProcess.hpp" />
     <ClInclude Include="CogMeta.hpp" />
     <ClInclude Include="ComponentMeta.hpp" />
     <ClInclude Include="EngineBindingExtensions.hpp" />
