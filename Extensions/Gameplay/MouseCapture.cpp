@@ -83,19 +83,24 @@ public:
   }
 
   //****************************************************************************
-  void OnMouseUp(MouseEvent* e) override
+  void OnMouseButtonUp(MouseEvent* e)
   {
     Cog* captureObject = mMouseCaptureObject;
-    if(captureObject == NULL)
+    if(captureObject == nullptr)
       return;
 
     if(MouseCapture* capture = captureObject->has(MouseCapture))
     {
       // The button that created the capture is the one that has to end it.
       if(mButton == e->Button)
-        capture->ReleaseCapture( );
+        capture->ReleaseCapture();
     }
+  }
 
+  //****************************************************************************
+  void OnMouseUp(MouseEvent* e) override
+  {
+    OnMouseButtonUp(e);
   }
 
   //****************************************************************************
@@ -113,25 +118,13 @@ public:
   //****************************************************************************
   void OnRightMouseUp(MouseEvent* e) override
   {
-    Cog* captureObject = mMouseCaptureObject;
-    if(captureObject == NULL)
-      return;
-
-    if(MouseCapture* capture = captureObject->has(MouseCapture))
-    {
-      // The button that created the capture is the one that has to end it.
-      if(mButton == e->Button)
-        capture->ReleaseCapture( );
-    }
-
+    OnMouseButtonUp(e);
   }
 
   //****************************************************************************
   void OnMiddleMouseUp(MouseEvent* e) override
   {
-    // Do not forward MiddleMouse if it didn't create this capture.
-    if(mButton == e->Button)
-      ForwardMouseEvent(e);
+    OnMouseButtonUp(e);
   }
 
   //****************************************************************************
