@@ -2291,7 +2291,7 @@ ZilchDefineType(EditInGameFilter, builder, type)
 {
 }
 
-bool EditInGameFilter::Filter(Property* prop, HandleParam instance)
+bool EditInGameFilter::Filter(Member* prop, HandleParam instance)
 {
   Component* component = instance.Get<Component*>();
   if(!component)

@@ -399,7 +399,7 @@ class EditInGameFilter : public MetaPropertyFilter
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  bool Filter(Property* prop, HandleParam instance) override;
+  bool Filter(Member* prop, HandleParam instance) override;
 };
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
