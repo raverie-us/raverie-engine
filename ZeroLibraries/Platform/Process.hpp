@@ -50,14 +50,17 @@ public:
   void Start(Status& status, StringRange commandLine, bool redirectOut = false, bool redirectError = false,
             bool redirectIn = false, bool showWindow = false);
 
-  // Wait for the process to close (returns the exit code)
+  // Wait for the process to close (returns the exit code).
   // Do not call this after closing a process
   int WaitForClose();
+  // Wait for the process to close up to a maximum time-limit(returns the exit code).
+  // Do not call this after closing a process.
+  int WaitForClose(unsigned long milliseconds);
 
   //  Returns if the process is running or not.
   bool IsRunning();
 
-  // Close the process handle this does not force the process to exit.
+  // Close the process handle. This does not force the process to exit.
   void Close();
 
   // Terminate the process (unsafe)
