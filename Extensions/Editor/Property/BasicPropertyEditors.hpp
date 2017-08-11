@@ -82,7 +82,6 @@ public:
 
   void OnRevert(Event* e);
   void OnMarkModified(Event* e);
-  void OnMetaModified(Event* e);
 
   Property* mProperty;
   Handle mInstance;

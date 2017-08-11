@@ -15,11 +15,11 @@ namespace Events
 
 
  //---------------------------------------------------------------------------------- Meta Type Event
-class MetaModifiedEvent : public Event
+class MetaTypeEvent : public Event
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  LibraryRef mLibrary;
+  BoundType* Type;
 };
 
 //-------------------------------------------------------------------------- Meta Serialize Property
@@ -46,8 +46,7 @@ public:
   /// Find a meta type object by name.
   static BoundType* FindType(StringParam typeName);
 
-  /// We should only send events for script libraries, not native libraries.
-  void AddLibrary(LibraryParam library, bool sendModifiedEvent = false);
+  void AddLibrary(LibraryParam library);
   void AddNativeLibrary(LibraryParam library);
   void RemoveLibrary(LibraryParam library);
   void AddAlternateName(StringParam name, BoundType* boundType);

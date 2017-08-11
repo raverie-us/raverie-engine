@@ -39,6 +39,7 @@ public:
 
   /// Composite Interface.
   void UpdateTransform() override;
+  void ReleaseHandles() override;
 
   void LayoutChildren(bool animate = false);
 
@@ -79,6 +80,7 @@ public:
   void OnLeftClickRemove(MouseEvent* e);
   void OnLeftClickTitle(MouseEvent* e);
   void OnMouseDragTitle(MouseEvent* e);
+  void OnMetaModified(MetaTypeEvent* e);
   void OnEditScriptPressed(Event* e);
 
   void HighlightRed(StringParam message);

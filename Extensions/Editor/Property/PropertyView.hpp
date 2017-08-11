@@ -106,7 +106,6 @@ protected:
   void OnInvalidate(Event* e);
 
   void OnKeyDown(KeyboardEvent* e);
-  void OnMetaModified(MetaModifiedEvent* e);
 
   /// The root of the visible widgets representing each node in the
   /// ObjectPropertyNode tree.

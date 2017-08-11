@@ -162,7 +162,7 @@ void SwapLibrary::Commit()
 
     Unload();
 
-    MetaDatabase::GetInstance()->AddLibrary(mPendingLibrary, true);
+    MetaDatabase::GetInstance()->AddLibrary(mPendingLibrary);
     mCurrentLibrary = mPendingLibrary;
     mPendingLibrary = nullptr;
 

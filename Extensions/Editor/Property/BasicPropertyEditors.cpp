@@ -49,7 +49,6 @@ DirectProperty::DirectProperty(PropertyWidgetInitializer& initializer)
   mReadOnly = mProperty->IsReadOnly();
   mLabel->SetText(mProperty->Name);
   ConnectThisTo(mLabel, Events::RightMouseUp, OnRightMouseUpLabel);
-  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 }
 
 void DirectProperty::BeginPreviewChanges()
@@ -264,12 +263,6 @@ void DirectProperty::OnMarkModified(Event* e)
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   MarkPropertyAsModified(queue, rootInstance, propertyPath);
-}
-
-void DirectProperty::OnMetaModified(Event* e)
-{
-  mProperty = nullptr;
-  mInstance = Handle();
 }
 
 //******************************************************************************

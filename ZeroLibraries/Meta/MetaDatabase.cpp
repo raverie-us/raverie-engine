@@ -16,7 +16,7 @@ namespace Events
   DefineEvent(ObjectStructureModified);
 }//namespace Events
 
-ZilchDefineType(MetaModifiedEvent, builder, type)
+ZilchDefineType(MetaTypeEvent, builder, type)
 {
 
 }
@@ -52,7 +52,7 @@ BoundType* MetaDatabase::FindType(StringParam typeName)
 }
 
 //**************************************************************************************************
-void MetaDatabase::AddLibrary(LibraryParam library, bool sendModifiedEvent)
+void MetaDatabase::AddLibrary(LibraryParam library)
 {
   forRange (BoundType* type, library->BoundTypes.Values())
   {
@@ -99,13 +99,6 @@ void MetaDatabase::AddLibrary(LibraryParam library, bool sendModifiedEvent)
   }
 
   mLibraries.PushBack(library);
-
-  if(sendModifiedEvent)
-  {
-    MetaModifiedEvent e;
-    e.mLibrary = library;
-    DispatchEvent(Events::MetaModified, &e);
-  }
 }
 
 //**************************************************************************************************
