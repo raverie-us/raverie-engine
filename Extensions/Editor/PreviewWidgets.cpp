@@ -267,6 +267,13 @@ public:
     if(GravityEffect* g = space->has(GravityEffect))
       g->SetActive(false);
 
+    Component* renderer = camera->GetComponentByName("ForwardRenderer");
+    if (renderer != nullptr)
+    {
+      Texture* skybox = TextureManager::FindOrNull("WhiteSkybox");
+      renderer->SetProperty("Skybox", skybox);
+    }
+
     // Create preview object if necessary
     if(objectToView == nullptr)
     {

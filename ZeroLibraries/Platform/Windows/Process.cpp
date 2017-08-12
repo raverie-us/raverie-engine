@@ -233,12 +233,17 @@ bool Process::IsRunning()
 
 int Process::WaitForClose()
 {
+  return WaitForClose(INFINITE);
+}
+
+int Process::WaitForClose(unsigned long milliseconds)
+{
   ZeroGetPrivateData(ProcessPrivateData);
-  if (self->mProcess == cInvalidHandle)
+  if(self->mProcess == cInvalidHandle)
     return -1;
 
   // Wait for the process to close.
-  WaitForSingleObject(self->mProcess, INFINITE);
+  WaitForSingleObject(self->mProcess, milliseconds);
 
   // Return the exit code.
   OsInt exitCode = 0;

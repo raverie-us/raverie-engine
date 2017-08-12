@@ -687,8 +687,17 @@ namespace Zilch
     // Returns true if it is initialized, false if it is not
     bool IsInitializedAssert(const char* prependedMessage = "");
 
-    // Whether this type has a cooresponding native type (if it was made via binding)
+    // Whether this type has a corresponding native type (if it was made via binding)
     bool HasNativeBinding();
+
+    // This follows the logic in AllocateDefaultConstructedHeapObject
+    // Native types:
+    //   - Bound default constructor
+    // Script types:
+    //   - Bound default constructor
+    //   - Inherited default constructor
+    //   - No constructors at all
+    bool IsDefaultConstructable();
 
     // Get the virtual type from an instance of an object (not a Handle!)
     BoundType* GetBindingVirtualTypeFromInstance(const void* memory);

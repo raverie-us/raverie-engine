@@ -289,6 +289,14 @@ Cog* Space::Create(Archetype* archetype)
   if(archetype == nullptr)
     return nullptr;
 
+  // Space is being destroyed?
+  if (this->GetMarkedForDestruction())
+  {
+    // Don't allow objects to be created
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the IsBeingDestroyed property on the Space.");
+    return nullptr;
+  }
+
   return CreateNamed(archetype->ResourceIdName);
 }
 
@@ -296,6 +304,14 @@ Cog* Space::CreateAtPosition(Archetype* archetype, Vec3Param position)
 {
   if(archetype == nullptr)
     return nullptr;
+
+  // Space is being destroyed?
+  if (this->GetMarkedForDestruction())
+  {
+    // Don't allow objects to be created
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the IsBeingDestroyed property on the Space.");
+    return nullptr;
+  }
 
   return CreateAt(archetype->ResourceIdName, position);
 }
