@@ -29,6 +29,11 @@ struct ObjectPropertyNode
   /// Destructor.
   ~ObjectPropertyNode();
 
+  /// When scripts are compiled, all old types are going to become garbage. We invalidate the
+  /// property grid by destroying the whole tree, but the problem is that widgets are delay
+  /// destructed. So we need to release all handles immediately, before the types are freed.
+  void ReleaseHandles();
+
   ObjectPropertyNode* mParent;
 
   /// This object. This will be null for property nodes.

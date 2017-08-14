@@ -59,6 +59,7 @@ PropertyView::PropertyView(Composite* parent)
 
   SetPropertyInterface(&mDefaultPropertyInterface);
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
+  ConnectThisTo(this, Events::MetaModified, OnMetaModified);
 }
 
 //******************************************************************************
@@ -79,9 +80,9 @@ void PropertyView::Invalidate()
   this->MarkAsNeedsUpdate();
 
   // We need to release handles in case of meta changing. See the comment
-  // above PropertyWidget::ReleaseHandles
+  // above ObjectPropertyNode::ReleaseHandles
   if(mRoot)
-    mRoot->ReleaseHandles();
+    mRoot->mNode->ReleaseHandles();
 
   // Destroy the tree
   SafeDestroy(mRoot);
@@ -336,6 +337,12 @@ void PropertyView::OnKeyDown(KeyboardEvent* e)
     mPropertyInterface->Redo();
     e->Handled = true;
   }
+}
+
+//******************************************************************************
+void PropertyView::OnMetaModified(MetaModifiedEvent* e)
+{
+  Invalidate();
 }
 
 }//namespace Zero
