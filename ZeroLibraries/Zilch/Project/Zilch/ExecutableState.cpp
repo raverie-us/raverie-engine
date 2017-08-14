@@ -329,7 +329,7 @@ namespace Zilch
     StackSize(DefaultStackSize),
     OverflowStackSize(DefaultStackSize),
     UserData(nullptr),
-    MaxRecursionDepth(40),
+    MaxRecursionDepth(200),
     HitStackOverflow(false),
     TimeoutSeconds(0),
     Name(DefaultName),
