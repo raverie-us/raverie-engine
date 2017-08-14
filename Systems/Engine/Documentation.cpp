@@ -84,6 +84,31 @@ bool TrimCompareFn(const T* lhs, const T* rhs)
   return lhs->mName < rhs->mName;
 }
 
+template<>
+bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
+{
+  int nameComparison = lhs->mName.CompareTo(rhs->mName);
+
+  if (nameComparison != 0)
+  {
+    return nameComparison < 0;
+  }
+
+  uint iterLimit = Math::Min(lhs->mParameterList.Size(), rhs->mParameterList.Size());
+
+  // if the names are the same, sort by parameter name
+  for (uint i = 0; i < iterLimit; ++i)
+  {
+    int typeComparison = lhs->mParameterList[i]->mType.CompareTo(rhs->mParameterList[i]->mType);
+
+    if (typeComparison != 0)
+      return typeComparison < 0;
+  }
+
+  // if we get here, all the param types up to min param count were the same
+  return lhs->mParameterList.Size() < rhs->mParameterList.Size();
+}
+
 ////////////////////////////////////////////////////////////////////////
 // ExceptionDoc
 ////////////////////////////////////////////////////////////////////////
