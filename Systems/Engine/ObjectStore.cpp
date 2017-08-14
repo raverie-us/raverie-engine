@@ -30,10 +30,9 @@ void ObjectStore::SetStoreName(StringParam storeName)
 {
   mStoreName = storeName;
   mStorePath = String();
-  SetUpDirectory();
 }
 
-void ObjectStore::SetUpDirectory()
+void ObjectStore::SetupDirectory()
 {
   if(mStorePath.Empty())
   {
@@ -51,6 +50,7 @@ void ObjectStore::SetUpDirectory()
 
 String ObjectStore::GetFile(StringParam name)
 {
+  SetupDirectory();
   return FilePath::CombineWithExtension(mStorePath, name, ".data");
 }
 
@@ -63,6 +63,7 @@ bool ObjectStore::IsStored(StringParam name)
 
 String ObjectStore::GetDirectoryPath()
 {
+  SetupDirectory();
   return mStorePath;
 }
 
@@ -165,6 +166,7 @@ void ObjectStore::Erase(StringParam name)
 
 void ObjectStore::ClearStore()
 {
+  SetupDirectory();
   String trashDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
 
   MoveFolderContents(trashDirectory, mStorePath);

@@ -48,7 +48,7 @@ public:
 private:
   //Helper function for file names.
   String GetFile(StringParam name);
-  void SetUpDirectory();
+  void SetupDirectory();
 
   String mStoreName;
   String mStorePath;
