@@ -46,7 +46,7 @@ public:
   /// Returns the path to the content folder containing editor specific content (screen shot, editor settings, etc...).
   String GetEditorContentFolder();
 
-  void Save(bool overwriteRevisionNumber = true);
+  void Save();
 
   /// The full path including file name and extension to the screen shot file.
   String GetScreenshotFile();
@@ -78,8 +78,6 @@ public:
   String ProjectName;
   /// Owner of the project.
   String ProjectOwner;
-  /// Project Engine Version. The revision of the engine that saved the project.
-  uint ProjectEngineRevision;
 
   /// Now deprecated
   /// Default Level to load.

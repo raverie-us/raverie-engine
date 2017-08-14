@@ -12,7 +12,7 @@
 namespace Math
 {
 
-static const Mat4 CatmulBasis = Mat4(Vec4(0,-1, 2,-1) / real(2.0),
+static const Mat4 CatmullBasis = Mat4(Vec4(0,-1, 2,-1) / real(2.0),
                                       Vec4(2, 0,-5, 3) / real(2.0),
                                       Vec4(0, 1, 4,-3) / real(2.0),
                                       Vec4(0, 0,-1, 1) / real(2.0));
@@ -25,7 +25,7 @@ static const Mat4 BSplineBasis = Mat4(Vec4(-1, 3,-3, 1) / real(6.0),
 //------------------------------------------------------------------------ Curve
 SplineCurve::SplineCurve()
 {
-  mCurveType = CurveType::CatmulRom;
+  mCurveType = CurveType::CatmullRom;
   mClosed = false;
 }
 
@@ -71,8 +71,8 @@ void SplineCurve::GetPoints(Vec3Array& results, uint resolution) const
     results = points;
   else if(curveType == CurveType::BSpline)
     GetPoints<BSplinePolicy>(points,results,resolution);
-  else if(curveType == CurveType::CatmulRom)
-    GetPoints<CatmulRomPolicy>(points,results,resolution);
+  else if(curveType == CurveType::CatmullRom)
+    GetPoints<CatmullRomPolicy>(points,results,resolution);
 }
 
 void SplineCurve::BakeAdaptive(Vec3Array& results, real error) const
@@ -91,8 +91,8 @@ void SplineCurve::BakeAdaptive(Vec3Array& results, real error) const
     results = points;
   if(curveType == CurveType::BSpline)
     GetPoints<BSplinePolicy>(points,results,error);
-  else if(curveType == CurveType::CatmulRom)
-    GetPoints<CatmulRomPolicy>(points,results,error);
+  else if(curveType == CurveType::CatmullRom)
+    GetPoints<CatmullRomPolicy>(points,results,error);
 }
 
 Vec3Array& SplineCurve::GetControlPoints()
@@ -359,12 +359,12 @@ Vec4 SplineCurve::BSplinePolicy::GetParam(real t)
 }
 
 //----------------------------------------------------------- Catmul-Rom Policy
-const Mat4& SplineCurve::CatmulRomPolicy::GetBasis()
+const Mat4& SplineCurve::CatmullRomPolicy::GetBasis()
 {
-  return CatmulBasis;
+  return CatmullBasis;
 }
 
-Vec4 SplineCurve::CatmulRomPolicy::GetParam(real t)
+Vec4 SplineCurve::CatmullRomPolicy::GetParam(real t)
 {
   return Vec4(1,t,t*t,t*t*t);
 }

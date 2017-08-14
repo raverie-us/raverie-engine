@@ -12,7 +12,7 @@ Cog
 	HierarchySpline 
 	{
 		var Closed = false
-		var SplineType = SplineType.CatmulRom
+		var SplineType = SplineType.CatmullRom
 		var Error = 0.00999999978
 		var DebugDrawSpline = true
 		var SplineColor = Vec4{0, 0, 0, 1}

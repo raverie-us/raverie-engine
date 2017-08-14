@@ -122,6 +122,7 @@ public:
   void ChildAdded(HandleParam object, ObjectState::ChildIdParam childId);
   void ChildRemoved(HandleParam object, ObjectState::ChildIdParam childId);
   bool IsChildLocallyAdded(HandleParam object, ObjectState::ChildIdParam childId);
+  bool IsChildLocallyRemoved(HandleParam object, ObjectState::ChildIdParam childId);
   bool IsObjectLocallyAdded(HandleParam object, bool recursivelyCheckParents);
   bool IsChildOrderModified(HandleParam object);
   void SetChildOrderModified(HandleParam object, bool state);

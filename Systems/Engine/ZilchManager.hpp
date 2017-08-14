@@ -33,16 +33,25 @@ public:
 };
 
 //------------------------------------------------------------------------------------ Zilch Manager
-DeclareEnum3(CompileResult, CompilationFailed, CompilationSucceeded, CompilationNotRequired);
+DeclareEnum2(CompileResult, CompilationFailed, CompilationSucceeded);
 
 class ZilchManager : public ExplicitSingleton<ZilchManager, EventObject>
 {
 public:
+  typedef ZilchManager ZilchSelf;
+  typedef ExplicitSingleton<ZilchManager, EventObject> ZilchBase;
+
   /// Constructor.
   ZilchManager();
 
+  /// Compiles all Scripts and Fragments and allow duplicate errors to re-appear.
+  void TriggerCompileExternally();
+
   /// Compiles all Scripts and Fragments.
-  CompileResult::Enum Compile();
+  void InternalCompile();
+
+  // If dirtied we attempt to compile every engine update (checks dirty flag)
+  void OnEngineUpdate(UpdateEvent* event);
 
   // The last library we properly built (set inside CompileLoadedScriptsIntoLibrary)
   // Once this library becomes in use by an executable state, we CANNOT update it, or any ZilchMeta types
@@ -51,6 +60,12 @@ public:
 
   // @TrevorS: We need to remove libraries from here if we remove them from the project.
   HashSet<ResourceLibrary*> mPendingLibraries;
+
+  // If any scripts, fragments, or plugins have been modified we should attempt to compile once on engine update
+  bool mShouldAttemptCompile;
+
+  // We need to store the last result because we don't always attempt to recompile
+  CompileResult::Enum mLastCompileResult;
 
   // Every time we recompile libraries we increment a version globally.
   // This lets us know elsewhere that anything related to types or scripts have changed.

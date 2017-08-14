@@ -57,7 +57,6 @@ void ProjectSettings::Serialize(Serializer& stream)
   SerializeNameDefault(ProjectOwner, String());
   SerializeNameDefault(DefaultLevel, String());
   SerializeNameDefault(ProjectSpace, String());
-  SerializeNameDefault(ProjectEngineRevision, uint(0));
   SerializeNameDefault(AutoTakeProjectScreenshot, true);
   SerializeNameDefault(mGuid, (Guid)0);
 
@@ -92,11 +91,9 @@ String ProjectSettings::GetEditorContentFolder()
 }
 
 //******************************************************************************
-void ProjectSettings::Save(bool overwriteRevisionNumber)
+void ProjectSettings::Save()
 {
   String projectFile = FilePath::CombineWithExtension(ProjectFolder, ProjectName, ".zeroproj");
-  if(overwriteRevisionNumber)
-    ProjectEngineRevision = GetRevisionNumber();
   SaveToDataFile(*mOwner, projectFile);
 }
 

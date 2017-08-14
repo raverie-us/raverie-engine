@@ -19,8 +19,8 @@
 
 #define ZeroDeclarePrivateData(Type, SizeInBytes) \
   ZeroDeclarePrivateDataBytes(SizeInBytes);       \
-  Type(const Type& right);                        \
-  Type& operator = (const Type& right);
+  Type(const Type& right) {}                      \
+  Type& operator = (const Type& right) { return *this; }
 
 // Gets the private object of a given pointer (doesn't assume self) and uses the provided variable name.
 #define ZeroGetObjectPrivateData(Type, pointer, name) \

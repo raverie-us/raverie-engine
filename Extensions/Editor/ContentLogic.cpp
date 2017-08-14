@@ -302,6 +302,7 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<TextureManager>("SimpleSkybox");
   ShowBuiltInResource<TextureManager>("SsaoRandom4x4");
   ShowBuiltInResource<TextureManager>("White");
+  ShowBuiltInResource<TextureManager>("WhiteSkybox");
   ShowBuiltInResource<TextureManager>("ZeroAlbedo");
   ShowBuiltInResource<TextureManager>("ZeroMetallic");
   ShowBuiltInResource<TextureManager>("ZeroNormal");

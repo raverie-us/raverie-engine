@@ -578,7 +578,6 @@ void ZilchPluginSourceManager::OnResourceEvent(ResourceEvent* event)
     ResourceLibrary* library = resource->mResourceLibrary;
     library->mSwapPlugins[libraryResource].mCompileStatus = ZilchCompileStatus::Modified;
     library->PluginsModified();
-    ZilchManager::GetInstance()->Compile();
   }
 }
 

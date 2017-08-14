@@ -803,6 +803,9 @@ void RigidBody::ClearMassAndVelocities()
 
 void RigidBody::UpdateKinematicVelocities()
 {
+  if (!IsInitialized())
+    return;
+
   // Check if a kinematic velocity computation is queued up
   TransformAction& action = mPhysicsNode->GetQueue()->mTransformAction;
   if(!(action.mState & TransformAction::KinematicVelocity))

@@ -21,6 +21,9 @@ class Level : public Resource
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  Level();
+  ~Level();
+
   //Resource interface
   void UpdateContentItem(ContentItem* contentItem) override;
 
@@ -34,6 +37,7 @@ public:
 
   ///Path to level file.
   String LoadPath;
+  DataNode* mCacheTree;
 };
 
 /// Resource Manager for Levels.

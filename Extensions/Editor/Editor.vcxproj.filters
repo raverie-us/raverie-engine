@@ -393,9 +393,6 @@
     <ClCompile Include="EditorDrop.cpp">
       <Filter>Resources\Operations</Filter>
     </ClCompile>
-    <ClCompile Include="ContentStore.cpp">
-      <Filter>ContentImporting</Filter>
-    </ClCompile>
     <ClCompile Include="ContentPackage.cpp">
       <Filter>ContentImporting</Filter>
     </ClCompile>
@@ -867,9 +864,6 @@
     </ClInclude>
     <ClInclude Include="EditorDrop.hpp">
       <Filter>Resources\Operations</Filter>
-    </ClInclude>
-    <ClInclude Include="ContentStore.hpp">
-      <Filter>ContentImporting</Filter>
     </ClInclude>
     <ClInclude Include="ContentPackage.hpp">
       <Filter>ContentImporting</Filter>

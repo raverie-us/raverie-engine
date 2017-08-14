@@ -73,7 +73,6 @@ public:
 #include "ContentPackage.hpp"
 #include "ContentPackageImporter.hpp"
 #include "ContentPackageItem.hpp"
-#include "ContentStore.hpp"
 #include "ContentUploader.hpp"
 
 // Editor Core

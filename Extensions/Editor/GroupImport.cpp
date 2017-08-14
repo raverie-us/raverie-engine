@@ -65,7 +65,7 @@ void RunGroupImport(ImportOptions& options)
   DoEditorSideImporting(&package, &options);
 
   // Compile all scripts
-  ZilchManager::GetInstance()->Compile();
+  ZilchManager::GetInstance()->TriggerCompileExternally();
 
   if(!contentToBuild.Empty() && status.Succeeded())
     DoNotify("Content Imported", "Content has been added to the project", "BigPlus");

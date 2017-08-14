@@ -190,7 +190,6 @@
     <ClCompile Include="SpriteImporter.cpp" />
     <ClCompile Include="StressTest.cpp" />
     <ClCompile Include="ResourceTableEditor.cpp" />
-    <ClCompile Include="ContentStore.cpp" />
     <ClCompile Include="EditorHotspots.cpp" />
     <ClCompile Include="TextEditor.cpp" />
     <ClCompile Include="TextEditorHotspot.cpp" />
@@ -370,7 +369,6 @@
     <ClInclude Include="SpriteImporter.hpp" />
     <ClInclude Include="StressTest.hpp" />
     <ClInclude Include="ResourceTableEditor.hpp" />
-    <ClInclude Include="ContentStore.hpp" />
     <ClInclude Include="TileEditor2D.hpp" />
     <ClInclude Include="TilePaletteProperty.hpp" />
     <ClInclude Include="TilePaletteSource.hpp" />

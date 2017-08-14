@@ -18,15 +18,15 @@ namespace Zero
 // Convert Integers into hexadecimal format "4a34"
 uint WriteToHex(char* buffer, uint bufferSize, u64 integerValue, bool exclude0x = false);
 uint WriteToHex(char* buffer, uint bufferSize, u32 integerValue, bool exclude0x = false);
-StringRange StripHex0x(StringRange hexString);
-bool StringStartsWith0x(StringRange hexString);
+StringRange StripHex0x(const StringRange& hexString);
+bool StringStartsWith0x(const StringRange& hexString);
 const uint cHex64Size = 16;
 
 // Write out 'places' number of hex digits from integerValue
 uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue, bool exclude0x = false);
 
 // Read 64 bit hex string
-Guid ReadHexString(StringRange range);
+Guid ReadHexString(const StringRange& range);
 
 //Basic conversion function (input must be UTF-16/2) DestAscii must unicodeLength +1 (for null terminator)
 void ConvertUnicodeToAscii(char* destAscii, uint destAsciiLength, const wchar_t* unicodeData, size_t unicodeLength);

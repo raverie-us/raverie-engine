@@ -1090,7 +1090,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   editorMain->mLoading->SetActive(false);
 
   // Compile once before trying to load a project so that the engine can render
-  ZilchManager::GetInstance()->Compile();
+  ZilchManager::GetInstance()->TriggerCompileExternally();
 
   // If we have a file to be loaded
   if(!fileToOpen.Empty())

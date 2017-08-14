@@ -48,7 +48,6 @@ PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initialize
   mMouseOverTitle = false;
   mDragging = false;
   mNode = initializer.ObjectNode;
-  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 
   mLocalModificationIcon = nullptr;
 
@@ -415,16 +414,6 @@ void PropertyWidgetObject::UpdateTransform()
     LayoutChildren();
 
   PropertyWidget::UpdateTransform();
-}
-
-//******************************************************************************
-void PropertyWidgetObject::ReleaseHandles()
-{
-  if(mNode)
-    mNode->mObject = Handle();
-
-  forRange(PropertyWidget& child, ChildWidgets.All())
-    child.ReleaseHandles();
 }
 
 //******************************************************************************
@@ -1311,7 +1300,7 @@ void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColor::Enum
   placement.SetScreenRect(mTitleBackground->GetScreenRect());
   placement.mScreenRect.RemoveThickness(Thickness(2,2,2,2));
   // We want the hotspot to point at the remove icon
-  placement.mHotSpot = mBackground->GetScreenRect().Center() - Pixels(0, 1);
+  placement.mHotSpot = mTitleBackground->GetScreenRect().Center() - Pixels(0, 1);
   placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
                         IndicatorSide::Bottom, IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
@@ -1365,26 +1354,6 @@ uint PropertyWidgetObject::GetComponentIndex()
   }
 
   return uint(-1);
-}
-
-//******************************************************************************
-void PropertyWidgetObject::OnMetaModified(MetaTypeEvent* event)
-{
-  // Widget is destroy but may still get the event
-  if(mDestroyed)
-    return;
-
-  // Is the type is node refers to been modified?
-  // Rebuild the tree. This reloads properties that
-  // may have been added or removed.
-  Handle handle = mNode->mObject;
-  BoundType* thisType = handle.StoredType;
-
-  // METAREFACTOR - IsSameOrProxy - we're removing proxies, right?
-  // This meta type or if this type is a proxy
-  //if(thisType->IsSameOrProxy(event->Type))
-  if(thisType->IsA(event->Type))
-    mGrid->Invalidate();
 }
 
 //******************************************************************************

@@ -193,7 +193,6 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
 
   AddLoader("ZilchScript", new ZilchScriptLoader());
 
-  //ConnectThisTo(Z::gResources, Events::ResourcesLoaded, OnResourcesLoaded);
   //listen for when we should compile
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::UnhandledException, ZeroZilchExceptionCallback);
@@ -266,18 +265,6 @@ String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
   String sourceFile = FilePath::Combine(GetTemporaryDirectory(), resourceAdd.FileName);
   WriteStringRangeToFile(sourceFile, fileData);
   return sourceFile;
-}
-
-void ZilchScriptManager::OnResourcesLoaded(ResourceEvent* event)
-{
-  // If we don't have scripts or plugins, then don't bother compiling
-  // This prevents compiling early (twice) and having missing meta
-  bool noScripts = ResourceIdMap.Empty();
-  bool noPlugins = ZilchPluginLibraryManager::GetInstance()->ResourceIdMap.Empty();
-  if(noScripts && noPlugins)
-    return;
-
-  ZilchManager::GetInstance()->Compile();
 }
 
 void ZilchScriptManager::OnPreZilchProjectCompilation(ZilchPreCompilationEvent* e)

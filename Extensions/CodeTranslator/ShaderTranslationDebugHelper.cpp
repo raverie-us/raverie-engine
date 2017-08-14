@@ -365,7 +365,7 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
   // Force modify and recompile all zilch fragments
   forRange(ResourceLibrary* resourceLibrary, Z::gResources->LoadedResourceLibraries.Values())
     resourceLibrary->FragmentsModified();
-  zilchManager->Compile();
+  zilchManager->TriggerCompileExternally();
 
   // Disconnect all events for compilation
   EventDispatcher* dispatcher = zilchManager->GetDispatcher();

@@ -50,7 +50,6 @@ public:
   String GetTemplateSourceFile(ResourceAdd& resourceAdd) override;
 
   //Internals
-  void OnResourcesLoaded(ResourceEvent* event);
   void OnPreZilchProjectCompilation(ZilchPreCompilationEvent* e);
   // We need to periodically pump the debugger for messages
   void OnEngineUpdate(Event* event);
@@ -72,7 +71,7 @@ public:
   HashSet<String> mAllowedFunctionAttributes;
   HashSet<String> mAllowedGetSetAttributes;
 
-  // We ignore duplicate exceptions until the version is incrmented
+  // We ignore duplicate exceptions until the version is incremented
   HashSet<String> mDuplicateExceptions;
   int mLastExceptionVersion;
 };

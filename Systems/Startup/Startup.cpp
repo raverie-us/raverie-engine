@@ -82,8 +82,6 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   // Add the core library to the meta database
   MetaDatabase::GetInstance()->AddNativeLibrary(Core::GetInstance().GetLibrary());
 
-  ZilchManager::Initialize();
-
   // Initialize Zero Libraries
   PlatformLibrary::Initialize();
   GeometryLibrary::Initialize();
@@ -107,6 +105,8 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   UiWidgetLibrary::Initialize();
 
   ZilchScriptLibrary::Initialize();
+
+  ZilchManager::Initialize();
 
   NativeBindingList::ValidateTypes();
 

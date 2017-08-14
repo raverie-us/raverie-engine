@@ -35,8 +35,19 @@ ZilchDefineType(Level, builder, type)
   ZeroBindDocumented();
 }
 
+Level::Level()
+{
+  mCacheTree = nullptr;
+}
+
+Level::~Level()
+{
+  SafeDelete(mCacheTree);
+}
+
 void Level::UpdateContentItem(ContentItem* contentItem)
 {
+  SafeDelete(mCacheTree);
   mContentItem = contentItem;
   LoadPath = contentItem->GetFullPath();
 }
@@ -52,6 +63,8 @@ String Level::GetLoadPath()
 
 void Level::SaveSpace(Space* space)
 {
+  SafeDelete(mCacheTree);
+
   // If the space has a level load pending do not save.
   if(Level* pending = space->mPendingLevel)
   {

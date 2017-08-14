@@ -289,6 +289,14 @@ Cog* Space::Create(Archetype* archetype)
   if(archetype == nullptr)
     return nullptr;
 
+  // Space is being destroyed?
+  if (this->GetMarkedForDestruction())
+  {
+    // Don't allow objects to be created
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the IsBeingDestroyed property on the Space.");
+    return nullptr;
+  }
+
   return CreateNamed(archetype->ResourceIdName);
 }
 
@@ -296,6 +304,14 @@ Cog* Space::CreateAtPosition(Archetype* archetype, Vec3Param position)
 {
   if(archetype == nullptr)
     return nullptr;
+
+  // Space is being destroyed?
+  if (this->GetMarkedForDestruction())
+  {
+    // Don't allow objects to be created
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the IsBeingDestroyed property on the Space.");
+    return nullptr;
+  }
 
   return CreateAt(archetype->ResourceIdName, position);
 }
@@ -588,11 +604,19 @@ Level* Space::AddObjectsFromLevel(Level* level)
     String levelMessage = String::Format("Loading Level From File %s", levelPath.c_str());
     PushErrorContext(levelMessage.c_str());
 
-    // Load from Level resource
     Status status;
     ObjectLoader stream;
-    stream.OpenFile(status, levelPath);
-    if(status.Succeeded())
+
+    if(level->mCacheTree != nullptr)
+    {
+      stream.SetRoot(level->mCacheTree);
+    }
+    else
+    {
+      stream.OpenFile(status, levelPath);
+    }
+
+    if (status.Succeeded())
     {
       //Read Level Node
       PolymorphicNode node;
@@ -608,6 +632,8 @@ Level* Space::AddObjectsFromLevel(Level* level)
       String message = String::Format("Failed to load level '%s' %s", level->Name.c_str(), status.Message.c_str());
       DoNotifyErrorWithContext(message);
     }
+
+    level->mCacheTree = stream.TakeOwnershipOfRoot();
   }
 
   ObjectEvent event(this);

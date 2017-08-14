@@ -523,7 +523,7 @@ bool EventBundle::DeserializeBitStreamToEvents()
   while(mBitStream.CanReadEvent())
   {
     // Read event from bitstream
-    Event* event = mBitStream.ReadEvent(mGameSession);
+    HandleOf<Event> event = mBitStream.ReadEvent(mGameSession);
     if(!event) // Unable?
     {
       DoNotifyError("Failed EventBundle Operation", "Error deserializing an Event contained in the EventBundle");

@@ -248,7 +248,7 @@ Spline::Spline()
 {
   mIsModified = true;
   mError = 0.01f;
-  mCurve.mCurveType = Math::CurveType::CatmulRom;
+  mCurve.mCurveType = Math::CurveType::CatmullRom;
   mCurve.mClosed = false;
   mControlPoints.mOwner = this;
   mBakedPoints.mOwner = this;

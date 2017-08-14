@@ -96,7 +96,7 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   LoadResourcePackageRelative(projectDirectory, project->ProjectName);
 
   // Make sure scripts in the project are compiled
-  ZilchManager::GetInstance()->Compile();
+  ZilchManager::GetInstance()->TriggerCompileExternally();
 
   // Send after compiling since graphics uses this event to know to stop displaying the splash/loading screen
   ObjectEvent event(projectCog);

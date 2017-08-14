@@ -48,6 +48,7 @@ void Deselect(Editor* editor, Space* space)
 {
   MetaSelection* selection = editor->GetSelection();
   selection->Clear();
+  selection->FinalSelectionChanged();
 }
 
 //----------------------------------------------------------------- Manipulation

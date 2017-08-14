@@ -33,26 +33,43 @@ ZilchCompileEvent::ZilchCompileEvent(HashSet<ResourceLibrary*>& modifiedLibrarie
 //------------------------------------------------------------------------------------ Zilch Manager
 //**************************************************************************************************
 ZilchManager::ZilchManager() :
-  mVersion(0)
+  mVersion(0),
+  mShouldAttemptCompile(true),
+  mLastCompileResult(CompileResult::CompilationSucceeded)
 {
+  ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
 }
 
 //**************************************************************************************************
-CompileResult::Enum ZilchManager::Compile()
+void ZilchManager::TriggerCompileExternally()
 {
+  // Currently the version is used to detect duplicate errors
+  // If something is externally triggering a compile (such as saving, project loading,
+  // playing a game, etc) then we want to show duplicate errors again.
+  ++mVersion;
+  InternalCompile();
+}
+
+//**************************************************************************************************
+void ZilchManager::InternalCompile()
+{
+  if (!mShouldAttemptCompile)
+    return;
+  mShouldAttemptCompile = false;
+
   forRange(ResourceLibrary* resourceLibrary, Z::gResources->LoadedResourceLibraries.Values())
   {
     if(resourceLibrary->CompileScripts(mPendingLibraries) == false)
     {
       Event eventToSend;
       this->DispatchEvent(Events::ScriptCompilationFailed, &eventToSend);
-      return CompileResult::CompilationFailed;
+      mLastCompileResult = CompileResult::CompilationFailed;
+      return;
     }
   }
 
   // If there are no pending libraries, nothing was compiled
-  if(mPendingLibraries.Empty())
-    return CompileResult::CompilationNotRequired;
+  ErrorIf(mPendingLibraries.Empty(), "If the mShouldAttemptCompile flag was set, we should always have pending libraries (even at startup with no scripts)!");
 
   // Since we binary cache archetypes (in a way that is NOT saving the data tree, but rather a 'known serialization format'
   // then if we moved any properties around in any script it would completely destroy how the archetypes were cached
@@ -82,7 +99,13 @@ CompileResult::Enum ZilchManager::Compile()
 
   mPendingLibraries.Clear();
 
-  return CompileResult::CompilationSucceeded;
+  mLastCompileResult = CompileResult::CompilationSucceeded;
+}
+
+//**************************************************************************************************
+void ZilchManager::OnEngineUpdate(UpdateEvent* event)
+{
+  InternalCompile();
 }
 
 }//namespace Zero
