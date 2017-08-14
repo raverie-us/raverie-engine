@@ -1400,13 +1400,22 @@ namespace Zilch
       ErrorIf(inheritedType == nullptr, "Type should be valid");
 
       // If the type is a class type...
-      if (BoundType* boundType = Type::DynamicCast<BoundType*>(inheritedType))
+      if (BoundType* boundBaseType = Type::DynamicCast<BoundType*>(inheritedType))
       {
+        BoundType* classType = classNode->Type;
+
         // If we have no base class...
-        if (classNode->Type->BaseType == nullptr)
+        if (classType->BaseType == nullptr)
         {
+          // Make sure the class that we're inheriting from doesn't
+          // already inherit from us (or that it's also not our own class!)
+          if (boundBaseType->IsA(classType))
+          {
+            return this->ErrorAt(syntaxType, ErrorCode::CycleOfInheritance);
+          }
+
           // Store the base type
-          classNode->Type->BaseType = boundType;
+          classType->BaseType = boundBaseType;
         }
         else
         {
