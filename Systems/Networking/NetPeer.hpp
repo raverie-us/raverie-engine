@@ -196,8 +196,11 @@ public:
   /// Always succeeds and returns true.
   bool OpenOffline();
 
-  /// Closes the peer (safe to call multiple times).
+  /// Closes the peer (resets peer data such that it may be opened again).
+  /// Delayed until the start of next frame, safe to call multiple times.
   void Close();
+  /// Closes the peer now (resets peer data such that it may be opened again).
+  void CloseNow();
 
   /// Handles behavior after the peer is opened.
   /// Returns true if successful, else false.
@@ -761,6 +764,7 @@ public:
 
   // Data
   bool                              mIsOpenOffline;                  ///< Is peer open in offline mode?
+  bool                              mPendingClose;                   ///< Pending peer close request?
   PendingNetUserArray               mPendingUserRequests;            ///< [Client] Pending outgoing network user add requests.
   NetUserSet                        mAddedUsers;                     ///< Added network user objects.
   NetUserSet                        mOurAddedUsers;                  ///< Added network user objects added by our peer.

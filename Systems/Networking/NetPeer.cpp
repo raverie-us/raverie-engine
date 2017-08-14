@@ -77,9 +77,9 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindGetterProperty(Ipv4Address)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(Ipv4Host)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(Ipv4Port)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv6Address)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv6Host)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv6Port)->Add(new EditInGameFilter);
+  // ZilchBindGetterProperty(Ipv6Address)->Add(new EditInGameFilter);
+  // ZilchBindGetterProperty(Ipv6Host)->Add(new EditInGameFilter);
+  // ZilchBindGetterProperty(Ipv6Port)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(NetSpaceCount)->Add(new EditInGameFilter);
@@ -138,6 +138,7 @@ NetPeer::NetPeer()
     Peer(ProcessReceivedCustomPacket, ProcessReceivedCustomMessage),
     Replicator(),
     mIsOpenOffline(false),
+    mPendingClose(false),
     mPendingUserRequests(),
     mAddedUsers(),
     mOurAddedUsers(),
@@ -204,7 +205,6 @@ void NetPeer::ResetConfig()
 Guid NetPeer::GetOurProjectGuid()
 {
   // Get project settings
-
   ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
   if(!projectSettings) // Unable?
     return 0;
@@ -284,7 +284,7 @@ void NetPeer::OnDestroy(uint flags)
   NetObject::OnDestroy(flags);
 
   // Close peer
-  Close();
+  CloseNow();
 }
 
 void NetPeer::OnEngineUpdate(UpdateEvent* event)
@@ -293,6 +293,14 @@ void NetPeer::OnEngineUpdate(UpdateEvent* event)
 
   // Get owner as game session
   GameSession* owner = static_cast<GameSession*>(GetOwner());
+
+  // Pending peer close request?
+  // (Frame delayed until now to avoid issues with closing the peer at unexpected times)
+  if(mPendingClose)
+  {
+    CloseNow();
+    mPendingClose = false;
+  }
 
   // Not open or is open offline?
   if(!IsOpen() || mIsOpenOffline)
@@ -701,8 +709,18 @@ bool NetPeer::IsOpen() const
 
 bool NetPeer::Open(Role::Enum role, uint port, uint retries)
 {
+  Role::Enum currentRole = NetPeer::GetRole();
+  uint currentPort = GetIpv4Port();
+  uint minPort = port;
+  uint maxPort = port + retries;
+
+  // Peer is already open as the specified role and within the given port range?
+  if(currentRole == role
+  && ((port == AnyPort) || (minPort <= currentPort && currentPort <= maxPort)))
+    return true;
+
   // Reset net peer state
-  Close();
+  CloseNow();
 
   // Unspecified role?
   if(role == Role::Unspecified)
@@ -741,7 +759,7 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     Role::Names[role], port, retries));
 
     // Clean up and return failure
-    Close();
+    CloseNow();
     return false;
   }
 
@@ -760,11 +778,10 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     Role::Names[role], port, retries));
 
     // Clean up and return failure
-    Close();
+    CloseNow();
     return false;
   }
 
-  
   Assert(Replicator::IsInitialized());
 
   // Handle net peer opened
@@ -775,7 +792,7 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     Role::Names[role], port, retries));
 
     // Clean up and return failure
-    Close();
+    CloseNow();
     return false;
   }
 
@@ -833,10 +850,15 @@ bool NetPeer::OpenOffline()
 
 void NetPeer::Close()
 {
+  // Delay the peer close request until next frame
+  // (Avoids issues with closing the peer at unexpected times)
+  mPendingClose = true;
+}
+void NetPeer::CloseNow()
+{
   //
   // Peer Scope Clean-up:
   //
-
 
   // Is opened?
   if(IsOpen())
@@ -884,13 +906,11 @@ void NetPeer::Close()
   mProjectHostRecordMaps.Clear();
   mHostRecords.Clear();
   mReceiptRecipients.Clear(); // I assume peer links will be auto closed.
-  
+
   // Clear Server Data
   mPublishElapsedTime = mInternetHostPublishInterval; //So that a new ping is sent when it is reopened.
 
-
   //TODO: Make sure that netpeer closes host discovery and Ping Manager.
-
 }
 
 bool NetPeer::HandleNetPeerOpened()
