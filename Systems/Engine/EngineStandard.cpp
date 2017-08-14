@@ -40,7 +40,6 @@ ZilchDefineEnum(LauncherAutoRunMode);
 ZilchDefineEnum(Location);
 ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
-ZilchDefineEnum(ScriptReloadMethod);
 ZilchDefineEnum(SplineType);
 ZilchDefineEnum(StoreResult);
 ZilchDefineEnum(TabWidth);
@@ -126,7 +125,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(Location);
   ZilchInitializeEnumAs(Math::CurveType, "CurveType");
   ZilchInitializeEnum(MouseButtons);
-  ZilchInitializeEnum(ScriptReloadMethod);
   ZilchInitializeEnum(SplineType);
   ZilchInitializeEnum(StoreResult);
   ZilchInitializeEnum(TabWidth);
