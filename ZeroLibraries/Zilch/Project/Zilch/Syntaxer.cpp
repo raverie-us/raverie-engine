@@ -1638,6 +1638,27 @@ namespace Zilch
     // Grab the function that was created above in 'SetupGenericFunction'
     Function* function = node->DefinedFunction;
 
+    // Walk up the base class hierarchy to find a method of the same name and signature that we may be overriding
+    if (node->Virtualized == VirtualMode::Overriding)
+    {
+      Function* baseFunction = nullptr;
+
+      BoundType* baseType = function->Owner->BaseType;
+      if (baseType != nullptr)
+      {
+        Function* foundFunction = baseType->FindFunction(function->Name, function->FunctionType, FindMemberOptions::None);
+        if (foundFunction != nullptr && foundFunction->IsVirtual)
+        {
+          baseFunction = foundFunction;
+        }
+      }
+
+      if (baseFunction == nullptr)
+      {
+        return ErrorAt(node, ErrorCode::MustOverrideBaseClassFunction);
+      }
+    }
+
     // If this is a normal function (not an extension function...)
     if (node->ExtensionOwner == nullptr)
     {

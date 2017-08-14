@@ -510,7 +510,7 @@ namespace Zilch
             continue;
 
           // Check if the user is attempting to filter by members of a specific type
-          if (this->DeclaredType != nullptr && member->GetTypeOrNull() != this->DeclaredType)
+          if (this->DeclaredType != nullptr && !Type::IsRawSame(member->GetTypeOrNull(), this->DeclaredType))
             continue;
 
           // The user might specifically want a Field, GetterSetter, Function, or even a base type such as Property or Member (which is everything)
