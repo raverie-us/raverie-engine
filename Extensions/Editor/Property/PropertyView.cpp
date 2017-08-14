@@ -59,7 +59,7 @@ PropertyView::PropertyView(Composite* parent)
 
   SetPropertyInterface(&mDefaultPropertyInterface);
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
-  ConnectThisTo(this, Events::MetaModified, OnMetaModified);
+  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 }
 
 //******************************************************************************
