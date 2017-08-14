@@ -14,8 +14,15 @@ namespace Zilch
   template <typename T>
   T& GetInvalid()
   {
-    static byte Invalid[sizeof(T)] = { 0 };
-    return (T&)*Invalid;
+    // Remove the reference qualifier if it has one
+    typedef Zero::Decay<T>::Type TNonReference;
+    static byte InvalidBuffer[sizeof(TNonReference)] = { 0 };
+    
+    // Clear out the buffer every time we request it
+    memset(InvalidBuffer, 0, sizeof(InvalidBuffer));
+
+    // Cast the buffer into a pointer then into a reference of the requested type
+    return *(TNonReference*)InvalidBuffer;
   }
 
   // Stores any type of object (handles, delegates, or even value types)
