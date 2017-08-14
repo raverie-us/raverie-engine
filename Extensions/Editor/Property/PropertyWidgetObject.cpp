@@ -1325,7 +1325,7 @@ void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColor::Enum
   placement.SetScreenRect(mTitleBackground->GetScreenRect());
   placement.mScreenRect.RemoveThickness(Thickness(2,2,2,2));
   // We want the hotspot to point at the remove icon
-  placement.mHotSpot = mBackground->GetScreenRect().Center() - Pixels(0, 1);
+  placement.mHotSpot = mTitleBackground->GetScreenRect().Center() - Pixels(0, 1);
   placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
                         IndicatorSide::Bottom, IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);

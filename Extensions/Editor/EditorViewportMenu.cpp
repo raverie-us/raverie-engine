@@ -105,6 +105,8 @@ EditorViewportMenu::EditorViewportMenu(EditorViewport* viewport)
   mCameraButton->SetIcon("CameraOptions");
   mCameraButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(49));
   mCameraButton->SetToolTip("Camera Options");
+  mCameraButton->mIcon->SetInteractive(false);
+  mCameraButton->mExpandIcon->SetInteractive(false);
   ConnectThisTo(mCameraButton, Events::ButtonPressed, OnCameraButtonPressed);
 
   mGridButton = new ToggleIconButton(this);

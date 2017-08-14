@@ -625,10 +625,7 @@ void TileView::SelectTilesInRange(uint min, uint max)
 
   // Select all in the given range
   for(uint i = min; i <= max && i < mTileWidgets.Size(); ++i)
-  {
-    if(TileViewWidget* tile = mTileWidgets[i])
-      mSelection->Select(tile->mIndex, false);
-  }
+    mSelection->Select(i, false);
 
   mSelection->SelectionModified();
   MarkAsNeedsUpdate();
