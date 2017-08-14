@@ -218,7 +218,7 @@ namespace ErrorDatabase
                 builder.AppendFormat("// {0}", info.Name);
                 builder.AppendLine();
                 builder.AppendLine("{");
-                builder.AppendLine("  ErrorInfo& error = this->Errors.push_back();");
+                builder.AppendLine("  ErrorInfo& error = this->Errors.PushBack();");
                 //builder.AppendFormat("  error.ErrorCode = ErrorCode::{0};", info.Name);
                 //builder.AppendLine();
                 builder.AppendFormat("  error.Error = \"{0}\";", Sanitize(info.Error));
@@ -232,7 +232,7 @@ namespace ErrorDatabase
                 foreach (ErrorExample example in info.Examples)
                 {
                     builder.AppendLine("  {");
-                    builder.AppendLine("    ErrorExample& example = error.Examples.push_back();");
+                    builder.AppendLine("    ErrorExample& example = error.Examples.PushBack();");
                     builder.AppendFormat("    example.ErrorCode = \"{0}\";", Sanitize(example.ErrorCode));
                     builder.AppendLine();
                     builder.AppendFormat("    example.FixedCode = \"{0}\";", Sanitize(example.FixedCode));
