@@ -121,6 +121,9 @@ namespace Zilch
     // We especially use this in plugin stub code generation
     Array<BoundType*> TypesInDependencyOrder;
 
+    // We single out static fields because their memory must be specially destructed
+    Array<Field*> StaticFields;
+
     // This map controls how we extend types with functions without using inheritance
     // We map a type guid to the functions we extend it with
     FunctionExtensionMap StaticExtensionFunctions;

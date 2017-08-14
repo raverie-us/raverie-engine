@@ -346,6 +346,7 @@ namespace Zilch
     friend class Call;
     friend class PerFrameData;
     friend class Debugger;
+    friend class Library;
 
     // Because users often need to access the state in their own bound functions, we provide a thread local
     // that is the last running state (set before each call to Zilch, and reset to the previous after the call)
@@ -493,7 +494,10 @@ namespace Zilch
   private:
 
     // Applies a patch, but skips some checks (used when we know patching a library is safe)
-    void ForcePatchLibrary(LibraryRef newLibrary);
+    void ForcePatchLibrary(LibraryParam newLibrary);
+
+    // When a library is freed we need to erase all static fields from that library to prevent crashes in the executable state destructor
+    void ClearStaticFieldsFromLibrary(Library* library);
 
     // Gets a pointer to the next stack frame
     // If we're currently in a function, this represents the
