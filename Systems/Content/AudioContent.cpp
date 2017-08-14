@@ -107,6 +107,9 @@ void SoundBuilder::BuildContent(BuildOptions& options)
     mOwner->SaveMetaFile();
 
     audioFile.WriteEncodedFile(status, destFile);
+
+    if (status.Failed())
+      DoNotifyWarning("Error Processing Audio File", status.Message);
   }
   else
     DoNotifyWarning("Error Processing Audio File", status.Message);

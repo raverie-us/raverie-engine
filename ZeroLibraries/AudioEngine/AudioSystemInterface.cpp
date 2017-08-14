@@ -179,7 +179,7 @@ namespace Audio
   //************************************************************************************************
   void AudioFile::WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName)
   {
-    if (Data->FileData)
+    if (Data->RawDataBuffer)
       FileEncoder::WriteFile(status, outputFileName, *Data);
     else
       status.SetFailed("No input file was opened");
@@ -190,8 +190,8 @@ namespace Audio
   {
     if (Data)
     {
-      if (Data->FileData)
-        delete[] Data->FileData;
+      if (Data->RawDataBuffer)
+        delete[] Data->RawDataBuffer;
 
       delete Data;
     }

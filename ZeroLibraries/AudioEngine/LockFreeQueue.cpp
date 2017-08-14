@@ -17,11 +17,7 @@ namespace Audio
   void* AtomicCompareExchangePointer(void** destination, void* exchange, void* comperand)
   {
 #ifdef _MSC_VER
-    if (sizeof(destination) == 4)
-      return (void*)InterlockedCompareExchange((long*)destination, (long)exchange, (long)comperand);
-    else if (sizeof(destination) == 8)
-      return (void*)InterlockedCompareExchange64((long long*)(&destination), (long long)exchange, 
-        (long long)comperand);
+    return InterlockedCompareExchangePointer(destination, exchange, comperand);
 #endif
 
     return destination;
@@ -31,10 +27,7 @@ namespace Audio
   void AtomicSetPointer(void** target, void* value)
   {
 #ifdef _MSC_VER
-    if (sizeof(target) == 4)
-      InterlockedExchange((long*)target, (long)value);
-    else if (sizeof(target) == 8)
-      InterlockedExchange64((long long*)target, (long long)value);
+    InterlockedExchangePointer(target, value);
 #endif
   }
 

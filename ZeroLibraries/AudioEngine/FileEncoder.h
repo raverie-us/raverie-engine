@@ -12,6 +12,7 @@
 
 namespace Audio
 {
+  // Types of audio files that can be processed
   enum FileTypes { WAV_Type, Ogg_Type, Other_Type };
 
   // Define data type that equals a byte. 
@@ -19,6 +20,7 @@ namespace Audio
 
   //-------------------------------------------------------------------------------- Audio File Data
 
+  // Information about an audio file as well as data read in from the file
   class AudioFileData
   {
   public:
@@ -28,7 +30,7 @@ namespace Audio
       Channels(0),
       SampleRate(0),
       Type(Other_Type),
-      FileData(nullptr),
+      RawDataBuffer(nullptr),
       BytesPerSample(0),
       FileSize(0)
     {}
@@ -39,7 +41,7 @@ namespace Audio
     unsigned BytesPerSample;
     unsigned FileSize;
     FileTypes Type;
-    byte* FileData;
+    byte* RawDataBuffer;
   };
 
   //----------------------------------------------------------------------------------- File Encoder
@@ -48,29 +50,35 @@ namespace Audio
   {
   public:
 
+    // Opens the specified file and reads in the raw data
     static AudioFileData OpenFile(Zero::Status& status, Zero::StringParam fileName);
+    // Encodes the audio file and writes it out to the specified file name
     static void WriteFile(Zero::Status& status, Zero::StringParam outputFileName, 
       AudioFileData& fileData);
 
+    // 20 ms of audio data at 48000 samples per second
+    static const unsigned FrameSize = 960;
+    // Recommended max packet size
+    static const unsigned MaxPacketSize = 4000;
+    
   private:
+    // Reads in audio data from a WAV file and puts it into the AudioFileData buffer
     static void ReadWav(Zero::Status& status, Zero::File& file, AudioFileData& data);
+    // Reads in audio data from an OGG file and puts it into the AudioFileData buffer
     static void ReadOgg(Zero::Status& status, Zero::File& file, Zero::StringParam fileName,
       AudioFileData& data);
+    // Translates PCM audio data to floats
     static bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount,
       const unsigned channelCount, const unsigned bytesPerSample);
+    // Processes the audio data so that its volume is not higher than MaxVolumeLimit
     static void Normalize(float** samplesPerChannel, const unsigned frames, const unsigned channels);
+    // Resamples the audio data to match the system's sample rate
     static unsigned Resample(unsigned fileSampleRate, unsigned channels, unsigned samplesPerChannel,
       float**& buffersPerChannel);
+    // Encodes the audio data and writes it out to the file
     static void EncodeFile(Zero::Status& status, Zero::File& outputFile, AudioFileData& data, 
       float** buffersPerChannel);
   };
-
-  // 20 ms of audio data at 48000 samples per second
-  static const unsigned FrameSize = 960;
-  // Recommended max packet size
-  static const unsigned MaxPacketSize = 4000;
-
-  static const float MaxVolume = 0.9f;
 
   struct FileHeader
   {
