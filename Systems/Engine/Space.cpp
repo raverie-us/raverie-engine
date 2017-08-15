@@ -293,7 +293,7 @@ Cog* Space::Create(Archetype* archetype)
   if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the IsBeingDestroyed property on the Space.");
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
     return nullptr;
   }
 
@@ -309,7 +309,7 @@ Cog* Space::CreateAtPosition(Archetype* archetype, Vec3Param position)
   if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the IsBeingDestroyed property on the Space.");
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
     return nullptr;
   }
 
@@ -322,7 +322,7 @@ Cog* Space::CreateNamed(StringParam source, StringParam name)
   if(this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the IsBeingDestroyed property on the Space.");
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
     return nullptr;
   }
 
@@ -356,6 +356,14 @@ Cog* Space::CreateNamedLink(StringParam archetypeName, Cog* objectA, Cog* object
 {
   if(objectA == nullptr || objectB == nullptr)
     return nullptr;
+
+  // Space is being destroyed?
+  if(this->GetMarkedForDestruction())
+  {
+    // Don't allow objects to be created
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
+    return nullptr;
+  }
 
   CogCreationContext context(this, archetypeName);
 
@@ -588,6 +596,14 @@ void Space::LoadLevelFile(StringParam filePath)
 
 Level* Space::AddObjectsFromLevel(Level* level)
 {
+  // Space is being destroyed?
+  if(this->GetMarkedForDestruction())
+  {
+    // Don't allow objects to be created
+    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
+    return nullptr;
+  }
+
   // Begin Loading Level
   mIsLoadingLevel = true;
 
@@ -669,7 +685,7 @@ void Space::LoadLevel(Level* level)
   if(this->GetMarkedForDestruction())
   {
     // Don't allow levels to be loaded
-    DoNotifyException("Space", "Cannot load a Level in a Space that is being destroyed. Check the IsBeingDestroyed property on the Space.");
+    DoNotifyException("Space", "Cannot load a Level in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
     return;
   }
 
