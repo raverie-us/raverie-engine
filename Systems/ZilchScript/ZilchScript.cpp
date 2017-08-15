@@ -292,6 +292,17 @@ void ZilchScriptManager::TypeParsedCallback(Zilch::ParseEvent* e, void* userData
   {
     ValidateAttributes(zilchProperty->Attributes, zilchProperty->Location, self->mAllowedGetSetAttributes, "property", e->BuildingProject);
     CheckDependencies(type, zilchProperty, e->BuildingProject);
+
+    // Static members cannot be serialized
+    if(zilchProperty->IsStatic)
+    {
+      if (zilchProperty->HasAttribute(Zilch::PropertyAttribute) ||
+          zilchProperty->HasAttribute(PropertyAttributes::cSerialized))
+      {
+        String message = "Static members cannot be serialized";
+        DispatchZeroZilchError(zilchProperty->Location, message, e->BuildingProject);
+      }
+    }
   }
 
   // Check if an object has a gizmo attribute.
