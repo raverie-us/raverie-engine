@@ -1092,10 +1092,19 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void StringFromChar(Call& call, ExceptionReport& report)
+  void StringFromRuneValue(Call& call, ExceptionReport& report)
   {
-    char character = (char)call.Get<Integer>(0);
-    String result(&character, 1);
+    int codePoint = (int)call.Get<Integer>(0);
+    Zero::Rune r(codePoint);
+    String result(r);
+    call.Set(Call::Return, &result);
+  }
+
+  //***************************************************************************
+  void StringFromRune(Call& call, ExceptionReport& report)
+  {
+    Rune rune = call.Get<Rune>(0);
+    String result(rune.mValue);
     call.Set(Call::Return, &result);
   }
 
@@ -3078,6 +3087,7 @@ namespace Zilch
     // Create the string type as a reference type
     BoundType* stringRangeType = ZilchTypeId(StringRangeExtended);
     BoundType* stringType = ZilchTypeId(String);
+    BoundType* runeType = ZilchTypeId(Rune);
     BoundType* runeIteratorType = ZilchTypeId(RuneIterator);
     BoundType* splitRangeType = ZilchTypeId(StringSplitRangeExtended);
 
@@ -3115,8 +3125,10 @@ namespace Zilch
       ->Description = ZilchDocumentString("Combines the two strings into a new string.");
     builder.AddBoundFunction(stringType, "Concatenate", StringRangeConcatenate, TwoParameters(stringRangeType), stringType, FunctionOptions::Static)
       ->Description = ZilchDocumentString("Combines the two string ranges into a new string.");
-    builder.AddBoundFunction(stringType, "FromChar", StringFromChar, OneParameter(integerType), stringType, FunctionOptions::Static)
-      ->Description = ZilchDocumentString("Constructs a string from the ascii index of a character.");
+    builder.AddBoundFunction(stringType, "FromRune", StringFromRuneValue, OneParameter(integerType), stringType, FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Constructs a string from the utf-8 code point of a rune.");
+    builder.AddBoundFunction(stringType, "FromRune", StringFromRune, OneParameter(runeType), stringType, FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Constructs a string from a rune.");
     builder.AddBoundFunction(stringType, "Contains", StringContains, OneParameter(stringRangeType), booleanType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Returns if the string Contains the specified substring.");
     builder.AddBoundFunction(stringType, "Compare", StringCompare, TwoParameters(stringType, "left", "right"), integerType, FunctionOptions::Static)
