@@ -77,9 +77,6 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindGetterProperty(Ipv4Address)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(Ipv4Host)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(Ipv4Port)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv6Address)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv6Host)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv6Port)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
   ZilchBindGetterProperty(NetSpaceCount)->Add(new EditInGameFilter);
@@ -137,6 +134,8 @@ NetPeer::NetPeer()
   : NetObject(),
     Peer(ProcessReceivedCustomPacket, ProcessReceivedCustomMessage),
     Replicator(),
+    mAlreadyOpening(false),
+    mAlreadyClosing(false),
     mIsOpenOffline(false),
     mPendingUserRequests(),
     mAddedUsers(),
@@ -204,7 +203,6 @@ void NetPeer::ResetConfig()
 Guid NetPeer::GetOurProjectGuid()
 {
   // Get project settings
-
   ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
   if(!projectSettings) // Unable?
     return 0;
@@ -701,6 +699,19 @@ bool NetPeer::IsOpen() const
 
 bool NetPeer::Open(Role::Enum role, uint port, uint retries)
 {
+  // We're in the middle of a previous net peer open call?
+  // (Script users might accidentally call open within a previous open call, such as when handling events caused by an open call)
+  if(mAlreadyOpening)
+  {
+    DoNotifyException("Error Opening NetPeer",
+                    String::Format("Unable to open %s NetPeer socket on port %u with %u retries - NetPeer is in the middle of being opened from a previous open call!",
+                    Role::Names[role], port, retries));
+    return false;
+  }
+
+  // Prevent open from getting called again in the middle of this open call
+  mAlreadyOpening = true;
+
   // Reset net peer state
   Close();
 
@@ -787,6 +798,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
     HandleNetGameStarted();
   }
 
+  // Allow net peer open to get called again (we're done opening)
+  mAlreadyOpening = false;
+
   // Success
   return true;
 }
@@ -833,10 +847,17 @@ bool NetPeer::OpenOffline()
 
 void NetPeer::Close()
 {
+  // We're in the middle of a previous net peer close call?
+  // (Script users might accidentally call close within a previous close call, such as when handling events caused by a close call)
+  if(mAlreadyClosing)
+    return;
+
+  // Prevent close from getting called again in the middle of this close call
+  mAlreadyClosing = true;
+
   //
   // Peer Scope Clean-up:
   //
-
 
   // Is opened?
   if(IsOpen())
@@ -884,13 +905,14 @@ void NetPeer::Close()
   mProjectHostRecordMaps.Clear();
   mHostRecords.Clear();
   mReceiptRecipients.Clear(); // I assume peer links will be auto closed.
-  
+
   // Clear Server Data
   mPublishElapsedTime = mInternetHostPublishInterval; //So that a new ping is sent when it is reopened.
 
-
   //TODO: Make sure that netpeer closes host discovery and Ping Manager.
 
+  // Allow net peer close to get called again (we're done closing)
+  mAlreadyClosing = false;
 }
 
 bool NetPeer::HandleNetPeerOpened()
