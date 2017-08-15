@@ -782,8 +782,6 @@ public:
 
 };
 
-
-
 //******************************************************************************
 class PropertyEditorNumber : public DirectProperty
 {

@@ -275,7 +275,6 @@ public:
   void SetArchetype(Archetype* archetype);
   /// Returns the Archetype our Archetype inherits from.
   Archetype* GetBaseArchetype();
-  String GetBaseArchetypeName();
 
   /// Returns whether or not we have any local modifications from our Archetype. This does not
   /// account for properties with LocalModificationOverride (such as Transform modifications).

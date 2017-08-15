@@ -204,11 +204,13 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
 }
 
 //-------------------------------------------------------------------------- Cog Archetype Extension
+//**************************************************************************************************
 ZilchDefineType(CogArchetypeExtension, builder, type)
 {
 }
 
 //--------------------------------------------------------------------------------- Cog Meta Display
+//**************************************************************************************************
 ZilchDefineType(CogMetaDisplay, builder, type)
 {
 }

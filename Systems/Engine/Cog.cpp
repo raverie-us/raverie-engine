@@ -89,8 +89,7 @@ ZilchDefineType(Cog, builder, type)
   // Properties
   ZilchBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension());
-  ZilchBindGetter(BaseArchetype);
-  ZilchBindGetterProperty(BaseArchetypeName);
+  ZilchBindGetterProperty(BaseArchetype)->Add(new EditorResource(false, false, "", true));
 
   ZilchBindGetter(Space);
   ZilchBindGetter(LevelSettings);
@@ -1525,15 +1524,6 @@ Archetype* Cog::GetBaseArchetype()
     return ArchetypeManager::FindOrNull(archetype->mBaseResourceIdName);
 
   return nullptr;
-}
-
-//**************************************************************************************************
-String Cog::GetBaseArchetypeName()
-{
-  if (Archetype* baseArchetype = GetBaseArchetype())
-    return baseArchetype->Name;
-
-  return "";
 }
 
 //**************************************************************************************************
