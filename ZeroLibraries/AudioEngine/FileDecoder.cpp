@@ -232,7 +232,9 @@ namespace Audio
 
     LockObject.Lock();
     if (DecodingTaskCount > 0)
-      int a = 1;
+    {
+      // TODO need to somehow get rid of the task? wait till its done?
+    }
     LockObject.Unlock();
 
     // Set the file to the start of the data

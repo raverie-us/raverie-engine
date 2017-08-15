@@ -95,11 +95,14 @@ void SoundBuilder::BuildContent(BuildOptions& options)
   if (status.Succeeded())
   {
     SoundInfo* info = mOwner->has(SoundInfo);
-    if (info)
+    if (!info)
     {
-      info->mFileLength = audioFile.FileLength;
-      info->mAudioChannels = audioFile.Channels;
+      info = new SoundInfo();
+      mOwner->AddComponent(info);
     }
+
+    info->mFileLength = audioFile.FileLength;
+    info->mAudioChannels = audioFile.Channels;
 
     // This should probably be handled differently. The properties need to be saved because the object
     // is serialized before it is loaded, but BuildContent won't be called next time the engine starts,
