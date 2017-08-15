@@ -326,10 +326,12 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(ObjectPropertyNode* 
   node->mComposition = GetMetaComposition(targetType);
   node->mMetaArray = GetMetaArray(targetType);
 
-  // Check for Editable attribute as well as Property attribute (Property implies Editable)
+  // Check for displayed attribute as well as Property attribute (Property implies displayed)
   forRange(Property* property, targetType->GetProperties())
   {
-    if(property->HasAttribute(Zilch::PropertyAttribute) || property->HasAttribute(PropertyAttributes::cEditable))
+    if(property->HasAttribute(PropertyAttributes::cProperty) ||
+       property->HasAttribute(PropertyAttributes::cDisplay)  ||
+       property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
     {
       if(EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
         node->mProperties.PushBack(new ObjectPropertyNode(node, property));

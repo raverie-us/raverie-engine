@@ -155,7 +155,7 @@ struct Policy<Variant>
 
 }//namespace Serialization
 
-#define ZeroSerialize(DefaultValue) AddAttributeChainable(PropertyAttributes::cSerialized)->Add(new MetaSerializedProperty(DefaultValue))
+#define ZeroSerialize(DefaultValue) AddAttributeChainable(PropertyAttributes::cSerialize)->Add(new MetaSerializedProperty(DefaultValue))
 
 //**************************************************************************************************
 template <typename T>

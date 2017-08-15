@@ -16,8 +16,6 @@ namespace Tags
 }
 
 /// Constants.
-static const String cNetProperty  = "NetProperty";
-static const String cNetPeerId    = "NetPeerId";
 static const String cScriptSource = "ScriptSource";
 static const String cEventId      = "EventId";
 static const String cGameSetup    = "GameSetup";

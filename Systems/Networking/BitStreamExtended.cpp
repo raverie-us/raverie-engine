@@ -1547,11 +1547,11 @@ bool BitStreamExtended::WriteEvent(Event* event)
       continue; // Skip property (we manually serialize this above)
 
     // Is a net peer ID property?
-    if(property->HasAttribute(cNetPeerId))
+    if(property->HasAttribute(PropertyAttributes::cNetPeerId))
       continue; // Skip property (will be set automatically by NetPeer after receiving the event)
 
     // Is a net property?
-    if(property->HasAttribute(cNetProperty))
+    if(property->HasAttribute(PropertyAttributes::cNetProperty))
     {
       // (Should be a valid net property type)
       Assert(IsValidNetPropertyType(property->PropertyType));
@@ -1664,11 +1664,11 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
       continue; // Skip property (we manually serialize this above)
 
     // Is a net peer ID property?
-    if(property->HasAttribute(cNetPeerId))
+    if(property->HasAttribute(PropertyAttributes::cNetPeerId))
       continue; // Skip property (will be set automatically by NetPeer after receiving the event)
 
     // Is a net property?
-    if(property->HasAttribute(cNetProperty))
+    if(property->HasAttribute(PropertyAttributes::cNetProperty))
     {
       // (Should be a valid net property type)
       Assert(IsValidNetPropertyType(property->PropertyType));

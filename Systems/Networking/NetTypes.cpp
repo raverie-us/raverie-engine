@@ -485,7 +485,7 @@ bool HasNetPeerIdProperty(Event* event)
   forRange(Property* property, properties)
   {
     // Is a net peer ID property?
-    if(property->HasAttribute(cNetPeerId)
+    if(property->HasAttribute(PropertyAttributes::cNetPeerId)
     && IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
       return true;
   }
@@ -507,7 +507,7 @@ void SetNetPeerIdProperties(Event* event, NetPeerId netPeerId)
   forRange(Property* property, properties)
   {
     // Is a net peer ID property?
-    if(property->HasAttribute(cNetPeerId)
+    if(property->HasAttribute(PropertyAttributes::cNetPeerId)
     && IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
     {
       // Set net peer ID

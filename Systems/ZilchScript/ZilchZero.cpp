@@ -36,9 +36,11 @@ void RestoreCogPathLinks(HandleParam object, Cog* owner, CogInitializer& initial
     if (propertyType == nullptr || propertyType->CopyMode != TypeCopyMode::ReferenceType)
       continue;
 
-    if(property->HasAttribute(PropertyAttribute) ||
-       property->HasAttribute(PropertyAttributes::cEditable) ||
-       property->HasAttribute(PropertyAttributes::cSerialized))
+    if(property->HasAttribute(PropertyAttributes::cProperty)           ||
+       property->HasAttribute(PropertyAttributes::cDisplay)            ||
+       property->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
+       property->HasAttribute(PropertyAttributes::cSerialize)          ||
+       property->HasAttribute(PropertyAttributes::cDeprecatedSerialized))
     {
       Any value = property->GetValue(object);
       if(propertyType == cogPathType)
@@ -112,14 +114,12 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
   // Set the value for all dependencies
   PopulateDependencies(this, this->GetOwner());
 
-  static const String cRuntimeClone = "RuntimeClone";
-
   // Walk all attributes and search for any RuntimeClones
   forRange(Property* prop, thisType->GetProperties())
   {
     Type* propertyType = prop->PropertyType;
     bool isResource = propertyType->IsA(ZilchTypeId(Resource));
-    if(isResource && prop->HasAttribute(cRuntimeClone) && prop->Set != nullptr)
+    if(isResource && prop->HasAttribute(PropertyAttributes::cRuntimeClone) && prop->Set != nullptr)
     {
       Any val = prop->GetValue(this);
       
@@ -137,9 +137,11 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
     if (boundPropertyType)
     {
       bool isProperty =
-        prop->HasAttribute(PropertyAttribute) ||
-        prop->HasAttribute(PropertyAttributes::cEditable) ||
-        prop->HasAttribute(PropertyAttributes::cSerialized);
+        prop->HasAttribute(PropertyAttributes::cProperty)           ||
+        prop->HasAttribute(PropertyAttributes::cDisplay)            ||
+        prop->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
+        prop->HasAttribute(PropertyAttributes::cSerialize)          ||
+        prop->HasAttribute(PropertyAttributes::cDeprecatedSerialized);
 
       bool isGetSetProperty =
         isProperty &&
