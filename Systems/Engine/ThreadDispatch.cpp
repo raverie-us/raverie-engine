@@ -1,7 +1,4 @@
 ///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ThreadDispatch.cpp
-/// 
 /// 
 /// Authors: Chris Peters
 /// Copyright 2010-2011, DigiPen Institute of Technology
@@ -17,35 +14,18 @@ namespace Z
 ThreadDispatch* gDispatch = nullptr;
 }
 
-ThreadEvents::~ThreadEvents()
-{
-  forRange(QueuedEvent& queuedEvent, Events.All())
-  {
-    delete queuedEvent.EventToSend;
-  }
-  Events.Clear();
-}
-
+//-------------------------------------------------------------------ThreadDispatch
 ThreadDispatch::ThreadDispatch()
 {
   Z::gDispatch = this;
-  AddThreadContext(ThreadContext::Main);
-  AddThreadContext(ThreadContext::FileIo);
 }
 
 ThreadDispatch::~ThreadDispatch()
 {
-  DeleteObjectsInContainer(ThreadEventMap);
+  ClearEvents();
 }
 
-void ThreadDispatch::AddThreadContext(ThreadContextId id)
-{
-  mLock.Lock();
-  ThreadEventMap[id] = new ThreadEvents();
-  mLock.Unlock();
-}
-
-void ThreadDispatch::DispatchOn(HandleParam object, ThreadContextId contextId, EventDispatcher* eventDispatcher, StringParam eventId, Event* event)
+void ThreadDispatch::DispatchOn(HandleParam object, EventDispatcher* eventDispatcher, StringParam eventId, Event* event)
 {
   //If this is null, ThreadDispatch has been shutdown. To prevent
   //crashes with destruction order just do nothing.
@@ -59,18 +39,18 @@ void ThreadDispatch::DispatchOn(HandleParam object, ThreadContextId contextId, E
   queuedEvent.EventId  = eventId;
 
   mLock.Lock();
-  ThreadEventMap[contextId]->Events.PushBack(queuedEvent);
+  mEvents.PushBack(queuedEvent);
   mLock.Unlock();
 }
 
-void ThreadDispatch::DispatchEventsFor(ThreadContextId contextId)
+void ThreadDispatch::DispatchEvents()
 {
   Array<QueuedEvent> eventsToDispatch;
 
   //To avoid dead lock pull out all message before dispatching
   //(dispatching may add more events)
   mLock.Lock();
-  eventsToDispatch.Swap(ThreadEventMap[contextId]->Events);
+  eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
   forRange(QueuedEvent& queuedEvent, eventsToDispatch.All())
@@ -85,6 +65,20 @@ void ThreadDispatch::DispatchEventsFor(ThreadContextId contextId)
   eventsToDispatch.Clear();
 }
 
+void ThreadDispatch::ClearEvents()
+{
+  Array<QueuedEvent> eventsToDispatch;
+
+  mLock.Lock();
+  eventsToDispatch.Swap(mEvents);
+  mLock.Unlock();
+
+  forRange(QueuedEvent& queuedEvent, eventsToDispatch.All())
+  {
+    delete queuedEvent.EventToSend;
+  }
+  eventsToDispatch.Clear();
+}
 
 
 void StartThreadSystem()

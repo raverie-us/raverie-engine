@@ -45,7 +45,7 @@ OsInt EventDirectoryWatcher::FileCallBack(DirectoryWatcher::FileOperationInfo& i
   if(info.Operation == DirectoryWatcher::Renamed)
     eventName = Events::FileRenamed;
 
-  Z::gDispatch->DispatchOn(this, ThreadContext::Main, this->GetDispatcher(), eventName, event);
+  Z::gDispatch->DispatchOn(this, this->GetDispatcher(), eventName, event);
   return 0;
 }
 

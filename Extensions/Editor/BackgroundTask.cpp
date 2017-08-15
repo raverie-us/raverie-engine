@@ -89,7 +89,7 @@ int BackgroundTaskJob::Cancel()
 //******************************************************************************
 void BackgroundTaskJob::SendMainThreadEvent(StringParam eventId, Event* e)
 {
-  Z::gDispatch->Dispatch(ThreadContext::Main, Z::gBackgroundTasks, eventId, e);
+  Z::gDispatch->Dispatch(Z::gBackgroundTasks, eventId, e);
 }
 
 //-------------------------------------------------------------- Background Task

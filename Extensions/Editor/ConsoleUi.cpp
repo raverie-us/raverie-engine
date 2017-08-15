@@ -160,7 +160,7 @@ void ConsoleUi::ConsoleLog(FilterType filterType, cstr message)
   //on the main ui thread.
   ConsoleTextEvent* event = new ConsoleTextEvent();
   event->Text = message;
-  Z::gDispatch->Dispatch(ThreadContext::Main, this, Events::ConsolePrint, event);
+  Z::gDispatch->Dispatch(this, Events::ConsolePrint, event);
 }
 
 }
