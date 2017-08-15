@@ -94,10 +94,10 @@ void PopulateDependencies(Component* component, Cog* owner)
         {
           String message = String::Format("The '%s' Component depends on the '%s' Component, "
                                           "but the object '%s' does not have that Component.",
-                                          componentType->Name.c_str(),
+                                          virtualBoundType->Name.c_str(),
                                           propertyType->Name.c_str(),
                                           owner->GetDescription().c_str());
-          DoNotifyError("Cog missing dependencies", message);
+          DoNotifyWarning("Cog missing dependencies", message);
         }
       }
     }

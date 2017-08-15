@@ -296,8 +296,12 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
         // Create and add the component
         if(component == nullptr && !subtractiveNode)
         {
-          // METAREFACTOR - calling this destructs the components on the Cog
-          bool canAdd = gameObject->CheckForAddition(componentMeta);
+          // Only check dependencies for native types. We do this because non-native types (script
+          // Components) safely handle null dependencies, and it avoids loss of data
+          bool canAdd = true;
+          if(componentMeta->Native)
+            canAdd = gameObject->CheckForAddition(componentMeta);
+
           if(canAdd)
           {
             uint flags = 0;
