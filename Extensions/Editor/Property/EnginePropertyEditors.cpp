@@ -1561,7 +1561,6 @@ class PropertyEditorResource : public DirectProperty
 {
 public:
   typedef PropertyEditorResource ZilchSelf;
-  ComboBox* mSelectBox;
   Any mVariantValue;
   EditorResource* mMetaEdit;
   ResourceManager* mResourceManager;
@@ -1714,7 +1713,7 @@ public:
     }
   }
 
-  void SetResource(Resource* resource)
+  void SetResource(Resource* resource, bool preview = false)
   {
     if(resource)
     {
@@ -1722,13 +1721,21 @@ public:
       {
         // Set the as a string with the full Id and name
         mVariantValue = resource->ResourceIdName;
-        CommitValue(mVariantValue);
+
+        if (preview)
+          PreviewValue(mVariantValue);
+        else
+          CommitValue(mVariantValue);
       }
       else
       {
         // Set as handle type
         mVariantValue = resource;
-        CommitValue(mVariantValue);
+
+        if (preview)
+          PreviewValue(mVariantValue);
+        else
+          CommitValue(mVariantValue);
       }
 
       // Resource properties can invalid objects forcing the grid to rebuild
@@ -1825,18 +1832,34 @@ public:
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
       searchView->Search(String());
+      ConnectThisTo(searchView, Events::SearchPreview, OnSearchPreview);
       ConnectThisTo(searchView, Events::SearchCompleted, OnSearchCompleted);
+      ConnectThisTo(searchView, Events::SearchCanceled, OnSearchCanceled);
+
+      BeginPreviewChanges();
 
       mActiveSearch = viewPopUp;
     }
   }
 
+  void OnSearchPreview(SearchViewEvent* event)
+  {
+    bool preview = true;
+    SetResource((Resource*)event->Element->Data, preview);
+  }
+
   void OnSearchCompleted(SearchViewEvent* event)
   {
+    EndPreviewChanges();
     SetResource((Resource*)event->Element->Data);
     mActiveSearch.SafeDestroy();
   }
-  
+
+  void OnSearchCanceled(SearchViewEvent* event)
+  {
+    EndPreviewChanges();
+  }
+
   void ResourcesChanged()
   {
 
