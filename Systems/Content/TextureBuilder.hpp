@@ -138,14 +138,14 @@ class ShowPremultipliedAlphaFilter : public MetaPropertyFilter
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  bool Filter(Property* prop, HandleParam instance) override;
+  bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class ShowGammaCorrectionFilter : public MetaPropertyFilter
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  bool Filter(Property* prop, HandleParam instance) override;
+  bool Filter(Member* prop, HandleParam instance) override;
 };
 
 /// Configuration for how an image file should be processed for use as a Texture resource.

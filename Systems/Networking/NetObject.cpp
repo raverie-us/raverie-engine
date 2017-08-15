@@ -23,18 +23,14 @@ ZilchDefineType(NetObject, builder, type)
   // Bind documentation
   ZeroBindDocumented();
 
-  // Is just a NetObject? (Not a more derived type?)
-  if(type == ZilchTypeId(NetObject))
-  {
-    // Bind dependencies
-    ZeroBindDependency(Cog);
-  }
+  // Bind dependencies
+  ZeroBindDependency(Cog);
 
   // Bind setup (can be added in the editor)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   // Bind peer interface
-  ZilchBindGetterProperty(Role);
+  ZilchBindGetterProperty(Role)->Add(new EditInGameFilter);
   ZilchBindCustomGetter(IsClient);
   ZilchBindCustomGetter(IsServer);
   ZilchBindCustomGetter(IsOffline);
@@ -46,76 +42,47 @@ ZilchDefineType(NetObject, builder, type)
   ZilchBindGetterSetterProperty(DetectOutgoingChanges);
   ZilchBindGetterSetterProperty(AcceptIncomingChanges);
   ZilchBindGetterSetterProperty(AllowNapping);
-
-  // Is not a NetPeer or NetSpace? (Accurate timestamps may be configured by the user?)
-  if(!type->IsA(ZilchTypeId(NetPeer))
-  && !type->IsA(ZilchTypeId(NetSpace)))
-  {
-    ZilchBindGetterSetterProperty(AccurateTimestampOnOnline);
-    ZilchBindGetterSetterProperty(AccurateTimestampOnChange);
-    ZilchBindGetterSetterProperty(AccurateTimestampOnOffline);
-  }
-
-  ZilchBindGetterProperty(OnlineTimestamp);
-  ZilchBindGetterProperty(LastChangeTimestamp);
-  ZilchBindGetterProperty(OfflineTimestamp);
-  ZilchBindGetterProperty(OnlineTimePassed);
-  ZilchBindGetterProperty(LastChangeTimePassed);
-  ZilchBindGetterProperty(OfflineTimePassed);
-  ZilchBindCustomGetterProperty(IsOnline);
-  ReflectionObject* netObjectIdProperty = ZilchBindGetterProperty(NetObjectId);
-
-  /* METAREFACTOR - config
-  if(!Z::gEngine->GetConfigCog()->has(DeveloperConfig)) // Not a developer?
-  {
-    // Hide from property grid
-    netObjectIdProperty->AddAttribute(PropertyAttributes::cHidden);
-  }
-  */
-  ZilchBindCustomGetterProperty(IsNapping);
-  ZilchBindMethodProperty(SelectRemote);
-  ZilchBindMethodProperty(ReplicateNow);
-  ZilchBindMethodProperty(WakeUp);
-  ZilchBindMethodProperty(TakeNap);
-  ZilchBindMethodProperty(Forget);
+  ZilchBindGetterSetterProperty(AccurateTimestampOnOnline);
+  ZilchBindGetterSetterProperty(AccurateTimestampOnChange);
+  ZilchBindGetterSetterProperty(AccurateTimestampOnOffline);
+  ZilchBindGetterProperty(OnlineTimestamp)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(LastChangeTimestamp)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(OfflineTimestamp)->Add(new EditInGameFilter);
+  ZilchBindCustomGetterProperty(IsOnline)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetObjectId)->Add(new EditInGameFilter);
+  ZilchBindCustomGetterProperty(IsNapping)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(OnlineTimePassed)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(LastChangeTimePassed)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(OfflineTimePassed)->Add(new EditInGameFilter);
+  ZilchBindMethodProperty(SelectRemote)->Add(new EditInGameFilter);
+  ZilchBindMethodProperty(ReplicateNow)->Add(new EditInGameFilter);
+  ZilchBindMethodProperty(WakeUp)->Add(new EditInGameFilter);
+  ZilchBindMethodProperty(TakeNap)->Add(new EditInGameFilter);
+  ZilchBindMethodProperty(Forget)->Add(new EditInGameFilter);
 
   // Bind channel interface
   ZilchBindMethod(HasNetChannel);
   ZilchBindMethod(GetNetChannel);
 
-  // Is not a NetPeer or NetSpace? (Is a NetObject that may be conceptually owned?)
-  if(!type->IsA(ZilchTypeId(NetPeer))
-  && !type->IsA(ZilchTypeId(NetSpace)))
-  {
-    // Bind ownership interface
-    ZilchBindCustomGetter(IsOwnedByAUser);
-    ZilchBindCustomGetter(IsNotOwnedByAUser);
-    ZilchBindMethod(IsOwnedByUser);
-    // ZilchBindMethod(IsOwnedByUserId);
-    ZilchBindMethod(IsOwnedByPeer);
-    ZilchBindCustomGetterProperty(IsMine);
-    ZilchBindCustomGetter(IsNotMine);
-    ZilchBindCustomGetter(IsClientAndMine);
-    ZilchBindCustomGetter(IsClientButNotMine);
-    ZilchBindCustomGetter(IsServerAndMine);
-    ZilchBindCustomGetter(IsServerButNotMine);
-    ZilchBindCustomGetter(IsOfflineAndMine);
-    ZilchBindCustomGetter(IsOfflineButNotMine);
-    ZilchBindGetterSetterProperty(NetUserOwner);
-    ReflectionObject* netUserOwnerUserIdProperty = ZilchBindGetterProperty(NetUserOwnerUserId);
-    ReflectionObject* netUserOwnerPeerIdProperty = ZilchBindGetterProperty(NetUserOwnerPeerId);
-    /* METAREFACTOR - DevConfig
-    if(!Z::gEngine->GetConfigCog()->has(DeveloperConfig)) // Not a developer?
-    {
-      // Hide from property grid
-      netUserOwnerUserIdProperty->AddAttribute(PropertyAttributes::cHidden);
-      netUserOwnerPeerIdProperty->AddAttribute(PropertyAttributes::cHidden);
-    }*/
-    ZilchBindMethod(SetNetUserOwnerUp);
-    // ZilchBindMethod(SetNetUserOwnerUpById);
-    ZilchBindMethod(SetNetUserOwnerDown);
-    // ZilchBindMethod(SetNetUserOwnerDownById);
-  }
+  // Bind ownership interface
+  ZilchBindCustomGetter(IsOwnedByAUser);
+  ZilchBindCustomGetter(IsNotOwnedByAUser);
+  ZilchBindMethod(IsOwnedByUser);
+  ZilchBindMethod(IsOwnedByPeer);
+  ZilchBindCustomGetterProperty(IsMine)->Add(new EditInGameFilter);
+  ZilchBindCustomGetter(IsNotMine);
+  ZilchBindCustomGetter(IsClientAndMine);
+  ZilchBindCustomGetter(IsClientButNotMine);
+  ZilchBindCustomGetter(IsServerAndMine);
+  ZilchBindCustomGetter(IsServerButNotMine);
+  ZilchBindCustomGetter(IsOfflineAndMine);
+  ZilchBindCustomGetter(IsOfflineButNotMine);
+  ZilchBindGetterSetter(NetUserOwner);
+  ZilchBindGetterProperty(NetUserOwnerPath)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetUserOwnerUserId)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetUserOwnerPeerId)->Add(new EditInGameFilter);
+  ZilchBindMethod(SetNetUserOwnerUp);
+  ZilchBindMethod(SetNetUserOwnerDown);
 
   // Bind network dispatch interface
   ZilchBindMethod(DispatchLocal);
@@ -127,10 +94,8 @@ ZilchDefineType(NetObject, builder, type)
   // Bind channel configuration interface
   ZilchBindGetterSetterProperty(AutomaticChannel);
 
-  // METAREFACTOR handle CreateMetaForContainer - needs to be bound as pointer with MetaContainer and container interface (think Zilch Ranges)
   // Bind property info interface
-  //BoundType* containerType = CreateMetaForContainer<NetPropertyInfoArray>("NetProperties");
-  ZilchBindFieldProperty(mNetPropertyInfos); // METAREFACTOR array
+  ZilchBindFieldProperty(mNetPropertyInfos);
 }
 
 NetObject::NetObject()
@@ -157,10 +122,20 @@ NetObject::~NetObject()
 
 void NetObject::Serialize(Serializer& stream)
 {
+  // Get this net object's derived type
+  BoundType* derivedType = ZilchVirtualTypeId(this);
+
+  // Use accurate timestamps by default for all derived net object types (every net object type other than NetObject itself)
+  // These types (NetPeer, NetSpace, and NetUser) almost always require accurate timestamps, so we enable them by default
+  bool accurateTimestampsByDefault = (derivedType != ZilchTypeId(NetObject));
+
   // Serialize data members
   SerializeNameDefault(mDetectOutgoingChanges, GetDetectOutgoingChanges());
   SerializeNameDefault(mAcceptIncomingChanges, GetAcceptIncomingChanges());
   SerializeNameDefault(mAllowNapping, GetAllowNapping());
+  stream.SerializeFieldDefault("AccurateTimestampOnOnline", mAccurateTimestampOnInitialization, accurateTimestampsByDefault);
+  SerializeNameDefault(mAccurateTimestampOnChange, accurateTimestampsByDefault);
+  stream.SerializeFieldDefault("AccurateTimestampOnOffline", mAccurateTimestampOnUninitialization, accurateTimestampsByDefault);
   SerializeResourceName(mAutomaticChannel, NetChannelConfigManager);
   SerializeNameDefault(mNetPropertyInfos, NetPropertyInfoArray());
 }
@@ -1100,7 +1075,7 @@ void NetObject::HandleNetObjectOffline()
   if(IsServerOrOffline())
   {
     // Clear net user owner
-    SetNetUserOwnerUserId(NetUserId(0));
+    SetNetUserOwnerUserById(NetUserId(0));
   }
 
   // Is client or server, and was cog initialized?
@@ -1800,8 +1775,34 @@ Cog* NetObject::GetNetUserOwner() const
 
   return netPeer->GetUser(GetNetUserOwnerUserId());
 }
+CogPath NetObject::GetNetUserOwnerPath() const
+{
+  CogPath netUserOwnerCogPath;
+  netUserOwnerCogPath.SetCog(GetNetUserOwner());
+  return netUserOwnerCogPath;
+}
 
-void NetObject::SetNetUserOwnerUserId(NetUserId netUserId)
+void NetObject::SetNetUserOwner(Cog* cog)
+{
+  NetUserId netUserId = 0;
+
+  // Valid cog?
+  if(cog)
+  {
+    // Get net user ID
+    NetUser* netUser = cog->has(NetUser);
+    if(!netUser) // Unable?
+    {
+      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
+      return;
+    }
+    netUserId = netUser->mNetUserId;
+  }
+
+  // Set net user owner
+  SetNetUserOwnerUserById(netUserId);
+}
+void NetObject::SetNetUserOwnerUserById(NetUserId netUserId)
 {
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
@@ -1831,26 +1832,6 @@ void NetObject::SetNetUserOwnerUserId(NetUserId netUserId)
     // Handle the net user owner change
     HandleNetUserOwnerChanged(previousNetUserOwnerUserId);
   }
-}
-void NetObject::SetNetUserOwner(Cog* cog)
-{
-  NetUserId netUserId = 0;
-
-  // Valid cog?
-  if(cog)
-  {
-    // Get net user ID
-    NetUser* netUser = cog->has(NetUser);
-    if(!netUser) // Unable?
-    {
-      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
-      return;
-    }
-    netUserId = netUser->mNetUserId;
-  }
-
-  // Set net user owner
-  SetNetUserOwnerUserId(netUserId);
 }
 
 void NetObject::SetNetUserOwnerUp(Cog* cog)
@@ -1888,7 +1869,7 @@ void NetObject::SetNetUserOwnerUpById(NetUserId netUserId)
   }
 
   // Set net user owner on this object
-  SetNetUserOwnerUserId(netUserId);
+  SetNetUserOwnerUserById(netUserId);
 
   // Has parent net object?
   Cog*       parentCog       = GetOwner()->GetParent();
@@ -1935,7 +1916,7 @@ void NetObject::SetNetUserOwnerDownById(NetUserId netUserId)
   }
 
   // Set net user owner on this object
-  SetNetUserOwnerUserId(netUserId);
+  SetNetUserOwnerUserById(netUserId);
 
   // For all child net objects
   Hierarchy* hierarchy = GetOwner()->has(Hierarchy);
@@ -2300,6 +2281,37 @@ void NetObject::RemoveNetPropertyInfo(BoundType* componentType, StringParam prop
   // We want the property grid to reflect the changes
   Event e;
   GetOwner()->DispatchEvent(Events::ObjectStructureModified, &e);
+}
+
+//---------------------------------------------------------------------------------//
+//                               EditInGameFilter                                  //
+//---------------------------------------------------------------------------------//
+
+ZilchDefineType(EditInGameFilter, builder, type)
+{
+}
+
+bool EditInGameFilter::Filter(Member* prop, HandleParam instance)
+{
+  Component* component = instance.Get<Component*>();
+  if(!component)
+  {
+    // Hide the property
+    Error("Unable to get component from meta property filter instance handle");
+    return false;
+  }
+
+  Cog* owner = component->GetOwner();
+  if(!owner)
+  {
+    // Hide the property
+    Error("Unable to get owner from component");
+    return false;
+  }
+
+  // Show the property if this is not editor mode
+  // (We are actually running the game and this filter is being checked in this context - aka "edit in-game")
+  return !owner->IsEditorMode();
 }
 
 } // namespace Zero

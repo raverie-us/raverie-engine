@@ -160,7 +160,7 @@ public:
 
   HideBaseFilter(BoundType* hiddenOnType);
 
-  bool Filter(Property* prop, HandleParam instance) override;
+  bool Filter(Member* prop, HandleParam instance) override;
 
   // Do not show the property on this type
   BoundType* mHiddenOnType;

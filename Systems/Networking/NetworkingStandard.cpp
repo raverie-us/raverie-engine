@@ -123,6 +123,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeType(PropertyFilterMultiPrimitiveTypes);
   ZilchInitializeType(PropertyFilterFloatingPointTypes);
   ZilchInitializeType(PropertyFilterArithmeticTypes);
+  ZilchInitializeType(EditInGameFilter);
 
   // Net property filters by type
   InitializePropertyFilterForType(Other);

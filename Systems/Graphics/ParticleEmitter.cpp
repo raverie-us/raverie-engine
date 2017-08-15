@@ -60,7 +60,7 @@ HideBaseFilter::HideBaseFilter(BoundType* hiddenOnType) :
 
 }
 
-bool HideBaseFilter::Filter(Property* prop, HandleParam instance)
+bool HideBaseFilter::Filter(Member* prop, HandleParam instance)
 {
   if (instance.StoredType->IsA(mHiddenOnType))
     return false;

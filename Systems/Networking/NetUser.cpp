@@ -29,25 +29,18 @@ ZilchDefineType(NetUser, builder, type)
   // Bind setup (can be added in the editor)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
+  // Bind member properties
+  ZilchBindFieldGetterProperty(mNetUserId)->Add(new EditInGameFilter);
+  ZilchBindFieldGetterProperty(mNetPeerId)->Add(new EditInGameFilter);
+
   // Bind ownership interface
-  ZilchBindCustomGetterProperty(AddedByMyPeer);
+  ZilchBindCustomGetterProperty(AddedByMyPeer)->Add(new EditInGameFilter);
   ZilchBindMethod(AddedByPeer);
   ZilchBindMethod(FindOwnedNetObjectByNameInSpace);
   ZilchBindMethod(FindOwnedNetObjectByName);
-  ZilchBindGetterProperty(OwnedNetObjects);
-  ZilchBindGetterProperty(OwnedNetObjectCount);
-  ZilchBindMethodProperty(ReleaseOwnedNetObjects);
-
-  // Bind member properties
-  ReflectionObject* netUserIdProperty = ZilchBindFieldGetterProperty(mNetUserId);
-  ReflectionObject* netPeerIdProperty = ZilchBindFieldGetterProperty(mNetPeerId);
-  /* METAREFACTOR - DevConfig
-  if(!Z::gEngine->GetConfigCog()->has(DeveloperConfig)) // Not a developer?
-  {
-    // Hide from property grid
-    netUserIdProperty->AddAttribute(PropertyAttributes::cHidden);
-    netPeerIdProperty->AddAttribute(PropertyAttributes::cHidden);
-  }*/
+  ZilchBindGetter(OwnedNetObjects);
+  ZilchBindGetterProperty(OwnedNetObjectCount)->Add(new EditInGameFilter);
+  ZilchBindMethodProperty(ReleaseOwnedNetObjects)->Add(new EditInGameFilter);
 }
 
 NetUser::NetUser()
@@ -100,11 +93,6 @@ void NetUser::Initialize(CogInitializer& initializer)
 
   // Connect event handlers
   ConnectThisTo(owner, Events::RegisterCppNetProperties, OnRegisterCppNetProperties);
-
-  // Use accurate timestamps by default
-  SetAccurateTimestampOnOnline(true);
-  SetAccurateTimestampOnChange(true);
-  SetAccurateTimestampOnOffline(true);
 
   // Initialize as net object
   NetObject::Initialize(initializer);
@@ -283,7 +271,7 @@ void NetUser::ReleaseOwnedNetObjects()
         continue;
 
       // Clear net user owner
-      netObject->SetNetUserOwnerUserId(NetUserId(0));
+      netObject->SetNetUserOwnerUserById(NetUserId(0));
     }
     mOwnedNetObjects.Clear();
   }

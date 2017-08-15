@@ -96,7 +96,7 @@ ZilchDefineType(ShowPremultipliedAlphaFilter, builder, type)
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-bool ShowPremultipliedAlphaFilter::Filter(Property* prop, HandleParam instance)
+bool ShowPremultipliedAlphaFilter::Filter(Member* prop, HandleParam instance)
 {
   TextureBuilder* builder = instance.Get<TextureBuilder*>();
   ImageContent* content = (ImageContent*)builder->mOwner;
@@ -113,7 +113,7 @@ ZilchDefineType(ShowGammaCorrectionFilter, builder, type)
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-bool ShowGammaCorrectionFilter::Filter(Property* prop, HandleParam instance)
+bool ShowGammaCorrectionFilter::Filter(Member* prop, HandleParam instance)
 {
   TextureBuilder* builder = instance.Get<TextureBuilder*>();
   ImageContent* content = (ImageContent*)builder->mOwner;

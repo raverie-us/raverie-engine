@@ -760,6 +760,8 @@ public:
   float GetExtraHostInfoTimeout() const;
 
   // Data
+  bool                              mAlreadyOpening;                 ///< Peer is already opening? (Dirty flag to prevent opening while opening.)
+  bool                              mAlreadyClosing;                 ///< Peer is already closing? (Dirty flag to prevent closing while closing.)
   bool                              mIsOpenOffline;                  ///< Is peer open in offline mode?
   PendingNetUserArray               mPendingUserRequests;            ///< [Client] Pending outgoing network user add requests.
   NetUserSet                        mAddedUsers;                     ///< Added network user objects.
