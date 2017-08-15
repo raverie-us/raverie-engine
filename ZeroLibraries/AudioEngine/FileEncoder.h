@@ -12,9 +12,6 @@
 
 namespace Audio
 {
-  // Types of audio files that can be processed
-  enum FileTypes { WAV_Type, Ogg_Type, Other_Type };
-
   // Define data type that equals a byte. 
   typedef unsigned char byte;
 
@@ -29,19 +26,15 @@ namespace Audio
       SamplesPerChannel(0),
       Channels(0),
       SampleRate(0),
-      Type(Other_Type),
-      RawDataBuffer(nullptr),
-      BytesPerSample(0),
-      FileSize(0)
+      BuffersPerChannel(nullptr)
     {}
+
+    void ReleaseData();
 
     unsigned SamplesPerChannel;
     unsigned Channels;
     unsigned SampleRate;
-    unsigned BytesPerSample;
-    unsigned FileSize;
-    FileTypes Type;
-    byte* RawDataBuffer;
+    float** BuffersPerChannel;
   };
 
   //----------------------------------------------------------------------------------- File Encoder
@@ -63,7 +56,8 @@ namespace Audio
     
   private:
     // Reads in audio data from a WAV file and puts it into the AudioFileData buffer
-    static void ReadWav(Zero::Status& status, Zero::File& file, AudioFileData& data);
+    static void ReadWav(Zero::Status& status, Zero::File& file, Zero::StringParam fileName, 
+      AudioFileData& data);
     // Reads in audio data from an OGG file and puts it into the AudioFileData buffer
     static void ReadOgg(Zero::Status& status, Zero::File& file, Zero::StringParam fileName,
       AudioFileData& data);

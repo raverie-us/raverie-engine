@@ -40,6 +40,17 @@ namespace Audio
   const static float Normalize16Bit = 1 << 15;
   const static float Normalize24Bit = 1 << 23;
 
+  //-------------------------------------------------------------------------------- Audio File Data
+
+  //************************************************************************************************
+  void AudioFileData::ReleaseData()
+  {
+    for (unsigned i = 0; i < Channels; ++i)
+      delete[] BuffersPerChannel[i];
+    delete[] BuffersPerChannel;
+    BuffersPerChannel = nullptr;
+  }
+
   //----------------------------------------------------------------------------------- File Encoder
 
   //************************************************************************************************
@@ -59,13 +70,15 @@ namespace Audio
 
     // Read in the header from the input file
     WavRiffHeader header;
-    file.Read(status, (byte*)(&header), sizeof(header));
+    if (file.Read(status, (byte*)(&header), sizeof(header)) < sizeof(header))
+    {
+      status.SetFailed(Zero::String::Format("Unable to read from file %s", fileName.c_str()));
+      return data;
+    }
 
     // If the file starts with RIFF, it's a WAV file
     if (header.riff_chunk[0] == 'R' && header.riff_chunk[1] == 'I')
     {
-      data.Type = WAV_Type;
-
       // Check WAV ID - if not WAVE, set status and return
       if (header.wave_fmt[0] != 'W' || header.wave_fmt[1] != 'A')
       {
@@ -74,16 +87,20 @@ namespace Audio
       }
 
       // Reads the audio data into the AudioFileData object
-      ReadWav(status, file, data);
+      ReadWav(status, file, fileName, data);
     }
     // If it starts with Ogg, it's an Ogg file
     else if ((header.riff_chunk[0] == 'O' || header.riff_chunk[0] == 'o') &&
       (header.riff_chunk[1] == 'G' || header.riff_chunk[1] == 'g'))
     {
-      data.Type = Ogg_Type;
-
       // Reads the audio data into the AudioFileData object
       ReadOgg(status, file, fileName, data);
+    }
+    else
+    {
+      status.SetFailed(Zero::String::Format("File %s was not in WAV or OGG format",
+        fileName.c_str()));
+      return;
     }
 
     return data;
@@ -103,59 +120,24 @@ namespace Audio
       return;
     }
 
-    // Create sample buffers for each channel
-    float** buffersPerChannel = new float*[data.Channels];
-    for (unsigned i = 0; i < data.Channels; ++i)
-      buffersPerChannel[i] = new float[data.SamplesPerChannel];
-
-    if (data.Type == WAV_Type)
-    {
-      // If the PCM to float translation returns false, it wasn't able to translate the format
-      if (!PcmToFloat(data.RawDataBuffer, buffersPerChannel, data.SamplesPerChannel * data.Channels,
-        data.Channels, data.BytesPerSample))
-      {
-        status.SetFailed(Zero::String::Format("File %s is in WAV format but is not 16 or 24 bit",
-          outputFileName.c_str()));
-        return;
-      }
-    }
-    else if (data.Type == Ogg_Type)
-    {
-      // Create the vorbis stream (the entire file should be in the RawDataBuffer)
-      int error;
-      stb_vorbis* oggStream = stb_vorbis_open_memory(data.RawDataBuffer, data.FileSize, &error, nullptr);
-
-      // Translate the ogg data into the buffers of floats
-      data.SamplesPerChannel = stb_vorbis_get_samples_float(oggStream, data.Channels, buffersPerChannel,
-        data.SamplesPerChannel);
-
-      // Close the vorbis stream
-      stb_vorbis_close(oggStream);
-    }
-    else
-    {
-      status.SetFailed(Zero::String::Format("File %s was not in WAV or OGG format", 
-        outputFileName.c_str()));
-      return;
-    }
-
     // Make sure the volume of the audio is below the MaxVolumeLimit
-    Normalize(buffersPerChannel, data.SamplesPerChannel, data.Channels);
+    Normalize(data.BuffersPerChannel, data.SamplesPerChannel, data.Channels);
 
     // If the sample rate of the file is different from the system's sample rate, resample the audio
     if (data.SampleRate != AudioSystemInternal::SampleRate)
     {
       data.SamplesPerChannel = Resample(data.SampleRate, data.Channels, data.SamplesPerChannel, 
-        buffersPerChannel);
+        data.BuffersPerChannel);
       data.SampleRate = AudioSystemInternal::SampleRate;
     }
 
     // Encode the file and write it out
-    EncodeFile(status, outputFile, data, buffersPerChannel);
+    EncodeFile(status, outputFile, data, data.BuffersPerChannel);
   }
 
   //************************************************************************************************
-  void FileEncoder::ReadWav(Zero::Status& status, Zero::File& file, AudioFileData& data)
+  void FileEncoder::ReadWav(Zero::Status& status, Zero::File& file, Zero::StringParam fileName,
+    AudioFileData& data)
   {
     // Read in the next chunk header
     WavChunkHeader chunkHeader;
@@ -200,19 +182,34 @@ namespace Audio
     data.Channels = fmtChunkData.number_of_channels;
     data.SamplesPerChannel = chunkHeader.chunk_size / fmtChunkData.bytes_per_sample;
     data.SampleRate = fmtChunkData.sampling_rate;
-    data.BytesPerSample = fmtChunkData.bytes_per_sample / data.Channels;
 
     // Create the buffer for reading in data from the file
-    data.RawDataBuffer = new byte[chunkHeader.chunk_size];
+    byte* rawDataBuffer = new byte[chunkHeader.chunk_size];
 
     // Read in the audio data 
-    file.Read(status, data.RawDataBuffer, chunkHeader.chunk_size);
-    // If the read failed, delete the buffer
-    if (status.Failed())
+    size_t sizeRead = file.Read(status, rawDataBuffer, chunkHeader.chunk_size);
+    // If the read failed, delete the buffer and return
+    if (status.Failed() || sizeRead < chunkHeader.chunk_size)
     {
-      delete[] data.RawDataBuffer;
-      data.RawDataBuffer = nullptr;
+      status.SetFailed(Zero::String::Format("Couldn't read data from file %s", fileName.c_str()));
+      delete[] rawDataBuffer;
+      return;
     }
+
+    // Create sample buffers for each channel
+    data.BuffersPerChannel = new float*[data.Channels];
+    for (unsigned i = 0; i < data.Channels; ++i)
+      data.BuffersPerChannel[i] = new float[data.SamplesPerChannel];
+
+    // If the PCM to float translation returns false, it wasn't able to translate the format
+    if (!PcmToFloat(rawDataBuffer, data.BuffersPerChannel, data.SamplesPerChannel * data.Channels,
+      data.Channels, fmtChunkData.bytes_per_sample / data.Channels))
+    {
+      status.SetFailed(Zero::String::Format("File %s is in WAV format but is not 16 or 24 bit",
+        fileName.c_str()));
+    }
+
+    delete[] rawDataBuffer;
   }
 
   //************************************************************************************************
@@ -221,44 +218,51 @@ namespace Audio
   {
     // Reset to beginning of file
     file.Seek(0);
-
+    
     // Save the size of the file
-    data.FileSize = (unsigned)file.CurrentFileSize();
+    size_t fileSize = file.CurrentFileSize();
 
     // Create the buffer for reading in data from the file
-    data.RawDataBuffer = new byte[data.FileSize];
+    byte* rawDataBuffer = new byte[fileSize];
 
     // Read in the entire file
-    file.Read(status, data.RawDataBuffer, data.FileSize);
+    size_t sizeRead = file.Read(status, rawDataBuffer, fileSize);
     // If the read failed, delete the buffer and return
-    if (status.Failed())
+    if (status.Failed() || sizeRead < fileSize)
     {
-      delete[] data.RawDataBuffer;
-      data.RawDataBuffer = nullptr;
+      delete[] rawDataBuffer;
       return;
     }
 
     // Create the vorbis stream
     int error;
-    stb_vorbis* oggStream = stb_vorbis_open_memory(data.RawDataBuffer, data.FileSize, &error, nullptr);
+    stb_vorbis* oggStream = stb_vorbis_open_memory(rawDataBuffer, fileSize, &error, nullptr);
     // If there was an error, set the failed status and delete the buffer
     if (error != VORBIS__no_error)
     {
       status.SetFailed(Zero::String::Format("Error reading file %s: vorbis error %d",
         fileName.c_str(), error));
-      delete[] data.RawDataBuffer;
-      data.RawDataBuffer = nullptr;
+      delete[] rawDataBuffer;
+      stb_vorbis_close(oggStream);
+      return;
     }
-    else
-    {
-      // Get the ogg vorbis file info
-      stb_vorbis_info info = stb_vorbis_get_info(oggStream);
 
-      // Set the variables on the AudioFileData object
-      data.Channels = info.channels;
-      data.SamplesPerChannel = stb_vorbis_stream_length_in_samples(oggStream);
-      data.SampleRate = info.sample_rate;
-    }
+    // Get the ogg vorbis file info
+    stb_vorbis_info info = stb_vorbis_get_info(oggStream);
+
+    // Set the variables on the AudioFileData object
+    data.Channels = info.channels;
+    data.SamplesPerChannel = stb_vorbis_stream_length_in_samples(oggStream);
+    data.SampleRate = info.sample_rate;
+
+    // Create sample buffers for each channel
+    data.BuffersPerChannel = new float*[data.Channels];
+    for (unsigned i = 0; i < data.Channels; ++i)
+      data.BuffersPerChannel[i] = new float[data.SamplesPerChannel];
+
+    // Translate the ogg data into the buffers of floats
+    data.SamplesPerChannel = stb_vorbis_get_samples_float(oggStream, data.Channels, 
+      data.BuffersPerChannel, data.SamplesPerChannel);
 
     // Close the vorbis stream
     stb_vorbis_close(oggStream);
