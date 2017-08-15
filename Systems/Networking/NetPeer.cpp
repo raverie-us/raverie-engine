@@ -722,6 +722,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     String::Format("Unable to open %s NetPeer socket on port %u with %u retries - Must specify a valid role",
                     Role::Names[role], port, retries));
 
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
+
     // Failure
     return false;
   }
@@ -730,6 +733,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
   {
     // Open peer in offline mode
     mIsOpenOffline = true;
+
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
 
     // Success
     return true;
@@ -751,6 +757,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     String::Format("Unable to open %s NetPeer socket on port %u with %u retries - There was an error initializing the replicator",
                     Role::Names[role], port, retries));
 
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
+
     // Clean up and return failure
     Close();
     return false;
@@ -770,12 +779,14 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     String::Format("Unable to open %s NetPeer socket on port %u with %u retries - The port may already be in use by another socket",
                     Role::Names[role], port, retries));
 
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
+
     // Clean up and return failure
     Close();
     return false;
   }
 
-  
   Assert(Replicator::IsInitialized());
 
   // Handle net peer opened
@@ -784,6 +795,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
     DoNotifyWarning("Error Opening NetPeer",
                     String::Format("Unable to open %s NetPeer socket on port %u with %u retries - There was an error emplacing existing NetObjects",
                     Role::Names[role], port, retries));
+
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
 
     // Clean up and return failure
     Close();
