@@ -185,6 +185,10 @@ namespace Audio
     // The index of the next available interpolator
     int NextInterpolator;
 
+    float PreviousPeakVolumeThreaded;
+    unsigned PreviousRMSVolumeThreaded;
+    unsigned ClippingCounter;
+
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();
     // Switches buffer pointers and executes all current tasks for the mix thread. 
@@ -298,8 +302,10 @@ namespace Audio
   {
   public:
     AudioFrame(float* samples, unsigned channels);
+    AudioFrame();
 
     void TranslateChannels(const unsigned channels);
+    void SetSamples(float* samples, unsigned channels);
 
     float Samples[8];
 

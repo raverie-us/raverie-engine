@@ -318,11 +318,18 @@ namespace Audio
     if (!Threaded)
       return;
 
+    DecodedPacket packet;
+    while (Decoder->DecodedPacketQueue.Read(packet))
+    {
+
+    }
+
     Decoder->ResetStream();
 
     PreviousBufferSamples = 0;
     NeedSecondBuffer = true;
     memset(Samples, 0, sizeof(float) * FileEncoder::FrameSize * Channels);
+    memset(NextStreamedSamples, 0, sizeof(float) * FileEncoder::FrameSize * Channels);
   }
 
   //************************************************************************************************

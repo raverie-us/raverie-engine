@@ -230,6 +230,11 @@ namespace Audio
     if (!InputFile.IsOpen())
       return;
 
+    LockObject.Lock();
+    if (DecodingTaskCount > 0)
+      int a = 1;
+    LockObject.Unlock();
+
     // Set the file to the start of the data
     InputFile.Seek(sizeof(FileHeader));
     // Set the index
@@ -245,7 +250,7 @@ namespace Audio
     for (short i = 0; i < Channels; ++i)
       Decoders[i] = opus_decoder_create(AudioSystemInternal::SampleRate, 1, &error);
 
-    // TODO read in buffer
+    AddDecodingTask();
   }
 
   //************************************************************************************************
@@ -253,6 +258,13 @@ namespace Audio
   {
     if (InputFile.IsOpen())
       InputFile.Close();
+
+
+    DecodedPacket packet;
+    while (DecodedPacketQueue.Read(packet))
+    {
+
+    }
   }
 
   //************************************************************************************************

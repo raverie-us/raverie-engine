@@ -32,7 +32,10 @@ namespace Audio
     RmsVolumeLastMix(0.0f),
     NodeCount(0),
     NextInterpolator(0),
-    LowPass(nullptr)
+    LowPass(nullptr),
+    PreviousPeakVolumeThreaded(0),
+    PreviousRMSVolumeThreaded(0),
+    ClippingCounter(0)
   {
     gAudioSystem = this;
 
@@ -235,12 +238,13 @@ namespace Audio
       float* output;
       for (unsigned i = 0; i < numberOfFrames; ++i)
       {
-        AudioFrame frame(BufferForOutput.Data() + (i * SystemChannelsThreaded), SystemChannelsThreaded);
+        AudioFrame frame;
         if (SystemChannelsThreaded != AudioIO.OutputChannelsThreaded)
         {
-          // Translate channels 
+          frame.SetSamples(BufferForOutput.Data() + (i * SystemChannelsThreaded), SystemChannelsThreaded);
+
           frame.TranslateChannels(AudioIO.OutputChannelsThreaded);
-          //AudioFrame outputFrame(inputFrame, AudioIO.OutputChannelsThreaded);
+
           output = frame.Samples;
         }
         else
@@ -293,13 +297,26 @@ namespace Audio
 
       // If there was clipping during this mix, notify the external engine
       if (clipping)
-        AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEvent, ExternalInterface, 
+        ++ClippingCounter;
+      else if (ClippingCounter > 0)
+        --ClippingCounter;
+
+      if (ClippingCounter > 5)
+      {
+        AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEvent, ExternalInterface,
           Notify_AudioClipping, (void*)nullptr));
+        ClippingCounter = 0;
+      }
     }
 
     // Update the output volumes
-    rmsVolume /= numberOfFrames;
-    AddTaskThreaded(Zero::CreateFunctor(&AudioSystemInternal::SetVolumes, this, peakVolume, rmsVolume));
+    if (peakVolume != PreviousPeakVolumeThreaded || rmsVolume != PreviousRMSVolumeThreaded)
+    {
+      PreviousPeakVolumeThreaded = peakVolume;
+      rmsVolume /= numberOfFrames;
+      PreviousRMSVolumeThreaded = rmsVolume;
+      AddTaskThreaded(Zero::CreateFunctor(&AudioSystemInternal::SetVolumes, this, peakVolume, rmsVolume));
+    }
 
     // If shutting down, wait for volume to ramp down to zero
     if (ShuttingDownThreaded)
@@ -914,6 +931,57 @@ namespace Audio
   AudioFrame::AudioFrame(float* samples, unsigned channels) : 
     HowManyChannels(channels)
   {
+    SetSamples(samples, channels);
+
+    Matrices[0] = ChannelMatrix1;
+    Matrices[1] = ChannelMatrix2;
+    Matrices[2] = ChannelMatrix3;
+    Matrices[3] = ChannelMatrix4;
+    Matrices[4] = ChannelMatrix5;
+    Matrices[5] = ChannelMatrix6;
+    Matrices[6] = ChannelMatrix7;
+    Matrices[7] = ChannelMatrix8;
+  }
+
+  //************************************************************************************************
+  AudioFrame::AudioFrame() :
+    HowManyChannels(0)
+  {
+    Matrices[0] = ChannelMatrix1;
+    Matrices[1] = ChannelMatrix2;
+    Matrices[2] = ChannelMatrix3;
+    Matrices[3] = ChannelMatrix4;
+    Matrices[4] = ChannelMatrix5;
+    Matrices[5] = ChannelMatrix6;
+    Matrices[6] = ChannelMatrix7;
+    Matrices[7] = ChannelMatrix8;
+  }
+
+  //************************************************************************************************
+  void AudioFrame::TranslateChannels(const unsigned channels)
+  {
+    float output[MaxChannels] = { 0 };
+
+    const float* matrix;
+    if (channels < HowManyChannels)
+      matrix = Matrices[channels - 1];
+    else
+      matrix = Matrices[HowManyChannels - 1];
+
+    for (unsigned outChannel = 0; outChannel < channels; ++outChannel)
+    {
+      for (unsigned sourceChannel = 0; sourceChannel < MaxChannels; ++sourceChannel)
+      {
+        output[outChannel] += Samples[sourceChannel] * matrix[(sourceChannel * channels) + outChannel];
+      }
+    }
+
+    memcpy(Samples, output, sizeof(float) * MaxChannels);
+  }
+
+  //************************************************************************************************
+  void AudioFrame::SetSamples(float* samples, unsigned channels)
+  {
     memset(Samples, 0, sizeof(float) * MaxChannels);
 
     switch (channels)
@@ -948,37 +1016,6 @@ namespace Audio
     default:
       break;
     }
-
-    Matrices[0] = ChannelMatrix1;
-    Matrices[1] = ChannelMatrix2;
-    Matrices[2] = ChannelMatrix3;
-    Matrices[3] = ChannelMatrix4;
-    Matrices[4] = ChannelMatrix5;
-    Matrices[5] = ChannelMatrix6;
-    Matrices[6] = ChannelMatrix7;
-    Matrices[7] = ChannelMatrix8;
-  }
-
-  //************************************************************************************************
-  void AudioFrame::TranslateChannels(const unsigned channels)
-  {
-    float output[MaxChannels] = { 0 };
-
-    const float* matrix;
-    if (channels < HowManyChannels)
-      matrix = Matrices[channels - 1];
-    else
-      matrix = Matrices[HowManyChannels - 1];
-
-    for (unsigned outChannel = 0; outChannel < channels; ++outChannel)
-    {
-      for (unsigned sourceChannel = 0; sourceChannel < MaxChannels; ++sourceChannel)
-      {
-        output[outChannel] += Samples[sourceChannel] * matrix[(sourceChannel * channels) + outChannel];
-      }
-    }
-
-    memcpy(Samples, output, sizeof(float) * MaxChannels);
   }
 
 }
