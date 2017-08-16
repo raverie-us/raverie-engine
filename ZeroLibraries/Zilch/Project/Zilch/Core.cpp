@@ -967,20 +967,8 @@ namespace Zilch
   //***************************************************************************
   void StringGetRune(Call& call, ExceptionReport& report)
   {
-    // Get this string object
-    String& self = call.Get<String&>(Call::This);
-    Integer index = call.Get<Integer>(0);
-    Integer stringCount = (Integer)self.ComputeRuneCount();
-  
-    // Check the character index (here, index CANNOT be the string count)
-    if (index < 0 || index >= stringCount)
-    {
-      call.GetState()->ThrowException(report, "String index was out of bounds");
-      return;
-    }
-  
-    Rune result = *(self.Begin() + index);
-    call.Set(Call::Return, result);
+    call.GetState()->ThrowException(report, "String operator Get is deprecated. "
+      "To iterate through a String use a StringRange (.All) or StringIterator (.Begin).");
   }
 
   //***************************************************************************
@@ -1052,6 +1040,13 @@ namespace Zilch
 
     Integer count = (Integer)self.SizeInBytes();
     call.Set(Call::Return, count);
+  }
+
+  //***************************************************************************
+  void StringCountLegacy(Call& call, ExceptionReport& report)
+  {
+    call.GetState()->ThrowException(report, "Count is deprecated. If you want the number of bytes in a String use ByteCount. "
+      "If you want the number of runes in the String call ComputeRuneCount.");
   }
 
   //***************************************************************************
@@ -3112,7 +3107,7 @@ namespace Zilch
       ->Description = ZilchDocumentString("Converts the string into a string range.");
     builder.AddBoundGetterSetter(stringType, "ByteCount", integerType, nullptr, StringByteCount, MemberOptions::None)
       ->Description = ZilchDocumentString("Returns the number of bytes in the string.");
-    builder.AddBoundGetterSetter(stringType, "Count", integerType, nullptr, StringByteCount,  MemberOptions::None)
+    builder.AddBoundGetterSetter(stringType, "Count", integerType, nullptr, StringCountLegacy,  MemberOptions::None)
       ->Description = ZilchDocumentString("Returns the number of bytes in the string.");
     builder.AddBoundFunction(stringType, "ComputeRuneCount", StringComputeRuneCount, ParameterArray(), integerType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Compute the number of runes in the string.");
