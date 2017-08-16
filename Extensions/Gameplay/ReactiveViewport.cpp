@@ -120,8 +120,10 @@ ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* came
   ConnectThisTo(this, Events::MouseScroll, OnMouseGeneric);
   ConnectThisTo(this, Events::MouseMove, OnMouseGeneric);
 
-  ConnectThisTo(this, Events::DoubleClick, OnMouseGeneric);
   ConnectThisTo(this, Events::LeftClick, OnMouseGeneric);
+  ConnectThisTo(this, Events::RightClick, OnMouseGeneric);
+  ConnectThisTo(this, Events::MiddleClick, OnMouseGeneric);
+  ConnectThisTo(this, Events::DoubleClick, OnMouseGeneric);
 
   ConnectThisTo(this, Events::MouseDown, OnMouseGeneric);
   ConnectThisTo(this, Events::MouseUp, OnMouseGeneric);
