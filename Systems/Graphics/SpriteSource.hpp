@@ -16,8 +16,6 @@ const int cMinFrameSize = 4;
 const float cMaxFrameRate = 100000.0f;
 const float cMinFrameRate = 0.001f;
 
-DeclareEnum4(NineSlices, Left, Top, Right, Bottom);
-
 //---------------------------------------------------------------- Sprite Source
 //class SpriteSource : public TextureRegion
 class SpriteSource : public Resource
