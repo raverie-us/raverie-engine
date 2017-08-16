@@ -80,7 +80,7 @@ private:
 
   /// We need to re-link all objects whenever the meta database has been
   /// modified. This should only ever happen if this object is in the editor.
-  void OnMetaModified(MetaTypeEvent* e);
+  void OnMetaModified(MetaModifiedEvent* e);
 
   /// Whether or not the graph is updated.
   bool mActive;

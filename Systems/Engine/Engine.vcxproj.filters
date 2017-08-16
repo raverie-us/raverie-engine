@@ -373,6 +373,7 @@
     <ClCompile Include="CogMeta.cpp">
       <Filter>Composition</Filter>
     </ClCompile>
+    <ClCompile Include="AsyncProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.hpp">
@@ -670,6 +671,7 @@
     <ClInclude Include="CogMeta.hpp">
       <Filter>Composition</Filter>
     </ClInclude>
+    <ClInclude Include="AsyncProcess.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertyTrack.inl">

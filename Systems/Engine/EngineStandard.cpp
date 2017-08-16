@@ -42,6 +42,7 @@ ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
 ZilchDefineEnum(SplineType);
 ZilchDefineEnum(StoreResult);
+ZilchDefineEnum(StreamType);
 ZilchDefineEnum(TabWidth);
 ZilchDefineEnum(TimeMode);
 ZilchDefineEnum(Verbosity);
@@ -127,6 +128,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(MouseButtons);
   ZilchInitializeEnum(SplineType);
   ZilchInitializeEnum(StoreResult);
+  ZilchInitializeEnum(StreamType);
   ZilchInitializeEnum(TabWidth);
   ZilchInitializeEnum(TimeMode);
   ZilchInitializeEnum(Verbosity);
@@ -194,6 +196,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(ZilchCompileEvent);
   ZilchInitializeType(SplineEvent);
   ZilchInitializeType(BlockingTaskEvent);
+  ZilchInitializeType(AsyncProcessEvent);
 
   // Components
   ZilchInitializeType(Component);
@@ -261,6 +264,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(SplineBakedPoint);
   ZilchInitializeType(SplineControlPoints);
   ZilchInitializeType(SplineControlPoint);
+  ZilchInitializeType(AsyncProcess);
 
   ZilchInitializeType(Action);
   ZilchInitializeType(ActionSet);

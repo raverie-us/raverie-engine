@@ -17,6 +17,8 @@ class Font;
 
 ///Text format constants and helpers
 const Rune NewLine = Rune('\n');
+const int cEmptyRuneIndex = ' ';
+const int cMissingGlyphIndex = 0;
 bool AnyNewLine(Rune rune);
 bool IsPrintable(Rune rune);
 const int cAnsiRunes = 256;
@@ -154,7 +156,8 @@ public:
   RenderFont* mRenderFont;
   Array<RenderGlyph> mGlyphInfo;
   Image mFontImage;
-  Array<Rune> mRunesToUseFallback;
+  Array<int> mInvalidRuneCodes;
+  Array<int> mUnprintableRuneCodes;
 
   // Font Rendering object data
   FontRasterizerData* mData;

@@ -233,6 +233,14 @@ Space* GameSession::CreateSpaceFlags(Archetype* archetype, CreationFlags::Type f
   if(!archetype)
     return nullptr;
 
+  // GameSession is being destroyed?
+  if(this->GetMarkedForDestruction())
+  {
+    // Don't allow objects to be created
+    DoNotifyException("GameSession", "Cannot create a Space in a GameSession that is being destroyed. Check the MarkedForDestruction property on the GameSession.");
+    return nullptr;
+  }
+
   Space* space = Z::gFactory->CreateSpace(archetype->ResourceIdName, flags, this);
   if(space && !space->GetMarkedForDestruction())
     InternalAdd(space);
@@ -244,6 +252,14 @@ Space* GameSession::CreateNamedSpace(StringParam name, Archetype* archetype)
 {
   if(!archetype)
     return nullptr;
+
+  // GameSession is being destroyed?
+  if(this->GetMarkedForDestruction())
+  {
+    // Don't allow objects to be created
+    DoNotifyException("GameSession", "Cannot create a Space in a GameSession that is being destroyed. Check the MarkedForDestruction property on the GameSession.");
+    return nullptr;
+  }
 
   Space* space = Z::gFactory->CreateSpace(archetype->ResourceIdName, CreationFlags::Default, this);
   if(space && !space->GetMarkedForDestruction())

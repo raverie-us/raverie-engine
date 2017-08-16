@@ -83,6 +83,9 @@ public:
   /// Read data from the file
   size_t Read(Status& status, byte* data, size_t sizeInBytes);
 
+  /// Is there data left to read from this file. Primarily for use when the file is a pipe.
+  bool HasData(Status& status);
+
   /// Force all reads / write to the disk
   void Flush();
   

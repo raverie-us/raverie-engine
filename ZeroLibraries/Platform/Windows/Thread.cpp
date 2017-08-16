@@ -152,11 +152,16 @@ OsHandle Thread::Detach()
 
 OsInt Thread::WaitForCompletion()
 {
+  return WaitForCompletion(INFINITE);
+}
+
+OsInt Thread::WaitForCompletion(unsigned long milliseconds)
+{
   ZeroGetPrivateData(ThreadPrivateData);
   if(!IsValid())
     return (OsInt)-1;
 
-  DWORD result = WaitForSingleObject(self->mHandle, INFINITE);
+  DWORD result = WaitForSingleObject(self->mHandle, milliseconds);
   if(result != WAIT_OBJECT_0)
   {
     DebugPrint("Failed to wait on thread. Thread name: %s", mThreadName.c_str());

@@ -143,13 +143,13 @@ RenderRune& RenderFont::GetRenderRune(Rune rune)
     FontRasterizer fontRaster(mFont);
     fontRaster.UpdateRasteredFont(this, rune);
     renderRune = mRunes.FindPointer(rune.value);
-    // this should probably be changed to a notification error (its for debug at the moment)
-    // as not all fonts have all runes available
-    //ErrorIf(renderRune == nullptr, "New Rune Failed To Render");
-    
-    // quick fix for andy to keep working
+
+    // this if a fail safe as this should never be the case
     if (renderRune == nullptr)
+    {
+      DoNotifyWarning("Unsupported Rune", "New rune failed to render for the selected font");
       renderRune = mRunes.FindPointer('?');
+    }
     
     return *renderRune;
   }
@@ -398,7 +398,8 @@ void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
 {
   int errorCode = 0;
   mGlyphInfo.Clear();
-  mRunesToUseFallback.Clear();
+  mInvalidRuneCodes.Clear();
+  mUnprintableRuneCodes.Clear();
 
   int& maxWidth = mRenderFont->mMaxWidthInPixels;
   int& maxHeight = mRenderFont->mMaxHeightInPixels;
@@ -413,6 +414,12 @@ void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
 
       FT_UInt glyphIndex = FT_Get_Char_Index(mData->FontFace, UTF8::Utf8ToUtf32(rune));
 
+      if (glyphIndex == cMissingGlyphIndex)
+      {
+        mInvalidRuneCodes.PushBack(runeCodes[i]);
+        continue;
+      }
+
       errorCode = FT_Load_Glyph(mData->FontFace, glyphIndex, FT_LOAD_DEFAULT);
 
       if (errorCode) continue;
@@ -426,6 +433,11 @@ void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
       maxHeight = Math::Max(maxHeight, curGlyph.Height + cFontSpacing);
 
       mGlyphInfo.PushBack(curGlyph);
+    }
+    // store all unprintable rune codes to set to the empty rune
+    else
+    {
+      mUnprintableRuneCodes.PushBack(runeCodes[i]);
     }
   }
 }
@@ -527,32 +539,43 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
     mRenderFont->mFontHeight = fontHeight;
     mRenderFont->mLineHeight = (float)FtToPixels(mData->FontFace->size->metrics.height);
 
-    const int empty = ' ';
-
     // Clear all default characters
-    mRenderFont->mRunes[empty].Rect.BotRight = Vec2(1, 1);
-    mRenderFont->mRunes[empty].Rect.TopLeft = Vec2(1, 1);
-    mRenderFont->mRunes[empty].Offset = Vec2(0, 0);
-    mRenderFont->mRunes[empty].Size = Vec2(0, 0);
-    mRenderFont->mRunes[empty].Advance = 0;
+    mRenderFont->mRunes[cEmptyRuneIndex].Rect.BotRight = Vec2(1, 1);
+    mRenderFont->mRunes[cEmptyRuneIndex].Rect.TopLeft = Vec2(1, 1);
+    mRenderFont->mRunes[cEmptyRuneIndex].Offset = Vec2(0, 0);
+    mRenderFont->mRunes[cEmptyRuneIndex].Size = Vec2(0, 0);
+    mRenderFont->mRunes[cEmptyRuneIndex].Advance = 0;
 
     // Get empty character size
-    FT_UInt glyph_index = FT_Get_Char_Index(mData->FontFace, empty);
+    FT_UInt glyph_index = FT_Get_Char_Index(mData->FontFace, cEmptyRuneIndex);
     errorCode = FT_Load_Glyph(mData->FontFace, glyph_index, FT_LOAD_DEFAULT);
     FT_GlyphSlot glyphSlot = mData->FontFace->glyph;
-    mRenderFont->mRunes[empty].Advance = (float)FtToPixels(glyphSlot->advance.x);
+    mRenderFont->mRunes[cEmptyRuneIndex].Advance = (float)FtToPixels(glyphSlot->advance.x);
 
     // If the hashmap resizes during an assignment the returned reference will be invalid so we need
     // a copy here for assignment below.
-    RenderRune emptyRune = mRenderFont->mRunes[empty];
+    RenderRune emptyRune = mRenderFont->mRunes[cEmptyRuneIndex];
     // Copy to other characters
-    for (int i = 1; i <= empty; ++i)
+    for (int i = 1; i <= cEmptyRuneIndex; ++i)
     {
       mRenderFont->mRunes[i] = emptyRune;
     }
   }
 
   ComputeGlyphTextureCoordinates();
+
+  // Set all unprintable rune codes to the empty rune
+  RenderRune emptyRune = mRenderFont->mRunes[cEmptyRuneIndex];
+  forRange(int runeCode, mUnprintableRuneCodes.All())
+  {
+    mRenderFont->mRunes[runeCode] = emptyRune;
+  }
+  // Set all invalid runes for the current font to a ?
+  RenderRune missingRune = mRenderFont->mRunes['?'];
+  forRange(int runeCode, mInvalidRuneCodes.All())
+  {
+    mRenderFont->mRunes[runeCode] = missingRune;
+  }
 
   mRenderFont->mTexture = texture;
   mFontObject->mRendered[fontHeight] = mRenderFont;

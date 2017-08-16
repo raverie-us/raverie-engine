@@ -11,7 +11,7 @@
 namespace Zilch
 {  
   /// Class to interface with another process. Allows re-directing standard input, output, and error.
-  class ProcessClass : public Zero::Process
+  class ZeroShared ProcessClass : public Zero::Process
   {
   public:
     ZilchDeclareType(TypeCopyMode::ReferenceType);

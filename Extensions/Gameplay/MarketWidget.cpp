@@ -22,7 +22,14 @@ MarketWidget::MarketWidget(Composite* composite) :
   ConnectThisTo(mBrowser, Events::WebBrowserDownloadStarted, OnDownloadStarted);
 }
 
-void OnPackageDownloadCallback(BackgroundTask* task, Job* job);
+void OnPackageDownloadCallback(BackgroundTask* task, Job* job)
+{
+  DownloadTaskJob* downloadJob = (DownloadTaskJob*)job;
+  String location = FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
+  WriteStringRangeToFile(location, downloadJob->mData);
+
+  ContentImporter::OpenImportWindow(location);
+}
 
 void OnGenericDownloadCallback(BackgroundTask* task, Job* job)
 {

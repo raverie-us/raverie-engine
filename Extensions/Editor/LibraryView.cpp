@@ -1085,13 +1085,22 @@ void LibraryView::OnMessageBox(MessageBoxEvent* event)
   if(event->ButtonIndex == MessageResult::Yes)
   {
     Array<Resource*> resourcesToRemove;
+    // content items with an associated resource that will be deleted
+    HashSet<ContentItem*> contentItems;
 
     for(uint i = 0; i < mCommandIndices.Size(); ++i)
     {
       DataIndex currIndex = mCommandIndices[i];
       LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(currIndex);
       if(Resource* resource = treeNode->mResource)
-        resourcesToRemove.PushBack(resource);
+      {
+        // only delete 1 resource for a content item as removing one removes all associated resources 
+        if(!contentItems.Contains(resource->mContentItem))
+        {
+          resourcesToRemove.PushBack(resource);
+          contentItems.Insert(resource->mContentItem);
+        }
+      }
     }
 
     forRange(Resource* resource, resourcesToRemove.All())

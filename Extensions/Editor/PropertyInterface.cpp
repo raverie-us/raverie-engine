@@ -38,6 +38,16 @@ ObjectPropertyNode::~ObjectPropertyNode()
   DeleteObjectsInContainer(mContainedObjects);
 }
 
+//******************************************************************************
+void ObjectPropertyNode::ReleaseHandles()
+{
+  mObject = Handle();
+  forRange(ObjectPropertyNode* childNode, mProperties)
+    childNode->ReleaseHandles();
+  forRange(ObjectPropertyNode* childNode, mContainedObjects)
+    childNode->ReleaseHandles();
+}
+
 //--------------------------------------------------------------- Property State
 //******************************************************************************
 PropertyState::PropertyState()

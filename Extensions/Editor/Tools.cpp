@@ -408,7 +408,10 @@ void SelectTool::Select(ViewportMouseEvent* e)
     // and clear our tracking of archetype based selection
     if (multiSelect)
     {
-      selection->Add(toSelect, SendsEvents::False);
+      if (selection->Contains(toSelect))
+        selection->Remove(toSelect);
+      else
+        selection->Add(toSelect, SendsEvents::False);
       mLastHitArchetype.Clear();
     }
     // smart select is not enabled so just select whatever the user clicked on regardless of hierarchy
