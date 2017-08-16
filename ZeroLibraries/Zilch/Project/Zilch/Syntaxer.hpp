@@ -303,6 +303,13 @@ namespace Zilch
     // Resolve the node type of a member (after a member access operator...)
     void ResolveMember(MemberAccessNode*& node, TypingContext* context);
 
+    void PrecomputeValueNode(ValueNode*& node, TypingContext* context);
+    void PrecomputeStringInterpolantNode(StringInterpolantNode*& node, TypingContext* context);
+    void PrecomputeFunctionCallNode(FunctionCallNode*& node, TypingContext* context);
+    void PrecomputeMultiExpressionNode(MultiExpressionNode*& node, TypingContext* context);
+    void PrecomputeExpressionInitializerNode(ExpressionInitializerNode*& node, TypingContext* context);
+    void PrecomputeTypeCastNode(TypeCastNode*& node, TypingContext* context);
+
     // Because replacing the side-effect operator case for binary/unary operators is so similar, we functionalized it
     // The template type should be the operator node type
     template <typename NodeType>
@@ -359,6 +366,7 @@ namespace Zilch
     BranchWalker<Syntaxer, TypingContext> FunctionWalker;
     BranchWalker<Syntaxer, TypingContext> LocationWalker;
     BranchWalker<Syntaxer, TypingContext> TypingWalker;
+    BranchWalker<Syntaxer, TypingContext> PrecomputeTypingWalker;
     BranchWalker<Syntaxer, TypingContext> ExpressionWalker;
 
     // Not copyable

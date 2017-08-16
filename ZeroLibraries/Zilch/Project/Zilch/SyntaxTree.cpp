@@ -624,6 +624,7 @@ namespace Zilch
     Io(IoMode::NotSet),
     IoUsage(IoMode::NotSet),
     ResultType(Core::GetInstance().ErrorType),
+    PrecomputedResultType(nullptr),
     IsUsedAsStatement(false)
   {
   }
@@ -984,6 +985,38 @@ namespace Zilch
   //***************************************************************************
   ValueNode::ValueNode()
   {
+  }
+
+  //***************************************************************************
+  Type* ValueNode::PrecomputeType() const
+  {
+    // Check to see what type of literal we have here
+    switch (this->Value.TokenId)
+    {
+    case Grammar::IntegerLiteral:
+      return ZilchTypeId(Integer);
+
+    case Grammar::DoubleIntegerLiteral:
+      return ZilchTypeId(DoubleInteger);
+
+    case Grammar::RealLiteral:
+      return ZilchTypeId(Real);
+
+    case Grammar::DoubleRealLiteral:
+      return ZilchTypeId(DoubleReal);
+
+    case Grammar::StringLiteral:
+      return ZilchTypeId(String);
+
+    case Grammar::True:
+    case Grammar::False:
+      return ZilchTypeId(Boolean);
+
+    case Grammar::Null:
+      return ZilchTypeId(nullptr_t);
+    }
+
+    return nullptr;
   }
 
   //***************************************************************************

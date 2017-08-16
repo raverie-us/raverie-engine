@@ -1278,90 +1278,57 @@ namespace Zilch
         // Look for a type after the member variable
         if (this->AcceptOptionalTypeSpecifier(node->ResultSyntaxType, ErrorCode::VariableTypeNotFound, node->Name.c_str()))
         {
-          // As long as we got a valid type...
-          if (node->ResultSyntaxType != nullptr)
+          // Accept the beginning scope
+          if (this->Accept(1, Grammar::BeginScope))
           {
-            // Accept the beginning scope
-            if (this->Accept(1, Grammar::BeginScope))
+            // As long as we got a valid type...
+            if (node->ResultSyntaxType == nullptr)
             {
-              // This is a property, thus we expect to find a get or a set, or both
-              // They must always come in the order of 'get' first, then set
-              node->IsGetterSetter = true;
-
-              // Check if we have a getter
-              if (this->Accept(1, Grammar::Get))
-              {
-                // Read in the get function body
-                node->Get = this->GetSetFunctionBody(node, true);
-              }
-
-              // Check if we have a setter
-              if (this->Accept(1, Grammar::Set))
-              {
-                // Read in the set function body
-                node->Set = this->GetSetFunctionBody(node, false);
-              }
-
-              // Error checking, we don't want to find a get after a set
-              if (this->Accept(1, Grammar::Get))
-              {
-                // Show an error message
-                this->ErrorHere(ErrorCode::GetFoundAfterSet, node->Name.c_str());
-              }
-              // We expect to see the end of the scope
-              else if (this->Expect(Grammar::EndScope, ErrorCode::PropertyDeclarationNotComplete, node->Name.c_str()))
-              {
-                // Accept the token position, and return the variable node
-                this->SetNodeLocationEndHere(node);
-                this->AcceptTokenPosition();
-                return node;
-              }
-              // If we're doing auto-complete or something like it...
-              else if (this->Errors.TolerantMode)
-              {
-                // Since we're being tolerant, just eat tokens until we hit the end of our scope
-                // This is just an approximation, as there may be actual scope errors
-                // This will return true if it finds the scope and will advance the token forward automatically
-                if (this->MoveToScopeEnd())
-                {
-                  // Accept the token position, and return the variable node
-                  this->SetNodeLocationEndHere(node);
-                  this->AcceptTokenPosition();
-                  return node;
-                }
-              }
+              this->ErrorHere(ErrorCode::MemberVariableTypesCannotBeInferred, node->Name.c_str());
+              this->RecallTokenPosition();
+              delete node;
+              return nullptr;
             }
-            // We are not a property, so make sure the user is initializing the variable
-            else
+
+            // This is a property, thus we expect to find a get or a set, or both
+            // They must always come in the order of 'get' first, then set
+            node->IsGetterSetter = true;
+
+            // Check if we have a getter
+            if (this->Accept(1, Grammar::Get))
             {
-              if (this->Accept(1, Grammar::Assignment))
-              {
-                // Note: It is actually legal for a member variable to Overriding or Virtual
-                // In the case that we're overriding, we'll still be a raw member when directly accessed, but
-                // if we're accessed through an interface it will use the generated get/set
-                // In the case that we're virtual, the member itself basically becomes a property
-                // This needs to be handled specially, because in the PreInitialize we still wan't to Assign
-                // a value to the raw field data, but then anyone who accessing the member after that goes
-                // through a property get/set
+              // Read in the get function body
+              node->Get = this->GetSetFunctionBody(node, true);
+            }
 
-                // Now attempt to read the initialization expression in
-                node->InitialValue = Expression();
-              
-                // If we failed to parsed an initial value...
-                if (node->InitialValue == nullptr)
-                {
-                  // Show an error message
-                  this->ErrorHere(ErrorCode::VariableInitialValueNotFound, node->Name.c_str());
+            // Check if we have a setter
+            if (this->Accept(1, Grammar::Set))
+            {
+              // Read in the set function body
+              node->Set = this->GetSetFunctionBody(node, false);
+            }
 
-                  // We didn't successfully parse a variable definition, so just recall the token position and return null
-                  RecallTokenPosition();
-                  delete node;
-                  return nullptr;
-                }
-              }
-
-              // Attempt to read the statement separator
-              if (this->Expect(Grammar::StatementSeparator, ErrorCode::VariableInitializationNotComplete, node->Name.c_str()))
+            // Error checking, we don't want to find a get after a set
+            if (this->Accept(1, Grammar::Get))
+            {
+              // Show an error message
+              this->ErrorHere(ErrorCode::GetFoundAfterSet, node->Name.c_str());
+            }
+            // We expect to see the end of the scope
+            else if (this->Expect(Grammar::EndScope, ErrorCode::PropertyDeclarationNotComplete, node->Name.c_str()))
+            {
+              // Accept the token position, and return the variable node
+              this->SetNodeLocationEndHere(node);
+              this->AcceptTokenPosition();
+              return node;
+            }
+            // If we're doing auto-complete or something like it...
+            else if (this->Errors.TolerantMode)
+            {
+              // Since we're being tolerant, just eat tokens until we hit the end of our scope
+              // This is just an approximation, as there may be actual scope errors
+              // This will return true if it finds the scope and will advance the token forward automatically
+              if (this->MoveToScopeEnd())
               {
                 // Accept the token position, and return the variable node
                 this->SetNodeLocationEndHere(node);
@@ -1370,10 +1337,51 @@ namespace Zilch
               }
             }
           }
+          // We are not a property, so make sure the user is initializing the variable
           else
           {
-            // Show an error message
-            this->ErrorHere(ErrorCode::MemberVariableTypesCannotBeInferred, node->Name.c_str());
+            if (this->Accept(1, Grammar::Assignment))
+            {
+              // Note: It is actually legal for a member variable to Overriding or Virtual
+              // In the case that we're overriding, we'll still be a raw member when directly accessed, but
+              // if we're accessed through an interface it will use the generated get/set
+              // In the case that we're virtual, the member itself basically becomes a property
+              // This needs to be handled specially, because in the PreInitialize we still want to Assign
+              // a value to the raw field data, but then anyone who accessing the member after that goes
+              // through a property get/set
+
+              // Now attempt to read the initialization expression in
+              node->InitialValue = Expression();
+
+              // If we failed to parsed an initial value...
+              if (node->InitialValue == nullptr)
+              {
+                // Show an error message
+                this->ErrorHere(ErrorCode::VariableInitialValueNotFound, node->Name.c_str());
+
+                // We didn't successfully parse a variable definition, so just recall the token position and return null
+                RecallTokenPosition();
+                delete node;
+                return nullptr;
+              }
+            }
+            else
+            {
+              // As long as we got a valid type...
+              if (node->ResultSyntaxType == nullptr)
+              {
+                this->ErrorHere(ErrorCode::MemberVariableTypesCannotBeInferred, node->Name.c_str());
+              }
+            }
+
+            // Attempt to read the statement separator
+            if (this->Expect(Grammar::StatementSeparator, ErrorCode::VariableInitializationNotComplete, node->Name.c_str()))
+            {
+              // Accept the token position, and return the variable node
+              this->SetNodeLocationEndHere(node);
+              this->AcceptTokenPosition();
+              return node;
+            }
           }
         }
       }
