@@ -338,7 +338,7 @@ size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
   {
     int errorCode = (int)GetLastError();
     String errorString = ToErrorString(errorCode);
-    String message = String::Format("Failed to read file '%s': %s", mFilePath, errorString.c_str());
+    String message = String::Format("Failed to read file '%s': %s", mFilePath.c_str(), errorString.c_str());
     status.SetFailed(message, errorCode);
   }
   return bytesRead;
