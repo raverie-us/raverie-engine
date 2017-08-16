@@ -344,8 +344,13 @@ LauncherSingletonCommunication::LauncherSingletonCommunication(const StringMap& 
   ConnectThisTo(mSocket, Events::ConnectionFailed, OnConnectionFailed);
   mSocket->Connect("localhost", LauncherCommunicationEvent::DesiredPort);
 
-  //this happens before the engine even exists and the tcp socket only updates during EngineUpdate
-  //so manually pump the engine a set number of times until we succeed or fail to connect
+  // Running engine update will attempt to compile even though we haven't loaded 
+  // any projects. Since we're just communicating with an open launcher and then
+  // immediately closing it should be safe to disable compilation.
+  ZilchManager::GetInstance()->mShouldAttemptCompile = false;
+
+  // This happens before the engine even exists and the tcp socket only updates during EngineUpdate
+  // so manually pump the engine a set number of times until we succeed or fail to connect
   while(mTimesTryingToConnect < 100)
     Z::gEngine->Update();
 }
