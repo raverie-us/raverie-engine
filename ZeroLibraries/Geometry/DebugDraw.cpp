@@ -74,6 +74,7 @@ ZilchDefineType(Arc, builder, type)
   DebugDrawObject<Arc>::SetupTypeHelper(builder, type);
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "start, mid, end", Vec3, Vec3, Vec3);
 
   ZilchBindFieldProperty(mStart);
@@ -87,6 +88,7 @@ ZilchDefineType(Box, builder, type)
   DebugDrawObject<Box>::SetupTypeHelper(builder, type);
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, Vec2);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, float);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents, rotation", Vec3, Vec2, Quat);
@@ -109,6 +111,7 @@ ZilchDefineType(Capsule, builder, type)
   DebugDrawObject<Capsule>::SetupTypeHelper(builder, type);
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end, radius", Vec3, Vec3, float);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, axis, height, radius", Vec3, Vec3, float, float);
 
@@ -123,6 +126,7 @@ ZilchDefineType(Circle, builder, type)
   DebugDrawObject<Circle>::SetupTypeHelper(builder, type);
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, axis, radius", Vec3, Vec3, float);
 
   ZilchBindFieldProperty(mPosition);
@@ -136,6 +140,7 @@ ZilchDefineType(Cone, builder, type)
   DebugDrawObject<Cone>::SetupTypeHelper(builder, type);
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, direction, length, radius", Vec3, Vec3, float, float);
 
   ZilchBindFieldProperty(mPosition);
@@ -150,6 +155,7 @@ ZilchDefineType(Cylinder, builder, type)
   DebugDrawObject<Cylinder>::SetupTypeHelper(builder, type);
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end, radius", Vec3, Vec3, float);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, axis, height, radius", Vec3, Vec3, float, float);
 
@@ -175,6 +181,7 @@ ZilchDefineType(Line, builder, type)
   
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end", Vec3, Vec3);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end, headSize", Vec3, Vec3, float);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "ray", Ray);
@@ -197,6 +204,7 @@ ZilchDefineType(LineCross, builder, type)
   DebugDrawObject<LineCross>::SetupTypeHelper(builder, type);
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, float);
 
   ZilchBindFieldProperty(mPosition);
@@ -209,6 +217,7 @@ ZilchDefineType(Obb, builder, type)
   DebugDrawObject<Obb>::SetupTypeHelper(builder, type);
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, Vec3);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, float);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents, rotation", Vec3, Vec3, Quat);
@@ -234,6 +243,7 @@ ZilchDefineType(Sphere, builder, type)
   
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, radius", Vec3, float);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "sphere", Sphere);
 
@@ -250,6 +260,7 @@ ZilchDefineType(Text, builder, type)
   
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchFullBindConstructor(builder, type, ZilchSelf, "position, textHeight, text", Vec3, float, String);
 
   ZilchBindFieldProperty(mPosition);
@@ -267,6 +278,7 @@ ZilchDefineType(Triangle, builder, type)
   
   
   ZilchBindDestructor();
+  ZilchBindDefaultConstructor();
   ZilchBindConstructor(Vec3, Vec3, Vec3);
 
   ZilchBindFieldProperty(mPoint0);
