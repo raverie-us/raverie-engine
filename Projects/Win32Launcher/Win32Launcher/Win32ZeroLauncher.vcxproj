@@ -196,6 +196,9 @@
     <ProjectReference Include="..\..\..\ZeroLibraries\Zilch\Project\Zilch\Zilch.vcxproj">
       <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\GeometryProcessor\GeometryProcessor.vcxproj">
+      <Project>{8f553e34-1239-42b2-a136-f05e719f6c43}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Win32LauncherDll\Win32ZeroLauncherDll.vcxproj">
       <Project>{ebd67762-3d8b-4f8a-8080-fc4d04013988}</Project>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

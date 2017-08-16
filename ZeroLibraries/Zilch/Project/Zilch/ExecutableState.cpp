@@ -431,6 +431,9 @@ namespace Zilch
       virtualTables.PopFront();
     }
 
+    // Clear handles from ExceptionReport before HandleManagers are destroyed
+    this->DefaultReport.Clear();
+
     // Delete all handle managers
     ZilchForEach(HandleManager* manager, this->UniqueManagers.Values())
     {

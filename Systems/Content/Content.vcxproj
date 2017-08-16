@@ -52,7 +52,6 @@
     <ClInclude Include="FileExtensionManager.hpp" />
     <ClInclude Include="ImportOptions.hpp" />
     <ClInclude Include="MeshBuilder.hpp" />
-    <ClInclude Include="MeshEntry.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="AudioContent.hpp" />
     <ClInclude Include="DataContent.hpp" />

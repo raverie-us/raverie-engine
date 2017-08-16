@@ -303,6 +303,9 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     <ProjectReference Include="..\ChromeSubProcess\ChromeSubProcess.vcxproj">
       <Project>{fad16d53-662c-47c1-9a7a-c0653d25c070}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\GeometryProcessor\GeometryProcessor.vcxproj">
+      <Project>{8f553e34-1239-42b2-a136-f05e719f6c43}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Win32Shared\ZeroEditor.rc" />

@@ -43,7 +43,7 @@ Cog =
 				bool ViewCulling = true,
 				bool VisibilityEvents = true,
 				string Material = "57a9318ffce03582:ViewCubeMat",
-				string Mesh = "57a93a5ca4ebaae9:ViewCube.Back",
+				string Mesh = "57a93a5ca4ebaae9:ViewCube_Back",
 			},
 			BoxCollider = 
 			{
@@ -77,7 +77,7 @@ Cog =
 				bool ViewCulling = true,
 				bool VisibilityEvents = true,
 				string Material = "57a9318ffce03582:ViewCubeMat",
-				string Mesh = "57a93a5ca4ebaa97:ViewCube.Bottom",
+				string Mesh = "57a93a5ca4ebaa97:ViewCube_Bottom",
 			},
 			BoxCollider = 
 			{
@@ -111,7 +111,7 @@ Cog =
 				bool ViewCulling = true,
 				bool VisibilityEvents = true,
 				string Material = "57a9318ffce03582:ViewCubeMat",
-				string Mesh = "57a93a5ca4ebaaf0:ViewCube.Case",
+				string Mesh = "57a93a5ca4ebaaf0:ViewCube_Case",
 			},
 		},
 		Cog:57a9367e5c5f3774 = 
@@ -136,7 +136,7 @@ Cog =
 				bool ViewCulling = true,
 				bool VisibilityEvents = true,
 				string Material = "57a9318ffce03582:ViewCubeMat",
-				string Mesh = "57a93a5ca4ebaae2:ViewCube.Front",
+				string Mesh = "57a93a5ca4ebaae2:ViewCube_Front",
 			},
 			BoxCollider = 
 			{
@@ -170,7 +170,7 @@ Cog =
 				bool ViewCulling = true,
 				bool VisibilityEvents = true,
 				string Material = "57a9318ffce03582:ViewCubeMat",
-				string Mesh = "57a93a5ca4ebaadc:ViewCube.Left",
+				string Mesh = "57a93a5ca4ebaadc:ViewCube_Left",
 			},
 			BoxCollider = 
 			{
@@ -204,7 +204,7 @@ Cog =
 				bool ViewCulling = true,
 				bool VisibilityEvents = true,
 				string Material = "57a9318ffce03582:ViewCubeMat",
-				string Mesh = "57a93a5ca4ebaacd:ViewCube.Right",
+				string Mesh = "57a93a5ca4ebaacd:ViewCube_Right",
 			},
 			BoxCollider = 
 			{
@@ -238,7 +238,7 @@ Cog =
 				bool ViewCulling = true,
 				bool VisibilityEvents = true,
 				string Material = "57a9318ffce03582:ViewCubeMat",
-				string Mesh = "57a93a5ca4ebaad5:ViewCube.Top",
+				string Mesh = "57a93a5ca4ebaad5:ViewCube_Top",
 			},
 			BoxCollider = 
 			{
