@@ -2184,10 +2184,26 @@ namespace Zilch
   }
 
   //***************************************************************************
+  Byte ZilchParseByte(StringRangeExtended range)
+  {
+    Byte value;
+    ToValue(range.mRange, value);
+    return value;
+  }
+
+  //***************************************************************************
   Integer ZilchParseInteger(StringRangeExtended range)
   {
     Integer value;
     Zero::ToValue(range.mRange, value);
+    return value;
+  }
+
+  //***************************************************************************
+  DoubleInteger ZilchParseDoubleInteger(StringRangeExtended range)
+  {
+    DoubleInteger value;
+    ToValue(range.mRange, value);
     return value;
   }
 
@@ -2197,6 +2213,26 @@ namespace Zilch
     Real value;
     ToValue(range.mRange, value);
     return value;
+  }
+  
+  //***************************************************************************
+  DoubleReal ZilchParseDoubleReal(StringRangeExtended range)
+  {
+    DoubleReal value;
+    ToValue(range.mRange, value);
+    return value;
+  }
+
+  //***************************************************************************
+  Byte ZilchBytePositiveMax()
+  {
+    return Math::BytePositiveMax();
+  }
+
+  //***************************************************************************
+  Byte ZilchBytePositiveValueClosestToZero()
+  {
+    return 1;
   }
 
   //***************************************************************************
@@ -2224,6 +2260,30 @@ namespace Zilch
   }
 
   //***************************************************************************
+  DoubleReal ZilchDoubleRealPositiveMax()
+  {
+    return Math::DoublePositiveMax();
+  }
+
+  //***************************************************************************
+  DoubleReal ZilchDoubleRealPositiveValueClosestToZero()
+  {
+    return Math::DoublePositiveMin();
+  }
+
+  //***************************************************************************
+  DoubleReal ZilchDoubleRealNegativeValueClosestToZero()
+  {
+    return -Math::DoublePositiveMin();
+  }
+
+  //***************************************************************************
+  DoubleReal ZilchDoubleRealNegativeMin()
+  {
+    return -Math::DoublePositiveMax();
+  }
+
+  //***************************************************************************
   Integer ZilchIntegerPositiveMax()
   {
     return Math::IntegerPositiveMax();
@@ -2245,6 +2305,30 @@ namespace Zilch
   Integer ZilchIntegerNegativeMin()
   {
     return Math::IntegerNegativeMin();
+  }
+
+  //***************************************************************************
+  DoubleInteger ZilchDoubleIntegerPositiveMax()
+  {
+    return Math::DoubleIntegerPositiveMax();
+  }
+
+  //***************************************************************************
+  DoubleInteger ZilchDoubleIntegerPositiveValueClosestToZero()
+  {
+    return 1;
+  }
+
+  //***************************************************************************
+  DoubleInteger ZilchDoubleIntegerNegativeValueClosestToZero()
+  {
+    return -1;
+  }
+
+  //***************************************************************************
+  DoubleInteger ZilchDoubleIntegerNegativeMin()
+  {
+    return Math::DoubleIntegerNegativeMin();
   }
 
   //***************************************************************************
@@ -3189,8 +3273,11 @@ namespace Zilch
     
     this->StringType = stringType;
     this->StringRangeType = stringRangeType;
+    ZilchFullBindMethod(builder, byteType, &ZilchParseByte, ZilchNoOverload, "Parse", ZilchNoNames)->Description = ZilchDocumentString("Attempt to convert the given StringRange to a Byte. If parsing fails 0 is returned.");
     ZilchFullBindMethod(builder, integerType, &ZilchParseInteger, ZilchNoOverload, "Parse", ZilchNoNames)->Description = ZilchDocumentString("Attempt to convert the given StringRange to an Integer. If parsing fails 0 is returned.");
+    ZilchFullBindMethod(builder, doubleIntegerType, &ZilchParseDoubleInteger, ZilchNoOverload, "Parse", ZilchNoNames)->Description = ZilchDocumentString("Attempt to convert the given StringRange to a DoubleInteger. If parsing fails 0 is returned.");
     ZilchFullBindMethod(builder, realType, &ZilchParseReal, ZilchNoOverload, "Parse", ZilchNoNames)->Description = ZilchDocumentString("Attempt to convert the given StringRange to a Real. If parsing fails 0 is returned.");
+    ZilchFullBindMethod(builder, doubleRealType, &ZilchParseDoubleReal, ZilchNoOverload, "Parse", ZilchNoNames)->Description = ZilchDocumentString("Attempt to convert the given StringRange to a DoubleReal. If parsing fails 0 is returned.");
 
     // Bind any stringify functions
     byteType          ->ToStringFunction = ByteToString;
@@ -3393,6 +3480,27 @@ namespace Zilch
 
       }
     }
+    // Add getters for the extremal values for types that don't matter (Byte, DoubleReal, and DoubleInteger)
+    ZilchFullBindGetterSetter(builder, byteType, &ZilchBytePositiveMax, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "PositiveMax")
+      ->Description = ZilchDocumentString("The largest (most positive) value that can be represented by a Byte.");
+    ZilchFullBindGetterSetter(builder, byteType, &ZilchBytePositiveValueClosestToZero, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "PositiveValueClosestToZero")
+      ->Description = ZilchDocumentString("The positive value closest to zero that can be represented by a Byte.");
+    ZilchFullBindGetterSetter(builder, doubleRealType, &ZilchDoubleRealPositiveMax, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "PositiveMax")
+      ->Description = ZilchDocumentString("The largest (most positive) value that can be represented by a DoubleReal.");
+    ZilchFullBindGetterSetter(builder, doubleRealType, &ZilchDoubleRealPositiveValueClosestToZero, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "PositiveValueClosestToZero")
+      ->Description = ZilchDocumentString("The positive value closest to zero that can be represented by a DoubleReal.");
+    ZilchFullBindGetterSetter(builder, doubleRealType, &ZilchDoubleRealNegativeValueClosestToZero, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "NegativeValueClosestToZero")
+      ->Description = ZilchDocumentString("The negative value closest to zero that can be represented by a DoubleReal.");
+    ZilchFullBindGetterSetter(builder, doubleRealType, &ZilchDoubleRealNegativeMin, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "NegativeMin")
+      ->Description = ZilchDocumentString("The smallest (most negative) value that can be represented by a DoubleReal.");
+    ZilchFullBindGetterSetter(builder, doubleIntegerType, &ZilchDoubleIntegerPositiveMax, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "PositiveMax")
+      ->Description = ZilchDocumentString("The largest (most positive) value that can be represented by a DoubleInteger.");
+    ZilchFullBindGetterSetter(builder, doubleIntegerType, &ZilchDoubleIntegerPositiveValueClosestToZero, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "PositiveValueClosestToZero")
+      ->Description = ZilchDocumentString("The positive value closest to zero that can be represented by a DoubleInteger.");
+    ZilchFullBindGetterSetter(builder, doubleIntegerType, &ZilchDoubleIntegerNegativeValueClosestToZero, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "NegativeValueClosestToZero")
+      ->Description = ZilchDocumentString("The negative value closest to zero that can be represented by a DoubleInteger.");
+    ZilchFullBindGetterSetter(builder, doubleIntegerType, &ZilchDoubleIntegerNegativeMin, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "NegativeMin")
+      ->Description = ZilchDocumentString("The smallest (most negative) value that can be represented by a DoubleInteger.");
 
     // Quaternion static bindings
     {
