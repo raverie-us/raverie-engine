@@ -781,7 +781,7 @@ public:
     ContentSystemEvent* event = new ContentSystemEvent();
     event->mLibrary = library;
     event->mPackage = package;
-    Z::gDispatch->Dispatch(ThreadContext::Main, Z::gContentSystem, Events::PackageBuilt, event);
+    Z::gDispatch->Dispatch(Z::gContentSystem, Events::PackageBuilt, event);
     return 0;
   }
 

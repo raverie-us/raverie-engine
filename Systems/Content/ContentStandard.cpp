@@ -107,7 +107,7 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeType(RichAnimationBuilder);
   ZilchInitializeType(TrackNode);
   ZilchInitializeType(GeometryImport);
-  ZilchInitializeType(MeshEntry);
+  ZilchInitializeType(GeometryResourceEntry);
   ZilchInitializeType(MeshBuilder);
   ZilchInitializeType(PhysicsMeshBuilder);
   ZilchInitializeType(AnimationClip);
@@ -115,7 +115,6 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeType(TextureContent);
   ZilchInitializeType(GeometryContent);
   ZilchInitializeType(AudioContent);
-  ZilchInitializeType(TextureEntry);
   ZilchInitializeType(TextureInfo);
   ZilchInitializeType(SoundBuilder);
   ZilchInitializeType(SoundInfo);

@@ -92,7 +92,7 @@ ZilchDefineType(ShowNormalGenerationOptionsFilter, builder, type)
 {
 }
 
-bool ShowNormalGenerationOptionsFilter::Filter(Property* prop, HandleParam instance)
+bool ShowNormalGenerationOptionsFilter::Filter(Member* prop, HandleParam instance)
 {
   GeometryOptions* options = instance.Get<GeometryOptions*>(GetOptions::AssertOnNull);
   return options->mImportMeshes && options->mGenerateSmoothNormals;

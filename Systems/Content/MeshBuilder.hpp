@@ -112,7 +112,7 @@ public:
   bool mFlipWindingOrder;
   bool mFlipNormals;
 
-  Array<MeshEntry> Meshes;
+  Array<GeometryResourceEntry> Meshes;
 
   //BuilderComponent Interface
   bool NeedsBuilding(BuildOptions& options) override;

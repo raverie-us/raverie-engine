@@ -45,7 +45,7 @@ String ResourceTableEntry::GetValue()
 
 void ResourceTableEntry::SetValue(StringParam value)
 {
-  mValue = mName;
+  mValue = value;
   mResourceType = ResourceTable::mStringType;
 }
 

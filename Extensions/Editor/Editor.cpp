@@ -1040,13 +1040,9 @@ void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibrar
   GameSession* game = GetEditGameSession();
   ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
 
-  // Running game sessions
-  if(settings->mScriptReloadGame == ScriptReloadMethod::ReInitializeObjects)
-  {
-    // Re-Initialize all components in all game sessions
-    forRange(GameSession* game, GetGames())
-      ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
-  }
+  // Re-Initialize all components in all game sessions
+  forRange(GameSession* game, GetGames())
+    ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
 
   mReInitializeQueue.EndBatch();
 }

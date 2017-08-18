@@ -108,36 +108,43 @@ void UpdateMeshes(SceneGraphSource* source, SceneGraphNode* sourceNode, Cog* obj
   if(!(flags & UpdateFlags::Meshes))
     return;
 
-  String graphicsMeshName = BuildString(source->Name, ".", sourceNode->MeshName);
-  Mesh* mesh = MeshManager::FindOrNull(graphicsMeshName);
-  if(mesh)
+  if (!sourceNode->MeshName.Empty())
   {
-    // Get the material for this node
-    Material* material = NULL;
+    // Check for name that's generated when there are multiple meshes from a scene file.
+    Mesh* mesh = MeshManager::FindOrNull(BuildString(source->Name, "_", sourceNode->MeshName));
+    if (mesh == nullptr)
+      // If not found, check for just scene name when there is only one mesh.
+      mesh = MeshManager::FindOrNull(source->Name);
 
-    if(flags & UpdateFlags::Materials)
-      material = FindMeshNodeMaterial(source, sourceNode);
-
-    if(mesh->mBones.Empty() == false)
+    if(mesh)
     {
-      SkinnedModel* skinnedModel = HasOrAdd<SkinnedModel>(object);
-      skinnedModel->SetMesh(mesh);
+      // Get the material for this node
+      Material* material = NULL;
 
-      if(sourceNode->SkeletonRootNodePath.Empty() == false)
-        skinnedModel->SetSkeletonPath(sourceNode->SkeletonRootNodePath);
+      if(flags & UpdateFlags::Materials)
+        material = FindMeshNodeMaterial(source, sourceNode);
+
+      if(mesh->mBones.Empty() == false)
+      {
+        SkinnedModel* skinnedModel = HasOrAdd<SkinnedModel>(object);
+        skinnedModel->SetMesh(mesh);
+
+        if(sourceNode->SkeletonRootNodePath.Empty() == false)
+          skinnedModel->SetSkeletonPath(sourceNode->SkeletonRootNodePath);
+        else
+          skinnedModel->SetSkeletonPath(CogPath("."));
+
+        if(material)
+          skinnedModel->SetMaterial(material);
+      }
       else
-        skinnedModel->SetSkeletonPath(CogPath("."));
+      {
+        Model* model = HasOrAdd<Model>(object);
+        model->SetMesh(mesh);
 
-      if(material)
-        skinnedModel->SetMaterial(material);
-    }
-    else
-    {
-      Model* model = HasOrAdd<Model>(object);
-      model->SetMesh(mesh);
-
-      if(material)
-        model->SetMaterial(material);
+        if(material)
+          model->SetMaterial(material);
+      }
     }
   }
 
@@ -248,9 +255,9 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent, Cog* object
     AnimationGraph* animGraph = HasOrAdd<AnimationGraph>(object);
 
     // Assign the first animation
-    if(animations->mClips.Size() > 0)
+    if(animations->mAnimations.Size() > 0)
     {
-      Animation* animation = (Animation*)Z::gResources->GetResource(animations->mClips[0].mResourceId);
+      Animation* animation = (Animation*)Z::gResources->GetResource(animations->mAnimations[0].mResourceId);
       if(animation)
       {
         if(object->AddComponentByType(ZilchTypeId(SimpleAnimation)))
@@ -380,7 +387,10 @@ void DoEditorSideImporting(ResourcePackage* package, ImportOptions* options)
       Array<String> files;
 
       for (size_t i = 0; i < textureContent->mTextures.Size(); ++i)
-        files.PushBack(textureContent->mTextures[i].mFullFilePath);
+      {
+        String fileName = FilePath::Combine(package->Location, textureContent->mTextures[i].mName);
+        files.PushBack(fileName);
+      }
 
       // we have textures we pulled from the scene file that need loading
       ContentLibrary* library = Z::gEditor->mProjectLibrary;

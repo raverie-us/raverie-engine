@@ -94,6 +94,7 @@ public:
   StringIterator End() const;
 
   void IncrementByRune();
+  void IncrementPointerByRune(cstr& ptr);
   void DecrementPointerByRune(cstr& ptr);
   Rune  ReadCurrentRune() const;
 

@@ -72,6 +72,13 @@ namespace Zilch
     // Walk through the tree and attempt to Assign locations to every node (class, function, etc)
     this->LocationWalker.RegisterNonLeafBase(&Syntaxer::DecorateCodeLocations);
 
+    this->PrecomputeTypingWalker.Register(&Syntaxer::PrecomputeValueNode);
+    this->PrecomputeTypingWalker.Register(&Syntaxer::PrecomputeStringInterpolantNode);
+    this->PrecomputeTypingWalker.Register(&Syntaxer::PrecomputeFunctionCallNode);
+    this->PrecomputeTypingWalker.Register(&Syntaxer::PrecomputeMultiExpressionNode);
+    this->PrecomputeTypingWalker.Register(&Syntaxer::PrecomputeExpressionInitializerNode);
+    this->PrecomputeTypingWalker.Register(&Syntaxer::PrecomputeTypeCastNode);
+
     // Walk all any type of expression (often, expressions are nested within each other)
     this->TypingWalker.Register(&Syntaxer::PushClass);
     this->TypingWalker.RegisterDerived<ConstructorNode>(&Syntaxer::PushFunction);
@@ -1400,13 +1407,22 @@ namespace Zilch
       ErrorIf(inheritedType == nullptr, "Type should be valid");
 
       // If the type is a class type...
-      if (BoundType* boundType = Type::DynamicCast<BoundType*>(inheritedType))
+      if (BoundType* boundBaseType = Type::DynamicCast<BoundType*>(inheritedType))
       {
+        BoundType* classType = classNode->Type;
+
         // If we have no base class...
-        if (classNode->Type->BaseType == nullptr)
+        if (classType->BaseType == nullptr)
         {
+          // Make sure the class that we're inheriting from doesn't
+          // already inherit from us (or that it's also not our own class!)
+          if (boundBaseType->IsA(classType))
+          {
+            return this->ErrorAt(syntaxType, ErrorCode::CycleOfInheritance);
+          }
+
           // Store the base type
-          classNode->Type->BaseType = boundType;
+          classType->BaseType = boundBaseType;
         }
         else
         {
@@ -1629,6 +1645,27 @@ namespace Zilch
     // Grab the function that was created above in 'SetupGenericFunction'
     Function* function = node->DefinedFunction;
 
+    // Walk up the base class hierarchy to find a method of the same name and signature that we may be overriding
+    if (node->Virtualized == VirtualMode::Overriding)
+    {
+      Function* baseFunction = nullptr;
+
+      BoundType* baseType = function->Owner->BaseType;
+      if (baseType != nullptr)
+      {
+        Function* foundFunction = baseType->FindFunction(function->Name, function->FunctionType, FindMemberOptions::None);
+        if (foundFunction != nullptr && foundFunction->IsVirtual)
+        {
+          baseFunction = foundFunction;
+        }
+      }
+
+      if (baseFunction == nullptr)
+      {
+        return ErrorAt(node, ErrorCode::MustOverrideBaseClassFunction);
+      }
+    }
+
     // If this is a normal function (not an extension function...)
     if (node->ExtensionOwner == nullptr)
     {
@@ -1650,13 +1687,29 @@ namespace Zilch
   //***************************************************************************
   void Syntaxer::CollectMemberVariableAndProperty(MemberVariableNode*& node, TypingContext* context)
   {
-    // As long as the type is not inferred...
-    ErrorIf(node->IsInferred(),
-      "Member variables should never have an inferred type (should be checked by the parser)");
+    // If the type was explicitly stated (not inferred)
+    if (node->ResultSyntaxType != nullptr)
+    {
+      // Store the type on the node (this helps us with byte-code generation later)
+      // Essentially, we are decorating the tree :)
+      node->ResultType = this->RetrieveType(node->ResultSyntaxType, node->Location);
+    }
+    else
+    {
+      // We can attempt to infer the type from our initial value
+      // We haven't run type checking on expressions yet (because members don't all have their types!)
+      // However, a few nodes can compute their type without running type checking such as a constructor call or literal value
+      // Attempt this way first...
+      this->PrecomputeTypingWalker.Walk(this, node->InitialValue, context);
+      node->ResultType = node->InitialValue->PrecomputedResultType;
 
-    // Store the type on the node (this helps us with byte-code generation later)
-    // Essentially, we are decorating the tree :)
-    node->ResultType = this->RetrieveType(node->ResultSyntaxType, node->Location);
+      // If we didn't compute any type then show an error message
+      if (node->ResultType == nullptr)
+      {
+        node->ResultType = Core::GetInstance().ErrorType;
+        return this->ErrorAt(node, ErrorCode::MemberVariableTypesCannotBeInferred, node->Name.c_str());
+      }
+    }
 
     // If we had an error, return out early
     if (this->Errors.WasError)
@@ -1967,71 +2020,14 @@ namespace Zilch
   {
     // Mark the node as being read only
     node->Io = IoMode::ReadRValue;
+    node->ResultType = node->PrecomputeType();
 
-    // Get the instance of the type database
-    Core& core = Core::GetInstance();
-
-    // Check to see what type of literal we have here
-    switch (node->Value.TokenId)
+    if (node->ResultType == nullptr)
     {
-      // The value is an Integer
-      case Grammar::IntegerLiteral:
-      {
-        node->ResultType = core.IntegerType;
-        break;
-      }
-
-      // The value is a DoubleInteger
-      case Grammar::DoubleIntegerLiteral:
-      {
-        node->ResultType = core.DoubleIntegerType;
-        break;
-      }
-
-      // The value is a Real
-      case Grammar::RealLiteral:
-      {
-        node->ResultType = core.RealType;
-        break;
-      }
-
-      // The value is a DoubleReal
-      case Grammar::DoubleRealLiteral:
-      {
-        node->ResultType = core.DoubleRealType;
-        break;
-      }
-
-      // The value is a String
-      case Grammar::StringLiteral:
-      {
-        node->ResultType = core.StringType;
-        break;
-      }
-
-      // The value is a Bool
-      case Grammar::True:
-      case Grammar::False:
-      {
-        node->ResultType = core.BooleanType;
-        break;
-      }
-
-      // The value is a null (which means that the type is unknown)
-      case Grammar::Null:
-      {
-        // Always assume we're going to be a null handle (implicit cast may change us!)
-        node->ResultType = core.NullType;
-        break;
-      }
-
-      default:
-      {
-        // We don't know what type it is???
-        // This especially should not be an identifier, since identifiers are caught as VariableReferences
-        return ErrorAt(node, ErrorCode::InternalError,
-          "We reached what should be a literal value and we have no idea what type it is.");
-      }
+      // We don't know what type it is?
+      // This especially should not be an identifier, since identifiers are caught as VariableReferences
+      this->ErrorAt(node, ErrorCode::InternalError,
+        "We reached what should be a literal value and we have no idea what type it is.");
     }
   }
 
@@ -4146,5 +4142,74 @@ namespace Zilch
       // Any types are handled above and use a special dynamic access
       this->ErrorAt(node, ErrorCode::MemberNotFound, node->Name.c_str(), leftType->ToString().c_str());
     }
+  }
+
+  //***************************************************************************
+  void Syntaxer::PrecomputeValueNode(ValueNode*& node, TypingContext* context)
+  {
+    node->PrecomputedResultType = node->PrecomputeType();
+  }
+
+  //***************************************************************************
+  void Syntaxer::PrecomputeStringInterpolantNode(StringInterpolantNode*& node, TypingContext* context)
+  {
+    // We don't need to walk any children because we know that our type will be a string
+    node->PrecomputedResultType = ZilchTypeId(String);
+  }
+
+  //***************************************************************************
+  void Syntaxer::PrecomputeFunctionCallNode(FunctionCallNode*& node, TypingContext* context)
+  {
+    // We don't need to walk the left operand in this case because there is no
+    // type-precomputing that needs to be done on it (we directly look for a StaticTypeNode)
+    if (StaticTypeNode* staticTypeNode = Type::DynamicCast<StaticTypeNode*>(node->LeftOperand))
+    {
+      BoundType* boundType = this->RetrieveBoundType(staticTypeNode->ReferencedSyntaxType, staticTypeNode->Location);
+
+      // If we had an error, return out early
+      if (this->Errors.WasError)
+        return;
+
+      // When using 'new' on a value type, the resulting type is actually a ref, eg new Real3 is ref Real3
+      if (staticTypeNode->Mode == CreationMode::New && boundType->CopyMode == TypeCopyMode::ValueType)
+        node->PrecomputedResultType = this->Builder->ReferenceOf(boundType);
+      // Otherwise we just use the exact type the user constructed
+      else
+        node->PrecomputedResultType = boundType;
+    }
+  }
+
+  //***************************************************************************
+  void Syntaxer::PrecomputeMultiExpressionNode(MultiExpressionNode*& node, TypingContext* context)
+  {
+    if (node->YieldChildExpressionIndex >= node->Expressions.Size())
+      return;
+
+    ExpressionNode* expression = node->Expressions[node->YieldChildExpressionIndex];
+
+    // In a multi-expression we just walk the one that is yielded and steal its precomputed type
+    context->Walker->Walk(this, expression, context);
+    node->PrecomputedResultType = expression->PrecomputedResultType;
+  }
+
+  //***************************************************************************
+  void Syntaxer::PrecomputeExpressionInitializerNode(ExpressionInitializerNode*& node, TypingContext* context)
+  {
+    // We only handle the case where the expression initializer is on a local variable node (which is an expression)
+    // This should be all initializations such as Array[Integer]() { 5 }
+    if (LocalVariableNode* localVariableNode = Type::DynamicCast<LocalVariableNode*>(node->LeftOperand))
+    {
+      // The initial value of the local variable is actually the container
+      ExpressionNode* initialValue = localVariableNode->InitialValue;
+      context->Walker->Walk(this, initialValue, context);
+      node->PrecomputedResultType = initialValue->PrecomputedResultType;
+    }
+  }
+
+  //***************************************************************************
+  void Syntaxer::PrecomputeTypeCastNode(TypeCastNode*& node, TypingContext* context)
+  {
+    // The type of a type cast is always just the type we cast to
+    node->PrecomputedResultType = this->RetrieveType(node->Type, node->Location);
   }
 }

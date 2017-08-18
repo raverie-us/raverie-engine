@@ -789,7 +789,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void FieldSetter(Call& call, ExceptionReport& report)
+  void InstanceFieldSetter(Call& call, ExceptionReport& report)
   {
     // Get the field and its offset
     Field* field = (Field*)call.GetFunction()->UserData;
@@ -812,7 +812,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void FieldGetter(Call& call, ExceptionReport& report)
+  void InstanceFieldGetter(Call& call, ExceptionReport& report)
   {
     // Get the field and its offset
     Field* field = (Field*)call.GetFunction()->UserData;
@@ -823,6 +823,46 @@ namespace Zilch
 
     // Get the memory offsetted to the field
     byte* fieldMemory = memory + field->Offset;
+
+    // Get a direct pointer to the return (not initialized yet!)
+    byte* returnMemory = call.GetReturnUnchecked();
+    call.DisableReturnChecks();
+
+    // Now copy construct the parameter they are trying to set over the field memory
+    field->PropertyType->GenericCopyConstruct(returnMemory, fieldMemory);
+  }
+
+  //***************************************************************************
+  void StaticFieldSetter(Call& call, ExceptionReport& report)
+  {
+    // Get the field and its offset
+    Field* field = (Field*)call.GetFunction()->UserData;
+
+    byte* fieldMemory = call.GetState()->GetStaticField(field, report);
+
+    if (report.HasThrownExceptions())
+      return;
+
+    // Get a direct pointer to the parameter (could be a primitive, such as a handle)
+    byte* parameterMemory = call.GetParameterUnchecked(0);
+
+    // Generically destruct the existing field (release reference, etc) the current parameter's memory
+    field->PropertyType->GenericDestruct(fieldMemory);
+
+    // Now copy construct the parameter they are trying to set over the field memory
+    field->PropertyType->GenericCopyConstruct(fieldMemory, parameterMemory);
+  }
+
+  //***************************************************************************
+  void StaticFieldGetter(Call& call, ExceptionReport& report)
+  {
+    // Get the field and its offset
+    Field* field = (Field*)call.GetFunction()->UserData;
+
+    byte* fieldMemory = call.GetState()->GetStaticField(field, report);
+
+    if (report.HasThrownExceptions())
+      return;
 
     // Get a direct pointer to the return (not initialized yet!)
     byte* returnMemory = call.GetReturnUnchecked();
@@ -852,7 +892,15 @@ namespace Zilch
     field->PropertyType = type;
 
     // Set whether or not the member is static (accessed on a class or instance)
-    field->IsStatic = (options & MemberOptions::Static) != 0;
+    if ((options & MemberOptions::Static) != 0)
+    {
+      this->BuiltLibrary->StaticFields.Append(field);
+      field->IsStatic = true;
+    }
+    else
+    {
+      field->IsStatic = false;
+    }
 
     // Set the member's offset to the given offset
     field->Offset = offset;
@@ -1015,7 +1063,7 @@ namespace Zilch
         (
           field->Owner,
           BuildGetterName(field->Name),
-          FieldGetter,
+          field->IsStatic ? StaticFieldGetter : InstanceFieldGetter,
           ParameterArray(),
           field->PropertyType,
           functionOptions
@@ -1038,7 +1086,7 @@ namespace Zilch
         (
           field->Owner,
           BuildSetterName(field->Name),
-          FieldSetter,
+          field->IsStatic ? StaticFieldSetter : InstanceFieldSetter,
           OneParameter(field->PropertyType, ValueKeyword),
           ZilchTypeId(void),
           functionOptions
@@ -1606,6 +1654,9 @@ namespace Zilch
   //***************************************************************************
   Library::~Library()
   {
+    if (ExecutableState::CallingState != nullptr)
+      ExecutableState::CallingState->ClearStaticFieldsFromLibrary(this);
+
     // First, release all components
     this->ClearComponents();
 

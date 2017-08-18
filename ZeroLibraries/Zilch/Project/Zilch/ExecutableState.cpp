@@ -329,7 +329,7 @@ namespace Zilch
     StackSize(DefaultStackSize),
     OverflowStackSize(DefaultStackSize),
     UserData(nullptr),
-    MaxRecursionDepth(40),
+    MaxRecursionDepth(200),
     HitStackOverflow(false),
     TimeoutSeconds(0),
     Name(DefaultName),
@@ -396,7 +396,7 @@ namespace Zilch
     // and then afterward we actually tear down the memory for both statics and handle managers
 
     // We need to clean up memory for static variables (release handles/delegates)
-    // Techincally code could run during this phase (even code that accesses other deleted statics)
+    // Technically code could run during this phase (even code that accesses other deleted statics)
     // To be entirely safe, we wait to delete the static memory (so we don't magically attempt to allocate it again on access)
     typedef Pair<Field*, byte*> StaticFieldPair;
     ZilchForEach(StaticFieldPair& pair, this->StaticFieldToMemory)
@@ -430,6 +430,9 @@ namespace Zilch
       delete virtualTables.Front();
       virtualTables.PopFront();
     }
+
+    // Clear handles from ExceptionReport before HandleManagers are destroyed
+    this->DefaultReport.Clear();
 
     // Delete all handle managers
     ZilchForEach(HandleManager* manager, this->UniqueManagers.Values())
@@ -1035,7 +1038,7 @@ namespace Zilch
   };
   
   //***************************************************************************
-  void ExecutableState::ForcePatchLibrary(LibraryRef newLibrary)
+  void ExecutableState::ForcePatchLibrary(LibraryParam newLibrary)
   {
     // If the library is the core, just early out (it will never change)
     if (newLibrary == Core::GetInstance().GetLibrary())
@@ -1254,6 +1257,40 @@ namespace Zilch
     // We cannot patch while an executable state is currently running
     ReturnIf(this->StackFrames.Size() > 1,, "Illegal to patch a library in an ExecutableState that has a running stack frame");
     this->ForcePatchLibrary(newLibrary);
+  }
+
+  //***************************************************************************
+  void ExecutableState::ClearStaticFieldsFromLibrary(Library* library)
+  {
+    // We need to clean up memory for static variables (release handles/delegates)
+    // Technically code could run during this phase (even code that accesses other deleted statics)
+    // To be entirely safe, we wait to delete the static memory (so we don't magically attempt to allocate it again on access)
+    ZilchForEach(Field* field, library->StaticFields)
+    {
+      byte* staticMemory = this->StaticFieldToMemory.FindValue(field, nullptr);
+      if (staticMemory == nullptr)
+        continue;
+
+      // Destruct the memory in place and then delete the memory
+      // Note: When we actually flag statics as being initialized, keep that flag on
+      // so we don't try and reinitialize it in case someone refers to it below
+      field->PropertyType->GenericDestruct(staticMemory);
+
+      // We only really need to memset the object to zero if it has a complex copy
+      if (field->PropertyType->IsCopyComplex())
+        memset(staticMemory, 0, field->PropertyType->GetCopyableSize());
+    }
+
+    // Now delete all static memory
+    ZilchForEach(Field* field, library->StaticFields)
+    {
+      byte* staticMemory = this->StaticFieldToMemory.FindValue(field, nullptr);
+      if (staticMemory != nullptr)
+      {
+        delete[] staticMemory;
+        this->StaticFieldToMemory.Erase(field);
+      }
+    }
   }
 
   //***************************************************************************

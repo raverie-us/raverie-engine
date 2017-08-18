@@ -194,7 +194,7 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Arc; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Arc() {}
+  Arc() : mStart(Vec3::cXAxis), mMid(Vec3::cYAxis), mEnd(-Vec3::cXAxis) {}
 
   Arc(Vec3Param start, Vec3Param mid, Vec3Param end)
     : mStart(start), mMid(mid), mEnd(end) {}
@@ -218,7 +218,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Box; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Box() {}
+  Box()
+    : mPosition(Vec3::cZero), mHalfExtents(Vec2(0.5f)), mRotation(Quat::cIdentity) {}
 
   Box(Vec3Param position, Vec2Param halfExtents)
     : mPosition(position), mHalfExtents(halfExtents), mRotation(Quat::cIdentity) {}
@@ -259,7 +260,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Capsule; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Capsule() {}
+  Capsule()
+    : mStart(-Vec3::cYAxis * 0.5f), mEnd(Vec3::cYAxis * 0.5f), mRadius(0.5f) {}
 
   Capsule(Vec3Param start, Vec3Param end, float radius)
     : mStart(start), mEnd(end), mRadius(radius) {}
@@ -289,7 +291,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Circle; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Circle() {}
+  Circle()
+    : mPosition(Vec3::cZero), mAxis(Vec3::cZAxis), mRadius(0.5f) {}
 
   Circle(Vec3Param position, Vec3Param axis, float radius)
     : mPosition(position), mAxis(axis), mRadius(radius) {}
@@ -313,7 +316,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Cone; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Cone() {}
+  Cone()
+    : mPosition(Vec3::cZero), mDirection(Vec3::cYAxis), mLength(1.0f), mRadius(0.5f) {}
 
   Cone(Vec3Param position, Vec3Param direction, float length, float radius)
     : mPosition(position), mDirection(direction), mLength(length), mRadius(radius) {}
@@ -339,7 +343,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Cylinder; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Cylinder() {}
+  Cylinder()
+    : mStart(-Vec3::cYAxis), mEnd(Vec3::cYAxis * 0.5f), mRadius(0.5f) {}
 
   Cylinder(Vec3Param start, Vec3Param end, float radius)
     : mStart(start), mEnd(end), mRadius(radius) {}
@@ -399,7 +404,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Line; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Line() {}
+  Line()
+    : mStart(Vec3::cZero), mEnd(Vec3::cXAxis), mHeadSize(0) {}
 
   Line(Vec3Param start, Vec3Param end)
     : mStart(start), mEnd(end), mHeadSize(0.0f) {}
@@ -435,7 +441,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::LineCross; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  LineCross() {}
+  LineCross()
+    : mPosition(Vec3::cZero), mHalfExtents(0.5f) {}
 
   LineCross(Vec3Param position, float halfExtents)
     : mPosition(position), mHalfExtents(halfExtents) {}
@@ -457,7 +464,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Obb; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Obb() {}
+  Obb() 
+    : mPosition(Vec3::cZero), mHalfExtents(Vec3(0.5f)), mRotation(Quat::cIdentity) {}
 
   Obb(Vec3Param position, Vec3Param halfExtents)
     : mPosition(position), mHalfExtents(halfExtents), mRotation(Quat::cIdentity) {}
@@ -501,7 +509,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Sphere; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Sphere() {}
+  Sphere()
+    : mPosition(Vec3::cZero), mRadius(0.5f) {}
 
   Sphere(Vec3Param position, float radius)
     : mPosition(position), mRadius(radius) {}
@@ -528,7 +537,7 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Text; }
 
   Text() :
-    mPosition(Vec3::cZero), mRotation(Quat::cIdentity), mTextHeight(1.0f) { }
+    mPosition(Vec3::cZero), mRotation(Quat::cIdentity), mTextHeight(1.0f), mText("Aa") { }
 
   Text(Vec3Param position, float textHeight, StringParam text)
     : mPosition(position), mRotation(Quat::cIdentity), mTextHeight(textHeight), mText(text) {}
@@ -556,7 +565,8 @@ public:
   DebugType::Enum GetDebugType() override { return DebugType::Triangle; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
 
-  Triangle() {}
+  Triangle()
+    : mPoint0(-Vec3::cXAxis), mPoint1(Vec3::cXAxis), mPoint2(Vec3::cYAxis) {}
 
   Triangle(Vec3Param point0, Vec3Param point1, Vec3Param point2)
     : mPoint0(point0), mPoint1(point1), mPoint2(point2) {}

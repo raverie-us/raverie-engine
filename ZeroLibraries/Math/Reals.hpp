@@ -111,8 +111,15 @@ ZeroShared real Step(real y, real x);
 ZeroShared int CountBits(int value);
 ZeroShared bool IsValid(real val);
 
+ZeroShared double DoublePositiveMax();
+ZeroShared double DoublePositiveMin();
+ZeroShared byte BytePositiveMax();
+ZeroShared byte BytePositiveMin();
 ZeroShared int IntegerPositiveMax();
 ZeroShared int IntegerNegativeMin();
+ZeroShared long long int DoubleIntegerPositiveMax();
+ZeroShared long long int DoubleIntegerNegativeMin();
+
 
 template <typename T>
 ZeroSharedTemplate inline T Max(const T lhs, const T rhs)

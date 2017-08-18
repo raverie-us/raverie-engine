@@ -39,13 +39,10 @@ bool MeshBuilder::NeedsBuilding(BuildOptions& options)
   if (Meshes.Empty())
     return true;
 
-  String outputFile = BuildString(Meshes[0].Name, ".mesh");
+  String outputFile = BuildString(Meshes[0].mName, ".mesh");
   String destFile = FilePath::Combine(options.OutputPath, outputFile);
   String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
-  if (CheckFileAndMeta(options, sourceFile, destFile))
-    return true;
-
-  return CheckToolFile(options, outputFile, "GeometryProcessor.exe");
+  return CheckFileAndMeta(options, sourceFile, destFile);
 }
 
 void MeshBuilder::Generate(ContentInitializer& initializer)
@@ -62,35 +59,15 @@ void MeshBuilder::Serialize(Serializer& stream)
   SerializeNameDefault(mInvertUvYAxis, false);
   SerializeNameDefault(mFlipWindingOrder, false);
   SerializeNameDefault(mFlipNormals, false);
-  SerializeNameDefault(Meshes, Array<MeshEntry>());
-
-  if (stream.GetMode() == SerializerMode::Loading)
-  {
-    //Legacy single mesh format
-    String mName;
-    ResourceId mResourceId = 0;
-
-    SerializeNameDefault(mName, String());
-    SerializeNameDefault(mResourceId, ResourceId(0));
-
-    if (mResourceId != 0)
-    {
-      MeshEntry entry;
-      entry.Name = mName;
-      entry.mResourceId = mResourceId;
-
-      Meshes.PushBack(entry);
-    }
-  }
+  SerializeNameDefault(Meshes, Array<GeometryResourceEntry>());
 }
 
 void MeshBuilder::BuildListing(ResourceListing& listing)
 {
-  forRange(MeshEntry& entry, Meshes.All())
+  forRange(GeometryResourceEntry& entry, Meshes.All())
   {
-    String output = BuildString(entry.Name, ".mesh");
-    String name = entry.Name;
-    listing.PushBack(ResourceEntry(0, "Mesh", name, output, entry.mResourceId, this->mOwner, this));
+    String output = BuildString(entry.mName, ".mesh");
+    listing.PushBack(ResourceEntry(0, "Mesh", entry.mName, output, entry.mResourceId, this->mOwner, this));
   }
 }
 

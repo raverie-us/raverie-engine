@@ -203,39 +203,39 @@ public:
 class TemplateFilterBase
 {
 public:
-  virtual bool Filter(Property* prop, HandleParam instance) = 0;
+  virtual bool Filter(Member* prop, HandleParam instance) = 0;
 };
 
-template <typename ClassType, bool ClassType::* Member>
+template <typename ClassType, bool ClassType::* ClassMember>
 class TemplateFilterBool : public TemplateFilterBase
 {
 public:
-  bool Filter(Property* prop, HandleParam instance) override
+  bool Filter(Member* prop, HandleParam instance) override
   {
     ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return pointer->*Member;
+    return pointer->*ClassMember;
   }
 };
 
-template <typename ClassType, bool ClassType::* Member>
+template <typename ClassType, bool ClassType::* ClassMember>
 class TemplateFilterNotBool : public TemplateFilterBase
 {
 public:
-  bool Filter(Property* prop, HandleParam instance) override
+  bool Filter(Member* prop, HandleParam instance) override
   {
     ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return !(pointer->*Member);
+    return !(pointer->*ClassMember);
   }
 };
 
-template <typename ClassType, typename ValueType, ValueType ClassType::* Member, ValueType Value>
+template <typename ClassType, typename ValueType, ValueType ClassType::* ClassMember, ValueType Value>
 class TemplateFilterEquality : public TemplateFilterBase
 {
 public:
-  bool Filter(Property* prop, HandleParam instance) override
+  bool Filter(Member* prop, HandleParam instance) override
   {
     ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return pointer->*Member == Value;
+    return pointer->*ClassMember == Value;
   }
 };
 
@@ -247,7 +247,8 @@ public:
   virtual ~MetaPropertyFilter() {}
 
   // Return false to hide the property
-  virtual bool Filter(Property* prop, HandleParam instance) = 0;
+  // (prop will be either a Property or Function with no parameters)
+  virtual bool Filter(Member* prop, HandleParam instance) = 0;
 };
 
 class MetaPropertyBasicFilter : public MetaPropertyFilter
@@ -258,7 +259,7 @@ public:
   MetaPropertyBasicFilter(TemplateFilterBase* filter = nullptr) : mActualFilter(filter) {}
   ~MetaPropertyBasicFilter() { if (mActualFilter) delete mActualFilter; }
 
-  bool Filter(Property* prop, HandleParam instance)
+  bool Filter(Member* prop, HandleParam instance)
   {
     return mActualFilter->Filter(prop, instance);
   }

@@ -41,7 +41,6 @@ ZilchDefineType(NetPeer, builder, type)
   // Bind host interface
   ZilchBindGetterSetterProperty(LanDiscoverable);
   ZilchBindGetterSetterProperty(InternetDiscoverable);
-  //ZilchBindGetterSetterProperty(FacilitateInternetConnections);
   ZilchBindGetterSetterProperty(HostPortRangeStart);
   ZilchBindGetterSetterProperty(HostPortRangeEnd);
   ZilchBindGetterSetterProperty(HostPingInterval);
@@ -62,9 +61,8 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindMethod(CancelHostRequests);
 
   // Bind peer interface
-  //ZilchBindGetterProperty(Guid)->AddAttribute(cHiddenAttribute);
-  ZilchBindGetterProperty(Info);
-  ZilchBindCustomGetterProperty(IsOpen);
+  ZilchBindGetterProperty(Info)->Add(new EditInGameFilter);
+  ZilchBindCustomGetterProperty(IsOpen)->Add(new EditInGameFilter);
   ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum, uint, uint));
   ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum, uint));
   ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum));
@@ -73,26 +71,20 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindOverloadedMethod(OpenClient, ZilchInstanceOverload(bool));
   ZilchBindOverloadedMethod(OpenServer, ZilchInstanceOverload(bool, uint));
   ZilchBindOverloadedMethod(OpenServer, ZilchInstanceOverload(bool));
-  //ZilchBindOverloadedMethod(OpenMasterServer, ZilchInstanceOverload(bool, uint));
-  //ZilchBindOverloadedMethod(OpenMasterServer, ZilchInstanceOverload(bool));
   ZilchBindOverloadedMethod(OpenOffline, ZilchInstanceOverload(bool));
   ZilchBindMethod(Close);
-  ZilchBindGetterProperty(NetPeerId);
-  ZilchBindGetterProperty(Ipv4Address);
-  ZilchBindGetterProperty(Ipv4Host);
-  ZilchBindGetterProperty(Ipv4Port);
-  ZilchBindGetterProperty(Ipv6Address);
-  ZilchBindGetterProperty(Ipv6Host);
-  ZilchBindGetterProperty(Ipv6Port);
-  //ZilchBindGetterProperty(CreationDuration)->AddAttribute(cHiddenAttribute);
-  ZilchBindGetterProperty(NetObjectCount);
-  ZilchBindGetterProperty(NetUserCount);
-  ZilchBindGetterProperty(NetSpaceCount);
+  ZilchBindGetterProperty(NetPeerId)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv4Address)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv4Host)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(Ipv4Port)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
+  ZilchBindGetterProperty(NetSpaceCount)->Add(new EditInGameFilter);
   ZilchBindGetterSetterProperty(FrameFillWarning);
   ZilchBindGetterSetterProperty(FrameFillSkip);
 
   // Bind link interface
-  ZilchBindGetterProperty(LinkCount);
+  ZilchBindGetterProperty(LinkCount)->Add(new EditInGameFilter);
   ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&, EventBundle*));
   ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&, Event*));
   ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&));
@@ -105,12 +97,9 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint, EventBundle*));
   ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint, Event*));
   ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint));
-  // ZilchBindMethod(GetLinkCreationDuration);
   ZilchBindMethod(GetLinkCreationDirection);
   ZilchBindMethod(GetLinkStatus);
   ZilchBindMethod(GetLinkState);
-  // ZilchBindMethod(GetLinkStateDuration);
-  // ZilchBindMethod(GetLinkGuid);
   ZilchBindMethod(GetLinkIpAddress);
   ZilchBindMethod(GetOurIpAddressFromLink);
   ZilchBindMethod(GetLinkInternetProtocol);
@@ -121,13 +110,10 @@ ZilchDefineType(NetPeer, builder, type)
   ZilchBindOverloadedMethod(AddUser, ZilchInstanceOverload(bool, Event*));
   ZilchBindOverloadedMethod(AddUser, ZilchInstanceOverload(bool));
   ZilchBindMethod(GetUser);
-  ZilchBindGetterProperty(UsersAddedByMyPeer);
+  ZilchBindGetter(UsersAddedByMyPeer);
   ZilchBindMethod(GetUsersAddedByPeer);
-  ZilchBindGetterProperty(Users);
-  ZilchBindGetterProperty(UserCount);
-  // ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, NetUserId, EventBundle*));
-  // ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, NetUserId, Event*));
-  // ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, NetUserId));
+  ZilchBindGetter(Users);
+  ZilchBindGetterProperty(UserCount)->Add(new EditInGameFilter);
   ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*, EventBundle*));
   ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*, Event*));
   ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*));
@@ -148,6 +134,8 @@ NetPeer::NetPeer()
   : NetObject(),
     Peer(ProcessReceivedCustomPacket, ProcessReceivedCustomMessage),
     Replicator(),
+    mAlreadyOpening(false),
+    mAlreadyClosing(false),
     mIsOpenOffline(false),
     mPendingUserRequests(),
     mAddedUsers(),
@@ -215,7 +203,6 @@ void NetPeer::ResetConfig()
 Guid NetPeer::GetOurProjectGuid()
 {
   // Get project settings
-
   ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
   if(!projectSettings) // Unable?
     return 0;
@@ -232,11 +219,10 @@ void NetPeer::Serialize(Serializer& stream)
 {
   // Serialize as net object
   NetObject::Serialize(stream);
-  
+
   // Serialize host settings
   SerializeNameDefault(mLanDiscoverable, GetLanDiscoverable());
   SerializeNameDefault(mInternetDiscoverable, GetInternetDiscoverable());
-  //SerializeNameDefault(mFacilitateInternetConnections, GetFacilitateInternetConnections());
   SerializeNameDefault(mHostPortRangeStart, GetHostPortRangeStart());
   SerializeNameDefault(mHostPortRangeEnd, GetHostPortRangeEnd());
   SerializeNameDefault(mHostPingInterval, GetHostPingInterval());
@@ -248,11 +234,10 @@ void NetPeer::Serialize(Serializer& stream)
   SerializeNameDefault(mFrameFillWarning, GetFrameFillWarning());
   SerializeNameDefault(mFrameFillSkip, GetFrameFillSkip());
 
-  //Serialize peer timeouts
-  SerializeNameDefault(mInternetHostListTimeout, GetInternetHostListTimeout() );
+  // Serialize peer timeouts
+  SerializeNameDefault(mInternetHostListTimeout, GetInternetHostListTimeout());
   SerializeNameDefault(mBasicHostInfoTimeout, GetBasicHostInfoTimeout());
   SerializeNameDefault(mExtraHostInfoTimeout, GetExtraHostInfoTimeout());
-
 }
 void NetPeer::Initialize(CogInitializer& initializer)
 {
@@ -262,11 +247,6 @@ void NetPeer::Initialize(CogInitializer& initializer)
   // Is editor or preview mode?
   if(owner->IsEditorOrPreviewMode())
     return;
-
-  // Use accurate timestamps by default
-  SetAccurateTimestampOnOnline(true);
-  SetAccurateTimestampOnChange(true);
-  SetAccurateTimestampOnOffline(true);
 
   // Initialize as net object
   NetObject::Initialize(initializer);
@@ -719,6 +699,19 @@ bool NetPeer::IsOpen() const
 
 bool NetPeer::Open(Role::Enum role, uint port, uint retries)
 {
+  // We're in the middle of a previous net peer open call?
+  // (Script users might accidentally call open within a previous open call, such as when handling events caused by an open call)
+  if(mAlreadyOpening)
+  {
+    DoNotifyException("Error Opening NetPeer",
+                    String::Format("Unable to open %s NetPeer socket on port %u with %u retries - NetPeer is in the middle of being opened from a previous open call!",
+                    Role::Names[role], port, retries));
+    return false;
+  }
+
+  // Prevent open from getting called again in the middle of this open call
+  mAlreadyOpening = true;
+
   // Reset net peer state
   Close();
 
@@ -729,6 +722,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     String::Format("Unable to open %s NetPeer socket on port %u with %u retries - Must specify a valid role",
                     Role::Names[role], port, retries));
 
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
+
     // Failure
     return false;
   }
@@ -737,6 +733,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
   {
     // Open peer in offline mode
     mIsOpenOffline = true;
+
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
 
     // Success
     return true;
@@ -758,6 +757,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     String::Format("Unable to open %s NetPeer socket on port %u with %u retries - There was an error initializing the replicator",
                     Role::Names[role], port, retries));
 
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
+
     // Clean up and return failure
     Close();
     return false;
@@ -777,12 +779,14 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
                     String::Format("Unable to open %s NetPeer socket on port %u with %u retries - The port may already be in use by another socket",
                     Role::Names[role], port, retries));
 
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
+
     // Clean up and return failure
     Close();
     return false;
   }
 
-  
   Assert(Replicator::IsInitialized());
 
   // Handle net peer opened
@@ -791,6 +795,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
     DoNotifyWarning("Error Opening NetPeer",
                     String::Format("Unable to open %s NetPeer socket on port %u with %u retries - There was an error emplacing existing NetObjects",
                     Role::Names[role], port, retries));
+
+    // Allow net peer open to get called again (we're done opening)
+    mAlreadyOpening = false;
 
     // Clean up and return failure
     Close();
@@ -804,6 +811,9 @@ bool NetPeer::Open(Role::Enum role, uint port, uint retries)
     // (Our server or offline peer is now hosting a network game)
     HandleNetGameStarted();
   }
+
+  // Allow net peer open to get called again (we're done opening)
+  mAlreadyOpening = false;
 
   // Success
   return true;
@@ -851,10 +861,17 @@ bool NetPeer::OpenOffline()
 
 void NetPeer::Close()
 {
+  // We're in the middle of a previous net peer close call?
+  // (Script users might accidentally call close within a previous close call, such as when handling events caused by a close call)
+  if(mAlreadyClosing)
+    return;
+
+  // Prevent close from getting called again in the middle of this close call
+  mAlreadyClosing = true;
+
   //
   // Peer Scope Clean-up:
   //
-
 
   // Is opened?
   if(IsOpen())
@@ -902,13 +919,14 @@ void NetPeer::Close()
   mProjectHostRecordMaps.Clear();
   mHostRecords.Clear();
   mReceiptRecipients.Clear(); // I assume peer links will be auto closed.
-  
+
   // Clear Server Data
   mPublishElapsedTime = mInternetHostPublishInterval; //So that a new ping is sent when it is reopened.
 
-
   //TODO: Make sure that netpeer closes host discovery and Ping Manager.
 
+  // Allow net peer close to get called again (we're done closing)
+  mAlreadyClosing = false;
 }
 
 bool NetPeer::HandleNetPeerOpened()

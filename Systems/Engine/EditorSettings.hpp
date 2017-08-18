@@ -15,7 +15,6 @@ namespace Zero
 class ContentLibrary;
 
 //--------------------------------------------------------------- EditorSettings
-DeclareEnum2(ScriptReloadMethod, PatchObjects, ReInitializeObjects);
 class EditorSettings : public Component
 {
 public:
@@ -36,8 +35,6 @@ public:
   /// Size in pixels of the viewport the view cube is shown in
   real mViewCubeSize;
   bool mAutoUpdateContentChanges;
-
-  ScriptReloadMethod::Enum mScriptReloadGame;
 };
 
 

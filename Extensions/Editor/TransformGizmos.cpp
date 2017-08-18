@@ -241,7 +241,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
 
       ObjectCreated(queue, cog);
 
-        // single duplicated object proper hierarchy, emulates ctrl+c, ctrl+v behavior
+      // single duplicated object proper hierarchy, emulates ctrl+c, ctrl+v behavior
       if(mObjectStates.Size() == 1 && mDuplicateCorrectIndex != unsigned(-1))
       {
         MoveObjectIndex(queue, cog, mDuplicateCorrectIndex);
@@ -510,8 +510,9 @@ void ObjectTranslateGizmo::OnMouseDragStart(ViewportMouseEvent* e)
         Cog* copy = cog->Clone();
         mNewObjects.Insert(copy);
 
-          // new object will go directly after the object it was copied from
-        mDuplicateCorrectIndex = cog->GetHierarchyIndex( ) + 1;
+       // new object will go directly after the object it was copied from
+       mDuplicateCorrectIndex = cog->GetHierarchyIndex( ) + 1;
+       copy->PlaceInHierarchy(mDuplicateCorrectIndex);
       }
       else  // currently unnecessary to check for protection on non-cogs
       {

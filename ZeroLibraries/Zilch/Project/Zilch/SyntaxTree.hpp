@@ -331,6 +331,10 @@ namespace Zilch
     // Store the type along with the expression (this will be filled in later)
     Type* ResultType;
 
+    // This type is filled out when we want to know an expression's result type BEFORE we run all the expression type
+    // checking, otherwise it will be null. This is used when inferring a type of a member variable
+    Type* PrecomputedResultType;
+
     // Stores how we access this particular expression (stack, member, etc)
     Operand Access;
 
@@ -860,7 +864,10 @@ namespace Zilch
 
     // Constructor
     ValueNode();
-    
+
+    // Returns the type of the value node based entirely on the token (or null if it's invalid)
+    Type* PrecomputeType() const;
+
     // SyntaxNode interface
     String ToString() const override;
 
@@ -1265,7 +1272,7 @@ namespace Zilch
     VirtualMode::Enum Virtualized;
   };
 
-  // Note that represents an initializer in the initailizer list
+  // Note that represents an initializer in the initializer list
   class ZeroShared InitializerNode : public ExpressionNode
   {
   public:
@@ -1295,7 +1302,7 @@ namespace Zilch
     // These are not owned initializers (technically the first statements in the constructor own them)
     // Hence we do not override 'PopulateChildren' and output these
     // If the initializers exist as the first statements, these MUST be set to be a valid tree
-    // The presense of the base initializer tells us if we initialized our base or not
+    // The presence of the base initializer tells us if we initialized our base or not
     InitializerNode* BaseInitializer;
     InitializerNode* ThisInitializer;
   };

@@ -329,7 +329,7 @@ class PropertyFilter##typeName : public MetaPropertyFilter                      
 {                                                                                     \
 public:                                                                               \
   ZilchDeclareType(TypeCopyMode::ReferenceType);                                      \
-  bool Filter(Property* prop, HandleParam instance) override;                         \
+  bool Filter(Member* prop, HandleParam instance) override;                           \
 }
 
 // Variant Configuration Property Filters
@@ -352,21 +352,21 @@ class PropertyFilterMultiPrimitiveTypes : public MetaPropertyFilter
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  bool Filter(Property* prop, HandleParam instance) override;
+  bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterFloatingPointTypes : public MetaPropertyFilter
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  bool Filter(Property* prop, HandleParam instance) override;
+  bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterArithmeticTypes : public MetaPropertyFilter
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  bool Filter(Property* prop, HandleParam instance) override;
+  bool Filter(Member* prop, HandleParam instance) override;
 };
 
 } // namespace Zero

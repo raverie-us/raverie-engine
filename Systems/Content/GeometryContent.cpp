@@ -12,12 +12,26 @@
 namespace Zero
 {
 
-ZilchDefineType(TextureEntry, builder, type)
+ZilchDefineType(GeometryResourceEntry, builder, type)
 {
+  type->HandleManager = ZilchManagerId(PointerManager);
 }
 
-ZilchDefineType(MeshEntry, builder, type)
+void GeometryResourceEntry::Serialize(Serializer& stream)
 {
+  SerializeNameDefault(mName, String());
+  SerializeNameDefault(mResourceId, (ResourceId)0);
+}
+
+void GeometryResourceEntry::SetDefaults()
+{
+  mName = String();
+  mResourceId = 0;
+}
+
+bool GeometryResourceEntry::operator==(const GeometryResourceEntry& other)
+{
+  return mName == other.mName;
 }
 
 Vec3 GetBasisVector(BasisType::Enum basisEnum)
@@ -351,7 +365,7 @@ String PhysicsMeshBuilder::GetOutputFile(uint index)
   if(MeshBuilt == PhysicsMeshType::ConvexMesh)
     extension = ConvexMeshExtension;
 
-  return BuildString(Meshes[index].Name, extension);
+  return BuildString(Meshes[index].mName, extension);
 }
 
 void PhysicsMeshBuilder::Generate(ContentInitializer& initializer)
@@ -370,7 +384,7 @@ void PhysicsMeshBuilder::SetMeshBuilt(PhysicsMeshType::Enum type)
 
     for(uint i = 0; i < Meshes.Size(); ++i)
     {
-      MeshEntry& entry = Meshes[i];
+      GeometryResourceEntry& entry = Meshes[i];
 
       // Increment each
       entry.mResourceId = baseId + i;
@@ -387,27 +401,7 @@ PhysicsMeshType::Enum PhysicsMeshBuilder::GetMeshBuilt()
 
 void PhysicsMeshBuilder::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(Meshes, Array<MeshEntry>());
-
-  if(stream.GetMode()==SerializerMode::Loading)
-  {
-    //Legacy single mesh format
-    String mName;
-    ResourceId mResourceId=0;
-
-    SerializeNameDefault(mName, String());
-    SerializeNameDefault(mResourceId, ResourceId(0));
-
-    if(mResourceId!=0)
-    {
-      MeshEntry entry;
-      entry.Name = mName;
-      entry.mResourceId = mResourceId;
-
-      Meshes.PushBack(entry);
-    }
-  }
-
+  SerializeNameDefault(Meshes, Array<GeometryResourceEntry>());
   SerializeEnumName(PhysicsMeshType, MeshBuilt);
 }
 
@@ -415,14 +409,13 @@ void PhysicsMeshBuilder::BuildListing(ResourceListing& listing)
 {
   for(uint i=0;i<Meshes.Size();++i)
   {
-    MeshEntry& entry = Meshes[i];
+    GeometryResourceEntry& entry = Meshes[i];
     String outputFile = GetOutputFile(i);
-    String name = entry.Name;
 
     if(MeshBuilt == PhysicsMeshType::PhysicsMesh)
-      listing.PushBack(ResourceEntry(0, "PhysicsMesh", name, outputFile, entry.mResourceId, this->mOwner, this));
+      listing.PushBack(ResourceEntry(0, "PhysicsMesh", entry.mName, outputFile, entry.mResourceId, this->mOwner, this));
     else
-      listing.PushBack(ResourceEntry(0, "ConvexMesh", name, outputFile, entry.mResourceId, this->mOwner, this));
+      listing.PushBack(ResourceEntry(0, "ConvexMesh", entry.mName, outputFile, entry.mResourceId, this->mOwner, this));
   }
 }
 
@@ -430,35 +423,26 @@ void PhysicsMeshBuilder::BuildListing(ResourceListing& listing)
 ZilchDefineType(AnimationClip, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchBindFieldProperty(Name);
+  ZilchBindFieldProperty(mName);
   ZilchBindFieldProperty(mStartFrame);
   ZilchBindFieldProperty(mEndFrame);
-  ZilchBindFieldProperty(mLoopingMode);
-}
-
-AnimationClip::AnimationClip()
-{
-  mStartFrame = 0;
-  mEndFrame = 0;
-  mLoopingMode = LoopingMode::Default;
+  ZilchBindFieldProperty(mAnimationIndex);
 }
 
 void AnimationClip::Serialize(Serializer& stream)
 {
-  SerializeName(Name);
-  SerializeName(mResourceId);
-  SerializeName(mStartFrame);
-  SerializeName(mEndFrame);
-  SerializeEnumName(LoopingMode, mLoopingMode);
+  SerializeNameDefault(mName, String("Default"));
+  SerializeNameDefault(mStartFrame, 0);
+  SerializeNameDefault(mEndFrame, 0);
+  SerializeNameDefault(mAnimationIndex, 0);
 }
 
 void AnimationClip::SetDefaults()
 {
-  Name = "Default";
-  mResourceId = GenerateUniqueId64();
+  mName = "Default";
   mStartFrame = 0;
   mEndFrame = 0;
-  mLoopingMode = LoopingMode::Default;
+  mAnimationIndex = 0;
 }
 
 //------------------------------------------------------------ Animation Builder
@@ -468,35 +452,26 @@ ZilchDefineType(AnimationBuilder, builder, type)
   ZeroBindSetup(SetupMode::CallSetDefaults);
   ZeroBindDependency(GeometryContent);
 
-  ZilchBindFieldProperty(Name);
   ZilchBindFieldProperty(mClips);
 }
 
 void AnimationBuilder::Serialize(Serializer& stream)
 {
-  SerializeName(Name);
-  SerializeName(mResourceId);
-  SerializeName(mClips);
+  SerializeNameDefault(mClips, Array<AnimationClip>());
+  SerializeNameDefault(mAnimations, Array<GeometryResourceEntry>());
 }
 
 void AnimationBuilder::Generate(ContentInitializer& initializer)
 {
-  mResourceId = GenerateUniqueId64();
   Name = initializer.Name;
-}
-
-AnimationBuilder::~AnimationBuilder()
-{
-
 }
 
 bool AnimationBuilder::NeedsBuilding(BuildOptions& options)
 {
-  if(mClips.Empty())
+  if (mAnimations.Empty())
     return true;
 
-  String subName = BuildString(Name, ".");
-  String outputFile = BuildString(subName, mClips[0].Name, ".anim.bin");
+  String outputFile = BuildString(mAnimations[0].mName, ".anim.bin");
   String destFile = FilePath::Combine(options.OutputPath, outputFile);
   String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
   return CheckFileAndMeta(options, sourceFile, destFile);
@@ -504,15 +479,13 @@ bool AnimationBuilder::NeedsBuilding(BuildOptions& options)
 
 void AnimationBuilder::BuildListing(ResourceListing& listing)
 {
-  String subName = BuildString(Name, ".");
-  forRange(AnimationClip& clip, mClips.All())
+  forRange (GeometryResourceEntry& entry, mAnimations.All())
   {
-    String output = BuildString(subName, clip.Name, ".anim.bin");
-    String name = BuildString(subName, clip.Name);
-    listing.PushBack(ResourceEntry(0, "AnimationBin", name, output, 
-                                     clip.mResourceId, this->mOwner, this));
+    String output = BuildString(entry.mName, ".anim.bin");
+    listing.PushBack(ResourceEntry(0, "AnimationBin", entry.mName, output, entry.mResourceId, this->mOwner, this));
   }
 }
+
 //------------------------------------------------------------------------ Texture Content
 ZilchDefineType(TextureContent, builder, type)
 {
@@ -523,12 +496,11 @@ ZilchDefineType(TextureContent, builder, type)
 
 void TextureContent::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(mTextures, Array<TextureEntry>());
+  SerializeNameDefault(mTextures, Array<GeometryResourceEntry>());
 }
 
 void TextureContent::Generate(ContentInitializer& initializer)
 {
-
 }
 
 //------------------------------------------------------------------------ Geometry Content
@@ -547,11 +519,17 @@ void GeometryContent::BuildContent(BuildOptions& options)
     //  usage here is super confusing and I don't want to break it"
     //                                                          -Trevor
     #define ZFS "\\"
-    cstr cmd = "\"%s" ZFS "GeometryProcessor.exe\" -in \"%s\" -out \"%s\" -metaFile \"%s\"";
+    cstr cmd = "\"%s%s" ZFS "GeometryProcessor.exe\" -in \"%s\" -out \"%s\" -metaFile \"%s\"";
+    #ifdef ZeroDebug
+    static cstr sProcessorPath = ZFS "GeometryProcessor" ZFS "Debug";
+    #elif ZeroRelease
+    static cstr sProcessorPath = ZFS "GeometryProcessor" ZFS "Release";
+    #endif
     #undef ZFS
     String fullFilePath = FilePath::Combine(options.SourcePath, Filename);
     String commandLine = String::Format(cmd, 
-                                        options.ToolPath.c_str(), 
+                                        options.ToolPath.c_str(),
+                                        sProcessorPath,
                                         fullFilePath.c_str(),
                                         options.OutputPath.c_str(),
                                         "");

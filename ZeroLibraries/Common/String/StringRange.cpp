@@ -541,7 +541,7 @@ cstr StringRange::Data() const
 
 bool StringRange::Empty() const
 { 
-  return mBegin == mEnd; 
+  return mBegin >= mEnd; 
 }
 
 size_t StringRange::ComputeRuneCount() const
@@ -573,18 +573,22 @@ StringIterator StringRange::End() const
 
 void StringRange::IncrementByRune()
 {
-  if(ValidateByte(mBegin))
-    mBegin += UTF8::EncodedCodepointLength(*mBegin);
+  IncrementPointerByRune(mBegin);
+}
+
+void StringRange::IncrementPointerByRune(cstr& ptr)
+{
+  if (ValidateByte(ptr))
+    ptr += UTF8::EncodedCodepointLength(*ptr);
+  else
+    ++ptr;
 }
 
 void StringRange::DecrementPointerByRune(cstr& ptr)
 {
-  if(ptr != mOriginalString.Data())
-  {
+  --ptr;
+  while (ValidateByte(ptr) && IsContinuationByte(ptr))
     --ptr;
-    while (ValidateByte(ptr) && IsContinuationByte(ptr))
-      ptr -= 1;
-  }
 }
 
 // this should never be called on an invalid rune (i.e end iterator itself)

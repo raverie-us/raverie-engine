@@ -167,6 +167,7 @@ private:
 #include "ZilchManager.hpp"
 #include "Spline.hpp"
 #include "HierarchySpline.hpp"
+#include "AsyncProcess.hpp"
 
 // Co-dependent libraries
 #include "Content/ContentStandard.hpp"

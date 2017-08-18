@@ -329,13 +329,13 @@ void UnloadInactive(ContentItem* contentItem, ResourceLibrary* resourceLibrary, 
   // Delete the resources from the resource managers
   forRange(Resource* resource, resourcesToDelete.All())
   {
+    // Remove the resource from the resource manager
+    resource->GetManager()->Remove(resource, RemoveMode::Deleted);
+
     // Now remove from the resource library
     ResourceLibrary* currentLibrary = resource->mResourceLibrary;
     if(currentLibrary)
       currentLibrary->Remove(resource);
-
-    // Remove the resource from the resource manager
-    resource->GetManager()->Remove(resource, RemoveMode::Deleted);
   }
 }
 

@@ -283,7 +283,7 @@ bool Chrome::OnBeforePopup
   toSend->mClient = client;
   toSend->mSettings = settings;
 
-  Z::gDispatch->Dispatch(ThreadContext::Main, gPlatform.get(), Events::ChromePopup, toSend);
+  Z::gDispatch->Dispatch(gPlatform.get(), Events::ChromePopup, toSend);
   return true;
 }
 

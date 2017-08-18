@@ -450,13 +450,13 @@ int WebRequestJob::Execute()
 
 void WebRequestJob::OnPartialWebResponse(WebResponseEvent* event)
 {
-  Z::gDispatch->Dispatch(ThreadContext::Main, mOrigin, 
+  Z::gDispatch->Dispatch(mOrigin, 
     Events::PartialWebResponse, new WebResponseEvent(*event));
 }
 
 void WebRequestJob::OnWebResponse(WebResponseEvent* event)
 {
-  Z::gDispatch->Dispatch(ThreadContext::Main, mOrigin, 
+  Z::gDispatch->Dispatch(mOrigin, 
     Events::WebResponse, new WebResponseEvent(*event));
 }
 

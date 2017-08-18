@@ -644,6 +644,31 @@ void PropertyWidgetObject::OpenNode(bool animate)
   // Expand Methods with no parameters
   forRange(Function* function, mNode->mFunctions.All())
   {
+    // Check to see if there's a custom filter hiding this function
+    if(MetaPropertyFilter* filter = function->HasInherited<MetaPropertyFilter>())
+    {
+      if(MetaSelection* selection = instance.Get<MetaSelection*>())
+      {
+        bool shouldShow = false;
+
+        forRange(Handle currInstance, selection->All())
+        {
+          shouldShow |= filter->Filter(function, currInstance);
+          if (shouldShow)
+            break;
+        }
+
+        if (shouldShow == false)
+          continue;
+      }
+      else
+      {
+        bool visible = filter->Filter(function, instance);
+        if (!visible)
+          continue;
+      }
+    }
+
     PropertyEditAction* actionEdit = new PropertyEditAction(initializer, function, instance);
     AddSubProperty(actionEdit);
   }

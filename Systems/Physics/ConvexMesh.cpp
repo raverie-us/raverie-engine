@@ -66,7 +66,13 @@ void ConvexMesh::BuildFromPointSet(const Vec3Array& points)
   const Vec3* p = &(points[0]);
 
   Geometry::Hull3D hull;
-  hull.Build(p, uint(points.Size()));
+  bool success = hull.Build(p, uint(points.Size()));
+  if(!success)
+  {
+    String msg = String::Format("Failed to build ConvexMesh '%s'", Name.c_str());
+    DoNotifyWarning("ConvexMesh building failed", msg);
+    return;
+  }
 
   Geometry::ConvexMesh geometryMesh;
   geometryMesh.CopyInfo(hull);

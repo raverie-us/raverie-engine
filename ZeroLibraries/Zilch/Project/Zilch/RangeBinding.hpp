@@ -35,6 +35,15 @@ namespace Zilch
 
     typename RangeAdapterBaseType::FrontResult Current()
     {
+      if (this->IsEmpty())
+      {
+        // Throw an exception since the range was empty and we called Current
+        if (ExecutableState::CallingState)
+          ExecutableState::CallingState->ThrowException("The range reached the end and an attempt was made to get the current value");
+
+        return GetInvalid<RangeAdapterBaseType::FrontResult>();
+      }
+
       return this->Front();
     }
 
@@ -50,6 +59,14 @@ namespace Zilch
 
     void MoveNext()
     {
+      if (this->IsEmpty())
+      {
+        // Throw an exception since the range was empty and we called MoveNext
+        if (ExecutableState::CallingState)
+          ExecutableState::CallingState->ThrowException("The range reached the end, but then an attempt was made to make it iterate forward more");
+        return;
+      }
+
       this->PopFront();
     }
   };

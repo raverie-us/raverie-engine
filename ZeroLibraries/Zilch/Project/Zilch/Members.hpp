@@ -263,7 +263,7 @@ namespace Zilch
     // This functionality is used by on the fly patching of classes, as well as by static fields (which are initialized upon the first use)
     // This function generally Contains the initializer expression and a return opcode (no arguments, no return value)
     // WARNING: Field initializers do not assume a value exists in its previous place and will NOT destruct any previous values
-    // If the intializer does not exist then it is generally acceptable to call GenericDefaultConstruct (which will typically just zero out memory)
+    // If the initializer does not exist then it is generally acceptable to call GenericDefaultConstruct (which will typically just zero out memory)
     // Instance field initializers must be given a valid instance of the object that Contains the field (for the 'this' parameter)
     Function* Initializer;
   };

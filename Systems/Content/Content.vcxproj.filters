@@ -96,9 +96,6 @@
     <ClInclude Include="MeshBuilder.hpp">
       <Filter>ContentTypes\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="MeshEntry.hpp">
-      <Filter>ContentTypes\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="ContentEnumerations.hpp">
       <Filter>ContentTypes</Filter>
     </ClInclude>

@@ -310,10 +310,12 @@ public:
   NetUserId GetNetUserOwnerUserId() const;
   /// Returns the network user this object conceptually belongs to, else nullptr.
   Cog* GetNetUserOwner() const;
+  /// Path to the network user this object conceptually belongs to, else empty cog path.
+  CogPath GetNetUserOwnerPath() const;
 
   /// [Server/Offline] Sets the owning network user on this object.
-  void SetNetUserOwnerUserId(NetUserId netUserId);
   void SetNetUserOwner(Cog* cog);
+  void SetNetUserOwnerUserById(NetUserId netUserId);
 
   /// [Server/Offline] Sets the owning network user on this object and up the tree on each parent recursively (pre-order traversal).
   void SetNetUserOwnerUp(Cog* cog);
@@ -377,13 +379,27 @@ public:
   void RemoveNetPropertyInfo(BoundType* componentType, StringParam propertyName);
 
   // Data
-  String                              mInitLevelResourceIdName; ///< Initialization level resource ID name (if created as part of a level initialization).
-  bool                                mIsAncestor;              ///< Is an ancestor? (Original network object archetype hierarchy root?).
-  FamilyTreeId                        mFamilyTreeId;            ///< [Client/Server] Family tree ID this net object belongs to (either as an ancestor or descendant).
-  bool                                mIsOnline;                ///< Is online? (Between the NetObjectOnline/Offline scope?).
-  NetUserId                           mNetUserOwnerUserId;      ///< User ID of our net user owner.
-  HandleOf<NetChannelConfig>          mAutomaticChannel;        ///< Automatic net channel configuration resource applied to net properties by default.
-  NetPropertyInfoArray                mNetPropertyInfos;        ///< Net property infos added through the property grid.
+  String                     mInitLevelResourceIdName; ///< Initialization level resource ID name (if created as part of a level initialization).
+  bool                       mIsAncestor;              ///< Is an ancestor? (Original network object archetype hierarchy root?).
+  FamilyTreeId               mFamilyTreeId;            ///< [Client/Server] Family tree ID this net object belongs to (either as an ancestor or descendant).
+  bool                       mIsOnline;                ///< Is online? (Between the NetObjectOnline/Offline scope?).
+  NetUserId                  mNetUserOwnerUserId;      ///< User ID of our net user owner.
+  HandleOf<NetChannelConfig> mAutomaticChannel;        ///< Automatic net channel configuration resource applied to net properties by default.
+  NetPropertyInfoArray       mNetPropertyInfos;        ///< Net property infos added through the property grid.
+};
+
+//---------------------------------------------------------------------------------//
+//                               EditInGameFilter                                  //
+//---------------------------------------------------------------------------------//
+
+/// Edit-In-Game Property Filter.
+/// Show the property only when editing in-game.
+/// For properties that may only be relevant at runtime but are still useful to display to the user.
+class EditInGameFilter : public MetaPropertyFilter
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  bool Filter(Member* prop, HandleParam instance) override;
 };
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

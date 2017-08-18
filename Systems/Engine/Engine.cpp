@@ -55,7 +55,7 @@ void ZeroDoNotify(StringParam title, StringParam message, StringParam icon, Noti
       event->Icon = icon;
       event->Type = type;
 
-      Z::gDispatch->Dispatch(ThreadContext::Main, Z::gEngine, Events::Notify, event);
+      Z::gDispatch->Dispatch(Z::gEngine, Events::Notify, event);
     }    
   }
   
@@ -147,7 +147,7 @@ void Engine::Update()
 
   Z::gTracker->ClearDeletedObjects();
 
-  Z::gDispatch->DispatchEventsFor(ThreadContext::Main);
+  Z::gDispatch->DispatchEvents();
 
   LoadPendingLevels();
 

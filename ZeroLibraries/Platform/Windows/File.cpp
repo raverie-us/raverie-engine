@@ -338,10 +338,43 @@ size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
   {
     int errorCode = (int)GetLastError();
     String errorString = ToErrorString(errorCode);
-    String message = String::Format("Failed to read file '%s': %s", mFilePath, errorString.c_str());
+    String message = String::Format("Failed to read file '%s': %s", mFilePath.c_str(), errorString.c_str());
     status.SetFailed(message, errorCode);
   }
   return bytesRead;
+}
+
+bool File::HasData(Status& status)
+{
+  ZeroGetPrivateData(FilePrivateData);
+  DWORD fileType = GetFileType(self->mHandle);
+
+  if(fileType == FILE_TYPE_DISK)
+  {
+    return Tell() != CurrentFileSize();
+  }
+  else if(fileType == FILE_TYPE_PIPE)
+  {
+    byte buffer[2];
+
+
+    DWORD bytesRead, bytesAvailable, bytesLeft;
+    bool result = PeekNamedPipe(self->mHandle, buffer, 1, &bytesRead, &bytesAvailable, &bytesLeft);
+    if(result)
+      status.SetSucceeded();
+    else
+    {
+      int errorCode = (int)GetLastError();
+      String errorString = ToErrorString(errorCode);
+      String message = String::Format("Failed to peek file '%s': %s", mFilePath, errorString.c_str());
+      status.SetFailed(message, errorCode);
+    }
+
+    return bytesRead > 0;
+  }
+
+  status.SetFailed("Unknown file handle type. Only files or pipes are allowed");
+  return false;
 }
 
 void File::Flush()

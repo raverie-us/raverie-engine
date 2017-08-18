@@ -12,7 +12,6 @@
 #include "ImportOptions.hpp"
 #include "BaseBuilders.hpp"
 #include "ContentEnumerations.hpp"
-#include "MeshEntry.hpp"
 
 namespace Zero
 {
@@ -42,6 +41,21 @@ public:
   Mat3 mChangeOfBasis;
 };
 
+//-------------------------------------------------------- GeometryResourceEntry
+class GeometryResourceEntry : public Object
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  void Serialize(Serializer& stream);
+  void SetDefaults();
+
+  bool operator==(const GeometryResourceEntry& other);
+
+  String mName;
+  ResourceId mResourceId;
+};
+
 //--------------------------------------------------------- Physics Mesh Builder
 
 //Build Collision Meshes on component
@@ -58,7 +72,7 @@ public:
   /// The type of mesh to make 
   PhysicsMeshType::Enum MeshBuilt;
 
-  Array<MeshEntry> Meshes;
+  Array<GeometryResourceEntry> Meshes;
 
   //BuilderComponent Interface
   bool NeedsBuilding(BuildOptions& options) override;
@@ -74,16 +88,13 @@ class AnimationClip : public Object
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  AnimationClip();
   void Serialize(Serializer& stream);
   void SetDefaults();
 
-  String Name;
-  ResourceId mResourceId;
-
+  String mName;
   int mStartFrame;
   int mEndFrame;
-  LoopingMode::Enum mLoopingMode;
+  int mAnimationIndex;
 };
 
 //------------------------------------------------------------ Animation Builder
@@ -97,15 +108,14 @@ public:
   {
   }
 
-  ~AnimationBuilder();
-
   Array<AnimationClip> mClips;
+  Array<GeometryResourceEntry> mAnimations;
 
   //BuilderComponent Interface
-  bool NeedsBuilding(BuildOptions& options) override;
-  void BuildListing(ResourceListing& listing) override;
   void Serialize(Serializer& stream) override;
   void Generate(ContentInitializer& initializer) override;
+  bool NeedsBuilding(BuildOptions& options) override;
+  void BuildListing(ResourceListing& listing) override;
 };
 
 //GeneratedArchetype
@@ -121,22 +131,8 @@ public:
   void Generate(ContentInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 };
+
 //------------------------------------------------------------------------ Texture Content
-class TextureEntry : public Object
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  void Serialize(Serializer& stream)
-  {
-    SerializeName(mFullFilePath);
-    SerializeName(mResourceId);
-  }
-
-  String mFullFilePath;
-  ResourceId mResourceId;
-};
-
 // Textures imported from mesh files with embedded textures
 class TextureContent : public ContentComponent
 {
@@ -146,7 +142,7 @@ public:
   void Serialize(Serializer& stream)  override;
   void Generate(ContentInitializer& initializer) override;
 
-  Array<TextureEntry> mTextures;
+  Array<GeometryResourceEntry> mTextures;
 };
 
 //------------------------------------------------------------------------ Geometry Content

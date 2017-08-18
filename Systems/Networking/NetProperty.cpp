@@ -293,7 +293,7 @@ ZilchBindGetterSetterProperty(property##typeName)->Add(new PropertyFilter##typeN
 ZilchDefineType(PropertyFilter##typeName, builder, type)                                  \
 {                                                                                         \
 }                                                                                         \
-bool PropertyFilter##typeName::Filter(Property* prop, HandleParam instance)               \
+bool PropertyFilter##typeName::Filter(Member* prop, HandleParam instance)                 \
 {                                                                                         \
   return (instance.Get<NetPropertyConfig*>()->mBasicNetType == BasicNetType::##typeName); \
 }
@@ -318,7 +318,7 @@ ZilchDefineType(PropertyFilterMultiPrimitiveTypes, builder, type)
 {
 }
 
-bool PropertyFilterMultiPrimitiveTypes::Filter(Property* prop, HandleParam instance)
+bool PropertyFilterMultiPrimitiveTypes::Filter(Member* prop, HandleParam instance)
 {
   switch(instance.Get<NetPropertyConfig*>()->mBasicNetType)
   {
@@ -347,7 +347,7 @@ ZilchDefineType(PropertyFilterFloatingPointTypes, builder, type)
 {
 }
 
-bool PropertyFilterFloatingPointTypes::Filter(Property* prop, HandleParam instance)
+bool PropertyFilterFloatingPointTypes::Filter(Member* prop, HandleParam instance)
 {
   switch(instance.Get<NetPropertyConfig*>()->mBasicNetType)
   {
@@ -376,7 +376,7 @@ ZilchDefineType(PropertyFilterArithmeticTypes, builder, type)
 {
 }
 
-bool PropertyFilterArithmeticTypes::Filter(Property* prop, HandleParam instance)
+bool PropertyFilterArithmeticTypes::Filter(Member* prop, HandleParam instance)
 {
   switch(instance.Get<NetPropertyConfig*>()->mBasicNetType)
   {

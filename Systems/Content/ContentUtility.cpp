@@ -32,7 +32,7 @@ bool NeedToBuild(BuildOptions& options, StringParam source, StringParam destinat
     {
       if(options.Verbosity == Verbosity::Detailed)
       {
-        String msg = String::Format("Needs to build because '%s' is newer than '%s'\n", destination.c_str(), source.c_str());
+        String msg = String::Format("Needs to build because '%s' is newer than '%s'\n", source.c_str(), destination.c_str());
         options.BuildTextStream->Write(msg.c_str());
       }
       return true;

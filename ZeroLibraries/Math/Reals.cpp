@@ -331,6 +331,26 @@ bool IsValid(real val)
 #endif
 }
 
+ZeroShared double DoublePositiveMax()
+{
+  return DBL_MAX;
+}
+
+ZeroShared double DoublePositiveMin()
+{
+  return DBL_MIN;
+}
+
+ZeroShared byte BytePositiveMax()
+{
+  return UCHAR_MAX;
+}
+
+ZeroShared byte BytePositiveMin()
+{
+  return (byte)0;
+}
+
 int IntegerPositiveMax()
 {
   return INT_MAX;
@@ -339,6 +359,16 @@ int IntegerPositiveMax()
 int IntegerNegativeMin()
 {
   return INT_MIN;
+}
+
+ZeroShared long long int DoubleIntegerPositiveMax()
+{
+  return LLONG_MAX;
+}
+
+ZeroShared long long int DoubleIntegerNegativeMin()
+{
+  return LLONG_MIN;
 }
 
 real Round(real value)

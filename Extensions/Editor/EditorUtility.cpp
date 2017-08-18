@@ -187,7 +187,7 @@ void ExpandAabb(Cog* object, Aabb& aabb, IncludeMode::Type includeMode, bool wor
 
     if(Collider* collider = object->has(Collider))
     {
-      Aabb subAabb = collider->mAabb;
+      Aabb subAabb = collider->GetWorldAabb();
       aabb.Combine(subAabb);
     }
 

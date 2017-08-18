@@ -57,5 +57,4 @@ public:
 #include "GeometryContent.hpp"
 #include "AudioContent.hpp"
 #include "BinaryContent.hpp"
-#include "MeshEntry.hpp"
 #include "MeshBuilder.hpp"
