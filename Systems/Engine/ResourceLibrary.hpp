@@ -163,6 +163,10 @@ public:
 
   void AddDependency(ResourceLibrary* dependency);
 
+  /// Checks the current libraries to see if the given type was built from our scripts, fragments,
+  /// or plugins.
+  bool BuiltType(BoundType* type);
+
   /// Can this library hold a reference to a resource in the given library. Checks
   /// library dependencies to see if the given library is in a dependent (parent).
   bool CanReference(ResourceLibrary* library);

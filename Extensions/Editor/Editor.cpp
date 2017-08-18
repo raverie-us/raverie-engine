@@ -1002,8 +1002,36 @@ void RevertSpaceModifiedState(GameSession* game,
   }
 }
 
+void ClearSelections(ZilchCompileEvent* e)
+{
+  Array<Handle> objectsToDeselect;
+  HashSet<MetaSelection*> modifiedSelections;
+  forRange(MetaSelection* selection, MetaSelection::GetAllSelections())
+  {
+    // Remove objects in the selection who's type was modified
+    forRange(Handle obj, selection->All())
+    {
+      if (e->WasTypeModified(obj.StoredType))
+        objectsToDeselect.PushBack(obj);
+    }
+
+    forRange(Handle& obj, objectsToDeselect.All())
+      selection->Remove(obj);
+    
+    if (!objectsToDeselect.Empty())
+      modifiedSelections.Insert(selection);
+
+    objectsToDeselect.Clear();
+  }
+
+  forRange(MetaSelection* selection, modifiedSelections.All())
+    selection->FinalSelectionChanged();
+}
+
 void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
 {
+  ClearSelections(e);
+
   TearDownZilchStateOnGames(e->mModifiedLibraries);
 }
 

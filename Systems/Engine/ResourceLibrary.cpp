@@ -273,6 +273,26 @@ void ResourceLibrary::AddDependency(ResourceLibrary* dependency)
 }
 
 //**************************************************************************************************
+bool ResourceLibrary::BuiltType(BoundType* type)
+{
+  LibraryRef sourceLib = type->SourceLibrary;
+
+  if (mSwapScript.mCurrentLibrary == sourceLib)
+    return true;
+
+  if (mSwapFragment.mCurrentLibrary == sourceLib)
+    return true;
+
+  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+  {
+    if (swapPlugin.mCurrentLibrary == sourceLib)
+      return true;
+  }
+
+  return false;
+}
+
+//**************************************************************************************************
 bool ResourceLibrary::CanReference(ResourceLibrary* library)
 {
   // Make sure to check ourself before dependencies

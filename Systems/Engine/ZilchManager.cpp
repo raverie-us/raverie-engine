@@ -30,6 +30,18 @@ ZilchCompileEvent::ZilchCompileEvent(HashSet<ResourceLibrary*>& modifiedLibrarie
 
 }
 
+//**************************************************************************************************
+bool ZilchCompileEvent::WasTypeModified(BoundType* type)
+{
+  forRange(ResourceLibrary* lib, mModifiedLibraries.All())
+  {
+    if (lib->BuiltType(type))
+      return true;
+  }
+
+  return false;
+}
+
 //------------------------------------------------------------------------------------ Zilch Manager
 //**************************************************************************************************
 ZilchManager::ZilchManager() :

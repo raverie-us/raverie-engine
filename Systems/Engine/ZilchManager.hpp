@@ -27,8 +27,10 @@ class ZilchCompileEvent : public Event
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-
   ZilchCompileEvent(HashSet<ResourceLibrary*>& modifiedLibraries);
+
+  bool WasTypeModified(BoundType* type);
+
   HashSet<ResourceLibrary*>& mModifiedLibraries;
 };
 
