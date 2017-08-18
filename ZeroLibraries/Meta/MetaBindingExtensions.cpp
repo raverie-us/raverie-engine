@@ -35,15 +35,20 @@ const String cTool("Tool");
 namespace PropertyAttributes
 {
 
-const String cHidden("Hidden");
+const String cProperty("Property");
 const String cInvalidatesObject("InvalidatesObject");
 const String cShaderInput("ShaderInput");
 const String cLocalModificationOverride("LocalModificationOverride");
-const String cSerialized("Serialized");
+const String cSerialize("Serialize");
+const String cDeprecatedSerialized("Serialized");
 const String cDependency("Dependency");
-const String cEditable("Editable");
+const String cDisplay("Display");
+const String cDeprecatedEditable("Editable");
 const String cResourceProperty("ResourceProperty");
+const String cRuntimeClone("RuntimeClone");
 const String cRenamedFrom("RenamedFrom");
+const String cNetProperty("NetProperty");
+const String cNetPeerId("NetPeerId");
 
 }//namespace PropertyFlags
 
@@ -52,6 +57,7 @@ namespace FunctionAttributes
 {
 
 const String cProperty("Property");
+const String cDisplay("Display");
 const String cInvalidatesObject("InvalidatesObject");
 
 }//namespace FunctionAttributes

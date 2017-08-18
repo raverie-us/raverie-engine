@@ -572,7 +572,7 @@ void AddProperties(MetaProxy* proxy, Object* object)
 {
   forRange(Property* prop, ZilchVirtualTypeId(object)->GetProperties())
   {
-    if(prop->HasAttribute(Zilch::PropertyAttribute) == false || prop->Set == nullptr)
+    if(prop->HasAttribute(PropertyAttributes::cProperty) == false || prop->Set == nullptr)
       continue;
 
     MetaProxy::PropertyState propertyState;

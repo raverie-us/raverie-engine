@@ -556,7 +556,7 @@ void NetObject::AddScriptNetProperties()
     forRange(Property* property, properties)
     {
       // Get net property attribute
-      Attribute* netPropertyAttribute = property->HasAttribute(cNetProperty);
+      Attribute* netPropertyAttribute = property->HasAttribute(PropertyAttributes::cNetProperty);
       if(!netPropertyAttribute) // Unable? (Is not a net property?)
         continue; // Skip property
 
@@ -635,7 +635,7 @@ void NetObject::AddConfiguredNetProperties()
     }
 
     // Has net property attribute?
-    Attribute* netPropertyAttribute = property->HasAttribute(cNetProperty);
+    Attribute* netPropertyAttribute = property->HasAttribute(PropertyAttributes::cNetProperty);
     if(netPropertyAttribute)
       continue; // Skip net property info (We've already added the net property above)
 

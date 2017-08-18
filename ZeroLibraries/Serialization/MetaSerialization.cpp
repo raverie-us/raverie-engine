@@ -451,8 +451,9 @@ void MetaSerializeProperties(HandleParam instance, Serializer& serializer)
     if (property->Get == nullptr || property->Set == nullptr)
       continue;
 
-    if(property->HasAttribute(Zilch::PropertyAttribute) == false &&
-       property->HasAttribute(PropertyAttributes::cSerialized) == false)
+    if(property->HasAttribute(PropertyAttributes::cProperty) == false &&
+       property->HasAttribute(PropertyAttributes::cSerialize) == false &&
+       property->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == false)
       continue;
 
     SerializeProperty(instance, property, serializer);

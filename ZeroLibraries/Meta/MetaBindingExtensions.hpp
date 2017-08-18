@@ -46,10 +46,8 @@ extern const String cTool;
 namespace PropertyAttributes
 {
 
-// The property cannot be modified by the user
-extern const String cReadOnly;
-// Only shows up in the property grid if the user has DevConfig
-extern const String cCore;
+// Implies both [Display] and [Serialize].
+extern const String cProperty;
 // When this property is modified in the property grid, the property grid
 // will do a full rebuild allowing for custom property filters to be run
 extern const String cInvalidatesObject;
@@ -61,17 +59,27 @@ extern const String cShaderInput;
 // used for things like 'Transform::Translation'. When we revert an object's modifications,
 // we still want it to stay in the same location.
 extern const String cLocalModificationOverride;
-// Should this property be serialized. This is implied by Zilch::PropertyAttribute,
-// but this is also added by ZeroSerialize.
-extern const String cSerialized;
+// Should this property be serialized. This is implied by PropertyAttributes::cProperty.
+extern const String cSerialize;
+// Deprecated. Same functionality as cSerialize. Kept around for legacy files.
+extern const String cDeprecatedSerialized;
 // Mark the property as being a dependency on another component.
 extern const String cDependency;
-// Should this property show up in the property grid.
-extern const String cEditable;
+// Should this property show up in the property grid. This is implied by PropertyAttributes::cProperty.
+extern const String cDisplay;
+// Deprecated. Same functionality as cDisplay. Kept around for legacy files.
+extern const String cDeprecatedEditable;
 // Used for customizing resource properties in scripts.
 extern const String cResourceProperty;
-// Used for renaming properties.
+// Clones the Resource 
+extern const String cRuntimeClone;
+// Used for renaming properties. First attribute parameter should be the old name.
 extern const String cRenamedFrom;
+// Indicates the property should be replicated over the network.
+extern const String cNetProperty;
+// Inside an Event dispatched over the network, this integer will be automatically filled with
+// the sending NetPeer's NetPeerId.
+extern const String cNetPeerId;
 
 }//namespace PropertyFlags
 
@@ -79,9 +87,10 @@ extern const String cRenamedFrom;
 namespace FunctionAttributes
 {
 
-// The property cannot be modified by the user
+// The function shows up in the property grid.
 extern const String cProperty;
-
+// The function shows up in the property grid.
+extern const String cDisplay;
 // When this function is called from the property grid, the property grid will do a full rebuild
 extern const String cInvalidatesObject;
 
