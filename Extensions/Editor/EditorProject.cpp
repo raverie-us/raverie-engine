@@ -141,6 +141,8 @@ void OpenProjectFile(StringParam filename)
     DoNotifyError("Failed to load project.", "Project file invalid.");
     return;
   }
+  // Prevent components from being added or removed from the project cog
+  projectCog->mFlags.SetFlag(CogFlags::ComponentsLocked);
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
   if(project == nullptr) return;

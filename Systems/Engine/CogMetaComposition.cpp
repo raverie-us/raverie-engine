@@ -49,10 +49,17 @@ Handle CogMetaComposition::GetComponentAt(HandleParam owner, uint index)
 //**************************************************************************************************
 bool CogMetaComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
 {
+  Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
+  if (cog->mFlags.IsSet(CogFlags::ComponentsLocked))
+  {
+    if (info)
+      info->Reason = "Cog is locked and components cannot be added";
+    return false;
+  }
+
   // We cannot add a Transform if our parent doesn't have a transform
   if(typeToAdd == ZilchTypeId(Transform))
   {
-    Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
     if(cog->GetParent() && !cog->GetParent()->has(Transform))
     {
       if(info)
@@ -123,11 +130,17 @@ bool CogMetaComposition::CanRemoveComponent(HandleParam owner, HandleParam compo
 {
   BoundType* typeToRemove = component.StoredType;
 
+  Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
+  if (cog->mFlags.IsSet(CogFlags::ComponentsLocked))
+  {
+    reason = "Cog is locked and components cannot be removed";
+    return false;
+  }
+
   //The child transform's TransformParent* will not be fixed and be a dangling pointer.
   if(typeToRemove->IsA(ZilchTypeId(Transform)))
   {
     // Can only remove it if we have no children with a Transform
-    Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
     forRange(Cog& child, cog->GetChildren())
     {
       if(child.has(Transform))

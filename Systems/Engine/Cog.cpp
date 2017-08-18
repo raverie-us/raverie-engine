@@ -605,6 +605,12 @@ bool Cog::AddComponentByType(BoundType* componentType)
 {
   ReturnIf(componentType == nullptr, false, "Invalid meta");
 
+  if (mFlags.IsSet(CogFlags::ComponentsLocked))
+  {
+    DoNotifyError("Cog locked", "Attempting to add a component to a locked cog");
+    return false;
+  }
+
   // Check for the component
   Component* current = this->QueryComponentType(componentType);
 
@@ -759,6 +765,12 @@ bool Cog::RemoveComponentByType(BoundType* componentType)
   if(componentType == nullptr)
   {
     DoNotifyException("Could not remove Component", "null type given");
+    return false;
+  }
+
+  if (mFlags.IsSet(CogFlags::ComponentsLocked))
+  {
+    DoNotifyError("Cog locked", "Attempting to remove a component from a locked cog");
     return false;
   }
 
