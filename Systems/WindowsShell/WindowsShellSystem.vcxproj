@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComPort.hpp" />
+    <ClInclude Include="Eula.hpp" />
     <ClInclude Include="Launcher.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="RawInput.hpp" />
