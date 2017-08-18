@@ -213,16 +213,16 @@ namespace Audio
     messageString << OutputChannelsThreaded << " output channels, ";
     messageString << gAudioSystem->SystemChannelsThreaded << " mix channels, ";
     messageString << OutputParameters.suggestedLatency << " latency, ";
-    messageString << AudioSystemInternal::SampleRate << " sample rate";
+    messageString << OutputSampleRate << " sample rate";
 
     ZPrint("API             : %s\n", deviceInfo->name);
     ZPrint("Output channels : %d\n", OutputChannelsThreaded);
     ZPrint("Mix channels    : %d\n", gAudioSystem->SystemChannelsThreaded);
     ZPrint("Latency         : %f\n", OutputParameters.suggestedLatency);
-    ZPrint("Sample rate     : %d\n", AudioSystemInternal::SampleRate);
+    ZPrint("Sample rate     : %d\n", OutputSampleRate);
 
     // Check device settings
-    result = Pa_IsFormatSupported(NULL, &OutputParameters, (double)AudioSystemInternal::SampleRate);
+    result = Pa_IsFormatSupported(NULL, &OutputParameters, (double)OutputSampleRate);
     if (result != paFormatIsSupported)
     {
       // Parameters were not supported - set error string and return
@@ -394,7 +394,7 @@ namespace Audio
       &Stream,
       NULL, // No input
       &OutputParameters,
-      AudioSystemInternal::SampleRate,
+      OutputSampleRate,
       CallbackFrameSizeThreaded,
       paClipOff,  // Won't check for clipping
       PACallback,

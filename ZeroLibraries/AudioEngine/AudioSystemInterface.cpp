@@ -37,7 +37,7 @@ namespace Audio
       System->ResetPA = false;
       System->LockObject.Unlock();
 
-      System->AudioIO.Reset();
+      System->ResetIO();
     }
     // Otherwise just unlock
     else

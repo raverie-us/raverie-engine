@@ -50,6 +50,31 @@ namespace Audio
 
   };
 
+  //------------------------------------------------------------------------------------ Audio Frame
+  
+  class AudioFrame
+  {
+  public:
+    AudioFrame(float* samples, unsigned channels);
+    AudioFrame();
+    AudioFrame(const AudioFrame& copy);
+
+    void TranslateChannels(const unsigned channels);
+    void SetSamples(float* samples, unsigned channels);
+    void Clamp();
+    float GetMaxValue();
+    float GetMonoValue();
+    void operator*=(float multiplier);
+    void operator=(const AudioFrame& copy);
+
+    float Samples[8];
+
+  private:
+    enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
+    unsigned HowManyChannels;
+    const float* Matrices[MaxChannels];
+  };
+  
   //-------------------------------------------------------------------------- Audio System Internal
 
   // Main audio system. 
@@ -95,6 +120,8 @@ namespace Audio
     void AddAsset(SoundAssetNode* asset);
     // Removes a non-threaded sound asset from the system
     void RemoveAsset(SoundAssetNode* asset);
+
+    void ResetIO();
 
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
@@ -188,6 +215,10 @@ namespace Audio
     float PreviousPeakVolumeThreaded;
     unsigned PreviousRMSVolumeThreaded;
     unsigned ClippingCounter;
+    AudioFrame LastFramePreviousMix;
+    double ResampleFrameIndex;
+    bool Resampling;
+    double ResampleFactor;
 
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();
@@ -203,6 +234,8 @@ namespace Audio
     void SetVolumes(const float peak, const unsigned rms);
     // Sets whether to use the high or low latency values
     void SetUseHighLatency(const bool useHighLatency);
+
+    void CheckForResampling();
 
     class NodeInterface : public ExternalNodeInterface
     {
@@ -296,23 +329,6 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
-  };
-
-  class AudioFrame
-  {
-  public:
-    AudioFrame(float* samples, unsigned channels);
-    AudioFrame();
-
-    void TranslateChannels(const unsigned channels);
-    void SetSamples(float* samples, unsigned channels);
-
-    float Samples[8];
-
-  private:
-    enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
-    unsigned HowManyChannels;
-    const float* Matrices[MaxChannels];
   };
 
 }

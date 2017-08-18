@@ -100,7 +100,7 @@ namespace Audio
     {
       status.SetFailed(Zero::String::Format("File %s was not in WAV or OGG format",
         fileName.c_str()));
-      return;
+      return data;
     }
 
     return data;
@@ -220,7 +220,7 @@ namespace Audio
     file.Seek(0);
     
     // Save the size of the file
-    size_t fileSize = file.CurrentFileSize();
+    unsigned fileSize = (unsigned)file.CurrentFileSize();
 
     // Create the buffer for reading in data from the file
     byte* rawDataBuffer = new byte[fileSize];
