@@ -27,7 +27,6 @@ namespace Audio
     MixVersionNumber(0), 
     FinalOutputNode(nullptr), 
     FinalOutputNodeThreaded(nullptr),
-    DecodingFinished(true),
     PeakVolumeLastMix(0.0f),
     RmsVolumeLastMix(0.0f),
     NodeCount(0),
@@ -68,7 +67,7 @@ namespace Audio
       return;
 
     // Start up the mix thread
-    MixThread.Initialize(StartMix, this, "MixThread");
+    MixThread.Initialize(StartMix, this, "Audio mix");
     MixThread.Resume();
     if (!MixThread.IsValid())
     {
@@ -109,14 +108,7 @@ namespace Audio
       MixThread.Close();
     }
 
-    if (!DecodingFinished)
-    {
-      DecodeLock.Lock();
-      DecodingList.Clear();
-      DecodeLock.Unlock();
-      DecodeThread.WaitForCompletion();
-      DecodeThread.Close();
-    }
+    DecodeThread.Close();
 
     // Shut down PortAudio
     AudioIO.ShutDown(status);
@@ -251,7 +243,6 @@ namespace Audio
       AudioFrame frame;
 
       unsigned outputFrames = AudioIO.OutputBufferSizeThreaded / AudioIO.OutputChannelsThreaded;
-      double factor = (double)SampleRate / (double)AudioIO.OutputSampleRate;
       unsigned mixFrameIndex = (unsigned)ResampleFrameIndex;
       AudioFrame previousFrame(LastFramePreviousMix);
 
@@ -272,7 +263,7 @@ namespace Audio
           }
 
           ErrorIf(ResampleFrameIndex < 0);
-          ResampleFrameIndex += factor;
+          ResampleFrameIndex += ResampleFactor;
           mixFrameIndex = (unsigned)ResampleFrameIndex;
         }
         else
@@ -535,14 +526,14 @@ namespace Audio
   void AudioSystemInternal::SetSystemChannelsThreaded(const unsigned channels)
   {
     SystemChannelsThreaded = channels;
-    MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * channels;
+
     if (Resampling)
+      AdjustBufferSizeForResampling();
+    else
     {
-      MixBufferSizeThreaded = (unsigned)(MixBufferSizeThreaded * ResampleFactor);
-      MixBufferSizeThreaded -= MixBufferSizeThreaded % SystemChannelsThreaded;
-      //MixBufferSizeThreaded += SystemChannelsThreaded;
+      MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
+      BufferForOutput.Resize(MixBufferSizeThreaded);
     }
-    BufferForOutput.Resize(MixBufferSizeThreaded);
   }
 
   //************************************************************************************************
@@ -631,13 +622,13 @@ namespace Audio
 
     AudioIO.RestartStream(!useHighLatency, status);
 
-    MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
     if (Resampling)
+      AdjustBufferSizeForResampling();
+    else
     {
-      MixBufferSizeThreaded = (unsigned)(MixBufferSizeThreaded * ResampleFactor);
-      MixBufferSizeThreaded -= MixBufferSizeThreaded % SystemChannelsThreaded;
+      MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
+      BufferForOutput.Resize(MixBufferSizeThreaded);
     }
-    BufferForOutput.Resize(MixBufferSizeThreaded);
   }
 
   //************************************************************************************************
@@ -649,9 +640,7 @@ namespace Audio
       ResampleFactor = (double)SampleRate / (double)AudioIO.OutputSampleRate;
       ResampleFrameIndex = 0;
 
-      MixBufferSizeThreaded = (unsigned)(AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded * ResampleFactor);
-      MixBufferSizeThreaded -= MixBufferSizeThreaded % SystemChannelsThreaded;
-      BufferForOutput.Resize(MixBufferSizeThreaded);
+      AdjustBufferSizeForResampling();
     }
     else if (Resampling && (SampleRate == AudioIO.OutputSampleRate))
     {
@@ -663,27 +652,24 @@ namespace Audio
   }
 
   //************************************************************************************************
+  void AudioSystemInternal::AdjustBufferSizeForResampling()
+  {
+    MixBufferSizeThreaded = (unsigned)(AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded * ResampleFactor);
+    MixBufferSizeThreaded -= MixBufferSizeThreaded % SystemChannelsThreaded;
+    BufferForOutput.Resize(MixBufferSizeThreaded);
+  }
+
+  //************************************************************************************************
   void AudioSystemInternal::AddDecodingTask(Zero::Functor* function)
   {
-    DecodeLock.Lock();
-
-    // Check if the decoding thread is currently running
-    if (!DecodingFinished)
+    if (!DecodeThread.IsValid())
     {
-      DecodingList.PushBack(function);
-      DecodeLock.Unlock();
-    }
-    else
-    {
-      DecodeLock.Unlock();
-
-      DecodingList.PushBack(function);
-      DecodingFinished = false;
-
       // Start a new thread
-      DecodeThread.Initialize(StartDecoding, this, "Decoding thread");
+      DecodeThread.Initialize(StartDecoding, this, "Audio decoding");
       DecodeThread.Resume();
     }
+
+    DecodingQueue.Write(function);
   }
 
   //************************************************************************************************
@@ -692,26 +678,14 @@ namespace Audio
     bool finished(false);
     while (!finished)
     {
-      DecodeLock.Lock();
-      // If the list is empty, nothing more to do, can close thread
-      if (DecodingList.Empty())
+      Zero::Functor* function;
+      while (DecodingQueue.Read(function))
       {
-        finished = true;
-        DecodingFinished = true;
-        DecodeLock.Unlock();
-        continue;
+        function->Execute();
+        delete function;
       }
-      // Get all objects in the current list
-      Zero::Array<Zero::Functor*> samplesToDecode(DecodingList);
-      DecodingList.Clear();
-      DecodeLock.Unlock();
 
-      unsigned size = samplesToDecode.Size();
-      for (unsigned i = 0; i < size; ++i)
-      {
-        samplesToDecode[i]->Execute();
-        delete samplesToDecode[i];
-      }
+      Sleep(10);
     }
   }
 

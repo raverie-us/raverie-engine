@@ -167,12 +167,8 @@ namespace Audio
     BufferType BufferForOutput;
     // Thread for decoding tasks
     Zero::Thread DecodeThread;
-    // Used to add tasks to decoding list
-    Zero::ThreadLock DecodeLock;
-    // True when all decoding tasks have finished
-    bool DecodingFinished;
-    // List of decoding tasks
-    Zero::Array<Zero::Functor*> DecodingList;
+    // Queue for decoding tasks
+    LockFreeQueue<Zero::Functor*> DecodingQueue;
     // Thread for mix loop
     Zero::Thread MixThread;
     // To tell the system to shut down once everything stops. 
@@ -236,6 +232,7 @@ namespace Audio
     void SetUseHighLatency(const bool useHighLatency);
 
     void CheckForResampling();
+    void AdjustBufferSizeForResampling(); 
 
     class NodeInterface : public ExternalNodeInterface
     {
