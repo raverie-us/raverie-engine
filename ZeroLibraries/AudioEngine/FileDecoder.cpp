@@ -178,7 +178,7 @@ namespace Audio
       // Move the data index forward
       DataIndex += sizeof(packHead);
 
-      ErrorIf(DataIndex + packHead.Size >= DataSize);
+      ErrorIf(DataIndex + packHead.Size > DataSize);
 
       // If not a valid packet, set frames to zero
       if (packHead.Size == 0 || (packHead.Name[0] != 'p' || packHead.Name[1] != 'a'))

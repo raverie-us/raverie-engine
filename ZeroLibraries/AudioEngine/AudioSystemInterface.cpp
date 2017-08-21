@@ -150,28 +150,37 @@ namespace Audio
   //------------------------------------------------------------------------------------- Audio File
 
   //************************************************************************************************
+  AudioFile::AudioFile() :
+    Channels(0),
+    FileLength(0)
+  {
+    ZeroConstructPrivateData(AudioFileData);
+  }
+
+  //************************************************************************************************
   AudioFile::~AudioFile()
   {
     Close();
+    ZeroDestructPrivateData(AudioFileData);
   }
 
   //************************************************************************************************
   void AudioFile::OpenFile(Zero::Status& status, Zero::StringParam fileName)
   {
-    if (Data)
+    ZeroGetPrivateData(AudioFileData);
+
+    if (self->BuffersPerChannel)
     {
       status.SetFailed("Already open, call Close before opening another file");
     }
     else
     {
-      Data = new AudioFileData();
-
-      *Data = FileEncoder::OpenFile(status, fileName);
+      *self = FileEncoder::OpenFile(status, fileName);
 
       if (status.Succeeded())
       {
-        Channels = Data->Channels;
-        FileLength = (float)Data->SamplesPerChannel / (float)Data->SampleRate;
+        Channels = self->Channels;
+        FileLength = (float)self->SamplesPerChannel / (float)self->SampleRate;
       }
     }
   }
@@ -179,8 +188,10 @@ namespace Audio
   //************************************************************************************************
   void AudioFile::WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName)
   {
-    if (Data->BuffersPerChannel)
-      FileEncoder::WriteFile(status, outputFileName, *Data);
+    ZeroGetPrivateData(AudioFileData);
+
+    if (self->BuffersPerChannel)
+      FileEncoder::WriteFile(status, outputFileName, *self);
     else
       status.SetFailed("No input file was opened");
   }
@@ -188,11 +199,9 @@ namespace Audio
   //************************************************************************************************
   void AudioFile::Close()
   {
-    if (Data)
-    {
-      Data->ReleaseData();
-      delete Data;
-    }
+    ZeroGetPrivateData(AudioFileData);
+
+    self->ReleaseData();
   }
 
 }

@@ -115,10 +115,7 @@ namespace Audio
   class AudioFile
   {
   public:
-    AudioFile() : 
-      Channels(0), 
-      FileLength(0),
-      Data(nullptr) {}
+    AudioFile();
     ~AudioFile();
 
     // Opens an audio file and reads its data into a buffer so it's ready for encoding
@@ -134,7 +131,7 @@ namespace Audio
     float FileLength;
 
   private:
-    AudioFileData* Data;
+    ZeroDeclarePrivateData(AudioFile, 16);
   };
 }
 

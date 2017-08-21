@@ -27,7 +27,7 @@ namespace Audio
       Channels(0),
       SampleRate(0),
       BuffersPerChannel(nullptr)
-    {}
+    { }
 
     void ReleaseData();
 
