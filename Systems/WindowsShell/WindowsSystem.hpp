@@ -81,8 +81,9 @@ public:
   HWND mWindowHandle;
 private:
 
-  void SendKeyboardEvent(KeyboardEvent& keyEvent);
+  void SendKeyboardEvent(KeyboardEvent& keyEvent) override;
   void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
+  void SendMouseButtonEvent(OsMouseEvent& mouseEvent) override;
   void SendMouseButtonEvent(OsMouseEvent& mouseEvent, StringParam buttonState);
   void FillMouseEventData(IntVec2Param mousePosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
 

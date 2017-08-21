@@ -200,6 +200,15 @@ void RunUnitTests()
   new UnitTestDelayRunner(Z::gEditor);
 }
 
+void DebugUnitTestSystem()
+{
+  UnitTestSystem* unitTestSystem = Z::gEngine->has(UnitTestSystem);
+  if (unitTestSystem->mMode != UnitTestMode::Recording)
+    unitTestSystem->StartUnitTestRecordingSubProcess();
+  else
+    unitTestSystem->PlayUnitTestRecordingSubProcess();
+}
+
 void HostZilchDebugger()
 {
   // METAREFACTOR - Removed until ZilchScript compiles
@@ -227,6 +236,7 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion));
   commands->AddCommand("WriteBuildInfo", BindCommandFunction(WriteBuildInfo));
   commands->AddCommand("RunUnitTests", BindCommandFunction(RunUnitTests));
+  commands->AddCommand("DebugUnitTestSystem", BindCommandFunction(DebugUnitTestSystem));
 
   if(DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
   {

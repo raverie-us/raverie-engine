@@ -63,6 +63,8 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(SplineParticleEmitter);
   ZilchInitializeType(SplineParticleAnimator);
 
+  ZilchInitializeType(UnitTestSystem);
+
   ZilchInitializeTypeAs(ZeroStatic, "Zero");
 
   // @trevor.sundberg: The Gameplay and Editor libraries are co-dependent

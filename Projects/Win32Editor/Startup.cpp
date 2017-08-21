@@ -75,6 +75,7 @@ bool Startup(Engine* engine, StringMap& arguments)
     TimerBlock block("Initializing core systems.");
 
     // Create all core systems
+    engine->AddSystem(CreateUnitTestSystem());
     engine->AddSystem(CreateOsShellSystem());
     engine->AddSystem(CreateTimeSystem());
     engine->AddSystem(CreatePhysicsSystem());

@@ -32,6 +32,9 @@ DeclareEvent(OsMouseFileDrop);
 
 extern const String cOsKeyboardEventsFromState[3];
 
+class OsMouseEvent;
+class KeyboardEvent;
+
 /// Flags used to control the behavior of an OsWindow
 DeclareBitField7(WindowStyleFlags,
   // Is the window visible. This is 'NotVisible' instead of visible so that the
@@ -166,6 +169,9 @@ public:
 
   // Set application progress
   virtual void SendProgress(ProgressType::Enum progressType, float progress) {}
+
+  virtual void SendKeyboardEvent(KeyboardEvent& keyEvent) = 0;
+  virtual void SendMouseButtonEvent(OsMouseEvent& mouseEvent) = 0;
 };
 
 //-------------------------------------------------------------------OsWindowEvent

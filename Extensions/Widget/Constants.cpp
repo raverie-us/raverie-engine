@@ -15,6 +15,7 @@ const String cBackground = "Background";
 const String cWhiteSquare = "WhiteSquare";
 const String cWhiteSquareBorder = "WhiteSquareBorder";
 const String cWhiteSquareWithBorder = "WhiteSquareWithBorder";
+const String cCursor = "Cursor";
 const String cText = "Text";
 const String cTitleText = "TitleText";
 const String cBackgroundFocus = "BackgroundFocus";

@@ -515,6 +515,11 @@ void WindowsOsWindow::FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState,
   keyEvent.SpacePressed = IsSpaceHeld();
 }
 
+void WindowsOsWindow::SendMouseButtonEvent(OsMouseEvent& mouseEvent)
+{
+  SendMouseButtonEvent(mouseEvent, mouseEvent.EventId);
+}
+
 void WindowsOsWindow::SendMouseButtonEvent(OsMouseEvent& mouseEvent, StringParam buttonState)
 {
   DispatchEvent(buttonState, &mouseEvent);

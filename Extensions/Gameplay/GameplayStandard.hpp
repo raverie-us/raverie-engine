@@ -39,6 +39,7 @@ public:
 #include "Widget/WidgetStandard.hpp"
 
 // Gameplay Includes
+#include "UnitTestSystem.hpp"
 #include "Orientation.hpp"
 
 #include "Reactive.hpp"
