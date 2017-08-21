@@ -21,24 +21,6 @@ AudioContent::AudioContent()
   EditMode = ContentEditMode::ContentItem;
 }
 
-//---------------------------------------------------------------------- Sound Info
-
-ZilchDefineType(SoundInfo, builder, type)
-{
-  ZeroBindComponent();
-  ZeroBindDependency(AudioContent);
-  ZeroBindExpanded();
-
-  ZilchBindGetterProperty(FileLength);
-  ZilchBindGetterProperty(AudioChannels);
-}
-
-void SoundInfo::Serialize(Serializer& stream)
-{
-  SerializeNameDefault(mFileLength, 0.0f);
-  SerializeNameDefault(mAudioChannels, 0);
-}
-
 //---------------------------------------------------------------------- Factory
 
 ContentItem* MakeAudioContent(ContentInitializer& initializer)
@@ -46,9 +28,6 @@ ContentItem* MakeAudioContent(ContentInitializer& initializer)
   AudioContent* content = new AudioContent();
 
   content->Filename = initializer.Filename;
-
-  SoundInfo* info = new SoundInfo();
-  content->AddComponent(info);
 
   SoundBuilder* builder = new SoundBuilder();
   builder->Generate(initializer);
@@ -89,28 +68,13 @@ void SoundBuilder::BuildContent(BuildOptions& options)
   String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
   String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, SoundExtension));
 
+  // Create the AudiFile object and open the source file
   Audio::AudioFile audioFile;
   audioFile.OpenFile(status, sourceFile);
 
   if (status.Succeeded())
   {
-    SoundInfo* info = mOwner->has(SoundInfo);
-    if (!info)
-    {
-      info = new SoundInfo();
-      mOwner->AddComponent(info);
-    }
-
-    info->mFileLength = audioFile.FileLength;
-    info->mAudioChannels = audioFile.Channels;
-
-    // This should probably be handled differently. The properties need to be saved because the object
-    // is serialized before it is loaded, but BuildContent won't be called next time the engine starts,
-    // so if we don't save the properties now they'll be lost.
-    // Need to check for DefaultSound specifically so it doesn't keep re-creating meta file
-    if (mOwner->Filename != "DefaultSound.wav")
-      mOwner->SaveMetaFile();
-
+    // Encode the file and write it out to disk
     audioFile.WriteEncodedFile(status, destFile);
 
     if (status.Failed())
@@ -154,11 +118,9 @@ void CreateAudioContent(ContentSystem* system)
 {
   AddContent<AudioContent>(system);
   AddContentComponent<SoundBuilder>(system);
-  AddContentComponent<SoundInfo>(system);
 
   ContentTypeEntry audioContent(ZilchTypeId(AudioContent), MakeAudioContent);
   system->CreatorsByExtension["wav"] = audioContent;
-  system->CreatorsByExtension["wv"] = audioContent;
   system->CreatorsByExtension["ogg"] = audioContent;
 }
 

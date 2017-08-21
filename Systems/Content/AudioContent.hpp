@@ -21,27 +21,6 @@ public:
 
 const String SoundExtension = ".snd";
 
-class SoundInfo : public ContentComponent
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  SoundInfo() :
-    mFileLength(0),
-    mAudioChannels(0)
-  {}
-
-  void Serialize(Serializer& stream) override;
-
-  /// The length of the audio file, in seconds.
-  float GetFileLength() { return mFileLength; }
-  /// The number of audio channels in the file.
-  int GetAudioChannels() { return mAudioChannels; }
-
-  float mFileLength;
-  int mAudioChannels;
-};
-
 class SoundBuilder : public DirectBuilderComponent
 {
 public:
