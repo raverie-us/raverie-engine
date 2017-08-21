@@ -32,10 +32,33 @@ namespace Audio
   }
 
   //************************************************************************************************
-  bool AtomicCheckEqualityPointer(void* first, void* second)
+  Type32Bit AtomicDecrement32(Type32Bit* value)
   {
-    void* compareCheck = first;
-    AtomicCompareExchangePointer(&compareCheck, nullptr, second);
-    return compareCheck == nullptr;
+#ifdef _MSC_VER
+    return InterlockedDecrement(value);
+#endif
+
+    return 0;
   }
+
+  //************************************************************************************************
+  Type32Bit AtomicIncrement32(Type32Bit* value)
+  {
+#ifdef _MSC_VER
+    return InterlockedIncrement(value);
+#endif
+
+    return 0;
+  }
+
+  //************************************************************************************************
+  Type32Bit AtomicCompareExchange32(Type32Bit* destination, Type32Bit exchange, Type32Bit comperand)
+  {
+#ifdef _MSC_VER
+    return InterlockedCompareExchange(destination, exchange, comperand);
+#endif
+
+    return 0;
+  }
+
 }

@@ -181,14 +181,12 @@ namespace Audio
       if (Decoder)
       {
         // If the decoder isn't executing any tasks, go ahead and delete it
-        Decoder->LockObject.Lock();
-        if (Decoder->DecodingTaskCount == 0)
+        if (AtomicCompareExchange32(&Decoder->DecodingTaskCount, 0, 0) == 0)
           delete Decoder;
         else
         {
           // Otherwise set the Asset pointer to null so it will delete itself
           AtomicSetPointer((void**)Decoder->ParentAlive, (void*)nullptr);
-          Decoder->LockObject.Unlock();
         }
       }
     }

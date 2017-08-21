@@ -308,7 +308,6 @@ namespace Audio
         if (AudioIO.OutputChannelsThreaded == 6 || AudioIO.OutputChannelsThreaded == 8)
         {
           float monoSample = frame.GetMonoValue();
-
           LowPass->ProcessSample(&monoSample, &frame.Samples[3], 1);
         }
 

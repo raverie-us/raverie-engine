@@ -143,9 +143,7 @@ namespace Audio
   //************************************************************************************************
   void FileDecoder::AddDecodingTask()
   {
-    LockObject.Lock();
-    ++DecodingTaskCount;
-    LockObject.Unlock();
+    AtomicIncrement32(&DecodingTaskCount);
 
     // Add the decoding task
     gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodePacket, this));
@@ -230,12 +228,10 @@ namespace Audio
     if (!InputFile.IsOpen())
       return;
 
-    LockObject.Lock();
-    if (DecodingTaskCount > 0)
+    if (AtomicCompareExchange32(&DecodingTaskCount, 0, 0) != 0)
     {
       // TODO need to somehow get rid of the task? wait till its done?
     }
-    LockObject.Unlock();
 
     // Set the file to the start of the data
     InputFile.Seek(sizeof(FileHeader));
@@ -306,9 +302,7 @@ namespace Audio
   //************************************************************************************************
   void FileDecoder::FinishDecodingPacket()
   {
-    LockObject.Lock();
-    --DecodingTaskCount;
-    LockObject.Unlock();
+    AtomicDecrement32(&DecodingTaskCount);
 
     // If the pointer is null, this object should be deleted 
     // (sets ParentAlive to null if it's currently null, returns original value which would be null)

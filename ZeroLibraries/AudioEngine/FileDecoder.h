@@ -58,10 +58,8 @@ namespace Audio
     short Channels;
     // Number of samples per channel in the audio data
     unsigned SamplesPerChannel;
-    // Keeps track of active decoding tasks
-    int DecodingTaskCount;
-    // Used to check and set DecodingTaskCount
-    Zero::ThreadLock LockObject;
+    // Keeps track of active decoding tasks - shared between threads!
+    Type32Bit DecodingTaskCount;
     // Will be set to an object as long as the parent asset is alive, null when deleted
     void* ParentAlive;
 
