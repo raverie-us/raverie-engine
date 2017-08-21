@@ -207,14 +207,20 @@ namespace Audio
     Zero::Array<InterpolatorContainer> InterpolatorArray;
     // The index of the next available interpolator
     int NextInterpolator;
-
+    // The peak volume from the last mix, used to check whether to create a task
     float PreviousPeakVolumeThreaded;
+    // The RMS volume from the last mix, used to check whether to create a task
     unsigned PreviousRMSVolumeThreaded;
-    unsigned ClippingCounter;
-    AudioFrame LastFramePreviousMix;
+    // Stores the last frame of samples from the previous mix
+    AudioFrame PreviousFrame;
+    // The resample index including fractional value
     double ResampleFrameIndex;
+    // If true the output is being resampled to match the sample rate of the device
     bool Resampling;
+    // The factor to use when resampling
     double ResampleFactor;
+    // Used to adjust buffer sizes
+    double ResampleBufferFraction;
 
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();
@@ -230,9 +236,8 @@ namespace Audio
     void SetVolumes(const float peak, const unsigned rms);
     // Sets whether to use the high or low latency values
     void SetUseHighLatency(const bool useHighLatency);
-
+    // Checks for resampling and resets variables if applicable
     void CheckForResampling();
-    void AdjustBufferSizeForResampling(); 
 
     class NodeInterface : public ExternalNodeInterface
     {

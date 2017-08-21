@@ -107,7 +107,9 @@ void SoundBuilder::BuildContent(BuildOptions& options)
     // This should probably be handled differently. The properties need to be saved because the object
     // is serialized before it is loaded, but BuildContent won't be called next time the engine starts,
     // so if we don't save the properties now they'll be lost.
-    mOwner->SaveMetaFile();
+    // Need to check for DefaultSound specifically so it doesn't keep re-creating meta file
+    if (mOwner->Filename != "DefaultSound.wav")
+      mOwner->SaveMetaFile();
 
     audioFile.WriteEncodedFile(status, destFile);
 
