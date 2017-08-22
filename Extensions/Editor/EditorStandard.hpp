@@ -68,6 +68,7 @@ public:
 #include "Property/TreeView.hpp"
 #include "TreeViewSearch.hpp"
 #include "ItemList.hpp"
+#include "ListView.hpp"
 
 // Content Importing
 #include "ContentPackage.hpp"

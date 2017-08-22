@@ -75,6 +75,7 @@ public:
   void OnComponentsChanged(Event* event);
   void OnSelectionChanged(Event* event);
   void OnFinalSelectionChanged(Event* event);
+  void OnShortcutInfoEnter(QueryShortcutsEvent* event);
   void OnKeyDown(KeyboardEvent* e);
 
   void UpdateGrabState(GizmoGrabMode::Enum state);
@@ -108,6 +109,30 @@ public:
 };
 
 //------------------------------------------------------ ObjectTranslateTool ---
+/// <Commands>
+///   <command name = "CopySelection">
+///     <shortcut> Ctrl + Drag </shortcut>
+///     <description>
+///       Duplicate all objects in the current selection.  Then, make the 
+///       duplicates the current selection and target of the TranslateTool.
+///     </description>
+///   </command>
+///   <command name = "SnapToSurface">
+///     <shortcut> V + Drag (Center Square) </shortcut>
+///     <description>
+///       Snap the center of the translate tool to the surface being hovered
+///       over by the mouse cursor. Thereby affecting all target-objects of the
+///       TranslateTool.
+///     </description>
+///   </command>
+///   <command name = "TempSnapping">
+///     <shortcut> Shift (Hold) </shortcut>
+///     <description>
+///       While held, temporarily switch the state of 'Snapping' to the opposite
+///       of its current state.
+///     </description>
+///   </command>
+/// </Commands>
 class ObjectTranslateTool : public ObjectTransformTool
 {
 public:
@@ -131,24 +156,32 @@ public:
 
   void OnGizmoObjectsDuplicated(Event* event);
 
+  void OnShortcutInfoEnter(QueryShortcutsEvent* event);
+
   void GizmoCreated(Cog* gizmo) override;
   void CopyPropertiesToGizmo() override;
 
 public:
   GizmoSnapMode::Enum mSnapMode;
-
-  /// Duplicate all objects in the current selection.  Then, make the duplicates
-  /// the current selection and target of the TranslateTool.
-  String mCopySelection;
-  /// Snap the center of the translate tool to the surface being hovered over
-  /// by the mouse cursor, thereby affecting all target-objects of the TranslateTool.
-  String mSnapToSurface;
-  /// While held, temporarily switch the state of 'Snapping' to the opposite
-  /// of its current state.
-  String mTempSnapping;
 };
 
 //---------------------------------------------------------- ObjectScaleTool ---
+/// <Commands>
+///   <command name = "OffAxesScale">
+///     <shortcut> Ctrl + Drag </shortcut>
+///     <description>
+///       When dragging one of the three main axes - scale by the drag amount
+///       on the other two, non-drag axes, and not the drag axis itself.
+///     </description>
+///   </command>
+///   <command name = "TempSnapping">
+///     <shortcut> Shift (Hold) </shortcut>
+///     <description>
+///       While held, temporarily switch the state of 'Snapping' to the opposite
+///       of its current state.
+///     </description>
+///   </command>
+/// </Commands>
 class ObjectScaleTool : public ObjectTransformTool
 {
 public:
@@ -170,23 +203,23 @@ public:
   GizmoSnapMode::Enum GetSnapMode( );
   void SetSnapMode(GizmoSnapMode::Enum mode);
 
-  Vec3 GetChangeInScale();
-
   void CopyPropertiesToGizmo() override;
 
 public:
   GizmoSnapMode::Enum mSnapMode;
   bool mAffectTranslation;
-
-  /// When dragging one of the three main axes, scale by the drag amount on the
-  /// other two, non-drag axes, and not the drag axis itself.
-  String mOffAxesScale;
-  /// While held, temporarily switch the state of 'Snapping' to the opposite
-  /// of its current state.
-  String mTempSnapping;
 };
 
-//---------------------------------------------------------- ObjectScaleTool ---
+//--------------------------------------------------------- ObjectRotateTool ---
+/// <Commands>
+///   <command name = "TempSnapping">
+///     <shortcut> Shift (Hold) </shortcut>
+///     <description>
+///       While held, temporarily switch the state of 'Snapping' to the opposite
+///       of its current state.
+///     </description>
+///   </command>
+/// </Commands>
 class ObjectRotateTool : public ObjectTransformTool
 {
 public:
@@ -207,10 +240,6 @@ public:
   
 public:
   bool mAffectTranslation;
-
-  /// While held, temporarily switch the state of 'Snapping' to the opposite
-  /// of its current state.
-  String mTempSnapping;
 };
 
 }// end namespace Zero

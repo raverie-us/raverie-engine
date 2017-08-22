@@ -14,6 +14,5 @@ Cog
 		var Snapping = false
 		var SnapDistance = 15
 		var AffectTranslation = true
-		var TempSnapping = "Shift (Hold)"
 	}
 }

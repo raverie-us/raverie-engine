@@ -356,9 +356,6 @@ public:
   HashMap<int, int> mEnumIndexToListIndex;
   Array<int> mEnumIndexes;
 
-  // Most recent tool tip displayed.
-  HandleOf<ToolTip> mToolTip;
-
   PropertyEditorEnum(PropertyWidgetInitializer& initializer)
     :DirectProperty(initializer)
   {

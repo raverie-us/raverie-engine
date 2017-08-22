@@ -15,7 +15,5 @@ Cog
 		var SnapDistance = 1
 		var SnapMode = GizmoSnapMode.WorldGrid
 		var AffectTranslation = true
-		var OffAxesScale = "Ctrl + Drag"
-		var TempSnapping = "Shift (Hold)"
 	}
 }

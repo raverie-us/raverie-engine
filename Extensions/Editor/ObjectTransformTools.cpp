@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ///
 /// Authors: Ryan Edgemon, Josh Claeys
 /// Copyright 2016-2017, DigiPen Institute of Technology
 ///
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -37,13 +37,13 @@ GizmoCreator::GizmoCreator()
   mSpace = nullptr;
 }
 
-/******************************************************************************/
+//******************************************************************************
 void GizmoCreator::Serialize(Serializer& stream)
 {
   SerializeResourceName(mGizmoArchetype, ArchetypeManager);
 }
 
-/******************************************************************************/
+//******************************************************************************
 void GizmoCreator::Initialize(CogInitializer& initializer)
 {
 }
@@ -147,6 +147,8 @@ void ObjectTransformTool::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner( ), Events::ToolDeactivate, OnToolDeactivate);
 
   ConnectThisTo(GetOwner( ), Events::ToolCreateGizmoEvent, OnToolGizmoCreated);
+
+  ConnectThisTo(GetOwner( ), Events::ShortcutInfoEnter, OnShortcutInfoEnter);
 
   ConnectThisTo(GetOwner( ), Events::KeyDown, OnKeyDown);
 }
@@ -350,6 +352,13 @@ void ObjectTransformTool::OnFinalSelectionChanged(Event* event)
   OnSelectionChanged(event);
 }
 
+/******************************************************************************/
+void ObjectTransformTool::OnShortcutInfoEnter(QueryShortcutsEvent* event)
+{
+  BoundType* type = ZilchVirtualTypeId(this);
+  event->mEntries = Z::gShortcutsDoc->FindSet(type->Name);
+}
+
 //******************************************************************************
 void ObjectTransformTool::OnKeyDown(KeyboardEvent* e)
 {
@@ -463,29 +472,6 @@ ZilchDefineType(ObjectTranslateTool, builder, type)
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapDistance);
   ZilchBindGetterSetterProperty(SnapMode);
-
-  ReflectionObject* copyObject = ZilchBindFieldGetterProperty(mCopySelection);
-  ReflectionObject* snapObject = ZilchBindFieldGetterProperty(mSnapToSurface);
-  ReflectionObject* tempObject = ZilchBindFieldGetterProperty(mTempSnapping);
-
-  copyObject->AddAttribute(PropertyAttributes::cReadOnly);
-  snapObject->AddAttribute(PropertyAttributes::cReadOnly);
-  tempObject->AddAttribute(PropertyAttributes::cReadOnly);
-
-  StringBuilder copyString;
-  copyString << "Duplicate all objects in the current selection.  Then, make ";
-  copyString << "the duplicates the current selection and target of the TranslateTool.";
-  copyObject->Description = ZilchDocumentString(copyString.ToString( ));
-
-  StringBuilder snapString;
-  snapString << "When dragging one of the three main axes, scale by the drag ";
-  snapString << "amount on the other two, non-drag axes, and not the drag axis itself.";
-  snapObject->Description = ZilchDocumentString(snapString.ToString( ));
-
-  StringBuilder tempString;
-  tempString << "While held, temporarily switch the state of 'Snapping' to the ";
-  tempString << "opposite of its current state.";
-  tempObject->Description = ZilchDocumentString(tempString.ToString( ));
 }
 
 /******************************************************************************/
@@ -498,10 +484,6 @@ void ObjectTranslateTool::Serialize(Serializer& stream)
 {
   ObjectTransformTool::Serialize(stream);
   SerializeEnumName(GizmoSnapMode, mSnapMode);
-
-  SerializeName(mCopySelection);
-  SerializeName(mSnapToSurface);
-  SerializeName(mTempSnapping);
 }
 
 /******************************************************************************/
@@ -623,22 +605,6 @@ ZilchDefineType(ObjectScaleTool, builder, type)
   ZilchBindGetterSetterProperty(SnapMode);
 
   ZilchBindFieldProperty(mAffectTranslation);
-
-  ReflectionObject* axesObject = ZilchBindFieldGetterProperty(mOffAxesScale);
-  ReflectionObject* snapObject = ZilchBindFieldGetterProperty(mTempSnapping);
-
-  axesObject->AddAttribute(PropertyAttributes::cReadOnly);
-  snapObject->AddAttribute(PropertyAttributes::cReadOnly);
-
-  StringBuilder axesString;
-  axesString << "When dragging one of the three main axes - scale by the drag ";
-  axesString << "amount on the other two, non-drag axes, and not the drag axis itself.";
-  axesObject->Description = ZilchDocumentString(axesString.ToString());
-
-  StringBuilder snapString;
-  snapString << "While held, temporarily switch the state of 'Snapping' to the ";
-  snapString << "opposite of its current state.";
-  snapObject->Description = ZilchDocumentString(snapString.ToString());
 }
 
 /******************************************************************************/
@@ -652,9 +618,6 @@ void ObjectScaleTool::Serialize(Serializer& stream)
   ObjectTransformTool::Serialize(stream);
   SerializeEnumName(GizmoSnapMode, mSnapMode);
   SerializeName(mAffectTranslation);
-
-  SerializeName(mOffAxesScale);
-  SerializeName(mTempSnapping);
 }
 
 /******************************************************************************/
@@ -750,16 +713,6 @@ ZilchDefineType(ObjectRotateTool, builder, type)
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapAngle);
   ZilchBindFieldProperty(mAffectTranslation);
-
-
-  ReflectionObject* snapObject = ZilchBindFieldGetterProperty(mTempSnapping);
-
-  snapObject->AddAttribute(PropertyAttributes::cReadOnly);
-
-  StringBuilder snapString;
-  snapString << "While held, temporarily switch the state of 'Snapping' to the ";
-  snapString << "opposite of its current state.";
-  snapObject->Description = ZilchDocumentString(snapString.ToString( ));
 }
 
 /******************************************************************************/
@@ -772,8 +725,6 @@ void ObjectRotateTool::Serialize(Serializer& stream)
 {
   ObjectTransformTool::Serialize(stream);
   SerializeName(mAffectTranslation);
-
-  SerializeName(mTempSnapping);
 }
 
 /******************************************************************************/

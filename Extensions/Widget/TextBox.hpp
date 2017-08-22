@@ -110,6 +110,7 @@ public:
   String GetText();
 
   float mMaxLineWidth;
+  Thickness mPadding;
   Text* mTextField;
   Element* mBackground;
   Element* mBorder;

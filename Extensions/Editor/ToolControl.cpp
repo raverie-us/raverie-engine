@@ -12,9 +12,12 @@
 namespace Zero
 {
 
+#define InfoSpan (8.0f + mInfoIcon->mSize.x + 6.0f)
+
 namespace Events
 {
   DefineEvent(GetToolInfo);
+  DefineEvent(ShortcutInfoEnter);
 }
 
 //---------------------------------------------------------------- Tool Ui Event
@@ -57,6 +60,102 @@ Composite* ToolUiEvent::GetCustomUi()
 Cog* ToolUiEvent::GetSelectTool()
 {
   return mSelectTool;
+}
+
+//-------------------------------------------------------- Query Shortcuts Event
+ZilchDefineType(QueryShortcutsEvent, builder, type)
+{
+}
+
+//-------------------------------------------------------------- Shortcut Source
+#define IF_ROOT(r) DataEntry* root = &mSet; if(dataEntry == root) return r;
+
+//******************************************************************************
+ShortcutSource::ShortcutSource( )
+{
+}
+
+//******************************************************************************
+DataEntry* ShortcutSource::GetRoot( )
+{
+  return &mSet;
+}
+
+//******************************************************************************
+DataEntry* ShortcutSource::ToEntry(DataIndex index)
+{
+  DataEntry* root = &mSet;
+  if(((DataEntry *)index.Id) == root)
+    return ((DataEntry *)index.Id);
+  else if(index.Id >= mSet.Size( ))
+    return NULL;
+
+  return &mSet[(uint)index.Id];
+}
+
+//******************************************************************************
+DataIndex ShortcutSource::ToIndex(DataEntry* dataEntry)
+{
+  IF_ROOT((DataIndex)((u64)dataEntry));
+
+  return DataIndex(((ShortcutEntry*)dataEntry)->mIndex);
+}
+
+//******************************************************************************
+DataEntry* ShortcutSource::Parent(DataEntry* dataEntry)
+{
+  // Everyone but the root has the parent of the root.
+  IF_ROOT(NULL);
+
+  return root;
+}
+
+//******************************************************************************
+DataEntry* ShortcutSource::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
+{
+  if(index >= 0 && index < mSet.Size( ))
+    return &mSet[index];
+
+  IF_ROOT(&mSet.Front( ));
+
+  return NULL;
+}
+
+//******************************************************************************
+uint ShortcutSource::ChildCount(DataEntry* dataEntry)
+{
+  // Only the root has children, no one else does.
+  IF_ROOT(mSet.Size( ));
+
+  return 0;
+}
+
+//******************************************************************************
+bool ShortcutSource::IsExpandable(DataEntry* dataEntry)
+{
+  // Only the root is expandable.
+  IF_ROOT(true);
+
+  return false;
+}
+
+//******************************************************************************
+void ShortcutSource::GetData(DataEntry* dataEntry, Any& variant, StringParam column)
+{
+  ShortcutEntry *entry = ((ShortcutEntry *)dataEntry);
+
+  if(column == "Name")
+    variant = entry->mName;
+  else if(column == "Shortcut")
+    variant = entry->mShortcut;
+  else if(column == "Description")
+    variant = entry->mDescription;
+}
+
+//******************************************************************************
+bool ShortcutSource::SetData(DataEntry* dataEntry, AnyParam variant, StringParam column)
+{
+  return false;
 }
 
 //------------------------------------------------------ Tool Property Interface
@@ -316,9 +415,28 @@ ToolControl::ToolControl(Composite* parent) :
   MetaDatabase::GetInstance()->mEventMap[Events::ToolDeactivate] = ZilchTypeId(Event);
   MetaDatabase::GetInstance()->mEventMap[Events::ToolDraw] = ZilchTypeId(Event);
 
-  mToolBox = new ComboBox(this);
-  mToolSource = new ContainerSource< Array<ToolData*> >(&mTools.mToolArray);
-  mToolBox->SetListSource(mToolSource);
+  Composite* toolRow = new Composite(this);
+  toolRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2(6,0), Thickness(6,0,0,0)));
+  {
+    Composite* iconLayout = new Composite(toolRow);
+    iconLayout->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero));
+    {
+      Spacer* spacer = new Spacer(iconLayout);
+      spacer->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
+      spacer->SetSizing(SizeAxis::Y, SizePolicy::Fixed, 3);
+      
+      mInfoIcon = iconLayout->CreateAttached<Element>("Info");
+      mInfoIcon->SetSizing(SizePolicy::Fixed, mInfoIcon->mSize);
+      mInfoIcon->SetNotInLayout(false);
+    }
+
+    iconLayout->SizeToContents();
+
+    mToolBox = new ComboBox(toolRow);
+    mToolBox->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
+    mToolSource = new ContainerSource< Array<ToolData*> >(&mTools.mToolArray);
+    mToolBox->SetListSource(mToolSource);
+  }
 
   mScrollArea = new ScrollArea(this);
   mScrollArea->GetClientWidget()->SetLayout(CreateStackLayout());
@@ -330,6 +448,9 @@ ToolControl::ToolControl(Composite* parent) :
   mPropertyGrid->mFixedHeight = true;
   mPropertyInterface = new ToolPropertyInterface();
   mPropertyGrid->SetPropertyInterface(mPropertyInterface);
+
+  ConnectThisTo(mInfoIcon, Events::MouseEnter, OnInfoMouseEnter);
+  ConnectThisTo(mInfoIcon, Events::MouseExit, OnInfoMouseExit);
 
   ConnectThisTo(mToolBox, Events::ItemSelected, OnToolPulldownSelect);
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
@@ -347,10 +468,12 @@ ToolControl::~ToolControl()
 //******************************************************************************
 void ToolControl::UpdateTransform()
 {
-  Vec2 size = mScrollArea->GetClientWidget()->GetMinSize();
-  size.x = mSize.x;
+  float toolBoxHeight = mToolBox->GetMinSize( ).y;
 
-  real remainingHeight = mSize.y - mToolBox->GetMinSize().y;
+  real remainingHeight = mSize.y - toolBoxHeight;
+
+  Vec2 size = mScrollArea->GetClientWidget( )->GetMinSize( );
+  size.x = mSize.x;
 
   // Either make space for scrollbar or fill remaining area
   if (size.y > remainingHeight)
@@ -404,6 +527,12 @@ Cog* ToolControl::GetToolByName(StringParam typeName)
 }
 
 //******************************************************************************
+PropertyView* ToolControl::GetPropertyGrid( ) const
+{
+  return mPropertyGrid;
+}
+
+//******************************************************************************
 void ToolControl::SelectToolIndex(uint index, ShowToolProperties::Enum showTool)
 {
   if(index < mTools.mToolArray.Size())
@@ -422,6 +551,55 @@ void ToolControl::SelectToolName(StringParam toolName, ShowToolProperties::Enum 
 bool ToolControl::IsSelectToolActive()
 {
   return GetActiveCog() == mSelectTool->GetOwner();
+}
+
+//******************************************************************************
+void ToolControl::OnInfoMouseEnter(MouseEvent*)
+{
+  if(mActiveTool == nullptr)
+    return;
+
+  QueryShortcutsEvent queryEvent;
+  mActiveTool->mCog->DispatchEvent(Events::ShortcutInfoEnter, &queryEvent);
+
+  mShortcutsTip.SafeDestroy();
+
+  // Query for description came up empty.
+  if(queryEvent.mEntries == nullptr || queryEvent.mEntries->Empty( ))
+  {
+    ToolTip* toolTip = mShortcutsTip = new ToolTip(mToolBox);
+    toolTip->SetText("Current tool does not have any mouse/keyboard shortcuts.");
+    toolTip->SetDestroyOnMouseExit(false);
+
+    ToolTipPlacement placement;
+    placement.SetScreenRect(mToolBox->GetScreenRect( ));
+    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
+      IndicatorSide::Bottom, IndicatorSide::Top);
+
+    toolTip->SetArrowTipTranslation(placement);
+
+    // Move arrow outside of the tool's property grid.
+    if(toolTip->mSide == IndicatorSide::Right)
+    {
+      placement.mScreenRect.X += 2.0f;
+      toolTip->SetArrowTipTranslation(placement);
+    }
+    else if(toolTip->mSide == IndicatorSide::Left)
+    {
+      placement.mScreenRect.X -= InfoSpan;
+      toolTip->SetArrowTipTranslation(placement);
+    }
+
+    return;
+  }
+
+  BuildShortcutsToolTip(queryEvent.mEntries);
+}
+
+//******************************************************************************
+void ToolControl::OnInfoMouseExit(MouseEvent*)
+{
+  mShortcutsTip.SafeDestroy();
 }
 
 //******************************************************************************
@@ -506,6 +684,101 @@ void ToolControl::SelectToolInternal(ToolData* tool, ShowToolProperties::Enum sh
   // Select the correct toolbox index
   uint toolIndex = mTools.mToolArray.FindIndex(tool);
   mToolBox->SetSelectedItem(toolIndex, false);
+
+  UpdateShortcutsTip( );
+}
+
+//******************************************************************************
+void ToolControl::BuildShortcutsToolTip(const ShortcutSet* entries)
+{
+  ToolTip* toolTip = mShortcutsTip = new ToolTip(mToolBox);
+  mShortcutsView = new ListView(toolTip);
+
+  toolTip->SetDestroyOnMouseExit(false);
+  toolTip->mContentPadding = Thickness(2);
+
+  TreeFormatting formatting;
+  BuildShorcutsFormat(&formatting);
+  mShortcutsView->SetFormat(&formatting);
+
+  mShortcutSource.mSet = *entries;
+  mShortcutsView->SetDataSource(&mShortcutSource);
+
+  // Make the "Name" & "Shortcut" column width fit to the max-row's text
+  // size for their respective column.
+  mShortcutsView->mFitToText[0] = true;
+  mShortcutsView->mFitToText[1] = true;
+
+  ToolTipPlacement placement;
+  placement.SetScreenRect(mToolBox->GetScreenRect( ));
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
+    IndicatorSide::Bottom, IndicatorSide::Top);
+
+  toolTip->mBackgroundColor = FloatColorRGBA(30, 30, 30, 255);
+  toolTip->mBorderColor = FloatColorRGBA(10, 10, 10, 255);
+
+  toolTip->SetContent(mShortcutsView);
+  toolTip->SetArrowTipTranslation(placement);
+
+  // Move arrow outside of the tool's property grid.
+  if(toolTip->mSide == IndicatorSide::Right)
+  {
+    placement.mScreenRect.X += 2.0f;
+    toolTip->SetArrowTipTranslation(placement);
+  }
+  else if(toolTip->mSide == IndicatorSide::Left)
+  {
+    placement.mScreenRect.X -= InfoSpan;
+    toolTip->SetArrowTipTranslation(placement);
+  }
+}
+
+//******************************************************************************
+void ToolControl::BuildShorcutsFormat(TreeFormatting* formatting)
+{
+  formatting->Flags.SetFlag(FormatFlags::ShowHeaders);
+  formatting->Flags.SetFlag(FormatFlags::ShowSeparators);
+
+  ColumnFormat* format = &formatting->Columns.PushBack( );
+  format->Index = formatting->Columns.Size( ) - 1;
+  format->Name = "Name";
+  format->HeaderName = "Name";
+  format->ColumnType = ColumnType::Fixed;
+  format->MinWidth = Pixels(120.0f);
+  format->FixedSize.x = Pixels(120.0f);
+  format->Editable = false;
+
+  format = &formatting->Columns.PushBack( );
+  format->Index = formatting->Columns.Size( ) - 1;
+  format->Name = "Shortcut";
+  format->HeaderName = "Shortcut";
+  format->ColumnType = ColumnType::Fixed;
+  format->MinWidth = Pixels(150.0f);
+  format->FixedSize.x = Pixels(150.0f);
+  format->Editable = false;
+
+  format = &formatting->Columns.PushBack( );
+  format->Index = formatting->Columns.Size( ) - 1;
+  format->Name = "Description";
+  format->HeaderName = "Description";
+  format->ColumnType = ColumnType::Flex;
+  format->FlexSize = 1;
+  format->MinWidth = Pixels(280.0f);
+  format->FixedSize.x = Pixels(280.0f);
+  format->Editable = false;
+}
+
+//******************************************************************************
+void ToolControl::UpdateShortcutsTip( )
+{
+  // Only update the tool tip if one was already present
+  //  - [ie, mouse is over the info icon while a keyboard button 0- 9 was hit]
+  if(mShortcutsTip.IsNotNull( ))
+  {
+    MouseEvent e;
+    OnInfoMouseEnter(&e);
+  }
+
 }
 
 }//namespace Zero
