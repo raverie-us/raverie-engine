@@ -322,7 +322,7 @@ public:
 #define ZeroFilterEquality(Member, MemberType, ConstantValue)       \
   Add(new MetaPropertyBasicFilter(new TemplateFilterEquality<ZilchSelf, MemberType, &ZilchSelf::Member, ConstantValue>()))
 
-//----------------------------------------------------------------------------------- Meta Transform
+//--------------------------------------------------------------- Meta Transform
 class MetaTransformInstance
 {
 public:

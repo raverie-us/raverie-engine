@@ -810,7 +810,6 @@ HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
 }
 
 /******************************************************************************/
-
 void HotKeyEditor::BuildFormat(TreeFormatting& formatting)
 {
   formatting.Flags.SetFlag(FormatFlags::ShowHeaders);

@@ -142,6 +142,7 @@ private:
 #include "BuildVersion.hpp"
 #include "EditorSettings.hpp"
 #include "Documentation.hpp"
+#include "ShortcutsDoc.hpp"
 #include "ObjectStore.hpp"
 #include "ResourceTable.hpp"
 #include "SampleCurve.hpp"

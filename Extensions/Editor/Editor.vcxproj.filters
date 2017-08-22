@@ -626,6 +626,9 @@
     <ClCompile Include="HeightMapStateManager.cpp">
       <Filter>HeightMap</Filter>
     </ClCompile>
+    <ClCompile Include="ListView.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClothTools.hpp">
@@ -1142,6 +1145,9 @@
     </ClInclude>
     <ClInclude Include="HeightMapStateManager.hpp">
       <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ListView.hpp">
+      <Filter>EditorUi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

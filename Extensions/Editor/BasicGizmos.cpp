@@ -27,13 +27,6 @@ namespace Zero
 //  return Debug::GetViewScale(location, camera->mTransform->GetWorldTranslation( ), viewDirection, camera->mSize, camera->mPerspectiveMode == PerspectiveMode::Orthographic);
 //}
 
-float GizmoGetViewScale(Camera* camera, Vec3Param location)
-{
-  float viewDistance = Debug::GetViewDistance(location, camera->GetWorldTranslation(), camera->GetWorldDirection());
-  bool orthographic = camera->mPerspectiveMode == PerspectiveMode::Orthographic;
-  return Debug::GetViewScale(viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
-}
-
 //----------------------------------------------------------------------- Events
 namespace Events
 {
@@ -43,6 +36,14 @@ namespace Events
 //----------------------------------------------------------------- GizmoHelpers
 namespace GizmoHelpers
 {
+
+//******************************************************************************
+float GetViewScale(Camera* camera, Vec3Param location)
+{
+  float viewDistance = Debug::GetViewDistance(location, camera->GetWorldTranslation( ), camera->GetWorldDirection( ));
+  bool orthographic = camera->mPerspectiveMode == PerspectiveMode::Orthographic;
+  return Debug::GetViewScale(viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
+}
 
 //******************************************************************************
 int GetDragAxis(Vec3Param localMovement)
@@ -369,7 +370,7 @@ void SquareGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
   float viewScale = 1.0f;
   // Scale the gizmo by the view so it always appears the same size if specified
   if(mViewScaled)
-    viewScale = GizmoGetViewScale(camera, pivot);
+    viewScale = GizmoHelpers::GetViewScale(camera, pivot);
 
   Vec3 scaledCenter = pivot + ((center - pivot) * viewScale);
   Mat3 worldRotation = Math::ToMatrix3(t->GetWorldRotation());
@@ -472,7 +473,7 @@ void ArrowGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
 
   // Scale the gizmo by the view so it always appears the same size if specified
   if(mViewScaled)
-    viewScale = GizmoGetViewScale(camera, start);
+    viewScale = GizmoHelpers::GetViewScale(camera, start);
 
   Orientation* orientation = GetOwner()->has(Orientation);
   Vec3 dir = orientation->GetWorldForward();
@@ -622,7 +623,7 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
   float viewScale = 1.0f;
   // Scale the gizmo by the view so it always appears the same size if specified
   if(mViewScaled)
-    viewScale = GizmoGetViewScale(camera, pivot);
+    viewScale = GizmoHelpers::GetViewScale(camera, pivot);
 
   center = pivot + ((center - pivot) * viewScale);
 

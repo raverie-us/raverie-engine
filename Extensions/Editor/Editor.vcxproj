@@ -67,6 +67,7 @@
     <ClCompile Include="HeightMapUndoRedo.cpp" />
     <ClCompile Include="ItemList.cpp" />
     <ClCompile Include="EditorCameraMouseDrag.cpp" />
+    <ClCompile Include="ListView.cpp" />
     <ClCompile Include="UndoPropertyInterface.cpp" />
     <ClCompile Include="CollisionTableEditor.cpp" />
     <ClCompile Include="ColorGradientEditor.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="HeightMapStateManager.hpp" />
     <ClInclude Include="HeightMapUndoRedo.hpp" />
     <ClInclude Include="ItemList.hpp" />
+    <ClInclude Include="ListView.hpp" />
     <ClInclude Include="MetaCompositionWrapper.hpp" />
     <ClInclude Include="RotationBasisGizmos.hpp" />
     <ClInclude Include="BroadPhaseEditor.hpp" />
