@@ -32,8 +32,11 @@ DeclareEvent(OsMouseFileDrop);
 
 extern const String cOsKeyboardEventsFromState[3];
 
-class OsMouseEvent;
 class KeyboardEvent;
+class KeyboardTextEvent;
+class OsMouseEvent;
+class OsMouseDropEvent;
+class OsWindowEvent;
 
 /// Flags used to control the behavior of an OsWindow
 DeclareBitField7(WindowStyleFlags,
@@ -170,8 +173,11 @@ public:
   // Set application progress
   virtual void SendProgress(ProgressType::Enum progressType, float progress) {}
 
-  virtual void SendKeyboardEvent(KeyboardEvent& keyEvent) = 0;
-  virtual void SendMouseButtonEvent(OsMouseEvent& mouseEvent) = 0;
+  virtual void SendKeyboardEvent(KeyboardEvent& event) = 0;
+  virtual void SendKeyboardTextEvent(KeyboardTextEvent& event) = 0;
+  virtual void SendMouseEvent(OsMouseEvent& event) = 0;
+  virtual void SendMouseDropEvent(OsMouseDropEvent& event) = 0;
+  virtual void SendWindowEvent(OsWindowEvent& event) = 0;
 };
 
 //-------------------------------------------------------------------OsWindowEvent

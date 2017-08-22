@@ -200,13 +200,16 @@ void RunUnitTests()
   new UnitTestDelayRunner(Z::gEditor);
 }
 
-void DebugUnitTestSystem()
+void RecordUnitTestFile()
 {
   UnitTestSystem* unitTestSystem = Z::gEngine->has(UnitTestSystem);
-  if (unitTestSystem->mMode != UnitTestMode::Recording)
-    unitTestSystem->StartUnitTestRecordingSubProcess();
-  else
-    unitTestSystem->PlayUnitTestRecordingSubProcess();
+  unitTestSystem->RecordToZeroTestFile();
+}
+
+void PlayUnitTestFile()
+{
+  UnitTestSystem* unitTestSystem = Z::gEngine->has(UnitTestSystem);
+  unitTestSystem->PlayFromZeroTestFile();
 }
 
 void HostZilchDebugger()
@@ -236,7 +239,8 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion));
   commands->AddCommand("WriteBuildInfo", BindCommandFunction(WriteBuildInfo));
   commands->AddCommand("RunUnitTests", BindCommandFunction(RunUnitTests));
-  commands->AddCommand("DebugUnitTestSystem", BindCommandFunction(DebugUnitTestSystem));
+  commands->AddCommand("RecordUnitTestFile", BindCommandFunction(RecordUnitTestFile));
+  commands->AddCommand("PlayUnitTestFile", BindCommandFunction(PlayUnitTestFile));
 
   if(DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
   {

@@ -8,6 +8,14 @@
 
 namespace Zero
 {
+namespace Events
+{
+DeclareEvent(UnitTestRecordFileSelected);
+DeclareEvent(UnitTestPlayFileSelected);
+
+DefineEvent(UnitTestRecordFileSelected);
+DefineEvent(UnitTestPlayFileSelected);
+}
 
 //------------------------------------------------------------------------------------------ Widgets
 //**************************************************************************************************
@@ -93,6 +101,12 @@ Widget* WidgetPath::Resolve(RootWidget* root)
 }
 
 //--------------------------------------------------------------------------------- Unit Test Events
+static const String cUnitTestRecordOption("unitTestRecord");
+static const String cUnitTestPlayOption("unitTestPlay");
+static const String cProjectBegin("ProjectBegin");
+static const String cProjectEnd("ProjectEnd");
+static const IntVec2 cWindowSize(1024, 768);
+
 //**************************************************************************************************
 UnitTestEvent::~UnitTestEvent()
 {
@@ -101,31 +115,37 @@ UnitTestEvent::~UnitTestEvent()
 //**************************************************************************************************
 void UnitTestMouseEvent::Execute(UnitTestSystem* system)
 {
+  IntVec2 oldClientPosition = mEvent.ClientPosition;
   system->ExecuteBaseMouseEvent(this, &mEvent);
+  system->GetMainWindow()->SendMouseEvent(mEvent);
+  mEvent.ClientPosition = oldClientPosition;
 }
 
 //**************************************************************************************************
 void UnitTestMouseDropEvent::Execute(UnitTestSystem* system)
 {
+  IntVec2 oldClientPosition = mEvent.ClientPosition;
   system->ExecuteBaseMouseEvent(this, &mEvent);
+  system->GetMainWindow()->SendMouseDropEvent(mEvent);
+  mEvent.ClientPosition = oldClientPosition;
 }
 
 //**************************************************************************************************
 void UnitTestKeyboardEvent::Execute(UnitTestSystem* system)
 {
-  system->GetMainWindow()->DispatchEvent(mEvent.EventId, &mEvent);
+  system->GetMainWindow()->SendKeyboardEvent(mEvent);
 }
 
 //**************************************************************************************************
 void UnitTestKeyboardTextEvent::Execute(UnitTestSystem* system)
 {
-  system->GetMainWindow()->DispatchEvent(mEvent.EventId, &mEvent);
+  system->GetMainWindow()->SendKeyboardTextEvent(mEvent);
 }
 
 //**************************************************************************************************
 void UnitTestWindowEvent::Execute(UnitTestSystem* system)
 {
-  system->GetMainWindow()->DispatchEvent(mEvent.EventId, &mEvent);
+  system->GetMainWindow()->SendWindowEvent(mEvent);
 }
 
 //--------------------------------------------------------------------------------- Unit Test System
@@ -140,6 +160,8 @@ UnitTestSystem::UnitTestSystem() :
   mFrameIndex(0),
   mEmulatedCursor(nullptr)
 {
+  ConnectThisTo(this, Events::UnitTestRecordFileSelected, OnUnitTestRecordFileSelected);
+  ConnectThisTo(this, Events::UnitTestPlayFileSelected, OnUnitTestPlayFileSelected);
 }
 
 //**************************************************************************************************
@@ -151,11 +173,28 @@ cstr UnitTestSystem::GetName()
 //**************************************************************************************************
 void UnitTestSystem::Initialize(SystemInitializer& initializer)
 {
+  // We can't initialize here because the root widget and main window have not yet been created
+  // If the record or play modes were set, then we set a flag to initialize on the first Update
+  Environment* environment = Environment::GetInstance();
+  if (!environment->GetParsedArgument(cUnitTestRecordOption).Empty())
+  {
+    mMode = UnitTestMode::StartRecording;
+  }
+  else if (!environment->GetParsedArgument(cUnitTestPlayOption).Empty())
+  {
+    mMode = UnitTestMode::StartPlaying;
+  }
 }
 
 //**************************************************************************************************
 void UnitTestSystem::Update()
 {
+  // One time initialization logic for record and play modes
+  if (mMode == UnitTestMode::StartRecording)
+    SubProcessRecord();
+  else if (mMode == UnitTestMode::StartPlaying)
+    SubProcessPlay();
+
   if (mMode == UnitTestMode::Recording)
   {
     mFrames.PushBack(new UnitTestFrame());
@@ -176,21 +215,135 @@ void UnitTestSystem::Update()
 }
 
 //**************************************************************************************************
-void UnitTestSystem::StartUnitTestRecording(StringParam zeroTestFile)
+void UnitTestSystem::RecordToZeroTestFile()
 {
+  FileDialogConfig config;
+  config.EventName = Events::UnitTestRecordFileSelected;
+  config.CallbackObject = this;
+  config.Title = "Record Unit Test File";
+  config.AddFilter("Zero Unit Test", "*.zerotest");
+  Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
 //**************************************************************************************************
-void UnitTestSystem::PlayUnitTestRecording(StringParam zeroTestFile)
+void UnitTestSystem::OnUnitTestRecordFileSelected(OsFileSelection* event)
 {
-}
-
-//**************************************************************************************************
-void UnitTestSystem::StartUnitTestRecordingSubProcess()
-{
-  OsWindow* osWindow = GetMainWindow();
-  if (osWindow == nullptr)
+  if (event->Files.Empty())
     return;
+
+  RecordToZeroTestFile(event->Files.Front());
+}
+
+//**************************************************************************************************
+void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
+{
+  String name = FilePath::GetFileNameWithoutExtension(zeroTestFile);
+  String directory = FilePath::Combine(FilePath::GetDirectoryPath(zeroTestFile), name);
+  if (DirectoryExists(directory))
+  {
+    DoNotifyError("UnitTestSystem", "There must not be a directory of the same name next to the test file");
+    return;
+  }
+
+  // In case the file already exists, delete it
+  if (FileExists(zeroTestFile))
+    DeleteFile(zeroTestFile);
+
+  Z::gEditor->SaveAll(false);
+
+  // We create two directories so we can compare the beginning and the end
+  String beginFolder = FilePath::Combine(directory, cProjectBegin);
+  String endFolder = FilePath::Combine(directory, cProjectEnd);
+
+  ProjectSettings* settings = Z::gEngine->GetProjectSettings();
+  String projectFolder = settings->ProjectFolder;
+
+  CopyFolderContents(beginFolder, projectFolder);
+  CopyFolderContents(endFolder, projectFolder);
+
+  Status status;
+  ProcessStartInfo info;
+
+  info.mApplicationName = GetApplication();
+
+  String oldProjectFileName = FilePath::GetFileName(settings->ProjectFile);
+  String oldBeginProjectFilePath = FilePath::Combine(beginFolder, oldProjectFileName);
+  String oldEndProjectFilePath = FilePath::Combine(endFolder, oldProjectFileName);
+
+  String newProjectFileName = BuildString(name, ".zeroproj");
+  String newBeginProjectFilePath = FilePath::Combine(beginFolder, newProjectFileName);
+  String newEndProjectFilePath = FilePath::Combine(endFolder, newProjectFileName);
+
+  // Rename the project files to the same name as the zerotest file
+  MoveFile(newBeginProjectFilePath, oldBeginProjectFilePath);
+  MoveFile(newEndProjectFilePath, oldEndProjectFilePath);
+
+  // When recording, we always make our modifications to the end project (therefore the end becomes the final result)
+  info.mArguments = BuildString("-file \"", newEndProjectFilePath, "\" -safe -", cUnitTestRecordOption);
+
+  Process process;
+  process.Start(status, info);
+}
+
+//**************************************************************************************************
+void UnitTestSystem::PlayFromZeroTestFile()
+{
+  FileDialogConfig config;
+  config.EventName = Events::UnitTestPlayFileSelected;
+  config.CallbackObject = this;
+  config.Title = "Play Unit Test File";
+  config.AddFilter("Zero Unit Test", "*.zerotest");
+  Z::gEngine->has(OsShell)->OpenFile(config);
+}
+
+//**************************************************************************************************
+void UnitTestSystem::OnUnitTestPlayFileSelected(OsFileSelection* event)
+{
+  if (event->Files.Empty())
+    return;
+
+  RecordToZeroTestFile(event->Files.Front());
+}
+
+//**************************************************************************************************
+void UnitTestSystem::PlayFromZeroTestFile(StringParam zeroTestFile)
+{
+  String name = FilePath::GetFileNameWithoutExtension(zeroTestFile);
+  String directory = FilePath::Combine(FilePath::GetDirectoryPath(zeroTestFile), name);
+  if (DirectoryExists(directory))
+  {
+    DoNotifyError("UnitTestSystem", "There must not be a directory of the same name next to the test file");
+    return;
+  }
+
+  if (!FileExists(zeroTestFile))
+  {
+    DoNotifyError("UnitTestSystem", "The specified file does not exist");
+    return;
+  }
+
+  Archive archive(ArchiveMode::Decompressing);
+  archive.ReadZipFile(ArchiveReadFlags::All, zeroTestFile);
+  archive.ExportToDirectory(ArchiveExportMode::Overwrite, directory);
+
+  Status status;
+  ProcessStartInfo info;
+
+  info.mApplicationName = GetApplication();
+
+  // When playing back we always start from the beginning project (it should end up the same as the end project)
+  String projectFileName = BuildString(name, ".zeroproj");
+  String projectFilePath = FilePath::Combine(directory, cProjectBegin, projectFileName);
+  info.mArguments = BuildString("-file \"", projectFilePath, "\" -safe -", cUnitTestPlayOption);
+
+  Process process;
+  process.Start(status, info);
+}
+
+//**************************************************************************************************
+void UnitTestSystem::SubProcessRecord()
+{
+  OsWindow* osWindow = SubProcessSetupWindow();
 
   mMode = UnitTestMode::Recording;
 
@@ -216,9 +369,10 @@ void UnitTestSystem::StartUnitTestRecordingSubProcess()
 }
 
 //**************************************************************************************************
-void UnitTestSystem::PlayUnitTestRecordingSubProcess()
+void UnitTestSystem::SubProcessPlay()
 {
-  GetMainWindow();
+  SubProcessSetupWindow();
+
   mMode = UnitTestMode::Playing;
 
   if (mEmulatedCursor == nullptr)
@@ -226,6 +380,16 @@ void UnitTestSystem::PlayUnitTestRecordingSubProcess()
     mEmulatedCursor = GetRootWidget()->CreateAttached<Widget>(cCursor);
     mEmulatedCursor->SetInteractive(false);
   }
+}
+
+//**************************************************************************************************
+OsWindow* UnitTestSystem::SubProcessSetupWindow()
+{
+  OsWindow* window = GetMainWindow();
+  window->SetState(WindowState::Windowed);
+  window->SetStyle((WindowStyleFlags::Enum)(window->GetStyle() & ~WindowStyleFlags::Resizable));
+  window->SetClientSize(cWindowSize);
+  return window;
 }
 
 //**************************************************************************************************
@@ -333,8 +497,6 @@ void UnitTestSystem::RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsM
 //**************************************************************************************************
 void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event)
 {
-  IntVec2 oldClientPosition = event->ClientPosition;
-
   // If we can find a widget via the widget path, then use the normalized coordinates to compute a new
   // position from inside the widget. This helps to ensure that, even if widgets move positions, mouse
   // events such as down/up still occur on the correct widgets.
@@ -348,10 +510,6 @@ void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, Os
 
   // Update the emulated cursor position (purely visual that cannot be interacted with)
   mEmulatedCursor->SetTranslation(Vec3(ToVec2(event->ClientPosition), 0));
-
-  GetMainWindow()->DispatchEvent(event->EventId, event);
-
-  event->ClientPosition = oldClientPosition;
 }
 
 //**************************************************************************************************

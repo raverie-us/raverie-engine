@@ -96,7 +96,7 @@ public:
   Array<UnitTestEvent*> mEvents;
 };
 
-DeclareEnum3(UnitTestMode, Stopped, Recording, Playing);
+DeclareEnum5(UnitTestMode, Stopped, StartRecording, Recording, StartPlaying, Playing);
 
 class UnitTestSystem : public System
 {
@@ -110,16 +110,23 @@ public:
   void Initialize(SystemInitializer& initializer) override;
   void Update() override;
 
-  void StartUnitTestRecording(StringParam zeroTestFile);
-  void PlayUnitTestRecording(StringParam zeroTestFile);
+  void RecordToZeroTestFile();
+  void RecordToZeroTestFile(StringParam zeroTestFile);
+
+  void PlayFromZeroTestFile();
+  void PlayFromZeroTestFile(StringParam zeroTestFile);
 
   // These should only be called while systems are NOT updating, especially not the OsShell systems
   // Calling these during the OsShell would result in loss of inputs / missed events
-  void StartUnitTestRecordingSubProcess();
-  void PlayUnitTestRecordingSubProcess();
+  void SubProcessRecord();
+  void SubProcessPlay();
+  OsWindow* SubProcessSetupWindow();
 
   RootWidget* GetRootWidget();
   OsWindow* GetMainWindow();
+
+  void OnUnitTestRecordFileSelected(OsFileSelection* event);
+  void OnUnitTestPlayFileSelected(OsFileSelection* event);
 
   // Internals
   Widget* mEmulatedCursor;

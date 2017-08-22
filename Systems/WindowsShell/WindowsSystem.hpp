@@ -81,10 +81,14 @@ public:
   HWND mWindowHandle;
 private:
 
-  void SendKeyboardEvent(KeyboardEvent& keyEvent) override;
+  void SendKeyboardEvent(KeyboardEvent& event) override;
+  void SendKeyboardTextEvent(KeyboardTextEvent& event) override;
+  void SendMouseEvent(OsMouseEvent& event) override;
+  void SendMouseDropEvent(OsMouseDropEvent& event) override;
+  void SendWindowEvent(OsWindowEvent& event) override;
+
   void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
-  void SendMouseButtonEvent(OsMouseEvent& mouseEvent) override;
-  void SendMouseButtonEvent(OsMouseEvent& mouseEvent, StringParam buttonState);
+  void SendMouseEvent(OsMouseEvent& mouseEvent, StringParam buttonState);
   void FillMouseEventData(IntVec2Param mousePosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
 
   RECT GetDesktopClientRect();
