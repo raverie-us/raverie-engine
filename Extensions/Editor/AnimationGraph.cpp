@@ -734,7 +734,7 @@ Vec2 AnimationGraphEditor::ToGraphPosition(Vec2Param pixelPos)
 //******************************************************************************
 bool ExpandAabbByTrack(Vec2* min, Vec2* max, TrackNode* track)
 {
-  ErrorIf(track->mPropertyTypeId != ZilchTypeId(float), "Invalid track type.");
+  ErrorIf(track->mPropertyType != ZilchTypeId(float), "Invalid track type.");
 
   if(track->mKeyFrames.Empty())
     return false;
@@ -783,7 +783,7 @@ void AnimationGraphEditor::FocusOnSelectedCurves(IntVec2Param axes)
     forRange(TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
     {
       // Expand the aabb
-      if(track->mPropertyTypeId == ZilchTypeId(float))
+      if(track->mPropertyType == ZilchTypeId(float))
         validAabb |= ExpandAabbByTrack(&min, &max, track);
     }
   }
@@ -933,7 +933,7 @@ void AnimationGraphEditor::RebuildCurves()
 
   forRange(TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
   {
-    BoundType* keyType = track->mPropertyTypeId;
+    BoundType* keyType = track->mPropertyType;
 
     // Only create graphs for tracks whose key values are floats
     if(keyType != ZilchTypeId(float))

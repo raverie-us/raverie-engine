@@ -161,7 +161,7 @@ void AnimationGraph::ApplyFrame(AnimationFrame& frame)
       if(frameData.Active)
       {
         Any& newValue = frameData.Value;
-        if(!blendTrack->Object.IsNull())
+        if(!blendTrack->Object.IsNull() && newValue.IsHoldingValue())
           blendTrack->Property->SetValue(blendTrack->Object, newValue);
       }
     }
