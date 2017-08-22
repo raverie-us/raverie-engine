@@ -121,7 +121,8 @@ namespace Audio
     // Opens an audio file and reads its data into a buffer so it's ready for encoding
     void OpenFile(Zero::Status& status, Zero::StringParam fileName);
     // Encodes the audio data and writes it out to a new file
-    void WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName);
+    void WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName, bool normalize,
+      float maxVolume);
     // Deletes the current audio data
     void Close();
 

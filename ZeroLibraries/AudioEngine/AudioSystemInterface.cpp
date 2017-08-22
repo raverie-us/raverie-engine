@@ -186,12 +186,13 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void AudioFile::WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName)
+  void AudioFile::WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName, 
+    bool normalize, float maxVolume)
   {
     ZeroGetPrivateData(AudioFileData);
 
     if (self->BuffersPerChannel)
-      FileEncoder::WriteFile(status, outputFileName, *self);
+      FileEncoder::WriteFile(status, outputFileName, *self, normalize, maxVolume);
     else
       status.SetFailed("No input file was opened");
   }

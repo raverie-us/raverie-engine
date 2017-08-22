@@ -228,9 +228,14 @@ namespace Audio
     if (!InputFile.IsOpen())
       return;
 
-    if (AtomicCompareExchange32(&DecodingTaskCount, 0, 0) != 0)
+    // Remove any current packets from the queue
+    while (AtomicCompareExchange32(&DecodingTaskCount, 0, 0) != 0)
     {
-      // TODO need to somehow get rid of the task? wait till its done?
+      DecodedPacket packet;
+      while (DecodedPacketQueue.Read(packet))
+      {
+
+      }
     }
 
     // Set the file to the start of the data

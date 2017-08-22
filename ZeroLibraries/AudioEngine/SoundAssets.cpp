@@ -264,9 +264,9 @@ namespace Audio
 
     if (Streaming)
     {
-      // TODO what should actually be happening for this?
+      // TODO move decoded buffers forward
 
-      memset(buffer, 0, numberOfSamples * sizeof(float));
+      memset(buffer, 0, sizeof(float) * numberOfSamples);
       return;
     }
 

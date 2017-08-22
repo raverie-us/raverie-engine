@@ -47,7 +47,7 @@ namespace Audio
     static AudioFileData OpenFile(Zero::Status& status, Zero::StringParam fileName);
     // Encodes the audio file and writes it out to the specified file name
     static void WriteFile(Zero::Status& status, Zero::StringParam outputFileName, 
-      AudioFileData& fileData);
+      AudioFileData& fileData, bool normalize, float maxVolume);
 
     // 20 ms of audio data at 48000 samples per second
     static const unsigned FrameSize = 960;
@@ -64,8 +64,9 @@ namespace Audio
     // Translates PCM audio data to floats
     static bool PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount,
       const unsigned channelCount, const unsigned bytesPerSample);
-    // Processes the audio data so that its volume is not higher than MaxVolumeLimit
-    static void Normalize(float** samplesPerChannel, const unsigned frames, const unsigned channels);
+    // Processes the audio data so that its volume peak matches the specified max volume
+    static void Normalize(float** samplesPerChannel, const unsigned frames, const unsigned channels,
+      float maxVolume);
     // Resamples the audio data to match the system's sample rate
     static unsigned Resample(unsigned fileSampleRate, unsigned channels, unsigned samplesPerChannel,
       float**& buffersPerChannel);

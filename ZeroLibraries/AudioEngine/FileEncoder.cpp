@@ -34,8 +34,6 @@ namespace Audio
     unsigned short bits_per_sample;
   };
 
-  // Maximum volume an encoded audio file can have
-  static const float MaxVolumeLimit = 0.9f;
   // Used to translate PCM data to floats
   const static float Normalize16Bit = 1 << 15;
   const static float Normalize24Bit = 1 << 23;
@@ -108,7 +106,7 @@ namespace Audio
 
   //************************************************************************************************
   void FileEncoder::WriteFile(Zero::Status& status, Zero::StringParam outputFileName, 
-    AudioFileData& data)
+    AudioFileData& data, bool normalize, float maxVolume)
   {
     // Open the output file
     Zero::File outputFile;
@@ -120,8 +118,8 @@ namespace Audio
       return;
     }
 
-    // Make sure the volume of the audio is below the MaxVolumeLimit
-    Normalize(data.BuffersPerChannel, data.SamplesPerChannel, data.Channels);
+    if (normalize)
+      Normalize(data.BuffersPerChannel, data.SamplesPerChannel, data.Channels, maxVolume);
 
     // If the sample rate of the file is different from the system's sample rate, resample the audio
     if (data.SampleRate != AudioSystemInternal::SampleRate)
@@ -318,10 +316,11 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void FileEncoder::Normalize(float** samplesPerChannel, const unsigned frames, const unsigned channels)
+  void FileEncoder::Normalize(float** samplesPerChannel, const unsigned frames, 
+    const unsigned channels, float maxVolume)
   {
     // Save variables for finding the maximum volume in the audio data
-    float maxVolume(0.0f);
+    float maxFileVolume(0.0f);
     float volume(0.0f);
 
     // Step through every audio frame and every channel, saving the volume if its higher 
@@ -332,24 +331,20 @@ namespace Audio
       {
         volume = Math::Abs(samplesPerChannel[j][i]);
 
-        if (volume > maxVolume)
-          maxVolume = volume;
+        if (volume > maxFileVolume)
+          maxFileVolume = volume;
       }
     }
 
-    // Check if the maximum volume is higher than the volume limit
-    if (maxVolume > MaxVolumeLimit)
-    {
-      // Find the ratio to use when reducing the volume of all the audio
-      float multiplier = MaxVolumeLimit / maxVolume;
+    // Find the ratio to use when changing the volume of all the audio
+    float multiplier = maxVolume / maxFileVolume;
 
-      // Step through each frame and channel, applying the volume reduction
-      for (unsigned i = 0; i < frames; ++i)
+    // Step through each frame and channel, applying the volume change
+    for (unsigned i = 0; i < frames; ++i)
+    {
+      for (unsigned j = 0; j < channels; ++j)
       {
-        for (unsigned j = 0; j < channels; ++j)
-        {
-          samplesPerChannel[j][i] *= multiplier;
-        }
+        samplesPerChannel[j][i] *= multiplier;
       }
     }
   }

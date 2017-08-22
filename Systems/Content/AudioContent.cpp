@@ -44,7 +44,9 @@ ZilchDefineType(SoundBuilder, builder, type)
   ZeroBindExpanded();
 
   ZilchBindFieldProperty(Name);
-  ZilchBindFieldProperty(Streamed);
+  ZilchBindFieldProperty(mStreamed);
+  ZilchBindFieldProperty(mNormalize)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mMaxVolume)->Add(new EditorRange(0.0f, 1.0f, 0.1f))->ZeroFilterBool(mNormalize);
 }
 
 void SoundBuilder::Generate(ContentInitializer& initializer)
@@ -52,14 +54,16 @@ void SoundBuilder::Generate(ContentInitializer& initializer)
   mResourceId = GenerateUniqueId64();
   Name = initializer.Name;
 
-  Streamed = false;
+  mStreamed = false;
 }
 
 void SoundBuilder::Serialize(Serializer& stream)
 {
   SerializeName(Name);
   SerializeName(mResourceId);
-  SerializeNameDefault(Streamed, false);
+  SerializeNameDefault(mStreamed, false);
+  SerializeNameDefault(mNormalize, false);
+  SerializeNameDefault(mMaxVolume, 0.9f);
 }
 
 void SoundBuilder::BuildContent(BuildOptions& options)
@@ -75,7 +79,7 @@ void SoundBuilder::BuildContent(BuildOptions& options)
   if (status.Succeeded())
   {
     // Encode the file and write it out to disk
-    audioFile.WriteEncodedFile(status, destFile);
+    audioFile.WriteEncodedFile(status, destFile, mNormalize, mMaxVolume);
 
     if (status.Failed())
       DoNotifyWarning("Error Processing Audio File", status.Message);
@@ -89,23 +93,10 @@ bool SoundBuilder::NeedsBuilding(BuildOptions& options)
   return DirectBuilderComponent::NeedsBuilding(options);
 }
 
-void SoundBuilder::CopyFile(BuildOptions& options)
-{
-  String filename = mOwner->Filename;
-  String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, SoundExtension));
-  String sourceFile = FilePath::Combine(options.SourcePath, filename);
-
-  // Copy the file over.
-  Zero::CopyFile(destFile, sourceFile);
-
-  // Mark the file as up to date.
-  SetFileToCurrentTime(destFile);
-}
-
 void SoundBuilder::BuildListing(ResourceListing& listing)
 {
   //Data is the same but loaders are different for streamed and direct load.
-  if(Streamed)
+  if(mStreamed)
     LoaderType = "StreamedSound";
   else
     LoaderType = "Sound";
