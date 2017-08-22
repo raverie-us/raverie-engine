@@ -120,20 +120,6 @@ void SerializeObjectFromDataBlock(DataBlock& block, Object* object);
 
 namespace Serialization
 {
-template <typename T>
-bool MetaStartPolymorphic(Serializer& stream, PolymorphicNode& node)
-{
-  if (stream.GetMode() == SerializerMode::Loading)
-  {
-    return stream.GetPolymorphic(node);
-  }
-  else
-  {
-    SerializeInfo info = T::GetStaticSerializedInfo();
-    stream.StartPolymorphic(info.TypeName, info.HashId, 0);
-    return true;
-  }
-}
 
 template<>
 struct Policy<Any>

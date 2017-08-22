@@ -8,14 +8,17 @@
 
 namespace Zero
 {
+
+//------------------------------------------------------------------------------------------ Widgets
 class WidgetChildId
 {
 public:
   WidgetChildId();
+  void Serialize(Serializer& stream);
 
   String mName;
   BoundType* mType;
-  size_t mIndex;
+  uint mIndex;
 };
 
 class WidgetPath
@@ -23,7 +26,8 @@ class WidgetPath
 public:
   WidgetPath();
   WidgetPath(Widget* toWidget, RootWidget* fromRoot);
-
+  
+  void Serialize(Serializer& stream);
   Widget* Resolve(RootWidget* root);
 
   Array<WidgetChildId> mPath;
@@ -31,9 +35,13 @@ public:
 
 class UnitTestSystem;
 
-class UnitTestEvent
+//--------------------------------------------------------------------------------- Unit Test Events
+class UnitTestEvent : public IZilchObject
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  virtual void Serialize(Serializer& stream) = 0;
   virtual ~UnitTestEvent();
   virtual void Execute(UnitTestSystem* system) = 0;
 };
@@ -41,6 +49,10 @@ public:
 class UnitTestBaseMouseEvent : public UnitTestEvent
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  void Serialize(Serializer& stream) override;
+
   WidgetPath mWidgetPath;
   Vec2 mNormalizedWidgetOffset;
 };
@@ -48,7 +60,10 @@ public:
 class UnitTestMouseEvent : public UnitTestBaseMouseEvent
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
   // UnitTestEvent interface
+  void Serialize(Serializer& stream) override;
   void Execute(UnitTestSystem* system) override;
 
   OsMouseEvent mEvent;
@@ -57,7 +72,10 @@ public:
 class UnitTestMouseDropEvent : public UnitTestBaseMouseEvent
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
   // UnitTestEvent interface
+  void Serialize(Serializer& stream) override;
   void Execute(UnitTestSystem* system) override;
 
   OsMouseDropEvent mEvent;
@@ -66,7 +84,10 @@ public:
 class UnitTestKeyboardEvent : public UnitTestEvent
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
   // UnitTestEvent interface
+  void Serialize(Serializer& stream) override;
   void Execute(UnitTestSystem* system) override;
 
   KeyboardEvent mEvent;
@@ -75,7 +96,10 @@ public:
 class UnitTestKeyboardTextEvent : public UnitTestEvent
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
   // UnitTestEvent interface
+  void Serialize(Serializer& stream) override;
   void Execute(UnitTestSystem* system) override;
 
   KeyboardTextEvent mEvent;
@@ -84,7 +108,10 @@ public:
 class UnitTestWindowEvent : public UnitTestEvent
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
   // UnitTestEvent interface
+  void Serialize(Serializer& stream) override;
   void Execute(UnitTestSystem* system) override;
 
   OsWindowEvent mEvent;
@@ -143,6 +170,13 @@ public:
 
   void RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event);
   void ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event);
+
+  void RecordEvent(UnitTestEvent* e);
+  void LoadRecordedEvents(StringParam directory);
+
+  // The file we store our recorded data
+  String mRecordedEventsDirectory;
+  uint mEventNumber;
 };
 
 UnitTestSystem* CreateUnitTestSystem();
