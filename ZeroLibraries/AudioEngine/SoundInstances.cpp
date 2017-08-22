@@ -794,7 +794,7 @@ namespace Audio
       ++Data->FrameIndex;
 
       if (Data->CrossFading)
-        ApplyCrossFade(frameData, 0.0f);
+        ApplyCrossFade(thisFrame, 0.0f);
     }
     else
     {

@@ -206,9 +206,7 @@ namespace Audio
 
     if (!Streaming)
     {
-      // If we have no more decoded samples or the number of decoded samples is below the 
-      // minimum, call the function to get decoded packets
-      if (sampleIndex > UndecodedSamplesIndex || UndecodedSamplesIndex - sampleIndex < IndexCheck)
+      if (Decoder)
         CheckForDecodedPacket();
 
       // Past end of file, return zeros
@@ -275,9 +273,7 @@ namespace Audio
     // Translate from frames to sample location
     unsigned sampleIndex = frameIndex * Channels;
 
-    // If we have no more decoded samples or the number of decoded samples is below the 
-    // minimum, call the function to get decoded packets
-    if (sampleIndex > UndecodedSamplesIndex || UndecodedSamplesIndex - sampleIndex < IndexCheck)
+    if (Decoder)
       CheckForDecodedPacket();
 
     // If the number of samples would go past the available decoded samples, reduce the number
@@ -421,6 +417,12 @@ namespace Audio
         // If the index hasn't reached the end, decode another packet
         if (UndecodedSamplesIndex < FrameCount * Channels)
           Decoder->AddDecodingTask();
+        // If this is the end, don't need the decoder any more (it won't be processing tasks)
+        else
+        {
+          delete Decoder;
+          Decoder = nullptr;
+        }
       }
       else
       {
