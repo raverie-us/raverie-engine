@@ -65,6 +65,11 @@ ZilchDefineType(OsWindowEvent, builder, type)
 {
 }
 
+void OsWindowEvent::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(EventId, String());
+}
+
 //-------------------------------------------------------------------OsMouseEvent
 ZilchDefineType(OsMouseEvent, builder, type)
 {
@@ -90,17 +95,7 @@ void OsMouseEvent::Clear()
 
 void OsMouseEvent::Serialize(Serializer& stream)
 {
-  if(stream.GetMode() == SerializerMode::Loading)
-  {
-    PolymorphicNode eventNode;
-
-    stream.GetPolymorphic(eventNode);
-  }
-  else
-  {
-    stream.StartPolymorphic(this);
-  }
-
+  SerializeNameDefault(EventId, String());
   SerializeNameDefault(ShiftPressed, false);
   SerializeNameDefault(AltPressed, false);
   SerializeNameDefault(CtrlPressed, false);
@@ -109,13 +104,17 @@ void OsMouseEvent::Serialize(Serializer& stream)
   SerializeNameDefault(IsTrapMoveBack, false);
 
   SerializeEnumNameDefault(MouseButtons, MouseButton, MouseButtons::None);
-
-  stream.EndPolymorphic();
 }
 
 //-------------------------------------------------------------------OsMouseDropEvent
 ZilchDefineType(OsMouseDropEvent, builder, type)
 {
+}
+
+void OsMouseDropEvent::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(EventId, String());
+  SerializeName(Files);
 }
 
 }//namespace Zero

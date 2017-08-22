@@ -64,6 +64,13 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(SplineParticleAnimator);
 
   ZilchInitializeType(UnitTestSystem);
+  ZilchInitializeType(UnitTestEvent);
+  ZilchInitializeType(UnitTestBaseMouseEvent);
+  ZilchInitializeType(UnitTestMouseEvent);
+  ZilchInitializeType(UnitTestMouseDropEvent);
+  ZilchInitializeType(UnitTestKeyboardEvent);
+  ZilchInitializeType(UnitTestKeyboardTextEvent);
+  ZilchInitializeType(UnitTestWindowEvent);
 
   ZilchInitializeTypeAs(ZeroStatic, "Zero");
 

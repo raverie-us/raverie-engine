@@ -247,6 +247,8 @@ public:
   KeyboardTextEvent(uint runeCode)
     : mRune(runeCode), mHandled(false) {};
 
+  void Serialize(Serializer& stream);
+
   Rune mRune;
   bool mHandled;
 };

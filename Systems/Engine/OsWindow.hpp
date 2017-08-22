@@ -182,6 +182,8 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   OsWindowEvent() {}
 
+  void Serialize(Serializer& stream);
+
   OsWindow* Window;
   IntVec2 ClientSize;
   IntVec2 WindowSize;
@@ -219,6 +221,9 @@ class OsMouseDropEvent : public OsMouseEvent
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   OsMouseDropEvent() {}
+
+  void Serialize(Serializer& stream);
+
   Array<String> Files;
 };
 

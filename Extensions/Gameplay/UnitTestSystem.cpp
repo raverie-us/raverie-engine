@@ -18,6 +18,26 @@ WidgetChildId::WidgetChildId() :
 }
 
 //**************************************************************************************************
+void WidgetChildId::Serialize(Serializer& stream)
+{
+  SerializeName(mName);
+  
+  if(stream.GetMode() == SerializerMode::Loading)
+  {
+    String typeName;
+    stream.SerializeField("TypeName", typeName);
+    mType = MetaDatabase::FindType(typeName);
+  }
+  else
+  {
+    if(mType)
+      stream.SerializeField("TypeName", mType->Name);
+  }
+
+  SerializeName(mIndex);
+}
+
+//**************************************************************************************************
 WidgetPath::WidgetPath()
 {
 }
@@ -48,6 +68,12 @@ WidgetPath::WidgetPath(Widget* toWidget, RootWidget* fromRoot)
   }
 
   Reverse(mPath.Begin(), mPath.End());
+}
+
+//**************************************************************************************************
+void WidgetPath::Serialize(Serializer& stream)
+{
+  SerializeName(mPath);
 }
 
 //**************************************************************************************************
@@ -94,8 +120,39 @@ Widget* WidgetPath::Resolve(RootWidget* root)
 
 //--------------------------------------------------------------------------------- Unit Test Events
 //**************************************************************************************************
+ZilchDefineType(UnitTestEvent, builder, type)
+{
+  type->HandleManager = ZilchManagerId(PointerManager);
+}
+
+//**************************************************************************************************
 UnitTestEvent::~UnitTestEvent()
 {
+}
+
+//**************************************************************************************************
+ZilchDefineType(UnitTestBaseMouseEvent, builder, type)
+{
+}
+
+//**************************************************************************************************
+void UnitTestBaseMouseEvent::Serialize(Serializer& stream)
+{
+  SerializeName(mWidgetPath);
+  SerializeName(mNormalizedWidgetOffset);
+}
+
+//**************************************************************************************************
+ZilchDefineType(UnitTestMouseEvent, builder, type)
+{
+  ZilchBindConstructor();
+}
+
+//**************************************************************************************************
+void UnitTestMouseEvent::Serialize(Serializer& stream)
+{
+  UnitTestBaseMouseEvent::Serialize(stream);
+  mEvent.Serialize(stream);
 }
 
 //**************************************************************************************************
@@ -105,21 +162,70 @@ void UnitTestMouseEvent::Execute(UnitTestSystem* system)
 }
 
 //**************************************************************************************************
+ZilchDefineType(UnitTestMouseDropEvent, builder, type)
+{
+  ZilchBindConstructor();
+}
+
+//**************************************************************************************************
+void UnitTestMouseDropEvent::Serialize(Serializer& stream)
+{
+  UnitTestBaseMouseEvent::Serialize(stream);
+  mEvent.Serialize(stream);
+}
+
+//**************************************************************************************************
 void UnitTestMouseDropEvent::Execute(UnitTestSystem* system)
 {
   system->ExecuteBaseMouseEvent(this, &mEvent);
 }
 
 //**************************************************************************************************
+ZilchDefineType(UnitTestKeyboardEvent, builder, type)
+{
+  ZilchBindConstructor();
+}
+
+//**************************************************************************************************
+void UnitTestKeyboardEvent::Serialize(Serializer& stream)
+{
+  mEvent.Serialize(stream);
+}
+
+//**************************************************************************************************
 void UnitTestKeyboardEvent::Execute(UnitTestSystem* system)
 {
-  system->GetMainWindow()->DispatchEvent(mEvent.EventId, &mEvent);
+  system->GetMainWindow()->SendKeyboardEvent(mEvent);
+}
+
+//**************************************************************************************************
+ZilchDefineType(UnitTestKeyboardTextEvent, builder, type)
+{
+  ZilchBindConstructor();
+}
+
+//**************************************************************************************************
+void UnitTestKeyboardTextEvent::Serialize(Serializer& stream)
+{
+  mEvent.Serialize(stream);
 }
 
 //**************************************************************************************************
 void UnitTestKeyboardTextEvent::Execute(UnitTestSystem* system)
 {
   system->GetMainWindow()->DispatchEvent(mEvent.EventId, &mEvent);
+}
+
+//**************************************************************************************************
+ZilchDefineType(UnitTestWindowEvent, builder, type)
+{
+  ZilchBindConstructor();
+}
+
+//**************************************************************************************************
+void UnitTestWindowEvent::Serialize(Serializer& stream)
+{
+  mEvent.Serialize(stream);
 }
 
 //**************************************************************************************************
@@ -138,7 +244,8 @@ ZilchDefineType(UnitTestSystem, builder, type)
 UnitTestSystem::UnitTestSystem() :
   mMode(UnitTestMode::Stopped),
   mFrameIndex(0),
-  mEmulatedCursor(nullptr)
+  mEmulatedCursor(nullptr),
+  mEventNumber(0)
 {
 }
 
@@ -270,7 +377,7 @@ void UnitTestSystem::RecordMouseFileDropEvent(OsMouseDropEvent* event)
   UnitTestMouseDropEvent* testEvent = new UnitTestMouseDropEvent();
   testEvent->mEvent = *event;
 
-  mFrames.Back()->mEvents.PushBack(testEvent);
+  RecordEvent(testEvent);
 }
 
 //**************************************************************************************************
@@ -282,7 +389,7 @@ void UnitTestSystem::RecordKeyboardEvent(KeyboardEvent* event)
   UnitTestKeyboardEvent* testEvent = new UnitTestKeyboardEvent();
   testEvent->mEvent = *event;
 
-  mFrames.Back()->mEvents.PushBack(testEvent);
+  RecordEvent(testEvent);
 }
 
 //**************************************************************************************************
@@ -294,7 +401,7 @@ void UnitTestSystem::RecordKeyboardTextEvent(KeyboardTextEvent* event)
   UnitTestKeyboardTextEvent* testEvent = new UnitTestKeyboardTextEvent();
   testEvent->mEvent = *event;
 
-  mFrames.Back()->mEvents.PushBack(testEvent);
+  RecordEvent(testEvent);
 }
 
 //**************************************************************************************************
@@ -305,8 +412,8 @@ void UnitTestSystem::RecordWindowEvent(OsWindowEvent* event)
 
   UnitTestWindowEvent* testEvent = new UnitTestWindowEvent();
   testEvent->mEvent = *event;
-
-  mFrames.Back()->mEvents.PushBack(testEvent);
+  
+  RecordEvent(testEvent);
 }
 
 //**************************************************************************************************
@@ -327,7 +434,7 @@ void UnitTestSystem::RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsM
   // Compute the path to the widget from the root via WidgetPath constructor
   baseEvent->mWidgetPath = WidgetPath(overWidget, root);
 
-  mFrames.Back()->mEvents.PushBack(baseEvent);
+  RecordEvent(baseEvent);
 }
 
 //**************************************************************************************************
@@ -352,6 +459,60 @@ void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, Os
   GetMainWindow()->DispatchEvent(event->EventId, event);
 
   event->ClientPosition = oldClientPosition;
+}
+
+//**************************************************************************************************
+void UnitTestSystem::RecordEvent(UnitTestEvent* e)
+{
+  // Add it to our current frame
+  mFrames.Back()->mEvents.PushBack(e);
+
+  // Save out the event to our file. We want to append so that in case of a crash, we have already
+  // saved out all input required to reproduce that crash
+  String fileName = String::Format("Event%d.data", mEventNumber++);
+  String file = FilePath::Combine(mRecordedEventsDirectory, fileName);
+  TextSaver saver;
+  Status status;
+  saver.Open(status, file.c_str());
+
+  ReturnIf(status.Failed(), , "Failed to save recorded event file");
+
+  BoundType* type = ZilchVirtualTypeId(e);
+  saver.StartPolymorphic(type);
+  e->Serialize(saver);
+  saver.EndPolymorphic();
+
+  saver.Close();
+}
+
+//**************************************************************************************************
+void UnitTestSystem::LoadRecordedEvents(StringParam directory)
+{
+  for(uint i = 0; ; ++i)
+  {
+    String fileName = String::Format("Event%d.data", i);
+    String file = FilePath::Combine(mRecordedEventsDirectory, fileName);
+    if (!FileExists(file))
+      break;
+
+    DataTreeLoader loader;
+    Status status;
+    loader.OpenFile(status, file);
+
+    ReturnIf(status.Failed(), , "Failed to load recorded event file");
+
+    PolymorphicNode eventNode;
+    if(loader.GetPolymorphic(eventNode))
+    {
+      BoundType* type = MetaDatabase::FindType(eventNode.TypeName);
+      UnitTestEvent* e = ZilchAllocate(UnitTestEvent, type);
+      e->Serialize(loader);
+
+      //mFrames.PushBack(e);
+
+      loader.EndPolymorphic();
+    }
+  }
 }
 
 //**************************************************************************************************
