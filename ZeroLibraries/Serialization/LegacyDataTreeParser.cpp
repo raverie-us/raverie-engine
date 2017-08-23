@@ -134,8 +134,14 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   if(token.Type != TempToken::Word)
     return ParseError(c, tokenizer, "Bad token while reading object. Expected type name.");
 
-  // Convert to "Real2, Real3, ..."
-  if (typeName == "Vec2")
+  // Convert to new type names "Real2, Real3, ..."
+  if(typeName == "float")
+    typeName = ZilchTypeId(float)->Name;
+  else if (typeName == "bool")
+    typeName = ZilchTypeId(bool)->Name;
+  else if (typeName == "uint")
+    typeName = ZilchTypeId(int)->Name;
+  else if (typeName == "Vec2")
     typeName = ZilchTypeId(Vec2)->Name;
   else if (typeName == "Vec3")
     typeName = ZilchTypeId(Vec3)->Name;

@@ -126,6 +126,7 @@
     <ClCompile Include="HierarchySpline.cpp" />
     <ClCompile Include="Spline.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="ShortcutsDoc.cpp" />
     <ClCompile Include="Tweakables.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="SystemObjectManager.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="ResourceTable.hpp" />
     <ClInclude Include="HierarchySpline.hpp" />
     <ClInclude Include="Spline.hpp" />
+    <ClInclude Include="ShortcutsDoc.hpp" />
     <ClInclude Include="Tweakables.hpp" />
     <ClInclude Include="SceneGraph.hpp" />
     <ClInclude Include="SystemObjectManager.hpp" />

@@ -26,8 +26,7 @@ String GetTypeInFile(StringParam fileName)
 
   String buffer = ReadFileIntoString(fileName);
 
-  static const Regex regefx("\\[[^\\]]*\\]\\s*([a-zA-Z_][a-zA-Z_0-9]*)");
-
+  static const Regex regefx("(?:\\[[^\\]]*\\]\\s*)?([a-zA-Z_][a-zA-Z_0-9]*)");
   Matches matches;
   regefx.Search(buffer, matches);
 

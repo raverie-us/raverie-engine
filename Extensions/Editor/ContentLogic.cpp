@@ -275,6 +275,7 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<MaterialManager>("DirectionalLightShadows");
   ShowBuiltInResource<MaterialManager>("EmptyMaterial");
   ShowBuiltInResource<MaterialManager>("OpaqueFlat");
+  ShowBuiltInResource<MaterialManager>("PointLight");
   ShowBuiltInResource<MaterialManager>("ZeroMaterial");
 
   ShowBuiltInResource<RenderGroupManager>("AdditiveBlend");

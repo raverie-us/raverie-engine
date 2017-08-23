@@ -377,22 +377,18 @@ void OperationQueue::EndBatch()
     return;
   }
 
+  // Queue all changes
+  forRange(MetaProxy* proxy, ActiveBatch->mObjectProxies.All())
+    QueueChanges(proxy);
+
   int operationCount = 0;
   forRange(Operation& operation, ActiveBatch->GetChildren( ))
-  {
     ++operationCount;
-  }
 
   // Only error if operations exist in the batch.  If there are no operations
   // in the batch, it'll get cleaned up below.
   ErrorIf((ActiveBatch->mName.Empty() && operationCount != 0),
     "ActiveBatch must have a name before EndBatch.");
-
-  // Queue all changes
-  forRange(MetaProxy* proxy, ActiveBatch->mObjectProxies.All())
-  {
-    QueueChanges(proxy);
-  }
 
   // Cleanup
   mDestroyedObjects.Clear();
@@ -572,7 +568,7 @@ void AddProperties(MetaProxy* proxy, Object* object)
 {
   forRange(Property* prop, ZilchVirtualTypeId(object)->GetProperties())
   {
-    if(prop->HasAttribute(Zilch::PropertyAttribute) == false || prop->Set == nullptr)
+    if(prop->HasAttribute(PropertyAttributes::cProperty) == false || prop->Set == nullptr)
       continue;
 
     MetaProxy::PropertyState propertyState;

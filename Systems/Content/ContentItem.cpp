@@ -177,7 +177,7 @@ Object* ContentItem::GetEditingObject(Resource* resource)
     
     forRange(Property* prop, resourceType->GetProperties())
     {
-      if (prop->HasAttribute(Zilch::PropertyAttribute))
+      if (prop->HasAttribute(PropertyAttributes::cProperty))
         return resource;
     }
 

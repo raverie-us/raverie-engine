@@ -43,6 +43,11 @@ Thickness::Thickness()
 
 }
 
+Thickness::Thickness(float splat)
+  : Left(splat), Top(splat), Right(splat), Bottom(splat)
+{
+}
+
 Thickness::Thickness(float left, float top, float right, float bottom)
   : Left(left), Top(top), Right(right), Bottom(bottom)
 {

@@ -34,6 +34,7 @@ struct Thickness
   ZilchDeclareType(TypeCopyMode::ValueType);
 
   Thickness();
+  Thickness(float splat);
 
   Thickness(float left, float top, float right, float bottom);
   explicit Thickness(Vec4 vector);

@@ -30,41 +30,11 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   ZilchRegisterSharedHandleManager(WidgetHandleManager);
   ZilchRegisterSharedHandleManager(ContentItemHandleManager);
 
-  // Basic handles
-  ZeroRegisterHandleManager(ReferenceCountedEmpty);
-  ZeroRegisterHandleManager(SafeId32);
-  ZeroRegisterHandleManager(SafeId64);
-  ZeroRegisterHandleManager(ThreadSafeId32);
-  ZeroRegisterHandleManager(ThreadSafeId64);
-  ZeroRegisterHandleManager(ReferenceCountedSafeId32);
-  ZeroRegisterHandleManager(ReferenceCountedSafeId64);
-  ZeroRegisterHandleManager(ReferenceCountedThreadSafeId32);
-  ZeroRegisterHandleManager(ReferenceCountedThreadSafeId64);
-
-  // Object handles
-  ZeroRegisterHandleManager(ReferenceCountedObject);
-  ZeroRegisterHandleManager(SafeId32Object);
-  ZeroRegisterHandleManager(SafeId64Object);
-  ZeroRegisterHandleManager(ThreadSafeId32Object);
-  ZeroRegisterHandleManager(ThreadSafeId64Object);
-  ZeroRegisterHandleManager(ReferenceCountedSafeId32Object);
-  ZeroRegisterHandleManager(ReferenceCountedSafeId64Object);
-  ZeroRegisterHandleManager(ReferenceCountedThreadSafeId32Object);
-  ZeroRegisterHandleManager(ReferenceCountedThreadSafeId64Object);
-
-  // EventObject handles
-  ZeroRegisterHandleManager(ReferenceCountedEventObject);
-  ZeroRegisterHandleManager(SafeId32EventObject);
-  ZeroRegisterHandleManager(SafeId64EventObject);
-  ZeroRegisterHandleManager(ThreadSafeId32EventObject);
-  ZeroRegisterHandleManager(ThreadSafeId64EventObject);
-  ZeroRegisterHandleManager(ReferenceCountedSafeId32EventObject);
-  ZeroRegisterHandleManager(ReferenceCountedSafeId64EventObject);
-  ZeroRegisterHandleManager(ReferenceCountedThreadSafeId32EventObject);
-  ZeroRegisterHandleManager(ReferenceCountedThreadSafeId64EventObject);
+  RegisterCommonHandleManagers();
 
   ZeroRegisterHandleManager(ContentComposition);
 
+  // Graphics specific
   ZeroRegisterThreadSafeReferenceCountedHandleManager(ThreadSafeReferenceCounted);
   ZeroRegisterThreadSafeReferenceCountedHandleManager(BlendSettings);
   ZeroRegisterThreadSafeReferenceCountedHandleManager(DepthSettings);

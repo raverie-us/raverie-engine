@@ -1140,12 +1140,14 @@ public:
   bool mShowClearButton;
   bool mReadOnly;
   bool mSmallDisplay;
+  bool mForceCompact;
 
-  ResourceEditor(Composite* parent, BoundType* resourceType)
+  ResourceEditor(Composite* parent, BoundType* resourceType, bool forceCompact)
     : Composite(parent)
     , mResourceType(resourceType)
     , mResourcePreview(nullptr)
     , mReadOnly(false)
+    , mForceCompact(forceCompact)
   {
     // Background
     mBackground = CreateAttached<Element>(cWhiteSquare);
@@ -1161,6 +1163,9 @@ public:
     mResourceManager = Z::gResources->Managers.FindValue(mResourceType->Name, nullptr);
 
     mSmallDisplay = (ResourcePreview::GetPreviewImportance(resourceType) != PreviewImportance::High);
+    
+    if (mForceCompact)
+      mSmallDisplay = true;
 
     if (mSmallDisplay)
       mSize.y = Pixels(16.0f);
@@ -1304,6 +1309,12 @@ public:
 
     ConnectThisTo(mResourcePreviewParent, Events::FocusGained, OnFocusChanged);
     ConnectThisTo(mResourcePreviewParent, Events::FocusLost, OnFocusChanged);
+
+    if(mForceCompact)
+    {
+      mCloneButton->SetActive(false);
+      mNewButton->SetActive(false);
+    }
   }
 
   void OnFocusChanged(Event*)
@@ -1375,12 +1386,21 @@ public:
 
     // Place name
     Vec3 nameTranslation(12.0f, nameAreaSize.y * 0.5f - nameMinSize.y * 0.5f, 0);
-    if (mSmallDisplay)
+
+    if(mForceCompact)
+    {
+      nameTranslation.x = 4.0f;
+    }
+    else if (mSmallDisplay)
     {
       nameTranslation.x += Pixels(6);
       if (mClearButton->GetActive())
         nameTranslation.x += 5.0f;
+
+      if (mDisplayedResource.IsNull())
+        nameTranslation.x = 4.0f;
     }
+
     mResourceName->SetTranslation(SnapToPixels(nameTranslation));
 
     Vec2 nameSize = nameAreaSize;
@@ -1430,7 +1450,7 @@ public:
     mResourceName->mFontColor = Vec4(1);
     if (resource == nullptr)
     {
-      mResourceName->SetText("nothing selected...");
+      mResourceName->SetText("null");
       mResourceName->SetSizing(SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
       mResourceName->mFontColor = Vec4(1, 1, 1, 0.4f);
       mClearButton->SetActive(false);
@@ -1471,15 +1491,19 @@ public:
     mResourceName->SetText(resource->Name);
     mResourceName->SetSizing(SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
 
-    mResourcePreview = ResourcePreview::CreatePreviewWidget(mResourcePreviewParent, resource->Name, resource);
-    mResourcePreview->SetSizing(SizePolicy::Flex, 1.0f);
-    if(mSmallDisplay)
-      mResourcePreview->SetMinSize(Vec2(12, 12));
-    else
-      mResourcePreview->SetMinSize(Vec2(46, 46));
+    // Don't show previews for compact mode
+    if(!mForceCompact)
+    {
+      mResourcePreview = ResourcePreview::CreatePreviewWidget(mResourcePreviewParent, resource->Name, resource);
+      mResourcePreview->SetSizing(SizePolicy::Flex, 1.0f);
+      if (mSmallDisplay)
+        mResourcePreview->SetMinSize(Vec2(12, 12));
+      else
+        mResourcePreview->SetMinSize(Vec2(46, 46));
 
-    if (mResourceType->IsA(ZilchTypeId(ColorGradient)))
-      mResourcePreview->SetMinSize(Vec2(46, 5));
+      if (mResourceType->IsA(ZilchTypeId(ColorGradient)))
+        mResourcePreview->SetMinSize(Vec2(46, 5));
+    }
   }
 
   void OnResourceModified(Event*)
@@ -1537,7 +1561,6 @@ class PropertyEditorResource : public DirectProperty
 {
 public:
   typedef PropertyEditorResource ZilchSelf;
-  ComboBox* mSelectBox;
   Any mVariantValue;
   EditorResource* mMetaEdit;
   ResourceManager* mResourceManager;
@@ -1561,9 +1584,16 @@ public:
 
     ConnectThisTo(mResourceManager, Events::ResourceAdded, OnResourceAdded);
     
-    mEditor = new ResourceEditor(this, mResourceType);
+    bool forceCompact = false;
+    if (mMetaEdit)
+      forceCompact = mMetaEdit->ForceCompact;
 
-    SetSize(Pixels(1, mEditor->mSize.y + Pixels(20)));
+    mEditor = new ResourceEditor(this, mResourceType, forceCompact);
+
+    if(forceCompact)
+      SetSize(Pixels(1, mEditor->mSize.y + Pixels(3)));
+    else
+      SetSize(Pixels(1, mEditor->mSize.y + Pixels(20)));
 
     ConnectThisTo(mEditor->mResourcePreviewParent, Events::LeftClick, OnLeftClick);
     ConnectThisTo(mEditor->mNameArea, Events::LeftClick, OnLeftClick);
@@ -1683,7 +1713,7 @@ public:
     }
   }
 
-  void SetResource(Resource* resource)
+  void SetResource(Resource* resource, bool preview = false)
   {
     if(resource)
     {
@@ -1691,13 +1721,21 @@ public:
       {
         // Set the as a string with the full Id and name
         mVariantValue = resource->ResourceIdName;
-        CommitValue(mVariantValue);
+
+        if (preview)
+          PreviewValue(mVariantValue);
+        else
+          CommitValue(mVariantValue);
       }
       else
       {
         // Set as handle type
         mVariantValue = resource;
-        CommitValue(mVariantValue);
+
+        if (preview)
+          PreviewValue(mVariantValue);
+        else
+          CommitValue(mVariantValue);
       }
 
       // Resource properties can invalid objects forcing the grid to rebuild
@@ -1794,18 +1832,34 @@ public:
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
       searchView->Search(String());
+      ConnectThisTo(searchView, Events::SearchPreview, OnSearchPreview);
       ConnectThisTo(searchView, Events::SearchCompleted, OnSearchCompleted);
+      ConnectThisTo(searchView, Events::SearchCanceled, OnSearchCanceled);
+
+      BeginPreviewChanges();
 
       mActiveSearch = viewPopUp;
     }
   }
 
+  void OnSearchPreview(SearchViewEvent* event)
+  {
+    bool preview = true;
+    SetResource((Resource*)event->Element->Data, preview);
+  }
+
   void OnSearchCompleted(SearchViewEvent* event)
   {
+    EndPreviewChanges();
     SetResource((Resource*)event->Element->Data);
     mActiveSearch.SafeDestroy();
   }
-  
+
+  void OnSearchCanceled(SearchViewEvent* event)
+  {
+    EndPreviewChanges();
+  }
+
   void ResourcesChanged()
   {
 
@@ -1857,8 +1911,16 @@ public:
     LayoutResult nameLayout = GetNameLayout();
     PlaceWithLayout(nameLayout, mLabel);
 
-    mEditor->SetTranslation(Vec3(6, 20.0f, 0));
-    mEditor->SetSize(Vec2(mSize.x - 6, mEditor->GetSize().y));
+    if (mMetaEdit && mMetaEdit->ForceCompact)
+    {
+      mEditor->SetTranslation(Vec3(nameLayout.Size.x, 1, 0));
+      mEditor->SetSize(Vec2(mSize.x  - nameLayout.Size.x, mEditor->GetSize().y));
+    }
+    else
+    {
+      mEditor->SetTranslation(Vec3(6, 20.0f, 0));
+      mEditor->SetSize(Vec2(mSize.x - 6, mEditor->GetSize().y));
+    }
 
     PropertyWidget::UpdateTransform();
   }

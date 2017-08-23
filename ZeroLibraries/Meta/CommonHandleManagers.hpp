@@ -46,4 +46,6 @@ typedef ReferenceCountedSafeId<u64, EventObject>       ReferenceCountedSafeId64E
 typedef ReferenceCountedThreadSafeId<u32, EventObject> ReferenceCountedThreadSafeId32EventObject;
 typedef ReferenceCountedThreadSafeId<u64, EventObject> ReferenceCountedThreadSafeId64EventObject;
 
+void RegisterCommonHandleManagers();
+
 } // namespace Zero

@@ -329,12 +329,10 @@ MultiLineText::MultiLineText(Composite* parent, StringParam font, uint fontSize)
   Initialize(text);
 }
 
-Thickness MultiLineTextPadding = Thickness(2,2,2,2);
-
 Vec2 MultiLineText::GetMinSize()
 {
   Vec2 minSize = mTextField->GetBoundedSize(mMaxLineWidth, 10000);
-  return ExpandSizeByThickness(MultiLineTextPadding, minSize);
+  return ExpandSizeByThickness(mPadding, minSize);
 }
 
 void MultiLineText::UpdateTransform()
@@ -342,7 +340,7 @@ void MultiLineText::UpdateTransform()
   mBackground->SetSize(mSize);
   mBorder->SetSize(mSize);
 
-  Rect rect = RemoveThicknessRect(MultiLineTextPadding, mSize);
+  Rect rect = RemoveThicknessRect(mPadding, mSize);
   PlaceWithRect(rect, mTextField);
 
   Composite::UpdateTransform();
@@ -362,6 +360,7 @@ void MultiLineText::Initialize(Text* textObject)
 {
   mDefSet = mDefSet->GetDefinitionSet(TextBoxClass);
 
+  mPadding = Thickness(2, 2, 2, 2);
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquareBorder);
   mBorder->SetInteractive(false);

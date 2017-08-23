@@ -212,7 +212,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Area);
   ZilchInitializeType(ActionSpace);
   ZilchInitializeType(AnimationGraph);
-  ZilchInitializeType(SimpleAnimation);
   ZilchInitializeType(ProjectSettings);
   ZilchInitializeType(ProjectDescription);
 
@@ -353,6 +352,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(EventDirectoryWatcher);
   ZilchInitializeType(Job);
   ZilchInitializeType(DocumentationLibrary);
+  ZilchInitializeType(Shortcuts);
   ZilchInitializeTypeAs(ProxyObject<Component>, "ComponentProxy");
 
   if(!Engine::sInLauncher)
@@ -456,6 +456,7 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   engine->mConfigCog = config;
 
   Tweakables::Load(settings.mTweakableFileName);
+  Shortcuts::GetInstance( )->Load(FilePath::Combine(Z::gEngine->GetConfigCog( )->has(MainConfig)->DataDirectory, "Shortcuts.data"));
 
   return true;
 }

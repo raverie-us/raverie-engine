@@ -207,23 +207,24 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   mAllowedFunctionAttributes.Insert("Static");
   mAllowedFunctionAttributes.Insert("Virtual");
   mAllowedFunctionAttributes.Insert("Override");
-  mAllowedFunctionAttributes.Insert("Hidden");
-  mAllowedFunctionAttributes.Insert("Property");
+  mAllowedFunctionAttributes.Insert(FunctionAttributes::cProperty);
+  mAllowedFunctionAttributes.Insert(FunctionAttributes::cDisplay);
 
   mAllowedGetSetAttributes.Insert("Static");
   mAllowedGetSetAttributes.Insert("Virtual");
   mAllowedGetSetAttributes.Insert("Override");
-  mAllowedGetSetAttributes.Insert("Hidden");
-  mAllowedGetSetAttributes.Insert("Serialized");
-  mAllowedGetSetAttributes.Insert("Editable");
-  mAllowedGetSetAttributes.Insert("Property");
-  mAllowedGetSetAttributes.Insert("Dependency");
-  mAllowedGetSetAttributes.Insert("NetProperty");
-  mAllowedGetSetAttributes.Insert("NetPeerId");
-  mAllowedGetSetAttributes.Insert("RuntimeClone");
-  mAllowedGetSetAttributes.Insert("ShaderInput");
-  mAllowedGetSetAttributes.Insert("ResourceProperty");
-  mAllowedGetSetAttributes.Insert("RenamedFrom");
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cProperty);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cSerialize);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cDeprecatedSerialized);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cDisplay);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cDeprecatedEditable);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cDependency);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cNetProperty);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cNetPeerId);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cRuntimeClone);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cShaderInput);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cResourceProperty);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cRenamedFrom);
   mAllowedGetSetAttributes.Insert(PropertyAttributes::cLocalModificationOverride);
 
   ConnectThisTo(Z::gResources, Events::PreScriptSetCompile, OnPreZilchProjectCompilation);
@@ -292,6 +293,17 @@ void ZilchScriptManager::TypeParsedCallback(Zilch::ParseEvent* e, void* userData
   {
     ValidateAttributes(zilchProperty->Attributes, zilchProperty->Location, self->mAllowedGetSetAttributes, "property", e->BuildingProject);
     CheckDependencies(type, zilchProperty, e->BuildingProject);
+
+    // Static members cannot be serialized
+    if(zilchProperty->IsStatic)
+    {
+      if (zilchProperty->HasAttribute(PropertyAttributes::cSerialize) || 
+          zilchProperty->HasAttribute(PropertyAttributes::cDeprecatedSerialized))
+      {
+        String message = "Static members cannot be serialized";
+        DispatchZeroZilchError(zilchProperty->Location, message, e->BuildingProject);
+      }
+    }
   }
 
   // Check if an object has a gizmo attribute.

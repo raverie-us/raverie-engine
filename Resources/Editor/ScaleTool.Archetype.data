@@ -2,7 +2,6 @@
 Cog 
 {
 	var Name = "ScaleTool"
-	var LinkId = 1
 	GizmoCreator 
 	{
 		var GizmoArchetype = "54c73a2d19b7cc96:ObjectScaleGizmo"

@@ -22,37 +22,37 @@ GeometryContent
 		{
 			Object
 			{
-				var Name = "ViewCube.Bottom"
+				var Name = "ViewCube_Bottom"
 				var ResourceId = 0x57a93a5ca4ebaa97
 			}
 			Object
 			{
-				var Name = "ViewCube.Right"
+				var Name = "ViewCube_Right"
 				var ResourceId = 0x57a93a5ca4ebaacd
 			}
 			Object
 			{
-				var Name = "ViewCube.Top"
+				var Name = "ViewCube_Top"
 				var ResourceId = 0x57a93a5ca4ebaad5
 			}
 			Object
 			{
-				var Name = "ViewCube.Left"
+				var Name = "ViewCube_Left"
 				var ResourceId = 0x57a93a5ca4ebaadc
 			}
 			Object
 			{
-				var Name = "ViewCube.Front"
+				var Name = "ViewCube_Front"
 				var ResourceId = 0x57a93a5ca4ebaae2
 			}
 			Object
 			{
-				var Name = "ViewCube.Back"
+				var Name = "ViewCube_Back"
 				var ResourceId = 0x57a93a5ca4ebaae9
 			}
 			Object
 			{
-				var Name = "ViewCube.Case"
+				var Name = "ViewCube_Case"
 				var ResourceId = 0x57a93a5ca4ebaaf0
 			}
 		}

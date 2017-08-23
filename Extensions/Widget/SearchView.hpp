@@ -25,6 +25,7 @@ class TagChainTextBox;
 namespace Events
 {
   DeclareEvent(SearchCanceled);
+  DeclareEvent(SearchPreview);
   DeclareEvent(SearchCompleted);
 }
 
@@ -62,6 +63,11 @@ public:
 struct SearchViewResult
 {
 public:
+  SearchViewResult()
+    : Data(nullptr)
+  {
+
+  }
   // Provider that added this result
   SearchProvider* Interface;
   // Name match Priority
@@ -139,6 +145,7 @@ public:
 
   /// Start a search with a string
   void Search(StringParam text);
+  void OnDestroy() override;
 
   //Add a tag to the search and clear text.
   void AddTag(StringParam tag, bool removeable = true);
@@ -177,6 +184,10 @@ private:
   // Results area
   ScrollArea* mArea;
   Element* mBackground;
+
+  // Whether or not we sent out an event saying we completed or failed.
+  bool mEventTerminated;
+
   friend class SearchViewElement;
 };
 

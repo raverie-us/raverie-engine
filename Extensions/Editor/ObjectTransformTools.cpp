@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ///
 /// Authors: Ryan Edgemon, Josh Claeys
 /// Copyright 2016-2017, DigiPen Institute of Technology
 ///
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -37,13 +37,13 @@ GizmoCreator::GizmoCreator()
   mSpace = nullptr;
 }
 
-/******************************************************************************/
+//******************************************************************************
 void GizmoCreator::Serialize(Serializer& stream)
 {
   SerializeResourceName(mGizmoArchetype, ArchetypeManager);
 }
 
-/******************************************************************************/
+//******************************************************************************
 void GizmoCreator::Initialize(CogInitializer& initializer)
 {
 }
@@ -147,6 +147,8 @@ void ObjectTransformTool::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner( ), Events::ToolDeactivate, OnToolDeactivate);
 
   ConnectThisTo(GetOwner( ), Events::ToolCreateGizmoEvent, OnToolGizmoCreated);
+
+  ConnectThisTo(GetOwner( ), Events::ShortcutInfoEnter, OnShortcutInfoEnter);
 
   ConnectThisTo(GetOwner( ), Events::KeyDown, OnKeyDown);
 }
@@ -350,6 +352,13 @@ void ObjectTransformTool::OnFinalSelectionChanged(Event* event)
   OnSelectionChanged(event);
 }
 
+/******************************************************************************/
+void ObjectTransformTool::OnShortcutInfoEnter(QueryShortcutsEvent* event)
+{
+  BoundType* type = ZilchVirtualTypeId(this);
+  event->mEntries = Z::gShortcutsDoc->FindSet(type->Name);
+}
+
 //******************************************************************************
 void ObjectTransformTool::OnKeyDown(KeyboardEvent* e)
 {
@@ -457,12 +466,12 @@ Space* ObjectTransformTool::GetSpaceFromSelection(MetaSelection* selection)
 ZilchDefineType(ObjectTranslateTool, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindTag(Tags::Tool);
+  ZeroBindDocumented( );
 
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapDistance);
   ZilchBindGetterSetterProperty(SnapMode);
-
-  ZeroBindTag(Tags::Tool);
 }
 
 /******************************************************************************/
@@ -588,14 +597,14 @@ void ObjectTranslateTool::CopyPropertiesToGizmo()
 ZilchDefineType(ObjectScaleTool, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindTag(Tags::Tool);
+  ZeroBindDocumented( );
 
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapDistance);
   ZilchBindGetterSetterProperty(SnapMode);
 
   ZilchBindFieldProperty(mAffectTranslation);
-
-  ZeroBindTag(Tags::Tool);
 }
 
 /******************************************************************************/
@@ -698,11 +707,12 @@ void ObjectScaleTool::CopyPropertiesToGizmo()
 ZilchDefineType(ObjectRotateTool, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindTag(Tags::Tool);
+  ZeroBindDocumented();
+
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapAngle);
   ZilchBindFieldProperty(mAffectTranslation);
-
-  ZeroBindTag(Tags::Tool);
 }
 
 /******************************************************************************/

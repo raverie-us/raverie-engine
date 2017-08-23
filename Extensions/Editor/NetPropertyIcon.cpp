@@ -99,7 +99,7 @@ void NetPropertyIcon::UpdateTransform()
 
   //    Has net property attribute?
   // OR Net object has this net property info added? (Property is enabled for network replication?)
-  if(mProperty->HasAttribute(cNetProperty)
+  if(mProperty->HasAttribute(PropertyAttributes::cNetProperty)
   || netObject->HasNetPropertyInfo(componentType, propertyName))
     color = NetPropertyUi::EnabledNetPropertyIcon; // Use enabled color
   else
@@ -129,7 +129,7 @@ void NetPropertyIcon::OnMouseEnter(Event* event)
   // DebugPrint("NetPropertyIcon: [%f, %f]\n", mTranslation.x, mTranslation.y);
 
   // Has net property attribute?
-  if(mProperty->HasAttribute(cNetProperty))
+  if(mProperty->HasAttribute(PropertyAttributes::cNetProperty))
     toolTip->SetText("This property will always be replicated over the network. Specified in script via the [NetProperty] attribute.");
   else
   {
@@ -210,7 +210,7 @@ void NetPropertyIcon::OnLeftClick(Event* event)
   OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
 
   // Does not have net property attribute?
-  if(!mProperty->HasAttribute(cNetProperty))
+  if(!mProperty->HasAttribute(PropertyAttributes::cNetProperty))
   {
     // Net object has this net property info added? (Property is enabled for network replication?)
     if(netObject->HasNetPropertyInfo(componentType, propertyName))

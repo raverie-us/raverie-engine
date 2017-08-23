@@ -112,9 +112,14 @@ public:
   bool AllowAdd;
   /// Are null resources allowed?
   bool AllowNone;
+  bool ForceCompact;
 
-  EditorResource(bool allowAdd = false, bool allowNone = false, StringParam filterTag = "")
-    : AllowAdd(allowAdd), AllowNone(allowNone), FilterTag(filterTag)
+  EditorResource(bool allowAdd = false, bool allowNone = false, StringParam filterTag = "",
+                 bool forceCompact = false)
+    : AllowAdd(allowAdd)
+    , AllowNone(allowNone)
+    , FilterTag(filterTag)
+    , ForceCompact(forceCompact)
   {
   }
 };

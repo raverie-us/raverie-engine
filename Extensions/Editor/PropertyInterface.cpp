@@ -160,7 +160,9 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
       ErrorIf(boundType->Name.Empty(), "Forget to bind an enum?");
 
     // Check for Editable attribute as well as Property attribute (Property implies Editable)
-    if(property->HasAttribute(Zilch::PropertyAttribute) || property->HasAttribute(PropertyAttributes::cEditable))
+    if(property->HasAttribute(PropertyAttributes::cProperty) ||
+       property->HasAttribute(PropertyAttributes::cDisplay)  ||
+       property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
     {
       if(EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
       {
@@ -183,11 +185,13 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
   forRange(Function* function, objectType->GetFunctions())
   {
     // Don't want to add hidden methods
-    if(function->HasAttribute(FunctionAttributes::cProperty))
+    if(function->HasAttribute(FunctionAttributes::cProperty) || 
+       function->HasAttribute(FunctionAttributes::cDisplay))
     {
       // METAREFACTOR - 0 param
       // We can only display methods with 0 parameters
       //if(function->HasOverloadWithNoParams)
+      if(function->FunctionType->Parameters.Empty())
         node->mFunctions.PushBack(function);
     }
   }

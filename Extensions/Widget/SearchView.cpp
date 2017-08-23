@@ -27,6 +27,7 @@ Tweakable(float, RowSize,          Pixels(20),    cLocation);
 namespace Events
 {
   DefineEvent(SearchCanceled);
+  DefineEvent(SearchPreview);
   DefineEvent(SearchCompleted);
 }
 
@@ -114,7 +115,8 @@ ZilchDefineType(SearchView, builder, type)
 }
 
 SearchView::SearchView(Composite* parent)
-  :Composite(parent)
+  : Composite(parent)
+  , mEventTerminated(false)
 {
   static const String className = "ListBox";
   mDefSet = mDefSet->GetDefinitionSet(className);
@@ -258,6 +260,7 @@ void SearchView::Selected()
       e.Element = &foundElement;
       e.View = this;
       DispatchEvent(Events::SearchCompleted, &e);
+      mEventTerminated = true;
     }
   }
 }
@@ -318,6 +321,15 @@ void SearchView::BuildResults()
       toolTip->SetContent(composite);
       mToolTip = toolTip;
       PositionToolTip();
+    }
+
+    const String tag = "Tag";
+    if(result.Interface->GetType(result) != tag)
+    {
+      SearchViewEvent e;
+      e.Element = &result;
+      e.View = this;
+      DispatchEvent(Events::SearchPreview, &e);
     }
 
     mPreviewData = result.Data;
@@ -534,6 +546,12 @@ void SearchView::Search(StringParam text)
   BuildResults();
 }
 
+void SearchView::OnDestroy()
+{
+  Canceled();
+  Composite::OnDestroy();
+}
+
 void SearchView::OnKeyPressed(KeyboardEvent* event)
 {
   if(event->Key == Keys::Down)
@@ -553,10 +571,14 @@ void SearchView::OnKeyPressed(KeyboardEvent* event)
 
 void SearchView::Canceled()
 {
-  SearchViewEvent searchEvent;
-  searchEvent.Element = NULL;
-  searchEvent.View = this;
-  DispatchEvent(Events::SearchCanceled, &searchEvent);
+  if(!mEventTerminated)
+  {
+    mEventTerminated = true;
+    SearchViewEvent searchEvent;
+    searchEvent.Element = nullptr;
+    searchEvent.View = this;
+    DispatchEvent(Events::SearchCanceled, &searchEvent);
+  }
 }
 
 void SearchView::OnEnter(ObjectEvent* event)

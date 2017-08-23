@@ -89,8 +89,7 @@ ZilchDefineType(Cog, builder, type)
   // Properties
   ZilchBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension());
-  ZilchBindGetter(BaseArchetype);
-  ZilchBindGetterProperty(BaseArchetypeName);
+  ZilchBindGetterProperty(BaseArchetype)->Add(new EditorResource(false, false, "", true));
 
   ZilchBindGetter(Space);
   ZilchBindGetter(LevelSettings);
@@ -606,6 +605,12 @@ bool Cog::AddComponentByType(BoundType* componentType)
 {
   ReturnIf(componentType == nullptr, false, "Invalid meta");
 
+  if (mFlags.IsSet(CogFlags::ComponentsLocked))
+  {
+    DoNotifyError("Cog locked", "Attempting to add a component to a locked cog");
+    return false;
+  }
+
   // Check for the component
   Component* current = this->QueryComponentType(componentType);
 
@@ -760,6 +765,12 @@ bool Cog::RemoveComponentByType(BoundType* componentType)
   if(componentType == nullptr)
   {
     DoNotifyException("Could not remove Component", "null type given");
+    return false;
+  }
+
+  if (mFlags.IsSet(CogFlags::ComponentsLocked))
+  {
+    DoNotifyError("Cog locked", "Attempting to remove a component from a locked cog");
     return false;
   }
 
@@ -1525,15 +1536,6 @@ Archetype* Cog::GetBaseArchetype()
     return ArchetypeManager::FindOrNull(archetype->mBaseResourceIdName);
 
   return nullptr;
-}
-
-//**************************************************************************************************
-String Cog::GetBaseArchetypeName()
-{
-  if (Archetype* baseArchetype = GetBaseArchetype())
-    return baseArchetype->Name;
-
-  return "";
 }
 
 //**************************************************************************************************

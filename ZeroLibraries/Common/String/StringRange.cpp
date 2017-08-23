@@ -541,7 +541,7 @@ cstr StringRange::Data() const
 
 bool StringRange::Empty() const
 { 
-  return mBegin == mEnd; 
+  return mBegin >= mEnd; 
 }
 
 size_t StringRange::ComputeRuneCount() const

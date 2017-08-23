@@ -31,8 +31,10 @@ Install/
 CMakeBuilds/
 Data/ContentStore/
 Data/ZilchCustomPluginShared/
+Tools/GeometryProcessor
 ZeroDevTools/
 Extensions/UiWidget/Debug/*
 AudioTest/*
 enc_temp_folder/
 *.ide
+.arcconfig
