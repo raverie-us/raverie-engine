@@ -2,6 +2,7 @@
 
 #define STB_VORBIS_NO_PUSHDATA_API
 #define STB_VORBIS_NO_INTEGER_CONVERSION
+#define STB_VORBIS_NO_STDIO
 
 // Ogg Vorbis audio decoder - v1.10 - public domain
 // http://nothings.org/stb_vorbis/

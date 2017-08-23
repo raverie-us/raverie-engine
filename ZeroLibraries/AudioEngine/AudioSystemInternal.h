@@ -50,6 +50,31 @@ namespace Audio
 
   };
 
+  //------------------------------------------------------------------------------------ Audio Frame
+  
+  class AudioFrame
+  {
+  public:
+    AudioFrame(float* samples, unsigned channels);
+    AudioFrame();
+    AudioFrame(const AudioFrame& copy);
+
+    void TranslateChannels(const unsigned channels);
+    void SetSamples(float* samples, unsigned channels);
+    void Clamp();
+    float GetMaxValue();
+    float GetMonoValue();
+    void operator*=(float multiplier);
+    void operator=(const AudioFrame& copy);
+
+    float Samples[8];
+
+  private:
+    enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
+    unsigned HowManyChannels;
+    const float* Matrices[MaxChannels];
+  };
+  
   //-------------------------------------------------------------------------- Audio System Internal
 
   // Main audio system. 
@@ -83,11 +108,23 @@ namespace Audio
     InterpolatingObject* GetInterpolatorThreaded();
     // Releases an interpolator object that was in use
     void ReleaseInterpolatorThreaded(InterpolatingObject* object);
+    // Sets the threaded variable for the minimum volume threshold.
+    void SetMinVolumeThresholdThreaded(const float volume);
+    // Adds a tag to the system
+    void AddTag(TagObject* tag, bool threaded);
+    // Removes a tag from the system
+    void RemoveTag(TagObject* tag, bool threaded);
+    // Adds a tag to the list to delete
+    void DelayDeleteTag(TagObject* tag, bool threaded);
+    // Adds a non-threaded sound asset to the system
+    void AddAsset(SoundAssetNode* asset);
+    // Removes a non-threaded sound asset from the system
+    void RemoveAsset(SoundAssetNode* asset);
+
+    void ResetIO();
 
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
-    // Samples per second in audio output.
-    unsigned SystemSampleRate;
     // Size of the system mix buffer.
     unsigned MixBufferSizeThreaded;
     // Used to lock for swapping pointers to buffers.
@@ -104,18 +141,8 @@ namespace Audio
     ExternalSystemInterface* ExternalInterface;
     // If a SoundInstance is below this threshold it will keep its place but not process any audio.
     float MinimumVolumeThresholdThreaded;
-    // Sets the threaded variable for the minimum volume threshold.
-    void SetMinVolumeThresholdThreaded(const float volume);
-    // Adds a tag to the system
-    void AddTag(TagObject* tag, bool threaded);
-    // Removes a tag from the system
-    void RemoveTag(TagObject* tag, bool threaded);
-    // Adds a tag to the list to delete
-    void DelayDeleteTag(TagObject* tag, bool threaded);
-    // Adds a non-threaded sound asset to the system
-    void AddAsset(SoundAssetNode* asset);
-    // Removes a non-threaded sound asset from the system
-    void RemoveAsset(SoundAssetNode* asset);
+
+    static const unsigned SampleRate = 48000;
     
     AudioChannelsManager ChannelsManager;
     AudioInputOutput AudioIO;
@@ -140,12 +167,12 @@ namespace Audio
     BufferType BufferForOutput;
     // Thread for decoding tasks
     Zero::Thread DecodeThread;
-    // Used to add tasks to decoding list
-    Zero::ThreadLock DecodeLock;
-    // True when all decoding tasks have finished
-    bool DecodingFinished;
-    // List of decoding tasks
-    Zero::Array<Zero::Functor*> DecodingList;
+    // Queue for decoding tasks
+    LockFreeQueue<Zero::Functor*> DecodingQueue;
+    // Used to signal the decoding thread when decoding tasks are added to the queue
+    Zero::OsEvent DecodeThreadEvent;
+    // Will be zero while running, set to 1 when the decoding thread should shut down
+    Type32Bit StopDecodeThread;
     // Thread for mix loop
     Zero::Thread MixThread;
     // To tell the system to shut down once everything stops. 
@@ -184,6 +211,20 @@ namespace Audio
     Zero::Array<InterpolatorContainer> InterpolatorArray;
     // The index of the next available interpolator
     int NextInterpolator;
+    // The peak volume from the last mix, used to check whether to create a task
+    float PreviousPeakVolumeThreaded;
+    // The RMS volume from the last mix, used to check whether to create a task
+    unsigned PreviousRMSVolumeThreaded;
+    // Stores the last frame of samples from the previous mix
+    AudioFrame PreviousFrame;
+    // The resample index including fractional value
+    double ResampleFrameIndex;
+    // If true the output is being resampled to match the sample rate of the device
+    bool Resampling;
+    // The factor to use when resampling
+    double ResampleFactor;
+    // Used to adjust buffer sizes
+    double ResampleBufferFraction;
 
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();
@@ -199,6 +240,8 @@ namespace Audio
     void SetVolumes(const float peak, const unsigned rms);
     // Sets whether to use the high or low latency values
     void SetUseHighLatency(const bool useHighLatency);
+    // Checks for resampling and resets variables if applicable
+    void CheckForResampling();
 
     class NodeInterface : public ExternalNodeInterface
     {
@@ -292,21 +335,6 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
-  };
-
-  class AudioFrame
-  {
-  public:
-    AudioFrame(float* samples, unsigned channels);
-
-    void TranslateChannels(const unsigned channels);
-
-    float Samples[8];
-
-  private:
-    enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
-    unsigned HowManyChannels;
-    const float* Matrices[MaxChannels];
   };
 
 }

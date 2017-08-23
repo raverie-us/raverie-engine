@@ -24,12 +24,6 @@ public:
   float GetLength();
   /// The number of audio channels in the file.
   int GetChannels();
-  /// The total number of audio samples in the file. 
-  int GetSampleCount();
-  /// The samples per second rate used by the audio file. 
-  int GetSampleRate();
-  /// This is the file format used for the audio file.
-  AudioFileFormats::Enum GetFormat();
   /// This will be true if the audio file is set to stream from disk.
   bool GetStreaming();
 

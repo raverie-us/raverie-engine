@@ -44,7 +44,7 @@ namespace Audio
       // Constructor happens on main thread, so need to send a message to add to threaded list
       gAudioSystem->AddTask(Zero::CreateFunctor(&AudioSystemInternal::AddTag, gAudioSystem, this, true));
 
-      TotalOutput.Resize(gAudioSystem->AudioIO.OutputBufferSizeThreaded, 0);
+      TotalOutput.Resize(gAudioSystem->MixBufferSizeThreaded, 0);
     }
   }
 

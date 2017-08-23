@@ -19,7 +19,6 @@ namespace Audio
   AudioSystemInternal::AudioSystemInternal(ExternalSystemInterface* extInterface) : 
     ExternalInterface(extInterface), 
     MinimumVolumeThresholdThreaded(0.015f),
-    SystemSampleRate(44100),
     ShuttingDownThreaded(false), 
     SystemVolumeThreaded(1.0f),
     SystemChannelsThreaded(2),
@@ -28,12 +27,17 @@ namespace Audio
     MixVersionNumber(0), 
     FinalOutputNode(nullptr), 
     FinalOutputNodeThreaded(nullptr),
-    DecodingFinished(true),
     PeakVolumeLastMix(0.0f),
     RmsVolumeLastMix(0.0f),
     NodeCount(0),
     NextInterpolator(0),
-    LowPass(nullptr)
+    LowPass(nullptr),
+    PreviousPeakVolumeThreaded(0),
+    PreviousRMSVolumeThreaded(0),
+    ResampleFrameIndex(0),
+    Resampling(false),
+    ResampleBufferFraction(0),
+    StopDecodeThread(0)
   {
     gAudioSystem = this;
 
@@ -58,15 +62,13 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::StartSystem(Zero::Status &status)
   {
-    MixBufferSizeThreaded = AudioIO.GetBaseBufferSize() * SystemChannelsThreaded;
-
     // Initialize Port Audio, and quit if it didn't work
     AudioIO.Initialize(status);
     if (status.Failed())
       return;
 
     // Start up the mix thread
-    MixThread.Initialize(StartMix, this, "MixThread");
+    MixThread.Initialize(StartMix, this, "Audio mix");
     MixThread.Resume();
     if (!MixThread.IsValid())
     {
@@ -76,8 +78,24 @@ namespace Audio
       return;
     }
 
-    ZPrint("Mix thread initialized\n");
-    ZPrint("Audio was successfully initialized\n");
+    ZPrint("Audio mix thread initialized\n");
+
+    // Start up the decoding thread
+    DecodeThreadEvent.Initialize();
+    DecodeThread.Initialize(StartDecoding, this, "Audio decoding");
+    DecodeThread.Resume();
+    if (!DecodeThread.IsValid())
+    {
+      ZPrint("Error creating audio decoding thread\n");
+      status.SetFailed("Error creating audio decoding thread");
+      AudioIO.StopStream();
+      return;
+    }
+
+    ZPrint("Audio decoding thread initialized\n");
+
+    MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
+    CheckForResampling();
 
     // Create output nodes
     FinalOutputNode = new OutputNode(status, "FinalOutputNode", &NodeInt, false);
@@ -86,6 +104,8 @@ namespace Audio
     // For low frequency channel (uses audio system in constructor)
     LowPass = new LowPassFilter();
     LowPass->SetCutoffFrequency(120.0f);
+
+    ZPrint("Audio was successfully initialized\n");
   }
 
   //************************************************************************************************
@@ -103,14 +123,10 @@ namespace Audio
       MixThread.Close();
     }
 
-    if (!DecodingFinished)
-    {
-      DecodeLock.Lock();
-      DecodingList.Clear();
-      DecodeLock.Unlock();
-      DecodeThread.WaitForCompletion();
-      DecodeThread.Close();
-    }
+    AtomicSet32(&StopDecodeThread, 1);
+    DecodeThreadEvent.Signal();
+    DecodeThread.WaitForCompletion();
+    DecodeThread.Close();
 
     // Shut down PortAudio
     AudioIO.ShutDown(status);
@@ -163,7 +179,7 @@ namespace Audio
 
 #ifdef _DEBUG 
     double maxTime = (double)AudioIO.OutputBufferSizeThreaded / (double)AudioIO.OutputChannelsThreaded 
-      / (double)SystemSampleRate;
+      / (double)SampleRate;
 #endif
     
     bool running = true;
@@ -212,8 +228,28 @@ namespace Audio
         return false;
     }
 
-    // Store number of frames 
-    unsigned numberOfFrames = MixBufferSizeThreaded / SystemChannelsThreaded;
+    // Save the number of frames 
+    unsigned outputFrames = AudioIO.OutputBufferSizeThreaded / AudioIO.OutputChannelsThreaded;
+
+    // If resampling, need to determine the buffer size for this mix
+    if (Resampling)
+    {
+      double framesToGet = ResampleFactor * outputFrames;
+
+      // Account for fractional part of previous buffer
+      framesToGet += ResampleBufferFraction;
+      // Get integer portion for actual buffer size
+      MixBufferSizeThreaded = (unsigned)framesToGet;
+      // Save the fractional part
+      ResampleBufferFraction = framesToGet - MixBufferSizeThreaded;
+      // Adjust to number of samples
+      MixBufferSizeThreaded *= SystemChannelsThreaded;
+      // Set the size of the mixing buffer
+      BufferForOutput.Resize(MixBufferSizeThreaded);
+    }
+
+    // Number of frames in the mix (for resampling)
+    unsigned mixFrames = MixBufferSizeThreaded / SystemChannelsThreaded;
 
     // Get samples from output node
     bool isThereData = FinalOutputNodeThreaded->GetOutputSamples(&BufferForOutput, 
@@ -231,76 +267,93 @@ namespace Audio
       memset(outputBuffer, 0, AudioIO.OutputBufferSizeThreaded * sizeof(float));
     else
     {
-      // Copy samples into output buffer, apply volume, and check for clipping
-      bool clipping(false);
-      float* output;
-      for (unsigned i = 0; i < numberOfFrames; ++i)
+      // Frame object for this set of samples
+      AudioFrame frame;
+
+      // Step through each frame in the output buffer
+      for (unsigned frameIndex = 0; frameIndex < outputFrames; ++frameIndex)
       {
-        AudioFrame frame(BufferForOutput.Data() + (i * SystemChannelsThreaded), SystemChannelsThreaded);
-        if (SystemChannelsThreaded != AudioIO.OutputChannelsThreaded)
-        {
-          // Translate channels 
-          frame.TranslateChannels(AudioIO.OutputChannelsThreaded);
-          //AudioFrame outputFrame(inputFrame, AudioIO.OutputChannelsThreaded);
-          output = frame.Samples;
-        }
+        // If not resampling, set the samples on the frame object from this frame in the mix
+        if (!Resampling)
+          frame.SetSamples(BufferForOutput.Data() + (frameIndex * SystemChannelsThreaded), 
+            SystemChannelsThreaded);
+        // Otherwise, interpolate between two mix frames
         else
-          output = BufferForOutput.Data() + (i * SystemChannelsThreaded);
-
-        float frameTotal(0.0f);
-        // Apply system volume to copied samples, check for clipping, and copy to output buffer
-        for (unsigned j = 0; j < AudioIO.OutputChannelsThreaded; ++j)
         {
-          // Save reference to sample
-          float& sample = output[j];
-          // Apply system volume adjustment
-          sample *= SystemVolumeThreaded;
+          // Mix frame index is the integer portion of the resampling index
+          unsigned mixFrameIndex = (unsigned)ResampleFrameIndex;
 
-          // Check for clipping
-          if (sample > 1.0f)
+          // Make sure we don't go past the end of the buffer
+          if (mixFrameIndex >= mixFrames)
+            mixFrameIndex = mixFrames - 1;
+
+          // Get the samples from the buffer at the mix frame index
+          frame.SetSamples(BufferForOutput.Data() + (mixFrameIndex * SystemChannelsThreaded), 
+            SystemChannelsThreaded);
+          // If this isn't the first frame, get the previous frame also
+          if (mixFrameIndex > 0)
+            PreviousFrame.SetSamples(BufferForOutput.Data() + ((mixFrameIndex - 1) 
+              * SystemChannelsThreaded), SystemChannelsThreaded);
+
+          // Interpolate the two samples using the resample frame index
+          for (unsigned i = 0; i < SystemChannelsThreaded; ++i)
           {
-            sample = 1.0f;
-            clipping = true;
-          }
-          else if (sample < -1.0f)
-          {
-            sample = -1.0f;
-            clipping = true;
+            frame.Samples[i] = PreviousFrame.Samples[i] + (float)((frame.Samples[i] 
+              - PreviousFrame.Samples[i]) * (ResampleFrameIndex - mixFrameIndex));
           }
 
-          frameTotal += sample;
-          if (Math::Abs(sample) > peakVolume)
-            peakVolume = Math::Abs(sample);
-
-          // Copy sample to output buffer
-          outputBuffer[(i * AudioIO.OutputChannelsThreaded) + j] = sample;
+          // Move the resample frame index forward
+          ResampleFrameIndex += ResampleFactor;
         }
+
+        // If the mix and output channels don't match, translate the samples
+        frame.TranslateChannels(AudioIO.OutputChannelsThreaded);
+        // Apply the system volume
+        frame *= SystemVolumeThreaded;
+        // Keep the samples between -1.0 and 1.0
+        frame.Clamp();
+
+        // If the peak volume of this frame is the loudest so far, save it
+        float framePeak = frame.GetMaxValue();
+        if (framePeak > peakVolume)
+          peakVolume = framePeak;
 
         // Use 16 bit int for RMS volume
-        unsigned value = (unsigned)((frameTotal / AudioIO.OutputChannelsThreaded) * ((1 << 15) - 1));
+        unsigned value = (unsigned)(Math::Abs(frame.GetMonoValue()) * ((1 << 15) - 1));
         rmsVolume += value * value;
 
         // If 5.1 or 7.1, handle low frequency channel
         if (AudioIO.OutputChannelsThreaded == 6 || AudioIO.OutputChannelsThreaded == 8)
         {
-          // Get mono sample value
-          float monoSample(0.0f);
-          for (unsigned j = 0; j < AudioIO.OutputChannelsThreaded; ++j)
-            monoSample += outputBuffer[(i * AudioIO.OutputChannelsThreaded) + j];
-
-          LowPass->ProcessSample(&monoSample, outputBuffer + (i * AudioIO.OutputChannelsThreaded) + 3, 1);
+          float monoSample = frame.GetMonoValue();
+          LowPass->ProcessSample(&monoSample, &frame.Samples[3], 1);
         }
+
+        // Copy this frame of samples to the output buffer
+        memcpy(outputBuffer + (frameIndex * AudioIO.OutputChannelsThreaded), frame.Samples, 
+          sizeof(float) * AudioIO.OutputChannelsThreaded);
       }
 
-      // If there was clipping during this mix, notify the external engine
-      if (clipping)
-        AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEvent, ExternalInterface, 
-          Notify_AudioClipping, (void*)nullptr));
+
+      if (Resampling)
+      {
+        // Save the last frame of samples
+        PreviousFrame.SetSamples(BufferForOutput.Data() + ((mixFrames * SystemChannelsThreaded) 
+          - SystemChannelsThreaded), SystemChannelsThreaded);
+
+        // Reset the resample index, keeping the fractional portion 
+        ResampleFrameIndex -= (int)ResampleFrameIndex;
+      }
     }
 
     // Update the output volumes
-    rmsVolume /= numberOfFrames;
-    AddTaskThreaded(Zero::CreateFunctor(&AudioSystemInternal::SetVolumes, this, peakVolume, rmsVolume));
+    if (peakVolume != PreviousPeakVolumeThreaded || rmsVolume != PreviousRMSVolumeThreaded)
+    {
+      PreviousPeakVolumeThreaded = peakVolume;
+      PreviousRMSVolumeThreaded = rmsVolume;
+      rmsVolume /= outputFrames;
+      AddTaskThreaded(Zero::CreateFunctor(&AudioSystemInternal::SetVolumes, this, peakVolume, rmsVolume));
+    }
 
     // If shutting down, wait for volume to ramp down to zero
     if (ShuttingDownThreaded)
@@ -395,6 +448,14 @@ namespace Audio
   }
 
   //************************************************************************************************
+  void AudioSystemInternal::ResetIO()
+  {
+    AudioIO.Reset();
+
+    CheckForResampling();
+  }
+
+  //************************************************************************************************
   void AudioSystemInternal::HandleTasksThreaded()
   {
     int counter(0);
@@ -431,8 +492,12 @@ namespace Audio
   void AudioSystemInternal::SetSystemChannelsThreaded(const unsigned channels)
   {
     SystemChannelsThreaded = channels;
-    MixBufferSizeThreaded = AudioIO.GetBaseBufferSize() * channels;
-    BufferForOutput.Resize(MixBufferSizeThreaded);
+
+    if (!Resampling)
+    {
+      MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
+      BufferForOutput.Resize(MixBufferSizeThreaded);
+    }
   }
 
   //************************************************************************************************
@@ -521,60 +586,52 @@ namespace Audio
 
     AudioIO.RestartStream(!useHighLatency, status);
 
-    MixBufferSizeThreaded = AudioIO.GetBaseBufferSize() * SystemChannelsThreaded;
-    BufferForOutput.Resize(MixBufferSizeThreaded);
+    if (!Resampling)
+    {
+      MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
+      BufferForOutput.Resize(MixBufferSizeThreaded);
+    }
+  }
+
+  //************************************************************************************************
+  void AudioSystemInternal::CheckForResampling()
+  {
+    if (!Resampling && (SampleRate != AudioIO.OutputSampleRate))
+    {
+      Resampling = true;
+      ResampleFactor = (double)SampleRate / (double)AudioIO.OutputSampleRate;
+      ResampleFrameIndex = 0;
+      ResampleBufferFraction = 0;
+    }
+    else if (Resampling && (SampleRate == AudioIO.OutputSampleRate))
+    {
+      Resampling = false;
+
+      MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate);
+      BufferForOutput.Resize(MixBufferSizeThreaded);
+    }
   }
 
   //************************************************************************************************
   void AudioSystemInternal::AddDecodingTask(Zero::Functor* function)
   {
-    DecodeLock.Lock();
-
-    // Check if the decoding thread is currently running
-    if (!DecodingFinished)
-    {
-      DecodingList.PushBack(function);
-      DecodeLock.Unlock();
-    }
-    else
-    {
-      DecodeLock.Unlock();
-
-      DecodingList.PushBack(function);
-      DecodingFinished = false;
-
-      // Start a new thread
-      DecodeThread.Initialize(StartDecoding, this, "Decoding thread");
-      DecodeThread.Resume();
-    }
+    DecodingQueue.Write(function);
+    DecodeThreadEvent.Signal();
   }
 
   //************************************************************************************************
   void AudioSystemInternal::DecodeLoopThreaded()
   {
-    bool finished(false);
-    while (!finished)
+    while (AtomicCompareExchange32(&StopDecodeThread, 0, 0) == 0)
     {
-      DecodeLock.Lock();
-      // If the list is empty, nothing more to do, can close thread
-      if (DecodingList.Empty())
+      Zero::Functor* function;
+      while (DecodingQueue.Read(function))
       {
-        finished = true;
-        DecodingFinished = true;
-        DecodeLock.Unlock();
-        continue;
+        function->Execute();
+        delete function;
       }
-      // Get all objects in the current list
-      Zero::Array<Zero::Functor*> samplesToDecode(DecodingList);
-      DecodingList.Clear();
-      DecodeLock.Unlock();
 
-      unsigned size = samplesToDecode.Size();
-      for (unsigned i = 0; i < size; ++i)
-      {
-        samplesToDecode[i]->Execute();
-        delete samplesToDecode[i];
-      }
+      DecodeThreadEvent.Wait();
     }
   }
 
@@ -915,6 +972,72 @@ namespace Audio
   AudioFrame::AudioFrame(float* samples, unsigned channels) : 
     HowManyChannels(channels)
   {
+    SetSamples(samples, channels);
+
+    Matrices[0] = ChannelMatrix1;
+    Matrices[1] = ChannelMatrix2;
+    Matrices[2] = ChannelMatrix3;
+    Matrices[3] = ChannelMatrix4;
+    Matrices[4] = ChannelMatrix5;
+    Matrices[5] = ChannelMatrix6;
+    Matrices[6] = ChannelMatrix7;
+    Matrices[7] = ChannelMatrix8;
+  }
+
+  //************************************************************************************************
+  AudioFrame::AudioFrame() :
+    HowManyChannels(0)
+  {
+    memset(Samples, 0, sizeof(float) * MaxChannels);
+
+    Matrices[0] = ChannelMatrix1;
+    Matrices[1] = ChannelMatrix2;
+    Matrices[2] = ChannelMatrix3;
+    Matrices[3] = ChannelMatrix4;
+    Matrices[4] = ChannelMatrix5;
+    Matrices[5] = ChannelMatrix6;
+    Matrices[6] = ChannelMatrix7;
+    Matrices[7] = ChannelMatrix8;
+  }
+
+  //************************************************************************************************
+  AudioFrame::AudioFrame(const AudioFrame& copy) :
+    HowManyChannels(copy.HowManyChannels)
+  {
+    memset(Samples, 0, sizeof(float) * MaxChannels);
+    memcpy(Samples, copy.Samples, sizeof(float) * HowManyChannels);
+  }
+
+  //************************************************************************************************
+  void AudioFrame::TranslateChannels(const unsigned channels)
+  {
+    if (channels == HowManyChannels)
+      return;
+
+    float output[MaxChannels] = { 0 };
+
+    const float* matrix;
+    if (channels < HowManyChannels)
+      matrix = Matrices[channels - 1];
+    else
+      matrix = Matrices[HowManyChannels - 1];
+
+    for (unsigned outChannel = 0; outChannel < channels; ++outChannel)
+    {
+      for (unsigned sourceChannel = 0; sourceChannel < MaxChannels; ++sourceChannel)
+      {
+        output[outChannel] += Samples[sourceChannel] * matrix[(sourceChannel * channels) + outChannel];
+      }
+    }
+
+    memcpy(Samples, output, sizeof(float) * MaxChannels);
+  }
+
+  //************************************************************************************************
+  void AudioFrame::SetSamples(float* samples, unsigned channels)
+  {
+    HowManyChannels = channels;
+
     memset(Samples, 0, sizeof(float) * MaxChannels);
 
     switch (channels)
@@ -949,37 +1072,58 @@ namespace Audio
     default:
       break;
     }
-
-    Matrices[0] = ChannelMatrix1;
-    Matrices[1] = ChannelMatrix2;
-    Matrices[2] = ChannelMatrix3;
-    Matrices[3] = ChannelMatrix4;
-    Matrices[4] = ChannelMatrix5;
-    Matrices[5] = ChannelMatrix6;
-    Matrices[6] = ChannelMatrix7;
-    Matrices[7] = ChannelMatrix8;
   }
 
   //************************************************************************************************
-  void AudioFrame::TranslateChannels(const unsigned channels)
+  void AudioFrame::Clamp()
   {
-    float output[MaxChannels] = { 0 };
+    for (unsigned i = 0; i < HowManyChannels; ++i)
+      Math::Clamp(Samples[i], -1.0f, 1.0f);
+  }
 
-    const float* matrix;
-    if (channels < HowManyChannels)
-      matrix = Matrices[channels - 1];
-    else
-      matrix = Matrices[HowManyChannels - 1];
+  //************************************************************************************************
+  float AudioFrame::GetMaxValue()
+  {
+    float value = Math::Abs(Samples[0]);
 
-    for (unsigned outChannel = 0; outChannel < channels; ++outChannel)
+    for (unsigned i = 1; i < HowManyChannels; ++i)
     {
-      for (unsigned sourceChannel = 0; sourceChannel < MaxChannels; ++sourceChannel)
-      {
-        output[outChannel] += Samples[sourceChannel] * matrix[(sourceChannel * channels) + outChannel];
-      }
+      float newValue = Math::Abs(Samples[i]);
+      if (newValue > value)
+        value = newValue;
     }
 
-    memcpy(Samples, output, sizeof(float) * MaxChannels);
+    return value;
+  }
+
+  //************************************************************************************************
+  float AudioFrame::GetMonoValue()
+  {
+    if (HowManyChannels == 1)
+      return Samples[0];
+
+    float value = Samples[0];
+
+    for (unsigned i = 1; i < HowManyChannels; ++i)
+      value += Samples[i];
+
+    value /= HowManyChannels;
+
+    return value;
+  }
+
+  //************************************************************************************************
+  void AudioFrame::operator*=(float multiplier)
+  {
+    for (unsigned i = 0; i < HowManyChannels; ++i)
+      Samples[i] *= multiplier;
+  }
+
+  //************************************************************************************************
+  void AudioFrame::operator=(const AudioFrame& copy)
+  {
+    HowManyChannels = copy.HowManyChannels;
+    memcpy(Samples, copy.Samples, sizeof(float) * MaxChannels);
   }
 
 }

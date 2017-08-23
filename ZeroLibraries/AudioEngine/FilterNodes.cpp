@@ -77,6 +77,9 @@ namespace Audio
   //************************************************************************************************
   void LowPassNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (FiltersPerListener.FindValue(listener, nullptr))
     {
       // If there is still another listener, we need to combine the history of the filters to avoid clicks
@@ -196,6 +199,9 @@ namespace Audio
   //************************************************************************************************
   void HighPassNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (FiltersPerListener.FindValue(listener, nullptr))
     {
       // If there is still another listener, we need to combine the history of the filters to avoid clicks
@@ -315,6 +321,9 @@ namespace Audio
   //************************************************************************************************
   void BandPassNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (FiltersPerListener.FindValue(listener, nullptr))
     {
       // If there is still another listener, we need to combine the history of the filters to avoid clicks
@@ -492,6 +501,9 @@ namespace Audio
   //************************************************************************************************
   void DelayNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (FiltersPerListener.FindValue(listener, nullptr))
     {
       delete FiltersPerListener[listener];
@@ -672,6 +684,9 @@ namespace Audio
   //************************************************************************************************
   void FlangerNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (FiltersPerListener.FindValue(listener, nullptr))
     {
       delete FiltersPerListener[listener];
@@ -887,6 +902,9 @@ namespace Audio
   //************************************************************************************************
   void ChorusNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (FiltersPerListener.FindValue(listener, nullptr))
     {
       delete FiltersPerListener[listener];
@@ -913,8 +931,8 @@ namespace Audio
       SetSiblingNodes(new AddNoiseNode(status, name, ID, nullptr, true), status);
     else
     {
-      AddPeriod = gAudioSystem->SystemSampleRate * 0.5f / AdditiveNoiseCutoffHz;
-      MultiplyPeriod = gAudioSystem->SystemSampleRate * 0.5f / MultipleNoiseCutoffHz;
+      AddPeriod = AudioSystemInternal::SampleRate * 0.5f / AdditiveNoiseCutoffHz;
+      MultiplyPeriod = AudioSystemInternal::SampleRate * 0.5f / MultipleNoiseCutoffHz;
       AddGain = Math::Pow(10.0f, 0.05f * AdditiveNoiseDB);
       MultiplyGain = Math::Pow(10.0f, 0.05f * MultipleNoiseDB);
     }
@@ -974,7 +992,7 @@ namespace Audio
           (AddNoiseNode*)GetSiblingNode(), cutoff));
     }
     else
-      AddPeriod = gAudioSystem->SystemSampleRate * 0.5f / AdditiveNoiseCutoffHz;
+      AddPeriod = AudioSystemInternal::SampleRate * 0.5f / AdditiveNoiseCutoffHz;
   }
 
   //************************************************************************************************
@@ -995,7 +1013,7 @@ namespace Audio
           (AddNoiseNode*)GetSiblingNode(), cutoff));
     }
     else
-      MultiplyPeriod = gAudioSystem->SystemSampleRate * 0.5f / MultipleNoiseCutoffHz;
+      MultiplyPeriod = AudioSystemInternal::SampleRate * 0.5f / MultipleNoiseCutoffHz;
   }
 
   //************************************************************************************************
@@ -1189,6 +1207,9 @@ namespace Audio
   //************************************************************************************************
   void ModulationNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (OscillatorsPerListener.FindValue(listener, nullptr))
     {
       delete OscillatorsPerListener[listener];
