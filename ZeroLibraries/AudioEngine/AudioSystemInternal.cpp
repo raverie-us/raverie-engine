@@ -36,7 +36,8 @@ namespace Audio
     PreviousRMSVolumeThreaded(0),
     ResampleFrameIndex(0),
     Resampling(false),
-    ResampleBufferFraction(0)
+    ResampleBufferFraction(0),
+    StopDecodeThread(0)
   {
     gAudioSystem = this;
 
@@ -77,12 +78,24 @@ namespace Audio
       return;
     }
 
-    ZPrint("Mix thread initialized\n");
+    ZPrint("Audio mix thread initialized\n");
+
+    // Start up the decoding thread
+    DecodeThreadEvent.Initialize();
+    DecodeThread.Initialize(StartDecoding, this, "Audio decoding");
+    DecodeThread.Resume();
+    if (!DecodeThread.IsValid())
+    {
+      ZPrint("Error creating audio decoding thread\n");
+      status.SetFailed("Error creating audio decoding thread");
+      AudioIO.StopStream();
+      return;
+    }
+
+    ZPrint("Audio decoding thread initialized\n");
 
     MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
     CheckForResampling();
-
-    ZPrint("Audio was successfully initialized\n");
 
     // Create output nodes
     FinalOutputNode = new OutputNode(status, "FinalOutputNode", &NodeInt, false);
@@ -91,6 +104,8 @@ namespace Audio
     // For low frequency channel (uses audio system in constructor)
     LowPass = new LowPassFilter();
     LowPass->SetCutoffFrequency(120.0f);
+
+    ZPrint("Audio was successfully initialized\n");
   }
 
   //************************************************************************************************
@@ -108,6 +123,9 @@ namespace Audio
       MixThread.Close();
     }
 
+    AtomicSet32(&StopDecodeThread, 1);
+    DecodeThreadEvent.Signal();
+    DecodeThread.WaitForCompletion();
     DecodeThread.Close();
 
     // Shut down PortAudio
@@ -597,21 +615,14 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::AddDecodingTask(Zero::Functor* function)
   {
-    if (!DecodeThread.IsValid())
-    {
-      // Start a new thread
-      DecodeThread.Initialize(StartDecoding, this, "Audio decoding");
-      DecodeThread.Resume();
-    }
-
     DecodingQueue.Write(function);
+    DecodeThreadEvent.Signal();
   }
 
   //************************************************************************************************
   void AudioSystemInternal::DecodeLoopThreaded()
   {
-    bool finished(false);
-    while (!finished)
+    while (AtomicCompareExchange32(&StopDecodeThread, 0, 0) == 0)
     {
       Zero::Functor* function;
       while (DecodingQueue.Read(function))
@@ -620,8 +631,7 @@ namespace Audio
         delete function;
       }
 
-      // TODO handle this better
-      Sleep(10);
+      DecodeThreadEvent.Wait();
     }
   }
 

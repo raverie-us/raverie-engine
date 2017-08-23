@@ -169,6 +169,10 @@ namespace Audio
     Zero::Thread DecodeThread;
     // Queue for decoding tasks
     LockFreeQueue<Zero::Functor*> DecodingQueue;
+    // Used to signal the decoding thread when decoding tasks are added to the queue
+    Zero::OsEvent DecodeThreadEvent;
+    // Will be zero while running, set to 1 when the decoding thread should shut down
+    Type32Bit StopDecodeThread;
     // Thread for mix loop
     Zero::Thread MixThread;
     // To tell the system to shut down once everything stops. 

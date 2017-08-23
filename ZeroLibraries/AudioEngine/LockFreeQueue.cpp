@@ -38,7 +38,7 @@ namespace Audio
     return InterlockedDecrement(value);
 #endif
 
-    return 0;
+    return *value;
   }
 
   //************************************************************************************************
@@ -48,7 +48,17 @@ namespace Audio
     return InterlockedIncrement(value);
 #endif
 
-    return 0;
+    return *value;
+  }
+
+  //************************************************************************************************
+  Type32Bit AtomicSet32(Type32Bit* target, Type32Bit value)
+  {
+#ifdef _MSC_VER
+    return InterlockedExchange(target, value);
+#endif
+
+    return *target;
   }
 
   //************************************************************************************************
@@ -58,7 +68,7 @@ namespace Audio
     return InterlockedCompareExchange(destination, exchange, comperand);
 #endif
 
-    return 0;
+    return *destination;
   }
 
 }

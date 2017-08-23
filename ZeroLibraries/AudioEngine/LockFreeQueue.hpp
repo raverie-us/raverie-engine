@@ -20,6 +20,7 @@ namespace Audio
   void AtomicSetPointer(void** target, void* value);
   Type32Bit AtomicDecrement32(Type32Bit* value);
   Type32Bit AtomicIncrement32(Type32Bit* value);
+  Type32Bit AtomicSet32(Type32Bit* target, Type32Bit value);
   Type32Bit AtomicCompareExchange32(Type32Bit* destination, Type32Bit exchange, Type32Bit comperand);
 
   //-------------------------------------------------------------------------------- Lock Free Queue
