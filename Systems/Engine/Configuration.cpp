@@ -19,6 +19,8 @@ DefineEvent(RecentProjectsUpdated);
 
 
 //------------------------------------------------------------------ Main Config
+bool MainConfig::sConfigCanSave = true;
+
 ZilchDefineType(MainConfig, builder, type)
 {
   ZeroBindComponent();
@@ -375,6 +377,9 @@ String GetConfigFile(StringParam applicationName)
 
 void SaveConfig(Cog* configCog)
 {
+  if (!MainConfig::sConfigCanSave)
+    return;
+
   MainConfig* config = configCog->has(MainConfig);
   String applicationName = config->ApplicationName;
   String fileName = GetConfigFile(applicationName);
@@ -411,18 +416,16 @@ Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSetting
   String configFile = GetConfigFile(applicationName);
 
   Cog* configCog = nullptr;
-  bool configDidNotExist = false;
+  bool configExists = FileExists(configFile);
 
   //Does a current config file exist?
-  if(FileExists(configFile) && !useDefault)
+  if(configExists && !useDefault)
   {
     ZPrintFilter(Filter::DefaultFilter, "Using user config at '%s'.\n", configFile.c_str());
     configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), configFile, 0, nullptr);
   }
   else
   {
-    configDidNotExist = true;
-
     String localConfigFile = FilePath::Combine(applicationDirectory, "Configuration.data");
 
     if(FileExists(localConfigFile))
@@ -441,7 +444,7 @@ Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSetting
   {
     //We didn't find the config, attempt to use the default config
     //and replace the current config with the default.
-    configDidNotExist = true;
+    configExists = false;
     String localConfigFile = FilePath::Combine(applicationDirectory, "Configuration.data");
     configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), localConfigFile, 0, nullptr);
 
@@ -459,7 +462,7 @@ Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSetting
   HasOrAdd<EditorSettings>(configCog);
   MainConfig* mainConfig = configCog->has(MainConfig);
   mainConfig->ApplicationName = applicationName;
-  mainConfig->mConfigDidNotExist = configDidNotExist;
+  mainConfig->mConfigDidNotExist = !configExists;
   mainConfig->DataDirectory = FilePath::Combine(applicationDirectory, "Data");
   mainConfig->ApplicationDirectory = applicationDirectory;
 
@@ -483,7 +486,7 @@ Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSetting
     mainConfig->DataDirectory = FilePath::Combine(settings.mEmbeddedWorkingDirectory, "Data");
   }
 
-  if(configDidNotExist)
+  if(!configExists)
   {
     //Set the application name this allows different native programs
     //to have different config files.

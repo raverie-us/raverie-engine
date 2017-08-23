@@ -261,6 +261,8 @@ TimeSystem::TimeSystem()
 {
   mEngineDt = 0.0f;
   mEngineRuntime = 0.0;
+  mUseFixedDt = false;
+  mFixedDt = 1.0f / 60.0f;
 }
 
 TimeSystem::~TimeSystem()
@@ -300,6 +302,10 @@ void TimeSystem::Update()
   }
 
   ProfileScopeTree("TimeSystem", "Engine", Color::Orange);
+
+  // We can pretend that the rest of the engine runs at a fixed frame rate
+  if (mUseFixedDt)
+    dt = mFixedDt;
 
   mEngineDt = dt;
   mEngineRuntime = mTimer.Time();

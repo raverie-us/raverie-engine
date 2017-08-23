@@ -131,11 +131,13 @@ static const String cUnitTestRecordOption("unitTestRecord");
 static const String cUnitTestPlayOption("unitTestPlay");
 static const String cProjectBegin("ProjectBegin");
 static const String cProjectEnd("ProjectEnd");
+static const String cEvents("Events");
 static const IntVec2 cWindowSize(1024, 768);
 
 //**************************************************************************************************
 ZilchDefineType(UnitTestEvent, builder, type)
 {
+  ZilchBindDestructor();
   type->HandleManager = ZilchManagerId(PointerManager);
 }
 
@@ -145,8 +147,26 @@ UnitTestEvent::~UnitTestEvent()
 }
 
 //**************************************************************************************************
+ZilchDefineType(UnitTestEndFrameEvent, builder, type)
+{
+  ZilchBindConstructor();
+  ZilchBindDestructor();
+}
+
+//**************************************************************************************************
+void UnitTestEndFrameEvent::Serialize(Serializer& stream)
+{
+}
+
+//**************************************************************************************************
+void UnitTestEndFrameEvent::Execute(UnitTestSystem* system)
+{
+}
+
+//**************************************************************************************************
 ZilchDefineType(UnitTestBaseMouseEvent, builder, type)
 {
+  ZilchBindDestructor();
 }
 
 //**************************************************************************************************
@@ -160,6 +180,7 @@ void UnitTestBaseMouseEvent::Serialize(Serializer& stream)
 ZilchDefineType(UnitTestMouseEvent, builder, type)
 {
   ZilchBindConstructor();
+  ZilchBindDestructor();
 }
 
 //**************************************************************************************************
@@ -172,9 +193,10 @@ void UnitTestMouseEvent::Serialize(Serializer& stream)
 //**************************************************************************************************
 void UnitTestMouseEvent::Execute(UnitTestSystem* system)
 {
+  mEvent.Window = system->GetMainWindow();
   IntVec2 oldClientPosition = mEvent.ClientPosition;
   system->ExecuteBaseMouseEvent(this, &mEvent);
-  system->GetMainWindow()->SendMouseEvent(mEvent);
+  system->GetMainWindow()->SendMouseEvent(mEvent, true);
   mEvent.ClientPosition = oldClientPosition;
 }
 
@@ -182,6 +204,7 @@ void UnitTestMouseEvent::Execute(UnitTestSystem* system)
 ZilchDefineType(UnitTestMouseDropEvent, builder, type)
 {
   ZilchBindConstructor();
+  ZilchBindDestructor();
 }
 
 //**************************************************************************************************
@@ -194,9 +217,10 @@ void UnitTestMouseDropEvent::Serialize(Serializer& stream)
 //**************************************************************************************************
 void UnitTestMouseDropEvent::Execute(UnitTestSystem* system)
 {
+  mEvent.Window = system->GetMainWindow();
   IntVec2 oldClientPosition = mEvent.ClientPosition;
   system->ExecuteBaseMouseEvent(this, &mEvent);
-  system->GetMainWindow()->SendMouseDropEvent(mEvent);
+  system->GetMainWindow()->SendMouseDropEvent(mEvent, true);
   mEvent.ClientPosition = oldClientPosition;
 }
 
@@ -204,6 +228,7 @@ void UnitTestMouseDropEvent::Execute(UnitTestSystem* system)
 ZilchDefineType(UnitTestKeyboardEvent, builder, type)
 {
   ZilchBindConstructor();
+  ZilchBindDestructor();
 }
 
 //**************************************************************************************************
@@ -215,13 +240,15 @@ void UnitTestKeyboardEvent::Serialize(Serializer& stream)
 //**************************************************************************************************
 void UnitTestKeyboardEvent::Execute(UnitTestSystem* system)
 {
-  system->GetMainWindow()->SendKeyboardEvent(mEvent);
+  mEvent.mKeyboard = Keyboard::GetInstance();
+  system->GetMainWindow()->SendKeyboardEvent(mEvent, true);
 }
 
 //**************************************************************************************************
 ZilchDefineType(UnitTestKeyboardTextEvent, builder, type)
 {
   ZilchBindConstructor();
+  ZilchBindDestructor();
 }
 
 //**************************************************************************************************
@@ -233,13 +260,14 @@ void UnitTestKeyboardTextEvent::Serialize(Serializer& stream)
 //**************************************************************************************************
 void UnitTestKeyboardTextEvent::Execute(UnitTestSystem* system)
 {
-  system->GetMainWindow()->SendKeyboardTextEvent(mEvent);
+  system->GetMainWindow()->SendKeyboardTextEvent(mEvent, true);
 }
 
 //**************************************************************************************************
 ZilchDefineType(UnitTestWindowEvent, builder, type)
 {
   ZilchBindConstructor();
+  ZilchBindDestructor();
 }
 
 //**************************************************************************************************
@@ -251,7 +279,7 @@ void UnitTestWindowEvent::Serialize(Serializer& stream)
 //**************************************************************************************************
 void UnitTestWindowEvent::Execute(UnitTestSystem* system)
 {
-  system->GetMainWindow()->SendWindowEvent(mEvent);
+  system->GetMainWindow()->SendWindowEvent(mEvent, true);
 }
 
 //--------------------------------------------------------------------------------- Unit Test System
@@ -263,9 +291,8 @@ ZilchDefineType(UnitTestSystem, builder, type)
 //**************************************************************************************************
 UnitTestSystem::UnitTestSystem() :
   mMode(UnitTestMode::Stopped),
-  mFrameIndex(0),
   mEmulatedCursor(nullptr),
-  mEventNumber(0)
+  mEventIndex(0)
 {
   ConnectThisTo(this, Events::UnitTestRecordFileSelected, OnUnitTestRecordFileSelected);
   ConnectThisTo(this, Events::UnitTestPlayFileSelected, OnUnitTestPlayFileSelected);
@@ -280,21 +307,41 @@ cstr UnitTestSystem::GetName()
 //**************************************************************************************************
 void UnitTestSystem::Initialize(SystemInitializer& initializer)
 {
+  bool unitTestSystemActive = false;
+
   // We can't initialize here because the root widget and main window have not yet been created
   // If the record or play modes were set, then we set a flag to initialize on the first Update
   Environment* environment = Environment::GetInstance();
   if (!environment->GetParsedArgument(cUnitTestRecordOption).Empty())
   {
+    unitTestSystemActive = true;
     mMode = UnitTestMode::StartRecording;
   }
   else if (!environment->GetParsedArgument(cUnitTestPlayOption).Empty())
   {
+    unitTestSystemActive = true;
     mMode = UnitTestMode::StartPlaying;
+  }
+
+  // Is the unit test recording a replay or 
+  if (unitTestSystemActive)
+  {
+    // Hook the OsShell update so we can process input events at the same time
+    Z::gEngine->has(OsShell)->mOsShellHook = this;
+
+    // When recording or playing we do not want the config to
+    // be saved out since we launched with the 'safe' option
+    MainConfig::sConfigCanSave = false;
+
+    // For determinism we lie about the frame-time that has passed to
+    // the entire engine (it becomes a fixed value of 1/60)
+    TimeSystem* timeSystem = Z::gEngine->has(TimeSystem);
+    timeSystem->mUseFixedDt = true;
   }
 }
 
 //**************************************************************************************************
-void UnitTestSystem::Update()
+void UnitTestSystem::HookUpdate()
 {
   // One time initialization logic for record and play modes
   if (mMode == UnitTestMode::StartRecording)
@@ -304,20 +351,21 @@ void UnitTestSystem::Update()
 
   if (mMode == UnitTestMode::Recording)
   {
-    mFrames.PushBack(new UnitTestFrame());
+    if (mEventIndex != 0)
+      RecordEvent(new UnitTestEndFrameEvent());
   }
   else if (mMode == UnitTestMode::Playing)
   {
-    if (mFrameIndex < mFrames.Size())
+    while (mEventIndex < mEvents.Size())
     {
-      UnitTestFrame* frame = mFrames[mFrameIndex];
-      
-      forRange(UnitTestEvent* testEvent, frame->mEvents.All())
-      {
-        testEvent->Execute(this);
-      }
+      UnitTestEvent* event = mEvents[mEventIndex];
+      ++mEventIndex;
+
+      if (ZilchVirtualTypeId(event) != ZilchTypeId(UnitTestEndFrameEvent))
+        event->Execute(this);
+      else
+        break;
     }
-    ++mFrameIndex;
   }
 }
 
@@ -328,8 +376,10 @@ void UnitTestSystem::RecordToZeroTestFile()
   config.EventName = Events::UnitTestRecordFileSelected;
   config.CallbackObject = this;
   config.Title = "Record Unit Test File";
-  config.AddFilter("Zero Unit Test", "*.zerotest");
-  Z::gEngine->has(OsShell)->OpenFile(config);
+  config.AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
+  config.mDefaultSaveExtension = "zerotest";
+  config.DefaultFileName = BuildString(Z::gEngine->GetProjectSettings()->ProjectName, ".zerotest");
+  Z::gEngine->has(OsShell)->SaveFile(config);
 }
 
 //**************************************************************************************************
@@ -357,6 +407,9 @@ void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
     DeleteFile(zeroTestFile);
 
   Z::gEditor->SaveAll(false);
+
+  String eventsFolder = FilePath::Combine(directory, cEvents);
+  CreateDirectoryAndParents(eventsFolder);
 
   // We create two directories so we can compare the beginning and the end
   String beginFolder = FilePath::Combine(directory, cProjectBegin);
@@ -390,6 +443,24 @@ void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
 
   Process process;
   process.Start(status, info);
+  if (status.Failed())
+  {
+    DoNotifyError("UnitTestSystem", status.Message);
+    return;
+  }
+
+  process.WaitForClose();
+
+  Archive archive(ArchiveMode::Compressing);
+  archive.ArchiveDirectory(status, directory);
+  if (status.Failed())
+  {
+    DoNotifyError("UnitTestSystem", status.Message);
+    return;
+  }
+
+  archive.WriteZipFile(zeroTestFile);
+  DeleteDirectory(directory);
 }
 
 //**************************************************************************************************
@@ -399,7 +470,7 @@ void UnitTestSystem::PlayFromZeroTestFile()
   config.EventName = Events::UnitTestPlayFileSelected;
   config.CallbackObject = this;
   config.Title = "Play Unit Test File";
-  config.AddFilter("Zero Unit Test", "*.zerotest");
+  config.AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
@@ -409,7 +480,7 @@ void UnitTestSystem::OnUnitTestPlayFileSelected(OsFileSelection* event)
   if (event->Files.Empty())
     return;
 
-  RecordToZeroTestFile(event->Files.Front());
+  PlayFromZeroTestFile(event->Files.Front());
 }
 
 //**************************************************************************************************
@@ -445,6 +516,16 @@ void UnitTestSystem::PlayFromZeroTestFile(StringParam zeroTestFile)
 
   Process process;
   process.Start(status, info);
+  if (status.Failed())
+  {
+    DoNotifyError("UnitTestSystem", status.Message);
+    return;
+  }
+
+  process.WaitForClose();
+
+  // The play should have finished, so delete the directory
+  DeleteDirectory(directory);
 }
 
 //**************************************************************************************************
@@ -452,33 +533,28 @@ void UnitTestSystem::SubProcessRecord()
 {
   OsWindow* osWindow = SubProcessSetupWindow();
 
+  // Let us capture input before everyone else
+  osWindow->mOsInputHook = this;
+
   mMode = UnitTestMode::Recording;
-
-  // This should not be needed if these functions are called at the proper time
-  mFrames.PushBack(new UnitTestFrame());
-
-  // Mouse events
-  ConnectThisTo(osWindow, Events::OsMouseDown, RecordMouseEvent);
-  ConnectThisTo(osWindow, Events::OsMouseUp, RecordMouseEvent);
-  ConnectThisTo(osWindow, Events::OsMouseMove, RecordMouseEvent);
-  ConnectThisTo(osWindow, Events::OsMouseScroll, RecordMouseEvent);
-  ConnectThisTo(osWindow, Events::OsMouseFileDrop, RecordMouseFileDropEvent);
-
-  // Keyboard events
-  ConnectThisTo(osWindow, Events::OsKeyDown, RecordKeyboardEvent);
-  ConnectThisTo(osWindow, Events::OsKeyUp, RecordKeyboardEvent);
-  ConnectThisTo(osWindow, Events::OsKeyRepeated, RecordKeyboardEvent);
-  ConnectThisTo(osWindow, Events::OsKeyTyped, RecordKeyboardTextEvent);
-
-  // Window events
-  ConnectThisTo(osWindow, Events::OsFocusGained, RecordWindowEvent);
-  ConnectThisTo(osWindow, Events::OsFocusLost, RecordWindowEvent);
 }
 
 //**************************************************************************************************
 void UnitTestSystem::SubProcessPlay()
 {
-  SubProcessSetupWindow();
+  OsWindow* osWindow = SubProcessSetupWindow();
+
+  // Don't allow the user moving over the window to do anything
+  osWindow->mBlockUserInput = true;
+
+  LoadRecordedEvents();
+
+  // During playback we always play as fast as possible (but we lie about frame time)
+  Cog* project = Z::gEngine->GetProjectSettings()->GetOwner();
+  project->AddComponentByType(ZilchTypeId(FrameRateSettings));
+  FrameRateSettings* frameRateSettings = project->has(FrameRateSettings);
+  frameRateSettings->mVerticalSync = false;
+  frameRateSettings->mLimitFrameRate = false;
 
   mMode = UnitTestMode::Playing;
 
@@ -496,6 +572,13 @@ OsWindow* UnitTestSystem::SubProcessSetupWindow()
   window->SetState(WindowState::Windowed);
   window->SetStyle((WindowStyleFlags::Enum)(window->GetStyle() & ~WindowStyleFlags::Resizable));
   window->SetClientSize(cWindowSize);
+
+  IntVec2 screenSize = window->GetPrimaryScreenSize();
+  IntVec2 centeredPosition = screenSize / 2 - window->GetSize() / 2;
+  window->SetPosition(centeredPosition);
+
+  ProjectSettings* settings = Z::gEngine->GetProjectSettings();
+  mRecordedEventsDirectory = FilePath::Combine(settings->ProjectFolder, "..", cEvents);
   return window;
 }
 
@@ -521,61 +604,61 @@ OsWindow* UnitTestSystem::GetMainWindow()
 }
 
 //**************************************************************************************************
-void UnitTestSystem::RecordMouseEvent(OsMouseEvent* event)
-{
-  if (mMode != UnitTestMode::Recording)
-    return;
-
-  UnitTestMouseEvent* testEvent = new UnitTestMouseEvent();
-  testEvent->mEvent = *event;
-
-  RecordBaseMouseEvent(testEvent, event);
-}
-
-//**************************************************************************************************
-void UnitTestSystem::RecordMouseFileDropEvent(OsMouseDropEvent* event)
-{
-  if (mMode != UnitTestMode::Recording)
-    return;
-
-  UnitTestMouseDropEvent* testEvent = new UnitTestMouseDropEvent();
-  testEvent->mEvent = *event;
-
-  RecordEvent(testEvent);
-}
-
-//**************************************************************************************************
-void UnitTestSystem::RecordKeyboardEvent(KeyboardEvent* event)
+void UnitTestSystem::HookKeyboardEvent(KeyboardEvent& event)
 {
   if (mMode != UnitTestMode::Recording)
     return;
 
   UnitTestKeyboardEvent* testEvent = new UnitTestKeyboardEvent();
-  testEvent->mEvent = *event;
+  testEvent->mEvent = event;
 
   RecordEvent(testEvent);
 }
 
 //**************************************************************************************************
-void UnitTestSystem::RecordKeyboardTextEvent(KeyboardTextEvent* event)
+void UnitTestSystem::HookKeyboardTextEvent(KeyboardTextEvent& event)
 {
   if (mMode != UnitTestMode::Recording)
     return;
 
   UnitTestKeyboardTextEvent* testEvent = new UnitTestKeyboardTextEvent();
-  testEvent->mEvent = *event;
+  testEvent->mEvent = event;
 
   RecordEvent(testEvent);
 }
 
 //**************************************************************************************************
-void UnitTestSystem::RecordWindowEvent(OsWindowEvent* event)
+void UnitTestSystem::HookMouseEvent(OsMouseEvent& event)
+{
+  if (mMode != UnitTestMode::Recording)
+    return;
+
+  UnitTestMouseEvent* testEvent = new UnitTestMouseEvent();
+  testEvent->mEvent = event;
+
+  RecordBaseMouseEvent(testEvent, &event);
+}
+
+//**************************************************************************************************
+void UnitTestSystem::HookMouseDropEvent(OsMouseDropEvent& event)
+{
+  if (mMode != UnitTestMode::Recording)
+    return;
+
+  UnitTestMouseDropEvent* testEvent = new UnitTestMouseDropEvent();
+  testEvent->mEvent = event;
+
+  RecordEvent(testEvent);
+}
+
+//**************************************************************************************************
+void UnitTestSystem::HookWindowEvent(OsWindowEvent& event)
 {
   if (mMode != UnitTestMode::Recording)
     return;
 
   UnitTestWindowEvent* testEvent = new UnitTestWindowEvent();
-  testEvent->mEvent = *event;
+  testEvent->mEvent = event;
 
   RecordEvent(testEvent);
 }
@@ -593,7 +676,11 @@ void UnitTestSystem::RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsM
 
   // Compute the normalized coordinates of the cursor within the widget
   Vec2 widgetClientTopLeft = overWidget->ToScreen(Vec2::cZero);
-  baseEvent->mNormalizedWidgetOffset = (clientPos - widgetClientTopLeft) / overWidget->GetSize();
+  Vec2 size = overWidget->GetSize();
+  if (size.x <= 0 || size.y <= 0)
+    baseEvent->mNormalizedWidgetOffset = Vec2(0, 0);
+  else
+    baseEvent->mNormalizedWidgetOffset = (clientPos - widgetClientTopLeft) / size;
 
   // Compute the path to the widget from the root via WidgetPath constructor
   baseEvent->mWidgetPath = WidgetPath(overWidget, root);
@@ -617,17 +704,20 @@ void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, Os
 
   // Update the emulated cursor position (purely visual that cannot be interacted with)
   mEmulatedCursor->SetTranslation(Vec3(ToVec2(event->ClientPosition), 0));
+  mEmulatedCursor->SetVisible(true);
+  mEmulatedCursor->SetActive(true);
+  mEmulatedCursor->MoveToFront();
 }
 
 //**************************************************************************************************
 void UnitTestSystem::RecordEvent(UnitTestEvent* e)
 {
   // Add it to our current frame
-  mFrames.Back()->mEvents.PushBack(e);
+  mEvents.PushBack(e);
 
   // Save out the event to our file. We want to append so that in case of a crash, we have already
   // saved out all input required to reproduce that crash
-  String fileName = String::Format("Event%d.data", mEventNumber++);
+  String fileName = String::Format("Event%d.data", mEventIndex++);
   String file = FilePath::Combine(mRecordedEventsDirectory, fileName);
   TextSaver saver;
   Status status;
@@ -644,7 +734,7 @@ void UnitTestSystem::RecordEvent(UnitTestEvent* e)
 }
 
 //**************************************************************************************************
-void UnitTestSystem::LoadRecordedEvents(StringParam directory)
+void UnitTestSystem::LoadRecordedEvents()
 {
   for(uint i = 0; ; ++i)
   {
@@ -666,7 +756,7 @@ void UnitTestSystem::LoadRecordedEvents(StringParam directory)
       UnitTestEvent* e = ZilchAllocate(UnitTestEvent, type);
       e->Serialize(loader);
 
-      //mFrames.PushBack(e);
+      mEvents.PushBack(e);
 
       loader.EndPolymorphic();
     }

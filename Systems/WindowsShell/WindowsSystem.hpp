@@ -53,6 +53,8 @@ public:
 
   WindowState::Enum GetState() override;
   void SetState(WindowState::Enum windowState) override;
+
+  IntVec2 GetPrimaryScreenSize() override;
   
   void TakeFocus() override;
   bool HasFocus() override;
@@ -81,11 +83,11 @@ public:
   HWND mWindowHandle;
 private:
 
-  void SendKeyboardEvent(KeyboardEvent& event) override;
-  void SendKeyboardTextEvent(KeyboardTextEvent& event) override;
-  void SendMouseEvent(OsMouseEvent& event) override;
-  void SendMouseDropEvent(OsMouseDropEvent& event) override;
-  void SendWindowEvent(OsWindowEvent& event) override;
+  void SendKeyboardEvent(KeyboardEvent& event, bool simulated) override;
+  void SendKeyboardTextEvent(KeyboardTextEvent& event, bool simulated) override;
+  void SendMouseEvent(OsMouseEvent& event, bool simulated) override;
+  void SendMouseDropEvent(OsMouseDropEvent& event, bool simulated) override;
+  void SendWindowEvent(OsWindowEvent& event, bool simulated) override;
 
   void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
   void SendMouseEvent(OsMouseEvent& mouseEvent, StringParam buttonState);

@@ -338,6 +338,11 @@ void WindowsOsWindow::SetState(WindowState::Enum windowState)
   }
 }
 
+IntVec2 WindowsOsWindow::GetPrimaryScreenSize()
+{
+  return IntVec2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+}
+
 void WindowsOsWindow::TakeFocus()
 {
   //JoshD: There's a lot of extra stuff required to make a window's window take
@@ -495,8 +500,14 @@ void WindowsOsWindow::SendProgress(ProgressType::Enum progressType, float progre
   }
 }
 
-void WindowsOsWindow::SendKeyboardEvent(KeyboardEvent& event)
+void WindowsOsWindow::SendKeyboardEvent(KeyboardEvent& event, bool simulated)
 {
+  if (mOsInputHook)
+    mOsInputHook->HookKeyboardEvent(event);
+
+  if (mBlockUserInput && !simulated)
+    return;
+
   mKeyboard->UpdateKeys(event);
 
   DispatchEvent(cOsKeyboardEventsFromState[event.State], &event);
@@ -504,24 +515,48 @@ void WindowsOsWindow::SendKeyboardEvent(KeyboardEvent& event)
   mKeyboard->DispatchEvent(cKeyboardEventsFromState[event.State], &event);
 }
 
-void WindowsOsWindow::SendKeyboardTextEvent(KeyboardTextEvent& event)
+void WindowsOsWindow::SendKeyboardTextEvent(KeyboardTextEvent& event, bool simulated)
 {
+  if (mOsInputHook)
+    mOsInputHook->HookKeyboardTextEvent(event);
+
+  if (mBlockUserInput && !simulated)
+    return;
+
   DispatchEvent(event.EventId, &event);
   Keyboard::GetInstance()->DispatchEvent(event.EventId, &event);
 }
 
-void WindowsOsWindow::SendMouseEvent(OsMouseEvent& event)
+void WindowsOsWindow::SendMouseEvent(OsMouseEvent& event, bool simulated)
 {
+  if (mOsInputHook)
+    mOsInputHook->HookMouseEvent(event);
+
+  if (mBlockUserInput && !simulated)
+    return;
+
   DispatchEvent(event.EventId, &event);
 }
 
-void WindowsOsWindow::SendMouseDropEvent(OsMouseDropEvent& event)
+void WindowsOsWindow::SendMouseDropEvent(OsMouseDropEvent& event, bool simulated)
 {
+  if (mOsInputHook)
+    mOsInputHook->HookMouseDropEvent(event);
+
+  if (mBlockUserInput && !simulated)
+    return;
+
   DispatchEvent(event.EventId, &event);
 }
 
-void WindowsOsWindow::SendWindowEvent(OsWindowEvent& event)
+void WindowsOsWindow::SendWindowEvent(OsWindowEvent& event, bool simulated)
 {
+  if (mOsInputHook)
+    mOsInputHook->HookWindowEvent(event);
+
+  if (mBlockUserInput && !simulated)
+    return;
+
   DispatchEvent(event.EventId, &event);
 }
 
@@ -539,7 +574,7 @@ void WindowsOsWindow::FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState,
 void WindowsOsWindow::SendMouseEvent(OsMouseEvent& mouseEvent, StringParam buttonState)
 {
   mouseEvent.EventId = buttonState;
-  SendMouseEvent(mouseEvent);
+  SendMouseEvent(mouseEvent, false);
 }
 
 void WindowsOsWindow::FillMouseEventData(IntVec2Param mousePosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent)
@@ -700,7 +735,7 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
         if (mWindowState == WindowState::Minimized)
           SetState(WindowState::Restore);
 
-        DispatchEvent(Events::OsFocusGained, &focusEvent);
+        focusEvent.EventId = Events::OsFocusGained;
       }
       else
       {
@@ -708,8 +743,9 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
           SetState(WindowState::Minimized);
 
         Keyboard::Instance->Clear();
-        DispatchEvent(Events::OsFocusLost, &focusEvent);
+        focusEvent.EventId = Events::OsFocusLost;
       }
+      SendWindowEvent(focusEvent, false);
 
       return MessageHandled;
     }
@@ -759,7 +795,7 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
       DragFinish((HDROP)wParam);
 
       mouseDrop.EventId = Events::OsMouseFileDrop;
-      SendMouseDropEvent(mouseDrop);
+      SendMouseDropEvent(mouseDrop, false);
 
       return MessageHandled;
     }
@@ -877,7 +913,7 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
     {
       KeyboardTextEvent textEvent = KeyboardTextEvent(Utf16ToUtf8(wParam));
       textEvent.EventId = Events::OsKeyTyped;
-      SendKeyboardTextEvent(textEvent);
+      SendKeyboardTextEvent(textEvent, false);
       return MessageHandled;
     }
 
@@ -893,7 +929,7 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
       KeyboardEvent keyEvent;
       keyEvent.OsKey = wParam;
       FillKeyboardEvent(key, keyState, keyEvent);
-      SendKeyboardEvent(keyEvent);
+      SendKeyboardEvent(keyEvent, false);
 
       return MessageHandled;
     }
@@ -916,7 +952,7 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
       KeyboardEvent keyEvent;
       keyEvent.OsKey = wParam;
       FillKeyboardEvent(key, keyState, keyEvent);
-      SendKeyboardEvent(keyEvent);
+      SendKeyboardEvent(keyEvent, false);
 
       return MessageHandled;
     }
@@ -1115,6 +1151,9 @@ void WindowsShellSystem::Update()
   RawInputUpdate();
   Keyboard* keyboard = Keyboard::GetInstance();
   keyboard->Update();
+
+  if (mOsShellHook)
+    mOsShellHook->HookUpdate();
 
   ProfileScopeTree("ShellSystem", "Engine", Color::Red);
 

@@ -271,7 +271,7 @@ void KeyboardEvent::Serialize(Serializer& stream)
   SerializeNameDefault(OsKey, 0U);
   stream.SerializeFieldDefault<int>("Key", *(int*)&Key, (int)Keys::Unknown);
 
-  SerializeEnumNameDefault(KeyState, State, (KeyState::Enum)KeyState::Size);
+  SerializeEnumNameDefault(KeyState, State, KeyState::Up);
 }
 
 Keyboard* KeyboardEvent::GetKeyboard()

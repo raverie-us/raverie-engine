@@ -46,11 +46,22 @@ public:
   virtual void Execute(UnitTestSystem* system) = 0;
 };
 
+class UnitTestEndFrameEvent : public UnitTestEvent
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  // UnitTestEvent interface
+  void Serialize(Serializer& stream) override;
+  void Execute(UnitTestSystem* system) override;
+};
+
 class UnitTestBaseMouseEvent : public UnitTestEvent
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  // UnitTestEvent interface
   void Serialize(Serializer& stream) override;
 
   WidgetPath mWidgetPath;
@@ -117,15 +128,9 @@ public:
   OsWindowEvent mEvent;
 };
 
-class UnitTestFrame
-{
-public:
-  Array<UnitTestEvent*> mEvents;
-};
-
 DeclareEnum5(UnitTestMode, Stopped, StartRecording, Recording, StartPlaying, Playing);
 
-class UnitTestSystem : public System
+class UnitTestSystem : public System, public OsShellHook, public OsInputHook
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -135,7 +140,9 @@ public:
   // System interface
   cstr GetName();
   void Initialize(SystemInitializer& initializer) override;
-  void Update() override;
+
+  // OsShellHook interface
+  void HookUpdate();
 
   void RecordToZeroTestFile();
   void RecordToZeroTestFile(StringParam zeroTestFile);
@@ -158,25 +165,24 @@ public:
   // Internals
   Widget* mEmulatedCursor;
   UnitTestMode::Enum mMode;
-  size_t mFrameIndex;
-  Array<UnitTestFrame*> mFrames;
-
-  // Event callbacks
-  void RecordMouseEvent(OsMouseEvent* event);
-  void RecordMouseFileDropEvent(OsMouseDropEvent* event);
-  void RecordKeyboardEvent(KeyboardEvent* event);
-  void RecordKeyboardTextEvent(KeyboardTextEvent* event);
-  void RecordWindowEvent(OsWindowEvent* event);
+  Array<UnitTestEvent*> mEvents;
 
   void RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event);
   void ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event);
 
   void RecordEvent(UnitTestEvent* e);
-  void LoadRecordedEvents(StringParam directory);
+  void LoadRecordedEvents();
+
+  // InputHook interface
+  void HookKeyboardEvent(KeyboardEvent& event) override;
+  void HookKeyboardTextEvent(KeyboardTextEvent& event) override;
+  void HookMouseEvent(OsMouseEvent& event) override;
+  void HookMouseDropEvent(OsMouseDropEvent& event) override;
+  void HookWindowEvent(OsWindowEvent& event) override;
 
   // The file we store our recorded data
   String mRecordedEventsDirectory;
-  uint mEventNumber;
+  uint mEventIndex;
 };
 
 UnitTestSystem* CreateUnitTestSystem();

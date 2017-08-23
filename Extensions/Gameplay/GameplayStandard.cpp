@@ -65,6 +65,7 @@ ZilchDefineStaticLibrary(GameplayLibrary)
 
   ZilchInitializeType(UnitTestSystem);
   ZilchInitializeType(UnitTestEvent);
+  ZilchInitializeType(UnitTestEndFrameEvent);
   ZilchInitializeType(UnitTestBaseMouseEvent);
   ZilchInitializeType(UnitTestMouseEvent);
   ZilchInitializeType(UnitTestMouseDropEvent);
