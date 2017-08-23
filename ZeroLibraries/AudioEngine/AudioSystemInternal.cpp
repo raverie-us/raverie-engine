@@ -67,6 +67,9 @@ namespace Audio
     if (status.Failed())
       return;
 
+    MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
+    CheckForResampling();
+
     // Start up the mix thread
     MixThread.Initialize(StartMix, this, "Audio mix");
     MixThread.Resume();
@@ -93,9 +96,6 @@ namespace Audio
     }
 
     ZPrint("Audio decoding thread initialized\n");
-
-    MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
-    CheckForResampling();
 
     // Create output nodes
     FinalOutputNode = new OutputNode(status, "FinalOutputNode", &NodeInt, false);
