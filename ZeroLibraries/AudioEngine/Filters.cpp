@@ -330,7 +330,7 @@ namespace Audio
   void LowPassFilter::SetCutoffValues()
   {
     // LP coefficients
-    float tanValue = Math::cPi * CutoffFrequency / gAudioSystem->SystemSampleRate;
+    float tanValue = Math::cPi * CutoffFrequency / AudioSystemInternal::SampleRate;
     if (tanValue >= HalfPI)
       tanValue = HalfPI - 0.001f;
 
@@ -392,7 +392,7 @@ namespace Audio
   //************************************************************************************************
   void HighPassFilter::SetCutoffValues()
   {
-    float tanValue = Math::cPi * CutoffFrequency / gAudioSystem->SystemSampleRate;
+    float tanValue = Math::cPi * CutoffFrequency / AudioSystemInternal::SampleRate;
     if (tanValue >= HalfPI)
       tanValue = HalfPI - 0.001f;
 
@@ -499,10 +499,10 @@ namespace Audio
     else
       LowPassCutoff = 0.0f;
 
-    AlphaLP = gAudioSystem->SystemSampleRate / ((LowPassCutoff * 2.0f * Math::cPi) + 
-      gAudioSystem->SystemSampleRate);
-    AlphaHP = gAudioSystem->SystemSampleRate / ((HighPassCutoff * 2.0f * Math::cPi) + 
-      gAudioSystem->SystemSampleRate);
+    AlphaLP = AudioSystemInternal::SampleRate / ((LowPassCutoff * 2.0f * Math::cPi) + 
+      AudioSystemInternal::SampleRate);
+    AlphaHP = AudioSystemInternal::SampleRate / ((HighPassCutoff * 2.0f * Math::cPi) + 
+      AudioSystemInternal::SampleRate);
   }
 
   //------------------------------------------------------------------------------------- Oscillator
@@ -512,7 +512,7 @@ namespace Audio
     mReadIndex(0),
     mIncrement(0), 
     mNoteOn(false), 
-    mSampleRate(gAudioSystem->SystemSampleRate),
+    mSampleRate(AudioSystemInternal::SampleRate),
     mFrequency(1.0f),
     mType(Noise), 
     mPolarity(Bipolar)
@@ -640,7 +640,7 @@ namespace Audio
 
   //************************************************************************************************
   DelayLine::DelayLine() : 
-    DelayInSamples(100.0f * gAudioSystem->SystemSampleRate / 1000.0f),
+    DelayInSamples(100.0f * AudioSystemInternal::SampleRate / 1000.0f),
     Feedback(0),
     WetLevel(0.5f),
     ReadIndex(0), 
@@ -649,7 +649,7 @@ namespace Audio
     MaxDelaySec(2.0f),
     InterpolatingWetLevel(false)
   {
-    BufferSize = (int)(MaxDelaySec * gAudioSystem->SystemSampleRate);
+    BufferSize = (int)(MaxDelaySec * AudioSystemInternal::SampleRate);
     for (unsigned i = 0; i < MaxChannels; ++i)
     {
       BuffersPerChannel[i] = new float[BufferSize];
@@ -731,7 +731,7 @@ namespace Audio
     if (delay > MaxDelaySec * 1000)
       delay = MaxDelaySec * 1000;
 
-    DelayInSamples = delay * gAudioSystem->SystemSampleRate / 1000.0f;
+    DelayInSamples = delay * AudioSystemInternal::SampleRate / 1000.0f;
 
     ReadIndex = WriteIndex - (int)DelayInSamples;
     while (ReadIndex < 0)
@@ -741,7 +741,7 @@ namespace Audio
   //************************************************************************************************
   float DelayLine::GetDelayMSec()
   {
-    return DelayInSamples / gAudioSystem->SystemSampleRate * 1000.0f;
+    return DelayInSamples / AudioSystemInternal::SampleRate * 1000.0f;
   }
 
   //************************************************************************************************
@@ -762,7 +762,7 @@ namespace Audio
   void DelayLine::InterpolateWetLevelPct(const float percent, const float time)
   {
     InterpolatingWetLevel = true;
-    WetLevelInterpolator.SetValues(WetLevel, percent / 100.0f, (unsigned)(time * gAudioSystem->SystemSampleRate));
+    WetLevelInterpolator.SetValues(WetLevel, percent / 100.0f, (unsigned)(time * AudioSystemInternal::SampleRate));
   }
 
   //------------------------------------------------------------------------------ Envelope Detector
@@ -773,7 +773,7 @@ namespace Audio
     mReleaseTimeMSec(0.0f), 
     mAttackTime(0.0f),
     mReleaseTime(0.0f),
-    mSampleRate((float)gAudioSystem->SystemSampleRate), 
+    mSampleRate((float)AudioSystemInternal::SampleRate), 
     mEnvelope(0.0f),
     mDetectMode(DetectModes::Peak), 
     mSample(0),
@@ -1229,15 +1229,15 @@ namespace Audio
     const float at2500Hz, const float above5000Hz, const float timeToInterpolate)
   {
     LowPassInterpolator.SetValues(mLowPassGain, below80Hz, (unsigned)(timeToInterpolate * 
-      gAudioSystem->SystemSampleRate));
+      AudioSystemInternal::SampleRate));
     Band1Interpolator.SetValues(mBand1Gain, at150Hz, (unsigned)(timeToInterpolate * 
-      gAudioSystem->SystemSampleRate));
+      AudioSystemInternal::SampleRate));
     Band2Interpolator.SetValues(mBand2Gain, at600Hz, (unsigned)(timeToInterpolate *
-      gAudioSystem->SystemSampleRate));
+      AudioSystemInternal::SampleRate));
     Band3Interpolator.SetValues(mBand3Gain, at2500Hz, (unsigned)(timeToInterpolate * 
-      gAudioSystem->SystemSampleRate));
+      AudioSystemInternal::SampleRate));
     HighPassInterpolator.SetValues(mHighPassGain, above5000Hz, (unsigned)(timeToInterpolate * 
-      gAudioSystem->SystemSampleRate));
+      AudioSystemInternal::SampleRate));
   }
 
   //************************************************************************************************
@@ -1267,14 +1267,14 @@ namespace Audio
 
   //************************************************************************************************
   ReverbData::ReverbData() :
-    PreDelay(0.5f, gAudioSystem->SystemSampleRate),
-    InputAP_1(0.5f, gAudioSystem->SystemSampleRate),
-    InputAP_2(0.5f, gAudioSystem->SystemSampleRate),
-    Comb_1(0.5f, gAudioSystem->SystemSampleRate),
-    Comb_2(0.5f, gAudioSystem->SystemSampleRate),
-    LPComb_1(0.5f, gAudioSystem->SystemSampleRate),
-    LPComb_2(0.5f, gAudioSystem->SystemSampleRate),
-    OutputAP(0.5f, gAudioSystem->SystemSampleRate)
+    PreDelay(0.5f, AudioSystemInternal::SampleRate),
+    InputAP_1(0.5f, AudioSystemInternal::SampleRate),
+    InputAP_2(0.5f, AudioSystemInternal::SampleRate),
+    Comb_1(0.5f, AudioSystemInternal::SampleRate),
+    Comb_2(0.5f, AudioSystemInternal::SampleRate),
+    LPComb_1(0.5f, AudioSystemInternal::SampleRate),
+    LPComb_2(0.5f, AudioSystemInternal::SampleRate),
+    OutputAP(0.5f, AudioSystemInternal::SampleRate)
   {
   
   }
@@ -1409,7 +1409,7 @@ namespace Audio
   void Reverb::InterpolateWetPercent(const float newPercent, const float time)
   {
     WetValueInterpolator.SetValues(WetValue, newPercent / 100.0f, (unsigned)(time * 
-      gAudioSystem->SystemSampleRate));
+      AudioSystemInternal::SampleRate));
   }
 
   //************************************************************************************************
@@ -1794,7 +1794,7 @@ namespace Audio
     mSustainLevel(0.0f),
     mReleaseTime(0.0f),
     mCurrentTime(0.0f),
-    mTimeDelta(1.0f / gAudioSystem->SystemSampleRate),
+    mTimeDelta(1.0f / AudioSystemInternal::SampleRate),
     mCurrentState(DelayState),
     mLastAmplitude(0.0f)
   {
@@ -1932,7 +1932,7 @@ namespace Audio
     mVolume(0.0f),
     mPitchOffset(0.0f),
     mTime(0.0f),
-    mTimeDelta(1.0f / gAudioSystem->SystemSampleRate)
+    mTimeDelta(1.0f / AudioSystemInternal::SampleRate)
   {
 
   }

@@ -12,9 +12,16 @@
 
 namespace Audio
 {
+#ifdef _MSC_VER
+#define Type32Bit long
+#endif
+
   void* AtomicCompareExchangePointer(void** destination, void* exchange, void* comperand);
   void AtomicSetPointer(void** target, void* value);
-  bool AtomicCheckEqualityPointer(void* first, void* second);
+  Type32Bit AtomicDecrement32(Type32Bit* value);
+  Type32Bit AtomicIncrement32(Type32Bit* value);
+  Type32Bit AtomicSet32(Type32Bit* target, Type32Bit value);
+  Type32Bit AtomicCompareExchange32(Type32Bit* destination, Type32Bit exchange, Type32Bit comperand);
 
   //-------------------------------------------------------------------------------- Lock Free Queue
 
@@ -56,7 +63,8 @@ namespace Audio
     bool Read(T& result)
     {
       // Check if there is anything on the queue
-      if (!AtomicCheckEqualityPointer(First, Last))
+      void* check = (void*)First;
+      if (AtomicCompareExchangePointer(&check, (void*)Last, (void*)Last) != Last)
       {
         // Store the pointers
         Node* firstNode = First;
