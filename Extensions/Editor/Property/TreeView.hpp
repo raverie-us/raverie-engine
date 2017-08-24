@@ -420,6 +420,7 @@ public:
   /// Visible rows
   Array<TreeRow*> mRows;
   HashMap<u64, TreeRow*> mRowMap;
+  uint mScrollAreaRows;
 };
 
 namespace TreeViewValidUi
