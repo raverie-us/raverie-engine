@@ -61,7 +61,7 @@ void Shortcuts::Serialize(Serializer& stream)
 void Shortcuts::Load(StringParam filename)
 {
   // will throw if unable to load file
-  //LoadFromDataFile(*this, filename);
+  LoadFromDataFile(*this, filename);
 
   // save the global documentation
   Z::gShortcutsDoc = this;
