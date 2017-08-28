@@ -156,6 +156,9 @@ public:
   void SubProcessPlay();
   OsWindow* SubProcessSetupWindow();
 
+  static void DiffDirectories(StringParam dir1, StringParam dir2, StringParam diffProgram = "tortoisemerge");
+  static void EnumerateFiles(StringParam directory, StringParam relativeParentPath, HashSet<String>* relativePaths);
+
   RootWidget* GetRootWidget();
   OsWindow* GetMainWindow();
 

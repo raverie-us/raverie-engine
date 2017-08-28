@@ -132,6 +132,8 @@ static const String cUnitTestPlayOption("unitTestPlay");
 static const String cProjectBegin("ProjectBegin");
 static const String cProjectEnd("ProjectEnd");
 static const String cEvents("Events");
+static const String cZeroProjWithoutDot("zeroproj");
+static const String cZeroProjWithDot(".zeroproj");
 static const IntVec2 cWindowSize(1024, 768);
 
 //**************************************************************************************************
@@ -430,7 +432,7 @@ void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
   String oldBeginProjectFilePath = FilePath::Combine(beginFolder, oldProjectFileName);
   String oldEndProjectFilePath = FilePath::Combine(endFolder, oldProjectFileName);
 
-  String newProjectFileName = BuildString(name, ".zeroproj");
+  String newProjectFileName = BuildString(name, cZeroProjWithDot);
   String newBeginProjectFilePath = FilePath::Combine(beginFolder, newProjectFileName);
   String newEndProjectFilePath = FilePath::Combine(endFolder, newProjectFileName);
 
@@ -509,10 +511,15 @@ void UnitTestSystem::PlayFromZeroTestFile(StringParam zeroTestFile)
 
   info.mApplicationName = GetApplication();
 
+  String beginProjectPath = FilePath::Combine(directory, cProjectBegin);
+  String endProjectPath = FilePath::Combine(directory, cProjectEnd);
+
   // When playing back we always start from the beginning project (it should end up the same as the end project)
-  String projectFileName = BuildString(name, ".zeroproj");
-  String projectFilePath = FilePath::Combine(directory, cProjectBegin, projectFileName);
-  info.mArguments = BuildString("-file \"", projectFilePath, "\" -safe -", cUnitTestPlayOption);
+  String projectFileName = BuildString(name, cZeroProjWithDot);
+  String beginProjectFilePath = FilePath::Combine(beginProjectPath, projectFileName);
+  String endProjectFilePath = FilePath::Combine(endProjectPath, projectFileName);
+
+  info.mArguments = BuildString("-file \"", beginProjectFilePath, "\" -safe -", cUnitTestPlayOption);
 
   Process process;
   process.Start(status, info);
@@ -524,6 +531,9 @@ void UnitTestSystem::PlayFromZeroTestFile(StringParam zeroTestFile)
 
   process.WaitForClose();
 
+  // Diff the directories
+  DiffDirectories(beginProjectPath, endProjectPath);
+  
   // The play should have finished, so delete the directory
   DeleteDirectory(directory);
 }
@@ -580,6 +590,95 @@ OsWindow* UnitTestSystem::SubProcessSetupWindow()
   ProjectSettings* settings = Z::gEngine->GetProjectSettings();
   mRecordedEventsDirectory = FilePath::Combine(settings->ProjectFolder, "..", cEvents);
   return window;
+}
+
+//**************************************************************************************************
+void UnitTestSystem::DiffDirectories(StringParam dir1, StringParam dir2, StringParam diffProgram)
+{
+  HashSet<String> relativePaths1;
+  HashSet<String> relativePaths2;
+
+  EnumerateFiles(dir1, String(), &relativePaths1);
+  EnumerateFiles(dir2, String(), &relativePaths2);
+
+  forRange(StringParam relativePath, relativePaths1.All())
+  {
+    // Don't diff the zeroproj file because the verison will
+    // often be different (and frame rate settings may change)
+    if (FilePath::GetExtension(relativePath) == cZeroProjWithoutDot)
+      continue;
+
+    // If both directories have this path...
+    if (relativePaths2.Contains(relativePath))
+    {
+      relativePaths2.Erase(relativePath);
+
+      String path1 = FilePath::Combine(dir1, relativePath);
+      String path2 = FilePath::Combine(dir2, relativePath);
+
+      Status status;
+
+      String hash1 = Zilch::Sha1Builder::GetHashStringFromFile(status, path1);
+      if (status.Failed())
+      {
+        DoNotifyWarning("UnitTestSystem", String::Format("Failed to open file: %s", status.Message.c_str()));
+        continue;
+      }
+
+      String hash2 = Zilch::Sha1Builder::GetHashStringFromFile(status, path2);
+      if (status.Failed())
+      {
+        DoNotifyWarning("UnitTestSystem", String::Format("Failed to open file: %s", status.Message.c_str()));
+        continue;
+      }
+
+      if (hash1 != hash2)
+      {
+        DoNotifyWarning("UnitTestSystem", String::Format("Diff failed because file %s did not match", relativePath.c_str()));
+        if (!diffProgram.Empty())
+        {
+          ProcessStartInfo info;
+          info.mApplicationName = diffProgram;
+          info.mArguments = BuildString("\"", path1.c_str(), "\" \"", path2.c_str(), "\"");
+
+          Process process;
+          process.Start(status, info);
+
+          if (status.Failed())
+          {
+            DoNotifyWarning("UnitTestSystem", String::Format("Failed run diff process: %s", status.Message.c_str()));
+            continue;
+          }
+        }
+      }
+    }
+    else
+    {
+      DoNotifyWarning("UnitTestSystem", String::Format("Diff failed because file %s did not exist in both directories", relativePath.c_str()));
+    }
+  }
+
+  forRange(StringParam relativePath, relativePaths2.All())
+  {
+    DoNotifyWarning("UnitTestSystem", String::Format("Diff failed because file %s did not exist in both directories", relativePath.c_str()));
+  }
+}
+
+//**************************************************************************************************
+void UnitTestSystem::EnumerateFiles(StringParam directory, StringParam relativeParentPath, HashSet<String>* relativePaths)
+{
+  FileRange files(directory);
+  for (; !files.Empty(); files.PopFront())
+  {
+    String fileName = files.Front();
+    String relativePath = FilePath::Combine(relativeParentPath, fileName);
+    String fullPath = FilePath::Combine(directory, fileName);
+
+    if (IsDirectory(fullPath))
+      EnumerateFiles(fullPath, relativePath, relativePaths);
+    else
+      relativePaths->Insert(relativePath);
+  }
 }
 
 //**************************************************************************************************
