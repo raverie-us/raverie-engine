@@ -133,7 +133,7 @@ void Archetype::CacheDataTree()
 
   loader.CacheModifications(&mLocalCachedModifications);
 
-  mCachedTree = loader.TakeOwnershipOfRoot();
+  mCachedTree = loader.TakeOwnershipOfFirstRoot();
 
   // Add all modifications from all the base Archetypes
   mAllCachedModifications.Combine(mLocalCachedModifications);

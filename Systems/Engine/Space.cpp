@@ -649,7 +649,7 @@ Level* Space::AddObjectsFromLevel(Level* level)
       DoNotifyErrorWithContext(message);
     }
 
-    level->mCacheTree = stream.TakeOwnershipOfRoot();
+    level->mCacheTree = stream.TakeOwnershipOfFirstRoot();
   }
 
   ObjectEvent event(this);

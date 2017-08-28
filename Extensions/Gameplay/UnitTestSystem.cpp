@@ -131,7 +131,6 @@ static const String cUnitTestRecordOption("unitTestRecord");
 static const String cUnitTestPlayOption("unitTestPlay");
 static const String cProjectBegin("ProjectBegin");
 static const String cProjectEnd("ProjectEnd");
-static const String cEvents("Events");
 static const String cZeroProjWithoutDot("zeroproj");
 static const String cZeroProjWithDot(".zeroproj");
 static const IntVec2 cWindowSize(1024, 768);
@@ -410,9 +409,6 @@ void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
 
   Z::gEditor->SaveAll(false);
 
-  String eventsFolder = FilePath::Combine(directory, cEvents);
-  CreateDirectoryAndParents(eventsFolder);
-
   // We create two directories so we can compare the beginning and the end
   String beginFolder = FilePath::Combine(directory, cProjectBegin);
   String endFolder = FilePath::Combine(directory, cProjectEnd);
@@ -588,7 +584,7 @@ OsWindow* UnitTestSystem::SubProcessSetupWindow()
   window->SetPosition(centeredPosition);
 
   ProjectSettings* settings = Z::gEngine->GetProjectSettings();
-  mRecordedEventsDirectory = FilePath::Combine(settings->ProjectFolder, "..", cEvents);
+  mRecordedEventsFile = FilePath::Combine(settings->ProjectFolder, "..", "Playback.data");
   return window;
 }
 
@@ -813,14 +809,13 @@ void UnitTestSystem::RecordEvent(UnitTestEvent* e)
 {
   // Add it to our current frame
   mEvents.PushBack(e);
+  ++mEventIndex;
 
   // Save out the event to our file. We want to append so that in case of a crash, we have already
   // saved out all input required to reproduce that crash
-  String fileName = String::Format("Event%d.data", mEventIndex++);
-  String file = FilePath::Combine(mRecordedEventsDirectory, fileName);
   TextSaver saver;
   Status status;
-  saver.Open(status, file.c_str());
+  saver.Open(status, mRecordedEventsFile.c_str(), DataVersion::Current, FileMode::Append);
 
   ReturnIf(status.Failed(), , "Failed to save recorded event file");
 
@@ -835,21 +830,14 @@ void UnitTestSystem::RecordEvent(UnitTestEvent* e)
 //**************************************************************************************************
 void UnitTestSystem::LoadRecordedEvents()
 {
-  for(uint i = 0; ; ++i)
-  {
-    String fileName = String::Format("Event%d.data", i);
-    String file = FilePath::Combine(mRecordedEventsDirectory, fileName);
-    if (!FileExists(file))
-      break;
-
     DataTreeLoader loader;
     Status status;
-    loader.OpenFile(status, file);
+  loader.OpenFile(status, mRecordedEventsFile);
 
     ReturnIf(status.Failed(), , "Failed to load recorded event file");
 
     PolymorphicNode eventNode;
-    if(loader.GetPolymorphic(eventNode))
+  while (loader.GetPolymorphic(eventNode))
     {
       BoundType* type = MetaDatabase::FindType(eventNode.TypeName);
       UnitTestEvent* e = ZilchAllocate(UnitTestEvent, type);
@@ -860,7 +848,6 @@ void UnitTestSystem::LoadRecordedEvents()
       loader.EndPolymorphic();
     }
   }
-}
 
 //**************************************************************************************************
 UnitTestSystem* CreateUnitTestSystem()

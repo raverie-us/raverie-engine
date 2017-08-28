@@ -184,7 +184,7 @@ public:
   void HookWindowEvent(OsWindowEvent& event) override;
 
   // The file we store our recorded data
-  String mRecordedEventsDirectory;
+  String mRecordedEventsFile;
   uint mEventIndex;
 };
 

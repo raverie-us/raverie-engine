@@ -34,19 +34,23 @@ TextSaver::~TextSaver()
 }
 
 //******************************************************************************
-void TextSaver::Open(Status& status, cstr file, DataVersion::Enum version)
+void TextSaver::Open(Status& status, cstr file, DataVersion::Enum version,
+                     FileMode::Enum fileMode)
 {
+  ErrorIf(fileMode != FileMode::Write && fileMode != FileMode::Append,
+          "FileMode must be Write or Append.");
+
   Close();
   SetFlags();
   mFilename = file;
   mVersion = version;
+  mWriteMode = fileMode;
 
   // Save out the file version if we're not in the legacy version
-  if(version != DataVersion::Legacy)
-  {
-    SaveAttribute("Version", ToString((uint)version));
-    mStream << "\n";
-  }
+  // If we're appending, the version will be written out when the file is opened
+  // if the file didn't exist
+  if (fileMode == FileMode::Write && version != DataVersion::Legacy)
+    SaveFileVersion();
 }
 
 //******************************************************************************
@@ -55,13 +59,11 @@ bool TextSaver::OpenBuffer(DataVersion::Enum version)
   Close();
   SetFlags();
   mVersion = version;
+  mWriteMode = FileMode::Write;
 
   // Save out the file version if we're not in the legacy version
   if(version != DataVersion::Legacy)
-  {
-    SaveAttribute("Version", ToString((uint)version));
-    mStream << "\n";
-  }
+    SaveFileVersion();
 
   return true;
 }
@@ -105,10 +107,22 @@ void TextSaver::Close()
   if(!mFilename.Empty())
   {
     File file;
-    bool opened = file.Open(mFilename.c_str(), FileMode::Write, FileAccessPattern::Sequential);
+
+    bool opened = file.Open(mFilename.c_str(), mWriteMode, FileAccessPattern::Sequential);
     ErrorIf(!opened, "Failed to open file for text output");
     if(opened)
     {
+      // We only want the file version to save out once. We've deferred the 
+      // responsibility of saving out the file version to here, where we need
+      // to check if there is anything in the file
+      if (mWriteMode == FileMode::Append && file.Tell() == 0)
+      {
+        String data = mStream.ToString();
+        mStream.Deallocate();
+        SaveFileVersion();
+        mStream.Append(data);
+      }
+
       ByteBuffer::BlockRange blocks = mStream.Blocks();
       for(;!blocks.Empty();blocks.PopFront())
       {
@@ -597,6 +611,13 @@ void TextSaver::SaveAttribute(StringParam name, StringParam value, bool stringVa
     }
   }
   mStream << "]";
+}
+
+//******************************************************************************
+void TextSaver::SaveFileVersion()
+{
+  SaveAttribute("Version", ToString((uint)mVersion));
+  mStream << "\n";
 }
 
 //******************************************************************************
