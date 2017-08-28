@@ -16,12 +16,12 @@ struct DataTreeContext;
 class DataTreeParser
 {
 public:
-  static DataNode* BuildTree(DataTreeContext& context, StringRange data);
+  static bool BuildTree(DataTreeContext& context, StringRange data, DataNode* fileRoot);
 
 private:
   DataTreeParser(DataTreeContext& context);
 
-  DataNode* Parse(StringRange text);
+  bool Parse(StringRange text, DataNode* fileRoot);
 
   bool Start();
   bool Object();
@@ -39,7 +39,6 @@ private:
   DataNode* GetCurrentNode();
   DataToken& GetLastAcceptedToken();
 
-  DataNode* mRoot;
   DataNode* mLastPoppedNode;
   Array<DataNode*> mNodeStack;
 

@@ -438,7 +438,7 @@ Cog* Factory::BuildFromFile(BoundType* expectedMetaType, StringParam fileName, C
   }
 
   //Validation - make sure the file contains the expected type
-  DataNode* root = loader.GetCurrent();
+  DataNode* root = loader.GetNext();
   if(!(root->mTypeName == expectedMetaType->Name))
     return TypeCheckFail("a file", root->mTypeName.c_str(), fileName.c_str(), expectedMetaType);
 
@@ -477,7 +477,7 @@ Cog* Factory::BuildFromArchetype(BoundType* expectedMetaType, Archetype* archety
       cog->SetArchetype(archetype);
 
     // The Archetype owns the data tree, so pull it back from the loader so that it doesn't free it
-    loader.TakeOwnershipOfRoot();
+    loader.TakeOwnershipOfFirstRoot();
 
     if(CacheBinaryArchetypes)
       archetype->BinaryCache(cog, context);

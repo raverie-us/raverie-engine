@@ -577,7 +577,7 @@ DataNode* DataResource::GetDataTree()
   Status status;
   ObjectLoader loader;
   loader.OpenFile(status, mContentItem->GetFullPath());
-  return loader.TakeOwnershipOfRoot();
+  return loader.TakeOwnershipOfFirstRoot();
 }
 
 //------------------------------------------------------------------------ Data Resource Inheritance
