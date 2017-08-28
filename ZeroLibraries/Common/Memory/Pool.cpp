@@ -67,6 +67,12 @@ void Pool::Deallocate(MemPtr ptr, size_t /*numberOfBytes*/)
   if(ptr == nullptr)
     return;
 
+#ifdef ZeroDebug
+  // 0xFAFAFAFA is our own byte pattern used to show that we deallocated the memory, but have not
+  // yet released it to the os
+  memset(ptr, 0xFA, mBlockSize);
+#endif
+
   //Deallocate memory by push a block on the free list.
   RemoveAllocation(mBlockSize);
   PushOnFreeList(ptr);
