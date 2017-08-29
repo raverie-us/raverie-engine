@@ -129,13 +129,16 @@ namespace Audio
   //************************************************************************************************
   AdditiveSynthNode::~AdditiveSynthNode()
   {
-    // Look at each MIDI note in the map
-    for (NotesMapType::valuerange allLists = CurrentNotes.Values(); !allLists.Empty(); allLists.PopFront())
+    if (Threaded)
     {
-      NotesListType& list = *allLists.Front();
-      // Step through each current note at this frequency
-      for (unsigned i = 0; i < list.Size(); ++i)
-        delete list[i];
+      // Look at each MIDI note in the map
+      for (NotesMapType::valuerange allLists = CurrentNotes.Values(); !allLists.Empty(); allLists.PopFront())
+      {
+        NotesListType& list = *allLists.Front();
+        // Step through each current note at this frequency
+        for (unsigned i = 0; i < list.Size(); ++i)
+          delete list[i];
+      }
     }
   }
 

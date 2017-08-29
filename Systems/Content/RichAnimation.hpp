@@ -269,8 +269,7 @@ public:
   /// to be in vector order (x,y,z), making it indexable.
   Array<TrackNode*> Children;
 
-  BoundTypeHandle mPropertyTypeId;
-  String mPropertyTypeName;
+  BoundTypeHandle mPropertyType;
 
   /// All key frames in this track. If this is a property track of a vector
   /// type, the key frames will be stored in the Children tracks (one for

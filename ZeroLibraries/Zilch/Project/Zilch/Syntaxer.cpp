@@ -485,10 +485,18 @@ namespace Zilch
             else
             {
               // Otherwise, we just do a full replacement :)
-              // We MUST do a clone here or else we'll get a double delete situation
-              delete typeToReplace;
-              typeToReplace = (SyntaxType*)replaceWithType->Clone();
-              dataTypeToReplace = nullptr;
+              SyntaxType* replaceWithTypeNode = Type::DynamicCast<SyntaxType*>(replaceWithType);
+              if (replaceWithTypeNode != nullptr)
+              {
+                // We MUST do a clone here or else we'll get a double delete situation
+                delete typeToReplace;
+                typeToReplace = (SyntaxType*)replaceWithType->Clone();
+                dataTypeToReplace = nullptr;
+              }
+              else
+              {
+                return this->Errors.Raise(location, ErrorCode::CannotReplaceTemplateInstanceWithTemplateArguments);
+              }
             }
             break;
           }
@@ -952,6 +960,49 @@ namespace Zilch
           if (this->Builder->FindBoundType(fullyQualifiedTemplateName) == nullptr &&
               this->ExternalBoundTypes.FindValue(fullyQualifiedTemplateName, nullptr) == nullptr)
           {
+            // The resolved type arguments
+            Array<Constant> templateInstanceArguments;
+            templateInstanceArguments.Resize(dataType->TemplateArguments.Size());
+
+            // Loop through all the given template instance arguments (the actual types)
+            for (size_t i = 0; i < dataType->TemplateArguments.Size(); ++i)
+            {
+              // Get the template argument
+              SyntaxNode* templateArgument = dataType->TemplateArguments[i];
+
+              // This node should either be a syntax type or a constant
+              SyntaxType* templateTypeArgument = Type::DynamicCast<SyntaxType*>(templateArgument);
+              ValueNode* constantArgument = Type::DynamicCast<ValueNode*>(templateArgument);
+
+              // Attempt to retrieve it as a valid type (this could be a constant instead...)
+              if (templateTypeArgument != nullptr)
+              {
+                // If we got no type back, we failed to instantiate this template
+                Type* resolvedType = this->RetrieveType(templateTypeArgument, location);
+                if (resolvedType == ZilchTypeId(void))
+                  return;
+
+                // Store the type in our array of resolved types...
+                templateInstanceArguments[i] = resolvedType;
+              }
+              // If this is a constant (we still have to be sure the user didn't pass a name reference in)
+              else if (constantArgument != nullptr)
+              {
+                // Arguments cannot be identifiers (we should probably make a separate LiteralNode)
+                if (constantArgument->Value.TokenId == Grammar::LowerIdentifier)
+                  return this->ErrorAt(templateArgument, ErrorCode::TemplateArgumentsMustBeConstantsOrTypes);
+
+                // Resolve the node into a constant and pass that to the template
+                Constant constant = this->ValueNodeToConstant(constantArgument);
+                templateInstanceArguments[i] = constant;
+              }
+              // Otherwise, we have no idea what this is (maybe the user is trying to use folding?)
+              else
+              {
+                return this->ErrorAt(templateArgument, ErrorCode::TemplateArgumentsMustBeConstantsOrTypes);
+              }
+            }
+
             // Check to see if we found the type as a named template
             if (ClassNode* classNode = this->InternalBoundTemplates.FindValue(baseName, nullptr))
             {
@@ -984,6 +1035,9 @@ namespace Zilch
               // Setup the class as an instantiation
               this->SetupClassInstance(cloneTree, context);
 
+              // If aynyone queries the type we want to let them check what template arguments were used to create this type
+              cloneTree->Type->TemplateArguments = templateInstanceArguments;
+
               // Add ourselves to the roots. Note this will not be traversed
               // as the walker already grabbed the child list from the root
               ZilchTodo("Make sure we traverse the added class");
@@ -997,49 +1051,6 @@ namespace Zilch
             }
             else
             {
-              // The resolved type arguments
-              Array<Constant> templateInstanceArguments;
-              templateInstanceArguments.Resize(dataType->TemplateArguments.Size());
-
-              // Loop through all the given template instance arguments (the actual types)
-              for (size_t i = 0; i < dataType->TemplateArguments.Size(); ++i)
-              {
-                // Get the template argument
-                SyntaxNode* templateArgument = dataType->TemplateArguments[i];
-                
-                // This node should either be a syntax type or a constant
-                SyntaxType* templateTypeArgument = Type::DynamicCast<SyntaxType*>(templateArgument);
-                ValueNode* constantArgument = Type::DynamicCast<ValueNode*>(templateArgument);
-
-                // Attempt to retrieve it as a valid type (this could be a constant instead...)
-                if (templateTypeArgument != nullptr)
-                {
-                  // If we got no type back, we failed to instantiate this template
-                  Type* resolvedType = this->RetrieveType(templateTypeArgument, location);
-                  if (resolvedType == ZilchTypeId(void))
-                    return;
-
-                  // Store the type in our array of resolved types...
-                  templateInstanceArguments[i] = resolvedType;
-                }
-                // If this is a constant (we still have to be sure the user didn't pass a name reference in)
-                else if (constantArgument != nullptr)
-                {
-                  // Arguments cannot be identifiers (we should probably make a separate LiteralNode)
-                  if (constantArgument->Value.TokenId == Grammar::LowerIdentifier)
-                    return this->ErrorAt(templateArgument, ErrorCode::TemplateArgumentsMustBeConstantsOrTypes);
-
-                  // Resolve the node into a constant and pass that to the template
-                  Constant constant = this->ValueNodeToConstant(constantArgument);
-                  templateInstanceArguments[i] = constant;
-                }
-                // Otherwise, we have no idea what this is (maybe the user is trying to use folding?)
-                else
-                {
-                  return this->ErrorAt(templateArgument, ErrorCode::TemplateArgumentsMustBeConstantsOrTypes);
-                }
-              }
-
               // Attempt to instantiate the template
               InstantiatedTemplate instantiatedTemplate = this->Builder->InstantiateTemplate(baseName, templateInstanceArguments, *this->Dependencies);
 
@@ -1645,27 +1656,6 @@ namespace Zilch
     // Grab the function that was created above in 'SetupGenericFunction'
     Function* function = node->DefinedFunction;
 
-    // Walk up the base class hierarchy to find a method of the same name and signature that we may be overriding
-    if (node->Virtualized == VirtualMode::Overriding)
-    {
-      Function* baseFunction = nullptr;
-
-      BoundType* baseType = function->Owner->BaseType;
-      if (baseType != nullptr)
-      {
-        Function* foundFunction = baseType->FindFunction(function->Name, function->FunctionType, FindMemberOptions::None);
-        if (foundFunction != nullptr && foundFunction->IsVirtual)
-        {
-          baseFunction = foundFunction;
-        }
-      }
-
-      if (baseFunction == nullptr)
-      {
-        return ErrorAt(node, ErrorCode::MustOverrideBaseClassFunction);
-      }
-    }
-
     // If this is a normal function (not an extension function...)
     if (node->ExtensionOwner == nullptr)
     {
@@ -1962,6 +1952,29 @@ namespace Zilch
   void Syntaxer::CheckAndPushFunction(FunctionNode*& node, TypingContext* context)
   {
     this->PreventNameHiddenBaseMembers(node->DefinedFunction);
+
+    // Walk up the base class hierarchy to find a method of the same name and signature that we may be overriding
+    if (node->Virtualized == VirtualMode::Overriding)
+    {
+      Function* function = node->DefinedFunction;
+      Function* baseFunction = nullptr;
+
+      BoundType* baseType = function->Owner->BaseType;
+      if (baseType != nullptr)
+      {
+        Function* foundFunction = baseType->FindFunction(function->Name, function->FunctionType, FindMemberOptions::None);
+        if (foundFunction != nullptr && foundFunction->IsVirtual)
+        {
+          baseFunction = foundFunction;
+        }
+      }
+
+      if (baseFunction == nullptr)
+      {
+        return ErrorAt(node, ErrorCode::MustOverrideBaseClassFunction);
+      }
+    }
+
     if (this->Errors.WasError)
       return;
     return PushFunctionHelper<GenericFunctionNode>(node, context, nullptr);

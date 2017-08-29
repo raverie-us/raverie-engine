@@ -1,0 +1,67 @@
+[Version:1]
+Shortcuts 
+{
+	ShortcutSetEntry 
+	{
+		var Name = "ObjectRotateTool"
+		var ShortcutSet = Array 
+		{
+			ShortcutEntry 
+			{
+				var Index = 0
+				var Name = "TempSnapping"
+				var Shortcut = "Shift (Hold) "
+				var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
+			}
+		}
+	}
+	ShortcutSetEntry 
+	{
+		var Name = "ObjectScaleTool"
+		var ShortcutSet = Array 
+		{
+			ShortcutEntry 
+			{
+				var Index = 0
+				var Name = "OffAxesScale"
+				var Shortcut = "Ctrl + Drag "
+				var Description = "When dragging one of the three main axes - scale by the drag amount on the other two, non-drag axes, and not the drag axis itself."
+			}
+			ShortcutEntry 
+			{
+				var Index = 1
+				var Name = "TempSnapping"
+				var Shortcut = "Shift (Hold) "
+				var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
+			}
+		}
+	}
+	ShortcutSetEntry 
+	{
+		var Name = "ObjectTranslateTool"
+		var ShortcutSet = Array 
+		{
+			ShortcutEntry 
+			{
+				var Index = 0
+				var Name = "CopySelection"
+				var Shortcut = "Ctrl + Drag "
+				var Description = "Duplicate all objects in the current selection. Then, make the duplicates the current selection and target of the TranslateTool."
+			}
+			ShortcutEntry 
+			{
+				var Index = 1
+				var Name = "SnapToSurface"
+				var Shortcut = "V + Drag (Center Square) "
+				var Description = "Snap the center of the translate tool to the surface being hovered over by the mouse cursor. Thereby affecting all target-objects of the TranslateTool."
+			}
+			ShortcutEntry 
+			{
+				var Index = 2
+				var Name = "TempSnapping"
+				var Shortcut = "Shift (Hold) "
+				var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
+			}
+		}
+	}
+}

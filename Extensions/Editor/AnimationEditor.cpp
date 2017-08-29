@@ -1192,7 +1192,7 @@ void AnimationEditor::CreateKeyFrameAtPlayHead(Property* property,
                                               property->Name);
 
   // If the property type has changed, notify the user and don't do anything
-  if(property->PropertyType != propertyTrack->mPropertyTypeId)
+  if(property->PropertyType != propertyTrack->mPropertyType)
   {
     String message = String::Format("The property '%s' has changed types.",
                                     propertyTrack->Path.c_str());

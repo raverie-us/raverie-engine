@@ -12,6 +12,8 @@
 
 #define WAVE_VOLUME 0.5f
 
+struct OpusDecoder;
+
 namespace Audio
 {
   //------------------------------------------------------------------------------------- Frame Data
@@ -62,10 +64,6 @@ namespace Audio
     virtual void GetBuffer(float* buffer, const unsigned frameIndex, const unsigned numberOfSamples) = 0;
     // Returns the number of audio channels
     virtual unsigned GetChannels() = 0;
-    // The sample rate of this asset's audio data
-    virtual unsigned GetSampleRate() = 0;
-    // The total number of samples in this asset's data
-    virtual unsigned GetNumberOfSamples() = 0;
     // The total number of audio frames in this asset's data
     virtual unsigned GetNumberOfFrames() = 0;
     // Returns true if this asset is streaming
@@ -91,8 +89,8 @@ namespace Audio
 
   //-------------------------------------------------------------------------- Sound Asset From File
 
-  class SamplesFromFile;
-
+  class FileDecoder;
+  
   class SoundAssetFromFile : public SoundAssetNode
   {
   public:
@@ -103,10 +101,6 @@ namespace Audio
     FrameData GetFrame(const unsigned frameIndex) override;
     // Fills the provided buffer with samples, starting at the specified index
     void GetBuffer(float* buffer, const unsigned frameIndex, const unsigned numberOfSamples) override;
-    // The sample rate of this asset's audio data
-    unsigned GetSampleRate() override;
-    // The total number of samples in this asset's data
-    unsigned GetNumberOfSamples() override;
     // The total number of audio frames in this asset's data
     unsigned GetNumberOfFrames() override;
     // Returns true if this asset is streaming
@@ -117,8 +111,6 @@ namespace Audio
     float GetLengthOfFile();
     // Returns the number of channels in the audio data
     unsigned GetChannels() override;
-    // Returns the type of the audio file
-    AudioFileTypes GetFileType();
         
   private:
     ~SoundAssetFromFile();
@@ -131,19 +123,29 @@ namespace Audio
     float FileLength;
     // The number of channels in the audio data
     unsigned Channels;
-    // The sample rate of the audio data
-    unsigned SampleRate;
     // The number of audio frames in the audio data
     unsigned FrameCount;
-    // Pointer to the object used to access and decode the audio data
-    SamplesFromFile* FileData;
-    // The type of the file
-    AudioFileTypes Type;
+    // Pointer to the decoder object used by this asset
+    FileDecoder* Decoder;
+    // The index of the first undecoded sample (the first index that can't be used yet)
+    unsigned UndecodedSamplesIndex;
+    // The buffer of decoded samples
+    float* Samples;
+    // If streaming, keeps track of previous samples
+    unsigned PreviousBufferSamples;
+    // The next buffer of decoded streamed samples
+    float* NextStreamedSamples;
+    // If true, the NextStreamedSamples buffer needs to be filled out
+    bool NeedSecondBuffer;
+    // Used to check when to get a decoded packet
+    unsigned IndexCheck;
 
     // Returns false if this is a streaming asset and there is already an instance associated with it
     bool OkayToAddInstance() override;
     // Resets the HasStreamingInstance variable
     void RemoveInstance() override;
+    // Checks if there is a decoded packet to copy into the Samples buffer
+    void CheckForDecodedPacket();
   };
 
 
@@ -161,10 +163,6 @@ namespace Audio
     void GetBuffer(float* buffer, const unsigned frameIndex, const unsigned numberOfSamples) override;
     // Returns the number of channels in the audio data
     unsigned GetChannels() override { return 1; }
-    // The sample rate of this asset's audio data
-    unsigned GetSampleRate() override;
-    // The total number of samples in this asset's data
-    unsigned GetNumberOfSamples() override;
     // The total number of audio frames in this asset's data
     unsigned GetNumberOfFrames() override;
     // Returns true if this asset is streaming

@@ -135,7 +135,7 @@ namespace Audio
       {
         Data->Pausing = true;
         Data->InterpolatingVolume = true;
-        Data->VolumeInterpolator.SetValues(1.0f, 0.0f, (unsigned)(0.02f * gAudioSystem->SystemSampleRate));
+        Data->VolumeInterpolator.SetValues(1.0f, 0.0f, (unsigned)(0.02f * AudioSystemInternal::SampleRate));
       }
     }
   }
@@ -156,7 +156,7 @@ namespace Audio
         Data->Pausing = false;
         Data->InterpolatingVolume = true;
         Data->VolumeInterpolator.SetValues(Data->VolumeInterpolator.GetCurrentValue(), 1.0f, 
-          (unsigned)(0.02f * gAudioSystem->SystemSampleRate));
+          (unsigned)(0.02f * AudioSystemInternal::SampleRate));
       }
     }
   }
@@ -336,6 +336,9 @@ namespace Audio
   void EmitterNode::CalculateData(EmitterDataPerListener* data, Math::Vec3& relativePosition,
     ListenerNode* listener, const unsigned numberOfChannels)
   {
+    if (!Threaded)
+      return;
+
     // Save reference for ease of use
     EmitterDataPerListener& listenerData = *data;
 

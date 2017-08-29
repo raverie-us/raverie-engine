@@ -35,7 +35,6 @@
 #include "SoundInstances.h"
 #include "Tags.h"
 
-#include "LockFreeQueue.hpp"
 #include "Interpolator.h"
 #include "Filters.h"
 #include "AudioInputOutput.h"
@@ -43,7 +42,8 @@
 
 #include "MIDI.h"
 #include "Modifiers.h"
-#include "FileAccess.h"
+#include "LockFreeQueue.hpp"
+#include "FileEncoder.h"
 #include "FileDecoder.h"
 #include "AudioSystemInterface.h"
 #include "AudioSystemInternal.h"

@@ -27,14 +27,6 @@ namespace Audio
     CustomCurveType
   };
 
-  // Types of files
-  enum AudioFileTypes
-  {
-    WAV_Type,
-    OGG_Type,
-    Other_Type
-  };
-
   struct MidiData
   {
     MidiData() : Channel(0), Value1(0), Value2(0) {}

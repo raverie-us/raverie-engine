@@ -355,6 +355,22 @@ bool String::DebugIsNodePointerInPool(String* str)
   return isInPool;
 }
 
+void String::ComputeStringStats(StringStats& stats)
+{
+  StringPool& pool = StringPool::GetInstance();
+  pool.mLock.Lock();
+  
+  stats.mTotalSize = 0;
+  stats.mTotalCount = pool.mPool.Size();
+
+  forRange(StringNode* node, pool.mPool.All())
+  {
+    stats.mTotalSize += node->Size;
+  }
+  
+  pool.mLock.Unlock();
+}
+
 void String::poolOrDeleteNode(StringNode* node)
 {
   ZeroStringStats(StringStats& stats = StringStats::GetInstance());

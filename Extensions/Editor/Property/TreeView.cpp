@@ -1532,7 +1532,7 @@ void TreeView::ShowRow(DataIndex& index)
   if(dataRow)
   {
     uint rowIndex = dataRow->mVisibleRowIndex;
-    float y = float(rowIndex+1) / (float)mRows.Size();
+    float y = float(rowIndex+1) / (float)mScrollAreaRows;
     mArea->SetScrolledPercentage(Vec2(0, y));
   }
 
@@ -2000,8 +2000,13 @@ void TreeView::UpdateTransform()
 
   uint activeRows = mRows.Size();
 
+  // scrolling past the end of our total list by half of the visible rows results in
+  // a consistent buffer area past the end. Subtracting a flat number gives varying
+  // results for the object view and library view.
+  mScrollAreaRows = activeRows + (visibleRows/2);
+
   // Update the client size with the size of all the rows
-  mArea->SetClientSize(Vec2(mSize.x, float(activeRows) * mRowHeight));
+  mArea->SetClientSize(Vec2(mSize.x, float(mScrollAreaRows) * mRowHeight));
 
   uint startVisible = uint(Math::Floor((-scrollOffset.y) / mRowHeight));
   startVisible = Math::Min(activeRows, startVisible);
