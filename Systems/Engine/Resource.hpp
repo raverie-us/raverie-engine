@@ -174,6 +174,7 @@ public:
     Resource* Front();
     void PopFront();
     bool Empty();
+    InheritRange& All() { return *this; }
 
     Resource* mCurrent;
   };

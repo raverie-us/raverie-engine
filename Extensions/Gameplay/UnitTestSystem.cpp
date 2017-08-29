@@ -212,12 +212,20 @@ ZilchDefineType(UnitTestMouseDropEvent, builder, type)
 void UnitTestMouseDropEvent::Serialize(Serializer& stream)
 {
   UnitTestBaseMouseEvent::Serialize(stream);
+  SerializeName(mFileIndex);
   mEvent.Serialize(stream);
 }
 
 //**************************************************************************************************
 void UnitTestMouseDropEvent::Execute(UnitTestSystem* system)
 {
+  // Update file paths to the cached files
+  for (uint i = 0; i < mEvent.Files.Size(); ++i)
+  {
+    String& fileName = mEvent.Files[i];
+    fileName = system->GetRecordedFile(mFileIndex, fileName);
+  }
+
   mEvent.Window = system->GetMainWindow();
   IntVec2 oldClientPosition = mEvent.ClientPosition;
   system->ExecuteBaseMouseEvent(this, &mEvent);
@@ -293,7 +301,8 @@ ZilchDefineType(UnitTestSystem, builder, type)
 UnitTestSystem::UnitTestSystem() :
   mMode(UnitTestMode::Stopped),
   mEmulatedCursor(nullptr),
-  mEventIndex(0)
+  mEventIndex(0),
+  mFilesIndex(0)
 {
   ConnectThisTo(this, Events::UnitTestRecordFileSelected, OnUnitTestRecordFileSelected);
   ConnectThisTo(this, Events::UnitTestPlayFileSelected, OnUnitTestPlayFileSelected);
@@ -587,6 +596,7 @@ OsWindow* UnitTestSystem::SubProcessSetupWindow()
 
   ProjectSettings* settings = Z::gEngine->GetProjectSettings();
   mRecordedEventsFile = FilePath::Combine(settings->ProjectFolder, "..", "Playback.data");
+  mRecordedFilesDirectory = FilePath::Combine(settings->ProjectFolder, "..", "Files");
   return window;
 }
 
@@ -745,6 +755,17 @@ void UnitTestSystem::HookMouseDropEvent(OsMouseDropEvent& event)
   UnitTestMouseDropEvent* testEvent = new UnitTestMouseDropEvent();
   testEvent->mEvent = event;
 
+  testEvent->mFileIndex = mFilesIndex;
+
+  forRange(String& file, testEvent->mEvent.Files)
+  {
+    RecordFile(file);
+
+    // Store the exact file names so we have the same order when we load them back in
+    file = FilePath::GetFileName(file);
+  }
+
+  ++mFilesIndex;
   RecordEvent(testEvent);
 }
 
@@ -807,6 +828,27 @@ void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, Os
 }
 
 //**************************************************************************************************
+void UnitTestSystem::RecordFile(StringParam sourceFile)
+{
+  String fileName = FilePath::GetFileName(sourceFile);
+
+  String subDirectory = String::Format("Files%d", mFilesIndex);
+  String destinationDirectory = FilePath::Combine(mRecordedFilesDirectory, subDirectory);
+  String destinationFile= FilePath::Combine(destinationDirectory, fileName);
+
+  CreateDirectoryAndParents(destinationDirectory);
+  CopyFile(destinationFile, sourceFile);
+}
+
+//**************************************************************************************************
+String UnitTestSystem::GetRecordedFile(uint fileIndex, StringParam fileName)
+{
+  String subDirectory = String::Format("Files%d", fileIndex);
+  String destinationDirectory = FilePath::Combine(mRecordedFilesDirectory, subDirectory);
+  return FilePath::Combine(destinationDirectory, fileName);
+}
+
+//**************************************************************************************************
 void UnitTestSystem::RecordEvent(UnitTestEvent* e)
 {
   FileMode::Enum fileMode = FileMode::Append;
@@ -863,4 +905,5 @@ UnitTestSystem* CreateUnitTestSystem()
 {
   return new UnitTestSystem();
 }
+
 }// namespace Zero

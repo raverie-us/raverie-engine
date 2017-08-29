@@ -61,6 +61,7 @@ public:
     HashMark Front();
     void PopFront();
     bool Empty();
+    range& All() { return *this; }
 
   private:
     friend class ScrollingGraph;

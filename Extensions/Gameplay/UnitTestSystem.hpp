@@ -90,6 +90,7 @@ public:
   void Execute(UnitTestSystem* system) override;
 
   OsMouseDropEvent mEvent;
+  uint mFileIndex;
 };
 
 class UnitTestKeyboardEvent : public UnitTestEvent
@@ -173,6 +174,8 @@ public:
   void RecordBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event);
   void ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, OsMouseEvent* event);
 
+  void RecordFile(StringParam file);
+  String GetRecordedFile(uint fileIndex, StringParam fileName);
   void RecordEvent(UnitTestEvent* e);
   void LoadRecordedEvents();
 
@@ -185,8 +188,10 @@ public:
 
   // The file we store our recorded data
   String mRecordedEventsFile;
+  String mRecordedFilesDirectory;
   uint mEventIndex;
   File mPlaybackFile;
+  uint mFilesIndex;
 };
 
 UnitTestSystem* CreateUnitTestSystem();
