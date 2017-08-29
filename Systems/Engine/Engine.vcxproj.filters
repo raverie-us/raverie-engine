@@ -374,6 +374,9 @@
       <Filter>Composition</Filter>
     </ClCompile>
     <ClCompile Include="AsyncProcess.cpp" />
+    <ClCompile Include="ShortcutsDoc.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.hpp">
@@ -672,6 +675,9 @@
       <Filter>Composition</Filter>
     </ClInclude>
     <ClInclude Include="AsyncProcess.hpp" />
+    <ClInclude Include="ShortcutsDoc.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertyTrack.inl">

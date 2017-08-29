@@ -7,526 +7,312 @@
 
 #include "Precompiled.h"
 #include "stb_vorbis.h"
+#include "opus.h"
 
 namespace Audio
 {
+  //--------------------------------------------------------------------------------- Decoded Packet
+
+  //************************************************************************************************
+  DecodedPacket::DecodedPacket(const DecodedPacket& copy) :
+    FrameCount(copy.FrameCount),
+    Samples(copy.Samples)
+  {
+
+  }
+
+  //************************************************************************************************
+  void DecodedPacket::ReleaseSamples()
+  {
+    if (Samples)
+    {
+      delete[] Samples;
+      Samples = nullptr;
+    }
+  }
+
   //----------------------------------------------------------------------------------- File Decoder
 
   //************************************************************************************************
-  FileDecoder::FileDecoder(AudioFileTypes type, const unsigned channels, const unsigned rate, 
-      const unsigned sampleBytes, const unsigned sampleCount, const unsigned dataBytes) :
-    RawSamples(nullptr),
-    BytesInBuffer(0),
-    BytesPerSample(sampleBytes),
-    DeleteOnFinishing(false),
-    Channels(channels),
-    TotalSamples(sampleCount),
-    SampleRate(rate),
-    FrameCount(sampleCount / channels),
-    DataSizeBytes(dataBytes),
-    SamplesToDecode(gAudioSystem->SystemSampleRate * channels / 2),
-    FileDataBeginPosition(0),
-    FinishedDecoding(true),
-    Type(type),
-    Streaming(false),
-    TotalBytesRead(0)
+  FileDecoder::FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming, 
+      SoundAssetFromFile* asset) :
+    Streaming(streaming),
+    DecodingTaskCount(0),
+    ParentAlive(this),
+    InputFileData(nullptr),
+    DataIndex(0),
+    FileName(fileName)
   {
-    StreamedBufferSizeInBytes = SamplesToDecode;
-    if (BytesPerSample > 0)
-      StreamedBufferSizeInBytes *= BytesPerSample;
+    // The constructor happens on the game thread
+
+    // Open the input file
+    Zero::File inputFile;
+    inputFile.Open(fileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+    // If not open, set the failed message and return
+    if (!inputFile.IsOpen())
+    {
+      status.SetFailed(Zero::String::Format("Unable to open audio file %s", fileName.c_str()));
+      return;
+    }
+
+    // Get the size of the file
+    long long size = inputFile.CurrentFileSize();
+    // Check for an invalid size
+    if (size < sizeof(FileHeader))
+    {
+      status.SetFailed(Zero::String::Format("Unable to read from audio file %s", fileName.c_str()));
+      return;
+    }
+
+    // Save the file size 
+    DataSize = (unsigned)size;
+
+    // If not streaming, create a buffer for all data and read it in
+    if (!Streaming)
+    {
+      InputFileData = new byte[DataSize];
+      inputFile.Read(status, InputFileData, DataSize);
+    }
+    // Otherwise create a buffer for the maximum packet size and read in the file header
+    else
+    {
+      InputFileData = new byte[FileEncoder::MaxPacketSize];
+      inputFile.Read(status, InputFileData, sizeof(FileHeader));
+    }
+
+    // If the read failed, delete the buffer and return
+    if (status.Failed())
+    {
+      delete[] InputFileData;
+      InputFileData = nullptr;
+      return;
+    }
+
+    // Read the file header from the input data
+    FileHeader header;
+    memcpy(&header, InputFileData, sizeof(header));
+    // Move the index forward
+    DataIndex += sizeof(header);
+
+    // If this isn't the right type of file, set the failed message, delete the buffer, and return
+    if (header.Name[0] != 'Z' || header.Name[1] != 'E')
+    {
+      status.SetFailed(Zero::String::Format("Audio file %s is an incorrect format", fileName.c_str()));
+      delete[] InputFileData;
+      InputFileData = nullptr;
+      return;
+    }
+
+    // Set the data variables
+    SamplesPerChannel = header.SamplesPerChannel;
+    Channels = header.Channels;
+
+    // Create a decoder for each channel
+    int error;
+    for (short i = 0; i < Channels; ++i)
+    {
+      Decoders[i] = opus_decoder_create(AudioSystemInternal::SampleRate, 1, &error);
+
+      // If there was an error creating the decoder, set the failed message and delete the buffer
+      if (error < 0)
+      {
+        status.SetFailed(Zero::String::Format("Error creating audio decoder: %s", opus_strerror(error)));
+
+        delete[] InputFileData;
+        InputFileData = nullptr;
+        return;
+      }
+    }
   }
 
   //************************************************************************************************
   FileDecoder::~FileDecoder()
   {
-    if (RawSamples)
-      delete[] RawSamples;
-  }
-
-  //************************************************************************************************
-  void FileDecoder::DecodeNextSamples(unsigned howManySamples)
-  {
-    LockObject.Lock();
-    FinishedDecoding = false;
-    LockObject.Unlock();
-
-    FrameSamples frame;
-    // Decode the desired number of samples, a frame at a time
-    for (unsigned i = 0; i < howManySamples && !IsFinished(); i += Channels)
+    // Destroy any alive decoders
+    for (short i = 0; i < Channels; ++i)
     {
-      // Get a frame of audio samples
-      DecodeFrame(frame.Samples);
-
-      // Add the samples to the buffer
-      for (unsigned j = 0; j < Channels; ++j)
-        DecodedSamples.PushBack(frame.Samples[j]);
+      if (Decoders[i])
+        opus_decoder_destroy(Decoders[i]);
     }
 
-    // Add the finished buffer to the queue
-    DecodedBuffers.Write(&DecodedSamples);
-
-    LockObject.Lock();
-    FinishedDecoding = true;
-    LockObject.Unlock();
-
-    // This will be true if the parent object has been deleted
-    if (DeleteOnFinishing)
-      delete this;
+    // If there is data in the buffer, delete it
+    if (InputFileData)
+      delete[] InputFileData;
   }
 
   //************************************************************************************************
-  void FileDecoder::SetStreaming(const Zero::String& fileName, const Zero::FilePosition beginPosition)
+  void FileDecoder::AddDecodingTask()
   {
-    Streaming = true;
-    FileDataBeginPosition = beginPosition;
-    FileName = fileName;
+    AtomicIncrement32(&DecodingTaskCount);
+
+    // Add the decoding task
+    gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodePacket, this));
   }
 
-  //------------------------------------------------------------------------------------ WAV Decoder
-
   //************************************************************************************************
-  void WavDecoder::DecodeFrame(float* samples)
+  void FileDecoder::DecodePacket()
   {
-    // Check if we've already decoded the whole file
-    if (IsFinished())
-      return;
-
-    for (unsigned i = 0; i < Channels; ++i)
+    // Remember that this function happens on the decoding thread
+    
+    // If no data, can't do anything
+    if (!InputFileData || DataIndex >= DataSize || (Streaming && !InputFile.IsOpen()))
     {
-      // Adjust index for bytes
-      unsigned adjIndex = DecodingIndex++ * BytesPerSample;
+      FinishDecodingPacket();
+      return;
+    }
 
-      // Translate 16 bit data to a float
-      if (BytesPerSample == 2)
-      {
-        // Get first byte
-        int sample = RawSamples[adjIndex];
-        // Get second byte
-        sample |= (int)RawSamples[adjIndex + 1] << 8;
-        // Account for negative numbers
-        if ((unsigned char)(RawSamples[adjIndex + 1] & 0x80) == 0x80)
-          sample |= 0xffff0000;
+    int frames;
+    Zero::Status status;
 
-        // Save normalized value
-        samples[i] = (float)sample / Normalize16Bit;
-      }
-      // Translate 24 bit data to a float
-      else if (BytesPerSample == 3)
+    // Get a packet for each channel
+    for (short i = 0; i < Channels; ++i)
+    {
+      PacketHeader packHead;
+
+      // Read in the packet header
+      if (!Streaming)
+        memcpy(&packHead, InputFileData + DataIndex, sizeof(packHead));
+      else
+        InputFile.Read(status, (byte*)&packHead, sizeof(packHead));
+
+      // Move the data index forward
+      DataIndex += sizeof(packHead);
+
+      ErrorIf(DataIndex + packHead.Size > DataSize);
+
+      // If not a valid packet, set frames to zero
+      if (packHead.Size == 0 || (packHead.Name[0] != 'p' || packHead.Name[1] != 'a'))
+        frames = 0;
+      else
       {
-        // Get first byte
-        int sample = RawSamples[adjIndex];
-        // Get next two bytes
-        memcpy(&sample, RawSamples + adjIndex, sizeof(char) * 3);
-        // Account for negative numbers
-        if (sample & 0x800000)
-          sample |= 0xff000000;
+        // If not streaming, decode the packet from the buffer
+        if (!Streaming)
+          frames = opus_decode_float(Decoders[i], InputFileData + DataIndex, packHead.Size,
+            DecodedPackets[i], FileEncoder::FrameSize, 0);
+        // Otherwise read in the data from the file before decoding
         else
-          sample &= 0x00ffffff;
+        {
+          InputFile.Read(status, InputFileData, packHead.Size);
 
-        // Save normalized value
-        samples[i] = (float)sample / Normalize24Bit;
+          frames = opus_decode_float(Decoders[i], InputFileData, packHead.Size,
+            DecodedPackets[i], FileEncoder::FrameSize, 0);
+        }
       }
+
+      // Move the data index forward
+      DataIndex += packHead.Size;
     }
-  }
 
-  //************************************************************************************************
-  bool WavDecoder::IsFinished()
-  {
-    return DecodingIndex >= BytesInBuffer / BytesPerSample;
-  }
+    // Add the decoded packets to the queue
+    QueueDecodedPackets(frames);
 
-  //************************************************************************************************
-  bool WavDecoder::GetStreamingBuffer()
-  {
-    Zero::Status status;
-    BytesInBuffer = StreamingFile.Read(status, RawSamples, StreamedBufferSizeInBytes);
-    TotalBytesRead += BytesInBuffer;
-
-    // Check if we're at the end of the file
-    if (BytesInBuffer == 0 || TotalBytesRead >= DataSizeBytes)
+    // If we've reached the end of the file, delete the data
+    if (DataIndex >= DataSize && !Streaming)
     {
-      // Reset the file to the beginning
-      StreamingFile.Seek(FileDataBeginPosition);
-      // Reset index to beginning of buffer
-      DecodingIndex = 0;
-      // Reset bytes read counter
-      TotalBytesRead = 0;
-
-      return true;
+      delete[] InputFileData;
+      InputFileData = nullptr;
     }
-    else
-    {
-      // Reset index to beginning of buffer
-      DecodingIndex = 0;
 
-      return false;
-    }
+    FinishDecodingPacket();
   }
 
   //************************************************************************************************
-  void WavDecoder::ResetStreamingFile()
+  bool FileDecoder::StreamIsOpen()
   {
-    TotalBytesRead = 0;
-    DecodingIndex = 0;
-    StreamingFile.Seek(FileDataBeginPosition);
-
-    Zero::Status status;
-    BytesInBuffer = StreamingFile.Read(status, RawSamples, StreamedBufferSizeInBytes);
-    TotalBytesRead += BytesInBuffer;
+    return InputFile.IsOpen();
   }
 
   //************************************************************************************************
-  void WavDecoder::CloseStreamingFile()
+  void FileDecoder::ResetStream()
   {
-    if (StreamingFile.IsOpen())
-    {
-      StreamingFile.Close();
-    }
-  }
-
-  //************************************************************************************************
-  void WavDecoder::ReopenStreamingFile()
-  {
-    StreamingFile.Open(FileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
-
-    ErrorIf(!StreamingFile.IsOpen(), "Audio Engine: Problem re-opening streaming file");
-
-    TotalBytesRead = 0;
-    DecodingIndex = 0;
-    BytesInBuffer = 0;
-  }
-
-  //************************************************************************************************
-  bool WavDecoder::StreamingFileIsOpen()
-  {
-    return StreamingFile.IsOpen();
-  }
-
-  //------------------------------------------------------------------------------------ Ogg Decoder
-
-  //************************************************************************************************
-  OggDecoder::~OggDecoder()
-  {
-    if (OggData)
-      stb_vorbis_close(OggData);
-  }
-
-  //************************************************************************************************
-  void OggDecoder::SetFile(void* file)
-  {
-    OggData = (stb_vorbis*)file;
-  }
-
-  //************************************************************************************************
-  void OggDecoder::DecodeFrame(float* samples)
-  {
-    // Already read entire file or file isn't open
-    if (IsFinished() || !OggData)
+    if (!InputFile.IsOpen())
       return;
 
-    // No more samples available, read another chunk
-    if (SampleIndex >= SamplesRead)
+    // Remove any current packets from the queue
+    while (AtomicCompareExchange32(&DecodingTaskCount, 0, 0) != 0)
     {
-      SampleArray = nullptr;
-      SampleIndex = 0;
-
-      SamplesRead = stb_vorbis_get_frame_float(OggData, nullptr, &SampleArray);
-      TotalSamplesRead += SamplesRead * Channels;
-    }
-
-    // If there are samples, copy them into array to return
-    if (SampleArray)
-    {
-      for (unsigned i = 0; i < Channels; ++i)
+      DecodedPacket packet;
+      while (DecodedPacketQueue.Read(packet))
       {
-        samples[i] = SampleArray[i][SampleIndex];
+
       }
-      ++SampleIndex;
     }
 
-  }
+    // Set the file to the start of the data
+    InputFile.Seek(sizeof(FileHeader));
+    // Set the index
+    DataIndex = sizeof(FileHeader);
 
-  //************************************************************************************************
-  bool OggDecoder::IsFinished()
-  {
-    return TotalSamplesRead - (SamplesRead - SampleIndex) >= TotalSamples;
-  }
+    // Destroy the current decoders (since they rely on history for decoding, they can't 
+    // continue from the beginning of the file)
+    for (short i = 0; i < Channels; ++i)
+      opus_decoder_destroy(Decoders[i]);
 
-  //************************************************************************************************
-  bool OggDecoder::GetStreamingBuffer()
-  {
-    // Check if we are at the end of the file
-    if (SamplesRead == 0 || TotalSamplesRead >= TotalSamples)
-    {
-      ResetStreamingFile();
-
-      return true;
-    }
-    else
-      return false;
-  }
-
-  //************************************************************************************************
-  void OggDecoder::ResetStreamingFile()
-  {
-    stb_vorbis_seek_start(OggData);
-    TotalSamplesRead = 0;
-    SamplesRead = 0;
-    SampleIndex = 0;
-  }
-
-  //************************************************************************************************
-  void OggDecoder::CloseStreamingFile()
-  {
-    if (Streaming && OggData)
-    {
-      stb_vorbis_close(OggData);
-      OggData = nullptr;
-
-      SamplesRead = 0;
-      TotalSamplesRead = 0;
-      SampleIndex = 0;
-    }
-  }
-
-  //************************************************************************************************
-  void OggDecoder::ReopenStreamingFile()
-  {
+    // Create new decoders
     int error;
-    OggData = stb_vorbis_open_filename(const_cast<char*>(FileName.c_str()), &error, nullptr);
+    for (short i = 0; i < Channels; ++i)
+      Decoders[i] = opus_decoder_create(AudioSystemInternal::SampleRate, 1, &error);
 
-    ErrorIf(!OggData, "Audio Engine: Problem re-opening streaming OGG file");
+    AddDecodingTask();
   }
 
   //************************************************************************************************
-  bool OggDecoder::StreamingFileIsOpen()
+  void FileDecoder::CloseStream()
   {
-    return OggData != nullptr;
-  }
+    if (InputFile.IsOpen())
+      InputFile.Close();
 
-  //------------------------------------------------------------------------------ Samples From File
 
-  //************************************************************************************************
-  SamplesFromFile::SamplesFromFile(FileDecoder* decoder) :
-    DecodedSamples(nullptr),
-    LastAvailableIndex(0),
-    DecodingData(decoder),
-    WaitingForDecoder(false),
-    PreviousBufferSamples(0),
-    ResetPreviousSamples(false)
-  {
-
-  }
-
-  //************************************************************************************************
-  SamplesFromFile::~SamplesFromFile()
-  {
-    // Check if we're waiting for the decoder and it's not finished
-    // (have to let it finish executing function on decoder thread)
-    if (WaitingForDecoder)
+    DecodedPacket packet;
+    while (DecodedPacketQueue.Read(packet))
     {
-      DecodingData->LockObject.Lock();
-      // Not finished yet, mark to delete when done
-      if (!DecodingData->FinishedDecoding)
+
+    }
+  }
+
+  //************************************************************************************************
+  void FileDecoder::OpenStream()
+  {
+    InputFile.Open(FileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+
+    ResetStream();
+  }
+
+  //************************************************************************************************
+  void FileDecoder::QueueDecodedPackets(int numberOfFrames)
+  {
+    // Create the DecodedPacket object
+    DecodedPacket newPacket;
+    // Set the number of frames
+    newPacket.FrameCount = numberOfFrames;
+    // Create the buffer for the samples
+    newPacket.Samples = new float[newPacket.FrameCount * Channels];
+
+    // Step through each frame of samples
+    for (unsigned frame = 0, index = 0; frame < newPacket.FrameCount; ++frame)
+    {
+      // Copy the sample from each channel to the interleaved sample buffer
+      for (short channel = 0; channel < Channels; ++channel, ++index)
       {
-        DecodingData->DeleteOnFinishing = true;
-        DecodingData->LockObject.Unlock();
-      }
-      // Finished, can delete now
-      else
-        delete DecodingData;
-    }
-    // Not waiting, go ahead and delete it
-    else
-      delete DecodingData;
+        newPacket.Samples[index] = DecodedPackets[channel][frame];
 
-    if (DecodedSamples)
-      delete[] DecodedSamples;
-  }
-
-  //************************************************************************************************
-  float SamplesFromFile::operator[](const unsigned index)
-  {
-    // Check if there are decoded samples available 
-    CheckForDecodedSamples();
-
-    // Check if we are streaming and need a new buffer
-    CheckForNeedingStreamedBuffer(index);
-
-    // If not streaming and index is available, return sample at that index
-    if (!DecodingData->Streaming)
-    {
-      if (index > LastAvailableIndex)
-        return 0.0f;
-      else
-        return DecodedSamples[index];
-    }
-    // If streaming and index is available, return sample at adjusted index
-    else
-    {
-      if (index - PreviousBufferSamples >= StreamedBuffer.Size())
-        return 0.0f;
-      else
-        return StreamedBuffer[index - PreviousBufferSamples];
-    }
-  }
-
-  //************************************************************************************************
-  void SamplesFromFile::SetBuffer(byte* rawSampleBuffer, const unsigned bufferSizeInBytes)
-  {
-    DecodingData->RawSamples = rawSampleBuffer;
-    DecodingData->BytesInBuffer = bufferSizeInBytes;
-    DecodingData->TotalBytesRead = bufferSizeInBytes;
-
-    if (!DecodingData->Streaming)
-      DecodedSamples = new float[DecodingData->TotalSamples];
-
-    if (!DecodingData->Streaming)
-    {
-      WaitingForDecoder = true;
-
-      gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextSamples, DecodingData,
-        DecodingData->SamplesToDecode));
-    }
-  }
-
-  //************************************************************************************************
-  Audio::AudioFileTypes SamplesFromFile::GetFileType()
-  {
-    return DecodingData->Type;
-  }
-
-  //************************************************************************************************
-  void SamplesFromFile::CloseStreamingFile()
-  {
-    if (!DecodingData->Streaming)
-      return;
-
-    // Clear out any existing decoded buffers
-    if (WaitingForDecoder)
-    {
-      Zero::Array<float>* buffer;
-      while (!DecodingData->DecodedBuffers.Read(buffer))
-      {
-
-      }
-
-      WaitingForDecoder = false;
-    }
-
-    DecodingData->CloseStreamingFile();
-  }
-
-  //************************************************************************************************
-  void SamplesFromFile::ReopenStreamingFile()
-  {
-    if (!DecodingData->Streaming || DecodingData->StreamingFileIsOpen())
-      return;
-
-    DecodingData->ReopenStreamingFile();
-
-    ResetStreamingFile();
-  }
-
-  //************************************************************************************************
-  void SamplesFromFile::CheckForDecodedSamples()
-  {
-    // Are we waiting for the decoder?
-    if (WaitingForDecoder)
-    {
-      Zero::Array<float>* buffer;
-      // Check if there is a finished buffer
-      if (DecodingData->DecodedBuffers.Read(buffer))
-      {
-        if (!DecodingData->Streaming)
-        {
-          // Copy decoded samples 
-          memcpy(DecodedSamples + LastAvailableIndex, buffer->Data(), sizeof(float) * buffer->Size());
-          // Advance last available index
-          LastAvailableIndex += buffer->Size();
-
-          // Are there more samples to decode?
-          if (LastAvailableIndex < DecodingData->TotalSamples)
-          {
-            // Clear the buffer before it's reused
-            buffer->Clear();
-            // Send another task to the decoding thread
-            gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextSamples, 
-              DecodingData, DecodingData->SamplesToDecode));
-          }
-          else
-            WaitingForDecoder = false;
-        }
-        else
-        {
-          // Move the buffer's data (clears the other array)
-          NextStreamedBuffer = Zero::MoveReference<Zero::Array<float>>(*buffer);
-
-          WaitingForDecoder = false;
-        }
-      }
-    }
-  }
-
-  //************************************************************************************************
-  void SamplesFromFile::CheckForNeedingStreamedBuffer(const unsigned index)
-  {
-    // Are we streaming, not waiting, and at the end of the buffer?
-    if (DecodingData->Streaming && DecodingData->StreamingFileIsOpen() && !WaitingForDecoder 
-      && (index < PreviousBufferSamples || index - PreviousBufferSamples >= StreamedBuffer.Size()))
-    {
-      // Move the next buffer to the current buffer
-      if (ResetPreviousSamples)
-      {
-        PreviousBufferSamples = 0;
-        ResetPreviousSamples = false;
-      }
-      else
-        PreviousBufferSamples += StreamedBuffer.Size();
-
-      // Move the buffer's data (clears the other array)
-      StreamedBuffer = Zero::MoveReference<Zero::Array<float>>(NextStreamedBuffer);
-
-      ResetPreviousSamples = DecodingData->GetStreamingBuffer();
-
-      DecodingData->FinishedDecoding = false;
-
-      // Mark that we are now waiting
-      WaitingForDecoder = true;
-      // Send another task to the decoding thread
-      gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextSamples, 
-        DecodingData, DecodingData->SamplesToDecode));
-    }
-  }
-
-  //************************************************************************************************
-  void SamplesFromFile::ResetStreamingFile()
-  {
-    if (!DecodingData->Streaming)
-      return;
-
-    // Clear out any existing decoded buffers
-    if (WaitingForDecoder)
-    {
-      Zero::Array<float>* buffer;
-      while (!DecodingData->DecodedBuffers.Read(buffer))
-      {
-
+        ErrorIf(newPacket.Samples[index] < -1.0f || newPacket.Samples[index] > 1.0f);
       }
     }
 
-    // Clear the saved buffers of samples
-    StreamedBuffer.Clear();
-    NextStreamedBuffer.Clear();
+    // Add the DecodedPacket object to the queue
+    DecodedPacketQueue.Write(newPacket);
+  }
 
-    ResetPreviousSamples = true;
+  //************************************************************************************************
+  void FileDecoder::FinishDecodingPacket()
+  {
+    AtomicDecrement32(&DecodingTaskCount);
 
-    DecodingData->ResetStreamingFile();
-
-    // Send another task to the decoding thread
-    gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodeNextSamples, 
-      DecodingData, DecodingData->SamplesToDecode));
-    WaitingForDecoder = true;
+    // If the pointer is null, this object should be deleted 
+    // (sets ParentAlive to null if it's currently null, returns original value which would be null)
+    if (AtomicCompareExchangePointer(&ParentAlive, nullptr, nullptr) == nullptr)
+      delete this;
   }
 
 }

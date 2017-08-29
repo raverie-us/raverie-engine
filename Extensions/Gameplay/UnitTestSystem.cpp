@@ -327,17 +327,17 @@ void UnitTestSystem::Initialize(SystemInitializer& initializer)
   // Is the unit test recording a replay or 
   if (unitTestSystemActive)
   {
+    // For determinism we lie about the frame-time that has passed to
+    // the entire engine (it becomes a fixed value of 1/60)
+    // Also force resource ids to be deterministic...
+    gDeterministicMode = true;
+
     // Hook the OsShell update so we can process input events at the same time
     Z::gEngine->has(OsShell)->mOsShellHook = this;
 
     // When recording or playing we do not want the config to
     // be saved out since we launched with the 'safe' option
     MainConfig::sConfigCanSave = false;
-
-    // For determinism we lie about the frame-time that has passed to
-    // the entire engine (it becomes a fixed value of 1/60)
-    TimeSystem* timeSystem = Z::gEngine->has(TimeSystem);
-    timeSystem->mUseFixedDt = true;
   }
 }
 

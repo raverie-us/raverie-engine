@@ -95,6 +95,8 @@ ZilchDefineType(SpriteData, builder, type)
 
 bool SpriteSourceBuilder::NeedsBuilding(BuildOptions& options)
 {
+  mOwner->EditMode = ContentEditMode::ResourceObject;
+
   if(DirectBuilderComponent::NeedsBuilding(options))
     return true;
 

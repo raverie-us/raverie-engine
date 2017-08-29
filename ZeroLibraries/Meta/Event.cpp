@@ -207,7 +207,8 @@ void EventDispatchList::Dispatch(Event* event)
     //safe iterate
     connection = mConnections.Next(connection);
 
-    if(CheckEventReceiveAsConnectedType)
+    // Do not check if event is already invalid, EventType could have been deleted due to a script recompile.
+    if(CheckEventReceiveAsConnectedType && !current->Flags.IsSet(ConnectionFlags::Invalid))
     {
       // We should only ever dispatch an event that is either more derived or the exact same as the received event type
       if(!sentEventType->IsA(current->EventType))
@@ -232,7 +233,9 @@ void EventDispatchList::Dispatch(Event* event)
       delete current;
     }
     else
+    {
       current->Invoke(event);
+    }
 
     if(event->mTerminated)
       break;

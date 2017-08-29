@@ -37,10 +37,6 @@ namespace Audio
     // Sets the number of channels used by this node for output
     void SetNumberOfChannels(const unsigned channels);
 
-    // Haven't made resampling work completely cleanly yet
-    //unsigned GetSampleRate() { return SampleRate; }
-    //void SetSampleRate(unsigned rate);
-
   private:
     ~InputNode();
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
@@ -69,9 +65,6 @@ namespace Audio
     unsigned SampleRate;
     unsigned TotalSamplesInBuffers;
     unsigned SamplesInExtraBuffers;
-    float ResampleFrameFactor;
-    bool Resampling;
-    double ResampleFrameIndex;
     Zero::Array<float> SamplesThisFrame;
 
     unsigned MinimumSamplesNeededInBuffers;

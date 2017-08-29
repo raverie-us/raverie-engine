@@ -212,6 +212,9 @@ namespace Audio
   //************************************************************************************************
   void EqualizerNode::RemoveListener(ListenerNode* listener)
   {
+    if (!Threaded)
+      return;
+
     if (FiltersPerListener.FindValue(listener, nullptr))
     {
       // If there is still another listener, we need to combine the history of the filters to avoid clicks

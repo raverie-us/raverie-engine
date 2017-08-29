@@ -191,7 +191,8 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
       // METAREFACTOR - 0 param
       // We can only display methods with 0 parameters
       //if(function->HasOverloadWithNoParams)
-      node->mFunctions.PushBack(function);
+      if(function->FunctionType->Parameters.Empty())
+        node->mFunctions.PushBack(function);
     }
   }
 

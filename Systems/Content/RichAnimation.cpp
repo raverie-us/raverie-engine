@@ -247,7 +247,7 @@ TrackNode::TrackNode()
   mTargetMeta = nullptr;
   mDisplayColor = Vec4::cZero;
   mDisabled = false;
-  mPropertyTypeId = ZilchTypeId(void);
+  mPropertyType = ZilchTypeId(void);
   Type = TrackType::Invalid;
 }
 
@@ -282,7 +282,7 @@ TrackNode::TrackNode(StringParam name, StringParam path, TrackType::Enum type,
   mTargetMeta = targetMeta;
   Id = cInvalidTrackId;
   mDisabled = false;
-  mPropertyTypeId = ZilchTypeId(void);
+  mPropertyType = ZilchTypeId(void);
 
   Parent = parent;
   mRichAnimation = richAnim;
@@ -302,32 +302,29 @@ TrackNode::TrackNode(StringParam name, StringParam path, TrackType::Enum type,
 
     if (boundType != nullptr)
     {
-      mPropertyTypeName = boundType->Name;
-      mPropertyTypeId = boundType;
+      mPropertyType = boundType;
     }
     else
     {
       Error("The property we tried to animate was not a BoundType (may be because of the meta refactor)");
-      mPropertyTypeName = cInvalidTypeName;
-      mPropertyTypeId = ZilchTypeId(void);
+      mPropertyType = ZilchTypeId(void);
     }
   }
   // Sub-property types are always floats
   else if(type == TrackType::SubProperty)
   {
     BoundType* boundType = ZilchTypeId(float);
-    mPropertyTypeName = boundType->Name;
-    mPropertyTypeId = boundType;
+    mPropertyType = boundType;
   }
 
   /// Add sub tracks if we're a vector type
-  if(mPropertyTypeId == ZilchTypeId(Vec2))
+  if(mPropertyType == ZilchTypeId(Vec2))
     CreateSubTracks(this, "XY", richAnim);
-  else if (mPropertyTypeId == ZilchTypeId(Vec3))
+  else if (mPropertyType == ZilchTypeId(Vec3))
     CreateSubTracks(this, "XYZ", richAnim);
-  else if (mPropertyTypeId == ZilchTypeId(Vec4))
+  else if (mPropertyType == ZilchTypeId(Vec4))
     CreateSubTracks(this, "RGBA", richAnim);
-  else if (mPropertyTypeId == ZilchTypeId(Quat))
+  else if (mPropertyType == ZilchTypeId(Quat))
     // Quaternions will be edited with Euler angle curves, so we only need XYZ
     CreateSubTracks(this, "XYZ", richAnim);
 }
@@ -341,7 +338,27 @@ void TrackNode::Serialize(Serializer& stream)
   SerializeNameDefault(mDisabled, false);
   // Serialized to support old versions. The PropertyTypeName will always
   // get priority over the type id
-  SerializeNameDefault(mPropertyTypeName, cInvalidTypeName);
+  stream.SerializeFieldDefault("PropertyTypeName", mPropertyType.mName, cInvalidTypeName);
+
+  // Update from legacy types
+  if(stream.GetMode() == SerializerMode::Loading)
+  {
+    if (mPropertyType.mName == "float")
+      mPropertyType = ZilchTypeId(float);
+    else if (mPropertyType.mName == "bool")
+      mPropertyType = ZilchTypeId(bool);
+    else if (mPropertyType.mName == "uint")
+      mPropertyType = ZilchTypeId(int);
+    else if (mPropertyType.mName == "Vec2")
+      mPropertyType = ZilchTypeId(Vec2);
+    else if (mPropertyType.mName == "Vec3")
+      mPropertyType = ZilchTypeId(Vec3);
+    else if (mPropertyType.mName == "Vec4")
+      mPropertyType = ZilchTypeId(Vec4);
+    else if (mPropertyType.mName == "Quat")
+      mPropertyType = ZilchTypeId(Quat);
+  }
+
   SerializeName(mKeyFrames);
   SerializeName(Children);
 }
@@ -353,18 +370,6 @@ void TrackNode::Initialize(RichAnimation* richAnimation, TrackNode* parent)
   mRichAnimation = richAnimation;
 
   mRichAnimation->RegisterTrack(this);
-
-  // If the property type name is invalid, try 
-  if(mPropertyTypeName == cInvalidTypeName)
-  {
-    // Look up the property type name
-    mPropertyTypeName = mPropertyTypeId->Name;
-  }
-  else
-  {
-    // Look up the property type id
-    mPropertyTypeId = MetaDatabase::GetInstance()->FindType(mPropertyTypeName);
-  }
   
   // For now, we only need the target meta for property tracks.
   // The parent of a property track will always be the component, so look
@@ -375,16 +380,16 @@ void TrackNode::Initialize(RichAnimation* richAnimation, TrackNode* parent)
 
     // Look up the type id only if we were given an invalid from the 
     // data file. This should be for old rich animation files
-    if(mPropertyTypeId == ZilchTypeId(void) && mTargetMeta)
+    if(mPropertyType == ZilchTypeId(void) && mTargetMeta)
     {
       if(Property* prop = mTargetMeta->GetProperty(Name))
       {
-        mPropertyTypeId = Type::GetBoundType(prop->PropertyType);
+        mPropertyType = Type::GetBoundType(prop->PropertyType);
 
-        if (mPropertyTypeId == nullptr)
+        if (mPropertyType == nullptr)
         {
           Error("The property we tried to animate was not a BoundType (may be because of the meta refactor)");
-          mPropertyTypeId = ZilchTypeId(void);
+          mPropertyType = ZilchTypeId(void);
         }
       }
     }
@@ -395,12 +400,7 @@ void TrackNode::Initialize(RichAnimation* richAnimation, TrackNode* parent)
   }
   else if(Type == TrackType::SubProperty)
   {
-    // The property id should always be a float
-    ErrorIf(mPropertyTypeId != ZilchTypeId(float) &&
-            mPropertyTypeId != ZilchTypeId(void),
-            "Invalid type id for sub-property track.");
-
-    mPropertyTypeId = ZilchTypeId(float);
+    mPropertyType = ZilchTypeId(float);
   }
 
   // Initialize all children tracks
@@ -550,18 +550,18 @@ Any TrackNode::SampleTrack(float t)
 
   /// Float types can sample the baked curve directly, but vector types
   /// need to sample each SubProperty track to build a final sampled vector type
-  if (mPropertyTypeId == ZilchTypeId(float))
+  if (mPropertyType == ZilchTypeId(float))
   {
     BakePiecewiseFunction();
     return mBakedCurve.Sample(t);
   }
-  else if (mPropertyTypeId == ZilchTypeId(Vec2))
+  else if (mPropertyType == ZilchTypeId(Vec2))
     return SubPropertySample<Vec2, 2>(this, t);
-  else if (mPropertyTypeId == ZilchTypeId(Vec3))
+  else if (mPropertyType == ZilchTypeId(Vec3))
     return SubPropertySample<Vec3, 3>(this, t);
-  else if (mPropertyTypeId == ZilchTypeId(Vec4))
+  else if (mPropertyType == ZilchTypeId(Vec4))
     return SubPropertySample<Vec4, 4>(this, t);
-  else if (mPropertyTypeId == ZilchTypeId(Quat))
+  else if (mPropertyType == ZilchTypeId(Quat))
     return SubPropertySample<Quat, 3>(this, t);
 
   // Sampling is currently only supported for float and vector types
@@ -609,7 +609,7 @@ Any TrackNode::SampleObject(Cog* animGraphObject)
     uint element = Parent->Children.FindIndex(this);
 
     // Sample the value at the index in the vector type
-    BoundType* parentType = Parent->mPropertyTypeId;
+    BoundType* parentType = Parent->mPropertyType;
     if (parentType == ZilchTypeId(Vec2))
       return SubSample<Vec2>(sample, element);
     else if(parentType == ZilchTypeId(Vec3))
@@ -678,10 +678,10 @@ TrackNode* TrackNode::IsValid(Cog* animGraphObject, Status& status)
         status.SetFailed(message);
       }
       // If the type has changed from the initial type the track was created with
-      else if(prop->PropertyType != mPropertyTypeId)
+      else if(prop->PropertyType != mPropertyType)
       {
         // The stored type could no longer exist (such as a removed custom resource)
-        BoundType* storedType = mPropertyTypeId;
+        BoundType* storedType = mPropertyType;
 
         // The current type should exist as it's currently on the object
         BoundType* currType = Type::GetBoundType(prop->PropertyType);
@@ -919,13 +919,13 @@ KeyFrame* TrackNode::CreateKeyFrame(float time, AnyParam value)
 
   // If this property node is of a vector type, we want to create key frames
   // on the SubProperty tracks
-  if (mPropertyTypeId == ZilchTypeId(Vec2))
+  if (mPropertyType == ZilchTypeId(Vec2))
     CreateSubKeyFrames<Vec2, 2>(this, time, value);
-  else if (mPropertyTypeId == ZilchTypeId(Vec3))
+  else if (mPropertyType == ZilchTypeId(Vec3))
     CreateSubKeyFrames<Vec3, 3>(this, time, value);
-  else if (mPropertyTypeId == ZilchTypeId(Vec4))
+  else if (mPropertyType == ZilchTypeId(Vec4))
     CreateSubKeyFrames<Vec4, 4>(this, time, value);
-  else if (mPropertyTypeId == ZilchTypeId(Quat))
+  else if (mPropertyType == ZilchTypeId(Quat))
     CreateSubKeyFrames<Quat, 3>(this, time, value);
   else
   {
@@ -1008,13 +1008,13 @@ void TrackNode::UpdateOrCreateKeyAtTime(float time, AnyParam value)
 {
   // If it's of a vector type, we want to call the same function
   // on the SubProperty tracks with the corresponding element of the vector
-  if (mPropertyTypeId == ZilchTypeId(Vec2))
+  if (mPropertyType == ZilchTypeId(Vec2))
     UpdateSubKeyAtTime<Vec2, 2>(this, time, value);
-  else if (mPropertyTypeId == ZilchTypeId(Vec3))
+  else if (mPropertyType == ZilchTypeId(Vec3))
     UpdateSubKeyAtTime<Vec3, 3>(this, time, value);
-  else if (mPropertyTypeId == ZilchTypeId(Vec4))
+  else if (mPropertyType == ZilchTypeId(Vec4))
     UpdateSubKeyAtTime<Vec4, 4>(this, time, value);
-  else if (mPropertyTypeId == ZilchTypeId(Quat))
+  else if (mPropertyType == ZilchTypeId(Quat))
     UpdateSubKeyAtTime<Quat, 3>(this, time, value);
   else
   {
@@ -1165,10 +1165,10 @@ void TrackNode::BakeKeyFrames(Array<KeyEntry>& keyFrames)
 {
   // If we get a void type, it's likely that the property no longer exists
   // on the component
-  if (mPropertyTypeId == ZilchTypeId(void))
+  if (mPropertyType == ZilchTypeId(void))
     return;
   // For float types, we want to use the baked points on an adaptive curve
-  else if (mPropertyTypeId == ZilchTypeId(float))
+  else if (mPropertyType == ZilchTypeId(float))
   {
     BakePiecewiseFunction();
 
@@ -1181,13 +1181,13 @@ void TrackNode::BakeKeyFrames(Array<KeyEntry>& keyFrames)
   }
   // For vector types, we want to sample each curve of each element
   // to build a final set of key frames
-  else if (mPropertyTypeId == ZilchTypeId(Vec2))
+  else if (mPropertyType == ZilchTypeId(Vec2))
     BakeSubPropertyKeyFrames<Vec2, 2>(this, keyFrames);
-  else if (mPropertyTypeId == ZilchTypeId(Vec3))
+  else if (mPropertyType == ZilchTypeId(Vec3))
     BakeSubPropertyKeyFrames<Vec3, 3>(this, keyFrames);
-  else if (mPropertyTypeId == ZilchTypeId(Vec4))
+  else if (mPropertyType == ZilchTypeId(Vec4))
     BakeSubPropertyKeyFrames<Vec4, 4>(this, keyFrames);
-  else if (mPropertyTypeId == ZilchTypeId(Quat))
+  else if (mPropertyType == ZilchTypeId(Quat))
     BakeSubPropertyKeyFrames<Quat, 3>(this, keyFrames);
   // All other types cannot be represented as curves, so the key frames
   // are already in their final format
@@ -1391,7 +1391,7 @@ void PushToAnimationRecursive(TrackNode* objectTrackInfo, Animation* animation,
 
       // Build the property track
       PropertyTrack* propertyTrack = MakePropertyTrack(componentName,
-                              propertyName, propertyTrackNode->mPropertyTypeName);
+                              propertyName, propertyTrackNode->mPropertyType);
 
       // The property track could fail to create if the property type doesn't
       // exist anymore

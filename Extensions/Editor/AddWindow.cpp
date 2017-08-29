@@ -715,6 +715,10 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
     mTagsBox = new TextBox(tags);
     mTagsBox->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
     mTagsBox->SetEditable(true);
+
+    ConnectThisTo(mTagsBox, Events::TextTyped, OnTextTypedTag);
+    ConnectThisTo(mTagsBox->mEditTextField, Events::FocusGained, OnTagsFocusGained);
+    ConnectThisTo(mTagsBox->mEditTextField, Events::FocusLost, OnTagsFocusLost);
   }
 
   new Spacer(this, SizePolicy::Fixed, Pixels(0, 2));
@@ -911,9 +915,54 @@ void ResourceTemplateDisplay::RemoveNameToolTip()
 }
 
 //**************************************************************************************************
+void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColor::Enum tagColor)
+{
+  mTagsToolTip.SafeDestroy();
+
+  ToolTip* toolTip = new ToolTip(mTagsBox);
+  toolTip->SetText(message);
+  toolTip->SetDestroyOnMouseExit(false);
+  toolTip->SetColor(tagColor);
+
+  ToolTipPlacement placement;
+  placement.SetScreenRect(mTagsBox->GetScreenRect());
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
+                        +IndicatorSide::Bottom, IndicatorSide::Top);
+  toolTip->SetArrowTipTranslation(placement);
+
+  // if this is a warning tooltip also color the tag text box red
+  if (tagColor == ToolTipColor::Red)
+  {
+    mTagsBox->mBackgroundColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
+    mTagsBox->mBorderColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
+    mTagsBox->mFocusBorderColor = ToByteColor(Vec4(0.625f, 0.256f, 0.256f, 1));
+  }
+  // otherwise set the tag box to its default selected state
+  else 
+  {
+    mTagsBox->SetStyle(TextBoxStyle::Classic);
+  }
+
+  mTagsToolTip = toolTip;
+}
+
+//**************************************************************************************************
+void ResourceTemplateDisplay::RemoveTagToolTip()
+{
+  mTagsToolTip.SafeDestroy();
+  mTagsBox->SetStyle(TextBoxStyle::Classic);
+}
+
+//**************************************************************************************************
 void ResourceTemplateDisplay::OnTextTypedName(Event*)
 {
   ValidateName(false);
+}
+
+//**************************************************************************************************
+void ResourceTemplateDisplay::OnTextTypedTag(Event*)
+{
+  ValidateTags();
 }
 
 //**************************************************************************************************
@@ -984,6 +1033,32 @@ bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
 }
 
 //**************************************************************************************************
+bool ResourceTemplateDisplay::ValidateTags()
+{
+  // Can't do anything if there is no selected template
+  if (mSelectedTemplate.IsNull())
+    return false;
+
+  String tagString = mTagsBox->GetText();
+
+  // replace tag delimiters that will be detected as invalid for our check
+  tagString = tagString.Replace(",", "");
+  tagString = tagString.Replace(" ", "");
+
+  // check to see if the tag string changed after being sanitized, if so it was invalid
+  String santiziedTags = Cog::SanatizeName(tagString);
+  if(tagString != santiziedTags)
+  {
+    CreateTagToolTip("Tags contain invalid symbols", ToolTipColor::Red);
+    return false;
+  }
+
+  // let the user know how to specify a list of tags
+  CreateTagToolTip("Tags are space or comma delimited");
+  return true;
+}
+
+//**************************************************************************************************
 void ResourceTemplateDisplay::OnCancel(Event*)
 {
   Event event;
@@ -996,9 +1071,9 @@ void ResourceTemplateDisplay::OnCancel(Event*)
 //**************************************************************************************************
 void ResourceTemplateDisplay::OnCreate(Event*)
 {
-  if (ValidateName(true) == false)
+  if (ValidateName(true) == false || ValidateTags() == false)
     return;
-
+  
   Resource* resource = mSelectedTemplate;
   if (resource == nullptr)
     return;
@@ -1031,11 +1106,38 @@ void ResourceTemplateDisplay::OnCreate(Event*)
       if (property && property->PropertyType == ZilchVirtualTypeId(resourceAdd.SourceResource))
         ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(), instance, mPostAdd.mProperty, resourceAdd.SourceResource);
     }
+
+    // Add all the tags set in the add window on our new resource
+    String tagList = mTagsBox->GetText().Replace(",", " ");
+    StringSplitRange splitTags = tagList.Split(" ");
+    HashSet<String> tags;
+    forRange(StringRange r, splitTags)
+    {
+      // At this point all tags have already been validated
+      if (!r.Empty())
+        tags.Insert(r);
+    }
+    resourceAdd.SourceResource->mContentItem->SetTags(tags);
   }
 
   Z::gEditor->GetCenterWindow()->TryTakeFocus();
 
   CloseTabContaining(this);
+}
+
+//**************************************************************************************************
+void ResourceTemplateDisplay::OnTagsFocusGained(Event*)
+{
+  // create the appropriate tooltip when the tags box gains focus
+  ValidateTags();
+}
+
+//**************************************************************************************************
+void ResourceTemplateDisplay::OnTagsFocusLost(Event*)
+{
+  // if the tags are invalid do not remove the tooltip just because the user deselected it
+  if (ValidateTags() == true)
+    RemoveTagToolTip();
 }
 
 //------------------------------------------------------------------------ Resource Template Display

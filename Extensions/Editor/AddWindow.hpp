@@ -158,12 +158,18 @@ private:
   void BuildContentLibraryList();
   void CreateNameToolTip(StringParam message);
   void RemoveNameToolTip();
+  void CreateTagToolTip(StringParam message, ToolTipColor::Enum tagColor = ToolTipColor::Default);
+  void RemoveTagToolTip();
   void OnTextTypedName(Event*);
+  void OnTextTypedTag(Event*);
   void OnKeyDownNameField(KeyboardEvent* e);
   bool ValidateName(bool finalValidation);
+  bool ValidateTags();
   void OnCancel(Event*);
   void OnCreate(Event*);
-  
+  void OnTagsFocusGained(Event*);
+  void OnTagsFocusLost(Event*);
+
   PostAddOp& mPostAdd;
 
   Widget* mPreviousFocus;
@@ -180,6 +186,7 @@ private:
   TextBox* mTagsBox;
   StringComboBox* mLibrarySelect;
   HandleOf<ToolTip> mNameToolTip;
+  HandleOf<ToolTip> mTagsToolTip;
 };
 
 //------------------------------------------------------------------------ Resource Template Display

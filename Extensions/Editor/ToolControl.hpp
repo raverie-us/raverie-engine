@@ -29,6 +29,7 @@ namespace Events
 {
   DeclareEvent(GetToolInfo);
   DeclareEvent(SelectTool);
+  DeclareEvent(ShortcutInfoEnter);
 }
 
 //---------------------------------------------------------------- Tool Ui Event
@@ -126,12 +127,18 @@ public:
   Cog* GetActiveCog();
   Cog* GetToolByName(StringParam typeName);
 
+  /// Returns the PropertyGrid widget.
+  PropertyView* GetPropertyGrid() const;
+
   /// Tool Selection.
   void SelectToolIndex(uint index, ShowToolProperties::Enum showTool = ShowToolProperties::Auto);
   void SelectToolName(StringParam toolName, ShowToolProperties::Enum showTool  = ShowToolProperties::Auto);
 
   /// Whether or not the default selection tool is currently selected.
   bool IsSelectToolActive();
+
+  /// Update the shortcut tool when hovering of info icon and tool is changed.
+  void UpdateShortcutsTip( );
 
   SelectTool* mSelectTool;
   CreationTool* mCreationTool;
@@ -142,6 +149,10 @@ public:
 
 private:
   friend class ToolObjectManager;
+
+  /// Display the mouse/keyboard shortcuts unique to the selected tool.
+  void OnInfoMouseEnter(MouseEvent*);
+  void OnInfoMouseExit(MouseEvent*);
 
   /// Change the tool when selected in the dropdown.
   void OnToolPulldownSelect(ObjectEvent*);
@@ -155,13 +166,25 @@ private:
 
   void SelectToolInternal(ToolData* tool, ShowToolProperties::Enum showTool);
 
+  void BuildShortcutsToolTip(const ShortcutSet* entries);
+  void BuildShorcutsFormat(TreeFormatting* formatting);
+
+  
+
   PropertyInterface* mPropertyInterface;
   Editor* mEditor;
+  Element* mInfoIcon;
   ComboBox* mToolBox;
+
   PropertyView* mPropertyGrid;
-  UniquePointer<ListSource> mToolSource;
   ScrollArea* mScrollArea;
   Composite* mCustomUi;
+
+  HandleOf<ToolTip> mShortcutsTip;
+  ListView* mShortcutsView;
+
+  UniquePointer<ListSource> mToolSource;
+  ShortcutSource mShortcutSource;
 };
 
 }//namespace Zero

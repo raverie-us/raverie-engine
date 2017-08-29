@@ -726,7 +726,21 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, EditFocusMode::Enum focus
   MetaSelection* activeSelection = Z::gEditor->GetSelection();
   if (activeSelection->Empty())
     return;
-  Aabb aabb = GetAabb(activeSelection);
+  
+  MetaSelection transformObjects;
+  // we only want to construct an aabb from objects with transforms
+  forRange(Handle selection, activeSelection->All())
+  {
+    Cog* cog = selection.Get<Cog*>();
+    if (cog->has(Transform))
+      transformObjects.Add(cog);
+  }
+  
+  // if there are no objects with transform we don't want to focus on the origin of the level
+  if (transformObjects.Empty())
+    return;
+
+  Aabb aabb = GetAabb(&transformObjects);
   CameraFocusSpace(space, cameraObject, aabb, focusMode);
 }
 

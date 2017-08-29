@@ -266,6 +266,9 @@ public:
   // This should only ever be used for debugging purposes.
   static bool DebugIsNodePointerInPool(String* node);
 
+  // Compute how many strings and bytes of string data do we have in the pool
+  static void ComputeStringStats(StringStats& stats);
+
 private:
   void InitializeCharacter(int character);
   void InitializeCharacterNonPreallocated(int character);

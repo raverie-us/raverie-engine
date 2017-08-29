@@ -115,7 +115,7 @@ namespace Audio
           timeToInterpolate = 0.02f;
 
         Interpolate->SetValues(Volume, newVolume, (unsigned)(timeToInterpolate
-          * gAudioSystem->SystemSampleRate));
+          * AudioSystemInternal::SampleRate));
       }
     }
   }
@@ -205,7 +205,7 @@ namespace Audio
           time = 0.02f;
 
         LeftInterpolator->SetValues(LeftVolume, volume, (unsigned)(time
-          * gAudioSystem->SystemSampleRate));
+          * AudioSystemInternal::SampleRate));
       }
     }
   }
@@ -245,7 +245,7 @@ namespace Audio
           time = 0.02f;
 
         RightInterpolator->SetValues(RightVolume, volume, (unsigned)(time
-          * gAudioSystem->SystemSampleRate));
+          * AudioSystemInternal::SampleRate));
       }
     }
   }

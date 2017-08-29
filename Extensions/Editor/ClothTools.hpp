@@ -258,6 +258,27 @@ public:
 };
 
 //-------------------------------------------------------------------SpringTools
+/// <Commands>
+///   <command name = "AddToSelection">
+///     <shortcut> Shift + Drag </shortcut>
+///     <description>
+///       SelectorSpringSubTool:\Add the current drag selection to the already selected items.
+///     </description>
+///   </command>
+///   <command name = "DeselectSpring">
+///     <shortcut> Shift\(NOT Held) </shortcut>
+///     <description>
+///       SelectorSpringSubTool:\If the left mouse button is released and the
+///       Shift key is not being held, then clear selections.
+///     </description>
+///   </command>
+///   <command name = "DeselectRope">
+///     <shortcut> Esc </shortcut>
+///     <description>
+///       RopeCreatorSubTool:\Deselect rope-start and rope-end objects.
+///     </description>
+///   </command>
+/// </Commands>
 class SpringTools : public Component
 {
 public:

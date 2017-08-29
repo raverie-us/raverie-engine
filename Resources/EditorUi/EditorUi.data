@@ -52,7 +52,7 @@ DefinitionSet =
 	{
 		string Texture = "EditorUi",
 		int ImageMode = 0,
-		float[] Uv0 = [ 72, 236 ],
+		float[] Uv0 = [ 92, 236 ],
 		float[] Uv1 = [ 14 , 20 ],
 	},
 	
@@ -102,6 +102,14 @@ DefinitionSet =
 		int ImageMode = 0,
 		float[] Uv0 = [ 216, 4 ],
 		float[] Uv1 = [ 32 , 32 ],
+	},
+	
+	ImageDefinition Info =
+	{
+		string Texture = "EditorUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 71, 239 ],
+		float[] Uv1 = [ 13 , 13 ],
 	},
 	
 	ImageDefinition SoundIcon =

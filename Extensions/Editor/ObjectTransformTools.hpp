@@ -108,6 +108,36 @@ public:
 };
 
 //------------------------------------------------------ ObjectTranslateTool ---
+/// <Commands>
+///   <command name = "CopySelection">
+///     <shortcut> Ctrl + Drag </shortcut>
+///     <description>
+///       Duplicate all objects in the current selection.  Then, set the 
+///       duplicates to be the current selection and target of the TranslateTool.
+///     </description>
+///   </command>
+///   <command name = "SnapToSurface">
+///     <shortcut> V + Drag\(Center Square) </shortcut>
+///     <description>
+///       Snap the center of the translate tool to the surface being hovered
+///       over by the mouse cursor. Thereby affecting all target-objects of the
+///       TranslateTool.
+///     </description>
+///   </command>
+///   <command name = "TempSnapping">
+///     <shortcut> Shift (Hold) </shortcut>
+///     <description>
+///       While held, temporarily switch the state of 'Snapping' to the opposite
+///       of its current state.
+///     </description>
+///   </command>
+///   <command name = "ToggleBasis">
+///     <shortcut> X </shortcut>
+///     <description>
+///       Toggle the tool's basis setting between Local or World.
+///     </description>
+///   </command>
+/// </Commands>
 class ObjectTranslateTool : public ObjectTransformTool
 {
 public:
@@ -139,6 +169,28 @@ public:
 };
 
 //---------------------------------------------------------- ObjectScaleTool ---
+/// <Commands>
+///   <command name = "OffAxesScale">
+///     <shortcut> Ctrl + Drag </shortcut>
+///     <description>
+///       When dragging one of the three main axes - scale by the drag amount
+///       on the other two, non-drag axes, and not the drag axis itself.
+///     </description>
+///   </command>
+///   <command name = "TempSnapping">
+///     <shortcut> Shift (Hold) </shortcut>
+///     <description>
+///       While held, temporarily switch the state of 'Snapping' to the opposite
+///       of its current state.
+///     </description>
+///   </command>
+///   <command name = "ToggleBasis">
+///     <shortcut> X </shortcut>
+///     <description>
+///       Toggle the tool's basis setting between Local or World.
+///     </description>
+///   </command>
+/// </Commands>
 class ObjectScaleTool : public ObjectTransformTool
 {
 public:
@@ -160,8 +212,6 @@ public:
   GizmoSnapMode::Enum GetSnapMode( );
   void SetSnapMode(GizmoSnapMode::Enum mode);
 
-  Vec3 GetChangeInScale();
-
   void CopyPropertiesToGizmo() override;
 
 public:
@@ -169,7 +219,22 @@ public:
   bool mAffectTranslation;
 };
 
-//---------------------------------------------------------- ObjectScaleTool ---
+//--------------------------------------------------------- ObjectRotateTool ---
+/// <Commands>
+///   <command name = "TempSnapping">
+///     <shortcut> Shift (Hold) </shortcut>
+///     <description>
+///       While held, temporarily switch the state of 'Snapping' to the opposite
+///       of its current state.
+///     </description>
+///   </command>
+///   <command name = "ToggleBasis">
+///     <shortcut> X </shortcut>
+///     <description>
+///       Toggle the tool's basis setting between Local or World.
+///     </description>
+///   </command>
+/// </Commands>
 class ObjectRotateTool : public ObjectTransformTool
 {
 public:

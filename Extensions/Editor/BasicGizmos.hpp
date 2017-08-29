@@ -23,9 +23,12 @@ namespace Events
   DeclareEvent(RingGizmoModified);
 }
 
+
 //----------------------------------------------------------------- GizmoHelpers
 namespace GizmoHelpers
 {
+
+float GetViewScale(Camera* camera, Vec3Param location);
 
 int GetDragAxis(Vec3Param localMovement);
 Vec3 GetOffAxisMovement(Vec3Param localMovement);
@@ -37,7 +40,6 @@ float ProcessScale(float movement, float startDis, float starting);
 Vec3 ScaleVector(Vec3Param delta, float distance, Vec3Param start);
 
 }
-
 
 //--------------------------------------------------------------- Gizmo Snapping
 /// Different snapping behaviors to suit specific needs [ex: Tile-based games].

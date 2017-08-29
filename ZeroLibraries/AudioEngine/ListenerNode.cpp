@@ -192,7 +192,7 @@ namespace Audio
         ThreadedData->Deactivating = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          0.0f, (unsigned)(0.02f * gAudioSystem->SystemSampleRate));
+          0.0f, (unsigned)(0.02f * AudioSystemInternal::SampleRate));
       }
       // If currently not active and setting to active
       else if ((!Active || ThreadedData->Deactivating) && active)
@@ -201,7 +201,7 @@ namespace Audio
         Active = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          1.0f, (unsigned)(0.02f * gAudioSystem->SystemSampleRate));
+          1.0f, (unsigned)(0.02f * AudioSystemInternal::SampleRate));
       }
     }
   }
@@ -215,18 +215,27 @@ namespace Audio
   //************************************************************************************************
   Math::Vec3 ListenerNode::GetRelativePosition(Math::Vec3Param otherPosition)
   {
+    if (!Threaded)
+      return Math::Vec3();
+
     return Math::Transform(ThreadedData->WorldToLocal, (otherPosition - ThreadedData->PositionWorld));
   }
 
   //************************************************************************************************
   Math::Vec3 ListenerNode::GetRelativeVelocity(Math::Vec3Param otherVelocity)
   {
+    if (!Threaded)
+      return Math::Vec3();
+
     return Math::Transform(ThreadedData->WorldToLocal, (otherVelocity - ThreadedData->VelocityWorld));
   }
 
   //************************************************************************************************
   Math::Vec3 ListenerNode::GetRelativeFacing(Math::Vec3Param facingDirection)
   {
+    if (!Threaded)
+      return Math::Vec3();
+
     return Math::Transform(ThreadedData->WorldToLocal, facingDirection);
   }
 

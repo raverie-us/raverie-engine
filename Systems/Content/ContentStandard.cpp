@@ -11,7 +11,6 @@ namespace Zero
 
 // Enums
 ZilchDefineEnum(AudioCueImport);
-ZilchDefineEnum(AudioFileFormats);
 ZilchDefineEnum(BasisType);
 ZilchDefineEnum(ConflictAction);
 ZilchDefineEnum(ImageImport);
@@ -41,7 +40,6 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
 
   // Enums
   ZilchInitializeEnum(AudioCueImport);
-  ZilchInitializeEnum(AudioFileFormats);
   ZilchInitializeEnum(BasisType);
   ZilchInitializeEnum(ConflictAction);
   ZilchInitializeEnum(ImageImport);

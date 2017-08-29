@@ -75,6 +75,9 @@ namespace Audio
     // Changes the overall system volume
     void SetVolume(const float volume);
 
+    // Returns the sample rate used by the audio system
+    unsigned GetSampleRate();
+
     // Returns the number of channels used in the system's output
     unsigned GetOutputChannels();
 
@@ -103,6 +106,33 @@ namespace Audio
     // Pointer to the internal system object
     AudioSystemInternal *System;
 
+  };
+
+  //------------------------------------------------------------------------------------- Audio File
+
+  class AudioFileData;
+
+  class AudioFile
+  {
+  public:
+    AudioFile();
+    ~AudioFile();
+
+    // Opens an audio file and reads its data into a buffer so it's ready for encoding
+    void OpenFile(Zero::Status& status, Zero::StringParam fileName);
+    // Encodes the audio data and writes it out to a new file
+    void WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName, bool normalize,
+      float maxVolume);
+    // Deletes the current audio data
+    void Close();
+
+    // Number of channels of audio data in the opened file
+    unsigned Channels;
+    // Length, in seconds, of the opened audio file
+    float FileLength;
+
+  private:
+    ZeroDeclarePrivateData(AudioFile, 16);
   };
 }
 

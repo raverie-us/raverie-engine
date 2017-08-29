@@ -38,7 +38,7 @@ BasicSerializationType(float,        "Real");
 BasicSerializationType(double,       "double");
 BasicSerializationType(s64,          "int64");
 BasicSerializationType(u64,          "uint64");
-BasicSerializationType(bool,         "bool");
+BasicSerializationType(bool,         "Boolean");
 
 #undef BasicSerializationType
 

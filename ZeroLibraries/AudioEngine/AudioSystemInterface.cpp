@@ -37,7 +37,7 @@ namespace Audio
       System->ResetPA = false;
       System->LockObject.Unlock();
 
-      System->AudioIO.Reset();
+      System->ResetIO();
     }
     // Otherwise just unlock
     else
@@ -79,6 +79,12 @@ namespace Audio
 
     // Send an asynchronous task to the threaded system
     System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SystemVolumeThreaded, System, newVolume));
+  }
+
+  //************************************************************************************************
+  unsigned AudioSystemInterface::GetSampleRate()
+  {
+    return AudioSystemInternal::SampleRate;
   }
 
   //************************************************************************************************
@@ -139,6 +145,64 @@ namespace Audio
   void AudioSystemInterface::UseHighLatency(const bool useHigh)
   {
     System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetUseHighLatency, System, useHigh));
+  }
+
+  //------------------------------------------------------------------------------------- Audio File
+
+  //************************************************************************************************
+  AudioFile::AudioFile() :
+    Channels(0),
+    FileLength(0)
+  {
+    ZeroConstructPrivateData(AudioFileData);
+  }
+
+  //************************************************************************************************
+  AudioFile::~AudioFile()
+  {
+    Close();
+    ZeroDestructPrivateData(AudioFileData);
+  }
+
+  //************************************************************************************************
+  void AudioFile::OpenFile(Zero::Status& status, Zero::StringParam fileName)
+  {
+    ZeroGetPrivateData(AudioFileData);
+
+    if (self->BuffersPerChannel)
+    {
+      status.SetFailed("Already open, call Close before opening another file");
+    }
+    else
+    {
+      *self = FileEncoder::OpenFile(status, fileName);
+
+      if (status.Succeeded())
+      {
+        Channels = self->Channels;
+        FileLength = (float)self->SamplesPerChannel / (float)self->SampleRate;
+      }
+    }
+  }
+
+  //************************************************************************************************
+  void AudioFile::WriteEncodedFile(Zero::Status& status, Zero::StringParam outputFileName, 
+    bool normalize, float maxVolume)
+  {
+    ZeroGetPrivateData(AudioFileData);
+
+    if (self->BuffersPerChannel)
+      FileEncoder::WriteFile(status, outputFileName, *self, normalize, maxVolume);
+    else
+      status.SetFailed("No input file was opened");
+  }
+
+  //************************************************************************************************
+  void AudioFile::Close()
+  {
+    ZeroGetPrivateData(AudioFileData);
+
+    self->ReleaseData();
   }
 
 }
