@@ -48,6 +48,15 @@ public:
 };
 
 //------------------------------------------------------------------ Select Tool
+/// <Commands>
+///   <command name = "MultiSelect">
+///     <shortcut> Shift + Drag </shortcut>
+///     <description>
+///       Select all objects inside the box bound by the initial drag point and
+///       the current mouse cursor position.
+///     </description>
+///   </command>
+/// </Commands>
 class SelectTool : public Component
 {
 public:
@@ -166,6 +175,14 @@ public:
 };
 
 //------------------------------------------------------- Object Connecting Tool
+/// <Commands>
+///   <command name = "ToolDeactivate">
+///     <shortcut> Esc </shortcut>
+///     <description>
+///       Deactivate the Object Connecting Tool.
+///     </description>
+///   </command>
+/// </Commands>
 class ObjectConnectingTool : public Component
 {
 public:
@@ -204,6 +221,14 @@ public:
 };
 
 //--------------------------------------------------------------- Parenting Tool
+/// <Commands>
+///   <command name = "ToolDeactivate">
+///     <shortcut> Esc </shortcut>
+///     <description>
+///       Deactivate the Parenting Tool.
+///     </description>
+///   </command>
+/// </Commands>
 class ParentingTool : public ObjectConnectingTool
 {
 public:

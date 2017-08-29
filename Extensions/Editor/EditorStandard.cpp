@@ -202,7 +202,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ObjectConnectingTool);
   ZilchInitializeType(ParentingTool);
   ZilchInitializeType(ToolUiEvent);
-  ZilchInitializeType(QueryShortcutsEvent);
   ZilchInitializeType(ToolControl);
   ZilchInitializeType(TransformTool);
   ZilchInitializeType(TranslateTool);

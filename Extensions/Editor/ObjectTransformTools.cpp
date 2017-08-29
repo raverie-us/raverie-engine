@@ -148,8 +148,6 @@ void ObjectTransformTool::Initialize(CogInitializer& initializer)
 
   ConnectThisTo(GetOwner( ), Events::ToolCreateGizmoEvent, OnToolGizmoCreated);
 
-  ConnectThisTo(GetOwner( ), Events::ShortcutInfoEnter, OnShortcutInfoEnter);
-
   ConnectThisTo(GetOwner( ), Events::KeyDown, OnKeyDown);
 }
 
@@ -350,13 +348,6 @@ void ObjectTransformTool::OnFinalSelectionChanged(Event* event)
 {
     // @RYAN: TEMP [ie, might need separate "Final" version]
   OnSelectionChanged(event);
-}
-
-/******************************************************************************/
-void ObjectTransformTool::OnShortcutInfoEnter(QueryShortcutsEvent* event)
-{
-  BoundType* type = ZilchVirtualTypeId(this);
-  event->mEntries = Z::gShortcutsDoc->FindSet(type->Name);
 }
 
 //******************************************************************************

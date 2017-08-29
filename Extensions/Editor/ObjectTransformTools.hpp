@@ -75,7 +75,6 @@ public:
   void OnComponentsChanged(Event* event);
   void OnSelectionChanged(Event* event);
   void OnFinalSelectionChanged(Event* event);
-  void OnShortcutInfoEnter(QueryShortcutsEvent* event);
   void OnKeyDown(KeyboardEvent* e);
 
   void UpdateGrabState(GizmoGrabMode::Enum state);
@@ -113,12 +112,12 @@ public:
 ///   <command name = "CopySelection">
 ///     <shortcut> Ctrl + Drag </shortcut>
 ///     <description>
-///       Duplicate all objects in the current selection.  Then, make the 
-///       duplicates the current selection and target of the TranslateTool.
+///       Duplicate all objects in the current selection.  Then, set the 
+///       duplicates to be the current selection and target of the TranslateTool.
 ///     </description>
 ///   </command>
 ///   <command name = "SnapToSurface">
-///     <shortcut> V + Drag (Center Square) </shortcut>
+///     <shortcut> V + Drag\(Center Square) </shortcut>
 ///     <description>
 ///       Snap the center of the translate tool to the surface being hovered
 ///       over by the mouse cursor. Thereby affecting all target-objects of the
@@ -130,6 +129,12 @@ public:
 ///     <description>
 ///       While held, temporarily switch the state of 'Snapping' to the opposite
 ///       of its current state.
+///     </description>
+///   </command>
+///   <command name = "ToggleBasis">
+///     <shortcut> X </shortcut>
+///     <description>
+///       Toggle the tool's basis setting between Local or World.
 ///     </description>
 ///   </command>
 /// </Commands>
@@ -156,8 +161,6 @@ public:
 
   void OnGizmoObjectsDuplicated(Event* event);
 
-  void OnShortcutInfoEnter(QueryShortcutsEvent* event);
-
   void GizmoCreated(Cog* gizmo) override;
   void CopyPropertiesToGizmo() override;
 
@@ -179,6 +182,12 @@ public:
 ///     <description>
 ///       While held, temporarily switch the state of 'Snapping' to the opposite
 ///       of its current state.
+///     </description>
+///   </command>
+///   <command name = "ToggleBasis">
+///     <shortcut> X </shortcut>
+///     <description>
+///       Toggle the tool's basis setting between Local or World.
 ///     </description>
 ///   </command>
 /// </Commands>
@@ -217,6 +226,12 @@ public:
 ///     <description>
 ///       While held, temporarily switch the state of 'Snapping' to the opposite
 ///       of its current state.
+///     </description>
+///   </command>
+///   <command name = "ToggleBasis">
+///     <shortcut> X </shortcut>
+///     <description>
+///       Toggle the tool's basis setting between Local or World.
 ///     </description>
 ///   </command>
 /// </Commands>

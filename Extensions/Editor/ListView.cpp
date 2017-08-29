@@ -457,8 +457,12 @@ void ListView::UpdateTextUI( )
       ColumnFormat& format = mFormatting.Columns[i];
       Label* content = row->mColumnContent[i];
 
+      float fitWidth = format.CurrSize.x;
+      if(format.ColumnType == ColumnType::Flex)
+        fitWidth = RemoveThicknessRect(content->mPadding, Vec2(fitWidth, 0)).SizeX;
+
         // Allow ample height for text.
-      Vec2 size(Pixels(format.CurrSize.x), Pixels(1000));
+      Vec2 size(Pixels(fitWidth), Pixels(1000));
         // Measures the text's render size and sets it internally.
       content->mText->FitToWidth(size.x, size.y);
 
@@ -755,12 +759,29 @@ void ListRow::Refresh( )
       ColumnFormat& format = formatting.Columns[i];
       mList->mDataSource->GetData(entry, value, format.Name);
 
+      String final;
+      String text = value.ToString( );
+      StringRange sRange = text.FindFirstOf("\\");
+      while(!sRange.Empty())
+      {
+        StringSplitRange sSplit = text.Split(sRange);
+        final = String::Join("", final, sSplit.mCurrentRange, "\n");
+        text = sSplit.mRemainingRange;
+        sRange = text.FindFirstOf("\\");
+      }
+
+      final = String::Join("", final, text);
+
       Label* content = mColumnContent[i];
-      content->SetText(value.ToString( ));
+      content->SetText(final);
       content->mPadding.Right += 6.0f;
 
+      float fitWidth = format.MinWidth;
+      if(format.ColumnType == ColumnType::Flex)
+        fitWidth = RemoveThicknessRect(content->mPadding, Vec2(fitWidth, 0)).SizeX;
+
         // Allow ample height for text.
-      Vec2 size(Pixels(format.MinWidth), Pixels(1000));
+      Vec2 size(Pixels(fitWidth), Pixels(1000));
         // Measures the text's render size and sets it internally.
       content->mText->FitToWidth(size.x, size.y);
 

@@ -305,6 +305,22 @@ public:
 /// Declaration debug index type
 DeclareEnum2(CellIndexType, Local, Absoulte)
 
+/// <Commands>
+///   <command name = "ResizeBrush">
+///     <shortcut> Shift + MouseScroll </shortcut>
+///     <description>
+///       Resize the brush size up or down depending on the scroll direction.
+///     </description>
+///   </command>
+///   <command name = "SubToolCommands">
+///     <shortcut> Shift + LeftMouse </shortcut>
+///     <description>
+///       CreateDestroy:\Destroy patches instead of creating them.\ \
+///       RaiseLower:\Lower height map with the brush instead of raising it.\ \
+///       SmoothSharpen:\Sharpen height map with the brush instead of smoothing it.
+///     </description>
+///   </command>
+/// </Commands>
 class HeightMapTool : public Component
 {
 public:
