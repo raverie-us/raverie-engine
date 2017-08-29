@@ -96,6 +96,18 @@ extern const String cInvalidatesObject;
 
 }//namespace FunctionFlags
 
+//------------------------------------------------------------------------- Serialization Attributes
+namespace SerializationAttributes
+{
+
+// If it's not a primitive type, serialization will assume it can never be a modified property.
+// Only its child properties can be modified.
+// This was used to avoid checking if Transform.Translation.X is modified. It can never be
+// modified because it's a primitive. Only Transform.Translation can be modified.
+extern const String cSerializationPrimitive;
+
+}//namespace SerializationAttributes
+
  // Uncategorized
 extern const String cInvalidTypeName;
 

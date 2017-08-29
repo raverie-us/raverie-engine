@@ -11,15 +11,6 @@ namespace Zero
 
 struct PolymorphicNode;
 
-namespace SerializationAttributes
-{
-// If it's not a primitive type, serialization will assume it can never be a modified property.
-// Only its child properties can be modified.
-// This was used to avoid checking if Transform.Translation.X is modified. It can never be
-// modified because it's a primitive. Only Transform.Translation can be modified.
-extern const String cSerializationPrimitive;
-}
-
 // See SerializationAttributes::cSerializationPrimitive
 #define ZeroBindSerializationPrimitive() type->AddAttribute(SerializationAttributes::cSerializationPrimitive)
 #define ZeroBindSerializationPrimitiveExternal(type) ZilchTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)

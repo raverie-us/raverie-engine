@@ -62,6 +62,13 @@ const String cInvalidatesObject("InvalidatesObject");
 
 }//namespace FunctionAttributes
 
+ //------------------------------------------------------------------------- Serialization Attributes
+namespace SerializationAttributes
+{
+
+const String cSerializationPrimitive("SerializationPrimitive");
+
+}//namespace SerializationAttributes
 
  //------------------------------------------------------------------------------------------- Events
 namespace Events

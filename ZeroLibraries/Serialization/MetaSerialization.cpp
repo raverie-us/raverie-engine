@@ -9,11 +9,6 @@
 namespace Zero
 {
 
-namespace SerializationAttributes
-{
-const String cSerializationPrimitive("SerializationPrimitive");
-}
-
 //------------------------------------------------------------------------------- Meta Serialization
 //**************************************************************************************************
 ZilchDefineType(MetaSerialization, builder, type)
