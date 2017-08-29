@@ -334,7 +334,7 @@ void CachedProject::AddOrReplaceDataNodeComponent(Component* component)
   // the component and then creating a data set from it.
 
   mLoader.Reset();
-  DataNode* root = mLoader.GetCurrent();
+  DataNode* root = mLoader.GetNext();
 
   // Remove an old node by the same name if it exists
   bool foundDuplicate;
@@ -352,10 +352,8 @@ void CachedProject::AddOrReplaceDataNodeComponent(Component* component)
   // Extract the text as a data block and then read that block into a data node
   DataBlock dataBlock = saver.ExtractAsDataBlock();
   uint fileVersion;
-  DataNode* set = ReadDataSet(status, String((char*)dataBlock.Data, dataBlock.Size),
-                              String(), &mLoader, &fileVersion);
-  // Add this node into the tree
-  set->AttachTo(root);
+  ReadDataSet(status, String((char*)dataBlock.Data, dataBlock.Size),
+              String(), &mLoader, &fileVersion, root);
 }
 
 String CachedProject::GetProjectPropertyValue(StringParam propertyName)
