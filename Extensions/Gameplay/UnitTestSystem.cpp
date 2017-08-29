@@ -543,6 +543,8 @@ void UnitTestSystem::SubProcessRecord()
   osWindow->mOsInputHook = this;
 
   mMode = UnitTestMode::Recording;
+
+  mPlaybackFile.Open(mRecordedEventsFile, FileMode::Append, FileAccessPattern::Sequential);
 }
 
 //**************************************************************************************************
@@ -599,15 +601,15 @@ void UnitTestSystem::DiffDirectories(StringParam dir1, StringParam dir2, StringP
 
   forRange(StringParam relativePath, relativePaths1.All())
   {
-    // Don't diff the zeroproj file because the verison will
-    // often be different (and frame rate settings may change)
-    if (FilePath::GetExtension(relativePath) == cZeroProjWithoutDot)
-      continue;
-
     // If both directories have this path...
     if (relativePaths2.Contains(relativePath))
     {
       relativePaths2.Erase(relativePath);
+
+      // Don't diff the zeroproj file because the verison will
+      // often be different (and frame rate settings may change)
+      if (FilePath::GetExtension(relativePath) == cZeroProjWithoutDot)
+        continue;
 
       String path1 = FilePath::Combine(dir1, relativePath);
       String path2 = FilePath::Combine(dir2, relativePath);
@@ -807,6 +809,11 @@ void UnitTestSystem::ExecuteBaseMouseEvent(UnitTestBaseMouseEvent* baseEvent, Os
 //**************************************************************************************************
 void UnitTestSystem::RecordEvent(UnitTestEvent* e)
 {
+  FileMode::Enum fileMode = FileMode::Append;
+
+  if (mEventIndex == 0)
+    fileMode = FileMode::Write;
+
   // Add it to our current frame
   mEvents.PushBack(e);
   ++mEventIndex;
@@ -814,40 +821,42 @@ void UnitTestSystem::RecordEvent(UnitTestEvent* e)
   // Save out the event to our file. We want to append so that in case of a crash, we have already
   // saved out all input required to reproduce that crash
   TextSaver saver;
-  Status status;
-  saver.Open(status, mRecordedEventsFile.c_str(), DataVersion::Current, FileMode::Append);
-
-  ReturnIf(status.Failed(), , "Failed to save recorded event file");
+  saver.OpenBuffer(DataVersion::Current, fileMode);
 
   BoundType* type = ZilchVirtualTypeId(e);
   saver.StartPolymorphic(type);
   e->Serialize(saver);
   saver.EndPolymorphic();
 
-  saver.Close();
+  forRange(const ByteBuffer::Block& block, saver.mStream.Blocks())
+  {
+    mPlaybackFile.Write(block.Data, block.Size);
+  }
+
+  mPlaybackFile.Flush();
 }
 
 //**************************************************************************************************
 void UnitTestSystem::LoadRecordedEvents()
 {
-    DataTreeLoader loader;
-    Status status;
+  DataTreeLoader loader;
+  Status status;
   loader.OpenFile(status, mRecordedEventsFile);
 
-    ReturnIf(status.Failed(), , "Failed to load recorded event file");
+  ReturnIf(status.Failed(), , "Failed to load recorded event file");
 
-    PolymorphicNode eventNode;
+  PolymorphicNode eventNode;
   while (loader.GetPolymorphic(eventNode))
-    {
-      BoundType* type = MetaDatabase::FindType(eventNode.TypeName);
-      UnitTestEvent* e = ZilchAllocate(UnitTestEvent, type);
-      e->Serialize(loader);
+  {
+    BoundType* type = MetaDatabase::FindType(eventNode.TypeName);
+    UnitTestEvent* e = ZilchAllocate(UnitTestEvent, type);
+    e->Serialize(loader);
 
-      mEvents.PushBack(e);
+    mEvents.PushBack(e);
 
-      loader.EndPolymorphic();
-    }
+    loader.EndPolymorphic();
   }
+}
 
 //**************************************************************************************************
 UnitTestSystem* CreateUnitTestSystem()

@@ -54,15 +54,18 @@ void TextSaver::Open(Status& status, cstr file, DataVersion::Enum version,
 }
 
 //******************************************************************************
-bool TextSaver::OpenBuffer(DataVersion::Enum version)
+bool TextSaver::OpenBuffer(DataVersion::Enum version, FileMode::Enum fileMode)
 {
+  ErrorIf(fileMode != FileMode::Write && fileMode != FileMode::Append,
+    "FileMode must be Write or Append.");
+
   Close();
   SetFlags();
   mVersion = version;
-  mWriteMode = FileMode::Write;
+  mWriteMode = fileMode;
 
   // Save out the file version if we're not in the legacy version
-  if(version != DataVersion::Legacy)
+  if(fileMode == FileMode::Write && version != DataVersion::Legacy)
     SaveFileVersion();
 
   return true;

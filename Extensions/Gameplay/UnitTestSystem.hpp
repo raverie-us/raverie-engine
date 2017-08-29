@@ -186,6 +186,7 @@ public:
   // The file we store our recorded data
   String mRecordedEventsFile;
   uint mEventIndex;
+  File mPlaybackFile;
 };
 
 UnitTestSystem* CreateUnitTestSystem();

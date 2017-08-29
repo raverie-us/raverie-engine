@@ -23,7 +23,8 @@ public:
   /// Open a text file for saving. FileMode must be either Write or Append.
   void Open(Status& status, cstr file, DataVersion::Enum version = DataVersion::Current,
             FileMode::Enum fileMode = FileMode::Write);
-  bool OpenBuffer(DataVersion::Enum version = DataVersion::Current);
+  bool OpenBuffer(DataVersion::Enum version = DataVersion::Current,
+                  FileMode::Enum fileMode = FileMode::Write);
   uint GetBufferSize();
   String GetString();
 

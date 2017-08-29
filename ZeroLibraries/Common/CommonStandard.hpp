@@ -118,4 +118,5 @@ public:
 #include "Utility/Guid.hpp"
 #include "Utility/NativeType.hpp"
 #include "Utility/Variant.hpp"
+#include "Utility/Determinism.hpp"
 #include "Singleton.hpp"

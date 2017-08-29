@@ -167,10 +167,6 @@ public:
   bool mLimitFrameRate;
   uint mFrameRate;
 
-  // If this value is non zero
-  bool mUseFixedDt;
-  float mFixedDt;
-
 private:
   //Main system timer
   Timer mTimer;

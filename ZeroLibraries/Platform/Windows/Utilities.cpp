@@ -336,6 +336,13 @@ String GetVersionString()
 
 u64 GenerateUniqueId64()
 {
+  if (gDeterministicMode)
+  {
+    static u64 deterministicId = 0;
+    ++deterministicId;
+    return deterministicId;
+  }
+
   //Get the mac address of the machine
   static u64 cachedMacAdress = (Os::GetMacAddress() << 16);
 
