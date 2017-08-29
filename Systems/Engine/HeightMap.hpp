@@ -133,6 +133,7 @@ public:
   HeightMapCell Front();
   void PopFront();
   bool Empty();
+  HeightMapCellRange& All() { return *this; }
 
   void GetNextPatch();
   void SkipDeadPatches();

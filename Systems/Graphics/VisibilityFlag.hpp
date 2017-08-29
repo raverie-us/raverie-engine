@@ -84,6 +84,8 @@ public:
       mDeltaFlags = flagsLeft;
     }
 
+    ChangeRange& All() { return *this; }
+
     uint mDeltaFlags;
     uint mCurrentId;
   };

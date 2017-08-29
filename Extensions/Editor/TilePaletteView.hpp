@@ -194,6 +194,7 @@ public:
     bool Empty();
     Selection Front();
     void PopFront();
+    SelectionRange& All() { return *this; }
 
     PaletteEntryMap* mPaletteTiles;
     TilePaletteEntry* mCurrentEntry;

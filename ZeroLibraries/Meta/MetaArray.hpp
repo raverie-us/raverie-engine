@@ -44,6 +44,7 @@ public:
     bool Empty();
     Any Front();
     void PopFront();
+    Range& All() { return *this; }
 
     Handle mContainer;
     MetaArray* mMetaArray;

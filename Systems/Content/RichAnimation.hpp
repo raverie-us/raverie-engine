@@ -348,6 +348,7 @@ public:
     TrackNode* Front();
     void PopFront();
     bool Empty();
+    range& All() { return *this; }
 
   private:
     /// Reentrant pre-order n-dimensional tree traversal.

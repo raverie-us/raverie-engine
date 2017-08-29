@@ -122,6 +122,7 @@ public:
     const Handle& Front();
     void PopFront();
     bool Empty();
+    range& All() { return *this; }
 
   private:
     /// Finds the next valid object in the range and updates mCurrent.
@@ -145,6 +146,7 @@ public:
     type*& Front();
     void PopFront();
     bool Empty();
+    rangeType& All() { return *this; }
 
     /// Finds the next valid object in the range and updates mCurrent.
     void FindNextValidObject();
