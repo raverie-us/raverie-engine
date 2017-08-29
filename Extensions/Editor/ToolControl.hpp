@@ -54,41 +54,6 @@ public:
   Cog* mSelectTool;
 };
 
-//-------------------------------------------------------- Query Shortcuts Event
-class QueryShortcutsEvent : public Event
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  QueryShortcutsEvent( ) { mEntries = nullptr; }
-  const ShortcutSet* mEntries;
-};
-
-//------------------------------------------------------------- ShortcutSource
-class ShortcutSource : public DataSource
-{
-public:
-  ShortcutSource( );
-
-  DataEntry* GetRoot( ) override;
-
-  DataEntry* ToEntry(DataIndex index) override;
-  DataIndex ToIndex(DataEntry* dataEntry) override;
-
-  DataEntry* Parent(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
-
-  uint ChildCount(DataEntry* dataEntry) override;
-
-  bool IsExpandable(DataEntry* dataEntry) override;
-
-  void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override;
-
-public:
-  ShortcutSet mSet;
-};
-
 //-------------------------------------------------------------------- Tool Data
 class ToolData
 {
