@@ -50,7 +50,7 @@ Handle CogMetaComposition::GetComponentAt(HandleParam owner, uint index)
 bool CogMetaComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
 {
   Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
-  if (cog->mFlags.IsSet(CogFlags::ComponentsLocked))
+  if (cog->mFlags.IsSet(CogFlags::ScriptComponentsLocked) && !typeToAdd->Native)
   {
     if (info)
       info->Reason = "Cog is locked and components cannot be added";
@@ -131,11 +131,6 @@ bool CogMetaComposition::CanRemoveComponent(HandleParam owner, HandleParam compo
   BoundType* typeToRemove = component.StoredType;
 
   Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
-  if (cog->mFlags.IsSet(CogFlags::ComponentsLocked))
-  {
-    reason = "Cog is locked and components cannot be removed";
-    return false;
-  }
 
   //The child transform's TransformParent* will not be fixed and be a dangling pointer.
   if(typeToRemove->IsA(ZilchTypeId(Transform)))
