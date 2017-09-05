@@ -19,6 +19,7 @@ public:
 
   /// Constructor.
   PixelBuffer();
+  PixelBuffer(MoveReference<PixelBuffer> rhs);
   PixelBuffer(ByteColor clearColor, uint width, uint height);
 
   /// Destructor.
@@ -69,6 +70,11 @@ public:
 
   /// The final texture that we spit out.
   HandleOf<Texture> Image;
+
+private:
+  // We cannot be copied
+  PixelBuffer(const PixelBuffer&);
+  PixelBuffer& operator=(const PixelBuffer&);
 };
 
 }//namespace Zero
