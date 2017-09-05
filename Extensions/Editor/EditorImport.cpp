@@ -347,9 +347,6 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
   }
   else if(options->mGenerateCue == AudioCueImport::Grouped)
   {
-    // Create a new sound cue
-    SoundCue* cue = SoundCueManager::CreateNewResource(options->mGroupCueName);
-
     // Attempt to create a new sound cue
     ResourceAdd resourceAdd;
     resourceAdd.Library = Z::gEditor->mProjectLibrary;
@@ -370,10 +367,10 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
         Sound* sound = SoundManager::GetInstance()->Find(entry.mResourceId);
         cue->AddSoundEntry(sound, 1.0f);
       }
-    }
 
-    if(cue->mContentItem)
-      cue->mContentItem->SaveContent();
+      if (cue->mContentItem)
+        cue->mContentItem->SaveContent();
+    }
   }
 }
 
