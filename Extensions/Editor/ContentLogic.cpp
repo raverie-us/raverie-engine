@@ -358,6 +358,8 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<PhysicsSolverConfigManager>("Baumgarte");
   ShowBuiltInResource<PhysicsSolverConfigManager>("PostStabilization");
 
+  ShowBuiltInResource<SoundAttenuatorManager>("DefaultAttenuation");
+
 
   float time = (float)timer.UpdateAndGetTime();
   ZPrint("Finished Loading Editor Content in %.2f\n", time);
