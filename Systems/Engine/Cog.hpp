@@ -322,6 +322,9 @@ public:
   /// Dispatches an event down the tree on all children recursively (pre-order traversal)
   void DispatchDown(StringParam eventId, Event* event);
 
+  /// Check if anyone has signed up for a particular event.
+  bool HasReceivers(StringParam eventId);
+
   //----- Internals
   EventDispatcher* GetDispatcherObject();
   EventReceiver* GetReceiverObject();
