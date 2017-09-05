@@ -51,7 +51,7 @@ Level
 			var RenderDiffuse = true
 			var RenderSpecular = true
 			var RenderSkybox = false
-			var Skybox = "null"
+			var Skybox = "5822dec85e380cf1:SimpleSkybox"
 			var ClearColor = Real4{0, 0, 0, 1}
 			var DirectLighting = true
 			var IndirectLighting = true
@@ -82,7 +82,7 @@ Level
 		{
 			var Translation = Real3{0, 0, 10}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{-0, -1.09278471e-08, 0, 1}
+			var Rotation = Quaternion{0, 0, 0, 1}
 		}
 		CameraViewport 
 		{
@@ -139,14 +139,11 @@ Level
 		{
 			var ControlMode = ControlMode.ZPlane
 			var Previous3DMode = ControlMode.Orbit
-			var LookDistance = 10
+			var LookDistance = 20
 			var VerticalAngle = 0
 			var HorizontalAngle = 0
 			var LookTarget = Real3{0, 0, 0}
 			var MoveSensitivity = 1
-		}
-		Hierarchy 
-		{
 		}
 	}
 	Cog 

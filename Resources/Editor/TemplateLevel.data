@@ -63,7 +63,7 @@ Level
 		{
 			var Active = true
 			var Radius = 1
-			var Intensity = 2.20000005
+			var Intensity = 1
 			var BlurDepthThreshold = 0.0500000007
 			var DebugBuffer = false
 		}
@@ -113,8 +113,8 @@ Level
 		}
 		DirectionalLight 
 		{
-			var LightColorValue = Real3{1, 1, 1}
-			var LightIntensityValue = 1
+			var LightColor = Real4{1, 1, 1, 1}
+			var LightIntensity = 5
 		}
 		CameraViewport 
 		{
@@ -171,9 +171,6 @@ Level
 		{
 			var ResolutionValue = ShadowResolution.High
 			var NormalOffsetBias = 0.100000001
-		}
-		Hierarchy 
-		{
 		}
 	}
 	Cog 
@@ -257,6 +254,15 @@ Level
 			var Translation = Real3{0, 2, 10}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
+		}
+		SelectionIcon 
+		{
+			var Visible = true
+			var VisibilityEvents = true
+			var Material = "56581e2bb81777be:DebugDrawOnTop"
+			var SpriteSource = "58f8e4be7360cf7c:CameraIcon"
+			var ViewScale = 1
+			var OverrideSelections = true
 		}
 		CameraViewport 
 		{
