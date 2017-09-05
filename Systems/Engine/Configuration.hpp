@@ -46,6 +46,10 @@ public:
   StringMap Parameters;
   /// If we were locally built from the users machine
   bool mLocallyBuilt;
+
+  /// A global flag for whether we save the config or not. This is used in unit test mode where
+  /// we want to clear the config but not have it overwrite the user's config.
+  static bool sConfigCanSave;
 };
 
 //-------------------------------------------------------------------------

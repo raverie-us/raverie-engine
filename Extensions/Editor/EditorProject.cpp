@@ -142,7 +142,7 @@ void OpenProjectFile(StringParam filename)
     return;
   }
   // Prevent components from being added or removed from the project cog
-  projectCog->mFlags.SetFlag(CogFlags::ComponentsLocked);
+  projectCog->mFlags.SetFlag(CogFlags::ScriptComponentsLocked);
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
   if(project == nullptr) return;

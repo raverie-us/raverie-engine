@@ -20,9 +20,11 @@ public:
   TextSaver();
   ~TextSaver();
 
-  /// Open a text file for saving.
-  void Open(Status& status, cstr file, DataVersion::Enum version = DataVersion::Current);
-  bool OpenBuffer(DataVersion::Enum version = DataVersion::Current);
+  /// Open a text file for saving. FileMode must be either Write or Append.
+  void Open(Status& status, cstr file, DataVersion::Enum version = DataVersion::Current,
+            FileMode::Enum fileMode = FileMode::Write);
+  bool OpenBuffer(DataVersion::Enum version = DataVersion::Current,
+                  FileMode::Enum fileMode = FileMode::Write);
   uint GetBufferSize();
   String GetString();
 
@@ -61,10 +63,13 @@ public:
 
   void SaveAttribute(StringParam name, StringParam value = "", bool stringValue = false);
 
+  void SaveFileVersion();
+
 //private:
   StringBuilder mStream;
   String mFilename;
   uint mDepth;
+  FileMode::Enum mWriteMode;
 
   /// The version being saved
   DataVersion::Enum mVersion;

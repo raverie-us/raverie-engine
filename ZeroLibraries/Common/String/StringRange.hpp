@@ -198,6 +198,7 @@ public:
   StringRange Front();
   void PopFront();
   bool Empty();
+  StringTokenRange& All();
 
   StringRange curRange;
   StringRange internalRange;

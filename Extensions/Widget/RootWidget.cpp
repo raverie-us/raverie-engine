@@ -38,6 +38,8 @@ ZilchDefineType(RootWidget, builder, type)
 RootWidget::RootWidget(OsWindow* osWindow)
   : Composite(NULL)
 {
+  WidgetManager::GetInstance()->RootWidgets.PushBack(this);
+
   mRootWidget = this;
   mHoverTime = 0.0f;
   mHoldTime = 0.0f;
@@ -95,6 +97,7 @@ RootWidget::RootWidget(OsWindow* osWindow)
 
 RootWidget::~RootWidget()
 {
+  InList<RootWidget>::Unlink(this);
   mOsWindow->Destroy();
 }
 

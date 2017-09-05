@@ -115,7 +115,7 @@ void Engine::Initialize(SystemInitializer& initializer)
   mConfigCog = initializer.Config;
 
   // Prevent components from being added or removed from the editor cog
-  mConfigCog->mFlags.SetFlag(CogFlags::ComponentsLocked);
+  mConfigCog->mFlags.SetFlag(CogFlags::ScriptComponentsLocked);
 
   for(unsigned i = 0; i < mSystems.Size(); ++i)
   {

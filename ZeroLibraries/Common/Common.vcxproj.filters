@@ -116,6 +116,9 @@
     <ClCompile Include="Utility\Variant.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\Determinism.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">
@@ -359,6 +362,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Utility\PointerCast.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Determinism.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>

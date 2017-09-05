@@ -89,6 +89,7 @@
     <ClInclude Include="CsgExternalSerialization.hpp">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="UnitTestSystem.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Precompiled.cpp">
@@ -152,5 +153,6 @@
     <ClCompile Include="Orientation.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="UnitTestSystem.cpp" />
   </ItemGroup>
 </Project>

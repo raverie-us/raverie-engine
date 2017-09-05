@@ -42,6 +42,8 @@ public:
   /// this widget is forced on top of everything
   virtual Composite* GetPopUp();
 
+  IntrusiveLink(RootWidget, link);
+
 private:
   // Focus on object
   void RootRemoveFocus(Widget* object);

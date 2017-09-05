@@ -9,6 +9,8 @@
 namespace Zero
 {
 
+class RootWidget;
+
 class WidgetManager : public ExplicitSingleton<WidgetManager, EventObject>
 {
 public:
@@ -19,7 +21,7 @@ public:
 
   u64 IdCounter;
   HashMap<u64, Widget*> Widgets;
-  Array<Widget*> RootWidgets;
+  InList<RootWidget> RootWidgets;
   Array<Widget*> DestroyList;
   ActionSpace* mWidgetActionSpace;
 

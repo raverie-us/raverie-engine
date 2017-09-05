@@ -112,6 +112,7 @@ public:
     size_t Length() { return mSize; }
 
     size_type Size() { return Length(); }
+    range& All() { return *this; }
 
   private:
     Node* begin;

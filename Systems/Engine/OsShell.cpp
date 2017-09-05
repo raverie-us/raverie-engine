@@ -27,6 +27,11 @@ ZilchDefineType(OsShell, builder, type)
   ZilchBindMethod(DumpMemoryDebuggerStats);
 }
 
+OsShell::OsShell() :
+  mOsShellHook(nullptr)
+{
+}
+
 void OsShell::DumpMemoryDebuggerStats()
 {
   Memory::DumpMemoryDebuggerStats("MyProject");

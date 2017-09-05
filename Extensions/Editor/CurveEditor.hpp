@@ -309,6 +309,7 @@ private:
     Draggable* Front();
     bool Empty();
     void PopFront();
+    range& All() { return *this; }
     void FindNextControlPoint();
 
     CurveEditor::SelectionRange mRange;

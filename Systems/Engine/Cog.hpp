@@ -43,8 +43,8 @@ DeclareBitField11(CogFlags,
                   ObjectViewHidden,
                   // Not able to be modified or selected in the viewport
                   Locked,
-                  // Cannot add or remove components
-                  ComponentsLocked,
+                  // Cannot add or remove non-native Components
+                  ScriptComponentsLocked,
                   // Can only be selected by SelectionIcon
                   SelectionLimited);
 
