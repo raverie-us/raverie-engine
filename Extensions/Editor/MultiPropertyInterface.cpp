@@ -435,6 +435,7 @@ MultiMetaComposition::MultiMetaComposition(PropertyInterface* propertyInterface,
 uint MultiMetaComposition::GetComponentCount(HandleParam object)
 {
   MetaSelection* selection = object.Get<MetaSelection*>();
+  ReturnIf(selection == nullptr, 0, "The object was not a MetaSelection");
 
   // The count needed is the shared component count
   Array<BoundType*> sharedComponents;
@@ -447,6 +448,7 @@ uint MultiMetaComposition::GetComponentCount(HandleParam object)
 Handle MultiMetaComposition::GetComponentAt(HandleParam object, uint index)
 {
   MetaSelection* selection = object.Get<MetaSelection*>();
+  ReturnIf(selection == nullptr, Handle(), "The object was not a MetaSelection");
 
   // It's the index into the shared component list
   Array<BoundType*> sharedComponents;
@@ -465,6 +467,7 @@ Handle MultiMetaComposition::GetComponentAt(HandleParam object, uint index)
 bool MultiMetaComposition::CanAddComponent(HandleParam object, BoundType* typeToAdd, AddInfo* info)
 {
   MetaSelection* selection = object.Get<MetaSelection*>();
+  ReturnIf(selection == nullptr, false, "The object was not a MetaSelection");
 
   // Check if it can be added to each object in the selection
   forRange(Handle instance, selection->All())
@@ -479,6 +482,10 @@ bool MultiMetaComposition::CanAddComponent(HandleParam object, BoundType* typeTo
 //******************************************************************************
 void MultiMetaComposition::AddComponent(HandleParam object, BoundType* typeToAdd, int index, bool ignoreDependencies)
 {
+  // Add the component to each object in the selection
+  MetaSelection* selection = object.Get<MetaSelection*>();
+  ReturnIf(selection == nullptr,, "The object was not a MetaSelection");
+
   ErrorIf(index != -1, "Adding Components at an index through multi-select is not supported");
 
   // We want all add operations to be part of the same operation group
@@ -486,8 +493,6 @@ void MultiMetaComposition::AddComponent(HandleParam object, BoundType* typeToAdd
 
   mOperationQueue->SetActiveBatchName(BuildString("Add '", typeToAdd->Name, "to objects"));
 
-  // Add the component to each object in the selection
-  MetaSelection* selection = object.Get<MetaSelection*>();
   forRange(Handle currentObject, selection->All())
     UndoMetaComposition::AddComponent(currentObject, typeToAdd, index, ignoreDependencies);
 
@@ -497,10 +502,12 @@ void MultiMetaComposition::AddComponent(HandleParam object, BoundType* typeToAdd
 //******************************************************************************
 bool MultiMetaComposition::CanRemoveComponent(HandleParam object, HandleParam component, String& reason)
 {
-  BoundType* componentType = component.StoredType;
-
   // Check if we can remove the component type from each object in the selection
   MetaSelection* selection = object.Get<MetaSelection*>();
+  ReturnIf(selection == nullptr, false, "The object was not a MetaSelection");
+
+  BoundType* componentType = component.StoredType;
+
   forRange(Handle currentObject, selection->All())
   {
     // If we cannot remove the component on this object, we can't remove any
@@ -514,6 +521,10 @@ bool MultiMetaComposition::CanRemoveComponent(HandleParam object, HandleParam co
 //******************************************************************************
 void MultiMetaComposition::RemoveComponent(HandleParam object, HandleParam component, bool ignoreDependencies)
 {
+  // Remove the component type from each object in the selection
+  MetaSelection* selection = object.Get<MetaSelection*>();
+  ReturnIf(selection == nullptr,, "The object was not a MetaSelection");
+
   // We want all remove operations to be part of the same operation group
   mOperationQueue->BeginBatch();
 
@@ -521,8 +532,6 @@ void MultiMetaComposition::RemoveComponent(HandleParam object, HandleParam compo
 
   mOperationQueue->SetActiveBatchName(BuildString("Remove '", componentType->Name, "from objects"));
 
-  // Remove the component type from each object in the selection
-  MetaSelection* selection = object.Get<MetaSelection*>();
   forRange(Handle currentObject, selection->All())
   {
     Handle component = GetComponent(currentObject, componentType);
@@ -536,6 +545,7 @@ void MultiMetaComposition::RemoveComponent(HandleParam object, HandleParam compo
 void MultiMetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateAction::Enum action, HandleParam object)
 {
   MetaSelection* selection = object.Get<MetaSelection*>();
+  ReturnIf(selection == nullptr,, "The object was not a MetaSelection");
 
   // Only show the types that all compositions can add / enumerate
   HashMap<BoundType*, uint> filteredList;
@@ -562,7 +572,7 @@ void MultiMetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateActio
 void MultiMetaComposition::GetSharedComponents(MetaSelection* selection,
                                                Array<BoundType*>& sharedComponents)
 {
-  Handle primary = selection->GetPrimaryAs<Object>();
+  Handle primary = selection->GetPrimary();
   if (primary.IsNull())
     return;
 

@@ -71,6 +71,10 @@ void ObjectTransformGizmo::AddObject(HandleParam object)
   if(object.IsNull())
     return;
 
+  MetaTransform* metaTransform = object.StoredType->HasInherited<MetaTransform>();
+  if(!metaTransform)
+    return;
+
   mObjects.PushBack(object);
   UpdateGizmoBasis();
 }
@@ -81,7 +85,7 @@ void ObjectTransformGizmo::RemoveObject(HandleParam object)
   if(object.IsNull())
     return;
 
-  mObjects.EraseValueError(object);
+  mObjects.EraseValue(object);
   UpdateGizmoBasis();
 }
 
