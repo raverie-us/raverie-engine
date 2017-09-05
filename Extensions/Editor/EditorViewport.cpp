@@ -942,6 +942,9 @@ bool EditorViewport::ForwardEventToGizmos(KeyboardEvent* e)
 
 void EditorViewport::OnCameraUpdate(ObjectEvent* event)
 {
+  if (mDestroyed)
+    return;
+
   EditorSettings* settings = Z::gEngine->GetConfigCog()->has(EditorSettings);
   ConfigureViewCube(settings->mViewCube, settings->mViewCubeSize);
 
