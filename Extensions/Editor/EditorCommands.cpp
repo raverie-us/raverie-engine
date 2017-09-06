@@ -732,7 +732,7 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, EditFocusMode::Enum focus
   forRange(Handle selection, activeSelection->All())
   {
     Cog* cog = selection.Get<Cog*>();
-    if (cog->has(Transform))
+    if (cog != nullptr && cog->has(Transform))
       transformObjects.Add(cog);
   }
   
