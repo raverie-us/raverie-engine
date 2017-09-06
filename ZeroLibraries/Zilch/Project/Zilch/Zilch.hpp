@@ -304,5 +304,6 @@ namespace Zilch
 #include "DataDrivenLexer.hpp"
 #include "Wrapper.hpp"
 #include "ProcessClass.hpp"
+#include "Color.hpp"
 
 #endif
