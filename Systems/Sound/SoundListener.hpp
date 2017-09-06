@@ -44,6 +44,7 @@ private:
   SoundSpace* mSpace;
   Transform* mTransform;
   Vec3 mPrevPosition;
+  Vec3 mPrevForward;
 
   friend class SoundSpace;
   friend class SoundSystem;
