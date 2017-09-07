@@ -149,7 +149,8 @@ void MetaOperations::NotifyPropertyModified(HandleParam object, PropertyPathPara
     else
       PropertyModifiedDefault(localObject, localPath, oldValue, newValue, intermediateChange);
 
-    NotifyObjectModified(localObject);
+    // The object has been modified, so notify that as well
+    NotifyObjectModified(localObject, intermediateChange);
 
     localPath.mPath.PopFront();
   }
@@ -162,7 +163,7 @@ void MetaOperations::NotifyComponentsModified(HandleParam object)
   if (MetaOperations* metaOps = objectType->HasInherited<MetaOperations>())
   {
     metaOps->ComponentsModified(object);
-    metaOps->ObjectModified(object);
+    metaOps->ObjectModified(object, false);
   }
   else
   {
@@ -172,11 +173,11 @@ void MetaOperations::NotifyComponentsModified(HandleParam object)
 }
 
 //**************************************************************************************************
-void MetaOperations::NotifyObjectModified(HandleParam object)
+void MetaOperations::NotifyObjectModified(HandleParam object, bool intermediateChange)
 {
   BoundType* objectType = object.StoredType;
   if (MetaOperations* metaOps = objectType->HasInherited<MetaOperations>())
-    metaOps->ObjectModified(object);
+    metaOps->ObjectModified(object, intermediateChange);
   else
     ObjectModifiedDefault(object);
 }
@@ -207,7 +208,7 @@ void MetaOperations::ComponentsModified(HandleParam object)
 }
 
 //**************************************************************************************************
-void MetaOperations::ObjectModified(HandleParam object)
+void MetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 {
   ObjectModifiedDefault(object);
 }

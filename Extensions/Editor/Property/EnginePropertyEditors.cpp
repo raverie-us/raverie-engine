@@ -1748,6 +1748,9 @@ public:
 
   void Refresh() override
   {
+    if (mDestroyed)
+      return;
+
     DirectProperty::Refresh();
 
     auto resourceState = GetResource();
@@ -1844,6 +1847,9 @@ public:
 
   void OnSearchPreview(SearchViewEvent* event)
   {
+    if (mDestroyed)
+      return;
+
     bool preview = true;
     SetResource((Resource*)event->Element->Data, preview);
   }

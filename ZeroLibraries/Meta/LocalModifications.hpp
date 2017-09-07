@@ -164,6 +164,7 @@ public:
   virtual void Revert(HandleParam object);
   virtual bool CanPropertyBeReverted(HandleParam object, PropertyPathParam propertyPath);
   virtual void RevertProperty(HandleParam object, PropertyPathParam propertyPath);
+  virtual void RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId);
   virtual void SetPropertyModified(HandleParam object, PropertyPathParam propertyPath, bool state);
 
   /// When a modification of an object is being reverted, the object has to be rebuilt to

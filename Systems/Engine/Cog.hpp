@@ -24,7 +24,7 @@ struct TransformUpdateInfo;
 // Type define for a range
 typedef ConditionalRange<HierarchyRange, NameCondition> HierarchyNameRange;
 
-DeclareBitField11(CogFlags,
+DeclareBitField12(CogFlags,
                   // Object cannot be destroyed be the user
                   Protected,
                   // Object will not be destroy on level change or clear
@@ -46,7 +46,9 @@ DeclareBitField11(CogFlags,
                   // Cannot add or remove non-native Components
                   ScriptComponentsLocked,
                   // Can only be selected by SelectionIcon
-                  SelectionLimited);
+                  SelectionLimited,
+                  // Is the Cog representing the Archetype definition (data file)?
+                  ArchetypeDefinitionMode);
 
 //----------------------------------------------------------------------------------------- Base Cog
 /// Base class used for the intrusive link.
@@ -364,6 +366,9 @@ public:
   /// Not able to be modified or selected in the viewport.
   bool GetLocked();
   void SetLocked(bool state);
+  /// Is the Cog representing the Archetype definition (data file)?
+  bool InArchetypeDefinitionMode();
+  void SetArchetypeDefinitionMode();
 
   /// When the object is moved, this should be called to inform all Components that it has moved.
   /// It also sends an event.

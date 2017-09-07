@@ -88,7 +88,7 @@ ZilchDefineType(Cog, builder, type)
 
   // Properties
   ZilchBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension());
+  ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension())->Add(new CogArchetypePropertyFilter());
   ZilchBindGetterProperty(BaseArchetype)->Add(new EditorResource(false, false, "", true));
 
   ZilchBindGetter(Space);
@@ -1642,8 +1642,15 @@ void Cog::UploadToArchetype()
   //
   // If we only ever allowed people to modify the Archetype in its own window, this would not be
   // an issue.
-  CachedModifications& archetypeModifications = archetype->GetAllCachedModifications();
-  archetypeModifications.ApplyModificationsToObject(this, true);
+  //
+  // However, if we're in ArchetypeDefinition mode, all these modifications will already be
+  // on the object. Re-applying these could even override modifications we're trying to make
+  // to the Archetype definition (such as reverting a property)
+  if(InArchetypeDefinitionMode() == false)
+  {
+    CachedModifications& archetypeModifications = archetype->GetAllCachedModifications();
+    archetypeModifications.ApplyModificationsToObject(this, true);
+  }
 
   // Assign all children child-id's if they don't already have them
   AssignChildIds(this);
@@ -1658,7 +1665,10 @@ void Cog::UploadToArchetype()
   //    because those modifications are now part of the Archetype's context, not the instance
   // 2. Any cached modifications we applied to the object before saving. See comment above
   //    applying the archetypes cached modifications in this function.
-  ClearCogModifications(this, false);
+  //
+  // However, if we're in ArchetypeDefinition mode, we want to keep the modifications
+  if (InArchetypeDefinitionMode() == false)
+    ClearCogModifications(this, false);
 
   overlappingModifications.ApplyModificationsToObject(this);
 
@@ -1990,6 +2000,29 @@ void Cog::SetLocked(bool state)
   {
     child.SetLocked(state);
   }
+}
+
+//**************************************************************************************************
+bool Cog::InArchetypeDefinitionMode()
+{
+  if (mFlags.IsSet(CogFlags::ArchetypeDefinitionMode))
+    return true;
+  if (Cog* parent = GetParent())
+    return parent->InArchetypeDefinitionMode();
+  return false;
+}
+
+//**************************************************************************************************
+void Cog::SetArchetypeDefinitionMode()
+{
+  Archetype* archetype = GetArchetype();
+
+  ReturnIf(archetype == nullptr, , "Must have an Archetype to be in Archetype Definition mode.");
+
+  // Apply our modifications from our base Archetype
+  archetype->GetLocalCachedModifications().ApplyModificationsToObject(this);
+
+  mFlags.SetFlag(CogFlags::ArchetypeDefinitionMode);
 }
 
 //**************************************************************************************************

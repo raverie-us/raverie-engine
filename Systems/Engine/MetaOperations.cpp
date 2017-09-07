@@ -189,6 +189,8 @@ void MetaOperation::Undo()
 {
   Handle object = GetUndoObject();
 
+  ReturnIf(object.IsNull(), , "Cannot undo operation");
+
   if(MetaOperations* metaOp = object.StoredType->HasInherited<MetaOperations>())
     metaOp->RestoreUndoData(object, mUndoClientData);
 }
@@ -199,7 +201,7 @@ void MetaOperation::Redo()
   Handle object = GetUndoObject();
 
   if (MetaOperations* metaOp = object.StoredType->HasInherited<MetaOperations>())
-    metaOp->ObjectModified(object);
+    metaOp->ObjectModified(object, false);
 }
 
 //******************************************************************************
@@ -272,12 +274,12 @@ void PropertyOperation::Redo()
   if(!succeeded)
     return;
 
-  // Notify Meta that the property has changed
-  MetaOperations::NotifyPropertyModified(instance, mPropertyPath, mValueBefore, mValueAfter, false);
-
   // Mark the property as modified
   LocalModifications* modifications = LocalModifications::GetInstance();
   modifications->SetPropertyModified(instance, mPropertyPath, true);
+
+  // Notify Meta that the property has changed
+  MetaOperations::NotifyPropertyModified(instance, mPropertyPath, mValueBefore, mValueAfter, false);
 }
 
 //******************************************************************************
@@ -734,10 +736,10 @@ void RestoreChildOperation::Redo()
 
   if(!parent.IsNull())
   {
-    LocalModifications::GetInstance()->ChildAdded(parent, mChildId);
 
-    // Rebuild the object to reflect the changes
-    mInheritance->RebuildObject(parent);
+    BoundType* parentType = parent.StoredType;
+    if (MetaDataInheritance* inheritance = parentType->HasInherited<MetaDataInheritance>())
+      inheritance->RestoreRemovedChild(parent, mChildId);
   }
 
   MetaOperation::Redo();

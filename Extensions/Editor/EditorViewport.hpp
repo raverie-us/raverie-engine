@@ -48,9 +48,6 @@ public:
   /// Set this as the active viewport for playing
   void SetAsActive();
 
-  /// When an editor viewport is selected set the appropriate active selection
-  void SetActiveSelection();
-
   /// Find the editor camera
   void SetUpEditorCamera();
   void OnCameraDestroyed(ObjectEvent* event);
@@ -78,7 +75,6 @@ public:
 
   // If this viewport is editing an archetype
   HandleOf<Archetype> mEditArchetype;
-  HandleOf<Cog> mArchetypedObject;
 
   MouseMode::Enum mMouseOperation;
   Vec2 mMouseDownScreenPosition;
@@ -90,6 +86,9 @@ public:
   EditorViewportMenu* mMenu;
   Element* mMenuToggleButton;
   bool mMenuHidden;
+  
+  /// Used to stop the tab from ever showing modified for this viewport
+  bool mIgnoreSpaceModifications;
 
   OrientationGizmoViewport* mOrientationGizmo;
 
