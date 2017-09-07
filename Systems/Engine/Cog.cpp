@@ -15,7 +15,6 @@ bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
 void ClearCogModifications(Cog* rootCog, Cog* cog, ObjectState::ModifiedProperties& cachedMemory,
                            bool retainOverrideProperties, bool retainChildArchetypeModifications);
 void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications);
-void AssignChildIds(Cog* parent);
 template<typename type>
 void eraseEqualValues(Array<type>& mArray, type value);
 
@@ -1517,6 +1516,22 @@ HierarchyList* Cog::GetParentHierarchyList()
   return parent->GetHierarchyList();
 }
 
+
+//**************************************************************************************************
+void Cog::AssignChildIds()
+{
+  forRange(Cog& child, GetChildren())
+  {
+    if (child.mChildId == PolymorphicNode::cInvalidUniqueNodeId)
+      child.mChildId = GenerateUniqueId64();
+
+    // Assign to children as long as we don't enter a new Archetype (they should
+    // already have child id's assigned to them)
+    if (child.mArchetype == nullptr)
+      child.AssignChildIds();
+  }
+}
+
 //**************************************************************************************************
 Archetype* Cog::GetArchetype()
 {
@@ -1653,7 +1668,7 @@ void Cog::UploadToArchetype()
   }
 
   // Assign all children child-id's if they don't already have them
-  AssignChildIds(this);
+  AssignChildIds();
 
   // Update the resource and save to library
   // If uploaded this will also clear modified
@@ -2200,21 +2215,6 @@ void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications)
   bool retainOverride = (nearestArchetypeContext == root);
 
   ClearCogModifications(root, root, cachedMemory, retainOverride, retainChildArchetypeModifications);
-}
-
-//**************************************************************************************************
-void AssignChildIds(Cog* parent)
-{
-  forRange(Cog& child, parent->GetChildren())
-  {
-    if(child.mChildId == PolymorphicNode::cInvalidUniqueNodeId)
-      child.mChildId = GenerateUniqueId64();
-
-    // Assign to children as long as we don't enter a new Archetype (they should
-    // already have child id's assigned to them)
-    if (child.mArchetype == nullptr)
-      AssignChildIds(&child);
-  }
 }
 
 //**************************************************************************************************

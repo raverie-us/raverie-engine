@@ -269,6 +269,7 @@ public:
   /// Returns the list of all of our parents children. If we don't have a parent, it will return
   /// the list of all objects in the Space.
   HierarchyList* GetParentHierarchyList();
+  void AssignChildIds();
 
   /// The parent of this Cog in a Hierarchy.
   Cog* mHierarchyParent;
