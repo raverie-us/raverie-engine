@@ -147,7 +147,7 @@ struct QuatMathExtensions
     return result;
   }
   
-  [Static][Extension(typeid(Math))]
+  [Static][Extension(typeid(Math))][Implements]
   function ToReal3x3(rotation : Quaternion) : Real3x3
   {
     //     |       2     2                                |

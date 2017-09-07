@@ -69,6 +69,12 @@ int main()
   GlslRenderer glslRenderer(drawContext);
 
   Zilch::ZilchSetup zilchSetup;
+
+  Zilch::Module module;
+  ExecutableState::CallingState = module.Link();
+
+  ShaderSettingsLibrary::InitializeInstance();
+  ShaderIntrinsicsLibrary::InitializeInstance();
   ShaderSettingsLibrary::GetInstance().GetLibrary();
   String extensionsPath = FilePath::Combine(GetApplicationDirectory(), "FragmentCore");
   String fragmentSettingsPath = FilePath::Combine(GetApplicationDirectory(), "ZilchFragmentSettings");
