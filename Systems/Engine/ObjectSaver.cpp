@@ -213,12 +213,12 @@ void ObjectSaver::SaveChildren(Object* object, Object* propertyPathParent, Prope
     // Only save objects that are modified if specified
     if(onlyModifiedChildren)
     {
-      // If the object has modifications, we only want to save out modifications
-      if(modifications->IsModified(child, true, false))
-        SaveObject(child, child, path, true, InheritIdContext::Instance);
       // If the object was locally added, we want to save the object normally
-      else if(objectState && objectState->IsChildLocallyAdded(Handle(child)))
+      if (objectState && objectState->IsChildLocallyAdded(Handle(child)))
         SaveObject(child, child, path, false, InheritIdContext::Instance);
+      // If the object has modifications, we only want to save out modifications
+      else if (modifications->IsModified(child, true, false))
+        SaveObject(child, child, path, true, InheritIdContext::Instance);
       else if(objectState && objectState->IsChildOrderModified())
       {
         PolymorphicInfo info;
