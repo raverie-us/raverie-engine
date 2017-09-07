@@ -3181,8 +3181,8 @@ namespace Zilch
     builder.AddBoundFunction(stringType, "SubString", SubString, TwoParameters(runeIteratorType, "start", "end"), stringType, FunctionOptions::None);
     builder.AddBoundFunction(stringType, "SubStringFromRuneIndices", SubStringFromRuneIndices, TwoParameters(integerType, "startIndex", "endIndex"), stringType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Creates a substring from start and end indices. WARNING: this may be slow as finding an index for a UTF8 string requires a linear search.");
-    builder.AddBoundFunction(stringType, Zilch::OperatorGet, StringGetRune, OneParameter(integerType, "index"), ZilchTypeId(Rune), FunctionOptions::None);
-
+    builder.AddBoundFunction(stringType, Zilch::OperatorGet, StringGetRune, OneParameter(integerType, "index"), ZilchTypeId(Rune), FunctionOptions::None)
+      ->Description = ZilchDocumentString("String operator Get is deprecated. To iterate through a String use a StringRange (.All) or StringIterator (.Begin).");
     builder.AddBoundFunction(stringType, "SubStringBytes", SubStringBytes, TwoParameters(integerType, "startByteIndex", "lengthInBytes"), stringRangeType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings are UTF8 so indexing by bytes could produce unexpected results on non-ascii strings.");
     builder.AddBoundFunction(stringType, "RuneIteratorFromByteIndex", StringRuneIteratorFromByteIndex, OneParameter(integerType, "byteIndex"), runeIteratorType, FunctionOptions::None)
