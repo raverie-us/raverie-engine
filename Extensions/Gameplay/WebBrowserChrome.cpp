@@ -6,6 +6,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+// We include this here to hide the implementation
+#include "WebBrowserChrome.hpp"
+
 namespace Zero
 {
 

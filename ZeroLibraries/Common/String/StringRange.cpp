@@ -928,4 +928,9 @@ bool StringTokenRange::Empty()
   return curRange.Empty() && internalRange.Empty();
 }
 
+StringTokenRange& StringTokenRange::All()
+{
+  return *this;
+}
+
 }// namespace Zero

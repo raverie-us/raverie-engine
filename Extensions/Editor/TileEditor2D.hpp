@@ -123,6 +123,78 @@ private:
   IntVec2 mEnd;
 };
 
+/// <Commands>
+///   <command name = "TileDraw">
+///     <shortcut> Shift + 1 </shortcut>
+///     <description>
+///       Set the TileEditor's sub-tool to the tile DrawTool.
+///     </description>
+///   </command>
+///   <command name = "TileSelection 1">
+///     <shortcut> Shift + 2 </shortcut>
+///     <description>
+///       Set the TileEditor's sub-tool to the tile SelectionTool.
+///     </description>
+///   </command>
+///   <command name = "TileSelection 2">
+///     <shortcut> Shift + LeftClick (in Editor Viewport) </shortcut>
+///     <description>
+///       Set the TileEditor's sub-tool to the tile SelectionTool.
+///     </description>
+///   </command>
+///   <command name = "PrimaryBrushAction">
+///     <shortcut> LeftMouse + Drag </shortcut>
+///     <description>
+///       DrawTool:\Paint tiles using the current brush.\ \
+///       SelectionTool:\Select a collection of tiles bound by the initial drag
+///       point and current mouse cursor position.
+///     </description>
+///   </command>
+///   <command name = "SecondaryBrushAction">
+///     <shortcut> RightMouse + Drag </shortcut>
+///     <description>
+///       DrawTool:\Erase tiles using the current brush size.\ \
+///       SelectionTool:\Commit the current tile-selection to be used as the new brush.
+///     </description>
+///   </command>
+///   <command name = "SelectTilePaletteBrush">
+///     <shortcut> Esc </shortcut>
+///     <description>
+///       Return the brush's tile-selection to the current TilePalette selection,
+///       or if there isn't one - return the brush to the default, single-tile
+///       TilePalette setup.
+///     </description>
+///   </command>
+///   <command name = "TilePaletteSelection">
+///     <shortcut> LeftMouse + Drag\(in TilePalette view) </shortcut>
+///     <description>
+///       Select an area in the TilePalette view bound by the initial drag
+///       point and current mouse cursor position.  The current brush will be
+///       set to the tile configuration in this area.
+///     </description>
+///   </command>
+///   <command name = "TilePaletteDeletion">
+///     <shortcut> RightClick\(in TilePalette view) </shortcut>
+///     <description>
+///       Delete a single tile in the TilePalette view.
+///     </description>
+///   </command>
+///   <command name = "TilePaletteCopy">
+///     <shortcut> Shift + RightClick\(in TilePalette view) </shortcut>
+///     <description>
+///       Paste a copy of the current tile-selection at the click-point
+///       in the TilePalette view.\ \
+///       Note:\  - Current tile-selection may be in either the TilePalette view
+///       or in any other view containing tiles recognized by the TileEditor2D tool.
+///     </description>
+///   </command>
+///   <command name = "TilePaletteZoom">
+///     <shortcut> Ctrl + MouseScroll\(in TilePalette view) </shortcut>
+///     <description>
+///       Zoom in/out on the TilePalette view.
+///     </description>
+///   </command>
+/// </Commands>
 class TileEditor2D : public Component
 {
 public:

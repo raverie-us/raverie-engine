@@ -19,7 +19,11 @@ void AddDependencies(DataNode* parent, BoundType* type, DataNode* addLocation);
 //**************************************************************************************************
 void ObjectLoader::RecordModifications(Object* rootObject)
 {
-  if(mRoot->IsPatched())
+  // Object loader assumes a single root node
+  ErrorIf(mFileRoot->GetNumberOfChildren() != 1, "Must contain a single root node");
+
+  DataNode* root = mFileRoot->GetFirstChild();
+  if(root->IsPatched())
   {
     CachedModifications modifications;
     CacheModifications(&modifications);
@@ -30,7 +34,11 @@ void ObjectLoader::RecordModifications(Object* rootObject)
 //**************************************************************************************************
 void ObjectLoader::CacheModifications(CachedModifications* modifications)
 {
-  modifications->Cache(mRoot);
+  // Object loader assumes a single root node
+  ErrorIf(mFileRoot->GetNumberOfChildren() != 1, "Must contain a single root node");
+
+  DataNode* root = mFileRoot->GetFirstChild();
+  modifications->Cache(root);
 }
 
 //**************************************************************************************************

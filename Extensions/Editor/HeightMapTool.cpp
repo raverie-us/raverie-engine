@@ -914,6 +914,7 @@ void HeightMapTool::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner(), Events::MouseMove, OnMouseMove);
   ConnectThisTo(GetOwner(), Events::MouseScroll, OnMouseScroll);
   ConnectThisTo(GetOwner(), Events::ToolDraw, OnToolDraw);
+  ConnectThisTo(GetOwner(), Events::KeyDown, OnKeyDown);
 }
 
 void HeightMapTool::OnToolActivate(Event*)
@@ -933,6 +934,52 @@ void HeightMapTool::OnToolDeactivate(Event*)
 {
   mAddHeightMapWidget.SafeDestroy();
   Z::gEditor->GetSelection()->GetDispatcher()->Disconnect(this);
+}
+
+void HeightMapTool::OnKeyDown(KeyboardEvent* e)
+{
+  switch(e->Key)
+  {
+    case Keys::Num1:
+      if(e->ShiftPressed)
+      {
+        SetCurrentTool(HeightTool::CreateDestroy);
+        e->Handled = true;
+      }
+      break;
+
+    case Keys::Num2:
+      if(e->ShiftPressed)
+      {
+        SetCurrentTool(HeightTool::RaiseLower);
+        e->Handled = true;
+      }
+      break;
+
+    case Keys::Num3:
+      if(e->ShiftPressed)
+      {
+        SetCurrentTool(HeightTool::SmoothSharpen);
+        e->Handled = true;
+      }
+      break;
+
+    case Keys::Num4:
+      if(e->ShiftPressed)
+      {
+        SetCurrentTool(HeightTool::Flatten);
+        e->Handled = true;
+      }
+      break;
+
+    case Keys::Num5:
+      if(e->ShiftPressed)
+      {
+        SetCurrentTool(HeightTool::WeightPainter);
+        e->Handled = true;
+      }
+      break;
+  }
 }
 
 void HeightMapTool::OnLeftMouseDown(ViewportMouseEvent* e)
@@ -998,9 +1045,6 @@ void HeightMapTool::OnMouseMove(ViewportMouseEvent* e)
 
 void HeightMapTool::OnMouseScroll(ViewportMouseEvent* e)
 {
-  if(mMouseCapture.IsNull( ))
-    return;
-
   // If we have no map that we are editing, ignore this event
   HeightMap* map = GetHeightMap();
   if (map == NULL)
@@ -1010,6 +1054,10 @@ void HeightMapTool::OnMouseScroll(ViewportMouseEvent* e)
 
   // Set the local position on the sub tool and forward the event
   e->Handled = SetupLocalPosition(map, viewport, e) && mSubTool->MouseScroll(map, e);
+
+  // Capture/Claim the mouse
+  if(e->Handled)
+    mMouseCapture = new HeightMapMouseCapture(e->GetMouse( ), viewport, this);
 }
 
 void HeightMapTool::OnToolDraw(Event*)

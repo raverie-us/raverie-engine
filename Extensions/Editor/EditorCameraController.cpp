@@ -103,7 +103,7 @@ void EditorCameraController::Serialize(Serializer& stream)
 
 void EditorCameraController::Reset()
 {
-  mLookDistance = 10.0f;
+  mLookDistance = mControlMode != ControlMode::ZPlane ? 10.0f : 20.0f;
   mLookTarget = mControlMode != ControlMode::ZPlane ? Vec3(0, 2, 0) : Vec3::cZero;
   mCameraDirection = -Vec3::cZAxis;
   mCameraRight = Vec3::cXAxis;

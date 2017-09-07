@@ -301,6 +301,10 @@ void TimeSystem::Update()
 
   ProfileScopeTree("TimeSystem", "Engine", Color::Orange);
 
+  // We can pretend that the rest of the engine runs at a fixed frame rate
+  if (gDeterministicMode)
+    dt = 1.0f / 60.0f;
+
   mEngineDt = dt;
   mEngineRuntime = mTimer.Time();
 

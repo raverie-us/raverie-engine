@@ -79,6 +79,7 @@ protected:
     bool Empty();
     void PopFront();
     void SkipInvalid();
+    UiFilteredChildren& All() { return *this; }
 
     UiWidget::ChildList::range mRange;
   };

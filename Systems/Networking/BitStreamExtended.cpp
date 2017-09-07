@@ -1632,9 +1632,10 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
     return nullptr;
   }
 
-  // Create event //METAREFACTOR This may not work since we're using the calling state for everything
-  HandleOf<Event> event = ExecutableState::CallingState->AllocateDefaultConstructed<Event>(eventType);
-  if(event.IsNull()) // Unable?
+  // Create event
+  HandleOf<Event> eventHandle = ExecutableState::CallingState->AllocateDefaultConstructed<Event>(eventType);
+  Event* event = eventHandle;
+  if(!event) // Unable?
   {
     Assert(false);
     return nullptr;

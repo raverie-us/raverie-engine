@@ -62,102 +62,6 @@ Cog* ToolUiEvent::GetSelectTool()
   return mSelectTool;
 }
 
-//-------------------------------------------------------- Query Shortcuts Event
-ZilchDefineType(QueryShortcutsEvent, builder, type)
-{
-}
-
-//-------------------------------------------------------------- Shortcut Source
-#define IF_ROOT(r) DataEntry* root = &mSet; if(dataEntry == root) return r;
-
-//******************************************************************************
-ShortcutSource::ShortcutSource( )
-{
-}
-
-//******************************************************************************
-DataEntry* ShortcutSource::GetRoot( )
-{
-  return &mSet;
-}
-
-//******************************************************************************
-DataEntry* ShortcutSource::ToEntry(DataIndex index)
-{
-  DataEntry* root = &mSet;
-  if(((DataEntry *)index.Id) == root)
-    return ((DataEntry *)index.Id);
-  else if(index.Id >= mSet.Size( ))
-    return NULL;
-
-  return &mSet[(uint)index.Id];
-}
-
-//******************************************************************************
-DataIndex ShortcutSource::ToIndex(DataEntry* dataEntry)
-{
-  IF_ROOT((DataIndex)((u64)dataEntry));
-
-  return DataIndex(((ShortcutEntry*)dataEntry)->mIndex);
-}
-
-//******************************************************************************
-DataEntry* ShortcutSource::Parent(DataEntry* dataEntry)
-{
-  // Everyone but the root has the parent of the root.
-  IF_ROOT(NULL);
-
-  return root;
-}
-
-//******************************************************************************
-DataEntry* ShortcutSource::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
-{
-  if(index >= 0 && index < mSet.Size( ))
-    return &mSet[index];
-
-  IF_ROOT(&mSet.Front( ));
-
-  return NULL;
-}
-
-//******************************************************************************
-uint ShortcutSource::ChildCount(DataEntry* dataEntry)
-{
-  // Only the root has children, no one else does.
-  IF_ROOT(mSet.Size( ));
-
-  return 0;
-}
-
-//******************************************************************************
-bool ShortcutSource::IsExpandable(DataEntry* dataEntry)
-{
-  // Only the root is expandable.
-  IF_ROOT(true);
-
-  return false;
-}
-
-//******************************************************************************
-void ShortcutSource::GetData(DataEntry* dataEntry, Any& variant, StringParam column)
-{
-  ShortcutEntry *entry = ((ShortcutEntry *)dataEntry);
-
-  if(column == "Name")
-    variant = entry->mName;
-  else if(column == "Shortcut")
-    variant = entry->mShortcut;
-  else if(column == "Description")
-    variant = entry->mDescription;
-}
-
-//******************************************************************************
-bool ShortcutSource::SetData(DataEntry* dataEntry, AnyParam variant, StringParam column)
-{
-  return false;
-}
-
 //------------------------------------------------------ Tool Property Interface
 // We're using a custom property interface to only show components marked with
 // the 'Tool' tag. This allows the author of the tool to hide irrelevant
@@ -559,13 +463,25 @@ void ToolControl::OnInfoMouseEnter(MouseEvent*)
   if(mActiveTool == nullptr)
     return;
 
-  QueryShortcutsEvent queryEvent;
-  mActiveTool->mCog->DispatchEvent(Events::ShortcutInfoEnter, &queryEvent);
+  ShortcutSet entries;
+  // Get the shortcuts documentation for all components of the tool.
+  forRange(Component* component, mActiveTool->mCog->GetComponents( ))
+  {
+    BoundType *type = ZilchVirtualTypeId(component);
+    const ShortcutSet* shortcuts = Z::gShortcutsDoc->FindSet(type->Name);
+
+    if(shortcuts)
+    {
+      entries.Reserve(entries.Size() + shortcuts->Size());
+      entries.Append(shortcuts->All());
+    }
+
+  }
 
   mShortcutsTip.SafeDestroy();
 
-  // Query for description came up empty.
-  if(queryEvent.mEntries == nullptr || queryEvent.mEntries->Empty( ))
+  // Query for description came up empty, so report that in the info tooltip.
+  if(entries.Empty( ))
   {
     ToolTip* toolTip = mShortcutsTip = new ToolTip(mToolBox);
     toolTip->SetText("Current tool does not have any mouse/keyboard shortcuts.");
@@ -593,7 +509,7 @@ void ToolControl::OnInfoMouseEnter(MouseEvent*)
     return;
   }
 
-  BuildShortcutsToolTip(queryEvent.mEntries);
+  BuildShortcutsToolTip(&entries);
 }
 
 //******************************************************************************
@@ -705,7 +621,7 @@ void ToolControl::BuildShortcutsToolTip(const ShortcutSet* entries)
   mShortcutsView->SetDataSource(&mShortcutSource);
 
   // Make the "Name" & "Shortcut" column width fit to the max-row's text
-  // size for their respective column.
+  // size for their respective column.6
   mShortcutsView->mFitToText[0] = true;
   mShortcutsView->mFitToText[1] = true;
 

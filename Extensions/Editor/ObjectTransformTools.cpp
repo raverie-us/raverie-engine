@@ -95,9 +95,6 @@ Cog* GizmoCreator::GetGizmo(Space* space)
     gizmo->SetTransient(true);
     gizmo->SetObjectViewHidden(true);
 
-    if(!space->GetModified())
-      space->MarkModified();
-
     Transform *t = gizmo->has(Transform);
 
     ToolGizmoEvent e(mGizmo);
@@ -147,8 +144,6 @@ void ObjectTransformTool::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner( ), Events::ToolDeactivate, OnToolDeactivate);
 
   ConnectThisTo(GetOwner( ), Events::ToolCreateGizmoEvent, OnToolGizmoCreated);
-
-  ConnectThisTo(GetOwner( ), Events::ShortcutInfoEnter, OnShortcutInfoEnter);
 
   ConnectThisTo(GetOwner( ), Events::KeyDown, OnKeyDown);
 }
@@ -350,13 +345,6 @@ void ObjectTransformTool::OnFinalSelectionChanged(Event* event)
 {
     // @RYAN: TEMP [ie, might need separate "Final" version]
   OnSelectionChanged(event);
-}
-
-/******************************************************************************/
-void ObjectTransformTool::OnShortcutInfoEnter(QueryShortcutsEvent* event)
-{
-  BoundType* type = ZilchVirtualTypeId(this);
-  event->mEntries = Z::gShortcutsDoc->FindSet(type->Name);
 }
 
 //******************************************************************************

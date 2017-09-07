@@ -60,9 +60,20 @@ ZilchDefineType(OsWindow, builder, type)
   ZilchBindMethod(ClientToScreen);
 }
 
+OsWindow::OsWindow() :
+  mOsInputHook(nullptr),
+  mBlockUserInput(false)
+{
+}
+
 //-------------------------------------------------------------------OsWindowEvent
 ZilchDefineType(OsWindowEvent, builder, type)
 {
+}
+
+void OsWindowEvent::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(EventId, String());
 }
 
 //-------------------------------------------------------------------OsMouseEvent
@@ -77,6 +88,7 @@ OsMouseEvent::OsMouseEvent()
 
 void OsMouseEvent::Clear()
 {
+  Window = nullptr;
   ClientPosition = IntVec2(0, 0);
   ScrollMovement = Vec2(0, 0);
   ShiftPressed = false;
@@ -90,17 +102,7 @@ void OsMouseEvent::Clear()
 
 void OsMouseEvent::Serialize(Serializer& stream)
 {
-  if(stream.GetMode() == SerializerMode::Loading)
-  {
-    PolymorphicNode eventNode;
-
-    stream.GetPolymorphic(eventNode);
-  }
-  else
-  {
-    stream.StartPolymorphic(this);
-  }
-
+  SerializeNameDefault(EventId, String());
   SerializeNameDefault(ShiftPressed, false);
   SerializeNameDefault(AltPressed, false);
   SerializeNameDefault(CtrlPressed, false);
@@ -110,12 +112,29 @@ void OsMouseEvent::Serialize(Serializer& stream)
 
   SerializeEnumNameDefault(MouseButtons, MouseButton, MouseButtons::None);
 
-  stream.EndPolymorphic();
+  static_assert(sizeof(bool) == sizeof(byte), "For this trick work the size must be the same");
+  bool& LeftButton = (bool&)ButtonDown[MouseButtons::Left];
+  bool& RightButton = (bool&)ButtonDown[MouseButtons::Right];
+  bool& MiddleButton = (bool&)ButtonDown[MouseButtons::Middle];
+  bool& XOneBackButton = (bool&)ButtonDown[MouseButtons::XOneBack];
+  bool& XTwoForwardButton = (bool&)ButtonDown[MouseButtons::XTwoForward];
+  
+  SerializeNameDefault(LeftButton, false);
+  SerializeNameDefault(RightButton, false);
+  SerializeNameDefault(MiddleButton, false);
+  SerializeNameDefault(XOneBackButton, false);
+  SerializeNameDefault(XTwoForwardButton, false);
 }
 
 //-------------------------------------------------------------------OsMouseDropEvent
 ZilchDefineType(OsMouseDropEvent, builder, type)
 {
+}
+
+void OsMouseDropEvent::Serialize(Serializer& stream)
+{
+  OsMouseEvent::Serialize(stream);
+  SerializeName(Files);
 }
 
 }//namespace Zero

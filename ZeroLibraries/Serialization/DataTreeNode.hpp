@@ -219,7 +219,7 @@ public:
   Guid mUniqueNodeId;
 };
 
-DataNode* ReadDataSet(Status& status, StringRange data, StringParam source,
-                      DataTreeLoader* loader, uint* fileVersion);
+bool ReadDataSet(Status& status, StringRange data, StringParam source,
+                 DataTreeLoader* loader, uint* fileVersion, DataNode* fileRoot);
 
 }//namespace Zero

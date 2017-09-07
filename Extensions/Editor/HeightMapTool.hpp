@@ -305,6 +305,52 @@ public:
 /// Declaration debug index type
 DeclareEnum2(CellIndexType, Local, Absoulte)
 
+/// <Commands>
+///   <command name = "CreateDestroy">
+///     <shortcut> Shift + 1 </shortcut>
+///     <description>
+///       Set the HeightMapTool's sub-tool to the CreateDestroy tool.
+///     </description>
+///   </command>
+///   <command name = "RaiseLower">
+///     <shortcut> Shift + 2 </shortcut>
+///     <description>
+///       Set the HeightMapTool's sub-tool to the RaiseLower tool.
+///     </description>
+///   </command>
+///   <command name = "SmoothSharpen">
+///     <shortcut> Shift + 3 </shortcut>
+///     <description>
+///       Set the HeightMapTool's sub-tool to the SmoothSharpen tool.
+///     </description>
+///   </command>
+///   <command name = "Flatten">
+///     <shortcut> Shift + 4 </shortcut>
+///     <description>
+///       Set the HeightMapTool's sub-tool to the Flatten tool.
+///     </description>
+///   </command>
+///   <command name = "WeightPainter">
+///     <shortcut> Shift + 5 </shortcut>
+///     <description>
+///       Set the HeightMapTool's sub-tool to the WeightPainter tool.
+///     </description>
+///   </command>
+///   <command name = "ResizeBrush">
+///     <shortcut> Shift + MouseScroll </shortcut>
+///     <description>
+///       Resize the brush size up or down depending on the scroll direction.
+///     </description>
+///   </command>
+///   <command name = "SubToolCommands">
+///     <shortcut> Shift + LeftClick/LeftDrag </shortcut>
+///     <description>
+///       CreateDestroy:\Destroy patches instead of creating them.\ \
+///       RaiseLower:\Lower height map with the brush instead of raising it.\ \
+///       SmoothSharpen:\Sharpen height map with the brush instead of smoothing it.
+///     </description>
+///   </command>
+/// </Commands>
 class HeightMapTool : public Component
 {
 public:
@@ -321,6 +367,7 @@ public:
   /// Event response.
   void OnToolActivate(Event* e);
   void OnToolDeactivate(Event* e);
+  void OnKeyDown(KeyboardEvent* e);
   void OnLeftMouseDown(ViewportMouseEvent* e);
   void OnLeftMouseDrag(ViewportMouseEvent* e);
   void OnLeftMouseUp(ViewportMouseEvent* e);

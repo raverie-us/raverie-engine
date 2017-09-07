@@ -5,6 +5,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
+#include "WebBrowserChrome.hpp"
 
 namespace Zero
 {
@@ -30,7 +31,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   // Events
   ZilchInitializeType(MouseEvent);
   ZilchInitializeType(ViewportMouseEvent);
-  ZilchInitializeType(ChromePopupEvent);
   ZilchInitializeType(WebBrowserEvent);
   ZilchInitializeType(WebBrowserConsoleEvent);
   ZilchInitializeType(WebBrowserCursorEvent);
@@ -62,6 +62,16 @@ ZilchDefineStaticLibrary(GameplayLibrary)
 
   ZilchInitializeType(SplineParticleEmitter);
   ZilchInitializeType(SplineParticleAnimator);
+
+  ZilchInitializeType(UnitTestSystem);
+  ZilchInitializeType(UnitTestEvent);
+  ZilchInitializeType(UnitTestEndFrameEvent);
+  ZilchInitializeType(UnitTestBaseMouseEvent);
+  ZilchInitializeType(UnitTestMouseEvent);
+  ZilchInitializeType(UnitTestMouseDropEvent);
+  ZilchInitializeType(UnitTestKeyboardEvent);
+  ZilchInitializeType(UnitTestKeyboardTextEvent);
+  ZilchInitializeType(UnitTestWindowEvent);
 
   ZilchInitializeTypeAs(ZeroStatic, "Zero");
 

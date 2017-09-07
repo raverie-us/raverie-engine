@@ -64,6 +64,7 @@ public:
     void PopFront(){mCurrentParticle = mCurrentParticle->Next;}
     FrontResult Front(){return mCurrentParticle;}
     bool Empty(){return mCurrentParticle == mEndParticle;}
+    range& All() { return *this; }
     Particle* mCurrentParticle;
     Particle* mEndParticle;
   };

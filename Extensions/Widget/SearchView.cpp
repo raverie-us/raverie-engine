@@ -588,6 +588,9 @@ void SearchView::OnEnter(ObjectEvent* event)
 
 Composite* CreateTextPreview(Composite* parent, StringParam text)
 {
+  if(text.Empty())
+    return nullptr;
+
   MultiLineText* desc = new MultiLineText(parent);
   desc->mBackground->SetVisible(false);
   desc->SetText(text);

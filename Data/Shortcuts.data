@@ -1,67 +1,255 @@
 [Version:1]
 Shortcuts 
 {
-	ShortcutSetEntry 
-	{
-		var Name = "ObjectRotateTool"
-		var ShortcutSet = Array 
-		{
-			ShortcutEntry 
-			{
-				var Index = 0
-				var Name = "TempSnapping"
-				var Shortcut = "Shift (Hold) "
-				var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
-			}
-		}
-	}
-	ShortcutSetEntry 
-	{
-		var Name = "ObjectScaleTool"
-		var ShortcutSet = Array 
-		{
-			ShortcutEntry 
-			{
-				var Index = 0
-				var Name = "OffAxesScale"
-				var Shortcut = "Ctrl + Drag "
-				var Description = "When dragging one of the three main axes - scale by the drag amount on the other two, non-drag axes, and not the drag axis itself."
-			}
-			ShortcutEntry 
-			{
-				var Index = 1
-				var Name = "TempSnapping"
-				var Shortcut = "Shift (Hold) "
-				var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
-			}
-		}
-	}
-	ShortcutSetEntry 
-	{
-		var Name = "ObjectTranslateTool"
-		var ShortcutSet = Array 
-		{
-			ShortcutEntry 
-			{
-				var Index = 0
-				var Name = "CopySelection"
-				var Shortcut = "Ctrl + Drag "
-				var Description = "Duplicate all objects in the current selection. Then, make the duplicates the current selection and target of the TranslateTool."
-			}
-			ShortcutEntry 
-			{
-				var Index = 1
-				var Name = "SnapToSurface"
-				var Shortcut = "V + Drag (Center Square) "
-				var Description = "Snap the center of the translate tool to the surface being hovered over by the mouse cursor. Thereby affecting all target-objects of the TranslateTool."
-			}
-			ShortcutEntry 
-			{
-				var Index = 2
-				var Name = "TempSnapping"
-				var Shortcut = "Shift (Hold) "
-				var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
-			}
-		}
-	}
+  ShortcutSetEntry
+  {
+    var Name = "ObjectTranslateTool"
+    
+    var ShortcutSet = Array
+    {
+      ShortcutEntry
+      {
+        var Index = 0
+        var Name = "CopySelection"
+        var Shortcut = "Ctrl + Drag"
+        var Description = "Duplicate all objects in the current selection.  Then, make the duplicates the current selection and target of the TranslateTool."
+      }
+      ShortcutEntry
+      {
+        var Index = 1
+        var Name = "SnapToSurface"
+        var Shortcut = "V + Drag\(Center Square)"
+        var Description = "Snap the center of the translate tool to the surface being hovered over by the mouse cursor. Thereby affecting all target-objects of the TranslateTool."
+      }
+      ShortcutEntry
+      {
+        var Index = 2
+        var Name = "TempSnapping"
+        var Shortcut = "Shift (Hold)"
+        var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
+      }
+      ShortcutEntry
+      {
+        var Index = 3
+        var Name = "ToggleBasis"
+        var Shortcut = "X"
+        var Description = "Toggle the tool setting between Local or World basis."
+      }
+    }
+  }
+  ShortcutSetEntry
+  {
+    var Name = "ObjectScaleTool"
+    
+    var ShortcutSet = Array
+    {
+      ShortcutEntry
+      {
+        var Index = 0
+        var Name = "OffAxesScale"
+        var Shortcut = "Ctrl + Drag"
+        var Description = "When dragging one of the three main axes - scale by the drag amount on the other two, non-drag axes, and not the drag axis itself."
+      }
+      ShortcutEntry
+      {
+        var Index = 1
+        var Name = "TempSnapping"
+        var Shortcut = "Shift (Hold)"
+        var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
+      }
+      ShortcutEntry
+      {
+        var Index = 2
+        var Name = "ToggleBasis"
+        var Shortcut = "X"
+        var Description = "Toggle the tool setting between Local or World basis."
+      }
+    }
+  }
+  ShortcutSetEntry
+  {
+    var Name = "ObjectRotateTool"
+    
+    var ShortcutSet = Array
+    {
+      ShortcutEntry
+      {
+        var Index = 0
+        var Name = "TempSnapping"
+        var Shortcut = "Shift (Hold)"
+        var Description = "While held, temporarily switch the state of 'Snapping' to the opposite of its current state."
+      }
+      ShortcutEntry
+      {
+        var Index = 1
+        var Name = "ToggleBasis"
+        var Shortcut = "X"
+        var Description = "Toggle the tool setting between Local or World basis."
+      }
+    }
+  }
+  ShortcutSetEntry
+  {
+    var Name = "HeightMapTool"
+    
+    var ShortcutSet = Array
+    {
+      ShortcutEntry
+      {
+        var Index = 0
+        var Name = "CreateDestroy"
+        var Shortcut = "Shift + 1"
+        var Description = "Set the HeightMapTool's sub-tool to the CreateDestroy tool."
+      }
+      ShortcutEntry
+      {
+        var Index = 1
+        var Name = "RaiseLower"
+        var Shortcut = "Shift + 2"
+        var Description = "Set the HeightMapTool's sub-tool to the RaiseLower tool."
+      }
+      ShortcutEntry
+      {
+        var Index = 2
+        var Name = "SmoothSharpen"
+        var Shortcut = "Shift + 3"
+        var Description = "Set the HeightMapTool's sub-tool to the SmoothSharpen tool."
+      }
+      ShortcutEntry
+      {
+        var Index = 3
+        var Name = "Flatten"
+        var Shortcut = "Shift + 4"
+        var Description = "Set the HeightMapTool's sub-tool to the Flatten tool."
+      }
+      ShortcutEntry
+      {
+        var Index = 4
+        var Name = "WeightPainter"
+        var Shortcut = "Shift + 5"
+        var Description = "Set the HeightMapTool's sub-tool to the WeightPainter tool."
+      }
+      ShortcutEntry
+      {
+        var Index = 5
+        var Name = "ResizeBrush"
+        var Shortcut = "Shift + MouseScroll"
+        var Description = "Resize the brush size up or down depending on the scroll direction."
+      }
+      ShortcutEntry
+      {
+        var Index = 6
+        var Name = "SubToolCommands"
+        var Shortcut = "Shift + LeftClick/LeftDrag"
+        var Description = "CreateDestroy:\Destroy patches instead of creating them.\ \RaiseLower:\Lower height map with the brush instead of raising it.\ \SmoothSharpen:\Sharpen height map with the brush instead of smoothing it."
+      }
+    }
+  }
+  ShortcutSetEntry
+  {
+    var Name = "TileEditor2D"
+    
+    var ShortcutSet = Array
+    {
+      ShortcutEntry
+      {
+        var Index = 0
+        var Name = "TileDraw"
+        var Shortcut = "Shift + 1"
+        var Description = "Set the TileEditor's sub-tool to the tile DrawTool."
+      }
+      ShortcutEntry
+      {
+        var Index = 1
+        var Name = "TileSelection 1"
+        var Shortcut = "Shift + 2"
+        var Description = "Set the TileEditor's sub-tool to the tile SelectionTool."
+      }
+      ShortcutEntry
+      {
+        var Index = 2
+        var Name = "TileSelection 2"
+        var Shortcut = "Shift + LeftClick\(in Editor Viewport)"
+        var Description = "Set the TileEditor's sub-tool to the tile SelectionTool."
+      }
+      ShortcutEntry
+      {
+        var Index = 3
+        var Name = "PrimaryBrushAction"
+        var Shortcut = "LeftMouse + Drag"
+        var Description = "DrawTool:\Paint tiles using the current brush.\ \SelectionTool:\Select a collection of tiles bound by the initial drag point and current mouse cursor position."
+      }
+      ShortcutEntry
+      {
+        var Index = 4
+        var Name = "SecondaryBrushAction"
+        var Shortcut = "RightMouse + Drag"
+        var Description = "DrawTool:\Erase tiles using the current brush size.\ \SelectionTool:\Commit the current tile-selection to be used as the new brush."
+      }
+      ShortcutEntry
+      {
+        var Index = 5
+        var Name = "SelectTilePaletteBrush"
+        var Shortcut = "Esc"
+        var Description = "Return the brush's tile-selection to the current TilePalette selection, or if there isn't one - return the brush to the default, single-tile TilePalette setup."
+      }
+      ShortcutEntry
+      {
+        var Index = 6
+        var Name = "TilePaletteSelection"
+        var Shortcut = "LeftMouse + Drag\(in TilePalette view)"
+        var Description = "Select an area in the TilePalette view bound by the initial drag point and current mouse cursor position.  The current brush will be set to the tile configuration in this area."
+      }
+      ShortcutEntry
+      {
+        var Index = 7
+        var Name = "TilePaletteDeletion"
+        var Shortcut = "RightClick\(in TilePalette view)"
+        var Description = "Delete a single tile in the TilePalette view."
+      }
+      ShortcutEntry
+      {
+        var Index = 8
+        var Name = "TilePaletteCopy"
+        var Shortcut = "Shift + RightClick\(in TilePalette view)"
+        var Description = "Paste a copy of the current tile-selection at the click-point in the TilePalette view.\ \Note:\  - Current tile-selection may be in either the TilePalette view or in any other view containing tiles recognized by the TileEditor2D tool."
+      }
+      ShortcutEntry
+      {
+        var Index = 9
+        var Name = "TilePaletteZoom"
+        var Shortcut = "Ctrl + MouseScroll\(in TilePalette view)"
+        var Description = "Zoom in/out on the TilePalette view."
+      }
+    }
+  }
+  ShortcutSetEntry
+  {
+    var Name = "SpringTools"
+    
+    var ShortcutSet = Array
+    {
+      ShortcutEntry
+      {
+        var Index = 0
+        var Name = "AddToSelection"
+        var Shortcut = "Shift (Hold) + Drag"
+        var Description = "SelectorSpringSubTool:\Add the current drag selection to the already selected items."
+      }
+      ShortcutEntry
+      {
+        var Index = 1
+        var Name = "DeselectSpring"
+        var Shortcut = "Shift (NOT Held)"
+        var Description = "SelectorSpringSubTool:\If the left mouse button is released and the 'Shift' key is not being held, then clear selections."
+      }
+      ShortcutEntry
+      {
+        var Index = 2
+        var Name = "DeselectRope"
+        var Shortcut = "Esc"
+        var Description = "RopeCreatorSubTool:\Deselect rope-start and rope-end objects."
+      }
+    }
+  }
 }

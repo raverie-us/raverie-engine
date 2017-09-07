@@ -51,8 +51,8 @@ public:
   void SetNext(DataNode* node);
   void SetRoot(DataNode* node);
 
-  /// Takes ownership of the data tree. Primarily used in data tree patching.
-  DataNode* TakeOwnershipOfRoot();
+  /// Takes ownership of the first child of the file root. Primarily used in data tree patching.
+  DataNode* TakeOwnershipOfFirstRoot();
 
   String DebugLocation() override;
 
@@ -90,7 +90,7 @@ public:
 protected:
   Array<DataNode*> mNodeStack;
   String mFileName;
-  DataNode* mRoot;
+  DataNode* mFileRoot;
   DataNode* mNext;
   void PushChildOnStack();
   void PopStack();

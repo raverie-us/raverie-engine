@@ -48,6 +48,14 @@ DefinitionSet =
 		float[] Uv1 = [ 15 , 12 ],
 	},
 	
+	ImageDefinition Cursor =
+	{
+		string Texture = "EditorUi",
+		int ImageMode = 0,
+		float[] Uv0 = [ 92, 236 ],
+		float[] Uv1 = [ 14 , 20 ],
+	},
+	
 	ImageDefinition TitleRestore =
 	{
 		string Texture = "EditorUi",

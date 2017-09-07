@@ -30,16 +30,15 @@ public:
   /// Constructs an empty variant
   Variant();
 
-  /// Constructs a non-empty variant by default constructing a value of the specified native type to be managed
-  explicit Variant(NativeType* nativeType);
+  /// Constructs a variant by copying the specified native type and value to be managed
+  /// (If nativeType is null, the variant is simply default constructed)
+  /// (If valueAddress is null, the variant is assigned a default constructed value of the specified native type instead)
+  explicit Variant(NativeType* nativeType, const void* valueAddress = nullptr);
 
-  /// Constructs a non-empty variant by copying the specified value, of the specified native type, to be managed
-  Variant(NativeType* nativeType, const void* data);
-
-  /// Constructs a non-empty variant by copying the specified value to be managed
+  /// Constructs a variant by copying the specified value to be managed
   template <typename T>
   explicit Variant(const T& rhs);
-  /// Constructs a non-empty variant by moving the specified value to be managed
+  /// Constructs a variant by moving the specified value to be managed
   template <typename T>
   explicit Variant(MoveReference<T> rhs);
 
@@ -160,14 +159,17 @@ public:
   // Stored Value Management
   //
 
-  /// Clears the variant and default constructs a value of the specified type T to be managed
+  /// Clears the variant and assigns a default constructed value of the specified native type to be managed
   template <typename T>
   void DefaultConstruct();
-  /// Clears the variant and default constructs a value of the specified native type to be managed
+  /// Clears the variant and assigns a default constructed value of the specified native type to be managed
+  /// (If nativeType is null, the variant is simply cleared)
   void DefaultConstruct(NativeType* nativeType = nullptr);
 
-  /// Clears the variant and copies the specified value, of the specified native type, to be managed
-  void Assign(NativeType* nativeType, const void* data);
+  /// Clears the variant and copies the specified native type and value to be managed
+  /// (If nativeType is null, the variant is simply cleared)
+  /// (If valueAddress is null, the variant is assigned a default constructed value of the specified native type instead)
+  void Assign(NativeType* nativeType = nullptr, const void* valueAddress = nullptr);
 
   /// Clears the variant and copies the specified value to be managed
   template <typename T>

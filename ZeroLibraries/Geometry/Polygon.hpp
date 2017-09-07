@@ -145,6 +145,7 @@ public:
     Edge Front();
     void PopFront();
     bool Empty();
+    range& All() { return *this; }
 
   private:
     uint mCurrIndex;
