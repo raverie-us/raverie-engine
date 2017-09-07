@@ -59,6 +59,7 @@
     <ClCompile Include="DataDrivenLexer.cpp" />
     <ClCompile Include="Wrapper.cpp" />
     <ClCompile Include="MultiPrimitive.cpp" />
+    <ClCompile Include="Color.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VirtualMachine.hpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="Wrapper.hpp" />
     <ClInclude Include="MultiPrimitive.hpp" />
     <ClInclude Include="ProcessClass.hpp" />
+    <ClInclude Include="Color.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MethodBinding.inl" />

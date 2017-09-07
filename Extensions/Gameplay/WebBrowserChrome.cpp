@@ -21,6 +21,7 @@ ZilchDefineType(ChromePopupEvent, builder, type)
 {
 
 }
+
 //------------------------------------------------------------------ Chrome
 // We need to keep this global object alive
 CefRefPtr<Chrome> gPlatform;
@@ -84,7 +85,7 @@ CefRefPtr<CefBrowser> Chrome::GetCefBrowser(WebBrowser* webBrowser)
 bool Chrome::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect)
 {
   WebBrowser* webBrowser = GetWebBrowser(browser);
-  IntVec2 size = IntVec2(512, 512);
+  IntVec2 size = IntVec2(1024, 1024);
 
   if (webBrowser)
     size = webBrowser->GetSize();
@@ -549,12 +550,7 @@ void WebBrowserManager::PlatformUpdate()
 {
   CEF_REQUIRE_UI_THREAD();
 
-  // We must prevent Zero from handling windows messages since an infinite recursion can occur
-  // This is primarily because the WM_TIMER message updates the engine recursively (when dragging a window)
-  // and Chrome can send windows messages itself
-  Z::gEnableOsWindowProcedure = false;
   CefDoMessageLoopWork();
-  Z::gEnableOsWindowProcedure = true;
 }
 
 void WebBrowser::CreatePlatformBrowser(const WebBrowserSetup& setup)
@@ -566,8 +562,15 @@ void WebBrowser::CreatePlatformBrowser(const WebBrowserSetup& setup)
   CefBrowserSettings browserSettings;
   browserSettings.windowless_frame_rate = 60;
   browserSettings.webgl = STATE_DISABLED;
-  browserSettings.background_color = ToByteColor(setup.mBackgroundColor);
+
+  // Change from RGBA to BGRA (which is what Chrome uses)
+  ByteColor backgroundColor = ToByteColor(setup.mBackgroundColor);
+  byte* dstBytes = (byte*)&backgroundColor;
+  Math::Swap(dstBytes[0], dstBytes[2]);
+
+  browserSettings.background_color = backgroundColor;
   
+  // These globals are how we pass parameters to the created browser
   gPlatform->mCreatedWebBrowser = this;
   CefRefPtr<CefBrowser> browser = CefBrowserHost::CreateBrowserSync(window, gPlatform, setup.mUrl.c_str(), browserSettings, nullptr);
   gPlatform->mCreatedWebBrowser = nullptr;
@@ -655,17 +658,35 @@ void WebBrowser::SetVisible(bool visible)
     host->SetWindowlessFrameRate(60);
 }
 
+void WebBrowser::SetBackgroundColorPlatform(Vec4Param color)
+{
+  // The mBackgroundColor member was already set, just reinitialize and
+  // we'll re-fill out the mBackgroundColor color on WebBrowserSetup
+  ReInitializePlatformBrowser();
+}
+
+void WebBrowser::SetTransparentPlatform(bool transparent)
+{
+  // The mTransparent member was already set, just reinitialize and
+  // we'll re-fill out the mTransparent color on WebBrowserSetup
+  ReInitializePlatformBrowser();
+}
+
 bool WebBrowser::GetVisible()
 {
   return gPlatform->GetWebBrowserData(this).mVisible;
 }
 
-void WebBrowser::SetUrl(StringParam url)
+void WebBrowser::SetUrlPlatform(StringParam url)
 {
+  // CEF Asserts if you give it an empty url...
+  if (url.Empty())
+    return;
+
   gPlatform->GetCefBrowser(this)->GetMainFrame()->LoadURL(url.c_str());
 }
 
-String WebBrowser::GetUrl()
+String WebBrowser::GetUrlPlatform()
 {
   return gPlatform->GetCefBrowser(this)->GetMainFrame()->GetURL().ToString().c_str();
 }

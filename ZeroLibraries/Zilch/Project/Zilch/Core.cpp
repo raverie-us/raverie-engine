@@ -3862,6 +3862,8 @@ namespace Zilch
     ZilchInitializeTypeAs(StringSplitRangeExtended, "StringSplitRange");
     ZilchInitializeType(MultiPrimitive);
     ZilchInitializeType(Wrapper);
+    ZilchInitializeTypeAs(ColorClass, "Color");
+    ZilchInitializeTypeAs(ColorsClass, "Colors");
 
     // Add multi primitive type components
     //doubleIntegerType->Add(new MultiPrimitive(doubleIntegerType,  1));

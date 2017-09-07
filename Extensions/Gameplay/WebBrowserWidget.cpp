@@ -32,8 +32,7 @@ ZilchDefineType(WebBrowserWidget, builder, type)
 WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& setup) :
   Composite(composite)
 {
-  mBrowser = new WebBrowser(setup);
-
+  mBrowser = WebBrowser::Create(setup);
   SetLayout(new StackLayout(LayoutDirection::TopToBottom, Vec2(WebBrowserUi::ElementSpacing)));
 
   mAddressBar = new Composite(this);
@@ -62,10 +61,12 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& 
   mAddressText->SetEditable(true);
   mAddressText->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
 
+  WebBrowser* browser = mBrowser;
+
   mBrowserView = new TextureView(this);
   mBrowserView->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1.0f);
   mBrowserView->SetDockMode(DockMode::DockFill);
-  mBrowserView->SetTexture(mBrowser->GetTexture());
+  mBrowserView->SetTexture(browser->GetTexture());
 
   mStatusBar = new TextBox(this);
   mStatusBar->SetEditable(false);
@@ -73,18 +74,18 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& 
   mStatusBar->SetText("Ready");
 
   mBrowserView->SetTakeFocusMode(FocusMode::Hard);
-  SetSize(Math::ToVec2(mBrowser->GetSize()));
+  SetSize(Math::ToVec2(browser->GetSize()));
 
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
 
   ConnectThisTo(mAddressText, Events::TextSubmit, OnAddressTextSubmit);
 
-  ConnectThisTo(mBrowser, Events::WebBrowserPointQuery, OnWebBrowserPointQuery);
-  ConnectThisTo(mBrowser, Events::WebBrowserUrlChanged, OnWebBrowserUrlChanged);
-  ConnectThisTo(mBrowser, Events::WebBrowserCursorChanged, OnWebBrowserCursorChanged);
-  ConnectThisTo(mBrowser, Events::WebBrowserTitleChanged, OnWebBrowserTitleChanged);
-  ConnectThisTo(mBrowser, Events::WebBrowserStatusChanged, OnWebBrowserStatusChanged);
-  ConnectThisTo(mBrowser, Events::WebBrowserConsoleMessage, OnWebBrowserConsoleMessage);
+  ConnectThisTo(browser, Events::WebBrowserPointQuery, OnWebBrowserPointQuery);
+  ConnectThisTo(browser, Events::WebBrowserUrlChanged, OnWebBrowserUrlChanged);
+  ConnectThisTo(browser, Events::WebBrowserCursorChanged, OnWebBrowserCursorChanged);
+  ConnectThisTo(browser, Events::WebBrowserTitleChanged, OnWebBrowserTitleChanged);
+  ConnectThisTo(browser, Events::WebBrowserStatusChanged, OnWebBrowserStatusChanged);
+  ConnectThisTo(browser, Events::WebBrowserConsoleMessage, OnWebBrowserConsoleMessage);
   
   ConnectThisTo(mBrowserView, Events::FocusGained, OnFocusGained);
   ConnectThisTo(mBrowserView, Events::FocusLost, OnFocusLost);
@@ -112,13 +113,14 @@ void WebBrowserWidget::OnEngineUpdate(UpdateEvent* event)
 {
   if (!GetActive())
     return;
+  WebBrowser* browser = mBrowser;
 
-  if (mBrowser->GetCanGoBackward())
+  if (browser->GetCanGoBackward())
     mBack->SetColor(WebBrowserUi::ButtonEnabledColor);
   else
     mBack->SetColor(WebBrowserUi::ButtonDisabledColor);
 
-  if (mBrowser->GetCanGoForward())
+  if (browser->GetCanGoForward())
     mForward->SetColor(WebBrowserUi::ButtonEnabledColor);
   else
     mForward->SetColor(WebBrowserUi::ButtonDisabledColor);

@@ -43,3 +43,4 @@ public:
 #include "EnumSerialization.hpp"
 #include "MetaSerialization.hpp"
 #include "MathSerialization.hpp"
+#include "SerializationUtility.hpp"

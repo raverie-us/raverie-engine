@@ -181,11 +181,11 @@ Variant ConvertBasicAnyToVariant(const Any& anyValue)
   if(!nativeType) // Unable? (The any's stored type is not a basic native type?)
     return Variant();
 
-  // Get any's stored value data
-  const void* anyData = anyValue.GetData();
-  Assert(anyData);
+  // Get any's stored value data (may be null)
+  const void* anyData = anyValue.Dereference();
 
-  // Copy any's stored value to new variant
+  // Copy value to new variant
+  // (If the data is null, this simply default constructs a value of the native type)
   Variant result(nativeType, anyData);
   return result;
 }
@@ -204,9 +204,22 @@ Any ConvertBasicVariantToAny(const Variant& variantValue)
   const void* variantData = variantValue.GetData();
   Assert(variantData);
 
-  // Copy variant's stored value to new any
-  Any result((const byte*)variantData, zilchType);
-  return result;
+  // This zilch type is meant to be passed by handle?
+  if(zilchType->IsHandle())
+  {
+    // Create a handle containing our value data
+    Handle handle((const byte*)variantData, Type::GetBoundType(zilchType));
+
+    // Copy handle to new any
+    Any result(handle);
+    return result;
+  }
+  else
+  {
+    // Copy value to new any
+    Any result((const byte*)variantData, zilchType);
+    return result;
+  }
 }
 
 } // namespace Zero

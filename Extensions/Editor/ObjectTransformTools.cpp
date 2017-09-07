@@ -95,9 +95,6 @@ Cog* GizmoCreator::GetGizmo(Space* space)
     gizmo->SetTransient(true);
     gizmo->SetObjectViewHidden(true);
 
-    if(!space->GetModified())
-      space->MarkModified();
-
     Transform *t = gizmo->has(Transform);
 
     ToolGizmoEvent e(mGizmo);

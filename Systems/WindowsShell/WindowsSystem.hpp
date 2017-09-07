@@ -153,6 +153,10 @@ private:
   Array<WindowsOsWindow*> mWindows;
   HWND mMainWindow;
   WindowsSystemUpdateState::Enum mState;
+
+  // This is used to prevent recursion into the Update function
+  // because we occassionally call Z::gEngine->Update() from inside the message pump
+  bool mIsUpdating;
 };
 
 }//namespace Zero

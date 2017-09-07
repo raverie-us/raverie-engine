@@ -1841,6 +1841,12 @@ void Cog::DispatchDown(StringParam eventId, Event* event)
 }
 
 //**************************************************************************************************
+bool Cog::HasReceivers(StringParam eventId)
+{
+  return GetDispatcher()->HasReceivers(eventId);
+}
+
+//**************************************************************************************************
 EventDispatcher* Cog::GetDispatcherObject()
 {
   return GetDispatcher();
@@ -2050,9 +2056,12 @@ void Cog::TransformUpdate(TransformUpdateInfo& info)
     component->TransformUpdate(info);
   }
 
-  ObjectEvent toSend;
-  toSend.Source = this;
-  DispatchEvent(Events::TransformUpdated, &toSend);
+  if (HasReceivers(Events::TransformUpdated))
+  {
+    ObjectEvent toSend;
+    toSend.Source = this;
+    DispatchEvent(Events::TransformUpdated, &toSend);
+  }
 }
 
 //**************************************************************************************************

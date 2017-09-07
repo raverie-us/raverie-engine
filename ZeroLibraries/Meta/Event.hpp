@@ -180,6 +180,9 @@ public:
   /// Dispatch event to all connections
   void Dispatch(StringParam eventId, Event* event);
 
+  /// Check if anyone has signed up for a particular event.
+  bool HasReceivers(StringParam eventId);
+
   /// Add a new EventConnection to this Dispatcher
   void Connect(StringParam eventId, EventConnection* connect);
 
@@ -302,6 +305,9 @@ public:
   void DispatchEvent(StringParam eventId, Event* event);
   EventDispatcher* GetDispatcher() { return &mDispatcher; }
   EventReceiver* GetReceiver() { return &mTracker; }
+
+  /// Check if anyone has signed up for a particular event.
+  bool HasReceivers(StringParam eventId);
 
 protected:
   EventReceiver mTracker;

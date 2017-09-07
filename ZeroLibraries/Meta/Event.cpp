@@ -438,6 +438,11 @@ void EventDispatcher::Dispatch(StringParam eventId, Event* event)
   event->EventId = previousEventId;
 }
 
+bool EventDispatcher::HasReceivers(StringParam eventId)
+{
+  return !mEvents.Find(eventId).Empty();
+}
+
 void EventDispatcher::Connect(StringParam eventId, EventConnection* connection)
 {
   //Check to see if the signal has been mapped
@@ -461,6 +466,11 @@ void EventDispatcher::Connect(StringParam eventId, EventConnection* connection)
 void EventObject::DispatchEvent(StringParam eventId, Event* event)
 {
   this->GetDispatcher()->Dispatch(eventId, event);
+}
+
+bool EventObject::HasReceivers(StringParam eventId)
+{
+  return GetDispatcher()->HasReceivers(eventId);
 }
 
 }//namespace Zero

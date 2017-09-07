@@ -21,6 +21,22 @@ PixelBuffer::PixelBuffer() :
 {
 }
 
+PixelBuffer::PixelBuffer(MoveReference<PixelBuffer> rhs) :
+  Width(rhs->Width),
+  Height(rhs->Height),
+  Total(rhs->Total),
+  Data(rhs->Data),
+  Image(rhs->Image),
+  MaxMipLevel(rhs->MaxMipLevel)
+{
+  rhs->Width = 0;
+  rhs->Height = 0;
+  rhs->Total = 0;
+  rhs->Data = nullptr;
+  rhs->Image = nullptr;
+  rhs->MaxMipLevel = -1;
+}
+
 PixelBuffer::PixelBuffer(ByteColor clearColor, uint width, uint height) :
   Width(width),
   Height(height),

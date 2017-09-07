@@ -365,9 +365,7 @@ public:
 
   ~SpaceObjectSource()
   {
-    forRange(RemovedEntry* entry, mVisibleRemovedEntries.Values())
-      delete entry;
-    mVisibleRemovedEntries.Clear();
+    ClearRemovedObjects();
   }
 
   bool ShowObject(Cog* cog)
@@ -1246,6 +1244,9 @@ void ObjectView::OnDelete(ObjectEvent* event)
 
 void ObjectView::OnSpaceChange(Event*)
 {
+  if (!mSource)
+    return;
+
   mSource->ClearRemovedObjects();
 
   // Rebuild the tree now that there is new objects

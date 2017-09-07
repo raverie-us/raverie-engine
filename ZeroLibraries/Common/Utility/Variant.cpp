@@ -19,18 +19,11 @@ Variant::Variant()
   InternalZeroLocalBuffer();
 }
 
-Variant::Variant(NativeType* nativeType)
+Variant::Variant(NativeType* nativeType, const void* valueAddress)
   : mNativeType(nullptr)
 {
   InternalZeroLocalBuffer();
-  DefaultConstruct(nativeType);
-}
-
-Variant::Variant(NativeType* nativeType, const void* data)
-  : mNativeType(nullptr)
-{
-  InternalZeroLocalBuffer();
-  Assign(nativeType, data);
+  Assign(nativeType, valueAddress);
 }
 
 Variant::Variant(const Variant& rhs)
@@ -193,44 +186,10 @@ NativeTypeId Variant::GetNativeTypeId() const
 
 void Variant::DefaultConstruct(NativeType* nativeType)
 {
-  // New stored type is null?
-  if(nativeType == nullptr)
-  {
-    // Clear this variant
-    Clear();
-    return;
-  }
-
-  // Type is not both copy constructible and destructible?
-  // (Unfortunately we must do this check at runtime as we don't have the static C++ type here)
-  if(nativeType->mCopyConstructObjectFn == nullptr
-  || nativeType->mDestructObjectFn      == nullptr)
-  {
-    Error(String::Format("Unable to assign type '%s' to variant. - "
-                         "Types assigned to variant must have both an accessible copy constructor and destructor.", nativeType->mDebugTypeName).c_str());
-
-    // Clear this variant
-    Clear();
-    return;
-  }
-
-  // Destroy current stored value, if any
-  // (Does not free memory or forget the current stored type)
-  InternalDestructStoredValue();
-
-  // Replace current stored type, if any, with this new stored type
-  // (Prepares internal buffers for the new stored value)
-  NativeType* newStoredType = nativeType;
-  InternalReplaceStoredType(newStoredType);
-
-  // Default construct the new stored value
-  InternalDefaultConstructValue();
-
-  // (Sanity check)
-  Assert(GetNativeType() == newStoredType);
+  return Assign(nativeType, nullptr);
 }
 
-void Variant::Assign(NativeType* nativeType, const void* data)
+void Variant::Assign(NativeType* nativeType, const void* valueAddress)
 {
   // New stored type is null?
   if(nativeType == nullptr)
@@ -262,8 +221,17 @@ void Variant::Assign(NativeType* nativeType, const void* data)
   NativeType* newStoredType = nativeType;
   InternalReplaceStoredType(newStoredType);
 
-  // Copy construct the new stored value
-  InternalCopyConstructValue(data);
+  // No value provided to copy?
+  if(valueAddress == nullptr)
+  {
+    // Default construct the new stored value
+    InternalDefaultConstructValue();
+  }
+  else
+  {
+    // Copy construct the new stored value
+    InternalCopyConstructValue(valueAddress);
+  }
 
   // (Sanity check)
   Assert(GetNativeType() == newStoredType);

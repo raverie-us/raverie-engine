@@ -138,7 +138,9 @@ ZilchDefineType(WebBrowserManager, builder, type)
 WebBrowserManager::WebBrowserManager()
 {
   PlatformCreate();
-  ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+  OsShell* shell = Z::gEngine->has(OsShell);
+  ErrorIf(shell == nullptr, "We require the OsShell to use the WebBrowser");
+  ConnectThisTo(shell, Events::OsShellUpdate, OnOsShellUpdate);
 }
 
 WebBrowserManager::~WebBrowserManager()
@@ -152,7 +154,7 @@ WebBrowserManager& WebBrowserManager::GetInstance()
   return instance;
 }
 
-void WebBrowserManager::OnEngineUpdate(UpdateEvent* event)
+void WebBrowserManager::OnOsShellUpdate(Event* event)
 {
   PlatformUpdate();
 }
@@ -168,11 +170,13 @@ ZilchDefineType(WebBrowserSetup, builder, type)
 
   ZilchBindDestructor();
   ZilchBindDefaultConstructor();
+
+  type->CreatableInScript = true;
 }
 
 const String cWebBrowserDefaultUrl("http://www.google.com");
-const IntVec2 cWebBrowserDefaultSize(512, 512);
-const bool cWebBrowserDefaultTransparent(true);
+const IntVec2 cWebBrowserDefaultSize(1024, 1024);
+const bool cWebBrowserDefaultTransparent(false);
 const Vec4 cWebBrowserDefaultBackgroundColor(1.0f);
 const Vec2 cWebBrowserDefaultScrollSpeed(100, 100);
 
@@ -198,15 +202,13 @@ ZilchDefineType(WebBrowser, builder, type)
   ZeroBindEvent(Events::WebBrowserDownloadStarted, WebBrowserDownloadEvent);
   ZeroBindEvent(Events::WebBrowserDownloadUpdated, WebBrowserDownloadEvent);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchBindConstructor(WebBrowserSetup&);
-  type->CreatableInScript = true;
+  ZilchBindOverloadedMethod(Create, ZilchStaticOverload(HandleOf<WebBrowser>));
+  ZilchBindOverloadedMethod(Create, ZilchStaticOverload(HandleOf<WebBrowser>, const WebBrowserSetup&));
 
   ZilchBindGetterSetterProperty(Size);
-  ZilchBindGetterSetterProperty(Texture);
-  ZilchBindFieldProperty(mStatus);
-  ZilchBindFieldProperty(mTitle);
+  ZilchBindGetterProperty(Texture);
+  ZilchBindFieldGetterProperty(mStatus);
+  ZilchBindFieldGetterProperty(mTitle);
   ZilchBindFieldProperty(mScrollSpeed);
 
   ZilchBindGetterSetterProperty(Url);
@@ -222,6 +224,8 @@ ZilchDefineType(WebBrowser, builder, type)
 
   ZilchBindGetterSetterProperty(Focus);
   ZilchBindGetterSetterProperty(Visible);
+  ZilchBindGetterSetterProperty(BackgroundColor);
+  ZilchBindGetterSetterProperty(Transparent);
 
   ZilchBindMethod(ExecuteScript);
   ZilchBindMethod(ExecuteScriptFromLocation);
@@ -245,16 +249,37 @@ WebBrowser::WebBrowser(const WebBrowserSetup& setup)
   Initialize(setup);
 }
 
+HandleOf<WebBrowser> WebBrowser::Create()
+{
+  return new WebBrowser();
+}
+
+HandleOf<WebBrowser> WebBrowser::Create(const WebBrowserSetup& setup)
+{
+  return new WebBrowser(setup);
+}
+
 void WebBrowser::Initialize(const WebBrowserSetup& setup)
 {
   // Make sure the singleton is initialized
   WebBrowserManager::GetInstance();
 
+  mLastSetUrl = setup.mUrl;
   mScrollSpeed = setup.mScrollSpeed;
   mBackgroundColor = setup.mBackgroundColor;
+  mTransparent = setup.mTransparent;
 
   mBuffer.Resize(setup.mSize.x, setup.mSize.y, true, true, ToByteColor(mBackgroundColor));
   
+  CreatePlatformBrowser(setup);
+}
+
+void WebBrowser::ReInitializePlatformBrowser()
+{
+  // Save all the original settings from the browser
+  WebBrowserSetup setup(GetUrl(), GetSize(), mTransparent, mBackgroundColor, mScrollSpeed);
+
+  DestroyPlatformBrowser();
   CreatePlatformBrowser(setup);
 }
 
@@ -294,9 +319,48 @@ Texture* WebBrowser::GetTexture()
   return mBuffer.Image;
 }
 
-void WebBrowser::SetTexture(Texture* tex)
+Vec4 WebBrowser::GetBackgroundColor()
 {
-  mBuffer.Image = tex;
+  return mBackgroundColor;
+}
+
+void WebBrowser::SetBackgroundColor(Vec4Param color)
+{
+  if (color == mBackgroundColor)
+    return;
+
+  mBackgroundColor = color;
+  SetBackgroundColorPlatform(color);
+}
+
+bool WebBrowser::GetTransparent()
+{
+  return mTransparent;
+}
+
+void WebBrowser::SetTransparent(bool transparent)
+{
+  if (transparent == mTransparent)
+    return;
+
+  mTransparent = transparent;
+  SetTransparentPlatform(transparent);
+}
+
+void WebBrowser::SetUrl(StringParam url)
+{
+  mLastSetUrl = url;
+  SetUrlPlatform(url);
+}
+
+String WebBrowser::GetUrl()
+{
+  String url = GetUrlPlatform();
+
+  if (!url.Empty())
+    return url;
+
+  return mLastSetUrl;
 }
 
 void WebBrowser::Reload()
