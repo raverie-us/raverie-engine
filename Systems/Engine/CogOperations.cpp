@@ -192,39 +192,46 @@ Archetype* UploadToArchetype(OperationQueue* queue, Cog* cog, StringParam archet
   // Create the operation to cache the current cog before making any changes
   UploadToNewArchetypeOperation* op = new UploadToNewArchetypeOperation(cog);
   
+  Archetype* currentArchetype = cog->GetArchetype();
+
   ArchetypeManager* manager = ArchetypeManager::GetInstance();
-  Archetype* newArchetype = manager->FindOrNull(archetypeName);
-  if(newArchetype == nullptr)
+  Archetype* archetype = manager->FindOrNull(archetypeName);
+  if(archetype == nullptr)
   {
-    Archetype* oldArchetype = cog->GetArchetype();
-  
     // Create a new Archetype if it didn't exist
-    newArchetype = manager->MakeNewArchetypeWith(cog, archetypeName, 0, baseArchetype);
+    archetype = manager->MakeNewArchetypeWith(cog, archetypeName, 0, baseArchetype);
     op->mUploadedToNewArchetype = true;
-    op->mNewArchetype = newArchetype;
+    op->mNewArchetype = archetype;
 
     op->Redo();
   
     // Copy over tags to the new Archetype
-    if(oldArchetype)
+    if(currentArchetype)
     {
       TagList oldTags;
-      oldArchetype->GetTags(oldTags);
-      newArchetype->mContentItem->SetTags(oldTags);
+      currentArchetype->GetTags(oldTags);
+      archetype->mContentItem->SetTags(oldTags);
     }
   }
   else
   {
-    op->mNewArchetype = newArchetype;
+    op->mNewArchetype = archetype;
+
+    if (baseArchetype)
+      archetype->mBaseResourceIdName = baseArchetype->ResourceIdName;
+    else if (currentArchetype)
+      archetype->mBaseResourceIdName = currentArchetype->mBaseResourceIdName;
+    else
+      archetype->mBaseResourceIdName.Clear();
 
     // Cache the Archetype we're changing to before uploading it
-    op->CacheArchetype(newArchetype);
+    op->CacheArchetype(archetype);
     op->Redo();
   }
   
   queue->Queue(op);
   
-  return newArchetype;
+  return archetype;
 }
 
 //******************************************************************************

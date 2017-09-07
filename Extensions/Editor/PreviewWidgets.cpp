@@ -553,6 +553,11 @@ public:
   {
     UpdateViewDistance(Vec3(-1.0f));
   }
+
+  Handle GetEditObject() override
+  {
+    return (Cog*)mObject;
+  }
 };
 
 //------------------------------------------------------------- SpriteSourceTile

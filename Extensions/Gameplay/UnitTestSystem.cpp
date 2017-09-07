@@ -766,7 +766,7 @@ void UnitTestSystem::HookMouseDropEvent(OsMouseDropEvent& event)
   }
 
   ++mFilesIndex;
-  RecordEvent(testEvent);
+  RecordBaseMouseEvent(testEvent, &event);
 }
 
 //**************************************************************************************************

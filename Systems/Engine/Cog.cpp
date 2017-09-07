@@ -15,7 +15,6 @@ bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
 void ClearCogModifications(Cog* rootCog, Cog* cog, ObjectState::ModifiedProperties& cachedMemory,
                            bool retainOverrideProperties, bool retainChildArchetypeModifications);
 void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications);
-void AssignChildIds(Cog* parent);
 template<typename type>
 void eraseEqualValues(Array<type>& mArray, type value);
 
@@ -88,7 +87,7 @@ ZilchDefineType(Cog, builder, type)
 
   // Properties
   ZilchBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension());
+  ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension())->Add(new CogArchetypePropertyFilter());
   ZilchBindGetterProperty(BaseArchetype)->Add(new EditorResource(false, false, "", true));
 
   ZilchBindGetter(Space);
@@ -1517,6 +1516,22 @@ HierarchyList* Cog::GetParentHierarchyList()
   return parent->GetHierarchyList();
 }
 
+
+//**************************************************************************************************
+void Cog::AssignChildIds()
+{
+  forRange(Cog& child, GetChildren())
+  {
+    if (child.mChildId == PolymorphicNode::cInvalidUniqueNodeId)
+      child.mChildId = GenerateUniqueId64();
+
+    // Assign to children as long as we don't enter a new Archetype (they should
+    // already have child id's assigned to them)
+    if (child.mArchetype == nullptr)
+      child.AssignChildIds();
+  }
+}
+
 //**************************************************************************************************
 Archetype* Cog::GetArchetype()
 {
@@ -1642,11 +1657,18 @@ void Cog::UploadToArchetype()
   //
   // If we only ever allowed people to modify the Archetype in its own window, this would not be
   // an issue.
-  CachedModifications& archetypeModifications = archetype->GetAllCachedModifications();
-  archetypeModifications.ApplyModificationsToObject(this, true);
+  //
+  // However, if we're in ArchetypeDefinition mode, all these modifications will already be
+  // on the object. Re-applying these could even override modifications we're trying to make
+  // to the Archetype definition (such as reverting a property)
+  if(InArchetypeDefinitionMode() == false)
+  {
+    CachedModifications& archetypeModifications = archetype->GetAllCachedModifications();
+    archetypeModifications.ApplyModificationsToObject(this, true);
+  }
 
   // Assign all children child-id's if they don't already have them
-  AssignChildIds(this);
+  AssignChildIds();
 
   // Update the resource and save to library
   // If uploaded this will also clear modified
@@ -1658,7 +1680,10 @@ void Cog::UploadToArchetype()
   //    because those modifications are now part of the Archetype's context, not the instance
   // 2. Any cached modifications we applied to the object before saving. See comment above
   //    applying the archetypes cached modifications in this function.
-  ClearCogModifications(this, false);
+  //
+  // However, if we're in ArchetypeDefinition mode, we want to keep the modifications
+  if (InArchetypeDefinitionMode() == false)
+    ClearCogModifications(this, false);
 
   overlappingModifications.ApplyModificationsToObject(this);
 
@@ -1999,6 +2024,29 @@ void Cog::SetLocked(bool state)
 }
 
 //**************************************************************************************************
+bool Cog::InArchetypeDefinitionMode()
+{
+  if (mFlags.IsSet(CogFlags::ArchetypeDefinitionMode))
+    return true;
+  if (Cog* parent = GetParent())
+    return parent->InArchetypeDefinitionMode();
+  return false;
+}
+
+//**************************************************************************************************
+void Cog::SetArchetypeDefinitionMode()
+{
+  Archetype* archetype = GetArchetype();
+
+  ReturnIf(archetype == nullptr, , "Must have an Archetype to be in Archetype Definition mode.");
+
+  // Apply our modifications from our base Archetype
+  archetype->GetLocalCachedModifications().ApplyModificationsToObject(this);
+
+  mFlags.SetFlag(CogFlags::ArchetypeDefinitionMode);
+}
+
+//**************************************************************************************************
 void Cog::TransformUpdate(TransformUpdateInfo& info)
 {
   ComponentRange range = mComponents.All();
@@ -2176,21 +2224,6 @@ void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications)
   bool retainOverride = (nearestArchetypeContext == root);
 
   ClearCogModifications(root, root, cachedMemory, retainOverride, retainChildArchetypeModifications);
-}
-
-//**************************************************************************************************
-void AssignChildIds(Cog* parent)
-{
-  forRange(Cog& child, parent->GetChildren())
-  {
-    if(child.mChildId == PolymorphicNode::cInvalidUniqueNodeId)
-      child.mChildId = GenerateUniqueId64();
-
-    // Assign to children as long as we don't enter a new Archetype (they should
-    // already have child id's assigned to them)
-    if (child.mArchetype == nullptr)
-      AssignChildIds(&child);
-  }
 }
 
 //**************************************************************************************************

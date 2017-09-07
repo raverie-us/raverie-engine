@@ -53,7 +53,7 @@ private:
   /// Event response.
   void OnSelectionChanged(SelectionChangedEvent* e);
   void OnSelectionFinal(SelectionChangedEvent* e);
-  void OnArchetypeReload(ResourceEvent* e);
+  void OnSelectedArchetypeReplaced(CogReplaceEvent* e);
 
   /// History button events.
   void OnPreviousPressed(Event* e);

@@ -26,9 +26,6 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
 
   HasOrAdd<EditorConfig>(Z::gEditor->mConfig)->EditingProject = projectFile;
 
-  RecentProjects* recent = HasOrAdd<RecentProjects>(Z::gEditor->mConfig);
-  recent->AddRecentProject(projectFile);
-
   // Save what project was opened
   SaveConfig(Z::gEditor->mConfig);
 

@@ -65,24 +65,26 @@ void EditArchetype(Editor* editor, Resource* resource)
   space->has(TimeSpace)->SetPaused(true);
 
   EditorViewport* editorViewport = new EditorViewport(editor, OwnerShip::Owner);
+  editorViewport->mIgnoreSpaceModifications = true;
   editorViewport->SetTargetSpace(space);
   editorViewport->mEditArchetype = archetype;
 
   Level* level = LevelManager::FindOrNull("EmptyLevel");
   level->LoadSpace(space);
 
+  // We don't want to be able to save this level
+  space->mLevelLoaded = nullptr;
+
   Cog* objectToView = space->CreateAt(archetype->ResourceIdName, Vec3(0, 0, 0));
-  editorViewport->mArchetypedObject = objectToView;
 
-  // We want the modifications local to the Archetype to be on the object as we're editing it
-  // in that Archetype's context
-  archetype->GetLocalCachedModifications().ApplyModificationsToObject(objectToView);
-
+  objectToView->SetArchetypeDefinitionMode();
 
   editorViewport->SetName(BuildString("Archetype: ", archetype->Name));
 
   // Set the archetype we opened as the current selection
-  editor->GetSelection()->SelectOnly(objectToView);
+  MetaSelection* selection = editor->GetSelection();
+  selection->SelectOnly(objectToView);
+  selection->FinalSelectionChanged();
 
   // Clear modified since we added objects
   space->MarkNotModified();
@@ -233,7 +235,7 @@ void EditHotKeys(Editor* editor, Resource* resource)
 
 ResourceEditors::ResourceEditors()
 {
-  //Editors[ZilchTypeId(Archetype)] = EditArchetype;
+  Editors[ZilchTypeId(Archetype)] = EditArchetype;
   Editors[ZilchTypeId(Level)] = EditLevel;
   Editors[ZilchTypeId(DocumentResource)] = EditDocumentResource;
   Editors[ZilchTypeId(SampleCurve)] = EditSampleCurve;

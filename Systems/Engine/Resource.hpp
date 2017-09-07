@@ -272,7 +272,7 @@ public:
 
   u64 GetUndoHandleId(HandleParam object) override;
   Any GetUndoData(HandleParam object);
-  void ObjectModified(HandleParam object) override;
+  void ObjectModified(HandleParam object, bool intermediateChange) override;
   void RestoreUndoData(HandleParam object, AnyParam undoData);
 };
 

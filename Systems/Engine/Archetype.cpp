@@ -335,6 +335,9 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog, StringParam newName,
   if(newName.Empty())
     return nullptr;
 
+  // Make sure all objects have valid child id's
+  cog->AssignChildIds();
+
   Archetype* archetype = FindOrNull(newName);
   if(archetype)
   {

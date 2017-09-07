@@ -722,6 +722,13 @@ void MetaDataInheritance::RevertProperty(HandleParam object, PropertyPathParam p
 }
 
 //**************************************************************************************************
+void MetaDataInheritance::RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId)
+{
+  LocalModifications::GetInstance()->ChildAdded(parent, childId);
+  RebuildObject(parent);
+}
+
+//**************************************************************************************************
 void MetaDataInheritance::SetPropertyModified(HandleParam object, PropertyPathParam propertyPath,
                                               bool state)
 {

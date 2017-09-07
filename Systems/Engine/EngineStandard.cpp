@@ -158,6 +158,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(MetaResource);
   ZilchInitializeType(ComponentMetaOperations);
   ZilchInitializeType(ResourceMetaOperations);
+  ZilchInitializeType(CogArchetypePropertyFilter);
 
   // Events
   ZilchInitializeType(CogPathEvent);
