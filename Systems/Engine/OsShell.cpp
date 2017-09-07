@@ -8,9 +8,9 @@
 
 namespace Zero
 {
-namespace Z
+namespace Events
 {
-  bool gEnableOsWindowProcedure = true;
+DefineEvent(OsShellUpdate);
 }
 
 //-------------------------------------------------------------------OsShell

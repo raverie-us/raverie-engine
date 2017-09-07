@@ -50,7 +50,7 @@ public:
   TextBox* mAddressText;
   TextBox* mStatusBar;
   TextureView* mBrowserView;
-  WebBrowser* mBrowser;
+  HandleOf<WebBrowser> mBrowser;
 };
 
 } // namespace Zero

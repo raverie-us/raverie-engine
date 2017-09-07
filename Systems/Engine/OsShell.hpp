@@ -8,10 +8,10 @@
 
 namespace Zero
 {
-namespace Z
+namespace Events
 {
-// This is only used in extreme cases where we integrate an API that also attempts to make OS calls (eg Chrome)
-extern bool gEnableOsWindowProcedure;
+// This event occurs in the middle of OsShell update before we process Os messages
+DeclareEvent(OsShellUpdate);
 }
 
 class Image;

@@ -19,7 +19,8 @@ const char* cMarketURL = "https://market.zeroengine.io/?q=products";
 MarketWidget::MarketWidget(Composite* composite) :
   WebBrowserWidget(composite, WebBrowserSetup(cMarketURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f)))
 {
-  ConnectThisTo(mBrowser, Events::WebBrowserDownloadStarted, OnDownloadStarted);
+  WebBrowser* browser = mBrowser;
+  ConnectThisTo(browser, Events::WebBrowserDownloadStarted, OnDownloadStarted);
 }
 
 void OnPackageDownloadCallback(BackgroundTask* task, Job* job)
@@ -53,6 +54,9 @@ void MarketWidget::OnDownloadStarted(WebBrowserDownloadEvent* event)
   {
     task->mCallback = &OnGenericDownloadCallback;
   }
+  
+  // Since we started our own download, cancel the browser download
+  event->mCancel = true;
 }
 
 } // namespace Zero
