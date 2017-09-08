@@ -462,6 +462,7 @@ CachedProject* ProjectCache::CreateProjectFromTemplate(StringParam projectName, 
   }
   cachedProject->SetBuildId(buildId);
   cachedProject->SetProjectPropertyValue("ProjectName", projectName);
+  cachedProject->SetProjectPropertyValue("Guid", ToString(GenerateUniqueId64()));
   mProjectMap[newProjectFilePath] = cachedProject;
 
   // Add the tag info to the project (for legacy tags)
