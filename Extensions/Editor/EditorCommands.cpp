@@ -1078,12 +1078,13 @@ void GoToDefinition(Editor* editor)
   
   forRange(DocumentEditor* docEditor, docManager->Instances.All())
   {
-    DocumentResource* docResource = docEditor->GetResource();
+    ZilchDocumentResource* docResource = Type::DynamicCast<ZilchDocumentResource*>(docEditor->GetResource());
     if (docResource != nullptr && ZilchVirtualTypeId(docResource) == ZilchVirtualTypeId(resource))
     {
       // Saves the current text from the document editor to the Document (which may just set a resource or other thing underlying)
       // This should only ever upload the value in memory, but not actually access the disk (we could call docEditor->Save())
-      docResource->ReloadData(docEditor->GetAllText());
+      // This also should not mark any resources as modified or send any events
+      docResource->mText = docEditor->GetAllText();
     }
   }
   
