@@ -167,7 +167,7 @@ ZilchDefineType(MouseCapture, builder, type)
 
   ZilchBindMethod(Capture);
   ZilchBindMethod(ReleaseCapture);
-  ZilchBindMethod(IsCaptured);
+  ZilchBindGetterProperty(IsCaptured);
 
   ZeroBindEvent(Events::MouseDragStart, ViewportMouseEvent);
   ZeroBindEvent(Events::MouseDragMove, ViewportMouseEvent);
@@ -188,7 +188,7 @@ void MouseCapture::Serialize(Serializer& stream)
 //******************************************************************************
 bool MouseCapture::Capture(ViewportMouseEvent* e)
 {
-  if(IsCaptured())
+  if(GetIsCaptured())
     return false;
   
   // Create the viewport event
@@ -215,7 +215,7 @@ void MouseCapture::ReleaseCapture()
 }
 
 //******************************************************************************
-bool MouseCapture::IsCaptured()
+bool MouseCapture::GetIsCaptured()
 {
   return mManipulation.IsNotNull();
 }
