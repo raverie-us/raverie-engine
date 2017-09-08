@@ -35,7 +35,7 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   SoundInstanceEvent() : mSoundInstance(nullptr) {}
-  SoundInstanceEvent(HandleOf<SoundInstance> instance) : mSoundInstance(instance) {}
+  SoundInstanceEvent(const HandleOf<SoundInstance>& instance) : mSoundInstance(instance) {}
 
   /// The SoundInstance associated with this event
   HandleOf<SoundInstance> GetSoundInstance() { return mSoundInstance; }

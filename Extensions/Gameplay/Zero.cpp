@@ -27,6 +27,7 @@ ZilchDefineType(ZeroStatic, builder, type)
   ZilchBindGetter(ObjectStore);
   ZilchBindGetter(ResourceSystem);
   ZilchBindGetter(OsShell);
+  ZilchBindGetter(Audio);
 }
 
 //**************************************************************************************************
@@ -184,6 +185,12 @@ ResourceSystem* ZeroStatic::GetResourceSystem()
 OsShell* ZeroStatic::GetOsShell()
 {
   return GetEngine()->has(OsShell);
+}
+
+//**************************************************************************************************
+SoundSystem* ZeroStatic::GetAudio()
+{
+  return Z::gSound;
 }
 
 //---------------------------------------------------------------------------- ZilchScriptConnection

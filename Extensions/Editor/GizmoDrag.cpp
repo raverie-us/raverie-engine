@@ -175,7 +175,7 @@ Vec3 GizmoDrag::GetGrabPoint()
 //******************************************************************************
 bool GizmoDrag::GetDragActive()
 {
-  return mMouseCapture->IsCaptured();
+  return mMouseCapture->GetIsCaptured();
 }
 
 //******************************************************************************

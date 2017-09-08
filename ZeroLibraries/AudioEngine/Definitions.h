@@ -75,7 +75,11 @@ namespace Audio
     Notify_MidiPitchWheel,
     Notify_MidiVolume,
     Notify_MidiModWheel,
-    Notify_MidiControl
+    Notify_MidiControl,
+    // Sends a buffer of input data
+    Notify_MicInputData,
+    // Sends a compressed packet of input data
+    Notify_CompressedMicInputData
   };
 }
 

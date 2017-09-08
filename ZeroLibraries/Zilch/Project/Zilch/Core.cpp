@@ -3865,6 +3865,26 @@ namespace Zilch
     ZilchInitializeTypeAs(ColorClass, "Color");
     ZilchInitializeTypeAs(ColorsClass, "Colors");
 
+    ZilchInitializeType(ArrayClass<Handle>);
+    ZilchInitializeType(ArrayClass<Delegate>);
+    ZilchInitializeType(ArrayClass<Boolean>);
+    ZilchInitializeType(ArrayClass<Boolean2>);
+    ZilchInitializeType(ArrayClass<Boolean3>);
+    ZilchInitializeType(ArrayClass<Boolean4>);
+    ZilchInitializeType(ArrayClass<Byte>);
+    ZilchInitializeType(ArrayClass<Integer>);
+    ZilchInitializeType(ArrayClass<Integer2>);
+    ZilchInitializeType(ArrayClass<Integer3>);
+    ZilchInitializeType(ArrayClass<Integer4>);
+    ZilchInitializeType(ArrayClass<Real>);
+    ZilchInitializeType(ArrayClass<Real2>);
+    ZilchInitializeType(ArrayClass<Real3>);
+    ZilchInitializeType(ArrayClass<Real4>);
+    ZilchInitializeType(ArrayClass<Quaternion>);
+    ZilchInitializeType(ArrayClass<DoubleInteger>);
+    ZilchInitializeType(ArrayClass<DoubleReal>);
+    ZilchInitializeType(ArrayClass<Any>);
+
     // Add multi primitive type components
     //doubleIntegerType->Add(new MultiPrimitive(doubleIntegerType,  1));
     //doubleRealType   ->Add(new MultiPrimitive(doubleRealType,     1));

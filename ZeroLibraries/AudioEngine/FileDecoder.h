@@ -73,7 +73,7 @@ namespace Audio
     // Opus decoders for each channel
     OpusDecoder* Decoders[MaxChannels];
     // Buffers to hold the decoded data for a single packet per channel
-    float DecodedPackets[MaxChannels][FileEncoder::FrameSize];
+    float DecodedPackets[MaxChannels][FileEncoder::PacketFrames];
     // If true, streaming from disk instead of using the saved buffer
     bool Streaming;
     // The name of the file to use for streaming
@@ -86,6 +86,26 @@ namespace Audio
     void QueueDecodedPackets(int numberOfFrames);
     // Decrements the DecodingTaskCount and checks if it should delete itself
     void FinishDecodingPacket();
+  };
+
+  //--------------------------------------------------------------------------------- Packet Decoder
+
+  class PacketDecoder
+  {
+  public:
+    PacketDecoder() : Decoder(nullptr) {}
+    ~PacketDecoder();
+
+    // Initializes decoder for use with DecodePacket. 
+    // If the decoder already exists, it will be destroyed and re-created.
+    void InitializeDecoder();
+    // Decodes a single packet of data and allocates a buffer for the decoded data.
+    void DecodePacket(const byte* packetData, const unsigned dataSize, float*& decodedData, 
+      unsigned& numberOfSamples);
+
+  private:
+    // Used for repeated calls to DecodePacket
+    OpusDecoder* Decoder;
   };
 }
 

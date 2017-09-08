@@ -21,9 +21,10 @@
 #include "ReverbNodes.h"
 #include "AdditiveSynthNode.h"
 #include "DynamicsProcessorNode.h"
+#include "MicrophoneInputNode.h"
+#include "CustomDataNode.h"
 #include "Emitter.h"
 #include "Attenuator.h"
-#include "InputNode.h"
 #include "SoundAssets.h"
 #include "SoundInstances.h"
 #include "Tags.h"
@@ -49,6 +50,8 @@ namespace Audio
   };
 
   //------------------------------------------------------------------------- Audio System Interface
+
+  class PacketEncoder;
 
   // Provides interface functions for accessing API, interacts with internal system
   class AudioSystemInterface
@@ -100,12 +103,30 @@ namespace Audio
     // Sets the minimum volume at which SoundInstances will process audio.
     void SetMinimumVolumeThreshold(const float volume);
 
+    // Sets whether the audio system should use a high latency value
     void UseHighLatency(const bool useHigh);
+
+    // If true, events will be sent with microphone input data as float samples
+    void SetSendUncompressedMicInput(const bool sendInput);
+
+    // If true, events will be sent with compressed microphone input data as bytes
+    void SetSendCompressedMicInput(const bool sendInput);
 
   private:
     // Pointer to the internal system object
-    AudioSystemInternal *System;
+    AudioSystemInternal* System;
+    // Number of output channels used by the audio system
+    unsigned SystemOutputChannels;
+    // Stored microphone input samples when sending compressed input
+    Zero::Array<float> PreviousInputSamples;
+    // Maximum number of audio frames of microphone input to send
+    static const unsigned MaxInputFrames = 5000;
+    // If true, will send microphone input data to external system
+    bool SendUncompressedInputData;
+    // If true, will send compressed microphone input data to external system
+    bool SendCompressedInputData;
 
+    void SetSendMicInput(const bool turnOn);
   };
 
   //------------------------------------------------------------------------------------- Audio File
@@ -133,6 +154,23 @@ namespace Audio
 
   private:
     ZeroDeclarePrivateData(AudioFile, 16);
+  };
+
+  //--------------------------------------------------------------------------- Audio Stream Decoder
+
+  class PacketDecoder;
+
+  class AudioStreamDecoder
+  {
+  public:
+    AudioStreamDecoder();
+
+    // Decodes the provided encoded byte data
+    void DecodeCompressedPacket(const byte* encodedData, const unsigned dataSize, 
+      float*& decodedSamples, unsigned& sampleCount);
+
+  private:
+    PacketDecoder* Decoder;
   };
 }
 

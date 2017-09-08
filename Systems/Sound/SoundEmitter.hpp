@@ -14,7 +14,7 @@ namespace Zero
 // Used to store attenuation information for each instance
 struct InstanceAttenuation
 {
-  InstanceAttenuation(SoundAttenuatorNode* attenuatorNode, HandleOf<SoundAttenuator> attenuator) :
+  InstanceAttenuation(SoundAttenuatorNode* attenuatorNode, const HandleOf<SoundAttenuator>& attenuator) :
     mAttenuatorNode(attenuatorNode), 
     mAttenuator(attenuator) 
   {}
@@ -116,7 +116,7 @@ public:
   /// to SoundCues without their own SoundAttenuator resource. If a SoundCue has attenuation 
   /// settings those will always be used. If neither has settings, the sound will not be attenuated.
   HandleOf<SoundAttenuator> GetAttenuator();
-  void SetAttenuator(HandleOf<SoundAttenuator> attenuator);
+  void SetAttenuator(const HandleOf<SoundAttenuator>& attenuator);
   /// The SoundNode to use for attaching other nodes to the input of the SoundEmitter.
   HandleOf<SoundNode> GetInputNode();
   /// The SoundNode to use for attaching other nodes to the output of the SoundEmitter.
@@ -154,7 +154,7 @@ private:
   AttenuatorListType mAttenuatorList;
 
   bool CheckAttenuatorInputs();
-  void SetUpAttenuatorNode(HandleOf<SoundAttenuator> attenuator);
+  void SetUpAttenuatorNode(const HandleOf<SoundAttenuator>& attenuator);
   void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
   SoundAttenuatorNode* IsAttenuatorInList(SoundAttenuator* attenuator);
 };

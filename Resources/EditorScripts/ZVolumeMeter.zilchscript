@@ -20,7 +20,7 @@ class ZPeakVolumeBar : ZilchComponent
   function OnLogicUpdate(event : UpdateEvent)
   {
     // Translate from floating point to decibels
-    var decibels = this.ToDecibels(Audio.PeakOutputLevel);
+    var decibels = this.ToDecibels(Zero.Audio.PeakOutputLevel);
     // What percentage of the decibel scale is this?
     var percent = decibels / -42.0;
     if (percent > 1.0)
@@ -66,7 +66,7 @@ class ZVolumeBarSegments : ZilchComponent
 
   function OnLogicUpdate(event : UpdateEvent)
   { 
-    var decibels = this.ToDecibels(Audio.RMSOutputLevel);
+    var decibels = this.ToDecibels(Zero.Audio.RMSOutputLevel);
       
     // If the decibels are higher than the limit, set to custom color
     if (decibels >= this.DecibelLimit)
@@ -97,7 +97,7 @@ class ZVolumeSlider : ZilchComponent
   {
     Zero.Connect(this.Owner, Events.UiSliderChanged, this.OnVolumeChange);
     
-    var volume = Audio.SystemVolume;
+    var volume = Zero.Audio.SystemVolume;
     var decibels = this.ToDecibels(volume);
     decibels -= 12;
     decibels *= -1;
@@ -112,7 +112,7 @@ class ZVolumeSlider : ZilchComponent
     
     var volume = Math.Pow(10.0, decibels / 20.0);
     
-    Audio.SystemVolume = volume;
+    Zero.Audio.SystemVolume = volume;
   }
     
   function ToDecibels(volume : Real) : Real

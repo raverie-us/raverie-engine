@@ -188,14 +188,14 @@ namespace Audio
         // If not streaming, decode the packet from the buffer
         if (!Streaming)
           frames = opus_decode_float(Decoders[i], InputFileData + DataIndex, packHead.Size,
-            DecodedPackets[i], FileEncoder::FrameSize, 0);
+            DecodedPackets[i], FileEncoder::PacketFrames, 0);
         // Otherwise read in the data from the file before decoding
         else
         {
           InputFile.Read(status, InputFileData, packHead.Size);
 
           frames = opus_decode_float(Decoders[i], InputFileData, packHead.Size,
-            DecodedPackets[i], FileEncoder::FrameSize, 0);
+            DecodedPackets[i], FileEncoder::PacketFrames, 0);
         }
       }
 
@@ -316,6 +316,36 @@ namespace Audio
     // (sets ParentAlive to null if it's currently null, returns original value which would be null)
     if (AtomicCompareExchangePointer(&ParentAlive, nullptr, nullptr) == nullptr)
       delete this;
+  }
+
+  //--------------------------------------------------------------------------------- Packet Decoder
+
+  //************************************************************************************************
+  PacketDecoder::~PacketDecoder()
+  {
+    if (Decoder)
+      opus_decoder_destroy(Decoder);
+  }
+
+  //************************************************************************************************
+  void PacketDecoder::InitializeDecoder()
+  {
+    if (Decoder)
+      opus_decoder_destroy(Decoder);
+
+    int error;
+    Decoder = opus_decoder_create(AudioSystemInternal::SampleRate, PacketEncoder::Channels, &error);
+  }
+
+  //************************************************************************************************
+  void PacketDecoder::DecodePacket(const byte* packetData, const unsigned dataSize, 
+    float*& decodedData, unsigned& numberOfSamples)
+  {
+    ReturnIf(!Decoder, , "Tried to decode packet without initializing decoder");
+
+    decodedData = new float[PacketEncoder::PacketFrames];
+    numberOfSamples = opus_decode_float(Decoder, packetData, dataSize, decodedData, 
+      PacketEncoder::PacketFrames, 0);
   }
 
 }
