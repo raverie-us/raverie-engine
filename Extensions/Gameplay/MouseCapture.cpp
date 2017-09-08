@@ -55,6 +55,8 @@ public:
   void ForwardMouseEvent(MouseEvent* e, StringParam eventId)
   {
     ReactiveViewport* viewport = *mViewport;
+    if(viewport == NULL)
+      return;
 
     // Create the viewport event
     ViewportMouseEvent eventToSend(e);
@@ -97,7 +99,9 @@ public:
         // Create the viewport event
         ViewportMouseEvent eventToSend(e);
         eventToSend.EventId = e->EventId;
-        viewport->InitViewportEvent(eventToSend);
+
+        if(viewport != nullptr)
+          viewport->InitViewportEvent(eventToSend);
 
         capture->ReleaseCapture(&eventToSend);
 
