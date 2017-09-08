@@ -45,7 +45,7 @@ public:
   void ReleaseCapture();
 
   /// Returns whether or not this has an active mouse capture.
-  bool GetIsCaptured();
+  bool IsCaptured();
 
   /// We need to release the mouse manipulation when we're destroyed.
   void OnDestroy(u32 flags = 0) override;
