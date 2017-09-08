@@ -258,7 +258,7 @@ void CachedProject::Save(bool overwriteRevisionNumber)
 
   // Save out the entire tree
   mLoader.Reset();
-  mLoader.GetCurrent()->SaveToStream(saver);
+  mLoader.GetNext()->SaveToStream(saver);
   saver.Close();
 }
 
@@ -296,7 +296,7 @@ DataNode* CachedProject::GetComponentPropertyNode(StringParam componentType, Str
 {
   // Reset to tree otherwise the root won't be correct
   mLoader.Reset();
-  DataNode* root = mLoader.GetCurrent();
+  DataNode* root = mLoader.GetNext();
 
   // Find the component node
   bool dummy;
@@ -462,6 +462,7 @@ CachedProject* ProjectCache::CreateProjectFromTemplate(StringParam projectName, 
   }
   cachedProject->SetBuildId(buildId);
   cachedProject->SetProjectPropertyValue("ProjectName", projectName);
+  cachedProject->SetProjectPropertyValue("Guid", ToString(GenerateUniqueId64()));
   mProjectMap[newProjectFilePath] = cachedProject;
 
   // Add the tag info to the project (for legacy tags)
