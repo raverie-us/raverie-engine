@@ -12,9 +12,19 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(NeedMoreSamples);
+  DefineEvent(CustomAudioNodeSamplesNeeded);
   DefineEvent(AudioInterpolationDone);
   DefineEvent(SoundNodeDisconnected);
+}
+
+//-------------------------------------------------------------------------- Custom Audio Node Event
+
+//**************************************************************************************************
+ZilchDefineType(CustomAudioNodeEvent, builder, type)
+{
+  ZeroBindDocumented();
+
+  ZilchBindField(SamplesNeeded);
 }
 
 //--------------------------------------------------------------------------------------- Sound Node
@@ -321,36 +331,13 @@ ZilchDefineType(SoundBuffer, builder, type)
   ZilchBindMethod(AddSampleToBuffer);
   ZilchBindMethod(GetSampleAtIndex);
   ZilchBindMethod(Reset);
+  ZilchBindMethod(AddMicUncompressedData);
 }
 
 //**************************************************************************************************
 void SoundBuffer::AddSampleToBuffer(float value)
 {
   mBuffer.PushBack(value);
-}
-
-//**************************************************************************************************
-int SoundBuffer::GetSampleRate()
-{
-  return mSampleRate;
-}
-
-//**************************************************************************************************
-void SoundBuffer::SetSampleRate(int sampleRate)
-{
-  mSampleRate = sampleRate;
-}
-
-//**************************************************************************************************
-int SoundBuffer::GetChannels()
-{
-  return mChannels;
-}
-
-//**************************************************************************************************
-void SoundBuffer::SetChannels(int channels)
-{
-  mChannels = channels;
 }
 
 //**************************************************************************************************
@@ -374,6 +361,12 @@ void SoundBuffer::Reset()
   mBuffer.Clear();
 }
 
+//**************************************************************************************************
+void SoundBuffer::AddMicUncompressedData(const HandleOf<ArrayClass<float>>& buffer)
+{
+  mBuffer.Append(buffer->NativeArray.All());
+} 
+
 //-------------------------------------------------------------------------------- Custom Audio Node
 
 //**************************************************************************************************
@@ -386,15 +379,18 @@ ZilchDefineType(CustomAudioNode, builder, type)
   ZilchBindGetter(SystemSampleRate);
   ZilchBindMethod(SendBuffer);
   ZilchBindMethod(SendPartialBuffer);
+  ZilchBindMethod(SendMicUncompressedData);
+  ZilchBindMethod(SendMicCompressedData);
 
-  ZeroBindEvent(Events::NeedMoreSamples, ObjectEvent);
+  ZeroBindEvent(Events::CustomAudioNodeSamplesNeeded, CustomAudioNodeEvent);
 }
 
 //**************************************************************************************************
-CustomAudioNode::CustomAudioNode()
+CustomAudioNode::CustomAudioNode() :
+  AudioDecoder(nullptr)
 {
   Zero::Status status;
-  SetNode(new Audio::InputNode(status, "CustomAudioNode", Z::gSound->mCounter++, this), status);
+  SetNode(new Audio::CustomDataNode(status, "CustomAudioNode", Z::gSound->mCounter++, this), status);
 }
 
 //**************************************************************************************************
@@ -410,7 +406,7 @@ CustomAudioNode::~CustomAudioNode()
 int CustomAudioNode::GetMinimumBufferSize()
 {
   if (mNode)
-    return (int)((Audio::InputNode*)mNode)->GetMinimumBufferSize();
+    return (int)((Audio::CustomDataNode*)mNode)->GetMinimumBufferSize();
   else
     return 0;
 }
@@ -419,7 +415,7 @@ int CustomAudioNode::GetMinimumBufferSize()
 int CustomAudioNode::GetSystemSampleRate()
 {
   if (mNode)
-    return (int)((Audio::InputNode*)mNode)->GetSystemSampleRate();
+    return (int)((Audio::CustomDataNode*)mNode)->GetSystemSampleRate();
   else
     return 0;
 }
@@ -428,7 +424,7 @@ int CustomAudioNode::GetSystemSampleRate()
 int CustomAudioNode::GetChannels()
 {
   if (mNode)
-    return ((Audio::InputNode*)mNode)->GetNumberOfChannels();
+    return ((Audio::CustomDataNode*)mNode)->GetNumberOfChannels();
   else
     return 0;
 }
@@ -437,35 +433,50 @@ int CustomAudioNode::GetChannels()
 void CustomAudioNode::SetChannels(int channels)
 {
   if (mNode)
-    ((Audio::InputNode*)mNode)->SetNumberOfChannels(channels);
+    ((Audio::CustomDataNode*)mNode)->SetNumberOfChannels(channels);
 }
 
 //**************************************************************************************************
 void CustomAudioNode::SendBuffer(SoundBuffer* buffer)
 {
-  if (mNode && buffer)
-  {
-    // Create the array to send
-    float* newBuffer = new float[buffer->mBuffer.Size()];
-    // Copy the data into the array
-    memcpy(newBuffer, buffer->mBuffer.Data(), sizeof(float) * buffer->mBuffer.Size());
-    // Send the array (will be deleted by the audio engine)
-    ((Audio::InputNode*)mNode)->AddSamples(newBuffer, buffer->mBuffer.Size());
-  }
+  if (!buffer)
+    DoNotifyException("Audio Error", "Called SendBuffer on CustomAudioNode with a null SoundBuffer");
+  else if (mNode)
+    SendToAudioEngine(buffer->mBuffer.Data(), buffer->mBuffer.Size());
 }
 
 //**************************************************************************************************
 void CustomAudioNode::SendPartialBuffer(SoundBuffer* buffer, int startAtIndex, int howManySamples)
 {
-  if (mNode && buffer && (startAtIndex + howManySamples) <= (int)buffer->mBuffer.Size())
-  {
-    // Create the array to send
-    float* newBuffer = new float[howManySamples];
-    // Copy the data into the array
-    memcpy(newBuffer, buffer->mBuffer.Data() + startAtIndex, sizeof(float) * howManySamples);
-    // Send the array (will be deleted by the audio engine)
-    ((Audio::InputNode*)mNode)->AddSamples(newBuffer, howManySamples);
-  }
+  if (!buffer)
+    DoNotifyException("Audio Error", "Called SendPartialBuffer on CustomAudioNode with a null SoundBuffer");
+  else if (startAtIndex < 0 || ((startAtIndex + howManySamples) > (int)buffer->mBuffer.Size()))
+    DoNotifyException("Audio Error", "SendPartialBuffer parameters exceed size of the SoundBuffer");
+  else if (mNode)
+    SendToAudioEngine(buffer->mBuffer.Data() + startAtIndex, howManySamples);
+}
+
+//**************************************************************************************************
+void CustomAudioNode::SendMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData)
+{
+  SendToAudioEngine(audioData->NativeArray.Data(), audioData->NativeArray.Size());
+}
+
+//**************************************************************************************************
+void CustomAudioNode::SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData)
+{
+  // If we haven't created the decoder yet, create it
+  if (!AudioDecoder)
+    AudioDecoder = new Audio::AudioStreamDecoder();
+
+  // Decode the compressed data
+  float* decodedSamples;
+  unsigned sampleCount;
+  AudioDecoder->DecodeCompressedPacket(audioData->NativeArray.Data(), audioData->NativeArray.Size(), 
+    decodedSamples, sampleCount);
+
+  // Send the array (will be deleted by the audio engine)
+  ((Audio::CustomDataNode*)mNode)->AddSamples(decodedSamples, sampleCount);
 }
 
 //**************************************************************************************************
@@ -473,9 +484,20 @@ void CustomAudioNode::SendAudioEvent(const Audio::AudioEventType eventType, void
 {
   if (eventType == Audio::Notify_NeedInputSamples)
   {
-    SoundEvent event;
-    mDispatcher.Dispatch(Events::NeedMoreSamples, &event);
+    CustomAudioNodeEvent event(((Audio::CustomDataSampleRequest*)data)->SamplesNeeded);
+    mDispatcher.Dispatch(Events::CustomAudioNodeSamplesNeeded, &event);
   }
+}
+
+//**************************************************************************************************
+void CustomAudioNode::SendToAudioEngine(float* samples, unsigned howManySamples)
+{
+  // Create the array to send
+  float* newBuffer = new float[howManySamples];
+  // Copy the data into the array
+  memcpy(newBuffer, samples, sizeof(float) * howManySamples);
+  // Send the array (will be deleted by the audio engine)
+  ((Audio::CustomDataNode*)mNode)->AddSamples(newBuffer, howManySamples);
 }
 
 //------------------------------------------------------------------------------ Generated Wave Node
@@ -2088,6 +2110,23 @@ void ModulationNode::SetWetPercent(float percent)
 {
   if (mNode)
     ((Audio::ModulationNode*)mNode)->SetWetPercent(percent);
+}
+
+//---------------------------------------------------------------------------- Microphone Input Node
+
+//**************************************************************************************************
+ZilchDefineType(MicrophoneInputNode, builder, type)
+{
+  ZeroBindDocumented();
+
+}
+
+//**************************************************************************************************
+MicrophoneInputNode::MicrophoneInputNode()
+{
+  Status status;
+  SetNode(new Audio::MicrophoneInputNode(status, "MicrophoneInputNode", 
+    Z::gSound->mCounter++, this), status);
 }
 
 }

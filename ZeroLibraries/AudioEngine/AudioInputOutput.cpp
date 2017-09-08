@@ -21,7 +21,7 @@ namespace Audio
       float* buffer = data->GetReadBuffer();
 
       // Determine number of samples to copy from read buffer to output buffer
-      unsigned size = framesPerBuffer * data->Channels;
+      unsigned size = framesPerBuffer * data->OutputChannels;
       // Make sure we don't go past the end of the buffer
       if (size > data->BufferSize - data->Index)
         size = data->BufferSize - data->Index;
@@ -41,13 +41,15 @@ namespace Audio
 
       return paContinue;
     }
-    //else if (inputBuffer)
-    //{
-    //  PaUtil_WriteRingBuffer(&gAudioSystem->AudioIO.InputRingBuffer, inputBuffer, 
-    //    framesPerBuffer * gAudioSystem->AudioIO.InputParameters.channelCount);
+    else if (inputBuffer)
+    {
+      // Cast data passed through stream to our structure
+      CallbackDataObject *data = (CallbackDataObject*)userData;
 
-    //  return paContinue;
-    //}
+      PaUtil_WriteRingBuffer(data->InputRingBuffer, inputBuffer, framesPerBuffer * data->InputChannels);
+
+      return paContinue;
+    }
 
     return paAbort;
   }
@@ -113,6 +115,7 @@ namespace Audio
   void AudioInputOutput::Initialize(Zero::Status& status)
   {
     Initialized = true;
+    CallbackDataThreaded.InputRingBuffer = &InputRingBuffer;
 
     // Initialize PortAudio and check for error
     PaError result = Pa_Initialize();
@@ -205,7 +208,7 @@ namespace Audio
     // Set the variables that depend on the number of output channels
     OutputParameters.channelCount = deviceInfo->maxOutputChannels;
     OutputChannelsThreaded = deviceInfo->maxOutputChannels;
-    CallbackDataThreaded.Channels = OutputChannelsThreaded;
+    CallbackDataThreaded.OutputChannels = OutputChannelsThreaded;
 
     // Create the string with data on the audio setup
     Zero::StringBuilder messageString;
@@ -244,23 +247,26 @@ namespace Audio
     while (BufferLargeSize < (unsigned)(LargeBufferMultiplier * OutputSampleRate))
       BufferLargeSize *= 2;
 
+    InputParameters.device = apiInfo->defaultInputDevice;
+    InputParameters.sampleFormat = OutputParameters.sampleFormat;
+    const PaDeviceInfo* inputDeviceInfo = Pa_GetDeviceInfo(InputParameters.device);
+    InputParameters.suggestedLatency = inputDeviceInfo->defaultLowInputLatency;
+    InputParameters.channelCount = inputDeviceInfo->maxInputChannels;
+    InputSampleRate = (unsigned)inputDeviceInfo->defaultSampleRate;
+
+    result = Pa_IsFormatSupported(&InputParameters, NULL, (double)InputSampleRate);
+    if (result != paFormatIsSupported)
+    {
+      Error("Audio input format is not supported");
+    }
+
+    CallbackDataThreaded.InputChannels = InputParameters.channelCount;
+    InputChannels = InputParameters.channelCount;
+
+    PaUtil_InitializeRingBuffer(&InputRingBuffer, sizeof(float), InputBufferSize, InputBuffer);
+    PaUtil_FlushRingBuffer(&InputRingBuffer);
+
     RestartStream(true, status);
-
-    //InputParameters.device = apiInfo->defaultInputDevice;
-    //InputParameters.sampleFormat = OutputParameters.sampleFormat;
-    //const PaDeviceInfo* inputDeviceInfo = Pa_GetDeviceInfo(InputParameters.device);
-    //InputParameters.suggestedLatency = inputDeviceInfo->defaultLowInputLatency;
-    //InputParameters.channelCount = inputDeviceInfo->maxInputChannels;
-    //InputSampleRate = (unsigned)inputDeviceInfo->defaultSampleRate;
-
-    //result = Pa_IsFormatSupported(&InputParameters, NULL, (double)InputSampleRate);
-    //if (result != paFormatIsSupported)
-    //{
-    //  Error("Audio input format is not supported");
-    //}
-
-    //PaUtil_InitializeRingBuffer(&InputRingBuffer, sizeof(float), InputBufferSize, InputBuffer);
-    //PaUtil_FlushRingBuffer(&InputRingBuffer);
 
   }
 
@@ -270,7 +276,7 @@ namespace Audio
     PaError result;
 
     StopPAStream(status);
-    //StopInputStream();
+    StopInputStream();
 
     // Terminate PortAudio and check for error
     result = Pa_Terminate();
@@ -306,7 +312,7 @@ namespace Audio
     Zero::Status status;
     StartPAStream(status);
 
-    //StartInputStream();
+    StartInputStream();
   }
 
   //************************************************************************************************
@@ -369,6 +375,8 @@ namespace Audio
       SetLatency(BufferBaseSize);
 
       StartPAStream(status);
+
+      StartInputStream();
     }
   }
 
@@ -384,6 +392,22 @@ namespace Audio
       size *= 2;
 
     return size;
+  }
+
+  //************************************************************************************************
+  void AudioInputOutput::GetInputData(Zero::Array<float>& buffer, unsigned howManySamples)
+  {
+    unsigned samplesAvailable = PaUtil_GetRingBufferReadAvailable(&InputRingBuffer);
+
+    if (samplesAvailable < howManySamples)
+      howManySamples = samplesAvailable;
+    
+    buffer.Resize(howManySamples);
+
+    unsigned samplesRead = PaUtil_ReadRingBuffer(&InputRingBuffer, buffer.Data(), howManySamples);
+
+    if (samplesRead != howManySamples)
+      buffer.Resize(samplesRead);
   }
 
   //************************************************************************************************
@@ -455,21 +479,6 @@ namespace Audio
   {
     CallbackFrameSizeThreaded = baseSize / 2;
     SetUpBuffers(baseSize * OutputChannelsThreaded);
-  }
-
-  //-------------------------------------------------------------------------- Microphone Input Node
-
-  //************************************************************************************************
-  bool MicrophoneInputNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, 
-    ListenerNode* listener, const bool firstRequest)
-  {
-    if (PaUtil_GetRingBufferReadAvailable(&gAudioSystem->AudioIO.InputRingBuffer) == 0)
-      return false;
-
-    PaUtil_ReadRingBuffer(&gAudioSystem->AudioIO.InputRingBuffer, outputBuffer->Data(), 
-      outputBuffer->Size());
-
-    return true;
   }
 
 }

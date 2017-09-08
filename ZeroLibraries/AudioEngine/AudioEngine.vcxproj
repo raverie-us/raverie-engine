@@ -65,6 +65,7 @@
     <ClCompile Include="AudioInputOutput.cpp" />
     <ClCompile Include="AudioSystemInterface.cpp" />
     <ClCompile Include="AudioSystemInternal.cpp" />
+    <ClCompile Include="CustomDataNode.cpp" />
     <ClCompile Include="DynamicsProcessorNode.cpp" />
     <ClCompile Include="Emitter.cpp" />
     <ClCompile Include="EqualizerNode.cpp" />
@@ -72,7 +73,7 @@
     <ClCompile Include="FileEncoder.cpp" />
     <ClCompile Include="FilterNodes.cpp" />
     <ClCompile Include="Filters.cpp" />
-    <ClCompile Include="InputNode.cpp" />
+    <ClCompile Include="MicrophoneInputNode.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="ListenerNode.cpp" />
     <ClCompile Include="LockFreeQueue.cpp" />
@@ -101,6 +102,7 @@
     <ClInclude Include="AudioInputOutput.h" />
     <ClInclude Include="AudioSystemInterface.h" />
     <ClInclude Include="AudioSystemInternal.h" />
+    <ClInclude Include="CustomDataNode.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="DeviceNotifier.h" />
     <ClInclude Include="DynamicsProcessorNode.h" />
@@ -110,7 +112,7 @@
     <ClInclude Include="FileEncoder.h" />
     <ClInclude Include="FilterNodes.h" />
     <ClInclude Include="Filters.h" />
-    <ClInclude Include="InputNode.h" />
+    <ClInclude Include="MicrophoneInputNode.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="ListenerNode.h" />
     <ClInclude Include="LockFreeQueue.hpp" />

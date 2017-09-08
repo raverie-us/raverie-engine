@@ -460,7 +460,7 @@ HandleOf<SoundAttenuator> SoundEmitter::GetAttenuator()
 }
 
 //**************************************************************************************************
-void SoundEmitter::SetAttenuator(HandleOf<SoundAttenuator> attenuation)
+void SoundEmitter::SetAttenuator(const HandleOf<SoundAttenuator>& attenuation)
 {
   SetUpAttenuatorNode(attenuation);
 }
@@ -596,7 +596,7 @@ bool SoundEmitter::CheckAttenuatorInputs()
 }
 
 //**************************************************************************************************
-void SoundEmitter::SetUpAttenuatorNode(HandleOf<SoundAttenuator> attenuator)
+void SoundEmitter::SetUpAttenuatorNode(const HandleOf<SoundAttenuator>& attenuator)
 {
   if (!mEmitterObject)
     return;

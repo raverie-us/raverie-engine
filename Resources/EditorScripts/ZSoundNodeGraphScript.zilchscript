@@ -52,7 +52,7 @@ class ZSoundNodeGraphScript : ZilchComponent
       object.Destroy();
     this.ObjectList.Clear();
     
-    foreach(var info in Audio.GetNodeGraphInfo())
+    foreach(var info in Zero.Audio.GetNodeGraphInfo())
     {
       var thisPosition = Real3(info.Position.X, info.Position.Y, 1);
       

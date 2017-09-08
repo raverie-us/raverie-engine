@@ -51,9 +51,12 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeType(SoundInstanceEvent);
   ZilchInitializeType(SoundEvent);
   ZilchInitializeType(MidiEvent);
+  ZilchInitializeType(AudioFloatDataEvent);
+  ZilchInitializeType(CustomAudioNodeEvent);
+  ZilchInitializeType(AudioByteDataEvent);
 
   ZilchInitializeType(SoundListener);
-  ZilchInitializeType(SoundSystem);
+  ZilchInitializeTypeAs(SoundSystem, "Audio");
   ZilchInitializeType(AudioSettings);
   ZilchInitializeType(SoundSpace);
   ZilchInitializeType(SoundAttenuatorDisplay);
@@ -87,13 +90,13 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeType(RecordingNode);
   ZilchInitializeType(CompressorNode);
   ZilchInitializeType(ExpanderNode);
-  ZilchInitializeTypeAs(AudioStatics, "Audio");
   ZilchInitializeType(SoundTag);
   ZilchInitializeType(PanningNode);
   ZilchInitializeType(AddNoiseNode);
   ZilchInitializeType(AdsrEnvelope);
   ZilchInitializeType(AdditiveSynthNode);
   ZilchInitializeType(ModulationNode);
+  ZilchInitializeType(MicrophoneInputNode);
   ZilchInitializeType(SoundTagDisplay);
   ZilchInitializeType(SoundTag);
   ZilchInitializeType(NodePrintInfo);

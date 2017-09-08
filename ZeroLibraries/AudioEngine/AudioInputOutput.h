@@ -25,8 +25,9 @@ namespace Audio
     CallbackDataObject() : 
       Index(0), 
       ReadBufferThreaded(1),
-      Channels(0),
-      BufferSize(0)
+      OutputChannels(0),
+      BufferSize(0),
+      InputChannels(0)
     {}
 
     // Returns the current buffer for reading
@@ -39,9 +40,13 @@ namespace Audio
     // For notifying the mix thread when a new buffer is needed.
     Zero::Semaphore Counter;
     // Number of channels being used for output.
-    unsigned Channels;
+    unsigned OutputChannels;
     // Size of output buffers.
     unsigned BufferSize;
+    // Pointer to the input data ring buffer
+    PaUtilRingBuffer* InputRingBuffer;
+    // Number of channels used by the input device
+    unsigned InputChannels;
   };
 
   //----------------------------------------------------------------------------- Audio Input Output
@@ -79,17 +84,13 @@ namespace Audio
     void StopInputStream();
     // Starts or re-starts the output stream with the specified latency values
     void RestartStream(const bool lowLatency, Zero::Status& status);
-
+    // Returns the buffer sized based on current latency and the supplied sample rate
     unsigned GetBufferSize(unsigned sampleRate);
+    // Fills the buffer with the requested number of audio samples, or the max available if lower
+    void GetInputData(Zero::Array<float>& buffer, unsigned howManySamples);
 
-    // Size of the buffer for input data
-    static const unsigned InputBufferSize = 8192;
-    // Ring buffer used for receiving input data
-    PaUtilRingBuffer InputRingBuffer;
-    // Buffer of input data
-    float InputBuffer[InputBufferSize];
-    // Parameters for input data stream
-    PaStreamParameters InputParameters;
+    // Number of channels in the input
+    unsigned InputChannels;
     // Sample rate of input data
     unsigned InputSampleRate;
     // Number of channels in the output
@@ -117,10 +118,21 @@ namespace Audio
     PaStream *Stream;
     // Port audio output stream parameters
     PaStreamParameters OutputParameters;
+    // Port audio input stream parameters
+    PaStreamParameters InputParameters;
     // Keeps track of whether audio output has already been initialized
     bool Initialized;
     // Pointer to the Port Audio input stream
     PaStream* InputStream;
+    // If true, currently set to low latency
+    bool LowLatency;
+    // Size of the buffer for input data
+    static const unsigned InputBufferSize = 8192;
+    // Buffer of input data
+    float InputBuffer[InputBufferSize];
+    // Ring buffer used for receiving input data
+    PaUtilRingBuffer InputRingBuffer;
+
     // Starts the Port Audio stream
     void StartPAStream(Zero::Status &status);
     // Stops the Port Audio stream
@@ -129,8 +141,6 @@ namespace Audio
     void SetUpBuffers(const unsigned size);
     // Sets the callback frame size and calls SetUpBuffers
     void SetLatency(const unsigned baseSize);
-    // If true, currently set to low latency
-    bool LowLatency;
 
     friend class CallbackDataObject;
   };

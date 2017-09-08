@@ -23,6 +23,8 @@ namespace Events
   DefineEvent(MIDIModWheel);
   DefineEvent(MIDIOtherControl);
   DefineEvent(SoundInstancePlayed);
+  DefineEvent(MicrophoneUncompressedFloatData);
+  DefineEvent(MicrophoneCompressedByteData);
 }
 
 namespace Z
@@ -53,19 +55,71 @@ ZilchDefineType(MidiEvent, builder, type)
   ZilchBindField(Value);
 }
 
+//--------------------------------------------------------------------------- Audio Float Data Event
+
+ZilchDefineType(AudioFloatDataEvent, builder, type)
+{
+  ZeroBindDocumented();
+
+  ZilchBindField(Channels);
+  ZilchBindMember(AudioData);
+}
+
+//---------------------------------------------------------------------------- Audio Byte Data Event
+
+ZilchDefineType(AudioByteDataEvent, builder, type)
+{
+  ZeroBindDocumented();
+
+  ZilchBindMember(AudioData);
+}
+
 //------------------------------------------------------------------------------------- Sound System
 
 //**************************************************************************************************
 ZilchDefineType(SoundSystem, builder, type)
 {
+  type->HandleManager = ZilchManagerId(PointerManager);
+
+  ZilchBindGetterSetter(SystemVolume);
+  ZilchBindGetter(PeakOutputLevel);
+  ZilchBindGetter(RMSOutputLevel);
+  ZilchBindMethod(GetNodeGraphInfo);
+  ZilchBindGetterSetter(LatencySetting);
+  ZilchBindGetterSetter(DispatchMicrophoneUncompressedFloatData);
+  ZilchBindGetterSetter(DispatchMicrophoneCompressedFloatData);
+
+  ZilchBindMethod(VolumeNode);
+  ZilchBindMethod(PanningNode);
+  ZilchBindMethod(PitchNode);
+  ZilchBindMethod(LowPassNode);
+  ZilchBindMethod(HighPassNode);
+  ZilchBindMethod(BandPassNode);
+  ZilchBindMethod(EqualizerNode);
+  ZilchBindMethod(ReverbNode);
+  ZilchBindMethod(DelayNode);
+  ZilchBindMethod(CustomAudioNode);
+  ZilchBindMethod(SoundBuffer);
+  ZilchBindMethod(FlangerNode);
+  ZilchBindMethod(ChorusNode);
+  ZilchBindMethod(CompressorNode);
+  ZilchBindMethod(ExpanderNode);
+  ZilchBindMethod(GeneratedWaveNode);
+  ZilchBindMethod(RecordingNode);
+  ZilchBindMethod(AddNoiseNode);
+  ZilchBindMethod(AdditiveSynthNode);
+  ZilchBindMethod(ModulationNode);
+  ZilchBindMethod(MicrophoneInputNode);
+
   ZeroBindEvent(Events::MIDINoteOn, MidiEvent);
   ZeroBindEvent(Events::MIDINoteOff, MidiEvent);
   ZeroBindEvent(Events::MIDIPitchWheel, MidiEvent);
   ZeroBindEvent(Events::MIDIVolume, MidiEvent);
   ZeroBindEvent(Events::MIDIModWheel, MidiEvent);
   ZeroBindEvent(Events::MIDIOtherControl, MidiEvent);
-
   ZeroBindEvent(Events::SoundInstancePlayed, SoundInstanceEvent);
+  ZeroBindEvent(Events::MicrophoneUncompressedFloatData, AudioFloatDataEvent);
+  ZeroBindEvent(Events::MicrophoneCompressedByteData, AudioByteDataEvent);
 }
 
 //**************************************************************************************************
@@ -112,6 +166,79 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
   InitializeResourceManager(SoundCueManager);
   InitializeResourceManager(SoundTagManager);
   InitializeResourceManager(SoundAttenuatorManager);
+}
+
+//**************************************************************************************************
+NodeInfoListType::range SoundSystem::GetNodeGraphInfo()
+{
+  return NodeGraph.GetNodeInfoList();
+}
+
+//**************************************************************************************************
+float SoundSystem::GetSystemVolume()
+{
+  return mAudioSystem->GetVolume();
+}
+
+//**************************************************************************************************
+void SoundSystem::SetSystemVolume(float volume)
+{
+  mAudioSystem->SetVolume(volume);
+}
+
+//**************************************************************************************************
+float SoundSystem::GetPeakOutputLevel()
+{
+  return mAudioSystem->GetPeakOutputVolume();
+}
+
+//**************************************************************************************************
+float SoundSystem::GetRMSOutputLevel()
+{
+  return mAudioSystem->GetRMSOutputVolume();
+}
+
+//**************************************************************************************************
+Zero::AudioLatency::Enum SoundSystem::GetLatencySetting()
+{
+  return mLatency;
+}
+
+//**************************************************************************************************
+void SoundSystem::SetLatencySetting(AudioLatency::Enum latency)
+{
+  mLatency = latency;
+
+  if (latency == AudioLatency::High)
+    mAudioSystem->UseHighLatency(true);
+  else
+    mAudioSystem->UseHighLatency(false);
+}
+
+//**************************************************************************************************
+bool SoundSystem::GetDispatchMicrophoneUncompressedFloatData()
+{
+  return mSendMicEvents;
+}
+
+//**************************************************************************************************
+void SoundSystem::SetDispatchMicrophoneUncompressedFloatData(bool dispatchData)
+{
+  mSendMicEvents = dispatchData;
+  mAudioSystem->SetSendUncompressedMicInput(dispatchData);
+}
+
+//**************************************************************************************************
+bool SoundSystem::GetDispatchMicrophoneCompressedFloatData()
+{
+  return mSendCompressedMicEvents;
+}
+
+//**************************************************************************************************
+void SoundSystem::SetDispatchMicrophoneCompressedFloatData(bool dispatchData)
+{
+  mSendCompressedMicEvents = dispatchData;
+  mAudioSystem->SetSendCompressedMicInput(dispatchData);
 }
 
 //**************************************************************************************************
@@ -218,18 +345,29 @@ void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * d
     SendEventOnAllSpaces(Events::MIDIOtherControl, event);
     delete (Audio::MidiData*)data;
   }
+  else if (eventType == Audio::Notify_MicInputData)
+  {
+    Array<float>* buffer = (Array<float>*)data;
+    AudioFloatDataEvent event;
+    event.Channels = 2;
+    event.AudioData = ZilchAllocate(ArrayClass<float>);
+    event.AudioData->NativeArray = *buffer;
+    DispatchEvent(Events::MicrophoneUncompressedFloatData, &event);
+  }
+  else if (eventType == Audio::Notify_CompressedMicInputData)
+  {
+    Array<byte>* buffer = (Array<byte>*)data;
+    AudioByteDataEvent event;
+    event.AudioData = ZilchAllocate(ArrayClass<byte>);
+    event.AudioData->NativeArray = *buffer;
+    DispatchEvent(Events::MicrophoneCompressedByteData, &event);
+  }
 }
 
 //**************************************************************************************************
 void SoundSystem::SendAudioError(const Zero::String message)
 {
   DoNotifyWarning("Audio Error", message.c_str());
-}
-
-//**************************************************************************************************
-NodeInfoListType::range SoundSystem::GetNodeInfoList()
-{
-  return NodeGraph.GetNodeInfoList();
 }
 
 //**************************************************************************************************
@@ -272,8 +410,7 @@ void AudioSettings::Initialize(CogInitializer& initializer)
   Z::gSound->mAudioSystem->SetVolume(mSystemVolume);
   SetMixType(mMixType);
   Z::gSound->mAudioSystem->SetMinimumVolumeThreshold(mMinVolumeThreshold);
-  if (mLatency == AudioLatency::High)
-    Z::gSound->mAudioSystem->UseHighLatency(true);
+  Z::gSound->SetLatencySetting(mLatency);
 }
 
 //**************************************************************************************************
@@ -350,91 +487,7 @@ Zero::AudioLatency::Enum AudioSettings::GetLatencySetting()
 void AudioSettings::SetLatencySetting(AudioLatency::Enum latency)
 {
   mLatency = latency;
-
-  if (latency == AudioLatency::High)
-    Z::gSound->mAudioSystem->UseHighLatency(true);
-  else
-    Z::gSound->mAudioSystem->UseHighLatency(false);
-}
-
-//------------------------------------------------------------------------------------ Audio Statics
-
-//**************************************************************************************************
-ZilchDefineType(AudioStatics, builder, type)
-{
-  ZeroBindDocumented();
-
-  ZilchBindMethod(VolumeNode);
-  ZilchBindMethod(PanningNode);
-  ZilchBindMethod(PitchNode);
-  ZilchBindMethod(LowPassNode);
-  ZilchBindMethod(HighPassNode);
-  ZilchBindMethod(BandPassNode);
-  ZilchBindMethod(EqualizerNode);
-  ZilchBindMethod(ReverbNode);
-  ZilchBindMethod(DelayNode);
-  ZilchBindMethod(CustomAudioNode);
-  ZilchBindMethod(SoundBuffer);
-  ZilchBindMethod(FlangerNode);
-  ZilchBindMethod(ChorusNode);
-  ZilchBindMethod(CompressorNode);
-  ZilchBindMethod(ExpanderNode);
-  ZilchBindMethod(GeneratedWaveNode);
-  ZilchBindMethod(RecordingNode);
-  ZilchBindMethod(AddNoiseNode);
-  ZilchBindMethod(AdditiveSynthNode);
-  ZilchBindMethod(ModulationNode);
-
-  ZilchBindGetterSetter(SystemVolume);
-  ZilchBindGetter(PeakOutputLevel);
-  ZilchBindGetter(RMSOutputLevel);
-
-  ZilchBindMethod(GetNodeGraphInfo);
-  ZilchBindMethod(SetUseHighLatency);
-}
-
-//**************************************************************************************************
-NodeInfoListType::range AudioStatics::GetNodeGraphInfo()
-{
-  return Z::gSound->GetNodeInfoList();
-}
-
-//**************************************************************************************************
-void AudioStatics::PrintAudioStartupMessage()
-{
-  StringBuilder message;
-  message << "Audio Startup Data: " << Z::gSound->mAudioMessage << "\n";
-  ZPrint(message.ToString().c_str());
-}
-
-//**************************************************************************************************
-float AudioStatics::GetSystemVolume()
-{
-  return Z::gSound->mAudioSystem->GetVolume();
-}
-
-//**************************************************************************************************
-void AudioStatics::SetSystemVolume(float volume)
-{
-  Z::gSound->mAudioSystem->SetVolume(volume);
-}
-
-//**************************************************************************************************
-float AudioStatics::GetPeakOutputLevel()
-{
-  return Z::gSound->mAudioSystem->GetPeakOutputVolume();
-}
-
-//**************************************************************************************************
-float AudioStatics::GetRMSOutputLevel()
-{
-  return Z::gSound->mAudioSystem->GetRMSOutputVolume();
-}
-
-//**************************************************************************************************
-void AudioStatics::SetUseHighLatency(bool useHigh)
-{
-  Z::gSound->mAudioSystem->UseHighLatency(useHigh);
+  Z::gSound->SetLatencySetting(latency);
 }
 
 }//namespace Zero

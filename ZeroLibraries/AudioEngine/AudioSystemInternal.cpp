@@ -37,7 +37,8 @@ namespace Audio
     ResampleFrameIndex(0),
     Resampling(false),
     ResampleBufferFraction(0),
-    StopDecodeThread(0)
+    StopDecodeThread(0),
+    SendMicrophoneInputData(false)
   {
     gAudioSystem = this;
 
@@ -70,6 +71,10 @@ namespace Audio
     MixBufferSizeThreaded = AudioIO.GetBufferSize(SampleRate) * SystemChannelsThreaded;
     CheckForResampling();
 
+    // Create output nodes
+    FinalOutputNode = new OutputNode(status, "FinalOutputNode", &NodeInt, false);
+    FinalOutputNodeThreaded = (OutputNode*)FinalOutputNode->GetSiblingNode();
+
     // Start up the mix thread
     MixThread.Initialize(StartMix, this, "Audio mix");
     MixThread.Resume();
@@ -96,10 +101,6 @@ namespace Audio
     }
 
     ZPrint("Audio decoding thread initialized\n");
-
-    // Create output nodes
-    FinalOutputNode = new OutputNode(status, "FinalOutputNode", &NodeInt, false);
-    FinalOutputNodeThreaded = (OutputNode*)FinalOutputNode->GetSiblingNode();
 
     // For low frequency channel (uses audio system in constructor)
     LowPass = new LowPassFilter();
@@ -227,6 +228,12 @@ namespace Audio
       else
         return false;
     }
+
+    GetAudioInputDataThreaded();
+
+    // If sending microphone input to the external system, add the input buffer to the queue
+    if (SendMicrophoneInputData)
+      InputDataQueue.Write(new Zero::Array<float>(InputBuffer));
 
     // Save the number of frames 
     unsigned outputFrames = AudioIO.OutputBufferSizeThreaded / AudioIO.OutputChannelsThreaded;
@@ -403,9 +410,26 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void AudioSystemInternal::SetMinVolumeThresholdThreaded(const float volume)
+  void AudioSystemInternal::AddDecodingTask(Zero::Functor* function)
   {
-    MinimumVolumeThresholdThreaded = volume;
+    DecodingQueue.Write(function);
+    DecodeThreadEvent.Signal();
+  }
+
+  //************************************************************************************************
+  void AudioSystemInternal::DecodeLoopThreaded()
+  {
+    while (AtomicCompareExchange32(&StopDecodeThread, 0, 0) == 0)
+    {
+      Zero::Functor* function;
+      while (DecodingQueue.Read(function))
+      {
+        function->Execute();
+        delete function;
+      }
+
+      DecodeThreadEvent.Wait();
+    }
   }
 
   //************************************************************************************************
@@ -445,6 +469,84 @@ namespace Audio
   void AudioSystemInternal::RemoveAsset(SoundAssetNode* asset)
   {
     AssetList.Erase(asset);
+  }
+
+  //************************************************************************************************
+  bool AudioSystemInternal::AddSoundNode(SoundNode* node, const bool threaded)
+  {
+    if (!threaded)
+    {
+      // Need to add the node to the list even if over the max, since it will 
+      // remove itself in its destructor
+      ++NodeCount;
+      NodeList.PushBack(node);
+
+#ifdef _DEBUG  
+      if (NodeCount >= MAXNODES)
+        ExternalInterface->SendAudioError("Number of SoundNodes over limit");
+#endif
+    }
+    else
+    {
+      NodeListThreaded.PushBack(node);
+    }
+
+    return true;
+  }
+
+  //************************************************************************************************
+  void AudioSystemInternal::RemoveSoundNode(SoundNode* node, const bool threaded)
+  {
+    if (!threaded)
+    {
+      --NodeCount;
+      NodeList.Erase(node);
+    }
+    else
+      NodeListThreaded.Erase(node);
+  }
+
+  //************************************************************************************************
+  Audio::InterpolatingObject* AudioSystemInternal::GetInterpolatorThreaded()
+  {
+    // If we've used all available interpolators, increase the array size
+    if ((unsigned)NextInterpolator >= InterpolatorArray.Size())
+      InterpolatorArray.Resize(InterpolatorArray.Size() * 2);
+
+    ErrorIf(InterpolatorArray[NextInterpolator].Active == true,
+      "Audio Engine: Trying to use interpolator which is already active");
+    ErrorIf(InterpolatorArray[NextInterpolator].Object->Container != &InterpolatorArray[NextInterpolator],
+      "Audio Engine: Interpolator container pointer does not match container");
+
+    // Mark as active
+    InterpolatorArray[NextInterpolator].Active = true;
+    // Return the interpolator and increment the index
+    return InterpolatorArray[NextInterpolator++].Object;
+  }
+
+  //************************************************************************************************
+  void AudioSystemInternal::ReleaseInterpolatorThreaded(InterpolatingObject* object)
+  {
+    if (!object)
+      return;
+
+    // Clear the values
+    object->SetValues(0.0f, 0.0f, 0.0f);
+    // Mark as not active
+    object->Container->Active = false;
+    // Decrement index
+    --NextInterpolator;
+    // If the interpolator at the next available index is active, swap this object's data with that one
+    if (InterpolatorArray[NextInterpolator].Active)
+      InterpolatorArray[NextInterpolator].Swap(*object->Container);
+
+    ErrorIf(NextInterpolator < 0, "Audio Engine: Interpolator index went below 0");
+  }
+
+  //************************************************************************************************
+  void AudioSystemInternal::SetMinVolumeThresholdThreaded(const float volume)
+  {
+    MinimumVolumeThresholdThreaded = volume;
   }
 
   //************************************************************************************************
@@ -501,78 +603,6 @@ namespace Audio
   }
 
   //************************************************************************************************
-  bool AudioSystemInternal::AddSoundNode(SoundNode* node, const bool threaded)
-  {
-    if (!threaded)
-    {
-      // Need to add the node to the list even if over the max, since it will 
-      // remove itself in its destructor
-      ++NodeCount;
-      NodeList.PushBack(node);
-
-#ifdef _DEBUG  
-      if (NodeCount >= MAXNODES)
-        ExternalInterface->SendAudioError("Number of SoundNodes over limit");
-#endif
-    }
-    else
-    {
-      NodeListThreaded.PushBack(node);
-    }
-
-    return true;
-  }
-
-  //************************************************************************************************
-  void AudioSystemInternal::RemoveSoundNode(SoundNode* node, const bool threaded)
-  {
-    if (!threaded)
-    {
-      --NodeCount; 
-      NodeList.Erase(node);
-    }
-    else
-      NodeListThreaded.Erase(node);
-  }
-
-  //************************************************************************************************
-  Audio::InterpolatingObject* AudioSystemInternal::GetInterpolatorThreaded()
-  {
-    // If we've used all available interpolators, increase the array size
-    if ((unsigned)NextInterpolator >= InterpolatorArray.Size())
-      InterpolatorArray.Resize(InterpolatorArray.Size() * 2);
-
-    ErrorIf(InterpolatorArray[NextInterpolator].Active == true, 
-      "Audio Engine: Trying to use interpolator which is already active");
-    ErrorIf(InterpolatorArray[NextInterpolator].Object->Container != &InterpolatorArray[NextInterpolator],
-      "Audio Engine: Interpolator container pointer does not match container");
-
-    // Mark as active
-    InterpolatorArray[NextInterpolator].Active = true;
-    // Return the interpolator and increment the index
-    return InterpolatorArray[NextInterpolator++].Object;
-  }
-
-  //************************************************************************************************
-  void AudioSystemInternal::ReleaseInterpolatorThreaded(InterpolatingObject* object)
-  {
-    if (!object)
-      return;
-    
-    // Clear the values
-    object->SetValues(0.0f, 0.0f, 0.0f);
-    // Mark as not active
-    object->Container->Active = false;
-    // Decrement index
-    --NextInterpolator;
-    // If the interpolator at the next available index is active, swap this object's data with that one
-    if (InterpolatorArray[NextInterpolator].Active)
-      InterpolatorArray[NextInterpolator].Swap(*object->Container);
-
-    ErrorIf(NextInterpolator < 0, "Audio Engine: Interpolator index went below 0");
-  }
-
-  //************************************************************************************************
   void AudioSystemInternal::SetVolumes(const float peak, const unsigned rms)
   {
     PeakVolumeLastMix = peak;
@@ -613,26 +643,32 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void AudioSystemInternal::AddDecodingTask(Zero::Functor* function)
+  void AudioSystemInternal::GetAudioInputDataThreaded()
   {
-    DecodingQueue.Write(function);
-    DecodeThreadEvent.Signal();
-  }
-
-  //************************************************************************************************
-  void AudioSystemInternal::DecodeLoopThreaded()
-  {
-    while (AtomicCompareExchange32(&StopDecodeThread, 0, 0) == 0)
+    // Channels and sample rates match, don't need to process anything
+    if (AudioIO.InputChannels == SystemChannelsThreaded && AudioIO.InputSampleRate == SampleRate)
     {
-      Zero::Functor* function;
-      while (DecodingQueue.Read(function))
-      {
-        function->Execute();
-        delete function;
-      }
-
-      DecodeThreadEvent.Wait();
+      AudioIO.GetInputData(InputBuffer, MixBufferSizeThreaded);
     }
+    // Only need to adjust channels
+    else if (AudioIO.InputSampleRate == SampleRate)
+    {
+      Zero::Array<float> inputSamples;
+      AudioIO.GetInputData(inputSamples, MixBufferSizeThreaded / SystemChannelsThreaded 
+        * AudioIO.InputChannels);
+
+      InputBuffer.Clear();
+
+      for (unsigned i = 0; i < inputSamples.Size(); i += AudioIO.InputChannels)
+      {
+        AudioFrame frame(inputSamples.Data() + i, AudioIO.InputChannels);
+        frame.TranslateChannels(SystemChannelsThreaded);
+        for (unsigned j = 0; j < SystemChannelsThreaded; ++j)
+          InputBuffer.PushBack(frame.Samples[j]);
+      }
+    }
+
+    // TODO resampling
   }
 
   //------------------------------------------------------------------------- Audio Channels Manager

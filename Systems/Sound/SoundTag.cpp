@@ -381,7 +381,7 @@ HandleOf<SoundTag> SoundTag::GetTagForDucking()
 }
 
 //**************************************************************************************************
-void SoundTag::SetTagForDucking(HandleOf<SoundTag> tag)
+void SoundTag::SetTagForDucking(const HandleOf<SoundTag>& tag)
 {
   mCompressorTag = tag;
 

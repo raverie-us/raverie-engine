@@ -34,6 +34,7 @@ public:
   static ObjectStore* GetObjectStore();
   static ResourceSystem* GetResourceSystem();
   static OsShell* GetOsShell();
+  static SoundSystem* GetAudio();
 
   //static Joysticks* GetJoysticks();
   //static MultiTouch* GetMultiTouch();
