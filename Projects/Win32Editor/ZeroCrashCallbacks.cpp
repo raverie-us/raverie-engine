@@ -85,7 +85,7 @@ void CrashLoggingCallback(CrashHandlerParameters& params, CrashInfo& info, void*
   {
     StackEntry& entry = stackTrace.Stack[i];
     // Print the location of the crash to the log
-    String location = entry.ExecutingFunction->Location.GetFormattedString(Zilch::MessageFormat::Python);
+    String location = entry.Location.GetFormattedString(Zilch::MessageFormat::Python);
     ZPrint("%s\n", location.c_str());
 
     // Only append scripts so we can attach them to crashes
