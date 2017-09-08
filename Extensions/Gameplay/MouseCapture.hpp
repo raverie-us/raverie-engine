@@ -42,7 +42,7 @@ public:
   bool Capture(ViewportMouseEvent* e);
 
   /// Releases the mouse manipulation.
-  void ReleaseCapture();
+  void ReleaseCapture(ViewportMouseEvent* e);
 
   /// Returns whether or not this has an active mouse capture.
   bool IsCaptured();
