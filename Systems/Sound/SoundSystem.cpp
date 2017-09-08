@@ -307,42 +307,42 @@ void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * d
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, midiData->Value2);
-    SendEventOnAllSpaces(Events::MIDINoteOn, event);
+    DispatchEvent(Events::MIDINoteOn, &event);
     delete (Audio::MidiData*)data;
   }
   else if (eventType == Audio::Notify_MidiNoteOff)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, 0);
-    SendEventOnAllSpaces(Events::MIDINoteOff, event);
+    DispatchEvent(Events::MIDINoteOff, &event);
     delete (Audio::MidiData*)data;
   }
   else if (eventType == Audio::Notify_MidiPitchWheel)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
-    SendEventOnAllSpaces(Events::MIDIPitchWheel, event);
+    DispatchEvent(Events::MIDIPitchWheel, &event);
     delete (Audio::MidiData*)data;
   }
   else if (eventType == Audio::Notify_MidiVolume)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
-    SendEventOnAllSpaces(Events::MIDIVolume, event);
+    DispatchEvent(Events::MIDIVolume, &event);
     delete (Audio::MidiData*)data;
   }
   else if (eventType == Audio::Notify_MidiModWheel)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
-    SendEventOnAllSpaces(Events::MIDIModWheel, event);
+    DispatchEvent(Events::MIDIModWheel, &event);
     delete (Audio::MidiData*)data;
   }
   else if (eventType == Audio::Notify_MidiControl)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, midiData->Value2);
-    SendEventOnAllSpaces(Events::MIDIOtherControl, event);
+    DispatchEvent(Events::MIDIOtherControl, &event);
     delete (Audio::MidiData*)data;
   }
   else if (eventType == Audio::Notify_MicInputData)
@@ -368,15 +368,6 @@ void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * d
 void SoundSystem::SendAudioError(const Zero::String message)
 {
   DoNotifyWarning("Audio Error", message.c_str());
-}
-
-//**************************************************************************************************
-void SoundSystem::SendEventOnAllSpaces(StringParam eventType, Event& eventToSend)
-{
-  forRange(SoundSpace& space, mSpaces.All())
-  {
-    space.DispatchEvent(eventType, &eventToSend);
-  }
 }
 
 //----------------------------------------------------------------------------------- Audio Settings

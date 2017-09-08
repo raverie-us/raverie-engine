@@ -196,7 +196,6 @@ public:
   float DecibelsToVolume(float decibels);
   void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
   void SendAudioError(const Zero::String message) override;
-  void SendEventOnAllSpaces(StringParam eventType, Event& eventToSend);
 
   unsigned mCounter;
   InList<SoundSpace> mSpaces;
