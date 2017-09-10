@@ -171,7 +171,7 @@ bool InMessageChannel::IsDuplicate(const Message& message) const
   // Fragment message already acknowledged? (This specific fragment has already been acknowledged?)
   if(message.IsFragment())
   {
-    ArraySet<FragmentedMessage>::iterator iter = mFragmentedMessages.FindPointer(message.GetSequenceId());
+    ArraySet<FragmentedMessage>::const_iterator iter = mFragmentedMessages.FindIterator(message.GetSequenceId());
     if(iter != mFragmentedMessages.End())
       if(iter->IsDuplicate(message))
         return true;
@@ -187,7 +187,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
   // Fragment message already exists as a fragmented message?
   if(message->IsFragment())
   {
-    ArraySet<FragmentedMessage>::iterator iter = mFragmentedMessages.FindPointer(message->GetSequenceId());
+    ArraySet<FragmentedMessage>::iterator iter = mFragmentedMessages.FindIterator(message->GetSequenceId());
     if(iter != mFragmentedMessages.End())
     {
       // Add message fragment
