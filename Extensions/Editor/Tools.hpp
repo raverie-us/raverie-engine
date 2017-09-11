@@ -80,8 +80,15 @@ public:
   /// Select objects on mouse up.
   void OnLeftMouseUp(ViewportMouseEvent* e);
 
+  // Checks whether an object is the currently selected archetype
   bool IsLastHitArchetype(Cog* cog);
+  // Checks whether an object is a direct child of the last selected archetype
   bool IsChildOfLastHitArchetype(Cog* cog);
+  // Checks whether an object is the root of currently selected hierarchy
+  bool IsLastHitHierarchyRoot(Cog* cog);
+  // Checks whether an object is a direct child of the last selected hierarchy
+  bool IsChildOfLastHitHierarchyRoot(Cog* cog);
+  
   void Select(ViewportMouseEvent* e);
   SelectionResult RayCastSelect(Viewport* viewport, Vec2 mousePosition);
   RaycastResultList RayCastSelectInternal(Viewport* viewport, Vec2 mousePosition);
@@ -105,6 +112,7 @@ public:
   bool mSmartGroupSelect;
 
   HandleOf<Cog> mLastHitArchetype;
+  HandleOf<Cog> mLastHitHierarchyRoot;
 
   //stores all of the providers for raycasting and does the actual casting.
   Raycaster mRaycaster;

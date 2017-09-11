@@ -392,6 +392,21 @@ bool SelectTool::IsChildOfLastHitArchetype(Cog* cog)
 }
 
 //******************************************************************************
+bool SelectTool::IsLastHitHierarchyRoot(Cog* cog)
+{
+  return cog == mLastHitHierarchyRoot.Get<Cog*>();
+}
+
+//******************************************************************************
+bool SelectTool::IsChildOfLastHitHierarchyRoot(Cog* cog)
+{
+  if(mLastHitHierarchyRoot.IsNull())
+    return false;
+
+  return cog->FindRoot() == mLastHitHierarchyRoot.Get<Cog*>();
+}
+
+//******************************************************************************
 void SelectTool::Select(ViewportMouseEvent* e)
 {
   RaycastResultList result = RayCastSelectInternal(e->mViewport, e->Position);
@@ -405,7 +420,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
   if (toSelect != nullptr)
   {
     // if we are multi selecting objects just add the object to the selection
-    // and clear our tracking of archetype based selection
+    // and clear our tracking of archetype/hierarchy based selection
     if (multiSelect)
     {
       if (selection->Contains(toSelect))
@@ -413,6 +428,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
       else
         selection->Add(toSelect, SendsEvents::False);
       mLastHitArchetype.Clear();
+      mLastHitHierarchyRoot.Clear();
     }
     // smart select is not enabled so just select whatever the user clicked on regardless of hierarchy
     else if (!mSmartSelect)
@@ -446,14 +462,47 @@ void SelectTool::Select(ViewportMouseEvent* e)
         selection->SelectOnly(toSelect);
       }
       // otherwise select the new objects nearest archetype parent
-      // and if it is not part of an archetype just select the object
+      // and if it is not part of an archetype, select based on hierarchy
       else
       {
         mLastHitArchetype = toSelect->FindNearestArchetype();
         if (mLastHitArchetype.IsNotNull())
+        {
           selection->SelectOnly(mLastHitArchetype);
+        }
         else
-          selection->SelectOnly(toSelect);
+        {
+          // for smart select if we have an hierarchy selected take the next object hit
+          // to account for sub objects contained within the parent
+          if (IsLastHitHierarchyRoot(toSelect))
+          {
+            RayCastEntries::range entries = result.mEntries.All();
+            // we want to remove the first entry as we already checked it
+            entries.PopFront();
+            while (!entries.Empty())
+            {
+              RayCastEntry entry = entries.Front();
+              if (IsChildOfLastHitHierarchyRoot(entry.HitCog))
+              {
+                toSelect = entry.HitCog;
+                break;
+              }
+              entries.PopFront();
+            }
+          }
+          // select the root of any hierarchy object first
+          // if the root was already selected and this a child, select the child
+          if (IsChildOfLastHitHierarchyRoot(toSelect))
+          {
+            selection->SelectOnly(toSelect);
+          }
+          // otherwise select the root of the hierarchy
+          else
+          {
+            mLastHitHierarchyRoot = toSelect->FindRoot();
+            selection->SelectOnly(mLastHitHierarchyRoot);
+          }
+        }
       }
     }
     selection->FinalSelectionChanged();
@@ -462,6 +511,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
   else
   {
     mLastHitArchetype.Clear();
+    mLastHitHierarchyRoot.Clear();
     selection->Clear(SendsEvents::False);
     selection->FinalSelectionChanged();
   }
