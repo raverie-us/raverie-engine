@@ -923,13 +923,12 @@ bool Cog::CheckForRemovalWithNotify(BoundType* componentType)
   MetaComposition* composition = cogType->Has<MetaComposition>();
 
   String reason;
-  if (composition->CanRemoveComponent(this, componentType, reason))
+  if (!composition->CanRemoveComponent(this, componentType, reason))
   {
     DoNotifyWarning("Can't Remove Component.", reason);
     return false;
   }
 
-  composition->RemoveComponent(this, componentType);
   return true;
 }
 
