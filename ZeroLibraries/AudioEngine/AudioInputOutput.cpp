@@ -116,6 +116,8 @@ namespace Audio
   {
     Initialized = true;
     CallbackDataThreaded.InputRingBuffer = &InputRingBuffer;
+    OutputParameters.device = -1;
+    InputParameters.device = -1;
 
     // Initialize PortAudio and check for error
     PaError result = Pa_Initialize();
@@ -225,7 +227,7 @@ namespace Audio
     ZPrint("Sample rate     : %d\n", OutputSampleRate);
 
     // Check device settings
-    result = Pa_IsFormatSupported(NULL, &OutputParameters, (double)OutputSampleRate);
+    result = Pa_IsFormatSupported(nullptr, &OutputParameters, (double)OutputSampleRate);
     if (result != paFormatIsSupported)
     {
       // Parameters were not supported - set error string and return
@@ -247,24 +249,33 @@ namespace Audio
     while (BufferLargeSize < (unsigned)(LargeBufferMultiplier * OutputSampleRate))
       BufferLargeSize *= 2;
 
+    // Check if there is an input device
     InputParameters.device = apiInfo->defaultInputDevice;
-    InputParameters.sampleFormat = OutputParameters.sampleFormat;
-    const PaDeviceInfo* inputDeviceInfo = Pa_GetDeviceInfo(InputParameters.device);
-    InputParameters.suggestedLatency = inputDeviceInfo->defaultLowInputLatency;
-    InputParameters.channelCount = inputDeviceInfo->maxInputChannels;
-    InputSampleRate = (unsigned)inputDeviceInfo->defaultSampleRate;
-
-    result = Pa_IsFormatSupported(&InputParameters, NULL, (double)InputSampleRate);
-    if (result != paFormatIsSupported)
+    if (InputParameters.device >= 0)
     {
-      Error("Audio input format is not supported");
+      InputParameters.sampleFormat = OutputParameters.sampleFormat;
+      const PaDeviceInfo* inputDeviceInfo = Pa_GetDeviceInfo(InputParameters.device);
+      InputParameters.suggestedLatency = inputDeviceInfo->defaultLowInputLatency;
+      InputParameters.channelCount = inputDeviceInfo->maxInputChannels;
+      InputSampleRate = (unsigned)inputDeviceInfo->defaultSampleRate;
+
+      result = Pa_IsFormatSupported(&InputParameters, nullptr, (double)InputSampleRate);
+      if (result != paFormatIsSupported)
+      {
+        ZPrint("Audio input format is not supported\n");
+        InputParameters.device = -1;
+      }
+      else
+      {
+        CallbackDataThreaded.InputChannels = InputParameters.channelCount;
+        InputChannels = InputParameters.channelCount;
+
+        PaUtil_InitializeRingBuffer(&InputRingBuffer, sizeof(float), InputBufferSize, InputBuffer);
+        PaUtil_FlushRingBuffer(&InputRingBuffer);
+
+        ZPrint("Successfully initialized audio input\n");
+      }
     }
-
-    CallbackDataThreaded.InputChannels = InputParameters.channelCount;
-    InputChannels = InputParameters.channelCount;
-
-    PaUtil_InitializeRingBuffer(&InputRingBuffer, sizeof(float), InputBufferSize, InputBuffer);
-    PaUtil_FlushRingBuffer(&InputRingBuffer);
 
     RestartStream(true, status);
 
@@ -301,6 +312,7 @@ namespace Audio
   {
     Zero::Status status;
     StopPAStream(status);
+    StopInputStream();
   }
 
   //************************************************************************************************
@@ -324,21 +336,28 @@ namespace Audio
   //************************************************************************************************
   void AudioInputOutput::StartInputStream()
   {
+    // No current input device
+    if (InputParameters.device < 0)
+      return;
+
+    // Open PortAudio stream
     PaError result = Pa_OpenStream(
       &InputStream,
       &InputParameters,
-      NULL,
+      nullptr,
       InputSampleRate,
       CallbackFrameSizeThreaded,
       0,
       PACallback,
       &CallbackDataThreaded);
-    if (result != paNoError)
-      Error("Error opening input stream");
+    
+    ErrorIf(result != paNoError, "Error opening input stream: %s\n", Pa_GetErrorText(result));
 
-    result = Pa_StartStream(InputStream);
-    if (result != paNoError)
-      Error("Error starting input stream");
+    // If opened successfully, start the stream
+    if (result == paNoError)
+      result = Pa_StartStream(InputStream);
+    
+    ErrorIf(result != paNoError, "Error starting input stream: %s\n", Pa_GetErrorText(result));
   }
 
   //************************************************************************************************
@@ -348,8 +367,8 @@ namespace Audio
       return;
 
     PaError result = Pa_CloseStream(InputStream);
-    if (result != paNoError)
-      Error("Error closing input stream");
+    
+    ErrorIf(result != paNoError, "Error closing input stream: %s\n", Pa_GetErrorText(result));
 
     InputStream = nullptr;
   }
@@ -413,10 +432,17 @@ namespace Audio
   //************************************************************************************************
   void AudioInputOutput::StartPAStream(Zero::Status& status)
   {
+    // No current output device
+    if (OutputParameters.device < 0)
+    {
+      status.SetFailed("No audio output device, can't start stream");
+      return;
+    }
+
     // Open a PA stream
     PaError result = Pa_OpenStream(
       &Stream,
-      NULL, // No input
+      nullptr, // No input
       &OutputParameters,
       OutputSampleRate,
       CallbackFrameSizeThreaded,
@@ -430,6 +456,7 @@ namespace Audio
     {
       ZPrint("Error starting output stream: %s\n", Pa_GetErrorText(result));
       status.SetFailed(Zero::String::Format("PortAudio error: %s", Pa_GetErrorText(result)));
+      return;
     }
 
     ZPrint("Output stream started\n");
