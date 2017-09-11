@@ -73,7 +73,7 @@ public:
   void ForwardEvent(Event* e)
   {
     Cog* captureObject = mMouseCaptureObject;
-    if(captureObject == NULL)
+    if(captureObject == nullptr)
       return;
 
     Debug::ActiveDrawSpace debugContext(captureObject->GetSpace()->GetId().Id);
