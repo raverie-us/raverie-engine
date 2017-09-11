@@ -131,6 +131,7 @@ ZilchDefineType(OperationQueue, builder, type)
   ZilchBindMethod(ClearRedo);
   ZilchBindMethod(ClearAll);
 
+  ZilchBindGetterSetterProperty(ActiveBatchName);
   ZilchBindGetterProperty(Commands);
   ZilchBindGetterProperty(RedoCommands);
 
@@ -335,8 +336,11 @@ void OperationQueue::Queue(Operation* command)
 }
 
 //******************************************************************************
-const String& OperationQueue::GetActiveBatchName(StringParam batchName)
+String OperationQueue::GetActiveBatchName()
 {
+  if(ActiveBatch != nullptr)
+    return String();
+
   return ActiveBatch->mName;
 }
 
@@ -384,11 +388,6 @@ void OperationQueue::EndBatch()
   int operationCount = 0;
   forRange(Operation& operation, ActiveBatch->GetChildren( ))
     ++operationCount;
-
-  // Only error if operations exist in the batch.  If there are no operations
-  // in the batch, it'll get cleaned up below.
-  ErrorIf((ActiveBatch->mName.Empty() && operationCount != 0),
-    "ActiveBatch must have a name before EndBatch.");
 
   // Cleanup
   mDestroyedObjects.Clear();
