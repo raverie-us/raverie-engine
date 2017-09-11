@@ -24,7 +24,7 @@ class MouseCaptureDrag : public MouseManipulation
 {
 public:
   CogId mMouseCaptureObject;
-  HandleOf<Viewport> mViewport;
+  HandleOf<ReactiveViewport> mViewport;
 
   //****************************************************************************
   MouseCaptureDrag(ViewportMouseEvent* e, Cog* captureObject)
@@ -54,7 +54,7 @@ public:
   //****************************************************************************
   void ForwardMouseEvent(MouseEvent* e, StringParam eventId)
   {
-    ReactiveViewport* viewport = Type::DynamicCast<ReactiveViewport*>((Viewport*)mViewport);
+    ReactiveViewport* viewport = *mViewport;
     if(viewport == NULL)
       return;
 
@@ -73,7 +73,7 @@ public:
   void ForwardEvent(Event* e)
   {
     Cog* captureObject = mMouseCaptureObject;
-    if(captureObject == NULL)
+    if(captureObject == nullptr)
       return;
 
     Debug::ActiveDrawSpace debugContext(captureObject->GetSpace()->GetId().Id);
@@ -93,7 +93,22 @@ public:
     {
       // The button that created the capture is the one that has to end it.
       if(mButton == e->Button)
-        capture->ReleaseCapture();
+      {
+        ReactiveViewport* viewport = *mViewport;
+
+        // Create the viewport event
+        ViewportMouseEvent eventToSend(e);
+        eventToSend.EventId = e->EventId;
+
+        if(viewport != nullptr)
+          viewport->InitViewportEvent(eventToSend);
+
+        capture->ReleaseCapture(&eventToSend);
+
+        e->Handled = eventToSend.Handled;
+        e->HandledEventScript = eventToSend.HandledEventScript;
+      }
+
     }
   }
 
@@ -171,7 +186,7 @@ ZilchDefineType(MouseCapture, builder, type)
 
   ZeroBindEvent(Events::MouseDragStart, ViewportMouseEvent);
   ZeroBindEvent(Events::MouseDragMove, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseDragEnd, Event);
+  ZeroBindEvent(Events::MouseDragEnd, ViewportMouseEvent);
 }
 
 //******************************************************************************
@@ -205,11 +220,10 @@ bool MouseCapture::Capture(ViewportMouseEvent* e)
 }
 
 //******************************************************************************
-void MouseCapture::ReleaseCapture()
+void MouseCapture::ReleaseCapture(ViewportMouseEvent* e)
 {
-  Event eventToSend;
-  GetOwner()->DispatchEvent(Events::MouseDragEnd, &eventToSend);
-  GetOwner()->DispatchUp(Events::MouseDragEnd, &eventToSend);
+  GetOwner()->DispatchEvent(Events::MouseDragEnd, e);
+  GetOwner()->DispatchUp(Events::MouseDragEnd, e);
 
   mManipulation.SafeDestroy();
 }
