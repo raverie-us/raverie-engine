@@ -3,7 +3,7 @@
 /// \file Manipulator.cpp
 /// Implementation of the MouseManipulation and Gripper.
 ///
-/// Authors: Chris Peters, Ryan Edgemon (edited MouseManipulation)
+/// Authors: Chris Peters
 /// Copyright 2010-2011, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////

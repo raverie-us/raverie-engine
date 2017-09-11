@@ -3,7 +3,7 @@
 /// \file MouseCapture.cpp
 /// Implementation of the MouseCapture Component.
 ///
-/// Authors: Joshua Claeys, Ryan Edgemon (edited MouseCaptureDrag)
+/// Authors: Joshua Claeys
 /// Copyright 2015, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
