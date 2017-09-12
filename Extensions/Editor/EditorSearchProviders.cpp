@@ -285,7 +285,8 @@ public:
 
         // Create a grayed out description text below
         MultiLineText* text = (MultiLineText*)CreateTextPreview(group, description);
-        text->mTextField->SetColor(Vec4(1,1,1,0.35f));
+        if(text)
+          text->mTextField->SetColor(Vec4(1,1,1,0.35f));
 
         return group;
       }
