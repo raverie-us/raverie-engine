@@ -129,7 +129,8 @@ void EditorViewport::SetAsActive()
   if (Space* space = mEditSpace)
   {
     Level* editLevel = space->mLevelLoaded;
-    Z::gEditor->mEditLevel = editLevel;
+    if(editLevel && mEditArchetype.IsNull())
+      Z::gEditor->mEditLevel = editLevel;
 
     Z::gEditor->SetEditSpace(space);
   }
