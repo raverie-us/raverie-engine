@@ -71,6 +71,13 @@ public:
   /// Used by the editor when uploading.
   CogId mCachedObject;
 
+  /// When re-initializing Cogs due to script changes, we don't want Component removals to 
+  /// cause changes to Archetype's with Cogs that are in ArchetypeDefinition mode. This will be
+  /// set before re-initializing Cogs, and should stop the ArchetypeDefinition mode from doing
+  /// extra logic. There is possibly a better solution for this, but it was causing data loss
+  /// and needed to be fixed quickly.
+  static bool sRebuilding;
+
 private:
   DataNode* mCachedTree;
   CachedModifications mLocalCachedModifications;

@@ -1030,6 +1030,8 @@ void ClearSelections(ZilchCompileEvent* e)
 
 void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
 {
+  Archetype::sRebuilding = true;
+
   ClearSelections(e);
 
   TearDownZilchStateOnGames(e->mModifiedLibraries);
@@ -1053,6 +1055,8 @@ void Editor::OnScriptsCompiledPostPatch(ZilchCompileEvent* e)
 
   // Cleanup
   mSpaceModifiedStates.Clear();
+
+  Archetype::sRebuilding = false;
 }
 
 void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibraries)

@@ -120,8 +120,11 @@ void ComponentMetaOperations::ObjectModified(HandleParam object, bool intermedia
     Cog* root = component->GetOwner()->FindRootArchetype();
     if (root&& root->InArchetypeDefinitionMode())
     {
-      root->UploadToArchetype();
-      ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype(), root);
+      if (!Archetype::sRebuilding)
+      {
+        root->UploadToArchetype();
+        ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype(), root);
+      }
     }
   }
 
