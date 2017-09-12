@@ -16,6 +16,7 @@ namespace Events
 {
   DefineEvent(MouseDragStart);
   DefineEvent(MouseDragMove);
+  DefineEvent(MouseDragUpdate);
   DefineEvent(MouseDragEnd);
 }
 
@@ -145,7 +146,7 @@ public:
   //****************************************************************************
   void OnMouseUpdate(MouseEvent* e) override
   {
-    ForwardMouseEvent(e);
+    ForwardMouseEvent(e, Events::MouseDragUpdate);
   }
 
   //****************************************************************************
@@ -181,23 +182,20 @@ ZilchDefineType(MouseCapture, builder, type)
   ZeroBindDocumented();
 
   ZilchBindMethod(Capture);
-  ZilchBindMethod(ReleaseCapture);
+  ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void));
+  ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void, ViewportMouseEvent*));
   ZilchBindGetterProperty(IsCaptured);
 
   ZeroBindEvent(Events::MouseDragStart, ViewportMouseEvent);
   ZeroBindEvent(Events::MouseDragMove, ViewportMouseEvent);
+  ZeroBindEvent(Events::MouseDragUpdate, ViewportMouseEvent);
   ZeroBindEvent(Events::MouseDragEnd, ViewportMouseEvent);
 }
 
 //******************************************************************************
-MouseCapture::~MouseCapture()
+void MouseCapture::Initialize(CogInitializer& initializer)
 {
-
-}
-
-//******************************************************************************
-void MouseCapture::Serialize(Serializer& stream)
-{
+  ConnectThisTo(GetOwner(), Events::MouseDragUpdate, OnMouseDragUpdate);
 }
 
 //******************************************************************************
@@ -220,8 +218,18 @@ bool MouseCapture::Capture(ViewportMouseEvent* e)
 }
 
 //******************************************************************************
+void MouseCapture::ReleaseCapture()
+{
+  ReleaseCapture(&mLastMouseEvent);
+}
+
+//******************************************************************************
 void MouseCapture::ReleaseCapture(ViewportMouseEvent* e)
 {
+  // Don't do anything if we weren't captured
+  if (GetIsCaptured() == false)
+    return;
+
   GetOwner()->DispatchEvent(Events::MouseDragEnd, e);
   GetOwner()->DispatchUp(Events::MouseDragEnd, e);
 
@@ -238,6 +246,12 @@ bool MouseCapture::GetIsCaptured()
 void MouseCapture::OnDestroy(u32 flags)
 {
   mManipulation.SafeDestroy();
+}
+
+//******************************************************************************
+void MouseCapture::OnMouseDragUpdate(ViewportMouseEvent* e)
+{
+  mLastMouseEvent = *e;
 }
 
 } // namespace Zero
