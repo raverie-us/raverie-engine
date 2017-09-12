@@ -473,6 +473,8 @@ void GraphicsEngine::CreateRenderer(OsHandle mainWindowHandle)
     FatalEngineError(rendererJob->mError.c_str());
 
   delete rendererJob;
+
+  Z::gEngine->mIntel = Z::gRenderer->mDriverSupport.mIntel;
 }
 
 void GraphicsEngine::DestroyRenderer()

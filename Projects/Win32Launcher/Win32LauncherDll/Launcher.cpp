@@ -117,7 +117,7 @@ void Launcher::Initialize()
   IntVec2 position = desktopRect.Center(size);
 
   BitField<WindowStyleFlags::Enum> mainStyle;
-  mainStyle.U32Field = WindowStyleFlags::OnTaskBar | WindowStyleFlags::ClientOnly;
+  mainStyle.U32Field = WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::ClientOnly;
 
   if(mainWindow)
     mainStyle.SetFlag(WindowStyleFlags::MainWindow);

@@ -104,6 +104,9 @@ public:
   // If engine has resources for display of loading
   bool mHaveLoadingResources;
 
+  // For detecting Intel drivers to handle driver bugs.
+  bool mIntel;
+
   static bool sInLauncher;
 private:
 

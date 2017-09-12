@@ -121,17 +121,18 @@ IntVec2 LocalScreenToClient(HWND window, IntVec2 point)
 
 DWORD Win32StyleFromWindowStyle(WindowStyleFlags::Enum styleFlags)
 {
-  DWORD win32Style = WS_VISIBLE;
+  DWORD win32Style = WS_POPUP | WS_VISIBLE;
   if(styleFlags & WindowStyleFlags::NotVisible)
     win32Style &= ~WS_VISIBLE;
   if(styleFlags & WindowStyleFlags::TitleBar)
     win32Style |= WS_CAPTION;
-  else
-    win32Style |= WS_POPUP;
   if(styleFlags & WindowStyleFlags::Resizable)
     win32Style |= WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
   if(styleFlags & WindowStyleFlags::Close)
     win32Style |= WS_SYSMENU;
+  // Maximize size not correct with caption on and borderless
+  if(styleFlags & WindowStyleFlags::ClientOnly)
+    win32Style &= ~WS_CAPTION;
   return win32Style;
 }
 
@@ -143,14 +144,6 @@ DWORD GetWin32ExStyle(WindowStyleFlags::Enum styleFlags)
     return WS_EX_TOOLWINDOW;
 }
 
-DWORD GetWindowStyle(bool borderless)
-{
-  if (borderless)
-    return WS_POPUP | WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-  else
-    return WS_POPUP | WS_CAPTION;
-}
-
 //-------------------------------------------------------------------WindowsOsWindow
 ZilchDefineType(WindowsOsWindow, builder, type)
 {
@@ -160,8 +153,6 @@ ZilchDefineType(WindowsOsWindow, builder, type)
 
 WindowsOsWindow::WindowsOsWindow()
 {
-  mWindowState = WindowState::Windowed;
-  mRestoreState = WindowState::Windowed;
   mTaskBar = nullptr;
   mTaskBarButtonCreated = 0;
   mIsMainWindow = false;
@@ -224,7 +215,7 @@ void WindowsOsWindow::SetClientSize(IntVec2Param size)
 {
   RECT rect = { 0, 0, size.x, size.y };
   if (!mBorderless)
-    AdjustWindowRect(&rect, GetWindowStyle(mBorderless), FALSE);
+    AdjustWindowRect(&rect, Win32StyleFromWindowStyle(mWindowStyle), FALSE);
 
   SetWindowPos(mWindowHandle, 0, 0, 0, RectWidth(rect), RectHeight(rect), 
     SWP_NOZORDER | SWP_NOCOPYBITS | SWP_NOMOVE);
@@ -252,8 +243,10 @@ WindowStyleFlags::Enum WindowsOsWindow::GetStyle()
 
 void WindowsOsWindow::SetStyle(WindowStyleFlags::Enum windowStyle)
 {
-  mWindowStyle = (WindowStyleFlags::Enum)windowStyle;
+  mWindowStyle = windowStyle;
+  mBorderless = (windowStyle & WindowStyleFlags::ClientOnly);
   DWORD win32 = Win32StyleFromWindowStyle(windowStyle);
+  SendMessage(mWindowHandle, WM_SYSCOMMAND, SC_RESTORE, 0);
   SetWindowLong(mWindowHandle, GWL_STYLE, win32);
 }
 
@@ -274,65 +267,96 @@ void WindowsOsWindow::SetTitle(StringParam title)
 
 WindowState::Enum WindowsOsWindow::GetState()
 {
-  return mWindowState;
+  WINDOWPLACEMENT placement = { sizeof(placement) };
+  GetWindowPlacement(mWindowHandle, &placement);
+  if (placement.showCmd == SW_SHOWNORMAL)
+  {
+    HMONITOR monitor = MonitorFromWindow(mWindowHandle, MONITOR_DEFAULTTONEAREST);
+    MONITORINFO monitorInfo = { sizeof(monitorInfo) };
+    GetMonitorInfo(monitor, &monitorInfo);
+    RECT monitorRect = monitorInfo.rcMonitor;
+
+    RECT rect = placement.rcNormalPosition;
+
+    // Fullscreen is done in windowed mode, check if window size is the same as the monitor.
+    if (rect.left == monitorRect.left && rect.top == monitorRect.top && rect.right == monitorRect.right && rect.bottom == monitorRect.bottom)
+      return WindowState::Fullscreen;
+
+    return WindowState::Windowed;
+  }
+  else if (placement.showCmd == SW_SHOWMINIMIZED)
+    return WindowState::Minimized;
+  else if (placement.showCmd == SW_SHOWMAXIMIZED)
+    return WindowState::Maximized;
+  else
+    return WindowState::Windowed;
 }
 
 void WindowsOsWindow::SetState(WindowState::Enum windowState)
 {
-  static WINDOWPLACEMENT sPlacement = { sizeof(sPlacement) };
-
-  if (windowState == mWindowState)
-    return;
+  static WINDOWPLACEMENT sPlacement;
+  static WindowStyleFlags::Enum sRestorStyle;
 
   switch (windowState)
   {
     case WindowState::Minimized:
     {
-      mRestoreState = mWindowState;
-      mWindowState = windowState;
-      ShowWindow(mWindowHandle, SW_MINIMIZE);
+      // Intel crashes if minimizing from our fullscreen state, so revert to windowed first.
+      if (Z::gEngine->mIntel && GetState() == WindowState::Fullscreen)
+      {
+        SetStyle(sRestorStyle);
+        SetWindowPlacement(mWindowHandle, &sPlacement);
+      }
+
+      SendMessage(mWindowHandle, WM_SYSCOMMAND, SC_MINIMIZE, 0);
       break;
     }
     case WindowState::Windowed:
     {
-      mWindowState = windowState;
+      // Switching back to windowed mode is the only way to leave fullscreen.
+      // This is the only location that style and placement should need to be reset (except intel bug above).
+      if (GetState() == WindowState::Fullscreen)
+      {
+        SetStyle(sRestorStyle);
+        SetWindowPlacement(mWindowHandle, &sPlacement);
+      }
 
-      SetWindowPlacement(mWindowHandle, &sPlacement);
+      SendMessage(mWindowHandle, WM_SYSCOMMAND, SC_RESTORE, 0);
+      // Force window to update
       SetWindowPos(mWindowHandle, nullptr, 0, 0, 0, 0,
-                   SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-
-      ShowWindow(mWindowHandle, SW_SHOWNORMAL);
-
+        SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
       break;
     }
     case WindowState::Maximized:
+    {
+      SendMessage(mWindowHandle, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+      break;
+    }
     case WindowState::Fullscreen:
     {
-      if (mWindowState == WindowState::Windowed)
-        GetWindowPlacement(mWindowHandle, &sPlacement);
-      mWindowState = windowState;
+      // Make sure in windowed mode to save placement.
+      SendMessage(mWindowHandle, WM_SYSCOMMAND, SC_RESTORE, 0);
+      GetWindowPlacement(mWindowHandle, &sPlacement);
+
+      // Remove border and disable window's aero so it can't manipulate the window without us knowing.
+      sRestorStyle = mWindowStyle;
+      mWindowStyle = (WindowStyleFlags::Enum)(mWindowStyle | WindowStyleFlags::ClientOnly);
+      mWindowStyle = (WindowStyleFlags::Enum)(mWindowStyle & ~WindowStyleFlags::Resizable);
+      SetStyle(mWindowStyle);
 
       HMONITOR monitor = MonitorFromWindow(mWindowHandle, MONITOR_DEFAULTTONEAREST);
       MONITORINFO monitorInfo = { sizeof(monitorInfo) };
       GetMonitorInfo(monitor, &monitorInfo);
+      RECT rect = monitorInfo.rcMonitor;
 
-      RECT rect = windowState == WindowState::Fullscreen ? monitorInfo.rcMonitor : monitorInfo.rcWork;
-
-      SetWindowPos(mWindowHandle, HWND_TOP,
-                   rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
-                   SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-
-      ShowWindow(mWindowHandle, SW_SHOWNORMAL);
+      SetPosition(IntVec2(rect.left, rect.top));
+      SetClientSize(IntVec2(rect.right - rect.left, rect.bottom - rect.top));
 
       break;
     }
     case WindowState::Restore:
     {
-      if (mWindowState == WindowState::Minimized)
-      {
-        mWindowState = mRestoreState;
-        ShowWindow(mWindowHandle, SW_RESTORE);
-      }
+      SendMessage(mWindowHandle, WM_SYSCOMMAND, SC_RESTORE, 0);
       break;
     }
   }
@@ -732,16 +756,10 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
       OsWindowEvent focusEvent;
       if (activated)
       {
-        if (mWindowState == WindowState::Minimized)
-          SetState(WindowState::Restore);
-
         focusEvent.EventId = Events::OsFocusGained;
       }
       else
       {
-        if (mWindowState == WindowState::Fullscreen)
-          SetState(WindowState::Minimized);
-
         Keyboard::Instance->Clear();
         focusEvent.EventId = Events::OsFocusLost;
       }
@@ -800,34 +818,6 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
       return MessageHandled;
     }
 
-    case WM_SIZE:
-    {
-      HMONITOR monitor = MonitorFromWindow(mWindowHandle, MONITOR_DEFAULTTONEAREST);
-      MONITORINFO monitorInfo = { sizeof(monitorInfo) };
-      GetMonitorInfo(monitor, &monitorInfo);
-      RECT workRect = monitorInfo.rcWork;
-      RECT monitorRect = monitorInfo.rcMonitor;
-
-      IntVec2 newSize  = PositionFromLParam(lParam);
-
-      WINDOWPLACEMENT placement;
-      GetWindowPlacement(mWindowHandle, &placement);
-
-      // Detect if the window is being taken out of maximize/fullscreen because of Windows aero
-      if (mWindowState == WindowState::Maximized && placement.showCmd != SW_SHOWMINIMIZED)
-      {
-        if (newSize.x != workRect.right - workRect.left || newSize.y != workRect.bottom - workRect.top)
-          SetState(WindowState::Windowed);
-      }
-      else if (mWindowState == WindowState::Fullscreen && placement.showCmd != SW_SHOWMINIMIZED)
-      {
-        if (newSize.x != monitorRect.right - monitorRect.left || newSize.y != monitorRect.bottom - monitorRect.top)
-          SetState(WindowState::Windowed);
-      }
-
-      return MessageHandled;
-    }
-
     case WM_TIMER:
     {
       Z::gEngine->Update();
@@ -866,43 +856,36 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
 
     // Returning 0 from WM_NCCALCSIZE removes the window border
     case WM_NCCALCSIZE:
-      if (mBorderless || mWindowState != WindowState::Windowed)
+      if (mBorderless)
         return 0;
       else
         return DefWindowProc(hwnd, messageId, wParam, lParam);
 
     case WM_GETMINMAXINFO:
     {
-      // Windows aero maximize changes the window state to SW_MAXIMIZE, which we don't use.
-      WINDOWPLACEMENT placement;
-      GetWindowPlacement(mWindowHandle, &placement);
-      if (placement.showCmd == SW_MAXIMIZE)
-      {
-        ShowWindow(mWindowHandle, SW_SHOWNORMAL);
-        SetState(WindowState::Maximized);
-      }
-
-      // Get the monitor this window is closest to
-      HMONITOR appMonitor = MonitorFromWindow(mWindowHandle, MONITOR_DEFAULTTONEAREST);
-
-      // Get the monitor information
-      MONITORINFO monitorInfo = { sizeof(monitorInfo) };
-      GetMonitorInfo(appMonitor, &monitorInfo);
-
-      // The working area is the desktop area with the task bar removed
       MINMAXINFO* minMaxInfo =  (MINMAXINFO*)lParam;
-      RECT workAreaRect = monitorInfo.rcWork;
-      RECT monitorRect = monitorInfo.rcMonitor;
 
-      int maxWidth = Math::Abs(workAreaRect.right - workAreaRect.left);
-      int maxHeight = Math::Abs(workAreaRect.bottom - workAreaRect.top);
-
-      minMaxInfo->ptMaxPosition.x = Math::Abs(workAreaRect.left - monitorRect.left);
-      minMaxInfo->ptMaxPosition.y = Math::Abs(workAreaRect.top - monitorRect.top);
-      minMaxInfo->ptMaxSize.x = maxWidth;
-      minMaxInfo->ptMaxSize.y = maxHeight;
+      // Set min size
       minMaxInfo->ptMinTrackSize.x = mMinSize.x;
       minMaxInfo->ptMinTrackSize.y = mMinSize.y;
+
+      if (mBorderless)
+      {
+        // Get the monitor this window is closest to
+        HMONITOR appMonitor = MonitorFromWindow(mWindowHandle, MONITOR_DEFAULTTONEAREST);
+
+        // Get the monitor information
+        MONITORINFO monitorInfo = { sizeof(monitorInfo) };
+        GetMonitorInfo(appMonitor, &monitorInfo);
+
+        RECT monitorRect = monitorInfo.rcMonitor;
+        RECT rect = monitorInfo.rcWork;
+
+        minMaxInfo->ptMaxPosition.x = rect.left - monitorRect.left;
+        minMaxInfo->ptMaxPosition.y = rect.top - monitorRect.top;
+        minMaxInfo->ptMaxSize.x = rect.right - rect.left;
+        minMaxInfo->ptMaxSize.y = rect.bottom - rect.top;
+      }
 
       return MessageHandled;
     }
@@ -1229,13 +1212,9 @@ PixelRect WindowsShellSystem::GetDesktopRect()
 WindowsOsWindow* WindowsShellSystem::CreateOsWindow(StringParam windowName, IntVec2Param windowSize, IntVec2Param windowPos,
                                                     OsWindow* parentWindowOs, WindowStyleFlags::Enum flags)
 {
-  // Translate the style flags
-  //DWORD style = Win32StyleFromWindowStyle(flags);
-  //DWORD exStyle = GetWin32ExStyle(flags);
-
   WindowsOsWindow* osWindow = new WindowsOsWindow();
 
-  if (flags & WindowStyleFlags::ClientOnly)
+  if(flags & WindowStyleFlags::ClientOnly)
     osWindow->mBorderless = true;
 
   // Get the parent window
@@ -1249,14 +1228,16 @@ WindowsOsWindow* WindowsShellSystem::CreateOsWindow(StringParam windowName, IntV
   HINSTANCE hInstance = (HINSTANCE)GetModuleHandle(nullptr);
 
   osWindow->mSystem = this;
-  osWindow->mWindowStyle = (WindowStyleFlags::Enum)flags;
+  osWindow->mWindowStyle = flags;
   osWindow->mIsMainWindow = (WindowStyleFlags::MainWindow & flags) != 0;
   osWindow->mParent = parentWindow;
 
-  DWORD style = GetWindowStyle(osWindow->mBorderless);
+  // Translate the style flags
+  DWORD style = Win32StyleFromWindowStyle(flags);
+  DWORD exStyle = GetWin32ExStyle(flags);
 
   // Create the window
-  HWND windowHandle = CreateWindowEx(WS_EX_APPWINDOW, cWindowClassName, Widen(windowName).c_str(), style,
+  HWND windowHandle = CreateWindowEx(exStyle, cWindowClassName, Widen(windowName).c_str(), style,
                                      CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                                      parentWindowHwnd, nullptr, hInstance, (LPVOID)osWindow);
 
@@ -1266,7 +1247,6 @@ WindowsOsWindow* WindowsShellSystem::CreateOsWindow(StringParam windowName, IntV
   osWindow->SetPosition(windowPos);
   osWindow->SetClientSize(windowSize);
 
-  ShowWindow(windowHandle, SW_SHOWNORMAL);
   SetWindowPos(windowHandle, nullptr, 0, 0, 0, 0,
                SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
