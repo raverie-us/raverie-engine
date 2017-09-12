@@ -152,7 +152,7 @@ void FlowEffect::ApplyEffect(RigidBody* obj, real dt)
   // Now clamp that force based upon the max flow strength
   // (so we will always target a set speed but have a max acceleration with which to get there)
   appliedForce = Math::Clamp(appliedForce, -mMaxFlowForce, mMaxFlowForce);
-  obj->ApplyForce(appliedForce * worldFlowDir);
+  obj->ApplyForceNoWakeUp(appliedForce * worldFlowDir);
 
   // If we want to attract the object towards the center of the flow
   if(mForceStates.IsSet(FlowFlags::AttractToFlowCenter))
@@ -199,7 +199,7 @@ void FlowEffect::ApplyEffect(RigidBody* obj, real dt)
       appliedAttractForce = Math::Clamp(appliedAttractForce, -mMaxAttractForce, mMaxAttractForce);
       totalSideAttractionForce = dirToCenter * appliedAttractForce;
     }
-    obj->ApplyForce(totalSideAttractionForce);
+    obj->ApplyForceNoWakeUp(totalSideAttractionForce);
   }
 }
 

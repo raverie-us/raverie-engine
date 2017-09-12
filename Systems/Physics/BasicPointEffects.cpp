@@ -312,7 +312,7 @@ void PointForceEffect::ApplyEffect(RigidBody* obj, real dt)
 
   // Calculate and apply the force
   Vec3 force = CalculateInwardForce(obj);
-  obj->ApplyForce(force);
+  obj->ApplyForceNoWakeUp(force);
 }
 
 //-------------------------------------------------------------------PointGravityEffect
@@ -339,7 +339,7 @@ void PointGravityEffect::ApplyEffect(RigidBody* obj, real dt)
   Vec3 force = CalculateInwardForce(obj);
   // To apply this as an acceleration, divide out by the mass.
   Vec3 scaledForce = obj->mInvMass.ApplyInverted(force);
-  obj->ApplyForce(scaledForce);
+  obj->ApplyForceNoWakeUp(scaledForce);
 }
 
 }//namespace Zero
