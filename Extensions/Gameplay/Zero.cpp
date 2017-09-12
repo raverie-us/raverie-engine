@@ -13,6 +13,7 @@ namespace Zero
 //**************************************************************************************************
 ZilchDefineType(ZeroStatic, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindMethod(Connect);
   ZilchBindMethod(Disconnect);
   ZilchBindMethodAs(DisconnectAllEvents, "DisconnectAll");

@@ -19,9 +19,13 @@ class ZeroStatic
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  /// Connect functions.
-  static void Connect(Object* target, StringParam eventId, DelegateParam delegate);
+  /// Connection invokes the given delegate when sender dispatches the specified event.
+  static void Connect(Object* sender, StringParam eventId, DelegateParam receiverDelegate);
+  /// Removes specified event connection, 
+  /// if connection delegate was a component method then receiver object is just the component.
   static void Disconnect(Object* sender, StringParam eventId, Object* receiver);
+  /// Removes all event connections between sender and receiver, 
+  /// if connection delegate was a component method then receiver object is just the component.
   static void DisconnectAllEvents(Object* sender, Object* receiver);
   
   static Keyboard* GetKeyboard();
