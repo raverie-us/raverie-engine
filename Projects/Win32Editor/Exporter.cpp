@@ -109,7 +109,48 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library)
 {
   String libraryPath = library->GetOutputPath();
   String libraryOutputPath = FilePath::Combine(outputDirectory, library->Name);
-  CopyFolderContents(libraryOutputPath, libraryPath);
+
+  CreateDirectoryAndParents(libraryOutputPath);
+
+  // Copy the .pack file
+  String packFile = BuildString(library->Name, ".pack");
+  String packFileSource = FilePath::Combine(libraryPath, packFile);
+  String packFileDestination = FilePath::Combine(libraryOutputPath, packFile);
+  CopyFile(packFileDestination, packFileSource);
+
+  BoundType* zilchDocumentType = ZilchTypeId(ZilchDocumentResource);
+  BoundType* ZilchPluginSourceType = ZilchTypeId(ZilchPluginSource);
+  BoundType* zilchPluginLibraryType = ZilchTypeId(ZilchPluginLibrary);
+
+  forRange(ContentItem* contentItem, library->GetContentItems())
+  {
+    bool isTemplate = contentItem->has(ResourceTemplate);
+
+    // Copy each generated Resource
+    ResourceListing listing;
+    contentItem->BuildListing(listing);
+    forRange(ResourceEntry& entry, listing.All())
+    {
+      // Skip zilch Resource Templates
+      if (isTemplate)
+      {
+        BoundType* resourceType = MetaDatabase::FindType(entry.Type);
+
+        // Skip zilch resource types
+        if(resourceType->IsA(zilchDocumentType)       ||
+           resourceType->IsA(ZilchPluginSourceType)   ||
+           resourceType->IsA(zilchPluginLibraryType))
+        {
+          continue;
+        }
+      }
+
+      String fileName = entry.Location;
+      String source = FilePath::Combine(libraryPath, fileName);
+      String destination = FilePath::Combine(libraryOutputPath, fileName);
+      CopyFile(destination, source);
+    }
+  }
 }
 
 void CopyLibraryOut(StringParam outputDirectory, StringParam name)
@@ -550,6 +591,8 @@ void ExportContentFolders(Cog* projectCog)
   Cog* configCog = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = configCog->has(MainConfig);
 
+  // Delete the old content if it was previously exported
+  DeleteDirectoryContents(outputDirectory);
   CreateDirectoryAndParents(outputDirectory);
 
   // Copy content output
