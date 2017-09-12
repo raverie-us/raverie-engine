@@ -153,7 +153,7 @@ void ContentComposition::AddComponent(ContentComponent* cc)
   this->Components.Insert(ZilchVirtualTypeId(cc), cc);
   cc->mOwner = this;
 
-  Event e;
+  ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ComponentsModified, &e);
 }
 

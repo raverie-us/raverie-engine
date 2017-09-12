@@ -595,7 +595,7 @@ void Cog::ForceAddComponent(Component* component, int index)
   for (; !range.Empty(); range.PopFront())
     range.Front()->ComponentAdded(componentType, component);
 
-  Event e;
+  ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ComponentsModified, &e);
 }
 
@@ -753,7 +753,7 @@ void Cog::ForceRemoveComponent(Component* component)
 
   RemoveComponentInternal(component);
 
-  Event e;
+  ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ComponentsModified, &e);
 }
 
@@ -822,7 +822,7 @@ void Cog::MoveComponentBefore(uint componentToMove, uint destination)
   else
     mComponents.InsertAt(destination, component);
 
-  Event e;
+  ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ComponentsModified, &e);
 }
 
