@@ -1007,37 +1007,44 @@ uint Cog::GetChildCount()
 }
 
 //**************************************************************************************************
-void Cog::AttachToPreserveLocal(Cog* parent)
+bool Cog::AttachToPreserveLocal(Cog* parent)
 {
   if (parent == nullptr)
   {
     DoNotifyException("Invalid attachment", "Cannot attach to a null object.");
-    return;
+    return false;
   }
 
   if (parent == this)
   {
     DoNotifyException("Invalid attachment", "Cannot attach to ourself.");
-    return;
+    return false;
   }
 
-  if (parent == mHierarchyParent)
+  if (GetParent() == parent)
   {
     DoNotifyException("Invalid attachment", "Already attached to our own parent.");
-    return;
+    return false;
   }
 
   if (this->mFlags.IsSet(CogFlags::Protected))
   {
     DoNotifyException("Invalid attachment", "Cannot attach protected objects to other objects.");
-    return;
+    return false;
+  }
+
+  if (GetSpace() != parent->GetSpace())
+  {
+    DoNotifyException("Invalid attachment", "Parent must be in the same Space.");
+    return false;
   }
 
   // Don't bother doing anything if we're being destroyed
-  if (GetMarkedForDestruction())
-    return;
+  if (GetMarkedForDestruction() || parent->GetMarkedForDestruction())
+    return false;
 
   // Check to make sure that the passed in parent is not already a child of us
+  // Check to make sure that the parent is not already a child of us
   Cog* otherRootParent = parent;
   while (otherRootParent->GetParent())
   {
@@ -1045,7 +1052,7 @@ void Cog::AttachToPreserveLocal(Cog* parent)
     if (otherRootParent == this)
     {
       DoNotifyException("Invalid attachment", "Cannot attach to our own child.");
-      return;
+      return false;
     }
   }
 
@@ -1100,31 +1107,27 @@ void Cog::AttachToPreserveLocal(Cog* parent)
 
   // Space has now changed
   mSpace->ChangedObjects();
+
+  return true;
 }
 
 //**************************************************************************************************
-void Cog::AttachTo(Cog* parent)
+bool Cog::AttachTo(Cog* parent)
 {
-  if (parent == nullptr || parent == this)
-    return;
-
-  // Don't bother doing anything if we're being destroyed
-  if (GetMarkedForDestruction())
-    return;
-
   Transform* childTransform = this->has(Transform);
 
   // If the child has no Transform, there's no relative attachment needed
   if (childTransform == nullptr)
-  {
-    AttachToPreserveLocal(parent);
-    return;
-  }
+    return AttachToPreserveLocal(parent);
 
   // Cannot attach an object with a Transform to an object without a Transform
   Transform* parentTransform = parent->has(Transform);
   if (parentTransform == nullptr)
-    return;
+  {
+    DoNotifyException("Invalid attachment", "Cannot attach an object with a Transform to an "
+                      "object without a Transform.");
+    return false;
+  }
 
   // Bring the child's transformation into the parent's space
   Mat4 parentTransformation = parentTransform->GetWorldMatrix();
@@ -1137,7 +1140,9 @@ void Cog::AttachTo(Cog* parent)
   relativeTransformation.Decompose(&scale, &rotation, &translation);
 
   // Attach the child
-  AttachToPreserveLocal(parent);
+  bool success = AttachToPreserveLocal(parent);
+  if (success == false)
+    return false;
 
   // Set his new transformation
   //if the child wants to be in world after the attachment, don't reset
@@ -1149,6 +1154,8 @@ void Cog::AttachTo(Cog* parent)
     childTransform->SetRotation(Math::ToQuaternion(rotation));
     childTransform->SetTranslation(translation);
   }
+
+  return true;
 }
 
 //**************************************************************************************************

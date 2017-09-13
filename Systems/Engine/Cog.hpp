@@ -218,9 +218,9 @@ public:
   uint GetChildCount();
 
   /// Attach to a parent object.
-  void AttachToPreserveLocal(Cog* parent);
+  bool AttachToPreserveLocal(Cog* parent);
   /// Attach to a parent object and compute the new transfo;rm so that the objects are relative
-  void AttachTo(Cog* parent);
+  bool AttachTo(Cog* parent);
   /// Detach from a parent object.
   void DetachPreserveLocal();
   /// Detach from a parent object and compute the new transform so that the objects are relative
