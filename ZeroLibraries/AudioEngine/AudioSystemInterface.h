@@ -112,6 +112,9 @@ namespace Audio
     // If true, events will be sent with compressed microphone input data as bytes
     void SetSendCompressedMicInput(const bool sendInput);
 
+    // If currently sending microphone input data, returns the highest peak volume in the last input
+    float GetPeakInputVolume(Zero::Status& status);
+
   private:
     // Pointer to the internal system object
     AudioSystemInternal* System;
@@ -125,6 +128,8 @@ namespace Audio
     bool SendUncompressedInputData;
     // If true, will send compressed microphone input data to external system
     bool SendCompressedInputData;
+    // The peak volume of the latest input data
+    float PeakInputVolume;
 
     void SetSendMicInput(const bool turnOn);
   };

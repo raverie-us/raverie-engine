@@ -14,7 +14,8 @@ namespace Audio
   //************************************************************************************************
   AudioSystemInterface::AudioSystemInterface(ExternalSystemInterface* extInterface) : 
     SendUncompressedInputData(false),
-    SendCompressedInputData(false)
+    SendCompressedInputData(false),
+    PeakInputVolume(0.0f)
   {
     // Create the internal audio system
     System = new AudioSystemInternal(extInterface);
@@ -71,6 +72,15 @@ namespace Audio
           allInput.Append(inputBuffer->All());
 
         delete inputBuffer;
+      }
+
+      // Save the peak volume from the input samples
+      PeakInputVolume = 0.0f;
+      forRange(float sample, allInput.All())
+      {
+        float absSample = Math::Abs(sample);
+        if (absSample > PeakInputVolume)
+          PeakInputVolume = absSample;
       }
 
       // If we're sending uncompressed input data, send the entire buffer
@@ -254,6 +264,18 @@ namespace Audio
       }
 
       SendCompressedInputData = sendInput;
+    }
+  }
+
+  //************************************************************************************************
+  float AudioSystemInterface::GetPeakInputVolume(Zero::Status& status)
+  {
+    if (SendUncompressedInputData || SendCompressedInputData)
+      return PeakInputVolume;
+    else
+    {
+      status.SetFailed("To get PeakInputVolume turn on sending microphone data, either uncompressed or compressed");
+      return 0.0f;
     }
   }
 

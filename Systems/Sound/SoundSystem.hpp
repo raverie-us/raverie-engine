@@ -131,6 +131,9 @@ public:
   float GetPeakOutputLevel();
   /// The current RMS volume level of all audio output
   float GetRMSOutputLevel();
+  /// If currently dispatching either uncompressed or compressed audio input data, this value
+  /// will be the highest peak volume in the last batch of input.
+  float GetPeakInputLevel();
   /// Using the high latency setting can fix some audio problems (such as clicks and static) 
   /// but can lead to a slight delay in the audio
   AudioLatency::Enum GetLatencySetting();
@@ -141,8 +144,8 @@ public:
   void SetDispatchMicrophoneUncompressedFloatData(bool dispatchData);
   /// If true, MicrophoneCompressedByteData events will be sent every update with the buffer of
   /// compressed audio data received from the default audio input device.
-  bool GetDispatchMicrophoneCompressedFloatData();
-  void SetDispatchMicrophoneCompressedFloatData(bool dispatchData);
+  bool GetDispatchMicrophoneCompressedByteData();
+  void SetDispatchMicrophoneCompressedByteData(bool dispatchData);
 
   /// Creates a new VolumeNode object
   static VolumeNode* VolumeNode() { return new Zero::VolumeNode(); }

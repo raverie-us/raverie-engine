@@ -84,10 +84,11 @@ ZilchDefineType(SoundSystem, builder, type)
   ZilchBindGetterSetter(SystemVolume);
   ZilchBindGetter(PeakOutputLevel);
   ZilchBindGetter(RMSOutputLevel);
+  ZilchBindGetter(PeakInputLevel);
   ZilchBindMethod(GetNodeGraphInfo);
   ZilchBindGetterSetter(LatencySetting);
   ZilchBindGetterSetter(DispatchMicrophoneUncompressedFloatData);
-  ZilchBindGetterSetter(DispatchMicrophoneCompressedFloatData);
+  ZilchBindGetterSetter(DispatchMicrophoneCompressedByteData);
 
   ZilchBindMethod(VolumeNode);
   ZilchBindMethod(PanningNode);
@@ -199,6 +200,18 @@ float SoundSystem::GetRMSOutputLevel()
 }
 
 //**************************************************************************************************
+float SoundSystem::GetPeakInputLevel()
+{
+  Status status;
+  float volume = mAudioSystem->GetPeakInputVolume(status);
+  
+  if (status.Failed())
+    DoNotifyException("Audio Error", status.Message);
+
+  return volume;
+}
+
+//**************************************************************************************************
 Zero::AudioLatency::Enum SoundSystem::GetLatencySetting()
 {
   return mLatency;
@@ -229,13 +242,13 @@ void SoundSystem::SetDispatchMicrophoneUncompressedFloatData(bool dispatchData)
 }
 
 //**************************************************************************************************
-bool SoundSystem::GetDispatchMicrophoneCompressedFloatData()
+bool SoundSystem::GetDispatchMicrophoneCompressedByteData()
 {
   return mSendCompressedMicEvents;
 }
 
 //**************************************************************************************************
-void SoundSystem::SetDispatchMicrophoneCompressedFloatData(bool dispatchData)
+void SoundSystem::SetDispatchMicrophoneCompressedByteData(bool dispatchData)
 {
   mSendCompressedMicEvents = dispatchData;
   mAudioSystem->SetSendCompressedMicInput(dispatchData);
