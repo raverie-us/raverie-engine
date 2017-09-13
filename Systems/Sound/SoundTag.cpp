@@ -375,13 +375,13 @@ void SoundTag::SetCompressorKneeWidth(float knee)
 }
 
 //**************************************************************************************************
-HandleOf<SoundTag> SoundTag::GetTagForDucking()
+SoundTag* SoundTag::GetTagForDucking()
 {
   return mCompressorTag;
 }
 
 //**************************************************************************************************
-void SoundTag::SetTagForDucking(const HandleOf<SoundTag>& tag)
+void SoundTag::SetTagForDucking(SoundTag* tag)
 {
   mCompressorTag = tag;
 

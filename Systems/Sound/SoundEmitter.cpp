@@ -454,13 +454,13 @@ void SoundEmitter::SetRearVolume(float minimumVolume)
 }
 
 //**************************************************************************************************
-HandleOf<SoundAttenuator> SoundEmitter::GetAttenuator()
+SoundAttenuator* SoundEmitter::GetAttenuator()
 {
   return mAttenuator;
 }
 
 //**************************************************************************************************
-void SoundEmitter::SetAttenuator(const HandleOf<SoundAttenuator>& attenuation)
+void SoundEmitter::SetAttenuator(SoundAttenuator* attenuation)
 {
   SetUpAttenuatorNode(attenuation);
 }
@@ -548,8 +548,7 @@ HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue, bool startP
 
   Audio::SoundNode* outputNode;
   // If the SoundCue has attenuation settings, get an attenuation node and store it
-  HandleOf<SoundAttenuator> attenuatorHandle = cue->GetAttenuator();
-  SoundAttenuator* attenuator = attenuatorHandle;
+  SoundAttenuator* attenuator = cue->GetAttenuator();
   if (attenuator && attenuator->Name != "DefaultNoAttenuation")
   {
     SoundAttenuatorNode* attenuatorNode = IsAttenuatorInList(attenuator);
@@ -559,7 +558,7 @@ HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue, bool startP
       attenuatorNode = attenuator->GetAttenuationNode("CueAttenuator", Z::gSound->mCounter++);
       if (attenuatorNode)
       {
-        InstanceAttenuation* info = new InstanceAttenuation(attenuatorNode, attenuatorHandle);
+        InstanceAttenuation* info = new InstanceAttenuation(attenuatorNode, attenuator);
         mAttenuatorList.PushBack(info);
         info->mAttenuatorNode->mNode->SetPosition(mPrevPosition);
         outputNode = info->mAttenuatorNode->mNode;
@@ -596,7 +595,7 @@ bool SoundEmitter::CheckAttenuatorInputs()
 }
 
 //**************************************************************************************************
-void SoundEmitter::SetUpAttenuatorNode(const HandleOf<SoundAttenuator>& attenuator)
+void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
 {
   if (!mEmitterObject)
     return;
@@ -613,14 +612,11 @@ void SoundEmitter::SetUpAttenuatorNode(const HandleOf<SoundAttenuator>& attenuat
     mInputNode = newNode;
   }
 
-  // Get the pointer to the new attenuator
-  SoundAttenuator* newAttenuator = attenuator;
-
   SoundAttenuator* oldAttenuator = mAttenuator;
   SoundAttenuatorNode* oldNode = mAttenuatorNode;
 
   // Set the attenuator handle
-  mAttenuator = attenuator;
+  mAttenuator = newAttenuator;
 
   // Check if the new attenuator is null or the default
   if (!newAttenuator || newAttenuator->Name == "DefaultNoAttenuation")

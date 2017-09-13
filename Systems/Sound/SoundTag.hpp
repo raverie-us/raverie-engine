@@ -112,8 +112,8 @@ public:
   float GetCompressorKneeWidth();
   void SetCompressorKneeWidth(float kneeWidth);
   /// If this property is not null, the selected SoundTag will be used to trigger this SoundTag's compressor.
-  HandleOf<SoundTag> GetTagForDucking();
-  void SetTagForDucking(const HandleOf<SoundTag>& tag);
+  SoundTag* GetTagForDucking();
+  void SetTagForDucking(SoundTag*);
   /// If this value is greater than zero, SoundCues with this SoundTag will only play if
   /// the number of tagged SoundInstances is less than this number.
   float GetInstanceLimit();
