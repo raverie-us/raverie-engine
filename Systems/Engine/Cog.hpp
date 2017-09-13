@@ -226,7 +226,7 @@ public:
   /// Detach from a parent object and compute the new transform so that the objects are relative
   void Detach();
 
-  /// Find a child object with the given name
+  /// Depth first search of all children.
   Cog* FindChildByName(StringParam name);
   /// Returns a range of all children with the given name.
   HierarchyNameRange FindAllChildrenByName(StringParam name);
