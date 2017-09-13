@@ -83,12 +83,19 @@ public:
   // Checks whether an object is the currently selected archetype
   bool IsLastHitArchetype(Cog* cog);
   // Checks whether an object is a direct child of the last selected archetype
-  bool IsChildOfLastHitArchetype(Cog* cog);
+  bool IsDirectChildOfLastHitArchetype(Cog* cog);
+  // Checks whether the root archetype for the cog is the same as the last selected object
+  bool SameRootAsLastHitArchetype(Cog* cog);
+  // Select an object based on the its archetype/sub-archetype hierarchy
+  bool ArchetypeSelect(Cog* toSelect, RaycastResultList& result);
+  // Select an object based on its hierarchy
+  bool HierarchySelect(Cog* toSelect, RaycastResultList& result);
+
   // Checks whether an object is the root of currently selected hierarchy
   bool IsLastHitHierarchyRoot(Cog* cog);
   // Checks whether an object is a direct child of the last selected hierarchy
   bool IsChildOfLastHitHierarchyRoot(Cog* cog);
-  
+
   void Select(ViewportMouseEvent* e);
   SelectionResult RayCastSelect(Viewport* viewport, Vec2 mousePosition);
   RaycastResultList RayCastSelectInternal(Viewport* viewport, Vec2 mousePosition);
@@ -103,12 +110,17 @@ public:
   String mFilterAccept;
   String mFilterReject;
 
-  //Selects the nearest parent archetype of the tree instead of the first
-  //subsequent clicks will select the sub nodes of that parent archetype
-  bool mSmartSelect;
+  ///Selects the root archetype of the tree,
+  ///subsequent clicks will select the nearest archetype
+  ///followed by any direct children following that.
+  bool mArchetypeSelect;
+
+  ///Selects the root of a hierarchy first,
+  ///subsequent clicks will select children objects
+  bool mRootSelect;
   
-  //If a parent of a hierarchy is already selected drag select will only select all the children
-  //of the currently selected parent
+  ///If a parent of a hierarchy is already selected drag select will only select all the children
+  ///of the currently selected parent.
   bool mSmartGroupSelect;
 
   HandleOf<Cog> mLastHitArchetype;
