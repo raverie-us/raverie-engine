@@ -329,8 +329,15 @@ void OperationQueue::Queue(Operation* command)
     ClearRedo();
     Commands.PushBack(command);
 
+    // Do NOT queue any operations that come about through updating the history
+    // window, as that is what responds to 'OperationQueued'
+    bool prevSideEffects = sListeningForSideEffects;
+    sListeningForSideEffects = false;
+
     OperationQueueEvent event(command);
     DispatchEvent(Events::OperationQueued, &event);
+
+    sListeningForSideEffects = prevSideEffects;
   }
 
 }
@@ -445,9 +452,16 @@ void OperationQueue::EndBatch()
         Commands.PushBack(ActiveBatch);
       }
 
+      // Do NOT queue any operations that come about through updating the history
+      // window, as that is what responds to 'OperationQueued'
+      bool prevSideEffects = sListeningForSideEffects;
+      sListeningForSideEffects = false;
+
       // ONLY send out the queue event when the root-batch in the stack has ended.
       OperationQueueEvent event(&Commands.Back());
       DispatchEvent(Events::OperationQueued, &event);
+
+      sListeningForSideEffects = prevSideEffects;
     }
 
     ActiveBatch = NULL;
