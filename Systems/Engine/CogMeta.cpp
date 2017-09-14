@@ -91,7 +91,7 @@ void CogMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoData)
     if (wasSpaceModified == false)
       space->MarkNotModified();
     else
-      space->MarkNotModified();
+      space->MarkModified();
   }
 }
 
