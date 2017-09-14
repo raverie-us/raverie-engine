@@ -80,21 +80,9 @@ public:
   /// Select objects on mouse up.
   void OnLeftMouseUp(ViewportMouseEvent* e);
 
-  // Checks whether an object is the currently selected archetype
-  bool IsLastHitArchetype(Cog* cog);
-  // Checks whether an object is a direct child of the last selected archetype
-  bool IsDirectChildOfLastHitArchetype(Cog* cog);
-  // Checks whether the root archetype for the cog is the same as the last selected object
-  bool SameRootAsLastHitArchetype(Cog* cog);
-  // Select an object based on the its archetype/sub-archetype hierarchy
-  bool ArchetypeSelect(Cog* toSelect, RaycastResultList& result);
-  // Select an object based on its hierarchy
-  bool HierarchySelect(Cog* toSelect, RaycastResultList& result);
-
-  // Checks whether an object is the root of currently selected hierarchy
-  bool IsLastHitHierarchyRoot(Cog* cog);
-  // Checks whether an object is a direct child of the last selected hierarchy
-  bool IsChildOfLastHitHierarchyRoot(Cog* cog);
+  typedef bool(*CogSelectFilter)(Cog*, Cog*);
+  Cog* WalkRayCast(Cog* current, RaycastResultList& result, CogSelectFilter func);
+  bool ArchetypeSelect(Cog* current, Cog* toSelect, RaycastResultList& result);
 
   void Select(ViewportMouseEvent* e);
   SelectionResult RayCastSelect(Viewport* viewport, Vec2 mousePosition);
@@ -122,9 +110,6 @@ public:
   ///If a parent of a hierarchy is already selected drag select will only select all the children
   ///of the currently selected parent.
   bool mSmartGroupSelect;
-
-  HandleOf<Cog> mLastHitArchetype;
-  HandleOf<Cog> mLastHitHierarchyRoot;
 
   //stores all of the providers for raycasting and does the actual casting.
   Raycaster mRaycaster;
