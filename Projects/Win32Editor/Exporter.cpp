@@ -165,7 +165,7 @@ void RelativeCopyFile(StringParam dest, StringParam source, StringParam filename
   CopyFile(FilePath::Combine(dest,  filename), FilePath::Combine(source, filename));
 }
 
-void CopyInstallerSetupFile(StringParam dest, StringParam source, StringParam projectName)
+void CopyInstallerSetupFile(StringParam dest, StringParam source, StringParam projectName, Guid guid)
 {
   // Open our installer setup template file
   String setupFilename = "InnoSetupTemplate.txt";
@@ -195,7 +195,7 @@ void CopyInstallerSetupFile(StringParam dest, StringParam source, StringParam pr
 
   // Replace the template values with the project name and generate a guid
   String outputFileContent = fileContent.Replace("%PROJECTNAME%", projectName);
-  outputFileContent = outputFileContent.Replace("%GUID%", ToString(GenerateUniqueId64()));
+  outputFileContent = outputFileContent.Replace("%GUID%", ToString(guid.mValue));
 
   // Open our output file and write out the updated data
   File outputFile;
@@ -606,7 +606,7 @@ void ExportContentFolders(Cog* projectCog)
   RelativeCopyFile(outputDirectory, appDirectory, "Configuration.data");
   
   // Copy Inno Setup Template
-  CopyInstallerSetupFile(outputDirectory, mainConfig->DataDirectory, project->ProjectName);
+  CopyInstallerSetupFile(outputDirectory, mainConfig->DataDirectory, project->ProjectName, project->GetProjectGuid());
 
   // Add all dlls (and other files next to the exe)
   AddFiles(appDirectory, CopyFileCallback, &outputDirectory);
