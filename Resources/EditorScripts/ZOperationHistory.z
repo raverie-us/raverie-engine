@@ -21,19 +21,12 @@ class ZOperationHistory : ZilchComponent
   
   var TotalViewLength : Real = 0.0;
   
-  var OriginalWidgetSpan : Real = 0.0;
-  var MaxFontSize : Integer = 128;
-  var MaxStatusTextSize : Real2 = Real2(300, 35);
-  
   
   /******************************************************************************/
   function Initialize(init : CogInitializer)
   {
       // Save original scrollbar-indicator thickness
     this.IntendedScrollBarSizeX = this.ScrollBar.Cog.UiWidget.Size.X;
-      // Save original window span on the minor axis
-    var windowWidget = this.Owner.Parent.UiWidget;
-    this.OriginalWidgetSpan = Math.Min(windowWidget.Size.X, windowWidget.Size.Y);
     
       // Alternating histroy row colors.
     var color1 = 61.0/255.0;
@@ -44,7 +37,7 @@ class ZOperationHistory : ZilchComponent
     
     Zero.Connect(this.Owner, Events.HistoryEntryUpdate, this.OnEntryListUpdate);
     Zero.Connect(this.Owner.Parent, Events.AreaChanged, this.OnWindowResize);
-    
+
     this.UpdateStatusText();
   }
 
@@ -86,13 +79,13 @@ class ZOperationHistory : ZilchComponent
       ++this.EntryCount;
       row.ZHistoryEntry.UpdateColor(this.GetNextRowColor());
     }
-    
+
     foreach(var row in this.RedoView.Cog.Children)
     {
       ++this.EntryCount;
       row.ZHistoryEntry.UpdateColor(this.GetNextRowColor());
     }
-    
+
     this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;
       // maintain room for the scrollbar on the x axis
     this.UiWidget.Size = Real2(this.UiWidget.ParentWidget.Size.X - this.CurrentScrollBarSizeX, this.TotalViewLength);
@@ -122,22 +115,9 @@ class ZOperationHistory : ZilchComponent
       return;
     }
     
-      // Determine the current window-span on the minor axis
+      // Center the text in the window and clamp the values to integer pixels.
     var windowWidget = this.Owner.Parent.UiWidget;
-    var minorSpan = Math.Min(windowWidget.Size.X, windowWidget.Size.Y);
-    
-      // Calulate the new font size.
-    var sizeRatio = minorSpan / this.OriginalWidgetSpan;
-    statusText.FontSize = (sizeRatio * this.MaxFontSize) as Integer;
-    
-      // Reset to max allowed status text size.
-    statusCog.Area.Size = this.MaxStatusTextSize;
-    
-      // Size down from the max size to the actual size needed.
-    statusCog.UiWidget.SizeToContents;
-    
-      // Center the text in the window and z-sort it to the front.
-    statusCog.Transform.Translation = Real3(windowWidget.Size.X / 2, -windowWidget.Size.Y / 2, 1);
+    statusCog.UiWidget.LocalTranslation = Real2(Math.Floor(windowWidget.Size.X / 2), Math.Floor(windowWidget.Size.Y / 2));
   }
   
   /******************************************************************************/
