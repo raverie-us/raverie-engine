@@ -40,9 +40,6 @@
     return mDrawFlags & DebugDrawFlags::flagName; \
   } 
 
-#define DebugObjectsArray(DebugObjectType) \
-  PodArray<DebugObjectType> m##DebugObjectType##Objects;
-
 #define DebugObjectAddMethods(DebugObjectType)                     \
   void Add(const DebugObjectType& object)                          \
   {                                                                \
@@ -654,5 +651,4 @@ extern Debug::DebugDraw* gDebugDraw;
 #undef CustomPropertySetter
 #undef PropertySetter
 #undef PropertySetterBit
-#undef DebugObjectsArray
 #undef DebugObjectAddMethods
