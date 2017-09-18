@@ -41,7 +41,7 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   BaseCollisionEvent();
-  void Set(const Physics::Manifold* manifold, StringParam eventType);
+  void Set(Physics::Manifold* manifold, StringParam eventType);
   
   /// The object that this event was sent to.
   Cog* GetObject();
@@ -72,8 +72,6 @@ public:
   /// for C++ use and only for those who know what they are doing.
   const Physics::ManifoldPoint& GetPoint(uint index);
 
-  /// Pointer to the manifold for the collision to pull out extra data.
-  const Physics::Manifold* mManifold;
   /// Used to determine what kind of collision this is during event sending.
   enum CollisionType{CollisionStarted, CollisionPersisted, CollisionEnded};
   CollisionType mCollisionType;
@@ -82,6 +80,10 @@ public:
   /// Internal index used to "flip the manifold data" when sending to the second
   /// object. This effectively reverses all the data (aka, the normal is negated for object B).
   uint mObjectIndex;
+
+protected:
+  /// Pointer to the manifold for the collision to pull out extra data.
+  Physics::Manifold* mManifold;
 };
 
 //-------------------------------------------------------------- Collision Event
@@ -92,7 +94,8 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   CollisionEvent();
-  void Set(const Physics::Manifold* manifold, const Physics::ManifoldPoint& point, StringParam eventType);
+  void Set(Physics::Manifold* manifold, StringParam eventType);
+  void Set(Physics::Manifold* manifold, const Physics::ManifoldPoint& point, StringParam eventType);
 
   /// Convenience function to return the first ContactPoint. Some logic only cares about
   /// one point of information. In a more general case all points should be iterated over.
@@ -125,7 +128,7 @@ public:
 
   /// Sets the two colliders with the given pair. Takes care of making sure the
   /// collider ordering matches the filter order.
-  void Set(const Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType);
+  void Set(Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType);
 
   /// Returns the CollisionGroup name of object A
   String GetTypeAName();
@@ -154,7 +157,14 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
    PreSolveEvent();
-   void Set(const Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock);
+   void Set(Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock);
+
+   /// The restitution to use for solving this pair. Allows custom overriding for this pair.
+   real GetRestitution();
+   void SetRestitution(real restitution);
+   /// The friction to use for solving this pair. Allows custom overriding for this pair.
+   real GetFriction();
+   void SetFriction(real friction);
 
    CollisionFilterBlock* mBlock;
    Link<PreSolveEvent> mEventLink;

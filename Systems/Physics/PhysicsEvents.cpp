@@ -44,7 +44,7 @@ BaseCollisionEvent::BaseCollisionEvent()
   mObjectIndex = 0;
 }
 
-void BaseCollisionEvent::Set(const Physics::Manifold* manifold, StringParam eventType)
+void BaseCollisionEvent::Set(Physics::Manifold* manifold, StringParam eventType)
 {
   mManifold = manifold;
   mEventType = eventType;
@@ -130,7 +130,14 @@ CollisionEvent::CollisionEvent()
   mContactIndex = 0;
 }
 
-void CollisionEvent::Set(const Physics::Manifold* manifold, const Physics::ManifoldPoint& point, StringParam eventType)
+void CollisionEvent::Set(Physics::Manifold* manifold, StringParam eventType)
+{
+  BaseCollisionEvent::Set(manifold, eventType);
+  mContactIndex = 0;
+  UpdatePoint();
+}
+
+void CollisionEvent::Set(Physics::Manifold* manifold, const Physics::ManifoldPoint& point, StringParam eventType)
 {
   BaseCollisionEvent::Set(manifold, eventType);
   mContactPoint = point;
@@ -176,7 +183,7 @@ CollisionGroupEvent::CollisionGroupEvent()
   
 }
 
-void CollisionGroupEvent::Set(const Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType)
+void CollisionGroupEvent::Set(Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType)
 {
   BaseCollisionEvent::Set(manifold,eventType);
   mBlock = block;
@@ -214,6 +221,9 @@ ZilchDefineType(PreSolveEvent, builder, type)
 {
   ZeroBindDocumented();
 
+  ZilchBindGetterSetter(Restitution);
+  ZilchBindGetterSetter(Friction);
+
   ZeroBindTag(Tags::Physics);
 }
 
@@ -222,7 +232,7 @@ PreSolveEvent::PreSolveEvent()
   mBlock = nullptr;
 }
 
-void PreSolveEvent::Set(const Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock)
+void PreSolveEvent::Set(Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock)
 {
   BaseCollisionEvent::Set(manifold, String());
   mBlock = preSolveBlock;
@@ -231,6 +241,26 @@ void PreSolveEvent::Set(const Physics::Manifold* manifold, CollisionFilterBlock*
     EventId = mBlock->mEventOverride;
   else
     EventId = Events::GroupCollisionPreSolve;
+}
+
+real PreSolveEvent::GetRestitution()
+{
+  return mManifold->Restitution;
+}
+
+void PreSolveEvent::SetRestitution(real restitution)
+{
+  mManifold->Restitution = restitution;
+}
+
+real PreSolveEvent::GetFriction()
+{
+  return mManifold->DynamicFriction;
+}
+
+void PreSolveEvent::SetFriction(real friction)
+{
+  mManifold->DynamicFriction = friction;
 }
 
 }//namespace Zero
