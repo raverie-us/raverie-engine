@@ -77,13 +77,25 @@ class ZOperationHistory : ZilchComponent
     foreach(var row in this.UndoView.Cog.Children)
     {
       ++this.EntryCount;
-      row.ZHistoryEntry.UpdateColor(this.GetNextRowColor());
+      row.ZHistoryEntry.SetRowColor(this.GetNextRowColor());
+      
+      foreach(var child in row.ZHistoryEntry.ChildContainer.Children)
+      {
+        child.ZHistoryEntry.SetRowColor(this.GetNextRowColor());
+      }
+      
     }
 
     foreach(var row in this.RedoView.Cog.Children)
     {
       ++this.EntryCount;
-      row.ZHistoryEntry.UpdateColor(this.GetNextRowColor());
+      row.ZHistoryEntry.SetRowColor(this.GetNextRowColor());
+      
+      foreach(var child in row.ZHistoryEntry.ChildContainer.Children)
+      {
+        child.ZHistoryEntry.SetRowColor(this.GetNextRowColor());
+      }
+    
     }
 
     this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;

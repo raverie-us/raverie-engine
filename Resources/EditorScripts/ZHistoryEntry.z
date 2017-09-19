@@ -21,6 +21,8 @@ class ZHistoryEntry : ZilchComponent
     // Current expand/collapse state.
   var IsExpanded : Boolean;
   
+  var IsHighlighted : Boolean;
+  
     // Potential parent(s).
   var UndoView : Cog = null;
   var RedoView : Cog = null;
@@ -33,6 +35,7 @@ class ZHistoryEntry : ZilchComponent
   var ChildContainer : Cog;
   
   var UiOriginalSize : Real2;
+  var UiOriginalColor : Real4;
   
     // Data for the operation that needs to be undone/redone.
   var OperationData : Operation;
@@ -42,8 +45,9 @@ class ZHistoryEntry : ZilchComponent
   
     // Owning cog is of this archetype.
   [Property] var ArchetypeEntry : Archetype = Archetype.HistoryEntry;
-  
-    // Animation time used for sizing and/or highlighting a row.
+    // Highlight color used when the mouse enters the hierarchy of this entry.
+  [Property] var HighlightColor : Real4;
+    // Animation time used for sizing.
   [Property] var AnimateTime : Real = 0.2;
   
   
@@ -57,6 +61,7 @@ class ZHistoryEntry : ZilchComponent
   {
     this.IsUndone = false;
     this.IsExpanded = false;
+    this.IsHighlighted = false;
     
     this.HistoryInfo = this.Owner.Children.Current;
     this.Icon = this.HistoryInfo.FindChildByName("Icon");
@@ -67,6 +72,11 @@ class ZHistoryEntry : ZilchComponent
     this.UiOriginalSize = this.UiWidget.Size;
     
     Zero.Connect(this.Owner, Events.Attached, this.OnAttached);
+    
+    // No way to tell which history entry rows are children to other history
+    // entry rows.  So for now, connect them all to mouse enter/exit.
+    Zero.Connect(this.Owner, Events.MouseEnterHierarchy, this.OnMouseEnter);
+    Zero.Connect(this.Owner, Events.MouseExitHierarchy, this.OnMouseExit);
     
     Zero.Connect(this.Icon, Events.LeftMouseUp, this.OnLeftClickExpand);
     Zero.Connect(this.RowName, Events.LeftMouseUp, this.OnLeftMouseUp);
@@ -106,6 +116,14 @@ class ZHistoryEntry : ZilchComponent
       
       var entry = this.Space.Create(this.ArchetypeEntry);
       
+      // Highlight all of our new child rows, because we are currently highlighted.
+      entry.ZHistoryEntry.UpdateColor(this.HighlightColor, true);
+      
+      // Children entries are not allowed to be the autority on hierarchical-
+      // highlighting on mouse enter/exit.  So disconnect these events.
+      Zero.Disconnect(entry, Events.MouseEnterHierarchy, entry.ZHistoryEntry);
+      Zero.Disconnect(entry, Events.MouseExitHierarchy, entry.ZHistoryEntry);
+      
       var entryManager = entry.ZHistoryEntry;
       entryManager.OperationData = operation;
       //entryManager.HistoryInfo.Name = operation.Name;
@@ -142,7 +160,25 @@ class ZHistoryEntry : ZilchComponent
   }
   
   /******************************************************************************/
-  // Excute undo/redo command
+  // Highlight entry row.
+  function OnMouseEnter(event : ViewportMouseEvent)
+  {
+    this.UpdateHierarchyColor(this.HighlightColor, true);
+    
+    event.HandledEvent = true;
+  }
+  
+  /******************************************************************************/
+  // Un-highlight entry row.
+  function OnMouseExit(event : ViewportMouseEvent)
+  {
+    this.OriginalHierarchyColor();
+    
+    event.HandledEvent = true;
+  }
+  
+  /******************************************************************************/
+  // Excute undo/redo command.
   function OnLeftMouseUp(event : ViewportMouseEvent)
   {
     if(this.IsUndone)
@@ -207,7 +243,8 @@ class ZHistoryEntry : ZilchComponent
       this.Icon.Sprite.SpriteSource = this.CollapseArrow;
       
       var childCount = this.CreateChildrenEntries();
-
+      
+      this.Owner.Actions.Cancel();
       var seq = this.AnimateSize(childCount * this.UiOriginalSize.Y);
       Action.Call(seq, this.AfterExpand);
     }
@@ -217,7 +254,7 @@ class ZHistoryEntry : ZilchComponent
       this.Icon.Sprite.SpriteSource = this.ExpandArrow;
       
       this.UiWidget.SizePolicyY = UiSizePolicy.Fixed;
-
+      
       this.Owner.Actions.Cancel();
       var seq = this.AnimateSize(0);
       Action.Call(seq, this.AfterCollapse);
@@ -253,16 +290,50 @@ class ZHistoryEntry : ZilchComponent
   }
   
   /******************************************************************************/
-  // Make all children rows of this row this row the same color as this row.
-  function UpdateColor(color : Real4)
+  // Sets the base color the row should be without modifications such as highlight.
+  function SetRowColor(color : Real4)
   {
+    this.UiOriginalColor = color;
+    
+      // Do not update to a new base color if this entry is highlighted.  The
+      // highlight color needs to stay active in this case.
+    if(!this.IsHighlighted)
+      this.UpdateColor(color, false);
+  }
+  
+  /******************************************************************************/
+  // Change the color of this row, but not the children rows.
+  function UpdateColor(color : Real4, highlight : Boolean)
+  {
+    this.IsHighlighted = highlight;
     this.HistoryInfo.UiWidget.LocalColor = color;
     this.ChildBG.UiWidget.LocalColor = color;
     this.ChildContainer.UiWidget.LocalColor = color;
+  }
+  
+  /******************************************************************************/
+  // Recursively change the color of this row and its hierarchy to the same color.
+  function UpdateHierarchyColor(color : Real4, highlight : Boolean)
+  {
+    this.UpdateColor(color, highlight);
     
     foreach(var row in this.ChildContainer.Children)
     {
-      row.ZHistoryEntry.HistoryInfo.UiWidget.LocalColor = color;
+      row.ZHistoryEntry.UpdateHierarchyColor(color, highlight);
+    }
+    
+  }
+  
+  /******************************************************************************/
+  // Recursively restore the color of this row and all rows its hierarchy to their
+  // respective original color.
+  function OriginalHierarchyColor()
+  {
+    this.UpdateColor(this.UiOriginalColor, false);
+
+    foreach(var row in this.ChildContainer.Children)
+    {
+      row.ZHistoryEntry.OriginalHierarchyColor();
     }
     
   }
