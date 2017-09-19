@@ -115,9 +115,9 @@ class ZOperationHistory : ZilchComponent
       return;
     }
     
-      // Center the text in the window and clamp the values to integer pixels.
+      // Center the text in the window.
     var windowWidget = this.Owner.Parent.UiWidget;
-    statusCog.UiWidget.LocalTranslation = Real2(Math.Floor(windowWidget.Size.X / 2), Math.Floor(windowWidget.Size.Y / 2));
+    statusCog.UiWidget.LocalTranslation = Real2(windowWidget.Size.X / 2, windowWidget.Size.Y / 2);
   }
   
   /******************************************************************************/
