@@ -199,6 +199,8 @@ namespace Audio
         }
       }
 
+      ErrorIf(frames < 0, opus_strerror(frames));
+
       // Move the data index forward
       DataIndex += packHead.Size;
     }

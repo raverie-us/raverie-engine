@@ -18,6 +18,7 @@
 #include "pa_ringbuffer.h"
 
 #include "Definitions.h"
+#include "Resampler.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
 #include "ListenerNode.h"

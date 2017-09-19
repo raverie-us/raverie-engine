@@ -126,6 +126,9 @@
     <ClCompile Include="MicrophoneInputNode.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="Resampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modifiers.h">
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="MicrophoneInputNode.h">
       <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Resampler.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

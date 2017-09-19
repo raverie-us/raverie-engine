@@ -143,7 +143,7 @@ namespace Audio
     Zero::Array<float> InputBuffer;
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
-
+    // The sample rate used by the audio engine for the output mix
     static const unsigned SampleRate = 48000;
     
     AudioChannelsManager ChannelsManager;
@@ -217,20 +217,16 @@ namespace Audio
     float PreviousPeakVolumeThreaded;
     // The RMS volume from the last mix, used to check whether to create a task
     unsigned PreviousRMSVolumeThreaded;
-    // Stores the last frame of samples from the previous mix
-    AudioFrame PreviousFrame;
-    // The resample index including fractional value
-    double ResampleFrameIndex;
     // If true the output is being resampled to match the sample rate of the device
     bool Resampling;
-    // The factor to use when resampling
-    double ResampleFactor;
-    // Used to adjust buffer sizes
-    double ResampleBufferFraction;
+    // Resampler object used to resample mixed output
+    Resampler OutputResampling;
     // Encoder to use for compressed microphone input
     PacketEncoder Encoder;
-
+    // Queue for passing microphone input between threads
     LockFreeQueue<Zero::Array<float>*> InputDataQueue;
+    // Resampler object used to resample microphone input
+    Resampler InputResampling;
 
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();

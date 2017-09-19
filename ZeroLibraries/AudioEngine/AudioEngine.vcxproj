@@ -86,6 +86,7 @@
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RecordNode.cpp" />
+    <ClCompile Include="Resampler.cpp" />
     <ClCompile Include="ReverbNodes.cpp" />
     <ClCompile Include="SoundAssets.cpp" />
     <ClCompile Include="SoundInstances.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="portaudio.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="RecordNode.h" />
+    <ClInclude Include="Resampler.h" />
     <ClInclude Include="ReverbNodes.h" />
     <ClInclude Include="SoundAssets.h" />
     <ClInclude Include="SoundInstances.h" />
