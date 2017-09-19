@@ -731,9 +731,12 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, EditFocusMode::Enum focus
   // we only want to construct an aabb from objects with transforms
   forRange(Handle selection, activeSelection->All())
   {
-    Cog* cog = selection.Get<Cog*>();
-    if (cog != nullptr && cog->has(Transform))
-      transformObjects.Add(cog);
+    if(selection.IsNull())
+      continue;
+
+    MetaTransform* metaTransform = selection.StoredType->HasInherited<MetaTransform>( );
+    if(metaTransform != nullptr)
+      transformObjects.Add(selection);
   }
   
   // if there are no objects with transform we don't want to focus on the origin of the level
@@ -765,7 +768,7 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, const Aabb& focusAabb, Ed
   float lookDistance = extents.Length()  * 1.5f;
   float viewSize = extents.Length() * 1.5f;
 
-  //const bool previewBox = false;
+  //const bool previewBox = true;
   //if(previewBox)
   //  gDebugDraw->Add(Debug::Box(aabb).Duration(1.0f).Color(Color::Red));
 
