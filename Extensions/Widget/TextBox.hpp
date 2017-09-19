@@ -99,6 +99,8 @@ public:
 class MultiLineText : public Composite
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
   MultiLineText(Composite* parent, StringParam textClass = String());
   MultiLineText(Composite* parent, StringParam font, uint fontSize);
 

@@ -315,9 +315,15 @@ void SearchView::BuildResults()
       ToolTip* toolTip = new ToolTip(this);
       toolTip->SetDestroyOnMouseExit(false);
       toolTip->mContentPadding = Thickness(1,1,1,1);
-      composite->SetSize(Pixels(130, 130));
+
       if(result.mStatus.Failed())
         toolTip->SetColor(ToolTipColor::Red);
+
+      // Defer border-display to the parent's (tooltip) border.
+      if(MultiLineText* content = Type::DynamicCast<MultiLineText*>(composite))
+        content->mBorder->SetVisible(false);
+
+      composite->SetSize(Pixels(130, 130));
       toolTip->SetContent(composite);
       mToolTip = toolTip;
       PositionToolTip();

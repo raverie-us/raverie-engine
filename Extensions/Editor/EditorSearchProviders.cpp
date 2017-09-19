@@ -265,11 +265,11 @@ public:
 
   Composite* CreatePreview(Composite* parent, SearchViewResult& element) override
   {
-    //For preview attempt to look up class description from documentation system;
+    //For preview attempt to look up class description from documentation system.
     BoundType* boundType = (BoundType*)element.Data;
     ClassDoc* classDoc = Z::gDocumentation->mClassMap.FindValue(boundType->Name, NULL);
 
-    // Only bother showing the preview if the class documentation exists
+    // Try to include class documentation in the preview.
     if(classDoc)
     {
       String &description = classDoc->mDescription;
@@ -281,12 +281,20 @@ public:
         group->SetLayout(CreateStackLayout());
         
         // Create the error text on top
-        CreateTextPreview(group, element.mStatus.Message);
+        MultiLineText* text = (MultiLineText*)CreateTextPreview(group, element.mStatus.Message);
+        // Defer border-display to the parent's border.
+        if(text != nullptr)
+          text->mBorder->SetVisible(false);
 
-        // Create a grayed out description text below
-        MultiLineText* text = (MultiLineText*)CreateTextPreview(group, description);
-        if(text)
-          text->mTextField->SetColor(Vec4(1,1,1,0.35f));
+        // Gray-scale with less alpha to inherit some of the parent's display color.
+        Vec4 overlayColor(1, 1, 1, 0.35f);
+
+        if(text = (MultiLineText*)CreateTextPreview(group, description))
+        {
+          text->mTextField->SetColor(overlayColor);
+          // Defer border-display to the parent's border.
+          text->mBorder->SetVisible(false);
+        }
 
         return group;
       }
@@ -295,12 +303,12 @@ public:
         return CreateTextPreview(parent, description);
       }
     }
-    // if we had no class documentation
-    else
+    else  // No class documentation.
     {
-      // only create a text preview if we have a 'failed' message to display
+      // Only create a text preview if there's a valid 'failed' message to display.
       if(element.mStatus.Failed())
         return CreateTextPreview(parent, element.mStatus.Message);
+
       return NULL;
     }
   }
