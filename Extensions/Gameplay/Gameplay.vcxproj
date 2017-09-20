@@ -50,6 +50,7 @@
     <ClInclude Include="DefaultGame.hpp" />
     <ClInclude Include="CameraViewport.hpp" />
     <ClInclude Include="GameplayStandard.hpp" />
+    <ClInclude Include="IndexedHalfEdgeMesh.hpp" />
     <ClInclude Include="MarchingCubes.hpp" />
     <ClInclude Include="MarchingSquares.hpp" />
     <ClInclude Include="MarketWidget.hpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="Orientation.hpp" />
     <ClInclude Include="PlayGame.hpp" />
     <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="QuickHull3DBindings.hpp" />
     <ClInclude Include="RandomContext.hpp" />
     <ClInclude Include="Reactive.hpp" />
     <ClInclude Include="ReactiveViewport.hpp" />
@@ -77,6 +79,7 @@
     <ClCompile Include="DefaultGame.cpp" />
     <ClCompile Include="CameraViewport.cpp" />
     <ClCompile Include="GameplayStandard.cpp" />
+    <ClCompile Include="IndexedHalfEdgeMesh.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="MarchingSquares.cpp" />
     <ClCompile Include="MarketWidget.cpp" />
@@ -87,6 +90,7 @@
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="QuickHull3DBindings.cpp" />
     <ClCompile Include="RandomContext.cpp" />
     <ClCompile Include="Reactive.cpp" />
     <ClCompile Include="ReactiveViewport.cpp" />

@@ -7,6 +7,9 @@
 #include "Precompiled.hpp"
 #include "WebBrowserChrome.hpp"
 
+#include "IndexedHalfEdgeMesh.hpp"
+#include "QuickHull3DBindings.hpp"
+
 namespace Zero
 {
 
@@ -14,6 +17,11 @@ namespace Zero
 ZilchDefineEnum(WebBrowserModifiers);
 ZilchDefineEnum(OrientationBases);
 ZilchDefineEnum(SplineAnimatorMode);
+
+ZilchDefineRange(IndexedHalfEdgeMeshVertexArray::RangeType);
+ZilchDefineRange(IndexedHalfEdgeMeshEdgeArray::RangeType);
+ZilchDefineRange(IndexedHalfEdgeFaceEdgeIndexArray::RangeType);
+ZilchDefineRange(IndexedHalfEdgeMeshFaceArray::RangeType);
 
 //**************************************************************************************************
 ZilchDefineStaticLibrary(GameplayLibrary)
@@ -24,6 +32,12 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeEnum(WebBrowserModifiers);
   ZilchInitializeEnum(OrientationBases);
   ZilchInitializeEnum(SplineAnimatorMode);
+
+  // Ranges
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshVertexArray::RangeType, "IndexedHalfEdgeMeshVertexArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshEdgeArray::RangeType, "IndexedHalfEdgeMeshEdgeArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType, "IndexedHalfEdgeFaceEdgeIndexArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType, "IndexedHalfEdgeMeshFaceArrayRange");
 
   // Meta Components
   ZilchInitializeType(RaycasterMetaComposition);
@@ -72,6 +86,15 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(UnitTestKeyboardEvent);
   ZilchInitializeType(UnitTestKeyboardTextEvent);
   ZilchInitializeType(UnitTestWindowEvent);
+
+  ZilchInitializeType(IndexedHalfEdgeMeshVertexArray);
+  ZilchInitializeType(IndexedHalfEdgeMeshEdgeArray);
+  ZilchInitializeType(IndexedHalfEdgeFaceEdgeIndexArray);
+  ZilchInitializeType(IndexedHalfEdgeMeshFaceArray);
+  ZilchInitializeType(IndexedHalfEdge);
+  ZilchInitializeType(IndexedHalfEdgeFace);
+  ZilchInitializeType(IndexedHalfEdgeMesh);
+  ZilchInitializeTypeAs(QuickHull3DInterface, "QuickHull3D");
 
   ZilchInitializeTypeAs(ZeroStatic, "Zero");
 

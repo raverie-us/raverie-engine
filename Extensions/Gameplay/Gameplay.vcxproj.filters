@@ -90,6 +90,8 @@
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="UnitTestSystem.hpp" />
+    <ClInclude Include="IndexedHalfEdgeMesh.hpp" />
+    <ClInclude Include="QuickHull3DBindings.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Precompiled.cpp">
@@ -154,5 +156,7 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="UnitTestSystem.cpp" />
+    <ClCompile Include="IndexedHalfEdgeMesh.cpp" />
+    <ClCompile Include="QuickHull3DBindings.cpp" />
   </ItemGroup>
 </Project>
