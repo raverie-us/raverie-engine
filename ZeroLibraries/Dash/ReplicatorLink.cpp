@@ -1157,7 +1157,9 @@ bool ReplicatorLink::DeserializeChange(const Message& message, TimeMs timestamp)
   // Get replica
   Replica*              replica   = replicaChannel->GetReplica();
   ReplicaId::value_type replicaId = replica->GetReplicaId().value();
-  Assert(replica && replicaId);
+  ReturnIf(!replicaChannelType, false, "ReplicaChannelType was null");
+  ReturnIf(!replica, false, "Replica was null");
+  ReturnIf(!replicaId, false, "The ReplicaId was not valid");
 
   // Don't accept incoming changes for this replica or replica channel type?
   if(!replica->GetAcceptIncomingChanges()
