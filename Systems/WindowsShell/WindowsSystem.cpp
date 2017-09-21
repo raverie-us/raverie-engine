@@ -548,7 +548,7 @@ void WindowsOsWindow::SendKeyboardTextEvent(KeyboardTextEvent& event, bool simul
     return;
 
   DispatchEvent(event.EventId, &event);
-  Keyboard::GetInstance()->DispatchEvent(event.EventId, &event);
+  Keyboard::GetInstance()->DispatchEvent(Events::TextTyped, &event);
 }
 
 void WindowsOsWindow::SendMouseEvent(OsMouseEvent& event, bool simulated)

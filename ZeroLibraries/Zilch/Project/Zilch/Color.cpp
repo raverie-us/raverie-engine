@@ -380,7 +380,8 @@ namespace Zilch
             a * CC::InvFactor,                    \
             r,                                    \
             g,                                    \
-            b                                     \
+            b,                                    \
+            a                                     \
           )                                       \
         );
     #include "Math/ColorDefinitions.hpp"
