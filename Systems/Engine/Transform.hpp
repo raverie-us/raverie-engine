@@ -69,6 +69,7 @@ public:
   void Reset();
 
   Mat4 GetLocalMatrix();
+  Mat4 GetParentRelativeMatrix();
   Mat4 GetWorldMatrix();
   Mat4 GetParentWorldMatrix( );
   Transform* GetParent() { return TransformParent; } 

@@ -260,6 +260,23 @@ Mat4 Transform::GetLocalMatrix( )
   return roatationTranslate* scale;
 }
 
+Mat4 Transform::GetParentRelativeMatrix()
+{
+  Mat4 ourLocal = GetLocalMatrix();
+
+  if (InWorld && TransformParent)
+  {
+    Mat4 parentWorld = TransformParent->GetWorldMatrix();
+    parentWorld.Invert();
+
+    return parentWorld * ourLocal;
+  }
+  else
+  {
+    return ourLocal;
+  }
+}
+
 Mat4 Transform::GetWorldMatrix( )
 {
   // Return it if it's already cached

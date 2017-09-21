@@ -102,7 +102,7 @@ void Bone::NotifySkeletonModified()
 
 Mat4 Bone::GetLocalTransform()
 {
-  Mat4 localMatrix = mTransform->GetLocalMatrix();
+  Mat4 localMatrix = mTransform->GetParentRelativeMatrix();
 
   Cog* parent = GetOwner()->GetParent();
   while (parent)
@@ -111,7 +111,7 @@ Mat4 Bone::GetLocalTransform()
       return localMatrix;
 
     if (Transform* transform = parent->has(Transform))
-      localMatrix = transform->GetLocalMatrix() * localMatrix;
+      localMatrix = transform->GetParentRelativeMatrix() * localMatrix;
 
     parent = parent->GetParent();
   }
@@ -258,7 +258,7 @@ IndexRange Skeleton::GetBoneTransforms(Array<Mat4>& skinningBuffer, uint version
   boneTransforms.Resize(mBones.Size());
 
   // mBones[0] is this object and bone pointer may be null
-  boneTransforms[0] = mBones[0].mCog->has(Transform)->GetLocalMatrix();
+  boneTransforms[0] = mBones[0].mCog->has(Transform)->GetParentRelativeMatrix();
   for (uint i = 1; i < mBones.Size(); ++i)
     boneTransforms[i] = boneTransforms[mBones[i].mParentIndex] * mBones[i].mCog->has(Bone)->GetLocalTransform();
 
