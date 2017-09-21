@@ -572,6 +572,7 @@ void MultiMetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateActio
 void MultiMetaComposition::GetSharedComponents(MetaSelection* selection,
                                                Array<BoundType*>& sharedComponents)
 {
+  ReturnIf(selection == nullptr,, "The MetaSelection was null");
   Handle primary = selection->GetPrimary();
   if (primary.IsNull())
     return;
