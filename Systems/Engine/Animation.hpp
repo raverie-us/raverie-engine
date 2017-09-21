@@ -73,10 +73,15 @@ public:
 
   void AddPropertyTrack(PropertyTrack* track);
 
-  String GetLocalName(){return FullPath;}
-
   uint ObjectTrackId;
-  String FullPath;
+
+  // An empty array means we are referring to the root Cog
+  // These names are from the root down (each element is a nested child name)
+  // These names should match the ones in FullPath
+  Array<String> CogNames;
+
+  void SetFullPath(StringParam path);
+  StringParam GetFullPath() const;
 
 //private:
   uint mTrackCount;
@@ -84,6 +89,9 @@ public:
 
   /// Intrusive link for the animation
   IntrusiveLink(ObjectTrack, link);
+
+private:
+  String FullPath;
 };
 typedef InList<ObjectTrack> ObjectTrackList;
 

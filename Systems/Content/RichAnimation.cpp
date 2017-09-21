@@ -1351,7 +1351,7 @@ void PushToAnimationRecursive(TrackNode* objectTrackInfo, Animation* animation,
   // Create the Object Track on the animation
   ObjectTrack* objectTrack = new ObjectTrack();
   objectTrack->ObjectTrackId = objectTrackCount++;
-  objectTrack->FullPath = objectTrackInfo->Path;
+  objectTrack->SetFullPath(objectTrackInfo->Path);
   animation->ObjectTracks.PushBack(objectTrack);
 
   forRange(TrackNode* currTrack, objectTrackInfo->Children.All())

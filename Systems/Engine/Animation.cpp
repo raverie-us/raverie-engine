@@ -51,6 +51,9 @@ void ObjectTrack::Serialize(Serializer& stream)
   }
   else
   {
+    // Rebuild the array of cog names (this sets it twice technically...)
+    SetFullPath(FullPath);
+
     // Walk all property tracks
     PolymorphicNode propertyTrack;
     while(stream.GetPolymorphic(propertyTrack))
@@ -164,6 +167,20 @@ void ObjectTrack::AddPropertyTrack(PropertyTrack* track)
   PropertyTracks.PushBack(track);
 }
 
+void ObjectTrack::SetFullPath(StringParam path)
+{
+  FullPath = path;
+  CogNames.Clear();
+
+  forRange(String str, StringTokenRange(path, cAnimationPathDelimiter))
+    CogNames.Append(str);
+}
+
+StringParam ObjectTrack::GetFullPath() const
+{
+  return FullPath;
+}
+
 //------------------------------------------------------------ Animation
 ZilchDefineType(Animation, builder, type)
 {
@@ -268,7 +285,9 @@ struct AnimationLoadPattern
     reader.Read(trackHeader);
 
     ObjectTrack* track = new ObjectTrack();
-    reader.ReadString(track->FullPath);
+    String fullPath;
+    reader.ReadString(fullPath);
+    track->SetFullPath(fullPath);
 
     // read the position key frames
     PropertyTrack* translationTrack = MakePropertyTrack("Transform", "Translation", ZilchTypeId(Vec3));

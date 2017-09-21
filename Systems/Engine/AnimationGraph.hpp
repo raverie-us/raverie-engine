@@ -75,6 +75,7 @@ private:
   friend class Animator;
 
   /// Updates the root node on each from and applies it to the object tree.
+  void Update(float dt);
   void OnUpdate(UpdateEvent* e);
   void ApplyFrame(AnimationFrame& frame);
 
