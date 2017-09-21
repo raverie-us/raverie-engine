@@ -91,7 +91,7 @@ public:
   virtual void OnDestroy();
 
   /// Name of the Object.
-  String GetName( );
+  StringParam GetName( );
   virtual void SetName(StringParam newName);
 
   /// Returns the Space that this object lives in.

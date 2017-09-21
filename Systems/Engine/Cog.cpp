@@ -242,7 +242,7 @@ void Cog::ForceDestroy()
 }
 
 //**************************************************************************************************
-String Cog::GetName( )
+StringParam Cog::GetName( )
 {
   return mName;
 }

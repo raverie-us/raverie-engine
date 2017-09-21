@@ -15,7 +15,6 @@
 #include "Utility/Atomic.hpp"
 
 #define ZeroStringPooling
-//#define ZeroStringStats
 
 namespace Zero
 {
@@ -34,8 +33,6 @@ typedef const StringRange& StringRangeParam;
 class StringStats
 {
 public:
-  static StringStats& GetInstance();
-
   Atomic<size_t> mTotalSize;
   Atomic<size_t> mTotalCount;
 };
@@ -284,6 +281,7 @@ private:
   void release();
   void Assign(const_pointer data, size_type size);
   void Assign(StringNode* node);
+  void CreateAndAssignNode(const_pointer data, size_type size, size_t hash);
   StringNode* mNode;
 };
 

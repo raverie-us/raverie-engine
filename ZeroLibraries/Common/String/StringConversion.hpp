@@ -37,27 +37,27 @@ void ConvertUnicodeToAscii(char* destAscii, uint destAsciiLength, const wchar_t*
 
 /// Reads a value from a character buffer
 /// (Takes value by reference so functions can be overloaded)
-void ToValue(StringRange range, String& value);
-void ToValue(StringRange range, StringRange& value);
+void ToValue(StringRangeParam range, String& value);
+void ToValue(StringRangeParam range, StringRange& value);
 
-void ToValue(StringRange range, bool& value);
+void ToValue(StringRangeParam range, bool& value);
 
-void ToValue(StringRange range, char& value);
+void ToValue(StringRangeParam range, char& value);
 
-void ToValue(StringRange range, int8& value, int base = 0);
-void ToValue(StringRange range, int16& value, int base = 0);
-void ToValue(StringRange range, int32& value, int base = 0);
-void ToValue(StringRange range, int64& value, int base = 0);
+void ToValue(StringRangeParam range, int8& value, int base = 0);
+void ToValue(StringRangeParam range, int16& value, int base = 0);
+void ToValue(StringRangeParam range, int32& value, int base = 0);
+void ToValue(StringRangeParam range, int64& value, int base = 0);
 
-void ToValue(StringRange range, uint8& value, int base = 0);
-void ToValue(StringRange range, uint16& value, int base = 0);
-void ToValue(StringRange range, uint32& value, int base = 0);
-void ToValue(StringRange range, uint64& value, int base = 0);
+void ToValue(StringRangeParam range, uint8& value, int base = 0);
+void ToValue(StringRangeParam range, uint16& value, int base = 0);
+void ToValue(StringRangeParam range, uint32& value, int base = 0);
+void ToValue(StringRangeParam range, uint64& value, int base = 0);
 
-void ToValue(StringRange range, float& value);
-void ToValue(StringRange range, double& value);
+void ToValue(StringRangeParam range, float& value);
+void ToValue(StringRangeParam range, double& value);
 
-void ToValue(StringRange range, Guid& value);
+void ToValue(StringRangeParam range, Guid& value);
 
 //
 // ToBuffer Functions
@@ -106,8 +106,21 @@ struct ZeroSharedTemplate has_global_to_value_helper
   template<typename T2>
   static inline no Test2(...);
 
+  template<typename T2>
+  static inline yes Test3(static_verify_function_signature< typename void(*)(StringRangeParam, T2&), &ToValue >*);
+  template<typename T2>
+  static inline no Test3(...);
+
+  // Third parameter (base) must have a default argument, so ToValue may be invoked without it
+  template<typename T2>
+  static inline yes Test4(static_verify_function_signature< typename void(*)(StringRangeParam, T2&, int), &ToValue >*);
+  template<typename T2>
+  static inline no Test4(...);
+
   static const bool value =  (sizeof(Test1<T>(0)) == sizeof(yes))
-                          || (sizeof(Test2<T>(0)) == sizeof(yes));
+                          || (sizeof(Test2<T>(0)) == sizeof(yes))
+                          || (sizeof(Test3<T>(0)) == sizeof(yes))
+                          || (sizeof(Test4<T>(0)) == sizeof(yes));
 };
 
 /// Provides a constant defined as true if T has a global "ToValue" function, else defined as false

@@ -119,4 +119,5 @@ public:
 #include "Utility/NativeType.hpp"
 #include "Utility/Variant.hpp"
 #include "Utility/Determinism.hpp"
+#include "Utility/SpinLock.hpp"
 #include "Singleton.hpp"
