@@ -55,6 +55,9 @@ Vec2 ToOffset(Location::Enum orign)
 
 ZilchDefineType(AreaEvent, builder, type)
 {
+  ZeroBindDocumented();
+
+  ZilchBindField(mArea);
 }
 
 ZilchDefineType(Area, builder, type)

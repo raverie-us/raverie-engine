@@ -28,10 +28,13 @@ Vec2 OffsetOfOffset(Location::Enum base, Location::Enum corner);
 // Thickness used for converting an Area to an Aabb
 const float AreaThickness = 0.001f;
 
+/// Sent when an area component's size or origin changes.
 class AreaEvent : public Event
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  /// The area component that triggered this event.
   Area* mArea;
 };
 
