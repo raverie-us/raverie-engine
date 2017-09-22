@@ -106,7 +106,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to create device when initializing audio API: %d", result));
+        "Unable to create device when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -126,7 +126,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to access device property when initializing audio API: %d", result));
+        "Unable to access device property when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -137,7 +137,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to get device name when initializing audio API: %d", result));
+        "Unable to get device name when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -151,7 +151,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to create client when initializing audio API: %d", result));
+        "Unable to create client when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -160,7 +160,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to get format when initializing audio API: %d", result));
+        "Unable to get format when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -185,7 +185,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to initialize client when initializing audio API: %d", result));
+        "Unable to initialize client when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -194,7 +194,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to get buffer size when initializing audio API: %d", result));
+        "Unable to get buffer size when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -207,10 +207,10 @@ namespace Audio
     {
       if (render)
         SetStatusAndLog(status, Zero::String::Format(
-          "Failed to get render client when initializing audio API: %d", result));
+          "Unable to get render client when initializing audio API: %d", result));
       else
         SetStatusAndLog(status, Zero::String::Format(
-          "Failed to get capture client when initializing audio API: %d", result));
+          "Unable to get capture client when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -226,7 +226,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to set event handle when initializing audio API: %d", result));
+        "Unable to set event handle when initializing audio API: %d", result));
       goto ErrorExit;
     }
 
@@ -241,9 +241,9 @@ namespace Audio
 
     ReleaseData();
     if (render)
-      ZPrint("Audio output initialization failed\n");
+      ZPrint("Audio output initialization unsuccessful\n");
     else
-      ZPrint("Audio input initialization failed\n");
+      ZPrint("Audio input initialization unsuccessful\n");
   }
 
   //************************************************************************************************
@@ -522,7 +522,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "CoInitialize failed when initializing audio API: %d", result));
+        "CoInitialize unsuccessful when initializing audio API: %d", result));
       return;
     }
 
@@ -534,7 +534,7 @@ namespace Audio
     if (FAILED(result))
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to create enumerator when initializing audio API: %d", result));
+        "Unable to create enumerator when initializing audio API: %d", result));
       return;
     }
 

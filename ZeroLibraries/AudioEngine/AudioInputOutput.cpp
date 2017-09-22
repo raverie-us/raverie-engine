@@ -432,7 +432,7 @@ namespace Audio
     if (result != paNoError)
     {
       SetStatusAndLog(status, Zero::String::Format(
-        "Failed to initialize PortAudio: %s", Pa_GetErrorText(result)));
+        "Unable to initialize PortAudio: %s", Pa_GetErrorText(result)));
       return;
     }
     ZPrint("PortAudio initialized\n");
@@ -450,7 +450,7 @@ namespace Audio
     else if (numDevices == 0)
     {
       SetStatusAndLog(status, "No audio output devices found");
-      ZPrint("Audio initialization failed\n");
+      ZPrint("Audio initialization unsuccessful\n");
       return;
     }
 
@@ -458,7 +458,7 @@ namespace Audio
     if (numAPIs == 0)
     {
       SetStatusAndLog(status, "No audio APIs found");
-      ZPrint("Audio initialization failed\n");
+      ZPrint("Audio initialization unsuccessful\n");
       return;
     }
 
@@ -490,7 +490,7 @@ namespace Audio
     if (apiIndex < 0)
     {
       SetStatusAndLog(status, "No supported audio APIs found.");
-      ZPrint("Audio initialization failed\n");
+      ZPrint("Audio initialization unsuccessful\n");
       return;
     }
 
@@ -502,7 +502,7 @@ namespace Audio
     if (OutputParameters->device == paNoDevice)
     {
       SetStatusAndLog(status, "No default audio output device found.");
-      ZPrint("Audio initialization failed\n");
+      ZPrint("Audio initialization unsuccessful\n");
       return;
     }
     OutputParameters->sampleFormat = paFloat32;    // 32 bit floating point output
@@ -539,7 +539,7 @@ namespace Audio
       errorString << "Audio settings not supported by default output device. ";
       errorString << messageString.ToString();
       status.SetFailed(messageString.ToString());
-      ZPrint("Settings not supported by default output device\n Audio initialization failed\n");
+      ZPrint("Settings not supported by default output device\n Audio initialization unsuccessful\n");
       return;
     }
 
