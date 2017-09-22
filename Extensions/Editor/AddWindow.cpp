@@ -66,6 +66,16 @@ ZilchDefineType(AddResourceWindow, builder, type)
 }
 
 //**************************************************************************************************
+void CloseAddWindow(Composite* windowElement)
+{
+  Event e;
+  windowElement->DispatchBubble(Events::AddWindowCancelled, &e);
+  CloseTabContaining(windowElement);
+
+  Z::gEditor->GetCenterWindow()->TryTakeFocus();
+}
+
+//**************************************************************************************************
 AddResourceWindow::AddResourceWindow(Composite* parent) :
   Composite(parent)
 {
@@ -113,6 +123,16 @@ AddResourceWindow::AddResourceWindow(Composite* parent) :
   bottomBar->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   bottomBar->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(19.0f));
   bottomBar->SetNotInLayout(false);
+
+  ConnectThisTo(this, Events::KeyDown, OnKeyDown);
+}
+
+//**************************************************************************************************
+void AddResourceWindow::OnKeyDown(KeyboardEvent* e)
+{
+  // close the add window when escape is pressed
+  if (e->Key == Keys::Escape)
+    CloseAddWindow(this);
 }
 
 //**************************************************************************************************
@@ -230,13 +250,12 @@ ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
   {
     mSearchField = new TagChainTextBox(searchFieldArea);
     mSearchField->SetSizing(SizePolicy::Flex, 1.0f);
-    //mSearchField->SetEditable(this);
-    //mSearchField->SetHintText("search...");
    
     ConnectThisTo(mSearchField, Events::TextChanged, OnTextEntered);
     ConnectThisTo(mSearchField, Events::TextEnter, OnEnter);
     ConnectThisTo(mSearchField, Events::KeyDown, OnKeyDownSearch);
     ConnectThisTo(mSearchField, Events::KeyRepeated, OnKeyDownSearch);
+    ConnectThisTo(mSearchField, Events::KeyPreview, OnSearchKeyPreview);
   }
 
   ColoredComposite* importArea = new ColoredComposite(this, Vec4(1, 1, 1, 0.05f));
@@ -384,14 +403,15 @@ void ResourceTypeSearch::OnKeyDown(KeyboardEvent* e)
     mSearchField->mSearchBar->LoseFocus();
     mNextFocus->TakeFocus();
   }
+}
 
+//**************************************************************************************************
+void ResourceTypeSearch::OnSearchKeyPreview(KeyboardEvent* e)
+{
   if (e->Key == Keys::Escape)
   {
-    Event e;
-    GetDispatcher()->Dispatch(Events::AddWindowCancelled, &e);
-    CloseTabContaining(this);
-
-    Z::gEditor->GetCenterWindow()->TryTakeFocus();
+    // ResourceTypeSearch Parent = Main Area, Main Area Parent = Add Window
+    CloseAddWindow(this);
   }
 }
 
@@ -631,11 +651,6 @@ void ResourceTemplateSearch::OnKeyDown(KeyboardEvent* e)
   else if(e->Key == Keys::Enter)
   {
     mNextFocus->TakeFocus();
-  }
-  else if(e->Key == Keys::Escape)
-  {
-    CloseTabContaining(this);
-    Z::gEditor->GetCenterWindow()->TryTakeFocus();
   }
 }
 
