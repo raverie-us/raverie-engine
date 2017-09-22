@@ -139,7 +139,6 @@ SoundSystem::~SoundSystem()
 
   Zero::Status status;
   mAudioSystem->StopSystem(status);
-  ErrorIf(status.Failed(), status.Message.c_str());
   SafeDelete(mAudioSystem);
 }
 
@@ -152,11 +151,8 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
   Zero::Status status;
   mAudioSystem = new Audio::AudioSystemInterface(this);
   mAudioSystem->StartSystem(status);
-  if (status.Failed())
-    DoNotifyWarning("Audio Error", status.Message);
 
-  mAudioMessage = status.Message;
-
+  status.Reset();
   SoundNode* node = new SoundNode();
   node->SetNode(new Audio::CombineNode(status, "AudioOutput", mCounter++, nullptr), status);
   mAudioSystem->AddNodeToOutput(node->mNode);

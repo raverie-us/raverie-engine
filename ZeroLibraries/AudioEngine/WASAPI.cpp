@@ -42,9 +42,9 @@ namespace Audio
 
   //------------------------------------------------------------------------------------- DeviceInfo
 
-  class WasapiDeviceInfo
+  class WasapiDevice
   {
-    WasapiDeviceInfo() :
+    WasapiDevice() :
       AudioClient(nullptr),
       Device(nullptr),
       RenderClient(nullptr),
@@ -54,7 +54,7 @@ namespace Audio
       StopRequest(nullptr),
       ThreadExit(nullptr)
     {}
-    ~WasapiDeviceInfo() { ReleaseData(); }
+    ~WasapiDevice() { ReleaseData(); }
 
     void ReleaseData();
     void Initialize(Zero::Status& status, IMMDeviceEnumerator* enumerator, bool render);
@@ -79,7 +79,7 @@ namespace Audio
   };
 
   //************************************************************************************************
-  void WasapiDeviceInfo::ReleaseData()
+  void WasapiDevice::ReleaseData()
   {
     SAFE_RELEASE(AudioClient);
     SAFE_RELEASE(Device);
@@ -94,7 +94,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void WasapiDeviceInfo::Initialize(Zero::Status& status, IMMDeviceEnumerator* enumerator, bool render)
+  void WasapiDevice::Initialize(Zero::Status& status, IMMDeviceEnumerator* enumerator, bool render)
   {
     HRESULT result;
 
@@ -247,7 +247,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void WasapiDeviceInfo::ProcessingLoop()
+  void WasapiDevice::ProcessingLoop()
   {
     // Boost the thread priority to Audio
     LPCTSTR name = TEXT("Audio");
@@ -363,7 +363,8 @@ namespace Audio
   //************************************************************************************************
   AudioIOWindows::AudioIOWindows() :
     OutputDevice(nullptr),
-    InputDevice(nullptr)
+    InputDevice(nullptr),
+    Enumerator(nullptr)
   {
 
   }
@@ -372,14 +373,90 @@ namespace Audio
   AudioIOWindows::~AudioIOWindows()
   {
     Zero::Status status;
+    ShutDownOutput(status);
+    ShutDownInput(status);
     ShutDownAPI(status);
-
-    CoUninitialize();
 
     if (OutputDevice)
       delete OutputDevice;
     if (InputDevice)
       delete InputDevice;
+  }
+
+  //************************************************************************************************
+  void AudioIOWindows::InitializeAPI(Zero::Status& status)
+  {
+    HRESULT result;
+
+    result = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+    if (FAILED(result))
+    {
+      SetStatusAndLog(status, Zero::String::Format(
+        "CoInitialize unsuccessful when initializing audio API: %d", result));
+      return;
+    }
+
+    // Create the device enumerator
+    result = CoCreateInstance(CLSID_MMDeviceEnumerator, nullptr, CLSCTX_ALL, IID_IMMDeviceEnumerator,
+      (void**)&Enumerator);
+    if (FAILED(result))
+    {
+      SetStatusAndLog(status, Zero::String::Format(
+        "Unable to create enumerator when initializing audio API: %d", result));
+      return;
+    }
+    
+  }
+
+  //************************************************************************************************
+  void AudioIOWindows::InitializeOutput(Zero::Status& status)
+  {
+    if (!OutputDevice)
+      OutputDevice = new WasapiDevice();
+
+    OutputDevice->Initialize(status, Enumerator, true);
+
+    if (status.Succeeded())
+      InitializeOutputBuffers();
+  }
+
+  //************************************************************************************************
+  void AudioIOWindows::InitializeInput(Zero::Status& status)
+  {
+    if (!InputDevice)
+      InputDevice = new WasapiDevice();
+
+    InputDevice->Initialize(status, Enumerator, false);
+  }
+
+  //************************************************************************************************
+  void AudioIOWindows::ShutDownAPI(Zero::Status& status)
+  {
+    if (Enumerator)
+    {
+      SAFE_RELEASE(Enumerator);
+      CoUninitialize();
+    }
+  }
+
+  //************************************************************************************************
+  void AudioIOWindows::ShutDownOutput(Zero::Status& status)
+  {
+    if (OutputDevice && OutputDevice->StreamOpen)
+    {
+      StopOutputStream(status);
+      OutputDevice->ReleaseData();
+    }
+  }
+
+  //************************************************************************************************
+  void AudioIOWindows::ShutDownInput(Zero::Status& status)
+  {
+    if (InputDevice && InputDevice->StreamOpen)
+    {
+      StopInputStream(status);
+      InputDevice->ReleaseData();
+    }
   }
 
   //************************************************************************************************
@@ -506,54 +583,6 @@ namespace Audio
 
       ZPrint("Audio input stream stopped\n");
     }
-  }
-
-  //************************************************************************************************
-  void AudioIOWindows::InitializeAPI(Zero::Status& status)
-  {
-    if (!OutputDevice)
-      OutputDevice = new WasapiDeviceInfo();
-    if (!InputDevice)
-      InputDevice = new WasapiDeviceInfo();
-
-    HRESULT result;
-
-    result = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-    if (FAILED(result))
-    {
-      SetStatusAndLog(status, Zero::String::Format(
-        "CoInitialize unsuccessful when initializing audio API: %d", result));
-      return;
-    }
-
-    IMMDeviceEnumerator* enumerator(nullptr);
-
-    // Create the device enumerator
-    result = CoCreateInstance(CLSID_MMDeviceEnumerator, nullptr, CLSCTX_ALL, IID_IMMDeviceEnumerator,
-      (void**)&enumerator);
-    if (FAILED(result))
-    {
-      SetStatusAndLog(status, Zero::String::Format(
-        "Unable to create enumerator when initializing audio API: %d", result));
-      return;
-    }
-
-    OutputDevice->Initialize(status, enumerator, true);
-    InputDevice->Initialize(status, enumerator, false);
-
-    SAFE_RELEASE(enumerator);
-  }
-
-  //************************************************************************************************
-  void AudioIOWindows::ShutDownAPI(Zero::Status& status)
-  {
-    StopOutputStream(status);
-    StopInputStream(status);
-
-    OutputDevice->ReleaseData();
-    InputDevice->ReleaseData();
-
-    ZPrint("Audio IO shut down\n");
   }
 
   //************************************************************************************************

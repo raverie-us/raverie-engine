@@ -11,6 +11,8 @@
 #define AudioInputOutput_H
 
 struct PaStreamParameters;
+struct PaHostApiInfo;
+struct IMMDeviceEnumerator;
 
 namespace Audio
 {
@@ -35,12 +37,10 @@ namespace Audio
     void FinishedMixingBuffer();
     // Waits until another mix is needed, using semaphore counter
     void WaitUntilOutputNeeded();
-    // Initializes audio input and output
-    void Initialize(Zero::Status& status);
-    // Shuts down all audio output
-    void ShutDown(Zero::Status& status);
     // Resets the audio output (should call on device change)
-    void Reset(Zero::Status& status);
+    void ResetOutput(Zero::Status& status);
+    // Resets the audio input
+    void ResetInput(Zero::Status& status);
     // Returns the buffer sized based on current latency and the supplied sample rate
     unsigned GetBufferSize(unsigned sampleRate);
     // Fills the buffer with the requested number of audio samples, or the max available if lower
@@ -48,6 +48,18 @@ namespace Audio
     // Sets whether the system should use a low or high latency value
     void SetLatency(bool lowLatency);
 
+    // Initializes the underlying audio API
+    virtual void InitializeAPI(Zero::Status& status) = 0;
+    // Initializes audio output
+    virtual void InitializeOutput(Zero::Status& status) = 0;
+    // Initializes audio input
+    virtual void InitializeInput(Zero::Status& status) = 0;
+    // Shuts down the underlying audio API
+    virtual void ShutDownAPI(Zero::Status& status) = 0;
+    // Shuts down audio output
+    virtual void ShutDownOutput(Zero::Status& status) = 0;
+    // Shuts down audio input
+    virtual void ShutDownInput(Zero::Status& status) = 0;
     // Returns the number of channels in the audio output
     virtual unsigned GetOutputChannels() = 0;
     // Returns the sample rate of the audio output
@@ -92,7 +104,6 @@ namespace Audio
     float InputBuffer[InputBufferSize];
     // Ring buffer used for receiving input data
     PaUtilRingBuffer InputRingBuffer;
-
     // Current position in the output buffer.
     unsigned MixedBufferIndex;
     // For notifying the mix thread when a new buffer is needed.
@@ -102,7 +113,9 @@ namespace Audio
     const float LargeBufferMultiplier = 0.04f;
     const unsigned BufferSizeStartValue = 128;
 
-    // Sets variables and creates output buffers using the specified size
+    // Sets variables and initializes output buffers at the appropriate size
+    void InitializeOutputBuffers();
+    // Creates output buffers using the specified size
     void SetUpOutputBuffers(const unsigned size);
     // Sets the callback frame size and calls SetUpBuffers
     void SetLatency(const unsigned baseSize);
@@ -110,16 +123,11 @@ namespace Audio
     void GetMixedOutputSamples(float* outputBuffer, const unsigned howManySamples);
     // Saves the input buffer from the microphone
     void SaveInputSamples(const float* inputBuffer, unsigned howManySamples);
-
-    // Initializes the audio API 
-    virtual void InitializeAPI(Zero::Status& status) = 0;
-    // Shuts down the audio API
-    virtual void ShutDownAPI(Zero::Status& status) = 0;
   };
 
   //---------------------------------------------------------------- Audio Input Output using WASAPI
   
-  class WasapiDeviceInfo;
+  class WasapiDevice;
 
   class AudioIOWindows : public AudioInputOutput
   {
@@ -127,6 +135,18 @@ namespace Audio
     AudioIOWindows();
     ~AudioIOWindows();
 
+    // Initializes the underlying audio API
+    void InitializeAPI(Zero::Status& status) override;
+    // Initializes audio output
+    void InitializeOutput(Zero::Status& status) override;
+    // Initializes audio input
+    void InitializeInput(Zero::Status& status) override;
+    // Shuts down the underlying audio API
+    void ShutDownAPI(Zero::Status& status) override;
+    // Shuts down audio output
+    void ShutDownOutput(Zero::Status& status) override;
+    // Shuts down audio input
+    void ShutDownInput(Zero::Status& status) override;
     // Returns the number of channels in the audio output
     unsigned GetOutputChannels() override;
     // Returns the sample rate of the audio output
@@ -147,16 +167,13 @@ namespace Audio
     void StartInputStream(Zero::Status& status) override;
     // Stops the audio input stream
     void StopInputStream(Zero::Status& status) override;
-    // Initializes the audio API 
-    void InitializeAPI(Zero::Status& status) override;
-    // Shuts down the audio API
-    void ShutDownAPI(Zero::Status& status) override;
 
     void HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
 
   private:
-    WasapiDeviceInfo* OutputDevice;
-    WasapiDeviceInfo* InputDevice;
+    WasapiDevice* OutputDevice;
+    WasapiDevice* InputDevice;
+    IMMDeviceEnumerator* Enumerator;
 
     static unsigned _stdcall StartOutputThread(void* param);
     static unsigned _stdcall StartInputThread(void* param);
@@ -170,6 +187,18 @@ namespace Audio
     AudioIOPortAudio();
     ~AudioIOPortAudio();
 
+    // Initializes the underlying audio API
+    void InitializeAPI(Zero::Status& status) override;
+    // Initializes audio output
+    void InitializeOutput(Zero::Status& status) override;
+    // Initializes audio input
+    void InitializeInput(Zero::Status& status) override;
+    // Shuts down the underlying audio API
+    void ShutDownAPI(Zero::Status& status) override;
+    // Shuts down audio output
+    void ShutDownOutput(Zero::Status& status) override;
+    // Shuts down audio input
+    void ShutDownInput(Zero::Status& status) override;
     // Returns the number of channels in the audio output
     unsigned GetOutputChannels() override;
     // Returns the sample rate of the audio output
@@ -190,14 +219,12 @@ namespace Audio
     void StartInputStream(Zero::Status& status) override;
     // Stops the audio input stream
     void StopInputStream(Zero::Status& status) override;
-    // Initializes the audio API 
-    void InitializeAPI(Zero::Status& status) override;
-    // Shuts down the audio API
-    void ShutDownAPI(Zero::Status& status) override;
 
     int HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
 
   private:
+    const PaHostApiInfo* ApiInfo;
+
     // Pointer to the Port Audio output stream
     void* OutputStream;
     // Port audio output stream parameters

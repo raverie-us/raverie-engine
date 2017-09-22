@@ -43,7 +43,7 @@ namespace Audio
     // Start with sixteen interpolator objects
     InterpolatorArray.Resize(16);
 
-    AudioIO = new AudioIOWindows();
+    AudioIO = new AudioIOPortAudio();
   }
 
   //************************************************************************************************
@@ -69,10 +69,18 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::StartSystem(Zero::Status &status)
   {
-    // Initialize Port Audio, and quit if it didn't work
-    AudioIO->Initialize(status);
+    // Initialize the audio API, and quit if it didn't work
+    AudioIO->InitializeAPI(status);
     if (status.Failed())
       return;
+
+    // Initialize audio output, and quit if it didn't work
+    AudioIO->InitializeOutput(status);
+    if (status.Failed())
+      return;
+
+    // Initialize audio input (non-essential)
+    AudioIO->InitializeInput(status);
 
     MixBufferSizeThreaded = AudioIO->GetBufferSize(SampleRate) * SystemChannelsThreaded;
     CheckForResampling();
@@ -93,7 +101,6 @@ namespace Audio
     {
       ZPrint("Error creating audio decoding thread\n");
       status.SetFailed("Error creating audio decoding thread");
-      AudioIO->ShutDown(status);
       return;
     }
 
@@ -106,7 +113,6 @@ namespace Audio
     {
       ZPrint("Error creating audio mix thread\n");
       status.SetFailed("Error creating audio mix thread");
-      AudioIO->ShutDown(status);
       return;
     }
 
@@ -133,13 +139,18 @@ namespace Audio
       MixThread.Close();
     }
 
-    AtomicSet32(&StopDecodeThread, 1);
-    DecodeThreadEvent.Signal();
-    DecodeThread.WaitForCompletion();
-    DecodeThread.Close();
+    if (DecodeThread.IsValid())
+    {
+      AtomicSet32(&StopDecodeThread, 1);
+      DecodeThreadEvent.Signal();
+      DecodeThread.WaitForCompletion();
+      DecodeThread.Close();
+    }
 
-    // Shut down PortAudio
-    AudioIO->ShutDown(status);
+    // Shut down audio output, input, and API
+    AudioIO->ShutDownInput(status);
+    AudioIO->ShutDownOutput(status);
+    AudioIO->ShutDownAPI(status);
 
     while (!TagsToDelete.Empty())
     {
@@ -516,7 +527,7 @@ namespace Audio
   void AudioSystemInternal::ResetIO()
   {
     Zero::Status status;
-    AudioIO->Reset(status);
+    AudioIO->ResetOutput(status);
 
     CheckForResampling();
   }
