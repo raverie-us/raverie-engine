@@ -34,7 +34,7 @@ class ZSoundNodeGraphScript : ZilchComponent
   
   function OnMouseUp(event : ViewportMouseEvent)
   {
-    this.Capture.ReleaseCapture();
+    this.Capture.ReleaseCapture(event);
   }
   
   function OnMouseMove(event : ViewportMouseEvent)

@@ -123,7 +123,7 @@ class ZHistoryScrollIndicator : ZilchComponent
   /******************************************************************************/
   function OnMouseUp(event : ViewportMouseEvent)
   {
-    this.MouseCapture.ReleaseCapture();
+    this.MouseCapture.ReleaseCapture(event);
     this.IsGrabbed = false;
   }
   

@@ -180,8 +180,8 @@ namespace Audio
       if (channels == 0)
       {
         System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System,
-          System->AudioIO.OutputChannelsThreaded));
-        SystemOutputChannels = System->AudioIO.OutputChannelsThreaded;
+          System->AudioIO->GetOutputChannels()));
+        SystemOutputChannels = System->AudioIO->GetOutputChannels();
       }
       else
       {

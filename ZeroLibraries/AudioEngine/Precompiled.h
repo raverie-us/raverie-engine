@@ -14,7 +14,6 @@
 #include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
-#include "portaudio.h"
 #include "pa_ringbuffer.h"
 
 #include "Definitions.h"

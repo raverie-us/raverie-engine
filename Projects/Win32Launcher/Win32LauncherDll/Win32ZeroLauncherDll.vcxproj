@@ -45,7 +45,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\GLEW\lib;$(ZERO_SOURCE)\External\freetype\lib;$(ZERO_SOURCE)\External\WinHid\lib;$(ZERO_SOURCE)\External\CEF\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>dbghelp.dll;libcef.dll;</DelayLoadDLLs>
     </Link>
     <PostBuildEvent>

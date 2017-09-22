@@ -94,6 +94,7 @@
     <ClCompile Include="stb_vorbis.cpp" />
     <ClCompile Include="Tags.cpp" />
     <ClCompile Include="VolumeNodes.cpp" />
+    <ClCompile Include="WASAPI.cpp" />
     <ClCompile Include="WindowsDeviceAccess.cpp" />
     <ClCompile Include="WindowsMIDI.cpp" />
   </ItemGroup>

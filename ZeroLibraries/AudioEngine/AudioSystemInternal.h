@@ -82,6 +82,7 @@ namespace Audio
   {
   public:
     AudioSystemInternal(ExternalSystemInterface* extInterface);
+    ~AudioSystemInternal();
 
     // Sets up variables, initializes audio output, starts mix thread.
     void StartSystem(Zero::Status &status);
@@ -147,7 +148,7 @@ namespace Audio
     static const unsigned SampleRate = 48000;
     
     AudioChannelsManager ChannelsManager;
-    AudioInputOutput AudioIO;
+    AudioInputOutput* AudioIO;
     
   private:
     typedef Zero::Array<TagObject*> TagsToDeleteListType;

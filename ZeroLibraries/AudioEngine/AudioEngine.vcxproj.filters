@@ -126,6 +126,9 @@
     <ClCompile Include="MicrophoneInputNode.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="WASAPI.cpp">
+      <Filter>Source Files\PlatformSpecific</Filter>
+    </ClCompile>
     <ClCompile Include="Resampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
