@@ -3,7 +3,7 @@
 namespace Zero
 {
 
-const float SelectionIcon::cBaseScale = 0.75f;
+const float SelectionIcon::cBaseScale = 0.45f;
 
 ZilchDefineType(SelectionIcon, builder, type)
 {
