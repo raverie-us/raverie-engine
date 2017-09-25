@@ -407,8 +407,7 @@ TabWidget* TabArea::TabFromWidget(Widget* widget)
 {
   forRange(TabWidget* tab, mTabs.All())
   {
-    Widget* ownedWidget = tab->GetOwnedWidget();
-    if(ownedWidget->IsAncestorOf(widget))
+    if(tab->GetOwnedWidget() == widget)
       return tab;
   }
   return nullptr;
