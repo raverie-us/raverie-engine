@@ -146,6 +146,8 @@ public:
   /// compressed audio data received from the default audio input device.
   bool GetDispatchMicrophoneCompressedByteData();
   void SetDispatchMicrophoneCompressedByteData(bool dispatchData);
+  /// Returns the number of audio channels currently used by the audio engine for audio output.
+  int GetOutputChannels();
 
   /// Creates a new VolumeNode object
   static VolumeNode* VolumeNode() { return new Zero::VolumeNode(); }

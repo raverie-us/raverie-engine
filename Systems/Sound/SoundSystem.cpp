@@ -89,6 +89,7 @@ ZilchDefineType(SoundSystem, builder, type)
   ZilchBindGetterSetter(LatencySetting);
   ZilchBindGetterSetter(DispatchMicrophoneUncompressedFloatData);
   ZilchBindGetterSetter(DispatchMicrophoneCompressedByteData);
+  ZilchBindGetter(OutputChannels);
 
   ZilchBindMethod(VolumeNode);
   ZilchBindMethod(PanningNode);
@@ -248,6 +249,12 @@ void SoundSystem::SetDispatchMicrophoneCompressedByteData(bool dispatchData)
 {
   mSendCompressedMicEvents = dispatchData;
   mAudioSystem->SetSendCompressedMicInput(dispatchData);
+}
+
+//**************************************************************************************************
+int SoundSystem::GetOutputChannels()
+{
+  return mAudioSystem->GetOutputChannels();
 }
 
 //**************************************************************************************************
