@@ -132,7 +132,7 @@ DeveloperConfig::DeveloperConfig()
 
 void DeveloperConfig::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(mDoubleEscapeQuit, true);
+  SerializeNameDefault(mDoubleEscapeQuit, false);
   SerializeNameDefault(mCanModifyReadOnlyResources, false);
   SerializeNameDefault(mGenericFlags, HashSet<String>());
 }
