@@ -735,7 +735,7 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, EditFocusMode::Enum focus
       continue;
 
     MetaTransform* metaTransform = selection.StoredType->HasInherited<MetaTransform>( );
-    if(metaTransform != nullptr)
+    if(metaTransform && metaTransform->GetInstance(selection).IsNotNull())
       transformObjects.Add(selection);
   }
   
