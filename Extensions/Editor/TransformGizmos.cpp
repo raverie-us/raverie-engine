@@ -695,15 +695,15 @@ void ObjectScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
 {
   Vec3 worldMovement = e->mMouseWorldMovement;
 
+  GizmoDrag* gizmoDrag = e->GetGizmo( )->has(GizmoDrag);
+  ScaleGizmo* baseGizmo = GetOwner( )->has(ScaleGizmo);
+
   Vec3 gizmoPosition = mTransform->GetWorldTranslation( );
   Vec3 grabDirection = (e->mInitialGrabPoint - gizmoPosition);
   float distance = grabDirection.Length( );
 
   Mat3 worldRotationBasis = Math::ToMatrix3(mTransform->GetWorldRotation( ));
   Mat3 inverseWorld = worldRotationBasis.Inverted( );
-
-  GizmoDrag* gizmoDrag = e->GetGizmo( )->has(GizmoDrag);
-  ScaleGizmo* baseGizmo = GetOwner()->has(ScaleGizmo);
 
   // If we're transforming multiple objects, we will have to translate them
   bool multiTransform = mObjectStates.Size() > 1;
@@ -723,31 +723,7 @@ void ObjectScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     Mat4 inverseMatrix(Mat4::cIdentity);
     inverseMatrix = transform.GetParentWorldMatrix().Inverted( );
 
-    const float cRotationLengthLimit = 0.001f;
-    if(multiTransform && mAffectTranslation)
-    {
-      // Update the object's translation by scaling it about the basis
-      // pivot Translation point
-      Vec3 pivotOffset = objectState.StartWorldTranslation - gizmoPosition;
-      if(pivotOffset.Length() > cRotationLengthLimit)
-      {
-        Math::Transform(inverseWorld, &pivotOffset);
-
-        //Scale the pivotOffset
-        pivotOffset *= baseGizmo->mScaledLocalMovement;
-
-        //Transform it back into world space
-        Math::Transform(worldRotationBasis, &pivotOffset);
-
-        Vec3 newPosition = gizmoPosition + pivotOffset;
-        newPosition = Math::TransformPoint(inverseMatrix, newPosition);
-
-        transform.SetLocalTranslation(newPosition);
-        objectState.EndTranslation = newPosition;
-      }
-    }
-
-      // Mouse-drag movement in object local orientation.
+    // Mouse-drag movement in object local orientation.
     Vec3 localMovement = Math::TransformNormal(inverseMatrix, worldMovement);
     Quat localRotation(objectState.StartRotation);
     localRotation.Invert( );
@@ -756,9 +732,35 @@ void ObjectScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     Vec3 newScale = baseGizmo->ScaleFromDrag(gizmoDrag, distance,
       localMovement, objectState.StartScale, transform.GetWorldRotation( ));
 
-      // Final object scale (at this step) of gizmo modification.
+    // Final object scale (at this step) of gizmo modification.
     objectState.EndScale = newScale;
     transform.SetLocalScale(newScale);
+
+    const float cRotationLengthLimit = 0.001f;
+    if(multiTransform && mAffectTranslation)
+    {
+      // Update the object's translation by scaling it about the basis
+      // pivot Translation point
+      Vec3 pivotOffset = objectState.StartWorldTranslation - gizmoPosition;
+      if(pivotOffset.Length( ) > cRotationLengthLimit)
+      {
+        Math::Transform(inverseWorld, &pivotOffset);
+
+        //Scale the pivotOffset
+        Vec3 scaleRatio = newScale / objectState.StartScale;
+        pivotOffset *= scaleRatio;
+
+        //Transform it back into world space
+        Math::Transform(worldRotationBasis, &pivotOffset);
+
+        Vec3 newPosition = gizmoPosition + pivotOffset;
+
+        newPosition = Math::TransformPoint(inverseMatrix, newPosition);
+
+        transform.SetLocalTranslation(newPosition);
+        objectState.EndTranslation = newPosition;
+      }
+    }
   }
 }
 
@@ -799,27 +801,26 @@ void ObjectRotateGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 //******************************************************************************
 void ObjectRotateGizmo::OnGizmoModified(RingGizmoEvent* e)
 {
-  Quat worldRotation = e->mWorldRotation;
   Vec3 selectedAxis = e->mWorldRotationAxis;
-  float deltaOnAxis = e->mDeltaRadiansAroundAxis;
-
+  
   Vec3 gizmoPos = mTransform->GetWorldTranslation();
   RotateGizmo* baseGizmo = GetOwner()->has(RotateGizmo);
 
-  float moveOnAxis = e->mRadiansAroundAxis;
-  if(baseGizmo->GetSnapping( ))
-    moveOnAxis = Snap(moveOnAxis, Math::DegToRad(baseGizmo->mSnapAngle));
+  float deltaOnAxis = baseGizmo->mDeltaRotation;
+
+  // If snapping is on, but there is no change in the snap-angle - then there's
+  // no point to allow object updating.
+  if(baseGizmo->GetSnapping() && deltaOnAxis == 0.0f)
+    return;
 
   // If we're transforming multiple objects, we will have to translate them
   bool multiTransform = mObjectStates.Size() > 1;
-
-  Quat newRotation;
 
   // Apply the rotation transform to each selected object
   forRange(ObjectTransformState& objectState, mObjectStates.All())
   {
     Handle target = objectState.MetaObject;
-    if(target.IsNull())
+    if(target.IsNull( ))
       continue;
 
     MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
@@ -833,37 +834,37 @@ void ObjectRotateGizmo::OnGizmoModified(RingGizmoEvent* e)
     Mat4 inverseMatrix(Mat4::cIdentity);
     inverseMatrix = oldMat.Inverted( );
 
+    Vec3 localAxis = Math::TransformNormal(inverseMatrix, selectedAxis).AttemptNormalized( );
+
+    //Construct a local rotation
+    Quat localRotation;
+    Math::ToQuaternion(localAxis, deltaOnAxis, &localRotation);
+
+    //Add the current rotation to the starting rotation
+    Quat newRotation = localRotation * transform.GetLocalRotation();
+
+    //Normalize to prevent rounding errors
+    newRotation.Normalize( );
+
+    // Set the rotation
+    objectState.EndRotation = newRotation;
+    transform.SetLocalRotation(newRotation);
+
     const float cRotationLengthLimit = 0.001f;
     if(multiTransform && mAffectTranslation)
     {
-      Vec3 pivot = objectState.StartWorldTranslation - gizmoPos;
+      Vec3 pivot = transform.GetWorldTranslation() - gizmoPos;
       if(pivot.Length() > cRotationLengthLimit)
       {
-        Vec3 rotatedPivot = Math::Multiply(worldRotation, pivot);
-        Vec3 newWorldPosition = gizmoPos + rotatedPivot;
+        Quat snappedRotation = Math::ToQuaternion(selectedAxis, deltaOnAxis);
+        Vec3 rotatedPivot = Math::Multiply(snappedRotation, pivot);
+        Vec3 newPosition = gizmoPos + rotatedPivot;
 
-        Vec3 newLocalPosition = Math::TransformPoint(inverseMatrix, newWorldPosition);
+        Vec3 newLocalPosition = Math::TransformPoint(inverseMatrix, newPosition);
         transform.SetLocalTranslation(newLocalPosition);
         objectState.EndTranslation = newLocalPosition;
       }
     }
-
-    Vec3 localAxis = Math::TransformNormal(inverseMatrix, selectedAxis).AttemptNormalized();
-
-    //Construct a local rotation
-    Quat localRotation;
-    Math::ToQuaternion(localAxis, moveOnAxis, &localRotation);
-
-    //Add the current rotation to the starting rotation
-    Quat newRotation = localRotation * objectState.StartRotation;
-
-    //Normalize to prevent rounding errors
-    newRotation.Normalize();
-
-    objectState.EndRotation = newRotation;
-
-    // Set the rotation
-    transform.SetLocalRotation(newRotation);
   }
 }
 

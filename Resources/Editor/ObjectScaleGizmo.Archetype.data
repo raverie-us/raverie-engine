@@ -17,6 +17,7 @@ Cog
 	ScaleGizmo 
 	{
     var Snapping = false
+		var SnapMode = GizmoSnapMode.Relative
 		var SnapDistance = 1
 	}
 	ObjectScaleGizmo 
