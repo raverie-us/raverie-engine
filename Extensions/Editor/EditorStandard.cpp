@@ -203,8 +203,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ParentingTool);
   ZilchInitializeType(ToolUiEvent);
   ZilchInitializeType(ToolControl);
-  ZilchInitializeType(TransformTool);
-  ZilchInitializeType(TranslateTool);
   ZilchInitializeType(ManipulatorTool);
   ZilchInitializeType(GizmoCreator);
   ZilchInitializeType(ObjectTransformTool);

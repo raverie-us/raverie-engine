@@ -1030,7 +1030,8 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     float a = Dot(side, worldMovement);
     float b = Dot(screenUp, worldMovement);
 
-      // Line from top-left to bottom-right, across view-plane, passing through grab-point.
+      // Line from top-left to bottom-right, across view-plane, passing through
+      // previous frame's mouse position on view-plane.
       //  - Drag movement in half-space to the left is scaling down
       //  - Drag movement in half-space to the right is scaling up
     mViewPlaneMove = -Dot(Vec2(a, b), Vec2(1, 1)) * distance;
