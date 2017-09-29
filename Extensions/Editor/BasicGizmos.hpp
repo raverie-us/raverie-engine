@@ -191,6 +191,7 @@ public:
 };
 
 //------------------------------------------------------------- Ring Gizmo Event
+/// Notification about various rotation parameters on the most recent RingGizmo modification.
 class RingGizmoEvent : public GizmoUpdateEvent
 {
 public:
