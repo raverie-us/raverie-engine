@@ -100,12 +100,15 @@ extern String NamedMouseDown[3];
 extern String NamedMouseUp[3];
 extern String NamedMouseClick[3];
 
+/// Basic event that can be "handled" to override default engine behavior.
 class HandleableEvent : public Event
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   HandleableEvent()
     :Handled(false){};
+  /// Set to true to signify that you have responded to this event, and that other
+  /// event responders should do nothing.
   bool Handled;
 };
 

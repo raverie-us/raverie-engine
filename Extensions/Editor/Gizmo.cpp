@@ -100,6 +100,8 @@ ZilchDefineType(Gizmo, builder, type)
   ZeroBindEvent(Events::MouseEnterGizmoHierarchy, GizmoEvent);
   ZeroBindEvent(Events::MouseExitGizmo, GizmoEvent);
   ZeroBindEvent(Events::MouseExitGizmoHierarchy, GizmoEvent);
+
+  ZeroBindDocumented();
 }
 
 //******************************************************************************

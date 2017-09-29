@@ -65,6 +65,8 @@ ZilchDefineType(FocusEvent, builder, type)
 
 ZilchDefineType(HandleableEvent, builder, type)
 {
+  ZilchBindFieldProperty(Handled);
+  ZeroBindDocumented();
 }
 
 ZilchDefineType(MouseDragEvent, builder, type)
