@@ -80,20 +80,39 @@ struct SsaoFragment
                                tangent.Y, bitangent.Y, viewNormal.Y,
                                tangent.Z, bitangent.Z, viewNormal.Z);
     
+    // Sample origin in ndc coordinates
+    var perspectiveFragPos = Math.Multiply(this.ViewToPerspective, Real4(viewPosition, 1.0));
+    var ndcFragPos = perspectiveFragPos.XY / perspectiveFragPos.W;
+    
     var occlusion = 0.0;
     
     for (var i = 0; i < 32; ++i)
     {
       var samplePos = Real4(viewPosition + Math.Multiply(kernalToView, this.Kernal[i]) * this.Radius, 1.0);
-      var sampleUv = Math.Multiply(this.ViewToPerspective, samplePos);
-      sampleUv.XY = (sampleUv.XY / sampleUv.W) * 0.5 + Real2(0.5);
+      var sampleDepth = -samplePos.Z;
+      samplePos = Math.Multiply(this.ViewToPerspective, samplePos);
+      var sampleUv = (samplePos.XY / samplePos.W);
+      
+      // Clamp sample offset to 1/8 in ndc space to prevent sampling the texture too far away, limiting cache problems
+      var ndcOffset = sampleUv - ndcFragPos;
+      var length = Math.Length(ndcOffset);
+      ndcOffset = Math.Normalize(ndcOffset);
+      length = Math.Min(length, 0.125);
+      ndcOffset *= length;
+      
+      // Reset uv with clamped offset
+      sampleUv = ndcFragPos + ndcOffset;
+      
+      // Convert to texture coordinates
+      sampleUv = sampleUv * 0.5 + Real2(0.5);
       sampleUv.Y = 1.0 - sampleUv.Y;
       
       // Assumes sample depths not on opaque geometry will be far plane value
       var comparisonDepth = GeometryPass.GetDepth(this.GeometryBuffer0.Sample(sampleUv.XY)) * this.FarPlane;
       
       // Check if sample is behind the depth value
-      var depthTest = Math.Step(comparisonDepth, -samplePos.Z);
+      var depthTest = Math.Step(comparisonDepth, sampleDepth);
+      
       // Check if depth value is too far back
       // If depth value is too far forward result will just be no occlusion (prevents bad artifacts at high view angles)
       var rangeTest = Math.Step(fragmentDepth - comparisonDepth, this.Radius);
@@ -109,5 +128,106 @@ struct SsaoFragment
     // Splatting result to rgb channels in case greyscale is desired
     // A single channel target can be used in the renderer for optimal memory usage
     this.Target0 = Real4(accessibility.XXX, 1.0);
+  }
+}
+
+// Upsample occlusion buffer using a guidance texture (the full resolution geometry buffer).
+// http://developer.amd.com/wordpress/media/2012/10/ShopfMixedResolutionRendering.pdf
+[Pixel][PostProcess]
+struct JointBilateralOcclusionUpsample
+{
+  [Static] var UvOffsets : FixedArray[Real2, 4] = FixedArray[Real2, 4]()
+  {
+    Real2(0.0, 0.0),
+    Real2(1.0, 0.0),
+    Real2(0.0, 1.0),
+    Real2(1.0, 1.0)
+  };
+  
+  [Static] var BilinearWeights : FixedArray[Real4, 4] = FixedArray[Real4, 4]()
+  {
+    Real4(9.0 / 16.0, 3.0 / 16.0, 3.0 / 16.0, 1.0 / 16.0),
+    Real4(3.0 / 16.0, 9.0 / 16.0, 1.0 / 16.0, 3.0 / 16.0),
+    Real4(3.0 / 16.0, 1.0 / 16.0, 9.0 / 16.0, 3.0 / 16.0),
+    Real4(1.0 / 16.0, 3.0 / 16.0, 3.0 / 16.0, 9.0 / 16.0)
+  };
+  
+  [StageInput] var Uv : Real2;
+  
+  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var HalfResGeometryBuffer0 : Sampler2d;
+  [Input] var InvRes : Real2;
+  [Input] var InvHalfRes : Real2;
+  [Input] var HalfRes : Real2;
+  
+  [Input] var OcclusionBuffer : Sampler2d;
+  
+  [Output] var Target0 : Real4;
+  
+  function Main()
+  {
+    // Comparison depth and normal from full resolution to determine low resolution sample weights
+    var refGeoSample = this.GeometryBuffer0.Sample(this.Uv);
+    var refNormal = GeometryPass.GetNormal(refGeoSample);
+    var refDepth = GeometryPass.GetDepth(refGeoSample);
+    
+    // Calculate uv of the nearest top left low res texel
+    var uvLow = this.Uv - this.InvRes;
+    uvLow = Math.Floor(uvLow * this.HalfRes) + Real2(0.5);
+    uvLow *= this.InvHalfRes;
+    
+    var occlusionValues = Real4();
+    var depths = Real4();
+    var normals = FixedArray[Real3, 4]();
+    
+    // Get values from low res textures
+    for (var i = 0; i < 4; ++i)
+    {
+      var uv = uvLow + this.InvHalfRes * JointBilateralOcclusionUpsample.UvOffsets[i];
+      occlusionValues[i] = this.OcclusionBuffer.Sample(uv).X;
+      var geoSample = this.HalfResGeometryBuffer0.Sample(uv);
+      depths[i] = GeometryPass.GetDepth(geoSample);
+      normals[i] = GeometryPass.GetNormal(geoSample);
+    }
+    
+    // Get low res pixel space coordinate of current pixel and adjacent bottom left pixel
+    var uv0 = Math.Floor(this.Uv * this.HalfRes);
+    var uv1 = Math.Floor((this.Uv + this.InvRes) * this.HalfRes);
+    
+    // Use pixel coordinates to determine if adjacent pixel straddles the low res pixel boundaries,
+    // index 0 is when the high res pixel is the bottom right quadrant of a low res pixel
+    var texelIndex = 0;
+    texelIndex += (uv0.X == uv1.X) as Integer;
+    texelIndex += (uv0.Y == uv1.Y) as Integer * 2;
+    var bilinearWeights = JointBilateralOcclusionUpsample.BilinearWeights[texelIndex];
+    
+    var output = 0.0;
+    var weightSum = 0.0;
+    
+    // Add the weighted samples of the four nearest low res samples
+    for (var i = 0; i < 4; ++i)
+    {
+      var occlusionValue = occlusionValues[i];
+      var bilinearWeight = bilinearWeights[i];
+      var depthWeight = 1.0 / (0.0001 + Math.Abs(refDepth - depths[i]));
+      var normalWeight = Math.Pow(Math.Max(Math.Dot(refNormal, normals[i]), 0.0), 32.0);
+      var weight = bilinearWeight * depthWeight * normalWeight;
+      
+      output += occlusionValue * weight;
+      weightSum += weight;
+    }
+    
+    // It's possible for no samples to be used at extreme viewing angles or distances, so fallback to just the average
+    if (weightSum > 0.0)
+    {
+      output /= weightSum;
+    }
+    else
+    {
+      output = occlusionValues[0] + occlusionValues[1] + occlusionValues[2] + occlusionValues[3];
+      output *= 0.25;
+    }
+    
+    this.Target0 = Real4(output, Real3(0.0));
   }
 }
