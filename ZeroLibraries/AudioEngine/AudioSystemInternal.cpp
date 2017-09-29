@@ -150,7 +150,9 @@ namespace Audio
     // Shut down audio output, input, and API
     AudioIO->ShutDownInput(status);
     AudioIO->ShutDownOutput(status);
-    AudioIO->ShutDownAPI(status);
+
+    // temporarily disabled for Port Audio
+    // AudioIO->ShutDownAPI(status);
 
     while (!TagsToDelete.Empty())
     {

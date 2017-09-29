@@ -353,6 +353,12 @@ namespace Audio
 
                                                    // Get the device info
     const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(OutputParameters->device);
+    if (!deviceInfo)
+    {
+      SetStatusAndLog(status, "Unable to get device parameters.");
+      ZPrint("Audio initialization unsuccessful\n");
+      return;
+    }
 
     OutputParameters->suggestedLatency = deviceInfo->defaultLowOutputLatency;
     OutputSampleRate = (unsigned)deviceInfo->defaultSampleRate;
