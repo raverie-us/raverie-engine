@@ -53,7 +53,7 @@ class ActionSpace;
 class TimeSpace;
 typedef InList<Action> InActionList;
 
-/// Base class for ActionGroup and ActionSet
+/// Base class for ActionGroup and ActionSequence. Stores a set of sub-actions.
 class ActionSet : public Action
 {
 public:
@@ -62,7 +62,7 @@ public:
   virtual bool IsEmpty() = 0;
 };
 
-/// Actions stored on a object
+/// The collection of actions queued up on an object.
 class Actions : public ActionSet
 {
 public:
@@ -90,8 +90,7 @@ private:
   bool mRealTime;
 };
 
-/// A action group is just a group of actions.
-/// Non blocking.
+/// A group of actions that run in parallel with each other.
 class ActionGroup : public ActionSet
 {
 public:
@@ -110,8 +109,7 @@ private:
   InActionList mActions;
 };
 
-/// An action Sequence performs action in Sequence.
-/// Blocking the next action.
+/// A group of actions that run in serial. The first child action will block the second from running and so on.
 class ActionSequence : public ActionSet
 {
 public:

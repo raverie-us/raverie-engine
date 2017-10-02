@@ -8,8 +8,11 @@
     <ZilchSource>$(ZeroSource)\ZeroLibraries\Zilch</ZilchSource>
     <ZILCH_SOURCE>$(ZilchSource)</ZILCH_SOURCE>
     <ZERO_OUTPUT>$(SolutionDir)\BuildOutput</ZERO_OUTPUT>
+    <LibrariesBuildPath>$(ZeroStandardLibrariesSource)\Build</LibrariesBuildPath>
+    <BuildsPath>$(LibrariesBuildPath)</BuildsPath>
   </PropertyGroup>
   <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(LibrariesBuildPath)\CoreConfiguration.props')" Project="$(LibrariesBuildPath)\CoreConfiguration.props" />
     <Import Condition="exists('LocalPaths.props')" Project="LocalPaths.props" />
   </ImportGroup>
 </Project>

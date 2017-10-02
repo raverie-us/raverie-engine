@@ -121,7 +121,7 @@ void ForceEffect::ApplyEffect(RigidBody* obj, real dt)
 
   // Apply the force as normal
   Vec3 force = mWorldForce;
-  obj->ApplyForce(force);
+  obj->ApplyForceNoWakeUp(force);
 }
 
 //-------------------------------------------------------------------GravityEffect
@@ -146,7 +146,7 @@ void GravityEffect::ApplyEffect(RigidBody* obj, real dt)
   // We're applying this as a constant acceleration, so convert the
   // force to an acceleration by dividing out the mass
   force = obj->mInvMass.ApplyInverted(force);
-  obj->ApplyForce(force);
+  obj->ApplyForceNoWakeUp(force);
 }
 
 void GravityEffect::ApplyEffect(SpringSystem* obj, real dt)

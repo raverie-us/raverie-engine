@@ -24,7 +24,7 @@ struct TransformUpdateInfo;
 // Type define for a range
 typedef ConditionalRange<HierarchyRange, NameCondition> HierarchyNameRange;
 
-DeclareBitField11(CogFlags,
+DeclareBitField12(CogFlags,
                   // Object cannot be destroyed be the user
                   Protected,
                   // Object will not be destroy on level change or clear
@@ -43,10 +43,12 @@ DeclareBitField11(CogFlags,
                   ObjectViewHidden,
                   // Not able to be modified or selected in the viewport
                   Locked,
-                  // Cannot add or remove components
-                  ComponentsLocked,
+                  // Cannot add or remove non-native Components
+                  ScriptComponentsLocked,
                   // Can only be selected by SelectionIcon
-                  SelectionLimited);
+                  SelectionLimited,
+                  // Is the Cog representing the Archetype definition (data file)?
+                  ArchetypeDefinitionMode);
 
 //----------------------------------------------------------------------------------------- Base Cog
 /// Base class used for the intrusive link.
@@ -216,15 +218,15 @@ public:
   uint GetChildCount();
 
   /// Attach to a parent object.
-  void AttachToPreserveLocal(Cog* parent);
-  /// Attach to a parent object and compute the new transfo;rm so that the objects are relative
-  void AttachTo(Cog* parent);
+  bool AttachToPreserveLocal(Cog* parent);
+  /// Attach to a parent object and compute the new transform so that the objects are relative
+  bool AttachTo(Cog* parent);
   /// Detach from a parent object.
   void DetachPreserveLocal();
   /// Detach from a parent object and compute the new transform so that the objects are relative
   void Detach();
 
-  /// Find a child object with the given name
+  /// Depth first search of all children.
   Cog* FindChildByName(StringParam name);
   /// Returns a range of all children with the given name.
   HierarchyNameRange FindAllChildrenByName(StringParam name);
@@ -267,6 +269,7 @@ public:
   /// Returns the list of all of our parents children. If we don't have a parent, it will return
   /// the list of all objects in the Space.
   HierarchyList* GetParentHierarchyList();
+  void AssignChildIds();
 
   /// The parent of this Cog in a Hierarchy.
   Cog* mHierarchyParent;
@@ -322,6 +325,9 @@ public:
   /// Dispatches an event down the tree on all children recursively (pre-order traversal)
   void DispatchDown(StringParam eventId, Event* event);
 
+  /// Check if anyone has signed up for a particular event.
+  bool HasReceivers(StringParam eventId);
+
   //----- Internals
   EventDispatcher* GetDispatcherObject();
   EventReceiver* GetReceiverObject();
@@ -364,6 +370,9 @@ public:
   /// Not able to be modified or selected in the viewport.
   bool GetLocked();
   void SetLocked(bool state);
+  /// Is the Cog representing the Archetype definition (data file)?
+  bool InArchetypeDefinitionMode();
+  void SetArchetypeDefinitionMode();
 
   /// When the object is moved, this should be called to inform all Components that it has moved.
   /// It also sends an event.

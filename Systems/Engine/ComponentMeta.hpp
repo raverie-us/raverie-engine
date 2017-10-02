@@ -33,7 +33,7 @@ public:
 
   // Used to restore the space modified state when any operations are done to the Component.
   Any GetUndoData(HandleParam object) override;
-  void ObjectModified(HandleParam object) override;
+  void ObjectModified(HandleParam object, bool intermediateChange) override;
   void RestoreUndoData(HandleParam object, AnyParam undoData) override;
   ObjectRestoreState* GetRestoreState(HandleParam object) override;
 };

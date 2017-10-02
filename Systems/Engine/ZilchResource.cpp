@@ -278,7 +278,7 @@ void ZilchDocumentResource::ValidateScriptName(Status& status, StringParam name)
   // Make sure the user used a valid Zilch type name
   if(LibraryBuilder::CheckUpperIdentifier(name) == false)
   {
-    status.SetFailed("Zilch type names must start with an uppercase letter");
+    status.SetFailed("Zilch type names must start with an uppercase letter and not contain invalid symbols");
     return;
   }
 }

@@ -616,6 +616,7 @@ void CollisionTableEditor::OnPropertyChanged(PropertyEvent* propEvent)
   // The property grid was modified, refresh the matrix and
   // make sure we mark the resource as modified
   RefreshMatrix();
+  MarkModified();
 }
 
 void CollisionTableEditor::RefreshAll()

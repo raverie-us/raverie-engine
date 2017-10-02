@@ -213,6 +213,7 @@ public:
   static RT* GetFallback(){return (RT*)Instance->GetFallbackResource();}                                                    \
   static RT* Find(ResourceId resourceId){return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ErrorFallback);}   \
   static RT* Find(StringParam nameId){return (RT*)Instance->GetResource(nameId, ResourceNotFound::ErrorFallback);}            \
+  static RT* FindOrNull(ResourceId resourceId){return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ReturnNull);}  \
   static RT* FindOrNull(StringParam nameId){return (RT*)Instance->GetResource(nameId, ResourceNotFound::ReturnNull);}         \
   static RT* CreateNewResource(StringParam name){return (RT*)Instance->CreateNewResourceInternal(name);}                    \
   private:                                                                                                                  \

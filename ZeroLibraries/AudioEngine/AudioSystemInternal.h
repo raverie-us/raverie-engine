@@ -82,6 +82,7 @@ namespace Audio
   {
   public:
     AudioSystemInternal(ExternalSystemInterface* extInterface);
+    ~AudioSystemInternal();
 
     // Sets up variables, initializes audio output, starts mix thread.
     void StartSystem(Zero::Status &status);
@@ -94,22 +95,10 @@ namespace Audio
     void AddTask(Zero::Functor* function);
     // Adds a task from the mix thread for the main thread to handle
     void AddTaskThreaded(Zero::Functor* function);
-    // Stops a current task block from the main thread
-    void StopTaskBlock();
-    // Loop to execute decoding tasks
-    void DecodeLoopThreaded();
     // Adds a new decoding task to the list
     void AddDecodingTask(Zero::Functor* function);
-    // Adds a new node to the threaded or non-threaded list
-    bool AddSoundNode(SoundNode* node, const bool threaded);
-    // Removes a node from the threaded or non-threaded list
-    void RemoveSoundNode(SoundNode* node, const bool threaded);
-    // Returns a pointer to an available interpolator object
-    InterpolatingObject* GetInterpolatorThreaded();
-    // Releases an interpolator object that was in use
-    void ReleaseInterpolatorThreaded(InterpolatingObject* object);
-    // Sets the threaded variable for the minimum volume threshold.
-    void SetMinVolumeThresholdThreaded(const float volume);
+    // Loop to execute decoding tasks
+    void DecodeLoopThreaded();
     // Adds a tag to the system
     void AddTag(TagObject* tag, bool threaded);
     // Removes a tag from the system
@@ -120,9 +109,19 @@ namespace Audio
     void AddAsset(SoundAssetNode* asset);
     // Removes a non-threaded sound asset from the system
     void RemoveAsset(SoundAssetNode* asset);
-
+    // Adds a new node to the threaded or non-threaded list
+    bool AddSoundNode(SoundNode* node, const bool threaded);
+    // Removes a node from the threaded or non-threaded list
+    void RemoveSoundNode(SoundNode* node, const bool threaded);
+    // Returns a pointer to an available interpolator object
+    InterpolatingObject* GetInterpolatorThreaded();
+    // Releases an interpolator object that was in use
+    void ReleaseInterpolatorThreaded(InterpolatingObject* object);
+    // Sets the threaded variable for the minimum volume threshold.
+    void SetMinVolumeThresholdThreaded(const float volume);
+    // Resets the IO and updates resampling values if necessary
     void ResetIO();
-
+    
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
     // Size of the system mix buffer.
@@ -141,11 +140,15 @@ namespace Audio
     ExternalSystemInterface* ExternalInterface;
     // If a SoundInstance is below this threshold it will keep its place but not process any audio.
     float MinimumVolumeThresholdThreaded;
-
+    // Audio input data for the current mix, matching the current output sample rate and channels
+    Zero::Array<float> InputBuffer;
+    // If true, will send microphone input data to external system
+    bool SendMicrophoneInputData;
+    // The sample rate used by the audio engine for the output mix
     static const unsigned SampleRate = 48000;
     
     AudioChannelsManager ChannelsManager;
-    AudioInputOutput AudioIO;
+    AudioInputOutput* AudioIO;
     
   private:
     typedef Zero::Array<TagObject*> TagsToDeleteListType;
@@ -215,16 +218,16 @@ namespace Audio
     float PreviousPeakVolumeThreaded;
     // The RMS volume from the last mix, used to check whether to create a task
     unsigned PreviousRMSVolumeThreaded;
-    // Stores the last frame of samples from the previous mix
-    AudioFrame PreviousFrame;
-    // The resample index including fractional value
-    double ResampleFrameIndex;
     // If true the output is being resampled to match the sample rate of the device
     bool Resampling;
-    // The factor to use when resampling
-    double ResampleFactor;
-    // Used to adjust buffer sizes
-    double ResampleBufferFraction;
+    // Resampler object used to resample mixed output
+    Resampler OutputResampling;
+    // Encoder to use for compressed microphone input
+    PacketEncoder Encoder;
+    // Queue for passing microphone input between threads
+    LockFreeQueue<Zero::Array<float>*> InputDataQueue;
+    // Resampler object used to resample microphone input
+    Resampler InputResampling;
 
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();
@@ -242,6 +245,8 @@ namespace Audio
     void SetUseHighLatency(const bool useHighLatency);
     // Checks for resampling and resets variables if applicable
     void CheckForResampling();
+    // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
+    void GetAudioInputDataThreaded();
 
     class NodeInterface : public ExternalNodeInterface
     {

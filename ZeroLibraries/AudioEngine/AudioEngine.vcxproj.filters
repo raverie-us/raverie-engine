@@ -75,9 +75,6 @@
     <ClCompile Include="FilterNodes.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
-    <ClCompile Include="InputNode.cpp">
-      <Filter>Source Files\Nodes</Filter>
-    </ClCompile>
     <ClCompile Include="AudioInputOutput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -121,6 +118,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileDecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomDataNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="MicrophoneInputNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="WASAPI.cpp">
+      <Filter>Source Files\PlatformSpecific</Filter>
+    </ClCompile>
+    <ClCompile Include="Resampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -181,9 +190,6 @@
     </ClInclude>
     <ClInclude Include="Definitions.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputNode.h">
-      <Filter>Source Files\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="AudioInputOutput.h">
       <Filter>Source Files</Filter>
@@ -246,6 +252,15 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="FileDecoder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomDataNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="MicrophoneInputNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Resampler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

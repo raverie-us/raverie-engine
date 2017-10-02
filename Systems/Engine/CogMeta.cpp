@@ -42,16 +42,19 @@ Any CogMetaOperations::GetUndoData(HandleParam object)
   Cog* cog = object.Get<Cog*>();
   ReturnIf(cog == nullptr, Any(), "Invalid Cog given.");
 
+  // This could be a component on the game session, so we can't assume it has a Space
   if (Space* space = cog->GetSpace())
+  {
     return true; // Temporary until we fix issues with how this works
     //return space->GetModified();
+  }
 
   // Doesn't matter what we return because we won't do anything with it when we get it back
   return nullptr;
 }
 
 //**************************************************************************************************
-void CogMetaOperations::ObjectModified(HandleParam object)
+void CogMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 {
   Cog* cog = object.Get<Cog*>(GetOptions::AssertOnNull);
   if (Space* space = cog->GetSpace())
@@ -59,18 +62,36 @@ void CogMetaOperations::ObjectModified(HandleParam object)
     space->MarkModified();
     space->ChangedObjects();
   }
-  MetaOperations::ObjectModified(object);
+
+  if(!intermediateChange)
+  {
+    Cog* root = cog->FindRootArchetype();
+    if (root && root->InArchetypeDefinitionMode())
+    {
+      if (!Archetype::sRebuilding)
+      {
+        root->UploadToArchetype();
+        ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype());
+      }
+    }
+  }
+
+  MetaOperations::ObjectModified(object, intermediateChange);
 }
 
 //**************************************************************************************************
 void CogMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoData)
 {
   Cog* cog = object.Get<Cog*>(GetOptions::AssertOnNull);
+
+  // This could be a component on the game session, so we can't assume it has a Space
   if (Space* space = cog->GetSpace())
   {
     bool wasSpaceModified = undoData.Get<bool>();
     if (wasSpaceModified == false)
       space->MarkNotModified();
+    else
+      space->MarkModified();
   }
 }
 
@@ -136,12 +157,43 @@ bool CogMetaDataInheritance::CanPropertyBeReverted(HandleParam, PropertyPathPara
 //**************************************************************************************************
 void CogMetaDataInheritance::RevertProperty(HandleParam instance, PropertyPathParam propertyPath)
 {
-  Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
-
   MetaDataInheritance::RevertProperty(instance, propertyPath);
 
-  if (Cog* rootArchetype = cog->FindNearestArchetypeContext())
-    ArchetypeRebuilder::RebuildCog(rootArchetype);
+  Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
+  if (Cog* root = cog->FindRootArchetype())
+  {
+    if (root->InArchetypeDefinitionMode())
+    {
+      root->UploadToArchetype();
+      ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype());
+    }
+    else
+    {
+      Cog* rootArchetype = cog->FindNearestArchetypeContext();
+      ArchetypeRebuilder::RebuildCog(rootArchetype);
+    }
+  }
+}
+
+//**************************************************************************************************
+void CogMetaDataInheritance::RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId)
+{
+  MetaDataInheritance::RestoreRemovedChild(parent, childId);
+
+  Cog* cog = parent.Get<Cog*>(GetOptions::AssertOnNull);
+  if (Cog* root = cog->FindRootArchetype())
+  {
+    if (root->InArchetypeDefinitionMode())
+    {
+      root->UploadToArchetype();
+      ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype());
+    }
+    else
+    {
+      Cog* rootArchetype = cog->FindNearestArchetypeContext();
+      ArchetypeRebuilder::RebuildCog(rootArchetype);
+    }
+  }
 }
 
 //**************************************************************************************************
@@ -274,6 +326,21 @@ void CogMetaSerialization::AddCustomAttributes(HandleParam object, TextSaver* sa
       saver->SaveAttribute(sContextId, ToString(linkId));
     }
   }
+}
+
+
+//**************************************************************************************************
+ZilchDefineType(CogArchetypePropertyFilter, builder, type)
+{
+}
+
+//**************************************************************************************************
+bool CogArchetypePropertyFilter::Filter(Member* prop, HandleParam instance)
+{
+  Cog* cog = instance.Get<Cog*>();
+  if (cog->InArchetypeDefinitionMode())
+    return false;
+  return true;
 }
 
 }//namespace Zero

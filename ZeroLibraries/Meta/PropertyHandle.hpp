@@ -20,7 +20,7 @@ DeclareEnum3(PropertyPathType, Component, Property, Index);
 // PropertyPath always assumed that a PropertyPathType::Property is at
 // the end of the path. This is not the case for some arrays. In the case
 // of Array<float>, PropertyPathType::Index will be at the end. This works for now
-// because all of our arrays require having a class/struct in them.
+// because all of our arrays require having a class/struct in them (in the property grid).
 
 /// We used to reference properties with a MetaProperty and a handle to the
 /// object instance. The problem that came up was with properties that have

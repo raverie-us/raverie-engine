@@ -8,9 +8,9 @@
 
 namespace Zero
 {
-namespace Z
+namespace Events
 {
-  bool gEnableOsWindowProcedure = true;
+DefineEvent(OsShellUpdate);
 }
 
 //-------------------------------------------------------------------OsShell
@@ -25,6 +25,11 @@ ZilchDefineType(OsShell, builder, type)
   ZilchBindMethod(GetWindow);
 
   ZilchBindMethod(DumpMemoryDebuggerStats);
+}
+
+OsShell::OsShell() :
+  mOsShellHook(nullptr)
+{
 }
 
 void OsShell::DumpMemoryDebuggerStats()

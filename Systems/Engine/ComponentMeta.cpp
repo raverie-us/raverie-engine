@@ -42,8 +42,20 @@ void ComponentMetaDataInheritance::RevertProperty(HandleParam object, PropertyPa
 
   Component* component = object.Get<Component*>();
   Cog* owner = component->GetOwner();
-  if (Cog* rootArchetype = owner->FindRootArchetype())
-    ArchetypeRebuilder::RebuildCog(rootArchetype);
+  if (Cog* root = owner->FindRootArchetype())
+  {
+    if(root->InArchetypeDefinitionMode())
+    {
+      root->UploadToArchetype();
+      ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype());
+    }
+    else
+    {
+      // We only need to rebuild the nearest context, not the actual root
+      Cog* rootContext = owner->FindNearestArchetypeContext();
+      ArchetypeRebuilder::RebuildCog(rootContext);
+    }
+  }
 }
 
 //**************************************************************************************************
@@ -86,20 +98,12 @@ Any ComponentMetaOperations::GetUndoData(HandleParam object)
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, Any(), "Invalid Component given.");
 
-  // This could be a component on the game session
-  if (Space* space = component->GetSpace())
-  {
-    bool isModified = space->GetModified();
-    //return isModified;
-    return true; // Temporary until we fix issues with how this works
-  }
-
-  // Doesn't matter what we return because we won't do anything with it when we get it back
-  return nullptr;
+  MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
+  return cogOperations->GetUndoData(component->GetOwner());
 }
 
 //**************************************************************************************************
-void ComponentMetaOperations::ObjectModified(HandleParam object)
+void ComponentMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 {
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, , "Invalid Component given");
@@ -110,7 +114,21 @@ void ComponentMetaOperations::ObjectModified(HandleParam object)
     space->MarkModified();
     space->ChangedObjects();
   }
-  MetaOperations::ObjectModified(object);
+
+  if (!intermediateChange)
+  {
+    Cog* root = component->GetOwner()->FindRootArchetype();
+    if (root&& root->InArchetypeDefinitionMode())
+    {
+      if (!Archetype::sRebuilding)
+      {
+        root->UploadToArchetype();
+        ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype(), root);
+      }
+    }
+  }
+
+  MetaOperations::ObjectModified(object, intermediateChange);
 }
 
 //**************************************************************************************************
@@ -119,24 +137,18 @@ void ComponentMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoD
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, , "Invalid Component given.");
 
-  // This could be a component on the game session
-  if (Space* space = component->GetSpace())
-  {
-    bool wasSpaceModified = undoData.Get<bool>();
-    if (wasSpaceModified)
-      space->MarkModified();
-    else
-      space->MarkNotModified();
-  }
+  MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
+  cogOperations->RestoreUndoData(component->GetOwner(), undoData);
 }
 
 //**************************************************************************************************
 ObjectRestoreState* ComponentMetaOperations::GetRestoreState(HandleParam object)
 {
   Component* component = object.Get<Component*>();
-  Cog* cog = component->GetOwner();
+  ReturnIf(component == nullptr, nullptr, "Invalid Component given.");
+
   MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
-  return cogOperations->GetRestoreState(cog);
+  return cogOperations->GetRestoreState(component->GetOwner());
 }
 
 }//namespace Zero

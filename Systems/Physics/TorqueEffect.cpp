@@ -70,7 +70,7 @@ void TorqueEffect::ApplyEffect(RigidBody* obj, real dt)
     return;
 
   Vec3 torque = mWorldTorqueAxis * mTorqueStrength;
-  obj->ApplyTorque(torque);
+  obj->ApplyTorqueNoWakeUp(torque);
 }
 
 bool TorqueEffect::GetLocalTorque() const

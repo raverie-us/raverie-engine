@@ -258,7 +258,7 @@ void CachedProject::Save(bool overwriteRevisionNumber)
 
   // Save out the entire tree
   mLoader.Reset();
-  mLoader.GetCurrent()->SaveToStream(saver);
+  mLoader.GetNext()->SaveToStream(saver);
   saver.Close();
 }
 
@@ -296,7 +296,7 @@ DataNode* CachedProject::GetComponentPropertyNode(StringParam componentType, Str
 {
   // Reset to tree otherwise the root won't be correct
   mLoader.Reset();
-  DataNode* root = mLoader.GetCurrent();
+  DataNode* root = mLoader.GetNext();
 
   // Find the component node
   bool dummy;
@@ -334,7 +334,7 @@ void CachedProject::AddOrReplaceDataNodeComponent(Component* component)
   // the component and then creating a data set from it.
 
   mLoader.Reset();
-  DataNode* root = mLoader.GetCurrent();
+  DataNode* root = mLoader.GetNext();
 
   // Remove an old node by the same name if it exists
   bool foundDuplicate;
@@ -352,10 +352,8 @@ void CachedProject::AddOrReplaceDataNodeComponent(Component* component)
   // Extract the text as a data block and then read that block into a data node
   DataBlock dataBlock = saver.ExtractAsDataBlock();
   uint fileVersion;
-  DataNode* set = ReadDataSet(status, String((char*)dataBlock.Data, dataBlock.Size),
-                              String(), &mLoader, &fileVersion);
-  // Add this node into the tree
-  set->AttachTo(root);
+  ReadDataSet(status, String((char*)dataBlock.Data, dataBlock.Size),
+              String(), &mLoader, &fileVersion, root);
 }
 
 String CachedProject::GetProjectPropertyValue(StringParam propertyName)
@@ -464,6 +462,7 @@ CachedProject* ProjectCache::CreateProjectFromTemplate(StringParam projectName, 
   }
   cachedProject->SetBuildId(buildId);
   cachedProject->SetProjectPropertyValue("ProjectName", projectName);
+  cachedProject->SetProjectPropertyValue("Guid", ToString(GenerateUniqueId64()));
   mProjectMap[newProjectFilePath] = cachedProject;
 
   // Add the tag info to the project (for legacy tags)

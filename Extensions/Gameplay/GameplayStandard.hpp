@@ -37,8 +37,10 @@ public:
 #include "Physics/PhysicsStandard.hpp"
 #include "Graphics/GraphicsStandard.hpp"
 #include "Widget/WidgetStandard.hpp"
+#include "Sound/SoundStandard.hpp"
 
 // Gameplay Includes
+#include "UnitTestSystem.hpp"
 #include "Orientation.hpp"
 
 #include "Reactive.hpp"

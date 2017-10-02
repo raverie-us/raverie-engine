@@ -182,6 +182,8 @@ namespace Zilch
       return (mCurrentComposition == nullptr);
     }
 
+    ComponentRange& All() { return *this; }
+
   private:
     // Finds the next composition that has the component we're looking for
     void FindNextValid()

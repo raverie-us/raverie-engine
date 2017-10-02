@@ -134,7 +134,7 @@ void Glsl13FixedArrayInitializerResolver(ZilchShaderTranslator* translator, Zilc
   // Report an error if the number of statements in the initializer list is not equal to the fixed array's size
   if(statementCount != fixedSize)
   {
-    String errMsg = String::Format("Array initializer was only given %d items and it must have %d.", statementCount, fixedSize);
+    String errMsg = String::Format("Array initializer was given %d items and it expected %d.", statementCount, fixedSize);
     translator->SendTranslationError(initializerNode->Location, errMsg);
     return;
   }

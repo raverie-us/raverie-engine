@@ -161,7 +161,7 @@ void VortexEffect::ApplyEffect(RigidBody* obj, real dt)
   Vec3 inwardForce = projToBody * inwardStrength;
   Vec3 sideForce = forceAxis * forceStrength;
   Vec3 totalForce = sideForce - inwardForce;
-  obj->ApplyForce(totalForce);
+  obj->ApplyForceNoWakeUp(totalForce);
 }
 
 void VortexEffect::ComputeVortexInformation()

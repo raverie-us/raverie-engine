@@ -27,7 +27,7 @@ public:
 
   // Used to restore the space modified state when any operations are done to the Cog.
   Any GetUndoData(HandleParam object) override;
-  void ObjectModified(HandleParam object) override;
+  void ObjectModified(HandleParam object, bool intermediateChange) override;
   void RestoreUndoData(HandleParam object, AnyParam undoData) override;
   ObjectRestoreState* GetRestoreState(HandleParam object) override;
 };
@@ -48,6 +48,7 @@ public:
   void Revert(HandleParam object) override;
   bool CanPropertyBeReverted(HandleParam object, PropertyPathParam propertyPath) override;
   void RevertProperty(HandleParam object, PropertyPathParam propertyPath) override;
+  void RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId) override;
   void SetPropertyModified(HandleParam object, PropertyPathParam propertyPath, bool state) override;
   void RebuildObject(HandleParam object) override;
 };
@@ -96,6 +97,14 @@ public:
   /// will be set to false, and context id's won't be assigned. This means that CogPaths must
   /// have a unique path within an Archetype.
   static bool sSaveContextIds;
+};
+
+class CogArchetypePropertyFilter : public MetaPropertyFilter
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  bool Filter(Member* prop, HandleParam instance) override;
 };
 
 }//namespace Zero

@@ -52,7 +52,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <DelayLoadDLLs>dbghelp.dll;</DelayLoadDLLs>
-      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;zlib.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;zlib.lib;libcurl.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>

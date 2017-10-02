@@ -14,6 +14,7 @@ extern const String cBackground;
 extern const String cWhiteSquare;
 extern const String cWhiteSquareBorder;
 extern const String cWhiteSquareWithBorder;
+extern const String cCursor;
 extern const String cText;
 extern const String cTitleText;
 extern const String cBackgroundFocus;

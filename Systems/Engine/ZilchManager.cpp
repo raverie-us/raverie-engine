@@ -91,6 +91,9 @@ void ZilchManager::InternalCompile()
   // Scripts were successfully compiled
   ZilchCompileEvent compileEvent(mPendingLibraries);
 
+  // If Events::ScriptsCompiledPrePatch is dispatched, we MUST dispatch the PostPatch event
+  // after. There cannot be a return in between them. This is due to how we re-initialize Cogs
+  // and rebuild Archetype's (see Archetype::sRebuilding)
   this->DispatchEvent(Events::ScriptsCompiledPrePatch, &compileEvent);
   // Library commits must happen after all systems have handle PrePatch
   this->DispatchEvent(Events::ScriptsCompiledCommit, &compileEvent);

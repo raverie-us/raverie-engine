@@ -12,10 +12,24 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(NeedMoreSamples);
+  DeclareEvent(CustomAudioNodeSamplesNeeded);
   DeclareEvent(AudioInterpolationDone);
   DeclareEvent(SoundNodeDisconnected);
 }
+
+//-------------------------------------------------------------------------- Custom Audio Node Event
+
+class CustomAudioNodeEvent : public Event 
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  CustomAudioNodeEvent(unsigned samples) :
+    SamplesNeeded(samples)
+  {}
+
+  unsigned SamplesNeeded;
+};
 
 //--------------------------------------------------------------------------------------- Sound Node
 
@@ -83,27 +97,20 @@ class SoundBuffer : public ReferenceCountedObject
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  SoundBuffer() : mSampleRate(48000), mChannels(1) {}
-
   /// Adds a new audio sample to the end of the buffer.
   void AddSampleToBuffer(float sample);
-  /// The sample rate of the audio in the buffer.
-  int GetSampleRate();
-  void SetSampleRate(int sampleRate);
-  /// The number of audio channels in the buffer.
-  int GetChannels();
-  void SetChannels(int numChannels);
   /// The number of samples currently in the buffer.
   int GetSampleCount();
   /// Returns the sample at a specific index from the beginning of the buffer.
   float GetSampleAtIndex(int index);
   /// Removes all data from the buffer and resets it.
   void Reset();
+  /// Takes the AudioData from a MicrophoneUncompressedFloatData event and adds all of 
+  /// the audio samples to the buffer
+  void AddMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData);
 
 private:
   Zero::Array<float> mBuffer;
-  int mSampleRate;
-  int mChannels;
 
   friend class CustomAudioNode;
 };
@@ -130,9 +137,18 @@ public:
   void SendBuffer(SoundBuffer* buffer);
   /// Sends a partial buffer of audio samples to the audio system for output.
   void SendPartialBuffer(SoundBuffer* buffer, int startAtIndex, int howManySamples);
+  /// Takes the AudioData from a MicrophoneUncompressedFloatData event and sends all of 
+  /// the audio samples to the audio engine for output
+  void SendMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData);
+  /// Takes the AudioData from a MicrophoneCompressedByteData event, decompresses the data,
+  /// and sends all of the audio samples to the audio engine for output
+  void SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData);
 
 private:
   void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendToAudioEngine(float* samples, unsigned howManySamples);
+
+  Audio::AudioStreamDecoder* AudioDecoder;
 
   friend class SoundSpace;
 };
@@ -678,6 +694,17 @@ public:
   /// The percentage of the input which should have the modulation applied to it.
   float GetWetPercent();
   void SetWetPercent(float percent);
+};
+
+//---------------------------------------------------------------------------- Microphone Input Node
+
+/// Receives input from a microphone and passes the audio data to its output SoundNodes
+class MicrophoneInputNode : public SoundNode
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  MicrophoneInputNode();
 };
 
 }

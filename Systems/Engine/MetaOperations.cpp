@@ -84,7 +84,7 @@ void QueueRemoveComponent(OperationQueue* queue, HandleParam object,
                                      componentMeta, ComponentOperation::Remove,
                                      componentData, componentIndex);
   queue->Queue(op);
-  op->ComponentRemoved();
+  op->ComponentRemoved(object);
 }
 
 //******************************************************************************
@@ -113,7 +113,7 @@ void QueueAddComponent(OperationQueue* queue, HandleParam object,
   AddRemoveComponentOperation* op = new AddRemoveComponentOperation(object, 
                                        component.StoredType, ComponentOperation::Add);
   queue->Queue(op);
-  op->ComponentAdded();
+  op->ComponentAdded(object);
 }
 
 //******************************************************************************
@@ -147,6 +147,8 @@ void RevertProperty(OperationQueue* queue, HandleParam object,
 void RestoreLocallyRemovedChild(OperationQueue* queue, HandleParam parent,
                                 ObjectState::ChildId& childId)
 {
+  ReturnIf(parent.StoredType == nullptr,, "We should always be given a valid parent handle");
+
   // First check dependencies before re-adding the child (e.g. if Transform and Model were
   // both locally removed, we cannot restore Model until Transform has been restored)
   if(BoundType* childType = MetaDatabase::FindType(childId.mTypeName))
@@ -189,6 +191,8 @@ void MetaOperation::Undo()
 {
   Handle object = GetUndoObject();
 
+  ReturnIf(object.IsNull(), , "Cannot undo operation");
+
   if(MetaOperations* metaOp = object.StoredType->HasInherited<MetaOperations>())
     metaOp->RestoreUndoData(object, mUndoClientData);
 }
@@ -199,7 +203,7 @@ void MetaOperation::Redo()
   Handle object = GetUndoObject();
 
   if (MetaOperations* metaOp = object.StoredType->HasInherited<MetaOperations>())
-    metaOp->ObjectModified(object);
+    metaOp->ObjectModified(object, false);
 }
 
 //******************************************************************************
@@ -272,12 +276,12 @@ void PropertyOperation::Redo()
   if(!succeeded)
     return;
 
-  // Notify Meta that the property has changed
-  MetaOperations::NotifyPropertyModified(instance, mPropertyPath, mValueBefore, mValueAfter, false);
-
   // Mark the property as modified
   LocalModifications* modifications = LocalModifications::GetInstance();
   modifications->SetPropertyModified(instance, mPropertyPath, true);
+
+  // Notify Meta that the property has changed
+  MetaOperations::NotifyPropertyModified(instance, mPropertyPath, mValueBefore, mValueAfter, false);
 }
 
 //******************************************************************************
@@ -505,20 +509,14 @@ void AddRemoveComponentOperation::SaveComponentToBuffer()
 //******************************************************************************
 void AddRemoveComponentOperation::ComponentAdded(HandleParam object)
 {
-  Handle instance = object;
-  if(instance.IsNull())
-  {
-    // Attempt to grab the object from the undo map
-    instance = MetaOperation::GetUndoObject();
-    ReturnIf(instance == NULL, , "Invalid undo object handle.");
-  }
+  ReturnIf(object.IsNull( ), , "Invalid undo object handle.");
 
   LocalModifications* modifications = LocalModifications::GetInstance();
 
   // If the component ever has a unique child id, this will not work. Should
   // be fixed later
   ObjectState::ChildId childId(mComponentType->Name);
-  modifications->ChildAdded(instance, childId);
+  modifications->ChildAdded(object, childId);
 
   MetaOperations::NotifyComponentsModified(object);
 }
@@ -526,19 +524,13 @@ void AddRemoveComponentOperation::ComponentAdded(HandleParam object)
 //******************************************************************************
 void AddRemoveComponentOperation::ComponentRemoved(HandleParam object)
 {
-  Handle instance = object;
-  if(instance.IsNull())
-  {
-    // Attempt to grab the object from the undo map
-    instance = MetaOperation::GetUndoObject();
-    ReturnIf(instance.IsNull(), , "Invalid undo object handle.");
-  }
+  ReturnIf(object.IsNull( ), , "Invalid undo object handle.");
 
   LocalModifications* modifications = LocalModifications::GetInstance();
   // If the component ever has a unique child id, this will not work. Should
   // be fixed later
   ObjectState::ChildId childId(mComponentType->Name);
-  modifications->ChildRemoved(instance, childId);
+  modifications->ChildRemoved(object, childId);
 
   MetaOperations::NotifyComponentsModified(object);
 }
@@ -734,10 +726,10 @@ void RestoreChildOperation::Redo()
 
   if(!parent.IsNull())
   {
-    LocalModifications::GetInstance()->ChildAdded(parent, mChildId);
 
-    // Rebuild the object to reflect the changes
-    mInheritance->RebuildObject(parent);
+    BoundType* parentType = parent.StoredType;
+    if (MetaDataInheritance* inheritance = parentType->HasInherited<MetaDataInheritance>())
+      inheritance->RestoreRemovedChild(parent, mChildId);
   }
 
   MetaOperation::Redo();

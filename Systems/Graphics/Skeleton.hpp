@@ -23,6 +23,7 @@ public:
   Skeleton* Front();
   void PopFront();
   bool Empty();
+  ParentSkeletonRange& All() { return *this; }
 
   Cog* mParent;
   Skeleton* mSkeleton;

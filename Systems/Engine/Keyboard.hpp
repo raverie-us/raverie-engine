@@ -221,7 +221,7 @@ public:
   /// Is Space pressed with this key?
   bool SpacePressed;
 
-  /// Is they key handled
+  /// Is the key handled
   bool Handled;
 
   /// Not for use in native code:
@@ -246,6 +246,8 @@ public:
 
   KeyboardTextEvent(uint runeCode)
     : mRune(runeCode), mHandled(false) {};
+
+  void Serialize(Serializer& stream);
 
   Rune mRune;
   bool mHandled;

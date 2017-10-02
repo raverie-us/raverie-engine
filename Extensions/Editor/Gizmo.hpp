@@ -36,6 +36,7 @@ namespace Events
 }
 
 //------------------------------------------------------------------ Gizmo Event
+/// Event sent on a Gizmo when it has been modified by the user.
 class GizmoEvent : public Event
 {
 public:

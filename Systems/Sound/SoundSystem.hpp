@@ -23,6 +23,8 @@ namespace Events
   DeclareEvent(MIDIModWheel);
   DeclareEvent(MIDIOtherControl);
   DeclareEvent(SoundInstancePlayed);
+  DeclareEvent(MicrophoneUncompressedFloatData);
+  DeclareEvent(MicrophoneCompressedByteData);
 }
 
 //-------------------------------------------------------------------------------------- Sound Event
@@ -62,6 +64,43 @@ public:
   float Value;
 };
 
+//--------------------------------------------------------------------------- Audio Float Data Event
+
+class AudioFloatDataEvent : public Event
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  HandleOf<ArrayClass<float>> AudioData;
+  unsigned Channels;
+};
+
+//---------------------------------------------------------------------------- Audio Byte Data Event
+
+class AudioByteDataEvent : public Event
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  HandleOf<ArrayClass<byte>> AudioData;
+};
+
+//-------------------------------------------------------------------------------------------- Enums
+
+/// The possible settings for the number of channels used by the audio system when creating audio.
+/// <param name="AutoDetect">The audio system will match its channels to the default output device.</param>
+/// <param name="Mono">Audio will be produced using only a single channel.</param>
+/// <param name="Stereo">Audio will be produced using two channels, one for the left speaker and one for the right.</param>
+/// <param name="Quad">Audio will be produced using two left channels and two right channels.</param>
+/// <param name="FiveOne">Audio will be produced using a typical 5.1 speaker configuration.</param>
+/// <param name="SevenOne">Audio will be produced using a typical 7.1 speaker configuration.</param>
+DeclareEnum6(AudioMixTypes, AutoDetect, Mono, Stereo, Quad, FiveOne, SevenOne);
+
+/// The latency setting used by the audio system.
+/// <param name="Low">The default setting, where audio will have a low amount of latency.</param>
+/// <param name="High">Audio will have a higher latency. This can fix some audio problems in some cases.</param>
+DeclareEnum2(AudioLatency, Low, High);
+
 //------------------------------------------------------------------------------------- Sound System
 
 ///SoundSystem manages audio for the engine.
@@ -72,7 +111,10 @@ public:
 
   SoundSystem() :
     mCounter(0), 
-    mPreviewInstance(0) 
+    mPreviewInstance(0),
+    mLatency(AudioLatency::Low),
+    mSendMicEvents(false),
+    mSendCompressedMicEvents(false)
   {}
   ~SoundSystem();
 
@@ -80,113 +122,33 @@ public:
   virtual cstr GetName()override{return "Sound";}
   void Initialize(SystemInitializer& initializer) override;
 
-//Internals
-  void Update();
-  void StopPreview();
-  float PitchToSemitones(float pitch);
-  float SemitonesToPitch(float semitones);
-  float VolumeToDecibels(float volume);
-  float DecibelsToVolume(float decibels);
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
-  void SendAudioError(const Zero::String message) override;
-  NodeInfoListType::range GetNodeInfoList();
-  void SendEventOnAllSpaces(StringParam eventType, Event& eventToSend);
-
-  unsigned mCounter;
-  InList<SoundSpace> mSpaces;
-  HandleOf<SoundInstance> mPreviewInstance;
-  String mAudioMessage;
-  SoundNodeGraph NodeGraph;
-  HandleOf<SoundNode> mOutputNode;
-
-private:
-  Audio::AudioSystemInterface* mAudioSystem;
-
-  friend class AudioSettings;
-  friend class AudioStatics;
-};
-
-System* CreateSoundSystem();
-
-// Global Access
-namespace Z
-{
-  extern SoundSystem* gSound;
-}
-
-//----------------------------------------------------------------------------------- Sound Settings
-
-/// The possible settings for the number of channels used by the audio system when creating audio.
-/// <param name="AutoDetect">The audio system will match its channels to the default output device.</param>
-/// <param name="Mono">Audio will be produced using only a single channel.</param>
-/// <param name="Stereo">Audio will be produced using two channels, one for the left speaker and one for the right.</param>
-/// <param name="Quad">Audio will be produced using two left channels and two right channels.</param>
-/// <param name="FiveOne">Audio will be produced using a typical 5.1 speaker configuration.</param>
-/// <param name="SevenOne">Audio will be produced using a typical 7.1 speaker configuration.</param>
-DeclareEnum6(AudioMixTypes, AutoDetect, Mono, Stereo, Quad, FiveOne, SevenOne);
-/// The latency setting used by the audio system.
-/// <param name="Low">The default setting, where audio will have a low amount of latency.</param>
-/// <param name="High">Audio will have a higher latency. This can fix some audio problems in some cases.</param>
-DeclareEnum2(AudioLatency, Low, High);
-
-class AudioSettings : public Component
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  AudioSettings() : 
-    mSystemVolume(1.0f), 
-    mMixType(AudioMixTypes::AutoDetect), 
-    mLatency(AudioLatency::Low) 
-  {}
-
-  void Serialize(Serializer& stream) override;
-  void Initialize(CogInitializer& initializer) override;
-
-  /// An overall volume modifier that is applied to all audio produced by Zero.
+  /// Used by the SoundNode Graph window to display the current state of connected SoundNodes.
+  NodeInfoListType::range GetNodeGraphInfo();
+  /// The volume modifier applied to all audio generated by Zero.
   float GetSystemVolume();
   void SetSystemVolume(float volume);
-  /// Sets the number of channels the audio system uses when creating audio. See the enum descriptions.
-  /// If your selection is different from the output device, it will be automatically translated 
-  /// to match the number of channels needed for output.
-  AudioMixTypes::Enum GetMixType();
-  void SetMixType(AudioMixTypes::Enum mixType);
-  /// Sets the volume threshold at which sounds will be virtualized (they will continue
-  /// tracking their position and all data but will not process audio). 
-  /// This is a floating point volume number, not decibels.
-  float GetMinVolumeThreshold();
-  void SetMinVolumeThreshold(float volume);
-  /// If you are having audio problems (lots of clicks and/or static) you can 
-  /// try changing this setting to High. 
+  /// The current peak volume level of all audio output
+  float GetPeakOutputLevel();
+  /// The current RMS volume level of all audio output
+  float GetRMSOutputLevel();
+  /// If currently dispatching either uncompressed or compressed audio input data, this value
+  /// will be the highest peak volume in the last batch of input.
+  float GetPeakInputLevel();
+  /// Using the high latency setting can fix some audio problems (such as clicks and static) 
+  /// but can lead to a slight delay in the audio
   AudioLatency::Enum GetLatencySetting();
   void SetLatencySetting(AudioLatency::Enum latency);
+  /// If true, MicrophoneUncompressedFloatData events will be sent every update with the buffer of
+  /// audio data received from the default audio input device.
+  bool GetDispatchMicrophoneUncompressedFloatData();
+  void SetDispatchMicrophoneUncompressedFloatData(bool dispatchData);
+  /// If true, MicrophoneCompressedByteData events will be sent every update with the buffer of
+  /// compressed audio data received from the default audio input device.
+  bool GetDispatchMicrophoneCompressedByteData();
+  void SetDispatchMicrophoneCompressedByteData(bool dispatchData);
+  /// Returns the number of audio channels currently used by the audio engine for audio output.
+  int GetOutputChannels();
 
-private:
-  float mSystemVolume;
-  float mMinVolumeThreshold;
-  AudioMixTypes::Enum mMixType;
-  AudioLatency::Enum mLatency;
-};
-
-//------------------------------------------------------------------------------------ Audio Statics
-
-class AudioStatics
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  /// Used by the SoundNode Graph window to display the current state of connected SoundNodes.
-  static NodeInfoListType::range GetNodeGraphInfo();
-  /// The volume modifier applied to all audio generated by Zero.
-  static float GetSystemVolume();
-  /// The volume modifier applied to all audio generated by Zero.
-  static void SetSystemVolume(float volume);
-  /// The current peak volume level of all audio output
-  static float GetPeakOutputLevel();
-  /// The current RMS volume level of all audio output
-  static float GetRMSOutputLevel();
-  /// This can be set to True to fix some audio problems
-  static void SetUseHighLatency(bool useHigh);
   /// Creates a new VolumeNode object
   static VolumeNode* VolumeNode() { return new Zero::VolumeNode(); }
   /// Creates a new PanningNode object
@@ -227,8 +189,82 @@ public:
   static AdditiveSynthNode* AdditiveSynthNode() { return new Zero::AdditiveSynthNode(); }
   /// Creates a new ModulationNode object
   static ModulationNode* ModulationNode() { return new Zero::ModulationNode(); }
-  
-  static void PrintAudioStartupMessage();
+  /// Creates a new MicrophoneInputNode object
+  static MicrophoneInputNode* MicrophoneInputNode() { return new Zero::MicrophoneInputNode(); }
+
+//Internals
+  void Update();
+  void StopPreview();
+  float PitchToSemitones(float pitch);
+  float SemitonesToPitch(float semitones);
+  float VolumeToDecibels(float volume);
+  float DecibelsToVolume(float decibels);
+  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioError(const Zero::String message) override;
+
+  unsigned mCounter;
+  InList<SoundSpace> mSpaces;
+  HandleOf<SoundInstance> mPreviewInstance;
+  String mAudioMessage;
+  SoundNodeGraph NodeGraph;
+  HandleOf<SoundNode> mOutputNode;
+
+private:
+  Audio::AudioSystemInterface* mAudioSystem;
+  AudioLatency::Enum mLatency;
+  bool mSendMicEvents;
+  bool mSendCompressedMicEvents;
+
+  friend class AudioSettings;
+  friend class AudioStatics;
+};
+
+System* CreateSoundSystem();
+
+// Global Access
+namespace Z
+{
+  extern SoundSystem* gSound;
+}
+
+//----------------------------------------------------------------------------------- Sound Settings
+
+class AudioSettings : public Component
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  AudioSettings() : 
+    mSystemVolume(1.0f), 
+    mMixType(AudioMixTypes::AutoDetect)
+  {}
+
+  void Serialize(Serializer& stream) override;
+  void Initialize(CogInitializer& initializer) override;
+
+  /// An overall volume modifier that is applied to all audio produced by Zero.
+  float GetSystemVolume();
+  void SetSystemVolume(float volume);
+  /// Sets the number of channels the audio system uses when creating audio. See the enum descriptions.
+  /// If your selection is different from the output device, it will be automatically translated 
+  /// to match the number of channels needed for output.
+  AudioMixTypes::Enum GetMixType();
+  void SetMixType(AudioMixTypes::Enum mixType);
+  /// Sets the volume threshold at which sounds will be virtualized (they will continue
+  /// tracking their position and all data but will not process audio). 
+  /// This is a floating point volume number, not decibels.
+  float GetMinVolumeThreshold();
+  void SetMinVolumeThreshold(float volume);
+  /// Using the high latency setting can fix some audio problems (such as clicks and static) 
+  /// but can lead to a slight delay in the audio
+  AudioLatency::Enum GetLatencySetting();
+  void SetLatencySetting(AudioLatency::Enum latency);
+
+private:
+  float mSystemVolume;
+  float mMinVolumeThreshold;
+  AudioMixTypes::Enum mMixType;
+  AudioLatency::Enum mLatency;
 };
 
 }//namespace Zero

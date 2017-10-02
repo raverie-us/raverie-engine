@@ -10,44 +10,20 @@
 #ifndef AudioInputOutput_H
 #define AudioInputOutput_H
 
+struct PaStreamParameters;
+struct PaHostApiInfo;
+struct IMMDeviceEnumerator;
+
 namespace Audio
 {
-  // Will be called by Port Audio when audio data is needed.
-  // May be called at interrupt level on some machines so can't do anything time consuming.
-  static int PACallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer,
-    const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData);
-  
-  //--------------------------------------------------------------------------- Callback Data Object
-
-  class CallbackDataObject
+  static void SetStatusAndLog(Zero::Status& status, Zero::StringParam message)
   {
-  public:
-    CallbackDataObject() : 
-      Index(0), 
-      ReadBufferThreaded(1),
-      Channels(0),
-      BufferSize(0)
-    {}
-
-    // Returns the current buffer for reading
-    float* GetReadBuffer();
-
-    // Current position in the output buffer.
-    unsigned Index;
-    // Index for current output reading buffer, used to send samples to Port Audio.
-    int ReadBufferThreaded;
-    // For notifying the mix thread when a new buffer is needed.
-    Zero::Semaphore Counter;
-    // Number of channels being used for output.
-    unsigned Channels;
-    // Size of output buffers.
-    unsigned BufferSize;
-  };
+    status.SetFailed(message);
+    ZPrint(message.c_str());
+    ZPrint("\n");
+  }
 
   //----------------------------------------------------------------------------- Audio Input Output
-
-  static const float SmallBufferMultiplier = 0.01f;
-  static const float LargeBufferMultiplier = 0.04f;
 
   class AudioInputOutput
   {
@@ -61,78 +37,207 @@ namespace Audio
     void FinishedMixingBuffer();
     // Waits until another mix is needed, using semaphore counter
     void WaitUntilOutputNeeded();
-    // Initializes audio output
-    void Initialize(Zero::Status& status);
-    // Shuts down all audio output
-    void ShutDown(Zero::Status& status);
     // Resets the audio output (should call on device change)
-    void Reset();
-    // Stops the output stream without shutting down
-    void StopStream();
-    // Re-starts the output stream after being stopped
-    void StartStream();
-    // Returns true if the output stream is currently open
-    bool IsStreamOpen();
-    // Starts the input stream
-    void StartInputStream();
-    // Stops the input stream
-    void StopInputStream();
-    // Starts or re-starts the output stream with the specified latency values
-    void RestartStream(const bool lowLatency, Zero::Status& status);
-
+    void ResetOutput(Zero::Status& status);
+    // Resets the audio input
+    void ResetInput(Zero::Status& status);
+    // Returns the buffer sized based on current latency and the supplied sample rate
     unsigned GetBufferSize(unsigned sampleRate);
+    // Fills the buffer with the requested number of audio samples, or the max available if lower
+    void GetInputData(Zero::Array<float>& buffer, unsigned howManySamples);
+    // Sets whether the system should use a low or high latency value
+    void SetLatency(bool lowLatency);
 
-    // Size of the buffer for input data
-    static const unsigned InputBufferSize = 8192;
-    // Ring buffer used for receiving input data
-    PaUtilRingBuffer InputRingBuffer;
-    // Buffer of input data
-    float InputBuffer[InputBufferSize];
-    // Parameters for input data stream
-    PaStreamParameters InputParameters;
-    // Sample rate of input data
-    unsigned InputSampleRate;
-    // Number of channels in the output
-    unsigned OutputChannelsThreaded;
+    // Initializes the underlying audio API
+    virtual void InitializeAPI(Zero::Status& status) = 0;
+    // Initializes audio output
+    virtual void InitializeOutput(Zero::Status& status) = 0;
+    // Initializes audio input
+    virtual void InitializeInput(Zero::Status& status) = 0;
+    // Shuts down the underlying audio API
+    virtual void ShutDownAPI(Zero::Status& status) = 0;
+    // Shuts down audio output
+    virtual void ShutDownOutput(Zero::Status& status) = 0;
+    // Shuts down audio input
+    virtual void ShutDownInput(Zero::Status& status) = 0;
+    // Returns the number of channels in the audio output
+    virtual unsigned GetOutputChannels() = 0;
+    // Returns the sample rate of the audio output
+    virtual unsigned GetOutputSampleRate() = 0;
+    // Returns the number of channels in the audio input
+    virtual unsigned GetInputChannels() = 0;
+    // Returns the sample rate of the audio input
+    virtual unsigned GetInputSampleRate() = 0;
+    // Returns true if the audio output stream is currently running
+    virtual bool IsOutputStreamOpen() = 0;
+    // Returns true if the audio input stream is currently running
+    virtual bool IsInputStreamOpen() = 0;
+    // Starts the audio output stream
+    virtual void StartOutputStream(Zero::Status& status) = 0;
+    // Stops the audio output stream
+    virtual void StopOutputStream(Zero::Status& status) = 0;
+    // Starts the audio input stream
+    virtual void StartInputStream(Zero::Status& status) = 0;
+    // Stops the audio input stream
+    virtual void StopInputStream(Zero::Status& status) = 0;
+
     // Size of the output buffer
     unsigned OutputBufferSizeThreaded;
-    // Sample rate of the output device
-    unsigned OutputSampleRate;
 
     static const unsigned NumOutputBuffers = 3;
 
-  private:
+  protected:
     unsigned BufferBaseSize;
     unsigned BufferLargeSize;
 
     // Index for current output writing buffer, used for mixing output
     int WriteBufferThreaded;
+    // Index for current output reading buffer, used to send samples to Port Audio.
+    int ReadBufferThreaded;
     // Array of three buffers for output
     float* OutputBuffersThreaded[NumOutputBuffers];
-    // Number of frames handed off to Port Audio at a time
-    unsigned CallbackFrameSizeThreaded;
-    // Object for communication with the Port Audio callback function
-    CallbackDataObject CallbackDataThreaded;
-    // Pointer to the Port Audio output stream
-    PaStream *Stream;
-    // Port audio output stream parameters
-    PaStreamParameters OutputParameters;
-    // Keeps track of whether audio output has already been initialized
-    bool Initialized;
-    // Pointer to the Port Audio input stream
-    PaStream* InputStream;
-    // Starts the Port Audio stream
-    void StartPAStream(Zero::Status &status);
-    // Stops the Port Audio stream
-    void StopPAStream(Zero::Status &status);
-    // Sets variables and creates output buffers using the specified size
-    void SetUpBuffers(const unsigned size);
-    // Sets the callback frame size and calls SetUpBuffers
-    void SetLatency(const unsigned baseSize);
     // If true, currently set to low latency
     bool LowLatency;
+    // Size of the buffer for input data
+    static const unsigned InputBufferSize = 8192;
+    // Buffer of input data
+    float InputBuffer[InputBufferSize];
+    // Ring buffer used for receiving input data
+    PaUtilRingBuffer InputRingBuffer;
+    // Current position in the output buffer.
+    unsigned MixedBufferIndex;
+    // For notifying the mix thread when a new buffer is needed.
+    Zero::Semaphore Counter;
 
-    friend class CallbackDataObject;
+    const float SmallBufferMultiplier = 0.01f;
+    const float LargeBufferMultiplier = 0.04f;
+    const unsigned BufferSizeStartValue = 128;
+
+    // Sets variables and initializes output buffers at the appropriate size
+    void InitializeOutputBuffers();
+    // Creates output buffers using the specified size
+    void SetUpOutputBuffers(const unsigned size);
+    // Sets the callback frame size and calls SetUpBuffers
+    void SetLatency(const unsigned baseSize);
+    // Gets the mixed buffer that is ready to output
+    void GetMixedOutputSamples(float* outputBuffer, const unsigned howManySamples);
+    // Saves the input buffer from the microphone
+    void SaveInputSamples(const float* inputBuffer, unsigned howManySamples);
+  };
+
+  //---------------------------------------------------------------- Audio Input Output using WASAPI
+  
+  class WasapiDevice;
+
+  class AudioIOWindows : public AudioInputOutput
+  {
+  public:
+    AudioIOWindows();
+    ~AudioIOWindows();
+
+    // Initializes the underlying audio API
+    void InitializeAPI(Zero::Status& status) override;
+    // Initializes audio output
+    void InitializeOutput(Zero::Status& status) override;
+    // Initializes audio input
+    void InitializeInput(Zero::Status& status) override;
+    // Shuts down the underlying audio API
+    void ShutDownAPI(Zero::Status& status) override;
+    // Shuts down audio output
+    void ShutDownOutput(Zero::Status& status) override;
+    // Shuts down audio input
+    void ShutDownInput(Zero::Status& status) override;
+    // Returns the number of channels in the audio output
+    unsigned GetOutputChannels() override;
+    // Returns the sample rate of the audio output
+    unsigned GetOutputSampleRate() override;
+    // Returns the number of channels in the audio input
+    unsigned GetInputChannels() override;
+    // Returns the sample rate of the audio input
+    unsigned GetInputSampleRate() override;
+    // Returns true if the audio output stream is currently running
+    bool IsOutputStreamOpen() override;
+    // Returns true if the audio input stream is currently running
+    bool IsInputStreamOpen() override;
+    // Starts the audio output stream
+    void StartOutputStream(Zero::Status& status) override;
+    // Stops the audio output stream
+    void StopOutputStream(Zero::Status& status) override;
+    // Starts the audio input stream
+    void StartInputStream(Zero::Status& status) override;
+    // Stops the audio input stream
+    void StopInputStream(Zero::Status& status) override;
+
+    void HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
+
+  private:
+    WasapiDevice* OutputDevice;
+    WasapiDevice* InputDevice;
+    IMMDeviceEnumerator* Enumerator;
+
+    static unsigned _stdcall StartOutputThread(void* param);
+    static unsigned _stdcall StartInputThread(void* param);
+  };
+
+  //------------------------------------------------------------- Audio Input Output using PortAudio
+  
+  class AudioIOPortAudio : public AudioInputOutput
+  {
+  public:
+    AudioIOPortAudio();
+    ~AudioIOPortAudio();
+
+    // Initializes the underlying audio API
+    void InitializeAPI(Zero::Status& status) override;
+    // Initializes audio output
+    void InitializeOutput(Zero::Status& status) override;
+    // Initializes audio input
+    void InitializeInput(Zero::Status& status) override;
+    // Shuts down the underlying audio API
+    void ShutDownAPI(Zero::Status& status) override;
+    // Shuts down audio output
+    void ShutDownOutput(Zero::Status& status) override;
+    // Shuts down audio input
+    void ShutDownInput(Zero::Status& status) override;
+    // Returns the number of channels in the audio output
+    unsigned GetOutputChannels() override;
+    // Returns the sample rate of the audio output
+    unsigned GetOutputSampleRate() override;
+    // Returns the number of channels in the audio input
+    unsigned GetInputChannels() override;
+    // Returns the sample rate of the audio input
+    unsigned GetInputSampleRate() override;
+    // Returns true if the audio output stream is currently running
+    bool IsOutputStreamOpen() override;
+    // Returns true if the audio input stream is currently running
+    bool IsInputStreamOpen() override;
+    // Starts the audio output stream
+    void StartOutputStream(Zero::Status& status) override;
+    // Stops the audio output stream
+    void StopOutputStream(Zero::Status& status) override;
+    // Starts the audio input stream
+    void StartInputStream(Zero::Status& status) override;
+    // Stops the audio input stream
+    void StopInputStream(Zero::Status& status) override;
+
+    int HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
+
+  private:
+    const PaHostApiInfo* ApiInfo;
+
+    // Pointer to the Port Audio output stream
+    void* OutputStream;
+    // Port audio output stream parameters
+    PaStreamParameters* OutputParameters;
+    // Sample rate of the audio output
+    unsigned OutputSampleRate;
+
+    // Pointer to the Port Audio input stream
+    void* InputStream;
+    // Port audio input stream parameters
+    PaStreamParameters* InputParameters;
+    // Sample rate of the audio input
+    unsigned InputSampleRate;
   };
 }
 

@@ -311,6 +311,10 @@ void TextBoxButton::UpdateTransform()
 }
 
 //---------------------------------------------------------------- MultiLineText
+ZilchDefineType(MultiLineText, builder, type)
+{
+}
+
 MultiLineText::MultiLineText(Composite* parent, StringParam textStyle)
   :Composite(parent)
 {

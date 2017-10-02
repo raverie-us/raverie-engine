@@ -212,6 +212,9 @@ public:
   GizmoSnapMode::Enum GetSnapMode( );
   void SetSnapMode(GizmoSnapMode::Enum mode);
 
+  bool GetAffectTranslation( );
+  void SetAffectTranslation(bool affectTranslation);
+
   void CopyPropertiesToGizmo() override;
 
 public:
@@ -250,6 +253,9 @@ public:
 
   float GetSnapAngle();
   void SetSnapAngle(float angle);
+
+  bool GetAffectTranslation();
+  void SetAffectTranslation(bool affectTranslation);
 
   void CopyPropertiesToGizmo() override;
   

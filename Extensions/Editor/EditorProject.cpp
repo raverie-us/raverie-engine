@@ -26,9 +26,6 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
 
   HasOrAdd<EditorConfig>(Z::gEditor->mConfig)->EditingProject = projectFile;
 
-  RecentProjects* recent = HasOrAdd<RecentProjects>(Z::gEditor->mConfig);
-  recent->AddRecentProject(projectFile);
-
   // Save what project was opened
   SaveConfig(Z::gEditor->mConfig);
 
@@ -142,7 +139,7 @@ void OpenProjectFile(StringParam filename)
     return;
   }
   // Prevent components from being added or removed from the project cog
-  projectCog->mFlags.SetFlag(CogFlags::ComponentsLocked);
+  projectCog->mFlags.SetFlag(CogFlags::ScriptComponentsLocked);
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
   if(project == nullptr) return;

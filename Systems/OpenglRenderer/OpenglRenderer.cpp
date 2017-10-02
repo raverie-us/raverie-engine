@@ -99,14 +99,6 @@ OpenglRenderer* CreateOpenglRenderer(OsHandle windowHandle, String& error)
   ZPrint("OpenGL Vendor           : %s\n", gl_vendor ? gl_vendor : "(no data)");
   ZPrint("OpenGL Renderer         : %s\n", gl_renderer ? gl_renderer : "(no data)");
 
-  // Intel integrated graphics currently does not run Zero correctly.
-  String vendorString = gl_vendor;
-  if (vendorString.Contains("Intel"))
-  {
-    error = "Intel graphics drivers are unsupported. Please run with dedicated graphics hardware.";
-    return nullptr;
-  }
-
   // Initialize glew
   GLenum glewInitStatus = glewInit();
   if (glewInitStatus != GLEW_OK)
@@ -149,6 +141,11 @@ OpenglRenderer* CreateOpenglRenderer(OsHandle windowHandle, String& error)
   renderer->mDriverSupport.mTextureCompression = texture_compression;
   renderer->mDriverSupport.mMultiTargetBlend = draw_buffers_blend;
   renderer->mDriverSupport.mSamplerObjects = sampler_objects;
+
+  // Intel integrated graphics does not render correctly with borderless Window's aero on OpenGL.
+  String vendorString = gl_vendor;
+  if (vendorString.Contains("Intel"))
+    renderer->mDriverSupport.mIntel = true;
 
   return renderer;
 }

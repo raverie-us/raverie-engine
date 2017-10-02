@@ -731,9 +731,12 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, EditFocusMode::Enum focus
   // we only want to construct an aabb from objects with transforms
   forRange(Handle selection, activeSelection->All())
   {
-    Cog* cog = selection.Get<Cog*>();
-    if (cog->has(Transform))
-      transformObjects.Add(cog);
+    if(selection.IsNull())
+      continue;
+
+    MetaTransform* metaTransform = selection.StoredType->HasInherited<MetaTransform>( );
+    if(metaTransform && metaTransform->GetInstance(selection).IsNotNull())
+      transformObjects.Add(selection);
   }
   
   // if there are no objects with transform we don't want to focus on the origin of the level
@@ -765,7 +768,7 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, const Aabb& focusAabb, Ed
   float lookDistance = extents.Length()  * 1.5f;
   float viewSize = extents.Length() * 1.5f;
 
-  //const bool previewBox = false;
+  //const bool previewBox = true;
   //if(previewBox)
   //  gDebugDraw->Add(Debug::Box(aabb).Duration(1.0f).Color(Color::Red));
 
@@ -1078,12 +1081,13 @@ void GoToDefinition(Editor* editor)
   
   forRange(DocumentEditor* docEditor, docManager->Instances.All())
   {
-    DocumentResource* docResource = docEditor->GetResource();
+    ZilchDocumentResource* docResource = Type::DynamicCast<ZilchDocumentResource*>(docEditor->GetResource());
     if (docResource != nullptr && ZilchVirtualTypeId(docResource) == ZilchVirtualTypeId(resource))
     {
       // Saves the current text from the document editor to the Document (which may just set a resource or other thing underlying)
       // This should only ever upload the value in memory, but not actually access the disk (we could call docEditor->Save())
-      docResource->ReloadData(docEditor->GetAllText());
+      // This also should not mark any resources as modified or send any events
+      docResource->mText = docEditor->GetAllText();
     }
   }
   

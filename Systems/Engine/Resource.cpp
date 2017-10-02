@@ -577,7 +577,7 @@ DataNode* DataResource::GetDataTree()
   Status status;
   ObjectLoader loader;
   loader.OpenFile(status, mContentItem->GetFullPath());
-  return loader.TakeOwnershipOfRoot();
+  return loader.TakeOwnershipOfFirstRoot();
 }
 
 //------------------------------------------------------------------------ Data Resource Inheritance
@@ -627,13 +627,16 @@ Any ResourceMetaOperations::GetUndoData(HandleParam object)
 }
 
 //**************************************************************************************************
-void ResourceMetaOperations::ObjectModified(HandleParam object)
+void ResourceMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 {
-  MetaOperations::ObjectModified(object);
+  MetaOperations::ObjectModified(object, intermediateChange);
 
-  Resource* resource = object.Get<Resource*>(GetOptions::AssertOnNull);
-  resource->ResourceModified();
-  Z::gResources->mModifiedResources.Insert(resource->mResourceId);
+  if(!intermediateChange)
+  {
+    Resource* resource = object.Get<Resource*>(GetOptions::AssertOnNull);
+    resource->ResourceModified();
+    Z::gResources->mModifiedResources.Insert(resource->mResourceId);
+  }
 
   // We used to dispatch an event on the Manager. Should we?
 }

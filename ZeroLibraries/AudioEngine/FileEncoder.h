@@ -10,6 +10,8 @@
 #ifndef FILEENCODER_H
 #define FILEENCODER_H
 
+struct OpusEncoder;
+
 namespace Audio
 {
   // Define data type that equals a byte. 
@@ -42,7 +44,6 @@ namespace Audio
   class FileEncoder
   {
   public:
-
     // Opens the specified file and reads in the raw data
     static AudioFileData OpenFile(Zero::Status& status, Zero::StringParam fileName);
     // Encodes the audio file and writes it out to the specified file name
@@ -50,7 +51,7 @@ namespace Audio
       AudioFileData& fileData, bool normalize, float maxVolume);
 
     // 20 ms of audio data at 48000 samples per second
-    static const unsigned FrameSize = 960;
+    static const unsigned PacketFrames = 960;
     // Recommended max packet size
     static const unsigned MaxPacketSize = 4000;
     
@@ -89,6 +90,30 @@ namespace Audio
     const char Name[4] = { 'p','a','c','k' };
     short Channel;
     unsigned Size;
+  };
+
+  //--------------------------------------------------------------------------------- Packet Encoder
+
+  class PacketEncoder
+  {
+  public:
+    PacketEncoder() : Encoder(nullptr) {}
+    ~PacketEncoder();
+
+    // Initializes encoder for use with EncodePacket. 
+    // If the encoder already exists, it will be destroyed and re-created.
+    void InitializeEncoder();
+    // Encodes a single packet of data and allocates a buffer for the encoded data.
+    // Number of samples must be the same as PacketFrames
+    void EncodePacket(const float* dataBuffer, const unsigned samples, Zero::Array<byte>& encodedData);
+
+    static const unsigned Channels = 1;
+    static const unsigned PacketFrames = 960;
+
+  private:
+    // Used for repeated calls to EncodePacket
+    OpusEncoder* Encoder;
+
   };
 }
 

@@ -99,7 +99,7 @@ void FilterChildrenAndProtected(Array<Cog*>& cogs, MetaSelection* selection)
   for(;!r.Empty();r.PopFront())
   {
     Cog* object = r.Front();
-    if(!object->mFlags.IsSet(CogFlags::Protected) &&
+    if(object && !object->mFlags.IsSet(CogFlags::Protected) &&
       !IsAncestorInSelection(object, selection))
     {
       cogs.PushBack(object);
@@ -111,7 +111,7 @@ void FilterChildrenAndProtected(const Array<CogId>& cogsIn, Array<Cog*>& cogsOut
 {
   forRange(Cog* object, cogsIn.All())
   {
-    if(!object->mFlags.IsSet(CogFlags::Protected) && !IsAncestorPresent(object, cogsIn))
+    if(object && !object->mFlags.IsSet(CogFlags::Protected) && !IsAncestorPresent(object, cogsIn))
       cogsOut.PushBack(object);
   }
 }
@@ -121,7 +121,7 @@ void FilterChildrenAndProtected(const Array<Handle>& objectsIn, Array<Handle>& o
   forRange(Handle object, objectsIn.All())
   {
     Cog* cog = object.Get<Cog*>();
-    if(!cog->mFlags.IsSet(CogFlags::Protected) && !IsAncestorPresent(cog, objectsIn))
+    if(cog && !cog->mFlags.IsSet(CogFlags::Protected) && !IsAncestorPresent(cog, objectsIn))
       objectsOut.PushBack(object);
   }
 }

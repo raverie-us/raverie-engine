@@ -58,8 +58,8 @@ class DeferredRenderer : ZilchComponent
     geometryPassSettings.DepthSettings.DepthPassOp = StencilOp.Replace;
     geometryPassSettings.DepthSettings.StencilTestValue = 1 as Byte;
     
-    // Clearing color targets to 1 so that depth value the way it is currently stored will be farplane
-    event.AddRenderTaskClearTarget(geometryPassSettings, Real4(1.0), 1.0, 0);
+    // Clearing depth to 1 (the farplane) the way it is currently stored, and normals to +z
+    event.AddRenderTaskClearTarget(geometryPassSettings, Real4(0.0, 0.0, 1.0, 1.0), 1.0, 0);
     
     geometryPassSettings.CullMode = CullMode.BackFace;
     event.AddRenderTaskRenderPass(geometryPassSettings, RenderGroup.Opaque, GeometryPass());
@@ -152,7 +152,7 @@ class DeferredRenderer : ZilchComponent
     // Ssao
     if (this.Owner.Ssao != null)
     {
-      this.Owner.Ssao.AddRenderTasks(event, lightBuffer, depthStencil, geometryBuffer0);
+      this.Owner.Ssao.AddRenderTasks(event, lightBuffer, geometryBuffer0);
       if (this.Owner.Ssao.DebugBuffer && this.Owner.Ssao.Active)
       {
         // Don't do any other lighting if debugging ssao buffer

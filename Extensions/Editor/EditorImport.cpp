@@ -216,25 +216,44 @@ Cog* CreateCogFromGraph(Space* space, SceneGraphSource* source, SceneGraphNode* 
   // Update children
   for(uint i=0;i<sourceNode->Children.Size();++i)
   {
-    CreateCogFromGraph(space, source, sourceNode->Children[i], object, NULL, flags, isBone);
+    SceneGraphNode* childGraphNode = sourceNode->Children[i];
+    CreateCogFromGraph(space, source, childGraphNode, object, NULL, flags, isBone);
   }
 
   return object;
 }
 
+void CopyChildIds(Cog* newArchetypeCog, Cog* oldArchetypeCog)
+{
+  newArchetypeCog->mChildId = oldArchetypeCog->mChildId;
+
+  forRange(Cog& newChild, newArchetypeCog->GetChildren())
+  {
+    if(Cog* oldChild = oldArchetypeCog->FindChildByName(newChild.GetName()))
+    {
+      newChild.mChildId = oldChild->mChildId;
+
+      CopyChildIds(&newChild, oldChild);
+    }
+  }
+}
 
 void DoEditorSideGeometryImporting(GeometryContent* geometryContent, Cog* object, UpdateFlags::Type flags, StringParam contentOutputPath)
 {
   // Load the graph file with details of materials to generate
   String graphFile = FilePath::CombineWithExtension(contentOutputPath,
                                                     geometryContent->Filename, ".graph.data");
-
   if(!FileExists(graphFile))
     return;
 
   GeneratedArchetype* genArchetype = geometryContent->has(GeneratedArchetype);
   if(!genArchetype)
     return;
+  
+  ResourceId archetypeId = genArchetype->mResourceId;
+
+  // Find the archetype
+  Archetype* archetype = ArchetypeManager::FindOrNull(archetypeId);
 
   UniquePointer<SceneGraphSource> sceneGraph = new SceneGraphSource();
   LoadFromDataFile(*sceneGraph, graphFile);
@@ -250,6 +269,13 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent, Cog* object
 
   // If there is animations attach a animGraph component and Assign animations
   AnimationBuilder* animations = geometryContent->has(AnimationBuilder);
+
+  if (archetype)
+  {
+    Cog* oldArchetypeCog = space->Create(archetype);
+    CopyChildIds(object, oldArchetypeCog);
+  }
+
   if(animations)
   {
     AnimationGraph* animGraph = HasOrAdd<AnimationGraph>(object);
@@ -271,9 +297,6 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent, Cog* object
 
   if(flags & UpdateFlags::Archetype)
   {
-    // Find the archetype
-    Archetype* archetype = (Archetype*)ArchetypeManager::GetInstance()->ResourceIdMap.FindValue(genArchetype->mResourceId, NULL);
-
     // If archetype exists update it
     if(archetype)
     {
@@ -283,12 +306,11 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent, Cog* object
     }
     else
     {
-      archetype = ArchetypeManager::GetInstance()->MakeNewArchetypeWith(object, baseName, genArchetype->mResourceId);
+      archetype = ArchetypeManager::GetInstance()->MakeNewArchetypeWith(object, baseName, archetypeId);
     }
   }
 
   space->Destroy();
-
 }
 
 void UpdateToContent(Cog* object, UpdateFlags::Type flags)
@@ -347,9 +369,6 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
   }
   else if(options->mGenerateCue == AudioCueImport::Grouped)
   {
-    // Create a new sound cue
-    SoundCue* cue = SoundCueManager::CreateNewResource(options->mGroupCueName);
-
     // Attempt to create a new sound cue
     ResourceAdd resourceAdd;
     resourceAdd.Library = Z::gEditor->mProjectLibrary;
@@ -370,10 +389,10 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
         Sound* sound = SoundManager::GetInstance()->Find(entry.mResourceId);
         cue->AddSoundEntry(sound, 1.0f);
       }
-    }
 
-    if(cue->mContentItem)
-      cue->mContentItem->SaveContent();
+      if (cue->mContentItem)
+        cue->mContentItem->SaveContent();
+    }
   }
 }
 

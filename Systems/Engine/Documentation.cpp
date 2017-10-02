@@ -19,6 +19,8 @@ ZilchDefineType(DocumentationLibrary, builder, type)
 ////////////////////////////////////////////////////////////////////////
 // Helpers
 ////////////////////////////////////////////////////////////////////////
+
+// Note: returns empty string if this is a type we shouldn't document
 String ReplaceTypeIfTemplated(StringParam typeString)
 {
   // if the whole type is inside brackets, just remove the brackets,
@@ -28,7 +30,15 @@ String ReplaceTypeIfTemplated(StringParam typeString)
   }
   else if (typeString.Contains("["))
   {
+    if (!typeString.Contains("any"))
+    {
+      return String();
+    }
     return BuildString(typeString.SubString(typeString.Begin(), typeString.FindFirstOf("[").Begin()), "[T]");
+  }
+  else if (typeString == "any")
+  {
+    return "T";
   }
   else
   {
@@ -652,11 +662,16 @@ void DocumentationLibrary::LoadFromMeta()
     // check if we have to do template name replacement
     String name = ReplaceTypeIfTemplated(metaType->Name);
 
+    if (name.Empty())
+      continue;
+
     ClassDoc* classDoc;
 
     // If we have already seen this class before, grab it from the map
     if (mClassMap.ContainsKey(name))
+    {
       classDoc = mClassMap[name];
+    }
     // Otherwise, create a new classdoc and add it to the array and map
     else
     {
@@ -747,6 +762,10 @@ void DocumentationLibrary::LoadFromMeta()
      if (returnType)
      {
        newMethod->mReturnType = ReplaceTypeIfTemplated(returnType->ToString());
+
+       // if empty, this was a template type we shouldn't replace
+       if (newMethod->mReturnType.Empty())
+         newMethod->mReturnType = returnType->ToString();
      }
 
      forRange(DelegateParameter& param, type->GetParameters().All())
@@ -755,6 +774,10 @@ void DocumentationLibrary::LoadFromMeta()
 
        newParam->mName = param.Name;
        newParam->mType = ReplaceTypeIfTemplated(param.ParameterType->ToString());
+
+       // if empty, this was a template type we shouldn't replace
+       if (newParam->mType.Empty())
+         newParam->mType = param.ParameterType->ToString();
 
        newMethod->mParameterList.PushBack(newParam);
      }
@@ -786,6 +809,10 @@ void DocumentationLibrary::LoadFromMeta()
       newProp->mDescription = metaProperty->Description;
 
      newProp->mType = ReplaceTypeIfTemplated(metaProperty->PropertyType->ToString());
+
+     // if empty, this was a template type we shouldn't replace
+     if (newProp->mType.Empty())
+       newProp->mType = metaProperty->PropertyType->ToString();
 
      classDoc->mProperties.PushBack(newProp);
 

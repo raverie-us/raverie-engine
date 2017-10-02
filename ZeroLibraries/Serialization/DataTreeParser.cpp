@@ -11,16 +11,15 @@ namespace Zero
 
 //--------------------------------------------------------------------------------- Data Tree Parser
 //**************************************************************************************************
-DataNode* DataTreeParser::BuildTree(DataTreeContext& context, StringRange data)
+bool DataTreeParser::BuildTree(DataTreeContext& context, StringRange data, DataNode* fileRoot)
 {
   DataTreeParser parser(context);
-  return parser.Parse(data);
+  return parser.Parse(data, fileRoot);
 }
 
 //*************************************************************************************************
 DataTreeParser::DataTreeParser(DataTreeContext& context) : 
   mContext(context),
-  mRoot(nullptr),
   mCurrentIndex(0),
   mLastPoppedNode(nullptr)
 {
@@ -28,8 +27,10 @@ DataTreeParser::DataTreeParser(DataTreeContext& context) :
 }
 
 //*************************************************************************************************
-DataNode* DataTreeParser::Parse(StringRange text)
+bool DataTreeParser::Parse(StringRange text, DataNode* fileRoot)
 {
+  mNodeStack.PushBack(fileRoot);
+
   // Read all tokens into an array
   DataTreeTokenizer tokenizer(text);
   Status status;
@@ -42,12 +43,12 @@ DataNode* DataTreeParser::Parse(StringRange text)
   {
     mContext.Error = true;
     mContext.Message = status.Message;
-    return nullptr;
+    return false;
   }
 
   Start();
 
-  return mRoot;
+  return true;
 }
 
 //**************************************************************************************************
@@ -58,6 +59,9 @@ bool DataTreeParser::Start()
 
   // There must be at least one Object
   Expect(Object(), "There must be a single object in the file");
+
+  // Accept any other amount of objects (roots)
+  while (Object());
 
   return true;
 }
@@ -352,11 +356,11 @@ bool DataTreeParser::AcceptValue(bool createNode, DataTokenType::Enum tokenType)
 //**************************************************************************************************
 DataNode* DataTreeParser::CreateNewNode(DataNodeType::Enum nodeType)
 {
-  DataNode* newNode =  new DataNode(nodeType, GetCurrentNode());
+  DataNode* parent = GetCurrentNode();
+  DataNode* newNode =  new DataNode(nodeType, parent);
   mNodeStack.PushBack(newNode);
 
-  if(mRoot == nullptr)
-    mRoot = newNode;
+  ErrorIf(parent == nullptr, "Invalid node stack. The file root node should always be on the stack");
 
   return newNode;
 }

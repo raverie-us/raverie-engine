@@ -144,7 +144,26 @@ void Command::Execute()
 
 void Command::Format()
 {
-  ToolTip = String::Format("%s - %s (%s)", Name.c_str(), Description.c_str(), Shortcut.c_str());
+  // Assumes all commands must have names.
+  if(Name.Empty())
+    return;
+
+  if(!Description.Empty())
+  {
+    if(!Shortcut.Empty())
+      ToolTip = String::Format("%s - %s (%s)", Name.c_str(), Description.c_str(), Shortcut.c_str());
+    else
+      ToolTip = String::Format("%s - %s", Name.c_str(), Description.c_str());
+  }
+  else if(!Shortcut.Empty())
+  {
+    ToolTip = String::Format("%s (%s)", Name.c_str(), Shortcut.c_str());
+  }
+  else // !Name.Empty()
+  {
+    ToolTip = String::Format("%s", Name.c_str());
+  }
+
 }
 
 void Command::ChangeState()

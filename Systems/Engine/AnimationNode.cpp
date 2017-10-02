@@ -199,7 +199,6 @@ BasicAnimation::BasicAnimation(AnimationGraph* animGraph, Animation* animation,
                                float t, AnimationPlayMode::Enum playMode)
 {
   mDirection = 1.0f;
-  mAnimation = animation;
   mTime = t;
   mPlayMode = playMode;
   mLoopCount = 0;
@@ -210,8 +209,14 @@ BasicAnimation::BasicAnimation(AnimationGraph* animGraph, Animation* animation,
 //******************************************************************************
 void BasicAnimation::ReLinkAnimations()
 {
-  // Re-set the animation
-  SetAnimation(mAnimation);
+  mPlayData.Clear();
+  mDuration = 0.0f;
+  if (mAnimation)
+  {
+    mDuration = mAnimation->mDuration;
+    if (AnimationGraph* animGraph = mAnimGraph)
+      animGraph->SetUpPlayData(mAnimation, mPlayData);
+  }
 }
 
 //******************************************************************************
@@ -354,16 +359,12 @@ Animation* BasicAnimation::GetAnimation()
 //******************************************************************************
 void BasicAnimation::SetAnimation(Animation* animation)
 {
+  if (animation == mAnimation)
+    return;
+
   mAnimation = animation;
 
-  mPlayData.Clear();
-  mDuration = 0.0f;
-  if(animation)
-  {
-    mDuration = animation->mDuration;
-    if(AnimationGraph* animGraph = mAnimGraph)
-      animGraph->SetUpPlayData(mAnimation, mPlayData);
-  }
+  ReLinkAnimations();
 }
 
 //******************************************************************************

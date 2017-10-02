@@ -22,8 +22,8 @@ DataTreeLoader::DataTreeLoader()
 {
   mMode = SerializerMode::Loading;
   mSerializerType = SerializerType::Text;
-  mRoot = nullptr;
   mNext = nullptr;
+  mFileRoot = nullptr;
   mIgnoreDataInheritance = false;
   mLoadedFileVersion = (uint)-1;
 }
@@ -82,27 +82,35 @@ bool DataTreeLoader::OpenFile(Status& status, StringParam fileName)
 //******************************************************************************
 bool DataTreeLoader::OpenBuffer(Status& status, StringRange data, StringRange source)
 {
-  DataNode* root = ReadDataSet(status, data, source, this, &mLoadedFileVersion);
+  Close();
 
-  if(root)
+  mFileRoot = new DataNode(DataNodeType::Object, nullptr);
+  if(ReadDataSet(status, data, source, this, &mLoadedFileVersion, mFileRoot))
   {
-    SetRoot(root);
+    // "Open" the file root and make the first child the next node to be read
+    Reset();
     return true;
   }
   
+  // We need to delete the file root if we failed to load
+  Close();
   return false;
 }
 
 //******************************************************************************
 void DataTreeLoader::Close()
 {
-  SafeDelete(mRoot);
+  SafeDelete(mFileRoot);
+  mNodeStack.Clear();
+  mNext = nullptr;
 }
 
 //******************************************************************************
 void DataTreeLoader::Reset()
 {
-  mNext = mRoot;
+  mNodeStack.Clear();
+  mNodeStack.PushBack(mFileRoot);
+  mNext = mFileRoot->GetFirstChild();
 }
 
 //******************************************************************************
@@ -257,20 +265,23 @@ void DataTreeLoader::SetNext(DataNode* node)
 //******************************************************************************
 void DataTreeLoader::SetRoot(DataNode* node)
 {
-  SafeDelete(mRoot);
-  mNodeStack.Clear();
+  Close();
 
-  mRoot = node;
-  mNext = node;
-  mNodeStack.PushBack(mRoot);
+  mFileRoot = new DataNode(DataNodeType::Object, nullptr);
+  node->AttachTo(mFileRoot);
+
+  // "Open" the file root and make the first child the next node to be read
+  Reset();
 }
 
 //******************************************************************************
-DataNode* DataTreeLoader::TakeOwnershipOfRoot()
+DataNode* DataTreeLoader::TakeOwnershipOfFirstRoot()
 {
-  DataNode* root = mRoot;
-  mRoot = nullptr;
-  mNext = nullptr;
+  ReturnIf(mFileRoot->GetNumberOfChildren() != 1, nullptr,
+           "Can only take ownership if there's one root");
+  DataNode* root = mFileRoot->GetFirstChild();
+  root->Detach();
+  Close();
   return root;
 }
 

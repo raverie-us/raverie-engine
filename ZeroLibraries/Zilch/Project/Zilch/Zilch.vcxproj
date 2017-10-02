@@ -65,6 +65,7 @@
     <ClCompile Include="Any.cpp" />
     <ClCompile Include="ArrayClass.cpp" />
     <ClCompile Include="Base64.cpp" />
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="Composition.cpp" />
     <ClCompile Include="ConsoleClass.cpp" />
     <ClCompile Include="DataDrivenLexer.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="Base64.hpp" />
     <ClInclude Include="Binding.hpp" />
     <ClInclude Include="CodeLocation.hpp" />
+    <ClInclude Include="Color.hpp" />
     <ClInclude Include="MultiPrimitive.hpp" />
     <ClInclude Include="RangeBinding.hpp" />
     <ClInclude Include="DataDrivenLexer.hpp" />

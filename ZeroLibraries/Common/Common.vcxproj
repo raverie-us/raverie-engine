@@ -99,6 +99,7 @@
       <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'==''">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Utility\Callback.cpp" />
+    <ClCompile Include="Utility\Determinism.cpp" />
     <ClCompile Include="Utility\Functor.cpp" />
     <ClCompile Include="Utility\HalfFloat.cpp" />
     <ClCompile Include="Utility\Misc.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Utility\BitTypes.hpp" />
     <ClInclude Include="Utility\Callback.hpp" />
     <ClInclude Include="Utility\ConditionalRange.hpp" />
+    <ClInclude Include="Utility\Determinism.hpp" />
     <ClInclude Include="Utility\EnumDeclaration.hpp" />
     <ClInclude Include="Utility\Functor.hpp" />
     <ClInclude Include="Utility\Guid.hpp" />

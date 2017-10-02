@@ -161,6 +161,7 @@ template <typename ZilchLibrary>
 void WebBrowserManager::PlatformInitializeMeta()
 {
   ZilchInitializeType(Chrome);
+  ZilchInitializeType(ChromePopupEvent);
 }
 
 } // namespace Zero

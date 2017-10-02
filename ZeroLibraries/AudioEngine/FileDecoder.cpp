@@ -188,16 +188,18 @@ namespace Audio
         // If not streaming, decode the packet from the buffer
         if (!Streaming)
           frames = opus_decode_float(Decoders[i], InputFileData + DataIndex, packHead.Size,
-            DecodedPackets[i], FileEncoder::FrameSize, 0);
+            DecodedPackets[i], FileEncoder::PacketFrames, 0);
         // Otherwise read in the data from the file before decoding
         else
         {
           InputFile.Read(status, InputFileData, packHead.Size);
 
           frames = opus_decode_float(Decoders[i], InputFileData, packHead.Size,
-            DecodedPackets[i], FileEncoder::FrameSize, 0);
+            DecodedPackets[i], FileEncoder::PacketFrames, 0);
         }
       }
+
+      ErrorIf(frames < 0, opus_strerror(frames));
 
       // Move the data index forward
       DataIndex += packHead.Size;
@@ -294,9 +296,12 @@ namespace Audio
       // Copy the sample from each channel to the interleaved sample buffer
       for (short channel = 0; channel < Channels; ++channel, ++index)
       {
-        newPacket.Samples[index] = DecodedPackets[channel][frame];
+        float sample = DecodedPackets[channel][frame];
+        newPacket.Samples[index] = sample;
 
-        ErrorIf(newPacket.Samples[index] < -1.0f || newPacket.Samples[index] > 1.0f);
+        // Samples should be between [-1, +1] but it's possible
+        // encoding caused the sample to jump beyond 1
+        ErrorIf(sample < -2.0f || sample > 2.0f);
       }
     }
 
@@ -313,6 +318,36 @@ namespace Audio
     // (sets ParentAlive to null if it's currently null, returns original value which would be null)
     if (AtomicCompareExchangePointer(&ParentAlive, nullptr, nullptr) == nullptr)
       delete this;
+  }
+
+  //--------------------------------------------------------------------------------- Packet Decoder
+
+  //************************************************************************************************
+  PacketDecoder::~PacketDecoder()
+  {
+    if (Decoder)
+      opus_decoder_destroy(Decoder);
+  }
+
+  //************************************************************************************************
+  void PacketDecoder::InitializeDecoder()
+  {
+    if (Decoder)
+      opus_decoder_destroy(Decoder);
+
+    int error;
+    Decoder = opus_decoder_create(AudioSystemInternal::SampleRate, PacketEncoder::Channels, &error);
+  }
+
+  //************************************************************************************************
+  void PacketDecoder::DecodePacket(const byte* packetData, const unsigned dataSize, 
+    float*& decodedData, unsigned& numberOfSamples)
+  {
+    ReturnIf(!Decoder, , "Tried to decode packet without initializing decoder");
+
+    decodedData = new float[PacketEncoder::PacketFrames];
+    numberOfSamples = opus_decode_float(Decoder, packetData, dataSize, decodedData, 
+      PacketEncoder::PacketFrames, 0);
   }
 
 }

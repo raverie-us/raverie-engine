@@ -64,6 +64,7 @@
     <ClInclude Include="TileMap.hpp" />
     <ClInclude Include="TileMapSource.hpp" />
     <ClInclude Include="TileMapSourceLoadPattern.hpp" />
+    <ClInclude Include="UnitTestSystem.hpp" />
     <ClInclude Include="WebBrowser.hpp" />
     <ClInclude Include="WebBrowserChrome.hpp">
       <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>
@@ -92,6 +93,7 @@
     <ClCompile Include="SplineParticles.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="TileMapSource.cpp" />
+    <ClCompile Include="UnitTestSystem.cpp" />
     <ClCompile Include="WebBrowser.cpp" />
     <ClCompile Include="WebBrowserChrome.cpp">
       <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>

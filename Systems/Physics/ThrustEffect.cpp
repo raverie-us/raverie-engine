@@ -60,7 +60,7 @@ void ThrustEffect::ApplyEffect(RigidBody* obj, real dt)
 
   // Apply the force to the rigid body at our thrust center
   Vec3 force = mWorldThrustDirection * mForceStrength;
-  obj->ApplyForceAtPoint(force, mWorldThrustCenter);
+  obj->ApplyForceAtPointNoWakeUp(force, mWorldThrustCenter);
 }
 
 bool ThrustEffect::GetLocalSpaceDirection() const

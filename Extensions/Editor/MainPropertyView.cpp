@@ -90,7 +90,6 @@ MainPropertyView::MainPropertyView(Composite* parent, MetaSelection* selection,
 
   ConnectThisTo(selection, Events::SelectionChanged, OnSelectionChanged);
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
-  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceReload, OnArchetypeReload);
 
   mSpecialEdit = new MetaSelection();
 }
@@ -204,20 +203,15 @@ void MainPropertyView::OnSelectionFinal(SelectionChangedEvent* e)
 }
 
 //******************************************************************************
-void MainPropertyView::OnArchetypeReload(ResourceEvent* event)
+void MainPropertyView::OnSelectedArchetypeReplaced(CogReplaceEvent* e)
 {
-  // Re-create the preview for the given archetype if it was the one
-  // we were modifying
-  if(mSelectionHistory->mCurrent)
-  {
-    Resource* resource = event->EventResource;
-    Handle primary = mSelectionHistory->mCurrent->GetPrimaryAs<Object>();
-    if(primary == resource)
-    {
-      Handle instance = PreviewResource(resource);
-      mPropertyView->SetObject(instance, mUndoInterface);
-    }
-  }
+  Cog* newCog = e->mNewCog;
+
+  // We need to know when this one is replaced as well
+  ConnectThisTo(newCog, Events::CogReplaced, OnSelectedArchetypeReplaced);
+
+  // Display the new Cog
+  mPropertyView->SetObject(newCog, mUndoInterface);
 }
 
 //******************************************************************************
@@ -284,11 +278,15 @@ void MainPropertyView::EditResource(HandleParam object)
   // Preview the object
   Handle editObject = PreviewResource(object);
 
-  if(object.Get<Archetype*>())
+  if(Archetype* archetype = object.Get<Archetype*>())
   {
     // We want to use a local operation queue for editing the archetype object
     mLocalOpQueue->ClearAll();
     mUndoInterface->mOperationQueue = mLocalOpQueue;
+
+    Cog* cog = editObject.Get<Cog*>();
+    cog->SetArchetypeDefinitionMode();
+    ConnectThisTo(cog, Events::CogReplaced, OnSelectedArchetypeReplaced);
 
     // Edit the archetype object in the preview
     mPropertyView->SetObject(editObject, mUndoInterface);

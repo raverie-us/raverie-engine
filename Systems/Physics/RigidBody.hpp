@@ -78,58 +78,94 @@ public:
 
   /// The velocity (units per second) of this body in world space. Max bounds are around 1e+10,
   /// after this the velocity will be capped.
+  /// Setting this will wake up the body if it's asleep.
   Vec3 GetVelocity();
   void SetVelocity(Vec3Param velocity);
   /// The angular velocity (radians per second) of this body in world space. Objects will rotate about
   /// this axis using the right-hand rule. Max bounds are around 1e+10, after this
   /// the angular velocity will be capped.
+  /// Setting this will wake up the body if it's asleep.
   Vec3 GetAngularVelocity();
   void SetAngularVelocity(Vec3Param angularVelocity);
   /// The total accumulated force (in world space) that is being applied
   /// to the center of mass of this rigid body this frame.
+  /// Setting this will wake up the body if it's asleep.
   Vec3 GetForce();
   void SetForce(Vec3Param force);
   /// The total accumulated torque (in world space) that is being applied
   /// to the center of mass of this rigid body this frame.
+  /// Setting this will wake up the body if it's asleep.
   Vec3 GetTorque();
   void SetTorque(Vec3Param torque);
 
-  /// Adds to the current linear velocity. (world space)
+  /// Adds to the current linear velocity (world space). Will wake up the body if it's asleep.
   void ApplyLinearVelocity(Vec3Param linear);
-  /// Adds to the current angular velocity. (world space)
+  /// Adds to the current angular velocity (world space). Will wake up the body if it's asleep.
   void ApplyAngularVelocity(Vec3Param angular);
   /// Applies a velocity at a world space point on the object.
   /// Results in a change to linear and angular velocity.
+  /// Will wake up the body if it's asleep.
   void ApplyVelocityAtPoint(Vec3Param velocity, Vec3Param worldPoint);
   
   /// Computes the linear point velocity of world-space point.
   Vec3 GetPointVelocity(Vec3Param worldPoint);
 
-  /// Applies a force through the center of mass of the body. (world space)
+  /// Applies a force through the center of mass of the body
+  /// (world space). Will not wake up the body if it's asleep.
+  void ApplyForceNoWakeUp(Vec3Param force);
+  /// Applies a torque through the center of mass of the body
+  /// (world space). Will not wake up the body if it's asleep.
+  void ApplyTorqueNoWakeUp(Vec3Param torque);
+  /// Applies a force at an offset from the center of mass (world space). Results in a
+  /// force and torque to the center of mass. Will not wake up the body if it's asleep.
+  void ApplyForceAtOffsetVectorNoWakeUp(Vec3Param force, Vec3Param worldOffset);
+  /// Applies a force at a world point (world space). Results in a
+  /// force and torque to the center of mass. Will not wake up the body if it's asleep.
+  void ApplyForceAtPointNoWakeUp(Vec3Param force, Vec3Param worldPoint);
+
+  /// Applies a force through the center of mass of the body
+  /// (world space). Will wake up the body if it's asleep.
   void ApplyForce(Vec3Param force);
-  /// Applies a torque through the center of mass of the body. (world space)
+  /// Applies a torque through the center of mass of the body
+  /// (world space). Will wake up the body if it's asleep.
   void ApplyTorque(Vec3Param torque);
   /// Applies a force at an offset from the center of mass (world space). Results in a
-  /// force and torque to the center of mass.
+  /// force and torque to the center of mass. Will wake up the body if it's asleep.
   void ApplyForceAtOffsetVector(Vec3Param force, Vec3Param worldOffset);
   /// Applies a force at a world point (world space). Results in a
-  /// force and torque to the center of mass.
+  /// force and torque to the center of mass. Will wake up the body if it's asleep.
   void ApplyForceAtPoint(Vec3Param force, Vec3Param worldPoint);
 
   /// Applies a linear impulse through the center of mass (world space).
-  /// Only results in a change of linear velocity.
+  /// Only results in a change of linear velocity. Will not wake up the body if it's asleep.
+  void ApplyLinearImpulseNoWakeUp(Vec3Param linear);
+  /// Applies an angular impulse through the center of mass (world space).
+  /// Only results in a change of angular velocity. Will not wake up the body if it's asleep.
+  void ApplyAngularImpulseNoWakeUp(Vec3Param angular);
+  /// Applies an impulse at on offset from the center of mass (world space).
+  /// Results in a change in linear and angular velocity. Will not wake up the body if it's asleep.
+  void ApplyImpulseAtOffsetVectorNoWakeUp(Vec3Param impulse, Vec3Param worldOffset);
+  /// Applies an impulse at a world point (world space).
+  /// Results in a change to linear and angular velocity.
+  /// Will not wake up the body if it's asleep.
+  void ApplyImpulseAtPointNoWakeUp(Vec3Param impulse, Vec3Param worldPoint);
+
+  /// Applies a linear impulse through the center of mass (world space).
+  /// Only results in a change of linear velocity. Will wake up the body if it's asleep.
   void ApplyLinearImpulse(Vec3Param linear);
   /// Applies an angular impulse through the center of mass (world space).
-  /// Only results in a change of angular velocity.
+  /// Only results in a change of angular velocity. Will wake up the body if it's asleep.
   void ApplyAngularImpulse(Vec3Param angular);
-  /// Applies a linear and angular impulse (world space). Used in solving constraints.
-  void ApplyConstraintImpulse(Vec3Param linear, Vec3Param angular);
   /// Applies an impulse at on offset from the center of mass (world space).
-  /// Results in a change in linear and angular velocity.
+  /// Results in a change in linear and angular velocity. Will wake up the body if it's asleep.
   void ApplyImpulseAtOffsetVector(Vec3Param impulse, Vec3Param worldOffset);
   /// Applies an impulse at a world point (world space).
   /// Results in a change to linear and angular velocity.
+  /// Will wake up the body if it's asleep.
   void ApplyImpulseAtPoint(Vec3Param impulse, Vec3Param worldPoint);
+
+  /// Applies a linear and angular impulse (world space). Used in solving constraints.
+  void ApplyConstraintImpulse(Vec3Param linear, Vec3Param angular);
   
   /// How this rigid body handles dynamics. Is it a regular rigid body (dynamic)?
   /// Does it not move (static)? Does the user want to manually move it and have

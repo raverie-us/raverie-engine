@@ -466,18 +466,10 @@ public:
       MeshCollider* collider = object->has(MeshCollider);
       collider->SetPhysicsMesh(mesh);
     }
-    UpdateViewDistance();
+
+    UpdateViewDistance(Vec3(-1.0f));
     //We want to be called for update every frame so we debug draw
     AnimatePreview(PreviewAnimate::Always);
-
-    //To make it easier to see the debug drawing, change to orthographic and zoom in
-    Camera* camera = mCamera.has(Camera);
-    if(camera != nullptr)
-    {
-      camera->mPerspectiveMode = PerspectiveMode::Orthographic;
-      camera->mSize = 2.0f;
-    }
-    
   }
 };
 
@@ -496,18 +488,10 @@ public:
       ConvexMeshCollider* collider = object->has(ConvexMeshCollider);
       collider->SetConvexMesh(mesh);
     }
-    UpdateViewDistance();
+
+    UpdateViewDistance(Vec3(-1.0f));
     //We want to be called for update every frame so we debug draw
     AnimatePreview(PreviewAnimate::Always);
-
-    //To make it easier to see the debug drawing, change to orthographic and zoom in
-    Camera* camera = mCamera.has(Camera);
-    if(camera != nullptr)
-    {
-      camera->mPerspectiveMode = PerspectiveMode::Orthographic;
-      camera->mSize = 2.0f;
-    }
-
   }
 };
 
@@ -552,6 +536,11 @@ public:
     : SpacePreview(initializer, initializer.Object.Get<Archetype*>()->ResourceIdName)
   {
     UpdateViewDistance(Vec3(-1.0f));
+  }
+
+  Handle GetEditObject() override
+  {
+    return (Cog*)mObject;
   }
 };
 

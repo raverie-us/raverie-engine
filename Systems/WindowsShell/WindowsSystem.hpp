@@ -53,6 +53,8 @@ public:
 
   WindowState::Enum GetState() override;
   void SetState(WindowState::Enum windowState) override;
+
+  IntVec2 GetPrimaryScreenSize() override;
   
   void TakeFocus() override;
   bool HasFocus() override;
@@ -81,9 +83,14 @@ public:
   HWND mWindowHandle;
 private:
 
-  void SendKeyboardEvent(KeyboardEvent& keyEvent);
+  void SendKeyboardEvent(KeyboardEvent& event, bool simulated) override;
+  void SendKeyboardTextEvent(KeyboardTextEvent& event, bool simulated) override;
+  void SendMouseEvent(OsMouseEvent& event, bool simulated) override;
+  void SendMouseDropEvent(OsMouseDropEvent& event, bool simulated) override;
+  void SendWindowEvent(OsWindowEvent& event, bool simulated) override;
+
   void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
-  void SendMouseButtonEvent(OsMouseEvent& mouseEvent, StringParam buttonState);
+  void SendMouseEvent(OsMouseEvent& mouseEvent, StringParam buttonState);
   void FillMouseEventData(IntVec2Param mousePosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
 
   RECT GetDesktopClientRect();
@@ -101,8 +108,6 @@ private:
   bool mMouseTrapped;
   Keyboard* mKeyboard;
   WindowStyleFlags::Enum mWindowStyle;
-  WindowState::Enum mWindowState;
-  WindowState::Enum mRestoreState;
   ITaskbarList3* mTaskBar;
   uint mTaskBarButtonCreated;
   WindowsOsWindow* mParent;
@@ -146,6 +151,10 @@ private:
   Array<WindowsOsWindow*> mWindows;
   HWND mMainWindow;
   WindowsSystemUpdateState::Enum mState;
+
+  // This is used to prevent recursion into the Update function
+  // because we occassionally call Z::gEngine->Update() from inside the message pump
+  bool mIsUpdating;
 };
 
 }//namespace Zero

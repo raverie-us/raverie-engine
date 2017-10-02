@@ -36,11 +36,22 @@ ZilchDefineType(RigidBody, builder, type)
   // Bind force methods
   ZilchBindGetterSetter(Force);
   ZilchBindGetterSetter(Torque);
+  ZilchBindMethod(ApplyForceNoWakeUp);
+  ZilchBindMethod(ApplyTorqueNoWakeUp);
+  ZilchBindMethod(ApplyForceAtOffsetVectorNoWakeUp);
+  ZilchBindMethod(ApplyForceAtPointNoWakeUp);
   ZilchBindMethod(ApplyForce);
   ZilchBindMethod(ApplyTorque);
   ZilchBindMethod(ApplyForceAtOffsetVector);
   ZilchBindMethod(ApplyForceAtPoint);
   // Bind impulse methods
+  // These 4 methods don't need to be bound because applying a non-zero vector will always wake an
+  // object up after resolution unless the impulse is zero. This prevents a frame delay issue of the
+  // object not getting forces. These functions only exist currently for internal use.
+  //ZilchBindMethod(ApplyLinearImpulseNoWakeUp);
+  //ZilchBindMethod(ApplyAngularImpulseNoWakeUp);
+  //ZilchBindMethod(ApplyImpulseAtOffsetVectorNoWakeUp);
+  //ZilchBindMethod(ApplyImpulseAtPointNoWakeUp);
   ZilchBindMethod(ApplyLinearImpulse);
   ZilchBindMethod(ApplyAngularImpulse);
   ZilchBindMethod(ApplyImpulseAtOffsetVector);
@@ -189,6 +200,7 @@ void RigidBody::SetVelocity(Vec3Param velocity)
 {
   // Clamp velocity to attempt to deal with bad floating point values
   mVelocity = ClampVelocityValue(velocity, "velocity");
+  ForceAwake();
 }
 
 Vec3 RigidBody::GetAngularVelocity()
@@ -201,6 +213,7 @@ Vec3 RigidBody::GetAngularVelocity()
 void RigidBody::SetAngularVelocity(Vec3Param angularVelocity)
 {
   mAngularVelocity = ClampVelocityValue(angularVelocity, "angular velocity");
+  ForceAwake();
 }
 
 Vec3 RigidBody::GetForce()
@@ -211,6 +224,7 @@ Vec3 RigidBody::GetForce()
 void RigidBody::SetForce(Vec3Param force)
 {
   mForceAccumulator = force;
+  ForceAwake();
 }
 
 Vec3 RigidBody::GetTorque()
@@ -221,16 +235,19 @@ Vec3 RigidBody::GetTorque()
 void RigidBody::SetTorque(Vec3Param torque)
 {
   mTorqueAccumulator = torque;
+  ForceAwake();
 }
 
 void RigidBody::ApplyLinearVelocity(Vec3Param linear)
 {
   mVelocity += linear;
+  ForceAwake();
 }
 
 void RigidBody::ApplyAngularVelocity(Vec3Param angular)
 {
   mAngularVelocity += angular;
+  ForceAwake();
 }
 
 void RigidBody::ApplyVelocityAtPoint(Vec3Param velocity, Vec3Param worldPoint)
@@ -257,65 +274,114 @@ Vec3 RigidBody::GetPointVelocity(Vec3Param worldPoint)
   return activeBody->GetPointVelocityInternal(worldPoint);
 }
 
-void RigidBody::ApplyForce(Vec3Param force)
+void RigidBody::ApplyForceNoWakeUp(Vec3Param force)
 {
   mForceAccumulator += force;
 }
 
-void RigidBody::ApplyTorque(Vec3Param torque)
+void RigidBody::ApplyTorqueNoWakeUp(Vec3Param torque)
 {
   mTorqueAccumulator += torque;
 }
 
-void RigidBody::ApplyForceAtOffsetVector(Vec3Param force, Vec3Param worldOffset)
+void RigidBody::ApplyForceAtOffsetVectorNoWakeUp(Vec3Param force, Vec3Param worldOffset)
 {
   Vec3 torque = Math::Cross(worldOffset, force);
-  ApplyForce(force);
-  ApplyTorque(torque);
+  ApplyForceNoWakeUp(force);
+  ApplyTorqueNoWakeUp(torque);
 }
 
-void RigidBody::ApplyForceAtPoint(Vec3Param force, Vec3Param worldPoint)
+void RigidBody::ApplyForceAtPointNoWakeUp(Vec3Param force, Vec3Param worldPoint)
 {
   // Check for changes to the center of mass
   UpdateResourcesAndQueue();
 
   Vec3 worldR = worldPoint - mCenterOfMass;
-  ApplyForceAtOffsetVector(force, worldR);
+  ApplyForceAtOffsetVectorNoWakeUp(force, worldR);
 }
 
-void RigidBody::ApplyLinearImpulse(Vec3Param linear)
+void RigidBody::ApplyForce(Vec3Param force)
+{
+  ApplyForceNoWakeUp(force);
+  ForceAwake();
+}
+
+void RigidBody::ApplyTorque(Vec3Param torque)
+{
+  ApplyTorqueNoWakeUp(torque);
+  ForceAwake();
+}
+
+void RigidBody::ApplyForceAtOffsetVector(Vec3Param force, Vec3Param worldOffset)
+{
+  ApplyForceAtOffsetVectorNoWakeUp(force, worldOffset);
+  ForceAwake();
+}
+
+void RigidBody::ApplyForceAtPoint(Vec3Param force, Vec3Param worldPoint)
+{
+  ApplyForceAtPointNoWakeUp(force, worldPoint);
+  ForceAwake();
+}
+
+void RigidBody::ApplyLinearImpulseNoWakeUp(Vec3Param linear)
 {
   // Check for changes to the mass
   UpdateResourcesAndQueue();
   mVelocity += mInvMass.Apply(linear);
 }
 
-void RigidBody::ApplyAngularImpulse(Vec3Param angular)
+void RigidBody::ApplyAngularImpulseNoWakeUp(Vec3Param angular)
 {
   // Check for changes to the inertia
   UpdateResourcesAndQueue();
   mAngularVelocity += mInvInertia.Apply(angular);
 }
 
-void RigidBody::ApplyConstraintImpulse(Vec3Param linear, Vec3Param angular)
-{
-  ApplyLinearImpulse(linear);
-  ApplyAngularImpulse(angular);
-}
-
-void RigidBody::ApplyImpulseAtOffsetVector(Vec3Param impulse, Vec3Param worldOffset)
+void RigidBody::ApplyImpulseAtOffsetVectorNoWakeUp(Vec3Param impulse, Vec3Param worldOffset)
 {
   Vec3 angularMomentum = Math::Cross(worldOffset, impulse);
   ApplyConstraintImpulse(impulse, angularMomentum);
 }
 
-void RigidBody::ApplyImpulseAtPoint(Vec3Param impulse, Vec3Param worldPoint)
+void RigidBody::ApplyImpulseAtPointNoWakeUp(Vec3Param impulse, Vec3Param worldPoint)
 {
   // Check for changes to the center of mass (also mass and inertia)
   UpdateResourcesAndQueue();
 
   Vec3 worldR = worldPoint - mCenterOfMass;
-  ApplyImpulseAtOffsetVector(impulse, worldR);
+  ApplyImpulseAtOffsetVectorNoWakeUp(impulse, worldR);
+}
+
+void RigidBody::ApplyLinearImpulse(Vec3Param linear)
+{
+  // Check for changes to the mass
+  ApplyLinearImpulseNoWakeUp(linear);
+  ForceAwake();
+}
+
+void RigidBody::ApplyAngularImpulse(Vec3Param angular)
+{
+  ApplyAngularImpulseNoWakeUp(angular);
+  ForceAwake();
+}
+
+void RigidBody::ApplyImpulseAtOffsetVector(Vec3Param impulse, Vec3Param worldOffset)
+{
+  ApplyImpulseAtOffsetVectorNoWakeUp(impulse, worldOffset);
+  ForceAwake();
+}
+
+void RigidBody::ApplyImpulseAtPoint(Vec3Param impulse, Vec3Param worldPoint)
+{
+  ApplyImpulseAtPointNoWakeUp(impulse, worldPoint);
+  ForceAwake();
+}
+
+void RigidBody::ApplyConstraintImpulse(Vec3Param linear, Vec3Param angular)
+{
+  ApplyLinearImpulseNoWakeUp(linear);
+  ApplyAngularImpulseNoWakeUp(angular);
 }
 
 RigidBodyDynamicState::Enum RigidBody::GetDynamicState()

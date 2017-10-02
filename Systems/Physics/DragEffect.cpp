@@ -57,7 +57,7 @@ void DragEffect::ApplyEffect(RigidBody* obj, real dt)
     Vec3 linearAcceleration = -obj->mVelocity * linearDamping;
     force += obj->mInvMass.ApplyInverted(linearAcceleration);
   }
-  obj->ApplyForce(force);
+  obj->ApplyForceNoWakeUp(force);
   
   Vec3 torque = -obj->mAngularVelocity * mAngularDrag;
   if(angularDamping != 0.0f)
@@ -66,7 +66,7 @@ void DragEffect::ApplyEffect(RigidBody* obj, real dt)
     torque = obj->mInvInertia.ApplyInverted(angularAcceleration);
   }
   
-  obj->ApplyTorque(torque);
+  obj->ApplyTorqueNoWakeUp(torque);
 }
 
 real DragEffect::GetLinearDamping() const

@@ -188,7 +188,7 @@ public:
   /// with distance when played through a SoundEmitter. If DefaultNoAttenuation is selected on the SoundCue 
   /// and a different SoundAttenuator is selected on the SoundEmitter, the SoundEmitter's settings will be applied.
   /// If DefaultNoAttenuation is selected on both the sound will not be attenuated.
-  HandleOf<SoundAttenuator> GetAttenuator();
+  SoundAttenuator* GetAttenuator();
   void SetAttenuator(SoundAttenuator* attenuation);
   /// Adds a new SoundEntry to this SoundCue.
   void AddSoundEntry(Sound* sound, float weight);

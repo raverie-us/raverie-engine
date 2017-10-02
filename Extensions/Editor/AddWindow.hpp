@@ -42,6 +42,9 @@ public:
 
   AddResourceWindow(Composite* parent);
 
+  // Event handlers
+  void OnKeyDown(KeyboardEvent* e);
+
   /// Shows template's for the given resource type.
   void SelectResourceType(BoundType* resourceType);
 
@@ -86,6 +89,7 @@ private:
   void OnTextEntered(Event* e);
   void OnKeyDownSearch(KeyboardEvent* e);
   void OnKeyDown(KeyboardEvent* e);
+  void OnSearchKeyPreview(KeyboardEvent* e);
 
   /// When they hit 'Enter' on a selected Resource type, we want to notify a type was selected.
   void OnEnter(Event*);

@@ -128,9 +128,9 @@ void WindEffect::ApplyEffect(Collider& collider, RigidBody* obj, real dt)
   force *= mWindSpeed;
   // Apply a force to the center of each face in the direction of
   // the wind with the computed surface area ratio
-  obj->ApplyForceAtOffsetVector(force * forceX, basisX);
-  obj->ApplyForceAtOffsetVector(force * forceY, basisY);
-  obj->ApplyForceAtOffsetVector(force * forceZ, basisZ);
+  obj->ApplyForceAtOffsetVectorNoWakeUp(force * forceX, basisX);
+  obj->ApplyForceAtOffsetVectorNoWakeUp(force * forceY, basisY);
+  obj->ApplyForceAtOffsetVectorNoWakeUp(force * forceZ, basisZ);
 }
 
 real WindEffect::GetWindSpeed() const

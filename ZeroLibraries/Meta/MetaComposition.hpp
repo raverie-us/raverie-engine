@@ -143,6 +143,7 @@ public:
     bool Empty();
     Handle Front();
     void PopFront();
+    ComponentRange& All() { return *this; }
 
     Handle mOwner;
     MetaComposition* mComposition;

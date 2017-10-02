@@ -212,6 +212,7 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifi
   // Send an event to signal that the cog has been replaced
   CogReplaceEvent eventToSend(oldCog, updatedCog);
   space->DispatchEvent(Events::CogReplaced, &eventToSend);
+  oldCog->DispatchEvent(Events::CogReplaced, &eventToSend);
 
   // Move to the same place on the tree
   Cog* parent = oldCog->GetParent();
@@ -227,7 +228,9 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifi
     parent->ReplaceChild(oldCog, updatedCog);
   }
 
-  // The old object is no longer needed
+  if (oldCog->InArchetypeDefinitionMode())
+    updatedCog->SetArchetypeDefinitionMode();
+
   oldCog->Destroy();
 
   return updatedCog;

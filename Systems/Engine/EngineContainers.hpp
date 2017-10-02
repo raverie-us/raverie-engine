@@ -81,6 +81,7 @@ public:
     value_type& Front() { return mR.Front(); }
     void PopFront() { mR.PopFront(); }
     bool Empty() { return mR.Empty(); }
+    range& All() { return *this; }
   };
   
   class valueRange
@@ -95,6 +96,7 @@ public:
     data_type& Front() { return mR.Front().second; }
     void PopFront() { mR.PopFront(); }
     bool Empty() { return mR.Empty(); }
+    valueRange& All() { return *this; }
   };
   
   value_type& operator[](uint index)

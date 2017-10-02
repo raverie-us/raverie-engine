@@ -15,7 +15,6 @@ bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
 void ClearCogModifications(Cog* rootCog, Cog* cog, ObjectState::ModifiedProperties& cachedMemory,
                            bool retainOverrideProperties, bool retainChildArchetypeModifications);
 void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications);
-void AssignChildIds(Cog* parent);
 template<typename type>
 void eraseEqualValues(Array<type>& mArray, type value);
 
@@ -88,7 +87,7 @@ ZilchDefineType(Cog, builder, type)
 
   // Properties
   ZilchBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension());
+  ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension())->Add(new CogArchetypePropertyFilter());
   ZilchBindGetterProperty(BaseArchetype)->Add(new EditorResource(false, false, "", true));
 
   ZilchBindGetter(Space);
@@ -596,7 +595,7 @@ void Cog::ForceAddComponent(Component* component, int index)
   for (; !range.Empty(); range.PopFront())
     range.Front()->ComponentAdded(componentType, component);
 
-  Event e;
+  ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ComponentsModified, &e);
 }
 
@@ -605,7 +604,7 @@ bool Cog::AddComponentByType(BoundType* componentType)
 {
   ReturnIf(componentType == nullptr, false, "Invalid meta");
 
-  if (mFlags.IsSet(CogFlags::ComponentsLocked))
+  if (mFlags.IsSet(CogFlags::ScriptComponentsLocked) && !componentType->Native)
   {
     DoNotifyError("Cog locked", "Attempting to add a component to a locked cog");
     return false;
@@ -754,7 +753,7 @@ void Cog::ForceRemoveComponent(Component* component)
 
   RemoveComponentInternal(component);
 
-  Event e;
+  ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ComponentsModified, &e);
 }
 
@@ -768,7 +767,7 @@ bool Cog::RemoveComponentByType(BoundType* componentType)
     return false;
   }
 
-  if (mFlags.IsSet(CogFlags::ComponentsLocked))
+  if (mFlags.IsSet(CogFlags::ScriptComponentsLocked) && !componentType->Native)
   {
     DoNotifyError("Cog locked", "Attempting to remove a component from a locked cog");
     return false;
@@ -823,7 +822,7 @@ void Cog::MoveComponentBefore(uint componentToMove, uint destination)
   else
     mComponents.InsertAt(destination, component);
 
-  Event e;
+  ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ComponentsModified, &e);
 }
 
@@ -924,13 +923,12 @@ bool Cog::CheckForRemovalWithNotify(BoundType* componentType)
   MetaComposition* composition = cogType->Has<MetaComposition>();
 
   String reason;
-  if (composition->CanRemoveComponent(this, componentType, reason))
+  if (!composition->CanRemoveComponent(this, componentType, reason))
   {
     DoNotifyWarning("Can't Remove Component.", reason);
     return false;
   }
 
-  composition->RemoveComponent(this, componentType);
   return true;
 }
 
@@ -1009,37 +1007,44 @@ uint Cog::GetChildCount()
 }
 
 //**************************************************************************************************
-void Cog::AttachToPreserveLocal(Cog* parent)
+bool Cog::AttachToPreserveLocal(Cog* parent)
 {
   if (parent == nullptr)
   {
     DoNotifyException("Invalid attachment", "Cannot attach to a null object.");
-    return;
+    return false;
   }
 
   if (parent == this)
   {
     DoNotifyException("Invalid attachment", "Cannot attach to ourself.");
-    return;
+    return false;
   }
 
-  if (parent == mHierarchyParent)
+  if (GetParent() == parent)
   {
     DoNotifyException("Invalid attachment", "Already attached to our own parent.");
-    return;
+    return false;
   }
 
   if (this->mFlags.IsSet(CogFlags::Protected))
   {
     DoNotifyException("Invalid attachment", "Cannot attach protected objects to other objects.");
-    return;
+    return false;
+  }
+
+  if (GetSpace() != parent->GetSpace())
+  {
+    DoNotifyException("Invalid attachment", "Parent must be in the same Space.");
+    return false;
   }
 
   // Don't bother doing anything if we're being destroyed
-  if (GetMarkedForDestruction())
-    return;
+  if (GetMarkedForDestruction() || parent->GetMarkedForDestruction())
+    return false;
 
   // Check to make sure that the passed in parent is not already a child of us
+  // Check to make sure that the parent is not already a child of us
   Cog* otherRootParent = parent;
   while (otherRootParent->GetParent())
   {
@@ -1047,7 +1052,7 @@ void Cog::AttachToPreserveLocal(Cog* parent)
     if (otherRootParent == this)
     {
       DoNotifyException("Invalid attachment", "Cannot attach to our own child.");
-      return;
+      return false;
     }
   }
 
@@ -1102,31 +1107,27 @@ void Cog::AttachToPreserveLocal(Cog* parent)
 
   // Space has now changed
   mSpace->ChangedObjects();
+
+  return true;
 }
 
 //**************************************************************************************************
-void Cog::AttachTo(Cog* parent)
+bool Cog::AttachTo(Cog* parent)
 {
-  if (parent == nullptr || parent == this)
-    return;
-
-  // Don't bother doing anything if we're being destroyed
-  if (GetMarkedForDestruction())
-    return;
-
   Transform* childTransform = this->has(Transform);
 
   // If the child has no Transform, there's no relative attachment needed
   if (childTransform == nullptr)
-  {
-    AttachToPreserveLocal(parent);
-    return;
-  }
+    return AttachToPreserveLocal(parent);
 
   // Cannot attach an object with a Transform to an object without a Transform
   Transform* parentTransform = parent->has(Transform);
   if (parentTransform == nullptr)
-    return;
+  {
+    DoNotifyException("Invalid attachment", "Cannot attach an object with a Transform to an "
+                      "object without a Transform.");
+    return false;
+  }
 
   // Bring the child's transformation into the parent's space
   Mat4 parentTransformation = parentTransform->GetWorldMatrix();
@@ -1139,7 +1140,9 @@ void Cog::AttachTo(Cog* parent)
   relativeTransformation.Decompose(&scale, &rotation, &translation);
 
   // Attach the child
-  AttachToPreserveLocal(parent);
+  bool success = AttachToPreserveLocal(parent);
+  if (success == false)
+    return false;
 
   // Set his new transformation
   //if the child wants to be in world after the attachment, don't reset
@@ -1151,6 +1154,8 @@ void Cog::AttachTo(Cog* parent)
     childTransform->SetRotation(Math::ToQuaternion(rotation));
     childTransform->SetTranslation(translation);
   }
+
+  return true;
 }
 
 //**************************************************************************************************
@@ -1517,6 +1522,22 @@ HierarchyList* Cog::GetParentHierarchyList()
   return parent->GetHierarchyList();
 }
 
+
+//**************************************************************************************************
+void Cog::AssignChildIds()
+{
+  forRange(Cog& child, GetChildren())
+  {
+    if (child.mChildId == PolymorphicNode::cInvalidUniqueNodeId)
+      child.mChildId = GenerateUniqueId64();
+
+    // Assign to children as long as we don't enter a new Archetype (they should
+    // already have child id's assigned to them)
+    if (child.mArchetype == nullptr)
+      child.AssignChildIds();
+  }
+}
+
 //**************************************************************************************************
 Archetype* Cog::GetArchetype()
 {
@@ -1642,11 +1663,18 @@ void Cog::UploadToArchetype()
   //
   // If we only ever allowed people to modify the Archetype in its own window, this would not be
   // an issue.
-  CachedModifications& archetypeModifications = archetype->GetAllCachedModifications();
-  archetypeModifications.ApplyModificationsToObject(this, true);
+  //
+  // However, if we're in ArchetypeDefinition mode, all these modifications will already be
+  // on the object. Re-applying these could even override modifications we're trying to make
+  // to the Archetype definition (such as reverting a property)
+  if(InArchetypeDefinitionMode() == false)
+  {
+    CachedModifications& archetypeModifications = archetype->GetAllCachedModifications();
+    archetypeModifications.ApplyModificationsToObject(this, true);
+  }
 
   // Assign all children child-id's if they don't already have them
-  AssignChildIds(this);
+  AssignChildIds();
 
   // Update the resource and save to library
   // If uploaded this will also clear modified
@@ -1658,7 +1686,10 @@ void Cog::UploadToArchetype()
   //    because those modifications are now part of the Archetype's context, not the instance
   // 2. Any cached modifications we applied to the object before saving. See comment above
   //    applying the archetypes cached modifications in this function.
-  ClearCogModifications(this, false);
+  //
+  // However, if we're in ArchetypeDefinition mode, we want to keep the modifications
+  if (InArchetypeDefinitionMode() == false)
+    ClearCogModifications(this, false);
 
   overlappingModifications.ApplyModificationsToObject(this);
 
@@ -1813,6 +1844,12 @@ void Cog::DispatchDown(StringParam eventId, Event* event)
       child.DispatchDown(eventId, event);
     }
   }
+}
+
+//**************************************************************************************************
+bool Cog::HasReceivers(StringParam eventId)
+{
+  return GetDispatcher()->HasReceivers(eventId);
 }
 
 //**************************************************************************************************
@@ -1993,6 +2030,29 @@ void Cog::SetLocked(bool state)
 }
 
 //**************************************************************************************************
+bool Cog::InArchetypeDefinitionMode()
+{
+  if (mFlags.IsSet(CogFlags::ArchetypeDefinitionMode))
+    return true;
+  if (Cog* parent = GetParent())
+    return parent->InArchetypeDefinitionMode();
+  return false;
+}
+
+//**************************************************************************************************
+void Cog::SetArchetypeDefinitionMode()
+{
+  Archetype* archetype = GetArchetype();
+
+  ReturnIf(archetype == nullptr, , "Must have an Archetype to be in Archetype Definition mode.");
+
+  // Apply our modifications from our base Archetype
+  archetype->GetLocalCachedModifications().ApplyModificationsToObject(this);
+
+  mFlags.SetFlag(CogFlags::ArchetypeDefinitionMode);
+}
+
+//**************************************************************************************************
 void Cog::TransformUpdate(TransformUpdateInfo& info)
 {
   ComponentRange range = mComponents.All();
@@ -2002,9 +2062,12 @@ void Cog::TransformUpdate(TransformUpdateInfo& info)
     component->TransformUpdate(info);
   }
 
-  ObjectEvent toSend;
-  toSend.Source = this;
-  DispatchEvent(Events::TransformUpdated, &toSend);
+  if (HasReceivers(Events::TransformUpdated))
+  {
+    ObjectEvent toSend;
+    toSend.Source = this;
+    DispatchEvent(Events::TransformUpdated, &toSend);
+  }
 }
 
 //**************************************************************************************************
@@ -2167,21 +2230,6 @@ void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications)
   bool retainOverride = (nearestArchetypeContext == root);
 
   ClearCogModifications(root, root, cachedMemory, retainOverride, retainChildArchetypeModifications);
-}
-
-//**************************************************************************************************
-void AssignChildIds(Cog* parent)
-{
-  forRange(Cog& child, parent->GetChildren())
-  {
-    if(child.mChildId == PolymorphicNode::cInvalidUniqueNodeId)
-      child.mChildId = GenerateUniqueId64();
-
-    // Assign to children as long as we don't enter a new Archetype (they should
-    // already have child id's assigned to them)
-    if (child.mArchetype == nullptr)
-      AssignChildIds(&child);
-  }
 }
 
 //**************************************************************************************************

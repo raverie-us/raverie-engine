@@ -1686,15 +1686,18 @@ namespace Zilch
     }
     else
     {
-      // We can attempt to infer the type from our initial value
-      // We haven't run type checking on expressions yet (because members don't all have their types!)
-      // However, a few nodes can compute their type without running type checking such as a constructor call or literal value
-      // Attempt this way first...
-      this->PrecomputeTypingWalker.Walk(this, node->InitialValue, context);
-      node->ResultType = node->InitialValue->PrecomputedResultType;
+      if (node->InitialValue != nullptr)
+      {
+        // We can attempt to infer the type from our initial value
+        // We haven't run type checking on expressions yet (because members don't all have their types!)
+        // However, a few nodes can compute their type without running type checking such as a constructor call or literal value
+        // Attempt this way first...
+        this->PrecomputeTypingWalker.Walk(this, node->InitialValue, context);
+        node->ResultType = node->InitialValue->PrecomputedResultType;
+      }
 
       // If we didn't compute any type then show an error message
-      if (node->ResultType == nullptr)
+      if (node->InitialValue == nullptr || node->ResultType == nullptr)
       {
         node->ResultType = Core::GetInstance().ErrorType;
         return this->ErrorAt(node, ErrorCode::MemberVariableTypesCannotBeInferred, node->Name.c_str());

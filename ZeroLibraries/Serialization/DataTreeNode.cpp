@@ -910,8 +910,8 @@ void Compare(DataNode* lhs, DataNode* rhs)
 }
 
 //******************************************************************************
-DataNode* ReadDataSet(Status& status, StringRange data, StringParam source,
-                      DataTreeLoader* loader, uint* fileVersion)
+bool ReadDataSet(Status& status, StringRange data, StringParam source, DataTreeLoader* loader,
+                 uint* fileVersion, DataNode* fileRoot)
 {
   DataTreeContext parseContext;
   parseContext.Filename = source;
@@ -920,37 +920,39 @@ DataNode* ReadDataSet(Status& status, StringRange data, StringParam source,
   // Load the data tree with the correct parser
   *fileVersion = GetFileVersion(data);
 
-  // Use the correct loader given the file version
-  DataNode* fileTree = nullptr;
-  DataNode* newFileTree = nullptr;
+  //TimerBlock block("Data Tree Parsing");
+  if (*fileVersion == DataVersion::Legacy)
   {
-    //TimerBlock block("Data Tree Parsing");
-    if(*fileVersion == DataVersion::Legacy)
-      fileTree = LegacyDataTreeParser::BuildTree(parseContext, data);
-    else
-      fileTree = DataTreeParser::BuildTree(parseContext, data);
+    // Legacy format only supported a single root
+    DataNode* root = LegacyDataTreeParser::BuildTree(parseContext, data);
+    if(root == nullptr)
+      return false;
+    root->AttachTo(fileRoot);
+  }
+  else
+  {
+    DataTreeParser::BuildTree(parseContext, data, fileRoot);
   }
 
   // Failed to read file
-  if(fileTree == NULL)
+  if(fileRoot->mChildren.Empty())
   {
     status.SetFailed("Failed to parse root element.", ParseErrorCodes::ParsingError);
-    return NULL;
+    return false;
   }
 
   // Check for parse error
   if(parseContext.Error)
   {
     status.SetFailed(parseContext.Message, ParseErrorCodes::ParsingError);
-    SafeDelete(fileTree);
-    return NULL;
+    return false;
   }
 
   // Patch the tree if required
-  if(parseContext.PatchRequired && !loader->mIgnoreDataInheritance)
-    PatchDataTree(fileTree, loader, parseContext, false);
+  if (parseContext.PatchRequired && !loader->mIgnoreDataInheritance)
+    PatchDataTree(fileRoot, loader, parseContext, false);
 
-  return fileTree;
+  return true;
 }
 
 }//namespace Zero

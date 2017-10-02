@@ -33,6 +33,7 @@ ZilchDefineType(EditorViewport, builder, type)
 
 EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership)
   : Composite(parent)
+  , mIgnoreSpaceModifications(false)
 {
   mTools = Z::gEditor->Tools;
   mOwnerShip = ownership;
@@ -127,22 +128,12 @@ void EditorViewport::SetAsActive()
   /// switch the object view to the space edited by this viewport
   if (Space* space = mEditSpace)
   {
-    // If the space being viewed is editing an archetype do not set it as our edit level
-    // but we still need to set the space or we will not properly display the object view
     Level* editLevel = space->mLevelLoaded;
-    if (editLevel && !mEditArchetype)
+    if(editLevel && mEditArchetype.IsNull())
       Z::gEditor->mEditLevel = editLevel;
 
     Z::gEditor->SetEditSpace(space);
   }
-}
-
-void EditorViewport::SetActiveSelection()
-{
-  MetaSelection* selection = Z::gEditor->GetSelection();
-  // If we are editing an archetype set it as our selection
-  if(mArchetypedObject.IsNotNull())
-    selection->SelectOnly(mArchetypedObject);
 }
 
 void EditorViewport::SetUpEditorCamera()
@@ -208,8 +199,6 @@ bool EditorViewport::TakeFocusOverride()
   SetAsActive();
   // Take soft focus so hard focus items can block it
   SoftTakeFocus();
-  // Change the object focus based on the scene we are entering
-  SetActiveSelection();
 
   return true;
 }
@@ -312,6 +301,9 @@ void EditorViewport::OnSpaceDestroyed(Event* event)
 
 void EditorViewport::OnSpaceModified(Event* event)
 {
+  if (mIgnoreSpaceModifications)
+    return;
+
   // Set the modified icon
   if(Space* editSpace = mEditSpace)
   {
@@ -392,21 +384,6 @@ void EditorViewport::OnSave(SavingEvent* event)
   // Has anything in the level changed?
   if(!editSpace->GetModified())
     return;
-
-  // If editing an archetype upload it
-  if(mEditArchetype && mArchetypedObject)
-  {
-    Cog* object = mArchetypedObject;
-
-    // Make sure it is still the same archetype
-    // and upload if it has changed
-    if(object->GetArchetype() == mEditArchetype && object->IsModifiedFromArchetype())
-    {
-      object->UploadToArchetype();
-      Z::gEngine->RebuildArchetypes(mEditArchetype);
-    }
-    return;
-  }
 
   // Editing a level
   Level* editLevel = editSpace->mLevelLoaded;
@@ -942,6 +919,9 @@ bool EditorViewport::ForwardEventToGizmos(KeyboardEvent* e)
 
 void EditorViewport::OnCameraUpdate(ObjectEvent* event)
 {
+  if (mDestroyed)
+    return;
+
   EditorSettings* settings = Z::gEngine->GetConfigCog()->has(EditorSettings);
   ConfigureViewCube(settings->mViewCube, settings->mViewCubeSize);
 

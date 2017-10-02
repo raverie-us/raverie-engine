@@ -125,10 +125,10 @@ namespace Zilch
 }
 
 // Special macros
-#define ZilchForEach(VariableName, Range)                 forRange(VariableName, (Range).All())
-#define ZilchRefForEach(VariableName, Range)              forRangeRef(VariableName, (Range).All())
-#define ZilchForRange(VariableName, RangeName, Range)     ZeroForRangeVar(VariableName, RangeName, (Range).All())
-#define ZilchRefForRange(VariableName, RangeName, Range)  ZeroForRangeRefVar(VariableName, RangeName, (Range).All())
+#define ZilchForEach(VariableName, Range)                 forRange(VariableName, Range)
+#define ZilchRefForEach(VariableName, Range)              forRangeRef(VariableName, Range)
+#define ZilchForRange(VariableName, RangeName, Range)     ZeroForRangeVar(VariableName, RangeName, Range)
+#define ZilchRefForRange(VariableName, RangeName, Range)  ZeroForRangeRefVar(VariableName, RangeName, Range)
 
 // Zilch Includes
 #include "ForwardDeclarations.hpp"
@@ -304,5 +304,6 @@ namespace Zilch
 #include "DataDrivenLexer.hpp"
 #include "Wrapper.hpp"
 #include "ProcessClass.hpp"
+#include "Color.hpp"
 
 #endif

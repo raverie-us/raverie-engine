@@ -903,12 +903,27 @@ Quaternion RotationQuaternionBetween(Vec3Param start, Vec3Param end)
   Vec3 b = end;
   b.AttemptNormalize();
   Vec3 axis = Math::Cross(a, b);
-  float length = axis.AttemptNormalize();
   float dot = Dot(a, b);
-  float angle = Math::ArcCos(dot);
-  if(length == 0)
-    return Quat::cIdentity;
+  if (axis == Vec3::cZero)
+  {
+    // If the two vectors are in the same direction or either are zero...
+    if (dot >= 0)
+    {
+      return Quat::cIdentity;
+    }
+    // Otherwise they're in opposite directions
+    // This case technically has infinite possibilities
+    else
+    {
+      axis = Math::Cross(a, Vec3::cXAxis);
 
+      if (axis == Vec3::cZero)
+        axis = Math::Cross(a, Vec3::cZAxis);
+    }
+  }
+
+  // ToQuaternion will normalize the axis
+  float angle = Math::ArcCos(dot);
   return ToQuaternion(axis, angle);
 }
 

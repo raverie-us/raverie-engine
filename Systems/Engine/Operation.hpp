@@ -25,6 +25,7 @@ DeclareEvent(OperationUndo);
 DeclareEvent(OperationRedo);
 }
 
+/// Notification about most recent Operation/OperationBatch added to the OperationQueue.
 class OperationQueueEvent : public Event
 {
 public:
@@ -120,7 +121,7 @@ class OperationBatch : public Operation
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  OperationBatch(){}
+  OperationBatch() : Operation() { mName = "UnnamedBatch"; }
   ~OperationBatch();
   
   /// Operation Interface.
@@ -165,7 +166,7 @@ public:
   OperationListType BatchStack;
 
   void Queue(Operation* command);
-  const String& GetActiveBatchName(StringParam batchName);
+  String GetActiveBatchName();
   void SetActiveBatchName(StringParam batchName);
   void SetActiveBatchDescription(StringParam description);
   void BeginBatch();

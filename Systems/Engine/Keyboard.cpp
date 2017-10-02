@@ -263,32 +263,15 @@ KeyboardEvent::KeyboardEvent()
 
 void KeyboardEvent::Serialize(Serializer& stream)
 {
-  if(stream.GetMode() == SerializerMode::Saving)
-  {
-    stream.StartPolymorphic(ZilchTypeId(KeyboardEvent));
+  SerializeNameDefault(EventId, String());
+  SerializeNameDefault(ShiftPressed, false);
+  SerializeNameDefault(AltPressed, false);
+  SerializeNameDefault(CtrlPressed, false);
+  SerializeNameDefault(SpacePressed, false);
+  SerializeNameDefault(OsKey, 0U);
+  stream.SerializeFieldDefault<int>("Key", *(int*)&Key, (int)Keys::Unknown);
 
-    SerializeNameDefault(ShiftPressed, false);
-    SerializeNameDefault(AltPressed, false);
-    SerializeNameDefault(CtrlPressed, false);
-    SerializeNameDefault(SpacePressed, false);
-    SerializeNameDefault(OsKey, 0U);
-    stream.SerializeFieldDefault<int>("Key", *(int*)&Key, (int)Keys::Unknown);
-
-    SerializeEnumNameDefault(KeyState, State, (KeyState::Enum)KeyState::Size);
-
-    stream.EndPolymorphic();
-  }
-  else
-  {
-    SerializeNameDefault(ShiftPressed, false);
-    SerializeNameDefault(AltPressed, false);
-    SerializeNameDefault(CtrlPressed, false);
-    SerializeNameDefault(SpacePressed, false);
-    SerializeNameDefault(OsKey, 0U);
-    stream.SerializeFieldDefault<int>("Key", *(int*)&Key, (int)Keys::Unknown);
-
-    SerializeEnumNameDefault(KeyState, State, (KeyState::Enum)KeyState::Size);
-  }
+  SerializeEnumNameDefault(KeyState, State, KeyState::Up);
 }
 
 Keyboard* KeyboardEvent::GetKeyboard()
@@ -306,6 +289,12 @@ ZilchDefineType(KeyboardTextEvent, builder, type)
 KeyboardTextEvent::KeyboardTextEvent()
   : mRune(Rune::Invalid), mHandled(false)
 {
+}
+
+void KeyboardTextEvent::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(EventId, String());
+  stream.SerializeFieldDefault("Rune", mRune.value, 0u);
 }
 
 }//namespace Zero

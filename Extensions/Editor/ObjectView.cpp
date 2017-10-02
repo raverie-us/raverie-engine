@@ -111,6 +111,9 @@ public:
   {
     mFilteredList.Clear();
 
+    if (!mSource)
+      return;
+
     if(filterString.Empty())
       return;
 
@@ -365,9 +368,7 @@ public:
 
   ~SpaceObjectSource()
   {
-    forRange(RemovedEntry* entry, mVisibleRemovedEntries.Values())
-      delete entry;
-    mVisibleRemovedEntries.Clear();
+    ClearRemovedObjects();
   }
 
   bool ShowObject(Cog* cog)
@@ -1173,6 +1174,9 @@ void ObjectView::OnKeyDown(KeyboardEvent* event)
 
 void ObjectView::ShowObject(Cog* cog)
 {
+  if (!mSource)
+    return;
+
   DataIndex index = mSource->ToIndex(cog);
   mTree->ShowRow(index);
 }
@@ -1246,6 +1250,9 @@ void ObjectView::OnDelete(ObjectEvent* event)
 
 void ObjectView::OnSpaceChange(Event*)
 {
+  if (!mSource)
+    return;
+
   mSource->ClearRemovedObjects();
 
   // Rebuild the tree now that there is new objects
@@ -1282,6 +1289,9 @@ void ObjectView::OnSelectionChanged(Event* event)
 
 void ObjectView::OnMouseEnterRow(TreeEvent* e)
 {
+  if (!mSource)
+    return;
+
   mToolTip.SafeDestroy();
   Object* object = (Object*)mSource->ToEntry(e->Row->mIndex);
   if(object == nullptr)
@@ -1343,6 +1353,9 @@ void ObjectView::OnMouseExitRow(TreeEvent* e)
 
 void ObjectView::OnTreeRightClick(TreeEvent* event)
 {
+  if (!mSource)
+    return;
+
   ContextMenu* menu = new ContextMenu(event->Row);
   Mouse* mouse = Z::gMouse;
   menu->SetBelowMouse(mouse, Pixels(0,0));
@@ -1364,12 +1377,20 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
 
 void ObjectView::OnRestore(ObjectEvent* event)
 {
-  RemovedEntry* removedEntry = (RemovedEntry*)mSource->ToEntry(mCommandIndex);
+  if (!mSource)
+    return;
+
+  Object* object = (Object*)mSource->ToEntry(mCommandIndex);
+  RemovedEntry* removedEntry = Type::DirectDynamicCast<RemovedEntry*>(object);
+  ReturnIf(removedEntry == nullptr, , "There should have been a RemovedEntry at the command index");
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   Cog* parent = removedEntry->mParent;
+  ReturnIf(parent == nullptr, , "The RemovedEntry should always have a parent");
   ObjectState::ChildId childId("Cog", removedEntry->mChildId);
-  RestoreLocallyRemovedChild(queue, parent->has(Hierarchy), childId);
+  Hierarchy* parentHierarchy = parent->has(Hierarchy);
+  ReturnIf(parentHierarchy == nullptr, , "The parent Cog should have had a Hierarchy");
+  RestoreLocallyRemovedChild(queue, parentHierarchy, childId);
 }
 
 void ObjectView::OnRestoreChildOrder(ObjectEvent* event)

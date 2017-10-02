@@ -107,8 +107,8 @@ public:
   void AddComponentFromBuffer();
   void SaveComponentToBuffer();
 
-  void ComponentAdded(HandleParam object = nullptr);
-  void ComponentRemoved(HandleParam object = nullptr);
+  void ComponentAdded(HandleParam object);
+  void ComponentRemoved(HandleParam object);
 
 private:
   /// The meta of the component we're adding/removing.

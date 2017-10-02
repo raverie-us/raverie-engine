@@ -346,6 +346,9 @@ Vec3 Transform::GetLocalScale( )
 
 void Transform::SetLocalScale(Vec3Param localScale)
 {
+  if (localScale == Scale)
+    return;
+
   Mat4 oldMat;
   if(IsInitialized( ))
     oldMat = GetWorldMatrix( );
@@ -403,6 +406,9 @@ Quat Transform::GetLocalRotation( )
 
 void Transform::SetLocalRotation(QuatParam localRotation)
 {
+  if (localRotation == Rotation)
+    return;
+
   Mat4 oldMat;
   if(IsInitialized( ))
     oldMat = GetWorldMatrix( );
@@ -450,6 +456,9 @@ Vec3 Transform::GetLocalTranslation( )
 
 void Transform::SetLocalTranslation(Vec3Param localTranslation)
 {
+  if (localTranslation == Translation)
+    return;
+
   Mat4 oldMat;
   if(IsInitialized( ))
     oldMat = GetWorldMatrix( );

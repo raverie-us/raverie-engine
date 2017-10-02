@@ -24,6 +24,9 @@ Tweakable(float, ToolTipWrapWidth, 280.0f, cLocation);
 // Fill out necessary tooltip information for a Composite, if available.
 bool GetToolTipText(int index, ListSource* source, StringBuilder* toolTipText)
 {
+  if (!source)
+    return false;
+
   String valueDescription = source->GetDescriptionAt(index);
 
   // No need for a tool tip if there is no description.

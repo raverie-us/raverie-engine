@@ -3181,8 +3181,8 @@ namespace Zilch
     builder.AddBoundFunction(stringType, "SubString", SubString, TwoParameters(runeIteratorType, "start", "end"), stringType, FunctionOptions::None);
     builder.AddBoundFunction(stringType, "SubStringFromRuneIndices", SubStringFromRuneIndices, TwoParameters(integerType, "startIndex", "endIndex"), stringType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Creates a substring from start and end indices. WARNING: this may be slow as finding an index for a UTF8 string requires a linear search.");
-    builder.AddBoundFunction(stringType, Zilch::OperatorGet, StringGetRune, OneParameter(integerType, "index"), ZilchTypeId(Rune), FunctionOptions::None);
-
+    builder.AddBoundFunction(stringType, Zilch::OperatorGet, StringGetRune, OneParameter(integerType, "index"), ZilchTypeId(Rune), FunctionOptions::None)
+      ->Description = ZilchDocumentString("String operator Get is deprecated. To iterate through a String use a StringRange (.All) or StringIterator (.Begin).");
     builder.AddBoundFunction(stringType, "SubStringBytes", SubStringBytes, TwoParameters(integerType, "startByteIndex", "lengthInBytes"), stringRangeType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings are UTF8 so indexing by bytes could produce unexpected results on non-ascii strings.");
     builder.AddBoundFunction(stringType, "RuneIteratorFromByteIndex", StringRuneIteratorFromByteIndex, OneParameter(integerType, "byteIndex"), runeIteratorType, FunctionOptions::None)
@@ -3757,7 +3757,7 @@ namespace Zilch
       }
 
       ZilchBindBasicSplatWithError(builder, math, Real, realType, "Sqrt", Math::SafeSqrt, boundType, OneParameter(boundType), "Computes the square root", "Sqrt of the negative number '%s' is invalid.");
-      ZilchBindBasicTwoParamSplat(builder, math, Real, realType, "Step", Math::Step, boundType, TwoParameters(boundType, "y", "x"), "If y < x then 0 is returned, otherwise 1 is returned.")
+      ZilchBindBasicTwoParamSplat(builder, math, Real, realType, "Step", Math::Step, boundType, TwoParameters(boundType, "y", "x"), "If y <= x then 1 is returned, otherwise 0 is returned.")
       ZilchBindBasicSplat(builder, math, Real, realType, "Tan", Math::Tan, boundType, OneParameter(boundType, "radians"), "The transcendental function tangent.");
       ZilchBindBasicSplat(builder, math, Real, realType, "Tanh", Math::Tanh, boundType, OneParameter(boundType,  "radians"), "The hyperbolic tangent function.");
       ZilchBindBasicSplat(builder, math, Real, realType, "ToRadians", Math::DegToRad, boundType, OneParameter(boundType, "degrees"), "Converts the given degrees to radians.");
@@ -3862,6 +3862,28 @@ namespace Zilch
     ZilchInitializeTypeAs(StringSplitRangeExtended, "StringSplitRange");
     ZilchInitializeType(MultiPrimitive);
     ZilchInitializeType(Wrapper);
+    ZilchInitializeTypeAs(ColorClass, "Color");
+    ZilchInitializeTypeAs(ColorsClass, "Colors");
+
+    ZilchInitializeType(ArrayClass<Handle>);
+    ZilchInitializeType(ArrayClass<Delegate>);
+    ZilchInitializeType(ArrayClass<Boolean>);
+    ZilchInitializeType(ArrayClass<Boolean2>);
+    ZilchInitializeType(ArrayClass<Boolean3>);
+    ZilchInitializeType(ArrayClass<Boolean4>);
+    ZilchInitializeType(ArrayClass<Byte>);
+    ZilchInitializeType(ArrayClass<Integer>);
+    ZilchInitializeType(ArrayClass<Integer2>);
+    ZilchInitializeType(ArrayClass<Integer3>);
+    ZilchInitializeType(ArrayClass<Integer4>);
+    ZilchInitializeType(ArrayClass<Real>);
+    ZilchInitializeType(ArrayClass<Real2>);
+    ZilchInitializeType(ArrayClass<Real3>);
+    ZilchInitializeType(ArrayClass<Real4>);
+    ZilchInitializeType(ArrayClass<Quaternion>);
+    ZilchInitializeType(ArrayClass<DoubleInteger>);
+    ZilchInitializeType(ArrayClass<DoubleReal>);
+    ZilchInitializeType(ArrayClass<Any>);
 
     // Add multi primitive type components
     //doubleIntegerType->Add(new MultiPrimitive(doubleIntegerType,  1));

@@ -77,4 +77,26 @@ bool DeleteFile(StringParam dest)
   return result;
 }
 
+bool DeleteDirectoryContents(StringParam directory)
+{
+  if (!DirectoryExists(directory))
+    return false;
+
+  bool success = true;
+
+  // RemoveDirectoryW requires the directory to be empty, so we must delete everything in it
+  FileRange range(directory);
+  for (; !range.Empty(); range.PopFront())
+  {
+    String name = range.Front();
+    String fullName = BuildString(directory, cDirectorySeparatorCstr, name);
+    if (IsDirectory(fullName))
+      success &= DeleteDirectory(fullName);
+    else
+      success &= DeleteFile(fullName);
+  }
+
+  return success;
+}
+
 }//namespace Zero

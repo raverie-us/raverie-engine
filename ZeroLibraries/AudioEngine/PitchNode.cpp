@@ -263,7 +263,7 @@ namespace Audio
       }
 
       // If currently interpolating, get updated pitch factor
-      if (CurrentData.FramesProcessed <= FramesToInterpolate)
+      if (CurrentData.Interpolating)
         currentPitchFactor = Interpolate->ValueAtIndex(CurrentData.FramesProcessed);
 
       // Advance the pitch index

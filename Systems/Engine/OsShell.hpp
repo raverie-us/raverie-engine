@@ -8,16 +8,22 @@
 
 namespace Zero
 {
-namespace Z
+namespace Events
 {
-// This is only used in extreme cases where we integrate an API that also attempts to make OS calls (eg Chrome)
-extern bool gEnableOsWindowProcedure;
+// This event occurs in the middle of OsShell update before we process Os messages
+DeclareEvent(OsShellUpdate);
 }
 
 class Image;
 class OsWindow;
 class OsWindow;
 struct FileDialogConfig;
+
+class OsShellHook
+{
+public:
+  virtual void HookUpdate() = 0;
+};
 
 //--------------------------------------------------------------------- OS Shell
 /// Os Shell interface used to provide abstract platform user interface 
@@ -26,6 +32,8 @@ class OsShell : public System
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  OsShell();
 
   /// Name of the Shell's operating system.
   virtual String GetOsName() = 0;
@@ -69,6 +77,11 @@ public:
   
   /// Debug helper to print out memory logging information
   void DumpMemoryDebuggerStats();
+
+  /// If this is set we will call the HookUpdate function inside here
+  /// during the middle of our update after the keyboard has
+  /// been updated but before we send input events.
+  OsShellHook* mOsShellHook;
 };
 
 //-------------------------------------------------------------------- Os Events

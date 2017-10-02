@@ -154,11 +154,12 @@ namespace Audio
         // Otherwise, make the Samples buffer the size of one packet
         else
         {
-          Samples = new float[FileEncoder::FrameSize * Channels];
-          memset(Samples, 0, sizeof(float) * FileEncoder::FrameSize * Channels);
+          unsigned sampleCount = FileEncoder::PacketFrames * Channels;
+          Samples = new float[sampleCount];
+          memset(Samples, 0, sizeof(float) * sampleCount);
 
-          NextStreamedSamples = new float[FileEncoder::FrameSize * Channels];
-          memset(NextStreamedSamples, 0, sizeof(float) * FileEncoder::FrameSize * Channels);
+          NextStreamedSamples = new float[sampleCount];
+          memset(NextStreamedSamples, 0, sizeof(float) * sampleCount);
         }
       }
       // If not successful, delete the decoder object
@@ -221,7 +222,7 @@ namespace Audio
       // Adjust the sample index
       sampleIndex -= PreviousBufferSamples;
 
-      unsigned bufferSize = FileEncoder::FrameSize * Channels;
+      unsigned bufferSize = FileEncoder::PacketFrames * Channels;
 
       // If we've reached the end of the buffer, swap in the NextStreamedSamples buffer
       if (sampleIndex >= bufferSize)
@@ -322,8 +323,8 @@ namespace Audio
 
     PreviousBufferSamples = 0;
     NeedSecondBuffer = true;
-    memset(Samples, 0, sizeof(float) * FileEncoder::FrameSize * Channels);
-    memset(NextStreamedSamples, 0, sizeof(float) * FileEncoder::FrameSize * Channels);
+    memset(Samples, 0, sizeof(float) * FileEncoder::PacketFrames * Channels);
+    memset(NextStreamedSamples, 0, sizeof(float) * FileEncoder::PacketFrames * Channels);
   }
 
   //************************************************************************************************
@@ -380,7 +381,7 @@ namespace Audio
 
       threadedSibling->PreviousBufferSamples = 0;
       threadedSibling->NeedSecondBuffer = true;
-      memset(threadedSibling->Samples, 0, sizeof(float) * FileEncoder::FrameSize * Channels);
+      memset(threadedSibling->Samples, 0, sizeof(float) * FileEncoder::PacketFrames * Channels);
     }
   }
 
@@ -430,7 +431,7 @@ namespace Audio
         memcpy(NextStreamedSamples, packet.Samples, sizeof(float) * packet.FrameCount * Channels);
 
         // If the index hasn't reached the end, decode another packet
-        if (PreviousBufferSamples + (FileEncoder::FrameSize * Channels) < FrameCount * Channels)
+        if (PreviousBufferSamples + (FileEncoder::PacketFrames * Channels) < FrameCount * Channels)
           Decoder->AddDecodingTask();
 
         // Mark that the second buffer is filled

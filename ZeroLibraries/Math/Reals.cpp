@@ -443,7 +443,7 @@ real Floor(real value, int places, int base)
 
 real Step(real y, real x)
 {
-  return (x >= y) ? real(1.0) : real(0.0);
+  return (y <= x) ? real(1.0) : real(0.0);
 }
 
 int CountBits(int value)

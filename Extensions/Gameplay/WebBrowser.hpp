@@ -37,7 +37,7 @@ public:
   WebBrowserManager();
   ~WebBrowserManager();
   static WebBrowserManager& GetInstance();
-  void OnEngineUpdate(UpdateEvent* event);
+  void OnOsShellUpdate(Event* event);
 
   // These functions get implemented by the platform
 
@@ -80,7 +80,7 @@ public:
   Vec2 mScrollSpeed;
 };
 
-class WebBrowser : public ThreadSafeId32EventObject
+class WebBrowser : public ReferenceCountedEventObject
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -88,6 +88,9 @@ public:
   WebBrowser();
   WebBrowser(const WebBrowserSetup& setup);
   ~WebBrowser();
+
+  static HandleOf<WebBrowser> Create();
+  static HandleOf<WebBrowser> Create(const WebBrowserSetup& setup);
 
   /// Reloads the browser (full forced without cache)
   void Reload();
@@ -98,12 +101,26 @@ public:
   IntVec2 GetSize();
 
   Texture* GetTexture();
-  void SetTexture(Texture* tex);
 
+  /// The background color of the browser when no CSS background is specified or when pages are loading.
+  /// Note that changing this MAY cause the browser page to refresh/reinitialize.
+  Vec4 GetBackgroundColor();
+  void SetBackgroundColor(Vec4Param color);
+
+  /// Whether the browser renderer allows transparency when no CSS background is specified or when pages are loading.
+  /// Note that changing this MAY cause the browser page to refresh/reinitialize.
+  bool GetTransparent();
+  void SetTransparent(bool transparent);
+
+  void SetUrl(StringParam url);
+  String GetUrl();
+
+  String mLastSetUrl;
   String mStatus;
   String mTitle;
   Vec2 mScrollSpeed;
   Vec4 mBackgroundColor;
+  bool mTransparent;
 
   ///////////////////////////////////////////////////
   // BEGIN PLATFORM
@@ -128,8 +145,11 @@ public:
   void SetVisible(bool visible);
   bool GetVisible();
 
-  void SetUrl(StringParam url);
-  String GetUrl();
+  void SetBackgroundColorPlatform(Vec4Param color);
+  void SetTransparentPlatform(bool transparent);
+
+  void SetUrlPlatform(StringParam url);
+  String GetUrlPlatform();
 
   void ExecuteScriptFromLocation(StringParam script, StringParam url, int line);
 
@@ -146,6 +166,7 @@ public:
     
   // Internal
   void Initialize(const WebBrowserSetup& setup);
+  void ReInitializePlatformBrowser();
   PixelBuffer mBuffer;
   void* mPlatformBrowser;
 };

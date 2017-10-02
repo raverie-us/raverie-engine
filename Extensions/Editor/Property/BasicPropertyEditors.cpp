@@ -231,7 +231,7 @@ void DirectProperty::OnRightMouseUpLabel(MouseEvent* event)
 void DirectProperty::Refresh()
 {
   // The property can be null when scripts re-compile before the property grid is torn down
-  if (!mProperty)
+  if (!mProperty || mDestroyed)
     return;
 
   // We want to visually notify that the property is modified

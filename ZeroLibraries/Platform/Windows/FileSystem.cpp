@@ -205,16 +205,8 @@ bool DeleteDirectory(StringParam directory)
   if(!DirectoryExists(directory))
     return false;
 
-  FileRange range(directory);
-  for(; !range.Empty(); range.PopFront())
-  {
-    String name = range.Front();
-    String fullName = BuildString(directory, cDirectorySeparatorCstr, name);
-    if(IsDirectory(fullName))
-      DeleteDirectory(fullName);
-    else
-      DeleteFile(fullName);
-  }
+  // RemoveDirectoryW requires the directory to be empty, so we must delete everything in it
+  DeleteDirectoryContents(directory);
 
   //this is the only part that needs to be updated platform specific
   BOOL success = ::RemoveDirectoryW(Widen(directory).c_str());

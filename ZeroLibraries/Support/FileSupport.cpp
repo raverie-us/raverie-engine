@@ -57,7 +57,7 @@ void MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter
 
 void CopyFolderContents(StringParam dest, StringParam source, FileFilter* filter)
 {
-  CreateDirectory(dest);
+  CreateDirectoryAndParents(dest);
 
   FileRange files(source);
   for(;!files.Empty();files.PopFront())

@@ -96,6 +96,18 @@ extern const String cInvalidatesObject;
 
 }//namespace FunctionFlags
 
+//------------------------------------------------------------------------- Serialization Attributes
+namespace SerializationAttributes
+{
+
+// If it's not a primitive type, serialization will assume it can never be a modified property.
+// Only its child properties can be modified.
+// This was used to avoid checking if Transform.Translation.X is modified. It can never be
+// modified because it's a primitive. Only Transform.Translation can be modified.
+extern const String cSerializationPrimitive;
+
+}//namespace SerializationAttributes
+
  // Uncategorized
 extern const String cInvalidTypeName;
 
@@ -148,7 +160,8 @@ public:
   static void NotifyPropertyModified(HandleParam object, PropertyPathParam property,
                                     AnyParam oldValue, AnyParam newValue, bool intermediateChange);
   static void NotifyComponentsModified(HandleParam object);
-  static void NotifyObjectModified(HandleParam object);
+  // Called when an object is modified in any way.
+  static void NotifyObjectModified(HandleParam object, bool intermediateChange = false);
 
   // Id used in the UndoMap for the operation system. Currently, this id needs to be globally
   // unique between everything that implements this function. This could be made better by 
@@ -174,7 +187,7 @@ public:
 
   // The object was modified in any way (property modified, component added/moved/removed, property
   // marked as modified, property reverted, child restored, child order restored, etc...)
-  virtual void ObjectModified(HandleParam object);
+  virtual void ObjectModified(HandleParam object, bool intermediateChange);
 
   // When an operation is undone, the data returned from 'GetUndoData' will be given back to us here.
   virtual void RestoreUndoData(HandleParam object, AnyParam undoData) { }

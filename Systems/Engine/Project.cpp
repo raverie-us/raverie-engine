@@ -93,8 +93,10 @@ String ProjectSettings::GetEditorContentFolder()
 //******************************************************************************
 void ProjectSettings::Save()
 {
-  String projectFile = FilePath::CombineWithExtension(ProjectFolder, ProjectName, ".zeroproj");
-  SaveToDataFile(*mOwner, projectFile);
+  if (ProjectFile.Empty())
+    ProjectFile = FilePath::CombineWithExtension(ProjectFolder, ProjectName, ".zeroproj");
+  
+  SaveToDataFile(*mOwner, ProjectFile);
 }
 
 //******************************************************************************

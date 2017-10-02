@@ -33,6 +33,7 @@ namespace Events
 }
 
 //---------------------------------------------------------------- Tool Ui Event
+/// Allows Ui customization for Tools. This will be sent on the Tool every time it is activated.
 class ToolUiEvent : public Event
 {
 public:
@@ -51,6 +52,7 @@ public:
   bool mNeedsPropertyGrid;
   Composite* mParent;
   Composite* mCustomUi;
+  /// Easy access to the Select Tool. It's commonly used in other Tools (such as ray casting).
   Cog* mSelectTool;
 };
 

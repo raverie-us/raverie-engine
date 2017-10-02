@@ -26,6 +26,7 @@ ZilchDefineType(ToolUiEvent, builder, type)
   ZilchBindFieldProperty(mNeedsPropertyGrid);
   ZilchBindGetterProperty(Parent);
   ZilchBindGetterProperty(SelectTool);
+  ZeroBindDocumented();
 }
 
 //******************************************************************************
@@ -492,8 +493,6 @@ void ToolControl::OnInfoMouseEnter(MouseEvent*)
     placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
       IndicatorSide::Bottom, IndicatorSide::Top);
 
-    toolTip->SetArrowTipTranslation(placement);
-
     // Move arrow outside of the tool's property grid.
     if(toolTip->mSide == IndicatorSide::Right)
     {
@@ -503,6 +502,10 @@ void ToolControl::OnInfoMouseEnter(MouseEvent*)
     else if(toolTip->mSide == IndicatorSide::Left)
     {
       placement.mScreenRect.X -= InfoSpan;
+      toolTip->SetArrowTipTranslation(placement);
+    }
+    else  // No adjustment.
+    {
       toolTip->SetArrowTipTranslation(placement);
     }
 
@@ -634,7 +637,6 @@ void ToolControl::BuildShortcutsToolTip(const ShortcutSet* entries)
   toolTip->mBorderColor = FloatColorRGBA(10, 10, 10, 255);
 
   toolTip->SetContent(mShortcutsView);
-  toolTip->SetArrowTipTranslation(placement);
 
   // Move arrow outside of the tool's property grid.
   if(toolTip->mSide == IndicatorSide::Right)
@@ -647,6 +649,11 @@ void ToolControl::BuildShortcutsToolTip(const ShortcutSet* entries)
     placement.mScreenRect.X -= InfoSpan;
     toolTip->SetArrowTipTranslation(placement);
   }
+  else  // No adjustment.
+  {
+    toolTip->SetArrowTipTranslation(placement);
+  }
+
 }
 
 //******************************************************************************
