@@ -32,7 +32,7 @@ void FullScreen(Editor* editor)
   if (osWindow->GetState() != WindowState::Fullscreen)
     osWindow->SetState(WindowState::Fullscreen);
   else
-    osWindow->SetState(WindowState::Maximized);
+    osWindow->SetState(WindowState::Windowed);
 }
 
 void ShowTextWindow(StringParam windowTitle, StringParam windowText)

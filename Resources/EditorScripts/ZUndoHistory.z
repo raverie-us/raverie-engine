@@ -34,6 +34,7 @@ class ZUndoHistory : ZilchComponent
       
     var entry = entryCog.ZHistoryEntry;
     entry.OperationData = operation;
+    
     //entry.HistoryInfo.Name = operation.Name;
     entry.RowName.SpriteText.Text = operation.Name;
     

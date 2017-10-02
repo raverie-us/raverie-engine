@@ -137,43 +137,43 @@ namespace GizmoSnapping
   float ii = in*in;    out = (ii > Math::Epsilon() || ii < -Math::Epsilon())
 
 //******************************************************************************
-Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param deltaWorldMovement,
+Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param worldMovement,
   QuatParam basis, GizmoDragMode::Enum dragMode,
   GizmoSnapMode::Enum snapMode, float snapDistance)
 {
-  Vec3 worldMovement = deltaWorldMovement;
+  Vec3 movement = worldMovement;
 
   if(snapMode == GizmoSnapMode::Relative)
   {
     if(dragMode == GizmoDragMode::Line)
     {
-      // Snap the distance that we're moving
-      float distance = Math::Length(worldMovement);
+      // Snap the distance moved.
+      float distance = Math::Length(movement);
       distance = Snap(distance, snapDistance);
 
-      // Apply the new distance to the movement
-      worldMovement.AttemptNormalize( );
-      worldMovement = worldMovement * distance;
+      // Apply the snapped distance to the movement.
+      movement.AttemptNormalize( );
+      movement = movement * distance;
     }
-    else  // Moving on a hyperplane, or the view-plane specifically
+    else  // Moving on a hyperplane, or the view-plane specifically.
     {
-      // Snap on all basis axes
+      // Snap on all basis axes.
       //  - note: Doing so accounts for 'GizmoBasis::Local'
       Mat3 m = ToMatrix3(basis);
       // X
       Vec3 axis = m.BasisX( ).AttemptNormalized( );
-      float snap = Snap(Math::Dot(axis, worldMovement), snapDistance);
+      float snap = Snap(Math::Dot(axis, movement), snapDistance);
       Vec3 snappedMovement(snap * axis);
       // Y
       axis = m.BasisY( ).AttemptNormalized( );
-      snap = Snap(Math::Dot(axis, worldMovement), snapDistance);
+      snap = Snap(Math::Dot(axis, movement), snapDistance);
       snappedMovement += snap * axis;
       // Z
       axis = m.BasisZ( ).AttemptNormalized( );
-      snap = Snap(Math::Dot(axis, worldMovement), snapDistance);
+      snap = Snap(Math::Dot(axis, movement), snapDistance);
       snappedMovement += snap * axis;
 
-      worldMovement = snappedMovement;
+      movement = snappedMovement;
     }
 
   }
@@ -183,11 +183,11 @@ Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param deltaWorldMovement,
     for(int i = 0; i < 3; ++i)
     {
       bool snapOnAxis;
-      SNAP_ON_AXIS(worldMovement[i], snapOnAxis);
+      SNAP_ON_AXIS(movement[i], snapOnAxis);
 
       // If 'snapOnAxis * snapDistance' is 0, then 'currentPosition[i]' will be the final result.
       // [ie, don't snap on that axis]
-      newPosition[i] = Snap(currentPosition[i] + worldMovement[i], snapOnAxis * snapDistance);
+      newPosition[i] = Snap(currentPosition[i] + movement[i], snapOnAxis * snapDistance);
     }
 
     return newPosition;
@@ -195,11 +195,11 @@ Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param deltaWorldMovement,
   else if(snapMode == GizmoSnapMode::WorldGrid)
   {
     // Apply the movement, then snap to world-grid with units defined by 'snapDistance'
-    Vec3 worldGridPosition = Snap(currentPosition + worldMovement, snapDistance);
+    Vec3 worldGridPosition = Snap(currentPosition + movement, snapDistance);
     return worldGridPosition;
   }
 
-  return currentPosition + worldMovement;
+  return currentPosition + movement;
 }
 
 //******************************************************************************
@@ -943,9 +943,9 @@ ZilchDefineType(ScaleGizmo, builder, type)
   ZilchBindFieldProperty(mSnapMode);
   ZilchBindFieldProperty(mSnapDistance);
 
-  //outputs of gizmo modified
-  ZilchBindField(mDirection);
-  ZilchBindField(mChangeInScale);
+  // Read-only outputs of gizmo modified.
+  ZilchBindFieldGetter(mDirection);
+  ZilchBindFieldGetter(mChangeInScale);
 }
 
 //******************************************************************************
@@ -1030,7 +1030,8 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     float a = Dot(side, worldMovement);
     float b = Dot(screenUp, worldMovement);
 
-      // Line from top-left to bottom-right, across view-plane, passing through grab-point.
+      // Line from top-left to bottom-right, across view-plane, passing through
+      // previous frame's mouse position on view-plane.
       //  - Drag movement in half-space to the left is scaling down
       //  - Drag movement in half-space to the right is scaling up
     mViewPlaneMove = -Dot(Vec2(a, b), Vec2(1, 1)) * distance;
@@ -1135,9 +1136,10 @@ ZilchDefineType(RotateGizmo, builder, type)
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindFieldProperty(mSnapAngle);
 
-  //outputs of gizmo modified
-  ZilchBindField(mDirection);
-  ZilchBindField(mChangeInRotation);
+  // Read-only outputs of gizmo modified.
+  ZilchBindFieldGetter(mDirection);
+  ZilchBindFieldGetter(mChangeInRotation);
+  ZilchBindFieldGetter(mDeltaRotation);
 }
 
 //******************************************************************************
@@ -1187,8 +1189,7 @@ void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
   mDirection /= Math::Abs(mDirection);
 
   mChangeInRotation = e->mRadiansAroundAxis;
-
-  float deltaOnAxis = e->mDeltaRadiansAroundAxis;
+  mDeltaRotation = e->mDeltaRadiansAroundAxis;
   Vec3 selectedAxis = e->mWorldRotationAxis;
 
   if(GetSnapping())
@@ -1198,19 +1199,19 @@ void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
     float deltaSnap = Math::Abs(mChangeInRotation) - Math::Abs(mPreviousSnap);
     if(deltaSnap > Math::Epsilon( ) || deltaSnap < -Math::Epsilon( ))
     {
-      deltaOnAxis = Math::DegToRad((mChangeInRotation - mPreviousSnap < 0.0f) ? -mSnapAngle : mSnapAngle);
+      mDeltaRotation = Math::DegToRad((mChangeInRotation - mPreviousSnap < 0.0f) ? -mSnapAngle : mSnapAngle);
       mPreviousSnap = mChangeInRotation;
     }
     else
     {
+      mDeltaRotation = 0.0f;
       mPreviousSnap = mChangeInRotation;
       return;
     }
 
   }
 
-  Quat deltaRotation;
-  Math::ToQuaternion(selectedAxis, deltaOnAxis, &deltaRotation);
+  Quat deltaRotation = Math::ToQuaternion(selectedAxis, mDeltaRotation);
   // sanity normalize to prevent rounding errors
   deltaRotation.Normalize( );
 

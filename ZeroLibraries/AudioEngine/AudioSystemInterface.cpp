@@ -12,10 +12,14 @@ namespace Audio
   //------------------------------------------------------------------------- Audio System Interface
 
   //************************************************************************************************
-  AudioSystemInterface::AudioSystemInterface(ExternalSystemInterface* extInterface)
+  AudioSystemInterface::AudioSystemInterface(ExternalSystemInterface* extInterface) : 
+    SendUncompressedInputData(false),
+    SendCompressedInputData(false),
+    PeakInputVolume(0.0f)
   {
     // Create the internal audio system
     System = new AudioSystemInternal(extInterface);
+    SystemOutputChannels = System->SystemChannelsThreaded;
   }
 
   //************************************************************************************************
@@ -50,6 +54,80 @@ namespace Audio
     forRange(TagObject* object, System->TagsToDelete.All())
       delete object;
     System->TagsToDelete.Clear();
+
+    // Check if we need to send microphone input to the external system
+    if (SendCompressedInputData || SendUncompressedInputData)
+    {
+      Zero::Array<float> allInput;
+      Zero::Array<float>* inputBuffer;
+
+      // Pull all input buffers out of the queue
+      while (System->InputDataQueue.Read(inputBuffer))
+      {
+        // Make sure that we don't send too many samples (will create latency if they are
+        // using this data for audio output)
+        if (allInput.Size() > MaxInputFrames * SystemOutputChannels)
+          allInput = *inputBuffer;
+        else
+          allInput.Append(inputBuffer->All());
+
+        delete inputBuffer;
+      }
+
+      // Save the peak volume from the input samples
+      PeakInputVolume = 0.0f;
+      forRange(float sample, allInput.All())
+      {
+        float absSample = Math::Abs(sample);
+        if (absSample > PeakInputVolume)
+          PeakInputVolume = absSample;
+      }
+
+      // If we're sending uncompressed input data, send the entire buffer
+      if (SendUncompressedInputData)
+        System->ExternalInterface->SendAudioEvent(Notify_MicInputData, (void*)&allInput);
+
+      // Check if we're sending compressed data and have an encoder
+      if (SendCompressedInputData)
+      {
+        // Add the input samples to the end of the buffer
+        PreviousInputSamples.Append(allInput.All());
+
+        unsigned totalPacketSamples = PacketEncoder::PacketFrames * SystemOutputChannels;
+
+        // While we have at least the number of samples for a packet, encode them
+        while (PreviousInputSamples.Size() > totalPacketSamples)
+        {
+          Zero::Array<float> monoSamples;
+
+          // If the system is in mono, just add samples
+          if (SystemOutputChannels == 1)
+            monoSamples.Append(PreviousInputSamples.SubRange(0, PacketEncoder::PacketFrames));
+          else
+          {
+            // Translate samples to mono
+            for (unsigned i = 0; i < totalPacketSamples; i += SystemOutputChannels)
+            {
+              float monoValue(0.0f);
+              for (unsigned j = 0; j < SystemOutputChannels; ++j)
+                monoValue += PreviousInputSamples[i + j];
+              monoValue /= SystemOutputChannels;
+              monoSamples.PushBack(monoValue);
+            }
+          }
+
+          // Remove the samples from the array
+          PreviousInputSamples.Erase(PreviousInputSamples.SubRange(0, totalPacketSamples));
+
+          // Encode the packet
+          Zero::Array<byte> dataArray;
+          System->Encoder.EncodePacket(monoSamples.Data(), PacketEncoder::PacketFrames, dataArray);
+
+          // Send the event with the encoded data
+          System->ExternalInterface->SendAudioEvent(Notify_CompressedMicInputData, (void*)&dataArray);
+        }
+      }
+    }
   }
 
   //************************************************************************************************
@@ -90,21 +168,27 @@ namespace Audio
   //************************************************************************************************
   unsigned AudioSystemInterface::GetOutputChannels()
   {
-    return System->SystemChannelsThreaded;
+    return SystemOutputChannels;
   }
 
   //************************************************************************************************
   void AudioSystemInterface::SetOutputChannels(const unsigned channels)
   {
     // Can only mix channels up to 7.1
-    if (channels <= 8)
+    if (channels != SystemOutputChannels && channels <= 8)
     {
       if (channels == 0)
-        System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System, 
-          System->AudioIO.OutputChannelsThreaded));
+      {
+        System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System,
+          System->AudioIO->GetOutputChannels()));
+        SystemOutputChannels = System->AudioIO->GetOutputChannels();
+      }
       else
-        System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System, 
+      {
+        System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System,
           channels));
+        SystemOutputChannels = channels;
+      }
     }
   }
 
@@ -145,6 +229,75 @@ namespace Audio
   void AudioSystemInterface::UseHighLatency(const bool useHigh)
   {
     System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetUseHighLatency, System, useHigh));
+  }
+
+  //************************************************************************************************
+  void AudioSystemInterface::SetSendUncompressedMicInput(const bool sendInput)
+  {
+    if (sendInput != SendUncompressedInputData)
+    {
+      // Both modes now off - turn off sending input data
+      if (!sendInput && !SendCompressedInputData)
+        SetSendMicInput(false);
+      // Both modes were off but this one is on - turn on sending input data
+      else if (sendInput && !SendCompressedInputData)
+        SetSendMicInput(true);
+
+      SendUncompressedInputData = sendInput;
+    }
+  }
+
+  //************************************************************************************************
+  void AudioSystemInterface::SetSendCompressedMicInput(const bool sendInput)
+  {
+    if (sendInput != SendCompressedInputData)
+    {
+      // Both modes now off - turn off sending input data
+      if (!sendInput && !SendUncompressedInputData)
+        SetSendMicInput(false);
+      // Both modes were off but this one is on - turn on sending input data
+      // and initialize (or re-initialize) the encoder
+      else if (sendInput && !SendUncompressedInputData)
+      {
+        System->Encoder.InitializeEncoder();
+        SetSendMicInput(true);
+      }
+
+      SendCompressedInputData = sendInput;
+    }
+  }
+
+  //************************************************************************************************
+  float AudioSystemInterface::GetPeakInputVolume(Zero::Status& status)
+  {
+    if (SendUncompressedInputData || SendCompressedInputData)
+      return PeakInputVolume;
+    else
+    {
+      status.SetFailed("To get PeakInputVolume turn on sending microphone data, either uncompressed or compressed");
+      return 0.0f;
+    }
+  }
+
+  //************************************************************************************************
+  void AudioSystemInterface::SetSendMicInput(const bool turnOn)
+  {
+    if (turnOn)
+    {
+      // Turn on sending input data
+      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SendMicrophoneInputData,
+        System, true));
+
+      // Flush the input queue
+      Zero::Array<float>* inputBuffer;
+      while (System->InputDataQueue.Read(inputBuffer))
+      {
+
+      }
+    }
+    else
+      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SendMicrophoneInputData,
+        System, false));
   }
 
   //------------------------------------------------------------------------------------- Audio File
@@ -203,6 +356,22 @@ namespace Audio
     ZeroGetPrivateData(AudioFileData);
 
     self->ReleaseData();
+  }
+
+  //--------------------------------------------------------------------------- Audio Stream Decoder
+
+  //************************************************************************************************
+  AudioStreamDecoder::AudioStreamDecoder()
+  {
+    Decoder = new PacketDecoder();
+    Decoder->InitializeDecoder();
+  }
+
+  //************************************************************************************************
+  void AudioStreamDecoder::DecodeCompressedPacket(const byte* encodedData, const unsigned dataSize, 
+    float*& decodedSamples, unsigned& sampleCount)
+  {
+    Decoder->DecodePacket(encodedData, dataSize, decodedSamples, sampleCount);
   }
 
 }

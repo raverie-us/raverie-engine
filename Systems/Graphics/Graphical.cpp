@@ -16,6 +16,9 @@ namespace Events
   DefineEvent(ExitViewAll);
 }
 
+static float sMinimumBoundingSize = 0.01f;
+static float sMinimumBoundingHalfSize = sMinimumBoundingSize * 0.5f;
+
 void MakeLocalToViewAligned(Mat4& localToView, Mat4Param localToWorld, Mat4Param worldToView, Vec3Param translation)
 {
   // Get just the camera's rotation
@@ -231,7 +234,7 @@ Vec3 Graphical::GetLocalAabbHalfExtents()
 
 void Graphical::SetLocalAabbHalfExtents(Vec3 halfExtents)
 {
-  mLocalAabbHalfExtents = Math::Max(halfExtents, Vec3(0.1f));
+  mLocalAabbHalfExtents = Math::Max(halfExtents, Vec3(sMinimumBoundingHalfSize));
   UpdateBroadPhaseAabb();
 }
 
@@ -264,14 +267,14 @@ void Graphical::SetShaderInputs(ShaderInputs* shaderInputs)
 Aabb Graphical::GetWorldAabb()
 {
   Aabb localAabb = GetLocalAabbInternal();
-  localAabb.SetHalfExtents(Math::Max(localAabb.GetHalfExtents(), Vec3(0.1f)));
+  localAabb.SetHalfExtents(Math::Max(localAabb.GetHalfExtents(), Vec3(sMinimumBoundingHalfSize)));
   return localAabb.TransformAabb(mTransform->GetWorldMatrix());
 }
 
 Obb Graphical::GetWorldObb()
 {
   Aabb localAabb = GetLocalAabbInternal();
-  localAabb.SetHalfExtents(Math::Max(localAabb.GetHalfExtents(), Vec3(0.1f)));
+  localAabb.SetHalfExtents(Math::Max(localAabb.GetHalfExtents(), Vec3(sMinimumBoundingHalfSize)));
   return localAabb.Transform(mTransform->GetWorldMatrix());
 }
 

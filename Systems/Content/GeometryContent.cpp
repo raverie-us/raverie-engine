@@ -285,10 +285,10 @@ ZilchDefineType(GeometryImport, builder, type)
   
   ZilchBindFieldProperty(mOriginOffset);
   ZilchBindFieldProperty(mScaleFactor);
-  ZilchBindFieldProperty(mChangeBasis);
-  ZilchBindFieldProperty(mXBasisTo);
-  ZilchBindFieldProperty(mYBasisTo);
-  ZilchBindFieldProperty(mZBasisTo);
+  ZilchBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mXBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
+  ZilchBindFieldProperty(mYBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
+  ZilchBindFieldProperty(mZBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
 }
 
 void GeometryImport::Serialize(Serializer& stream)

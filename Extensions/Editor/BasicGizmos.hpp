@@ -60,7 +60,7 @@ DeclareEnum3(GizmoSnapMode, Relative, WorldAxes, WorldGrid);
 namespace GizmoSnapping
 {
 
-Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param deltaWorldMovement,
+Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param worldMovement,
   QuatParam basis, GizmoDragMode::Enum dragMode,
   GizmoSnapMode::Enum snapMode, float snapDistance);
 
@@ -394,6 +394,10 @@ public:
   float mDirection;
   /// Resultant rotation change for an on-going gizmo drag.
   float mChangeInRotation;
+  /// Resultant delta-rotation from this step in an on-going gizmo drag.
+  /// - Note: Unlike 'ChangeInRotation' this delta will contain a snapped angle,
+  ///         if applicable.
+  float mDeltaRotation;
 };
 
 

@@ -433,17 +433,17 @@ namespace Audio
     // Current buffer position for encoding
     float* buffer(nullptr);
     // Used on the final frame to keep a usable frame size
-    float finalBuffer[FrameSize] = { 0 };
+    float finalBuffer[PacketFrames] = { 0 };
 
-    // Encode the samples, in chunks of FrameSize
-    for (unsigned inputIndex = 0; inputIndex < data.SamplesPerChannel; inputIndex += FrameSize)
+    // Encode the samples, in chunks of PacketFrames
+    for (unsigned inputIndex = 0; inputIndex < data.SamplesPerChannel; inputIndex += PacketFrames)
     {
       // Handle each channel separately
       for (unsigned channel = 0; channel < data.Channels; ++channel)
       {
-        // If the next FrameSize chunk would go past the end of the audio data, fill in what's
+        // If the next PacketFrames-sized chunk would go past the end of the audio data, fill in what's
         // available to the finalBuffer, the rest will be zeros
-        if (inputIndex + FrameSize > data.SamplesPerChannel)
+        if (inputIndex + PacketFrames > data.SamplesPerChannel)
         {
           buffer = finalBuffer;
           memcpy(buffer, buffersPerChannel[channel] + inputIndex,
@@ -455,7 +455,7 @@ namespace Audio
           buffer = buffersPerChannel[channel] + inputIndex;
 
         // Encode a packet for this channel
-        packetHeader.Size = opus_encode_float(encodersPerChannel[channel], buffer, FrameSize,
+        packetHeader.Size = opus_encode_float(encodersPerChannel[channel], buffer, PacketFrames,
           encodedPacket, MaxPacketSize);
         // If there was an error, set the status 
         if (packetHeader.Size <= 0)
@@ -480,6 +480,39 @@ namespace Audio
     for (unsigned i = 0; i < data.Channels; ++i)
       opus_encoder_destroy(encodersPerChannel[i]);
     delete[] encodersPerChannel;
+  }
+
+  //--------------------------------------------------------------------------------- Packet Encoder
+
+  //************************************************************************************************
+  PacketEncoder::~PacketEncoder()
+  {
+    if (Encoder)
+      opus_encoder_destroy(Encoder);
+  }
+
+  //************************************************************************************************
+  void PacketEncoder::InitializeEncoder()
+  {
+    if (Encoder)
+      opus_encoder_destroy(Encoder);
+
+    int error;
+    Encoder = opus_encoder_create(AudioSystemInternal::SampleRate, Channels,
+      OPUS_APPLICATION_VOIP, &error);
+  }
+
+  //************************************************************************************************
+  void PacketEncoder::EncodePacket(const float* dataBuffer, const unsigned samples, 
+    Zero::Array<byte>& encodedData)
+  {
+    ReturnIf(!Encoder, , "Tried to encode packet without initializing encoder");
+    ReturnIf(samples != PacketFrames, , "Tried to encode packet with incorrect number of samples");
+
+    encodedData.Resize(FileEncoder::MaxPacketSize);
+    unsigned encodedDataSize = opus_encode_float(Encoder, dataBuffer, samples, encodedData.Data(),
+      FileEncoder::MaxPacketSize);
+    encodedData.Resize(encodedDataSize);
   }
 
 }

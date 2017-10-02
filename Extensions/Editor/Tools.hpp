@@ -80,8 +80,10 @@ public:
   /// Select objects on mouse up.
   void OnLeftMouseUp(ViewportMouseEvent* e);
 
-  bool IsLastHitArchetype(Cog* cog);
-  bool IsChildOfLastHitArchetype(Cog* cog);
+  typedef bool(*CogSelectFilter)(Cog*, Cog*);
+  Cog* WalkRayCast(Cog* current, RaycastResultList& result, CogSelectFilter func);
+  bool ArchetypeSelect(Cog* current, Cog* toSelect, RaycastResultList& result);
+
   void Select(ViewportMouseEvent* e);
   SelectionResult RayCastSelect(Viewport* viewport, Vec2 mousePosition);
   RaycastResultList RayCastSelectInternal(Viewport* viewport, Vec2 mousePosition);
@@ -96,15 +98,18 @@ public:
   String mFilterAccept;
   String mFilterReject;
 
-  //Selects the nearest parent archetype of the tree instead of the first
-  //subsequent clicks will select the sub nodes of that parent archetype
-  bool mSmartSelect;
-  
-  //If a parent of a hierarchy is already selected drag select will only select all the children
-  //of the currently selected parent
-  bool mSmartGroupSelect;
+  ///Selects the root archetype of the tree,
+  ///subsequent clicks will select the nearest archetype
+  ///followed by any direct children following that.
+  bool mArchetypeSelect;
 
-  HandleOf<Cog> mLastHitArchetype;
+  ///Selects the root of a hierarchy first,
+  ///subsequent clicks will select children objects
+  bool mRootSelect;
+  
+  ///If a parent of a hierarchy is already selected drag select will only select all the children
+  ///of the currently selected parent.
+  bool mSmartGroupSelect;
 
   //stores all of the providers for raycasting and does the actual casting.
   Raycaster mRaycaster;

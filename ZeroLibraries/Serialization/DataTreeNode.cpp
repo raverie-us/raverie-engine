@@ -925,6 +925,8 @@ bool ReadDataSet(Status& status, StringRange data, StringParam source, DataTreeL
   {
     // Legacy format only supported a single root
     DataNode* root = LegacyDataTreeParser::BuildTree(parseContext, data);
+    if(root == nullptr)
+      return false;
     root->AttachTo(fileRoot);
   }
   else

@@ -283,7 +283,6 @@ void AnimationEditor::UpdateTransform()
 void AnimationEditor::SetPropertyView(MainPropertyView* view)
 {
   mPropertyView = view;
-  ConnectThisTo(view, Events::ComponentsModified, OnComponentsChanged);
   ConnectThisTo(view, Events::PropertyContextMenu, OnPropertyContextMenu);
 }
 
@@ -296,7 +295,8 @@ void AnimationEditor::SetAnimation(Animation* animation)
 
     if(simpleAnim == nullptr)
     {
-      if(animGraphObject->AddComponentByType(ZilchTypeId(SimpleAnimation)))
+      OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
+      if(QueueAddComponent(opQueue, animGraphObject, ZilchTypeId(SimpleAnimation)))
         simpleAnim = animGraphObject->has(SimpleAnimation);
     }
     ReturnIf(simpleAnim == nullptr, , "Could not add SimpleAnimation");
@@ -496,6 +496,7 @@ void AnimationEditor::ObjectSelected(Cog* cog)
   if(!refreshing)
   {
     ConnectThisTo(cog, Events::PropertyModified, OnPropertyChanged);
+    ConnectThisTo(cog, Events::ComponentsModified, OnComponentsChanged);
 
     // We need to connect to keyboard events on the viewport of the selected
     // object, so attempt to find it
@@ -727,20 +728,16 @@ void AnimationEditor::OnPropertyChanged(PropertyEvent* event)
 }
 
 //******************************************************************************
-void AnimationEditor::OnComponentsChanged(PropertyEvent* event)
+void AnimationEditor::OnComponentsChanged(ObjectEvent* event)
 {
   // Do nothing if we're not active
   if(GetActive() == false)
     return;
-
-  // Only make a change if the object changed is a cog
-  if(Cog* object = event->mObject.Get<Cog*>())
-  {
-    // If it was the selected object that changed, refresh the selection
-    // in case the AnimationGraph was added / removed
-    if(object == mSelectedObject)
-      RefreshSelection();
-  }
+  
+  // If it was the selected object that changed, refresh the selection
+  // in case the AnimationGraph was added / removed
+  if(event->Source == (Object*)mSelectedObject)
+    RefreshSelection();
 }
 
 //******************************************************************************
@@ -1043,7 +1040,9 @@ void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
   {
     // Add a animGraph to the selected object
     Cog* cog = mSelectedObject;
-    cog->AddComponentByName("AnimationGraph");
+
+    OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
+    QueueAddComponent(opQueue, cog, ZilchTypeId(AnimationGraph));
 
     // We need to tell the property grid that something changed on the object
     mPropertyView->GetPropertyView()->Invalidate();
@@ -1095,7 +1094,8 @@ void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
     SimpleAnimation* autoPlay = cog->has(SimpleAnimation);
     if(autoPlay == nullptr)
     {
-      if(cog->AddComponentByType(ZilchTypeId(SimpleAnimation)))
+      OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
+      if (QueueAddComponent(opQueue, cog, ZilchTypeId(SimpleAnimation)))
         autoPlay = cog->has(SimpleAnimation);
     }
 
@@ -1141,7 +1141,8 @@ void AnimationEditor::OnAnimationAdded(ResourceEvent* e)
     SimpleAnimation* autoPlay = cog->has(SimpleAnimation);
     if(autoPlay == nullptr)
     {
-      if(cog->AddComponentByType(ZilchTypeId(SimpleAnimation)))
+      OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
+      if (QueueAddComponent(opQueue, cog, ZilchTypeId(SimpleAnimation)))
         autoPlay = cog->has(SimpleAnimation);
     }
     if(autoPlay)

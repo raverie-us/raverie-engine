@@ -40,9 +40,6 @@
     return mDrawFlags & DebugDrawFlags::flagName; \
   } 
 
-#define DebugObjectsArray(DebugObjectType) \
-  PodArray<DebugObjectType> m##DebugObjectType##Objects;
-
 #define DebugObjectAddMethods(DebugObjectType)                     \
   void Add(const DebugObjectType& object)                          \
   {                                                                \
@@ -531,7 +528,9 @@ public:
 class Text : public DebugDrawObject<Text>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  // This has to be a reference type for now since this contains a string.
+  // If copy constructors ever get implemented then this can return to a value type.
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Text; }
@@ -652,5 +651,4 @@ extern Debug::DebugDraw* gDebugDraw;
 #undef CustomPropertySetter
 #undef PropertySetter
 #undef PropertySetterBit
-#undef DebugObjectsArray
 #undef DebugObjectAddMethods

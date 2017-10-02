@@ -27,6 +27,9 @@ public:
   bool mMultiTargetBlend;
   /// If texture sampler settings can be uniquely specified per sampler shader input.
   bool mSamplerObjects;
+
+  // For detecting Intel drivers to handle driver bugs.
+  bool mIntel;
 };
 
 class Renderer

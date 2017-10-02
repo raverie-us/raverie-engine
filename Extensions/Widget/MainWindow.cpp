@@ -184,29 +184,32 @@ void MainWindow::UpdateTransform()
   mSizeGrips->MoveToFront();
   mPopUp->MoveToFront();
 
+  WindowState::Type windowState = GetOsWindow()->GetState();
+
+  // Has to be set outside of resize because maximize and fullscreen could be same size.
+  mSizeGrips->SetActive(windowState == WindowState::Windowed);
+  mTitleGrip->SetActive(windowState != WindowState::Fullscreen);
+
   // Do not resize all child widgets unless
   // a child has been added or the size of the OS window
   // has changed this prevents animation issues
   if(size != mLayoutSize)
   {
-    WindowState::Type windowState = GetOsWindow()->GetState();
-
     // Skip resizing if Minimized
     if(windowState == WindowState::Minimized)
       return;
+
+    // Can't be set outside of resize or the event connection is lost.
+    // There aren't any cases where it's diplayed wrong anyway.
+    if (windowState != WindowState::Windowed)
+      mMax->SetIcon("TitleRestore");
+    else
+      mMax->SetIcon("TitleMaximize");
 
     mLayoutSize = mSize;
     mSize = size;
     mSizeGrips->SetSize(size);
     mPopUp->SetSize(mSize);
-
-    mSizeGrips->SetActive(windowState == WindowState::Windowed);
-    mTitleGrip->SetActive(windowState == WindowState::Windowed);
-
-    if (windowState == WindowState::Windowed)
-      mMax->SetIcon("TitleMaximize");
-    else
-      mMax->SetIcon("TitleRestore");
 
     mTitleGrip->SetTranslation(Vec3(0,0,0));
 

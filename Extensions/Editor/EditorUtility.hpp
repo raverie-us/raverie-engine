@@ -38,10 +38,14 @@ void DisplayCodeDefinition(CodeDefinition& definition);
 template <typename metaRangeType>
 Aabb GetAabbFromObjects(metaRangeType objects, IncludeMode::Type includeMode = IncludeMode::Children)
 {
-  if(objects.Empty())
-    return Aabb(Vec3::cZero, Vec3::cZero);
+  Aabb aabb = Aabb(Vec3::cZero, Vec3::cZero);
 
-  Aabb aabb = GetAabb(objects.Front(), includeMode);
+  if(objects.Empty())
+    return aabb;
+
+  // If this didn't happen before going through the range below, then the min
+  // point of the aabb will always be (0,0,0), which is incorrect.
+  aabb = GetAabb(objects.Front(), includeMode);
 
   forRange(Handle instance, objects)
   {

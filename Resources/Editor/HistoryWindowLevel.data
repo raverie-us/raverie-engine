@@ -1,10 +1,9 @@
 [Version:1]
 Level 
 {
-	Cog 
+	Cog [ContextId:1]
 	{
 		var Name = "LevelSettings"
-		var LinkId = 1
 		GravityEffect 
 		{
 			var Active = false
@@ -40,10 +39,9 @@ Level
 			var FollowEditorCamera = false
 		}
 	}
-	Cog 
+	Cog [ContextId:2]
 	{
 		var Name = "Camera"
-		var LinkId = 2
 		Transform 
 		{
 			var Translation = Real3{0, 0, 50}
@@ -54,11 +52,7 @@ Level
 		{
 			var RenderInEditor = false
 			var RenderInGame = true
-			var RenderToViewport = true
-			var ForwardViewportEvents = false
 			var RenderOrder = 0
-			var NormalizedSize = Real2{1, 1}
-			var NormalizedOffset = Real2{0, 0}
 			var CameraPath = CogPath
 			{
 				var Path = "."
@@ -69,7 +63,7 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 2
+				var Cog = 2
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
@@ -84,14 +78,18 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 2
+				var Cog = 2
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
-			var Resolution = Real2{1920, 1080}
+			var ResolutionOrAspect = Integer2{1920, 1080}
+			var RenderToViewport = true
+			var ForwardViewportEvents = false
 			var ViewportScaling = ViewportScaling.Fill
 			var MarginColor = Real4{0, 0, 0, 1}
+			var NormalizedSize = Real2{1, 1}
+			var NormalizedOffset = Real2{0, 0}
 		}
 		Camera 
 		{
@@ -119,10 +117,9 @@ Level
 			var Zoom = 1
 		}
 	}
-	Cog 
+	Cog [ContextId:3]
 	{
 		var Name = "HistoryWindow"
-		var LinkId = 3
 		Transform 
 		{
 			var Translation = Real3{0, 0, 0}
@@ -138,7 +135,7 @@ Level
 			var LocalAabbCenter = Real3{0, 0, 0}
 			var LocalAabbHalfExtents = Real3{1, 1, 1}
 			var GroupSortValue = 0
-			var Material = "56dcc7b15f51207d:DefaultSpriteMaterial"
+			var Material = "582c575af53d18c9:AlphaSprite"
 			var VertexColor = Real4{0.258823544, 0.258823544, 0.258823544, 1}
 			var GeometryMode = SpriteGeometryMode.ZPlane
 			var SpriteSource = "5275aa4d802dd6dc:Square"
@@ -208,7 +205,7 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 2
+				var Cog = 2
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
@@ -223,7 +220,7 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 2
+				var Cog = 2
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
@@ -238,10 +235,9 @@ Level
 		}
 		Hierarchy 
 		{
-			Cog 
+			Cog [ContextId:4]
 			{
 				var Name = "OperationHistory"
-				var LinkId = 4
 				Transform 
 				{
 					var Translation = Real3{0, 0, 0}
@@ -250,7 +246,7 @@ Level
 				}
 				Area 
 				{
-					var Size = Real2{286, 0}
+					var Size = Real2{300, 0}
 					var Origin = Location.TopLeft
 				}
 				UiWidget 
@@ -296,7 +292,7 @@ Level
 						var UpdatePathOnCogChange = true
 						var UpdateCogOnInitialize = true
 						var ResolvedNullErrorOccurred = false
-						var ResolvedCog = 5
+						var Cog = 5
 						var PathPreference0 = CogPathPreference.CogRelative
 						var PathPreference1 = CogPathPreference.SpaceRelative
 						var PathPreference2 = CogPathPreference.Absolute
@@ -311,7 +307,7 @@ Level
 						var UpdatePathOnCogChange = true
 						var UpdateCogOnInitialize = true
 						var ResolvedNullErrorOccurred = false
-						var ResolvedCog = 6
+						var Cog = 6
 						var PathPreference0 = CogPathPreference.CogRelative
 						var PathPreference1 = CogPathPreference.SpaceRelative
 						var PathPreference2 = CogPathPreference.Absolute
@@ -326,7 +322,7 @@ Level
 						var UpdatePathOnCogChange = true
 						var UpdateCogOnInitialize = true
 						var ResolvedNullErrorOccurred = false
-						var ResolvedCog = 7
+						var Cog = 7
 						var PathPreference0 = CogPathPreference.CogRelative
 						var PathPreference1 = CogPathPreference.SpaceRelative
 						var PathPreference2 = CogPathPreference.Absolute
@@ -341,7 +337,7 @@ Level
 						var UpdatePathOnCogChange = true
 						var UpdateCogOnInitialize = true
 						var ResolvedNullErrorOccurred = false
-						var ResolvedCog = 8
+						var Cog = 8
 						var PathPreference0 = CogPathPreference.CogRelative
 						var PathPreference1 = CogPathPreference.SpaceRelative
 						var PathPreference2 = CogPathPreference.Absolute
@@ -349,10 +345,9 @@ Level
 				}
 				Hierarchy 
 				{
-					Cog 
+					Cog [ContextId:6]
 					{
 						var Name = "UndoView"
-						var LinkId = 6
 						Transform 
 						{
 							var Translation = Real3{2, 0, 0}
@@ -403,10 +398,9 @@ Level
 						{
 						}
 					}
-					Cog 
+					Cog [ContextId:7]
 					{
 						var Name = "RedoView"
-						var LinkId = 7
 						Transform 
 						{
 							var Translation = Real3{2, 0, 0}
@@ -459,13 +453,12 @@ Level
 					}
 				}
 			}
-			Cog 
+			Cog [ContextId:8]
 			{
 				var Name = "ScrollBar"
-				var LinkId = 8
 				Transform 
 				{
-					var Translation = Real3{290, 0, -3.40514816e-07}
+					var Translation = Real3{290, 0, 0}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}
@@ -498,13 +491,12 @@ Level
 				}
 				Hierarchy 
 				{
-					Cog 
+					Cog [ContextId:10]
 					{
 						var Name = "ScrollIndicator"
-						var LinkId = 9
 						Transform 
 						{
-							var Translation = Real3{0, -0.0154876709, 3.49245965e-10}
+							var Translation = Real3{0, -0.0154876709, 0}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
@@ -522,7 +514,7 @@ Level
 							var LocalAabbCenter = Real3{0, 0, 0}
 							var LocalAabbHalfExtents = Real3{1, 1, 1}
 							var GroupSortValue = 0
-							var Material = "56dcc7b15f51207d:DefaultSpriteMaterial"
+							var Material = "582c575af53d18c9:AlphaSprite"
 							var VertexColor = Real4{0.164705887, 0.164705887, 0.164705887, 1}
 							var GeometryMode = SpriteGeometryMode.ZPlane
 							var SpriteSource = "5275aa4d802dd6dc:Square"
@@ -576,7 +568,7 @@ Level
 								var UpdatePathOnCogChange = true
 								var UpdateCogOnInitialize = true
 								var ResolvedNullErrorOccurred = false
-								var ResolvedCog = 4
+								var Cog = 4
 								var PathPreference0 = CogPathPreference.CogRelative
 								var PathPreference1 = CogPathPreference.SpaceRelative
 								var PathPreference2 = CogPathPreference.Absolute
@@ -596,7 +588,7 @@ Level
 								var UpdatePathOnCogChange = true
 								var UpdateCogOnInitialize = true
 								var ResolvedNullErrorOccurred = false
-								var ResolvedCog = 9
+								var Cog = 10
 								var PathPreference0 = CogPathPreference.CogRelative
 								var PathPreference1 = CogPathPreference.SpaceRelative
 								var PathPreference2 = CogPathPreference.Absolute
@@ -611,7 +603,7 @@ Level
 								var UpdatePathOnCogChange = true
 								var UpdateCogOnInitialize = true
 								var ResolvedNullErrorOccurred = false
-								var ResolvedCog = 9
+								var Cog = 10
 								var PathPreference0 = CogPathPreference.CogRelative
 								var PathPreference1 = CogPathPreference.SpaceRelative
 								var PathPreference2 = CogPathPreference.Absolute
@@ -627,15 +619,14 @@ Level
 					}
 				}
 			}
-			Cog 
+			Cog [ContextId:5]
 			{
 				var Name = "StatusText"
-				var LinkId = 5
 				Transform 
 				{
 					var Translation = Real3{0, 0, 1}
 					var Scale = Real3{1, 1, 1}
-					var Rotation = Quaternion{0, 0, -0.382683456, 0.923879504}
+					var Rotation = Quaternion{0, 0, 0, 1}
 				}
 				Area 
 				{
@@ -676,10 +667,10 @@ Level
 					var Material = "582c575af53d18c9:AlphaSprite"
 					var VertexColor = Real4{0.196078435, 0.196078435, 0.196078435, 1}
 					var GeometryMode = SpriteGeometryMode.ZPlane
-					var Text = "No Operations in History"
+					var Text = "No History..."
 					var Font = "57343753bb4eaaec:NotoSans-Regular"
-					var FontSize = 128
-					var PixelsPerUnit = 5
+					var FontSize = 24
+					var PixelsPerUnit = 1
 					var TextAlign = TextAlign.Center
 				}
 				Hierarchy 

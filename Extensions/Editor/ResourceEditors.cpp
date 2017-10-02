@@ -75,7 +75,7 @@ void EditArchetype(Editor* editor, Resource* resource)
   // We don't want to be able to save this level
   space->mLevelLoaded = nullptr;
 
-  Cog* objectToView = space->CreateAt(archetype->ResourceIdName, Vec3(0, 0, 0));
+  Cog* objectToView = space->Create(archetype);
 
   objectToView->SetArchetypeDefinitionMode();
 
@@ -88,6 +88,8 @@ void EditArchetype(Editor* editor, Resource* resource)
 
   // Clear modified since we added objects
   space->MarkNotModified();
+
+  CameraFocusSpace(space);
 
   editor->GetCenterWindow()->AttachAsTab(editorViewport);
 }

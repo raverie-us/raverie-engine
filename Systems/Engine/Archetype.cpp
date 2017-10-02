@@ -14,6 +14,7 @@ namespace Zero
 {
 
 Memory::Heap* Archetype::CacheHeap = new Memory::Heap("Archetypes", Memory::GetRoot());
+bool Archetype::sRebuilding = false;
 
 //---------------------------------------------------------------------------------------- Archetype
 ZilchDefineType(Archetype, builder, type)
@@ -130,6 +131,8 @@ void Archetype::CacheDataTree()
   Status status;
   ObjectLoader loader;
   loader.OpenFile(status, mLoadPath);
+
+  ReturnIf(status.Failed(), , status.Message.c_str());
 
   loader.CacheModifications(&mLocalCachedModifications);
 

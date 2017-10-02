@@ -405,7 +405,7 @@ void SoundCue::SetSemitones(float newSemitones)
 }
 
 //**************************************************************************************************
-HandleOf<SoundAttenuator> SoundCue::GetAttenuator()
+SoundAttenuator* SoundCue::GetAttenuator()
 {
   return mAttenuator;
 }

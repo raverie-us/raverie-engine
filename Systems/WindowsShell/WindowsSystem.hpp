@@ -108,8 +108,6 @@ private:
   bool mMouseTrapped;
   Keyboard* mKeyboard;
   WindowStyleFlags::Enum mWindowStyle;
-  WindowState::Enum mWindowState;
-  WindowState::Enum mRestoreState;
   ITaskbarList3* mTaskBar;
   uint mTaskBarButtonCreated;
   WindowsOsWindow* mParent;

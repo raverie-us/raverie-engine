@@ -107,6 +107,7 @@ ZeroShared real Ceil(real val, int places, int base);
 ZeroShared real Floor(real val);
 ZeroShared real Floor(real val, int places);
 ZeroShared real Floor(real val, int places, int base);
+/// If y <= x then 1 is returned, otherwise 0 is returned.
 ZeroShared real Step(real y, real x);
 ZeroShared int CountBits(int value);
 ZeroShared bool IsValid(real val);

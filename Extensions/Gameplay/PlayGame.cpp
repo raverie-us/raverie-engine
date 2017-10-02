@@ -55,7 +55,7 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   if (windowLaunch != nullptr)
     size = windowLaunch->mWindowedResolution;
 
-  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar);
+  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar);
 
   OsWindow* mainWindow = osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
   if (windowLaunch == nullptr || windowLaunch->mLaunchFullscreen)

@@ -68,8 +68,11 @@ void CogMetaOperations::ObjectModified(HandleParam object, bool intermediateChan
     Cog* root = cog->FindRootArchetype();
     if (root && root->InArchetypeDefinitionMode())
     {
-      root->UploadToArchetype();
-      ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype());
+      if (!Archetype::sRebuilding)
+      {
+        root->UploadToArchetype();
+        ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype());
+      }
     }
   }
 
@@ -88,7 +91,7 @@ void CogMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoData)
     if (wasSpaceModified == false)
       space->MarkNotModified();
     else
-      space->MarkNotModified();
+      space->MarkModified();
   }
 }
 

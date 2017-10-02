@@ -47,6 +47,7 @@ ZeroShared bool DeleteFileInternal(StringParam dest);
 
 /// Delete an entire directory
 ZeroShared bool DeleteDirectory(StringParam directory);
+ZeroShared bool DeleteDirectoryContents(StringParam directory);
 
 /// Create a directory.
 ZeroShared void CreateDirectory(StringParam dest);

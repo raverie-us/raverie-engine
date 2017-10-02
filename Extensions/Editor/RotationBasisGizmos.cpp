@@ -135,7 +135,9 @@ void RotationBasisGizmo::SetWorldRotationInternal(QuatParam rotation)
 {
   mStartingWorldRotation = Math::Normalized(rotation);
   mFinalWorldRotation = mStartingWorldRotation;
-  mTransform->SetWorldRotation(mStartingWorldRotation);
+
+  if(mTransform != nullptr)
+    mTransform->SetWorldRotation(mStartingWorldRotation);
 }
 
 void RotationBasisGizmo::SetGizmoWorldRotationInternal(QuatParam rotation)

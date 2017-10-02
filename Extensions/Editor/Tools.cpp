@@ -181,7 +181,7 @@ public:
           selection->Add(hitCog, SendsEvents::False);
       }
       // only add parent cogs to the selection if select root is set
-      else if (mTool->mSmartSelect)
+      else if (mTool->mArchetypeSelect)
       {
         Cog* rootArchetype = hitCog ? hitCog->FindRootArchetype() : nullptr;
         // if we have a root archetype just add it
@@ -224,10 +224,12 @@ SelectionResult EditorRayCast(Viewport* viewport, Vec2 mousePosition)
 //------------------------------------------------------------------ Select Tool
 ZilchDefineType(SelectTool, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   
-  ZilchBindFieldProperty(mSmartSelect);
+  ZilchBindFieldProperty(mArchetypeSelect);
+  ZilchBindFieldProperty(mRootSelect);
   ZilchBindFieldProperty(mSmartGroupSelect);
   ZeroBindTag(Tags::Tool);
   ZilchBindMethod(RayCast);
@@ -247,7 +249,8 @@ SelectTool::SelectTool()
 //******************************************************************************
 void SelectTool::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(mSmartSelect, true);
+  SerializeNameDefault(mArchetypeSelect, true);
+  SerializeNameDefault(mRootSelect, true);
   SerializeNameDefault(mSmartGroupSelect, false);
 }
 
@@ -362,33 +365,84 @@ void SelectTool::OnLeftMouseUp(ViewportMouseEvent* e)
   this->Select(e);
 }
 
+
 //******************************************************************************
-bool SelectTool::IsLastHitArchetype(Cog* cog)
+bool SameRootCompare(Cog* toSelect, Cog* hitCog)
 {
-  return cog == mLastHitArchetype.Get<Cog*>();
+  if (toSelect == nullptr || hitCog == nullptr)
+    return false;
+
+  return toSelect->FindRoot() == hitCog->FindRoot();
 }
 
 //******************************************************************************
-bool SelectTool::IsChildOfLastHitArchetype(Cog* cog)
+bool SameArchetypeCompare(Cog* toSelect, Cog* hitCog)
 {
-  if (mLastHitArchetype.IsNull())
+  if (toSelect == nullptr || hitCog == nullptr)
     return false;
 
-  Cog* parent = cog;
-  Cog* lastArchetype = mLastHitArchetype.Get<Cog*>();
+  return toSelect->FindRootArchetype() == hitCog->FindRootArchetype();
+}
 
-  while (parent != nullptr)
+//******************************************************************************
+Cog* SelectTool::WalkRayCast(Cog* toSelect, RaycastResultList& result, CogSelectFilter func)
+{
+  RayCastEntries::range entries = result.mEntries.All();
+  // we want to remove the first entry as we already checked it
+  entries.PopFront();
+
+  while (!entries.Empty())
   {
-    if (parent == lastArchetype)
-      return true;
-
-    // If we hit another Archetype, we're not part of the last hit Archetype context
-    if (parent->GetArchetype() != nullptr)
-      return false;
-
-    parent = parent->GetParent();
+    RayCastEntry entry = entries.Front();
+    if (func(toSelect, entry.HitCog))
+    {
+      toSelect = entry.HitCog;
+      break;
+    }
+    entries.PopFront();
   }
-  return false;
+  
+  return toSelect;
+}
+
+//******************************************************************************
+bool SelectTool::ArchetypeSelect(Cog* current, Cog* toSelect, RaycastResultList& result)
+{
+  MetaSelection* selection = Z::gEditor->mSelection;
+
+  Cog* lastHitArchetype = current->FindNearestArchetype();
+  Cog* nearestArchetype = toSelect->FindNearestArchetype();
+
+  // we are not selecting an object within an archetype
+  if (nearestArchetype == nullptr)
+    return false;
+  
+  // check whether we are selecting the last hit archetype
+  if (lastHitArchetype == toSelect)
+  {
+    // ray cast and discard the object as we already selected it and might be 
+    // attempting to select a child object contained within the parents aabb
+    toSelect = WalkRayCast(toSelect, result, SameArchetypeCompare);
+  }
+
+  // if the object we are attempting to select is a sibling of the last selected object, select it
+  if(current->GetParent() == toSelect->GetParent())
+  {
+    selection->SelectOnly(toSelect);
+    return true;
+  }
+
+  // check if we are attempting to selected an object within the context of the last
+  // selected archetype
+  if (nearestArchetype == lastHitArchetype)
+  {
+    selection->SelectOnly(toSelect);
+    return true;
+  }
+
+  // otherwise we should just select the nearest archetype
+  selection->SelectOnly(nearestArchetype);
+  return true;
 }
 
 //******************************************************************************
@@ -401,67 +455,61 @@ void SelectTool::Select(ViewportMouseEvent* e)
   bool multiSelect = keyboard->KeyIsDown(Keys::Shift);
 
   MetaSelection* selection = Z::gEditor->mSelection;
+  Cog* current = selection->GetPrimaryAs<Cog>();
 
   if (toSelect != nullptr)
   {
     // if we are multi selecting objects just add the object to the selection
-    // and clear our tracking of archetype based selection
+    // and clear our tracking of archetype/hierarchy based selection
     if (multiSelect)
     {
       if (selection->Contains(toSelect))
         selection->Remove(toSelect);
       else
         selection->Add(toSelect, SendsEvents::False);
-      mLastHitArchetype.Clear();
     }
-    // smart select is not enabled so just select whatever the user clicked on regardless of hierarchy
-    else if (!mSmartSelect)
+    // archetype and root select are not enabled so just select the object the user clicked on
+    else if (!mArchetypeSelect && !mRootSelect)
     {
       selection->SelectOnly(toSelect);
     }
     else
     {
-      selection->Clear(SendsEvents::False);
-      // for smart select if we have an archetype selected take the next object hit
-      // to account for sub objects contained within the parent
-      if (IsLastHitArchetype(toSelect))
+      Cog* root = toSelect->FindRoot();
+      Cog* current = selection->GetPrimaryAs<Cog>();
+
+      // Are we already in the context of the root?
+      if (current == root || root->IsDescendant(current))
       {
-        RayCastEntries::range entries = result.mEntries.All();
-        // we want to remove the first entry as we already checked it
-        entries.PopFront();
-        while(!entries.Empty())
+        bool selected = false;
+
+        // archetype select is enabled, attempt archetype selection
+        if (mArchetypeSelect)
+          selected  = ArchetypeSelect(current, toSelect, result);
+        
+        // if root select is enabled and we haven't selected anything
+        // attempt to select an object within the hierarchy
+        if (selected == false && mRootSelect)
         {
-          RayCastEntry entry = entries.Front();
-          if(IsChildOfLastHitArchetype(entry.HitCog))
-          {
-            toSelect = entry.HitCog;
-            break;
-          }
-          entries.PopFront();
+          toSelect = WalkRayCast(toSelect, result, SameRootCompare);
+          selection->SelectOnly(toSelect);
         }
       }
-      // if the object is a child of our archetype select it
-      if (IsChildOfLastHitArchetype(toSelect))
-      {
-        selection->SelectOnly(toSelect);
-      }
-      // otherwise select the new objects nearest archetype parent
-      // and if it is not part of an archetype just select the object
+      // we are not in the context of the root so select it
       else
       {
-        mLastHitArchetype = toSelect->FindNearestArchetype();
-        if (mLastHitArchetype.IsNotNull())
-          selection->SelectOnly(mLastHitArchetype);
+        if (mRootSelect)
+          selection->SelectOnly(root);
         else
-          selection->SelectOnly(toSelect);
+          ArchetypeSelect(current, toSelect, result);
       }
     }
+
     selection->FinalSelectionChanged();
   }
-  // we clicked on nothing so clear out current selection
+  // no object clicked on so clear out current selection
   else
   {
-    mLastHitArchetype.Clear();
     selection->Clear(SendsEvents::False);
     selection->FinalSelectionChanged();
   }

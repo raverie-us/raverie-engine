@@ -90,6 +90,7 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(MultiManager);
   ZilchInitializeType(Modal);
   ZilchInitializeType(Text);
+  ZilchInitializeType(MultiLineText);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }

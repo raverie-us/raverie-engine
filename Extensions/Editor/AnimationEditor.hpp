@@ -148,7 +148,7 @@ private:
 
   /// We want to update the state if the AnimationGraph component is
   /// added or removed.
-  void OnComponentsChanged(PropertyEvent* event);
+  void OnComponentsChanged(ObjectEvent* event);
 
   /// We want to update the animation while scrubbing.
   void OnPlayHeadModified(Event* event);

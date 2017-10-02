@@ -537,7 +537,7 @@ void PhysicsCarWheel::ApplySpringForce(real dt)
   // Calculate the impulse along the spring direction
   Vec3 impulse = mWorldWheelSpringDir * mSpringForce * dt;
   // Apply the impulse at the wheel position
-  mCarBody->mBody->ApplyImpulseAtPoint(impulse, mWorldContactPosition);
+  mCarBody->mBody->ApplyImpulseAtPointNoWakeUp(impulse, mWorldContactPosition);
 }
 
 /// Helper struct to make it easier to pass around a lot more data

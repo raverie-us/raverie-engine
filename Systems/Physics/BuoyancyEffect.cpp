@@ -82,7 +82,7 @@ void BuoyancyEffect::ApplyEffect(RigidBody* obj, real dt)
     {
       // Get the approximate volume of intersecting region
       real volumeInside = collider->ComputeWorldVolumeInternal() * percentInside;
-      obj->ApplyForceAtPoint(-mGravity * volumeInside * mDensity, centerInside);
+      obj->ApplyForceAtPointNoWakeUp(-mGravity * volumeInside * mDensity, centerInside);
     }    
   }
 }

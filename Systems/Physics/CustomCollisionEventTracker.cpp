@@ -119,8 +119,7 @@ void CustomCollisionEventTracker::SendEventList(Array<CollisionData>& events, St
   Physics::Manifold tempManifold;
   tempManifold.Objects[0] = GetOwner()->has(Collider);
   CollisionEvent toSend;
-  toSend.mEventType = eventName;
-  toSend.mManifold = &tempManifold;
+  toSend.Set(&tempManifold, eventName);
 
   for(uint i = 0; i < events.Size(); ++i)
   {

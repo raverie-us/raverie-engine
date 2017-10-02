@@ -14,10 +14,10 @@
 #include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
-#include "portaudio.h"
 #include "pa_ringbuffer.h"
 
 #include "Definitions.h"
+#include "Resampler.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
 #include "ListenerNode.h"
@@ -30,7 +30,8 @@
 #include "DynamicsProcessorNode.h"
 #include "Emitter.h"
 #include "Attenuator.h"
-#include "InputNode.h"
+#include "MicrophoneInputNode.h"
+#include "CustomDataNode.h"
 #include "SoundAssets.h"
 #include "SoundInstances.h"
 #include "Tags.h"

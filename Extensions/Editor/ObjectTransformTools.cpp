@@ -592,7 +592,7 @@ ZilchDefineType(ObjectScaleTool, builder, type)
   ZilchBindGetterSetterProperty(SnapDistance);
   ZilchBindGetterSetterProperty(SnapMode);
 
-  ZilchBindFieldProperty(mAffectTranslation);
+  ZilchBindGetterSetterProperty(AffectTranslation);
 }
 
 /******************************************************************************/
@@ -670,6 +670,21 @@ void ObjectScaleTool::SetSnapMode(GizmoSnapMode::Enum mode)
 }
 
 /******************************************************************************/
+bool ObjectScaleTool::GetAffectTranslation( )
+{
+  return mAffectTranslation;
+}
+
+void ObjectScaleTool::SetAffectTranslation(bool affectTranslation)
+{
+  mAffectTranslation = affectTranslation;
+
+  Cog* gizmo = mGizmo.ToCog( );
+  if(gizmo)
+    gizmo->has(ObjectScaleGizmo)->mAffectTranslation = affectTranslation;
+}
+
+/******************************************************************************/
 void ObjectScaleTool::CopyPropertiesToGizmo()
 {
   Cog* gizmo = mGizmo.ToCog( );
@@ -700,7 +715,7 @@ ZilchDefineType(ObjectRotateTool, builder, type)
 
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapAngle);
-  ZilchBindFieldProperty(mAffectTranslation);
+  ZilchBindGetterSetterProperty(AffectTranslation);
 }
 
 /******************************************************************************/
@@ -749,6 +764,21 @@ void ObjectRotateTool::SetSnapAngle(float angle)
   Cog* gizmo = mGizmo.ToCog();
   if(gizmo)
     gizmo->has(RotateGizmo)->mSnapAngle = angle;
+}
+
+/******************************************************************************/
+bool ObjectRotateTool::GetAffectTranslation( )
+{
+  return mAffectTranslation;
+}
+
+void ObjectRotateTool::SetAffectTranslation(bool affectTranslation)
+{
+  mAffectTranslation = affectTranslation;
+
+  Cog* gizmo = mGizmo.ToCog( );
+  if(gizmo)
+    gizmo->has(ObjectRotateGizmo)->mAffectTranslation = affectTranslation;
 }
 
 /******************************************************************************/

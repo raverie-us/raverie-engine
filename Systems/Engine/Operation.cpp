@@ -131,6 +131,7 @@ ZilchDefineType(OperationQueue, builder, type)
   ZilchBindMethod(ClearRedo);
   ZilchBindMethod(ClearAll);
 
+  ZilchBindGetterSetterProperty(ActiveBatchName);
   ZilchBindGetterProperty(Commands);
   ZilchBindGetterProperty(RedoCommands);
 
@@ -328,15 +329,25 @@ void OperationQueue::Queue(Operation* command)
     ClearRedo();
     Commands.PushBack(command);
 
+    // Do NOT queue any operations that come about through updating the history
+    // window, as that is what responds to 'OperationQueued'
+    bool prevSideEffects = sListeningForSideEffects;
+    sListeningForSideEffects = false;
+
     OperationQueueEvent event(command);
     DispatchEvent(Events::OperationQueued, &event);
+
+    sListeningForSideEffects = prevSideEffects;
   }
 
 }
 
 //******************************************************************************
-const String& OperationQueue::GetActiveBatchName(StringParam batchName)
+String OperationQueue::GetActiveBatchName()
 {
+  if(ActiveBatch != nullptr)
+    return String();
+
   return ActiveBatch->mName;
 }
 
@@ -384,11 +395,6 @@ void OperationQueue::EndBatch()
   int operationCount = 0;
   forRange(Operation& operation, ActiveBatch->GetChildren( ))
     ++operationCount;
-
-  // Only error if operations exist in the batch.  If there are no operations
-  // in the batch, it'll get cleaned up below.
-  ErrorIf((ActiveBatch->mName.Empty() && operationCount != 0),
-    "ActiveBatch must have a name before EndBatch.");
 
   // Cleanup
   mDestroyedObjects.Clear();
@@ -446,9 +452,16 @@ void OperationQueue::EndBatch()
         Commands.PushBack(ActiveBatch);
       }
 
+      // Do NOT queue any operations that come about through updating the history
+      // window, as that is what responds to 'OperationQueued'
+      bool prevSideEffects = sListeningForSideEffects;
+      sListeningForSideEffects = false;
+
       // ONLY send out the queue event when the root-batch in the stack has ended.
       OperationQueueEvent event(&Commands.Back());
       DispatchEvent(Events::OperationQueued, &event);
+
+      sListeningForSideEffects = prevSideEffects;
     }
 
     ActiveBatch = NULL;

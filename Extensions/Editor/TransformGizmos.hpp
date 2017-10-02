@@ -171,9 +171,6 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  bool GetSnapping( );
-  void SetSnapping(bool snapping);
-
   /// If they're holding down ctrl, we want to duplicate the objects.
   void OnMouseDragStart(ViewportMouseEvent* e) override;
 
@@ -198,9 +195,6 @@ public:
   /// Component Interface.
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
-
-  bool GetSnapping( );
-  void SetSnapping(bool snapping);
 
   void OnMouseDragStart(ViewportMouseEvent* e) override;
 

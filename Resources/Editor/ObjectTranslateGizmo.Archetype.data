@@ -18,7 +18,7 @@ Cog
 	{
 		var UpdateMode = UpdateMode.TranslateSelf
 		var Snapping = false
-		var SnapMode = GizmoSnapMode.RelativeUnits
+		var SnapMode = GizmoSnapMode.Relative
 		var SnapDistance = 0.25
 	}
 	ObjectTranslateGizmo 
