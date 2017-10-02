@@ -62,8 +62,10 @@ struct SsaoFragment
     var geometrySample0 = this.GeometryBuffer0.Sample(this.Uv);
     var viewNormal = GeometryPass.GetNormal(geometrySample0);
     var viewPosition = GeometryPass.ReconstructViewPosition(geometrySample0, this.PerspectiveToView, this.PerspectivePosition, this.FarPlane);
-    viewPosition += viewNormal * 0.1;
     var fragmentDepth = GeometryPass.GetDepth(geometrySample0) * this.FarPlane;
+    
+    // Offset bias to minimize self occlusion artifacts with high depth discrepancy at far distances
+    viewPosition += viewNormal * (fragmentDepth / this.FarPlane) * Math.Pow(this.Radius, 0.75);
     
     // Repeat 4x4 sample over the screen
     var randScale = this.TargetSize / 4.0;
