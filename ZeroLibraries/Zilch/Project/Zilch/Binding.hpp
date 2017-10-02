@@ -1190,7 +1190,6 @@ namespace Zilch
   ZilchDefineExternalBaseType(enumType::Enum, TypeCopyMode::ValueType, builder, type)  \
   {                                                                                    \
     ZilchFullBindEnum(builder, type, SpecialType::Enumeration);                        \
-    type->AddAttribute(SerializationAttributes::cSerializationPrimitive);              \
                                                                                        \
     for(uint i = 0; i < enumType::Size; ++i)                                           \
     {                                                                                  \
