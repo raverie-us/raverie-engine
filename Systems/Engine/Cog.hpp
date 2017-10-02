@@ -219,7 +219,7 @@ public:
 
   /// Attach to a parent object.
   bool AttachToPreserveLocal(Cog* parent);
-  /// Attach to a parent object and compute the new transfo;rm so that the objects are relative
+  /// Attach to a parent object and compute the new transform so that the objects are relative
   bool AttachTo(Cog* parent);
   /// Detach from a parent object.
   void DetachPreserveLocal();
