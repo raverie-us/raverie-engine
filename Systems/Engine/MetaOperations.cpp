@@ -147,6 +147,8 @@ void RevertProperty(OperationQueue* queue, HandleParam object,
 void RestoreLocallyRemovedChild(OperationQueue* queue, HandleParam parent,
                                 ObjectState::ChildId& childId)
 {
+  ReturnIf(parent.StoredType == nullptr,, "We should always be given a valid parent handle");
+
   // First check dependencies before re-adding the child (e.g. if Transform and Model were
   // both locally removed, we cannot restore Model until Transform has been restored)
   if(BoundType* childType = MetaDatabase::FindType(childId.mTypeName))

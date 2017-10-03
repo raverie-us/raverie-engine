@@ -32,6 +32,7 @@ DefineEvent(OperationRedo);
 ZilchDefineType(OperationQueueEvent, builder, type)
 {
   ZilchBindFieldProperty(mOperation);
+  ZeroBindDocumented();
 }
 
 //-------------------------------------------------------------------- Operation

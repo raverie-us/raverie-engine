@@ -25,6 +25,7 @@ DeclareEvent(OperationUndo);
 DeclareEvent(OperationRedo);
 }
 
+/// Notification about most recent Operation/OperationBatch added to the OperationQueue.
 class OperationQueueEvent : public Event
 {
 public:

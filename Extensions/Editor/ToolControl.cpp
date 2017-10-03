@@ -26,6 +26,7 @@ ZilchDefineType(ToolUiEvent, builder, type)
   ZilchBindFieldProperty(mNeedsPropertyGrid);
   ZilchBindGetterProperty(Parent);
   ZilchBindGetterProperty(SelectTool);
+  ZeroBindDocumented();
 }
 
 //******************************************************************************

@@ -47,6 +47,7 @@ ZilchDefineStaticLibrary(SerializationLibrary)
   ZeroBindSerializationPrimitiveExternal(Mat3);
   ZeroBindSerializationPrimitiveExternal(Mat4);
   ZeroBindSerializationPrimitiveExternal(Quat);
+  ZeroBindSerializationPrimitiveExternal(Enum);
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }

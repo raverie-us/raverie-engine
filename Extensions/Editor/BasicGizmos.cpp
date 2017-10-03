@@ -532,6 +532,8 @@ ZilchDefineType(RingGizmoEvent, builder, type)
   ZilchBindFieldProperty(mWorldRotationAxis);
   ZilchBindFieldProperty(mRadiansAroundAxis);
   ZilchBindFieldProperty(mDeltaRadiansAroundAxis);
+
+  ZeroBindDocumented( );
 }
 
 //******************************************************************************
