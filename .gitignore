@@ -32,6 +32,7 @@ CMakeBuilds/
 Data/ContentStore/
 Data/ZilchCustomPluginShared/
 Tools/GeometryProcessor
+Tools/ImageProcessor
 ZeroDevTools/
 Extensions/UiWidget/Debug/*
 AudioTest/*
