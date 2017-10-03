@@ -51,9 +51,6 @@
     <ClCompile Include="Precompiled.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pa_ringbuffer.cpp">
-      <Filter>Source Files\PortAudio</Filter>
-    </ClCompile>
     <ClCompile Include="pa_win_util.cpp">
       <Filter>Source Files\PortAudio</Filter>
     </ClCompile>
@@ -129,6 +126,9 @@
     <ClCompile Include="WASAPI.cpp">
       <Filter>Source Files\PlatformSpecific</Filter>
     </ClCompile>
+    <ClCompile Include="RingBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Resampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -141,9 +141,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="pa_memorybarrier.h">
-      <Filter>Source Files\PortAudio</Filter>
-    </ClInclude>
-    <ClInclude Include="pa_ringbuffer.h">
       <Filter>Source Files\PortAudio</Filter>
     </ClInclude>
     <ClInclude Include="pa_util.h">
@@ -261,6 +258,9 @@
       <Filter>Source Files\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="Resampler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

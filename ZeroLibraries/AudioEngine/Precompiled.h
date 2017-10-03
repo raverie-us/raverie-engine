@@ -14,7 +14,8 @@
 #include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
-#include "pa_ringbuffer.h"
+#include "LockFreeQueue.hpp"
+#include "RingBuffer.h"
 
 #include "Definitions.h"
 #include "Resampler.h"
@@ -43,7 +44,6 @@
 
 #include "MIDI.h"
 #include "Modifiers.h"
-#include "LockFreeQueue.hpp"
 #include "FileEncoder.h"
 #include "FileDecoder.h"
 #include "AudioSystemInterface.h"

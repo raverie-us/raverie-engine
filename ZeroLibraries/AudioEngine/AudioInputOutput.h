@@ -103,7 +103,7 @@ namespace Audio
     // Buffer of input data
     float InputBuffer[InputBufferSize];
     // Ring buffer used for receiving input data
-    PaUtilRingBuffer InputRingBuffer;
+    RingBuffer InputRingBuffer;
     // Current position in the output buffer.
     unsigned MixedBufferIndex;
     // For notifying the mix thread when a new buffer is needed.

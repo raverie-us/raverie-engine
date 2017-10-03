@@ -26,8 +26,7 @@ namespace Audio
     // Null first buffer so we can check if they've been created yet
     OutputBuffersThreaded[0] = nullptr;
 
-    PaUtil_InitializeRingBuffer(&InputRingBuffer, sizeof(float), InputBufferSize, InputBuffer);
-    PaUtil_FlushRingBuffer(&InputRingBuffer);
+    InputRingBuffer.Initialize(sizeof(float), InputBufferSize, InputBuffer);
   }
 
   //************************************************************************************************
@@ -96,14 +95,14 @@ namespace Audio
   //************************************************************************************************
   void AudioInputOutput::GetInputData(Zero::Array<float>& buffer, unsigned howManySamples)
   {
-    unsigned samplesAvailable = PaUtil_GetRingBufferReadAvailable(&InputRingBuffer);
+    unsigned samplesAvailable = InputRingBuffer.GetReadAvailable();
 
     if (samplesAvailable < howManySamples)
       howManySamples = samplesAvailable;
     
     buffer.Resize(howManySamples);
 
-    unsigned samplesRead = PaUtil_ReadRingBuffer(&InputRingBuffer, buffer.Data(), howManySamples);
+    unsigned samplesRead = InputRingBuffer.Read(buffer.Data(), howManySamples);
 
     if (samplesRead != howManySamples)
       buffer.Resize(samplesRead);
@@ -213,7 +212,7 @@ namespace Audio
   //************************************************************************************************
   void AudioInputOutput::SaveInputSamples(const float* inputBuffer, unsigned howManySamples)
   {
-    PaUtil_WriteRingBuffer(&InputRingBuffer, inputBuffer, howManySamples);
+    InputRingBuffer.Write(inputBuffer, howManySamples);
   }
   
   //------------------------------------------------------------- Audio Input Output using PortAudio

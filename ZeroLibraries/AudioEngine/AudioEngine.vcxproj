@@ -78,7 +78,6 @@
     <ClCompile Include="ListenerNode.cpp" />
     <ClCompile Include="LockFreeQueue.cpp" />
     <ClCompile Include="Modifiers.cpp" />
-    <ClCompile Include="pa_ringbuffer.cpp" />
     <ClCompile Include="pa_win_util.cpp" />
     <ClCompile Include="PitchNode.cpp" />
     <ClCompile Include="Precompiled.cpp">
@@ -88,6 +87,7 @@
     <ClCompile Include="RecordNode.cpp" />
     <ClCompile Include="Resampler.cpp" />
     <ClCompile Include="ReverbNodes.cpp" />
+    <ClCompile Include="RingBuffer.cpp" />
     <ClCompile Include="SoundAssets.cpp" />
     <ClCompile Include="SoundInstances.cpp" />
     <ClCompile Include="SoundNode.cpp" />
@@ -126,7 +126,6 @@
     <ClInclude Include="opus_multistream.h" />
     <ClInclude Include="opus_types.h" />
     <ClInclude Include="pa_memorybarrier.h" />
-    <ClInclude Include="pa_ringbuffer.h" />
     <ClInclude Include="pa_util.h" />
     <ClInclude Include="PitchNode.h" />
     <ClInclude Include="portaudio.h" />
@@ -134,6 +133,7 @@
     <ClInclude Include="RecordNode.h" />
     <ClInclude Include="Resampler.h" />
     <ClInclude Include="ReverbNodes.h" />
+    <ClInclude Include="RingBuffer.h" />
     <ClInclude Include="SoundAssets.h" />
     <ClInclude Include="SoundInstances.h" />
     <ClInclude Include="SoundNode.h" />
