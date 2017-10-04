@@ -685,8 +685,8 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
       Vec3 pointAlongAxis = center + pointToAxisProjection * axis;
       float distance = (point.Points[i] - pointAlongAxis).Length( );
 
-      // Check to see if the intersection is with the tube radius
-      // of the edge to make it a donut
+      // Check to see if the intersection is within the tube radius
+      // of the ring [ie, within the donut surrounding the ring gizmo].
       float distanceToEdge = Math::Abs(sphereRadius - distance);
       bool withinEdge = (distanceToEdge <= tubeRadius+0.0001f);
 

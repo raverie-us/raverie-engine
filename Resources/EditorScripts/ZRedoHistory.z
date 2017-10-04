@@ -39,6 +39,7 @@ class ZRedoHistory : ZilchComponent
     var entryCog = this.Space.Create(this.ArchetypeEntry);
     
     var entry = entryCog.ZHistoryEntry;
+    entry.IsUndone = true;
     entry.OperationData = operation;
     //entry.HistoryInfo.Name = operation.Name;
     entry.RowName.SpriteText.Text = operation.Name;
@@ -88,6 +89,7 @@ class ZRedoHistory : ZilchComponent
     if(this.Owner.Children.Current == event.HistoryEntry)
       return;
       
+      // Place the new entry at the top of the Redo queue.
     event.HistoryEntry.PlaceBeforeSibling(this.Owner.Children.Current);
   }
   

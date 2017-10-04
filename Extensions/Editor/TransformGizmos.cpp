@@ -211,7 +211,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
   // We want everything to be in the same operation batch so that it's
   // all undone at the same time
   queue->BeginBatch();
-  queue->SetActiveBatchName("TransformGizmo_Batch");
+  queue->SetActiveBatchName("MultiTransform");
 
   forRange(ObjectTransformState& objectState, mObjectStates.All())
   {

@@ -1700,7 +1700,7 @@ void MultiConvexMeshEditor::TestConvexMeshes()
   {
     mQueue.Undo();
     //remove the last action from the redo list (so the user can't redo to a bad state)
-    mQueue.RedoCommands.PopBack();
+    mQueue.mRedoCommands.PopBack();
 
     DoNotifyWarning("Invalid Mesh", "The mesh resulting from the last operation is invalid. The last operation will be undone.");
   }

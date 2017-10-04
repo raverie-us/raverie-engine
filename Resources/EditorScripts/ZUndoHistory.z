@@ -33,8 +33,8 @@ class ZUndoHistory : ZilchComponent
     var entryCog = this.Space.Create(this.ArchetypeEntry);
       
     var entry = entryCog.ZHistoryEntry;
+    entry.IsUndone = false;
     entry.OperationData = operation;
-    
     //entry.HistoryInfo.Name = operation.Name;
     entry.RowName.SpriteText.Text = operation.Name;
     

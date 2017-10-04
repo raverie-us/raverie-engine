@@ -68,6 +68,16 @@ class ZOperationHistory : ZilchComponent
   }
   
   /******************************************************************************/
+  function RecursiveRowColorHelper(row : ZHistoryEntry)
+  {
+    ++this.EntryCount;
+    row.SetRowColor(this.GetNextRowColor());
+    
+    foreach(var child in row.ChildContainer.Children)
+      this.RecursiveRowColorHelper(child.ZHistoryEntry);
+  }
+  
+  /******************************************************************************/
   // Update the history row colors and size the view according to the number of rows.
   function OnEntryListUpdate(event : ZilchEvent)
   {
@@ -75,31 +85,13 @@ class ZOperationHistory : ZilchComponent
     this.NextRowColor = 0;
     
     foreach(var row in this.UndoView.Cog.Children)
-    {
-      ++this.EntryCount;
-      row.ZHistoryEntry.SetRowColor(this.GetNextRowColor());
-      
-      foreach(var child in row.ZHistoryEntry.ChildContainer.Children)
-      {
-        child.ZHistoryEntry.SetRowColor(this.GetNextRowColor());
-      }
-      
-    }
+      this.RecursiveRowColorHelper(row.ZHistoryEntry);
 
     foreach(var row in this.RedoView.Cog.Children)
-    {
-      ++this.EntryCount;
-      row.ZHistoryEntry.SetRowColor(this.GetNextRowColor());
-      
-      foreach(var child in row.ZHistoryEntry.ChildContainer.Children)
-      {
-        child.ZHistoryEntry.SetRowColor(this.GetNextRowColor());
-      }
-    
-    }
+      this.RecursiveRowColorHelper(row.ZHistoryEntry);
 
     this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;
-      // maintain room for the scrollbar on the x axis
+      // Maintain room for the scrollbar on the x axis.
     this.UiWidget.Size = Real2(this.UiWidget.ParentWidget.Size.X - this.CurrentScrollBarSizeX, this.TotalViewLength);
     
     this.UpdateStatusText();

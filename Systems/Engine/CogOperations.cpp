@@ -604,15 +604,9 @@ CreateDestroyOperation::CreateDestroyOperation(Cog* object, ObjectOperationMode:
 void CreateDestroyOperation::Undo()
 {
   if(mMode == ObjectOperationMode::Destroy)
-  {
     mRestoreState.RestoreObject( );
-
-    mCanPatch = false;
-  }
   else
-  {
     mRestoreState.DestroyObject(true);
-  }
 }
 
 //******************************************************************************
@@ -620,7 +614,6 @@ void CreateDestroyOperation::Redo()
 {
   if(mMode == ObjectOperationMode::Destroy)
   {
-    mCanPatch = true;
     mRestoreState.DestroyObject(false);
   }
   else

@@ -15,15 +15,21 @@ class ZHistoryEntry : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
   
+  var SingleIndent : Integer = 20;
+  
     // Denotes the current parent and undone state.
-  var IsUndone : Boolean;
+  var IsUndone : Boolean = false;
   
     // Current expand/collapse state.
   var IsExpanded : Boolean;
   
   var IsHighlighted : Boolean;
   
-    // Potential parent(s).
+    // If this HistoryEntry has ancestors, then 'RootHistoryEntry' will point
+    // to the root of the hierarchy containing this HistoryEntry.
+  var RootHistoryEntry : ZHistoryEntry = null;
+  
+    // Associated views, depending on this entry's undo/redo state.
   var UndoView : Cog = null;
   var RedoView : Cog = null;
   
@@ -31,7 +37,6 @@ class ZHistoryEntry : ZilchComponent
   var Icon : Cog;
   var HistoryInfo : Cog;
   var RowName : Cog;
-  var ChildBG : Cog;
   var ChildContainer : Cog;
   
   var UiOriginalSize : Real2;
@@ -59,15 +64,13 @@ class ZHistoryEntry : ZilchComponent
   /******************************************************************************/
   function Initialize(init : CogInitializer)
   {
-    this.IsUndone = false;
     this.IsExpanded = false;
     this.IsHighlighted = false;
     
     this.HistoryInfo = this.Owner.Children.Current;
     this.Icon = this.HistoryInfo.FindChildByName("Icon");
     this.RowName = this.HistoryInfo.FindChildByName("Text");
-    this.ChildBG = this.Owner.FindChildByName("ChildrenBG");
-    this.ChildContainer = this.ChildBG.Children.Current;
+    this.ChildContainer = this.Owner.FindChildByName("Children");
     
     this.UiOriginalSize = this.UiWidget.Size;
     
@@ -94,8 +97,16 @@ class ZHistoryEntry : ZilchComponent
     if(this.UndoView != null)
       return;
       
-    this.UndoView = this.Owner.Parent;
-    this.RedoView = this.UndoView.Parent.FindChildByName("RedoView");
+    if(this.RootHistoryEntry != null)
+    {
+      this.UndoView = this.RootHistoryEntry.UndoView;
+      this.RedoView = this.RootHistoryEntry.RedoView;
+    }
+    else
+    {
+      this.UndoView = this.Owner.FindRoot().FindChildByName("UndoView");
+      this.RedoView = this.Owner.FindRoot().FindChildByName("RedoView");
+    }
     
     this.Owner.DispatchUp(Events.HistoryEntryUpdate, ZilchEvent());
   }
@@ -115,16 +126,29 @@ class ZHistoryEntry : ZilchComponent
       ++childCount;
       
       var entry = this.Space.Create(this.ArchetypeEntry);
+      var entryManager = entry.ZHistoryEntry;
       
-      // Highlight all of our new child rows, because we are currently highlighted.
-      entry.ZHistoryEntry.UpdateColor(this.HighlightColor, true);
+        // Find the root HistoryEntry of the hierarchy this new entry will be in.
+      var root = this;
+      while(root != null)
+      {
+        entryManager.RootHistoryEntry = root;
+        root = root.RootHistoryEntry;
+      }
       
-      // Children entries are not allowed to be the autority on hierarchical-
-      // highlighting on mouse enter/exit.  So disconnect these events.
+        // Highlight all of our new child rows, because we are currently highlighted.
+      entryManager.UpdateColor(this.HighlightColor, true);
+      
+        // Children entries are not allowed to be the autority with respect to
+        // hierarchical-highlighting on mouse enter/exit.  So disconnect these events.
       Zero.Disconnect(entry, Events.MouseEnterHierarchy, entry.ZHistoryEntry);
       Zero.Disconnect(entry, Events.MouseExitHierarchy, entry.ZHistoryEntry);
       
-      var entryManager = entry.ZHistoryEntry;
+        // Indent the new entry content.
+      var parentIndent = this.Owner.Children.Current.UiStackLayout.PaddingLeft;
+      entry.Children.Current.UiStackLayout.PaddingLeft = parentIndent + this.SingleIndent;
+      
+        // Set the rest of the data for this entry.
       entryManager.OperationData = operation;
       //entryManager.HistoryInfo.Name = operation.Name;
       entryManager.RowName.SpriteText.Text = operation.Name;
@@ -151,10 +175,10 @@ class ZHistoryEntry : ZilchComponent
   function ChangeHistoryView(moveToRedoView : Boolean, dispatcher : Cog, eventName: String)
   {
     this.IsUndone = moveToRedoView;
-        
+    this.Owner.DetachPreserveLocal();
+    
     var changedViewEvent = ChangedHistoryView();
     changedViewEvent.HistoryEntry = this.Owner;
-    this.Owner.DetachPreserveLocal();
     
     dispatcher.DispatchEvent(eventName, changedViewEvent);
   }
@@ -181,9 +205,13 @@ class ZHistoryEntry : ZilchComponent
   // Excute undo/redo command.
   function OnLeftMouseUp(event : ViewportMouseEvent)
   {
-    if(this.IsUndone)
+    var targetEntry = this;
+    if(this.RootHistoryEntry != null)
+      targetEntry = this.RootHistoryEntry;
+        
+    if(targetEntry.IsUndone)
     {
-      var operationValid = Zero.Editor.OperationQueue.Redo(this.OperationData);
+      var operationValid = Zero.Editor.OperationQueue.Redo(targetEntry.OperationData);
       if(!operationValid)
         return;
       
@@ -192,8 +220,8 @@ class ZHistoryEntry : ZilchComponent
         var entry = cog.ZHistoryEntry;
         entry.ChangeHistoryView(false, entry.UndoView, Events.OperationRedone);
         
-          // Redo all operations up to AND including this row.
-        if(entry == this)
+          // Redo all operations up to AND including the target entry.
+        if(entry == targetEntry)
           return;
       }
 
@@ -202,15 +230,14 @@ class ZHistoryEntry : ZilchComponent
     {
       var reverseRange  = this.UndoView.ChildrenReversed;
       
-        // Undo this row if (and only if) clicking on this AND every row after is already undone.
-      if(reverseRange.First == this.Owner)
+        // Undo the target entry if (and only if) every entry after the target is already undone.
+      if(reverseRange.First == targetEntry.Owner)
       {
-        //this.ChangeHistoryView(true, this.RedoView, Events.OperationUndone);
         Zero.Editor.OperationQueue.Undo();
         return; 
       }
       
-      var operationValid = Zero.Editor.OperationQueue.Undo(this.OperationData);
+      var operationValid = Zero.Editor.OperationQueue.Undo(targetEntry.OperationData);
       if(!operationValid)
         return;
       
@@ -218,8 +245,8 @@ class ZHistoryEntry : ZilchComponent
       {
         var entry = cog.ZHistoryEntry;
         
-          // Undo all operations up to, but NOT including this row.
-        if(entry == this)
+          // Undo all operations up to, but NOT including the target/clicked entry.
+        if(entry == targetEntry)
           return;
         
         entry.ChangeHistoryView(true, entry.RedoView, Events.OperationUndone);
@@ -307,8 +334,6 @@ class ZHistoryEntry : ZilchComponent
   {
     this.IsHighlighted = highlight;
     this.HistoryInfo.UiWidget.LocalColor = color;
-    this.ChildBG.UiWidget.LocalColor = color;
-    this.ChildContainer.UiWidget.LocalColor = color;
   }
   
   /******************************************************************************/
@@ -318,10 +343,7 @@ class ZHistoryEntry : ZilchComponent
     this.UpdateColor(color, highlight);
     
     foreach(var row in this.ChildContainer.Children)
-    {
       row.ZHistoryEntry.UpdateHierarchyColor(color, highlight);
-    }
-    
   }
   
   /******************************************************************************/
@@ -332,10 +354,7 @@ class ZHistoryEntry : ZilchComponent
     this.UpdateColor(this.UiOriginalColor, false);
 
     foreach(var row in this.ChildContainer.Children)
-    {
       row.ZHistoryEntry.OriginalHierarchyColor();
-    }
-    
   }
   
 }
