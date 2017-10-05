@@ -119,8 +119,6 @@ namespace Audio
     void ReleaseInterpolatorThreaded(InterpolatingObject* object);
     // Sets the threaded variable for the minimum volume threshold.
     void SetMinVolumeThresholdThreaded(const float volume);
-    // Resets the IO and updates resampling values if necessary
-    void ResetIO();
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
@@ -145,7 +143,7 @@ namespace Audio
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
     // The sample rate used by the audio engine for the output mix
-    static const unsigned SampleRate = 48000;
+    static const unsigned SystemSampleRate = 48000;
     
     AudioChannelsManager ChannelsManager;
     AudioInputOutput* AudioIO;
@@ -186,8 +184,6 @@ namespace Audio
     float Volume;
     // For interpolating the overall system volume on the mix thread. 
     InterpolatingObject VolumeInterpolatorThreaded;
-    // Receives audio device change notifications (headphones plugged in etc.) 
-    DeviceNotificationObject DeviceInfo;
     // For low frequency channel on 5.1 or 7.1 mix 
     // Must be pointer because relies on audio system in constructor
     LowPassFilter* LowPass;
@@ -242,7 +238,7 @@ namespace Audio
     // Sets the peak and RMS volume values.
     void SetVolumes(const float peak, const unsigned rms);
     // Sets whether to use the high or low latency values
-    void SetUseHighLatency(const bool useHighLatency);
+    void SetLatencyThreaded(const bool useHighLatency);
     // Checks for resampling and resets variables if applicable
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings

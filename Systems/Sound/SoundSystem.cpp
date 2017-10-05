@@ -152,6 +152,8 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
   Zero::Status status;
   mAudioSystem = new Audio::AudioSystemInterface(this);
   mAudioSystem->StartSystem(status);
+  if (status.Failed())
+    DoNotifyWarning("Audio Initialization Unsuccessful", status.Message);
 
   status.Reset();
   SoundNode* node = new SoundNode();

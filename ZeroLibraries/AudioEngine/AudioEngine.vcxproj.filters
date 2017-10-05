@@ -51,6 +51,9 @@
     <ClCompile Include="Precompiled.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pa_ringbuffer.cpp">
+      <Filter>Source Files\PortAudio</Filter>
+    </ClCompile>
     <ClCompile Include="pa_win_util.cpp">
       <Filter>Source Files\PortAudio</Filter>
     </ClCompile>
@@ -74,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="AudioInputOutput.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsDeviceAccess.cpp">
-      <Filter>Source Files\PlatformSpecific</Filter>
     </ClCompile>
     <ClCompile Include="WindowsMIDI.cpp">
       <Filter>Source Files\PlatformSpecific</Filter>
@@ -161,9 +161,6 @@
     <ClInclude Include="Tags.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="DeviceNotifier.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Precompiled.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -195,9 +192,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="WindowsMIDI.h">
-      <Filter>Source Files\PlatformSpecific</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsDeviceAccess.h">
       <Filter>Source Files\PlatformSpecific</Filter>
     </ClInclude>
     <ClInclude Include="LockFreeQueue.hpp">
@@ -262,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="RingBuffer.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WASAPI.h">
+      <Filter>Source Files\PlatformSpecific</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

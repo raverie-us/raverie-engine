@@ -782,14 +782,14 @@ namespace Audio
       {
         Pausing = true;
         Interpolating = true;
-        VolumeInterpolator->SetValues(1.0f, 0.0f, (unsigned)(0.05f * AudioSystemInternal::SampleRate));
+        VolumeInterpolator->SetValues(1.0f, 0.0f, (unsigned)(0.05f * AudioSystemInternal::SystemSampleRate));
       }
       // If we should un-pause and we are currently paused
       else if (!paused && Paused)
       {
         Paused = Pausing = false;
         Interpolating = true;
-        VolumeInterpolator->SetValues(0.0f, 1.0f, (unsigned)(0.05f * AudioSystemInternal::SampleRate));
+        VolumeInterpolator->SetValues(0.0f, 1.0f, (unsigned)(0.05f * AudioSystemInternal::SystemSampleRate));
       }
     }
   }

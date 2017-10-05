@@ -138,10 +138,10 @@ namespace Audio
       if (!status.Failed())
       {
         // Set the variables
-        FileLength = (float)Decoder->SamplesPerChannel / AudioSystemInternal::SampleRate;
+        FileLength = (float)Decoder->SamplesPerChannel / AudioSystemInternal::SystemSampleRate;
         Channels = Decoder->Channels;
         FrameCount = Decoder->SamplesPerChannel;
-        IndexCheck = AudioSystemInternal::SampleRate * Channels / 2;
+        IndexCheck = AudioSystemInternal::SystemSampleRate * Channels / 2;
 
         // If not streaming, make the Samples buffer big enough to hold all the audio samples,
         // and decode one buffer so it's ready to go
@@ -510,7 +510,7 @@ namespace Audio
   //************************************************************************************************
   unsigned GeneratedWaveSoundAsset::GetNumberOfFrames()
   {
-    return AudioSystemInternal::SampleRate;
+    return AudioSystemInternal::SystemSampleRate;
   }
 
   //************************************************************************************************
@@ -544,7 +544,7 @@ namespace Audio
       }
       else
         FrequencyInterpolator->SetValues(Frequency, newFrequency,
-          (unsigned)(time * AudioSystemInternal::SampleRate));
+          (unsigned)(time * AudioSystemInternal::SystemSampleRate));
     }
   }
 

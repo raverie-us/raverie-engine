@@ -40,7 +40,9 @@
 #include "Interpolator.h"
 #include "Filters.h"
 #include "AudioInputOutput.h"
-#include "DeviceNotifier.h"
+#ifdef _MSC_VER
+#include "WASAPI.h"
+#endif
 
 #include "MIDI.h"
 #include "Modifiers.h"
