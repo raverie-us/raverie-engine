@@ -71,22 +71,22 @@ namespace Audio
   void AudioSystemInternal::StartSystem(Zero::Status &status)
   {
     // Initialize the audio API
-    StreamStatus ioStatus = AudioIO->InitializeAPI();
+    StreamStatus::Enum ioStatus = AudioIO->InitializeAPI();
     // If initialization was not successful, set the message on the status object
-    if (ioStatus != Initialized)
+    if (ioStatus != StreamStatus::Initialized)
       status.SetFailed(AudioIO->LastErrorMessage);
 
     // Initialize audio output
-    StreamStatus outputStatus = AudioIO->InitializeStream(OutputStream);
+    StreamStatus::Enum outputStatus = AudioIO->InitializeStream(StreamTypes::Output);
     // If initializing stream failed but initializing API succeeded, set the message on the status
-    if (outputStatus != Initialized && status.Succeeded())
-      status.SetFailed(AudioIO->GetStreamInfo(OutputStream).ErrorMessage);
+    if (outputStatus != StreamStatus::Initialized && status.Succeeded())
+      status.SetFailed(AudioIO->GetStreamInfo(StreamTypes::Output).ErrorMessage);
 
     // Initialize audio input (non-essential)
-    StreamStatus inputStatus = AudioIO->InitializeStream(InputStream);
+    StreamStatus::Enum inputStatus = AudioIO->InitializeStream(StreamTypes::Input);
 
     MixBufferSizeThreaded = AudioIO->MixedOutputBufferSizeSamples;
-    if (SystemChannelsThreaded != AudioIO->GetStreamChannels(OutputStream))
+    if (SystemChannelsThreaded != AudioIO->GetStreamChannels(StreamTypes::Output))
       MixBufferSizeThreaded = AudioIO->MixedOutputBufferSizeFrames * SystemChannelsThreaded;
     CheckForResampling();
 
@@ -124,9 +124,9 @@ namespace Audio
 
     ZPrint("Audio mix thread initialized\n");
 
-    AudioIO->StartStream(OutputStream);
-    if (inputStatus == Initialized)
-      AudioIO->StartStream(InputStream);
+    AudioIO->StartStream(StreamTypes::Output);
+    if (inputStatus == StreamStatus::Initialized)
+      AudioIO->StartStream(StreamTypes::Input);
 
     ZPrint("Audio was successfully initialized\n");
   }
@@ -155,8 +155,8 @@ namespace Audio
     }
 
     // Shut down audio output, input, and API
-    AudioIO->ShutDownStream(InputStream);
-    AudioIO->ShutDownStream(OutputStream);
+    AudioIO->ShutDownStream(StreamTypes::Input);
+    AudioIO->ShutDownStream(StreamTypes::Output);
     AudioIO->ShutDownAPI();
 
     while (!TagsToDelete.Empty())
@@ -275,7 +275,7 @@ namespace Audio
 
     float peakVolume(0.0f);
     unsigned rmsVolume(0);
-    unsigned outputChannels = AudioIO->GetStreamChannels(OutputStream);
+    unsigned outputChannels = AudioIO->GetStreamChannels(StreamTypes::Output);
 
     // If there is no real data, just reset output buffer to 0
     if (!isThereData)
@@ -372,7 +372,7 @@ namespace Audio
   void AudioSystemInternal::AddTask(Zero::Functor* function)
   {
     // Don't add tasks to the list when audio output is stopped
-    if (!AudioIO->IsStreamStarted(OutputStream))
+    if (!AudioIO->IsStreamStarted(StreamTypes::Output))
     {
       delete function;
       return;
@@ -392,7 +392,7 @@ namespace Audio
   void AudioSystemInternal::AddDecodingTask(Zero::Functor* function)
   {
     // Don't add tasks to the list when audio output is stopped
-    if (!AudioIO->IsStreamStarted(OutputStream))
+    if (!AudioIO->IsStreamStarted(StreamTypes::Output))
     {
       delete function;
       return;
@@ -575,7 +575,7 @@ namespace Audio
 
     if (!Resampling)
     {
-      if (SystemChannelsThreaded == AudioIO->GetStreamChannels(OutputStream))
+      if (SystemChannelsThreaded == AudioIO->GetStreamChannels(StreamTypes::Output))
         MixBufferSizeThreaded = AudioIO->MixedOutputBufferSizeSamples;
       else
         MixBufferSizeThreaded = AudioIO->MixedOutputBufferSizeFrames * SystemChannelsThreaded;
@@ -600,9 +600,9 @@ namespace Audio
   void AudioSystemInternal::SetLatencyThreaded(const bool useHighLatency)
   {
     if (!useHighLatency)
-      AudioIO->SetOutputLatency(LowLatency);
+      AudioIO->SetOutputLatency(LatencyValues::LowLatency);
     else
-      AudioIO->SetOutputLatency(HighLatency);
+      AudioIO->SetOutputLatency(LatencyValues::HighLatency);
 
     // Set the mix buffer size
     SetSystemChannelsThreaded(SystemChannelsThreaded);
@@ -611,7 +611,7 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::CheckForResampling()
   {
-    unsigned outputSampleRate = AudioIO->GetStreamSampleRate(OutputStream);
+    unsigned outputSampleRate = AudioIO->GetStreamSampleRate(StreamTypes::Output);
 
     if (!Resampling && (SystemSampleRate != outputSampleRate))
     {
@@ -633,8 +633,8 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::GetAudioInputDataThreaded()
   {
-    unsigned inputChannels = AudioIO->GetStreamChannels(InputStream);
-    unsigned inputRate = AudioIO->GetStreamSampleRate(InputStream);
+    unsigned inputChannels = AudioIO->GetStreamChannels(StreamTypes::Input);
+    unsigned inputRate = AudioIO->GetStreamSampleRate(StreamTypes::Input);
 
     // Channels and sample rates match, don't need to process anything
     if (inputChannels == SystemChannelsThreaded && inputRate == SystemSampleRate)

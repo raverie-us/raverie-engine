@@ -154,7 +154,7 @@ namespace Audio
   class GeneratedWaveSoundAsset : public SoundAssetNode
   {
   public:
-    GeneratedWaveSoundAsset(const OscillatorTypes waveType, const float frequency, 
+    GeneratedWaveSoundAsset(const OscillatorTypes::Enum waveType, const float frequency, 
       ExternalNodeInterface *extInt, const bool isThreaded = false);
 
     // Returns the samples for the audio frame at the specified index

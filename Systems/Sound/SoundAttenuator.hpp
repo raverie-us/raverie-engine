@@ -109,7 +109,7 @@ private:
   float mLowPassStartDistance;
   float mLowPassCutoffFreq;
 
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override {}
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override {}
 };
 
 class SoundAttenuatorDisplay : public MetaDisplay

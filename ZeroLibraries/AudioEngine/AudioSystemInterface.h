@@ -37,7 +37,7 @@ namespace Audio
   class ExternalSystemInterface
   {
   public:
-    virtual void SendAudioEvent(const AudioEventType eventType, void* data) = 0;
+    virtual void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) = 0;
     virtual void SendAudioError(const Zero::String message) = 0;
   };
 
@@ -46,7 +46,7 @@ namespace Audio
   class ExternalNodeInterface
   {
   public:
-    virtual void SendAudioEvent(const AudioEventType eventType, void* data) = 0;
+    virtual void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) = 0;
   };
 
   //------------------------------------------------------------------------- Audio System Interface

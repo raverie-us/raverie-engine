@@ -18,10 +18,10 @@ namespace Audio
     MixedOutputBufferSizeFrames(0),
     WriteBufferThreaded(0),
     ReadBufferThreaded(0),
-    OutputStreamLatency(LowLatency),
+    OutputStreamLatency(LatencyValues::LowLatency),
     MixedBufferIndex(0)
   {
-    memset(OutputBufferFramesPerLatency, 0, sizeof(unsigned) * NumLatencyValues);
+    memset(OutputBufferFramesPerLatency, 0, sizeof(unsigned) * LatencyValues::Count);
 
     // Null first buffer so we can check if they've been created yet
     MixedOutputBuffersThreaded[0] = nullptr;
@@ -75,23 +75,23 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void AudioInputOutput::SetOutputLatency(LatencyValues newLatency)
+  void AudioInputOutput::SetOutputLatency(LatencyValues::Enum newLatency)
   {
     if (newLatency == OutputStreamLatency)
       return;
 
     OutputStreamLatency = newLatency;
 
-    ShutDownStream(OutputStream);
+    ShutDownStream(StreamTypes::Output);
 
     SetUpOutputBuffers(OutputBufferFramesPerLatency[OutputStreamLatency]);
 
-    InitializeStream(OutputStream);
-    StartStream(OutputStream);
+    InitializeStream(StreamTypes::Output);
+    StartStream(StreamTypes::Output);
   }
 
   //************************************************************************************************
-  const Audio::StreamInfo& AudioInputOutput::GetStreamInfo(StreamType whichStream)
+  const Audio::StreamInfo& AudioInputOutput::GetStreamInfo(StreamTypes::Enum whichStream)
   {
     return StreamInfoList[whichStream];
   }
@@ -99,16 +99,17 @@ namespace Audio
   //************************************************************************************************
   void AudioInputOutput::InitializeOutputBuffers()
   {
-    unsigned outputSampleRate = GetStreamSampleRate(OutputStream);
+    unsigned outputSampleRate = GetStreamSampleRate(StreamTypes::Output);
 
-    OutputBufferFramesPerLatency[LowLatency] = BufferSizeStartValue;
-    while (OutputBufferFramesPerLatency[LowLatency] < (unsigned)(BufferSizeMultiplier * outputSampleRate))
-      OutputBufferFramesPerLatency[LowLatency] += BufferSizeStartValue;
+    unsigned& lowLatencyFrames = OutputBufferFramesPerLatency[LatencyValues::LowLatency];
+    lowLatencyFrames = BufferSizeStartValue;
+    while (lowLatencyFrames < (unsigned)(BufferSizeMultiplier * outputSampleRate))
+      lowLatencyFrames += BufferSizeStartValue;
 
-    OutputBufferFramesPerLatency[HighLatency] = BufferSizeStartValue * HighLatencyModifier;
-    while (OutputBufferFramesPerLatency[HighLatency] < (unsigned)(BufferSizeMultiplier 
-        * HighLatencyModifier * outputSampleRate))
-      OutputBufferFramesPerLatency[HighLatency] += BufferSizeStartValue;
+    unsigned& highLatencyFrames = OutputBufferFramesPerLatency[LatencyValues::HighLatency];
+    highLatencyFrames = BufferSizeStartValue * HighLatencyModifier;
+    while (highLatencyFrames < (unsigned)(BufferSizeMultiplier * HighLatencyModifier * outputSampleRate))
+      highLatencyFrames += BufferSizeStartValue;
 
     SetUpOutputBuffers(OutputBufferFramesPerLatency[OutputStreamLatency]);
   }
@@ -117,7 +118,7 @@ namespace Audio
   void AudioInputOutput::SetUpOutputBuffers(const unsigned frames)
   {
     MixedOutputBufferSizeFrames = frames;
-    MixedOutputBufferSizeSamples = frames * GetStreamChannels(OutputStream);
+    MixedOutputBufferSizeSamples = frames * GetStreamChannels(StreamTypes::Output);
 
     // Check if there are existing buffers
     if (MixedOutputBuffersThreaded[0])
@@ -216,7 +217,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOPortAudio::InitializeAPI()
+  StreamStatus::Enum AudioIOPortAudio::InitializeAPI()
   {
     OutputParameters->device = -1;
     InputParameters->device = -1;
@@ -227,7 +228,7 @@ namespace Audio
     {
       LogAudioIoError(Zero::String::Format("Unable to initialize PortAudio: %s", 
         Pa_GetErrorText(result)), &LastErrorMessage);
-      return ApiProblem;
+      return StreamStatus::ApiProblem;
     }
     ZPrint("PortAudio initialized\n");
 
@@ -238,14 +239,14 @@ namespace Audio
     {
       LastErrorMessage = Zero::String::Format(
         "Error getting audio devices: Pa_CountDevices returned 0x%x", numDevices);
-      return ApiProblem;
+      return StreamStatus::ApiProblem;
     }
     // No audio devices, can't do anything
     else if (numDevices == 0)
     {
       LastErrorMessage = "No audio output devices found";
       ZPrint("Audio initialization unsuccessful: no output devices\n");
-      return Uninitialized;
+      return StreamStatus::Uninitialized;
     }
 
     int numAPIs = Pa_GetHostApiCount();
@@ -253,7 +254,7 @@ namespace Audio
     {
       LastErrorMessage = "No audio APIs found";
       ZPrint("Audio initialization unsuccessful: no audio APIs found\n");
-      return ApiProblem;
+      return StreamStatus::ApiProblem;
     }
 
     PaHostApiIndex apiIndex = -1;
@@ -285,44 +286,44 @@ namespace Audio
     {
       LastErrorMessage = "No supported audio APIs found.";
       ZPrint("Audio initialization unsuccessful: no supported API found\n");
-      return ApiProblem;
+      return StreamStatus::ApiProblem;
     }
 
     // Get API info
     ApiInfo = Pa_GetHostApiInfo(apiIndex);
 
-    return Initialized;
+    return StreamStatus::Initialized;
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOPortAudio::InitializeStream(StreamType whichStream)
+  StreamStatus::Enum AudioIOPortAudio::InitializeStream(StreamTypes::Enum whichStream)
   {
-    if (whichStream == InputStream)
+    if (whichStream == StreamTypes::Input)
       InitializeInput();
-    else if (whichStream == OutputStream)
+    else if (whichStream == StreamTypes::Output)
       InitializeOutput();
 
     return StreamInfoList[whichStream].Status;
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOPortAudio::StartStream(StreamType whichStream)
+  StreamStatus::Enum AudioIOPortAudio::StartStream(StreamTypes::Enum whichStream)
   {
     StreamInfo& info = StreamInfoList[whichStream];
     PaStreamParameters* parameters = OutputParameters;
-    if (whichStream == InputStream)
+    if (whichStream == StreamTypes::Input)
       parameters = InputParameters;
 
     if (parameters->device < 0)
     {
       LogAudioIoError("No audio device, can't start stream", &info.ErrorMessage);
-      info.Status = DeviceProblem;
-      return DeviceProblem;
+      info.Status = StreamStatus::DeviceProblem;
+      return StreamStatus::DeviceProblem;
     }
 
     PaError result;
     // Open a PortAudio stream
-    if (whichStream == OutputStream)
+    if (whichStream == StreamTypes::Output)
     {
       result = Pa_OpenStream(
         &PaOutputStream,
@@ -350,12 +351,12 @@ namespace Audio
     {
       LogAudioIoError(Zero::String::Format("Error opening audio stream: %s",
         Pa_GetErrorText(result)), &info.ErrorMessage);
-      info.Status = DeviceProblem;
-      return DeviceProblem;
+      info.Status = StreamStatus::DeviceProblem;
+      return StreamStatus::DeviceProblem;
     }
 
     // If opened successfully, start the stream
-    if (whichStream == OutputStream)
+    if (whichStream == StreamTypes::Output)
       result = Pa_StartStream(PaOutputStream);
     else
       result = Pa_StartStream(PaInputStream);
@@ -363,29 +364,28 @@ namespace Audio
     {
       LogAudioIoError(Zero::String::Format("Error starting audio stream : %s",
         Pa_GetErrorText(result)), &info.ErrorMessage);
-      info.Status = DeviceProblem;
-      return DeviceProblem;
+      info.Status = StreamStatus::DeviceProblem;
+      return StreamStatus::DeviceProblem;
     }
 
-    if (whichStream == OutputStream)
+    if (whichStream == StreamTypes::Output)
       ZPrint("Audio output stream started\n");
     else
       ZPrint("Audio input stream started\n");
       
-    info.Status = Started;
-    return Started;
-
+    info.Status = StreamStatus::Started;
+    return StreamStatus::Started;
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOPortAudio::StopStream(StreamType whichStream)
+  StreamStatus::Enum AudioIOPortAudio::StopStream(StreamTypes::Enum whichStream)
   {
     StreamInfo& info = StreamInfoList[whichStream];
 
-    if (whichStream == OutputStream)
+    if (whichStream == StreamTypes::Output)
     {
       if (!PaOutputStream)
-        return Uninitialized;
+        return StreamStatus::Uninitialized;
 
       // Close the stream
       PaError result = Pa_CloseStream(PaOutputStream);
@@ -393,20 +393,20 @@ namespace Audio
       {
         LogAudioIoError(Zero::String::Format("Error closing audio output stream: %s",
           Pa_GetErrorText(result)), &info.ErrorMessage);
-        info.Status = DeviceProblem;
-        return DeviceProblem;
+        info.Status = StreamStatus::DeviceProblem;
+        return StreamStatus::DeviceProblem;
       }
 
       PaOutputStream = nullptr;
 
       ZPrint("Audio output stream stopped\n");
-      info.Status = Stopped;
-      return Stopped;
+      info.Status = StreamStatus::Stopped;
+      return StreamStatus::Stopped;
     }
-    else if (whichStream == InputStream)
+    else if (whichStream == StreamTypes::Input)
     {
       if (!PaInputStream)
-        return Uninitialized;
+        return StreamStatus::Uninitialized;
 
       // Close the stream
       PaError result = Pa_CloseStream(PaInputStream);
@@ -414,26 +414,26 @@ namespace Audio
       {
         LogAudioIoError(Zero::String::Format("Error closing audio input stream: %s",
           Pa_GetErrorText(result)), &info.ErrorMessage);
-        info.Status = DeviceProblem;
-        return DeviceProblem;
+        info.Status = StreamStatus::DeviceProblem;
+        return StreamStatus::DeviceProblem;
       }
 
       PaInputStream = nullptr;
 
       ZPrint("Audio input stream stopped\n");
-      info.Status = Stopped;
-      return Stopped;
+      info.Status = StreamStatus::Stopped;
+      return StreamStatus::Stopped;
     }
 
-    return Uninitialized;
+    return StreamStatus::Uninitialized;
   }
 
   //************************************************************************************************
-  Audio::StreamStatus AudioIOPortAudio::ShutDownStream(StreamType whichStream)
+  Audio::StreamStatus::Enum AudioIOPortAudio::ShutDownStream(StreamTypes::Enum whichStream)
   {
     StopStream(whichStream);
 
-    return Stopped;
+    return StreamStatus::Stopped;
   }
 
   //************************************************************************************************
@@ -451,27 +451,27 @@ namespace Audio
   }
 
   //************************************************************************************************
-  unsigned AudioIOPortAudio::GetStreamChannels(StreamType whichStream)
+  unsigned AudioIOPortAudio::GetStreamChannels(StreamTypes::Enum whichStream)
   {
-    if (whichStream == OutputStream)
+    if (whichStream == StreamTypes::Output)
       return OutputParameters->channelCount;
     else
       return InputParameters->channelCount;
   }
 
   //************************************************************************************************
-  unsigned AudioIOPortAudio::GetStreamSampleRate(StreamType whichStream)
+  unsigned AudioIOPortAudio::GetStreamSampleRate(StreamTypes::Enum whichStream)
   {
-    if (whichStream == OutputStream)
+    if (whichStream == StreamTypes::Output)
       return OutputSampleRate;
     else
       return InputSampleRate;
   }
 
   //************************************************************************************************
-  bool AudioIOPortAudio::IsStreamStarted(StreamType whichStream)
+  bool AudioIOPortAudio::IsStreamStarted(StreamTypes::Enum whichStream)
   {
-    if (whichStream == OutputStream)
+    if (whichStream == StreamTypes::Output)
       return PaOutputStream != nullptr;
     else
       return PaInputStream != nullptr;
@@ -503,9 +503,9 @@ namespace Audio
     // Make sure API is already initialized
     if (!ApiInfo)
     {
-      StreamInfoList[InputStream].ErrorMessage = 
+      StreamInfoList[StreamTypes::Input].ErrorMessage = 
         "Audio API was not successfully initialized, unable to initialize input";
-      StreamInfoList[InputStream].Status = Uninitialized;
+      StreamInfoList[StreamTypes::Input].Status = StreamStatus::Uninitialized;
       return;
     }
 
@@ -522,21 +522,21 @@ namespace Audio
       PaError result = Pa_IsFormatSupported(InputParameters, nullptr, (double)InputSampleRate);
       if (result != paFormatIsSupported)
       {
-        StreamInfoList[InputStream].ErrorMessage = "Audio input format is not supported";
+        StreamInfoList[StreamTypes::Input].ErrorMessage = "Audio input format is not supported";
         ZPrint("Audio input format is not supported\n");
         InputParameters->device = -1;
-        StreamInfoList[InputStream].Status = DeviceProblem;
+        StreamInfoList[StreamTypes::Input].Status = StreamStatus::DeviceProblem;
       }
       else
       {
         ZPrint("Successfully initialized audio input\n");
-        StreamInfoList[InputStream].Status = Initialized;
+        StreamInfoList[StreamTypes::Input].Status = StreamStatus::Initialized;
       }
     }
     else
     {
-      StreamInfoList[InputStream].ErrorMessage = "No default audio input device.";
-      StreamInfoList[InputStream].Status = DeviceProblem;
+      StreamInfoList[StreamTypes::Input].ErrorMessage = "No default audio input device.";
+      StreamInfoList[StreamTypes::Input].Status = StreamStatus::DeviceProblem;
     }
   }
 
@@ -546,13 +546,13 @@ namespace Audio
     // Make sure API is already initialized
     if (!ApiInfo)
     {
-      StreamStatus status = InitializeAPI();
+      StreamStatus::Enum status = InitializeAPI();
 
-      if (status != Initialized)
+      if (status != StreamStatus::Initialized)
       {
-        StreamInfoList[OutputStream].ErrorMessage = 
+        StreamInfoList[StreamTypes::Output].ErrorMessage = 
           "Audio API was not successfully initialized, unable to initialize output";
-        StreamInfoList[OutputStream].Status = Uninitialized;
+        StreamInfoList[StreamTypes::Output].Status = StreamStatus::Uninitialized;
         return;
       }
     }
@@ -561,9 +561,9 @@ namespace Audio
     OutputParameters->device = ApiInfo->defaultOutputDevice;    // Default output device
     if (OutputParameters->device == paNoDevice)
     {
-      StreamInfoList[OutputStream].ErrorMessage = "No default audio output device found.";
+      StreamInfoList[StreamTypes::Output].ErrorMessage = "No default audio output device found.";
       ZPrint("Audio initialization unsuccessful: no default audio device\n");
-      StreamInfoList[OutputStream].Status = DeviceProblem;
+      StreamInfoList[StreamTypes::Output].Status = StreamStatus::DeviceProblem;
       return;
     }
     OutputParameters->sampleFormat = paFloat32;    // 32 bit floating point output
@@ -584,12 +584,12 @@ namespace Audio
       // Parameters were not supported
       LastErrorMessage = "Audio settings not supported by default output device. ";
       ZPrint("Settings not supported by default output device\n Audio initialization unsuccessful\n");
-      StreamInfoList[OutputStream].Status = DeviceProblem;
+      StreamInfoList[StreamTypes::Output].Status = StreamStatus::DeviceProblem;
       return;
     }
 
     ZPrint("Successfully initialized audio output\n");
-    StreamInfoList[OutputStream].Status = Initialized;
+    StreamInfoList[StreamTypes::Output].Status = StreamStatus::Initialized;
 
     InitializeOutputBuffers();
   }

@@ -122,7 +122,7 @@ public:
 // Internals
   Audio::TagObject* mTagObject;
   InstanceList SoundInstanceList;
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
 
 private:
   HandleOf<SoundTag> mCompressorTag;

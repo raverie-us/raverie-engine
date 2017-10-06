@@ -77,7 +77,7 @@ namespace Audio
     // ***** These must be public but should not be used outside of this system *****
 
     // Sends an audio event to the external interface
-    void SendEventToExternalData(const AudioEventType eventType, void* data);
+    void SendEventToExternalData(const AudioEventTypes::Enum eventType, void* data);
     // Should be implemented by nodes if they keep track of data per listeners
     virtual void RemoveListener(ListenerNode* listener) {}
     // Used for InList

@@ -360,9 +360,9 @@ void SoundInstance::Play(bool loop, SoundTag* tag, Audio::SoundNode* outputNode,
 }
 
 //**************************************************************************************************
-void SoundInstance::SendAudioEvent(const Audio::AudioEventType eventType, void* data)
+void SoundInstance::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
 {
-  if (eventType == Audio::Notify_InstanceFinished)
+  if (eventType == Audio::AudioEventTypes::InstanceFinished)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::SoundStopped, &event);
@@ -379,47 +379,47 @@ void SoundInstance::SendAudioEvent(const Audio::AudioEventType eventType, void* 
       mSoundNode->mNode = nullptr;
     }
   }
-  else if (eventType == Audio::Notify_InstanceLooped)
+  else if (eventType == Audio::AudioEventTypes::InstanceLooped)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::SoundLooped, &event);
   }
-  else if (eventType == Audio::Notify_MusicBeat)
+  else if (eventType == Audio::AudioEventTypes::MusicBeat)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicBeat, &event);
   }
-  else if (eventType == Audio::Notify_MusicBar)
+  else if (eventType == Audio::AudioEventTypes::MusicBar)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicBar, &event);
   }
-  else if (eventType == Audio::Notify_MusicEighthNote)
+  else if (eventType == Audio::AudioEventTypes::MusicEighthNote)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicEighthNote, &event);
   }
-  else if (eventType == Audio::Notify_MusicQuarterNote)
+  else if (eventType == Audio::AudioEventTypes::MusicQuarterNote)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicQuarterNote, &event);
   }
-  else if (eventType == Audio::Notify_MusicHalfNote)
+  else if (eventType == Audio::AudioEventTypes::MusicHalfNote)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicHalfNote, &event);
   }
-  else if (eventType == Audio::Notify_MusicWholeNote)
+  else if (eventType == Audio::AudioEventTypes::MusicWholeNote)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicWholeNote, &event);
   }
-  else if (eventType == Audio::Notify_MusicCustomTime)
+  else if (eventType == Audio::AudioEventTypes::MusicCustomTime)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicCustomTime, &event);
   }
-  else if (eventType == Audio::AudioEventType::Notify_InterpolationDone)
+  else if (eventType == Audio::AudioEventTypes::InterpolationDone)
   {
     SoundEvent event;
     DispatchEvent(Events::AudioInterpolationDone, &event);

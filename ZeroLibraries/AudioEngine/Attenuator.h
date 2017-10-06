@@ -43,9 +43,9 @@ namespace Audio
   class AttenuatorNode : public SimpleCollapseNode
   {
   public:
-    AttenuatorNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, Math::Vec3Param position, 
-      const AttenuationData& data, const CurveTypes curveType, Zero::Array<Math::Vec3> *customCurveData,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    AttenuatorNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, 
+      Math::Vec3Param position, const AttenuationData& data, const CurveTypes::Enum curveType, 
+      Zero::Array<Math::Vec3> *customCurveData, ExternalNodeInterface* extInt, const bool isThreaded = false);
     
     // Sets the current position of the attenuator
     void SetPosition(Math::Vec3Param position);
@@ -54,7 +54,7 @@ namespace Audio
     // Gets a copy of the attenuation data
     AttenuationData GetAttenuationData();
     // Sets the curve type used by the attenuator
-    void SetCurveType(const CurveTypes type, Zero::Array<Math::Vec3> *customCurveData);
+    void SetCurveType(const CurveTypes::Enum type, Zero::Array<Math::Vec3> *customCurveData);
     // Sets whether the attenuator should apply a low pass filter
     void SetUsingLowPass(const bool useLowPass);
     // Sets the distance to start applying the low pass filter

@@ -97,7 +97,7 @@ namespace Audio
     TotalFrames(numberOfFrames),
     CurrentFrame(0), 
     TotalDistance(0),
-    CurrentCurveType(LinearCurveType)
+    CurrentCurveType(CurveTypes::Linear)
   {
     GetValue = GetValueLinearCurve;
   }
@@ -110,7 +110,7 @@ namespace Audio
     TotalFrames(0), 
     CurrentFrame(0), 
     TotalDistance(distance),
-    CurrentCurveType(LinearCurveType)
+    CurrentCurveType(CurveTypes::Linear)
   {
     GetValue = GetValueLinearCurve;
   }
@@ -122,7 +122,7 @@ namespace Audio
     TotalFrames(0),
     CurrentFrame(0), 
     TotalDistance(0),
-    CurrentCurveType(LinearCurveType)
+    CurrentCurveType(CurveTypes::Linear)
   {
     GetValue = GetValueLinearCurve;
   }
@@ -138,22 +138,22 @@ namespace Audio
   {
     switch (copy.CurrentCurveType)
     {
-    case LinearCurveType:
+    case CurveTypes::Linear:
       GetValue = GetValueLinearCurve;
       break;
-    case SquaredCurveType:
+    case CurveTypes::Squared:
       GetValue = GetValueSquaredCurve;
       break;
-    case SineCurveType:
+    case CurveTypes::Sine:
       GetValue = GetValueSineCurve;
       break;
-    case SquareRootCurveType:
+    case CurveTypes::SquareRoot:
       GetValue = GetValueSquareRootCurve;
       break;
-    case LogCurveType:
+    case CurveTypes::Log:
       GetValue = GetValueExponentialCurve;
       break;
-    case CustomCurveType:
+    case CurveTypes::Custom:
       CustomCurveObject.CurveData->Clear();
       (*CustomCurveObject.CurveData) = (*copy.CustomCurveObject.CurveData);
       break;
@@ -252,7 +252,7 @@ namespace Audio
       if (nodeForEvent)
         // Notify the external object that the interpolation is done
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          nodeForEvent, Notify_InterpolationDone, (void*)nullptr));
+          nodeForEvent, AudioEventTypes::InterpolationDone, (void*)nullptr));
 
       return true;
     }
@@ -261,30 +261,30 @@ namespace Audio
   //************************************************************************************************
   void InterpolatingObject::SetCustomCurve(Zero::Array<Math::Vec3>* curveData)
   {
-    CurrentCurveType = CustomCurveType;
+    CurrentCurveType = CurveTypes::Custom;
     CustomCurveObject.SetCurveData(curveData);
   }
 
   //************************************************************************************************
-  void InterpolatingObject::SetCurve(const CurveTypes curveType)
+  void InterpolatingObject::SetCurve(const CurveTypes::Enum curveType)
   {
     CurrentCurveType = curveType;
 
     switch (curveType)
     {
-    case LinearCurveType:
+    case CurveTypes::Linear:
       GetValue = GetValueLinearCurve;
       break;
-    case SquaredCurveType:
+    case CurveTypes::Squared:
       GetValue = GetValueSquaredCurve;
       break;
-    case SineCurveType:
+    case CurveTypes::Sine:
       GetValue = GetValueSineCurve;
       break;
-    case SquareRootCurveType:
+    case CurveTypes::SquareRoot:
       GetValue = GetValueSquareRootCurve;
       break;
-    case LogCurveType:
+    case CurveTypes::Log:
       GetValue = GetValueExponentialCurve;
       break;
     default:
@@ -335,7 +335,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  const CurveTypes InterpolatingObject::GetCurveType() const
+  const CurveTypes::Enum InterpolatingObject::GetCurveType() const
   {
     return CurrentCurveType;
   }

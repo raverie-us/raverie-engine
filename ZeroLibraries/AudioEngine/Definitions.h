@@ -17,14 +17,9 @@ namespace Audio
   static const unsigned MaxChannels = 8;
 
   // Types of curves used for interpolation. 
-  enum CurveTypes
+  namespace CurveTypes
   {
-    LinearCurveType,
-    SquaredCurveType,
-    SineCurveType,
-    SquareRootCurveType,
-    LogCurveType,
-    CustomCurveType
+    enum Enum { Linear, Squared, Sine, SquareRoot, Log, Custom };
   };
 
   struct MidiData
@@ -37,50 +32,53 @@ namespace Audio
     float Value2;
   };
 
-  enum AudioEventType
+  namespace AudioEventTypes
   {
-    // Notification type has not been set.
-    Notify_NotSet,
-    // Sound instance has finished playing. 
-    Notify_InstanceFinished,
-    // Sound instance has looped back to beginning. 
-    Notify_InstanceLooped,
-    // Tag has no more instances associated with it. 
-    Notify_TagIsUnreferenced,
-    // New sound instance was added to a tag
-    Notify_TagAddedInstance,
-    // Audio output is exceeding the maximum value. 
-    Notify_AudioClipping,
-    // Sound asset has no more instances. 
-    Notify_AssetUnreferenced,
-    // Sound asset has finished and been deleted. 
-    Notify_AssetRemoved,
-    // The custom input node needs another buffer of samples 
-    Notify_NeedInputSamples,
-    // An interpolation has finished 
-    Notify_InterpolationDone,
-    // Music notifications
-    Notify_MusicBar,
-    Notify_MusicBeat,
-    Notify_MusicEighthNote,
-    Notify_MusicQuarterNote,
-    Notify_MusicHalfNote,
-    Notify_MusicWholeNote,
-    Notify_MusicCustomTime,
-    // Sound node was disconnected
-    Notify_NodeDisconnected,
-    // MIDI notifications
-    Notify_MidiNoteOn,
-    Notify_MidiNoteOff,
-    Notify_MidiPitchWheel,
-    Notify_MidiVolume,
-    Notify_MidiModWheel,
-    Notify_MidiControl,
-    // Sends a buffer of input data
-    Notify_MicInputData,
-    // Sends a compressed packet of input data
-    Notify_CompressedMicInputData
-  };
+    enum Enum
+    {
+      // Notification type has not been set.
+      NotSet,
+      // Sound instance has finished playing. 
+      InstanceFinished,
+      // Sound instance has looped back to beginning. 
+      InstanceLooped,
+      // Tag has no more instances associated with it. 
+      TagIsUnreferenced,
+      // New sound instance was added to a tag
+      TagAddedInstance,
+      // Audio output is exceeding the maximum value. 
+      AudioClipping,
+      // Sound asset has no more instances. 
+      AssetUnreferenced,
+      // Sound asset has finished and been deleted. 
+      AssetRemoved,
+      // The custom input node needs another buffer of samples 
+      NeedInputSamples,
+      // An interpolation has finished 
+      InterpolationDone,
+      // Music notifications
+      MusicBar,
+      MusicBeat,
+      MusicEighthNote,
+      MusicQuarterNote,
+      MusicHalfNote,
+      MusicWholeNote,
+      MusicCustomTime,
+      // Sound node was disconnected
+      NodeDisconnected,
+      // MIDI notifications
+      MidiNoteOn,
+      MidiNoteOff,
+      MidiPitchWheel,
+      MidiVolume,
+      MidiModWheel,
+      MidiControl,
+      // Sends a buffer of input data
+      MicInputData,
+      // Sends a compressed packet of input data
+      CompressedMicInputData
+    };
+  }
 }
 
 #endif

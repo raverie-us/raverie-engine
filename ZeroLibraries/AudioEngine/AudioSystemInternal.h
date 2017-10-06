@@ -247,7 +247,7 @@ namespace Audio
     class NodeInterface : public ExternalNodeInterface
     {
     public:
-      void SendAudioEvent(const AudioEventType eventType, void* data) override {}
+      void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) override {}
     };
 
     NodeInterface NodeInt;

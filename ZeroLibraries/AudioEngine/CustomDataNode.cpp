@@ -103,7 +103,7 @@ namespace Audio
         + MinimumSamplesNeededInBuffers;
       samplesNeeded -= samplesNeeded % Channels;
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
-        GetSiblingNode(), Notify_NeedInputSamples, (void*)new CustomDataSampleRequest(samplesNeeded)));
+        GetSiblingNode(), AudioEventTypes::NeedInputSamples, (void*)new CustomDataSampleRequest(samplesNeeded)));
     }
   }
 
@@ -142,7 +142,7 @@ namespace Audio
         WaitingForSamples = true;
         if (GetSiblingNode())
           gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
-            GetSiblingNode(), Notify_NeedInputSamples, 
+            GetSiblingNode(), AudioEventTypes::NeedInputSamples,
             (void*)new CustomDataSampleRequest(MinimumSamplesNeededInBuffers * 2)));
       }
       return false;
@@ -218,7 +218,7 @@ namespace Audio
       samplesNeeded -= samplesNeeded % Channels;
       if (GetSiblingNode())
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
-          GetSiblingNode(), Notify_NeedInputSamples, (void*)new CustomDataSampleRequest(samplesNeeded)));
+          GetSiblingNode(), AudioEventTypes::NeedInputSamples, (void*)new CustomDataSampleRequest(samplesNeeded)));
     }
 
     return true;

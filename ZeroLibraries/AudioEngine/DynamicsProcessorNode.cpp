@@ -23,7 +23,7 @@ namespace Audio
     Ratio(1),
     OutputGainDB(0),
     KneeWidth(0),
-    ProcessorType(Compressor)
+    ProcessorType(DynamicsProcessorTypes::Compressor)
   {
     if (!Threaded)
     {
@@ -172,13 +172,13 @@ namespace Audio
   }
 
   //************************************************************************************************
-  Audio::ProcessorTypes DynamicsProcessorNode::GetType()
+  DynamicsProcessorTypes::Enum DynamicsProcessorNode::GetType()
   {
     return ProcessorType;
   }
 
   //************************************************************************************************
-  void DynamicsProcessorNode::SetType(const ProcessorTypes type)
+  void DynamicsProcessorNode::SetType(const DynamicsProcessorTypes::Enum type)
   {
     ProcessorType = type;
 

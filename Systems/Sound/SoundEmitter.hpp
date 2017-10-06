@@ -155,7 +155,7 @@ private:
 
   bool CheckAttenuatorInputs();
   void SetUpAttenuatorNode(SoundAttenuator* attenuator);
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
   SoundAttenuatorNode* IsAttenuatorInList(SoundAttenuator* attenuator);
 };
 

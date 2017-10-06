@@ -82,11 +82,11 @@ namespace Audio
     // Gets the current value of a sequential interpolation.
     const float GetCurrentValue() const;
     // Gets the type of curve currently being used. 
-    const CurveTypes GetCurveType() const;
+    const CurveTypes::Enum GetCurveType() const;
     // Sets a new custom curve for this interpolator. Relies on curves being in 0-1 range.
     void SetCustomCurve(Zero::Array<Math::Vec3>* curveData);
     // Changes the curve type of this interpolator. 
-    void SetCurve(const CurveTypes curveType);
+    void SetCurve(const CurveTypes::Enum curveType);
     // Resets the object for sequential interpolation using NextValue or ValueAtIndex.
     void SetValues(const float startValue, const float endValue, const unsigned numberOfFrames);
     // Resets the object for direct-access interpolation using ValueAtDistance.
@@ -110,7 +110,7 @@ namespace Audio
     // Current frame of sequential interpolation. 
     unsigned CurrentFrame;
 
-    CurveTypes CurrentCurveType;
+    CurveTypes::Enum CurrentCurveType;
     float(*GetValue)(const float current, const float total, const float startValue, const float endValue);
     CustomCurve CustomCurveObject;
 

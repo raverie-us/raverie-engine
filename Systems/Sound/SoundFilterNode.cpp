@@ -293,14 +293,14 @@ void SoundNode::SetBypassPercent(float percent)
 }
 
 //**************************************************************************************************
-void SoundNode::SendAudioEvent(const Audio::AudioEventType eventType, void* data)
+void SoundNode::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
 {
-  if (eventType == Audio::AudioEventType::Notify_InterpolationDone)
+  if (eventType == Audio::AudioEventTypes::InterpolationDone)
   {
     SoundEvent event;
     DispatchEvent(Events::AudioInterpolationDone, &event);
   }
-  else if (eventType == Audio::AudioEventType::Notify_NodeDisconnected)
+  else if (eventType == Audio::AudioEventTypes::NodeDisconnected)
   {
     SoundEvent event;
     DispatchEvent(Events::SoundNodeDisconnected, &event);
@@ -480,9 +480,9 @@ void CustomAudioNode::SendMicCompressedData(const HandleOf<ArrayClass<byte>>& au
 }
 
 //**************************************************************************************************
-void CustomAudioNode::SendAudioEvent(const Audio::AudioEventType eventType, void* data)
+void CustomAudioNode::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
 {
-  if (eventType == Audio::Notify_NeedInputSamples)
+  if (eventType == Audio::AudioEventTypes::NeedInputSamples)
   {
     CustomAudioNodeEvent event(((Audio::CustomDataSampleRequest*)data)->SamplesNeeded);
     mDispatcher.Dispatch(Events::CustomAudioNodeSamplesNeeded, &event);
@@ -658,24 +658,24 @@ void GeneratedWaveNode::CreateAsset()
   if (mAsset)
     ReleaseAsset();
 
-  Audio::OscillatorTypes waveType;
+  Audio::OscillatorTypes::Enum waveType;
 
   switch (mWaveType)
   {
   case SynthWaveType::SineWave:
-    waveType = Audio::Sine;
+    waveType = Audio::OscillatorTypes::Sine;
     break;
   case SynthWaveType::SawWave:
-    waveType = Audio::Saw;
+    waveType = Audio::OscillatorTypes::Saw;
     break;
   case SynthWaveType::SquareWave:
-    waveType = Audio::Square;
+    waveType = Audio::OscillatorTypes::Square;
     break;
   case SynthWaveType::TriangleWave:
-    waveType = Audio::Triangle;
+    waveType = Audio::OscillatorTypes::Triangle;
     break;
   case SynthWaveType::Noise:
-    waveType = Audio::Noise;
+    waveType = Audio::OscillatorTypes::Noise;
     break;
   }
 
@@ -1516,7 +1516,7 @@ CompressorNode::CompressorNode()
 
   Audio::DynamicsProcessorNode* node = new Audio::DynamicsProcessorNode(status, 
     "DynamicsCompressionNode", Z::gSound->mCounter++, this);
-  node->SetType(Audio::ProcessorTypes::Compressor);
+  node->SetType(Audio::DynamicsProcessorTypes::Compressor);
 
   SetNode(node, status);
 }
@@ -1656,7 +1656,7 @@ ExpanderNode::ExpanderNode()
 
   Audio::DynamicsProcessorNode* node = new Audio::DynamicsProcessorNode(status,
     "DynamicsCompressionNode", Z::gSound->mCounter++, this);
-  node->SetType(Audio::ProcessorTypes::Expander);
+  node->SetType(Audio::DynamicsProcessorTypes::Expander);
 
   SetNode(node, status);
 }
@@ -1992,7 +1992,7 @@ void AdditiveSynthNode::AddHarmonic(float multiplier, float volume, AdsrEnvelope
   {
     Audio::EnvelopeSettings envelope(envelope.DelayTime, envelope.AttackTime,
       envelope.DecayTime, envelope.SustainTime, envelope.SustainLevel, envelope.ReleaseTime);
-    Audio::OscillatorTypes oscType;
+    Audio::OscillatorTypes::Enum oscType;
     switch (type)
     {
     case SynthWaveType::SineWave:

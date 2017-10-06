@@ -122,7 +122,7 @@ namespace Audio
           (SoundInstanceNode*)instance->GetSiblingNode()));
 
       if (ExternalInterface)
-        ExternalInterface->SendAudioEvent(Notify_TagAddedInstance, (void*)nullptr);
+        ExternalInterface->SendAudioEvent(AudioEventTypes::TagAddedInstance, (void*)nullptr);
     }
     else
     {
@@ -176,7 +176,7 @@ namespace Audio
       instance->TagList.EraseValue(this);
 
       if (ExternalInterface && Instances.Empty())
-        ExternalInterface->SendAudioEvent(Notify_TagIsUnreferenced, (void*)nullptr);
+        ExternalInterface->SendAudioEvent(AudioEventTypes::TagIsUnreferenced, (void*)nullptr);
     }
     else
     {

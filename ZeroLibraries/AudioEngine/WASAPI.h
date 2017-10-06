@@ -24,6 +24,11 @@ namespace Audio
 
   //------------------------------------------------------------------------------------- DeviceInfo
 
+  namespace ThreadEventTypes 
+  {
+    enum Enum { StopRequestEvent, ThreadExitEvent, WasapiEvent, ResetEvent, NumThreadEvents }; 
+  }
+
   class WasapiDevice : IMMNotificationClient
   {
   public:
@@ -32,10 +37,10 @@ namespace Audio
     ~WasapiDevice();
 
     void ReleaseData();
-    void Initialize(IMMDeviceEnumerator* enumerator, bool render, StreamStatus& status,
+    void Initialize(IMMDeviceEnumerator* enumerator, bool render, StreamStatus::Enum& status,
       Zero::String& message);
-    StreamStatus StartStream(WASAPICallbackType* callback, void* data);
-    StreamStatus StopStream();
+    StreamStatus::Enum StartStream(WASAPICallbackType* callback, void* data);
+    StreamStatus::Enum StopStream();
     void ProcessingLoop();
     unsigned GetChannels();
     unsigned GetSampleRate();
@@ -65,8 +70,7 @@ namespace Audio
     float FallbackBuffer[FallbackFrames * FallbackChannels];
     unsigned FallbackSleepTime;
 
-    enum ThreadEventTypes { StopRequestEvent, ThreadExitEvent, WasapiEvent, ResetEvent, NumThreadEvents };
-    HANDLE ThreadEvents[NumThreadEvents];
+    HANDLE ThreadEvents[ThreadEventTypes::NumThreadEvents];
 
   public:
     HRESULT STDMETHODCALLTYPE OnDefaultDeviceChanged(EDataFlow flow, ERole role, LPCWSTR pwstrDeviceId);
@@ -91,28 +95,28 @@ namespace Audio
     ~AudioIOWindows();
 
     // Initializes the underlying audio API
-    StreamStatus InitializeAPI() override;
+    StreamStatus::Enum InitializeAPI() override;
     // Initializes the specified audio stream
-    StreamStatus InitializeStream(StreamType whichStream) override;
+    StreamStatus::Enum InitializeStream(StreamTypes::Enum whichStream) override;
     // Starts the specified audio stream
-    StreamStatus StartStream(StreamType whichStream) override;
+    StreamStatus::Enum StartStream(StreamTypes::Enum whichStream) override;
     // Stops the specified audio stream
-    StreamStatus StopStream(StreamType whichStream) override;
+    StreamStatus::Enum StopStream(StreamTypes::Enum whichStream) override;
     // Shuts down the specified audio stream
-    StreamStatus ShutDownStream(StreamType whichStream) override;
+    StreamStatus::Enum ShutDownStream(StreamTypes::Enum whichStream) override;
     // Shuts down the underlying audio API
     void ShutDownAPI() override;
     // Returns the number of channels in the specified audio stream
-    unsigned GetStreamChannels(StreamType whichStream) override;
+    unsigned GetStreamChannels(StreamTypes::Enum whichStream) override;
     // Returns the sample rate of the specified audio stream
-    unsigned GetStreamSampleRate(StreamType whichStream) override;
+    unsigned GetStreamSampleRate(StreamTypes::Enum whichStream) override;
     // Returns true if the specified audio stream has been started
-    bool IsStreamStarted(StreamType whichStream) override;
+    bool IsStreamStarted(StreamTypes::Enum whichStream) override;
 
     void HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
 
   private:
-    WasapiDevice* StreamDevices[NumStreamTypes];
+    WasapiDevice* StreamDevices[StreamTypes::Count];
     IMMDeviceEnumerator* Enumerator;
 
     static unsigned _stdcall StartOutputThread(void* param);

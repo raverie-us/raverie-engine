@@ -317,53 +317,53 @@ float SoundSystem::DecibelsToVolume(float decibels)
 }
 
 //**************************************************************************************************
-void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * data)
+void SoundSystem::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void * data)
 {
-  if (eventType == Audio::Notify_AudioClipping)
+  if (eventType == Audio::AudioEventTypes::AudioClipping)
     DoNotifyWarning("Audio Error", "Audio is too loud and is being clipped. Reduce volume or number of sounds to avoid audio problems.");
-  else if (eventType == Audio::Notify_MidiNoteOn)
+  else if (eventType == Audio::AudioEventTypes::MidiNoteOn)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, midiData->Value2);
     DispatchEvent(Events::MIDINoteOn, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiNoteOff)
+  else if (eventType == Audio::AudioEventTypes::MidiNoteOff)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, 0);
     DispatchEvent(Events::MIDINoteOff, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiPitchWheel)
+  else if (eventType == Audio::AudioEventTypes::MidiPitchWheel)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
     DispatchEvent(Events::MIDIPitchWheel, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiVolume)
+  else if (eventType == Audio::AudioEventTypes::MidiVolume)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
     DispatchEvent(Events::MIDIVolume, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiModWheel)
+  else if (eventType == Audio::AudioEventTypes::MidiModWheel)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
     DispatchEvent(Events::MIDIModWheel, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiControl)
+  else if (eventType == Audio::AudioEventTypes::MidiControl)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, midiData->Value2);
     DispatchEvent(Events::MIDIOtherControl, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MicInputData)
+  else if (eventType == Audio::AudioEventTypes::MicInputData)
   {
     Array<float>* buffer = (Array<float>*)data;
     AudioFloatDataEvent event;
@@ -372,7 +372,7 @@ void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * d
     event.AudioData->NativeArray = *buffer;
     DispatchEvent(Events::MicrophoneUncompressedFloatData, &event);
   }
-  else if (eventType == Audio::Notify_CompressedMicInputData)
+  else if (eventType == Audio::AudioEventTypes::CompressedMicInputData)
   {
     Array<byte>* buffer = (Array<byte>*)data;
     AudioByteDataEvent event;

@@ -542,7 +542,7 @@ namespace Audio
     MaxDelay(5.0f),
     ModFrequency(0.18f), 
     FeedbackPct(0), 
-    OscillatorType(Sine)
+    OscillatorType(OscillatorTypes::Sine)
   {
     if (!Threaded)
       SetSiblingNodes(new FlangerNode(status, name, ID, extInt, true), status);
@@ -629,7 +629,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void FlangerNode::SetOscillatorType(const OscillatorTypes type)
+  void FlangerNode::SetOscillatorType(const OscillatorTypes::Enum type)
   {
     OscillatorType = type;
 
@@ -726,7 +726,7 @@ namespace Audio
     MaxDelay(20.0f), 
     ModFrequency(0.1f), 
     FeedbackPct(0), 
-    OscillatorType(Sine),
+    OscillatorType(OscillatorTypes::Sine),
     ChorusOffset(40.0f)
   {
     if (!Threaded)
@@ -824,13 +824,13 @@ namespace Audio
   }
 
   //************************************************************************************************
-  OscillatorTypes ChorusNode::GetOscillatorType()
+  OscillatorTypes::Enum ChorusNode::GetOscillatorType()
   {
     return OscillatorType;
   }
 
   //************************************************************************************************
-  void ChorusNode::SetOscillatorType(const OscillatorTypes type)
+  void ChorusNode::SetOscillatorType(const OscillatorTypes::Enum type)
   {
     OscillatorType = type;
 

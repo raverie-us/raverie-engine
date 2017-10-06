@@ -155,7 +155,10 @@ namespace Audio
 
   class Oscillator;
 
-  enum OscillatorTypes { Sine = 0, Saw, Triangle, Square, Noise };
+  namespace OscillatorTypes
+  {
+    enum Enum { Sine = 0, Saw, Triangle, Square, Noise };
+  }
 
   class FlangerNode : public SimpleCollapseNode
   {
@@ -178,7 +181,7 @@ namespace Audio
     // Returns the current oscillator type
     int GetOscillatorType();
     // Sets the oscillator type to use for modulation
-    void SetOscillatorType(const OscillatorTypes type);
+    void SetOscillatorType(const OscillatorTypes::Enum type);
 
   private:
     ~FlangerNode();
@@ -207,7 +210,7 @@ namespace Audio
     // Feedback percentage
     float FeedbackPct;
     // Oscillator type used for modulation
-    OscillatorTypes OscillatorType;
+    OscillatorTypes::Enum OscillatorType;
   };
 
   //------------------------------------------------------------------------------------ Chorus Node
@@ -235,9 +238,9 @@ namespace Audio
     // Sets the feedback percentage
     void SetFeedbackPct(const float percent);
     // Returns the current oscillator type
-    OscillatorTypes GetOscillatorType();
+    OscillatorTypes::Enum GetOscillatorType();
     // Sets the oscillator type to use for the modulation
-    void SetOscillatorType(const OscillatorTypes type);
+    void SetOscillatorType(const OscillatorTypes::Enum type);
     // Returns the current chorus offset
     float GetOffsetMSec();
     // Sets the chorus offset
@@ -272,7 +275,7 @@ namespace Audio
     // Feedback percentage
     float FeedbackPct;
     // Oscillator type to use for modulation
-    OscillatorTypes OscillatorType;
+    OscillatorTypes::Enum OscillatorType;
     // Chorus offset value
     float ChorusOffset;
   };

@@ -129,7 +129,7 @@ namespace Audio
       // Notify the external data that the interpolation is finished
       if (firstRequest && GetSiblingNode())
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          GetSiblingNode(), Notify_InterpolationDone, (void*)nullptr));
+          GetSiblingNode(), AudioEventTypes::InterpolationDone, (void*)nullptr));
     }
 
     double framesToGet(0.0f);

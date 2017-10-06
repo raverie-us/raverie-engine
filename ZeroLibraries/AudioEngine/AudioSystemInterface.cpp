@@ -70,7 +70,7 @@ namespace Audio
 
       // If we're sending uncompressed input data, send the entire buffer
       if (SendUncompressedInputData)
-        System->ExternalInterface->SendAudioEvent(Notify_MicInputData, (void*)&allInput);
+        System->ExternalInterface->SendAudioEvent(AudioEventTypes::MicInputData, (void*)&allInput);
 
       // Check if we're sending compressed data and have an encoder
       if (SendCompressedInputData)
@@ -109,7 +109,7 @@ namespace Audio
           System->Encoder.EncodePacket(monoSamples.Data(), PacketEncoder::PacketFrames, dataArray);
 
           // Send the event with the encoded data
-          System->ExternalInterface->SendAudioEvent(Notify_CompressedMicInputData, (void*)&dataArray);
+          System->ExternalInterface->SendAudioEvent(AudioEventTypes::CompressedMicInputData, (void*)&dataArray);
         }
       }
     }
@@ -164,7 +164,7 @@ namespace Audio
     {
       if (channels == 0)
       {
-        SystemOutputChannels = System->AudioIO->GetStreamChannels(OutputStream);
+        SystemOutputChannels = System->AudioIO->GetStreamChannels(StreamTypes::Output);
         System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System,
           SystemOutputChannels));
       }

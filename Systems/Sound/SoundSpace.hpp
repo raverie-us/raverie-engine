@@ -94,7 +94,7 @@ private:
 
   class NodeInterface : public Audio::ExternalNodeInterface
   {
-    void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override {}
+    void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override {}
   };
 
   NodeInterface mNodeInterface;

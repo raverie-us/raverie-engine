@@ -12,13 +12,21 @@
 
 struct PaStreamParameters;
 struct PaHostApiInfo;
-struct IMMDeviceEnumerator;
 
 namespace Audio
 {
-  enum LatencyValues { LowLatency, HighLatency, NumLatencyValues };
-  enum StreamType { OutputStream, InputStream, NumStreamTypes };
-  enum StreamStatus { Uninitialized, Initialized, Started, Stopped, ApiProblem, DeviceProblem };
+  namespace LatencyValues
+  {
+    enum Enum { LowLatency, HighLatency, Count };
+  }
+  namespace StreamTypes
+  {
+    enum Enum { Output, Input, Count };
+  }
+  namespace StreamStatus
+  {
+    enum Enum { Uninitialized, Initialized, Started, Stopped, ApiProblem, DeviceProblem };
+  }
 
   inline static void LogAudioIoError(Zero::StringParam message, Zero::String* savedMessage = nullptr)
   {
@@ -29,9 +37,9 @@ namespace Audio
 
   struct StreamInfo
   {
-    StreamInfo() : Status(Uninitialized) {}
+    StreamInfo() : Status(StreamStatus::Uninitialized) {}
 
-    StreamStatus Status;
+    StreamStatus::Enum Status;
     Zero::String ErrorMessage;
   };
 
@@ -52,28 +60,28 @@ namespace Audio
     // Fills the buffer with the requested number of audio samples, or the max available if lower
     void GetInputDataThreaded(Zero::Array<float>& buffer, unsigned howManySamples);
     // Sets whether the system should use a low or high latency value
-    void SetOutputLatency(LatencyValues latency);
+    void SetOutputLatency(LatencyValues::Enum latency);
     // Returns the StreamInfo data for the specified audio stream
-    virtual const StreamInfo& GetStreamInfo(StreamType whichStream);
+    virtual const StreamInfo& GetStreamInfo(StreamTypes::Enum whichStream);
 
     // Initializes the underlying audio API
-    virtual StreamStatus InitializeAPI() = 0;
+    virtual StreamStatus::Enum InitializeAPI() = 0;
     // Initializes the specified audio stream
-    virtual StreamStatus InitializeStream(StreamType whichStream) = 0;
+    virtual StreamStatus::Enum InitializeStream(StreamTypes::Enum whichStream) = 0;
     // Starts the specified audio stream
-    virtual StreamStatus StartStream(StreamType whichStream) = 0;
+    virtual StreamStatus::Enum StartStream(StreamTypes::Enum whichStream) = 0;
     // Stops the specified audio stream
-    virtual StreamStatus StopStream(StreamType whichStream) = 0;
+    virtual StreamStatus::Enum StopStream(StreamTypes::Enum whichStream) = 0;
     // Shuts down the specified audio stream
-    virtual StreamStatus ShutDownStream(StreamType whichStream) = 0;
+    virtual StreamStatus::Enum ShutDownStream(StreamTypes::Enum whichStream) = 0;
     // Shuts down the underlying audio API
     virtual void ShutDownAPI() = 0;
     // Returns the number of channels in the specified audio stream
-    virtual unsigned GetStreamChannels(StreamType whichStream) = 0;
+    virtual unsigned GetStreamChannels(StreamTypes::Enum whichStream) = 0;
     // Returns the sample rate of the specified audio stream
-    virtual unsigned GetStreamSampleRate(StreamType whichStream) = 0;
+    virtual unsigned GetStreamSampleRate(StreamTypes::Enum whichStream) = 0;
     // Returns true if the specified audio stream has been started
-    virtual bool IsStreamStarted(StreamType whichStream) = 0;
+    virtual bool IsStreamStarted(StreamTypes::Enum whichStream) = 0;
 
     // Size of the output buffer in samples
     unsigned MixedOutputBufferSizeSamples;
@@ -86,7 +94,7 @@ namespace Audio
 
   protected:
     // The number of mix buffer frames for each latency setting
-    unsigned OutputBufferFramesPerLatency[NumLatencyValues];
+    unsigned OutputBufferFramesPerLatency[LatencyValues::Count];
     // Index for current output writing buffer, used for mixing output
     int WriteBufferThreaded;
     // Index for current output reading buffer
@@ -96,7 +104,7 @@ namespace Audio
     // Current position in the output buffer for the WASAPI output callback
     unsigned MixedBufferIndex;
     // Current latency setting for the audio output
-    LatencyValues OutputStreamLatency;
+    LatencyValues::Enum OutputStreamLatency;
     // Size of the buffer for input data
     static const unsigned InputBufferSize = 8192;
     // Buffer of input data
@@ -106,7 +114,7 @@ namespace Audio
     // For notifying the mix thread when a new buffer is needed.
     Zero::Semaphore Counter;
     // List of info objects for each stream type
-    StreamInfo StreamInfoList[NumStreamTypes];
+    StreamInfo StreamInfoList[StreamTypes::Count];
     // The multiplier used to find the mix frames for a certain sample rate
     const float BufferSizeMultiplier = 0.01f;
     // The value used to start calculating the mix frames
@@ -133,23 +141,23 @@ namespace Audio
     ~AudioIOPortAudio();
 
     // Initializes the underlying audio API
-    StreamStatus InitializeAPI() override;
+    StreamStatus::Enum InitializeAPI() override;
     // Initializes the specified audio stream
-    StreamStatus InitializeStream(StreamType whichStream) override;
+    StreamStatus::Enum InitializeStream(StreamTypes::Enum whichStream) override;
     // Starts the specified audio stream
-    StreamStatus StartStream(StreamType whichStream) override;
+    StreamStatus::Enum StartStream(StreamTypes::Enum whichStream) override;
     // Stops the specified audio stream
-    StreamStatus StopStream(StreamType whichStream) override;
+    StreamStatus::Enum StopStream(StreamTypes::Enum whichStream) override;
     // Shuts down the specified audio stream
-    StreamStatus ShutDownStream(StreamType whichStream) override;
+    StreamStatus::Enum ShutDownStream(StreamTypes::Enum whichStream) override;
     // Shuts down the underlying audio API
     void ShutDownAPI() override;
     // Returns the number of channels in the specified audio stream
-    unsigned GetStreamChannels(StreamType whichStream) override;
+    unsigned GetStreamChannels(StreamTypes::Enum whichStream) override;
     // Returns the sample rate of the specified audio stream
-    unsigned GetStreamSampleRate(StreamType whichStream) override;
+    unsigned GetStreamSampleRate(StreamTypes::Enum whichStream) override;
     // Returns true if the specified audio stream has been started
-    bool IsStreamStarted(StreamType whichStream) override;
+    bool IsStreamStarted(StreamTypes::Enum whichStream) override;
 
     int HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
 

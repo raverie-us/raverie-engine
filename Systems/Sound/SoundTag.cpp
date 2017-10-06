@@ -443,14 +443,14 @@ void SoundTag::SetInstanceLimit(float limit)
 }
 
 //**************************************************************************************************
-void SoundTag::SendAudioEvent(const Audio::AudioEventType eventType, void * data)
+void SoundTag::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void * data)
 {
-  if (eventType == Audio::AudioEventType::Notify_TagAddedInstance)
+  if (eventType == Audio::AudioEventTypes::TagAddedInstance)
   {
     SoundEvent event;
     DispatchEvent(Events::AddedInstanceToTag, &event);
   }
-  else if (eventType == Audio::AudioEventType::Notify_TagIsUnreferenced)
+  else if (eventType == Audio::AudioEventTypes::TagIsUnreferenced)
   {
     SoundEvent event;
     DispatchEvent(Events::TagHasNoInstances, &event);

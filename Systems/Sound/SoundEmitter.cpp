@@ -670,9 +670,9 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
 }
 
 //**************************************************************************************************
-void SoundEmitter::SendAudioEvent(const Audio::AudioEventType eventType, void* data)
+void SoundEmitter::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
 {
-  if (eventType == Audio::AudioEventType::Notify_InterpolationDone)
+  if (eventType == Audio::AudioEventTypes::InterpolationDone)
   {
     SoundEvent event;
     DispatchEvent(Events::AudioInterpolationDone, &event);

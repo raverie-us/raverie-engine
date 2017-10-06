@@ -27,7 +27,7 @@ namespace Audio
 
   //************************************************************************************************
   AttenuatorNode::AttenuatorNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      Math::Vec3Param position, const AttenuationData& data, const CurveTypes curveType, 
+      Math::Vec3Param position, const AttenuationData& data, const CurveTypes::Enum curveType,
       Zero::Array<Math::Vec3> *customCurveData, ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, true, false, isThreaded), 
     AttenStartDist(data.StartDistance), 
@@ -51,7 +51,7 @@ namespace Audio
       DistanceInterpolator->SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
 
       // Set the falloff curve on the interpolator
-      if (curveType == CustomCurveType)
+      if (curveType == CurveTypes::Custom)
       {
         if (customCurveData)
           DistanceInterpolator->SetCustomCurve(customCurveData);
@@ -109,7 +109,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void AttenuatorNode::SetCurveType(const CurveTypes curveType, Zero::Array<Math::Vec3>* customCurveData)
+  void AttenuatorNode::SetCurveType(const CurveTypes::Enum curveType, Zero::Array<Math::Vec3>* customCurveData)
   {
     if (!Threaded)
     {
@@ -125,7 +125,7 @@ namespace Audio
     }
     else
     {
-      if (curveType == CustomCurveType)
+      if (curveType == CurveTypes::Custom)
       {
         if (customCurveData)
           DistanceInterpolator->SetCustomCurve(customCurveData);

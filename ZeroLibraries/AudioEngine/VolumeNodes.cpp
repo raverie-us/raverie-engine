@@ -305,7 +305,7 @@ namespace Audio
             if (firstRequest && GetSiblingNode())
             {
               gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-                GetSiblingNode(), Notify_InterpolationDone, (void*)nullptr));
+                GetSiblingNode(), AudioEventTypes::InterpolationDone, (void*)nullptr));
 
               // Set the final volume values on the non-threaded object
               gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&PanningNode::LeftVolume,

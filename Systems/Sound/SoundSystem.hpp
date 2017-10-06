@@ -199,7 +199,7 @@ public:
   float SemitonesToPitch(float semitones);
   float VolumeToDecibels(float volume);
   float DecibelsToVolume(float decibels);
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
   void SendAudioError(const Zero::String message) override;
 
   unsigned mCounter;

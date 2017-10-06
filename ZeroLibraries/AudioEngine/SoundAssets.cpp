@@ -95,7 +95,7 @@ namespace Audio
       if (!ExternalData)
         delete this;
       else
-        ExternalData->SendAudioEvent(Notify_AssetUnreferenced, (void*)nullptr);
+        ExternalData->SendAudioEvent(AudioEventTypes::AssetUnreferenced, (void*)nullptr);
     }
   }
 
@@ -446,7 +446,7 @@ namespace Audio
   //--------------------------------------------------------------------- Generated Wave Sound Asset
 
   //************************************************************************************************
-  GeneratedWaveSoundAsset::GeneratedWaveSoundAsset(const OscillatorTypes waveType, const float frequency, 
+  GeneratedWaveSoundAsset::GeneratedWaveSoundAsset(const OscillatorTypes::Enum waveType, const float frequency, 
       ExternalNodeInterface* extInt, const bool isThreaded) :
     SoundAssetNode(extInt, isThreaded),
     Frequency(frequency), 

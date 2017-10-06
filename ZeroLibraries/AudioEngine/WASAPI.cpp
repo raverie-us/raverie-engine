@@ -59,7 +59,7 @@ namespace Audio
     ClientData(nullptr),
     FallbackSleepTime((unsigned)((float)FallbackFrames / (float)FallbackSampleRate * 1000.0f))
   {
-    memset(ThreadEvents, 0, sizeof(void*) * NumThreadEvents);
+    memset(ThreadEvents, 0, sizeof(void*) * ThreadEventTypes::NumThreadEvents);
   }
 
   //************************************************************************************************
@@ -80,12 +80,12 @@ namespace Audio
 
     SAFE_FREE(Format);
 
-    for (int i = 0; i < NumThreadEvents; ++i)
+    for (int i = 0; i < ThreadEventTypes::NumThreadEvents; ++i)
       SAFE_CLOSE(ThreadEvents[i]);
   }
 
   //************************************************************************************************
-  void WasapiDevice::Initialize(IMMDeviceEnumerator* enumerator, bool render, StreamStatus& status,
+  void WasapiDevice::Initialize(IMMDeviceEnumerator* enumerator, bool render, StreamStatus::Enum& status,
     Zero::String& message)
   {
     if (!Enumerator)
@@ -105,7 +105,7 @@ namespace Audio
       result = enumerator->GetDefaultAudioEndpoint(eCapture, eConsole, &Device);
     if (FAILED(result))
     {
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       if (render)
         LogAudioIoError(GetMessageForHresult("Unable to get default output device.", result), &message);
       else
@@ -118,7 +118,7 @@ namespace Audio
     result = Device->GetState(&deviceState);
     if (deviceState != DEVICE_STATE_ACTIVE)
     {
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       if (render)
         LogAudioIoError("Default output device not active.", &message);
       else
@@ -146,7 +146,7 @@ namespace Audio
     result = Device->Activate(IID_IAudioClient, CLSCTX_ALL, nullptr, (void**)&AudioClient);
     if (FAILED(result))
     {
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       LogAudioIoError(GetMessageForHresult("Unable to create audio client.", result), &message);
       goto ErrorExit;
     }
@@ -155,7 +155,7 @@ namespace Audio
     result = AudioClient->GetMixFormat(&Format);
     if (FAILED(result))
     {
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       LogAudioIoError(GetMessageForHresult("Unable to get audio client format.", result), &message);
       goto ErrorExit;
     }
@@ -165,7 +165,7 @@ namespace Audio
       ((WAVEFORMATEXTENSIBLE*)Format)->SubFormat != KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
     {
       // Shouldn't hit this unless something is really weird
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       LogAudioIoError(GetMessageForHresult("Incompatible audio format.", result), &message);
       goto ErrorExit;
     }
@@ -180,7 +180,7 @@ namespace Audio
       nullptr);                            // Audio session GUID value
     if (FAILED(result))
     {
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       LogAudioIoError(GetMessageForHresult("Unable to initialize audio client.", result), &message);
       goto ErrorExit;
     }
@@ -189,7 +189,7 @@ namespace Audio
     result = AudioClient->GetBufferSize(&BufferFrameCount);
     if (FAILED(result))
     {
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       LogAudioIoError(GetMessageForHresult("Unable to get buffer size from audio client.", result),
         &message);
       goto ErrorExit;
@@ -202,7 +202,7 @@ namespace Audio
       result = AudioClient->GetService(IID_IAudioCaptureClient, (void**)&CaptureClient);
     if (FAILED(result))
     {
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       if (render)
         LogAudioIoError(GetMessageForHresult("Unable to get audio render client.", result), &message);
       else
@@ -211,20 +211,20 @@ namespace Audio
     }
 
     // Create the thread events
-    for (int i = 0; i < NumThreadEvents; ++i)
+    for (int i = 0; i < ThreadEventTypes::NumThreadEvents; ++i)
       ThreadEvents[i] = CreateEvent(nullptr, false, false, nullptr);
 
     // Set the event handle on the AudioClient
-    result = AudioClient->SetEventHandle(ThreadEvents[WasapiEvent]);
+    result = AudioClient->SetEventHandle(ThreadEvents[ThreadEventTypes::WasapiEvent]);
     if (FAILED(result))
     {
-      status = DeviceProblem;
+      status = StreamStatus::DeviceProblem;
       LogAudioIoError(GetMessageForHresult("Unable to set event handle on audio client.", result),
         &message);
       goto ErrorExit;
     }
 
-    status = Initialized;
+    status = StreamStatus::Initialized;
 
     if (render)
       ZPrint("Audio output successfully initialized\n");
@@ -243,9 +243,9 @@ namespace Audio
   }
 
   //************************************************************************************************
-  StreamStatus WasapiDevice::StartStream(WASAPICallbackType* callback, void* data)
+  StreamStatus::Enum WasapiDevice::StartStream(WASAPICallbackType* callback, void* data)
   {
-    StreamStatus status = Uninitialized;
+    StreamStatus::Enum status = StreamStatus::Uninitialized;
 
     // Make sure the stream hasn't already been started and has been initialized
     if (!StreamOpen && Enumerator)
@@ -278,13 +278,13 @@ namespace Audio
       else if (!IsOutput)
       {
         ZPrint("Unable to start input stream: uninitialized\n");
-        return Uninitialized;
+        return StreamStatus::Uninitialized;
       }
       // Set up fallback output stream
       else
       {
         // Create the thread events
-        for (int i = 0; i < NumThreadEvents; ++i)
+        for (int i = 0; i < ThreadEventTypes::NumThreadEvents; ++i)
           ThreadEvents[i] = CreateEvent(nullptr, false, false, nullptr);
 
         ZPrint("Started audio output stream with fallback for no device\n");
@@ -294,7 +294,7 @@ namespace Audio
       ClientData = data;
       
       StreamOpen = true;
-      status = Started;
+      status = StreamStatus::Started;
     }
     else
     {
@@ -310,21 +310,22 @@ namespace Audio
   }
 
   //************************************************************************************************
-  StreamStatus WasapiDevice::StopStream()
+  StreamStatus::Enum WasapiDevice::StopStream()
   {
-    StreamStatus status = Uninitialized;
+    StreamStatus::Enum status = StreamStatus::Uninitialized;
 
     if (StreamOpen)
     {
       // Signal the StopRequest and wait on ThreadExit
-      SignalObjectAndWait(ThreadEvents[StopRequestEvent], ThreadEvents[ThreadExitEvent], INFINITE, false);
+      SignalObjectAndWait(ThreadEvents[ThreadEventTypes::StopRequestEvent], 
+        ThreadEvents[ThreadEventTypes::ThreadExitEvent], INFINITE, false);
 
       // Stop the audio client
       if (RenderClient || CaptureClient)
         AudioClient->Stop();
 
       StreamOpen = false;
-      status = Stopped;
+      status = StreamStatus::Stopped;
 
       if (IsOutput)
         ZPrint("Stopped audio output stream\n");
@@ -365,7 +366,7 @@ namespace Audio
     AvRevertMmThreadCharacteristics(task);
 
     // Set the thread exit event
-    SetEvent(ThreadEvents[ThreadExitEvent]);
+    SetEvent(ThreadEvents[ThreadEventTypes::ThreadExitEvent]);
   }
 
   //************************************************************************************************
@@ -403,7 +404,7 @@ namespace Audio
 
     ReleaseData();
 
-    StreamStatus status;
+    StreamStatus::Enum status;
     Zero::String string;
     Initialize(Enumerator, IsOutput, status, string);
 
@@ -414,13 +415,13 @@ namespace Audio
   bool WasapiDevice::WasapiEventHandling()
   {
     // Wait for 1000 ms or until an event is signaled
-    DWORD waitResult = WaitForMultipleObjects(NumThreadEvents, ThreadEvents, false, 1000);
+    DWORD waitResult = WaitForMultipleObjects(ThreadEventTypes::NumThreadEvents, ThreadEvents, false, 1000);
 
     // If the StopRequestEvent was signaled, return and stop
-    if (waitResult == StopRequestEvent)
+    if (waitResult == ThreadEventTypes::StopRequestEvent)
       return false;
     // If the ResetEvent was signaled, reset and return
-    else if (waitResult == ResetEvent)
+    else if (waitResult == ThreadEventTypes::ResetEvent)
     {
       Reset();
       return true;
@@ -484,13 +485,14 @@ namespace Audio
   bool WasapiDevice::OutputFallback()
   {
     // Wait for the FallbackSleepTime or until an event is signaled
-    DWORD waitResult = WaitForMultipleObjects(NumThreadEvents, ThreadEvents, false, FallbackSleepTime);
+    DWORD waitResult = WaitForMultipleObjects(ThreadEventTypes::NumThreadEvents, ThreadEvents, 
+      false, FallbackSleepTime);
     // Check for signaled thread events
     if (waitResult != WAIT_TIMEOUT)
     {
-      if (waitResult == StopRequestEvent)
+      if (waitResult == ThreadEventTypes::StopRequestEvent)
         return false;
-      else if (waitResult == ResetEvent)
+      else if (waitResult == ThreadEventTypes::ResetEvent)
       {
         Reset();
         return true;
@@ -510,7 +512,7 @@ namespace Audio
     if (role == ERole::eConsole)
     {
       if ((IsOutput && flow == EDataFlow::eRender) || (!IsOutput && flow == EDataFlow::eCapture))
-        SetEvent(ThreadEvents[ResetEvent]);
+        SetEvent(ThreadEvents[ThreadEventTypes::ResetEvent]);
     }
 
     return S_OK;
@@ -529,24 +531,24 @@ namespace Audio
   AudioIOWindows::AudioIOWindows() :
     Enumerator(nullptr)
   {
-    memset(StreamDevices, 0, sizeof(WasapiDevice*) * NumStreamTypes);
+    memset(StreamDevices, 0, sizeof(WasapiDevice*) * StreamTypes::Count);
   }
 
   //************************************************************************************************
   AudioIOWindows::~AudioIOWindows()
   {
-    ShutDownStream(OutputStream);
-    ShutDownStream(InputStream);
+    ShutDownStream(StreamTypes::Output);
+    ShutDownStream(StreamTypes::Input);
     ShutDownAPI();
 
-    if (StreamDevices[OutputStream])
-      delete StreamDevices[OutputStream];
-    if (StreamDevices[InputStream])
-      delete StreamDevices[InputStream];
+    if (StreamDevices[StreamTypes::Output])
+      delete StreamDevices[StreamTypes::Output];
+    if (StreamDevices[StreamTypes::Input])
+      delete StreamDevices[StreamTypes::Input];
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOWindows::InitializeAPI()
+  StreamStatus::Enum AudioIOWindows::InitializeAPI()
   {
     ZPrint("Initializing WASAPI\n");
 
@@ -554,7 +556,7 @@ namespace Audio
     if (FAILED(result))
     {
       LogAudioIoError(GetMessageForHresult("CoInitialize unsuccessful.", result), &LastErrorMessage);
-      return ApiProblem;
+      return StreamStatus::ApiProblem;
     }
 
     // Create the device enumerator
@@ -563,32 +565,32 @@ namespace Audio
     if (FAILED(result))
     {
       LogAudioIoError(GetMessageForHresult("Unable to create enumerator.", result), &LastErrorMessage);
-      return ApiProblem;
+      return StreamStatus::ApiProblem;
     }
     
-    return Initialized;
+    return StreamStatus::Initialized;
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOWindows::InitializeStream(StreamType whichStream)
+  StreamStatus::Enum AudioIOWindows::InitializeStream(StreamTypes::Enum whichStream)
   {
     // Create the WasapiDevice object if needed
     if (!StreamDevices[whichStream])
       StreamDevices[whichStream] = new WasapiDevice();
 
     // Initialize the appropriate device
-    StreamDevices[whichStream]->Initialize(Enumerator, whichStream == OutputStream,
+    StreamDevices[whichStream]->Initialize(Enumerator, whichStream == StreamTypes::Output,
       StreamInfoList[whichStream].Status, StreamInfoList[whichStream].ErrorMessage);
 
     // If this was the output stream, also initialize the buffers
-    if (whichStream == OutputStream)
+    if (whichStream == StreamTypes::Output)
       InitializeOutputBuffers();
 
     return StreamInfoList[whichStream].Status;
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOWindows::StartStream(StreamType whichStream)
+  StreamStatus::Enum AudioIOWindows::StartStream(StreamTypes::Enum whichStream)
   {
     // Get the appropriate device object
     WasapiDevice* device = StreamDevices[whichStream];
@@ -596,15 +598,15 @@ namespace Audio
     if (device)
       StreamInfoList[whichStream].Status = device->StartStream(WASAPICallback, this);
     else
-      StreamInfoList[whichStream].Status = Uninitialized;
+      StreamInfoList[whichStream].Status = StreamStatus::Uninitialized;
 
     // Check if the device exists and was successfully initialized
-    if (StreamInfoList[whichStream].Status == Started)
+    if (StreamInfoList[whichStream].Status == StreamStatus::Started)
     {
       // Start the processing loop thread
-      if (whichStream == OutputStream)
+      if (whichStream == StreamTypes::Output)
         _beginthreadex(nullptr, 0, &AudioIOWindows::StartOutputThread, this, 0, nullptr);
-      else if (whichStream == InputStream)
+      else if (whichStream == StreamTypes::Input)
         _beginthreadex(nullptr, 0, &AudioIOWindows::StartInputThread, this, 0, nullptr);
     }
 
@@ -612,7 +614,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOWindows::StopStream(StreamType whichStream)
+  StreamStatus::Enum AudioIOWindows::StopStream(StreamTypes::Enum whichStream)
   {
     // Get the appropriate device object
     WasapiDevice* device = StreamDevices[whichStream];
@@ -620,34 +622,34 @@ namespace Audio
     if (device)
     {
       device->StopStream();
-      StreamInfoList[whichStream].Status = Stopped;
+      StreamInfoList[whichStream].Status = StreamStatus::Stopped;
 
-      if (whichStream == OutputStream)
+      if (whichStream == StreamTypes::Output)
         ZPrint("Audio output stream stopped\n");
-      else if (whichStream == InputStream)
+      else if (whichStream == StreamTypes::Input)
         ZPrint("Audio input stream stopped\n");
 
-      return Stopped;
+      return StreamStatus::Stopped;
     }
 
-    if (whichStream == InputStream)
+    if (whichStream == StreamTypes::Input)
       LogAudioIoError("Unable to stop audio input stream: not currently started", 
         &StreamInfoList[whichStream].ErrorMessage);
     else
       LogAudioIoError("Unable to stop audio output stream: not currently started",
         &StreamInfoList[whichStream].ErrorMessage);
 
-    return Uninitialized;
+    return StreamStatus::Uninitialized;
   }
 
   //************************************************************************************************
-  StreamStatus AudioIOWindows::ShutDownStream(StreamType whichStream)
+  StreamStatus::Enum AudioIOWindows::ShutDownStream(StreamTypes::Enum whichStream)
   {
     // Release stream data if stream stopped successfully
-    if (StopStream(whichStream) == Stopped)
+    if (StopStream(whichStream) == StreamStatus::Stopped)
       StreamDevices[whichStream]->ReleaseData();
 
-    return Stopped;
+    return StreamStatus::Stopped;
   }
 
   //************************************************************************************************
@@ -663,7 +665,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  unsigned AudioIOWindows::GetStreamChannels(StreamType whichStream)
+  unsigned AudioIOWindows::GetStreamChannels(StreamTypes::Enum whichStream)
   {
     if (StreamDevices[whichStream])
       return StreamDevices[whichStream]->GetChannels();
@@ -672,7 +674,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  unsigned AudioIOWindows::GetStreamSampleRate(StreamType whichStream)
+  unsigned AudioIOWindows::GetStreamSampleRate(StreamTypes::Enum whichStream)
   {
     if (StreamDevices[whichStream])
       return StreamDevices[whichStream]->GetSampleRate();
@@ -681,7 +683,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  bool AudioIOWindows::IsStreamStarted(StreamType whichStream)
+  bool AudioIOWindows::IsStreamStarted(StreamTypes::Enum whichStream)
   {
     if (StreamDevices[whichStream])
       return StreamDevices[whichStream]->StreamOpen;
@@ -695,17 +697,17 @@ namespace Audio
   {
     if (outputBuffer)
       GetMixedOutputSamples((float*)outputBuffer, framesPerBuffer * 
-        StreamDevices[OutputStream]->GetChannels());
+        StreamDevices[StreamTypes::Output]->GetChannels());
     else if (inputBuffer)
       SaveInputSamples((const float*)inputBuffer, framesPerBuffer * 
-        StreamDevices[InputStream]->GetChannels());
+        StreamDevices[StreamTypes::Input]->GetChannels());
   }
 
   //************************************************************************************************
   unsigned AudioIOWindows::StartOutputThread(void* param)
   {
     if (param)
-      ((AudioIOWindows*)param)->StreamDevices[OutputStream]->ProcessingLoop();
+      ((AudioIOWindows*)param)->StreamDevices[StreamTypes::Output]->ProcessingLoop();
     return 0;
   }
 
@@ -713,7 +715,7 @@ namespace Audio
   unsigned AudioIOWindows::StartInputThread(void* param)
   {
     if (param)
-      ((AudioIOWindows*)param)->StreamDevices[InputStream]->ProcessingLoop();
+      ((AudioIOWindows*)param)->StreamDevices[StreamTypes::Input]->ProcessingLoop();
     return 0;
   }
 
