@@ -59,10 +59,19 @@ public:
 };
 
 //------------------------------------------------------- Object Transform Gizmo
-DeclareEnum2(GizmoBasis, Local, World);
+/// Set the pivot point when a gizmo affects translation during manipulation.
+/// <param name="Primary">
+///   Set the pivot point as the position of the primary object in the selection.
+/// </param>
+/// <param name="Center">
+///   Set the pivot point to be at the spacial center of the selection.
+/// </param>
+/// <param name="Average">
+///   Set the pivot point to be at the average position of all objects in the selection.
+/// </param>
 DeclareEnum3(GizmoPivot, Primary, Center, Average);
 
-/// 
+
 class ObjectTransformGizmo : public Component
 {
 public:
