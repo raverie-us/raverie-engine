@@ -604,18 +604,17 @@ void DocumentationLibrary::LoadFromMeta()
   // First get the range of types from the MetaDatabase
   MetaDatabase* database = MetaDatabase::GetInstance();
 
-  // Keep map of function pointers to check for stuff we have already found
-  HashSet<Function*> functionSet;
-
   // Loop over every type
   forRange(BoundType* metaType, database->mTypeMap.Values())
   {
+    // Keep map of function pointers to check for stuff we have already found
+    HashSet<Function*> functionSet;
+
     // so we can check if we should export internal description of type
     bool exportDoc = metaType->HasAttribute(ExportDocumentation);
 
     // check for enum types
-    if (metaType->SpecialType == SpecialType::Enumeration 
-      || metaType->SpecialType == SpecialType::Flags)
+    if (metaType->SpecialType != SpecialType::Standard)
     {
       // save the enum
       EnumDoc *newEnumDoc = new EnumDoc();
@@ -732,8 +731,18 @@ void DocumentationLibrary::LoadFromMeta()
        }
      }
    }
+
+   // add constructors to method list so we get them into the documentation too.
+
+   Array<Function *> allFunctions = metaType->AllFunctions;
+
+   forRange(Function* constructor, metaType->Constructors.All())
+   {
+     allFunctions.Append(constructor);
+   }
+
    // Get all methods
-   forRange(Function* method, metaType->AllFunctions.All())
+   forRange(Function* method, allFunctions.All())
    {
      if (functionSet.Contains(method))
        continue;
@@ -743,8 +752,14 @@ void DocumentationLibrary::LoadFromMeta()
      newMethod->mStatic = method->IsStatic;
 
      // Currently, the majority of methods contain angle brackets that we have to strip.
-     if (method->Name.Contains("["))
+     if (method->Name.StartsWith("["))
+     {
        newMethod->mName = method->Name.SubString(method->Name.Begin() + 1, method->Name.End() - 1);
+       if (newMethod->mName == "Constructor")
+       {
+         newMethod->mName = classDoc->mName;
+       }
+     }
      else
        newMethod->mName = method->Name;
 
