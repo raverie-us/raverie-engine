@@ -70,14 +70,14 @@
     </Link>
     <PostBuildEvent>
       <Command>mkdir "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
-copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-331.dll" "$(TargetDir)"
-copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-331.dll" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
+copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(TargetDir)"
+copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
 copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opusDebug.lib;assimp-331.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opusDebug.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -92,7 +92,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-331.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
     </Link>
@@ -102,7 +102,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-331.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
     </Link>
