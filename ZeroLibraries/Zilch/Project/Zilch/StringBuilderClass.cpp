@@ -519,6 +519,31 @@ namespace Zilch
   }
 
   //***************************************************************************
+  bool RuneIterator::ValidateIteratorPair(RuneIterator& rhs, RuneIterator& lhs)
+  {
+    // the iterators are referencing the same string and are a valid pair
+    if(rhs.mRange.mOriginalString == lhs.mRange.mOriginalString)
+      return true;
+
+    ExecutableState* state = ExecutableState::CallingState;
+    ExceptionReport& report = state->GetCallingReport();
+    state->ThrowException(report, "RuneIterators referencing different strings are invalid.");
+    return false;
+  }
+
+  //***************************************************************************
+  bool RuneIterator::ValidateIteratorOrder(RuneIterator& start, RuneIterator& end)
+  {
+    if(start.mRange.Begin() <= end.mRange.Begin())
+      return true;
+
+    ExecutableState* state = ExecutableState::CallingState;
+    ExceptionReport& report = state->GetCallingReport();
+    state->ThrowException(report, "A negative substring length is not supported.");
+    return false;
+  }
+
+  //***************************************************************************
   ZilchDefineType(StringRangeExtended, builder, type)
   {
     ZilchFullBindDestructor(builder, type, StringRangeExtended);
@@ -818,16 +843,21 @@ namespace Zilch
   void StringRangeExtended::SubString(Call& call, ExceptionReport& report)
   {
     StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
-    RuneIterator* beginIterator = call.Get<RuneIterator*>(0);
-    RuneIterator* endIterator = call.Get<RuneIterator*>(1);
-    //make sure that the begin and end are within the valid range of the original string
-    cstr begin = Math::Clamp(beginIterator->mRange.mBegin, self->mOriginalStringReference.Data(), self->mOriginalStringReference.EndData());
-    cstr end = Math::Clamp(endIterator->mRange.mBegin, self->mOriginalStringReference.Data(), self->mOriginalStringReference.EndData());
-    //make sure the end is equal to or after begin
-    if(end < begin)
-      end = begin;
+    RuneIterator& beginIterator = *call.Get<RuneIterator*>(0);
+    RuneIterator& endIterator = *call.Get<RuneIterator*>(1);
+    
+    String& originalString = self->mOriginalStringReference;
+    // All validations present contains the zilch throw exception so just return
+    if (RuneIterator::ValidateIteratorPair(beginIterator, endIterator) == false)
+      return;
+    if (StringRangeExtended::ValidateRange(originalString, beginIterator.mRange) == false)
+      return;
+    if (StringRangeExtended::ValidateRange(originalString, endIterator.mRange) == false)
+      return;
+    if (RuneIterator::ValidateIteratorOrder(beginIterator, endIterator) == false)
+      return;
 
-    SetResultStringRange(call, report, self->mOriginalStringReference, StringRange(self->mOriginalStringReference, begin, end));
+    SetResultStringRange(call, report, self->mOriginalStringReference, StringRange(beginIterator.mRange.Begin(), endIterator.mRange.Begin()));
   }
 
   //***************************************************************************

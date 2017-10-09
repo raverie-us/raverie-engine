@@ -239,8 +239,11 @@ public:
   ValueType& operator[](const KeyType& key)
   {
     Node*& node = mMap[key];
-    if (node == nullptr)
-      InsertInternal(key, ValueType());
+    if(node == nullptr)
+    {
+      node = new Node(key, ValueType());
+      mList.PushBack(node);
+    }
     return node->mPair.second;
   }
 
