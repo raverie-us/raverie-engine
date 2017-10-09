@@ -404,7 +404,7 @@ public:
 template <typename PointerType, typename ValueType>
 Functor* CreateFunctor(PointerType* pointer, ValueType value)
 {
-  ErrorIf(instance == nullptr);
+  ErrorIf(pointer == nullptr);
 
   auto functor = new FunctorSetPointer<PointerType, ValueType>();
   functor->mPointer = pointer;
@@ -416,7 +416,7 @@ Functor* CreateFunctor(PointerType* pointer, ValueType value)
 template <typename ReferenceType, typename ValueType>
 Functor* CreateFunctor(ReferenceType& reference, ValueType value)
 {
-  ErrorIf(instance == nullptr);
+  ErrorIf(&reference == nullptr);
 
   auto functor = new FunctorSetPointer<ReferenceType, ValueType>();
   functor->mPointer = &reference;
