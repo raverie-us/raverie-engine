@@ -1152,6 +1152,7 @@ void TreeRow::OnRightUp(MouseEvent* event)
   TreeEvent e;
   e.Row  = this;
   mTree->DispatchEvent(Events::TreeRightClick, &e);
+  event->Handled = true;
 }
 
 void TreeRow::OnKeyUp(KeyboardEvent* event)

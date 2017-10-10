@@ -38,8 +38,10 @@ public:
   void OnSpaceChange(Event*);
   void OnSpaceDestroyed(Event*);
   void OnTreeRightClick(TreeEvent* event);
+  void OnRightMouseUp(MouseEvent* event);
   void OnDataActivated(DataEvent* event);
   void OnKeyDown(KeyboardEvent* event);
+  void OnMenuClosed(ObjectEvent* event);
 
   void ShowObject(Cog* cog);
   void SelectAll();

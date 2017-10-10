@@ -378,6 +378,8 @@ LibraryView::LibraryView(Composite* parent)
 
   MetaSelection* selection = Z::gEditor->GetSelection();
   ConnectThisTo(selection, Events::SelectionFinal, OnEditorSelectionChanged);
+
+  ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
 }
 
 LibraryView::~LibraryView()
@@ -476,7 +478,7 @@ void LibraryView::SwitchToTileView()
 }
 
 //******************************************************************************
-void LibraryView::SetSearchTags(HashSet<String>& tags)
+void LibraryView::SetSearchTags(TagList& tags)
 {
   mSearchBox->ClearTags();
   forRange(String tag, tags.All())
@@ -677,7 +679,7 @@ void LibraryView::OnResourcesModified(ResourceEvent* event)
 {
   // If an archetype has a RunInEditor script that creates a runtime resource
   // we don't want the preview to cause itself to be recreated
-  if (event->EventResource != nullptr && event->EventResource->IsRuntime())
+  if(event->EventResource != nullptr && event->EventResource->IsRuntime())
     return;
 
   mSearchBox->Refresh();
@@ -713,7 +715,6 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
   mCommandIndices.Clear();
   ContextMenu* menu = new ContextMenu(objectToAttachTo);
   Mouse* mouse = Z::gMouse;
-  menu->SetBelowMouse(mouse, Pixels(0,0));
 
   mDataSelection->GetSelected(mCommandIndices);
   mPrimaryCommandIndex = index;
@@ -748,14 +749,41 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
     {
       ConnectMenu(menu, "TranslateFragment", OnTranslateFragment);
     }
+
+    menu->AddDivider();
+    AddResourceOptionsToMenu(menu, resourceType->Name);
   }
   else
   {
+    // When right clicking on a resource tag show an "Add 'resourceType'" option if the user can add this type of resource
+    if(AddResourceOptionsToMenu(menu, entry->mTag))
+      menu->AddDivider();
     ConnectMenu(menu, "Add Tag To Search", OnAddTagToSearch);
-    //ConnectMenu(menu, "Just This Tag", OnRename);
   }
 
   menu->SizeToContents();
+  menu->ShiftOntoScreen(ToVector3(mouse->GetClientPosition()));
+}
+
+void LibraryView::OnRightMouseUp(MouseEvent* event)
+{
+  if (event->Handled)
+    return;
+
+  ContextMenu* menu = new ContextMenu(this);
+  // When in the context of a specific resource search show an "Add 'resourceType'" option
+  forRange(String& tag, mSearchBox->mSearch.ActiveTags.All())
+  {
+    if(AddResourceOptionsToMenu(menu, tag))
+    {
+      menu->ShiftOntoScreen(ToVector3(event->Position));
+      return;
+    }
+  }
+
+  // If a specific resource is not found pop up the generic add resources menu
+  menu->LoadMenu("Resources");
+  menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 
 //******************************************************************************
@@ -1199,6 +1227,51 @@ void LibraryView::OnAddTagToSearch(ObjectEvent* event)
   {
     mSearchBox->AddTag(tag, true, false);
   }
+}
+
+//******************************************************************************
+bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName)
+{
+  BoundType* boundType = MetaDatabase::GetInstance()->FindType(resouceName);
+
+  // Attempt to get bound type for the tag and if we have a type is it a resource
+  if (boundType && boundType->IsA(ZilchTypeId(Resource)))
+  {
+    ResourceManager* manager = Z::gResources->GetResourceManager(boundType);
+    if (manager->mCanAddFile || manager->mCanCreateNew)
+    {
+      // We have a resource so add the option to create a new resource of the viewed type
+      StringBuilder buttonTitle;
+      buttonTitle.Append("Add ");
+      buttonTitle.Append(boundType->Name);
+
+      ContextMenuItem* item = new ContextMenuItem(menu, buttonTitle.ToString());
+      ConnectThisTo(item, Zero::Events::MenuItemSelected, OnAddResource);
+      item->mContextData = Any(static_cast<ReflectionObject*>(boundType));
+      return true;
+     }
+   }
+
+   return false;
+}
+
+//******************************************************************************
+void LibraryView::OnAddResource(ObjectEvent* event)
+{
+  ContextMenuItem* item = (ContextMenuItem*)event->Source;
+  AddResourceWindow* resourceWindow = OpenAddWindow(nullptr);
+  if (item->mContextData.IsNotNull())
+  {
+    BoundType* resource = item->mContextData.Get<BoundType*>();
+    resourceWindow->SelectResourceType(resource);
+
+    TagList tags = mSearch->ActiveTags;
+    // The library view has an implicit "Resources" tag and we don't want to add this to
+    // all the newly created resources as a custom tag
+    tags.Erase("Resources");
+    resourceWindow->AddTags(tags);
+  }
+  resourceWindow->TemplateSearchTakeFocus();
 }
 
 //******************************************************************************

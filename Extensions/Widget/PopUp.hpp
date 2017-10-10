@@ -41,7 +41,7 @@ public:
   Element* mDropShadow;
 };
 
-DeclareEnum2(PopUpCloseMode, MouseOutTarget, MouseDistance);
+DeclareEnum3(PopUpCloseMode, MouseOutTarget, MouseDistance, DisableClose);
 
 ///A Floating Pop Up Mix in class.
 class PopUp : public FloatingComposite

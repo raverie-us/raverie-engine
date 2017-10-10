@@ -98,7 +98,7 @@ struct SearchData
   // String being searched
   String SearchString;
   // Tags active for this search
-  HashSet<String> ActiveTags;
+  TagList ActiveTags;
   // Meta types active for this search
   Array<BoundType*> ActiveMeta;
 
@@ -110,7 +110,7 @@ struct SearchData
   void ClearSearchProviders();
 
   // Tags found in this search
-  HashSet<String> AvailableTags;
+  TagList AvailableTags;
   // Search results
   Array<SearchViewResult> Results;
 };

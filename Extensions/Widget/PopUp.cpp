@@ -167,9 +167,9 @@ void PopUp::OnMouseMove(MouseEvent* event)
   Vec3 localMousePos = mBackground->ToLocal(ToVector3(event->Position - mBackground->GetSize()*0.5f));
   bool notChildOfTarget = !hoverTarget->IsAncestorOf(event->Source);
   bool notChildOfMine = !this->IsAncestorOf(event->Source);
-  if(notChildOfTarget && notChildOfMine)
+  if(notChildOfTarget && notChildOfMine && mCloseMode != PopUpCloseMode::DisableClose)
   {
-    if(localMousePos.Length() > mSize.Length())
+    if(localMousePos.Length() > mSize.Length() && mCloseMode == PopUpCloseMode::MouseDistance)
     {
       FadeOut();
     }

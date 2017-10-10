@@ -1087,6 +1087,8 @@ ObjectView::ObjectView(Composite* parent)
   ConnectThisTo(mTree, Events::KeyDown, OnKeyDown);
   ConnectThisTo(mTree, Events::MouseEnterRow, OnMouseEnterRow);
   ConnectThisTo(mTree, Events::MouseExitRow, OnMouseExitRow);
+
+  ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
 }
 
 ObjectView::~ObjectView()
@@ -1171,6 +1173,13 @@ void ObjectView::OnKeyDown(KeyboardEvent* event)
   ExecuteShortCuts(mSpace, nullptr, event);
 }
 
+void ObjectView::OnMenuClosed(ObjectEvent* event)
+{
+  // Clear the context so we don't accidentally create new objects
+  // as children of the last selected cog
+  CommandManager* commandManager = CommandManager::GetInstance();
+  commandManager->ClearContext(ZilchTypeId(Cog));
+}
 
 void ObjectView::ShowObject(Cog* cog)
 {
@@ -1357,22 +1366,51 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
     return;
 
   ContextMenu* menu = new ContextMenu(event->Row);
+  menu->SetName("ObjectViewItemMenu");
+
   Mouse* mouse = Z::gMouse;
-  menu->SetBelowMouse(mouse, Pixels(0,0));
   mCommandIndex = event->Row->mIndex;
 
   Object* object = (Object*)mSource->ToEntry(mCommandIndex);
   if(Cog* cog = Type::DynamicCast<Cog*>(object))
   {
+    MetaSelection* selection = Z::gEditor->GetSelection();
+    // Don't create objects as children is multiple objects are selected
+    if ( selection->Count() == 1)
+    {
+      // Set what cog is selected for the creation of new objects as children
+      // when using the right click create menu
+      CommandManager* commandManager = CommandManager::GetInstance();
+      commandManager->SetContext(cog, ZilchTypeId(Cog));
+    }
+
     ConnectMenu(menu, "Rename", OnRename);
     ConnectMenu(menu, "Delete", OnDelete);
     if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
       ConnectMenu(menu, "Restore Child Order", OnRestoreChildOrder);
+
+    menu->AddDivider();
+    // Set our icon to the arrow indicating a sub menu
+    ContextMenuItem* createSubMenu = menu->CreateContextItem("Create", "PropArrowRight");
+    createSubMenu->LoadMenu("Create");
   }
   else
   {
     ConnectMenu(menu, "Restore", OnRestore);
   }
+
+  ConnectThisTo(menu, Events::MenuClosed, OnMenuClosed);
+  menu->ShiftOntoScreen(ToVector3(mouse->GetClientPosition()));
+}
+
+void ObjectView::OnRightMouseUp(MouseEvent* event)
+{
+  if (event->Handled)
+    return;
+
+  ContextMenu* menu = new ContextMenu(this);
+  menu->LoadMenu("Create");
+  menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 
 void ObjectView::OnRestore(ObjectEvent* event)

@@ -156,6 +156,42 @@ void AddResourceWindow::ShowResourceTypeSearch(bool state)
 }
 
 //**************************************************************************************************
+void AddResourceWindow::AddTags(TagList& tags)
+{
+  TextBox* tagsBox = mResourceTemplateDisplay->mTagsBox;
+  StringBuilder allTags;
+  
+  // Keep whatever current tags are already set
+  if(!tagsBox->GetText().Empty())
+  {
+    allTags.Append(tagsBox->GetText());
+    allTags.Append(", ");
+  }
+
+  // Add all the tags for the resource being created
+  forRange(StringParam& tag, tags.All())
+  {
+    // Only add tags that are not resource types as they are automatically added
+    // to resources upon their creation
+    BoundType* type = MetaDatabase::GetInstance()->FindType(tag);
+    if(type && type->IsA(ZilchTypeId(Resource)))
+      continue;
+
+    allTags.Append(tag);
+    allTags.Append(", ");
+  }
+
+  tagsBox->SetText(allTags.ToString());
+}
+
+//**************************************************************************************************
+void AddResourceWindow::TemplateSearchTakeFocus()
+{
+  mResourceTypeSearch->mSearchField->LoseFocus();
+  mResourceTemplateSearch->TakeFocus();
+}
+
+//**************************************************************************************************
 bool AddResourceWindow::TakeFocusOverride()
 {
   if (mResourceTypeSearch->GetActive())

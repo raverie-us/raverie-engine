@@ -33,7 +33,7 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* commandManager) override
   {
-    return commandManager->GetContext<Space>() != NULL;
+    return commandManager->GetContext<Space>() != nullptr;
   }
 };
 
@@ -41,27 +41,33 @@ public:
 void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manager)
 {
   Space* space = manager->GetContext<Space>();
-  if(space == NULL)
+  if(space == nullptr)
     return CommandFailed(command, ZilchTypeId(Space));
 
   Editor* editor = Z::gEditor;
 
   Cog* editorCameraObject = space->FindObjectByName(SpecialCogNames::EditorCamera);
-  if(editorCameraObject == NULL)
+  if(editorCameraObject == nullptr)
     return;
 
   EditorCameraController* editorCameraController = editorCameraObject->has(EditorCameraController);
-  if(editorCameraController == NULL)
+  if(editorCameraController == nullptr)
     return;
 
   Archetype* archetype = ArchetypeManager::Find(ArchetypeName);
   Vec3 creationPoint = editorCameraController->GetLookTarget();
   Cog* cog = CreateFromArchetype(editor->GetOperationQueue(), space, archetype, creationPoint);
-  if(cog == NULL)
+  if(cog == nullptr)
     return;
 
   cog->ClearArchetype();
   cog->SetName(ArchetypeName);
+
+  // If a cog command context has been set attach the new cog as a child
+  CommandManager* commandManager = CommandManager::GetInstance();
+  if (Cog* selectedCog = commandManager->GetContext<Cog>())
+    cog->AttachTo(selectedCog);
+  
   editor->SelectOnly(cog);
 }
 
@@ -87,13 +93,13 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* commandManager) override
   {
-    return commandManager->GetContext<Space>() != NULL;
+    return commandManager->GetContext<Space>() != nullptr;
   }
 
   void Execute(Command* command, CommandManager* manager)
   {
     Space* space = manager->GetContext<Space>();
-    if(space == NULL)
+    if(space == nullptr)
       return CommandFailed(command, ZilchTypeId(Space));
 
     (*Function)(space, Vec3(0,0,0), Size, Height, Width);
