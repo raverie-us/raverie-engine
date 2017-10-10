@@ -3,8 +3,8 @@
   <Import Project="$(SolutionDir)\Paths.props" />
   <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
   <PropertyGroup Label="Globals">
-    <ProjectName>GeometryProcessor</ProjectName>
-    <ProjectGuid>{8F553E34-1239-42B2-A136-F05E719F6C43}</ProjectGuid>
+    <ProjectName>ImageProcessor</ProjectName>
+    <ProjectGuid>{6AAAA7A6-682E-40A3-A344-5602CF144A8F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -50,7 +50,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Production|x64'">false</LinkIncremental>
-    <TargetName Condition="'$(Platform)'=='Win32'">GeometryProcessor</TargetName>
+    <TargetName Condition="'$(Platform)'=='Win32'">ImageProcessor</TargetName>
   </PropertyGroup>
   <!--If the RunVld environmental variable is defined then add a #define to the project-->
   <ItemDefinitionGroup Condition="'$(RunVld)'!=''">
@@ -62,22 +62,22 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ZeroSource)\External\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ZeroSource)\External\Nvtt\include;$%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\ZeroLibraries\AudioEngine;$(ZeroSource)\External\Assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\ZeroLibraries\AudioEngine;$(ZeroSource)\External\Nvtt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
-copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(TargetDir)"
-copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
-copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"</Command>
+      <Command>mkdir "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Configuration)"
+copy "$(ZERO_SOURCE)\External\Nvtt\bin\nvtt.dll" "$(TargetDir)"
+copy "$(ZERO_SOURCE)\External\nvtt\bin\nvtt.dll" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Configuration)"
+copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Configuration)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opusDebug.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opus.lib;Avrt.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -92,7 +92,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opus.lib;Avrt.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
     </Link>
@@ -102,39 +102,11 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opus.lib;Avrt.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="AnimationProcessor.cpp" />
-    <ClCompile Include="ArchetypeProcessor.cpp" />
-    <ClCompile Include="GeometryImporter.cpp" />
-    <ClCompile Include="GeometryUtility.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MeshProcessor.cpp" />
-    <ClCompile Include="PhysicsMeshProcessor.cpp" />
-    <ClCompile Include="Precompiled.cpp">
-      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="SkeletonProcessor.cpp" />
-    <ClCompile Include="TextureProcessor.cpp" />
-    <ClCompile Include="VertexDescriptionBuilder.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AnimationProcessor.hpp" />
-    <ClInclude Include="ArchetypeProcessor.hpp" />
-    <ClInclude Include="GeometryImporter.hpp" />
-    <ClInclude Include="GeometryProcessorDataStructures.hpp" />
-    <ClInclude Include="GeometryUtility.hpp" />
-    <ClInclude Include="MeshProcessor.hpp" />
-    <ClInclude Include="PhysicsMeshProcessor.hpp" />
-    <ClInclude Include="Precompiled.hpp" />
-    <ClInclude Include="SkeletonProcessor.hpp" />
-    <ClInclude Include="TextureProcessor.hpp" />
-    <ClInclude Include="VertexDescriptionBuilder.hpp" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Systems\Content\Content.vcxproj">
       <Project>{e19019f5-9c2c-4329-aab5-db28e39cc0f2}</Project>
@@ -187,6 +159,21 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
       <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CubemapProcessing.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="TextureImporter.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CubemapProcessing.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TextureImporter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

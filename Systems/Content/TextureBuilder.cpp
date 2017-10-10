@@ -223,8 +223,14 @@ void TextureBuilder::BuildContent(BuildOptions& buildOptions)
 {
   String destFile = FilePath::Combine(buildOptions.OutputPath, GetOutputFile());
 
+  #ifdef ZeroDebug
+  static cstr sConfigurationPath = "Debug";
+  #elif ZeroRelease
+  static cstr sConfigurationPath = "Release";
+  #endif
+
   StringBuilder builder;
-  builder << "\"" << FilePath::Combine(buildOptions.ToolPath, "ImageProcessor.exe\"");
+  builder << "\"" << FilePath::Combine(buildOptions.ToolPath, "ImageProcessor", sConfigurationPath, "ImageProcessor.exe\"");
   builder << " -in \"" << FilePath::Combine(buildOptions.SourcePath, mOwner->Filename) << "\"";
   builder << " -out \"" << destFile << "\"";
 

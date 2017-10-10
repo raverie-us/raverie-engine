@@ -12,6 +12,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform", "Platform", "{BFA616BA-20B4-4210-A078-840A6BBC6F62}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Editor", "Projects\Win32Editor\Win32Editor.vcxproj", "{F5630AC8-F0C7-4B26-A2C0-BECCBD633B97}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F} = {6AAAA7A6-682E-40A3-A344-5602CF144A8F}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Systems\Physics\Physics.vcxproj", "{B1397FE7-B02A-4689-8F19-719BF0E70E7C}"
 EndProject
@@ -60,6 +63,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WindowsPlatform", "ZeroLibraries\Platform\Windows\WindowsPlatform.vcxproj", "{DBE8E33A-7E70-402C-BCF6-D1EFEE93FA76}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32ZeroLauncher", "Projects\Win32Launcher\Win32Launcher\Win32ZeroLauncher.vcxproj", "{C47C1FA4-409A-4300-905F-D4CC179BABC0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F} = {6AAAA7A6-682E-40A3-A344-5602CF144A8F}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32ZeroLauncherDll", "Projects\Win32Launcher\Win32LauncherDll\Win32ZeroLauncherDll.vcxproj", "{EBD67762-3D8B-4F8A-8080-FC4D04013988}"
 EndProject
@@ -93,6 +99,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryProcessor", "Projec
 		{C26BF2C8-D6C3-441A-83AA-9BA656CDF41C} = {C26BF2C8-D6C3-441A-83AA-9BA656CDF41C}
 		{E19019F5-9C2C-4329-AAB5-DB28E39CC0F2} = {E19019F5-9C2C-4329-AAB5-DB28E39CC0F2}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageProcessor", "Projects\ImageProcessor\ImageProcessor.vcxproj", "{6AAAA7A6-682E-40A3-A344-5602CF144A8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -634,6 +642,22 @@ Global
 		{8F553E34-1239-42B2-A136-F05E719F6C43}.Scons|Win32.Build.0 = Release|Win32
 		{8F553E34-1239-42B2-A136-F05E719F6C43}.Scons|x64.ActiveCfg = Release|x64
 		{8F553E34-1239-42B2-A136-F05E719F6C43}.Scons|x64.Build.0 = Release|x64
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Debug|Win32.Build.0 = Debug|Win32
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Debug|x64.ActiveCfg = Debug|x64
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Debug|x64.Build.0 = Debug|x64
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Production|Win32.ActiveCfg = Release|Win32
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Production|Win32.Build.0 = Release|Win32
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Production|x64.ActiveCfg = Release|x64
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Production|x64.Build.0 = Release|x64
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Release|Win32.ActiveCfg = Release|Win32
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Release|Win32.Build.0 = Release|Win32
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Release|x64.ActiveCfg = Release|x64
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Release|x64.Build.0 = Release|x64
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Scons|Win32.ActiveCfg = Release|Win32
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Scons|Win32.Build.0 = Release|Win32
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Scons|x64.ActiveCfg = Release|x64
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F}.Scons|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -673,5 +697,6 @@ Global
 		{FAD16D53-662C-47C1-9A7A-C0653D25C070} = {7C1A603E-AC96-42B7-A35A-8878C8C9E0C8}
 		{D435E236-C996-4E7D-A4D6-DCDC20CC835D} = {B8833CAA-9607-4563-B9D0-4236DF19B428}
 		{8F553E34-1239-42B2-A136-F05E719F6C43} = {3A1CECD3-9F23-4225-B640-5BA5EC8AF8E8}
+		{6AAAA7A6-682E-40A3-A344-5602CF144A8F} = {3A1CECD3-9F23-4225-B640-5BA5EC8AF8E8}
 	EndGlobalSection
 EndGlobal
