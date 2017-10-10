@@ -140,6 +140,7 @@ namespace Audio
 
     void ProcessSample(const float* input, float* output, const unsigned numChannels);
 
+    float GetCutoffFrequency();
     void SetCutoffFrequency(const float value);
     void MergeWith(LowPassFilter& otherFilter);
 

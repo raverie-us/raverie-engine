@@ -22,7 +22,6 @@ namespace Audio
       PreviousRelativePosition(Math::Vec3(FLT_MAX, FLT_MAX, FLT_MAX)),
       DirectionalVolume(1.0f),
       UseLowPass(false),
-      LowPassFrequency(0.0f),
       Gain1(1.0f),
       Gain2(1.0f),
       Channel1(0),
@@ -48,7 +47,6 @@ namespace Audio
     // These values are only re-calculated when the relative position changes
     float DirectionalVolume;
     bool UseLowPass;
-    float LowPassFrequency;
     float Gain1;
     float Gain2;
     int Channel1;
@@ -364,12 +362,28 @@ namespace Audio
     // Check for sounds behind listener
     if (relativePosition.x < 0)
     {
-      // Set low pass filter
+      // Get the angle to the listener
       float angle = Math::ArcTan2(relativePosition.z, -relativePosition.x);
+      // Translate this to a percentage of a quarter circle (this value should be 1.0 when the 
+      // emitter is directly behind the listener and 0.0 when off to the side)
       float percent = Math::Abs(angle) / (Math::cPi / 2.0f);
 
+      // The low pass cutoff frequency ranges from 5000.0 to 20000.0 depending on the angle
+      // percentage, using a squared curve
       float frequency = 5000.0f + (15000.0f * percent * percent);
 
+      // Check if the difference between this frequency and the last frequency used is large
+      float maxDifferenceAllowed = 1000.0f;
+      if (!IsWithinLimit(frequency, listenerData.LowPass.GetCutoffFrequency(), maxDifferenceAllowed))
+      {
+        // Set frequency to be only maxDifferenceAllowed away from the last frequency used
+        if (frequency > listenerData.LowPass.GetCutoffFrequency())
+          frequency = listenerData.LowPass.GetCutoffFrequency() + maxDifferenceAllowed;
+        else
+          frequency = listenerData.LowPass.GetCutoffFrequency() - maxDifferenceAllowed;
+      }
+
+      // Set the cutoff frequency on the low pass filter
       listenerData.LowPass.SetCutoffFrequency(frequency);
 
       // Mirror source to front for stereo
@@ -379,7 +393,12 @@ namespace Audio
       listenerData.UseLowPass = true;
     }
     else
+    {
+      // Make sure the cutoff frequency is set to the maximum value
+      listenerData.LowPass.SetCutoffFrequency(20000.0f);
+
       listenerData.UseLowPass = false;
+    }
 
     // If emitter and listener are very close or emitter is directly above or below listener, skip calculations
     if (relativePosition.LengthSq() < 0.01f || (relativePosition.x == 0.0f && relativePosition.z == 0.0f))
