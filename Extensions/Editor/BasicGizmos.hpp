@@ -73,6 +73,17 @@ Vec3 GetSnappedVectorWorldAxes(Vec3Param start, Vec3Param end, float snapDistanc
 }  // namespace GizmoSnapping
 
 
+/// Set the bases of operation for a gizmo to use when being manipulated.
+/// <param name="Local">
+///   Set bases of a gizmo to inherit from an object selection.
+/// </param>
+/// <param name="World">
+///   Set the bases to match the standard world xyz bases.
+/// </param>
+DeclareEnum2(GizmoBasis, Local, World);
+
+
+
 //------------------------------------------------------------ Simple Gizmo Base
 class SimpleGizmoBase : public Component
 {
