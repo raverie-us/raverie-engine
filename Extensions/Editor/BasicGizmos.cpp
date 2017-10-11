@@ -158,7 +158,6 @@ Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param worldMovement,
     else  // Moving on a hyperplane, or the view-plane specifically.
     {
       // Snap on all basis axes.
-      //  - note: Doing so accounts for 'GizmoBasis::Local'
       Mat3 m = ToMatrix3(basis);
       // X
       Vec3 axis = m.BasisX( ).AttemptNormalized( );
@@ -897,28 +896,32 @@ void TranslateGizmo::OnGizmoModified(GizmoUpdateEvent* e)
 
   mDragMode = gizmoDrag->mDragMode;
 
-  Vec3 delta = ((mStartPosition + e->mMouseWorldMovement) - t->GetWorldTranslation( ));
+  // Update the translation of the gizmo itself, unsnapped.
+  t->SetWorldTranslation(mStartPosition + e->mMouseWorldMovement);
 
-  Vec3 newPosition = TranslateFromDrag(gizmoDrag, t->GetWorldTranslation( ),
-    delta, t->GetWorldRotation());
+  // Calculate a position that includes snapping, if applicable.
+  Vec3 newPosition = TranslateFromDrag(gizmoDrag, mStartPosition,
+    e->mMouseWorldMovement, t->GetWorldRotation( ));
 
-  // Update the final translation
-  t->SetWorldTranslation(newPosition);
+  TranslateGizmoUpdateEvent eventToSend(e);
+  eventToSend.mProcessedMovement = newPosition - mStartPosition;
+
+  DispatchEvent(Events::TranslateGizmoModified, &eventToSend);
 }
 
 //******************************************************************************
 Vec3 TranslateGizmo::TranslateFromDrag(GizmoDrag* gizmoDrag, Vec3Param startPosition,
-  Vec3Param localMovement, QuatParam rotation)
+  Vec3Param movement, QuatParam rotation)
 {
   Vec3 newPosition;
   if(GetSnapping( ))
   {
     newPosition = GizmoSnapping::GetSnappedPosition(startPosition,
-      localMovement, rotation, gizmoDrag->mDragMode, mSnapMode, mSnapDistance);
+      movement, rotation, gizmoDrag->mDragMode, mSnapMode, mSnapDistance);
   }
   else
   {
-    newPosition = startPosition + localMovement;
+    newPosition = startPosition + movement;
   }
 
   return newPosition;
@@ -944,10 +947,6 @@ ZilchDefineType(ScaleGizmo, builder, type)
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindFieldProperty(mSnapMode);
   ZilchBindFieldProperty(mSnapDistance);
-
-  // Read-only outputs of gizmo modified.
-  ZilchBindFieldGetter(mDirection);
-  ZilchBindFieldGetter(mChangeInScale);
 }
 
 //******************************************************************************
@@ -988,8 +987,6 @@ void ScaleGizmo::OnMouseDragStart(ViewportMouseEvent* e)
   
   Mat3 rotation = Math::ToMatrix3(viewport->GetCamera()->mTransform->GetWorldRotation( ));
   mEyeDirection = -rotation.BasisZ( );
-
-  mChangeInScale.Set(1, 1, 1);
 }
 
 //******************************************************************************
@@ -1003,8 +1000,6 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
   GizmoDrag* gizmoDrag = e->GetGizmo( )->has(GizmoDrag);
   ReturnIf(gizmoDrag == nullptr, , "Dragging gizmo has no GizmoDrag Component.");
 
-  mDragMode = gizmoDrag->mDragMode;
-
   // Transform of 'this' gizmo.
   Mat3 m = Math::ToMatrix3(t->GetWorldRotation( ));
 
@@ -1016,8 +1011,9 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
   Vec3 grabDirection = (e->mInitialGrabPoint - t->GetWorldTranslation( ));
   float distance = grabDirection.Length( );
 
-  bool viewPlaneGizmo = (mDragMode == GizmoDragMode::ViewPlane);
+  bool viewPlaneGizmo = (gizmoDrag->mDragMode == GizmoDragMode::ViewPlane);
 
+  mDragMode = gizmoDrag->mDragMode;
   mDirection.Set(1, 1, 1);
   mViewPlaneMove = 0.0f;
 
@@ -1063,8 +1059,13 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     mScaledLocalMovement = GizmoHelpers::ScaleVector(localMovement, distance, startScale);
   }
 
-  mChangeInScale = ScaleFromDrag(gizmoDrag, distance, localMovement,
-    startScale, t->GetWorldRotation());
+  Vec3 newScale = ScaleFromDrag(gizmoDrag, distance, localMovement,
+    startScale, t->GetWorldRotation( ));
+
+  ScaleGizmoUpdateEvent eventToSend(e);
+  eventToSend.mProcessedScale = newScale - startScale;
+
+  DispatchEvent(Events::ScaleGizmoModified, &eventToSend);
 }
 
 //******************************************************************************
@@ -1137,11 +1138,6 @@ ZilchDefineType(RotateGizmo, builder, type)
 
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindFieldProperty(mSnapAngle);
-
-  // Read-only outputs of gizmo modified.
-  ZilchBindFieldGetter(mDirection);
-  ZilchBindFieldGetter(mChangeInRotation);
-  ZilchBindFieldGetter(mDeltaRotation);
 }
 
 //******************************************************************************
@@ -1178,7 +1174,6 @@ void RotateGizmo::SetSnapping(bool snapping)
 void RotateGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 {
   mPreviousSnap = 0.0f;
-  mChangeInRotation = 0.0f;
 }
 
 //******************************************************************************
@@ -1187,38 +1182,41 @@ void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
   Transform* t = GetOwner()->has(Transform);
   ReturnIf(t == nullptr, , "RotateGizmo has no Transform. This should never happen.");
 
-  mDirection = e->mRadiansAroundAxis - mChangeInRotation;
-  mDirection /= Math::Abs(mDirection);
-
-  mChangeInRotation = e->mRadiansAroundAxis;
-  mDeltaRotation = e->mDeltaRadiansAroundAxis;
+  float rotation = e->mRadiansAroundAxis;
+  float delta = e->mDeltaRadiansAroundAxis;
   Vec3 selectedAxis = e->mWorldRotationAxis;
 
   if(GetSnapping())
   {
-    mChangeInRotation = Snap(mChangeInRotation, Math::DegToRad(mSnapAngle));
+    rotation = Snap(rotation, Math::DegToRad(mSnapAngle));
 
-    float deltaSnap = Math::Abs(mChangeInRotation) - Math::Abs(mPreviousSnap);
+    float deltaSnap = Math::Abs(rotation) - Math::Abs(mPreviousSnap);
     if(deltaSnap > Math::Epsilon( ) || deltaSnap < -Math::Epsilon( ))
     {
-      mDeltaRotation = Math::DegToRad((mChangeInRotation - mPreviousSnap < 0.0f) ? -mSnapAngle : mSnapAngle);
-      mPreviousSnap = mChangeInRotation;
+      delta = Math::DegToRad((rotation - mPreviousSnap < 0.0f) ? -mSnapAngle : mSnapAngle);
+      mPreviousSnap = rotation;
     }
     else
     {
-      mDeltaRotation = 0.0f;
-      mPreviousSnap = mChangeInRotation;
+      delta= 0.0f;
+      mPreviousSnap = rotation;
       return;
     }
 
   }
 
-  Quat deltaRotation = Math::ToQuaternion(selectedAxis, mDeltaRotation);
-  // sanity normalize to prevent rounding errors
+  Quat deltaRotation = Math::ToQuaternion(selectedAxis, delta);
+  // Sanity normalize to prevent rounding errors.
   deltaRotation.Normalize( );
 
-  // Rotate display
+  // Rotate the gizmo itself.
   t->RotateWorld(deltaRotation);
+
+  RotateGizmoUpdateEvent eventToSend(e);
+  eventToSend.mProcessedRotation = delta;
+  eventToSend.mSelectedAxis = selectedAxis;
+  
+  DispatchEvent(Events::RotateGizmoModified, &eventToSend);
 }
 
 }//namespace Zero

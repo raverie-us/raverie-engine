@@ -154,6 +154,9 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(Gizmo);
   ZilchInitializeType(GizmoSpace);
   ZilchInitializeType(GizmoUpdateEvent);
+  ZilchInitializeType(TranslateGizmoUpdateEvent);
+  ZilchInitializeType(ScaleGizmoUpdateEvent);
+  ZilchInitializeType(RotateGizmoUpdateEvent);
   ZilchInitializeType(GizmoDrag);
   ZilchInitializeType(SimpleGizmoBase);
   ZilchInitializeType(SquareGizmo);

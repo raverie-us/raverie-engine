@@ -159,7 +159,7 @@ public:
   void OnMouseDragStart(ViewportMouseEvent* e) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(GizmoUpdateEvent* e);
+  void OnGizmoModified(TranslateGizmoUpdateEvent* e);
 
   /// Special command to place an object on the surface of another object.
   void SnapToSurface(GizmoUpdateEvent* e, Vec3* movementOut);
@@ -184,7 +184,7 @@ public:
   void OnMouseDragStart(ViewportMouseEvent* e) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(GizmoUpdateEvent* e);
+  void OnGizmoModified(ScaleGizmoUpdateEvent* e);
 
   /// With multiple objects selected, allow their spacial-offest to be affected
   /// about the chosen pivot point, while being locally scaled with 'mAffectScale'.
@@ -211,7 +211,7 @@ public:
   void OnMouseDragStart(ViewportMouseEvent* e) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(RingGizmoEvent* e);
+  void OnGizmoModified(RotateGizmoUpdateEvent* e);
 
   /// With multiple objects selected, allow their spacial-offest to be rotated
   /// about the chosen pivot point, while being locally rotated with 'mAffectRotation'.
