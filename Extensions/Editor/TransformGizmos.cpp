@@ -666,6 +666,7 @@ void ObjectScaleGizmo::Serialize(Serializer& stream)
   ObjectTransformGizmo::Serialize(stream);
 
   SerializeNameDefault(mAffectTranslation, true);
+  SerializeNameDefault(mAffectScale, true);
 }
 
 //******************************************************************************
@@ -732,9 +733,12 @@ void ObjectScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     Vec3 newScale = baseGizmo->ScaleFromDrag(gizmoDrag, distance,
       localMovement, objectState.StartScale, transform.GetWorldRotation( ));
 
-    // Final object scale (at this step) of gizmo modification.
-    objectState.EndScale = newScale;
-    transform.SetLocalScale(newScale);
+    if(mAffectScale || !multiTransform)
+    {
+      // Final object scale (at this step) of gizmo modification.
+      objectState.EndScale = newScale;
+      transform.SetLocalScale(newScale);
+    }
 
     const float cRotationLengthLimit = 0.001f;
     if(multiTransform && mAffectTranslation)
@@ -780,6 +784,7 @@ void ObjectRotateGizmo::Serialize(Serializer& stream)
   ObjectTransformGizmo::Serialize(stream);
 
   SerializeNameDefault(mAffectTranslation, true);
+  SerializeNameDefault(mAffectRotation, true);
 }
 
 //******************************************************************************
@@ -830,25 +835,28 @@ void ObjectRotateGizmo::OnGizmoModified(RingGizmoEvent* e)
       continue;
 
     //save the old transform so that we can properly apply the deltas to in-world objects
-    Mat4 oldMat = transform.GetParentWorldMatrix();
+    Mat4 oldMat = transform.GetParentWorldMatrix( );
     Mat4 inverseMatrix(Mat4::cIdentity);
     inverseMatrix = oldMat.Inverted( );
 
-    Vec3 localAxis = Math::TransformNormal(inverseMatrix, selectedAxis).AttemptNormalized( );
+    if(mAffectRotation || !multiTransform)
+    {
+      Vec3 localAxis = Math::TransformNormal(inverseMatrix, selectedAxis).AttemptNormalized( );
 
-    //Construct a local rotation
-    Quat localRotation;
-    Math::ToQuaternion(localAxis, deltaOnAxis, &localRotation);
+      //Construct a local rotation
+      Quat localRotation;
+      Math::ToQuaternion(localAxis, deltaOnAxis, &localRotation);
 
-    //Add the current rotation to the starting rotation
-    Quat newRotation = localRotation * transform.GetLocalRotation();
+      //Add the current rotation to the starting rotation
+      Quat newRotation = localRotation * transform.GetLocalRotation( );
 
-    //Normalize to prevent rounding errors
-    newRotation.Normalize( );
+      //Normalize to prevent rounding errors
+      newRotation.Normalize( );
 
-    // Set the rotation
-    objectState.EndRotation = newRotation;
-    transform.SetLocalRotation(newRotation);
+      // Set the rotation
+      objectState.EndRotation = newRotation;
+      transform.SetLocalRotation(newRotation);
+    }
 
     const float cRotationLengthLimit = 0.001f;
     if(multiTransform && mAffectTranslation)

@@ -186,9 +186,12 @@ public:
   /// As the gizmo is being dragged, we want to update all objects.
   void OnGizmoModified(GizmoUpdateEvent* e);
 
-  /// With multiple objects selected, the translation could be changed
-  /// when scaled.
+  /// With multiple objects selected, allow their spacial-offest to be affected
+  /// about the chosen pivot point, while being locally scaled with 'mAffectScale'.
   bool mAffectTranslation;
+  /// With multiple objects selected, allow their local scale to be affected
+  /// while being spacially-offset (with 'AffectTranslation') about the chosen pivot point.
+  bool mAffectScale;
 
   /// Used when dragging on the view axis to determine which direction 
   Vec3 mEyeDirection;
@@ -210,9 +213,12 @@ public:
   /// As the gizmo is being dragged, we want to update all objects.
   void OnGizmoModified(RingGizmoEvent* e);
 
-  /// With multiple objects selected, the translation could be changed
-  /// when rotated.
+  /// With multiple objects selected, allow their spacial-offest to be rotated
+  /// about the chosen pivot point, while being locally rotated with 'mAffectRotation'.
   bool mAffectTranslation;
+  /// With multiple objects selected, allow their local rotation to be affected
+  /// while being spacially-rotated (with 'AffectTranslation') about the chosen pivot point.
+  bool mAffectRotation;
 };
 
 
