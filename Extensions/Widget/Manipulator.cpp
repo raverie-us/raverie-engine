@@ -70,6 +70,7 @@ MouseManipulation::MouseManipulation(Mouse* mouse, Composite* parent)
 
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyUp, OnKeyUp);
+  ConnectThisTo(this, Events::KeyRepeated, OnKeyRepeated);
   ConnectThisTo(this, Events::MouseScroll, OnMouseScroll);
 
   ConnectThisTo(this, Events::MouseUpdate, OnMouseUpdate);
