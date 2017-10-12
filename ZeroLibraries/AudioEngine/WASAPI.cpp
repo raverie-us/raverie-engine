@@ -274,20 +274,17 @@ namespace Audio
         // Start the AudioClient
         AudioClient->Start();
       }
-      // If not, and this is the input stream, do nothing
-      else if (!IsOutput)
-      {
-        ZPrint("Unable to start input stream: uninitialized\n");
-        return StreamStatus::Uninitialized;
-      }
-      // Set up fallback output stream
+      // Set up fallback stream
       else
       {
         // Create the thread events
         for (int i = 0; i < ThreadEventTypes::NumThreadEvents; ++i)
           ThreadEvents[i] = CreateEvent(nullptr, false, false, nullptr);
 
-        ZPrint("Started audio output stream with fallback for no device\n");
+        if (IsOutput)
+          ZPrint("Started audio output stream with fallback for no device\n");
+        else
+          ZPrint("Started audio input stream with fallback for no device\n");
       }
 
       ClientCallback = callback;
@@ -354,12 +351,26 @@ namespace Audio
     bool processing(true);
     while (processing)
     {
+      // If there is a valid input or output device, use the WASAPI function
       if (RenderClient || CaptureClient)
         processing = WasapiEventHandling();
+      // Otherwise, if this is the output stream, use the fallback function
       else if (IsOutput)
         processing = OutputFallback();
+      // If this is the input stream, wait for either a stop or reset signal
       else
-        processing = false;
+      {
+        HANDLE events[2] = { ThreadEvents[ThreadEventTypes::StopRequestEvent],
+          ThreadEvents[ThreadEventTypes::ResetEvent] };
+
+        DWORD waitResult = WaitForMultipleObjects(2, events, false, INFINITE);
+        // Check for stop request
+        if (waitResult == 0)
+          processing = false;
+        // Check for reset request
+        else if (waitResult == 1)
+          Reset();
+      }
     }
 
     // Revert the thread priority
@@ -600,15 +611,11 @@ namespace Audio
     else
       StreamInfoList[whichStream].Status = StreamStatus::Uninitialized;
 
-    // Check if the device exists and was successfully initialized
-    if (StreamInfoList[whichStream].Status == StreamStatus::Started)
-    {
-      // Start the processing loop thread
-      if (whichStream == StreamTypes::Output)
-        _beginthreadex(nullptr, 0, &AudioIOWindows::StartOutputThread, this, 0, nullptr);
-      else if (whichStream == StreamTypes::Input)
-        _beginthreadex(nullptr, 0, &AudioIOWindows::StartInputThread, this, 0, nullptr);
-    }
+    // Start the processing loop thread (needs to start even if uninitialized)
+    if (whichStream == StreamTypes::Output)
+      _beginthreadex(nullptr, 0, &AudioIOWindows::StartOutputThread, this, 0, nullptr);
+    else if (whichStream == StreamTypes::Input)
+      _beginthreadex(nullptr, 0, &AudioIOWindows::StartInputThread, this, 0, nullptr);
 
     return StreamInfoList[whichStream].Status;
   }

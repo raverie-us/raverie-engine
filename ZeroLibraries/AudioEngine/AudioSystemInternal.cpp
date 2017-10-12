@@ -123,8 +123,7 @@ namespace Audio
     ZPrint("Audio mix thread initialized\n");
 
     AudioIO->StartStream(StreamTypes::Output);
-    if (inputStatus == StreamStatus::Initialized)
-      AudioIO->StartStream(StreamTypes::Input);
+    AudioIO->StartStream(StreamTypes::Input);
 
     ZPrint("Audio was successfully initialized\n");
   }
