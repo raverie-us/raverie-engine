@@ -254,7 +254,7 @@ Level
 					var Active = true
 					var Visible = true
 					var Interactive = true
-					var InLayout = true
+					var InLayout = false
 					var ClipChildren = false
 					var CanTakeFocus = false
 					var LocalColor = Real4{0.258823544, 0.258823544, 0.258823544, 1}

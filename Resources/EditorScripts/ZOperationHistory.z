@@ -100,6 +100,10 @@ class ZOperationHistory : ZilchComponent
   /******************************************************************************/
   function OnWindowResize(event : AreaEvent)
   {
+    this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;
+      // Maintain room for the scrollbar on the x axis.
+    this.UiWidget.Size = Real2(this.UiWidget.ParentWidget.Size.X - this.CurrentScrollBarSizeX, this.TotalViewLength);
+    
     this.UpdateStatusText();
   }
   
@@ -111,8 +115,13 @@ class ZOperationHistory : ZilchComponent
     var statusCog = this.StatusText.Cog;
     var statusText = statusCog.SpriteText;
     
+    if(this.EntryCount == 0)
+    {
+      statusCog.UiWidget.Active = true;
+      statusCog.SpriteText.Visible = true;
+    }
       // No longer necessary to display the status text.
-    if(this.EntryCount != 0)
+    else if(this.EntryCount != 0)
     {
       statusCog.UiWidget.Active = false;
       statusCog.SpriteText.Visible = false;
