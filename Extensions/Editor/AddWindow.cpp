@@ -1133,6 +1133,14 @@ void ResourceTemplateDisplay::OnCreate(Event*)
         tags.Insert(r);
     }
     resourceAdd.SourceResource->mContentItem->SetTags(tags);
+
+    // Dispatch an event that the resource has been modified on the resource itself
+    // and on the resource system
+    ResourceEvent e;
+    e.Manager = resource->GetManager();
+    e.EventResource = resource;
+    resource->GetManager()->DispatchEvent(Events::ResourceModified, &e);
+    Z::gResources->DispatchEvent(Events::ResourceModified, &e);
   }
 
   Z::gEditor->GetCenterWindow()->TryTakeFocus();

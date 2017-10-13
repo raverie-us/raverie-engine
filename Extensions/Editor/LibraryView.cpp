@@ -370,6 +370,7 @@ LibraryView::LibraryView(Composite* parent)
   ConnectThisTo(Z::gResources, Events::ResourceModified, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesLoaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesModified);
+  ConnectThisTo(Z::gResources, Events::ResourceTagsModified, OnResourcesModified);
 
   ConnectThisTo(mTreeView, Events::MouseScroll, OnMouseScroll);
 
