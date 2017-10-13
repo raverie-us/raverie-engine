@@ -126,9 +126,9 @@ namespace Audio
     EighthsPerBeat(0),
     EighthNoteCount(0),
     StartTime(0),
-    EndTime((float)parentAsset->GetNumberOfFrames() / AudioSystemInternal::SampleRate),
+    EndTime((float)parentAsset->GetNumberOfFrames() / AudioSystemInternal::SystemSampleRate),
     LoopStartTime(0),
-    LoopEndTime((float)parentAsset->GetNumberOfFrames() / AudioSystemInternal::SampleRate),
+    LoopEndTime((float)parentAsset->GetNumberOfFrames() / AudioSystemInternal::SystemSampleRate),
     LoopTailTime(0),
     NotifyTime(0),
     CustomNotifySent(false),
@@ -158,7 +158,7 @@ namespace Audio
     {
       Data = new SoundInstanceNodeData;
 
-      Data->TimeIncrement = 1.0 / (double)AudioSystemInternal::SampleRate;
+      Data->TimeIncrement = 1.0 / (double)AudioSystemInternal::SystemSampleRate;
       Data->FrameIndex = 0;
       Data->ResampleIndex = Data->FrameIndex;
       Data->EndFrame = Asset->GetNumberOfFrames() - 1;
@@ -217,7 +217,7 @@ namespace Audio
       {
         Data->Pausing = true;
         Data->FrameCount = 0;
-        Data->FramesToWait = (unsigned)(0.021f * AudioSystemInternal::SampleRate);
+        Data->FramesToWait = (unsigned)(0.021f * AudioSystemInternal::SystemSampleRate);
         ThreadedVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
         {
@@ -264,7 +264,7 @@ namespace Audio
     {
       Data->Stopping = true;
       Data->FrameCount = 0;
-      Data->FramesToWait = (unsigned)(0.025f * AudioSystemInternal::SampleRate);
+      Data->FramesToWait = (unsigned)(0.025f * AudioSystemInternal::SystemSampleRate);
       ThreadedVolumeModifier* mod = GetAvailableVolumeMod();
       if (mod)
         mod->Reset(1.0f, 0.0f, 0.02f, 0.0f, 0.0f, 0.0f);
@@ -299,7 +299,7 @@ namespace Audio
     if (!Threaded)
     {
       StartTime = startTime;
-      if (StartTime < 0.0f || StartTime * AudioSystemInternal::SampleRate >= Asset->GetNumberOfFrames())
+      if (StartTime < 0.0f || StartTime * AudioSystemInternal::SystemSampleRate >= Asset->GetNumberOfFrames())
         StartTime = 0.0f;
 
       if (GetSiblingNode())
@@ -308,7 +308,7 @@ namespace Audio
     }
     else
     {
-      Data->StartFrame = (unsigned)(startTime * AudioSystemInternal::SampleRate);
+      Data->StartFrame = (unsigned)(startTime * AudioSystemInternal::SystemSampleRate);
 
       if (Data->FrameIndex < Data->StartFrame)
         Data->FrameIndex = Data->StartFrame;
@@ -329,8 +329,8 @@ namespace Audio
       EndTime = endTime;
       if (EndTime < 0.0f)
         EndTime = 0.0f;
-      else if (EndTime * AudioSystemInternal::SampleRate >= Asset->GetNumberOfFrames())
-        EndTime = (float)Asset->GetNumberOfFrames() / (float)AudioSystemInternal::SampleRate;
+      else if (EndTime * AudioSystemInternal::SystemSampleRate >= Asset->GetNumberOfFrames())
+        EndTime = (float)Asset->GetNumberOfFrames() / (float)AudioSystemInternal::SystemSampleRate;
 
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetEndTime,
@@ -338,7 +338,7 @@ namespace Audio
     }
     else
     {
-      Data->EndFrame = (unsigned)(endTime * AudioSystemInternal::SampleRate);
+      Data->EndFrame = (unsigned)(endTime * AudioSystemInternal::SystemSampleRate);
       if (Data->EndFrame >= Asset->GetNumberOfFrames())
         Data->EndFrame = Asset->GetNumberOfFrames() - 1;
     }
@@ -356,7 +356,7 @@ namespace Audio
     if (!Threaded)
     {
       LoopStartTime = time;
-      if (LoopStartTime < 0.0f || LoopStartTime * AudioSystemInternal::SampleRate >= Asset->GetNumberOfFrames())
+      if (LoopStartTime < 0.0f || LoopStartTime * AudioSystemInternal::SystemSampleRate >= Asset->GetNumberOfFrames())
         LoopStartTime = 0.0f;
 
       if (GetSiblingNode())
@@ -365,7 +365,7 @@ namespace Audio
     }
     else
     {
-      Data->LoopStartFrame = (unsigned)(time *AudioSystemInternal::SampleRate);
+      Data->LoopStartFrame = (unsigned)(time *AudioSystemInternal::SystemSampleRate);
     }
   }
 
@@ -383,8 +383,8 @@ namespace Audio
       LoopEndTime = time;
       if (LoopEndTime < 0.0f)
         LoopEndTime = 0.0f;
-      else if (LoopEndTime * AudioSystemInternal::SampleRate >= Asset->GetNumberOfFrames())
-        LoopEndTime = (float)Asset->GetNumberOfFrames() / (float)AudioSystemInternal::SampleRate;
+      else if (LoopEndTime * AudioSystemInternal::SystemSampleRate >= Asset->GetNumberOfFrames())
+        LoopEndTime = (float)Asset->GetNumberOfFrames() / (float)AudioSystemInternal::SystemSampleRate;
 
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetLoopEndTime,
@@ -392,7 +392,7 @@ namespace Audio
     }
     else
     {
-      Data->LoopEndFrame = (unsigned)(time * AudioSystemInternal::SampleRate);
+      Data->LoopEndFrame = (unsigned)(time * AudioSystemInternal::SystemSampleRate);
     }
   }
 
@@ -417,7 +417,7 @@ namespace Audio
     }
     else
     {
-      Data->LoopTailFrames = (unsigned)(time * AudioSystemInternal::SampleRate);
+      Data->LoopTailFrames = (unsigned)(time * AudioSystemInternal::SystemSampleRate);
     }
   }
 
@@ -466,7 +466,7 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        Data->VolumeValues.SetValues(Volume, newVolume, (unsigned)(time * AudioSystemInternal::SampleRate));
+        Data->VolumeValues.SetValues(Volume, newVolume, (unsigned)(time * AudioSystemInternal::SystemSampleRate));
       }
     }
   }
@@ -508,7 +508,7 @@ namespace Audio
         {
           Data->InterpolatingPitch = true;
           Data->PitchValues.SetValues(PitchFactor, Math::Pow(2.0f, pitchCents / 1200.0f),
-            (unsigned)(time * AudioSystemInternal::SampleRate));
+            (unsigned)(time * AudioSystemInternal::SystemSampleRate));
         }
         else
           PitchFactor = Math::Pow(2.0f, pitchCents / 1200.0f);
@@ -552,12 +552,12 @@ namespace Audio
         Data->CrossFading = true;
         Data->CrossFadeFrameIndex = 0;
         Data->CrossFadeResampleIndex = 0;
-        Data->CrossFadeSamples.Resize((unsigned)(Data->CrossFadeTime * AudioSystemInternal::SampleRate));
+        Data->CrossFadeSamples.Resize((unsigned)(Data->CrossFadeTime * AudioSystemInternal::SystemSampleRate));
         Data->CrossFadeVolumeInterpolator.SetValues(1.0f, 0.0f, Data->CrossFadeSamples.Size());
         Asset->GetBuffer(Data->CrossFadeSamples.Data(), Data->FrameIndex, Data->CrossFadeSamples.Size());
       }
 
-      Data->FrameIndex = (unsigned)(seconds * gAudioSystem->SampleRate);
+      Data->FrameIndex = (unsigned)(seconds * gAudioSystem->SystemSampleRate);
       if (Data->FrameIndex > Data->EndFrame)
         Data->FrameIndex = Data->EndFrame;
       else if (Data->FrameIndex < Data->StartFrame)
@@ -981,7 +981,7 @@ namespace Audio
 
       Virtual = false;
       Data->InterpolatingVolume = true;
-      Data->VolumeValues.SetValues(0.0f, Volume, (unsigned)(0.1f * AudioSystemInternal::SampleRate));
+      Data->VolumeValues.SetValues(0.0f, Volume, (unsigned)(0.1f * AudioSystemInternal::SystemSampleRate));
     }
   }
 
@@ -1027,7 +1027,7 @@ namespace Audio
       ResetMusicBeats();
 
       // Determine the number of frames for the cross-fade
-      unsigned fadeSize = (unsigned)(Data->CrossFadeTime * AudioSystemInternal::SampleRate);
+      unsigned fadeSize = (unsigned)(Data->CrossFadeTime * AudioSystemInternal::SystemSampleRate);
       if (Data->LoopTailFrames > 0 && !Asset->GetStreaming())
         fadeSize = Data->LoopTailFrames;
 
@@ -1039,8 +1039,8 @@ namespace Audio
       Data->CrossFadeVolumeInterpolator.SetValues(1.0f, 0.0f, fadeSize);
 
       // We can only get a second of samples at a time
-      if (fadeSize > AudioSystemInternal::SampleRate)
-        fadeSize = AudioSystemInternal::SampleRate;
+      if (fadeSize > AudioSystemInternal::SystemSampleRate)
+        fadeSize = AudioSystemInternal::SystemSampleRate;
 
       // Adjust to the number of samples
       fadeSize *= Asset->GetChannels();
@@ -1201,7 +1201,7 @@ namespace Audio
       return;
 
     // Get a second of new samples
-    unsigned newSamples = AudioSystemInternal::SampleRate * channels;
+    unsigned newSamples = AudioSystemInternal::SystemSampleRate * channels;
 
     // If that's too many, adjust the size
     if (sampleIndex + newSamples > Data->CrossFadeVolumeInterpolator.GetTotalFrames() * channels)

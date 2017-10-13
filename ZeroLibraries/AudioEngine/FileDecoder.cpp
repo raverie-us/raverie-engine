@@ -111,7 +111,7 @@ namespace Audio
     int error;
     for (short i = 0; i < Channels; ++i)
     {
-      Decoders[i] = opus_decoder_create(AudioSystemInternal::SampleRate, 1, &error);
+      Decoders[i] = opus_decoder_create(AudioSystemInternal::SystemSampleRate, 1, &error);
 
       // If there was an error creating the decoder, set the failed message and delete the buffer
       if (error < 0)
@@ -253,7 +253,7 @@ namespace Audio
     // Create new decoders
     int error;
     for (short i = 0; i < Channels; ++i)
-      Decoders[i] = opus_decoder_create(AudioSystemInternal::SampleRate, 1, &error);
+      Decoders[i] = opus_decoder_create(AudioSystemInternal::SystemSampleRate, 1, &error);
 
     AddDecodingTask();
   }
@@ -336,7 +336,7 @@ namespace Audio
       opus_decoder_destroy(Decoder);
 
     int error;
-    Decoder = opus_decoder_create(AudioSystemInternal::SampleRate, PacketEncoder::Channels, &error);
+    Decoder = opus_decoder_create(AudioSystemInternal::SystemSampleRate, PacketEncoder::Channels, &error);
   }
 
   //************************************************************************************************

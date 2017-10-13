@@ -107,10 +107,10 @@ namespace Audio
   {
     VolumeStart = startVolume;
     Volume = endVolume;
-    unsigned attackFrames = (unsigned)(attackTime * AudioSystemInternal::SampleRate);
-    ReleaseFrames = (unsigned)(releaseTime * AudioSystemInternal::SampleRate);
-    TotalFrames = (unsigned)(totalTime * AudioSystemInternal::SampleRate);
-    DelayFrames = (unsigned)(delayTime * AudioSystemInternal::SampleRate);
+    unsigned attackFrames = (unsigned)(attackTime * AudioSystemInternal::SystemSampleRate);
+    ReleaseFrames = (unsigned)(releaseTime * AudioSystemInternal::SystemSampleRate);
+    TotalFrames = (unsigned)(totalTime * AudioSystemInternal::SystemSampleRate);
+    DelayFrames = (unsigned)(delayTime * AudioSystemInternal::SystemSampleRate);
     if (DelayFrames > 0)
       Delay = true;
     else

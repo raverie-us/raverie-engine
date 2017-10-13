@@ -32,21 +32,6 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInterface::Update()
   {
-    // Lock to change shared variables
-    System->LockObject.Lock();
-
-    // If we need to reset Port Audio, change the bool before unlocking, then reset
-    if (System->ResetPA)
-    {
-      System->ResetPA = false;
-      System->LockObject.Unlock();
-
-      System->ResetIO();
-    }
-    // Otherwise just unlock
-    else
-      System->LockObject.Unlock();
-
     // Run tasks from the mix thread
     System->HandleTasks();
 
@@ -162,7 +147,7 @@ namespace Audio
   //************************************************************************************************
   unsigned AudioSystemInterface::GetSampleRate()
   {
-    return AudioSystemInternal::SampleRate;
+    return AudioSystemInternal::SystemSampleRate;
   }
 
   //************************************************************************************************
@@ -179,9 +164,9 @@ namespace Audio
     {
       if (channels == 0)
       {
+        SystemOutputChannels = System->AudioIO->GetStreamChannels(OutputStream);
         System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System,
-          System->AudioIO->GetOutputChannels()));
-        SystemOutputChannels = System->AudioIO->GetOutputChannels();
+          SystemOutputChannels));
       }
       else
       {
@@ -228,7 +213,7 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInterface::UseHighLatency(const bool useHigh)
   {
-    System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetUseHighLatency, System, useHigh));
+    System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetLatencyThreaded, System, useHigh));
   }
 
   //************************************************************************************************

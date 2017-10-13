@@ -14,7 +14,8 @@
 #include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
-#include "pa_ringbuffer.h"
+#include "LockFreeQueue.hpp"
+#include "RingBuffer.h"
 
 #include "Definitions.h"
 #include "Resampler.h"
@@ -39,11 +40,12 @@
 #include "Interpolator.h"
 #include "Filters.h"
 #include "AudioInputOutput.h"
-#include "DeviceNotifier.h"
+#ifdef _MSC_VER
+#include "WASAPI.h"
+#endif
 
 #include "MIDI.h"
 #include "Modifiers.h"
-#include "LockFreeQueue.hpp"
 #include "FileEncoder.h"
 #include "FileDecoder.h"
 #include "AudioSystemInterface.h"

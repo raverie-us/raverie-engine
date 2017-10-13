@@ -135,7 +135,7 @@ namespace Audio
       {
         Data->Pausing = true;
         Data->InterpolatingVolume = true;
-        Data->VolumeInterpolator.SetValues(1.0f, 0.0f, (unsigned)(0.02f * AudioSystemInternal::SampleRate));
+        Data->VolumeInterpolator.SetValues(1.0f, 0.0f, (unsigned)(0.02f * AudioSystemInternal::SystemSampleRate));
       }
     }
   }
@@ -156,7 +156,7 @@ namespace Audio
         Data->Pausing = false;
         Data->InterpolatingVolume = true;
         Data->VolumeInterpolator.SetValues(Data->VolumeInterpolator.GetCurrentValue(), 1.0f, 
-          (unsigned)(0.02f * AudioSystemInternal::SampleRate));
+          (unsigned)(0.02f * AudioSystemInternal::SystemSampleRate));
       }
     }
   }

@@ -84,7 +84,7 @@ namespace Audio
         else
           CurrentData.Interpolating = true;
 
-        FramesToInterpolate = (unsigned)(timeToInterpolate * AudioSystemInternal::SampleRate);
+        FramesToInterpolate = (unsigned)(timeToInterpolate * AudioSystemInternal::SystemSampleRate);
         Interpolate->SetValues(PitchFactor, newFactor, (unsigned)FramesToInterpolate);
         TimeToInterpolate = timeToInterpolate;
         CurrentData.FramesProcessed = 0;

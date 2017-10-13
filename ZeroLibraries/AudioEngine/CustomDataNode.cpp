@@ -17,7 +17,7 @@ namespace Audio
     SoundNode(status, name, ID, extInt, false, true, isThreaded), 
     WaitingForSamples(false), 
     Channels(1), 
-    SampleRate(AudioSystemInternal::SampleRate),
+    SampleRate(AudioSystemInternal::SystemSampleRate),
     TotalSamplesInBuffers(0), 
     SamplesInExtraBuffers(0)
   {
@@ -73,7 +73,7 @@ namespace Audio
   //************************************************************************************************
   unsigned CustomDataNode::GetSystemSampleRate()
   {
-    return AudioSystemInternal::SampleRate;
+    return AudioSystemInternal::SystemSampleRate;
   }
 
   //************************************************************************************************
@@ -99,7 +99,8 @@ namespace Audio
     }
     else if (GetSiblingNode())
     {
-      unsigned samplesNeeded = MinimumSamplesNeededInBuffers - TotalSamplesInBuffers + MinimumSamplesNeededInBuffers;
+      unsigned samplesNeeded = MinimumSamplesNeededInBuffers - TotalSamplesInBuffers 
+        + MinimumSamplesNeededInBuffers;
       samplesNeeded -= samplesNeeded % Channels;
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
         GetSiblingNode(), Notify_NeedInputSamples, (void*)new CustomDataSampleRequest(samplesNeeded)));
@@ -109,15 +110,14 @@ namespace Audio
   //************************************************************************************************
   void CustomDataNode::SetMinimumBufferSize()
   {
-    // System mix buffer size accounts for number of channels. 
-    // Channels/SystemChannels accounts for differences in channels.
-    MinimumBufferSize = gAudioSystem->MixBufferSizeThreaded * Channels 
-      / gAudioSystem->SystemChannelsThreaded * 4;
+    if (Channels > 0)
+    {
+      MinimumBufferSize = (unsigned)(AudioSystemInternal::SystemSampleRate * 0.01f * Channels * 4);
 
-    // Make sure the size is a multiple of the number of channels
-    MinimumBufferSize -= MinimumBufferSize % Channels;
-
-    MinimumSamplesNeededInBuffers = MinimumBufferSize * 3;
+      MinimumSamplesNeededInBuffers = MinimumBufferSize * 3;
+    }
+    else
+      MinimumBufferSize = 0;
   }
 
   //************************************************************************************************
