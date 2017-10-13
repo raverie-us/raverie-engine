@@ -354,6 +354,13 @@ void PhysicsEffect::CheckWakeUp()
       return;
     space->ForceAwakeRigidBodies();
   }
+  else if(mFlags.IsSet(EffectFlags::LevelEffect))
+  {
+    PhysicsSpace* space = GetSpace()->has(PhysicsSpace);
+    if(!space)
+      return;
+    space->ForceAwakeRigidBodies();
+  }
 }
 
 void PhysicsEffect::Toggle()
