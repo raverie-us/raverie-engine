@@ -24,6 +24,10 @@ public:
   // ICodeInspector Interface.
   void AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition) override;
 
+  void GetKeywords(Array<Completion>& keywordsOut);
+  void AddKeywords(Array<Completion>& keywordsOut, const Array<String>& keyswords, HashSet<String>& keywordsToSkip);
+  void AddKeywords(Array<Completion>& keywordsOut, const HashMap<String, AttributeInfo>& keyswordsToTest);
+
   // ZilchDocumentResource Interface.
   void GetLibraries(Array<Zilch::LibraryRef>& libraries) override;
   void GetLibrariesRecursive(Array<LibraryRef>& libraries, ResourceLibrary* library);
