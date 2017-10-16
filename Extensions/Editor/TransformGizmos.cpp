@@ -60,7 +60,6 @@ void ObjectTransformGizmo::Initialize(CogInitializer& initializer)
   mTransform = GetOwner()->has(Transform);
 
   ConnectThisTo(GetOwner(), Events::MouseDragStart, OnMouseDragStart);
-  ConnectThisTo(GetOwner(), Events::GizmoModified, OnGizmoModified);
   ConnectThisTo(GetOwner(), Events::MouseDragEnd, OnMouseDragEnd);
   ConnectThisTo(GetSpace(), Events::FrameUpdate, OnFrameUpdate);
 }
@@ -211,7 +210,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
   // We want everything to be in the same operation batch so that it's
   // all undone at the same time
   queue->BeginBatch();
-  queue->SetActiveBatchName("TransformGizmo_Batch");
+  queue->SetActiveBatchName("MultiTransform");
 
   forRange(ObjectTransformState& objectState, mObjectStates.All())
   {
@@ -494,9 +493,9 @@ void ObjectTranslateGizmo::Serialize(Serializer& stream)
 //******************************************************************************
 void ObjectTranslateGizmo::Initialize(CogInitializer& initializer)
 {
-  ConnectThisTo(GetOwner(), Events::GizmoModified, OnGizmoModified);
-
   ObjectTransformGizmo::Initialize(initializer);
+
+  ConnectThisTo(GetOwner( ), Events::TranslateGizmoModified, OnGizmoModified);
 }
 
 //******************************************************************************
@@ -543,18 +542,23 @@ void ObjectTranslateGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 }
 
 //******************************************************************************
-void ObjectTranslateGizmo::OnGizmoModified(GizmoUpdateEvent* e)
+void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* e)
 {
-  Vec3 worldMovement = e->mMouseWorldMovement;
-
+  TranslateGizmo* baseGizmo = GetOwner( )->has(TranslateGizmo);
   GizmoDrag* gizmoDrag = e->GetGizmo( )->has(GizmoDrag);
   bool viewPlaneGizmo = (gizmoDrag->mDragMode == GizmoDragMode::ViewPlane);
 
-    // Special command, possibly modifies 'worldMovement'
-  if(viewPlaneGizmo && Keyboard::Instance->KeyIsDown(Keys::V))
-    SnapToSurface(e, &worldMovement);
+  Vec3 movement = e->mProcessedMovement;
 
-  TranslateGizmo* baseGizmo = GetOwner()->has(TranslateGizmo);
+  // Cannot use singularly snapped ProcessedMovement when operating on multiple
+  // objects.  They must be snapped individually in their own local space.
+  bool multiTransform = mObjectStates.Size( ) > 1;
+  if(multiTransform)
+    movement = e->mMouseWorldMovement;
+
+    // Special command, possibly modifies 'deltaMovement'
+  if(viewPlaneGizmo && Keyboard::Instance->KeyIsDown(Keys::V))
+    SnapToSurface(e, &movement);
 
   forRange(ObjectTransformState& objectState, mObjectStates.All())
   {
@@ -571,10 +575,18 @@ void ObjectTranslateGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     inverseMatrix = transform.GetParentWorldMatrix();
     inverseMatrix.Invert();
   
-    Vec3 localMovement = Math::TransformNormal(inverseMatrix, worldMovement);
+    Vec3 localMovement = Math::TransformNormal(inverseMatrix, movement);
 
-    objectState.EndTranslation = baseGizmo->TranslateFromDrag(gizmoDrag,
-      objectState.StartTranslation, localMovement, transform.GetWorldRotation( ));
+    // If snapping multiple objects then snap them one at a time in their local space.
+    if(multiTransform)
+    {
+      objectState.EndTranslation = baseGizmo->TranslateFromDrag(gizmoDrag,
+        objectState.StartTranslation, localMovement, objectState.StartRotation);
+    }
+    else  // If single object, then the processed movement will already be snapped.
+    {
+      objectState.EndTranslation = objectState.StartTranslation + localMovement;
+    }
 
     transform.SetLocalTranslation(objectState.EndTranslation);
   }
@@ -666,14 +678,15 @@ void ObjectScaleGizmo::Serialize(Serializer& stream)
   ObjectTransformGizmo::Serialize(stream);
 
   SerializeNameDefault(mAffectTranslation, true);
+  SerializeNameDefault(mAffectScale, true);
 }
 
 //******************************************************************************
 void ObjectScaleGizmo::Initialize(CogInitializer& initializer)
 {
-  ConnectThisTo(GetOwner(), Events::GizmoModified, OnGizmoModified);
-
   ObjectTransformGizmo::Initialize(initializer);
+
+  ConnectThisTo(GetOwner( ), Events::ScaleGizmoModified, OnGizmoModified);
 }
 
 //******************************************************************************
@@ -691,7 +704,7 @@ void ObjectScaleGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 }
 
 //******************************************************************************
-void ObjectScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
+void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* e)
 {
   Vec3 worldMovement = e->mMouseWorldMovement;
 
@@ -732,9 +745,12 @@ void ObjectScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     Vec3 newScale = baseGizmo->ScaleFromDrag(gizmoDrag, distance,
       localMovement, objectState.StartScale, transform.GetWorldRotation( ));
 
-    // Final object scale (at this step) of gizmo modification.
-    objectState.EndScale = newScale;
-    transform.SetLocalScale(newScale);
+    if(mAffectScale || !multiTransform)
+    {
+      // Final object scale (at this step) of gizmo modification.
+      objectState.EndScale = newScale;
+      transform.SetLocalScale(newScale);
+    }
 
     const float cRotationLengthLimit = 0.001f;
     if(multiTransform && mAffectTranslation)
@@ -780,14 +796,15 @@ void ObjectRotateGizmo::Serialize(Serializer& stream)
   ObjectTransformGizmo::Serialize(stream);
 
   SerializeNameDefault(mAffectTranslation, true);
+  SerializeNameDefault(mAffectRotation, true);
 }
 
 //******************************************************************************
 void ObjectRotateGizmo::Initialize(CogInitializer& initializer)
 {
-  ConnectThisTo(GetOwner(), Events::RingGizmoModified, OnGizmoModified);
-
   ObjectTransformGizmo::Initialize(initializer);
+
+  ConnectThisTo(GetOwner( ), Events::RotateGizmoModified, OnGizmoModified);
 
   mRotateGizmo = true;
 }
@@ -799,16 +816,16 @@ void ObjectRotateGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 }
 
 //******************************************************************************
-void ObjectRotateGizmo::OnGizmoModified(RingGizmoEvent* e)
+void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* e)
 {
-  Vec3 selectedAxis = e->mWorldRotationAxis;
+  Vec3 selectedAxis = e->mSelectedAxis;
   
   Vec3 gizmoPos = mTransform->GetWorldTranslation();
   RotateGizmo* baseGizmo = GetOwner()->has(RotateGizmo);
 
-  float deltaOnAxis = baseGizmo->mDeltaRotation;
+  float deltaOnAxis = e->mProcessedRotation;
 
-  // If snapping is on, but there is no change in the snap-angle - then there's
+  // If snapping is on, but there's no change in the snap-angle - then there's
   // no point to allow object updating.
   if(baseGizmo->GetSnapping() && deltaOnAxis == 0.0f)
     return;
@@ -830,25 +847,28 @@ void ObjectRotateGizmo::OnGizmoModified(RingGizmoEvent* e)
       continue;
 
     //save the old transform so that we can properly apply the deltas to in-world objects
-    Mat4 oldMat = transform.GetParentWorldMatrix();
+    Mat4 oldMat = transform.GetParentWorldMatrix( );
     Mat4 inverseMatrix(Mat4::cIdentity);
     inverseMatrix = oldMat.Inverted( );
 
-    Vec3 localAxis = Math::TransformNormal(inverseMatrix, selectedAxis).AttemptNormalized( );
+    if(mAffectRotation || !multiTransform)
+    {
+      Vec3 localAxis = Math::TransformNormal(inverseMatrix, selectedAxis).AttemptNormalized( );
 
-    //Construct a local rotation
-    Quat localRotation;
-    Math::ToQuaternion(localAxis, deltaOnAxis, &localRotation);
+      //Construct a local rotation
+      Quat localRotation;
+      Math::ToQuaternion(localAxis, deltaOnAxis, &localRotation);
 
-    //Add the current rotation to the starting rotation
-    Quat newRotation = localRotation * transform.GetLocalRotation();
+      //Add the current rotation to the starting rotation
+      Quat newRotation = localRotation * transform.GetLocalRotation( );
 
-    //Normalize to prevent rounding errors
-    newRotation.Normalize( );
+      //Normalize to prevent rounding errors
+      newRotation.Normalize( );
 
-    // Set the rotation
-    objectState.EndRotation = newRotation;
-    transform.SetLocalRotation(newRotation);
+      // Set the rotation
+      objectState.EndRotation = newRotation;
+      transform.SetLocalRotation(newRotation);
+    }
 
     const float cRotationLengthLimit = 0.001f;
     if(multiTransform && mAffectTranslation)

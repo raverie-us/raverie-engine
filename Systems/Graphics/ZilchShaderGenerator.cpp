@@ -56,11 +56,11 @@ void ZilchShaderGenerator::Initialize()
   // max target count needs to be queried by the renderer
   ZilchShaderSettings* settings = mSettings;
 
-  settings->mNameSettings.mAllowedClassAttributes.Insert("Protected");
-  settings->mNameSettings.mAllowedClassAttributes.Insert("CoreVertex");
-  settings->mNameSettings.mAllowedClassAttributes.Insert("RenderPass");
-  settings->mNameSettings.mAllowedClassAttributes.Insert("PostProcess");
-  settings->mNameSettings.mAllowedFieldAttributes.Insert("Hidden");
+  settings->mNameSettings.mAllowedClassAttributes.Insert("Protected", AttributeInfo());
+  settings->mNameSettings.mAllowedClassAttributes.Insert("CoreVertex", AttributeInfo());
+  settings->mNameSettings.mAllowedClassAttributes.Insert("RenderPass", AttributeInfo());
+  settings->mNameSettings.mAllowedClassAttributes.Insert("PostProcess", AttributeInfo());
+  settings->mNameSettings.mAllowedFieldAttributes.Insert("Hidden", AttributeInfo());
 
   ZilchShaderSettingsLoader settingsLoader;
   String settingsDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchFragmentSettings");
@@ -191,7 +191,8 @@ void ZilchShaderGenerator::Initialize()
   mSamplerAttributeValues["TextureCompareFuncNotEqual"]     = SamplerSettings::CompareFunc(TextureCompareFunc::NotEqual);
 
   // Add names to list of allowed attributes in zilch fragments
-  settings->mNameSettings.mAllowedFieldAttributes.Append(mSamplerAttributeValues.Keys());
+  forRange(String& attribute, mSamplerAttributeValues.Keys())
+    settings->mNameSettings.mAllowedFieldAttributes.Insert(attribute, AttributeInfo());
 }
 
 // Quick fix function for turning a zilch any into a string (the to-string function isn't always correct

@@ -531,7 +531,7 @@ namespace Audio
       // If the output state has changed, notify the non-threaded node
       if (ValidOutputLastMix != hasOutput && GetSiblingNode())
           gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
-            GetSiblingNode(), ValidOutputLastMix));
+            GetSiblingNode(), hasOutput));
 
       ValidOutputLastMix = hasOutput;
 

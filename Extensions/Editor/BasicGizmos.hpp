@@ -73,6 +73,17 @@ Vec3 GetSnappedVectorWorldAxes(Vec3Param start, Vec3Param end, float snapDistanc
 }  // namespace GizmoSnapping
 
 
+/// Set the bases of operation for a gizmo to use when being manipulated.
+/// <param name="Local">
+///   Set bases of a gizmo to inherit from an object selection.
+/// </param>
+/// <param name="World">
+///   Set the bases to match the standard world xyz bases.
+/// </param>
+DeclareEnum2(GizmoBasis, Local, World);
+
+
+
 //------------------------------------------------------------ Simple Gizmo Base
 class SimpleGizmoBase : public Component
 {
@@ -292,7 +303,7 @@ public:
   void OnGizmoModified(GizmoUpdateEvent* e);
 
   Vec3 TranslateFromDrag(GizmoDrag* gizmoDrag, Vec3Param startPosition,
-    Vec3Param localMovement, QuatParam rotation);
+    Vec3Param movement, QuatParam rotation);
 
   /// Start Position getter (we want it to be read only).
   Vec3 GetStartPosition();
@@ -349,6 +360,7 @@ public:
   /// Copied from 'GizmoUpdateEvent' when gizmo is modified.
   GizmoDragMode::Enum mDragMode;
 
+
   /// Scaled mouse movement based on grab-point vs. gizmo origin
   /// (note: movement in local gizmo-orientation).
   Vec3 mScaledLocalMovement;
@@ -358,12 +370,7 @@ public:
   float mSnapDistance;
   GizmoSnapMode::Enum mSnapMode;
 
-  // Outputs Below:
-
-  /// Denotes if the scale is increasing or decreasing along each axis.
   Vec3 mDirection;
-  /// Resultant scale change for an on-going gizmo drag.
-  Vec3 mChangeInScale;
 };
 
 //------------------------------------------------------------------Rotate Gizmo
@@ -390,15 +397,6 @@ public:
   bool mSnapping;
   float mSnapAngle;
   float mPreviousSnap;
-
-  /// Direction of the rotation, either positive or negative.
-  float mDirection;
-  /// Resultant rotation change for an on-going gizmo drag.
-  float mChangeInRotation;
-  /// Resultant delta-rotation from this step in an on-going gizmo drag.
-  /// - Note: Unlike 'ChangeInRotation' this delta will contain a snapped angle,
-  ///         if applicable.
-  float mDeltaRotation;
 };
 
 

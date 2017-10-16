@@ -119,6 +119,11 @@ namespace Zilch
     static void GetOriginalString(Call& call, ExceptionReport& report);
     static void FindRuneIndexFromIterator(Call& call, ExceptionReport& report);
 
+    // Checks if the iterators are both referencing the same string
+    static bool ValidateIteratorPair(RuneIterator& rhs, RuneIterator& lhs);
+    // Checks to makes sure the start and end iterators are in a valid arrangement
+    static bool ValidateIteratorOrder(RuneIterator& start, RuneIterator& end);
+
     // The original string this range was made from. Also keeps this string alive.
     StringRange mRange;
   };

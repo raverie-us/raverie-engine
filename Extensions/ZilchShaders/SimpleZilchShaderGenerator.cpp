@@ -28,10 +28,10 @@ SimpleZilchShaderGenerator::SimpleZilchShaderGenerator(BaseShaderTranslator* tra
   settings->mShaderDefinitionSettings.AddVertexDefinition("Normal", "Real3");
   settings->mShaderDefinitionSettings.AddVertexDefinition("Position", "Real3");
 
-  settings->mNameSettings.mAllowedClassAttributes.Insert("Protected");
-  settings->mNameSettings.mAllowedClassAttributes.Insert("CoreVertex");
-  settings->mNameSettings.mAllowedClassAttributes.Insert("RenderPass");
-  settings->mNameSettings.mAllowedClassAttributes.Insert("PostProcess");
+  settings->mNameSettings.mAllowedClassAttributes.Insert("Protected", AttributeInfo());
+  settings->mNameSettings.mAllowedClassAttributes.Insert("CoreVertex", AttributeInfo());
+  settings->mNameSettings.mAllowedClassAttributes.Insert("RenderPass", AttributeInfo());
+  settings->mNameSettings.mAllowedClassAttributes.Insert("PostProcess", AttributeInfo());
   mSettings = settings;
 
   // If no translator was passed in then just default to glsl130 for now

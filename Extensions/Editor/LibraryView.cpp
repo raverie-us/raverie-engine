@@ -1214,9 +1214,14 @@ void LibraryView::OnSearchDataModified(Event* e)
   if(mSearchBox->mSearchBar->HasFocus())
   {
     if(mTreeView->GetActive())
+    {
       mTreeView->SelectFirstRow();
+      mTreeView->ShowRow(mPrimaryCommandIndex);
+    }
     else if(mTileView->GetActive())
+    {
       mTileView->SelectFirstTile();
+    }
   }
   else if(mDataSelection)
   {

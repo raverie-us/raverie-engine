@@ -14,17 +14,10 @@ namespace Audio
 
   //************************************************************************************************
   AudioInputOutput::AudioInputOutput() :
-    MixedOutputBufferSizeSamples(0),
-    MixedOutputBufferSizeFrames(0),
-    WriteBufferThreaded(0),
-    ReadBufferThreaded(0),
     OutputStreamLatency(LatencyValues::LowLatency),
-    MixedBufferIndex(0)
+    MixedOutputBuffer(nullptr)
   {
-    memset(OutputBufferFramesPerLatency, 0, sizeof(unsigned) * LatencyValues::Count);
-
-    // Null first buffer so we can check if they've been created yet
-    MixedOutputBuffersThreaded[0] = nullptr;
+    memset(OutputBufferSizePerLatency, 0, sizeof(unsigned) * LatencyValues::Count);
 
     InputRingBuffer.Initialize(sizeof(float), InputBufferSize, InputBuffer);
   }
@@ -32,30 +25,14 @@ namespace Audio
   //************************************************************************************************
   AudioInputOutput::~AudioInputOutput()
   {
-    // Delete output buffers
-    if (MixedOutputBuffersThreaded[0])
-    {
-      for (unsigned i = 0; i < NumOutputBuffers; ++i)
-        delete MixedOutputBuffersThreaded[i];
-    }
-  }
-
-  //************************************************************************************************
-  float* AudioInputOutput::GetMixedOutputBufferThreaded()
-  {
-    return MixedOutputBuffersThreaded[WriteBufferThreaded];
-  }
-
-  //************************************************************************************************
-  void AudioInputOutput::FinishedMixingBufferThreaded()
-  {
-    WriteBufferThreaded = (WriteBufferThreaded + 1) % NumOutputBuffers;
+    if (MixedOutputBuffer)
+      delete[] MixedOutputBuffer;
   }
 
   //************************************************************************************************
   void AudioInputOutput::WaitUntilOutputNeededThreaded()
   {
-    Counter.WaitAndDecrement();
+    MixThreadSemaphore.WaitAndDecrement();
   }
 
   //************************************************************************************************
@@ -77,15 +54,17 @@ namespace Audio
   //************************************************************************************************
   void AudioInputOutput::SetOutputLatency(LatencyValues::Enum newLatency)
   {
+    // If the setting is the same, don't do anything
     if (newLatency == OutputStreamLatency)
       return;
 
+    // Set the latency variable
     OutputStreamLatency = newLatency;
-
+    // Shut down the output stream so we can change the buffer size
     ShutDownStream(StreamTypes::Output);
-
-    SetUpOutputBuffers(OutputBufferFramesPerLatency[OutputStreamLatency]);
-
+    // Set up the output buffer with the current latency setting
+    SetUpOutputBuffers();
+    // Restart the audio output
     InitializeStream(StreamTypes::Output);
     StartStream(StreamTypes::Output);
   }
@@ -99,83 +78,58 @@ namespace Audio
   //************************************************************************************************
   void AudioInputOutput::InitializeOutputBuffers()
   {
+    // Save the output sample rate and audio channels
     unsigned outputSampleRate = GetStreamSampleRate(StreamTypes::Output);
+    unsigned outputChannels = GetStreamChannels(StreamTypes::Output);
 
-    unsigned& lowLatencyFrames = OutputBufferFramesPerLatency[LatencyValues::LowLatency];
-    lowLatencyFrames = BufferSizeStartValue;
-    while (lowLatencyFrames < (unsigned)(BufferSizeMultiplier * outputSampleRate))
-      lowLatencyFrames += BufferSizeStartValue;
+    // Start at the BufferSizeStartValue
+    unsigned size = BufferSizeStartValue;
+    // We need to get close to a value that accounts for the sample rate and channels
+    float checkValue = (float)BufferSizeMultiplier * outputSampleRate * outputChannels;
+    // Continue multiplying by 2 until we get close enough (buffer must be multiple of 2)
+    while (!IsWithinLimit((float)size, checkValue, 1000.0f))
+      size *= 2;
 
-    unsigned& highLatencyFrames = OutputBufferFramesPerLatency[LatencyValues::HighLatency];
-    highLatencyFrames = BufferSizeStartValue * HighLatencyModifier;
-    while (highLatencyFrames < (unsigned)(BufferSizeMultiplier * HighLatencyModifier * outputSampleRate))
-      highLatencyFrames += BufferSizeStartValue;
+    OutputBufferSizePerLatency[LatencyValues::LowLatency] = size;
+    OutputBufferSizePerLatency[LatencyValues::HighLatency] = size * 4;
 
-    SetUpOutputBuffers(OutputBufferFramesPerLatency[OutputStreamLatency]);
+    SetUpOutputBuffers();
   }
 
   //************************************************************************************************
-  void AudioInputOutput::SetUpOutputBuffers(const unsigned frames)
+  void AudioInputOutput::SetUpOutputBuffers()
   {
-    MixedOutputBufferSizeFrames = frames;
-    MixedOutputBufferSizeSamples = frames * GetStreamChannels(StreamTypes::Output);
+    // If the buffer already exists, delete it
+    if (MixedOutputBuffer)
+      delete[] MixedOutputBuffer;
 
-    // Check if there are existing buffers
-    if (MixedOutputBuffersThreaded[0])
-    {
-      // Delete existing buffers
-      for (int i = 0; i < NumOutputBuffers; ++i)
-        delete MixedOutputBuffersThreaded[i];
-    }
-
-    // Create the output buffers and set them to zero 
-    for (int i = 0; i < NumOutputBuffers; ++i)
-    {
-      MixedOutputBuffersThreaded[i] = new float[MixedOutputBufferSizeSamples];
-      memset(MixedOutputBuffersThreaded[i], 0, MixedOutputBufferSizeSamples * sizeof(float));
-    }
-
+    // Create the buffer at the appropriate size
+    MixedOutputBuffer = new float[OutputBufferSizePerLatency[OutputStreamLatency]];
+    // Set up the OutputRingBuffer with the new buffer
+    OutputRingBuffer.Initialize(sizeof(float), OutputBufferSizePerLatency[OutputStreamLatency], 
+      MixedOutputBuffer);
   }
 
   //************************************************************************************************
   void AudioInputOutput::GetMixedOutputSamples(float* outputBuffer, const unsigned howManySamples)
   {
-    float* mixedBuffer = MixedOutputBuffersThreaded[ReadBufferThreaded];
+    // Save the number of samples available to read
+    unsigned available = OutputRingBuffer.GetReadAvailable();
 
+    // Make sure we don't try to read more samples than are available
     unsigned samples = howManySamples;
+    if (samples > available)
+      samples = available;
 
-    // Make sure we don't go past the end of the buffer
-    if (samples > MixedOutputBufferSizeSamples - MixedBufferIndex)
-      samples = MixedOutputBufferSizeSamples - MixedBufferIndex;
+    // Copy the samples from the OutputRingBuffer
+    OutputRingBuffer.Read((void*)outputBuffer, samples);
 
-    // Copy data into output buffer
-    memcpy(outputBuffer, mixedBuffer + MixedBufferIndex, samples * sizeof(float));
+    // If there weren't enough available, set the rest to 0
+    if (samples < howManySamples)
+      memset(outputBuffer + samples, 0, howManySamples - samples);
 
-    // Advance the buffer position index
-    MixedBufferIndex += samples;
-
-    // Check if we reached the end of the buffer
-    if (MixedBufferIndex >= MixedOutputBufferSizeSamples)
-    {
-      // Increment the buffer read number, wrapping if necessary
-      ReadBufferThreaded = (ReadBufferThreaded + 1) % NumOutputBuffers;
-      // Reset the index
-      MixedBufferIndex = 0;
-
-      // Check if we need to add more samples to the output buffer
-      if (samples < howManySamples)
-      {
-        unsigned previousSamples = samples;
-        samples = howManySamples - previousSamples;
-        mixedBuffer = MixedOutputBuffersThreaded[ReadBufferThreaded];
-        memcpy(outputBuffer + previousSamples, mixedBuffer, samples * sizeof(float));
-        MixedBufferIndex += samples;
-      }
-    }
-
-    if (MixedOutputBufferSizeSamples - MixedBufferIndex <= howManySamples)
-      // Signal the mix thread to mix another buffer
-      Counter.Increment();
+    // Signal the semaphore for the mix thread
+    MixThreadSemaphore.Increment();
   }
 
   //************************************************************************************************
@@ -375,6 +329,7 @@ namespace Audio
       
     info.Status = StreamStatus::Started;
     return StreamStatus::Started;
+
   }
 
   //************************************************************************************************
@@ -503,7 +458,7 @@ namespace Audio
     // Make sure API is already initialized
     if (!ApiInfo)
     {
-      StreamInfoList[StreamTypes::Input].ErrorMessage = 
+      StreamInfoList[StreamTypes::Input].ErrorMessage =
         "Audio API was not successfully initialized, unable to initialize input";
       StreamInfoList[StreamTypes::Input].Status = StreamStatus::Uninitialized;
       return;

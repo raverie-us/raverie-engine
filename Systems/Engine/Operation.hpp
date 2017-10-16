@@ -50,7 +50,7 @@ public:
   typedef BaseInList<OperationLink, Operation, &OperationLink::link> OperationList;
   typedef OperationList::range OperationRange;
 
-  Operation() : mCanPatch(false) {}
+  Operation() : mParent(nullptr) {}
 
   /// Operation memory management.
   static Memory::Heap* sHeap;
@@ -59,14 +59,13 @@ public:
   /// Standard Interface.
   virtual void Undo()=0;
   virtual void Redo()=0;
-
-  /// Patching Interface.
-  virtual void OnSaveStatePatch(Event* e) {};
   
   virtual OperationRange GetChildren( ) { return OperationRange( ); }
 
-  /// Patching available during active 'Redo' state.
-  bool mCanPatch;
+  /// Find the top most ancestor in an Operation hierarchy, if there is one.
+  Operation* FindRoot();
+
+  Operation* mParent;
 
   String mName;
   String mDescription;
@@ -148,12 +147,17 @@ public:
   OperationQueue();
   ~OperationQueue();
 
-  OperationListType Commands;
-  OperationListType RedoCommands;
+  OperationListType mCommands;
+  OperationListType mRedoCommands;
 
   void Undo();
+  /// If the operation passed in has ancestors, then the Undo will be done on
+  /// all operations before the ancestor root of the hierarchy containing 'allBeforeThis'.
   bool Undo(Operation* allBeforeThis);
   void Redo();
+  /// If the operation passed in has ancestors, then the Redo will be done on
+  /// all operations up to and including the ancestor root of the hierarchy
+  /// containing 'upToAndThis'.
   bool Redo(Operation* upToAndThis);
 
   void ClearUndo();

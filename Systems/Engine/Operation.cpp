@@ -38,10 +38,12 @@ ZilchDefineType(OperationQueueEvent, builder, type)
 //-------------------------------------------------------------------- Operation
 ZilchDefineType(Operation, builder, type)
 {
-  ZilchBindFieldProperty(mName);
-  ZilchBindFieldProperty(mDescription);
+  ZilchBindFieldGetter(mParent);
+  ZilchBindField(mName);
+  ZilchBindField(mDescription);
 
-  ZilchBindGetterProperty(Children);
+  ZilchBindGetter(Children);
+  ZilchBindMethod(FindRoot);
 
   ZeroBindEvent(Events::OperationQueued, OperationQueueEvent);
   ZeroBindEvent(Events::OperationUndo, OperationQueueEvent);
@@ -60,6 +62,16 @@ void* Operation::operator new(size_t size)
 void Operation::operator delete(void* pMem, size_t size)
 {
   return sHeap->Deallocate(pMem, size);
+}
+
+//******************************************************************************
+Operation* Operation::FindRoot()
+{
+  Operation* root = this;
+  while(root->mParent != nullptr)
+    root = root->mParent;
+
+  return root;
 }
 
 //------------------------------------------------------------------- Meta Proxy
@@ -171,13 +183,13 @@ OperationQueue::~OperationQueue()
 //******************************************************************************
 void OperationQueue::Undo( )
 {
-  if(Commands.Empty( ))
+  if(mCommands.Empty( ))
     return;
 
-  Operation* last = &Commands.Back( );
+  Operation* last = &mCommands.Back( );
   last->Undo( );
-  Commands.Erase(last);
-  RedoCommands.PushFront(last);
+  mCommands.Erase(last);
+  mRedoCommands.PushFront(last);
 
   OperationQueueEvent event(last);
   DispatchEvent(Events::OperationUndo, &event);
@@ -186,16 +198,19 @@ void OperationQueue::Undo( )
 //******************************************************************************
 bool OperationQueue::Undo(Operation* allbeforeThis)
 {
-  if(allbeforeThis == nullptr || Commands.Empty( ))
+  // Call most likely came from script.
+  if(allbeforeThis == nullptr || mCommands.Empty( ))
     return false;
+
+  Operation* searchCriteria = allbeforeThis->FindRoot();
 
   bool operationFound = false;
   Array<Operation*> toErase;
 
-  OperationListType::reverse_range rRange(Commands.Begin( ), Commands.End( ));
+  OperationListType::reverse_range rRange(mCommands.Begin( ), mCommands.End( ));
   forRange(Operation& operation, rRange.All( ))
   {
-    if(&operation == allbeforeThis)
+    if(&operation == searchCriteria)
     {
       operationFound = true;
       break;
@@ -206,7 +221,8 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
 
   if(!operationFound)
   {
-    Warn("Supplied operation does not exist in Undo Queue.  Undo will not occur.");
+    Warn("Supplied operation does not exist in the Undo Queue, or does not \
+      have an ancestor in the Undo Queue.  Undo will not occur.");
     return operationFound;
   }
 
@@ -214,8 +230,8 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
   for(int i = 0; i < size; ++i)
   {
     toErase[i]->Undo( );
-    Commands.Erase(toErase[i]);
-    RedoCommands.PushFront(toErase[i]);
+    mCommands.Erase(toErase[i]);
+    mRedoCommands.PushFront(toErase[i]);
   }
 
   return operationFound;
@@ -224,12 +240,12 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
 //******************************************************************************
 void OperationQueue::Redo( )
 {
-  if(!RedoCommands.Empty( ))
+  if(!mRedoCommands.Empty( ))
   {
-    Operation* first = &RedoCommands.Front( );
+    Operation* first = &mRedoCommands.Front( );
     first->Redo( );
-    RedoCommands.Erase(first);
-    Commands.PushBack(first);
+    mRedoCommands.Erase(first);
+    mCommands.PushBack(first);
 
     OperationQueueEvent event(first);
     DispatchEvent(Events::OperationRedo, &event);
@@ -240,18 +256,20 @@ void OperationQueue::Redo( )
 //******************************************************************************
 bool OperationQueue::Redo(Operation* upToAndThis)
 {
-    // Call most likely came from script.
-  if(upToAndThis == nullptr || RedoCommands.Empty())
+  // Call most likely came from script.
+  if(upToAndThis == nullptr || mRedoCommands.Empty())
     return false;
+
+  Operation* searchCriteria = upToAndThis->FindRoot();
 
   bool operationFound = false;
   Array<Operation*> toErase;
 
-  forRange(Operation& operation, RedoCommands.All( ))
+  forRange(Operation& operation, mRedoCommands.All( ))
   {
     toErase.PushBack(&operation);
 
-    if(&operation == upToAndThis)
+    if(&operation == searchCriteria)
     {
       operationFound = true;
       break;
@@ -261,7 +279,8 @@ bool OperationQueue::Redo(Operation* upToAndThis)
 
   if(!operationFound)
   {
-    Warn("Supplied operation does not exist in Redo Queue.  Redo will not occur.");
+    Warn("Supplied operation does not exist in the Redo Queue, or does not \
+      have an ancestor in the Redo Queue.  Redo will not occur.");
     return operationFound;
   }
 
@@ -269,8 +288,8 @@ bool OperationQueue::Redo(Operation* upToAndThis)
   for(int i = 0; i < size; ++i)
   {
     toErase[i]->Redo();
-    RedoCommands.Erase(toErase[i]);
-    Commands.PushBack(toErase[i]);
+    mRedoCommands.Erase(toErase[i]);
+    mCommands.PushBack(toErase[i]);
   }
 
   return operationFound;
@@ -290,13 +309,13 @@ void DeleteObjectsInTest(BaseInList<baseLinkType, type>& container)
 //******************************************************************************
 void OperationQueue::ClearUndo()
 {
-  DeleteObjectsIn(Commands);
+  DeleteObjectsIn(mCommands);
 }
 
 //******************************************************************************
 void OperationQueue::ClearRedo()
 {
-  DeleteObjectsIn(RedoCommands);
+  DeleteObjectsIn(mRedoCommands);
 }
 
 //******************************************************************************
@@ -309,13 +328,13 @@ void OperationQueue::ClearAll()
 //******************************************************************************
 OperationListRange OperationQueue::GetCommands( )
 {
-  return Commands.All();
+  return mCommands.All();
 }
 
 //******************************************************************************
 OperationListRange OperationQueue::GetRedoCommands( )
 {
-  return RedoCommands.All( );
+  return mRedoCommands.All( );
 }
 
 //******************************************************************************
@@ -324,11 +343,12 @@ void OperationQueue::Queue(Operation* command)
   if(ActiveBatch)
   {
     ActiveBatch->BatchedCommands.PushBack(command);
+    command->mParent = ActiveBatch;
   }
   else
   {
     ClearRedo();
-    Commands.PushBack(command);
+    mCommands.PushBack(command);
 
     // Do NOT queue any operations that come about through updating the history
     // window, as that is what responds to 'OperationQueued'
@@ -371,8 +391,12 @@ void OperationQueue::BeginBatch()
 {
   if(ActiveBatch)
   {
+    OperationBatch* parentBatch = ActiveBatch;
+
     BatchStack.PushBack(ActiveBatch);
     ActiveBatch = new OperationBatch();
+
+    ActiveBatch->mParent = parentBatch;
   }
   else
   {
@@ -416,6 +440,9 @@ void OperationQueue::EndBatch()
       ActiveBatch->BatchedCommands.Erase(operation);
       previous->BatchedCommands.PushBack(operation);
 
+      // Promote parent.
+      operation->mParent = ActiveBatch->mParent;
+
       SafeDelete(ActiveBatch);
     }
     // Normal batch.
@@ -444,13 +471,16 @@ void OperationQueue::EndBatch()
       {
         Operation* operation = &ActiveBatch->GetChildren( ).Front( );
         ActiveBatch->BatchedCommands.Erase(operation);
-        Commands.PushBack(operation);
+        mCommands.PushBack(operation);
+
+        // Promote parent.
+        operation->mParent = ActiveBatch->mParent;
 
         SafeDelete(ActiveBatch);
       }
       else if(operationCount != 0)
       {
-        Commands.PushBack(ActiveBatch);
+        mCommands.PushBack(ActiveBatch);
       }
 
       // Do NOT queue any operations that come about through updating the history
@@ -459,7 +489,7 @@ void OperationQueue::EndBatch()
       sListeningForSideEffects = false;
 
       // ONLY send out the queue event when the root-batch in the stack has ended.
-      OperationQueueEvent event(&Commands.Back());
+      OperationQueueEvent event(&mCommands.Back());
       DispatchEvent(Events::OperationQueued, &event);
 
       sListeningForSideEffects = prevSideEffects;

@@ -352,33 +352,7 @@ void ObjectTransformTool::OnKeyDown(KeyboardEvent* e)
 {
   if(!e->CtrlPressed && e->Key == Keys::X)
   {
-    mBasis = (GizmoBasis::Enum)!mBasis;
-
-    Cog* gizmo = mGizmo.ToCog();
-    if(gizmo != nullptr)
-    {
-      gizmo->has(ObjectTransformGizmo)->mBasis = mBasis;
-
-      if(mBasis == GizmoBasis::Local)
-      {
-        MetaSelection* selection = Z::gEditor->GetSelection();
-        Handle object = selection->GetPrimary();
-
-        MetaTransform* metaTransform = object.StoredType->HasInherited<MetaTransform>();
-        MetaTransformInstance transform = metaTransform->GetInstance(object);
-
-        if(transform.IsNotNull())
-        {
-          Transform* t = gizmo->has(Transform);
-          Vec3 translation = transform.GetWorldTranslation();
-          t->SetWorldTranslation(translation);
-
-          Quat rotation = transform.GetWorldRotation();
-          t->SetWorldRotation(rotation);
-        }
-      }
-    }
-
+    SetBasis((GizmoBasis::Enum)!mBasis);
     e->Handled = true;
   }
 
@@ -423,7 +397,7 @@ void ObjectTransformTool::SetBasis(GizmoBasis::Enum basis)
   mBasis = basis;
   Cog* gizmo = mGizmo.ToCog();
   if(gizmo)
-    gizmo->has(ObjectTransformGizmo)->mBasis = basis;
+    gizmo->has(ObjectTransformGizmo)->SetBasis(basis);
 }
 
 /******************************************************************************/
@@ -437,7 +411,7 @@ void ObjectTransformTool::SetPivot(GizmoPivot::Enum pivot)
   mPivot = pivot;
   Cog* gizmo = mGizmo.ToCog();
   if(gizmo)
-    gizmo->has(ObjectTransformGizmo)->mPivot = pivot;
+    gizmo->has(ObjectTransformGizmo)->SetPivot(pivot);
 }
 
 /******************************************************************************/
@@ -573,12 +547,14 @@ void ObjectTranslateTool::CopyPropertiesToGizmo()
 
   UpdateGrabState(mGrab);
 
-  gizmo->has(TranslateGizmo)->mSnapping = mSnapping;
-  gizmo->has(TranslateGizmo)->mSnapDistance = mSnapDistance;
-  gizmo->has(TranslateGizmo)->mSnapMode = mSnapMode;
+  TranslateGizmo* translateGizmo = gizmo->has(TranslateGizmo);
+  translateGizmo->mSnapping = mSnapping;
+  translateGizmo->mSnapDistance = mSnapDistance;
+  translateGizmo->mSnapMode = mSnapMode;
 
-  gizmo->has(ObjectTranslateGizmo)->mBasis = mBasis;
-  gizmo->has(ObjectTranslateGizmo)->mPivot = mPivot;
+  ObjectTranslateGizmo* objectTranslateGizmo = gizmo->has(ObjectTranslateGizmo);
+  objectTranslateGizmo->SetBasis(mBasis);
+  objectTranslateGizmo->SetPivot(mPivot);
 }
 
 //---------------------------------------------------------- ObjectScaleTool ---
@@ -593,6 +569,7 @@ ZilchDefineType(ObjectScaleTool, builder, type)
   ZilchBindGetterSetterProperty(SnapMode);
 
   ZilchBindGetterSetterProperty(AffectTranslation);
+  ZilchBindGetterSetterProperty(AffectScale);
 }
 
 /******************************************************************************/
@@ -605,7 +582,8 @@ void ObjectScaleTool::Serialize(Serializer& stream)
 {
   ObjectTransformTool::Serialize(stream);
   SerializeEnumName(GizmoSnapMode, mSnapMode);
-  SerializeName(mAffectTranslation);
+  SerializeNameDefault(mAffectTranslation, true);
+  SerializeNameDefault(mAffectScale, true);
 }
 
 /******************************************************************************/
@@ -685,6 +663,21 @@ void ObjectScaleTool::SetAffectTranslation(bool affectTranslation)
 }
 
 /******************************************************************************/
+bool ObjectScaleTool::GetAffectScale( )
+{
+  return mAffectScale;
+}
+
+void ObjectScaleTool::SetAffectScale(bool affectScale)
+{
+  mAffectScale = affectScale;
+
+  Cog* gizmo = mGizmo.ToCog( );
+  if(gizmo)
+    gizmo->has(ObjectScaleGizmo)->mAffectScale = affectScale;
+}
+
+/******************************************************************************/
 void ObjectScaleTool::CopyPropertiesToGizmo()
 {
   Cog* gizmo = mGizmo.ToCog( );
@@ -694,16 +687,15 @@ void ObjectScaleTool::CopyPropertiesToGizmo()
   UpdateGrabState(mGrab);
 
   ScaleGizmo *scaleGizmo = gizmo->has(ScaleGizmo);
-
   scaleGizmo->mSnapping = mSnapping;
   scaleGizmo->mSnapDistance = mSnapDistance;
   scaleGizmo->mSnapMode = mSnapMode;
 
   ObjectScaleGizmo* objectGizmo = gizmo->has(ObjectScaleGizmo);
-
-  objectGizmo->mBasis = mBasis;
-  objectGizmo->mPivot = mPivot;
+  objectGizmo->SetBasis(mBasis);
+  objectGizmo->SetPivot(mPivot);
   objectGizmo->mAffectTranslation = mAffectTranslation;
+  objectGizmo->mAffectScale = mAffectScale;
 }
 
 //--------------------------------------------------------- ObjectRotateTool ---
@@ -716,6 +708,7 @@ ZilchDefineType(ObjectRotateTool, builder, type)
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindGetterSetterProperty(SnapAngle);
   ZilchBindGetterSetterProperty(AffectTranslation);
+  ZilchBindGetterSetterProperty(AffectRotation);
 }
 
 /******************************************************************************/
@@ -727,7 +720,8 @@ ObjectRotateTool::ObjectRotateTool()
 void ObjectRotateTool::Serialize(Serializer& stream)
 {
   ObjectTransformTool::Serialize(stream);
-  SerializeName(mAffectTranslation);
+  SerializeNameDefault(mAffectTranslation, true);
+  SerializeNameDefault(mAffectRotation, true);
 }
 
 /******************************************************************************/
@@ -782,6 +776,21 @@ void ObjectRotateTool::SetAffectTranslation(bool affectTranslation)
 }
 
 /******************************************************************************/
+bool ObjectRotateTool::GetAffectRotation( )
+{
+  return mAffectRotation;
+}
+
+void ObjectRotateTool::SetAffectRotation(bool affectRotation)
+{
+  mAffectRotation = affectRotation;
+
+  Cog* gizmo = mGizmo.ToCog( );
+  if(gizmo)
+    gizmo->has(ObjectRotateGizmo)->mAffectRotation = affectRotation;
+}
+
+/******************************************************************************/
 void ObjectRotateTool::CopyPropertiesToGizmo()
 {
   Cog* gizmo = mGizmo.ToCog( );
@@ -790,12 +799,15 @@ void ObjectRotateTool::CopyPropertiesToGizmo()
 
   UpdateGrabState(mGrab);
 
-  gizmo->has(RotateGizmo)->mSnapping = mSnapping;
-  gizmo->has(RotateGizmo)->mSnapAngle = mSnapDistance;
+  RotateGizmo* rotateGizmo = gizmo->has(RotateGizmo);
+  rotateGizmo->mSnapping = mSnapping;
+  rotateGizmo->mSnapAngle = mSnapDistance;
 
-  gizmo->has(ObjectRotateGizmo)->mBasis = mBasis;
-  gizmo->has(ObjectRotateGizmo)->mPivot = mPivot;
-  gizmo->has(ObjectRotateGizmo)->mAffectTranslation = mAffectTranslation;
+  ObjectRotateGizmo* objectRotateGizmo = gizmo->has(ObjectRotateGizmo);
+  objectRotateGizmo->SetBasis(mBasis);
+  objectRotateGizmo->SetPivot(mPivot);
+  objectRotateGizmo->mAffectTranslation = mAffectTranslation;
+  objectRotateGizmo->mAffectRotation = mAffectRotation;
 }
 
 }// end namespace Zero

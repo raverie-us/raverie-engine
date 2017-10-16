@@ -112,13 +112,7 @@ namespace Audio
   {
     if (Channels > 0)
     {
-      // System mix buffer size accounts for number of channels. 
-      // Channels/SystemChannels accounts for differences in channels.
-      MinimumBufferSize = gAudioSystem->MixBufferSizeThreaded * Channels
-        / gAudioSystem->SystemChannelsThreaded * 4;
-
-      // Make sure the size is a multiple of the number of channels
-      MinimumBufferSize -= MinimumBufferSize % Channels;
+      MinimumBufferSize = (unsigned)(AudioSystemInternal::SystemSampleRate * 0.01f * Channels * 4);
 
       MinimumSamplesNeededInBuffers = MinimumBufferSize * 3;
     }

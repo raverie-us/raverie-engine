@@ -19,6 +19,9 @@ namespace Events
 {
   DefineEvent(GizmoRayTest);
   DefineEvent(GizmoModified);
+  DefineEvent(TranslateGizmoModified);
+  DefineEvent(ScaleGizmoModified);
+  DefineEvent(RotateGizmoModified);
   DefineEvent(GizmoTargetSet);
   DefineEvent(MouseEnterGizmo);
   DefineEvent(MouseEnterGizmoHierarchy);

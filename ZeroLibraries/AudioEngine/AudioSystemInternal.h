@@ -122,8 +122,6 @@ namespace Audio
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
-    // Size of the system mix buffer.
-    unsigned MixBufferSizeThreaded;
     // Used to lock for swapping pointers to buffers.
     Zero::ThreadLock LockObject;
     // Notifies the system to reset Port Audio after a device change.
@@ -166,6 +164,8 @@ namespace Audio
     AssetListType AssetList;
     // Array used to accumulate samples for output
     BufferType BufferForOutput;
+    // Array for finished mixed output
+    BufferType MixedOutput;
     // Thread for decoding tasks
     Zero::Thread DecodeThread;
     // Queue for decoding tasks
@@ -242,7 +242,7 @@ namespace Audio
     // Checks for resampling and resets variables if applicable
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
-    void GetAudioInputDataThreaded();
+    void GetAudioInputDataThreaded(unsigned howManySamples);
 
     class NodeInterface : public ExternalNodeInterface
     {

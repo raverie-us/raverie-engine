@@ -53,6 +53,7 @@ public:
   /// Keyboard Events.
   virtual void OnKeyDown(KeyboardEvent* event){};
   virtual void OnKeyUp(KeyboardEvent* event){};
+  virtual void OnKeyRepeated(KeyboardEvent* event) {};
 
   virtual void OnTargetDestroy(MouseEvent* event){};
   virtual void OnUpdate(UpdateEvent* event){};

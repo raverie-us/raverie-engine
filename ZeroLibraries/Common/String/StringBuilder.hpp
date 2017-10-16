@@ -19,6 +19,7 @@ ZeroShared String BuildString(StringRange a, StringRange b, StringRange c);
 ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d);
 ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e);
 ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f);
+ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f, StringRange g);
 ZeroShared String BuildString(StringRange** ranges, uint count);
 
 ZeroShared String StringJoin(Array<String>& strings, StringParam joinToken);

@@ -832,3 +832,16 @@ struct MathMatrixDeterminant
   }
 }
 
+struct MathIntegerAbs
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Abs(value : Integer) : Integer
+  {
+    var result = 0;
+    // Glsl has issues with integer abs on nvidia cards in random scenarios involving arrays
+    // and texture lookups that seems to read garbage memory. Fallback on another operation that always works for glsl.
+    Shader.AddInlineShaderCode("glsl", "`result` = `Math.Sign(value) * value`");
+    Shader.AddInlineShaderCode("hlsl", "`result` = abs(`value`)");
+    return result;
+  }
+}

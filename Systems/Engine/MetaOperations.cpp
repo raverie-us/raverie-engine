@@ -215,15 +215,22 @@ Handle MetaOperation::GetUndoObject()
 //----------------------------------------------------------- Property Operation
 //******************************************************************************
 PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam property,
-                                    AnyParam before, AnyParam after) :
+  AnyParam before, AnyParam after) :
   MetaOperation(object),
   mPropertyPath(property)
 {
-  MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>();
-  if (owner && owner->GetOwner(object).IsNotNull())
-    mName = BuildString(GetNameFromHandle(owner->GetOwner(object)), ".", GetNameFromHandle(object), ".", property.GetStringPath());
+  MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>( );
+  if(owner && owner->GetOwner(object).IsNotNull( ))
+  {
+    mName = BuildString(GetNameFromHandle(owner->GetOwner(object)), ".",
+      GetNameFromHandle(object), ".", property.GetStringPath(), " ",
+      after.ToString());
+  }
   else
-    mName = BuildString(GetNameFromHandle(object), ".", property.GetStringPath());
+  {
+    mName = BuildString(GetNameFromHandle(object), ".", property.GetStringPath(),
+      " ", after.ToString());
+  }
 
   mValueBefore = before;
   mValueAfter = after;

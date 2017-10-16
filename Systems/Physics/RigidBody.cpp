@@ -200,7 +200,8 @@ void RigidBody::SetVelocity(Vec3Param velocity)
 {
   // Clamp velocity to attempt to deal with bad floating point values
   mVelocity = ClampVelocityValue(velocity, "velocity");
-  ForceAwake();
+  if(IsInitialized())
+    ForceAwake();
 }
 
 Vec3 RigidBody::GetAngularVelocity()
@@ -213,7 +214,8 @@ Vec3 RigidBody::GetAngularVelocity()
 void RigidBody::SetAngularVelocity(Vec3Param angularVelocity)
 {
   mAngularVelocity = ClampVelocityValue(angularVelocity, "angular velocity");
-  ForceAwake();
+  if(IsInitialized())
+    ForceAwake();
 }
 
 Vec3 RigidBody::GetForce()

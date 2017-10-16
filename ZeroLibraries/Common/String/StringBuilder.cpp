@@ -57,6 +57,12 @@ String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, S
   return BuildString(strings, 6);
 }
 
+String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f, StringRange g)
+{
+  StringRange* strings[] = { &a, &b, &c, &d, &e, &f, &g };
+  return BuildString(strings, 7);
+}
+
 String BuildString(StringRange** ranges, uint count)
 {
   //+1 extra for null terminator

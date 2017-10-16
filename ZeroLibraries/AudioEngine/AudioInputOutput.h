@@ -12,10 +12,11 @@
 
 struct PaStreamParameters;
 struct PaHostApiInfo;
+struct IMMDeviceEnumerator;
 
 namespace Audio
 {
-  namespace LatencyValues
+  namespace LatencyValues 
   {
     enum Enum { LowLatency, HighLatency, Count };
   }
@@ -51,10 +52,6 @@ namespace Audio
     AudioInputOutput();
     ~AudioInputOutput();
 
-    // Returns the current buffer to write output to
-    float* GetMixedOutputBufferThreaded();
-    // Advances the buffer index
-    void FinishedMixingBufferThreaded();
     // Waits until another mix is needed, using semaphore counter
     void WaitUntilOutputNeededThreaded();
     // Fills the buffer with the requested number of audio samples, or the max available if lower
@@ -83,26 +80,16 @@ namespace Audio
     // Returns true if the specified audio stream has been started
     virtual bool IsStreamStarted(StreamTypes::Enum whichStream) = 0;
 
-    // Size of the output buffer in samples
-    unsigned MixedOutputBufferSizeSamples;
-    // Size of the output buffer in frames
-    unsigned MixedOutputBufferSizeFrames;
     // Last error message pertaining to the audio API
     Zero::String LastErrorMessage;
-    // Number of buffers available for mixing output
-    static const unsigned NumOutputBuffers = 3;
+    // Ring buffer used for mixed output
+    RingBuffer OutputRingBuffer;
 
   protected:
+    // Buffer used for the OutputRingBuffer
+    float* MixedOutputBuffer;
     // The number of mix buffer frames for each latency setting
-    unsigned OutputBufferFramesPerLatency[LatencyValues::Count];
-    // Index for current output writing buffer, used for mixing output
-    int WriteBufferThreaded;
-    // Index for current output reading buffer
-    int ReadBufferThreaded;
-    // Array of three buffers for output
-    float* MixedOutputBuffersThreaded[NumOutputBuffers];
-    // Current position in the output buffer for the WASAPI output callback
-    unsigned MixedBufferIndex;
+    unsigned OutputBufferSizePerLatency[LatencyValues::Count];
     // Current latency setting for the audio output
     LatencyValues::Enum OutputStreamLatency;
     // Size of the buffer for input data
@@ -112,20 +99,18 @@ namespace Audio
     // Ring buffer used for receiving input data
     RingBuffer InputRingBuffer;
     // For notifying the mix thread when a new buffer is needed.
-    Zero::Semaphore Counter;
+    Zero::Semaphore MixThreadSemaphore;
     // List of info objects for each stream type
     StreamInfo StreamInfoList[StreamTypes::Count];
     // The multiplier used to find the mix frames for a certain sample rate
-    const float BufferSizeMultiplier = 0.01f;
+    const float BufferSizeMultiplier = 0.04f;
     // The value used to start calculating the mix frames
-    const unsigned BufferSizeStartValue = 128;
-    // Used to calculate the mix frames for high latency
-    const unsigned HighLatencyModifier = 4;
+    const unsigned BufferSizeStartValue = 512;
 
     // Sets variables and initializes output buffers at the appropriate size
     void InitializeOutputBuffers();
     // Creates output buffers using the specified size
-    void SetUpOutputBuffers(const unsigned frames);
+    void SetUpOutputBuffers();
     // Gets the mixed buffer that is ready to output
     void GetMixedOutputSamples(float* outputBuffer, const unsigned howManySamples);
     // Saves the input buffer from the microphone

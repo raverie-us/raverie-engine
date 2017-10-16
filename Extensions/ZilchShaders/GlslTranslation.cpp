@@ -723,7 +723,7 @@ void SetupGlsl_1_3(ZilchShaderTranslator* translator)
     }
   }
 
-
+  Zilch::BoundType* intType = ZilchTypeId(int);
   Array<Zilch::BoundType*>& allRealTypes = core.AllRealTypes;
   Array<Zilch::BoundType*>& allIntegerTypes = core.AllIntegerTypes;
   Array<Zilch::BoundType*>& allBooleanTypes = core.AllBooleanTypes;
@@ -750,7 +750,9 @@ void SetupGlsl_1_3(ZilchShaderTranslator* translator)
     String boundTypeStr = boundType->ToString();
     String realTypeStr = core.RealType->ToString();
 
-    libraryTranslator.RegisterMemberAccessResolver(GetStaticFunction(core.MathType, "Abs", boundType->ToString()), "abs");
+    // Don't translate integer abs as there are some driver bugs. Instead rely on the MathExtensions.
+    if(boundType != intType)
+      libraryTranslator.RegisterMemberAccessResolver(GetStaticFunction(core.MathType, "Abs", boundType->ToString()), "abs");
     libraryTranslator.RegisterMemberAccessResolver(GetStaticFunction(core.MathType, "Clamp", boundTypeStr, boundTypeStr, boundTypeStr), "clamp");
     // Glsl 4.0
     //libraryTranslator.RegisterMemberAccessResolver(GetStaticFunction(core.MathType, "CountBits", boundTypeStr), "bitCount");

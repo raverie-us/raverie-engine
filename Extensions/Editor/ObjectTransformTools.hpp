@@ -215,11 +215,19 @@ public:
   bool GetAffectTranslation( );
   void SetAffectTranslation(bool affectTranslation);
 
+  bool GetAffectScale( );
+  void SetAffectScale(bool affectScale);
+
   void CopyPropertiesToGizmo() override;
 
 public:
   GizmoSnapMode::Enum mSnapMode;
+  /// With multiple objects selected, allow their spacial-offest to be affected
+  /// about the chosen pivot point, while being locally scaled with 'mAffectScale'.
   bool mAffectTranslation;
+  /// With multiple objects selected, allow their local scale to be affected
+  /// while being spacially-offset (with 'AffectTranslation') about the chosen pivot point.
+  bool mAffectScale;
 };
 
 //--------------------------------------------------------- ObjectRotateTool ---
@@ -257,10 +265,18 @@ public:
   bool GetAffectTranslation();
   void SetAffectTranslation(bool affectTranslation);
 
+  bool GetAffectRotation( );
+  void SetAffectRotation(bool affectRotation);
+
   void CopyPropertiesToGizmo() override;
   
 public:
+  /// With multiple objects selected, allow their spacial-offest to be rotated
+  /// about the chosen pivot point, while being locally rotated with 'mAffectRotation'.
   bool mAffectTranslation;
+  /// With multiple objects selected, allow their local rotation to be affected
+  /// while being spacially-rotated (with 'AffectTranslation') about the chosen pivot point.
+  bool mAffectRotation;
 };
 
 }// end namespace Zero
