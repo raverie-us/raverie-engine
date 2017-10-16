@@ -15,17 +15,28 @@ namespace Audio
   {
   public:
     MicrophoneInputNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-      ExternalNodeInterface* extInt, bool isThreaded = false) :
-      SoundNode(status, name, ID, extInt, false, false, isThreaded)
-    {
-      if (!isThreaded)
-        SetSiblingNodes(new MicrophoneInputNode(status, name, ID, nullptr, true), status);
-    }
+      ExternalNodeInterface* extInt, bool isThreaded = false);
+    ~MicrophoneInputNode();
+
+    // Returns the current volume
+    float GetVolume();
+    // Sets the volume modifier
+    void SetVolume(float newVolume);
+    // Returns whether the node is active
+    bool GetActive();
+    // Sets whether the node is active and outputting microphone data
+    void SetActive(bool active);
 
   private:
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
     void CollapseNode() override {}
+
+    bool Active;
+    float Volume;
+    InterpolatingObject* VolumeInterpolator;
+    bool Stopping;
+    float CurrentVolume;
   };
   
 }

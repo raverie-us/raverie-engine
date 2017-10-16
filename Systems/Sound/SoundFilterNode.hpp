@@ -705,6 +705,13 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   MicrophoneInputNode();
+
+  /// The volume modifier applied to all audio data received from the microphone.
+  float GetVolume();
+  void SetVolume(float volume);
+  /// Microphone input will only be played while the Active property is set to True.
+  bool GetActive();
+  void SetActive(bool active);
 };
 
 }

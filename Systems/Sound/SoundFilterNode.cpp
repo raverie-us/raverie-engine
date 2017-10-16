@@ -2119,6 +2119,8 @@ ZilchDefineType(MicrophoneInputNode, builder, type)
 {
   ZeroBindDocumented();
 
+  ZilchBindGetterSetter(Volume);
+  ZilchBindGetterSetter(Active);
 }
 
 //**************************************************************************************************
@@ -2127,6 +2129,38 @@ MicrophoneInputNode::MicrophoneInputNode()
   Status status;
   SetNode(new Audio::MicrophoneInputNode(status, "MicrophoneInputNode", 
     Z::gSound->mCounter++, this), status);
+}
+
+//**************************************************************************************************
+float MicrophoneInputNode::GetVolume()
+{
+  if (mNode)
+    return ((Audio::MicrophoneInputNode*)mNode)->GetVolume();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void MicrophoneInputNode::SetVolume(float volume)
+{
+  if (mNode)
+    ((Audio::MicrophoneInputNode*)mNode)->SetVolume(volume);
+}
+
+//**************************************************************************************************
+bool MicrophoneInputNode::GetActive()
+{
+  if (mNode)
+    return ((Audio::MicrophoneInputNode*)mNode)->GetActive();
+  else
+    return false;
+}
+
+//**************************************************************************************************
+void MicrophoneInputNode::SetActive(bool active)
+{
+  if (mNode)
+    ((Audio::MicrophoneInputNode*)mNode)->SetActive(active);
 }
 
 }
