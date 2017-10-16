@@ -17,21 +17,11 @@ namespace Audio
     SoundNode(status, name, ID, extInt, false, false, isThreaded),
     Active(true),
     Volume(1.0f),
-    VolumeInterpolator(nullptr),
     Stopping(false),
     CurrentVolume(1.0f)
   {
     if (!isThreaded)
       SetSiblingNodes(new MicrophoneInputNode(status, name, ID, nullptr, true), status);
-    else
-      VolumeInterpolator = gAudioSystem->GetInterpolatorThreaded();
-  }
-
-  //************************************************************************************************
-  MicrophoneInputNode::~MicrophoneInputNode()
-  {
-    if (VolumeInterpolator)
-      gAudioSystem->ReleaseInterpolatorThreaded(VolumeInterpolator);
   }
 
   //************************************************************************************************
@@ -61,7 +51,7 @@ namespace Audio
 
       // Don't change volume if we are currently not active or deactivating
       if (Active && !Stopping)
-        VolumeInterpolator->SetValues(CurrentVolume, newVolume,
+        VolumeInterpolator.SetValues(CurrentVolume, newVolume,
           (unsigned)(AudioSystemInternal::SystemSampleRate * 0.02f));
     }
   }
@@ -96,7 +86,7 @@ namespace Audio
         // Mark that we are stopping
         Stopping = true;
         // Interpolate volume to 0
-        VolumeInterpolator->SetValues(CurrentVolume, 0.0f,
+        VolumeInterpolator.SetValues(CurrentVolume, 0.0f,
           (unsigned)(AudioSystemInternal::SystemSampleRate * 0.02f));
       }
       // Activating
@@ -106,7 +96,7 @@ namespace Audio
         Active = true;
         Stopping = false;
         // Interpolate volume to its previous setting
-        VolumeInterpolator->SetValues(CurrentVolume, Volume,
+        VolumeInterpolator.SetValues(CurrentVolume, Volume,
           (unsigned)(AudioSystemInternal::SystemSampleRate * 0.02f));
       }
     }
@@ -135,18 +125,18 @@ namespace Audio
       memset(outputBuffer->Data() + samplesToCopy, 0, sizeof(float) * (bufferSize - samplesToCopy));
 
     // If interpolating volume or volume is not 1.0, apply volume change
-    if (!VolumeInterpolator->Finished() || !IsWithinLimit(CurrentVolume, 1.0f, 0.01f))
+    if (!VolumeInterpolator.Finished() || !IsWithinLimit(CurrentVolume, 1.0f, 0.01f))
     {
       // Step through output buffer
       for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
       {
         // Check if volume is interpolating
-        if (!VolumeInterpolator->Finished())
+        if (!VolumeInterpolator.Finished())
         {
-          CurrentVolume = VolumeInterpolator->NextValue();
+          CurrentVolume = VolumeInterpolator.NextValue();
 
           // If interpolation is now finished and we are stopping, mark as not active
-          if (VolumeInterpolator->Finished() && Stopping)
+          if (VolumeInterpolator.Finished() && Stopping)
             Active = false;
         }
 

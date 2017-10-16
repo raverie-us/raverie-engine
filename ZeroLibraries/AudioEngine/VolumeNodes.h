@@ -12,8 +12,6 @@
 
 namespace Audio
 {
-  class InterpolatingObject;
-
   //------------------------------------------------------------------------------------ Volume Node
 
   // Adjusts the volume of all inputs
@@ -29,7 +27,7 @@ namespace Audio
     void SetVolume(const float volume, float timeToInterpolate);
 
   private:
-    ~VolumeNode();
+    ~VolumeNode() {}
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
 
@@ -49,7 +47,7 @@ namespace Audio
     // The volume of the modification
     float Volume;
     // Used to interpolate between volumes
-    InterpolatingObject* Interpolate;
+    InterpolatingObject Interpolator;
 
     Data CurrentData;
     Data PreviousData;
@@ -79,7 +77,7 @@ namespace Audio
     void SetRightVolume(const float volume, float time);
 
   private:
-    ~PanningNode();
+    ~PanningNode() {}
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
 
@@ -105,9 +103,9 @@ namespace Audio
     // Current volume of the right channel
     float RightVolume;
     // Interpolates the left channel volume from one value to another
-    InterpolatingObject* LeftInterpolator;
+    InterpolatingObject LeftInterpolator;
     // Interpolates the right channel volume from one value to another
-    InterpolatingObject* RightInterpolator;
+    InterpolatingObject RightInterpolator;
     // If true, the volume is currently modified and the node will perform its calculations
     bool Active;
 

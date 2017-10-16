@@ -35,9 +35,7 @@ namespace Audio
     LowPassDistance(data.EndDistance / 2.0f),
     AttenEndDist(data.EndDistance), 
     MinimumVolume(data.MinimumVolume), 
-    Position(position),
-    DistanceInterpolator(nullptr),
-    LowPassInterpolator(nullptr)
+    Position(position)
   {
     if (!Threaded)
     {
@@ -47,21 +45,19 @@ namespace Audio
     else
     {
       // Set values on interpolator
-      DistanceInterpolator = gAudioSystem->GetInterpolatorThreaded();
-      DistanceInterpolator->SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
+      DistanceInterpolator.SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
 
       // Set the falloff curve on the interpolator
       if (curveType == CurveTypes::Custom)
       {
         if (customCurveData)
-          DistanceInterpolator->SetCustomCurve(customCurveData);
+          DistanceInterpolator.SetCustomCurve(customCurveData);
       }
       else
-        DistanceInterpolator->SetCurve(curveType);
+        DistanceInterpolator.SetCurve(curveType);
 
       // Set the low pass interpolator 
-      LowPassInterpolator = gAudioSystem->GetInterpolatorThreaded();
-      LowPassInterpolator->SetValues(15000.0f, 1000.0f, LowPassDistance);
+      LowPassInterpolator.SetValues(15000.0f, 1000.0f, LowPassDistance);
     }
   }
 
@@ -70,9 +66,6 @@ namespace Audio
   {
     if (Threaded)
     {
-      gAudioSystem->ReleaseInterpolatorThreaded(DistanceInterpolator);
-      gAudioSystem->ReleaseInterpolatorThreaded(LowPassInterpolator);
-
       for (DataPerListenerMapType::valuerange data = DataPerListener.Values(); !data.Empty(); data.PopFront())
         delete data.Front();
     }
@@ -99,7 +92,7 @@ namespace Audio
       gAudioSystem->AddTask(Zero::CreateFunctor(&AttenuatorNode::SetAttenuationData,
           (AttenuatorNode*)GetSiblingNode(), data));
     else if (Threaded)
-      DistanceInterpolator->SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
+      DistanceInterpolator.SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
   }
 
   //************************************************************************************************
@@ -128,10 +121,10 @@ namespace Audio
       if (curveType == CurveTypes::Custom)
       {
         if (customCurveData)
-          DistanceInterpolator->SetCustomCurve(customCurveData);
+          DistanceInterpolator.SetCustomCurve(customCurveData);
       }
       else
-        DistanceInterpolator->SetCurve(curveType);
+        DistanceInterpolator.SetCurve(curveType);
     }
   }
 
@@ -157,7 +150,7 @@ namespace Audio
             (AttenuatorNode*)GetSiblingNode(), distance));
     }
     else
-      LowPassInterpolator->SetValues(15000.0f, LowPassInterpolator->GetEndValue(), AttenEndDist - distance);
+      LowPassInterpolator.SetValues(15000.0f, LowPassInterpolator.GetEndValue(), AttenEndDist - distance);
   }
 
   //************************************************************************************************
@@ -170,7 +163,7 @@ namespace Audio
             (AttenuatorNode*)GetSiblingNode(), frequency));
     }
     else
-      LowPassInterpolator->SetValues(15000.0f, frequency, AttenEndDist - LowPassDistance);
+      LowPassInterpolator.SetValues(15000.0f, frequency, AttenEndDist - LowPassDistance);
   }
 
   //************************************************************************************************
@@ -214,7 +207,7 @@ namespace Audio
       attenuatedVolume = MinimumVolume;
     // Otherwise, get the value using the falloff curve on the interpolator
     else
-      attenuatedVolume = DistanceInterpolator->ValueAtDistance(distance - AttenStartDist);
+      attenuatedVolume = DistanceInterpolator.ValueAtDistance(distance - AttenStartDist);
 
     // Check if the listener needs to be added to the map
     if (!DataPerListener.FindValue(listener, nullptr))
@@ -241,7 +234,7 @@ namespace Audio
     if (UseLowPass && distance > LowPassDistance)
     {
       // Find cutoff frequency for this distance (will return end value if distance is past AttenEndDist)
-      float cutoffFreq = LowPassInterpolator->ValueAtDistance(distance - LowPassDistance);
+      float cutoffFreq = LowPassInterpolator.ValueAtDistance(distance - LowPassDistance);
 
       // Set the cutoff frequency on the filter
       listenerData.LowPass.SetCutoffFrequency(cutoffFreq);

@@ -450,8 +450,7 @@ namespace Audio
       ExternalNodeInterface* extInt, const bool isThreaded) :
     SoundAssetNode(extInt, isThreaded),
     Frequency(frequency), 
-    WaveData(nullptr),
-    FrequencyInterpolator(nullptr)
+    WaveData(nullptr)
   {
     if (!Threaded)
       ThreadedAsset = new GeneratedWaveSoundAsset(waveType, frequency, extInt, true);
@@ -461,8 +460,6 @@ namespace Audio
       WaveData->SetType((Oscillator::Types)waveType);
       WaveData->SetFrequency(frequency);
       WaveData->SetNoteOn(true);
-
-      FrequencyInterpolator = gAudioSystem->GetInterpolatorThreaded();
     }
   }
 
@@ -472,7 +469,6 @@ namespace Audio
     if (Threaded)
     {
       delete WaveData;
-      gAudioSystem->ReleaseInterpolatorThreaded(FrequencyInterpolator);
     }
   }
 
@@ -487,9 +483,9 @@ namespace Audio
 
     data.Samples[0] = WaveData->GetNextSample() * WAVE_VOLUME;
     
-    if (!FrequencyInterpolator->Finished())
+    if (!FrequencyInterpolator.Finished())
     {
-      Frequency = FrequencyInterpolator->NextValue();
+      Frequency = FrequencyInterpolator.NextValue();
       WaveData->SetFrequency(Frequency);
     }
 
@@ -543,7 +539,7 @@ namespace Audio
         WaveData->SetFrequency(Frequency);
       }
       else
-        FrequencyInterpolator->SetValues(Frequency, newFrequency,
+        FrequencyInterpolator.SetValues(Frequency, newFrequency,
           (unsigned)(time * AudioSystemInternal::SystemSampleRate));
     }
   }

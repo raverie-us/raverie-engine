@@ -222,8 +222,6 @@ namespace Audio
 
   //------------------------------------------------------------------------- Combine And Pause Node
 
-  class InterpolatingObject;
-
   class CombineAndPauseNode : public SimpleCollapseNode
   {
   public:
@@ -234,13 +232,13 @@ namespace Audio
     bool GetPaused();
 
   private:
-    ~CombineAndPauseNode();
+    ~CombineAndPauseNode() {}
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
 
     bool Paused;
     bool Pausing;
-    InterpolatingObject* VolumeInterpolator;
+    InterpolatingObject VolumeInterpolator;
     bool Interpolating;
   };
 

@@ -41,20 +41,10 @@ namespace Audio
     PitchCents(0),
     PitchFactor(1.0f),
     FramesToInterpolate(0),
-    TimeToInterpolate(0.0f),
-    Interpolate(nullptr)
+    TimeToInterpolate(0.0f)
   {
     if (!Threaded)
       SetSiblingNodes(new PitchNode(status, name, ID, nullptr, true), status);
-    else
-      Interpolate = gAudioSystem->GetInterpolatorThreaded();
-  }
-
-  //************************************************************************************************
-  PitchNode::~PitchNode()
-  {
-    if (Interpolate)
-      gAudioSystem->ReleaseInterpolatorThreaded(Interpolate);
   }
 
   //************************************************************************************************
@@ -80,12 +70,12 @@ namespace Audio
       {
         // Check if currently interpolating pitch
         if (CurrentData.Interpolating)
-          PitchFactor = Interpolate->ValueAtIndex(CurrentData.FramesProcessed);
+          PitchFactor = Interpolator.ValueAtIndex(CurrentData.FramesProcessed);
         else
           CurrentData.Interpolating = true;
 
         FramesToInterpolate = (unsigned)(timeToInterpolate * AudioSystemInternal::SystemSampleRate);
-        Interpolate->SetValues(PitchFactor, newFactor, (unsigned)FramesToInterpolate);
+        Interpolator.SetValues(PitchFactor, newFactor, (unsigned)FramesToInterpolate);
         TimeToInterpolate = timeToInterpolate;
         CurrentData.FramesProcessed = 0;
         PitchFactor = newFactor;
@@ -138,8 +128,8 @@ namespace Audio
     if (CurrentData.Interpolating)
     {
       // Get the starting and ending pitch factor for interpolation
-      float startingPitchFactor = Interpolate->ValueAtIndex(CurrentData.FramesProcessed);
-      float endingPitchFactor = Interpolate->GetEndValue();
+      float startingPitchFactor = Interpolator.ValueAtIndex(CurrentData.FramesProcessed);
+      float endingPitchFactor = Interpolator.GetEndValue();
 
       // How many frames are left in the interpolation
       int interpolationFrames = FramesToInterpolate - CurrentData.FramesProcessed;
@@ -151,7 +141,7 @@ namespace Audio
         // Set the number of frames to the buffer size
         interpolationFrames = outputBufferFrames;
         // Set the ending pitch factor to the end of the buffer
-        endingPitchFactor = Interpolate->ValueAtIndex(CurrentData.FramesProcessed + outputBufferFrames);
+        endingPitchFactor = Interpolator.ValueAtIndex(CurrentData.FramesProcessed + outputBufferFrames);
       }
       // Otherwise, how many frames in the buffer after the end of the interpolation
       else
@@ -211,7 +201,7 @@ namespace Audio
     // Get the pitch factor, accounting for interpolation
     float currentPitchFactor;
     if (CurrentData.Interpolating)
-      currentPitchFactor = Interpolate->ValueAtIndex(CurrentData.FramesProcessed);
+      currentPitchFactor = Interpolator.ValueAtIndex(CurrentData.FramesProcessed);
     else
       currentPitchFactor = PitchFactor;
 
@@ -264,7 +254,7 @@ namespace Audio
 
       // If currently interpolating, get updated pitch factor
       if (CurrentData.Interpolating)
-        currentPitchFactor = Interpolate->ValueAtIndex(CurrentData.FramesProcessed);
+        currentPitchFactor = Interpolator.ValueAtIndex(CurrentData.FramesProcessed);
 
       // Advance the pitch index
       CurrentData.PitchIndex += currentPitchFactor;

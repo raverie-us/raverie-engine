@@ -12,8 +12,6 @@
 
 namespace Audio
 {
-  class InterpolatingObject;
-
   //------------------------------------------------------------------------------------- Pitch Node
 
   // Adjusts the pitch of all inputs
@@ -29,7 +27,7 @@ namespace Audio
     void SetPitch(const int pitchCents, const float timeToInterpolate);
 
   private:
-    ~PitchNode();
+    ~PitchNode() {}
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
 
@@ -59,7 +57,7 @@ namespace Audio
     // Time of interpolation when changing pitch
     float TimeToInterpolate;
     // Used to interpolate pitch
-    InterpolatingObject* Interpolate;
+    InterpolatingObject Interpolator;
 
     Data CurrentData;
     Data PreviousData;

@@ -83,13 +83,13 @@ namespace Audio
     // The minimum volume reached at the furthest attenuation
     float MinimumVolume;
     // Used to get attenuation value based on falloff curve
-    InterpolatingObject* DistanceInterpolator;
+    InterpolatingObject DistanceInterpolator;
     // If true, will apply a low pass filter with attenuation
     bool UseLowPass;
     // The distance at which the low pass filter starts
     float LowPassDistance;
     // Interpolator for low pass filter
-    InterpolatingObject* LowPassInterpolator;
+    InterpolatingObject LowPassInterpolator;
   };
 
 

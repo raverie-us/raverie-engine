@@ -16,7 +16,6 @@ namespace Audio
   public:
     MicrophoneInputNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
       ExternalNodeInterface* extInt, bool isThreaded = false);
-    ~MicrophoneInputNode();
 
     // Returns the current volume
     float GetVolume();
@@ -34,7 +33,7 @@ namespace Audio
 
     bool Active;
     float Volume;
-    InterpolatingObject* VolumeInterpolator;
+    InterpolatingObject VolumeInterpolator;
     bool Stopping;
     float CurrentVolume;
   };

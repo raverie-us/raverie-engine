@@ -179,7 +179,7 @@ namespace Audio
     // The current wave frequency
     float Frequency;
     // Used to interpolate between two frequencies
-    InterpolatingObject* FrequencyInterpolator;
+    InterpolatingObject FrequencyInterpolator;
 
     // Always true
     bool OkayToAddInstance() override { return true; }

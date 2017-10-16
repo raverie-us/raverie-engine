@@ -30,7 +30,6 @@ namespace Audio
     PeakVolumeLastMix(0.0f),
     RmsVolumeLastMix(0.0f),
     NodeCount(0),
-    NextInterpolator(0),
     LowPass(nullptr),
     PreviousPeakVolumeThreaded(0),
     PreviousRMSVolumeThreaded(0),
@@ -39,9 +38,6 @@ namespace Audio
     SendMicrophoneInputData(false)
   {
     gAudioSystem = this;
-
-    // Start with sixteen interpolator objects
-    InterpolatorArray.Resize(16);
 
     AudioIO = new AudioIOWindows();
   }
@@ -189,9 +185,6 @@ namespace Audio
       delete function;
     while (TasksForMixThread.Read(function))
       delete function;
-
-    forRange(InterpolatorContainer& container, InterpolatorArray.All())
-      delete container.Object;
     
     if (LowPass)
       delete LowPass;
@@ -507,43 +500,6 @@ namespace Audio
     }
     else
       NodeListThreaded.Erase(node);
-  }
-
-  //************************************************************************************************
-  Audio::InterpolatingObject* AudioSystemInternal::GetInterpolatorThreaded()
-  {
-    // If we've used all available interpolators, increase the array size
-    if ((unsigned)NextInterpolator >= InterpolatorArray.Size())
-      InterpolatorArray.Resize(InterpolatorArray.Size() * 2);
-
-    ErrorIf(InterpolatorArray[NextInterpolator].Active == true,
-      "Audio Engine: Trying to use interpolator which is already active");
-    ErrorIf(InterpolatorArray[NextInterpolator].Object->Container != &InterpolatorArray[NextInterpolator],
-      "Audio Engine: Interpolator container pointer does not match container");
-
-    // Mark as active
-    InterpolatorArray[NextInterpolator].Active = true;
-    // Return the interpolator and increment the index
-    return InterpolatorArray[NextInterpolator++].Object;
-  }
-
-  //************************************************************************************************
-  void AudioSystemInternal::ReleaseInterpolatorThreaded(InterpolatingObject* object)
-  {
-    if (!object)
-      return;
-
-    // Clear the values
-    object->SetValues(0.0f, 0.0f, 0.0f);
-    // Mark as not active
-    object->Container->Active = false;
-    // Decrement index
-    --NextInterpolator;
-    // If the interpolator at the next available index is active, swap this object's data with that one
-    if (InterpolatorArray[NextInterpolator].Active)
-      InterpolatorArray[NextInterpolator].Swap(*object->Container);
-
-    ErrorIf(NextInterpolator < 0, "Audio Engine: Interpolator index went below 0");
   }
 
   //************************************************************************************************
