@@ -1,0 +1,192 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+uniform mat2x2 InOutRealMatricesVertexFrag_Real2x2;
+uniform mat2x3 InOutRealMatricesVertexFrag_Real2x3;
+uniform mat2x4 InOutRealMatricesVertexFrag_Real2x4;
+uniform mat3x2 InOutRealMatricesVertexFrag_Real3x2;
+uniform mat3x3 InOutRealMatricesVertexFrag_Real3x3;
+uniform mat3x4 InOutRealMatricesVertexFrag_Real3x4;
+uniform mat4x2 InOutRealMatricesVertexFrag_Real4x2;
+uniform mat4x3 InOutRealMatricesVertexFrag_Real4x3;
+uniform mat4x4 InOutRealMatricesVertexFrag_Real4x4;
+out mat2x2 psInReal2x2;
+out mat2x3 psInReal2x3;
+out mat2x4 psInReal2x4;
+out mat3x2 psInReal3x2;
+out mat3x3 psInReal3x3;
+out mat3x4 psInReal3x4;
+out mat4x2 psInReal4x2;
+out mat4x3 psInReal4x3;
+out mat4x4 psInReal4x4;
+
+//----- Struct Definitions -----
+struct InOutRealMatricesVertexFrag
+{
+  mat2x2 Real2x2;
+  mat2x3 Real2x3;
+  mat2x4 Real2x4;
+  mat3x2 Real3x2;
+  mat3x3 Real3x3;
+  mat3x4 Real3x4;
+  mat4x2 Real4x2;
+  mat4x3 Real4x3;
+  mat4x4 Real4x4;
+};
+
+struct VaryingsRealMatricesTest_Vertex
+{
+  float Time;
+  vec4 ApiPerspectivePosition;
+  mat2x2 Real2x2;
+  mat2x3 Real2x3;
+  mat2x4 Real2x4;
+  mat3x2 Real3x2;
+  mat3x3 Real3x3;
+  mat3x4 Real3x4;
+  mat4x2 Real4x2;
+  mat4x3 Real4x3;
+  mat4x4 Real4x4;
+  mat2x2 InOutRealMatricesVertexFrag_Real2x2;
+  mat2x3 InOutRealMatricesVertexFrag_Real2x3;
+  mat2x4 InOutRealMatricesVertexFrag_Real2x4;
+  mat3x2 InOutRealMatricesVertexFrag_Real3x2;
+  mat3x3 InOutRealMatricesVertexFrag_Real3x3;
+  mat3x4 InOutRealMatricesVertexFrag_Real3x4;
+  mat4x2 InOutRealMatricesVertexFrag_Real4x2;
+  mat4x3 InOutRealMatricesVertexFrag_Real4x3;
+  mat4x4 InOutRealMatricesVertexFrag_Real4x4;
+};
+
+//----- Forward Declarations -----
+void _InOutRealMatricesVertexFragPreConstructor(inout InOutRealMatricesVertexFrag self);
+InOutRealMatricesVertexFrag _InOutRealMatricesVertexFragConstructor();
+void _InOutRealMatricesVertexFragMain(inout InOutRealMatricesVertexFrag self);
+
+void _VaryingsRealMatricesTest_VertexPreConstructor(inout VaryingsRealMatricesTest_Vertex self);
+VaryingsRealMatricesTest_Vertex _VaryingsRealMatricesTest_VertexConstructor();
+void _VaryingsRealMatricesTest_VertexMain(inout VaryingsRealMatricesTest_Vertex self);
+void CopyInputs(inout VaryingsRealMatricesTest_Vertex self);
+void CopyOutputs(inout VaryingsRealMatricesTest_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- InOutRealMatricesVertexFrag Functions -----
+void _InOutRealMatricesVertexFragPreConstructor(inout InOutRealMatricesVertexFrag self)
+{
+  self.Real2x2 = mat2x2(0.0, 0.0, 0.0, 0.0);
+  self.Real2x3 = mat2x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real2x4 = mat2x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real3x2 = mat3x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real3x3 = mat3x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real3x4 = mat3x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real4x2 = mat4x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real4x3 = mat4x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real4x4 = mat4x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+}
+
+InOutRealMatricesVertexFrag _InOutRealMatricesVertexFragConstructor()
+{
+  InOutRealMatricesVertexFrag self;
+  _InOutRealMatricesVertexFragPreConstructor(self);
+  return self;
+}
+
+void _InOutRealMatricesVertexFragMain(inout InOutRealMatricesVertexFrag self)
+{
+}
+
+//----- VaryingsRealMatricesTest_Vertex Functions -----
+void _VaryingsRealMatricesTest_VertexPreConstructor(inout VaryingsRealMatricesTest_Vertex self)
+{
+  self.Time = float(0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Real2x2 = mat2x2(0.0, 0.0, 0.0, 0.0);
+  self.Real2x3 = mat2x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real2x4 = mat2x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real3x2 = mat3x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real3x3 = mat3x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real3x4 = mat3x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real4x2 = mat4x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real4x3 = mat4x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.Real4x4 = mat4x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real2x2 = mat2x2(0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real2x3 = mat2x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real2x4 = mat2x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real3x2 = mat3x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real3x3 = mat3x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real3x4 = mat3x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real4x2 = mat4x2(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real4x3 = mat4x3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  self.InOutRealMatricesVertexFrag_Real4x4 = mat4x4(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+}
+
+VaryingsRealMatricesTest_Vertex _VaryingsRealMatricesTest_VertexConstructor()
+{
+  VaryingsRealMatricesTest_Vertex self;
+  _VaryingsRealMatricesTest_VertexPreConstructor(self);
+  return self;
+}
+
+void _VaryingsRealMatricesTest_VertexMain(inout VaryingsRealMatricesTest_Vertex self)
+{
+  InOutRealMatricesVertexFrag _inoutrealmatricesvertexfrag = _InOutRealMatricesVertexFragConstructor();
+  _inoutrealmatricesvertexfrag.Real2x2 = self.InOutRealMatricesVertexFrag_Real2x2;
+  _inoutrealmatricesvertexfrag.Real2x3 = self.InOutRealMatricesVertexFrag_Real2x3;
+  _inoutrealmatricesvertexfrag.Real2x4 = self.InOutRealMatricesVertexFrag_Real2x4;
+  _inoutrealmatricesvertexfrag.Real3x2 = self.InOutRealMatricesVertexFrag_Real3x2;
+  _inoutrealmatricesvertexfrag.Real3x3 = self.InOutRealMatricesVertexFrag_Real3x3;
+  _inoutrealmatricesvertexfrag.Real3x4 = self.InOutRealMatricesVertexFrag_Real3x4;
+  _inoutrealmatricesvertexfrag.Real4x2 = self.InOutRealMatricesVertexFrag_Real4x2;
+  _inoutrealmatricesvertexfrag.Real4x3 = self.InOutRealMatricesVertexFrag_Real4x3;
+  _inoutrealmatricesvertexfrag.Real4x4 = self.InOutRealMatricesVertexFrag_Real4x4;
+  _InOutRealMatricesVertexFragMain(_inoutrealmatricesvertexfrag);
+  self.Real2x2 = _inoutrealmatricesvertexfrag.Real2x2;
+  self.Real2x3 = _inoutrealmatricesvertexfrag.Real2x3;
+  self.Real2x4 = _inoutrealmatricesvertexfrag.Real2x4;
+  self.Real3x2 = _inoutrealmatricesvertexfrag.Real3x2;
+  self.Real3x3 = _inoutrealmatricesvertexfrag.Real3x3;
+  self.Real3x4 = _inoutrealmatricesvertexfrag.Real3x4;
+  self.Real4x2 = _inoutrealmatricesvertexfrag.Real4x2;
+  self.Real4x3 = _inoutrealmatricesvertexfrag.Real4x3;
+  self.Real4x4 = _inoutrealmatricesvertexfrag.Real4x4;
+}
+
+//----- VaryingsRealMatricesTest_Vertex Final Shader Functions -----
+void CopyInputs(inout VaryingsRealMatricesTest_Vertex self)
+{
+  self.Time = Time;
+  self.InOutRealMatricesVertexFrag_Real2x2 = InOutRealMatricesVertexFrag_Real2x2;
+  self.InOutRealMatricesVertexFrag_Real2x3 = InOutRealMatricesVertexFrag_Real2x3;
+  self.InOutRealMatricesVertexFrag_Real2x4 = InOutRealMatricesVertexFrag_Real2x4;
+  self.InOutRealMatricesVertexFrag_Real3x2 = InOutRealMatricesVertexFrag_Real3x2;
+  self.InOutRealMatricesVertexFrag_Real3x3 = InOutRealMatricesVertexFrag_Real3x3;
+  self.InOutRealMatricesVertexFrag_Real3x4 = InOutRealMatricesVertexFrag_Real3x4;
+  self.InOutRealMatricesVertexFrag_Real4x2 = InOutRealMatricesVertexFrag_Real4x2;
+  self.InOutRealMatricesVertexFrag_Real4x3 = InOutRealMatricesVertexFrag_Real4x3;
+  self.InOutRealMatricesVertexFrag_Real4x4 = InOutRealMatricesVertexFrag_Real4x4;
+}
+
+void CopyOutputs(inout VaryingsRealMatricesTest_Vertex self)
+{
+  gl_Position = self.ApiPerspectivePosition;
+  psInReal2x2 = self.Real2x2;
+  psInReal2x3 = self.Real2x3;
+  psInReal2x4 = self.Real2x4;
+  psInReal3x2 = self.Real3x2;
+  psInReal3x3 = self.Real3x3;
+  psInReal3x4 = self.Real3x4;
+  psInReal4x2 = self.Real4x2;
+  psInReal4x3 = self.Real4x3;
+  psInReal4x4 = self.Real4x4;
+}
+
+//----- Main -----
+void main(void)
+{
+  VaryingsRealMatricesTest_Vertex varyingsrealmatricestest_vertex = _VaryingsRealMatricesTest_VertexConstructor(); 
+  CopyInputs(varyingsrealmatricestest_vertex);
+  _VaryingsRealMatricesTest_VertexMain(varyingsrealmatricestest_vertex);
+  CopyOutputs(varyingsrealmatricestest_vertex);
+}
+

@@ -13,12 +13,16 @@ namespace Zero
 /// Common logic for all glsl translators
 class BaseGlslTranslator : public ZilchShaderTranslator
 {
+public:
   String GetLanguageName() override;
   void SetupShaderLanguage() override;
   void WriteGeometryOutputVariableDeclaration(Zilch::LocalVariableNode*& node, ShaderType* variableShaderType, ZilchShaderTranslatorContext* context) override;
   void WriteMainForClass(Zilch::SyntaxNode* node, ShaderType* currentType, ShaderFunction* function, ZilchShaderTranslatorContext* context) override;
 
   static String mLanguageName;
+  // @JoshD: Types that need to have the flat attribute auto-appended to them. This should be
+  // moved to the actual shader type as an attribute or flag once shaders are refactored.
+  HashSet<String> mFlatTypes;
 };
 
 //-------------------------------------------------------------------Glsl130Translator

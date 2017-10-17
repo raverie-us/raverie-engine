@@ -1,0 +1,132 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+uniform float InOutRealVectorsVertexFrag_Real;
+uniform vec2 InOutRealVectorsVertexFrag_Real2;
+uniform vec3 InOutRealVectorsVertexFrag_Real3;
+uniform vec4 InOutRealVectorsVertexFrag_Real4;
+out float psInReal;
+out vec2 psInReal2;
+out vec3 psInReal3;
+out vec4 psInReal4;
+
+//----- Struct Definitions -----
+struct InOutRealVectorsVertexFrag
+{
+  float Real;
+  vec2 Real2;
+  vec3 Real3;
+  vec4 Real4;
+};
+
+struct VaryingsRealVectorsTest_Vertex
+{
+  float Time;
+  vec4 ApiPerspectivePosition;
+  float Real;
+  vec2 Real2;
+  vec3 Real3;
+  vec4 Real4;
+  float InOutRealVectorsVertexFrag_Real;
+  vec2 InOutRealVectorsVertexFrag_Real2;
+  vec3 InOutRealVectorsVertexFrag_Real3;
+  vec4 InOutRealVectorsVertexFrag_Real4;
+};
+
+//----- Forward Declarations -----
+void _InOutRealVectorsVertexFragPreConstructor(inout InOutRealVectorsVertexFrag self);
+InOutRealVectorsVertexFrag _InOutRealVectorsVertexFragConstructor();
+void _InOutRealVectorsVertexFragMain(inout InOutRealVectorsVertexFrag self);
+
+void _VaryingsRealVectorsTest_VertexPreConstructor(inout VaryingsRealVectorsTest_Vertex self);
+VaryingsRealVectorsTest_Vertex _VaryingsRealVectorsTest_VertexConstructor();
+void _VaryingsRealVectorsTest_VertexMain(inout VaryingsRealVectorsTest_Vertex self);
+void CopyInputs(inout VaryingsRealVectorsTest_Vertex self);
+void CopyOutputs(inout VaryingsRealVectorsTest_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- InOutRealVectorsVertexFrag Functions -----
+void _InOutRealVectorsVertexFragPreConstructor(inout InOutRealVectorsVertexFrag self)
+{
+  self.Real = float(0.0);
+  self.Real2 = vec2(0.0, 0.0);
+  self.Real3 = vec3(0.0, 0.0, 0.0);
+  self.Real4 = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+InOutRealVectorsVertexFrag _InOutRealVectorsVertexFragConstructor()
+{
+  InOutRealVectorsVertexFrag self;
+  _InOutRealVectorsVertexFragPreConstructor(self);
+  return self;
+}
+
+void _InOutRealVectorsVertexFragMain(inout InOutRealVectorsVertexFrag self)
+{
+}
+
+//----- VaryingsRealVectorsTest_Vertex Functions -----
+void _VaryingsRealVectorsTest_VertexPreConstructor(inout VaryingsRealVectorsTest_Vertex self)
+{
+  self.Time = float(0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Real = float(0.0);
+  self.Real2 = vec2(0.0, 0.0);
+  self.Real3 = vec3(0.0, 0.0, 0.0);
+  self.Real4 = vec4(0.0, 0.0, 0.0, 0.0);
+  self.InOutRealVectorsVertexFrag_Real = float(0.0);
+  self.InOutRealVectorsVertexFrag_Real2 = vec2(0.0, 0.0);
+  self.InOutRealVectorsVertexFrag_Real3 = vec3(0.0, 0.0, 0.0);
+  self.InOutRealVectorsVertexFrag_Real4 = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+VaryingsRealVectorsTest_Vertex _VaryingsRealVectorsTest_VertexConstructor()
+{
+  VaryingsRealVectorsTest_Vertex self;
+  _VaryingsRealVectorsTest_VertexPreConstructor(self);
+  return self;
+}
+
+void _VaryingsRealVectorsTest_VertexMain(inout VaryingsRealVectorsTest_Vertex self)
+{
+  InOutRealVectorsVertexFrag _inoutrealvectorsvertexfrag = _InOutRealVectorsVertexFragConstructor();
+  _inoutrealvectorsvertexfrag.Real = self.InOutRealVectorsVertexFrag_Real;
+  _inoutrealvectorsvertexfrag.Real2 = self.InOutRealVectorsVertexFrag_Real2;
+  _inoutrealvectorsvertexfrag.Real3 = self.InOutRealVectorsVertexFrag_Real3;
+  _inoutrealvectorsvertexfrag.Real4 = self.InOutRealVectorsVertexFrag_Real4;
+  _InOutRealVectorsVertexFragMain(_inoutrealvectorsvertexfrag);
+  self.Real = _inoutrealvectorsvertexfrag.Real;
+  self.Real2 = _inoutrealvectorsvertexfrag.Real2;
+  self.Real3 = _inoutrealvectorsvertexfrag.Real3;
+  self.Real4 = _inoutrealvectorsvertexfrag.Real4;
+}
+
+//----- VaryingsRealVectorsTest_Vertex Final Shader Functions -----
+void CopyInputs(inout VaryingsRealVectorsTest_Vertex self)
+{
+  self.Time = Time;
+  self.InOutRealVectorsVertexFrag_Real = InOutRealVectorsVertexFrag_Real;
+  self.InOutRealVectorsVertexFrag_Real2 = InOutRealVectorsVertexFrag_Real2;
+  self.InOutRealVectorsVertexFrag_Real3 = InOutRealVectorsVertexFrag_Real3;
+  self.InOutRealVectorsVertexFrag_Real4 = InOutRealVectorsVertexFrag_Real4;
+}
+
+void CopyOutputs(inout VaryingsRealVectorsTest_Vertex self)
+{
+  gl_Position = self.ApiPerspectivePosition;
+  psInReal = self.Real;
+  psInReal2 = self.Real2;
+  psInReal3 = self.Real3;
+  psInReal4 = self.Real4;
+}
+
+//----- Main -----
+void main(void)
+{
+  VaryingsRealVectorsTest_Vertex varyingsrealvectorstest_vertex = _VaryingsRealVectorsTest_VertexConstructor(); 
+  CopyInputs(varyingsrealvectorstest_vertex);
+  _VaryingsRealVectorsTest_VertexMain(varyingsrealvectorstest_vertex);
+  CopyOutputs(varyingsrealvectorstest_vertex);
+}
+
