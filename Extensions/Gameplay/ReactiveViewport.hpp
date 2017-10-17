@@ -97,6 +97,9 @@ public:
 
   ComponentHandle<CameraViewport> mCameraViewport;
   GameWidget* mGameWidget;
+
+  /// First object that the mouse is over for this viewport.
+  CogId mOverObject;
 };
 
 //------------------------------------------------------------------ Game Widget

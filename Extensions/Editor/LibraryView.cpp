@@ -351,6 +351,7 @@ LibraryView::LibraryView(Composite* parent)
   mTileView->SetActive(false);
   mTileView->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
   ConnectThisTo(mTileView, Events::TileViewRightClick, OnTileViewRightClick);
+  ConnectThisTo(mTileView, Events::KeyDown, OnKeyDown);
   ConnectThisTo(mTileView, Events::ScrolledAllTheWayOut, OnTilesScrolledAllTheWayOut);
 
   mTagEditor = new ResourceTagEditor(this);
