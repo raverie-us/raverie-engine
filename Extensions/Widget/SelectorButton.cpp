@@ -98,6 +98,9 @@ void SelectorButton::Clear()
 //******************************************************************************
 void SelectorButton::SetSelectedItem(int index, bool sendEvent)
 {
+  if (mButtons.Size() == 0)
+    return;
+
   SelectButton(mButtons[index]);
 }
 
