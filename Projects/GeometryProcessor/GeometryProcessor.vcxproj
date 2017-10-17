@@ -70,9 +70,9 @@
     </Link>
     <PostBuildEvent>
       <Command>mkdir "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
-copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(TargetDir)"
-copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
-copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"</Command>
+copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(TargetDir)" /y
+copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)" /y
+copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

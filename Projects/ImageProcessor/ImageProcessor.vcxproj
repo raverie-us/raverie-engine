@@ -70,9 +70,9 @@
     </Link>
     <PostBuildEvent>
       <Command>mkdir "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Configuration)"
-copy "$(ZERO_SOURCE)\External\Nvtt\bin\nvtt.dll" "$(TargetDir)"
-copy "$(ZERO_SOURCE)\External\nvtt\bin\nvtt.dll" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Configuration)"
-copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Configuration)"</Command>
+copy "$(ZERO_SOURCE)\External\Nvtt\bin\nvtt.dll" "$(TargetDir)" /y
+copy "$(ZERO_SOURCE)\External\nvtt\bin\nvtt.dll" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Configuration)" /y
+copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Configuration)" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
