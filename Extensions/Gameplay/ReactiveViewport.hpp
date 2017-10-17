@@ -43,6 +43,8 @@ public:
   Vec3 mHitPosition;
   /// The normal at the intersection point with an object. Used with Reactive components.
   Vec3 mHitNormal;
+  /// The uv texture coordinate at the intersection point, if applicable. Used with Reactive components.
+  Vec2 mHitUv;
   /// The distance away the hit point is. Used with Reactive components.
   float mHitDistance;
   /// The Reactive object hit. In normal mouse events this will be null.
@@ -93,6 +95,7 @@ public:
   Ray mReactiveRay;
   Vec3 mReactiveHitPosition;
   Vec3 mReactiveHitNormal;
+  Vec2 mReactiveHitUv;
   float mReactiveHitDistance;
 
   ComponentHandle<CameraViewport> mCameraViewport;

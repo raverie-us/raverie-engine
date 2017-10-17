@@ -17,6 +17,7 @@ ZilchDefineType(ViewportMouseEvent, builder, type)
   ZilchBindFieldProperty(mRayDirection);
   ZilchBindFieldProperty(mHitPosition);
   ZilchBindFieldProperty(mHitNormal);
+  ZilchBindFieldProperty(mHitUv);
   ZilchBindFieldProperty(mHitDistance);
   ZilchBindGetterProperty(HitObject);
   ZilchBindGetterProperty(CameraViewport);
@@ -32,6 +33,7 @@ ViewportMouseEvent::ViewportMouseEvent() :
   mRayDirection(Vec3::cZero),
   mHitPosition(Vec3::cZero),
   mHitNormal(Vec3::cZero),
+  mHitUv(Vec2::cZero),
   mHitDistance(0.0f)
 {
 }
@@ -42,6 +44,7 @@ ViewportMouseEvent::ViewportMouseEvent(MouseEvent* event) :
   mRayDirection(Vec3::cZero),
   mHitPosition(Vec3::cZero),
   mHitNormal(Vec3::cZero),
+  mHitUv(Vec2::cZero),
   mHitDistance(0.0f)
 {
   // Copy the event into ourselves
@@ -283,6 +286,7 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
         //store the mouse position info on the reactive component
         this->mReactiveHitPosition = result.HitWorldPosition;
         this->mReactiveHitNormal = result.HitWorldNormal;
+        this->mReactiveHitUv = result.HitUv;
         this->mReactiveHitDistance = result.T;
 
         // Preserving old behavior of the space's over object being the result
@@ -415,8 +419,9 @@ void ReactiveViewport::InitViewportEvent(ViewportMouseEvent& viewportEvent)
   this->mReactiveRay = ScreenToWorldRay(viewportEvent.Position);
 
   viewportEvent.mHitDistance = this->mReactiveHitDistance;
-  viewportEvent.mHitNormal = this->mReactiveHitNormal;
   viewportEvent.mHitPosition = this->mReactiveHitPosition;
+  viewportEvent.mHitNormal = this->mReactiveHitNormal;
+  viewportEvent.mHitUv = this->mReactiveHitUv;
   viewportEvent.mHitObject = mOverObject;
   viewportEvent.mWorldRay = this->mReactiveRay;
   viewportEvent.mRayStart = this->mReactiveRay.Start;
