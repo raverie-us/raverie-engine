@@ -1,0 +1,11 @@
+[Pixel]
+struct ColorsTest
+{
+    function Main()
+    {
+        var color = Real4(0);
+        color = Colors.Red;
+        color = Colors.OrangeRed;
+        color = Colors.Purple;
+    }
+}
