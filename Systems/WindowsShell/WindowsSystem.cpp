@@ -1140,6 +1140,8 @@ void WindowsShellSystem::Update()
   RawInputUpdate();
   Keyboard* keyboard = Keyboard::GetInstance();
   keyboard->Update();
+  // Zero the cursor movement before the windows message pump to clear last frames movement
+  Z::gMouse->mCursorMovement = Vec2::cZero;
 
   if (mOsShellHook)
     mOsShellHook->HookUpdate();
