@@ -30,8 +30,15 @@ namespace GizmoHelpers
 
 float GetViewScale(Camera* camera, Vec3Param location);
 
-int GetDragAxis(Vec3Param localMovement);
-Vec3 GetOffAxisMovement(Vec3Param localMovement);
+int GetDragAxis(Vec3Param movement);
+Vec3 SingleAxisToOffAxesScale(Vec3Param movement);
+Vec3 SingleAxisToOffAxesScale(int dragAxis, Vec3Param movement);
+Vec3 GetMovementDirection(Vec3Param movement, Mat3Param bases);
+
+Vec3 MovementToUniformSignedLocalScale(float scaleDirection,
+  Vec3Param worldMovement, Mat4 worldToParent, QuatParam parentToLocal);
+Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection,
+  Vec3Param worldMovement, Mat4 worldToParent, QuatParam parentToLocal);
 
 Vec3 NormalToLocal(Vec3Param vector0, Transform* transform);
 void SetLocalPositionFromWorld(ObjectTransformState& object, Vec3Param worldTranslation, Transform* transform);
@@ -81,7 +88,6 @@ Vec3 GetSnappedVectorWorldAxes(Vec3Param start, Vec3Param end, float snapDistanc
 ///   Set the bases to match the standard world xyz bases.
 /// </param>
 DeclareEnum2(GizmoBasis, Local, World);
-
 
 
 //------------------------------------------------------------ Simple Gizmo Base
@@ -347,9 +353,9 @@ public:
   /// As the gizmo is being dragged, we want to update all objects.
   void OnGizmoModified(GizmoUpdateEvent* e);
 
-  /// Specific utility function.
-  Vec3 ScaleFromDrag(GizmoDrag* gizmoDrag, float distance, Vec3Param localMovement,
-    Vec3Param startScale, QuatParam rotation);
+  /// Generate a new scale based on drag-type [ie: viewplane, gizmo-basis-plane, gizmo-axis].
+  Vec3 ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, float distance,
+    Vec3Param movement, Vec3Param startScale, MetaTransformParam transform);
 
   /// Used when dragging on the view axis to determine which direction 
   Vec3 mEyeDirection;

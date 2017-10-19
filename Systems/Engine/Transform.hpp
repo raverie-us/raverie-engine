@@ -178,6 +178,18 @@ private:
   bool InWorld;
 };
 
+//------------------------------------------------------ Transform MetaTransform
+/// Gizmos use this interface to operate on transforms.
+class TransformMetaTransform : public MetaTransform
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  MetaTransformInstance GetInstance(HandleParam object) override;
+  static MetaTransformInstance BuildInstance(Transform* transform);
+};
+
+//------------------------------------------------------------ Transform Utility
 /// Transform Utility
 Vec3 GetTranslationFrom(Mat4Param mat);
 void SetTranslationOn(Mat4* mat, Vec3Param newTraslation);

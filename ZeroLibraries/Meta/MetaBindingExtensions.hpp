@@ -375,7 +375,7 @@ public:
   // World Matrix
   Mat4 GetParentWorldMatrix();
 
-  // Transform for cog, object instance for geoelement, etc...
+  // Transform for Cog, object instance for GeoElement, etc...
   Handle mInstance;
 
   // Consider removing this. It was added to mark the space as modified in Gizmos, but
@@ -399,6 +399,8 @@ public:
   // Used to get a size for focusing. Potentially remove and refactor later.
   Aabb mAabb;
 };
+
+typedef MetaTransformInstance& MetaTransformParam;
 
 // Allows objects to have transform type properties without the limitation of
 // the object type being a Cog
