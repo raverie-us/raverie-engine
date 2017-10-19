@@ -1442,7 +1442,8 @@ void ZilchShaderTranslator::WalkGetterSetter(Zilch::MemberAccessNode*& node, Zil
       context->GetBuilder() << ")";
       return;
     }
-    String msg = String::Format("Getter '%s.%s' can't be translated", accessedShaderType->mZilchName.c_str(), zilchGetter->Name.c_str());
+    String accessedTypeName = node->LeftOperand->ResultType->ToString();
+    String msg = String::Format("Getter '%s.%s' can't be translated", accessedTypeName.c_str(), zilchGetter->Name.c_str());
     SendTranslationError(node->Location, msg);
   }
 }
