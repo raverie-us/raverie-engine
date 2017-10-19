@@ -451,7 +451,7 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
     return true;
 
   // Currently the version is used to detect duplicate errors
-  // Since scripts are changing, we definately want to show duplicate errors.
+  // Since scripts are changing, we definitely want to show duplicate errors.
   ++ZilchManager::GetInstance()->mVersion;
 
   // Scripts cannot compile if fragments do not compile
