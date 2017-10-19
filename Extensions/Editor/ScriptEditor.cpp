@@ -1517,22 +1517,6 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
   CheckPopups();
 }
 
-String AlphaNumericScrub(StringRange input)
-{
-  StringBuilder builder;
-  while (!input.Empty())
-  {
-    Rune r = input.Front();
-    if (IsAlphaNumeric(r))
-    {
-      builder.Append(r);
-    }
-    input.PopFront();
-  }
-
-  return builder.ToString();
-}
-
 bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut, String& indentOut, int& functionPositionOut)
 {
   functionPositionOut = -1;
@@ -1541,18 +1525,18 @@ bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut, String& inde
   if (code && code->SupportsZeroConnect())
   {
     String line = GetCurrentLineText();
-    Regex zeroConnect("Zero.Connect\\(.+,\\s*Events\\.([a-zA-Z0-9]+)\\s*,\\s*$");
+    Regex zeroConnect("Zero.Connect\\(.+,\\s*Events\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
     Matches matches;
     zeroConnect.Search(line, matches);
 
     if (matches.Size() != 2)
     {
-      Regex zeroConnectString("Zero.Connect\\(.+,\\s*\"([a-zA-Z0-9]+)\"\\s*,\\s*$");
+      Regex zeroConnectString("Zero.Connect\\(.+,\\s*\"([a-zA-Z0-9_]+)\"\\s*,\\s*$");
       zeroConnectString.Search(line, matches);
 
       if (matches.Size() != 2)
       {
-        Regex zeroConnectString("Zero.Connect\\(.+,\\s*.*\\.([a-zA-Z0-9]+)\\s*,\\s*$");
+        Regex zeroConnectString("Zero.Connect\\(.+,\\s*.*\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
         zeroConnectString.Search(line, matches);
 
         if (matches.Size() != 2)
@@ -1565,7 +1549,7 @@ bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut, String& inde
 
     if (matches.Size() == 2)
     {
-      eventNameOut = AlphaNumericScrub(matches[1]);
+      eventNameOut = Zilch::LibraryBuilder::FixIdentifier(matches[1], TokenCheck::IsUpper);
 
       if (eventNameOut.Empty())
       {
