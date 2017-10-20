@@ -2217,15 +2217,24 @@ public:
 
     forRange (Resource* resource, resources.All())
     {
-      SearchViewResult result;
+      AttemptAddResource(search, resource);
+    }
+  }
+
+  void AttemptAddResource(SearchData& search, Resource* resource)
+  {
+    // Match on the name
+    int priority = PartialMatch(search.SearchString.All(), resource->Name.All(), CaseInsensitiveCompare);
+    if (priority != cNoMatch)
+    {
+      // Add a result
+      SearchViewResult& result = search.Results.PushBack();
       result.Data = resource;
       result.Interface = this;
       result.Name = resource->Name;
-      result.Priority = 0;
-
+      result.Priority = priority;
+      // Grey out resources options in the search view that cannot be added to the object
       mResourceList->CheckForAddition(result.mStatus, resource);
-
-      search.Results.PushBack(result);
     }
   }
 
