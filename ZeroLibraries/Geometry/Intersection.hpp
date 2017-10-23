@@ -504,6 +504,12 @@ Type LineTriangle(Vec3Param linePoint, Vec3Param lineDirection,
 Type RayAabb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint,
              Vec3Param aabbMaxPoint, Interval* interval);
 
+/// Intersect a ray with a cylinder. Returns None if the ray doesn't intersect
+/// the infinite cylinder anywhere. Returns Outside if the intersection with the infinite cylinder is invalid.
+Type RayInfiniteCylinder(Vec3Param rayStart, Vec3Param rayDirection,
+                         Vec3Param cylinderPointA, Vec3Param cylinderPointB,
+                         real cylinderRadius, Interval* interval);
+
 ///Intersect a ray with a capsule defined by its center, local axes, radius, and
 ///half of the distance between the centers of the spherical endcaps.
 Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection,
@@ -525,17 +531,11 @@ Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection,
                  Interval* interval);
 
 ///Intersect a ray with a cylinder defined by the points at the planar endcaps
-///and the radius.
+///and the radius. Returns None if the ray doesn't hit the infinite cylinder.
+///Returns Outside if the intersection with the cylinder is invalid.
 Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, 
                  Vec3Param cylinderPointA, Vec3Param cylinderPointB, 
                  real cylinderRadius, Interval* interval);
-
-///Intersect a ray with an elliptical cylinder defined by its center, local
-///axes, major radius (x-axis), minor radius (z-axis), and half height (y-axis).
-Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, 
-                 Vec3Param cylinderCenter, Mat3Param cylinderBasis, 
-                 real cylinderMajorRadius, real cylinderMinorRadius, 
-                 real cylinderHalfHeight, Interval* interval);
 
 ///Intersect a ray with an ellipsoid, the inverse scaled basis is the
 ///combination of the ellipsoid's basis with its radii and then inverted.
@@ -559,6 +559,11 @@ Type RayObb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param obbCenter,
 ///Intersect a ray with a sphere.
 Type RaySphere(Vec3Param rayStart, Vec3Param rayDirection, 
                Vec3Param sphereCenter, real sphereRadius, Interval* interval);
+///Intersect a ray with a sphere. This function will not early out when the sphere
+///is behind the ray so that the interval can be filled out. This is currently used
+///in RayCapsule to get accurate t-values.
+Type RaySphereAllowBehind(Vec3Param rayStart, Vec3Param rayDirection,
+                          Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 
 //Intersect a ray with a tetrahedron.
 Type RayTetrahedron(Vec3Param rayStart, Vec3Param rayDirection, 
