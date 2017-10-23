@@ -37,6 +37,9 @@ public:
   void SetSelectedItem(int index, bool sendEvent);
   int GetSelectedItem();
 
+  /// Are the values being displayed selectable? 
+  void SetSelectable(bool selectable);
+
   /// Get the index of the Button being hovered over by the mouse
   int GetHoverItem( ) { return mHoverItem; }
 
@@ -59,6 +62,7 @@ public:
   Array<TextButton*> mButtons;
   int mSelectedItem;
   int mHoverItem;
+  bool mAllowSelect;
 };
 
 }//namespace Zero

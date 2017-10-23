@@ -190,7 +190,7 @@ BuildList::BuildList(Composite* parent, VersionSelector* versionSelector,
      latestBuild->mInstallState != InstallState::Installing)
   {
     TextButton* installLatest = new TextButton(this, mLauncherBoldFont, 9);
-    installLatest->mTextColor = ToByteColor(BuildStatusUi::InstallLatestColor);
+    installLatest->mTextColor = BuildStatusUi::InstallLatestColor;
     installLatest->SetText("+ INSTALL LATEST");
     installLatest->mBorder->SetVisible(false);
     installLatest->mBackgroundColor = ToByteColor(Vec4(1,1,1,0));

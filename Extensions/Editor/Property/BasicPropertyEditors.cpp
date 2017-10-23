@@ -397,6 +397,13 @@ public:
 
     Refresh();
 
+    if (mProperty->IsReadOnly())
+    {
+      // Read only values should not be selectable
+      mSelectorButton->SetSelectable(false);
+      mSelectBox->SetSelectable(false);
+    }
+
     ConnectThisTo(mSelectBox, Events::ItemSelected, OnIndexChanged);
     ConnectThisTo(mSelectorButton, Events::ItemSelected, OnSelectorIndexChanged);
   }
