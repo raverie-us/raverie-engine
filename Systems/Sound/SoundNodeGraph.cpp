@@ -40,6 +40,21 @@ void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* output
   if (node->Name == "EditorSpace")
     return;
 
+  // If this is a space with no inputs, skip it
+  if (node->Name == "Space" && !node->HasInputs())
+  {
+    // Check if the output node is also for the space
+    if (outputNode->Name == "Space")
+    {
+      // If the child exists in the map and has no other parents, erase it
+      NodePrintInfo* child = mNodeMap.FindValue(outputNode->NodeID, nullptr);
+      if (child && child->mParents.Empty())
+        mNodeMap.Erase(outputNode->NodeID);
+    }
+
+    return;
+  }
+
   // Keep track of the highest level
   if (level > mMaxLevel)
     mMaxLevel = level;
@@ -481,6 +496,7 @@ NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
 {
   float minXpos(0.0f);
   mNodeMap.Clear();
+  mMaxLevel = 0;
 
   // Create all node info objects, starting with the system's output node
   CreateInfo(Z::gSound->mOutputNode->mNode, nullptr, 0);
@@ -488,13 +504,7 @@ NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
   // Sort nodes by level
   Array<Array<NodePrintInfo*>> infoByLevel(mMaxLevel + 1);
   forRange(NodePrintInfo* nodeInfo, mNodeMap.Values())
-  {
-    // Skip space nodes with no parents
-    if (nodeInfo->mName == "Space" && nodeInfo->mParents.Empty())
-      continue;
-
     infoByLevel[nodeInfo->mLevel].PushBack(nodeInfo);
-  }
 
   // Find first level with the most nodes
   int largestLevel(0);
