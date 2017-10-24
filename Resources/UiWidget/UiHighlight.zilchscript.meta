@@ -5,12 +5,11 @@ TextContent
 	{
 		var Tags = Array
 		{
-			"Ui"
 		}
 	}
 	ZilchScriptBuilder 
 	{
-		var Name = "ZUiFillViewport"
-		var ResourceId = 0x577bd4df3c590577
+		var Name = "UiHighlight"
+		var ResourceId = 0x569f15ea32786611
 	}
 }

@@ -1,0 +1,26 @@
+[Version:1]
+DataContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+		}
+	}
+	DataBuilder 
+	{
+		var Name = "UiTemplate"
+		var ResourceId = 0x59b1605f99ed8055
+		var LoaderType = "Level"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ResourceTemplate 
+	{
+		var DisplayName = "Ui Level"
+		var Description = "Simple Ui Level"
+		var SortWeight = 110
+		var Category = ""
+		var CategorySortWeight = 0
+	}
+}

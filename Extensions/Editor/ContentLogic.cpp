@@ -210,9 +210,9 @@ bool LoadEditorContent(Cog* configCog)
 
   Array<String> coreLibs;
   coreLibs.PushBack("ZeroCore");
-  coreLibs.PushBack("Editor");
+  coreLibs.PushBack("UiWidget");
   coreLibs.PushBack("EditorUi");
-  coreLibs.PushBack("EditorScripts");
+  coreLibs.PushBack("Editor");
 
   forRange(String libraryName, coreLibs.All())
   {

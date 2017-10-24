@@ -92,7 +92,7 @@ class ZVolumeBarSegments : ZilchComponent
 [RunInEditor]
 class ZVolumeSlider : ZilchComponent
 {
-  [Dependency] var Slider : ZUiSlider;
+  [Dependency] var Slider : UiSlider;
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Owner, Events.UiSliderChanged, this.OnVolumeChange);

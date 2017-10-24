@@ -1,8 +1,8 @@
 [Version:1]
 ContentLibrary 
 {
-	var Name = "EditorScripts"
-	var LibraryId = 0x580e189afbc779f3
+	var Name = "UiWidget"
+	var LibraryId = 0x59b91dbfc0627e59
 	var SourceControlType = ""
 	var ReadOnly = true
 }
