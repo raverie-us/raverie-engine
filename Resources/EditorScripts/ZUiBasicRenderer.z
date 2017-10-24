@@ -1,86 +1,116 @@
 [RunInEditor]
-class ZUiBasicRenderer : ZilchComponent
+class UiRenderer : ZilchComponent
 {
-  [Property] var ClearColor : Real4 = Real4(0, 0, 0, 1);
-  [Property] var DrawDebug : Boolean = true;
-  [Property] var DrawOpaque : Boolean = false;
-  [Property] var DrawAlphaBlend : Boolean = false;
+  [Dependency] var UiWidget : UiWidget;
+  [Dependency] var UiRootWidget : UiRootWidget;
+  
+  [Property] var ClearColor : Real4 = Real4(0);
+  
+  // If DebugDraw RenderGroups are drawn in edit mode.
+  [Property] var EditorDebugDraw : Boolean = true;
+  
+  // If DebugDraw RenderGroups are drawn in play mode.
+  [Property] var GameDebugDraw : Boolean = true;
+  
+  var PreviousResolutionY : Integer;
   
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Owner, Events.RenderTasksUpdate, this.OnRenderTasksUpdate);
   }
   
-  function RenderUi(event : RenderTasksEvent, color : RenderTarget, depth : RenderTarget)
-  {
-    // Find all root widgets
-    foreach(var root in this.Space.AllObjects)
-    {
-      if(root.UiRootWidget != null)
-      {
-        // Update layouts before rendering
-        root.UiRootWidget.Update();
-        
-        if(root.UiRenderer != null)
-          root.UiRenderer.Render(event, color, depth, ColorOutput());
-      }
-    }
-  }
-
   function OnRenderTasksUpdate(event : RenderTasksEvent)
   {
     var size = event.ViewportSize;
-    var color = event.GetFinalTarget(size, TextureFormat.RGB8);
-    var depth = event.GetRenderTarget(size, TextureFormat.Depth24Stencil8);
     
-    event.AddRenderTaskClearTarget(color, depth, this.ClearColor, 1.0, 0);
+    this.ResizeToViewport(size, event.CameraViewportCog.CameraViewport);
     
-    // Settings used to render opaque objects
-    var opaqueSettings = RenderSettings();
-    opaqueSettings.ColorTarget = color;
-    opaqueSettings.DepthTarget = depth;
-    opaqueSettings.DepthSettings.DepthMode = DepthMode.Write;
-    opaqueSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
-    opaqueSettings.CullMode = CullMode.BackFace;
+    var final = event.GetFinalTarget(size, TextureFormat.RGBA8);
+    var depthStencil = event.GetRenderTarget(size, TextureFormat.Depth24Stencil8);
     
-    // Settings used to render alpha objects
-    var alphaSettings = RenderSettings();
-    alphaSettings.ColorTarget = color;
-    alphaSettings.DepthTarget = depth;
-    alphaSettings.DepthSettings.DepthMode = DepthMode.Read;
-    alphaSettings.BlendSettings.BlendMode = BlendMode.Enabled;
-    alphaSettings.BlendSettings.SourceFactor = BlendFactor.SourceAlpha;
-    alphaSettings.BlendSettings.DestFactor = BlendFactor.InvSourceAlpha;
-    alphaSettings.CullMode = CullMode.Disabled;
+    event.AddRenderTaskClearTarget(final, depthStencil, this.ClearColor, 1.0, 0);
     
-    var renderPass = ColorOutput();
+    // Update layouts before rendering
+    this.UiRootWidget.Update();
+    this.UiRootWidget.Render(event, final, depthStencil, ColorOutput());
     
-    // Render opaque objects
-    if(this.DrawOpaque)
-      event.AddRenderTaskRenderPass(opaqueSettings, RenderGroup.Opaque, renderPass);
+    this.DrawDebugObjects(event, final, depthStencil);
+  }
+  
+  function ResizeToViewport(viewportSize : Integer2, cameraViewport : CameraViewport)
+  {
+    var cameraCog = cameraViewport.CameraPath.Cog;
+    var cameraTransform = cameraCog.Transform;
+    var camera = cameraCog.Camera;
     
-    // Render alpha blended objects (Sprites, Particles, etc..)
-    if(this.DrawAlphaBlend)
-      event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.AlphaBlend, renderPass);
-      
-    // Render the ZSorted objects (SpriteText, etc...)
-    //event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.ZSort, renderPass);
+    var cameraPos = cameraTransform.Translation;
     
-    // Render debug draw
-    if (this.DrawDebug)
-        event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.DebugDraw, renderPass);
-    
-    // Render the Ui
-    this.RenderUi(event, color, depth);
-    
-    if(this.DrawDebug && this.Space.IsEditorMode)
+    if(this.Space.IsEditorMode == false)
     {
-      event.AddRenderTaskRenderPass(alphaSettings, RenderGroup.DebugDraw, renderPass);
+      // Size ourself to the viewport size
+      this.UiWidget.Size = viewportSize as Real2;
       
-      var renderSettings = RenderSettings();
-      renderSettings.ColorTarget = color;
-      renderSettings.DepthTarget = depth;
-      event.AddRenderTaskRenderPass(renderSettings, RenderGroup.DebugDrawOnTop, renderPass);
+      // Center the camera
+      cameraPos.X = +viewportSize.X * 0.5;
+      cameraPos.Y = -viewportSize.Y * 0.5;
+      
+      camera.Size = viewportSize.Y;
     }
+    else
+    {
+      var firstRender = (this.PreviousResolutionY == 0);
+      var zoomOneToOneHotkey = Zero.Keyboard.KeyIsDown(Keys.Zero) && Zero.Keyboard.KeyIsDown(Keys.Control);
+      
+      // Make the camera zoom level 1 to 1 with the viewport (pixel perfect)
+      if(firstRender || zoomOneToOneHotkey)
+        cameraCog.Camera.Size = viewportSize.Y;
+      
+      // When the viewport is resized, we want to adjust our camera size to keep the zoom the same
+      if(!firstRender && this.PreviousResolutionY != viewportSize.Y)
+        camera.Size *= (viewportSize.Y as Real / this.PreviousResolutionY);
+      
+      this.PreviousResolutionY = viewportSize.Y;
+      
+      // The editor camera controller zoom can make it non-integral
+      camera.Size = Math.Round(camera.Size);
+    }
+    
+    // Camera's position should always be snapped because the
+    // EditorCameraController can make it non-integral (and the 0.5 multiplication above)
+    cameraPos = Math.Floor(cameraPos);
+    
+    // If the viewport size is an odd number then we would have removed the half offset
+    // in the above floor, so we need to add it back. Note we cannot just remove the Floor
+    // due to the EditorCameraController adding in non-integral offsets
+    if (viewportSize.Y % 2 == 1)
+      cameraPos.Y += 0.5;
+    cameraTransform.Translation = cameraPos;
+  }
+  
+  function DrawDebugObjects(event : RenderTasksEvent, color : RenderTarget, depth : RenderTarget)
+  {
+    if (!this.EditorDebugDraw && this.Space.IsEditorMode || !this.GameDebugDraw && !this.Space.IsEditorMode)
+      return;
+      
+    var debugSettings = RenderSettings();
+    debugSettings.ColorTarget = color;
+    debugSettings.DepthTarget = depth;
+    
+    debugSettings.CullMode = CullMode.Disabled;
+    
+    debugSettings.BlendSettings.BlendMode = BlendMode.Separate;
+    debugSettings.BlendSettings.BlendEquation = BlendEquation.Add;
+    debugSettings.BlendSettings.SourceFactor = BlendFactor.SourceAlpha;
+    debugSettings.BlendSettings.DestFactor = BlendFactor.InvSourceAlpha;
+    debugSettings.BlendSettings.SourceFactorAlpha = BlendFactor.One;
+    debugSettings.BlendSettings.DestFactorAlpha = BlendFactor.One;
+    
+    debugSettings.DepthSettings.DepthMode = DepthMode.Read;
+    debugSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+    
+    event.AddRenderTaskRenderPass(debugSettings, RenderGroup.DebugDraw, ColorOutput());
+    
+    debugSettings.DepthSettings.DepthMode = DepthMode.Disabled;
+    event.AddRenderTaskRenderPass(debugSettings, RenderGroup.DebugDrawOnTop, ColorOutput());
   }
 }

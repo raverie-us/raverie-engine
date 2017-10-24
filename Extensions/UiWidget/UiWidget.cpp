@@ -188,12 +188,17 @@ void UiWidget::Initialize(CogInitializer& initializer)
 
   ConnectThisTo(GetOwner(), Events::AreaChanged, OnAreaChanged);
   ConnectThisTo(GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
+  ConnectThisTo(mArea, Events::PropertyModified, OnAreaPropertyModified);
+  ConnectThisTo(mArea, Events::PropertyModifiedIntermediate, OnAreaPropertyModified);
 
   // If we're dynamically added, we need to let our parent know that it needs
   // to update. Unfortunately, this means that when the Ui is created, the entire
   // tree is updated once. We could change this so this is only called if
   // the component was added dynamically once that information is available.
   MarkAsNeedsUpdate();
+
+  // Currently, TopLeft is the only thing supported by the widget system
+  mArea->mOrigin = Location::TopLeft;
 }
 
 //**************************************************************************************************
@@ -582,12 +587,12 @@ void UiWidget::OnAreaChanged(Event* e)
 float UiWidget::GetSnapSize()
 {
   float snapSize = cDefaultSnapSize;
-  if(UiRootWidget* rootWidget = GetRootWidget())
-  {
-    snapSize = rootWidget->mSnapSize;
-    if(snapSize == 0.0f)
-      snapSize = 0.0001f;
-  }
+  //if(UiRootWidget* rootWidget = GetRootWidget())
+  //{
+  //  snapSize = rootWidget->mSnapSize;
+  //  if(snapSize == 0.0f)
+  //    snapSize = 0.0001f;
+  //}
 
   return snapSize;
 }
@@ -631,7 +636,12 @@ void UiWidget::UpdateTransform(UiTransformUpdateEvent* e)
   if(GetOwner()->GetMarkedForDestruction())
     return;
 
-  if(mTransformUpdateState != UiTransformUpdateState::Updated || e->mAlwaysUpdate)
+  // Currently, TopLeft is the only thing supported by the widget system
+  mArea->mOrigin = Location::TopLeft;
+
+  // Until the TransformUpdateState is fully functional, we should always update
+  bool alwaysUpdate = true;
+  if(mTransformUpdateState != UiTransformUpdateState::Updated || alwaysUpdate)
   {
     // Send the pre-update
     GetOwner()->DispatchEvent(Events::PreTransformUpdate, e);
@@ -766,6 +776,9 @@ void UiWidget::SetSizePolicy(Axis::Enum axis, UiSizePolicy::Enum policy)
 //**************************************************************************************************
 void UiWidget::SetSizePolicyX(UiSizePolicy::Enum policy)
 {
+  if (OperationQueue::IsListeningForSideEffects())
+    OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+
   mSizePolicy[Axis::X] = policy;
   MarkAsNeedsUpdate();
 }
@@ -773,6 +786,9 @@ void UiWidget::SetSizePolicyX(UiSizePolicy::Enum policy)
 //**************************************************************************************************
 void UiWidget::SetSizePolicyY(UiSizePolicy::Enum policy)
 {
+  if (OperationQueue::IsListeningForSideEffects())
+    OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+
   mSizePolicy[Axis::Y] = policy;
   MarkAsNeedsUpdate();
 }
@@ -914,6 +930,11 @@ void UiWidget::SetMarginBottom(float val)
   MarkAsNeedsUpdate();
 }
 
+//**************************************************************************************************
+void UiWidget::OnAreaPropertyModified(PropertyEvent* e)
+{
+  SetSize(mArea->GetSize());
+}
 
 //**************************************************************************************************
 void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction)

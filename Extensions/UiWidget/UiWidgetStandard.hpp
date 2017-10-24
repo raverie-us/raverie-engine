@@ -31,8 +31,6 @@ public:
 #include "UiWidget.hpp"
 #include "UiRootWidget.hpp"
 #include "UiWidgetEvents.hpp"
-#include "UiRenderer.hpp"
-#include "UiRootInputRouter.hpp"
 
 // Layouts
 #include "UiLayout.hpp"

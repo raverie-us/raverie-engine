@@ -17,8 +17,9 @@ class KeyboardEvent;
 class DispatchAtParams;
 
 /// Add Pixel scalar to everything
+DeclareEnum4(StencilDrawMode, None, Add, Remove, Test);
 
-//------------------------------------------------------------------ Root Widget
+//--------------------------------------------------------------------------------- Root Widget
 class UiRootWidget : public Component
 {
 public:
@@ -35,15 +36,12 @@ public:
   /// called right before rendering.
   void Update();
 
-  /// Used to update mouse hover and double click timing.
-  void UpdateMouseTimers(float dt, ViewportMouseEvent* e);
-
-  //------------------------------------------------------------ Keyboard Events
+  //--------------------------------------------------------------------------- Keyboard Events
   void PerformKeyDown(Keys::Enum key);
   void PerformKeyUp(Keys::Enum key);
   void PerformKeyboardEvent(KeyboardEvent* e);
 
-  //--------------------------------------------------------------- Mouse Events
+  //------------------------------------------------------------------------------ Mouse Events
   /// This must be called appropriately before mouse clicks.
   void PerformMouseMove(Vec2Param newRootPoint);
 
@@ -52,7 +50,10 @@ public:
   void PerformMouseDown(MouseButtons::Enum button, Vec2Param rootPoint);
   void PerformMouseUp(MouseButtons::Enum button, Vec2Param rootPoint);
   void PerformMouseScroll(Vec2Param rootPoint, Vec2Param scroll);
-
+  
+  /// Used to update mouse hover and double click timing.
+  void UpdateMouseTimers(float dt, ViewportMouseEvent* e);
+  
   void BuildMouseEvent(ViewportMouseEvent* e, Vec2Param rootPoint,
                        MouseButtons::Enum button = MouseButtons::None);
 
@@ -67,6 +68,48 @@ public:
 
   /// Finds the Widget at the given location and dispatches an event on the Widget.
   void DispatchAt(DispatchAtParams& dispatchParams);
+
+  //----------------------------------------------------------------------- Input Event Routing
+  /// If set, all input from the Os will be forwarded to the root widget.
+  void SetOsWindow(OsWindow* window);
+
+  /// Reactive event response
+  void OnMouseEvent(ViewportMouseEvent* e);
+  void OnMouseButton(ViewportMouseEvent* e);
+  void OnMouseUpdate(ViewportMouseEvent* e);
+  void OnKeyboardEvent(KeyboardEvent* e);
+
+  /// When we forward events through the RootWidget, they will bubble back up
+  /// and we'll get them again. This is used to ignore duplicate events.
+  bool mIgnoreEvents;
+
+  //--------------------------------------------------------------------------------- Rendering
+  /// Renders the Ui to the given color render target. The depth render target must have stencil.
+  void Render(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass);
+
+  //-------------- Internals
+  void RenderWidgets(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
+                     MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform);
+
+  void AddGraphical(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
+                    MaterialBlock* renderPass, Cog* widgetCog, StencilDrawMode::Enum stencilMode,
+                    uint stencilIncrement);
+
+  /// Clears the GraphicalRangeInterface and 
+  void FlushGraphicals(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
+                       MaterialBlock* renderPass);
+
+  /// All objects to be rendered will be added to this list.
+  GraphicalRangeInterface mGraphicals;
+
+  uint mStencilCount;
+  StencilDrawMode::Enum mStencilDrawMode;
+
+  RenderSettings mStencilAddSettings;
+  RenderSettings mStencilRemoveSettings;
+  RenderSettings mStencilTestSettings;
+
+  //------------------------------------------------------------------------------------- Other
 
   void SetDebugSelected(Cog* selected);
   Cog* GetDebugSelected();
@@ -83,8 +126,6 @@ public:
   /// Whether or not to print out debug information to the console about what
   /// the mouse is currently doing.
   bool mDebugMouseInteraction;
-
-  bool mAlwaysUpdate;
 
   /// Only send the MouseHover event when the mouse has been over
   /// a single widget for this amount of time.

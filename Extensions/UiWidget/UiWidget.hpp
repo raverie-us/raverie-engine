@@ -41,12 +41,11 @@ public:
   /// Meta Initialization.
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  UiTransformUpdateEvent() : mRootWidget(nullptr), mAlwaysUpdate(false) {}
+  UiTransformUpdateEvent() : mRootWidget(nullptr) {}
 
   UiRootWidget* GetRootWidget();
 
   UiRootWidget* mRootWidget;
-  bool mAlwaysUpdate;
 };
 
 DeclareEnum2(Axis, X, Y);
@@ -319,6 +318,8 @@ public:
   void SetMarginTop(float val);
   void SetMarginRight(float val);
   void SetMarginBottom(float val);
+
+  void OnAreaPropertyModified(PropertyEvent* e);
 
   /// Flag getters / setters.
   DeclareWidgetFlagSetterGetter(Visible);

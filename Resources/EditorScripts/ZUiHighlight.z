@@ -9,7 +9,7 @@ class ZUiHighlight : ZilchComponent
     [Property] var Active : Boolean = true;
     
     // Mouse interaction
-    [Property] var MouseMode : ZUiHighlightMouseMode = ZUiHighlightMouseMode.Enter;
+    [Property] var MouseMode : ZUiHighlightMouseMode = ZUiHighlightMouseMode.EnterHierarchy;
     [Property] var MouseOverCog : CogPath = CogPath();
     [Property] var HighlightCog : CogPath = CogPath();
     
@@ -49,8 +49,8 @@ class ZUiHighlight : ZilchComponent
         }
         else
         {
-            Zero.Connect(mouseOverCog, "MouseHover", this.OnMouseEnter);
-            Zero.Connect(mouseOverCog, Events.MouseExit, this.OnMouseExit);
+            Zero.Connect(mouseOverCog, Events.MouseHover, this.OnMouseEnter);
+            Zero.Connect(mouseOverCog, Events.MouseExitHierarchy, this.OnMouseExit);
         }
         
         Zero.Connect(mouseOverCog, Events.LeftMouseDown, this.OnLeftMouseDown);
