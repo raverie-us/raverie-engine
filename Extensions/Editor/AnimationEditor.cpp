@@ -250,7 +250,7 @@ AnimationEditor::AnimationEditor(Composite* parent)
 
   // We want to connect to events for when the selection changes
   MetaSelection* selection = Z::gEditor->GetSelection();
-  ConnectThisTo(selection, Events::SelectionChanged, OnSelectionChanged);
+  ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
   ConnectThisTo(Z::gEditor, Events::Save, OnSave);
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
 
@@ -444,7 +444,7 @@ Cog* FindAnimationGraphObject(Cog* object)
 }
 
 //******************************************************************************
-void AnimationEditor::OnSelectionChanged(SelectionChangedEvent* event)
+void AnimationEditor::OnSelectionFinal(SelectionChangedEvent* event)
 {
   // Do nothing if we're not active
   if(!GetActive())

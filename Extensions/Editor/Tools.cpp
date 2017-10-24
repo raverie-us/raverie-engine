@@ -523,7 +523,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
   // no object clicked on so clear out current selection
   else
   {
-    selection->Clear(SendsEvents::False);
+    selection->Clear();
     selection->FinalSelectionChanged();
   }
 }
