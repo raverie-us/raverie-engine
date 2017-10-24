@@ -351,6 +351,7 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<SpriteSourceManager>("CircleBordered");
   ShowBuiltInResource<SpriteSourceManager>("ConnectionIcon");
   ShowBuiltInResource<SpriteSourceManager>("LightIcon");
+  ShowBuiltInResource<SpriteSourceManager>("ParticleIcon");
   ShowBuiltInResource<SpriteSourceManager>("SelectIcon");
   ShowBuiltInResource<SpriteSourceManager>("Square");
   ShowBuiltInResource<SpriteSourceManager>("SquareBordered");
