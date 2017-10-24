@@ -37,8 +37,6 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
   ZilchInitializeType(UiWidgetCastResultsRange);
   ZilchInitializeType(UiWidget);
   ZilchInitializeType(UiRootWidget);
-  ZilchInitializeType(UiRenderer);
-  ZilchInitializeType(UiRootInputRouter);
   ZilchInitializeType(UiLayout);
   ZilchInitializeType(UiStackLayout);
   ZilchInitializeType(UiFillLayout);
@@ -46,8 +44,6 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
 
   ZilchInitializeType(UiWidget);
   ZilchInitializeType(UiRootWidget);
-  ZilchInitializeType(UiRootInputRouter);
-  ZilchInitializeType(UiRenderer);
   ZilchInitializeType(UiLayout);
   ZilchInitializeType(UiStackLayout);
   ZilchInitializeType(UiFillLayout);

@@ -46,8 +46,6 @@
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="UiDockLayout.hpp" />
     <ClInclude Include="UiFillLayout.hpp" />
-    <ClInclude Include="UiRenderer.hpp" />
-    <ClInclude Include="UiRootInputRouter.hpp" />
     <ClInclude Include="UiLayout.hpp" />
     <ClInclude Include="UiRootWidget.hpp" />
     <ClInclude Include="UiStackLayout.hpp" />
@@ -63,8 +61,6 @@
     <ClCompile Include="UiDockLayout.cpp" />
     <ClCompile Include="UiFillLayout.cpp" />
     <ClCompile Include="UiLayout.cpp" />
-    <ClCompile Include="UiRenderer.cpp" />
-    <ClCompile Include="UiRootInputRouter.cpp" />
     <ClCompile Include="UiRootWidget.cpp" />
     <ClCompile Include="UiStackLayout.cpp" />
     <ClCompile Include="UiWidget.cpp" />

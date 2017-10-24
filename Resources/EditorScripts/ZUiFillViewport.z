@@ -30,5 +30,4 @@ class ZUiFillViewport : ZilchComponent
     cameraPos.Y = -viewportSize.Y * 0.5;
     cameraCog.Transform.Translation = cameraPos;
   }
-  
 }
