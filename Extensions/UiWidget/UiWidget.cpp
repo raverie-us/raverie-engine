@@ -188,6 +188,8 @@ void UiWidget::Initialize(CogInitializer& initializer)
 
   ConnectThisTo(GetOwner(), Events::AreaChanged, OnAreaChanged);
   ConnectThisTo(GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
+  ConnectThisTo(mTransform, Events::PropertyModified, OnTransformPropertyModified);
+  ConnectThisTo(mTransform, Events::PropertyModifiedIntermediate, OnTransformPropertyModified);
   ConnectThisTo(mArea, Events::PropertyModified, OnAreaPropertyModified);
   ConnectThisTo(mArea, Events::PropertyModifiedIntermediate, OnAreaPropertyModified);
 
@@ -934,6 +936,12 @@ void UiWidget::SetMarginBottom(float val)
 void UiWidget::OnAreaPropertyModified(PropertyEvent* e)
 {
   SetSize(mArea->GetSize());
+}
+
+//**************************************************************************************************
+void UiWidget::OnTransformPropertyModified(PropertyEvent* e)
+{
+  SetLocalTranslation(GetLocalTranslation());
 }
 
 //**************************************************************************************************
