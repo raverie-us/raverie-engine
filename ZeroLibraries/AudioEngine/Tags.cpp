@@ -574,10 +574,12 @@ namespace Audio
   {
     if (!IsThreaded)
     {
-      UseCompressor = UseCompressor;
+      UseCompressor = useCompressor;
 
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetUseCompressor, ThreadedTag, useCompressor));
+      // Compressor functionality is temporarily disabled to fix a crash 
+      // so we are not sending a task to the threaded object
+      // (Needs a fairly complicated refactor to actually fix the issue 
+      // (variable size mixing when using another tag for the compressor))
     }
     else
     {
@@ -801,11 +803,11 @@ namespace Audio
       if (ThreadedTag)
       {
         if (tag && tag->ThreadedTag)
-          gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorInputTag, ThreadedTag, 
+          gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorInputTag, ThreadedTag,
             tag->ThreadedTag));
         else
-          gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorInputTag, ThreadedTag, 
-            (TagObject*)nullptr));
+          gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorInputTag, ThreadedTag,
+          (TagObject*)nullptr));
       }
     }
     else

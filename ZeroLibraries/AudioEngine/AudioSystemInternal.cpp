@@ -378,9 +378,10 @@ namespace Audio
     // Copy the data to the ring buffer
     AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
 
-    // Update tags
-    forRange(TagObject& tag, TagListThreaded.All())
-      tag.UpdateCompressorInput();
+    // Tag compressor functionality is temporarily disabled to fix a crash so no longer calling
+    // the UpdateCompressorInput function on all objects in TagListThreaded.
+    // Needs a fairly complicated refactor to actually fix the issue 
+    // (variable size mixing when using another tag for the compressor)
 
     // Still running, return true
     return true;
