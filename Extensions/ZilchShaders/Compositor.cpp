@@ -584,7 +584,7 @@ void ZilchCompositor::DetermineFragmentInputTypes(ShaderStageInfo& previousStage
       if(containsInputAttribute && fieldInfo.mInputType == FieldInputType::Unknown)
       {
         fieldInfo.mInputError = true;
-        fieldInfo.mInputType = FieldInputType::Property;
+        fieldInfo.mInputType = FieldInputType::Unknown;
       }
 
       // If this field also contains the output attribute then mark the current

@@ -17,6 +17,51 @@ namespace Tags
 DefineTag(Core);
 }
 
+//------------------------------------------------------ Transform MetaTransform
+ZilchDefineType(TransformMetaTransform, builder, type)
+{
+}
+
+//******************************************************************************
+MetaTransformInstance TransformMetaTransform::GetInstance(HandleParam object)
+{
+  Transform* transform = object.Get<Transform*>();
+  return BuildInstance(transform);
+}
+
+//******************************************************************************
+MetaTransformInstance TransformMetaTransform::BuildInstance(Transform* transform)
+{
+  if(transform == nullptr)
+    return MetaTransformInstance( );
+
+  BoundType* t = ZilchTypeId(Transform);
+
+  MetaTransformInstance instance(transform);
+
+  instance.mSpace = nullptr;
+  if(Cog* owner = transform->GetOwner( ))
+    instance.mSpace = owner->GetSpace( );
+
+  instance.mLocalTranslation = t->GetProperty("Translation");
+  instance.mLocalRotation = t->GetProperty("Rotation");
+  instance.mLocalScale = t->GetProperty("Scale");
+
+  instance.mWorldTranslation = t->GetProperty("WorldTranslation");
+  instance.mWorldRotation = t->GetProperty("WorldRotation");
+  instance.mWorldScale = t->GetProperty("WorldScale");
+
+  if(Transform* parentTransform = transform->GetParent( ))
+  {
+    instance.mParentInstance = t->GetProperty("Parent");
+    instance.mParentWorldMatrix = t->GetProperty("WorldMatrix");
+  }
+
+  return instance;
+}
+
+//------------------------------------------------------------ Transform Utility
+
 Vec3 GetTranslationFrom(Mat4Param mat)
 {
   return Vec3(mat.m03, mat.m13, mat.m23);
@@ -63,6 +108,8 @@ void SetRotationLookAt(Transform* transform, Vec3 lookAtPoint, Vec3 up, Facing::
   transform->SetWorldRotation(LookAt(transform->GetWorldTranslation( ), lookAtPoint, up, facing));
 }
 
+//-------------------------------------------------------------------- Transform
+
 Memory::Pool* Transform::sCachedWorldMatrixPool = new Memory::Pool("TransformWorldMatrixCache",
   Memory::GetRoot( ), sizeof(Mat4), 100);
 
@@ -70,6 +117,8 @@ bool Transform::sCacheWorldMatrices = true;
 
 ZilchDefineType(Transform, builder, type)
 {
+  type->Add(new TransformMetaTransform());
+
   ZeroBindComponent();
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::CallSetDefaults);
@@ -105,6 +154,7 @@ ZilchDefineType(Transform, builder, type)
   ZilchBindGetterSetter(WorldTranslation);
 
   ZilchBindGetter(WorldMatrix);
+  ZilchBindGetter(Parent);
 
   ZeroBindTag(Tags::Core);
 }

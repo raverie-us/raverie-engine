@@ -51,6 +51,12 @@ public:
   /// Used to hide the Resource type search on the left.
   void ShowResourceTypeSearch(bool state);
 
+  /// Add a list of tags to the resource being added
+  void AddTags(TagList& tags);
+
+  ///ResourceTemplateSearch will take focus
+  void TemplateSearchTakeFocus();
+
   PostAddOp mPostAdd;
 
 private:

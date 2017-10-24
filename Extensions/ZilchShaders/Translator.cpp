@@ -1420,25 +1420,31 @@ void ZilchShaderTranslator::WalkGetterSetter(Zilch::MemberAccessNode*& node, Zil
   {
     Zilch::Function* zilchGetter = node->AccessedGetterSetter->Get;
 
-    ShaderFunction* shaderfunction = nullptr;
-    // Find the shader function on from the member's type
-    ShaderType* accessedShaderType = FindShaderType(node->ResultType, node, false);
+    ShaderFunction* shaderFunction = nullptr;
+    // Find the shader function from the member's type
+    ShaderType* accessedShaderType = FindShaderType(node->LeftOperand->ResultType, node, false);
     if(accessedShaderType != nullptr)
-      shaderfunction = accessedShaderType->FindFunction(zilchGetter);
+      shaderFunction = accessedShaderType->FindFunction(zilchGetter);
     // If we couldn't find the function then try finding an extension function
-    if(shaderfunction == nullptr)
-      shaderfunction = mCurrentLibrary->FindExtension(zilchGetter);
+    if(shaderFunction == nullptr)
+      shaderFunction = mCurrentLibrary->FindExtension(zilchGetter);
     
     // If we managed to get the shader function then translate it
-    if(shaderfunction != nullptr)
+    if(shaderFunction != nullptr)
     {
-      context->GetBuilder() << shaderfunction->mShaderName << "(";
+      // Mark the function we referenced as a dependency
+      context->mCurrentType->AddDependency(shaderFunction->mOwner);
+
+      context->GetBuilder() << shaderFunction->mShaderName << "(";
       // If the function is not static then pass the left operand (the self type)
-      if(!shaderfunction->ContainsAttribute(mSettings->mNameSettings.mStaticAttribute))
+      if(!shaderFunction->ContainsAttribute(mSettings->mNameSettings.mStaticAttribute))
         context->Walker->Walk(this, node->LeftOperand, context);
       context->GetBuilder() << ")";
       return;
     }
+    String accessedTypeName = node->LeftOperand->ResultType->ToString();
+    String msg = String::Format("Getter '%s.%s' can't be translated", accessedTypeName.c_str(), zilchGetter->Name.c_str());
+    SendTranslationError(node->Location, msg);
   }
 }
 

@@ -39,6 +39,25 @@ void ResolveBackupScalarSwizzle(ZilchShaderTranslator* translator, Zilch::Member
   }
 }
 
+void ResolveColors(ZilchShaderTranslator* translator, Zilch::MemberAccessNode* memberAccessNode, ZilchShaderTranslatorContext* context)
+{
+  NameSettings& nameSettings = translator->mSettings->mNameSettings;
+  Zilch::Type* zilchResultType = memberAccessNode->LeftOperand->ResultType;
+  ShaderType* colorsType = translator->FindShaderType(zilchResultType, memberAccessNode, false);
+  ShaderFunction* shaderFn = colorsType->FindFunction(memberAccessNode->AccessedGetterSetter->Get);
+  // Validate that we have an inline translation for this member.
+  // Inlining means we paste the function body directly in without invoking the function call.
+  if(shaderFn != nullptr && shaderFn->ContainsAttribute(nameSettings.mInlineAttribute))
+    context->GetBuilder() << shaderFn->mShaderBodyCode;
+  // Otherwise report an error
+  else
+  {
+    String leftOpType = zilchResultType->ToString();
+    String msg = String::Format("The member access '%s' on type '%s' is unable to be translated.", memberAccessNode->Name.c_str(), leftOpType.c_str());
+    translator->SendTranslationError(memberAccessNode->Location, "Member access cannot be translated.", msg);
+  }
+}
+
 void ResolveSimpleBackupConstructor(ZilchShaderTranslator* translator, Zilch::FunctionCallNode* fnCallNode, Zilch::StaticTypeNode* staticTypeNode, ZilchShaderTranslatorContext* context)
 {
   ShaderCodeBuilder& builder = context->GetBuilder();
@@ -497,6 +516,38 @@ String BuildVectorAxis(StringParam type, size_t dimension, size_t axis, StringPa
   return builder.ToString();
 }
 
+void ParseColors(ZilchShaderTranslator* translator, ZilchShaderLibrary* coreLibrary)
+{
+  NameSettings& nameSettings = translator->mSettings->mNameSettings;
+  String refType = nameSettings.mReferenceKeyword;
+  
+  // Create the colors type
+  Zilch::BoundType* colors = ZilchTypeId(Zilch::ColorsClass);
+  ShaderType* colorsShaderType = coreLibrary->CreateNativeType(colors->Name, "Colors", refType);
+
+  // the only way to get the value for each color during translation is to compile and execute zilch.
+  Zilch::Type* real4Type = ZilchTypeId(Zilch::Real4);
+  forRange(Zilch::Property* zilchProperty, colors->GetProperties())
+  {
+    // Skip non-static real4 properties (should only be the actual colors)
+    if(!zilchProperty->IsStatic || zilchProperty->PropertyType != real4Type)
+      continue;
+
+    // The actual color value is stored in the complex user data of this field
+    Zilch::Real4 propertyValue = zilchProperty->ComplexUserData.ReadObject<Zilch::Real4>(0);
+
+    // Create the shader function from the getter. The name of this function
+    // shouldn't matter (it contains the '[]' of hidden methods) since we're going to inline this.
+    ShaderFunction* shaderFn = colorsShaderType->FindOrCreateFunction(zilchProperty->Get->Name, zilchProperty->Get);
+    shaderFn->mIsStatic = true;
+    shaderFn->mAttributes.AddAttribute(nameSettings.mStaticAttribute, nullptr);
+    // Mark this as an inline function. This means that the body of the function
+    // is directly copied when translating instead of invoking the function call.
+    shaderFn->mAttributes.AddAttribute(nameSettings.mInlineAttribute, nullptr);
+    shaderFn->mShaderBodyCode = BuildString("vec4(", ToString(propertyValue), ")");
+  }
+}
+
 void ParseCoreLibrary(ZilchShaderTranslator* translator, ZilchShaderLibrary* coreLibrary)
 {
   String refType = translator->mSettings->mNameSettings.mReferenceKeyword;
@@ -548,6 +599,9 @@ void ParseCoreLibrary(ZilchShaderTranslator* translator, ZilchShaderLibrary* cor
   }
 
   coreLibrary->CreateNativeType("Math", "Math", refType);
+
+  // Parse the colors class
+  ParseColors(translator, coreLibrary);
 }
 
 void ParseShaderLibrary(ZilchShaderTranslator* translator, ZilchShaderLibrary* shaderIntrinsicLibrary)
@@ -806,6 +860,8 @@ void SetupGlsl_1_3(ZilchShaderTranslator* translator)
     //libraryTranslator.RegisterMemberAccessResolver(GetStaticFunction(core.MathType, "ApproximatelyEqual", boundTypeStr, boundTypeStr), "approxEqual");
   }
 
+  // Register a special resolver for how the static colors functions are resolved
+  libraryTranslator.RegisterMemberAccessBackupResolver(ZilchTypeId(Zilch::ColorsClass), ResolveColors);
 
   // Stuff for shader values (samplers, etc...)
   Zilch::Library* shaderLibrary = Zilch::ShaderIntrinsicsLibrary::GetInstance().GetLibrary();

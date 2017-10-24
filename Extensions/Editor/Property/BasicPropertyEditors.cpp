@@ -397,6 +397,13 @@ public:
 
     Refresh();
 
+    if (mProperty->IsReadOnly())
+    {
+      // Read only values should not be selectable
+      mSelectorButton->SetSelectable(false);
+      mSelectBox->SetSelectable(false);
+    }
+
     ConnectThisTo(mSelectBox, Events::ItemSelected, OnIndexChanged);
     ConnectThisTo(mSelectorButton, Events::ItemSelected, OnSelectorIndexChanged);
   }
@@ -1178,6 +1185,7 @@ public:
 
   void PreviewElementValue(int index, float value) override
   {
+    CorrectNonFiniteValues(value);
     mCurrent[index] = (elementType)value;
     PropertyState newState = mState;
     newState.Value = mCurrent;
@@ -1187,6 +1195,7 @@ public:
 
   void CommitElementValue(int index, float value) override
   {
+    CorrectNonFiniteValues(value);
     mCurrent[index] = (elementType)value;
     PropertyState newState = mState;
     newState.Value = mCurrent;
@@ -1250,6 +1259,7 @@ public:
 
   void UpdateElement(PropertyState& newState, int index, float value)
   {
+    CorrectNonFiniteValues(value);
     mEulerCurrent[index] = value;
     if(mEulerMode)
     {

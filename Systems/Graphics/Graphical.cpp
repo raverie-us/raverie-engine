@@ -348,6 +348,12 @@ void Graphical::RebuildComponentShaderInputs()
 
 void Graphical::AddComponentShaderInputs(Component* component)
 {
+  // If a ZilchComponent becomes a proxy, the GraphicsEngine does not spend time
+  // trying to detect it to remove its entries from mComponentShaderProperties.
+  BoundType* componentType = ZilchVirtualTypeId(component);
+  if (componentType->HasAttribute(ObjectAttributes::cProxy))
+    return;
+
   String componentName = ZilchVirtualTypeId(component)->Name;
   Array<ShaderMetaProperty>* shaderProperties = Z::gEngine->has(GraphicsEngine)->mComponentShaderProperties.FindPointer(componentName);
 

@@ -145,6 +145,15 @@ FindTextDialog::FindTextDialog(Composite* parent) : Composite(parent)
   mDirection->SetSelectedItem(Direction::Down, true);
   mCharacterMode->SetSelectedItem(CharacterMode::Normal, true);
   mRegexFlavor->SetSelectedItem(RegexFlavor::EcmaScript, true);
+
+  ConnectThisTo(this, Events::KeyDown, OnKeyDown);
+}
+
+void FindTextDialog::OnKeyDown(KeyboardEvent* event)
+{
+  // Close the find dialog when escape is pressed
+  if (event->Key == Keys::Escape)
+    CloseTabContaining(this);
 }
 
 // Go into default find next mode

@@ -54,6 +54,9 @@ public:
   String mGeometryAttributeName;
 
   String mStaticAttribute;
+  // Marks a function as being inline. This assumes the raw-body of the function
+  // can be used instead of the function call. Currently only works on static get properties (like Color.Red).
+  String mInlineAttribute;
   String mPreConstructorName;
   String mConstructorName;
   String mReferenceKeyword;

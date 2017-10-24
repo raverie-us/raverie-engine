@@ -21,7 +21,7 @@ REM build up the git log fomatting string
 SET Format=format:
 SET Format=%Format%#define ZeroShortChangeSet %%h%%n
 SET Format=%Format%#define ZeroChangeSet %%H%%n
-SET Format=%Format%#define ZeroChangeSetDate \"%%ad\"%%n
+SET Format=%Format%#define ZeroChangeSetDate \"%%cd\"%%n
 
 REM Log the current commit info to the temp file (hardcode the short changeset to 12 characters)
 git log -1 --abbrev=12 --date=format:"%%Y-%%m-%%d" --pretty="%Format%" >> %TempFile%

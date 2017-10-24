@@ -1,0 +1,54 @@
+[Vertex]
+struct VaryingsRealVectorsTest_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVOutput] var ApiPerspectivePosition : Real4;
+  [StageOutput] var Real : Real;
+  [StageOutput] var Real2 : Real2;
+  [StageOutput] var Real3 : Real3;
+  [StageOutput] var Real4 : Real4;
+  // Fragment Properties
+  [Uniform][Input] var InOutRealVectorsVertexFrag_Real : Real;
+  [Uniform][Input] var InOutRealVectorsVertexFrag_Real2 : Real2;
+  [Uniform][Input] var InOutRealVectorsVertexFrag_Real3 : Real3;
+  [Uniform][Input] var InOutRealVectorsVertexFrag_Real4 : Real4;
+
+  [Main]
+  function Main()
+  {
+    var inoutrealvectorsvertexfrag = InOutRealVectorsVertexFrag();
+    inoutrealvectorsvertexfrag.Real = this.InOutRealVectorsVertexFrag_Real;
+    inoutrealvectorsvertexfrag.Real2 = this.InOutRealVectorsVertexFrag_Real2;
+    inoutrealvectorsvertexfrag.Real3 = this.InOutRealVectorsVertexFrag_Real3;
+    inoutrealvectorsvertexfrag.Real4 = this.InOutRealVectorsVertexFrag_Real4;
+    inoutrealvectorsvertexfrag.Main();
+    this.Real = inoutrealvectorsvertexfrag.Real;
+    this.Real2 = inoutrealvectorsvertexfrag.Real2;
+    this.Real3 = inoutrealvectorsvertexfrag.Real3;
+    this.Real4 = inoutrealvectorsvertexfrag.Real4;
+  }
+}
+[Pixel]
+struct VaryingsRealVectorsTest_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageInput] var Real : Real;
+  [StageInput] var Real2 : Real2;
+  [StageInput] var Real3 : Real3;
+  [StageInput] var Real4 : Real4;
+
+  [Main]
+  function Main()
+  {
+    var inoutrealvectorspixelfrag = InOutRealVectorsPixelFrag();
+    inoutrealvectorspixelfrag.Real = this.Real;
+    inoutrealvectorspixelfrag.Real2 = this.Real2;
+    inoutrealvectorspixelfrag.Real3 = this.Real3;
+    inoutrealvectorspixelfrag.Real4 = this.Real4;
+    inoutrealvectorspixelfrag.Main();
+  }
+}

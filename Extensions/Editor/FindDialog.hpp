@@ -37,6 +37,9 @@ public:
   // Constructor
   FindTextDialog(Composite* parent);
 
+  // Event Handlers
+  void OnKeyDown(KeyboardEvent* event);
+
   // On Take focus
   bool TakeFocusOverride() override;
 

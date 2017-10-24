@@ -554,7 +554,7 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* e)
   // objects.  They must be snapped individually in their own local space.
   bool multiTransform = mObjectStates.Size( ) > 1;
   if(multiTransform)
-    movement = e->mMouseWorldMovement;
+    movement = e->mConstrainedWorldMovement;
 
     // Special command, possibly modifies 'deltaMovement'
   if(viewPlaneGizmo && Keyboard::Instance->KeyIsDown(Keys::V))
@@ -567,8 +567,11 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* e)
       continue;
 
     MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
+    if(metaTransform == nullptr)
+      continue;
+
     MetaTransformInstance transform = metaTransform->GetInstance(target);
-    if(transform.IsNull())
+    if(transform.IsNull( ))
       continue;
 
     Mat4 inverseMatrix(Mat4::cIdentity);
@@ -706,11 +709,13 @@ void ObjectScaleGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 //******************************************************************************
 void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* e)
 {
-  Vec3 worldMovement = e->mMouseWorldMovement;
+  Vec3 worldMovement = e->mConstrainedWorldMovement;
 
   GizmoDrag* gizmoDrag = e->GetGizmo( )->has(GizmoDrag);
   ScaleGizmo* baseGizmo = GetOwner( )->has(ScaleGizmo);
 
+  // The speed at which scaling occurs is determined by how far away
+  // the gizmo was grabbed from its center.
   Vec3 gizmoPosition = mTransform->GetWorldTranslation( );
   Vec3 grabDirection = (e->mInitialGrabPoint - gizmoPosition);
   float distance = grabDirection.Length( );
@@ -718,32 +723,25 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* e)
   Mat3 worldRotationBasis = Math::ToMatrix3(mTransform->GetWorldRotation( ));
   Mat3 inverseWorld = worldRotationBasis.Inverted( );
 
-  // If we're transforming multiple objects, we will have to translate them
+  // Are multiple objects being transformed?
   bool multiTransform = mObjectStates.Size() > 1;
 
   forRange(ObjectTransformState& objectState, mObjectStates.All())
   {
     Handle target = objectState.MetaObject;
     if(target.IsNull())
-    continue;
+      continue;
 
     MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
-    MetaTransformInstance transform = metaTransform->GetInstance(target);
+    if(metaTransform == nullptr)
+      continue;
 
+    MetaTransformInstance transform = metaTransform->GetInstance(target);
     if(transform.IsNull())
       continue;
 
-    Mat4 inverseMatrix(Mat4::cIdentity);
-    inverseMatrix = transform.GetParentWorldMatrix().Inverted( );
-
-    // Mouse-drag movement in object local orientation.
-    Vec3 localMovement = Math::TransformNormal(inverseMatrix, worldMovement);
-    Quat localRotation(objectState.StartRotation);
-    localRotation.Invert( );
-    localMovement = Math::Multiply(localRotation, localMovement);
-
-    Vec3 newScale = baseGizmo->ScaleFromDrag(gizmoDrag, distance,
-      localMovement, objectState.StartScale, transform.GetWorldRotation( ));
+    Vec3 newScale = baseGizmo->ScaleFromDrag(mBasis, gizmoDrag, distance,
+      worldMovement, objectState.StartScale, transform);
 
     if(mAffectScale || !multiTransform)
     {
@@ -755,23 +753,24 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* e)
     const float cRotationLengthLimit = 0.001f;
     if(multiTransform && mAffectTranslation)
     {
-      // Update the object's translation by scaling it about the basis
-      // pivot Translation point
+      // Update the object's translation by scaling its offset about the basis
+      // pivot point.
       Vec3 pivotOffset = objectState.StartWorldTranslation - gizmoPosition;
       if(pivotOffset.Length( ) > cRotationLengthLimit)
       {
+        // Transform into local gizmo space.
         Math::Transform(inverseWorld, &pivotOffset);
 
-        //Scale the pivotOffset
         Vec3 scaleRatio = newScale / objectState.StartScale;
         pivotOffset *= scaleRatio;
 
-        //Transform it back into world space
+        //Transform back into world space.
         Math::Transform(worldRotationBasis, &pivotOffset);
 
         Vec3 newPosition = gizmoPosition + pivotOffset;
 
-        newPosition = Math::TransformPoint(inverseMatrix, newPosition);
+        // Put the new position in parent's space.
+        newPosition = Math::TransformPoint(transform.GetParentWorldMatrix( ).Inverted( ), newPosition);
 
         transform.SetLocalTranslation(newPosition);
         objectState.EndTranslation = newPosition;
@@ -841,9 +840,11 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* e)
       continue;
 
     MetaTransform* metaTransform = target.StoredType->HasInherited<MetaTransform>();
-    MetaTransformInstance transform = metaTransform->GetInstance(target);
+    if(metaTransform == nullptr)
+      continue;
 
-    if(transform.IsNull())
+    MetaTransformInstance transform = metaTransform->GetInstance(target);
+    if(transform.IsNull( ))
       continue;
 
     //save the old transform so that we can properly apply the deltas to in-world objects

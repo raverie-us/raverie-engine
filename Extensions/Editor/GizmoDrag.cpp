@@ -18,9 +18,12 @@ namespace Events
 //----------------------------------------------------------- Gizmo Update Event
 ZilchDefineType(GizmoUpdateEvent, builder, type)
 {
-  ZilchBindFieldProperty(mMouseWorldMovement);
+  ZilchBindFieldProperty(mConstrainedWorldMovement);
   ZilchBindFieldProperty(mInitialGrabPoint);
-  ZilchBindFieldProperty(mMouseWorldDelta);
+  ZilchBindFieldProperty(mConstrainedWorldDelta);
+
+  ZilchBindFieldPropertyAs(mConstrainedWorldMovement, "MouseWorldMovement")->AddAttribute(DeprecatedAttribute);
+  ZilchBindFieldPropertyAs(mConstrainedWorldDelta, "MouseWorldDelta")->AddAttribute(DeprecatedAttribute);
 }
 
 //******************************************************************************
@@ -34,8 +37,8 @@ GizmoUpdateEvent::GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e) :
 GizmoUpdateEvent::GizmoUpdateEvent(GizmoUpdateEvent* rhs) :
   GizmoEvent(rhs->mGizmo, rhs->mMouseEvent)
 {
-  mMouseWorldMovement = rhs->mMouseWorldMovement;
-  mMouseWorldDelta = rhs->mMouseWorldDelta;
+  mConstrainedWorldMovement = rhs->mConstrainedWorldMovement;
+  mConstrainedWorldDelta = rhs->mConstrainedWorldDelta;
   mInitialGrabPoint = rhs->mInitialGrabPoint;
 }
 
@@ -317,9 +320,9 @@ void GizmoDrag::OnMouseDragMove(ViewportMouseEvent* e)
   newPosition += movement;
 
   GizmoUpdateEvent eventToSend(GetOwner(), e);
-  eventToSend.mMouseWorldMovement = movement;
+  eventToSend.mConstrainedWorldMovement = movement;
   eventToSend.mInitialGrabPoint = mInitialGrabPoint;
-  eventToSend.mMouseWorldDelta = newPosition - mPreviousMouseWorldPosition;
+  eventToSend.mConstrainedWorldDelta = newPosition - mPreviousMouseWorldPosition;
 
   mPreviousMouseWorldPosition = newPosition;
 

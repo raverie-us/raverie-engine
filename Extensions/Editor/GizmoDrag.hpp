@@ -33,13 +33,15 @@ public:
   GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e);
   GizmoUpdateEvent(GizmoUpdateEvent* rhs);
 
-  /// Movement of the mouse in world space.
-  Vec3 mMouseWorldMovement;
+  /// Movement of the mouse (in world space) constrained against a gizmo's drag-mode.
+  Vec3 mConstrainedWorldMovement;
 
-  /// Movement of the mouse in world space with respect to it's position in the previous frame
-  Vec3 mMouseWorldDelta;
+  /// Difference of the mouse position (in world space) constrained against a
+  /// gizmo's drag-mode with that position last frame.
+  Vec3 mConstrainedWorldDelta;
 
-  /// Where the gizmo was initially grabbed.
+  /// Initial mouse-click position (in world space) constrained against a
+  /// gizmo's drag-mode.
   Vec3 mInitialGrabPoint;
 };
 

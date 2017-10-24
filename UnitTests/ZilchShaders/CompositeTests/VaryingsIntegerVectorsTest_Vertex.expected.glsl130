@@ -1,0 +1,132 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+uniform int InOutIntegerVectorsVertexFrag_Integer;
+uniform ivec2 InOutIntegerVectorsVertexFrag_Integer2;
+uniform ivec3 InOutIntegerVectorsVertexFrag_Integer3;
+uniform ivec4 InOutIntegerVectorsVertexFrag_Integer4;
+flat out int psInInteger;
+flat out ivec2 psInInteger2;
+flat out ivec3 psInInteger3;
+flat out ivec4 psInInteger4;
+
+//----- Struct Definitions -----
+struct InOutIntegerVectorsVertexFrag
+{
+  int Integer;
+  ivec2 Integer2;
+  ivec3 Integer3;
+  ivec4 Integer4;
+};
+
+struct VaryingsIntegerVectorsTest_Vertex
+{
+  float Time;
+  vec4 ApiPerspectivePosition;
+  int Integer;
+  ivec2 Integer2;
+  ivec3 Integer3;
+  ivec4 Integer4;
+  int InOutIntegerVectorsVertexFrag_Integer;
+  ivec2 InOutIntegerVectorsVertexFrag_Integer2;
+  ivec3 InOutIntegerVectorsVertexFrag_Integer3;
+  ivec4 InOutIntegerVectorsVertexFrag_Integer4;
+};
+
+//----- Forward Declarations -----
+void _InOutIntegerVectorsVertexFragPreConstructor(inout InOutIntegerVectorsVertexFrag self);
+InOutIntegerVectorsVertexFrag _InOutIntegerVectorsVertexFragConstructor();
+void _InOutIntegerVectorsVertexFragMain(inout InOutIntegerVectorsVertexFrag self);
+
+void _VaryingsIntegerVectorsTest_VertexPreConstructor(inout VaryingsIntegerVectorsTest_Vertex self);
+VaryingsIntegerVectorsTest_Vertex _VaryingsIntegerVectorsTest_VertexConstructor();
+void _VaryingsIntegerVectorsTest_VertexMain(inout VaryingsIntegerVectorsTest_Vertex self);
+void CopyInputs(inout VaryingsIntegerVectorsTest_Vertex self);
+void CopyOutputs(inout VaryingsIntegerVectorsTest_Vertex self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- InOutIntegerVectorsVertexFrag Functions -----
+void _InOutIntegerVectorsVertexFragPreConstructor(inout InOutIntegerVectorsVertexFrag self)
+{
+  self.Integer = int(0);
+  self.Integer2 = ivec2(0, 0);
+  self.Integer3 = ivec3(0, 0, 0);
+  self.Integer4 = ivec4(0, 0, 0, 0);
+}
+
+InOutIntegerVectorsVertexFrag _InOutIntegerVectorsVertexFragConstructor()
+{
+  InOutIntegerVectorsVertexFrag self;
+  _InOutIntegerVectorsVertexFragPreConstructor(self);
+  return self;
+}
+
+void _InOutIntegerVectorsVertexFragMain(inout InOutIntegerVectorsVertexFrag self)
+{
+}
+
+//----- VaryingsIntegerVectorsTest_Vertex Functions -----
+void _VaryingsIntegerVectorsTest_VertexPreConstructor(inout VaryingsIntegerVectorsTest_Vertex self)
+{
+  self.Time = float(0.0);
+  self.ApiPerspectivePosition = vec4(0.0, 0.0, 0.0, 0.0);
+  self.Integer = int(0);
+  self.Integer2 = ivec2(0, 0);
+  self.Integer3 = ivec3(0, 0, 0);
+  self.Integer4 = ivec4(0, 0, 0, 0);
+  self.InOutIntegerVectorsVertexFrag_Integer = int(0);
+  self.InOutIntegerVectorsVertexFrag_Integer2 = ivec2(0, 0);
+  self.InOutIntegerVectorsVertexFrag_Integer3 = ivec3(0, 0, 0);
+  self.InOutIntegerVectorsVertexFrag_Integer4 = ivec4(0, 0, 0, 0);
+}
+
+VaryingsIntegerVectorsTest_Vertex _VaryingsIntegerVectorsTest_VertexConstructor()
+{
+  VaryingsIntegerVectorsTest_Vertex self;
+  _VaryingsIntegerVectorsTest_VertexPreConstructor(self);
+  return self;
+}
+
+void _VaryingsIntegerVectorsTest_VertexMain(inout VaryingsIntegerVectorsTest_Vertex self)
+{
+  InOutIntegerVectorsVertexFrag _inoutintegervectorsvertexfrag = _InOutIntegerVectorsVertexFragConstructor();
+  _inoutintegervectorsvertexfrag.Integer = self.InOutIntegerVectorsVertexFrag_Integer;
+  _inoutintegervectorsvertexfrag.Integer2 = self.InOutIntegerVectorsVertexFrag_Integer2;
+  _inoutintegervectorsvertexfrag.Integer3 = self.InOutIntegerVectorsVertexFrag_Integer3;
+  _inoutintegervectorsvertexfrag.Integer4 = self.InOutIntegerVectorsVertexFrag_Integer4;
+  _InOutIntegerVectorsVertexFragMain(_inoutintegervectorsvertexfrag);
+  self.Integer = _inoutintegervectorsvertexfrag.Integer;
+  self.Integer2 = _inoutintegervectorsvertexfrag.Integer2;
+  self.Integer3 = _inoutintegervectorsvertexfrag.Integer3;
+  self.Integer4 = _inoutintegervectorsvertexfrag.Integer4;
+}
+
+//----- VaryingsIntegerVectorsTest_Vertex Final Shader Functions -----
+void CopyInputs(inout VaryingsIntegerVectorsTest_Vertex self)
+{
+  self.Time = Time;
+  self.InOutIntegerVectorsVertexFrag_Integer = InOutIntegerVectorsVertexFrag_Integer;
+  self.InOutIntegerVectorsVertexFrag_Integer2 = InOutIntegerVectorsVertexFrag_Integer2;
+  self.InOutIntegerVectorsVertexFrag_Integer3 = InOutIntegerVectorsVertexFrag_Integer3;
+  self.InOutIntegerVectorsVertexFrag_Integer4 = InOutIntegerVectorsVertexFrag_Integer4;
+}
+
+void CopyOutputs(inout VaryingsIntegerVectorsTest_Vertex self)
+{
+  gl_Position = self.ApiPerspectivePosition;
+  psInInteger = self.Integer;
+  psInInteger2 = self.Integer2;
+  psInInteger3 = self.Integer3;
+  psInInteger4 = self.Integer4;
+}
+
+//----- Main -----
+void main(void)
+{
+  VaryingsIntegerVectorsTest_Vertex varyingsintegervectorstest_vertex = _VaryingsIntegerVectorsTest_VertexConstructor(); 
+  CopyInputs(varyingsintegervectorstest_vertex);
+  _VaryingsIntegerVectorsTest_VertexMain(varyingsintegervectorstest_vertex);
+  CopyOutputs(varyingsintegervectorstest_vertex);
+}
+

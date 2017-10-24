@@ -116,6 +116,9 @@ public:
   void SetSelectedItem(int index, bool message);
   int GetSelectedItem( ) { return mSelectedItem; }
 
+  /// Is the the drop down selectable?
+  void SetSelectable(bool selectable);
+
   void OnMouseDown(MouseEvent* event);
   void OnMouseEnter(MouseEvent* event);
   void OnItemSelected(ObjectEvent* event);
@@ -140,6 +143,7 @@ public:
   ListSource* mDataSource;
   int mSelectedItem;
   bool mScrollToSelected;
+  bool mAllowSelect;
 };
 
 //------------------------------------------------------------- String Combo Box

@@ -530,12 +530,21 @@ class ArchetypePreview : public SpacePreview
 {
 public:
   typedef ArchetypePreview ZilchSelf;
-
+  const float cSpritePreviewThreshold = 0.1f;
   //****************************************************************************
   ArchetypePreview(PreviewWidgetInitializer& initializer)
     : SpacePreview(initializer, initializer.Object.Get<Archetype*>()->ResourceIdName)
   {
     UpdateViewDistance(Vec3(-1.0f));
+    
+    if (Cog* cog = (Cog*)mObject)
+    {
+      Aabb aabb = GetAabb(cog);
+      // Our asset has a thin AABB on the z axis and is most likely a 2D asset
+      // Change the camera preview to be from the front of the object
+      if (aabb.GetExtents().z < cSpritePreviewThreshold)
+        UpdateViewDistance(Vec3(0.0f, 0.0f, -1.0f));
+    }
   }
 
   Handle GetEditObject() override

@@ -63,7 +63,8 @@ namespace Zilch
 
   // These are all the specializations that are optimized to store exactly that data type
   // All values that are unknown will be stored as the 'Any' type
-  #define ZilchDeclareDefinePrimitiveArray(ElementType, Linkage) \
+  #define ZilchDeclareDefinePrimitiveArray(ElementType, Linkage)  \
+    typedef ArrayClass<ElementType> Array##ElementType;           \
     ZilchDeclareCustomType(ArrayClass<ElementType>, ZZ::Core::GetInstance().GetBuilder()->InstantiateTemplate("Array", ZilchConstants(ZilchTypeId(ElementType)), LibraryArray(ZeroInit, Core::GetInstance().GetBuilder()->BuiltLibrary)).Type, Linkage);
   
   // Pre-existing useful declarations

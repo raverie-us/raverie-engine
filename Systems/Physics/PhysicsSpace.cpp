@@ -976,6 +976,9 @@ CastResultsRange PhysicsSpace::CastRay(const Ray& worldRay, uint maxCount, CastF
 
 void PhysicsSpace::CastSegment(const Segment& segment, CastResults& results)
 {
+  BaseCastFilter& filter = results.mResults.Filter;
+  filter.ClearFlag(BaseCastFilterFlags::IgnoreInternalCasts);
+
   PushBroadPhaseQueue();
   mBroadPhase->CastSegment(segment.Start, segment.End, results.mResults);
   results.ConvertToColliders();

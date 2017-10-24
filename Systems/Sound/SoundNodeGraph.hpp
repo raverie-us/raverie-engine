@@ -20,7 +20,9 @@ public:
     mName(name),
     mHasOutput(hasOutput),
     mMoved(false), 
-    mPositionSet(false) 
+    mPositionSet(false),
+    mPosition(Vec2(0.0f,0.0f)),
+    mConnectAvgPos(0.0f)
   {}
 
   Array<NodePrintInfo*>::range GetConnections() { return mChildren.All(); }

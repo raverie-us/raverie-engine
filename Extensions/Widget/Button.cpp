@@ -25,14 +25,16 @@ namespace ButtonUi
   Tweakable(Vec4, ClickedColor,      Vec4(1,1,1,1), cLocation);
   Tweakable(Vec4, BorderColor,       Vec4(1,1,1,1), cLocation);
   Tweakable(Vec4, FocusBorderColor,  Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, ReadOnlyColor,     Vec4(1, 1, 1, 1), cLocation);
 }
 
 namespace TextBUttonUi
 {
   const cstr cLocation = "EditorUi/Controls/ModernTextButton";
-  Tweakable(Vec4, TextColor,        Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, TextHoverColor,   Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, TextClickedColor, Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, TextColor,         Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, TextHoverColor,    Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, TextClickedColor,  Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, ReadOnlyTextColor, Vec4(1, 1, 1, 1), cLocation);
 }
 
 namespace IconButtonUi
@@ -42,7 +44,7 @@ namespace IconButtonUi
   Tweakable(Vec4, HoverColor,   Vec4(1,1,1,1), cLocation);
   Tweakable(Vec4, ClickedColor, Vec4(1,1,1,1), cLocation);
   Tweakable(Vec2, Padding,      Vec2(2,2), cLocation);
-  Tweakable(Vec4, ActiveColor, Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, ActiveColor,  Vec4(1,1,1,1), cLocation);
   Tweakable(Vec4, ActiveHoverColor, Vec4(1,1,1,1), cLocation);
 }
 
@@ -253,9 +255,9 @@ TextButton::TextButton(Composite* parent, StringParam textStyle)
   
   mStyle = TextButtonStyle::Classic;
 
-  mTextColor = ToByteColor(TextBUttonUi::TextColor);
-  mTextHoverColor = ToByteColor(TextBUttonUi::TextHoverColor);
-  mTextClickedColor = ToByteColor(TextBUttonUi::TextClickedColor);
+  mTextColor = TextBUttonUi::TextColor;
+  mTextHoverColor = TextBUttonUi::TextHoverColor;
+  mTextClickedColor = TextBUttonUi::TextClickedColor;
 }
 
 TextButton::TextButton(Composite* parent, StringParam fontName, uint fontSize)
@@ -265,9 +267,9 @@ TextButton::TextButton(Composite* parent, StringParam fontName, uint fontSize)
 
   mStyle = TextButtonStyle::Classic;
 
-  mTextColor = ToByteColor(TextBUttonUi::TextColor);
-  mTextHoverColor = ToByteColor(TextBUttonUi::TextHoverColor);
-  mTextClickedColor = ToByteColor(TextBUttonUi::TextClickedColor);
+  mTextColor = TextBUttonUi::TextColor;
+  mTextHoverColor = TextBUttonUi::TextHoverColor;
+  mTextClickedColor = TextBUttonUi::TextClickedColor;
 }
 
 //******************************************************************************
@@ -297,11 +299,18 @@ void TextButton::UpdateTransform()
   if(mStyle == TextButtonStyle::Modern)
   {
     if(mMouseDown)
-      mButtonText->SetColor(ToFloatColor(mTextClickedColor));
+      mButtonText->SetColor(mTextClickedColor);
     else if(mMouseOver)
-      mButtonText->SetColor(ToFloatColor(mTextHoverColor));
+      mButtonText->SetColor(mTextHoverColor);
     else
-      mButtonText->SetColor(ToFloatColor(mTextColor));
+      mButtonText->SetColor(mTextColor);
+  }
+  
+  // If out text button is set to non-interactive grey out the displayed button and text
+  if(!mInteractive)
+  {
+    mButtonText->SetColor(TextBUttonUi::ReadOnlyTextColor);
+    mBackground->SetColor(ButtonUi::ReadOnlyColor);
   }
 
   // Even though the button base sets the size of the background, we

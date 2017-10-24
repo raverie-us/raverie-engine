@@ -30,6 +30,38 @@ struct Real3x3Implements
     }
 }
 
+// Test an instance getter that already exists
+struct Real3Count
+{
+    [Extension(typeid(Real3))][Implements]
+    var Count : Integer
+    {
+        get
+        {
+            var x = this.X as Integer;
+            var y = this.Y as Integer;
+            var z = this.Z as Integer;
+            return x + y + z;
+        }
+    }
+    
+    [Extension(typeid(Real3))][Implements][Static]
+    var Count : Integer
+    {
+        get { return 3; }
+    }
+}
+
+// Test an instance getter that already exists
+struct MathDot
+{
+    [Extension(typeid(Math))][Implements][Static]
+    function Dot(a : Real3, b : Real3) : Real
+    {
+        return 1;
+    }
+}
+
 [Pixel]
 struct ImplementTest
 {
@@ -40,5 +72,8 @@ struct ImplementTest
         var m = Real3x3(); 
         var r = m.GetByIndex(0);
         var v = Real3.GetAxis(0);
+        var count = Real3.Count;
+        count = v.Count;
+        var dot = Math.Dot(v, v);
     }
 }

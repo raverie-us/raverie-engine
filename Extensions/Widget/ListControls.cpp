@@ -32,7 +32,9 @@ Tweakable(Vec4, BorderColor,        Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, FocusBorderColor,   Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, ListPrimaryColor,   Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, ListSecondaryColor, Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, ListReadOnlyColor,  Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, ListBackgroundColor, Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, ReadOnlyBackgroundColor, Vec4(1, 1, 1, 1), cLocation)
 }
 
 const String cSelectionBox = "SelectionBox";
@@ -534,6 +536,7 @@ ComboBox::ComboBox(Composite* parent)
   mListBox = nullptr;
   mReady = true;
   mScrollToSelected = false;
+  mAllowSelect = true;
 }
 
 ComboBox::~ComboBox()
@@ -612,8 +615,15 @@ void ComboBox::CloseList()
   this->MarkAsNeedsUpdate();
 }
 
+void ComboBox::SetSelectable(bool selectable)
+{
+  mAllowSelect = selectable;
+}
+
 void ComboBox::OnMouseDown(MouseEvent* event)
 {
+  if(!mAllowSelect)
+    return;
   if(!mReady)
     return;
   if(mDataSource == nullptr)
@@ -742,11 +752,20 @@ void ComboBox::UpdateTransform()
   else
     mBorder->SetColor(ListControlsUi::BorderColor);
 
+  if(!mAllowSelect)
+  {
+    mText->SetColor(ListControlsUi::ListReadOnlyColor);
+    mBackground->SetColor(ListControlsUi::ReadOnlyBackgroundColor);
+    mBorder->SetColor(ListControlsUi::BorderColor);
+  }
+  else
+  {
+    mBackground->SetColor(ToFloatColor(mBackgroundColor));
+  }
+
   Thickness borderThickness = ComboBoxPadding;
   Vec2 iconSize = mPullImage->GetSize();
   Vec2 newSize = mSize;
-
-  mBackground->SetColor(ToFloatColor(mBackgroundColor));
 
   Rect textRect = RemoveThicknessRect(borderThickness, mSize);
   textRect.X += 4.0f;

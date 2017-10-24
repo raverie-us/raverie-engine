@@ -62,4 +62,28 @@ Array Shaders =
       "SVPixel2",
     ],
   },
+  {
+    string ShaderName = "VaryingsRealVectorsTest",
+    Array FragmentNames = 
+    [
+      "InOutRealVectorsVertexFrag",
+      "InOutRealVectorsPixelFrag",
+    ],
+  },
+  {
+    string ShaderName = "VaryingsIntegerVectorsTest",
+    Array FragmentNames = 
+    [
+      "InOutIntegerVectorsVertexFrag",
+      "InOutIntegerVectorsPixelFrag",
+    ],
+  },
+  {
+    string ShaderName = "VaryingsRealMatricesTest",
+    Array FragmentNames = 
+    [
+      "InOutRealMatricesVertexFrag",
+      "InOutRealMatricesPixelFrag",
+    ],
+  },
 ],

@@ -98,7 +98,7 @@ public:
   Thickness GetPadding();
 
   /// Text colors.
-  ByteColor mTextColor, mTextHoverColor, mTextClickedColor;
+  Vec4 mTextColor, mTextHoverColor, mTextClickedColor;
 
   /// The current style of the button.
   TextButtonStyle::Type mStyle;

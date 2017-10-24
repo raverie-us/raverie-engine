@@ -205,9 +205,6 @@ namespace Audio
       DataIndex += packHead.Size;
     }
 
-    // Add the decoded packets to the queue
-    QueueDecodedPackets(frames);
-
     // If we've reached the end of the file, delete the data
     if (DataIndex >= DataSize && !Streaming)
     {
@@ -216,6 +213,10 @@ namespace Audio
     }
 
     FinishDecodingPacket();
+
+    // Add the decoded packets to the queue. Must happen last so that all actions are completed
+    // before the packet is sent to the SoundAsset.
+    QueueDecodedPackets(frames);
   }
 
   //************************************************************************************************

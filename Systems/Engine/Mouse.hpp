@@ -43,13 +43,14 @@ public:
 
   /// High precision raw movement of the mouse.
   Vec2 mRawMovement;
+  Vec2 mCursorMovement;
+
   // Hack to make public for now
   OsWindow* mActiveWindow;
 
 private:
   Cursor::Enum mCurrentCursor;
   OsShell* mPlatform;
-  Vec2 mCursorMovement;
   Vec2 mClientPosition;
   byte mButtonDown[MouseButtons::Size];
 };

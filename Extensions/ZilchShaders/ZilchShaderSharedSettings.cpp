@@ -25,6 +25,7 @@ NameSettings::NameSettings()
   mGeometryAttributeName = "Geometry";
 
   mStaticAttribute = "Static";
+  mInputAttributeName = "Inline";
   mPreConstructorName = "PreConstructor";
   mConstructorName = "Constructor";
   mReferenceKeyword = "inout";
@@ -102,6 +103,9 @@ NameSettings::NameSettings()
   // Hidden
   mAllowedFunctionAttributes.Insert(mMainAttribute, AttributeInfo(true));
   mAllowedFunctionAttributes.Insert(mNoMangleAttributeName, AttributeInfo(true));
+  // Currently don't display this attribute since it doesn't fully
+  // work everywhere yet and is only used on native types.
+  //mAllowedFunctionAttributes.Insert(mInputAttributeName, AttributeInfo(true));
   
 
   mAllowedFieldAttributes.Insert(mStaticAttribute, AttributeInfo());

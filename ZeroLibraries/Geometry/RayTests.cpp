@@ -105,6 +105,54 @@ Type RayAabb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint,
   return Other;
 }
 
+Type RayInfiniteCylinder(Vec3Param rayStart, Vec3Param rayDirection,
+                         Vec3Param cylinderPointA, Vec3Param cylinderPointB,
+                         real cylinderRadius, Interval* interval)
+{
+  Vec3 n = Math::AttemptNormalized(cylinderPointB - cylinderPointA);
+  Vec3 m = rayStart - cylinderPointA;
+  Vec3 d = rayDirection;
+  real r = cylinderRadius;
+
+  real nn = Math::Dot(n, n);
+  real mn = Math::Dot(m, n);
+  real nd = Math::Dot(n, d);
+
+  real dd = Math::Dot(d, d);
+  real md = Math::Dot(m, d);
+  real mm = Math::Dot(m, m);
+
+  real k = mm - r * r;
+  real a = nn * dd - nd * nd;
+  real c = nn * k - mn * mn;
+
+  // Compute the interval range of the ray with the infinite cylinder
+  const real cCylinderEpsilon = real(0.000001);
+  // If the ray is not parallel to the cylinder
+  if(Math::Abs(a) > cCylinderEpsilon)
+  {
+    real b = nn * md - nd * mn;
+    real disc = b * b - a * c;
+
+    // The ray misses the infinite cylinder
+    if(disc < 0)
+      return Intersection::None;
+
+    // Compute the two intersection times
+    real sqrt = Math::Sqrt(disc);
+    interval->Min = (-b - sqrt) / a;
+    interval->Max = (-b + sqrt) / a;
+    if(interval->Max < 0)
+      return Intersection::Outside;
+    return Intersection::Line;
+  }
+  // Otherwise the ray is parallel. If the start of the ray is
+  // outside the infinite cylinder then return that there's no intersection
+  else if(c > 0)
+    return Intersection::None;
+  return Intersection::Other;
+}
+
 //Intersect a ray with a capsule defined by its center, local axes, radius, and
 //half of the distance between the centers of the spherical endcaps.
 Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection,
@@ -112,129 +160,54 @@ Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection,
                 real capsuleRadius, real capsuleSegmentHalfLength, 
                 Interval* interval)
 {
-  ErrorIf(interval == nullptr, "Intersection - Invalid interval passed to " \
-                            "function.");
-
-  *interval = Interval::cInfinite;
-
   const real halfHeight = capsuleSegmentHalfLength;
-  Vec3 capsulePointA = capsuleCenter + (halfHeight * capsuleBasis.BasisY());
-  Vec3 capsulePointB = capsuleCenter - (halfHeight * capsuleBasis.BasisY());
-  Vec3 normal = Normalized(capsulePointA - capsulePointB);
-
-  //-------------------------------------------------------------------- Plane A
-  real planeDistance = Dot(capsulePointA, normal);
-  LinePlane(rayStart, rayDirection, normal, planeDistance, interval);
-
-  //-------------------------------------------------------------------- Plane B
-  {
-    planeDistance = Dot(capsulePointB, -normal);
-
-    Interval temp = Interval::cInfinite;
-    LinePlane(rayStart, rayDirection, -normal, planeDistance, &temp);
-    *interval = interval->Intersection(temp);
-  }
-
-  //---------------------------------------------------------- Infinite Cylinder
-  real radiusSq = Math::Sq(capsuleRadius);
-  {
-    Interval temp = Interval::cInvalid;
-
-    // n*d
-    const real dirDotNormal = Dot(rayDirection, normal);
-
-    // m
-    const Vec3 relStart = rayStart - capsulePointA;
-
-    // m*d
-    const real startDotNormal = Dot(relStart, normal);
-    
-    // (d*d)(n*n) - (n*d)^2 = 1 - (n*d)^2
-    const real a = real(1.0) - Math::Sq(dirDotNormal);
-
-    // (d*d)((m*m) - r^2) - (m*d)^2 = ((m*m) - r^2) - (m*d)^2
-    const real c = (LengthSq(relStart) - radiusSq) - Math::Sq(startDotNormal);
-    if(Math::Abs(a) < real(0.000001))
-    {
-      if(c > real(0.0))
-      {
-        return None;
-      }
-    }
-    else
-    {
-      // 2 x ((d*d)(m*n) - (n*d)(m*d))
-      const real b = real(2.0) * (Dot(relStart, rayDirection) - 
-                                  startDotNormal * dirDotNormal);
-      real discr = b * b - real(4.0) * a * c;
-      if(discr > real(0.0))
-      {
-        discr = Math::Sqrt(discr);
-        temp.Min = (-b - discr) / (real(2.0) * a);
-        temp.Max = (-b + discr) / (real(2.0) * a);
-        *interval = interval->Intersection(temp);
-      }
-      else if(discr != real(0.0))
-      {
-        return None;
-      }
-    }
-  }
-
-  //Ray completely missed the capsule's finite cylinder, but it could still hit 
-  //one of the spherical end caps. Invalidate the finite cylinder's interval so 
-  //it doesn't affect the results of the sphere intersections
-  if(!interval->IsValid())
-  {
-    *interval = Interval::cInvalid;
-  }
-
-  //------------------------------------------------------------------- Sphere A
-  {
-    Interval temp = Interval::cInvalid;
-    RaySphere(rayStart, rayDirection, capsulePointA, capsuleRadius, &temp);
-
-    if(temp.IsValid())
-    {
-      *interval = interval->Union(temp);
-    }
-  }
-
-  //------------------------------------------------------------------- Sphere B
-  {
-    Interval temp = Interval::cInvalid;
-    RaySphere(rayStart, rayDirection, capsulePointB, capsuleRadius, &temp);
-
-    if(temp.IsValid())
-    {
-      *interval = interval->Union(temp);
-    }
-  }
-
-  //------------------------------------------------ Compute Intersection Points
-  if(!interval->IsValid())
-  {
-    return None;
-  }
-
-  return Other;
+  Vec3 halfHeightOffset = halfHeight * capsuleBasis.BasisY();
+  Vec3 capsulePointA = capsuleCenter + halfHeightOffset;
+  Vec3 capsulePointB = capsuleCenter - halfHeightOffset;
+  return RayCapsule(rayStart, rayDirection, capsulePointA, capsulePointB, capsuleRadius, interval);
 }
 
-//Intersect a ray with a capsule. If the result is "Segment", the second point
-//isn't guaranteed to be on the surface of the capsule (for now).
-Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection, 
-                Vec3Param capsulePointA, Vec3Param capsulePointB, 
-                real capsuleRadius, Interval* interval)
+//Intersect a ray with a capsule.
+Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection,
+  Vec3Param capsulePointA, Vec3Param capsulePointB,
+  real capsuleRadius, Interval* interval)
 {
-  Vec3 yAxis = capsulePointB - capsulePointA;
-  real halfLength = real(0.5) * Normalize(yAxis);
-  Vec3 center = capsulePointA + (halfLength * yAxis);
+  // Test against the finite cylinder defined by the capsule
+  Interval cylinderInterval;
+  Type cylinderResult = RayCylinder(rayStart, rayDirection, capsulePointA, capsulePointB, capsuleRadius, &cylinderInterval);
+  if(cylinderResult == None)
+    return None;
+  // If the finite cylinder wasn't intersected, then there's still a chance the sphere caps could be hit.
+  // Unlike standard interval logic which uses 'Intersection', the combination with the sphere end caps
+  // needs to use union otherwise the backside of the spheres will produce the incorrect result.
+  // To get around this when there is no cylinder intersection set the range to invalid [inf, -inf]
+  // so that union operations will work and the final 'IsValid' test will be correct.
+  if(cylinderResult == Outside)
+    cylinderInterval = Interval::cInvalid;
 
-  Mat3 basis;
-  MakeBasisFromY(yAxis, &basis);
+  Interval sphereAInterval;
+  Type sphereAResult = RaySphereAllowBehind(rayStart, rayDirection, capsulePointA, capsuleRadius, &sphereAInterval);
+  // If the ray doesn't miss the sphere (this allows negative t-values) then merge the range
+  if(sphereAResult != None)
+    cylinderInterval = cylinderInterval.Union(sphereAInterval);
 
-  return RayCapsule(rayStart, rayDirection, center, basis, capsuleRadius, 
-                    halfLength, interval);
+  Interval sphereBInterval;
+  Type sphereBResult = RaySphereAllowBehind(rayStart, rayDirection, capsulePointB, capsuleRadius, &sphereBInterval);
+  if(sphereBResult != None)
+    cylinderInterval = cylinderInterval.Union(sphereBInterval);
+
+  if(interval != nullptr)
+    *interval = cylinderInterval;
+
+  // If the final interval didn't invert and both values are
+  // positive then return that there was no intersection.
+  if(!cylinderInterval.IsValid())
+    return Outside;
+  if(cylinderInterval.Max < 0)
+    return Outside;
+  
+  // Otherwise we had a valid intersection.
+  return Other;
 }
 
 //Intersect a ray with a cylinder defined by its center, local axes, radius, and
@@ -244,97 +217,11 @@ Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection,
                  real cylinderRadius, real cylinderHalfHeight, 
                  Interval* interval)
 {
-  ErrorIf(interval == nullptr, "Intersection - Invalid interval passed to " \
-                            "function.");
-
-  const Vec3 cylinderPointA = cylinderCenter +
-                              (cylinderBasis.BasisY() * cylinderHalfHeight);
-  const Vec3 cylinderPointB = cylinderCenter -
-                              (cylinderBasis.BasisY() * cylinderHalfHeight);
-
-  *interval = Interval::cInfinite;
-
-  Vec3 normal = Normalized(cylinderPointA - cylinderPointB);
-
-  //-------------------------------------------------------------------- Plane A
-  {
-    Interval temp = Interval::cInfinite;
-    Type result = RayPlane(rayStart, rayDirection, normal, 
-                           Dot(cylinderPointA, normal), &temp);
-    if(result != None)
-    {
-      *interval = interval->Intersection(temp);
-    }
-  }
-
-  //-------------------------------------------------------------------- Plane B
-  {
-    Negate(&normal);
-    Interval temp = Interval::cInfinite;
-    Type result = RayPlane(rayStart, rayDirection, normal, 
-                           Dot(cylinderPointB, normal), &temp);
-    if(result != None)
-    {
-      *interval = interval->Intersection(temp);
-    }
-  }
-
-  //---------------------------------------------------------- Infinite Cylinder
-  {
-    Interval temp = Interval::cInvalid;
-
-    // n*d
-    const Vec3 relStart = rayStart - cylinderPointA;
-
-    // m
-    const real dirDotNormal = Dot(rayDirection, normal);
-
-    // m*d
-    const real startDotNormal = Dot(relStart, normal);
-
-    // (d*d)((m*m) - r^2) - (m*d)^2 = ((m*m) - r^2) - (m*d)^2
-    const real a = real(1.0) - Math::Sq(dirDotNormal);
-    
-    // (d*d)((m*m) - r^2) - (m*d)^2 = ((m*m) - r^2) - (m*d)^2
-    const real c = (LengthSq(relStart) - Math::Sq(cylinderRadius)) - 
-                    Math::Sq(startDotNormal);
-
-    const real cCylinderEpsilon = real(0.000001);
-    if(Math::Abs(a) < cCylinderEpsilon)
-    {
-      if(c > real(0.0))
-      {
-        return None;
-      }
-    }
-    else
-    {
-      // 2 x ((d*d)(m*n) - (n*d)(m*d))
-      const real b = real(2.0) * (Dot(relStart, rayDirection) - 
-                                  startDotNormal * dirDotNormal);
-      real discr = b * b - real(4.0) * a * c;
-      if(discr > real(0.0))
-      {
-        discr = Math::Sqrt(discr);
-        temp.Min = (-b - discr) / (real(2.0) * a);
-        temp.Max = (-b + discr) / (real(2.0) * a);
-        *interval = interval->Intersection(temp);
-      }
-      else
-      {
-        return None;
-      }
-    }    
-  }
   
-  //-------------------------------------------------------------- Test Interval
-  if(!interval->IsValid() || interval->Max < real(0.0))
-  {
-    return None;
-  }
-
-  //Otherwise, both are negative and there is no intersection
-  return Other;
+  Vec3 halfHeight = cylinderBasis.BasisY() * cylinderHalfHeight;
+  const Vec3 cylinderPointA = cylinderCenter + halfHeight;
+  const Vec3 cylinderPointB = cylinderCenter - halfHeight;
+  return RayCylinder(rayStart, rayDirection, cylinderPointA, cylinderPointB, cylinderRadius, interval);
 }
 
 //Intersect a ray with a cylinder defined by the points at the planar endcaps
@@ -343,29 +230,71 @@ Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection,
                  Vec3Param cylinderPointA, Vec3Param cylinderPointB, 
                  real cylinderRadius, Interval* interval)
 {
-  Vec3 yAxis = cylinderPointB - cylinderPointA;
-  real halfLength = real(0.5) * Normalize(yAxis);
-  Vec3 center = cylinderPointA + (halfLength * yAxis);
+  // ----------------------- Infinite cylinder
+  Interval cylinderInterval = Interval::cInfinite;
+  Type cylinderResult = RayInfiniteCylinder(rayStart, rayDirection, cylinderPointA, cylinderPointB, cylinderRadius, &cylinderInterval);
+  // If the ray doesn't intersect the infinite cylinder then it can't intersect the
+  // finite cylinder. Make sure to return the same result state though as this contains 
+  // extra information that other tests (RayCapsule) can use.
+  if(cylinderResult < 0)
+    return cylinderResult;
 
-  Mat3 basis;
-  MakeBasisFromY(yAxis, &basis);
+  // Compute the normal of the cylinder. This normal doesn't need to be normalized
+  // because the t-value will have this constant in the numerator and denominator
+  // so it will cancel. Additionally the early-out tests will be scaled by a positive
+  // scalar and we only care about the sign of these terms.
+  Vec3 n = cylinderPointB - cylinderPointA;
 
-  return RayCylinder(rayStart, rayDirection, center, basis, cylinderRadius, 
-                     halfLength, interval);
-}
+  // Compute the shared denominator for the plane normal of both end-caps
+  real bDen = Math::Dot(n, rayDirection);
 
-//Intersect a ray with an elliptical cylinder defined by its center, local
-//axes, major radius (x-axis), minor radius (z-axis), and half height (y-axis).
-Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, 
-                 Vec3Param cylinderCenter, Mat3Param cylinderBasis, 
-                 real cylinderMajorRadius, real cylinderMinorRadius, 
-                 real cylinderHalfHeight, Interval* interval)
-{
-  Error("Intersection - This function hasn't been implemented yet, you "\
-        "probably shouldn't be calling this function.");
-  ErrorIf(interval == nullptr, "Intersection - Invalid interval passed to " \
-                            "function.");
-  return Unimplemented;
+  // ----------------------- Plane B
+
+  // If the ray is outside the pointB plane and points away from the plane
+  // then we can early out since the ray can't hit the cylinder
+  real bNum = Math::Dot(n, cylinderPointB - rayStart);
+  if(bNum < 0 && bDen >= 0)
+    return Intersection::Outside;
+
+  // ----------------------- Plane A
+
+  // Same check as above, but for the plane at point a
+  real aNum = Math::Dot(n, cylinderPointA - rayStart);
+  real aDen = bDen;
+  if(aNum >= 0 && aDen <= 0)
+    return Intersection::Outside;
+
+  // Compute the intersection interval with the end-caps
+  Interval capsInterval = Interval::cInfinite;
+  // If the ray is not parallel to the plane
+  if(aDen != 0)
+  {
+    real bT = bNum / bDen;
+    real aT = aNum / aDen;
+    capsInterval.Min = Math::Min(aT, bT);
+    capsInterval.Max = Math::Max(aT, bT);
+  }
+
+  // ----------------------- Interval merge
+
+  // Compute the intersection of the infinite cylinder range and the end caps range.
+  // This is the actual intersection with the finite cylinder
+  Interval finalInterval = cylinderInterval.Intersection(capsInterval);
+  // If the final range isn't valid then there's no intersection
+  // (we started intersecting after we stopped)
+  if(!finalInterval.IsValid())
+    return Intersection::Outside;
+
+  // If both intersection values were negative then the intersection \
+  // was with the infinite line but not the ray
+  if(finalInterval.Max < 0)
+    return Intersection::Outside;
+
+  // Otherwise there was a valid intersection. Return the interval if requested.
+  if(interval != nullptr)
+    *interval = finalInterval;
+
+  return Intersection::Other;
 }
 
 //Intersect a ray with an ellipsoid, the inverse scaled basis is the combination
@@ -504,6 +433,34 @@ Type RaySphere(Vec3Param rayStart, Vec3Param rayDirection,
   real sqrtDiscr = Math::Sqrt(discr);
   interval->Min = -b - sqrtDiscr;
   interval->Max = -b + sqrtDiscr;
+  return Other;
+}
+
+Type RaySphereAllowBehind(Vec3Param rayStart, Vec3Param rayDirection,
+                          Vec3Param sphereCenter, real sphereRadius, Interval* interval)
+{
+  Vec3 m = rayStart - sphereCenter;
+  real c = Dot(m, m) - sphereRadius * sphereRadius;
+  real b = Dot(m, rayDirection);
+
+  real discr = b * b - c;
+
+  //A negative discriminant corresponds to ray missing sphere. If 
+  //discriminant = 0 (or close to 0 in our case), ray intersects sphere
+  //tangentially and is not counted as a "hit".
+  if(discr < real(0.0))
+  {
+    return None;
+  }
+
+  //Ray now found to intersect sphere, compute smallest value of intersection
+  real sqrtDiscr = Math::Sqrt(discr);
+  interval->Min = -b - sqrtDiscr;
+  interval->Max = -b + sqrtDiscr;
+
+  // Check for the intersection being behind the ray
+  if(interval->Max < 0)
+    return Outside;
   return Other;
 }
 

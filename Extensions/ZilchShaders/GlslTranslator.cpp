@@ -9,7 +9,7 @@
 namespace Zero
 {
 
-void WriteGlslGeometryMain(ZilchShaderTranslator* translator, Zilch::SyntaxNode* node, ShaderFunction* function, ZilchShaderTranslatorContext* context)
+void WriteGlslGeometryMain(BaseGlslTranslator* translator, Zilch::SyntaxNode* node, ShaderFunction* function, ZilchShaderTranslatorContext* context)
 {
   ShaderType* currentType = context->mCurrentType;
   // This should never happen!
@@ -71,7 +71,7 @@ void WriteGlslGeometryMain(ZilchShaderTranslator* translator, Zilch::SyntaxNode*
   
 }
 
-void GenerateCopyGeometryInputs(ZilchShaderTranslator* translator, ShaderType* compositeShaderType, ZilchShaderTranslatorContext* context)
+void GenerateCopyGeometryInputs(BaseGlslTranslator* translator, ShaderType* compositeShaderType, ZilchShaderTranslatorContext* context)
 {
   NameSettings& settings = translator->mSettings->mNameSettings;
   ShaderSystemValueSettings& systemValueSettings = translator->mSettings->mSystemValueSettings;
@@ -184,7 +184,7 @@ void GenerateCopyGeometryInputs(ZilchShaderTranslator* translator, ShaderType* c
     {
       // Hack: to allow outputting varying integers. Should eventually be changed to
       // be an attribute (as even float can choose to not be interpolated).
-      if(field->mZilchType == "Integer")
+      if(translator->mFlatTypes.Contains(field->mZilchType))
         globalVarsBuilder << "flat ";
       
       // Write out the input varying declaration: "in `varType`[`count`] `varName`;"
@@ -223,7 +223,7 @@ void FindOutputStreamTypes(ShaderType* type, Array<ShaderType*>& streamTypes, Ha
   }
 }
 
-void GenerateGeometryShaderCloneVertex(ZilchShaderTranslator* translator, NameSettings& nameSettings, ShaderType* compositeShaderType, ShaderType* fragmentOutputDataType)
+void GenerateGeometryShaderCloneVertex(BaseGlslTranslator* translator, NameSettings& nameSettings, ShaderType* compositeShaderType, ShaderType* fragmentOutputDataType)
 {
   // The clone vertex function copies every available input to the corresponding field in the final output type.
   // If either the input or output doesn't exist then no copy should happen.
@@ -274,7 +274,7 @@ void GenerateGeometryShaderCloneVertex(ZilchShaderTranslator* translator, NameSe
   cloneFunction->mShaderBodyCode = builder.ToString();
 }
 
-void GenerateGeometryShaderWriteVertex(ZilchShaderTranslator* translator, NameSettings& nameSettings, ShaderType* compositeShaderType, ShaderType* fragmentOutputDataType)
+void GenerateGeometryShaderWriteVertex(BaseGlslTranslator* translator, NameSettings& nameSettings, ShaderType* compositeShaderType, ShaderType* fragmentOutputDataType)
 {
   // The write vertex function copies the output type to the final glsl global varying.
 
@@ -322,7 +322,7 @@ void GenerateGeometryShaderWriteVertex(ZilchShaderTranslator* translator, NameSe
   writeVertexFunction->mShaderBodyCode = builder.ToString();
 }
 
-void GenerateGeometryShaderWriteToVertex(ZilchShaderTranslator* translator, NameSettings& nameSettings, ShaderType* compositeShaderType, ShaderType* fragmentOutputDataType)
+void GenerateGeometryShaderWriteToVertex(BaseGlslTranslator* translator, NameSettings& nameSettings, ShaderType* compositeShaderType, ShaderType* fragmentOutputDataType)
 {
   // WriteToVertex is a simple function that just calls CloneVertex, EmitVertexHelper, and WriteVertex.
   // This function exists because the OutputStream type doesn't know about the composite output data type (and can't know)
@@ -343,7 +343,7 @@ void GenerateGeometryShaderWriteToVertex(ZilchShaderTranslator* translator, Name
   writeToVertexFunction->mShaderBodyCode = builder.ToString();
 }
 
-void GenerateDummyEmitVertexHelper(ZilchShaderTranslator* translator, NameSettings& nameSettings, ShaderType* compositeShaderType, ShaderType* fragmentOutputDataType)
+void GenerateDummyEmitVertexHelper(BaseGlslTranslator* translator, NameSettings& nameSettings, ShaderType* compositeShaderType, ShaderType* fragmentOutputDataType)
 {
   ShaderType* compositeOutputDataShaderType = compositeShaderType->mOutputType->mOutputType;
   ShaderCodeBuilder emitVertexSignatureBuilder;
@@ -413,7 +413,7 @@ void GenerateDummyEmitVertexHelper(ZilchShaderTranslator* translator, NameSettin
   emitFunction->mShaderBodyCode = emitFunctionBuilder.ToString();
 }
 
-void GenerateCopyGeometryOutputs(ZilchShaderTranslator* translator, ShaderType* compositeShaderType, ZilchShaderTranslatorContext* context)
+void GenerateCopyGeometryOutputs(BaseGlslTranslator* translator, ShaderType* compositeShaderType, ZilchShaderTranslatorContext* context)
 {
   NameSettings& nameSettings = translator->mSettings->mNameSettings;
   ShaderDefinitionSettings& shaderDefSettings = translator->mSettings->mShaderDefinitionSettings;
@@ -442,7 +442,7 @@ void GenerateCopyGeometryOutputs(ZilchShaderTranslator* translator, ShaderType* 
     String varName = BuildString(nameSettings.mPixelShaderInputPrefix, field->mShaderName);
     // Hack: to allow outputting varying integers. Should eventually be changed to
     // be an attribute (as even float can choose to not be interpolated).
-    if(field->mZilchType == "Integer")
+    if(translator->mFlatTypes.Contains(field->mZilchType))
       globalVarsBuilder << "flat ";
     globalVarsBuilder << "out " << field->mShaderType << " " << varName << ";" << globalVarsBuilder.EmitLineReturn();
   }
@@ -471,7 +471,7 @@ void GenerateCopyGeometryOutputs(ZilchShaderTranslator* translator, ShaderType* 
   }
 }
 
-void WriteGlslMain(ZilchShaderTranslator* translator, Zilch::SyntaxNode* node, ShaderFunction* function, ZilchShaderTranslatorContext* context)
+void WriteGlslMain(BaseGlslTranslator* translator, Zilch::SyntaxNode* node, ShaderFunction* function, ZilchShaderTranslatorContext* context)
 {
   ScopedShaderCodeBuilder mainBuilder(context);
   ShaderType* currentType = context->mCurrentType;
@@ -501,7 +501,7 @@ void WriteGlslMain(ZilchShaderTranslator* translator, Zilch::SyntaxNode* node, S
   mainFunction->mShaderBodyCode = mainBuilder.ToString();
 }
 
-void GenerateCopyInputs(ZilchShaderTranslator* translator, ShaderType* type, ZilchShaderTranslatorContext* context, bool legacyMode)
+void GenerateCopyInputs(BaseGlslTranslator* translator, ShaderType* type, ZilchShaderTranslatorContext* context, bool legacyMode)
 {
   NameSettings& settings = translator->mSettings->mNameSettings;
   ShaderDefinitionSettings& shaderSettings = translator->mSettings->mShaderDefinitionSettings;
@@ -580,7 +580,7 @@ void GenerateCopyInputs(ZilchShaderTranslator* translator, ShaderType* type, Zil
       copyInputsBuilder << copyInputsBuilder.EmitIndent() << settings.mThisKeyword << "." << field->mShaderName << " = " << varyingName << ";" << copyInputsBuilder.EmitLineReturn();
       // Hack: to allow outputting varying integers. Should eventually be changed to
       // be an attribute (as even float can choose to not be interpolated).
-      if(field->mZilchType == "Integer")
+      if(translator->mFlatTypes.Contains(field->mZilchType))
         globalVarsBuilder << "flat ";
       // Write: varying type varyingName;
       globalVarsBuilder << varyingKeyword << " " << field->mShaderType << " " << varyingName << ";" << copyInputsBuilder.EmitLineReturn();
@@ -592,7 +592,7 @@ void GenerateCopyInputs(ZilchShaderTranslator* translator, ShaderType* type, Zil
   copyInputsFunction->mShaderBodyCode = copyInputsBuilder.ToString();
 }
 
-void GenerateCopyOutputs(ZilchShaderTranslator* translator, ShaderType* type, ZilchShaderTranslatorContext* context, bool legacyMode)
+void GenerateCopyOutputs(BaseGlslTranslator* translator, ShaderType* type, ZilchShaderTranslatorContext* context, bool legacyMode)
 {
   NameSettings& settings = translator->mSettings->mNameSettings;
   ShaderDefinitionSettings& shaderDefSettings = translator->mSettings->mShaderDefinitionSettings;
@@ -654,7 +654,7 @@ void GenerateCopyOutputs(ZilchShaderTranslator* translator, ShaderType* type, Zi
       copyOutputsBuilder << copyOutputsBuilder.EmitIndent() << varyingName << " = " << settings.mThisKeyword << "." << field->mShaderName << ";" << copyOutputsBuilder.EmitLineReturn();
       // Hack: to allow outputting varying integers. Should eventually be changed to
       // be an attribute (as even float can choose to not be interpolated).
-      if(field->mZilchType == "Integer")
+      if(translator->mFlatTypes.Contains(field->mZilchType))
         globalVarsBuilder << "flat ";
       // Write: varying type varyingName;
       globalVarsBuilder << varyingKeyword << " " << field->mShaderType << " " << varyingName << ";" << copyOutputsBuilder.EmitLineReturn();
@@ -681,6 +681,10 @@ void BaseGlslTranslator::SetupShaderLanguage()
 {
   mLibraryTranslator.Reset();
   SetupGlsl_1_3(this);
+  mFlatTypes.Insert("Integer");
+  mFlatTypes.Insert("Integer2");
+  mFlatTypes.Insert("Integer3");
+  mFlatTypes.Insert("Integer4");
 }
 
 String BaseGlslTranslator::GetLanguageName()

@@ -141,6 +141,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(System);
 
   // Meta Components
+  ZilchInitializeType(TransformMetaTransform);
   ZilchInitializeType(CogMetaComposition);
   ZilchInitializeType(CogMetaDataInheritance);
   ZilchInitializeType(CogMetaDisplay);
