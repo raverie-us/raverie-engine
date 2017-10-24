@@ -320,6 +320,7 @@ public:
   void SetMarginBottom(float val);
 
   void OnAreaPropertyModified(PropertyEvent* e);
+  void OnTransformPropertyModified(PropertyEvent* e);
 
   /// Flag getters / setters.
   DeclareWidgetFlagSetterGetter(Visible);
