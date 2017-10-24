@@ -166,6 +166,7 @@ bool PrimitiveMetaSerialization<T>::ConvertFromString(StringParam input, Any& ou
 {
   T value = T();
   ToValue(input.c_str(), value);
+  CorrectNonFiniteValues(value);
   output = value;
   return true;
 }

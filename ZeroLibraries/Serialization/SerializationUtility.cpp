@@ -43,6 +43,10 @@ bool CorrectNonFiniteValues<float>(float& value)
     value = 0.0f;
     return false;
   }
+
+  // Correct -0 to 0
+  if (value == -0.0f)
+    value = 0.0f;
   return true;
 }
   
@@ -55,6 +59,10 @@ bool CorrectNonFiniteValues<double>(double& value)
     value = 0.0;
     return false;
   }
+
+  // Correct -0 to 0
+  if (value == -0.0)
+    value = 0.0;
   return true;
 }
 

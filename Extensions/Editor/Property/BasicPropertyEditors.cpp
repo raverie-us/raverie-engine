@@ -1185,6 +1185,7 @@ public:
 
   void PreviewElementValue(int index, float value) override
   {
+    CorrectNonFiniteValues(value);
     mCurrent[index] = (elementType)value;
     PropertyState newState = mState;
     newState.Value = mCurrent;
@@ -1194,6 +1195,7 @@ public:
 
   void CommitElementValue(int index, float value) override
   {
+    CorrectNonFiniteValues(value);
     mCurrent[index] = (elementType)value;
     PropertyState newState = mState;
     newState.Value = mCurrent;
@@ -1257,6 +1259,7 @@ public:
 
   void UpdateElement(PropertyState& newState, int index, float value)
   {
+    CorrectNonFiniteValues(value);
     mEulerCurrent[index] = value;
     if(mEulerMode)
     {
