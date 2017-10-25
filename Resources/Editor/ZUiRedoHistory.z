@@ -1,8 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Redo history view manager.
 ////////////////////////////////////////////////////////////////////////////////
-[RunInEditor]
-class ZRedoHistory : ZilchComponent
+class ZUiRedoHistory : ZilchComponent
 {
     // This row's current color.
   var RowColor : Array[Real4] = new Array[Real4]();
@@ -38,7 +37,7 @@ class ZRedoHistory : ZilchComponent
     
     var entryCog = this.Space.Create(this.ArchetypeEntry);
     
-    var entry = entryCog.ZHistoryEntry;
+    var entry = entryCog.ZUiHistoryEntry;
     entry.IsUndone = true;
     entry.OperationData = operation;
     //entry.HistoryInfo.Name = operation.Name;
@@ -73,9 +72,9 @@ class ZRedoHistory : ZilchComponent
     if(!this.Owner.Children.IsNotEmpty)
       return;
     
-    var front = this.Owner.Children.Current.ZHistoryEntry;
+    var front = this.Owner.Children.Current.ZUiHistoryEntry;
     if(front.OperationData == event.Operation)
-      front.ChangeHistoryView(false, this.Owner.Parent.ZOperationHistory.UndoView.Cog, Events.OperationRedone);
+      front.ChangeHistoryView(false, this.Owner.Parent.ZUiOperationHistory.UndoView.Cog, Events.OperationRedone);
   }
 
   /******************************************************************************/

@@ -302,7 +302,7 @@ Level
 					var StackDirection = UiStackLayoutDirection.TopToBottom
 					var Spacing = Real2{0, 0}
 				}
-				ZOperationHistory 
+				ZUiOperationHistory 
 				{
 					var StatusText = CogPath
 					{
@@ -412,7 +412,7 @@ Level
 							var StackDirection = UiStackLayoutDirection.TopToBottom
 							var Spacing = Real2{0, 0}
 						}
-						ZUndoHistory 
+						ZUiUndoHistory 
 						{
 							var ArchetypeEntry = "582d2a7ffc50d5f7:HistoryEntry"
 						}
@@ -465,7 +465,7 @@ Level
 							var StackDirection = UiStackLayoutDirection.TopToBottom
 							var Spacing = Real2{0, 0}
 						}
-						ZRedoHistory 
+						ZUiRedoHistory 
 						{
 							var ArchetypeEntry = "582d2a7ffc50d5f7:HistoryEntry"
 						}
@@ -578,7 +578,7 @@ Level
 						MouseCapture 
 						{
 						}
-						ZHistoryScrollIndicator 
+						ZUiHistoryScrollIndicator 
 						{
 							var ScrollAreaObject = CogPath
 							{

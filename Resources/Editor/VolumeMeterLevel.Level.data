@@ -446,7 +446,7 @@ Level
 							var StackDirection = UiStackLayoutDirection.TopToBottom
 							var Spacing = Real2{0, 2}
 						}
-						ZPeakVolumeBar 
+						ZUiPeakVolumeBar 
 						{
 						}
 						Hierarchy 
@@ -506,7 +506,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = 0
 									var Color = Real4{0.654901981, 0, 0, 1}
@@ -567,7 +567,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -3
 									var Color = Real4{0.843137324, 0.305882365, 0, 1}
@@ -628,7 +628,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -6
 									var Color = Real4{0.843137324, 0.305882365, 0, 1}
@@ -689,7 +689,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -9
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -750,7 +750,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -12
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -811,7 +811,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -15
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -872,7 +872,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -18
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -933,7 +933,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -21
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -994,7 +994,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -24
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -1055,7 +1055,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -27
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -1116,7 +1116,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -30
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -1177,7 +1177,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -33
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -1238,7 +1238,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -36
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -1299,7 +1299,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -39
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -1360,7 +1360,7 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -42
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
@@ -2341,10 +2341,10 @@ Level
 							var PaddingRight = 0
 							var PaddingBottom = 0
 						}
-						UiSlider 
+						ZUiSlider 
 						{
 						}
-						ZVolumeSlider 
+						ZUiVolumeSlider 
 						{
 						}
 						Hierarchy 

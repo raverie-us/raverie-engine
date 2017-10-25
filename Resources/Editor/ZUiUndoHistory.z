@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Undo history view manager.
 ////////////////////////////////////////////////////////////////////////////////
-class ZUndoHistory : ZilchComponent
+class ZUiUndoHistory : ZilchComponent
 {
     // History row cogs are of this archetype.
   [Property] var ArchetypeEntry : Archetype = Archetype.HistoryEntry;
@@ -30,7 +30,7 @@ class ZUndoHistory : ZilchComponent
     
     var entryCog = this.Space.Create(this.ArchetypeEntry);
       
-    var entry = entryCog.ZHistoryEntry;
+    var entry = entryCog.ZUiHistoryEntry;
     entry.IsUndone = false;
     entry.OperationData = operation;
     //entry.HistoryInfo.Name = operation.Name;
@@ -53,9 +53,9 @@ class ZUndoHistory : ZilchComponent
     if(!this.Owner.Children.IsNotEmpty)
       return;
 
-    var front = this.Owner.ChildrenReversed.Current.ZHistoryEntry;
+    var front = this.Owner.ChildrenReversed.Current.ZUiHistoryEntry;
     if(front.OperationData == event.Operation)
-      front.ChangeHistoryView(true, this.Owner.Parent.ZOperationHistory.RedoView.Cog, Events.OperationUndone);
+      front.ChangeHistoryView(true, this.Owner.Parent.ZUiOperationHistory.RedoView.Cog, Events.OperationUndone);
   }
   
   /******************************************************************************/

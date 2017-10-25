@@ -10,7 +10,7 @@ TextContent
 	}
 	ZilchScriptBuilder 
 	{
-		var Name = "ZHistoryEntry"
+		var Name = "ZUiHistoryEntry"
 		var ResourceId = 0x58257b371a304fd2
 	}
 }

@@ -1,4 +1,4 @@
-class ZSoundNodeGraphScript : ZilchComponent
+class ZUiSoundNodeGraph : ZilchComponent
 {
   [Dependency] var Capture : MouseCapture;
   [Dependency] var Transform : Transform;
