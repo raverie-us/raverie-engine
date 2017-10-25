@@ -167,10 +167,10 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
 
   // Only run Initialize function if not in editor mode or if has RunInEditor attribute
   bool editorMode = false;
-  if (initializer.mGameSession != nullptr)
+  if (initializer.mSpace)
+    editorMode = initializer.mSpace->IsEditorMode();
+  else if (initializer.mGameSession != nullptr)
     editorMode = initializer.mGameSession->IsEditorMode();
-  if(initializer.mSpace)
-    editorMode |= initializer.mSpace->IsEditorMode();
   
   if(!editorMode || thisType->HasAttributeInherited(ObjectAttributes::cRunInEditor))
   {
