@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////
+/// 
+/// Authors: Joshua Claeys
+/// Copyright 2017, DigiPen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
+
+//----------------------------------------------------------------- Ui Renderer
 [RunInEditor]
 class UiRenderer : ZilchComponent
 {
@@ -14,11 +22,13 @@ class UiRenderer : ZilchComponent
   
   var PreviousResolutionY : Integer;
   
+  //***************************************************************************
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Owner, Events.RenderTasksUpdate, this.OnRenderTasksUpdate);
   }
   
+  //***************************************************************************
   function OnRenderTasksUpdate(event : RenderTasksEvent)
   {
     var size = event.ViewportSize;
@@ -37,6 +47,7 @@ class UiRenderer : ZilchComponent
     this.DrawDebugObjects(event, final, depthStencil);
   }
   
+  //***************************************************************************
   function ResizeToViewport(viewportSize : Integer2, cameraViewport : CameraViewport)
   {
     var cameraCog = cameraViewport.CameraPath.Cog;
@@ -87,6 +98,7 @@ class UiRenderer : ZilchComponent
     cameraTransform.Translation = cameraPos;
   }
   
+  //***************************************************************************
   function DrawDebugObjects(event : RenderTasksEvent, color : RenderTarget, depth : RenderTarget)
   {
     if (!this.EditorDebugDraw && this.Space.IsEditorMode || !this.GameDebugDraw && !this.Space.IsEditorMode)
