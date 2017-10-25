@@ -35,7 +35,7 @@ namespace Zilch
     SelfType(nullptr)
   {
   }
-  
+
   //***************************************************************************
   // Enum comparison mode for array sorting
   DeclareEnum2(ComparisonMode, BoolMode, CompareMode);
@@ -782,7 +782,7 @@ namespace Zilch
       ArrayTemplate<T>* array = (ArrayTemplate<T>*)self->Array.Dereference();
 
       // Check if the array was modified
-      if (self->ModifyId != array->ModifyId)
+      if (array == nullptr || self->ModifyId != array->ModifyId)
       {
         // It was modified, so throw an exception and early out
         call.GetState()->ThrowException(report,
@@ -806,6 +806,58 @@ namespace Zilch
         // Copy the value at the array to the return type (this properly deals with the Any type)
         CopyFromAnyOrActualType(array->NativeArray[self->Current], returnValue);
       }
+    }
+
+    static String ArrayRangeToString(const BoundType* type, const byte* data)
+    {
+      // Get the user data, because we need to know the contained arrays element type
+      Type* containedType = (Type*)type->UserData;
+
+      // Create a string builder to generate the array ranges element entries
+      StringBuilder builder;
+      builder.Append(Grammar::GetKeywordOrSymbol(Grammar::BeginInitializer));
+
+      // Grab the generic data as our own self template
+      ArrayRangeTemplate* self = (ArrayRangeTemplate*)data;
+
+      // Get the ranges contained array
+      ArrayTemplate<T>* array = (ArrayTemplate<T>*)self->Array.Dereference();
+
+      // Check if the array was modified
+      if (array == nullptr || self->ModifyId != array->ModifyId)
+      {
+        // It was modified, so throw an exception and early out
+        ExecutableState::CallingState->ThrowException("The collection was modified and therefore the range cannot be used");
+        return String();
+      }
+
+      // Get the end of the range object
+      Integer end = self->Start + self->Count;
+      // Loop through all entries in the contained native array
+      for (Integer i = self->Current; i < end; ++i)
+      {
+        // Get a pointer to the value at the given index (as a byte*)
+        byte* valuePointer = (byte*)&array->NativeArray[i];
+
+        // Convert that value to a string generically
+        String valueString = containedType->GenericToString(valuePointer);
+
+        // Append the stringified value to the builder
+        builder.Append(valueString);
+
+        // If we're not the last element, add a comma (argument separator) and a space
+        bool isNotLastItem = (end - 1 != i);
+        if (isNotLastItem)
+        {
+          builder.Append(Grammar::GetKeywordOrSymbol(Grammar::ArgumentSeparator));
+          builder.Append(" ");
+        }
+      }
+
+      builder.Append(Grammar::GetKeywordOrSymbol(Grammar::EndInitializer));
+
+      String result = builder.ToString();
+      return result;
     }
   };
 
@@ -840,6 +892,8 @@ namespace Zilch
     ZilchTodo("The range type must have a valid destructor the decrements the reference count on the 'array' handle");
     BoundType* rangeType = builder.AddBoundType(fullyQualifiedRangeName, TypeCopyMode::ReferenceType, sizeof(ArrayRangeTemplate<T>));
 
+    rangeType->ToStringFunction = ArrayRangeTemplate<T>::ArrayRangeToString;
+
     // Create the array type instance (arrays and any other containers should be reference types!)
     BoundType* arrayType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(ArrayTemplate<T>));
 
@@ -853,7 +907,10 @@ namespace Zilch
     arrayUserData.RangeType = rangeType;
     arrayUserData.SelfType = arrayType;
     arrayType->ComplexUserData.WriteObject(arrayUserData);
-    
+
+    // Store the type contained in the array within the range
+    rangeType->UserData = containedType;
+
     ZilchFullBindDestructor(builder, arrayType, ArrayTemplate<T>);
     ZilchFullBindConstructor(builder, arrayType, ArrayTemplate<T>, ZilchNoNames);
 
