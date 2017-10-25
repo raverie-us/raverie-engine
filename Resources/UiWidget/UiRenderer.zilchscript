@@ -56,6 +56,13 @@ class UiRenderer : ZilchComponent
     
     var cameraPos = cameraTransform.Translation;
     
+    // Set these to nice clean values so the user can't ever mess them up
+    camera.NearPlane = 0.1;
+    camera.FarPlane = 100;
+    cameraTransform.WorldScale = Real3(1);
+    cameraTransform.WorldRotation = Quaternion.Identity;
+    cameraPos.Z = 10;
+    
     if(this.Space.IsEditorMode == false)
     {
       // Size ourself to the viewport size
@@ -93,8 +100,7 @@ class UiRenderer : ZilchComponent
     // If the viewport size is an odd number then we would have removed the half offset
     // in the above floor, so we need to add it back. Note we cannot just remove the Floor
     // due to the EditorCameraController adding in non-integral offsets
-    if (viewportSize.Y % 2 == 1)
-      cameraPos.Y += 0.5;
+    cameraPos.XY += (viewportSize % 2) * 0.5;
     cameraTransform.Translation = cameraPos;
   }
   
