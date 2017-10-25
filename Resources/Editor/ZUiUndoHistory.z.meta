@@ -10,7 +10,7 @@ TextContent
 	}
 	ZilchScriptBuilder 
 	{
-		var Name = "ZHistoryScrollIndicator"
-		var ResourceId = 0x583bef37a8395817
+		var Name = "ZUiUndoHistory"
+		var ResourceId = 0x582a3b428c36a003
 	}
 }

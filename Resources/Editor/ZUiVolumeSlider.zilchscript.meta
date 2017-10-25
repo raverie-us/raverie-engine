@@ -3,7 +3,7 @@ TextContent
 {
 	ZilchScriptBuilder 
 	{
-		var Name = "UiSlider"
+		var Name = "ZUiVolumeSlider"
 		var ResourceId = 0x595c99fc5e60af11
 	}
 }

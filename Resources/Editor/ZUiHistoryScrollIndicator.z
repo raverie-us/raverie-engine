@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Main controller for scrolling the operation history view.
 ////////////////////////////////////////////////////////////////////////////////
-class ZHistoryScrollIndicator : ZilchComponent
+class ZUiHistoryScrollIndicator : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
   [Dependency] var MouseCapture : MouseCapture;
@@ -29,8 +29,8 @@ class ZHistoryScrollIndicator : ZilchComponent
     Zero.Connect(this.ScrollAreaObject.Cog, Events.AreaChanged, this.OnAreaChanged);
     Zero.Connect(this.ScrollAreaObject.Cog, Events.MouseScroll, this.OnMouseScroll);
     
-    Zero.Connect(this.ScrollAreaObject.Cog.ZOperationHistory.UndoView.Cog, Events.ChildAttached, this.OnChildrenModified);
-    Zero.Connect(this.ScrollAreaObject.Cog.ZOperationHistory.RedoView.Cog, Events.RedoRowsCleared, this.OnChildrenModified);
+    Zero.Connect(this.ScrollAreaObject.Cog.ZUiOperationHistory.UndoView.Cog, Events.ChildAttached, this.OnChildrenModified);
+    Zero.Connect(this.ScrollAreaObject.Cog.ZUiOperationHistory.RedoView.Cog, Events.RedoRowsCleared, this.OnChildrenModified);
     
     this.UpdateSize();
   }
@@ -48,7 +48,7 @@ class ZHistoryScrollIndicator : ZilchComponent
   // Determine the size of the scroll bar indicator.
   function UpdateSize()
   {
-    var operationHistory = this.ScrollAreaObject.Cog.ZOperationHistory;
+    var operationHistory = this.ScrollAreaObject.Cog.ZUiOperationHistory;
     var scrollRatio = operationHistory.ScrollRatio;
     
       // No need to show the scroll bar (or make space for it, [ie. "hide" it]) if there is nothing to scroll.
@@ -85,7 +85,7 @@ class ZHistoryScrollIndicator : ZilchComponent
       return;
     
     var scrollAmount = 0.0;
-    var childrenCount = this.ScrollAreaObject.Cog.ZOperationHistory.ChildCount;
+    var childrenCount = this.ScrollAreaObject.Cog.ZUiOperationHistory.ChildCount;
     
     if(childrenCount > 0)
       scrollAmount = 1.0 / childrenCount * 2;
@@ -144,7 +144,7 @@ class ZHistoryScrollIndicator : ZilchComponent
     
     this.UiWidget.LocalTranslation = Real2(0, (parentWidget.Size.Y - this.UiWidget.Size.Y) * this.ScrollPercentage);
     
-    this.ScrollAreaObject.Cog.ZOperationHistory.SetVerticalScrollPosition(this.ScrollPercentage);
+    this.ScrollAreaObject.Cog.ZUiOperationHistory.SetVerticalScrollPosition(this.ScrollPercentage);
   }
   
 }

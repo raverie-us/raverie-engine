@@ -4,19 +4,19 @@
 /// Copyright 2017, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class UiSliderEvent : ZilchEvent
+class ZUiSliderEvent : ZilchEvent
 {
   var SliderPercentage : Real;
 }
 
 //------------------------------------------------------------------- Ui Slider
-class UiSlider : ZilchComponent
+class ZUiSlider : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
   //[Property] var Handle : CogPath;
   var Handle : Cog;
   
-  sends UiSliderChanged : UiSliderEvent;
+  sends ZUiSliderChanged : ZUiSliderEvent;
   
   //***************************************************************************
   function Initialize(init : CogInitializer)
@@ -60,9 +60,9 @@ class UiSlider : ZilchComponent
     handle.LocalTranslation = currHandlePos;
     
     // Send an event to for the changes
-    var eventToSend = UiSliderEvent();
+    var eventToSend = ZUiSliderEvent();
     eventToSend.SliderPercentage = 1.0 - (currHandlePos.Y / max);
-    this.Owner.DispatchEvent(Events.UiSliderChanged, eventToSend);
+    this.Owner.DispatchEvent(Events.ZUiSliderChanged, eventToSend);
   }
   
   //***************************************************************************

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Main operation history script-side manager.
 ////////////////////////////////////////////////////////////////////////////////
-class ZOperationHistory : ZilchComponent
+class ZUiOperationHistory : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
   
@@ -67,13 +67,13 @@ class ZOperationHistory : ZilchComponent
   }
   
   /******************************************************************************/
-  function RecursiveRowColorHelper(row : ZHistoryEntry)
+  function RecursiveRowColorHelper(row : ZUiHistoryEntry)
   {
     ++this.EntryCount;
     row.SetRowColor(this.GetNextRowColor());
     
     foreach(var child in row.ChildContainer.Children)
-      this.RecursiveRowColorHelper(child.ZHistoryEntry);
+      this.RecursiveRowColorHelper(child.ZUiHistoryEntry);
   }
   
   /******************************************************************************/
@@ -84,10 +84,10 @@ class ZOperationHistory : ZilchComponent
     this.NextRowColor = 0;
     
     foreach(var row in this.UndoView.Cog.Children)
-      this.RecursiveRowColorHelper(row.ZHistoryEntry);
+      this.RecursiveRowColorHelper(row.ZUiHistoryEntry);
 
     foreach(var row in this.RedoView.Cog.Children)
-      this.RecursiveRowColorHelper(row.ZHistoryEntry);
+      this.RecursiveRowColorHelper(row.ZUiHistoryEntry);
 
     this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;
       // Maintain room for the scrollbar on the x axis.

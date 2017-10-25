@@ -10,7 +10,7 @@ TextContent
 	}
 	ZilchScriptBuilder 
 	{
-		var Name = "ZRedoHistory"
-		var ResourceId = 0x583cb8200e39de3a
+		var Name = "ZUiOperationHistory"
+		var ResourceId = 0x583d5ee778f1b2f8
 	}
 }

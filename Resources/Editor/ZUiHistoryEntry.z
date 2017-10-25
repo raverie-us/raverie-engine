@@ -10,7 +10,7 @@ class ChangedHistoryView : ZilchEvent
 ////////////////////////////////////////////////////////////////////////////////
 //  Controller for all functionlity related to a history entry row.
 ////////////////////////////////////////////////////////////////////////////////
-class ZHistoryEntry : ZilchComponent
+class ZUiHistoryEntry : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
   
@@ -26,7 +26,7 @@ class ZHistoryEntry : ZilchComponent
   
     // If this HistoryEntry has ancestors, then 'RootHistoryEntry' will point
     // to the root of the hierarchy containing this HistoryEntry.
-  var RootHistoryEntry : ZHistoryEntry = null;
+  var RootHistoryEntry : ZUiHistoryEntry = null;
   
     // Associated views, depending on this entry's undo/redo state.
   var UndoView : Cog = null;
@@ -125,7 +125,7 @@ class ZHistoryEntry : ZilchComponent
       ++childCount;
       
       var entry = this.Space.Create(this.ArchetypeEntry);
-      var entryManager = entry.ZHistoryEntry;
+      var entryManager = entry.ZUiHistoryEntry;
       
         // Find the root HistoryEntry of the hierarchy this new entry will be in.
       var root = this;
@@ -140,8 +140,8 @@ class ZHistoryEntry : ZilchComponent
       
         // Children entries are not allowed to be the autority with respect to
         // hierarchical-highlighting on mouse enter/exit.  So disconnect these events.
-      Zero.Disconnect(entry, Events.MouseEnterHierarchy, entry.ZHistoryEntry);
-      Zero.Disconnect(entry, Events.MouseExitHierarchy, entry.ZHistoryEntry);
+      Zero.Disconnect(entry, Events.MouseEnterHierarchy, entry.ZUiHistoryEntry);
+      Zero.Disconnect(entry, Events.MouseExitHierarchy, entry.ZUiHistoryEntry);
       
         // Indent the new entry content.
       var parentIndent = this.Owner.Children.Current.UiStackLayout.PaddingLeft;
@@ -216,7 +216,7 @@ class ZHistoryEntry : ZilchComponent
       
       foreach(var cog in this.RedoView.ChildrenArray)
       {
-        var entry = cog.ZHistoryEntry;
+        var entry = cog.ZUiHistoryEntry;
         entry.ChangeHistoryView(false, entry.UndoView, Events.OperationRedone);
         
           // Redo all operations up to AND including the target entry.
@@ -242,7 +242,7 @@ class ZHistoryEntry : ZilchComponent
       
       foreach(var cog in reverseRange)
       {
-        var entry = cog.ZHistoryEntry;
+        var entry = cog.ZUiHistoryEntry;
         
           // Undo all operations up to, but NOT including the target/clicked entry.
         if(entry == targetEntry)
@@ -342,7 +342,7 @@ class ZHistoryEntry : ZilchComponent
     this.UpdateColor(color, highlight);
     
     foreach(var row in this.ChildContainer.Children)
-      row.ZHistoryEntry.UpdateHierarchyColor(color, highlight);
+      row.ZUiHistoryEntry.UpdateHierarchyColor(color, highlight);
   }
   
   /******************************************************************************/
@@ -353,7 +353,7 @@ class ZHistoryEntry : ZilchComponent
     this.UpdateColor(this.UiOriginalColor, false);
 
     foreach(var row in this.ChildContainer.Children)
-      row.ZHistoryEntry.OriginalHierarchyColor();
+      row.ZUiHistoryEntry.OriginalHierarchyColor();
   }
   
 }
