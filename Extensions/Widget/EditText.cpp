@@ -130,7 +130,7 @@ void EditText::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Pa
 
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
   FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, color);
-  AddTextRange(fontProcessor, mFont, text, textStart, mAlign, Vec2(1, 1), mSize, mClipText);
+  AddTextRange(fontProcessor, mFont, text, textStart, mAlign, 0, Vec2(1, 1), mSize, mClipText);
 }
 
 void EditText::SetText(StringParam text)

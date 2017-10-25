@@ -150,7 +150,7 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
         Vec2 textSize = font->MeasureText(text);
         pos.x -= textSize.x + Pixels(2);
         pos.y -= textSize.y * 0.5f;
-        AddTextRange(fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
+        AddTextRange(fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, 0, Vec2(1, 1), mSize, false);
       }
     }
 
@@ -171,7 +171,7 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
         Vec2 textSize = font->MeasureText(text);
         pos.x -= textSize.x * 0.5f;
         pos.y += textSize.y * 0.5f;
-        AddTextRange(fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
+        AddTextRange(fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, 0, Vec2(1, 1), mSize, false);
       }
     }
   }

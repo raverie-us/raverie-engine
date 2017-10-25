@@ -89,7 +89,7 @@ void PerformanceGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& fram
   float seconds = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)mainRecord->SmoothAverage());
   float fps = (seconds != 0.0f) ? Math::Round(1.0f / seconds) : 1.0f;
   String text = String::Format(" FPS: %0.0f", fps);
-  AddTextRange(fontProcessor, font, text, Vec2(0, 0), TextAlign::Left, Vec2(1, 1), mSize, true);
+  AddTextRange(fontProcessor, font, text, Vec2(0, 0), TextAlign::Left, 0, Vec2(1, 1), mSize, true);
 
   text = String("25.0ms (40fps) ");
   ProcessTextRange(fontProcessor, font, text, ToVector2(mGraphPos), TextAlign::Right, Vec2(1, 1), Vec2(mGraphSize.x, font->mLineHeight));
@@ -106,7 +106,7 @@ void PerformanceGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& fram
     float seconds = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)record.SmoothAverage());
     text = String::Format(" %0.1fms %s", seconds * 1000.0f, record.GetName());
     fontProcessor.mVertexColor = ToFloatColor(record.GetColor());
-    AddTextRange(fontProcessor, font, text, namePos, TextAlign::Left, Vec2(1, 1), mSize, true);
+    AddTextRange(fontProcessor, font, text, namePos, TextAlign::Left, 0, Vec2(1, 1), mSize, true);
     namePos -= Vec2(0, 20);
   }
 
@@ -116,7 +116,7 @@ void PerformanceGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& fram
     float seconds = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)samplesTotal[Profile::Record::sSampleIndex - 1]);
     text = String::Format(" %0.1fms %s Total", seconds * 1000.0f, record.GetName());
     fontProcessor.mVertexColor = ToFloatColor(record.GetColor());
-    AddTextRange(fontProcessor, font, text, namePos, TextAlign::Left, Vec2(1, 1), mSize, true);
+    AddTextRange(fontProcessor, font, text, namePos, TextAlign::Left, 0, Vec2(1, 1), mSize, true);
     namePos -= Vec2(0, 20);
   }
 }
@@ -211,7 +211,7 @@ float PerformanceGraphWidget::DrawProfileGraph(ViewBlock& viewBlock, FrameBlock&
 
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
   FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(Color::Black));
-  AddTextRange(fontProcessor, font, text, ToVector2(pos), TextAlign::Left, Vec2(1, 1), mSize, true);
+  AddTextRange(fontProcessor, font, text, ToVector2(pos), TextAlign::Left, 0, Vec2(1, 1), mSize, true);
 
   position.y += size.y;
   double totalTime = 0.0f;
@@ -316,7 +316,7 @@ float MemoryGraphWidget::DrawMemoryGraph(Vec3 position, Memory::Graph* memoryNod
   RenderFont* font = FontManager::GetInstance()->GetRenderFont("NotoSans-Regular", 11, 0);
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, subClipRect, font->mTexture);
   FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(Color::Black));
-  AddTextRange(fontProcessor, font, text, ToVector2(position), TextAlign::Left, Vec2(1, 1), mSize, true);
+  AddTextRange(fontProcessor, font, text, ToVector2(position), TextAlign::Left, 0, Vec2(1, 1), mSize, true);
 
 
   position.y += ysize;

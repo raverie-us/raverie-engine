@@ -1154,12 +1154,12 @@ namespace Zilch
     /* The only issue is the base case (no base class), which we use SFINAE */                                                                        \
     /* to detect if we even inherited a ZilchSelf typedef */                                                                                          \
     template <typename T>                                                                                                                             \
-    static typename T::ZilchSelf* SfinaeBase(typename T::ZilchSelf*);                                                                                 \
+    static typename T::ZilchSelf* SfinaeBase(int);                                                                                 \
     template <typename T>                                                                                                                             \
     static ZZ::NoType SfinaeBase(...);                                                                                                                \
     void ZilchDiscoverClass() {}                                                                                                                      \
     typedef typename ZE::remove_pointer<ZilchTypeOf(ZZ::DiscoverClass(&ZilchDiscoverClass))>::type ZilchTempSelf;                                     \
-    typedef typename ZE::remove_pointer<ZilchTypeOf(SfinaeBase<ZilchTempSelf>((ZilchTempSelf*)nullptr))>::type ZilchTempBase;                         \
+    typedef typename ZE::remove_pointer<ZilchTypeOf(SfinaeBase<ZilchTempSelf>(0))>::type ZilchTempBase;                         \
     ZilchDeclareDerivedTypeExplicit(ZilchTempSelf, ZilchTempBase, CopyMode)
 
 #define ZilchDefineType(SelfType, builder, type)                                                                                                      \

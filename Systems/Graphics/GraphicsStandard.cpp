@@ -22,6 +22,7 @@ ZilchDefineEnum(BlendEquation);
 ZilchDefineEnum(CullMode);
 ZilchDefineEnum(DepthMode);
 ZilchDefineEnum(GraphicalSortMethod);
+ZilchDefineEnum(MeasureOptions);
 ZilchDefineEnum(MeshEmitMode);
 ZilchDefineEnum(PerspectiveMode);
 ZilchDefineEnum(PrimitiveType);
@@ -56,6 +57,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeEnum(CullMode);
   ZilchInitializeEnum(DepthMode);
   ZilchInitializeEnum(GraphicalSortMethod);
+  ZilchInitializeEnum(MeasureOptions);
   ZilchInitializeEnum(MeshEmitMode);
   ZilchInitializeEnum(PerspectiveMode);
   ZilchInitializeEnum(PrimitiveType);
@@ -95,6 +97,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeType(BlendSettingsMrt);
   ZilchInitializeType(Bone);
   ZilchInitializeType(Camera);
+  ZilchInitializeType(CharacterIndex);
   ZilchInitializeType(ColorTargetMrt);
   ZilchInitializeType(DebugGraphical);
   ZilchInitializeType(DebugGraphicalPrimitive);

@@ -154,7 +154,7 @@ void GraphView::DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& f
     String text = String::Format("%s %g", label.Name.c_str(), last);
 
     FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(entry->Color));
-    AddTextRange(fontProcessor, font, text, ToVector2(label.Translation), TextAlign::Left, Vec2(1, 1), mSize);
+    AddTextRange(fontProcessor, font, text, ToVector2(label.Translation), TextAlign::Left, 0, Vec2(1, 1), mSize);
     //if(i == mMouseOverLabel)
     //  label.DrawSelection(render);
   }
@@ -232,7 +232,7 @@ void GraphView::DrawGrid(Vec2Param size, RenderFont* font, ViewBlock& viewBlock,
   {
     String num = String::Format("%d", i);
     Vec3 pos = Vec3(0, mSize.y - i * spacing * mSize.y, 0);
-    AddTextRange(fontProcessor, font, num, ToVector2(mTranslation) + ToVector2(pos), TextAlign::Left, Vec2(1, 1), mSize, false);
+    AddTextRange(fontProcessor, font, num, ToVector2(mTranslation) + ToVector2(pos), TextAlign::Left, 0, Vec2(1, 1), mSize, false);
   }
 
   static Array<StreamedVertex> lines;

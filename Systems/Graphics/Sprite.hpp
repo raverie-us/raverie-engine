@@ -101,6 +101,8 @@ public:
   float mFrameTime;
 };
 
+DeclareEnum3(MeasureOptions, BoundedByArea, BoundedByAreaWidth, Unbounded);
+
 /// Text that is rendered from a texture atlas in the same way that Sprites are.
 class SpriteText : public BaseSprite
 {
@@ -140,6 +142,9 @@ public:
   void SetPixelsPerUnit(float pixelsPerUnit);
   float mPixelsPerUnit;
 
+  /// Get the height of a line (scaled by PixelsPerUnit).
+  float GetLineHeight();
+
   /// How to position the text about the objects origin.
   TextAlign::Enum GetTextAlign();
   void SetTextAlign(TextAlign::Enum textAlign);
@@ -151,8 +156,28 @@ public:
   /// Get the effective size in world space that the SpriteText would be if this was its text.
   Vec2 MeasureGivenText(StringParam text);
 
+  /// Get the effective size in world space that the SpriteText would be if this was its text.
+  Vec2 MeasureGivenText(StringParam text, MeasureOptions::Enum options);
+
   /// Get the position in world space of a character by index.
   Vec3 GetCharacterPosition(int characterIndex);
+
+  /// Get the position in world space of a character by index. When encountering an index between lines
+  /// you may specify whether to return the beginning of the next line or end of the previous.
+  Vec3 GetCharacterPosition(int characterIndex, bool nextLine);
+
+  /// Get the position in world space of a character by index. When encountering an index between lines
+  /// you may specify whether to return the beginning of the next line or end of the previous.
+  /// The Line member is unused in this call (this is for convenience to be used with GetCharacterIndex).
+  Vec3 GetCharacterPosition(const CharacterIndex& characterIndex);
+
+  /// Find the nearest character index from a local space position. Primarily used in text editors
+  /// for selection. May put a caret on the right or left side (whichever is closer).
+  CharacterIndex GetCharacterIndex(Vec2Param localPosition);
+
+  /// Find the nearest character index from a world space position (projected). Primarily used in text
+  /// editors for selection. May put a caret on the right or left side (whichever is closer).
+  CharacterIndex GetCharacterIndex(Vec3Param worldPosition);
 
   // Internal
 

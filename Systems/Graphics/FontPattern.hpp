@@ -56,7 +56,7 @@ inline StringRange SkipRestOfLine(StringRange range)
 }
 
 template <typename FontProcessor>
-void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, Vec2 textStart, TextAlign::Enum align, Vec2 pixelScale, Vec2 textAreaSize, bool clipText = false)
+void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, Vec2 textStart, TextAlign::Enum align, int line, Vec2 pixelScale, Vec2 textAreaSize, bool clipText = false)
 {
   String displayText(text);
   if (clipText)
@@ -94,7 +94,7 @@ void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, 
     if (current == NewLine)
       pos.y = font->mLineHeight * pixelScale.y;
 
-    processor.ProcessRenderRune(r, pos, pixelScale);
+    processor.ProcessRenderRune(r, pos, pixelScale, line);
 
     pos.x += r.Advance * pixelScale.x;
   }
@@ -105,6 +105,7 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
 {
   Vec2 t = textStart;
 
+  int line = 0;
   float lineSize = textAreaSize.x;
   float lineHeight = font->mLineHeight * pixelScale.y;
   float maxLineWidth = 0.0f;
@@ -125,7 +126,7 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
       float textSize = font->MeasureText(text, pixelScale.x).x;
       maxLineWidth = Math::Max(maxLineWidth, textSize);
       Vec2 textStart = Align(textAlign, t, textSize, lineSize, pixelScale.x);
-      AddTextRange(processor, font, text, textStart, textAlign, pixelScale, textAreaSize);
+      AddTextRange(processor, font, text, textStart, textAlign, line, pixelScale, textAreaSize);
       // No more text to render
       text = StringRange();
     }
@@ -150,7 +151,7 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
       maxLineWidth = Math::Max(maxLineWidth, textSize);
       Vec2 textStart = Align(textAlign, t, textSize, lineSize, pixelScale.x);
 
-      AddTextRange(processor, font, rangeToDraw, textStart, textAlign, pixelScale, textAreaSize);
+      AddTextRange(processor, font, rangeToDraw, textStart, textAlign, line, pixelScale, textAreaSize);
 
       // build a range of what is left to draw
       text = StringRange(rangeToDraw.End(), text.End());
@@ -160,7 +161,8 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
     }
 
     //Move down a line and continue
-    t.y += font->mLineHeight * pixelScale.y;
+    t.y += lineHeight;
+    ++line;
   }
 
   // Return size used
@@ -171,7 +173,7 @@ class FontProcessor
 {
 public:
   FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec4 vertexColor);
-  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale);
+  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale, int line);
 
   RenderQueues* mRenderQueues;
   ViewNode* mViewNode;
@@ -182,7 +184,7 @@ class FontProcessorVertexArray
 {
 public:
   FontProcessorVertexArray(Vec4 vertexColor);
-  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale);
+  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale, int line);
 
   Array<StreamedVertex> mVertices;
   Vec4 mVertexColor;
@@ -191,18 +193,53 @@ public:
 class FontProcessorFindCharPosition
 {
 public:
-  FontProcessorFindCharPosition(int charIndex, Vec2 startPosition);
-  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale);
+  FontProcessorFindCharPosition(int charIndex, bool nextLine, Vec2 startPosition);
+  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale, int line);
 
   int mFindIndex;
+  bool mNextLine;
   int mCurrentIndex;
   Vec2 mCharPosition;
+  int mLastLine;
+};
+
+/// An index into a string that is rendered by SpriteText which may include word wrapping.
+class CharacterIndex
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ValueType);
+  CharacterIndex();
+  CharacterIndex(int index);
+  CharacterIndex(int index, int line, bool nextLine);
+
+  /// The Rune index of a character (not the byte index).
+  int mIndex;
+
+  /// Which line this index originated from (starting from 0).
+  int mLine;
+
+  /// Whether the index is at the end of a line or the beginning of the next line.
+  bool mNextLine;
+};
+
+class FontProcessorFindCharIndex
+{
+public:
+  FontProcessorFindCharIndex(Vec2Param localPosition, float lineHeight);
+  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale, int line);
+
+  Vec2 mLocalPosition;
+  float mLineHeight;
+  CharacterIndex mResult;
+  float mClosestDistance;
+  int mCurrentIndex;
+  int mLastLine;
 };
 
 class FontProcessorNoRender
 {
 public:
-  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale) {}
+  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale, int line) {}
 };
 
 }

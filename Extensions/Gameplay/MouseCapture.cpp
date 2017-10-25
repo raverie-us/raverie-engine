@@ -226,6 +226,7 @@ bool MouseCapture::Capture(ViewportMouseEvent* e)
   // Create the viewport event
   ViewportMouseEvent eventToSend(e);
   ReactiveViewport* viewport = e->GetViewport();
+  ReturnIf(!viewport, false, "ViewportMouseEvent did not have a valid viewport");
   viewport->InitViewportEvent(eventToSend);
 
   GetOwner()->DispatchEvent(Events::MouseDragStart, &eventToSend);

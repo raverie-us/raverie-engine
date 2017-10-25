@@ -328,7 +328,7 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
 
   String progressText = BuildString(event->Operation, " ", event->CurrentTask, " ", event->ProgressLine);
   FontProcessorVertexArray fontProcessor(Vec4(1.0f));
-  AddTextRange(fontProcessor, renderFont, progressText, Vec2::cZero, TextAlign::Left, Vec2(1.0f), Vec2((float)mShowProgressJob->mProgressWidth, (float)renderFont->mFontHeight), true);
+  AddTextRange(fontProcessor, renderFont, progressText, Vec2::cZero, TextAlign::Left, 0, Vec2(1.0f), Vec2((float)mShowProgressJob->mProgressWidth, (float)renderFont->mFontHeight), true);
 
   mShowProgressJob->Lock();
   mShowProgressJob->mTargetPercent = event->Percentage;

@@ -71,7 +71,7 @@ void Text::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param 
   if (mMultiline)
     ProcessTextRange(fontProcessor, mFont, mText, Vec2::cZero, mAlign, Vec2(1, 1), mSize);
   else
-    AddTextRange(fontProcessor, mFont, mText, Vec2::cZero, mAlign, Vec2(1, 1), mSize, mClipText);
+    AddTextRange(fontProcessor, mFont, mText, Vec2::cZero, mAlign, 0, Vec2(1, 1), mSize, mClipText);
 }
 
 Vec2 Text::GetBoundedSize(float maxWidth, float maxHeight)

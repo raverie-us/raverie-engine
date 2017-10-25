@@ -214,8 +214,9 @@ void ScanDevice(HANDLE deviceHandle, RID_DEVICE_INFO& ridDeviceInfo, Joysticks* 
     // Value caps
     HIDP_VALUE_CAPS* valueCaps = (PHIDP_VALUE_CAPS)alloca(sizeof(HIDP_VALUE_CAPS) * caps.NumberInputValueCaps);
     capsLength = caps.NumberInputValueCaps;
-    ReturnIf(HidP_GetValueCaps(HidP_Input, valueCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS,,
-      "Unable to get value capabilities");
+    NTSTATUS status = HidP_GetValueCaps(HidP_Input, valueCaps, &capsLength, preparsedData);
+    if (status != HIDP_STATUS_SUCCESS)
+      return;
 
     auto& usageNames = GetUsageNames();
 

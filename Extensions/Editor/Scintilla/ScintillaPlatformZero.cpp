@@ -188,7 +188,7 @@ void SurfaceImpl::DrawTextNoClip(PRectangle rc, Font &font_, XYPOSITION ybase, c
   Vec4 color = ToFloatColor(0xFF000000 | fore.AsLong());
 
   Zero::FontProcessor fontProcessor(mFrameBlock->mRenderQueues, mViewNode, color);
-  AddTextRange(fontProcessor, font, text, textStart, Zero::TextAlign::Left, Vec2(1, 1), size);
+  AddTextRange(fontProcessor, font, text, textStart, Zero::TextAlign::Left, 0, Vec2(1, 1), size, 0);
 }
 
 void SurfaceImpl::DrawTextClipped(PRectangle rc, Font &font_, XYPOSITION ybase, const char *s, int len, ColourDesired fore, ColourDesired back)
@@ -215,7 +215,7 @@ void SurfaceImpl::DrawTextTransparent(PRectangle rc, Font &font_, XYPOSITION yba
   Vec4 color = ToFloatColor(fore.AsLong());
 
   Zero::FontProcessor fontProcessor(mFrameBlock->mRenderQueues, mViewNode, color);
-  AddTextRange(fontProcessor, font, text, textStart, Zero::TextAlign::Left, Vec2(1, 1), size);
+  AddTextRange(fontProcessor, font, text, textStart, Zero::TextAlign::Left, 0, Vec2(1, 1), size);
 }
 
 void SurfaceImpl::MeasureWidths(Font &font_, const char *s, int len, XYPOSITION *positions)

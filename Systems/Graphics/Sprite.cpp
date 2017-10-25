@@ -335,10 +335,16 @@ ZilchDefineType(SpriteText, builder, type)
   ZilchBindGetterSetterProperty(FontSize);
   ZilchBindGetterSetterProperty(PixelsPerUnit);
   ZilchBindGetterSetterProperty(TextAlign);
+  ZilchBindGetter(LineHeight);
 
   ZilchBindMethod(MeasureText);
-  ZilchBindMethod(MeasureGivenText);
-  ZilchBindMethod(GetCharacterPosition);
+  ZilchBindOverloadedMethod(MeasureGivenText, ZilchInstanceOverload(Vec2, StringParam));
+  ZilchBindOverloadedMethod(MeasureGivenText, ZilchInstanceOverload(Vec2, StringParam, MeasureOptions::Enum));
+  ZilchBindOverloadedMethod(GetCharacterPosition, ZilchInstanceOverload(Vec3, int));
+  ZilchBindOverloadedMethod(GetCharacterPosition, ZilchInstanceOverload(Vec3, int, bool));
+  ZilchBindOverloadedMethod(GetCharacterPosition, ZilchInstanceOverload(Vec3, const CharacterIndex&));
+  ZilchBindOverloadedMethod(GetCharacterIndex, ZilchInstanceOverload(CharacterIndex, Vec2Param));
+  ZilchBindOverloadedMethod(GetCharacterIndex, ZilchInstanceOverload(CharacterIndex, Vec3Param));
 }
 
 void SpriteText::Serialize(Serializer& stream)
@@ -453,6 +459,12 @@ void SpriteText::SetPixelsPerUnit(float pixelsPerUnit)
   UpdateBroadPhaseAabb();
 }
 
+float SpriteText::GetLineHeight()
+{
+  RenderFont* font = mFont->GetRenderFont(mFontSize);
+  return font->mLineHeight / mPixelsPerUnit;
+}
+
 TextAlign::Enum SpriteText::GetTextAlign()
 {
   return mTextAlign;
@@ -471,8 +483,20 @@ Vec2 SpriteText::MeasureText()
 
 Vec2 SpriteText::MeasureGivenText(StringParam text)
 {
-  if(Area* area = GetOwner()->has(Area))
+  return MeasureGivenText(text, MeasureOptions::BoundedByArea);
+}
+
+Vec2 SpriteText::MeasureGivenText(StringParam text, MeasureOptions::Enum options)
+{
+  Area* area = nullptr;
+  if (options != MeasureOptions::Unbounded && (area = GetOwner()->has(Area)))
   {
+    Vec2 size = area->GetSize();
+
+    // If we are only bounded by the area width...
+    if (options == MeasureOptions::BoundedByAreaWidth)
+      size.y = Math::PositiveMax();
+
     RenderFont* font = mFont->GetRenderFont(mFontSize);
     FontProcessorNoRender noRender;
     return ProcessTextRange(noRender, font, text, Vec2(0.0f), mTextAlign, Vec2(1.0f, -1.0f) / mPixelsPerUnit, area->GetSize());
@@ -485,6 +509,11 @@ Vec2 SpriteText::MeasureGivenText(StringParam text)
 }
 
 Vec3 SpriteText::GetCharacterPosition(int characterIndex)
+{
+  return GetCharacterPosition(characterIndex, true);
+}
+
+Vec3 SpriteText::GetCharacterPosition(int characterIndex, bool nextLine)
 {
   Vec2 center = GetLocalCenter();
   Vec2 widths = GetLocalWidths();
@@ -500,10 +529,39 @@ Vec3 SpriteText::GetCharacterPosition(int characterIndex)
 
   RenderFont* font = mFont->GetRenderFont(mFontSize);
 
-  FontProcessorFindCharPosition findPosition(characterIndex, textStart);
+  FontProcessorFindCharPosition findPosition(characterIndex, nextLine, textStart);
   ProcessTextRange(findPosition, font, mText, textStart, mTextAlign, Vec2(1.0f, -1.0f) / mPixelsPerUnit, size);
 
   return mTransform->TransformPoint(Vec3(findPosition.mCharPosition, 0.0f));
+}
+
+Vec3 SpriteText::GetCharacterPosition(const CharacterIndex& characterIndex)
+{
+  return GetCharacterPosition(characterIndex.mIndex, characterIndex.mNextLine);
+}
+
+CharacterIndex SpriteText::GetCharacterIndex(Vec2Param localPosition)
+{
+  Vec2 center = GetLocalCenter();
+  Vec2 widths = GetLocalWidths();
+  Vec2 textStart = center + Vec2(-widths.x, widths.y);
+
+  Vec2 size;
+  if (Area* area = GetOwner()->has(Area))
+    size = area->GetSize();
+  else
+    size = MeasureText();
+
+  RenderFont* font = mFont->GetRenderFont(mFontSize);
+  FontProcessorFindCharIndex findIndex(localPosition, font->mLineHeight);
+  ProcessTextRange(findIndex, font, mText, textStart, mTextAlign, Vec2(1.0f, -1.0f) / mPixelsPerUnit, size);
+  return findIndex.mResult;
+}
+
+CharacterIndex SpriteText::GetCharacterIndex(Vec3Param worldPosition)
+{
+  Vec3 localPosition = mTransform->TransformPointInverse(worldPosition);
+  return GetCharacterIndex(Vec2(localPosition.x, localPosition.y));
 }
 
 Vec2 SpriteText::GetLocalCenter()
