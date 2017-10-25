@@ -1,5 +1,4 @@
 // Sets the position of the peak volume bar
-[RunInEditor]
 class ZPeakVolumeBar : ZilchComponent
 {
   var Bar : Cog;
@@ -51,7 +50,6 @@ class ZPeakVolumeBar : ZilchComponent
   }
 }
 
-[RunInEditor]
 class ZVolumeBarSegments : ZilchComponent
 {
   // The decibel level at which the bar will change color
@@ -89,7 +87,6 @@ class ZVolumeBarSegments : ZilchComponent
   }
 }
 
-[RunInEditor]
 class ZVolumeSlider : ZilchComponent
 {
   [Dependency] var Slider : UiSlider;

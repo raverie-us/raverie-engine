@@ -2,10 +2,9 @@
 Cog 
 {
 	var Name = "NodeLine"
-	var LinkId = 1
 	Transform 
 	{
-		var Translation = Real3{0, 0, 0}
+		var Translation = Real3{129, -16, 1.60499573}
 		var Scale = Real3{1, 1, 1}
 		var Rotation = Quaternion{0, 0, 0, 1}
 	}
@@ -14,6 +13,10 @@ Cog
 		var Visible = true
 		var ViewCulling = true
 		var VisibilityEvents = true
+		var OverrideBoundingBox = false
+		var LocalAabbCenter = Real3{0, 0, 0}
+		var LocalAabbHalfExtents = Real3{1, 1, 1}
+		var GroupSortValue = 0
 		var Material = "582c575af53d18c9:AlphaSprite"
 		var VertexColor = Real4{0.485000014, 0.485000014, 0.485000014, 1}
 		var GeometryMode = SpriteGeometryMode.ZPlane
@@ -37,7 +40,7 @@ Cog
 		var InLayout = false
 		var ClipChildren = false
 		var CanTakeFocus = false
-		var LocalColor = Real4{1, 1, 1, 1}
+		var LocalColor = Real4{0.48627454, 0.48627454, 0.48627454, 1}
 		var HierarchyColor = Real4{1, 1, 1, 1}
 		var SizePolicyX = UiSizePolicy.Fixed
 		var SizePolicyY = UiSizePolicy.Fixed

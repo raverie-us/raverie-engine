@@ -136,9 +136,9 @@ Level
 		var Name = "EditorCamera"
 		Transform 
 		{
-			var Translation = Real3{182, -162, 38}
+			var Translation = Real3{250, -200, 10}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{-0.0871557519, -1.09695906e-08, -1.90484961e-09, 0.99619478}
+			var Rotation = Quaternion{0, -1.09278471e-08, 0, 1}
 		}
 		CameraViewport 
 		{
@@ -189,16 +189,16 @@ Level
 			var FarPlane = 200
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 60
-			var Size = 323
+			var Size = 1217
 		}
 		EditorCameraController 
 		{
-			var ControlMode = ControlMode.Orbit
+			var ControlMode = ControlMode.ZPlane
 			var Previous3DMode = ControlMode.Orbit
 			var LookDistance = 10
-			var VerticalAngle = 0.17453292
+			var VerticalAngle = 0
 			var HorizontalAngle = 0
-			var LookTarget = Real3{182.673065, -162.829269, 29.0638638}
+			var LookTarget = Real3{250, -200, 0}
 			var MoveSensitivity = 1
 		}
 	}
@@ -345,13 +345,6 @@ Level
 			var EditorDebugDraw = true
 			var GameDebugDraw = true
 		}
-		UiFillLayout 
-		{
-			var PaddingLeft = 0
-			var PaddingTop = 0
-			var PaddingRight = 0
-			var PaddingBottom = 0
-		}
 		Hierarchy 
 		{
 			Cog [ContextId:6]
@@ -407,19 +400,6 @@ Level
 				}
 				Hierarchy 
 				{
-				}
-			}
-			Cog [InheritId:"58a2259b9745dd8b:SoundNodeIcon"][ContextId:7]
-			{
-				Transform 
-				{
-					var Translation = Real3{169, -169, 0.00500106812}
-					var Rotation = Quaternion{0, 0, 0, 1}
-					var Scale = Real3{1, 1, 1}
-				}
-				Area 
-				{
-					var Size = Real2{78, 28}
 				}
 			}
 		}
