@@ -61,8 +61,10 @@ ZilchDefineType(SoundEmitter, builder, type)
   ZilchBindMethod(InterpolateSemitones);
   ZilchBindMethod(InterpolateVolume);
   ZilchBindMethod(InterpolateDecibels);
-  ZilchBindGetter(InputNode);
-  ZilchBindGetter(OutputNode);
+  ZilchBindGetter(InputNode)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetter(OutputNode)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetter(SoundNodeInput);
+  ZilchBindGetter(SoundNodeOutput);
 
   type->Add(new SoundEmitterDisplay());
 }
@@ -79,8 +81,8 @@ SoundEmitter::SoundEmitter() :
   mDirectional(false), 
   mEmitAngle(90.0f), 
   mRearVolume(0.2f), 
-  mInputNode(nullptr), 
-  mOutputNode(nullptr)
+  mSoundNodeInput(nullptr), 
+  mSoundNodeOutput(nullptr)
 {
   mAttenuator = SoundAttenuatorManager::GetDefault();
 }
@@ -114,8 +116,8 @@ SoundEmitter::~SoundEmitter()
     mAttenuator->RemoveAttenuationNode(mAttenuatorNode);
 
   // Disconnect emitter nodes and all nodes attached to this emitter
-  if (mOutputNode && mOutputNode->mNode)
-    mOutputNode->mNode->DisconnectThisAndAllInputs();
+  if (mSoundNodeOutput && mSoundNodeOutput->mNode)
+    mSoundNodeOutput->mNode->DisconnectThisAndAllInputs();
 
   // Delete nodes
   if (mEmitterObject)
@@ -126,10 +128,10 @@ SoundEmitter::~SoundEmitter()
     mVolumeNode->DeleteThisNode();
 
   // Stop sound nodes from doing anything in destructor
-  if (mInputNode)
-    mInputNode->mNode = nullptr;
-  if (mOutputNode)
-    mOutputNode->mNode = nullptr;
+  if (mSoundNodeInput)
+    mSoundNodeInput->mNode = nullptr;
+  if (mSoundNodeOutput)
+    mSoundNodeOutput->mNode = nullptr;
 }
 
 //**************************************************************************************************
@@ -239,14 +241,14 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
     outNode->mCanRemove = false;
     outNode->mCanReplace = false;
     // Set the OutputNode handle
-    mOutputNode = outNode;
+    mSoundNodeOutput = outNode;
 
     // Set up attenuation and create the InputNode
     SetUpAttenuatorNode(mAttenuator);
 
     // Add to all existing listeners in the space
     forRange(SoundListener& listener, mSpace->GetListeners()->All())
-      listener.GetSoundNode()->AddInputNode(mOutputNode);
+      listener.GetSoundNode()->AddInputNode(mSoundNodeOutput);
   }
 
 }
@@ -419,7 +421,7 @@ bool SoundEmitter::GetIsPlaying()
   if (!mEmitterObject)
     return false;
 
-  if (CheckAttenuatorInputs() || mInputNode->GetHasInputs())
+  if (CheckAttenuatorInputs() || mSoundNodeInput->GetHasInputs())
     return true;
   else
     return false;
@@ -466,15 +468,27 @@ void SoundEmitter::SetAttenuator(SoundAttenuator* attenuation)
 }
 
 //**************************************************************************************************
+Zilch::HandleOf<Zero::SoundNode> SoundEmitter::GetSoundNodeInput()
+{
+  return mSoundNodeInput;
+}
+
+//**************************************************************************************************
 HandleOf<SoundNode> SoundEmitter::GetInputNode()
 {
-  return mInputNode;
+  return mSoundNodeInput;
+}
+
+//**************************************************************************************************
+Zilch::HandleOf<Zero::SoundNode> SoundEmitter::GetSoundNodeOutput()
+{
+  return mSoundNodeOutput;
 }
 
 //**************************************************************************************************
 HandleOf<SoundNode> SoundEmitter::GetOutputNode()
 {
-  return mOutputNode;
+  return mSoundNodeOutput;
 }
 
 //**************************************************************************************************
@@ -566,7 +580,7 @@ HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue, bool startP
       }
       // If getting the attenuator node failed, use the emitter's input node
       else
-        outputNode = mInputNode->mNode;
+        outputNode = mSoundNodeInput->mNode;
     }
     // Otherwise, use the node already in the list
     else
@@ -574,7 +588,7 @@ HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue, bool startP
   }
   // Use the emitter's input node (could be either attenuation or emitter node)
   else
-    outputNode = mInputNode->mNode;
+    outputNode = mSoundNodeInput->mNode;
 
   // Play the instance
   HandleOf<SoundInstance> instance = cue->PlayCue(mSpace, outputNode, startPaused);
@@ -601,7 +615,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
     return;
 
   // If the input node object hasn't been created yet, create it
-  if (!mInputNode)
+  if (!mSoundNodeInput)
   {
     SoundNode* newNode = new SoundNode();
     newNode->mNode = mEmitterObject;
@@ -609,7 +623,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
     newNode->mCanInsertBefore = false;
     newNode->mCanReplace = false;
     newNode->mCanRemove = false;
-    mInputNode = newNode;
+    mSoundNodeInput = newNode;
   }
 
   SoundAttenuator* oldAttenuator = mAttenuator;
@@ -628,7 +642,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
     // No attenuator node
     mAttenuatorNode = nullptr;
     // The input node is the emitter
-    mInputNode->mNode = mEmitterObject;
+    mSoundNodeInput->mNode = mEmitterObject;
   }
   else
   {
@@ -643,7 +657,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
         mAttenuatorNode->mNode->SetPosition(mPrevPosition);
 
         // Store the new node as the input node
-        mInputNode->mNode = mAttenuatorNode->mNode;
+        mSoundNodeInput->mNode = mAttenuatorNode->mNode;
         // Swap the new node with the old node in the graph
         oldNode->mNode->ReplaceWith(mAttenuatorNode->mNode);
 
@@ -661,7 +675,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
         mAttenuatorNode->mNode->SetPosition(mPrevPosition);
 
         // Store the new node as the input
-        mInputNode->mNode = mAttenuatorNode->mNode;
+        mSoundNodeInput->mNode = mAttenuatorNode->mNode;
         // Add the new node to the emitter node
         mEmitterObject->AddInput(mAttenuatorNode->mNode);
       }
