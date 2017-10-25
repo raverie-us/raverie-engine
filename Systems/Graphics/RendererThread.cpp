@@ -126,9 +126,39 @@ void RemoveTextureJob::Execute()
   delete this;
 }
 
-void AddShadersJob::Execute()
+AddShadersJob::AddShadersJob(RendererThreadJobQueue* jobQueue)
+  : RepeatingJob(jobQueue)
+  , mForceCompileBatchCount(0)
+{
+  // Job starts and terminates itself.
+  Start();
+}
+
+void AddShadersJob::OnExecute()
 {
   Z::gRenderer->AddShaders(this);
+}
+
+bool AddShadersJob::OnShouldRun()
+{
+  bool shouldRun = !mShaders.Empty();
+  if (!shouldRun)
+  {
+    Terminate();
+    Z::gEngine->has(GraphicsEngine)->mReturnJobQueue->AddJob(this);
+  }
+  return shouldRun;
+}
+
+void AddShadersJob::ReturnExecute()
+{
+  // Blocking task is assumed only used when mForceCompileBatchCount is not 0.
+  // Do not need to send this event otherwise.
+  if (mForceCompileBatchCount > 0)
+  {
+    Event event;
+    Z::gEngine->DispatchEvent(Events::BlockingTaskFinish, &event);
+  }
   delete this;
 }
 
@@ -150,13 +180,7 @@ void DoRenderTasksJob::Execute()
   mWaitEvent.Signal();
 }
 
-void ReturnRendererJob::Execute()
-{
-  OnExecute();
-  Z::gEngine->has(GraphicsEngine)->mReturnJobQueue->AddJob(this);
-}
-
-void GetTextureDataJob::OnExecute()
+void GetTextureDataJob::Execute()
 {
   Z::gRenderer->GetTextureData(this);
 }

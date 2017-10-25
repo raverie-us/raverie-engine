@@ -10,6 +10,7 @@ class RendererJob
 public:
   virtual ~RendererJob() {}
   virtual void Execute() = 0;
+  virtual void ReturnExecute() {}
 };
 
 class RendererJobQueue
@@ -41,6 +42,34 @@ public:
   // Wait function called by main thread to wait on this job
   void WaitOnThisJob();
   OsEvent mWaitEvent;
+};
+
+// Adds itself back into the job queue until terminated
+class RepeatingJob : public RendererJob
+{
+public:
+  RepeatingJob(RendererThreadJobQueue* jobQueue);
+
+  void Execute() override;
+  virtual void OnExecute() = 0;
+  virtual bool OnShouldRun() {return false;}
+
+  void Lock();
+  void Unlock();
+  bool ShouldRun();
+  bool IsRunning();
+  void Start();
+  void Terminate();
+  void ForceTerminate();
+
+  ThreadLock mThreadLock;
+  RendererThreadJobQueue* mRendererJobQueue;
+  uint mExecuteDelay;
+  uint mStartCount;
+  uint mEndCount;
+  bool mShouldRun;
+  bool mDelayTerminate;
+  bool mForceTerminate;
 };
 
 class CreateRendererJob : public WaitRendererJob
@@ -140,13 +169,19 @@ public:
   TextureRenderData* mRenderData;
 };
 
-class AddShadersJob : public RendererJob
+class AddShadersJob : public RepeatingJob
 {
 public:
-  void Execute() override;
+  AddShadersJob(RendererThreadJobQueue* jobQueue);
 
+  void OnExecute() override;
+  bool OnShouldRun() override;
+  void ReturnExecute() override;
+
+  // All processed entries must be removed so that job knows when to terminate.
   Array<ShaderEntry> mShaders;
-  bool mForceCompile;
+  // If non 0, specifies how many shaders to compile per execute.
+  uint mForceCompileBatchCount;
 };
 
 class RemoveShadersJob : public RendererJob
@@ -174,18 +209,10 @@ public:
   RenderQueues* mRenderQueues;
 };
 
-class ReturnRendererJob : public RendererJob
+class GetTextureDataJob : public RendererJob
 {
 public:
   void Execute() override;
-  virtual void OnExecute() = 0;
-  virtual void ReturnExecute() = 0;
-};
-
-class GetTextureDataJob : public ReturnRendererJob
-{
-public:
-  void OnExecute() override;
 
   TextureRenderData* mRenderData;
   TextureFormat::Enum mFormat;
@@ -200,34 +227,6 @@ public:
   void ReturnExecute() override;
 
   String mFilename;
-};
-
-// Adds itself back into the job queue until terminated
-class RepeatingJob : public RendererJob
-{
-public:
-  RepeatingJob(RendererThreadJobQueue* jobQueue);
-
-  void Execute() override;
-  virtual void OnExecute() = 0;
-  virtual bool OnShouldRun() {return false;}
-
-  void Lock();
-  void Unlock();
-  bool ShouldRun();
-  bool IsRunning();
-  void Start();
-  void Terminate();
-  void ForceTerminate();
-
-  ThreadLock mThreadLock;
-  RendererThreadJobQueue* mRendererJobQueue;
-  uint mExecuteDelay;
-  uint mStartCount;
-  uint mEndCount;
-  bool mShouldRun;
-  bool mDelayTerminate;
-  bool mForceTerminate;
 };
 
 class ShowProgressJob : public RepeatingJob

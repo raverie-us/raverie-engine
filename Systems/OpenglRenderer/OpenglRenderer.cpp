@@ -1026,22 +1026,30 @@ void OpenglRenderer::RemoveTexture(RemoveTextureJob* job)
 
 void OpenglRenderer::AddShaders(AddShadersJob* job)
 {
-  if (cLazyShaderCompilation && !job->mForceCompile)
+  if (cLazyShaderCompilation && job->mForceCompileBatchCount == 0)
   {
     forRange (ShaderEntry& entry, job->mShaders.All())
     {
       ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
       mShaderEntries.Insert(shaderKey, entry);
     }
+    job->mShaders.Clear();
   }
   else
   {
-    forRange (ShaderEntry& entry, job->mShaders.All())
+    uint processCount = Math::Min(job->mForceCompileBatchCount, job->mShaders.Size());
+    if (processCount == 0)
+      processCount = job->mShaders.Size();
+
+    for (uint i = 0; i < processCount; ++i)
     {
+      ShaderEntry& entry = job->mShaders[i];
       ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
       mShaderEntries.Erase(shaderKey);
       CreateShader(entry);
     }
+
+    job->mShaders.Erase(job->mShaders.SubRange(0, processCount));
   }
 }
 
