@@ -21,6 +21,8 @@ public:
   byte* HandleToObject(const Handle& handle) override;
 };
 
+typedef uint ContentItemId;
+
 // A content item is an object that represents a content generating
 // item in the library. This is usually a single file and is generated
 // from that file's meta file.
@@ -35,7 +37,7 @@ public:
   String GetName();
 
   // Core Content Item
-  uint Id;
+  ContentItemId Id;
 
   //The library this content item is contained within.
   ContentLibrary* mLibrary;
@@ -113,6 +115,16 @@ public:
   // Called when content item is initialized for derived classes.
   virtual void OnInitialize();
 private:
+};
+
+//------------------------------------------------------------------------- Resource Meta Operations
+class ContentItemMetaOperations : public MetaOperations
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  /// MetaOperations Interface.
+  void ObjectModified(HandleParam object, bool intermediateChange) override;
 };
 
 }//namespace Zero

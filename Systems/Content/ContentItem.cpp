@@ -14,6 +14,8 @@ namespace Zero
 ZilchDefineType(ContentItem, builder, type)
 {
   type->HandleManager = ZilchManagerId(ContentItemHandleManager);
+  type->Add(new ContentItemMetaOperations());
+
   ZilchBindGetterProperty(Name);
 }
 
@@ -221,6 +223,25 @@ ContentComponent* ContentItem::QueryComponentId(BoundType* typeId)
 void ContentItem::OnInitialize()
 {
 
+}
+
+//------------------------------------------------------------------------- Resource Meta Operations
+//**************************************************************************************************
+ZilchDefineType(ContentItemMetaOperations, builder, type)
+{
+
+}
+
+//**************************************************************************************************
+void ContentItemMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
+{
+  MetaOperations::ObjectModified(object, intermediateChange);
+
+  if(!intermediateChange)
+  {
+    ContentItem* contentItem = object.Get<ContentItem*>(GetOptions::AssertOnNull);
+    Z::gContentSystem->mModifiedContentItems.Insert(contentItem->Id);
+  }
 }
 
 }//namespace Zero

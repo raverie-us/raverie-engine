@@ -751,7 +751,7 @@ Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection,
                            capsuleRadius, &interval);
 
   //Minimum point of intersection is positive. Two intersection points.
-  if(result == Other)
+  if(result >= 0)
   {
     if(interval.Min > real(0.0))
     {
@@ -790,7 +790,7 @@ Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection,
   Type result = RayCylinder(rayStart, rayDirection, cylinderCenter, 
                             cylinderBasis, cylinderRadius, cylinderHalfHeight,
                             &interval);
-  if(result != None)
+  if(result >= 0)
   {
     //Minimum point of intersection is positive. Two intersection points.
     if(interval.Min > real(0.0))
@@ -828,7 +828,7 @@ Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection,
   Interval interval;
   Type result = RayCylinder(rayStart, rayDirection, cylinderPointA, 
                             cylinderPointB, cylinderRadius, &interval);
-  if(result != None)
+  if(result >= 0)
   {
     //Minimum point of intersection is positive. Two intersection points.
     if(interval.Min > real(0.0))

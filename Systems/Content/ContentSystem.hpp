@@ -193,10 +193,9 @@ public:
   ContentLibraryMapType Libraries;
 
   // Map of active ContentItems for safe handles
-  typedef uint IdType;
-  typedef HashMap<IdType, ContentItem*> ContentItemMap;
+  typedef HashMap<ContentItemId, ContentItem*> ContentItemMap;
   ContentItemMap LoadedItems;
-  IdType mIdCount;
+  ContentItemId mIdCount;
 
   /// Where to move deleted content to.
   String HistoryPath;
@@ -210,6 +209,7 @@ public:
 
   Verbosity::Enum SystemVerbosity;
   TextStream* DefaultBuildStream;
+  HashSet<ContentItemId> mModifiedContentItems;
 
 private:
 };

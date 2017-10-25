@@ -623,6 +623,10 @@ Any ResourceMetaOperations::GetUndoData(HandleParam object)
 {
   Resource* resource = object.Get<Resource*>(GetOptions::AssertOnNull);
   bool isModified = Z::gResources->mModifiedResources.Contains(resource->mResourceId);
+
+  // Temporary until we fix issues with how this works
+  isModified = true;
+
   return isModified;
 }
 
