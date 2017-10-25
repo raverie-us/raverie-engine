@@ -241,8 +241,12 @@ bool RenameResource(Resource* resource, StringParam newName)
 
   ContentLibrary* library = resource->mContentItem->mLibrary;
 
+  bool canModifyReadOnly = false;
+  if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
+    canModifyReadOnly = devConfig->mCanModifyReadOnlyResources;
+
   // Do not rename resources from read only content libraries.
-  if(!library->GetWritable())
+  if(!library->GetWritable() && canModifyReadOnly == false)
     return false;
 
   ContentItem* contentItem = resource->mContentItem;
