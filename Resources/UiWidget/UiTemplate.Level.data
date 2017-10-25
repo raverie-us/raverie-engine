@@ -97,11 +97,10 @@ Level
 		}
 		Camera 
 		{
-			var NearPlane = 0.5
-			var FarPlane = 500
+			var NearPlane = 0.1
+			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 45
-			var Size = 776
 		}
 		EditorCameraController 
 		{
@@ -177,11 +176,10 @@ Level
 		}
 		Camera 
 		{
-			var NearPlane = 0.100000001
-			var FarPlane = 200
+			var NearPlane = 0.1
+			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 60
-			var Size = 0.00999999978
 		}
 		SoundListener 
 		{
