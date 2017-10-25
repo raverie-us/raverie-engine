@@ -10,7 +10,6 @@ class UiSliderEvent : ZilchEvent
 }
 
 //------------------------------------------------------------------- Ui Slider
-[RunInEditor]
 class UiSlider : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;

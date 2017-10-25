@@ -9,7 +9,6 @@ enum UiHighlightMouseMode {Enter, EnterHierarchy, Hover}
 enum UiHighlightColorMode {Local, Hierarchy}
 
 //---------------------------------------------------------------- Ui Highlight
-[RunInEditor]
 class UiHighlight : ZilchComponent
 {
   [Dependency] var UiWidget : UiWidget;
