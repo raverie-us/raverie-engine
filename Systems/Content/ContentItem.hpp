@@ -75,8 +75,8 @@ public:
   String GetFullPath();
   
   /// Adds all tags of this content item to the given array.
-  void AddTags(Array<String>& tags);
-  void AddTags(HashSet<String>& tags);
+  void GetTags(Array<String>& tags);
+  void GetTags(HashSet<String>& tags);
   void SetTag(StringParam tag);
   void SetTags(HashSet<String>& tags);
   bool HasTag(StringParam tag);

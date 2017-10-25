@@ -431,7 +431,7 @@ void Resource::GetTags(Array<String>& coreTags, Array<String>& userTags)
 
   // Add all tags from the content item
   if(mContentItem != nullptr)
-    mContentItem->AddTags(userTags);
+    mContentItem->GetTags(userTags);
 }
 
 void Resource::AddTags(HashSet<String>& tags)

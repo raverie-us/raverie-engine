@@ -210,7 +210,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
   addContent.Library = library;
 
   // We want to copy over the tags of the content item as well
-  resource->mContentItem->AddTags(addContent.Tags);
+  resource->mContentItem->GetTags(addContent.Tags);
 
   // Try to add the file
   Status addStatus;

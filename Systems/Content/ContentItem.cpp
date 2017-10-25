@@ -103,14 +103,11 @@ String ContentItem::GetFullPath()
   return FilePath::Combine(mLibrary->SourcePath, Filename);
 }
 
-void ContentItem::AddTags(Array<String>& tags)
+void ContentItem::GetTags(Array<String>& tags)
 {
   ContentTags* contentTags = this->has(ContentTags);
   if (contentTags == nullptr)
-  {
-    contentTags = new ContentTags();
-    AddComponent(contentTags);
-  }
+    return;
 
   forRange(String currTag, contentTags->mTags.All())
   {
@@ -118,14 +115,11 @@ void ContentItem::AddTags(Array<String>& tags)
   }
 }
 
-void ContentItem::AddTags(HashSet<String>& tags)
+void ContentItem::GetTags(HashSet<String>& tags)
 {
   ContentTags* contentTags = this->has(ContentTags);
   if (contentTags == nullptr)
-  {
-    contentTags = new ContentTags();
-    AddComponent(contentTags);
-  }
+    return;
 
   forRange(String currTag, contentTags->mTags.All())
   {
