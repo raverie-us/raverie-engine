@@ -1,12 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Undo history view manager.
 ////////////////////////////////////////////////////////////////////////////////
-[RunInEditor]
 class ZUndoHistory : ZilchComponent
 {
     // History row cogs are of this archetype.
   [Property] var ArchetypeEntry : Archetype = Archetype.HistoryEntry;
-  
   
   /******************************************************************************/
   function Initialize(init : CogInitializer)

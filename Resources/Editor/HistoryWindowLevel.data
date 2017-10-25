@@ -70,7 +70,7 @@ Level
 			}
 			var RendererPath = CogPath
 			{
-				var Path = "."
+				var Path = ":/HistoryWindow"
 				var ErrorOnResolveToNull = false
 				var ErrorOnPathCantCompute = false
 				var ErrorOnDirectLinkFail = false
@@ -78,7 +78,7 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var Cog = 2
+				var Cog = 3
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
@@ -103,18 +103,76 @@ Level
 		{
 			var Active = false
 		}
-		ZUiBasicRenderer 
+	}
+	Cog [ContextId:4]
+	{
+		var Name = "EditorCamera"
+		Transform 
 		{
-			var ClearColor = Real4{0, 0, 0, 1}
-			var DrawDebug = false
-			var DrawOpaque = false
-			var DrawAlphaBlend = false
+			var Translation = Real3{156, -7, 500}
+			var Scale = Real3{1, 1, 1}
+			var Rotation = Quaternion{0, -1.09278471e-08, 0, 1}
 		}
-		ZUiSnapCameraSize 
+		CameraViewport 
 		{
-			var Active = true
-			var ZoomSpeed = 0.00999999978
-			var Zoom = 1
+			var RenderInEditor = true
+			var RenderInGame = false
+			var RenderOrder = 0
+			var CameraPath = CogPath
+			{
+				var Path = "."
+				var ErrorOnResolveToNull = false
+				var ErrorOnPathCantCompute = false
+				var ErrorOnDirectLinkFail = false
+				var UpdateCogOnPathChange = true
+				var UpdatePathOnCogChange = true
+				var UpdateCogOnInitialize = true
+				var ResolvedNullErrorOccurred = false
+				var Cog = 4
+				var PathPreference0 = CogPathPreference.CogRelative
+				var PathPreference1 = CogPathPreference.SpaceRelative
+				var PathPreference2 = CogPathPreference.Absolute
+			}
+			var RendererPath = CogPath
+			{
+				var Path = ":/HistoryWindow"
+				var ErrorOnResolveToNull = false
+				var ErrorOnPathCantCompute = false
+				var ErrorOnDirectLinkFail = false
+				var UpdateCogOnPathChange = true
+				var UpdatePathOnCogChange = true
+				var UpdateCogOnInitialize = true
+				var ResolvedNullErrorOccurred = false
+				var Cog = 3
+				var PathPreference0 = CogPathPreference.CogRelative
+				var PathPreference1 = CogPathPreference.SpaceRelative
+				var PathPreference2 = CogPathPreference.Absolute
+			}
+			var ResolutionOrAspect = Integer2{1920, 1080}
+			var RenderToViewport = true
+			var ForwardViewportEvents = true
+			var ViewportScaling = ViewportScaling.Fill
+			var MarginColor = Real4{0, 0, 0, 1}
+			var NormalizedSize = Real2{1, 1}
+			var NormalizedOffset = Real2{0, 0}
+		}
+		Camera 
+		{
+			var NearPlane = 0.5
+			var FarPlane = 500
+			var PerspectiveMode = PerspectiveMode.Perspective
+			var FieldOfView = 45
+			var Size = 776
+		}
+		EditorCameraController 
+		{
+			var ControlMode = ControlMode.Orbit
+			var Previous3DMode = ControlMode.Orbit
+			var LookDistance = 500
+			var VerticalAngle = 0
+			var HorizontalAngle = 0
+			var LookTarget = Real3{156.136505, -6.00232983, 6.82494192e-06}
+			var MoveSensitivity = 1
 		}
 	}
 	Cog [ContextId:3]
@@ -179,8 +237,6 @@ Level
 			var DoubleClickTime = 0.300000012
 			var DepthSeparation = 0.00999999978
 			var DebugMouseInteraction = false
-			var SnapSize = 1
-			var AlwaysUpdate = true
 		}
 		Reactive 
 		{
@@ -188,43 +244,9 @@ Level
 		}
 		UiRenderer 
 		{
-		}
-		UiRootInputRouter 
-		{
-		}
-		ZUiFillViewport 
-		{
-			var Active = true
-			var CameraViewport = CogPath
-			{
-				var Path = ":/Camera"
-				var ErrorOnResolveToNull = false
-				var ErrorOnPathCantCompute = false
-				var ErrorOnDirectLinkFail = false
-				var UpdateCogOnPathChange = true
-				var UpdatePathOnCogChange = true
-				var UpdateCogOnInitialize = true
-				var ResolvedNullErrorOccurred = false
-				var Cog = 2
-				var PathPreference0 = CogPathPreference.CogRelative
-				var PathPreference1 = CogPathPreference.SpaceRelative
-				var PathPreference2 = CogPathPreference.Absolute
-			}
-			var Camera = CogPath
-			{
-				var Path = ":/Camera"
-				var ErrorOnResolveToNull = false
-				var ErrorOnPathCantCompute = false
-				var ErrorOnDirectLinkFail = false
-				var UpdateCogOnPathChange = true
-				var UpdatePathOnCogChange = true
-				var UpdateCogOnInitialize = true
-				var ResolvedNullErrorOccurred = false
-				var Cog = 2
-				var PathPreference0 = CogPathPreference.CogRelative
-				var PathPreference1 = CogPathPreference.SpaceRelative
-				var PathPreference2 = CogPathPreference.Absolute
-			}
+			var ClearColor = Real4{0, 0, 0, 0}
+			var EditorDebugDraw = true
+			var GameDebugDraw = true
 		}
 		UiFillLayout 
 		{
@@ -235,7 +257,7 @@ Level
 		}
 		Hierarchy 
 		{
-			Cog [ContextId:4]
+			Cog [ContextId:5]
 			{
 				var Name = "OperationHistory"
 				Transform 
@@ -246,7 +268,7 @@ Level
 				}
 				Area 
 				{
-					var Size = Real2{300, 0}
+					var Size = Real2{300, 64}
 					var Origin = Location.TopLeft
 				}
 				UiWidget 
@@ -292,7 +314,7 @@ Level
 						var UpdatePathOnCogChange = true
 						var UpdateCogOnInitialize = true
 						var ResolvedNullErrorOccurred = false
-						var Cog = 5
+						var Cog = 6
 						var PathPreference0 = CogPathPreference.CogRelative
 						var PathPreference1 = CogPathPreference.SpaceRelative
 						var PathPreference2 = CogPathPreference.Absolute
@@ -307,7 +329,7 @@ Level
 						var UpdatePathOnCogChange = true
 						var UpdateCogOnInitialize = true
 						var ResolvedNullErrorOccurred = false
-						var Cog = 6
+						var Cog = 7
 						var PathPreference0 = CogPathPreference.CogRelative
 						var PathPreference1 = CogPathPreference.SpaceRelative
 						var PathPreference2 = CogPathPreference.Absolute
@@ -322,7 +344,7 @@ Level
 						var UpdatePathOnCogChange = true
 						var UpdateCogOnInitialize = true
 						var ResolvedNullErrorOccurred = false
-						var Cog = 7
+						var Cog = 8
 						var PathPreference0 = CogPathPreference.CogRelative
 						var PathPreference1 = CogPathPreference.SpaceRelative
 						var PathPreference2 = CogPathPreference.Absolute
@@ -337,7 +359,7 @@ Level
 						var UpdatePathOnCogChange = true
 						var UpdateCogOnInitialize = true
 						var ResolvedNullErrorOccurred = false
-						var Cog = 8
+						var Cog = 9
 						var PathPreference0 = CogPathPreference.CogRelative
 						var PathPreference1 = CogPathPreference.SpaceRelative
 						var PathPreference2 = CogPathPreference.Absolute
@@ -345,18 +367,18 @@ Level
 				}
 				Hierarchy 
 				{
-					Cog [ContextId:6]
+					Cog [ContextId:7]
 					{
 						var Name = "UndoView"
 						Transform 
 						{
-							var Translation = Real3{2, 0, 0}
+							var Translation = Real3{0, 0, 0}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
-							var Size = Real2{282, 0}
+							var Size = Real2{300, 2}
 							var Origin = Location.TopLeft
 						}
 						UiWidget 
@@ -398,18 +420,18 @@ Level
 						{
 						}
 					}
-					Cog [ContextId:7]
+					Cog [ContextId:8]
 					{
 						var Name = "RedoView"
 						Transform 
 						{
-							var Translation = Real3{2, 0, 0}
+							var Translation = Real3{0, -2, 0}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
-							var Size = Real2{282, 0}
+							var Size = Real2{300, 2}
 							var Origin = Location.TopLeft
 						}
 						UiWidget 
@@ -453,18 +475,18 @@ Level
 					}
 				}
 			}
-			Cog [ContextId:8]
+			Cog [ContextId:9]
 			{
 				var Name = "ScrollBar"
 				Transform 
 				{
-					var Translation = Real3{290, 0, 0}
+					var Translation = Real3{300, 0, 0}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}
 				Area 
 				{
-					var Size = Real2{10, 450}
+					var Size = Real2{0, 450}
 					var Origin = Location.TopLeft
 				}
 				UiWidget 
@@ -502,7 +524,7 @@ Level
 						}
 						Area 
 						{
-							var Size = Real2{10, 45}
+							var Size = Real2{0, 0}
 							var Origin = Location.TopLeft
 						}
 						Sprite 
@@ -568,16 +590,16 @@ Level
 								var UpdatePathOnCogChange = true
 								var UpdateCogOnInitialize = true
 								var ResolvedNullErrorOccurred = false
-								var Cog = 4
+								var Cog = 5
 								var PathPreference0 = CogPathPreference.CogRelative
 								var PathPreference1 = CogPathPreference.SpaceRelative
 								var PathPreference2 = CogPathPreference.Absolute
 							}
 						}
-						ZUiHighlight 
+						UiHighlight 
 						{
 							var Active = true
-							var MouseMode = ZUiHighlightMouseMode.Enter
+							var MouseMode = UiHighlightMouseMode.Enter
 							var MouseOverCog = CogPath
 							{
 								var Path = "."
@@ -608,7 +630,7 @@ Level
 								var PathPreference1 = CogPathPreference.SpaceRelative
 								var PathPreference2 = CogPathPreference.Absolute
 							}
-							var ColorMode = ZUiHighlightColorMode.Local
+							var ColorMode = UiHighlightColorMode.Local
 							var MouseHoverColor = Real4{0.180392101, 0.180392101, 0.180392101, 1}
 							var MouseDownColor = Real4{0.180392101, 0.180392101, 0.180392101, 1}
 							var AnimateTime = 0
@@ -619,19 +641,19 @@ Level
 					}
 				}
 			}
-			Cog [ContextId:5]
+			Cog [ContextId:6]
 			{
 				var Name = "StatusText"
 				Transform 
 				{
-					var Translation = Real3{0, 0, 1}
+					var Translation = Real3{150, -225, 1}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}
 				Area 
 				{
 					var Size = Real2{300, 35}
-					var Origin = Location.Center
+					var Origin = Location.TopLeft
 				}
 				UiWidget 
 				{
