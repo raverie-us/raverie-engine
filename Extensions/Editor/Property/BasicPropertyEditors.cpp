@@ -1211,8 +1211,11 @@ public:
     mCurrent = typedValue;
 
     Vec4 displayValue = Vec4::cZero;
-    for(uint i=0;i<dimension;++i)
+    for (uint i = 0; i < dimension; ++i)
+    {
       displayValue[i] = (float)typedValue[i];
+      CorrectNonFiniteValues(displayValue[i]);
+    }
 
     return displayValue;
   }
