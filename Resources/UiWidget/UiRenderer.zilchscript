@@ -63,7 +63,7 @@ class UiRenderer : ZilchComponent
     cameraTransform.WorldRotation = Quaternion.Identity;
     cameraPos.Z = 10;
     
-    if(this.Space.IsEditorMode == false)
+    if(cameraCog.EditorCameraController == null)
     {
       // Size ourself to the viewport size
       this.UiWidget.Size = viewportSize as Real2;
