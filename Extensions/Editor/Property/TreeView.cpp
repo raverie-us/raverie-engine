@@ -1779,7 +1779,7 @@ void TreeView::OnRightClickBg(MouseEvent* event)
 
 TreeRow* TreeView::FindRowByIndex(DataIndex& index)
 {
-  return mRowMap.FindValue(index.Id, NULL);
+  return mRowMap.FindValue(index.Id, nullptr);
 }
 
 uint TreeView::FindRowIndex(TreeRow* row)

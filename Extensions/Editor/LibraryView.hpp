@@ -129,7 +129,7 @@ private:
 
   void OnAddTagToSearch(ObjectEvent* event);
   
-  bool AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName);
+  bool AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName, bool addDivider = false);
   void OnAddResource(ObjectEvent* event);
 
   /// Editor event response.
@@ -150,6 +150,8 @@ private:
 
   float GetTagEditorHeight();
   void SetTagEditorHeight(float height);
+
+  void RenameAtIndex(DataIndex& dataIndex);
 
 private:
   /// Tag editor functions.

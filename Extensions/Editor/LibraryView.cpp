@@ -221,7 +221,7 @@ public:
     float tagWidth = mTagIcon->mSize.x;
 
     // Place the tag to the left of the text
-    Vec3 tagTranslation(mText->mTranslation.x - tagWidth - Pixels(2), Pixels(2), 0);
+    Vec3 tagTranslation(mEditableText->mTranslation.x - tagWidth - Pixels(2), Pixels(2), 0);
 
     // The amount the tag would be negative on the left
     float overflow = tagTranslation.x - Pixels(2);
@@ -231,10 +231,10 @@ public:
     mTagIcon->SetTranslation(tagTranslation);
 
     // Push the text to the right to account for the tag being stuck too far on the left
-    mText->mTranslation.x += overflow;
+    mEditableText->mTranslation.x += overflow;
 
     // Make sure the size isn't too large
-    mText->mSize.x = Math::Min(mText->mSize.x, mSize.x - tagWidth - Pixels(2));
+    mEditableText->mSize.x = Math::Min(mEditableText->mSize.x, mSize.x - tagWidth - Pixels(2));
 
     // We need to update our children again to let the ellipses (...) on mText process
     Composite::UpdateTransform();
@@ -750,8 +750,7 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
       ConnectMenu(menu, "TranslateFragment", OnTranslateFragment);
     }
 
-    menu->AddDivider();
-    AddResourceOptionsToMenu(menu, resourceType->Name);
+    AddResourceOptionsToMenu(menu, resourceType->Name, true);
   }
   else
   {
@@ -833,9 +832,8 @@ void LibraryView::OnKeyDown(KeyboardEvent* event)
       // make sure we have anything actively selected
       if(selectedIndices.Size())
       {
-        // get the row of the selected item and edit its name
-        TreeRow* row = mTreeView->FindRowByIndex(selectedIndices.Front());
-        row->Edit(CommonColumns::Name);
+        // get the data index of the selected item and edit its name
+        RenameAtIndex(selectedIndices.Front());
       }
     }
   }
@@ -1075,8 +1073,7 @@ void LibraryView::OnRemove(ObjectEvent* event)
 //******************************************************************************
 void LibraryView::OnRename(ObjectEvent* event)
 {
-  TreeRow* row = mTreeView->FindRowByIndex(mPrimaryCommandIndex);
-  row->Edit(CommonColumns::Name);
+  RenameAtIndex(mPrimaryCommandIndex);
 }
 
 //******************************************************************************
@@ -1230,7 +1227,7 @@ void LibraryView::OnAddTagToSearch(ObjectEvent* event)
 }
 
 //******************************************************************************
-bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName)
+bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName, bool addDivider)
 {
   BoundType* boundType = MetaDatabase::GetInstance()->FindType(resouceName);
 
@@ -1240,6 +1237,9 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
     ResourceManager* manager = Z::gResources->GetResourceManager(boundType);
     if (manager->mCanAddFile || manager->mCanCreateNew)
     {
+      if (addDivider)
+        menu->AddDivider();
+
       // We have a resource so add the option to create a new resource of the viewed type
       StringBuilder buttonTitle;
       buttonTitle.Append("Add ");
@@ -1422,6 +1422,21 @@ void LibraryView::SetTagEditorHeight(float height)
   }
   mTagEditorHeight = height;
   MarkAsNeedsUpdate();
+}
+
+//******************************************************************************
+void LibraryView::RenameAtIndex(DataIndex& dataIndex)
+{
+  if (mTreeView->GetActive())
+  {
+    TreeRow* row = mTreeView->FindRowByIndex(dataIndex);
+    row->Edit(CommonColumns::Name);
+  }
+  else if (mTileView->GetActive())
+  {
+    TileViewWidget* tile = mTileView->FindTileByIndex(dataIndex);
+    tile->Edit();
+  }
 }
 
 //******************************************************************************

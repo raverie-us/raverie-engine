@@ -32,6 +32,19 @@ public:
   TileViewWidget* mTile;
 };
 
+//-------------------------------------------------------------- Item Pop Up
+class ItemPopUp : public PopUp
+{
+public:
+  ItemPopUp(TileViewWidget* source, MouseEvent* mouseEvent);
+
+  void UpdateTransform() override;
+
+  Label* mName;
+  Label* mType;
+  Label* mExtra;
+};
+
 //------------------------------------------------------------- Tile View Widget
 class TileViewWidget : public Composite
 {
@@ -40,6 +53,7 @@ public:
 
   TileViewWidget(Composite* parent, TileView* tileView,
                  PreviewWidget* tileWidget, DataIndex dataIndex);
+  ~TileViewWidget();
 
   DataIndex GetDataIndex();
 
@@ -48,6 +62,7 @@ public:
 
   //TileViewWidget Interface
   virtual void Refresh(){};
+  virtual void OnRightUp(MouseEvent* event);
   virtual void OnDoubleClick(MouseEvent* event);
   virtual void AnimatePreview(PreviewAnimate::Enum value){mContent->AnimatePreview(value);}
   virtual Handle GetEditObject(){return mContent->GetEditObject();}
@@ -59,6 +74,10 @@ public:
   virtual void OnMouseHover(MouseEvent* event);
   virtual void OnMouseDrag(MouseEvent* event);
   virtual void OnMouseRightClick(MouseEvent* event);
+  void OnValueChanged(ObjectEvent* event);
+  void OnTextChanged(TextUpdatedEvent* event);
+
+  void Edit();
 
   Thickness mContentMargins;
   String mItemType;
@@ -73,12 +92,13 @@ protected:
   Element* mBackground;
   Element* mTitleBar;
   Element* mHighlight;
-  Label* mText;
+  InPlaceTextEditor* mEditableText;
   /// The contained widget.
   PreviewWidget* mContent;
 
   DataIndex mIndex;
   TileView* mTileView;
+  HandleOf<ItemPopUp> mTilePopUp;
 };
 
 //-------------------------------------------------------------------- Tile View
@@ -100,6 +120,8 @@ public:
   /// Selects the first active tile.
   void SelectFirstTile();
 
+  TileViewWidget* FindTileByIndex(DataIndex& index);
+
   /// Percentage from [0-1].  0 being the smallest size, 1 being the largest.
   void SetItemSizePercent(float percentage);
   float GetItemSize();
@@ -117,6 +139,11 @@ public:
 
   /// Widget Interface.
   void UpdateTransform() override;
+
+  /// Determines if the tile will refresh whenever a value is changed. Set
+  /// this to true if setting a property might alter the input value such
+  /// that the display needs to be reset.
+  void SetRefreshOnValueChange(bool state);
 
 private:
   friend class TileViewWidget;
@@ -147,9 +174,11 @@ private:
   DataSelection* mSelection;
   DataSelection* mDefaultSelection;
   Array<TileViewWidget*> mTileWidgets;
+  HashMap<u64, TileViewWidget*> mTileWidgetMap;
   float mItemSize;
   uint mTileCount;
   ScrollArea* mArea;
+  bool mRefreshOnValueChange;
   Element* mBackground;
 };
 

@@ -133,43 +133,35 @@ public:
 };
 
 //------------------------------------------------------------------ Item Pop Up
-class ItemPopUp : public PopUp
+//****************************************************************************
+ItemPopUp::ItemPopUp(TileViewWidget* source, MouseEvent* mouseEvent)
+  : PopUp(source, PopUpCloseMode::MouseOutTarget)
 {
-public:
-  Label* mName;
-  Label* mType;
-  Label* mExtra;
+  SetBelowMouse(mouseEvent->GetMouse(), Pixels(10, 10));
 
-  //****************************************************************************
-  ItemPopUp(TileViewWidget* source, MouseEvent* mouseEvent)
-    : PopUp(source, PopUpCloseMode::MouseOutTarget)
-  {
-    SetBelowMouse(mouseEvent->GetMouse(), Pixels(10, 10));
+  mName = new Label(this, cText);
+  mType = new Label(this, cText);
+  mExtra = new Label(this, cText);
 
-    mName = new Label(this, cText);
-    mType = new Label(this, cText);
-    mExtra = new Label(this, cText);
+  mName->SetText(BuildString("Name: ", source->mName));
+  mName->SizeToContents();
+  mName->SetInteractive(false);
 
-    mName->SetText(BuildString("Name: ", source->mName));
-    mName->SizeToContents();
-    mName->SetInteractive(false);
+  mType->SetText(BuildString("Type: ", source->mItemType));
+  mType->SizeToContents();
+  mType->SetInteractive(false);
 
-    mType->SetText(BuildString("Type: ", source->mItemType));
-    mType->SizeToContents();
-    mType->SetInteractive(false);
+  FadeIn();
+}
 
-    FadeIn();
-  }
-
-  //****************************************************************************
-  void UpdateTransform()
-  {
-    mType->SetTranslation(Pixels(4, 4, 0));
-    mName->SetTranslation(Pixels(4, 20, 0));
-    mExtra->SetTranslation(Pixels(4, 36, 0));
-    PopUp::UpdateTransform();
-  }
-};
+//****************************************************************************
+void ItemPopUp::UpdateTransform()
+{
+  mType->SetTranslation(Pixels(4, 4, 0));
+  mName->SetTranslation(Pixels(4, 20, 0));
+  mExtra->SetTranslation(Pixels(4, 36, 0));
+  PopUp::UpdateTransform();
+}
 
 //------------------------------------------------------------------ Item Widget
 //******************************************************************************
@@ -181,26 +173,28 @@ TileViewWidget::TileViewWidget(Composite* parent, TileView* tileView,
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mTitleBar = CreateAttached<Element>(cWhiteSquare);
   mHighlight = CreateAttached<Element>(cWhiteSquare);
+  mHighlight->SetInteractive(false);
 
   mBackground->SetColor(Vec4(0.416f, 0.416f, 0.416f, 1));
   mTitleBar->SetColor(Vec4(0.35f, 0.35f, 0.35f, 1));
   mHighlight->SetColor(Vec4(TileViewUi::MouseOverBorderColor) * Vec4(1,1,1,0.6));
 
-  mText = new Label(this, cText);
-
   mObject = tileWidget->mObject;
   mName = tileWidget->mName;
   mIndex = dataIndex;
+  mTileView->mTileWidgetMap[mIndex.Id] = this;
 
   mContentMargins = Thickness(1, 1, 1, 1);
 
-  //
   if(tileWidget->mObject.IsNotNull())
     mItemType = tileWidget->mObject.GetBoundOrIndirectType()->ToString();
 
-  //SetClipping(true);
-  mText->SetTextClipping(true);
-  mText->SetText(mName);
+  mEditableText = new InPlaceTextEditor(this, InPlaceTextEditorFlags::EditOnDoubleClick);
+  mEditableText->mText->SetTextClipping(true);
+  mEditableText->mText->SetText(mName);
+  mEditableText->Name = CommonColumns::Name;
+  ConnectThisTo(mEditableText, Events::TextUpdated, OnTextChanged);
+  ConnectThisTo(mEditableText, Events::ValueChanged, OnValueChanged);
 
   AttachChildWidget(tileWidget);
   mContent = tileWidget;
@@ -210,8 +204,16 @@ TileViewWidget::TileViewWidget(Composite* parent, TileView* tileView,
   ConnectThisTo(this, Events::MouseExitHierarchy, OnMouseExit);
   ConnectThisTo(this, Events::MouseHover, OnMouseHover);
   ConnectThisTo(this, Events::LeftMouseDrag, OnMouseDrag);
+  ConnectThisTo(this, Events::RightMouseUp, OnRightUp);
   ConnectThisTo(this, Events::DoubleClick, OnDoubleClick);
   ConnectThisTo(this, Events::RightClick, OnMouseRightClick);
+}
+
+//******************************************************************************
+TileViewWidget::~TileViewWidget()
+{
+  if (mTileView->mTileWidgetMap.FindValue(mIndex.Id, nullptr) == this)
+    mTileView->mTileWidgetMap.Erase(mIndex.Id);
 }
 
 //******************************************************************************
@@ -226,7 +228,7 @@ void TileViewWidget::UpdateTransform()
   //mText->MoveToFront();
 
   float titleBarHeight = cTileViewNameOffset;
-  if (mText->GetText().Empty())
+  if (mEditableText->mText->GetText().Empty())
     titleBarHeight = 0.0f;
 
   Vec2 backgroundSize = mSize;
@@ -255,13 +257,22 @@ void TileViewWidget::UpdateTransform()
   contentRect.RemoveThickness(mContentMargins);
   PlaceWithRect(contentRect, mContent);
 
-  // Center text to the title bar
-  mText->SizeToContents();
-  WidgetRect textRect = WidgetRect::PointAndSize(Vec2::cZero, titleBarSize);
-  PlaceCenterToRect(textRect, mText);
+  // When editing text take up the entire title bars available space
+  if (mEditableText->mEdit)
+  {
+    mEditableText->SetTranslation(Vec3::cZero);
+    mEditableText->mEdit->SetSize(titleBarSize);
+  }
+  // Center text to the title bar when not being edited
+  else
+  {
+    mEditableText->SizeToContents();
+    WidgetRect textRect = WidgetRect::PointAndSize(Vec2::cZero, titleBarSize);
+    PlaceCenterToRect(textRect, mEditableText);
 
-  mText->mTranslation.x = Math::Max(mText->mTranslation.x, 0.0f);
-  mText->mSize.x = Math::Min(mText->mSize.x, mSize.x);
+    mEditableText->mTranslation.x = Math::Max(mEditableText->mTranslation.x, 0.0f);
+    mEditableText->mSize.x = Math::Min(mEditableText->mSize.x, mSize.x);
+  }
 
   Composite::UpdateTransform();
 }
@@ -269,8 +280,11 @@ void TileViewWidget::UpdateTransform()
 //******************************************************************************
 void TileViewWidget::OnMouseHover(MouseEvent* event)
 {
-  ItemPopUp* popUp = new ItemPopUp(this, event);
-  popUp->SetBelowMouse(event->GetMouse(), Pixels(2,2));
+  if(mTilePopUp.IsNull())
+  {
+    mTilePopUp = new ItemPopUp(this, event);
+    mTilePopUp->SetBelowMouse(event->GetMouse(), Pixels(2,2));
+  }
 }
 
 //******************************************************************************
@@ -300,6 +314,15 @@ void TileViewWidget::OnMouseExit(MouseEvent* event)
 }
 
 //******************************************************************************
+void TileViewWidget::OnRightUp(MouseEvent* event)
+{
+  if (!mTileView->GetSelection()->IsSelected(mIndex))
+    OnMouseClick(event);
+
+  event->Handled = true;
+}
+
+//******************************************************************************
 void TileViewWidget::OnDoubleClick(MouseEvent* event)
 {
   if(!event->Handled && event->Button == MouseButtons::Left)
@@ -322,6 +345,56 @@ void TileViewWidget::OnMouseRightClick(MouseEvent* event)
   TileViewEvent eventToSend;
   eventToSend.mTile = this;
   mTileView->GetDispatcher()->Dispatch(Events::TileViewRightClick, &eventToSend);
+}
+
+//******************************************************************************
+void TileViewWidget::OnValueChanged(ObjectEvent* event)
+{
+  //Editor has changed value update the Tile View
+  DataEntry* entry = mTileView->mDataSource->ToEntry(mIndex);
+  if (entry)
+  {
+    //Editor has changed the value
+    ValueEditor* editor = (ValueEditor*)event->Source;
+
+    //Get the new value
+    Any newValue;
+    editor->GetVariant(newValue);
+
+    //Apply the value to the data source
+    mTileView->mDataSource->SetData(entry, newValue, editor->Name);
+  }
+
+  if (mTileView->mRefreshOnValueChange)
+    Refresh();
+}
+
+//******************************************************************************
+void TileViewWidget::OnTextChanged(TextUpdatedEvent* event)
+{
+  //Editor has changed text value update the Tile View
+  DataEntry* entry = mTileView->mDataSource->ToEntry(mIndex);
+  if (entry)
+  {
+    //Editor has changed the in place text
+    InPlaceTextEditor* editor = (InPlaceTextEditor*)event->GetSource();
+
+    //Get the text value
+    Any newTextValue;
+    editor->GetEditTextVariant(newTextValue);
+
+    //Apply the value to the data source
+    event->mChangeAccepted = mTileView->mDataSource->SetData(entry, newTextValue, editor->Name);
+  }
+
+  if (mTileView->mRefreshOnValueChange)
+    Refresh();
+}
+
+//******************************************************************************
+void TileViewWidget::Edit()
+{
+  mEditableText->Edit();
 }
 
 //******************************************************************************
@@ -399,6 +472,7 @@ TileView::TileView(Composite* parent)
   mDataSource = NULL;
   mSelection = mDefaultSelection = new HashDataSelection();
   mItemSize = TileViewUi::StartingTileSize;
+  mRefreshOnValueChange = false;
 
   ConnectThisTo(mArea->GetBackground(), Events::LeftClick, OnLeftClick);
   ConnectThisTo(mArea->GetBackground(), Events::LeftMouseDrag, OnLeftMouseDrag);
@@ -449,6 +523,12 @@ void TileView::SelectFirstTile()
     tile->MarkAsNeedsUpdate();
     mSelection->SelectFinal();
   }
+}
+
+//******************************************************************************
+Zero::TileViewWidget* TileView::FindTileByIndex(DataIndex& index)
+{
+  return mTileWidgetMap.FindValue(index.Id, nullptr);
 }
 
 //******************************************************************************
@@ -524,6 +604,12 @@ void TileView::UpdateTransform()
   UpdateVisibleTiles();
 
   Composite::UpdateTransform();
+}
+
+//******************************************************************************
+void TileView::SetRefreshOnValueChange(bool state)
+{
+  mRefreshOnValueChange = state;
 }
 
 //******************************************************************************
@@ -829,6 +915,7 @@ void TileView::ClearTiles()
   }
 
   mTileWidgets.Clear();
+  mTileWidgetMap.Clear();
 
   MarkAsNeedsUpdate();
 }

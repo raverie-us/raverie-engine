@@ -61,15 +61,6 @@ void InPlaceTextEditor::SizeToContents()
 
 void InPlaceTextEditor::UpdateTransform()
 {
-  //if(mCustomIcon->GetActive())
-  //{
-  //  Vec3 pos(0, (mSize.y * 0.5) - (mCustomIcon->mSize.y * 0.5), 0);
-  //  //pos.x += Pixels(5);
-  //  mCustomIcon->SetTranslation(SnapToPixels(pos));
-  //  //mCustomIcon->SetTranslation(Vec3::cZero);
-  //}
-  //float iconWidth = GetIconsWidth();
-
   // Place the text
   mText->SetTranslation(Pixels(0, 0, 0));
   mText->SizeToContents();
@@ -106,7 +97,7 @@ void InPlaceTextEditor::Edit()
   mText->SetVisible(false);
 
   TextBox* edit = new TextBox(this);
-  edit->SetTranslation(Vec3(0, 0, 0) );
+  edit->SetTranslation(Vec3::cZero);
   edit->SetText( mText->GetText() );
   edit->SetSize( this->GetSize() - Vec2(GetIconsWidth(), 0) );
   edit->SetEditable(true);
