@@ -330,6 +330,7 @@ void BindCreationCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("CreateSprite", new EditorCreateObjectCommand(CoreArchetypes::Sprite));
   commands->AddCommand("CreateSpriteText", new EditorCreateObjectCommand(CoreArchetypes::SpriteText));
   commands->AddCommand("CreateSpriteParticles", new EditorCreateObjectCommand(CoreArchetypes::SpriteParticles));
+  commands->AddCommand("CreateSpline", new EditorCreateObjectCommand(CoreArchetypes::Spline));
   commands->AddCommand("CreateSplineParticleSystem", new EditorCreateObjectCommand(CoreArchetypes::SplineParticleSystem));
 
   commands->AddCommand("CreateGrid", new EditorCreateObjectCommand(CoreArchetypes::Grid));
