@@ -251,7 +251,7 @@ void ObjectState::ChildAdded(ChildIdParam childId)
   if(mRemovedChildren.Contains(childId))
     mRemovedChildren.Erase(childId);
   else
-    mAddedChildren.Insert(childId);
+    mAddedChildren.InsertOrError(childId);
 }
 
 //**************************************************************************************************
@@ -260,7 +260,7 @@ void ObjectState::ChildRemoved(ChildIdParam childId)
   if(mAddedChildren.Contains(childId))
     mAddedChildren.Erase(childId);
   else
-    mRemovedChildren.Insert(childId);
+    mRemovedChildren.InsertOrError(childId);
 }
 
 //**************************************************************************************************
