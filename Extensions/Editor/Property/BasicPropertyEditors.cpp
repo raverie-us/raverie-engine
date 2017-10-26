@@ -800,9 +800,6 @@ public:
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
 
-    mEditText = new TextBox(this);
-    mEditText->SetEditable(true);
-
     mSpinButton = new IconButton(this);
     mSpinButton->SetIcon("Spin");
     mSpinButton->mBackgroundColor = ToByteColor(Vec4::cZero);
@@ -810,6 +807,10 @@ public:
     mSpinButton->mBackgroundClickedColor = ToByteColor(Vec4(1, 1, 1, 0.1f));
     mSpinButton->SetSize(Pixels(24, 16));
     mSpinButton->SetToolTip("Drag to change value");
+    mSpinButton->mTabFocusStop = false;
+
+    mEditText = new TextBox(this);
+    mEditText->SetEditable(true);
 
     mEditRange = initializer.Property->HasInherited<EditorRange>();
 
@@ -1483,6 +1484,7 @@ public:
     mEyeDropper->mBackgroundClickedColor = ToByteColor(Vec4(1, 1, 1, 0.1f));
     mEyeDropper->SetSize(Pixels(24, 16));
     mEyeDropper->SetToolTip("Drag to pick color");
+    mEyeDropper->mTabFocusStop = false;
 
     // Create the color buffer
     mColorDisplay = new ColorDisplay(this, 70, 20);
