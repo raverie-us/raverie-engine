@@ -277,10 +277,11 @@ void DataTreeLoader::SetRoot(DataNode* node)
 //******************************************************************************
 DataNode* DataTreeLoader::TakeOwnershipOfFirstRoot()
 {
-  ReturnIf(mFileRoot->GetNumberOfChildren() != 1, nullptr,
+  ReturnIf(mFileRoot == nullptr || mFileRoot->GetNumberOfChildren() != 1, nullptr,
            "Can only take ownership if there's one root");
   DataNode* root = mFileRoot->GetFirstChild();
-  root->Detach();
+  if(root)
+    root->Detach();
   Close();
   return root;
 }
