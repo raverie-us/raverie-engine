@@ -354,6 +354,7 @@ namespace Zilch
     // Validate that the argument is of the same type (or raw convertable)
     Type* expectedType = this->PropertyType;
     Type* argumentType = value.StoredType;
+    ReturnIf(expectedType == nullptr, , "The PropertyType was null");
 
     // Look up a cast operator between the two types
     // Note that if the types are the same, a cast always technically exists of 'Raw' type
@@ -361,11 +362,19 @@ namespace Zilch
     CastOperator cast = Shared::GetInstance().GetCastOperator(argumentType, expectedType);
     if (cast.IsValid == false || cast.Operation != CastOperation::Raw)
     {
+      static String NullString("null");
+
+      String argumentTypeName;
+      if(argumentType != nullptr)
+        argumentTypeName = argumentType->ToString();
+      else
+        argumentTypeName = NullString;
+
       String message = String::Format
       (
         "The setter expected the type '%s' but was given '%s' (which could not be raw-converted)",
         expectedType->ToString().c_str(),
-        argumentType->ToString().c_str()
+        argumentTypeName.c_str()
       );
       return state->ThrowException(message);
     }
