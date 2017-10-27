@@ -134,6 +134,8 @@ ZilchDefineType(Transform, builder, type)
   ZilchBindMethod(TransformNormalInverse);
   ZilchBindMethod(TransformPointInverse);
 
+  ZilchBindMethod(Reset);
+
   ZilchBindMethod(RotateLocal);
   ZilchBindMethod(RotateWorld);
   ZilchBindMethod(RotateAround);
