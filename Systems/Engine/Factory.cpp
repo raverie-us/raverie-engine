@@ -429,8 +429,8 @@ Cog* Factory::BuildFromFile(BoundType* expectedMetaType, StringParam fileName, C
   //Load the file from data tree.
   ObjectLoader loader;
   Status status;
-  loader.OpenFile(status, fileName);
-  if(!status)
+  bool success = loader.OpenFile(status, fileName);
+  if(!status || !success)
   {
     DoNotifyStatus(status);
     DoNotifyErrorWithContext("Failed to parse data file");
