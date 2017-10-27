@@ -79,6 +79,8 @@ void EngineLibraryExtensions::FindProxiedTypeOrigin(BoundType* proxiedType)
   forRange(ResourceId textResourceId, Z::gResources->TextResources.Values())
   {
     DocumentResource* textResource = (DocumentResource*)Z::gResources->GetResource(textResourceId);
+    if(textResource == nullptr)
+      continue;
 
     Matches matches;
     regex.Search(textResource->LoadTextData(), matches);
