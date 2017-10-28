@@ -227,7 +227,7 @@ void Transform::Detached(AttachmentInfo& info)
 
 void Transform::SetDefaults( )
 {
-  Reset( );
+  ResetInternal( );
 };
 
 void Transform::TransformUpdate(TransformUpdateInfo& info)
@@ -289,11 +289,34 @@ void Transform::UpdateAll(uint flags)
   GetOwner( )->TransformUpdate(info);
 }
 
-void Transform::Reset( )
+void Transform::ResetInternal( )
 {
   Translation = Vec3::cZero;
   Scale = Vec3(1, 1, 1);
   Rotation = Quat::cIdentity;
+}
+
+void Transform::Reset()
+{
+  Mat4 oldMat;
+  if (IsInitialized())
+    oldMat = GetWorldMatrix();
+
+  SetLocalTranslationInternal(Vec3::cZero);
+  SetLocalScaleInternal(Vec3(1, 1, 1));
+  SetLocalRotationInternal(Quat::cIdentity);
+
+  if (IsInitialized())
+  {
+    TransformUpdateInfo info;
+    //compute the delta of this transform so that child in-world objects can be updated
+    info.TransformFlags =
+      TransformUpdateFlags::Translation |
+      TransformUpdateFlags::Scale       |
+      TransformUpdateFlags::Rotation;
+    ComputeDeltaTransform(info, oldMat, GetWorldMatrix());
+    GetOwner()->TransformUpdate(info);
+  }
 }
 
 Mat4 Transform::GetLocalMatrix( )

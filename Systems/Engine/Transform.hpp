@@ -66,6 +66,7 @@ public:
   /// translation flags. Currently used for attach/detach.
   void UpdateAll(Mat4Param oldMat, uint flags = 0);
   void UpdateAll(uint flags = 0);
+  void ResetInternal();
 
   /// Resets the LocalTranslation to (0, 0, 0), the LocalScale
   /// to (1, 1, 1), and the LocalRotation to the identity quaternion.

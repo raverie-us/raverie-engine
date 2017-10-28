@@ -541,7 +541,7 @@ Vec3 UiWidget::LocalToWorld(Vec2Param localPosition)
 {
   Vec2 localPos = localPosition;
   localPos.y *= -1.0f;
-  return mTransform->TransformPoint(Vec3(localPosition));
+  return mTransform->TransformPoint(Vec3(localPos));
 }
 
 //**************************************************************************************************
