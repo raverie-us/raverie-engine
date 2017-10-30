@@ -27,6 +27,8 @@ namespace Events
 
 class RenderFont;
 
+DeclareEnum4(SelectMode, Left, Right, Start, End);
+
 class EditText : public Widget
 {
 public:
@@ -50,8 +52,11 @@ public:
   void SetEditable(bool state);
   void SetTextClipping(bool value){mClipText = value;}
   void SetClearFocus(bool value){mEnterClearFocus = value;};
-  void SetEditCaretPos(int caretPos);
+  int SetEditCaretPos(int caretPos);
   int MoveEditCaret(Vec2Param newPosition);
+  void MoveCaretNextToken();
+  void MoveCaretPrevToken();
+  void ExtendSelection(SelectMode::Enum direction);
   void MakeLetterVisible(int characterIndex);
   int CharacterPositionAt(Vec2Param screenPos);
   void SetEditSelection(int selectionStart, int selectionEnd);
@@ -97,8 +102,9 @@ public:
   bool mClipText;
   bool mPassword;
   bool mEnterClearFocus;
-  int mSelectionStart;
-  int mSelectionEnd;
+  int mSelectionStartPos;
+  int mSelectionLeftPos;
+  int mSelectionRightPos;
   int mCaretPos;
   TextAlign::Enum mAlign;
   int mTextSize;

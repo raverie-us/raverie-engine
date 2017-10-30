@@ -32,6 +32,7 @@ EditText::EditText(Composite* parent)
   mDragging = false;
   mEditEnabled = false;
   mCaretPos = 0;
+  mSelectionStartPos = 0;
   mHasFocus = false;
   mClipText = false;
   mEnterClearFocus = true;
@@ -102,9 +103,9 @@ void EditText::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Pa
     // If there is a valid selection range draw the selection background
     if (IsValidSelection())
     {
-      pos0 = mFont->MeasureText(text, mSelectionStart, 1.0f);
+      pos0 = mFont->MeasureText(text, mSelectionLeftPos, 1.0f);
       pos0.y = 0.0f;
-      pos1 = mFont->MeasureText(text, mSelectionEnd, 1.0f);
+      pos1 = mFont->MeasureText(text, mSelectionRightPos, 1.0f);
       pos1.y = mSize.y;
       boxColor = ToFloatColor(Color::DarkOrange);
     }
@@ -166,8 +167,9 @@ void EditText::SelectAll()
 
 void EditText::SelectNone()
 {
-  mSelectionStart = 0;
-  mSelectionEnd = 0;
+  mSelectionStartPos = 0;
+  mSelectionLeftPos = 0;
+  mSelectionRightPos = 0;
 }
 
 void EditText::MakeLetterVisible(int characterIndex)
@@ -181,13 +183,14 @@ void EditText::MakeLetterVisible(int characterIndex)
     mOffset = -size.x ;
 }
 
-void EditText::SetEditCaretPos(int caretPos)
+int EditText::SetEditCaretPos(int caretPos)
 {
   // Selection can be at the End()
   int maxSize = mDisplayText.ComputeRuneCount();
   mCaretPos = Math::Clamp(caretPos, 0 , maxSize);
 
   MakeLetterVisible(mCaretPos);
+  return mCaretPos;
 }
 
 void EditText::SetEditSelection(int selectionStart, int selectionEnd)
@@ -197,13 +200,13 @@ void EditText::SetEditSelection(int selectionStart, int selectionEnd)
 
   // Selection can include the End()
   int maxSize = mDisplayText.ComputeRuneCount();
-  mSelectionStart = Math::Clamp(selectionStart, 0, maxSize);
-  mSelectionEnd = Math::Clamp(selectionEnd, 0, maxSize);
+  mSelectionLeftPos  = Math::Clamp(selectionStart, 0, maxSize);
+  mSelectionRightPos = Math::Clamp(selectionEnd, 0, maxSize);
 }
 
 bool EditText::IsValidSelection()
 {
-  return mSelectionEnd - mSelectionStart > 0;
+  return mSelectionRightPos - mSelectionLeftPos > 0;
 }
 
 int EditText::CharacterPositionAt(Vec2Param screenPos)
@@ -218,8 +221,137 @@ int EditText::CharacterPositionAt(Vec2Param screenPos)
 int EditText::MoveEditCaret(Vec2Param screenPos)
 {
   int newCaretPosition = CharacterPositionAt(screenPos);
-  SetEditCaretPos(newCaretPosition);
-  return mCaretPos;
+  return SetEditCaretPos(newCaretPosition);
+}
+
+void EditText::MoveCaretNextToken()
+{
+  StringIterator begin = mDisplayText.Begin();
+  StringIterator currentCaretPos = begin + mCaretPos;
+  StringRange range = mDisplayText.SubString(currentCaretPos, mDisplayText.End());
+  
+  // Already at the end of the text
+  if (range.Empty())
+    return;
+
+  // If currently at a whitespace rune trim all whitespace and
+  // set the caret at the next non-whitespace rune
+  if (range.IsCurrentRuneWhitespace())
+  {
+    range = range.TrimStart();
+  }
+  // Move to the end of the current token
+  else
+  {
+    // If currently at a symbol move past it and any other consecutive tokens
+    if (IsSymbol(range.Front()))
+    {
+      while (!range.Empty())
+      {
+        if (IsSymbol(range.Front()))
+          range.PopFront();
+        else
+          break;
+      }
+    }
+    // Move to the end of the current alphanumeric token (i.e word)
+    else
+    {
+      while (!range.Empty())
+      {
+        if (IsAlphaNumeric(range.Front()))
+          range.PopFront();
+        else
+          break;
+      }
+    }
+  }
+
+  // Compute the position to set the caret at
+  int newPosition = range.Begin() - begin;
+  // Set the new caret position
+  SetEditCaretPos(newPosition);
+}
+
+void EditText::MoveCaretPrevToken()
+{
+  StringIterator begin = mDisplayText.Begin();
+  StringIterator currentCaretPos = mDisplayText.Begin() + mCaretPos;
+  StringRange range = mDisplayText.SubString(begin, currentCaretPos);
+  
+  // Already at the start of the text
+  if (range.Empty())
+    return;
+
+  // If currently at a whitespace rune trim all whitespace and
+  // set the caret at the end of the previous non-whitespace rune
+  if (UTF8::IsWhiteSpace(range.Back()))
+  {
+    range = range.TrimEnd();
+  }
+  // Move to the start the current token
+  else
+  {
+    // If currently at a symbol move before it and any other consecutive tokens
+    if (IsSymbol(range.Back()))
+    {
+      while (!range.Empty())
+      {
+        if (IsSymbol(range.Back()))
+          range.PopBack();
+        else
+          break;
+      }
+    }
+    // Move to the start of the current alphanumeric token (i.e word)
+    else
+    {
+      while (!range.Empty())
+      {
+        if (IsAlphaNumeric(range.Back()))
+          range.PopBack();
+        else
+          break;
+      }
+    }
+  }
+
+  // Compute the position to set the caret at
+  int newPosition = range.End() - begin;
+  // Set the new caret position
+  SetEditCaretPos(newPosition);
+}
+
+void EditText::ExtendSelection(SelectMode::Enum direction)
+{
+  // If no text is currently selected set the caret position as our selections start
+  if (mSelectionLeftPos == 0 && mSelectionRightPos == 0)
+    mSelectionStartPos = mCaretPos;
+
+  // Move the caret to the next valid token in the direction we are selecting
+  switch (direction)
+  {
+    case SelectMode::Left:
+      MoveCaretPrevToken();
+      break;
+    case SelectMode::Right:
+      MoveCaretNextToken();
+      break;
+    case SelectMode::Start:
+      mCaretPos = 0;
+      break;
+    case SelectMode::End:
+      mCaretPos = mDisplayText.ComputeRuneCount();
+      break;
+  }
+
+  // Select from our current selection start to the new caret position
+  // Set the selection range based on whether the next caret position is
+  // to the left or right of our selections starting position
+  if (mCaretPos > mSelectionStartPos)
+    SetEditSelection(mSelectionStartPos, mCaretPos);
+  else
+    SetEditSelection(mCaretPos, mSelectionStartPos);
 }
 
 void EditText::ReplaceSelection(StringRange text)
@@ -229,18 +361,18 @@ void EditText::ReplaceSelection(StringRange text)
   // If their is no selection used the caret position
   if(!IsValidSelection())
   {
-    mSelectionStart = mCaretPos;
-    mSelectionEnd = mCaretPos;
+    mSelectionRightPos = mCaretPos;
+    mSelectionLeftPos = mCaretPos;
   }
 
   // Replace the sub string 
   StringIterator displayTextStartIt = mDisplayText.Begin();
-  StringIterator selectionStartIt = displayTextStartIt + mSelectionStart;
-  StringIterator selectionEndIt = displayTextStartIt + mSelectionEnd;
+  StringIterator selectionStartIt = displayTextStartIt + mSelectionLeftPos;
+  StringIterator selectionEndIt = displayTextStartIt + mSelectionRightPos;
   mDisplayText = BuildString(mDisplayText.SubString(displayTextStartIt, selectionStartIt), text, mDisplayText.SubString(selectionEndIt, mDisplayText.End()));
   // Move the caret to the End() of the pasted text
   
-  int newCaretPos = mSelectionStart + text.ComputeRuneCount();
+  int newCaretPos = mSelectionLeftPos + text.ComputeRuneCount();
   SetEditCaretPos(newCaretPos);
 
   // Clear the selection
@@ -249,10 +381,10 @@ void EditText::ReplaceSelection(StringRange text)
 
 StringRange EditText::GetSelectedText()
 {
-  int selectionSizeInBytes = mSelectionEnd - mSelectionStart;
+  int selectionSizeInBytes = mSelectionRightPos - mSelectionLeftPos;
   if(mDisplayText.SizeInBytes() && selectionSizeInBytes > 0)
   {
-    return StringRange(mDisplayText.Begin() + mSelectionStart, mDisplayText.Begin() + mSelectionEnd);
+    return StringRange(mDisplayText.Begin() + mSelectionRightPos, mDisplayText.Begin() + mSelectionLeftPos);
   }
   else
   {
@@ -354,38 +486,42 @@ void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
       {
         //Highlight everything to the left
         if(ctrlPressed)
-          SetEditSelection(0, mCaretPos);
+        {
+          ExtendSelection(SelectMode::Left);
+        }
         else if(textSelected)
         {
-          //If the selection is to the left of the caret, grow the selection 
-          //left
-          if(mSelectionStart < mCaretPos && mSelectionStart > 0)
-            --mSelectionStart;
-          //If it is to the right, shrink it from the right
-          else if(mSelectionEnd > mCaretPos)
-            --mSelectionEnd;
+          if (mCaretPos > 0)
+            --mCaretPos;
 
-          MakeLetterVisible(mSelectionStart);
-
+          SetEditSelection(mSelectionStartPos, mCaretPos);
+          MakeLetterVisible(mCaretPos);
         }
         else if(mCaretPos > 0)
-          SetEditSelection(mCaretPos - 1, mCaretPos);
+        {
+          mSelectionStartPos = mCaretPos;
+          --mCaretPos;
+
+          SetEditSelection(mSelectionStartPos, mCaretPos);
+          MakeLetterVisible(mCaretPos);
+        }
       }
-      //For now, jump all the way to the left.  Should jump to the next token.
+      //Move to the start of the previous token
       else if(ctrlPressed)
       {
-        SetEditCaretPos(0);
+        MoveCaretPrevToken();
         SelectNone();
       }
       //Move the caret to the start of the selection and de-select
       else if(textSelected)
       {
-        SetEditCaretPos(mSelectionStart);
+        SetEditCaretPos(mSelectionLeftPos);
         SelectNone();
       }
       else
-        SetEditCaretPos(mCaretPos - 1);
-
+      {
+        mSelectionStartPos = SetEditCaretPos(mCaretPos - 1);
+      }
       keyboardEvent->Handled = true;
       break;
     }
@@ -396,37 +532,42 @@ void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
       {
         //Highlight everything to the right
         if(ctrlPressed)
-          SetEditSelection(mCaretPos, size);
-
+        {
+          ExtendSelection(SelectMode::Right);
+        }
         else if(textSelected)
         {
-          //If the selection is to the right of the caret, grow the selection 
-          //right
-          if(mSelectionEnd > mCaretPos && mSelectionEnd < size)
-            ++mSelectionEnd;
-          //If it is to the left, shrink it from the left
-          else if(mSelectionStart < mCaretPos)
-            ++mSelectionStart;
+          if (mCaretPos < size)
+            ++mCaretPos;
 
-          MakeLetterVisible(mSelectionEnd);
+          SetEditSelection(mSelectionStartPos, mCaretPos);
+          MakeLetterVisible(mCaretPos);
         }
         else if(mCaretPos < size)
-          SetEditSelection(mCaretPos, mCaretPos + 1);
+        {
+          mSelectionStartPos = mCaretPos;
+          ++mCaretPos;
+
+          SetEditSelection(mSelectionStartPos, mCaretPos);
+          MakeLetterVisible(mCaretPos);
+        }
       }
-      //For now, jump all the way to the right.  Should jump to the next token.
+      //Move to the start of the next token
       else if(ctrlPressed)
       {
-        SetEditCaretPos(size);
+        MoveCaretNextToken();
         SelectNone();
       }
       //Move the caret to the End() of the selection and de-select
       else if(textSelected)
       {
-        SetEditCaretPos(mSelectionEnd);
+        SetEditCaretPos(mSelectionRightPos);
         SelectNone();
       }
       else
-        SetEditCaretPos(mCaretPos + 1);
+      {
+        mSelectionStartPos = SetEditCaretPos(mCaretPos + 1);
+      }
 
       keyboardEvent->Handled = true;
       break;
@@ -436,7 +577,10 @@ void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
     {
       //Select from the beginning to the caret
       if(shiftPressed)
-        SetEditSelection(0, mCaretPos);
+      {
+        ExtendSelection(SelectMode::Start);
+        MakeLetterVisible(0);
+      }
       else
       {
         //Move to the start and clear the selection
@@ -452,7 +596,10 @@ void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
     {
       //Select from the caret to the End()
       if(shiftPressed)
-        SetEditSelection(mCaretPos, size);
+      {
+        ExtendSelection(SelectMode::End);
+        MakeLetterVisible(size);
+      }
       else
       {
         //Move to the End() and clear the selection
@@ -606,6 +753,7 @@ void EditText::OnLeftMouseDown(MouseEvent* mouseEvent)
   {
     SelectNone();
     mStartDragPos = MoveEditCaret(mouseEvent->Position);
+    mSelectionStartPos = mStartDragPos;
     this->CaptureMouse();
     mDragging = true;
   }
@@ -644,6 +792,7 @@ void EditText::OnMouseMove(MouseEvent* mouseEvent)
   {
     mMouseMovedFocus = true;
     int newPos = MoveEditCaret(mouseEvent->Position);
+    mSelectionStartPos = newPos;
     if(mStartDragPos < newPos)
       SetEditSelection(mStartDragPos, newPos);
     else
