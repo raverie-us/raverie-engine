@@ -47,6 +47,7 @@
     <ClInclude Include="UiDockLayout.hpp" />
     <ClInclude Include="UiFillLayout.hpp" />
     <ClInclude Include="UiLayout.hpp" />
+    <ClInclude Include="UiRect.hpp" />
     <ClInclude Include="UiRootWidget.hpp" />
     <ClInclude Include="UiStackLayout.hpp" />
     <ClInclude Include="UiWidget.hpp" />
@@ -61,6 +62,7 @@
     <ClCompile Include="UiDockLayout.cpp" />
     <ClCompile Include="UiFillLayout.cpp" />
     <ClCompile Include="UiLayout.cpp" />
+    <ClCompile Include="UiRect.cpp" />
     <ClCompile Include="UiRootWidget.cpp" />
     <ClCompile Include="UiStackLayout.cpp" />
     <ClCompile Include="UiWidget.cpp" />

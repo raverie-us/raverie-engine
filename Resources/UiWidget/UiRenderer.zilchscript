@@ -70,7 +70,7 @@ class UiRenderer : ZilchComponent
       
       // Center the camera
       cameraPos.X = +viewportSize.X * 0.5;
-      cameraPos.Y = -viewportSize.Y * 0.5;
+      cameraPos.Y = viewportSize.Y * 0.5;
       
       camera.Size = viewportSize.Y;
     }

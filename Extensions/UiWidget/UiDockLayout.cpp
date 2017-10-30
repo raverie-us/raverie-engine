@@ -32,13 +32,13 @@ void UiDockLayout::Serialize(Serializer& stream)
 }
 
 //******************************************************************************
-Vec2 UiDockLayout::Measure(Rect& rect)
+Vec2 UiDockLayout::Measure(UiRect& rect)
 {
   return MaxMeasure(rect);
 }
 
 //******************************************************************************
-Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
+Vec2 UiDockLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if (mDebug)
@@ -52,7 +52,7 @@ Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
   UpdateNotInLayout(e);
 
   ApplyPadding(mPadding, rect);
-  Vec2 offset = rect.GetPosition();
+  Vec2 offset = rect.GetTranslation();
   Vec2 size = rect.GetSize();
 
   Vec4 area = Vec4(offset.x, offset.y,

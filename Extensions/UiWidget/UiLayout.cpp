@@ -75,28 +75,28 @@ float UiLayout::GetPaddingBottom()
 //******************************************************************************
 void UiLayout::SetPaddingLeft(float val)
 {
-  mPadding.Left = val;
+  mPadding.Left = Snap(val, mWidget->GetSnapSize());
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingTop(float val)
 {
-  mPadding.Top = val;
+  mPadding.Top = Snap(val, mWidget->GetSnapSize());
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingRight(float val)
 {
-  mPadding.Right = val;
+  mPadding.Right = Snap(val, mWidget->GetSnapSize());
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingBottom(float val)
 {
-  mPadding.Bottom = val;
+  mPadding.Bottom = Snap(val, mWidget->GetSnapSize());
   mWidget->MarkAsNeedsUpdate();
 }
 
@@ -127,11 +127,11 @@ void UiLayout::CalculateAlignment(Axis::Type axis, uint alignment,
   switch (alignment)
   {
   case UiHorizontalAlignment::Left:
-    //case UiVerticalAlignment::Top:
+    //case UiVerticalAlignment::Bottom:
     childTranslation[axis] = areaPos[axis];
     break;
   case UiHorizontalAlignment::Right:
-    //case UiVerticalAlignment::Bottom:
+    //case UiVerticalAlignment::Top:
     childTranslation[axis] = areaPos[axis] + (areaSize[axis] - childSize[axis]);
     break;
   case UiHorizontalAlignment::Center:
@@ -142,7 +142,7 @@ void UiLayout::CalculateAlignment(Axis::Type axis, uint alignment,
 }
 
 //******************************************************************************
-Vec2 UiLayout::MaxMeasure(Rect& rect)
+Vec2 UiLayout::MaxMeasure(UiRect& rect)
 {
   Vec2 neededSize = Vec2(0,0);
 
@@ -157,7 +157,7 @@ Vec2 UiLayout::MaxMeasure(Rect& rect)
 }
 
 //******************************************************************************
-void UiLayout::ApplyPadding(Thickness& padding, Rect& area)
+void UiLayout::ApplyPadding(Thickness& padding, UiRect& area)
 {
   Vec2 padTopLeft = padding.TopLeft();
   Vec2 padSize = padding.Size();
@@ -168,7 +168,7 @@ void UiLayout::ApplyPadding(Thickness& padding, Rect& area)
 }
 
 //******************************************************************************
-void UiLayout::RemovePadding(Thickness& padding, Rect& area)
+void UiLayout::RemovePadding(Thickness& padding, UiRect& area)
 {
   Vec2 padTopLeft = padding.TopLeft();
   Vec2 padSize = padding.Size();

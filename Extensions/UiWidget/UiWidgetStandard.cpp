@@ -34,6 +34,7 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
   ZilchInitializeType(UiFocusEvent);
   ZilchInitializeType(UiTransformUpdateEvent);
 
+  ZilchInitializeType(UiRect);
   ZilchInitializeType(UiWidgetCastResultsRange);
   ZilchInitializeType(UiWidget);
   ZilchInitializeType(UiRootWidget);
