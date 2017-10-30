@@ -409,12 +409,8 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
 //******************************************************************************
 void UiRootWidget::MouseMove(ViewportMouseEvent* e)
 {
-  // Bring the reactive event into root space
-  Vec3 worldPos = e->mHitPosition;
-  Vec2 rootPos = mWidget->WorldToRoot(worldPos);
-
   // We want to send mouse events to the widget that the mouse is over
-  UiWidget* newMouseOver = mWidget->CastPoint(rootPos);
+  UiWidget* newMouseOver = mWidget->CastPoint(ToVector2(e->mHitPosition));
   while(newMouseOver && !newMouseOver->GetInteractive())
     newMouseOver = newMouseOver->GetParentWidget();
   

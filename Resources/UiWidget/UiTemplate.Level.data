@@ -48,9 +48,9 @@ Level
 		var Name = "EditorCamera"
 		Transform 
 		{
-			var Translation = Real3{244, -229, 20}
+			var Translation = Real3{291, 254, 10}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{0, -1.09278471e-08, 0, 1}
+			var Rotation = Quaternion{0, 0, 0, 1}
 		}
 		CameraViewport 
 		{
@@ -97,10 +97,11 @@ Level
 		}
 		Camera 
 		{
-			var NearPlane = 0.1
+			var NearPlane = 0.100000001
 			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 45
+			var Size = 1642
 		}
 		EditorCameraController 
 		{
@@ -109,7 +110,7 @@ Level
 			var LookDistance = 20
 			var VerticalAngle = 0
 			var HorizontalAngle = 0
-			var LookTarget = Real3{244.144272, -228.113495, 2.11825918e-05}
+			var LookTarget = Real3{291.144287, 254.886505, 2.32370257e-05}
 			var MoveSensitivity = 1
 		}
 	}
@@ -176,10 +177,11 @@ Level
 		}
 		Camera 
 		{
-			var NearPlane = 0.1
+			var NearPlane = 0.100000001
 			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 60
+			var Size = 20
 		}
 		SoundListener 
 		{
@@ -198,7 +200,7 @@ Level
 		Area 
 		{
 			var Size = Real2{500, 500}
-			var Origin = Location.TopLeft
+			var Origin = Location.BottomLeft
 		}
 		Sprite 
 		{
@@ -275,7 +277,7 @@ Level
 				var Name = "Sprite"
 				Transform 
 				{
-					var Translation = Real3{5, -5, 0}
+					var Translation = Real3{5, 470, 0}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}
@@ -301,7 +303,7 @@ Level
 				Area 
 				{
 					var Size = Real2{490, 25}
-					var Origin = Location.TopLeft
+					var Origin = Location.BottomLeft
 				}
 				UiWidget 
 				{
@@ -334,7 +336,7 @@ Level
 				var Name = "Sprite"
 				Transform 
 				{
-					var Translation = Real3{5, -35, 0}
+					var Translation = Real3{5, 238, 0}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}
@@ -360,7 +362,7 @@ Level
 				Area 
 				{
 					var Size = Real2{490, 227}
-					var Origin = Location.TopLeft
+					var Origin = Location.BottomLeft
 				}
 				UiWidget 
 				{
@@ -393,7 +395,7 @@ Level
 				var Name = "Sprite"
 				Transform 
 				{
-					var Translation = Real3{5, -267, 0}
+					var Translation = Real3{5, 5, 0}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}
@@ -419,7 +421,7 @@ Level
 				Area 
 				{
 					var Size = Real2{490, 228}
-					var Origin = Location.TopLeft
+					var Origin = Location.BottomLeft
 				}
 				UiWidget 
 				{

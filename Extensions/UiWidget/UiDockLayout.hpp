@@ -21,8 +21,8 @@ public:
   void Serialize(Serializer& stream) override;
 
   /// UiLayout Interface.
-  Vec2 Measure(Rect& rect) override;
-  Vec2 DoLayout(Rect& rect, UiTransformUpdateEvent* e) override;
+  Vec2 Measure(UiRect& rect) override;
+  Vec2 DoLayout(UiRect& rect, UiTransformUpdateEvent* e) override;
 
   Vec2 mSpacing;
 };

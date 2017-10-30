@@ -24,13 +24,13 @@ void UiFillLayout::Initialize(CogInitializer& initializer)
 }
 
 //******************************************************************************
-Vec2 UiFillLayout::Measure(Rect& rect)
+Vec2 UiFillLayout::Measure(UiRect& rect)
 {
   return MaxMeasure(rect);
 }
 
 //******************************************************************************
-Vec2 UiFillLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
+Vec2 UiFillLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if (mDebug)
@@ -45,7 +45,7 @@ Vec2 UiFillLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
 
   // Apply the padding before laying out the children
   ApplyPadding(mPadding, rect);
-  Vec2 pos = rect.GetPosition();
+  Vec2 pos = rect.GetTranslation();
   Vec2 size = rect.GetSize();
 
   // Layout each child
@@ -56,13 +56,13 @@ Vec2 UiFillLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
       continue;
 
     // Measure the child object
-    Rect tempRect;
+    UiRect tempRect;
     Vec2 childSize = child->Measure(tempRect);
 
     const Thickness& childMargins = child->GetMargins();
 
     // Add the margins
-    childSize += child->GetMargins().Size();
+    childSize += childMargins.Size();
 
     Vec2 childPos = pos;
 
@@ -92,11 +92,11 @@ Vec2 UiFillLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
       CalculateAlignment(Axis::Y, child->GetVerticalAlignment(), size, pos, childSize, childPos);
     }
 
-    Rect childRect = Rect::PointAndSize(childPos, childSize);
+    UiRect childRect = UiRect::PointAndSize(childPos, childSize);
 
     childRect.RemoveThickness(childMargins);
 
-    child->SetLocalTranslation(childRect.GetPosition());
+    child->SetLocalTranslation(childRect.GetTranslation());
     child->SetSize(childRect.GetSize());
     child->UpdateTransform(e);
   }

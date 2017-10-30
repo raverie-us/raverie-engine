@@ -98,25 +98,28 @@ class ZUiHistoryScrollIndicator : ZilchComponent
   /******************************************************************************/
   function OnMouseMove(event : ViewportMouseEvent)
   {
-    if(!this.IsGrabbed)
-      return;
-    
-    var parentWidget = this.Owner.Parent.UiWidget;
-    var parentTop = parentWidget.RootTranslation;
-    var parentBottom = parentWidget.RootTranslation + parentWidget.Size;
-    var worldTop = parentWidget.RootToWorld(parentTop);
-    var worldBottom = parentWidget.RootToWorld(parentBottom);
-    
-    var lengthOfScrollArea = Math.Abs(worldTop.Y - worldBottom.Y - this.UiWidget.Size.Y);
-    
-      // Move the top-left position (origin) of the scroll bar to the current mouse position.
-      // Then offset by grab point in scroll bar to match exact position.
-    var worldPos = this.WorldMousePosition(event.CameraViewport) - this.GrabOffest;
-
-    var scrollPercentage = (worldTop.Y - worldPos.Y) / lengthOfScrollArea;
-    this.ScrollPercentage = scrollPercentage;
-    
-    this.ApplyScroll();
+    // FIXME
+    //if(!this.IsGrabbed)
+    //  return;
+    //
+    //var parentWidget = this.Owner.Parent.UiWidget;
+    //var parentTop = parentWidget.WorldTranslation;
+    //
+    ////var worldRect
+    //var parentBottom = parentWidget.RootRect.BottomRight();
+    //var worldTop = parentWidget.RootToWorld(parentTop);
+    //var worldBottom = parentWidget.RootToWorld(parentBottom);
+    //
+    //var lengthOfScrollArea = Math.Abs(worldTop.Y - worldBottom.Y - this.UiWidget.Size.Y);
+    //
+    //  // Move the top-left position (origin) of the scroll bar to the current mouse position.
+    //  // Then offset by grab point in scroll bar to match exact position.
+    //var worldPos = this.WorldMousePosition(event.CameraViewport) - this.GrabOffest;
+    //
+    //var scrollPercentage = (worldTop.Y - worldPos.Y) / lengthOfScrollArea;
+    //this.ScrollPercentage = scrollPercentage;
+    //
+    //this.ApplyScroll();
   }
   
   /******************************************************************************/

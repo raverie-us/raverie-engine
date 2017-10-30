@@ -28,6 +28,7 @@ public:
 }//namespace Zero
 
 // Widget Core
+#include "UiRect.hpp"
 #include "UiWidget.hpp"
 #include "UiRootWidget.hpp"
 #include "UiWidgetEvents.hpp"

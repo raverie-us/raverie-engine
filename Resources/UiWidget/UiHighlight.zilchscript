@@ -7,6 +7,7 @@
 
 enum UiHighlightMouseMode {Enter, EnterHierarchy, Hover}
 enum UiHighlightColorMode {Local, Hierarchy}
+enum UiHighlightColorOp {Set, Add, Multiply}
 
 //---------------------------------------------------------------- Ui Highlight
 class UiHighlight : ZilchComponent
