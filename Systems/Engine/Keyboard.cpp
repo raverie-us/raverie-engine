@@ -256,9 +256,16 @@ ZilchDefineType(KeyboardEvent, builder, type)
 
 KeyboardEvent::KeyboardEvent()
 {
+  Key = Keys::None;
+  State = KeyState::Down;
+  ShiftPressed = false;
+  AltPressed = false;
+  CtrlPressed = false;
+  SpacePressed = false;
   Handled = false;
   HandledEventScript = false;
   OsKey = 0;
+  mKeyboard = Keyboard::GetInstance();
 }
 
 void KeyboardEvent::Serialize(Serializer& stream)
@@ -287,13 +294,13 @@ ZilchDefineType(KeyboardTextEvent, builder, type)
 }
 
 KeyboardTextEvent::KeyboardTextEvent()
-  : mRune(Rune::Invalid), mHandled(false)
+  : mRune(Rune::Invalid)
 {
 }
 
 void KeyboardTextEvent::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(EventId, String());
+  KeyboardEvent::Serialize(stream);
   stream.SerializeFieldDefault("Rune", mRune.value, 0u);
 }
 

@@ -423,7 +423,7 @@ Rect UiWidget::GetRootRect()
 //**************************************************************************************************
 bool UiWidget::GetActive()
 {
-  return mFlags.IsSet(UiWidgetFlags::Active);
+  return mFlags.IsSet(UiWidgetFlags::Active) && !GetOwner()->GetMarkedForDestruction();
 }
 
 //**************************************************************************************************

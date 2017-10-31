@@ -237,7 +237,7 @@ public:
 
 //------------------------------------------------------------------- KeyboardTextEvent
 /// Gives the actual key value being typed. For example, holding Shift + 'a' will give 'A'.
-class KeyboardTextEvent : public Event
+class KeyboardTextEvent : public KeyboardEvent
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -245,12 +245,11 @@ public:
   KeyboardTextEvent();
 
   KeyboardTextEvent(uint runeCode)
-    : mRune(runeCode), mHandled(false) {};
+    : mRune(runeCode) {};
 
   void Serialize(Serializer& stream);
 
   Rune mRune;
-  bool mHandled;
 };
 
 }//namespace Zero

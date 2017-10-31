@@ -343,6 +343,7 @@ ZilchDefineType(SpriteText, builder, type)
   ZilchBindOverloadedMethod(GetCharacterPosition, ZilchInstanceOverload(Vec3, int));
   ZilchBindOverloadedMethod(GetCharacterPosition, ZilchInstanceOverload(Vec3, int, bool));
   ZilchBindOverloadedMethod(GetCharacterPosition, ZilchInstanceOverload(Vec3, const CharacterIndex&));
+  ZilchBindMethod(GetCharacterPositions);
   ZilchBindOverloadedMethod(GetCharacterIndex, ZilchInstanceOverload(CharacterIndex, Vec2Param));
   ZilchBindOverloadedMethod(GetCharacterIndex, ZilchInstanceOverload(CharacterIndex, Vec3Param));
 }
@@ -538,6 +539,29 @@ Vec3 SpriteText::GetCharacterPosition(int characterIndex, bool nextLine)
 Vec3 SpriteText::GetCharacterPosition(const CharacterIndex& characterIndex)
 {
   return GetCharacterPosition(characterIndex.mIndex, characterIndex.mNextLine);
+}
+
+HandleOf<ArrayClass<Vec3>> SpriteText::GetCharacterPositions()
+{
+  Vec2 center = GetLocalCenter();
+  Vec2 widths = GetLocalWidths();
+  Vec2 textStart = center + Vec2(-widths.x, widths.y);
+
+  Vec2 size;
+  if (Area* area = GetOwner()->has(Area))
+    size = area->GetSize();
+  else
+    size = MeasureText();
+
+  RenderFont* font = mFont->GetRenderFont(mFontSize);
+
+  HandleOf<ArrayClass<Vec3>> array = ZilchAllocate(ArrayClass<Vec3>);
+  Array<Vec3>* worldPositions = &array->NativeArray;
+
+  FontProcessorOutputPositions outputPositions(worldPositions, mTransform);
+  ProcessTextRange(outputPositions, font, mText, textStart, mTextAlign, Vec2(1.0f, -1.0f) / mPixelsPerUnit, size);
+
+  return array;
 }
 
 CharacterIndex SpriteText::GetCharacterIndex(Vec2Param localPosition)

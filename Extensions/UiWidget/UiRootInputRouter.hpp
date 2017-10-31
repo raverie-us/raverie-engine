@@ -39,6 +39,7 @@ public:
   void OnMouseButton(ViewportMouseEvent* e);
   void OnMouseUpdate(ViewportMouseEvent* e);
   void OnKeyboardEvent(KeyboardEvent* e);
+  void OnKeyTyped(KeyboardTextEvent* e);
 
   /// If set, all input from the Os will be forwarded to the root widget.
   void SetOsWindow(OsWindow* window);

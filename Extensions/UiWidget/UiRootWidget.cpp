@@ -168,6 +168,7 @@ void UiRootWidget::PerformKeyUp(Keys::Enum key)
 void SendKeyboardEvent(KeyboardEvent* e, Cog* cog, StringParam previewEventId,
                        cstr eventPreAppend)
 {
+  String eventId = e->EventId;
   e->Handled = false;
 
   // Allow higher level logic to block keyboard events
@@ -176,10 +177,7 @@ void SendKeyboardEvent(KeyboardEvent* e, Cog* cog, StringParam previewEventId,
 
   if(e->Handled || e->HandledEventScript)
     return;
-
-  // Send out the general key down
-  String eventId = cKeyboardEventsFromState[e->State];
-
+  
   // Used to pre-append "Hover" to the beginning of each event
   if(eventPreAppend)
     eventId = BuildString(eventPreAppend, eventId);
@@ -367,7 +365,7 @@ void UiRootWidget::MouseMove(ViewportMouseEvent* e)
   Vec2 rootPos = mWidget->WorldToRoot(worldPos);
 
   // We want to send mouse events to the widget that the mouse is over
-  UiWidget* newMouseOver = mWidget->CastPoint(rootPos);
+  UiWidget* newMouseOver = mWidget->CastPoint(rootPos, nullptr, true);
   while(newMouseOver && !newMouseOver->GetInteractive())
     newMouseOver = newMouseOver->GetParentWidget();
   

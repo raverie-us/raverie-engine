@@ -171,6 +171,9 @@ public:
   /// The Line member is unused in this call (this is for convenience to be used with GetCharacterIndex).
   Vec3 GetCharacterPosition(const CharacterIndex& characterIndex);
 
+  /// Get all the world space positions of each character.
+  HandleOf<ArrayClass<Vec3>> GetCharacterPositions();
+
   /// Find the nearest character index from a local space position. Primarily used in text editors
   /// for selection. May put a caret on the right or left side (whichever is closer).
   CharacterIndex GetCharacterIndex(Vec2Param localPosition);

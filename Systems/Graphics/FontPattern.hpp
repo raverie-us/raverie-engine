@@ -203,6 +203,16 @@ public:
   int mLastLine;
 };
 
+class FontProcessorOutputPositions
+{
+public:
+  FontProcessorOutputPositions(Array<Vec3>* worldPositions, Transform* transform);
+  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale, int line);
+
+  Array<Vec3>* mWorldPositions;
+  Transform* mTransform;
+};
+
 /// An index into a string that is rendered by SpriteText which may include word wrapping.
 class CharacterIndex
 {

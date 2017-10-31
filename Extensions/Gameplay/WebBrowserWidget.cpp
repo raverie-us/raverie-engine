@@ -267,7 +267,7 @@ void WebBrowserWidget::OnKeyUp(KeyboardEvent* event)
 void WebBrowserWidget::OnTextTyped(KeyboardTextEvent* event)
 {
   mBrowser->SimulateTextTyped(event->mRune.value, (WebBrowserModifiers::Enum)0);
-  event->mHandled = true;
+  event->Handled = true;
 }
 
 void WebBrowserWidget::OnMouseMove(MouseEvent* event)

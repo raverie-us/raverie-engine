@@ -107,6 +107,18 @@ void FontProcessorFindCharPosition::ProcessRenderRune(RenderRune& rune, Vec2 pos
   ++mCurrentIndex;
 }
 
+FontProcessorOutputPositions::FontProcessorOutputPositions(Array<Vec3>* worldPositions, Transform* transform)
+  : mWorldPositions(worldPositions)
+  , mTransform(transform)
+{
+}
+
+void FontProcessorOutputPositions::ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale, int line)
+{
+  Vec3 worldPos = mTransform->TransformPoint(Vec3(position, 0.0f));
+  mWorldPositions->PushBack(worldPos);
+}
+
 FontProcessorFindCharIndex::FontProcessorFindCharIndex(Vec2Param localPosition, float lineHeight)
   : mLocalPosition(localPosition)
   , mLineHeight(lineHeight)

@@ -895,6 +895,7 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
     {
       KeyboardTextEvent textEvent = KeyboardTextEvent(Utf16ToUtf8(wParam));
       textEvent.EventId = Events::OsKeyTyped;
+      FillKeyboardEvent(Keys::None, KeyState::Down, textEvent);
       SendKeyboardTextEvent(textEvent, false);
       return MessageHandled;
     }
