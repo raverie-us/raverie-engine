@@ -1,0 +1,49 @@
+///////////////////////////////////////////////////////////////////////////////
+/// 
+/// Authors: Joshua Claeys
+/// Copyright 2017, DigiPen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
+
+//---------------------------------------------------------- Ui Focus Highlight
+class UiFocusHighlight : ZilchComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  
+  [Property] var HighlightObject : CogPath;
+  [Property] var FocusColor : Real4 = Real4(1);
+  
+  var InitialColor : Real4;
+  
+  //***************************************************************************
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Owner, Events.UiFocusGained, this.OnUiFocusGained);
+    Zero.Connect(this.Owner, Events.UiFocusLost, this.OnUiFocusLost);
+    
+    Zero.Connect(this.Owner, Events.KeyDown, this.OnKeyDown);
+    Zero.Connect(this.Owner, Events.KeyRepeated, this.OnKeyDown);
+      
+    if(this.HighlightObject.Cog != null)
+      this.InitialColor = this.HighlightObject.Cog.UiWidget.LocalColor;
+  }
+
+  //***************************************************************************
+  function OnKeyDown(event : KeyboardEvent)
+  {
+    if(this.UiWidget.HasFocus)
+      this.UiWidget.TabJump(event);
+  }
+  
+  //***************************************************************************
+  function OnUiFocusGained(event : UiFocusEvent)
+  {
+    this.HighlightObject.Cog.UiWidget.LocalColor = this.FocusColor;
+  }
+  
+  //***************************************************************************
+  function OnUiFocusLost(event : UiFocusEvent)
+  {
+    this.HighlightObject.Cog.UiWidget.LocalColor = this.InitialColor;
+  }
+}

@@ -32,10 +32,10 @@ int GetSign(UiStackLayoutDirection::Enum direction)
 {
   switch(direction)
   {
-  case UiStackLayoutDirection::TopToBottom:
+  case UiStackLayoutDirection::BottomToTop:
   case UiStackLayoutDirection::LeftToRight:
     return 1;
-  case UiStackLayoutDirection::BottomToTop:
+  case UiStackLayoutDirection::TopToBottom:
   case UiStackLayoutDirection::RightToLeft:
     return -1;
   default:
@@ -68,7 +68,7 @@ void UiStackLayout::Initialize(CogInitializer& initializer)
 }
 
 //******************************************************************************
-Vec2 UiStackLayout::Measure(Rect& rect)
+Vec2 UiStackLayout::Measure(UiRect& rect)
 {
   // Axis of Stacking 
   int stackAxis = GetAxis(mStackDirection);
@@ -100,7 +100,7 @@ Vec2 UiStackLayout::Measure(Rect& rect)
 }
 
 //******************************************************************************
-Vec2 UiStackLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
+Vec2 UiStackLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if(mDebug)
@@ -271,9 +271,9 @@ Vec2 UiStackLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
     else
     {
       if(child->GetVerticalAlignment() != UiVerticalAlignment::Top)
-        childTranslation[opAxis] -= childMargins.Bottom;
+        childTranslation[opAxis] += childMargins.Bottom;
       if(child->GetVerticalAlignment() != UiVerticalAlignment::Bottom)
-        childTranslation[opAxis] += childMargins.Top;
+        childTranslation[opAxis] -= childMargins.Top;
     }
 
     // When laying out forward, the position we're calculating is in the top 

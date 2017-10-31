@@ -210,9 +210,9 @@ bool LoadEditorContent(Cog* configCog)
 
   Array<String> coreLibs;
   coreLibs.PushBack("ZeroCore");
-  coreLibs.PushBack("Editor");
+  coreLibs.PushBack("UiWidget");
   coreLibs.PushBack("EditorUi");
-  coreLibs.PushBack("EditorScripts");
+  coreLibs.PushBack("Editor");
 
   forRange(String libraryName, coreLibs.All())
   {
@@ -352,6 +352,7 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<SpriteSourceManager>("ConnectionIcon");
   ShowBuiltInResource<SpriteSourceManager>("LightIcon");
   ShowBuiltInResource<SpriteSourceManager>("ParticleIcon");
+  ShowBuiltInResource<SpriteSourceManager>("PixelBorder");
   ShowBuiltInResource<SpriteSourceManager>("SelectIcon");
   ShowBuiltInResource<SpriteSourceManager>("Square");
   ShowBuiltInResource<SpriteSourceManager>("SquareBordered");

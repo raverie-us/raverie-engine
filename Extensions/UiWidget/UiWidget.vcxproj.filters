@@ -37,10 +37,7 @@
     <ClInclude Include="UiWidgetEvents.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="UiRootInputRouter.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="UiRenderer.hpp">
+    <ClInclude Include="UiRect.hpp">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -69,12 +66,9 @@
     <ClCompile Include="UiWidgetEvents.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="UiRootInputRouter.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="UiRenderer.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="UiWidgetStandard.cpp" />
+    <ClCompile Include="UiRect.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

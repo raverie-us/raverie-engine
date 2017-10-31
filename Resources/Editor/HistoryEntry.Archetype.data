@@ -63,7 +63,7 @@ Cog
 		var StackDirection = UiStackLayoutDirection.TopToBottom
 		var Spacing = Real2{0, 0}
 	}
-	ZHistoryEntry 
+	ZUiHistoryEntry 
 	{
 		var ArchetypeEntry = "582d2a7ffc50d5f7:HistoryEntry"
 		var HighlightColor = Real4{0.247058839, 0.376470625, 0.48627454, 1}

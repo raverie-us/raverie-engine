@@ -1,0 +1,8 @@
+[Version:1]
+ContentLibrary 
+{
+	var Name = "UiWidget"
+	var LibraryId = 0x59b91dbfc0627e59
+	var SourceControlType = ""
+	var ReadOnly = true
+}

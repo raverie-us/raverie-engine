@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
 /// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
+/// Copyright 2015-2017, DigiPen Institute of Technology
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma once
@@ -41,12 +41,11 @@ public:
   /// Meta Initialization.
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  UiTransformUpdateEvent() : mRootWidget(nullptr), mAlwaysUpdate(false) {}
+  UiTransformUpdateEvent() : mRootWidget(nullptr) {}
 
   UiRootWidget* GetRootWidget();
 
   UiRootWidget* mRootWidget;
-  bool mAlwaysUpdate;
 };
 
 DeclareEnum2(Axis, X, Y);
@@ -59,7 +58,7 @@ DeclareEnum3(UiSizePolicy,
              Flex); // Shares space with other widgets
 
 // Alignments used to shift widgets when in a layout.
-DeclareEnum3(UiVerticalAlignment, Top, Center, Bottom);
+DeclareEnum3(UiVerticalAlignment, Bottom, Center, Top);
 DeclareEnum3(UiHorizontalAlignment, Left, Center, Right);
 
 //---------------------------------------------------------------------------------------- Dock Mode
@@ -183,7 +182,7 @@ public:
   void OnChildrenOrderChanged(Event* e);
 
   /// Returns the minimum size that this widget needs to be.
-  virtual Vec2 Measure(Rect& data);
+  virtual Vec2 Measure(UiRect& data);
 
   Vec2 GetMinSize();
 
@@ -197,18 +196,15 @@ public:
   /// the 'ignore' widget will not be included. The ignore was added for
   /// trying to find the widget underneath a dragging window. The window is
   /// directly under the mouse, so we want to ignore it.
-  UiWidget* CastPoint(Vec2Param rootPoint, UiWidget* ignore = nullptr,
+  UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr,
                       bool interactiveOnly = false);
-  UiWidgetCastResultsRange CastRect(const Rect& rootRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
+  UiWidgetCastResultsRange CastRect(UiRectParam worldRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
 
-  /// Returns our local rect (Translation should be at 0,0).
-  Rect GetLocalRect();
+  /// Returns our local rect (in our parents space)
+  UiRect GetLocalRect();
 
-  /// Returns our translation and size in our parents space.
-  Rect GetRectInParent();
-
-  /// Returns our local rect (Translation should be at 0,0).
-  Rect GetRootRect();
+  /// Returns our world rect.
+  UiRect GetWorldRect();
 
   /// Active getter / setter.
   bool GetActive();
@@ -217,24 +213,10 @@ public:
   /// Translation getter / setter. Shortcut to the Translation Component.
   Vec2 GetLocalTranslation();
   void SetLocalTranslation(Vec2Param localTranslation);
-  Vec2 GetRootTranslation();
-  void SetRootTranslation(Vec2Param rootTranslation);
-  Vec3 GetWorldTranslation();
-
-  /// Transformations.
-  /// Local Space: Local to Cog (positive y is down)
-  /// Root Space:  Local to the Root Widget (positive y is down)
-  /// World Space: Same world space as Cogs
-  ///
-  /// Basically, if you're dealing with a Vec3, it's the normal world space for Cogs
-  /// If you're dealing with a Vec2, it's in the "Ui Space" and the 'y' is flipped to
-  /// be positive down
-  Vec2 RootToLocal(Vec2Param rootPosition);
-  Vec2 WorldToLocal(Vec3Param worldPosition);
-  Vec2 LocalToRoot(Vec2Param localPosition);
-  Vec2 WorldToRoot(Vec3Param worldPosition);
-  Vec3 LocalToWorld(Vec2Param localPosition);
-  Vec3 RootToWorld(Vec2Param localPosition);
+  Vec2 GetWorldTranslation();
+  void SetWorldTranslation(Vec2Param worldTranslation);
+  Vec2 WorldToLocal(Vec2Param worldPosition);
+  Vec2 LocalToWorld(Vec2Param localPosition);
 
   /// Size getter / setter. This acts as a shortcut to the Area Component.
   Vec2 GetSize();
@@ -319,6 +301,9 @@ public:
   void SetMarginTop(float val);
   void SetMarginRight(float val);
   void SetMarginBottom(float val);
+
+  void OnAreaPropertyModified(PropertyEvent* e);
+  void OnTransformPropertyModified(PropertyEvent* e);
 
   /// Flag getters / setters.
   DeclareWidgetFlagSetterGetter(Visible);

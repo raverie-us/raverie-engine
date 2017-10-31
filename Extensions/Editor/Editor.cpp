@@ -560,7 +560,7 @@ void Editor::OnSelectionFinal(SelectionChangedEvent* event)
 
 void Editor::OnSaveCheck(SavingEvent* event)
 {
-  if(!Z::gResources->mModifiedResources.Empty())
+  if(!Z::gResources->mModifiedResources.Empty() || !Z::gContentSystem->mModifiedContentItems.Empty())
     event->NeedSaving = true;
 }
 
@@ -848,7 +848,16 @@ Status Editor::SaveAll(bool showNotify)
 
   SaveConfig(Z::gEditor->mConfig);
 
-  // Save all resources that have been edited.
+  // Save all content items that have been edited
+  forRange(ContentItemId id, Z::gContentSystem->mModifiedContentItems.All())
+  {
+    ContentItem* contentItem = Z::gContentSystem->LoadedItems.FindValue(id, nullptr);
+    if (contentItem)
+      contentItem->SaveContent();
+  }
+  Z::gContentSystem->mModifiedContentItems.Clear();
+
+  // Save all resources that have been edited
   forRange(ResourceId id, Z::gResources->mModifiedResources.All())
   {
     Resource* resource = Z::gResources->ResourceIdMap.FindValue(id, nullptr);
