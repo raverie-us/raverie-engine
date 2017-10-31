@@ -131,6 +131,8 @@ void UiRootWidget::Initialize(CogInitializer& initializer)
     // Keyboard events
     ConnectThisTo(Keyboard::Instance, Events::KeyDown, OnKeyboardEvent);
     ConnectThisTo(Keyboard::Instance, Events::KeyRepeated, OnKeyboardEvent);
+    ConnectThisTo(Keyboard::Instance, Events::KeyUp, OnKeyboardEvent);
+    ConnectThisTo(Keyboard::Instance, Events::TextTyped, OnKeyboardEvent);
   }
 }
 
