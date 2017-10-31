@@ -56,6 +56,9 @@ class UiRenderer : ZilchComponent
     
     var cameraPos = cameraTransform.Translation;
     
+    // Root widget should always be at the origin
+    this.UiWidget.LocalTranslation = Real2(0);
+    
     // Set these to nice clean values so the user can't ever mess them up
     camera.NearPlane = 0.1;
     camera.FarPlane = 100;
