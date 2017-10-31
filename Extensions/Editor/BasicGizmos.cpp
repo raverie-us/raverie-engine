@@ -36,8 +36,9 @@ namespace Events
 //----------------------------------------------------------------- GizmoHelpers
 namespace GizmoHelpers
 {
-
 static const real sGizmoEpsilon = real(0.0001);
+
+
 
 //******************************************************************************
 float GetViewScale(Camera* camera, Vec3Param location)
@@ -549,10 +550,11 @@ void ArrowGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
 
   Intersection::IntersectionPoint point;
   Intersection::Type result = Intersection::RayCapsule(ray.Start, ray.Direction,
-    start, end, radius,
-    &point);
-  if(result != Intersection::None)
-    e->RegisterResult(GetOwner(), point.T, mPickingPriority);
+    start, end, radius, &point);
+  
+  // All negative values of 'Intersection::Type' are considered false.
+  if(result > 0)
+    e->RegisterResult(GetOwner( ), point.T, mPickingPriority);
 }
 
 //******************************************************************************
@@ -708,25 +710,12 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
 
   Ray mouseRay = e->GetWorldRay();
 
-  Intersection::Interval interval;
-  Intersection::Type result = Intersection::RayCylinder(mouseRay.Start, mouseRay.Direction,
-    center - axis * tubeRadius, center + axis * tubeRadius, outerSphereRadius, &interval);
-
   Intersection::IntersectionPoint point;
-  if(interval.Min > real(0.0))
-  {
-    point.Points[0] = mouseRay.Start + interval.Min * mouseRay.Direction;
-    point.Points[1] = mouseRay.Start + interval.Max * mouseRay.Direction;
-    point.T = interval.Min;
-  }
-  else if(interval.Max > real(0.0))
-  {
-    point.Points[0] = mouseRay.Start + interval.Max * mouseRay.Direction;
-    point.Points[1] = point.Points[0];
-    point.T = interval.Max;
-  }
+  Intersection::Type result = Intersection::RayCylinder(mouseRay.Start, mouseRay.Direction,
+    center - axis * tubeRadius, center + axis * tubeRadius, outerSphereRadius, &point);
 
-  //if(result != Intersection::None)
+  // All negative values of 'Intersection::Type' are considered false.
+  if(result > 0)
   {
     const float cAngleSlop = 0.3f;
 
@@ -738,22 +727,13 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
       Vec3 dirToIntersection = point.Points[i] - center;
       float pointToAxisProjection = Dot(axis, dirToIntersection);
 
-        // Intersection point is outside cylinder caps
-        //  - NOTE: this is to catch the degenerate case (false positive from
-        //          'RayCylinder') when the caps are parallel to the ray
-        //             > ex: orthographic view
-        //
-        //  - @RYAN: remove this when 'RayCylinder gets fixed'
-      if(pointToAxisProjection*pointToAxisProjection - tubeRadius*tubeRadius > 0.000001f)
-        continue;
-
       Vec3 pointAlongAxis = center + pointToAxisProjection * axis;
       float distance = (point.Points[i] - pointAlongAxis).Length( );
 
       // Check to see if the intersection is within the tube radius
       // of the ring [ie, within the donut surrounding the ring gizmo].
       float distanceToEdge = Math::Abs(sphereRadius - distance);
-      bool withinEdge = (distanceToEdge <= tubeRadius+0.0001f);
+      bool withinEdge = (distanceToEdge <= tubeRadius + GizmoHelpers::sGizmoEpsilon);
 
       dirToIntersection.AttemptNormalize( );
       real angle = Dot(dirToIntersection, mouseRay.Direction);
