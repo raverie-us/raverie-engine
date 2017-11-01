@@ -56,7 +56,7 @@ void Text::SetMultiLine(bool multiLine)
   mMultiline = multiLine;
 }
 
-void Text::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void Text::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -160,7 +160,7 @@ Vec2 Label::GetMinSize()
 
 void Label::UpdateTransform()
 {
-  Rect innerRect = RemoveThicknessRect(mPadding, mSize);
+  WidgetRect innerRect = RemoveThicknessRect(mPadding, mSize);
   PlaceWithRect(innerRect, mText);
   Composite::UpdateTransform();
 }

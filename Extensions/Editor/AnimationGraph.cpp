@@ -456,7 +456,7 @@ public:
   //  }
   //}
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
   {
     Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -475,7 +475,7 @@ public:
   }
 
   //****************************************************************************
-  void DrawVerticalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines)
+  void DrawVerticalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
     Vec4 color = AnimGraphUi::GridLineColor;
 
@@ -519,7 +519,7 @@ public:
   }
 
   //****************************************************************************
-  void DrawHorizontalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines)
+  void DrawHorizontalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
     Vec4 color = AnimGraphUi::GridLineColor;
 
@@ -568,7 +568,7 @@ public:
   }
 
   //****************************************************************************
-  void DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines)
+  void DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
     if(!mScrub->mShowGhostPlayHead)
       return;
@@ -582,7 +582,7 @@ public:
   }
 
   //****************************************************************************
-  void DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines)
+  void DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
     float localX = mScrub->ToPixels(mScrub->GetPlayHead());
 

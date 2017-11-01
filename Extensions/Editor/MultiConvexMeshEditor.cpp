@@ -36,7 +36,7 @@ MultiConvexMeshDrawer::MultiConvexMeshDrawer(Composite* parent, MultiConvexMeshE
   mEditor = editor;
 }
 
-void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -57,7 +57,7 @@ void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frame
   DrawAutoComputedContours(viewBlock, frameBlock, clipRect);
 }
 
-void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   Array<StreamedVertex> lines;
 
@@ -111,7 +111,7 @@ void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock, FrameBlock& f
   }
 }
 
-void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   static Texture* white = TextureManager::FindOrNull("White");
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
@@ -139,7 +139,7 @@ void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBl
   }
 }
 
-void MultiConvexMeshDrawer::DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void MultiConvexMeshDrawer::DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   //debug! shows the closest point on the closest edge (where just adding a new point will go to)
   Keyboard* keyboard = Keyboard::GetInstance();
@@ -158,7 +158,7 @@ void MultiConvexMeshDrawer::DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBl
   }
 }
 
-void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   bool debugging = ConvexMeshEditorUi::DebuggingMode;
   if(debugging == false)
@@ -548,7 +548,7 @@ public:
     }
   }
 
-  Rect GetSelectionRect(Vec2Param screenEndPosition)
+  WidgetRect GetSelectionRect(Vec2Param screenEndPosition)
   {
     Viewport* viewport = mEditor->mViewport;
     Vec2 startPosition = mEditor->ToLocal(viewport->ViewportToScreen(mViewportStartPosition));
@@ -558,7 +558,7 @@ public:
     //so construct the proper rect by getting the min and max corners
     Vec2 min = Math::Min(startPosition, currPosition);
     Vec2 max = Math::Max(startPosition, currPosition);
-    return Rect::MinAndMax(min, max);
+    return WidgetRect::MinAndMax(min, max);
   }
 
   void OnMouseUpdate(MouseEvent* e) override
@@ -573,7 +573,7 @@ public:
 
     //get the selection rect to raw
     Vec2 screenEndPosition = viewport->ViewportToScreen(viewportEndPosition);
-    Rect selection = GetSelectionRect(screenEndPosition);
+    WidgetRect selection = GetSelectionRect(screenEndPosition);
     mSelectBox->SetSize(selection.GetSize());
     mSelectBox->SetTranslation(ToVector3(selection.TopLeft()));
     

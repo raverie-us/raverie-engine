@@ -1000,7 +1000,7 @@ void UpdateToolTipPlacement(TreeRow* row, InsertMode::Type mode, MetaDropEvent* 
   e->mUseTooltipPlacement = true;
 
   // Center it to the row
-  Rect rect = row->GetScreenRect();
+  WidgetRect rect = row->GetScreenRect();
   placement.SetScreenRect(rect);
 
   // If we're inserting before, make it point to the top left corner

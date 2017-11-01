@@ -36,7 +36,7 @@ public:
   void SizeToContents() override;
   void ChangeDefinition(BaseDefinition* def) override;
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   RenderFont* mFont;
   Vec4 mFontColor;

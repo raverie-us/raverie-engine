@@ -95,12 +95,12 @@ struct TileLayout
     return tileX + (TilesX * tileY);
   }
 
-  void GetOverlappingTiles(Rect& rect, Array<int>& overlappingTiles)
+  void GetOverlappingTiles(WidgetRect& rect, Array<int>& overlappingTiles)
   {
     // This could be optimized to not loop over all tiles
     for(int i = 0; i < TilesX * TilesY; ++i)
     {
-      Rect tile = ComputeRect(i);
+      WidgetRect tile = ComputeRect(i);
       if(rect.Overlap(tile))
         overlappingTiles.PushBack(i);
 
@@ -110,10 +110,10 @@ struct TileLayout
     }
   }
 
-  Rect ComputeRect(int tileIndex)
+  WidgetRect ComputeRect(int tileIndex)
   {
     LayoutResult result = ComputeTileLayout(tileIndex);
-    return Rect::PointAndSize(ToVector2(result.Translation), result.Size);
+    return WidgetRect::PointAndSize(ToVector2(result.Translation), result.Size);
   }
 
   LayoutResult ComputeTileLayout(int tileIndex)

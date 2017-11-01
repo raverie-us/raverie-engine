@@ -1023,7 +1023,7 @@ void CogPickerManipulation<PropertyEditor>::OnUpdate(UpdateEvent* event)
     SafeDestroy(mToolTip);
 
     ToolTipPlacement toolTipPlacement;
-    toolTipPlacement.SetScreenRect(Rect::CenterAndSize(mMousePosition, Vec2(15, 15)));
+    toolTipPlacement.SetScreenRect(WidgetRect::CenterAndSize(mMousePosition, Vec2(15, 15)));
     toolTipPlacement.SetPriority(IndicatorSide::Top, IndicatorSide::Bottom, IndicatorSide::Left, IndicatorSide::Right);
     mToolTip = new ToolTip(GetRootWidget());
 
@@ -1670,7 +1670,7 @@ public:
     toolTip->SetContent(tileWidget);
 
     // Position the tooltip
-    Rect rect = this->GetScreenRect();
+    WidgetRect rect = this->GetScreenRect();
 
     // Offset out to look nicer
     float extraBorder = Pixels(15);
@@ -1883,7 +1883,7 @@ public:
     AddResourceWindow* addWidget = OpenAddWindow(mResourceType, &window);
     addWidget->ShowResourceTypeSearch(false);
 
-    Rect rect = mEditor->GetScreenRect();
+    WidgetRect rect = mEditor->GetScreenRect();
     Vec3 topRight = ToVector3(rect.TopRight());
 
     window->SetTranslation(topRight + Vec3(6.0f, -22.0f, 0));

@@ -45,14 +45,14 @@ bool GetToolTipText(int index, ListSource* source, StringBuilder* toolTipText)
 //******************************************************************************
 ToolTipPlacement::ToolTipPlacement()
 {
-  mScreenRect = Rect::PointAndSize(Vec2::cZero, Vec2::cZero);
+  mScreenRect = WidgetRect::PointAndSize(Vec2::cZero, Vec2::cZero);
 
   SetPriority(IndicatorSide::Left, IndicatorSide::Right,
     IndicatorSide::Top, IndicatorSide::Bottom);
 }
 
 //******************************************************************************
-void ToolTipPlacement::SetScreenRect(const Rect& rect)
+void ToolTipPlacement::SetScreenRect(const WidgetRect& rect)
 {
   mScreenRect = rect;
   mHotSpot = rect.Center();
@@ -137,8 +137,8 @@ void ToolTip::UpdateTransform()
   // The size of the arrow
   float arrowSize = mArrow->GetSize().x;
 
-  Rect contentArea = Rect::PointAndSize(Vec2::cZero, GetSize());
-  Rect arrowArea = Rect::PointAndSize(Vec2::cZero, GetSize());
+  WidgetRect contentArea = WidgetRect::PointAndSize(Vec2::cZero, GetSize());
+  WidgetRect arrowArea = WidgetRect::PointAndSize(Vec2::cZero, GetSize());
   float arrowRotation = 0.0f;
 
   // Used for minor adjustments for pixel perfect results
@@ -384,7 +384,7 @@ bool ToolTip::SetArrowTipTranslation(Vec3Param screenPos)
 void ToolTip::SetArrowTipTranslation(ToolTipPlacement& placement)//const Rect& rect, Vec2Param hotSpot,
                         //const Thickness& margins, IndicatorSide::Type priority[4])
 {
-  Rect& rect = placement.mScreenRect;
+  WidgetRect& rect = placement.mScreenRect;
 
   // Attempt to place the tool tip on each side of the rect based on the priority
   for (uint i = 0; i < 4; ++i)

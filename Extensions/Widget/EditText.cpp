@@ -78,7 +78,7 @@ void EditText::ChangeDefinition(BaseDefinition* def)
   //mFont = mDef->mFont;
 }
 
-void EditText::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void EditText::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -94,7 +94,7 @@ void EditText::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Pa
   Vec2 textSize = mFont->MeasureText(text, (uint)text.SizeInBytes());
   bool needsClipping = textSize.x + mOffset > mSize.x || mOffset < 0.0f;
   if (needsClipping) 
-    clipRect = Rect::PointAndSize(Vec2(mWorldTx.m30, mWorldTx.m31), Vec2(mSize.x + 1, mSize.y));
+    clipRect = WidgetRect::PointAndSize(Vec2(mWorldTx.m30, mWorldTx.m31), Vec2(mSize.x + 1, mSize.y));
 
   if (mEditEnabled && mHasFocus)
   {

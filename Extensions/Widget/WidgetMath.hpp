@@ -65,18 +65,16 @@ struct Thickness
 };
 
 //------------------------------------------------------------------------- Rect
-struct Rect;
-typedef const Rect& RectParam;
+struct WidgetRect;
+typedef const WidgetRect& RectParam;
 
-struct Rect
+struct WidgetRect
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  static const WidgetRect cZero;
 
-  static const Rect cZero;
-
-  static Rect PointAndSize(Vec2Param point, Vec2Param size);
-  static Rect CenterAndSize(Vec2Param point, Vec2Param size);
-  static Rect MinAndMax(Vec2Param min, Vec2Param max);
+  static WidgetRect PointAndSize(Vec2Param point, Vec2Param size);
+  static WidgetRect CenterAndSize(Vec2Param point, Vec2Param size);
+  static WidgetRect MinAndMax(Vec2Param min, Vec2Param max);
 
   float X;
   float Y;
@@ -91,9 +89,9 @@ struct Rect
   void SetTranslation(Vec2Param translation);
   void SetSize(Vec2Param size);
 
-  void Expand(const Rect& other);
+  void Expand(const WidgetRect& other);
   bool Contains(Vec2Param point) const;
-  bool Overlap(const Rect& other) const;
+  bool Overlap(const WidgetRect& other) const;
 
   void RemoveThickness(const Thickness& thickness);
 
@@ -109,8 +107,8 @@ struct Rect
   float Bottom() const {return Y + SizeY;}
 };
 
-void PlaceWithRect(const Rect& rect, Widget* widget);
-void PlaceCenterToRect(const Rect& rect, Widget* widget, Vec2Param offset = Vec2::cZero);
+void PlaceWithRect(const WidgetRect& rect, Widget* widget);
+void PlaceCenterToRect(const WidgetRect& rect, Widget* widget, Vec2Param offset = Vec2::cZero);
 
 Mat4 Invert2D(Mat4Param matrix);
 void Build2dTransform(Mat4& matrix, Vec3Param translation, float rotation);
@@ -127,6 +125,6 @@ inline Vec4 Pixels(float x, float y, float z, float w){return Vec4(x, y, z, w);}
 //Utility functions
 Vec2 ExpandSizeByThickness(Thickness thickness, Vec2Param size);
 
-Rect RemoveThicknessRect(Thickness thickness, Vec2Param outerSize);
+WidgetRect RemoveThicknessRect(Thickness thickness, Vec2Param outerSize);
 
 }

@@ -319,7 +319,7 @@ void TextButton::UpdateTransform()
 
   // Place the button text
   Thickness padding = GetPadding();
-  Rect rect = RemoveThicknessRect(padding, mSize);
+  WidgetRect rect = RemoveThicknessRect(padding, mSize);
 
   const Vec2 cOffsets[2] = {Pixels(0, -1), Vec2::cZero};
 
@@ -410,7 +410,7 @@ Vec2 IconButton::GetMinSize()
 void IconButton::UpdateTransform()
 {
   mBackground->SetSize(mSize);
-  Rect rect = RemoveThicknessRect(mPadding, mSize);
+  WidgetRect rect = RemoveThicknessRect(mPadding, mSize);
 
   if(mIcon)
     PlaceCenterToRect(rect, mIcon);

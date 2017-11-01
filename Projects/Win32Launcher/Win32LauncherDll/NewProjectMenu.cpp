@@ -65,7 +65,7 @@ void TemplateProjectItem::UpdateTransform()
 {
   mBackground->SetSize(mSize);
 
-  Rect rect = GetLocalRect();
+  WidgetRect rect = GetLocalRect();
   PlaceCenterToRect(rect, mImage);
 
   Composite::UpdateTransform();
@@ -122,7 +122,7 @@ void TemplateProjectItem::UpdatePreviewImage()
   mImage->SetTexture(previewTexture);
   mImage->SizeToContents();
 
-  Rect rect = GetLocalRect();
+  WidgetRect rect = GetLocalRect();
   PlaceCenterToRect(rect, mImage);
 }
 

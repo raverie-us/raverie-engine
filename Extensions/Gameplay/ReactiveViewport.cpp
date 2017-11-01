@@ -398,7 +398,7 @@ void ReactiveViewport::ForwardReactiveEvent(StringParam eventName, MouseEvent* e
     while (viewport)
     {
       // Make sure the mouse is actually within the viewport below us
-      Rect childRect = viewport->GetScreenRect();
+      WidgetRect childRect = viewport->GetScreenRect();
       if (childRect.Contains(e->Position))
       {
         // Forward event and stop looping, it is up to the next viewport
@@ -576,7 +576,7 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   viewBlock.mZeroPerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
 
   ColorTransform colorTx = {Vec4(1.0f)};
-  Rect clipRect = {0, 0, size.x, size.y};
+  WidgetRect clipRect = {0, 0, size.x, size.y};
   RenderUpdate(viewBlock, frameBlock, Mat4::cIdentity, colorTx, clipRect);
 
   IndexRange& indexRange = viewBlock.mRenderGroupRanges.PushBack();

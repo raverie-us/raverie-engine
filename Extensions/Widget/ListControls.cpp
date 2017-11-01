@@ -170,7 +170,7 @@ void ListBox::UpdateTransform()
   if(mListArea->IsScrollBarVisible(SizeAxis::Y))
     boxWidth -= mListArea->GetScrollBarSize();
 
-  Rect listArea = RemoveThicknessRect(borderThickness, mSize);
+  WidgetRect listArea = RemoveThicknessRect(borderThickness, mSize);
 
   Vec2 subSize = listArea.GetSize();
 
@@ -767,7 +767,7 @@ void ComboBox::UpdateTransform()
   Vec2 iconSize = mPullImage->GetSize();
   Vec2 newSize = mSize;
 
-  Rect textRect = RemoveThicknessRect(borderThickness, mSize);
+  WidgetRect textRect = RemoveThicknessRect(borderThickness, mSize);
   textRect.X += 4.0f;
   textRect.Y -= 1.0f;
   PlaceWithRect(textRect, mText);

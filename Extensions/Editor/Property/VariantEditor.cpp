@@ -438,7 +438,7 @@ public:
 
   void UpdateTransform() override
   {
-    Rect local = GetLocalRect();
+    WidgetRect local = GetLocalRect();
     PlaceCenterToRect(local, mCheckBox);
     Composite::UpdateTransform();
   }

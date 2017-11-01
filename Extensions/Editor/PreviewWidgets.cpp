@@ -187,7 +187,7 @@ public:
     }
   }
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override
   {
     Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -777,7 +777,7 @@ public:
     parent->SetClipping(true);
   }
 
-  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, SampleCurve* curveObject)
+  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, SampleCurve* curveObject)
   {
     Array<StreamedVertex> lines;
     Array<StreamedVertex> triangles;
@@ -820,7 +820,7 @@ public:
     CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
   }
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
   {
     Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 

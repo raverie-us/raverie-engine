@@ -62,8 +62,8 @@ public:
   Zero::FrameBlock* mFrameBlock;
   Zero::ViewNode* mViewNode;
   Zero::Vec4 mColor;
-  Zero::Rect mClipRect;
-  Zero::Rect mBaseRect;
+  Zero::WidgetRect mClipRect;
+  Zero::WidgetRect mBaseRect;
 
   float mLastX;
   float mLastY;

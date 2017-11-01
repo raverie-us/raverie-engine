@@ -1339,7 +1339,7 @@ void ScriptEditor::OnMouseMove(MouseEvent* event)
 
     ToolTipPlacement placement;
     placement.mHotSpot = Math::ToVector2(GetScreenPositionFromCursor(cursor)) + Vec2(0, (float)GetLineHeight() * 0.5f);
-    placement.mScreenRect = Rect::CenterAndSize(placement.mHotSpot, Vec2(200, (float)GetLineHeight() + 2));
+    placement.mScreenRect = WidgetRect::CenterAndSize(placement.mHotSpot, Vec2(200, (float)GetLineHeight() + 2));
     placement.SetPriority(IndicatorSide::Bottom, IndicatorSide::Top, IndicatorSide::Right, IndicatorSide::Left);
     tooltip->SetArrowTipTranslation(placement);
 

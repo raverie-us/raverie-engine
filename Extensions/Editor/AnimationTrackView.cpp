@@ -368,7 +368,7 @@ void AnimationTrackView::UpdateTransform()
   mBackground->SetSize(mSize);
   UpdateToolTip();
 
-  Rect local = GetLocalRect();
+  WidgetRect local = GetLocalRect();
   local.RemoveThickness(Thickness(1,1,1,1));
   PlaceWithRect(local, mTree);
   mTree->Refresh();
@@ -515,7 +515,7 @@ void AnimationTrackView::UpdateToolTip()
     
   // Place the tooltip around the track view
   ToolTipPlacement placement;
-  Rect rect = GetScreenRect();
+  WidgetRect rect = GetScreenRect();
   rect.SizeX -= Pixels(5);
   placement.SetScreenRect(rect);
   placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 

@@ -238,9 +238,9 @@ public:
   void MoveToBack();
 
   //Coordinates
-  Rect GetRectInParent();
-  Rect GetLocalRect() const;
-  Rect GetScreenRect() const;
+  WidgetRect GetRectInParent();
+  WidgetRect GetLocalRect() const;
+  WidgetRect GetScreenRect() const;
   Vec2 ToLocal(Vec2Param screenPoint);
   Vec3 ToLocal(Vec3Param screenPoint);
   Vec2 ToScreen(Vec2Param localPoint);
@@ -265,7 +265,7 @@ public:
 
   /// Captures the back buffer in the region of this widget.
   virtual void ScreenCaptureBackBuffer(Image& image);
-  void ScreenCaptureBackBuffer(Image& image, Rect& subViewport);
+  void ScreenCaptureBackBuffer(Image& image, WidgetRect& subViewport);
 
   //Docking
   DockMode::Enum GetDockMode() { return mCurDockMode; }
@@ -287,9 +287,9 @@ public:
   virtual void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform& colorTx, DrawParams& params){};
   virtual void DispatchAt(DispatchAtParams& params);
 
-  virtual void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect);
-  ViewNode& AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Texture* texture);
-  void CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& vertices, PrimitiveType::Enum primitiveType);
+  virtual void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
+  ViewNode& AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Texture* texture);
+  void CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& vertices, PrimitiveType::Enum primitiveType);
 
 //Internals
   IntrusiveLink(Widget, mWidgetLink);

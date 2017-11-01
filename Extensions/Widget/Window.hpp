@@ -273,7 +273,7 @@ public:
   void OnFocusGained(FocusEvent* event);
   WindowStyle::Enum mWindowStyle;
   bool mMinimized;
-  Rect mClientRect;
+  WidgetRect mClientRect;
   Vec2 mFloatingSize;
   Vec2 mLayoutSize;
 

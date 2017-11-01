@@ -487,10 +487,10 @@ public:
   CurveDrawer(CurveEditor* curveEditor);
 
   /// Draw the widget.
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
-  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, CurveObject* curveObject);
-  void AddControlPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, CurveObject* curveObject);
+  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject);
+  void AddControlPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject);
   void AddPoint(Array<StreamedVertex>& lines, Array<StreamedVertex>& triangles, Vec3Param pos, float size, Vec4 color, bool empty = false);
 
   CurveEditor* mCurveEditor;

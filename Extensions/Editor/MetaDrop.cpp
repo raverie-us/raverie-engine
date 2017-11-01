@@ -175,7 +175,7 @@ void MetaDrag::OnMouseMove(MouseEvent* event)
       }
       else
       {
-        placement.SetScreenRect(Rect::PointAndSize(position, Vec2::cZero));
+        placement.SetScreenRect(WidgetRect::PointAndSize(position, Vec2::cZero));
         placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
                               IndicatorSide::Bottom, IndicatorSide::Top);
       }

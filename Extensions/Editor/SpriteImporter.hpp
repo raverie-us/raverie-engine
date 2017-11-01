@@ -37,7 +37,7 @@ public:
 
   PixelGridArea(Composite* parent, SpriteSheetImporter* owner);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 };
 
 //------------------------------------------------------------------------ Sprite Sheet Importer
@@ -84,7 +84,7 @@ public:
   void UpdateTransform() override;
 
   void DrawLines(Array<StreamedVertex>& lines, uint axis, float zoom, float spacing, Vec2 totalSize, Vec2 startOffset, uint lineCount);
-  void DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect);
+  void DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
   void NudgePosition(IntVec2 move);
   void AddFrame(IntVec2 gridCell);
   void RemoveFrame(int frameIndex);

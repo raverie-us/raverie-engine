@@ -226,9 +226,9 @@ void MainWindow::UpdateTransform()
     mTitleBack->SetColor(MainWindowUi::TitleBarColor);
     mTitleBack->SetSize(titleBarSize);
 
-    Rect currentRect = RemoveThicknessRect(border, size);
+    WidgetRect currentRect = RemoveThicknessRect(border, size);
 
-    Rect titleRect = currentRect;
+    WidgetRect titleRect = currentRect;
     titleRect.SizeY = titleBarSize.y;
 
     // Center the tile text on the title bar
@@ -236,8 +236,8 @@ void MainWindow::UpdateTransform()
     PlaceCenterToRect(titleRect, mTitleText, Vec2(0,-3));
 
     // Hide if it overlaps the menu
-    Rect menuRect = mMenu->GetScreenRect();
-    Rect titleTextRect =  mTitleText->GetScreenRect();
+    WidgetRect menuRect = mMenu->GetScreenRect();
+    WidgetRect titleTextRect =  mTitleText->GetScreenRect();
     mTitleText->SetVisible(!menuRect.Overlap(titleTextRect));
 
     // Remove title bar

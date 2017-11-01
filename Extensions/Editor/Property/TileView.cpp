@@ -104,7 +104,7 @@ public:
     mSelectBox->SetTranslation(Vec3(min.x, min.y, 0));
 
     Array<int> overlappingTiles;
-    Rect rect = Rect::MinAndMax(min, max);
+    WidgetRect rect = WidgetRect::MinAndMax(min, max);
     mTileView->mLayout.GetOverlappingTiles(rect, overlappingTiles);
 
     DataSelection* selection = mTileView->GetSelection();
@@ -251,13 +251,13 @@ void TileViewWidget::UpdateTransform()
   mHighlight->SetSize(mSize);
 
   // Center content
-  Rect contentRect = Rect::PointAndSize(Vec2(0, titleBarHeight), backgroundSize);
+  WidgetRect contentRect = WidgetRect::PointAndSize(Vec2(0, titleBarHeight), backgroundSize);
   contentRect.RemoveThickness(mContentMargins);
   PlaceWithRect(contentRect, mContent);
 
   // Center text to the title bar
   mText->SizeToContents();
-  Rect textRect = Rect::PointAndSize(Vec2::cZero, titleBarSize);
+  WidgetRect textRect = WidgetRect::PointAndSize(Vec2::cZero, titleBarSize);
   PlaceCenterToRect(textRect, mText);
 
   mText->mTranslation.x = Math::Max(mText->mTranslation.x, 0.0f);

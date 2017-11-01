@@ -26,8 +26,8 @@ class PerformanceGraphWidget : public Widget
 public:
   PerformanceGraphWidget(Composite* parent);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
-  float DrawProfileGraph(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Vec3 position, Profile::Record* record, float parentSize, float parentTotal, int level = 0);
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  float DrawProfileGraph(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Vec3 position, Profile::Record* record, float parentSize, float parentTotal, int level = 0);
 
   static double RecursiveAverage(Profile::Record* record);
 
@@ -45,10 +45,10 @@ class MemoryGraphWidget : public Widget
 public:
   MemoryGraphWidget(Composite* parent);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   float DrawMemoryGraph(Vec3 position, Memory::Graph* memoryNode, float parentSize, float parentTotal,
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, Rect clipRect);
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, WidgetRect clipRect);
 };
 
 }//namespace Zero

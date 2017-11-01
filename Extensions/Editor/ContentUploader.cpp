@@ -133,7 +133,7 @@ ContentExportTile::ContentExportTile(Composite* parent, TileView* tileView,
 void ContentExportTile::UpdateTransform()
 {
   Vec2 textSize = mMissingText->GetMinSize();
-  Rect local = GetLocalRect();
+  WidgetRect local = GetLocalRect();
   local.SizeY = textSize.y;
   SetClipping(true);
   PlaceCenterToRect(local, mMissingText);
@@ -366,7 +366,7 @@ ContentPackageExporter::~ContentPackageExporter()
 void ContentPackageExporter::UpdateTransform()
 {
   // Center the hint text to the tile view
-  Rect tileViewRect = mTileView->GetLocalRect();
+  WidgetRect tileViewRect = mTileView->GetLocalRect();
   PlaceCenterToRect(tileViewRect, mHintText);
 
   Composite::UpdateTransform();

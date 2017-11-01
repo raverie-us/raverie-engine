@@ -620,7 +620,7 @@ void LauncherWindow::OnForcedBuildsModal(ModalButtonEvent* e)
 void LauncherWindow::UpdateTransform()
 {
   // Center the background
-  Rect centerRect = mCenterPanel->GetRectInParent();
+  WidgetRect centerRect = mCenterPanel->GetRectInParent();
   PlaceWithRect(centerRect, mCenterPanelBackground);
 
   mWindowGripper->SetSize(mTopBar->GetSize());

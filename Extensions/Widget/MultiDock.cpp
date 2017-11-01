@@ -387,7 +387,7 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
 
   const Vec2 cCenterRegionSize = Pixels(400, 400);
 
-  Rect centerRect = Rect::CenterAndSize(dockAreaSize * 0.5f, cCenterRegionSize);
+  WidgetRect centerRect = WidgetRect::CenterAndSize(dockAreaSize * 0.5f, cCenterRegionSize);
   if(centerRect.Contains(newMousePosition))
   {
     ChangeHover(DockHover::Overlay);

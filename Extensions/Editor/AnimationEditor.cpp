@@ -270,7 +270,7 @@ AnimationEditor::~AnimationEditor()
 void AnimationEditor::UpdateTransform()
 {
   mErrorStateText->SizeToContents();
-  Rect rect = mScrubber->GetLocalRect();
+  WidgetRect rect = mScrubber->GetLocalRect();
   PlaceCenterToRect(rect, mErrorStateText);
 
   // Update the color and position of the negative area

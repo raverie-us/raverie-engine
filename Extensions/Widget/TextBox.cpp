@@ -352,7 +352,7 @@ void MultiLineText::UpdateTransform()
   mBackground->SetSize(mSize);
   mBorder->SetSize(mSize);
 
-  Rect rect = RemoveThicknessRect(mPadding, mSize);
+  WidgetRect rect = RemoveThicknessRect(mPadding, mSize);
   PlaceWithRect(rect, mTextField);
 
   Composite::UpdateTransform();

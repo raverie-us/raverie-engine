@@ -87,7 +87,7 @@ void BackgroundTaskButton::OnButtonPressed(Event* e)
   LayoutArea data;
   window->SetSize(window->Measure(data));
 
-  Rect buttonRect = GetScreenRect();
+  WidgetRect buttonRect = GetScreenRect();
   Vec2 pos = buttonRect.BottomRight() - Vec2(window->mSize.x, 0);
   window->SetTranslation(ToVector3(pos));
 
@@ -257,7 +257,7 @@ void BackgroundTaskItem::UpdateTransform()
   mProgressText->SizeToContents();
   mBackground->SetSize(mSize);
 
-  Rect local = GetLocalRect();
+  WidgetRect local = GetLocalRect();
   PlaceCenterToRect(local, mXButton);
   mXButton->mTranslation.x = mSize.x - mXButton->GetSize().x - Pixels(2);
   Composite::UpdateTransform();

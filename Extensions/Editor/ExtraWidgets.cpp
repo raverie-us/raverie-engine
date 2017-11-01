@@ -21,7 +21,7 @@ void AddLine(Vec3 pos0, Vec3 pos1, Vec4 color, Array<StreamedVertex>& vertices)
   vertices.PushBack(StreamedVertex(pos1, Vec2(), color));
 }
 
-void PerformanceGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void PerformanceGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -169,7 +169,7 @@ void PerformanceGraphWidget::DrawSamples(ViewBlock& viewBlock, FrameBlock& frame
   }
 }
 
-float PerformanceGraphWidget::DrawProfileGraph(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Vec3 position, Profile::Record* record, float parentSize, float parentTotal, int level)
+float PerformanceGraphWidget::DrawProfileGraph(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Vec3 position, Profile::Record* record, float parentSize, float parentTotal, int level)
 {
   float average = (float)record->SmoothAverage();
   float timeInS = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)record->SmoothAverage());
@@ -250,13 +250,13 @@ MemoryGraphWidget::MemoryGraphWidget(Composite* parent)
 {
 }
 
-void MemoryGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void MemoryGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
   DrawMemoryGraph(Vec3(1, 0, 0), Memory::GetRoot(), mSize.x, 0, viewBlock, frameBlock, parentTx, clipRect);
 }
 
-void DrawRect(const Rect& rect, Array<StreamedVertex>& triangles, Vec4Param solidColor, Array<StreamedVertex>& lines, Vec4Param lineColor)
+void DrawRect(const WidgetRect& rect, Array<StreamedVertex>& triangles, Vec4Param solidColor, Array<StreamedVertex>& lines, Vec4Param lineColor)
 {
   Vec3 bl = Vec3(rect.BottomLeft());
   Vec3 br = Vec3(rect.BottomRight());
@@ -284,7 +284,7 @@ void DrawRect(const Rect& rect, Array<StreamedVertex>& triangles, Vec4Param soli
 }
 
 float MemoryGraphWidget::DrawMemoryGraph(Vec3 position, Memory::Graph* memoryNode, float parentSize, float parentTotal,
-  ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, Rect clipRect)
+  ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, WidgetRect clipRect)
 {
   float ysize = Pixels(20);
   Memory::Stats stat;
@@ -300,7 +300,7 @@ float MemoryGraphWidget::DrawMemoryGraph(Vec3 position, Memory::Graph* memoryNod
   Vec4 boxColor = ToFloatColor(Color::Red);
   Vec4 lineColor = ToFloatColor(Color::Black);
   position = SnapToPixels(position);
-  Rect rect = Rect::PointAndSize(ToVector2(position), Vec2(xsize, ysize));
+  WidgetRect rect = WidgetRect::PointAndSize(ToVector2(position), Vec2(xsize, ysize));
   
   // Create and render bordered boxes
   Array<StreamedVertex> triangles;
@@ -311,7 +311,7 @@ float MemoryGraphWidget::DrawMemoryGraph(Vec3 position, Memory::Graph* memoryNod
 
   // Compute the clip rect for the text
   Vec3 clipPosition = Math::TransformPointCol(parentTx, position);
-  Rect subClipRect = Rect::PointAndSize(ToVector2(clipPosition), Vec2(xsize, ysize));
+  WidgetRect subClipRect = WidgetRect::PointAndSize(ToVector2(clipPosition), Vec2(xsize, ysize));
   // Render the text
   RenderFont* font = FontManager::GetInstance()->GetRenderFont("NotoSans-Regular", 11, 0);
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, subClipRect, font->mTexture);

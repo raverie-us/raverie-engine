@@ -187,7 +187,7 @@ void SearchView::PositionToolTip()
     Vec2 size = Vec2(mSize.x, SearchViewUi::RowSize);
 
     // Set the rect
-    Rect rect = Rect::PointAndSize(topLeft, size);
+    WidgetRect rect = WidgetRect::PointAndSize(topLeft, size);
     placement.SetScreenRect(rect);
 
     placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 

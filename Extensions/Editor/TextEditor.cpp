@@ -41,7 +41,7 @@ public:
   ~ScintillaWidget();
   ScintillaZero* mScintilla;
   Scintilla::SurfaceImpl mSurface;
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 };
 
 //------------------------------------------------------------ ScintillaZero
@@ -109,7 +109,7 @@ ScintillaWidget::~ScintillaWidget()
   SafeDelete(mScintilla);
 }
 
-void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -120,7 +120,7 @@ void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock,
   mSurface.mBaseRect = clipRect;
 
   // Setting clip rect here because scintilla is not getting the correct client rect
-  mSurface.mClipRect = Rect::PointAndSize(Vec2(parentTx.m30, parentTx.m31), mSize);
+  mSurface.mClipRect = WidgetRect::PointAndSize(Vec2(parentTx.m30, parentTx.m31), mSize);
 
   PRectangle rcPaint = mScintilla->GetClientRectangle();
   mScintilla->Paint(&mSurface, rcPaint);

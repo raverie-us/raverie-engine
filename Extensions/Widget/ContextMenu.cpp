@@ -478,7 +478,7 @@ void MenuBarItem::UpdateTransform()
 {
   mBackground->SetSize(mSize);
   mText->SetSize(mSize);
-  Rect rect = RemoveThicknessRect( Thickness(MenuUi::MenuBarItemPadding), mSize);
+  WidgetRect rect = RemoveThicknessRect( Thickness(MenuUi::MenuBarItemPadding), mSize);
   PlaceWithRect(rect, mText);
   Composite::UpdateTransform();
 }

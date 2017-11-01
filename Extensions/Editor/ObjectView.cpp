@@ -1098,7 +1098,7 @@ ObjectView::~ObjectView()
 
 void ObjectView::UpdateTransform()
 {
-  Rect rect = mSearch->GetLocalRect();
+  WidgetRect rect = mSearch->GetLocalRect();
   PlaceWithRect(rect, mDimSearch);
 
   mNoSpaceText->SetColor(Vec4(1, 1, 1, 0.4f));
@@ -1341,7 +1341,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
     ToolTip* toolTip = new ToolTip(this);
     toolTip->SetText(toolTipMessage);
 
-    Rect rect = e->Row->GetScreenRect();
+    WidgetRect rect = e->Row->GetScreenRect();
 
     ToolTipPlacement placement;
     placement.mScreenRect = rect;

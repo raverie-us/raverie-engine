@@ -18,7 +18,7 @@ PixelGridArea::PixelGridArea(Composite* parent, SpriteSheetImporter* owner)
   mOwner = owner;
 }
 
-void PixelGridArea::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void PixelGridArea::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
   mOwner->DrawRedirect(viewBlock, frameBlock, mWorldTx, colorTx, clipRect);
@@ -800,7 +800,7 @@ void SpriteSheetImporter::DrawLines(Array<StreamedVertex>& lines, uint axis, flo
   }
 }
 
-void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Mat4 oldWorldTx = mWorldTx;
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);

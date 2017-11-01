@@ -45,7 +45,7 @@ void AddHashLines(Array<Vec3>& lines, Vec3 pos, float size, Vec3 dir, Vec3 hashD
   }
 }
 
-void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 

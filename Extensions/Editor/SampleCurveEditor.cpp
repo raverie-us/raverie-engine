@@ -310,7 +310,7 @@ MultiSampleCurveEditor::MultiSampleCurveEditor(Composite* parent)
 void MultiSampleCurveEditor::UpdateTransform()
 {
   Thickness margins(Pixels(40), Pixels(11), Pixels(20), Pixels(30));
-  Rect graphRect = Rect::PointAndSize(Vec2::cZero, mGraphArea->GetSize());
+  WidgetRect graphRect = WidgetRect::PointAndSize(Vec2::cZero, mGraphArea->GetSize());
   graphRect.RemoveThickness(margins);
 
   PlaceWithRect(graphRect, mGraph);

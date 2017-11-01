@@ -25,7 +25,7 @@ public:
 
   GraphWidget(Composite* parent);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   /// Point transformations
   Vec2 ToGraphPositionScaled(Vec2Param pixelPos);
