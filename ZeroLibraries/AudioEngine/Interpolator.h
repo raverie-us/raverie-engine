@@ -23,32 +23,17 @@ namespace Audio
     
     // Calculates a value using the current percentage.
     float GetValue(const float current, const float total, const float startValue, const float endValue);
-
+    // Sets the custom curve data pointer. Will delete this data on destruction.
     void SetCurveData(Zero::Array<Math::Vec3>* curveData);
 
   private:
     // Array of custom curve values. 
     Zero::Array<Math::Vec3>* CurveData;
-    
-    friend class ThreadedEmitterObject;
-    friend class InterpolatingObject;
   };
 
   //--------------------------------------------------------------------------- Interpolating Object
 
-  class InterpolatingObject;
-
-  class InterpolatorContainer
-  {
-  public:
-    InterpolatorContainer();
-    InterpolatorContainer(const InterpolatorContainer& copy);
-
-    void Swap(InterpolatorContainer& other);
-
-    bool Active;
-    InterpolatingObject* Object;
-  };
+  class SoundNode;
 
   // Object to interpolate either sequentially or with direct access. 
   class InterpolatingObject
@@ -93,12 +78,6 @@ namespace Audio
     void SetValues(const float startValue, const float endValue, const float distance);
 
   private:
-    // Sets up object for sequential interpolation using (). Uses LinearCurve by default.
-    InterpolatingObject(const float startValue, const float endValue, const unsigned numberOfFrames);
-    // Sets up object for direct-access interpolation using []. Uses LinearCurve by default.
-    InterpolatingObject(const float startValue, const float endValue, const float distance);
-    InterpolatingObject(const InterpolatingObject &copy);
-
     // Starting value to interpolate from. 
     float StartValue;
     // Ending value to interpolate to. 
@@ -109,15 +88,12 @@ namespace Audio
     unsigned TotalFrames;
     // Current frame of sequential interpolation. 
     unsigned CurrentFrame;
-
+    // The type of curve currently being used
     CurveTypes CurrentCurveType;
-    float(*GetValue)(const float current, const float total, const float startValue, const float endValue);
+    // The object used to handle custom curve data
     CustomCurve CustomCurveObject;
-
-    InterpolatorContainer* Container;
-
-    friend class AudioSystemInternal;
-    friend class InterpolatorContainer;
+    // A pointer to the function used to get values. Set according to curve type.
+    float(*GetValue)(const float current, const float total, const float startValue, const float endValue);
   };
 }
 

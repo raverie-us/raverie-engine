@@ -748,20 +748,10 @@ namespace Audio
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
     Paused(false),
     Pausing(false),
-    VolumeInterpolator(nullptr),
     Interpolating(false)
   {
     if (!Threaded)
       SetSiblingNodes(new CombineAndPauseNode(status, name, ID, extInt, true), status);
-    else
-      VolumeInterpolator = gAudioSystem->GetInterpolatorThreaded();
-  }
-
-  //************************************************************************************************
-  CombineAndPauseNode::~CombineAndPauseNode()
-  {
-    if (VolumeInterpolator)
-      gAudioSystem->ReleaseInterpolatorThreaded(VolumeInterpolator);
   }
 
   //************************************************************************************************
@@ -782,14 +772,14 @@ namespace Audio
       {
         Pausing = true;
         Interpolating = true;
-        VolumeInterpolator->SetValues(1.0f, 0.0f, (unsigned)(0.05f * AudioSystemInternal::SystemSampleRate));
+        VolumeInterpolator.SetValues(1.0f, 0.0f, (unsigned)(0.05f * AudioSystemInternal::SystemSampleRate));
       }
       // If we should un-pause and we are currently paused
       else if (!paused && Paused)
       {
         Paused = Pausing = false;
         Interpolating = true;
-        VolumeInterpolator->SetValues(0.0f, 1.0f, (unsigned)(0.05f * AudioSystemInternal::SystemSampleRate));
+        VolumeInterpolator.SetValues(0.0f, 1.0f, (unsigned)(0.05f * AudioSystemInternal::SystemSampleRate));
       }
     }
   }
@@ -823,7 +813,7 @@ namespace Audio
         float volume;
         for (unsigned i = 0; i < outputBuffer->Size(); i += numberOfChannels)
         {
-          volume = VolumeInterpolator->NextValue();
+          volume = VolumeInterpolator.NextValue();
 
           // Apply the volume multiplier to all samples
           for (unsigned j = 0; j < numberOfChannels; ++j)
@@ -831,7 +821,7 @@ namespace Audio
         }
 
         // Check if we're done interpolating
-        if (VolumeInterpolator->Finished())
+        if (VolumeInterpolator.Finished())
         {
           Interpolating = false;
           if (Pausing)

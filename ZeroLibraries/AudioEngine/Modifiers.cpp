@@ -24,13 +24,7 @@ namespace Audio
     DelayFrames(0),
     Delay(false)
   {
-    Interpolate = gAudioSystem->GetInterpolatorThreaded();
-  }
 
-  //************************************************************************************************
-  ThreadedVolumeModifier::~ThreadedVolumeModifier() 
-  { 
-    gAudioSystem->ReleaseInterpolatorThreaded(Interpolate); 
   }
 
   //************************************************************************************************
@@ -61,19 +55,19 @@ namespace Audio
       // In attack phase
       if (Attack)
       {
-        volumeValue = Interpolate->NextValue();
+        volumeValue = Interpolator.NextValue();
         
         // If attack is finished, go to sustain
-        if (Interpolate->Finished())
+        if (Interpolator.Finished())
           Attack = false;
       }
       // In release phase
       else if (Release)
       {
-        volumeValue = Interpolate->NextValue();
+        volumeValue = Interpolator.NextValue();
 
         // If release is finished, we're done
-        if (Interpolate->Finished())
+        if (Interpolator.Finished())
         {
           Active = false;
           return;
@@ -88,7 +82,7 @@ namespace Audio
         if (TotalFrames > 0 && FramesProcessed >= TotalFrames - ReleaseFrames)
         {
           Release = true;
-          Interpolate->SetValues(Volume, VolumeStart, ReleaseFrames);
+          Interpolator.SetValues(Volume, VolumeStart, ReleaseFrames);
         }
       }
 
@@ -122,19 +116,19 @@ namespace Audio
     if (attackFrames == 0)
       attackFrames = 1000;
 
-    Interpolate->SetValues(VolumeStart, Volume, attackFrames);
+    Interpolator.SetValues(VolumeStart, Volume, attackFrames);
   }
 
   //************************************************************************************************
   float ThreadedVolumeModifier::GetCurrentVolume()
   {
-    return Interpolate->GetCurrentValue(); 
+    return Interpolator.GetCurrentValue();
   }
 
   //************************************************************************************************
   float ThreadedVolumeModifier::GetFutureVolume(unsigned frames)
   {
-    return Interpolate->ValueAtIndex(FramesProcessed + frames);
+    return Interpolator.ValueAtIndex(FramesProcessed + frames);
   }
 
 }

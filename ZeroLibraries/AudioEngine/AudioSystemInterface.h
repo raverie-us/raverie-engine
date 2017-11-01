@@ -11,6 +11,7 @@
 #define AudioSystemInterface_H
 
 #include "Definitions.h"
+#include "Interpolator.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
 #include "ListenerNode.h"

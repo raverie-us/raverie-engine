@@ -14,10 +14,10 @@
 #include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
+#include "Definitions.h"
 #include "LockFreeQueue.hpp"
 #include "RingBuffer.h"
-
-#include "Definitions.h"
+#include "Interpolator.h"
 #include "Resampler.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
@@ -37,7 +37,6 @@
 #include "SoundInstances.h"
 #include "Tags.h"
 
-#include "Interpolator.h"
 #include "Filters.h"
 #include "AudioInputOutput.h"
 #ifdef _MSC_VER

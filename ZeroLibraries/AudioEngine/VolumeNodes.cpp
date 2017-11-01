@@ -15,20 +15,10 @@ namespace Audio
   VolumeNode::VolumeNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
     ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
-    Volume(1.0f),
-    Interpolate(nullptr)
+    Volume(1.0f)
   {
     if (!Threaded)
       SetSiblingNodes(new VolumeNode(status, name, ID, nullptr, true), status);
-    else
-      Interpolate = gAudioSystem->GetInterpolatorThreaded();
-  }
-
-  //************************************************************************************************
-  VolumeNode::~VolumeNode()
-  {
-    if (Interpolate)
-      gAudioSystem->ReleaseInterpolatorThreaded(Interpolate);
   }
 
   //************************************************************************************************
@@ -63,9 +53,9 @@ namespace Audio
       // Check if the volume is being interpolated
       if (CurrentData.Interpolating)
       {
-        Volume = Interpolate->ValueAtIndex(CurrentData.Index++);
+        Volume = Interpolator.ValueAtIndex(CurrentData.Index++);
 
-        CurrentData.Interpolating = !Interpolate->Finished(GetSiblingNode());
+        CurrentData.Interpolating = !Interpolator.Finished(GetSiblingNode());
 
         if (!CurrentData.Interpolating && firstRequest && GetSiblingNode())
           gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&VolumeNode::Volume,
@@ -114,7 +104,7 @@ namespace Audio
         if (timeToInterpolate < 0.02f)
           timeToInterpolate = 0.02f;
 
-        Interpolate->SetValues(Volume, newVolume, (unsigned)(timeToInterpolate
+        Interpolator.SetValues(Volume, newVolume, (unsigned)(timeToInterpolate
           * AudioSystemInternal::SystemSampleRate));
       }
     }
@@ -129,28 +119,14 @@ namespace Audio
     SumToMono(false),
     LeftVolume(1.0f),
     RightVolume(1.0f),
-    Active(false),
-    LeftInterpolator(nullptr),
-    RightInterpolator(nullptr)
+    Active(false)
   {
     if (!isThreaded)
       SetSiblingNodes(new PanningNode(status, name, ID, nullptr, true), status);
     else
     {
-      LeftInterpolator = gAudioSystem->GetInterpolatorThreaded();
-      LeftInterpolator->SetValues(1.0f, 1.0f, (unsigned)0);
-      RightInterpolator = gAudioSystem->GetInterpolatorThreaded();
-      RightInterpolator->SetValues(1.0f, 1.0f, (unsigned)0);
-    }
-  }
-
-  //************************************************************************************************
-  PanningNode::~PanningNode()
-  {
-    if (LeftInterpolator)
-    {
-      gAudioSystem->ReleaseInterpolatorThreaded(LeftInterpolator);
-      gAudioSystem->ReleaseInterpolatorThreaded(RightInterpolator);
+      LeftInterpolator.SetValues(1.0f, 1.0f, (unsigned)0);
+      RightInterpolator.SetValues(1.0f, 1.0f, (unsigned)0);
     }
   }
 
@@ -204,7 +180,7 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        LeftInterpolator->SetValues(LeftVolume, volume, (unsigned)(time
+        LeftInterpolator.SetValues(LeftVolume, volume, (unsigned)(time
           * AudioSystemInternal::SystemSampleRate));
       }
     }
@@ -244,7 +220,7 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        RightInterpolator->SetValues(RightVolume, volume, (unsigned)(time
+        RightInterpolator.SetValues(RightVolume, volume, (unsigned)(time
           * AudioSystemInternal::SystemSampleRate));
       }
     }
@@ -295,11 +271,11 @@ namespace Audio
         // Check if we are interpolating the volume
         if (CurrentData.Interpolating)
         {
-          LeftVolume = LeftInterpolator->NextValue();
-          RightVolume = RightInterpolator->NextValue();
+          LeftVolume = LeftInterpolator.NextValue();
+          RightVolume = RightInterpolator.NextValue();
 
           // If we finished interpolating the volume, send a notification
-          if (LeftInterpolator->Finished() && RightInterpolator->Finished())
+          if (LeftInterpolator.Finished() && RightInterpolator.Finished())
           {
             CurrentData.Interpolating = false;
             if (firstRequest && GetSiblingNode())

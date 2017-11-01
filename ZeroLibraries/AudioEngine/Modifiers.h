@@ -19,7 +19,6 @@ namespace Audio
   {
   public:
     ThreadedVolumeModifier();
-    ~ThreadedVolumeModifier();
 
     // Applies this modification to a buffer of samples.
     void ApplyModification(float *sampleBuffer, const unsigned bufferSize);
@@ -53,7 +52,7 @@ namespace Audio
     // If true, currently delaying.
     bool Delay;
     // Used to interpolate between start and end volumes. 
-    InterpolatingObject* Interpolate;
+    InterpolatingObject Interpolator;
   };
 }
 

@@ -113,10 +113,6 @@ namespace Audio
     bool AddSoundNode(SoundNode* node, const bool threaded);
     // Removes a node from the threaded or non-threaded list
     void RemoveSoundNode(SoundNode* node, const bool threaded);
-    // Returns a pointer to an available interpolator object
-    InterpolatingObject* GetInterpolatorThreaded();
-    // Releases an interpolator object that was in use
-    void ReleaseInterpolatorThreaded(InterpolatingObject* object);
     // Sets the threaded variable for the minimum volume threshold.
     void SetMinVolumeThresholdThreaded(const float volume);
     
@@ -206,10 +202,6 @@ namespace Audio
     NodeListType NodeList;
     // Number of currently alive sound nodes
     unsigned NodeCount;
-    // List of interpolator objects
-    Zero::Array<InterpolatorContainer> InterpolatorArray;
-    // The index of the next available interpolator
-    int NextInterpolator;
     // The peak volume from the last mix, used to check whether to create a task
     float PreviousPeakVolumeThreaded;
     // The RMS volume from the last mix, used to check whether to create a task
