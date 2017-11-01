@@ -193,8 +193,8 @@ void UiWidget::Initialize(CogInitializer& initializer)
   // the component was added dynamically once that information is available.
   MarkAsNeedsUpdate();
 
-  // Currently, TopLeft is the only thing supported by the widget system
-  mArea->mOrigin = Location::TopLeft;
+  // Currently, BottomLeft is the only thing supported by the widget system
+  mArea->mOrigin = Location::BottomLeft;
 }
 
 //**************************************************************************************************

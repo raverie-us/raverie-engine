@@ -40,7 +40,6 @@ public:
   void PerformKeyDown(Keys::Enum key);
   void PerformKeyUp(Keys::Enum key);
   void PerformKeyboardEvent(KeyboardEvent* e);
-  void PerformKeyboardEvent(KeyboardTextEvent* e);
 
   //------------------------------------------------------------------------------ Mouse Events
   /// This must be called appropriately before mouse clicks.
