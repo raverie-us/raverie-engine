@@ -85,7 +85,7 @@ Vec2 UiDockLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
       switch (mode)
       {
         //--------------------------------------------------------------------
-      case UiDockMode::Top:
+      case UiDockMode::Bottom:
         {
           float moveY = size.y;
           areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
@@ -95,7 +95,7 @@ Vec2 UiDockLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
         break;
 
         //--------------------------------------------------------------------
-      case UiDockMode::Bottom:
+      case UiDockMode::Top:
         {
           float moveY = size.y;
           areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Bottom] - moveY);
@@ -119,8 +119,8 @@ Vec2 UiDockLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
         {
           float moveX = size.x;
           areaPos = Vec2(area[SlicesIndex::Right] - moveX, area[SlicesIndex::Top]);
-          area[SlicesIndex::Right] -= moveX + +mSpacing[Axis::X];
-          areaSize = Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);          
+          area[SlicesIndex::Right] -= moveX + mSpacing[Axis::X];
+          areaSize = Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
         }
         break;
       }
