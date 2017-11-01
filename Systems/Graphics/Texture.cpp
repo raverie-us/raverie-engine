@@ -65,6 +65,7 @@ Texture::Texture()
   mFiltering = TextureFiltering::Nearest;
   mAnisotropy = TextureAnisotropy::x1;
   mMipMapping = TextureMipMapping::None;
+  mMaxMipOverride = 0;
   mCompareMode = TextureCompareMode::Disabled;
   mCompareFunc = TextureCompareFunc::Never;
 

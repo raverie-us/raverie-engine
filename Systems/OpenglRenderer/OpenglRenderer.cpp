@@ -988,7 +988,11 @@ void OpenglRenderer::AddTexture(AddTextureJob* job)
     glTexParameteri(GlTextureType(job->mType), GL_TEXTURE_MAX_LEVEL, GlTextureMipMapping(job->mMipMapping));
 
     if (job->mMipMapping == TextureMipMapping::GpuGenerated)
+    {
+      if (job->mMaxMipOverride > 0)
+        glTexParameteri(GlTextureType(job->mType), GL_TEXTURE_MAX_LEVEL, job->mMaxMipOverride);
       glGenerateMipmap(GlTextureType(job->mType));
+    }
 
     glBindTexture(GlTextureType(job->mType), 0);
   }

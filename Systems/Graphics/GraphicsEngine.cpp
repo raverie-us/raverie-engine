@@ -581,6 +581,7 @@ void GraphicsEngine::AddTexture(Texture* texture, bool subImage, uint xOffset, u
   rendererJob->mCompareFunc = texture->mCompareFunc;
   rendererJob->mAnisotropy = texture->mAnisotropy;
   rendererJob->mMipMapping = texture->mMipMapping;
+  rendererJob->mMaxMipOverride = texture->mMaxMipOverride;
 
   rendererJob->mSubImage = subImage;
   rendererJob->mXOffset = xOffset;

@@ -139,6 +139,7 @@ public:
   TextureCompareFunc::Enum mCompareFunc;
   TextureAnisotropy::Enum mAnisotropy;
   TextureMipMapping::Enum mMipMapping;
+  uint mMaxMipOverride;
 
   bool mSubImage;
   uint mXOffset;
