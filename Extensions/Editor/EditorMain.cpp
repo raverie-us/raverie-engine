@@ -81,7 +81,7 @@ void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
 
   // Tools
   uint keyPressed = keyEvent->Key;
-  if(keyPressed >= '0' && keyPressed <= '9')
+  if(keyPressed >= '0' && keyPressed <= '9' && keyEvent->GetModififierPressed() == false)
   {
     if(keyPressed == '0') keyPressed += 10;
     uint toolIndex = keyPressed - '0' - 1;

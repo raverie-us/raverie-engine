@@ -208,6 +208,8 @@ public:
   /// Get the keyboard that generated this event.
   Keyboard* GetKeyboard();
 
+  bool GetModififierPressed();
+
   /// Key that was changed.
   Keys::Enum Key;
   /// State of the key Up,Down,Repeated.

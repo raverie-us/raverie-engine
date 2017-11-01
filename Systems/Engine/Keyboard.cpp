@@ -252,6 +252,7 @@ ZilchDefineType(KeyboardEvent, builder, type)
   ZilchBindFieldPropertyAs(HandledEventScript, "HandledEvent");
   ZilchBindGetterProperty(Keyboard);
   ZilchBindFieldProperty(OsKey);
+  ZilchBindGetterProperty(ModififierPressed);
 }
 
 KeyboardEvent::KeyboardEvent()
@@ -277,6 +278,11 @@ void KeyboardEvent::Serialize(Serializer& stream)
 Keyboard* KeyboardEvent::GetKeyboard()
 {
   return mKeyboard;
+}
+
+bool KeyboardEvent::GetModififierPressed()
+{
+  return CtrlPressed || ShiftPressed || AltPressed;
 }
 
 //--------------------------------------------------------------- KeyboardTextEvent
