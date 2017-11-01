@@ -75,6 +75,10 @@ Space::~Space()
 {
   ErrorIf(!mCogList.Empty(), "Not all objects in space destroyed.");
   Z::gEngine->mSpaceList.Erase(this);
+
+  // Remove ourself from the game session list
+  if (GameSession* gameSession = GetGameSession())
+    gameSession->InternalRemove(this);
 }
 
 bool Space::IsEditorMode()
@@ -435,10 +439,6 @@ void Space::ForceDestroy()
     r.PopFront();
   }
   Cog::ForceDestroy();
-
-  // Remove ourself from the game session list
-  if(GameSession* gameSession = GetGameSession())
-    gameSession->InternalRemove(this);
 }
 
 void Space::SaveLevelFile(StringParam filename)
