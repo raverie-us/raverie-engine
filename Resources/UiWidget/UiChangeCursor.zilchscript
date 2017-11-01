@@ -1,0 +1,33 @@
+///////////////////////////////////////////////////////////////////////////////
+/// 
+/// Authors: Joshua Claeys
+/// Copyright 2017, DigiPen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
+
+//------------------------------------------------------------ Ui Change Cursor
+class UiChangeCursor : ZilchComponent
+{
+  [Property] var Cursor : Cursor = Cursor.Arrow;
+  var OldCursor : Cursor;
+  
+  //***************************************************************************
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Owner, Events.MouseEnter, this.OnMouseEnter);
+    Zero.Connect(this.Owner, Events.MouseExit, this.OnMouseExit);
+  }
+
+  //***************************************************************************
+  function OnMouseExit(event : ViewportMouseEvent)
+  {
+    Zero.Mouse.Cursor = this.OldCursor;
+  }
+
+  //***************************************************************************
+  function OnMouseEnter(event : ViewportMouseEvent)
+  {
+    this.OldCursor = Zero.Mouse.Cursor;
+    Zero.Mouse.Cursor = this.Cursor;
+  }
+}

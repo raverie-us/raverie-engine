@@ -1,0 +1,101 @@
+///////////////////////////////////////////////////////////////////////////////
+/// 
+/// Authors: Joshua Claeys
+/// Copyright 2017, DigiPen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
+
+//--------------------------------------------------------- Ui Editor Extension
+[RunInEditor]
+class UiEditorExtension : ZilchComponent
+{
+  [Property] var HighlightColor : Real4 = Real4(1,0,0,1);
+  
+  //***************************************************************************
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.MetaDrop, this.OnMetaDrop);
+    Zero.Connect(this.Space, Events.MetaDropTest, this.OnMetaDrop);
+    Zero.Connect(this.Space, Events.MetaDropUpdate, this.OnMetaDrop);
+  }
+  
+  //***************************************************************************
+  function OnMetaDrop(event : MetaDropEvent)
+  {
+    var archetype = event.Object as Archetype;
+    if(archetype == null)
+      return;
+  
+    var mouseOver = this.GetAttachObject(event);
+    if(mouseOver != null)
+    {
+      if(event.Testing)
+      {
+        event.Result = "Attach to `mouseOver.Name`";
+        
+        var area = mouseOver.Area;
+      
+        var offset = mouseOver.Transform.WorldTranslation;
+        var line = DebugLine();
+        line.Color = this.HighlightColor;
+        //line.OnTop = true;
+        this.DrawLine(line, offset, area.TopLeft, area.TopRight);
+        this.DrawLine(line, offset, area.TopRight, area.BottomRight);
+        this.DrawLine(line, offset, area.BottomRight, area.BottomLeft);
+        this.DrawLine(line, offset, area.BottomLeft, area.TopLeft);
+      }
+      else
+      {
+        var opQueue = Zero.Editor.OperationQueue;
+        opQueue.BeginBatch();
+        var worldPos = event.ViewportMouseEvent.ToWorldZPlane(0);
+        
+        var cog = this.Space.Create(archetype);
+        cog.AttachTo(mouseOver);
+        var localPos = mouseOver.UiWidget.WorldToLocal(worldPos.XY);
+        cog.UiWidget.LocalTranslation = localPos;
+        
+        opQueue.ObjectCreated(cog);
+        opQueue.EndBatch();
+        
+        Zero.Editor.Selection.SelectOnly(cog);
+        Zero.Editor.Selection.FinalSelectionChanged();
+      }
+      
+      event.Handled = true;
+    }
+  }
+  
+  //***************************************************************************
+  function GetAttachObject(event : MetaDropEvent) : Cog
+  {
+    var obj = event.MouseOverObject as Cog;
+    
+    if(obj == null)
+      return null;
+    
+    var rootWidget : UiWidget = null;
+    
+    if(obj.UiWidget != null)
+      rootWidget = obj.UiWidget.RootWidget.Owner.UiWidget;
+    
+    if(rootWidget == null)
+      return null;
+    
+    var worldPoint = event.ViewportMouseEvent.HitPosition;
+    var hitWidget = rootWidget.Owner.UiWidget.CastPoint(worldPoint.XY, null, false);
+
+    //if(obj.UiLayout == null)
+      //return this.GetAttachObject(obj.Parent);
+        
+    return obj;
+  }
+  
+  //***************************************************************************
+  function DrawLine(line : DebugLine, offset : Real3, start : Real2, end : Real2)
+  {
+    line.Start = (Real3(start, 0) + offset);
+    line.End = (Real3(end, 0) + offset);
+    DebugDraw.Add(line);
+  }
+}

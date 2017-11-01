@@ -101,7 +101,7 @@ Level
 			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 45
-			var Size = 1642
+			var Size = 996
 		}
 		EditorCameraController 
 		{
@@ -221,6 +221,10 @@ Level
 			var AnimationSpeed = 1
 			var StartFrame = 0
 		}
+		Reactive 
+		{
+			var Active = true
+		}
 		UiWidget 
 		{
 			var Active = true
@@ -251,9 +255,11 @@ Level
 			var DepthSeparation = 0.00999999978
 			var DebugMouseInteraction = false
 		}
-		Reactive 
+		UiRenderer 
 		{
-			var Active = true
+			var ClearColor = Real4{0, 0, 0, 0}
+			var EditorDebugDraw = true
+			var GameDebugDraw = true
 		}
 		UiStackLayout 
 		{
@@ -263,12 +269,6 @@ Level
 			var PaddingBottom = 5
 			var StackDirection = UiStackLayoutDirection.TopToBottom
 			var Spacing = Real2{0, 5}
-		}
-		UiRenderer 
-		{
-			var ClearColor = Real4{0, 0, 0, 0}
-			var EditorDebugDraw = true
-			var GameDebugDraw = true
 		}
 		Hierarchy 
 		{
