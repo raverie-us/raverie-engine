@@ -74,7 +74,7 @@ public:
 
   //---------------------------------------------------------------------------------------- Queries
   /// Returns how many Components the given instance has.
-  virtual uint GetComponentCount(HandleParam owner) = 0;
+  virtual uint GetComponentCount(HandleParam owner);
 
   /// Returns whether or not the given object contains the given component type.
   virtual bool HasComponent(HandleParam owner, BoundType* componentType);
