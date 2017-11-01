@@ -34,10 +34,15 @@ struct ObjectPropertyNode
   /// destructed. So we need to release all handles immediately, before the types are freed.
   void ReleaseHandles();
 
+  bool IsPropertyGroup();
+
   ObjectPropertyNode* mParent;
 
   /// This object. This will be null for property nodes.
   Handle mObject;
+
+  /// Used to group up properties on an object into a dropdown for organizational purposes.
+  String mPropertyGroupName;
   
   /// The meta composition of the current object. The property interface may override the
   /// composition of the object, so that's why we use this instead of querying the object

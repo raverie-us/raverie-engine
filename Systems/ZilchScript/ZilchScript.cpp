@@ -226,6 +226,7 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   mAllowedGetSetAttributes.Insert(PropertyAttributes::cResourceProperty);
   mAllowedGetSetAttributes.Insert(PropertyAttributes::cRenamedFrom);
   mAllowedGetSetAttributes.Insert(PropertyAttributes::cLocalModificationOverride);
+  mAllowedGetSetAttributes.Insert(PropertyAttributes::cGroup);
 
   ConnectThisTo(Z::gResources, Events::PreScriptSetCompile, OnPreZilchProjectCompilation);
 }

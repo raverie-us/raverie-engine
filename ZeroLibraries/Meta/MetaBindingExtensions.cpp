@@ -49,6 +49,7 @@ const String cRuntimeClone("RuntimeClone");
 const String cRenamedFrom("RenamedFrom");
 const String cNetProperty("NetProperty");
 const String cNetPeerId("NetPeerId");
+const String cGroup("Group");
 
 }//namespace PropertyFlags
 

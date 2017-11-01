@@ -143,7 +143,7 @@ PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initialize
 
     if(MetaResource* metaResource = objectType->HasInherited<MetaResource>())
     {
-      if(mNode->mProperty == nullptr)
+      if(mNode->mProperty == nullptr && !mNode->IsPropertyGroup())
       {
         mEditScriptButton = new IconButton(this);
         mEditScriptButton->SetIcon("EditScript");
@@ -177,7 +177,7 @@ PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initialize
   //Expanded
   if(objectType)
   {
-    if(mExpandedTypes.Contains(objectType->Name) || objectType->HasAttribute(ObjectAttributes::cExpanded))
+    if(mExpandedTypes.Contains(GetExpandId()) || objectType->HasAttribute(ObjectAttributes::cExpanded))
       OpenNode(false);
   }
 
@@ -292,7 +292,9 @@ void PropertyWidgetObject::RefreshLabel()
   Handle instance = mNode->mObject;
   String text;
 
-  if(MetaDisplay* display = instance.StoredType->HasInherited<MetaDisplay>())
+  if (mNode->IsPropertyGroup())
+    text = mNode->mPropertyGroupName;
+  else if(MetaDisplay* display = instance.StoredType->HasInherited<MetaDisplay>())
     text = display->GetName(instance);
   else if(mNode && mNode->mProperty)
     text = mNode->mProperty->Name;
@@ -539,7 +541,8 @@ void PropertyWidgetObject::CloseNode()
     return;
 
   mNodeState = NodeState::Closed;
-  mExpandedTypes.Erase(mNode->mObject.StoredType->Name);
+
+  mExpandedTypes.Erase(GetExpandId());
 
   //Change the icon
   mExpandNode->ChangeDefinition(mDefSet->GetDefinition(cPropArrowRight));
@@ -598,7 +601,8 @@ void PropertyWidgetObject::OpenNode(bool animate)
     return;
 
   mNodeState = NodeState::Open;
-  mExpandedTypes.Insert(mNode->mObject.StoredType->Name);
+
+  mExpandedTypes.Insert(GetExpandId());
 
   //Change the icon
   mExpandNode->ChangeDefinition(mDefSet->GetDefinition(cPropArrowDown));
@@ -1407,6 +1411,15 @@ uint PropertyWidgetObject::GetComponentIndex()
   }
 
   return uint(-1);
+}
+
+//******************************************************************************
+String PropertyWidgetObject::GetExpandId()
+{
+  String typeName = mNode->mObject.StoredType->Name;
+  if(mNode->IsPropertyGroup())
+    return BuildString(typeName, ".", mNode->mPropertyGroupName);
+  return typeName;
 }
 
 //******************************************************************************

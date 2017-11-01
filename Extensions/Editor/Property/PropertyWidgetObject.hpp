@@ -150,6 +150,7 @@ public:
   /// Access back to the property grid that owns us.
   PropertyView* mGrid;
 
+  String GetExpandId();
   static HashSet<String> mExpandedTypes;
 };
 

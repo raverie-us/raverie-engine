@@ -80,6 +80,9 @@ extern const String cNetProperty;
 // Inside an Event dispatched over the network, this integer will be automatically filled with
 // the sending NetPeer's NetPeerId.
 extern const String cNetPeerId;
+// Used to group properties in the property view. Must have a single string attribute parameter
+// which is the name of the group.
+extern const String cGroup;
 
 }//namespace PropertyFlags
 

@@ -48,6 +48,12 @@ void ObjectPropertyNode::ReleaseHandles()
     childNode->ReleaseHandles();
 }
 
+//******************************************************************************
+bool ObjectPropertyNode::IsPropertyGroup()
+{
+  return !mPropertyGroupName.Empty();
+}
+
 //--------------------------------------------------------------- Property State
 //******************************************************************************
 PropertyState::PropertyState()
@@ -139,6 +145,24 @@ HandleOf<MetaArray> PropertyInterface::GetMetaArray(BoundType* objectType)
   return nullptr;
 }
 
+void AddProperty(Property* property, ObjectPropertyNode* parent, HandleParam object, PropertyInterface* propertyInterface)
+{
+  if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
+  {
+    parent->mProperties.PushBack(new ObjectPropertyNode(parent, property));
+  }
+  else if (property->PropertyType->HasInherited<MetaPropertyEditor>())
+  {
+    parent->mProperties.PushBack(new ObjectPropertyNode(parent, property));
+  }
+  else
+  {
+    Handle propertyObject = property->GetValue(object).ToHandle();
+    if (propertyObject.IsNotNull())
+      parent->mProperties.PushBack(propertyInterface->BuildObjectTree(parent, propertyObject, property));
+  }
+}
+
 //******************************************************************************
 ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty)
 {
@@ -153,6 +177,9 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
   node->mComposition = GetMetaComposition(objectType);
   node->mMetaArray = GetMetaArray(objectType);
 
+  typedef ArrayMap<String, Array<Property*>*> FilteredPropertyMap;
+  FilteredPropertyMap filteredProperties;
+
   // Add properties to this node
   forRange(Property* property, objectType->GetProperties())
   {
@@ -164,21 +191,47 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
        property->HasAttribute(PropertyAttributes::cDisplay)  ||
        property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
     {
-      if(EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
+      if(Attribute* attribute = property->HasAttribute(PropertyAttributes::cGroup))
       {
-        node->mProperties.PushBack(new ObjectPropertyNode(node, property));
+        // Must have a string attribute that's the group name
+        if (attribute->Parameters.Empty())
+          continue;
+
+        AttributeParameter& param = attribute->Parameters.Front();
+        if (param.Type != ConstantType::String)
+          continue;
+
+        // If there isn't already a group under this name, create one
+        Array<Property*>* propertyArray = filteredProperties.FindValue(param.StringValue, nullptr);
+        if(propertyArray == nullptr)
+        {
+          propertyArray = new Array<Property*>();
+          filteredProperties.Insert(param.StringValue, propertyArray);
+        }
+
+        propertyArray->PushBack(property);
+        continue;
       }
-      else if(property->PropertyType->HasInherited<MetaPropertyEditor>())
-      {
-        node->mProperties.PushBack(new ObjectPropertyNode(node, property));
-      }
-      else
-      {
-        Handle propertyObject = property->GetValue(object).ToHandle();
-        if(propertyObject.IsNotNull())
-          node->mProperties.PushBack(BuildObjectTree(node, propertyObject, property));
-      }
+
+      AddProperty(property, node, object, this);
     }
+  }
+
+  forRange(FilteredPropertyMap::value_type filteredGroup, filteredProperties.All())
+  {
+    String groupName = filteredGroup.first;
+    Array<Property*>* properties = filteredGroup.second;
+    
+    // Create a new node that all the properties can go under
+    ObjectPropertyNode* groupNode = new ObjectPropertyNode(node, object, objectProperty);
+    node->mContainedObjects.PushBack(groupNode);
+    groupNode->mPropertyGroupName = groupName;
+
+    // Add all properties
+    forRange(Property* property, properties->All())
+      AddProperty(property, groupNode, object, this);
+
+    delete properties;
   }
 
   // Add Methods with no parameters to this node
