@@ -889,6 +889,10 @@ namespace Zilch
 
     f = builder.AddBoundFunction(arrayType, "Insert", ArrayTemplate<T>::ArrayInsert, TwoParameters(core.IntegerType, "index", containedType, "value"), core.VoidType, FunctionOptions::None);
     f->ComplexUserData.WriteObject(arrayUserData);
+    f->AddAttribute(DeprecatedAttribute);
+
+    f = builder.AddBoundFunction(arrayType, "InsertBefore", ArrayTemplate<T>::ArrayInsert, TwoParameters(core.IntegerType, "index", containedType, "value"), core.VoidType, FunctionOptions::None);
+    f->ComplexUserData.WriteObject(arrayUserData);
 
     f = builder.AddBoundFunction(arrayType, "RemoveAt", ArrayTemplate<T>::ArrayRemoveAt, OneParameter(core.IntegerType, "index"), core.VoidType, FunctionOptions::None);
     f->ComplexUserData.WriteObject(arrayUserData);

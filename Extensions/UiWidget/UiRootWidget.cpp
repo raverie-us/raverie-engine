@@ -353,8 +353,21 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
     ++mMouseButtonDownCount;
     if(mouseOverWidget)
     {
-      if (mouseOverWidget->GetCanTakeFocus())
-        RootChangeFocus(mouseOverWidget);
+      UiWidget* focusWidget = mouseOverWidget;
+      do
+      {
+        if (focusWidget->GetCanTakeFocus())
+        {
+          RootChangeFocus(focusWidget);
+          break;
+        }
+        else
+        {
+          focusWidget = focusWidget->GetParentWidget();
+        }
+      }
+      while (focusWidget);
+
       mMouseDownWidget = mouseOverWidget;
     }
   }
