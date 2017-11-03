@@ -1066,7 +1066,8 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
       OsMouseEvent mouseEvent;
       FillMouseEventData(localPoint, MouseButtons::None, mouseEvent);
 
-      mouseEvent.ScrollMovement.x = HIWORD(wParam) / (float)WHEEL_DELTA;
+      int scrollAmount = GET_WHEEL_DELTA_WPARAM(wParam);
+      mouseEvent.ScrollMovement.x = scrollAmount / (float)WHEEL_DELTA;
 
 
       SendMouseEvent(mouseEvent, Events::OsMouseScroll);
