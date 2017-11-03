@@ -384,7 +384,7 @@ StringRange EditText::GetSelectedText()
   int selectionSizeInBytes = mSelectionRightPos - mSelectionLeftPos;
   if(mDisplayText.SizeInBytes() && selectionSizeInBytes > 0)
   {
-    return StringRange(mDisplayText.Begin() + mSelectionRightPos, mDisplayText.Begin() + mSelectionLeftPos);
+    return StringRange(mDisplayText.Begin() + mSelectionLeftPos, mDisplayText.Begin() + mSelectionRightPos);
   }
   else
   {
