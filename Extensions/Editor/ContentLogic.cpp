@@ -310,6 +310,7 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<TextureManager>("ZeroRoughness");
 
   ShowBuiltInResource<FontManager>("NotoSans-Bold");
+  ShowBuiltInResource<FontManager>("Inconsolata");
 
   ShowBuiltInResource<ColorGradientManager>("FadeIn");
   ShowBuiltInResource<ColorGradientManager>("FadeOut");
