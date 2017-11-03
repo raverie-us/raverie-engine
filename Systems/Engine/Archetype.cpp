@@ -377,8 +377,18 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog, StringParam newName,
     Archetype* newArchetype = new Archetype();
     newArchetype->Name = newName;
     
-    if(inheritedArchetype)
+    if (inheritedArchetype)
+    {
+      // We're making a new Archetype with the old Archetype as the base
       newArchetype->mBaseResourceIdName = inheritedArchetype->ResourceIdName;
+    }
+    else if (Archetype* oldArchetype = cog->GetArchetype())
+    {
+      // We want the new Archetype to be exactly the same as the old, so we need to copy over
+      // any modifications from the Archetype we're copying from
+      oldArchetype->GetLocalCachedModifications().ApplyModificationsToObject(cog);
+      newArchetype->mBaseResourceIdName = oldArchetype->mBaseResourceIdName;
+    }
 
     SaveToContent(cog, newArchetype, addResourceId);
 
