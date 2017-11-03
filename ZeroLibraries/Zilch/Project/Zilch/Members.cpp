@@ -131,6 +131,7 @@ namespace Zilch
     this->IntegerValue = 0;
     this->RealValue = 0.0;
     this->BooleanValue = false;
+    this->TypeValue = nullptr;
   }
   
   //***************************************************************************
@@ -161,6 +162,53 @@ namespace Zilch
   }
 
   //***************************************************************************
+  AttributeParameter::AttributeParameter()
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(StringParam value) : 
+    Constant(value)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(Integer value) :
+    Constant(value)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(DoubleInteger value) :
+    Constant(value)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(Real value) :
+    Constant(value)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(DoubleReal value) :
+    Constant(value)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(Boolean value) :
+    Constant(value)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(Zilch::Type* value) :
+    Constant(value)
+  {
+  }
+
+  //***************************************************************************
   Attribute::Attribute() :
     Owner(nullptr)
   {
@@ -181,6 +229,50 @@ namespace Zilch
     // If we got here, we didn't find the parameter
     return nullptr;
   }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(Integer value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(DoubleInteger value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(Real value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(DoubleReal value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(Boolean value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(Type* value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
 
   //***************************************************************************
   Attribute* Attribute::AddAttribute(StringParam name)
@@ -216,6 +308,7 @@ namespace Zilch
   {
     Attribute& attribute = this->Attributes.PushBack();
     attribute.Name = name;
+    attribute.Owner = this;
     return &attribute;
   }
 

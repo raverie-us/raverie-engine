@@ -54,6 +54,18 @@ bool ObjectPropertyNode::IsPropertyGroup()
   return !mPropertyGroupName.Empty();
 }
 
+//******************************************************************************
+ObjectPropertyNode* ObjectPropertyNode::FindChildGroup(StringRange groupName)
+{
+  forRange(ObjectPropertyNode* child, mContainedObjects.All())
+  {
+    if (child->mPropertyGroupName == groupName)
+      return child;
+  }
+
+  return nullptr;
+}
+
 //--------------------------------------------------------------- Property State
 //******************************************************************************
 PropertyState::PropertyState()
@@ -145,6 +157,7 @@ HandleOf<MetaArray> PropertyInterface::GetMetaArray(BoundType* objectType)
   return nullptr;
 }
 
+//******************************************************************************
 void AddProperty(Property* property, ObjectPropertyNode* parent, HandleParam object, PropertyInterface* propertyInterface)
 {
   if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
@@ -164,6 +177,27 @@ void AddProperty(Property* property, ObjectPropertyNode* parent, HandleParam obj
 }
 
 //******************************************************************************
+void AddGroup(ObjectPropertyNode* parentNode, StringRange groupPath, Property* property,
+              HandleParam object, Property* objectProperty, PropertyInterface* propertyInterface)
+{
+  StringTokenRange r = StringTokenRange(groupPath, '/');
+  String groupName = r.Front();
+
+  ObjectPropertyNode* groupNode = parentNode->FindChildGroup(groupName);
+  if(groupNode == nullptr)
+  {
+    groupNode = new ObjectPropertyNode(parentNode, object, objectProperty);
+    parentNode->mContainedObjects.PushBack(groupNode);
+    groupNode->mPropertyGroupName = groupName;
+  }
+
+  if (!r.internalRange.Empty())
+    AddGroup(groupNode, r.internalRange, property, object, objectProperty, propertyInterface);
+  else
+    AddProperty(property, groupNode, object, propertyInterface);
+}
+
+//******************************************************************************
 ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty)
 {
   ReturnIf(object.IsNull(), nullptr, "Invalid object.");
@@ -176,9 +210,6 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
   // Set the custom composition (if it exists)
   node->mComposition = GetMetaComposition(objectType);
   node->mMetaArray = GetMetaArray(objectType);
-
-  typedef ArrayMap<String, Array<Property*>*> FilteredPropertyMap;
-  FilteredPropertyMap filteredProperties;
 
   // Add properties to this node
   forRange(Property* property, objectType->GetProperties())
@@ -201,37 +232,12 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
         if (param.Type != ConstantType::String)
           continue;
 
-        // If there isn't already a group under this name, create one
-        Array<Property*>* propertyArray = filteredProperties.FindValue(param.StringValue, nullptr);
-        if(propertyArray == nullptr)
-        {
-          propertyArray = new Array<Property*>();
-          filteredProperties.Insert(param.StringValue, propertyArray);
-        }
-
-        propertyArray->PushBack(property);
+        AddGroup(node, param.StringValue, property, object, objectProperty, this);
         continue;
       }
 
       AddProperty(property, node, object, this);
     }
-  }
-
-  forRange(FilteredPropertyMap::value_type filteredGroup, filteredProperties.All())
-  {
-    String groupName = filteredGroup.first;
-    Array<Property*>* properties = filteredGroup.second;
-    
-    // Create a new node that all the properties can go under
-    ObjectPropertyNode* groupNode = new ObjectPropertyNode(node, object, objectProperty);
-    node->mContainedObjects.PushBack(groupNode);
-    groupNode->mPropertyGroupName = groupName;
-
-    // Add all properties
-    forRange(Property* property, properties->All())
-      AddProperty(property, groupNode, object, this);
-
-    delete properties;
   }
 
   // Add Methods with no parameters to this node

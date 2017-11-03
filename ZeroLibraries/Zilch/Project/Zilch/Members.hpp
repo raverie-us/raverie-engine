@@ -84,6 +84,17 @@ namespace Zilch
   class ZeroShared AttributeParameter : public Constant
   {
   public:
+    AttributeParameter();
+
+    // Helper constructors
+    AttributeParameter(StringParam value);
+    AttributeParameter(Integer value);
+    AttributeParameter(DoubleInteger value);
+    AttributeParameter(Real value);
+    AttributeParameter(DoubleReal value);
+    AttributeParameter(Boolean value);
+    AttributeParameter(Zilch::Type* value);
+
     // An optional name given to the parameter (if the user used name parameter calling)
     String Name;
   };
@@ -98,6 +109,14 @@ namespace Zilch
 
     // Checks to see if an attribute parameter exists (returns a pointer to the attribute parameter)
     AttributeParameter* HasAttributeParameter(StringParam name);
+
+    void AddParameter(StringParam value);
+    void AddParameter(Integer value);
+    void AddParameter(DoubleInteger value);
+    void AddParameter(Real value);
+    void AddParameter(DoubleReal value);
+    void AddParameter(Boolean value);
+    void AddParameter(Type* value);
 
     // The reflection object that owns this attribute
     ReflectionObject* Owner;

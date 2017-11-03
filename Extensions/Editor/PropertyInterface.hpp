@@ -36,6 +36,8 @@ struct ObjectPropertyNode
 
   bool IsPropertyGroup();
 
+  ObjectPropertyNode* FindChildGroup(StringRange groupName);
+
   ObjectPropertyNode* mParent;
 
   /// This object. This will be null for property nodes.
