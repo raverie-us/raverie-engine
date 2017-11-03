@@ -9,11 +9,90 @@
 namespace Zero
 {
 
-//------------------------------------------------------------------------------------------ Ui Rect
-const UiRect UiRect::cZero = UiRect::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
+//---------------------------------------------------------------------------------------- Thickness
+const Thickness Thickness::cZero(0, 0, 0, 0);
 
 //**************************************************************************************************
-ZilchDefineType(UiRect, builder, type)
+ZilchDefineType(Thickness, builder, type)
+{
+  type->CreatableInScript = true;
+
+  ZilchBindDestructor();
+  ZilchBindConstructor(float, float, float, float);
+  ZilchBindConstructor(Vec4);
+  ZilchBindConstructor(float, float);
+  ZilchBindConstructor(Vec2);
+
+  ZilchBindMethod(All);
+
+  ZilchBindFieldProperty(Left);
+  ZilchBindFieldProperty(Top);
+  ZilchBindFieldProperty(Right);
+  ZilchBindFieldProperty(Bottom);
+  ZilchBindFieldGetter(cZero);
+
+  ZilchBindMethod(Size);
+  ZilchBindMethod(TopLeft);
+}
+
+//**************************************************************************************************
+Thickness::Thickness()
+  : Left(0), Top(0), Right(0), Bottom(0)
+{
+
+}
+
+//**************************************************************************************************
+Thickness::Thickness(float splat)
+  : Left(splat), Top(splat), Right(splat), Bottom(splat)
+{
+}
+
+//**************************************************************************************************
+Thickness::Thickness(float left, float top, float right, float bottom)
+  : Left(left), Top(top), Right(right), Bottom(bottom)
+{
+
+}
+
+//**************************************************************************************************
+Thickness::Thickness(Vec4 vector)
+  : Left(vector.x), Top(vector.y), Right(vector.z), Bottom(vector.w)
+{
+
+}
+
+//**************************************************************************************************
+Thickness::Thickness(float leftRight, float topBottom)
+  : Left(leftRight), Top(topBottom), Right(leftRight), Bottom(topBottom)
+{
+
+}
+
+//**************************************************************************************************
+Thickness::Thickness(Vec2 vector)
+  : Left(vector.x), Top(vector.y), Right(vector.x), Bottom(vector.y)
+{
+
+}
+
+//**************************************************************************************************
+Thickness Thickness::All(float amount)
+{
+  return Thickness(amount, amount, amount, amount);
+}
+
+//**************************************************************************************************
+Thickness Thickness::operator+(const Thickness& rhs)
+{
+  return Thickness(Left + rhs.Left, Top + rhs.Top, Right + rhs.Right, Bottom + rhs.Bottom);
+}
+
+//------------------------------------------------------------------------------------------ Ui Rect
+const Rectangle Rectangle::cZero = Rectangle::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
+
+//**************************************************************************************************
+ZilchDefineType(Rectangle, builder, type)
 {
   type->CreatableInScript = true;
 
@@ -41,9 +120,9 @@ ZilchDefineType(UiRect, builder, type)
 }
 
 //**************************************************************************************************
-UiRect UiRect::PointAndSize(Vec2Param point, Vec2Param size)
+Rectangle Rectangle::PointAndSize(Vec2Param point, Vec2Param size)
 {
-  UiRect r;
+  Rectangle r;
   r.X = point.x;
   r.Y = point.y;
   r.SizeX = size.x;
@@ -52,11 +131,11 @@ UiRect UiRect::PointAndSize(Vec2Param point, Vec2Param size)
 }
 
 //**************************************************************************************************
-UiRect UiRect::CenterAndSize(Vec2Param point, Vec2Param size)
+Rectangle Rectangle::CenterAndSize(Vec2Param point, Vec2Param size)
 {
   Vec2 halfSize = size / 2.0f;
 
-  UiRect r;
+  Rectangle r;
   r.X = point.x - halfSize.x;
   r.Y = point.y - halfSize.y;
   r.SizeX = size.x;
@@ -65,9 +144,9 @@ UiRect UiRect::CenterAndSize(Vec2Param point, Vec2Param size)
 }
 
 //**************************************************************************************************
-UiRect UiRect::MinAndMax(Vec2Param min, Vec2Param max)
+Rectangle Rectangle::MinAndMax(Vec2Param min, Vec2Param max)
 {
-  UiRect r;
+  Rectangle r;
   r.X = min.x;
   r.Y = min.y;
   r.SizeX = (max.x - min.x);
@@ -76,7 +155,7 @@ UiRect UiRect::MinAndMax(Vec2Param min, Vec2Param max)
 }
 
 //**************************************************************************************************
-bool UiRect::operator==(UiRectParam rhs) const
+bool Rectangle::operator==(UiRectParam rhs) const
 {
   bool result = Math::Abs(X - rhs.X) < Math::Epsilon();
   result &= Math::Abs(Y - rhs.Y) < Math::Epsilon();
@@ -87,33 +166,33 @@ bool UiRect::operator==(UiRectParam rhs) const
 }
 
 //**************************************************************************************************
-Vec2 UiRect::GetTranslation() const
+Vec2 Rectangle::GetTranslation() const
 {
   return GetBottomLeft();
 }
 
 //**************************************************************************************************
-void UiRect::SetTranslation(Vec2Param translation)
+void Rectangle::SetTranslation(Vec2Param translation)
 {
   X = translation.x;
   Y = translation.y;
 }
 
 //**************************************************************************************************
-Vec2 UiRect::GetSize() const
+Vec2 Rectangle::GetSize() const
 {
   return Vec2(SizeX, SizeY);
 }
 
 //**************************************************************************************************
-void UiRect::SetSize(Vec2Param size)
+void Rectangle::SetSize(Vec2Param size)
 {
   SizeX = size.x;
   SizeY = size.y;
 }
 
 //**************************************************************************************************
-bool UiRect::Contains(Vec2Param point) const
+bool Rectangle::Contains(Vec2Param point) const
 {
   if (point.x < X) return false;
   if (point.x > X + SizeX) return false;
@@ -123,7 +202,7 @@ bool UiRect::Contains(Vec2Param point) const
 }
 
 //**************************************************************************************************
-bool UiRect::Overlap(UiRectParam other) const
+bool Rectangle::Overlap(UiRectParam other) const
 {
   bool noOverlap = (X > other.X + other.SizeX) ||
                    (Y > other.Y + other.SizeY) ||
@@ -134,7 +213,7 @@ bool UiRect::Overlap(UiRectParam other) const
 }
 
 //**************************************************************************************************
-void UiRect::RemoveThickness(const Thickness& thickness)
+void Rectangle::RemoveThickness(const Thickness& thickness)
 {
   X += thickness.Left;
   Y += thickness.Bottom;

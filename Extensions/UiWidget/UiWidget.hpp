@@ -182,7 +182,7 @@ public:
   void OnChildrenOrderChanged(Event* e);
 
   /// Returns the minimum size that this widget needs to be.
-  virtual Vec2 Measure(UiRect& data);
+  virtual Vec2 Measure(Rectangle& data);
 
   Vec2 GetMinSize();
 
@@ -200,27 +200,73 @@ public:
                       bool interactiveOnly = false);
   UiWidgetCastResultsRange CastRect(UiRectParam worldRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
 
-  /// Returns our local rect (in our parents space)
-  UiRect GetLocalRect();
+  /// Returns our rect relative to parent.
+  Rectangle GetLocalRectangle();
 
   /// Returns our world rect.
-  UiRect GetWorldRect();
+  Rectangle GetWorldRectangle();
 
   /// Active getter / setter.
   bool GetActive();
   void SetActive(bool state);
   
-  /// Translation getter / setter. Shortcut to the Translation Component.
+  /// Local Translation relative to parent.
   Vec2 GetLocalTranslation();
   void SetLocalTranslation(Vec2Param localTranslation);
+
+  /// Translation in world space.
   Vec2 GetWorldTranslation();
   void SetWorldTranslation(Vec2Param worldTranslation);
-  Vec2 WorldToLocal(Vec2Param worldPosition);
-  Vec2 LocalToWorld(Vec2Param localPosition);
+
+  /// Transforms a local point into world space.
+  Vec2 TransformPoint(Vec2Param localPosition);
+
+  /// Transforms a world point into this Widget's local space. Note, this is not the same space
+  /// as LocalTranslation. LocalTranslation is in this Widget's parent space.
+  Vec2 TransformPointInverse(Vec2Param worldPosition);
 
   /// Size getter / setter. This acts as a shortcut to the Area Component.
   Vec2 GetSize();
   void SetSize(Vec2Param size);
+
+  /// Top left relative to parent.
+  Vec2 GetLocalTopLeft();
+  void SetLocalTopLeft(Vec2Param localTopLeft);
+  Vec2 GetWorldTopLeft();
+  void SetWorldTopLeft(Vec2Param worldTopLeft);
+  Vec2 GetLocalTopRight();
+  void SetLocalTopRight(Vec2Param localTopRight);
+  Vec2 GetWorldTopRight();
+  void SetWorldTopRight(Vec2Param worldTopRight);
+  Vec2 GetLocalBottomLeft();
+  void SetLocalBottomLeft(Vec2Param localBottomLeft);
+  Vec2 GetWorldBottomLeft();
+  void SetWorldBottomLeft(Vec2Param worldBottomLeft);
+  Vec2 GetLocalBottomRight();
+  void SetLocalBottomRight(Vec2Param localBottomRight);
+  Vec2 GetWorldBottomRight();
+  void SetWorldBottomRight(Vec2Param worldBottomRight);
+  Vec2 GetLocalCenter();
+  void SetLocalCenter(Vec2Param localCenter);
+  Vec2 GetWorldCenter();
+  void SetWorldCenter(Vec2Param worldCenter);
+
+  float GetLocalTop();
+  void  SetLocalTop(float localTop);
+  float GetWorldTop();
+  void  SetWorldTop(float worldTop);
+  float GetLocalRight();
+  void  SetLocalRight(float localRight);
+  float GetWorldRight();
+  void  SetWorldRight(float worldRight);
+  float GetLocalBottom();
+  void  SetLocalBottom(float localBottom);
+  float GetWorldBottom();
+  void  SetWorldBottom(float worldBottom);
+  float GetLocalLeft();
+  void  SetLocalLeft(float localLeft);
+  float GetWorldLeft();
+  void  SetWorldLeft(float worldLeft);
 
   /// When the area changes, we want to mark ourselves as needing to be updated.
   void OnAreaChanged(Event* e);

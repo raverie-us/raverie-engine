@@ -26,10 +26,10 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   /// Returns the minimum size that this widget needs to be based on the children.
-  virtual Vec2 Measure(UiRect& rect) = 0;
+  virtual Vec2 Measure(Rectangle& rect) = 0;
   
   /// Update the translation and sizes of all children objects.
-  virtual Vec2 DoLayout(UiRect& rect, UiTransformUpdateEvent* e) = 0;
+  virtual Vec2 DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) = 0;
 
   /// Padding getter / setters for binding until we have Thickness binding.
   float GetPaddingLeft();
@@ -64,10 +64,10 @@ protected:
               Vec2Param areaPos, Vec2Param childSize, Vec2Ref childTranslation);
 
   /// Finds the maximum of all the minimum sizes of all child widgets.
-  Vec2 MaxMeasure(UiRect& rect);
+  Vec2 MaxMeasure(Rectangle& rect);
 
-  void ApplyPadding(Thickness& padding, UiRect& area);
-  void RemovePadding(Thickness& padding, UiRect& area);
+  void ApplyPadding(Thickness& padding, Rectangle& area);
+  void RemovePadding(Thickness& padding, Rectangle& area);
 
   //---------------------------------------------------------- Filtered Children
   /// Range for walking through all children that are in the layout.

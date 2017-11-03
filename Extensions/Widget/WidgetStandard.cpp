@@ -46,7 +46,6 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(DockLayout);
   ZilchInitializeType(RatioLayout);
   ZilchInitializeType(GridLayout);
-  ZilchInitializeType(Thickness);
   ZilchInitializeType(SizePolicies);
   ZilchInitializeType(Widget);
   ZilchInitializeType(Composite);

@@ -279,6 +279,9 @@ ZilchDefineStaticLibrary(EngineLibrary)
 
   ZilchInitializeType(CogInitializer);
 
+  ZilchInitializeType(Thickness);
+  ZilchInitializeType(Rectangle);
+
   ZilchInitializeType(LinkId);
   ZilchInitializeType(Named);
   ZilchInitializeType(EditorFlags);

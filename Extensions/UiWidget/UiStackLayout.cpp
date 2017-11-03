@@ -68,7 +68,7 @@ void UiStackLayout::Initialize(CogInitializer& initializer)
 }
 
 //******************************************************************************
-Vec2 UiStackLayout::Measure(UiRect& rect)
+Vec2 UiStackLayout::Measure(Rectangle& rect)
 {
   // Axis of Stacking 
   int stackAxis = GetAxis(mStackDirection);
@@ -100,7 +100,7 @@ Vec2 UiStackLayout::Measure(UiRect& rect)
 }
 
 //******************************************************************************
-Vec2 UiStackLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
+Vec2 UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if(mDebug)

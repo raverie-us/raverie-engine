@@ -68,6 +68,7 @@ private:
 
 }//namespace Zero
 
+#include "Rectangle.hpp"
 #include "Resource.hpp"
 #include "EngineBindingExtensions.hpp"
 #include "EngineObject.hpp"

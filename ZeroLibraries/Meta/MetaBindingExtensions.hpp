@@ -122,6 +122,7 @@ extern const String cInvalidTypeName;
 #define ZeroBindInterface(Type)  type->HasOrAdd<::Zero::CogComponentMeta>(type)->AddInterface(ZilchTypeId(Type))
 #define ZeroBindTag(Tag)         type->HasOrAdd<::Zero::CogComponentMeta>(type)->mTags.Insert(Tag)
 #define ZeroBindPropertyRename(oldName)  Add(new ::Zero::MetaPropertyRename(oldName))
+#define ZeroLocalModificationOverride() AddAttribute(::Zero::PropertyAttributes::cLocalModificationOverride)
 
 void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType);
 #define ZeroBindEvent(EventName, EventType)  BindEventSent(builder, type, (EventName), ZilchTypeId(EventType))

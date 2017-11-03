@@ -142,7 +142,7 @@ void UiLayout::CalculateAlignment(Axis::Type axis, uint alignment,
 }
 
 //******************************************************************************
-Vec2 UiLayout::MaxMeasure(UiRect& rect)
+Vec2 UiLayout::MaxMeasure(Rectangle& rect)
 {
   Vec2 neededSize = Vec2(0,0);
 
@@ -157,7 +157,7 @@ Vec2 UiLayout::MaxMeasure(UiRect& rect)
 }
 
 //******************************************************************************
-void UiLayout::ApplyPadding(Thickness& padding, UiRect& area)
+void UiLayout::ApplyPadding(Thickness& padding, Rectangle& area)
 {
   Vec2 padTopLeft = padding.TopLeft();
   Vec2 padSize = padding.Size();
@@ -168,7 +168,7 @@ void UiLayout::ApplyPadding(Thickness& padding, UiRect& area)
 }
 
 //******************************************************************************
-void UiLayout::RemovePadding(Thickness& padding, UiRect& area)
+void UiLayout::RemovePadding(Thickness& padding, Rectangle& area)
 {
   Vec2 padTopLeft = padding.TopLeft();
   Vec2 padSize = padding.Size();

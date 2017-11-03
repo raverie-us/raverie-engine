@@ -20,8 +20,8 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   /// UiLayout Interface.
-  Vec2 Measure(UiRect& rect) override;
-  Vec2 DoLayout(UiRect& rect, UiTransformUpdateEvent* e) override;
+  Vec2 Measure(Rectangle& rect) override;
+  Vec2 DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) override;
 };
 
 }//namespace Zero

@@ -68,7 +68,7 @@ ZilchDefineType(Area, builder, type)
   ZeroBindEvent(Events::AreaChanged, AreaEvent);
   ZeroBindDependency(Transform);
  
-  ZilchBindGetterSetterProperty(Origin)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(Origin)->ZeroLocalModificationOverride();
   ZilchBindGetter(TopLeft);
   ZilchBindGetter(TopCenter);
   ZilchBindGetter(TopRight);
@@ -78,7 +78,7 @@ ZilchDefineType(Area, builder, type)
   ZilchBindGetter(BottomLeft);
   ZilchBindGetter(BottomCenter);
   ZilchBindGetter(BottomRight);
-  ZilchBindGetterSetterProperty(Size)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(Size)->ZeroLocalModificationOverride();
 
   ZilchBindMethod(LocalOffsetOf);
 }

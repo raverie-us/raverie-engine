@@ -122,9 +122,9 @@ ZilchDefineType(Transform, builder, type)
   ZeroBindComponent();
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZilchBindGetterSetterProperty(Translation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Rotation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Scale)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(Translation)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(Rotation)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(Scale)->ZeroLocalModificationOverride();
   ZilchBindMethod(SetRotationBases);
 
   ZilchBindMethod(TransformNormal);

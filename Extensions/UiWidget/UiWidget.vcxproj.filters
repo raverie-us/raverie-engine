@@ -37,9 +37,6 @@
     <ClInclude Include="UiWidgetEvents.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="UiRect.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UiRootWidget.cpp">
@@ -67,8 +64,5 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="UiWidgetStandard.cpp" />
-    <ClCompile Include="UiRect.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

@@ -100,6 +100,7 @@
     <ClCompile Include="OsWindow.cpp" />
     <ClCompile Include="PropertyTrack.cpp" />
     <ClCompile Include="RaycastProvider.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="ResourcePropertyOperations.cpp" />
     <ClCompile Include="SampleCurve.cpp" />
     <ClCompile Include="Documentation.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Operation.hpp" />
     <ClInclude Include="OsWindow.hpp" />
     <ClInclude Include="PropertyTrack.hpp" />
+    <ClInclude Include="Rectangle.hpp" />
     <ClInclude Include="ResourceLoaderTemplates.hpp" />
     <ClInclude Include="HeightMap.hpp" />
     <ClInclude Include="JoystickSystem.hpp" />

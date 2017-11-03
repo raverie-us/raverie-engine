@@ -28,42 +28,6 @@ namespace SlicesIndex
 DeclareEnum3(VerticalAlignment, Top, Bottom, Center);
 DeclareEnum3(HorizontalAlignment, Left, Right, Center);
 
-//---------------------------------------------------------------------- Thickness
-struct Thickness
-{
-  ZilchDeclareType(TypeCopyMode::ValueType);
-
-  Thickness();
-  Thickness(float splat);
-
-  Thickness(float left, float top, float right, float bottom);
-  explicit Thickness(Vec4 vector);
-
-  Thickness(float leftRight, float topBottom);
-  explicit Thickness(Vec2 vector);
-
-  // Thickness equal to value in all directions
-  static Thickness All(float amount);
-
-  // Add Thickness
-  Thickness operator+(const Thickness& rhs);
-
-  float Left;
-  float Top;
-  float Right;
-  float Bottom;
-
-  Vec2 Size() const  {return Vec2(Width(), Height()); }
-  Vec2 TopLeft() const {return Vec2(Left, Top); }
-  Vec2 TopRight() const {return Vec2(Right, Top); }
-  Vec2 BottomLeft() const {return Vec2(Left, Bottom); }
-  Vec2 BottomRight() const {return Vec2(Right, Bottom); }
-  float Width() const {return Left + Right;}
-  float Height() const {return Top + Bottom;}
-
-  static const Thickness cZero;
-};
-
 //------------------------------------------------------------------------- Rect
 struct WidgetRect;
 typedef const WidgetRect& RectParam;

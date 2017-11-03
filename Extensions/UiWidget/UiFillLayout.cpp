@@ -24,13 +24,13 @@ void UiFillLayout::Initialize(CogInitializer& initializer)
 }
 
 //******************************************************************************
-Vec2 UiFillLayout::Measure(UiRect& rect)
+Vec2 UiFillLayout::Measure(Rectangle& rect)
 {
   return MaxMeasure(rect);
 }
 
 //******************************************************************************
-Vec2 UiFillLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
+Vec2 UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if (mDebug)
@@ -56,7 +56,7 @@ Vec2 UiFillLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
       continue;
 
     // Measure the child object
-    UiRect tempRect;
+    Rectangle tempRect;
     Vec2 childSize = child->Measure(tempRect);
 
     const Thickness& childMargins = child->GetMargins();
@@ -92,7 +92,7 @@ Vec2 UiFillLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
       CalculateAlignment(Axis::Y, child->GetVerticalAlignment(), size, pos, childSize, childPos);
     }
 
-    UiRect childRect = UiRect::PointAndSize(childPos, childSize);
+    Rectangle childRect = Rectangle::PointAndSize(childPos, childSize);
 
     childRect.RemoveThickness(childMargins);
 

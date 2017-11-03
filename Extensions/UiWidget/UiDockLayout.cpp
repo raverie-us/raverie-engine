@@ -32,13 +32,13 @@ void UiDockLayout::Serialize(Serializer& stream)
 }
 
 //******************************************************************************
-Vec2 UiDockLayout::Measure(UiRect& rect)
+Vec2 UiDockLayout::Measure(Rectangle& rect)
 {
   return MaxMeasure(rect);
 }
 
 //******************************************************************************
-Vec2 UiDockLayout::DoLayout(UiRect& rect, UiTransformUpdateEvent* e)
+Vec2 UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if (mDebug)

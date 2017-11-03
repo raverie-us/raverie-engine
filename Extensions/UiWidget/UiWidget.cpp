@@ -108,25 +108,51 @@ ZilchDefineType(UiWidget, builder, type)
   ZilchBindGetterSetterProperty(LocalTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(WorldTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Size)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+
+  ZilchBindGetterProperty(LocalRectangle);
+  ZilchBindGetterProperty(WorldRectangle);
+
+  ZilchBindGetterSetter(LocalTopLeft);
+  ZilchBindGetterSetter(WorldTopLeft);
+  ZilchBindGetterSetter(LocalTopRight);
+  ZilchBindGetterSetter(WorldTopRight);
+  ZilchBindGetterSetter(LocalBottomLeft);
+  ZilchBindGetterSetter(WorldBottomLeft);
+  ZilchBindGetterSetter(LocalBottomRight);
+  ZilchBindGetterSetter(WorldBottomRight);
+  ZilchBindGetterSetter(LocalCenter);
+  ZilchBindGetterSetter(WorldCenter);
+
+  ZilchBindGetterSetter(LocalTop);
+  ZilchBindGetterSetter(WorldTop);
+  ZilchBindGetterSetter(LocalRight);
+  ZilchBindGetterSetter(WorldRight);
+  ZilchBindGetterSetter(LocalBottom);
+  ZilchBindGetterSetter(WorldBottom);
+  ZilchBindGetterSetter(LocalLeft);
+  ZilchBindGetterSetter(WorldLeft);
+
   ZilchBindFieldProperty(mAbsoluteMinSize);
   ZilchBindFieldProperty(mLocalColor);
   ZilchBindFieldProperty(mHierarchyColor);
   ZilchBindGetterSetterProperty(ClipChildren);
-  ZilchBindGetterSetterProperty(InLayout)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(SizePolicyX)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(SizePolicyY)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindFieldProperty(mFlexSize)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterProperty(LocalRect);
-  ZilchBindGetterProperty(WorldRect);
-  ZilchBindGetterSetterProperty(VerticalAlignment)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(HorizontalAlignment)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(InLayout)->ZeroLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(MarginLeft)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(MarginTop)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(MarginRight)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(MarginBottom)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  static const String sLayoutGroup = "Layout";
 
-  ZilchBindGetterSetterProperty(DockMode)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(SizePolicyX)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(SizePolicyY)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindFieldProperty(mFlexSize)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+
+  ZilchBindGetterSetterProperty(VerticalAlignment)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(HorizontalAlignment)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+
+  ZilchBindGetterSetterProperty(MarginLeft)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(MarginTop)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(MarginRight)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(MarginBottom)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+
+  ZilchBindGetterSetterProperty(DockMode)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
   ZilchBindGetterSetterProperty(CanTakeFocus);
   ZilchBindGetter(MouseOver);
   ZilchBindGetter(MouseOverHierarchy);
@@ -141,8 +167,8 @@ ZilchDefineType(UiWidget, builder, type)
   ZilchBindMethod(LoseFocus);
   ZilchBindMethod(TabJump);
   ZilchBindMethod(TabJumpDirection);
-  ZilchBindMethod(WorldToLocal);
-  ZilchBindMethod(LocalToWorld);
+  ZilchBindMethod(TransformPoint);
+  ZilchBindMethod(TransformPointInverse);
   ZilchBindMethod(CastPoint);
   ZilchBindMethod(CastRect);
   ZilchBindMethod(UpdateTransform);
@@ -246,7 +272,7 @@ void UiWidget::OnChildrenOrderChanged(Event* e)
 }
 
 //**************************************************************************************************
-Vec2 UiWidget::Measure(UiRect& data)
+Vec2 UiWidget::Measure(Rectangle& data)
 {
   bool xFixed = (GetSizePolicyX() == UiSizePolicy::Fixed);
   bool yFixed = (GetSizePolicyY() == UiSizePolicy::Fixed);
@@ -285,7 +311,7 @@ Vec2 UiWidget::GetMinSize()
   {
     // We don't want to set the size because we want the layout to return
     // the minimum size it needs
-    UiRect defaultRect;
+    Rectangle defaultRect;
     return Math::Max(layout->Measure(defaultRect), mAbsoluteMinSize);
   }
 
@@ -338,7 +364,7 @@ UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool inter
     return nullptr;
 
   // Check whether or not the position is within our rect
-  UiRect worldRect = GetWorldRect();
+  Rectangle worldRect = GetWorldRectangle();
   bool within = worldRect.Contains(worldPoint);
 
   // If clipping is enabled on this Widget, we want to ignore any points
@@ -377,7 +403,7 @@ void CastRectInternal(UiWidget* widget, UiRectParam worldRect, UiWidget* ignore,
     return;
 
   // Check to see if the current widget overlaps with the given rect
-  UiRect currWorldRect = widget->GetWorldRect();
+  Rectangle currWorldRect = widget->GetWorldRectangle();
   if(currWorldRect.Overlap(worldRect))
     overlapping.PushBack(widget);
   // If clipping is enabled and we didn't overlap, don't recurse the children
@@ -399,15 +425,15 @@ UiWidgetCastResultsRange UiWidget::CastRect(UiRectParam worldRect, UiWidget* ign
 }
 
 //**************************************************************************************************
-UiRect UiWidget::GetLocalRect()
+Rectangle UiWidget::GetLocalRectangle()
 {
-  return UiRect::PointAndSize(GetLocalTranslation(), GetSize());
+  return Rectangle::PointAndSize(GetLocalTranslation(), GetSize());
 }
 
 //**************************************************************************************************
-UiRect UiWidget::GetWorldRect()
+Rectangle UiWidget::GetWorldRectangle()
 {
-  return UiRect::PointAndSize(GetWorldTranslation(), GetSize());
+  return Rectangle::PointAndSize(GetWorldTranslation(), GetSize());
 }
 
 //**************************************************************************************************
@@ -468,24 +494,26 @@ Vec2 UiWidget::GetWorldTranslation()
 //**************************************************************************************************
 void UiWidget::SetWorldTranslation(Vec2Param worldTranslation)
 {
-  Vec2 localTranslation = WorldToLocal(worldTranslation);
+  Vec2 localTranslation = worldTranslation;
+  if (mParent)
+    localTranslation = mParent->TransformPointInverse(worldTranslation);
 
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(this, "LocalTranslation", localTranslation);
 
   SetLocalTranslation(localTranslation);
 }
 
 //**************************************************************************************************
-Vec2 UiWidget::WorldToLocal(Vec2Param worldPosition)
+Vec2 UiWidget::TransformPoint(Vec2Param localPosition)
 {
-  return ToVector2(mTransform->TransformPointInverse(Vec3(worldPosition)));
+  return ToVector2(mTransform->TransformPoint(Vec3(localPosition)));
 }
 
 //**************************************************************************************************
-Vec2 UiWidget::LocalToWorld(Vec2Param localPosition)
+Vec2 UiWidget::TransformPointInverse(Vec2Param worldPosition)
 {
-  return ToVector2(mTransform->TransformPoint(Vec3(localPosition)));
+  return ToVector2(mTransform->TransformPointInverse(Vec3(worldPosition)));
 }
 
 //**************************************************************************************************
@@ -504,6 +532,246 @@ void UiWidget::SetSize(Vec2Param size)
 
   // We don't need to call MarkAsNeeds update as we will respond to the 
   // Events::AreaChanged event when setting the size on Area
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetLocalTopLeft()
+{
+  return GetLocalTranslation() + Vec2(0, GetSize().y);
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalTopLeft(Vec2Param localTopLeft)
+{
+  Vec2 translation = localTopLeft - Vec2(0, GetSize().y);
+  SetLocalTranslation(translation);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetWorldTopLeft()
+{
+  return GetWorldTranslation() + Vec2(0, GetSize().y);
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldTopLeft(Vec2Param worldTopLeft)
+{
+  Vec2 translation = worldTopLeft - Vec2(0, GetSize().y);
+  SetWorldTranslation(translation);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetLocalTopRight()
+{
+  return GetLocalTranslation() + GetSize();
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalTopRight(Vec2Param localTopRight)
+{
+  Vec2 translation = localTopRight - GetSize();
+  SetLocalTranslation(translation);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetWorldTopRight()
+{
+  return GetWorldTranslation() + GetSize();
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldTopRight(Vec2Param worldTopRight)
+{
+  Vec2 translation = worldTopRight - GetSize();
+  SetWorldTranslation(translation);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetLocalBottomLeft()
+{
+  return GetLocalTranslation();
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalBottomLeft(Vec2Param localBottomLeft)
+{
+  SetLocalTranslation(localBottomLeft);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetWorldBottomLeft()
+{
+  return GetWorldTranslation();
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldBottomLeft(Vec2Param worldBottomLeft)
+{
+  SetWorldTranslation(worldBottomLeft);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetLocalBottomRight()
+{
+  return GetLocalTranslation() + Vec2(GetSize().x, 0);
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalBottomRight(Vec2Param localBottomRight)
+{
+  Vec2 translation = localBottomRight - Vec2(GetSize().x, 0);
+  SetLocalTranslation(translation);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetWorldBottomRight()
+{
+  return GetWorldTranslation() + Vec2(GetSize().x, 0);
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldBottomRight(Vec2Param worldBottomRight)
+{
+  Vec2 translation = worldBottomRight - Vec2(GetSize().x, 0);
+  SetWorldTranslation(translation);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetLocalCenter()
+{
+  return GetLocalTranslation() + Snap(GetSize() * 0.5f, GetSnapSize());
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalCenter(Vec2Param localCenter)
+{
+  Vec2 translation = localCenter - GetSize() * 0.5f;
+  SetLocalTranslation(translation);
+}
+
+//**************************************************************************************************
+Vec2 UiWidget::GetWorldCenter()
+{
+  return GetWorldTranslation() + Snap(GetSize() * 0.5f, GetSnapSize());
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldCenter(Vec2Param worldCenter)
+{
+  Vec2 translation = worldCenter - GetSize() * 0.5f;
+  SetWorldTranslation(translation);
+}
+
+//**************************************************************************************************
+float UiWidget::GetLocalTop()
+{
+  return GetLocalTopRight().y;
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalTop(float localTop)
+{
+  Vec2 topRight = GetLocalTopRight();
+  topRight.y = localTop;
+  SetLocalTopRight(topRight);
+}
+
+//**************************************************************************************************
+float UiWidget::GetWorldTop()
+{
+  return GetWorldTopRight().y;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldTop(float worldTop)
+{
+  Vec2 topRight = GetWorldTopRight();
+  topRight.y = worldTop;
+  SetWorldTopRight(topRight);
+}
+
+//**************************************************************************************************
+float UiWidget::GetLocalRight()
+{
+  return GetLocalTopRight().x;
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalRight(float localRight)
+{
+  Vec2 topRight = GetLocalTopRight();
+  topRight.x = localRight;
+  SetLocalTopRight(topRight);
+}
+
+//**************************************************************************************************
+float UiWidget::GetWorldRight()
+{
+  return GetWorldTopRight().x;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldRight(float worldRight)
+{
+  Vec2 topRight = GetWorldTopRight();
+  topRight.x = worldRight;
+  SetWorldTopRight(topRight);
+}
+
+//**************************************************************************************************
+float UiWidget::GetLocalBottom()
+{
+  return GetLocalBottomLeft().y;
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalBottom(float localBottom)
+{
+  Vec2 bottomLeft = GetLocalBottomLeft();
+  bottomLeft.y = localBottom;
+  SetLocalBottomLeft(bottomLeft);
+}
+
+//**************************************************************************************************
+float UiWidget::GetWorldBottom()
+{
+  return GetWorldBottomLeft().y;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldBottom(float worldBottom)
+{
+  Vec2 bottomLeft = GetWorldBottomLeft();
+  bottomLeft.y = worldBottom;
+  SetWorldBottomLeft(bottomLeft);
+}
+
+//**************************************************************************************************
+float UiWidget::GetLocalLeft()
+{
+  return GetLocalBottomLeft().x;
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalLeft(float localLeft)
+{
+  Vec2 bottomLeft = GetLocalBottomLeft();
+  bottomLeft.x = localLeft;
+  SetLocalBottomLeft(bottomLeft);
+}
+
+//**************************************************************************************************
+float UiWidget::GetWorldLeft()
+{
+  return GetWorldBottomLeft().x;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldLeft(float worldLeft)
+{
+  Vec2 bottomLeft = GetWorldBottomLeft();
+  bottomLeft.x = worldLeft;
+  SetWorldBottomLeft(bottomLeft);
 }
 
 //**************************************************************************************************
@@ -578,7 +846,7 @@ void UiWidget::UpdateTransform(UiTransformUpdateEvent* e)
     // Update our layout if it exists
     if(UiLayout* layout = GetOwner()->has(UiLayout))
     {
-      UiRect layoutData = UiRect::PointAndSize(Vec2::cZero, GetSize());
+      Rectangle layoutData = Rectangle::PointAndSize(Vec2::cZero, GetSize());
       layout->DoLayout(layoutData, e);
     }
     else

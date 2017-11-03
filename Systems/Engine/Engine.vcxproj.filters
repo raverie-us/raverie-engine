@@ -377,6 +377,7 @@
     <ClCompile Include="ShortcutsDoc.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Rectangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.hpp">
@@ -678,6 +679,7 @@
     <ClInclude Include="ShortcutsDoc.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Rectangle.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertyTrack.inl">
