@@ -490,7 +490,7 @@ Vec3 SpriteText::GetCharacterPosition(int characterIndex)
   Vec2 widths = GetLocalWidths();
   Vec2 textStart = center + Vec2(-widths.x, widths.y);
 
-  characterIndex = Math::Clamp(characterIndex, 0, (int)mText.SizeInBytes());
+  characterIndex = Math::Clamp(characterIndex, 0, (int)mText.ComputeRuneCount());
 
   Vec2 size;
   if (Area* area = GetOwner()->has(Area))
