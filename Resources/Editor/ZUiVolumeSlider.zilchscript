@@ -46,7 +46,7 @@ class ZUiSlider : ZilchComponent
   {
     // Bring the mouse position into local space
     var mouseWorldPos = event.ToWorldZPlane(0);
-    var mousePosLocal = this.UiWidget.WorldToLocal(mouseWorldPos.XY);
+    var mousePosLocal = this.UiWidget.TransformPointInverse(mouseWorldPos.XY);
     
     var handle = this.Handle.UiWidget;
     var currHandlePos = handle.LocalTranslation;

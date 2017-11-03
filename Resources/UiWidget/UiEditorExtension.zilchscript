@@ -52,8 +52,7 @@ class UiEditorExtension : ZilchComponent
         
         var cog = this.Space.Create(archetype);
         cog.AttachTo(mouseOver);
-        var localPos = mouseOver.UiWidget.WorldToLocal(worldPos.XY);
-        cog.UiWidget.LocalTranslation = localPos;
+        cog.UiWidget.WorldBottomLeft = worldPos.XY;
         
         opQueue.ObjectCreated(cog);
         opQueue.EndBatch();
