@@ -334,7 +334,7 @@ void TilePaletteView::LoadPalette()
       entry.frame = CreateTilePaletteSprite(pair.second.GetSpriteResource(), pair.second.GetCollisionResource());
       entry.tile = pair.second;
       // Use defaults if a resource was removed
-      if (entry.tile.GetArchetypeResource())
+      if (entry.tile.GetArchetypeResource() == nullptr)
         entry.tile.ArchetypeResource = ArchetypeManager::Find(DefaultTileArchetype)->mResourceId;
       /* METAREFACTOR - The handle has "valid" data, but cannot be resolved (resource was removed)
       if (entry.tile.CollisionResource.IsNotNullAndCantResolve())
