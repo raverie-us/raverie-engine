@@ -126,6 +126,12 @@ void RemoveTextureJob::Execute()
   delete this;
 }
 
+void SetLazyShaderCompilationJob::Execute()
+{
+  Z::gRenderer->SetLazyShaderCompilation(this);
+  delete this;
+}
+
 AddShadersJob::AddShadersJob(RendererThreadJobQueue* jobQueue)
   : RepeatingJob(jobQueue)
   , mForceCompileBatchCount(0)

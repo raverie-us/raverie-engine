@@ -9,8 +9,6 @@ extern "C"
   _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 }
 
-const bool cLazyShaderCompilation = true;
-
 // temporary to prevent string constructions every frame
 // RenderQueue structures should have semantics for setting shader parameters
 namespace
@@ -716,6 +714,8 @@ OpenglRenderer::OpenglRenderer()
   //GLfloat maxAnisotropy;
   //glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
 
+  mLazyShaderCompilation = true;
+
   mActiveShader = 0;
   mActiveMaterial = 0;
   mActiveTexture = 0;
@@ -1032,9 +1032,14 @@ void OpenglRenderer::RemoveTexture(RemoveTextureJob* job)
   mTextureRenderDataToDestroy.PushBack((GlTextureRenderData*)job->mRenderData);
 }
 
+void OpenglRenderer::SetLazyShaderCompilation(SetLazyShaderCompilationJob* job)
+{
+  mLazyShaderCompilation = job->mLazyShaderCompilation;
+}
+
 void OpenglRenderer::AddShaders(AddShadersJob* job)
 {
-  if (cLazyShaderCompilation && job->mForceCompileBatchCount == 0)
+  if (mLazyShaderCompilation && job->mForceCompileBatchCount == 0)
   {
     forRange (ShaderEntry& entry, job->mShaders.All())
     {

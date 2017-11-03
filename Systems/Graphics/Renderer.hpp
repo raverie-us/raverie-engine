@@ -55,6 +55,7 @@ public:
   virtual void RemoveMesh(RemoveMeshJob* job) = 0;
   virtual void RemoveTexture(RemoveTextureJob* job) = 0;
 
+  virtual void SetLazyShaderCompilation(SetLazyShaderCompilationJob* job) {}
   virtual void AddShaders(AddShadersJob* job) = 0;
   virtual void RemoveShaders(RemoveShadersJob* job) = 0;
 

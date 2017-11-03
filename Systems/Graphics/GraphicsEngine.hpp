@@ -89,6 +89,7 @@ public:
   void RemoveMaterial(Material* material);
   void RemoveMesh(Mesh* mesh);
   void RemoveTexture(Texture* texture);
+  void SetLazyShaderCompilation(bool lazyShaderCompilation);
 
   void OnRenderGroupAdded(ResourceEvent* event);
   void OnRenderGroupRemoved(ResourceEvent* event);

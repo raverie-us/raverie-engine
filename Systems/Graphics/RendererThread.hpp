@@ -170,6 +170,14 @@ public:
   TextureRenderData* mRenderData;
 };
 
+class SetLazyShaderCompilationJob : public RendererJob
+{
+public:
+  void Execute() override;
+
+  bool mLazyShaderCompilation;
+};
+
 class AddShadersJob : public RepeatingJob
 {
 public:

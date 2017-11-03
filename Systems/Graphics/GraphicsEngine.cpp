@@ -623,6 +623,13 @@ void GraphicsEngine::RemoveTexture(Texture* texture)
   AddRendererJob(rendererJob);
 }
 
+void GraphicsEngine::SetLazyShaderCompilation(bool lazyShaderCompilation)
+{
+  SetLazyShaderCompilationJob* rendererJob = new SetLazyShaderCompilationJob();
+  rendererJob->mLazyShaderCompilation = lazyShaderCompilation;
+  AddRendererJob(rendererJob);
+}
+
 void GraphicsEngine::OnRenderGroupAdded(ResourceEvent* event)
 {
   mAddedRenderGroups.PushBack((RenderGroup*)event->EventResource);

@@ -67,6 +67,7 @@ public:
   void RemoveMesh(RemoveMeshJob* job) override;
   void RemoveTexture(RemoveTextureJob* job) override;
 
+  void SetLazyShaderCompilation(SetLazyShaderCompilationJob* job) override;
   void AddShaders(AddShadersJob* job) override;
   void RemoveShaders(RemoveShadersJob* job) override;
 
@@ -119,6 +120,8 @@ public:
 
   HashMap<ShaderKey, GlShader> mGlShaders;
   HashMap<ShaderKey, ShaderEntry> mShaderEntries;
+
+  bool mLazyShaderCompilation;
 
   GLuint mActiveShader;
   GLuint mActiveTexture;
