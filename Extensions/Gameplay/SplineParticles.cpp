@@ -144,7 +144,7 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt,
 
     // The curve always samples in world space, so bring the sample back into
     // local space
-    Vec3 startingPoint = trans->TransformPointInverse(sample.mWorldPoint);
+    Vec3 startingPoint = trans->TransformPointInverse(sample.mPoint);
     
     // Random velocity
     Vec3 velocity = mStartVelocity + gRandom.PointOnUnitSphere() * mRandomVelocity;
@@ -153,7 +153,7 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt,
     if(mTangentVelocity.LengthSq() > 0.0f || mEmitRadius > 0.0f)
     {
       // Generate the orthonormal basis from the local tangent
-      Vec3 tangent = trans->TransformNormalInverse(sample.mWorldTangent);
+      Vec3 tangent = trans->TransformNormalInverse(sample.mTangent);
       tangent.AttemptNormalize();
 
       Vec3 crossA, normal;
@@ -302,7 +302,7 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
   // Because of this, we first generate an orthonormal basis from the tangent
   // at the start of the curve, store its normal, and then use the newly
   // generated normal at each particle
-  Vec3 startTangent = spline->SampleDistance(0).mWorldTangent;
+  Vec3 startTangent = spline->SampleDistance(0).mTangent;
   startTangent = trans->TransformNormalInverse(startTangent);
 
   Vec3 crossA, previousNormal;
@@ -328,7 +328,7 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
     // The curve is in world space, so bring it into our local space
     // Bring the sample into our local space and transform back
     // depending on which mode we're in
-    Vec3 splineSample = trans->TransformPointInverse(sample.mWorldPoint);
+    Vec3 splineSample = trans->TransformPointInverse(sample.mPoint);
 
     if(mHelix)
     {
@@ -338,7 +338,7 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
       radians += mHelixOffset;
 
       // Bring the tangent into our local space
-      Vec3 tangent = trans->TransformNormalInverse(sample.mWorldTangent);
+      Vec3 tangent = trans->TransformNormalInverse(sample.mTangent);
 
       // Generate the spin vector
       Vec3 localSpin = GetSplineNormal(radians, &previousNormal, tangent);

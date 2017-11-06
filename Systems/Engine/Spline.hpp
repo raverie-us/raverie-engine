@@ -40,10 +40,10 @@ public:
   ZilchDeclareType(TypeCopyMode::ValueType);
 
   SplineControlPoint();
-  SplineControlPoint(Vec3Param worldPosition);
+  SplineControlPoint(Vec3Param position);
 
-  /// The world position of a control point
-  Vec3 mWorldPosition;
+  /// The position of a control point
+  Vec3 mPosition;
 };
 
 //-------------------------------------------------------------------SplineControlPoints
@@ -84,10 +84,10 @@ public:
   ZilchDeclareType(TypeCopyMode::ValueType);
 
   SplineBakedPoint();
-  SplineBakedPoint(Vec3Param worldPosition);
+  SplineBakedPoint(Vec3Param position);
 
-  /// The world position of a baked point
-  Vec3 mWorldPosition;
+  /// The position of a baked point
+  Vec3 mPosition;
 };
 
 //-------------------------------------------------------------------SplineBakedPoints
@@ -115,10 +115,10 @@ public:
 
   SplineSampleData();
 
-  /// The point on the curve in world space.
-  Vec3 mWorldPoint;
+  /// The point on the curve.
+  Vec3 mPoint;
   // The tangent of the curve (traveling forward) at the sampled point.
-  Vec3 mWorldTangent;
+  Vec3 mTangent;
 };
 
 //-------------------------------------------------------------------Spline
@@ -153,6 +153,8 @@ public:
   real GetTotalDistance();
   /// Samples the curve at a given arc-length distance.
   SplineSampleData SampleDistance(float distance);
+  /// Samples the curve with a time in the range of [0, 1].
+  SplineSampleData SampleNormalized(float time);
 
   /// Rebuild the baked points from the control points if they have changed. Should not need to be manually
   /// called unless the user wants to control the timing when the points are baked.

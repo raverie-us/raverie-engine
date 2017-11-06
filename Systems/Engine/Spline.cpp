@@ -19,6 +19,7 @@ DefineEvent(QuerySpline);
  //-------------------------------------------------------------------SplineEvent
 ZilchDefineType(SplineEvent, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindGetterSetterProperty(Spline);
   ZilchBindDefaultCopyDestructor();
   type->CreatableInScript = true;
@@ -38,21 +39,26 @@ void SplineEvent::SetSpline(Spline* spline)
 ZilchDefineType(SplineControlPoint, builder, type)
 {
   ZeroBindDocumented();
-  ZilchBindMember(mWorldPosition);
   ZilchBindDestructor();
   ZilchBindDefaultConstructor();
   ZilchBindConstructor(Vec3Param);
+
+  ZilchBindMember(mPosition);
   type->CreatableInScript = true;
+
+  Field* worldPosition = ZilchBindMemberAs(mPosition, "WorldPosition");
+  worldPosition->AddAttribute(DeprecatedAttribute);
+  worldPosition->Description = "This field is deprecated. Use Position instead.";
 }
 
 SplineControlPoint::SplineControlPoint()
 {
-  mWorldPosition = Vec3::cZero;
+  mPosition = Vec3::cZero;
 }
 
-SplineControlPoint::SplineControlPoint(Vec3Param worldPosition)
+SplineControlPoint::SplineControlPoint(Vec3Param position)
 {
-  mWorldPosition = worldPosition;
+  mPosition = position;
 }
 
 //-------------------------------------------------------------------SplineControlPoints
@@ -151,21 +157,26 @@ int SplineControlPoints::GetCount() const
 ZilchDefineType(SplineBakedPoint, builder, type)
 {
   ZeroBindDocumented();
-  ZilchBindMember(mWorldPosition);
   ZilchBindDestructor();
   ZilchBindDefaultConstructor();
   ZilchBindConstructor(Vec3Param);
   type->CreatableInScript = true;
+
+  ZilchBindMember(mPosition);
+
+  Field* worldPosition = ZilchBindMemberAs(mPosition, "WorldPosition");
+  worldPosition->AddAttribute(DeprecatedAttribute);
+  worldPosition->Description = "This field is deprecated. Use Position instead.";
 }
 
 SplineBakedPoint::SplineBakedPoint()
 {
-  mWorldPosition = Vec3::cZero;
+  mPosition = Vec3::cZero;
 }
 
-SplineBakedPoint::SplineBakedPoint(Vec3Param worldPosition)
+SplineBakedPoint::SplineBakedPoint(Vec3Param position)
 {
-  mWorldPosition = worldPosition;
+  mPosition = position;
 }
 
 //-------------------------------------------------------------------SplineBakedPoints
@@ -209,16 +220,25 @@ SplineBakedPoint SplineBakedPoints::Get(uint index) const
 //-------------------------------------------------------------------SplineSampleData
 ZilchDefineType(SplineSampleData, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindDestructor();
   ZilchBindDefaultConstructor();
   type->CreatableInScript = true;
-  ZilchBindMember(mWorldPoint);
-  ZilchBindMember(mWorldTangent);
+  ZilchBindMember(mPoint);
+  ZilchBindMember(mTangent);
+
+  Field* worldPoint = ZilchBindMemberAs(mPoint, "WorldPoint");
+  worldPoint->AddAttribute(DeprecatedAttribute);
+  worldPoint->Description = "This field is deprecated. Use Point instead.";
+
+  Field* worldTangent = ZilchBindMemberAs(mTangent, "WorldTangent");
+  worldTangent->AddAttribute(DeprecatedAttribute);
+  worldTangent->Description = "This field is deprecated. Use Tangent instead.";
 }
 
 SplineSampleData::SplineSampleData()
 {
-  mWorldTangent = mWorldTangent = Vec3::cZero;
+  mTangent = mTangent = Vec3::cZero;
 }
 
 //-------------------------------------------------------------------Spline
@@ -235,6 +255,7 @@ ZilchDefineType(Spline, builder, type)
 
   ZilchBindGetterProperty(TotalDistance);
   ZilchBindMethod(SampleDistance);
+  ZilchBindMethod(SampleNormalized);
   
   ZilchBindMethod(RebuildIfModified);
   ZilchBindMethod(ForceRebuild);
@@ -325,8 +346,13 @@ SplineSampleData Spline::SampleDistance(float distance)
   RebuildIfModified();
 
   SplineSampleData data;
-  data.mWorldPoint = mBakedCurve.SampleTable(distance, &data.mWorldTangent);
+  data.mPoint = mBakedCurve.SampleTable(distance, &data.mTangent);
   return data;
+}
+
+SplineSampleData Spline::SampleNormalized(float time)
+{
+  return SampleDistance(time * GetTotalDistance());
 }
 
 void Spline::RebuildIfModified()
@@ -343,7 +369,7 @@ void Spline::ForceRebuild()
   mCurve.Clear();
   Vec3Array controlPoints;
   for(size_t i = 0; i < mControlPoints.mControlPoints.Size(); ++i)
-    controlPoints.PushBack(mControlPoints.mControlPoints[i].mWorldPosition);
+    controlPoints.PushBack(mControlPoints.mControlPoints[i].mPosition);
   mCurve.AddControlPoints(controlPoints);
   mBakedCurve.Bake(mCurve, mError);
 
