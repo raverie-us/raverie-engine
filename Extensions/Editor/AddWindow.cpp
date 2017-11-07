@@ -1175,8 +1175,8 @@ void ResourceTemplateDisplay::OnCreate(Event*)
     ResourceEvent e;
     e.Manager = resource->GetManager();
     e.EventResource = resource;
-    resource->GetManager()->DispatchEvent(Events::ResourceModified, &e);
-    Z::gResources->DispatchEvent(Events::ResourceModified, &e);
+    resource->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
+    Z::gResources->DispatchEvent(Events::ResourceTagsModified, &e);
   }
 
   Z::gEditor->GetCenterWindow()->TryTakeFocus();
