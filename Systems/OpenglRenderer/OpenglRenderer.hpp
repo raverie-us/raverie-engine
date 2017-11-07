@@ -128,6 +128,7 @@ public:
   float mCurrentLineWidth;
   bool mClipMode;
   Vec4 mCurrentClip;
+  BlendSettings mCurrentBlendSettings;
 
   OsHandle mWindow;
   OsHandle mDeviceContext;

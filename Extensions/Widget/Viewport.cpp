@@ -301,6 +301,17 @@ void ViewportDisplay::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock,
 
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mViewport->mViewportTexture);
   frameBlock.mRenderQueues->AddStreamedQuad(viewNode, Vec3(0, 0, 0), Vec3(size, 0), Vec2(0, 0), Vec2(1, 1), color);
+
+  // override blend settings
+  FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
+
+  BlendSettings& blendSettings = frameBlock.mRenderQueues->mBlendSettingsOverrides.PushBack();
+  blendSettings.mBlendMode = BlendMode::Enabled;
+  blendSettings.mSourceFactor = BlendFactor::One;
+  blendSettings.mDestFactor = BlendFactor::InvSourceAlpha;
+
+  frameNode.mBlendSettingsOverride = true;
+  frameNode.mBlendSettingsIndex = frameBlock.mRenderQueues->mBlendSettingsOverrides.Size() - 1;
 }
 
 }//namespace Zero

@@ -136,6 +136,7 @@ Aabb Sprite::GetLocalAabb()
 void Sprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
 
@@ -605,6 +606,7 @@ void MultiSprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   Texture* atlas = (Texture*)entryData->mUtility;
 
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
 

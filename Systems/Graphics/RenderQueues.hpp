@@ -43,8 +43,11 @@ public:
 
   // temporary, needed by ui
   Vec4 mClip;
-  // temp, needed by gizmo debug draw
+  // temporary, needed by gizmo debug draw
   float mBorderThickness;
+  // temporary, needed for viewport blending
+  uint mBlendSettingsIndex;
+  bool mBlendSettingsOverride;
 };
 
 class ViewNode
@@ -124,6 +127,9 @@ public:
   uint mSkinningBufferVersion;
   Array<Mat4> mSkinningBuffer;
   Array<uint> mIndexRemapBuffer;
+
+  // temporary, needed for viewport blending
+  Array<BlendSettings> mBlendSettingsOverrides;
 
   /// This was for the old Ui system to add custom shader inputs. It's only set when rendering widgets.
   RenderTasks* mRenderTasks;

@@ -516,6 +516,7 @@ ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, R
   viewNode.mGraphicalEntry = nullptr;
 
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
   frameNode.mLocalToWorld = mWorldTx.Transposed();

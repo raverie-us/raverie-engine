@@ -34,6 +34,7 @@ Aabb Model::GetLocalAabb()
 void Model::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Static;
   frameNode.mCoreVertexType = CoreVertexType::Mesh;
 

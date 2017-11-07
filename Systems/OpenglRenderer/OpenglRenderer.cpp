@@ -478,6 +478,26 @@ GLuint GlCompareFunc(TextureCompareFunc::Enum value)
   }
 }
 
+void SetBlendSettings(const BlendSettings& blendSettings)
+{
+  switch (blendSettings.mBlendMode)
+  {
+    case BlendMode::Disabled:
+      glDisable(GL_BLEND);
+    break;
+    case BlendMode::Enabled:
+      glEnable(GL_BLEND);
+      glBlendEquation(GlBlendEquation(blendSettings.mBlendEquation));
+      glBlendFunc(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
+    break;
+    case BlendMode::Separate:
+      glEnable(GL_BLEND);
+      glBlendEquationSeparate(GlBlendEquation(blendSettings.mBlendEquation), GlBlendEquation(blendSettings.mBlendEquationAlpha));
+      glBlendFuncSeparate(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor), GlBlendFactor(blendSettings.mSourceFactorAlpha), GlBlendFactor(blendSettings.mDestFactorAlpha));
+    break;
+  }
+}
+
 void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBlend)
 {
   switch (renderSettings.mCullMode)
@@ -494,23 +514,7 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
 
   if (renderSettings.mSingleColorTarget || drawBuffersBlend == false)
   {
-    const BlendSettings& blendSettings = renderSettings.mBlendSettings[0];
-    switch (blendSettings.mBlendMode)
-    {
-      case BlendMode::Disabled:
-        glDisable(GL_BLEND);
-      break;
-      case BlendMode::Enabled:
-        glEnable(GL_BLEND);
-        glBlendEquation(GlBlendEquation(blendSettings.mBlendEquation));
-        glBlendFunc(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
-      break;
-      case BlendMode::Separate:
-        glEnable(GL_BLEND);
-        glBlendEquationSeparate(GlBlendEquation(blendSettings.mBlendEquation), GlBlendEquation(blendSettings.mBlendEquationAlpha));
-        glBlendFuncSeparate(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor), GlBlendFactor(blendSettings.mSourceFactorAlpha), GlBlendFactor(blendSettings.mDestFactorAlpha));
-      break;
-    }
+    SetBlendSettings(renderSettings.mBlendSettings[0]);
   }
   else
   {
@@ -1366,6 +1370,9 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
   SetRenderSettings(task->mRenderSettings, mDriverSupport.mMultiTargetBlend);
   mClipMode = task->mRenderSettings.mScissorMode == ScissorMode::Enabled;
 
+  // For easily resetting blend settings after overriding
+  mCurrentBlendSettings = task->mRenderSettings.mBlendSettings[0];
+
   SetRenderTargets(task->mRenderSettings);
 
   glViewport(0, 0, mViewportSize.x, mViewportSize.y);
@@ -1633,9 +1640,22 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
     mActiveMaterial = 0;
   }
 
+  if (frameNode.mBlendSettingsOverride)
+  {
+    // Only overrides for target 0, temporary functionality for viewports
+    mStreamedVertexBuffer.FlushBuffer(false);
+    SetBlendSettings(mRenderQueues->mBlendSettingsOverrides[frameNode.mBlendSettingsIndex]);
+  }
+
   uint vertexStart = viewNode.mStreamedVertexStart;
   uint vertexCount = viewNode.mStreamedVertexCount;
   mStreamedVertexBuffer.AddVertices(&mRenderQueues->mStreamedVertices[vertexStart], vertexCount, viewNode.mStreamedVertexType);
+
+  if (frameNode.mBlendSettingsOverride)
+  {
+    mStreamedVertexBuffer.FlushBuffer(false);
+    SetBlendSettings(mCurrentBlendSettings);
+  }
 }
 
 void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, StringParam name, void* data)

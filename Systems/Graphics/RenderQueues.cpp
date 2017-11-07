@@ -22,6 +22,8 @@ void RenderQueues::Clear()
 
   mSkinningBuffer.Clear();
   mIndexRemapBuffer.Clear();
+
+  mBlendSettingsOverrides.Clear();
 }
 
 void RenderQueues::AddStreamedLineRect(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
