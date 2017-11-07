@@ -443,6 +443,9 @@ void CompletedCompilation(BackgroundTask* task, Job* job)
 
 bool ZilchPluginSource::CheckIdeAndInformUser()
 {
+  if (GetResourceTemplate())
+    return false;
+
   if (IsIdeInstalled() == false)
   {
     DoNotifyWarning("Zilch Plugin", "No IDE was detected, you must first install a C++ IDE for your platform");
