@@ -953,12 +953,15 @@ void OpenglRenderer::AddTexture(AddTextureJob* job)
 
     BindTexture(job->mType, 0, renderData->mId, mDriverSupport.mSamplerObjects);
 
-    if (job->mImageData == nullptr)
+    // RenderTarget upload if data size is 0 (not calculated).
+    // A texture resource with uploaded data will never set data size to 0.
+    if (job->mTotalDataSize == 0)
     {
-      // RenderTarget upload if no data, rendering to cubemap is not implemented
+      // Rendering to cubemap is not implemented.
       glTexImage2D(GL_TEXTURE_2D, 0, glEnums.mInternalFormat, job->mWidth, job->mHeight, 0, glEnums.mFormat, glEnums.mType, nullptr);
     }
-    else
+    // Do not try to reallocate texture data if no new data is given.
+    else if (job->mImageData != nullptr)
     {
       for (uint i = 0; i < job->mMipCount; ++i)
       {
