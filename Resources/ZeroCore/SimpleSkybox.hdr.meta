@@ -1,6 +1,13 @@
 [Version:1]
 ImageContent 
 {
+	TextureInfo 
+	{
+		var FileType = "hdr"
+		var LoadFormat = "RGB32f"
+		var Dimensions = "128 x 128"
+		var Size = "0.125 MB"
+	}
 	TextureBuilder 
 	{
 		var Name = "SimpleSkybox"
@@ -14,12 +21,5 @@ ImageContent
 		var MipMapping = TextureMipMapping.PreGenerated
 		var PremultipliedAlpha = true
 		var GammaCorrection = true
-	}
-	TextureInfo 
-	{
-		var FileType = "hdr"
-		var LoadFormat = "RGB32f"
-		var Dimensions = "512 x 512"
-		var Size = "2.000 MB"
 	}
 }
