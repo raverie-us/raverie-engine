@@ -87,7 +87,7 @@ namespace Audio
     // We need to get close to a value that accounts for the sample rate and channels
     float checkValue = (float)BufferSizeMultiplier * outputSampleRate * outputChannels;
     // Continue multiplying by 2 until we get close enough (buffer must be multiple of 2)
-    while (!IsWithinLimit((float)size, checkValue, 1000.0f))
+    while (size < checkValue)
       size *= 2;
 
     OutputBufferSizePerLatency[LowLatency] = size;
