@@ -936,11 +936,11 @@ void HeightMap::LoadFromHeightMapSource(Serializer& stream)
   if (!space)
     return;
 
-  if (!mSource->mBuilder)
+  if (!mSource->GetBuilder())
     return;
 
   // Get the level that owns this resource
-  String resourceIdName = mSource->mBuilder->GetResourceOwner();
+  String resourceIdName = mSource->GetBuilder()->GetResourceOwner();
   LevelManager* levelManager = LevelManager::GetInstance();
   Resource* levelOwner = levelManager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
 
