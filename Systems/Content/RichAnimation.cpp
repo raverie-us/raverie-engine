@@ -199,9 +199,15 @@ void KeyFrame::SetTangents(Vec2Param tangentIn, Vec2Param tangentOut)
 //******************************************************************************
 Vec2 KeyFrame::GetGraphPosition()
 {
-  // This is only valid for float key frames
-  float value = mValue.Get<float>(GetOptions::AssertOnNull);
-  return Vec2(mTime, value);
+  Type* keyType = mValue.StoredType;
+  float y;
+  if (keyType->IsA(ZilchTypeId(float)))
+    y = mValue.Get<float>();
+  else if (keyType->IsA(ZilchTypeId(int)))
+    y = (float)mValue.Get<int>();
+  else if (keyType->IsA(ZilchTypeId(bool)))
+    y = (float)mValue.Get<bool>();
+  return Vec2(mTime, y);
 }
 
 //******************************************************************************
@@ -1289,12 +1295,11 @@ void TrackNode::BakePiecewiseFunction()
 
   forRange(KeyFrame* keyFrame, mKeyFrames.AllValues())
   {
-    float time = keyFrame->GetTime();
-    float value = keyFrame->GetValue().Get<float>();
+    Vec2 pos = keyFrame->GetGraphPosition();
     Vec2 tanIn = keyFrame->GetTangentIn();
     Vec2 tanOut = keyFrame->GetTangentOut();
 
-    mBakedCurve.AddControlPoint(Vec2(time, value), tanIn, tanOut);
+    mBakedCurve.AddControlPoint(pos, tanIn, tanOut);
   }
 
   mBakedCurve.Bake();

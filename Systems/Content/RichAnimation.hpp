@@ -96,7 +96,6 @@ public:
   Vec2 GetTangentOut();
   void SetTangents(Vec2Param tangentIn, Vec2Param tangentOut);
   
-  /// Only valid if the key frame type is float.
   Vec2 GetGraphPosition();
 
   /// The track that this key frame belongs to.

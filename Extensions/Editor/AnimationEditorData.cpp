@@ -151,8 +151,11 @@ void AnimationEditorData::SaveRichAnimation()
   // Save the rich animation
   if(Animation* animation = mAnimation)
   {
-    String file = animation->mContentItem->GetFullPath();
-    SaveToDataFile(*mRichAnimation, file);
+    if(animation != AnimationManager::GetDefault())
+    {
+      String file = animation->mContentItem->GetFullPath();
+      SaveToDataFile(*mRichAnimation, file);
+    }
   }
 }
 
