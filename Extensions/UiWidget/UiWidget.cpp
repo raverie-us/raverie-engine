@@ -208,10 +208,8 @@ void UiWidget::Initialize(CogInitializer& initializer)
 
   ConnectThisTo(GetOwner(), Events::AreaChanged, OnAreaChanged);
   ConnectThisTo(GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
-  ConnectThisTo(mTransform, Events::PropertyModified, OnTransformPropertyModified);
-  ConnectThisTo(mTransform, Events::PropertyModifiedIntermediate, OnTransformPropertyModified);
-  ConnectThisTo(mArea, Events::PropertyModified, OnAreaPropertyModified);
-  ConnectThisTo(mArea, Events::PropertyModifiedIntermediate, OnAreaPropertyModified);
+  ConnectThisTo(GetOwner(), Events::PropertyModified, OnPropertyModified);
+  ConnectThisTo(GetOwner(), Events::PropertyModifiedIntermediate, OnPropertyModified);
 
   // If we're dynamically added, we need to let our parent know that it needs
   // to update. Unfortunately, this means that when the Ui is created, the entire
@@ -1128,15 +1126,13 @@ void UiWidget::SetMarginBottom(float val)
 }
 
 //**************************************************************************************************
-void UiWidget::OnAreaPropertyModified(PropertyEvent* e)
+void UiWidget::OnPropertyModified(PropertyEvent* e)
 {
-  SetSize(mArea->GetSize());
-}
-
-//**************************************************************************************************
-void UiWidget::OnTransformPropertyModified(PropertyEvent* e)
-{
-  SetLocalTranslation(GetLocalTranslation());
+  BoundType* modifiedType = e->mObject.StoredType;
+  if(modifiedType->IsA(ZilchTypeId(Transform)))
+    SetLocalTranslation(GetLocalTranslation());
+  else if (modifiedType->IsA(ZilchTypeId(Area)))
+    SetSize(mArea->GetSize());
 }
 
 //**************************************************************************************************
