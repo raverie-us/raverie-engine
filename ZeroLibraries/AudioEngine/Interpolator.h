@@ -90,8 +90,6 @@ namespace Audio
     unsigned CurrentFrame;
     // The type of curve currently being used
     CurveTypes::Enum CurrentCurveType;
-    // The object used to handle custom curve data
-    CustomCurve CustomCurveObject;
     // A pointer to the function used to get values. Set according to curve type.
     float(*GetValue)(const float current, const float total, const float startValue, const float endValue);
   };
