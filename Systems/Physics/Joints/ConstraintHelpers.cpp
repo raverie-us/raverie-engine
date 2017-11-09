@@ -78,8 +78,13 @@ void GetMasses(RigidBody* body0, RigidBody* body1, JointMass& masses)
 
 void GetMasses(Collider* obj0, Collider* obj1, JointMass& masses)
 {
-  RigidBody* body0 = obj0->GetActiveBody();
-  RigidBody* body1 = obj1->GetActiveBody();
+  RigidBody* body0 = nullptr;
+  if(obj0 != nullptr)
+    body0 = obj0->GetActiveBody();
+
+  RigidBody* body1 = nullptr;
+  if(obj1 != nullptr)
+    body1 = obj1->GetActiveBody();
 
   GetMasses(body0, body1, masses);
 }
