@@ -128,14 +128,6 @@ extern const String cInvalidTypeName;
 void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType);
 #define ZeroBindEvent(EventName, EventType)  BindEventSent(builder, type, (EventName), ZilchTypeId(EventType))
 
-// Used for adding custom Ui to the property grid
-class MetaCustomUi : public ReferenceCountedEventObject
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  virtual void CreateUi(void* parentComposite, HandleParam object) = 0;
-};
-
 //------------------------------------------------------------------------------------------- Events
 namespace Events
 {
@@ -227,80 +219,7 @@ public:
   BoundType* mType;
 };
 
-class TemplateFilterBase
-{
-public:
-  virtual bool Filter(Member* prop, HandleParam instance) = 0;
-};
-
-template <typename ClassType, bool ClassType::* ClassMember>
-class TemplateFilterBool : public TemplateFilterBase
-{
-public:
-  bool Filter(Member* prop, HandleParam instance) override
-  {
-    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return pointer->*ClassMember;
-  }
-};
-
-template <typename ClassType, bool ClassType::* ClassMember>
-class TemplateFilterNotBool : public TemplateFilterBase
-{
-public:
-  bool Filter(Member* prop, HandleParam instance) override
-  {
-    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return !(pointer->*ClassMember);
-  }
-};
-
-template <typename ClassType, typename ValueType, ValueType ClassType::* ClassMember, ValueType Value>
-class TemplateFilterEquality : public TemplateFilterBase
-{
-public:
-  bool Filter(Member* prop, HandleParam instance) override
-  {
-    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return pointer->*ClassMember == Value;
-  }
-};
-
-class MetaPropertyFilter : public ReferenceCountedEventObject
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  virtual ~MetaPropertyFilter() {}
-
-  // Return false to hide the property
-  // (prop will be either a Property or Function with no parameters)
-  virtual bool Filter(Member* prop, HandleParam instance) = 0;
-};
-
-class MetaPropertyBasicFilter : public MetaPropertyFilter
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  MetaPropertyBasicFilter(TemplateFilterBase* filter = nullptr) : mActualFilter(filter) {}
-  ~MetaPropertyBasicFilter() { if (mActualFilter) delete mActualFilter; }
-
-  bool Filter(Member* prop, HandleParam instance)
-  {
-    return mActualFilter->Filter(prop, instance);
-  }
-
-  TemplateFilterBase* mActualFilter;
-};
-
-class MetaEditorGizmo : public ReferenceCountedEventObject
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  String mGizmoArchetype;
-};
-
+//------------------------------------------------------------------------------------- Meta Display
 class MetaDisplay : public ReferenceCountedEventObject
 {
 public:
@@ -310,6 +229,7 @@ public:
   virtual String GetDebugText(HandleParam object) = 0;
 };
 
+//-------------------------------------------------------------------------------- Type Name Display
 class TypeNameDisplay : public MetaDisplay
 {
 public:
@@ -319,6 +239,7 @@ public:
   String GetDebugText(HandleParam object) override;
 };
 
+//------------------------------------------------------------------------------ String Name Display
 class StringNameDisplay : public MetaDisplay
 {
 public:
@@ -331,16 +252,7 @@ public:
   String mString;
 };
 
-#define ZeroFilterBool(Member)                                      \
-  Add(new MetaPropertyBasicFilter(new TemplateFilterBool<ZilchSelf, &ZilchSelf::Member>()))
-
-#define ZeroFilterNotBool(Member)                                   \
-  Add(new MetaPropertyBasicFilter(new TemplateFilterNotBool<ZilchSelf, &ZilchSelf::Member>()))
-
-#define ZeroFilterEquality(Member, MemberType, ConstantValue)       \
-  Add(new MetaPropertyBasicFilter(new TemplateFilterEquality<ZilchSelf, MemberType, &ZilchSelf::Member, ConstantValue>()))
-
-//--------------------------------------------------------------- Meta Transform
+//-------------------------------------------------------------------------- Meta Transform Instance
 class MetaTransformInstance
 {
 public:
@@ -407,6 +319,7 @@ public:
 
 typedef MetaTransformInstance& MetaTransformParam;
 
+//----------------------------------------------------------------------------------- Meta Transform
 // Allows objects to have transform type properties without the limitation of
 // the object type being a Cog
 class MetaTransform : public ReferenceCountedEventObject

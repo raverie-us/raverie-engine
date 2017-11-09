@@ -261,23 +261,7 @@ void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam ev
   builder.AddSendsEvent(boundType, eventName, eventType);
 }
 
-ZilchDefineType(MetaCustomUi, builder, type)
-{
-}
-
 ZilchDefineType(MetaOperations, builder, type)
-{
-}
-
-ZilchDefineType(MetaPropertyFilter, builder, type)
-{
-}
-
-ZilchDefineType(MetaPropertyBasicFilter, builder, type)
-{
-}
-
-ZilchDefineType(MetaEditorGizmo, builder, type)
 {
 }
 

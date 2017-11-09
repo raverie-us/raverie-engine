@@ -22,23 +22,16 @@ public:
 //---------------------------------------------------------------------- Editor Indexed String Array
 typedef void (*GetStringsFunc)(HandleParam instance, Property* property, Array<String>& strings);
 extern const String StringArrayEdit;
+
 class EditorIndexedStringArray : public EditorPropertyExtension
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  ~EditorIndexedStringArray(){}
-
-  EditorIndexedStringArray(GetStringsFunc sourceArray)
-    : AccessSourceArray(sourceArray){};
+  EditorIndexedStringArray(GetStringsFunc sourceArray);
+  ~EditorIndexedStringArray() {}
   
-  void Enumerate(HandleParam instance, Property* property, Array<String>& strings)
-  {
-    if(AccessSourceArray)
-      AccessSourceArray(instance, property, strings);
-    else
-      strings = mFixedValues;
-  }
+  void Enumerate(HandleParam instance, Property* property, Array<String>& strings);
 
   // If the function pointer is present, it will be called
   // otherwise the array of values will be used
@@ -46,28 +39,17 @@ public:
   Array<String> mFixedValues;
 };
 
-
 //------------------------------------------------------------------------------------- Editor Range
 class EditorRange : public EditorPropertyExtension
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  EditorRange(float minValue, float maxValue, float increment);
+
   float MinValue;
   float MaxValue;
   float Increment;
-
-  //Takes a value between zero and one and returns the value
-  float NormalizedToValue(float n);
-
-  //Take the range value and converts it to between zero and one.
-  float NormalizeValue(float v);
-
-  EditorRange(float minValue, float maxValue, float increment)
-    : MinValue(minValue), MaxValue(maxValue), Increment(increment)
-  {
-
-  }
 };
 
 //------------------------------------------------------------------------------ EditorRotationBasis
@@ -79,20 +61,9 @@ class EditorRotationBasis : public EditorPropertyExtension
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  EditorRotationBasis()
-    : mGizmoName("EditorGizmo"), mIntData(0)
-  {
-  }
-
-  EditorRotationBasis(StringParam archetypeName)
-    : mArchetypeName(archetypeName), mGizmoName("EditorGizmo"), mIntData(0)
-  { 
-  }
-
-  EditorRotationBasis(StringParam archetypeName, StringParam gizmoName, int intData)
-    : mArchetypeName(archetypeName), mGizmoName(gizmoName), mIntData(intData)
-  {
-  }
+  EditorRotationBasis();
+  EditorRotationBasis(StringParam archetypeName);
+  EditorRotationBasis(StringParam archetypeName, StringParam gizmoName, int intData);
 
   int mIntData;
   String mGizmoName;
@@ -114,14 +85,108 @@ public:
   bool AllowNone;
   bool ForceCompact;
 
-  EditorResource(bool allowAdd = false, bool allowNone = false, StringParam filterTag = "",
-                 bool forceCompact = false)
-    : AllowAdd(allowAdd)
-    , AllowNone(allowNone)
-    , FilterTag(filterTag)
-    , ForceCompact(forceCompact)
+  EditorResource(bool allowAdd = false, bool allowNone = false,
+                 StringParam filterTag = "", bool forceCompact = false);
+};
+
+//----------------------------------------------------------------------------- Meta Property Filter
+class MetaPropertyFilter : public ReferenceCountedEventObject
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  virtual ~MetaPropertyFilter() {}
+
+  // Return false to hide the property
+  // (prop will be either a Property or Function with no parameters)
+  virtual bool Filter(Member* prop, HandleParam instance) = 0;
+};
+
+
+//----------------------------------------------------------------------------- Template Filter Base
+class TemplateFilterBase
+{
+public:
+  virtual bool Filter(Member* prop, HandleParam instance) = 0;
+};
+
+//----------------------------------------------------------------------------- Template Filter Bool
+template <typename ClassType, bool ClassType::* ClassMember>
+class TemplateFilterBool : public TemplateFilterBase
+{
+public:
+  bool Filter(Member* prop, HandleParam instance) override
   {
+    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
+    return pointer->*ClassMember;
   }
+};
+
+//------------------------------------------------------------------------- Template Filter Not Bool
+template <typename ClassType, bool ClassType::* ClassMember>
+class TemplateFilterNotBool : public TemplateFilterBase
+{
+public:
+  bool Filter(Member* prop, HandleParam instance) override
+  {
+    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
+    return !(pointer->*ClassMember);
+  }
+};
+
+//------------------------------------------------------------------------- Template Filter Equality
+template <typename ClassType, typename ValueType, ValueType ClassType::* ClassMember, ValueType Value>
+class TemplateFilterEquality : public TemplateFilterBase
+{
+public:
+  bool Filter(Member* prop, HandleParam instance) override
+  {
+    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
+    return pointer->*ClassMember == Value;
+  }
+};
+//----------------------------------------------------------------------- Meta Property Basic Filter
+class MetaPropertyBasicFilter : public MetaPropertyFilter
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  MetaPropertyBasicFilter(TemplateFilterBase* filter = nullptr) : mActualFilter(filter) {}
+  ~MetaPropertyBasicFilter() { if (mActualFilter) delete mActualFilter; }
+
+  bool Filter(Member* prop, HandleParam instance)
+  {
+    return mActualFilter->Filter(prop, instance);
+  }
+
+  TemplateFilterBase* mActualFilter;
+};
+
+//-------------------------------------------------------------------------------- Meta Editor Gizmo
+class MetaEditorGizmo : public ReferenceCountedEventObject
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  String mGizmoArchetype;
+};
+
+#define ZeroFilterBool(Member)                                      \
+  Add(new MetaPropertyBasicFilter(new TemplateFilterBool<ZilchSelf, &ZilchSelf::Member>()))
+
+#define ZeroFilterNotBool(Member)                                   \
+  Add(new MetaPropertyBasicFilter(new TemplateFilterNotBool<ZilchSelf, &ZilchSelf::Member>()))
+
+#define ZeroFilterEquality(Member, MemberType, ConstantValue)       \
+  Add(new MetaPropertyBasicFilter(new TemplateFilterEquality<ZilchSelf, MemberType, &ZilchSelf::Member, ConstantValue>()))
+
+//----------------------------------------------------------------------------------- Meta Custom Ui
+/// Used for adding custom Ui to the property grid. This is currently only for the old Ui and not
+/// exposed to script.
+class MetaCustomUi : public ReferenceCountedEventObject
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  virtual void CreateUi(void* parentComposite, HandleParam object) = 0;
 };
 
 }//namespace Zero
