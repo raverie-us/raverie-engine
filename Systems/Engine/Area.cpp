@@ -119,8 +119,11 @@ Location::Enum Area::GetOrigin()
 
 void Area::SetOrigin(Location::Enum origin)
 {
-  mOrigin = origin;
-  DoAreaChanged();
+  if(mOrigin != origin)
+  {
+    mOrigin = origin;
+    DoAreaChanged();
+  }
 }
 
 Vec2 Area::LocalOffsetOf(Location::Enum location)
