@@ -30,6 +30,7 @@ public:
   ZilchCompileEvent(HashSet<ResourceLibrary*>& modifiedLibraries);
 
   bool WasTypeModified(BoundType* type);
+  BoundType* GetReplacingType(BoundType* oldType);
 
   HashSet<ResourceLibrary*>& mModifiedLibraries;
 };

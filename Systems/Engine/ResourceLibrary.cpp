@@ -293,6 +293,38 @@ bool ResourceLibrary::BuiltType(BoundType* type)
 }
 
 //**************************************************************************************************
+BoundType* GetReplacingTypeFromSwapLibrary(SwapLibrary& swapLibrary, BoundType* oldType)
+{
+  LibraryRef sourceLib = oldType->SourceLibrary;
+
+  if (swapLibrary.mCurrentLibrary == sourceLib)
+  {
+    if (Library* pendingLibrary = swapLibrary.mPendingLibrary)
+      return pendingLibrary->BoundTypes.FindValue(oldType->Name, nullptr);
+  }
+
+  return nullptr;
+}
+
+//**************************************************************************************************
+BoundType* ResourceLibrary::GetReplacingType(BoundType* oldType)
+{
+  if (BoundType* newType = GetReplacingTypeFromSwapLibrary(mSwapScript, oldType))
+    return newType;
+
+  if (BoundType* newType = GetReplacingTypeFromSwapLibrary(mSwapFragment, oldType))
+    return newType;
+
+  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+  {
+    if (BoundType* newType = GetReplacingTypeFromSwapLibrary(swapPlugin, oldType))
+      return newType;
+  }
+
+  return nullptr;
+}
+
+//**************************************************************************************************
 bool ResourceLibrary::CanReference(ResourceLibrary* library)
 {
   // Make sure to check ourself before dependencies

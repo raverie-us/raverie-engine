@@ -13,10 +13,11 @@ namespace Events
 {
   DefineEvent(FactoryModified);
   DefineEvent(MetaModified);
+  DefineEvent(MetaRemoved);
   DefineEvent(ObjectStructureModified);
 }//namespace Events
 
-ZilchDefineType(MetaModifiedEvent, builder, type)
+ZilchDefineType(MetaLibraryEvent, builder, type)
 {
 
 }
@@ -102,7 +103,7 @@ void MetaDatabase::AddLibrary(LibraryParam library, bool sendModifiedEvent)
 
   if(sendModifiedEvent)
   {
-    MetaModifiedEvent e;
+    MetaLibraryEvent e;
     e.mLibrary = library;
     DispatchEvent(Events::MetaModified, &e);
   }
@@ -148,6 +149,10 @@ void MetaDatabase::RemoveLibrary(LibraryParam library)
 
   mRemovedLibraries.Append(library);
   mLibraries.EraseValue(library);
+
+  MetaLibraryEvent e;
+  e.mLibrary = library;
+  DispatchEvent(Events::MetaRemoved, &e);
 }
 
 //**************************************************************************************************

@@ -11,11 +11,12 @@ namespace Zero
 namespace Events
 {
   DeclareEvent(MetaModified);
+  DeclareEvent(MetaRemoved);
 }//namespace Events
 
 
  //---------------------------------------------------------------------------------- Meta Type Event
-class MetaModifiedEvent : public Event
+class MetaLibraryEvent : public Event
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);

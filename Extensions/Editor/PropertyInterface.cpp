@@ -259,7 +259,10 @@ void PropertyInterface::RestoreState(PropertyStateCapture& capture)
 {
   // Restore all objects the state
   forRange(PropertyStateCapture::CapturedProperty& captured, capture.Properties.All())
-    captured.Property->SetValue(captured.Object, captured.Value);
+  {
+    Handle object = captured.Object.GetHandle();
+    captured.Property.SetValue(object, captured.Value);
+  }
 }
 
 //******************************************************************************

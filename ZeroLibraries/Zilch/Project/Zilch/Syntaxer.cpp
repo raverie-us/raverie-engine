@@ -1263,6 +1263,9 @@ namespace Zilch
     BoundType* type = this->Builder->AddBoundType(node->Name.Token, TypeCopyMode::ValueType, sizeof(Integer), 0);
     node->Type = type;
 
+    // Mark this type as not being native
+    type->Native = false;
+
     // Use the comments as the class description
     String description = node->GetMergedComments();
     type->Description = description;
