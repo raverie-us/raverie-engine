@@ -331,11 +331,15 @@ namespace Zilch
 
   // Bind data members with an offset
   #define ZilchFullBindMember(ZilchBuilder, ZilchType, MemberName, Name, PropertyBinding)                                                           \
+  [&]()                                                                                                                                             \
+  {                                                                                                                                                 \
     ErrorIf(                                                                                                                                        \
       ZilchTypeId(ZilchTypeOf(ZilchSelf::MemberName))->GetCopyableSize() != sizeof(ZilchSelf::MemberName),                                          \
       "When binding a member the type must match the exact size it is expected to be in Zilch "                                                     \
       "(e.g. all reference types must be a Handle). Most likely you want ZilchBindField.");                                                         \
-    ZilchBuilder.AddBoundField(ZilchType, Name, ZilchTypeId(ZilchTypeOf(ZilchSelf::MemberName)), offsetof(ZilchSelf, MemberName), PropertyBinding)
+      return ZilchBuilder.AddBoundField(ZilchType, Name, ZilchTypeId(ZilchTypeOf(ZilchSelf::MemberName)),                                           \
+        offsetof(ZilchSelf, MemberName), PropertyBinding);                                                                                          \
+  }()
 
   // Bind a property (getter and setter in C++) to Zilch
   // A property will appear like a member, but it will invoke the getter when being read, and the setter when being written to
