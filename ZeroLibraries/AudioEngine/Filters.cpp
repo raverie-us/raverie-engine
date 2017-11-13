@@ -516,15 +516,16 @@ namespace Audio
   //************************************************************************************************
   Oscillator::Oscillator() :
     mReadIndex(0),
-    mIncrement(0), 
-    mNoteOn(false), 
+    mIncrement(0),
+    mNoteOn(false),
     mSampleRate(AudioSystemInternal::SystemSampleRate),
     mFrequency(1.0f),
-    mType(Noise), 
-    mPolarity(Bipolar)
+    mType(OscillatorTypes::Noise),
+    mPolarity(Bipolar),
+    mPositiveWavePercent(0.5f)
   {
-    mIncrement = 1024.0f * mFrequency / mSampleRate;
-    SetType(Sine);
+    mIncrement = ArraySize * mFrequency / (float)mSampleRate;
+    SetType(OscillatorTypes::Sine);
   }
 
   //************************************************************************************************
@@ -548,7 +549,7 @@ namespace Audio
     if (!mNoteOn)
       return 0.0f;
 
-    if (mType == Noise)
+    if (mType == OscillatorTypes::Noise)
       return RandomObject.FloatRange(-1.0f, 1.0f) * WAVE_VOLUME;
 
     int readIndexInt = (int)mReadIndex;
@@ -585,19 +586,19 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void Oscillator::SetType(const Types newType)
+  void Oscillator::SetType(const OscillatorTypes::Enum newType)
   {
     if (newType == mType)
       return;
 
     mType = newType;
 
-    if (mType == Sine)
+    if (mType == OscillatorTypes::Sine)
     {
       for (int i = 0; i < ArraySize; ++i)
-        mWaveValues[i] = 0.99f * Math::Sin(((float)i / (float)ArraySize) * 2.0f * Math::cPi);
+        mWaveValues[i] = 0.99f * Math::Sin(((float)i / (float)ArraySize) * Math::cTwoPi);
     }
-    else if (mType == Saw)
+    else if (mType == OscillatorTypes::Saw)
     {
       int halfBuffer = ArraySize / 2;
       float sawtoothInc = 1.0f / halfBuffer;
@@ -609,18 +610,19 @@ namespace Audio
           mWaveValues[i] = ((i - halfBuffer - 1) * sawtoothInc - 1.0f);
       }
     }
-    else if (mType == Square)
+    else if (mType == OscillatorTypes::Square)
     {
-      int halfBuffer = ArraySize / 2;
+      int positiveSize = (int)(mPositiveWavePercent * ArraySize);
+
       for (int i = 0; i < ArraySize; ++i)
       {
-        if (i < halfBuffer)
+        if (i < positiveSize)
           mWaveValues[i] = 1.0f;
         else
           mWaveValues[i] = -1.0f;
       }
     }
-    else if (mType == Triangle)
+    else if (mType == OscillatorTypes::Triangle)
     {
       int halfBuffer = ArraySize / 2;
       int quarterBuffer = halfBuffer / 2;
@@ -640,6 +642,28 @@ namespace Audio
           mWaveValues[i] = (triangleIncRising * (i - threeQtrBuffer) - 1.0f);
       }
     }
+  }
+
+  //************************************************************************************************
+  void Oscillator::SetPositiveWavePct(const float percent)
+  {
+    mPositiveWavePercent = percent;
+
+    // If necessary, re-create the wave data
+    if (mType == OscillatorTypes::Square)
+    {
+      int positiveSize = (int)(mPositiveWavePercent * ArraySize);
+
+      for (int i = 0; i < ArraySize; ++i)
+      {
+        if (i < positiveSize)
+          mWaveValues[i] = 1.0f;
+        else
+          mWaveValues[i] = -1.0f;
+      }
+    }
+
+    int a = 1;
   }
 
   //------------------------------------------------------------------------------------- Delay Line

@@ -642,7 +642,7 @@ namespace Audio
     else
     {
       forRange(Data* data, FiltersPerListener.Values())
-        data->LFO->SetType((Oscillator::Types)type);
+        data->LFO->SetType(type);
     }
   }
 
@@ -843,7 +843,7 @@ namespace Audio
     else
     {
       forRange(Data* data, FiltersPerListener.Values())
-        data->LFO->SetType((Oscillator::Types)type);
+        data->LFO->SetType(type);
     }
   }
 

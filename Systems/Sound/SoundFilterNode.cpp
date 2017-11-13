@@ -511,6 +511,7 @@ ZilchDefineType(GeneratedWaveNode, builder, type)
   ZilchBindGetterSetter(WaveFrequency);
   ZilchBindGetterSetter(Volume);
   ZilchBindGetterSetter(Decibels);
+  ZilchBindGetterSetter(SquareWavePercent);
   ZilchBindMethod(Play);
   ZilchBindMethod(Stop);
   ZilchBindMethod(InterpolateVolume);
@@ -523,7 +524,8 @@ GeneratedWaveNode::GeneratedWaveNode() :
   mWaveType(SynthWaveType::SineWave),
   mWaveFrequency(440.0f), 
   mAsset(nullptr), 
-  mVolume(1.0f)
+  mVolume(1.0f),
+  mSquareWavePercent(100.0f)
 {
   CreateInstance(true);
 }
@@ -586,7 +588,7 @@ void GeneratedWaveNode::InterpolateWaveFrequency(float frequency, float time)
   mWaveFrequency = frequency;
 
   if (mAsset)
-    ((Audio::GeneratedWaveSoundAsset*)mAsset)->SetFrequency(frequency, time);
+    mAsset->SetFrequency(frequency, time);
 }
 
 //**************************************************************************************************
@@ -653,6 +655,21 @@ void GeneratedWaveNode::InterpolateDecibels(float decibels, float time)
 }
 
 //**************************************************************************************************
+float GeneratedWaveNode::GetSquareWavePercent()
+{
+  return mSquareWavePercent;
+}
+
+//**************************************************************************************************
+void GeneratedWaveNode::SetSquareWavePercent(float percentage)
+{
+  mSquareWavePercent = percentage;
+
+  if (mAsset)
+    mAsset->SetSquareWavePercent(percentage / 100.0f);
+}
+
+//**************************************************************************************************
 void GeneratedWaveNode::CreateAsset()
 {
   if (mAsset)
@@ -680,6 +697,8 @@ void GeneratedWaveNode::CreateAsset()
   }
 
   mAsset = new Audio::GeneratedWaveSoundAsset(waveType, mWaveFrequency, this);
+  if (mWaveType == SynthWaveType::SquareWave)
+    mAsset->SetSquareWavePercent(mSquareWavePercent / 100.0f);
 }
 
 //**************************************************************************************************

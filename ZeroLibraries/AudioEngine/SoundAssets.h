@@ -70,9 +70,9 @@ namespace Audio
     virtual bool GetStreaming() = 0;
     // Returns true if another instance can be added to this asset
     // Called from AddReference
-    virtual bool OkayToAddInstance() = 0;
+    virtual bool OkayToAddInstance() { return true; }
     // Called from ReleaseReference
-    virtual void RemoveInstance() = 0;
+    virtual void RemoveInstance() {}
     // Resets a streaming file back to the beginning
     virtual void ResetStreamingFile() {}
 
@@ -97,10 +97,6 @@ namespace Audio
     SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, const bool streaming,
       ExternalNodeInterface* externalInterface, const bool isThreaded = false);
 
-    // Returns the samples for the audio frame at the specified index
-    FrameData GetFrame(const unsigned frameIndex) override;
-    // Fills the provided buffer with samples, starting at the specified index
-    void GetBuffer(float* buffer, const unsigned frameIndex, const unsigned numberOfSamples) override;
     // The total number of audio frames in this asset's data
     unsigned GetNumberOfFrames() override;
     // Returns true if this asset is streaming
@@ -114,6 +110,17 @@ namespace Audio
         
   private:
     ~SoundAssetFromFile();
+
+    // Returns the samples for the audio frame at the specified index
+    FrameData GetFrame(const unsigned frameIndex) override;
+    // Fills the provided buffer with samples, starting at the specified index
+    void GetBuffer(float* buffer, const unsigned frameIndex, const unsigned numberOfSamples) override;
+    // Returns false if this is a streaming asset and there is already an instance associated with it
+    bool OkayToAddInstance() override;
+    // Resets the HasStreamingInstance variable
+    void RemoveInstance() override;
+    // Checks if there is a decoded packet to copy into the Samples buffer
+    void CheckForDecodedPacket();
 
     // If true, this is a streaming asset
     bool Streaming;
@@ -139,13 +146,6 @@ namespace Audio
     bool NeedSecondBuffer;
     // Used to check when to get a decoded packet
     unsigned IndexCheck;
-
-    // Returns false if this is a streaming asset and there is already an instance associated with it
-    bool OkayToAddInstance() override;
-    // Resets the HasStreamingInstance variable
-    void RemoveInstance() override;
-    // Checks if there is a decoded packet to copy into the Samples buffer
-    void CheckForDecodedPacket();
   };
 
 
@@ -157,10 +157,6 @@ namespace Audio
     GeneratedWaveSoundAsset(const OscillatorTypes::Enum waveType, const float frequency, 
       ExternalNodeInterface *extInt, const bool isThreaded = false);
 
-    // Returns the samples for the audio frame at the specified index
-    FrameData GetFrame(const unsigned frameIndex) override;
-    // Fills the provided buffer with samples, starting at the specified index
-    void GetBuffer(float* buffer, const unsigned frameIndex, const unsigned numberOfSamples) override;
     // Returns the number of channels in the audio data
     unsigned GetChannels() override { return 1; }
     // The total number of audio frames in this asset's data
@@ -171,19 +167,22 @@ namespace Audio
     float GetFrequency();
     // Sets the frequency of the generated wave, over a specified number of seconds
     void SetFrequency(const float frequency, const float time);
+    // If a square wave is chosen, set the percent (0 - 1.0) of the wave which will be positive
+    void SetSquareWavePercent(float percent);
 
   private:
     ~GeneratedWaveSoundAsset();
+
+    // Returns the samples for the audio frame at the specified index
+    FrameData GetFrame(const unsigned frameIndex) override;
+    // Fills the provided buffer with samples, starting at the specified index
+    void GetBuffer(float* buffer, const unsigned frameIndex, const unsigned numberOfSamples) override;
 
     Oscillator* WaveData;
     // The current wave frequency
     float Frequency;
     // Used to interpolate between two frequencies
     InterpolatingObject FrequencyInterpolator;
-
-    // Always true
-    bool OkayToAddInstance() override { return true; }
-    void RemoveInstance() override {}
   };
 }
 

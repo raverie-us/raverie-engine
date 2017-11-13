@@ -215,15 +215,6 @@ namespace Audio
 
     float GetNextSample();
 
-    enum Types
-    {
-      Sine = 0,
-      Saw,
-      Triangle,
-      Square,
-      Noise
-    };
-
     enum Polarities
     {
       Bipolar = 0,
@@ -231,13 +222,14 @@ namespace Audio
     };
 
     void SetFrequency(const float frequency);
-    void SetType(const Types type);
+    void SetType(const OscillatorTypes::Enum type);
     void SetPolarity(const Polarities polarity) { mPolarity = polarity; }
     void SetNoteOn(const bool isOn) { mNoteOn = isOn; }
+    void SetPositiveWavePct(const float percent);
 
   private:
     float mFrequency;
-    Types mType;
+    OscillatorTypes::Enum mType;
     Polarities mPolarity;
     unsigned mSampleRate;
     static const int ArraySize = 1024;
@@ -246,6 +238,7 @@ namespace Audio
     float mReadIndex;
     float mIncrement;
     bool mNoteOn;
+    float mPositiveWavePercent;
   };
 
   //------------------------------------------------------------------------------------- Delay Line

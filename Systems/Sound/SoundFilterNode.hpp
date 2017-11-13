@@ -203,12 +203,17 @@ public:
   /// Interpolates the Decibels property from its current value to the value passed in 
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateDecibels(float decibels, float interpolationTime);
+  /// The percentage of the square wave (from 0 to 100) which should be up. This will have no effect
+  /// if a different wave type is chosen.
+  float GetSquareWavePercent();
+  void SetSquareWavePercent(float percentage);
 
 private:
-  Audio::SoundAssetNode *mAsset;
+  Audio::GeneratedWaveSoundAsset *mAsset;
   SynthWaveType::Enum mWaveType;
   float mWaveFrequency;
   float mVolume;
+  float mSquareWavePercent;
 
   void CreateAsset();
   void ReleaseAsset();

@@ -194,6 +194,50 @@ namespace Audio
   }
 
   //************************************************************************************************
+  unsigned SoundAssetFromFile::GetNumberOfFrames()
+  {
+    return FrameCount;
+  }
+
+  //************************************************************************************************
+  bool SoundAssetFromFile::GetStreaming()
+  {
+    return Streaming;
+  }
+
+  //************************************************************************************************
+  void SoundAssetFromFile::ResetStreamingFile()
+  {
+    if (!Threaded)
+      return;
+
+    DecodedPacket packet;
+    while (Decoder->DecodedPacketQueue.Read(packet))
+    {
+
+    }
+
+    Decoder->ResetStream();
+
+    PreviousBufferSamples = 0;
+    NeedSecondBuffer = true;
+    memset(Samples, 0, sizeof(float) * FileEncoder::PacketFrames * Channels);
+    memset(NextStreamedSamples, 0, sizeof(float) * FileEncoder::PacketFrames * Channels);
+  }
+
+  //************************************************************************************************
+  float SoundAssetFromFile::GetLengthOfFile()
+  {
+    return FileLength;
+  }
+
+  //************************************************************************************************
+  unsigned SoundAssetFromFile::GetChannels()
+  {
+    return Channels;
+  }
+
+  //************************************************************************************************
   FrameData SoundAssetFromFile::GetFrame(const unsigned frameIndex)
   {
     if (!Threaded)
@@ -257,7 +301,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void SoundAssetFromFile::GetBuffer(float* buffer, const unsigned frameIndex, 
+  void SoundAssetFromFile::GetBuffer(float* buffer, const unsigned frameIndex,
     const unsigned numberOfSamples)
   {
     if (!Threaded)
@@ -293,50 +337,6 @@ namespace Audio
     // If the number of samples provided is less than what's requested, set the rest to zero
     if (samples < numberOfSamples)
       memset(buffer + samples, 0, (numberOfSamples - samples) * sizeof(float));
-  }
-
-  //************************************************************************************************
-  unsigned SoundAssetFromFile::GetNumberOfFrames()
-  {
-    return FrameCount;
-  }
-
-  //************************************************************************************************
-  bool SoundAssetFromFile::GetStreaming()
-  {
-    return Streaming;
-  }
-
-  //************************************************************************************************
-  void SoundAssetFromFile::ResetStreamingFile()
-  {
-    if (!Threaded)
-      return;
-
-    DecodedPacket packet;
-    while (Decoder->DecodedPacketQueue.Read(packet))
-    {
-
-    }
-
-    Decoder->ResetStream();
-
-    PreviousBufferSamples = 0;
-    NeedSecondBuffer = true;
-    memset(Samples, 0, sizeof(float) * FileEncoder::PacketFrames * Channels);
-    memset(NextStreamedSamples, 0, sizeof(float) * FileEncoder::PacketFrames * Channels);
-  }
-
-  //************************************************************************************************
-  float SoundAssetFromFile::GetLengthOfFile()
-  {
-    return FileLength;
-  }
-
-  //************************************************************************************************
-  unsigned SoundAssetFromFile::GetChannels()
-  {
-    return Channels;
   }
 
   //************************************************************************************************
@@ -457,7 +457,7 @@ namespace Audio
     else
     {
       WaveData = new Oscillator();
-      WaveData->SetType((Oscillator::Types)waveType);
+      WaveData->SetType(waveType);
       WaveData->SetFrequency(frequency);
       WaveData->SetNoteOn(true);
     }
@@ -470,37 +470,6 @@ namespace Audio
     {
       delete WaveData;
     }
-  }
-
-  //************************************************************************************************
-  FrameData GeneratedWaveSoundAsset::GetFrame(const unsigned frameIndex)
-  {
-    if (!Threaded)
-      return FrameData();
-
-    FrameData data;
-    data.HowManyChannels = 1;
-
-    data.Samples[0] = WaveData->GetNextSample() * WAVE_VOLUME;
-    
-    if (!FrequencyInterpolator.Finished())
-    {
-      Frequency = FrequencyInterpolator.NextValue();
-      WaveData->SetFrequency(Frequency);
-    }
-
-    return data;
-  }
-
-  //************************************************************************************************
-  void GeneratedWaveSoundAsset::GetBuffer(float* buffer, const unsigned frameIndex, 
-    const unsigned numberOfSamples)
-  {
-    if (!Threaded)
-      return;
-
-    for (unsigned i = 0; i < numberOfSamples; ++i)
-      buffer[i] = GetFrame(i).Samples[0];
   }
 
   //************************************************************************************************
@@ -542,6 +511,52 @@ namespace Audio
         FrequencyInterpolator.SetValues(Frequency, newFrequency,
           (unsigned)(time * AudioSystemInternal::SystemSampleRate));
     }
+  }
+
+  //************************************************************************************************
+  void GeneratedWaveSoundAsset::SetSquareWavePercent(float percent)
+  {
+    if (!Threaded)
+    {
+      if (ThreadedAsset)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&GeneratedWaveSoundAsset::SetSquareWavePercent,
+          (GeneratedWaveSoundAsset*)ThreadedAsset, percent));
+    }
+    else
+    {
+      WaveData->SetPositiveWavePct(percent);
+    }
+  }
+
+  //************************************************************************************************
+  FrameData GeneratedWaveSoundAsset::GetFrame(const unsigned frameIndex)
+  {
+    if (!Threaded)
+      return FrameData();
+
+    FrameData data;
+    data.HowManyChannels = 1;
+
+    data.Samples[0] = WaveData->GetNextSample() * WAVE_VOLUME;
+
+    if (!FrequencyInterpolator.Finished())
+    {
+      Frequency = FrequencyInterpolator.NextValue();
+      WaveData->SetFrequency(Frequency);
+    }
+
+    return data;
+  }
+
+  //************************************************************************************************
+  void GeneratedWaveSoundAsset::GetBuffer(float* buffer, const unsigned frameIndex,
+    const unsigned numberOfSamples)
+  {
+    if (!Threaded)
+      return;
+
+    for (unsigned i = 0; i < numberOfSamples; ++i)
+      buffer[i] = GetFrame(i).Samples[0];
   }
 
 }
