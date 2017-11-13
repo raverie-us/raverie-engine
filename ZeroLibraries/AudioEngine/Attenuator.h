@@ -90,6 +90,8 @@ namespace Audio
     float LowPassDistance;
     // Interpolator for low pass filter
     InterpolatingObject LowPassInterpolator;
+    // Highest cutoff frequency value used for the low pass filter
+    float LowPassCutoffStartValue;
   };
 
 

@@ -44,7 +44,7 @@ namespace Audio
       float LastSamples[MaxChannels];
       // Keeps track of the source frame index
       double PitchIndex;
-
+      // The fractional part of the previous buffers
       double BufferFraction;
     };
 

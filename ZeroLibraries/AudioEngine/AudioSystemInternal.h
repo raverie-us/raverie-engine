@@ -138,6 +138,8 @@ namespace Audio
     bool SendMicrophoneInputData;
     // The sample rate used by the audio engine for the output mix
     static const unsigned SystemSampleRate = 48000;
+    // The number of frames used to interpolate instant property changes
+    static const unsigned  PropertyChangeFrames = (unsigned)(48000 * 0.02f);
     
     AudioChannelsManager ChannelsManager;
     AudioInputOutput* AudioIO;

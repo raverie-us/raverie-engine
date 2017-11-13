@@ -217,7 +217,7 @@ namespace Audio
       {
         Data->Pausing = true;
         Data->FrameCount = 0;
-        Data->FramesToWait = (unsigned)(0.021f * AudioSystemInternal::SystemSampleRate);
+        Data->FramesToWait = AudioSystemInternal::PropertyChangeFrames + 10;
         ThreadedVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
         {
@@ -264,7 +264,7 @@ namespace Audio
     {
       Data->Stopping = true;
       Data->FrameCount = 0;
-      Data->FramesToWait = (unsigned)(0.025f * AudioSystemInternal::SystemSampleRate);
+      Data->FramesToWait = AudioSystemInternal::PropertyChangeFrames + 10;
       ThreadedVolumeModifier* mod = GetAvailableVolumeMod();
       if (mod)
         mod->Reset(1.0f, 0.0f, 0.02f, 0.0f, 0.0f, 0.0f);

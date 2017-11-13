@@ -16,7 +16,6 @@ namespace Audio
   {
   public:
     EmitterDataPerListener() :
-      PreviousTotalGain(0),
       PreviousGain1(0),
       PreviousGain2(0),
       PreviousRelativePosition(Math::Vec3(FLT_MAX, FLT_MAX, FLT_MAX)),
@@ -31,8 +30,6 @@ namespace Audio
     // Low pass filter for sounds behind listener
     LowPassFilter LowPass;
 
-    // Previous total attenuated volume from the last mix
-    float PreviousTotalGain;
     // Previous gain for speaker 1
     float PreviousGain1;
     // Previous gain for speaker 2 from the last mix
@@ -133,7 +130,7 @@ namespace Audio
       {
         Data->Pausing = true;
         Data->InterpolatingVolume = true;
-        Data->VolumeInterpolator.SetValues(1.0f, 0.0f, (unsigned)(0.02f * AudioSystemInternal::SystemSampleRate));
+        Data->VolumeInterpolator.SetValues(1.0f, 0.0f, AudioSystemInternal::PropertyChangeFrames);
       }
     }
   }
@@ -154,7 +151,7 @@ namespace Audio
         Data->Pausing = false;
         Data->InterpolatingVolume = true;
         Data->VolumeInterpolator.SetValues(Data->VolumeInterpolator.GetCurrentValue(), 1.0f, 
-          (unsigned)(0.02f * AudioSystemInternal::SystemSampleRate));
+          AudioSystemInternal::PropertyChangeFrames);
       }
     }
   }

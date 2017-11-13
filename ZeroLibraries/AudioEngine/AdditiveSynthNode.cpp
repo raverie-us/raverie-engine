@@ -260,9 +260,9 @@ namespace Audio
     memset(outputBuffer->Data(), 0, sizeof(float) * bufferSize);
 
     // Look at each MIDI note in the map
-    for (NotesMapType::valuerange allLists = CurrentNotes.Values(); !allLists.Empty(); allLists.PopFront())
+    forRange(NotesListType* notesList, CurrentNotes.Values())
     {
-      NotesListType& list = *allLists.Front();
+      NotesListType& list = *notesList;
       // Step through each current note at this frequency
       for (unsigned i = 0; i < list.Size(); ++i)
       {

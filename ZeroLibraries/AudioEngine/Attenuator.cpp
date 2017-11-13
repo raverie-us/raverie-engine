@@ -35,7 +35,8 @@ namespace Audio
     LowPassDistance(data.EndDistance / 2.0f),
     AttenEndDist(data.EndDistance), 
     MinimumVolume(data.MinimumVolume), 
-    Position(position)
+    Position(position),
+    LowPassCutoffStartValue(15000.0f)
   {
     if (!Threaded)
     {
@@ -57,7 +58,7 @@ namespace Audio
         DistanceInterpolator.SetCurve(curveType);
 
       // Set the low pass interpolator 
-      LowPassInterpolator.SetValues(15000.0f, 1000.0f, LowPassDistance);
+      LowPassInterpolator.SetValues(LowPassCutoffStartValue, 1000.0f, LowPassDistance);
     }
   }
 
@@ -150,7 +151,8 @@ namespace Audio
             (AttenuatorNode*)GetSiblingNode(), distance));
     }
     else
-      LowPassInterpolator.SetValues(15000.0f, LowPassInterpolator.GetEndValue(), AttenEndDist - distance);
+      LowPassInterpolator.SetValues(LowPassCutoffStartValue, LowPassInterpolator.GetEndValue(), 
+        AttenEndDist - distance);
   }
 
   //************************************************************************************************
@@ -163,7 +165,7 @@ namespace Audio
             (AttenuatorNode*)GetSiblingNode(), frequency));
     }
     else
-      LowPassInterpolator.SetValues(15000.0f, frequency, AttenEndDist - LowPassDistance);
+      LowPassInterpolator.SetValues(LowPassCutoffStartValue, frequency, AttenEndDist - LowPassDistance);
   }
 
   //************************************************************************************************
@@ -188,7 +190,7 @@ namespace Audio
 
     // Get the relative position with the listener
     Math::Vec3 relativePosition = listener->GetRelativePosition(Position);
-
+    // Save the distance value
     float distance = relativePosition.Length();
 
     // If we are outside the max distance and the minimum volume is zero, there is no audio
@@ -256,9 +258,10 @@ namespace Audio
     if (!Threaded)
       return 0;
 
-    float volume(1.0);
+    // If there are multiple listeners, the sounds they hear are added together
+    float volume = 0.0f;
     forRange(AttenuationPerListener* data, DataPerListener.Values())
-      volume *= data->PreviousVolume;
+      volume += data->PreviousVolume;
 
     return volume;
   }

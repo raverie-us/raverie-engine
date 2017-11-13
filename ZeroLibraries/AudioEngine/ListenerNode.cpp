@@ -192,7 +192,7 @@ namespace Audio
         ThreadedData->Deactivating = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          0.0f, (unsigned)(0.02f * AudioSystemInternal::SystemSampleRate));
+          0.0f, AudioSystemInternal::PropertyChangeFrames);
       }
       // If currently not active and setting to active
       else if ((!Active || ThreadedData->Deactivating) && active)
@@ -201,7 +201,7 @@ namespace Audio
         Active = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          1.0f, (unsigned)(0.02f * AudioSystemInternal::SystemSampleRate));
+          1.0f, AudioSystemInternal::PropertyChangeFrames);
       }
     }
   }

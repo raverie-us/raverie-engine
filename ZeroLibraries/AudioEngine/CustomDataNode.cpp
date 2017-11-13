@@ -127,10 +127,9 @@ namespace Audio
     if (!Threaded)
       return false;
 
-    // If no sample data, just reset buffer to zero and return
+    // If no sample data, check if we need to request more samples and return
     if (BufferList.Empty())
     {
-      memset(outputBuffer->Data(), 0, sizeof(float) * outputBuffer->Size());
       if (!WaitingForSamples)
       {
         WaitingForSamples = true;
