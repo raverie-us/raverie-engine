@@ -603,11 +603,11 @@ void TileMap::LoadFromTileMapSource(Serializer& stream)
   if (!space)
     return;
 
-  if (!mSource->mBuilder)
+  if (!mSource->GetBuilder())
     return;
 
   // Get the level that owns this resource
-  String resourceIdName = mSource->mBuilder->GetResourceOwner();
+  String resourceIdName = mSource->GetBuilder()->GetResourceOwner();
   LevelManager* levelManager = LevelManager::GetInstance();
   Resource* levelOwner = levelManager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
 
@@ -997,13 +997,13 @@ String TileMap::FormatTileError(TileStatus::Enum status, IntVec2 pos, Tile tile)
     case TileStatus::Valid: return String();
 
     case TileStatus::MissingArchetype:
-      error = String::Format("Could not resolve Archetype %s", tile.GetArchetypeResource()->Name);
+      error = String::Format("Could not resolve Archetype at position (%s)", ToString(pos).c_str());
     break;
     case TileStatus::MissingPhysicsMesh:
-      error = String::Format("Could not resolve PhysicsMesh %s", tile.GetCollisionResource()->Name);
+      error = String::Format("Could not resolve PhysicsMesh at position (%s)", ToString(pos).c_str());
     break;
     case TileStatus::MissingSpriteSource:
-      error = String::Format("Could not resolve SpriteSource %s", tile.GetSpriteResource()->Name);
+      error = String::Format("Could not resolve SpriteSource at position (%s)", ToString(pos).c_str());
     break;
     case TileStatus::ConflictMeshCollider:
       error = "Archetype has a collider component that is not of type 'MeshCollider'";

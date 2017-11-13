@@ -167,6 +167,11 @@ public:
   /// or plugins.
   bool BuiltType(BoundType* type);
 
+  /// If the given type was built in this library, it will attempt to find the type replacing it
+  /// in the pending libraries. It's usually only valid to call this function in response to 
+  /// the ZilchManager compile events before libraries are committed.
+  BoundType* GetReplacingType(BoundType* oldType);
+
   /// Can this library hold a reference to a resource in the given library. Checks
   /// library dependencies to see if the given library is in a dependent (parent).
   bool CanReference(ResourceLibrary* library);

@@ -219,6 +219,8 @@ PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam prope
   MetaOperation(object),
   mPropertyPath(property)
 {
+  ErrorIf(before.StoredType != after.StoredType, "Values are different types");
+
   MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>( );
   if(owner && owner->GetOwner(object).IsNotNull( ))
   {
@@ -239,6 +241,9 @@ PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam prope
   // can restore that state
   LocalModifications* modifications = LocalModifications::GetInstance();
   mPropertyWasModified = modifications->IsPropertyModified(object, property);
+
+  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaRemoved, OnMetaRemoved);
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPrePatch, OnScriptsCompiled);
 }
 
 //******************************************************************************
@@ -298,6 +303,57 @@ void PropertyOperation::UpdateValueAfter()
   mValueAfter = mPropertyPath.GetValue(instance);
 }
 
+//******************************************************************************
+void PropertyOperation::OnScriptsCompiled(ZilchCompileEvent* e)
+{
+  if (mValueBefore.IsNull() || mValueAfter.IsNull())
+    return;
+
+  BoundType* propertyType = Type::GetBoundType(mValueBefore.StoredType);
+  if(BoundType* newType = e->GetReplacingType(propertyType))
+  {
+    MetaSerialization* metaSerialize = newType->HasInherited<MetaSerialization>();
+    if(metaSerialize)
+    {
+      String stringBefore = mValueBefore.ToString();
+      String stringAfter = mValueAfter.ToString();
+
+      bool succeeded = true;
+      succeeded &= metaSerialize->ConvertFromString(stringBefore, mValueBefore);
+      succeeded &= metaSerialize->ConvertFromString(stringAfter, mValueAfter);
+
+      if(succeeded)
+        return;
+    }
+
+    mInvalidReason = "Could not convert enum value to updated enum type";
+  }
+  else
+  {
+    mInvalidReason = String::Format("The property type '%s' was removed", propertyType->Name.c_str());
+  }
+
+  // We can't update the values, so invalidate them
+  mValueBefore = Any();
+  mValueAfter = Any();
+}
+
+//******************************************************************************
+void PropertyOperation::OnMetaRemoved(MetaLibraryEvent* e)
+{
+  if (mValueBefore.IsNull() || mValueAfter.IsNull())
+    return;
+  
+  // If the property type was built in the library being removed, 
+  BoundType* propertyType = Type::GetBoundType(mValueBefore.StoredType);
+  if(propertyType->SourceLibrary == e->mLibrary)
+  {
+    mValueBefore = Any();
+    mValueAfter = Any();
+    mInvalidReason = String::Format("The property type '%s' was removed", propertyType->Name.c_str());
+  }
+}
+
 //---------------------------------------------------------- Component Operation
 //******************************************************************************
 AddRemoveComponentOperation::AddRemoveComponentOperation(HandleParam object,
@@ -327,6 +383,7 @@ AddRemoveComponentOperation::AddRemoveComponentOperation(HandleParam object,
   if(mode == ComponentOperation::Remove)
   {
     Handle component = composition->GetComponent(object, componentType);
+    mComponentHandle.SetObject(component);
     mRemovedObjectState = LocalModifications::GetInstance()->TakeObjectState(component);
   }
 }
@@ -459,6 +516,8 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
   bool ignoreDependencies = true;
   composition->AddComponent(object, componentInstance, (int)mComponentIndex, ignoreDependencies);
 
+  Handle component = composition->GetComponent(object, componentType);
+
   // Re-add the local modifications
   if (mRemovedObjectState)
   {
@@ -466,9 +525,10 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
     // was created before being added to the Cog, so it has a raw pointer in the handle data, not
     // a valid CogId. Now that it has been added to the Cog, lets get a new, proper handle to it.
     // This should change once we change Component handles.
-    Handle component = composition->GetComponent(object, componentType);
     modifications->RestoreObjectState(component, mRemovedObjectState);
   }
+
+  mComponentHandle.UpdateObject(component);
 
   ComponentAdded(object);
 }

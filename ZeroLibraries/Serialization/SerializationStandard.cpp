@@ -72,7 +72,6 @@ void SerializationLibrary::Initialize()
   ZilchTypeId(Mat3)->Add(new PrimitiveMetaSerialization<Mat3>());
   ZilchTypeId(Mat4)->Add(new PrimitiveMetaSerialization<Mat4>());
   ZilchTypeId(Quat)->Add(new PrimitiveMetaSerialization<Quat>());
-  ZilchTypeId(Enum)->Add(new EnumMetaSerialization());
 }
 
 //**************************************************************************************************

@@ -339,6 +339,10 @@ void NewProjectMenu::ValidateProjectCreation()
       highlightBuildBorder = true;
       SetInvalidProject("Please select a valid build version");
     }
+    else if (!validBuild)
+    {
+      mLauncher->mMainButton->SetEnabled(false);
+    }
   }
   else
   {

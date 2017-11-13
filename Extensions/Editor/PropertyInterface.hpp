@@ -95,8 +95,8 @@ struct PropertyStateCapture
 {
   struct CapturedProperty
   {
-    Property* Property;
-    Handle Object;
+    PropertyPath Property;
+    UndoHandle Object;
     Any Value;
   };
 

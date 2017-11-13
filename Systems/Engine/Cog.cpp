@@ -1577,9 +1577,13 @@ bool Cog::IsModifiedFromArchetype()
 //**************************************************************************************************
 void Cog::ClearArchetype()
 {
-  // Clear all modifications
-  LocalModifications* modifications = LocalModifications::GetInstance();
-  modifications->ClearModifications(this, true, false);
+  // To retain the correct state of any child Archetypes, we need to apply all modifications of our
+  // Archetype and any inherited Archetypes
+  mArchetype->GetAllCachedModifications().ApplyModificationsToObject(this);
+
+  // The modifications to us don't matter (our Archetype is being cleared), so clear ours but 
+  // retain the newly applied child Archetype modifications
+  ClearCogModifications(this, true);
 
   mArchetype = nullptr;
 }
@@ -1669,7 +1673,7 @@ void Cog::UploadToArchetype()
   // to the Archetype definition (such as reverting a property)
   if(InArchetypeDefinitionMode() == false)
   {
-    CachedModifications& archetypeModifications = archetype->GetAllCachedModifications();
+    CachedModifications& archetypeModifications = archetype->GetLocalCachedModifications();
     archetypeModifications.ApplyModificationsToObject(this, true);
   }
 

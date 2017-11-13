@@ -160,8 +160,7 @@ void GraphicsEngine::Update()
   mReturnJobQueue->TakeAllJobs(returnJobs);
   forRange (RendererJob* job, returnJobs.All())
   {
-    ReturnRendererJob* returnJob = (ReturnRendererJob*)job;
-    returnJob->ReturnExecute();
+    job->ReturnExecute();
   }
 
   ++mFrameCounter;
@@ -582,6 +581,7 @@ void GraphicsEngine::AddTexture(Texture* texture, bool subImage, uint xOffset, u
   rendererJob->mCompareFunc = texture->mCompareFunc;
   rendererJob->mAnisotropy = texture->mAnisotropy;
   rendererJob->mMipMapping = texture->mMipMapping;
+  rendererJob->mMaxMipOverride = texture->mMaxMipOverride;
 
   rendererJob->mSubImage = subImage;
   rendererJob->mXOffset = xOffset;
@@ -620,6 +620,13 @@ void GraphicsEngine::RemoveTexture(Texture* texture)
   RemoveTextureJob* rendererJob = new RemoveTextureJob();
   rendererJob->mRenderData = texture->mRenderData;
   texture->mRenderData = nullptr;
+  AddRendererJob(rendererJob);
+}
+
+void GraphicsEngine::SetLazyShaderCompilation(bool lazyShaderCompilation)
+{
+  SetLazyShaderCompilationJob* rendererJob = new SetLazyShaderCompilationJob();
+  rendererJob->mLazyShaderCompilation = lazyShaderCompilation;
   AddRendererJob(rendererJob);
 }
 
@@ -988,19 +995,23 @@ void GraphicsEngine::ClearRenderTargets()
 
 void GraphicsEngine::ForceCompileAllShaders()
 {
-  // METAREFACTOR Check how this was being used
-  //ShaderSet allShaders;
-  //allShaders.Append(mCompositeShaders.Values());
-  //allShaders.Append(mPostProcessShaders.Values());
-  //
-  //if(allShaders.Empty())
-  //  return;
-  //
-  //AddShadersJob* addShadersJob = new AddShadersJob();
-  //bool compiled = mShaderGenerator->BuildShadersLibrary(allShaders, mUniqueComposites, addShadersJob->mShaders);
-  //ErrorIf(!compiled, "Shaders did not compile after composition.");
-  //addShadersJob->mForceCompile = true;
-  //AddRendererJob(addShadersJob);
+  BlockingTaskEvent event("Compiling");
+  Z::gEngine->DispatchEvent(Events::BlockingTaskStart, &event);
+
+  ShaderSet allShaders;
+  allShaders.Append(mCompositeShaders.Values());
+  allShaders.Append(mPostProcessShaders.Values());
+  
+  if (allShaders.Empty())
+    return;
+  
+  AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
+  bool compiled = mShaderGenerator->BuildShaders(allShaders, mUniqueComposites, addShadersJob->mShaders);
+  ErrorIf(!compiled, "Shaders did not compile after composition.");
+
+  // Blocking task is ended in the return exectute of the job, mForceCompileBatchCount cannot be 0 here.
+  addShadersJob->mForceCompileBatchCount = 10;
+  AddRendererJob(addShadersJob);
 }
 
 void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type, StringParam name)
@@ -1292,10 +1303,9 @@ void GraphicsEngine::CompileShaders()
 
   if (shadersToCompile.Empty() == false)
   {
-    AddShadersJob* addShadersJob = new AddShadersJob();
+    AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
     bool compiled = mShaderGenerator->BuildShaders(shadersToCompile, mUniqueComposites, addShadersJob->mShaders);
     ErrorIf(!compiled, "Shaders did not compile after composition.");
-    addShadersJob->mForceCompile = false;
     AddRendererJob(addShadersJob);
   }
 }

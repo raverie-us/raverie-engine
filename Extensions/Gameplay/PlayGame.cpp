@@ -69,6 +69,7 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   // Pass window handle to initialize the graphics api
   Z::gEngine->has(GraphicsEngine)->CreateRenderer(mainWindow->GetWindowHandle());
   Z::gEngine->has(GraphicsEngine)->SetSplashscreenLoading();
+  Z::gEngine->has(GraphicsEngine)->SetLazyShaderCompilation(false);
 
   ZPrint("Loading resource packages...\n");
 

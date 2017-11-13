@@ -310,6 +310,7 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<TextureManager>("ZeroRoughness");
 
   ShowBuiltInResource<FontManager>("NotoSans-Bold");
+  ShowBuiltInResource<FontManager>("Inconsolata");
 
   ShowBuiltInResource<ColorGradientManager>("FadeIn");
   ShowBuiltInResource<ColorGradientManager>("FadeOut");
@@ -353,6 +354,7 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<SpriteSourceManager>("LightIcon");
   ShowBuiltInResource<SpriteSourceManager>("ParticleIcon");
   ShowBuiltInResource<SpriteSourceManager>("SelectIcon");
+  ShowBuiltInResource<SpriteSourceManager>("SoftCircle");
   ShowBuiltInResource<SpriteSourceManager>("Square");
   ShowBuiltInResource<SpriteSourceManager>("SquareBordered");
 

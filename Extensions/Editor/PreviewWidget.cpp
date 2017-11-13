@@ -220,7 +220,8 @@ PreviewImportance::Enum ResourcePreview::GetPreviewImportance(BoundType* resourc
   PreviewWidgetFactory::CellEditorMapType& creators = PreviewWidgetFactory::GetInstance()->Creators;
   PreviewWidgetCreator* createTileWidget = creators.FindPointer(resourceType->Name, nullptr);
 
-  ReturnIf(createTileWidget == nullptr, PreviewImportance::None, "Could not find creator");
+  if(createTileWidget == nullptr)
+    return PreviewImportance::None;
 
   return createTileWidget->Importance;
 }

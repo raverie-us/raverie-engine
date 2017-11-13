@@ -74,6 +74,12 @@ Operation* Operation::FindRoot()
   return root;
 }
 
+//******************************************************************************
+bool Operation::GetInvalid()
+{
+  return mInvalidReason.Empty() == false;
+}
+
 //------------------------------------------------------------------- Meta Proxy
 // Use the Operations heap for allocations
 //******************************************************************************

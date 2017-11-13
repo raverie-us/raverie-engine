@@ -16,6 +16,7 @@ class Operation;
 class OperationBatch;
 class OperationQueue;
 class PropertyOperation;
+class ZilchCompileEvent;
 
 //----------------------------------------------------------------------- Events
 namespace Events
@@ -65,10 +66,13 @@ public:
   /// Find the top most ancestor in an Operation hierarchy, if there is one.
   Operation* FindRoot();
 
+  bool GetInvalid();
+
   Operation* mParent;
 
   String mName;
   String mDescription;
+  String mInvalidReason;
 
 private:
   Operation(const Operation& rhs) {}

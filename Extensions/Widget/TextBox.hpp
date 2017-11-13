@@ -74,7 +74,8 @@ private:
   void OnKeyUp(KeyboardEvent* event);
   void OnFocusGained(Event*);
   void OnFocusLost(Event*);
-  
+  void OnLeftMouseDown(MouseEvent* event);
+
   bool mAllowEdit;
   
   Text* mHint;

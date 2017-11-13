@@ -939,9 +939,6 @@ void ClearArchetypeOperation::Redo()
     modifications->ChildAdded(parent->has(Hierarchy), childId);
   }
 
-  // The object no longer has any modifications
-  modifications->ClearModifications(cog, true, false);
-
   if(Space* space = cog->GetSpace())
   {
     space->ChangedObjects();

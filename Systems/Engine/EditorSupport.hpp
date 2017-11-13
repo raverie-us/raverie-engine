@@ -135,6 +135,7 @@ extern const String Default;
 extern const String Sprite;
 extern const String SpriteText;
 extern const String SpriteParticles;
+extern const String Spline;
 extern const String SplineParticleSystem;
 extern const String DirectionalLight;
 extern const String DirectionalLightShadows;

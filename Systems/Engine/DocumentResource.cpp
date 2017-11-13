@@ -440,8 +440,11 @@ void DocumentResource::UpdateContentItem(ContentItem* contentItem)
   // A content item has been assigned to this resource make sure it is
   // searchable and saves to the content item file.
   mContentItem = contentItem;
+
+  ResourceSystem::TextResourceMap& textResources = Z::gResources->TextResources;
+  textResources.Erase(LoadPath);
   LoadPath = contentItem->GetFullPath();
-  Z::gResources->TextResources.InsertNoOverwrite(LoadPath, mResourceId);
+  textResources.InsertNoOverwrite(LoadPath, mResourceId);
 }
 
 

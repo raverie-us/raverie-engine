@@ -27,6 +27,9 @@ void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
     // Add Resource.Find functions
     if(type->IsA(resourceType) && !type->HasAttribute(ObjectAttributes::cResourceInterface))
       AddResourceFind(builder, type);
+
+    if (type->IsEnumOrFlags())
+      type->Add(new EnumMetaSerialization(type));
   }
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
@@ -53,11 +56,15 @@ void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* use
   MetaLibraryExtensions::TypeParsedCallback(e, userData);
 
   BoundType* componentType = ZilchTypeId(Component);
+
   BoundType* boundType = e->Type;
 
   // @TrevorS: Is this necessary anymore? I believe HandleManagers are inherited.
   if(boundType->IsA(componentType))
     boundType->HandleManager = componentType->HandleManager;
+
+  if (boundType->IsEnumOrFlags())
+    boundType->Add(new EnumMetaSerialization(boundType));
 
   // Get the location of the resource so we can take the user to where the type is defined
   ZilchDocumentResource* resource = (ZilchDocumentResource*)e->Location->CodeUserData;
@@ -79,6 +86,8 @@ void EngineLibraryExtensions::FindProxiedTypeOrigin(BoundType* proxiedType)
   forRange(ResourceId textResourceId, Z::gResources->TextResources.Values())
   {
     DocumentResource* textResource = (DocumentResource*)Z::gResources->GetResource(textResourceId);
+    if(textResource == nullptr)
+      continue;
 
     Matches matches;
     regex.Search(textResource->LoadTextData(), matches);

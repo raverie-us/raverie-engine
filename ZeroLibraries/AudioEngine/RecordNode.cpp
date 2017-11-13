@@ -43,11 +43,18 @@ namespace Audio
     // Get input
     bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
 
-    // Move input to output buffer
-    InputSamples.Swap(*outputBuffer);
+    // If there is input data, move input to output buffer
+    if (isThereOutput)
+      InputSamples.Swap(*outputBuffer);
 
+    // If we are recording, not paused, this is the first time input was requested, and we still
+    // have a sibling node, create a task to write the data to the file
     if (Recording && !Paused && firstRequest && GetSiblingNode())
     {
+      // If there was no input data, set the buffer to zero
+      if (!isThereOutput)
+        memset(outputBuffer->Data(), 0, sizeof(float) * outputBuffer->Size());
+
       Zero::Array<float>* buffer = new Zero::Array<float>(*outputBuffer);
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&RecordNode::WriteBuffer,
         (RecordNode*)GetSiblingNode(), buffer, numberOfChannels));

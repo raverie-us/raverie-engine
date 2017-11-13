@@ -452,7 +452,7 @@ public:
     //Convert the list index to the enum index value
     uint enumIndex = mEnumIndexes[selectedIndex];
 
-    Any newValue = enumIndex;
+    Any newValue((byte*)&enumIndex, mProperty->PropertyType);
     CommitValue(newValue);
     if(mProperty->HasAttribute(PropertyAttributes::cInvalidatesObject))
       mGrid->Invalidate();
@@ -800,9 +800,6 @@ public:
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
 
-    mEditText = new TextBox(this);
-    mEditText->SetEditable(true);
-
     mSpinButton = new IconButton(this);
     mSpinButton->SetIcon("Spin");
     mSpinButton->mBackgroundColor = ToByteColor(Vec4::cZero);
@@ -810,6 +807,10 @@ public:
     mSpinButton->mBackgroundClickedColor = ToByteColor(Vec4(1, 1, 1, 0.1f));
     mSpinButton->SetSize(Pixels(24, 16));
     mSpinButton->SetToolTip("Drag to change value");
+    mSpinButton->mTabFocusStop = false;
+
+    mEditText = new TextBox(this);
+    mEditText->SetEditable(true);
 
     mEditRange = initializer.Property->HasInherited<EditorRange>();
 
@@ -1210,8 +1211,11 @@ public:
     mCurrent = typedValue;
 
     Vec4 displayValue = Vec4::cZero;
-    for(uint i=0;i<dimension;++i)
+    for (uint i = 0; i < dimension; ++i)
+    {
       displayValue[i] = (float)typedValue[i];
+      CorrectNonFiniteValues(displayValue[i]);
+    }
 
     return displayValue;
   }
@@ -1483,6 +1487,7 @@ public:
     mEyeDropper->mBackgroundClickedColor = ToByteColor(Vec4(1, 1, 1, 0.1f));
     mEyeDropper->SetSize(Pixels(24, 16));
     mEyeDropper->SetToolTip("Drag to pick color");
+    mEyeDropper->mTabFocusStop = false;
 
     // Create the color buffer
     mColorDisplay = new ColorDisplay(this, 70, 20);

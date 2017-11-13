@@ -145,10 +145,15 @@ ZilchDefineType(EnumMetaSerialization, builder, type)
 }
 
 //**************************************************************************************************
-bool EnumMetaSerialization::SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)
+EnumMetaSerialization::EnumMetaSerialization(BoundType* enumType)
+  : mEnumType(enumType)
 {
-  BoundType* type = Type::DebugOnlyDynamicCast<BoundType*>(meta);
 
+}
+
+//**************************************************************************************************
+bool EnumMetaSerialization::SerializePrimitiveProperty(BoundType* type, cstr fieldName, Any& value, Serializer& serializer)
+{
   Integer& enumValue = value.Get<Integer&>();
   return serializer.EnumField(type->Name.c_str(), fieldName, (uint&)enumValue, type);
 }
@@ -160,6 +165,20 @@ void EnumMetaSerialization::SetDefault(Type* meta, Any& any)
   any = Any(type);
   Integer& value = any.Get<Integer&>();
   value = type->DefaultEnumValue;
+}
+
+//**************************************************************************************************
+bool EnumMetaSerialization::ConvertFromString(StringParam input, Any& output)
+{
+  Integer* foundEnumValue = mEnumType->StringToEnumValue.FindPointer(input);
+
+  if (foundEnumValue)
+  {
+    output = Any((byte*)foundEnumValue, mEnumType);
+    return true;
+  }
+
+  return false;
 }
 
 //**************************************************************************************************
@@ -265,7 +284,7 @@ bool MetaStringSerialization::SerializeReferenceProperty(BoundType* propertyType
 }
 
 //**************************************************************************************************
-bool MetaStringSerialization::ConvertFromString(StringParam input, Any& output)
+bool MetaStringSerialization::ConvertFromString(StringParam input,  Any& output)
 {
   String value;
   ToValue(input.c_str(), value);

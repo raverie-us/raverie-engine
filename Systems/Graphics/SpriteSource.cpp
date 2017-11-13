@@ -374,6 +374,8 @@ void SpriteSourceManager::RebuildSpriteSheets()
         HandleOf<Texture> textureHandle = Texture::CreateRuntime();
 
         Texture* texture = textureHandle;
+        texture->mMipMapping = TextureMipMapping::GpuGenerated;
+        texture->mMaxMipOverride = Atlas::sMaxMipLevel;
         texture->mAddressingX = TextureAddressing::Clamp;
         texture->mAddressingY = TextureAddressing::Clamp;
         texture->mFiltering = inputIndex == 0 ? TextureFiltering::Nearest : TextureFiltering::Bilinear;

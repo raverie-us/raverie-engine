@@ -179,7 +179,7 @@ void AnimationGraph::ApplyFrame(AnimationFrame& frame)
 }
 
 //******************************************************************************
-void AnimationGraph::OnMetaModified(MetaModifiedEvent* e)
+void AnimationGraph::OnMetaModified(MetaLibraryEvent* e)
 {
   // The blend tracks store pointers to MetaProperties, and must be deleted
   DeleteObjectsInContainer(mBlendTracks);

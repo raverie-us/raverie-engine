@@ -36,8 +36,8 @@ bool DropOnObject(MetaDropEvent* event, Cog* droppedOn)
       forRange(Property* property, component.StoredType->GetProperties())
       {
         // if the object type being dropped matches the property of a component on the cog
-        // set that property to be the dropped item
-        if(property->PropertyType == metaObjectDrop)
+        // set that property to be the dropped item as long as the property has a setter
+        if(property->PropertyType == metaObjectDrop && property->Set != nullptr)
         {
           if(event->Testing)
           {

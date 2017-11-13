@@ -301,7 +301,7 @@ Resource::Resource()
   mManager = nullptr;
   mResourceLibrary = nullptr;
   mContentItem = nullptr;
-  mBuilder = nullptr;
+  mBuilderType = nullptr;
   mIsRuntimeResource = false;
   mReferenceCount = 0;
 }
@@ -352,6 +352,11 @@ Resource::InheritRange Resource::GetBaseResources()
   InheritRange r(this);
   r.PopFront();
   return r;
+}
+
+BuilderComponent* Resource::GetBuilder()
+{
+  return (BuilderComponent*)mContentItem->QueryComponentId(mBuilderType);
 }
 
 void Resource::AddReference()
@@ -431,7 +436,7 @@ void Resource::GetTags(Array<String>& coreTags, Array<String>& userTags)
 
   // Add all tags from the content item
   if(mContentItem != nullptr)
-    mContentItem->AddTags(userTags);
+    mContentItem->GetTags(userTags);
 }
 
 void Resource::AddTags(HashSet<String>& tags)

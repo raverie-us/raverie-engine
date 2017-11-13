@@ -556,6 +556,7 @@ Cog* Space::FindLastRootObjectByName(StringParam name)
 
 void Space::LoadLevelAdditive(Level* level)
 {
+  // Set the level redundantly because AddObjectsFromLevel can send out an event.
   mLevelLoaded = level;
   mLevelLoaded = AddObjectsFromLevel(level);
 }
@@ -647,8 +648,12 @@ Level* Space::AddObjectsFromLevel(Level* level)
     {
       String message = String::Format("Failed to load level '%s' %s", level->Name.c_str(), status.Message.c_str());
       DoNotifyErrorWithContext(message);
+      mIsLoadingLevel = false;
+      return nullptr;
     }
 
+    // If we already cached the tree then take ownership
+    // back from the stream so it doesn't de-allocate it.
     level->mCacheTree = stream.TakeOwnershipOfFirstRoot();
   }
 

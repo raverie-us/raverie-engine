@@ -244,7 +244,7 @@ void AnimationCurveObject::CreateControlPoint(KeyFrame* keyFrame)
 {
   mIgnoreAnimationEvents = true;
   // Pull data out from the key frame
-  Vec2 pos = Vec2(keyFrame->GetTime(), keyFrame->GetValue().Get<float>());
+  Vec2 pos = keyFrame->GetGraphPosition();
   Vec2 tanIn = keyFrame->GetTangentIn();
   Vec2 tanOut = keyFrame->GetTangentOut();
   CurveEditing::CurveEditorFlags::Type flags = keyFrame->mEditorFlags;
@@ -375,9 +375,7 @@ void AnimationCurveObject::OnKeyFrameModified(KeyFrameEvent* event)
                                 "control point in the curve editor.");
 
   // Set the position of the key frame
-  float x = keyFrame->GetTime();
-  float y = keyFrame->GetValue().Get<float>();
-  Vec2 position(x, y);
+  Vec2 position = keyFrame->GetGraphPosition();
 
   mIgnoreAnimationEvents = true;
   controlPoint->SetGraphPosition(position);
@@ -743,9 +741,7 @@ bool ExpandAabbByTrack(Vec2* min, Vec2* max, TrackNode* track)
   {
     KeyFrame* keyFrame = track->mKeyFrames[i].second;
 
-    float x = keyFrame->GetTime();
-    float y = keyFrame->GetValue().Get<float>();
-
+    Vec2 pos = keyFrame->GetGraphPosition();
     Vec2 tanIn = keyFrame->GetTangentIn();
     Vec2 tanOut = keyFrame->GetTangentOut();
 
@@ -758,10 +754,9 @@ bool ExpandAabbByTrack(Vec2* min, Vec2* max, TrackNode* track)
 
     // If we expand the aabb by all control points and the tangents of the
     // control points, we're guaranteed to contain the entire curve
-    Vec2 controlPoint(x, y);
-    Expand(min, max, controlPoint);
-    Expand(min, max, controlPoint + tanIn);
-    Expand(min, max, controlPoint + tanOut);
+    Expand(min, max, pos);
+    Expand(min, max, pos + tanIn);
+    Expand(min, max, pos + tanOut);
   }
 
   return true;

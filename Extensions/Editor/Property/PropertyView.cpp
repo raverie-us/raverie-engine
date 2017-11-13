@@ -340,7 +340,7 @@ void PropertyView::OnKeyDown(KeyboardEvent* e)
 }
 
 //******************************************************************************
-void PropertyView::OnMetaModified(MetaModifiedEvent* e)
+void PropertyView::OnMetaModified(MetaLibraryEvent* e)
 {
   Invalidate();
 }

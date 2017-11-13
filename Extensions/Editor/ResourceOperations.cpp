@@ -210,7 +210,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
   addContent.Library = library;
 
   // We want to copy over the tags of the content item as well
-  resource->mContentItem->AddTags(addContent.Tags);
+  resource->mContentItem->GetTags(addContent.Tags);
 
   // Try to add the file
   Status addStatus;
@@ -230,7 +230,7 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
 bool RenameResource(Resource* resource, StringParam newName)
 {
   //if there's no resource and no resource builder, there is nothing to do.
-  if(!(resource && resource->mBuilder))
+  if(!(resource && resource->GetBuilder()))
     return false;
 
   ResourceManager* resourceManager = resource->GetManager();
@@ -241,8 +241,12 @@ bool RenameResource(Resource* resource, StringParam newName)
 
   ContentLibrary* library = resource->mContentItem->mLibrary;
 
+  bool canModifyReadOnly = false;
+  if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
+    canModifyReadOnly = devConfig->mCanModifyReadOnlyResources;
+
   // Do not rename resources from read only content libraries.
-  if(!library->GetWritable())
+  if(!library->GetWritable() && canModifyReadOnly == false)
     return false;
 
   ContentItem* contentItem = resource->mContentItem;
@@ -260,7 +264,7 @@ bool RenameResource(Resource* resource, StringParam newName)
   }
 
   // Rename the 'builder' this came from.
-  BuilderComponent* builder = resource->mBuilder;
+  BuilderComponent* builder = resource->GetBuilder();
   builder->Rename(newName);
 
   // Save the changes
@@ -420,7 +424,7 @@ void RemoveResource(Resource* resource)
     {
       // Clear references to content
       currentResource->mContentItem = NULL;
-      currentResource->mBuilder = NULL;
+      currentResource->mBuilderType = NULL;
 
       toDelete.PushBack(currentResource);
     }
@@ -599,10 +603,10 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* resour
     }
 
     // Possible to get here without a builder on the resource
-    if (!resource->mBuilder)
+    if (!resource->GetBuilder())
       return resource;
 
-    String resourceIdName = resource->mBuilder->GetResourceOwner();
+    String resourceIdName = resource->GetBuilder()->GetResourceOwner();
 
     // Get the archetype that this resource may belong to from meta data
     ArchetypeManager* archetypeManager = ArchetypeManager::GetInstance();
@@ -619,7 +623,7 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* resour
       // then this archetype will take ownership
       if (!archetypeOwner && (!modified || instanceCount < 2))
       {
-        resource->mBuilder->SetResourceOwner(archetype->ResourceIdName);
+        resource->GetBuilder()->SetResourceOwner(archetype->ResourceIdName);
 
         MetaOperations::NotifyObjectModified(resource);
 
@@ -636,7 +640,7 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* resour
       // Assign to this level if no previous owner
       if (!levelOwner)
       {
-        resource->mBuilder->SetResourceOwner(activeLevel->ResourceIdName);
+        resource->GetBuilder()->SetResourceOwner(activeLevel->ResourceIdName);
 
         MetaOperations::NotifyObjectModified(resource);
 
