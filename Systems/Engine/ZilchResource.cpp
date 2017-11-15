@@ -266,7 +266,8 @@ void ZilchDocumentResource::ValidateScriptName(Status& status, StringParam name)
   // Because we do component access off of cogs using the . operator, then it might
   // conflict with an actual member of cog (name a component 'Destroy', what is Owner.Destroy?)
   // We must do this for Space and GameSession also (technically GameSession and Space doubly hit Cog, but that's fine).
-  if(ZilchTypeId(Cog)->GetMember(name) || ZilchTypeId(GameSession)->GetMember(name) || ZilchTypeId(Space)->GetMember(name))
+  if(ZilchTypeId(Cog)->GetMember(name)   || ZilchTypeId(GameSession)->GetMember(name) ||
+     ZilchTypeId(Space)->GetMember(name) || ZilchTypeId(CogPath)->GetMember(name))
   {
     String message = String::Format(
       "Components cannot have the same name as a property/method on Cog/Space/GameSession (this.Owner.%s would conflict)",

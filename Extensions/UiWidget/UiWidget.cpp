@@ -997,6 +997,14 @@ bool UiWidget::GetInLayout()
 //**************************************************************************************************
 void UiWidget::SetInLayout(bool state)
 {
+  // If the user enables in layout, hitting undo should move the translation and scale back
+  // to their previous values
+  if (OperationQueue::IsListeningForSideEffects())
+  {
+    OperationQueue::RegisterSideEffect(this, PropertyPath("LocalTranslation"), GetLocalTranslation());
+    OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+  }
+
   mFlags.SetState(UiWidgetFlags::InLayout, state);
   MarkAsNeedsUpdate();
 }
@@ -1132,7 +1140,7 @@ void UiWidget::OnPropertyModified(PropertyEvent* e)
   if(modifiedType->IsA(ZilchTypeId(Transform)))
     SetLocalTranslation(GetLocalTranslation());
   else if (modifiedType->IsA(ZilchTypeId(Area)))
-    SetSize(mArea->GetSize());
+    SetSize(GetSize());
 }
 
 //**************************************************************************************************

@@ -20,7 +20,7 @@ Cog
 		var Material = "582c575af53d18c9:AlphaSprite"
 		var VertexColor = Real4{1, 1, 1, 1}
 		var GeometryMode = SpriteGeometryMode.ZPlane
-		var SpriteSource = "5586f579ca73ecc2:SquareBordered"
+		var SpriteSource = "5275aa4d802dd6dc:Square"
 		var FlipX = false
 		var FlipY = false
 		var AnimationActive = true

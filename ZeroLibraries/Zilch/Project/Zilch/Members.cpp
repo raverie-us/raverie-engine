@@ -162,49 +162,51 @@ namespace Zilch
   }
 
   //***************************************************************************
-  AttributeParameter::AttributeParameter()
+  AttributeParameter::AttributeParameter(StringParam name, StringParam value) :
+    Constant(value),
+    Name(name)
   {
   }
 
   //***************************************************************************
-  AttributeParameter::AttributeParameter(StringParam value) : 
-    Constant(value)
+  AttributeParameter::AttributeParameter(StringParam name, Integer value) :
+    Constant(value),
+    Name(name)
   {
   }
 
   //***************************************************************************
-  AttributeParameter::AttributeParameter(Integer value) :
-    Constant(value)
+  AttributeParameter::AttributeParameter(StringParam name, DoubleInteger value) :
+    Constant(value),
+    Name(name)
   {
   }
 
   //***************************************************************************
-  AttributeParameter::AttributeParameter(DoubleInteger value) :
-    Constant(value)
+  AttributeParameter::AttributeParameter(StringParam name, Real value) :
+    Constant(value),
+    Name(name)
   {
   }
 
   //***************************************************************************
-  AttributeParameter::AttributeParameter(Real value) :
-    Constant(value)
+  AttributeParameter::AttributeParameter(StringParam name, DoubleReal value) :
+    Constant(value),
+    Name(name)
   {
   }
 
   //***************************************************************************
-  AttributeParameter::AttributeParameter(DoubleReal value) :
-    Constant(value)
+  AttributeParameter::AttributeParameter(StringParam name, Boolean value) :
+    Constant(value),
+    Name(name)
   {
   }
 
   //***************************************************************************
-  AttributeParameter::AttributeParameter(Boolean value) :
-    Constant(value)
-  {
-  }
-
-  //***************************************************************************
-  AttributeParameter::AttributeParameter(Zilch::Type* value) :
-    Constant(value)
+  AttributeParameter::AttributeParameter(StringParam name, Zilch::Type* value) :
+    Constant(value),
+    Name(name)
   {
   }
 
@@ -273,7 +275,46 @@ namespace Zilch
   }
 
   //***************************************************************************
+  void Attribute::AddParameter(StringParam name, StringParam value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
 
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, Integer value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, DoubleInteger value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, Real value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, DoubleReal value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, Boolean value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, Type* value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
   //***************************************************************************
   Attribute* Attribute::AddAttribute(StringParam name)
   {
