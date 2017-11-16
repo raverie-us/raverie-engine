@@ -167,7 +167,7 @@ ZilchDefineType(OperationQueue, builder, type)
 
   ZilchBindMethod(StartListeningForSideEffects);
   ZilchBindMethod(IsListeningForSideEffects);
-  ZilchBindMethod(RegisterSideEffect);
+  ZilchBindMethodAs(RegisterSideEffectProperty, "RegisterSideEffect");
   ZilchBindMethod(QueueRegisteredSideEffects);
   ZilchBindMethod(PopSubPropertyContext);
   ZilchBindMethod(MarkPropertyAsModified);
@@ -815,6 +815,12 @@ bool OperationQueue::IsListeningForSideEffects()
 void OperationQueue::RegisterSideEffect(HandleParam object, PropertyPathParam propertyPath,
                                         const Any& oldValue)
 {
+  if(sListeningForSideEffects == false)
+  {
+    DoNotifyExceptionAssert("OperationQueue is not listening for side effects", "First check OperationQueue.IsListeningForSideEffects");
+    return;
+  }
+
   BoundType* objectType = object.StoredType;
   if(objectType->HasInherited<MetaDataInheritance>() != nullptr)
   {
@@ -842,6 +848,12 @@ void OperationQueue::RegisterSideEffect(HandleParam object, PropertyPathParam pr
     PropertyOperation* op = new PropertyOperation(context.mContext, finalPath, oldValue, dummyNewValue);
     sSideEffects.PushBack(op);
   }
+}
+
+//******************************************************************************
+void OperationQueue::RegisterSideEffectProperty(HandleParam object, StringParam propertyName, const Any& oldValue)
+{
+  RegisterSideEffect(object, propertyName, oldValue);
 }
 
 //******************************************************************************
