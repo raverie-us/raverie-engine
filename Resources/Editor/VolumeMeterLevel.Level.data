@@ -136,9 +136,9 @@ Level
 		var Name = "EditorCamera"
 		Transform 
 		{
-			var Translation = Real3{151.693024, -122.44368, 99.6336746}
+			var Translation = Real3{126, 180, 10}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{0, -1.09278471e-08, 0, 1}
+			var Rotation = Quaternion{0, 0, 0, 1}
 		}
 		CameraViewport 
 		{
@@ -185,11 +185,11 @@ Level
 		}
 		Camera 
 		{
-			var NearPlane = 0.5
+			var NearPlane = 0.100000001
 			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 60
-			var Size = 784
+			var Size = 747
 		}
 		EditorCameraController 
 		{
@@ -198,7 +198,7 @@ Level
 			var LookDistance = 100
 			var VerticalAngle = 0
 			var HorizontalAngle = 0
-			var LookTarget = Real3{151.693024, -122.44368, -0.366327584}
+			var LookTarget = Real3{126.629517, 180.2229, 1.33288859e-05}
 			var MoveSensitivity = 1
 		}
 	}
@@ -303,7 +303,7 @@ Level
 		Area 
 		{
 			var Size = Real2{300, 300}
-			var Origin = Location.TopLeft
+			var Origin = Location.BottomLeft
 		}
 		UiWidget 
 		{
@@ -366,7 +366,7 @@ Level
 				Area 
 				{
 					var Size = Real2{300, 300}
-					var Origin = Location.TopLeft
+					var Origin = Location.BottomLeft
 				}
 				UiWidget 
 				{
@@ -406,14 +406,14 @@ Level
 						var Name = "VolumeBarArea"
 						Transform 
 						{
-							var Translation = Real3{10, -10, 0}
+							var Translation = Real3{10, 70, 0}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
 							var Size = Real2{40, 220}
-							var Origin = Location.TopLeft
+							var Origin = Location.BottomLeft
 						}
 						UiWidget 
 						{
@@ -456,7 +456,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, 0, 0}
+									var Translation = Real3{0, 208, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -482,7 +482,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -517,7 +517,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -14, 0}
+									var Translation = Real3{0, 193, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -543,7 +543,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -578,7 +578,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -29, 0}
+									var Translation = Real3{0, 178, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -604,7 +604,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -639,7 +639,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -44, 0}
+									var Translation = Real3{0, 163, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -665,7 +665,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -700,7 +700,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -59, 0}
+									var Translation = Real3{0, 148, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -726,7 +726,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -761,7 +761,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -74, 0}
+									var Translation = Real3{0, 134, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -787,7 +787,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -822,7 +822,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -88, 0}
+									var Translation = Real3{0, 119, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -848,7 +848,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -883,7 +883,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -103, 0}
+									var Translation = Real3{0, 104, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -909,7 +909,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -944,7 +944,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -118, 0}
+									var Translation = Real3{0, 89, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -970,7 +970,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1005,7 +1005,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -133, 0}
+									var Translation = Real3{0, 74, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1031,7 +1031,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1066,7 +1066,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -148, 0}
+									var Translation = Real3{0, 60, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1092,7 +1092,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1127,7 +1127,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -162, 0}
+									var Translation = Real3{0, 45, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1153,7 +1153,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1188,7 +1188,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -177, 0}
+									var Translation = Real3{0, 30, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1214,7 +1214,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1249,7 +1249,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -192, 0}
+									var Translation = Real3{0, 15, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1275,7 +1275,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1310,7 +1310,7 @@ Level
 								var Name = "Bar"
 								Transform 
 								{
-									var Translation = Real3{0, -207, 0}
+									var Translation = Real3{0, 0, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1336,7 +1336,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1371,7 +1371,7 @@ Level
 								var Name = "PeakVolumeBar"
 								Transform 
 								{
-									var Translation = Real3{-5, -220, 9.10519793e-06}
+									var Translation = Real3{-5, 0, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1397,7 +1397,7 @@ Level
 								Area 
 								{
 									var Size = Real2{50, 4}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1429,14 +1429,14 @@ Level
 						var Name = "VolumeTextArea"
 						Transform 
 						{
-							var Translation = Real3{60, -10, 0}
+							var Translation = Real3{60, 70, 0}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
 							var Size = Real2{40, 220}
-							var Origin = Location.TopLeft
+							var Origin = Location.BottomLeft
 						}
 						UiWidget 
 						{
@@ -1476,7 +1476,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, 0, 9.10519793e-06}
+									var Translation = Real3{0, 208, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1501,7 +1501,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1531,7 +1531,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -14, 9.10519793e-06}
+									var Translation = Real3{0, 193, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1556,7 +1556,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1586,7 +1586,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -29, 9.10519793e-06}
+									var Translation = Real3{0, 178, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1611,7 +1611,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1641,7 +1641,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -44, 9.10519793e-06}
+									var Translation = Real3{0, 163, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1666,7 +1666,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1696,7 +1696,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -59, 9.10519793e-06}
+									var Translation = Real3{0, 148, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1721,7 +1721,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1751,7 +1751,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -74, 9.10519793e-06}
+									var Translation = Real3{0, 134, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1776,7 +1776,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1806,7 +1806,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -88, 9.10519793e-06}
+									var Translation = Real3{0, 119, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1831,7 +1831,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1861,7 +1861,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -103, 9.10519793e-06}
+									var Translation = Real3{0, 104, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1886,7 +1886,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1916,7 +1916,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -118, 9.10519793e-06}
+									var Translation = Real3{0, 89, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1941,7 +1941,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1971,7 +1971,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -133, 9.10519793e-06}
+									var Translation = Real3{0, 74, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1996,7 +1996,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2026,7 +2026,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -148, 9.10519793e-06}
+									var Translation = Real3{0, 60, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2051,7 +2051,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2081,7 +2081,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -162, 9.10519793e-06}
+									var Translation = Real3{0, 45, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2106,7 +2106,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2136,7 +2136,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -177, 9.10519793e-06}
+									var Translation = Real3{0, 30, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2161,7 +2161,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2191,7 +2191,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -192, 9.10519793e-06}
+									var Translation = Real3{0, 15, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2216,7 +2216,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2246,7 +2246,7 @@ Level
 								var Name = "Text"
 								Transform 
 								{
-									var Translation = Real3{0, -207, 9.10519793e-06}
+									var Translation = Real3{0, 0, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2271,7 +2271,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2303,14 +2303,14 @@ Level
 						var Name = "SliderArea"
 						Transform 
 						{
-							var Translation = Real3{100, -10, 9.10519793e-06}
+							var Translation = Real3{100, 70, 9.10519793e-06}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
 							var Size = Real2{50, 220}
-							var Origin = Location.TopLeft
+							var Origin = Location.BottomLeft
 						}
 						UiWidget 
 						{
@@ -2380,7 +2380,7 @@ Level
 								Area 
 								{
 									var Size = Real2{2, 220}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2417,7 +2417,7 @@ Level
 								Area 
 								{
 									var Size = Real2{50, 220}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2457,7 +2457,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, 0, 0}
+											var Translation = Real3{0, 196, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2482,7 +2482,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2512,7 +2512,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, -24, 0}
+											var Translation = Real3{0, 172, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2537,7 +2537,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2567,7 +2567,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, -48, 0}
+											var Translation = Real3{0, 147, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2592,7 +2592,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 25}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2622,7 +2622,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, -73, 0}
+											var Translation = Real3{0, 123, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2647,7 +2647,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2677,7 +2677,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, -97, 0}
+											var Translation = Real3{0, 98, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2702,7 +2702,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 25}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2732,7 +2732,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, -122, 0}
+											var Translation = Real3{0, 74, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2757,7 +2757,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2787,7 +2787,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, -146, 0}
+											var Translation = Real3{0, 49, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2812,7 +2812,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 25}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2842,7 +2842,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, -171, 0}
+											var Translation = Real3{0, 25, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2867,7 +2867,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2897,7 +2897,7 @@ Level
 										var Name = "SliderMarker"
 										Transform 
 										{
-											var Translation = Real3{0, -195, 0}
+											var Translation = Real3{0, 0, 0}
 											var Scale = Real3{1, 1, 1}
 											var Rotation = Quaternion{0, 0, 0, 1}
 										}
@@ -2922,7 +2922,7 @@ Level
 										Area 
 										{
 											var Size = Real2{50, 25}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -2954,7 +2954,7 @@ Level
 								var Name = "Handle"
 								Transform 
 								{
-									var Translation = Real3{14, -54, 0}
+									var Translation = Real3{14, 155, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2980,7 +2980,7 @@ Level
 								Area 
 								{
 									var Size = Real2{23, 9}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3054,14 +3054,14 @@ Level
 						var Name = "SliderTextArea"
 						Transform 
 						{
-							var Translation = Real3{150, -10, 9.10519793e-06}
+							var Translation = Real3{150, 70, 9.10519793e-06}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
 							var Size = Real2{50, 220}
-							var Origin = Location.TopLeft
+							var Origin = Location.BottomLeft
 						}
 						UiWidget 
 						{
@@ -3101,7 +3101,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -6, 0}
+									var Translation = Real3{0, 194, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3126,7 +3126,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3156,7 +3156,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -30, 0}
+									var Translation = Real3{0, 170, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3181,7 +3181,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3211,7 +3211,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -54, 0}
+									var Translation = Real3{0, 146, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3236,7 +3236,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3266,7 +3266,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -79, 0}
+									var Translation = Real3{0, 121, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3291,7 +3291,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3321,7 +3321,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -103, 0}
+									var Translation = Real3{0, 97, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3346,7 +3346,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3376,7 +3376,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -127, 0}
+									var Translation = Real3{0, 73, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3401,7 +3401,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3431,7 +3431,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -151, 0}
+									var Translation = Real3{0, 49, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3456,7 +3456,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3486,7 +3486,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -175, 0}
+									var Translation = Real3{0, 25, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3511,7 +3511,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3541,7 +3541,7 @@ Level
 								var Name = "SliderText"
 								Transform 
 								{
-									var Translation = Real3{0, -200, 0}
+									var Translation = Real3{0, 0, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3566,7 +3566,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{

@@ -40,7 +40,7 @@ class ZUiSoundNodeGraph : ZilchComponent
   {
     var position = this.Owner.UiWidget.LocalTranslation;
     position.X += event.Movement.X;
-    position.Y += event.Movement.Y;
+    position.Y -= event.Movement.Y;
     this.Owner.UiWidget.LocalTranslation = position;
   }
   
@@ -55,8 +55,8 @@ class ZUiSoundNodeGraph : ZilchComponent
     
     foreach(var info in Zero.Audio.GetNodeGraphInfo())
     {
-      var thisPosition = Real3(info.Position.X, info.Position.Y, 1);
-      
+      var thisPosition = Real3(info.Position.X, 320 + info.Position.Y, 1);
+      Console.WriteLine("Output: `thisPosition.Y`");
       var color = Real4(0.4118, 0.698, 1.0, 1.0);
       if (info.Name == "Space")
           color = Real4(1.0, 0.2431, 0.247, 1.0);
@@ -73,7 +73,7 @@ class ZUiSoundNodeGraph : ZilchComponent
       else if (info.Name == "AudioOutput")
           color = Real4(0.4157, 0.2118, 0.2118, 1.0);
       
-      var node = this.Space.CreateAtPosition(Archetype.SoundNodeIcon, thisPosition - nodeSize * Real3(1,-1,1) * 0.5);
+      var node = this.Space.CreateAtPosition(Archetype.SoundNodeIcon, thisPosition - nodeSize * 0.5);
       node.FindChildByName("CircleHighlight").UiWidget.LocalColor = color;
       node.FindChildByName("BoxHighlight").UiWidget.LocalColor = color;
       node.FindChildByName("Text").SpriteText.Text = info.Name;
@@ -84,9 +84,9 @@ class ZUiSoundNodeGraph : ZilchComponent
       // Add the connection lines
       foreach(var otherInfo in info.Connections)
       {
-        var otherPosition = Real3(otherInfo.Position.X, otherInfo.Position.Y + 47, 0);
+        var otherPosition = Real3(otherInfo.Position.X, 320 + otherInfo.Position.Y + 47, 0);
         
-        var distance = thisPosition - otherPosition;
+        var distance = otherPosition - thisPosition;
         var linePosition = thisPosition + otherPosition;
         linePosition = linePosition / 2.0;
         

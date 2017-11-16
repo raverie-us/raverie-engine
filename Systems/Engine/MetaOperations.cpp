@@ -219,8 +219,6 @@ PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam prope
   MetaOperation(object),
   mPropertyPath(property)
 {
-  ErrorIf(before.StoredType != after.StoredType, "Values are different types");
-
   MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>( );
   if(owner && owner->GetOwner(object).IsNotNull( ))
   {

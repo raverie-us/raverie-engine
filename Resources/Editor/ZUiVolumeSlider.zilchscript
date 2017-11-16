@@ -61,13 +61,14 @@ class ZUiSlider : ZilchComponent
     
     // Send an event to for the changes
     var eventToSend = ZUiSliderEvent();
-    eventToSend.SliderPercentage = 1.0 - (currHandlePos.Y / max);
+    eventToSend.SliderPercentage = (currHandlePos.Y / max);
     this.Owner.DispatchEvent(Events.ZUiSliderChanged, eventToSend);
   }
   
   //***************************************************************************
   function SetHandlePosition(percent : Real)
   {
+    Console.WriteLine(percent);
     var handle = this.Handle.UiWidget;
     var max = this.UiWidget.Size.Y - handle.Size.Y;
     var position = max * percent;

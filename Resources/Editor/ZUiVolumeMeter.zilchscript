@@ -13,7 +13,7 @@ class ZUiPeakVolumeBar : ZilchComponent
     this.MaxMove = this.WidgetSize / 200.0;
     this.Bar = this.Owner.FindChildByName("PeakVolumeBar");
     
-    this.Bar.UiWidget.LocalTranslation = Real2(-5, this.WidgetSize);
+    this.Bar.UiWidget.LocalTranslation = Real2(-5, 0);
   }
 
   function OnLogicUpdate(event : UpdateEvent)
@@ -22,19 +22,18 @@ class ZUiPeakVolumeBar : ZilchComponent
     var decibels = this.ToDecibels(Zero.Audio.PeakOutputLevel);
     // What percentage of the decibel scale is this?
     var percent = decibels / -42.0;
-    if (percent > 1.0)
-      percent = 1.0;
+    percent = Math.Min(percent, 1.0);
       
     // Y position is the percentage 
-    var position = this.WidgetSize * percent;
+    var position = this.WidgetSize * (1.0 - percent);
     
     // Is the bar moving down? (0 is at the top)
-    if (position > this.Bar.UiWidget.LocalTranslation.Y)
+    if (position < this.Bar.UiWidget.LocalTranslation.Y)
     {
       // Make it go down slowly
-      var difference = position - this.Bar.UiWidget.LocalTranslation.Y;
+      var difference = this.Bar.UiWidget.LocalTranslation.Y - position;
       if (difference > this.MaxMove)
-        position = this.Bar.UiWidget.LocalTranslation.Y + this.MaxMove;
+        position = this.Bar.UiWidget.LocalTranslation.Y - this.MaxMove;
     }
       
     // Set the position of the bar
@@ -98,12 +97,13 @@ class ZUiVolumeSlider : ZilchComponent
     var decibels = this.ToDecibels(volume);
     decibels -= 12;
     decibels *= -1;
-    var percent = decibels / 48.0;
+    var percent = 1.0 - (decibels / 48.0);
     this.Slider.SetHandlePosition(percent);
   }
 
   function OnVolumeChange(event : ZUiSliderEvent)
   {
+    Console.WriteLine(event.SliderPercentage);
     var decibels = (1.0 - event.SliderPercentage) * -48.0;
     decibels += 12;
     
