@@ -60,6 +60,8 @@ void SaveRangeOfObjects(Serializer& saver, uint objectCount, rangeType range)
   while(!range.Empty())
   {
     Cog* cog = ResolveCog(range.Front());
+    // Make sure everything has an id
+    cog->AssignChildIds();
     objectSaver->SaveInstance(cog);
     range.PopFront();
   }

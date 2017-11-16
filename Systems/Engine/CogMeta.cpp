@@ -138,7 +138,13 @@ void CogMetaDataInheritance::SetInheritId(HandleParam instance, StringParam inhe
 Guid CogMetaDataInheritance::GetUniqueId(HandleParam instance)
 {
   Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
-  return cog->mChildId;
+  Guid childId = cog->mChildId;
+  if (childId == PolymorphicNode::cInvalidUniqueNodeId)
+  {
+    childId = GenerateUniqueId64();
+    cog->mChildId = childId;
+  }
+  return childId;
 }
 
 //**************************************************************************************************
