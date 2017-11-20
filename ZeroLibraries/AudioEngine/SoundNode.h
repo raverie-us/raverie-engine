@@ -63,10 +63,10 @@ namespace Audio
     void SetCollapse(const bool shouldCollapse);
     // Return true if this sound node is currently outputting audio data
     bool HasAudibleOutput();
-    // Returns the current bypass percent for this sound node
-    float GetBypassPercent();
-    // Sets the bypass percentage (percent of output that is not altered by this node)
-    void SetBypassPercent(const float percent);
+    // Returns the current bypass value for this sound node (0 - 1.0)
+    float GetBypassValue();
+    // Sets the bypass value (fraction of output that is not altered by this node) (0 - 1.0)
+    void SetBypassValue(const float bypassValue);
 
     // The name given to this sound node by the external system when it was constructed
     const Zero::String Name;
@@ -100,7 +100,7 @@ namespace Audio
     void SetSiblingNodes(SoundNode* threadedNode, Zero::Status& previousStatus);
     // Returns the pointer to the node's external interface
     ExternalNodeInterface* GetExternalInterface() { return ExternalData; }
-    // Uses the BypassPercent to add a portion of the InputSamples buffer to the passed-in buffer
+    // Uses the BypassValue to add a portion of the InputSamples buffer to the passed-in buffer
     void AddBypass(BufferType* outputBuffer);
 
     // If true, this node is running on the mix thread. If false, it is on the game thread.
@@ -148,8 +148,8 @@ namespace Audio
     bool ValidOutputLastMix;
     // If true, this node has listener-specific data (such as an emitter)
     bool ListenerDependent;
-    // The percentage of output that shouldn't be affected by this node
-    float BypassPercent;
+    // The fraction of output that shouldn't be affected by this node (0 - 1.0)
+    float BypassValue;
     // If true, this is a node which generates audio
     bool Generator;
     

@@ -347,8 +347,8 @@ namespace Audio
       ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
     DelayMSec(100.0f), 
-    FeedbackPct(0),
-    WetPercent(50.0f),
+    FeedbackValue(0),
+    WetValue(0.5f),
     HasHadInput(false)
   {
     if (!Threaded)
@@ -381,9 +381,9 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float DelayNode::GetFeedbackPct()
+  float DelayNode::GetFeedback()
   {
-    return FeedbackPct;
+    return FeedbackValue;
   }
 
   //************************************************************************************************
@@ -393,62 +393,62 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void DelayNode::SetFeedbackPct(const float feedbackPct)
+  void DelayNode::SetFeedback(const float feedbackValue)
   {
-    FeedbackPct = feedbackPct;
+    FeedbackValue = feedbackValue;
 
     if (!Threaded)
     {
       if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::SetFeedbackPct, 
-          (DelayNode*)GetSiblingNode(), feedbackPct));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::SetFeedback, 
+          (DelayNode*)GetSiblingNode(), feedbackValue));
     }
     else
     {
       forRange(DelayLine* filter, FiltersPerListener.Values())
-        filter->SetFeedbackPct(feedbackPct);
+        filter->SetFeedback(feedbackValue);
     }
   }
 
   //************************************************************************************************
-  float DelayNode::GetWetLevelPct()
+  float DelayNode::GetWetLevel()
   {
-    return WetPercent;
+    return WetValue;
   }
 
   //************************************************************************************************
-  void DelayNode::SetWetLevelPct(const float wetPct)
+  void DelayNode::SetWetLevel(const float wetLevelValue)
   {
-    WetPercent = wetPct;
+    WetValue = wetLevelValue;
 
     if (!Threaded)
     {
       if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::SetWetLevelPct,
-          (DelayNode*)GetSiblingNode(), wetPct));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::SetWetLevel,
+          (DelayNode*)GetSiblingNode(), wetLevelValue));
     }
     else
     {
       forRange(DelayLine* filter, FiltersPerListener.Values())
-        filter->SetWetLevelPct(wetPct);
+        filter->SetWetLevel(wetLevelValue);
     }
   }
 
   //************************************************************************************************
-  void DelayNode::InterpolateWetLevelPct(const float percent, const float time)
+  void DelayNode::InterpolateWetLevel(const float newValue, const float time)
   {
-    WetPercent = percent;
+    WetValue = newValue;
 
     if (!Threaded)
     {
       if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::InterpolateWetLevelPct, 
-            (DelayNode*)GetSiblingNode(), percent, time));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::InterpolateWetLevel, 
+            (DelayNode*)GetSiblingNode(), newValue, time));
     }
     else
     {
       forRange(DelayLine* filter, FiltersPerListener.Values())
-        filter->InterpolateWetLevelPct(percent, time);
+        filter->InterpolateWetLevel(newValue, time);
     }
   }
 
@@ -474,8 +474,8 @@ namespace Audio
     {
       filter = new DelayLine;
       filter->SetDelayMSec(DelayMSec);
-      filter->SetFeedbackPct(FeedbackPct);
-      filter->SetWetLevelPct(WetPercent);
+      filter->SetFeedback(FeedbackValue);
+      filter->SetWetLevel(WetValue);
       FiltersPerListener[listener] = filter;
     }
 
@@ -519,8 +519,8 @@ namespace Audio
     LFO(new Oscillator)
   {
     Delay->SetDelayMSec(0);
-    Delay->SetFeedbackPct(feedback);
-    Delay->SetWetLevelPct(50.0f);
+    Delay->SetFeedback(feedback);
+    Delay->SetWetLevel(50.0f);
     LFO->SetFrequency(frequency);
     LFO->SetPolarity(Oscillator::Unipolar);
     LFO->SetNoteOn(true);
@@ -541,7 +541,7 @@ namespace Audio
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
     MaxDelay(5.0f),
     ModFrequency(0.18f), 
-    FeedbackPct(0), 
+    Feedback(0), 
     OscillatorType(OscillatorTypes::Sine)
   {
     if (!Threaded)
@@ -599,26 +599,26 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float FlangerNode::GetFeedbackPct()
+  float FlangerNode::GetFeedback()
   {
-    return FeedbackPct;
+    return Feedback;
   }
 
   //************************************************************************************************
-  void FlangerNode::SetFeedbackPct(const float percent)
+  void FlangerNode::SetFeedback(const float feedbackValue)
   {
-    FeedbackPct = percent;
+    Feedback = feedbackValue;
 
     if (!Threaded)
     {
       if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&FlangerNode::SetFeedbackPct, 
-            (FlangerNode*)GetSiblingNode(), percent));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&FlangerNode::SetFeedback, 
+            (FlangerNode*)GetSiblingNode(), feedbackValue));
     }
     else
     {
       forRange(Data* data, FiltersPerListener.Values())
-        data->Delay->SetFeedbackPct(percent);
+        data->Delay->SetFeedback(feedbackValue);
     }
   }
 
@@ -663,7 +663,7 @@ namespace Audio
     Data* filter = FiltersPerListener.FindValue(listener, nullptr);
     if (!filter)
     {
-      filter = new Data(ModFrequency, FeedbackPct);
+      filter = new Data(ModFrequency, Feedback);
       FiltersPerListener[listener] = filter;
     }
 
@@ -702,8 +702,8 @@ namespace Audio
     LFO(new Oscillator)
   {
     Delay->SetDelayMSec(minDelay);
-    Delay->SetFeedbackPct(feedback);
-    Delay->SetWetLevelPct(50.0f);
+    Delay->SetFeedback(feedback);
+    Delay->SetWetLevel(50.0f);
     LFO->SetFrequency(frequency);
     LFO->SetPolarity(Oscillator::Unipolar);
     LFO->SetNoteOn(true);
@@ -725,7 +725,7 @@ namespace Audio
     MinDelay(5.0f),
     MaxDelay(20.0f), 
     ModFrequency(0.1f), 
-    FeedbackPct(0), 
+    Feedback(0), 
     OscillatorType(OscillatorTypes::Sine),
     ChorusOffset(40.0f)
   {
@@ -800,26 +800,26 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float ChorusNode::GetFeedbackPct()
+  float ChorusNode::GetFeedback()
   {
-    return FeedbackPct;
+    return Feedback;
   }
 
   //************************************************************************************************
-  void ChorusNode::SetFeedbackPct(const float percent)
+  void ChorusNode::SetFeedback(const float feedbackValue)
   {
-    FeedbackPct = percent;
+    Feedback = feedbackValue;
 
     if (!Threaded)
     {
       if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ChorusNode::SetFeedbackPct, 
-          (ChorusNode*)GetSiblingNode(), percent));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&ChorusNode::SetFeedback, 
+          (ChorusNode*)GetSiblingNode(), feedbackValue));
     }
     else
     {
       forRange(Data* data, FiltersPerListener.Values())
-        data->Delay->SetFeedbackPct(percent);
+        data->Delay->SetFeedback(feedbackValue);
     }
   }
 
@@ -880,7 +880,7 @@ namespace Audio
     Data* filter = FiltersPerListener.FindValue(listener, nullptr);
     if (!filter)
     {
-      filter = new Data(ModFrequency, MinDelay, FeedbackPct);
+      filter = new Data(ModFrequency, MinDelay, Feedback);
       FiltersPerListener[listener] = filter;
     }
 
@@ -1071,7 +1071,7 @@ namespace Audio
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
     Amplitude(false),
     Frequency(10.0f),
-    WetValue(1.0f)
+    WetLevelValue(1.0f)
   {
     if (!Threaded)
       SetSiblingNodes(new ModulationNode(status, name, ID, nullptr, true), status);
@@ -1141,24 +1141,24 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float ModulationNode::GetWetPercent()
+  float ModulationNode::GetWetLevel()
   {
-    return WetValue * 100.0f;
+    return WetLevelValue;
   }
 
   //************************************************************************************************
-  void ModulationNode::SetWetPercent(const float percent)
+  void ModulationNode::SetWetLevel(const float wetLevel)
   {
-    WetValue = percent / 100.0f;
+    WetLevelValue = wetLevel;
 
-    if (WetValue < 0.0f)
-      WetValue = 0.0f;
-    if (WetValue > 1.0f)
-      WetValue = 1.0f;
+    if (WetLevelValue < 0.0f)
+      WetLevelValue = 0.0f;
+    if (WetLevelValue > 1.0f)
+      WetLevelValue = 1.0f;
 
     if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&ModulationNode::SetWetPercent, 
-          (ModulationNode*)GetSiblingNode(), percent));
+      gAudioSystem->AddTask(Zero::CreateFunctor(&ModulationNode::SetWetLevel, 
+          (ModulationNode*)GetSiblingNode(), wetLevel));
   }
 
   //************************************************************************************************
@@ -1195,8 +1195,8 @@ namespace Audio
 
       // Multiply signal with modulator wave, taking into account gain and wet percent
       for (unsigned channel = 0; channel < numberOfChannels; ++channel)
-        (*outputBuffer)[frame + channel] = (InputSamples[frame + channel] * waveValue * WetValue)
-        + (InputSamples[frame + channel] * (1.0f - WetValue));
+        (*outputBuffer)[frame + channel] = (InputSamples[frame + channel] * waveValue * WetLevelValue)
+        + (InputSamples[frame + channel] * (1.0f - WetLevelValue));
     }
 
     AddBypass(outputBuffer);

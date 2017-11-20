@@ -522,7 +522,7 @@ namespace Audio
     mFrequency(1.0f),
     mType(OscillatorTypes::Noise),
     mPolarity(Bipolar),
-    mPositiveWavePercent(0.5f)
+    mSquareWavePositiveFraction(0.5f)
   {
     mIncrement = ArraySize * mFrequency / (float)mSampleRate;
     SetType(OscillatorTypes::Sine);
@@ -612,7 +612,7 @@ namespace Audio
     }
     else if (mType == OscillatorTypes::Square)
     {
-      int positiveSize = (int)(mPositiveWavePercent * ArraySize);
+      int positiveSize = (int)(mSquareWavePositiveFraction * ArraySize);
 
       for (int i = 0; i < ArraySize; ++i)
       {
@@ -645,14 +645,14 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void Oscillator::SetPositiveWavePct(const float percent)
+  void Oscillator::SetSquareWavePositiveFraction(const float positiveFraction)
   {
-    mPositiveWavePercent = percent;
+    mSquareWavePositiveFraction = positiveFraction;
 
     // If necessary, re-create the wave data
     if (mType == OscillatorTypes::Square)
     {
-      int positiveSize = (int)(mPositiveWavePercent * ArraySize);
+      int positiveSize = (int)(mSquareWavePositiveFraction * ArraySize);
 
       for (int i = 0; i < ArraySize; ++i)
       {
@@ -662,8 +662,6 @@ namespace Audio
           mWaveValues[i] = -1.0f;
       }
     }
-
-    int a = 1;
   }
 
   //------------------------------------------------------------------------------------- Delay Line
@@ -734,7 +732,7 @@ namespace Audio
         // Write input to delay buffer
         BuffersPerChannel[channel][WriteIndex] = inputSample + (Feedback * delayedSample);
 
-        // Check if we are interpolating the wet percent
+        // Check if we are interpolating the wet level
         if (InterpolatingWetLevel)
         {
           WetLevel = WetLevelInterpolator.NextValue();
@@ -775,24 +773,25 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void DelayLine::SetFeedbackPct(const float feedbackPct)
+  void DelayLine::SetFeedback(const float feedbackValue)
   {
-    Feedback = feedbackPct / 100.0f;
+    Feedback = feedbackValue;
 
   }
 
   //************************************************************************************************
-  void DelayLine::SetWetLevelPct(const float wetPct)
+  void DelayLine::SetWetLevel(const float wetLevelValue)
   {
-    WetLevel = wetPct / 100.0f;
+    WetLevel = wetLevelValue;
 
   }
 
   //************************************************************************************************
-  void DelayLine::InterpolateWetLevelPct(const float percent, const float time)
+  void DelayLine::InterpolateWetLevel(const float newValue, const float time)
   {
     InterpolatingWetLevel = true;
-    WetLevelInterpolator.SetValues(WetLevel, percent / 100.0f, (unsigned)(time * AudioSystemInternal::SystemSampleRate));
+    WetLevelInterpolator.SetValues(WetLevel, newValue, 
+      (unsigned)(time * AudioSystemInternal::SystemSampleRate));
   }
 
   //------------------------------------------------------------------------------ Envelope Detector
@@ -1430,15 +1429,15 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void Reverb::SetWetPercent(const float newPercent)
+  void Reverb::SetWetLevel(const float wetLevel)
   {
-    WetValue = newPercent / 100.0f;
+    WetValue = wetLevel;
   }
 
   //************************************************************************************************
-  void Reverb::InterpolateWetPercent(const float newPercent, const float time)
+  void Reverb::InterpolateWetLevel(const float newWetLevel, const float time)
   {
-    WetValueInterpolator.SetValues(WetValue, newPercent / 100.0f, (unsigned)(time * 
+    WetValueInterpolator.SetValues(WetValue, newWetLevel, (unsigned)(time *
       AudioSystemInternal::SystemSampleRate));
   }
 

@@ -167,8 +167,8 @@ namespace Audio
     float GetFrequency();
     // Sets the frequency of the generated wave, over a specified number of seconds
     void SetFrequency(const float frequency, const float time);
-    // If a square wave is chosen, set the percent (0 - 1.0) of the wave which will be positive
-    void SetSquareWavePercent(float percent);
+    // If a square wave is chosen, set the fraction (0 - 1.0) of the wave which will be positive
+    void SetSquareWavePositiveFraction(float positiveFraction);
 
   private:
     ~GeneratedWaveSoundAsset();

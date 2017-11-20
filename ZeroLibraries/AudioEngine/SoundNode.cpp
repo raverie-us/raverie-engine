@@ -23,7 +23,7 @@ namespace Audio
     MixedListener(nullptr), 
     Threaded(isThreaded),
     Collapse(false), 
-    BypassPercent(0.0f),
+    BypassValue(0.0f),
     Name(name),
     NodeID(ID),
     ValidOutputLastMix(false),
@@ -379,19 +379,19 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float SoundNode::GetBypassPercent()
+  float SoundNode::GetBypassValue()
   {
-    return BypassPercent * 100.0f;
+    return BypassValue;
   }
 
   //************************************************************************************************
-  void SoundNode::SetBypassPercent(const float percent)
+  void SoundNode::SetBypassValue(const float bypassValue)
   {
-    BypassPercent = percent / 100.0f;
+    BypassValue = bypassValue;
 
     // If not threaded, send message to threaded node
     if (!Threaded && SiblingNode)
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::SetBypassPercent, SiblingNode, percent));
+      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::SetBypassValue, SiblingNode, bypassValue));
   }
 
   //************************************************************************************************
@@ -615,13 +615,13 @@ namespace Audio
 
     // If some of the node's output should be bypassed, adjust the output buffer 
     // with a percentage of the input buffer
-    if (BypassPercent > 0.0f)
+    if (BypassValue > 0.0f)
     {
       unsigned bufferSize = outputBuffer->Size();
 
       for (unsigned i = 0; i < bufferSize; ++i)
-        (*outputBuffer)[i] = (InputSamples[i] * BypassPercent) + ((*outputBuffer)[i]
-          * (1.0f - BypassPercent));
+        (*outputBuffer)[i] = (InputSamples[i] * BypassValue) + ((*outputBuffer)[i]
+          * (1.0f - BypassValue));
     }
   }
 

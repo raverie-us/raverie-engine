@@ -119,11 +119,11 @@ public:
   void SetAttenuator(SoundAttenuator* attenuator);
   /// The SoundNode to use for attaching other nodes to the input of the SoundEmitter. 
   HandleOf<SoundNode> GetSoundNodeInput();
-  /// This property is deprecated. SoundNodeInput should be used instead.
+  /// DEPRECATED The SoundNodeInput property should be used instead.
   HandleOf<SoundNode> GetInputNode();
   /// The SoundNode to use for attaching other nodes to the output of the SoundEmitter.
   HandleOf<SoundNode> GetSoundNodeOutput();
-  /// This property is deprecated. SoundNodeOutput should be used instead.
+  /// DEPRECATED The SoundNodeOutput property should be used instead.
   HandleOf<SoundNode> GetOutputNode();
 
 //Internals

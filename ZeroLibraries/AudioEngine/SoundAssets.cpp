@@ -514,17 +514,17 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void GeneratedWaveSoundAsset::SetSquareWavePercent(float percent)
+  void GeneratedWaveSoundAsset::SetSquareWavePositiveFraction(float positiveFraction)
   {
     if (!Threaded)
     {
       if (ThreadedAsset)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&GeneratedWaveSoundAsset::SetSquareWavePercent,
-          (GeneratedWaveSoundAsset*)ThreadedAsset, percent));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&GeneratedWaveSoundAsset::SetSquareWavePositiveFraction,
+          (GeneratedWaveSoundAsset*)ThreadedAsset, positiveFraction));
     }
     else
     {
-      WaveData->SetPositiveWavePct(percent);
+      WaveData->SetSquareWavePositiveFraction(positiveFraction);
     }
   }
 

@@ -47,7 +47,8 @@ ZilchDefineType(SoundNode, builder, type)
   ZilchBindGetter(HasOutputs);
   ZilchBindGetter(InputCount);
   ZilchBindGetter(OutputCount);
-  ZilchBindGetterSetter(BypassPercent);
+  ZilchBindGetterSetter(BypassPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetterSetter(BypassValue);
 
   ZeroBindEvent(Events::AudioInterpolationDone, SoundEvent);
   ZeroBindEvent(Events::SoundNodeDisconnected, SoundEvent);
@@ -280,7 +281,7 @@ int SoundNode::GetOutputCount()
 float SoundNode::GetBypassPercent()
 {
   if (mNode)
-    return mNode->GetBypassPercent();
+    return mNode->GetBypassValue() * 100.0f;
   else
     return 0.0f;
 }
@@ -289,7 +290,23 @@ float SoundNode::GetBypassPercent()
 void SoundNode::SetBypassPercent(float percent)
 {
   if (mNode)
-    mNode->SetBypassPercent(percent);
+    mNode->SetBypassValue(percent / 100.0f);
+}
+
+//**************************************************************************************************
+float SoundNode::GetBypassValue()
+{
+  if (mNode)
+    return mNode->GetBypassValue();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void SoundNode::SetBypassValue(float value)
+{
+  if (mNode)
+    mNode->SetBypassValue(value);
 }
 
 //**************************************************************************************************
@@ -511,7 +528,7 @@ ZilchDefineType(GeneratedWaveNode, builder, type)
   ZilchBindGetterSetter(WaveFrequency);
   ZilchBindGetterSetter(Volume);
   ZilchBindGetterSetter(Decibels);
-  ZilchBindGetterSetter(SquareWavePercent);
+  ZilchBindGetterSetter(SquareWavePulseValue);
   ZilchBindMethod(Play);
   ZilchBindMethod(Stop);
   ZilchBindMethod(InterpolateVolume);
@@ -525,7 +542,7 @@ GeneratedWaveNode::GeneratedWaveNode() :
   mWaveFrequency(440.0f), 
   mAsset(nullptr), 
   mVolume(1.0f),
-  mSquareWavePercent(100.0f)
+  mSquareWavePulseValue(0.5f)
 {
   CreateInstance(true);
 }
@@ -655,18 +672,18 @@ void GeneratedWaveNode::InterpolateDecibels(float decibels, float time)
 }
 
 //**************************************************************************************************
-float GeneratedWaveNode::GetSquareWavePercent()
+float GeneratedWaveNode::GetSquareWavePulseValue()
 {
-  return mSquareWavePercent;
+  return mSquareWavePulseValue;
 }
 
 //**************************************************************************************************
-void GeneratedWaveNode::SetSquareWavePercent(float percentage)
+void GeneratedWaveNode::SetSquareWavePulseValue(float value)
 {
-  mSquareWavePercent = percentage;
+  mSquareWavePulseValue = value;
 
   if (mAsset)
-    mAsset->SetSquareWavePercent(percentage / 100.0f);
+    mAsset->SetSquareWavePositiveFraction(value);
 }
 
 //**************************************************************************************************
@@ -698,7 +715,7 @@ void GeneratedWaveNode::CreateAsset()
 
   mAsset = new Audio::GeneratedWaveSoundAsset(waveType, mWaveFrequency, this);
   if (mWaveType == SynthWaveType::SquareWave)
-    mAsset->SetSquareWavePercent(mSquareWavePercent / 100.0f);
+    mAsset->SetSquareWavePositiveFraction(mSquareWavePulseValue);
 }
 
 //**************************************************************************************************
@@ -1219,8 +1236,10 @@ ZilchDefineType(ReverbNode, builder, type)
   ZeroBindDocumented();
 
   ZilchBindGetterSetter(Length);
-  ZilchBindGetterSetter(WetPercent);
-  ZilchBindMethod(InterpolateWetPercent);
+  ZilchBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetterSetter(WetValue);
+  ZilchBindMethod(InterpolateWetPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindMethod(InterpolateWetValue);
 }
 
 //**************************************************************************************************
@@ -1250,7 +1269,7 @@ void ReverbNode::SetLength(float time)
 float ReverbNode::GetWetPercent()
 {
   if (mNode)
-    return ((Audio::ReverbNode*)mNode)->GetWetPercent();
+    return ((Audio::ReverbNode*)mNode)->GetWetLevel() * 100.0f;
   else
     return 0;
 }
@@ -1259,14 +1278,37 @@ float ReverbNode::GetWetPercent()
 void ReverbNode::SetWetPercent(float percent)
 {
   if (mNode)
-    ((Audio::ReverbNode*)mNode)->SetWetPercent(percent);
+    ((Audio::ReverbNode*)mNode)->SetWetLevel(percent / 100.0f);
+}
+
+//**************************************************************************************************
+float ReverbNode::GetWetValue()
+{
+  if (mNode)
+    return ((Audio::ReverbNode*)mNode)->GetWetLevel();
+  else
+    return 0;
+}
+
+//**************************************************************************************************
+void ReverbNode::SetWetValue(float value)
+{
+  if (mNode)
+    ((Audio::ReverbNode*)mNode)->SetWetLevel(value);
 }
 
 //**************************************************************************************************
 void ReverbNode::InterpolateWetPercent(float percent, float time)
 {
   if (mNode)
-    ((Audio::ReverbNode*)mNode)->InterpolateWetPercent(percent, time);
+    ((Audio::ReverbNode*)mNode)->InterpolateWetLevel(percent / 100.0f, time);
+}
+
+//**************************************************************************************************
+void ReverbNode::InterpolateWetValue(float value, float time)
+{
+  if (mNode)
+    ((Audio::ReverbNode*)mNode)->InterpolateWetLevel(value, time);
 }
 
 //--------------------------------------------------------------------------------------- Delay Node
@@ -1277,9 +1319,12 @@ ZilchDefineType(DelayNode, builder, type)
   ZeroBindDocumented();
 
   ZilchBindGetterSetter(Delay);
-  ZilchBindGetterSetter(FeedbackPercent);
-  ZilchBindGetterSetter(WetPercent);
-  ZilchBindMethod(InterpolateWetPercent);
+  ZilchBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetterSetter(FeedbackValue);
+  ZilchBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetterSetter(WetValue);
+  ZilchBindMethod(InterpolateWetPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindMethod(InterpolateWetValue);
 }
 
 //**************************************************************************************************
@@ -1309,7 +1354,7 @@ void DelayNode::SetDelay(float seconds)
 float DelayNode::GetFeedbackPercent()
 {
   if (mNode)
-    return ((Audio::DelayNode*)mNode)->GetFeedbackPct();
+    return ((Audio::DelayNode*)mNode)->GetFeedback() * 100.0f;
   else
     return 0.0f;
 }
@@ -1318,14 +1363,30 @@ float DelayNode::GetFeedbackPercent()
 void DelayNode::SetFeedbackPercent(float feedback)
 {
   if (mNode)
-    ((Audio::DelayNode*)mNode)->SetFeedbackPct(feedback);
+    ((Audio::DelayNode*)mNode)->SetFeedback(feedback / 100.0f);
+}
+
+//**************************************************************************************************
+float DelayNode::GetFeedbackValue()
+{
+  if (mNode)
+    return ((Audio::DelayNode*)mNode)->GetFeedback();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void DelayNode::SetFeedbackValue(float feedback)
+{
+  if (mNode)
+    ((Audio::DelayNode*)mNode)->SetFeedback(feedback);
 }
 
 //**************************************************************************************************
 float DelayNode::GetWetPercent()
 {
   if (mNode)
-    return ((Audio::DelayNode*)mNode)->GetWetLevelPct();
+    return ((Audio::DelayNode*)mNode)->GetWetLevel() * 100.0f;
   else
     return 0.0f;
 }
@@ -1334,14 +1395,37 @@ float DelayNode::GetWetPercent()
 void DelayNode::SetWetPercent(float wetLevel)
 {
   if (mNode)
-    ((Audio::DelayNode*)mNode)->SetWetLevelPct(wetLevel);
+    ((Audio::DelayNode*)mNode)->SetWetLevel(wetLevel / 100.0f);
+}
+
+//**************************************************************************************************
+float DelayNode::GetWetValue()
+{
+  if (mNode)
+    return ((Audio::DelayNode*)mNode)->GetWetLevel();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void DelayNode::SetWetValue(float wetLevel)
+{
+  if (mNode)
+    ((Audio::DelayNode*)mNode)->SetWetLevel(wetLevel);
 }
 
 //**************************************************************************************************
 void DelayNode::InterpolateWetPercent(float percent, float time)
 {
   if (mNode)
-    ((Audio::DelayNode*)mNode)->InterpolateWetLevelPct(percent, time);
+    ((Audio::DelayNode*)mNode)->InterpolateWetLevel(percent / 100.0f, time);
+}
+
+//**************************************************************************************************
+void DelayNode::InterpolateWetValue(float percent, float time)
+{
+  if (mNode)
+    ((Audio::DelayNode*)mNode)->InterpolateWetLevel(percent, time);
 }
 
 //------------------------------------------------------------------------------------- Flanger Node
@@ -1353,7 +1437,8 @@ ZilchDefineType(FlangerNode, builder, type)
 
   ZilchBindGetterSetter(MaxDelayMillisec);
   ZilchBindGetterSetter(ModulationFrequency);
-  ZilchBindGetterSetter(FeedbackPercent);
+  ZilchBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetterSetter(FeedbackValue);
 }
 
 //**************************************************************************************************
@@ -1399,7 +1484,7 @@ void FlangerNode::SetModulationFrequency(float frequency)
 float FlangerNode::GetFeedbackPercent()
 {
   if (mNode)
-    return ((Audio::FlangerNode*)mNode)->GetFeedbackPct();
+    return ((Audio::FlangerNode*)mNode)->GetFeedback() * 100.0f;
   else
     return 0.0f;
 }
@@ -1408,7 +1493,23 @@ float FlangerNode::GetFeedbackPercent()
 void FlangerNode::SetFeedbackPercent(float percent)
 {
   if (mNode)
-    ((Audio::FlangerNode*)mNode)->SetFeedbackPct(percent);
+    ((Audio::FlangerNode*)mNode)->SetFeedback(percent / 100.0f);
+}
+
+//**************************************************************************************************
+float FlangerNode::GetFeedbackValue()
+{
+  if (mNode)
+    return ((Audio::FlangerNode*)mNode)->GetFeedback();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void FlangerNode::SetFeedbackValue(float value)
+{
+  if (mNode)
+    ((Audio::FlangerNode*)mNode)->SetFeedback(value);
 }
 
 //-------------------------------------------------------------------------------------- Chorus Node
@@ -1421,7 +1522,8 @@ ZilchDefineType(ChorusNode, builder, type)
   ZilchBindGetterSetter(MaxDelayMillisec);
   ZilchBindGetterSetter(MinDelayMillisec);
   ZilchBindGetterSetter(ModulationFrequency);
-  ZilchBindGetterSetter(FeedbackPercent);
+  ZilchBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetterSetter(FeedbackValue);
   ZilchBindGetterSetter(OffsetMillisec);
 }
 
@@ -1484,7 +1586,7 @@ void ChorusNode::SetModulationFrequency(float frequency)
 float ChorusNode::GetFeedbackPercent()
 {
   if (mNode)
-    return ((Audio::ChorusNode*)mNode)->GetFeedbackPct();
+    return ((Audio::ChorusNode*)mNode)->GetFeedback() * 100.0f;
   else
     return 0.0f;
 }
@@ -1493,7 +1595,23 @@ float ChorusNode::GetFeedbackPercent()
 void ChorusNode::SetFeedbackPercent(float percent)
 {
   if (mNode)
-    ((Audio::ChorusNode*)mNode)->SetFeedbackPct(percent);
+    ((Audio::ChorusNode*)mNode)->SetFeedback(percent / 100.0f);
+}
+
+//**************************************************************************************************
+float ChorusNode::GetFeedbackValue()
+{
+  if (mNode)
+    return ((Audio::ChorusNode*)mNode)->GetFeedback();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void ChorusNode::SetFeedbackValue(float value)
+{
+  if (mNode)
+    ((Audio::ChorusNode*)mNode)->SetFeedback(value);
 }
 
 //**************************************************************************************************
@@ -2073,7 +2191,8 @@ ZilchDefineType(ModulationNode, builder, type)
 
   ZilchBindGetterSetter(UseAmplitudeModulation);
   ZilchBindGetterSetter(Frequency);
-  ZilchBindGetterSetter(WetPercent);
+  ZilchBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetterSetter(WetValue);
 }
 
 //**************************************************************************************************
@@ -2119,7 +2238,7 @@ void ModulationNode::SetFrequency(float frequency)
 float ModulationNode::GetWetPercent()
 {
   if (mNode)
-    return ((Audio::ModulationNode*)mNode)->GetWetPercent();
+    return ((Audio::ModulationNode*)mNode)->GetWetLevel() * 100.0f;
   else
     return 0.0f;
 }
@@ -2128,7 +2247,23 @@ float ModulationNode::GetWetPercent()
 void ModulationNode::SetWetPercent(float percent)
 {
   if (mNode)
-    ((Audio::ModulationNode*)mNode)->SetWetPercent(percent);
+    ((Audio::ModulationNode*)mNode)->SetWetLevel(percent / 100.0f);
+}
+
+//**************************************************************************************************
+float ModulationNode::GetWetValue()
+{
+  if (mNode)
+    return ((Audio::ModulationNode*)mNode)->GetWetLevel();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void ModulationNode::SetWetValue(float value)
+{
+  if (mNode)
+    ((Audio::ModulationNode*)mNode)->SetWetLevel(value);
 }
 
 //---------------------------------------------------------------------------- Microphone Input Node

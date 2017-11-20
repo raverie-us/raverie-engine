@@ -121,16 +121,16 @@ namespace Audio
     float GetDelayMSec();
     // Sets the length of delay in milliseconds
     void SetDelayMSec(const float delay);
-    // Returns the current feedback percentage
-    float GetFeedbackPct();
-    // Sets the percentage of output which is fed back in as input
-    void SetFeedbackPct(const float feedbackPercent);
-    // Returns the current wet percentage
-    float GetWetLevelPct();
-    // Sets the percentage of output which is filtered
-    void SetWetLevelPct(const float wetLevelPercent);
-    // Sets the wet level percentage over time
-    void InterpolateWetLevelPct(const float percent, const float time);
+    // Returns the current feedback fraction (0 - 1.0)
+    float GetFeedback();
+    // Sets the fraction of output which is fed back in as input (0 - 1.0)
+    void SetFeedback(const float feedbackValue);
+    // Returns the current wet level (0 - 1.0)
+    float GetWetLevel();
+    // Sets the fraction of output which is filtered (0 - 1.0)
+    void SetWetLevel(const float wetLevelValue);
+    // Sets the wet level fraction over time
+    void InterpolateWetLevel(const float newValue, const float time);
 
   private:
     ~DelayNode();
@@ -140,10 +140,10 @@ namespace Audio
 
     // Length of delay 
     float DelayMSec;
-    // Feedback value
-    float FeedbackPct;
-    // Wet level value
-    float WetPercent;
+    // Feedback value (0 - 1.0)
+    float FeedbackValue;
+    // Wet level value (0 - 1.0)
+    float WetValue;
     // Will be true if there was recent input
     bool HasHadInput;
     // The filter used for calculations
@@ -174,10 +174,10 @@ namespace Audio
     float GetModFrequency();
     // Sets the modulation frequency
     void SetModFrequency(const float frequency);
-    // Returns the current feedback percentage
-    float GetFeedbackPct();
-    // Sets the feedback percentage
-    void SetFeedbackPct(const float percent);
+    // Returns the current feedback value (0 - 1.0)
+    float GetFeedback();
+    // Sets the fraction of output which is fed back in as input (0 - 1.0)
+    void SetFeedback(const float feedbackValue);
     // Returns the current oscillator type
     int GetOscillatorType();
     // Sets the oscillator type to use for modulation
@@ -207,8 +207,8 @@ namespace Audio
     float MaxDelay;
     // Modulation frequency
     float ModFrequency;
-    // Feedback percentage
-    float FeedbackPct;
+    // Feedback value (0 - 1.0)
+    float Feedback;
     // Oscillator type used for modulation
     OscillatorTypes::Enum OscillatorType;
   };
@@ -233,10 +233,10 @@ namespace Audio
     float GetModFrequency();
     // Sets the modulation frequency
     void SetModFrequency(const float frequency);
-    // Returns the current feedback percentage
-    float GetFeedbackPct();
-    // Sets the feedback percentage
-    void SetFeedbackPct(const float percent);
+    // Returns the current feedback value (0 - 1.0f)
+    float GetFeedback();
+    // Sets the fraction of output which is fed back in as input (0 - 1.0)
+    void SetFeedback(const float feedbackValue);
     // Returns the current oscillator type
     OscillatorTypes::Enum GetOscillatorType();
     // Sets the oscillator type to use for the modulation
@@ -272,8 +272,8 @@ namespace Audio
     float MaxDelay;
     // Modulation frequency
     float ModFrequency;
-    // Feedback percentage
-    float FeedbackPct;
+    // Feedback value (0 - 1.0f)
+    float Feedback;
     // Oscillator type to use for modulation
     OscillatorTypes::Enum OscillatorType;
     // Chorus offset value
@@ -346,10 +346,10 @@ namespace Audio
     float GetFrequency();
     // Sets the frequency of the modulator wave
     void SetFrequency(const float frequency);
-    // Returns the percent of output that is modulated
-    float GetWetPercent();
-    // Sets the percent of output that should be modulated
-    void SetWetPercent(const float percentage);
+    // Returns the fraction of output that is modulated (0 - 1.0)
+    float GetWetLevel();
+    // Sets the fraction of output that should be modulated (0 - 1.0)
+    void SetWetLevel(const float wetLevel);
 
   private:
     ~ModulationNode();
@@ -359,7 +359,7 @@ namespace Audio
 
     bool Amplitude;
     float Frequency;
-    float WetValue;
+    float WetLevelValue;
 
     typedef Zero::HashMap<ListenerNode*, Oscillator*> OscMapType;
     OscMapType OscillatorsPerListener;
