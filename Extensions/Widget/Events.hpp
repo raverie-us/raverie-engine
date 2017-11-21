@@ -144,7 +144,7 @@ public:
 
 
 //------------------------------------------------------------------ Mouse Event
-/// Mouse events for any every with the mouse.
+/// Mouse events for actions concerning the mouse.
 class MouseEvent : public Event
 {
 public:

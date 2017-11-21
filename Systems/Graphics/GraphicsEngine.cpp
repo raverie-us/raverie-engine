@@ -379,6 +379,20 @@ void GraphicsEngine::SetSplashscreenLoading()
   mShowProgressJob->mSplashMode = true;
 }
 
+void GraphicsEngine::OnOsWindowMinimized(Event* event)
+{
+  Z::gRenderer->mThreadLock.Lock();
+  Z::gRenderer->mBackBufferSafe = false;
+  Z::gRenderer->mThreadLock.Unlock();
+}
+
+void GraphicsEngine::OnOsWindowRestored(Event* event)
+{
+  Z::gRenderer->mThreadLock.Lock();
+  Z::gRenderer->mBackBufferSafe = true;
+  Z::gRenderer->mThreadLock.Unlock();
+}
+
 void GraphicsEngine::OnProjectCogModified(Event* event)
 {
   if (FrameRateSettings* frameRate = mProjectCog.has(FrameRateSettings))
@@ -461,8 +475,10 @@ void GraphicsEngine::AddRendererJob(RendererJob* rendererJob)
   mRendererJobQueue->AddJob(rendererJob);
 }
 
-void GraphicsEngine::CreateRenderer(OsHandle mainWindowHandle)
+void GraphicsEngine::CreateRenderer(OsWindow* mainWindow)
 {
+  OsHandle mainWindowHandle = mainWindow->GetWindowHandle();
+
   CreateRendererJob* rendererJob = new CreateRendererJob();
   rendererJob->mMainWindowHandle = mainWindowHandle;
   AddRendererJob(rendererJob);
@@ -474,6 +490,9 @@ void GraphicsEngine::CreateRenderer(OsHandle mainWindowHandle)
   delete rendererJob;
 
   Z::gEngine->mIntel = Z::gRenderer->mDriverSupport.mIntel;
+
+  ConnectThisTo(mainWindow, Events::OsWindowMinimized, OnOsWindowMinimized);
+  ConnectThisTo(mainWindow, Events::OsWindowRestored, OnOsWindowRestored);
 }
 
 void GraphicsEngine::DestroyRenderer()

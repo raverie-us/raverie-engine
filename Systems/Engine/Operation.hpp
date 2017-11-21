@@ -206,6 +206,7 @@ public:
   static void StartListeningForSideEffects();
   static bool IsListeningForSideEffects();
   static void RegisterSideEffect(HandleParam object, PropertyPathParam propertyPath, const Any& oldValue);
+  static void RegisterSideEffectProperty(HandleParam object, StringParam propertyName, const Any& oldValue);
   void QueueRegisteredSideEffects();
 
   /// The ObjectLink Component has the property 'ObjectAPath' of type CogPath.

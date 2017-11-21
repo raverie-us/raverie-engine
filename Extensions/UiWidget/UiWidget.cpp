@@ -227,8 +227,6 @@ void UiWidget::OnDestroy(uint flags)
   // We need to tell our parent that it needs to be updated
   if(mParent)
     mParent->MarkAsNeedsUpdate();
-
-  ComponentHierarchy::OnDestroy(flags);
 }
 
 //**************************************************************************************************

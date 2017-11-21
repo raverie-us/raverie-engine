@@ -39,13 +39,13 @@ public:
   typename typedef ChildList::reverse_range ChildListReverseRange;
 
   /// Constructor.
-  ComponentHierarchy() : mParent(nullptr) {}
+  ComponentHierarchy();
+  ~ComponentHierarchy();
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
   void AttachTo(AttachmentInfo& info) override;
   void Detached(AttachmentInfo& info) override;
-  void OnDestroy(uint flags = 0) override;
 
   /// When a child is attached or detached, we need to update our child list.
   void OnChildAttached(HierarchyEvent* e);
@@ -81,6 +81,25 @@ ZilchDefineType(ComponentHierarchy<ComponentType>, builder, type)
   // Temporarily unbound until an issue is fixed
   //InitMetaRangeAdapter(ChildListRange);
   //ZilchBindMethod(GetChildren);
+}
+
+//******************************************************************************
+template <typename ComponentType>
+ComponentHierarchy<ComponentType>::ComponentHierarchy()
+  : mParent(nullptr)
+{
+
+}
+
+//******************************************************************************
+template <typename ComponentType>
+ComponentHierarchy<ComponentType>::~ComponentHierarchy()
+{
+  forRange(ComponentType& child, GetChildren())
+    child.mParent = nullptr;
+  
+  if (mParent)
+    mParent->mChildren.Erase(this);
 }
 
 //******************************************************************************
@@ -153,14 +172,6 @@ void ComponentHierarchy<ComponentType>::Detached(AttachmentInfo& info)
 {
   if(info.Child == GetOwner())
     mParent = nullptr;
-}
-
-//******************************************************************************
-template <typename ComponentType>
-void ComponentHierarchy<ComponentType>::OnDestroy(uint flags)
-{
-  if(mParent)
-    mParent->mChildren.Erase(this);
 }
 
 //******************************************************************************
