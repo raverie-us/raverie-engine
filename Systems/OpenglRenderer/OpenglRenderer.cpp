@@ -1463,18 +1463,17 @@ void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
   GlTextureRenderData* renderData = (GlTextureRenderData*)task->mColorTarget;
   ScreenViewport viewport = task->mViewport;
 
-  RECT rect;
-  GetClientRect((HWND)mWindow, &rect);
-  IntVec2 size = IntVec2(rect.right - rect.left, rect.bottom - rect.top);
-
   glBindFramebuffer(GL_READ_FRAMEBUFFER, mSingleTargetFbo);
   glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderData->mId, 0);
   glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
   glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
   CheckFramebufferStatus();
-  glBlitFramebuffer(0, 0, task->mTextureWidth, task->mTextureHeight, viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-  // Stretch texture to fill the whole back buffer
-  //glBlitFramebuffer(0, 0, task->mTextureWidth, task->mTextureHeight, 0, 0, size.x, size.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+  mThreadLock.Lock();
+  if (mBackBufferSafe)
+    glBlitFramebuffer(0, 0, task->mTextureWidth, task->mTextureHeight, viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+  mThreadLock.Unlock();
+
   glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 }
 

@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <shlobj.h>
 #include <io.h>
+#include <VersionHelpers.h>
 
 #include "StackWalker.hpp"
 #include "ThreadIo.hpp"

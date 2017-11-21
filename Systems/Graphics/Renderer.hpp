@@ -35,8 +35,8 @@ public:
 class Renderer
 {
 public:
-  Renderer() {}
-  virtual ~Renderer() {}
+  Renderer();
+  virtual ~Renderer();
 
   // should move these to a file for api dependent utility functions
   virtual void BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float near, float far) = 0;
@@ -68,6 +68,12 @@ public:
   virtual void DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues) = 0;
 
   GraphicsDriverSupport mDriverSupport;
+
+  // Thread lock for the main thread to set any critical control flags.
+  ThreadLock mThreadLock;
+  // Intel crashes when blitting to back buffer when window is minimized with certain window style flags set.
+  // Flag is set to false when the window is minimized.
+  bool mBackBufferSafe;
 };
 
 namespace Z

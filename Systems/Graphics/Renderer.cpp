@@ -25,4 +25,13 @@ GraphicsDriverSupport::GraphicsDriverSupport()
 {
 }
 
+Renderer::Renderer()
+  : mBackBufferSafe(true)
+{
+}
+
+Renderer::~Renderer()
+{
+}
+
 } // namespace Zero

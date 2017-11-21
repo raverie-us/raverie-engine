@@ -26,6 +26,8 @@ namespace Events
   DefineEvent(OsFocusLost);
   DefineEvent(OsPaint);
   DefineEvent(OsMouseFileDrop);
+  DefineEvent(OsWindowMinimized);
+  DefineEvent(OsWindowRestored);
 }//namespace Events
 
 const String cOsKeyboardEventsFromState[] =

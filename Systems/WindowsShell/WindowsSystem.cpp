@@ -128,11 +128,10 @@ DWORD Win32StyleFromWindowStyle(WindowStyleFlags::Enum styleFlags)
     win32Style |= WS_CAPTION;
   if(styleFlags & WindowStyleFlags::Resizable)
     win32Style |= WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-  if(styleFlags & WindowStyleFlags::Close)
-    win32Style |= WS_SYSMENU;
-  // Maximize size not correct with caption on and borderless
-  if(styleFlags & WindowStyleFlags::ClientOnly)
-    win32Style &= ~WS_CAPTION;
+  // WS_SYSMENU shows buttons on titlebar, don't use when in client only.
+  // The buttons interfere with input on some drivers, even when border is disabled.
+  if(styleFlags & WindowStyleFlags::Close && !(styleFlags & WindowStyleFlags::ClientOnly))
+    win32Style |= WS_SYSMENU | WS_MINIMIZEBOX;
   return win32Style;
 }
 
@@ -342,6 +341,7 @@ void WindowsOsWindow::SetState(WindowState::Enum windowState)
       sRestorStyle = mWindowStyle;
       mWindowStyle = (WindowStyleFlags::Enum)(mWindowStyle | WindowStyleFlags::ClientOnly);
       mWindowStyle = (WindowStyleFlags::Enum)(mWindowStyle & ~WindowStyleFlags::Resizable);
+      mWindowStyle = (WindowStyleFlags::Enum)(mWindowStyle & ~WindowStyleFlags::TitleBar);
       SetStyle(mWindowStyle);
 
       HMONITOR monitor = MonitorFromWindow(mWindowHandle, MONITOR_DEFAULTTONEAREST);
@@ -723,6 +723,46 @@ MouseButtons::Enum ButtonFromWParam(WPARAM wParam)
     return MouseButtons::XTwoForward;
 }
 
+bool IsTaskbarHidden(UINT edge, RECT monitorRect)
+{
+  APPBARDATA appbardata = { sizeof(APPBARDATA), 0, 0, edge, monitorRect };
+  // Multi-monitor taskbar settings on Windows 8 and later.
+  if (IsWindows8OrGreater())
+    return SHAppBarMessage(ABM_GETAUTOHIDEBAREX, &appbardata);
+  else
+    return SHAppBarMessage(ABM_GETAUTOHIDEBAR, &appbardata);
+}
+
+MONITORINFO GetActualMonitorInfo(HMONITOR monitor)
+{
+  MONITORINFO monitorInfo = { sizeof(monitorInfo) };
+  GetMonitorInfo(monitor, &monitorInfo);
+
+  RECT monitorRect = monitorInfo.rcMonitor;
+  RECT workRect = monitorInfo.rcWork;
+
+  // If rect is the same as the full monitor size then check for a
+  // hidden task bar and remove a pixel from the size,
+  // otherwise the taskbar is not accessable because windows does not
+  // account for its own hidden taskbar in the working desktop size.
+  if (workRect.left == monitorRect.left &&
+      workRect.top == monitorRect.top &&
+      workRect.right == monitorRect.right &&
+      workRect.bottom == monitorRect.bottom)
+  {
+    if (IsTaskbarHidden(ABE_BOTTOM, monitorRect))
+      --workRect.bottom;
+    else if (IsTaskbarHidden(ABE_LEFT, monitorRect))
+      ++workRect.left;
+    else if (IsTaskbarHidden(ABE_TOP, monitorRect))
+      ++workRect.top;
+    else if (IsTaskbarHidden(ABE_RIGHT, monitorRect))
+      --workRect.right;
+  }
+
+  return monitorInfo;
+}
+
 const uint MessageHandled = 0;
 
 LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wParam, LPARAM lParam)
@@ -854,12 +894,49 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
       return MessageHandled;
     }
 
-    // Returning 0 from WM_NCCALCSIZE removes the window border
+    case WM_SYSCOMMAND:
+    {
+      if (wParam == SC_MINIMIZE)
+      {
+        Event event;
+        DispatchEvent(Events::OsWindowMinimized, &event);
+      }
+      else if (wParam == SC_RESTORE)
+      {
+        Event event;
+        DispatchEvent(Events::OsWindowRestored, &event);
+      }
+      break;
+    }
+
     case WM_NCCALCSIZE:
       if (mBorderless)
+      {
+        if (GetState() == WindowState::Maximized)
+        {
+          // Get window location.
+          DefWindowProc(hwnd, WM_NCCALCSIZE, wParam, lParam);
+          RECT* rect = (RECT*)lParam;
+
+          // Get the nearest monitor.
+          // Cannot call MonitorFromWindow because it returns the wrong monitor from minimized state.
+          HMONITOR appMonitor = MonitorFromRect(rect, MONITOR_DEFAULTTONEAREST);
+
+          // Get the monitor information.
+          MONITORINFO monitorInfo = GetActualMonitorInfo(appMonitor);
+          RECT workRect = monitorInfo.rcWork;
+
+          // Size window to exact monitor working area.
+          *rect = monitorInfo.rcWork;
+        }
+
+        // Returning 0 from WM_NCCALCSIZE disables the window border rendering.
         return 0;
+      }
       else
+      {
         return DefWindowProc(hwnd, messageId, wParam, lParam);
+      }
 
     case WM_GETMINMAXINFO:
     {
@@ -875,9 +952,7 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
         HMONITOR appMonitor = MonitorFromWindow(mWindowHandle, MONITOR_DEFAULTTONEAREST);
 
         // Get the monitor information
-        MONITORINFO monitorInfo = { sizeof(monitorInfo) };
-        GetMonitorInfo(appMonitor, &monitorInfo);
-
+        MONITORINFO monitorInfo = GetActualMonitorInfo(appMonitor);
         RECT monitorRect = monitorInfo.rcMonitor;
         RECT rect = monitorInfo.rcWork;
 

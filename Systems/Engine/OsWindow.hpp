@@ -28,6 +28,8 @@ DeclareEvent(OsFocusGained);
 DeclareEvent(OsFocusLost);
 DeclareEvent(OsPaint);
 DeclareEvent(OsMouseFileDrop);
+DeclareEvent(OsWindowMinimized);
+DeclareEvent(OsWindowRestored);
 }//namespace Events
 
 extern const String cOsKeyboardEventsFromState[3];
