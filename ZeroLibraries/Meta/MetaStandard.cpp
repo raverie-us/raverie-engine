@@ -105,6 +105,7 @@ ZilchDefineStaticLibrary(MetaLibrary)
   // Meta Components
   ZilchInitializeType(CogComponentMeta);
   ZilchInitializeType(MetaOwner);
+  ZilchInitializeType(MetaGroup);
   ZilchInitializeType(MetaCustomUi);
   ZilchInitializeType(MetaOperations);
   ZilchInitializeType(MetaPropertyFilter);
@@ -115,9 +116,11 @@ ZilchDefineStaticLibrary(MetaLibrary)
   ZilchInitializeType(StringNameDisplay);
   ZilchInitializeType(MetaTransform);
   ZilchInitializeType(MetaPropertyRename);
+  ZilchInitializeType(MetaShaderInput);
   ZilchInitializeType(EditorPropertyExtension);
   ZilchInitializeType(EditorIndexedStringArray);
   ZilchInitializeType(EditorRange);
+  ZilchInitializeType(EditorSlider);
   ZilchInitializeType(EditorRotationBasis);
   ZilchInitializeType(EditorResource);
   ZilchInitializeType(MetaDataInheritance);
@@ -154,11 +157,39 @@ void MetaLibrary::Initialize()
 {
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
+
+  AttributeExtensions::Initialize();
+
+  RegisterFunctionAttribute("Static")->AllowStatic(true);
+  RegisterFunctionAttribute("Virtual");
+  RegisterFunctionAttribute("Override");
+  RegisterFunctionAttribute(FunctionAttributes::cDisplay)->AllowStatic(true);
+
+  RegisterPropertyAttribute("Static")->AllowStatic(true);
+  RegisterPropertyAttribute("Virtual");
+  RegisterPropertyAttribute("Override");
+  RegisterPropertyAttribute(PropertyAttributes::cProperty);
+  RegisterPropertyAttribute(PropertyAttributes::cSerialize);
+  RegisterPropertyAttribute(PropertyAttributes::cDeprecatedSerialized);
+  RegisterPropertyAttribute(PropertyAttributes::cDisplay)->AllowStatic(true);
+  RegisterPropertyAttribute(PropertyAttributes::cDeprecatedEditable)->AllowStatic(true);
+  RegisterPropertyAttribute(PropertyAttributes::cDependency);
+  RegisterPropertyAttribute(PropertyAttributes::cNetProperty);
+  RegisterPropertyAttribute(PropertyAttributes::cNetPeerId);
+  RegisterPropertyAttribute(PropertyAttributes::cRuntimeClone)->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cShaderInput, MetaShaderInput)->AllowMultiple(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cRenamedFrom, MetaPropertyRename);
+  RegisterPropertyAttribute(PropertyAttributes::cLocalModificationOverride);
+  RegisterPropertyAttributeType(PropertyAttributes::cGroup, MetaGroup)->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cRange, EditorRange)->TypeMustBe(float)->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cSlider, EditorSlider)->TypeMustBe(float)->AllowStatic(true);
 }
 
 //**************************************************************************************************
 void MetaLibrary::Shutdown()
 {
+  AttributeExtensions::Destroy();
+
   GetLibrary()->ClearComponents();
 }
 

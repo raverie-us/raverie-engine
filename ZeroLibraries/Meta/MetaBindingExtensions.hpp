@@ -83,6 +83,12 @@ extern const String cNetPeerId;
 // Used to group properties in the property view. Must have a single string attribute parameter
 // which is the name of the group.
 extern const String cGroup;
+// Used to specify a range for numbers being edited in the property grid.
+extern const String cRange;
+// Used to specify that the value should be modified by a slider in the property grid.
+extern const String cSlider;
+// Used to mark attribute parameters as optional. This is an internal attribute (not exposed to user).
+extern const String cOptional;
 
 }//namespace PropertyFlags
 
@@ -122,7 +128,7 @@ extern const String cInvalidTypeName;
 #define ZeroBindInterface(Type)  type->HasOrAdd<::Zero::CogComponentMeta>(type)->AddInterface(ZilchTypeId(Type))
 #define ZeroBindTag(Tag)         type->HasOrAdd<::Zero::CogComponentMeta>(type)->mTags.Insert(Tag)
 #define ZeroBindPropertyRename(oldName)  Add(new ::Zero::MetaPropertyRename(oldName))
-#define ZeroSetPropertyGroup(groupName) AddAttribute(::Zero::PropertyAttributes::cGroup)->AddParameter(groupName)
+#define ZeroSetPropertyGroup(groupName) Add(new ::Zero::MetaGroup(groupName))
 #define ZeroLocalModificationOverride() AddAttribute(::Zero::PropertyAttributes::cLocalModificationOverride)
 
 void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType);
@@ -359,6 +365,7 @@ class MetaPropertyRename : public ReferenceCountedEventObject
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   
+  MetaPropertyRename(){}
   MetaPropertyRename(StringParam oldName);
 
   String mOldName;

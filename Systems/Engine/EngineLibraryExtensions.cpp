@@ -14,7 +14,8 @@ void FindResourceOrNull(Call& call, ExceptionReport& report);
 void FindResourceOrError(Call& call, ExceptionReport& report);
 void AddResourceFind(LibraryBuilder& builder, BoundType* resourceMeta);
 void FindNamedResource(Call& call, ExceptionReport& report);
-void ProcessResourceProperties(BoundType* scripType);
+void ProcessResourceProperties(BoundType* type);
+void ProcessComponentInterfaces(BoundType* type);
 
 //-------------------------------------------------------------------------- Zero Library Extensions
 //**************************************************************************************************
@@ -71,6 +72,7 @@ void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* use
   ReturnIf(resource == nullptr, , "Type parsed not from a Resource?");
   boundType->Add(new MetaResource(resource));
 
+  ProcessComponentInterfaces(boundType);
   ProcessResourceProperties(boundType);
 }
 
@@ -243,10 +245,10 @@ void FindNamedResource(Call& call, ExceptionReport& report)
 }
 
 //**************************************************************************************************
-void ProcessResourceProperties(BoundType* scripType)
+void ProcessResourceProperties(BoundType* type)
 {
   BoundType* resourceType = ZilchTypeId(Resource);
-  forRange(Property* property, scripType->GetProperties(Members::Instance))
+  forRange(Property* property, type->GetProperties(Members::Instance))
   {
     if (property->PropertyType->IsA(resourceType))
     {
@@ -265,6 +267,32 @@ void ProcessResourceProperties(BoundType* scripType)
       }
 
       property->Add(new EditorResource(allowAdd, nullable, filterTag));
+    }
+  }
+}
+
+//**************************************************************************************************
+void ProcessComponentInterfaces(BoundType* type)
+{
+  // Check for this having a base that has component interface
+  Attribute* componentInterfaceAttribute = type->HasAttributeInherited(ObjectAttributes::cComponentInterface);
+  if (componentInterfaceAttribute)
+  {
+    BoundType* baseType = type->BaseType;
+    // Keep walking up the hierarchy to find what base type had the attribute. Make
+    // sure we skip the base type itself though (i.e. Collider can't add Collider as an interface)
+    while (baseType != nullptr && type != baseType)
+    {
+      if (baseType->HasAttribute(ObjectAttributes::cComponentInterface))
+      {
+        CogComponentMeta* componentMeta = type->HasOrAdd<CogComponentMeta>(type);
+        // The default constructor will set this type to FromDataOnly so we have to manually set this for now
+        componentMeta->mSetupMode = SetupMode::DefaultSerialization;
+        componentMeta->AddInterface(baseType);
+        break;
+      }
+
+      baseType = baseType->BaseType;
     }
   }
 }

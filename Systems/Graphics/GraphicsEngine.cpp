@@ -963,20 +963,15 @@ void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
 
       forRange (Property* metaProperty, type->GetProperties())
       {
-        Attribute* inputAttribute = metaProperty->HasAttribute(PropertyAttributes::cShaderInput);
-        if (inputAttribute == nullptr)
-          continue;
+        forRange(MetaShaderInput* shaderInput, metaProperty->HasAll<MetaShaderInput>())
+        {
+          ShaderMetaProperty shaderProperty;
+          shaderProperty.mMetaPropertyName = metaProperty->Name;
+          shaderProperty.mFragmentName = shaderInput->mFragmentName;
+          shaderProperty.mInputName = shaderInput->mInputName;
 
-        ShaderMetaProperty shaderProperty;
-        shaderProperty.mMetaPropertyName = metaProperty->Name;
-
-        uint parameterCount = inputAttribute->Parameters.Size();
-        if (parameterCount >= 2)
-          shaderProperty.mInputName = inputAttribute->Parameters[1].StringValue;
-        if (parameterCount >= 1)
-          shaderProperty.mFragmentName = inputAttribute->Parameters[0].StringValue;
-
-        mComponentShaderProperties[typeName].PushBack(shaderProperty);
+          mComponentShaderProperties[typeName].PushBack(shaderProperty);
+        }
       }
     }
 

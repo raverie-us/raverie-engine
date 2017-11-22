@@ -493,7 +493,7 @@ public:
     EditorRange* metaEdit = mProperty->HasInherited<EditorRange>();
 
     mSlider = new Slider(this, SliderType::Number);
-    mSlider->SetRange(metaEdit->MinValue, metaEdit->MaxValue);
+    mSlider->SetRange(metaEdit->Min, metaEdit->Max);
     mSlider->SetIncrement(metaEdit->Increment);
 
     Refresh();
@@ -678,11 +678,15 @@ public:
     mCurrentAngle = 0.0f;
     mType = Type::GetBoundType(startingValue.StoredType);
     mStart = ConvertValue(startingValue);
+    mIncrement = 0.1f;
+    if (startingValue.Is<int>())
+      mIncrement = 1;
 
     if(range)
     {
-      mMin = range->MinValue;
-      mMax = range->MaxValue;
+      mMin = range->Min;
+      mMax = range->Max;
+      mIncrement = range->Increment;
     }
     else
     {
@@ -707,6 +711,7 @@ public:
   // Storing a pointer to this is safe because when meta is changed, the entire property grid
   // is torn down and rebuilt. This should never point at a destroyed type.
   BoundType* mType;
+  float mIncrement;
 
   double mMin;
   double mMax;
@@ -745,7 +750,7 @@ public:
       angleDelta += Math::cTwoPi;
 
     // Update the adjustment value
-    const float cChangeScalar = 4.0f;
+    const float cChangeScalar = 4.0f * mIncrement;
     double previousChange = mCurrentChange;
     double newChange  = previousChange + double(angleDelta * cChangeScalar);
     double newValue = mStart + newChange;
@@ -1623,7 +1628,8 @@ void RegisterGeneralEditors()
   ZilchTypeId(Quat   )->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotation>));
   ZilchTypeId(Enum   )->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorEnum>));
 
-  ZilchTypeId(EditorRange)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorRange>));
+  ZilchTypeId(EditorSlider)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorRange>));
+  ZilchTypeId(EditorRange)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
   ZilchTypeId(EditorRotationBasis)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotationBasis>));
   ZilchTypeId(EditorIndexedStringArray)->Add(new MetaPropertyEditor(&CreateProperty<PropertyIndexedStringArray>));
 }

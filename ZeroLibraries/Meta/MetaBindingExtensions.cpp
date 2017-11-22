@@ -50,6 +50,9 @@ const String cRenamedFrom("RenamedFrom");
 const String cNetProperty("NetProperty");
 const String cNetPeerId("NetPeerId");
 const String cGroup("Group");
+const String cRange("Range");
+const String cSlider("Slider");
+const String cOptional("Optional");
 
 }//namespace PropertyFlags
 

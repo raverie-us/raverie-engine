@@ -379,6 +379,14 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
+  RegisterClassAttribute(ObjectAttributes::cRunInEditor)->TypeMustBe(Component);
+  RegisterClassAttribute(ObjectAttributes::cTool)->TypeMustBe(Component);
+  RegisterClassAttribute(ObjectAttributes::cCommand)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
+  RegisterClassAttribute(ObjectAttributes::cComponentInterface)->TypeMustBe(Component);
+
+  RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty, EditorResource)->TypeMustBe(Resource);
+
   ZPrintFilter(Filter::DefaultFilter, "Engine Initialize...\n");
 
   EngineObject::sEngineHeap = new Memory::Heap("Engine", Memory::GetRoot());

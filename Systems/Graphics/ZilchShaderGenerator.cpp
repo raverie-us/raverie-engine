@@ -48,6 +48,7 @@ void ZilchShaderGenerator::Initialize()
 
   ShaderSettingsLibrary::GetInstance().BuildLibrary();
   EventConnect(&mFragmentsProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);
+  EventConnect(&mFragmentsProject, Zilch::Events::TypeParsed, &ZilchShaderGenerator::OnZilchFragmentTypeParsed, this);
   EventConnect(&mFragmentsProject, Events::TranslationError, &ZilchShaderGenerator::OnZilchFragmentTranslationError, this);
 
   MainConfig* mainConfig = Z::gEngine->GetConfigCog()->has(MainConfig);
@@ -61,6 +62,9 @@ void ZilchShaderGenerator::Initialize()
   settings->mNameSettings.mAllowedClassAttributes.Insert("RenderPass", AttributeInfo());
   settings->mNameSettings.mAllowedClassAttributes.Insert("PostProcess", AttributeInfo());
   settings->mNameSettings.mAllowedFieldAttributes.Insert("Hidden", AttributeInfo());
+  settings->mNameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cGroup, AttributeInfo());
+  settings->mNameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cRange, AttributeInfo());
+  settings->mNameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cSlider, AttributeInfo());
 
   ZilchShaderSettingsLoader settingsLoader;
   String settingsDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchFragmentSettings");
@@ -229,6 +233,8 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
   // instead of building a file that has to be parsed. It was done because I was having issues
   // and needed to move on
 
+  AttributeExtensions* zeroAttributes = AttributeExtensions::GetInstance();
+
   Project project;
   forRange(ShaderType* shaderType, fragmentsLibrary->mTypes.Values())
   {
@@ -236,14 +242,6 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
     // Only add fragment types 
     if(shaderType->mFragmentType != FragmentType::None)
     {
-      forRange(ShaderAttribute& attribute, shaderType->mAttributes.All())
-      {
-        file.Append("[");
-        file.Append(attribute.mAttributeName);
-        file.Append("]");
-      }
-      file.Append("\n");
-
       file.Append("class ");
       file.Append(shaderType->mZilchName);
       file.Append(" : MaterialBlock\n{\n");
@@ -258,7 +256,45 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
         {
           ShaderType* type = field->GetShaderType();
 
-          file.Append("\t[Property] var ");
+          file.Append("\t[Property]");
+
+          // Copy over all attributes used by zero
+          forRange(ShaderAttribute& attribute, field->mAttributes.All())
+          {
+            if (zeroAttributes->IsValidPropertyAttribute(attribute.mAttributeName))
+            {
+              file.AppendFormat("[%s", attribute.mAttributeName.c_str());
+              
+              // Start writing parameters if we have any
+              if (!attribute.mParameters.Empty())
+              {
+                file.Append("(");
+
+                // Copy each parameters
+                uint currentParameter = 0;
+                forRange(AttributeParameter& parameter, attribute.mParameters.All())
+                {
+                  // Include the name if specified
+                  if (!parameter.Name.Empty())
+                    file.AppendFormat("%s:", parameter.Name.c_str());
+
+                  file.Append(parameter.ToString());
+
+                  ++currentParameter;
+
+                  // Add a comma in between parameters
+                  if (currentParameter < attribute.mParameters.Size())
+                    file.Append(',');
+                }
+
+                file.Append(")");
+              }
+
+              file.Append("]");
+            }
+          }
+
+          file.Append(" var ");
           file.Append(field->mZilchName);
           file.Append(" : ");
           file.Append(type->mPropertyType);
@@ -341,19 +377,24 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Arr
   // Build the wrapper library around the internal library
   LibraryRef library = BuildWrapperLibrary(fragmentsLibrary);
 
+  if (library == nullptr)
+    return nullptr;
+
   mPendingToPendingInternal.Insert(library, fragmentsLibrary);
 
   ZilchFragmentTypeMap& fragmentTypes = mPendingFragmentTypes[library];
   fragmentTypes.Clear();
   forRange (BoundType* boundType, library->BoundTypes.Values())
   {
-    if (boundType->HasAttribute("CoreVertex") != nullptr && boundType->HasAttribute("Vertex") != nullptr)
+    ShaderType* shaderType = fragmentsLibrary->FindType(boundType->Name);
+    
+    if (shaderType->ContainsAttribute("CoreVertex") && shaderType->ContainsAttribute("Vertex"))
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::CoreVertex);
-    else if (boundType->HasAttribute("RenderPass") != nullptr && boundType->HasAttribute("Pixel") != nullptr)
+    else if (shaderType->ContainsAttribute("RenderPass") && shaderType->ContainsAttribute("Pixel"))
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::RenderPass);
-    else if (boundType->HasAttribute("PostProcess") != nullptr && boundType->HasAttribute("Pixel") != nullptr)
+    else if (shaderType->ContainsAttribute("PostProcess") && shaderType->ContainsAttribute("Pixel"))
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::PostProcess);
-    else if (boundType->HasAttribute("Protected") != nullptr)
+    else if (shaderType->ContainsAttribute("Protected"))
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::Protected);
     else
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::Fragment);
@@ -401,23 +442,26 @@ void ZilchShaderGenerator::MapFragmentTypes()
   // Find fragments needed for shader permutations
   forRange (LibraryRef wrapperLibrary, mCurrentToInternal.Keys())
   {
+    ZilchShaderLibraryRef fragmentLibrary = GetInternalLibrary(wrapperLibrary);
     forRange (BoundType* boundType, wrapperLibrary->BoundTypes.Values())
     {
-      if (boundType->HasAttribute("CoreVertex") != nullptr && boundType->HasAttribute("Vertex") != nullptr)
+      ShaderType* shaderType = fragmentLibrary->FindType(boundType->Name);
+
+      if (shaderType->ContainsAttribute("CoreVertex") && shaderType->ContainsAttribute("Vertex"))
       {
         mCoreVertexFragments.PushBack(boundType->Name);
         mFragmentTypes.Insert(boundType->Name, ZilchFragmentType::CoreVertex);
       }
-      else if (boundType->HasAttribute("RenderPass") != nullptr && boundType->HasAttribute("Pixel") != nullptr)
+      else if (shaderType->ContainsAttribute("RenderPass") && shaderType->ContainsAttribute("Pixel"))
       {
         mRenderPassFragments.PushBack(boundType->Name);
         mFragmentTypes.Insert(boundType->Name, ZilchFragmentType::RenderPass);
       }
-      else if (boundType->HasAttribute("PostProcess") != nullptr && boundType->HasAttribute("Pixel") != nullptr)
+      else if (shaderType->ContainsAttribute("PostProcess") && shaderType->ContainsAttribute("Pixel"))
       {
         mFragmentTypes.Insert(boundType->Name, ZilchFragmentType::PostProcess);
       }
-      else if (boundType->HasAttribute("Protected") != nullptr)
+      else if (shaderType->ContainsAttribute("Protected"))
       {
         mFragmentTypes.Insert(boundType->Name, ZilchFragmentType::Protected);
       }
@@ -587,6 +631,14 @@ void ZilchShaderGenerator::OnZilchFragmentCompilationError(Zilch::ErrorEvent* ev
   String shortMessage = event->ExactError;
   String fullMessage = event->GetFormattedMessage(Zilch::MessageFormat::Python);
   ZilchFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, shortMessage, fullMessage, event->Location);
+}
+
+void ZilchShaderGenerator::OnZilchFragmentTypeParsed(Zilch::ParseEvent* event)
+{
+  // There are a lot of attributes in zilch fragments that aren't valid for zilch script.
+  // Because of this, we want to ignore invalid attributes here and let the fragment compilation
+  // catch them
+  AttributeExtensions::GetInstance()->ProcessType(event->Type, event->BuildingProject, true);
 }
 
 void ZilchShaderGenerator::OnZilchFragmentTranslationError(TranslationErrorEvent* event)

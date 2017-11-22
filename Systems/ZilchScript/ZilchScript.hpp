@@ -54,7 +54,6 @@ public:
   // We need to periodically pump the debugger for messages
   void OnEngineUpdate(Event* event);
 
-  static void TypeParsedCallback(Zilch::ParseEvent* e, void* userData);
   static void ValidateAttribute(Attribute& attribute, CodeLocation& location, HashSet<String>& allowedAttributes, StringParam attributeClassification, Project* buildingProject);
   static void ValidateAttributes(Array<Attribute>& attributes, CodeLocation& location, HashSet<String>& allowedAttributes, StringParam attributeClassification, Project* buildingProject);
   static void CheckDependencies(BoundType* classType, Property* property, Project* buildingProject);
@@ -65,11 +64,6 @@ public:
   
   // The debugger interface that we register states with
   //Debugger mDebugger;
-
-  // All allowed attributes for properties, classes, and functions
-  HashSet<String> mAllowedClassAttributes;
-  HashSet<String> mAllowedFunctionAttributes;
-  HashSet<String> mAllowedGetSetAttributes;
 
   // We ignore duplicate exceptions until the version is incremented
   HashSet<String> mDuplicateExceptions;

@@ -165,6 +165,14 @@ namespace Zilch
     // If this documented object has a resulting type (or represents a type) this will return it
     virtual Type* GetTypeOrNull();
 
+    // Used to chain operations on reflection objects.
+    template <typename T>
+    ReflectionObject* Add(const T* component)
+    {
+      Composition::Add<T>(component);
+      return this;
+    }
+
     // The location of just the name/identifier for this document object
     // This is what gets selected in common IDE commands such as Go-To-Definition
     CodeLocation NameLocation;

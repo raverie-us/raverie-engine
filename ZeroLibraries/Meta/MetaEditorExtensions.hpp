@@ -45,11 +45,21 @@ class EditorRange : public EditorPropertyExtension
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  EditorRange();
   EditorRange(float minValue, float maxValue, float increment);
 
-  float MinValue;
-  float MaxValue;
+  float Min;
+  float Max;
   float Increment;
+};
+
+//------------------------------------------------------------------------------------ Editor Slider
+class EditorSlider : public EditorRange
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  EditorSlider();
 };
 
 //------------------------------------------------------------------------------ EditorRotationBasis
@@ -71,7 +81,6 @@ public:
 };
 
 //---------------------------------------------------------------------------------- Editor Resource
-extern const String ResourceEdit;
 class EditorResource : public EditorPropertyExtension
 {
 public:
@@ -162,6 +171,16 @@ public:
   TemplateFilterBase* mActualFilter;
 };
 
+//-------------------------------------------------------------------------------- Meta Shader Input
+class MetaShaderInput : public ReferenceCountedEventObject
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  
+  String mFragmentName;
+  String mInputName;
+};
+
 //-------------------------------------------------------------------------------- Meta Editor Gizmo
 class MetaEditorGizmo : public ReferenceCountedEventObject
 {
@@ -178,6 +197,16 @@ public:
 
 #define ZeroFilterEquality(Member, MemberType, ConstantValue)       \
   Add(new MetaPropertyBasicFilter(new TemplateFilterEquality<ZilchSelf, MemberType, &ZilchSelf::Member, ConstantValue>()))
+
+//--------------------------------------------------------------------------------------- Meta Group
+/// Used for grouping properties in the property grid.
+class MetaGroup : public ReferenceCountedEventObject
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  MetaGroup(StringParam name = String());
+  String mName;
+};
 
 //----------------------------------------------------------------------------------- Meta Custom Ui
 /// Used for adding custom Ui to the property grid. This is currently only for the old Ui and not

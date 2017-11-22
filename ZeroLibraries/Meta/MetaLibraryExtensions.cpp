@@ -40,6 +40,9 @@ void MetaLibraryExtensions::AddExtensionsPostCompilation(LibraryBuilder& builder
 void MetaLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* userData)
 {
   BoundType* type = e->Type;
+
+  AttributeExtensions::GetInstance()->ProcessType(type, e->BuildingProject);
+
   ProcessComponent(*e->Builder, type);
 
   // Command and Tool attributes imply RunInEditor

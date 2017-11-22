@@ -222,17 +222,9 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
        property->HasAttribute(PropertyAttributes::cDisplay)  ||
        property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
     {
-      if(Attribute* attribute = property->HasAttribute(PropertyAttributes::cGroup))
+      if(MetaGroup* group = property->Has<MetaGroup>())
       {
-        // Must have a string attribute that's the group name
-        if (attribute->Parameters.Empty())
-          continue;
-
-        AttributeParameter& param = attribute->Parameters.Front();
-        if (param.Type != ConstantType::String)
-          continue;
-
-        AddGroup(node, param.StringValue, property, object, objectProperty, this);
+        AddGroup(node, group->mName, property, object, objectProperty, this);
         continue;
       }
 

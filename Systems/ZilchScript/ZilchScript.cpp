@@ -105,9 +105,10 @@ void ZilchScript::GetKeywords(Array<Completion>& keywordsOut)
   keywordsOut.Append(Grammar::GetUsedKeywords().All());
   keywordsOut.Append(Grammar::GetSpecialKeywords().All());
 
-  keywordsOut.Append(manager->mAllowedClassAttributes.All());
-  keywordsOut.Append(manager->mAllowedFunctionAttributes.All());
-  keywordsOut.Append(manager->mAllowedGetSetAttributes.All());
+  AttributeExtensions* attributeExtensions = AttributeExtensions::GetInstance();
+  keywordsOut.Append(attributeExtensions->mClassExtensions.Keys());
+  keywordsOut.Append(attributeExtensions->mPropertyExtensions.Keys());
+  keywordsOut.Append(attributeExtensions->mFunctionExtensions.Keys());
 }
 
 //**************************************************************************************************
@@ -198,36 +199,6 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::UnhandledException, ZeroZilchExceptionCallback);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::FatalError, ZeroZilchFatalErrorCallback);
 
-  mAllowedClassAttributes.Insert(ObjectAttributes::cRunInEditor);
-  mAllowedClassAttributes.Insert(ObjectAttributes::cTool);
-  mAllowedClassAttributes.Insert(ObjectAttributes::cCommand);
-  mAllowedClassAttributes.Insert(ObjectAttributes::cGizmo);
-  mAllowedClassAttributes.Insert(ObjectAttributes::cComponentInterface);
-  
-  mAllowedFunctionAttributes.Insert("Static");
-  mAllowedFunctionAttributes.Insert("Virtual");
-  mAllowedFunctionAttributes.Insert("Override");
-  mAllowedFunctionAttributes.Insert(FunctionAttributes::cProperty);
-  mAllowedFunctionAttributes.Insert(FunctionAttributes::cDisplay);
-
-  mAllowedGetSetAttributes.Insert("Static");
-  mAllowedGetSetAttributes.Insert("Virtual");
-  mAllowedGetSetAttributes.Insert("Override");
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cProperty);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cSerialize);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cDeprecatedSerialized);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cDisplay);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cDeprecatedEditable);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cDependency);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cNetProperty);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cNetPeerId);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cRuntimeClone);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cShaderInput);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cResourceProperty);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cRenamedFrom);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cLocalModificationOverride);
-  mAllowedGetSetAttributes.Insert(PropertyAttributes::cGroup);
-
   ConnectThisTo(Z::gResources, Events::PreScriptSetCompile, OnPreZilchProjectCompilation);
 }
 
@@ -272,76 +243,12 @@ String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
 void ZilchScriptManager::OnPreZilchProjectCompilation(ZilchPreCompilationEvent* e)
 {
   EventConnect(e->mProject, Zilch::Events::CompilationError, ZeroZilchErrorCallback);
-  EventConnect(e->mProject, Zilch::Events::TypeParsed, &ZilchScriptManager::TypeParsedCallback, this);
 }
 
 void ZilchScriptManager::OnEngineUpdate(Event* event)
 {
   //METAREFACTOR
   //mDebugger.Update();
-}
-
-void ZilchScriptManager::TypeParsedCallback(Zilch::ParseEvent* e, void* userData)
-{
-  LibraryBuilder* builder = e->Builder;
-  BoundType* type = e->Type;
-  ZilchScriptManager* self = (ZilchScriptManager*)userData;
-
-  ValidateAttributes(type->Attributes, *e->Location, self->mAllowedClassAttributes, "class", e->BuildingProject);
-  forRange(Function* zilchFunction, type->AllFunctions.All())
-    ValidateAttributes(zilchFunction->Attributes, zilchFunction->Location, self->mAllowedFunctionAttributes, "function", e->BuildingProject);
-  forRange(Property* zilchProperty, type->AllProperties.All())
-  {
-    ValidateAttributes(zilchProperty->Attributes, zilchProperty->Location, self->mAllowedGetSetAttributes, "property", e->BuildingProject);
-    CheckDependencies(type, zilchProperty, e->BuildingProject);
-
-    // Static members cannot be serialized
-    if(zilchProperty->IsStatic)
-    {
-      if (zilchProperty->HasAttribute(PropertyAttributes::cSerialize) || 
-          zilchProperty->HasAttribute(PropertyAttributes::cDeprecatedSerialized))
-      {
-        String message = "Static members cannot be serialized";
-        DispatchZeroZilchError(zilchProperty->Location, message, e->BuildingProject);
-      }
-    }
-  }
-
-  // Check if an object has a gizmo attribute.
-  Attribute* gizmoAttribute = type->HasAttributeInherited(ObjectAttributes::cGizmo);
-  if(gizmoAttribute)
-  {
-    // Get the archetype's name if it exists
-    Zilch::AttributeParameter* param = gizmoAttribute->HasAttributeParameter("archetype");
-    if(param != nullptr)
-    {
-      MetaEditorGizmo* editorGizmo = new MetaEditorGizmo();
-      editorGizmo->mGizmoArchetype = param->StringValue;
-      type->Add(editorGizmo);
-    }
-  }
-
-  // Check for this having a base that has component interface
-  Attribute* componentInterfaceAttribute = type->HasAttributeInherited(ObjectAttributes::cComponentInterface);
-  if(componentInterfaceAttribute)
-  {
-    BoundType* baseType = type->BaseType;
-    // Keep walking up the hierarchy to find what base type had the attribute. Make
-    // sure we skip the base type itself though (i.e. Collider can't add Collider as an interface)
-    while(baseType != nullptr && type != baseType)
-    {
-      if(baseType->HasAttribute(ObjectAttributes::cComponentInterface))
-      {
-        CogComponentMeta* componentMeta = type->HasOrAdd<CogComponentMeta>(type);
-        // The default constructor will set this type to FromDataOnly so we have to manually set this for now
-        componentMeta->mSetupMode = SetupMode::DefaultSerialization;
-        componentMeta->AddInterface(baseType);
-        break;
-      }
-      
-      baseType = baseType->BaseType;
-    }
-  }
 }
 
 void ZilchScriptManager::ValidateAttribute(Attribute& attribute, CodeLocation& location, HashSet<String>& allowedAttributes, StringParam attributeClassification, Project* buildingProject)

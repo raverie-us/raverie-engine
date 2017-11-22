@@ -53,3 +53,4 @@ const Guid cInvalidUniqueId = (Guid)-1;
 #include "SourceControl.hpp"
 #include "SimpleResourceFactory.hpp"
 #include "MetaLibraryExtensions.hpp"
+#include "AttributeExtension.hpp"

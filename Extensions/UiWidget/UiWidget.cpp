@@ -140,19 +140,19 @@ ZilchDefineType(UiWidget, builder, type)
 
   static const String sLayoutGroup = "Layout";
 
-  ZilchBindGetterSetterProperty(SizePolicyX)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
-  ZilchBindGetterSetterProperty(SizePolicyY)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
-  ZilchBindFieldProperty(mFlexSize)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(SizePolicyX)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(SizePolicyY)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindFieldProperty(mFlexSize)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(VerticalAlignment)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
-  ZilchBindGetterSetterProperty(HorizontalAlignment)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(VerticalAlignment)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(HorizontalAlignment)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(MarginLeft)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
-  ZilchBindGetterSetterProperty(MarginTop)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
-  ZilchBindGetterSetterProperty(MarginRight)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
-  ZilchBindGetterSetterProperty(MarginBottom)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(MarginLeft)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginTop)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginRight)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginBottom)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(DockMode)->ZeroLocalModificationOverride()->ZeroSetPropertyGroup(sLayoutGroup);
+  ZilchBindGetterSetterProperty(DockMode)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
   ZilchBindGetterSetterProperty(CanTakeFocus);
   ZilchBindGetter(MouseOver);
   ZilchBindGetter(MouseOverHierarchy);

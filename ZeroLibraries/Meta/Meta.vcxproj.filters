@@ -29,6 +29,7 @@
     <ClCompile Include="ThreadSafeReferenceCounted.cpp" />
     <ClCompile Include="CommonHandleManagers.cpp" />
     <ClCompile Include="NativeTypeConversion.cpp" />
+    <ClCompile Include="AttributeExtension.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceControl.hpp">
@@ -59,6 +60,7 @@
     <ClInclude Include="HandleManagers.hpp" />
     <ClInclude Include="CommonHandleManagers.hpp" />
     <ClInclude Include="NativeTypeConversion.hpp" />
+    <ClInclude Include="AttributeExtension.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimpleResourceFactory.hpp" />

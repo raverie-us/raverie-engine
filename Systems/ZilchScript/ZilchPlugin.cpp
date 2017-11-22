@@ -201,9 +201,10 @@ void ZilchPluginSource::ForceCopyPluginDependencies()
   cppAttributes.WriteLine("{");
 
   HashSet<String> attributes;
-  attributes.Append(manager->mAllowedClassAttributes.All());
-  attributes.Append(manager->mAllowedFunctionAttributes.All());
-  attributes.Append(manager->mAllowedGetSetAttributes.All());
+  AttributeExtensions* attributeExtensions = AttributeExtensions::GetInstance();
+  attributes.Append(attributeExtensions->mClassExtensions.Keys());
+  attributes.Append(attributeExtensions->mPropertyExtensions.Keys());
+  attributes.Append(attributeExtensions->mFunctionExtensions.Keys());
 
   forRange(String& attribute, attributes.All())
   {

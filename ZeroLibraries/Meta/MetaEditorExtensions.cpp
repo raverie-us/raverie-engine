@@ -39,15 +39,41 @@ void EditorIndexedStringArray::Enumerate(HandleParam instance, Property* propert
 //**************************************************************************************************
 ZilchDefineType(EditorRange, builder, type)
 {
+  ZilchBindFieldProperty(Min);
+  ZilchBindFieldProperty(Max);
+  ZilchBindFieldProperty(Increment)->AddAttribute(PropertyAttributes::cOptional);
+}
+
+//**************************************************************************************************
+EditorRange::EditorRange()
+  : Min(-Math::PositiveMax())
+  , Max(Math::PositiveMax())
+  , Increment(0.01f)
+{
+
 }
 
 //**************************************************************************************************
 EditorRange::EditorRange(float minValue, float maxValue, float increment)
-  : MinValue(minValue)
-  , MaxValue(maxValue)
+  : Min(minValue)
+  , Max(maxValue)
   , Increment(increment)
 {
 
+}
+
+//------------------------------------------------------------------------------------ Editor Slider
+//**************************************************************************************************
+ZilchDefineType(EditorSlider, builder, type)
+{
+}
+
+//**************************************************************************************************
+EditorSlider::EditorSlider()
+{
+  Min = 0;
+  Max = 1;
+  Increment = 0.01f;
 }
 
 //------------------------------------------------------------------------------ EditorRotationBasis
@@ -83,6 +109,9 @@ EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam 
 //**************************************************************************************************
 ZilchDefineType(EditorResource, builder, type)
 {
+  ZilchBindField(FilterTag);
+  ZilchBindField(AllowAdd);
+  ZilchBindField(AllowNone);
 }
 
 //**************************************************************************************************
@@ -111,6 +140,29 @@ ZilchDefineType(MetaPropertyBasicFilter, builder, type)
 //**************************************************************************************************
 ZilchDefineType(MetaEditorGizmo, builder, type)
 {
+  ZilchBindFieldProperty(mGizmoArchetype);
+}
+
+//-------------------------------------------------------------------------------- Meta Shader Input
+//**************************************************************************************************
+ZilchDefineType(MetaShaderInput, builder, type)
+{
+  ZilchBindFieldProperty(mFragmentName)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindFieldProperty(mInputName)->AddAttribute(PropertyAttributes::cOptional);
+}
+
+//--------------------------------------------------------------------------------------- Meta Group
+//**************************************************************************************************
+ZilchDefineType(MetaGroup, builder, type)
+{
+  ZilchBindFieldProperty(mName);
+}
+
+//**************************************************************************************************
+MetaGroup::MetaGroup(StringParam name)
+  : mName(name)
+{
+
 }
 
 //----------------------------------------------------------------------------------- Meta Custom Ui
