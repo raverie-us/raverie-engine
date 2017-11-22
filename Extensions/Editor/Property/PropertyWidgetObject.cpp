@@ -1372,11 +1372,12 @@ Handle PropertyWidgetObject::GetParentObject()
 void PropertyWidgetObject::StartChildDrag(Mouse* mouse, PropertyWidgetObject* child)
 {
   // Don't do anything if the components can't be reordered
-  if(MetaComposition* composition = mComposition)
-  {
-    if (!composition->mSupportsComponentReorder)
-      return;
-  }
+  MetaComposition* composition = mComposition;
+  if (composition == nullptr)
+    return;
+  
+  if (!composition->mSupportsComponentReorder)
+    return;
 
   // Dragging for meta arrays is disabled until fully supported
   if (mMetaArray.IsNotNull())
