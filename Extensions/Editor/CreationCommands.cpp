@@ -66,7 +66,13 @@ void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manage
   // If a cog command context has been set attach the new cog as a child
   CommandManager* commandManager = CommandManager::GetInstance();
   if (Cog* selectedCog = commandManager->GetContext<Cog>())
+  {
     cog->AttachTo(selectedCog);
+    
+    // Create it directly under the parent
+    if (Transform* t = cog->has(Transform))
+      t->SetLocalTranslation(Vec3::cZero);
+  }
   
   editor->SelectOnly(cog);
 }
