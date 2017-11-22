@@ -1581,11 +1581,13 @@ void Cog::ClearArchetype()
   // Archetype and any inherited Archetypes
   mArchetype->GetAllCachedModifications().ApplyModificationsToObject(this);
 
+  // We need to clear the Archetype before calling ClearCogModifications because it 
+  // will keep around modifications if it thinks this Cog is still an Archetype.
+  mArchetype = nullptr;
+
   // The modifications to us don't matter (our Archetype is being cleared), so clear ours but 
   // retain the newly applied child Archetype modifications
   ClearCogModifications(this, true);
-
-  mArchetype = nullptr;
 }
 
 //**************************************************************************************************
