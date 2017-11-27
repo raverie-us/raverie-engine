@@ -53,7 +53,6 @@ void ContentPackage::operator=(const ContentPackage& rhs)
   mTags = rhs.mTags;
   mSize = rhs.mSize;
   mVersionBuilt = rhs.mVersionBuilt;
-  mTileSize = rhs.mTileSize;
 }
 
 //******************************************************************************
@@ -66,7 +65,6 @@ void ContentPackage::Serialize(Serializer& stream)
   SerializeNameDefault(mTags, String());
   SerializeNameDefault(mSize, (uint)0);
   SerializeNameDefault(mVersionBuilt, (uint)9147);
-  SerializeNameDefault(mTileSize, Vec2::cZero);
 }
 
 //******************************************************************************
