@@ -1577,6 +1577,9 @@ bool Cog::IsModifiedFromArchetype()
 //**************************************************************************************************
 void Cog::ClearArchetype()
 {
+  if (mArchetype == nullptr)
+    return;
+
   // To retain the correct state of any child Archetypes, we need to apply all modifications of our
   // Archetype and any inherited Archetypes
   mArchetype->GetAllCachedModifications().ApplyModificationsToObject(this);
