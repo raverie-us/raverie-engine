@@ -2427,6 +2427,28 @@ namespace Zilch
   }
 
   //***************************************************************************
+  void VectorOneFunction(Call& call, ExceptionReport& report)
+  {
+    call.DisableReturnChecks();
+
+    // Get the user data for the function
+    VectorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
+
+    // Get the element type of the vector (Real, Integer, etc...)
+    Core& core = Core::GetInstance();
+
+    BoundType* elementType = core.VectorScalarBoundTypes[userData.ElementTypeIndex];
+    Core::ScalarTypeOneFunction oneFunction = core.ScalarTypeOneFunctions[userData.ElementTypeIndex];
+    // Set the entire array to one based upon a callback function for the bound type
+    byte* returnData = call.GetReturnUnchecked();
+    for(size_t i = 0; i < userData.Count; ++i)
+    {
+      oneFunction(returnData);
+      returnData += elementType->Size;
+    }
+  }
+
+  //***************************************************************************
   // Splats a function of the type Scalar Fn(Scalar) to
   // Vec(n) Fn(Vec(n)) (vector could be of whatever scalar type is)
   template <size_t Components, typename ScalarType, ScalarType (*Function)(ScalarType)>
@@ -3448,6 +3470,11 @@ namespace Zilch
         prop = builder.AddBoundGetterSetter(vectorType, "Zero", vectorType, nullptr, VectorZeroFunction, FunctionOptions::Static);
         prop->Get->ComplexUserData.WriteObject(userData);
         prop->Description = ZilchDocumentString("The zero vector (a vector containing all zeroes).");
+
+        // Add a property for the one vector
+        prop = builder.AddBoundGetterSetter(vectorType, "One", vectorType, nullptr, VectorOneFunction, FunctionOptions::Static);
+        prop->Get->ComplexUserData.WriteObject(userData);
+        prop->Description = ZilchDocumentString("The one vector (a vector containing all ones).");
 
         // Add a property for each axis (e.g. Real3.XAxis, Real3.YAxis, etc...)
         for(size_t axis = 0; axis <= dimension; ++axis)
