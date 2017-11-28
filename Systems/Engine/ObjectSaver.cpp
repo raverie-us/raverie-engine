@@ -14,9 +14,9 @@ namespace Zero
 //------------------------------------------------------------------------------------- Object Saver
 //**************************************************************************************************
 ObjectSaver::ObjectSaver()
+  : mSerializeStart(nullptr)
+  , mFullObjectOverride(false)
 {
-  //mInheritanceDepth = 0;
-  mSerializeStart = nullptr;
 }
 
 //**************************************************************************************************
@@ -31,6 +31,15 @@ void ObjectSaver::SaveDefinition(Object* object)
 {
   PropertyPath path;
   SaveObject(object, object, path, false, InheritIdContext::Definition);
+}
+
+//**************************************************************************************************
+void ObjectSaver::SaveFullObject(Object* object)
+{
+  mFullObjectOverride = true;
+
+  PropertyPath path;
+  SaveObject(object, object, path, false, InheritIdContext::Instance);
 }
 
 //**************************************************************************************************
@@ -61,7 +70,7 @@ void ObjectSaver::SaveObject(Object* object, Object* propertyPathParent, Propert
     path = localPath;
 
   // If we're patching, continue to only save out modified properties
-  if(patching)
+  if(patching && !mFullObjectOverride)
   {
     SaveModifications(object, propertyPathParent, path, context);
     return;
@@ -73,8 +82,8 @@ void ObjectSaver::SaveObject(Object* object, Object* propertyPathParent, Propert
   if(MetaDataInheritanceRoot* inheritance = objectType->HasInherited<MetaDataInheritanceRoot>())
     inheritId = inheritance->GetInheritId(object, context);
 
-  if(inheritId.Empty())
-    SaveFullObject(object);
+  if(inheritId.Empty() || mFullObjectOverride)
+    SaveFullObjectInternal(object);
   else
     SaveModifications(object, propertyPathParent, path, context);
 
@@ -84,7 +93,7 @@ void ObjectSaver::SaveObject(Object* object, Object* propertyPathParent, Propert
 }
 
 //**************************************************************************************************
-void ObjectSaver::SaveFullObject(Object* object)
+void ObjectSaver::SaveFullObjectInternal(Object* object)
 {
   LocalModifications* modifications = LocalModifications::GetInstance();
 
@@ -93,8 +102,10 @@ void ObjectSaver::SaveFullObject(Object* object)
   PolymorphicInfo info;
   BuildPolymorphicInfo(info, object, InheritIdContext::Instance, false);
 
-  // We're saving the full object, so clear out the inheritance id if it exists
-  info.mInheritanceId = String();
+  // We're saving the full object, so clear out the inheritance id if it exists (it could exist when
+  // saving out a definition (e.g. an Archetype)
+  if(mFullObjectOverride == false)
+    info.mInheritanceId = String();
 
   StartPolymorphicInternal(info);
   object->Serialize(*this);
@@ -298,11 +309,5 @@ void ObjectSaver::BuildPolymorphicInfo(PolymorphicInfo& info, Object* object,
       info.mFlags.SetFlag(PolymorphicSaveFlags::ChildOrderOverride);
   }
 }
-
-//**************************************************************************************************
-//bool ObjectSaver::IsPatching()
-//{
-//  return mInheritanceDepth > 0;
-//}
 
 }//namespace Zero

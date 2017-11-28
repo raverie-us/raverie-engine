@@ -137,7 +137,7 @@ StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
 
   Status status;
   //Create a text serializer
-  TextSaver saver;
+  ObjectSaver saver;
   // Add a saving context so that ids are relative
   CogSavingContext savingContext;
 
@@ -150,7 +150,7 @@ StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
       mEntries.PushBack(storeFile);
 
     saver.SetSerializationContext(&savingContext);
-    saver.SerializePolymorphic(*object);
+    saver.SaveFullObject(object);
     saver.Close();
   }
   else
