@@ -84,6 +84,7 @@ public:
   String mPropertyInputAttributeName;
   String mSystemValueInputAttributeName;
   String mSystemValueOutputAttributeName;
+  String mNoFallbackWarningAttributeName;
   // Attributes that are implied by the [Input] attribute
   Array<String> mInputSubAttributes;
   String mGeometryShaderOutputTag;

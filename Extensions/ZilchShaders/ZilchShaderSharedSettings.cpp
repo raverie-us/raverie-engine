@@ -49,6 +49,7 @@ NameSettings::NameSettings()
   mStageOutputAttributeName = "StageOutput";
   mSystemValueInputAttributeName = "SVInput";
   mSystemValueOutputAttributeName = "SVOutput";
+  mNoFallbackWarningAttributeName = "NoFallbackWarning";
   mBuiltinInputAttributeName = "BuiltInInput";
   mPropertyInputAttributeName = "PropertyInput";
   mInputSubAttributes.PushBack(mFragmentInputAttributeName);
@@ -116,6 +117,7 @@ NameSettings::NameSettings()
   mAllowedFieldAttributes.Insert(mBuiltinInputAttributeName, AttributeInfo());
   mAllowedFieldAttributes.Insert(mPropertyInputAttributeName, AttributeInfo());
   mAllowedFieldAttributes.Insert(mOutputAttributeName, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mNoFallbackWarningAttributeName, AttributeInfo());
   // Hidden
   mAllowedFieldAttributes.Insert(mNoMangleAttributeName, AttributeInfo(true));
   mAllowedFieldAttributes.Insert(mUniformName, AttributeInfo(true));
