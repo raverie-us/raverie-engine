@@ -458,6 +458,8 @@ void Exporter::DoExport()
   Archive engineArchive(ArchiveMode::Compressing);
   ArchiveLibraryOutput(engineArchive, "FragmentCore");
   ArchiveLibraryOutput(engineArchive, "ZeroCore");
+  ArchiveLibraryOutput(engineArchive, "UiWidget");
+  ArchiveLibraryOutput(engineArchive, "EditorUi");
   ArchiveLibraryOutput(engineArchive, "Editor");
   ArchiveLibraryOutput(engineArchive, "Loading");
 
@@ -598,6 +600,8 @@ void ExportContentFolders(Cog* projectCog)
   // Copy content output
   CopyLibraryOut(outputDirectory, "FragmentCore");
   CopyLibraryOut(outputDirectory, "ZeroCore");
+  CopyLibraryOut(outputDirectory, "UiWidget");
+  CopyLibraryOut(outputDirectory, "EditorUi");
   CopyLibraryOut(outputDirectory, "Editor");
   CopyLibraryOut(outputDirectory, "Loading");
   CopyLibraryOut(outputDirectory, project->ProjectContentLibrary);

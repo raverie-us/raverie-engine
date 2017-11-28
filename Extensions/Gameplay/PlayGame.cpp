@@ -76,6 +76,8 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   LoadResourcePackageRelative(projectDirectory, "FragmentCore");
   LoadResourcePackageRelative(projectDirectory, "Loading");
   LoadResourcePackageRelative(projectDirectory, "ZeroCore");
+  LoadResourcePackageRelative(projectDirectory, "UiWidget");
+  LoadResourcePackageRelative(projectDirectory, "EditorUi");
   LoadResourcePackageRelative(projectDirectory, "Editor");
 
   // Hack!
