@@ -3,7 +3,7 @@
 /// \file ContextMenu.cpp
 /// Implementation of the PopUp.
 ///
-/// Authors: Chris Peters
+/// Authors: Chris Peters, Dane Curbow
 /// Copyright 2010, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,9 +35,9 @@ namespace MenuUi
 
 namespace Events
 {
-  DefineEvent(MenuClosed);
+  DefineEvent(MenuDestroy);
   DefineEvent(MenuItemSelected);
-  DefineEvent(MouseEnterSibling);
+  DefineEvent(MouseHoverSibling);
 }
 
 Composite* CreateLineDivider(Composite* parent, Vec4 color)
@@ -87,18 +87,15 @@ ContextMenuItem::ContextMenuItem(ContextMenu* parent, StringParam name)
 
   ConnectThisTo(this, Events::LeftMouseUp, OnLeftMouseUp);
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
-  ConnectThisTo(this, Events::MouseEnterHierarchy, OnMouseEnterHierarchy);
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
-  ConnectThisTo(this, Events::MouseEnterSibling, OnSiblingEntered);
+  ConnectThisTo(this, Events::MouseHover, OnMouseHover);
+  ConnectThisTo(this, Events::MouseHoverSibling, OnSiblingHover);
 
   parent->SizeToContents();
 }
 
 void ContextMenuItem::OnMouseEnter(MouseEvent* event)
 {
-  ObjectEvent e(this);
-  GetParent()->DispatchDown(Events::MouseEnterSibling, &e);
-
   MarkAsNeedsUpdate();
 }
 
@@ -107,12 +104,17 @@ void ContextMenuItem::OnMouseExit(MouseEvent* event)
   MarkAsNeedsUpdate();
 }
 
-void ContextMenuItem::OnMouseEnterHierarchy(MouseEvent* event)
+void ContextMenuItem::OnMouseHover(MouseEvent* event)
 {
   // This context item is a sub menu and needs to spawn a new context menu with all the
   // items it contains
   if (mSubMenu == nullptr && !mSubMenuContents.Empty())
   {
+    // Close any sibling sub menus that are currently open
+    ObjectEvent e(this);
+    GetParent()->DispatchDown(Events::MouseHoverSibling, &e);
+
+    // Create our current menu items sub menu
     mSubMenu = new ContextMenu(this);
     mSubMenu->mName = "SubMenu";
     // When opening a sub menu disable the parent from closing based on mouse distance
@@ -136,25 +138,15 @@ void ContextMenuItem::OnMouseEnterHierarchy(MouseEvent* event)
 
     // Position the sub menu
     Vec3 subMenuPos = Vec3(mSize.x, 0, 0) + GetScreenPosition();
-    mSubMenu->SizeToContents();
     mSubMenu->FitSubMenuOnScreen(subMenuPos, mSize);
     // When the sub menu closes the parent's menu close option needs to be re-enabled
-    ConnectThisTo(mSubMenu, Events::MenuClosed, OnChildMenuClosed);
+    ConnectThisTo(mSubMenu, Events::MenuDestroy, OnChildMenuDestroy);
+    
+    mSubMenu->UpdateTransform();
   }
-
-  MarkAsNeedsUpdate();
 }
 
-void ContextMenuItem::OnChildMenuClosed(ObjectEvent* e)
-{
-  // Our sub menu has closed so re-enable closing the parent menu based on mouse distance
-  ContextMenu* menuClosed = (ContextMenu*)e->Source;
-  PopUp* parentPopup = (PopUp*)this->GetParent();
-  parentPopup->mCloseMode = PopUpCloseMode::MouseDistance;
-  mSubMenu = nullptr;
-}
-
-void ContextMenuItem::OnSiblingEntered(ObjectEvent* e)
+void ContextMenuItem::OnSiblingHover(ObjectEvent* e)
 {
   ContextMenuItem* item = (ContextMenuItem*)e->Source;
   // Don't do anything if we were the item selected
@@ -166,6 +158,15 @@ void ContextMenuItem::OnSiblingEntered(ObjectEvent* e)
     mSubMenu->CloseContextMenu();
     mSubMenu = nullptr;
   }
+}
+
+void ContextMenuItem::OnChildMenuDestroy(ObjectEvent* e)
+{
+  // Our sub menu has closed so re-enable closing the parent menu based on mouse distance
+  ContextMenu* menuClosed = (ContextMenu*)e->Source;
+  PopUp* parentPopup = (PopUp*)this->GetParent();
+  parentPopup->mCloseMode = PopUpCloseMode::MouseDistance;
+  mSubMenu = nullptr;
 }
 
 Vec2 ContextMenuItem::GetMinSize()
@@ -315,9 +316,6 @@ ContextMenu::ContextMenu(Widget* target)
 
 ContextMenu::~ContextMenu()
 {
-  ObjectEvent e(this);
-  DispatchEvent(Events::MenuClosed, &e);
-
   // when the context menu loses focus and deletes itself we need
   // to clear the currently open menu references so returning the menu bar
   // requires you to click an item to open it again
@@ -332,6 +330,14 @@ ContextMenu::~ContextMenu()
 Vec2 ContextMenu::GetMinSize()
 {
   return Composite::GetMinSize() + Vec2(MenuUi::BorderPadding);
+}
+
+void ContextMenu::OnDestroy()
+{
+  ObjectEvent e(this);
+  DispatchEvent(Events::MenuDestroy, &e);
+
+  Composite::OnDestroy();
 }
 
 void ContextMenu::SizeToContents()
@@ -401,7 +407,7 @@ void ContextMenu::LoadMenu(StringParam menuName)
 
 void ContextMenu::CloseContextMenu()
 {
-  this->Destroy();
+  FadeOut(0.05f);
 }
 
 // Similar to shift onto screen, but takes the ContextMenuItem's position and
