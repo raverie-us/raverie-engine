@@ -290,6 +290,8 @@ void PropertyOperation::Redo()
   LocalModifications* modifications = LocalModifications::GetInstance();
   modifications->SetPropertyModified(instance, mPropertyPath, true);
 
+  // Should we disable property side effects for the notification?
+
   // Notify Meta that the property has changed
   MetaOperations::NotifyPropertyModified(instance, mPropertyPath, mValueBefore, mValueAfter, false);
 }
