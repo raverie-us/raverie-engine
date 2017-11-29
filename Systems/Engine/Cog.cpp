@@ -1602,6 +1602,7 @@ void Cog::MarkNotModified()
 //**************************************************************************************************
 void Cog::UploadToArchetype()
 {
+  ReturnIf(GetMarkedForDestruction() || GetTransient(), , "Cannot upload to Archetype");
   if (!mArchetype)
   {
     DoNotifyError("No archetype", "No archetype to upload to.");

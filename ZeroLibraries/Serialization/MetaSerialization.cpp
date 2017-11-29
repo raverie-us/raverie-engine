@@ -20,12 +20,14 @@ void MetaSerialization::SerializeProperty(HandleParam instance, Property* proper
 {
   BoundType* propertyType = Type::GetBoundType(property->PropertyType);
 
+  SerializerMode::Enum mode = serializer.GetMode();
+
   Any value;
-  if (serializer.GetMode() == SerializerMode::Saving)
+  if (mode == SerializerMode::Saving)
   {
     value = property->GetValue(instance);
   }
-  else if (serializer.GetMode() == SerializerMode::Loading)
+  else if (mode == SerializerMode::Loading)
   {
     // If it's a reference type, attempt to get the already allocated object
     if (propertyType->CopyMode == TypeCopyMode::ReferenceType)
@@ -49,28 +51,35 @@ void MetaSerialization::SerializeProperty(HandleParam instance, Property* proper
   {
     bool serialized = SerializePrimitiveProperty(propertyType, property->Name.c_str(), value, serializer);
 
-    // Check if it has a rename
-    if (MetaPropertyRename* rename = property->Has<MetaPropertyRename>())
-      serialized = SerializePrimitiveProperty(propertyType, rename->mOldName.c_str(), value, serializer);
-
-    // If the value was not found use the default
-    // value off of the property
-    if (!serialized)
+    // If we failed to load the property, there are a few extra things we need to do
+    if (mode == SerializerMode::Loading)
     {
-      MetaSerializedProperty* metaDefault = property->Has<MetaSerializedProperty>();
-      if (metaDefault)
+      // Check if it has a rename
+      if(!serialized)
       {
-        // Even though we failed to read the property, someone set up a valid default so set the property!
-        value = metaDefault->mDefault;
-        serialized = true;
+        if (MetaPropertyRename* rename = property->Has<MetaPropertyRename>())
+          serialized = SerializePrimitiveProperty(propertyType, rename->mOldName.c_str(), value, serializer);
       }
-    }
 
-    // We only set the property if we properly read a value, or we had a valid default
-    // If neither is true, we actually just leave the property as it was
-    // (assuming it is already initialized to its own default)
-    if (serialized)
-      property->SetValue(instance, value);
+      // If the value was not found use the default
+      // value off of the property
+      if (!serialized)
+      {
+        MetaSerializedProperty* metaDefault = property->Has<MetaSerializedProperty>();
+        if (metaDefault)
+        {
+          // Even though we failed to read the property, someone set up a valid default so set the property!
+          value = metaDefault->mDefault;
+          serialized = true;
+        }
+      }
+
+      // We only set the property if we properly read a value, or we had a valid default
+      // If neither is true, we actually just leave the property as it was
+      // (assuming it is already initialized to its own default)
+      if (serialized)
+        property->SetValue(instance, value);
+    }
   }
 }
 
