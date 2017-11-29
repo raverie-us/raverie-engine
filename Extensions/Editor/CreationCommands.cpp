@@ -50,24 +50,42 @@ void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manage
   if(editorCameraObject == nullptr)
     return;
 
-  EditorCameraController* editorCameraController = editorCameraObject->has(EditorCameraController);
-  if(editorCameraController == nullptr)
-    return;
-
+  // Create the object
   Archetype* archetype = ArchetypeManager::Find(ArchetypeName);
-  Vec3 creationPoint = editorCameraController->GetLookTarget();
-  Cog* cog = CreateFromArchetype(editor->GetOperationQueue(), space, archetype, creationPoint);
+  Cog* cog = space->Create(archetype);
   if(cog == nullptr)
     return;
 
+  // We don't want it to be associated with the Archetype as they're all core Resources
   cog->ClearArchetype();
   cog->SetName(ArchetypeName);
+
+  // Create it at the origin
+  Transform* transform = cog->has(Transform);
+  if (transform)
+    transform->SetLocalTranslation(Vec3::cZero);
 
   // If a cog command context has been set attach the new cog as a child
   CommandManager* commandManager = CommandManager::GetInstance();
   if (Cog* selectedCog = commandManager->GetContext<Cog>())
-    cog->AttachTo(selectedCog);
-  
+  {
+    // Preserve local so that it is created under the parent
+    cog->AttachToPreserveLocal(selectedCog);
+  }
+  else
+  {
+    EditorCameraController* editorCameraController = editorCameraObject->has(EditorCameraController);
+    if (editorCameraController != nullptr)
+    {
+      if (transform)
+        transform->SetLocalTranslation(editorCameraController->GetLookTarget());
+    }
+  }
+
+  // Queue the creation of this object
+  OperationQueue* opQueue = editor->GetOperationQueue();
+  ObjectCreated(opQueue, cog);
+
   editor->SelectOnly(cog);
 }
 

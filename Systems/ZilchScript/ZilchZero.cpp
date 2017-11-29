@@ -298,11 +298,17 @@ void ZilchEvent::Delete()
 //**************************************************************************************************
 ZilchDefineType(ZilchObject, builder, type)
 {
+  type->HandleManager = ZilchManagerId(HeapManager);
   type->Sealed = false;
 
   type->CreatableInScript = true;
 
   ZilchBindMethod(DispatchEvent);
+
+  ZilchBindConstructor();
+  // Do not bind copy constructor. The only time it would be need is if this went from
+  // C++ to Zilch (because of HeapManager), and this should never be constructed in C++.
+  ZilchBindDestructor();
 }
 
 //**************************************************************************************************
