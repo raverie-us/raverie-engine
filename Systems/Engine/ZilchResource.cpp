@@ -229,6 +229,33 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, 
   {
     Rune r = textRange.ReadCurrentRune();
 
+    // if we are in a comment scan until we reach a new line or the end of the text range
+    if (r == '/')
+    {
+      textRange.PopFront();
+      if (!textRange.Empty())
+      {
+        r = textRange.ReadCurrentRune();
+        if (r == '/')
+        {
+          StringRange newline = textRange.FindFirstOf("\n");
+          if (!newline.Empty())
+            textRange = textRange.SubString(newline.End(), textRange.End());
+        }
+        if (r == '*')
+        {
+          // Have to pop front after the star as /*/*/ is a valid c style comment
+          textRange.PopFront();
+          StringRange endComment = textRange.FindFirstOf("*/");
+          if (!endComment.Empty())
+            textRange = textRange.SubString(endComment.End(), textRange.End());
+        }
+      }
+      // we reached the end of the text range and need to break out of the for loop too
+      if (textRange.Empty())
+        break;
+    }
+
     if (r == '{')
       ++bracesCount;
 
