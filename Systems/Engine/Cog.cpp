@@ -1930,7 +1930,7 @@ String Cog::SanatizeName(StringParam newName)
   if (newName.Empty())
     return newName;
 
-  return LibraryBuilder::FixIdentifier(newName, TokenCheck::None, '\0');
+  return LibraryBuilder::FixIdentifier(newName, TokenCheck::RemoveOuterBrackets, '\0');
 }
 
 //**************************************************************************************************
