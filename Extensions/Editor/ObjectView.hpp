@@ -41,7 +41,6 @@ public:
   void OnRightMouseUp(MouseEvent* event);
   void OnDataActivated(DataEvent* event);
   void OnKeyDown(KeyboardEvent* event);
-  void OnMenuClosed(ObjectEvent* event);
 
   void ShowObject(Cog* cog);
   void SelectAll();
@@ -55,6 +54,9 @@ private:
   void OnSelectionChanged(Event* event);
   void OnMouseEnterRow(TreeEvent* e);
   void OnMouseExitRow(TreeEvent* e);
+  // Event handlers for object view create sub-menu
+  void OnMenuMouseEnter(MouseEvent* event);
+  void OnMenuFocusLost(FocusEvent* event);
 
   TreeViewSearch* mSearch;
   TreeView* mTree;
