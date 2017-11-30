@@ -128,8 +128,12 @@ void Area::SetOrigin(Location::Enum origin)
 
 Vec2 Area::LocalOffsetOf(Location::Enum location)
 {
-  Vec2 offset = OffsetOfOffset(mOrigin, location);
-  return offset * mSize;
+  return OffsetOfOffset(location) * mSize;
+}
+
+Vec2 Area::OffsetOfOffset(Location::Enum location)
+{
+  return Zero::OffsetOfOffset(mOrigin, location);
 }
 
 Aabb Area::GetLocalAabb()

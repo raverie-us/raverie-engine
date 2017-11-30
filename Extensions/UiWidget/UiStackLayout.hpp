@@ -26,7 +26,7 @@ public:
 
   /// UiLayout Interface.
   Vec2 Measure(Rectangle& rect) override;
-  Vec2 DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) override;
+  void DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) override;
 
   float ComputeFlexRatio(float fixedSize, float totalFlex, float flexMinSize,
                          float totalSize);

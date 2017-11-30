@@ -4,7 +4,7 @@ Cog
 	var Name = "NodeLine"
 	Transform 
 	{
-		var Translation = Real3{129, -16, 1.60499573}
+		var Translation = Real3{0, 0, 0}
 		var Scale = Real3{1, 1, 1}
 		var Rotation = Quaternion{0, 0, 0, 1}
 	}
@@ -30,7 +30,7 @@ Cog
 	Area 
 	{
 		var Size = Real2{2, 1}
-		var Origin = Location.TopLeft
+		var Origin = Location.BottomLeft
 	}
 	UiWidget 
 	{

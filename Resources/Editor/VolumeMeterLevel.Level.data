@@ -305,7 +305,7 @@ Level
 			var Size = Real2{300, 300}
 			var Origin = Location.BottomLeft
 		}
-		UiWidget 
+		UiRootWidget 
 		{
 			var Active = true
 			var Visible = true
@@ -326,9 +326,6 @@ Level
 			var MarginRight = 0
 			var MarginBottom = 0
 			var DockMode = UiDockMode.Left
-		}
-		UiRootWidget 
-		{
 			var MouseHoverTime = 0.100000001
 			var MouseHoldTime = 1
 			var DoubleClickTime = 0.300000012

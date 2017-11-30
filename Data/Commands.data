@@ -461,15 +461,6 @@ Commands commands =
 		string Shortcut = "Alt+Shift+H",
 		string Tags = "Windows",
 	},
-  
-  Command =
-	{
-		string Name = "OperationHistory",
-		string Description = "Show the Operation Queue",
-		string IconName = "OperationHistory",
-		string Shortcut = "Ctrl+Shift+O",
-		string Tags = "Windows",
-	},
 	
 	Command =
 	{

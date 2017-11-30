@@ -151,7 +151,7 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifi
 {
   // TODO: For now, don't rebuild objects that are transient. We could mark them as non-transient,
   // rebuild, then mark the new one as transient
-  if (oldCog->GetTransient())
+  if (oldCog->GetTransient() || oldCog->GetMarkedForDestruction())
     return nullptr;
 
   ErrorIf(oldCog->FindNearestArchetypeContext() != oldCog, "Can only rebuild root contexts.");

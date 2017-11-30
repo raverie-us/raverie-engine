@@ -38,7 +38,7 @@ Vec2 UiDockLayout::Measure(Rectangle& rect)
 }
 
 //******************************************************************************
-Vec2 UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
+void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if (mDebug)
@@ -51,8 +51,8 @@ Vec2 UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   // regardless of whether or not they're in the layout
   UpdateNotInLayout(e);
 
-  ApplyPadding(mPadding, rect);
-  Vec2 offset = rect.GetTranslation();
+  rect.RemoveThickness(mPadding);
+  Vec2 offset = rect.GetBottomLeft();
   Vec2 size = rect.GetSize();
 
   Vec4 area = Vec4(offset.x, offset.y,
@@ -151,13 +151,10 @@ Vec2 UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
       CalculateAlignment(Axis::Y, child->GetVerticalAlignment(), areaSize, areaPos, childSize, childPos);
     }
 
-    child->SetLocalTranslation(childPos);
     child->SetSize(childSize);
+    child->SetLocalBottomLeft(childPos);
     child->UpdateTransform(e);
   }
-
-  RemovePadding(mPadding, rect);
-  return rect.GetSize();
 }
 
 }//namespace Zero

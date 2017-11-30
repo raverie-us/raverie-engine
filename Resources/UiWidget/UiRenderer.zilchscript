@@ -9,7 +9,6 @@
 [RunInEditor]
 class UiRenderer : ZilchComponent
 {
-  [Dependency] var UiWidget : UiWidget;
   [Dependency] var UiRootWidget : UiRootWidget;
   
   [Property] var ClearColor : Real4 = Real4(0);
@@ -57,7 +56,7 @@ class UiRenderer : ZilchComponent
     var cameraPos = cameraTransform.Translation;
     
     // Root widget should always be at the origin
-    this.UiWidget.LocalTranslation = Real2(0);
+    this.UiRootWidget.LocalTranslation = Real2(0);
     
     // Set these to nice clean values so the user can't ever mess them up
     camera.NearPlane = 0.1;
@@ -69,12 +68,9 @@ class UiRenderer : ZilchComponent
     if(cameraCog.EditorCameraController == null)
     {
       // Size ourself to the viewport size
-      this.UiWidget.Size = viewportSize as Real2;
+      this.UiRootWidget.Size = viewportSize as Real2;
       
-      // Center the camera
-      cameraPos.X = +viewportSize.X * 0.5;
-      cameraPos.Y = viewportSize.Y * 0.5;
-      
+      cameraPos.XY = this.UiRootWidget.WorldCenter;
       camera.Size = viewportSize.Y;
     }
     else

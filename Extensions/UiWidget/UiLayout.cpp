@@ -75,28 +75,28 @@ float UiLayout::GetPaddingBottom()
 //******************************************************************************
 void UiLayout::SetPaddingLeft(float val)
 {
-  mPadding.Left = Snap(val, mWidget->GetSnapSize());
+  mPadding.Left = Snap(val, cUiWidgetSnapSize);
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingTop(float val)
 {
-  mPadding.Top = Snap(val, mWidget->GetSnapSize());
+  mPadding.Top = Snap(val, cUiWidgetSnapSize);
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingRight(float val)
 {
-  mPadding.Right = Snap(val, mWidget->GetSnapSize());
+  mPadding.Right = Snap(val, cUiWidgetSnapSize);
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingBottom(float val)
 {
-  mPadding.Bottom = Snap(val, mWidget->GetSnapSize());
+  mPadding.Bottom = Snap(val, cUiWidgetSnapSize);
   mWidget->MarkAsNeedsUpdate();
 }
 
@@ -154,29 +154,6 @@ Vec2 UiLayout::MaxMeasure(Rectangle& rect)
   }
 
   return neededSize + mPadding.Size();
-}
-
-//******************************************************************************
-void UiLayout::ApplyPadding(Thickness& padding, Rectangle& area)
-{
-  Vec2 padTopLeft = padding.TopLeft();
-  Vec2 padSize = padding.Size();
-  area.X += padTopLeft.x;
-  area.Y += padTopLeft.y;
-  area.SizeX -= padSize.x;
-  area.SizeY -= padSize.y;
-}
-
-//******************************************************************************
-void UiLayout::RemovePadding(Thickness& padding, Rectangle& area)
-{
-  Vec2 padTopLeft = padding.TopLeft();
-  Vec2 padSize = padding.Size();
-
-  area.X -= padTopLeft.x;
-  area.Y -= padTopLeft.y;
-  area.SizeX += padSize.x;
-  area.SizeY += padSize.y;
 }
 
 //******************************************************************************

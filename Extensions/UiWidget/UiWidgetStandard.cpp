@@ -35,6 +35,7 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
   ZilchInitializeType(UiTransformUpdateEvent);
 
   ZilchInitializeType(UiWidgetCastResultsRange);
+  ZilchInitializeType(UiWidgetComponentHierarchy);
   ZilchInitializeType(UiWidget);
   ZilchInitializeType(UiRootWidget);
   ZilchInitializeType(UiLayout);

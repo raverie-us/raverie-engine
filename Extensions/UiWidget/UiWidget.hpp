@@ -155,7 +155,8 @@ public:
 };
 
 //------------------------------------------------------------------------------------------- Widget
-class UiWidget : public ComponentHierarchy<UiWidget>
+typedef ComponentHierarchy<UiWidget> UiWidgetComponentHierarchy;
+class UiWidget : public UiWidgetComponentHierarchy
 {
 public:
   /// Typedefs.
@@ -163,7 +164,7 @@ public:
   typedef ComponentHierarchy<UiWidget> BaseType;
 
   /// Meta Initialization.
-  ZilchDeclareDerivedTypeExplicit(UiWidget, Component, TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -186,9 +187,8 @@ public:
 
   Vec2 GetMinSize();
 
-  /// Returns the parent widget. Will return null on the root widget.
-  UiWidget* GetParentWidget();
-  UiRootWidget* GetRootWidget();
+  /// Hide the ComponentHierarchy with a more specific root type.
+  UiRootWidget* GetRoot();
 
   void SizeToContents();
 
@@ -200,10 +200,10 @@ public:
                       bool interactiveOnly = false);
   UiWidgetCastResultsRange CastRect(UiRectParam worldRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
 
-  /// Returns our rect relative to parent.
+  /// Returns our rect relative to parent. The origin of this Rect is bottom left.
   Rectangle GetLocalRectangle();
 
-  /// Returns our world rect.
+  /// Returns our world rect. The origin of this Rect is bottom left.
   Rectangle GetWorldRectangle();
 
   /// Active getter / setter.
@@ -229,27 +229,27 @@ public:
   Vec2 GetSize();
   void SetSize(Vec2Param size);
 
-  /// Top left relative to parent.
-  Vec2 GetLocalTopLeft();
-  void SetLocalTopLeft(Vec2Param localTopLeft);
-  Vec2 GetWorldTopLeft();
-  void SetWorldTopLeft(Vec2Param worldTopLeft);
-  Vec2 GetLocalTopRight();
-  void SetLocalTopRight(Vec2Param localTopRight);
-  Vec2 GetWorldTopRight();
-  void SetWorldTopRight(Vec2Param worldTopRight);
-  Vec2 GetLocalBottomLeft();
-  void SetLocalBottomLeft(Vec2Param localBottomLeft);
-  Vec2 GetWorldBottomLeft();
-  void SetWorldBottomLeft(Vec2Param worldBottomLeft);
-  Vec2 GetLocalBottomRight();
-  void SetLocalBottomRight(Vec2Param localBottomRight);
-  Vec2 GetWorldBottomRight();
-  void SetWorldBottomRight(Vec2Param worldBottomRight);
-  Vec2 GetLocalCenter();
-  void SetLocalCenter(Vec2Param localCenter);
-  Vec2 GetWorldCenter();
-  void SetWorldCenter(Vec2Param worldCenter);
+  Vec2 GetLocalLocation(Location::Enum location);
+  void SetLocalLocation(Location::Enum location, Vec2Param localTranslation);
+  Vec2 GetWorldLocation(Location::Enum location);
+  void SetWorldLocation(Location::Enum location, Vec2Param worldTranslation);
+
+#define LocationGetterSetter(location)                                                                             \
+  Vec2 GetLocal##location() { return GetLocalLocation(Location::location); }                                       \
+  void SetLocal##location(Vec2Param localTranslation) { SetLocalLocation(Location::location, localTranslation); }  \
+  Vec2 GetWorld##location() { return GetWorldLocation(Location::location); }                                       \
+  void SetWorld##location(Vec2Param worldTranslation) { SetWorldLocation(Location::location, worldTranslation); }
+
+  LocationGetterSetter(TopLeft)
+  LocationGetterSetter(TopCenter)
+  LocationGetterSetter(TopRight)
+  LocationGetterSetter(CenterLeft)
+  LocationGetterSetter(Center)
+  LocationGetterSetter(CenterRight)
+  LocationGetterSetter(BottomLeft)
+  LocationGetterSetter(BottomCenter)
+  LocationGetterSetter(BottomRight)
+#undef LocationGetterSetter
 
   float GetLocalTop();
   void  SetLocalTop(float localTop);
@@ -270,9 +270,6 @@ public:
 
   /// When the area changes, we want to mark ourselves as needing to be updated.
   void OnAreaChanged(Event* e);
-
-  /// Returns the snap size defined by the root widget.
-  float GetSnapSize();
 
   /// Lets the Widget system know that this object has been modified and needs
   /// to be re-laid out. 
@@ -394,6 +391,8 @@ private:
   Thickness mMargins;
   UiTransformUpdateState::Type mTransformUpdateState;
 };
+
+extern const float cUiWidgetSnapSize;
 
 typedef ComponentHandle<UiWidget> UiWidgetHandle;
 

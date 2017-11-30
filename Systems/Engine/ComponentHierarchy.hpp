@@ -71,12 +71,13 @@ public:
 template <typename ComponentType>
 ZilchDefineType(ComponentHierarchy<ComponentType>, builder, type)
 {
-  ZilchBindGetterProperty(PreviousSibling);
-  ZilchBindGetterProperty(NextSibling);
-  ZilchBindGetterProperty(LastChild);
-  ZilchBindGetterProperty(NextInHierarchyOrder);
-  ZilchBindGetterProperty(PreviousInHierarchyOrder);
-  ZilchBindGetterProperty(Root);
+  ZilchBindGetter(PreviousSibling);
+  ZilchBindGetter(NextSibling);
+  ZilchBindGetter(LastChild);
+  ZilchBindGetter(NextInHierarchyOrder);
+  ZilchBindGetter(PreviousInHierarchyOrder);
+  ZilchBindFieldGetter(mParent);
+  ZilchBindGetter(Root);
   
   // Temporarily unbound until an issue is fixed
   //InitMetaRangeAdapter(ChildListRange);

@@ -100,7 +100,7 @@ Vec2 UiStackLayout::Measure(Rectangle& rect)
 }
 
 //******************************************************************************
-Vec2 UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
+void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if(mDebug)
@@ -108,8 +108,6 @@ Vec2 UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     ZERO_DEBUG_BREAK;
     mDebug = false;
   }
-
-  float snapSize = mWidget->GetSnapSize();
 
   // We're in charge of calling UpdateTransform on all of our children,
   // regardless of whether or not they're in the layout
@@ -158,21 +156,15 @@ Vec2 UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
       fixedSize += mSpacing[stackAxis];
   }
 
-  // Used to determine the starting location based on the current stack
-  // direction. This is an optimization to avoid branching.
-  Vec2 paddings[4] = { mPadding.TopLeft(), mPadding.BottomLeft(),
-                       mPadding.TopLeft(), mPadding.TopRight() };
-
   // Remove the padding
-  Vec2 initialSize = rect.GetSize();
-  ApplyPadding(mPadding, rect);
+  rect.RemoveThickness(mPadding);
   Vec2 areaSize = rect.GetSize();
-  Vec2 offset = paddings[mStackDirection];
+  Vec2 offset = rect.GetBottomLeft();
 
   // If we're laying out objects in reverse, we need to start from the end
   // on the stack axis
-  if(reverse)
-    offset[stackAxis] = initialSize[stackAxis] - paddings[mStackDirection][stackAxis];
+  if (reverse)
+    offset[stackAxis] -= areaSize[stackAxis] * direction;
 
   float totalSize = areaSize[stackAxis];
 
@@ -215,9 +207,8 @@ Vec2 UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     offset[stackAxis] += marginsStart[mStackDirection] * direction;
 
     // Measure the child
-    rect.SizeX = areaSize.x;
-    rect.SizeY = areaSize.y;
-    Vec2 childSize = child ->Measure(rect);
+    rect.SetSize(Location::BottomLeft, areaSize);
+    Vec2 childSize = child->Measure(rect);
     Vec2 childTranslation = offset;
 
     UiSizePolicy::Enum stackPolicy = child->GetSizePolicy(stackAxis);
@@ -231,7 +222,7 @@ Vec2 UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
       // Add in the previous remainder
       size += flexRemainder;
 
-      float flooredSize = Math::Floor(size / snapSize) * snapSize;
+      float flooredSize = Math::Floor(size / cUiWidgetSnapSize) * cUiWidgetSnapSize;
       childSize[stackAxis] = flooredSize;
 
       // Calculate the new remainder
@@ -282,8 +273,8 @@ Vec2 UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     if(reverse)
       childTranslation[stackAxis] -= childSize[stackAxis];
 
-    child->SetLocalTranslation(childTranslation);
     child->SetSize(childSize);
+    child->SetLocalBottomLeft(childTranslation);
     child->UpdateTransform(e);
 
     offset[stackAxis] += childSize[stackAxis] * direction;
@@ -295,21 +286,6 @@ Vec2 UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     if(!lastWidget)
       offset[stackAxis] += mSpacing[stackAxis] * direction;
   }
-
-  // Put these in an if until the rect is refactored...
-  if(stackAxis == 0)
-    rect.SizeX = offset[stackAxis];
-  else
-    rect.SizeY = offset[stackAxis];
-  if (opAxis == 0)
-    rect.SizeX = areaSize[opAxis];
-  else
-    rect.SizeY = areaSize[opAxis];
-
-  // Remove padding
-  RemovePadding(mPadding, rect);
-
-  return rect.GetSize();
 }
 
 //******************************************************************************

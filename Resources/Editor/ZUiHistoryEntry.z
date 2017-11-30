@@ -186,6 +186,7 @@ class ZUiHistoryEntry : ZilchComponent
   // Highlight entry row.
   function OnMouseEnter(event : ViewportMouseEvent)
   {
+    Console.WriteLine(this.Owner);
     this.UpdateHierarchyColor(this.HighlightColor, true);
     
     event.HandledEvent = true;

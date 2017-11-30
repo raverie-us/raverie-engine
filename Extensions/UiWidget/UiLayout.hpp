@@ -29,7 +29,7 @@ public:
   virtual Vec2 Measure(Rectangle& rect) = 0;
   
   /// Update the translation and sizes of all children objects.
-  virtual Vec2 DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) = 0;
+  virtual void DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) = 0;
 
   /// Padding getter / setters for binding until we have Thickness binding.
   float GetPaddingLeft();
@@ -65,9 +65,6 @@ protected:
 
   /// Finds the maximum of all the minimum sizes of all child widgets.
   Vec2 MaxMeasure(Rectangle& rect);
-
-  void ApplyPadding(Thickness& padding, Rectangle& area);
-  void RemovePadding(Thickness& padding, Rectangle& area);
 
   //---------------------------------------------------------- Filtered Children
   /// Range for walking through all children that are in the layout.

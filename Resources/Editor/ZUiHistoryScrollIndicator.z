@@ -40,7 +40,7 @@ class ZUiHistoryScrollIndicator : ZilchComponent
   {
     return viewport.ScreenToWorldPlane(
       Zero.Mouse.ClientPosition,
-      this.UiWidget.RootWidget.Owner.Transform.TransformNormal(Real3.ZAxis),
+      this.UiWidget.Root.Owner.Transform.TransformNormal(Real3.ZAxis),
       this.Owner.Transform.WorldTranslation);
   }
    
@@ -55,14 +55,14 @@ class ZUiHistoryScrollIndicator : ZilchComponent
     if(scrollRatio == 0.0)
     {
       this.UiWidget.Size = Real2(0, 0);
-      this.UiWidget.ParentWidget.Size = Real2(0, this.UiWidget.ParentWidget.Size.Y);
+      this.UiWidget.Parent.Size = Real2(0, this.UiWidget.Parent.Size.Y);
       return;
     }
     
       // "Unhide" scroll bar.
-    var newSize = Math.Max(1.0, this.UiWidget.ParentWidget.Size.Y * scrollRatio);
+    var newSize = Math.Max(1.0, this.UiWidget.Parent.Size.Y * scrollRatio);
     this.UiWidget.Size = Real2(this.OriginalSize.X, newSize);
-    this.UiWidget.ParentWidget.Size = this.UiWidget.Size;
+    this.UiWidget.Parent.Size = this.UiWidget.Size;
   }
   
   /******************************************************************************/

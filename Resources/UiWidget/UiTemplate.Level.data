@@ -101,7 +101,7 @@ Level
 			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 45
-			var Size = 996
+			var Size = 956
 		}
 		EditorCameraController 
 		{
@@ -200,7 +200,7 @@ Level
 		Area 
 		{
 			var Size = Real2{500, 500}
-			var Origin = Location.BottomLeft
+			var Origin = Location.TopLeft
 		}
 		Sprite 
 		{
@@ -225,7 +225,7 @@ Level
 		{
 			var Active = true
 		}
-		UiWidget 
+		UiRootWidget 
 		{
 			var Active = true
 			var Visible = true
@@ -246,9 +246,6 @@ Level
 			var MarginRight = 0
 			var MarginBottom = 0
 			var DockMode = UiDockMode.Left
-		}
-		UiRootWidget 
-		{
 			var MouseHoverTime = 0.100000001
 			var MouseHoldTime = 1
 			var DoubleClickTime = 0.300000012
@@ -303,7 +300,7 @@ Level
 				Area 
 				{
 					var Size = Real2{490, 25}
-					var Origin = Location.BottomLeft
+					var Origin = Location.TopLeft
 				}
 				UiWidget 
 				{
@@ -362,7 +359,7 @@ Level
 				Area 
 				{
 					var Size = Real2{490, 227}
-					var Origin = Location.BottomLeft
+					var Origin = Location.TopLeft
 				}
 				UiWidget 
 				{
@@ -421,7 +418,7 @@ Level
 				Area 
 				{
 					var Size = Real2{490, 228}
-					var Origin = Location.BottomLeft
+					var Origin = Location.TopLeft
 				}
 				UiWidget 
 				{

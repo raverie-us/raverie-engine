@@ -9,6 +9,10 @@
 namespace Zero
 {
 
+DeclareEnum9(Location, TopLeft,    TopCenter,    TopRight,
+                       CenterLeft, Center,       CenterRight,
+                       BottomLeft, BottomCenter, BottomRight);
+
 //---------------------------------------------------------------------------------------- Thickness
 struct Thickness
 {
@@ -58,33 +62,42 @@ struct Rectangle
   static Rectangle MinAndMax(Vec2Param min, Vec2Param max);
 
   bool operator==(UiRectParam rhs) const;
-
-  Vec2 GetTranslation() const;
-  void SetTranslation(Vec2Param translation);
+  
+  /// Translates the rectangle by the passed in vector.
+  void Translate(Vec2Param translation);
 
   Vec2 GetSize() const;
-  void SetSize(Vec2Param size);
+  void SetSize(Location::Enum origin, Vec2Param size);
+  
+  void Expand(Vec2Param point);
 
   bool Contains(Vec2Param point) const;
   bool Overlap(UiRectParam other) const;
 
   void RemoveThickness(const Thickness& thickness);
 
-  Vec2 GetTopLeft() const { return Vec2(X, Y + SizeY); }
-  Vec2 GetTopRight() const { return Vec2(X + SizeX, Y + SizeY); }
-  Vec2 GetBottomLeft() const { return Vec2(X, Y); }
-  Vec2 GetBottomRight() const { return Vec2(X + SizeX, Y); }
-  Vec2 GetCenter() const { return Vec2(X + SizeX * 0.5f, Y + SizeY * 0.5f); }
+  Vec2 GetTopLeft() const;
+  void SetTopLeft(Vec2Param point);
+  Vec2 GetTopRight() const;
+  void SetTopRight(Vec2Param point);
+  Vec2 GetBottomLeft() const;
+  void SetBottomLeft(Vec2Param point);
+  Vec2 GetBottomRight() const;
+  void SetBottomRight(Vec2Param point);
+  Vec2 GetCenter() const;
+  void SetCenter(Vec2Param point);
 
-  float GetLeft() const { return X; }
-  float GetRight() const { return X + SizeX; }
-  float GetTop() const { return Y + SizeY; }
-  float GetBottom() const { return Y; }
+  float GetLeft() const;
+  void SetLeft(float left);
+  float GetRight() const;
+  void SetRight(float right);
+  float GetTop() const;
+  void SetTop(float top);
+  float GetBottom() const;
+  void SetBottom(float bottom);
 
-  float X;
-  float Y;
-  float SizeX;
-  float SizeY;
+  Vec2 Min;
+  Vec2 Max;
   static const Rectangle cZero;
 };
 

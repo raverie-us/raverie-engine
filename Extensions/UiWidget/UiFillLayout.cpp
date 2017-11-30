@@ -30,7 +30,7 @@ Vec2 UiFillLayout::Measure(Rectangle& rect)
 }
 
 //******************************************************************************
-Vec2 UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
+void UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if (mDebug)
@@ -44,8 +44,8 @@ Vec2 UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   UpdateNotInLayout(e);
 
   // Apply the padding before laying out the children
-  ApplyPadding(mPadding, rect);
-  Vec2 pos = rect.GetTranslation();
+  rect.RemoveThickness(mPadding);
+  Vec2 pos = rect.GetBottomLeft();
   Vec2 size = rect.GetSize();
 
   // Layout each child
@@ -93,16 +93,13 @@ Vec2 UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     }
 
     Rectangle childRect = Rectangle::PointAndSize(childPos, childSize);
-
+    
     childRect.RemoveThickness(childMargins);
 
-    child->SetLocalTranslation(childRect.GetTranslation());
     child->SetSize(childRect.GetSize());
+    child->SetLocalBottomLeft(childRect.GetBottomLeft());
     child->UpdateTransform(e);
   }
-
-  RemovePadding(mPadding, rect);
-  return rect.GetSize();
 }
 
 }//namespace Zero

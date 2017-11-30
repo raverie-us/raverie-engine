@@ -136,9 +136,9 @@ Level
 		var Name = "EditorCamera"
 		Transform 
 		{
-			var Translation = Real3{250, -200, 10}
+			var Translation = Real3{297.5, -229, 10}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{0, -1.09278471e-08, 0, 1}
+			var Rotation = Quaternion{0, 0, 0, 1}
 		}
 		CameraViewport 
 		{
@@ -186,10 +186,10 @@ Level
 		Camera 
 		{
 			var NearPlane = 0.100000001
-			var FarPlane = 200
+			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 60
-			var Size = 1217
+			var Size = 1749
 		}
 		EditorCameraController 
 		{
@@ -198,7 +198,7 @@ Level
 			var LookDistance = 10
 			var VerticalAngle = 0
 			var HorizontalAngle = 0
-			var LookTarget = Real3{250, -200, 0}
+			var LookTarget = Real3{297.412659, -228.09639, 2.07247285e-06}
 			var MoveSensitivity = 1
 		}
 	}
@@ -303,9 +303,9 @@ Level
 		Area 
 		{
 			var Size = Real2{500, 400}
-			var Origin = Location.TopLeft
+			var Origin = Location.BottomLeft
 		}
-		UiWidget 
+		UiRootWidget 
 		{
 			var Active = true
 			var Visible = true
@@ -326,9 +326,6 @@ Level
 			var MarginRight = 0
 			var MarginBottom = 0
 			var DockMode = UiDockMode.Left
-		}
-		UiRootWidget 
-		{
 			var MouseHoverTime = 0.100000001
 			var MouseHoldTime = 1
 			var DoubleClickTime = 0.300000012

@@ -27,7 +27,7 @@ ZilchDefineType(UiRootWidget, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(UiWidget);
+  ZeroBindInterface(UiWidget);
 
   // Events
   ZeroBindEvent(Events::UiFocusGainedPreview, UiFocusEvent);
@@ -101,18 +101,19 @@ UiRootWidget::UiRootWidget()
 //******************************************************************************
 void UiRootWidget::Serialize(Serializer& stream)
 {
+  UiWidget::Serialize(stream);
+
   SerializeNameDefault(mMouseHoverTime, 0.1f);
   SerializeNameDefault(mMouseHoldTime, 1.0f);
   SerializeNameDefault(mDoubleClickTime, 0.3f);
   SerializeNameDefault(mDepthSeparation, 0.01f);
   SerializeNameDefault(mDebugMouseInteraction, false);
-  //SerializeNameDefault(mSnapSize, 1.0f);
 }
 
 //******************************************************************************
 void UiRootWidget::Initialize(CogInitializer& initializer)
 {
-  mWidget = GetOwner()->has(UiWidget);
+  UiWidget::Initialize(initializer);
 
   // If we have a Reactive Component, listen for events that come through it
   if (GetOwner()->has(Reactive))
@@ -148,11 +149,11 @@ void UiRootWidget::Update()
   bool alwaysUpdate = true;
 
   // Update the widget tree if we need to be updated
-  if(mWidget->mTransformUpdateState != UiTransformUpdateState::Updated || alwaysUpdate)
+  if(mTransformUpdateState != UiTransformUpdateState::Updated || alwaysUpdate)
   {
     UiTransformUpdateEvent e;
     e.mRootWidget = this;
-    mWidget->UpdateTransform(&e);
+    UpdateTransform(&e);
   }
 }
 
@@ -371,7 +372,7 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
         }
         else
         {
-          focusWidget = focusWidget->GetParentWidget();
+          focusWidget = focusWidget->mParent;
         }
       } while (focusWidget);
 
@@ -430,9 +431,9 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
 void UiRootWidget::MouseMove(ViewportMouseEvent* e)
 {
   // We want to send mouse events to the widget that the mouse is over
-  UiWidget* newMouseOver = mWidget->CastPoint(ToVector2(e->mHitPosition));
+  UiWidget* newMouseOver = CastPoint(ToVector2(e->mHitPosition));
   while(newMouseOver && !newMouseOver->GetInteractive())
-    newMouseOver = newMouseOver->GetParentWidget();
+    newMouseOver = newMouseOver->mParent;
   
   MouseOver(e, newMouseOver);
 }
@@ -611,7 +612,7 @@ void UiRootWidget::Render(RenderTasksEvent* e, RenderTarget* color,
 
   // Render all widgets
   Vec4 colorTransform(1);
-  RenderWidgets(e, color, depth, renderPass, mWidget, colorTransform);
+  RenderWidgets(e, color, depth, renderPass, this, colorTransform);
   FlushGraphicals(e, color, depth, renderPass);
 }
 

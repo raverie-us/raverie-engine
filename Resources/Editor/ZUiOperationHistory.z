@@ -63,7 +63,7 @@ class ZUiOperationHistory : ZilchComponent
   function GetVerticalScrollDistance() : Real
   {
       // Total distance (on the Y-axis) the scrollbar indicator can travel.
-    return Math.Max(0, this.TotalViewLength - this.UiWidget.ParentWidget.Size.Y);
+    return Math.Max(0, this.TotalViewLength - this.UiWidget.Parent.Size.Y);
   }
   
   /******************************************************************************/
@@ -91,7 +91,7 @@ class ZUiOperationHistory : ZilchComponent
 
     this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;
       // Maintain room for the scrollbar on the x axis.
-    this.UiWidget.Size = Real2(this.UiWidget.ParentWidget.Size.X - this.CurrentScrollBarSizeX, this.TotalViewLength);
+    this.UiWidget.Size = Real2(this.UiWidget.Parent.Size.X - this.CurrentScrollBarSizeX, this.TotalViewLength);
     
     this.UpdateStatusText();
   }
@@ -101,7 +101,7 @@ class ZUiOperationHistory : ZilchComponent
   {
     this.TotalViewLength = this.UndoView.Cog.UiWidget.Size.Y + this.RedoView.Cog.UiWidget.Size.Y;
       // Maintain room for the scrollbar on the x axis.
-    this.UiWidget.Size = Real2(this.UiWidget.ParentWidget.Size.X - this.CurrentScrollBarSizeX, this.TotalViewLength);
+    this.UiWidget.Size = Real2(this.UiWidget.Parent.Size.X - this.CurrentScrollBarSizeX, this.TotalViewLength);
     
     this.UpdateStatusText();
   }
@@ -126,10 +126,6 @@ class ZUiOperationHistory : ZilchComponent
       statusCog.SpriteText.Visible = false;
       return;
     }
-    
-      // Center the text in the window.
-    var windowWidget = this.Owner.Parent.UiWidget;
-    statusCog.UiWidget.LocalTranslation = Real2(windowWidget.Size.X / 2, windowWidget.Size.Y / 2);
   }
   
   /******************************************************************************/
@@ -144,7 +140,7 @@ class ZUiOperationHistory : ZilchComponent
   {
     get
     {
-      if(this.TotalViewLength <= this.UiWidget.ParentWidget.Size.Y)
+      if(this.TotalViewLength <= this.UiWidget.Parent.Size.Y)
       {
           // scroll bar & well should not be visible
         this.CurrentScrollBarSizeX = 0.0;
@@ -152,7 +148,7 @@ class ZUiOperationHistory : ZilchComponent
       }
       
       this.CurrentScrollBarSizeX = this.IntendedScrollBarSizeX;
-      return this.UiWidget.ParentWidget.Size.Y / this.TotalViewLength;
+      return this.UiWidget.Parent.Size.Y / this.TotalViewLength;
     }
       
   }

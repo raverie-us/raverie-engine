@@ -21,7 +21,7 @@ public:
 
   /// UiLayout Interface.
   Vec2 Measure(Rectangle& rect) override;
-  Vec2 DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) override;
+  void DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) override;
 };
 
 }//namespace Zero

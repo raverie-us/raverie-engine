@@ -11,7 +11,7 @@ Cog
 	Area 
 	{
 		var Size = Real2{78, 28}
-		var Origin = Location.TopLeft
+		var Origin = Location.BottomLeft
 	}
 	UiWidget 
 	{

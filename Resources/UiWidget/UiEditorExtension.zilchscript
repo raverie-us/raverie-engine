@@ -76,7 +76,7 @@ class UiEditorExtension : ZilchComponent
     var rootWidget : UiWidget = null;
     
     if(obj.UiWidget != null)
-      rootWidget = obj.UiWidget.RootWidget.Owner.UiWidget;
+      rootWidget = obj.UiWidget.Root;
     
     if(rootWidget == null)
       return null;

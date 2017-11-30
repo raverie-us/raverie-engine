@@ -20,7 +20,7 @@ class DispatchAtParams;
 DeclareEnum4(StencilDrawMode, None, Add, Remove, Test);
 
 //--------------------------------------------------------------------------------- Root Widget
-class UiRootWidget : public Component
+class UiRootWidget : public UiWidget
 {
 public:
   /// Meta Initialization.
@@ -120,9 +120,6 @@ public:
 
   void SetDebugSelected(Cog* selected);
   Cog* GetDebugSelected();
-
-  /// We must have a Widget Component.
-  UiWidget* mWidget;
 
   float mSnapSize;
 
