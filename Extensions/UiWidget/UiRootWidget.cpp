@@ -54,6 +54,9 @@ ZilchDefineType(UiRootWidget, builder, type)
 
   ZilchBindFieldProperty(mDebugMouseInteraction);
 
+  ZilchBindGetterSetter(FocusWidget);
+  ZilchBindGetter(MouseOverWidget);
+
   // Methods
   ZilchBindMethod(Update);
   ZilchBindMethod(Render);
@@ -132,6 +135,10 @@ void UiRootWidget::Initialize(CogInitializer& initializer)
     ConnectThisTo(Keyboard::Instance, Events::KeyDown, OnKeyboardEvent);
     ConnectThisTo(Keyboard::Instance, Events::KeyRepeated, OnKeyboardEvent);
   }
+
+  // Keyboard events that have bubbled through the widget system.
+  ConnectThisTo(GetOwner(), Events::KeyDown, OnWidgetKeyDown);
+  ConnectThisTo(GetOwner(), Events::KeyRepeated, OnWidgetKeyDown);
 }
 
 //******************************************************************************
@@ -351,10 +358,23 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
   if(e->ButtonDown)
   {
     ++mMouseButtonDownCount;
+
     if(mouseOverWidget)
     {
-      if (mouseOverWidget->GetCanTakeFocus())
-        RootChangeFocus(mouseOverWidget);
+      UiWidget* focusWidget = mouseOverWidget;
+      do
+      {
+        if (focusWidget->GetCanTakeFocus())
+        {
+          SetFocusWidget(focusWidget);
+          break;
+        }
+        else
+        {
+          focusWidget = focusWidget->GetParentWidget();
+        }
+      } while (focusWidget);
+
       mMouseDownWidget = mouseOverWidget;
     }
   }
@@ -449,33 +469,6 @@ void UiRootWidget::MouseOver(ViewportMouseEvent* e, UiWidget* newMouseOver)
     //DebugPrint("Mouse now over %s\n", newMouseOverCog->mObjectName.c_str());
     mCurrHoverTime = 0.0f;
     mCurrHoldTime = 0.0f;
-  }
-}
-
-//******************************************************************************
-void UiRootWidget::RootChangeFocus(UiWidget* newFocus)
-{
-  UiWidget* oldFocus = mFocusWidget;
-
-  //Do not change it the object is already the focus object
-  if(oldFocus != newFocus)
-  {
-    Cog* oldFocusCog = (oldFocus) ? oldFocus->GetOwner() : nullptr;
-    Cog* newFocusCog = (newFocus) ? newFocus->GetOwner() : nullptr;
-
-    cstr op = (mDebugMouseInteraction) ? "Focus" : nullptr;
-
-    // Send the Focus to the Hierarchy
-    UiFocusEvent focusEvent(newFocusCog, oldFocusCog);
-
-    SendHierarchyEvents(op, oldFocusCog, newFocusCog, &focusEvent, &focusEvent,
-                    Events::UiFocusLost, Events::UiFocusGained, 
-                    Events::UiFocusLostHierarchy, Events::UiFocusGainedHierarchy,
-                    UiWidgetFlags::HasFocus, UiWidgetFlags::HierarchyHasFocus,
-                    &WidgetFlagCallback);
-
-    // Store the current focus object
-    mFocusWidget = newFocus;
   }
 }
 
@@ -577,6 +570,14 @@ void UiRootWidget::OnKeyboardEvent(KeyboardEvent* e)
 {
   if (mIgnoreEvents)
     return;
+  
+  // We're connecting for keyboard on the global keyboard, which gets events after the event
+  // is dispatched through the old widget system.
+  // The GameWidget sets handled to true after going to the Space to ensure that editor shortcuts
+  // aren't executed while in game. So, by the time we get this, the event is handled. However,
+  // we don't want all events to be immediately handled, so we have to set it back to false.
+  // This should be removed by either not connecting to the global keyboard, or with input refactor.
+  e->Handled = false;
 
   mIgnoreEvents = true;
   PerformKeyboardEvent(e);
@@ -584,6 +585,8 @@ void UiRootWidget::OnKeyboardEvent(KeyboardEvent* e)
 
   // See the comment above the Terminate call in 'OnMouseEvent'
   //e->Terminate();
+
+  e->Handled = true;
 }
 
 //******************************************************************************
@@ -696,6 +699,55 @@ void UiRootWidget::FlushGraphicals(RenderTasksEvent* e, RenderTarget* color,
   }
 
   mGraphicals.Clear();
+}
+
+//******************************************************************************
+void UiRootWidget::SetFocusWidget(UiWidget* newFocus)
+{
+  UiWidget* oldFocus = mFocusWidget;
+
+  //Do not change it the object is already the focus object
+  if (oldFocus != newFocus)
+  {
+    Cog* oldFocusCog = (oldFocus) ? oldFocus->GetOwner() : nullptr;
+    Cog* newFocusCog = (newFocus) ? newFocus->GetOwner() : nullptr;
+
+    cstr op = (mDebugMouseInteraction) ? "Focus" : nullptr;
+
+    // Send the Focus to the Hierarchy
+    UiFocusEvent focusEvent(newFocusCog, oldFocusCog);
+
+    SendHierarchyEvents(op, oldFocusCog, newFocusCog, &focusEvent, &focusEvent,
+      Events::UiFocusLost, Events::UiFocusGained,
+      Events::UiFocusLostHierarchy, Events::UiFocusGainedHierarchy,
+      UiWidgetFlags::HasFocus, UiWidgetFlags::HierarchyHasFocus,
+      &WidgetFlagCallback);
+
+    // Store the current focus object
+    mFocusWidget = newFocus;
+  }
+}
+
+//******************************************************************************
+UiWidget* UiRootWidget::GetFocusWidget()
+{
+  return mFocusWidget;
+}
+
+//******************************************************************************
+UiWidget* UiRootWidget::GetMouseOverWidget()
+{
+  return mMouseOverWidget;
+}
+
+//******************************************************************************
+void UiRootWidget::OnWidgetKeyDown(KeyboardEvent* e)
+{
+  if (e->Handled || e->HandledEventScript)
+    return;
+
+  if(UiWidget* focusWidget = GetFocusWidget())
+    focusWidget->TabJump(e);
 }
 
 //******************************************************************************

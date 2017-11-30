@@ -87,8 +87,7 @@ class UiHighlight : ZilchComponent
   //***************************************************************************
   function OnMouseExit(event : ViewportMouseEvent)
   {
-    if(this.UiWidget.HasFocus == false)
-      this.SetColor(this.OriginalColor);
+    this.SetColor(this.OriginalColor);
   }
   
   //***************************************************************************

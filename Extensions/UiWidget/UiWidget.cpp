@@ -908,14 +908,18 @@ void UiWidget::MoveChildrenToFront(float& currWorldDepth, float amount)
 void UiWidget::TakeFocus()
 {
   if(UiRootWidget* rootWidget = GetRootWidget())
-    rootWidget->RootChangeFocus(this);
+    rootWidget->SetFocusWidget(this);
 }
 
 //**************************************************************************************************
 void UiWidget::LoseFocus()
 {
+  // Don't lose focus if we don't have focus
+  if (GetHasFocus() == false)
+    return;
+
   if(UiRootWidget* rootWidget = GetRootWidget())
-    rootWidget->RootChangeFocus(nullptr);
+    rootWidget->SetFocusWidget(nullptr);
 }
 
 //**************************************************************************************************
@@ -1144,13 +1148,23 @@ void UiWidget::OnPropertyModified(PropertyEvent* e)
 //**************************************************************************************************
 void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction)
 {
+  UiWidget* root = widget->GetRoot();
+
   while(widget != NULL)
   {
     // Get the next widget in the given direction
-    if(direction == UiFocusDirection::Forward)
+    if (direction == UiFocusDirection::Forward)
+    {
       widget = widget->GetNextInHierarchyOrder();
+      if (widget == nullptr)
+        widget = root;
+    }
     else
+    {
       widget = widget->GetPreviousInHierarchyOrder();
+      if (widget == nullptr)
+        widget = root->GetLastChild();
+    }
 
     if(widget && widget->GetActive() && widget->GetCanTakeFocus())
     {

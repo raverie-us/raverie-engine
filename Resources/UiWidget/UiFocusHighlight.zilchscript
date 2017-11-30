@@ -18,21 +18,11 @@ class UiFocusHighlight : ZilchComponent
   //***************************************************************************
   function Initialize(init : CogInitializer)
   {
-    Zero.Connect(this.Owner, Events.UiFocusGained, this.OnUiFocusGained);
-    Zero.Connect(this.Owner, Events.UiFocusLost, this.OnUiFocusLost);
+    Zero.Connect(this.Owner, Events.UiFocusGainedHierarchy, this.OnUiFocusGained);
+    Zero.Connect(this.Owner, Events.UiFocusLostHierarchy, this.OnUiFocusLost);
     
-    Zero.Connect(this.Owner, Events.KeyDown, this.OnKeyDown);
-    Zero.Connect(this.Owner, Events.KeyRepeated, this.OnKeyDown);
-      
     if(this.HighlightObject.Cog != null)
       this.InitialColor = this.HighlightObject.Cog.UiWidget.LocalColor;
-  }
-
-  //***************************************************************************
-  function OnKeyDown(event : KeyboardEvent)
-  {
-    if(this.UiWidget.HasFocus)
-      this.UiWidget.TabJump(event);
   }
   
   //***************************************************************************

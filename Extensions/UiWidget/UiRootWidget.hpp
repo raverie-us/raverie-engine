@@ -63,9 +63,6 @@ public:
   void MouseMove(ViewportMouseEvent* e);
   void MouseOver(ViewportMouseEvent* e, UiWidget* newMouseOver);
 
-  /// Focus.
-  void RootChangeFocus(UiWidget* newFocus);
-
   /// Finds the Widget at the given location and dispatches an event on the Widget.
   void DispatchAt(DispatchAtParams& dispatchParams);
 
@@ -110,6 +107,16 @@ public:
   RenderSettings mStencilTestSettings;
 
   //------------------------------------------------------------------------------------- Other
+  /// The widget currently in focus.
+  void SetFocusWidget(UiWidget* newFocus);
+  UiWidget* GetFocusWidget();
+
+  /// The widget that the mouse is currently over.
+  UiWidget* GetMouseOverWidget();
+
+  /// Used for focus tab logic. This is for keyboard events that have
+  /// bubbled through the widget system.
+  void OnWidgetKeyDown(KeyboardEvent* e);
 
   void SetDebugSelected(Cog* selected);
   Cog* GetDebugSelected();
