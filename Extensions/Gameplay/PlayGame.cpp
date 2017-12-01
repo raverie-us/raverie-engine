@@ -79,6 +79,7 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   LoadResourcePackageRelative(projectDirectory, "UiWidget");
   LoadResourcePackageRelative(projectDirectory, "EditorUi");
   LoadResourcePackageRelative(projectDirectory, "Editor");
+  LoadResourcePackageRelative(projectDirectory, "EditorScripts");
 
   // Hack!
   if(mCustomLibraryLoader != nullptr)

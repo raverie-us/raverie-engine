@@ -457,11 +457,12 @@ void Exporter::DoExport()
   //archive all core resources
   Archive engineArchive(ArchiveMode::Compressing);
   ArchiveLibraryOutput(engineArchive, "FragmentCore");
+  ArchiveLibraryOutput(engineArchive, "Loading");
   ArchiveLibraryOutput(engineArchive, "ZeroCore");
   ArchiveLibraryOutput(engineArchive, "UiWidget");
   ArchiveLibraryOutput(engineArchive, "EditorUi");
   ArchiveLibraryOutput(engineArchive, "Editor");
-  ArchiveLibraryOutput(engineArchive, "Loading");
+  ArchiveLibraryOutput(engineArchive, "EditorScripts");
 
   // Add all dlls (and other files next to the exe)
   AddFiles(appDirectory, ArchiveFileCallback, &engineArchive);
@@ -599,11 +600,12 @@ void ExportContentFolders(Cog* projectCog)
 
   // Copy content output
   CopyLibraryOut(outputDirectory, "FragmentCore");
+  CopyLibraryOut(outputDirectory, "Loading");
   CopyLibraryOut(outputDirectory, "ZeroCore");
   CopyLibraryOut(outputDirectory, "UiWidget");
   CopyLibraryOut(outputDirectory, "EditorUi");
   CopyLibraryOut(outputDirectory, "Editor");
-  CopyLibraryOut(outputDirectory, "Loading");
+  CopyLibraryOut(outputDirectory, "EditorScripts");
   CopyLibraryOut(outputDirectory, project->ProjectContentLibrary);
 
   // Copy default configuration
