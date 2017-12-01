@@ -255,7 +255,7 @@ public:
       space = editorGameSession->CreateSpaceFlags(spaceArchetype, creationFlags);
 
       String spaceName = BuildString("ResourcePreview ", initializer.Name);
-      space->SetName(Cog::SanatizeName(spaceName));
+      space->SetName(Cog::SanitizeName(spaceName));
       
       // Do not update the space
       space->has(TimeSpace)->SetPaused(true);

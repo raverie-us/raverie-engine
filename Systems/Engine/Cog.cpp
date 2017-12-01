@@ -155,6 +155,7 @@ ZilchDefineType(Cog, builder, type)
   // Other
   ZilchBindGetter(MarkedForDestruction);
   ZilchBindMethod(DebugDraw);
+  ZilchBindMethod(SanitizeName);
 
   ZeroBindEvent(Events::CogNameChanged, ObjectEvent);
   ZeroBindEvent(Events::TransformUpdated, ObjectEvent);
@@ -253,19 +254,19 @@ void Cog::SetName(StringParam newName)
   if(!mName.Empty( ) && this->mFlags.IsSet(CogFlags::Protected))
     return;
 
-  String sanatizedName = SanatizeName(newName);
-  if(sanatizedName != newName)
+  String sanitizedName = SanitizeName(newName);
+  if(sanitizedName != newName)
     DoNotifyWarning("Invalid Symbols in Cog Name", "Invalid symbols were removed from cog name");
 
   if(mSpace)
   {
     mSpace->RemoveFromNameMap(this, mName);
-    mSpace->AddToNameMap(this, sanatizedName);
+    mSpace->AddToNameMap(this, sanitizedName);
 
     mSpace->ChangedObjects( );
   }
 
-  mName = sanatizedName;
+  mName = sanitizedName;
 
   Event event;
   DispatchEvent(Events::CogNameChanged, &event);
@@ -1924,7 +1925,7 @@ void Cog::DebugDraw()
 }
 
 //**************************************************************************************************
-String Cog::SanatizeName(StringParam newName)
+String Cog::SanitizeName(StringParam newName)
 {
   // 'FixIdentifier' will return "empty" if the string is empty, so we need to special case it here
   // because we allow for empty names

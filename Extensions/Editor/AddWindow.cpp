@@ -1097,7 +1097,7 @@ bool ResourceTemplateDisplay::ValidateTags()
   tagString = tagString.Replace(" ", "");
 
   // check to see if the tag string changed after being sanitized, if so it was invalid
-  String santiziedTags = Cog::SanatizeName(tagString);
+  String santiziedTags = Cog::SanitizeName(tagString);
   if(tagString != santiziedTags)
   {
     CreateTagToolTip("Tags contain invalid symbols", ToolTipColor::Red);

@@ -346,7 +346,7 @@ public:
   virtual void DebugDraw();
 
   /// Cleans an object name of invalid runes.
-  static String SanatizeName(StringParam newName);
+  static String SanitizeName(StringParam newName);
 
   ///Get the game object's Id
   CogId GetId();
