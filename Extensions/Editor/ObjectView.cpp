@@ -1173,7 +1173,19 @@ void ObjectView::OnKeyDown(KeyboardEvent* event)
   ExecuteShortCuts(mSpace, nullptr, event);
 }
 
-void ObjectView::OnMenuClosed(ObjectEvent* event)
+void ObjectView::OnMenuMouseEnter(MouseEvent* event)
+{
+  Object* object = (Object*)mSource->ToEntry(mCommandIndex);
+  if (Cog* cog = Type::DynamicCast<Cog*>(object))
+  {
+    // Set what cog is selected for the creation of new objects as children
+    // when using the right click create menu
+    CommandManager* commandManager = CommandManager::GetInstance();
+    commandManager->SetContext(cog, ZilchTypeId(Cog));
+  }
+}
+
+void ObjectView::OnMenuFocusLost(FocusEvent* event)
 {
   // Clear the context so we don't accidentally create new objects
   // as children of the last selected cog
@@ -1374,16 +1386,6 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
   Object* object = (Object*)mSource->ToEntry(mCommandIndex);
   if(Cog* cog = Type::DynamicCast<Cog*>(object))
   {
-    MetaSelection* selection = Z::gEditor->GetSelection();
-    // Don't create objects as children is multiple objects are selected
-    if ( selection->Count() == 1)
-    {
-      // Set what cog is selected for the creation of new objects as children
-      // when using the right click create menu
-      CommandManager* commandManager = CommandManager::GetInstance();
-      commandManager->SetContext(cog, ZilchTypeId(Cog));
-    }
-
     ConnectMenu(menu, "Rename", OnRename);
     ConnectMenu(menu, "Delete", OnDelete);
     if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
@@ -1393,13 +1395,20 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
     // Set our icon to the arrow indicating a sub menu
     ContextMenuItem* createSubMenu = menu->CreateContextItem("Create", "PropArrowRight");
     createSubMenu->LoadMenu("Create");
+
+    MetaSelection* selection = Z::gEditor->GetSelection();
+    // Don't create objects as children if multiple objects are selected
+    if (selection->Count() == 1)
+    {
+      ConnectThisTo(createSubMenu, Events::MouseEnter, OnMenuMouseEnter);
+      ConnectThisTo(createSubMenu, Events::FocusLost, OnMenuFocusLost);
+    }
   }
   else
   {
     ConnectMenu(menu, "Restore", OnRestore);
   }
 
-  ConnectThisTo(menu, Events::MenuClosed, OnMenuClosed);
   menu->ShiftOntoScreen(ToVector3(mouse->GetClientPosition()));
 }
 
