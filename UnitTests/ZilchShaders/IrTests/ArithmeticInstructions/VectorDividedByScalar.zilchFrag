@@ -1,0 +1,28 @@
+struct Helper[VectorType, ScalarType]
+{
+  [Static]
+  function Test()
+  {
+    var vector = VectorType();
+    var scalar = ScalarType();
+    
+    var result = vector / scalar;
+    result /= scalar;
+  }
+}
+
+[Pixel][UnitTest]
+struct VectorDividedByScalar
+{
+  [EntryPoint]
+  function Main()
+  {
+    Helper[Real2, Real].Test();
+    Helper[Real3, Real].Test();
+    Helper[Real4, Real].Test();
+    
+    //Helper[Integer2, Integer].Test();
+    //Helper[Integer3, Integer].Test();
+    //Helper[Integer4, Integer].Test();
+  }
+}

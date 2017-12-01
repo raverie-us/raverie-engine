@@ -1,0 +1,18 @@
+// All built-ins
+[Vertex][UnitTest]
+struct BuiltInsVertex5
+{
+  // Inputs
+  [HardwareBuiltInInput("VertexId")] var IdOfVertex : Integer;
+  [HardwareBuiltInInput("InstanceId")] var IdOfInstance : Integer;
+  
+  // Outputs  
+  [HardwareBuiltInOutput("ApiPerspectivePosition")] var PerspectivePosition : Real4;
+  [HardwareBuiltInOutput("PointSize")] var Size : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

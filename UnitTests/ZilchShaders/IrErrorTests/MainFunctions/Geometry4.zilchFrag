@@ -1,0 +1,12 @@
+struct GeoData
+{
+  var Data : Real;
+}
+
+[Geometry(maxVertices : 3)][UnitTest]
+struct Geometry4
+{
+  function Main(output : TriangleOutput[GeoData], input : TriangleInput[GeoData])
+  {
+  }
+}

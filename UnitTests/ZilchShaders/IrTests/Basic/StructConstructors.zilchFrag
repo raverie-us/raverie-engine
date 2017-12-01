@@ -1,0 +1,32 @@
+struct TestStructNoConstructor
+{
+  var Data : Real;
+}
+
+struct TestStructWithConstructors
+{
+  var Data : Real = -1.0;
+  
+  constructor()
+  {
+    this.Data = 1;
+  }
+  
+  constructor(data : Real)
+  {
+    this.Data = data;
+  }
+}
+
+[Pixel][UnitTest]
+struct StructConstructors
+{
+  var Dummy : Integer;
+  [EntryPoint]
+  function Main()
+  {
+    var sNoC = TestStructNoConstructor();
+    var sWithC = TestStructWithConstructors();
+    sWithC = TestStructWithConstructors(2.0);
+  }
+}

@@ -1,0 +1,35 @@
+[Pixel][UnitTest]
+struct Refract
+{
+  function Test_Static_Real2_Real2_Real()
+  {
+    var toBeRefracted_ = Real2();
+    var planeNormal_ = Real2();
+    var refractionIndex_ = Real();
+    var result = Math.Refract(toBeRefracted_, planeNormal_, refractionIndex_);
+  }
+
+  function Test_Static_Real3_Real3_Real()
+  {
+    var toBeRefracted_ = Real3();
+    var planeNormal_ = Real3();
+    var refractionIndex_ = Real();
+    var result = Math.Refract(toBeRefracted_, planeNormal_, refractionIndex_);
+  }
+
+  function Test_Static_Real4_Real4_Real()
+  {
+    var toBeRefracted_ = Real4();
+    var planeNormal_ = Real4();
+    var refractionIndex_ = Real();
+    var result = Math.Refract(toBeRefracted_, planeNormal_, refractionIndex_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real2_Real2_Real();
+    this.Test_Static_Real3_Real3_Real();
+    this.Test_Static_Real4_Real4_Real();
+  }
+}

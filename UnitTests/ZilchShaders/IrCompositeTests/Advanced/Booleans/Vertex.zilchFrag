@@ -1,0 +1,17 @@
+[Vertex]
+struct Vertex
+{
+  [StageOutput] var MyVar1 : Boolean;
+  [StageOutput("MyVar1")] var MyInt1 : Integer;
+  
+  [StageOutput] var MyVar2 : Boolean2;
+  [StageOutput("MyVar2")] var MyInt2 : Integer2;
+  
+  [StageOutput] var MyVar3 : Boolean3;
+  [StageOutput("MyVar3")] var MyInt3 : Integer3;
+
+  function Main()
+  {
+    
+  }
+}

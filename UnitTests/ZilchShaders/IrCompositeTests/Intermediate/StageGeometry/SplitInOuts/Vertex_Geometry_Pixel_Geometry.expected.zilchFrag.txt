@@ -1,0 +1,35 @@
+struct Vertex_Geometry_Pixel_GeoIn
+{
+  [StageInput(name : "ViewPosition")] var Stage_ViewPosition_Real3 : Real3;
+  [StageInput(name : "PerspectivePosition")] var Stage_PerspectivePosition_Real4 : Real4;
+  [StageInput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageInput(name : "Time")] var Stage_Time_Real : Real;
+  [HardwareBuiltInInput] var ApiPerspectivePosition : Real4;
+}
+struct Vertex_Geometry_Pixel_GeoOut
+{
+  [StageOutput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageOutput(name : "Color")] var Stage_Color_Real4 : Real4;
+  [StageOutput(name : "Size")] var Stage_Size_Real : Real;
+  [StageOutput(name : "Time")] var Stage_Time_Real : Real;
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+[Geometry(maxVertices : 3)][UnitTest]
+struct Vertex_Geometry_Pixel_Geometry
+{
+  [AppBuiltInInput] var PerspectiveToApiPerspective : Real4x4;
+  [EntryPoint]
+  function Main(input : TriangleInput[Vertex_Geometry_Pixel_GeoIn], output : TriangleOutput[Vertex_Geometry_Pixel_GeoOut])
+  {
+    var fragmentInput = TriangleInput[GeometryInData]();
+    for(var i = 0; i < 3; ++i)
+    {
+      fragmentInput[i].ViewPosition = input[i].Stage_ViewPosition_Real3;
+      fragmentInput[i].PerspectivePosition = input[i].Stage_PerspectivePosition_Real4;
+      fragmentInput[i].Uv = input[i].Stage_Uv_Real2;
+    }
+    var fragmentOutput = TriangleOutput[GeometryOutData]();
+    var geometry = Geometry();
+    geometry.Main(fragmentInput, fragmentOutput);
+  }
+}

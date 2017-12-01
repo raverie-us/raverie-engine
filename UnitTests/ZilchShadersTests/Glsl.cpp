@@ -172,6 +172,12 @@ bool GlslRenderer::CompileAndLinkShader(Array<FragmentInfo>& fragments, ErrorRep
 
 void GlslRenderer::RunPostProcess(Array<FragmentInfo>& fragments, RenderResult& result, ErrorReporter& reporter)
 {
+  Array<UniformBufferData> uniformBuffers;
+  RunPostProcess(fragments, uniformBuffers, result, reporter);
+}
+
+void GlslRenderer::RunPostProcess(Array<FragmentInfo>& fragments, Array<UniformBufferData>& uniformBuffers, RenderResult& result, ErrorReporter& reporter)
+{
   // Compile the shaders
   int programId;
   bool success = CompileAndLinkInternal(fragments, programId, reporter);
@@ -192,6 +198,30 @@ void GlslRenderer::RunPostProcess(Array<FragmentInfo>& fragments, RenderResult& 
 
   // Start using the shader
   glUseProgram(programId);
+
+  // @JoshD: This leaks right now
+  for(size_t i = 0; i < uniformBuffers.Size(); ++i)
+  {
+    UniformBufferData& uBufferData = uniformBuffers[i];
+    // Check if the uniform block exists by name
+    GLint blockIndex = glGetUniformBlockIndex(programId, uBufferData.mBufferName.c_str());
+    if(blockIndex == GL_INVALID_INDEX)
+      continue;
+
+    // If so, generate the actual uniform buffer object
+    GLuint uniformBufferObject = 0;
+    glGenBuffers(1, &uniformBufferObject);
+    glBindBuffer(GL_UNIFORM_BUFFER, uniformBufferObject);
+    glBufferData(GL_UNIFORM_BUFFER, uBufferData.mBuffer.mSize, uBufferData.mBuffer.mData, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    
+    // There's an extra level of indirection here. You have to map the buffer block's index to an actual binding id.
+    GLuint blockBinding = i;
+    glUniformBlockBinding(programId, blockIndex, blockBinding);
+
+    // Now we can map the binding id of the uniform block to the uniform buffer object
+    glBindBufferBase(GL_UNIFORM_BUFFER, blockBinding, uniformBufferObject);
+  }
 
   // Render to the target
   glBindVertexArray(mTriangleArray);

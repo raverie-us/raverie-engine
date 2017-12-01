@@ -1,0 +1,10 @@
+[Vertex]
+struct BadVertexHardwareBuiltIn1
+{
+  // Wrong type.
+  [HardwareBuiltInInput] var VertexId : Real;
+  
+  function Main()
+  {
+  }
+}

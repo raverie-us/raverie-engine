@@ -1,0 +1,29 @@
+[Pixel][UnitTest]
+struct Determinant
+{
+  function Test_Static_Real2x2()
+  {
+    var param0 = Real2x2();
+    var result = Math.Determinant(param0);
+  }
+
+  function Test_Static_Real3x3()
+  {
+    var param0 = Real3x3();
+    var result = Math.Determinant(param0);
+  }
+
+  function Test_Static_Real4x4()
+  {
+    var param0 = Real4x4();
+    var result = Math.Determinant(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real2x2();
+    this.Test_Static_Real3x3();
+    this.Test_Static_Real4x4();
+  }
+}

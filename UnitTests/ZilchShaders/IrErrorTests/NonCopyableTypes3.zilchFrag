@@ -1,0 +1,17 @@
+[Pixel][UnitTest]
+struct NonCopyableTypes3
+{
+  var SampledImage1 : SampledImage2d;
+  var SampledImage2 : SampledImage2d;
+  
+  // This must be passed through by ref
+  function Test(sampler : SampledImage2d)
+  {
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.Test(this.SampledImage1);
+  }
+}

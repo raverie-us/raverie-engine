@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct AppBuiltIns_Pixel
+{
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput] var LocalToWorld : Real4x4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel = Pixel();
+    pixel.LogicTime = this.LogicTime;
+    pixel.Transform = this.LocalToWorld;
+    pixel.Main();
+
+  }
+}

@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct Pixel2
+{
+  [StageInput("WorldNormal")] var Normal : Real3;
+  [StageInput("PerspectivePosition")] var Position : Real4;
+  
+  //Outputs
+  [StageOutput("FinalColor")] var Color : Real4;
+  
+  //In/Outs
+  [StageInput("VertexColor")][StageOutput("VertexColor")] var Color1 : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

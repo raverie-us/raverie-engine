@@ -1,0 +1,15 @@
+[Pixel]
+struct Pixel
+{
+  [StageInput] var Uv : Real2;
+  [StageInput] var Color : Real4;
+  [StageInput] var Size : Real;
+  [StageInput] var Time : Real;
+  
+  [StageOutput] var Target0 : Real4;
+  
+  function Main()
+  {
+    
+  }
+}

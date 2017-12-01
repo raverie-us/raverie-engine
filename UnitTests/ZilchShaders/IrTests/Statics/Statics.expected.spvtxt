@@ -1,0 +1,148 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 77
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
+               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Statics "Statics"
+               OpMemberName %Statics 0 "Dummy"
+               OpName %SubStruct "SubStruct"
+               OpMemberName %SubStruct 0 "R4"
+               OpName %R1_Statics "R1_Statics"
+               OpName %Sub_Statics "Sub_Statics"
+               OpName %R1_SubStruct "R1_SubStruct"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %r "r"
+               OpName %r4 "r4"
+               OpName %Statics_R1_Initializer "Statics_R1_Initializer"
+               OpName %PreConstructor_SubStruct "PreConstructor_SubStruct"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %Statics_Sub_Initializer "Statics_Sub_Initializer"
+               OpName %SubStruct_R1_Initializer "SubStruct_R1_Initializer"
+               OpName %PreConstructor_Statics "PreConstructor_Statics"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_4 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_5 "self"
+               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %self_6 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+    %Statics = OpTypeStruct %int
+%_ptr_Function_Statics = OpTypePointer Function %Statics
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Statics
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+ %R1_Statics = OpVariable %_ptr_Function_float Private
+         %11 = OpTypeFunction %void
+    %float_0 = OpConstant %float 0
+%float_1_10000002 = OpConstant %float 1.10000002
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+  %SubStruct = OpTypeStruct %v4float
+%_ptr_Function_SubStruct = OpTypePointer Function %SubStruct
+         %16 = OpTypeFunction %void %_ptr_Function_SubStruct
+      %int_0 = OpConstant %int 0
+%Sub_Statics = OpVariable %_ptr_Function_SubStruct Private
+      %int_3 = OpConstant %int 3
+%R1_SubStruct = OpVariable %_ptr_Function_float Private
+    %float_2 = OpConstant %float 2
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Statics
+         %27 = OpLabel
+          %r = OpVariable %_ptr_Function_float Function
+         %r4 = OpVariable %_ptr_Function_v4float Function
+         %30 = OpLoad %float %R1_Statics
+               OpStore %r %30
+               OpStore %R1_Statics %float_1_10000002
+         %31 = OpAccessChain %_ptr_Function_v4float %Sub_Statics %int_0
+         %32 = OpLoad %v4float %31
+               OpStore %r4 %32
+         %33 = OpAccessChain %_ptr_Function_v4float %Sub_Statics %int_0
+         %34 = OpConvertSToF %float %int_3
+         %35 = OpCompositeConstruct %v4float %34 %34 %34 %34
+               OpStore %33 %35
+               OpStore %R1_SubStruct %float_2
+               OpReturn
+               OpFunctionEnd
+%Statics_R1_Initializer = OpFunction %void None %11
+         %37 = OpLabel
+               OpStore %R1_Statics %float_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_SubStruct = OpFunction %void None %16
+     %self_0 = OpFunctionParameter %_ptr_Function_SubStruct
+         %40 = OpLabel
+         %41 = OpAccessChain %_ptr_Function_v4float %self_0 %int_0
+         %42 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %41 %42
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %16
+     %self_1 = OpFunctionParameter %_ptr_Function_SubStruct
+         %45 = OpLabel
+         %46 = OpFunctionCall %void %PreConstructor_SubStruct %self_1
+               OpReturn
+               OpFunctionEnd
+%Statics_Sub_Initializer = OpFunction %void None %11
+         %48 = OpLabel
+         %49 = OpFunctionCall %void %DefaultConstructor %Sub_Statics
+               OpReturn
+               OpFunctionEnd
+%SubStruct_R1_Initializer = OpFunction %void None %11
+         %51 = OpLabel
+               OpStore %R1_SubStruct %float_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Statics = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Statics
+         %54 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Statics
+         %57 = OpLabel
+         %58 = OpFunctionCall %void %PreConstructor_Statics %self_3
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_Statics
+         %61 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_Statics
+         %64 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main = OpFunction %void None %11
+         %66 = OpLabel
+     %self_6 = OpVariable %_ptr_Function_Statics Function
+         %68 = OpFunctionCall %void %InitializeGlobals
+         %69 = OpFunctionCall %void %DefaultConstructor_0 %self_6
+         %70 = OpFunctionCall %void %CopyInputs_Main %self_6
+         %71 = OpFunctionCall %void %Main %self_6
+         %72 = OpFunctionCall %void %CopyOutputs_Main %self_6
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %11
+         %73 = OpLabel
+         %74 = OpFunctionCall %void %Statics_R1_Initializer
+         %75 = OpFunctionCall %void %Statics_Sub_Initializer
+         %76 = OpFunctionCall %void %SubStruct_R1_Initializer
+               OpReturn
+               OpFunctionEnd

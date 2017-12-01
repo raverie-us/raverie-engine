@@ -1,0 +1,41 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 18
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %auto_main "auto_main"
+               OpExecutionMode %auto_main OriginUpperLeft
+               OpSource Unknown 100
+               OpName %RandomMath "RandomMath"
+               OpMemberName %RandomMath 0 "Dummy"
+               OpName %auto_main "auto_main"
+               OpName %PreConstructor_RandomMath "PreConstructor_RandomMath"
+               OpName %self "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %3 = OpTypeFunction %void
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %RandomMath = OpTypeStruct %int
+%_ptr_Function_RandomMath = OpTypePointer Function %RandomMath
+          %8 = OpTypeFunction %void %_ptr_Function_RandomMath
+  %auto_main = OpFunction %void None %3
+         %10 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_RandomMath = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_RandomMath
+         %13 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_RandomMath
+         %16 = OpLabel
+         %17 = OpFunctionCall %void %PreConstructor_RandomMath %self_0
+               OpReturn
+               OpFunctionEnd

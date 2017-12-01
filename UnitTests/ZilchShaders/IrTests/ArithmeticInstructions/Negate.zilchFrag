@@ -1,0 +1,27 @@
+struct NegateHelper[Type]
+{
+  [Static]
+  function Test()
+  {
+    var t = Type();
+    t = -t;
+  }
+}
+
+[Pixel][UnitTest]
+struct Negate
+{
+  [EntryPoint]
+  function Main()
+  {
+    NegateHelper[Real].Test();
+    NegateHelper[Real2].Test();
+    NegateHelper[Real3].Test();
+    NegateHelper[Real4].Test();
+    
+    NegateHelper[Integer].Test();
+    NegateHelper[Integer2].Test();
+    NegateHelper[Integer3].Test();
+    NegateHelper[Integer4].Test();
+  }
+}

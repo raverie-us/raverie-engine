@@ -1,0 +1,59 @@
+struct Real4x4Implements
+{
+  [Static][Extension(typeid(Real4x4))][Implements]
+  var CountX : Integer
+  {
+    get { return 4; }
+  }
+  [Static][Extension(typeid(Real4x4))][Implements]
+  var CountY : Integer
+  {
+    get { return 4; }
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  var CountX : Integer
+  {
+    get { return Real4x4.CountX; }
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  var CountY : Integer
+  {
+    get { return Real4x4.CountY; }
+  }
+  [Static][Extension(typeid(Real4x4))][Implements]
+  var Count : Integer
+  {
+    get { return Real4x4.CountX * Real4x4.CountY; }
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  var Count : Integer
+  {
+    get { return Real4x4.Count; }
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  function Get(y : Integer, x : Integer) : Real
+  {
+    return this[y][x];
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  function Set(y : Integer, x : Integer, value : Real)
+  {
+    this[y][x] = value;
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var countX = this.CountX;
+    var indexX = index % countX;
+    var indexY = index / countX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real4x4))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var countX = this.CountX;
+    var indexX = index % countX;
+    var indexY = index / countX;
+    this[indexY][indexX] = value;
+  }
+}

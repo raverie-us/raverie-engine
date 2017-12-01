@@ -1,0 +1,19 @@
+[Vertex][UnitTest]
+struct Vertex_Geometry_Pixel_Vertex
+{
+  [StageOutput(name : "ViewPosition")] var Stage_ViewPosition_Real3 : Real3;
+  [StageOutput(name : "Time")] var Stage_Time_Real : Real;
+  [StageOutput(name : "Color")][StageInput(name : "Color")] var Stage_Color_Real4 : Real4;
+  [StageInput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.Uv = this.Stage_Uv_Real2;
+    vertex.Main();
+
+    this.Stage_ViewPosition_Real3 = vertex.ViewPosition;
+    this.Stage_Time_Real = vertex.Time;
+  }
+}

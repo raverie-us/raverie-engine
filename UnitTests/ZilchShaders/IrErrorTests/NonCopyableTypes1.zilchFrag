@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct NonCopyableTypes1
+{
+  var SampledImage : SampledImage2d;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var sampledImage2d : SampledImage2d = this.SampledImage;
+  }
+}

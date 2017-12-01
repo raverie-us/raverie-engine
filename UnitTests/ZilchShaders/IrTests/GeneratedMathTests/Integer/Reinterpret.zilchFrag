@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct Reinterpret
+{
+  function Test_Real()
+  {
+    var param0 = Real();
+    var result = Integer.Reinterpret(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Real();
+  }
+}

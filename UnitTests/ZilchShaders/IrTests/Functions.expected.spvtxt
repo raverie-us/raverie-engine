@@ -1,0 +1,147 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 78
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %auto_main "auto_main"
+               OpExecutionMode %auto_main OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Functions "Functions"
+               OpMemberName %Functions 0 "Dummy"
+               OpName %auto_main "auto_main"
+               OpName %Fn0 "Fn0"
+               OpName %self "self"
+               OpName %Fn1 "Fn1"
+               OpName %self_0 "self"
+               OpName %data "data"
+               OpName %Fn2 "Fn2"
+               OpName %self_1 "self"
+               OpName %data_0 "data"
+               OpName %data_Local "data_Local"
+               OpName %result "result"
+               OpName %Fn3 "Fn3"
+               OpName %self_2 "self"
+               OpName %data_1 "data"
+               OpName %data_Local_0 "data_Local"
+               OpName %StaticFn1 "StaticFn1"
+               OpName %a "a"
+               OpName %StaticFn2 "StaticFn2"
+               OpName %data_2 "data"
+               OpName %data_Local_1 "data_Local"
+               OpName %Main "Main"
+               OpName %self_3 "self"
+               OpName %val "val"
+               OpName %PreConstructor_Functions "PreConstructor_Functions"
+               OpName %self_4 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_5 "self"
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %3 = OpTypeFunction %void
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+  %Functions = OpTypeStruct %int
+%_ptr_Function_Functions = OpTypePointer Function %Functions
+          %8 = OpTypeFunction %void %_ptr_Function_Functions
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_1 = OpConstant %float 1
+         %11 = OpTypeFunction %void %_ptr_Function_Functions %float
+      %int_2 = OpConstant %int 2
+         %12 = OpTypeFunction %float %_ptr_Function_Functions %float
+         %13 = OpTypeFunction %float
+         %14 = OpTypeFunction %void %float
+      %int_1 = OpConstant %int 1
+    %float_3 = OpConstant %float 3
+    %float_2 = OpConstant %float 2
+  %auto_main = OpFunction %void None %3
+         %21 = OpLabel
+               OpReturn
+               OpFunctionEnd
+        %Fn0 = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Functions
+         %24 = OpLabel
+         %25 = OpFunctionCall %void %Fn1 %self
+               OpReturn
+               OpFunctionEnd
+        %Fn1 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Functions
+         %28 = OpLabel
+       %data = OpVariable %_ptr_Function_float Function
+               OpStore %data %float_1
+         %30 = OpLoad %float %data
+         %31 = OpFunctionCall %void %Fn2 %self_0 %30
+               OpReturn
+               OpFunctionEnd
+        %Fn2 = OpFunction %void None %11
+     %self_1 = OpFunctionParameter %_ptr_Function_Functions
+     %data_0 = OpFunctionParameter %float
+         %35 = OpLabel
+ %data_Local = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_float Function
+               OpStore %data_Local %data_0
+         %38 = OpConvertSToF %float %int_2
+         %39 = OpLoad %float %data_Local
+         %40 = OpFAdd %float %39 %38
+         %41 = OpFunctionCall %float %Fn3 %self_1 %40
+               OpStore %result %41
+               OpReturn
+               OpFunctionEnd
+        %Fn3 = OpFunction %float None %12
+     %self_2 = OpFunctionParameter %_ptr_Function_Functions
+     %data_1 = OpFunctionParameter %float
+         %45 = OpLabel
+%data_Local_0 = OpVariable %_ptr_Function_float Function
+               OpStore %data_Local_0 %data_1
+         %47 = OpLoad %float %data_Local_0
+         %48 = OpFAdd %float %47 %float_1
+               OpReturnValue %48
+               OpFunctionEnd
+  %StaticFn1 = OpFunction %float None %13
+         %50 = OpLabel
+          %a = OpVariable %_ptr_Function_float Function
+               OpStore %a %float_1
+         %52 = OpLoad %float %a
+         %53 = OpFunctionCall %void %StaticFn2 %52
+         %54 = OpLoad %float %a
+               OpReturnValue %54
+               OpFunctionEnd
+  %StaticFn2 = OpFunction %void None %14
+     %data_2 = OpFunctionParameter %float
+         %57 = OpLabel
+%data_Local_1 = OpVariable %_ptr_Function_float Function
+               OpStore %data_Local_1 %data_2
+         %59 = OpConvertSToF %float %int_1
+         %60 = OpLoad %float %data_Local_1
+         %61 = OpFAdd %float %60 %59
+               OpStore %data_Local_1 %61
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Functions
+         %64 = OpLabel
+        %val = OpVariable %_ptr_Function_float Function
+         %66 = OpFunctionCall %void %Fn1 %self_3
+         %67 = OpFunctionCall %float %Fn3 %self_3 %float_1
+               OpStore %val %67
+         %68 = OpFunctionCall %float %Fn3 %self_3 %float_3
+         %69 = OpFunctionCall %float %Fn3 %self_3 %float_2
+               OpStore %val %69
+         %70 = OpFunctionCall %float %StaticFn1
+               OpStore %val %70
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Functions = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_Functions
+         %73 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_Functions
+         %76 = OpLabel
+         %77 = OpFunctionCall %void %PreConstructor_Functions %self_5
+               OpReturn
+               OpFunctionEnd

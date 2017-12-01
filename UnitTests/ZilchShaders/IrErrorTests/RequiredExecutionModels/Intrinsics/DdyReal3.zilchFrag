@@ -1,0 +1,8 @@
+[UnitTest][Vertex]
+struct DdyReal3
+{
+  function Main()
+  {
+    ShaderIntrinsics.Ddy(Real3());
+  }
+}

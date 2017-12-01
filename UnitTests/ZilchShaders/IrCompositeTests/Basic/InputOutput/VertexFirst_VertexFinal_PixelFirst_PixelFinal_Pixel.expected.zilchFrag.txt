@@ -1,0 +1,37 @@
+[Pixel][UnitTest]
+struct VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel
+{
+  [StageInput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageInput(name : "LocalPosition")] var Stage_LocalPosition_Real3 : Real3;
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  [HardwareBuiltInInput] var PointCoord : Real2;
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput] var LocalToWorld : Real4x4;
+  [PropertyInput] var Property1_PixelFinal : Real;
+  [PropertyInput] var Property2_PixelFinal : Real;
+  [StageOutput(name : "Target0")] var Stage_Target0_Real4 : Real4;
+  [StageOutput(name : "Target1")] var Stage_Target1_Real4 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixelFirst = PixelFirst();
+    pixelFirst.Main();
+
+    var pixelFinal = PixelFinal();
+    pixelFinal.FragmentVar1 = pixelFirst.FragmentVar1;
+    pixelFinal.MyFragmentVar2 = pixelFirst.MyFragmentVar;
+    pixelFinal.FragCoord = this.FragCoord;
+    pixelFinal.PointCoordinate = this.PointCoord;
+    pixelFinal.Uv = this.Stage_Uv_Real2;
+    pixelFinal.Position = this.Stage_LocalPosition_Real3;
+    pixelFinal.LogicTime = this.LogicTime;
+    pixelFinal.Transform = this.LocalToWorld;
+    pixelFinal.Property1 = this.Property1_PixelFinal;
+    pixelFinal.MyProperty = this.Property2_PixelFinal;
+    pixelFinal.Main();
+
+    this.Stage_Target0_Real4 = pixelFinal.Target0;
+    this.Stage_Target1_Real4 = pixelFinal.Target;
+  }
+}

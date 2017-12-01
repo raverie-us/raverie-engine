@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct HardwareBuiltIn1_Pixel
+{
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  [HardwareBuiltInInput] var PointCoord : Real2;
+  [HardwareBuiltInOutput] var FragDepth : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel1 = Pixel1();
+    pixel1.FragCoord = this.FragCoord;
+    pixel1.PointCoordinate = this.PointCoord;
+    pixel1.Main();
+
+    this.FragDepth = pixel1.FragDepth;
+  }
+}

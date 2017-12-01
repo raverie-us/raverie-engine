@@ -1,0 +1,10 @@
+[Vertex]
+struct BadVertexHardwareBuiltIn2
+{
+  // Wrong name.
+  [HardwareBuiltInInput] var VertexIds : Integer;
+  
+  function Main()
+  {
+  }
+}

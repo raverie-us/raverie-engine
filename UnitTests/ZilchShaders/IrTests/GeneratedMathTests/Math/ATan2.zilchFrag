@@ -1,0 +1,112 @@
+[Pixel][UnitTest]
+struct ATan2
+{
+  function Test_Static_Real_Real()
+  {
+    var y_ = Real();
+    var x_ = Real();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real2_Real2()
+  {
+    var y_ = Real2();
+    var x_ = Real2();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real2x2_Real2x2()
+  {
+    var y_ = Real2x2();
+    var x_ = Real2x2();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real2x3_Real2x3()
+  {
+    var y_ = Real2x3();
+    var x_ = Real2x3();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real2x4_Real2x4()
+  {
+    var y_ = Real2x4();
+    var x_ = Real2x4();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real3_Real3()
+  {
+    var y_ = Real3();
+    var x_ = Real3();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real3x2_Real3x2()
+  {
+    var y_ = Real3x2();
+    var x_ = Real3x2();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real3x3_Real3x3()
+  {
+    var y_ = Real3x3();
+    var x_ = Real3x3();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real3x4_Real3x4()
+  {
+    var y_ = Real3x4();
+    var x_ = Real3x4();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real4_Real4()
+  {
+    var y_ = Real4();
+    var x_ = Real4();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real4x2_Real4x2()
+  {
+    var y_ = Real4x2();
+    var x_ = Real4x2();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real4x3_Real4x3()
+  {
+    var y_ = Real4x3();
+    var x_ = Real4x3();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  function Test_Static_Real4x4_Real4x4()
+  {
+    var y_ = Real4x4();
+    var x_ = Real4x4();
+    var result = Math.ATan2(y_, x_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real_Real();
+    this.Test_Static_Real2_Real2();
+    this.Test_Static_Real2x2_Real2x2();
+    this.Test_Static_Real2x3_Real2x3();
+    this.Test_Static_Real2x4_Real2x4();
+    this.Test_Static_Real3_Real3();
+    this.Test_Static_Real3x2_Real3x2();
+    this.Test_Static_Real3x3_Real3x3();
+    this.Test_Static_Real3x4_Real3x4();
+    this.Test_Static_Real4_Real4();
+    this.Test_Static_Real4x2_Real4x2();
+    this.Test_Static_Real4x3_Real4x3();
+    this.Test_Static_Real4x4_Real4x4();
+  }
+}

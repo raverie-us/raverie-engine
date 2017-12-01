@@ -1,0 +1,10 @@
+[UnitTest][Vertex]
+struct SampleProjDRefImplicitLodImage
+{
+  var Image : DepthImage2d;
+  var Sampler : Sampler;
+  function Main()
+  {
+    ShaderIntrinsics.SampleProjDRefImplicitLod(this.Image, this.Sampler, Real3(), 1.0);
+  }
+}

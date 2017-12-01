@@ -1,0 +1,14 @@
+[UnitTest]
+struct Real3Constructors
+{
+  function Main()
+  {
+    var r2 = Real2();
+    var r3 = Real3();
+    r3 = Real3(2.0, 1.0, 0.0);
+    r3 = Real3(1.0);
+    
+    r3 = Real3(2.0, r2);
+    r3 = Real3(r2, 0.0);
+  }
+}

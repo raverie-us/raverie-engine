@@ -1,0 +1,70 @@
+[Pixel]
+struct Pixel1
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [Output("Value1")] var P1Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [Output("Value2")] var P1Value2 : Real;
+  
+  // Out 1 (P3,P4), In 2(P3), In 3(P4) (1:P34->2:P3, 1:P34->3:P4)
+  [Output("Value3")][Output("Value4")] var P1Value34 : Real;
+  
+  // Out 1 (R2), In 1 (R) (mismatched types)
+  [Output("Value6")] var P1Value6 : Real2;
+  // Out 1, In 1 (mismatched override names but same var names)
+  [Output("P1Value7")] var Value7 : Real2;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [Output("Value8")] var P1Value8 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct Pixel2
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [FragmentInput("Value1")][Output("Value1")] var P2Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [FragmentInput("Value2")] var P2Value2 : Real;
+  
+  // Out 1 (P3,P4), In 2(P3), In 3(P4) (1:P34->2:P3, 1:P34->3:P4)
+  [FragmentInput("Value3")] var P2Value3 : Real;
+  
+  // Out 1 (R2), In 1 (R) (mismatched types)
+  [FragmentInput("Value6")] var P2Value6 : Real;
+  // Out 1, In 1 (mismatched override names but same var names)
+  [FragmentInput("VPValue7")] var Value7 : Real2;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [FragmentInput("Value8")][Output("Value8")] var P2Value8 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct Pixel3
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [FragmentInput("Value1")] var P3Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [FragmentInput("Value2")] var P3Value2 : Real;
+  
+  // Out 1 (P3,P4), In 2(P3), In 3(P4) (1:P34->2:P3, 1:P34->3:P4)
+  [FragmentInput("Value4")] var P3Value4 : Real;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [FragmentInput("Value8")] var P3Value8 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+

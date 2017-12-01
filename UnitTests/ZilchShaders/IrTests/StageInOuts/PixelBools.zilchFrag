@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct PixelBools
+{
+  [StageInput] var MyVar1 : Boolean;
+  [StageInput("MyVar1")] var MyInt1 : Integer;
+  
+  [StageInput] var MyVar2 : Boolean2;
+  [StageInput("MyVar2")] var MyInt2 : Integer2;
+  
+  [StageInput] var MyVar3 : Boolean3;
+  [StageInput("MyVar3")] var MyInt3 : Integer3;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

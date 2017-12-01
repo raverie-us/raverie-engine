@@ -1,0 +1,26 @@
+struct ConversionTests[RealType, IntType, BoolType]
+{
+  [Static]
+  function Test()
+  {
+    var i = IntType();
+    var b = BoolType();
+    var r = RealType();
+    
+    i = ShaderIntrinsics.ConvertFToS(r);
+    r = ShaderIntrinsics.ConvertSToF(i);
+    
+    i = ShaderIntrinsics.BitCastToInteger(r);
+    r = ShaderIntrinsics.BitCastToReal(i);
+  }
+}
+
+[Pixel][UnitTest]
+struct ConversionIntrinsicTests
+{
+  [EntryPoint]
+  function Main()
+  {
+    ConversionTests[Real, Integer, Boolean].Test();
+  }
+}

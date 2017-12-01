@@ -1,0 +1,2 @@
+  IrErrorTests\SpecializationConstants\BadType.zilchFrag(4): Type 'FixedArray[Integer, 5]' is not valid as a specialization constant.:
+  Type 'FixedArray[Integer, 5]' is not valid as a specialization constant.

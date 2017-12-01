@@ -1,0 +1,38 @@
+struct MathRotationTranslationMatrixImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateRotationMatrix2x2(radians : Real) : Real2x2
+  {
+    var cosTheta = Math.Cos(radians);
+    var sinTheta = Math.Sin(radians);
+    return Real2x2(cosTheta, -sinTheta,
+                   sinTheta, cosTheta);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateRotationMatrix3x3(radians : Real) : Real3x3
+  {
+    var r2x2 = Math.GenerateRotationMatrix2x2(radians);
+    return Real3x3(r2x2.M00, r2x2.M01, 0.0,
+                   r2x2.M10, r2x2.M11, 0.0,
+                        0.0,      0.0, 1.0);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateRotationMatrix3x3(axis : Real3, radians : Real) : Real3x3
+  {
+    return Math.ToReal3x3(axis, radians);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateRotationMatrix4x4(axis : Real3, radians : Real) : Real4x4
+  {
+    var r3x3 = Math.ToReal3x3(axis, radians);
+    var result = Real4x4();
+    result[0] = Real4(r3x3[0], 0.0);
+    result[1] = Real4(r3x3[1], 0.0);
+    result[2] = Real4(r3x3[2], 0.0);
+    result[3] = Real4(0.0, 0.0, 0.0, 1.0);
+    return result;
+  }
+}

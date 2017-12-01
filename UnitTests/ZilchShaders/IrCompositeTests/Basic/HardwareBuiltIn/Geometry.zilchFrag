@@ -1,0 +1,18 @@
+struct GeometryData
+{
+  [HardwareBuiltInInput("ApiPerspectivePosition")]
+  [HardwareBuiltInOutput("ApiPerspectivePosition")]
+  var PerspectivePosition : Real4;
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry
+{
+  [HardwareBuiltInInput("PrimitiveId")][HardwareBuiltInOutput("PrimitiveId")] var Id : Integer;
+  
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    output.Append(input[0], 0);
+    output.Restart();
+  }
+}

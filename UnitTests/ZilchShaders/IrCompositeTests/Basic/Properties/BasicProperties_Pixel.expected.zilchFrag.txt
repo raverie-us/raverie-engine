@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct BasicProperties_Pixel
+{
+  [PropertyInput] var Position_Pixel : Real4;
+  [PropertyInput] var Value_Pixel : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel = Pixel();
+    pixel.Position = this.Position_Pixel;
+    pixel.Value = this.Value_Pixel;
+    pixel.Main();
+
+  }
+}

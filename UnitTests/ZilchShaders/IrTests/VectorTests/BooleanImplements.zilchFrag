@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct BooleanImplements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var x = Boolean.XAxis;
+    var zero = Boolean.Zero;
+    var axis = Boolean.GetAxis(1);
+  }
+}

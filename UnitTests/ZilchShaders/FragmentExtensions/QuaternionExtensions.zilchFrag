@@ -1,0 +1,8 @@
+struct QuaternionExtensions
+{
+  [Static][Extension(typeid(Quaternion))][Implements]
+  var Identity : Quaternion
+  {
+    get { return Quaternion(0.0, 0.0, 0.0, 1.0); }
+  }
+}

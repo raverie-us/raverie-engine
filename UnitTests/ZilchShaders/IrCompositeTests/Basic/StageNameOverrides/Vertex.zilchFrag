@@ -1,0 +1,25 @@
+[Vertex]
+struct Vertex
+{
+  // Out Vertex, In Pixel
+  [Output("Value1")] var V1 : Real;
+  
+  // Out Vertex (V2,V3), In Pixel(P2), In Pixel(P3)
+  [Output("Value2")][Output("Value3")] var V23 : Real;
+  
+  // Out Vertex (V5), In Pixel(P4)(P5) (Resovle V5 -> P45)
+  [Output("Value5")] var V5 : Real;
+  
+  // Out Vertex (R2), In Pixel (R) (mismatched types)
+  [Output("Value6")] var V6 : Real2;
+  // Out 1, In 1 (mismatched override names but same var names)
+  [Output("V7")] var Value7 : Real;
+  
+  // Out Vertex, In Pixel after other properties)
+  [Output("Value8")] var V8 : Real;
+  
+  function Main()
+  {
+    
+  }
+}

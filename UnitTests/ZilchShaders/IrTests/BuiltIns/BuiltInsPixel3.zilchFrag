@@ -1,0 +1,16 @@
+// Sub-set of built-ins
+[Pixel][UnitTest]
+struct BuiltInsPixel3
+{
+  [HardwareBuiltInOutput] var FragDepth : Real;
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  //[BuiltInInput] var PointCoord : Real2;
+  [HardwareBuiltInInput] var FrontFacing : Boolean;
+  //[BuiltInInput] var PrimitiveId : Integer;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

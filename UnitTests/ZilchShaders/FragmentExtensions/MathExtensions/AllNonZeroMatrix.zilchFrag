@@ -1,0 +1,84 @@
+struct MathAllNonZeroMatrixImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real2x2) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real2x3) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real2x4) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real3x2) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[2]));
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real3x3) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[2]));
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real3x4) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[2]));
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real4x2) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[2]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[3]));
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real4x3) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[2]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[3]));
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(param0 : Real4x4) : Boolean
+  {
+    var result = true;
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[0]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[1]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[2]));
+    result = ShaderIntrinsics.LogicalAnd(result, Math.AllNonZero(param0[3]));
+    return result;
+  }
+}

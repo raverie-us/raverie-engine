@@ -1,0 +1,70 @@
+[Vertex]
+struct Vertex1
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [Output("Value1")] var V1Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [Output("Value2")] var V1Value2 : Real;
+  
+  // Out 1 (V3,V4), In 2(V3), In 3(V4) (1:V34->2:V3, 1:V34->3:V4)
+  [Output("Value3")][Output("Value4")] var V1Value34 : Real;
+  
+  // Out 1 (R2), In 1 (R) (mismatched types)
+  [Output("Value6")] var V1Value6 : Real2;
+  // Out 1, In 1 (mismatched override names but same var names)
+  [Output("V1Value7")] var Value7 : Real2;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [Output("Value8")] var V1Value8 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Vertex]
+struct Vertex2
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [FragmentInput("Value1")][Output("Value1")] var V2Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [FragmentInput("Value2")] var V2Value2 : Real;
+  
+  // Out 1 (V3,V4), In 2(V3), In 3(V4) (1:V34->2:V3, 1:V34->3:V4)
+  [FragmentInput("Value3")] var V2Value3 : Real;
+  
+  // Out 1 (R2), In 1 (R) (mismatched types)
+  [FragmentInput("Value6")] var V2Value6 : Real;
+  // Out 1, In 1 (mismatched override names but same var names)
+  [FragmentInput("V2Value7")] var Value7 : Real2;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [FragmentInput("Value8")][Output("Value8")] var V2Value8 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Vertex]
+struct Vertex3
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [FragmentInput("Value1")] var V3Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [FragmentInput("Value2")] var V3Value2 : Real;
+  
+  // Out 1 (V3,V4), In 2(V3), In 3(V4) (1:V34->2:V3, 1:V34->3:V4)
+  [FragmentInput("Value4")] var V3Value4 : Real;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [FragmentInput("Value8")] var V3Value8 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+

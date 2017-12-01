@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Compositor.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="ShaderCodeBuilder.hpp" />
+    <ClInclude Include="LibraryTranslator.hpp" />
+    <ClInclude Include="LibraryTranslationHelpers.hpp" />
+    <ClInclude Include="GlslTranslation.hpp">
+      <Filter>LanguageTranslation</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericTranslation.hpp">
+      <Filter>LanguageTranslation</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchTypeCollector.hpp" />
+    <ClInclude Include="ZilchShaderSharedSettings.hpp" />
+    <ClInclude Include="ShaderType.hpp" />
+    <ClInclude Include="ShaderLibrary.hpp" />
+    <ClInclude Include="ShaderProject.hpp" />
+    <ClInclude Include="ShaderErrors.hpp" />
+    <ClInclude Include="SimpleZilchShaderGenerator.hpp" />
+    <ClInclude Include="Translator.hpp" />
+    <ClInclude Include="BaseShaderTranslator.hpp" />
+    <ClInclude Include="CodeRangeMapping.hpp" />
+    <ClInclude Include="ShaderIntrinsicTypes.hpp" />
+    <ClInclude Include="TranslatorContext.hpp" />
+    <ClInclude Include="GlslTranslator.hpp">
+      <Filter>LanguageTranslation</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardDeclarations.hpp" />
+    <ClInclude Include="ShaderAttributes.hpp" />
+    <ClInclude Include="ZilchShaderSettingsLibrary.hpp" />
+    <ClInclude Include="ZilchShadersStandard.hpp" />
+    <ClInclude Include="SimpleZilchShaderIRGenerator.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleZilchParser.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRLibrary.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchSpirVFrontEnd.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseShaderIRTranslator.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderSpirVBinaryBackend.hpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtensionLibrary.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSL.std.450.h">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeDependencyCollector.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="spirv.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="EntryPointGeneration.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchSpirVSettings.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="SpirVHelpers.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRProject.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderIRLibraryTranslation.hpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClInclude>
+    <ClInclude Include="OperatorKeys.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRShared.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRMeta.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchSpirVFrontEndValidation.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonInstructions.hpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRCompositor.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRCore.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIntrinsics.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderImageIntrinsics.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRReflection.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderByteStream.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchSpirVDisassemblerBackend.hpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderGlslBackend.hpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRPasses.hpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="ZilchShaderIRTranslationPass.hpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="SpirVSpecializationConstantPass.hpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="StageRequirementsGatherer.hpp">
+      <Filter>New</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Compositor.cpp" />
+    <ClCompile Include="Precompiled.cpp" />
+    <ClCompile Include="ShaderCodeBuilder.cpp" />
+    <ClCompile Include="LibraryTranslator.cpp" />
+    <ClCompile Include="LibraryTranslationHelpers.cpp" />
+    <ClCompile Include="GlslTranslation.cpp">
+      <Filter>LanguageTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericTranslation.cpp">
+      <Filter>LanguageTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchTypeCollector.cpp" />
+    <ClCompile Include="ZilchShaderSharedSettings.cpp" />
+    <ClCompile Include="ShaderType.cpp" />
+    <ClCompile Include="ShaderLibrary.cpp" />
+    <ClCompile Include="ShaderProject.cpp" />
+    <ClCompile Include="ShaderErrors.cpp" />
+    <ClCompile Include="SimpleZilchShaderGenerator.cpp" />
+    <ClCompile Include="Translator.cpp" />
+    <ClCompile Include="CodeRangeMapping.cpp" />
+    <ClCompile Include="ShaderIntrinsicTypes.cpp" />
+    <ClCompile Include="TranslatorContext.cpp" />
+    <ClCompile Include="GlslTranslator.cpp">
+      <Filter>LanguageTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderAttributes.cpp" />
+    <ClCompile Include="ZilchShaderSettingsLibrary.cpp" />
+    <ClCompile Include="ZilchShadersStandard.cpp" />
+    <ClCompile Include="SimpleZilchShaderIRGenerator.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleZilchParser.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIRLibrary.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchSpirVFrontEnd.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderSpirVBinaryBackend.cpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtensionLibrary.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeDependencyCollector.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="EntryPointGeneration.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchSpirVSettings.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIRProject.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderIRLibraryTranslation.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="ArithmeticInstructions.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="ConversionInstructions.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="LogicalInstructions.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="OperatorKeys.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="Glsl450Extensions.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="BitInstructions.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderIntrinsics.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedArray.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIRShared.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIRMeta.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchSpirVFrontEndValidation.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonInstructions.cpp">
+      <Filter>New\LibraryTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIRCompositor.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIRCore.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIntrinsics.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderImageIntrinsics.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIRReflection.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderByteStream.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchSpirVDisassemblerBackend.cpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderGlslBackend.cpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="ZilchShaderIRPasses.cpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="SpirVSpecializationConstantPass.cpp">
+      <Filter>New\TranslationPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="StageRequirementsGatherer.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LanguageTranslation">
+      <UniqueIdentifier>{8555eb2f-7908-42f3-b7d1-9e5798d846a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="New">
+      <UniqueIdentifier>{48606400-2e21-4f19-af3b-5edff3844a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="New\LibraryTranslation">
+      <UniqueIdentifier>{1799b632-f0aa-42bf-8846-339fe25ad888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="New\TranslationPasses">
+      <UniqueIdentifier>{7831de53-4057-496e-89d0-fa48bbdeb066}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

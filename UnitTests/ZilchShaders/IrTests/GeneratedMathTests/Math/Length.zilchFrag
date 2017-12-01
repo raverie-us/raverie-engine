@@ -1,0 +1,36 @@
+[Pixel][UnitTest]
+struct Length
+{
+  function Test_Static_Quaternion()
+  {
+    var param0 = Quaternion();
+    var result = Math.Length(param0);
+  }
+
+  function Test_Static_Real2()
+  {
+    var param0 = Real2();
+    var result = Math.Length(param0);
+  }
+
+  function Test_Static_Real3()
+  {
+    var param0 = Real3();
+    var result = Math.Length(param0);
+  }
+
+  function Test_Static_Real4()
+  {
+    var param0 = Real4();
+    var result = Math.Length(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Quaternion();
+    this.Test_Static_Real2();
+    this.Test_Static_Real3();
+    this.Test_Static_Real4();
+  }
+}

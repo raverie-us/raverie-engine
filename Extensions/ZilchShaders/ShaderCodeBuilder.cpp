@@ -81,6 +81,92 @@ String ShaderCodeBuilder::EmitIndent()
   return builder.ToString();
 }
 
+ShaderCodeBuilder& ShaderCodeBuilder::WriteMemberVariableDeclaration(StringParam variableName, StringParam variableTypeName)
+{
+  (*this) << "var " << variableName << " : " << variableTypeName << ";" << this->EmitLineReturn();
+  return *this;
+}
+
+ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttributeList& attributes, StringParam variableName, StringParam variableTypeName)
+{
+  ShaderCodeBuilder& builder = *this;
+  builder << builder.EmitIndent();
+  // Add all attributes
+  ShaderIRAttributeList::Range attributeRange = attributes.All();
+  for(; !attributeRange.Empty(); attributeRange.PopFront())
+  {
+    ShaderIRAttribute& attribute = attributeRange.Front();
+    builder.DeclareAttribute(attribute);
+  }
+
+  // Declare the field
+  builder << builder.EmitSpace();
+  builder.WriteMemberVariableDeclaration(variableName, variableTypeName);
+  return builder;
+}
+
+ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttribute& attribute, StringParam variableName, StringParam variableTypeName)
+{
+  ShaderCodeBuilder& builder = *this;
+  builder << builder.EmitIndent();
+  builder.DeclareAttribute(attribute);
+  builder << builder.EmitSpace();
+  // Declare the field
+  builder.WriteMemberVariableDeclaration(variableName, variableTypeName);
+  return builder;
+}
+
+ShaderCodeBuilder& ShaderCodeBuilder::WriteLocalVariableDefaultConstruction(StringParam variableName, StringParam variableTypeName)
+{
+  (*this) << this->EmitIndent() << "var " << variableName << " = " << variableTypeName << "();" << this->EmitLineReturn();
+  return *this;
+}
+
+ShaderCodeBuilder& ShaderCodeBuilder::DeclareAttribute(ShaderIRAttribute& attribute)
+{
+  ShaderCodeBuilder& builder = *this;
+  // Add all attributes
+  builder << "[" << attribute.mAttributeName;
+  // Write any attribute parameters that exist
+  DeclareAttributeParams(attribute);
+  builder << "]";
+  return builder;
+}
+
+ShaderCodeBuilder& ShaderCodeBuilder::DeclareAttribute(StringParam attributeName)
+{
+  ShaderCodeBuilder& builder = *this;
+  // Add all attributes
+  builder << "[" << attributeName << "]";
+  return builder;
+}
+
+ShaderCodeBuilder& ShaderCodeBuilder::DeclareAttributeParams(ShaderIRAttribute& attribute)
+{
+  ShaderCodeBuilder& builder = *this;
+  size_t paramCount = attribute.mParameters.Size();
+  // There's no params so do nothing
+  if(paramCount == 0)
+    return builder;
+
+  // Write each attribute out (assuming only string value right now)
+  builder << "(";
+  for(size_t i = 0; i < paramCount; ++i)
+  {
+    ShaderIRAttributeParameter& param = attribute.mParameters[i];
+    // If this parameter has no name then just write the value
+    if(param.GetName().Empty())
+      builder << param.GetStringValue();
+    // Otherwise write 'name' : 'value'
+    else
+      builder << param.GetName() << " : " << "\"" << param.GetStringValue() << "\"";
+    if(i != paramCount - 1)
+      builder << ", ";
+  }
+  builder << ")";
+  return builder;
+}
+
 ShaderCodeBuilder& ShaderCodeBuilder::WriteScopedIndent()
 {
   WriteIndentation();

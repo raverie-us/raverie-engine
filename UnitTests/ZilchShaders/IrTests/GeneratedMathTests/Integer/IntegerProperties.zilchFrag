@@ -1,0 +1,79 @@
+[Pixel][UnitTest]
+struct IntegerProperties
+{
+  function Test_Count_Integer()
+  {
+    var instance = Integer();
+    var value = instance.Count;
+  }
+  function Test_StaticCount_Integer()
+  {
+    var value = Integer.Count;
+  }
+  function Test_StaticNegativeMin_Integer()
+  {
+    var value = Integer.NegativeMin;
+  }
+  function Test_StaticNegativeValueClosestToZero_Integer()
+  {
+    var value = Integer.NegativeValueClosestToZero;
+  }
+  function Test_StaticOne_Integer()
+  {
+    var value = Integer.One;
+  }
+  function Test_StaticPositiveMax_Integer()
+  {
+    var value = Integer.PositiveMax;
+  }
+  function Test_StaticPositiveValueClosestToZero_Integer()
+  {
+    var value = Integer.PositiveValueClosestToZero;
+  }
+  function Test_X_Integer()
+  {
+    var instance = Integer();
+    var value = instance.X;
+    instance.X = Integer();
+  }
+  function Test_StaticXAxis_Integer()
+  {
+    var value = Integer.XAxis;
+  }
+  function Test_XX_Integer2()
+  {
+    var instance = Integer();
+    var value = instance.XX;
+  }
+  function Test_XXX_Integer3()
+  {
+    var instance = Integer();
+    var value = instance.XXX;
+  }
+  function Test_XXXX_Integer4()
+  {
+    var instance = Integer();
+    var value = instance.XXXX;
+  }
+  function Test_StaticZero_Integer()
+  {
+    var value = Integer.Zero;
+  }
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Count_Integer();
+    this.Test_StaticCount_Integer();
+    this.Test_StaticNegativeMin_Integer();
+    this.Test_StaticNegativeValueClosestToZero_Integer();
+    this.Test_StaticOne_Integer();
+    this.Test_StaticPositiveMax_Integer();
+    this.Test_StaticPositiveValueClosestToZero_Integer();
+    this.Test_X_Integer();
+    this.Test_StaticXAxis_Integer();
+    this.Test_XX_Integer2();
+    this.Test_XXX_Integer3();
+    this.Test_XXXX_Integer4();
+    this.Test_StaticZero_Integer();
+  }
+}

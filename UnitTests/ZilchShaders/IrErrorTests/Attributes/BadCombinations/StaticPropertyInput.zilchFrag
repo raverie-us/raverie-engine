@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct StaticPropertyInput
+{
+  [Static][PropertyInput] var Var1 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

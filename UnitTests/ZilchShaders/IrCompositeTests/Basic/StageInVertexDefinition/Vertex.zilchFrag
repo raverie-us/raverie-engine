@@ -1,0 +1,23 @@
+[Vertex]
+struct Vertex
+{
+  [StageInput] var Uv : Real2;
+  [StageInput] var LocalPosition : Real3;
+  // Name override
+  [StageInput("Color")] var VertexColor : Real4;
+  
+  // No name match
+  [StageInput] var Dummy : Real2;
+  // Bad name override match
+  [StageInput("Scalar2")] var Scalar : Real2;
+  // Bad Type match
+  [StageInput] var Aux0 : Real;
+  
+  // Bad first match, correct second match
+  [StageInput("Aux")][StageInput("Aux0")] var Aux10 : Real4;
+  
+  function Main()
+  {
+    
+  }
+}

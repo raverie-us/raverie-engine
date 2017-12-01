@@ -1,0 +1,149 @@
+struct BooleanExtensions
+{
+  [Static][Extension(typeid(Boolean))][Implements]
+  var XAxis : Boolean
+  {
+    get {return true; }
+  }
+  
+  [Static][Extension(typeid(Boolean))][Implements]
+  var Zero : Boolean
+  {
+    get {return false; }
+  }
+  
+  [Static][Extension(typeid(Boolean))][Implements]
+  var One : Boolean
+  {
+    get {return true; }
+  }
+  
+  [Static][Extension(typeid(Boolean))][Implements]
+  function GetAxis(value : Integer) : Boolean
+  {
+    return value == 0;
+  }
+}
+
+struct Boolean2Extensions
+{
+  [Static][Extension(typeid(Boolean2))][Implements]
+  var XAxis : Boolean2
+  {
+    get {return Boolean2(true, false); }
+  }
+  
+  [Static][Extension(typeid(Boolean2))][Implements]
+  var YAxis : Boolean2
+  {
+    get {return Boolean2(false, true); }
+  }
+  
+  [Static][Extension(typeid(Boolean2))][Implements]
+  var Zero : Boolean2
+  {
+    get {return Boolean2(); }
+  }
+  
+  [Static][Extension(typeid(Boolean2))][Implements]
+  var One : Boolean2
+  {
+    get {return Boolean2(true); }
+  }
+  
+  [Static][Extension(typeid(Boolean2))][Implements]
+  function GetAxis(value : Integer) : Boolean2
+  {
+    var result = Boolean2();
+    result[value] = true;
+    return result;
+  }
+}
+
+struct Boolean3Extensions
+{
+  [Static][Extension(typeid(Boolean3))][Implements]
+  var XAxis : Boolean3
+  {
+    get {return Boolean3(true, false, false); }
+  }
+  
+  [Static][Extension(typeid(Boolean3))][Implements]
+  var YAxis : Boolean3
+  {
+    get {return Boolean3(false, true, false); }
+  }
+  
+  [Static][Extension(typeid(Boolean3))][Implements]
+  var ZAxis : Boolean3
+  {
+    get {return Boolean3(false, false, true); }
+  }
+  
+  [Static][Extension(typeid(Boolean3))][Implements]
+  var Zero : Boolean3
+  {
+    get {return Boolean3(); }
+  }
+  
+  [Static][Extension(typeid(Boolean3))][Implements]
+  var One : Boolean3
+  {
+    get {return Boolean3(true); }
+  }
+  
+  [Static][Extension(typeid(Boolean3))][Implements]
+  function GetAxis(value : Integer) : Boolean3
+  {
+    var result = Boolean3();
+    result[value] = true;
+    return result;
+  }
+}
+
+struct Boolean4Extensions
+{
+  [Static][Extension(typeid(Boolean4))][Implements]
+  var XAxis : Boolean4
+  {
+    get {return Boolean4(true, false, false, false); }
+  }
+  
+  [Static][Extension(typeid(Boolean4))][Implements]
+  var YAxis : Boolean4
+  {
+    get {return Boolean4(false, true, false, false); }
+  }
+  
+  [Static][Extension(typeid(Boolean4))][Implements]
+  var ZAxis : Boolean4
+  {
+    get {return Boolean4(false, false, true, false); }
+  }
+  
+  [Static][Extension(typeid(Boolean4))][Implements]
+  var WAxis : Boolean4
+  {
+    get {return Boolean4(false, false, false, true); }
+  }
+  
+  [Static][Extension(typeid(Boolean4))][Implements]
+  var Zero : Boolean4
+  {
+    get {return Boolean4(); }
+  }
+  
+  [Static][Extension(typeid(Boolean4))][Implements]
+  var One : Boolean4
+  {
+    get {return Boolean4(true); }
+  }
+  
+  [Static][Extension(typeid(Boolean4))][Implements]
+  function GetAxis(value : Integer) : Boolean4
+  {
+    var result = Boolean4();
+    result[value] = true;
+    return result;
+  }
+}

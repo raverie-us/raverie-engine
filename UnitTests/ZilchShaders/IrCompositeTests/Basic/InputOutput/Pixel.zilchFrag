@@ -1,0 +1,44 @@
+[Pixel]
+struct PixelFirst
+{
+  [Output] var FragmentVar1 : Real;
+  [Output("FragmentVar2")] var MyFragmentVar : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct PixelFinal
+{
+  // Fragment
+  [Input] var FragmentVar1 : Real;
+  [Input("FragmentVar2")] var MyFragmentVar2 : Real;
+  
+  // HardwareBuiltIn Inputs
+  [Input] var FragCoord : Real4;
+  [Input("PointCoord")] var PointCoordinate : Real2;
+  
+  // Stage Inputs
+  [Input][Output] var Uv : Real2;
+  [Input("LocalPosition")] var Position : Real3;
+  
+  // AppBuiltIn Inputs
+  [Input] var LogicTime : Real;
+  [Input("LocalToWorld")] var Transform : Real4x4;
+  
+  // Property
+  [Input] var Property1 : Real;
+  [Input("Property2")] var MyProperty : Real;
+  
+  // Render Target Stage Output
+  [Output] var Target0 : Real4;
+  [Output("Target1")] var Target : Real4;
+  
+  function Main()
+  {
+    
+  }
+}

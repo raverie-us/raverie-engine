@@ -1,0 +1,8 @@
+[UnitTest][Vertex]
+struct DdxReal
+{
+  function Main()
+  {
+    ShaderIntrinsics.Ddx(1.0);
+  }
+}

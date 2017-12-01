@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct StaticFragmentInput
+{
+  [Static][FragmentInput] var Var1 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

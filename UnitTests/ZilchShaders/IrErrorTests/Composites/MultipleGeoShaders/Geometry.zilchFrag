@@ -1,0 +1,19 @@
+struct GeometryData
+{
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry1
+{
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+  }
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry2
+{
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+  }
+}

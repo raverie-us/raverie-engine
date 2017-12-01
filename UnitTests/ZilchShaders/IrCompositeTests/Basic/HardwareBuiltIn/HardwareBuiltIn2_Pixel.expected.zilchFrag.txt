@@ -1,0 +1,14 @@
+[Pixel][UnitTest]
+struct HardwareBuiltIn2_Pixel
+{
+  [HardwareBuiltInOutput] var FragDepth : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel2 = Pixel2();
+    pixel2.Main();
+
+    this.FragDepth = pixel2.Depth;
+  }
+}

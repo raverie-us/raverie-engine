@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct ImageFetch
+{
+  var UvTex : Integer2;
+  var Image : Image2d;
+  var SampledImage : SampledImage2d;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var color = Real4();
+    var lod = 1;
+    color = ShaderIntrinsics.ImageFetch(this.Image, this.UvTex, lod);
+    color = ShaderIntrinsics.ImageFetch(this.SampledImage, this.UvTex, lod);
+    color = ShaderIntrinsics.ImageFetch(this.Image, this.UvTex);
+    color = ShaderIntrinsics.ImageFetch(this.SampledImage, this.UvTex);
+  }
+}

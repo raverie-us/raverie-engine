@@ -1,0 +1,11 @@
+[UnitTest]
+struct Real2Constructors
+{
+  function Main()
+  {
+    var a = Real2();
+    a = Real2(1.0, 0.0);
+    a = Real2(1, 0);
+    a = Real2(1.0);
+  }
+}

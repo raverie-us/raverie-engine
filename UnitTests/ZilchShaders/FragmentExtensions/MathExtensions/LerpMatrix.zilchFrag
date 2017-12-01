@@ -1,0 +1,165 @@
+struct MathLerpMatrixImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real2x2, end : Real2x2, t : Real2x2) : Real2x2
+  {
+    var result = Real2x2();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real2x2, end : Real2x2, t : Real) : Real2x2
+  {
+    var result = Real2x2();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real2x3, end : Real2x3, t : Real2x3) : Real2x3
+  {
+    var result = Real2x3();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real2x3, end : Real2x3, t : Real) : Real2x3
+  {
+    var result = Real2x3();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real2x4, end : Real2x4, t : Real2x4) : Real2x4
+  {
+    var result = Real2x4();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real2x4, end : Real2x4, t : Real) : Real2x4
+  {
+    var result = Real2x4();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real3x2, end : Real3x2, t : Real3x2) : Real3x2
+  {
+    var result = Real3x2();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    result[2] = Math.Lerp(start[2], end[2], t[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real3x2, end : Real3x2, t : Real) : Real3x2
+  {
+    var result = Real3x2();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    result[2] = Math.Lerp(start[2], end[2], t);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real3x3, end : Real3x3, t : Real3x3) : Real3x3
+  {
+    var result = Real3x3();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    result[2] = Math.Lerp(start[2], end[2], t[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real3x3, end : Real3x3, t : Real) : Real3x3
+  {
+    var result = Real3x3();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    result[2] = Math.Lerp(start[2], end[2], t);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real3x4, end : Real3x4, t : Real3x4) : Real3x4
+  {
+    var result = Real3x4();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    result[2] = Math.Lerp(start[2], end[2], t[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real3x4, end : Real3x4, t : Real) : Real3x4
+  {
+    var result = Real3x4();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    result[2] = Math.Lerp(start[2], end[2], t);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real4x2, end : Real4x2, t : Real4x2) : Real4x2
+  {
+    var result = Real4x2();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    result[2] = Math.Lerp(start[2], end[2], t[2]);
+    result[3] = Math.Lerp(start[3], end[3], t[3]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real4x2, end : Real4x2, t : Real) : Real4x2
+  {
+    var result = Real4x2();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    result[2] = Math.Lerp(start[2], end[2], t);
+    result[3] = Math.Lerp(start[3], end[3], t);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real4x3, end : Real4x3, t : Real4x3) : Real4x3
+  {
+    var result = Real4x3();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    result[2] = Math.Lerp(start[2], end[2], t[2]);
+    result[3] = Math.Lerp(start[3], end[3], t[3]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real4x3, end : Real4x3, t : Real) : Real4x3
+  {
+    var result = Real4x3();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    result[2] = Math.Lerp(start[2], end[2], t);
+    result[3] = Math.Lerp(start[3], end[3], t);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real4x4, end : Real4x4, t : Real4x4) : Real4x4
+  {
+    var result = Real4x4();
+    result[0] = Math.Lerp(start[0], end[0], t[0]);
+    result[1] = Math.Lerp(start[1], end[1], t[1]);
+    result[2] = Math.Lerp(start[2], end[2], t[2]);
+    result[3] = Math.Lerp(start[3], end[3], t[3]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real4x4, end : Real4x4, t : Real) : Real4x4
+  {
+    var result = Real4x4();
+    result[0] = Math.Lerp(start[0], end[0], t);
+    result[1] = Math.Lerp(start[1], end[1], t);
+    result[2] = Math.Lerp(start[2], end[2], t);
+    result[3] = Math.Lerp(start[3], end[3], t);
+    return result;
+  }
+}

@@ -1,0 +1,17 @@
+[Pixel][UnitTest]
+struct Real2Implements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var max = Real2.PositiveMax;
+    var posMin = Real2.PositiveValueClosestToZero;
+    var negMax = Real2.NegativeValueClosestToZero;
+    var min = Real2.NegativeMin;
+    
+    var x = Real2.XAxis;
+    var y = Real2.YAxis;
+    var zero = Real2.Zero;
+    var axis = Real2.GetAxis(1);
+  }
+}

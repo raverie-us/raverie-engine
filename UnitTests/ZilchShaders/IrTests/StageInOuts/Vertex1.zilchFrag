@@ -1,0 +1,21 @@
+[Vertex][UnitTest]
+struct Vertex1
+{
+  [StageInput] var Scalar : Real;
+  [StageInput] var Uv : Real2;
+  [StageInput] var LocalNormal : Real3;
+  [StageInput] var BoneIndices : Integer4;
+  
+  //Outputs
+  [StageOutput] var WorldNormal : Real3;
+  [StageOutput] var PerspectivePosition : Real4;
+  
+  //In/Outs
+  [StageInput][StageOutput] var Color : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.WorldNormal = this.LocalNormal;
+  }
+}

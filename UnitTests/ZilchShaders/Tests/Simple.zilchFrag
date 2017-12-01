@@ -1,0 +1,76 @@
+[Pixel]
+struct Simple
+{
+  /*function Bools() : Boolean
+  {
+    var b = true;
+    var c = !b;
+    return c;
+  }
+  function Empty()
+  {
+    if(true)
+      if(false)
+        return;
+  }*/
+  
+  function If() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    return a;
+  }
+  
+  function IfElse() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    else
+      a = 2;
+    
+    return a;
+  }
+  
+  function IfElseIf() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    else if(false)
+      a = 2;
+    else
+      a = 3;
+      
+    return a;
+  }
+  
+  /*function Test() : Integer
+  {
+    var a = 1 + 2;
+    if(a == 0)
+      return 0;
+    else if(a == 1)
+      a = 2;
+    else
+      a = 3;
+    var b = 16;
+    return a;
+  }
+  
+  function Main() : Integer
+  {
+    var a = 0;
+    var b = 3 + 4;
+    a = -(6 + 2);
+    a += b;
+    a -= 3;
+    a *= 1;
+    b /= 5;
+    a = b + 2;
+    a = b + a - 3;
+    a = b + (a - 3);
+    return a;
+  }*/
+}

@@ -1,0 +1,17 @@
+struct GeoData
+{
+  [Static] var Pi : Real = Math.Pi;
+}
+
+[Geometry(maxVertices : 3)][UnitTest]
+struct GeometryStatics
+{
+  [Static] var Count : Integer = 1;
+  
+  [EntryPoint]
+  function Main(input : ref TriangleInput[GeoData], output : ref TriangleOutput[GeoData])
+  {
+    var pi = GeoData.Pi;
+    var count = GeometryStatics.Count;
+  }
+}

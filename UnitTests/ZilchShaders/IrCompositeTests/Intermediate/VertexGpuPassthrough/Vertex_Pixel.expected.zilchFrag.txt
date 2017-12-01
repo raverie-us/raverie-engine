@@ -1,0 +1,12 @@
+[Pixel][UnitTest]
+struct Vertex_Pixel
+{
+  [StageOutput(name : "Target0")][StageInput(name : "Target0")] var Stage_Target0_Real4 : Real4;
+  [StageOutput(name : "Target1")][StageInput(name : "Target1")] var Stage_Target1_Real4 : Real4;
+  [StageOutput(name : "Target3")][StageInput(name : "Target3")] var Stage_Target3_Real4 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

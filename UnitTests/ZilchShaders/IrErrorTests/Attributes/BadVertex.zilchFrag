@@ -1,0 +1,7 @@
+[Vertex("Param")]
+struct BadVertex
+{
+  function Main()
+  {
+  }
+}

@@ -1,0 +1,66 @@
+[Vertex][UnitTest]
+struct CombinedTest_Vertex
+{
+  [StageOutput(name : "Property1")] var Stage_Property1_Real : Real;
+  [StageOutput(name : "Property2")] var Stage_Property2_Real : Real;
+  [StageOutput(name : "Property3")] var Stage_Property3_Real : Real;
+  [StageInput(name : "Uv")][StageOutput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageInput(name : "LocalPosition")][StageOutput(name : "LocalPosition")] var Stage_LocalPosition_Real3 : Real3;
+  [PropertyInput] var Property1_Vertex1 : Real;
+  [PropertyInput] var Property2_Vertex1 : Real;
+  [PropertyInput] var Property3_Vertex1 : Real;
+  [HardwareBuiltInInput] var VertexId : Integer;
+  [HardwareBuiltInInput] var InstanceId : Integer;
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput] var FrameTime : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex1 = Vertex1();
+    vertex1.Property1 = this.Property1_Vertex1;
+    vertex1.Property2 = this.Property2_Vertex1;
+    vertex1.Property3 = this.Property3_Vertex1;
+    vertex1.VertexId = this.VertexId;
+    vertex1.InstanceId = this.InstanceId;
+    vertex1.Uv = this.Stage_Uv_Real2;
+    vertex1.LocalPosition = this.Stage_LocalPosition_Real3;
+    vertex1.LogicTime = this.LogicTime;
+    vertex1.FrameTime = this.FrameTime;
+    vertex1.Main();
+
+    var vertex2 = Vertex2();
+    vertex2.Property1 = vertex1.Property1;
+    vertex2.Property2 = vertex1.Property2;
+    vertex2.Property3 = vertex1.Property3;
+    vertex2.VertexId = vertex1.VertexId;
+    vertex2.InstanceId = vertex1.InstanceId;
+    vertex2.Uv = vertex1.Uv;
+    vertex2.LocalPosition = vertex1.LocalPosition;
+    vertex2.LogicTime = vertex1.LogicTime;
+    vertex2.FrameTime = vertex1.FrameTime;
+    vertex2.FragmentVar1 = vertex1.FragmentVar1;
+    vertex2.FragmentVar2 = vertex1.FragmentVar2;
+    vertex2.Main();
+
+    var vertex3 = Vertex3();
+    vertex3.Property1 = vertex2.Property1;
+    vertex3.Property2 = vertex2.Property2;
+    vertex3.Property3 = vertex1.Property3;
+    vertex3.VertexId = vertex2.VertexId;
+    vertex3.InstanceId = this.InstanceId;
+    vertex3.Uv = vertex2.Uv;
+    vertex3.LocalPosition = this.Stage_LocalPosition_Real3;
+    vertex3.LogicTime = vertex2.LogicTime;
+    vertex3.FrameTime = this.FrameTime;
+    vertex3.FragmentVar1 = vertex2.FragmentVar1;
+    vertex3.FragmentVar2 = vertex1.FragmentVar2;
+    vertex3.Main();
+
+    this.Stage_Property1_Real = vertex3.Property1;
+    this.Stage_Property2_Real = vertex2.Property2;
+    this.Stage_Property3_Real = vertex1.Property3;
+    this.Stage_Uv_Real2 = vertex3.Uv;
+    this.Stage_LocalPosition_Real3 = vertex1.LocalPosition;
+  }
+}

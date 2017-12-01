@@ -1,0 +1,20 @@
+[Vertex][UnitTest]
+struct Vertex_Geometry_Pixel_Vertex
+{
+  [StageInput(name : "Uv")][StageOutput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageOutput(name : "Color")][StageInput(name : "Color")] var Stage_Color_Real4 : Real4;
+  [StageOutput(name : "Time")] var Stage_Time_Real : Real;
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.Uv = this.Stage_Uv_Real2;
+    vertex.Main();
+
+    this.ApiPerspectivePosition = vertex.ApiPerspectivePosition;
+    this.Stage_Uv_Real2 = vertex.Uv;
+    this.Stage_Time_Real = vertex.Time;
+  }
+}

@@ -39,6 +39,14 @@ public:
   String EmitSpace();
   String EmitIndent();
 
+  ShaderCodeBuilder& WriteMemberVariableDeclaration(StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& WriteVariableDeclaration(ShaderIRAttributeList& attributes, StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& WriteVariableDeclaration(ShaderIRAttribute& attribute, StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& WriteLocalVariableDefaultConstruction(StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& DeclareAttribute(ShaderIRAttribute& attribute);
+  ShaderCodeBuilder& DeclareAttribute(StringParam attributeName);
+  ShaderCodeBuilder& DeclareAttributeParams(ShaderIRAttribute& attribute);
+
   // These functions are test replacement functions for the above Emit functions. It's less efficient
   // to build up a string, return it, and then append it into our builder instead of just writing a
   // function to append directly into the builder. To make these work with the insertion operator they return this.

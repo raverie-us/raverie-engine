@@ -1,0 +1,50 @@
+[Pixel][UnitTest]
+struct LogicalOrAnd
+{
+  function Test0()
+  {
+    var a = true;
+    var b = true;
+    var c = true;
+    
+    var d = a || b && c;
+  }
+  
+  function Test1()
+  {
+    var a = true;
+    var b = true;
+    var c = true;
+    
+    var d = a && b || c;
+  }
+  
+  function Test2()
+  {
+    var a = true;
+    var b = true;
+    var c = true;
+    var d = true;
+    
+    var e = (a || b) && (c || d);
+  }
+  
+  function Test3()
+  {
+    var a = true;
+    var b = true;
+    var c = true;
+    var d = true;
+    
+    var e = (a && b) || (c && d);
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.Test0();
+    this.Test1();
+    this.Test2();
+    this.Test3();
+  }
+}

@@ -1,0 +1,16 @@
+struct InputData
+{
+  [StageInput][StageOutput]
+  var Color : Real4;
+}
+
+[Geometry(maxVertices : 5)][UnitTest]
+struct Geometry3
+{
+  [PropertyInput] var Color : Real4;
+  
+  [EntryPoint]
+  function Main(input : ref TriangleInput[InputData], output : ref TriangleOutput[InputData], param3 : Real)
+  {
+  }
+}

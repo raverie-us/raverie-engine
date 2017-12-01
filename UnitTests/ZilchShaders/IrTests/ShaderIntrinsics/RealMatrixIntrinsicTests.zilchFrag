@@ -1,0 +1,28 @@
+struct RealMatrixTests[MatrixType, RowType, ColumnType]
+{
+  [Static]
+  function Test()
+  {
+    var param0 = MatrixType();
+    var param1 = param0;
+    var row = RowType();
+    var column = ColumnType();
+    
+    // Unary
+    var result0 = ShaderIntrinsics.MatrixTimesScalar(param0, 1.0);
+    //var result1 = ShaderIntrinsics.MatrixTimesMatrix(param0, param1);
+    var result2 = ShaderIntrinsics.Transpose(param0);
+  }
+}
+
+[Pixel][UnitTest]
+struct RealMatrixIntrinsicTests
+{
+  [EntryPoint]
+  function Main()
+  {
+    RealMatrixTests[Real2x2, Real2, Real2].Test();
+    RealMatrixTests[Real3x3, Real3, Real3].Test();
+    RealMatrixTests[Real4x4, Real4, Real4].Test();
+  }
+}

@@ -1,0 +1,28 @@
+struct BasicProperties_GeoIn
+{
+  [HardwareBuiltInInput] var ApiPerspectivePosition : Real4;
+}
+struct BasicProperties_GeoOut
+{
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+[Geometry(maxVertices : 3)][UnitTest]
+struct BasicProperties_Geometry
+{
+  [PropertyInput] var Position_Geometry : Real4;
+  [PropertyInput] var Value_Geometry : Real;
+  [AppBuiltInInput] var PerspectiveToApiPerspective : Real4x4;
+  [EntryPoint]
+  function Main(input : TriangleInput[BasicProperties_GeoIn], output : TriangleOutput[BasicProperties_GeoOut])
+  {
+    var fragmentInput = TriangleInput[GeometryData]();
+    for(var i = 0; i < 3; ++i)
+    {
+    }
+    var fragmentOutput = TriangleOutput[GeometryData]();
+    var geometry = Geometry();
+    geometry.Position = this.Position_Geometry;
+    geometry.Value = this.Value_Geometry;
+    geometry.Main(fragmentInput, fragmentOutput);
+  }
+}

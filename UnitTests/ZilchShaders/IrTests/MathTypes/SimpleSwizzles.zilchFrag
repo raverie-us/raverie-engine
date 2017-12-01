@@ -1,0 +1,24 @@
+[UnitTest][Pixel]
+struct SimpleSwizzles
+{
+  [EntryPoint]
+  function Main()
+  {
+    var r1 = Real();
+    var r2 = Real2();
+    var r3 = Real3();
+    var r4 = Real4();
+    
+    var i1 = Integer();
+    var i2 = Integer2();
+    var i3 = Integer3();
+    var i4 = Integer4();
+    
+    r1 = r2.X;
+    r2 = r2.XY;
+    r3 = r2.XYX;
+    
+    var r1_0 = r1.X;
+    r2 = r1.XX;
+  }
+}

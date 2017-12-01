@@ -1,0 +1,29 @@
+struct InputData
+{
+  [StageInput][StageOutput] var LocalNormal : Real3;
+  [HardwareBuiltInInput][HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+
+struct OutputData
+{
+  [StageInput][StageOutput] var Color : Real4;
+  [StageInput][StageOutput] var WorldNormal : Real3;
+  [HardwareBuiltInInput][HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+
+[Geometry(maxVertices : 5)][UnitTest]
+struct GeometryInOuts6
+{
+  [AppBuiltInInput] var LocalToWorld : Real4x4;
+  
+  [EntryPoint]
+  function Main(input : ref PointInput[InputData], output : ref TriangleOutput[OutputData])
+  {
+    var outData = OutputData();
+    outData.Color = Real4(1);
+    outData.WorldNormal = Math.MultiplyNormal(this.LocalToWorld, input[0].LocalNormal);
+    outData.ApiPerspectivePosition = input[0].ApiPerspectivePosition;
+    output.Append(outData, 0);
+    output.Restart();
+  }
+}

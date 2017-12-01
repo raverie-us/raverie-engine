@@ -20,10 +20,11 @@ public:
   bool CompileShader(StringParam filePath, StringParam shaderSource, FragmentType::Enum type, ErrorReporter& reporter) override;
   bool CompileAndLinkShader(Array<FragmentInfo>& fragments, ErrorReporter& reporter) override;
   void RunPostProcess(Array<FragmentInfo>& fragments, RenderResult& result, ErrorReporter& reporter) override;
+  void RunPostProcess(Array<FragmentInfo>& fragments, Array<UniformBufferData>& uniformBuffers, RenderResult& result, ErrorReporter& reporter) override;
 
   // Private interface
-  int FragmentTypeToShaderType(FragmentType::Enum fragmentType, ErrorReporter& report);
-  bool CompileShaderInternal(StringParam filePath, StringParam shaderSource, int shaderType, int& shaderId, ErrorReporter& report);
+  int FragmentTypeToShaderType(FragmentType::Enum fragmentType, ErrorReporter& reporter);
+  bool CompileShaderInternal(StringParam filePath, StringParam shaderSource, int shaderType, int& shaderId, ErrorReporter& reporter);
   bool LinkInternal(const Array<int>& shaderIds, int& programId, ErrorReporter& reporter);
   bool CompileAndLinkInternal(Array<FragmentInfo>& fragments, int& programId, ErrorReporter& reporter);
   

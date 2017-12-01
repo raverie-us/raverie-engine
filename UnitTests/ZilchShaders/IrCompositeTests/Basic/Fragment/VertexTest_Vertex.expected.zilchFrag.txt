@@ -1,0 +1,25 @@
+[Vertex][UnitTest]
+struct VertexTest_Vertex
+{
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex1 = Vertex1();
+    vertex1.Main();
+
+    var vertex2 = Vertex2();
+    vertex2.Value1 = vertex1.Value1;
+    vertex2.Value2 = vertex1.Value2;
+    vertex2.Value7 = vertex1.Value7;
+    vertex2.Main();
+
+    var vertex3 = Vertex3();
+    vertex3.Value1 = vertex2.Value1;
+    vertex3.Value2 = vertex1.Value2;
+    vertex3.Value5 = vertex1.Value5;
+    vertex3.Value7 = vertex2.Value7;
+    vertex3.Main();
+
+  }
+}

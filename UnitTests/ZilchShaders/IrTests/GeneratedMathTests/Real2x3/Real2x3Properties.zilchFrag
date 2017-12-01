@@ -1,0 +1,83 @@
+[Pixel][UnitTest]
+struct Real2x3Properties
+{
+  function Test_Count_Integer()
+  {
+    var instance = Real2x3();
+    var value = instance.Count;
+  }
+  function Test_StaticCount_Integer()
+  {
+    var value = Real2x3.Count;
+  }
+  function Test_CountX_Integer()
+  {
+    var instance = Real2x3();
+    var value = instance.CountX;
+  }
+  function Test_StaticCountX_Integer()
+  {
+    var value = Real2x3.CountX;
+  }
+  function Test_CountY_Integer()
+  {
+    var instance = Real2x3();
+    var value = instance.CountY;
+  }
+  function Test_StaticCountY_Integer()
+  {
+    var value = Real2x3.CountY;
+  }
+  function Test_M00_Real()
+  {
+    var instance = Real2x3();
+    var value = instance.M00;
+    instance.M00 = Real();
+  }
+  function Test_M01_Real()
+  {
+    var instance = Real2x3();
+    var value = instance.M01;
+    instance.M01 = Real();
+  }
+  function Test_M02_Real()
+  {
+    var instance = Real2x3();
+    var value = instance.M02;
+    instance.M02 = Real();
+  }
+  function Test_M10_Real()
+  {
+    var instance = Real2x3();
+    var value = instance.M10;
+    instance.M10 = Real();
+  }
+  function Test_M11_Real()
+  {
+    var instance = Real2x3();
+    var value = instance.M11;
+    instance.M11 = Real();
+  }
+  function Test_M12_Real()
+  {
+    var instance = Real2x3();
+    var value = instance.M12;
+    instance.M12 = Real();
+  }
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Count_Integer();
+    this.Test_StaticCount_Integer();
+    this.Test_CountX_Integer();
+    this.Test_StaticCountX_Integer();
+    this.Test_CountY_Integer();
+    this.Test_StaticCountY_Integer();
+    this.Test_M00_Real();
+    this.Test_M01_Real();
+    this.Test_M02_Real();
+    this.Test_M10_Real();
+    this.Test_M11_Real();
+    this.Test_M12_Real();
+  }
+}

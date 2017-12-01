@@ -1,0 +1,12 @@
+Array Shaders = 
+[
+  {
+    string ShaderName = "Booleans",
+    Array FragmentNames = 
+    [
+      "Vertex",
+      "Geometry",
+      "Pixel",
+    ],
+  },
+],

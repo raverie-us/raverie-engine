@@ -1,0 +1,20 @@
+struct MyData
+{
+  var Data : Real;
+}
+
+[Pixel][UnitTest]
+// Test Structs
+struct FixedArrayTest3
+{
+  [EntryPoint]
+  function Main()
+  {
+    var initialValue = MyData();
+    var localArray = FixedArray[MyData, 3]() {initialValue, initialValue, initialValue};
+    
+    var value = localArray[2];
+    value.Data = 1.0;
+    localArray[1] = value;
+  }
+}

@@ -1,0 +1,20 @@
+[UnitTest][Vertex]
+struct StaticFields1
+{
+  function Main()
+  {
+    var field = Helper.Field;
+  }
+}
+
+struct Helper
+{
+  [Static] var Field : Real = Helper.GetValue();
+  
+  [Static]
+  function GetValue() : Real
+  {
+    ShaderIntrinsics.Kill();
+    return 1.0;
+  }
+}

@@ -1,0 +1,13 @@
+Array Shaders = 
+[
+  {
+    string ShaderName = "",
+    Array FragmentNames = 
+    [
+      "VertexFirst",
+      "VertexFinal",
+      "PixelFirst",
+      "PixelFinal",
+    ],
+  },
+],

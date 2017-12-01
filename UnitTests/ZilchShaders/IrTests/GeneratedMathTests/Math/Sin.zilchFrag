@@ -1,0 +1,99 @@
+[Pixel][UnitTest]
+struct Sin
+{
+  function Test_Static_Real()
+  {
+    var radians_ = Real();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real2()
+  {
+    var radians_ = Real2();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real2x2()
+  {
+    var radians_ = Real2x2();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real2x3()
+  {
+    var radians_ = Real2x3();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real2x4()
+  {
+    var radians_ = Real2x4();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real3()
+  {
+    var radians_ = Real3();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real3x2()
+  {
+    var radians_ = Real3x2();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real3x3()
+  {
+    var radians_ = Real3x3();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real3x4()
+  {
+    var radians_ = Real3x4();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real4()
+  {
+    var radians_ = Real4();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real4x2()
+  {
+    var radians_ = Real4x2();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real4x3()
+  {
+    var radians_ = Real4x3();
+    var result = Math.Sin(radians_);
+  }
+
+  function Test_Static_Real4x4()
+  {
+    var radians_ = Real4x4();
+    var result = Math.Sin(radians_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real();
+    this.Test_Static_Real2();
+    this.Test_Static_Real2x2();
+    this.Test_Static_Real2x3();
+    this.Test_Static_Real2x4();
+    this.Test_Static_Real3();
+    this.Test_Static_Real3x2();
+    this.Test_Static_Real3x3();
+    this.Test_Static_Real3x4();
+    this.Test_Static_Real4();
+    this.Test_Static_Real4x2();
+    this.Test_Static_Real4x3();
+    this.Test_Static_Real4x4();
+  }
+}

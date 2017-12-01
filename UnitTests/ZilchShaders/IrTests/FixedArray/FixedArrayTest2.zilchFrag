@@ -1,0 +1,17 @@
+[Pixel][UnitTest]
+// Test initializer lists
+struct FixedArrayTest2
+{
+  var Data : FixedArray[Real, 3] = FixedArray[Real, 3](){1.0, 2.0, 3.0};
+  [EntryPoint]
+  function Main()
+  {
+    this.Data{3.0, 2.0, 1.1};
+    
+    var localArray = FixedArray[Integer, 3]() {1, 2, 3};
+    localArray{4, 5, this.Data[0].X as Integer};
+    
+    var matrixArray = FixedArray[Real3x3, 2]() {Real3x3(), Real3x3()};
+    matrixArray[1] = Real3x3();
+  }
+}

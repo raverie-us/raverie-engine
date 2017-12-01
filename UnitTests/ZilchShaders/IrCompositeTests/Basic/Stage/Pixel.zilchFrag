@@ -1,0 +1,19 @@
+[Pixel]
+struct Pixel
+{
+  // Out Vertex, In Pixel
+  [StageInput] var Value1 : Real;
+  // None Vertex, In Pixel
+  [StageInput] var Value2 : Real;
+  // Out Vertex, None Pixel
+  var Value3 : Real;
+  // Out Vertex (R2), In Pixel (R) (mismatched types)
+  [StageInput] var Value4 : Real;
+  // Out Vertex, In Pixel after other properties)
+  [StageInput] var Value5 : Real;
+  
+  function Main()
+  {
+    
+  }
+}

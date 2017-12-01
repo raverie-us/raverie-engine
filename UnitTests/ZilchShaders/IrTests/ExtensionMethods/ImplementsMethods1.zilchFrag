@@ -1,0 +1,44 @@
+struct MyStruct
+{
+  var Data : Real;
+}
+
+[Pixel][UnitTest]
+struct ImplementsMethods1
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Dot(lhs : Real3, rhs : Real3) : Real
+  {
+    var temp = lhs * rhs;
+    return temp.X + temp.Y + temp.Z;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function ToRadians(degrees : Real) : Real
+  {
+    return 3.14159 * degrees;
+  }
+  
+  [Extension(typeid(Real3))][Implements]
+  function Get(value : Integer) : Real
+  {
+    if(value == 0)
+      return this.X;
+    else if(value == 1)
+      return this.Y;
+    return this.Z;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var r2 = Real2();
+    var r3 = Real3();
+    var a = Math.Dot(r3, r3);
+    var deg = Math.ToDegrees(0.0);
+    var rad = Math.ToRadians(deg);
+    
+    var scalar = r3.Get(0);
+    scalar = r3[0];
+  }
+}

@@ -1,0 +1,47 @@
+[Pixel]
+struct Pixel1
+{
+  [PropertyInput][Output] var Property1 : Real;
+  [PropertyInput][Output] var Property2 : Real;
+  [PropertyInput][Output] var Property4 : Real;
+  
+  [HardwareBuiltInInput][Output] var FragCoord : Real4;
+  [HardwareBuiltInInput][Output] var PointCoord : Real2;
+  
+  [StageInput][Output] var Uv : Real2;
+  [StageInput][Output] var LocalPosition : Real3;
+  
+  [AppBuiltInInput][Output] var LogicTime : Real;
+  [AppBuiltInInput][Output] var FrameTime : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct Pixel2
+{
+  [FragmentInput][PropertyInput][StageInput] var Property1 : Real;//[Fragment]
+  [PropertyInput][FragmentInput][StageInput] var Property2 : Real;//[PropertyInput]
+  [FragmentInput][StageInput][PropertyInput] var Property3 : Real;//[StageInput]
+  [StageInput][FragmentInput][PropertyInput] var Property4 : Real;//[FragmentInput]
+  [FragmentInput][StageInput][PropertyInput] var Property5 : Real;//[PropertyInput]
+  
+  [FragmentInput][HardwareBuiltInInput] var FragCoord : Real4;//[FragmentInput]
+  [HardwareBuiltInInput][FragmentInput] var PointCoord : Real2;//[HardwareBuiltInInput]
+  [FragmentInput][StageInput] var VertexId : Integer;//[StageInput]
+  
+  [FragmentInput][StageInput] var Uv : Real2;//[FragmentInput]
+  [StageInput][FragmentInput] var LocalPosition : Real3;//[StageInput]
+  
+  [FragmentInput][AppBuiltInInput] var LogicTime : Real;//[FragmentInput]
+  [AppBuiltInInput][FragmentInput] var FrameTime : Real;//[AppBuiltInInput]
+  [FragmentInput][StageInput][AppBuiltInInput][Output] var NearPlane : Real;//[StageInput]
+  
+  function Main()
+  {
+    
+  }
+}

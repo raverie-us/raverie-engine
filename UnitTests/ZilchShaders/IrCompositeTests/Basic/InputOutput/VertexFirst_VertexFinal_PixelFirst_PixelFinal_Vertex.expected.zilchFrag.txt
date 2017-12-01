@@ -1,0 +1,35 @@
+[Vertex][UnitTest]
+struct VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex
+{
+  [StageInput(name : "Uv")][StageOutput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageInput(name : "LocalPosition")][StageOutput(name : "LocalPosition")] var Stage_LocalPosition_Real3 : Real3;
+  [HardwareBuiltInInput] var VertexId : Integer;
+  [HardwareBuiltInInput] var InstanceId : Integer;
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput] var LocalToWorld : Real4x4;
+  [PropertyInput] var Property1_VertexFinal : Real;
+  [PropertyInput] var Property2_VertexFinal : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertexFirst = VertexFirst();
+    vertexFirst.Main();
+
+    var vertexFinal = VertexFinal();
+    vertexFinal.FragmentVar1 = vertexFirst.FragmentVar1;
+    vertexFinal.MyFragmentVar2 = vertexFirst.MyFragmentVar;
+    vertexFinal.VertexId = this.VertexId;
+    vertexFinal.Id = this.InstanceId;
+    vertexFinal.Uv = this.Stage_Uv_Real2;
+    vertexFinal.Position = this.Stage_LocalPosition_Real3;
+    vertexFinal.LogicTime = this.LogicTime;
+    vertexFinal.Transform = this.LocalToWorld;
+    vertexFinal.Property1 = this.Property1_VertexFinal;
+    vertexFinal.MyProperty = this.Property2_VertexFinal;
+    vertexFinal.Main();
+
+    this.Stage_Uv_Real2 = vertexFinal.Uv;
+    this.Stage_LocalPosition_Real3 = vertexFinal.Position;
+  }
+}

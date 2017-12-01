@@ -1,0 +1,15 @@
+struct GeoData
+{
+  [StageInput][StageOutput] var MyVar2 : Boolean2;
+  [StageInput("MyVar2")][StageOutput("MyVar2")] var MyInt2 : Integer2;
+}
+
+[Geometry(maxVertices : 5)][UnitTest]
+struct Geometry
+{
+  function Main(input : TriangleInput[GeoData], output : TriangleOutput[GeoData])
+  {
+    var outData = input[0];
+    output.Append(outData, 0);
+  }
+}

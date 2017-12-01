@@ -1,0 +1,16 @@
+[UnitTest][Vertex]
+struct InstanceImplementsMethod1
+{
+  function Main()
+  {
+    var r3 = Real3();
+    var result = r3.Get(1);
+  }
+  
+  [Extension(typeid(Real3))][Implements]
+  function Get(axis : Integer) : Real
+  {
+    ShaderIntrinsics.Kill();
+    return 0.0;
+  }
+}

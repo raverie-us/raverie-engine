@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct BasicSpecConstants_Pixel
+{
+  [Static][SpecConstant] var Position_Pixel : Real4;
+  [Static][SpecConstant] var Value_Pixel : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel = Pixel();
+    pixel.Position = BasicSpecConstants_Pixel.Position_Pixel;
+    pixel.Value = BasicSpecConstants_Pixel.Value_Pixel;
+    pixel.Main();
+
+  }
+}

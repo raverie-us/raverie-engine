@@ -1,0 +1,27 @@
+[Pixel][UnitTest]
+struct PassToFunctions
+{
+  var Uv : Real2;
+  
+  var Sampler : Sampler;
+  var Image : Image2d;
+  var SampledImage : SampledImage2d;
+  
+  function SampleCombined(sampler : ref SampledImage2d) : Real4
+  {
+    return ShaderIntrinsics.SampleImplicitLod(*sampler, this.Uv);
+  }
+  
+  function SampleSplit(image : ref Image2d, sampler : ref Sampler) : Real4
+  {
+    return ShaderIntrinsics.SampleImplicitLod(*image, *sampler, this.Uv);
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var color = Real4();
+    color = this.SampleCombined(&this.SampledImage);
+    color = this.SampleSplit(&this.Image, &this.Sampler);
+  }
+}

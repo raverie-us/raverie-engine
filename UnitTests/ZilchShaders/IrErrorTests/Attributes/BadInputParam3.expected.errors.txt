@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadInputParam3.zilchFrag(5): Too many parameters to attribute 'Input'. Signature must be 'name : String':
+  Too many parameters to attribute 'Input'. Signature must be 'name : String'

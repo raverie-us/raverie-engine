@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct GenerateTranslationMatrix4x4
+{
+  function Test_Static_Real3()
+  {
+    var translation_ = Real3();
+    var result = Math.GenerateTranslationMatrix4x4(translation_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real3();
+  }
+}

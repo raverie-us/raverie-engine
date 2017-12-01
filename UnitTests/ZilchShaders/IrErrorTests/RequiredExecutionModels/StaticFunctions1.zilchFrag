@@ -1,0 +1,18 @@
+[UnitTest][Vertex]
+struct StaticFunction1
+{
+  function Main()
+  {
+    var value = Helper.GetValue();
+  }
+}
+
+struct Helper
+{
+  [Static]
+  function GetValue() : Real
+  {
+    ShaderIntrinsics.Kill();
+    return 1.0;
+  }
+}

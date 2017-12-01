@@ -1,0 +1,17 @@
+[Pixel][UnitTest]
+struct Set
+{
+  function Test_Integer_Real()
+  {
+    var param0 = Integer();
+    var param1 = Real();
+    var instance_ = Quaternion();
+    instance_.Set(param0, param1);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Integer_Real();
+  }
+}

@@ -1,0 +1,17 @@
+[Pixel][UnitTest]
+struct Integer2Implements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var max = Integer2.PositiveMax;
+    var posMin = Integer2.PositiveValueClosestToZero;
+    var negMax = Integer2.NegativeValueClosestToZero;
+    var min = Integer2.NegativeMin;
+    
+    var x = Integer2.XAxis;
+    var y = Integer2.YAxis;
+    var zero = Integer2.Zero;
+    var axis = Integer2.GetAxis(1);
+  }
+}

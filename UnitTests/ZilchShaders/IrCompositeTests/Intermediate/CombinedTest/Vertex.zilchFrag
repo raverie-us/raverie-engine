@@ -1,0 +1,74 @@
+[Vertex]
+struct Vertex1
+{
+  [PropertyInput][Output] var Property1 : Real;
+  [PropertyInput][Output] var Property2 : Real;
+  [PropertyInput][Output] var Property3 : Real;
+  
+  [HardwareBuiltInInput][Output] var VertexId : Integer;
+  [HardwareBuiltInInput][Output] var InstanceId : Integer;
+  
+  [StageInput][Output] var Uv : Real2;
+  [StageInput][Output] var LocalPosition : Real3;
+  
+  [AppBuiltInInput][Output] var LogicTime : Real;
+  [AppBuiltInInput][Output] var FrameTime : Real;
+  
+  [Output] var FragmentVar1 : Real;
+  [Output] var FragmentVar2 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Vertex]
+struct Vertex2
+{
+  [Input][Output] var Property1 : Real;
+  [Input][Output] var Property2 : Real;
+  [Input] var Property3 : Real;
+  
+  [Input][Output] var VertexId : Integer;
+  [Input] var InstanceId : Integer;
+  
+  [Input][Output] var Uv : Real2;
+  [Input] var LocalPosition : Real3;
+  
+  [Input][Output] var LogicTime : Real;
+  [Input] var FrameTime : Real;
+  
+  [Input][Output] var FragmentVar1 : Real;
+  [Input] var FragmentVar2 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Vertex]
+struct Vertex3
+{
+  [Input][Output] var Property1 : Real;
+  [Input] var Property2 : Real;
+  [Input] var Property3 : Real;
+  
+  [Input][Output] var VertexId : Integer;
+  [HardwareBuiltInInput] var InstanceId : Integer;
+  
+  [Input][Output] var Uv : Real2;
+  [StageInput] var LocalPosition : Real3;
+  
+  [Input][Output] var LogicTime : Real;
+  [AppBuiltInInput] var FrameTime : Real;
+  
+  [Input][Output] var FragmentVar1 : Real;
+  [Input] var FragmentVar2 : Real;
+  
+  function Main()
+  {
+    
+  }
+}

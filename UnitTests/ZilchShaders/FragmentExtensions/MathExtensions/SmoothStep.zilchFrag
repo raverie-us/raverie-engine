@@ -1,0 +1,21 @@
+struct MathSmoothStepPlacesImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function SmoothStep(min : Real2, max : Real2, t : Real) : Real2
+  {
+    var tVec = Real2(t);
+    return Math.SmoothStep(min, max, tVec);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function SmoothStep(min : Real3, max : Real3, t : Real) : Real3
+  {
+    var tVec = Real3(t);
+    return Math.SmoothStep(min, max, tVec);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function SmoothStep(min : Real4, max : Real4, t : Real) : Real4
+  {
+    var tVec = Real4(t);
+    return Math.SmoothStep(min, max, tVec);
+  }
+}

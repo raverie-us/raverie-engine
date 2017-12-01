@@ -1,0 +1,16 @@
+[Vertex][UnitTest]
+struct NameOverrideSpecConstants_Vertex
+{
+  [Static][SpecConstant] var Position_VertexOverride : Real4;
+  [Static][SpecConstant] var Value_VertexOverride : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertexOverride = VertexOverride();
+    vertexOverride.VertexPosition = NameOverrideSpecConstants_Vertex.Position_VertexOverride;
+    vertexOverride.Aux = NameOverrideSpecConstants_Vertex.Value_VertexOverride;
+    vertexOverride.Main();
+
+  }
+}

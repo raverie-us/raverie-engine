@@ -1,0 +1,75 @@
+struct RealTests[RealType]
+{
+  [Static]
+  function TestReals()
+  {
+    var param0 = RealType();
+    var param1 = param0;
+    var param2 = param0;
+    var realParam = 0.0;
+    
+    var result0 = ShaderIntrinsics.Round(param0);
+    var result1 = ShaderIntrinsics.RoundEven(param0);
+    var result2 = ShaderIntrinsics.Trunc(param0);
+    var result3 = ShaderIntrinsics.FAbs(param0);
+    var result4 = ShaderIntrinsics.FSign(param0);
+    var result5 = ShaderIntrinsics.Floor(param0);
+    var result6 = ShaderIntrinsics.Ceil(param0);
+    var result7 = ShaderIntrinsics.Fract(param0);
+    var result8 = ShaderIntrinsics.Radians(param0);
+    var result9 = ShaderIntrinsics.Degrees(param0);
+    var result10 = ShaderIntrinsics.Sin(param0);
+    var result11 = ShaderIntrinsics.Cos(param0);
+    var result12 = ShaderIntrinsics.Tan(param0);
+    var result13 = ShaderIntrinsics.Sinh(param0);
+    var result14 = ShaderIntrinsics.Cosh(param0);
+    var result15 = ShaderIntrinsics.Tanh(param0);
+    var result16 = ShaderIntrinsics.Ceil(param0);
+    var result17 = ShaderIntrinsics.ASin(param0);
+    var result18 = ShaderIntrinsics.ACos(param0);
+    var result19 = ShaderIntrinsics.ATan(param0);
+    var result20 = ShaderIntrinsics.ASinh(param0);
+    var result21 = ShaderIntrinsics.ACosh(param0);
+    var result22 = ShaderIntrinsics.ATanh(param0);
+    var result23 = ShaderIntrinsics.ATan2(param0, param1);
+    var result24 = ShaderIntrinsics.Pow(param0, param1);
+    var result25 = ShaderIntrinsics.Exp(param0);
+    var result26 = ShaderIntrinsics.Log(param0);
+    var result27 = ShaderIntrinsics.Exp2(param0);
+    var result28 = ShaderIntrinsics.Log2(param0);
+    var result29 = ShaderIntrinsics.Sqrt(param0);
+    var result30 = ShaderIntrinsics.InverseSqrt(param0);
+    var result31 = ShaderIntrinsics.FMin(param0, param1);
+    var result32 = ShaderIntrinsics.FMax(param0, param1);
+    var result33 = ShaderIntrinsics.FClamp(param0, param1, param2);
+    var result34 = ShaderIntrinsics.FMix(param0, param1, param2);
+    var result35 = ShaderIntrinsics.Step(param0, param1);
+    var result36 = ShaderIntrinsics.SmoothStep(param0, param1, param2);
+    var result37 = ShaderIntrinsics.Fma(param0, param1, param2);
+    var result38 = ShaderIntrinsics.Length(param0);
+    var result39 = ShaderIntrinsics.Distance(param0, param1);
+    var result40 = ShaderIntrinsics.Normalize(param0);
+    var result41 = ShaderIntrinsics.FaceForward(param0, param1, param2);
+    var result42 = ShaderIntrinsics.Reflect(param0, param1);
+    var result43 = ShaderIntrinsics.Refract(param0, param1, realParam);
+    //var result44 = ShaderIntrinsics.NMin(param0, param1);
+    //var result45 = ShaderIntrinsics.NMax(param0, param1);
+    //var result46 = ShaderIntrinsics.NClamp(param0, param1, param2);
+  }
+}
+
+[Pixel][UnitTest]
+struct GlslRealIntrinsics
+{
+  [EntryPoint]
+  function Main()
+  {
+    RealTests[Real].TestReals();
+    RealTests[Real2].TestReals();
+    RealTests[Real3].TestReals();
+    RealTests[Real4].TestReals();
+    
+    var real3 = Real3();
+    real3 = ShaderIntrinsics.Cross(real3, real3);
+  }
+}

@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct RealImplements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var max = Real.PositiveMax;
+    var posMin = Real.PositiveValueClosestToZero;
+    var negMax = Real.NegativeValueClosestToZero;
+    var min = Real.NegativeMin;
+    
+    var x = Real.XAxis;
+    var zero = Real.Zero;
+    var axis = Real.GetAxis(1);
+  }
+}

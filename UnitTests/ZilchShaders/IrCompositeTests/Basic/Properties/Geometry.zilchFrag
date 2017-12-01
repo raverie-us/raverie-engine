@@ -1,0 +1,29 @@
+struct GeometryData
+{
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry
+{
+  [PropertyInput] var Position : Real4;
+  [PropertyInput] var Value : Real;
+  
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    output.Append(input[0], 0);
+    output.Restart();
+  }
+}
+
+[Geometry(maxVertices : 3)]
+struct GeometryOverride
+{
+  [PropertyInput("Position")] var GeoPosition : Real4;
+  [PropertyInput("Value")] var Aux : Real;
+  
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    output.Append(input[0], 0);
+    output.Restart();
+  }
+}

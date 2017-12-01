@@ -13,17 +13,65 @@ void DisplayError(StringParam filePath, StringParam lineNumber, StringParam errM
   ZPrint("%s(%s): \n\t%s\n", filePath.c_str(), lineNumber.c_str(), errMsg.c_str());
 }
 
-// Simple struct that defines a shader by name and a collection of fragments on that shader
-struct SerializedShaderDefinition
+void LoadShaderDefinitions(Array<SerializedShaderDefinition>& shadersDefs, StringParam defFilePath)
 {
-  String mShaderName;
-  Array<String> mFragmentNames;
-  void Serialize(Serializer& stream)
+  Status status;
+  DataTreeLoader loader;
+  loader.OpenFile(status, defFilePath.c_str());
+  loader.SerializeField("Shaders", shadersDefs);
+  loader.Close();
+}
+
+void LoadSettingsOrDefault(ZilchShaderSpirVSettings& settings, StringParam defFilePath)
+{
+  if(!FileExists(defFilePath))
   {
-    SerializeNameDefault(mShaderName, String("Test"));
-    SerializeNameDefault(mFragmentNames, mFragmentNames);
+    settings.mErrorSettings = ZilchShaderErrorSettings();
+    return;
   }
-};
+
+  SerializedErrorSettings serializedData;
+  DataTreeLoader loader;
+  Status status;
+  loader.OpenFile(status, defFilePath.c_str());
+  PolymorphicNode node;
+  while(loader.GetPolymorphic(node))
+  {
+    if(node.TypeName == "ErrorSettings")
+    {
+      serializedData.Serialize(loader);
+      settings.mErrorSettings.mFrontEndErrorOnNoMainFunction = serializedData.mErrorOnNoMain;
+    }
+  }
+  loader.Close();
+}
+
+void LoadDirectorySettingsOrDefault(ZilchShaderSpirVSettings& settings, StringParam directoryPath)
+{
+  String settingsFilePath = FilePath::Combine(directoryPath, "Settings.txt");
+  LoadSettingsOrDefault(settings, settingsFilePath);
+}
+
+void LoadFragmentCodeDirectory(SimpleZilchShaderIRGenerator& shaderGenerator, StringParam directory)
+{
+  // Load all of the fragments in the directory into the fragment project
+  FileRange range(directory);
+  for(; !range.Empty(); range.PopFront())
+  {
+    FileEntry entry = range.frontEntry();
+    String filePath = range.frontEntry().GetFullPath();
+
+    if(IsDirectory(filePath))
+      continue;
+
+    if(FilePath::GetExtension(filePath).ToLower() == mFragmentExtension)
+    {
+      FileEntry entry = range.frontEntry();
+      String fragmentCode = ReadFileIntoString(entry.GetFullPath());
+      shaderGenerator.AddFragmentCode(fragmentCode, entry.mFileName, nullptr);
+    }
+  }
+}
 
 void LoadCompositeDirectory(SimpleZilchShaderGenerator& shaderGenerator, StringParam directory, StringParam defFileName)
 {
@@ -46,12 +94,7 @@ void LoadCompositeDirectory(SimpleZilchShaderGenerator& shaderGenerator, StringP
   // Load the shader def file
   Array<SerializedShaderDefinition> shaders;
   String defPath = FilePath::CombineWithExtension(directory, defFileName, ".txt");
-  
-  Status status;
-  DataTreeLoader loader;
-  loader.OpenFile(status, defPath.c_str());
-  loader.SerializeField("Shaders", shaders);
-  loader.Close();
+  LoadShaderDefinitions(shaders, defPath);
 
   // Create composites for all of the shader defs
   for(size_t i = 0; i < shaders.Size(); ++i)
@@ -83,8 +126,8 @@ void LoadCompositeDirectory(SimpleZilchShaderGenerator& shaderGenerator, StringP
   }
 }
 
-//bool TestDiff(StringParam directory, StringParam testName, StringParam languageExt, StringParam generatedFileContents, ErrorReporter& report)
-bool TestDiff(StringParam expectedFilePath, StringParam generatedFilePath, StringParam generatedFileContents, ErrorReporter& report)
+//bool TestDiff(StringParam directory, StringParam testName, StringParam languageExt, StringParam generatedFileContents, ErrorReporter& reporter)
+bool TestDiff(StringParam expectedFilePath, StringParam generatedFilePath, StringParam generatedFileContents, ErrorReporter& reporter)
 {
   String expectedFileContents;
   if(FileExists(expectedFilePath))
@@ -101,13 +144,13 @@ bool TestDiff(StringParam expectedFilePath, StringParam generatedFilePath, Strin
 
   if(generatedFileContents != expectedFileContents)
   {
-    report.DisplayDiffs(expectedFilePath, generatedFilePath);
+    reporter.DisplayDiffs(expectedFilePath, generatedFilePath);
     return false;
   }
   return true;
 }
 
-bool TestDiff(StringParam expectedFilePath, StringParam generatedFilePath, ErrorReporter& report)
+bool TestDiff(StringParam expectedFilePath, StringParam generatedFilePath, ErrorReporter& reporter)
 {
   // Load the generated file if it exists
   String generatedFileContents;
@@ -121,10 +164,10 @@ bool TestDiff(StringParam expectedFilePath, StringParam generatedFilePath, Error
   else
     WriteStringRangeToFile(generatedFilePath, "");
 
-  return TestDiff(expectedFilePath, generatedFilePath, generatedFileContents, report);
+  return TestDiff(expectedFilePath, generatedFilePath, generatedFileContents, reporter);
 }
 
-void TestCompilation(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, ShaderType* type, StringParam directory, ErrorReporter& report)
+void TestCompilation(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, ShaderType* type, StringParam directory, ErrorReporter& reporter)
 {
   // Only output fragment types (and their dependencies)
   if(type->mFragmentType == FragmentType::None)
@@ -142,12 +185,12 @@ void TestCompilation(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& 
   String generatedFilePath = FilePath::CombineWithExtension(directory, testName, BuildString(".generated.", extension));
   WriteStringRangeToFile(generatedFilePath, generatedResults.All());
   
-  bool diffedCleanly = TestDiff(expectedFilePath, generatedFilePath, generatedResults, report);
-  if(diffedCleanly)
-    renderer.CompileShader(generatedFilePath, generatedResults, type->mFragmentType, report);
+  bool diffedCleanly = TestDiff(expectedFilePath, generatedFilePath, generatedResults, reporter);
+  //if(diffedCleanly)
+  //  renderer.CompileShader(generatedFilePath, generatedResults, type->mFragmentType, reporter);
 }
 
-void TestShaderFileCompilation(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam filePath, StringParam directory, ErrorReporter& report)
+void TestShaderFileCompilation(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam filePath, StringParam directory, ErrorReporter& reporter)
 {
   // Clear the previous results
   shaderGenerator.ClearAll();
@@ -155,23 +198,29 @@ void TestShaderFileCompilation(SimpleZilchShaderGenerator& shaderGenerator, Base
   // Load the fragment code and compile
   String fragmentCode = ReadFileIntoString(filePath);
   shaderGenerator.AddFragmentCode(fragmentCode, filePath, nullptr);
-  shaderGenerator.CompileAndTranslateFragments();
+
+  ZilchShaderModuleRef fragmentDependencies = new ZilchShaderModule();
+  shaderGenerator.mFragmentProject.CompileAndTranslate(fragmentDependencies, shaderGenerator.mTranslator, shaderGenerator.mSettings, true);
+
+  //shaderGenerator.CompileAndTranslateFragments();
 
   // Test all fragment types (not helpers) that resulted from this.
   // We have to do this as a file can contain multiple fragments of different names than the file.
   AutoDeclare(typeRange, shaderGenerator.mFragmentLibraryRef->mTypes.Values());
   for(; !typeRange.Empty(); typeRange.PopFront())
-    TestCompilation(shaderGenerator, renderer, typeRange.Front(), directory, report);
+    TestCompilation(shaderGenerator, renderer, typeRange.Front(), directory, reporter);
 }
 
-void TestShaderCompilationOfDirectory(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& report)
+void TestShaderCompilationOfDirectory(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& reporter)
 {
   FileRange range(directory);
   for(; !range.Empty(); range.PopFront())
   {
+    if(range.frontEntry().mFileName != "Simple.zilchFrag")
+      continue;
     String filePath = range.frontEntry().GetFullPath();
     if(FilePath::GetExtension(filePath).ToLower() == mFragmentExtension)
-      TestShaderFileCompilation(shaderGenerator, renderer, filePath, directory, report);
+      TestShaderFileCompilation(shaderGenerator, renderer, filePath, directory, reporter);
   }
 }
 
@@ -201,12 +250,12 @@ void WriteAndDiffComposites(SimpleZilchShaderGenerator& shaderGenerator, StringP
   }
 }
 
-void TestCompilationAndLinkingOfCompositesInDirectory(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& report)
+void TestCompilationAndLinkingOfCompositesInDirectory(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& reporter)
 {
   shaderGenerator.ClearFragmentsProjectAndLibrary();
   shaderGenerator.ClearShadersProjectAndLibrary();
   LoadCompositeDirectory(shaderGenerator, directory, "ShaderDefinitions");
-  WriteAndDiffComposites(shaderGenerator, directory, report);
+  WriteAndDiffComposites(shaderGenerator, directory, reporter);
 
   shaderGenerator.CompileAndTranslateShaders();
 
@@ -218,18 +267,18 @@ void TestCompilationAndLinkingOfCompositesInDirectory(SimpleZilchShaderGenerator
     Array<FragmentInfo> fragments;
     fragments.Resize(FragmentType::Size);
     for(size_t i = 0; i < FragmentType::Size; ++i)
-      fragments[i] = BuildShaderAndDiff(shaderGenerator, shaderDef, renderer, (FragmentType::Enum)i, directory, report);
+      fragments[i] = BuildShaderAndDiff(shaderGenerator, shaderDef, renderer, (FragmentType::Enum)i, directory, reporter);
     
-    renderer.CompileAndLinkShader(fragments, report);
+    renderer.CompileAndLinkShader(fragments, reporter);
   }
 }
 
-void TestRuntime(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& report)
+void TestRuntime(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& reporter)
 {
   shaderGenerator.ClearFragmentsProjectAndLibrary();
   shaderGenerator.ClearShadersProjectAndLibrary();
   LoadCompositeDirectory(shaderGenerator, directory, "ShaderDefinitions");
-  WriteAndDiffComposites(shaderGenerator, directory, report);
+  WriteAndDiffComposites(shaderGenerator, directory, reporter);
 
   // Compile and translate the shader library
   shaderGenerator.CompileAndTranslateShaders();
@@ -246,7 +295,7 @@ void TestRuntime(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& rend
     Array<FragmentInfo> fragments;
     fragments.Resize(FragmentType::Size);
     for(size_t i = 0; i < fragments.Size(); ++i)
-      fragments[i] = BuildShaderAndDiff(shaderGenerator, shaderDef, renderer, (FragmentType::Enum)i, directory, report);
+      fragments[i] = BuildShaderAndDiff(shaderGenerator, shaderDef, renderer, (FragmentType::Enum)i, directory, reporter);
 
     RenderResults results;
     String targetLanguage = shaderGenerator.mTranslator->GetFullLanguageString();
@@ -256,7 +305,7 @@ void TestRuntime(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& rend
     // Collect the results from zilch
     ComputeZilchRenderResults(shaderGenerator, pixelShaderType->mZilchName, results);
     // Then collect them from the renderer
-    renderer.RunPostProcess(fragments, shaderResult, report);
+    renderer.RunPostProcess(fragments, shaderResult, reporter);
 
     for(size_t i = 0; i < mMaxRenderTargets; ++i)
     {
@@ -265,12 +314,12 @@ void TestRuntime(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& rend
       Vec4 zilchData = zilchResult.mData[i];
       Vec4 shaderData = shaderResult.mData[i];
       if(Math::LengthSq(zilchData - shaderData) > 0.0001f)
-        report.ReportPostProcessError(shaderName, zilchData, shaderData, i);
+        reporter.ReportPostProcessError(shaderName, zilchData, shaderData, i);
     }
   }
 }
 
-FragmentInfo BuildShaderAndDiff(SimpleZilchShaderGenerator& shaderGenerator, ZilchShaderDefinition& shaderDef, BaseRenderer& renderer, FragmentType::Enum fragmentType, StringParam directory, ErrorReporter& report)
+FragmentInfo BuildShaderAndDiff(SimpleZilchShaderGenerator& shaderGenerator, ZilchShaderDefinition& shaderDef, BaseRenderer& renderer, FragmentType::Enum fragmentType, StringParam directory, ErrorReporter& reporter)
 {
   FragmentInfo result;
   result.mFragmentType = fragmentType;
@@ -297,6 +346,73 @@ FragmentInfo BuildShaderAndDiff(SimpleZilchShaderGenerator& shaderGenerator, Zil
   WriteStringRangeToFile(result.mFilePath, result.mFragmentCode);
 
   // Diff the vertex and pixel fragment
-  bool diffedCleanly = TestDiff(expectedFilePath, generatedFilePath, result.mFragmentCode, report);
+  bool diffedCleanly = TestDiff(expectedFilePath, generatedFilePath, result.mFragmentCode, reporter);
   return result;
+}
+
+void FileToStream(File& file, TextStreamBuffer& stream)
+{
+  Status status;
+  for(;;)
+  {
+    const size_t BufferSize = 4096;
+
+    // We add 1 for an extra null terminator at the end
+    // (technically the null terminator could go anywhere since we place it at the end of the amount we read)
+    byte buffer[BufferSize + 1];
+
+    size_t amountRead = file.Read(status, buffer, BufferSize);
+
+    // Terminate this buffer and write it out
+    buffer[amountRead] = '\0';
+    stream.Write((cstr)buffer);
+
+    if(status.Failed())
+      break;
+  }
+}
+
+void RunProcess(StringParam applicationPath, StringParam args, String* stdOutResult, String* stdErrResult)
+{
+  Status status;
+
+  ProcessStartInfo startInfo;
+  startInfo.mApplicationName = applicationPath;
+  startInfo.mArguments = args;
+  startInfo.mRedirectStandardOutput = true;
+  startInfo.mRedirectStandardError = true;
+
+  File standardOut;
+  File standardError;
+  TextStreamBuffer standardOutStream;
+  TextStreamBuffer standardErrStream;
+
+  Process process;
+  process.Start(status, startInfo);
+  if(stdOutResult != nullptr)
+    process.OpenStandardOut(standardOut);
+  if(stdErrResult != nullptr)
+    process.OpenStandardError(standardError);
+
+  while(process.IsRunning())
+  {
+    process.WaitForClose(100);
+    if(stdOutResult != nullptr)
+      FileToStream(standardOut, standardOutStream);
+    if(stdErrResult != nullptr)
+      FileToStream(standardError, standardErrStream);
+  }
+  if(stdOutResult != nullptr)
+    FileToStream(standardOut, standardOutStream);
+  if(stdErrResult != nullptr)
+    FileToStream(standardError, standardErrStream);
+
+  bool isRunning = process.IsRunning();
+
+
+  String standardOutStr;
+  if(stdOutResult != nullptr)
+    *stdOutResult = standardOutStream.ToString();
+  if(stdErrResult != nullptr)
+    *stdErrResult = standardErrStream.ToString();
 }

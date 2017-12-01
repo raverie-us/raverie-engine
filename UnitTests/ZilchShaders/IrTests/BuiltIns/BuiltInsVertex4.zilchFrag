@@ -1,0 +1,18 @@
+// Sub-set of built-ins (keep last)
+[Vertex][UnitTest]
+struct BuiltInsVertex4
+{
+  // Inputs
+  //[BuiltInInput] var VertexId : Integer;
+  [HardwareBuiltInInput] var InstanceId : Integer;
+  
+  // Outputs
+  //[BuiltInOutput] var ApiPerspectivePosition : Real4;
+  [HardwareBuiltInOutput] var PointSize : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

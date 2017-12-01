@@ -1,0 +1,9 @@
+[Vertex][UnitTest]
+struct MultipleOutput_Vertex
+{
+
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

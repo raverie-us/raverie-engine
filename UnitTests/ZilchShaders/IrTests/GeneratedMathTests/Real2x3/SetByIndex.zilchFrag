@@ -1,0 +1,17 @@
+[Pixel][UnitTest]
+struct SetByIndex
+{
+  function Test_Integer_Real()
+  {
+    var index_ = Integer();
+    var value_ = Real();
+    var instance_ = Real2x3();
+    instance_.SetByIndex(index_, value_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Integer_Real();
+  }
+}

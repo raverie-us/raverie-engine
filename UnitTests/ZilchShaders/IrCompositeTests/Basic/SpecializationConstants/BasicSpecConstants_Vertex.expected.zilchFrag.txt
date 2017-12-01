@@ -1,0 +1,16 @@
+[Vertex][UnitTest]
+struct BasicSpecConstants_Vertex
+{
+  [Static][SpecConstant] var Position_Vertex : Real4;
+  [Static][SpecConstant] var Value_Vertex : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.Position = BasicSpecConstants_Vertex.Position_Vertex;
+    vertex.Value = BasicSpecConstants_Vertex.Value_Vertex;
+    vertex.Main();
+
+  }
+}

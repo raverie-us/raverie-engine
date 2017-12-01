@@ -1,0 +1,20 @@
+[Vertex][UnitTest]
+struct Vertex_Vertex
+{
+  [StageInput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageInput(name : "LocalPosition")] var Stage_LocalPosition_Real3 : Real3;
+  [StageInput(name : "Color")] var Stage_Color_Real4 : Real4;
+  [StageInput(name : "Aux0")] var Stage_Aux0_Real4 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.Uv = this.Stage_Uv_Real2;
+    vertex.LocalPosition = this.Stage_LocalPosition_Real3;
+    vertex.VertexColor = this.Stage_Color_Real4;
+    vertex.Aux10 = this.Stage_Aux0_Real4;
+    vertex.Main();
+
+  }
+}

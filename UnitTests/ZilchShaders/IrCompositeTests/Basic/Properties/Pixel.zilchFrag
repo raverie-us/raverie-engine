@@ -1,0 +1,23 @@
+[Pixel]
+struct Pixel
+{
+  [Input] var Position : Real4;
+  [Input] var Value : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct PixelOverride
+{
+  [Input("Position")] var PixelPosition : Real4;
+  [Input("Value")] var T : Real;
+  
+  function Main()
+  {
+    
+  }
+}

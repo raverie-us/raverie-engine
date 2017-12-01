@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct BadType
+{
+  [Static][SpecConstant] var Var1 : FixedArray[Integer, 5];
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

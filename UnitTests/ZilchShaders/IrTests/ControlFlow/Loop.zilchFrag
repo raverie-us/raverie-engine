@@ -1,0 +1,92 @@
+[Pixel][UnitTest]
+struct Loop
+{
+  function Loop0() : Integer
+  {
+    var a = 1;
+    loop
+    {
+      --a;
+    }
+    return a;
+  }
+  
+  function Loop0Break() : Integer
+  {
+    var a = 1;
+    loop
+    {
+      --a;
+      break;
+    }
+    return a;
+  }
+  
+  function Loop0Continue() : Integer
+  {
+    var a = 1;
+    loop
+    {
+      --a;
+      continue;
+    }
+    return a;
+  }
+  
+  function LoopIf0() : Integer
+  {
+    var a = 1;
+    loop
+    {
+      if(a > 0)
+        continue;
+      else if(a < 0)
+        break;
+      else
+        a = 0;
+      --a;
+    }
+    return a;
+  }
+  
+  function NestedLoop0() : Integer
+  {
+    var a = 1;
+    loop
+    {
+      var b = 1;
+      loop
+      {
+        --b;
+      }
+      --a;
+    }
+    return a;
+  }
+  
+  function NestedLoop1() : Integer
+  {
+    var a = 1;
+    loop
+    {
+      var b = 1;
+      loop
+      {
+        break;
+      }
+      break;
+    }
+    return a;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.Loop0();
+    this.Loop0Break();
+    this.Loop0Continue();
+    this.LoopIf0();
+    this.NestedLoop0();
+    this.NestedLoop1();
+  }
+}

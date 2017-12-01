@@ -103,10 +103,14 @@ void TranslatedShaderScriptEditor::CompileAndTranslateFragments(SimpleZilchShade
   for(; !range.Empty(); range.PopFront())
   {
     ZilchFragment* fragment = (ZilchFragment*)range.Front();
-
+    
     String fileName = fragment->Name;
     if(fragment->mContentItem)
+    {
+      if(fragment->mContentItem->has(ResourceTemplate))
+        continue;
       fileName = fragment->mContentItem->GetFullPath();
+    }
 
     // Add the fragment* itself as the user data
     // (the error callback function uses this to display errors on the script)

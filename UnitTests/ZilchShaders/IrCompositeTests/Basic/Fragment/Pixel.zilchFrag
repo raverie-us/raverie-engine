@@ -1,0 +1,74 @@
+[Pixel]
+struct Pixel1
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [Output] var Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [Output] var Value2 : Real;
+  
+  // None 1, In 2 (no match)
+  var Value3 : Real;
+  // Out 1, None 2 (no match)
+  [Output] var Value4 : Real;
+  // Out 1, None 2, In 3 (1->3 match)
+  [Output] var Value5 : Real;
+  
+  // Out 1 (R2), In 1 (R) (mismatched types)
+  [Output] var Value6 : Real2;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [Output] var Value7 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct Pixel2
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [FragmentInput][Output] var Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [FragmentInput] var Value2 : Real;
+  
+  // None 1, In 2 (no match)
+  [FragmentInput] var Value3 : Real;
+  // Out 1, None 2 (no match)
+  var Value4 : Real;
+  // Out 1, None 2, In 3 (1->3 match)
+  var Value5 : Real;
+  
+  // Out 1 (R2), In 1 (R) (mismatched types)
+  [FragmentInput] var Value6 : Real;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [FragmentInput][Output] var Value7 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct Pixel3
+{
+  // Out 1, InOut 2, In 3 (1->2->3)
+  [FragmentInput] var Value1 : Real;
+  // Out 1, In 2, In 3 (1->2; 1->3)
+  [FragmentInput] var Value2 : Real;
+  
+  // Out 1, None 2, In 3 (1->3 match)
+  [FragmentInput] var Value5 : Real;
+  
+  // Out 1, InOut 2, In 3 (1->2->3) (after other properties)
+  [FragmentInput] var Value7 : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+

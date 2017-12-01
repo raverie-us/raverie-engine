@@ -1,0 +1,30 @@
+[Pixel][UnitTest]
+struct ExtensionMethods4
+{
+  // Test Static extension method on a built-in type
+  [Static][Extension(typeid(Real3))]
+  var Default : Real3
+  {
+    get
+    {
+      return Real3(-1.0);
+    }
+  }
+  
+  // Test Instance extension method on a built-in type
+  [Extension(typeid(Real3))]
+  var Scalar : Real
+  {
+    get
+    {
+      return this.X;
+    }
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var r3 = Real3.Default;
+    var scalar = r3.Scalar;
+  }
+}

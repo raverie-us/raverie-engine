@@ -1,0 +1,799 @@
+[Pixel][UnitTest]
+struct Real3Properties
+{
+  function Test_StaticCount_Integer()
+  {
+    var value = Real3.Count;
+  }
+  function Test_Count_Integer()
+  {
+    var instance = Real3();
+    var value = instance.Count;
+  }
+  function Test_StaticNegativeMin_Real3()
+  {
+    var value = Real3.NegativeMin;
+  }
+  function Test_StaticNegativeValueClosestToZero_Real3()
+  {
+    var value = Real3.NegativeValueClosestToZero;
+  }
+  function Test_StaticOne_Real3()
+  {
+    var value = Real3.One;
+  }
+  function Test_StaticPositiveMax_Real3()
+  {
+    var value = Real3.PositiveMax;
+  }
+  function Test_StaticPositiveValueClosestToZero_Real3()
+  {
+    var value = Real3.PositiveValueClosestToZero;
+  }
+  function Test_X_Real()
+  {
+    var instance = Real3();
+    var value = instance.X;
+    instance.X = Real();
+  }
+  function Test_StaticXAxis_Real3()
+  {
+    var value = Real3.XAxis;
+  }
+  function Test_XX_Real2()
+  {
+    var instance = Real3();
+    var value = instance.XX;
+  }
+  function Test_XXX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XXX;
+  }
+  function Test_XXXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXXX;
+  }
+  function Test_XXXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXXY;
+  }
+  function Test_XXXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXXZ;
+  }
+  function Test_XXY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XXY;
+  }
+  function Test_XXYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXYX;
+  }
+  function Test_XXYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXYY;
+  }
+  function Test_XXYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXYZ;
+  }
+  function Test_XXZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XXZ;
+  }
+  function Test_XXZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXZX;
+  }
+  function Test_XXZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXZY;
+  }
+  function Test_XXZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XXZZ;
+  }
+  function Test_XY_Real2()
+  {
+    var instance = Real3();
+    var value = instance.XY;
+    instance.XY = Real2();
+  }
+  function Test_XYX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XYX;
+  }
+  function Test_XYXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYXX;
+  }
+  function Test_XYXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYXY;
+  }
+  function Test_XYXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYXZ;
+  }
+  function Test_XYY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XYY;
+  }
+  function Test_XYYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYYX;
+  }
+  function Test_XYYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYYY;
+  }
+  function Test_XYYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYYZ;
+  }
+  function Test_XYZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XYZ;
+    instance.XYZ = Real3();
+  }
+  function Test_XYZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYZX;
+  }
+  function Test_XYZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYZY;
+  }
+  function Test_XYZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XYZZ;
+  }
+  function Test_XZ_Real2()
+  {
+    var instance = Real3();
+    var value = instance.XZ;
+    instance.XZ = Real2();
+  }
+  function Test_XZX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XZX;
+  }
+  function Test_XZXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZXX;
+  }
+  function Test_XZXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZXY;
+  }
+  function Test_XZXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZXZ;
+  }
+  function Test_XZY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XZY;
+    instance.XZY = Real3();
+  }
+  function Test_XZYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZYX;
+  }
+  function Test_XZYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZYY;
+  }
+  function Test_XZYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZYZ;
+  }
+  function Test_XZZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.XZZ;
+  }
+  function Test_XZZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZZX;
+  }
+  function Test_XZZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZZY;
+  }
+  function Test_XZZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.XZZZ;
+  }
+  function Test_Y_Real()
+  {
+    var instance = Real3();
+    var value = instance.Y;
+    instance.Y = Real();
+  }
+  function Test_StaticYAxis_Real3()
+  {
+    var value = Real3.YAxis;
+  }
+  function Test_YX_Real2()
+  {
+    var instance = Real3();
+    var value = instance.YX;
+    instance.YX = Real2();
+  }
+  function Test_YXX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YXX;
+  }
+  function Test_YXXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXXX;
+  }
+  function Test_YXXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXXY;
+  }
+  function Test_YXXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXXZ;
+  }
+  function Test_YXY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YXY;
+  }
+  function Test_YXYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXYX;
+  }
+  function Test_YXYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXYY;
+  }
+  function Test_YXYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXYZ;
+  }
+  function Test_YXZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YXZ;
+    instance.YXZ = Real3();
+  }
+  function Test_YXZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXZX;
+  }
+  function Test_YXZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXZY;
+  }
+  function Test_YXZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YXZZ;
+  }
+  function Test_YY_Real2()
+  {
+    var instance = Real3();
+    var value = instance.YY;
+  }
+  function Test_YYX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YYX;
+  }
+  function Test_YYXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYXX;
+  }
+  function Test_YYXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYXY;
+  }
+  function Test_YYXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYXZ;
+  }
+  function Test_YYY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YYY;
+  }
+  function Test_YYYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYYX;
+  }
+  function Test_YYYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYYY;
+  }
+  function Test_YYYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYYZ;
+  }
+  function Test_YYZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YYZ;
+  }
+  function Test_YYZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYZX;
+  }
+  function Test_YYZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYZY;
+  }
+  function Test_YYZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YYZZ;
+  }
+  function Test_YZ_Real2()
+  {
+    var instance = Real3();
+    var value = instance.YZ;
+    instance.YZ = Real2();
+  }
+  function Test_YZX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YZX;
+    instance.YZX = Real3();
+  }
+  function Test_YZXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZXX;
+  }
+  function Test_YZXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZXY;
+  }
+  function Test_YZXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZXZ;
+  }
+  function Test_YZY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YZY;
+  }
+  function Test_YZYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZYX;
+  }
+  function Test_YZYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZYY;
+  }
+  function Test_YZYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZYZ;
+  }
+  function Test_YZZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.YZZ;
+  }
+  function Test_YZZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZZX;
+  }
+  function Test_YZZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZZY;
+  }
+  function Test_YZZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.YZZZ;
+  }
+  function Test_Z_Real()
+  {
+    var instance = Real3();
+    var value = instance.Z;
+    instance.Z = Real();
+  }
+  function Test_StaticZAxis_Real3()
+  {
+    var value = Real3.ZAxis;
+  }
+  function Test_ZX_Real2()
+  {
+    var instance = Real3();
+    var value = instance.ZX;
+    instance.ZX = Real2();
+  }
+  function Test_ZXX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZXX;
+  }
+  function Test_ZXXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXXX;
+  }
+  function Test_ZXXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXXY;
+  }
+  function Test_ZXXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXXZ;
+  }
+  function Test_ZXY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZXY;
+    instance.ZXY = Real3();
+  }
+  function Test_ZXYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXYX;
+  }
+  function Test_ZXYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXYY;
+  }
+  function Test_ZXYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXYZ;
+  }
+  function Test_ZXZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZXZ;
+  }
+  function Test_ZXZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXZX;
+  }
+  function Test_ZXZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXZY;
+  }
+  function Test_ZXZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZXZZ;
+  }
+  function Test_ZY_Real2()
+  {
+    var instance = Real3();
+    var value = instance.ZY;
+    instance.ZY = Real2();
+  }
+  function Test_ZYX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZYX;
+    instance.ZYX = Real3();
+  }
+  function Test_ZYXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYXX;
+  }
+  function Test_ZYXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYXY;
+  }
+  function Test_ZYXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYXZ;
+  }
+  function Test_ZYY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZYY;
+  }
+  function Test_ZYYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYYX;
+  }
+  function Test_ZYYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYYY;
+  }
+  function Test_ZYYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYYZ;
+  }
+  function Test_ZYZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZYZ;
+  }
+  function Test_ZYZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYZX;
+  }
+  function Test_ZYZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYZY;
+  }
+  function Test_ZYZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZYZZ;
+  }
+  function Test_ZZ_Real2()
+  {
+    var instance = Real3();
+    var value = instance.ZZ;
+  }
+  function Test_ZZX_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZZX;
+  }
+  function Test_ZZXX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZXX;
+  }
+  function Test_ZZXY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZXY;
+  }
+  function Test_ZZXZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZXZ;
+  }
+  function Test_ZZY_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZZY;
+  }
+  function Test_ZZYX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZYX;
+  }
+  function Test_ZZYY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZYY;
+  }
+  function Test_ZZYZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZYZ;
+  }
+  function Test_ZZZ_Real3()
+  {
+    var instance = Real3();
+    var value = instance.ZZZ;
+  }
+  function Test_ZZZX_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZZX;
+  }
+  function Test_ZZZY_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZZY;
+  }
+  function Test_ZZZZ_Real4()
+  {
+    var instance = Real3();
+    var value = instance.ZZZZ;
+  }
+  function Test_StaticZero_Real3()
+  {
+    var value = Real3.Zero;
+  }
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_StaticCount_Integer();
+    this.Test_Count_Integer();
+    this.Test_StaticNegativeMin_Real3();
+    this.Test_StaticNegativeValueClosestToZero_Real3();
+    this.Test_StaticOne_Real3();
+    this.Test_StaticPositiveMax_Real3();
+    this.Test_StaticPositiveValueClosestToZero_Real3();
+    this.Test_X_Real();
+    this.Test_StaticXAxis_Real3();
+    this.Test_XX_Real2();
+    this.Test_XXX_Real3();
+    this.Test_XXXX_Real4();
+    this.Test_XXXY_Real4();
+    this.Test_XXXZ_Real4();
+    this.Test_XXY_Real3();
+    this.Test_XXYX_Real4();
+    this.Test_XXYY_Real4();
+    this.Test_XXYZ_Real4();
+    this.Test_XXZ_Real3();
+    this.Test_XXZX_Real4();
+    this.Test_XXZY_Real4();
+    this.Test_XXZZ_Real4();
+    this.Test_XY_Real2();
+    this.Test_XYX_Real3();
+    this.Test_XYXX_Real4();
+    this.Test_XYXY_Real4();
+    this.Test_XYXZ_Real4();
+    this.Test_XYY_Real3();
+    this.Test_XYYX_Real4();
+    this.Test_XYYY_Real4();
+    this.Test_XYYZ_Real4();
+    this.Test_XYZ_Real3();
+    this.Test_XYZX_Real4();
+    this.Test_XYZY_Real4();
+    this.Test_XYZZ_Real4();
+    this.Test_XZ_Real2();
+    this.Test_XZX_Real3();
+    this.Test_XZXX_Real4();
+    this.Test_XZXY_Real4();
+    this.Test_XZXZ_Real4();
+    this.Test_XZY_Real3();
+    this.Test_XZYX_Real4();
+    this.Test_XZYY_Real4();
+    this.Test_XZYZ_Real4();
+    this.Test_XZZ_Real3();
+    this.Test_XZZX_Real4();
+    this.Test_XZZY_Real4();
+    this.Test_XZZZ_Real4();
+    this.Test_Y_Real();
+    this.Test_StaticYAxis_Real3();
+    this.Test_YX_Real2();
+    this.Test_YXX_Real3();
+    this.Test_YXXX_Real4();
+    this.Test_YXXY_Real4();
+    this.Test_YXXZ_Real4();
+    this.Test_YXY_Real3();
+    this.Test_YXYX_Real4();
+    this.Test_YXYY_Real4();
+    this.Test_YXYZ_Real4();
+    this.Test_YXZ_Real3();
+    this.Test_YXZX_Real4();
+    this.Test_YXZY_Real4();
+    this.Test_YXZZ_Real4();
+    this.Test_YY_Real2();
+    this.Test_YYX_Real3();
+    this.Test_YYXX_Real4();
+    this.Test_YYXY_Real4();
+    this.Test_YYXZ_Real4();
+    this.Test_YYY_Real3();
+    this.Test_YYYX_Real4();
+    this.Test_YYYY_Real4();
+    this.Test_YYYZ_Real4();
+    this.Test_YYZ_Real3();
+    this.Test_YYZX_Real4();
+    this.Test_YYZY_Real4();
+    this.Test_YYZZ_Real4();
+    this.Test_YZ_Real2();
+    this.Test_YZX_Real3();
+    this.Test_YZXX_Real4();
+    this.Test_YZXY_Real4();
+    this.Test_YZXZ_Real4();
+    this.Test_YZY_Real3();
+    this.Test_YZYX_Real4();
+    this.Test_YZYY_Real4();
+    this.Test_YZYZ_Real4();
+    this.Test_YZZ_Real3();
+    this.Test_YZZX_Real4();
+    this.Test_YZZY_Real4();
+    this.Test_YZZZ_Real4();
+    this.Test_Z_Real();
+    this.Test_StaticZAxis_Real3();
+    this.Test_ZX_Real2();
+    this.Test_ZXX_Real3();
+    this.Test_ZXXX_Real4();
+    this.Test_ZXXY_Real4();
+    this.Test_ZXXZ_Real4();
+    this.Test_ZXY_Real3();
+    this.Test_ZXYX_Real4();
+    this.Test_ZXYY_Real4();
+    this.Test_ZXYZ_Real4();
+    this.Test_ZXZ_Real3();
+    this.Test_ZXZX_Real4();
+    this.Test_ZXZY_Real4();
+    this.Test_ZXZZ_Real4();
+    this.Test_ZY_Real2();
+    this.Test_ZYX_Real3();
+    this.Test_ZYXX_Real4();
+    this.Test_ZYXY_Real4();
+    this.Test_ZYXZ_Real4();
+    this.Test_ZYY_Real3();
+    this.Test_ZYYX_Real4();
+    this.Test_ZYYY_Real4();
+    this.Test_ZYYZ_Real4();
+    this.Test_ZYZ_Real3();
+    this.Test_ZYZX_Real4();
+    this.Test_ZYZY_Real4();
+    this.Test_ZYZZ_Real4();
+    this.Test_ZZ_Real2();
+    this.Test_ZZX_Real3();
+    this.Test_ZZXX_Real4();
+    this.Test_ZZXY_Real4();
+    this.Test_ZZXZ_Real4();
+    this.Test_ZZY_Real3();
+    this.Test_ZZYX_Real4();
+    this.Test_ZZYY_Real4();
+    this.Test_ZZYZ_Real4();
+    this.Test_ZZZ_Real3();
+    this.Test_ZZZX_Real4();
+    this.Test_ZZZY_Real4();
+    this.Test_ZZZZ_Real4();
+    this.Test_StaticZero_Real3();
+  }
+}

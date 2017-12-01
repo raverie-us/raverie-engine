@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct GenerateScaleMatrix4x4
+{
+  function Test_Static_Real3()
+  {
+    var scale_ = Real3();
+    var result = Math.GenerateScaleMatrix4x4(scale_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real3();
+  }
+}

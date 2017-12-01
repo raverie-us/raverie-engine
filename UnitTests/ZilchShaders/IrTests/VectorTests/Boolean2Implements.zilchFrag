@@ -1,0 +1,12 @@
+[Pixel][UnitTest]
+struct Boolean2Implements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var x = Boolean2.XAxis;
+    var y = Boolean2.YAxis;
+    var zero = Boolean2.Zero;
+    var axis = Boolean2.GetAxis(1);
+  }
+}

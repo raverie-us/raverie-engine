@@ -41,7 +41,31 @@ void ZilchShaderProject::Clear()
   ComplexUserData.Clear();
 }
 
-ZilchShaderLibraryRef ZilchShaderProject::CompileAndTranslate(ZilchShaderModuleRef& dependencies, BaseShaderTranslator* translator, ZilchShaderSettingsRef& settings)
+bool ZilchShaderProject::CompileTree(Zilch::Module& zilchDependencies, Zilch::LibraryRef& zilchLibrary, Zilch::SyntaxTree& syntaxTree, Zilch::Array<Zilch::UserToken>& tokensOut)
+{
+  // Add all of the source code to the zilch project
+  Zilch::Project zilchProject;
+  BuildZilchProject(zilchProject);
+  // Listen for compilation errors on this zilch project (so we can forward them back up)
+  ListenForZilchErrors(zilchProject);
+  ListenForTypeParsed(zilchProject);
+
+  // Compile the source code into a syntax tree
+  Zilch::LibraryBuilder libraryBuilder(mProjectName);
+  bool compiledSuccessfully = zilchProject.CompileCheckedSyntaxTree(syntaxTree, libraryBuilder, tokensOut, zilchDependencies, Zilch::EvaluationMode::Project);
+
+  // If it failed to compile then don't build the library
+  if(!compiledSuccessfully)
+    return compiledSuccessfully;
+
+  // Always have to run the code generator to create the zilch library
+  // (so we can build an executable state and run it to collect default values).
+  Zilch::CodeGenerator codeGenerator;
+  zilchLibrary = codeGenerator.Generate(syntaxTree, libraryBuilder);
+  return compiledSuccessfully;
+}
+
+ZilchShaderLibraryRef ZilchShaderProject::CompileAndTranslate(ZilchShaderModuleRef& dependencies, BaseShaderTranslator* translator, ZilchShaderSettingsRef& settings, bool test)
 {
   // Add all of the dependencies to the zilch module
   Zilch::Module zilchDependencies;
@@ -84,12 +108,15 @@ ZilchShaderLibraryRef ZilchShaderProject::CompileAndTranslate(ZilchShaderModuleR
   // calls such as searching for a type will search the new library
   zilchDependencies.PushBack(library->mZilchLibrary);
 
+  if(!test)
+  {
   // First run the type collector (grabs type names along with their functions, members, and attributes)
-  ZilchTypeCollector typeCollector;
-  typeCollector.CollectTypes(syntaxTree, libraryRef, &zilchDependencies, this, settings);
-  // If an error was triggered during type collecting then just return (likely because of using class instead of struct)
-  if(this->mErrorTriggered)
-    return nullptr;
+    ZilchTypeCollector typeCollector;
+    typeCollector.CollectTypes(syntaxTree, libraryRef, &zilchDependencies, this, settings);
+    // If an error was triggered during type collecting then just return (likely because of using class instead of struct)
+    if(this->mErrorTriggered)
+      return nullptr;
+  }
 
   // Now actually translate the types of this library
   library->mTranslated = translator->Translate(syntaxTree, this, libraryRef);

@@ -1,0 +1,95 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 54
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %auto_main "auto_main"
+               OpExecutionMode %auto_main OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Real4Constructors "Real4Constructors"
+               OpMemberName %Real4Constructors 0 "Dummy"
+               OpName %auto_main "auto_main"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %r2 "r2"
+               OpName %r3 "r3"
+               OpName %r4 "r4"
+               OpName %PreConstructor_Real4Constructors "PreConstructor_Real4Constructors"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %3 = OpTypeFunction %void
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%Real4Constructors = OpTypeStruct %int
+%_ptr_Function_Real4Constructors = OpTypePointer Function %Real4Constructors
+          %8 = OpTypeFunction %void %_ptr_Function_Real4Constructors
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+    %float_3 = OpConstant %float 3
+    %float_2 = OpConstant %float 2
+    %float_1 = OpConstant %float 1
+  %auto_main = OpFunction %void None %3
+         %22 = OpLabel
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Real4Constructors
+         %25 = OpLabel
+         %r2 = OpVariable %_ptr_Function_v2float Function
+         %r3 = OpVariable %_ptr_Function_v3float Function
+         %r4 = OpVariable %_ptr_Function_v4float Function
+         %29 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %r2 %29
+         %30 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %r3 %30
+         %31 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %r4 %31
+         %32 = OpCompositeConstruct %v4float %float_3 %float_2 %float_1 %float_0
+               OpStore %r4 %32
+         %33 = OpCompositeConstruct %v4float %float_1 %float_1 %float_1 %float_1
+               OpStore %r4 %33
+         %34 = OpLoad %v3float %r3
+         %35 = OpCompositeConstruct %v4float %float_1 %34
+               OpStore %r4 %35
+         %36 = OpLoad %v3float %r3
+         %37 = OpCompositeConstruct %v4float %36 %float_1
+               OpStore %r4 %37
+         %38 = OpLoad %v2float %r2
+         %39 = OpLoad %v2float %r2
+         %40 = OpCompositeConstruct %v4float %38 %39
+               OpStore %r4 %40
+         %41 = OpLoad %v2float %r2
+         %42 = OpCompositeConstruct %v4float %41 %float_1 %float_0
+               OpStore %r4 %42
+         %43 = OpLoad %v2float %r2
+         %44 = OpCompositeConstruct %v4float %float_1 %43 %float_0
+               OpStore %r4 %44
+         %45 = OpLoad %v2float %r2
+         %46 = OpCompositeConstruct %v4float %float_1 %float_0 %45
+               OpStore %r4 %46
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Real4Constructors = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Real4Constructors
+         %49 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Real4Constructors
+         %52 = OpLabel
+         %53 = OpFunctionCall %void %PreConstructor_Real4Constructors %self_1
+               OpReturn
+               OpFunctionEnd

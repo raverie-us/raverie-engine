@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct LogicalNot
+{
+  [EntryPoint]
+  function Main()
+  {
+    var b = true;
+    var result = !b;
+    result = !(!b);
+  }
+}

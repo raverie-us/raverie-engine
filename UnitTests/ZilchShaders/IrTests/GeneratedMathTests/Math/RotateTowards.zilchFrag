@@ -1,0 +1,35 @@
+[Pixel][UnitTest]
+struct RotateTowards
+{
+  function Test_Static_Quaternion_Quaternion_Real()
+  {
+    var p0_ = Quaternion();
+    var p1_ = Quaternion();
+    var maxRadians_ = Real();
+    var result = Math.RotateTowards(p0_, p1_, maxRadians_);
+  }
+
+  function Test_Static_Real2_Real2_Real()
+  {
+    var p0_ = Real2();
+    var p1_ = Real2();
+    var maxRadians_ = Real();
+    var result = Math.RotateTowards(p0_, p1_, maxRadians_);
+  }
+
+  function Test_Static_Real3_Real3_Real()
+  {
+    var p0_ = Real3();
+    var p1_ = Real3();
+    var maxRadians_ = Real();
+    var result = Math.RotateTowards(p0_, p1_, maxRadians_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Quaternion_Quaternion_Real();
+    this.Test_Static_Real2_Real2_Real();
+    this.Test_Static_Real3_Real3_Real();
+  }
+}

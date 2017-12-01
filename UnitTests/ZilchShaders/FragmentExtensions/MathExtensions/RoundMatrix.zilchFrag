@@ -1,0 +1,246 @@
+struct MathRoundMatrixImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real2x2) : Real2x2
+  {
+    var result = Real2x2();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real2x2, places : Integer) : Real2x2
+  {
+    var result = Real2x2();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real2x2, places : Integer, numericalBase : Integer) : Real2x2
+  {
+    var result = Real2x2();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real2x3) : Real2x3
+  {
+    var result = Real2x3();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real2x3, places : Integer) : Real2x3
+  {
+    var result = Real2x3();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real2x3, places : Integer, numericalBase : Integer) : Real2x3
+  {
+    var result = Real2x3();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real2x4) : Real2x4
+  {
+    var result = Real2x4();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real2x4, places : Integer) : Real2x4
+  {
+    var result = Real2x4();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real2x4, places : Integer, numericalBase : Integer) : Real2x4
+  {
+    var result = Real2x4();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real3x2) : Real3x2
+  {
+    var result = Real3x2();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    result[2] = Math.Round(param0[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real3x2, places : Integer) : Real3x2
+  {
+    var result = Real3x2();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    result[2] = Math.Round(value[2], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real3x2, places : Integer, numericalBase : Integer) : Real3x2
+  {
+    var result = Real3x2();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    result[2] = Math.Round(value[2], places, numericalBase);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real3x3) : Real3x3
+  {
+    var result = Real3x3();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    result[2] = Math.Round(param0[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real3x3, places : Integer) : Real3x3
+  {
+    var result = Real3x3();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    result[2] = Math.Round(value[2], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real3x3, places : Integer, numericalBase : Integer) : Real3x3
+  {
+    var result = Real3x3();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    result[2] = Math.Round(value[2], places, numericalBase);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real3x4) : Real3x4
+  {
+    var result = Real3x4();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    result[2] = Math.Round(param0[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real3x4, places : Integer) : Real3x4
+  {
+    var result = Real3x4();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    result[2] = Math.Round(value[2], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real3x4, places : Integer, numericalBase : Integer) : Real3x4
+  {
+    var result = Real3x4();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    result[2] = Math.Round(value[2], places, numericalBase);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real4x2) : Real4x2
+  {
+    var result = Real4x2();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    result[2] = Math.Round(param0[2]);
+    result[3] = Math.Round(param0[3]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real4x2, places : Integer) : Real4x2
+  {
+    var result = Real4x2();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    result[2] = Math.Round(value[2], places);
+    result[3] = Math.Round(value[3], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real4x2, places : Integer, numericalBase : Integer) : Real4x2
+  {
+    var result = Real4x2();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    result[2] = Math.Round(value[2], places, numericalBase);
+    result[3] = Math.Round(value[3], places, numericalBase);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real4x3) : Real4x3
+  {
+    var result = Real4x3();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    result[2] = Math.Round(param0[2]);
+    result[3] = Math.Round(param0[3]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real4x3, places : Integer) : Real4x3
+  {
+    var result = Real4x3();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    result[2] = Math.Round(value[2], places);
+    result[3] = Math.Round(value[3], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real4x3, places : Integer, numericalBase : Integer) : Real4x3
+  {
+    var result = Real4x3();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    result[2] = Math.Round(value[2], places, numericalBase);
+    result[3] = Math.Round(value[3], places, numericalBase);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(param0 : Real4x4) : Real4x4
+  {
+    var result = Real4x4();
+    result[0] = Math.Round(param0[0]);
+    result[1] = Math.Round(param0[1]);
+    result[2] = Math.Round(param0[2]);
+    result[3] = Math.Round(param0[3]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real4x4, places : Integer) : Real4x4
+  {
+    var result = Real4x4();
+    result[0] = Math.Round(value[0], places);
+    result[1] = Math.Round(value[1], places);
+    result[2] = Math.Round(value[2], places);
+    result[3] = Math.Round(value[3], places);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Round(value : Real4x4, places : Integer, numericalBase : Integer) : Real4x4
+  {
+    var result = Real4x4();
+    result[0] = Math.Round(value[0], places, numericalBase);
+    result[1] = Math.Round(value[1], places, numericalBase);
+    result[2] = Math.Round(value[2], places, numericalBase);
+    result[3] = Math.Round(value[3], places, numericalBase);
+    return result;
+  }
+}

@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct RequiresStatic
+{
+  [SpecConstant] var Var1 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

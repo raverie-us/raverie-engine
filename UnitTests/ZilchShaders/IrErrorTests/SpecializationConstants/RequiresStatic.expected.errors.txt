@@ -1,0 +1,2 @@
+  IrErrorTests\SpecializationConstants\RequiresStatic.zilchFrag(4): Attribute 'SpecConstant' requires attribute(s): Static:
+  Attribute 'SpecConstant' requires attribute(s): Static

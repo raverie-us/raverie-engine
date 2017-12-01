@@ -1,0 +1,66 @@
+struct MyStruct
+{
+  var RealValue : Real;
+  var Real2Value : Real2;
+  var IntValue : Integer;
+  
+  function Add(value : Integer)
+  {
+    this.IntValue = value;
+  }
+  
+  function Add(value : Real2)
+  {
+    this.Real2Value = value;
+  }
+  
+  function Add(r2 : Real2, r3 : Real3)
+  {
+  }
+}
+
+[Pixel][UnitTest]
+struct Initializers
+{
+  function Test0()
+  {
+    var myStruct = MyStruct() { RealValue = 1.0 };
+    myStruct.IntValue = 0;
+  }
+  
+  function Test1()
+  {
+    var myStruct = MyStruct() { RealValue = 1.0, 1 };
+    myStruct.IntValue = 0;
+  }
+  
+  function Test2()
+  {
+    var myStruct = MyStruct();
+    myStruct { RealValue = 1.0, 1 , Real2()};
+  }
+  
+  function Test3()
+  {
+    var myStruct = MyStruct();
+    myStruct { RealValue = 1.0, 1 , Real2()};
+  }
+  
+  function Test4()
+  {
+    var myStruct = MyStruct();
+    myStruct { {Real2(), Real3()}};
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.Test0();
+    this.Test1();
+    this.Test2();
+    this.Test3();
+    this.Test4();
+    
+    5 {X = 1};
+  }
+}

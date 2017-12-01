@@ -1,0 +1,19 @@
+Array Shaders = 
+[
+  {
+    string ShaderName = "HardwareBuiltIn1",
+    Array FragmentNames = 
+    [
+      "Vertex",
+      "Geometry",
+      "Pixel1",
+    ],
+  },
+  {
+    string ShaderName = "HardwareBuiltIn2",
+    Array FragmentNames = 
+    [
+      "Pixel2",
+    ],
+  },
+],

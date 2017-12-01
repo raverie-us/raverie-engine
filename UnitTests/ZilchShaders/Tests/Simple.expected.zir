@@ -1,0 +1,139 @@
+Simple
+//class Simple
+//function Bools()
+  @Bools0 = OpLabel
+  //var b = true;
+  %b = OpVariable
+  #1 = OpConstant true
+  OpStore %b #1
+  //var c = !(b);
+  %c = OpVariable
+  %b2 = OpLoad %b
+  %3 = OpLogicalNot %b2
+  OpStore %c %3
+  //return c
+  %c4 = OpLoad %c
+  OpReturnValue %c4
+
+//function Empty()
+  @Empty5 = OpLabel
+  //if(true)
+  #6 = OpConstant true
+  OpBranchConditional #6 @if-true7 @if-false11
+
+  @if-true7 = OpLabel
+  //if(false)
+  #8 = OpConstant false
+  OpBranchConditional #8 @if-true9 @if-false10
+
+  @if-true9 = OpLabel
+  //return
+  OpReturn
+
+  @if-false10 = OpLabel
+
+  @if-false11 = OpLabel
+  OpReturn
+
+//function Test()
+  @Test12 = OpLabel
+  //var a = (1 + 2);
+  %a = OpVariable
+  #13 = OpConstant 1
+  #14 = OpConstant 2
+  %15 = OpAdd #13 #14
+  OpStore %a %15
+  //if((a == 0))
+  %a16 = OpLoad %a
+  #17 = OpConstant 0
+  %18 = OpLogicalEqual %a16 #17
+  OpBranchConditional %18 @if-true19 @if-false21
+
+  @if-true19 = OpLabel
+  //return 0
+  #20 = OpConstant 0
+  OpReturnValue #20
+
+  @if-false21 = OpLabel
+  //else if((a == 1))
+  %a22 = OpLoad %a
+  #23 = OpConstant 1
+  %24 = OpLogicalEqual %a22 #23
+  OpBranchConditional %24 @if-true25 @if-false27
+
+  @if-true25 = OpLabel
+  //return 1
+  #26 = OpConstant 1
+  OpReturnValue #26
+
+  @if-false27 = OpLabel
+  //else
+  //return a
+  %a28 = OpLoad %a
+  OpReturnValue %a28
+
+//function Main()
+  @Main29 = OpLabel
+  //var a = 0;
+  %a = OpVariable
+  #30 = OpConstant 0
+  OpStore %a #30
+  //var b = (3 + 4);
+  %b = OpVariable
+  #31 = OpConstant 3
+  #32 = OpConstant 4
+  %33 = OpAdd #31 #32
+  OpStore %b %33
+  //a = -((6 + 2))
+  %a34 = OpLoad %a
+  #35 = OpConstant 6
+  #36 = OpConstant 2
+  %37 = OpAdd #35 #36
+  %38 = OpNegate %37
+  OpStore %a %38
+  //a += b
+  %a39 = OpLoad %a
+  %b40 = OpLoad %b
+  %41 = OpAdd %a39 %b40
+  OpStore %a %41
+  //a -= 3
+  %a42 = OpLoad %a
+  #43 = OpConstant 3
+  %44 = OpSub %a42 #43
+  OpStore %a %44
+  //a *= 1
+  %a45 = OpLoad %a
+  #46 = OpConstant 1
+  %47 = OpMul %a45 #46
+  OpStore %a %47
+  //b /= 5
+  %b48 = OpLoad %b
+  #49 = OpConstant 5
+  %50 = OpDiv %b48 #49
+  OpStore %b %50
+  //a = (b + 2)
+  %a51 = OpLoad %a
+  %b52 = OpLoad %b
+  #53 = OpConstant 2
+  %54 = OpAdd %b52 #53
+  OpStore %a %54
+  //a = ((b + a) - 3)
+  %a55 = OpLoad %a
+  %b56 = OpLoad %b
+  %a57 = OpLoad %a
+  %58 = OpAdd %b56 %a57
+  #59 = OpConstant 3
+  %60 = OpSub %58 #59
+  OpStore %a %60
+  //a = (b + (a - 3))
+  %a61 = OpLoad %a
+  %b62 = OpLoad %b
+  %a63 = OpLoad %a
+  #64 = OpConstant 3
+  %65 = OpSub %a63 #64
+  %66 = OpAdd %b62 %65
+  OpStore %a %66
+  //return a
+  %a67 = OpLoad %a
+  OpReturnValue %a67
+

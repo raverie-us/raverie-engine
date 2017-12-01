@@ -1,0 +1,82 @@
+[Pixel][UnitTest]
+struct BasicIfs
+{
+  function If0() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    return a;
+  }
+  
+  function If1() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    ++a;
+    return a;
+  }
+  
+  function IfElse0() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    else
+      a = 2;
+    ++a;
+    return a;
+  }
+  
+  function IfElseChain0() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    else if(false)
+      a = 2;
+    ++a;
+    return a;
+  }
+  
+  function IfElseChain1() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    else if(false)
+      a = 2;
+    else
+      a = 3;
+    ++a;
+    return a;
+  }
+  
+  function IfElseChain2() : Integer
+  {
+    var a = 0;
+    if(true)
+      a = 1;
+    else if(false)
+      a = 2;
+    else if(a < 3)
+      a = 3;
+    else
+      a = 4;
+    ++a;
+    return a;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var i = 0;
+    i = this.If0();
+    i = this.If1();
+    i = this.IfElse0();
+    i = this.IfElseChain0();
+    i = this.IfElseChain1();
+    i = this.IfElseChain2();
+  }
+}

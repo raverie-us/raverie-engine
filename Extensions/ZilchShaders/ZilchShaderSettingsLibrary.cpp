@@ -57,6 +57,8 @@ ZilchDefineStaticLibrary(ShaderSettingsLibrary)
   ZilchInitializeType(ShaderSystemValue);
   ZilchInitializeType(ShaderSystemValueSettings);
   ZilchInitializeType(TranslationErrorEvent);
+  ZilchInitializeType(ValidationErrorEvent);
+  ZilchInitializeType(SpecializationConstantEvent);
 }
 
 //-------------------------------------------------------------------ZilchShaderSettingsLoader

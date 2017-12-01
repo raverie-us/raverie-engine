@@ -1,0 +1,19 @@
+[Pixel][UnitTest]
+struct ConvertSignedIntToReal
+{
+  [EntryPoint]
+  function Main()
+  {
+    var i1 = 1;
+    var r1 = i1 as Real;
+    
+    var i2 = Integer2(1);
+    var r2 = i2 as Real2;
+    
+    var i3 = Integer3(1);
+    var r3 = i3 as Real3;
+    
+    var i4 = Integer4(1);
+    var r4 = i4 as Real4;
+  }
+}

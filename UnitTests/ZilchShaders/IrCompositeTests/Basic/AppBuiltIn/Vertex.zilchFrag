@@ -1,0 +1,11 @@
+[Vertex]
+struct Vertex
+{
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput("LocalToWorld")] var Transform : Real4x4;
+  
+  function Main()
+  {
+    
+  }
+}

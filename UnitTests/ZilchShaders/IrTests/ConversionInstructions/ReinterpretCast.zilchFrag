@@ -1,0 +1,12 @@
+[Pixel][UnitTest]
+struct ReinterpretCast
+{
+  [EntryPoint]
+  function Main()
+  {
+    var i = 1;
+    var r = Real.Reinterpret(i);
+    
+    i = Integer.Reinterpret(r);
+  }
+}

@@ -1,0 +1,34 @@
+struct TestCount[Type]
+{
+  [Static]
+  function Test()
+  {
+    var count = 0;
+    count = Type.Count;
+    var instance = Type();
+    count = instance.Count;
+  }
+}
+
+[Pixel][UnitTest]
+struct Count
+{
+  [EntryPoint]
+  function Main()
+  {
+    TestCount[Real].Test();
+    TestCount[Real2].Test();
+    TestCount[Real3].Test();
+    TestCount[Real4].Test();
+    
+    TestCount[Integer].Test();
+    TestCount[Integer2].Test();
+    TestCount[Integer3].Test();
+    TestCount[Integer4].Test();
+    
+    TestCount[Boolean].Test();
+    TestCount[Boolean2].Test();
+    TestCount[Boolean3].Test();
+    TestCount[Boolean4].Test();
+  }
+}

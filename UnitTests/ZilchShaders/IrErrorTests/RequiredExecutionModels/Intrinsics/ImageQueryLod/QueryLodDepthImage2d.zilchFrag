@@ -1,0 +1,11 @@
+[UnitTest][Vertex]
+struct QueryLodDepthImage2d
+{
+  var Image : DepthImage2d;
+  var Sampler : Sampler;
+  
+  function Main()
+  {
+    ShaderIntrinsics.ImageQueryLod(this.Image, this.Sampler, Real2());
+  }
+}

@@ -1,0 +1,24 @@
+[Pixel][UnitTest]
+struct SamplerTest
+{
+  var Uv : Real2;
+  var Ddx : Real2;
+  var Ddy : Real2;
+  var Lod : Real;
+  
+  var Sampler : SampledImage2d;
+  var DepthSampler : SampledDepthImage2d;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var color : Real4 = this.Sampler.Sample(this.Uv);
+    color = this.Sampler.Sample(this.Uv, this.Ddx, this.Ddy);
+    color = this.Sampler.SampleLod(this.Uv, this.Lod);
+    var size : Integer2 = this.Sampler.SampleSize(0);
+    
+    var depth : Real = this.DepthSampler.Sample(this.Uv, 1.0);
+    depth = this.DepthSampler.SampleLod(this.Uv, 1.0, this.Lod);
+    size = this.DepthSampler.SampleSize(0);
+  }
+}

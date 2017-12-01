@@ -1,0 +1,13 @@
+[Pixel][UnitTest]
+struct MatrixSpecConstants
+{
+  [Static][SpecConstant] var ConstantReal3x3 : Real3x3;
+  [Static][SpecConstant] var ConstantReal2x2 : Real2x2;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var constantReal3x3 = MatrixSpecConstants.ConstantReal3x3;
+    var constantReal2x2 = MatrixSpecConstants.ConstantReal2x2;
+  }
+}

@@ -1,0 +1,24 @@
+struct Helper[BoolType, VectorType]
+{
+  [Static]
+  function Test()
+  {
+    var b = BoolType();
+    var vec = VectorType();
+    
+    vec = b as VectorType;
+  }
+}
+
+[Pixel][UnitTest]
+struct ConvertBoolToInt
+{
+  [EntryPoint]
+  function Main()
+  {
+    Helper[Boolean, Integer].Test();
+    Helper[Boolean2, Integer2].Test();
+    Helper[Boolean3, Integer3].Test();
+    Helper[Boolean4, Integer4].Test();
+  }
+}

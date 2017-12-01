@@ -36,4 +36,8 @@ typedef Zilch::Ref<ZilchShaderModule> ZilchShaderModuleRef;
 typedef Zilch::Ref<ZilchShaderSettings> ZilchShaderSettingsRef;
 typedef Zilch::Ref<BaseShaderTranslator> BaseShaderTranslatorRef;
 
+
+class ZilchShaderSpirVSettings;
+typedef Zilch::Ref<ZilchShaderSpirVSettings> ZilchShaderSpirVSettingsRef;
+
 }//namespace Zero

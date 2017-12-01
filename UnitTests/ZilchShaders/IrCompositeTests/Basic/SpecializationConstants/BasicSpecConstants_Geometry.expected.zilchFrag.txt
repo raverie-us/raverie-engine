@@ -1,0 +1,28 @@
+struct BasicSpecConstants_GeoIn
+{
+  [HardwareBuiltInInput] var ApiPerspectivePosition : Real4;
+}
+struct BasicSpecConstants_GeoOut
+{
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+[Geometry(maxVertices : 3)][UnitTest]
+struct BasicSpecConstants_Geometry
+{
+  [Static][SpecConstant] var Position_Geometry : Real4;
+  [Static][SpecConstant] var Value_Geometry : Real;
+  [AppBuiltInInput] var PerspectiveToApiPerspective : Real4x4;
+  [EntryPoint]
+  function Main(input : TriangleInput[BasicSpecConstants_GeoIn], output : TriangleOutput[BasicSpecConstants_GeoOut])
+  {
+    var fragmentInput = TriangleInput[GeometryData]();
+    for(var i = 0; i < 3; ++i)
+    {
+    }
+    var fragmentOutput = TriangleOutput[GeometryData]();
+    var geometry = Geometry();
+    geometry.Position = BasicSpecConstants_Geometry.Position_Geometry;
+    geometry.Value = BasicSpecConstants_Geometry.Value_Geometry;
+    geometry.Main(fragmentInput, fragmentOutput);
+  }
+}

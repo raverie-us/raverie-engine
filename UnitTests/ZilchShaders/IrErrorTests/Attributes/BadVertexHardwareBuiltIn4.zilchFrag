@@ -1,0 +1,10 @@
+[Vertex]
+struct BadVertexHardwareBuiltIn4
+{
+  // Matches an output not an input.
+  [HardwareBuiltInInput] var PointSize : Real;
+  
+  function Main()
+  {
+  }
+}

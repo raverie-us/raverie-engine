@@ -1,0 +1,22 @@
+// Flipped Order within each buffer and declare the buffers in the opposite order
+[Vertex][UnitTest]
+struct UniformBuffersVertex2
+{
+  // Buffer2 (Misc)
+  [PropertyInput] var ObjectColor : Real4;
+  [PropertyInput] var Position : Real3;
+  
+  // Buffer1 (Camera Data)
+  [AppBuiltInInput] var ViewportSize : Real2;
+  [AppBuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var NearPlane : Real;
+  
+  // Buffer0 (Frame Data)
+  [AppBuiltInInput] var FrameTime : Real;
+  [AppBuiltInInput] var LogicTime : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

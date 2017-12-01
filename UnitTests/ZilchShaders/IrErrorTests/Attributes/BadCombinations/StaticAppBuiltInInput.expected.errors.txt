@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadCombinations\StaticAppBuiltInInput.zilchFrag(4): Attribute 'AppBuiltInInput' cannot be combined with attribute(s): Static:
+  Attribute 'AppBuiltInInput' cannot be combined with attribute(s): Static

@@ -1,0 +1,15 @@
+[Vertex][UnitTest]
+struct Vertex2
+{
+  //Outputs
+  [StageInput("LocalNormal")][StageOutput("WorldNormal")] var Normal : Real3;
+  [StageOutput("PerspectivePosition")] var Position : Real4;
+  
+  //In/Outs
+  [StageInput("Color")][StageOutput] var VertexColor : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

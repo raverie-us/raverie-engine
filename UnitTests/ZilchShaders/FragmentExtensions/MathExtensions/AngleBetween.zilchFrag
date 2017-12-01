@@ -1,0 +1,24 @@
+struct MathAngleBetweenImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function AngleBetween(param0 : Real2, param1 : Real2) : Real
+  {
+    var dotVal = Math.Dot(param0, param1);
+    dotVal = Math.Clamp(dotVal, -1.0, 1.0);
+    return Math.ACos(dotVal);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AngleBetween(param0 : Real3, param1 : Real3) : Real
+  {
+    var dotVal = Math.Dot(param0, param1);
+    dotVal = Math.Clamp(dotVal, -1.0, 1.0);
+    return Math.ACos(dotVal);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function AngleBetween(param0 : Real4, param1 : Real4) : Real
+  {
+    var dotVal = Math.Dot(param0, param1);
+    dotVal = Math.Clamp(dotVal, -1.0, 1.0);
+    return Math.ACos(dotVal);
+  }
+}

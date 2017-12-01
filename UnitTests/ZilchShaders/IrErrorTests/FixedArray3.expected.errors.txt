@@ -1,0 +1,2 @@
+  IrErrorTests\FixedArray3.zilchFrag(9) in Main: Array initializer was given 1 item(s) and it expected 3.:
+  Array initializer was given 1 item(s) and it expected 3.

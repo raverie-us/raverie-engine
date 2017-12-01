@@ -1,0 +1,16 @@
+// All built-ins
+[Pixel][UnitTest]
+struct BuiltInsPixel4
+{
+  [HardwareBuiltInInput("FragCoord")] var Coordinate : Real4;
+  [HardwareBuiltInInput("FragCoord")] var Coordinate2 : Real4;
+  [HardwareBuiltInInput("PointCoord")] var PointCoordinate : Real2;
+  [HardwareBuiltInOutput("FragDepth")] var Depth : Real;
+  [HardwareBuiltInOutput("FragDepth")] var Depth2 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

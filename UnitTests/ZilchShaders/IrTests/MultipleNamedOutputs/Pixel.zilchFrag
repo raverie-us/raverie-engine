@@ -1,0 +1,12 @@
+[Pixel][UnitTest]
+struct Pixel
+{
+  // Multiple attributes of same type but different names is not currently supported
+  [StageOutput("Target0")][StageOutput("Target1")] var Color : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

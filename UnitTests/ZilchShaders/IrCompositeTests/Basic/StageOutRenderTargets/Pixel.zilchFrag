@@ -1,0 +1,34 @@
+[Pixel]
+struct PixelBasic
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  // Name override
+  [StageOutput("Target2")] var CustomTarget : Real4;
+  
+  // Bad name
+  [StageOutput] var Target13 : Real4;
+  // Bad name override
+  [StageOutput("Target21")] var Target2 : Real4;
+  // Bad type
+  [StageOutput] var Target4 : Real2;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct PixelMultipleOutput
+{
+  [StageOutput("Target0")][StageOutput("Target1")][StageOutput("Target2")] var Target012 : Real4;
+  [StageOutput("Target2")] var Target2 : Real4;
+  // Bad first match, correct second match
+  [StageOutput("Target4")][StageOutput("Target3")] var Target43 : Real4;
+  
+  function Main()
+  {
+    
+  }
+}

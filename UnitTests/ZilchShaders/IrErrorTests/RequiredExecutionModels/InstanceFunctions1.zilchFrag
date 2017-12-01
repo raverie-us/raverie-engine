@@ -1,0 +1,18 @@
+[UnitTest][Vertex]
+struct InstanceFunctions1
+{
+  function Main()
+  {
+    var helper = Helper();
+    helper.GetValue();
+  }
+}
+
+struct Helper
+{
+  function GetValue() : Real
+  {
+    ShaderIntrinsics.Kill();
+    return 1.0;
+  }
+}

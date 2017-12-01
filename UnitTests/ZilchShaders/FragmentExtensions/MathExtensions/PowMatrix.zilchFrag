@@ -1,0 +1,84 @@
+struct MathPowMatrixImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real2x2, exponent : Real2x2) : Real2x2
+  {
+    var result = Real2x2();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real2x3, exponent : Real2x3) : Real2x3
+  {
+    var result = Real2x3();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real2x4, exponent : Real2x4) : Real2x4
+  {
+    var result = Real2x4();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real3x2, exponent : Real3x2) : Real3x2
+  {
+    var result = Real3x2();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    result[2] = Math.Pow(baseValue[2], exponent[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real3x3, exponent : Real3x3) : Real3x3
+  {
+    var result = Real3x3();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    result[2] = Math.Pow(baseValue[2], exponent[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real3x4, exponent : Real3x4) : Real3x4
+  {
+    var result = Real3x4();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    result[2] = Math.Pow(baseValue[2], exponent[2]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real4x2, exponent : Real4x2) : Real4x2
+  {
+    var result = Real4x2();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    result[2] = Math.Pow(baseValue[2], exponent[2]);
+    result[3] = Math.Pow(baseValue[3], exponent[3]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real4x3, exponent : Real4x3) : Real4x3
+  {
+    var result = Real4x3();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    result[2] = Math.Pow(baseValue[2], exponent[2]);
+    result[3] = Math.Pow(baseValue[3], exponent[3]);
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Pow(baseValue : Real4x4, exponent : Real4x4) : Real4x4
+  {
+    var result = Real4x4();
+    result[0] = Math.Pow(baseValue[0], exponent[0]);
+    result[1] = Math.Pow(baseValue[1], exponent[1]);
+    result[2] = Math.Pow(baseValue[2], exponent[2]);
+    result[3] = Math.Pow(baseValue[3], exponent[3]);
+    return result;
+  }
+}

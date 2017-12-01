@@ -1,0 +1,13 @@
+[Pixel][UnitTest]
+struct Boolean3Implements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var x = Boolean3.XAxis;
+    var y = Boolean3.YAxis;
+    var z = Boolean3.ZAxis;
+    var zero = Boolean3.Zero;
+    var axis = Boolean3.GetAxis(1);
+  }
+}

@@ -1,0 +1,32 @@
+struct IntTests[IntType]
+{
+  [Static]
+  function TestInt()
+  {
+    var param0 = IntType();
+    var param1 = param0;
+    var param2 = param0;
+    var intParam = 0;
+    
+    var result0 = ShaderIntrinsics.SAbs(param0);
+    var result1 = ShaderIntrinsics.SSign(param0);
+    var result2 = ShaderIntrinsics.SMin(param0, param1);
+    var result3 = ShaderIntrinsics.SMax(param0, param1);
+    var result4 = ShaderIntrinsics.SClamp(param0, param1, param2);
+    var result5 = ShaderIntrinsics.FindLeastSignificantBit(param0);
+    var result6 = ShaderIntrinsics.FindMostSignificantBit(param0);
+  }
+}
+
+[Pixel][UnitTest]
+struct GlslIntIntrinsics
+{
+  [EntryPoint]
+  function Main()
+  {
+    IntTests[Integer].TestInt();
+    IntTests[Integer2].TestInt();
+    IntTests[Integer3].TestInt();
+    IntTests[Integer4].TestInt();
+  }
+}

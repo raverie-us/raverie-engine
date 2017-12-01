@@ -1,0 +1,23 @@
+struct Helper[Type]
+{
+  [Static]
+  function Test()
+  {
+    var value = Type();
+    
+    var result = ~value;
+  }
+}
+
+[Pixel][UnitTest]
+struct BitwiseNot
+{
+  [EntryPoint]
+  function Main()
+  {
+    Helper[Integer].Test();
+    Helper[Integer2].Test();
+    Helper[Integer3].Test();
+    Helper[Integer4].Test();
+  }
+}

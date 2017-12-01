@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct NameOverrideProperties_Pixel
+{
+  [PropertyInput] var Position_PixelOverride : Real4;
+  [PropertyInput] var Value_PixelOverride : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixelOverride = PixelOverride();
+    pixelOverride.PixelPosition = this.Position_PixelOverride;
+    pixelOverride.T = this.Value_PixelOverride;
+    pixelOverride.Main();
+
+  }
+}

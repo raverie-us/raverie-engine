@@ -1,0 +1,69 @@
+struct IntegerTests[IntegerType]
+{
+  [Static]
+  function TestInts()
+  {
+    var param0 = IntegerType();
+    var param1 = param0;
+    
+    // Unary
+    var result0 = ShaderIntrinsics.BitReverse(param0);
+    var result1 = ShaderIntrinsics.BitCount(param0);
+    var result2 = ShaderIntrinsics.Not(param0);
+    
+    // Binary
+    var result3 = ShaderIntrinsics.ShiftRightLogical(param0, param1);
+    var result4 = ShaderIntrinsics.ShiftRightArithmetic(param0, param1);
+    var result5 = ShaderIntrinsics.ShiftLeftLogical(param0, param1);
+    
+    var result6 = ShaderIntrinsics.BitwiseOr(param0, param1);
+    var result7 = ShaderIntrinsics.BitwiseXor(param0, param1);
+    var result8 = ShaderIntrinsics.BitwiseAnd(param0, param1);
+    
+    var result9  = ShaderIntrinsics.Equal(param0, param1);
+    var result10  = ShaderIntrinsics.NotEqual(param0, param1);
+    var result11 = ShaderIntrinsics.GreaterThan(param0, param1);
+    var result12 = ShaderIntrinsics.GreaterThanEqual(param0, param1);
+    var result13 = ShaderIntrinsics.LessThan(param0, param1);
+    var result14 = ShaderIntrinsics.LessThanEqual(param0, param1);
+    
+    var result15 = ShaderIntrinsics.Mod(param0, param1);
+    var result16 = ShaderIntrinsics.Remainder(param0, param1);
+    
+    // Trinary
+    var result17 = ShaderIntrinsics.BitFieldExtract(param0, 1, 2);
+    
+    // Quadary?
+    var result18 = ShaderIntrinsics.BitFieldInsert(param0, param1, 1, 2);
+  }
+}
+
+struct SelectTests[Type, BoolType]
+{
+  [Static]
+  function TestSelect()
+  {
+    var condition = BoolType();
+    var obj1 = Type();
+    var obj2 = Type();
+    var result = ShaderIntrinsics.Select(condition, obj1, obj2);
+  }
+}
+
+[Pixel][UnitTest]
+struct IntIntrinsicTests
+{
+  [EntryPoint]
+  function Main()
+  {
+    IntegerTests[Integer].TestInts();
+    IntegerTests[Integer2].TestInts();
+    IntegerTests[Integer3].TestInts();
+    IntegerTests[Integer4].TestInts();
+    
+    SelectTests[ Integer,  Boolean].TestSelect();
+    SelectTests[Integer2, Boolean2].TestSelect();
+    SelectTests[Integer3, Boolean3].TestSelect();
+    SelectTests[Integer4, Boolean4].TestSelect();
+  }
+}

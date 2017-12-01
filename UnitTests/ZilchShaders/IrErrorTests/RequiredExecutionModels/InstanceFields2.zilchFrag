@@ -1,0 +1,24 @@
+[UnitTest][Vertex]
+struct InstanceFields2
+{
+  function Main()
+  {
+    var helper = Helper();
+  }
+}
+
+struct Helper
+{
+  var Field : Real = Helper.GetValue();
+  
+  constructor()
+  {
+  }
+  
+  [Static]
+  function GetValue() : Real
+  {
+    ShaderIntrinsics.Kill();
+    return 1.0;
+  }
+}

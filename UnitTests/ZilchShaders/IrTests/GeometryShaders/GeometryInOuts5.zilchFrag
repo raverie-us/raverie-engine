@@ -1,0 +1,19 @@
+struct InputData
+{
+  [StageInput][StageOutput] var Color : Real4;
+  [StageInput][StageOutput] var Normal : Real3;
+  [HardwareBuiltInInput][HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+
+[Geometry(maxVertices : 5)][UnitTest]
+struct GeometryInOuts5
+{
+  [EntryPoint]
+  function Main(input : ref LineInput[InputData], output : ref LineOutput[InputData])
+  {
+    var outData = input[0];
+    outData.ApiPerspectivePosition = Real4(1);
+    output.Append(outData, 0);
+    output.Restart();
+  }
+}

@@ -1,0 +1,51 @@
+[Pixel][UnitTest]
+struct OrderTest_Pixel
+{
+  [StageInput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageInput(name : "LocalPosition")] var Stage_LocalPosition_Real3 : Real3;
+  [StageInput(name : "Property3")] var Stage_Property3_Real : Real;
+  [StageInput(name : "VertexId")] var Stage_VertexId_Integer : Integer;
+  [StageInput(name : "NearPlane")] var Stage_NearPlane_Real : Real;
+  [PropertyInput] var Property1_Pixel1 : Real;
+  [PropertyInput] var Property2_Pixel1 : Real;
+  [PropertyInput] var Property4_Pixel1 : Real;
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  [HardwareBuiltInInput] var PointCoord : Real2;
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput] var FrameTime : Real;
+  [PropertyInput] var Property2_Pixel2 : Real;
+  [PropertyInput] var Property5_Pixel2 : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel1 = Pixel1();
+    pixel1.Property1 = this.Property1_Pixel1;
+    pixel1.Property2 = this.Property2_Pixel1;
+    pixel1.Property4 = this.Property4_Pixel1;
+    pixel1.FragCoord = this.FragCoord;
+    pixel1.PointCoord = this.PointCoord;
+    pixel1.Uv = this.Stage_Uv_Real2;
+    pixel1.LocalPosition = this.Stage_LocalPosition_Real3;
+    pixel1.LogicTime = this.LogicTime;
+    pixel1.FrameTime = this.FrameTime;
+    pixel1.Main();
+
+    var pixel2 = Pixel2();
+    pixel2.Property1 = pixel1.Property1;
+    pixel2.Property2 = this.Property2_Pixel2;
+    pixel2.Property3 = this.Stage_Property3_Real;
+    pixel2.Property4 = pixel1.Property4;
+    pixel2.Property5 = this.Property5_Pixel2;
+    pixel2.FragCoord = pixel1.FragCoord;
+    pixel2.PointCoord = this.PointCoord;
+    pixel2.VertexId = this.Stage_VertexId_Integer;
+    pixel2.Uv = pixel1.Uv;
+    pixel2.LocalPosition = this.Stage_LocalPosition_Real3;
+    pixel2.LogicTime = pixel1.LogicTime;
+    pixel2.FrameTime = this.FrameTime;
+    pixel2.NearPlane = this.Stage_NearPlane_Real;
+    pixel2.Main();
+
+  }
+}

@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct RotationQuaternionBetween
+{
+  function Test_Static_Real3_Real3()
+  {
+    var start_ = Real3();
+    var end_ = Real3();
+    var result = Math.RotationQuaternionBetween(start_, end_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real3_Real3();
+  }
+}

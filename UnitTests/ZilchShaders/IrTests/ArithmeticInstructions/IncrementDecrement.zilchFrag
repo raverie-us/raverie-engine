@@ -1,0 +1,26 @@
+struct Data
+{
+  var Int : Integer;
+  var Real : Real;
+}
+
+[Pixel][UnitTest]
+struct IncrementDecrement
+{
+  [EntryPoint]
+  function Main()
+  {
+    var i = 0;
+    ++i;
+    --i;
+    
+    var r = 0.0;
+    ++r;
+    --r;
+    
+    // Test on a sub-member (requires an extra store op)
+    var data = Data();
+    ++data.Int;
+    ++data.Real;
+  }
+}

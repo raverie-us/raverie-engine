@@ -1,0 +1,6 @@
+[Vertex]
+struct BadNameOverride1
+{
+  // Bad param name
+  [Input("1Value")] var MyVar : Real = 1.0;
+}

@@ -126,7 +126,7 @@ void SimpleZilchShaderGenerator::CompileAndTranslateFragments()
   fragmentDependencies->PushBack(mExtensionsLibraryRef);
 
   // Compile and translate the fragments project into a library
-  mFragmentLibraryRef = mFragmentProject.CompileAndTranslate(fragmentDependencies, mTranslator, mSettings);
+  mFragmentLibraryRef = mFragmentProject.CompileAndTranslate(fragmentDependencies, mTranslator, mSettings, true);
 }
 
 void SimpleZilchShaderGenerator::ClearFragmentsProjectAndLibrary()

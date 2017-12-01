@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadTypeAttribute.zilchFrag(1): Attribute 'SomeAttribute' is not allowed on types:
+  Attribute 'SomeAttribute' is not allowed on types

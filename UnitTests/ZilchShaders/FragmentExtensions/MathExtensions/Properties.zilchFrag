@@ -1,0 +1,14 @@
+struct MathPropertyImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  var Pi : Real
+  {
+    get { return 3.1415926535897932384626433832795; }
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  var E : Real
+  {
+    get { return 2.7182818284590452353602874713526; }
+  }
+}

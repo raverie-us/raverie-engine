@@ -1,0 +1,12 @@
+[Vertex][UnitTest]
+struct Pixel_Vertex
+{
+  [StageOutput(name : "Uv")][StageInput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageOutput(name : "LocalNormal")][StageInput(name : "LocalNormal")] var Stage_LocalNormal_Real3 : Real3;
+  [StageOutput(name : "Color")][StageInput(name : "Color")] var Stage_Color_Real4 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

@@ -1,0 +1,26 @@
+struct MySubStruct1
+{
+  var IntValue : Integer;
+  var RealValue : Real;
+}
+
+struct MySubStruct2
+{
+  var Real3Value : Real3;
+  var MySubStruct : MySubStruct1;
+  var Integer2Value : Integer2;
+}
+
+[Pixel][UnitTest]
+struct StructSpecConstants
+{
+  [Static][SpecConstant] var ConstantMySubStruct1 : MySubStruct1;
+  [Static][SpecConstant] var ConstantMySubStruct2 : MySubStruct2;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var constantMySubStruct1 = StructSpecConstants.ConstantMySubStruct1;
+    var constantMySubStruct2 = StructSpecConstants.ConstantMySubStruct2;
+  }
+}

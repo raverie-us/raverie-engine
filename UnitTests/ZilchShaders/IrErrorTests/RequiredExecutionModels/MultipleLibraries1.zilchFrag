@@ -1,0 +1,10 @@
+[UnitTest][Vertex]
+struct MultipleLibraries1
+{
+  var SampledImage : SampledImage2d;
+  function Main()
+  {
+    this.SampledImage.Sample(Real2());
+  }
+}
+

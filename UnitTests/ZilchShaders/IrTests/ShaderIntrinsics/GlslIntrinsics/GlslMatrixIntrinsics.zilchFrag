@@ -1,0 +1,23 @@
+struct MatrixTests[MatrixType]
+{
+  [Static]
+  function TestMatrix()
+  {
+    var param0 = MatrixType();
+    
+    var result0 = ShaderIntrinsics.Determinant(param0);
+    var result1 = ShaderIntrinsics.MatrixInverse(param0);
+  }
+}
+
+[Pixel][UnitTest]
+struct GlslMatrixIntrinsics
+{
+  [EntryPoint]
+  function Main()
+  {
+    MatrixTests[Real2x2].TestMatrix();
+    MatrixTests[Real3x3].TestMatrix();
+    MatrixTests[Real4x4].TestMatrix();
+  }
+}

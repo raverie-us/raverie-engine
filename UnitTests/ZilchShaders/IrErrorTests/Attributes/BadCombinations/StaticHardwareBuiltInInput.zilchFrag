@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct StaticHardwareBuiltInInput
+{
+  [Static][HardwareBuiltInInput] var FragCoord : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

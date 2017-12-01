@@ -1,0 +1,21 @@
+struct MathLerpPlacesImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real2, end : Real2, t : Real) : Real2
+  {
+    var tVec = Real2(t);
+    return Math.Lerp(start, end, tVec);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real3, end : Real3, t : Real) : Real3
+  {
+    var tVec = Real3(t);
+    return Math.Lerp(start, end, tVec);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Lerp(start : Real4, end : Real4, t : Real) : Real4
+  {
+    var tVec = Real4(t);
+    return Math.Lerp(start, end, tVec);
+  }
+}

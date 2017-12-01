@@ -1,0 +1,29 @@
+[Pixel][UnitTest]
+struct SampleGradExplicitLod
+{
+  var Uv : Real2;
+  var Uv3 : Real3;
+  
+  var Sampler : Sampler;
+  
+  var Image : Image2d;
+  var SampledImage : SampledImage2d;
+  
+  var ImageCube : ImageCube;
+  var SampledImageCube : SampledImageCube;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var color = Real4();
+    var ddx = Real2();
+    var ddy = Real2();
+    color = ShaderIntrinsics.SampleGradExplicitLod(this.SampledImage, this.Uv, ddx, ddy);
+    color = ShaderIntrinsics.SampleGradExplicitLod(this.Image, this.Sampler, this.Uv, ddx, ddy);
+    
+    var ddx3 = Real3();
+    var ddy3 = Real3();
+    color = ShaderIntrinsics.SampleGradExplicitLod(this.SampledImageCube, this.Uv3, ddx3, ddy3);
+    color = ShaderIntrinsics.SampleGradExplicitLod(this.ImageCube, this.Sampler, this.Uv3, ddx3, ddy3);
+  }
+}

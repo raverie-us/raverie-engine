@@ -1,0 +1,10 @@
+[Vertex]
+struct BadVertexHardwareBuiltIn3
+{
+  // Wrong stage.
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  
+  function Main()
+  {
+  }
+}

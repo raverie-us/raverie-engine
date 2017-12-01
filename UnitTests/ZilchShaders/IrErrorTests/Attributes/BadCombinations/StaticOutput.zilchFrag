@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct StaticOutput
+{
+  [Static][Output] var Var1 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

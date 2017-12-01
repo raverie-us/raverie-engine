@@ -1,0 +1,9 @@
+[Pixel][UnitTest]
+struct Vertex_Pixel
+{
+
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

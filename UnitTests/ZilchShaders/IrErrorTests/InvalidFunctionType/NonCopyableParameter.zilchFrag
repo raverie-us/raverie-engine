@@ -1,0 +1,7 @@
+[Pixel][UnitTest]
+struct NonCopyableParameter
+{
+  function Main(sampler : Sampler)
+  {
+  }
+}

@@ -1,0 +1,24 @@
+struct SubStruct
+{
+  var R4 : Real4;
+  [Static] var R1 : Real;
+}
+
+[Pixel][UnitTest]
+struct Statics
+{
+  [Static] var R1 : Real;
+  [Static] var Sub : SubStruct;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var r = Statics.R1;
+    Statics.R1 = 1.1;
+    
+    var r4 = Statics.Sub.R4;
+    Statics.Sub.R4 = Real4(3);
+    
+    SubStruct.R1 = 2.0;
+  }
+}

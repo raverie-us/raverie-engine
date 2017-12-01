@@ -1,0 +1,26 @@
+[Pixel][UnitTest]
+struct GenerateTransformMatrix4x4
+{
+  function Test_Static_Real3_Quaternion_Real3()
+  {
+    var translation_ = Real3();
+    var rotation_ = Quaternion();
+    var scale_ = Real3();
+    var result = Math.GenerateTransformMatrix4x4(translation_, rotation_, scale_);
+  }
+
+  function Test_Static_Real3_Real3x3_Real3()
+  {
+    var translation_ = Real3();
+    var rotation_ = Real3x3();
+    var scale_ = Real3();
+    var result = Math.GenerateTransformMatrix4x4(translation_, rotation_, scale_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real3_Quaternion_Real3();
+    this.Test_Static_Real3_Real3x3_Real3();
+  }
+}

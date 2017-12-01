@@ -1,0 +1,19 @@
+[Pixel][UnitTest]
+struct Pixel3
+{
+  // All of these require the flat attribute
+  [StageInput] var I1 : Integer;
+  [StageInput] var I2 : Integer2;
+  [StageInput] var I3 : Integer3;
+  [StageInput] var I4 : Integer4;
+  // Integer matrices not yet supported
+  //[StageInput] var I2x2 : Integer2x2;
+  //[StageInput] var I3x3 : Integer3x3;
+  //[StageInput] var I4x4 : Integer4x4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

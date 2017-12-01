@@ -23,7 +23,9 @@ public:
   void Clear();
 
   // Compiles and translates this project into a library.
-  ZilchShaderLibraryRef CompileAndTranslate(ZilchShaderModuleRef& dependencies, BaseShaderTranslator* translator, ZilchShaderSettingsRef& settings);
+
+  bool CompileTree(Zilch::Module& zilchDependencies, Zilch::LibraryRef& zilchLibrary, Zilch::SyntaxTree& syntaxTree, Zilch::Array<Zilch::UserToken>& tokensOut);
+  ZilchShaderLibraryRef CompileAndTranslate(ZilchShaderModuleRef& dependencies, BaseShaderTranslator* translator, ZilchShaderSettingsRef& settings, bool test = false);
 
   struct CodeEntry
   {

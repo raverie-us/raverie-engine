@@ -9,7 +9,7 @@
 namespace Zero
 {
 
-Zilch::Function* GetFunction(Zilch::Type* type, StringParam fnName, Array<String>& params, const Zilch::FunctionArray* functions)
+Zilch::Function* GetFunction(Array<String>& params, const Zilch::FunctionArray* functions)
 {
   if(functions == nullptr)
     return nullptr;
@@ -45,6 +45,11 @@ Zilch::Function* GetFunction(Zilch::Type* type, StringParam fnName, Array<String
   return nullptr;
 }
 
+Zilch::Function* GetFunction(Zilch::Type* type, StringParam fnName, Array<String>& params, const Zilch::FunctionArray* functions)
+{
+  return GetFunction(params, functions);
+}
+
 //simple (not pretty or efficient) function to get a zilch
 //function by name and parameter types, only in the Math module for static functions
 Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type, StringParam fnName, Array<String>& params)
@@ -67,6 +72,24 @@ Zilch::Function* GetStaticFunction(Zilch::Type* type, StringParam fnName, Array<
 
   const Zilch::FunctionArray* functions = boundType->GetOverloadedStaticFunctions(fnName);
   return GetFunction(type, fnName, params, functions);
+}
+
+Zilch::Function* GetConstructor(Zilch::Type* type, StringParam p0)
+{
+  Array<String> params;
+  params.PushBack(p0);
+  return GetConstructor(type, params);
+}
+
+Zilch::Function* GetConstructor(Zilch::Type* type, Array<String>& params)
+{
+  //get all of the overloaded static functions by this name
+  Zilch::BoundType* boundType = Zilch::Type::GetBoundType(type);
+  if(boundType == nullptr)
+    return nullptr;
+
+  const Zilch::FunctionArray* constructors = boundType->GetOverloadedInheritedConstructors();
+  return GetFunction(params, constructors);
 }
 
 Zilch::Function* GetMemberOverloadedFunction(Zilch::Type* type, StringParam fnName)

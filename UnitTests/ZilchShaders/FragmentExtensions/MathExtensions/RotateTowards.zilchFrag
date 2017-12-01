@@ -1,0 +1,51 @@
+struct MathGenericRotateTowards[VectorType]
+{
+  [Static]
+  function RotateTowards(p0 : VectorType, p1 : VectorType, maxRadians : Real) : VectorType
+  {
+    var p0Norm = Math.Normalize(p0);
+    var p1Norm = Math.Normalize(p1);
+    var angleEpsilon = 0.0000001;
+    
+    var angle = Math.AngleBetween(p0, p1);
+    
+    if(angle > Math.Pi)
+    {
+      angle -= 2.0 * Math.Pi;
+    }
+    
+    angle = Math.Abs(angle);
+    if(angle > angleEpsilon)
+    {
+      var t = maxRadians / angle;
+      if(t > 1.0)
+      {
+        t = 1.0;
+      }
+      return Math.Slerp(p0, p1, t);
+    }
+    else
+    {
+      return p1;
+    }
+  }
+}
+
+struct RotateTowardsImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function RotateTowards(p0 : Real2, p1 : Real2, maxRadians : Real) : Real2
+  {
+    return MathGenericRotateTowards[Real2].RotateTowards(p0, p1, maxRadians);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function RotateTowards(p0 : Real3, p1 : Real3, maxRadians : Real) : Real3
+  {
+    return MathGenericRotateTowards[Real3].RotateTowards(p0, p1, maxRadians);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function RotateTowards(p0 : Quaternion, p1 : Quaternion, maxRadians : Real) : Quaternion
+  {
+    return MathGenericRotateTowards[Quaternion].RotateTowards(p0, p1, maxRadians);
+  }
+}

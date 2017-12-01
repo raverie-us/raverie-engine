@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct GetAxis
+{
+  function Test_Integer()
+  {
+    var param0 = Integer();
+    var result = Integer.GetAxis(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Integer();
+  }
+}

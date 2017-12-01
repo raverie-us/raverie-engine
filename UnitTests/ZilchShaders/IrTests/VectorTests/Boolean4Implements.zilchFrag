@@ -1,0 +1,14 @@
+[Pixel][UnitTest]
+struct Boolean4Implements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var x = Boolean4.XAxis;
+    var y = Boolean4.YAxis;
+    var z = Boolean4.ZAxis;
+    var w = Boolean4.WAxis;
+    var zero = Boolean4.Zero;
+    var axis = Boolean4.GetAxis(1);
+  }
+}

@@ -1,0 +1,38 @@
+struct Booleans_GeoIn
+{
+  [StageInput(name : "MyVar2")] var Stage_MyVar2_Boolean2 : Boolean2;
+  [StageInput(name : "MyVar2")] var Stage_MyVar2_Integer2 : Integer2;
+  [StageInput(name : "MyVar1")] var Stage_MyVar1_Boolean : Boolean;
+  [StageInput(name : "MyVar1")] var Stage_MyVar1_Integer : Integer;
+  [StageInput(name : "MyVar3")] var Stage_MyVar3_Boolean3 : Boolean3;
+  [StageInput(name : "MyVar3")] var Stage_MyVar3_Integer3 : Integer3;
+  [HardwareBuiltInInput] var ApiPerspectivePosition : Real4;
+}
+struct Booleans_GeoOut
+{
+  [StageOutput(name : "MyVar1")] var Stage_MyVar1_Boolean : Boolean;
+  [StageOutput(name : "MyVar1")] var Stage_MyVar1_Integer : Integer;
+  [StageOutput(name : "MyVar2")] var Stage_MyVar2_Boolean2 : Boolean2;
+  [StageOutput(name : "MyVar2")] var Stage_MyVar2_Integer2 : Integer2;
+  [StageOutput(name : "MyVar3")] var Stage_MyVar3_Boolean3 : Boolean3;
+  [StageOutput(name : "MyVar3")] var Stage_MyVar3_Integer3 : Integer3;
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+[Geometry(maxVertices : 5)][UnitTest]
+struct Booleans_Geometry
+{
+  [AppBuiltInInput] var PerspectiveToApiPerspective : Real4x4;
+  [EntryPoint]
+  function Main(input : TriangleInput[Booleans_GeoIn], output : TriangleOutput[Booleans_GeoOut])
+  {
+    var fragmentInput = TriangleInput[GeoData]();
+    for(var i = 0; i < 3; ++i)
+    {
+      fragmentInput[i].MyVar2 = input[i].Stage_MyVar2_Boolean2;
+      fragmentInput[i].MyInt2 = input[i].Stage_MyVar2_Integer2;
+    }
+    var fragmentOutput = TriangleOutput[GeoData]();
+    var geometry = Geometry();
+    geometry.Main(fragmentInput, fragmentOutput);
+  }
+}

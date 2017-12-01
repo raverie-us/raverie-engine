@@ -1,0 +1,43 @@
+[Vertex]
+struct Vertex1
+{
+  [PropertyInput][Output] var Property1 : Real;
+  [PropertyInput][Output] var Property2 : Real;
+  [PropertyInput][Output] var Property3 : Real;//[StageOutput]
+  
+  [HardwareBuiltInInput][Output] var VertexId : Integer;//[StageOutput]
+  [HardwareBuiltInInput][Output] var InstanceId : Integer;
+  
+  [StageInput][Output] var Uv : Real2;//[StageOutput]
+  [StageInput][Output] var LocalPosition : Real3;//[StageOutput]
+  
+  [AppBuiltInInput][Output] var LogicTime : Real;
+  [AppBuiltInInput][Output] var FrameTime : Real;
+  [AppBuiltInInput][Output] var NearPlane : Real;//[StageOutput]
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Vertex]
+struct Vertex2
+{
+  [FragmentInput][PropertyInput] var Property1 : Real;//[FragmentInput]
+  [PropertyInput][FragmentInput] var Property2 : Real;//[PropertyInput]
+  
+  [FragmentInput][HardwareBuiltInInput] var VertexId : Integer;//[FragmentInput]
+  [HardwareBuiltInInput][FragmentInput] var InstanceId : Integer;//[HardwareBuiltInInput]
+  
+  [FragmentInput][StageInput] var Uv : Real2;//[FragmentInput]
+  [StageInput][FragmentInput] var LocalPosition : Real3;//[StageInput]
+  
+  [FragmentInput][AppBuiltInInput] var LogicTime : Real;//[FragmentInput]
+  [AppBuiltInInput][FragmentInput] var FrameTime : Real;//[AppBuiltInInput]
+  
+  function Main()
+  {
+    
+  }
+}
