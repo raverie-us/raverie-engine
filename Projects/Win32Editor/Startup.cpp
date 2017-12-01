@@ -60,6 +60,10 @@ bool Startup(Engine* engine, StringMap& arguments)
   if(FileExists(projectFile))
     playGame = true;
 
+  // Fix the project file path for exports to be in the import's output directory
+  if(embededPackage)
+    projectFile = FilePath::Combine(import.mOutputDirectory, "Project.zeroproj");
+  
   if(embededPackage || playGame)
   {
     // EmbededPackage always run in game mode

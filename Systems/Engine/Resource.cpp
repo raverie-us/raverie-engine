@@ -356,6 +356,8 @@ Resource::InheritRange Resource::GetBaseResources()
 
 BuilderComponent* Resource::GetBuilder()
 {
+  if(!mContentItem)
+    return nullptr;
   return (BuilderComponent*)mContentItem->QueryComponentId(mBuilderType);
 }
 

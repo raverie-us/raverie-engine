@@ -76,7 +76,9 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   LoadResourcePackageRelative(projectDirectory, "FragmentCore");
   LoadResourcePackageRelative(projectDirectory, "Loading");
   LoadResourcePackageRelative(projectDirectory, "ZeroCore");
+  LoadResourcePackageRelative(projectDirectory, "EditorUi");
   LoadResourcePackageRelative(projectDirectory, "Editor");
+  LoadResourcePackageRelative(projectDirectory, "EditorScripts");
 
   // Hack!
   if(mCustomLibraryLoader != nullptr)
