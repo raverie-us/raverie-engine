@@ -147,7 +147,7 @@ StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
   if(status)
   {
     if(result == StoreResult::Added)
-      mEntries.PushBack(storeFile);
+      mEntries.PushBack(name);
 
     saver.SetSerializationContext(&savingContext);
     saver.SaveFullObject(object);
@@ -219,7 +219,7 @@ void ObjectStore::Erase(StringParam name)
     // Move the file
     MoveFile(fileDestination, storeFile);
 
-    mEntries.EraseValue(storeFile);
+    mEntries.EraseValue(name);
   }
 }
 
