@@ -46,7 +46,7 @@ ZilchDefineType(SoundBuilder, builder, type)
   ZilchBindFieldProperty(Name);
   ZilchBindFieldProperty(mStreamed);
   ZilchBindFieldProperty(mNormalize)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mMaxVolume)->Add(new EditorRange(0.0f, 1.0f, 0.1f))->ZeroFilterBool(mNormalize);
+  ZilchBindFieldProperty(mMaxVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->ZeroFilterBool(mNormalize);
 }
 
 void SoundBuilder::Generate(ContentInitializer& initializer)

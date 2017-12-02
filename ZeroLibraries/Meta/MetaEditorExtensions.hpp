@@ -60,6 +60,8 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   EditorSlider();
+
+  using EditorRange::EditorRange;
 };
 
 //------------------------------------------------------------------------------ EditorRotationBasis

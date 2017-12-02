@@ -398,9 +398,9 @@ ZilchDefineType(AudioSettings, builder, type)
   ZeroBindTag(Tags::Sound);
   ZeroBindDocumented();
 
-  ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorRange(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
   ZilchBindGetterSetterProperty(MixType); 
-  ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorRange(0.0f, 0.2f, 0.001f));
+  ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
   ZilchBindGetterSetterProperty(LatencySetting);
 }
 

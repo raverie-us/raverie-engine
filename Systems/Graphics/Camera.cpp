@@ -35,7 +35,7 @@ ZilchDefineType(Camera, builder, type)
   ZilchBindGetterSetterProperty(NearPlane);
   ZilchBindGetterSetterProperty(FarPlane);
   ZilchBindGetterSetterProperty(PerspectiveMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(FieldOfView)->Add(new EditorRange(45, 135, 1))->ZeroFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Perspective);
+  ZilchBindGetterSetterProperty(FieldOfView)->Add(new EditorSlider(45, 135, 1))->ZeroFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Perspective);
   ZilchBindGetterSetterProperty(Size)->ZeroFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Orthographic);
 
   ZilchBindGetter(CameraViewportCog);

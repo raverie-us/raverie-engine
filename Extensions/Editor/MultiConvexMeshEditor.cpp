@@ -611,7 +611,7 @@ ZilchDefineType(MultiConvexMeshPropertyViewInfo, builder, type)
   ZilchBindFieldProperty(mDrawMode);
   ZilchBindMethodProperty(AutoCompute);
   ZilchBindFieldProperty(mAutoComputeMode);
-  ZilchBindFieldProperty(mSurfaceLevelThreshold)->Add(new EditorRange(0, 1, 0.05f));
+  ZilchBindFieldProperty(mSurfaceLevelThreshold)->Add(new EditorSlider(0, 1, 0.05f));
   ZilchBindFieldProperty(mAutoComputeMethod);
   ZilchBindFieldProperty(mSimplificationThreshold);
 }

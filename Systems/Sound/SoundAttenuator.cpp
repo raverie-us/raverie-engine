@@ -53,7 +53,7 @@ ZilchDefineType(SoundAttenuator, builder, type)
 
   ZilchBindGetterSetterProperty(StartDistance);
   ZilchBindGetterSetterProperty(StopDistance);
-  ZilchBindGetterSetterProperty(MinAttenuatedVolume)->Add(new EditorRange(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(MinAttenuatedVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
   ZilchBindGetterSetterProperty(UseLowPassFilter)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindGetterSetterProperty(LowPassStartDistance)->ZeroFilterBool(mUseLowPassFilter);
   ZilchBindGetterSetterProperty(LowPassCutoffFreq)->ZeroFilterBool(mUseLowPassFilter);

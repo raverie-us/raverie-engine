@@ -183,7 +183,7 @@ void HeightManipulationTool::Draw(HeightMap* map)
 //------------------------------------------------------------- Raise/Lower Tool
 ZilchDefineType(RaiseLowerTool, builder, type)
 {
-  ZilchBindFieldProperty(mStrength)->Add(new EditorRange(0,1,0.001f));
+  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0,1,0.001f));
   ZilchBindFieldProperty(mRelative);
 
   ZeroBindExpanded();
@@ -225,7 +225,7 @@ void RaiseLowerTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent*
 //---------------------------------------------------------- Smooth/Sharpen Tool
 ZilchDefineType(SmoothSharpenTool, builder, type)
 {
-  ZilchBindFieldProperty(mStrength)->Add(new EditorRange(0,1,0.001f));
+  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0,1,0.001f));
   ZilchBindField(mUniformSamples);
   ZilchBindField(mRandomSamples);
   ZilchBindField(mRandomSampleDistance);
@@ -613,7 +613,7 @@ ZilchDefineType(WeightPainterTool, builder, type)
 {
   ZilchBindFieldProperty(mTextureChannel);
 
-  ZilchBindFieldProperty(mStrength)->Add(new EditorRange(0,1,0.001f));
+  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0,1,0.001f));
   ZilchBindFieldProperty(mRadius);
   ZilchBindFieldProperty(mFeatherRadius);
 
