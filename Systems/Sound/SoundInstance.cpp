@@ -73,7 +73,7 @@ ZilchDefineType(SoundInstance, builder, type)
 }
 
 //**************************************************************************************************
-SoundInstance::SoundInstance(Status& status, SoundSpace* space, Audio::SoundAssetNode* asset, 
+SoundInstance::SoundInstance(Status& status, SoundSpace* space, Audio::SoundAsset* asset, 
     float volume, float pitch) : 
   mSpace(space), 
   mAssetObject(asset), 
@@ -204,15 +204,10 @@ bool SoundInstance::GetPaused()
 //**************************************************************************************************
 void SoundInstance::SetPaused(bool pause)
 {
-  if (!mSoundNode->mNode)
-    return;
+  mIsPaused = pause;
 
-  // Should be set to pause and is not currently paused
-  if (pause && !mIsPaused)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->Pause();
-  // Should be set to un-paused and is currently paused
-  else if (!pause && mIsPaused)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->Resume();
+  if (mSoundNode->mNode)
+    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetPaused(pause);
 }
 
 //**************************************************************************************************
@@ -330,7 +325,7 @@ void SoundInstance::SetCustomEventTime(float seconds)
 //**************************************************************************************************
 Zero::StringParam SoundInstance::GetSoundName()
 {
-  return mAssetObject->Name;
+  return mAssetObject->mName;
 }
 
 //**************************************************************************************************
@@ -354,7 +349,7 @@ void SoundInstance::Play(bool loop, SoundTag* tag, Audio::SoundNode* outputNode,
   mIsPlaying = true;
 
   if (!startPaused)
-    instance->Resume();
+    instance->SetPaused(false);
   else
     mIsPaused = true;
 }

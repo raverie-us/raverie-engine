@@ -7,8 +7,6 @@
 
 #pragma once
 
-typedef Zero::Array<float> BufferType;
-
 namespace Audio
 {
   class ListenerNode;

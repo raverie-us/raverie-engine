@@ -550,7 +550,7 @@ namespace Audio
       return 0.0f;
 
     if (mType == OscillatorTypes::Noise)
-      return RandomObject.FloatRange(-1.0f, 1.0f) * WAVE_VOLUME;
+      return RandomObject.FloatRange(-1.0f, 1.0f) * GeneratedWaveVolume;
 
     int readIndexInt = (int)mReadIndex;
 

@@ -12,6 +12,7 @@
 
 #include "Definitions.h"
 #include "Interpolator.h"
+#include "PitchChange.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
 #include "ListenerNode.h"

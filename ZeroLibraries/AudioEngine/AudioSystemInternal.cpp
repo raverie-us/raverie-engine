@@ -457,13 +457,13 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void AudioSystemInternal::AddAsset(SoundAssetNode* asset)
+  void AudioSystemInternal::AddAsset(SoundAsset* asset)
   {
     AssetList.PushBack(asset);
   }
 
   //************************************************************************************************
-  void AudioSystemInternal::RemoveAsset(SoundAssetNode* asset)
+  void AudioSystemInternal::RemoveAsset(SoundAsset* asset)
   {
     AssetList.Erase(asset);
   }

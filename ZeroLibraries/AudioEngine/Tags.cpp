@@ -107,7 +107,7 @@ namespace Audio
 
       // If the tag is currently paused, pause the instance
       if (Paused)
-        instance->Pause();
+        instance->SetPaused(true);
 
       // Add the instance to the tag's list
       Instances.PushBack(instance);
@@ -126,7 +126,7 @@ namespace Audio
     {
       // If already playing max instances, mark this one as virtual
       if (InstanceLimit > 0 && InstanceVolumeMap.Size() >= InstanceLimit)
-        instance->Virtual = true;
+        instance->mVirtual = true;
 
       // Add this tag to the instance's list
       instance->TagList.PushBack(this);
@@ -146,10 +146,10 @@ namespace Audio
         InstanceVolumeMap[instance] = NULL;
 
       if (UseEqualizer)
-        instance->EqualizerFilter = new Equalizer(LowPassGain, Band1Gain, Band2Gain, Band3Gain, HighPassGain);
+        instance->TagEqualizer = new Equalizer(LowPassGain, Band1Gain, Band2Gain, Band3Gain, HighPassGain);
 
       if (UseCompressor)
-        instance->CompressorFilter = new DynamicsProcessor(0, CompressorThresholdDB, CompressorAttackMSec,
+        instance->TagCompressor = new DynamicsProcessor(0, CompressorThresholdDB, CompressorAttackMSec,
           CompressorReleaseMSec, CompressorRatio, 0, CompressorKneeWidth, Audio::DynamicsProcessor::Compressor);
     }
   }
@@ -248,7 +248,7 @@ namespace Audio
       InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
       while (!instances.Empty())
       {
-        instances.Front().first->Pause();
+        instances.Front().first->SetPaused(true);
 
         instances.PopFront();
       }
@@ -272,7 +272,7 @@ namespace Audio
       InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
       while (!instances.Empty())
       {
-        instances.Front().first->Resume();
+        instances.Front().first->SetPaused(false);
 
         instances.PopFront();
       }
@@ -349,8 +349,8 @@ namespace Audio
           SoundInstanceNode* instance = instances.Front().first;
 
           // If there isn't an equalizer (there shouldn't be), add one
-          if (!instance->EqualizerFilter)
-            instance->EqualizerFilter = new Equalizer(LowPassGain, Band1Gain, Band2Gain, Band3Gain, 
+          if (!instance->TagEqualizer)
+            instance->TagEqualizer = new Equalizer(LowPassGain, Band1Gain, Band2Gain, Band3Gain, 
               HighPassGain);
         }
       }
@@ -366,10 +366,10 @@ namespace Audio
           SoundInstanceNode* instance = instances.Front().first;
 
           // If there is an equalizer (there should be), delete it
-          if (instance->EqualizerFilter)
+          if (instance->TagEqualizer)
           {
-            delete instance->EqualizerFilter;
-            instance->EqualizerFilter = nullptr;
+            delete instance->TagEqualizer;
+            instance->TagEqualizer = nullptr;
           }
         }
       }
@@ -399,10 +399,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
+        if (!instance->TagEqualizer)
+          instance->TagEqualizer = new Equalizer();
 
-        instance->EqualizerFilter->SetBelow80HzGain(gain);
+        instance->TagEqualizer->SetBelow80HzGain(gain);
       }
     }
   }
@@ -430,10 +430,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
+        if (!instance->TagEqualizer)
+          instance->TagEqualizer = new Equalizer();
 
-        instance->EqualizerFilter->Set150HzGain(gain);
+        instance->TagEqualizer->Set150HzGain(gain);
       }
     }
   }
@@ -461,10 +461,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
+        if (!instance->TagEqualizer)
+          instance->TagEqualizer = new Equalizer();
 
-        instance->EqualizerFilter->Set600HzGain(gain);
+        instance->TagEqualizer->Set600HzGain(gain);
       }
     }
   }
@@ -492,10 +492,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
+        if (!instance->TagEqualizer)
+          instance->TagEqualizer = new Equalizer();
 
-        instance->EqualizerFilter->Set2500HzGain(gain);
+        instance->TagEqualizer->Set2500HzGain(gain);
       }
     }
   }
@@ -523,10 +523,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
+        if (!instance->TagEqualizer)
+          instance->TagEqualizer = new Equalizer();
 
-        instance->EqualizerFilter->SetAbove5000HzGain(gain);
+        instance->TagEqualizer->SetAbove5000HzGain(gain);
       }
     }
   }
@@ -552,10 +552,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
+        if (!instance->TagEqualizer)
+          instance->TagEqualizer = new Equalizer();
 
-        instance->EqualizerFilter->InterpolateBands(values->Below80Hz, values->At150Hz, values->At600Hz,
+        instance->TagEqualizer->InterpolateBands(values->Below80Hz, values->At150Hz, values->At600Hz,
           values->At2500Hz, values->Above5000Hz, timeToInterpolate);
       }
 
@@ -595,8 +595,8 @@ namespace Audio
           SoundInstanceNode* instance = instances.Front().first;
 
           // If there isn't a compressor (there shouldn't be), add one
-          if (!instance->CompressorFilter)
-            instance->CompressorFilter = new DynamicsProcessor(0, CompressorThresholdDB, CompressorAttackMSec,
+          if (!instance->TagCompressor)
+            instance->TagCompressor = new DynamicsProcessor(0, CompressorThresholdDB, CompressorAttackMSec,
               CompressorReleaseMSec, CompressorRatio, 0, CompressorKneeWidth, Audio::DynamicsProcessor::Compressor);
         }
       }
@@ -612,10 +612,10 @@ namespace Audio
           SoundInstanceNode* instance = instances.Front().first;
 
           // If there is a compressor (there should be), delete it
-          if (instance->CompressorFilter)
+          if (instance->TagCompressor)
           {
-            delete instance->CompressorFilter;
-            instance->CompressorFilter = nullptr;
+            delete instance->TagCompressor;
+            instance->TagCompressor = nullptr;
           }
         }
       }
@@ -645,10 +645,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
+        if (!instance->TagCompressor)
+          instance->TagCompressor = new DynamicsProcessor();
 
-        instance->CompressorFilter->SetThreshold(value);
+        instance->TagCompressor->SetThreshold(value);
       }
     }
   }
@@ -676,10 +676,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
+        if (!instance->TagCompressor)
+          instance->TagCompressor = new DynamicsProcessor();
 
-        instance->CompressorFilter->SetAttackMSec(value);
+        instance->TagCompressor->SetAttackMSec(value);
       }
     }
   }
@@ -707,10 +707,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
+        if (!instance->TagCompressor)
+          instance->TagCompressor = new DynamicsProcessor();
 
-        instance->CompressorFilter->SetReleaseMSec(value);
+        instance->TagCompressor->SetReleaseMSec(value);
       }
     }
   }
@@ -738,10 +738,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
+        if (!instance->TagCompressor)
+          instance->TagCompressor = new DynamicsProcessor();
 
-        instance->CompressorFilter->SetRatio(value);
+        instance->TagCompressor->SetRatio(value);
       }
     }
   }
@@ -769,10 +769,10 @@ namespace Audio
       {
         SoundInstanceNode* instance = instances.Front().first;
 
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
+        if (!instance->TagCompressor)
+          instance->TagCompressor = new DynamicsProcessor();
 
-        instance->CompressorFilter->SetKneeWidth(value);
+        instance->TagCompressor->SetKneeWidth(value);
       }
     }
   }
@@ -825,7 +825,7 @@ namespace Audio
 
       for (InstanceVolumeMapType::range pairs = InstanceVolumeMap.All(); !pairs.Empty(); pairs.PopFront())
       {
-        pairs.Front().first->CompressorSideChainInput = buffer;
+        pairs.Front().first->TagCompressorInput = buffer;
       }
     }
   }
@@ -893,7 +893,7 @@ namespace Audio
     for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All(); !instances.Empty(); instances.PopFront())
     {
       SoundInstanceNode* thisInstance = instances.Front().first;
-      if (thisInstance->Virtual && thisInstance != instance)
+      if (thisInstance->mVirtual && thisInstance != instance)
         ++count;
 
       if (count > overLimit)

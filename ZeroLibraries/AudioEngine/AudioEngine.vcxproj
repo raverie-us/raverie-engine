@@ -79,6 +79,7 @@
     <ClCompile Include="LockFreeQueue.cpp" />
     <ClCompile Include="Modifiers.cpp" />
     <ClCompile Include="pa_win_util.cpp" />
+    <ClCompile Include="PitchChange.cpp" />
     <ClCompile Include="PitchNode.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
@@ -125,6 +126,7 @@
     <ClInclude Include="opus_types.h" />
     <ClInclude Include="pa_memorybarrier.h" />
     <ClInclude Include="pa_util.h" />
+    <ClInclude Include="PitchChange.h" />
     <ClInclude Include="PitchNode.h" />
     <ClInclude Include="portaudio.h" />
     <ClInclude Include="Precompiled.h" />

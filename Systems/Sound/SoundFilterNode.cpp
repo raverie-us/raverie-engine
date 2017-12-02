@@ -613,7 +613,7 @@ void GeneratedWaveNode::Play()
 {
   // If there is a SoundInstance and it's paused, resume it
   if (mNode && ((Audio::SoundInstanceNode*)mNode)->GetPaused())
-    ((Audio::SoundInstanceNode*)mNode)->Resume();
+    ((Audio::SoundInstanceNode*)mNode)->SetPaused(false);
   // Otherwise create a new SoundInstance
   else
     CreateInstance(false);
@@ -766,7 +766,7 @@ void GeneratedWaveNode::CreateInstance(bool paused)
     ((Audio::SoundInstanceNode*)mNode)->SetVolume(mVolume, 0.0f);
     // If it shouldn't be paused, resume it
     if (!paused)
-      ((Audio::SoundInstanceNode*)mNode)->Resume();
+      ((Audio::SoundInstanceNode*)mNode)->SetPaused(false);
   }
 }
 

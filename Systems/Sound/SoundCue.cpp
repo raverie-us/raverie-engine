@@ -512,7 +512,7 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
   }
 
   // Get asset
-  Audio::SoundAssetNode* asset = entry->GetSound()->mSoundAsset;
+  Audio::SoundAsset* asset = entry->GetSound()->mSoundAsset;
   ErrorIf(!asset, "No sound asset when playing SoundCue");
   if (!asset)
   {

@@ -47,7 +47,7 @@ namespace Audio
     bool StreamIsOpen();
     // Resets the streaming file to the beginning (if stream is open)
     void ResetStream();
-    // Closes the streaming file (if stream if open)
+    // Closes the streaming file (if stream is open)
     void CloseStream();
     // Opens the streaming file (if the decoder was created for streaming)
     void OpenStream();
@@ -58,7 +58,7 @@ namespace Audio
     short Channels;
     // Number of samples per channel in the audio data
     unsigned SamplesPerChannel;
-    // Keeps track of active decoding tasks - shared between threads!
+    // Keeps track of active decoding tasks (shared between threads)
     Type32Bit DecodingTaskCount;
     // Will be set to an object as long as the parent asset is alive, null when deleted
     void* ParentAlive;

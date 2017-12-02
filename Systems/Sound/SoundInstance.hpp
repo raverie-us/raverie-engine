@@ -52,7 +52,7 @@ class SoundInstance : public ReferenceCountedEventObject, Audio::ExternalNodeInt
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  SoundInstance(Status& status, SoundSpace* space, Audio::SoundAssetNode* asset, float volume, float pitch);
+  SoundInstance(Status& status, SoundSpace* space, Audio::SoundAsset* asset, float volume, float pitch);
 
   /// The volume adjustment of the SoundInstance, initially set by the SoundCue's Volume property. 
   /// A value of 1 does nothing, 2 will double the sound's volume, 0.5 will halve it.
@@ -132,7 +132,7 @@ private:
   void Play(bool loop, SoundTag *tag, Audio::SoundNode* outputNode, bool startPaused);
   void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
 
-  Audio::SoundAssetNode* mAssetObject;
+  Audio::SoundAsset* mAssetObject;
   SoundSpace* mSpace;
   bool mIsPaused;
   bool mIsPlaying;

@@ -16,11 +16,16 @@ namespace Audio
   // Maximum number of channels in audio output
   static const unsigned MaxChannels = 8;
 
+  // Volume modifier applied to all generated waves
+  static const float GeneratedWaveVolume = 0.5f;
+
   // Types of curves used for interpolation. 
   namespace CurveTypes
   {
     enum Enum { Linear, Squared, Sine, SquareRoot, Log, Custom };
   };
+
+  typedef Zero::Array<float> BufferType;
 
   struct MidiData
   {

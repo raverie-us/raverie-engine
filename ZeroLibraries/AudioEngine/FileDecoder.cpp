@@ -18,7 +18,7 @@ namespace Audio
     FrameCount(copy.FrameCount),
     Samples(copy.Samples)
   {
-
+    
   }
 
   //************************************************************************************************
@@ -128,6 +128,13 @@ namespace Audio
   //************************************************************************************************
   FileDecoder::~FileDecoder()
   {
+    // Delete any existing decoded packets
+    DecodedPacket packet;
+    while (DecodedPacketQueue.Read(packet))
+    {
+      packet.ReleaseSamples();
+    }
+
     // Destroy any alive decoders
     for (short i = 0; i < Channels; ++i)
     {
@@ -231,13 +238,13 @@ namespace Audio
     if (!InputFile.IsOpen())
       return;
 
-    // Remove any current packets from the queue
+    // Remove any current packets from the queue (wait for all existing tasks to be done)
     while (AtomicCompareExchange32(&DecodingTaskCount, 0, 0) != 0)
     {
       DecodedPacket packet;
       while (DecodedPacketQueue.Read(packet))
       {
-
+        packet.ReleaseSamples();
       }
     }
 
@@ -269,7 +276,7 @@ namespace Audio
     DecodedPacket packet;
     while (DecodedPacketQueue.Read(packet))
     {
-
+      packet.ReleaseSamples();
     }
   }
 

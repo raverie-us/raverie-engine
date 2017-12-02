@@ -51,9 +51,6 @@
     <ClCompile Include="Precompiled.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pa_ringbuffer.cpp">
-      <Filter>Source Files\PortAudio</Filter>
-    </ClCompile>
     <ClCompile Include="pa_win_util.cpp">
       <Filter>Source Files\PortAudio</Filter>
     </ClCompile>
@@ -130,6 +127,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PitchChange.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -259,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="WASAPI.h">
       <Filter>Source Files\PlatformSpecific</Filter>
+    </ClInclude>
+    <ClInclude Include="PitchChange.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

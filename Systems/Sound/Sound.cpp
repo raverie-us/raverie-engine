@@ -61,7 +61,7 @@ void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileN
   
   if (status.Succeeded())
   {
-    mSoundAsset->Name = assetName;
+    mSoundAsset->mName = assetName;
     mStreaming = streaming;
   }
   else

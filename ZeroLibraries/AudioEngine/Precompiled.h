@@ -19,6 +19,7 @@
 #include "RingBuffer.h"
 #include "Interpolator.h"
 #include "Resampler.h"
+#include "PitchChange.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
 #include "ListenerNode.h"

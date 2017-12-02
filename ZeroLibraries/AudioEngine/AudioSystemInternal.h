@@ -106,9 +106,9 @@ namespace Audio
     // Adds a tag to the list to delete
     void DelayDeleteTag(TagObject* tag, bool threaded);
     // Adds a non-threaded sound asset to the system
-    void AddAsset(SoundAssetNode* asset);
+    void AddAsset(SoundAsset* asset);
     // Removes a non-threaded sound asset from the system
-    void RemoveAsset(SoundAssetNode* asset);
+    void RemoveAsset(SoundAsset* asset);
     // Adds a new node to the threaded or non-threaded list
     bool AddSoundNode(SoundNode* node, const bool threaded);
     // Removes a node from the threaded or non-threaded list
@@ -148,7 +148,7 @@ namespace Audio
     typedef Zero::Array<TagObject*> TagsToDeleteListType;
     typedef Zero::InList<TagObject> TagListType;
     typedef Zero::InList<SoundNode> NodeListType;
-    typedef Zero::InList<SoundAssetNode> AssetListType;
+    typedef Zero::InList<SoundAsset> AssetListType;
 
     // List of objects to be deleted on update.
     TagsToDeleteListType TagsToDelete;
