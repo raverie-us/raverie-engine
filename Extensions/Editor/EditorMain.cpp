@@ -546,7 +546,7 @@ void EditorMain::OnScriptError(DebugEngineEvent* event)
   {
     // At the moment we always pause due to a syntax error or exception
     // If we are live editing, we really want to continue (live edit may need to be a mode)
-    PauseGame();
+    SetGamePaused(true);
 
     if(event->Script)
     {

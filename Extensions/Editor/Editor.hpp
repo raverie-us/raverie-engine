@@ -257,6 +257,8 @@ public:
   void EditGameSpaces();
   void DestroyGames();
   void PauseGame();
+  void ToggleGamePaused();
+  void SetGamePaused(bool state);
   void StopGame();
   void StepGame();
   bool AreGamesRunning();

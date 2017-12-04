@@ -326,7 +326,7 @@ Commands commands =
 		string Description = "Pause / resume the game",
 		string IconName = "PauseGame",
 		string Shortcut = "F6",
-		string Function = "Editor.PauseGame",
+		string Function = "Editor.ToggleGamePaused",
 		string Tags = "Game",
 	},
 
