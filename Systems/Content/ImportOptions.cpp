@@ -17,6 +17,12 @@ namespace Events
   DefineEvent(ImportOptionsModified);
 }
 
+String SanitizeContentFilename(StringParam filename)
+{
+  String sanitizedName = Cog::SanitizeName(FilePath::GetFileNameWithoutExtension(filename));
+  return BuildString(sanitizedName, ".", FilePath::GetExtension(filename));
+}
+
 //----------------------------------------------------------------- ImageOptions
 ZilchDefineType(ImageOptions, builder, type)
 {
@@ -182,7 +188,7 @@ void ImportOptions::Initialize(Array<String>& files, ContentLibrary* library)
     String fullPath = files[i];
 
     // Strip the path
-    String fileName = FilePath::GetFileName(fullPath.All());
+    String fileName = SanitizeContentFilename(FilePath::GetFileName(fullPath.All()));
 
      // Check to see if it already exists
      if(mLibrary->FindContentItemByFileName(fileName))
