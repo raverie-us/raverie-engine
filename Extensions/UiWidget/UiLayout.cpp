@@ -114,7 +114,7 @@ void UiLayout::UpdateNotInLayout(UiTransformUpdateEvent* e)
     if(UiWidget* widget = child.has(UiWidget))
     {
       if(widget->GetActive() && !widget->GetInLayout())
-        widget->UpdateTransform(e);
+        widget->Update(e);
     }
   }
 }

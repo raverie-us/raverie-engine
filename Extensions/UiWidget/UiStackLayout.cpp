@@ -275,7 +275,7 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 
     child->SetSize(childSize);
     child->SetLocalBottomLeft(childTranslation);
-    child->UpdateTransform(e);
+    child->Update(e);
 
     offset[stackAxis] += childSize[stackAxis] * direction;
 

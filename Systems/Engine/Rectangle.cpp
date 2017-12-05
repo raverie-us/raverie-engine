@@ -102,16 +102,16 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindMethod(SetSize);
   ZilchBindMethod(Expand);
 
-  ZilchBindGetterProperty(TopLeft);
-  ZilchBindGetterProperty(TopRight);
-  ZilchBindGetterProperty(BottomLeft);
-  ZilchBindGetterProperty(BottomRight);
-  ZilchBindGetterProperty(Center);
+  ZilchBindGetterSetterProperty(TopLeft);
+  ZilchBindGetterSetterProperty(TopRight);
+  ZilchBindGetterSetterProperty(BottomLeft);
+  ZilchBindGetterSetterProperty(BottomRight);
+  ZilchBindGetterSetterProperty(Center);
 
-  ZilchBindGetterProperty(Left);
-  ZilchBindGetterProperty(Right);
-  ZilchBindGetterProperty(Top);
-  ZilchBindGetterProperty(Bottom);
+  ZilchBindGetterSetterProperty(Left);
+  ZilchBindGetterSetterProperty(Right);
+  ZilchBindGetterSetterProperty(Top);
+  ZilchBindGetterSetterProperty(Bottom);
 
   ZilchBindMethod(Contains);
   ZilchBindMethod(Overlap);

@@ -28,8 +28,8 @@ void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction);
 namespace Events
 {
 
-DeclareEvent(PreTransformUpdate);
-DeclareEvent(PostTransformUpdate);
+DeclareEvent(UiPreUpdate);
+DeclareEvent(UiPostUpdate);
 //DeclareEvent(UiWidgetGetMinSize);
 
 }//namespace Events
@@ -280,7 +280,7 @@ public:
 
   /// Handles the updating of this Widget and the child Widgets. Once called,
   /// it will update the internal TransformUpdateState.
-  virtual void UpdateTransform(UiTransformUpdateEvent* e);
+  void Update(UiTransformUpdateEvent* e);
 
   /// Until we get a render in hierarchy order, we need to move our
   /// child widgets in front of us.

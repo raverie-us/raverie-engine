@@ -48,7 +48,7 @@ Level
 		var Name = "EditorCamera"
 		Transform 
 		{
-			var Translation = Real3{291, 254, 10}
+			var Translation = Real3{269, -216, 10}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
 		}
@@ -110,7 +110,7 @@ Level
 			var LookDistance = 20
 			var VerticalAngle = 0
 			var HorizontalAngle = 0
-			var LookTarget = Real3{291.144287, 254.886505, 2.32370257e-05}
+			var LookTarget = Real3{269.144287, -215.113495, 2.22753588e-05}
 			var MoveSensitivity = 1
 		}
 	}
@@ -170,7 +170,7 @@ Level
 			var ResolutionOrAspect = Integer2{1920, 1080}
 			var RenderToViewport = true
 			var ForwardViewportEvents = false
-			var ViewportScaling = ViewportScaling.Fill
+			var ViewportScaling = ViewportScaling.Letterbox
 			var MarginColor = Real4{0, 0, 0, 1}
 			var NormalizedSize = Real2{1, 1}
 			var NormalizedOffset = Real2{0, 0}
@@ -269,12 +269,12 @@ Level
 		}
 		Hierarchy 
 		{
-			Cog [ContextId:5]
+			Cog [Id:0x5a71d2e02ec8e8f2][ContextId:5]
 			{
 				var Name = "Sprite"
 				Transform 
 				{
-					var Translation = Real3{5, 470, 0}
+					var Translation = Real3{5, -5, 0}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}
@@ -328,12 +328,12 @@ Level
 				{
 				}
 			}
-			Cog [ContextId:6]
+			Cog [Id:0x5a71d2e02ec8e8fc][ContextId:6]
 			{
 				var Name = "Sprite"
 				Transform 
 				{
-					var Translation = Real3{5, 238, 0}
+					var Translation = Real3{5, -35, 0}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}
@@ -387,12 +387,12 @@ Level
 				{
 				}
 			}
-			Cog [ContextId:7]
+			Cog [Id:0x5a71d2e02ec8e8ff][ContextId:7]
 			{
 				var Name = "Sprite"
 				Transform 
 				{
-					var Translation = Real3{5, 5, 0}
+					var Translation = Real3{5, -267, 0}
 					var Scale = Real3{1, 1, 1}
 					var Rotation = Quaternion{0, 0, 0, 1}
 				}

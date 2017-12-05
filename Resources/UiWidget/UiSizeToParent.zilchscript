@@ -17,7 +17,7 @@ class UiSizeToParent : ZilchComponent
   //***************************************************************************
   function Initialize(init : CogInitializer)
   {
-    Zero.Connect(this.Owner, Events.PreTransformUpdate, this.OnTransformUpdate);
+    Zero.Connect(this.Owner, Events.UiPreUpdate, this.OnTransformUpdate);
   }
   
   //***************************************************************************
