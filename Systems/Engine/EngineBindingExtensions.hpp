@@ -33,4 +33,14 @@ public:
   CodeLocation mClassLocation;
 };
 
+//------------------------------------------------------------------------- MetaEditor Script Object
+class MetaEditorScriptObject : public ReferenceCountedEventObject
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  MetaEditorScriptObject();
+
+  bool mAutoRegister;
+};
+
 }//namespace Zero

@@ -161,6 +161,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(ResourceMetaOperations);
   ZilchInitializeType(CogArchetypePropertyFilter);
   ZilchInitializeType(CogPathMetaComposition);
+  ZilchInitializeType(MetaEditorScriptObject);
 
   // Events
   ZilchInitializeType(CogPathEvent);
@@ -380,8 +381,8 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   RegisterClassAttribute(ObjectAttributes::cRunInEditor)->TypeMustBe(Component);
-  RegisterClassAttribute(ObjectAttributes::cTool)->TypeMustBe(Component);
-  RegisterClassAttribute(ObjectAttributes::cCommand)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
   RegisterClassAttribute(ObjectAttributes::cComponentInterface)->TypeMustBe(Component);
 
