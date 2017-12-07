@@ -103,6 +103,8 @@ void ManipulatorTool::SetSnapDistance(float distance)
 //******************************************************************************
 bool ManipulatorTool::OnGizmo( )
 {
+  if (mValidSelection == false)
+    return false;
   MetaSelection* selection = Z::gEditor->GetSelection( );
   return selection->Count( ) > 0 && Active( );
 }
@@ -167,6 +169,7 @@ void ManipulatorTool::TestMouseMove(ViewportMouseEvent* e)
 
   mSelectedPoint = -1;
 
+  mValidSelection = false;
   for(uint i=0;i<PointCount;++i)
   {
     Vec3 point = center;
@@ -483,7 +486,11 @@ void ManipulatorTool::OnToolDraw(Event*)
 
   if(mGizmoMode != GizmoMode::Transforming)
   {
-    aabb = GetAabb(selection, IncludeMode::Children);
+    Cog* primary = selection->GetPrimaryAs<Cog>();
+    if (primary && primary->has(UiWidget) && selection->Count() == 1)
+      aabb = GetAabb(primary, IncludeMode::OnlyRoot);
+    else
+      aabb = GetAabb(selection, IncludeMode::Children);
     mActiveAabb = aabb;
   }
   else
