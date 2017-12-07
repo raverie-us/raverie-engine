@@ -97,7 +97,9 @@ bool TrimCompareFn(const T* lhs, const T* rhs)
 template<>
 bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
 {
-  int nameComparison = lhs->mName.CompareTo(rhs->mName);
+  String lhsName = lhs->mName.ToLower();
+  String rhsName = rhs->mName.ToLower();
+  int nameComparison = lhsName.CompareTo(rhsName);
 
   if (nameComparison != 0)
   {
@@ -106,10 +108,12 @@ bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
 
   uint iterLimit = Math::Min(lhs->mParameterList.Size(), rhs->mParameterList.Size());
 
-  // if the names are the same, sort by parameter name
+  // if the names are the same, sort by parameter type
   for (uint i = 0; i < iterLimit; ++i)
   {
-    int typeComparison = lhs->mParameterList[i]->mType.CompareTo(rhs->mParameterList[i]->mType);
+    String lhsTypeName = lhs->mParameterList[i]->mType.ToLower();
+    String rhsTypeName = rhs->mParameterList[i]->mType.ToLower();
+    int typeComparison = lhsTypeName.CompareTo(rhsTypeName);
 
     if (typeComparison != 0)
       return typeComparison < 0;
