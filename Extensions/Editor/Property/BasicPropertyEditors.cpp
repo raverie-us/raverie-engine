@@ -201,14 +201,18 @@ void DirectProperty::OnRightMouseUpLabel(MouseEvent* event)
 {
   ContextMenu* menu = new ContextMenu(this);
 
-  if(IsModified())
+  if(MetaDataInheritance::InheritsFromData(mInstance))
   {
-    ConnectMenu(menu, "Revert", OnRevert);
+    if (IsModified())
+    {
+      ConnectMenu(menu, "Revert", OnRevert);
+    }
+    else
+    {
+      ConnectMenu(menu, "Mark Modified", OnMarkModified);
+    }
   }
-  else
-  {
-    ConnectMenu(menu, "Mark Modified", OnMarkModified);
-  }
+
   // Send an event to let other widgets add items to the context menu
   ContextMenuEvent eventToSend;
   eventToSend.mMenu = menu;
