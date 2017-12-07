@@ -165,7 +165,11 @@ public:
 
   bool FilterComponentTypes(DataEntry* entry)
   {
-    Cog* cog = (Cog*)entry;
+    Object* object = (Object*)entry;
+    Cog* cog = Type::DynamicCast<Cog*>(object);
+
+    if (cog == nullptr)
+      return false;
 
     forRange(Component* component, cog->GetComponents())
     {
@@ -180,7 +184,11 @@ public:
 
   bool FilterResourceUsage(DataEntry* entry)
   {
-    Cog* cog = (Cog*)entry;
+    Object* object = (Object*)entry;
+    Cog* cog = Type::DynamicCast<Cog*>(object);
+
+    if (cog == nullptr)
+      return false;
 
     forRange(Component* component, cog->GetComponents())
     {
@@ -211,7 +219,12 @@ public:
 
   bool FilterNames(DataEntry* entry)
   {
-    Cog* cog = (Cog*)entry;
+    Object* object = (Object*)entry;
+    Cog* cog = Type::DynamicCast<Cog*>(object);
+
+    if (cog == nullptr)
+      return false;
+
     int priority = PartialMatch(SubFilterString, cog->GetName().All(), CaseInsensitiveCompare);
     return priority != cNoMatch;
   }
@@ -411,7 +424,7 @@ public:
     Object* object = (Object*)dataEntry;
     if(Cog* cog = Type::DynamicCast<Cog*>(object))
     {
-      CogId id = (Cog*)dataEntry;
+      CogId id = cog->GetId();
       return id.ToUint64();
     }
     else
@@ -531,6 +544,11 @@ public:
 
   DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
+    Object* parentObject = (Object*)dataEntry;
+
+    // Removed entries will never have children, so this should only ever be called for Cogs.
+    ReturnIf(Type::DynamicCast<Cog*>(parentObject) == nullptr, nullptr, "This should always be a Cog");
+
     if(dataEntry == mSpace)
     {
       Cog* prevObject = (Cog*)prev;
@@ -544,7 +562,6 @@ public:
     }
     else
     {
-      Object* parentObject = (Object*)dataEntry;
       Cog* parentCog = (Cog*)parentObject;
 
       if(prev == nullptr)
@@ -750,19 +767,26 @@ public:
   void CanMove(Status& status, DataEntry* source, DataEntry* destination,
                InsertMode::Type insertMode)
   {
+    Object* sourceObject = (Object*)source;
+    Cog* sourceCog = Type::DynamicCast<Cog*>(sourceObject);
+
+    if (sourceCog == nullptr)
+    {
+      status.SetFailed("Cannot move removed children", InsertError::NotSupported);
+      return;
+    }
+
     if(destination == mSpace)
     {
       status.SetSucceeded("Unparent");
     }
     else
     {
-      Object* sourceObject = (Object*)source;
-      Cog* sourceCog = Type::DynamicCast<Cog*>(sourceObject);
       Cog* destinationObj = Type::DynamicCast<Cog*>((Object*)destination);
 
-      if(sourceCog == nullptr ||  destinationObj == nullptr)
+      if(destinationObj == nullptr)
       {
-        status.SetFailed("Cannot move removed children", InsertError::NotSupported);
+        status.SetFailed("Cannot move to removed children", InsertError::NotSupported);
         return;
       }
 
@@ -822,6 +846,9 @@ public:
 
   bool Move(DataEntry* destinationEntry, DataEntry* movingEntry, InsertMode::Type insertMode)
   {
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)movingEntry) == nullptr, nullptr, "This should always be a Cog");
+
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
     
     Cog* dest = (Cog*)destinationEntry;
@@ -856,6 +883,8 @@ public:
   bool Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMove,
             InsertMode::Type insertMode) override
   {
+    ReturnIf(indicesToMove.Empty(), false, "Nothing to move");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
     Cog* dest = (Cog*)destinationEntry;
 
@@ -922,15 +951,13 @@ public:
       }
       else if(mode == InsertMode::On)
       {
-        Cog* parent = (Cog*)mouseOver;
-        AttachObject(queue, newChild, parent, false);
+        AttachObject(queue, newChild, mouseOverCog, false);
       }
       else
       {
-        Cog* destination = (Cog*)mouseOver;
-        Cog* parent = destination->GetParent();
+        Cog* parent = mouseOverCog->GetParent();
 
-        uint destIndex = destination->GetHierarchyIndex();
+        uint destIndex = mouseOverCog->GetHierarchyIndex();
         if(mode == InsertMode::Before)
           MoveObject(queue, newChild, parent, destIndex, false);
         else
