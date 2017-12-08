@@ -41,12 +41,10 @@ public:
 private:
   void GetMissingDependencies(HashSet<ContentItem*>& resources);
   void OnRightClick(MouseEvent* e);
-  void OnKeyDown(KeyboardEvent* e);
   void OnAddDependencies(Event* e);
   void OnRemove(Event* e);
 
-  void RemoveContentItem();
-
+  Element* mMissingTextBackground;
   Text* mMissingText;
   ContentPackageExporter* mExporter;
   ContentItem* mContentItem;
@@ -85,6 +83,8 @@ private:
   void OnExportFileSelected(OsFileSelection* e);
   void ExportPackageFile(StringParam filename);
   void RefreshTileView();
+  void OnKeyDown(KeyboardEvent* e);
+  void RemoveSelectedItems(Event*);
 
   friend class ContentExportTile;
   friend class ContentExporterTileView;

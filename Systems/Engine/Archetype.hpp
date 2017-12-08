@@ -51,8 +51,6 @@ public:
   /// have been invalidated.
   void ClearBinaryCache();
 
-  void GetDependencies(HashSet<ContentItem*>& dependencies,
-                       HandleParam instance = Handle()) override;
   DataNode* GetDataTree() override;
   String GetStringData();
 
