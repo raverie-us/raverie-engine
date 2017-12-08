@@ -153,7 +153,7 @@ void UiRootWidget::Update()
   {
     UiTransformUpdateEvent e;
     e.mRootWidget = this;
-    UpdateTransform(&e);
+    UiWidget::Update(&e);
   }
 }
 

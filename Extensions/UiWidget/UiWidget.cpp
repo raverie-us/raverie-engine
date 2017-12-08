@@ -15,8 +15,8 @@ const float cUiWidgetSnapSize = 1.0f;
 namespace Events
 {
 
-DefineEvent(PreTransformUpdate);
-DefineEvent(PostTransformUpdate);
+DefineEvent(UiPreUpdate);
+DefineEvent(UiPostUpdate);
 
 }//namespace Events
 
@@ -99,8 +99,8 @@ ZilchDefineType(UiWidget, builder, type)
   ZeroBindDependency(Area);
 
   // Events
-  ZeroBindEvent(Events::PreTransformUpdate, UiTransformUpdateEvent);
-  ZeroBindEvent(Events::PostTransformUpdate, UiTransformUpdateEvent);
+  ZeroBindEvent(Events::UiPreUpdate, UiTransformUpdateEvent);
+  ZeroBindEvent(Events::UiPostUpdate, UiTransformUpdateEvent);
 
   ZilchBindGetterSetterProperty(Active);
   ZilchBindGetterSetterProperty(Visible);
@@ -114,6 +114,7 @@ ZilchDefineType(UiWidget, builder, type)
 
   ZilchBindMethod(SetLocalLocation);
   ZilchBindMethod(SetWorldLocation);
+  ZilchBindMethod(MarkAsNeedsUpdate);
 
   ZilchBindGetterSetter(LocalTopLeft);
   ZilchBindGetterSetter(WorldTopLeft);
@@ -183,7 +184,7 @@ ZilchDefineType(UiWidget, builder, type)
   ZilchBindMethod(TransformPointInverse);
   ZilchBindMethod(CastPoint);
   ZilchBindMethod(CastRect);
-  ZilchBindMethod(UpdateTransform);
+  ZilchBindMethod(Update);
 }
 
 //**************************************************************************************************
@@ -717,7 +718,7 @@ void UiWidget::MarkAsNeedsUpdateInternal(bool localUpdate)
 }
 
 //**************************************************************************************************
-void UiWidget::UpdateTransform(UiTransformUpdateEvent* e)
+void UiWidget::Update(UiTransformUpdateEvent* e)
 {
   // Skip this if we're already on our way out
   if(GetOwner()->GetMarkedForDestruction())
@@ -728,7 +729,7 @@ void UiWidget::UpdateTransform(UiTransformUpdateEvent* e)
   if(mTransformUpdateState != UiTransformUpdateState::Updated || alwaysUpdate)
   {
     // Send the pre-update
-    GetOwner()->DispatchEvent(Events::PreTransformUpdate, e);
+    GetOwner()->DispatchEvent(Events::UiPreUpdate, e);
 
     // Update our layout if it exists
     if(UiLayout* layout = GetOwner()->has(UiLayout))
@@ -744,12 +745,12 @@ void UiWidget::UpdateTransform(UiTransformUpdateEvent* e)
       forRange(UiWidget& child, GetChildren())
       {
         if(child.GetActive())
-          child.UpdateTransform(e);
+          child.Update(e);
       }
     }
 
     // Send the post-update
-    GetOwner()->DispatchEvent(Events::PostTransformUpdate, e);
+    GetOwner()->DispatchEvent(Events::UiPostUpdate, e);
 
     // We're now fully updated
     mTransformUpdateState = UiTransformUpdateState::Updated;

@@ -98,7 +98,7 @@ void UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 
     child->SetSize(childRect.GetSize());
     child->SetLocalBottomLeft(childRect.GetBottomLeft());
-    child->UpdateTransform(e);
+    child->Update(e);
   }
 }
 
