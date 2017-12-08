@@ -136,6 +136,7 @@
       <Filter>MasterServer</Filter>
     </ClInclude>
     <ClInclude Include="NetworkingStandard.hpp" />
+    <ClInclude Include="NetworkingBindingExtensions.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IRCClient.cpp">
@@ -211,5 +212,6 @@
       <Filter>MasterServer</Filter>
     </ClCompile>
     <ClCompile Include="NetworkingStandard.cpp" />
+    <ClCompile Include="NetworkingBindingExtensions.cpp" />
   </ItemGroup>
 </Project>

@@ -65,6 +65,7 @@
     <ClInclude Include="NetUser.hpp" />
     <ClInclude Include="NetSpace.hpp" />
     <ClInclude Include="NetTypes.hpp" />
+    <ClInclude Include="NetworkingBindingExtensions.hpp" />
     <ClInclude Include="NetworkingStandard.hpp" />
     <ClInclude Include="PendingHostPing.hpp" />
     <ClInclude Include="PingManager.hpp" />
@@ -92,6 +93,7 @@
     <ClCompile Include="NetUser.cpp" />
     <ClCompile Include="NetSpace.cpp" />
     <ClCompile Include="NetTypes.cpp" />
+    <ClCompile Include="NetworkingBindingExtensions.cpp" />
     <ClCompile Include="NetworkingStandard.cpp" />
     <ClCompile Include="PendingHostPing.cpp" />
     <ClCompile Include="PingManager.cpp" />
