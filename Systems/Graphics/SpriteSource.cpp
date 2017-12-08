@@ -85,6 +85,9 @@ public:
       memset(imageData, 0xFF, imageSize);
     }
 
+    // Free the old data
+    source->SourceImage.Deallocate();
+
     source->SourceImage.Data = (ImagePixel*)imageData;
     source->SourceImage.Width = width;
     source->SourceImage.Height = height;
