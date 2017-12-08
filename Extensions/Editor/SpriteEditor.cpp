@@ -149,6 +149,9 @@ SpriteOrigin::Enum ComputeOrigin(Vec2 currentOrigin, int frameSizeX, int frameSi
 //------------------------------------------------------------ SpriteFrame
 ZilchDefineType(SpriteFrame, builder, type)
 {
+  // These are owned by the SpriteDataSource and can't be returned to script
+  type->HandleManager = ZilchManagerId(PointerManager);
+
   ZilchBindConstructor(SpriteFrame&);
   ZilchBindDestructor();
 }
