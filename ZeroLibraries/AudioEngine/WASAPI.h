@@ -110,8 +110,6 @@ namespace Audio
     unsigned GetStreamChannels(StreamTypes::Enum whichStream) override;
     // Returns the sample rate of the specified audio stream
     unsigned GetStreamSampleRate(StreamTypes::Enum whichStream) override;
-    // Returns true if the specified audio stream has been started
-    bool IsStreamStarted(StreamTypes::Enum whichStream) override;
 
     void HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
 

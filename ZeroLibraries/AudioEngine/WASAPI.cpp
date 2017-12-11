@@ -343,6 +343,8 @@ namespace Audio
   //************************************************************************************************
   void WasapiDevice::ProcessingLoop()
   {
+    CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+
     // Boost the thread priority to Audio
     LPCTSTR name = TEXT("Audio");
     DWORD value = 0;
@@ -375,6 +377,8 @@ namespace Audio
 
     // Revert the thread priority
     AvRevertMmThreadCharacteristics(task);
+
+    CoUninitialize();
 
     // Set the thread exit event
     SetEvent(ThreadEvents[ThreadEventTypes::ThreadExitEvent]);
@@ -687,15 +691,6 @@ namespace Audio
       return StreamDevices[whichStream]->GetSampleRate();
     else
       return 0;
-  }
-
-  //************************************************************************************************
-  bool AudioIOWindows::IsStreamStarted(StreamTypes::Enum whichStream)
-  {
-    if (StreamDevices[whichStream])
-      return StreamDevices[whichStream]->StreamOpen;
-    else
-      return false;
   }
 
   //************************************************************************************************

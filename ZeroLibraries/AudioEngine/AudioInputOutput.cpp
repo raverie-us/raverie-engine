@@ -424,15 +424,6 @@ namespace Audio
   }
 
   //************************************************************************************************
-  bool AudioIOPortAudio::IsStreamStarted(StreamTypes::Enum whichStream)
-  {
-    if (whichStream == StreamTypes::Output)
-      return PaOutputStream != nullptr;
-    else
-      return PaInputStream != nullptr;
-  }
-
-  //************************************************************************************************
   int AudioIOPortAudio::HandleCallback(const void *inputBuffer, void *outputBuffer, 
      unsigned long framesPerBuffer)
   {

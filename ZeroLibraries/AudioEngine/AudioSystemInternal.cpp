@@ -382,13 +382,6 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::AddTask(Zero::Functor* function)
   {
-    // Don't add tasks to the list when audio output is stopped
-    if (!AudioIO->IsStreamStarted(StreamTypes::Output))
-    {
-      delete function;
-      return;
-    }
-
     TasksForMixThread.Write(function);
     return;
   }
@@ -402,13 +395,6 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::AddDecodingTask(Zero::Functor* function)
   {
-    // Don't add tasks to the list when audio output is stopped
-    if (!AudioIO->IsStreamStarted(StreamTypes::Output))
-    {
-      delete function;
-      return;
-    }
-
     DecodingQueue.Write(function);
     DecodeThreadEvent.Signal();
   }
