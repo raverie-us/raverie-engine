@@ -11,7 +11,7 @@
 
 namespace Audio
 {
-  //------------------------------------------------------------------------------- Sound Asset Node
+  //------------------------------------------------------------------------------------ Sound Asset
 
   //************************************************************************************************
   SoundAsset::SoundAsset(ExternalNodeInterface* externalInterface, const bool threaded) :
@@ -140,17 +140,12 @@ namespace Audio
         mFrameCount = Decoder->SamplesPerChannel;
 
         // If not streaming, make the Samples buffer big enough to hold all the audio samples,
-        // and decode one buffer so it's ready to go
+        // and start decoding the audio data
         if (!mStreaming)
         {
           Samples.Reserve(mFrameCount * mChannels);
 
           gAudioSystem->AddTask(Zero::CreateFunctor(&FileDecoder::AddDecodingTask, Decoder));
-        }
-        // Otherwise, make the Samples buffer the size of one packet
-        else
-        {
-          Samples.Resize(FileEncoder::PacketFrames * mChannels, 0.0f);
         }
       }
       // If not successful, delete the decoder object
@@ -192,11 +187,19 @@ namespace Audio
     if (!mStreaming)
     {
       if (Decoder)
-        CheckForDecodedPacket();
+        ProcessAvailableDecodedPacket();
       
       // Check if the number of samples would go past the available decoded samples
       if (sampleIndex + numberOfSamples >= Samples.Size())
       {
+        // Keep getting decoded packets while it's successful
+        while (ProcessAvailableDecodedPacket())
+        {
+          // Stop when we have enough decoded samples
+          if (sampleIndex + numberOfSamples < Samples.Size())
+            break;
+        }
+
         // Copy available samples, if any
         if (sampleIndex < Samples.Size())
           buffer->Append(Samples.SubRange(sampleIndex, Samples.Size() - sampleIndex));
@@ -212,79 +215,9 @@ namespace Audio
     {
       // Adjust the sample index to be within the current buffer
       sampleIndex -= mPreviousBufferSamples;
-      // Save the buffer size
-      unsigned bufferSize = FileEncoder::PacketFrames * mChannels;
-      // Save the samples available in the current buffer
-      int samplesAvailable = bufferSize - sampleIndex;
 
-      // If there are more samples available than are needed, copy them over and return
-      if ((int)numberOfSamples <= samplesAvailable)
-      {
-        buffer->Append(Samples.SubRange(sampleIndex, numberOfSamples));
-        return;
-      }
-
-      // If there are samples available in the current buffer, copy them 
-      if (samplesAvailable > 0)
-      {
-        buffer->Append(Samples.SubRange(sampleIndex, samplesAvailable));
-
-        // Move the sample index forward
-        sampleIndex += samplesAvailable;
-        // Reduce the number of samples needed
-        numberOfSamples -= samplesAvailable;
-      }
-
-      // If there are no samples in the next buffer, check for a decoded packet
-      if (NextStreamedSamples.Size() == 0)
-      {
-        mNeedSecondBuffer = true;
-        CheckForDecodedPacket();
-
-        // If there are still no samples, set the rest of the buffer to zero and return
-        if (NextStreamedSamples.Size() == 0)
-        {
-          buffer->Resize(buffer->Size() + numberOfSamples, 0.0f);
-          return;
-        }
-      }
-
-      // Move the next buffer of samples into the Samples array
-      Samples.Swap(NextStreamedSamples);
-      // Clear the next buffer
-      NextStreamedSamples.Clear();
-      // Move the previous buffer samples counter forward
-      mPreviousBufferSamples += bufferSize;
-      // Adjust the sample index
-      sampleIndex -= bufferSize;
-      // Mark that we need another buffer and check for decoded packets
-      mNeedSecondBuffer = true;
-      CheckForDecodedPacket();
-
-      // If the sample index is not within this buffer, set the rest of the buffer to zero
-      if (sampleIndex > bufferSize)
-      {
-        buffer->Resize(buffer->Size() + numberOfSamples, 0.0f);
-      }
-      // Check if there are additional samples needed
-      else if (numberOfSamples > 0)
-      {
-        // Save how many samples are available now
-        samplesAvailable = bufferSize - sampleIndex;
-
-        // If there are more samples available than are needed, simply copy them over
-        if ((int)numberOfSamples <= samplesAvailable)
-          buffer->Append(Samples.SubRange(sampleIndex, numberOfSamples));
-        else
-        {
-          // If there are samples available in the current buffer, copy them 
-          if (samplesAvailable > 0)
-            buffer->Append(Samples.SubRange(sampleIndex, samplesAvailable));
-
-          // Set the remaining samples to zero
-          buffer->Resize(buffer->Size() + numberOfSamples - samplesAvailable, 0.0f);
-        }
-      }
+      while (numberOfSamples > 0)
+        FillStreamingBuffer(buffer, &sampleIndex, &numberOfSamples);
     }
   }
 
@@ -310,7 +243,7 @@ namespace Audio
     DecodedPacket packet;
     while (Decoder->DecodedPacketQueue.Read(packet))
     {
-      packet.ReleaseSamples();
+
     }
 
     // Reset the decoder
@@ -321,7 +254,7 @@ namespace Audio
     mNeedSecondBuffer = true;
 
     // Reset the buffers
-    memset(Samples.Data(), 0, sizeof(float) * FileEncoder::PacketFrames * mChannels);
+    Samples.Clear();
     NextStreamedSamples.Clear();
   }
 
@@ -381,33 +314,24 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void SoundAssetFromFile::CheckForDecodedPacket()
+  bool SoundAssetFromFile::ProcessAvailableDecodedPacket()
   {
     if (!Threaded || !Decoder)
-      return;
+      return false;
 
     if (mStreaming && !mNeedSecondBuffer)
-      return;
+      return false;
 
     DecodedPacket packet;
     if (Decoder->DecodedPacketQueue.Read(packet))
     {
-      unsigned sampleCount = packet.FrameCount * mChannels;
-
       if (!mStreaming)
       {
-        unsigned originalSize = Samples.Size();
+        // Move the decoded samples into the asset's array
+        Samples.Append(packet.Samples.All());
 
-        Samples.Resize(originalSize + sampleCount);
-        memcpy(Samples.Data() + originalSize, packet.Samples, sampleCount * sizeof(float));
-
-        packet.ReleaseSamples();
-
-        // If we haven't reached the end, decode another packet
-        if (Samples.Size() < mFrameCount * mChannels)
-          Decoder->AddDecodingTask();
         // If this is the end, don't need the decoder any more (it won't be processing tasks)
-        else
+        if (Samples.Size() >= mFrameCount * mChannels)
         {
           delete Decoder;
           Decoder = nullptr;
@@ -416,10 +340,7 @@ namespace Audio
       else
       {
         // Move the samples into the NextStreamedSamples buffer
-        NextStreamedSamples.Resize(sampleCount);
-        memcpy(NextStreamedSamples.Data(), packet.Samples, sampleCount * sizeof(float));
-
-        packet.ReleaseSamples();
+        NextStreamedSamples = Zero::MoveReference<Zero::Array<float>>(packet.Samples);
 
         // If the index hasn't reached the end, decode another packet
         if (mPreviousBufferSamples + NextStreamedSamples.Size() < mFrameCount * mChannels)
@@ -428,7 +349,77 @@ namespace Audio
         // Mark that the second buffer is filled
         mNeedSecondBuffer = false;
       }
+
+      return true;
     }
+
+    return false;
+  }
+
+  //************************************************************************************************
+  bool SoundAssetFromFile::MoveBuffers()
+  {
+    // If there are no samples in the next buffer, check for a decoded packet
+    if (NextStreamedSamples.Size() == 0)
+    {
+      mNeedSecondBuffer = true;
+      ProcessAvailableDecodedPacket();
+
+      // If there are still no samples, return
+      if (NextStreamedSamples.Size() == 0)
+        return false;
+    }
+
+    // Move the previous buffer samples counter forward
+    mPreviousBufferSamples += Samples.Size();
+    // Move the next buffer of samples into the Samples array
+    Samples = Zero::MoveReference<Zero::Array<float>>(NextStreamedSamples);
+    // Mark that we need another buffer and check for decoded packets
+    mNeedSecondBuffer = true;
+    ProcessAvailableDecodedPacket();
+
+    return true;
+  }
+
+  //************************************************************************************************
+  void SoundAssetFromFile::FillStreamingBuffer(Zero::Array<float>* buffer, unsigned* sampleIndexPtr,
+    unsigned* samplesNeededPtr)
+  {
+    if (*samplesNeededPtr == 0)
+      return;
+
+    // Save the buffer size
+    unsigned bufferSize = Samples.Size();
+
+    // Save references for ease of use
+    unsigned& sampleIndex = *sampleIndexPtr;
+    unsigned& samplesNeeded = *samplesNeededPtr;
+
+    // Keep looking for decoded samples while the index is larger than the current buffer
+    while (sampleIndex >= bufferSize)
+    {
+      // If there are no more decoded samples available, set the rest of the buffer to zero and return
+      if (!MoveBuffers())
+      {
+        buffer->Resize(buffer->Size() + samplesNeeded, 0.0f);
+        samplesNeeded = 0;
+        return;
+      }
+
+      // Adjust the sample index
+      sampleIndex -= bufferSize;
+      // Get the new buffer size
+      bufferSize = Samples.Size();
+    }
+
+    // Copy either the samples needed or the samples available, whichever is smaller
+    unsigned samplesCopied = Math::Min(samplesNeeded, bufferSize - sampleIndex);
+    buffer->Append(Samples.SubRange(sampleIndex, samplesCopied));
+
+    // Move the sample index forward
+    sampleIndex += samplesCopied;
+    // Reduce the number of samples needed
+    samplesNeeded -= samplesCopied;
   }
 
   //--------------------------------------------------------------------- Generated Wave Sound Asset

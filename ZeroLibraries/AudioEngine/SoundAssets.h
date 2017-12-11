@@ -14,7 +14,7 @@ struct OpusDecoder;
 
 namespace Audio
 {
-  //------------------------------------------------------------------------------- Sound Asset Node
+  //------------------------------------------------------------------------------------ Sound Asset
 
   // Base class for all sound assets
   class SoundAsset
@@ -104,8 +104,15 @@ namespace Audio
     bool OkayToAddInstance() override;
     // Resets the HasStreamingInstance variable.
     void RemoveInstance() override;
-    // Checks if there is a decoded packet to copy into the Samples buffer.
-    void CheckForDecodedPacket();
+    // Checks if there is a decoded packet to copy into the Samples buffer. Returns true if 
+    // decoded samples were added and false if they were not.
+    bool ProcessAvailableDecodedPacket();
+    // Moves the NextStreamedSamples buffer into the Samples buffer and checks for more decoded samples.
+    // Returns true if samples were moved into the Samples buffer and false if none were available.
+    bool MoveBuffers();
+    // Fills the buffer with the specified number of samples, starting at the specified index.
+    // Will pad with zero if not enough samples available.
+    void FillStreamingBuffer(Zero::Array<float>* buffer, unsigned* sampleIndex, unsigned* samplesNeeded);
 
     // If true, this is a streaming asset.
     bool mStreaming;
@@ -128,7 +135,6 @@ namespace Audio
     // If true, the NextStreamedSamples buffer needs to be filled out.
     bool mNeedSecondBuffer;
   };
-
 
   //--------------------------------------------------------------------- Generated Wave Sound Asset
 
