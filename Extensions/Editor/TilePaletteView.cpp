@@ -490,6 +490,9 @@ void TilePaletteView::SetArchetype(Archetype* newResource)
 void TilePaletteView::SetSprite(SpriteSource* newResource)
 {
   mSprite = newResource;
+  ResourceId spriteId = 0;
+  if(mSprite != nullptr)
+    spriteId = mSprite->mResourceId;
 
   if (mSelectionStart == mSelectionEnd && mPaletteTiles.Find(mSelectionStart).Empty())
   {
@@ -501,7 +504,7 @@ void TilePaletteView::SetSprite(SpriteSource* newResource)
     {
       TilePaletteEntry* entry = selection.mEntry;
 
-      entry->tile.SpriteResource = mSprite->mResourceId;
+      entry->tile.SpriteResource = spriteId;
       AddToPaletteSource(selection.mLocation, entry->tile);
 
       if (mSprite)
@@ -517,6 +520,9 @@ void TilePaletteView::SetSprite(SpriteSource* newResource)
 void TilePaletteView::SetCollision(PhysicsMesh* newResource)
 {
   mCollision = newResource;
+  ResourceId collisionId = 0;
+  if(mCollision != nullptr)
+    collisionId = mCollision->mResourceId;
 
   if (mSelectionStart == mSelectionEnd && mPaletteTiles.Find(mSelectionStart).Empty())
   {
@@ -528,7 +534,7 @@ void TilePaletteView::SetCollision(PhysicsMesh* newResource)
     {
       TilePaletteEntry* entry = selection.mEntry;
 
-      entry->tile.CollisionResource = mCollision->mResourceId;
+      entry->tile.CollisionResource = collisionId;
       AddToPaletteSource(selection.mLocation, entry->tile);
 
       if (mCollision && mShowCollision)
