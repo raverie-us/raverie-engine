@@ -430,7 +430,7 @@ void MetaSerializeComponents(HandleParam instance, Serializer& serializer)
     for(uint i = 0; i < childCount; ++i)
     {
       Any component = composition->GetComponentAt(instance, i);
-      MetaSerialization* metaSerialization = component.StoredType->Has<MetaSerialization>();
+      MetaSerialization* metaSerialization = component.StoredType->HasInherited<MetaSerialization>();
       if (metaSerialization)
         metaSerialization->SerializeObject(component, serializer);
       else
@@ -446,7 +446,13 @@ void MetaSerializeComponents(HandleParam instance, Serializer& serializer)
       if(componentType)
       {
         Handle component = composition->GetComponent(instance, componentType);
-        if(component.StoredType != nullptr)
+        if(component.IsNull())
+        {
+          component = ZilchAllocateUntyped(componentType);
+          composition->AddComponent(instance, component);
+        }
+
+        if(component.IsNotNull())
         {
           MetaSerialization* metaSerialization = component.StoredType->Has<MetaSerialization>();
           if (metaSerialization)

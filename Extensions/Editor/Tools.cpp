@@ -236,7 +236,7 @@ ZilchDefineType(SelectTool, builder, type)
 
   ZeroBindEvent(Events::SelectToolPreSelect, ViewportMouseEvent);
 
-  type->Add(new RaycasterMetaComposition(offsetof(SelectTool, mRaycaster)));
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 //******************************************************************************
@@ -647,7 +647,7 @@ ZilchDefineType(CreationTool, builder, type)
 
   ZeroBindTag(Tags::Tool);
 
-  type->Add(new RaycasterMetaComposition(offsetof(CreationTool, mRaycaster)));
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 //******************************************************************************

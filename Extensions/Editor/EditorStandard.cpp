@@ -307,6 +307,9 @@ void EditorLibrary::Initialize()
   RegisterHotKeyEditors();
   RegisterAnimationTrackViewEditors();
 
+  // Raycaster should start expanded when opening the property grid
+  PropertyWidgetObject::mExpandedTypes.Insert("Raycaster");
+
   InitializeResourceManager(TilePaletteSourceManager);
 }
 

@@ -164,6 +164,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(MetaEditorScriptObject);
   ZilchInitializeType(MetaDependency);
   ZilchInitializeType(MetaInterface);
+  ZilchInitializeType(RaycasterMetaComposition);
 
   // Events
   ZilchInitializeType(CogPathEvent);

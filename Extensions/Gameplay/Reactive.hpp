@@ -52,10 +52,7 @@ public:
   // Meta Initialization
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  ReactiveSpace();
-
   //Component Interface
-  void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
   Cog* GetOver();

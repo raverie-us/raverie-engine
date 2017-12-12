@@ -19,6 +19,7 @@ ZilchDefineType(GraphicsRaycastProvider, builder, type)
 {
   ZilchBindFieldProperty(mMultiSelectGraphical);
   ZilchBindFieldProperty(mVisibleOnly);
+  ZilchBindConstructor();
 
   type->ToStringFunction = GraphicsRaycastProviderToString;
   type->Add(new StringNameDisplay("Graphics"));
