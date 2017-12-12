@@ -224,7 +224,7 @@ void EditHotKeys(Editor* editor, Resource* resource)
   
   //HotKeyEditor* hotKeyEditor = new HotKeyEditor(editor);
 
-  Widget* widget = editor->mManager->ShowWidget("CommandListViewer");
+  Widget* widget = editor->mManager->ShowWidget("Commands");
   //widget->SetSize(Pixels(850, 500));
   //widget->TakeFocus();
 

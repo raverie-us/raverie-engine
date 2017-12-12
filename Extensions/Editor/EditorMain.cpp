@@ -892,7 +892,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   //----------------------------------------------------------------------------
   {
     HotKeyEditor* hotkeyEditor = new HotKeyEditor(editorMain);
-    hotkeyEditor->SetName("CommandListViewer");
+    hotkeyEditor->SetName("Commands");
     hotkeyEditor->SetHideOnClose(true);
     hotkeyEditor->SetSize(Pixels(850, 500));
     editorMain->AddManagedWidget(hotkeyEditor, DockArea::Floating, false);
@@ -900,7 +900,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
 
   //----------------------------------------------------------------------------
   {
-    BindCommand("CommandListViewer", ShowHotKeyEditor);
+    BindCommand("Commands", ShowHotKeyEditor);
     BindCommand("OperationHistory", ShowOperationHistroy);
     BindCommand("Animator", ShowAnimator);
     BindCommand("FindNext", ShowFindNext);

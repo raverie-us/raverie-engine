@@ -161,9 +161,9 @@ HotKeyDataSet
 		}
 		Object
 		{
-			var Name = "CommandListViewer"
+			var Name = "Commands"
 			var Description = "Show the Command List Viewer"
-			var IconName = "CommandListViewer"
+			var IconName = "Commands"
 			var Function = ""
 			var Tags = "Windows"
 			var DevOnly = false

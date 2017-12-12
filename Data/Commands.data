@@ -455,9 +455,9 @@ Commands commands =
 
 	Command =
 	{
-		string Name = "CommandListViewer",
+		string Name = "Commands",
 		string Description = "Show the Command List Viewer",
-		string IconName = "CommandListViewer",
+		string IconName = "Commands",
 		string Shortcut = "Alt+Shift+H",
 		string Tags = "Windows",
 	},
@@ -507,13 +507,6 @@ Commands commands =
 	{
 		string Name = "Help",
 		string Description = "Display documentation for the engine",
-		string Tags = "Editor Help",
-	},
-
-	Command =
-	{
-		string Name = "Controls",
-		string Description = "Show the Controls Window",
 		string Tags = "Editor Help",
 	},
 

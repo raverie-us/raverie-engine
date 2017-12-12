@@ -1222,7 +1222,8 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
 
   commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition));
 
-  commands->AddCommand("EditCommands", BindCommandFunction(EditCommands));
+  // Currently EditCommands just opens the command list and no editing functionality exists
+  // commands->AddCommand("EditCommands", BindCommandFunction(EditCommands));
 
   if(DeveloperConfig* config = configCog->has(DeveloperConfig))
   {

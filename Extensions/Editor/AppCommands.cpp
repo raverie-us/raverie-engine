@@ -48,44 +48,6 @@ void ShowTextWindow(StringParam windowTitle, StringParam windowText)
   CenterToWindow(Z::gEditor, window, true);
 }
 
-void ShowControls(Editor* editor)
-{
-  String controlsText = 
-    "Movement\n"
-    "  WASD - Dolly camera on x/z plane\n" 
-    "  Q / Alt - Orbit camera with left mouse\n"
-    "  E - Pan camera with left mouse\n"
-    "  Mouse Wheel - Dolly camera on view\n"
-    "  F - Focus on selected objects\n"
-    "  FF - Focus and Zoom selected Objects\n"
-    "\n"
-    "Commands\n"
-    "  ~ - Toggle Console\n"
-    "  Ctrl+X - Cut selected objects\n"
-    "  Ctrl+C - Copy selected objects\n"
-    "  Ctrl+V - Paste objects\n"
-    "  F5 - Play game\n"
-    "  F6 - Toggle pause game\n"
-    "  F7 - Step game forward one frame\n"
-    "  F8 - Stop game\n"
-    "  F9 - Edit running game\n"
-    "  F10 - Lock mouse to window\n"
-    "  F11 - Zoom\n"
-    "\n"
-    "Selection\n"
-    "  Shift+A - Select all\n"
-    "  Shift+W - Select Parent\n"
-    "  Shift+S - Select Space\n"
-    "  Shift+C - Select Camera\n"
-    "  Shift+D - Deselect\n"
-    "  Left Mouse - Select objects\n"
-    "  Left Mouse & Drag - Box select\n" 
-    "  Left Mouse & Drag+Ctrl - Smart Group Select\n"
-    "  Ctrl+L - Enable lighting\n";
-
-  ShowTextWindow("Controls", controlsText);
-}
-
 void ShowAbout()
 {
   String text = 
@@ -229,7 +191,6 @@ void RunZilchDebugger()
 
 void BindAppCommands(Cog* config, CommandManager* commands)
 {
-  commands->AddCommand("Controls", BindCommandFunction(ShowControls));
   commands->AddCommand("About", BindCommandFunction(ShowAbout));
 
   commands->AddCommand("Exit", BindCommandFunction(ExitEditor));
