@@ -124,6 +124,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeType(PropertyFilterFloatingPointTypes);
   ZilchInitializeType(PropertyFilterArithmeticTypes);
   ZilchInitializeType(EditInGameFilter);
+  ZilchInitializeType(MetaNetProperty);
 
   // Net property filters by type
   InitializePropertyFilterForType(Other);
@@ -178,6 +179,9 @@ void NetworkingLibrary::Initialize()
   // Resource Managers
   InitializeResourceManager(NetChannelConfigManager);
   InitializeResourceManager(NetPropertyConfigManager);
+
+  RegisterPropertyAttributeType(PropertyAttributes::cNetProperty, MetaNetProperty);
+  RegisterPropertyAttribute(PropertyAttributes::cNetPeerId)->TypeMustBe(int);
 }
 
 //**************************************************************************************************

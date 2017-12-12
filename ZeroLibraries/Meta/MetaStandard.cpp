@@ -160,22 +160,20 @@ void MetaLibrary::Initialize()
 
   AttributeExtensions::Initialize();
 
-  RegisterFunctionAttribute("Static")->AllowStatic(true);
-  RegisterFunctionAttribute("Virtual");
-  RegisterFunctionAttribute("Override");
+  RegisterFunctionAttribute(Zilch::StaticAttribute)->AllowStatic(true);
+  RegisterFunctionAttribute(Zilch::VirtualAttribute);
+  RegisterFunctionAttribute(Zilch::OverrideAttribute);
   RegisterFunctionAttribute(FunctionAttributes::cDisplay)->AllowStatic(true);
 
-  RegisterPropertyAttribute("Static")->AllowStatic(true);
-  RegisterPropertyAttribute("Virtual");
-  RegisterPropertyAttribute("Override");
+  RegisterPropertyAttribute(Zilch::StaticAttribute)->AllowStatic(true);
+  RegisterPropertyAttribute(Zilch::VirtualAttribute);
+  RegisterPropertyAttribute(Zilch::OverrideAttribute);
   RegisterPropertyAttribute(PropertyAttributes::cProperty);
   RegisterPropertyAttribute(PropertyAttributes::cSerialize);
   RegisterPropertyAttribute(PropertyAttributes::cDeprecatedSerialized);
   RegisterPropertyAttribute(PropertyAttributes::cDisplay)->AllowStatic(true);
   RegisterPropertyAttribute(PropertyAttributes::cDeprecatedEditable)->AllowStatic(true);
   RegisterPropertyAttribute(PropertyAttributes::cDependency);
-  RegisterPropertyAttribute(PropertyAttributes::cNetProperty);
-  RegisterPropertyAttribute(PropertyAttributes::cNetPeerId);
   RegisterPropertyAttribute(PropertyAttributes::cRuntimeClone)->AllowStatic(true);
   RegisterPropertyAttributeType(PropertyAttributes::cShaderInput, MetaShaderInput)->AllowMultiple(true);
   RegisterPropertyAttributeType(PropertyAttributes::cRenamedFrom, MetaPropertyRename);
