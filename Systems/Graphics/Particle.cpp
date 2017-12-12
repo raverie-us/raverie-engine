@@ -27,6 +27,7 @@ void PushFront(Particle*& front, Particle* particle)
 //--------------------------------------------------------------------- Particle
 ZilchDefineType(Particle, builder, type)
 {
+  type->HandleManager = ZilchManagerId(PointerManager);
   ZilchBindFieldProperty(Time);
   ZilchBindFieldProperty(Lifetime);
   ZilchBindFieldProperty(Size);

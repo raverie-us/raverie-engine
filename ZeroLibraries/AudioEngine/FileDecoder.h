@@ -18,16 +18,14 @@ namespace Audio
 
   struct DecodedPacket
   {
-    DecodedPacket() : Samples(nullptr) {}
+    DecodedPacket() {}
+    DecodedPacket(unsigned bufferSize);
     DecodedPacket(const DecodedPacket& copy);
 
-    // Deletes the sample buffer
-    void ReleaseSamples();
+    DecodedPacket& operator=(const DecodedPacket& other);
 
-    // The number of frames of audio data in this packet
-    unsigned FrameCount;
     // The buffer of samples for this channel
-    float* Samples;
+    Zero::Array<float> Samples;
   };
 
   //----------------------------------------------------------------------------------- File Decoder
@@ -83,9 +81,7 @@ namespace Audio
 
     // Adds decoded packets to the queue and translates the per-channel buffers to
     // an interleaved buffer
-    void QueueDecodedPackets(int numberOfFrames);
-    // Decrements the DecodingTaskCount and checks if it should delete itself
-    void FinishDecodingPacket();
+    void QueueDecodedPackets(unsigned numberOfFrames);
   };
 
   //--------------------------------------------------------------------------------- Packet Decoder

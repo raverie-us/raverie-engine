@@ -91,9 +91,6 @@ namespace Audio
     if (mFrameIndex + newFramesToGet > VolumeInterpolator.GetTotalFrames())
       newFramesToGet -= mFrameIndex + newFramesToGet - VolumeInterpolator.GetTotalFrames();
 
-    // Resize the sample array to hold the new samples
-    FadeSamples.Resize(FadeSamples.Size() + (newFramesToGet * mAsset->GetChannels()));
-
     // Add the new samples to the end of the sample array
     mAsset->AppendSamples(&FadeSamples, mStartFrame + mFrameIndex, newFramesToGet * mAsset->GetChannels());
   }

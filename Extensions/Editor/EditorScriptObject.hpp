@@ -151,7 +151,9 @@ void EditorScriptObjects<DataType>::CreateOrUpdateCog(DataType* object)
 
   if(Archetype* archetype = object->mArchetype)
   {
-    object->mCog = space->Create(archetype);
+    Cog* cog = space->Create(archetype);
+    cog->ClearArchetype();
+    object->mCog = cog;
   }
   else if(object->mScriptComponentType)
   {

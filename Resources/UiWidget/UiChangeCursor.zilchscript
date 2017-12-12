@@ -14,8 +14,8 @@ class UiChangeCursor : ZilchComponent
   //***************************************************************************
   function Initialize(init : CogInitializer)
   {
-    Zero.Connect(this.Owner, Events.MouseEnter, this.OnMouseEnter);
-    Zero.Connect(this.Owner, Events.MouseExit, this.OnMouseExit);
+    Zero.Connect(this.Owner, Events.MouseEnterHierarchy, this.OnMouseEnter);
+    Zero.Connect(this.Owner, Events.MouseExitHierarchy, this.OnMouseExit);
   }
 
   //***************************************************************************

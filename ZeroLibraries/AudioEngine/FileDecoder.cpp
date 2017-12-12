@@ -14,21 +14,24 @@ namespace Audio
   //--------------------------------------------------------------------------------- Decoded Packet
 
   //************************************************************************************************
-  DecodedPacket::DecodedPacket(const DecodedPacket& copy) :
-    FrameCount(copy.FrameCount),
-    Samples(copy.Samples)
+  DecodedPacket::DecodedPacket(unsigned bufferSize) :
+    Samples(bufferSize)
   {
-    
+
   }
 
   //************************************************************************************************
-  void DecodedPacket::ReleaseSamples()
+  DecodedPacket::DecodedPacket(const DecodedPacket& copy) :
+    Samples(Zero::MoveReference<Zero::Array<float>>(const_cast<DecodedPacket&>(copy).Samples))
   {
-    if (Samples)
-    {
-      delete[] Samples;
-      Samples = nullptr;
-    }
+
+  }
+
+  //************************************************************************************************
+  DecodedPacket& DecodedPacket::operator=(const DecodedPacket& other)
+  {
+    Samples = Zero::MoveReference<Zero::Array<float>>(const_cast<DecodedPacket&>(other).Samples);
+    return *this;
   }
 
   //----------------------------------------------------------------------------------- File Decoder
@@ -132,7 +135,7 @@ namespace Audio
     DecodedPacket packet;
     while (DecodedPacketQueue.Read(packet))
     {
-      packet.ReleaseSamples();
+
     }
 
     // Destroy any alive decoders
@@ -164,7 +167,13 @@ namespace Audio
     // If no data, can't do anything
     if (!InputFileData || DataIndex >= DataSize || (Streaming && !InputFile.IsOpen()))
     {
-      FinishDecodingPacket();
+      // If the pointer is null, this object should be deleted 
+      // (sets ParentAlive to null if it's currently null, returns original value which would be null)
+      if (AtomicCompareExchangePointer(&ParentAlive, nullptr, nullptr) == nullptr)
+        delete this;
+
+      AtomicDecrement32(&DecodingTaskCount);
+
       return;
     }
 
@@ -212,18 +221,30 @@ namespace Audio
       DataIndex += packHead.Size;
     }
 
-    // If we've reached the end of the file, delete the data
-    if (DataIndex >= DataSize && !Streaming)
+    // Check if we're not streaming
+    if (!Streaming)
     {
-      delete[] InputFileData;
-      InputFileData = nullptr;
+      // If we've reached the end of the file, delete the data
+      if (DataIndex >= DataSize)
+      {
+        delete[] InputFileData;
+        InputFileData = nullptr;
+      }
+      // Otherwise add another task to continue decoding the file
+      else 
+        gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodePacket, this));
     }
 
-    FinishDecodingPacket();
+    // If the pointer is null, this object should be deleted 
+    // (sets ParentAlive to null if it's currently null, returns original value which would be null)
+    if (AtomicCompareExchangePointer(&ParentAlive, nullptr, nullptr) == nullptr)
+      delete this;
 
     // Add the decoded packets to the queue. Must happen last so that all actions are completed
     // before the packet is sent to the SoundAsset.
     QueueDecodedPackets(frames);
+
+    AtomicDecrement32(&DecodingTaskCount);
   }
 
   //************************************************************************************************
@@ -238,14 +259,17 @@ namespace Audio
     if (!InputFile.IsOpen())
       return;
 
-    // Remove any current packets from the queue (wait for all existing tasks to be done)
+    // Wait for all existing tasks to be done
     while (AtomicCompareExchange32(&DecodingTaskCount, 0, 0) != 0)
     {
-      DecodedPacket packet;
-      while (DecodedPacketQueue.Read(packet))
-      {
-        packet.ReleaseSamples();
-      }
+
+    }
+
+    // Remove any current packets from the queue
+    DecodedPacket packet;
+    while (DecodedPacketQueue.Read(packet))
+    {
+
     }
 
     // Set the file to the start of the data
@@ -276,7 +300,7 @@ namespace Audio
     DecodedPacket packet;
     while (DecodedPacketQueue.Read(packet))
     {
-      packet.ReleaseSamples();
+
     }
   }
 
@@ -289,17 +313,13 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void FileDecoder::QueueDecodedPackets(int numberOfFrames)
+  void FileDecoder::QueueDecodedPackets(unsigned numberOfFrames)
   {
     // Create the DecodedPacket object
-    DecodedPacket newPacket;
-    // Set the number of frames
-    newPacket.FrameCount = numberOfFrames;
-    // Create the buffer for the samples
-    newPacket.Samples = new float[newPacket.FrameCount * Channels];
+    DecodedPacket newPacket(numberOfFrames * Channels);
 
     // Step through each frame of samples
-    for (unsigned frame = 0, index = 0; frame < newPacket.FrameCount; ++frame)
+    for (unsigned frame = 0, index = 0; frame < numberOfFrames; ++frame)
     {
       // Copy the sample from each channel to the interleaved sample buffer
       for (short channel = 0; channel < Channels; ++channel, ++index)
@@ -315,17 +335,6 @@ namespace Audio
 
     // Add the DecodedPacket object to the queue
     DecodedPacketQueue.Write(newPacket);
-  }
-
-  //************************************************************************************************
-  void FileDecoder::FinishDecodingPacket()
-  {
-    AtomicDecrement32(&DecodingTaskCount);
-
-    // If the pointer is null, this object should be deleted 
-    // (sets ParentAlive to null if it's currently null, returns original value which would be null)
-    if (AtomicCompareExchangePointer(&ParentAlive, nullptr, nullptr) == nullptr)
-      delete this;
   }
 
   //--------------------------------------------------------------------------------- Packet Decoder

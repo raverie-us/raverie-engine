@@ -344,7 +344,8 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(ObjectPropertyNode* 
   forRange(Function* function, targetType->GetFunctions())
   {
     // Don't want to add hidden methods
-    if (function->HasAttribute(FunctionAttributes::cProperty))
+    if (function->HasAttribute(FunctionAttributes::cProperty) ||
+        function->HasAttribute(FunctionAttributes::cDisplay))
     {
       // METAREFACTOR - 0 param
       // We can only display methods with 0 parameters

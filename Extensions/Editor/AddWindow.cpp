@@ -1125,11 +1125,11 @@ void ResourceTemplateDisplay::OnCreate(Event*)
   if (ValidateName(true) == false || ValidateTags() == false)
     return;
   
-  Resource* resource = mSelectedTemplate;
-  if (resource == nullptr)
+  Resource* resourceTemplate = mSelectedTemplate;
+  if (resourceTemplate == nullptr)
     return;
 
-  BoundType* resourceType = ZilchVirtualTypeId(resource);
+  BoundType* resourceType = ZilchVirtualTypeId(resourceTemplate);
   ResourceManager* manager = Z::gResources->GetResourceManager(resourceType);
 
   String newName = mNameField->GetText();
@@ -1141,7 +1141,7 @@ void ResourceTemplateDisplay::OnCreate(Event*)
   ResourceAdd resourceAdd;
   resourceAdd.Library = library;
   resourceAdd.Name = newName;
-  resourceAdd.Template = resource;
+  resourceAdd.Template = resourceTemplate;
   AddNewResource(manager, resourceAdd);
 
   if (resourceAdd.WasSuccessful())
@@ -1168,14 +1168,17 @@ void ResourceTemplateDisplay::OnCreate(Event*)
       if (!r.Empty())
         tags.Insert(r);
     }
+    // Add all the tags from the resource template to the newly created resource
+    resourceTemplate->GetTags(tags);
+    // Set all the collected tags on the newly created resource
     resourceAdd.SourceResource->mContentItem->SetTags(tags);
 
     // Dispatch an event that the resource has been modified on the resource itself
     // and on the resource system
     ResourceEvent e;
-    e.Manager = resource->GetManager();
-    e.EventResource = resource;
-    resource->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
+    e.Manager = resourceTemplate->GetManager();
+    e.EventResource = resourceTemplate;
+    resourceTemplate->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
     Z::gResources->DispatchEvent(Events::ResourceTagsModified, &e);
   }
 

@@ -172,8 +172,10 @@ public:
   /// (i.e. Archetype being rebuilt).
   virtual void RebuildObject(HandleParam object) = 0;
 
-  /// Needed??
-  //virtual void SetChildOrderOverride(HandleParam object);
+  /// Does this object inherit from other data? Short-hand to ShouldStoreLocalModifications.
+  /// See the comment in the implementation for ShouldStoreLocalModifications to get a better
+  /// description of what objects should and should not stored local modifications.
+  static bool InheritsFromData(HandleParam object);
 };
 
 //---------------------------------------------------------------------------- Meta Data Inheritance

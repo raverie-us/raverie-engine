@@ -27,4 +27,18 @@ void MetaResource::SetResource(Resource* resource)
   mResourceId = resource->mResourceId;
 }
 
+//------------------------------------------------------------------------- MetaEditor Script Object
+//**************************************************************************************************
+ZilchDefineType(MetaEditorScriptObject, builder, type)
+{
+  ZilchBindField(mAutoRegister)->AddAttribute(PropertyAttributes::cOptional);
+}
+
+//**************************************************************************************************
+MetaEditorScriptObject::MetaEditorScriptObject()
+  : mAutoRegister(true)
+{
+  
+}
+
 }//namespace Zero

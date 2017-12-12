@@ -167,7 +167,7 @@ namespace Audio
     // Thread for decoding tasks
     Zero::Thread DecodeThread;
     // Queue for decoding tasks
-    LockFreeQueue<Zero::Functor*> DecodingQueue;
+    MultipleWriterQueue<Zero::Functor*> DecodingQueue;
     // Used to signal the decoding thread when decoding tasks are added to the queue
     Zero::OsEvent DecodeThreadEvent;
     // Will be zero while running, set to 1 when the decoding thread should shut down

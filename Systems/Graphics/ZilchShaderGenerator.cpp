@@ -380,6 +380,18 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Arr
   if (library == nullptr)
     return nullptr;
 
+  // If pending changes cause scripts to not compile, and then fragments are changed again to fix it,
+  // will have duplicate pending libraries that should be replaced.
+  // Libraries aren't mapped by name so find it manually.
+  forRange (LibraryRef pendingLib, mPendingToPendingInternal.Keys())
+  {
+    if (pendingLib->Name == library->Name)
+    {
+      mPendingToPendingInternal.Erase(pendingLib);
+      break;
+    }
+  }
+
   mPendingToPendingInternal.Insert(library, fragmentsLibrary);
 
   ZilchFragmentTypeMap& fragmentTypes = mPendingFragmentTypes[library];
@@ -425,6 +437,8 @@ bool ZilchShaderGenerator::Commit(ZilchCompileEvent* e)
   }
 
   ErrorIf(!mPendingToPendingInternal.Empty(), "We created a new library but it was not given to commit");
+  // Clear after assert so it's not repeated or leaked.
+  mPendingToPendingInternal.Clear();
 
   MapFragmentTypes();
 

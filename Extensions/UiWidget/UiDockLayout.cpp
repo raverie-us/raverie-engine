@@ -153,7 +153,7 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 
     child->SetSize(childSize);
     child->SetLocalBottomLeft(childPos);
-    child->UpdateTransform(e);
+    child->Update(e);
   }
 }
 

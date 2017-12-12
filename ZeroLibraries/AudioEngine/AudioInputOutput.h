@@ -77,8 +77,6 @@ namespace Audio
     virtual unsigned GetStreamChannels(StreamTypes::Enum whichStream) = 0;
     // Returns the sample rate of the specified audio stream
     virtual unsigned GetStreamSampleRate(StreamTypes::Enum whichStream) = 0;
-    // Returns true if the specified audio stream has been started
-    virtual bool IsStreamStarted(StreamTypes::Enum whichStream) = 0;
 
     // Last error message pertaining to the audio API
     Zero::String LastErrorMessage;
@@ -141,8 +139,6 @@ namespace Audio
     unsigned GetStreamChannels(StreamTypes::Enum whichStream) override;
     // Returns the sample rate of the specified audio stream
     unsigned GetStreamSampleRate(StreamTypes::Enum whichStream) override;
-    // Returns true if the specified audio stream has been started
-    bool IsStreamStarted(StreamTypes::Enum whichStream) override;
 
     int HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
 
