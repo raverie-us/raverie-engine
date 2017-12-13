@@ -127,6 +127,7 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(Detach);
 
   ZilchBindMethod(FindChildByName);
+  ZilchBindMethod(FindDirectChildByName);
   ZilchBindMethod(FindAllChildrenByName);
 
   ZilchBindMethod(IsDescendant);
@@ -1253,34 +1254,39 @@ void Cog::Detach()
 //**************************************************************************************************
 Cog* Cog::FindChildByName(StringParam name)
 {
-  // Attempt to grab the hierarchy component
-  Hierarchy* hierarchy = this->has(Hierarchy);
-
-  // If we have a hierarchy
-  if (hierarchy != nullptr)
+  // Loop through all the children
+  forRange(Cog& child, GetChildren())
   {
-    // Loop through all the children
-    forRange(Cog& child, hierarchy->Children.All())
+    // Get the name of the object and compare it
+    if (child.GetName() == name)
     {
-      // Get the name of the object and compare it
-      if (child.GetName() == name)
-      {
-        // It's the object we wanted!
-        return &child;
-      }
-      else
-      {
-        // Otherwise, search the children of this object...
-        Cog* found = child.FindChildByName(name);
+      // It's the object we wanted!
+      return &child;
+    }
+    else
+    {
+      // Otherwise, search the children of this object...
+      Cog* found = child.FindChildByName(name);
 
-        // If we found it... return it
-        if (found != nullptr)
-          return found;
-      }
+      // If we found it... return it
+      if (found != nullptr)
+        return found;
     }
   }
 
   // Otherwise, we found nothing in this hierarchy
+  return nullptr;
+}
+
+//**************************************************************************************************
+Cog* Cog::FindDirectChildByName(StringParam name)
+{
+  forRange(Cog& child, GetChildren())
+  {
+    if (child.GetName() == name)
+      return &child;
+  }
+
   return nullptr;
 }
 

@@ -228,6 +228,8 @@ public:
 
   /// Depth first search of all children.
   Cog* FindChildByName(StringParam name);
+  /// Checks only direct children.
+  Cog* FindDirectChildByName(StringParam name);
   /// Returns a range of all children with the given name.
   HierarchyNameRange FindAllChildrenByName(StringParam name);
   /// Returns the child object with the given id. This is only checks direct children.
