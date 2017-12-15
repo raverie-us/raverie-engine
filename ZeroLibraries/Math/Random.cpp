@@ -1,72 +1,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// \file StressRandom.cpp
+/// \file Random.cpp
 /// Implementation of the random number and vector generation functions.
 /// 
-/// Authors: Benjamin Strukus
+/// Authors: Dane Curbow
 /// Copyright 2010-2012, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-//The following comment is required to use the Mersenne Twister
-/* 
-   A C-program for MT19937, with initialization improved 2002/1/26.
-   Coded by Takuji Nishimura and Makoto Matsumoto.
-
-   Before using, initialize the state by using init_genrand(seed)  
-   or init_by_array(init_key, key_length).
-
-   Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
-   All rights reserved.                          
-
-   Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
-
-     1. Redistributions of source code must retain the above copyright
-        notice, this list of conditions and the following disclaimer.
-
-     2. Redistributions in binary form must reproduce the above copyright
-        notice, this list of conditions and the following disclaimer in the
-        documentation and/or other materials provided with the distribution.
-
-     3. The names of its contributors may not be used to endorse or promote 
-        products derived from this software without specific prior written 
-        permission.
-
-   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-   Any feedback is very welcome.
-   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
-   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
-*/
 #include "Precompiled.hpp"
 
 using Zero::String;
 
 namespace Math
 {
-
-namespace
-{
-//----------------------------------------------- Mersenne Twister Magic Numbers
-const uint cM = 397;                //Period parameter.
-const uint cMatrixA = 0x9908B0DF;   //Constant vector A.
-const uint cUpperMask = 0x80000000; //Most significant w-r bits.
-const uint cLowerMask = 0x7FFFFFFF; //Least significant r bits.
-const uint cAllMask = 0xFFFFFFFF;   //All the bits.
-}
-
 //----------------------------------------------------------------------- Random
 uint Random::mGlobalSeed = 1299827;
 
@@ -77,6 +23,7 @@ Random::Random(void)
   mSeed = (uint)Zero::Time::GenerateSeed();
   mSeed ^= mGlobalSeed;
 
+  mRandomGenerator = RandomNumberGenerator64(mSeed);
   // Call next once just to jumble it up a bit
   Next();
 }
@@ -84,7 +31,13 @@ Random::Random(void)
 Random::Random(int initialSeed)
   : mSeed(initialSeed)
 {
-  //
+  mRandomGenerator = RandomNumberGenerator64(mSeed);
+}
+
+void Random::SetSeed(uint seed)
+{
+  mSeed = seed;
+  mRandomGenerator = RandomNumberGenerator64(mSeed);
 }
 
 uint Random::GetSeed()
@@ -92,39 +45,45 @@ uint Random::GetSeed()
   return mSeed;
 }
 
-void Random::SetSeed(uint seed)
+u64 Random::Next(void)
 {
-  mSeed = seed;
+  // operator() provides the next value from the random number generator
+  return mRandomGenerator();
 }
 
-uint Random::Next(void)
+u16 Random::Uint16(void)
 {
-  mSeed = 214013 * mSeed + 2531011;
-  mGlobalSeed = mSeed;
-  return (mSeed >> 16) & cRandMax;
+  U16UniformDistribution dis(0, cRandMaxU16);
+  return dis(mRandomGenerator);
 }
 
 u32 Random::Uint32(void)
 {
-  return (Next() << 16) | Next();
+  U32UniformDistribution dis(0, cRandMaxU32);
+  return dis(mRandomGenerator);
 }
 
 u64 Random::Uint64(void)
 {
-  u64 a = Uint32();
-  a = a << 32;
-  a |= Uint32();
-  return a;
+  return Next();
+}
+
+int Random::Int(void)
+{
+  S32UniformDistribution dis(cRandMinS32, cRandMaxS32);
+  return dis(mRandomGenerator);
 }
 
 float Random::Float(void)
 {
-  return Next() / float(cRandMax);
+  FloatUniformDistribution dis(0.0f, 1.0f);
+  return dis(mRandomGenerator);
 }
 
 double Random::Double(void)
 {
-  return Uint64() / double(cRandMax64);
+  DoubleUniformDistribution dis(0.0, 1.0);
+  return dis(mRandomGenerator);
 }
 
 bool Random::Bool(void)
@@ -135,39 +94,23 @@ bool Random::Bool(void)
 int Random::IntRangeInIn(int min, int max)
 {
   if(min > max)
-  {
-    String msg = String::Format("The min value '%d' must be less than or equal to the max value '%d'", min, max);
-    //DoNotifyException("Invalid range", msg);
     return min;
-  }
 
   ErrorIf(min > max, "Invalid range.");
-  int range = max - min;
-  return int(Uint32() % (range + 1)) + min;
+
+  S32UniformDistribution dis(min, max);
+  return dis(mRandomGenerator);
 }
 
 int Random::IntRangeInEx(int min, int max)
 {
-  if(min >= max)
-  {
-    String msg = String::Format("The min value '%d' must be less than the max value '%d'", min, max);
-    //DoNotifyException("Invalid range", msg);
-    return min;
-  }
-
-  ErrorIf(min > max, "Invalid range.");
-  int range = max - min;
-  return (Next() % range) + min;
+  return IntRangeInIn(min, max - 1);
 }
 
 int Random::IntVariance(int base, int variance)
 {
   if(variance < 0)
-  {
-    String msg = String::Format("The variance value '%d' cannot be negative.", variance);
-    //DoNotifyException("Invalid variance", msg);
     return base;
-  }
 
   return IntRangeInIn(base - variance, base + variance);
 }
@@ -175,15 +118,15 @@ int Random::IntVariance(int base, int variance)
 float Random::FloatRange(float min, float max)
 {
   ErrorIf(min > max, "Invalid range.");
-  float range = max - min;
-  return (Float() * range) + min;
+  FloatUniformDistribution dis(min, max);
+  return dis(mRandomGenerator);
 }
 
 double Random::DoubleRange(double min, double max)
 {
   ErrorIf(min > max, "Invalid range.");
-  double range = max - min;
-  return (Double() * range) + min;
+  DoubleUniformDistribution dis(min, max);
+  return dis(mRandomGenerator);
 }
 
 float Random::FloatVariance(float base, float variance)
@@ -342,10 +285,8 @@ void Random::RotationMatrix(Mat3Ptr matrix)
 int Random::DieRoll(uint sides)
 {
   if(sides == 0)
-  {
-    //DoNotifyException("Invalid die roll", "Cannot roll a zero sided die");
     return 0;
-  }
+
   return IntRangeInEx(0, sides) + 1;
 }
 
@@ -383,148 +324,4 @@ float Random::BellCurve(float center, float range, float standardDeviation)
   return randVal;
 }
 
-//------------------------------------------------------------- Mersenne Twister
-///Seeds with a call to the "time" function.
-MersenneTwister::MersenneTwister(void)
-  : mIndex(cN + 1)
-{
-  Initialize(uint(Zero::Time::GenerateSeed()));
 }
-
-///Initializes the internal array with a seed.
-MersenneTwister::MersenneTwister(uint seed)
-  : mIndex(cN + 1)
-{
-  Initialize(seed);
-}
-
-///Initialize by an array with array-length. "keys" is the array for 
-///initializing keys. "keyLength" is its length.
-MersenneTwister::MersenneTwister(uint keys[], uint keyLength)
-  : mIndex(cN + 1)
-{
-  Initialize(keys, keyLength);
-}
-
-///Initializes the values with a seed.
-void MersenneTwister::Initialize(uint seed)
-{
-  const uint cMultiplier = 1812433253;
-  uint& i = mIndex;
-  mValues[0] = seed & cAllMask;
-  for(i = 1; i < cN; ++i)
-  {
-    //See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. In the previous 
-    //versions, MSBs of the seed affect only MSBs of the array mValues[].
-    mValues[i] = cMultiplier * (mValues[i - 1] ^ (mValues[i - 1] >> 30)) + i;
-    
-    //For >32 bit machines
-    mValues[i] &= cAllMask;
-  }
-}
-
-///Initialize by an array with array-length. "keys" is the array for 
-///initializing keys. "keyLength" is its length.
-void MersenneTwister::Initialize(uint keys[], uint keyLength)
-{
-  const uint cInitialSeed = 19650218;
-
-  Initialize(cInitialSeed);
-  uint i = 1;
-  uint j = 0;
-  uint k = cN > keyLength ? cN : keyLength;
-  for(/* k */; k != 0; k--)
-  {
-    const uint h = i - 1;
-
-    //Non-linear
-    mValues[i] = (mValues[i] ^ ((mValues[h] ^ (mValues[h] >> 30)) * 1664525)) + 
-                 keys[j] + j;
-    mValues[i] &= cAllMask; //for WORDSIZE > 32 machines
-    ++i;
-    ++j;
-    if(i >= cN)
-    {
-      mValues[0] = mValues[cN - 1];
-      i = 1;
-    }
-    if(j >= keyLength)
-    {
-      j = 0;
-    }
-  }
-  for(k = cN - 1; k != 0; --k)
-  {
-    const uint h = i - 1;
-
-    //Non-linear
-    mValues[i] = (mValues[i] ^ ((mValues[h] ^ (mValues[h] >> 30)) * 1566083941)) - i;
-    mValues[i] &= cAllMask; //for WORDSIZE > 32 machines
-    ++i;
-    if(i >= cN)
-    {
-      mValues[0] = mValues[cN - 1];
-      i = 1;
-    }
-  }
-  mValues[0] = cUpperMask;  //MSB is 1; assuring non-zero initial array.
-}
-
-///Generates a random number on the [-2,147,483,648, 2,147,483,648] interval.
-int MersenneTwister::Int(void)
-{
-  uint i = Uint();
-  return *reinterpret_cast<int*>(&i);
-}
-
-///Generates a random number on the [0, 4,294,967,295] interval.
-uint MersenneTwister::Uint(void)
-{
-  //mag01[x] = x * cMatrixA for x = 0, 1
-  static uint mag01[2] = { 0x0, cMatrixA }; 
-
-  //Generate N words at one time.
-  if(mIndex >= cN)
-  {
-    //If "Initialize" has not been called, a default initial seed is used.
-    if(mIndex == cN + 1)
-    {
-      Initialize(5489);
-    }
-
-    uint y;
-    int kk;
-    for(kk = 0; kk < cN - cM; ++kk)
-    {
-      y = (mValues[kk] & cUpperMask) | (mValues[kk + 1] & cLowerMask);
-      mValues[kk] = mValues[kk + cM] ^ (y >> 1) ^ mag01[y & 0x1];
-    }
-    for(/*kk*/; kk < cN - 1; ++kk)
-    {
-      y = (mValues[kk] & cUpperMask) | (mValues[kk + 1] & cLowerMask);
-      mValues[kk] = mValues[kk + (cM - cN)] ^ (y >> 1) ^ mag01[y & 0x1];
-    }
-    y = (mValues[cN - 1] & cUpperMask) | (mValues[0] & cLowerMask);
-    mValues[cN - 1] = mValues[cM - 1] ^ (y >> 1) ^ mag01[y & 0x1];
-
-    mIndex = 0;
-  }
-
-  uint y = mValues[mIndex++];
- 
-  //Tempering
-  y ^= (y >> 11);
-  y ^= (y << 7) & 0x9D2C5680;
-  y ^= (y << 15) & 0xEFC60000;
-  y ^= (y >> 18);
-  return y;
-}
-
-///Generates a random number on the [0,1)-real-interval.
-float MersenneTwister::Float(void)
-{
-  //Divided by 2^32
-  return float(Uint()) * (1.0f / 4294967295.0f);
-}
-
-}// namespace Math
