@@ -100,6 +100,8 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindFieldProperty(Max);
   ZilchBindGetterProperty(Size);
   ZilchBindMethod(SetSize);
+  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
+  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
   ZilchBindMethod(Expand);
 
   ZilchBindGetterSetterProperty(TopLeft);
@@ -142,7 +144,7 @@ Rectangle Rectangle::MinAndMax(Vec2Param min, Vec2Param max)
 }
 
 //**************************************************************************************************
-bool Rectangle::operator==(UiRectParam rhs) const
+bool Rectangle::operator==(RectangleParam rhs) const
 {
   return (Min == rhs.Min) && (Max == rhs.Max);
 }
@@ -167,9 +169,8 @@ void Rectangle::SetSize(Location::Enum origin, Vec2Param size)
   {
   case Location::TopLeft:
   {
-    Vec2 topLeft = GetTopLeft();
-    Min = Vec2(topLeft.x, size.y);
-    Max = Vec2(size.x, topLeft.y);
+    Min.y = Max.y - size.y;
+    Max.x = Min.x + size.x;
     return;
   }
   case Location::TopRight:
@@ -184,15 +185,98 @@ void Rectangle::SetSize(Location::Enum origin, Vec2Param size)
   }
   case Location::BottomRight:
   {
-    Vec2 bottomRight = GetBottomRight();
-    Min = Vec2(bottomRight.x - size.x, bottomRight.y);
-    Max = Vec2(bottomRight.x, bottomRight.y + size.y);
+    Min.x = Max.x - size.x;
+    Max.y = Min.y + size.y;
+    return;
+  }
+  case Location::CenterLeft:
+  {
+    Max.x = Min.x + size.x;
+    return;
+  }
+  case Location::TopCenter:
+  {
+    Min.y = Max.y - size.y;
+    return;
+  }
+  case Location::CenterRight:
+  {
+    Min.x = Max.x - size.x;
+    return;
+  }
+  case Location::BottomCenter:
+  {
+    Max.y = Min.y + size.y;
+    return;
+  }
+  case Location::Center:
+  {
+    Vec2 center = GetCenter();
+    Vec2 halfSize = size * 0.5f;
+    Min = center - halfSize;
+    Max = center + halfSize;
     return;
   }
   }
+}
 
-  DoNotifyException("Location not supported.", "Only TopLeft, TopRight, BottomLeft, and BottomRight"
-                    " are currently supported.");
+//**************************************************************************************************
+void Rectangle::ResizeToPoint(Location::Enum location, Vec2Param position)
+{
+  ResizeToPoint(location, position, Vec2::cZero);
+}
+
+void Rectangle::ResizeToPoint(Location::Enum location, Vec2Param position, Vec2Param minSize)
+{
+  switch (location)
+  {
+  case Location::TopLeft:
+  {
+    Min.x = Math::Min(position.x, Max.x - minSize.x);
+    Max.y = Math::Max(position.y, Min.y + minSize.y);
+    return;
+  }
+  case Location::TopRight:
+  {
+    Max = Math::Max(position, Min + minSize);
+    return;
+  }
+  case Location::BottomLeft:
+  {
+    Min = Math::Min(position, Max - minSize);
+    return;
+  }
+  case Location::BottomRight:
+  {
+    Min.y = Math::Min(position.y, Max.y - minSize.y);
+    Max.x = Math::Max(position.x, Min.x + minSize.x);
+    return;
+  }
+  case Location::CenterLeft:
+  {
+    Min.x = Math::Min(position.x, Max.x - minSize.x);
+    return;
+  }
+  case Location::TopCenter:
+  {
+    Max.y = Math::Max(position.y, Min.y + minSize.y);
+    return;
+  }
+  case Location::CenterRight:
+  {
+    Max.x = Math::Max(position.x, Min.x + minSize.x);
+    return;
+  }
+  case Location::BottomCenter:
+  {
+    Min.y = Math::Min(position.y, Max.y - minSize.y);
+    return;
+  }
+  case Location::Center:
+  {
+    DoNotifyException("Location not supported.", "Location.Center is not implemented as it doesn't make sense in this context.");
+  }
+  }
 }
 
 //**************************************************************************************************
@@ -216,7 +300,7 @@ bool Rectangle::Contains(Vec2Param point) const
 }
 
 //**************************************************************************************************
-bool Rectangle::Overlap(UiRectParam other) const
+bool Rectangle::Overlap(RectangleParam other) const
 {
   bool noOverlap = (Min.x > other.Max.x) ||
                    (Min.y > other.Max.y) ||

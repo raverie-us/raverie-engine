@@ -13,6 +13,7 @@ namespace Zero
 //******************************************************************************
 ZilchDefineType(UiDockLayout, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindComponent();
   ZeroBindInterface(UiLayout);
   ZilchBindFieldProperty(mSpacing);
@@ -35,6 +36,53 @@ void UiDockLayout::Serialize(Serializer& stream)
 Vec2 UiDockLayout::Measure(Rectangle& rect)
 {
   return MaxMeasure(rect);
+}
+
+//******************************************************************************
+UiWidget* FindPreviousInLayout(UiWidget* widget)
+{
+  do
+  {
+    widget = widget->GetPreviousSibling();
+  } while (widget && !widget->GetInLayout());
+
+  return widget;
+}
+
+//******************************************************************************
+float GetChildFlex(UiWidget* widget, uint axis)
+{
+  UiWidget* current = widget->mParent->GetLastDirectChild();
+  if(current->GetInLayout() == false)
+    current = FindPreviousInLayout(current);
+
+  float flexSize = 0.0f;
+
+  while(current != widget && current)
+  {
+    float currentFlexSize = current->GetFlexSize()[axis];
+    uint currentAxis = UiDockMode::GetAxis(current->GetDockMode());
+
+    if (currentAxis == axis)
+      flexSize += currentFlexSize;
+    else
+      flexSize = Math::Max(flexSize, currentFlexSize);
+
+    current = FindPreviousInLayout(current);
+  }
+
+  return flexSize;
+}
+
+//******************************************************************************
+float CalculateFlexedSize(UiWidget* widget, float flexSize, float totalSize)
+{
+  uint axis = UiDockMode::GetAxis(widget->GetDockMode());
+
+  float remainingFlex = GetChildFlex(widget, axis);
+  float totalFlex = flexSize + remainingFlex;
+  float flexRatio = totalSize / totalFlex;
+  return Math::Floor(flexSize * flexRatio);
 }
 
 //******************************************************************************
@@ -87,6 +135,13 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
         //--------------------------------------------------------------------
       case UiDockMode::Bottom:
         {
+          if (child->GetSizePolicyY() == UiSizePolicy::Flex)
+          {
+            float flexSize = child->GetFlexSize().y;
+            float totalSize = area[SlicesIndex::Bottom] - area[SlicesIndex::Top];
+            size.y = CalculateFlexedSize(child, flexSize, totalSize);
+          }
+
           float moveY = size.y;
           areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
           area[SlicesIndex::Top] += moveY + mSpacing[Axis::Y];
@@ -97,6 +152,13 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
         //--------------------------------------------------------------------
       case UiDockMode::Top:
         {
+          if (child->GetSizePolicyY() == UiSizePolicy::Flex)
+          {
+            float flexSize = child->GetFlexSize().y;
+            float totalSize = area[SlicesIndex::Bottom] - area[SlicesIndex::Top];
+            size.y = CalculateFlexedSize(child, flexSize, totalSize);
+          }
+
           float moveY = size.y;
           areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Bottom] - moveY);
           area[SlicesIndex::Bottom] -= moveY + mSpacing[Axis::Y];
@@ -107,6 +169,12 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
         //--------------------------------------------------------------------
       case UiDockMode::Left:
         {
+          if (child->GetSizePolicyX() == UiSizePolicy::Flex)
+          {
+            float flexSize = child->GetFlexSize().x;
+            float totalSize = area[SlicesIndex::Right] - area[SlicesIndex::Left];
+            size.x = CalculateFlexedSize(child, flexSize, totalSize);
+          }
           float moveX = size.x;
           areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
           area[SlicesIndex::Left] += moveX + mSpacing[Axis::X];
@@ -117,6 +185,12 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
         //--------------------------------------------------------------------
       case UiDockMode::Right:
         {
+          if (child->GetSizePolicyX() == UiSizePolicy::Flex)
+          {
+            float flexSize = child->GetFlexSize().x;
+            float totalSize = area[SlicesIndex::Right] - area[SlicesIndex::Left];
+            size.x = CalculateFlexedSize(child, flexSize, totalSize);
+          }
           float moveX = size.x;
           areaPos = Vec2(area[SlicesIndex::Right] - moveX, area[SlicesIndex::Top]);
           area[SlicesIndex::Right] -= moveX + mSpacing[Axis::X];

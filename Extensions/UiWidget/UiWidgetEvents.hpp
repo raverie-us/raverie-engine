@@ -34,16 +34,13 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  UiFocusEvent(Cog* focusGained, Cog* focusLost)
-    : mReceivedFocus(focusGained), mLostFocus(focusLost)
-  {
-  }
+  UiFocusEvent(UiWidget* focusGained, UiWidget* focusLost);
 
   /// The object that is gaining focus.
-  CogId mReceivedFocus;
+  HandleOf<UiWidget> mReceivedFocus;
 
   /// The object that has lost focus, or will lose focus (in the case of preview).
-  CogId mLostFocus;
+  HandleOf<UiWidget> mLostFocus;
 
   /// On UiFocusGainedPreview, allows you to cancel the focus gain.
   bool mCancelFocus;

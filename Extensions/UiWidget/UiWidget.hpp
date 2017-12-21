@@ -85,6 +85,8 @@ namespace UiDockMode
     Left, Top, Right, Bottom
   };
 
+  uint GetAxis(UiDockMode::Enum mode);
+
 }//namespace DockMode
 
 //--------------------------------------------------------------------------- Transform Update State
@@ -94,7 +96,7 @@ DeclareEnum3(UiTransformUpdateState,
              LocalUpdate);  // This Widget needs updating
 
 //------------------------------------------------------------------------------------- Widget Flags
-DeclareBitField10(UiWidgetFlags,
+DeclareBitField11(UiWidgetFlags,
   // If inactive, it will not draw this Widget and all children. It will
   // also not be updated in layouts.
   Active,
@@ -105,6 +107,8 @@ DeclareBitField10(UiWidgetFlags,
   // If true, we will be ignored when our parent updates the layout. Disable
   // this if you want to manually place this widget.
   InLayout,
+  // The widget will be rendered after all objects in the widget hierarchy.
+  OnTop,
   // Whether or not we want our children to display outside of our size.
   ClipChildren,
   // Mouse is over object
@@ -166,6 +170,8 @@ public:
   /// Meta Initialization.
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  ~UiWidget();
+
   /// Component Interface.
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -197,15 +203,19 @@ public:
   /// the 'ignore' widget will not be included. The ignore was added for
   /// trying to find the widget underneath a dragging window. The window is
   /// directly under the mouse, so we want to ignore it.
-  UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr,
-                      bool interactiveOnly = false);
-  UiWidgetCastResultsRange CastRect(UiRectParam worldRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
+  virtual UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr,
+                              bool interactiveOnly = false);
+  UiWidgetCastResultsRange CastRect(RectangleParam worldRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
+
+  Rectangle GetBodyRectangle();
 
   /// Returns our rect relative to parent. The origin of this Rect is bottom left.
   Rectangle GetLocalRectangle();
+  void SetLocalRectangle(RectangleParam rectangle);
 
   /// Returns our world rect. The origin of this Rect is bottom left.
   Rectangle GetWorldRectangle();
+  void SetWorldRectangle(RectangleParam rectangle);
 
   /// Active getter / setter.
   bool GetActive();
@@ -357,6 +367,9 @@ public:
   DeclareWidgetFlagSetterGetter(CanTakeFocus);
   DeclareWidgetFlagSetterGetter(HasFocus);
   DeclareWidgetFlagSetterGetter(HierarchyHasFocus);
+
+  bool GetOnTop();
+  void SetOnTop(bool state);
 
   /// Dependencies.
   Transform* mTransform;

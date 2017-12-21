@@ -51,7 +51,7 @@ struct Thickness
 
 //---------------------------------------------------------------------------------------- Rectangle
 struct Rectangle;
-typedef const Rectangle& UiRectParam;
+typedef const Rectangle& RectangleParam;
 
 struct Rectangle
 {
@@ -61,18 +61,20 @@ struct Rectangle
   static Rectangle CenterAndSize(Vec2Param point, Vec2Param size);
   static Rectangle MinAndMax(Vec2Param min, Vec2Param max);
 
-  bool operator==(UiRectParam rhs) const;
+  bool operator==(RectangleParam rhs) const;
   
   /// Translates the rectangle by the passed in vector.
   void Translate(Vec2Param translation);
 
   Vec2 GetSize() const;
   void SetSize(Location::Enum origin, Vec2Param size);
+  void ResizeToPoint(Location::Enum location, Vec2Param position);
+  void ResizeToPoint(Location::Enum location, Vec2Param position, Vec2Param minSize);
   
   void Expand(Vec2Param point);
 
   bool Contains(Vec2Param point) const;
-  bool Overlap(UiRectParam other) const;
+  bool Overlap(RectangleParam other) const;
 
   void RemoveThickness(const Thickness& thickness);
 

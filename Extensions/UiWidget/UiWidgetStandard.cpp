@@ -43,13 +43,6 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
   ZilchInitializeType(UiFillLayout);
   ZilchInitializeType(UiDockLayout);
 
-  ZilchInitializeType(UiWidget);
-  ZilchInitializeType(UiRootWidget);
-  ZilchInitializeType(UiLayout);
-  ZilchInitializeType(UiStackLayout);
-  ZilchInitializeType(UiFillLayout);
-  ZilchInitializeType(UiDockLayout);
-
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 

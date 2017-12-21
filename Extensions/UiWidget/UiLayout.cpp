@@ -19,6 +19,7 @@ bool NeedsLayout(UiWidget* widget)
 //******************************************************************************
 ZilchDefineType(UiLayout, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDependency(UiWidget);
 

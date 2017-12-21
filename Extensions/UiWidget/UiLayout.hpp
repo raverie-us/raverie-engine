@@ -60,8 +60,8 @@ protected:
   void UpdateNotInLayout(UiTransformUpdateEvent* e);
 
   /// Helper for shifting widgets based on their alignment in a layout.
-  void CalculateAlignment(Axis::Type axis, uint alignment, Vec2Param areaSize,
-              Vec2Param areaPos, Vec2Param childSize, Vec2Ref childTranslation);
+  static void CalculateAlignment(Axis::Type axis, uint alignment, Vec2Param areaSize,
+                                 Vec2Param areaPos, Vec2Param childSize, Vec2Ref childTranslation);
 
   /// Finds the maximum of all the minimum sizes of all child widgets.
   Vec2 MaxMeasure(Rectangle& rect);
