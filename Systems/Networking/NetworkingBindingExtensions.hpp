@@ -10,7 +10,7 @@ namespace Zero
 {
 
 //-------------------------------------------------------------------------------- Meta Net Property
-class MetaNetProperty : public ReferenceCountedEventObject
+class MetaNetProperty : public MetaAttribute
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);

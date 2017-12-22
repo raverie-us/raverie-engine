@@ -11,7 +11,7 @@ namespace Zero
 
 //------------------------------------------------------------------------ Editor Property Extension 
 // Property Extensions
-class EditorPropertyExtension : public ReferenceCountedEventObject
+class EditorPropertyExtension : public MetaAttribute
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -101,7 +101,7 @@ public:
 };
 
 //----------------------------------------------------------------------------- Meta Property Filter
-class MetaPropertyFilter : public ReferenceCountedEventObject
+class MetaPropertyFilter : public MetaAttribute
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -174,7 +174,7 @@ public:
 };
 
 //-------------------------------------------------------------------------------- Meta Shader Input
-class MetaShaderInput : public ReferenceCountedEventObject
+class MetaShaderInput : public MetaAttribute
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -184,7 +184,7 @@ public:
 };
 
 //-------------------------------------------------------------------------------- Meta Editor Gizmo
-class MetaEditorGizmo : public ReferenceCountedEventObject
+class MetaEditorGizmo : public MetaAttribute
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -202,7 +202,7 @@ public:
 
 //--------------------------------------------------------------------------------------- Meta Group
 /// Used for grouping properties in the property grid.
-class MetaGroup : public ReferenceCountedEventObject
+class MetaGroup : public MetaAttribute
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -213,11 +213,24 @@ public:
 //----------------------------------------------------------------------------------- Meta Custom Ui
 /// Used for adding custom Ui to the property grid. This is currently only for the old Ui and not
 /// exposed to script.
-class MetaCustomUi : public ReferenceCountedEventObject
+class MetaCustomUi : public MetaAttribute
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   virtual void CreateUi(void* parentComposite, HandleParam object) = 0;
+};
+
+//---------------------------------------------------------------------------------- Property Rename
+/// Add to properties to handle old files with old property names.
+class MetaPropertyRename : public MetaAttribute
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  MetaPropertyRename() {}
+  MetaPropertyRename(StringParam oldName);
+
+  String mOldName;
 };
 
 }//namespace Zero

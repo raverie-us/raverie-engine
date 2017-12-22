@@ -69,7 +69,7 @@ public:
   void ValidateParameters(Status& status, HandleParam component, Attribute& attribute);
 
   virtual BoundType* GetMetaComponentType() { return nullptr; }
-  virtual Handle AllocateMetaComponent(ReflectionObject* object) { return Handle(); }
+  virtual HandleOf<MetaAttribute> AllocateMetaComponent(ReflectionObject* object) { return nullptr; }
 
   String mAttributeName;
   BoundType* mMustBeType;
@@ -84,7 +84,7 @@ class AttributeExtensionType : public AttributeExtension
 public:
   using AttributeExtension::AttributeExtension;
   BoundType* GetMetaComponentType() override { return ZilchTypeId(T); }
-  Handle AllocateMetaComponent(ReflectionObject* object) override
+  HandleOf<MetaAttribute> AllocateMetaComponent(ReflectionObject* object) override
   {
     T* component = new T();
     object->Add(component);

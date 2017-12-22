@@ -401,18 +401,9 @@ Mat4 MetaTransformInstance::GetParentWorldMatrix()
   return Mat4::cIdentity;
 }
 
-
-//---------------------------------------------------------------------------------- Property Rename
-//**************************************************************************************************
-ZilchDefineType(MetaPropertyRename, builder, type)
+//----------------------------------------------------------------------------------- Meta Attribute
+ZilchDefineType(MetaAttribute, builder, type)
 {
-}
-
-//**************************************************************************************************
-MetaPropertyRename::MetaPropertyRename(StringParam oldName)
-  : mOldName(oldName)
-{
-
 }
 
 }//namespace Zero

@@ -358,17 +358,12 @@ public:
   ZilchInitializeTypeAs(ZeroMetaArray<arrayType>, "ZeroMetaArray" name);    \
   ZilchInitializeExternalTypeAs(arrayType, name);
 
-//---------------------------------------------------------------------------------- Property Rename
-/// Add to properties to handle old files with old property names.
-class MetaPropertyRename : public ReferenceCountedEventObject
+//----------------------------------------------------------------------------------- Meta Attribute
+class MetaAttribute : public ReferenceCountedEventObject
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  
-  MetaPropertyRename(){}
-  MetaPropertyRename(StringParam oldName);
-
-  String mOldName;
+  virtual void PostProcess(Status& status, ReflectionObject* owner){}
 };
 
 } // namespace Zero

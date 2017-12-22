@@ -171,4 +171,17 @@ ZilchDefineType(MetaCustomUi, builder, type)
 {
 }
 
+//---------------------------------------------------------------------------------- Property Rename
+//**************************************************************************************************
+ZilchDefineType(MetaPropertyRename, builder, type)
+{
+}
+
+//**************************************************************************************************
+MetaPropertyRename::MetaPropertyRename(StringParam oldName)
+  : mOldName(oldName)
+{
+
+}
+
 }//namespace Zero

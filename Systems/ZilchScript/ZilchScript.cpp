@@ -251,55 +251,6 @@ void ZilchScriptManager::OnEngineUpdate(Event* event)
   //mDebugger.Update();
 }
 
-void ZilchScriptManager::ValidateAttribute(Attribute& attribute, CodeLocation& location, HashSet<String>& allowedAttributes, StringParam attributeClassification, Project* buildingProject)
-{
-  if(allowedAttributes.Contains(attribute.Name) == false)
-  {
-    String msg = String::Format("Attribute '%s' is not valid on a %s\n\n", attribute.Name.c_str(), attributeClassification.c_str());
-    DispatchZeroZilchError(location, msg, buildingProject);
-  }
-}
-
-void ZilchScriptManager::ValidateAttributes(Array<Attribute>& attributes, CodeLocation& location, HashSet<String>& allowedAttributes, StringParam attributeClassification, Project* buildingProject)
-{
-  for(size_t i = 0; i < attributes.Size(); ++i)
-  {
-    Attribute& attribute = attributes[i];
-    ValidateAttribute(attribute, location, allowedAttributes, attributeClassification, buildingProject);
-  }
-}
-
-void ZilchScriptManager::CheckDependencies(BoundType* classType, Property* property, Project* buildingProject)
-{
-  if(property->HasAttribute(PropertyAttributes::cDependency))
-  {
-    BoundType* componentType = ZilchTypeId(Component);
-
-    // It's only valid for Components to have dependencies
-    if(!classType->IsA(componentType))
-    {
-      String message = "Dependency properties can only be on Component Types";
-      DispatchZeroZilchError(property->Location, message, buildingProject);
-      return;
-    }
-
-    // Make sure the property type is a Component
-    BoundType* propertyType = Type::GetBoundType(property->PropertyType);
-    if(!propertyType->IsA(componentType))
-    {
-      // The extra spaces in this message is to force word wrap in our text editor. This is silly, but
-      // the word wrap is arbitrarily short. Should be fixed at some point
-      String message = "Dependency properties must be of type Component (e.g. Transform)";
-      DispatchZeroZilchError(property->Location, message, buildingProject);
-      return;
-    }
-
-    CogComponentMeta* metaComponent = classType->HasOrAdd<CogComponentMeta>(classType);
-    metaComponent->mDependencies.Insert(propertyType);
-    metaComponent->mSetupMode = SetupMode::DefaultConstructor;
-  }
-}
-
 void ZilchScriptManager::DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location)
 {
   ZilchScriptManager* instance = ZilchScriptManager::GetInstance();
