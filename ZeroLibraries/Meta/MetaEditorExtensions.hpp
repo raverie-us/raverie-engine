@@ -88,6 +88,9 @@ class EditorResource : public EditorPropertyExtension
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  EditorResource(bool allowAdd = false, bool allowNone = false,
+                 StringParam filterTag = "", bool forceCompact = false);
+
   /// If not empty only match resources with same FilterTag
   String FilterTag;
   /// Allows a plus button for easy adding of new resource
@@ -95,9 +98,6 @@ public:
   /// Are null resources allowed?
   bool AllowNone;
   bool ForceCompact;
-
-  EditorResource(bool allowAdd = false, bool allowNone = false,
-                 StringParam filterTag = "", bool forceCompact = false);
 };
 
 //----------------------------------------------------------------------------- Meta Property Filter
