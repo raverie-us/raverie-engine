@@ -191,6 +191,7 @@ public:
   UiRootWidget* GetRoot();
 
   void SizeToContents();
+  void SizeToContentsIfAuto();
 
   /// Finds the Widget at the given point. All Widgets bellow and including
   /// the 'ignore' widget will not be included. The ignore was added for

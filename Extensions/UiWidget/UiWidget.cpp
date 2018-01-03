@@ -353,6 +353,24 @@ void UiWidget::SizeToContents()
 }
 
 //**************************************************************************************************
+void UiWidget::SizeToContentsIfAuto()
+{
+  bool autoX = (GetSizePolicyX() == UiSizePolicy::Auto);
+  bool autoY = (GetSizePolicyY() == UiSizePolicy::Auto);
+
+  if(autoX || autoY)
+  {
+    Vec2 minSize = GetMinSize();
+    Vec2 size = GetSize();
+
+    size.x = Math::Lerp(size.x, minSize.x, autoX);
+    size.y = Math::Lerp(size.y, minSize.y, autoY);
+
+    SetSize(size);
+  }
+}
+
+//**************************************************************************************************
 UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool interactiveOnly)
 {
   // Check to see if it's ignoring this widget or any children
@@ -744,8 +762,11 @@ void UiWidget::Update(UiTransformUpdateEvent* e)
       // Update our active children
       forRange(UiWidget& child, GetChildren())
       {
-        if(child.GetActive())
+        if (child.GetActive())
+        {
+          child.SizeToContentsIfAuto();
           child.Update(e);
+        }
       }
     }
 

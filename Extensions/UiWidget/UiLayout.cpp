@@ -113,8 +113,11 @@ void UiLayout::UpdateNotInLayout(UiTransformUpdateEvent* e)
   {
     if(UiWidget* widget = child.has(UiWidget))
     {
-      if(widget->GetActive() && !widget->GetInLayout())
+      if (widget->GetActive() && !widget->GetInLayout())
+      {
+        widget->SizeToContentsIfAuto();
         widget->Update(e);
+      }
     }
   }
 }
