@@ -1,0 +1,103 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Cog children range to array and reverse-array helpers.
+////////////////////////////////////////////////////////////////////////////////
+class ZCogChildrenUtilities
+{
+  [Extension(typeid(Cog))]
+  var ChildrenArray : Array[Cog]
+  {
+    get
+    {
+      var self = this as Cog;
+      
+      return CogRangeToArray.Convert(self.Children);
+    }
+    
+  }
+  
+  [Extension(typeid(Cog))]
+  var ChildrenReversed : ReverseArrayRange[Array[Cog], Cog]
+  {
+    get
+    {
+      var self = this as Cog;
+      return ReverseArrayRange[Array[Cog], Cog](self.ChildrenArray);
+    }
+    
+  }
+    
+}
+
+class CogRangeToArray
+{
+  [Static]
+  function Convert(input : HierarchyListRange) : Array[Cog]
+  {
+    var array = Array[Cog]();
+    foreach (var value in input)
+    {
+      array.Add(value);
+    }
+    
+    return array;
+  }
+  
+}
+
+// Temporarily remove. This currently causes a memory leak in zilch.
+//class RangeToArray[RangeType, ElementType]
+//{
+//  [Static]
+//  function Convert(input : RangeType) : Array[ElementType]
+//  {
+//    var array = Array[ElementType]();
+//    foreach (var value in input)
+//    {
+//      array.Add(value);
+//    }
+//    
+//    return array;
+//  }
+//  
+//}
+
+////////////////////////////////////////////////////////////////////////////////
+//  Required implementation methods of a range.
+////////////////////////////////////////////////////////////////////////////////
+class ReverseArrayRange[ArrayType, ElementType]
+{
+  var Array : ArrayType;
+  var Index : Integer;
+  
+  constructor(array : ArrayType)
+  {
+    this.Array = array;
+    this.Index = this.Array.LastIndex;
+  }
+  
+  var All : ReverseArrayRange[ArrayType, ElementType]
+  {
+    get { return this; }
+  }
+  
+  var Current : ElementType
+  {
+    get { return this.Array[this.Index]; }
+  }
+  
+  function MoveNext()
+  {
+    --this.Index;
+  }
+  
+  var IsNotEmpty : Boolean
+  {
+    get { return this.Index >= 0; }
+  }
+  
+  var First : ElementType
+  {
+    get { return this.Array[this.Array.LastIndex]; }
+  }
+  
+}

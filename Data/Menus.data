@@ -126,6 +126,7 @@ Menus menus =
 		  "Console",
 		  "Objects",
 		  "CommandListViewer",
+		  "OperationHistory",
 		  "Tools",
           "Performance",
           "VolumeMeter",

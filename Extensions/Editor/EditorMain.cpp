@@ -901,8 +901,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   //----------------------------------------------------------------------------
   {
     BindCommand("CommandListViewer", ShowHotKeyEditor);
-    // Temporarily disabled until refactor
-    //BindCommand("OperationHistory", ShowOperationHistroy);
+    BindCommand("OperationHistory", ShowOperationHistroy);
     BindCommand("Animator", ShowAnimator);
     BindCommand("FindNext", ShowFindNext);
     BindCommand("FindAll", ShowFindAll);
