@@ -255,6 +255,11 @@ namespace Audio
     unsigned outputChannels = AudioIO->GetStreamChannels(StreamTypes::Output);
     // Number of frames in the output
     unsigned outputFrames = samplesNeeded / outputChannels;
+
+    // Check for resampling and update resample factor if necessary
+    // (this can change at any time if the audio output device changes)
+    CheckForResampling();
+
     // Number of frames in the mix (will be different if resampling)
     unsigned mixFrames = outputFrames;
     if (Resampling)
@@ -555,7 +560,7 @@ namespace Audio
   {
     unsigned outputSampleRate = AudioIO->GetStreamSampleRate(StreamTypes::Output);
 
-    if (!Resampling && (SystemSampleRate != outputSampleRate))
+    if (SystemSampleRate != outputSampleRate)
     {
       Resampling = true;
       OutputResampling.SetFactor((double)SystemSampleRate / (double)outputSampleRate);
