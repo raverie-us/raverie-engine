@@ -520,7 +520,7 @@ namespace Audio
   {
     Delay->SetDelayMSec(0);
     Delay->SetFeedback(feedback);
-    Delay->SetWetLevel(50.0f);
+    Delay->SetWetLevel(0.5f);
     LFO->SetFrequency(frequency);
     LFO->SetPolarity(Oscillator::Unipolar);
     LFO->SetNoteOn(true);
@@ -703,7 +703,7 @@ namespace Audio
   {
     Delay->SetDelayMSec(minDelay);
     Delay->SetFeedback(feedback);
-    Delay->SetWetLevel(50.0f);
+    Delay->SetWetLevel(0.5f);
     LFO->SetFrequency(frequency);
     LFO->SetPolarity(Oscillator::Unipolar);
     LFO->SetNoteOn(true);
