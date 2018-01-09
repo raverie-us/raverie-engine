@@ -411,6 +411,26 @@ ZeroShared Matrix3 ToMatrix3(real xRadians, real yRadians, real zRadians)
   return Math::ToMatrix3(euler);
 }
 
+Matrix2 ToMatrix2(Mat3Param matrix3)
+{
+  Matrix2 mat2;
+  ToMatrix2(matrix3, &mat2);
+  return mat2;
+}
+
+void ToMatrix2(Mat3Param mat3, Mat2Ptr mat2)
+{
+  ErrorIf(mat2 == nullptr, "Math - Null pointer passed for matrix.");
+
+  //First "cross" components
+  mat2->m00 = mat3.m00;
+  mat2->m01 = mat3.m01;
+
+  //Second "cross" components
+  mat2->m10 = mat3.m10;
+  mat2->m11 = mat3.m11;
+}
+
 ///Convert a 4x4 matrix to a 3x3 matrix. Simply copies the 4x4 matrix's upper 
 ///3x3 matrix (rotation & scale) to the 3x3 matrix.
 Matrix3 ToMatrix3(Mat4Param matrix)

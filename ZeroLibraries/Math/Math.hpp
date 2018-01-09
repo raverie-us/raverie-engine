@@ -91,6 +91,11 @@ ZeroShared void ToMatrix3(EulerAnglesParam eulerAngles, Mat3Ptr matrix);
 ///Convert a set of Euler angles to a 3x3 matrix (in radians).
 ZeroShared Matrix3 ToMatrix3(real xRadians, real yRadians, real zRadians);
 
+///Convert a 3x3 matrix to a 2x2 matrix. Simply copies the 3x3 matrix's upper 
+///2x2 matrix (rotation & scale) to the 2x2 matrix.
+ZeroShared Matrix2 ToMatrix2(Mat3Param matrix3);
+ZeroShared void ToMatrix2(Mat3Param matrix3, Mat2Ptr matrix2);
+
 ///Convert a 4x4 matrix to a 3x3 matrix. Simply copies the 4x4 matrix's upper 
 ///3x3 matrix (rotation & scale) to the 3x3 matrix.
 ZeroShared Matrix3 ToMatrix3(Mat4Param matrix4);

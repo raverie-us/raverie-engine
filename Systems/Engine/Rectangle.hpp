@@ -53,6 +53,7 @@ struct Thickness
 struct Rectangle;
 typedef const Rectangle& RectangleParam;
 
+/// Two dimensional, unrotated rectangle.
 struct Rectangle
 {
   ZilchDeclareType(TypeCopyMode::ValueType);
@@ -65,6 +66,32 @@ struct Rectangle
   
   /// Translates the rectangle by the passed in vector.
   void Translate(Vec2Param translation);
+
+  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
+  /// result in the Aabb around the rotated rectangle.
+  void Transform(Mat2Param transform);
+
+  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
+  /// result in the Aabb around the rotated rectangle. The given transform is assumed to be a
+  /// 2D transformation.
+  void Transform(Mat3Param transform);
+
+  /// Takes a full 3D transformation matrix and brings it down to a 2D matrix.
+  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
+  /// result in the Aabb around the rotated rectangle.
+  void Transform(Mat4Param transform);
+
+  /// Returns a copy of ourself transformed by the given matrix. Note that Rectangle is non-rotated,
+  /// so this will result in the Aabb around the rotated rectangle.
+  Rectangle Transformed(Mat2Param transform) const;
+
+  /// Returns a copy of ourself transformed by the given matrix. Note that Rectangle is non-rotated,
+  /// so this will result in the Aabb around the rotated rectangle. The given transform is assumed
+  /// to be a 2D transformation.
+  Rectangle Transformed(Mat3Param transform) const;
+
+  /// Takes a full 3D transformation matrix and brings it down to a 2D matrix.
+  Rectangle Transformed(Mat4Param transform) const;
 
   Vec2 GetSize() const;
   void SetSize(Location::Enum origin, Vec2Param size);

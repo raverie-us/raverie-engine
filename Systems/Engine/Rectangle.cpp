@@ -104,6 +104,13 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
   ZilchBindMethod(Expand);
 
+  ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat2Param));
+  ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat3Param));
+  ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat4Param));
+  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat2Param));
+  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat3Param));
+  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat4Param));
+
   ZilchBindGetterSetterProperty(TopLeft);
   ZilchBindGetterSetterProperty(TopRight);
   ZilchBindGetterSetterProperty(BottomLeft);
@@ -154,6 +161,68 @@ void Rectangle::Translate(Vec2Param translation)
 {
   Min += translation;
   Max += translation;
+}
+
+//**************************************************************************************************
+void Rectangle::Transform(Mat2Param transform)
+{
+  Mat3 mat3(transform.m00, transform.m01, 0,
+            transform.m10, transform.m11, 0,
+            0,             0,             1);
+
+  Transform(mat3);
+}
+
+//**************************************************************************************************
+void Rectangle::Transform(Mat3Param transform)
+{
+  Mat2 rotationScale = Math::ToMatrix2(transform);
+  for (size_t y = 0; y < 2; ++y)
+    for (size_t x = 0; x < 2; ++x)
+      rotationScale[y][x] = Math::Abs(rotationScale[y][x]);
+
+  Vec2 center = GetCenter();
+  Vec2 halfExtent = GetSize() * 0.5f;
+
+  halfExtent = rotationScale.Transform(halfExtent);
+  center = Math::TransformPoint(transform, center);
+
+  Min = center - halfExtent;
+  Max = center + halfExtent;
+}
+
+//**************************************************************************************************
+void Rectangle::Transform(Mat4Param transform)
+{
+  Aabb aabb;
+  aabb.SetMinAndMax(Vec3(Min), Vec3(Max));
+  aabb.Transform(transform);
+  Min = ToVector2(aabb.mMin);
+  Max = ToVector2(aabb.mMax);
+}
+
+//**************************************************************************************************
+Rectangle Rectangle::Transformed(Mat2Param transform) const
+{
+  Rectangle other = *this;
+  other.Transform(transform);
+  return other;
+}
+
+//**************************************************************************************************
+Rectangle Rectangle::Transformed(Mat3Param transform) const
+{
+  Rectangle other = *this;
+  other.Transform(transform);
+  return other;
+}
+
+//**************************************************************************************************
+Rectangle Rectangle::Transformed(Mat4Param transform) const
+{
+  Rectangle other = *this;
+  other.Transform(transform);
+  return other;
 }
 
 //**************************************************************************************************
