@@ -791,11 +791,11 @@ Commands commands =
 		string Shortcut = "",
 	},
 
-	Command =
-	{
-		string Name = "EditCommands",
-		string Description = "Displays all custom Commands for editing.",
-		string Tags = "",
-		string Shortcut = "",
-	},
+	//Command =
+	//{
+	//	string Name = "EditCommands",
+	//	string Description = "Displays all custom Commands for editing.",
+	//	string Tags = "",
+	//	string Shortcut = "",
+	//},
 },
