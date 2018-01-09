@@ -1177,6 +1177,7 @@ WindowsShellSystem::WindowsShellSystem() :
 {
   mState = WindowsSystemUpdateState::Normal;
   mMainWindow = nullptr;
+  DisableProcessWindowsGhosting();
 }
 
 WindowsShellSystem::~WindowsShellSystem()

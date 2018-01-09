@@ -13,6 +13,11 @@
 namespace Zero
 {
 
+//----------------------------------------------------------------- Import Support Functions
+
+// Sanitizes the name of the content file to be compatible with cog, archetype, and resource names
+String SanitizeContentFilename(StringParam filename);
+
 //----------------------------------------------------------------- ImageOptions
 DeclareEnum2(ImageImport, Textures, Sprites);
 

@@ -26,12 +26,12 @@ void RunGroupImport(ImportOptions& options)
   for(uint fileIndex = 0; fileIndex < filesToExport.Size(); ++fileIndex)
   {
     String fullPath = filesToExport[fileIndex];
-    String fileName = FilePath::GetFileName(fullPath);
-    String storedfilename = FilePath::Combine(library->SourcePath, fileName);
+    String filename = SanitizeContentFilename(FilePath::GetFileName(fullPath));
+    String storedfilename = FilePath::Combine(library->SourcePath, filename);
 
     //Add the content item
     AddContentItemInfo addContent;
-    addContent.FileName = fileName;
+    addContent.FileName = filename;
     addContent.Library = library;
     addContent.ExternalFile = fullPath;
     addContent.OnContentFileConflict = ContentFileConflict::Replace;

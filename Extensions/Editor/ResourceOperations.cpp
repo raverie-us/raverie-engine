@@ -194,6 +194,11 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
     }
   }
 
+  // Since resources are copied from file, call save so that duplicate will have any modifications made.
+  // Note: Modifications attempted to be made to non writable resources will not get copied over.
+  if (resource->IsWritable() && contentItem != nullptr)
+    contentItem->SaveContent();
+
   // Copy the resource file
   String newFileName = GetResourceFileName(resourceManager, newName, resource->mContentItem);
   String tempFile = FilePath::Combine(GetTemporaryDirectory(), newFileName);

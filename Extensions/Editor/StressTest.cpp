@@ -1057,6 +1057,8 @@ Any StressTestDialog::GetVariantForEnumExtension(StressRandom& random, Property*
 {
   BoundType* propertyType = Type::GetBoundType(prop->PropertyType);
   Zilch::PropertyArray& properties = propertyType->AllProperties;
+  if(properties.Empty())
+    return Any(0);
   
   if(random.Chance(0.9f))
   {

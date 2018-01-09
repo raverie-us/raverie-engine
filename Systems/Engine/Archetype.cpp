@@ -196,40 +196,6 @@ void Archetype::ClearBinaryCache()
 }
 
 //**************************************************************************************************
-void AddDependencies(Cog* cog, HashSet<ContentItem*>& dependencies)
-{
-  // Get all resources used by this component
-  HashSet<Resource*> usedResources;
-  GetResourcesFromProperties(cog, usedResources);
-
-  // Filter runtime and non-writable resources
-  forRange(Resource* resource, usedResources.All())
-  {
-    if(resource->IsWritable() && !resource->IsRuntime())
-    {
-      dependencies.Insert(resource->mContentItem);
-
-      // Add all dependencies of the resource
-      resource->GetDependencies(dependencies);
-    }
-  }
-
-  forRange(Cog& child, cog->GetChildren())
-  {
-    AddDependencies(&child, dependencies);
-  }
-}
-
-//**************************************************************************************************
-void Archetype::GetDependencies(HashSet<ContentItem*>& dependencies,
-                                HandleParam instance)
-{
-  Cog* cog = instance.Get<Cog*>();
-  ReturnIf(cog == nullptr,,"Instance must be a cog.");
-  AddDependencies(cog, dependencies);
-}
-
-//**************************************************************************************************
 DataNode* Archetype::GetDataTree()
 {
   // Return the cached tree if it exists

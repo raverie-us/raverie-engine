@@ -634,6 +634,9 @@ void LauncherWindow::UpdateTransform()
   float buttonLeftEdge = rightEdge - 36 - buttonSize;
   mFileBugTextButton->SetTranslation(Pixels(buttonLeftEdge, 33, 0));
 
+  if(mActiveModal != nullptr)
+    mActiveModal->UpdateTransform();
+
   Composite::UpdateTransform();
 }
 

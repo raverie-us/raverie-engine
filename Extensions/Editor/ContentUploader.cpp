@@ -120,31 +120,37 @@ ContentExportTile::ContentExportTile(Composite* parent, TileView* tileView,
   mExporter = uploadView;
   mContentItem = contentItem;
   CheckForDependencies();
-
-  mMissingText = new Text(this, cText);
-  mMissingText->SetText("Missing dependencies");
-  mMissingText->SizeToContents();
+  
+  if(mMissingDependencies)
+  {
+    mMissingTextBackground = CreateAttached<Element>(cWhiteSquare);
+    mMissingTextBackground->SetColor(UploaderUi::MissingColor);
+    mMissingText = new Text(this, cText);
+    mMissingText->SetText("Missing Dependencies");
+  }
 
   ConnectThisTo(this, Events::RightClick, OnRightClick);
-  ConnectThisTo(this, Events::KeyDown, OnKeyDown);
 }
 
 //******************************************************************************
 void ContentExportTile::UpdateTransform()
 {
-  Vec2 textSize = mMissingText->GetMinSize();
-  WidgetRect local = GetLocalRect();
-  local.SizeY = textSize.y;
-  SetClipping(true);
-  PlaceCenterToRect(local, mMissingText);
-  mMissingText->mTranslation.x = Math::Max(mMissingText->mTranslation.x, Pixels(1));
-  mMissingText->mSize.x = Math::Min(textSize.x, mSize.x);
-  mMissingText->SetVisible(mMissingDependencies);
-  mMissingText->SetColor(UploaderUi::MissingColor);
-  if(mMissingDependencies)
+  // If there are missing dependencies place the text for it below the tiles title bar
+  if (mMissingDependencies)
   {
-    mBackground->SetColor(UploaderUi::MissingColor);
-    //mHighlight->SetColor(UploaderUi::MissingColor);
+    Vec2 backgroundSize = Vec2(mSize.x, cTileViewNameOffset);
+    mMissingTextBackground->SetSize(backgroundSize);
+
+    mMissingText->SizeToContents();
+    // Y offset by the titlebar's height to place below it
+    Vec2 textbarOffset = Vec2(0, cTileViewNameOffset);
+    WidgetRect textRect = WidgetRect::PointAndSize(textbarOffset, backgroundSize);
+    // Place both the text and its background below the titlebar
+    PlaceCenterToRect(textRect, mMissingTextBackground);
+    PlaceCenterToRect(textRect, mMissingText);
+
+    mMissingText->mTranslation.x = Math::Max(mMissingText->mTranslation.x, 0.0f);
+    mMissingText->mSize.x = Math::Min(mMissingText->mSize.x, mSize.x);
   }
 
   TileViewWidget::UpdateTransform();
@@ -185,7 +191,21 @@ void ContentExportTile::GetMissingDependencies(HashSet<ContentItem*>& missingDep
   forRange(ResourceEntry& entry, listing.All())
   {
     Resource* resource = Z::gResources->GetResource(entry.mResourceId);
-    resource->GetDependencies(missingDependencies, instance);
+      resource->GetDependencies(missingDependencies, instance);
+  }
+    
+  // Check for core resources in our dependencies list
+  HashSet<ContentItem*> toRemove;
+  forRange(ContentItem* item, missingDependencies)
+  {
+    if(item->mLibrary->GetReadOnly())
+      toRemove.Insert(item);
+  }
+
+  // Remove core resources from the dependencies list as they don't need to be exported
+  forRange(ContentItem* item, toRemove)
+  {
+    missingDependencies.Erase(item);
   }
 
   forRange(ContentItem* dependency, missingDependencies.All())
@@ -205,14 +225,8 @@ void ContentExportTile::OnRightClick(MouseEvent* e)
 
   if(mMissingDependencies)
     ConnectMenu(menu, "Add Dependencies", OnAddDependencies);
-  ConnectMenu(menu, "Remove", OnRemove);
-}
 
-//******************************************************************************
-void ContentExportTile::OnKeyDown(KeyboardEvent* e)
-{
-  if(e->Key == Keys::Delete)
-    RemoveContentItem();
+  ConnectMenu(menu, "Remove", OnRemove);
 }
 
 //******************************************************************************
@@ -226,7 +240,8 @@ void ContentExportTile::OnAddDependencies(Event* e)
     mExporter->mContentItems.PushBack(dependency);
   }
 
-  mMissingDependencies = false;
+  CheckForDependencies();
+
   // Update the tile view display to show our dependency is no longer missing
   mExporter->RefreshTileView();
 }
@@ -234,16 +249,7 @@ void ContentExportTile::OnAddDependencies(Event* e)
 //******************************************************************************
 void ContentExportTile::OnRemove(Event* e)
 {
-  RemoveContentItem();
-}
-
-//******************************************************************************
-void ContentExportTile::RemoveContentItem()
-{
-  // Remove the item from the list of items to be exported
-  mExporter->mContentItems.EraseValueError(mContentItem);
-  // Update the tile view display
-  mExporter->RefreshTileView();
+  mParent->DispatchBubble("RemoveSelectedItems", e);
 }
 
 //---------------------------------------------------- Content Package Tile View
@@ -310,7 +316,7 @@ void ContentExporterTileView::OnMetaDrop(MetaDropEvent* e)
 
       mExporter->mContentItems.PushBack(resource->mContentItem);
 
-      mExporter->MarkAsNeedsUpdate();
+      mExporter->RefreshTileView();
       mExporter->UpdateTransformExternal();
       mExporter->mHintText->SetActive(false);
     }
@@ -329,6 +335,8 @@ ContentPackageExporter::ContentPackageExporter(Composite* parent)
   mTileView->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
   mSource = new ContentUploadSource(mContentItems);
   mTileView->SetDataSource(mSource);
+  // This is the smallest size that makes the entire missing dependency text visible
+  mTileView->SetItemSize(118.f);
 
   Splitter* splitter = new Splitter(this);
   splitter->SetInteractive(false);
@@ -353,7 +361,9 @@ ContentPackageExporter::ContentPackageExporter(Composite* parent)
   mHintText->SetNotInLayout(true);
   mHintText->SetInteractive(false);
 
+  ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, "OnExportFileSelected", OnExportFileSelected);
+  ConnectThisTo(this, "RemoveSelectedItems", RemoveSelectedItems);
 }
 
 //******************************************************************************
@@ -370,6 +380,13 @@ void ContentPackageExporter::UpdateTransform()
   PlaceCenterToRect(tileViewRect, mHintText);
 
   Composite::UpdateTransform();
+}
+
+//******************************************************************************
+void ContentPackageExporter::RefreshTileView()
+{
+  mTileView->SetDataSource(mSource);
+  MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
@@ -391,7 +408,10 @@ void ContentPackageExporter::OnExportPressed(Event* e)
   config.Title = "Select Content Package File";
   config.AddFilter("Zero Pack File", "*.zeropack");
   config.StartingDirectory = GetUserDocumentsDirectory();
-  config.DefaultFileName = "Package.zeropack";
+  String filename = "Package";
+  if (!mTempPackage.mName.Empty())
+    filename = mTempPackage.mName;
+  config.DefaultFileName = BuildString(filename, ".zeropack");
   Z::gEngine->has(OsShell)->SaveFile(config);
 }
 
@@ -444,10 +464,36 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
   }
 }
 
-void ContentPackageExporter::RefreshTileView()
+//******************************************************************************
+void ContentPackageExporter::OnKeyDown(KeyboardEvent* event)
 {
-  mTileView->SetDataSource(mSource);
-  MarkAsNeedsUpdate();
+  if (event->Key == Keys::Delete)
+    RemoveSelectedItems(nullptr);
+}
+
+//******************************************************************************
+void ContentPackageExporter::RemoveSelectedItems(Event*)
+{
+  // Remove all currently selected content items in the tile view
+  Array<DataIndex> selected;
+  DataSelection* selection = mTileView->GetSelection();
+  selection->GetSelected(selected);
+
+  Array<ContentItem*> toRemove;
+  forRange(DataIndex& index, selected)
+  {
+    ContentItem* item = (ContentItem*)mSource->ToEntry(index);
+    toRemove.PushBack(item);
+  }
+
+  forRange(ContentItem* content, toRemove.All())
+  {
+    mContentItems.EraseValue(content);
+  }
+  
+  // Clear our selection and update the tile view
+  selection->SelectNone();
+  RefreshTileView();
 }
 
 }//namespace Zero
