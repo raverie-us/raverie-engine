@@ -54,8 +54,16 @@ void Deselect(Editor* editor, Space* space)
 //----------------------------------------------------------------- Manipulation
 void DuplicateSelection(Editor* editor, Space* space)
 {
+  // Save the current clipboards state
+  OsShell* platform = Z::gEngine->has(OsShell);
+  String currentClipboard = platform->GetClipboardText();
+  
+  // Duplicate the current selection using clipboard support functions
   SaveSelectionToClipboard(editor, space);
   LoadObjectFromClipboard(editor, space);
+  
+  // Set the clipboard back to its previous state
+  platform->SetClipboardText(currentClipboard);
 }
 
 void DeleteSelectedObjects(Editor* editor, Space* space)
