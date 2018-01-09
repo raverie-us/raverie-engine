@@ -13,7 +13,7 @@
 namespace Audio
 {
   class TagObject;
-  class ThreadedVolumeModifier;
+  class InstanceVolumeModifier;
 
   //------------------------------------------------------------------------------ Cross Fade Object
 
@@ -41,7 +41,7 @@ namespace Audio
     // Used to interpolate cross-fading volumes. 
     InterpolatingObject VolumeInterpolator;
     // The samples to use for cross-fading
-    Zero::Array<float> FadeSamples;
+    BufferType FadeSamples;
     // Number of frames to use for default fade
     unsigned mDefaultFrames;
   };
@@ -154,24 +154,27 @@ namespace Audio
 
   private:
     ~SoundInstanceNode();
-    bool GetOutputSamples(Zero::Array<float>* outputBuffer, const unsigned numberOfChannels,
+
+    bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
-    // Adds the audio data from the mix to the tag, taking into account volume modifications
-    void AddAttenuatedOutputToTag(TagObject* tag);
-    // Fills the InputSamples buffer with the specified number of audio frames
-    void FillBuffer(unsigned outputFrames, unsigned outputChannels);
+    // Adds the requested number of audio frames to the back of the specified buffer
+    bool GetOutputForThisMix(BufferType* buffer, const unsigned numberOfChannels);
+    // Gets the cumulative volume attenuation from all output nodes
+    void AddSamplesToBuffer(BufferType* buffer, unsigned outputFrames, unsigned outputChannels);
+    // Fills the provided buffer with the audio data for the current mix
+    float GetAttenuationThisMix();
     // Resets back to the loop start point
     void Loop();
     // Translates the audio data in the array to the specified output channels, and puts the data
     // back into the array
-    static void TranslateChannels(Zero::Array<float>& inputSamples, const unsigned inputFrames,
+    static void TranslateChannels(BufferType* inputSamples, const unsigned inputFrames,
       const unsigned inputChannels, const unsigned outputChannels);
     // Sends notification and removes instance from any associated tags.
     void FinishedCleanUp();
     // Check for whether the total volume is lower than the minimum.
     bool BelowMinimumVolume(unsigned frames);
     // Returns a volume modifier from the array.
-    ThreadedVolumeModifier* GetAvailableVolumeMod();
+    InstanceVolumeModifier* GetAvailableVolumeMod();
     // Removes this instance from all tags it is associated with.
     void RemoveFromAllTags();
     // Handle music beat notifications.
@@ -185,12 +188,6 @@ namespace Audio
     typedef Zero::Array<TagObject*> TagListType;
     // List of tags that the instance is currently associated with.
     TagListType TagList;
-    // Equalizer filter controlled by tags.
-    Equalizer* TagEqualizer;
-    // Compressor filter controlled by tags.
-    DynamicsProcessor* TagCompressor;
-    // Input from another tag used by the TagCompressor filter.
-    const Zero::Array<float>* TagCompressorInput;
 
     // Handles fading the audio when looping or jumping.
     AudioFadeObject Fade;
@@ -256,16 +253,16 @@ namespace Audio
     unsigned mLoopEndFrame;
     // The frames after the LoopEndTime to use for fading.
     unsigned mLoopTailFrames;
-    // The time, in seconds, per audio frame.
-    double mTimeIncrement;
-    // The time position in the file on the previous mix.
-    double mPreviousTime;
     // Used to control volume modifications while pausing.
-    ThreadedVolumeModifier *PausingModifier;
+    InstanceVolumeModifier *PausingModifier;
     // Used to interpolate from one volume to another. 
     InterpolatingObject VolumeInterpolator;
     // Volume adjustments, used by the instance and by tags.
-    Zero::Array<ThreadedVolumeModifier*> VolumeModList;
+    Zero::Array<InstanceVolumeModifier*> VolumeModList;
+    // The mix version of the audio data saved in InputSamples
+    unsigned mSavedOutputVersion;
+    // Processed samples that are saved between mixes
+    BufferType SavedSamples;
 
     bool mVirtual;
 

@@ -244,7 +244,7 @@ namespace Audio
       // Apply the filter to each frame of audio samples
       float* buffer = outputBuffer->Data();
       for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-        listenerData.LowPass.ProcessSample(buffer + i, buffer + i, numberOfChannels);
+        listenerData.LowPass.ProcessFrame(buffer + i, buffer + i, numberOfChannels);
     }
 
     AddBypass(outputBuffer);
@@ -253,17 +253,24 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float AttenuatorNode::GetAttenuatedVolume()
+  float AttenuatorNode::GetVolumeChangeFromOutputs()
   {
     if (!Threaded)
       return 0;
 
-    // If there are multiple listeners, the sounds they hear are added together
     float volume = 0.0f;
+
+    // Get all volumes from outputs
+    forRange(SoundNode* node, GetOutputs()->All())
+      volume += node->GetVolumeChangeFromOutputs();
+
+    // If there are multiple listeners, the sounds they hear are added together
+    float attenuatorVolume = 0.0f;
     forRange(AttenuationPerListener* data, DataPerListener.Values())
       volume += data->PreviousVolume;
 
-    return volume;
+    // Return the output volume modified by this node's volume
+    return volume * attenuatorVolume;
   }
 
   //************************************************************************************************

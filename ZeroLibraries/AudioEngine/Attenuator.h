@@ -66,7 +66,7 @@ namespace Audio
     ~AttenuatorNode();
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
-    float GetAttenuatedVolume() override;
+    float GetVolumeChangeFromOutputs() override;
     void RemoveListener(ListenerNode* listener) override;
 
     typedef Zero::HashMap<ListenerNode*, AttenuationPerListener*> DataPerListenerMapType;

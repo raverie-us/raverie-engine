@@ -337,7 +337,7 @@ namespace Audio
         if (outputChannels == 6 || outputChannels == 8)
         {
           float monoSample = frame.GetMonoValue();
-          LowPass->ProcessSample(&monoSample, &frame.Samples[3], 1);
+          LowPass->ProcessFrame(&monoSample, &frame.Samples[3], 1);
         }
 
         // Copy this frame of samples to the output buffer

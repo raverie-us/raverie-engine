@@ -67,7 +67,7 @@ namespace Audio
 
     // Apply filter
     for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-      filter->ProcessSample(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+      filter->ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
 
     AddBypass(outputBuffer);
 
@@ -189,7 +189,7 @@ namespace Audio
 
     // Apply filter
     for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-      filter->ProcessSample(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+      filter->ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
 
     AddBypass(outputBuffer);
 
@@ -311,7 +311,7 @@ namespace Audio
 
     // Apply filter
     for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-      filter->ProcessSample(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+      filter->ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
 
     AddBypass(outputBuffer);
 

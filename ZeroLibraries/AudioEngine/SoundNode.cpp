@@ -409,27 +409,16 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float SoundNode::GetAttenuatedVolume()
+  float SoundNode::GetVolumeChangeFromOutputs()
   {
     if (!Threaded)
       return 0.0f;
 
-    float volume(1.0f);
-    bool gotData(false);
+    float volume = 0.0f;
     forRange(SoundNode* node, Outputs.All())
-    {
-      float nodeVolume = node->GetAttenuatedVolume();
-      if (nodeVolume > 0)
-      {
-        volume *= nodeVolume;
-        gotData = true;
-      }
-    }
+      volume += node->GetVolumeChangeFromOutputs();
 
-    if (gotData)
-      return volume;
-    else
-      return -1.0f;
+    return volume;
   }
 
   //************************************************************************************************
@@ -500,11 +489,7 @@ namespace Audio
     // Hasn't been mixed yet
     else
     {
-      // Set variables
       InProcess = true;
-      Version = gAudioSystem->MixVersionNumber;
-      NumMixedChannels = numberOfChannels;
-      MixedListener = listener;
 
       // Set mixed array to same size as output array
       MixedOutput.Resize(outputBuffer->Size());
@@ -533,11 +518,18 @@ namespace Audio
           gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
             GetSiblingNode(), hasOutput));
 
+      // Set variables
       ValidOutputLastMix = hasOutput;
+      Version = gAudioSystem->MixVersionNumber;
+      NumMixedChannels = numberOfChannels;
+      MixedListener = listener;
 
       // Copy mixed samples to output buffer if there is real data
       if (hasOutput)
-        memcpy(outputBuffer->Data(), MixedOutput.Data(), sizeof(float) * outputBuffer->Size());
+      {
+        ErrorIf(outputBuffer->Size() != MixedOutput.Size(), "Buffer sizes do not match when evaluating sound node");
+        memcpy(outputBuffer->Data(), MixedOutput.Data(), sizeof(float) * MixedOutput.Size());
+      }
 
       // Mark as finished
       InProcess = false;
@@ -553,17 +545,16 @@ namespace Audio
     if (!Threaded)
       return false;
 
-    // Reset buffer
-    InputSamples.Resize(howManySamples);
-    memset(InputSamples.Data(), 0, sizeof(float) * howManySamples);
-
     // No sources, do nothing
     if (Inputs.Empty())
       return false;
 
-    Zero::Array<float> tempBuffer(howManySamples);
-
+    BufferType tempBuffer(howManySamples);
     bool isThereInput(false);
+
+    // Reset buffer
+    InputSamples.Resize(howManySamples);
+    memset(InputSamples.Data(), 0, sizeof(float) * howManySamples);
 
     // Get samples from all inputs
     for (unsigned i = 0; i < Inputs.Size(); ++i)
@@ -674,7 +665,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  bool OutputNode::GetOutputSamples(Zero::Array<float>* outputBuffer, const unsigned numberOfChannels,
+  bool OutputNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
     ListenerNode* listener, const bool firstRequest)
   {
     if (!Threaded)
@@ -691,9 +682,9 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float OutputNode::GetAttenuatedVolume()
+  float OutputNode::GetVolumeChangeFromOutputs()
   {
-    return -1.0f;
+    return 1.0f;
   }
 
   //--------------------------------------------------------------------------- Simple Collapse Node

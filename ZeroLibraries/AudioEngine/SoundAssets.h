@@ -46,7 +46,7 @@ namespace Audio
     void ReleaseReference();
 
     // Appends the specified number of samples to the array, starting at the specified frame index.
-    virtual void AppendSamples(Zero::Array<float>* buffer, const unsigned frameIndex,
+    virtual void AppendSamples(BufferType* buffer, const unsigned frameIndex,
       unsigned numberOfSamples) = 0;
     // Returns the number of audio channels.
     virtual unsigned GetChannels() = 0;
@@ -84,7 +84,7 @@ namespace Audio
       ExternalNodeInterface* externalInterface, const bool isThreaded = false);
 
     // Appends the specified number of samples to the array, starting at the specified frame index.
-    void AppendSamples(Zero::Array<float>* buffer, const unsigned frameIndex,
+    void AppendSamples(BufferType* buffer, const unsigned frameIndex,
       unsigned numberOfSamples) override;
     // The total number of audio frames in this asset's data.
     unsigned GetNumberOfFrames() override;
@@ -112,7 +112,7 @@ namespace Audio
     bool MoveBuffers();
     // Fills the buffer with the specified number of samples, starting at the specified index.
     // Will pad with zero if not enough samples available.
-    void FillStreamingBuffer(Zero::Array<float>* buffer, unsigned* sampleIndex, unsigned* samplesNeeded);
+    void FillStreamingBuffer(float** buffer, unsigned* sampleIndex, unsigned* samplesNeeded);
 
     // If true, this is a streaming asset.
     bool mStreaming;
@@ -127,11 +127,11 @@ namespace Audio
     // Pointer to the decoder object used by this asset.
     FileDecoder* Decoder;
     // The buffer of decoded samples.
-    Zero::Array<float> Samples;
+    BufferType Samples;
     // If streaming, keeps track of previous samples.
     unsigned mPreviousBufferSamples;
     // The next buffer of decoded streamed samples.
-    Zero::Array<float> NextStreamedSamples;
+    BufferType NextStreamedSamples;
     // If true, the NextStreamedSamples buffer needs to be filled out.
     bool mNeedSecondBuffer;
   };
@@ -145,7 +145,7 @@ namespace Audio
       ExternalNodeInterface *extInt, const bool isThreaded = false);
 
     // Appends the specified number of samples to the array, starting at the specified frame index.
-    void AppendSamples(Zero::Array<float>* buffer, const unsigned frameIndex,
+    void AppendSamples(BufferType* buffer, const unsigned frameIndex,
       unsigned numberOfSamples) override;
     // Returns the number of channels in the audio data
     unsigned GetChannels() override { return 1; }

@@ -77,6 +77,22 @@ namespace Audio
   }
 
   //************************************************************************************************
+  float VolumeNode::GetVolumeChangeFromOutputs()
+  {
+    if (!Threaded)
+      return 0;
+
+    float outputVolume = 0.0f;
+
+    // Get all volumes from outputs
+    forRange(SoundNode* node, GetOutputs()->All())
+      outputVolume += node->GetVolumeChangeFromOutputs();
+
+    // Return the output volume modified by this node's volume
+    return outputVolume * Volume;
+  }
+
+  //************************************************************************************************
   void VolumeNode::SetVolume(const float newVolume, float timeToInterpolate)
   {
     if (!Threaded)
@@ -340,4 +356,16 @@ namespace Audio
 
     return true;
   }
+
+  //************************************************************************************************
+  float PanningNode::GetVolumeChangeFromOutputs()
+  {
+    float volume = (LeftVolume + RightVolume) / 2.0f;
+
+    forRange(SoundNode* node, GetOutputs()->All())
+      volume *= node->GetVolumeChangeFromOutputs();
+
+    return volume;
+  }
+
 }

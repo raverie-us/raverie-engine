@@ -138,7 +138,7 @@ namespace Audio
   public:
     LowPassFilter();
 
-    void ProcessSample(const float* input, float* output, const unsigned numChannels);
+    void ProcessFrame(const float* input, float* output, const unsigned numChannels);
 
     float GetCutoffFrequency();
     void SetCutoffFrequency(const float value);
@@ -161,7 +161,7 @@ namespace Audio
   public:
     HighPassFilter();
 
-    void ProcessSample(const float* input, float* output, const unsigned numChannels);
+    void ProcessFrame(const float* input, float* output, const unsigned numChannels);
 
     void SetCutoffFrequency(const float value);
     void MergeWith(HighPassFilter& otherFilter);
@@ -183,7 +183,7 @@ namespace Audio
   public:
     BandPassFilter();
 
-    void ProcessSample(const float* input, float* output, const unsigned numChannels);
+    void ProcessFrame(const float* input, float* output, const unsigned numChannels);
 
     void SetFrequency(const float frequency);
     void SetQuality(const float Q);
@@ -392,6 +392,7 @@ namespace Audio
     Equalizer();
     Equalizer(const float below80Hz, const float at150Hz, const float at600Hz, const float at2500Hz, 
       const float above5000Hz);
+    Equalizer(const Equalizer& copy);
 
     void ProcessBuffer(const float *input, float *output, const unsigned numChannels, 
       const unsigned bufferSize);

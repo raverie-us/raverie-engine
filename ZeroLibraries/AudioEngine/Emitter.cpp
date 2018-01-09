@@ -260,7 +260,7 @@ namespace Audio
     {
       // Copy input samples to output buffer while applying filter
       for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-        listenerData.LowPass.ProcessSample(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+        listenerData.LowPass.ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
     }
 
     // Adjust with gain values

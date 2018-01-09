@@ -22,6 +22,9 @@ namespace Audio
   public:
     TagObject(bool isThreaded = false);
 
+    void UpdateForMix(unsigned howManyFrames, unsigned channels);
+    void ProcessInstance(BufferType* instanceOutput, unsigned channels, SoundInstanceNode* instance);
+
     // Remove this tag from the system and delete it
     void RemoveTag();
     // Add a new instance to this tag
@@ -53,18 +56,18 @@ namespace Audio
     struct GainValues
     {
       GainValues(float below80Hz, float at150Hz, float at600Hz, float at2500Hz, float above5000Hz) :
-        Below80Hz(below80Hz),
-        At150Hz(at150Hz),
-        At600Hz(at600Hz),
-        At2500Hz(at2500Hz),
-        Above5000Hz(above5000Hz)
+        mBelow80Hz(below80Hz),
+        mAt150Hz(at150Hz),
+        mAt600Hz(at600Hz),
+        mAt2500Hz(at2500Hz),
+        mAbove5000Hz(above5000Hz)
       {}
 
-      float Below80Hz;
-      float At150Hz;
-      float At600Hz;
-      float At2500Hz;
-      float Above5000Hz;
+      float mBelow80Hz;
+      float mAt150Hz;
+      float mAt600Hz;
+      float mAt2500Hz;
+      float mAbove5000Hz;
     };
 
     // Returns true if currently applying equalizer settings
@@ -126,52 +129,64 @@ namespace Audio
   private:
     ~TagObject();
 
+    // Accumulates audio output from all tagged sound instances into the mTotalInstanceOutput buffer
+    BufferType* GetTotalInstanceOutput(unsigned howManyFrames, unsigned channels);
+    // Removes the specified instance from the appropriate lists 
+    void RemoveInstanceFromLists(SoundInstanceNode* instance);
+
     // If not threaded, a pointer to the threaded tag
-    TagObject* ThreadedTag;
+    TagObject* mThreadedTag;
+    // If true, this object is used for the mix thread
+    bool mIsThreaded;
+    // If true, all associated sound instances are currently paused
+    bool mPaused;
+    // The maximum number of instances that can be played with this tag
+    unsigned mInstanceLimit;
+    // Keeps track of whether this tag has updated for the current mix
+    unsigned mMixVersion;
+    // Used to hold the total audio output of all associated sound instances
+    BufferType mTotalInstanceOutput;
+    // List of all associated sound instances
+    Zero::Array<SoundInstanceNode*> mSoundInstanceList;
+    // Current volume adjustment
+    float mVolume;
+    // If true, volume adjustment should be applied to tagged instances
+    bool mModifyingVolume;
+    // If true, the equalizer filter will be applied to tagged instances
+    bool mUseEqualizer;
+    // The compressor filter applied to tagged instances
+    DynamicsProcessor* CompressorObject;
+    // If true, the compressor filter will be applied
+    bool mUseCompressor;
+    // The volume adjustment per sample created by the compressor filter
+    BufferType mCompressorVolumes;
+    // A tag whose audio will be used for the compressor input
+    TagObject* mCompressorInputTag;
+    
+    // Stores data for each tagged sound instance
+    struct InstanceData
+    {
+      InstanceData();
+      ~InstanceData();
 
-    float CurrentVolume;
-    bool ModifyingVolume;
-    bool IsThreaded;
-    bool Paused;
+      // The volume modifier on the instance which is being used by the tag
+      InstanceVolumeModifier* mVolumeModifier;
+      // Equalizer filters for each tagged instance (relies on history of samples)
+      Equalizer* mEqualizer;
+    };
 
-    unsigned InstanceLimit;
-
-    bool UseEqualizer;
-    float LowPassGain;
-    float HighPassGain;
-    float Band1Gain;
-    float Band2Gain;
-    float Band3Gain;
-
-    bool UseCompressor;
-    float CompressorThresholdDB;
-    float CompressorAttackMSec;
-    float CompressorReleaseMSec;
-    float CompressorRatio;
-    float CompressorKneeWidth;
-
-    InstanceListType Instances;
-
-    /** Map of instances associated with this tag to volume modifiers. */
-    typedef Zero::HashMap<SoundInstanceNode*, ThreadedVolumeModifier*> InstanceVolumeMapType;
-    InstanceVolumeMapType InstanceVolumeMap;
-
-    void RemoveFromAllInstances();
-    void SetInstanceDataOnRemove(SoundInstanceNode* instance, ThreadedVolumeModifier* modifier);
-    bool CanInstanceUnVirtualize(SoundInstanceNode* instance);
+    // Map of instance pointers to data objects
+    typedef Zero::HashMap<SoundInstanceNode*, InstanceData*> InstanceDataMapType;
+    InstanceDataMapType DataPerInstance;
+    // Used to store equalizer settings
+    Equalizer* EqualizerSettings;
 
     Zero::Link<TagObject> link;
-
-    Zero::Array<float> TotalOutput;
-    TagObject* CompressorInputTag;
-    const Zero::Array<float>* GetTagOutput();
-    void UpdateCompressorInput();
 
     friend class SoundInstanceNode;
     friend class AudioSystemInterface;
     friend class AudioSystemInternal;
   };
-
 }
 
 #endif

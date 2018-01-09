@@ -145,6 +145,15 @@ namespace Audio
   }
 
   //************************************************************************************************
+  void InterpolatingObject::JumpBackward(const unsigned howManyFrames)
+  {
+    if (CurrentFrame > howManyFrames)
+      CurrentFrame -= howManyFrames;
+    else
+      CurrentFrame = 0;
+  }
+
+  //************************************************************************************************
   bool InterpolatingObject::Finished()
   {
     return CurrentFrame >= TotalFrames;

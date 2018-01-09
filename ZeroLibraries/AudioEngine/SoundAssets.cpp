@@ -174,7 +174,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void SoundAssetFromFile::AppendSamples(Zero::Array<float>* buffer, const unsigned frameIndex,
+  void SoundAssetFromFile::AppendSamples(BufferType* buffer, const unsigned frameIndex,
     unsigned numberOfSamples)
   {
     if (!Threaded)
@@ -182,6 +182,12 @@ namespace Audio
 
     // Translate from frames to sample location
     unsigned sampleIndex = frameIndex * mChannels;
+
+    // Keep the original size of the buffer
+    unsigned originalBufferSize = buffer->Size();
+    // Resize the buffer to hold the new samples
+    buffer->Resize(originalBufferSize + numberOfSamples);
+    float* bufferStart = buffer->Data() + originalBufferSize;
 
     // Handle samples when not streaming
     if (!mStreaming)
@@ -200,15 +206,23 @@ namespace Audio
             break;
         }
 
-        // Copy available samples, if any
-        if (sampleIndex < Samples.Size())
-          buffer->Append(Samples.SubRange(sampleIndex, Samples.Size() - sampleIndex));
-        // Set the remaining samples to zero
-        buffer->Resize(buffer->Size() + numberOfSamples, 0.0f);
+        int samplesToCopy = Samples.Size() - sampleIndex;
+
+        // Check if there are samples available to copy
+        if (samplesToCopy > 0)
+        {
+          // Copy the samples into the buffer
+          memcpy(bufferStart, Samples.Data() + sampleIndex, sizeof(float) * samplesToCopy);
+          // Set the remaining samples (if any) to zero
+          memset(bufferStart + samplesToCopy, 0, sizeof(float) * (numberOfSamples - samplesToCopy));
+        }
+        // Otherwise, set all samples to zero
+        else
+          memset(bufferStart + samplesToCopy, 0, sizeof(float) * numberOfSamples);
       }
-      // Otherwise copy all samples
+      // Doesn't go past end of decoded data, so copy all samples
       else
-        buffer->Append(Samples.SubRange(sampleIndex, numberOfSamples));
+        memcpy(bufferStart, Samples.Data() + sampleIndex, sizeof(float) * numberOfSamples);
     }
     // Handle samples when streaming
     else
@@ -216,8 +230,9 @@ namespace Audio
       // Adjust the sample index to be within the current buffer
       sampleIndex -= mPreviousBufferSamples;
 
+      // Get streamed data for the buffer as long as there are still samples to get
       while (numberOfSamples > 0)
-        FillStreamingBuffer(buffer, &sampleIndex, &numberOfSamples);
+        FillStreamingBuffer(&bufferStart, &sampleIndex, &numberOfSamples);
     }
   }
 
@@ -323,12 +338,13 @@ namespace Audio
       return false;
 
     DecodedPacket packet;
+    // Check if there is an available packet on the queue
     if (Decoder->DecodedPacketQueue.Read(packet))
     {
       if (!mStreaming)
       {
-        // Move the decoded samples into the asset's array
-        Samples.Append(packet.Samples.All());
+        // Copy the decoded samples into the asset's array
+        CopyIntoBuffer(&Samples, packet.Samples, 0, packet.Samples.Size());
 
         // If this is the end, don't need the decoder any more (it won't be processing tasks)
         if (Samples.Size() >= mFrameCount * mChannels)
@@ -340,7 +356,7 @@ namespace Audio
       else
       {
         // Move the samples into the NextStreamedSamples buffer
-        NextStreamedSamples = Zero::MoveReference<Zero::Array<float>>(packet.Samples);
+        NextStreamedSamples = Zero::MoveReference<BufferType>(packet.Samples);
 
         // If the index hasn't reached the end, decode another packet
         if (mPreviousBufferSamples + NextStreamedSamples.Size() < mFrameCount * mChannels)
@@ -373,7 +389,7 @@ namespace Audio
     // Move the previous buffer samples counter forward
     mPreviousBufferSamples += Samples.Size();
     // Move the next buffer of samples into the Samples array
-    Samples = Zero::MoveReference<Zero::Array<float>>(NextStreamedSamples);
+    Samples = Zero::MoveReference<BufferType>(NextStreamedSamples);
     // Mark that we need another buffer and check for decoded packets
     mNeedSecondBuffer = true;
     ProcessAvailableDecodedPacket();
@@ -382,7 +398,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void SoundAssetFromFile::FillStreamingBuffer(Zero::Array<float>* buffer, unsigned* sampleIndexPtr,
+  void SoundAssetFromFile::FillStreamingBuffer(float** bufferPtr, unsigned* sampleIndexPtr,
     unsigned* samplesNeededPtr)
   {
     if (*samplesNeededPtr == 0)
@@ -398,10 +414,10 @@ namespace Audio
     // Keep looking for decoded samples while the index is larger than the current buffer
     while (sampleIndex >= bufferSize)
     {
-      // If there are no more decoded samples available, set the rest of the buffer to zero and return
+      // If there are no more decoded samples available, set the buffer to zero and return
       if (!MoveBuffers())
       {
-        buffer->Resize(buffer->Size() + samplesNeeded, 0.0f);
+        memset(*bufferPtr, 0, sizeof(float) * samplesNeeded);
         samplesNeeded = 0;
         return;
       }
@@ -414,12 +430,14 @@ namespace Audio
 
     // Copy either the samples needed or the samples available, whichever is smaller
     unsigned samplesCopied = Math::Min(samplesNeeded, bufferSize - sampleIndex);
-    buffer->Append(Samples.SubRange(sampleIndex, samplesCopied));
+    memcpy(*bufferPtr, Samples.Data() + sampleIndex, sizeof(float) * samplesCopied);
 
     // Move the sample index forward
     sampleIndex += samplesCopied;
     // Reduce the number of samples needed
     samplesNeeded -= samplesCopied;
+    // Move the buffer pointer forward
+    *bufferPtr = *bufferPtr + samplesCopied;
   }
 
   //--------------------------------------------------------------------- Generated Wave Sound Asset
@@ -452,7 +470,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void GeneratedWaveSoundAsset::AppendSamples(Zero::Array<float>* buffer, const unsigned frameIndex,
+  void GeneratedWaveSoundAsset::AppendSamples(BufferType* buffer, const unsigned frameIndex,
     unsigned numberOfSamples)
   {
     if (!Threaded)
