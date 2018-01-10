@@ -9,6 +9,9 @@
 namespace Zero
 {
 
+// Ranges
+ZilchDefineRange(UiWidgetComponentHierarchy::ChildListRange);
+
 // Enums
 ZilchDefineEnum(UiSizePolicy);
 ZilchDefineEnum(UiVerticalAlignment);
@@ -22,6 +25,9 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
 {
   builder.CreatableInScriptDefault = false;
   
+  // Ranges
+  ZilchInitializeRangeAs(UiWidgetComponentHierarchy::ChildListRange, "UiWidgetRange");
+
   // Enums
   ZilchInitializeEnum(UiSizePolicy);
   ZilchInitializeEnum(UiVerticalAlignment);

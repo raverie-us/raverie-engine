@@ -100,6 +100,7 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindGetterSetter(EditorViewportHidden);
   ZilchBindGetterSetter(ObjectViewHidden);
   ZilchBindGetterSetter(Locked);
+  ZilchBindGetter(ChildCount);
 
   ZilchBindMethod(Destroy);
   ZilchBindMethod(Clone);
