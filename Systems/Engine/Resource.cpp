@@ -387,9 +387,13 @@ int Resource::Release()
 void Resource::GetDependencies(HashSet<ContentItem*>& dependencies,
                                HandleParam instance)
 {
+  Handle resourceInstance = instance;
+  if(resourceInstance.IsNull())
+    resourceInstance = this;
+
   // Get all resources used by this component
   HashSet<Resource*> usedResources;
-  GetResourcesFromProperties(this, usedResources);
+  GetResourcesFromProperties(resourceInstance, usedResources);
 
   // Filter runtime and non-writable resources
   forRange(Resource* resource, usedResources.All())

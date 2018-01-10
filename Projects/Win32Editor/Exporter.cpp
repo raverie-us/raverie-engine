@@ -462,7 +462,6 @@ void Exporter::DoExport()
   ArchiveLibraryOutput(engineArchive, "UiWidget");
   ArchiveLibraryOutput(engineArchive, "EditorUi");
   ArchiveLibraryOutput(engineArchive, "Editor");
-  ArchiveLibraryOutput(engineArchive, "EditorScripts");
 
   // Add all dlls (and other files next to the exe)
   AddFiles(appDirectory, ArchiveFileCallback, &engineArchive);
@@ -605,7 +604,6 @@ void ExportContentFolders(Cog* projectCog)
   CopyLibraryOut(outputDirectory, "UiWidget");
   CopyLibraryOut(outputDirectory, "EditorUi");
   CopyLibraryOut(outputDirectory, "Editor");
-  CopyLibraryOut(outputDirectory, "EditorScripts");
   CopyLibraryOut(outputDirectory, project->ProjectContentLibrary);
 
   // Copy default configuration
