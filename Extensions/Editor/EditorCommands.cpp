@@ -489,6 +489,7 @@ void GroupSelected(Editor* editor, Space* space)
   queue->EndBatch();
 
   editor->GetSelection()->SelectOnly(rootObject);
+  editor->GetSelection()->FinalSelectionChanged();
 }
 
 void SelectSibling(Editor* editor, Space* space)
