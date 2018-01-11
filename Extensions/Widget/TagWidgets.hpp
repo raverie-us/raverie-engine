@@ -193,6 +193,8 @@ public:
   void EditResource(Resource* resource);
   void EditResources(Array<Resource*>& resources);
 
+  void CleanTagEditor();
+
 private:
   /// Saves the content item.
   void Modified();

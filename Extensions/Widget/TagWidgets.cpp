@@ -667,6 +667,12 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
   }
 }
 
+void ResourceTagEditor::CleanTagEditor()
+{
+  mResources.Clear();
+  mTagChain->ClearTags();
+}
+
 //******************************************************************************
 void ResourceTagEditor::Modified()
 {
