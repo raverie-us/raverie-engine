@@ -291,14 +291,11 @@ public:
   virtual ~HeightMapMouseCapture( );
 
   // Named MouseEvent Handlers
-  void OnLeftMouseUp(MouseEvent* event) override;
+  void OnMouseUp(MouseEvent* event) override;
   void OnMouseScroll(MouseEvent* event) override;
 
   // Generic MouseEvent Handlers
   void OnMouseMove(MouseEvent* event) override;
-
-  // Named, but not inherited, MouseEvent Handlers
-  void OnLeftMouseDrag(MouseEvent* event);
 };
 
 //-------------------------------------------------------------- Height Map Tool
@@ -369,7 +366,6 @@ public:
   void OnToolDeactivate(Event* e);
   void OnKeyDown(KeyboardEvent* e);
   void OnLeftMouseDown(ViewportMouseEvent* e);
-  void OnLeftMouseDrag(ViewportMouseEvent* e);
   void OnLeftMouseUp(ViewportMouseEvent* e);
   void OnMouseMove(ViewportMouseEvent* e);
   void OnMouseScroll(ViewportMouseEvent* e);
