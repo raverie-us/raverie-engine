@@ -78,6 +78,7 @@ ZilchDefineType(Sprite, builder, type)
 {
   ZeroBindComponent();
   ZeroBindDocumented();
+  ZeroBindInterface(BaseSprite);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   ZilchBindGetterSetterProperty(SpriteSource);
@@ -329,6 +330,7 @@ ZilchDefineType(SpriteText, builder, type)
 {
   ZeroBindComponent();
   ZeroBindDocumented();
+  ZeroBindInterface(BaseSprite);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   ZilchBindGetterSetterProperty(Text);
