@@ -486,7 +486,13 @@ Handle MultiMetaComposition::GetComponentAt(HandleParam object, uint index)
   BoundType* componentType = sharedComponents[index];
   Handle primary = selection->GetPrimaryAs<Object>();
 
-  return mContainedComposition->GetComponent(primary, componentType);
+  Handle component = mContainedComposition->GetComponent(primary, componentType);
+
+  // If the shared component is an interface type, we want the handle to be that exact type,
+  // not the more derived type returned from GetComponent
+  component.StoredType = componentType;
+
+  return component;
 }
 
 //******************************************************************************
@@ -595,6 +601,23 @@ void MultiMetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateActio
 }
 
 //******************************************************************************
+BoundType* FindCommonInterface(HashMap<BoundType*, uint>& sharedComponentMap, uint selectionCount,
+                               BoundType* componentType)
+{
+  forRange(CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
+  {
+    forRange(BoundType* interfaceType, meta->mInterfaces)
+    {
+      uint interfaceCount = sharedComponentMap.FindValue(interfaceType, uint(-1));
+      if (interfaceCount == selectionCount)
+        return interfaceType;
+    }
+  }
+
+  return nullptr;
+}
+
+//******************************************************************************
 void MultiMetaComposition::GetSharedComponents(MetaSelection* selection,
                                                Array<BoundType*>& sharedComponents)
 {
@@ -616,7 +639,15 @@ void MultiMetaComposition::GetSharedComponents(MetaSelection* selection,
     for (uint i = 0; i < componentCount; ++i)
     {
       Handle component = mContainedComposition->GetComponentAt(object, i);
-      sharedComponentMap[component.StoredType]++;
+      BoundType* componentType = component.StoredType;
+      sharedComponentMap[componentType]++;
+
+      // Add interfaces
+      forRange(CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
+      {
+        forRange(BoundType* interfaceType, meta->mInterfaces)
+          sharedComponentMap[interfaceType]++;
+      }
     }
   }
 
@@ -627,13 +658,22 @@ void MultiMetaComposition::GetSharedComponents(MetaSelection* selection,
   {
     // Get the component meta
     Handle component = mContainedComposition->GetComponentAt(primary, i);
-    BoundType* componentMeta = component.StoredType;
+    BoundType* componentType = component.StoredType;
 
     // If all objects in the selection have the component,
     // add it to be displayed
-    uint count = sharedComponentMap.FindValue(componentMeta, uint(-1));
+    uint count = sharedComponentMap.FindValue(componentType, uint(-1));
     if (count == selection->Count())
-      sharedComponents.PushBack(componentMeta);
+    {
+      sharedComponents.PushBack(componentType);
+    }
+    else
+    {
+      // If not all objects had this component, walk the interfaces to find a common interface
+      BoundType* interface = FindCommonInterface(sharedComponentMap, selection->Count(), componentType);
+      if (interface)
+        sharedComponents.PushBack(interface);
+    }
   }
 }
 
