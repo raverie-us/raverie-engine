@@ -358,6 +358,8 @@ namespace Audio
     // If shutting down, wait for volume to ramp down to zero
     if (ShuttingDownThreaded)
     {
+      VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, outputFrames);
+
       // Volume will interpolate down to zero
       for (unsigned i = 0; i < MixedOutput.Size(); i += outputChannels)
       {
@@ -367,18 +369,14 @@ namespace Audio
           MixedOutput[i + j] *= volume;
       }
 
-      // If we reached zero volume, it's okay to shut down
-      if (VolumeInterpolatorThreaded.Finished())
-        return false;
+      // Copy the data to the ring buffer
+      AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
+
+      return false;
     }
 
     // Copy the data to the ring buffer
     AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
-
-    // Tag compressor functionality is temporarily disabled to fix a crash so no longer calling
-    // the UpdateCompressorInput function on all objects in TagListThreaded.
-    // Needs a fairly complicated refactor to actually fix the issue 
-    // (variable size mixing when using another tag for the compressor)
 
     // Still running, return true
     return true;
@@ -530,7 +528,6 @@ namespace Audio
   void AudioSystemInternal::ShutDownThreaded()
   {
     ShuttingDownThreaded = true;
-    VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, 1000 * gAudioSystem->SystemChannelsThreaded);
   }
 
   //************************************************************************************************
