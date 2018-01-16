@@ -91,7 +91,7 @@ MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Function* func
 template<typename T>
 bool TrimCompareFn(const T* lhs, const T* rhs)
 {
-  return lhs->mName < rhs->mName;
+  return lhs->mName.ToLower() < rhs->mName.ToLower();
 }
 
 template<>
