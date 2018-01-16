@@ -333,7 +333,7 @@ ZilchDefineType(SpriteText, builder, type)
   ZeroBindInterface(BaseSprite);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(Text);
+  ZilchBindGetterSetterProperty(Text)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Font);
   ZilchBindGetterSetterProperty(FontSize);
   ZilchBindGetterSetterProperty(PixelsPerUnit);
