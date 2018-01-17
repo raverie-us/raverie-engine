@@ -51,6 +51,18 @@ void PropertyToUndo::ChangeProperty(HandleParam object,
 }
 
 //******************************************************************************
+void PropertyToUndo::MarkPropertyModified(HandleParam object, PropertyPathParam property)
+{
+  MarkPropertyAsModified(mOperationQueue, object, property);
+}
+
+//******************************************************************************
+void PropertyToUndo::RevertProperty(HandleParam object, PropertyPathParam property)
+{
+  Zero::RevertProperty(mOperationQueue, object, property);
+}
+
+//******************************************************************************
 void PropertyToUndo::InvokeFunction(HandleParam object, Function* function)
 {
   OperationQueue::StartListeningForSideEffects();

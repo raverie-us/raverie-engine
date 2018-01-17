@@ -916,7 +916,6 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
     else
       targetObject->DispatchBubble(namedMouseEvents[button], &mouseEvent);
   }
-
 }
 
 void RootWidget::OnOsMouseDrop(OsMouseDropEvent* mouseDrop)

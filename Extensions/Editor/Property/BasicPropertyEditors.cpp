@@ -256,8 +256,7 @@ void DirectProperty::OnRevert(Event* e)
   PropertyPath propertyPath;
   BuildPath(mNode, rootInstance, propertyPath);
 
-  OperationQueue* queue = Z::gEditor->GetOperationQueue();
-  RevertProperty(queue, rootInstance, propertyPath);
+  mProp->RevertProperty(rootInstance, propertyPath);
 }
 
 void DirectProperty::OnMarkModified(Event* e)
@@ -266,8 +265,7 @@ void DirectProperty::OnMarkModified(Event* e)
   PropertyPath propertyPath;
   BuildPath(mNode, rootInstance, propertyPath);
 
-  OperationQueue* queue = Z::gEditor->GetOperationQueue();
-  MarkPropertyAsModified(queue, rootInstance, propertyPath);
+  mProp->MarkPropertyModified(rootInstance, propertyPath);
 }
 
 void DirectProperty::OnMetaModified(Event* e)
