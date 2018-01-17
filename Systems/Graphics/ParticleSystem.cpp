@@ -139,9 +139,15 @@ void ParticleSystem::Initialize(CogInitializer& initializer)
 }
 
 //******************************************************************************
-void ParticleSystem::OnAllObjectsCreated(CogInitializer& initializer)
+void ParticleSystem::ScriptInitialize(CogInitializer& initializer)
 {
-  // Use the engines dt
+  // We're warming up the particle system on ScriptInitialize to accommodate for
+  // the SplineParticleEmitter. SplineParticleEmitter resolves its serialized CogPath
+  // target to the spline in OnAllObjectsCreated. It has a dependency on us, which means
+  // its OnAllObjectsCreated will be called after ours. Because of this, we have to
+  // warm up the particle system at a later point, hence the use of ScriptInitialize
+  
+  // Use the engines dt for simulating the warm up
   float timeStep = Z::gEngine->has(TimeSystem)->GetTargetDt();
 
   float timeLeft = mWarmUpTime;

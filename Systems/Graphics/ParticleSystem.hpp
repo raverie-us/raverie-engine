@@ -43,7 +43,7 @@ public:
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
-  void OnAllObjectsCreated(CogInitializer& initializer) override;
+  void ScriptInitialize(CogInitializer& initializer) override;
   void AttachTo(AttachmentInfo& info) override;
   void Detached(AttachmentInfo& info) override;
   void OnDestroy(uint flags = 0) override;
