@@ -1488,23 +1488,63 @@ void Cog::ReplaceChild(Cog* oldChild, Cog* newChild)
 //**************************************************************************************************
 uint Cog::GetHierarchyIndex()
 {
+  if (GetMarkedForDestruction())
+  {
+    DoNotifyExceptionAssert("Invalid Operation", "Cannot get Hierarchy Index of Cog that is marked for destruction");
+    return 0;
+  }
+
   if (HierarchyList* list = GetParentHierarchyList())
-    return list->FindIndex(this);
+  {
+    size_t index = 0;
+    forRange(Cog& cog, list->All())
+    {
+      // Don't account for Cogs marked for destruction
+      if (cog.GetMarkedForDestruction())
+        continue;
+
+      if (&cog == this)
+        return index;
+
+      ++index;
+    }
+  }
   return 0;
 }
 
 //**************************************************************************************************
-void Cog::PlaceInHierarchy(uint index)
+void Cog::PlaceInHierarchy(uint destinationIndex)
 {
   HierarchyList* list = GetParentHierarchyList();
-  uint currIndex = list->FindIndex(this);
+  uint currIndex = GetHierarchyIndex();
   list->Erase(this);
 
   // We have to compensate for removing ourself from the list
-  if (currIndex < index)
-    list->InsertAt(index - 1, this);
+  if (currIndex < destinationIndex)
+    destinationIndex -= 1;
+  
+  if(destinationIndex == 0)
+  {
+    list->PushFront(this);
+  }
   else
-    list->InsertAt(index, this);
+  {
+    size_t currentIndex = 0;
+    forRange(Cog& cog, list->All())
+    {
+      // Don't account for Cogs marked for destruction
+      if (cog.GetMarkedForDestruction())
+        continue;
+
+      ++currentIndex;
+
+      if (currentIndex == destinationIndex)
+      {
+        list->InsertAfter(&cog, this);
+        break;
+      }
+    }
+  }
 
   Event eventToSend;
   if (GetParent())

@@ -264,12 +264,14 @@ public:
   void ReplaceChild(Cog* oldChild, Cog* newChild);
 
   /// Returns this Cogs index in the parents children list. If it doesn't have a parent, it will
-  /// return the index in the Space's object list.
+  /// return the index in the Space's object list. Note that this ignores siblings that
+  /// are marked for destruction.
   uint GetHierarchyIndex();
 
   //----- Internals
   /// Moves the object to the given index in the parents child list. This currently does no
-  /// bounds checking as an optimization.
+  /// bounds checking as an optimization. Note that this ignores siblings that
+  /// are marked for destruction.
   void PlaceInHierarchy(uint index);
   Cog* FindLastDeepestChild();
   /// Returns the list of all children.
