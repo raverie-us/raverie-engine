@@ -252,6 +252,7 @@ Editor::Editor(Composite* parent)
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
   ConnectThisTo(this, Events::SaveCheck, OnSaveCheck);
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+  ConnectThisTo(Z::gResources, Events::ResourceRemoved, OnResourceRemoved);
 
   BoundType* editorMeta = ZilchTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
@@ -1090,6 +1091,23 @@ void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibrar
     ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
 
   mReInitializeQueue.EndBatch();
+}
+
+void Editor::OnResourceRemoved(ResourceEvent* event)
+{
+  // Runtime resources delete themselves when their reference count reaches 0
+  // Selection Remove takes a handle increasing the reference count to 1 and upon
+  // returning decrements it to 0 again setting off a recursive event loop
+  if(event->EventResource->IsRuntime())
+    return;
+
+  MetaSelection* selection = GetSelection();
+  // Attempt to remove the resource being deleted from the current selection
+  if (selection->Contains(event->EventResource))
+  {
+    selection->Remove(event->EventResource);
+    selection->FinalSelectionChanged();
+  }
 }
 
 void Editor::Update()

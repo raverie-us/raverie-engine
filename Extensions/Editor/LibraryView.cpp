@@ -1143,8 +1143,6 @@ void LibraryView::OnMessageBox(MessageBoxEvent* event)
 
     mPrimaryCommandIndex = 0;
     mCommandIndices.Clear();
-
-    Z::gEditor->GetSelection()->FinalSelectionChanged();
   }
 }
 
