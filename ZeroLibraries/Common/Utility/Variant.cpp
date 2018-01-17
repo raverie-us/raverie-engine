@@ -406,7 +406,7 @@ void Variant::InternalFreeHeapBuffer()
   Assert(mDataAsPointer != nullptr);
 
   // Free heap buffer
-  delete [] mDataAsPointer;
+  delete [] (byte*)mDataAsPointer;
   mDataAsPointer = nullptr;
 
   // (Local buffer should now be zeroed, albeit incidentally)

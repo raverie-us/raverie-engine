@@ -17,7 +17,7 @@ template<typename KeyType, typename DataType>
 struct PairSortPolicy
 {
   /// Typedefs
-  typedef typename Pair<KeyType, DataType> value_type;
+  typedef struct Pair<KeyType, DataType> value_type;
   typedef KeyType  key_type;
   typedef DataType data_type;
 
@@ -73,6 +73,8 @@ public:
   typedef typename base_type::size_type size_type;
   typedef typename base_type::pointer_bool_pair pointer_bool_pair;
   typedef typename base_type::iterator iterator;
+  typedef typename base_type::pointer pointer;
+  typedef typename base_type::const_reference const_reference;
 
   /// Range adapter that presents only the key members in a key-data pair range, intended for convenience
   struct key_range : public range

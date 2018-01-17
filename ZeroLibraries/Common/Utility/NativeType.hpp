@@ -133,11 +133,11 @@ struct IsBasicNativeType<T>                                                     
 template <>                                                                       \
 struct BasicNativeTypeToEnum<T>                                                   \
 {                                                                                 \
-  static const BasicNativeType::Enum Value = BasicNativeType::##Name;             \
+  static const BasicNativeType::Enum Value = BasicNativeType::Name;               \
 };                                                                                \
                                                                                   \
 template <>                                                                       \
-struct BasicNativeTypeFromEnum<BasicNativeType::##Name>                           \
+struct BasicNativeTypeFromEnum<BasicNativeType::Name>                             \
 {                                                                                 \
   typedef T Type;                                                                 \
 };
@@ -230,7 +230,7 @@ template <typename T, typename Enable = void>
 struct ConstantNativeTypeId;
 
 template <typename T>
-struct ConstantNativeTypeId<typename T, TC_ENABLE_IF(IsBasicNativeType<T>::Value)>
+struct ConstantNativeTypeId<T, TC_ENABLE_IF(IsBasicNativeType<T>::Value)>
 {
   static const NativeTypeId Value = NativeTypeId(BasicNativeTypeToEnum<T>::Value);
 };
@@ -266,7 +266,7 @@ inline NativeTypeId AcquireNextRuntimeNativeTypeId()
 {
   // Generate runtime native type ID counter (as lazy singleton)
   // (Atomic to ensure thread safety on post-increment)
-  static Atomic<NativeTypeId> nextRuntimeNativeTypeId = cRuntimeNativeTypeIdMin;
+  static Atomic<NativeTypeId> nextRuntimeNativeTypeId(cRuntimeNativeTypeIdMin);
   return nextRuntimeNativeTypeId++;
 }
 
@@ -577,13 +577,6 @@ public:
     static NativeType nativeType(static_cast<T*>(nullptr));
     return &nativeType;
   }
-  template <>
-  static NativeType* GetInstance<void>()
-  {
-    // Because void is an incomplete type we do not provide type info for it.
-    // Instead, NativeTypeOf(void) is used as a sentinel value, returning nullptr.
-    return nullptr;
-  }
 
   //
   // Type Info
@@ -669,5 +662,8 @@ public:
   /// String to object function
   StringToObjectFn mStringToObjectFn;
 };
+
+template <>
+NativeType* NativeType::GetInstance<void>();
 
 } // namespace Zero

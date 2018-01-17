@@ -27,7 +27,7 @@ template<typename T>
 struct ZeroSharedTemplate has_member_to_string_helper
 {
   template<typename T2>
-  static inline yes Test(static_verify_function_signature< typename String(T2::*)(bool) const, &T2::ToString >*);
+  static inline yes Test(static_verify_function_signature< class String(T2::*)(bool) const, &T2::ToString >*);
   template<typename T2>
   static inline no Test(...);
 
@@ -92,7 +92,7 @@ template<typename T>
 struct ZeroSharedTemplate has_global_to_string_helper
 {
   template<typename T2>
-  static inline yes Test(static_verify_function_signature< typename String(*)(const T2&, bool), &ToString >*);
+  static inline yes Test(static_verify_function_signature< class String(*)(const T2&, bool), &ToString >*);
   template<typename T2>
   static inline no Test(...);
 

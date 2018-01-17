@@ -201,7 +201,7 @@ T FunctionPointerPassThrough(T);
 #endif
 #else
   #define ZeroHasTypeOf 1
-  #define ZeroHasAuto 0
+  #define ZeroHasAuto 1
 #endif
 
 #if ZeroHasAuto

@@ -22,17 +22,17 @@ template <typename Item, typename Id>
 class ItemCache
 {
   /// Typedefs
-  typedef typename IdStore<Id>        IdStore;
-  typedef typename ArrayMap<Item, Id> ItemIdMap;
-  typedef typename ArrayMap<Id, Item> IdItemMap;
+  typedef class IdStore<Id>        IdStore;
+  typedef class ArrayMap<Item, Id> ItemIdMap;
+  typedef class ArrayMap<Id, Item> IdItemMap;
 
 public:
   /// Typedefs
-  typedef typename Id                 id_type;
-  typedef typename Item               item_type;
-  typedef typename IdStore            id_store_type;
-  typedef typename ItemIdMap          item_id_map_type;
-  typedef typename IdItemMap          id_item_map_type;
+  typedef Id                          id_type;
+  typedef Item                        item_type;
+  typedef IdStore                     id_store_type;
+  typedef ItemIdMap                   item_id_map_type;
+  typedef IdItemMap                   id_item_map_type;
   typedef typename ItemIdMap::pointer item_id_pointer;
   typedef typename IdItemMap::pointer id_item_pointer;
   typedef typename ItemIdMap::range   item_id_range;

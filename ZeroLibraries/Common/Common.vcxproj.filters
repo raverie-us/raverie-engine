@@ -122,6 +122,12 @@
     <ClCompile Include="Utility\SpinLock.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\ForEachRange.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\NativeType.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">

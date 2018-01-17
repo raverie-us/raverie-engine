@@ -96,24 +96,24 @@ template<typename T>
 struct ZeroSharedTemplate has_global_to_value_helper
 {
   template<typename T2>
-  static inline yes Test1(static_verify_function_signature< typename void(*)(StringRange, T2&), &ToValue >*);
+  static inline yes Test1(static_verify_function_signature<void(*)(StringRange, T2&), &ToValue >*);
   template<typename T2>
   static inline no Test1(...);
 
   // Third parameter (base) must have a default argument, so ToValue may be invoked without it
   template<typename T2>
-  static inline yes Test2(static_verify_function_signature< typename void(*)(StringRange, T2&, int), &ToValue >*);
+  static inline yes Test2(static_verify_function_signature<void(*)(StringRange, T2&, int), &ToValue >*);
   template<typename T2>
   static inline no Test2(...);
 
   template<typename T2>
-  static inline yes Test3(static_verify_function_signature< typename void(*)(StringRangeParam, T2&), &ToValue >*);
+  static inline yes Test3(static_verify_function_signature<void(*)(StringRangeParam, T2&), &ToValue >*);
   template<typename T2>
   static inline no Test3(...);
 
   // Third parameter (base) must have a default argument, so ToValue may be invoked without it
   template<typename T2>
-  static inline yes Test4(static_verify_function_signature< typename void(*)(StringRangeParam, T2&, int), &ToValue >*);
+  static inline yes Test4(static_verify_function_signature<void(*)(StringRangeParam, T2&, int), &ToValue >*);
   template<typename T2>
   static inline no Test4(...);
 
@@ -137,7 +137,7 @@ struct ZeroSharedTemplate has_global_to_buffer_helper
 {
   // Third parameter (shortFormat) must have a default argument, so ToValue may be invoked without it
   template<typename T2>
-  static inline yes Test(static_verify_function_signature< typename uint(*)(char*, uint, T2, bool) , &ToBuffer >*);
+  static inline yes Test(static_verify_function_signature<uint(*)(char*, uint, T2, bool) , &ToBuffer >*);
   template<typename T2>
   static inline no Test(...);
 

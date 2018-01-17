@@ -570,10 +570,10 @@ struct ZeroShared ComparePolicy<const char*>
 template<typename T>
 struct ZeroSharedTemplate has_valid_compare_policy_helper
 {
-  typedef typename ComparePolicy<T> ComparePolicyT;
+  typedef struct ComparePolicy<T> ComparePolicyT;
 
   template<typename T2>
-  static inline yes Test(static_verify_function_signature< typename bool(ComparePolicyT::*)(const T2&, const T2&) const, &ComparePolicyT::Equal >*);
+  static inline yes Test(static_verify_function_signature<bool(ComparePolicyT::*)(const T2&, const T2&) const, &ComparePolicyT::Equal >*);
   template<typename T2>
   static inline no Test(...);
 

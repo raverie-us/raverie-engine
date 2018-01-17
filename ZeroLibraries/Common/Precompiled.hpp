@@ -4,6 +4,6 @@
 /// Copyright 2016, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once
+//#pragma once
 
 #include "CommonStandard.hpp"

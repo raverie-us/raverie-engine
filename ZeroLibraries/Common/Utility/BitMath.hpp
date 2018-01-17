@@ -101,7 +101,7 @@ StaticAssert(PlatformByteLength, CHAR_BIT == 8, "Platform byte length must be 8 
                        typename conditional<(N) <= 64, intfast64, intmax>::type>::type>::type>::type
 
 /// Smallest unsigned integer capable of storing a pointer
-typedef typename NEAREST_UINT(BYTES_TO_BITS(sizeof(void*))) uintptr;
+typedef NEAREST_UINT(BYTES_TO_BITS(sizeof(void*))) uintptr;
 
 /// Returns the minimum of a and b
 #define MIN(a, b) ( (a) < (b) ? (a) : (b) )
@@ -120,7 +120,7 @@ namespace Endianness
   };
   typedef uint32 Type;
 }
-static const union { uint8 bytes[4]; Endianness::Enum value; } platformEndianness = { 0x01, 0x02, 0x03, 0x04 };
+static const union { uint8 bytes[4]; Endianness::Enum value; } platformEndianness = { {0x01, 0x02, 0x03, 0x04} };
 
 /// Returns the platform endianness
 inline Endianness::Enum PlatformEndianness(void)

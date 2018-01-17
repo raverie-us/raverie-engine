@@ -10,6 +10,11 @@
 #ifdef _MSC_VER
 #pragma warning(disable:4577)
 #endif
+
+#ifdef __clang__
+#undef __STDC__
+#endif
+
 #include <algorithm>
 #include <ctype.h>
 #include <cstddef>

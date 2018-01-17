@@ -48,7 +48,7 @@ template<typename T>
 struct ZeroSharedTemplate has_hash_function_helper
 {
   template<typename T2>
-  static inline yes Test(static_verify_function_signature< typename size_t(T2::*)() const, &T2::Hash >*);
+  static inline yes Test(static_verify_function_signature<size_t(T2::*)() const, &T2::Hash >*);
   template<typename T2>
   static inline no Test(...);
 
@@ -230,10 +230,10 @@ size_t Pair<type0, type1>::Hash() const
 template<typename T>
 struct ZeroSharedTemplate has_valid_hash_policy_helper
 {
-  typedef typename HashPolicy<T> HashPolicyT;
+  typedef struct HashPolicy<T> HashPolicyT;
 
   template<typename T2>
-  static inline yes Test(static_verify_function_signature< typename size_t(HashPolicyT::*)(const T2&) const, &HashPolicyT::operator() >*);
+  static inline yes Test(static_verify_function_signature<size_t(HashPolicyT::*)(const T2&) const, &HashPolicyT::operator() >*);
   template<typename T2>
   static inline no Test(...);
 
