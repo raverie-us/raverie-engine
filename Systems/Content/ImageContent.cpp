@@ -66,18 +66,20 @@ ContentItem* MakeImageContentItem(ContentInitializer& initializer)
       return content;
     }
 
-    if(pngInfo.Width > MaxSpriteSize ||  pngInfo.Height > MaxSpriteSize)
+    if(pngInfo.Width > cMaxSpriteSize ||  pngInfo.Height > cMaxSpriteSize)
     {
       initializer.Success = false;
-      initializer.Message = "Sprite is too large must be less than 4096";
+      initializer.Message = "Sprite is too large, must be within 4096x4096.";
       return content;
     }
 
     SpriteSourceBuilder* builder = new SpriteSourceBuilder();
     builder->Generate(initializer);
 
-    // Use width and height info
-    // to default to center
+    // Default frame size to image size
+    builder->FrameSizeX = pngInfo.Width;
+    builder->FrameSizeY = pngInfo.Height;
+    // Default origin to center
     builder->OriginX = float(pngInfo.Width / 2);
     builder->OriginY = float(pngInfo.Height / 2);
 

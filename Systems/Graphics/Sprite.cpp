@@ -143,7 +143,7 @@ void Sprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
   frameNode.mMeshRenderData = nullptr;
-  frameNode.mTextureRenderData = mSpriteSource->mTexture->mRenderData;
+  frameNode.mTextureRenderData = mSpriteSource->GetAtlasTextureRenderData();
 
   frameNode.mLocalToWorld = mTransform->GetWorldMatrix();
   frameNode.mLocalToWorldNormal = Mat3::cIdentity;
@@ -192,7 +192,7 @@ void Sprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBloc
 
   if (hasArea && mSpriteSource->Fill == SpriteFill::Tiled)
   {
-    Vec2 tileSize = mSpriteSource->GetSize() / mSpriteSource->PixelSize;
+    Vec2 tileSize = mSpriteSource->GetSize() / mSpriteSource->PixelsPerUnit;
     frameBlock.mRenderQueues->AddStreamedQuadTiled(viewNode, pos0, pos1, uv0, uv1, mVertexColor, tileSize, uvAux0, uvAux1);
   }
   else if (hasArea && mSpriteSource->Fill == SpriteFill::NineSlice)
@@ -893,7 +893,7 @@ void MultiSprite::AddCellEntries(MultiSpriteCell& cell, GroupMap& groupMap)
     IntVec2 entryIndex = pair.first;
     MultiSpriteEntry& spriteEntry = pair.second;
 
-    Texture* atlas = spriteEntry.mSource->mTexture;
+    Texture* atlas = spriteEntry.mSource->GetAtlasTexture();
     groupMap[atlas].mSpriteEntries.PushBack(spriteEntry);
   }
 }

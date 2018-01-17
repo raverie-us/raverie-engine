@@ -66,7 +66,7 @@ void SelectionIcon::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBloc
 
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
   frameNode.mMeshRenderData = nullptr;
-  frameNode.mTextureRenderData = mSpriteSource->mTexture->mRenderData;
+  frameNode.mTextureRenderData = mSpriteSource->GetAtlasTextureRenderData();
 
   frameNode.mLocalToWorld = Mat4::cIdentity;
   frameNode.mLocalToWorldNormal = Mat3::cIdentity;

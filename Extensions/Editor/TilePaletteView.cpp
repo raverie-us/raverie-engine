@@ -51,7 +51,7 @@ void TilePaletteSprite::SetBackground(bool background)
 void TilePaletteSprite::SetFrame(uint frameIndex, SpriteSource* sprite)
 {
   UvRect rect = sprite->GetUvRect(frameIndex);
-  mFrameDisplay->SetTexture(sprite->mTexture);
+  mFrameDisplay->SetTexture(sprite->GetAtlasTexture());
   mFrameDisplay->SetUv(rect.TopLeft, rect.BotRight);
 }
 

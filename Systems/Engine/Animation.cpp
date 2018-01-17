@@ -197,7 +197,6 @@ Animation::Animation()
 
 Animation::~Animation()
 {
-  Unload();
 }
 
 Animation* Animation::CreateRuntime()

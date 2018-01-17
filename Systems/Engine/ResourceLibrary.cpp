@@ -239,6 +239,9 @@ void ResourceLibrary::Remove(Resource* resource)
   // in the array was the last reference)
   HandleOf<Resource> resourceHandle = resource;
 
+  // Allow resources to do any required cleanup before being removed, same as when a library is unloaded.
+  resource->Unload();
+
   Resources.EraseValueError(resourceHandle);
 
   // Remove zilch resources from their containers
