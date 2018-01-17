@@ -85,7 +85,6 @@
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="HeightMapSource.cpp" />
     <ClCompile Include="HierarchyRange.cpp" />
-    <ClCompile Include="HotKeyManager.cpp" />
     <ClCompile Include="JoystickSystem.cpp" />
     <ClCompile Include="LauncherConfiguration.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -189,7 +188,6 @@
     <ClInclude Include="HeightMapSource.hpp" />
     <ClInclude Include="HierarchyRange.hpp" />
     <ClInclude Include="ErrorContext.hpp" />
-    <ClInclude Include="HotKeyManager.hpp" />
     <ClInclude Include="LauncherConfiguration.hpp" />
     <ClInclude Include="EngineLibraryExtensions.hpp" />
     <ClInclude Include="MetaOperations.hpp" />
