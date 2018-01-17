@@ -266,8 +266,8 @@ void EditorMain::ShowHotKeyEditor(CommandEvent* event)
   ////widget->SetSize(Pixels(850, 500));
   //widget->TakeFocus();
 
-  Z::gEditor->EditResource(HotKeyManager::GetDefault());
-  //((HotKeyEditor*)widget)->EditResource
+  Widget* widget = Z::gEditor->mManager->ShowWidget("Commands");
+  ((HotKeyEditor*)widget)->DisplayResource();
 }
 
 void EditorMain::ShowOperationHistroy(CommandEvent* event)
@@ -834,6 +834,9 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Menus.data"));
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Toolbars.data"));
 
+  // Copy commands from Command.data to a 'HotKeyDataSet' resource type.
+  HotKeyEditor::LoadCommandData(commands->mCommands);
+
   SetupTools(editorMain);
 
   commands->SetContext(editorMain, ZilchTypeId(Editor));
@@ -852,9 +855,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   BindDocumentationCommands(config, commands);
   BindProjectCommands(config, commands);
   BindContentCommands(config, commands);
-
-  //HotKeyManager *hkManager = HotKeyManager::Instance;// GetSystemObject(HotKeyManager);
-  //hkManager->RegisterSystemCommands(commands->mCommands);
 
   // Listen to the resource system if any unhandled exception or syntax error occurs
   Connect(Z::gResources, Events::UnhandledException, editorMain, &EditorMain::OnScriptError);

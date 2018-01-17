@@ -29,9 +29,30 @@ class ResourceLibraryDataSource;
 class BindingConflictEvent;
 class ModalConfirmEvent;
 
-void HotKeySortHelper(bool updateIndexes, HotKeyDataSet* Set);
-void HotKeySortHelper(bool updateIndexes, CommandSet& set);
-void RegisterHotKeyEditors();
+//------------------------------------------------------------- CommandEntry ---
+struct CommandEntry
+{
+  bool operator<(const CommandEntry& rhs) const;
+
+  bool mDevOnly;
+
+  unsigned mIndex;
+
+  String mName;
+  String mDescription;
+
+  String mIconName;
+  String mFunction;
+
+  String mTags;
+
+  String mBindingStr;
+  unsigned mModifier1;
+  unsigned mModifier2;
+  unsigned mMainKey;
+};
+
+typedef Array<CommandEntry> CommandSet;
 
 //----------------------------------------------------------- HotKeyCommands ---
 class HotKeyCommands : public DataSource
@@ -59,9 +80,7 @@ public:
   bool Remove(DataEntry* dataEntry) override;
 
 public:
-
-  HotKeyDataSet* mSet;
-
+  CommandSet mCommand;
 };
 
 //------------------------------------------------------------- HotKeyEditor ---
@@ -70,17 +89,18 @@ class HotKeyEditor : public Composite
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  HotKeyEditor(Composite* parent);
+  static void LoadCommandData(Array<Command*>& commands);
 
+  HotKeyEditor(Composite* parent);
   void BuildFormat(TreeFormatting& formatting);
 
   void UpdateTransform( ) override;
 
-  void EditResource(HotKeyDataSet* set, HotKeyManager *hkManager);
+  void DisplayResource( );
+ 
+  bool TakeFocusOverride( ) override;
 
-  bool TakeFocusOverride() override;
-
-  void AutoClose();
+  void AutoClose( );
   void OnCancel(SearchViewEvent* event);
   
   void OnCommandRename(ObjectEvent* event);
@@ -100,12 +120,10 @@ public:
 
   void OnModalOption(ModalConfirmEvent* event);
   void OnModalClosed(ModalConfirmEvent* event);
-  
-  void OnButton2Pressed(ObjectEvent* event);
 
 
 public:
-  
+  static HotKeyCommands sHotKeys;
   static HashMap<unsigned, String> sKeyMap;  // <Keys::Enum, "CommandName">
 
   DataIndex mRowIndex;
@@ -114,9 +132,6 @@ public:
   TextButton* mAddCommand;
   ComboBox* mHotKeySetDropdown;
 
-  HotKeyCommands mHotKeys;
-
-  HotKeyManager *mHotKeyManager;
   StringSource mSetNames;
 };
 
@@ -136,5 +151,11 @@ public:
     : mModifier1(m1), mModifier2(m2), mMainKey(mk), mString(bindStr) {}
 
 };
+
+//------------------------------------------------------------------------------
+
+void HotKeySortHelper(bool updateIndexes, CommandSet& set);
+void RegisterHotKeyEditors( );
+
 
 }//namespace Zero

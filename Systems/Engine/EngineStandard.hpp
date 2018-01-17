@@ -159,7 +159,6 @@ private:
 #include "RaycastProvider.hpp"
 #include "GamepadSystem.hpp"
 #include "JoystickSystem.hpp"
-#include "HotKeyManager.hpp"
 #include "EventDirectoryWatcher.hpp"
 #include "CogRange.hpp"
 #include "CogHelpers.hpp"

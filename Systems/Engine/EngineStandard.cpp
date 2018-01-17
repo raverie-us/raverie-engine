@@ -356,8 +356,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Joystick);
   ZilchInitializeType(Joysticks);
 
-  ZilchInitializeType(HotKeyDataSet);
-
   ZilchInitializeType(EventDirectoryWatcher);
   ZilchInitializeType(Job);
   ZilchInitializeType(DocumentationLibrary);
@@ -433,7 +431,6 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   InitializeResourceManager(LevelManager);
   InitializeResourceManager(AnimationManager);
   InitializeResourceManager(CurveManager);
-  InitializeResourceManager(HotKeyManager);
   InitializeResourceManager(ResourceTableManager);
   InitializeResourceManager(ColorGradientManager);
   InitializeResourceManager(TextBlockManager);
