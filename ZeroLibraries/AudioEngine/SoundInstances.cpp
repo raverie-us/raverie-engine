@@ -656,9 +656,16 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::SetBeatsPerMinute(const float bpm)
   {
-    MusicNotify.mSecondsPerBeat = 60.0f / bpm;
-
-    MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
+    if (bpm <= 0.0f)
+    {
+      MusicNotify.mSecondsPerBeat = 0.0f;
+      MusicNotify.mSecondsPerEighth = 0.0f;
+    }
+    else
+    {
+      MusicNotify.mSecondsPerBeat = 60.0f / bpm;
+      MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
+    }
 
     if (!Threaded && GetSiblingNode())
       gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetBeatsPerMinute,
@@ -668,11 +675,19 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::SetTimeSignature(const int beats, const int noteType)
   {
-    MusicNotify.mBeatsPerBar = beats;
-    MusicNotify.mBeatNoteType = noteType;
+    MusicNotify.mBeatsPerBar = Math::Max(beats, 0);
+    MusicNotify.mBeatNoteType = Math::Max(noteType, 0);
 
-    MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
-    MusicNotify.mEighthsPerBeat = 8 / MusicNotify.mBeatNoteType;
+    if (MusicNotify.mBeatsPerBar == 0 || MusicNotify.mBeatNoteType == 0)
+    {
+      MusicNotify.mSecondsPerEighth = 0.0f;
+      MusicNotify.mEighthsPerBeat = 0;
+    }
+    else
+    {
+      MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
+      MusicNotify.mEighthsPerBeat = 8 / MusicNotify.mBeatNoteType;
+    }
 
     if (!Threaded && GetSiblingNode())
       gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetTimeSignature,

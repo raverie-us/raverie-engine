@@ -141,7 +141,7 @@ void SoundSpace::SetVolume(float value)
 //**************************************************************************************************
 void SoundSpace::InterpolateVolume(float value, float interpolationTime)
 {
-  mVolume = value;
+  mVolume = Math::Max(value, 0.0f);
 
   if (mVolumeNode)
     mVolumeNode->SetVolume(mVolume, interpolationTime);

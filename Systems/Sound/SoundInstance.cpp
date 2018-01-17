@@ -124,7 +124,7 @@ void SoundInstance::SetVolume(float newVolume)
 void SoundInstance::InterpolateVolume(float newVolume, float interpolationTime)
 {
   if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetVolume(newVolume, interpolationTime);
+    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetVolume(Math::Max(newVolume, 0.0f), interpolationTime);
 }
 
 //**************************************************************************************************

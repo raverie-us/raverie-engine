@@ -664,9 +664,9 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void TagObject::SetInstanceLimit(const float limit)
+  void TagObject::SetInstanceLimit(const int limit)
   {
-    mInstanceLimit = (unsigned)limit;
+    mInstanceLimit = limit;
 
     if (!mIsThreaded)
     {

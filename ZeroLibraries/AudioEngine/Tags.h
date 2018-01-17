@@ -48,7 +48,7 @@ namespace Audio
     // Returns the maximum number of tagged instances that can play at once
     unsigned GetInstanceLimit();
     // Sets the maximum number of tagged instances that can play at once
-    void SetInstanceLimit(const float limit);
+    void SetInstanceLimit(const int limit);
     // Returns a pointer to the list of tagged instances
     const InstanceListType* GetInstances();
 
@@ -141,7 +141,7 @@ namespace Audio
     // If true, all associated sound instances are currently paused
     bool mPaused;
     // The maximum number of instances that can be played with this tag
-    unsigned mInstanceLimit;
+    int mInstanceLimit;
     // Keeps track of whether this tag has updated for the current mix
     unsigned mMixVersion;
     // Used to hold the total audio output of all associated sound instances
