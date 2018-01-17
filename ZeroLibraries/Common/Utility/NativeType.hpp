@@ -295,6 +295,7 @@ NativeTypeId GetNativeTypeId()
 {
   return GetConstantNativeTypeId<T>();
 }
+
 /// Returns the native type ID of the specified type T
 /// (Definition for non-basic native types returns a runtime native type ID)
 template <typename T, TF_DISABLE_IF(IsBasicNativeType<T>::Value)>
@@ -549,8 +550,8 @@ protected:
     {
       // (This NativeType should not be the same C++ type as it's primitive members' NativeType,
       //  otherwise it should be initialized above using 'this' to prevent a thread deadlock.)
-      Assert(typeid(T) != typeid(BasicNativeTypePrimitiveMembers<T>::Type));
-      mBasicNativeTypePrimitiveMembersType = NativeTypeOf(BasicNativeTypePrimitiveMembers<T>::Type);
+      Assert(typeid(T) != typeid(typename BasicNativeTypePrimitiveMembers<T>::Type));
+      mBasicNativeTypePrimitiveMembersType = NativeTypeOf(typename BasicNativeTypePrimitiveMembers<T>::Type);
     }
 
     mBasicNativeTypePrimitiveMembersCount = BasicNativeTypePrimitiveMembers<T>::Count;

@@ -98,7 +98,7 @@ void operator/=(SimVecRef lhs, scalar rhs);
 
 //vector3 specific
 SimVec Set3(scalar x, scalar y, scalar z);
-SimVec InnerSum3(SimVec vec);
+SimVec InnerSum3(SimVecParam vec);
 SimVec Dot3(SimVecParam lhs, SimVecParam rhs);
 SimVec Cross3(SimVecParam lhs, SimVecParam rhs);
 SimVec LengthSq3(SimVecParam vec);
@@ -111,7 +111,7 @@ SimVec Refract3(SimVecParam incident, SimVecParam normal, SimVecParam refraction
 
 //vector4 specific
 //the scalar value is splatted across all values of the result
-SimVec InnerSum4(SimVec vec);
+SimVec InnerSum4(SimVecParam vec);
 SimVec Dot4(SimVecParam lhs, SimVecParam rhs);
 SimVec LengthSq4(SimVecParam lhs);
 SimVec Length4(SimVecParam lhs);

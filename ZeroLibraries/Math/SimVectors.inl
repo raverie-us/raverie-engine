@@ -169,7 +169,7 @@ SimInline SimVec Set3(scalar x, scalar y, scalar z)
   return Set4(x,y,z,0);
 }
 
-SimInline SimVec InnerSum3(SimVec vec)
+SimInline SimVec InnerSum3(SimVecParam vec)
 {
   //temp = [z,y,z,y]
   SimVec temp = VecShuffle(vec,vec,2,1,2,1);
@@ -272,7 +272,7 @@ SimInline SimVec Refract3(SimVecParam incident, SimVecParam normal, SimVecParam 
   return AndVec(result,mask);
 }
 
-SimInline SimVec InnerSum4(SimVec vec)
+SimInline SimVec InnerSum4(SimVecParam vec)
 {
   SimVec yxwz = Add(VecShuffle(vec,vec,2,3,0,1),vec);
   return Add(VecShuffle(yxwz,yxwz,1,0,3,2),yxwz);
