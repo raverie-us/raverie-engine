@@ -834,8 +834,8 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Menus.data"));
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Toolbars.data"));
 
-  // Copy commands from Command.data to a 'HotKeyDataSet' resource type.
-  HotKeyEditor::LoadCommandData(commands->mCommands);
+  // Copy commands from Command.data to the HotKeyCommands DataSource.
+  HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
 
   SetupTools(editorMain);
 

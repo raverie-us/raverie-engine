@@ -391,13 +391,40 @@ bool CommandEntry::operator<(const CommandEntry& rhs) const
 //----------------------------------------------------------- HotKeyCommands ---
 
 /******************************************************************************/
-ZilchDefineType(HotKeyCommands, builder, type)
+HotKeyCommands::HotKeyCommands()
 {
 }
 
 /******************************************************************************/
-HotKeyCommands::HotKeyCommands()
+void HotKeyCommands::CopyCommandData(Array<Command*>& commands)
 {
+  // Already loaded, no need to do it again.
+  if(!mCommand.Empty( ))
+    return;
+
+  unsigned index = 0;
+  forRange(Command* command, commands.All( ))
+  {
+    CommandEntry& entry = mCommand.PushBack();
+
+    entry.mDevOnly = command->DevOnly;
+    entry.mIndex = index++;
+
+    entry.mName = command->Name;
+    entry.mDescription = command->Description;
+
+    entry.mIconName = command->IconName;
+    entry.mFunction = command->Function;
+
+    entry.mTags = command->Tags;
+
+    entry.mBindingStr = command->Shortcut.Replace("+", " + ");
+
+    entry.mModifier1 = (unsigned)Keys::Unknown;
+    entry.mModifier2 = (unsigned)Keys::Unknown;
+    entry.mMainKey = (unsigned)Keys::Unknown;
+  }
+
 }
 
 /******************************************************************************/
@@ -509,7 +536,7 @@ bool HotKeyCommands::SetData(DataEntry* dataEntry, AnyParam variant, StringParam
     ObjectEvent objectEvent(this);
     DispatchEvent(Events::CommandRenamed, &objectEvent);
     //mTreeView->ClearAllRows();
-    //mTreeView->SetDataSource(&mHotKeys);
+    //mTreeView->SetDataSource(mHotKeys);
   }
   else if(column == cBindingColumn)
   {
@@ -567,45 +594,14 @@ ZilchDefineType(HotKeyEditor, builder, type)
   
 }
 
-HotKeyCommands HotKeyEditor::sHotKeys;
 HashMap<unsigned, String> HotKeyEditor::sKeyMap;
 
-/******************************************************************************/
-void HotKeyEditor::LoadCommandData(Array<Command*>& commands)
-{
-  // Already loaded, no need to do it again.
-  if(!sHotKeys.mCommand.Empty( ))
-    return;
-
-  unsigned index = 0;
-  forRange(Command* command, commands.All( ))
-  {
-    sHotKeys.mCommand.PushBack(CommandEntry( ));
-
-    CommandEntry& entry = sHotKeys.mCommand.Back( );
-    entry.mDevOnly = command->DevOnly;
-    entry.mIndex = index++;
-
-    entry.mName = command->Name;
-    entry.mDescription = command->Description;
-
-    entry.mIconName = command->IconName;
-    entry.mFunction = command->Function;
-
-    entry.mTags = command->Tags;
-
-    entry.mBindingStr = command->Shortcut.Replace("+", " + ");
-
-    entry.mModifier1 = (unsigned)Keys::Unknown;
-    entry.mModifier2 = (unsigned)Keys::Unknown;
-    entry.mMainKey = (unsigned)Keys::Unknown;
-  }
-
-}
 
 /******************************************************************************/
 HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
 {
+  mHotKeys = HotKeyCommands::GetInstance();
+
   if(!cNotUsingHotKeyResource)
   {
     String userHotKeyFile = FilePath::Combine(GetUserDocumentsDirectory( ), "ZeroEditor", "Default.HotKeyDataSet.data");
@@ -622,7 +618,7 @@ HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
   SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
   
   if(cHotKeysEditable)
-    ConnectThisTo(&sHotKeys, Events::CommandRenamed, OnRenamedCommand);
+    ConnectThisTo(mHotKeys, Events::CommandRenamed, OnRenamedCommand);
 
   TreeViewSearch* search = new TreeViewSearchHotKeys(this);
   search->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
@@ -663,7 +659,7 @@ HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
 
     ConnectThisTo(mHotKeySetDropdown, Events::ItemSelected, OnCommandSetSelected);
 
-    ConnectThisTo(&sHotKeys, Events::BindingOverwrite, OnConfirmBindingOverwrite);
+    ConnectThisTo(mHotKeys, Events::BindingOverwrite, OnConfirmBindingOverwrite);
   }
 
     // letters 
@@ -829,7 +825,7 @@ void HotKeyEditor::UpdateTransform( )
 /******************************************************************************/
 void HotKeyEditor::DisplayResource( )
 {
-  mTreeView->SetDataSource(&sHotKeys);
+  mTreeView->SetDataSource(mHotKeys);
 
   if(cHotKeysEditable)
     mHotKeySetDropdown->SetListSource(&mSetNames);
@@ -863,12 +859,12 @@ void HotKeyEditor::OnCommandRename(ObjectEvent* event)
   TreeRow* row = mTreeView->FindRowByIndex(mRowIndex);
   row->Edit(cCommandColumn);
 
-  HotKeySortHelper(true, sHotKeys.mCommand);
+  HotKeySortHelper(true, mHotKeys->mCommand);
 
   mTreeView->ClearAllRows();
-  mTreeView->SetDataSource(&sHotKeys);
+  mTreeView->SetDataSource(mHotKeys);
 
-  MetaOperations::NotifyObjectModified(sHotKeys.mCommand);
+  MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
 
 /******************************************************************************/
@@ -885,15 +881,15 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
   TreeRow* row = mTreeView->FindRowByIndex(mRowIndex);
   row->Remove();  // dispatch event
   
-  sHotKeys.mCommand.EraseAt((unsigned)mRowIndex.Id);
+  mHotKeys->mCommand.EraseAt((unsigned)mRowIndex.Id);
   mTreeView->mRows.EraseAt((unsigned)mRowIndex.Id);
 
-  HotKeySortHelper(false, sHotKeys.mCommand);
+  HotKeySortHelper(false, mHotKeys->mCommand);
 
-  int size = (int)sHotKeys.mCommand.Size();
+  int size = (int)mHotKeys->mCommand.Size();
   for(int i = 0; i < size; ++i)
   {
-    sHotKeys.mCommand[i].mIndex = i;
+    mHotKeys->mCommand[i].mIndex = i;
 
       // +1 as the first row is the header
     mTreeView->mRows[i+1]->mIndex = i;
@@ -909,24 +905,24 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
 
   forRange(u64 selection, data->mSelection.All())
   {
-    sHotKeys.mCommand.EraseAt((unsigned)selection);
+    mHotKeys->mCommand.EraseAt((unsigned)selection);
     toErase.PushBack((unsigned)selection);
   }
 
   Sort(toErase.All());
-  sHotKeys.mCommand.Erase(sHotKeys.mCommand.SubRange(toErase[0], toErase.Size()));
+  mHotKeys->mCommand.Erase(mHotKeys->mCommand.SubRange(toErase[0], toErase.Size()));
 
-  size = (int)sHotKeys.mCommand.Size();
+  size = (int)mHotKeys->mCommand.Size();
   for(int i = 0; i < size; ++i)
-    sHotKeys.mCommand[i].mIndex = i;
+    mHotKeys->mCommand[i].mIndex = i;
 
     // deselect UI elements
   data->mSelection.Clear();
 
   mTreeView->ClearAllRows();
-  mTreeView->SetDataSource(&sHotKeys);
+  mTreeView->SetDataSource(mHotKeys);
 
-  MetaOperations::NotifyObjectModified(sHotKeys.mCommand);
+  MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
 
 /******************************************************************************/
@@ -954,7 +950,7 @@ void HotKeyEditor::OnKeyDown(KeyboardEvent* event)
     //HashDataSelection* data = (HashDataSelection*)mTreeView->GetSelection();
     //forRange(u64 selection, data->mSelection.All())
     //{
-    //  mHotKeys.mSet->mCommand.EraseAt((unsigned)selection);
+    //  mHotKeys->mSet->mCommand.EraseAt((unsigned)selection);
     //}
 
     //mRowIndex = event->Row->mIndex;
@@ -977,7 +973,7 @@ void HotKeyEditor::OnSelectionChanged(Event* event)
 void HotKeyEditor::OnRenamedCommand(ObjectEvent* event)
 {
   mTreeView->ClearAllRows();
-  mTreeView->SetDataSource(&sHotKeys);
+  mTreeView->SetDataSource(mHotKeys);
 }
 
 /******************************************************************************/
@@ -985,19 +981,19 @@ void HotKeyEditor::OnAddCommand(MouseEvent* event)
 {
   mTreeView->ClearAllRows();
 
-  sHotKeys.mCommand.InsertAt(0, CommandEntry());
+  mHotKeys->mCommand.InsertAt(0, CommandEntry());
 
-  sHotKeys.mCommand[0].mName = cDefaultCommandString;
-  sHotKeys.mCommand[0].mBindingStr = cDefaultBindingString;
+  mHotKeys->mCommand[0].mName = cDefaultCommandString;
+  mHotKeys->mCommand[0].mBindingStr = cDefaultBindingString;
   
-  //Sort(sHotKeys.mCommand.All());
-  int size = (int)sHotKeys.mCommand.Size();
+  //Sort(mHotKeys->mCommand.All());
+  int size = (int)mHotKeys->mCommand.Size();
   for(int i = 0; i < size; ++i)
-    sHotKeys.mCommand[i].mIndex = i;
+    mHotKeys->mCommand[i].mIndex = i;
 
-  mTreeView->SetDataSource(&sHotKeys);
+  mTreeView->SetDataSource(mHotKeys);
 
-  MetaOperations::NotifyObjectModified(sHotKeys.mCommand);
+  MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
 
 /******************************************************************************/
@@ -1013,8 +1009,8 @@ void HotKeyEditor::OnCommandSetSelected(ObjectEvent* event)
   mTreeView->mRowMap.Clear();
   mTreeView->Refresh();
 
-  //sHotKeys.mSet = (HotKeyDataSet *)mHotKeyManager->GetResource(mSetNames.Strings[index], ResourceNotFound::ReturnNull);
-  mTreeView->SetDataSource(&sHotKeys);
+  //mHotKeys->mSet = (HotKeyDataSet *)mHotKeyManager->GetResource(mSetNames.Strings[index], ResourceNotFound::ReturnNull);
+  mTreeView->SetDataSource(mHotKeys);
 }
 
 /******************************************************************************/
@@ -1058,9 +1054,9 @@ void HotKeyEditor::OnModalOption(ModalConfirmEvent* event)
   effectedData = nullptr;
 
   mTreeView->ClearAllRows();
-  mTreeView->SetDataSource(&sHotKeys);
+  mTreeView->SetDataSource(mHotKeys);
 
-  MetaOperations::NotifyObjectModified(sHotKeys.mCommand);
+  MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
 
 /******************************************************************************/
@@ -1079,7 +1075,7 @@ void HotKeyEditor::OnModalClosed(ModalConfirmEvent* event)  // unused, not firin
   delete effectedData->mNewBinding;
   delete effectedData;
 
-  MetaOperations::NotifyObjectModified(sHotKeys.mCommand);
+  MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
 
 //------------------------------------------------------------ HotKeyBinding ---

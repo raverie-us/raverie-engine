@@ -55,12 +55,12 @@ struct CommandEntry
 typedef Array<CommandEntry> CommandSet;
 
 //----------------------------------------------------------- HotKeyCommands ---
-class HotKeyCommands : public DataSource
+class HotKeyCommands : public ExplicitSingleton<HotKeyCommands, DataSource>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
   HotKeyCommands( );
+
+  void CopyCommandData(Array<Command*>& commands);
 
   DataEntry* GetRoot( ) override;
 
@@ -88,8 +88,6 @@ class HotKeyEditor : public Composite
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  static void LoadCommandData(Array<Command*>& commands);
 
   HotKeyEditor(Composite* parent);
   void BuildFormat(TreeFormatting& formatting);
@@ -123,7 +121,6 @@ public:
 
 
 public:
-  static HotKeyCommands sHotKeys;
   static HashMap<unsigned, String> sKeyMap;  // <Keys::Enum, "CommandName">
 
   DataIndex mRowIndex;
@@ -133,6 +130,8 @@ public:
   ComboBox* mHotKeySetDropdown;
 
   StringSource mSetNames;
+
+  HotKeyCommands* mHotKeys;
 };
 
 //------------------------------------------------------------ HotKeyBinding ---

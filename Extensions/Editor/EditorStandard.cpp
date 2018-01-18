@@ -252,7 +252,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
 
   // Editor Ui
   ZilchInitializeType(ObjectView);
-  ZilchInitializeType(HotKeyCommands);
   ZilchInitializeType(HotKeyEditor);
   ZilchInitializeType(MetaDropEvent);
   ZilchInitializeType(LibraryView);
@@ -300,6 +299,7 @@ void EditorLibrary::Initialize()
   EditorPackageLoader::Initialize();
   ValueEditorFactory::Initialize();
   ColorScheme::Initialize();
+  HotKeyCommands::Initialize();
 
   RegisterGeneralEditors();
   RegisterEngineEditors();
@@ -316,6 +316,7 @@ void EditorLibrary::Initialize()
 //**************************************************************************************************
 void EditorLibrary::Shutdown()
 {
+  HotKeyCommands::Destroy();
   ColorScheme::Destroy();
   ValueEditorFactory::Destroy();
   EditorPackageLoader::Destroy();
