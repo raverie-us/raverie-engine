@@ -141,7 +141,7 @@ namespace Audio
 
     if (DecodeThread.IsValid())
     {
-      AtomicSet32(&StopDecodeThread, 1);
+      Zero::AtomicStore(&StopDecodeThread, 1);
       DecodeThreadEvent.Signal();
       DecodeThread.WaitForCompletion();
       DecodeThread.Close();
@@ -405,7 +405,7 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::DecodeLoopThreaded()
   {
-    while (AtomicCompareExchange32(&StopDecodeThread, 0, 0) == 0)
+    while (Zero::AtomicCompareExchangeBool(&StopDecodeThread, 0, 0))
     {
       Zero::Functor* function;
       while (DecodingQueue.Read(function))

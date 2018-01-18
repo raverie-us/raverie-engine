@@ -153,7 +153,7 @@ namespace Audio
   //************************************************************************************************
   void FileDecoder::AddDecodingTask()
   {
-    AtomicIncrement32(&DecodingTaskCount);
+    Zero::AtomicPostIncrement(&DecodingTaskCount);
 
     // Add the decoding task
     gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodePacket, this));
@@ -169,10 +169,10 @@ namespace Audio
     {
       // If the pointer is null, this object should be deleted 
       // (sets ParentAlive to null if it's currently null, returns original value which would be null)
-      if (AtomicCompareExchangePointer(&ParentAlive, nullptr, nullptr) == nullptr)
+      if (Zero::AtomicCompareExchangeBool(&ParentAlive, nullptr, nullptr))
         delete this;
 
-      AtomicDecrement32(&DecodingTaskCount);
+      Zero::AtomicPostDecrement(&DecodingTaskCount);
 
       return;
     }
@@ -237,14 +237,14 @@ namespace Audio
 
     // If the pointer is null, this object should be deleted 
     // (sets ParentAlive to null if it's currently null, returns original value which would be null)
-    if (AtomicCompareExchangePointer(&ParentAlive, nullptr, nullptr) == nullptr)
+    if (Zero::AtomicCompareExchangeBool(&ParentAlive, nullptr, nullptr))
       delete this;
 
     // Add the decoded packets to the queue. Must happen last so that all actions are completed
     // before the packet is sent to the SoundAsset.
     QueueDecodedPackets(frames);
 
-    AtomicDecrement32(&DecodingTaskCount);
+    Zero::AtomicPostDecrement(&DecodingTaskCount);
   }
 
   //************************************************************************************************
@@ -260,7 +260,7 @@ namespace Audio
       return;
 
     // Wait for all existing tasks to be done
-    while (AtomicCompareExchange32(&DecodingTaskCount, 0, 0) != 0)
+    while (!Zero::AtomicCompareExchangeBool(&DecodingTaskCount, 0, 0))
     {
 
     }

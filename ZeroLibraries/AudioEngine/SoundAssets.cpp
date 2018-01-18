@@ -163,12 +163,12 @@ namespace Audio
     if (Threaded && Decoder)
     {
       // If the decoder isn't executing any tasks, go ahead and delete it
-      if (AtomicCompareExchange32(&Decoder->DecodingTaskCount, 0, 0) == 0)
+      if (Zero::AtomicCompareExchangeBool(&Decoder->DecodingTaskCount, 0, 0))
         delete Decoder;
       else
       {
         // Otherwise set the Asset pointer to null so it will delete itself
-        AtomicSetPointer((void**)Decoder->ParentAlive, (void*)nullptr);
+        Zero::AtomicStore((void**)Decoder->ParentAlive, (void*)nullptr);
       }
     }
   }

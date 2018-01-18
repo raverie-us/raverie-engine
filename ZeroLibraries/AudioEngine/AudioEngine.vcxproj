@@ -76,7 +76,6 @@
     <ClCompile Include="MicrophoneInputNode.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="ListenerNode.cpp" />
-    <ClCompile Include="LockFreeQueue.cpp" />
     <ClCompile Include="Modifiers.cpp" />
     <ClCompile Include="pa_win_util.cpp" />
     <ClCompile Include="PitchChange.cpp" />

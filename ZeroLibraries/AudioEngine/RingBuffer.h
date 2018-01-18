@@ -10,7 +10,7 @@
 #ifndef RINGBUFFER_H
 #define RINGBUFFER_H
 
-#define RingBufferType32 long
+#define RingBufferType32 s32
 
 namespace Audio
 {
