@@ -9,6 +9,8 @@
 namespace Zero
 {
 
+const bool cBindCogChildrenReverseRange = false;
+
 //------------------------------------------------------------------------------------------ Helpers
 void SetCogFlag(Cog* cog, CogFlags::Enum flag, cstr flagName, bool state);
 bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
@@ -121,6 +123,9 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindGetter(Parent);
   ZilchBindMethod(FindRoot);
   ZilchBindGetter(Children);
+
+  if(cBindCogChildrenReverseRange)
+    ZilchBindGetter(ChildrenReversed);
 
   ZilchBindMethod(AttachToPreserveLocal);
   ZilchBindMethod(AttachTo);
@@ -997,6 +1002,16 @@ HierarchyList::range Cog::GetChildren()
     return hierarchy->GetChildren();
 
   return HierarchyList::range();
+}
+
+//**************************************************************************************************
+HierarchyList::reverse_range Cog::GetChildrenReversed( )
+{
+  Hierarchy* hierarchy = this->has(Hierarchy);
+  if(hierarchy)
+    return hierarchy->GetChildrenReversed();
+
+  return HierarchyList::reverse_range();
 }
 
 //**************************************************************************************************

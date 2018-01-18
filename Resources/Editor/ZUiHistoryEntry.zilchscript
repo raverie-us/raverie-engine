@@ -214,7 +214,7 @@ class ZUiHistoryEntry : ZilchComponent
       if(!operationValid)
         return;
       
-      foreach(var cog in this.RedoView.Children)
+      foreach(var cog in this.RedoView.ChildrenArray)
       {
         var entry = cog.ZUiHistoryEntry;
         entry.ChangeHistoryView(false, entry.UndoView, Events.OperationRedone);
@@ -227,10 +227,10 @@ class ZUiHistoryEntry : ZilchComponent
     }
     else
     {
-      var reverseRange  = this.UndoView.ChildrenReversed;
+      var reverseArray  = this.UndoView.ChildrenReversedArray;
       
         // Undo the target entry if (and only if) every entry after the target is already undone.
-      if(reverseRange.First == targetEntry.Owner)
+      if(reverseArray.First == targetEntry.Owner)
       {
         Zero.Editor.OperationQueue.Undo();
         return; 
@@ -240,7 +240,7 @@ class ZUiHistoryEntry : ZilchComponent
       if(!operationValid)
         return;
       
-      foreach(var cog in reverseRange)
+      foreach(var cog in reverseArray)
       {
         var entry = cog.ZUiHistoryEntry;
         

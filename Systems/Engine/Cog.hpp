@@ -9,6 +9,8 @@
 namespace Zero
 {
 
+extern const bool cBindCogChildrenReverseRange;
+
 //------------------------------------------------------------------------------------------- Events
 namespace Events
 {
@@ -214,6 +216,9 @@ public:
   Cog* FindRoot();
   /// Returns a range of all direct children on this Cog.
   HierarchyList::range GetChildren();
+  /// Returns a range of all direct children on this Cog, in reverse order.
+  HierarchyList::reverse_range GetChildrenReversed();
+
   /// Returns the amount of children on this Cog. Note that this function has to iterate over
   /// all children to calculate the count.
   uint GetChildCount();

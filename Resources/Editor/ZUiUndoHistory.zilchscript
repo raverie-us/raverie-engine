@@ -53,7 +53,7 @@ class ZUiUndoHistory : ZilchComponent
     if(!this.Owner.Children.IsNotEmpty)
       return;
 
-    var front = this.Owner.ChildrenReversed.Current.ZUiHistoryEntry;
+    var front = this.Owner.ChildrenReversedArray.Current.ZUiHistoryEntry;
     if(front.OperationData == event.Operation)
       front.ChangeHistoryView(true, this.Owner.Parent.ZUiOperationHistory.RedoView.Cog, Events.OperationUndone);
   }

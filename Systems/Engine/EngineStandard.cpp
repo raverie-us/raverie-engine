@@ -14,6 +14,7 @@ ZilchDefineRange(HierarchyNameRange);
 ZilchDefineRange(HierarchyRange);
 ZilchDefineRange(CogNameRange);
 ZilchDefineRange(HierarchyList::range);
+ZilchDefineRange(HierarchyList::reverse_range);
 ZilchDefineRange(Space::range);
 ZilchDefineRange(SpaceMap::valueRange);
 ZilchDefineRange(ObjectLinkRange);
@@ -99,6 +100,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRange(HierarchyRange);
   ZilchInitializeRange(CogNameRange);
   ZilchInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
+  ZilchInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);

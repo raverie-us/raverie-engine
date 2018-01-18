@@ -187,13 +187,13 @@ OperationQueue::~OperationQueue()
 }
 
 //******************************************************************************
-void OperationQueue::Undo( )
+void OperationQueue::Undo()
 {
-  if(mCommands.Empty( ))
+  if(mCommands.Empty())
     return;
 
-  Operation* last = &mCommands.Back( );
-  last->Undo( );
+  Operation* last = &mCommands.Back();
+  last->Undo();
   mCommands.Erase(last);
   mRedoCommands.PushFront(last);
 
@@ -205,7 +205,7 @@ void OperationQueue::Undo( )
 bool OperationQueue::Undo(Operation* allbeforeThis)
 {
   // Call most likely came from script.
-  if(allbeforeThis == nullptr || mCommands.Empty( ))
+  if(allbeforeThis == nullptr || mCommands.Empty())
     return false;
 
   Operation* searchCriteria = allbeforeThis->FindRoot();
@@ -213,8 +213,8 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
   bool operationFound = false;
   Array<Operation*> toErase;
 
-  OperationListType::reverse_range rRange(mCommands.Begin( ), mCommands.End( ));
-  forRange(Operation& operation, rRange.All( ))
+  OperationListType::reverse_range rRange(mCommands.Begin(), mCommands.End());
+  forRange(Operation& operation, rRange.All())
   {
     if(&operation == searchCriteria)
     {
@@ -227,15 +227,15 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
 
   if(!operationFound)
   {
-    Warn("Supplied operation does not exist in the Undo Queue, or does not \
-      have an ancestor in the Undo Queue.  Undo will not occur.");
+    Warn("Supplied operation does not exist in the Undo Queue, or does not"
+      " have an ancestor in the Undo Queue.  Undo will not occur.");
     return operationFound;
   }
 
   int size = toErase.Size();
   for(int i = 0; i < size; ++i)
   {
-    toErase[i]->Undo( );
+    toErase[i]->Undo();
     mCommands.Erase(toErase[i]);
     mRedoCommands.PushFront(toErase[i]);
   }
@@ -244,12 +244,12 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
 }
 
 //******************************************************************************
-void OperationQueue::Redo( )
+void OperationQueue::Redo()
 {
-  if(!mRedoCommands.Empty( ))
+  if(!mRedoCommands.Empty())
   {
-    Operation* first = &mRedoCommands.Front( );
-    first->Redo( );
+    Operation* first = &mRedoCommands.Front();
+    first->Redo();
     mRedoCommands.Erase(first);
     mCommands.PushBack(first);
 
@@ -271,7 +271,7 @@ bool OperationQueue::Redo(Operation* upToAndThis)
   bool operationFound = false;
   Array<Operation*> toErase;
 
-  forRange(Operation& operation, mRedoCommands.All( ))
+  forRange(Operation& operation, mRedoCommands.All())
   {
     toErase.PushBack(&operation);
 
@@ -285,12 +285,12 @@ bool OperationQueue::Redo(Operation* upToAndThis)
 
   if(!operationFound)
   {
-    Warn("Supplied operation does not exist in the Redo Queue, or does not \
-      have an ancestor in the Redo Queue.  Redo will not occur.");
+    Warn("Supplied operation does not exist in the Redo Queue, or does not"
+      " have an ancestor in the Redo Queue.  Redo will not occur.");
     return operationFound;
   }
 
-  int size = toErase.Size( );
+  int size = toErase.Size();
   for(int i = 0; i < size; ++i)
   {
     toErase[i]->Redo();
@@ -304,12 +304,12 @@ bool OperationQueue::Redo(Operation* upToAndThis)
 template<typename type, Link<type> type::* PtrToMember>
 void DeleteObjectsInTest(InList<type, PtrToMember>& container)
 {
-  container.SafeForEach(container.Begin( ), container.End( ), EraseAndDelete<type, PtrToMember>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDelete<type, PtrToMember>);
 }
 template<typename type, typename baseLinkType>
 void DeleteObjectsInTest(BaseInList<baseLinkType, type>& container)
 {
-  container.SafeForEach(container.Begin( ), container.End( ), EraseAndDeleteBase<type, baseLinkType>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDeleteBase<type, baseLinkType>);
 }
 
 //******************************************************************************
@@ -332,15 +332,15 @@ void OperationQueue::ClearAll()
 }
 
 //******************************************************************************
-OperationListRange OperationQueue::GetCommands( )
+OperationListRange OperationQueue::GetCommands()
 {
   return mCommands.All();
 }
 
 //******************************************************************************
-OperationListRange OperationQueue::GetRedoCommands( )
+OperationListRange OperationQueue::GetRedoCommands()
 {
-  return mRedoCommands.All( );
+  return mRedoCommands.All();
 }
 
 //******************************************************************************
@@ -424,7 +424,7 @@ void OperationQueue::EndBatch()
     QueueChanges(proxy);
 
   int operationCount = 0;
-  forRange(Operation& operation, ActiveBatch->GetChildren( ))
+  forRange(Operation& operation, ActiveBatch->GetChildren())
     ++operationCount;
 
   // Cleanup
@@ -435,14 +435,14 @@ void OperationQueue::EndBatch()
     OperationBatch* previous = (OperationBatch*)&BatchStack.Back();
 
     // Don't queue an empty batch.
-    if(ActiveBatch->BatchedCommands.Empty( ))
+    if(ActiveBatch->BatchedCommands.Empty())
     {
       SafeDelete(ActiveBatch);
     }
     // Promote Operation if there is only one in the batch
     else if(operationCount == 1)
     {
-      Operation* operation = &ActiveBatch->GetChildren( ).Front( );
+      Operation* operation = &ActiveBatch->GetChildren().Front();
       ActiveBatch->BatchedCommands.Erase(operation);
       previous->BatchedCommands.PushBack(operation);
 
@@ -475,7 +475,7 @@ void OperationQueue::EndBatch()
       // Promote Operation if there is only one in the batch
       if(operationCount == 1)
       {
-        Operation* operation = &ActiveBatch->GetChildren( ).Front( );
+        Operation* operation = &ActiveBatch->GetChildren().Front();
         ActiveBatch->BatchedCommands.Erase(operation);
         mCommands.PushBack(operation);
 
