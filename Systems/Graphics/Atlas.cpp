@@ -158,8 +158,8 @@ void AtlasManager::AddSpriteSource(SpriteSource* source, Image* image)
 {
   ErrorIf(source->mAtlas.IsNotNull(), "SpriteSource is already on an Atlas.");
 
-  // Get frame count before adding pixel borders (if applicable).
-  source->mFramesPerRow = image->Width / source->FrameSizeX;
+  // Get frame count before adding pixel borders (if applicable). Must not be 0.
+  source->mFramesPerRow = Math::Max(image->Width / source->FrameSizeX, 1u);
 
   if (source->Sampling == SpriteSampling::Linear)
   {
