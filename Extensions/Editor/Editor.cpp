@@ -252,7 +252,7 @@ Editor::Editor(Composite* parent)
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
   ConnectThisTo(this, Events::SaveCheck, OnSaveCheck);
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
-  ConnectThisTo(Z::gResources, Events::ResourceRemoved, OnResourceRemoved);
+  ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesUnloaded);
 
   BoundType* editorMeta = ZilchTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
@@ -1093,21 +1093,37 @@ void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibrar
   mReInitializeQueue.EndBatch();
 }
 
-void Editor::OnResourceRemoved(ResourceEvent* event)
+void Editor::OnResourcesUnloaded(ResourceEvent* event)
 {
-  // Runtime resources delete themselves when their reference count reaches 0
-  // Selection Remove takes a handle increasing the reference count to 1 and upon
-  // returning decrements it to 0 again setting off a recursive event loop
-  if(event->EventResource->IsRuntime())
-    return;
-
   MetaSelection* selection = GetSelection();
-  // Attempt to remove the resource being deleted from the current selection
-  if (selection->Contains(event->EventResource))
+
+  Array<Handle> toRemove;
+  forRange (Handle handle, selection->All())
   {
-    selection->Remove(event->EventResource);
-    selection->FinalSelectionChanged();
+    // Object is gone.
+    if (handle.IsNull())
+    {
+      toRemove.PushBack(handle);
+    }
+    // Currently, handles to resources will fallback to a default resource,
+    // making IsNull() return false.
+    else if (handle.StoredType->IsA(ZilchTypeId(Resource)))
+    {
+      // Manually query for resource but with fallback disabled.
+      ResourceHandleManager* manager = (ResourceHandleManager*)handle.Manager;
+      Resource* resource = manager->GetResource(handle, false);
+      if (resource == nullptr)
+        toRemove.PushBack(handle);
+    }
   }
+
+  // Remove deleted objects from selection.
+  forRange (Handle handle, toRemove.All())
+    selection->Remove(handle);
+
+  // Don't need to call selection changed if nothing was removed.
+  if (!toRemove.Empty())
+    selection->FinalSelectionChanged();
 }
 
 void Editor::Update()
