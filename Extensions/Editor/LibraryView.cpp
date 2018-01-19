@@ -365,9 +365,6 @@ LibraryView::LibraryView(Composite* parent)
 
   SetTagEditorHeight(0);
 
-  ConnectThisTo(Z::gResources, Events::ResourceAdded, OnResourcesModified);
-  ConnectThisTo(Z::gResources, Events::ResourceRemoved, OnResourcesModified);
-  ConnectThisTo(Z::gResources, Events::ResourceModified, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesLoaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourceTagsModified, OnResourcesModified);
@@ -1140,6 +1137,10 @@ void LibraryView::OnMessageBox(MessageBoxEvent* event)
     {
       RemoveResource(resource);
     }
+
+    ResourceEvent eventToSend;
+    eventToSend.RemoveMode = RemoveMode::Unloading;
+    Z::gResources->DispatchEvent(Events::ResourcesUnloaded, &eventToSend);
 
     mPrimaryCommandIndex = 0;
     mCommandIndices.Clear();

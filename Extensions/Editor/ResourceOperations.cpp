@@ -450,10 +450,6 @@ void RemoveResource(Resource* resource)
 
     resourceLibrary->Remove(deletingResource);
   }
-
-  ResourceEvent eventToSend;
-  eventToSend.RemoveMode = RemoveMode::Unloading;
-  Z::gResources->DispatchEvent(Events::ResourcesUnloaded, &eventToSend);
 }
 
 Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager, ContentItem* newContentItem, Resource* resource)
