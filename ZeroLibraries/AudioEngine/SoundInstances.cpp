@@ -1017,6 +1017,10 @@ namespace Audio
       Fade.StartFade(mVolume, mLoopEndFrame, fadeSize, Asset, mCrossFadeTail);
     }
 
+    if (GetSiblingNode())
+      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
+        GetSiblingNode(), AudioEventTypes::InstanceLooped, (void*)nullptr));
+
     // Reset variables
     mFrameIndex = mLoopStartFrame;
     mCurrentTime = mFrameIndex * gAudioSystem->SystemTimeIncrement;
@@ -1025,10 +1029,6 @@ namespace Audio
     // If streaming, reset to the beginning of the file
     if (Asset->GetStreaming())
       Asset->ResetStreamingFile();
-
-    if (GetSiblingNode())
-      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        GetSiblingNode(), AudioEventTypes::InstanceLooped, (void*)nullptr));
   }
 
   //************************************************************************************************
@@ -1146,6 +1146,10 @@ namespace Audio
   void SoundInstanceNode::MusicNotifications()
   {
     if (!Threaded)
+      return;
+
+    // If we are looping and close to the loop end, don't do notifications
+    if (mLooping && mLoopEndFrame - mFrameIndex < 100)
       return;
 
     // If there is a custom notification time set and we've hit that time
