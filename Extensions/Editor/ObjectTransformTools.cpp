@@ -116,7 +116,7 @@ ZilchDefineType(ObjectTransformTool, builder, type)
   ZilchBindGetterSetterProperty(Basis);
   ZilchBindGetterSetterProperty(Pivot);
 
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 }
 
 /******************************************************************************/
@@ -428,7 +428,7 @@ Space* ObjectTransformTool::GetSpaceFromSelection(MetaSelection* selection)
 ZilchDefineType(ObjectTranslateTool, builder, type)
 {
   ZeroBindComponent();
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZeroBindDocumented( );
 
   ZilchBindGetterSetterProperty(Snapping);
@@ -561,7 +561,7 @@ void ObjectTranslateTool::CopyPropertiesToGizmo()
 ZilchDefineType(ObjectScaleTool, builder, type)
 {
   ZeroBindComponent();
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZeroBindDocumented( );
 
   ZilchBindGetterSetterProperty(Snapping);
@@ -702,7 +702,7 @@ void ObjectScaleTool::CopyPropertiesToGizmo()
 ZilchDefineType(ObjectRotateTool, builder, type)
 {
   ZeroBindComponent();
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZeroBindDocumented();
 
   ZilchBindGetterSetterProperty(Snapping);
