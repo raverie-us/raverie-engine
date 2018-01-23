@@ -168,7 +168,7 @@ namespace Audio
       else
       {
         // Otherwise set the Asset pointer to null so it will delete itself
-        Zero::AtomicStore((void**)Decoder->ParentAlive, (void*)nullptr);
+        Zero::AtomicStore(&Decoder->ParentAlive, (void*)nullptr);
       }
     }
   }

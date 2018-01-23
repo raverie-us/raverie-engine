@@ -290,6 +290,10 @@ MethodDoc::~MethodDoc()
   {
     delete param;
   }
+  forRange(ExceptionDoc* except, mPossibleExceptionThrows.All())
+  {
+    delete except;
+  }
 }
 
 void MethodDoc::Serialize(Serializer& stream)

@@ -232,7 +232,7 @@ namespace Audio
       }
       // Otherwise add another task to continue decoding the file
       else 
-        gAudioSystem->AddDecodingTask(Zero::CreateFunctor(&FileDecoder::DecodePacket, this));
+        AddDecodingTask();
     }
 
     // If the pointer is null, this object should be deleted 
