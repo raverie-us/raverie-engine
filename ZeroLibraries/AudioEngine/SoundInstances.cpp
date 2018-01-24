@@ -1004,7 +1004,7 @@ namespace Audio
   void SoundInstanceNode::Loop()
   {
     // Handle fading if we're not at the end of the audio
-    if (mLoopEndFrame != mEndFrame)
+    if (mLoopEndFrame < mEndFrame)
     {
       // Use the default cross fade size if streaming or if the variable hasn't been set
       unsigned fadeSize = Fade.mDefaultFrames;

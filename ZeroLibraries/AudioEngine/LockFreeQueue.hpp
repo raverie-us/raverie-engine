@@ -34,13 +34,7 @@ namespace Audio
 
     ~LockFreeQueue()
     {
-      // Delete anything remaining on the queue
-      while (First)
-      {
-        Node* temp = First;
-        First = temp->Next;
-        delete temp;
-      }
+      Clear();
     }
 
     void Write(const T& object)
@@ -70,6 +64,17 @@ namespace Audio
       }
 
       return false;
+    }
+
+    void Clear()
+    {
+      // Delete anything remaining on the queue
+      while (First)
+      {
+        Node* temp = First;
+        First = temp->Next;
+        delete temp;
+      }
     }
 
   private:

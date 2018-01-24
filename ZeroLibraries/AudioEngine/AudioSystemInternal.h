@@ -104,10 +104,6 @@ namespace Audio
     void AddTask(Zero::Functor* function);
     // Adds a task from the mix thread for the main thread to handle
     void AddTaskThreaded(Zero::Functor* function);
-    // Adds a new decoding task to the list
-    void AddDecodingTask(Zero::Functor* function);
-    // Loop to execute decoding tasks
-    void DecodeLoopThreaded();
     // Adds a tag to the system
     void AddTag(TagObject* tag, bool threaded);
     // Removes a tag from the system
@@ -127,8 +123,6 @@ namespace Audio
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
-    // Used to lock for swapping pointers to buffers.
-    Zero::ThreadLock LockObject;
     // Notifies the system to reset Port Audio after a device change.
     bool ResetPA;
     // Current mix version number
@@ -175,14 +169,6 @@ namespace Audio
     BufferType BufferForOutput;
     // Array for finished mixed output
     BufferType MixedOutput;
-    // Thread for decoding tasks
-    Zero::Thread DecodeThread;
-    // Queue for decoding tasks
-    MultipleWriterQueue<Zero::Functor*> DecodingQueue;
-    // Used to signal the decoding thread when decoding tasks are added to the queue
-    Zero::OsEvent DecodeThreadEvent;
-    // Will be zero while running, set to 1 when the decoding thread should shut down
-    Type32Bit StopDecodeThread;
     // Thread for mix loop
     Zero::Thread MixThread;
     // To tell the system to shut down once everything stops. 

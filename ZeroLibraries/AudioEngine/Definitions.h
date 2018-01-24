@@ -13,6 +13,8 @@
 
 namespace Audio
 {
+  typedef intptr_t AtomicType;
+
   // Maximum number of channels in audio output
   static const unsigned MaxChannels = 8;
 
