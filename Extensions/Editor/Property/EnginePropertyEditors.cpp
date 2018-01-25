@@ -1032,7 +1032,7 @@ void CogPickerManipulation<PropertyEditor>::OnUpdate(UpdateEvent* event)
     if (status.Failed())
     {
       selectText = BuildString(selectText, "\n", status.Message);
-      mToolTip->SetColor(ToolTipColor::Red);
+      mToolTip->SetColorScheme(ToolTipColorScheme::Red);
     }
     
     mToolTip->SetText(selectText);
@@ -1286,7 +1286,7 @@ public:
       mCloneButton->SetIgnoreInput(true);
       mCloneButton->mTabFocusStop = false;
       mCloneButton->SetToolTip("Cannot clone this Resource type");
-      mCloneButton->mToolTipColor = ToolTipColor::Yellow;
+      mCloneButton->mToolTipColor = ToolTipColorScheme::Yellow;
     }
 
     if(mResourceManager->mCanCreateNew == false)
@@ -1295,7 +1295,7 @@ public:
       mNewButton->SetIgnoreInput(true);
       mNewButton->mTabFocusStop = false;
       mNewButton->SetToolTip(String::Format("Cannot create new %s", mResourceType->Name.c_str()));
-      mNewButton->mToolTipColor = ToolTipColor::Yellow;
+      mNewButton->mToolTipColor = ToolTipColorScheme::Yellow;
     }
 
     ConnectThisTo(mNameArea, Events::MouseEnterHierarchy, OnMouseEnterMainArea);
@@ -1656,7 +1656,7 @@ public:
     ToolTip* toolTip = new ToolTip(this);
     toolTip->SetDestroyOnMouseExit(false);
     toolTip->mContentPadding = Thickness(2, 2, 2, 2);
-    toolTip->SetColor(ToolTipColor::Gray);
+    toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
     // Create the resource widget and attach it to the tooltip
     String name = resource->Name;

@@ -869,7 +869,7 @@ void LibraryView::CreateResourceToolTip(Resource* resource, TreeRow* row)
   // Create the tooltip
   ToolTip* toolTip = new ToolTip(row);
   toolTip->mContentPadding = Thickness(2,2,2,2);
-  toolTip->SetColor(ToolTipColor::Gray);
+  toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
   // Create the resource widget and attach it to the tooltip
   String name = resource->Name;
@@ -900,7 +900,7 @@ void LibraryView::CreateTagToolTip(StringParam tagName, TreeRow* row)
   // Create the tooltip
   ToolTip* toolTip = new ToolTip(row);
   toolTip->mContentPadding = Thickness(2,2,2,2);
-  toolTip->SetColor(ToolTipColor::Gray);
+  toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
   PreviewWidgetGroup* group = CreatePreviewGroup(toolTip, tagName, 9);
   if(group == nullptr)

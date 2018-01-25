@@ -358,7 +358,7 @@ void ContentImporter::OnMouseEnterTreeRow(TreeEvent* e)
     ToolTip* toolTip = new ToolTip(e->Row);
     toolTip->SetText("Content already exists under this name. Importing this "
                      "will overwrite the existing content item.");
-    toolTip->SetColor(ToolTipColor::Yellow);
+    toolTip->SetColorScheme(ToolTipColorScheme::Yellow);
 
     // Position the tooltip
     ToolTipPlacement placement;

@@ -74,7 +74,7 @@ public:
   bool IsModified();
 
   /// Interface PropertyWidget
-  String GetToolTip(ToolTipColor::Enum* color) override;
+  String GetToolTip(ToolTipColorScheme::Enum* color) override;
 
   void OnRightMouseUpLabel(MouseEvent* event);
 

@@ -102,7 +102,7 @@ void ToolTip::Initialize(Widget* source)
   mSource = source;
 
   // The default border color
-  SetColor(ToolTipColor::Default);
+  SetColorScheme(ToolTipColorScheme::Default);
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquareBorder);
@@ -267,7 +267,7 @@ Text* ToolTip::SetText(StringParam text)
 void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
 {
   SetText(text);
-  SetColor(ToolTipColor::Default);
+  SetColorScheme(ToolTipColorScheme::Default);
 
   ToolTipPlacement placement;
   placement.SetScreenRect(placementRect);
@@ -427,34 +427,34 @@ void ToolTip::SetDestroyOnMouseExit(bool state)
 }
 
 //******************************************************************************
-void ToolTip::SetColor(ToolTipColor::Enum color)
+void ToolTip::SetColorScheme(ToolTipColorScheme::Enum color)
 {
-  if(color == ToolTipColor::Default)
+  if(color == ToolTipColorScheme::Default)
   {
     mBackgroundColor = FloatColorRGBA(42, 90, 120, 255);
     mBorderColor = FloatColorRGBA(63, 135, 180, 255);
   }
-  else if (color == ToolTipColor::Gray)
+  else if (color == ToolTipColorScheme::Gray)
   {
     mBackgroundColor = ToolTipUi::BackgroundColor;
     mBorderColor = ToolTipUi::BorderColor;
   }
-  else if (color == ToolTipColor::Red)
+  else if (color == ToolTipColorScheme::Red)
   {
     mBackgroundColor = FloatColorRGBA(120, 42, 44, 255);
     mBorderColor = FloatColorRGBA(180, 63, 66, 255);
   }
-  else if (color == ToolTipColor::Yellow)
+  else if (color == ToolTipColorScheme::Yellow)
   {
     mBackgroundColor = FloatColorRGBA(135, 110, 43, 255);
     mBorderColor = FloatColorRGBA(195, 165, 65, 255);
   }
-  else if (color == ToolTipColor::Green)
+  else if (color == ToolTipColorScheme::Green)
   {
     mBackgroundColor = FloatColorRGBA(49, 113, 48, 255);
     mBorderColor = FloatColorRGBA(74, 170, 72, 255);
   }
-  else if (color == ToolTipColor::Orange)
+  else if (color == ToolTipColorScheme::Orange)
   {
     mBackgroundColor = FloatColorRGBA(128, 69, 34, 255);
     mBorderColor = FloatColorRGBA(192, 104, 51, 255);

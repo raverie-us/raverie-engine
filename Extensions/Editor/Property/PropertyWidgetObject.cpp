@@ -207,11 +207,11 @@ void PropertyWidgetObject::OnMouseEnterTitle(MouseEvent* event)
   mMouseOverTitle = true;
 
   if(mProxyIcon)
-    CreateTooltip("This Component type does not exist. Either the type was removed or scripts aren't compiling. This is referred to as being proxied.", ToolTipColor::Yellow);
+    CreateTooltip("This Component type does not exist. Either the type was removed or scripts aren't compiling. This is referred to as being proxied.", ToolTipColorScheme::Yellow);
   if(mLocallyRemoved)
-    CreateTooltip("This Component has been locally removed from the Archetype", ToolTipColor::Red);
+    CreateTooltip("This Component has been locally removed from the Archetype", ToolTipColorScheme::Red);
   if(mLocallyAdded)
-    CreateTooltip("This Component has been locally added to the Archetype", ToolTipColor::Green);
+    CreateTooltip("This Component has been locally added to the Archetype", ToolTipColorScheme::Green);
   MarkAsNeedsUpdate();
 }
 
@@ -1316,7 +1316,7 @@ void PropertyWidgetObject::HighlightRed(StringParam message)
   // Only create a tooltip if the message is valid and we don't
   // already have one made
   if(!message.Empty() && !mToolTip)
-    CreateTooltip(message, ToolTipColor::Red);
+    CreateTooltip(message, ToolTipColorScheme::Red);
 }
 
 //******************************************************************************
@@ -1342,7 +1342,7 @@ void PropertyWidgetObject::RemoveRedHighlight()
 }
 
 //******************************************************************************
-void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColor::Enum color)
+void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColorScheme::Enum color)
 {
   // Destroy it if one already exists
   mToolTip.SafeDestroy();
@@ -1350,7 +1350,7 @@ void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColor::Enum
   // Create an indicator
   ToolTip* toolTip = new ToolTip(this);
   toolTip->SetText(message);
-  toolTip->SetColor(color);
+  toolTip->SetColorScheme(color);
   toolTip->SetDestroyOnMouseExit(false);
 
   ToolTipPlacement placement;

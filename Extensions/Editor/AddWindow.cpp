@@ -942,7 +942,7 @@ void ResourceTemplateDisplay::CreateNameToolTip(StringParam message)
 
   ToolTip* toolTip = new ToolTip(mParent->mParent->mParent->mParent);
   toolTip->SetText(message);
-  toolTip->SetColor(ToolTipColor::Red);
+  toolTip->SetColorScheme(ToolTipColorScheme::Red);
   toolTip->SetDestroyOnMouseExit(false);
 
   ToolTipPlacement placement;
@@ -966,14 +966,14 @@ void ResourceTemplateDisplay::RemoveNameToolTip()
 }
 
 //**************************************************************************************************
-void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColor::Enum tagColor)
+void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColorScheme::Enum tagColor)
 {
   mTagsToolTip.SafeDestroy();
 
   ToolTip* toolTip = new ToolTip(mTagsBox);
   toolTip->SetText(message);
   toolTip->SetDestroyOnMouseExit(false);
-  toolTip->SetColor(tagColor);
+  toolTip->SetColorScheme(tagColor);
 
   ToolTipPlacement placement;
   placement.SetScreenRect(mTagsBox->GetScreenRect());
@@ -982,7 +982,7 @@ void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColor
   toolTip->SetArrowTipTranslation(placement);
 
   // if this is a warning tooltip also color the tag text box red
-  if (tagColor == ToolTipColor::Red)
+  if (tagColor == ToolTipColorScheme::Red)
   {
     mTagsBox->mBackgroundColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
     mTagsBox->mBorderColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
@@ -1100,7 +1100,7 @@ bool ResourceTemplateDisplay::ValidateTags()
   String santiziedTags = Cog::SanitizeName(tagString);
   if(tagString != santiziedTags)
   {
-    CreateTagToolTip("Tags contain invalid symbols", ToolTipColor::Red);
+    CreateTagToolTip("Tags contain invalid symbols", ToolTipColorScheme::Red);
     return false;
   }
 

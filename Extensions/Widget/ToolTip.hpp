@@ -39,7 +39,7 @@ struct ToolTipPlacement
 };
 
 //--------------------------------------------------------------------- Tool Tip
-DeclareEnum6(ToolTipColor, Default, Gray, Red, Yellow, Green, Orange);
+DeclareEnum6(ToolTipColorScheme, Default, Gray, Red, Yellow, Green, Orange);
 
 class ToolTip : public Composite
 {
@@ -77,7 +77,7 @@ public:
   /// Whether or not to destroy the object when the mouse moves off the source.
   void SetDestroyOnMouseExit(bool state);
 
-  void SetColor(ToolTipColor::Enum color);
+  void SetColorScheme(ToolTipColorScheme::Enum color);
 
   /// The side the tooltip is meant to be on.
   IndicatorSide::Type mSide;
