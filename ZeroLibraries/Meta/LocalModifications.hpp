@@ -152,7 +152,7 @@ DeclareEnum2(InheritIdContext,
 class MetaDataInheritance : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaDataInheritance, TypeCopyMode::ReferenceType);
 
   /// A unique identifier for this object. This will be used 
   virtual Guid GetUniqueId(HandleParam object);
@@ -183,7 +183,7 @@ public:
 class MetaDataInheritanceRoot : public MetaDataInheritance
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaDataInheritanceRoot, TypeCopyMode::ReferenceType);
 
   /// The id this object inherits from.
   virtual String GetInheritId(HandleParam object, InheritIdContext::Enum context) = 0;

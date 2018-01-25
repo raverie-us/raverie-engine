@@ -42,7 +42,7 @@ DeclareEnum3(PropertyPathType, Component, Property, Index);
 class PropertyPath
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyPath, TypeCopyMode::ReferenceType);
 
   /// Common constructors. For longer paths, use the Add functions.
   PropertyPath(){}

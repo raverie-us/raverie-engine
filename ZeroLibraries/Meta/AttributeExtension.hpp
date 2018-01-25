@@ -52,6 +52,7 @@ class AttributeExtension
 {
 public:
   AttributeExtension(StringParam name);
+  virtual ~AttributeExtension();
 
   /// Used to specify restricted class or property types that this attribute can be on.
   AttributeExtension* MustBeType(BoundType* type);

@@ -20,7 +20,7 @@ template <typename ComponentType>
 class ProxyObject : public ComponentType
 {
 public:
-  ZilchDeclareInheritableType(TypeCopyMode::ReferenceType);
+  ZilchDeclareInheritableType(ProxyObject, TypeCopyMode::ReferenceType);
 
   // Creates a type 
   static BoundType* CreateProxyMetaFromFile(StringParam typeName, ProxyReason::Enum reason);

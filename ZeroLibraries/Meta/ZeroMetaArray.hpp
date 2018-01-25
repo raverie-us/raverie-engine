@@ -17,7 +17,7 @@ class ZeroMetaArray : public MetaArray
 public:
   // We don't initialize a type for MetaContainer because we never
   // explicitly look for MetaContainer, but we do Has<MetaComposition>...
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZeroMetaArray, TypeCopyMode::ReferenceType);
 
   typedef typename ArrayType::value_type ContainedType;
 

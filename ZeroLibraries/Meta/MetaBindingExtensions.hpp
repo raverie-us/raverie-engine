@@ -156,7 +156,7 @@ DeclareEvent(ObjectModified);
 class MetaOperations : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaOperations, TypeCopyMode::ReferenceType);
 
   // When a property is changed in the editor, this should be called to properly send events or
   // run any special functionality per object type.
@@ -204,7 +204,7 @@ public:
 class PropertyEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyEvent, TypeCopyMode::ReferenceType);
 
   PropertyEvent(HandleParam object, PropertyPathParam property,
                 AnyParam oldValue, AnyParam newValue);
@@ -219,7 +219,7 @@ public:
 class TypeEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TypeEvent, TypeCopyMode::ReferenceType);
   TypeEvent(BoundType* type) : mType(type) {}
 
   BoundType* mType;
@@ -229,7 +229,7 @@ public:
 class MetaDisplay : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaDisplay, TypeCopyMode::ReferenceType);
 
   virtual String GetName(HandleParam object) = 0;
   virtual String GetDebugText(HandleParam object) = 0;
@@ -239,7 +239,7 @@ public:
 class TypeNameDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TypeNameDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -249,7 +249,7 @@ public:
 class StringNameDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(StringNameDisplay, TypeCopyMode::ReferenceType);
   StringNameDisplay(StringParam string);
 
   String GetName(HandleParam object) override;
@@ -331,7 +331,7 @@ typedef MetaTransformInstance& MetaTransformParam;
 class MetaTransform : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaTransform, TypeCopyMode::ReferenceType);
   virtual MetaTransformInstance GetInstance(HandleParam object) = 0;
 };
 
@@ -362,7 +362,7 @@ public:
 class MetaAttribute : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaAttribute, TypeCopyMode::ReferenceType);
   virtual void PostProcess(Status& status, ReflectionObject* owner){}
 };
 

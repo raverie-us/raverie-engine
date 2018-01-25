@@ -21,7 +21,7 @@ namespace Events
 /// Sent with the SelectionChanged event
 struct SelectionChangedEvent : public Event
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SelectionChangedEvent, TypeCopyMode::ReferenceType);
   SelectionChangedEvent() : Updated(false) {}
   MetaSelection* Selection;
 
@@ -41,7 +41,7 @@ DeclareEnum2(SendsEvents, False, True);
 class MetaSelection : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaSelection, TypeCopyMode::ReferenceType);
 
   typedef Array<MetaSelection*> MetaSelectionArray;
 

@@ -21,7 +21,7 @@ template <typename ResourceType, typename BlockType>
 class SimpleResourceFactory : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SimpleResourceFactory, TypeCopyMode::ReferenceType);
   SimpleResourceFactory() : MetaComposition(ZilchTypeId(BlockType)), mDeleteMemory(false) {};
 
   SimpleResourceFactory(bool deleteMemory) : MetaComposition(ZilchTypeId(BlockType))

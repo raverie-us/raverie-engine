@@ -295,7 +295,7 @@ Any GetValueFromParameter(AttributeParameter* parameter)
   case ConstantType::Boolean:
     return parameter->BooleanValue;
   case ConstantType::Type:
-    return parameter->TypeValue;
+    return Any(parameter->TypeValue);
   }
 
   Error("Invalid constant");

@@ -21,7 +21,7 @@ class EventDispatcher;
 class Event : public ThreadSafeId<u32, Object>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Event, TypeCopyMode::ReferenceType);
 
   // Efficient memory pooling
   OverloadedNew();
@@ -48,7 +48,7 @@ public:
 class ObjectEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectEvent, TypeCopyMode::ReferenceType);
 
   Object* GetSource();
 
@@ -296,7 +296,7 @@ namespace Tags
 class EventObject : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EventObject, TypeCopyMode::ReferenceType);
 
   //Object Interface
   EventDispatcher* GetDispatcherObject() override { return GetDispatcher(); }
