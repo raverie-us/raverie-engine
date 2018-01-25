@@ -15,7 +15,7 @@ namespace Zero
 class BoundingSphereBroadPhase : public IBroadPhase
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BoundingSphereBroadPhase, TypeCopyMode::ReferenceType);
 
   virtual void Serialize(Serializer& stream);
   virtual void Draw(int level, uint debugDrawFlags){}

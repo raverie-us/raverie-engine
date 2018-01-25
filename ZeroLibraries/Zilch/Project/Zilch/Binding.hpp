@@ -1157,6 +1157,14 @@ namespace Zilch
 #define ZilchDefineType(SelfType, builder, type)                                                                                                      \
     void SelfType::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 
+#define ZilchDefineTemplateType(TemplateType, Argument, builder, type)                                                                                \
+    template<>                                                                                                                                        \
+    void TemplateType<Argument>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+
+#define ZeroDefineArrayTypeHelper(containerType, containedType, builder, type)                                                                        \
+    template<>                                                                                                                                        \
+    void ZeroMetaArray<containerType<containedType>>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+
 #define ZilchDeclareExternalType(SelfType)                                                                                                            \
     void ZilchSetupType(SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type);
 

@@ -75,7 +75,7 @@ template <uint BroadphaseType>
 class BroadphasePropertyExtension : public EditorIndexedStringArray
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BroadphasePropertyExtension, TypeCopyMode::ReferenceType);
   static void EnumerateBroadphases(HandleParam instance, Property* property, Array<String>& strings)
   {
     Z::gBroadPhaseLibrary->EnumerateNamesOfType(BroadphaseType, strings);

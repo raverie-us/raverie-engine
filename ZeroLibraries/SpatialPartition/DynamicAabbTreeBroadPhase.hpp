@@ -19,7 +19,7 @@ class DynamicAabbTreeBroadPhase
   : public BaseDynamicAabbTreeBroadPhase<DynamicAabbTree<void*> >
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DynamicAabbTreeBroadPhase, TypeCopyMode::ReferenceType);
 
   typedef DynamicAabbTree<void*> TreeType;
   typedef TreeType::SelfQueryRange TreeSelfRange;

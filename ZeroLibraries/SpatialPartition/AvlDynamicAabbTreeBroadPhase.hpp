@@ -24,7 +24,7 @@ public:
   AvlDynamicAabbTreeBroadPhase();
   ~AvlDynamicAabbTreeBroadPhase();
 
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AvlDynamicAabbTreeBroadPhase, TypeCopyMode::ReferenceType);
 };
 
 }//namespace Zero
