@@ -818,7 +818,7 @@ ZilchDefineType(SpringTools, builder, type)
   ZeroBindDependency(MouseCapture);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
   //changing this property will invalidate us (so we refresh the property view)
   ZilchBindGetterSetterProperty(CurrentSubToolType)->AddAttribute(PropertyAttributes::cInvalidatesObject);

@@ -290,10 +290,10 @@ void SoundEmitter::SetVolume(float volume)
 //**************************************************************************************************
 void SoundEmitter::InterpolateVolume(float volume, float interpolationTime)
 {
-  mVolume = volume;
+  mVolume = Math::Max(volume, 0.0f);
 
   if (mVolumeNode)
-    mVolumeNode->SetVolume(volume, interpolationTime);
+    mVolumeNode->SetVolume(mVolume, interpolationTime);
 }
 
 //**************************************************************************************************
@@ -450,9 +450,9 @@ float SoundEmitter::GetRearVolume()
 //**************************************************************************************************
 void SoundEmitter::SetRearVolume(float minimumVolume)
 {
-  mRearVolume = minimumVolume;
+  mRearVolume = Math::Max(minimumVolume, 0.0f);
   if (mEmitterObject)
-    mEmitterObject->SetDirectionalAngle(mEmitAngle, minimumVolume);
+    mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
 }
 
 //**************************************************************************************************
@@ -694,6 +694,7 @@ void SoundEmitter::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, 
 
 }
 
+//**************************************************************************************************
 SoundAttenuatorNode* SoundEmitter::IsAttenuatorInList(SoundAttenuator* attenuator)
 {
   forRange(InstanceAttenuation& data, mAttenuatorList.All())

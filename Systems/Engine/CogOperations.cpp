@@ -33,7 +33,7 @@ void AttachObject(OperationQueue* queue, Cog* object, Cog* parent, bool relative
   // When re-attaching to ourself, just move it to the end
   if(object->GetParent() == parent)
   {
-    uint newIndex = parent->GetChildCount() - 1;
+    uint newIndex = parent->GetChildCount();
     MoveObjectIndex(queue, object, newIndex);
     return;
   }

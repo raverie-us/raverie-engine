@@ -109,9 +109,9 @@ EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam 
 //**************************************************************************************************
 ZilchDefineType(EditorResource, builder, type)
 {
-  ZilchBindField(FilterTag);
-  ZilchBindField(AllowAdd);
-  ZilchBindField(AllowNone);
+  ZilchBindField(FilterTag)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindField(AllowAdd)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindField(AllowNone)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 //**************************************************************************************************
@@ -169,6 +169,19 @@ MetaGroup::MetaGroup(StringParam name)
 //**************************************************************************************************
 ZilchDefineType(MetaCustomUi, builder, type)
 {
+}
+
+//---------------------------------------------------------------------------------- Property Rename
+//**************************************************************************************************
+ZilchDefineType(MetaPropertyRename, builder, type)
+{
+}
+
+//**************************************************************************************************
+MetaPropertyRename::MetaPropertyRename(StringParam oldName)
+  : mOldName(oldName)
+{
+
 }
 
 }//namespace Zero

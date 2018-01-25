@@ -96,14 +96,10 @@ public:
       {
         Handle subInstance = cogComposition->GetComponentAt(object, i);
 
-        // Any base class could have the tool tag, so search them all
-        forRange(CogComponentMeta* zeroMeta, subInstance.StoredType->HasAll<CogComponentMeta>())
+        if (subInstance.StoredType->HasAttributeInherited(ObjectAttributes::cTool))
         {
-          if (zeroMeta->mTags.Contains(Tags::Tool))
-          {
-            sValidComponentIndices.PushBack(i);
-            break;
-          }
+          sValidComponentIndices.PushBack(i);
+          break;
         }
       }
 

@@ -25,6 +25,7 @@ void WidgetFlagCallback(Cog* cog, uint flag, FlagOperation::Enum operation)
 //******************************************************************************
 ZilchDefineType(UiRootWidget, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindInterface(UiWidget);
@@ -155,6 +156,30 @@ void UiRootWidget::Update()
     e.mRootWidget = this;
     UiWidget::Update(&e);
   }
+}
+
+//******************************************************************************
+UiWidget* UiRootWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool interactiveOnly)
+{
+  // Walk in reverse to hit the most recently created first
+  uint size = mOnTopWidgets.Size();
+  for (uint i = size - 1; i < size; --i)
+  {
+    UiWidget* onTopWidget = mOnTopWidgets[i];
+
+    // Temporarily clear OnTop so that the CastPoint function properly processes this widget
+    onTopWidget->mFlags.ClearFlag(UiWidgetFlags::OnTop);
+
+    UiWidget* hitWidget = onTopWidget->CastPoint(worldPoint, ignore, interactiveOnly);
+
+    // Re-set the on top flag
+    onTopWidget->mFlags.SetFlag(UiWidgetFlags::OnTop);
+    
+    if(hitWidget)
+      return hitWidget;
+  }
+
+  return UiWidget::CastPoint(worldPoint, ignore, interactiveOnly);
 }
 
 //******************************************************************************
@@ -431,7 +456,7 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
 void UiRootWidget::MouseMove(ViewportMouseEvent* e)
 {
   // We want to send mouse events to the widget that the mouse is over
-  UiWidget* newMouseOver = CastPoint(ToVector2(e->mHitPosition));
+  UiWidget* newMouseOver = CastPoint(ToVector2(e->mHitPosition), nullptr, true);
   while(newMouseOver && !newMouseOver->GetInteractive())
     newMouseOver = newMouseOver->mParent;
   
@@ -610,19 +635,38 @@ void UiRootWidget::Render(RenderTasksEvent* e, RenderTarget* color,
   mStencilDrawMode = StencilDrawMode::None;
   mStencilCount = 0;
 
+  Array<CachedFloatingWidget> floatingWidgets;
+
   // Render all widgets
   Vec4 colorTransform(1);
-  RenderWidgets(e, color, depth, renderPass, this, colorTransform);
+  RenderWidgets(e, color, depth, renderPass, this, colorTransform, &floatingWidgets);
+
+  // Render all floating widgets
+  forRange(CachedFloatingWidget cachedWidget, floatingWidgets.All())
+  {
+    UiWidget* widget = cachedWidget.first;
+    Vec4 cachedColor = cachedWidget.second;
+
+    RenderWidgets(e, color, depth, renderPass, widget, cachedColor, nullptr);
+  }
+
   FlushGraphicals(e, color, depth, renderPass);
 }
 
 //******************************************************************************
 void UiRootWidget::RenderWidgets(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
-                              MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform)
+                              MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform,
+                              Array<CachedFloatingWidget>* floatingWidgets)
 {
   // Don't render inactive widgets
   if(!widget->GetActive())
     return;
+
+  if(floatingWidgets && widget->GetOnTop())
+  {
+    floatingWidgets->PushBack(CachedFloatingWidget(widget, colorTransform));
+    return;
+  }
 
   // Build color transform
   Vec4 hierarchyColor = colorTransform * widget->mHierarchyColor;
@@ -646,7 +690,7 @@ void UiRootWidget::RenderWidgets(RenderTasksEvent* e, RenderTarget* color, Rende
 
     // Recurse to all children
     forRange(UiWidget& child, widget->GetChildren())
-      RenderWidgets(e, color, depth, renderPass, &child, hierarchyColor);
+      RenderWidgets(e, color, depth, renderPass, &child, hierarchyColor, floatingWidgets);
 
     // Remove the written stencil data
     if (widget->GetClipChildren())
@@ -716,7 +760,7 @@ void UiRootWidget::SetFocusWidget(UiWidget* newFocus)
     cstr op = (mDebugMouseInteraction) ? "Focus" : nullptr;
 
     // Send the Focus to the Hierarchy
-    UiFocusEvent focusEvent(newFocusCog, oldFocusCog);
+    UiFocusEvent focusEvent(newFocus, oldFocus);
 
     SendHierarchyEvents(op, oldFocusCog, newFocusCog, &focusEvent, &focusEvent,
       Events::UiFocusLost, Events::UiFocusGained,

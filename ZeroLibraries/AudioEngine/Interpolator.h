@@ -50,6 +50,8 @@ namespace Audio
     float ValueAtDistance(const float distance);
     // Moves sequential interpolation forward by a specified number.
     void JumpForward(const unsigned howManyFrames);
+    // Moves sequential interpolation backward by a specified number.
+    void JumpBackward(const unsigned howManyFrames);
     // Sets the interpolation to a specified position.
     void SetFrame(const unsigned frame);
     // Gets the total number of frames in the interpolation
@@ -65,7 +67,7 @@ namespace Audio
     // Gets the start value of the interpolation.
     float GetStartValue();
     // Gets the current value of a sequential interpolation.
-    const float GetCurrentValue() const;
+    const float GetCurrentValue();
     // Gets the type of curve currently being used. 
     const CurveTypes::Enum GetCurveType() const;
     // Sets a new custom curve for this interpolator. Relies on curves being in 0-1 range.

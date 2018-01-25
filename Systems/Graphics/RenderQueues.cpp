@@ -67,8 +67,8 @@ void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1
 {
   Vec2 size = Vec2(pos1.x - pos0.x, pos0.y - pos1.y);
   Vec2 tiles = size / tileSize;
-  float remainderX = Math::FMod(tiles.x, tileSize.x);
-  float remainderY = Math::FMod(tiles.y, tileSize.y);
+  float remainderX = Math::FMod(tiles.x, 1.0f);
+  float remainderY = Math::FMod(tiles.y, 1.0f);
 
   float uvDirX = uv0.x < uv1.x ? 1.0f : -1.0f;
   float uvDirY = uv0.y < uv1.y ? 1.0f : -1.0f;
@@ -92,9 +92,9 @@ void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1
   {
     Vec3 posOffset = Vec3(tileSize * Vec2((float)x, -(float)(uint)tiles.y), 0);
     Vec3 newPos0 = pos0 + posOffset;
-    Vec3 newPos1 = newPos0 + Vec3(tileSize.x, -remainderY, 0);
-    Vec2 newUv1 = uv0 + Vec2(1, remainderY / tileSize.y) * uvSignedSize;
-    Vec2 newUvAux1 = uvAux0 + Vec2(1, remainderY / tileSize.y) * uvAuxSignedSize;
+    Vec3 newPos1 = newPos0 + Vec3(tileSize.x, -remainderY * tileSize.y, 0);
+    Vec2 newUv1 = uv0 + Vec2(1, remainderY) * uvSignedSize;
+    Vec2 newUvAux1 = uvAux0 + Vec2(1, remainderY) * uvAuxSignedSize;
 
     AddStreamedQuad(viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
   }
@@ -103,9 +103,9 @@ void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1
   {
     Vec3 posOffset = Vec3(tileSize * Vec2((float)(uint)tiles.x, -(float)y), 0);
     Vec3 newPos0 = pos0 + posOffset;
-    Vec3 newPos1 = newPos0 + Vec3(remainderX, -tileSize.y, 0);
-    Vec2 newUv1 = uv0 + Vec2(remainderX / tileSize.x, 1) * uvSignedSize;
-    Vec2 newUvAux1 = uvAux0 + Vec2(remainderX / tileSize.x, 1) * uvAuxSignedSize;
+    Vec3 newPos1 = newPos0 + Vec3(remainderX * tileSize.x, -tileSize.y, 0);
+    Vec2 newUv1 = uv0 + Vec2(remainderX, 1) * uvSignedSize;
+    Vec2 newUvAux1 = uvAux0 + Vec2(remainderX, 1) * uvAuxSignedSize;
 
     AddStreamedQuad(viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
   }
@@ -114,9 +114,9 @@ void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1
   {
     Vec3 posOffset = Vec3(tileSize * Vec2((float)(uint)tiles.x, -(float)(uint)tiles.y), 0);
     Vec3 newPos0 = pos0 + posOffset;
-    Vec3 newPos1 = newPos0 + Vec3(remainderX, -remainderY, 0);
-    Vec2 newUv1 = uv0 + Vec2(remainderX, remainderY) / tileSize * uvSignedSize;
-    Vec2 newUvAux1 = uvAux0 + Vec2(remainderX, remainderY) / tileSize * uvAuxSignedSize;
+    Vec3 newPos1 = newPos0 + Vec3(remainderX * tileSize.x, -remainderY * tileSize.y, 0);
+    Vec2 newUv1 = uv0 + Vec2(remainderX, remainderY) * uvSignedSize;
+    Vec2 newUvAux1 = uvAux0 + Vec2(remainderX, remainderY) * uvAuxSignedSize;
 
     AddStreamedQuad(viewNode, newPos0, newPos1, uv0, newUv1, color, uvAux0, newUvAux1);
   }

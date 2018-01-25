@@ -682,6 +682,12 @@ void LibraryView::OnResourcesModified(ResourceEvent* event)
   if(event->EventResource != nullptr && event->EventResource->IsRuntime())
     return;
 
+  // Whenever a resource is modified, added/removed, etc close the tag editor to
+  // clean up all handles to now potentially invalid data that results in an odd
+  // crash that hasn't been able to be reproduced. T941.
+  if(event->EventId != Events::ResourceTagsModified)
+    CloseTagEditor();
+
   mSearchBox->Refresh();
 
   // If there are no results (likely because resources have been removed),
@@ -1137,8 +1143,6 @@ void LibraryView::OnMessageBox(MessageBoxEvent* event)
 
     mPrimaryCommandIndex = 0;
     mCommandIndices.Clear();
-
-    Z::gEditor->GetSelection()->FinalSelectionChanged();
   }
 }
 
@@ -1478,6 +1482,9 @@ void LibraryView::OpenTagEditor()
 //******************************************************************************
 void LibraryView::CloseTagEditor()
 {
+  // Clean up all references to resource that the tag editor is holding onto
+  mTagEditor->CleanTagEditor();
+  
   float height = 0;
 
   ActionSequence* seq = new ActionSequence(this);

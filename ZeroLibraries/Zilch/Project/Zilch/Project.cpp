@@ -1035,7 +1035,8 @@ namespace Zilch
       if (wasUpperIdentifier)
       {
         Grammar::Enum id = token.TokenId;
-        if (id != Grammar::Access && id != Grammar::DynamicAccess && id != Grammar::NonVirtualAccess)
+        if (id != Grammar::Access && id != Grammar::DynamicAccess && id != Grammar::NonVirtualAccess &&
+            bracketsCount <= 0 && parenthesesCount <= 0)
         {
           done = true;
           break;

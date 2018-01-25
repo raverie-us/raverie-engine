@@ -26,11 +26,10 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float halfPI = 2.0f * Math::ArcTan(1.0f);
   static float GetValueSineCurve(const float current, const float total, const float startValue, 
     const float endValue)
   {
-    return (Math::Sin((current / total) * halfPI) * (endValue - startValue)) + startValue;
+    return (Math::Sin((current / total) * Math::cTwoPi) * (endValue - startValue)) + startValue;
   }
 
   //************************************************************************************************
@@ -71,33 +70,28 @@ namespace Audio
   //************************************************************************************************
   float InterpolatingObject::NextValue()
   {
-    if (TotalFrames == 0)
+    if (TotalFrames == 0 || CurrentFrame >= TotalFrames || EndValue == StartValue)
       return EndValue;
 
-    if (CurrentFrame >= TotalFrames)
-      return EndValue;
-
-    if (EndValue == StartValue)
-      return EndValue;
-
-    return GetValue((float)CurrentFrame++, (float)TotalFrames, StartValue, EndValue);
+    if (CurrentCurveType != CurveTypes::Custom)
+      return GetValue((float)CurrentFrame++, (float)TotalFrames, StartValue, EndValue);
+    else
+      return CustomCurveObject.GetValue((float)CurrentFrame++, (float)TotalFrames, StartValue, EndValue);
   }
 
   //************************************************************************************************
   float InterpolatingObject::ValueAtIndex(const unsigned index)
   {
-    if (TotalFrames == 0)
+    if (TotalFrames == 0 || index >= TotalFrames || EndValue == StartValue)
       return EndValue;
 
-    if (index >= TotalFrames)
-      return EndValue;
+    if (index == 0)
+      return StartValue;
 
-    if (EndValue == StartValue)
-      return EndValue;
-
-    CurrentFrame = index;
-
-    return GetValue((float)index, (float)TotalFrames, StartValue, EndValue);
+    if (CurrentCurveType != CurveTypes::Custom)
+      return GetValue((float)index, (float)TotalFrames, StartValue, EndValue);
+    else
+      return CustomCurveObject.GetValue((float)index, (float)TotalFrames, StartValue, EndValue);
   }
 
   //************************************************************************************************
@@ -106,13 +100,13 @@ namespace Audio
     if (currentDistance == 0.0f)
       return StartValue;
 
-    if (currentDistance >= TotalDistance)
+    if (currentDistance >= TotalDistance || EndValue == StartValue)
       return EndValue;
 
-    if (EndValue == StartValue)
-      return EndValue;
-
-    return GetValue(currentDistance, TotalDistance, StartValue, EndValue);
+    if (CurrentCurveType != CurveTypes::Custom)
+      return GetValue(currentDistance, TotalDistance, StartValue, EndValue);
+    else
+      return CustomCurveObject.GetValue(currentDistance, TotalDistance, StartValue, EndValue);
   }
 
   //************************************************************************************************
@@ -142,6 +136,15 @@ namespace Audio
   void InterpolatingObject::JumpForward(const unsigned howManyFrames)
   {
     CurrentFrame += howManyFrames;
+  }
+
+  //************************************************************************************************
+  void InterpolatingObject::JumpBackward(const unsigned howManyFrames)
+  {
+    if (CurrentFrame > howManyFrames)
+      CurrentFrame -= howManyFrames;
+    else
+      CurrentFrame = 0;
   }
 
   //************************************************************************************************
@@ -214,14 +217,18 @@ namespace Audio
   }
 
   //************************************************************************************************
-  const float InterpolatingObject::GetCurrentValue() const 
+  const float InterpolatingObject::GetCurrentValue()  
   {
     if (TotalFrames == 0 || CurrentFrame >= TotalFrames)
       return EndValue;
-    else if (CurrentFrame == 0)
+    
+    if (CurrentFrame == 0)
       return StartValue;
-    else
+
+    if (CurrentCurveType != CurveTypes::Custom)
       return GetValue((float)CurrentFrame, (float)TotalFrames, StartValue, EndValue);
+    else
+      return CustomCurveObject.GetValue((float)CurrentFrame, (float)TotalFrames, StartValue, EndValue);
   }
 
   //************************************************************************************************

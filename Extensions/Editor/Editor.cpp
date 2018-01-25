@@ -199,7 +199,11 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(PlayGame);
   ZilchBindMethod(PlaySingleGame);
   ZilchBindMethod(PlayNewGame);
-  ZilchBindMethod(PauseGame);
+  Zilch::Function* pauseFunction = ZilchBindMethod(PauseGame);
+  pauseFunction->AddAttribute(DeprecatedAttribute);
+  pauseFunction->Description = "PauseGame() is deprecated, please call ToggleGamePaused()";
+  ZilchBindMethod(ToggleGamePaused);
+  ZilchBindMethod(SetGamePaused);
   ZilchBindMethod(StopGame);
   ZilchBindMethod(StepGame);
   ZilchBindMethod(EditGameSpaces);
@@ -248,6 +252,7 @@ Editor::Editor(Composite* parent)
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
   ConnectThisTo(this, Events::SaveCheck, OnSaveCheck);
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+  ConnectThisTo(Z::gResources, Events::ResourceRemoved, OnResourceRemoved);
 
   BoundType* editorMeta = ZilchTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
@@ -1088,6 +1093,23 @@ void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibrar
   mReInitializeQueue.EndBatch();
 }
 
+void Editor::OnResourceRemoved(ResourceEvent* event)
+{
+  // Runtime resources delete themselves when their reference count reaches 0
+  // Selection Remove takes a handle increasing the reference count to 1 and upon
+  // returning decrements it to 0 again setting off a recursive event loop
+  if(event->EventResource->IsRuntime())
+    return;
+
+  MetaSelection* selection = GetSelection();
+  // Attempt to remove the resource being deleted from the current selection
+  if (selection->Contains(event->EventResource))
+  {
+    selection->Remove(event->EventResource);
+    selection->FinalSelectionChanged();
+  }
+}
+
 void Editor::Update()
 {
   //Debug::DefaultConfig config;
@@ -1382,18 +1404,28 @@ void Editor::StopGame()
 
 void Editor::PauseGame()
 {
+  ToggleGamePaused();
+}
+
+void Editor::ToggleGamePaused()
+{
   // We really don't want to just randomly toggle each game
   // take the first game, get it's pause state, then toggle that and apply
   // that to all games that are currently running
   GameRange games = GetGames();
-  if(!games.Empty())
+  if (!games.Empty())
   {
     GameSession* firstGame = games.Front();
     bool newPausedState = !firstGame->mPaused;
-
-    forRange(GameSession* game, games)
-      game->mPaused = newPausedState;
+    SetGamePaused(newPausedState);
   }
+}
+
+void Editor::SetGamePaused(bool state)
+{
+  // Set the new pause state on all currently running game sessions in the editor
+  forRange(GameSession* game, GetGames())
+    game->mPaused = state;
 
   // If the game pauses due to a script error, we need to undo trap
   // otherwise the mouse gets caught and you can't fix anything

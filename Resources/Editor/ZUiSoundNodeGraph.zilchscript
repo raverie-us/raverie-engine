@@ -56,7 +56,7 @@ class ZUiSoundNodeGraph : ZilchComponent
     foreach(var info in Zero.Audio.GetNodeGraphInfo())
     {
       var thisPosition = Real3(info.Position.X, 320 + info.Position.Y, 1);
-      Console.WriteLine("Output: `thisPosition.Y`");
+      
       var color = Real4(0.4118, 0.698, 1.0, 1.0);
       if (info.Name == "Space")
           color = Real4(1.0, 0.2431, 0.247, 1.0);

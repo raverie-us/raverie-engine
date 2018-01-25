@@ -722,7 +722,7 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
     switch(element.mType)
     {
       case CogPathElementType::NamedCog:
-        resolvedCog = resolvedCog->FindChildByName(element.mValue);
+        resolvedCog = resolvedCog->FindDirectChildByName(element.mValue);
         if(!resolvedCog)
         {
           status.State = StatusState::Failure;

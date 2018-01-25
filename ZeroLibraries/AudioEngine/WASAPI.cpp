@@ -161,12 +161,13 @@ namespace Audio
     }
 
     // Verify float32 output
-    if (Format->wFormatTag != WAVE_FORMAT_EXTENSIBLE ||
-      ((WAVEFORMATEXTENSIBLE*)Format)->SubFormat != KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
+    if ((Format->wFormatTag == WAVE_FORMAT_EXTENSIBLE && ((WAVEFORMATEXTENSIBLE*)Format)->SubFormat 
+      != KSDATAFORMAT_SUBTYPE_IEEE_FLOAT) || (Format->wFormatTag != WAVE_FORMAT_EXTENSIBLE &&
+      Format->wFormatTag != WAVE_FORMAT_IEEE_FLOAT))
     {
       // Shouldn't hit this unless something is really weird
       status = StreamStatus::DeviceProblem;
-      LogAudioIoError(GetMessageForHresult("Incompatible audio format.", result), &message);
+      LogAudioIoError(GetMessageForHresult(Zero::String::Format("Incompatible audio format 0x%04x.", Format->wFormatTag), result), &message);
       goto ErrorExit;
     }
 

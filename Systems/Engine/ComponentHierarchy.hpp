@@ -55,13 +55,18 @@ public:
   /// Tree traversal helpers.
   ComponentType* GetPreviousSibling();
   ComponentType* GetNextSibling();
-  ComponentType* GetLastChild();
+  ComponentType* GetLastDirectChild();
+  ComponentType* GetLastDeepestChild();
   ComponentType* GetNextInHierarchyOrder();
   ComponentType* GetPreviousInHierarchyOrder();
   ComponentType* GetRoot();
 
   typename ChildListRange GetChildren(){return mChildren.All();}
   typename ChildListReverseRange GetChildrenReverse() { return mChildren.ReverseAll(); }
+  
+  /// Returns the amount of children. Note that this function has to iterate over
+  /// all children to calculate the count.
+  uint GetChildCount();
 
   ComponentType* mParent;
   ChildList mChildren;
@@ -71,17 +76,18 @@ public:
 template <typename ComponentType>
 ZilchDefineType(ComponentHierarchy<ComponentType>, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindGetter(PreviousSibling);
   ZilchBindGetter(NextSibling);
-  ZilchBindGetter(LastChild);
+  ZilchBindGetter(LastDirectChild);
+  ZilchBindGetter(LastDeepestChild);
   ZilchBindGetter(NextInHierarchyOrder);
   ZilchBindGetter(PreviousInHierarchyOrder);
   ZilchBindFieldGetter(mParent);
   ZilchBindGetter(Root);
+  ZilchBindGetter(ChildCount);
   
-  // Temporarily unbound until an issue is fixed
-  //InitMetaRangeAdapter(ChildListRange);
-  //ZilchBindMethod(GetChildren);
+  ZilchBindMethod(GetChildren);
 }
 
 //******************************************************************************
@@ -101,6 +107,7 @@ ComponentHierarchy<ComponentType>::~ComponentHierarchy()
   
   if (mParent)
     mParent->mChildren.Erase(this);
+  mChildren.Clear();
 }
 
 //******************************************************************************
@@ -114,6 +121,21 @@ void ComponentHierarchy<ComponentType>::Initialize(CogInitializer& initializer)
     {
       mParent = component;
       mParent->mChildren.PushBack(this);
+    }
+  }
+
+  // If we were dynamically added, we need to add all of our children. If we
+  // aren't dynamically added, our children will add themselves to our child list
+  // in their initialize
+  if (initializer.Flags & CreationFlags::DynamicallyAdded)
+  {
+    forRange(Cog& childCog, GetOwner()->GetChildren())
+    {
+      if (ComponentType* child = childCog.has(ComponentType))
+      {
+        child->mParent = (ComponentType*)this;
+        mChildren.PushBack(child);
+      }
     }
   }
 
@@ -197,10 +219,19 @@ ComponentType* ComponentHierarchy<ComponentType>::GetNextSibling()
 
 //******************************************************************************
 template <typename ComponentType>
-ComponentType* ComponentHierarchy<ComponentType>::GetLastChild()
+ComponentType* ComponentHierarchy<ComponentType>::GetLastDirectChild()
 {
   if(!mChildren.Empty())
-    return mChildren.Back().GetLastChild();
+    return &mChildren.Back();
+  return nullptr;
+}
+
+//******************************************************************************
+template <typename ComponentType>
+ComponentType* ComponentHierarchy<ComponentType>::GetLastDeepestChild()
+{
+  if (UiWidget* lastChild = GetLastDirectChild())
+    return lastChild->GetLastDeepestChild();
   else
     return (ComponentType*)this;
 }
@@ -243,7 +274,7 @@ ComponentType* ComponentHierarchy<ComponentType>::GetPreviousInHierarchyOrder()
     return mParent;
 
   // Return the last child of the sibling
-  return prevSibling->GetLastChild();
+  return prevSibling->GetLastDeepestChild();
 }
 
 //******************************************************************************
@@ -254,6 +285,16 @@ ComponentType* ComponentHierarchy<ComponentType>::GetRoot()
   while(curr->mParent)
     curr = curr->mParent;
   return curr;
+}
+
+//******************************************************************************
+template <typename ComponentType>
+uint ComponentHierarchy<ComponentType>::GetChildCount()
+{
+  uint count = 0;
+  forRange(ComponentType& child, GetChildren())
+    ++count;
+  return count;
 }
 
 }//namespace Zero

@@ -78,9 +78,6 @@
     <ClCompile Include="WindowsMIDI.cpp">
       <Filter>Source Files\PlatformSpecific</Filter>
     </ClCompile>
-    <ClCompile Include="LockFreeQueue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ListenerNode.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>

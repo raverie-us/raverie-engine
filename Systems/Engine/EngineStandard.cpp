@@ -14,6 +14,7 @@ ZilchDefineRange(HierarchyNameRange);
 ZilchDefineRange(HierarchyRange);
 ZilchDefineRange(CogNameRange);
 ZilchDefineRange(HierarchyList::range);
+ZilchDefineRange(HierarchyList::reverse_range);
 ZilchDefineRange(Space::range);
 ZilchDefineRange(SpaceMap::valueRange);
 ZilchDefineRange(ObjectLinkRange);
@@ -99,6 +100,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRange(HierarchyRange);
   ZilchInitializeRange(CogNameRange);
   ZilchInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
+  ZilchInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);
@@ -162,6 +164,9 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(CogArchetypePropertyFilter);
   ZilchInitializeType(CogPathMetaComposition);
   ZilchInitializeType(MetaEditorScriptObject);
+  ZilchInitializeType(MetaDependency);
+  ZilchInitializeType(MetaInterface);
+  ZilchInitializeType(RaycasterMetaComposition);
 
   // Events
   ZilchInitializeType(CogPathEvent);
@@ -354,8 +359,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Joystick);
   ZilchInitializeType(Joysticks);
 
-  ZilchInitializeType(HotKeyDataSet);
-
   ZilchInitializeType(EventDirectoryWatcher);
   ZilchInitializeType(Job);
   ZilchInitializeType(DocumentationLibrary);
@@ -384,7 +387,9 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
-  RegisterClassAttribute(ObjectAttributes::cComponentInterface)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cComponentInterface, MetaInterface)->TypeMustBe(Component);
+
+  RegisterPropertyAttributeType(PropertyAttributes::cDependency, MetaDependency)->TypeMustBe(Component);
 
   RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty, EditorResource)->TypeMustBe(Resource);
 
@@ -429,7 +434,6 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   InitializeResourceManager(LevelManager);
   InitializeResourceManager(AnimationManager);
   InitializeResourceManager(CurveManager);
-  InitializeResourceManager(HotKeyManager);
   InitializeResourceManager(ResourceTableManager);
   InitializeResourceManager(ColorGradientManager);
   InitializeResourceManager(TextBlockManager);

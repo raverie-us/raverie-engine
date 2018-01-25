@@ -145,14 +145,12 @@ void SpriteSourceBuilder::SetDefaults()
   Sampling = SpriteSampling::Linear;
   Looping = true;
   Slices = Vec4(0,0,0,0);
-  AtlasId = 0x5274cf95e4a661fdULL;
   Fill = SpriteFill::Stretch;
 }
 
 //------------------------------------------------------------------ Sprite Data
 void SpriteData::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(AtlasId, Guid(0));
   SerializeNameDefault(FrameSizeX, uint(0));
   SerializeNameDefault(FrameSizeY, uint(0));
   SerializeNameDefault(FrameCount, uint(0));

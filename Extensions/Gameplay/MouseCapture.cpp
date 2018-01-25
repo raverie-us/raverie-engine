@@ -203,7 +203,7 @@ ZilchDefineType(MouseCapture, builder, type)
   ZilchBindMethod(Capture);
   ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void));
   ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void, ViewportMouseEvent*));
-  ZilchBindGetterProperty(IsCaptured);
+  ZilchBindGetter(IsCaptured);
 
   ZeroBindEvent(Events::MouseDragStart, ViewportMouseEvent);
   ZeroBindEvent(Events::MouseDragMove, ViewportMouseEvent);

@@ -54,8 +54,25 @@ void Deselect(Editor* editor, Space* space)
 //----------------------------------------------------------------- Manipulation
 void DuplicateSelection(Editor* editor, Space* space)
 {
-  SaveSelectionToClipboard(editor, space);
-  LoadObjectFromClipboard(editor, space);
+  MetaSelection* selection = editor->GetSelection();
+
+  // Get all cogs in the current selection filtering out protected objects and objects who's parents are already selected
+  Array<Cog*> cogs;
+  FilterChildrenAndProtected(cogs, selection);
+  
+  // Begin an operation queue batch to undo/redo all the duplications as one action
+  OperationQueue* opQueue = editor->GetOperationQueue();
+  opQueue->BeginBatch();
+
+  // Duplicate all valid selected objects
+  forRange(Cog* cog, cogs.All())
+  {
+    Cog* duplicateCog = cog->Clone();
+    ObjectCreated(opQueue, duplicateCog);
+  }
+
+  // End the batch operation
+  opQueue->EndBatch();
 }
 
 void DeleteSelectedObjects(Editor* editor, Space* space)
@@ -472,6 +489,7 @@ void GroupSelected(Editor* editor, Space* space)
   queue->EndBatch();
 
   editor->GetSelection()->SelectOnly(rootObject);
+  editor->GetSelection()->FinalSelectionChanged();
 }
 
 void SelectSibling(Editor* editor, Space* space)
@@ -1222,7 +1240,9 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
 
   commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition));
 
-  commands->AddCommand("EditCommands", BindCommandFunction(EditCommands));
+  // Currently EditCommands just opens the command list and no editing functionality exists
+  // Entry commented out in Commands.data needs to be added back in also
+  // commands->AddCommand("EditCommands", BindCommandFunction(EditCommands));
 
   if(DeveloperConfig* config = configCog->has(DeveloperConfig))
   {

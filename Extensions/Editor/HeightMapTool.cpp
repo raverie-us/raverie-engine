@@ -814,7 +814,7 @@ ZilchDefineType(HeightMapTool, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultConstructor);
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
   if(DeveloperConfig* devConfig = Z::gEngine->GetConfigCog( )->has(Zero::DeveloperConfig))
   {
@@ -938,12 +938,17 @@ void HeightMapTool::OnToolDeactivate(Event*)
 
 void HeightMapTool::OnKeyDown(KeyboardEvent* e)
 {
+  Cog* owner = GetOwner();
+  ObjectEvent eventToSend(owner);
+
   switch(e->Key)
   {
     case Keys::Num1:
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::CreateDestroy);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;
@@ -952,6 +957,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::RaiseLower);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;
@@ -960,6 +967,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::SmoothSharpen);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;
@@ -968,6 +977,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::Flatten);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;
@@ -976,6 +987,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::WeightPainter);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;

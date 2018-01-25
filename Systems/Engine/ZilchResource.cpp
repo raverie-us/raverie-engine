@@ -146,6 +146,25 @@ void AddTypesToAutoComplete(LibraryRef library, Array<Completion>& keywordsOut)
     {
       keywordsOut.PushBack(Completion(type->Name, type->Description));
     }
+    forRange(InstantiateTemplateInfo& templateHandler, library->TemplateHandlers.Values())
+    {
+      // Build the full name of the template
+      StringBuilder nameBuilder;
+      nameBuilder.Append(templateHandler.TemplateBaseName);
+      nameBuilder.Append("[");
+      size_t count = templateHandler.TemplateParameters.Size();
+      for(size_t i = 0; i < count; ++i)
+      {
+        nameBuilder.Append(templateHandler.TemplateParameters[i].Name);
+        if(i != count - 1)
+          nameBuilder.Append(", ");
+      }
+      nameBuilder.Append("]");
+
+      // Since auto-completion adds the full name, we can't put the default template argument names in there.
+      // For now put the full name in the description so the user can at least see the required arguments.
+      keywordsOut.PushBack(Completion(templateHandler.TemplateBaseName, nameBuilder.ToString()));
+    }
   }
 }
 

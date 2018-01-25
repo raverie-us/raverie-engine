@@ -233,9 +233,6 @@ namespace Audio
     mNotifyTime(0),
     mCustomNotifySent(false),
     mVirtual(false),
-    TagEqualizer(nullptr),
-    TagCompressor(nullptr),
-    TagCompressorInput(nullptr),
     mPitchFactor(1.0f),
     PausingModifier(nullptr),
     mFrameIndex(0),
@@ -244,13 +241,12 @@ namespace Audio
     mStopping(false),
     mPausing(false),
     mInterpolatingVolume(false),
-    mTimeIncrement(0),
-    mPreviousTime(0),
     mStartFrame(0),
     mEndFrame(0),
     mLoopStartFrame(0),
     mLoopEndFrame(0),
-    mLoopTailFrames(0)
+    mLoopTailFrames(0),
+    mSavedOutputVersion(gAudioSystem->MixVersionNumber - 1)
   {
     if (!Threaded)
     {
@@ -270,47 +266,31 @@ namespace Audio
     }
     else
     {
-      mTimeIncrement = 1.0 / (double)AudioSystemInternal::SystemSampleRate;
-      mFrameIndex = 0;
       mEndFrame = Asset->GetNumberOfFrames() - 1;
       mLoopEndFrame = mEndFrame;
 
       // Set volume ramp if not paused
       if (!mPaused)
       {
-        ThreadedVolumeModifier *volumeMod = GetAvailableVolumeMod();
+        InstanceVolumeModifier *volumeMod = GetAvailableVolumeMod();
         if (volumeMod)
-          volumeMod->Reset(0.0f, 1.0f, 0.02f, 0.0f, 0.02f, 0.0f);
+          volumeMod->Reset(0.0f, 1.0f, AudioSystemInternal::PropertyChangeFrames,
+            AudioSystemInternal::PropertyChangeFrames);
 
         ResetMusicBeats();
       }
-
     }
   }
 
   //************************************************************************************************
   SoundInstanceNode::~SoundInstanceNode()
   {
-    if (Threaded)
-    {
-      // Remove this instance from threaded tags
-      forRange(TagObject* tag, TagList.All())
-        tag->InstanceVolumeMap.Erase(this);
+    // Remove this instance from any associated tags
+    forRange(TagObject* tag, TagList.All())
+      tag->RemoveInstanceFromLists(this);
 
-      if (TagEqualizer)
-        delete TagEqualizer;
-      if (TagCompressor)
-        delete TagCompressor;
-    }
-    else
-    {
-      // Remove this instance from non-threaded tags
-      forRange(TagObject* tag, TagList.All())
-        tag->Instances.EraseValue(this);
-
-      if (Asset)
-        Asset->ReleaseReference();
-    }
+    if (!Threaded && Asset)
+      Asset->ReleaseReference();
   }
 
   //************************************************************************************************
@@ -337,10 +317,11 @@ namespace Audio
         mPausing = true;
         mStopFrameCount = 0;
         mStopFramesToWait = AudioSystemInternal::PropertyChangeFrames + 10;
-        ThreadedVolumeModifier* mod = GetAvailableVolumeMod();
+        InstanceVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
         {
-          mod->Reset(1.0f, 0.0f, 0.02f, 0.0f, 0.0f, 0.0f);
+          mod->Reset(1.0f, 0.0f, AudioSystemInternal::PropertyChangeFrames,
+            AudioSystemInternal::PropertyChangeFrames);
           PausingModifier = mod;
         }
       }
@@ -349,9 +330,10 @@ namespace Audio
       {
         mPaused = false;
         mPausing = false;
-        ThreadedVolumeModifier* mod = GetAvailableVolumeMod();
+        InstanceVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
-          mod->Reset(0.0f, 1.0f, 0.02f, 0.0f, 0.02f, 0.0f);
+          mod->Reset(0.0f, 1.0f, AudioSystemInternal::PropertyChangeFrames, 
+            AudioSystemInternal::PropertyChangeFrames);
 
         if (mCurrentTime == 0)
           ResetMusicBeats();
@@ -374,9 +356,10 @@ namespace Audio
       mStopping = true;
       mStopFrameCount = 0;
       mStopFramesToWait = AudioSystemInternal::PropertyChangeFrames + 10;
-      ThreadedVolumeModifier* mod = GetAvailableVolumeMod();
+      InstanceVolumeModifier* mod = GetAvailableVolumeMod();
       if (mod)
-        mod->Reset(1.0f, 0.0f, 0.02f, 0.0f, 0.0f, 0.0f);
+        mod->Reset(1.0f, 0.0f, AudioSystemInternal::PropertyChangeFrames,
+          AudioSystemInternal::PropertyChangeFrames);
     }
   }
 
@@ -653,7 +636,7 @@ namespace Audio
       else if (mFrameIndex < mStartFrame)
         mFrameIndex = mStartFrame;
 
-      mCurrentTime = mFrameIndex * mTimeIncrement;
+      mCurrentTime = mFrameIndex * gAudioSystem->SystemTimeIncrement;
       ResetMusicBeats();
     }
   }
@@ -673,9 +656,16 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::SetBeatsPerMinute(const float bpm)
   {
-    MusicNotify.mSecondsPerBeat = 60.0f / bpm;
-
-    MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
+    if (bpm <= 0.0f)
+    {
+      MusicNotify.mSecondsPerBeat = 0.0f;
+      MusicNotify.mSecondsPerEighth = 0.0f;
+    }
+    else
+    {
+      MusicNotify.mSecondsPerBeat = 60.0f / bpm;
+      MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
+    }
 
     if (!Threaded && GetSiblingNode())
       gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetBeatsPerMinute,
@@ -685,11 +675,19 @@ namespace Audio
   //************************************************************************************************
   void SoundInstanceNode::SetTimeSignature(const int beats, const int noteType)
   {
-    MusicNotify.mBeatsPerBar = beats;
-    MusicNotify.mBeatNoteType = noteType;
+    MusicNotify.mBeatsPerBar = Math::Max(beats, 0);
+    MusicNotify.mBeatNoteType = Math::Max(noteType, 0);
 
-    MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
-    MusicNotify.mEighthsPerBeat = 8 / MusicNotify.mBeatNoteType;
+    if (MusicNotify.mBeatsPerBar == 0 || MusicNotify.mBeatNoteType == 0)
+    {
+      MusicNotify.mSecondsPerEighth = 0.0f;
+      MusicNotify.mEighthsPerBeat = 0;
+    }
+    else
+    {
+      MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
+      MusicNotify.mEighthsPerBeat = 8 / MusicNotify.mBeatNoteType;
+    }
 
     if (!Threaded && GetSiblingNode())
       gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetTimeSignature,
@@ -714,144 +712,175 @@ namespace Audio
   }
 
   //************************************************************************************************
-  bool SoundInstanceNode::GetOutputSamples(Zero::Array<float>* outputBuffer, 
+  bool SoundInstanceNode::GetOutputSamples(BufferType* outputBuffer,
     const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
   {
     if (!Threaded)
       return false;
 
-    if (mFinished || mPaused)
+    // Get the audio output
+    bool result = GetOutputForThisMix(outputBuffer, numberOfChannels);
+
+    // If there was valid output, apply changes from any associated tags
+    if (result)
+    {
+      forRange(TagObject* tag, TagList.All())
+        tag->ProcessInstance(outputBuffer, numberOfChannels, this);
+    }
+
+    return result;
+  }
+
+  //************************************************************************************************
+  bool SoundInstanceNode::GetOutputForThisMix(BufferType* outputBuffer,
+    const unsigned numberOfChannels)
+  {
+    if (!Threaded)
       return false;
 
-    unsigned bufferSize = outputBuffer->Size();
-    unsigned bufferFrames = bufferSize / numberOfChannels;
-
-    //if (mVirtual)
-    //{
-    //  SkipForward(bufferFrames);
-    //  return false;
-    //}
-
-    FillBuffer(bufferFrames, numberOfChannels);
-
-    // Apply modifications
-    forRange (ThreadedVolumeModifier* modifier, VolumeModList.All())
+    // Check if we already processed output for this mix version
+    if (mSavedOutputVersion == gAudioSystem->MixVersionNumber)
     {
-      if (modifier->Active)
-        modifier->ApplyModification(InputSamples.Data(), bufferSize);
-    }
+      // Check if the buffer sizes don't match, and there is saved audio data
+      if (outputBuffer->Size() != InputSamples.Size() && !InputSamples.Empty())
+      {
+        // Need to get additional samples
+        if (outputBuffer->Size() > InputSamples.Size())
+        {
+          AddSamplesToBuffer(&InputSamples, (outputBuffer->Size() - InputSamples.Size()) / numberOfChannels,
+            numberOfChannels);
+        }
+        // Need to save samples for next time
+        else
+        {
+          // Add the extra samples to the end of the SavedSamples buffer
+          CopyIntoBuffer(&SavedSamples, InputSamples, outputBuffer->Size(), 
+            InputSamples.Size() - outputBuffer->Size());
 
-    // Check if we should apply the equalizer filter
-    if (TagEqualizer)
-    {
-      // Process samples into the output buffer
-      TagEqualizer->ProcessBuffer(InputSamples.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
-      // Move back to the input buffer
-      InputSamples.Swap(*outputBuffer);
-    }
+          // Resize the InputSamples buffer to match the output buffer
+          InputSamples.Resize(outputBuffer->Size());
+        }
+      }
 
-    // Check if we should apply the compressor filter
-    if (TagCompressor)
-    {
-      // Process samples into the output buffer
-      if (!TagCompressorInput)
-        TagCompressor->ProcessBuffer(InputSamples.Data(), InputSamples.Data(), outputBuffer->Data(),
-          numberOfChannels, bufferSize);
-      else
-        TagCompressor->ProcessBuffer(InputSamples.Data(), TagCompressorInput->Data(), 
-          outputBuffer->Data(), numberOfChannels, bufferSize);
+      // Copy the saved audio samples to the output buffer
+      if (!InputSamples.Empty())
+      {
+        outputBuffer->Resize(InputSamples.Size());
+        memcpy(outputBuffer->Data(), InputSamples.Data(), sizeof(float) * InputSamples.Size());
+      }
+      // Return true if there was actual audio data and false if there was not
+      return !InputSamples.Empty();
     }
     else
     {
-      // Move from input buffer to output buffer
-      InputSamples.Swap(*outputBuffer);
+      // Set the mix version
+      mSavedOutputVersion = gAudioSystem->MixVersionNumber;
+
+      if (mFinished || mPaused)
+        return false;
+
+      //if (mVirtual)
+      //{
+      //  SkipForward(bufferFrames);
+      //  return false;
+      //}
+
+      // Reset the InputSamples buffer
+      InputSamples.Clear();
+      // Fill the InputSamples buffer with the needed number of samples
+      AddSamplesToBuffer(&InputSamples, outputBuffer->Size() / numberOfChannels, numberOfChannels);
+
+      // Apply modifications
+      forRange(InstanceVolumeModifier* modifier, VolumeModList.All())
+      {
+        if (modifier->Active)
+          modifier->ApplyVolume(InputSamples.Data(), InputSamples.Size(), numberOfChannels);
+      }
+
+      // Copy from input buffer to output buffer
+      ErrorIf(outputBuffer->Size() != InputSamples.Size(), "Buffer sizes do not match in SoundInstance output");
+      memcpy(outputBuffer->Data(), InputSamples.Data(), sizeof(float) * outputBuffer->Size());
+
+      if (mPaused && PausingModifier)
+      {
+        PausingModifier->Active = false;
+        PausingModifier = nullptr;
+      }
+
+      if (GetSiblingNode())
+      {
+        // Set the time variable on the non-threaded node
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mCurrentTime,
+          (SoundInstanceNode*)GetSiblingNode(), mCurrentTime));
+
+        // Update the volume on the non-threaded instance
+        if (mInterpolatingVolume)
+          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mVolume,
+          (SoundInstanceNode*)GetSiblingNode(), mVolume));
+
+        // Update the pitch on the non-threaded instance
+        if (Pitch.Interpolating())
+          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mPitchFactor,
+          (SoundInstanceNode*)GetSiblingNode(), Pitch.GetPitchFactor()));
+      }
+
+      return true;
     }
-
-    if (mPaused && PausingModifier)
-    {
-      PausingModifier->Active = false;
-      PausingModifier = nullptr;
-    }
-
-    if (GetSiblingNode())
-    {
-      // Set the time variable on the non-threaded node
-      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mCurrentTime, 
-        (SoundInstanceNode*)GetSiblingNode(), mCurrentTime));
-
-      // Update the volume on the non-threaded instance
-      if (mInterpolatingVolume)
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mVolume, 
-            (SoundInstanceNode*)GetSiblingNode(), mVolume));
-
-      // Update the pitch on the non-threaded instance
-      if (Pitch.Interpolating())
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mPitchFactor, 
-            (SoundInstanceNode*)GetSiblingNode(), Pitch.GetPitchFactor()));
-    }
-
-    return true;
   }
 
   //************************************************************************************************
-  void SoundInstanceNode::AddAttenuatedOutputToTag(TagObject* tag)
+  void SoundInstanceNode::AddSamplesToBuffer(BufferType* buffer, unsigned outputFrames,
+    unsigned outputChannels)
   {
-    if (!Threaded)
-      return;
-
-    if (!ValidOutputLastMix)
-      return;
-
-    float volume(1.0);
-    forRange(SoundNode* node, GetOutputs()->All())
+    // Check if there are saved samples from last mix
+    if (!SavedSamples.Empty())
     {
-      float value = node->GetAttenuatedVolume();
-      if (value > 0)
-        volume *= value;
+      // Find out how many samples need to be copied over
+      unsigned samplesToCopy = Math::Min(SavedSamples.Size(), outputFrames * outputChannels);
+      // Add the saved samples to the end of the buffer
+      CopyIntoBuffer(buffer, SavedSamples, 0, samplesToCopy);
+      // If there are more saved samples, erase the ones we copied
+      if (SavedSamples.Size() > samplesToCopy)
+        SavedSamples.Erase(SavedSamples.SubRange(0, samplesToCopy));
+      // Otherwise just clear the array
+      else
+        SavedSamples.Clear();
+
+      // Adjust the number of frames needed
+      outputFrames -= samplesToCopy / outputChannels;
+      // If we don't need any more frames, just return
+      if (outputFrames == 0)
+        return;
     }
 
-    tag->TotalOutput.Resize(MixedOutput.Size());
-
-    for (unsigned i = 0; i < tag->TotalOutput.Size(); ++i)
-    {
-      tag->TotalOutput[i] += MixedOutput[i] * volume;
-    }
-  }
-
-  //************************************************************************************************
-  void SoundInstanceNode::FillBuffer(unsigned outputFrames, unsigned outputChannels)
-  {
     unsigned inputChannels = Asset->GetChannels();
     unsigned inputFrames = outputFrames;
-    InputSamples.Clear();
-
-    // Temporary array will be used if pitch shifting to get different amount of samples
-    Zero::Array<float> pitchShiftedArray;
-    Zero::Array<float>* inputArrayToUse = &InputSamples;
+    BufferType samples;
 
     // If pitch shifting, determine number of asset frames we need
     if (mPitchShifting)
     {
-      InputSamples.Resize(outputFrames * outputChannels);
-
-      Pitch.CalculateBufferSize(InputSamples.Size(), outputChannels);
+      Pitch.CalculateBufferSize(outputFrames * outputChannels, outputChannels);
       inputFrames = Pitch.GetInputFrameCount();
-
-      inputArrayToUse = &pitchShiftedArray;
     }
 
     // Store the starting frame
     unsigned startingFrameIndex = mFrameIndex;
     // Move the frame index forward
     mFrameIndex += inputFrames;
-    
+
     // Check if we are looping and will reach the loop end frame
     if (mLooping && mFrameIndex >= mLoopEndFrame)
     {
-      // Save the number of frames in the first section
-      unsigned sectionFrames = inputFrames - (mFrameIndex - mLoopEndFrame);
-      // Get the samples from the asset
-      Asset->AppendSamples(inputArrayToUse, startingFrameIndex, sectionFrames * inputChannels);
+      unsigned sectionFrames = 0;
+
+      if (startingFrameIndex < mLoopEndFrame)
+      {
+        // Save the number of frames in the first section
+        sectionFrames = inputFrames - (mFrameIndex - mLoopEndFrame);
+        // Get the samples from the asset
+        Asset->AppendSamples(&samples, startingFrameIndex, sectionFrames * inputChannels);
+      }
 
       // Reset back to the loop start frame
       Loop();
@@ -859,7 +888,7 @@ namespace Audio
       // Save the number of frames in the second section
       sectionFrames = inputFrames - sectionFrames;
       // Get the samples from the asset
-      Asset->AppendSamples(inputArrayToUse, mFrameIndex, sectionFrames * inputChannels);
+      Asset->AppendSamples(&samples, mFrameIndex, sectionFrames * inputChannels);
 
       // Move frame index forward
       mFrameIndex += sectionFrames;
@@ -868,25 +897,27 @@ namespace Audio
     else if (mFrameIndex >= mEndFrame)
     {
       // Get the available samples
-      Asset->AppendSamples(inputArrayToUse, startingFrameIndex, 
+      if (startingFrameIndex < mEndFrame)
+        Asset->AppendSamples(&samples, startingFrameIndex,
         (inputFrames - (mFrameIndex - mEndFrame)) * inputChannels);
-      // Resize the array back to full size, setting the rest of the samples to 0
-      inputArrayToUse->Resize(inputFrames * inputChannels, 0.0f);
+
+      // Resize the array to full size, setting the rest of the samples to 0
+      samples.Resize(inputFrames * inputChannels, 0.0f);
 
       FinishedCleanUp();
     }
     // Otherwise, no need to adjust anything
     else
     {
-      Asset->AppendSamples(inputArrayToUse, startingFrameIndex, inputFrames * inputChannels);
+      Asset->AppendSamples(&samples, startingFrameIndex, inputFrames * inputChannels);
     }
 
     // Apply fading if needed
-    Fade.ApplyFade(inputArrayToUse->Data(), inputFrames);
+    Fade.ApplyFade(samples.Data(), inputFrames);
 
     // Check if the output channels are different than the audio data
     if (inputChannels != outputChannels)
-      TranslateChannels(*inputArrayToUse, inputFrames, inputChannels, outputChannels);
+      TranslateChannels(&samples, inputFrames, inputChannels, outputChannels);
 
     // If pitch shifting, interpolate the samples into the buffer
     if (mPitchShifting)
@@ -894,11 +925,16 @@ namespace Audio
       // Save the interpolation state
       bool interpolating = Pitch.Interpolating();
 
-      Pitch.ProcessBuffer(inputArrayToUse, &InputSamples);
+      // Pitch shifts the samples into a temporary buffer
+      BufferType pitchShiftedSamples(outputFrames * outputChannels);
+      Pitch.ProcessBuffer(&samples, &pitchShiftedSamples);
+
+      // Move the samples back into the original buffer
+      samples.Swap(pitchShiftedSamples);
 
       // If interpolating the pitch (whether or not it finished) update the non-threaded 
       // object with the pitch factor
-      if (GetSiblingNode())
+      if (interpolating && GetSiblingNode())
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&PitchChangeHandler::SetPitchFactor,
           &((SoundInstanceNode*)GetSiblingNode())->Pitch, Pitch.GetPitchFactor(), 0.0f));
     }
@@ -906,7 +942,7 @@ namespace Audio
     // Check if we need to apply a volume change
     if (mInterpolatingVolume || !IsWithinLimit(mVolume, 1.0f, 0.01f))
     {
-      for (unsigned i = 0; i < InputSamples.Size(); i += outputChannels)
+      for (unsigned i = 0; i < samples.Size(); i += outputChannels)
       {
         // If interpolating volume, get new value
         if (mInterpolatingVolume)
@@ -915,17 +951,20 @@ namespace Audio
 
           mInterpolatingVolume = !VolumeInterpolator.Finished(GetSiblingNode());
 
+          // Update the non-threaded instance with the final volume
           if (!mInterpolatingVolume && GetSiblingNode())
-            // Update the non-threaded instance with the final volume
             gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mVolume,
               (SoundInstanceNode*)GetSiblingNode(), mVolume));
         }
 
         // Adjust volume for all samples on this frame
         for (unsigned j = 0; j < outputChannels; ++j)
-          InputSamples[i + j] *= mVolume;
+          samples[i + j] *= mVolume;
       }
     }
+
+    // Add the samples to the end of the supplied buffer
+    CopyIntoBuffer(buffer, samples, 0, samples.Size());
 
     // Check for pausing or stopping 
     if (mPausing || mStopping)
@@ -947,8 +986,18 @@ namespace Audio
     }
 
     // Advance time and handle music notifications
-    mCurrentTime = mFrameIndex * mTimeIncrement;
+    mCurrentTime = mFrameIndex * gAudioSystem->SystemTimeIncrement;
     MusicNotifications();
+  }
+
+  //************************************************************************************************
+  float SoundInstanceNode::GetAttenuationThisMix()
+  {
+    float volume = 0.0f;
+    forRange(SoundNode* node, GetOutputs()->All())
+      volume += node->GetVolumeChangeFromOutputs();
+
+    return volume;
   }
 
   //************************************************************************************************
@@ -970,7 +1019,7 @@ namespace Audio
 
     // Reset variables
     mFrameIndex = mLoopStartFrame;
-    mCurrentTime = mFrameIndex * mTimeIncrement;
+    mCurrentTime = mFrameIndex * gAudioSystem->SystemTimeIncrement;
     ResetMusicBeats();
 
     // If streaming, reset to the beginning of the file
@@ -983,18 +1032,18 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void SoundInstanceNode::TranslateChannels(Zero::Array<float>& inputSamples, const unsigned inputFrames,
+  void SoundInstanceNode::TranslateChannels(BufferType* inputSamples, const unsigned inputFrames,
     const unsigned inputChannels, const unsigned outputChannels)
   {
     // Temporary array for channel translation
-    Zero::Array<float> adjustedSamples(inputFrames * outputChannels);
+    BufferType adjustedSamples(inputFrames * outputChannels);
 
     // Step through each frame of audio data
     for (unsigned frame = 0, inputIndex = 0, outputIndex = 0; frame < inputFrames;
       ++frame, inputIndex += inputChannels, outputIndex += outputChannels)
     {
       // Create the AudioFrame object
-      AudioFrame thisFrame(inputSamples.Data() + inputIndex, inputChannels);
+      AudioFrame thisFrame(inputSamples->Data() + inputIndex, inputChannels);
       // Translate the channels 
       thisFrame.TranslateChannels(outputChannels);
       // Copy the translated samples into the other array
@@ -1002,7 +1051,7 @@ namespace Audio
     }
 
     // Move the translated data into the other array
-    inputSamples.Swap(adjustedSamples);
+    inputSamples->Swap(adjustedSamples);
   }
 
   //************************************************************************************************
@@ -1047,7 +1096,7 @@ namespace Audio
       volume2 = VolumeInterpolator.ValueAtIndex(mFrameIndex + frames);
 
     // Adjust with all volume modifiers
-    forRange(ThreadedVolumeModifier* modifier, VolumeModList.All())
+    forRange(InstanceVolumeModifier* modifier, VolumeModList.All())
     {
       if (modifier->Active)
       {
@@ -1065,7 +1114,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  ThreadedVolumeModifier* SoundInstanceNode::GetAvailableVolumeMod()
+  InstanceVolumeModifier* SoundInstanceNode::GetAvailableVolumeMod()
   {
     if (!Threaded)
       return nullptr;
@@ -1074,12 +1123,12 @@ namespace Audio
     {
       if (!VolumeModList[i]->Active)
       {
-        VolumeModList[i]->Reset(1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+        VolumeModList[i]->Reset(1.0f, 1.0f, (unsigned)0, (unsigned)0);
         return VolumeModList[i];
       }
     }
 
-    VolumeModList.PushBack(new ThreadedVolumeModifier);
+    VolumeModList.PushBack(new InstanceVolumeModifier);
     return VolumeModList.Back();
   }
 
@@ -1111,8 +1160,6 @@ namespace Audio
     }
 
     MusicNotify.ProcessAndNotify((float)mCurrentTime, GetSiblingNode());
-    //MusicNotify.ProcessAndNotify(mCurrentTime - mPreviousTime, GetSiblingNode());
-    mPreviousTime = mCurrentTime;
   }
 
   //************************************************************************************************
@@ -1120,8 +1167,6 @@ namespace Audio
   {
     if (!Threaded)
       return;
-
-    mPreviousTime = mCurrentTime;
 
     MusicNotify.ResetBeats((float)mCurrentTime, GetSiblingNode());
   }

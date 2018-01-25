@@ -12,123 +12,84 @@ namespace Audio
   //----------------------------------------------------------------------- Threaded Volume Modifier
 
   //************************************************************************************************
-  ThreadedVolumeModifier::ThreadedVolumeModifier() :
-    VolumeStart(0),
-    Volume(0),
-    FramesProcessed(0),
-    ReleaseFrames(0),
-    Active(false),
-    TotalFrames(0),
-    Release(false),
-    Attack(true),
-    DelayFrames(0),
-    Delay(false)
+  InstanceVolumeModifier::InstanceVolumeModifier() :
+    mCurrentVolume(1.0f),
+    mLifetimeFrames(0),
+    mLifetimeFrameCounter(0)
   {
 
   }
 
   //************************************************************************************************
-  void ThreadedVolumeModifier::ApplyModification(float *sampleBuffer, const unsigned bufferSize)
+  void InstanceVolumeModifier::ApplyVolume(float *sampleBuffer, const unsigned bufferSize, 
+    const unsigned numberOfChannels)
   {
     if (!Active)
       return;
 
-    for (unsigned i = 0; i < bufferSize; i += gAudioSystem->SystemChannelsThreaded)
+    // If this modifier has an end time, check if we should deactivate
+    ++mLifetimeFrameCounter;
+    if (mLifetimeFrames > 0 && mLifetimeFrameCounter > mLifetimeFrames)
     {
-      // If delaying, don't do anything
-      if (Delay)
+      Active = false;
+      return;
+    }
+
+    // If not interpolating and volume is close to 1.0, don't do anything
+    if (Interpolator.Finished() && IsWithinLimit(mCurrentVolume, 1.0f, 0.01f))
+      return;
+
+    // If we are not interpolating, apply the same volume to all samples
+    if (Interpolator.Finished())
+    {
+      for (unsigned i = 0; i < bufferSize; ++i)
+        sampleBuffer[i] *= mCurrentVolume;
+    }
+    // If we are interpolating, get the volume for each frame and apply to samples
+    else
+    {
+      for (unsigned sample = 0; sample < bufferSize; sample += numberOfChannels)
       {
-        // Done with delay, reset 
-        if (FramesProcessed == DelayFrames)
-        {
-          FramesProcessed = 0;
-          Delay = false;
-        }
-        else
-        {
-          ++FramesProcessed;
-          continue;
-        }
+        mCurrentVolume = Interpolator.NextValue();
+
+        for (unsigned channel = 0; channel < numberOfChannels; ++channel)
+          sampleBuffer[sample + channel] *= mCurrentVolume;
       }
-
-      float volumeValue;
-      // In attack phase
-      if (Attack)
-      {
-        volumeValue = Interpolator.NextValue();
-        
-        // If attack is finished, go to sustain
-        if (Interpolator.Finished())
-          Attack = false;
-      }
-      // In release phase
-      else if (Release)
-      {
-        volumeValue = Interpolator.NextValue();
-
-        // If release is finished, we're done
-        if (Interpolator.Finished())
-        {
-          Active = false;
-          return;
-        }
-      }
-      // In sustain phase
-      else
-      {
-        volumeValue = Volume;
-
-        // If the modification is timed and we've reached the end, go to release phase
-        if (TotalFrames > 0 && FramesProcessed >= TotalFrames - ReleaseFrames)
-        {
-          Release = true;
-          Interpolator.SetValues(Volume, VolumeStart, ReleaseFrames);
-        }
-      }
-
-      // Modify volume of this frame of samples
-      for (unsigned j = 0; j < gAudioSystem->SystemChannelsThreaded; ++j)
-        sampleBuffer[i + j] *= volumeValue;
-
-      // Keep track of how many frames total have been modified
-      ++FramesProcessed;
     }
   }
 
   //************************************************************************************************
-  void ThreadedVolumeModifier::Reset(const float startVolume, const float endVolume, const float attackTime, 
-    const float releaseTime, const float totalTime, const float delayTime)
+  void InstanceVolumeModifier::Reset(const float startVolume, const float endVolume, 
+    const float time, const float lifetime)
   {
-    VolumeStart = startVolume;
-    Volume = endVolume;
-    unsigned attackFrames = (unsigned)(attackTime * AudioSystemInternal::SystemSampleRate);
-    ReleaseFrames = (unsigned)(releaseTime * AudioSystemInternal::SystemSampleRate);
-    TotalFrames = (unsigned)(totalTime * AudioSystemInternal::SystemSampleRate);
-    DelayFrames = (unsigned)(delayTime * AudioSystemInternal::SystemSampleRate);
-    if (DelayFrames > 0)
-      Delay = true;
-    else
-      Delay = false;
-    Release = false;
-    Attack = true;
+    Reset(startVolume, endVolume, (unsigned)(time * AudioSystemInternal::SystemSampleRate),
+      (unsigned)(lifetime * AudioSystemInternal::SystemSampleRate));
+  }
+
+  //************************************************************************************************
+  void InstanceVolumeModifier::Reset(const float startVolume, const float endVolume, 
+    const unsigned frames, const unsigned lifetimeFrames)
+  {
+    mCurrentVolume = startVolume;
+    Interpolator.SetValues(startVolume, endVolume, frames);
+    mLifetimeFrames = lifetimeFrames;
+    mLifetimeFrameCounter = 0;
     Active = true;
-
-    if (attackFrames == 0)
-      attackFrames = 1000;
-
-    Interpolator.SetValues(VolumeStart, Volume, attackFrames);
   }
 
   //************************************************************************************************
-  float ThreadedVolumeModifier::GetCurrentVolume()
+  float InstanceVolumeModifier::GetCurrentVolume()
   {
-    return Interpolator.GetCurrentValue();
+    return mCurrentVolume;
   }
 
   //************************************************************************************************
-  float ThreadedVolumeModifier::GetFutureVolume(unsigned frames)
+  float InstanceVolumeModifier::GetFutureVolume(unsigned frames)
   {
-    return Interpolator.ValueAtIndex(FramesProcessed + frames);
+    if (Interpolator.Finished())
+      return mCurrentVolume;
+    else
+      return Interpolator.ValueAtIndex(Interpolator.GetCurrentFrame() + frames);
   }
 
 }

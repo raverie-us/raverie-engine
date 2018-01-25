@@ -155,6 +155,8 @@ public:
   {
   public:
     typedef refType value_type;
+    typedef sub_reference reference;
+    typedef sub_reference FrontResult;
 
     ///Default range is an empty range. Can only be checked for empty.
     reverse_range()

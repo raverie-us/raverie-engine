@@ -1,6 +1,13 @@
 [Version:1]
 DataContent 
 {
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"OperationHistory"
+		}
+	}
 	DataBuilder 
 	{
 		var Name = "HistoryWindowLevel"

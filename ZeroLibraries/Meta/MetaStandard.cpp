@@ -103,6 +103,7 @@ ZilchDefineStaticLibrary(MetaLibrary)
   ZilchInitializeType(ThreadSafeReferenceCounted);
 
   // Meta Components
+  ZilchInitializeType(MetaAttribute);
   ZilchInitializeType(CogComponentMeta);
   ZilchInitializeType(MetaOwner);
   ZilchInitializeType(MetaGroup);
@@ -173,7 +174,6 @@ void MetaLibrary::Initialize()
   RegisterPropertyAttribute(PropertyAttributes::cDeprecatedSerialized);
   RegisterPropertyAttribute(PropertyAttributes::cDisplay)->AllowStatic(true);
   RegisterPropertyAttribute(PropertyAttributes::cDeprecatedEditable)->AllowStatic(true);
-  RegisterPropertyAttribute(PropertyAttributes::cDependency);
   RegisterPropertyAttribute(PropertyAttributes::cRuntimeClone)->AllowStatic(true);
   RegisterPropertyAttributeType(PropertyAttributes::cShaderInput, MetaShaderInput)->AllowMultiple(true);
   RegisterPropertyAttributeType(PropertyAttributes::cRenamedFrom, MetaPropertyRename);

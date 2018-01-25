@@ -21,6 +21,15 @@ namespace Audio
       return true;
   }
 
+  static void CopyIntoBuffer(BufferType* destinationBuffer, const BufferType& sourceBuffer,
+    unsigned sourceStartIndex, unsigned numberOfSamples)
+  {
+    unsigned destIndex = destinationBuffer->Size();
+    destinationBuffer->Resize(destinationBuffer->Size() + numberOfSamples);
+    memcpy(destinationBuffer->Data() + destIndex, sourceBuffer.Data() + sourceStartIndex,
+      sizeof(float) * numberOfSamples);
+  }
+
   //------------------------------------------------------------------------- Audio Channels Manager
 
   class AudioChannelsManager
@@ -138,6 +147,8 @@ namespace Audio
     bool SendMicrophoneInputData;
     // The sample rate used by the audio engine for the output mix
     static const unsigned SystemSampleRate = 48000;
+    // The time increment per audio frame corresponding to the sample rate
+    const double SystemTimeIncrement = 1.0 / 48000.0;
     // The number of frames used to interpolate instant property changes
     static const unsigned  PropertyChangeFrames = (unsigned)(48000 * 0.02f);
     

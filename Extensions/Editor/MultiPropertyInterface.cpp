@@ -30,6 +30,7 @@ Handle GetActingObject(HandleParam componentOrSelection, HandleParam object)
 //---------------------------------------------------------------- MultiProperty
 //******************************************************************************
 MultiPropertyInterface::MultiPropertyInterface(OperationQueue* queue, MetaSelection* selection)
+  : PropertyToUndo(queue)
 {
   mOperationQueue = queue;
   mSelection = selection;
@@ -136,6 +137,30 @@ void MultiPropertyInterface::ChangeProperty(HandleParam object,
 
   if(action == PropertyAction::Commit)
     mOperationQueue->EndBatch();
+}
+
+//******************************************************************************
+void MultiPropertyInterface::MarkPropertyModified(HandleParam object, PropertyPathParam property)
+{
+  mOperationQueue->BeginBatch();
+  forRange(Handle instance, mSelection->All())
+  {
+    Handle actingObject = GetActingObject(object, instance);
+    PropertyToUndo::MarkPropertyModified(actingObject, property);
+  }
+  mOperationQueue->EndBatch();
+}
+
+//******************************************************************************
+void MultiPropertyInterface::RevertProperty(HandleParam object, PropertyPathParam property)
+{
+  mOperationQueue->BeginBatch();
+  forRange(Handle instance, mSelection->All())
+  {
+    Handle actingObject = GetActingObject(object, instance);
+    PropertyToUndo::RevertProperty(actingObject, property);
+  }
+  mOperationQueue->EndBatch();
 }
 
 //******************************************************************************

@@ -39,9 +39,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType, "IndexedHalfEdgeFaceEdgeIndexArrayRange");
   ZilchInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType, "IndexedHalfEdgeMeshFaceArrayRange");
 
-  // Meta Components
-  ZilchInitializeType(RaycasterMetaComposition);
-
   // Events
   ZilchInitializeType(MouseEvent);
   ZilchInitializeType(ViewportMouseEvent);

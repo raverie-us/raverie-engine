@@ -266,8 +266,8 @@ void EditorMain::ShowHotKeyEditor(CommandEvent* event)
   ////widget->SetSize(Pixels(850, 500));
   //widget->TakeFocus();
 
-  Z::gEditor->EditResource(HotKeyManager::GetDefault());
-  //((HotKeyEditor*)widget)->EditResource
+  Widget* widget = Z::gEditor->mManager->ShowWidget("Commands");
+  ((HotKeyEditor*)widget)->DisplayResource();
 }
 
 void EditorMain::ShowOperationHistroy(CommandEvent* event)
@@ -546,7 +546,7 @@ void EditorMain::OnScriptError(DebugEngineEvent* event)
   {
     // At the moment we always pause due to a syntax error or exception
     // If we are live editing, we really want to continue (live edit may need to be a mode)
-    PauseGame();
+    SetGamePaused(true);
 
     if(event->Script)
     {
@@ -834,6 +834,9 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Menus.data"));
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Toolbars.data"));
 
+  // Copy commands from Command.data to the HotKeyCommands DataSource.
+  HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
+
   SetupTools(editorMain);
 
   commands->SetContext(editorMain, ZilchTypeId(Editor));
@@ -852,9 +855,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   BindDocumentationCommands(config, commands);
   BindProjectCommands(config, commands);
   BindContentCommands(config, commands);
-
-  //HotKeyManager *hkManager = HotKeyManager::Instance;// GetSystemObject(HotKeyManager);
-  //hkManager->RegisterSystemCommands(commands->mCommands);
 
   // Listen to the resource system if any unhandled exception or syntax error occurs
   Connect(Z::gResources, Events::UnhandledException, editorMain, &EditorMain::OnScriptError);
@@ -892,7 +892,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   //----------------------------------------------------------------------------
   {
     HotKeyEditor* hotkeyEditor = new HotKeyEditor(editorMain);
-    hotkeyEditor->SetName("CommandListViewer");
+    hotkeyEditor->SetName("Commands");
     hotkeyEditor->SetHideOnClose(true);
     hotkeyEditor->SetSize(Pixels(850, 500));
     editorMain->AddManagedWidget(hotkeyEditor, DockArea::Floating, false);
@@ -900,9 +900,8 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
 
   //----------------------------------------------------------------------------
   {
-    BindCommand("CommandListViewer", ShowHotKeyEditor);
-    // Temporarily disabled until refactor
-    //BindCommand("OperationHistory", ShowOperationHistroy);
+    BindCommand("Commands", ShowHotKeyEditor);
+    BindCommand("OperationHistory", ShowOperationHistroy);
     BindCommand("Animator", ShowAnimator);
     BindCommand("FindNext", ShowFindNext);
     BindCommand("FindAll", ShowFindAll);

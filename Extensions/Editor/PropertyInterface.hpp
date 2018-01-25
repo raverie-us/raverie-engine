@@ -136,6 +136,9 @@ public:
   virtual void ChangeProperty(HandleParam object, PropertyPathParam property,
                               PropertyState& state, PropertyAction::Enum action);
 
+  virtual void MarkPropertyModified(HandleParam object, PropertyPathParam property);
+  virtual void RevertProperty(HandleParam object, PropertyPathParam property);
+
   /// Returns whether or not the value is valid. For example, it could be
   /// invalid if this is a multi-selection and there is a conflict between
   /// the values on multiple objects.

@@ -46,6 +46,9 @@ ZilchDefineType(Hierarchy, builder, type)
   ZeroBindDocumented();
   ZilchBindGetter(Children);
 
+  if(cBindCogChildrenReverseRange)
+    ZilchBindGetter(ChildrenReversed);
+
   type->AddAttribute(ObjectAttributes::cHidden);
   type->Add(new HierarchyComposition());
 }
@@ -167,6 +170,12 @@ void Hierarchy::Detached(AttachmentInfo& info)
 HierarchyList::range Hierarchy::GetChildren()
 {
   return Children.All();
+}
+
+//**************************************************************************************************
+HierarchyList::reverse_range Hierarchy::GetChildrenReversed()
+{
+  return Children.ReverseAll();
 }
 
 //**************************************************************************************************

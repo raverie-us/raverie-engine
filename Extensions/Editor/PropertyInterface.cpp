@@ -126,6 +126,22 @@ void PropertyInterface::ChangeProperty(HandleParam object, PropertyPathParam pro
 }
 
 //******************************************************************************
+void PropertyInterface::MarkPropertyModified(HandleParam object, PropertyPathParam property)
+{
+  BoundType* objectType = object.StoredType;
+  if (MetaDataInheritance* inheritance = objectType->HasInherited<MetaDataInheritance>())
+    inheritance->SetPropertyModified(object, property, true);
+}
+
+//******************************************************************************
+void PropertyInterface::RevertProperty(HandleParam object, PropertyPathParam property)
+{
+  BoundType* objectType = object.StoredType;
+  if (MetaDataInheritance* inheritance = objectType->HasInherited<MetaDataInheritance>())
+    inheritance->RevertProperty(object, property);
+}
+
+//******************************************************************************
 PropertyState PropertyInterface::GetValue(HandleParam object, PropertyPathParam property)
 {
   Any currValue = property.GetValue(object);

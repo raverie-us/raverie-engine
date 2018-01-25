@@ -141,7 +141,7 @@ namespace Audio
 
     if (DecodeThread.IsValid())
     {
-      AtomicSet32(&StopDecodeThread, 1);
+      Zero::AtomicStore(&StopDecodeThread, 1);
       DecodeThreadEvent.Signal();
       DecodeThread.WaitForCompletion();
       DecodeThread.Close();
@@ -255,6 +255,11 @@ namespace Audio
     unsigned outputChannels = AudioIO->GetStreamChannels(StreamTypes::Output);
     // Number of frames in the output
     unsigned outputFrames = samplesNeeded / outputChannels;
+
+    // Check for resampling and update resample factor if necessary
+    // (this can change at any time if the audio output device changes)
+    CheckForResampling();
+
     // Number of frames in the mix (will be different if resampling)
     unsigned mixFrames = outputFrames;
     if (Resampling)
@@ -332,7 +337,7 @@ namespace Audio
         if (outputChannels == 6 || outputChannels == 8)
         {
           float monoSample = frame.GetMonoValue();
-          LowPass->ProcessSample(&monoSample, &frame.Samples[3], 1);
+          LowPass->ProcessFrame(&monoSample, &frame.Samples[3], 1);
         }
 
         // Copy this frame of samples to the output buffer
@@ -353,6 +358,8 @@ namespace Audio
     // If shutting down, wait for volume to ramp down to zero
     if (ShuttingDownThreaded)
     {
+      VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, outputFrames);
+
       // Volume will interpolate down to zero
       for (unsigned i = 0; i < MixedOutput.Size(); i += outputChannels)
       {
@@ -362,18 +369,14 @@ namespace Audio
           MixedOutput[i + j] *= volume;
       }
 
-      // If we reached zero volume, it's okay to shut down
-      if (VolumeInterpolatorThreaded.Finished())
-        return false;
+      // Copy the data to the ring buffer
+      AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
+
+      return false;
     }
 
     // Copy the data to the ring buffer
     AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
-
-    // Tag compressor functionality is temporarily disabled to fix a crash so no longer calling
-    // the UpdateCompressorInput function on all objects in TagListThreaded.
-    // Needs a fairly complicated refactor to actually fix the issue 
-    // (variable size mixing when using another tag for the compressor)
 
     // Still running, return true
     return true;
@@ -402,7 +405,7 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::DecodeLoopThreaded()
   {
-    while (AtomicCompareExchange32(&StopDecodeThread, 0, 0) == 0)
+    while (Zero::AtomicCompareExchangeBool(&StopDecodeThread, 0, 0))
     {
       Zero::Functor* function;
       while (DecodingQueue.Read(function))
@@ -525,7 +528,6 @@ namespace Audio
   void AudioSystemInternal::ShutDownThreaded()
   {
     ShuttingDownThreaded = true;
-    VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, 1000 * gAudioSystem->SystemChannelsThreaded);
   }
 
   //************************************************************************************************
@@ -555,7 +557,7 @@ namespace Audio
   {
     unsigned outputSampleRate = AudioIO->GetStreamSampleRate(StreamTypes::Output);
 
-    if (!Resampling && (SystemSampleRate != outputSampleRate))
+    if (SystemSampleRate != outputSampleRate)
     {
       Resampling = true;
       OutputResampling.SetFactor((double)SystemSampleRate / (double)outputSampleRate);

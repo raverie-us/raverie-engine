@@ -54,9 +54,6 @@ public:
   // We need to periodically pump the debugger for messages
   void OnEngineUpdate(Event* event);
 
-  static void ValidateAttribute(Attribute& attribute, CodeLocation& location, HashSet<String>& allowedAttributes, StringParam attributeClassification, Project* buildingProject);
-  static void ValidateAttributes(Array<Attribute>& attributes, CodeLocation& location, HashSet<String>& allowedAttributes, StringParam attributeClassification, Project* buildingProject);
-  static void CheckDependencies(BoundType* classType, Property* property, Project* buildingProject);
   static void DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location);
   static void DispatchZeroZilchError(const CodeLocation& location, StringParam message, Project* buildingProject);
   

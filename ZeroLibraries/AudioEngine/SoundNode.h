@@ -78,13 +78,15 @@ namespace Audio
     void SendEventToExternalData(const AudioEventTypes::Enum eventType, void* data);
     // Should be implemented by nodes if they keep track of data per listeners
     virtual void RemoveListener(ListenerNode* listener) {}
+    // Returns the sum of all volumes from outputs. Will return 0.0 by default. The output
+    // node will return 1.0. Nodes which modify volume should implement this function
+    // and multiply their volume with the return value.
+    virtual float GetVolumeChangeFromOutputs();
     // Used for InList
     Zero::Link<SoundNode> link;
 
   protected:
     virtual ~SoundNode();
-    // Returns -1 by default. Attenuator nodes return their current attenuated volume.
-    virtual float GetAttenuatedVolume();
     // Handles getting the output from the passed-in sound node
     bool Evaluate(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener);
     // Adds the output from all input nodes to the InputSamples buffer
@@ -94,7 +96,7 @@ namespace Audio
     bool HasExternalInterface();
     // Get this node's threaded or non-threaded counterpart
     SoundNode* GetSiblingNode();
-    // Sets the sibling node variables for both this node and it's threaded counterpart
+    // Sets the sibling node variables for both this node and its threaded counterpart
     void SetSiblingNodes(SoundNode* threadedNode, Zero::Status& previousStatus);
     // Returns the pointer to the node's external interface
     ExternalNodeInterface* GetExternalInterface() { return ExternalData; }
@@ -104,7 +106,7 @@ namespace Audio
     // If true, this node is running on the mix thread. If false, it is on the game thread.
     const bool Threaded;
     // A buffer to hold the output of all input nodes
-    Zero::Array<float> InputSamples; 
+    BufferType InputSamples;
 
   private:
     // Must be implemented to provide the output of this sound node
@@ -135,7 +137,7 @@ namespace Audio
     // Version number of the mixed output
     unsigned Version;
     // Saved output for a mix version
-    Zero::Array<float> MixedOutput;
+    BufferType MixedOutput;
     // Number of channels in the mixed output
     unsigned NumMixedChannels;
     // The listener used for the mixed output
@@ -153,7 +155,6 @@ namespace Audio
     
     friend class AudioSystemInternal;
     friend class AudioSystemInterface;
-    friend class SoundInstanceNode;
   };
 
   //------------------------------------------------------------------------------------ Output Node
@@ -164,7 +165,7 @@ namespace Audio
   public:
     OutputNode(Zero::Status& status, Zero::StringParam name, ExternalNodeInterface* extInt, bool isThreaded);
 
-    float GetAttenuatedVolume() override;
+    float GetVolumeChangeFromOutputs() override;
 
   private:
     ~OutputNode() {}

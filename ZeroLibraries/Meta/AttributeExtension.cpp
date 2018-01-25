@@ -200,10 +200,16 @@ void AttributeExtension::Validate(Status& status, ReflectionObject* object, Attr
   if (status.Failed())
     return;
 
-  Handle metaComponent = AllocateMetaComponent(object);
-  if(metaComponent.IsNotNull())
+  HandleOf<MetaAttribute> metaComponent = AllocateMetaComponent(object);
+  if (metaComponent.IsNotNull())
   {
     ValidateParameters(status, metaComponent, attribute);
+
+    if (status.Succeeded())
+    {
+      MetaAttribute* attribute = metaComponent;
+      attribute->PostProcess(status, object);
+    }
   }
   else
   {

@@ -36,6 +36,10 @@ public:
   /// called right before rendering.
   void Update();
 
+  /// RootWidget overrides this to account for OnTop widgets.
+  UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr,
+                      bool interactiveOnly = false) override;
+
   //--------------------------------------------------------------------------- Keyboard Events
   void PerformKeyDown(Keys::Enum key);
   void PerformKeyUp(Keys::Enum key);
@@ -85,8 +89,10 @@ public:
   void Render(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass);
 
   //-------------- Internals
+  typedef Pair<UiWidget*, Vec4> CachedFloatingWidget;
   void RenderWidgets(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
-                     MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform);
+                     MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform,
+                     Array<CachedFloatingWidget>* floatingWidgets);
 
   void AddGraphical(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
                     MaterialBlock* renderPass, Cog* widgetCog, StencilDrawMode::Enum stencilMode,
@@ -172,6 +178,9 @@ public:
 
   /// The widget that currently has input captured.
   UiWidgetHandle mCapturedWidget;
+
+  /// All widgets marked on top so we can walk these first for picking.
+  Array<UiWidget*> mOnTopWidgets;
 };
 
 }//namespace Zero

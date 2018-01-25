@@ -30,6 +30,7 @@ namespace Audio
     ~VolumeNode() {}
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
+    float GetVolumeChangeFromOutputs() override;
 
     struct Data
     {
@@ -80,6 +81,7 @@ namespace Audio
     ~PanningNode() {}
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
+    float GetVolumeChangeFromOutputs() override;
 
     struct Data
     {

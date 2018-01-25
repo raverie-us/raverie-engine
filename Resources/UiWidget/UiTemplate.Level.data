@@ -38,10 +38,6 @@ Level
 			var HighlightInterval = 10
 			var FollowEditorCamera = false
 		}
-		UiEditorExtension 
-		{
-			var HighlightColor = Real4{1, 0, 0, 1}
-		}
 	}
 	Cog [ContextId:2]
 	{
@@ -119,7 +115,7 @@ Level
 		var Name = "GameCamera"
 		Transform 
 		{
-			var Translation = Real3{250, 100, 10}
+			var Translation = Real3{250, -250, 10}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
 		}
@@ -136,7 +132,7 @@ Level
 		{
 			var RenderInEditor = false
 			var RenderInGame = true
-			var RenderOrder = 0
+			var RenderOrder = 1
 			var CameraPath = CogPath
 			{
 				var Path = "."
@@ -181,7 +177,7 @@ Level
 			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 60
-			var Size = 20
+			var Size = 500
 		}
 		SoundListener 
 		{
@@ -232,7 +228,7 @@ Level
 			var Interactive = true
 			var InLayout = true
 			var ClipChildren = true
-			var CanTakeFocus = false
+			var CanTakeFocus = true
 			var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
 			var HierarchyColor = Real4{1, 1, 1, 1}
 			var SizePolicyX = UiSizePolicy.Auto
@@ -257,6 +253,10 @@ Level
 			var ClearColor = Real4{0, 0, 0, 0}
 			var EditorDebugDraw = true
 			var GameDebugDraw = true
+		}
+		UiEditorExtension 
+		{
+			var HighlightColor = Real4{1, 0, 0, 1}
 		}
 		UiStackLayout 
 		{

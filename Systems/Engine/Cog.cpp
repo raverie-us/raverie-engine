@@ -9,6 +9,8 @@
 namespace Zero
 {
 
+const bool cBindCogChildrenReverseRange = false;
+
 //------------------------------------------------------------------------------------------ Helpers
 void SetCogFlag(Cog* cog, CogFlags::Enum flag, cstr flagName, bool state);
 bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
@@ -100,6 +102,7 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindGetterSetter(EditorViewportHidden);
   ZilchBindGetterSetter(ObjectViewHidden);
   ZilchBindGetterSetter(Locked);
+  ZilchBindGetter(ChildCount);
 
   ZilchBindMethod(Destroy);
   ZilchBindMethod(Clone);
@@ -121,12 +124,16 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(FindRoot);
   ZilchBindGetter(Children);
 
+  if(cBindCogChildrenReverseRange)
+    ZilchBindGetter(ChildrenReversed);
+
   ZilchBindMethod(AttachToPreserveLocal);
   ZilchBindMethod(AttachTo);
   ZilchBindMethod(DetachPreserveLocal);
   ZilchBindMethod(Detach);
 
   ZilchBindMethod(FindChildByName);
+  ZilchBindMethod(FindDirectChildByName);
   ZilchBindMethod(FindAllChildrenByName);
 
   ZilchBindMethod(IsDescendant);
@@ -998,6 +1005,16 @@ HierarchyList::range Cog::GetChildren()
 }
 
 //**************************************************************************************************
+HierarchyList::reverse_range Cog::GetChildrenReversed( )
+{
+  Hierarchy* hierarchy = this->has(Hierarchy);
+  if(hierarchy)
+    return hierarchy->GetChildrenReversed();
+
+  return HierarchyList::reverse_range();
+}
+
+//**************************************************************************************************
 uint Cog::GetChildCount()
 {
   uint count = 0;
@@ -1253,34 +1270,39 @@ void Cog::Detach()
 //**************************************************************************************************
 Cog* Cog::FindChildByName(StringParam name)
 {
-  // Attempt to grab the hierarchy component
-  Hierarchy* hierarchy = this->has(Hierarchy);
-
-  // If we have a hierarchy
-  if (hierarchy != nullptr)
+  // Loop through all the children
+  forRange(Cog& child, GetChildren())
   {
-    // Loop through all the children
-    forRange(Cog& child, hierarchy->Children.All())
+    // Get the name of the object and compare it
+    if (child.GetName() == name)
     {
-      // Get the name of the object and compare it
-      if (child.GetName() == name)
-      {
-        // It's the object we wanted!
-        return &child;
-      }
-      else
-      {
-        // Otherwise, search the children of this object...
-        Cog* found = child.FindChildByName(name);
+      // It's the object we wanted!
+      return &child;
+    }
+    else
+    {
+      // Otherwise, search the children of this object...
+      Cog* found = child.FindChildByName(name);
 
-        // If we found it... return it
-        if (found != nullptr)
-          return found;
-      }
+      // If we found it... return it
+      if (found != nullptr)
+        return found;
     }
   }
 
   // Otherwise, we found nothing in this hierarchy
+  return nullptr;
+}
+
+//**************************************************************************************************
+Cog* Cog::FindDirectChildByName(StringParam name)
+{
+  forRange(Cog& child, GetChildren())
+  {
+    if (child.GetName() == name)
+      return &child;
+  }
+
   return nullptr;
 }
 
@@ -1466,23 +1488,63 @@ void Cog::ReplaceChild(Cog* oldChild, Cog* newChild)
 //**************************************************************************************************
 uint Cog::GetHierarchyIndex()
 {
+  if (GetMarkedForDestruction())
+  {
+    DoNotifyExceptionAssert("Invalid Operation", "Cannot get Hierarchy Index of Cog that is marked for destruction");
+    return 0;
+  }
+
   if (HierarchyList* list = GetParentHierarchyList())
-    return list->FindIndex(this);
+  {
+    size_t index = 0;
+    forRange(Cog& cog, list->All())
+    {
+      // Don't account for Cogs marked for destruction
+      if (cog.GetMarkedForDestruction())
+        continue;
+
+      if (&cog == this)
+        return index;
+
+      ++index;
+    }
+  }
   return 0;
 }
 
 //**************************************************************************************************
-void Cog::PlaceInHierarchy(uint index)
+void Cog::PlaceInHierarchy(uint destinationIndex)
 {
   HierarchyList* list = GetParentHierarchyList();
-  uint currIndex = list->FindIndex(this);
+  uint currIndex = GetHierarchyIndex();
   list->Erase(this);
 
   // We have to compensate for removing ourself from the list
-  if (currIndex < index)
-    list->InsertAt(index - 1, this);
+  if (currIndex < destinationIndex)
+    destinationIndex -= 1;
+  
+  if(destinationIndex == 0)
+  {
+    list->PushFront(this);
+  }
   else
-    list->InsertAt(index, this);
+  {
+    size_t currentIndex = 0;
+    forRange(Cog& cog, list->All())
+    {
+      // Don't account for Cogs marked for destruction
+      if (cog.GetMarkedForDestruction())
+        continue;
+
+      ++currentIndex;
+
+      if (currentIndex == destinationIndex)
+      {
+        list->InsertAfter(&cog, this);
+        break;
+      }
+    }
+  }
 
   Event eventToSend;
   if (GetParent())

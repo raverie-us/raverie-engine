@@ -67,7 +67,7 @@ namespace Audio
 
     // Apply filter
     for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-      filter->ProcessSample(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+      filter->ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
 
     AddBypass(outputBuffer);
 
@@ -189,7 +189,7 @@ namespace Audio
 
     // Apply filter
     for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-      filter->ProcessSample(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+      filter->ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
 
     AddBypass(outputBuffer);
 
@@ -311,7 +311,7 @@ namespace Audio
 
     // Apply filter
     for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-      filter->ProcessSample(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+      filter->ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
 
     AddBypass(outputBuffer);
 
@@ -520,7 +520,7 @@ namespace Audio
   {
     Delay->SetDelayMSec(0);
     Delay->SetFeedback(feedback);
-    Delay->SetWetLevel(50.0f);
+    Delay->SetWetLevel(0.5f);
     LFO->SetFrequency(frequency);
     LFO->SetPolarity(Oscillator::Unipolar);
     LFO->SetNoteOn(true);
@@ -703,7 +703,7 @@ namespace Audio
   {
     Delay->SetDelayMSec(minDelay);
     Delay->SetFeedback(feedback);
-    Delay->SetWetLevel(50.0f);
+    Delay->SetWetLevel(0.5f);
     LFO->SetFrequency(frequency);
     LFO->SetPolarity(Oscillator::Unipolar);
     LFO->SetNoteOn(true);

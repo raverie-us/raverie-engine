@@ -9,6 +9,8 @@
 namespace Zero
 {
 
+extern const bool cBindCogChildrenReverseRange;
+
 //------------------------------------------------------------------------------------------- Events
 namespace Events
 {
@@ -214,7 +216,11 @@ public:
   Cog* FindRoot();
   /// Returns a range of all direct children on this Cog.
   HierarchyList::range GetChildren();
-  /// Returns the amount of children on this Cog.
+  /// Returns a range of all direct children on this Cog, in reverse order.
+  HierarchyList::reverse_range GetChildrenReversed();
+
+  /// Returns the amount of children on this Cog. Note that this function has to iterate over
+  /// all children to calculate the count.
   uint GetChildCount();
 
   /// Attach to a parent object.
@@ -228,6 +234,8 @@ public:
 
   /// Depth first search of all children.
   Cog* FindChildByName(StringParam name);
+  /// Checks only direct children.
+  Cog* FindDirectChildByName(StringParam name);
   /// Returns a range of all children with the given name.
   HierarchyNameRange FindAllChildrenByName(StringParam name);
   /// Returns the child object with the given id. This is only checks direct children.
@@ -256,12 +264,14 @@ public:
   void ReplaceChild(Cog* oldChild, Cog* newChild);
 
   /// Returns this Cogs index in the parents children list. If it doesn't have a parent, it will
-  /// return the index in the Space's object list.
+  /// return the index in the Space's object list. Note that this ignores siblings that
+  /// are marked for destruction.
   uint GetHierarchyIndex();
 
   //----- Internals
   /// Moves the object to the given index in the parents child list. This currently does no
-  /// bounds checking as an optimization.
+  /// bounds checking as an optimization. Note that this ignores siblings that
+  /// are marked for destruction.
   void PlaceInHierarchy(uint index);
   Cog* FindLastDeepestChild();
   /// Returns the list of all children.

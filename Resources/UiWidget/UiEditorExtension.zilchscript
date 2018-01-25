@@ -9,14 +9,28 @@
 [RunInEditor]
 class UiEditorExtension : ZilchComponent
 {
+  [Dependency] var UiRootWidget : UiRootWidget;
   [Property] var HighlightColor : Real4 = Real4(1,0,0,1);
   
   //***************************************************************************
   function Initialize(init : CogInitializer)
   {
+    Zero.Connect(this.Space, Events.SelectToolPreSelect, this.OnSelectToolPreSelect);
     Zero.Connect(this.Space, Events.MetaDrop, this.OnMetaDrop);
     Zero.Connect(this.Space, Events.MetaDropTest, this.OnMetaDrop);
     Zero.Connect(this.Space, Events.MetaDropUpdate, this.OnMetaDrop);
+  }
+
+  //***************************************************************************
+  function OnSelectToolPreSelect(event : ViewportMouseEvent)
+  {
+    var hitWidget = this.GetHitCog(event.ToWorldZPlane(0));
+    if(hitWidget != null)
+    {
+      Zero.Editor.Selection.SelectOnly(hitWidget);
+      Zero.Editor.Selection.FinalSelectionChanged();
+      event.HandledEvent = true;
+    }
   }
   
   //***************************************************************************
@@ -26,7 +40,7 @@ class UiEditorExtension : ZilchComponent
     if(archetype == null)
       return;
   
-    var mouseOver = this.GetAttachObject(event);
+    var mouseOver = this.GetHitCog(event.ViewportMouseEvent.ToWorldZPlane(0));
     if(mouseOver != null)
     {
       if(event.Testing)
@@ -66,28 +80,12 @@ class UiEditorExtension : ZilchComponent
   }
   
   //***************************************************************************
-  function GetAttachObject(event : MetaDropEvent) : Cog
+  function GetHitCog(worldPoint : Real3) : Cog
   {
-    var obj = event.MouseOverObject as Cog;
-    
-    if(obj == null)
-      return null;
-    
-    var rootWidget : UiWidget = null;
-    
-    if(obj.UiWidget != null)
-      rootWidget = obj.UiWidget.Root;
-    
-    if(rootWidget == null)
-      return null;
-    
-    var worldPoint = event.ViewportMouseEvent.HitPosition;
-    var hitWidget = rootWidget.Owner.UiWidget.CastPoint(worldPoint.XY, null, false);
-
-    //if(obj.UiLayout == null)
-      //return this.GetAttachObject(obj.Parent);
-        
-    return obj;
+    var hitWidget = this.UiRootWidget.CastPoint(worldPoint.XY, null, false);
+    if(hitWidget != null)
+      return hitWidget.Owner;
+    return null;
   }
   
   //***************************************************************************

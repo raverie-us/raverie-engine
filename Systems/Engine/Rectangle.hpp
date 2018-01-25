@@ -51,8 +51,9 @@ struct Thickness
 
 //---------------------------------------------------------------------------------------- Rectangle
 struct Rectangle;
-typedef const Rectangle& UiRectParam;
+typedef const Rectangle& RectangleParam;
 
+/// Two dimensional, unrotated rectangle.
 struct Rectangle
 {
   ZilchDeclareType(TypeCopyMode::ValueType);
@@ -61,18 +62,46 @@ struct Rectangle
   static Rectangle CenterAndSize(Vec2Param point, Vec2Param size);
   static Rectangle MinAndMax(Vec2Param min, Vec2Param max);
 
-  bool operator==(UiRectParam rhs) const;
+  bool operator==(RectangleParam rhs) const;
   
   /// Translates the rectangle by the passed in vector.
   void Translate(Vec2Param translation);
 
+  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
+  /// result in the Aabb around the rotated rectangle.
+  void Transform(Mat2Param transform);
+
+  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
+  /// result in the Aabb around the rotated rectangle. The given transform is assumed to be a
+  /// 2D transformation.
+  void Transform(Mat3Param transform);
+
+  /// Takes a full 3D transformation matrix and brings it down to a 2D matrix.
+  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
+  /// result in the Aabb around the rotated rectangle.
+  void Transform(Mat4Param transform);
+
+  /// Returns a copy of ourself transformed by the given matrix. Note that Rectangle is non-rotated,
+  /// so this will result in the Aabb around the rotated rectangle.
+  Rectangle Transformed(Mat2Param transform) const;
+
+  /// Returns a copy of ourself transformed by the given matrix. Note that Rectangle is non-rotated,
+  /// so this will result in the Aabb around the rotated rectangle. The given transform is assumed
+  /// to be a 2D transformation.
+  Rectangle Transformed(Mat3Param transform) const;
+
+  /// Takes a full 3D transformation matrix and brings it down to a 2D matrix.
+  Rectangle Transformed(Mat4Param transform) const;
+
   Vec2 GetSize() const;
   void SetSize(Location::Enum origin, Vec2Param size);
+  void ResizeToPoint(Location::Enum location, Vec2Param position);
+  void ResizeToPoint(Location::Enum location, Vec2Param position, Vec2Param minSize);
   
   void Expand(Vec2Param point);
 
   bool Contains(Vec2Param point) const;
-  bool Overlap(UiRectParam other) const;
+  bool Overlap(RectangleParam other) const;
 
   void RemoveThickness(const Thickness& thickness);
 

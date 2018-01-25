@@ -362,7 +362,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void LowPassFilter::ProcessSample(const float* input, float* output, const unsigned numChannels)
+  void LowPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
   {
     if (CutoffFrequency > 20000.0f)
     {
@@ -430,7 +430,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void HighPassFilter::ProcessSample(const float* input, float* output, const unsigned numChannels)
+  void HighPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
   {
     if (CutoffFrequency < 20.0f)
       memcpy(output, input, sizeof(float) * numChannels);
@@ -481,7 +481,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void BandPassFilter::ProcessSample(const float* input, float* output, const unsigned numChannels)
+  void BandPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
   {
     for (unsigned i = 0; i < numChannels; ++i)
     {
@@ -1154,6 +1154,37 @@ namespace Audio
   }
 
   //************************************************************************************************
+  Equalizer::Equalizer(const Equalizer& copy) :
+    mLowPassGain(copy.mLowPassGain),
+    mHighPassGain(copy.mHighPassGain),
+    mBand1Gain(copy.mBand1Gain),
+    mBand2Gain(copy.mBand2Gain),
+    mBand3Gain(copy.mBand3Gain)
+  {
+    SetFilterData();
+
+    Equalizer& other = const_cast<Equalizer&>(copy);
+    if (!other.LowPassInterpolator.Finished())
+    {
+      LowPassInterpolator.SetValues(other.LowPassInterpolator.GetStartValue(),
+        other.LowPassInterpolator.GetEndValue(), other.LowPassInterpolator.GetTotalFrames());
+      LowPassInterpolator.JumpForward(other.LowPassInterpolator.GetCurrentFrame());
+      HighPassInterpolator.SetValues(other.HighPassInterpolator.GetStartValue(),
+        other.HighPassInterpolator.GetEndValue(), other.HighPassInterpolator.GetTotalFrames());
+      HighPassInterpolator.JumpForward(other.HighPassInterpolator.GetCurrentFrame());
+      Band1Interpolator.SetValues(other.Band1Interpolator.GetStartValue(),
+        other.Band1Interpolator.GetEndValue(), other.Band1Interpolator.GetTotalFrames());
+      Band1Interpolator.JumpForward(other.Band1Interpolator.GetCurrentFrame());
+      Band2Interpolator.SetValues(other.Band2Interpolator.GetStartValue(),
+        other.Band2Interpolator.GetEndValue(), other.Band2Interpolator.GetTotalFrames());
+      Band2Interpolator.JumpForward(other.Band2Interpolator.GetCurrentFrame());
+      Band3Interpolator.SetValues(other.Band3Interpolator.GetStartValue(),
+        other.Band3Interpolator.GetEndValue(), other.Band3Interpolator.GetTotalFrames());
+      Band3Interpolator.JumpForward(other.Band3Interpolator.GetCurrentFrame());
+    }
+  }
+
+  //************************************************************************************************
   void Equalizer::ProcessBuffer(const float* input, float* output, const unsigned numChannels, 
     const unsigned bufferSize)
   {
@@ -1161,31 +1192,31 @@ namespace Audio
 
     for (unsigned i = 0; i < bufferSize; i += numChannels)
     {
-      LowPass.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      LowPass.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!LowPassInterpolator.Finished())
         mLowPassGain = LowPassInterpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
         output[i + j] = resultSamples[j] * mLowPassGain;
 
-      Band1.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      Band1.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!Band1Interpolator.Finished())
         mBand1Gain = Band1Interpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
         output[i + j] += resultSamples[j] * mBand1Gain;
 
-      Band2.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      Band2.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!Band2Interpolator.Finished())
         mBand2Gain = Band2Interpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
         output[i + j] += resultSamples[j] * mBand2Gain;
 
-      Band3.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      Band3.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!Band3Interpolator.Finished())
         mBand3Gain = Band3Interpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
         output[i + j] += resultSamples[j] * mBand3Gain;
 
-      HighPass.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      HighPass.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!HighPassInterpolator.Finished())
         mHighPassGain = HighPassInterpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)

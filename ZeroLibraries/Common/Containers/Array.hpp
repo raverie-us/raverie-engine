@@ -234,13 +234,9 @@ public:
     if(&other == this)
       return;
 
-    Deallocate();
+    Swap(*other);
 
-    mData     = other->mData;
-    mCapacity = other->mCapacity;
-    mSize     = other->mSize;
-
-    other->ReleaseData();
+    other->Clear();
   }
 
   /// Comparison Operators

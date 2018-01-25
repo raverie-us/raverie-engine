@@ -10,6 +10,7 @@
 class UiRenderer : ZilchComponent
 {
   [Dependency] var UiRootWidget : UiRootWidget;
+  [Dependency] var Sprite : Sprite;
   
   [Property] var ClearColor : Real4 = Real4(0);
   
@@ -30,6 +31,10 @@ class UiRenderer : ZilchComponent
   //***************************************************************************
   function OnRenderTasksUpdate(event : RenderTasksEvent)
   {
+    // The Sprite must be visible for Reactive. This could be removed and
+    // the Reactive system could be extended to directly find the root widget
+    this.Sprite.Visible = true;
+    
     var size = event.ViewportSize;
     
     this.ResizeToViewport(size, event.CameraViewportCog.CameraViewport);

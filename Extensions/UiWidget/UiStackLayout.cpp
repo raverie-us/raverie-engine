@@ -47,6 +47,7 @@ int GetSign(UiStackLayoutDirection::Enum direction)
 //******************************************************************************
 ZilchDefineType(UiStackLayout, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindComponent();
   ZeroBindInterface(UiLayout);
   ZilchBindGetterSetterProperty(StackDirection);
@@ -171,8 +172,8 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   // Flex ratio
   float flexRatio = ComputeFlexRatio(fixedSize, totalFlex, flexMinSize, totalSize);
 
-  // When we all the flex objects can't be evenly distributed within the size
-  // allocated for flex objects, we need to Assign them slightly "incorrect" sizes.
+  // When all the flex objects can't be evenly distributed within the size
+  // allocated for flex objects, we need to assign them slightly "incorrect" sizes.
   // Example:
   // We have 300 pixels to Assign to two widgets (both with a flex ratio of 1).
   // There is a 1 pixel spacing (now 299 pixels for the flex widgets).

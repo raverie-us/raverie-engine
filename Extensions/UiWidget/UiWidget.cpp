@@ -23,6 +23,7 @@ DefineEvent(UiPostUpdate);
  //**************************************************************************************************
 ZilchDefineType(UiTransformUpdateEvent, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindGetterProperty(RootWidget);
 }
 
@@ -32,10 +33,25 @@ UiRootWidget* UiTransformUpdateEvent::GetRootWidget()
   return mRootWidget;
 }
 
+//---------------------------------------------------------------------------------------- Dock Mode
+namespace UiDockMode
+{
+
+//**************************************************************************************************
+uint GetAxis(UiDockMode::Enum mode)
+{
+  if (mode == UiDockMode::Top || mode == UiDockMode::Bottom)
+    return 1;
+  return 0;
+}
+
+}//namespace DockMode
+
 //--------------------------------------------------------------------- Ui Widget Cast Results Range
 //**************************************************************************************************
 ZilchDefineType(UiWidgetCastResultsRange, builder, type)
 {
+  ZeroBindDocumented();
   // METAREFACTOR - range type?
   //BindAsRangeType();
   ZilchBindMethod(Empty);
@@ -92,6 +108,7 @@ uint UiWidgetCastResultsRange::Size()
 //**************************************************************************************************
 ZilchDefineType(UiWidget, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
@@ -105,12 +122,13 @@ ZilchDefineType(UiWidget, builder, type)
   ZilchBindGetterSetterProperty(Active);
   ZilchBindGetterSetterProperty(Visible);
   ZilchBindGetterSetterProperty(Interactive);
+  ZilchBindGetterSetterProperty(OnTop);
   ZilchBindGetterSetterProperty(LocalTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(WorldTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Size)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
 
-  ZilchBindGetterProperty(LocalRectangle);
-  ZilchBindGetterProperty(WorldRectangle);
+  ZilchBindGetterSetter(LocalRectangle);
+  ZilchBindGetterSetter(WorldRectangle);
 
   ZilchBindMethod(SetLocalLocation);
   ZilchBindMethod(SetWorldLocation);
@@ -188,6 +206,13 @@ ZilchDefineType(UiWidget, builder, type)
 }
 
 //**************************************************************************************************
+UiWidget::~UiWidget()
+{
+  // This will remove us from the the root widget on top list if we're in it
+  SetOnTop(false);
+}
+
+//**************************************************************************************************
 void UiWidget::Serialize(Serializer& stream)
 {
   // Serialize flags
@@ -223,6 +248,13 @@ void UiWidget::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
   ConnectThisTo(GetOwner(), Events::PropertyModified, OnPropertyModified);
   ConnectThisTo(GetOwner(), Events::PropertyModifiedIntermediate, OnPropertyModified);
+
+  // Add ourself to the roots on top list for picking
+  if (GetOnTop())
+  {
+    if(UiRootWidget* root = GetRoot())
+      root->mOnTopWidgets.PushBack(this);
+  }
 
   // If we're dynamically added, we need to let our parent know that it needs
   // to update. Unfortunately, this means that when the Ui is created, the entire
@@ -353,6 +385,24 @@ void UiWidget::SizeToContents()
 }
 
 //**************************************************************************************************
+void UiWidget::SizeToContentsIfAuto()
+{
+  bool autoX = (GetSizePolicyX() == UiSizePolicy::Auto);
+  bool autoY = (GetSizePolicyY() == UiSizePolicy::Auto);
+
+  if(autoX || autoY)
+  {
+    Vec2 minSize = GetMinSize();
+    Vec2 size = GetSize();
+
+    size.x = Math::Lerp(size.x, minSize.x, autoX);
+    size.y = Math::Lerp(size.y, minSize.y, autoY);
+
+    SetSize(size);
+  }
+}
+
+//**************************************************************************************************
 UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool interactiveOnly)
 {
   // Check to see if it's ignoring this widget or any children
@@ -360,7 +410,8 @@ UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool inter
     return nullptr;
 
   // All reasons a Widget should not be picked
-  if(!GetActive() || !GetVisible() || GetOwner()->GetMarkedForDestruction())
+  bool destroyed = GetOwner()->GetMarkedForDestruction();
+  if(!GetActive() || !GetVisible() || destroyed || GetOnTop())
     return nullptr;
 
   // Check whether or not the position is within our rect
@@ -391,7 +442,7 @@ UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool inter
 }
 
 //**************************************************************************************************
-void CastRectInternal(UiWidget* widget, UiRectParam worldRect, UiWidget* ignore, bool interactiveOnly,
+void CastRectInternal(UiWidget* widget, RectangleParam worldRect, UiWidget* ignore, bool interactiveOnly,
                       UiWidgetArray& overlapping)
 {
   // Skip ignored widget
@@ -416,12 +467,20 @@ void CastRectInternal(UiWidget* widget, UiRectParam worldRect, UiWidget* ignore,
 }
 
 //**************************************************************************************************
-UiWidgetCastResultsRange UiWidget::CastRect(UiRectParam worldRect, UiWidget* ignore, bool interactiveOnly)
+UiWidgetCastResultsRange UiWidget::CastRect(RectangleParam worldRect, UiWidget* ignore, bool interactiveOnly)
 {
   UiWidgetArray overlapping;
   overlapping.Reserve(15);
   CastRectInternal(this, worldRect, ignore, interactiveOnly, overlapping);
   return UiWidgetCastResultsRange(overlapping);
+}
+
+//**************************************************************************************************
+Rectangle UiWidget::GetBodyRectangle()
+{
+  Vec2 offset = mArea->OffsetOfOffset(Location::BottomLeft);
+  Vec2 size = GetSize();
+  return Rectangle::PointAndSize(offset * size, size);
 }
 
 //**************************************************************************************************
@@ -431,9 +490,23 @@ Rectangle UiWidget::GetLocalRectangle()
 }
 
 //**************************************************************************************************
+void UiWidget::SetLocalRectangle(RectangleParam rectangle)
+{
+  SetLocalTopLeft(rectangle.GetTopLeft());
+  SetSize(rectangle.GetSize());
+}
+
+//**************************************************************************************************
 Rectangle UiWidget::GetWorldRectangle()
 {
   return Rectangle::PointAndSize(GetWorldBottomLeft(), GetSize());
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldRectangle(RectangleParam rectangle)
+{
+  SetWorldTopLeft(rectangle.GetTopLeft());
+  SetSize(rectangle.GetSize());
 }
 
 //**************************************************************************************************
@@ -734,9 +807,7 @@ void UiWidget::Update(UiTransformUpdateEvent* e)
     // Update our layout if it exists
     if(UiLayout* layout = GetOwner()->has(UiLayout))
     {
-      Vec2 offset = mArea->OffsetOfOffset(Location::BottomLeft);
-      Vec2 size = GetSize();
-      Rectangle layoutData = Rectangle::PointAndSize(offset * size, size);
+      Rectangle layoutData = GetBodyRectangle();
       layout->DoLayout(layoutData, e);
     }
     else
@@ -744,8 +815,11 @@ void UiWidget::Update(UiTransformUpdateEvent* e)
       // Update our active children
       forRange(UiWidget& child, GetChildren())
       {
-        if(child.GetActive())
+        if (child.GetActive())
+        {
+          child.SizeToContentsIfAuto();
           child.Update(e);
+        }
       }
     }
 
@@ -914,7 +988,7 @@ Vec2 UiWidget::GetFlexSize()
 //**************************************************************************************************
 void UiWidget::SetFlexSize(Vec2Param flexSize)
 {
-  mFlexSize = flexSize;
+  mFlexSize = Math::Max(flexSize, Vec2(0.00001f));
   MarkAsNeedsUpdate();
 }
 
@@ -1040,6 +1114,31 @@ void UiWidget::OnPropertyModified(PropertyEvent* e)
 }
 
 //**************************************************************************************************
+bool UiWidget::GetOnTop()
+{
+  return mFlags.IsSet(UiWidgetFlags::OnTop);
+}
+
+//**************************************************************************************************
+void UiWidget::SetOnTop(bool state)
+{
+  // Don't do anything if the state isn't changing
+  if (GetOnTop() == state)
+    return;
+
+  // Add / remove ourself from the root on top list for picking
+  if(UiRootWidget* rootWidget = GetRoot())
+  {
+    if (state)
+      rootWidget->mOnTopWidgets.PushBack(this);
+    else
+      rootWidget->mOnTopWidgets.EraseValue(this);
+  }
+
+  mFlags.SetState(UiWidgetFlags::OnTop, state);
+}
+
+//**************************************************************************************************
 void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction)
 {
   UiWidget* root = widget->GetRoot();
@@ -1057,7 +1156,7 @@ void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction)
     {
       widget = widget->GetPreviousInHierarchyOrder();
       if (widget == nullptr)
-        widget = root->GetLastChild();
+        widget = root->GetLastDeepestChild();
     }
 
     if(widget && widget->GetActive() && widget->GetCanTakeFocus())

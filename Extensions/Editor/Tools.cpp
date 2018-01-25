@@ -231,12 +231,12 @@ ZilchDefineType(SelectTool, builder, type)
   ZilchBindFieldProperty(mArchetypeSelect);
   ZilchBindFieldProperty(mRootSelect);
   ZilchBindFieldProperty(mSmartGroupSelect);
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZilchBindMethod(RayCast);
 
   ZeroBindEvent(Events::SelectToolPreSelect, ViewportMouseEvent);
 
-  type->Add(new RaycasterMetaComposition(offsetof(SelectTool, mRaycaster)));
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 //******************************************************************************
@@ -645,9 +645,9 @@ ZilchDefineType(CreationTool, builder, type)
   ZilchBindFieldProperty(mDepth);
   ZilchBindFieldProperty(mDepthPlane);
 
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
-  type->Add(new RaycasterMetaComposition(offsetof(CreationTool, mRaycaster)));
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 //******************************************************************************
@@ -872,7 +872,7 @@ ZilchDefineType(ObjectConnectingTool, builder, type)
   ZeroBindDependency(MouseCapture);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 }
 
 //******************************************************************************
@@ -966,7 +966,7 @@ void ObjectConnectingTool::OnToolDeactivate(Event*)
 ZilchDefineType(ParentingTool, builder, type)
 {
   ZeroBindComponent();
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   ZilchBindFieldProperty(mMaintainPosition);

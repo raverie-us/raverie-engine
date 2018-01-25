@@ -3,7 +3,7 @@ TextContent
 {
 	ZilchScriptBuilder 
 	{
-		var Name = "UiSizeToParent"
+		var Name = "UiFillToParent"
 		var ResourceId = 0x59b85d7054f4dd18
 	}
 }
