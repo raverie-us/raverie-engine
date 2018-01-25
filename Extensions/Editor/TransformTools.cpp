@@ -36,7 +36,7 @@ ZilchDefineType(ManipulatorTool, builder, type)
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDependency(MouseCapture);
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
   ZilchBindFieldProperty(mGrabMode);
   ZilchBindFieldProperty(mSnapping);

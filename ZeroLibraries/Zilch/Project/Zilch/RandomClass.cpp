@@ -18,9 +18,7 @@ namespace Zilch
 
     // Change to a property later
     ZilchFullBindGetterSetter(builder, type, &Random::GetSeed, ZilchNoOverload, &Random::SetSeed, ZilchNoOverload, "Seed");
-    GetterSetter* maxInteger = ZilchFullBindGetterSetter(builder, type, &Random::GetMaxInteger, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "MaxInteger");
-    maxInteger->AddAttribute(DeprecatedAttribute);
-    maxInteger->Description = "Calls to Integer() now return the full range of int (from Integer.NegativeMin to Integer.PositiveMax) and are not bounded by MaxInteger.";
+    ZilchFullBindGetterSetter(builder, type, &Random::GetMaxInteger, ZilchNoOverload, ZilchNoSetter, ZilchNoOverload, "MaxInteger");
 
     // Basic type randoms
     ZilchFullBindMethod(builder, type, &Random::Boolean,    ZilchNoOverload, "Boolean",    nullptr);
@@ -83,19 +81,19 @@ namespace Zilch
   //***************************************************************************
   int Random::GetMaxInteger()
   {
-    return Math::Random::cRandMaxS32;
+    return Math::Random::cRandMax;
   }
   
   //***************************************************************************
   bool Random::Boolean()
   {
-    return this->Generator.Bool();
+    return this->Generator.IntRangeInIn(0, 1) == 1;
   }
   
   //***************************************************************************
   int Random::Integer()
   {
-    return this->Generator.Int();
+    return this->Generator.Next();
   }
   
   //***************************************************************************

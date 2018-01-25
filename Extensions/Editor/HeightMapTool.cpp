@@ -814,7 +814,7 @@ ZilchDefineType(HeightMapTool, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultConstructor);
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
   if(DeveloperConfig* devConfig = Z::gEngine->GetConfigCog( )->has(Zero::DeveloperConfig))
   {

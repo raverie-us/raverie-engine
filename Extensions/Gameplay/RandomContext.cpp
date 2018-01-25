@@ -73,7 +73,7 @@ void RandomContext::SetSeed(uint seed)
 
 int RandomContext::GetMaxInt()
 {
-  return Math::Random::cRandMaxS32;
+  return Math::Random::cRandMax;
 }
 
 bool RandomContext::Bool()
@@ -83,7 +83,7 @@ bool RandomContext::Bool()
 
 int RandomContext::Int()
 {
-  return mRandom.Int();
+  return mRandom.Next();
 }
 
 float RandomContext::Float()
