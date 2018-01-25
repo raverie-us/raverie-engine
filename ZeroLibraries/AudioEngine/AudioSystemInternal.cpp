@@ -1080,7 +1080,7 @@ namespace Audio
   void AudioFrame::Clamp()
   {
     for (unsigned i = 0; i < HowManyChannels; ++i)
-      Math::Clamp(Samples[i], -1.0f, 1.0f);
+      Samples[i] = Math::Clamp(Samples[i], -1.0f, 1.0f);
   }
 
   //************************************************************************************************
