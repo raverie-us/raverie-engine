@@ -678,6 +678,7 @@
     <ClInclude Include="ShortcutsDoc.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="CopyOnWrite.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertyTrack.inl">

@@ -14,6 +14,7 @@ namespace Zero
 ZilchDefineEnum(WebBrowserModifiers);
 ZilchDefineEnum(OrientationBases);
 ZilchDefineEnum(SplineAnimatorMode);
+ZilchDefineEnum(PathFinderStatus);
 
 //**************************************************************************************************
 ZilchDefineStaticLibrary(GameplayLibrary)
@@ -24,6 +25,7 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeEnum(WebBrowserModifiers);
   ZilchInitializeEnum(OrientationBases);
   ZilchInitializeEnum(SplineAnimatorMode);
+  ZilchInitializeEnum(PathFinderStatus);
 
   // Meta Components
   ZilchInitializeType(RaycasterMetaComposition);
@@ -59,6 +61,12 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(RandomContext);
   ZilchInitializeType(CameraViewport);
   ZilchInitializeType(DefaultGameSetup);
+  ZilchInitializeType(PathFinderBaseEvent);
+  ZilchInitializeTypeAs(PathFinderEvent<Vec3>, "PathFinderEvent");
+  ZilchInitializeTypeAs(PathFinderEvent<IntVec3>, "PathFinderGridEvent");
+  ZilchInitializeType(PathFinder);
+  ZilchInitializeType(PathFinderRequest);
+  ZilchInitializeType(PathFinderGrid);
 
   ZilchInitializeType(SplineParticleEmitter);
   ZilchInitializeType(SplineParticleAnimator);

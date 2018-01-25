@@ -244,6 +244,11 @@ IntVector3 Max(IntVec3Param lhs, IntVec3Param rhs)
                     Math::Max(lhs.z, rhs.z));
 }
 
+int Dot(IntVec3Param lhs, IntVec3Param rhs)
+{
+  return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+}
+
 IntVector3  IntVector3::operator~() const
 {
   return IntVector3(~x,

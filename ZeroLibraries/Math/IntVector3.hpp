@@ -116,4 +116,23 @@ ZeroShared IntVector3 Min(IntVec3Param lhs, IntVec3Param rhs);
 ///Returns the component-wise maximum vector of the two vectors.
 ZeroShared IntVector3 Max(IntVec3Param lhs, IntVec3Param rhs);
 
+/// Compute the dot product of two vectors.
+ZeroShared int Dot(IntVec3Param lhs, IntVec3Param rhs);
+
 }// namespace Math
+
+namespace Zero
+{
+template<>
+struct HashPolicy<Math::IntVec3>
+{
+  inline size_t operator()(Math::IntVec3Param value) const
+  {
+    return value.x ^ value.y * 3461 ^ value.z * 44318;
+  }
+  inline bool Equal(Math::IntVec3Param left, Math::IntVec3Param right) const
+  {
+    return left == right;
+  }
+};
+}

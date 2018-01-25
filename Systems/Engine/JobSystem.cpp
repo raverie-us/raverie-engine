@@ -146,6 +146,7 @@ void JobSystem::AddJob(Job* job)
   if(!ThreadingEnabled)
   {
     job->Execute();
+    JobFinished(job);
     return;
   }
   

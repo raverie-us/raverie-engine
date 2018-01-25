@@ -161,6 +161,7 @@
     <ClInclude Include="AsyncProcess.hpp" />
     <ClInclude Include="CogMeta.hpp" />
     <ClInclude Include="ComponentMeta.hpp" />
+    <ClInclude Include="CopyOnWrite.hpp" />
     <ClInclude Include="EngineBindingExtensions.hpp" />
     <ClInclude Include="CogHelpers.hpp" />
     <ClInclude Include="CogId.hpp" />

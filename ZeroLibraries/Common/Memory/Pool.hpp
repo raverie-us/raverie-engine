@@ -31,6 +31,14 @@ public:
 
   template<typename type>
   type* AllocateType();
+  template<typename type, typename P0>
+  type* AllocateType(P0& p0);
+  template<typename type, typename P0, typename P1>
+  type* AllocateType(P0& p0, P1& p1);
+  template<typename type, typename P0, typename P1, typename P2>
+  type* AllocateType(P0& p0, P1& p1, P2& p2);
+  template<typename type, typename P0, typename P1, typename P2, typename P3>
+  type* AllocateType(P0& p0, P1& p1, P2& p2, P3& p3);
   template<typename type>
   void DeallocateType(type* instance);
   MemPtr Allocate(size_t numberOfBytes);
@@ -55,6 +63,38 @@ type* Pool::AllocateType()
 {
   MemPtr memory = Allocate(sizeof(type));
   type* object = new(memory) type();
+  return object;
+}
+
+template<typename type, typename P0>
+type* Pool::AllocateType(P0& p0)
+{
+  MemPtr memory = Allocate(sizeof(type));
+  type* object = new(memory) type(p0);
+  return object;
+}
+
+template<typename type, typename P0, typename P1>
+type* Pool::AllocateType(P0& p0, P1& p1)
+{
+  MemPtr memory = Allocate(sizeof(type));
+  type* object = new(memory) type(p0, p1);
+  return object;
+}
+
+template<typename type, typename P0, typename P1, typename P2>
+type* Pool::AllocateType(P0& p0, P1& p1, P2& p2)
+{
+  MemPtr memory = Allocate(sizeof(type));
+  type* object = new(memory) type(p0, p1, p2);
+  return object;
+}
+
+template<typename type, typename P0, typename P1, typename P2, typename P3>
+type* Pool::AllocateType(P0& p0, P1& p1, P2& p2, P3& p3)
+{
+  MemPtr memory = Allocate(sizeof(type));
+  type* object = new(memory) type(p0, p1, p2, p3);
   return object;
 }
 

@@ -117,4 +117,7 @@ ZeroShared IntVector4 Min(IntVec4Param lhs, IntVec4Param rhs);
 ///Returns the component-wise maximum vector of the two vectors.
 ZeroShared IntVector4 Max(IntVec4Param lhs, IntVec4Param rhs);
 
+/// Compute the dot product of two vectors.
+ZeroShared int Dot(IntVec4Param lhs, IntVec4Param rhs);
+
 }// namespace Math

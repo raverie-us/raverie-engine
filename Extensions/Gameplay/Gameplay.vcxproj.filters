@@ -90,6 +90,7 @@
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="UnitTestSystem.hpp" />
+    <ClInclude Include="PathFinder.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Precompiled.cpp">
@@ -154,5 +155,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="UnitTestSystem.cpp" />
+    <ClCompile Include="PathFinder.cpp" />
   </ItemGroup>
 </Project>

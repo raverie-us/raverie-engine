@@ -51,6 +51,8 @@ public:
 #include "DefaultGame.hpp"
 #include "PlayGame.hpp"
 
+#include "PathFinder.hpp"
+
 #include "MarchingSquares.hpp"
 #include "RandomContext.hpp"
 
