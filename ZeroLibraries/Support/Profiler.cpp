@@ -193,7 +193,7 @@ void PrintProfileGraph(Record* record, double total, int level)
 
   DebugPrint("%s : %3.2f\n", record->GetName(), ((double)record->GetTotalTime() / total) * 100.0);
   InListBaseLink<Profile::Record>::range records = record->GetChildren();
-  double totalTime = 0.0f;
+
   while(!records.Empty())
   {
     Profile::Record& r = records.Front();

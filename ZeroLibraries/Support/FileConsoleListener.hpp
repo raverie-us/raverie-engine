@@ -76,7 +76,7 @@ public:
     mOverridenFilePath = filePath;
   }
 
-  void Flush()
+  void Flush() override
   {
     if(logFile)
     {
