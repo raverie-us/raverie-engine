@@ -61,8 +61,8 @@ namespace Zilch
 
   //***************************************************************************
   Plugin::Plugin() :
-    Initialized(false),
     UserData(nullptr),
+    Initialized(false),
     SharedLibrary(nullptr)
   {
   }
@@ -454,8 +454,6 @@ namespace Zilch
   //***************************************************************************
   void NativeStubCode::WriteParameters(ZilchCodeBuilder& builder, DelegateType* delegateType)
   {
-    Library* library = delegateType->GetOwningLibrary();
-
     builder.Write("(");
 
     size_t lastIndex = delegateType->Parameters.Size() - 1;

@@ -150,7 +150,6 @@ namespace Zilch
         byte sizeByte = data[1];
 
         // The highest bit is always set, basically clear it
-        bool masking = (sizeByte & 0x80) != 0;
         sizeByte &= 0x7F;
         
         // We read the opcode/bits and the payload length, which is 2 bytes

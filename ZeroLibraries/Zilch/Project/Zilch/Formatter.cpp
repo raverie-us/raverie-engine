@@ -42,8 +42,8 @@ namespace Zilch
     SpaceStyleGlobalDefaultParenthesis(SpaceStyle::None),
     SpaceStyleFunctionDefinitionBeginParenthesis(SpaceStyle::None),
     SpaceStyleFunctionDefinitionEndParenthesis(SpaceStyle::None),
-    SpaceAfterComment(true),
-    CommentWordWrapLength(100)
+    CommentWordWrapLength(100),
+    SpaceAfterComment(true)
   {
   }
 
@@ -392,7 +392,7 @@ namespace Zilch
   //***************************************************************************
   SpaceStyle::Enum ZilchCodeBuilder::GetSpaceStyle(SpaceStyle::Enum specific, SpaceStyle::Enum globalDefault)
   {
-    ErrorIf(globalDefault == IndentStyle::UseGlobalDefault,
+    ErrorIf(globalDefault == SpaceStyle::UseGlobalDefault,
       "The global default cannot be set to 'SpaceStyle::UseGlobalDefault'");
 
     // Return the specific space style as long as it's not falling back on the default
@@ -901,7 +901,6 @@ namespace Zilch
   {
     // The string interpolant doesn't really need to do anything,
     // just walk it's children (which are expressions and string literals)
-    ZilchCodeBuilder& builder = context->Builder;
     context->Walker->GenericWalkChildren(this, node, context);
   }
 

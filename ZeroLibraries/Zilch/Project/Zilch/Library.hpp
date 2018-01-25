@@ -65,7 +65,7 @@ namespace Zilch
   class ZeroShared Library
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Library, TypeCopyMode::ReferenceType);
 
     // Friends
     friend class LibraryBuilder;

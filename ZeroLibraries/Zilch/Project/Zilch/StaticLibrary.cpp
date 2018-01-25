@@ -111,7 +111,7 @@ namespace Zilch
     this->Builder = nullptr;
 
     // Let the binding know we're no longer building a library
-    NativeBindingList::SetBuildingLibraryForThisThread(nullptr);
+    NativeBindingList::SetBuildingLibraryForThisThread(false);
 
     // Let the library know it's done being built
     this->Build = BuildState::Built;

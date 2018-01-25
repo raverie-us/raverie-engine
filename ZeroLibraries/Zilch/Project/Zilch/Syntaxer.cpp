@@ -23,10 +23,10 @@ namespace Zilch
 
   //***************************************************************************
   Syntaxer::Syntaxer(CompilationErrors& errors) :
-    Errors(errors),
-    Builder(nullptr),
     Tree(nullptr),
     ParentProject(nullptr),
+    Errors(errors),
+    Builder(nullptr),
     Dependencies(nullptr),
     ClassWalker(&errors),
     MemberWalker(&errors),
@@ -819,10 +819,6 @@ namespace Zilch
           // If this was a literal value...
           if (literalArgument != nullptr)
           {
-            // Store the original token text, just in case the user wants it
-            String& tokenString = literalArgument->Value.Token;
-            const char* token = tokenString.c_str();
-            
             // Check to see what type of literal we have here
             Constant& constant = parameter;
             constant = this->ValueNodeToConstant(literalArgument);
@@ -3348,8 +3344,6 @@ namespace Zilch
     if (this->Errors.WasError)
       return;
 
-    // Get the instance of the type database
-    Core& core = Core::GetInstance();
     Type* lhs = node->LeftOperand->ResultType;
     Type* rhs = node->RightOperand->ResultType;
 

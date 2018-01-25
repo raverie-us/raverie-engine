@@ -19,8 +19,8 @@ namespace Zilch
     PrimaryPosition(0),
     EndPosition(0),
     Origin(UnknownOrigin),
-    CodeUserData(nullptr),
-    IsNative(true)
+    IsNative(true),
+    CodeUserData(nullptr)
   {
   }
 

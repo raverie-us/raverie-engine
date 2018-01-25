@@ -202,7 +202,6 @@ namespace Zilch
       ExpressionNode* argument = arguments[i];
 
       // Store the types in a more human readable format
-      Type* fromType = argument->ResultType;
       Type* toType = delegateParameter.ParameterType;
 
       // Generate the implicit conversion

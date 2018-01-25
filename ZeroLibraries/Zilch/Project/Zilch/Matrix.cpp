@@ -558,9 +558,7 @@ namespace Zilch
     // but to do the math we need to flip them back to the right order
     Real* matrix0 = (Real*)call.GetParameterUnchecked(0);
     Real* vector0 = (Real*)call.GetParameterUnchecked(1);
-    Real* returnVector = (Real*)call.GetReturnUnchecked();
 
-    size_t expandedVectorSize = userData.Matrix1SizeY + 1;
     Real* tempReturnVector = (Real*)alloca(elementType->Size * (userData.Matrix1SizeY + 1));
 
     for(size_t matrix0Y = 0; matrix0Y < userData.Matrix0SizeY; ++matrix0Y)
@@ -846,13 +844,6 @@ namespace Zilch
 
     // Bind matrix building functions
     {
-      BoundType* real2x2Type = core.Real2x2Type;
-      BoundType* real3x3Type = core.Real3x3Type;
-      BoundType* real4x4Type = core.Real4x4Type;
-      BoundType* real2Type = core.Real2Type;
-      BoundType* real3Type = core.Real3Type;
-      BoundType* real4Type = core.Real4Type;
-
       // Real2x2
       ZilchFullBindMethod(builder, core.MathType, Math::Matrix2::GenerateScale, ZilchNoOverload, "GenerateScaleMatrix2x2", "scale")
         ->Description = ZilchDocumentString("Generates a two-dimensional scale matrix.");

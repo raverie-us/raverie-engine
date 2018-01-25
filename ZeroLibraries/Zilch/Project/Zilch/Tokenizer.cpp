@@ -55,9 +55,9 @@ namespace Zilch
 
   //***************************************************************************
   Tokenizer::Tokenizer(CompilationErrors& errors) :
-    WasCarriageReturn(false),
+    EnableStringInterpolation(true),
     Errors(errors),
-    EnableStringInterpolation(true)
+    WasCarriageReturn(false)
   {
     ZilchErrorIfNotStarted(Tokenizer);
 

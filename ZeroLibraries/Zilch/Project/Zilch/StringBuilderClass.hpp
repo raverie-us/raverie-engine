@@ -16,7 +16,7 @@ namespace Zilch
   class ZeroShared Rune
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ValueType);
+    ZilchDeclareType(Rune, TypeCopyMode::ValueType);
 
     Rune();
     Rune(int value);
@@ -38,7 +38,7 @@ namespace Zilch
   class ZeroShared StringBuilderExtended : public StringBuilder
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(StringBuilderExtended, TypeCopyMode::ReferenceType);
 
     // Write to the string builder
     void Write(AnyParam value);
@@ -101,7 +101,7 @@ namespace Zilch
   class ZeroShared RuneIterator
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(RuneIterator, TypeCopyMode::ReferenceType);
     
     static String ToString(const BoundType* type, const byte* data);
 
@@ -131,7 +131,7 @@ namespace Zilch
   // A string range bound to Zilch. This range will also keep the string that it's referencing alive
   class ZeroShared StringRangeExtended
   {
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(StringRangeExtended, TypeCopyMode::ReferenceType);
 
     static String ToString(const BoundType* type, const byte* data);
 
@@ -182,7 +182,7 @@ namespace Zilch
   // The results from a String.Split operation
   class ZeroShared StringSplitRangeExtended
   {
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(StringSplitRangeExtended, TypeCopyMode::ReferenceType);
 
     static void All(Call& call, ExceptionReport& report);
     static void MoveNext(Call& call, ExceptionReport& report);

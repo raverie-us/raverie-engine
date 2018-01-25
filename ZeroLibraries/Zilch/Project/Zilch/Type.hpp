@@ -81,7 +81,7 @@ namespace Zilch
   class ZeroShared Type : public ReflectionObject
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Type, TypeCopyMode::ReferenceType);
 
     // Constructor
     Type();
@@ -295,7 +295,7 @@ namespace Zilch
   class ZeroShared IndirectionType : public Type
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(IndirectionType, TypeCopyMode::ReferenceType);
 
     // Constructor
     IndirectionType();
@@ -327,7 +327,7 @@ namespace Zilch
   class ZeroShared AnyType : public Type
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(AnyType, TypeCopyMode::ReferenceType);
 
     // Constructor
     AnyType();
@@ -573,7 +573,7 @@ namespace Zilch
   class ZeroShared BoundType : public Type
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(BoundType, TypeCopyMode::ReferenceType);
 
     // Constructor
     BoundType(BoundTypeAssertFn nativeBindingAssert);
@@ -883,7 +883,7 @@ namespace Zilch
   class ZeroShared DelegateParameter
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DelegateParameter, TypeCopyMode::ReferenceType);
 
     // Constructor
     DelegateParameter();
@@ -916,7 +916,7 @@ namespace Zilch
   class ZeroShared DelegateType : public Type
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DelegateType, TypeCopyMode::ReferenceType);
 
     // Constructor
     DelegateType();

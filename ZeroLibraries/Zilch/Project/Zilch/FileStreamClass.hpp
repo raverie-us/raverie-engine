@@ -49,7 +49,7 @@ namespace Zilch
   class ZeroShared FileStream : public IStreamClass
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(FileStream, TypeCopyMode::ReferenceType);
 
     // Constructor
     FileStream(StringParam filePath, FileMode::Enum mode);

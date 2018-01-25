@@ -20,7 +20,7 @@ namespace Zilch
   class ZeroShared EventData : public IZilchObject
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(EventData, TypeCopyMode::ReferenceType);
 
     // Mark the destructor as virtual so we can properly clean up resources
     virtual ~EventData();
@@ -115,7 +115,7 @@ namespace Zilch
   class ZeroShared EventHandler : public IZilchObject
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(EventHandler, TypeCopyMode::ReferenceType);
 
     // Default constructor
     EventHandler();
@@ -339,8 +339,8 @@ namespace Zilch
     ForwardingEventDelegate(EventHandler* forwardTo);
 
     // EventDelegate interface
-    int Invoke(EventData* event);
-    void* GetThisPointerOrUniqueId();
+    int Invoke(EventData* event) override;
+    void* GetThisPointerOrUniqueId() override;
   };
 
   // An event delegate that can call Zilch code
@@ -362,8 +362,8 @@ namespace Zilch
     ExecutableState* State;
 
     // EventDelegate interface
-    int Invoke(EventData* event);
-    void* GetThisPointerOrUniqueId();
+    int Invoke(EventData* event) override;
+    void* GetThisPointerOrUniqueId() override;
   };
 
   // Automatically forwards all events of a type of event name to another receiver
@@ -373,7 +373,7 @@ namespace Zilch
   class ZeroShared EventsClass
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(EventsClass, TypeCopyMode::ReferenceType);
 
     // Sends an event out to anyone listening
     // Events are only accepted if their type is either the same or more derived then the callback's event type

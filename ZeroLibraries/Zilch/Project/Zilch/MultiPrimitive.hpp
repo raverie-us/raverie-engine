@@ -13,7 +13,7 @@ namespace Zilch
   class ZeroShared MultiPrimitive
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(MultiPrimitive, TypeCopyMode::ReferenceType);
 
     MultiPrimitive(BoundType* primitiveMemberType, size_t primitiveMemberCount);
 

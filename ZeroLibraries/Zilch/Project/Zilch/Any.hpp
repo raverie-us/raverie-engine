@@ -15,7 +15,7 @@ namespace Zilch
   T& GetInvalid()
   {
     // Remove the reference qualifier if it has one
-    typedef Zero::Decay<T>::Type TNonReference;
+    typedef typename Zero::Decay<T>::Type TNonReference;
     static byte InvalidBuffer[sizeof(TNonReference)] = { 0 };
     
     // Clear out the buffer every time we request it

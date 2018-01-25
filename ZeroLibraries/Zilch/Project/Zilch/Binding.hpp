@@ -931,18 +931,18 @@ namespace Zilch
       typedef SelfType& ReadType;                                                                                                                     \
       static const bool DirectRead = true;                                                                                                            \
       /* Implementation of the 'get type' specialization */                                                                                           \
-      static ZZ::BoundType* (ZilchStaticType(SelfType)::GetType)()                                                                                    \
+      static ZZ::BoundType* (GetType)()                                                                                    \
       {                                                                                                                                               \
         static BoundType* type = (CustomBoundType);                                                                                                   \
         return type;                                                                                                                                  \
       }                                                                                                                                               \
       /* Read our object representation from either stack data or handle data */                                                                      \
-      static typename ZilchStaticType(SelfType)::ReadType (ZilchStaticType(SelfType)::Read)(byte* from)                                               \
+      static typename ZilchStaticType(SelfType)::ReadType (Read)(byte* from)                                               \
       {                                                                                                                                               \
         return *(SelfType*)from;                                                                                                                      \
       }                                                                                                                                               \
       /* Write our object representation to either stack data or handle data */                                                                       \
-      static void (ZilchStaticType(SelfType)::Write)(const SelfType& value, byte* to)                                                                 \
+      static void (Write)(const SelfType& value, byte* to)                                                                 \
       {                                                                                                                                               \
         memcpy(to, &value, sizeof(SelfType));                                                                                                         \
       }                                                                                                                                               \
@@ -962,17 +962,17 @@ namespace Zilch
       typedef SelfType ReadType;                                                                                                                      \
       static const bool DirectRead = false;                                                                                                           \
       /* Implementation of the 'get type' specialization */                                                                                           \
-      static ZZ::BoundType* (ZilchStaticType(SelfType)::GetType)()                                                                                    \
+      static ZZ::BoundType* (GetType)()                                                                                    \
       {                                                                                                                                               \
         return ZilchTypeId(RepresentedType);                                                                                                          \
       }                                                                                                                                               \
       /* Read our object representation from either stack data or handle data */                                                                      \
-      static typename ZilchStaticType(SelfType)::ReadType (ZilchStaticType(SelfType)::Read)(byte* from)                                               \
+      static typename ZilchStaticType(SelfType)::ReadType (Read)(byte* from)                                               \
       {                                                                                                                                               \
         return ConvertToRedirect(*(RepresentedType*)from);                                                                                            \
       }                                                                                                                                               \
       /* Write our object representation to either stack data or handle data */                                                                       \
-      static void (ZilchStaticType(SelfType)::Write)(const SelfType& value, byte* to)                                                                 \
+      static void (Write)(const SelfType& value, byte* to)                                                                 \
       {                                                                                                                                               \
         new (to) RepresentedType(ConvertFromRedirect(value));                                                                                         \
       }                                                                                                                                               \
@@ -1009,8 +1009,8 @@ namespace Zilch
     BoundType* Type;
   };
 
-#define ZilchDeclareInheritableType(TypeCopyMode)                           \
-  ZilchDeclareType(TypeCopyMode);                                           \
+#define ZilchDeclareInheritableType(SelfType, TypeCopyMode)                 \
+  ZilchDeclareType(SelfType, TypeCopyMode);                                 \
   ZZ::AutoGrabAllocatingType ZilchDerivedType;                              \
   ZZ::BoundType* ZilchDerivedTypeOverride() const                           \
   {                                                                         \
@@ -1094,13 +1094,6 @@ namespace Zilch
     return type;
   }
 
-  // This macro lets us pass in a dummy member function pointer (takes nothing and returns nothing)
-  // and it 'discovers' the type of that function pointer. We use this in binding to find our own 'this' type
-  template <typename ClassType>
-  ClassType* DiscoverClass(void (ClassType::*)())
-  {
-  }
-
   // A helper for initializing types that belong to a library
 #define ZilchInitializeTypeAs(Type, Name)                                                                                                             \
     ZZ::InitializeType<Type, ZilchLibrary, void(*)(Type*, ZZ::LibraryBuilder&, ZZ::BoundType*)>(Name)
@@ -1146,7 +1139,7 @@ namespace Zilch
 
   // Declares a zilch type (belongs inside the type definition)
   // Implicitly deduces self and base types being bound
-#define ZilchDeclareType(CopyMode)                                                                                                                    \
+#define ZilchDeclareType(ClassType, CopyMode)                                                                                                         \
     public:                                                                                                                                           \
     /* Binding macros need the current class being bound */                                                                                           \
     /* This is a really neat trick where we never need to declare our base type */                                                                    \
@@ -1157,8 +1150,7 @@ namespace Zilch
     static typename T::ZilchSelf* SfinaeBase(typename T::ZilchSelf*);                                                                                 \
     template <typename T>                                                                                                                             \
     static ZZ::NoType SfinaeBase(...);                                                                                                                \
-    void ZilchDiscoverClass() {}                                                                                                                      \
-    typedef typename ZE::remove_pointer<ZilchTypeOf(ZZ::DiscoverClass(&ZilchDiscoverClass))>::type ZilchTempSelf;                                     \
+    typedef ClassType ZilchTempSelf;                                                                                                                  \
     typedef typename ZE::remove_pointer<ZilchTypeOf(SfinaeBase<ZilchTempSelf>((ZilchTempSelf*)nullptr))>::type ZilchTempBase;                         \
     ZilchDeclareDerivedTypeExplicit(ZilchTempSelf, ZilchTempBase, CopyMode)
 

@@ -12,7 +12,7 @@ namespace Zilch
   class ColorClass
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ColorClass, TypeCopyMode::ReferenceType);
 
     static Real4 FromBytes(Integer r, Integer g, Integer b);
     static Real4 FromBytes(Integer r, Integer g, Integer b, Integer a);
@@ -42,7 +42,7 @@ namespace Zilch
   class ColorsClass
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ColorsClass, TypeCopyMode::ReferenceType);
 
     #define DefineColor(name, r, g, b, a) static const Real4 name;
     #include "Math/ColorDefinitions.hpp"

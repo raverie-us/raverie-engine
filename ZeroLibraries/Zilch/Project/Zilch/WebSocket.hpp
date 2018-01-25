@@ -55,7 +55,7 @@ namespace Zilch
   class ZeroShared WebSocketEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(WebSocketEvent, TypeCopyMode::ReferenceType);
 
     // Default constructor
     WebSocketEvent();

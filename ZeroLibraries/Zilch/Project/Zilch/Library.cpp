@@ -119,8 +119,8 @@ namespace Zilch
   //***************************************************************************
   LibraryBuilder::LibraryBuilder(StringParam name, StringParam namespaceForPlugins) :
     UserData(nullptr),
-    ComputedDelegateAndFunctionSizes(false),
-    CreatableInScriptDefault(true)
+    CreatableInScriptDefault(true),
+    ComputedDelegateAndFunctionSizes(false)
   {
     // Start out by creating a new library that we'll populate
     this->BuiltLibrary = LibraryRef(new Library());
@@ -1547,8 +1547,8 @@ namespace Zilch
 
   //***************************************************************************
   Library::Library() :
-    UserData(nullptr),
     GeneratedDefinitionStubCode(false),
+    UserData(nullptr),
     TolerantMode(false),
     Plugin(nullptr)
   {
@@ -2427,8 +2427,8 @@ namespace Zilch
   //***************************************************************************
   InstantiatedTemplate::InstantiatedTemplate() :
     Type(nullptr),
-    Result(TemplateResult::FailedInstantiatorDidNotReturnType),
-    ExpectedArguments(0)
+    ExpectedArguments(0),
+    Result(TemplateResult::FailedInstantiatorDidNotReturnType)
   {
   }
 

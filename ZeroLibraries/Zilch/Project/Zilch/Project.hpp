@@ -30,7 +30,7 @@ namespace Zilch
   class ZeroShared ParseEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ParseEvent, TypeCopyMode::ReferenceType);
 
     ParseEvent();
     LibraryBuilder* Builder;

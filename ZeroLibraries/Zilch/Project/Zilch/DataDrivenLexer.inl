@@ -207,8 +207,8 @@ namespace Zilch
         GrammarNode<TokenType>* operand = operands.Front();
         ReplacementNode* replacement = replacements.Front();
 
-        //typedef GrammarNode<TokenType>::ReplacementPair ReplacementPair;
-        modifiedRule.mReplacements.PushBack(GrammarNode<TokenType>::ReplacementPair(operand, replacement));
+        typedef typename GrammarNode<TokenType>::ReplacementPair ReplacementPair;
+        modifiedRule.mReplacements.PushBack(ReplacementPair(operand, replacement));
 
         nodes.PopBack();
         this->mReplacementNodes.PopBack();

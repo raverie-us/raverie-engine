@@ -9,9 +9,9 @@ namespace Zilch
 {
   //***************************************************************************
   JsonBuilder::JsonBuilder() :
+    IsCompactMode(false),
     IsMember(false),
-    IsWrittenTo(false),
-    IsCompactMode(false)
+    IsWrittenTo(false)
   {
   }
 

@@ -344,8 +344,8 @@ namespace Zilch
 
   //***************************************************************************
   SyntaxNode::SyntaxNode(const SyntaxNode& toCopy) :
-    Location(toCopy.Location),
-    Parent(nullptr)
+    Parent(nullptr),
+    Location(toCopy.Location)
   {
     // We never copy the parent from other nodes
   }
@@ -608,8 +608,8 @@ namespace Zilch
   
   //***************************************************************************
   AttributeNode::AttributeNode() :
-    AttributeCall(nullptr),
-    TypeName(nullptr)
+    TypeName(nullptr),
+    AttributeCall(nullptr)
   {
   }
   
@@ -621,10 +621,10 @@ namespace Zilch
 
   //***************************************************************************
   ExpressionNode::ExpressionNode() :
-    Io(IoMode::NotSet),
-    IoUsage(IoMode::NotSet),
     ResultType(Core::GetInstance().ErrorType),
     PrecomputedResultType(nullptr),
+    Io(IoMode::NotSet),
+    IoUsage(IoMode::NotSet),
     IsUsedAsStatement(false)
   {
   }
@@ -779,15 +779,15 @@ namespace Zilch
 
   //***************************************************************************
   MemberAccessNode::MemberAccessNode() :
+    IsStatic(false),
     Operator(Grammar::Invalid),
-    AccessedFunction(nullptr),
-    OverloadedFunctions(nullptr),
+    MemberType(MemberAccessType::Invalid),
     AccessedMember(nullptr),
     AccessedProperty(nullptr),
     AccessedGetterSetter(nullptr),
     AccessedField(nullptr),
-    MemberType(MemberAccessType::Invalid),
-    IsStatic(false)
+    OverloadedFunctions(nullptr),
+    AccessedFunction(nullptr)
   {
   }
 
@@ -799,8 +799,8 @@ namespace Zilch
   
   //***************************************************************************
   TypeIdNode::TypeIdNode() :
-    Value(nullptr),
     CompileTimeSyntaxType(nullptr),
+    Value(nullptr),
     CompileTimeType(Core::GetInstance().ErrorType)
   {
   }
@@ -831,8 +831,8 @@ namespace Zilch
     ReferencedSyntaxType(nullptr),
     ReferencedType(Core::GetInstance().ErrorType),
     Mode(CreationMode::Invalid),
-    ConstructorFunction(nullptr),
     OverloadedConstructors(nullptr),
+    ConstructorFunction(nullptr),
     ThisHandleLocal(0)
   {
   }
@@ -959,16 +959,16 @@ namespace Zilch
 
   //***************************************************************************
   MemberVariableNode::MemberVariableNode() :
-    Get(nullptr),
-    Set(nullptr),
-    IsGetterSetter(false),
     CreatedField(nullptr),
     CreatedGetterSetter(nullptr),
     CreatedProperty(nullptr),
     ParentClassType(nullptr),
     ResultType(Core::GetInstance().ErrorType),
-    Virtualized(VirtualMode::NonVirtual),
-    ExtensionOwner(nullptr)
+    Get(nullptr),
+    Set(nullptr),
+    IsGetterSetter(false),
+    ExtensionOwner(nullptr),
+    Virtualized(VirtualMode::NonVirtual)
   {
   }
 
@@ -1086,8 +1086,8 @@ namespace Zilch
 
   //***************************************************************************
   IfNode::IfNode() :
-    Condition(nullptr),
-    IsFirstPart(false)
+    IsFirstPart(false),
+    Condition(nullptr)
   {
   }
     
@@ -1237,9 +1237,9 @@ namespace Zilch
   //***************************************************************************
   FunctionNode::FunctionNode() :
     ReturnType(nullptr),
+    ExtensionOwner(nullptr),
     IsStatic(false),
-    Virtualized(VirtualMode::NonVirtual),
-    ExtensionOwner(nullptr)
+    Virtualized(VirtualMode::NonVirtual)
   {
   }
 
@@ -1273,11 +1273,11 @@ namespace Zilch
 
   //***************************************************************************
   ClassNode::ClassNode() :
-    TemplateInstantiation(nullptr),
-    Destructor(nullptr),
+    CopyMode(TypeCopyMode::ReferenceType),
     Type(nullptr),
+    Destructor(nullptr),
     PreConstructor(nullptr),
-    CopyMode(TypeCopyMode::ReferenceType)
+    TemplateInstantiation(nullptr)
   {
   }
 
@@ -1324,8 +1324,8 @@ namespace Zilch
   //***************************************************************************
   EnumNode::EnumNode() :
     IsFlags(false),
-    Inheritance(nullptr),
-    Type(nullptr)
+    Type(nullptr),
+    Inheritance(nullptr)
   {
   }
 

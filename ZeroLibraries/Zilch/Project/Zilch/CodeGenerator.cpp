@@ -228,7 +228,7 @@ namespace Zilch
   //***************************************************************************
   void CodeGenerator::GenerateOutOfScope(ScopeNode*& node, GeneratorContext* context)
   {
-    VariableValueRange variables = node->ScopedVariables.Values();
+    //VariableValueRange variables = node->ScopedVariables.Values();
     ZilchTodo("Todo: Generate out of scope destructors")
 
     //// Loop through all the variables in this scope
@@ -483,10 +483,6 @@ namespace Zilch
       // If this if part has another else statement to follow (literally whether we're the last node)
       bool hasElseStatement = (i != node->IfParts.Size() - 1);
 
-      // The index of the jump instruction
-      RelativeJumpOpcode* jumpOpcode = nullptr;
-      size_t jumpInstructionIndex = 0;
-
       // If we have an else statement, we need one more opcode
       // This has to be here (and not below) because the if-false needs to skip this instruction
       if (hasElseStatement)
@@ -519,9 +515,6 @@ namespace Zilch
   //***************************************************************************
   void CodeGenerator::GenerateStatements(GeneratorContext* context, ScopeNode* node)
   {
-    // Get a pointer to the current function that we're building
-    Function* function = context->FunctionStack.Back();
-
     // Loop through all the statements
     for (size_t i = 0; i < node->Statements.Size(); ++i)
     {
@@ -856,9 +849,6 @@ namespace Zilch
     // Grab the token we used for this operator
     Grammar::Enum opToken = node->Operator->TokenId;
 
-    // Get the instance of the type database
-    Core& core = Core::GetInstance();
-
     // Store the binary operator info for convenience (shared definition)
     BinaryOperator& info = node->OperatorInfo;
 
@@ -1130,9 +1120,6 @@ namespace Zilch
   //***************************************************************************
   void CodeGenerator::GenerateStaticFieldAccess(MemberAccessNode*& node, GeneratorContext* context)
   {
-    // Get a reference to the current function that we're building
-    Function* function = context->FunctionStack.Back();
-    
     // Normally an Operand can actually point at a handle through another handle (class A containing a reference to another class B)
     // and this will work properly with GetOperand<Handle> where OperandType is Field
     // In this case, we only need to copy the handle for A to the stack, but not B (because again, Operand access solves this)
@@ -1940,9 +1927,6 @@ namespace Zilch
     // Generate an opcode for a function call (the last parameter is where the return value will be stored)
     caller->AllocateArgumentFreeOpcode(Instruction::FunctionCall, debugOrigin, location);
 
-    // Grab the core
-    Core& core = Core::GetInstance();
-
     // In certain cases it is possible that we're not even able to get the return value (even if it is void!)
     // For example, the case of a setter (technically returns void, which is storable, but cannot every be accessed)
     // In these cases, the 'returnAccessOut' will be null since there's nothing to return
@@ -2344,9 +2328,6 @@ namespace Zilch
   {
     // Create the opcode so that we can fill it in
     size_t opcodeStart = function->GetCurrentOpcodeIndex();
-
-    // Get the instance of the type database
-    Core& core = Core::GetInstance();
 
     // If this is creating a property delegate object
     ErrorIf(node.Operator->TokenId == Grammar::PropertyDelegate,

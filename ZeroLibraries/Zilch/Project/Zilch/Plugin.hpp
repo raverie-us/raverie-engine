@@ -24,7 +24,7 @@ namespace Zilch
   class ZeroShared BuildEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(BuildEvent, TypeCopyMode::ReferenceType);
     BuildEvent();
 
     // Finds a library from the dependencies by name
@@ -42,7 +42,7 @@ namespace Zilch
   class ZeroShared PluginEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(PluginEvent, TypeCopyMode::ReferenceType);
     PluginEvent();
 
     // The following values may be used for any purpose
@@ -84,7 +84,7 @@ namespace Zilch
     // All plugins loaded should have the '.zilchPlugin' extension (a shared object or dynamic linked library)
     // It may fail to load if the path specified isn't accessible, isn't a valid shared library,
     // or doesn't export the CreateZilchPlugin function
-    // Loading a plugin will attempt to make a local/temporary copy so that dyanmic reloading can be done (on certain platforms)
+    // Loading a plugin will attempt to make a local/temporary copy so that dynamic reloading can be done (on certain platforms)
     // This ideally prevents our program from locking the plugin file
     static LibraryRef LoadFromFile(Status& status, Module& dependencies, StringParam filePath, void* userData = nullptr);
     static void LoadFromDirectory(Status& status, Module& dependencies, Array<LibraryRef>& pluginsOut, StringParam directory, void* userData = nullptr);

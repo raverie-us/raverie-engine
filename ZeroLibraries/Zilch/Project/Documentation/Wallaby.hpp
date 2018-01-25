@@ -13,7 +13,7 @@ public:
   // This macro is only a declaration, and somewhere in a single cpp file we must use the 'ZilchDefineType' macro
   // The 'ReferenceType' means that when we construct this type in Zilch, it will always be allocated on the heap
   // and referenced via a safe handle (rather than copied around by value)
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(should, TypeCopyMode::ReferenceType);
 
   // Various types of members we may want to bind
   LivingBeing();
@@ -35,7 +35,7 @@ public:
   // Using this macro Zilch is also able to automatically determine the base
   // class type of Player to be LivingBeing. This allows Zilch to perform dynamic
   // down casting as well as implicit up casting
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(type, TypeCopyMode::ReferenceType);
   
   // Various types of members we may want to bind
   String Name;

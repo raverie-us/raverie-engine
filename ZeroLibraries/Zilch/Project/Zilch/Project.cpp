@@ -67,12 +67,12 @@ namespace Zilch
 
   //***************************************************************************
   AutoCompleteInfo::AutoCompleteInfo() :
-    IsStatic(false),
+    RemoveDuplicateNameEntries(true),
+    Success(false),
     NearestType(nullptr),
     IsLiteral(false),
-    RemoveDuplicateNameEntries(true),
-    BestCompletionOverload(-1),
-    Success(false)
+    IsStatic(false),
+    BestCompletionOverload(-1)
   {
   }
   
@@ -220,9 +220,9 @@ namespace Zilch
 
   //***************************************************************************
   Project::Project() :
-    CursorPosition(NoCursor),
     UserData(nullptr),
-    VariableUniqueIdCounter(0)
+    VariableUniqueIdCounter(0),
+    CursorPosition(NoCursor)
   {
     ZilchErrorIfNotStarted(Project);
   }

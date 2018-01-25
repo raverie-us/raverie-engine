@@ -14,7 +14,7 @@ namespace Zilch
   class ZeroShared ProcessClass : public Zero::Process
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ProcessClass, TypeCopyMode::ReferenceType);
 
     ProcessClass();
     ~ProcessClass();

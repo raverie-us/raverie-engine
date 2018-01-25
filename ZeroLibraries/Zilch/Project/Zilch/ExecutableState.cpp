@@ -118,9 +118,9 @@ namespace Zilch
   PerFrameData::PerFrameData(ExecutableState* state) :
     Frame(nullptr),
     NextFrame(nullptr),
-    CurrentFunction(nullptr),
-    ProgramCounter(ProgramCounterNotActive),
     State(state),
+    ProgramCounter(ProgramCounterNotActive),
+    CurrentFunction(nullptr),
     Debug(CallDebug::None),
     Report(nullptr),
     Timeouts(0),
@@ -326,18 +326,18 @@ namespace Zilch
 
   //***************************************************************************
   ExecutableState::ExecutableState() :
+    UserData(nullptr),
+    EnableDebugEvents(false),
+    PatchId(0),
     StackSize(DefaultStackSize),
     OverflowStackSize(DefaultStackSize),
-    UserData(nullptr),
-    MaxRecursionDepth(200),
-    HitStackOverflow(false),
-    TimeoutSeconds(0),
-    Name(DefaultName),
-    PatchId(0),
-    EnableDebugEvents(false),
     DoNotAllowAllocation(0),
+    MaxRecursionDepth(200),
+    Name(DefaultName),
+    AllocatingType(nullptr),
     UniqueIdScopeCounter(1),
-    AllocatingType(nullptr)
+    TimeoutSeconds(0),
+    HitStackOverflow(false)
   {
     ZilchErrorIfNotStarted(ExecutableState);
 
@@ -2277,9 +2277,6 @@ namespace Zilch
     Function* function = this->Data->CurrentFunction;
     ExecutableState* state = this->Data->State;
 
-    // Get the stack offset that we're at
-    size_t stackOffset = (size_t)(this->Data->Frame - this->Data->State->Stack);
-
     // Grab the parameters of the function type
     ParameterArray& parameters = function->FunctionType->Parameters;
 
@@ -2414,7 +2411,6 @@ namespace Zilch
 
     // Also grab the current function we're executing
     Function* function = topFrame->CurrentFunction;
-    size_t stackOffset = (size_t)(topFrame->Frame - state->Stack);
 
     // If this function is a non-static function
     if (function->This != nullptr)

@@ -14,7 +14,7 @@ namespace Zilch
   public:
     ZilchDocument(FilePathClass,
     "A helper class for building file paths and extracting information from file paths");
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(FilePathClass, TypeCopyMode::ReferenceType);
 
     ZilchDocument(CombineDirectories,
     "Combines directory paths and directories names together (empty entries are skipped). "

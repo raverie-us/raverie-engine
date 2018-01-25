@@ -13,7 +13,7 @@ namespace Zilch
   class ZeroSharedTemplate Range
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Range, TypeCopyMode::ReferenceType);
 
     Range() :
       Index(0)

@@ -50,6 +50,7 @@ namespace Zilch
 
   //***************************************************************************
   Function::Function() :
+    Hash(0),
     BoundFunction(nullptr),
     NativeConstructor(nullptr),
     FunctionType(nullptr),
@@ -57,8 +58,7 @@ namespace Zilch
     This(nullptr),
     SourceLibrary(nullptr),
     OwningProperty(nullptr),
-    IsVirtual(false),
-    Hash(0)
+    IsVirtual(false)
   {
   }
   

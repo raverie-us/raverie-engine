@@ -21,8 +21,8 @@ namespace Zilch
   
   //***************************************************************************
   DestructibleBuffer::DestructibleBuffer(const DestructibleBuffer& from) :
-    Data(from.Data),
-    Entries(from.Entries)
+    Entries(from.Entries),
+    Data(from.Data)
   {
     // We already directly copied over all the block array data (handed by its copy constructor)
     // Note: Untyped block array memcopies all its data over, but in truth we need to copy construct each of them

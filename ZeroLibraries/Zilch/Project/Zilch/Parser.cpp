@@ -35,9 +35,9 @@ namespace Zilch
 
   //***************************************************************************
   Parser::Parser(Project& project) :
-    TokenIndex(0),
     Errors(*(CompilationErrors*)&project),
-    ParentProject(&project)
+    ParentProject(&project),
+    TokenIndex(0)
   {
     ZilchErrorIfNotStarted(Parser);
   }

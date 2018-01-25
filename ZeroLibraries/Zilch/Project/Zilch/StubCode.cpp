@@ -133,9 +133,6 @@ namespace Zilch
   //***************************************************************************
   void StubCode::Generate(FunctionArray& functions)
   {
-    ZilchCodeBuilder& codeBuilder = this->Builder;
-    CodeFormat& format = codeBuilder.Format;
-
     // Loop through all the provided functions
     FunctionArray functionsSorted = functions;
     Sort(functionsSorted.All(), FunctionSorter);

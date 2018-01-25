@@ -78,7 +78,7 @@ namespace Zilch
   class ZeroShared ErrorEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ErrorEvent, TypeCopyMode::ReferenceType);
     
     ErrorEvent();
     ErrorEvent(const ErrorInfo& info, const CodeLocation& location, ErrorCode::Enum code, va_list args);

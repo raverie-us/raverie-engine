@@ -9,6 +9,11 @@
 #ifndef ZILCH_PRECOMPILED_HPP
 #define ZILCH_PRECOMPILED_HPP
 
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
+
 // This needs to be included before anything else
 // since it disables warnings and defines macros we use
 #include "LocalBuild.hpp"

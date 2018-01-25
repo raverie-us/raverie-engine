@@ -37,7 +37,7 @@ namespace Zilch
   class ZeroShared MemoryLeakEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(MemoryLeakEvent, TypeCopyMode::ReferenceType);
 
     MemoryLeakEvent();
     ExecutableState* State;
@@ -49,7 +49,7 @@ namespace Zilch
   class ZeroShared OpcodeEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(OpcodeEvent, TypeCopyMode::ReferenceType);
 
     OpcodeEvent();
     ExecutableState* State;
@@ -63,7 +63,7 @@ namespace Zilch
   class ZeroShared ExceptionEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ExceptionEvent, TypeCopyMode::ReferenceType);
     ExceptionEvent();
     ExecutableState* State;
     Exception* ThrownException;
@@ -84,7 +84,7 @@ namespace Zilch
   class ZeroShared FatalErrorEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(FatalErrorEvent, TypeCopyMode::ReferenceType);
 
     FatalErrorEvent();
     FatalError::Enum ErrorCode; 
@@ -334,7 +334,7 @@ namespace Zilch
   class ZeroShared ExecutableState : public EventHandler
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ExecutableState, TypeCopyMode::ReferenceType);
 
     // Friends
     friend class VirtualMachine;

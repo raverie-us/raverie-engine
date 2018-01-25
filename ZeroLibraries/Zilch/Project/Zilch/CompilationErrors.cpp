@@ -29,9 +29,9 @@ namespace Zilch
 
   //***************************************************************************
   CompilationErrors::CompilationErrors() :
+    UserData(nullptr),
     WasError(false),
     IgnoreMultipleErrors(true),
-    UserData(nullptr),
     TolerantMode(false)
   {
   }
