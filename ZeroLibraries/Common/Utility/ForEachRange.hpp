@@ -56,5 +56,5 @@ extern void VoidReturn();
 // This version will call 'front' and then immediately after grabbing the value it will call 'PopFront'
 // This means if the range does something irregular such as storing the value and modifying the stored value in PopFront, it will break
 // This form of iteration is generally safer however for iterating through intrusive lists and unlinking them as you go
-#define ZeroForRangeVar(value, rangeName, rangeExpr) ZeroForRangeHelper(value, rangeName, (rangeExpr).All(), 0, if(PopFront(rangeName)))
-#define ZeroForRangeRefVar(value, rangeName, rangeExpr) ZeroForRangeReferenceHelper(value, rangeName, (rangeExpr).All(), 0, if(PopFront(rangeName)))
+#define ZeroForRangeVar(value, rangeName, rangeExpr) ZeroForRangeHelper(value, rangeName, (rangeExpr).All(), VoidReturn(), if(PopFront(rangeName)))
+#define ZeroForRangeRefVar(value, rangeName, rangeExpr) ZeroForRangeReferenceHelper(value, rangeName, (rangeExpr).All(), VoidReturn(), if(PopFront(rangeName)))

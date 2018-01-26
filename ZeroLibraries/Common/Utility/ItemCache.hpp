@@ -132,7 +132,7 @@ public:
     }
 
     // Map unique item to ID
-    ItemIdMap::pointer_bool_pair result = mItemIdMap.Insert(item, id);
+    typename ItemIdMap::pointer_bool_pair result = mItemIdMap.Insert(item, id);
     if(result.second) // Insertion succeeded?
     {
       // Actually acquire the ID we used
@@ -203,7 +203,7 @@ public:
   bool MapIdOverwrite(Id id, const Item& item)
   {
     // Map unique ID to item
-    IdItemMap::pointer_bool_pair result = mIdItemMap.InsertOrAssign(id, item);
+    typename IdItemMap::pointer_bool_pair result = mIdItemMap.InsertOrAssign(id, item);
 
     // Success
     return result.second;

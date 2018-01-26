@@ -47,10 +47,12 @@ ZeroShared inline String ToString(StringParam value, bool shortFormat = false)
 {
   return value;
 }
+
 ZeroShared inline String ToString(StringRangeParam value, bool shortFormat = false)
 {
   return value;
 }
+
 ZeroShared inline String ToString(cstr value, bool shortFormat = false)
 {
   return value;

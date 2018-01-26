@@ -31,7 +31,7 @@ public:
   typedef typename base_type::const_reference const_reference;
   typedef typename base_type::value_type value_type;
   typedef typename base_type::pointer_bool_pair pointer_bool_pair;
-
+  typedef typename base_type::iterator iterator;
 protected:
   /// Base methods hidden to provide container behavior
   using base_type::FindAll;
