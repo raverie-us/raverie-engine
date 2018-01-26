@@ -165,7 +165,6 @@ Intersection::IntersectionType TestSegmentSegment(Vec2_t a1, Vec2_t a2,
   Vec2_t wn = w;
   SafeNormalize(&wn);
 
-  float_t dn = Cross(wn, vn);
   float_t d = Cross(w, v);
 
   // Either the segments are parallel, or one or both are degenerate
