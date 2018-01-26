@@ -63,7 +63,7 @@ DeclareEnum3(ScrollUpdate, Auto, ScrollBar, External);
 class BaseScrollArea : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BaseScrollArea, TypeCopyMode::ReferenceType);
 
   BaseScrollArea(Composite* parent, bool modernStyle = false);
   ~BaseScrollArea();
@@ -137,7 +137,7 @@ protected:
 class ScrollArea : public BaseScrollArea
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ScrollArea, TypeCopyMode::ReferenceType);
 
   ScrollArea(Composite* composite, bool modernStyle = false);
 

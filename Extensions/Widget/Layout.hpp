@@ -71,7 +71,7 @@ DeclareEnum2(LimitMode, Limited, Unlimited);
 
 struct LayoutArea
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(LayoutArea, TypeCopyMode::ValueType);
 
   LimitMode::Enum HorizLimit;
   LimitMode::Enum VerticalLimit;
@@ -99,7 +99,7 @@ LayoutResult AspectLayout(Vec2 aspect, Vec2 size);
 class Layout
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Layout, TypeCopyMode::ReferenceType);
 
   Layout(Thickness padding = Thickness::cZero);
 
@@ -115,7 +115,7 @@ public:
 class FillLayout : public Layout
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FillLayout, TypeCopyMode::ReferenceType);
 
   FillLayout(Thickness padding = Thickness::cZero);
   Vec2 Measure(Composite* widget, LayoutArea data) override;
@@ -126,7 +126,7 @@ public:
 class StackLayout : public Layout
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(StackLayout, TypeCopyMode::ReferenceType);
 
   StackLayout(Thickness padding = Thickness::cZero);
   StackLayout(LayoutDirection::Enum direction, Vec2 spacing = Vec2::cZero,
@@ -147,7 +147,7 @@ public:
 class EdgeDockLayout : public Layout
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EdgeDockLayout, TypeCopyMode::ReferenceType);
 
   Vec2 Measure(Composite* widget, LayoutArea data) override;
   Vec2 DoLayout(Composite* widget, LayoutArea data) override;
@@ -157,7 +157,7 @@ public:
 class DockLayout : public Layout
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DockLayout, TypeCopyMode::ReferenceType);
 
   DockLayout(Thickness padding = Thickness::cZero);
 
@@ -169,7 +169,7 @@ public:
 class RatioLayout : public Layout
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RatioLayout, TypeCopyMode::ReferenceType);
 
   RatioLayout(Thickness padding = Thickness::cZero);
 
@@ -183,7 +183,7 @@ public:
 class GridLayout : public Layout
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GridLayout, TypeCopyMode::ReferenceType);
 
   GridLayout(Thickness padding = Thickness::cZero);
 

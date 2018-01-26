@@ -22,7 +22,7 @@ namespace Events
 class TagEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TagEvent, TypeCopyMode::ReferenceType);
   TagLabel* mTag;
   String mTagName;
 };

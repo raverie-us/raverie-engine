@@ -22,7 +22,7 @@ typedef WidgetList::range WidgetListRange;
 class Composite : public Widget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Composite, TypeCopyMode::ReferenceType);
 
   Composite(Composite* parent, AttachType::Enum attachType = AttachType::Normal);
   ~Composite();

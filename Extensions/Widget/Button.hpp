@@ -23,7 +23,7 @@ class Command;
 class ButtonBase : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ButtonBase, TypeCopyMode::ReferenceType);
 
   typedef ButtonBase ZilchSelf;
 
@@ -79,7 +79,7 @@ DeclareEnum2(TextButtonStyle, Classic, Modern);
 class TextButton : public ButtonBase
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextButton, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   TextButton(Composite* parent, StringParam textStyle = cText);
@@ -112,7 +112,7 @@ public:
 class IconButton : public ButtonBase
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IconButton, TypeCopyMode::ReferenceType);
 
   IconButton(Composite* parent);
 
@@ -146,7 +146,7 @@ protected:
 class ToggleIconButton : public IconButton
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ToggleIconButton, TypeCopyMode::ReferenceType);
 
   ToggleIconButton(Composite* parent);
 

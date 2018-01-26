@@ -154,7 +154,7 @@ private:
 class MenuBarItem : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MenuBarItem, TypeCopyMode::ReferenceType);
   typedef MenuBarItem ZilchSelf;
   MenuBarItem(Composite* widget);
   void UpdateTransform() override;
@@ -177,7 +177,7 @@ public:
 class MenuBar : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MenuBar, TypeCopyMode::ReferenceType);
   typedef MenuBar ZilchSelf;
   MenuBar(Composite* widget);
   

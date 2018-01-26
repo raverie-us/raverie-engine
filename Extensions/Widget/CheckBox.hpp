@@ -18,7 +18,7 @@ namespace Zero
 class CheckBox : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CheckBox, TypeCopyMode::ReferenceType);
 
   CheckBox(Composite* parent);
   ~CheckBox();
@@ -58,7 +58,7 @@ private:
 class TextCheckBox : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextCheckBox, TypeCopyMode::ReferenceType);
 
   TextCheckBox(Composite* parent);
   ~TextCheckBox();

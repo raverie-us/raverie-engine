@@ -19,7 +19,7 @@ namespace Zero
 class MouseManipulation : public Widget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MouseManipulation, TypeCopyMode::ReferenceType);
 
   MouseManipulation(Mouse* mouse, Composite* parent);
   ~MouseManipulation();

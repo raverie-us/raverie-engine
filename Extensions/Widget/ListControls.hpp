@@ -29,7 +29,7 @@ const int cNoItemSelected = -1;
 class ListBox : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ListBox, TypeCopyMode::ReferenceType);
 
   ListBox(Composite* parent);
   ~ListBox();
@@ -95,7 +95,7 @@ public:
 class ComboBox : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ComboBox, TypeCopyMode::ReferenceType);
 
   ComboBox(Composite* parent);
   ~ComboBox();
@@ -150,7 +150,7 @@ public:
 class StringComboBox : public ComboBox
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(StringComboBox, TypeCopyMode::ReferenceType);
  
   StringComboBox(Composite* parent);
   ~StringComboBox();

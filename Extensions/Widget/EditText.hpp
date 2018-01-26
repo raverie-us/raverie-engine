@@ -32,7 +32,7 @@ DeclareEnum4(SelectMode, Left, Right, Start, End);
 class EditText : public Widget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditText, TypeCopyMode::ReferenceType);
 
   EditText(Composite* parent);
   ~EditText();

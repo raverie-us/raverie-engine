@@ -32,7 +32,7 @@ namespace Tags
 class CommandEvent : public ObjectEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CommandEvent, TypeCopyMode::ReferenceType);
 
   CommandEvent(Object* source, CommandManager* manager);
 
@@ -47,7 +47,7 @@ public:
 class CommandExecuter : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CommandExecuter, TypeCopyMode::ReferenceType);
 
   virtual ~CommandExecuter() {}
 
@@ -67,7 +67,7 @@ CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction);
 class Command : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Command, TypeCopyMode::ReferenceType);
 
   Command();
   ~Command();
@@ -154,7 +154,7 @@ public:
 class CommandManager : public ExplicitSingleton<CommandManager, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CommandManager, TypeCopyMode::ReferenceType);
 
   CommandManager();
   ~CommandManager();
@@ -206,14 +206,15 @@ public:
 template<typename ContextType>
 ContextType* CommandManager::GetContext()
 {
-  return GetContextFromTypeName(ZilchTypeId(ContextType)->Name).Get<ContextType*>();
+  BoundType* type = ZilchTypeId(ContextType);
+  return GetContextFromTypeName(type->Name).Get<ContextType*>();
 }
 
 //------------------------------------------------ Command Capture Context Event
 class CommandCaptureContextEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CommandCaptureContextEvent, TypeCopyMode::ReferenceType);
   CommandManager* ActiveSet;
 };
 

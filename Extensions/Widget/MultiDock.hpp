@@ -65,7 +65,7 @@ struct DockingShell
 class MultiDock : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiDock, TypeCopyMode::ReferenceType);
 
   MultiDock(Composite* parent);
   ~MultiDock();

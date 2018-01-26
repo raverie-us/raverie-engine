@@ -214,7 +214,7 @@ void ButtonBase::SetIgnoreInput(bool state)
 
 void ButtonBase::OnKeyDown(KeyboardEvent* event)
 {
-  if(!mIgnoreInput && event->Key == Keys::Space || event->Key == Keys::Enter)
+  if(!mIgnoreInput && (event->Key == Keys::Space || event->Key == Keys::Enter))
     Activate();
 
   TabJump(this, event);

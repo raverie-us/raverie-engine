@@ -15,7 +15,7 @@ class TextDefinition;
 class Text : public Widget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Text, TypeCopyMode::ReferenceType);
 
   Text(Composite* parent, StringParam style);
   Text(Composite* parent, StringParam fontName, uint fontSize);
@@ -51,7 +51,7 @@ public:
 class Label : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Label, TypeCopyMode::ReferenceType);
 
   Label(Composite* parent, StringParam style = DefaultTextStyle, StringParam text = String());
   ~Label();

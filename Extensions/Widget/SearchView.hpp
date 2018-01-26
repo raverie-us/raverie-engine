@@ -33,7 +33,7 @@ namespace Events
 class SearchViewEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SearchViewEvent, TypeCopyMode::ReferenceType);
 
   SearchView* View;
   SearchViewResult* Element;
@@ -119,7 +119,7 @@ struct SearchData
 class SearchViewElement : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SearchViewElement, TypeCopyMode::ReferenceType);
 
   SearchViewElement(Composite* parent);
   void OnMouseUp(MouseEvent* event);
@@ -138,7 +138,7 @@ public:
 class SearchView : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SearchView, TypeCopyMode::ReferenceType);
   
   SearchView(Composite* parent);
   ~SearchView();

@@ -17,7 +17,7 @@ namespace Zero
 class Viewport : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Viewport, TypeCopyMode::ReferenceType);
 
   Viewport(Composite* parent, Space* space, Camera* camera);
 
