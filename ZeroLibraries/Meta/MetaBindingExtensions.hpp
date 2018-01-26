@@ -342,16 +342,16 @@ public:
 #define hasAll(type) HasRange<type>()
 
 //------------------------------------------------------------------------------------ Array Binding
-#define ZeroDefineArrayType(containerType, containedType)                                                 \
-  ZeroDefineArrayTypeHelper(containerType, containedType, builder, type)                                  \
+#define ZeroDefineArrayType(arrayType)                                                                    \
+  ZilchDefineTemplateType(ZeroMetaArray<arrayType>, builder, type)                                        \
   {                                                                                                       \
                                                                                                           \
   }                                                                                                       \
                                                                                                           \
-  ZilchDefineExternalBaseType(containerType<containedType>, TypeCopyMode::ReferenceType, builder, type)   \
+  ZilchDefineExternalBaseType(arrayType, TypeCopyMode::ReferenceType, builder, type)                      \
   {                                                                                                       \
     type->HandleManager = ZilchManagerId(PointerManager);                                                 \
-    type->Add(new ZeroMetaArray<containerType<containedType>>());                                         \
+    type->Add(new ZeroMetaArray<arrayType>());                                                            \
   }
 
 #define ZeroInitializeArrayTypeAs(arrayType, name)                          \

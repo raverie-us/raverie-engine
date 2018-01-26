@@ -49,7 +49,7 @@ ZilchDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, typ
 ZilchDefineEnum(SendsEvents);
 ZilchDefineEnum(InternetProtocol);
 
-ZeroDefineArrayType(Array, Revision);
+ZeroDefineArrayType(Array<Revision>);
 
 //**************************************************************************************************
 ZilchDefineStaticLibrary(MetaLibrary)
