@@ -191,72 +191,72 @@ bool EnumMetaSerialization::ConvertFromString(StringParam input, Any& output)
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Integer>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Integer>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Integer2>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Integer2>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Integer3>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Integer3>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Integer4>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Integer4>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<String>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<String>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Boolean>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Boolean>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Real>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Real>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Real2>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Real2>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Real3>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Real3>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Real4>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Real4>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Mat2>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Mat2>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Mat3>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Mat3>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Mat4>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Mat4>, builder, type)
 {
 }
 
 //**************************************************************************************************
-ZilchDefineType(PrimitiveMetaSerialization<Quat>, builder, type)
+ZilchDefineTemplateType(PrimitiveMetaSerialization<Quat>, builder, type)
 {
 }
 

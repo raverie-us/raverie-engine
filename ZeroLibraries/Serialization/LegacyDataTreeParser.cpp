@@ -23,7 +23,7 @@ DataNode* LegacyDataTreeParser::BuildTree(DataTreeContext& context, StringRange 
 }
 
 //******************************************************************************
-DataNode* ParseError(DataTreeContext& c, Tokenizer& t, cstr parseError)
+DataNode* RaiseParseError(DataTreeContext& c, Tokenizer& t, cstr parseError)
 {
   c.Error = true;
   c.Message = String::Format("Error parsing file '%s' on line %u. Error: %s",
@@ -54,7 +54,7 @@ DataNode* ReadObject(DataTreeContext& c, Tokenizer& tokenizer, DataNode* parent)
     //if we ever get an invalid token, bail
     else if(token.Type == TempToken::None)
     {
-      return ParseError(c, tokenizer, "End of file found trying to read object.");
+      return RaiseParseError(c, tokenizer, "End of file found trying to read object.");
     }
 
     //read the next field (may be a property or even another object)
@@ -90,7 +90,7 @@ DataNode* ReadArray(DataTreeContext& c, Tokenizer& tokenizer, DataNode* parent)
     }
     else if(token.Type == TempToken::None)
     {
-      return ParseError(c, tokenizer, "End of file found trying to read array.");
+      return RaiseParseError(c, tokenizer, "End of file found trying to read array.");
     }
 
     //Should be a value to read in the array Try to read it
@@ -125,14 +125,14 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
 
   if(!(token.Type == TempToken::Word || token.Type == TempToken::String))
   {
-    return ParseError(c, tokenizer, "Objects can only contain name-value pairs. "
+    return RaiseParseError(c, tokenizer, "Objects can only contain name-value pairs. "
       "Name is not a string.");
   }
 
   // Read type name if available
   StringRange typeName = token.Text;
   if(token.Type != TempToken::Word)
-    return ParseError(c, tokenizer, "Bad token while reading object. Expected type name.");
+    return RaiseParseError(c, tokenizer, "Bad token while reading object. Expected type name.");
 
   // Convert to new type names "Real2, Real3, ..."
   if(typeName == "float")
@@ -158,7 +158,7 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
     tokenizer.ReadToken(token);
 
     if(token.Type != TempToken::Number)
-      return ParseError(c, tokenizer, "Bad child id while reading object. Expected u64.");
+      return RaiseParseError(c, tokenizer, "Bad child id while reading object. Expected u64.");
 
     childId = ReadHexString(String(token.Text));
     tokenizer.ReadToken(token);
@@ -212,7 +212,7 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   {
     if(token.Text != ',')
     {
-      return ParseError(c, tokenizer, "The node was being marked for removal "
+      return RaiseParseError(c, tokenizer, "The node was being marked for removal "
         "must be immediately closed with a comma.");
     }
 
@@ -225,7 +225,7 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
     // There has to be an = or : since the field is being assigned to
     if(!(token.Text == '=' || token.Text == ':'))
     {
-      return ParseError(c, tokenizer, "Bad token after name in field on object. "
+      return RaiseParseError(c, tokenizer, "Bad token after name in field on object. "
         "Needed '=' or ':'");
     }
 
@@ -256,7 +256,7 @@ DataNode* ReadValue(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   // Deal with invalid case
   if(token.Type == TempToken::None)
   {
-    return ParseError(c, tokenizer, "End of file found trying to read value.");
+    return RaiseParseError(c, tokenizer, "End of file found trying to read value.");
   }
 
   // If this is a single character symbol type, check which kind of bracket it is
@@ -267,7 +267,7 @@ DataNode* ReadValue(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
     else if(token.Text == '{')
       return ReadObject(c, tokenizer, parent);
     else
-      return ParseError(c, tokenizer, "Read symbol while trying to read value.");
+      return RaiseParseError(c, tokenizer, "Read symbol while trying to read value.");
   }
   else
   {

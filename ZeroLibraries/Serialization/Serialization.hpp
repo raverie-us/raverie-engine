@@ -66,7 +66,10 @@ DeclareBitField4(PolymorphicFlags,
 //------------------------------------------------------------- Polymorphic Node
 struct PolymorphicNode
 {
-  PolymorphicNode() : mAttributes(nullptr), UniqueNodeId(cInvalidUniqueNodeId) {}
+  PolymorphicNode()
+    : UniqueNodeId(cInvalidUniqueNodeId)
+    , mAttributes(nullptr)
+    {}
 
   StringRange TypeName;
   StringRange Name;

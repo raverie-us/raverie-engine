@@ -19,7 +19,7 @@ struct PolymorphicNode;
 class MetaSerialization : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaSerialization, TypeCopyMode::ReferenceType);
 
   virtual void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer);
 
@@ -45,7 +45,7 @@ public:
 class EnumMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EnumMetaSerialization, TypeCopyMode::ReferenceType);
 
   EnumMetaSerialization(BoundType* enumType);
 
@@ -61,7 +61,7 @@ template <typename T>
 class PrimitiveMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PrimitiveMetaSerialization, TypeCopyMode::ReferenceType);
 
   bool SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   bool ConvertFromString(StringParam input, Any& output) override;
@@ -71,7 +71,7 @@ public:
 class MetaStringSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaStringSerialization, TypeCopyMode::ReferenceType);
 
   bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer) override;
   bool ConvertFromString(StringParam input, Any& output) override;
@@ -81,7 +81,7 @@ public:
 class SerializationFilter : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SerializationFilter, TypeCopyMode::ReferenceType);
   virtual bool ShouldSerialize(Object* object) = 0;
 };
 
