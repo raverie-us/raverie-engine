@@ -384,7 +384,7 @@ bool Replica::RemoveReplicaChannel(const String& replicaChannelName)
   {
     // Unable to modify replica channel configuration
     Error("Replica is already valid, unable to modify replica channel configuration");
-    return nullptr;
+    return false;
   }
 
   // Remove replica channel
