@@ -39,7 +39,7 @@ class UiTransformUpdateEvent : public Event
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UiTransformUpdateEvent, TypeCopyMode::ReferenceType);
 
   UiTransformUpdateEvent() : mRootWidget(nullptr) {}
 
@@ -143,7 +143,7 @@ public:
   typedef UiWidget* return_type;
 
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(UiWidgetCastResultsRange, TypeCopyMode::ValueType);
   
   /// Constructor.
   UiWidgetCastResultsRange(const UiWidgetArray& overlappingWidgets);
@@ -168,7 +168,7 @@ public:
   typedef ComponentHierarchy<UiWidget> BaseType;
 
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UiWidget, TypeCopyMode::ReferenceType);
 
   ~UiWidget();
 

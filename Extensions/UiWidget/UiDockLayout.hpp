@@ -14,7 +14,7 @@ class UiDockLayout : public UiLayout
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UiDockLayout, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;

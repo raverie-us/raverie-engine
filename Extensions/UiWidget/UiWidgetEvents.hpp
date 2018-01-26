@@ -31,7 +31,7 @@ class UiFocusEvent : public Event
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UiFocusEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   UiFocusEvent(UiWidget* focusGained, UiWidget* focusLost);

@@ -14,7 +14,7 @@ class UiFillLayout : public UiLayout
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UiFillLayout, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
