@@ -152,7 +152,7 @@ DeclareBitField3(SystemValueStates, Input, Output, Forced);
 class LanguageSystemValue
 {
 public:
-  ZilchDeclareType(Zilch::TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LanguageSystemValue, Zilch::TypeCopyMode::ReferenceType);
 
   LanguageSystemValue();
 
@@ -188,7 +188,7 @@ public:
 class ShaderSystemValue
 {
 public:
-  ZilchDeclareType(Zilch::TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShaderSystemValue, Zilch::TypeCopyMode::ReferenceType);
 
   LanguageSystemValue* AddLanguageSystemValue(StringParam language);
 
@@ -217,7 +217,7 @@ public:
 class ShaderSystemValueSettings
 {
 public:
-  ZilchDeclareType(Zilch::TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShaderSystemValueSettings, Zilch::TypeCopyMode::ReferenceType);
 
   ShaderSystemValueSettings();
 

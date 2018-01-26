@@ -12,7 +12,7 @@ namespace Zilch
 //------------------------------------------------------------------------Shader
 class Shader
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Shader, TypeCopyMode::ReferenceType);
 
   static void AddInlineShaderCode(StringParam language, StringParam shaderCode);
   static void AddInlineShaderCode(StringParam language, int minVersion, int maxVersion, StringParam shaderCode);

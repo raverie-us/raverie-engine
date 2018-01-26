@@ -560,8 +560,8 @@ void ParseCoreLibrary(ZilchShaderTranslator* translator, ZilchShaderLibrary* cor
   coreLibrary->CreateNativeType("Boolean", "bool", refType, ShaderVarType::Scalar);
 
 
-  char* zilchVectorTypes[3] = {"Real%d", "Integer%d", "Boolean%d"};
-  char* glslVectorTypes[3] = {"vec%d", "ivec%d", "bvec%d"};
+  char const* zilchVectorTypes[3] = {"Real%d", "Integer%d", "Boolean%d"};
+  char const* glslVectorTypes[3] = {"vec%d", "ivec%d", "bvec%d"};
   for(size_t typeIndex = 0; typeIndex < 3; ++typeIndex)
   {
     for(size_t dim = 2; dim <= 4; ++dim)
@@ -572,8 +572,8 @@ void ParseCoreLibrary(ZilchShaderTranslator* translator, ZilchShaderLibrary* cor
     }
   }
 
-  char* zilchMatrixTypes[1] = {"Real%dx%d"};
-  char* glslMatrixTypes[1] = {"mat%dx%d"};
+  char const* zilchMatrixTypes[1] = {"Real%dx%d"};
+  char const* glslMatrixTypes[1] = {"mat%dx%d"};
   for(size_t type = 0; type < 1; ++type)
   {
     for(size_t y = 2; y <= 4; ++y)
@@ -634,11 +634,11 @@ void SetupGlsl_1_3(ZilchShaderTranslator* translator)
   libraryTranslator.RegisterTemplateTypeResolver(Glsl13TemplateTypeResolver);
 
   // Store what the default value is for the basic types in zilch (needed later for vector types as well)
-  char* glslDefaultValues[3] = {"0.0", "0", "false"};
+  char const* glslDefaultValues[3] = {"0.0", "0", "false"};
 
   // Make a mapping of zilch types to glsl types
-  char* zilchBasicTypes[3] = {"Real", "Integer", "Boolean"};
-  char* glslBasicTypes[3] = {"float", "int", "bool"};
+  char const* zilchBasicTypes[3] = {"Real", "Integer", "Boolean"};
+  char const* glslBasicTypes[3] = {"float", "int", "bool"};
   // Add translation mappings for all basic zilch->glsl types
   for(size_t type = 0; type < 3; ++type)
   {
@@ -664,9 +664,9 @@ void SetupGlsl_1_3(ZilchShaderTranslator* translator)
   }
 
   // Now register the vector type replacements
-  char* zilchVectorTypes[3] = {"Real%d", "Integer%d", "Boolean%d"};
-  char* glslVectorTypes[3] = {"vec%d", "ivec%d", "bvec%d"};
-  char* axesNames[4] = {"XAxis", "YAxis", "ZAxis", "WAxis"};
+  char const* zilchVectorTypes[3] = {"Real%d", "Integer%d", "Boolean%d"};
+  char const* glslVectorTypes[3] = {"vec%d", "ivec%d", "bvec%d"};
+  char const* axesNames[4] = {"XAxis", "YAxis", "ZAxis", "WAxis"};
   for(size_t type = 0; type < 3; ++type)
   {
     // Assume for now that all vector types are of dimension 2 -> 4
@@ -736,8 +736,8 @@ void SetupGlsl_1_3(ZilchShaderTranslator* translator)
   }
 
   // Now translate the matrix types
-  char* zilchMatrixTypes[1] = {"Real%dx%d"};
-  char* glslMatrixTypes[1] = {"mat%dx%d"};
+  char const* zilchMatrixTypes[1] = {"Real%dx%d"};
+  char const* glslMatrixTypes[1] = {"mat%dx%d"};
   for(size_t type = 0; type < 1; ++type)
   {
     for(size_t y = 2; y <= 4; ++y)
