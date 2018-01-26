@@ -132,7 +132,7 @@ public:
     if(stream.GetMode() == SerializerMode::Saving)
     {
       // If we're saving, grab each block and serialize it
-      Array<BlockType*>::range range = dataArray.All();
+      typename Array<BlockType*>::range range = dataArray.All();
       for(; !range.Empty(); range.PopFront())
       {
         BlockType* block = range.Front();
@@ -153,7 +153,8 @@ public:
           continue;
         }
 
-        BlockType* block = AllocateBlock(type, false).Get<BlockType*>();
+        Handle handle = AllocateBlock(type, false);
+        BlockType* block = handle.Get<BlockType*>();
         if(block)
         {
           // Serialize the block and then add it to our list

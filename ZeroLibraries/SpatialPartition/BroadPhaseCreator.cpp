@@ -18,11 +18,11 @@ namespace Z
 BroadPhaseLibrary* gBroadPhaseLibrary = nullptr;
 }//namespace Z
 
-ZilchDefineTemplateType(BroadphasePropertyExtension, BroadPhase::Dynamic, builder, type)
+ZilchDefineTemplateType(DynamicBroadphasePropertyExtension, builder, type)
 {
 }
 
-ZilchDefineTemplateType(BroadphasePropertyExtension, BroadPhase::Static, builder, type)
+ZilchDefineTemplateType(StaticBroadphasePropertyExtension, builder, type)
 {
 }
 

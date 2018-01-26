@@ -453,9 +453,6 @@ void LocalModifications::ClearModifications(HandleParam object, bool clearChildr
           isLocallyAdded = state->IsChildLocallyAdded(childId);
         }
 
-        // Only retain if it wasn't locally added
-        bool childRetainOverrideProperties = !isLocallyAdded;
-
         ClearModifications(child, true, retainOverrideProperties, cachedMemory);
       }
     }

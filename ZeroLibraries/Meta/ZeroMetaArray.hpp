@@ -40,7 +40,6 @@ public:
   void Add(HandleParam instance, AnyParam value) override
   {
     ArrayType& container = *instance.Get<ArrayType*>(GetOptions::AssertOnNull);
-    ContainedType* element = value.Get<ContainedType*>(GetOptions::AssertOnNull);
     container.PushBack();
     container.Back().SetDefaults();
   }
