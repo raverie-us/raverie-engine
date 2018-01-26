@@ -15,9 +15,9 @@ namespace Zero
 class DebugDrawStep
 {
 public:
-#define ZeroDebugPrimitive(DebugType) \
-  Array<Debug::##DebugType##> m##DebugType##List; \
-  void Add(const Debug::##DebugType##& value) {m##DebugType##List.PushBack(value);}
+#define ZeroDebugPrimitive(DebugType)         \
+  Array<Debug::DebugType> m##DebugType##List; \
+  void Add(const Debug::DebugType& value) {m##DebugType##List.PushBack(value);}
 #include "DebugPrimitives.inl"
 #undef ZeroDebugPrimitive
   
@@ -46,7 +46,7 @@ public:
   // top level of the algorithm. Any sub-step should clone a debug shape and only set 
   // the relevant properties, this leaves all pre-establish properties the same.
 #define ZeroDebugPrimitive(DebugType) \
-  Debug::##DebugType mBase##DebugType##;
+  Debug::DebugType mBase##DebugType;
 #include "DebugPrimitives.inl"
 #undef ZeroDebugPrimitive
 };

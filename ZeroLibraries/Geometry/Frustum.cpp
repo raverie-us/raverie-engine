@@ -39,7 +39,7 @@ Plane& Frustum::Get(uint index)
   if(index >= 6)
   {
     String msg = String::Format("Index %d is invalid. Frustums only have 6 planes.", index);
-    Error("Invalid Index", msg);
+    Error("Invalid Index", msg.c_str());
     return Planes[0];
   }
 
@@ -51,7 +51,7 @@ void Frustum::Set(uint index, const Plane& plane)
   if(index >= 6)
   {
     String msg = String::Format("Index %d is invalid. Frustums only have 6 planes.", index);
-    Error("Invalid Index", msg);
+    Error("Invalid Index", msg.c_str());
     return;
   }
   Planes[index] = plane;

@@ -68,9 +68,9 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
                            const Array<uint>& contours, 
                            s32 edgeCount, 
                            s32 seed)
-  : mRandom(seed)
+  : mNodes(vertices.Size() * 4 + 1 + vertices.Size() * 2)
   , mRegions(vertices.Size() * 2 + 1 + 1)
-  , mNodes(vertices.Size() * 4 + 1 + vertices.Size() * 2)
+  , mRandom(seed)
   , mIsValid(true)
 {
   // Total number of graph regions is n + k + 1

@@ -61,9 +61,9 @@ IndexPool<T, index_t>::IndexPool()
 
 template <typename T, typename index_t>
 IndexPool<T, index_t>::IndexPool(index_t capacity)
-  : mFreeList(-1)
-  , mCapacity(capacity)
+  : mCapacity(capacity)
   , mSize(0)
+  , mFreeList(-1)
 {
   mData = new Node[mCapacity];
   for(index_t i = mCapacity - 1; i >= 0; --i)
