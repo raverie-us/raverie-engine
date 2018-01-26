@@ -56,25 +56,26 @@ class ArrayMap : public ArraySet<Pair<KeyType, DataType>, Sorter, Allocator>
 {
 public:
   /// Typedefs
-  typedef ArrayMap<KeyType, DataType, Sorter, Allocator>       this_type;
-  typedef ArraySet<Pair<KeyType, DataType>, Sorter, Allocator> array_set_type;
-  typedef array_set_type                                       base_type;
-  typedef KeyType                                              key_type;
-  typedef key_type*                                            key_pointer;
-  typedef const key_type*                                      const_key_pointer;
-  typedef key_type&                                            key_reference;
-  typedef const key_type&                                      const_key_reference;
-  typedef DataType                                             data_type;
-  typedef data_type*                                           data_pointer;
-  typedef const data_type*                                     const_data_pointer;
-  typedef data_type&                                           data_reference;
-  typedef const data_type&                                     const_data_reference;
-  typedef typename base_type::range range;
-  typedef typename base_type::size_type size_type;
-  typedef typename base_type::pointer_bool_pair pointer_bool_pair;
-  typedef typename base_type::iterator iterator;
-  typedef typename base_type::pointer pointer;
-  typedef typename base_type::const_reference const_reference;
+  typedef ArrayMap<KeyType, DataType, Sorter, Allocator>        this_type;
+  typedef ArraySet<Pair<KeyType, DataType>, Sorter, Allocator>  array_set_type;
+  typedef array_set_type                                        base_type;
+  typedef KeyType                                               key_type;
+  typedef key_type*                                             key_pointer;
+  typedef const key_type*                                       const_key_pointer;
+  typedef key_type&                                             key_reference;
+  typedef const key_type&                                       const_key_reference;
+  typedef DataType                                              data_type;
+  typedef data_type*                                            data_pointer;
+  typedef const data_type*                                      const_data_pointer;
+  typedef data_type&                                            data_reference;
+  typedef const data_type&                                      const_data_reference;
+  typedef typename base_type::value_type                        value_type;
+  typedef typename base_type::range                             range;
+  typedef typename base_type::size_type                         size_type;
+  typedef typename base_type::pointer_bool_pair                 pointer_bool_pair;
+  typedef typename base_type::iterator                          iterator;
+  typedef typename base_type::pointer                           pointer;
+  typedef typename base_type::const_reference                   const_reference;
 
   /// Range adapter that presents only the key members in a key-data pair range, intended for convenience
   struct key_range : public range
@@ -185,7 +186,7 @@ public:
   key_pointer FindKeyPointer(const KeyCompareType& searchKey) const
   {
     // Find instance
-    size_type index = FindIndex(searchKey);
+    size_type index = base_type::FindIndex(searchKey);
     if(index == InvalidIndex) // Unable?
       return nullptr;
     else
@@ -197,7 +198,7 @@ public:
   const_key_reference FindKeyValue(const KeyCompareType& searchKey, const_key_reference ifNotFound) const
   {
     // Find instance
-    size_type index = FindIndex(searchKey);
+    size_type index = base_type::FindIndex(searchKey);
     if(index == InvalidIndex) // Unable?
       return ifNotFound;
     else
@@ -209,7 +210,7 @@ public:
   data_pointer FindPointer(const KeyCompareType& searchKey) const
   {
     // Find instance
-    size_type index = FindIndex(searchKey);
+    size_type index = base_type::FindIndex(searchKey);
     if(index == InvalidIndex) // Unable?
       return nullptr;
     else
@@ -221,11 +222,11 @@ public:
   const_data_reference FindValue(const KeyCompareType& searchKey, const_data_reference ifNotFound) const
   {
     // Find instance
-    size_type index = FindIndex(searchKey);
-    if(index == InvalidIndex) // Unable?
+    size_type index = base_type::FindIndex(searchKey);
+    if(index == base_type::InvalidIndex) // Unable?
       return ifNotFound;
     else
-      return mData[index].second;
+      return base_type::mData[index].second;
   }
 
   //
@@ -272,17 +273,17 @@ public:
   data_reference FindOrInsert(const_key_reference key)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), key, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, key)) // Found?
+    && base_type::mSorter.Equal(*position, key)) // Found?
       return position->second;
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       value_type newValue = value_type(key);
       base_type::Insert(position, ZeroMove(newValue));
-      return mData[index].second;
+      return base_type::mData[index].second;
     }
   }
 

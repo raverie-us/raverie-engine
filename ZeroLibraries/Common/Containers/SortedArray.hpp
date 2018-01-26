@@ -73,13 +73,14 @@ public:
   typedef SortedArray<ValueType, Sorter, Allocator> this_type;
   typedef Array<ValueType, Allocator>               array_type;
   typedef array_type                                base_type;
-  typedef typename base_type::pointer pointer;
-  typedef typename base_type::iterator iterator;
-  typedef typename base_type::size_type size_type;
-  typedef typename base_type::const_reference const_reference;
-  typedef typename base_type::const_iterator const_iterator;
-  typedef typename base_type::value_type value_type;
-  typedef typename base_type::range range;
+  
+  typedef typename base_type::pointer               pointer;
+  typedef typename base_type::iterator              iterator;
+  typedef typename base_type::size_type             size_type;
+  typedef typename base_type::const_reference       const_reference;
+  typedef typename base_type::const_iterator        const_iterator;
+  typedef typename base_type::value_type            value_type;
+  typedef typename base_type::range                 range;
 
   typedef Sorter                                    sorter_type;
   typedef Pair<pointer, bool>                       pointer_bool_pair;
@@ -167,12 +168,12 @@ public:
   {
     // Get lower bound
     iterator  position = LowerBound(base_type::All(), value, mSorter).Begin();
-    size_type index    = position - mData;
+    size_type index    = position - base_type::mData;
     if(position != base_type::End()
     && mSorter.Equal(*position, value)) // Found?
       return index;
     else
-      return InvalidIndex;
+      return base_type::InvalidIndex;
   }
 
   /// Returns a pointer to the first equivalent element in the array, else nullptr
@@ -181,10 +182,10 @@ public:
   {
     // Find first instance
     size_type index = FindIndex(value);
-    if(index == InvalidIndex) // Unable?
+    if(index == base_type::InvalidIndex) // Unable?
       return nullptr;
     else
-      return mData + index;
+      return base_type::mData + index;
   }
 
   /// Returns the value of the first equivalent element in the array, else valueIfNotFound
@@ -193,10 +194,10 @@ public:
   {
     // Find first instance
     size_type index = FindIndex(value);
-    if(index == InvalidIndex) // Unable?
+    if(index == base_type::InvalidIndex) // Unable?
       return valueIfNotFound;
     else
-      return mData[index];
+      return base_type::mData[index];
   }
 
   /// Returns the range of all equivalent elements in the array
@@ -217,7 +218,7 @@ public:
   template<typename CompareType>
   bool Contains(const CompareType& value) const
   {
-    return FindIndex(value) != InvalidIndex;
+    return FindIndex(value) != base_type::InvalidIndex;
   }
   bool Contains(const value_type& value) const
   {
@@ -234,9 +235,9 @@ public:
   {
     // Get lower bound
     iterator  position = LowerBound(base_type::All(), value, mSorter).Begin();
-    size_type index    = position - mData;
+    size_type index    = position - base_type::mData;
     base_type::Insert(position, value);
-    return mData + index;
+    return base_type::mData + index;
   }
   pointer Insert(MoveReference<value_type> value)
   {
@@ -300,10 +301,10 @@ public:
   {
     // Erase first instance
     size_type index = FindIndex(value);
-    if(index == InvalidIndex) // Unable?
+    if(index == base_type::InvalidIndex) // Unable?
       return pointer_bool_pair(base_type::End(), false);
     else
-      return pointer_bool_pair(base_type::Erase(mData + index), true);
+      return pointer_bool_pair(base_type::Erase(base_type::mData + index), true);
   }
   pointer_bool_pair EraseValue(const value_type& value)
   {

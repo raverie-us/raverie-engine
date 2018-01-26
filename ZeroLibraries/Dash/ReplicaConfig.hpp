@@ -461,7 +461,7 @@ template<typename DataType>
 struct PairSortPolicy<Variant, DataType>
 {
   /// Typedefs
-  typedef typename Pair<Variant, DataType> value_type;
+  typedef struct Pair<Variant, DataType> value_type;
   typedef Variant  key_type;
   typedef DataType data_type;
 

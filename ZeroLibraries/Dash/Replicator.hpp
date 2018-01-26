@@ -468,7 +468,7 @@ public:
   {
     /// Typedefs
     typedef Variant                             Item;
-    typedef typename ItemCache<Variant, Id>     ItemCache;
+    typedef class ItemCache<Variant, Id>        ItemCache;
     typedef typename ItemCache::item_id_range   item_id_range;
     typedef typename ItemCache::item_id_pointer item_id_pointer;
 

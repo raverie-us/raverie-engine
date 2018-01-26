@@ -360,8 +360,7 @@ class PeerPlugin
 {
 public:
   /// Destructor
-  /// NOTE: This is NOT virtual, it's the responsibility of the user to clean-up their plugin!
-  ~PeerPlugin();
+  virtual ~PeerPlugin();
 
   //
   // Member Functions

@@ -862,7 +862,7 @@ R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStream::Rea
   // Typedefs
   typedef typename conditional<is_signed<R>::value, R, T>::type V;
   typedef typename make_unsigned<V>::type                       UV;
-  typedef double                                                F;
+  //typedef double                                                F;
 
   // (Range should be valid)
   Assert(minValue_ <= maxValue_);
