@@ -185,7 +185,11 @@ namespace Audio
             break;
         }
 
-        int samplesToCopy = Math::Max((int)Samples.Size() - (int)sampleIndex, (int)0);
+        // The number of samples to copy is either the number we need or the number available
+        // (after checking for decoded packets we could have more than we need)
+        int samplesToCopy = Math::Min(numberOfSamples, Samples.Size() - sampleIndex);
+        // Make sure we don't try to use a negative number
+        samplesToCopy = Math::Max(samplesToCopy, (int)0);
 
         // Check if there are samples available to copy
         if (samplesToCopy > 0)
