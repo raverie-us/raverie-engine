@@ -929,6 +929,11 @@ void RootWidget::OnOsMouseDrop(OsMouseDropEvent* mouseDrop)
   mouseEvent.Source = targetObject;
 
   targetObject->DispatchBubble(Events::MouseDrop, &mouseEvent);
+
+  MouseFileDropEvent fileDrop(mouseEvent);
+  fileDrop.Copy(*mouseDrop);
+
+  targetObject->DispatchBubble(Events::MouseFileDrop, &fileDrop);
 }
 
 Composite* RootWidget::GetPopUp()

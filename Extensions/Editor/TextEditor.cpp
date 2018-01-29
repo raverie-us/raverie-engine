@@ -203,7 +203,7 @@ TextEditor::TextEditor(Composite* parent)
   ConnectThisTo(mScinWidget, Events::FocusGained, OnFocusIn);
   ConnectThisTo(mScinWidget, Events::RightMouseDown, OnRightMouseDown);
   ConnectThisTo(mScinWidget, Events::MouseMove, OnMouseMove);
-  ConnectThisTo(mScinWidget, Events::MouseDrop, OnMouseDrop);
+  ConnectThisTo(mScinWidget, Events::MouseFileDrop, OnMouseFileDrop);
   ConnectThisTo(mScinWidget, Events::TextTyped, OnTextTyped);
 
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
@@ -622,7 +622,7 @@ void TextEditor::OnMouseUp(MouseEvent* event)
   mScintilla->ButtonUp(Point(p.x, p.y), mTime, false);
 }
 
-void TextEditor::OnMouseDrop(MouseEvent* event)
+void TextEditor::OnMouseFileDrop(MouseFileDropEvent* event)
 {
 }
 

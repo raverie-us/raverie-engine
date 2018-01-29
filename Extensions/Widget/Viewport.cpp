@@ -36,12 +36,28 @@ Viewport::Viewport(Composite* parent, Space* space, Camera* camera)
 
   mViewportTexture = nullptr;
   new ViewportDisplay(this);
+
+  ConnectThisTo(this, Events::MouseFileDrop, OnMouseFileDrop);
 }
 
 void Viewport::OnDestroy()
 {
   Composite::OnDestroy();
   mViewportInterface = nullptr;
+}
+
+void Viewport::OnMouseFileDrop(MouseFileDropEvent* event)
+{
+  if(mTargetSpace != nullptr)
+    mTargetSpace->DispatchEvent(Events::MouseFileDrop, event);
+
+  if(mCamera != nullptr)
+  {
+    Cog* cog = mCamera->GetCameraViewportCog();
+    if(cog != nullptr)
+      cog->DispatchEvent(Events::MouseFileDrop, event);
+  }
+
 }
 
 Space* Viewport::GetTargetSpace()
