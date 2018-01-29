@@ -31,7 +31,7 @@ namespace Events
 class LauncherCommunicationEvent : public SendableEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherCommunicationEvent, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
   void LoadFromCommandArguments(StringMap& arguments);

@@ -36,7 +36,7 @@ DeclareEnum3(PreviewAnimate, None, MouseOver, Always);
 class PreviewWidget : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PreviewWidget, TypeCopyMode::ReferenceType);
 
   PreviewWidget(Composite* parent);
   PreviewWidget(PreviewWidgetInitializer& initializer);
@@ -98,7 +98,7 @@ struct PreviewWidgetCreator
 class PreviewWidgetFactory : public ExplicitSingleton<PreviewWidgetFactory, Object>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PreviewWidgetFactory, TypeCopyMode::ReferenceType);
 
   typedef HashMap<String, PreviewWidgetCreator> CellEditorMapType;
   CellEditorMapType Creators;

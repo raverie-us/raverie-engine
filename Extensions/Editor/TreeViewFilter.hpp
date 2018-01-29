@@ -142,11 +142,13 @@ public:
   {
     if(dataEntry == this)
     {
+      static const String itemIcon("ItemIcon");
+      static const String object("Object");
       if(column == CommonColumns::Icon)
-        variant = "ItemIcon";
+        variant = itemIcon;
 
       if(column == CommonColumns::Type)
-        variant = "Object";
+        variant = object;
       return;
     }
 

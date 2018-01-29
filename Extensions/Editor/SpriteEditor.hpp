@@ -44,7 +44,7 @@ class FileEditEvent;
 class SpriteFrame
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpriteFrame, TypeCopyMode::ReferenceType);
 
   SpriteFrame();
   ~SpriteFrame();
@@ -79,7 +79,7 @@ struct TextureArea
 class SpritePreview : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpritePreview, TypeCopyMode::ReferenceType);
 
   SpritePreview(Composite* parent);
   ~SpritePreview();
@@ -182,7 +182,7 @@ public:
 class SpriteSourceEditor : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpriteSourceEditor, TypeCopyMode::ReferenceType);
 
   SpriteSourceEditor(Composite* parent);
   ~SpriteSourceEditor();

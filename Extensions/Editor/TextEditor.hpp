@@ -37,7 +37,7 @@ class ScintillaWidget;
 class TextEditorEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextEditorEvent, TypeCopyMode::ReferenceType);
   char Added;
 };
 
@@ -64,7 +64,7 @@ DeclareEnum13(IndicatorStyle, Plain,
 class TextEditor : public BaseScrollArea
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextEditor, TypeCopyMode::ReferenceType);
 
   TextEditor(Composite* parent);
   ~TextEditor();

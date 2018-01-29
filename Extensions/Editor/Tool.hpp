@@ -54,7 +54,7 @@ class ViewportTextWidget : public Text
   ByteColor mTextHoverColor;
 
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ViewportTextWidget, TypeCopyMode::ReferenceType);
   typedef ViewportTextWidget ZilchSelf;
 
   ViewportTextWidget(Composite* parent) : Text(parent, "Text")
@@ -94,7 +94,7 @@ public:
 class Tool : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Tool, TypeCopyMode::ReferenceType);
 
   static Component* GetOrCreateEditComponent(BoundType* meta, StringParam defaultName, StringParam defaultArchetype, CogId& lastEdited, bool canCreate = true);
   static ViewportTextWidget* CreateViewportTextWidget(StringParam text);

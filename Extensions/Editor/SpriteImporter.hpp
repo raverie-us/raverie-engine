@@ -44,7 +44,7 @@ public:
 class SpriteSheetImporter : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpriteSheetImporter, TypeCopyMode::ReferenceType);
 
   SpriteSheetImporter(Composite* parent);
 

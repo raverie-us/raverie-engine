@@ -2111,10 +2111,10 @@ public:
   bool mAddOp;
 
   ResourceListOperation(HandleParam object, StringParam resourceIdName, uint index = -1, bool addOp = true)
-    : mResourceIdName(resourceIdName)
+    : mObjectHandle(object)
+    , mResourceIdName(resourceIdName)
     , mIndex(index)
     , mAddOp(addOp)
-    , mObjectHandle(object)
   {
     mName = "ResourceListOperation";
     mMeta = object.StoredType;

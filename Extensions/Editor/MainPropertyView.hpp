@@ -28,7 +28,7 @@ class MainPropertyView : public Composite
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MainPropertyView, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   MainPropertyView(Composite* parent, MetaSelection* selection,

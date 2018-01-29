@@ -32,7 +32,7 @@ namespace PropertyViewUi
 class ValueEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ValueEvent, TypeCopyMode::ReferenceType);
   Any NewValue;
   uint UserData;
 };
@@ -40,8 +40,12 @@ public:
 class ObjectPollEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  ObjectPollEvent() : FoundObject(NULL), OwnedWidget(NULL) {}
+  ZilchDeclareType(ObjectPollEvent, TypeCopyMode::ReferenceType);
+  ObjectPollEvent() 
+  : OwnedWidget(nullptr) 
+  , FoundObject(nullptr)
+  {}
+
   Widget* OwnedWidget;
   Cog* FoundObject;
   Vec2 Position;

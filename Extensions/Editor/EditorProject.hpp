@@ -38,7 +38,7 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
 class LauncherOpenProjectComposite : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherOpenProjectComposite, TypeCopyMode::ReferenceType);
 
   LauncherOpenProjectComposite(Composite* parent);
   ~LauncherOpenProjectComposite();
@@ -66,7 +66,7 @@ public:
 class LauncherSingletonCommunication : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherSingletonCommunication, TypeCopyMode::ReferenceType);
   
   LauncherSingletonCommunication(const StringMap& arguments);
   ~LauncherSingletonCommunication();
@@ -87,7 +87,7 @@ public:
 class LauncherDebuggerCommunication : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherDebuggerCommunication, TypeCopyMode::ReferenceType);
 
   LauncherDebuggerCommunication();
   ~LauncherDebuggerCommunication();
@@ -107,7 +107,7 @@ public:
 class SimpleDebuggerListener : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SimpleDebuggerListener, TypeCopyMode::ReferenceType);
 
   SimpleDebuggerListener();
   ~SimpleDebuggerListener();

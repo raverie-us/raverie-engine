@@ -35,7 +35,7 @@ extern ExtraLibrarySearchPathCallback mExtraLibrarySearchPaths;
 class EditorPackageLoader : public ExplicitSingleton<EditorPackageLoader, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);  
+  ZilchDeclareType(EditorPackageLoader, TypeCopyMode::ReferenceType);  
 
   EditorPackageLoader();
 

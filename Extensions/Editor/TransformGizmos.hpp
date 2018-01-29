@@ -76,7 +76,7 @@ class ObjectTransformGizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectTransformGizmo, TypeCopyMode::ReferenceType);
   
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -149,7 +149,7 @@ class ObjectTranslateGizmo : public ObjectTransformGizmo
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectTranslateGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -174,7 +174,7 @@ class ObjectScaleGizmo : public ObjectTransformGizmo
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectScaleGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -202,7 +202,7 @@ class ObjectRotateGizmo : public ObjectTransformGizmo
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectRotateGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;

@@ -30,11 +30,11 @@ ZilchDefineType(ToolUiEvent, builder, type)
 }
 
 //******************************************************************************
-ToolUiEvent::ToolUiEvent(Composite* parent) :
-  mParent(parent),
-  mCustomUi(nullptr),
-  mNeedsPropertyGrid(false),
-  mSelectTool(nullptr)
+ToolUiEvent::ToolUiEvent(Composite* parent) 
+  : mParent(parent)
+  , mNeedsPropertyGrid(false)
+  , mCustomUi(nullptr)
+  , mSelectTool(nullptr)
 {
 
 }
@@ -304,10 +304,10 @@ ZilchDefineType(ToolControl, builder, type)
 }
 
 //******************************************************************************
-ToolControl::ToolControl(Composite* parent) :
-  Composite(parent),
-  mCustomUi(nullptr),
-  mTools(this)
+ToolControl::ToolControl(Composite* parent) 
+  : Composite(parent)
+  , mTools(this)
+  , mCustomUi(nullptr)
 {
   mEditor = Z::gEditor;
   mActiveTool = nullptr;

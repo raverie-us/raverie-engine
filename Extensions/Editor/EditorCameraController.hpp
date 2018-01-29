@@ -46,7 +46,7 @@ class EditorCameraController : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorCameraController, TypeCopyMode::ReferenceType);
 
   EditorCameraController();
 

@@ -71,7 +71,7 @@ namespace Zero
 
     if (status.Failed())
     {
-      Error("Unable to save command list file: %s\n", fileName);
+      Error("Unable to save command list file: %s\n", fileName.c_str());
       return;
     }
 
@@ -124,7 +124,7 @@ namespace Zero
 
     if (status.Failed())
     {
-      Error("Unable to save command list file: %s\n", fileName);
+      Error("Unable to save command list file: %s\n", fileName.c_str());
       return;
     }
 

@@ -18,7 +18,7 @@ class UpdateEvent;
 class HeightMapDebugDrawer : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapDebugDrawer, TypeCopyMode::ReferenceType);
 
   HeightMapDebugDrawer();
 
@@ -44,7 +44,7 @@ public:
 class HeightMapAabbChecker : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapAabbChecker, TypeCopyMode::ReferenceType);
 
   HeightMapAabbChecker();
 

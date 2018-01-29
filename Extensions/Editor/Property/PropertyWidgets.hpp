@@ -32,7 +32,7 @@ public:
 class AddObjectWidget : public PropertyWidget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AddObjectWidget, TypeCopyMode::ReferenceType);
   AddObjectWidget(PropertyWidgetInitializer& init, 
                   PropertyWidgetObject* parentNode, 
                   PropertyView* grid, 

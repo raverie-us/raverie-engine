@@ -85,7 +85,7 @@ public:
 
 struct StressTest : public EventObject
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(StressTest, TypeCopyMode::ReferenceType);
 
   // Constructor
   StressTest();
@@ -130,7 +130,7 @@ class StressTestDialog : public Composite
 {
 public:
   // Type-defines
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(StressTestDialog, TypeCopyMode::ReferenceType);
   typedef StressTestDialog ZilchSelf;
 
   // Constructor

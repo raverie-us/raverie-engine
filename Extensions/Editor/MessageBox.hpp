@@ -34,7 +34,7 @@ DeclareEnum2(MessageBoxConfirmCancel, Confirm, Cancel);
 class MessageBoxEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MessageBoxEvent, TypeCopyMode::ReferenceType);
   // The button that was pressed (zero based index)
   size_t ButtonIndex;
 

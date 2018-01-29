@@ -28,7 +28,7 @@ class TileView;
 class TileViewEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileViewEvent, TypeCopyMode::ReferenceType);
   TileViewWidget* mTile;
 };
 
@@ -49,7 +49,7 @@ public:
 class TileViewWidget : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileViewWidget, TypeCopyMode::ReferenceType);
 
   TileViewWidget(Composite* parent, TileView* tileView,
                  PreviewWidget* tileWidget, DataIndex dataIndex);
@@ -106,7 +106,7 @@ protected:
 class TileView : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileView, TypeCopyMode::ReferenceType);
 
   TileView(Composite* parent);
   ~TileView();

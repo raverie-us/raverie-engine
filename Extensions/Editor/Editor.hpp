@@ -55,7 +55,7 @@ namespace Events
 class EditorEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorEvent, TypeCopyMode::ReferenceType);
 
   EditorEvent(Editor* editor);
   Editor* mEditor;
@@ -70,7 +70,7 @@ class Editor : public MultiDock
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Editor, TypeCopyMode::ReferenceType);
 
   Editor(Composite* parent);
   ~Editor();

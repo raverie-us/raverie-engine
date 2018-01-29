@@ -51,7 +51,7 @@ class AnimationEditorData : public EventObject
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationEditorData, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   AnimationEditorData(AnimationEditor* editor, Cog* animGraphObject,

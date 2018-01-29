@@ -18,7 +18,7 @@ class GridDraw : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GridDraw, TypeCopyMode::ReferenceType);
 
   // Constants
   static const size_t NumAxes = 3;

@@ -337,8 +337,8 @@ ZilchDefineType(Item, builder, type)
 //**************************************************************************************************
 Item::Item(Composite* parent, StringParam itemName, StringParam displayName, uint weight)
   : WeightedComposite(parent, displayName, weight, Vec4(1, 1, 1, 0.05f))
-  , mSelected(false)
   , mItemName(itemName)
+  , mSelected(false)
 {
   SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(12, 0), Thickness(Pixels(12, 0, 12, 0))));
 

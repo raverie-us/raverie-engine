@@ -15,7 +15,7 @@ namespace Zero
 class TilePaletteSource : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TilePaletteSource, TypeCopyMode::ReferenceType);
 
   TilePaletteSource();
   ~TilePaletteSource();

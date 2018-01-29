@@ -24,7 +24,7 @@ DeclareEnum5(SpringSubTools, Anchoring, PointSelector, SpringSelector, SpringCre
 class SpringSubTool : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpringSubTool, TypeCopyMode::ReferenceType);
 
   virtual ~SpringSubTool() {};
 
@@ -62,7 +62,7 @@ public:
 class DragSelectSubTool : public SpringSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DragSelectSubTool, TypeCopyMode::ReferenceType);
 
   DragSelectSubTool();
   
@@ -82,7 +82,7 @@ public:
 class SelectorSpringSubTool : public DragSelectSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SelectorSpringSubTool, TypeCopyMode::ReferenceType);
 
   SelectorSpringSubTool();
 
@@ -111,7 +111,7 @@ public:
 class PointMassSelectorSubTool : public SelectorSpringSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PointMassSelectorSubTool, TypeCopyMode::ReferenceType);
 
   PointMassSelectorSubTool();
 
@@ -126,7 +126,7 @@ public:
 class AnchoringSubTool : public PointMassSelectorSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnchoringSubTool, TypeCopyMode::ReferenceType);
 
   AnchoringSubTool();
 
@@ -141,7 +141,7 @@ public:
 class PointSelectorSubTool : public PointMassSelectorSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PointSelectorSubTool, TypeCopyMode::ReferenceType);
 
   PointSelectorSubTool();
 };
@@ -150,7 +150,7 @@ public:
 class SpringSelectorSubTool : public SelectorSpringSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpringSelectorSubTool, TypeCopyMode::ReferenceType);
 
   SpringSelectorSubTool();
 
@@ -162,7 +162,7 @@ public:
 class SpringCreatorSubTool : public SpringSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpringCreatorSubTool, TypeCopyMode::ReferenceType);
 
   SpringCreatorSubTool();
 
@@ -189,7 +189,7 @@ public:
 class RopeCreatorSubTool : public SpringSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RopeCreatorSubTool, TypeCopyMode::ReferenceType);
 
   RopeCreatorSubTool();
 
@@ -226,7 +226,7 @@ public:
 class SpringPointProxy : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpringPointProxy, TypeCopyMode::ReferenceType);
 
   SpringPointProxy();
 
@@ -250,7 +250,7 @@ public:
 class SpringPointProxyProperty : public PropertyInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpringPointProxyProperty, TypeCopyMode::ReferenceType);
   /// Returns whether or not the value is valid. For example, it could be
   /// invalid if this is a multi-selection and there is a conflict between
   /// the values on multiple objects.
@@ -282,7 +282,7 @@ public:
 class SpringTools : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpringTools, TypeCopyMode::ReferenceType);
 
   SpringTools();
   ~SpringTools();

@@ -52,7 +52,7 @@ public:
 class TileEditor2DSubTool : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileEditor2DSubTool, TypeCopyMode::ReferenceType);
 
   TileEditor2DSubTool(TileEditor2D* owner);
   virtual ~TileEditor2DSubTool() {};
@@ -86,7 +86,7 @@ protected:
 class TileEditor2DDrawTool : public TileEditor2DSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileEditor2DDrawTool, TypeCopyMode::ReferenceType);
 
   TileEditor2DDrawTool(TileEditor2D* owner);
 
@@ -108,7 +108,7 @@ private:
 class TileEditor2DSelectTool : public TileEditor2DSubTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileEditor2DSelectTool, TypeCopyMode::ReferenceType);
 
   TileEditor2DSelectTool(TileEditor2D* owner);
 
@@ -199,7 +199,7 @@ class TileEditor2D : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileEditor2D, TypeCopyMode::ReferenceType);
 
   static const char* cDefaultName;
   static const char* cDefaultArchetype;

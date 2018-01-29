@@ -95,7 +95,7 @@ class SimpleGizmoBase : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SimpleGizmoBase, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   SimpleGizmoBase();
@@ -145,7 +145,7 @@ class SquareGizmo : public SimpleGizmoBase
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SquareGizmo, TypeCopyMode::ReferenceType);
   
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -173,7 +173,7 @@ class ArrowGizmo : public SimpleGizmoBase
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ArrowGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -213,7 +213,7 @@ class RingGizmoEvent : public GizmoUpdateEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RingGizmoEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   RingGizmoEvent(GizmoUpdateEvent* e);
@@ -229,7 +229,7 @@ class RingGizmo : public SimpleGizmoBase
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RingGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -291,7 +291,7 @@ class TranslateGizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TranslateGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -338,7 +338,7 @@ class ScaleGizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ScaleGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -384,7 +384,7 @@ class RotateGizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotateGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;

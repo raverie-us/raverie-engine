@@ -37,7 +37,7 @@ void RegisterHotKeyEditors();
 class HotKeyCommands : public DataSource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HotKeyCommands, TypeCopyMode::ReferenceType);
 
   HotKeyCommands( );
 
@@ -68,7 +68,7 @@ public:
 class HotKeyEditor : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HotKeyEditor, TypeCopyMode::ReferenceType);
 
   HotKeyEditor(Composite* parent);
 
@@ -124,7 +124,7 @@ public:
 class HotKeyBinding : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HotKeyBinding, TypeCopyMode::ReferenceType);
 
   unsigned mModifier1;
   unsigned mModifier2;

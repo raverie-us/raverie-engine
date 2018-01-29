@@ -46,7 +46,7 @@ namespace StyleMode
 class PropertyWidget : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyWidget, TypeCopyMode::ReferenceType);
 
   /// Constructor / Destructor.
   PropertyWidget(PropertyWidgetInitializer& i, 
@@ -100,7 +100,7 @@ typedef PropertyWidget* (*MakePropertyWidget)(PropertyWidgetInitializer& initial
 class MetaPropertyEditor : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaPropertyEditor, TypeCopyMode::ReferenceType);
 
   MetaPropertyEditor(MakePropertyWidget make)
   {

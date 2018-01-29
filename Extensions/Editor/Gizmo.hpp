@@ -44,7 +44,7 @@ class GizmoEvent : public Event
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GizmoEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   GizmoEvent(Cog* gizmo, ViewportMouseEvent* e);
@@ -66,7 +66,7 @@ public:
 class GizmoRayTestEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GizmoRayTestEvent, TypeCopyMode::ReferenceType);
   /// Constructor.
   GizmoRayTestEvent();
 
@@ -91,7 +91,7 @@ class Gizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Gizmo, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   Gizmo();
@@ -136,7 +136,7 @@ class GizmoSpace : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GizmoSpace, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;

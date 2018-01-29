@@ -13,7 +13,7 @@ namespace Zero
 class HeightMapBrushStroke
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapBrushStroke, TypeCopyMode::ReferenceType);
 
   HeightMapBrushStroke( ) {}
   HeightMapBrushStroke(float radius, float featherRadius);
@@ -32,8 +32,7 @@ private:
 class HeightMapKeyFrame
 {
 public:
-
-  void HeightMapKeyFrame::CopyHeightMapData(HeightMap* map);
+  void CopyHeightMapData(HeightMap* map);
 
 public:
   float mUnitsPerPatch;

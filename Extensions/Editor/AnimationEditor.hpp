@@ -67,7 +67,7 @@ public:
 class AnimationEditor : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationEditor, TypeCopyMode::ReferenceType);
 
   /// We want the main viewport to get keyboard input for creating keys.
   AnimationEditor(Composite* parent);

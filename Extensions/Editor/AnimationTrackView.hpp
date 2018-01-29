@@ -32,7 +32,7 @@ class AnimationTrackView : public Composite
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationTrackView, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   AnimationTrackView(Composite* parent, AnimationEditor* editor);
