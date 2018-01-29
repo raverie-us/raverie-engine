@@ -898,16 +898,20 @@ void TextEditor::OnKeyUp(KeyboardEvent* event)
 
 void TextEditor::OnMouseScroll(MouseEvent* event)
 {
+  OsShell* shell = (OsShell*)Z::gSystemObjects->FindObject("OsShell");
+  uint scroll = shell->GetScrollLineCount();
+  scroll *= event->Scroll.y;
+
   // vertical scroll
   if(!event->CtrlPressed && !event->ShiftPressed)
-    mScintilla->ScrollTo(mScintilla->topLine + event->Scroll.y * -1);
+    mScintilla->ScrollTo(mScintilla->topLine + scroll * -1);
   // horizontal scroll when holding shift
   else if(!event->CtrlPressed && event->ShiftPressed)
-    mScintilla->HorizontalScrollTo(mScintilla->xOffset + event->Scroll.y * -10);
+    mScintilla->HorizontalScrollTo(mScintilla->xOffset + scroll * -10);
   // change font size while holding control and scrolling
   else
   {
-    mFontSize = Math::Clamp(int(mFontSize + event->Scroll.y), cMinFontSize, cMaxFontSize);
+    mFontSize = Math::Clamp(int(mFontSize + scroll), cMinFontSize, cMaxFontSize);
     SetFontSize(mFontSize);
     SetColorScheme(*GetColorScheme());
   }

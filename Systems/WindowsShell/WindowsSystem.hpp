@@ -128,6 +128,7 @@ public:
 
   // OsShell Interface
   String GetOsName() override;
+  uint GetScrollLineCount() override;
   WindowsOsWindow* FindWindowAt(IntVec2Param position);
   PixelRect GetDesktopRect();
   WindowsOsWindow* CreateOsWindow(StringParam windowName, IntVec2Param windowSize, IntVec2Param windowPos,

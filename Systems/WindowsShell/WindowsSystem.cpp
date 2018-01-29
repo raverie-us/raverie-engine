@@ -1261,6 +1261,17 @@ String WindowsShellSystem::GetOsName()
   return "Windows";
 }
 
+uint WindowsShellSystem::GetScrollLineCount( )
+{
+  uint scrollLines = 0;
+  SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &scrollLines, 0);
+
+  if(scrollLines == 0)
+    scrollLines = 1;
+
+  return scrollLines;
+}
+
 WindowsOsWindow* WindowsShellSystem::FindWindowAt(IntVec2Param position)
 {
   HWND windowHandle = WindowFromPoint(*(POINT*)&position);

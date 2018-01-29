@@ -31,6 +31,10 @@ OsShell::OsShell() :
   mOsShellHook(nullptr)
 {
 }
+uint OsShell::GetScrollLineCount( )
+{
+  return 1;
+}
 
 void OsShell::DumpMemoryDebuggerStats()
 {
