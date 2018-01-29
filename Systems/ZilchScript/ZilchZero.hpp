@@ -14,7 +14,7 @@ namespace Zero
 class ZilchComponent : public Component
 {
 public:
-  ZilchDeclareInheritableType(TypeCopyMode::ReferenceType);
+  ZilchDeclareInheritableType(ZilchComponent, TypeCopyMode::ReferenceType);
 
   // Component interface
   void OnAllObjectsCreated(CogInitializer& initializer) override;
@@ -31,7 +31,7 @@ public:
 class ZilchEvent : public Event
 {
 public:
-  ZilchDeclareInheritableType(TypeCopyMode::ReferenceType);
+  ZilchDeclareInheritableType(ZilchEvent, TypeCopyMode::ReferenceType);
 
   // Event interface
   void Serialize(Serializer& stream) override;
@@ -43,7 +43,7 @@ public:
 class ZilchObject : public EventObject
 {
 public:
-  ZilchDeclareInheritableType(TypeCopyMode::ReferenceType);
+  ZilchDeclareInheritableType(ZilchObject, TypeCopyMode::ReferenceType);
 
   // Object interface
   void Serialize(Serializer& stream) override;

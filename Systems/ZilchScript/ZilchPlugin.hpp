@@ -18,7 +18,7 @@ class UpdateEvent;
 class ZilchPluginSource : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchPluginSource, TypeCopyMode::ReferenceType);
 
   ZilchPluginSource();
   ~ZilchPluginSource();
@@ -103,7 +103,7 @@ public:
 class ZilchPluginLibrary : public ZilchLibraryResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchPluginLibrary, TypeCopyMode::ReferenceType);
 
   ZilchPluginLibrary();
   ~ZilchPluginLibrary();
