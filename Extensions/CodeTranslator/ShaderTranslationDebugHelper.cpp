@@ -85,8 +85,10 @@ String ShaderTranslationEntry::ToString(bool shortFormat) const
 
 //-------------------------------------------------------------------ShaderTranslationDebugHelper
 ShaderTranslationDebugHelper::ShaderTranslationDebugHelper(Composite* parent)
-  : Composite(parent), mLanguagesDataSource(&mLanguages),
-    mTranslationEntriesDataSource(&mTranslationEntries), mShaderGenerator(nullptr)
+  : Composite(parent)
+  , mShaderGenerator(nullptr)
+  , mLanguagesDataSource(&mLanguages)
+  , mTranslationEntriesDataSource(&mTranslationEntries)
 {
   SetName("Shader Translation Debug Helper");
 
