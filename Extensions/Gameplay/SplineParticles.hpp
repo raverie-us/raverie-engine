@@ -17,7 +17,7 @@ class SplineParticleEmitter : public ParticleEmitterShared
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SplineParticleEmitter, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -51,7 +51,7 @@ class SplineParticleAnimator : public ParticleAnimator
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SplineParticleAnimator, TypeCopyMode::ReferenceType);
 
   ~SplineParticleAnimator();
 

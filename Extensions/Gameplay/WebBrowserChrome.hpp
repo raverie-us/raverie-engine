@@ -47,7 +47,7 @@ public:
 class ChromePopupEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ChromePopupEvent, TypeCopyMode::ReferenceType);
 
   CefRefPtr<CefBrowser> mBrowser;
   CefRefPtr<CefFrame> mFrame;

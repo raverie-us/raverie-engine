@@ -142,35 +142,35 @@ class IndexedHalfEdgeMesh;
 class IndexedHalfEdgeMeshVertexArray : public BoundArray<IndexedHalfEdgeMesh, Vec3>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdgeMeshVertexArray, TypeCopyMode::ReferenceType);
 };
 
 //-------------------------------------------------------------------IndexedHalfEdgeMeshEdgeArray
 class IndexedHalfEdgeMeshEdgeArray : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdge*>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdgeMeshEdgeArray, TypeCopyMode::ReferenceType);
 };
 
 //-------------------------------------------------------------------IndexedHalfEdgeFaceEdgeIndexArray
 class IndexedHalfEdgeFaceEdgeIndexArray : public BoundArray<IndexedHalfEdgeFace, int>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdgeFaceEdgeIndexArray, TypeCopyMode::ReferenceType);
 };
 
 //-------------------------------------------------------------------IndexedHalfEdgeMeshFaceArray
 class IndexedHalfEdgeMeshFaceArray : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdgeFace*>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdgeMeshFaceArray, TypeCopyMode::ReferenceType);
 };
 
 //-------------------------------------------------------------------IndexedHalfEdge
 class IndexedHalfEdge : public SafeId32Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdge, TypeCopyMode::ReferenceType);
 
   /// Index of the tail vertex in the vertex list.
   int mVertexIndex;
@@ -184,7 +184,7 @@ public:
 class IndexedHalfEdgeFace : public SafeId32Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdgeFace, TypeCopyMode::ReferenceType);
 
   typedef Array<int> EdgeArray;
   typedef IndexedHalfEdgeFaceEdgeIndexArray BoundEdgeArray;
@@ -210,7 +210,7 @@ public:
 class IndexedHalfEdgeMesh : public ReferenceCountedObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdgeMesh, TypeCopyMode::ReferenceType);
 
   typedef Array<Vec3> VertexArray;
   typedef Array<IndexedHalfEdge*> EdgeArray;

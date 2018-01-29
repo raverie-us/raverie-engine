@@ -17,7 +17,7 @@ namespace Zero
 /// and then iterating over the resultant index-based half-edge-mesh.
 class QuickHull3DInterface
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(QuickHull3DInterface, TypeCopyMode::ReferenceType);
 
   QuickHull3DInterface();
   QuickHull3DInterface(const QuickHull3DInterface& rhs);

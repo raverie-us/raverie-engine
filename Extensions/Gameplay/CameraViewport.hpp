@@ -16,7 +16,7 @@ namespace Zero
 class CameraViewport : public ViewportInterface 
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CameraViewport, TypeCopyMode::ReferenceType);
 
   // Component Interface
 

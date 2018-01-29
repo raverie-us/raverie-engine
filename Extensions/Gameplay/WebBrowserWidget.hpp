@@ -12,7 +12,7 @@ namespace Zero
 class WebBrowserWidget : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserWidget, TypeCopyMode::ReferenceType);
 
   WebBrowserWidget(Composite* composite, const WebBrowserSetup& setup);
 

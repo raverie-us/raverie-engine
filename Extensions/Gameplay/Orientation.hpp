@@ -18,7 +18,7 @@ class Orientation : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Orientation, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;

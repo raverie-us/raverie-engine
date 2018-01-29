@@ -17,7 +17,7 @@ class Editor;
 class ZeroStatic
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZeroStatic, TypeCopyMode::ReferenceType);
 
   /// Connection invokes the given delegate when sender dispatches the specified event.
   static void Connect(Object* sender, StringParam eventId, DelegateParam receiverDelegate);

@@ -12,7 +12,7 @@ namespace Zero
 class MarketWidget : public WebBrowserWidget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MarketWidget, TypeCopyMode::ReferenceType);
 
   MarketWidget(Composite* composite);
 
