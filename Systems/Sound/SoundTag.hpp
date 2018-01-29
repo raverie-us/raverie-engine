@@ -122,10 +122,15 @@ public:
 // Internals
   Audio::TagObject* mTagObject;
   InstanceList SoundInstanceList;
+  Link<SoundTag> link;
+
   void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  void CreateTag();
+  void ReleaseTag();
 
 private:
   HandleOf<SoundTag> mCompressorTag;
+
 };
 
 //-------------------------------------------------------------------------------- Sound Tag Manager
