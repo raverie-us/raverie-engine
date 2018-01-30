@@ -31,7 +31,7 @@ DeclareBitField7(TransformUpdateFlags,
 class Transform : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Transform, TypeCopyMode::ReferenceType);
 
   /// Concatenating matrices to generate a world matrix can be very expensive when dealing with
   /// deep hierarchies that are constantly changing. Caching these world matrices can substantially
@@ -184,7 +184,7 @@ private:
 class TransformMetaTransform : public MetaTransform
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TransformMetaTransform, TypeCopyMode::ReferenceType);
 
   MetaTransformInstance GetInstance(HandleParam object) override;
   static MetaTransformInstance BuildInstance(Transform* transform);

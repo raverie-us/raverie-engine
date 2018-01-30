@@ -52,7 +52,7 @@ struct PatchLayer
 class HeightMapSource : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapSource, TypeCopyMode::ReferenceType);
 
   HeightMapSource();
   ~HeightMapSource();

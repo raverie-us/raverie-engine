@@ -19,7 +19,7 @@ namespace Zero
 class MetaResource : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaResource, TypeCopyMode::ReferenceType);
   
   MetaResource() {}
   MetaResource(Resource* resource);
@@ -37,7 +37,7 @@ public:
 class MetaEditorScriptObject : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaEditorScriptObject, TypeCopyMode::ReferenceType);
   MetaEditorScriptObject();
 
   bool mAutoRegister;
@@ -47,7 +47,7 @@ public:
 class MetaDependency : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaDependency, TypeCopyMode::ReferenceType);
 
   void PostProcess(Status& status, ReflectionObject* owner) override;
 };
@@ -56,7 +56,7 @@ public:
 class MetaInterface : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaInterface, TypeCopyMode::ReferenceType);
 
   void PostProcess(Status& status, ReflectionObject* owner) override;
 };

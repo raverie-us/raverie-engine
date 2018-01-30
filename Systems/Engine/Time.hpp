@@ -34,7 +34,7 @@ System* CreateTimeSystem();
 class UpdateEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UpdateEvent, TypeCopyMode::ReferenceType);
 
   UpdateEvent(float dt, float rDt, float timePassed, float realTimePassed);
 
@@ -54,7 +54,7 @@ DeclareEnum2(TimeMode, FixedFrametime, ActualFrametime);
 class TimeSpace : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TimeSpace, TypeCopyMode::ReferenceType);
 
   TimeSpace();
   ~TimeSpace();
@@ -139,7 +139,7 @@ public:
 class TimeSystem : public System
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TimeSystem, TypeCopyMode::ReferenceType);
 
   TimeSystem();
   ~TimeSystem();

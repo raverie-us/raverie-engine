@@ -28,7 +28,7 @@ Handle ComponentGetOwner(HandleParam object)
 }
 
 //**************************************************************************************************
-ZilchDefineType(ProxyObject<Component>, builder, type)
+ZilchDefineTemplateType(ProxyObject<Component>, builder, type)
 {
 }
 

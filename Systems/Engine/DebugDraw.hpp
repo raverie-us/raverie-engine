@@ -17,7 +17,7 @@ namespace Zero
 class DebugDraw
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DebugDraw, TypeCopyMode::ReferenceType);
   typedef DebugDraw self_type;
 
   #define ZeroDebugPrimitive(X) AddDeclarations(X);

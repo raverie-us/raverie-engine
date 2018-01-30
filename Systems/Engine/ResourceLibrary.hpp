@@ -36,7 +36,7 @@ DeclareEnum2(ZilchCompileStatus,
 class ZilchPreCompilationEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchPreCompilationEvent, TypeCopyMode::ReferenceType);
 
   Project* mProject;
 };
@@ -45,7 +45,7 @@ public:
 class ZilchCompiledEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchCompiledEvent, TypeCopyMode::ReferenceType);
   LibraryRef mLibrary;
 };
 
@@ -53,7 +53,7 @@ public:
 class ZilchCompileFragmentEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchCompileFragmentEvent, TypeCopyMode::ReferenceType);
   ZilchCompileFragmentEvent(Module& dependencies, Array<ZilchDocumentResource*>& fragments, ResourceLibrary* owningLibrary);
 
   Module& mDependencies;
@@ -103,7 +103,7 @@ class ResourcePackage : public Object
 {
 public:
   ResourcePackage();
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourcePackage, TypeCopyMode::ReferenceType);
 
   void Save(StringParam filename);
   void Load(StringParam filename);
@@ -118,7 +118,7 @@ public:
 
 class ResourcePackageDisplay : public MetaDisplay
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourcePackageDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -150,7 +150,7 @@ public:
 class ResourceLibrary : public EventObject, public EventHandler
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceLibrary, TypeCopyMode::ReferenceType);
 
   ResourceLibrary();
 

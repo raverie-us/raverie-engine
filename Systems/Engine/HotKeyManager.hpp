@@ -76,7 +76,7 @@ typedef Array<CommandEntry> CommandSet;
 class HotKeyDataSet : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HotKeyDataSet, TypeCopyMode::ReferenceType);
 
   HotKeyDataSet( );
   void Serialize(Serializer& stream);

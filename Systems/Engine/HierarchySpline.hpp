@@ -17,7 +17,7 @@ class HierarchyEvent;
 class HierarchySpline : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HierarchySpline, TypeCopyMode::ReferenceType);
 
   HierarchySpline();
 

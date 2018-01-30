@@ -30,7 +30,7 @@ DeclareEvent(OperationRedo);
 class OperationQueueEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OperationQueueEvent, TypeCopyMode::ReferenceType);
 
   OperationQueueEvent( ) : mOperation(nullptr) {}
   OperationQueueEvent(Operation* op) : mOperation(op) {}
@@ -122,7 +122,7 @@ public:
 class OperationBatch : public Operation
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OperationBatch, TypeCopyMode::ReferenceType);
 
   OperationBatch() : Operation() { mName = "UnnamedBatch"; }
   ~OperationBatch();
@@ -146,7 +146,7 @@ class UndoMap;
 class OperationQueue : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OperationQueue, TypeCopyMode::ReferenceType);
 
   OperationQueue();
   ~OperationQueue();

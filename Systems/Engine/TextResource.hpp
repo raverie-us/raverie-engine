@@ -16,7 +16,7 @@ namespace Zero
 class TextBlock : public DocumentResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextBlock, TypeCopyMode::ReferenceType);
 
   TextBlock();
   ~TextBlock();

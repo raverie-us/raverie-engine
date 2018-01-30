@@ -74,7 +74,7 @@ DeclareEnum3(FlickedStick, None, Left, Right);
 class GamepadEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GamepadEvent, TypeCopyMode::ReferenceType);
 
   GamepadEvent(Gamepad* gamepad, int buttonIndex = -1);
   /// Button that was just pressed down or released up.
@@ -94,7 +94,7 @@ public:
 class Gamepad : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Gamepad, TypeCopyMode::ReferenceType);
 
   Gamepad();
 
@@ -164,7 +164,7 @@ const uint cMaxUsers = 4;
 class Gamepads : public ExplicitSingleton<Gamepads, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Gamepads, TypeCopyMode::ReferenceType);
 
   Gamepads();
   ~Gamepads();

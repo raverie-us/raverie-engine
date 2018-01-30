@@ -42,7 +42,7 @@ class Component : public Object
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Component, TypeCopyMode::ReferenceType);
 
   /// Component memory management.
   static Memory::Heap* sHeap;

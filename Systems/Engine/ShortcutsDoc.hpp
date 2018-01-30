@@ -40,7 +40,7 @@ public:
 class Shortcuts : public LazySingleton<Shortcuts, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Shortcuts, TypeCopyMode::ReferenceType);
 
   ~Shortcuts( );
 

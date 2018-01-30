@@ -13,7 +13,7 @@ namespace Zero
 class ComponentMetaDataInheritance : public MetaDataInheritance
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ComponentMetaDataInheritance, TypeCopyMode::ReferenceType);
 
   /// MetaDataInheritance Interface.
   void Revert(HandleParam object) override;
@@ -27,7 +27,7 @@ public:
 class ComponentMetaOperations : public MetaOperations
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ComponentMetaOperations, TypeCopyMode::ReferenceType);
 
   u64 GetUndoHandleId(HandleParam object) override;
 

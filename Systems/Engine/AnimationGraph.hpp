@@ -21,7 +21,7 @@ namespace Zero
 class AnimationGraph : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationGraph, TypeCopyMode::ReferenceType);
 
   /// Constructor / destructor.
   AnimationGraph();
@@ -105,7 +105,7 @@ private:
 class SimpleAnimation : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SimpleAnimation, TypeCopyMode::ReferenceType);
 
   SimpleAnimation(){}
 

@@ -28,7 +28,7 @@ class DocumentResource;
 class DebugEngineEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DebugEngineEvent, TypeCopyMode::ReferenceType);
 
   DebugEngineEvent() { Script = NULL; }
   CodeLocation Location;
@@ -82,8 +82,12 @@ struct DebugValue
   DebugValue(){}
   DebugValue(ScopeType scope, ValueTypes stype, StringParam name,
     StringParam stringValue, StringParam address, int stackLevel)
-    : Scope(scope), ScriptType(stype), Name(name), StringValue(stringValue), 
-    Address(address), StackLevel(stackLevel)
+    : Scope(scope)
+    , ScriptType(stype)
+    , Name(name)
+    , StringValue(stringValue)
+    , StackLevel(stackLevel)
+    , Address(address)
   {
   }
 

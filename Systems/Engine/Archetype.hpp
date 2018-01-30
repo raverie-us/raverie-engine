@@ -25,7 +25,7 @@ class ObjectState;
 class Archetype : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Archetype, TypeCopyMode::ReferenceType);
 
   /// Constructor / Destructor.
   Archetype();

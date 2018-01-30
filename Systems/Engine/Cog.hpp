@@ -71,7 +71,7 @@ class Cog : public BaseCog
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Cog, TypeCopyMode::ReferenceType);
 
   /// Memory Allocation  
   OverloadedNew();

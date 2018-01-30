@@ -36,7 +36,7 @@ namespace Events
 /// Used by any height map event
 struct HeightMapEvent : public Event
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapEvent, TypeCopyMode::ReferenceType);
 
   /// The height map
   HeightMap* Map;
@@ -53,7 +53,7 @@ struct HeightMapEvent : public Event
 /// A large 2d block of height data
 struct HeightPatch
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightPatch, TypeCopyMode::ReferenceType);
 
   /// The size of each patch (in height cells)
   static const size_t Size      = 32;
@@ -168,7 +168,7 @@ public:
 class HeightMap : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMap, TypeCopyMode::ReferenceType);
 
   // Friends
   template <typename T>

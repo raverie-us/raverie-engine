@@ -13,7 +13,7 @@ namespace Zero
 class ZilchLibraryResource : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchLibraryResource, TypeCopyMode::ReferenceType);
 
   virtual String GetSharedLibraryPath() const = 0;
   virtual Resource* GetOriginResource() const = 0;
@@ -23,7 +23,7 @@ public:
 class ZilchDocumentResource : public DocumentResource, public ICodeInspector
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchDocumentResource, TypeCopyMode::ReferenceType);
 
   ZilchDocumentResource();
 

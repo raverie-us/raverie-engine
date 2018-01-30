@@ -84,7 +84,7 @@ public:
 class RaycastProvider : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RaycastProvider, TypeCopyMode::ReferenceType);
 
   RaycastProvider() {mActive = true;}
   virtual ~RaycastProvider() {};
@@ -105,7 +105,7 @@ public:
 class Raycaster
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Raycaster, TypeCopyMode::ReferenceType);
   ~Raycaster();
 
   /// Adds a new provider (that is owned by this class) to cast with during editor casts.
@@ -126,7 +126,7 @@ public:
 class RaycasterMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RaycasterMetaComposition, TypeCopyMode::ReferenceType);
 
   RaycasterMetaComposition(size_t raycasterClassOffset);
 

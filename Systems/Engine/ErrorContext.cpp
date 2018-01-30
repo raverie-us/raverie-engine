@@ -11,10 +11,12 @@
 namespace Zero
 {
 
+ZeroThreadLocal ErrorContextStack* ActiveErrorContextStack = nullptr;
+
 ErrorContext::ErrorContext()
 {
   // Check to see if the stack is allocated
-  if(ActiveErrorContextStack == NULL)
+  if(ActiveErrorContextStack == nullptr)
     ActiveErrorContextStack = new ErrorContextStack();
 
   // Push onto stack
@@ -45,8 +47,6 @@ String ErrorContextObject::GetDescription()
   // Return the display string combined with 
   return String::Format("%s - %s", Message, objectDesc.c_str());
 }
-
-ErrorContextStack* ActiveErrorContextStack = NULL;
 
 void DoNotifyErrorWithContext(StringParam message, NotifyException::Enum notifyException)
 {

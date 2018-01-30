@@ -26,7 +26,7 @@ DeclareEvent(ScriptCompilationFailed);
 class ZilchCompileEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchCompileEvent, TypeCopyMode::ReferenceType);
   ZilchCompileEvent(HashSet<ResourceLibrary*>& modifiedLibraries);
 
   bool WasTypeModified(BoundType* type);

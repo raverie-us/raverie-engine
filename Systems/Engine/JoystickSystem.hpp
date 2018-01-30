@@ -60,7 +60,7 @@ public:
 class RawControlMapping
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RawControlMapping, TypeCopyMode::ReferenceType);
 
   RawControlMapping();
   void Serialize(Serializer& stream);
@@ -77,7 +77,7 @@ public:
 class JoystickEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JoystickEvent, TypeCopyMode::ReferenceType);
 
   JoystickEvent(Joystick* joystick, int button);
 
@@ -93,7 +93,7 @@ public:
 class Joystick : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Joystick, TypeCopyMode::ReferenceType);
 
   friend class Joysticks;
 
@@ -186,7 +186,7 @@ typedef JoystickMap::valuerange JoystickRange;
 class Joysticks : public ExplicitSingleton<Joysticks, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Joysticks, TypeCopyMode::ReferenceType);
 
   /// Get the number of joysticks
   uint GetJoystickCount();

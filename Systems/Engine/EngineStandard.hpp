@@ -157,7 +157,7 @@ private:
 #include "SceneGraph.hpp"
 #include "Project.hpp"
 #include "RaycastProvider.hpp"
-#include "GamepadSystem.hpp"
+#include "GamePadSystem.hpp"
 #include "JoystickSystem.hpp"
 #include "HotKeyManager.hpp"
 #include "EventDirectoryWatcher.hpp"

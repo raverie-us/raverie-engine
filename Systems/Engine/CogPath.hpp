@@ -124,7 +124,7 @@ public:
 class CogPath : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogPath, TypeCopyMode::ReferenceType);
 
   CogPath();
   CogPath(StringParam path);
@@ -233,7 +233,7 @@ inline type* CogPath::Has()
 class CogPathEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogPathEvent, TypeCopyMode::ReferenceType);
 
   CogPathEvent();
   CogPathEvent(CogPath& path);
@@ -245,7 +245,7 @@ public:
 class CogPathMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogPathMetaComposition, TypeCopyMode::ReferenceType);
   CogPathMetaComposition();
 
   virtual Handle GetComponent(HandleParam owner, BoundType* componentType);
@@ -254,7 +254,7 @@ public:
 class CogPathMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogPathMetaSerialization, TypeCopyMode::ReferenceType);
 
   bool SerializeReferenceProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;

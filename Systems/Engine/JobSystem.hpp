@@ -19,7 +19,7 @@ namespace Zero
 class Job : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Job, TypeCopyMode::ReferenceType);
   Job();
   virtual ~Job();
 

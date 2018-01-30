@@ -18,7 +18,7 @@ class ContentLibrary;
 class EditorSettings : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorSettings, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   EditorSettings();

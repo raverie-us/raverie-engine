@@ -30,7 +30,7 @@ namespace Events
 class LauncherConfig : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherConfig, TypeCopyMode::ReferenceType);
 
   LauncherConfig();
   void Serialize(Serializer& stream);
@@ -84,7 +84,7 @@ public:
 //-------------------------------------------------------------------LauncherLegacySettings
 class LauncherLegacySettings : public Component
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherLegacySettings, TypeCopyMode::ReferenceType);
 
   LauncherLegacySettings();
   void Serialize(Serializer& stream);

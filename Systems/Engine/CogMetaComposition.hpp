@@ -13,7 +13,7 @@ namespace Zero
 class CogMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogMetaComposition, TypeCopyMode::ReferenceType);
   CogMetaComposition();
 
   /// MetaComposition Interface.

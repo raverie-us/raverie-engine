@@ -53,8 +53,6 @@ struct Lerp<String>
     int t0Size = (int)t0.ComputeRuneCount();
     int t1Size = (int)t1.ComputeRuneCount();
 
-    int maxSize = Math::Max(t0Size, t1Size);
-
     Rune startRune;
     Rune endRune;
     float runeFloatIndex;

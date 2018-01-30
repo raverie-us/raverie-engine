@@ -50,7 +50,7 @@ DeclareBitField1(DestroyFlags, DynamicallyDestroyed);
 class Space : public Cog
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Space, TypeCopyMode::ReferenceType);
 
   IntrusiveLink(Space, link);
   typedef SpaceCogList::range range;

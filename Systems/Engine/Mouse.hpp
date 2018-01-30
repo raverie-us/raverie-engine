@@ -15,7 +15,7 @@ namespace Zero
 class Mouse : public ExplicitSingleton<Mouse, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Mouse, TypeCopyMode::ReferenceType);
 
   Mouse();
 

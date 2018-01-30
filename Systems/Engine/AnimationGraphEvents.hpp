@@ -25,7 +25,7 @@ class AnimationNode;
 class AnimationGraphEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationGraphEvent, TypeCopyMode::ReferenceType);
 
   /// Only set when the animation node has a single animation.
   HandleOf<Animation> mAnimation;

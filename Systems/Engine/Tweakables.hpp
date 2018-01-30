@@ -66,7 +66,7 @@ public:
 class Tweakables : public TweakableNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Tweakables, TypeCopyMode::ReferenceType);
   /// Constructor.
   Tweakables();
 

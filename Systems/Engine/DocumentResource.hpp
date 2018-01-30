@@ -182,7 +182,7 @@ public:
 class DocumentResource : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DocumentResource, TypeCopyMode::ReferenceType);
 
   DocumentResource();
   ~DocumentResource();
@@ -219,7 +219,7 @@ namespace Events
 class SavingEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SavingEvent, TypeCopyMode::ReferenceType);
   SavingEvent() : NeedSaving(false){}
   bool NeedSaving;
   Status SaveStatus;

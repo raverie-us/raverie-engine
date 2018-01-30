@@ -654,7 +654,7 @@ void DocumentationLibrary::LoadFromMeta()
     // Used to remove a couple of core types that should not be documented
     if (metaType->Name.Contains(":"))
     {
-      ZPrint("Warning: type '%s' is improperly named and unreferenceable.\n", metaType->Name);
+      ZPrint("Warning: type '%s' is improperly named and unreferenceable.\n", metaType->Name.c_str());
       continue;
     }
 

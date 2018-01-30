@@ -43,7 +43,7 @@ namespace Events
 class ResourceEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceEvent, TypeCopyMode::ReferenceType);
   ResourceEvent();
   ResourceEvent(ResourceManager* manager, Resource* resource);
   String Name;

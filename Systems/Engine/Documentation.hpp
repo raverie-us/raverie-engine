@@ -254,7 +254,7 @@ namespace Zero
   class DocumentationLibrary : public LazySingleton<DocumentationLibrary, EventObject>
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DocumentationLibrary, TypeCopyMode::ReferenceType);
 
     ~DocumentationLibrary();
 

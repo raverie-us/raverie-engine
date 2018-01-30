@@ -16,7 +16,7 @@ namespace Zero
 class ColorGradient : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ColorGradient, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ColorGradient();
