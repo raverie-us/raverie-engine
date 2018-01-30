@@ -19,7 +19,7 @@ DeclareBitField2(JointMotorFlags, Active, Reverse);
 /// See each joint for a description of how it reacts to a motor.
 struct JointMotor : public Component
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointMotor, TypeCopyMode::ReferenceType);
   JointMotor();
   virtual ~JointMotor();
 

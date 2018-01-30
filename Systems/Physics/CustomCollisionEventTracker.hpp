@@ -22,7 +22,7 @@ struct Manifold;
 class CustomCollisionEventTracker : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CustomCollisionEventTracker, TypeCopyMode::ReferenceType);
 
   /// Add a collision for this frame between ourself and the passed in collider.
   void AddCollision(Collider* otherCollider, Vec3Param worldPoint, Vec3Param worldNormalTowardsOther);

@@ -299,9 +299,6 @@ bool ComplexVsComplexCollidersInternal(Collider* collider0, Collider* collider1,
 template <typename ColliderType0, typename ColliderType1>
 bool ComplexVsComplexColliders(Collider* collider0, Collider* collider1, PodArray<Physics::Manifold>* manifolds)
 {
-  ColliderType0* castedCollider0 = static_cast<ColliderType0*>(collider0);
-  ColliderType1* castedCollider1 = static_cast<ColliderType1*>(collider1);
-
   bool type0Local = ColliderType0::RangeInLocalSpace::value;
   bool type1Local = ColliderType1::RangeInLocalSpace::value;
   //determine which collider needs a local space functor and which needs a world space functor

@@ -16,7 +16,7 @@ class ConvexMesh;
 class ConvexMeshCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ConvexMeshCollider, TypeCopyMode::ReferenceType);
 
   ConvexMeshCollider();
 

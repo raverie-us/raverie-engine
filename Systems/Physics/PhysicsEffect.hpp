@@ -35,7 +35,7 @@ DeclareEnum3(PhysicsEffectEndCondition, ClampToMax, ContinueFalloff, NoEffect);
 class PhysicsEffect : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsEffect, TypeCopyMode::ReferenceType);
 
   PhysicsEffect();
 

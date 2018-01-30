@@ -14,7 +14,7 @@ namespace Zero
 class Region : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Region, TypeCopyMode::ReferenceType);
 
   Region();
 

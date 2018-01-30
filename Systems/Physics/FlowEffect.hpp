@@ -18,7 +18,7 @@ DeclareBitField2(FlowFlags, LocalForce, AttractToFlowCenter);
 class FlowEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FlowEffect, TypeCopyMode::ReferenceType);
 
   FlowEffect();
 

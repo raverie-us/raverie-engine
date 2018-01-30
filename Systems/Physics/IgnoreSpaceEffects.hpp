@@ -14,7 +14,7 @@ namespace Zero
 class IgnoreSpaceEffects : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IgnoreSpaceEffects, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;

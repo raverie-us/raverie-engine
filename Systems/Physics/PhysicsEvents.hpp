@@ -38,7 +38,7 @@ namespace Physics
 class BaseCollisionEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BaseCollisionEvent, TypeCopyMode::ReferenceType);
 
   BaseCollisionEvent();
   void Set(Physics::Manifold* manifold, StringParam eventType);
@@ -91,7 +91,7 @@ protected:
 class CollisionEvent : public BaseCollisionEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionEvent, TypeCopyMode::ReferenceType);
 
   CollisionEvent();
   void Set(Physics::Manifold* manifold, StringParam eventType);
@@ -122,7 +122,7 @@ public:
 class CollisionGroupEvent : public BaseCollisionEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionGroupEvent, TypeCopyMode::ReferenceType);
 
   CollisionGroupEvent();
 
@@ -154,7 +154,7 @@ private:
 class PreSolveEvent : public BaseCollisionEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PreSolveEvent, TypeCopyMode::ReferenceType);
 
    PreSolveEvent();
    void Set(Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock);

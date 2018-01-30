@@ -22,7 +22,7 @@ DeclareBitField3(CarFlags, DebugDraw, InEditor, OnAllObjectsCreatedCalled);
 /// forces to propel the car.
 struct PhysicsCar : public Component
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsCar, TypeCopyMode::ReferenceType);
 
   PhysicsCar();
 
@@ -78,7 +78,7 @@ struct PhysicsCar : public Component
   /// and helps with binding to the property grid (currently disabled).
   struct CarWheelRef : public Object
   {
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(CarWheelRef, TypeCopyMode::ReferenceType);
 
     Cog* GetCog();
     PhysicsCarWheel* GetCarWheel();
@@ -89,7 +89,7 @@ struct PhysicsCar : public Component
   /// An array interface to the cog paths of wheels that this car uses. This array is read-only.
   struct CarWheelArray : public SafeId32Object
   {
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(CarWheelArray, TypeCopyMode::ReferenceType);
 
     CarWheelArray();
     /// Get the cog for a wheel by index.

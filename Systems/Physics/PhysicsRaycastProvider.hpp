@@ -13,7 +13,7 @@ namespace Zero
 class PhysicsRaycastProvider : public RaycastProvider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsRaycastProvider, TypeCopyMode::ReferenceType);
 
   PhysicsRaycastProvider();
 

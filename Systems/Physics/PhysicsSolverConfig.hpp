@@ -28,7 +28,7 @@ DeclareEnum3(PhysicsContactTangentTypes, OrthonormalTangents, VelocityTangents, 
 /// This is used to configure how one joint is solved independently of another joint.
 struct ConstraintConfigBlock : public SafeId32Object
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ConstraintConfigBlock, TypeCopyMode::ReferenceType);
 
   ConstraintConfigBlock();
 
@@ -80,7 +80,7 @@ struct ConstraintConfigBlock : public SafeId32Object
 /// The block type for a contact constraint
 struct ContactBlock : public ConstraintConfigBlock
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContactBlock, TypeCopyMode::ReferenceType);
   ContactBlock() {mJointId = Zero::JointEnums::JointCount;}
 };
 
@@ -88,7 +88,7 @@ struct ContactBlock : public ConstraintConfigBlock
 #define JointType(jointType)                                           \
   struct jointType##Block : public ConstraintConfigBlock               \
   {                                                                    \
-    ZilchDeclareType(TypeCopyMode::ReferenceType);                     \
+    ZilchDeclareType(jointType##Block, TypeCopyMode::ReferenceType);   \
     jointType##Block() {mJointId = Zero::JointEnums::jointType##Type;} \
   };
 #include "Physics/Joints/JointList.hpp"
@@ -101,7 +101,7 @@ struct ContactBlock : public ConstraintConfigBlock
 class PhysicsSolverConfig : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsSolverConfig, TypeCopyMode::ReferenceType);
 
   PhysicsSolverConfig();
   ~PhysicsSolverConfig();

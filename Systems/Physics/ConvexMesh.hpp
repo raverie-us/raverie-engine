@@ -16,7 +16,7 @@ namespace Zero
 class ConvexMesh : public GenericPhysicsMesh
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ConvexMesh, TypeCopyMode::ReferenceType);
   
   //-------------------------------------------------------------------Resource Interface
   void Serialize(Serializer& stream) override;

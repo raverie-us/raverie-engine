@@ -17,7 +17,7 @@ DeclareBitField1(BasicForceFlags, LocalSpaceDirection);
 class BasicDirectionEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BasicDirectionEffect, TypeCopyMode::ReferenceType);
 
   BasicDirectionEffect();
 
@@ -64,7 +64,7 @@ protected:
 class ForceEffect : public BasicDirectionEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ForceEffect, TypeCopyMode::ReferenceType);
 
   ForceEffect();
 
@@ -79,7 +79,7 @@ public:
 class GravityEffect : public BasicDirectionEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GravityEffect, TypeCopyMode::ReferenceType);
 
   GravityEffect();
 

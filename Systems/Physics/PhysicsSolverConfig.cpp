@@ -270,7 +270,7 @@ ZilchDefineType(ContactBlock, builder, type)
 #undef JointType
 
 //-------------------------------------------------------------------Solver Config Factory
-ZilchDefineType(PhysicsSolverConfigMetaComposition, builder, type)
+ZilchDefineTemplateType(PhysicsSolverConfigMetaComposition, builder, type)
 {
 }
 

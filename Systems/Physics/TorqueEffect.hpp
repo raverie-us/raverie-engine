@@ -15,7 +15,7 @@ DeclareBitField1(TorqueFlags, LocalTorque);
 class TorqueEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TorqueEffect, TypeCopyMode::ReferenceType);
 
   TorqueEffect();
 

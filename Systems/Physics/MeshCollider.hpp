@@ -18,7 +18,7 @@ struct BaseCastFilter;
 class MeshCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MeshCollider, TypeCopyMode::ReferenceType);
 
   MeshCollider();
 

@@ -14,7 +14,7 @@ namespace Zero
 class BuoyancyEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BuoyancyEffect, TypeCopyMode::ReferenceType);
 
   BuoyancyEffect();
 

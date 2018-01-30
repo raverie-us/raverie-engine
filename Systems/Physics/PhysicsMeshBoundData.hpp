@@ -20,8 +20,8 @@ class GenericPhysicsMesh;
   HandleOf<ResourceType> ResourceType::RuntimeClone()                                         \
   {                                                                                           \
     AutoDeclare(manager, GetManager());                                                       \
-    HandleOf<ResourceType> cloneHandle = manager->CreateRuntimeInternal();                    \
-    ResourceType* clone = cloneHandle;                                                        \
+    HandleOf<ResourceType> cloneHandle(manager->CreateRuntimeInternal());                     \
+    ResourceType* clone = *cloneHandle;                                                       \
     CopyTo(clone);                                                                            \
     return cloneHandle;                                                                       \
   }
@@ -189,14 +189,14 @@ private:
 class PhysicsMeshVertexData : public BoundMeshData<GenericPhysicsMesh, Vec3>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsMeshVertexData, TypeCopyMode::ReferenceType);
 };
 
 //-------------------------------------------------------------------PhysicsMeshIndexData
 class PhysicsMeshIndexData : public BoundMeshData<GenericPhysicsMesh, uint>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsMeshIndexData, TypeCopyMode::ReferenceType);
 };
 
 #define PhysicsDefineArrayType(arrayType)   \

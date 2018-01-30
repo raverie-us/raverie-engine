@@ -18,21 +18,21 @@ class SubConvexMesh;
 class MultiConvexMeshVertexData : public BoundMeshData<MultiConvexMesh, Vec3>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMeshVertexData, TypeCopyMode::ReferenceType);
 };
 
 //-------------------------------------------------------------------MultiConvexMeshIndexData
 class MultiConvexMeshIndexData : public BoundMeshData<MultiConvexMesh, uint>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMeshIndexData, TypeCopyMode::ReferenceType);
 };
 
 //-------------------------------------------------------------------MultiConvexMeshSubMeshData
 class MultiConvexMeshSubMeshData : public BoundMeshData<MultiConvexMesh, SubConvexMesh*>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMeshSubMeshData, TypeCopyMode::ReferenceType);
   typedef MultiConvexMeshSubMeshData SelfType;
   typedef BoundMeshDataRange<SelfType> RangeType;
 
@@ -53,7 +53,7 @@ public:
 class SubConvexMesh : public SafeId32Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SubConvexMesh, TypeCopyMode::ReferenceType);
 
   typedef Array<Vec3> VertexArray;
   typedef const Array<Vec3>& VertexArrayParam;
@@ -121,7 +121,7 @@ public:
 class MultiConvexMesh : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMesh, TypeCopyMode::ReferenceType);
 
   MultiConvexMesh();
   ~MultiConvexMesh();

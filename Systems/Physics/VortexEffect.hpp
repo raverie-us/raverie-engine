@@ -18,7 +18,7 @@ DeclareBitField4(VortexFlags, LocalAxis, ClampToMax, ContinueFalloff, NoEffect);
 class VortexEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(VortexEffect, TypeCopyMode::ReferenceType);
   VortexEffect();
 
   // Component Interface

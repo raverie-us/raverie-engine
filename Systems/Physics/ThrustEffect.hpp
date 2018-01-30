@@ -17,7 +17,7 @@ DeclareBitField1(ThrustFlags, LocalSpaceDirection);
 class ThrustEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ThrustEffect, TypeCopyMode::ReferenceType);
 
   ThrustEffect();
 

@@ -15,7 +15,7 @@ namespace Zero
 class WindEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WindEffect, TypeCopyMode::ReferenceType);
 
   WindEffect();
 

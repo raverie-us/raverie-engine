@@ -19,7 +19,7 @@ DeclareBitField6(PointFlags, UseMaxDistance, LinearInterpolation, QuadraticInter
 class BasicPointEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BasicPointEffect, TypeCopyMode::ReferenceType);
 
   BasicPointEffect();
 
@@ -101,7 +101,7 @@ protected:
 class PointForceEffect : public BasicPointEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PointForceEffect, TypeCopyMode::ReferenceType);
 
   PointForceEffect();
 
@@ -118,7 +118,7 @@ public:
 class PointGravityEffect : public BasicPointEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PointGravityEffect, TypeCopyMode::ReferenceType);
 
   PointGravityEffect();
 

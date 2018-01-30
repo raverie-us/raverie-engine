@@ -27,7 +27,7 @@ struct PhysicsQueue
   BroadPhaseAction mBroadPhaseAction;
 
   friend struct PhysicsNodeManager;
-  friend class PhysicsNode;
+  friend class  Zero::PhysicsNode;
 
   void Validate();
   ///Empty the actions

@@ -20,7 +20,7 @@ DeclareBitField7(CarWheelFlags, IsDriveWheel, IsInContact, InEditor, ChildedWhee
 /// how to interact with the world (eg. spring forces, friction, etc...).
 struct PhysicsCarWheel: public Component
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsCarWheel, TypeCopyMode::ReferenceType);
 
   PhysicsCarWheel();
 

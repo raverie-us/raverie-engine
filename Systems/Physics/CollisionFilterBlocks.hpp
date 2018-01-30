@@ -20,7 +20,7 @@ DeclareEnum4(CollisionFilterBlockType, CollisionStartedBlock, CollisionPersisted
 /// Allows customizing who gets events (in the filter pair) and what event name is sent out.
 struct CollisionFilterBlock : public SafeId32Object
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionFilterBlock, TypeCopyMode::ReferenceType);
 
   CollisionFilterBlock();
 
@@ -52,7 +52,7 @@ struct CollisionFilterBlock : public SafeId32Object
 /// CollisionFilterBlock for CollisionStarted events.
 struct CollisionStartBlock : public CollisionFilterBlock
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionStartBlock, TypeCopyMode::ReferenceType);
 
   CollisionStartBlock();
 };
@@ -61,7 +61,7 @@ struct CollisionStartBlock : public CollisionFilterBlock
 /// CollisionFilterBlock for CollisionPersisted events.
 struct CollisionPersistedBlock : public CollisionFilterBlock
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionPersistedBlock, TypeCopyMode::ReferenceType);
 
   CollisionPersistedBlock();
 };
@@ -70,7 +70,7 @@ struct CollisionPersistedBlock : public CollisionFilterBlock
 /// CollisionFilterBlock for CollisionEnded events.
 struct CollisionEndBlock : public CollisionFilterBlock
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionEndBlock, TypeCopyMode::ReferenceType);
 
   CollisionEndBlock();
 };
@@ -80,7 +80,7 @@ struct CollisionEndBlock : public CollisionFilterBlock
 /// Allows modifying object state before collision responses have been calculated.
 struct PreSolveBlock : public CollisionFilterBlock
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PreSolveBlock, TypeCopyMode::ReferenceType);
 
   PreSolveBlock();
 };

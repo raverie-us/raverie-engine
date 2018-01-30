@@ -9,6 +9,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wunused-const-variable"
+#endif
+
 #include "Math/MathStandard.hpp"
 #include "Geometry/GeometryStandard.hpp"
 #include "Engine/EngineStandard.hpp"

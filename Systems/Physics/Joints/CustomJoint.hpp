@@ -25,7 +25,7 @@ struct CustomJoint;
 class CustomJointEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CustomJointEvent, TypeCopyMode::ReferenceType);
 
   /// The joint that sent this event.
   CustomJoint* mOwner;
@@ -39,7 +39,7 @@ public:
 /// velocities along the Jacobian are equal to zero (ignoring error correction or motors).
 struct CustomConstraintInfo : public ReferenceCountedEventObject
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CustomConstraintInfo, TypeCopyMode::ReferenceType);
 
   CustomConstraintInfo();
 

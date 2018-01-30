@@ -13,7 +13,7 @@ namespace Zero
 class EllipsoidCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EllipsoidCollider, TypeCopyMode::ReferenceType);
 
   EllipsoidCollider();
 
