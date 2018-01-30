@@ -18,7 +18,7 @@ namespace Zero
 class BinaryContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BinaryContent, TypeCopyMode::ReferenceType);
 
   BinaryContent();
 };
@@ -27,7 +27,7 @@ public:
 class BinaryBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BinaryBuilder, TypeCopyMode::ReferenceType);
 
   BinaryBuilder()
     :DirectBuilderComponent(0, ".bin", String())

@@ -68,7 +68,7 @@ namespace Events
 class ContentSystemEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentSystemEvent, TypeCopyMode::ReferenceType);
 
   ContentLibrary* mLibrary;
   ResourcePackage* mPackage;
@@ -125,7 +125,7 @@ void ShutdownContentSystem();
 class ContentSystem : public ExplicitSingleton<ContentSystem, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentSystem, TypeCopyMode::ReferenceType);
 
   ContentSystem();
   ~ContentSystem();

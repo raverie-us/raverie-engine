@@ -20,7 +20,7 @@ DeclareEnum2(LibraryState, Enumerated, Loaded);
 class ContentLibrary : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentLibrary, TypeCopyMode::ReferenceType);
   
   ContentLibrary();
   ~ContentLibrary();

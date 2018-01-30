@@ -29,7 +29,7 @@ typedef uint ContentItemId;
 class ContentItem : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentItem, TypeCopyMode::ReferenceType);
 
   ContentItem();
   virtual ~ContentItem();
@@ -121,7 +121,7 @@ private:
 class ContentItemMetaOperations : public MetaOperations
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentItemMetaOperations, TypeCopyMode::ReferenceType);
 
   /// MetaOperations Interface.
   void ObjectModified(HandleParam object, bool intermediateChange) override;

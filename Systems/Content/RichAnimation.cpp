@@ -200,7 +200,7 @@ void KeyFrame::SetTangents(Vec2Param tangentIn, Vec2Param tangentOut)
 Vec2 KeyFrame::GetGraphPosition()
 {
   Type* keyType = mValue.StoredType;
-  float y;
+  float y = 0.0f;
   if (keyType->IsA(ZilchTypeId(float)))
     y = mValue.Get<float>();
   else if (keyType->IsA(ZilchTypeId(int)))

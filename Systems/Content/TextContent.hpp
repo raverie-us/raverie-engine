@@ -18,7 +18,7 @@ namespace Zero
 class TextContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextContent, TypeCopyMode::ReferenceType);
 
   TextContent();
 };
@@ -27,7 +27,7 @@ public:
 class BaseTextBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BaseTextBuilder, TypeCopyMode::ReferenceType);
 
   void Generate(ContentInitializer& initializer) override;
   BaseTextBuilder(uint order, StringParam extension, StringParam resourceName)
@@ -44,7 +44,7 @@ const String TextExtension = ".txt";
 class TextBuilder : public BaseTextBuilder
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextBuilder, TypeCopyMode::ReferenceType);
 
   void SetDefaults(){}
   TextBuilder()
@@ -60,7 +60,7 @@ const String ZilchScriptResourceName = "ZilchScript";
 class ZilchScriptBuilder : public BaseTextBuilder
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchScriptBuilder, TypeCopyMode::ReferenceType);
 
   void SetDefaults(){}
 
@@ -73,7 +73,7 @@ public:
 class ZilchFragmentBuilder : public BaseTextBuilder
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchFragmentBuilder, TypeCopyMode::ReferenceType);
 
   void SetDefaults(){}
 

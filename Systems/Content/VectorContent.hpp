@@ -17,7 +17,7 @@ namespace Zero
 class FontContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FontContent, TypeCopyMode::ReferenceType);
 
   FontContent();
 };
@@ -26,7 +26,7 @@ public:
 class FontBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FontBuilder, TypeCopyMode::ReferenceType);
   FontBuilder();
   void Generate(ContentInitializer& initializer) override;
 };

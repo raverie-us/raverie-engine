@@ -14,7 +14,7 @@ namespace Zero
 class AudioContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AudioContent, TypeCopyMode::ReferenceType);
 
   AudioContent();
 };
@@ -24,7 +24,7 @@ const String SoundExtension = ".snd";
 class SoundBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundBuilder, TypeCopyMode::ReferenceType);
 
   /// If true, the sound file will be streamed from disk at runtime instead of loaded into memory. 
   /// Streaming files can't be played multiple times simultaneously and can't use loop tails.

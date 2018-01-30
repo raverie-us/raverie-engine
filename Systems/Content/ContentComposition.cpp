@@ -22,7 +22,6 @@ ZilchDefineType(BuilderComponent, builder, type)
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
-DefineSafeIdHandle(ContentComposition);
 ZilchDefineType(ContentComposition, builder, type)
 {
   ZeroBindHandle();

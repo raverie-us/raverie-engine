@@ -18,7 +18,7 @@ namespace Zero
 class DataContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DataContent, TypeCopyMode::ReferenceType);
 
   DataContent();
   DataContent(ContentInitializer& initializer);
@@ -30,7 +30,7 @@ public:
 class DataBuilder : public BuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DataBuilder, TypeCopyMode::ReferenceType);
 
   String Name;
   ResourceId mResourceId;

@@ -31,7 +31,9 @@ public:
   String ResourceOwner;
 
   DirectBuilderComponent(uint order, StringParam extension, StringParam loaderType)
-    : Order(order), Extension(extension), LoaderType(loaderType)
+    : Extension(extension)
+    , LoaderType(loaderType)
+    , Order(order)
   {}
 
   //BuilderComponent interface
