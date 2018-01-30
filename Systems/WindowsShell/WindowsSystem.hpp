@@ -20,7 +20,7 @@ DeclareEnum2(WindowsSystemUpdateState, Normal, SystemBlocking);
 class WindowsOsWindow : public OsWindow
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WindowsOsWindow, TypeCopyMode::ReferenceType);
 
   WindowsOsWindow();
   ~WindowsOsWindow();

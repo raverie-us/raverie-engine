@@ -169,7 +169,7 @@ public:
       if (selected != nullptr)
       {
         // If this object has the component type we're looking for then return it
-        ComponentType* component = selected->has(ComponentType);
+        ComponentType* component = selected->template has(ComponentType);
         if (component != nullptr)
           return component;
       }

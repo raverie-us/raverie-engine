@@ -1236,8 +1236,6 @@ TrapezoidMap::NodeId TrapezoidMap::MergeAbove(RegionId regionId, RegionId* paren
 
 void TrapezoidMap::InsertVertex(NodeId rootId, VertexId vertexId)
 {
-  Vec2 vertex = mVertices[vertexId];
-
   // Traverse the tree until we hit the leaf region that Contains this vertex
   NodeId nodeId = QueryInternal(rootId, vertexId)->NodeIndex;
   Node* node = mNodes.GetElement(nodeId);

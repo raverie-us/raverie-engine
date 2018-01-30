@@ -99,7 +99,7 @@ namespace Zilch
     ComponentType* Has()
     {
       if(T* instance = *this)
-        return instance->Has<ComponentType>();
+        return instance->template Has<ComponentType>();
       return nullptr;
     }
 
