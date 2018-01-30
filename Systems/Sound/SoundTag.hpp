@@ -22,7 +22,7 @@ namespace Events
 
 class SoundTagDisplay : public MetaDisplay
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundTagDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -32,7 +32,7 @@ class SoundTagDisplay : public MetaDisplay
 class SoundTag : public DataResource, public Audio::ExternalNodeInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundTag, TypeCopyMode::ReferenceType);
   SoundTag();
   ~SoundTag();
 

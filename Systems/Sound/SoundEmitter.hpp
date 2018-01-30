@@ -33,7 +33,7 @@ struct InstanceAttenuation
 class SoundEmitterDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundEmitterDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -43,7 +43,7 @@ public:
 class SoundEmitter : public Component, public Audio::ExternalNodeInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundEmitter, TypeCopyMode::ReferenceType);
 
   SoundEmitter();
   ~SoundEmitter();

@@ -57,10 +57,10 @@ ZilchDefineType(SoundNode, builder, type)
 //**************************************************************************************************
 SoundNode::SoundNode() :
   mNode(nullptr),
-  mCanInsertAfter(true),
   mCanInsertBefore(true),
-  mCanRemove(true),
-  mCanReplace(true)
+  mCanInsertAfter(true),
+  mCanReplace(true),
+  mCanRemove(true)
 {
 
 }
@@ -111,7 +111,7 @@ void SoundNode::InsertNodeAfter(SoundNode* node)
   if (!mCanInsertAfter || !node->mCanInsertBefore)
   {
     DoNotifyWarning("Incorrect SoundNode Operation", 
-      String::Format("InsertNodeAfter method not allowed with %s and %s", mNode->Name, node->mNode->Name));
+      String::Format("InsertNodeAfter method not allowed with %s and %s", mNode->Name.c_str(), node->mNode->Name.c_str()));
     return;
   }
 
@@ -138,7 +138,7 @@ void SoundNode::InsertNodeBefore(SoundNode* node)
   if (!mCanInsertBefore || !node->mCanInsertAfter)
   {
     DoNotifyWarning("Incorrect SoundNode Operation", 
-      String::Format("InsertNodeBefore method not allowed with %s and %s", mNode->Name, node->mNode->Name));
+      String::Format("InsertNodeBefore method not allowed with %s and %s", mNode->Name.c_str(), node->mNode->Name.c_str()));
     return;
   }
 
@@ -165,7 +165,7 @@ void SoundNode::ReplaceWith(SoundNode* node)
   if (!mCanReplace)
   {
     DoNotifyWarning("Incorrect SoundNode Operation", 
-      String::Format("ReplaceWith method not allowed with %s", mNode->Name));
+      String::Format("ReplaceWith method not allowed with %s", mNode->Name.c_str()));
     return;
   }
 
@@ -187,7 +187,7 @@ void SoundNode::RemoveAllInputs()
   if (!mCanInsertBefore)
   {
     DoNotifyWarning("Incorrect SoundNode Operation",
-      String::Format("RemoveAllInputs method not allowed with %s", mNode->Name));
+      String::Format("RemoveAllInputs method not allowed with %s", mNode->Name.c_str()));
     return;
   }
 
@@ -202,7 +202,7 @@ void SoundNode::RemoveAllOutputs()
   if (!mCanInsertAfter)
   {
     DoNotifyWarning("Incorrect SoundNode Operation",
-      String::Format("RemoveAllOutputs method not allowed with %s", mNode->Name));
+      String::Format("RemoveAllOutputs method not allowed with %s", mNode->Name.c_str()));
     return;
   }
 
@@ -217,7 +217,7 @@ void SoundNode::RemoveAndAttachInputsToOutputs()
   if (!mCanRemove)
   {
     DoNotifyWarning("Incorrect SoundNode Operation",
-      String::Format("RemoveAndAttachInputsToOutputs method not allowed with %s", mNode->Name));
+      String::Format("RemoveAndAttachInputsToOutputs method not allowed with %s", mNode->Name.c_str()));
     return;
   }
 
@@ -538,9 +538,9 @@ ZilchDefineType(GeneratedWaveNode, builder, type)
 
 //**************************************************************************************************
 GeneratedWaveNode::GeneratedWaveNode() :
+  mAsset(nullptr), 
   mWaveType(SynthWaveType::SineWave),
   mWaveFrequency(440.0f), 
-  mAsset(nullptr), 
   mVolume(1.0f),
   mSquareWavePulseValue(0.5f)
 {
@@ -2127,7 +2127,7 @@ void AdditiveSynthNode::AddHarmonic(float multiplier, float volume, AdsrEnvelope
 {
   if (mNode)
   {
-    Audio::EnvelopeSettings envelope(envelope.DelayTime, envelope.AttackTime,
+    Audio::EnvelopeSettings envelopeSettings(envelope.DelayTime, envelope.AttackTime,
       envelope.DecayTime, envelope.SustainTime, envelope.SustainLevel, envelope.ReleaseTime);
     Audio::OscillatorTypes::Enum oscType;
     switch (type)
@@ -2150,7 +2150,7 @@ void AdditiveSynthNode::AddHarmonic(float multiplier, float volume, AdsrEnvelope
     }
 
     ((Audio::AdditiveSynthNode*)mNode)->AddHarmonic(Audio::HarmonicData(multiplier, 
-      volume, envelope, oscType));
+      volume, envelopeSettings, oscType));
   }
 }
 

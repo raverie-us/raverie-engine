@@ -74,11 +74,11 @@ ZilchDefineType(SoundInstance, builder, type)
 
 //**************************************************************************************************
 SoundInstance::SoundInstance(Status& status, SoundSpace* space, Audio::SoundAsset* asset, 
-    float volume, float pitch) : 
-  mSpace(space), 
-  mAssetObject(asset), 
-  mIsPlaying(false), 
-  mIsPaused(false)
+    float volume, float pitch) :
+  mAssetObject(asset),
+  mSpace(space),
+  mIsPaused(false),
+  mIsPlaying(false)
 {
   // Create the SoundInstance
   Audio::SoundInstanceNode* instance = new Audio::SoundInstanceNode(status, "SoundInstance", 

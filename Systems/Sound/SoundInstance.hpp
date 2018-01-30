@@ -32,7 +32,7 @@ namespace Events
 class SoundInstanceEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundInstanceEvent, TypeCopyMode::ReferenceType);
 
   SoundInstanceEvent() : mSoundInstance(nullptr) {}
   SoundInstanceEvent(const HandleOf<SoundInstance>& instance) : mSoundInstance(instance) {}
@@ -50,7 +50,7 @@ private:
 class SoundInstance : public ReferenceCountedEventObject, Audio::ExternalNodeInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundInstance, TypeCopyMode::ReferenceType);
 
   SoundInstance(Status& status, SoundSpace* space, Audio::SoundAsset* asset, float volume, float pitch);
 

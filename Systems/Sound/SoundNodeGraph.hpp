@@ -14,15 +14,15 @@ namespace Zero
 class NodePrintInfo
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  NodePrintInfo(int level, const String& name, bool hasOutput) : 
-    mLevel(level),
-    mName(name),
-    mHasOutput(hasOutput),
-    mMoved(false), 
-    mPositionSet(false),
-    mPosition(Vec2(0.0f,0.0f)),
-    mConnectAvgPos(0.0f)
+  ZilchDeclareType(NodePrintInfo, TypeCopyMode::ReferenceType);
+  NodePrintInfo(int level, const String& name, bool hasOutput) 
+  : mLevel(level)
+  , mName(name)
+  , mPosition(Vec2(0.0f,0.0f))
+  , mConnectAvgPos(0.0f)
+  , mHasOutput(hasOutput)
+  , mMoved(false)
+  , mPositionSet(false)
   {}
 
   Array<NodePrintInfo*>::range GetConnections() { return mChildren.All(); }

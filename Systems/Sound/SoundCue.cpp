@@ -516,7 +516,7 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
   ErrorIf(!asset, "No sound asset when playing SoundCue");
   if (!asset)
   {
-    DoNotifyError("Audio Error", String::Format("No audio asset for Sound %s", entry->GetSound()->Name));
+    DoNotifyError("Audio Error", String::Format("No audio asset for Sound %s", entry->GetSound()->Name.c_str()));
     return nullptr;
   }
 

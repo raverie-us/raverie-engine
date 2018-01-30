@@ -33,7 +33,7 @@ namespace Events
 class SoundEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundEvent, TypeCopyMode::ReferenceType);
 
 };
 
@@ -43,7 +43,7 @@ public:
 class MidiEvent : public Event 
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MidiEvent, TypeCopyMode::ReferenceType);
 
   MidiEvent() : 
     Channel(0),
@@ -69,7 +69,7 @@ public:
 class AudioFloatDataEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AudioFloatDataEvent, TypeCopyMode::ReferenceType);
 
   HandleOf<ArrayClass<float>> AudioData;
   unsigned Channels;
@@ -80,7 +80,7 @@ public:
 class AudioByteDataEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AudioByteDataEvent, TypeCopyMode::ReferenceType);
 
   HandleOf<ArrayClass<byte>> AudioData;
 };
@@ -107,7 +107,7 @@ DeclareEnum2(AudioLatency, Low, High);
 class SoundSystem : public System, Audio::ExternalSystemInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundSystem, TypeCopyMode::ReferenceType);
 
   SoundSystem() :
     mCounter(0), 
@@ -232,7 +232,7 @@ namespace Z
 class AudioSettings : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AudioSettings, TypeCopyMode::ReferenceType);
 
   AudioSettings() : 
     mSystemVolume(1.0f), 

@@ -41,7 +41,7 @@ private:
 class SoundAttenuator : public DataResource, public Audio::ExternalNodeInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundAttenuator, TypeCopyMode::ReferenceType);
 
   SoundAttenuator();
   ~SoundAttenuator();
@@ -114,7 +114,7 @@ private:
 
 class SoundAttenuatorDisplay : public MetaDisplay
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundAttenuatorDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
