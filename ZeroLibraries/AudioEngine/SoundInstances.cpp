@@ -16,9 +16,9 @@ namespace Audio
     mFading(false),
     mFrameIndex(0),
     mStartFrame(0),
-    mDefaultFrames(AudioSystemInternal::PropertyChangeFrames),
     mCrossFade(false),
-    mAsset(nullptr)
+    mAsset(nullptr),
+    mDefaultFrames(AudioSystemInternal::PropertyChangeFrames)
   {
     VolumeInterpolator.SetCurve(CurveTypes::Squared);
   }
@@ -219,11 +219,11 @@ namespace Audio
       ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, false, true, isThreaded), 
     Asset(parentAsset), 
-    mVolume(0.8f), 
-    mFinished(false), 
+    mCurrentTime(0),
     mLooping(looping), 
     mPaused(startPaused), 
-    mCurrentTime(0),
+    mVolume(0.8f), 
+    mFinished(false), 
     mStartTime(0),
     mEndTime((float)parentAsset->GetNumberOfFrames() / AudioSystemInternal::SystemSampleRate),
     mLoopStartTime(0),
@@ -232,21 +232,21 @@ namespace Audio
     mCrossFadeTail(false),
     mNotifyTime(0),
     mCustomNotifySent(false),
-    mVirtual(false),
     mPitchFactor(1.0f),
-    PausingModifier(nullptr),
     mFrameIndex(0),
-    mPitchShifting(false),
-    mStopFrameCount(0),
-    mStopping(false),
     mPausing(false),
+    mStopping(false),
+    mStopFrameCount(0),
     mInterpolatingVolume(false),
+    mPitchShifting(false),
     mStartFrame(0),
     mEndFrame(0),
     mLoopStartFrame(0),
     mLoopEndFrame(0),
     mLoopTailFrames(0),
-    mSavedOutputVersion(gAudioSystem->MixVersionNumber - 1)
+    PausingModifier(nullptr),
+    mSavedOutputVersion(gAudioSystem->MixVersionNumber - 1),
+    mVirtual(false)
   {
     if (!Threaded)
     {

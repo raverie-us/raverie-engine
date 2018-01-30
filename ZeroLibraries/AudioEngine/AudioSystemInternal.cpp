@@ -17,25 +17,25 @@ namespace Audio
 
   //************************************************************************************************
   AudioSystemInternal::AudioSystemInternal(ExternalSystemInterface* extInterface) : 
-    ExternalInterface(extInterface), 
-    MinimumVolumeThresholdThreaded(0.015f),
-    ShuttingDownThreaded(false), 
-    SystemVolumeThreaded(1.0f),
     SystemChannelsThreaded(2),
-    Volume(1.0f), 
     ResetPA(false), 
     MixVersionNumber(0), 
     FinalOutputNode(nullptr), 
     FinalOutputNodeThreaded(nullptr),
+    ExternalInterface(extInterface), 
+    MinimumVolumeThresholdThreaded(0.015f),
+    SendMicrophoneInputData(false),
+    StopDecodeThread(0),
+    ShuttingDownThreaded(false), 
+    SystemVolumeThreaded(1.0f),
+    Volume(1.0f), 
+    LowPass(nullptr),
     PeakVolumeLastMix(0.0f),
     RmsVolumeLastMix(0.0f),
     NodeCount(0),
-    LowPass(nullptr),
     PreviousPeakVolumeThreaded(0),
     PreviousRMSVolumeThreaded(0),
-    Resampling(false),
-    StopDecodeThread(0),
-    SendMicrophoneInputData(false)
+    Resampling(false)
   {
     gAudioSystem = this;
 

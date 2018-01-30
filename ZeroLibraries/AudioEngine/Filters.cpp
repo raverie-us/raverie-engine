@@ -14,15 +14,15 @@ namespace Audio
 
   //************************************************************************************************
   BiQuad::BiQuad() : 
-    a0(0),
-    a1(0), 
-    a2(0), 
-    b1(0), 
-    b2(0), 
-    x_1(0), 
-    x_2(0), 
+    x_1(0),
+    x_2(0),
     y_1(0),
-    y_2(0)
+    y_2(0),
+    a0(0),
+    a1(0),
+    a2(0),
+    b1(0),
+    b2(0)
   {
     
   }
@@ -182,8 +182,8 @@ namespace Audio
 
   //************************************************************************************************
   DelayAPF::DelayAPF(const float maxDelayTime, const int sampleRate) :
-    mAPFg(0),
-    Delay(maxDelayTime, sampleRate)
+    Delay(maxDelayTime, sampleRate),
+    mAPFg(0)
   {
 
   }
@@ -211,8 +211,8 @@ namespace Audio
 
   //************************************************************************************************
   Comb::Comb(const float maxDelayTime, const int sampleRate) :
-    mCombG(0),
-    Delay(maxDelayTime, sampleRate)
+    Delay(maxDelayTime, sampleRate),
+    mCombG(0)
   {
 
   }
@@ -242,10 +242,10 @@ namespace Audio
 
   //************************************************************************************************
   LPComb::LPComb(const float maxDelayTime, const int sampleRate) :
+    Delay(maxDelayTime, sampleRate),
     mCombG(0), 
     mLPFg(0), 
-    mPrevSample(0),
-    Delay(maxDelayTime, sampleRate)
+    mPrevSample(0)
   {
 
   }
@@ -315,10 +315,10 @@ namespace Audio
   //-------------------------------------------------------------------------------- Low Pass Filter
 
   //************************************************************************************************
-  LowPassFilter::LowPassFilter() : 
-    CutoffFrequency(20001.0f), 
-    HalfPI(Math::cPi / 2.0f), 
-    SqRoot2(Math::Sqrt(2.0f))
+  LowPassFilter::LowPassFilter() :
+    CutoffFrequency(20001.0f),
+    SqRoot2(Math::Sqrt(2.0f)),
+    HalfPI(Math::cPi / 2.0f)
   {
     SetCutoffValues();
 
@@ -384,10 +384,10 @@ namespace Audio
   //------------------------------------------------------------------------------- High Pass Filter
 
   //************************************************************************************************
-  HighPassFilter::HighPassFilter() : 
-    CutoffFrequency(10.0f), 
-    HalfPI(Math::cPi / 2.0f), 
-    SqRoot2(Math::Sqrt(2.0f))
+  HighPassFilter::HighPassFilter() :
+    CutoffFrequency(10.0f),
+    SqRoot2(Math::Sqrt(2.0f)),
+    HalfPI(Math::cPi / 2.0f)
   {
     SetCutoffValues();
 
@@ -443,8 +443,8 @@ namespace Audio
 
   //************************************************************************************************
   BandPassFilter::BandPassFilter() :
-    Quality(0.669f), 
-    CentralFreq(1000.0f)
+    CentralFreq(1000.0f),
+    Quality(0.669f)
   {
     ResetFrequencies();
 
@@ -515,13 +515,13 @@ namespace Audio
 
   //************************************************************************************************
   Oscillator::Oscillator() :
-    mReadIndex(0),
-    mIncrement(0),
-    mNoteOn(false),
-    mSampleRate(AudioSystemInternal::SystemSampleRate),
     mFrequency(1.0f),
     mType(OscillatorTypes::Noise),
     mPolarity(Bipolar),
+    mSampleRate(AudioSystemInternal::SystemSampleRate),
+    mReadIndex(0),
+    mIncrement(0),
+    mNoteOn(false),
     mSquareWavePositiveFraction(0.5f)
   {
     mIncrement = ArraySize * mFrequency / (float)mSampleRate;
@@ -798,14 +798,14 @@ namespace Audio
 
   //************************************************************************************************
   EnvelopeDetector::EnvelopeDetector() :
-    mAttackTimeMSec(0.0f),
-    mReleaseTimeMSec(0.0f), 
+    mSample(0),
     mAttackTime(0.0f),
     mReleaseTime(0.0f),
+    mAttackTimeMSec(0.0f),
+    mReleaseTimeMSec(0.0f), 
     mSampleRate((float)AudioSystemInternal::SystemSampleRate), 
     mEnvelope(0.0f),
     mDetectMode(DetectModes::Peak), 
-    mSample(0),
     mAnalogTC(false), 
     mLogDetector(false)
   {
@@ -928,9 +928,9 @@ namespace Audio
     mRatio(1),
     mOutputGainDB(0),
     mKneeWidth(0), 
-    mHalfKnee(0),
     mProcessorType(Compressor),
-    mAnalog(true)
+    mAnalog(true),
+    mHalfKnee(0)
   {
     mHalfKnee = mKneeWidth * 0.5f;
 
@@ -952,9 +952,9 @@ namespace Audio
     mRatio(ratio),
     mOutputGainDB(outputGain),
     mKneeWidth(knee),
-    mHalfKnee(0),
     mProcessorType(type),
-    mAnalog(true)
+    mAnalog(true),
+    mHalfKnee(0)
   {
     mOutputGain = Math::Pow(10.0f, mOutputGainDB / 20.0f);
     mCompressorRatio = 1.0f / mRatio;
@@ -1855,8 +1855,8 @@ namespace Audio
     mReleaseTime(0.0f),
     mCurrentTime(0.0f),
     mTimeDelta(1.0f / AudioSystemInternal::SystemSampleRate),
-    mCurrentState(DelayState),
-    mLastAmplitude(0.0f)
+    mLastAmplitude(0.0f),
+    mCurrentState(DelayState)
   {
 
   }
@@ -1871,8 +1871,8 @@ namespace Audio
     mReleaseTime(copy.mReleaseTime),
     mCurrentTime(copy.mCurrentTime),
     mTimeDelta(copy.mTimeDelta),
-    mCurrentState(copy.mCurrentState),
-    mLastAmplitude(copy.mLastAmplitude)
+    mLastAmplitude(copy.mLastAmplitude),
+    mCurrentState(copy.mCurrentState)
   {
 
   }

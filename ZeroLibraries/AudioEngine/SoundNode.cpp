@@ -15,19 +15,19 @@ namespace Audio
   SoundNode::SoundNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, 
       ExternalNodeInterface* extInt, const bool listenerDependent, const bool generator, 
       const bool isThreaded) :
-    SiblingNode(nullptr),
-    InProcess(false), 
-    ExternalData(extInt), 
-    DeleteMe(false), 
-    NumMixedChannels(0), 
-    MixedListener(nullptr), 
-    Threaded(isThreaded),
-    Collapse(false), 
-    BypassValue(0.0f),
     Name(name),
     NodeID(ID),
+    Threaded(isThreaded),
+    DeleteMe(false), 
+    ExternalData(extInt), 
+    SiblingNode(nullptr),
+    InProcess(false), 
+    NumMixedChannels(0), 
+    MixedListener(nullptr), 
+    Collapse(false), 
     ValidOutputLastMix(false),
     ListenerDependent(listenerDependent),
+    BypassValue(0.0f),
     Generator(generator)
   {
     // Add to the list of nodes

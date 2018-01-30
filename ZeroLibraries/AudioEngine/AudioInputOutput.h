@@ -50,7 +50,7 @@ namespace Audio
   {
   public:
     AudioInputOutput();
-    ~AudioInputOutput();
+    virtual ~AudioInputOutput();
 
     // Waits until another mix is needed, using semaphore counter
     void WaitUntilOutputNeededThreaded();

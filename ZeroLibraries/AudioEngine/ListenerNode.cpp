@@ -33,9 +33,9 @@ namespace Audio
   //************************************************************************************************
   ListenerNodeData::ListenerNodeData(ListenerWorldPositionInfo& positionInfo) :
     InterpolatingVolume(false),
-    Deactivating(false),
     PositionWorld(positionInfo.Position),
-    VelocityWorld(positionInfo.Velocity)
+    VelocityWorld(positionInfo.Velocity),
+    Deactivating(false)
   {
     Math::Vec3 right = positionInfo.ForwardDirection.Cross(positionInfo.UpDirection);
 

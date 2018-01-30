@@ -62,8 +62,8 @@ namespace Audio
       InterpolatingVolume(false),
       Pausing(false),
       Paused(false),
-      MinimumVolume(0.2f),
-      DirectionalAngleRadians(0)
+      DirectionalAngleRadians(0),
+      MinimumVolume(0.2f)
     {}
 
     // Current emitter position. 

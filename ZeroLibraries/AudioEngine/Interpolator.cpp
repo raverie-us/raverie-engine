@@ -60,9 +60,9 @@ namespace Audio
   InterpolatingObject::InterpolatingObject() : 
     StartValue(0), 
     EndValue(0), 
+    TotalDistance(0),
     TotalFrames(0),
     CurrentFrame(0), 
-    TotalDistance(0),
     CurrentCurveType(CurveTypes::Linear)
   {
     GetValue = GetValueLinearCurve;

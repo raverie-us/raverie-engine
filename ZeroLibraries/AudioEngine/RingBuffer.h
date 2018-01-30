@@ -22,9 +22,9 @@ namespace Audio
     RingBuffer() :
       BufferSize(0),
       Buffer(nullptr),
+      ElementSizeBytes(0),
       WriteIndex(0),
       ReadIndex(0),
-      ElementSizeBytes(0),
       SmallMask(0),
       BigMask(0)
     {}

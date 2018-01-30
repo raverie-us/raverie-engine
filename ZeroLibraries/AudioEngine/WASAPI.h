@@ -34,7 +34,7 @@ namespace Audio
   public:
 
     WasapiDevice();
-    ~WasapiDevice();
+    virtual ~WasapiDevice();
 
     void ReleaseData();
     void Initialize(IMMDeviceEnumerator* enumerator, bool render, StreamStatus::Enum& status,

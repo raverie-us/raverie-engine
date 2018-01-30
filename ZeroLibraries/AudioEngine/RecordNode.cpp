@@ -15,12 +15,12 @@ namespace Audio
   RecordNode::RecordNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
     ExternalNodeInterface* extInt, bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
-    MaxValue((float)((1 << 15) - 1)),
     FileName("RecordedOutput.wav"),
+    MaxValue((float)((1 << 15) - 1)),
     Recording(false),
+    Paused(false),
     Channels(0),
-    Streaming(true),
-    Paused(false)
+    Streaming(true)
   {
     if (!Threaded)
       SetSiblingNodes(new RecordNode(status, name, ID, nullptr, true), status);

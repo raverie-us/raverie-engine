@@ -14,8 +14,8 @@ namespace Audio
 
   //************************************************************************************************
   AudioInputOutput::AudioInputOutput() :
-    OutputStreamLatency(LatencyValues::LowLatency),
-    MixedOutputBuffer(nullptr)
+    MixedOutputBuffer(nullptr),
+    OutputStreamLatency(LatencyValues::LowLatency)
   {
     memset(OutputBufferSizePerLatency, 0, sizeof(unsigned) * LatencyValues::Count);
 
@@ -149,11 +149,11 @@ namespace Audio
 
   //************************************************************************************************
   AudioIOPortAudio::AudioIOPortAudio() :
+    ApiInfo(nullptr),
     PaOutputStream(nullptr),
     OutputSampleRate(0),
     PaInputStream(nullptr),
-    InputSampleRate(0),
-    ApiInfo(nullptr)
+    InputSampleRate(0)
   {
     OutputParameters = new PaStreamParameters();
     InputParameters = new PaStreamParameters();

@@ -15,10 +15,10 @@ namespace Audio
   PitchChangeHandler::PitchChangeHandler() :
     mPitchCents(0),
     mPitchFactor(1.0f),
-    mFramesToInterpolate(0),
     mInputFrameCount(0),
     mInputSampleCount(0),
-    mChannels(0)
+    mChannels(0),
+    mFramesToInterpolate(0)
   {
     ResetLastSamples();
   }

@@ -39,11 +39,11 @@ namespace Audio
   //************************************************************************************************
   FileDecoder::FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming, 
       SoundAssetFromFile* asset) :
-    Streaming(streaming),
     DecodingTaskCount(0),
     ParentAlive(this),
     InputFileData(nullptr),
     DataIndex(0),
+    Streaming(streaming),
     FileName(fileName)
   {
     // The constructor happens on the game thread

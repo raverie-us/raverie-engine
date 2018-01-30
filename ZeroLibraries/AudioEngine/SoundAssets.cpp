@@ -16,9 +16,9 @@ namespace Audio
   //************************************************************************************************
   SoundAsset::SoundAsset(ExternalNodeInterface* externalInterface, const bool threaded) :
     ThreadedAsset(nullptr),
-    mReferenceCount(0), 
     Threaded(threaded), 
-    ExternalData(externalInterface)
+    ExternalData(externalInterface),
+    mReferenceCount(0)
   {
     // If not threaded, add to the system's list
     if (!Threaded)
@@ -105,8 +105,8 @@ namespace Audio
   SoundAssetFromFile::SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, 
     const bool streaming, ExternalNodeInterface* extInt, const bool isThreaded) :
     SoundAsset(extInt, isThreaded), 
-    mHasStreamingInstance(false), 
     mStreaming(streaming),
+    mHasStreamingInstance(false), 
     mFileLength(0),
     mChannels(0),
     mFrameCount(0),
@@ -446,8 +446,8 @@ namespace Audio
   GeneratedWaveSoundAsset::GeneratedWaveSoundAsset(const OscillatorTypes::Enum waveType, 
       const float frequency, ExternalNodeInterface* extInt, const bool isThreaded) :
     SoundAsset(extInt, isThreaded),
-    mFrequency(frequency), 
-    WaveData(nullptr)
+    WaveData(nullptr),
+    mFrequency(frequency)
   {
     if (!Threaded)
       ThreadedAsset = new GeneratedWaveSoundAsset(waveType, frequency, extInt, true);

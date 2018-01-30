@@ -30,12 +30,12 @@ namespace Audio
       Math::Vec3Param position, const AttenuationData& data, const CurveTypes::Enum curveType,
       Zero::Array<Math::Vec3> *customCurveData, ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, true, false, isThreaded), 
+    Position(position),
     AttenStartDist(data.StartDistance), 
-    UseLowPass(false), 
-    LowPassDistance(data.EndDistance / 2.0f),
     AttenEndDist(data.EndDistance), 
     MinimumVolume(data.MinimumVolume), 
-    Position(position),
+    UseLowPass(false), 
+    LowPassDistance(data.EndDistance / 2.0f),
     LowPassCutoffStartValue(15000.0f)
   {
     if (!Threaded)

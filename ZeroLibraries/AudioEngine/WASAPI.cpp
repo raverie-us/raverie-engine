@@ -46,17 +46,17 @@ namespace Audio
 
   //************************************************************************************************
   WasapiDevice::WasapiDevice() :
-    AudioClient(nullptr),
+    StreamOpen(false),
+    Enumerator(nullptr),
     Device(nullptr),
+    AudioClient(nullptr),
     RenderClient(nullptr),
     CaptureClient(nullptr),
     Format(nullptr),
-    Enumerator(nullptr),
-    IsOutput(false),
-    BufferFrameCount(0),
-    StreamOpen(false),
     ClientCallback(nullptr),
     ClientData(nullptr),
+    IsOutput(false),
+    BufferFrameCount(0),
     FallbackSleepTime((unsigned)((float)FallbackFrames / (float)FallbackSampleRate * 1000.0f))
   {
     memset(ThreadEvents, 0, sizeof(void*) * ThreadEventTypes::NumThreadEvents);
@@ -97,6 +97,7 @@ namespace Audio
     }
 
     HRESULT result;
+    IPropertyStore* property(nullptr);
 
     // Get the default output or input device
     if (render)
@@ -127,7 +128,6 @@ namespace Audio
     }
 
     // Get access to the device properties
-    IPropertyStore* property(nullptr);
     result = Device->OpenPropertyStore(STGM_READ, &property);
     if (result == S_OK)
     {
