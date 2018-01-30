@@ -17,7 +17,7 @@ static const u64 cGraphicalShaderInputsId = 2;
 class GraphicalRangeInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicalRangeInterface, TypeCopyMode::ReferenceType);
 
   /// Add a Graphical to the list.
   void Add(Graphical* graphical);
@@ -151,7 +151,7 @@ public:
 class RenderTasksEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RenderTasksEvent, TypeCopyMode::ReferenceType);
 
   RenderTasksEvent();
 

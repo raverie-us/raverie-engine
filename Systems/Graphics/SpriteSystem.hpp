@@ -21,7 +21,7 @@ DeclareEnum2(SpriteParticleAnimationMode, Single, Looping);
 class SpriteParticleSystem : public ParticleSystem
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpriteParticleSystem, TypeCopyMode::ReferenceType);
 
   // Component Interface
 

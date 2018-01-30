@@ -15,7 +15,7 @@ namespace Zero
 class Atlas : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Atlas, TypeCopyMode::ReferenceType);
 
   static const int sMaxMipLevel = 2;
   // Border width must be 2^sMaxMipLevel in order to

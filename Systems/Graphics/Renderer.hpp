@@ -16,7 +16,7 @@ class TextureRenderData {};
 class GraphicsDriverSupport
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicsDriverSupport, TypeCopyMode::ReferenceType);
 
   GraphicsDriverSupport();
 

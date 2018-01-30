@@ -23,7 +23,7 @@ namespace Events
 class ParticleEmitter : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleEmitter, TypeCopyMode::ReferenceType);
 
   ParticleEmitter();
   ~ParticleEmitter();
@@ -55,7 +55,7 @@ typedef InList<ParticleEmitter> EmitterList;
 class ParticleEmitterShared : public ParticleEmitter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleEmitterShared, TypeCopyMode::ReferenceType);
 
   ParticleEmitterShared();
   ~ParticleEmitterShared();
@@ -156,7 +156,7 @@ public:
 class HideBaseFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HideBaseFilter, TypeCopyMode::ReferenceType);
 
   HideBaseFilter(BoundType* hiddenOnType);
 

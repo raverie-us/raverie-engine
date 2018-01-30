@@ -44,7 +44,7 @@ public:
 class DefinitionSet : public BaseDefinition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DefinitionSet, TypeCopyMode::ReferenceType);
 
   DefinitionSet();
   ~DefinitionSet();

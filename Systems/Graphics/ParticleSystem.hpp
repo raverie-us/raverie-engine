@@ -20,7 +20,7 @@ namespace Events
 class ParticleEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleEvent, TypeCopyMode::ReferenceType);
 
   ParticleEvent(){}
 
@@ -37,7 +37,7 @@ DeclareEnum2(SystemSpace, WorldSpace, LocalSpace);
 class ParticleSystem : public Graphical
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleSystem, TypeCopyMode::ReferenceType);
 
   // Component Interface
 

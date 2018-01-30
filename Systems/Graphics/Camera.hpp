@@ -22,7 +22,7 @@ namespace Events
 class Camera : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Camera, TypeCopyMode::ReferenceType);
 
   // Component Interface
 

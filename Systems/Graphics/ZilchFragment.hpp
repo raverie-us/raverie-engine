@@ -14,7 +14,7 @@ namespace Zero
 class ZilchFragment : public ZilchDocumentResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchFragment, TypeCopyMode::ReferenceType);
 
   ZilchFragment();
 

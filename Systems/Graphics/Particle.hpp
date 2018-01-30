@@ -22,7 +22,7 @@ namespace Tags
 class Particle
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Particle, TypeCopyMode::ReferenceType);
 
   Particle* Next;
   float Time;

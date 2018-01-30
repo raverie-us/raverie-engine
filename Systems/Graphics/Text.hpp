@@ -17,7 +17,7 @@ class RenderFont;
 class TextDefinition : public BaseDefinition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextDefinition, TypeCopyMode::ReferenceType);
 
   Vec4 FontColor;
   String FontName;

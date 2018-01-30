@@ -9,7 +9,7 @@ namespace Zero
 class TextureData
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextureData, TypeCopyMode::ReferenceType);
 
   TextureData(TextureFormat::Enum format, int width, int height);
   ~TextureData();

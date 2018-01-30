@@ -770,7 +770,7 @@ void LoadIndexChunk(Mesh& mesh, streamType& file)
   case Zero::IndexElementType::Uint:   FillIndexBuffer<uint>(indexBuffer, indexBufferData, numIndicies);
     break;
   }
-  delete indexBufferData;
+  delete [] indexBufferData;
 }
 
 template<typename streamType>

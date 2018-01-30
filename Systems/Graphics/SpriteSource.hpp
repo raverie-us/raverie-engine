@@ -21,7 +21,7 @@ const float cMinFrameRate = 0.001f;
 class SpriteSource : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpriteSource, TypeCopyMode::ReferenceType);
   
   SpriteSource();
   ~SpriteSource();

@@ -7,7 +7,7 @@ namespace Zero
 class SamplerSettings
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SamplerSettings, TypeCopyMode::ReferenceType);
 
   SamplerSettings();
 
@@ -53,7 +53,7 @@ public:
 class RenderTarget : public SafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RenderTarget, TypeCopyMode::ReferenceType);
 
   /// Texture that is rendered to. Can be used as shader input to a separate rendering operation.
   HandleOf<Texture> mTexture;

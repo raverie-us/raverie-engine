@@ -21,8 +21,8 @@ bool GraphicsResourceList::mRenderGroupRuntimeExpanded = false;
 
 GraphicsResourceList::GraphicsResourceList(Resource* owner)
   : mReadOnly(false)
-  , mExpanded(nullptr)
   , mOwner(owner)
+  , mExpanded(nullptr)
 {
 }
 

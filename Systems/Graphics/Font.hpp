@@ -99,7 +99,7 @@ public:
 class Font : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Font, TypeCopyMode::ReferenceType);
 
   Font();
   ~Font();

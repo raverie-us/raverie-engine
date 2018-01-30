@@ -42,7 +42,7 @@ public:
 class HeightMapModel : public Graphical
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapModel, TypeCopyMode::ReferenceType);
 
   // Component Interface
 

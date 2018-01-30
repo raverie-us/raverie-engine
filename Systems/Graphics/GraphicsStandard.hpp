@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wunused-const-variable"
+#endif
+
 // Other projects
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"

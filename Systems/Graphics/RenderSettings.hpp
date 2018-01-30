@@ -7,7 +7,7 @@ namespace Zero
 class ShaderInputs : public ReferenceCountedThreadSafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShaderInputs, TypeCopyMode::ReferenceType);
 
   /// Add an input value for a specific fragment.
   void Add(String fragmentName, String inputName, bool input);
@@ -52,7 +52,7 @@ public:
 class BlendSettings
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BlendSettings, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandle(BlendSettings);
 
   BlendSettings();
@@ -85,7 +85,7 @@ public:
 class DepthSettings
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DepthSettings, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandle(DepthSettings);
 
   DepthSettings();
@@ -146,7 +146,7 @@ public:
 class RenderSettings
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RenderSettings, TypeCopyMode::ReferenceType);
 
   RenderSettings();
 
@@ -215,7 +215,7 @@ public:
 class ColorTargetMrt : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ColorTargetMrt, TypeCopyMode::ReferenceType);
 
   ColorTargetMrt(HandleOf<RenderSettings> renderSettings) : mRenderSettings(renderSettings) {}
 
@@ -229,7 +229,7 @@ public:
 class BlendSettingsMrt : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BlendSettingsMrt, TypeCopyMode::ReferenceType);
 
   BlendSettingsMrt(HandleOf<RenderSettings> renderSettings) : mRenderSettings(renderSettings) {}
 
@@ -245,7 +245,7 @@ public:
 class MultiRenderTarget : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiRenderTarget, TypeCopyMode::ReferenceType);
 
   MultiRenderTarget(HandleOf<RenderSettings> renderSettings);
 

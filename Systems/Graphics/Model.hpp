@@ -7,7 +7,7 @@ namespace Zero
 class Model : public Graphical
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Model, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
