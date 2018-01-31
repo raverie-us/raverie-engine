@@ -243,9 +243,9 @@ public:
   {
     // Get lower bound
     iterator  position = LowerBound(base_type::All(), *value, mSorter).Begin();
-    size_type index    = position - mData;
+    size_type index    = position - base_type::mData;
     base_type::Insert(position, ZeroMove(value));
-    return mData + index;
+    return base_type::mData + index;
   }
 
   /// Inserts a range of elements at their sorted positions in the array
@@ -273,19 +273,19 @@ public:
   template<typename iteratorType>
   void Assign(iteratorType begin, iteratorType end)
   {
-    Clear();
+    base_type::Clear();
     Insert(BuildRange(begin, end));
   }
   template<typename inputRangeType>
   void Assign(inputRangeType range)
   {
-    Clear();
+    base_type::Clear();
     Insert(range);
   }
   template<typename inputRangeType>
   void Assign(MoveReference<inputRangeType> range)
   {
-    Clear();
+    base_type::Clear();
     Insert(ZeroMove(range));
   }
 

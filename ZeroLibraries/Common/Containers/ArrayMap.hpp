@@ -187,10 +187,10 @@ public:
   {
     // Find instance
     size_type index = base_type::FindIndex(searchKey);
-    if(index == InvalidIndex) // Unable?
+    if(index == base_type::InvalidIndex) // Unable?
       return nullptr;
     else
-      return &(mData[index].first);
+      return &(base_type::mData[index].first);
   }
 
   /// Returns the key of the equivalent element in the array, else ifNotFound
@@ -199,10 +199,10 @@ public:
   {
     // Find instance
     size_type index = base_type::FindIndex(searchKey);
-    if(index == InvalidIndex) // Unable?
+    if(index == base_type::InvalidIndex) // Unable?
       return ifNotFound;
     else
-      return mData[index].first;
+      return base_type::mData[index].first;
   }
 
   /// Returns a pointer to the data of the equivalent element in the array, else nullptr
@@ -211,10 +211,10 @@ public:
   {
     // Find instance
     size_type index = base_type::FindIndex(searchKey);
-    if(index == InvalidIndex) // Unable?
+    if(index == base_type::InvalidIndex) // Unable?
       return nullptr;
     else
-      return &(mData[index].second);
+      return &(base_type::mData[index].second);
   }
 
   /// Returns the data of the equivalent element in the array, else ifNotFound
@@ -239,33 +239,33 @@ public:
   pointer_bool_pair FindOrInsert(const_key_reference key, const_data_reference data)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), key, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, key)) // Found?
+    && base_type::mSorter.Equal(*position, key)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       value_type newValue = value_type(key, data);
       base_type::Insert(position, ZeroMove(newValue));
-      return pointer_bool_pair(mData + index, true);
+      return pointer_bool_pair(base_type::mData + index, true);
     }
   }
   pointer_bool_pair FindOrInsert(const_key_reference key, MoveReference<data_type> data)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), key, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, key)) // Found?
+    && base_type::mSorter.Equal(*position, key)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       value_type newValue = value_type(key, ZeroMove(data));
       base_type::Insert(position, ZeroMove(newValue));
-      return pointer_bool_pair(mData + index, true);
+      return pointer_bool_pair(base_type::mData + index, true);
     }
   }
   /// Inserts a new element if an equivalent element does not already exist
@@ -326,10 +326,10 @@ public:
   bool EraseData(const DataCompareType& searchData)
   {
     // Erase first instance
-    for(size_type i = 0; i < Size(); ++i)
+    for(size_type i = 0; i < base_type::Size(); ++i)
     {
       // Found?
-      if(mData[i].second == searchData)
+      if(base_type::mData[i].second == searchData)
       {
         // Erase and return
         base_type::EraseAt(i);
@@ -347,10 +347,10 @@ public:
   void EraseAllData(const DataCompareType& searchData)
   {
     // Erase all instances
-    for(size_type i = 0; i < Size(); )
+    for(size_type i = 0; i < base_type::Size(); )
     {
       // Found?
-      if(mData[i].second == searchData)
+      if(base_type::mData[i].second == searchData)
         base_type::EraseAt(i); // Erase and advance
       else
         ++i; // Advance

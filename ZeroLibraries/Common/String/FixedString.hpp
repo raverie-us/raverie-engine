@@ -113,7 +113,7 @@ public:
       if(mData[i] == value)
       {
         //value found remove it
-        eraseIndex(i);
+        EraseIndex(i);
         return;
       }
     }
