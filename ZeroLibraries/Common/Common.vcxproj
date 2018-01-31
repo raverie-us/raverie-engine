@@ -84,6 +84,18 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
+    <OutDir>$(ZERO_OUTPUT)\Out\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(ZERO_OUTPUT)\Int\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <OutDir>$(ZERO_OUTPUT)\Out\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(ZERO_OUTPUT)\Int\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <OutDir>$(ZERO_OUTPUT)\Out\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(ZERO_OUTPUT)\Int\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
   <!--If the USEMEMORYDEBUGGER environmental variable is defined then add a #define to use the debugger and link it in-->
   <ItemDefinitionGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">
     <ClCompile>
@@ -114,17 +126,37 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
     <ClCompile>
       <AdditionalOptions>-s WASM=1 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OmitFramePointers>false</OmitFramePointers>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <ExceptionHandling>true</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <CompileAs>Default</CompileAs>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
     <ClCompile>
       <AdditionalOptions>-s WASM=1 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OmitFramePointers>false</OmitFramePointers>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <ExceptionHandling>true</ExceptionHandling>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAs>Default</CompileAs>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
     <ClCompile>
       <AdditionalOptions>-s WASM=1 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OmitFramePointers>false</OmitFramePointers>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <ExceptionHandling>true</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <CompileAs>Default</CompileAs>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
