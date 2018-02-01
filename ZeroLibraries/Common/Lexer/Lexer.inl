@@ -330,7 +330,7 @@ ParseNode<TokenType>::ParseNode() :
 //***************************************************************************
 template <typename TokenType>
 ParseNode<TokenType>::ParseNode(const ParseNodeInfo<TokenType>& info) :
-  ParseNodeInfo(info),
+  ParseNodeInfo<TokenType>(info),
   mParent(nullptr)
 {
 }
@@ -347,7 +347,7 @@ ParseNode<TokenType>::~ParseNode()
 template <typename TokenType>
 ParseNode<TokenType>& ParseNode<TokenType>::operator=(const ParseNodeInfo<TokenType>& rhs)
 {
-  *static_cast<ParseNodeInfo*>(this) = rhs;
+  *static_cast<ParseNodeInfo<TokenType>*>(this) = rhs;
   return *this;
 }
 

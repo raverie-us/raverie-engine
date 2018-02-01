@@ -158,7 +158,7 @@ public:
     }
 
     // Map unique item to ID or get current mapping
-    ItemIdMap::pointer_bool_pair result = mItemIdMap.FindOrInsert(item, id);
+    typename ItemIdMap::pointer_bool_pair result = mItemIdMap.FindOrInsert(item, id);
     if(result.second) // Insertion succeeded?
     {
       // Actually acquire the ID we used
@@ -191,7 +191,7 @@ public:
   bool MapId(Id id, const Item& item)
   {
     // Map unique ID to item
-    IdItemMap::pointer_bool_pair result = mIdItemMap.Insert(id, item);
+    typename IdItemMap::pointer_bool_pair result = mIdItemMap.Insert(id, item);
     if(!result.second) // Unable?
       return false;
 

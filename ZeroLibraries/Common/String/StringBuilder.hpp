@@ -107,5 +107,25 @@ inline StringBuilder& operator<<(StringBuilder& builder, const type& value)
   return builder;
 }
 
+template<typename T>
+inline String GetBinaryString(const T& value)
+{
+  StringBuilder result;
+  byte* valueCursor = (byte*)&value;
+
+  // Read every byte (from left to right)
+  for (uint i = 0; i < sizeof(value); ++i)
+  {
+    // Read every bit in the byte (from left to right)
+    for (uint j = 0; j < 8; ++j)
+      result += *valueCursor & LBIT(j) ? '1' : '0';
+
+    // Next byte
+    result += ' ';
+    ++valueCursor;
+  }
+
+  return result.ToString();
+}
 
 }//namespace Zero

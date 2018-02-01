@@ -33,7 +33,7 @@ public:
 template <typename ReturnType>
 Callback0<ReturnType>* CreateCallback(ReturnType(*functionPointer)())
 {
-  typename CallbackStatic0<ReturnType>* callback = new CallbackStatic0<ReturnType>();
+  CallbackStatic0<ReturnType>* callback = new CallbackStatic0<ReturnType>();
   callback->mFunctionPointer = functionPointer;
   return callback;
 }
@@ -55,7 +55,7 @@ public:
 template <typename ReturnType, typename InstanceType>
 Callback0<ReturnType>* CreateCallback(ReturnType(InstanceType::*functionPointer)(), InstanceType* instance)
 {
-  typename CallbackInstance0<ReturnType, InstanceType>* callback = new CallbackInstance0<ReturnType, InstanceType>();
+  CallbackInstance0<ReturnType, InstanceType>* callback = new CallbackInstance0<ReturnType, InstanceType>();
   callback->mFunctionPointer = functionPointer;
   callback->mInstance = instance;
   return callback;
@@ -85,7 +85,7 @@ public:
 template <typename ReturnType, typename P0>
 Callback1<ReturnType, P0>* CreateCallback(ReturnType(*functionPointer)(P0))
 {
-  typename CallbackStatic1<ReturnType, P0>* callback = new CallbackStatic1<ReturnType, P0>();
+  CallbackStatic1<ReturnType, P0>* callback = new CallbackStatic1<ReturnType, P0>();
   callback->mFunctionPointer = functionPointer;
   return callback;
 }
@@ -107,7 +107,7 @@ public:
 template <typename ReturnType, typename InstanceType, typename P0>
 Callback1<ReturnType, P0>* CreateCallback(ReturnType(InstanceType::*functionPointer)(P0), InstanceType* instance)
 {
-  typename CallbackInstance1<ReturnType, InstanceType, P0>* callback = new CallbackInstance1<ReturnType, InstanceType, P0>();
+  CallbackInstance1<ReturnType, InstanceType, P0>* callback = new CallbackInstance1<ReturnType, InstanceType, P0>();
   callback->mFunctionPointer = functionPointer;
   callback->mInstance = instance;
   return callback;
@@ -137,7 +137,7 @@ class CallbackStatic2 : public Callback2< ReturnType, P0, P1 >
 template <typename ReturnType, typename P0, typename P1>
 Callback2<ReturnType, P0, P1>* CreateCallback(ReturnType(*functionPointer)(P0, P1))
 {
-  typename CallbackStatic2<ReturnType, P0, P1>* callback = new CallbackStatic2<ReturnType, P0, P1>();
+  CallbackStatic2<ReturnType, P0, P1>* callback = new CallbackStatic2<ReturnType, P0, P1>();
   callback->mFunctionPointer = functionPointer;
   return callback;
 }
@@ -159,7 +159,7 @@ public:
 template <typename ReturnType, typename InstanceType, typename P0, typename P1>
 Callback2<ReturnType, P0, P1>* CreateCallback(ReturnType(InstanceType::*functionPointer)(P0, P1), InstanceType* instance)
 {
-  typename CallbackInstance2<ReturnType, InstanceType, P0, P1>* callback = new CallbackInstance2<ReturnType, InstanceType, P0, P1>();
+  CallbackInstance2<ReturnType, InstanceType, P0, P1>* callback = new CallbackInstance2<ReturnType, InstanceType, P0, P1>();
   callback->mFunctionPointer = functionPointer;
   callback->mInstance = instance;
   return callback;
@@ -189,7 +189,7 @@ public:
 template <typename ReturnType, typename P0, typename P1, typename P2>
 Callback3<ReturnType, P0, P1, P2>* CreateCallback(ReturnType(*functionPointer)(P0, P1, P2))
 {
-  typename CallbackStatic3<ReturnType, P0, P1, P2>* callback = new CallbackStatic3<ReturnType, P0, P1, P2>();
+  CallbackStatic3<ReturnType, P0, P1, P2>* callback = new CallbackStatic3<ReturnType, P0, P1, P2>();
   callback->mFunctionPointer = functionPointer;
   return callback;
 }
@@ -211,7 +211,7 @@ public:
 template <typename ReturnType, typename InstanceType, typename P0, typename P1, typename P2>
 Callback3<ReturnType, P0, P1, P2>* CreateCallback(ReturnType(InstanceType::*functionPointer)(P0, P1, P2), InstanceType* instance)
 {
-  typename CallbackInstance3<ReturnType, InstanceType, P0, P1, P2>* callback = new CallbackInstance3<ReturnType, InstanceType, P0, P1, P2>();
+  CallbackInstance3<ReturnType, InstanceType, P0, P1, P2>* callback = new CallbackInstance3<ReturnType, InstanceType, P0, P1, P2>();
   callback->mFunctionPointer = functionPointer;
   callback->mInstance = instance;
   return callback;

@@ -648,4 +648,20 @@ private:
   const std::type_info* mTypeInfo;
 };
 
+// GCC and Clang attempt to compile templates that aren't instantiated if their
+// code does not depend on template parameters. This helper allows us to define
+// a constant and force a dependency on a template parameter, allowing things like
+// static assert to be used in a non-compiling template, for example:
+// StaticAssert(MissingSpecialization, False<T>::Value, "Must be specialized (non-generic T version)");
+template <typename T, typename V, V value>
+struct ConstantTValue
+{
+  static const V Value = value;
+};
+
+template <typename T>
+struct False : ConstantTValue<T, bool, false>
+{
+};
+
 } // namespace Zero

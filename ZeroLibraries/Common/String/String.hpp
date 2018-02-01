@@ -191,27 +191,7 @@ public:
   // (to get the size of the range) and the policy is expected to have a ToStringRange member
   // function that takes the type of range.Front() and returns a StringRange.
   template <typename RangeType, typename PolicyType>
-  static String JoinRange(StringRangeParam separator, RangeType range, PolicyType policy)
-  {
-    // First we need to know how big the range is, so copy the range and iterate over to count
-    RangeType counterRange = range;
-    size_t count = 0;
-    for (; !counterRange.Empty(); counterRange.PopFront())
-      ++count;
-
-    // Now allocate enough pointers for the ranges and copy them over
-    StringRange* values = (StringRange*)alloca(sizeof(StringRange) * count);
-    size_t i = 0;
-    // Fill out the array of StringRanges
-    for (; !range.Empty(); range.PopFront())
-    {
-      new(values + i) StringRange();
-      values[i] = policy.ToStringRange(range.Front());
-      ++i;
-    }
-
-    return JoinInternal(separator, values, count);
-  }
+  static String JoinRange(StringRangeParam separator, RangeType range, PolicyType policy);
 
   template <typename RangeType>
   static String JoinRange(StringRangeParam separator, RangeType range)

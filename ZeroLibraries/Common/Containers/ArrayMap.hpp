@@ -90,8 +90,8 @@ public:
     key_reference       Front()                           { return range::Front().first;         }
     key_reference       Back()                            { return range::Back().first;          }
     key_range&          All()                             { return *this; }
-    key_reference       operator[](size_type index)       { return range::operator[index].first; }
-    const_key_reference operator[](size_type index) const { return range::operator[index].first; }
+    key_reference       operator[](size_type index)       { return range::operator[](index).first; }
+    const_key_reference operator[](size_type index) const { return range::operator[](index).first; }
   };
 
   /// Range adapter that presents only the data members in a key-data pair range, intended for convenience
@@ -107,8 +107,8 @@ public:
     data_reference       Front()                           { return range::Front().second;         }
     data_reference       Back()                            { return range::Back().second;          }
     data_range&          All()                             { return *this; }
-    data_reference       operator[](size_type index)       { return range::operator[index].second; }
-    const_data_reference operator[](size_type index) const { return range::operator[index].second; }
+    data_reference       operator[](size_type index)       { return range::operator[](index).second; }
+    const_data_reference operator[](size_type index) const { return range::operator[](index).second; }
   };
 
   //

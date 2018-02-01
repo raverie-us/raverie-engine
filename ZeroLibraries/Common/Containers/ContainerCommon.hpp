@@ -310,63 +310,63 @@ inline void DestroyElements(type* /*begin*/, size_t /*size*/,
 }
 
 //Forms a range with iterators.
-//template<typename containerType>
-//struct IteratorRange
-//{
-//  typedef typename containerType::iterator iterator;
-//  typedef typename containerType::reference reference;
-//
-//  IteratorRange(iterator pbegin, iterator pend)
-//    : Begin(pbegin) , End(pend)
-//  {
-//  }
-//
-//  reference Front() { return *begin; }
-//  void PopFront()
-//  {
-//    ErrorIf(Empty(), "Popped empty range.");
-//    ++begin;
-//  }
-//
-//  bool Empty() { return begin == end; }
-//  size_t Length() { return end - begin; }
-//
-//  IteratorRange& All() { return *this; }
-//  const IteratorRange& All() const { return *this; }
-//
-//  iterator begin;
-//  iterator end;
-//};
+template<typename containerType>
+struct IteratorRange
+{
+  typedef typename containerType::iterator iterator;
+  typedef typename containerType::reference reference;
+
+  IteratorRange(iterator pbegin, iterator pend)
+    : begin(pbegin) , end(pend)
+  {
+  }
+
+  reference Front() { return *begin; }
+  void PopFront()
+  {
+    ErrorIf(Empty(), "Popped empty range.");
+    ++begin;
+  }
+
+  bool Empty() { return begin == end; }
+  size_t Length() { return end - begin; }
+
+  IteratorRange& All() { return *this; }
+  const IteratorRange& All() const { return *this; }
+
+  iterator begin;
+  iterator end;
+};
 
 
 //Forms a range with iterators.
-//template<typename iteratorType>
-//struct IteratorTypedRange
-//{
-//  typedef iteratorType iterator;
-//  typedef typename iteratorType::reference reference;
-//
-//  IteratorTypedRange(iterator pbegin, iterator pend)
-//    : Begin(pbegin), End(pend)
-//  {
-//  }
-//
-//  reference Front() { return *begin; }
-//  void PopFront()
-//  {
-//    ErrorIf(Empty(), "Popped empty range.");
-//    ++begin;
-//  }
-//
-//  bool Empty() { return begin == end; }
-//  size_t Length() { return end - begin; }
-//
-//  IteratorTypedRange& All() { return *this; }
-//  const IteratorTypedRange& All() const { return *this; }
-//
-//  iterator begin;
-//  iterator end;
-//};
+template<typename iteratorType>
+struct IteratorTypedRange
+{
+  typedef iteratorType iterator;
+  typedef typename iteratorType::reference reference;
+
+  IteratorTypedRange(iterator pbegin, iterator pend)
+    : begin(pbegin), end(pend)
+  {
+  }
+
+  reference Front() { return *begin; }
+  void PopFront()
+  {
+    ErrorIf(Empty(), "Popped empty range.");
+    ++begin;
+  }
+
+  bool Empty() { return begin == end; }
+  size_t Length() { return end - begin; }
+
+  IteratorTypedRange& All() { return *this; }
+  const IteratorTypedRange& All() const { return *this; }
+
+  iterator begin;
+  iterator end;
+};
 
 
 // Constant Pointer Range. Forms a range between two pointers.
@@ -435,12 +435,12 @@ struct PointerRange
   iterator end;
 };
 
-//template<typename iteratorType>
-//IteratorTypedRange<iteratorType> BuildRange(iteratorType begin, 
-//                                            iteratorType end)
-//{
-//  return IteratorTypedRange<iteratorType>(begin, end);
-//}
+template<typename iteratorType>
+IteratorTypedRange<iteratorType> BuildRange(iteratorType begin, 
+                                            iteratorType end)
+{
+  return IteratorTypedRange<iteratorType>(begin, end);
+}
 
 template<typename elementType>
 ConstPointerRange<elementType> BuildRange(elementType* begin, elementType* end)

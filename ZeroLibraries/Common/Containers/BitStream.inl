@@ -15,28 +15,28 @@ class BitStream;
 template<typename T>
 inline Bits Measure(T& value)
 {
-  StaticAssert(MissingUserDefinedMeasure, false, "Requires a user-defined Measure function");
+  StaticAssert(MissingUserDefinedMeasure, False<T>::Value, "Requires a user-defined Measure function");
   return 0;
 }
 
 template<typename R>
 inline Bits MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_)
 {
-  StaticAssert(MissingUserDefinedMeasureQuantized, false, "Requires a user-defined MeasureQuantized function");
+  StaticAssert(MissingUserDefinedMeasureQuantized, False<R>::Value, "Requires a user-defined MeasureQuantized function");
   return 0;
 }
 
 template<typename T>
 inline Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, T& value)
 {
-  StaticAssert(MissingUserDefinedSerialize, false, "Requires a user-defined Serialize function");
+  StaticAssert(MissingUserDefinedSerialize, False<T>::Value, "Requires a user-defined Serialize function");
   return 0;
 }
 
 template<typename T, typename R>
 inline Bits SerializeQuantized(SerializeDirection::Enum direction, BitStream& bitStream, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
 {
-  StaticAssert(MissingUserDefinedSerializeQuantized, false, "Requires a user-defined SerializeQuantized function");
+  StaticAssert(MissingUserDefinedSerializeQuantized, False<T>::Value, "Requires a user-defined SerializeQuantized function");
   return 0;
 }
 
@@ -1004,27 +1004,6 @@ inline void BitStream::SetBytesRead(Bytes bytesRead) const
 inline void BitStream::ClearBitsRead() const
 {
   mBitsRead = 0;
-}
-
-template<typename T>
-inline String GetBinaryString(const T& value)
-{
-  StringBuilder result;
-  byte* valueCursor = (byte*)&value;
-
-  // Read every byte (from left to right)
-  for(uint i = 0; i < sizeof(value); ++i)
-  {
-    // Read every bit in the byte (from left to right)
-    for(uint j = 0; j < 8; ++j)
-      result += *valueCursor & LBIT(j) ? '1' : '0';
-
-    // Next byte
-    result += ' ';
-    ++valueCursor;
-  }
-
-  return result.ToString();
 }
 
 } // namespace Zero

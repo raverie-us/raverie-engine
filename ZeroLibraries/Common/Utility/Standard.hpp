@@ -163,7 +163,7 @@ extern char gDiscardBuffer[2];
 #include <malloc.h>
 #endif
 
-#if defined(__GXX_EXPERIMENTAL_CXX0X) ||  __cplusplus >= 201103L || _MSC_VER >= 1600
+#if defined(__GXX_EXPERIMENTAL_CXX0X) || __cplusplus >= 201103L || _MSC_VER >= 1600
   #define ZeroSupportsDecltypeAuto 1
   #define ZeroSupportsStaticAssert 1
 
