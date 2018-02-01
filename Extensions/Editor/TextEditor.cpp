@@ -898,7 +898,7 @@ void TextEditor::OnKeyUp(KeyboardEvent* event)
 
 void TextEditor::OnMouseScroll(MouseEvent* event)
 {
-  OsShell* shell = (OsShell*)Z::gSystemObjects->FindObject("OsShell");
+  OsShell* shell = Z::gEngine->has(OsShell);
   uint scroll = shell->GetScrollLineCount();
   scroll *= event->Scroll.y;
 
