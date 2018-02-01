@@ -93,6 +93,25 @@
       <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OmitFramePointers>false</OmitFramePointers>
+      <ExceptionHandling>true</ExceptionHandling>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommandLineSupport.hpp" />
     <ClInclude Include="ConsoleListeners.hpp" />

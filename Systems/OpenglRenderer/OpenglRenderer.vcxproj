@@ -104,16 +104,19 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
     <ClCompile>
       <AdditionalOptions>-s WASM=1 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\External\GLEW\include;$(ZERO_SOURCE)\External\Freetype\include\;$(ZERO_SOURCE)\External\Freetype\include\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
     <ClCompile>
       <AdditionalOptions>-s WASM=1 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\External\GLEW\include;$(ZERO_SOURCE)\External\Freetype\include\;$(ZERO_SOURCE)\External\Freetype\include\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
     <ClCompile>
       <AdditionalOptions>-s WASM=1 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\External\GLEW\include;$(ZERO_SOURCE)\External\Freetype\include\;$(ZERO_SOURCE)\External\Freetype\include\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

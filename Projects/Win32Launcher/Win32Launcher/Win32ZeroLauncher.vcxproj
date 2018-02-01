@@ -145,6 +145,21 @@
       <AdditionalLibraryDirectories>$(ZeroStandardLibrariesSource)\External\MemoryDebugger;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\Projects\Win32Launcher;$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\Extensions;$(ZERO_SOURCE)\Projects;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\Projects\Win32Launcher;$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\Extensions;$(ZERO_SOURCE)\Projects;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\Projects\Win32Launcher;$(ZILCH_SOURCE)\Project;$(ZERO_SOURCE)\Extensions;$(ZERO_SOURCE)\Projects;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">
     <Copy_Data_File Include="$(ZeroStandardLibrariesSource)\External\MemoryDebugger\MemoryDebugger.dll">
       <FileType>Document</FileType>

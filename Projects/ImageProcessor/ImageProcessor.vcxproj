@@ -141,6 +141,21 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
       <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZeroSource)\External\Nvtt\include;$%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZeroSource)\External\Nvtt\include;$%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZeroSource)\External\Nvtt\include;$%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Systems\Content\Content.vcxproj">
       <Project>{e19019f5-9c2c-4329-aab5-db28e39cc0f2}</Project>

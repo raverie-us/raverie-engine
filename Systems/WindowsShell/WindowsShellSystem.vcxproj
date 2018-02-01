@@ -93,6 +93,21 @@
       <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\Libraries;$(ZERO_SOURCE)\Systems;$(ZERO_SOURCE)\Utilities;$(ZERO_SOURCE)\External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\Libraries;$(ZERO_SOURCE)\Systems;$(ZERO_SOURCE)\Utilities;$(ZERO_SOURCE)\External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\Libraries;$(ZERO_SOURCE)\Systems;$(ZERO_SOURCE)\Utilities;$(ZERO_SOURCE)\External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ComPort.cpp" />
     <ClCompile Include="Launcher.cpp" />
