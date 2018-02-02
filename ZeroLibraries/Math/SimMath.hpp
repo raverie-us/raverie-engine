@@ -18,7 +18,14 @@ namespace Math
 namespace Simd
 {
 
-#define SimInline __forceinline
+#ifdef _MSC_VER
+  #define SimVecGlobalConstant extern const __declspec(selectany)
+  #define SimInline __forceinline
+#else
+  #define SimVecGlobalConstant extern const
+  #define SimInline __attribute__((always_inline))
+#endif
+
 
 //wrapper for the shuffle intrinsic so that the rest
 //of the library can be platform independent.
@@ -33,7 +40,7 @@ namespace Simd
 
 // Alias class to hold __m128 union to compile union
 // operator overloads with Clang/LLVM
-__declspec(align(16)) class M128
+ZeroAlign16 class M128
 {
 public:
   M128() : mValue() {}
@@ -80,9 +87,6 @@ struct SimMatrix3
 typedef SimMatrix3 SimMat3;
 typedef SimMat3& SimMatRef3;
 typedef const SimMat3& SimMat3Param;
-
-
-#define SimVecGlobalConstant extern const __declspec(selectany)
 
 inline uint& MaskInt()
 {

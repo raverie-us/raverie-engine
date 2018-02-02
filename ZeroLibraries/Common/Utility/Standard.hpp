@@ -232,6 +232,12 @@ T FunctionPointerPassThrough(T);
   #define ZeroThreadLocal __thread
 #endif
 
+#if defined __cplusplus >= 201103L
+  #define ZeroAlign16 __declspec(align(16))
+#else
+  #define ZeroAlign16
+#endif
+
 #define ZeroNoImportExport
 
 #ifdef _WIN32
