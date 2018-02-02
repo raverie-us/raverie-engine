@@ -9,6 +9,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+namespace Zero
+{
+void VoidReturn();
+}
+
 // The forRange macros use two for loops, so we need to do some extra work
 // to make the 'break' keyword properly break out of both loops. The
 // '__continueLoop' variable is used to both only loop once on the
@@ -28,8 +33,6 @@ bool PopFront(RangeType& range)
   range.PopFront();
   return true;
 }
-
-extern void VoidReturn();
 
 // With auto this is much easier to define
 #define ZeroForRangeHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                                        \

@@ -19,13 +19,10 @@ namespace Simd
 {
 
 #ifdef _MSC_VER
-  #define SimVecGlobalConstant extern const __declspec(selectany)
   #define SimInline __forceinline
 #else
-  #define SimVecGlobalConstant extern const
-  #define SimInline __attribute__((always_inline))
+  #define SimInline inline //__attribute__((always_inline))
 #endif
-
 
 //wrapper for the shuffle intrinsic so that the rest
 //of the library can be platform independent.
@@ -94,25 +91,21 @@ inline uint& MaskInt()
   return maskInt;
 }
 
-const static scalar gMaskScalar = *reinterpret_cast<const float*>(&MaskInt());
-
-SimVecGlobalConstant SimVec gSimOne = __m128{ 1.0f, 1.0f, 1.0f, 1.0f};
-SimVecGlobalConstant SimVec gSimOneVec3 = _mm_setr_ps(1.0f, 1.0f, 1.0f, 0.0f);
-SimVecGlobalConstant SimVec gSimZero = __m128{ 0.0f, 0.0f, 0.0f, 0.0f};
-SimVecGlobalConstant SimVec gSimNegativeOne = __m128{ -1.0f, -1.0f, -1.0f, -1.0f};
-SimVecGlobalConstant SimVec gSimOneHalf = __m128{ 0.5f, 0.5f, 0.5f, 0.5f};
-SimVecGlobalConstant SimVec gSimVec3Mask = __m128{gMaskScalar, gMaskScalar, gMaskScalar, 0x00000000};
-SimVecGlobalConstant SimVec gSimFullMask = __m128{gMaskScalar, gMaskScalar, gMaskScalar, gMaskScalar};
-SimVecGlobalConstant SimVec gSimBasisX = _mm_setr_ps(1.0f, 0.0f, 0.0f, 0.0f);
-SimVecGlobalConstant SimVec gSimBasisY = _mm_setr_ps(0.0f, 1.0f, 0.0f, 0.0f);
-SimVecGlobalConstant SimVec gSimBasisZ = _mm_setr_ps(0.0f, 0.0f, 1.0f, 0.0f);
-SimVecGlobalConstant SimVec gSimBasisW = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
-SimVecGlobalConstant SimVec gSimMaskX = _mm_setr_ps(gMaskScalar, 0x00000000, 0x00000000, 0x00000000);
-SimVecGlobalConstant SimVec gSimMaskY = _mm_setr_ps(0x00000000,gMaskScalar, 0x00000000, 0x00000000);
-SimVecGlobalConstant SimVec gSimMaskZ = _mm_setr_ps(0x00000000, 0x00000000, gMaskScalar, 0x00000000);
-SimVecGlobalConstant SimVec gSimMaskW = _mm_setr_ps(0x00000000, 0x00000000, 0x00000000, gMaskScalar);
-
-#undef SimVecGlobalConstant
+extern const SimVec gSimOne;
+extern const SimVec gSimOneVec3;
+extern const SimVec gSimZero;
+extern const SimVec gSimNegativeOne;
+extern const SimVec gSimOneHalf;
+extern const SimVec gSimVec3Mask;
+extern const SimVec gSimFullMask;
+extern const SimVec gSimBasisX;
+extern const SimVec gSimBasisY;
+extern const SimVec gSimBasisZ;
+extern const SimVec gSimBasisW;
+extern const SimVec gSimMaskX;
+extern const SimVec gSimMaskY;
+extern const SimVec gSimMaskZ;
+extern const SimVec gSimMaskW;
 
 }//namespace Simd
 

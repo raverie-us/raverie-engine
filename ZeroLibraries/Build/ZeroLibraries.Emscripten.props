@@ -27,7 +27,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <TreatWarningAsError>true</TreatWarningAsError>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName)$(Configuration)$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
-      <AdditionalOptions>-s WASM=1 -msse -msse2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-s WASM=1 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Lib>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>

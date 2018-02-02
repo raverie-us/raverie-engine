@@ -113,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="ExtendableMath.cpp" />
     <ClCompile Include="ToString.cpp" />
+    <ClCompile Include="SimMath.cpp">
+      <Filter>Simd</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector2.hpp">
