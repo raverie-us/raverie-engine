@@ -38,6 +38,7 @@ Cog
 		var Visible = true
 		var Interactive = true
 		var InLayout = true
+		var OnTop = false
 		var ClipChildren = true
 		var CanTakeFocus = false
 		var LocalColor = Real4{0.258823544, 0.258823544, 0.258823544, 1}
@@ -110,6 +111,7 @@ Cog
 				var Visible = true
 				var Interactive = true
 				var InLayout = true
+				var OnTop = false
 				var ClipChildren = false
 				var CanTakeFocus = false
 				var LocalColor = Real4{0.25999999, 0.25999999, 0.25999999, 1}
@@ -157,6 +159,7 @@ Cog
 						var Visible = true
 						var Interactive = true
 						var InLayout = true
+						var OnTop = false
 						var ClipChildren = false
 						var CanTakeFocus = false
 						var LocalColor = Real4{1, 1, 1, 1}
@@ -213,6 +216,7 @@ Cog
 						var Visible = true
 						var Interactive = true
 						var InLayout = true
+						var OnTop = false
 						var ClipChildren = false
 						var CanTakeFocus = false
 						var LocalColor = Real4{1, 1, 1, 1}
@@ -251,53 +255,54 @@ Cog
 			}
 		}
 		Cog [Id:0x588bf870fca44015]
-    {
-      var Name = "Children"
-      Transform 
-      {
-        var Translation = Real3{0, 0, 0}
-        var Scale = Real3{1, 1, 1}
-        var Rotation = Quaternion{0, 0, 0, 1}
-      }
-      Area 
-      {
-        var Size = Real2{267, 0}
-        var Origin = Location.TopLeft
-      }
-      UiWidget 
-      {
-        var Active = true
-        var Visible = true
-        var Interactive = true
-        var InLayout = true
-        var ClipChildren = false
-        var CanTakeFocus = false
-        var LocalColor = Real4{1, 1, 1, 0}
-        var HierarchyColor = Real4{1, 1, 1, 1}
-        var SizePolicyX = UiSizePolicy.Flex
-        var SizePolicyY = UiSizePolicy.Auto
-        var FlexSize = Real2{1, 1}
-        var AbsoluteMinSize = Real2{0, 0}
-        var VerticalAlignment = UiVerticalAlignment.Top
-        var HorizontalAlignment = UiHorizontalAlignment.Left
-        var MarginLeft = 0
-        var MarginTop = 0
-        var MarginRight = 0
-        var MarginBottom = 0
-        var DockMode = UiDockMode.Left
-      }
-      UiStackLayout 
-      {
-        var PaddingLeft = 0
-        var PaddingTop = 0
-        var PaddingRight = 0
-        var PaddingBottom = 0
-        var StackDirection = UiStackLayoutDirection.TopToBottom
-        var Spacing = Real2{2, 0}
-      }
-      Hierarchy 
-      {
-      }
-    }
+		{
+			var Name = "Children"
+			Transform 
+			{
+				var Translation = Real3{0, 0, 0}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			Area 
+			{
+				var Size = Real2{267, 0}
+				var Origin = Location.TopLeft
+			}
+			UiWidget 
+			{
+				var Active = true
+				var Visible = true
+				var Interactive = true
+				var InLayout = true
+				var OnTop = false
+				var ClipChildren = false
+				var CanTakeFocus = false
+				var LocalColor = Real4{1, 1, 1, 0}
+				var HierarchyColor = Real4{1, 1, 1, 1}
+				var SizePolicyX = UiSizePolicy.Flex
+				var SizePolicyY = UiSizePolicy.Auto
+				var FlexSize = Real2{1, 1}
+				var AbsoluteMinSize = Real2{0, 0}
+				var VerticalAlignment = UiVerticalAlignment.Top
+				var HorizontalAlignment = UiHorizontalAlignment.Left
+				var MarginLeft = 0
+				var MarginTop = 0
+				var MarginRight = 0
+				var MarginBottom = 0
+				var DockMode = UiDockMode.Left
+			}
+			UiStackLayout 
+			{
+				var PaddingLeft = 0
+				var PaddingTop = 0
+				var PaddingRight = 0
+				var PaddingBottom = 0
+				var StackDirection = UiStackLayoutDirection.TopToBottom
+				var Spacing = Real2{2, 0}
+			}
+			Hierarchy 
+			{
+			}
+		}
 	}
 }

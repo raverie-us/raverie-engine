@@ -2116,7 +2116,13 @@ public:
     , mAddOp(addOp)
     , mObjectHandle(object)
   {
-    mName = "ResourceListOperation";
+    mName = "Removed resource";
+    if(mAddOp)
+      mName = "Added resource";
+
+    if(Resource* resource = GetResourceList( )->mOwner)
+      BuildString(mName, ": ", resource->Name);
+    
     mMeta = object.StoredType;
   }
 

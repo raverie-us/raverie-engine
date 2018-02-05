@@ -66,7 +66,7 @@ public:
 class PropertyOperation : public MetaOperation
 {
 public:
-  typedef PropertyOperation ZilchSelf;
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   PropertyOperation(HandleParam object, PropertyPathParam property,
                     AnyParam before, AnyParam after);

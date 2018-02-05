@@ -116,6 +116,7 @@ void ToolTip::Initialize(Widget* source)
   // Default margins
   mContentPadding = Thickness(6, 4, 6, 4);
   mContent = nullptr;
+  mTextStack = nullptr;
   mArrowOffset = Vec2::cZero;
   mSide = IndicatorSide::Right;
 
@@ -251,16 +252,55 @@ void ToolTip::SizeToContents()
 //******************************************************************************
 Text* ToolTip::SetText(StringParam text)
 {
-  // Create the text object
-  Text* textObject = new Text(this, cText);
-  textObject->SetText(text);
+  if(mTextStack != nullptr)
+    mTextStack->DestroyChildren( );
+  
+  return AddText(text, Vec4(1));
+}
 
-  textObject->SetMultiLine(true);
-  textObject->FitToWidth(ToolTipUi::ToolTipWrapWidth, Pixels(1000));
+//******************************************************************************
+Text* ToolTip::AddText(StringParam text, Vec4Param color)
+{
+    // If the content wasn't text already then destroy it.
+  if(mContent != mTextStack)
+    SafeDestroy(mContent);
 
-  // Set it as the content
-  SetContent(textObject);
-  return textObject;
+  if(mTextStack == nullptr)
+  {
+    // Prep text stacking;
+    mTextStack = new Composite(this);
+    mTextStack->SetLayout(CreateStackLayout( ));
+
+    // The text stack will always be the content when adding text.
+    mContent = mTextStack;
+  }
+
+  MultiLineText* textObject = (MultiLineText*)CreateTextPreview(mTextStack, text);
+  if(textObject != nullptr)
+  {
+    textObject->mTextField->FitToWidth(ToolTipUi::ToolTipWrapWidth, Pixels(1000));
+
+    // Defer border-display to this tooltip's border.
+    textObject->mBorder->SetVisible(false);
+    textObject->mTextField->SetColor(color);
+  }
+
+  SizeToContents();
+  UpdateTransform();
+  MarkAsNeedsUpdate();
+
+  return textObject->mTextField;
+}
+
+//******************************************************************************
+void ToolTip::ClearText()
+{
+  if(mTextStack != nullptr)
+    mTextStack->DestroyChildren();
+
+  SizeToContents();
+  UpdateTransform();
+  MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
@@ -281,11 +321,13 @@ void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
 //******************************************************************************
 void ToolTip::SetContent(Widget* content)
 {
-  // Destroy the old one if it exists
+  // Destroy the old contexts if they exist.
   SafeDestroy(mContent);
+  SafeDestroy(mTextStack);
 
   // Attach it to ourself
   AttachChildWidget(content);
+
   mContent = content;
 
   // Update the size based on the new content

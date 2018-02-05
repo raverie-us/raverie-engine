@@ -60,8 +60,15 @@ public:
   /// GetMinSize will be called on the given widget to lay out the tooltip.
   void SetContent(Widget* content);
 
-  /// Creates a text object and sets it as the content.
+  /// If the content isn't already text, create a stack of one multitext object
+  /// and set it as the content.  Else set the text on the already present multitext object.
   Text* SetText(StringParam text);
+  /// If the content isn't already text, create a multitext stack.
+  /// Then, add a new multitext object to the content's stack.
+  /// Else, just to the add operation only.
+  Text* AddText(StringParam text, Vec4Param color);
+  /// Clear stack of multitext objects.
+  void ClearText();
 
   /// Simple compound setter.  Calls 'SetText' with the additional ability
   /// to set the tooltip's position.
@@ -107,6 +114,8 @@ private:
 
   /// The content contained in the tooltip.
   Widget* mContent;
+  /// The content, but only if using text objects.
+  Composite* mTextStack;
 
   /// Whether or not to destroy the object when the mouse moves off the source.
   bool mDestroyOnMouseExitSource;
