@@ -680,6 +680,8 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Rectangle.hpp" />
+    <ClInclude Include="ProxyObject.hpp" />
+    <ClInclude Include="SimpleResourceFactory.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertyTrack.inl">

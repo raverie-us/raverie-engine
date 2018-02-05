@@ -142,7 +142,6 @@
     <ClInclude Include="MetaHandles.hpp" />
     <ClInclude Include="MetaStandard.hpp" />
     <ClInclude Include="LocalModifications.hpp" />
-    <ClInclude Include="ProxyObject.hpp" />
     <ClInclude Include="ZeroMetaArray.hpp" />
     <ClInclude Include="MetaEditorExtensions.hpp" />
     <ClInclude Include="MetaMath.hpp" />
@@ -152,7 +151,6 @@
     <ClInclude Include="ObjectRestoreState.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="PropertyHandle.hpp" />
-    <ClInclude Include="SimpleResourceFactory.hpp" />
     <ClInclude Include="SourceControl.hpp" />
     <ClInclude Include="Tags.hpp" />
     <ClInclude Include="ThreadSafeReferenceCounted.hpp" />

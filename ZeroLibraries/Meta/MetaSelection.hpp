@@ -222,7 +222,7 @@ void MetaSelection::FilterComponentType(Array<type*>& destination)
     if(composition == NULL)
       continue;
 
-    Handle component = composition->GetComponentId(object.Get<Object>(), componentType);
+    Handle component = composition->GetComponent(object.Get<Object>(), componentType);
 
     // Add it if it's valid
     if(component.IsNotNull())

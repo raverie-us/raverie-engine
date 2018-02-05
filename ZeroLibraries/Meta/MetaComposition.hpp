@@ -9,6 +9,9 @@
 namespace Zero
 {
 
+//------------------------------------------------------------------------------------------ Proxy Objects
+DeclareEnum2(ProxyReason, TypeDidntExist, AllocationException);
+
 //------------------------------------------------------------------------------------------ Actions
 DeclareEnum2(EnumerateAction,
   // All Components that could ever be dynamically added to the object type

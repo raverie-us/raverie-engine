@@ -56,14 +56,12 @@
     <ClInclude Include="MetaArray.hpp" />
     <ClInclude Include="ZeroMetaArray.hpp" />
     <ClInclude Include="ThreadSafeReferenceCounted.hpp" />
-    <ClInclude Include="ProxyObject.hpp" />
     <ClInclude Include="HandleManagers.hpp" />
     <ClInclude Include="CommonHandleManagers.hpp" />
     <ClInclude Include="NativeTypeConversion.hpp" />
     <ClInclude Include="AttributeExtension.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SimpleResourceFactory.hpp" />
     <ClInclude Include="PropertyHandle.hpp">
       <Filter>Meta</Filter>
     </ClInclude>
