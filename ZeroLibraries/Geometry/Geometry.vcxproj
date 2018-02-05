@@ -49,6 +49,9 @@
   <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
     <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='Emscripten'" Label="PropertySheets">
+    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
+  </ImportGroup>
   <!--Add Static library with no CharacterSet for all x86 project configurations-->
   <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -90,6 +93,9 @@
       <AdditionalIncludeDirectories>$(ZeroExtensionLibrariesSource);$(ZilchSource)\Project;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <Warnings>NormalWarnings</Warnings>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
@@ -98,6 +104,9 @@
       <AdditionalIncludeDirectories>$(ZeroExtensionLibrariesSource);$(ZilchSource)\Project;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <Warnings>NormalWarnings</Warnings>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
@@ -106,6 +115,9 @@
       <AdditionalIncludeDirectories>$(ZeroExtensionLibrariesSource);$(ZilchSource)\Project;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <Warnings>NormalWarnings</Warnings>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
