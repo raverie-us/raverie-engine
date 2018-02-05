@@ -24,19 +24,7 @@ namespace Zilch
     // The last added component will overwrite any components in its place (as well as base types of the component)
     // Returns the composition so you can chain operations
     template <typename T>
-    Composition* Add(const T* component)
-    {
-      Type* type = ZilchVirtualTypeId(component);
-      
-      do
-      {
-        // Map the component's most derived type all the way up to its root base type
-        this->Components[type] = component;
-        type = Type::GetBaseType(type);
-      }
-      while (type != nullptr);
-      return this;
-    }
+    Composition* Add(const T* component);
 
     // Attempts to get a component by type, or creates it if it does not exist (expects a default constructor)
     // Warning, this may invalidate other references to components
@@ -88,7 +76,7 @@ namespace Zilch
     T* HasInheritedOrAdd()
     {
       // Attempt to get the component, and if we fail then create it immediately
-      T* component = this->GetInherited<T>();
+      T* component = this->HasInherited<T>();
       if (component == nullptr)
       {
         component = new T();
@@ -117,19 +105,7 @@ namespace Zilch
     // Safe to call even if the object does not exist
     // Returns the composition so you can chain operations
     template <typename T>
-    Composition* Remove()
-    {
-      // Walk up the base types and remove all the handles from the component map
-      // Note: This may release the memory of the component if it is reference counted
-      Type* type = ZilchTypeId(T);
-      do
-      {
-        this->Components.Erase(type);
-        type = Type::GetBaseType(type);
-      }
-      while (type != nullptr);
-      return this;
-    }
+    Composition* Remove();
 
     // Returns a range of all components on this, and all base compositions
     template <typename T>

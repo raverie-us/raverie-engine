@@ -57,12 +57,12 @@ $ReturnType$ VirtualThunk$Return$($ArgumentParameters$)
     "There was no function found by the guid, what happened?");
   
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);

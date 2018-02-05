@@ -9,11 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-namespace Zero
-{
-void VoidReturn();
-}
-
 // The forRange macros use two for loops, so we need to do some extra work
 // to make the 'break' keyword properly break out of both loops. The
 // '__continueLoop' variable is used to both only loop once on the
@@ -34,20 +29,22 @@ bool PopFront(RangeType& range)
   return true;
 }
 
+void VoidReturn();
+
 // With auto this is much easier to define
-#define ZeroForRangeHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                                        \
-  if(bool __continueLoop = true)                                                                                          \
-  for(AutoDeclare(rangeName, rangeExpr); __continueLoop == true && !rangeName.Empty(); __continueLoop ? rangePostPop : VoidReturn()) \
-  if(::AssignValue(__continueLoop, false))                                                                                \
-  for(value = rangeName.Front(); !__continueLoop; __continueLoop = true)                                                  \
+#define ZeroForRangeHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                                                    \
+  if(bool __continueLoop = true)                                                                                                      \
+  for(AutoDeclare(rangeName, rangeExpr); __continueLoop == true && !rangeName.Empty(); __continueLoop ? rangePostPop : VoidReturn())  \
+  if(::AssignValue(__continueLoop, false))                                                                                            \
+  for(value = rangeName.Front(); !__continueLoop; __continueLoop = true)                                                              \
   rangePrePop
 
 // With auto this is much easier to define
-#define ZeroForRangeReferenceHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                                        \
-  if(bool __continueLoop = true)                                                                                                   \
+#define ZeroForRangeReferenceHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                                                   \
+  if(bool __continueLoop = true)                                                                                                              \
   for(AutoDeclareReference(rangeName, rangeExpr); __continueLoop == true && !rangeName.Empty(); __continueLoop ? rangePostPop : VoidReturn()) \
-  if(::AssignValue(__continueLoop, false))                                                                                         \
-  for(value = rangeName.Front(); !__continueLoop; __continueLoop = true)                                                           \
+  if(::AssignValue(__continueLoop, false))                                                                                                    \
+  for(value = rangeName.Front(); !__continueLoop; __continueLoop = true)                                                                      \
   rangePrePop
 
 // This is the classic version that we use which will pop after the entire iteration of the loop is complete

@@ -139,7 +139,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void Syntaxer::ErrorAt(SyntaxNode* node, ErrorCode::Enum errorCode, ...)
+  void Syntaxer::ErrorAt(SyntaxNode* node, int errorCode, ...)
   {
     // Start a variadic argument list
     va_list argList;
@@ -153,7 +153,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void Syntaxer::ErrorAtArgs(SyntaxNode* node, ErrorCode::Enum errorCode, va_list argList)
+  void Syntaxer::ErrorAtArgs(SyntaxNode* node, int errorCode, va_list argList)
   {
     // Now call the error function
     this->Errors.RaiseArgs(node->Location, errorCode, argList);

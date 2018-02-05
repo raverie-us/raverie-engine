@@ -80,10 +80,10 @@ namespace Zilch
     void FindDependencyCycles(BoundType* type, HashMap<BoundType*, DependencyState::Enum>& dependencies, const CodeLocation& location);
 
     // Print out an error message corresponding to a given node
-    void ErrorAt(SyntaxNode* node, ErrorCode::Enum errorCode, ...);
+    void ErrorAt(SyntaxNode* node, int errorCode, ...);
 
     // Print out an error message corresponding to a given node
-    void ErrorAtArgs(SyntaxNode* node, ErrorCode::Enum errorCode, va_list argList);
+    void ErrorAtArgs(SyntaxNode* node, int errorCode, va_list argList);
 
     // Replace a populated array of syntax types
     void ReplaceTypes(SyntaxTypes& types, Array<const UserToken*>& names, const BoundSyntaxType* instanceType, const CodeLocation& location);

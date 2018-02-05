@@ -37,13 +37,13 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void CompilationErrors::RaiseArgs(const CodeLocation& location, ErrorCode::Enum errorCode, va_list args)
+  void CompilationErrors::RaiseArgs(const CodeLocation& location, int errorCode, va_list args)
   {
     return RaiseArgs(location, String(), LocationArray(), errorCode, args);
   }
 
   //***************************************************************************
-  void CompilationErrors::RaiseArgs(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, ErrorCode::Enum errorCode, va_list args)
+  void CompilationErrors::RaiseArgs(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, va_list args)
   {
     LocationArray associatedLocations;
     associatedLocations.PushBack(&associatedLocation);
@@ -51,7 +51,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void CompilationErrors::RaiseArgs(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, ErrorCode::Enum errorCode, va_list args)
+  void CompilationErrors::RaiseArgs(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, va_list args)
   {
     // If there already was an error and we're set to ignore multiple errors, exit out early
     if (this->WasError && this->IgnoreMultipleErrors)
@@ -65,10 +65,10 @@ namespace Zilch
     this->WasError = true;
 
     // Get the error information from the database
-    const ErrorInfo& errorInfo = ErrorDatabase::GetInstance().GetErrorInfo(errorCode);
+    const ErrorInfo& errorInfo = ErrorDatabase::GetInstance().GetErrorInfo((ErrorCode::Enum)errorCode);
 
     // Create an error details object that encompasses the error (including the context of the error)
-    ErrorEvent errorDetails(errorInfo, location, errorCode, args);
+    ErrorEvent errorDetails(errorInfo, location, (ErrorCode::Enum)errorCode, args);
 
     // Copy over any associated locations
     // For example, duplicate class definitions, where is the duplicate class?
@@ -91,7 +91,7 @@ namespace Zilch
   }
   
   //***************************************************************************
-  void CompilationErrors::Raise(const CodeLocation& location, ErrorCode::Enum errorCode, ...)
+  void CompilationErrors::Raise(const CodeLocation& location, int errorCode, ...)
   {
     // Create a variable argument list
     va_list argList;
@@ -105,7 +105,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void CompilationErrors::Raise(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, ErrorCode::Enum errorCode, ...)
+  void CompilationErrors::Raise(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, ...)
   {
     // Create a variable argument list
     va_list argList;
@@ -121,7 +121,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void CompilationErrors::Raise(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, ErrorCode::Enum errorCode, ...)
+  void CompilationErrors::Raise(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, ...)
   {
     // Create a variable argument list
     va_list argList;

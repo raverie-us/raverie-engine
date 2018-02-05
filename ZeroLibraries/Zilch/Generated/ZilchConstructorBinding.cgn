@@ -31,7 +31,7 @@ $BoundReadArguments$
   byte* data = handle.Dereference();
   new (data) Class($Arguments$);
   
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 
 template <typename Class[,]$ArgumentTypeNames$>

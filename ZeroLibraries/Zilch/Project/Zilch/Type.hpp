@@ -203,31 +203,7 @@ namespace Zilch
 
     // Dynamically cast a base type into a derived type
     template <typename Derived, typename Base>
-    static Derived DynamicCast(Base baseClassPointer)
-    {
-      // If the passed in pointer was null, then return null
-      if (baseClassPointer == nullptr)
-      {
-        // We can't possibly cast it or know what it even is...
-        return nullptr;
-      }
-      
-      BoundType* fromType = baseClassPointer->ZilchGetDerivedType();
-      fromType->IsInitializedAssert();
-      
-      BoundType* toType = ZilchTypeId(Derived);
-      toType->IsInitializedAssert();
-
-      // If the cast is safe...
-      if (BoundIsA(fromType, toType))
-      {
-        // Get the base class pointer
-        return static_cast<Derived>(baseClassPointer);
-      }
-
-      // Otherwise the cast failed, return a null pointer
-      return nullptr;
-    }
+    static Derived DynamicCast(Base baseClassPointer);
 
     // Dynamically cast a base type into a derived type without walking the inheritance chain (must be exact)
     template <typename Derived, typename Base>
@@ -477,63 +453,7 @@ namespace Zilch
       return this->Front();
     }
 
-    void PopFront()
-    {
-      // Assume that we won't find the next matching member
-      this->CurrentMember = nullptr;
-
-      ZilchLoop
-      {
-        // If we exhausted the range last time, then we need a new range
-        if (this->MembersRange.Empty())
-        {
-          // If we were already on the most derived type, we're done
-          if (this->IteratingType == this->DerivedType)
-            return;
-
-          // Find the next type below the iterating type (more derived)
-          BoundType* currentType = this->DerivedType;
-          while (currentType->BaseType != this->IteratingType)
-            currentType = currentType->BaseType;
-          this->IteratingType = currentType;
-
-          this->MembersRange = this->IteratingType->AllMembers.All();
-        }
-
-        while (this->MembersRange.Empty() == false)
-        {
-          Member* member = this->MembersRange.Front();
-          this->MembersRange.PopFront();
-
-          // We only check if the name matches if one was provided
-          if (this->Name.Empty() == false && this->Name != member->Name)
-            continue;
-
-          // Check if the user is attempting to filter by members of a specific type
-          if (this->DeclaredType != nullptr && !Type::IsRawSame(member->GetTypeOrNull(), this->DeclaredType))
-            continue;
-
-          // The user might specifically want a Field, GetterSetter, Function, or even a base type such as Property or Member (which is everything)
-          BoundType* derivedType = ZilchVirtualTypeId(member);
-          if (this->MemberKind != nullptr && derivedType->IsA(this->MemberKind) == false)
-            continue;
-
-          bool optionsStatic    = (this->Options & Members::Static)   != 0;
-          bool optionsInstance  = (this->Options & Members::Instance) != 0;
-          bool memberStatic     = member->IsStatic;
-          bool memberInstance   = !memberStatic;
-
-          if (memberStatic && !optionsStatic)
-            continue;
-
-          if (memberInstance && !optionsInstance)
-            continue;
-
-          this->CurrentMember = member;
-          return;
-        }
-      }
-    }
+    void PopFront();
 
     bool Empty()
     {
@@ -982,6 +902,115 @@ namespace Zilch
     T& value = *(T*)data;
     return ToString(value);
   }
+
+  template <typename T>
+  BoundType*& TypeBinding::StaticTypeId<T>::GetType()
+  {
+    ErrorOnDoNotBind<T>();
+
+    // Every bound type is statically allocated
+    // The library builder must support adding a bound type AFTER it has already been created
+    // (not the typical code path, but supported for this feature)
+    // This ensures that ZilchTypeId will always result in a BoundType, even if it is not initialized
+    // Note: This does however result BoundTypes being unintentionally created just
+    // by using ZilchTypeId on a type that is not bound. Usage of all types is scanned when the library is finalized
+    static BoundType* instance = new BoundType(AssertBadType);
+    if (instance->IsInitialized() == false)
+    {
+      ErrorIf(NativeBindingList::IsBuildingLibrary() == false,
+              "You can only get a type with ZilchTypeId if the type is initialized, "
+              "or if you're in the middle of building a library");
+    }
+
+    return instance;
+  }
+
+  template <typename Derived, typename Base>
+  Derived Type::DynamicCast(Base baseClassPointer)
+  {
+    // If the passed in pointer was null, then return null
+    if (baseClassPointer == nullptr)
+    {
+      // We can't possibly cast it or know what it even is...
+      return nullptr;
+    }
+
+    BoundType* fromType = baseClassPointer->ZilchGetDerivedType();
+    fromType->IsInitializedAssert();
+
+    BoundType* toType = ZilchTypeId(Derived);
+    toType->IsInitializedAssert();
+
+    // If the cast is safe...
+    if (BoundIsA(fromType, toType))
+    {
+      // Get the base class pointer
+      return static_cast<Derived>(baseClassPointer);
+    }
+
+    // Otherwise the cast failed, return a null pointer
+    return nullptr;
+  }
+
+  template <typename MemberType>
+  void MemberRange<MemberType>::PopFront()
+  {
+    // Assume that we won't find the next matching member
+    this->CurrentMember = nullptr;
+
+    ZilchLoop
+    {
+      // If we exhausted the range last time, then we need a new range
+      if (this->MembersRange.Empty())
+      {
+        // If we were already on the most derived type, we're done
+        if (this->IteratingType == this->DerivedType)
+          return;
+
+        // Find the next type below the iterating type (more derived)
+        BoundType* currentType = this->DerivedType;
+        while (currentType->BaseType != this->IteratingType)
+          currentType = currentType->BaseType;
+        this->IteratingType = currentType;
+
+        this->MembersRange = this->IteratingType->AllMembers.All();
+      }
+
+      while (this->MembersRange.Empty() == false)
+      {
+        Member* member = this->MembersRange.Front();
+        this->MembersRange.PopFront();
+
+        // We only check if the name matches if one was provided
+        if (this->Name.Empty() == false && this->Name != member->Name)
+          continue;
+
+        // Check if the user is attempting to filter by members of a specific type
+        if (this->DeclaredType != nullptr && !Type::IsRawSame(member->GetTypeOrNull(), this->DeclaredType))
+          continue;
+
+        // The user might specifically want a Field, GetterSetter, Function, or even a base type such as Property or Member (which is everything)
+        BoundType* derivedType = ZilchVirtualTypeId(member);
+        if (this->MemberKind != nullptr && derivedType->IsA(this->MemberKind) == false)
+          continue;
+
+        bool optionsStatic = (this->Options & Members::Static) != 0;
+        bool optionsInstance = (this->Options & Members::Instance) != 0;
+        bool memberStatic = member->IsStatic;
+        bool memberInstance = !memberStatic;
+
+        if (memberStatic && !optionsStatic)
+          continue;
+
+        if (memberInstance && !optionsInstance)
+          continue;
+
+        this->CurrentMember = member;
+        return;
+      }
+    }
+  }
+
 }
 
 #endif

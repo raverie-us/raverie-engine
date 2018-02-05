@@ -39,13 +39,13 @@ namespace Zilch
     typedef ExpressionNode* (Parser::*ExpressionFn)();
 
     // Print out an error message corresponding to the current token
-    void ErrorHere(ErrorCode::Enum errorCode, ...);
+    void ErrorHere(int errorCode, ...);
 
     // Print out an error message corresponding to the current token
-    void ErrorHereArgs(ErrorCode::Enum errorCode, va_list argList);
+    void ErrorHereArgs(int errorCode, va_list argList);
 
     // Print out an error message corresponding to the current token (with extra context if needed)
-    void ErrorHereArgs(ErrorCode::Enum errorCode, StringParam extra, va_list argList);
+    void ErrorHereArgs(int errorCode, StringParam extra, va_list argList);
 
     // Set the starting line and character of a syntax node
     void SetNodeLocationStartHere(SyntaxNode* node);
@@ -96,13 +96,13 @@ namespace Zilch
     bool AcceptAndRetrieve(size_t parameters, ...);
 
     // Expects a given grammar constant, and otherwise produces an error (variadic for the error context)
-    bool Expect(Grammar::Enum grammarConstant, ErrorCode::Enum errorCode, ...);
+    bool Expect(Grammar::Enum grammarConstant, int errorCode, ...);
 
     // Expects a given grammar constant, and otherwise produces an error (variadic for the error context)
-    bool ExpectAndRetrieve(Grammar::Enum grammarConstant, const UserToken*& outToken, ErrorCode::Enum errorCode, ...);
+    bool ExpectAndRetrieve(Grammar::Enum grammarConstant, const UserToken*& outToken, int errorCode, ...);
 
     // Expects a given grammar constant, and otherwise produces an error (variadic for the error context)
-    bool ExpectAndRetrieveArgs(Grammar::Enum grammarConstant, const UserToken*& outToken, ErrorCode::Enum errorCode, va_list vl);
+    bool ExpectAndRetrieveArgs(Grammar::Enum grammarConstant, const UserToken*& outToken, int errorCode, va_list vl);
 
     // A helper function to read the contents of a delgate syntax type
     bool ReadDelegateTypeContents(DelegateSyntaxType* delegateSyntaxType);
@@ -133,11 +133,11 @@ namespace Zilch
 
     // Accept a type specifier (return type for a function)
     // Returns true if it parses successfully, false otherwise (note that no type specifier will return true!)
-    bool AcceptOptionalTypeSpecifier(SyntaxType*& outSyntaxType, ErrorCode::Enum notFound, ...);
+    bool AcceptOptionalTypeSpecifier(SyntaxType*& outSyntaxType, int notFound, ...);
 
     // Accept a type specifier (return type for a function)
     // Returns true if it parses successfully, false otherwise (note that no type specifier will return true!)
-    bool AcceptOptionalTypeSpecifierArgs(SyntaxType*& outSyntaxType, ErrorCode::Enum notFound, va_list args);
+    bool AcceptOptionalTypeSpecifierArgs(SyntaxType*& outSyntaxType, int notFound, va_list args);
 
     // Expect an argument list
     bool ExpectArgumentList(GenericFunctionNode* node, StringParam functionName, bool mustBeEmpty);

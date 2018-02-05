@@ -5,6 +5,10 @@
 
 #include "Zilch.hpp"
 
+#ifdef COMPILER_CLANG
+#pragma clang diagnostic ignored "-Wlogical-op-parentheses"
+#endif
+
 // Set this to true this to get asserts for plugin types and functions not linking
 static const bool ZilchDebugPluginLinking = false;
 
