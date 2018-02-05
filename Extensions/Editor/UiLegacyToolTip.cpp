@@ -41,7 +41,7 @@ UiLegacyToolTip::UiLegacyToolTip()
 
   toolTip->mContentPadding = Thickness(2);
 
-  toolTip->SetColorScheme(ToolTipColor::Default);
+  toolTip->SetColorScheme(ToolTipColorScheme::Default);
 
   mPriority[0] = IndicatorSide::Right;
   mPriority[1] = IndicatorSide::Left;
@@ -93,7 +93,7 @@ void UiLegacyToolTip::SetPriority(IndicatorSide::Enum p0, IndicatorSide::Enum p1
 }
 
 /******************************************************************************/
-void UiLegacyToolTip::SetColorScheme(ToolTipColor::Enum color)
+void UiLegacyToolTip::SetColorScheme(ToolTipColorScheme::Enum color)
 {
   mToolTip->SetColorScheme(color);
 }

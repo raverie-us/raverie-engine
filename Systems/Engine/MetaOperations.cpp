@@ -236,9 +236,6 @@ PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam prope
     mName = BuildString(GetNameFromHandle(object), ".", property.GetStringPath());
   }
 
-  //mDescription = BuildString(before.StoredType->ToString(), "\nPrevious:@",
-  //  before.ToString(), "\nCurrent:@", after.ToString());
-
   mValueBefore = before;
   mValueAfter = after;
 

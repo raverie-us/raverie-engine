@@ -27,7 +27,7 @@ public:
   void SetPriority(IndicatorSide::Enum p0, IndicatorSide::Enum p1,
     IndicatorSide::Enum p2, IndicatorSide::Enum p3);
 
-  void SetColorScheme(ToolTipColor::Enum color);
+  void SetColorScheme(ToolTipColorScheme::Enum color);
   void SetBackgroundColor(Vec4Param c);
   void SetBorderColor(Vec4Param c);
 
