@@ -32,6 +32,7 @@
     </ClCompile>
     <Lib>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>%(AdditionalLibraryDirectories)</AdditionalDependencies>
     </Lib>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
