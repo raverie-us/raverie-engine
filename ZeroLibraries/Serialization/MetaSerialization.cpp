@@ -474,9 +474,9 @@ void MetaSerializeProperties(HandleParam instance, Serializer& serializer)
     if (property->Get == nullptr || property->Set == nullptr)
       continue;
 
-    if(property->HasAttribute(PropertyAttributes::cProperty) == false &&
-       property->HasAttribute(PropertyAttributes::cSerialize) == false &&
-       property->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == false)
+    if(property->HasAttribute(PropertyAttributes::cProperty) == nullptr &&
+       property->HasAttribute(PropertyAttributes::cSerialize) == nullptr &&
+       property->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == nullptr)
       continue;
 
     SerializeProperty(instance, property, serializer);
