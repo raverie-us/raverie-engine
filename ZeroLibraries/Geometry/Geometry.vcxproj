@@ -112,9 +112,7 @@
     <Link>
       <AdditionalOptions>"EXPORTED_FUNCTIONS=['PositiveMax']" %(AdditionalOptions)</AdditionalOptions>
     </Link>
-    <Lib>
-      <AdditionalOptions>-s "EXPORTED_FUNCTIONS=['PositiveMax']" %(AdditionalOptions)</AdditionalOptions>
-    </Lib>
+    <Lib />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
     <ClCompile>
