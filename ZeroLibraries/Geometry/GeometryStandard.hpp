@@ -7,6 +7,7 @@
 #pragma once
 
 // Standard includes
+#include "float.h"
 #include "Math/MathStandard.hpp"
 
 #include "Zilch/Zilch.hpp"

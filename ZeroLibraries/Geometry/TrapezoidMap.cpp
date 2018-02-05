@@ -791,9 +791,9 @@ bool TrapezoidMap::UpdateAbove(Region* O,
     //                A                                        A                    
     //                                                                        
     // --------------(x)--------------   --->   --------------(x)--------------
-    //                 \                                      + \                  
-    //        O         \       Q                            +   \   
-    //                   \                            L     +  R  \     Q                     
+    //                 \                                      + \
+    //        O         \       Q                            +   \
+    //                   \                            L     +  R  \     Q
     //                    \                                +       \
     //
     RegionId indexQ = A->BotNeighbor[1];
