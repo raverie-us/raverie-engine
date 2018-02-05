@@ -244,6 +244,12 @@ public:
   /// Returns whether or not the given cog is a descendant of us.
   bool IsDescendant(Cog* cog);
 
+  /// Returns whether or not we are a descendant of the given Cog.
+  bool IsDescendantOf(Cog* ancestor);
+
+  /// Returns whether or not we are an ancestor of the given Cog.
+  bool IsAncestorOf(Cog* descendant);
+
   /// Returns the sibling Cog after this in the parents child list. Returns null if it's the 
   /// last child. If the Cog doesn't have a parent, it will return the Cog after it in the Space.
   Cog* FindNextSibling();

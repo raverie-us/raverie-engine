@@ -61,6 +61,12 @@ public:
   ComponentType* GetPreviousInHierarchyOrder();
   ComponentType* GetRoot();
 
+  /// Returns whether or not we are a descendant of the given Cog.
+  bool IsDescendantOf(ComponentType& ancestor);
+
+  /// Returns whether or not we are an ancestor of the given Cog.
+  bool IsAncestorOf(ComponentType& descendant);
+
   typename ChildListRange GetChildren(){return mChildren.All();}
   typename ChildListReverseRange GetChildrenReverse() { return mChildren.ReverseAll(); }
   
@@ -88,6 +94,8 @@ ZilchDefineType(ComponentHierarchy<ComponentType>, builder, type)
   ZilchBindGetter(ChildCount);
   
   ZilchBindMethod(GetChildren);
+  ZilchBindMethod(IsDescendantOf);
+  ZilchBindMethod(IsAncestorOf);
 }
 
 //******************************************************************************
@@ -285,6 +293,28 @@ ComponentType* ComponentHierarchy<ComponentType>::GetRoot()
   while(curr->mParent)
     curr = curr->mParent;
   return curr;
+}
+
+//******************************************************************************
+template <typename ComponentType>
+bool ComponentHierarchy<ComponentType>::IsDescendantOf(ComponentType& ancestor)
+{
+  return ancestor.IsAncestorOf(*(ComponentType*)this);
+}
+
+//******************************************************************************
+template <typename ComponentType>
+bool ComponentHierarchy<ComponentType>::IsAncestorOf(ComponentType& descendant)
+{
+  ComponentType* current = &descendant;
+  while (current)
+  {
+    current = current->mParent;
+    if (current == this)
+      return true;
+  }
+
+  return false;
 }
 
 //******************************************************************************
