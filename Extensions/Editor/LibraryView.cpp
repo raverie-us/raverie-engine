@@ -190,7 +190,7 @@ public:
       {
         String newName = variant.Get<String>();
         Status status;
-        if(IsValidName(newName, status))
+        if(IsValidFilename(newName, status))
           return RenameResource(resource, newName);
         else
           DoNotifyWarning("Invalid resource name.",status.Message);

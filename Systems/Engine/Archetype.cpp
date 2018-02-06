@@ -334,7 +334,7 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog, StringParam newName,
   {
     // Check the archetype name
     Status status;
-    if(!IsValidName(newName, status))
+    if(!IsValidFilename(newName, status))
     {
       String errorString = String::Format("The name %s is not valid. %s", newName.c_str(), status.Message.c_str());
       DoNotifyWarning("Invalid name", errorString.c_str());

@@ -573,7 +573,7 @@ TagChain* TagEditor::GetTagChain()
 void TagEditor::SubmitText(StringParam text)
 {
   Status status;
-  if(!IsValidName(text, status))
+  if(!IsValidFilename(text, status))
   {
     DoNotify("Invalid Tag", status.Message, "Warning");
     return;
