@@ -395,9 +395,9 @@ bool Replicator::EmplaceReplicas(const ReplicaArray& replicas, const EmplaceCont
 {
   // (All replicas should be invalid)
   // (Hitting an assert here usually means an incorrect assumption was made in the calling logic about a replica's state)
-  AssertReplicas(replicas, replica->IsInvalid());
-  AssertReplicas(replicas, replica->GetInitializationTimestamp()   == cInvalidMessageTimestamp);
-  AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp);
+  AssertReplicas(replicas, replica->IsInvalid(), "");
+  AssertReplicas(replicas, replica->GetInitializationTimestamp()   == cInvalidMessageTimestamp, "");
+  AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp, "");
 
   // Create timestamp
   TimeMs timestamp = GetPeer()->GetLocalTime();
@@ -407,7 +407,7 @@ bool Replicator::EmplaceReplicas(const ReplicaArray& replicas, const EmplaceCont
     return false;
 
   // (All replicas should be valid (if client) or live (if server))
-  AssertReplicas(replicas, GetRole() == Role::Client ? replica->IsValid() : replica->IsLive());
+  AssertReplicas(replicas, GetRole() == Role::Client ? replica->IsValid() : replica->IsLive(), "");
 
   // Success
   return true;
@@ -425,9 +425,9 @@ bool Replicator::SpawnReplicas(const ReplicaArray& replicas, const Route& route)
 
   // (All replicas should be invalid)
   // (Hitting an assert here usually means an incorrect assumption was made in the calling logic about a replica's state)
-  AssertReplicas(replicas, replica->IsInvalid());
-  AssertReplicas(replicas, replica->GetInitializationTimestamp()   == cInvalidMessageTimestamp);
-  AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp);
+  AssertReplicas(replicas, replica->IsInvalid(), "");
+  AssertReplicas(replicas, replica->GetInitializationTimestamp()   == cInvalidMessageTimestamp, "");
+  AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp, "");
 
   // Create timestamp
   TimeMs timestamp = GetPeer()->GetLocalTime();
@@ -440,7 +440,7 @@ bool Replicator::SpawnReplicas(const ReplicaArray& replicas, const Route& route)
   RouteSpawn(replicas, route, timestamp);
 
   // (All replicas should be live)
-  AssertReplicas(replicas, replica->IsLive());
+  AssertReplicas(replicas, replica->IsLive(), "");
 
   // Success
   return true;
@@ -458,9 +458,9 @@ bool Replicator::CloneReplicas(const ReplicaArray& replicas, const Route& route)
 
   // (All replicas should be live)
   // (Hitting an assert here usually means an incorrect assumption was made in the calling logic about a replica's state)
-  AssertReplicas(replicas, replica->IsLive());
-  AssertReplicas(replicas, replica->GetInitializationTimestamp()   != cInvalidMessageTimestamp);
-  AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp);
+  AssertReplicas(replicas, replica->IsLive(), "");
+  AssertReplicas(replicas, replica->GetInitializationTimestamp()   != cInvalidMessageTimestamp, "");
+  AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp, "");
 
   // Get timestamp from replicas original initialization time
   TimeMs timestamp = GetInitializationTimestamp(replicas);
@@ -488,9 +488,9 @@ bool Replicator::ForgetReplicas(const ReplicaArray& replicas, const Route& route
 {
   // (All replicas should be valid (if client) or live (if server))
   // (Hitting an assert here usually means an incorrect assumption was made in the calling logic about a replica's state)
-  AssertReplicas(replicas, GetRole() == Role::Client ? replica->IsValid() : replica->IsLive());
-  AssertReplicas(replicas, GetRole() == Role::Client ? true : replica->GetInitializationTimestamp()   != cInvalidMessageTimestamp);
-  AssertReplicas(replicas,                                    replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp);
+  AssertReplicas(replicas, GetRole() == Role::Client ? replica->IsValid() : replica->IsLive(), "");
+  AssertReplicas(replicas, GetRole() == Role::Client ? true : replica->GetInitializationTimestamp()   != cInvalidMessageTimestamp, "");
+  AssertReplicas(replicas,                                    replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp, "");
 
   // Create timestamp
   TimeMs timestamp = GetPeer()->GetLocalTime();
@@ -507,7 +507,7 @@ bool Replicator::ForgetReplicas(const ReplicaArray& replicas, const Route& route
     return false;
 
   // (All replicas should be invalid)
-  AssertReplicas(replicas, replica->IsInvalid());
+  AssertReplicas(replicas, replica->IsInvalid(), "");
 
   // Success
   return true;
@@ -531,9 +531,9 @@ bool Replicator::DestroyReplicas(const ReplicaArray& replicas, const Route& rout
 
   // (All replicas should be live)
   // (Hitting an assert here usually means an incorrect assumption was made in the calling logic about a replica's state)
-  AssertReplicas(replicas, replica->IsLive());
-  AssertReplicas(replicas, replica->GetInitializationTimestamp()   != cInvalidMessageTimestamp);
-  AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp);
+  AssertReplicas(replicas, replica->IsLive(), "");
+  AssertReplicas(replicas, replica->GetInitializationTimestamp()   != cInvalidMessageTimestamp, "");
+  AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp, "");
 
   // Create timestamp
   TimeMs timestamp = GetPeer()->GetLocalTime();
@@ -546,7 +546,7 @@ bool Replicator::DestroyReplicas(const ReplicaArray& replicas, const Route& rout
     return false;
 
   // (All replicas should be invalid)
-  AssertReplicas(replicas, replica->IsInvalid());
+  AssertReplicas(replicas, replica->IsInvalid(), "");
 
   // Success
   return true;
@@ -1452,7 +1452,7 @@ bool Replicator::RouteSpawn(const ReplicaArray& replicas, const Route& route, Ti
   Assert(GetRole() == Role::Server);
 
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // Get links in route
   PeerLinkSet links = GetLinks(route);
@@ -1544,7 +1544,7 @@ bool Replicator::RouteClone(const ReplicaArray& replicas, const Route& route, Ti
   Assert(GetRole() == Role::Server);
 
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // Get links in route
   PeerLinkSet links = GetLinks(route);
@@ -1654,7 +1654,7 @@ bool Replicator::RouteForget(const ReplicaArray& replicas, const Route& route, T
   Assert(GetRole() == Role::Server);
 
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // Get links in route
   PeerLinkSet links = GetLinks(route);
@@ -1763,7 +1763,7 @@ bool Replicator::RouteDestroy(const ReplicaArray& replicas, const Route& route, 
   Assert(GetRole() == Role::Server);
 
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // Get links in route
   PeerLinkSet links = GetLinks(route);

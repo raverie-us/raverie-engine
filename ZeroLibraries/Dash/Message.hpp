@@ -131,6 +131,7 @@ protected:
   friend class FragmentedMessage;
   friend class InMessageChannel;
   friend class LinkPlugin;
+
   friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Message& message);
 };
 

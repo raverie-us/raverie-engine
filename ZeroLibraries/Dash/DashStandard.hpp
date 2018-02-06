@@ -56,9 +56,9 @@ namespace Zero
 #include "PacketConfig.hpp"
 #include "Packet.hpp"
 #include "MessageChannel.hpp"
+#include "ProtocolMessageData.hpp"
 #include "LinkInbox.hpp"
 #include "LinkOutbox.hpp"
-#include "ProtocolMessageData.hpp"
 #include "PeerLink.hpp"
 #include "Peer.hpp"
 

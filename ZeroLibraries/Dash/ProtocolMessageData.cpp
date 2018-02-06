@@ -42,10 +42,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Connect
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read IP address
-    ReturnIf(!bitStream.Read(connectRequestData.mIpAddress), 0);
+    ReturnIf(!bitStream.Read(connectRequestData.mIpAddress), 0, "");
 
     // Read timestamp
-    ReturnIf(!bitStream.ReadQuantized(connectRequestData.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0);
+    ReturnIf(!bitStream.ReadQuantized(connectRequestData.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
 
     // Read extra data (if any)
     connectRequestData.mExtraData.AssignRemainder(bitStream);
@@ -87,13 +87,13 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Connect
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read IP address
-    ReturnIf(!bitStream.Read(connectResponseData.mIpAddress), 0);
+    ReturnIf(!bitStream.Read(connectResponseData.mIpAddress), 0, "");
 
     // Read timestamp
-    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0);
+    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
 
     // Read connect response
-    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mConnectResponse, ConnectResponseMin, ConnectResponseMax), 0);
+    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mConnectResponse, ConnectResponseMin, ConnectResponseMax), 0, "");
 
     // Read extra data (if any)
     connectResponseData.mExtraData.AssignRemainder(bitStream);
@@ -131,7 +131,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, PacketS
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read next
-    ReturnIf(!bitStream.Read(packetSequenceHistoryData.mNext), 0);
+    ReturnIf(!bitStream.Read(packetSequenceHistoryData.mNext), 0, "");
 
     // Read history
     packetSequenceHistoryData.mHistory.AssignRemainder(bitStream);
@@ -144,7 +144,6 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, PacketS
 //---------------------------------------------------------------------------------//
 //                               ChannelOpenedData                                 //
 //---------------------------------------------------------------------------------//
-
 Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ChannelOpenedData& channelOpenedData)
 {
   return bitStream.SerializeQuantized(direction, channelOpenedData.mTransferMode, TransferModeMin, TransferModeMax);
@@ -176,7 +175,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Disconn
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read disconnect reason
-    ReturnIf(!bitStream.ReadQuantized(disconnectNoticeData.mDisconnectReason, DisconnectReasonMin, DisconnectReasonMax), 0);
+    ReturnIf(!bitStream.ReadQuantized(disconnectNoticeData.mDisconnectReason, DisconnectReasonMin, DisconnectReasonMax), 0, "");
 
     // Read extra data (if any)
     disconnectNoticeData.mExtraData.AssignRemainder(bitStream);
@@ -238,10 +237,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Connect
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read direction
-    ReturnIf(!bitStream.Read(connectRequestedData.mDirection), 0);
+    ReturnIf(!bitStream.Read(connectRequestedData.mDirection), 0, "");
 
     // Read connect request data
-    ReturnIf(!bitStream.Read(connectRequestedData.mConnectRequestData), 0);
+    ReturnIf(!bitStream.Read(connectRequestedData.mConnectRequestData), 0, "");
 
     // Success
     return bitStream.GetBitsRead() - bitsReadStart;
@@ -274,10 +273,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Connect
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read direction
-    ReturnIf(!bitStream.Read(connectRespondedData.mDirection), 0);
+    ReturnIf(!bitStream.Read(connectRespondedData.mDirection), 0, "");
 
     // Read connect response data
-    ReturnIf(!bitStream.Read(connectRespondedData.mConnectResponseData), 0);
+    ReturnIf(!bitStream.Read(connectRespondedData.mConnectResponseData), 0, "");
 
     // Success
     return bitStream.GetBitsRead() - bitsReadStart;
@@ -310,10 +309,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Disconn
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read direction
-    ReturnIf(!bitStream.Read(disconnectNoticedData.mDirection), 0);
+    ReturnIf(!bitStream.Read(disconnectNoticedData.mDirection), 0, "");
 
     // Read disconnect notice data
-    ReturnIf(!bitStream.Read(disconnectNoticedData.mDisconnectNoticeData), 0);
+    ReturnIf(!bitStream.Read(disconnectNoticedData.mDisconnectNoticeData), 0, "");
 
     // Success
     return bitStream.GetBitsRead() - bitsReadStart;
@@ -346,10 +345,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Incomin
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read message channel ID
-    ReturnIf(!bitStream.Read(incomingChannelOpenedData.mChannelId), 0);
+    ReturnIf(!bitStream.Read(incomingChannelOpenedData.mChannelId), 0, "");
 
     // Read message channel transfer mode
-    ReturnIf(!bitStream.Read(incomingChannelOpenedData.mTransferMode), 0);
+    ReturnIf(!bitStream.Read(incomingChannelOpenedData.mTransferMode), 0, "");
 
     // Success
     return bitStream.GetBitsRead() - bitsReadStart;
@@ -409,10 +408,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Receipt
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read receipt ID
-    ReturnIf(!bitStream.Read(receiptData.mReceiptId), 0);
+    ReturnIf(!bitStream.Read(receiptData.mReceiptId), 0, "");
 
     // Read receipt result
-    ReturnIf(!bitStream.Read(receiptData.mReceipt), 0);
+    ReturnIf(!bitStream.Read(receiptData.mReceipt), 0, "");
 
     // Success
     return bitStream.GetBitsRead() - bitsReadStart;
