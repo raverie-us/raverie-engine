@@ -1801,7 +1801,7 @@ namespace Zilch
           }
 
           // As long as we finished this node (either via correct parsing or tolerance)
-          if (finishedNode)
+          if (finishedNode || this->Errors.TolerantMode)
           {
             // We read the entire class definition
             // Accept the token position, and return the class node
@@ -3162,10 +3162,10 @@ namespace Zilch
     if (this->AcceptAny(2, &accessOperator, Grammar::Access, Grammar::NonVirtualAccess))
     {
       // Hold the member we attempted to access
-      const UserToken* member;
+      const UserToken* member = nullptr;
 
       // Get the member name that we're trying to access
-      if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, member, ErrorCode::MemberAccessNameNotFound))
+      if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, member, ErrorCode::MemberAccessNameNotFound) || this->Errors.TolerantMode)
       {
         // We started a member access, so allocate the corresponding node
         MemberAccessNode* node = new MemberAccessNode();
@@ -3176,7 +3176,8 @@ namespace Zilch
         node->Operator = accessOperator->TokenId;
 
         // Set the name
-        node->Name = member->Token;
+        if (member)
+          node->Name = member->Token;
 
         // Accept the token position, and return the function call node
         this->AcceptTokenPosition();
@@ -3424,7 +3425,7 @@ namespace Zilch
       else
       {
         // Check to see that the statement was properly delimited
-        if (this->Expect(Grammar::StatementSeparator, ErrorCode::StatementSeparatorNotFound))
+        if (this->Expect(Grammar::StatementSeparator, ErrorCode::StatementSeparatorNotFound) || this->Errors.TolerantMode)
         {
           // Accept the token position, and return the node
           AcceptTokenPosition();
@@ -4000,7 +4001,7 @@ namespace Zilch
       }
     }
     // Try and parse a single statement, if that fails, then throw an error
-    else if (statements.Add(this->Statement()))
+    else if (statements.Add(this->Statement()) || this->Errors.TolerantMode)
     {
       return true;
     }
