@@ -945,7 +945,10 @@ void UiWidget::SetSizePolicy(Axis::Enum axis, UiSizePolicy::Enum policy)
 void UiWidget::SetSizePolicyX(UiSizePolicy::Enum policy)
 {
   if (OperationQueue::IsListeningForSideEffects())
+  {
     OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+    OperationQueue::RegisterSideEffect(mArea, PropertyPath("Size"), GetSize());
+  }
 
   mSizePolicy[Axis::X] = policy;
   MarkAsNeedsUpdate();
@@ -955,7 +958,10 @@ void UiWidget::SetSizePolicyX(UiSizePolicy::Enum policy)
 void UiWidget::SetSizePolicyY(UiSizePolicy::Enum policy)
 {
   if (OperationQueue::IsListeningForSideEffects())
+  {
     OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+    OperationQueue::RegisterSideEffect(mArea, PropertyPath("Size"), GetSize());
+  }
 
   mSizePolicy[Axis::Y] = policy;
   MarkAsNeedsUpdate();
@@ -976,6 +982,7 @@ void UiWidget::SetInLayout(bool state)
   {
     OperationQueue::RegisterSideEffect(this, PropertyPath("LocalTranslation"), GetLocalTranslation());
     OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+    OperationQueue::RegisterSideEffect(mArea, PropertyPath("Size"), GetSize());
   }
 
   mFlags.SetState(UiWidgetFlags::InLayout, state);
