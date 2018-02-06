@@ -57,6 +57,7 @@ ZilchDefineType(UiRootWidget, builder, type)
 
   ZilchBindGetterSetter(FocusWidget);
   ZilchBindGetter(MouseOverWidget);
+  ZilchBindGetter(MouseDownWidget);
 
   // Methods
   ZilchBindMethod(Update);
@@ -434,6 +435,8 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
       mTimeSinceLastClick = 0;
       mLastClickPosition = e->Position;
     }
+
+    mMouseDownWidget.Clear();
   }
 
   // Send the event to the mouse over object
@@ -783,6 +786,12 @@ UiWidget* UiRootWidget::GetFocusWidget()
 UiWidget* UiRootWidget::GetMouseOverWidget()
 {
   return mMouseOverWidget;
+}
+
+//******************************************************************************
+UiWidget* UiRootWidget::GetMouseDownWidget()
+{
+  return mMouseDownWidget;
 }
 
 //******************************************************************************
