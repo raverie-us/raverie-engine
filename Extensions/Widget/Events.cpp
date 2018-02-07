@@ -121,13 +121,13 @@ ZilchDefineType(MouseFileDropEvent, builder, type)
 MouseFileDropEvent::MouseFileDropEvent()
   : MouseEvent()
 {
-  Files = ZilchAllocate(ArrayClassString);
+  Files = ZilchAllocate(ArrayString);
 }
 
 MouseFileDropEvent::MouseFileDropEvent(const MouseEvent& rhs)
   : MouseEvent(rhs)
 {
-  Files = ZilchAllocate(ArrayClassString);
+  Files = ZilchAllocate(ArrayString);
 }
 
 void MouseFileDropEvent::Copy(const OsMouseDropEvent& rhs)

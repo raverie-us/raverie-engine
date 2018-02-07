@@ -211,7 +211,7 @@ public:
   void Copy(const OsMouseDropEvent& rhs);
 
 public:
-  HandleOf<ArrayClassString> Files;
+  HandleOf<ArrayString> Files;
 };
 
 }//namespace Zero
