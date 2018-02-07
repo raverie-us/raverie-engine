@@ -122,6 +122,7 @@
     <ClCompile Include="Utility\SpinLock.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Permuter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">
@@ -373,6 +374,7 @@
     <ClInclude Include="Utility\SpinLock.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Permuter.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="ZeroVisualizers.natvis" />

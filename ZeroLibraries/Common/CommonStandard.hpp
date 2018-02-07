@@ -121,3 +121,4 @@ public:
 #include "Utility/Determinism.hpp"
 #include "Utility/SpinLock.hpp"
 #include "Singleton.hpp"
+#include "Permuter.hpp"
