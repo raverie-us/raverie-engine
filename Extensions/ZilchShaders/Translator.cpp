@@ -219,7 +219,7 @@ void ZilchShaderTranslator::BuildStructsTranslation(ShaderCodeBuilder& finalBuil
 {
   // Start a range of all of the structs being declared
   bool generateRanges = rootRange != nullptr;
-  ScopedRangeMapping structsRange(finalBuilder, rootRange, nullptr, generateRanges, CodeRangeDebugString("Structs"));
+  ScopedRangeMapping structsRange(finalBuilder, rootRange, nullptr, generateRanges, CodeRangeDebugString("Structs", ""));
 
   // Write out all structs
   finalBuilder << "//----- Struct Definitions -----" << finalBuilder.EmitLineReturn();
@@ -280,7 +280,7 @@ void ZilchShaderTranslator::BuildForwardDeclarationTranslation(ShaderCodeBuilder
 {
   bool generateRanges = rootRange != nullptr;
   // Build a range to map all forward declarations
-  ScopedRangeMapping forwardDeclarationRanges(finalBuilder, rootRange, nullptr, generateRanges, CodeRangeDebugString("Forward Declarations"));
+  ScopedRangeMapping forwardDeclarationRanges(finalBuilder, rootRange, nullptr, generateRanges, CodeRangeDebugString("Forward Declarations", ""));
 
   // Write out all forward declarations
   finalBuilder << "//----- Forward Declarations -----" << finalBuilder.EmitLineReturn();
@@ -348,7 +348,7 @@ void ZilchShaderTranslator::BuildGlobalVarsTranslation(ShaderCodeBuilder& finalB
 {
   bool generate = rootRange != nullptr;
   // Build a range to map all global variables
-  ScopedRangeMapping globalVarRanges(finalBuilder, rootRange, nullptr, generate, CodeRangeDebugString("Global Vars"));
+  ScopedRangeMapping globalVarRanges(finalBuilder, rootRange, nullptr, generate, CodeRangeDebugString("Global Vars", ""));
   // Store the "ordered map" of all shared fields so that we can emit them only once
   HashSet<String> sharedFieldNames;
   Array<ShaderField*> sharedFieldList;
@@ -454,7 +454,7 @@ void ZilchShaderTranslator::BuildFunctionCodeTranslation(ShaderCodeBuilder& fina
 {
   bool generate = rootRange != nullptr;
   // Build a range to map all code functions declarations
-  ScopedRangeMapping codeRanges(finalBuilder, rootRange, nullptr, generate, CodeRangeDebugString("Global Vars"));
+  ScopedRangeMapping codeRanges(finalBuilder, rootRange, nullptr, generate, CodeRangeDebugString("Global Vars", ""));
 
 
   // Write out all class functions
@@ -918,7 +918,7 @@ void ZilchShaderTranslator::GeneratePreConstructor(Zilch::ClassNode*& node, Zilc
 
   ScopedShaderCodeBuilder builder(context);
   // Map the body of the pre-constructor
-  ScopedCodeRangeMapping preConstructorRange(context, &function->mBodyRange, preConstructorFn->Location, CodeRangeDebugString("PreConstructor"));
+  ScopedCodeRangeMapping preConstructorRange(context, &function->mBodyRange, preConstructorFn->Location, CodeRangeDebugString("PreConstructor", ""));
 
   builder.BeginScope();
   // Have the pre-constructor initialize all non-static variables to their default values
@@ -960,7 +960,7 @@ void ZilchShaderTranslator::GenerateDefaultConstructor(Zilch::ClassNode*& node, 
 
     // Create an instance of the class named 'self' and then call the pre-constructor
     ScopedShaderCodeBuilder subBuilder(context);
-    ScopedCodeRangeMapping constructorRange(context, &constructor->mBodyRange, node->Location, CodeRangeDebugString("Constructor"));
+    ScopedCodeRangeMapping constructorRange(context, &constructor->mBodyRange, node->Location, CodeRangeDebugString("Constructor", ""));
     
     subBuilder.BeginScope();
     subBuilder << subBuilder.WriteScopedIndent() << constructor->mShaderReturnType<< " " << nameSettings.mThisKeyword << ";" << subBuilder.LineReturn;
@@ -1057,7 +1057,7 @@ void ZilchShaderTranslator::WalkClassConstructor(Zilch::ConstructorNode*& node, 
 
   // Build up the arguments of the constructor
   ScopedShaderCodeBuilder parametersBuilder(context);
-  ScopedCodeRangeMapping signatureRange(context, &function->mSignatureRange, node->Location, CodeRangeDebugString("Constructor Signature"));
+  ScopedCodeRangeMapping signatureRange(context, &function->mSignatureRange, node->Location, CodeRangeDebugString("Constructor Signature", ""));
   parametersBuilder.Write("(");
   context->Walker->Walk(this, node->Parameters, context);
   parametersBuilder.Write(")");
@@ -1066,7 +1066,7 @@ void ZilchShaderTranslator::WalkClassConstructor(Zilch::ConstructorNode*& node, 
   function->mShaderSignature = parametersBuilder.ToString();
 
   ScopedShaderCodeBuilder subBuilder(context);
-  ScopedCodeRangeMapping constructorRange(context, &function->mBodyRange, node->Location, CodeRangeDebugString("Constructor"));
+  ScopedCodeRangeMapping constructorRange(context, &function->mBodyRange, node->Location, CodeRangeDebugString("Constructor", ""));
 
   subBuilder.BeginScope();
   // As the first 2 lines we need to create the class named self "ClassName self;" and then call the pre-constructor
@@ -1107,7 +1107,7 @@ void ZilchShaderTranslator::WalkClassFunction(Zilch::FunctionNode*& node, ZilchS
 
   // Start a builder to make the signature
   ScopedShaderCodeBuilder signatureBuilder(context);
-  ScopedCodeRangeMapping signatureRange(context, &function->mSignatureRange, node->Location, CodeRangeDebugString("Function Signature"));
+  ScopedCodeRangeMapping signatureRange(context, &function->mSignatureRange, node->Location, CodeRangeDebugString("Function Signature", ""));
   // Override the source location for the signature
   function->mSignatureRange.mSourcePositionStart = signatureStart;
   function->mSignatureRange.mSourcePositionEnd = signatureEnd;
@@ -1405,7 +1405,7 @@ void ZilchShaderTranslator::WalkValueNode(Zilch::ValueNode*& node, ZilchShaderTr
 void ZilchShaderTranslator::WalkLocalRef(Zilch::LocalVariableReferenceNode*& node, ZilchShaderTranslatorContext* context)
 {
   // Build a scoped range to capture the range of this local ref (mostly for debugging ranges...)
-  ScopedCodeRangeMapping subRange(context, node->Location, CodeRangeDebugString("LocalRef"));
+  ScopedCodeRangeMapping subRange(context, node->Location, CodeRangeDebugString("LocalRef", ""));
 
   // Replace the local variable if needed (such as turn "this" into "self")
   String localVar = ApplyVariableReplacement(node->Value.Token);
@@ -1677,7 +1677,7 @@ void ZilchShaderTranslator::WriteStatements(Zilch::NodeList<Zilch::StatementNode
     Zilch::StatementNode* statement = statements[i];
 
     // For each statement keep track of the line number mappings
-    ScopedCodeRangeMapping statementRange(context, statement->Location, CodeRangeDebugString("Statement"));
+    ScopedCodeRangeMapping statementRange(context, statement->Location, CodeRangeDebugString("Statement", ""));
     context->Walker->Walk(this, statement, context);
   }
 }
