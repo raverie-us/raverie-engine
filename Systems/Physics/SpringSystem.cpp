@@ -994,7 +994,7 @@ void DecorativeCloth::Commit()
 
 void DecorativeCloth::UploadToMesh()
 {
-  if(mDebugDrawType != SpringDebugDrawMode::None)
+  if((u32)mDebugDrawType != (u32)SpringDebugDrawMode::None)
     DebugDraw();
 }
 
@@ -1120,7 +1120,7 @@ void DecorativeRope::DebugDraw()
 
 void DecorativeRope::Commit()
 {
-  if(mDebugDrawType != SpringDebugDrawMode::None)
+  if((u32)mDebugDrawType != (u32)SpringDebugDrawMode::None)
     DebugDraw();
 }
 

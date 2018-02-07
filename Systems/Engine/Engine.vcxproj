@@ -275,7 +275,6 @@
     <ClInclude Include="PropertyTrack.hpp" />
     <ClInclude Include="ProxyObject.hpp" />
     <ClInclude Include="Rectangle.hpp" />
-    <ClInclude Include="ResourceLoaderTemplates.hpp" />
     <ClInclude Include="HeightMap.hpp" />
     <ClInclude Include="JoystickSystem.hpp" />
     <ClInclude Include="Level.hpp" />

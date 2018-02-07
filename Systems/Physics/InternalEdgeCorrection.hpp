@@ -6,6 +6,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wbackslash-newline-escape"
+#endif
+
 namespace Zero
 {
 

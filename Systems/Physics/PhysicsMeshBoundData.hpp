@@ -32,12 +32,12 @@ class BoundMeshDataRange;
 /// Base functionality for binding a mesh array (on a resource) in physics. Currently designed as
 /// a templated base to reduce code duplication, especially while prototyping. Possibly split to
 /// individual classes (due to differences, code documentation, etc...) or make generic enough to use elsewhere later.
-template <typename OwningType, typename DataType>
+template <typename OwningType, typename DataTypeT>
 class BoundMeshData : public SafeId32Object
 {
 public:
-  typedef BoundMeshData<OwningType, DataType> SelfType;
-  typedef DataType DataType;
+  typedef BoundMeshData<OwningType, DataTypeT> SelfType;
+  typedef DataTypeT DataType;
   typedef Array<DataType> ArrayType;
   typedef BoundMeshDataRange<SelfType> RangeType;
 
@@ -53,7 +53,7 @@ public:
     mBoundArray = arrayData;
   }
 
-  void Add(const DataType& vertex)
+  void Add(const DataTypeT& vertex)
   {
     (*mBoundArray).PushBack(vertex);
     mOwner->ResourceModified();
@@ -73,15 +73,15 @@ public:
     return (*mBoundArray)[index];
   }
 
-  DataType Get(int arrayIndex) const
+  DataTypeT Get(int arrayIndex) const
   {
     if(!ValidateArrayIndex(arrayIndex))
-      return DataType();
+      return DataTypeT();
 
     return (*mBoundArray)[arrayIndex];
   }
 
-  void Set(int arrayIndex, const DataType value)
+  void Set(int arrayIndex, const DataTypeT value)
   {
     if(!ValidateArrayIndex(arrayIndex))
       return;
@@ -125,12 +125,12 @@ public:
   OwningType* mOwner;
 };
 
-template <typename ArrayType>
+template <typename ArrayTypeT>
 class BoundMeshDataRange
 {
 public:
-  typedef BoundMeshDataRange<ArrayType> SelfType;
-  typedef ArrayType ArrayType;
+  typedef BoundMeshDataRange<ArrayTypeT> SelfType;
+  typedef ArrayTypeT ArrayType;
   // Required for binding
   typedef typename ArrayType::DataType FrontResult;
 
@@ -140,7 +140,7 @@ public:
     mIndex = 0;
   }
 
-  BoundMeshDataRange(ArrayType* array)
+  BoundMeshDataRange(ArrayTypeT* array)
   {
     mArray = array;
     mIndex = 0;
@@ -181,7 +181,7 @@ public:
   }
 
 private:
-  HandleOf<ArrayType> mArray;
+  HandleOf<ArrayTypeT> mArray;
   size_t mIndex;
 };
 

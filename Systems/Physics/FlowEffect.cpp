@@ -47,8 +47,6 @@ void FlowEffect::DebugDraw()
     return;
 
   PreCalculate(0);
-  mWorldFlowCenter;
-  mWorldFlowDirection;
 
   // Get the total time passed in this space for the animation of the effect
   real totalTime = GetAnimationTime(GetOwner());

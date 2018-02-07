@@ -402,7 +402,7 @@ PhysicsSolverType::Enum PhysicsSolverConfig::GetSolverType() const
 
 void PhysicsSolverConfig::SetSolverType(PhysicsSolverType::Enum solverType)
 {
-  if(solverType >= PhysicsSolverType::Size)
+  if((u32)solverType >= (u32)PhysicsSolverType::Size)
   {
     DoNotifyWarning("Invalid value", "SolverType must be set to a valid value from the SolverType enum");
     return;
@@ -417,7 +417,7 @@ PhysicsSolverPositionCorrection::Enum PhysicsSolverConfig::GetPositionCorrection
 
 void PhysicsSolverConfig::SetPositionCorrectionType(PhysicsSolverPositionCorrection::Enum correctionType)
 {
-  if(correctionType >= PhysicsSolverPositionCorrection::Size)
+  if((u32)correctionType >= (u32)PhysicsSolverPositionCorrection::Size)
   {
     DoNotifyWarning("Invalid value", "PositionCorrectionType must be set to a valid value from the PositionCorrection enum");
     return;

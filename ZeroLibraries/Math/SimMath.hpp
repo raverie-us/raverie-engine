@@ -12,6 +12,14 @@
 #include <xmmintrin.h>
 #include <emmintrin.h>
 
+#if defined __cplusplus >= 201103L
+#define ZeroPreAlign16 __declspec(align(16))
+#define ZeroPostAlign16 
+#else
+#define ZeroPreAlign16
+#define ZeroPostAlign16 __attribute__((__aligned__(16)))
+#endif
+
 namespace Math
 {
 
@@ -37,7 +45,7 @@ namespace Simd
 
 // Alias class to hold __m128 union to compile union
 // operator overloads with Clang/LLVM
-ZeroAlign16 class M128
+ZeroPreAlign16 class M128
 {
 public:
   M128() : mValue() {}

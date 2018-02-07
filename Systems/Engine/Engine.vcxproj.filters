@@ -506,9 +506,6 @@
     <ClInclude Include="RaycastProvider.hpp">
       <Filter>Raycast</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceLoaderTemplates.hpp">
-      <Filter>Resources</Filter>
-    </ClInclude>
     <ClInclude Include="HeightMapSource.hpp">
       <Filter>EngineComponents\HeightMap</Filter>
     </ClInclude>

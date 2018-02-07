@@ -58,3 +58,4 @@ public:
 #include "AudioContent.hpp"
 #include "BinaryContent.hpp"
 #include "MeshBuilder.hpp"
+#include "ResourceLoaderTemplates.hpp"
