@@ -16,8 +16,8 @@ namespace Zero
 //---------------------------------------------------------------------------------//
 //                               ConnectRequestData                                //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestData& connectRequestData)
+template <>
+Bits Serialize<ConnectRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestData& connectRequestData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -58,8 +58,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Connect
 //---------------------------------------------------------------------------------//
 //                              ConnectResponseData                                //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectResponseData& connectResponseData)
+template <>
+Bits Serialize<ConnectResponseData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectResponseData& connectResponseData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -109,7 +109,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Connect
 
 /// Serializes packet sequence history protocol message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, PacketSequenceHistoryData& packetSequenceHistoryData)
+template <>
+Bits Serialize<PacketSequenceHistoryData>(SerializeDirection::Enum direction, BitStream& bitStream, PacketSequenceHistoryData& packetSequenceHistoryData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -144,7 +145,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, PacketS
 //---------------------------------------------------------------------------------//
 //                               ChannelOpenedData                                 //
 //---------------------------------------------------------------------------------//
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ChannelOpenedData& channelOpenedData)
+template <>
+Bits Serialize<ChannelOpenedData>(SerializeDirection::Enum direction, BitStream& bitStream, ChannelOpenedData& channelOpenedData)
 {
   return bitStream.SerializeQuantized(direction, channelOpenedData.mTransferMode, TransferModeMin, TransferModeMax);
 }
@@ -152,8 +154,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Channel
 //---------------------------------------------------------------------------------//
 //                              DisconnectNoticeData                               //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticeData& disconnectNoticeData)
+template <>
+Bits Serialize<DisconnectNoticeData>(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticeData& disconnectNoticeData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -192,8 +194,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Disconn
 //---------------------------------------------------------------------------------//
 //                           IncomingLinkCreatedData                               //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingLinkCreatedData& incomingLinkCreatedData)
+template <>
+Bits Serialize<IncomingLinkCreatedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingLinkCreatedData& incomingLinkCreatedData)
 {
   return bitStream.Serialize(direction, incomingLinkCreatedData.mIpAddress);
 }
@@ -201,8 +203,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Incomin
 //---------------------------------------------------------------------------------//
 //                               FatalErrorData                                    //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, FatalErrorData& fatalErrorData)
+template <>
+Bits Serialize<FatalErrorData>(SerializeDirection::Enum direction, BitStream& bitStream, FatalErrorData& fatalErrorData)
 {
   return bitStream.Serialize(direction, fatalErrorData.mErrorString);
 }
@@ -214,8 +216,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, FatalEr
 //---------------------------------------------------------------------------------//
 //                              ConnectRequestedData                               //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestedData& connectRequestedData)
+template <>
+Bits Serialize<ConnectRequestedData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestedData& connectRequestedData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -250,8 +252,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Connect
 //---------------------------------------------------------------------------------//
 //                              ConnectRespondedData                               //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRespondedData& connectRespondedData)
+template <>
+Bits Serialize<ConnectRespondedData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRespondedData& connectRespondedData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -286,8 +288,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Connect
 //---------------------------------------------------------------------------------//
 //                              DisconnectNoticedData                              //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticedData& disconnectNoticedData)
+template <>
+Bits Serialize<DisconnectNoticedData>(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticedData& disconnectNoticedData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -322,8 +324,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Disconn
 //---------------------------------------------------------------------------------//
 //                           IncomingChannelOpenedData                             //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelOpenedData& incomingChannelOpenedData)
+template <>
+Bits Serialize<IncomingChannelOpenedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelOpenedData& incomingChannelOpenedData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -358,8 +360,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Incomin
 //---------------------------------------------------------------------------------//
 //                           IncomingChannelClosedData                             //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelClosedData& incomingChannelClosedData)
+template <>
+Bits Serialize<IncomingChannelClosedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelClosedData& incomingChannelClosedData)
 {
   return bitStream.Serialize(direction, incomingChannelClosedData.mChannelId);
 }
@@ -367,8 +369,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Incomin
 //---------------------------------------------------------------------------------//
 //                                StateChangeData                                  //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, StateChangeData& stateChangeData)
+template <>
+Bits Serialize<StateChangeData>(SerializeDirection::Enum direction, BitStream& bitStream, StateChangeData& stateChangeData)
 {
   return bitStream.Serialize(direction, stateChangeData.mNewState);
 }
@@ -376,8 +378,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, StateCh
 //---------------------------------------------------------------------------------//
 //                                StatusChangeData                                 //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, StatusChangeData& statusChangeData)
+template <>
+Bits Serialize<StatusChangeData>(SerializeDirection::Enum direction, BitStream& bitStream, StatusChangeData& statusChangeData)
 {
   return bitStream.Serialize(direction, statusChangeData.mNewStatus);
 }
@@ -385,8 +387,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, StatusC
 //---------------------------------------------------------------------------------//
 //                                  ReceiptData                                    //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ReceiptData& receiptData)
+template <>
+Bits Serialize<ReceiptData>(SerializeDirection::Enum direction, BitStream& bitStream, ReceiptData& receiptData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)

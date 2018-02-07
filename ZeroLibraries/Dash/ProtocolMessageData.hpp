@@ -32,7 +32,8 @@ struct ConnectRequestData
 
 /// Serializes connect request data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestData& connectRequestData);
+template <>
+Bits Serialize<ConnectRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestData& connectRequestData);
 
 //---------------------------------------------------------------------------------//
 //                              ConnectResponseData                                //
@@ -55,7 +56,8 @@ struct ConnectResponseData
 
 /// Serializes connect response data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectResponseData& connectResponseData);
+template <>
+Bits Serialize<ConnectResponseData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectResponseData& connectResponseData);
 
 //---------------------------------------------------------------------------------//
 //                           PacketSequenceHistoryData                             //
@@ -66,7 +68,8 @@ typedef PacketSequenceHistory PacketSequenceHistoryData;
 
 /// Serializes packet sequence history protocol message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, PacketSequenceHistoryData& connectResponseData);
+template <>
+Bits Serialize<PacketSequenceHistoryData>(SerializeDirection::Enum direction, BitStream& bitStream, PacketSequenceHistoryData& connectResponseData);
 
 //---------------------------------------------------------------------------------//
 //                               ChannelOpenedData                                 //
@@ -81,7 +84,8 @@ struct ChannelOpenedData
 
 /// Serializes channel opened data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ChannelOpenedData& channelOpenedData);
+template <>
+Bits Serialize<ChannelOpenedData>(SerializeDirection::Enum direction, BitStream& bitStream, ChannelOpenedData& channelOpenedData);
 
 //---------------------------------------------------------------------------------//
 //                              DisconnectNoticeData                               //
@@ -98,7 +102,8 @@ struct DisconnectNoticeData
 
 /// Serializes disconnect notice data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticeData& disconnectNoticeData);
+template <>
+Bits Serialize<DisconnectNoticeData>(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticeData& disconnectNoticeData);
 
 //
 // Peer Event Message Types
@@ -117,7 +122,8 @@ struct IncomingLinkCreatedData
 
 /// Serializes peer incoming link created event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingLinkCreatedData& incomingLinkCreatedData);
+template <>
+Bits Serialize<IncomingLinkCreatedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingLinkCreatedData& incomingLinkCreatedData);
 
 //---------------------------------------------------------------------------------//
 //                               FatalErrorData                                    //
@@ -132,7 +138,8 @@ struct FatalErrorData
 
 /// Serializes peer fatal error event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, FatalErrorData& fatalErrorData);
+template <>
+Bits Serialize<FatalErrorData>(SerializeDirection::Enum direction, BitStream& bitStream, FatalErrorData& fatalErrorData);
 
 //
 // Link Event Message Types
@@ -153,7 +160,8 @@ struct ConnectRequestedData
 
 /// Serializes link connect requested event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestedData& connectRequestedData);
+template <>
+Bits Serialize<ConnectRequestedData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestedData& connectRequestedData);
 
 //---------------------------------------------------------------------------------//
 //                              ConnectRespondedData                               //
@@ -170,7 +178,8 @@ struct ConnectRespondedData
 
 /// Serializes link connect responded event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRespondedData& connectRespondedData);
+template <>
+Bits Serialize<ConnectRespondedData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRespondedData& connectRespondedData);
 
 //---------------------------------------------------------------------------------//
 //                              DisconnectNoticedData                              //
@@ -187,7 +196,8 @@ struct DisconnectNoticedData
 
 /// Serializes link disconnect noticed event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticedData& disconnectNoticedData);
+template <>
+Bits Serialize<DisconnectNoticedData>(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticedData& disconnectNoticedData);
 
 //---------------------------------------------------------------------------------//
 //                           IncomingChannelOpenedData                             //
@@ -204,7 +214,8 @@ struct IncomingChannelOpenedData
 
 /// Serializes link incoming channel opened event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelOpenedData& incomingChannelOpenedData);
+template <>
+Bits Serialize<IncomingChannelOpenedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelOpenedData& incomingChannelOpenedData);
 
 //---------------------------------------------------------------------------------//
 //                           IncomingChannelClosedData                             //
@@ -219,7 +230,8 @@ struct IncomingChannelClosedData
 
 /// Serializes link incoming channel closed event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelClosedData& incomingChannelClosedData);
+template <>
+Bits Serialize<IncomingChannelClosedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelClosedData& incomingChannelClosedData);
 
 //---------------------------------------------------------------------------------//
 //                                StateChangeData                                  //
@@ -234,7 +246,8 @@ struct StateChangeData
 
 /// Serializes link state change event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, StateChangeData& stateChangeData);
+template <>
+Bits Serialize<StateChangeData>(SerializeDirection::Enum direction, BitStream& bitStream, StateChangeData& stateChangeData);
 
 //---------------------------------------------------------------------------------//
 //                                StatusChangeData                                 //
@@ -249,7 +262,8 @@ struct StatusChangeData
 
 /// Serializes link status change event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, StatusChangeData& statusChangeData);
+template <>
+Bits Serialize<StatusChangeData>(SerializeDirection::Enum direction, BitStream& bitStream, StatusChangeData& statusChangeData);
 
 //---------------------------------------------------------------------------------//
 //                                  ReceiptData                                    //
@@ -266,6 +280,7 @@ struct ReceiptData
 
 /// Serializes receipt event message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ReceiptData& receiptData);
+template <>
+Bits Serialize<ReceiptData>(SerializeDirection::Enum direction, BitStream& bitStream, ReceiptData& receiptData);
 
 } // namespace Zero

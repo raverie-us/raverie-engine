@@ -233,9 +233,9 @@ struct is_enum : public integral_constant<bool, (!is_void< T >::value
 /// Use SFINAE to detect if we have a member
 /// This must be a macro because the name of the member cannot be provided as a template argument
 #define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                        \
-  template <typename U> static ::Zero::true_type  check_##TypeTraitName(TypeOf(&U::MemberName)*);   \
-  template <typename U> static ::Zero::false_type check_##TypeTraitName(...);                       \
-  template <typename U> struct TypeTraitName : public TypeOf(check_##TypeTraitName<U>(nullptr)) {};
+  template <typename ZilchT> static ::Zero::true_type  check_##TypeTraitName(TypeOf(&ZilchT::MemberName)*);   \
+  template <typename ZilchT> static ::Zero::false_type check_##TypeTraitName(...);                       \
+  template <typename ZilchT> struct TypeTraitName : public TypeOf(check_##TypeTraitName<ZilchT>(nullptr)) {};
 
 /// Provides a constant defined as true if T is an enum or integral type, else defined as false
 template<typename T>

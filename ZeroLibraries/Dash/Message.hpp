@@ -132,6 +132,7 @@ protected:
   friend class InMessageChannel;
   friend class LinkPlugin;
 
+  template <typename Message>
   friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Message& message);
 };
 
@@ -150,7 +151,8 @@ struct MoveWithoutDestructionOperator<Message>
 
 /// Serializes a message
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Message& message);
+template <>
+Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream, Message& message);
 
 //---------------------------------------------------------------------------------//
 //                                 OutMessage                                      //

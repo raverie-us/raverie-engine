@@ -90,11 +90,13 @@ public:
   String mHostPortString;
 
   // Friends
-  friend ZeroShared Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress);
+  template <typename IpAddress>
+  friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress);
 };
 
 /// Serializes an IP address
 /// Returns the number of bits serialized if successful, else 0
-ZeroShared Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress);
+template <>
+ZeroShared Bits Serialize<IpAddress>(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress);
 
 } // namespace Zero

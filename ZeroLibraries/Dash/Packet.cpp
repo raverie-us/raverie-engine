@@ -232,7 +232,8 @@ Bits OutPacket::GetTotalBits() const
   return result;
 }
 
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket)
+template <>
+Bits Serialize<OutPacket>(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket)
 {
   // Write operation only
   Assert(direction == SerializeDirection::Write);
@@ -334,7 +335,8 @@ Bits InPacket::GetTotalBits() const
   return result;
 }
 
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket)
+template <>
+Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket)
 {
   // Read operation only
   Assert(direction == SerializeDirection::Read);

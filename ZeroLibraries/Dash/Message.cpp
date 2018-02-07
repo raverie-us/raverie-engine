@@ -287,7 +287,8 @@ bool Message::IsFinalFragment() const
   return mIsFinalFragment;
 }
 
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Message& message)
+template <>
+Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream, Message& message)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)

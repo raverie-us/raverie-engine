@@ -34,7 +34,7 @@ public:
     Link<Node> link;
   };
 
-  //template <typename SubSorter>
+  template <typename SubSorterType = SubSorter>
   struct NodeSortPolicy
   {
     bool operator()(const Node& rhs, const Node& lhs)
@@ -42,10 +42,10 @@ public:
       return mSubSorter(rhs.mPair.first, lhs.mPair.first);
     }
 
-    SubSorter mSubSorter;
+    SubSorterType mSubSorter;
   };
 
-  typedef NodeSortPolicy            Sorter;
+  typedef NodeSortPolicy<SubSorter> Sorter;
   typedef HashMap<KeyType, Node*>   MapType;
   typedef InList<Node>              ListType;
   typedef typename ListType::range  ListTypeRange;

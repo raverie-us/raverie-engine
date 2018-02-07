@@ -47,7 +47,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!--Import the property sheets-->
-  <ImportGroup Condition="'$(Platform)'=='Win32' OR '$(Platform)'=='x64' OR '$(Platform)'=='Emscripten'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(ZILCH_SOURCE)\Project\Zilch.$(Configuration).props" Condition="exists('$(ZILCH_SOURCE)\Project\Zilch.$(Configuration).props')" />
   </ImportGroup>
   <!--Set as a static library with no character set for all configurations of win32 and x64-->

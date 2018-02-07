@@ -1051,9 +1051,9 @@ namespace Zilch
     /* because of how typedefs are inherited (and they only apply to members below */                                                                 \
     /* The only issue is the base case (no base class), which we use SFINAE */                                                                        \
     /* to detect if we even inherited a ZilchSelf typedef */                                                                                          \
-    template <typename U>                                                                                                                             \
-    static typename U::ZilchSelf* SfinaeBase(typename U::ZilchSelf*);                                                                                 \
-    template <typename U>                                                                                                                             \
+    template <typename ZilchT>                                                                                                                        \
+    static typename ZilchT::ZilchSelf* SfinaeBase(typename ZilchT::ZilchSelf*);                                                                       \
+    template <typename ZilchT>                                                                                                                        \
     static ZZ::NoType SfinaeBase(...);                                                                                                                \
     typedef ClassType ZilchTempSelf;                                                                                                                  \
     typedef typename ZE::remove_pointer<ZilchTypeOf(SfinaeBase<ZilchTempSelf>((ZilchTempSelf*)nullptr))>::type ZilchTempBase;                         \
