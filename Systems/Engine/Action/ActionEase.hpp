@@ -180,6 +180,210 @@ struct Sin
   }
 };
 
+struct Elastic
+{
+  // Originally written by Robert Penner
+  // http://robertpenner.com/easing/
+  // Adapted by Doug Zwick
+
+  static inline float In(float t)
+  {
+    if (t <= 0.0f)
+      return 0.0f;
+    if (t >= 1.0f)
+      return 1.0f;
+
+    float exponent = 10.0f;
+    float period = 0.3f;
+    
+    float valueAtX = Math::Pow(2.0f, exponent * (t - 1.0f)) * Math::Cos(Math::cTwoPi * (t - 1.0f) / period);
+    float verticalShift = -0.00048828125f;       // for default exponent and period
+    float verticalScale = 1.0f - verticalShift;  // 1.00048828125 for default exponent and period
+    return (valueAtX - verticalShift) / verticalScale;
+  }
+
+  static inline float Out(float t)
+  {
+    if (t <= 0.0f)
+      return 0.0f;
+    if (t >= 1.0f)
+      return 1.0f;
+
+    float exponent = 10.0f;
+    float period = 0.3f;
+    float verticalScale = 1.00048828125f; // for default exponent and period
+    return (1.0f - Math::Pow(2.0f, -exponent * t) * Math::Cos(Math::cTwoPi * t / period)) / verticalScale;
+  }
+
+  static inline float InOut(float t)
+  {
+    if (t < 0.5f)
+    {
+      t *= 2.0f;
+      return In(t) / 2.0f;
+    }
+    else
+    {
+      t = 2.0f * t - 1.0f;
+      return Out(t) / 2.0f + 0.5f;
+    }
+  }
+};
+
+struct Bounce
+{
+  // Originally written by Robert Penner
+  // http://robertpenner.com/easing/
+  // Adapted by Doug Zwick
+
+  static inline float In(float t)
+  {
+    if (t <= 0.0f)
+      return 0.0f;
+    if (t >= 1.0f)
+      return 1.0f;
+
+    return 1.0f - Out(1.0f - t);
+  }
+
+  static inline float Out(float t)
+  {
+    if (t <= 0.0f)
+      return 0.0f;
+    if (t >= 1.0f)
+      return 1.0f;
+
+    if (t < 1.0f / 2.75f)
+    {
+      return 7.5625f * t * t;
+    }
+    if (t < 2.0f / 2.75f)
+    {
+      t -= 1.5f / 2.75f;
+      return 7.5625f * t * t + 0.75f;
+    }
+    if (t < 2.5f / 2.75f)
+    {
+      t -= 2.25f / 2.75f;
+      return 7.5625f * t * t + 0.9375f;
+    }
+    else
+    {
+      t -= 2.625f / 2.75f;
+      return 7.5625f * t * t + 0.984375f;
+    }
+  }
+
+  static inline float InOut(float t)
+  {
+    if (t < 0.5f)
+    {
+      t *= 2.0f;
+      return In(t) / 2.0f;
+    }
+    else
+    {
+      t = 2.0f * t - 1.0f;
+      return Out(t) / 2.0f + 0.5f;
+    }
+  }
+};
+
+struct Back
+{
+  // Originally written by Robert Penner
+  // http://robertpenner.com/easing/
+  // Adapted by Doug Zwick
+
+  static inline float In(float t)
+  {
+    if (t <= 0.0f)
+      return 0.0f;
+    if (t >= 1.0f)
+      return 1.0f;
+
+    float scale = 1.70158;  // original value defined by Penner
+    return t * t * ((scale + 1.0f) * t - scale);
+  }
+
+  static inline float Out(float t)
+  {
+    if (t <= 0.0f)
+      return 0.0f;
+    if (t >= 1.0f)
+      return 1.0f;
+
+    float scale = 1.70158;  // original value defined by Penner
+    t -= 1.0f;
+    return t * t * ((scale + 1.0f) * t + scale) + 1.0f;
+  }
+
+  static inline float InOut(float t)
+  {
+    if (t < 0.5f)
+    {
+      t *= 2.0f;
+      return In(t) / 2.0f;
+    }
+    else
+    {
+      t = 2.0f * t - 1.0f;
+      return Out(t) / 2.0f + 0.5f;
+    }
+  }
+};
+
+struct Warp
+{
+  static inline float In(float t)
+  {
+    if (t <= 0.0f)
+      return 0.0f;
+    if (t >= 1.0f)
+      return 1.0f;
+
+    if (t > 1.0f - MinDifferenceFromAsymptote)
+      t = 1.0f - MinDifferenceFromAsymptote;
+
+    return 1.0f - Math::Sqrt(1.0f / Math::Cos(Math::cPi * t / 2.0f));
+  }
+
+  static inline float Out(float t)
+  {
+    if (t <= 0.0f)
+      return 0.0f;
+    if (t >= 1.0f)
+      return 1.0f;
+
+    if (t < MinDifferenceFromAsymptote)
+      t = MinDifferenceFromAsymptote;
+
+    return Math::Sqrt(1.0f / Math::Cos(Math::cPi * (1.0f - t) / 2.0f));
+  }
+
+  static inline float InOut(float t)
+  {
+    if (t < 0.5f)
+    {
+      if (t > 0.5f - MinDifferenceFromAsymptote)
+        t = 0.5f - MinDifferenceFromAsymptote;
+
+      t *= 2.0f;
+      return In(t) / 2.0f;
+    }
+    else
+    {
+      if (t < 0.5f + MinDifferenceFromAsymptote)
+        t = 0.5f + MinDifferenceFromAsymptote;
+
+      t = 2.0f * t - 1.0f;
+      return Out(t) / 2.0f + 0.5f;
+    }
+  }
+
+  static const float MinDifferenceFromAsymptote;
+};
+
 }
 
 }

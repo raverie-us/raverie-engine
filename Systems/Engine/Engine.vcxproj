@@ -51,6 +51,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Action\ActionEase.cpp" />
     <ClCompile Include="Action\MetaAction.cpp" />
     <ClCompile Include="AnimationGraphEvents.cpp" />
     <ClCompile Include="AnimationNode.cpp" />
