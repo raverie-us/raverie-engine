@@ -495,8 +495,8 @@ Rectangle UiWidget::GetLocalRectangle()
 //**************************************************************************************************
 void UiWidget::SetLocalRectangle(RectangleParam rectangle)
 {
-  SetLocalTopLeft(rectangle.GetTopLeft());
   SetSize(rectangle.GetSize());
+  SetLocalTopLeft(rectangle.GetTopLeft());
 }
 
 //**************************************************************************************************
@@ -508,8 +508,8 @@ Rectangle UiWidget::GetWorldRectangle()
 //**************************************************************************************************
 void UiWidget::SetWorldRectangle(RectangleParam rectangle)
 {
-  SetWorldTopLeft(rectangle.GetTopLeft());
   SetSize(rectangle.GetSize());
+  SetWorldTopLeft(rectangle.GetTopLeft());
 }
 
 //**************************************************************************************************
@@ -637,7 +637,7 @@ Vec2 UiWidget::GetWorldLocation(Location::Enum location)
 //**************************************************************************************************
 void UiWidget::SetWorldLocation(Location::Enum location, Vec2Param worldTranslation)
 {
-  Vec2 localTranslation = GetLocalLocation(location);
+  Vec2 localTranslation = worldTranslation;
   if (mParent)
     localTranslation = mParent->TransformPointInverse(worldTranslation);
   SetLocalLocation(location, localTranslation);
