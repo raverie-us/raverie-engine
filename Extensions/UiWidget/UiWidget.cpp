@@ -431,11 +431,14 @@ UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool inter
     if(hit)
       return hit;
   }
+
+  bool spaceInEditMode = GetSpace()->IsEditorMode();
+  bool editorLocked = spaceInEditMode && GetOwner()->GetLocked();
   
   // We were hit if we didn't hit a child but we were within our boundaries
   // Check to see if we only want interactive objects
   bool failedInteractive = (interactiveOnly && !GetInteractive());
-  if(within && !failedInteractive)
+  if(within && !failedInteractive && !editorLocked)
     return this;
   
   return nullptr;

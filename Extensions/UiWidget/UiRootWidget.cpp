@@ -658,8 +658,11 @@ void UiRootWidget::RenderWidgets(RenderTasksEvent* e, RenderTarget* color, Rende
                               MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform,
                               Array<CachedFloatingWidget>* floatingWidgets)
 {
-  // Don't render inactive widgets
-  if(!widget->GetActive())
+  // Don't render inactive, destroyed, or editor hidden widgets
+  Cog* widgetCog = widget->GetOwner();
+  bool spaceInEditMode = GetSpace()->IsEditorMode();
+  bool editorHidden = (spaceInEditMode && widgetCog->GetEditorViewportHidden());
+  if(!widget->GetActive() || widgetCog->GetMarkedForDestruction() || editorHidden)
     return;
 
   if(floatingWidgets && widget->GetOnTop())
@@ -673,7 +676,6 @@ void UiRootWidget::RenderWidgets(RenderTasksEvent* e, RenderTarget* color, Rende
   Vec4 localColor = hierarchyColor * widget->mLocalColor;
 
   // Set the color on graphicals
-  Cog* widgetCog = widget->GetOwner();
   if(Sprite* sprite = widgetCog->has(Sprite))
     sprite->mVertexColor = localColor;
   else if (SpriteText* spriteText = widgetCog->has(SpriteText))
