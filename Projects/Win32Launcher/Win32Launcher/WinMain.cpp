@@ -92,8 +92,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
   LPSTR     lpCmdLine,
   int       nCmdShow)
 {
-  WebRequestInitializer webRequestInitializer;
-
   int restart = 1;
   HMODULE module;
 

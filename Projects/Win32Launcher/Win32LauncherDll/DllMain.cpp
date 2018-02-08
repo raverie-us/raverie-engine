@@ -18,8 +18,6 @@ using namespace Zero;
 
 extern "C" __declspec(dllexport) int RunZeroLauncher(const char* dllPath)
 {
-  WebRequestInitializer webRequestInitializer;
-
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
   DebuggerListener debuggerOutput;

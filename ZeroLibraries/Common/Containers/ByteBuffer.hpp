@@ -107,6 +107,10 @@ public:
   ByteBufferBlock();
   ~ByteBufferBlock();
 
+  ByteBufferBlock(ByteBufferBlock&& rhs);
+  ByteBufferBlock(MoveReference<ByteBufferBlock> rhs);
+  ByteBufferBlock(const ByteBufferBlock& rhs);
+
   //Create buffer with the given size
   ByteBufferBlock(size_t size);
 
@@ -153,6 +157,15 @@ private:
   byte* mCurrent;
   bool mOwnsData;
   friend class ByteBuffer;
+};
+
+template<>
+struct ZeroShared MoveWithoutDestructionOperator<ByteBufferBlock>
+{
+  static inline void MoveWithoutDestruction(ByteBufferBlock* dest, ByteBufferBlock* source)
+  {
+    memcpy(dest, source, sizeof(*dest));
+  }
 };
 
 }

@@ -75,8 +75,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR     lpCmdLine,
                    int       nCmdShow)
 {
-  WebRequestInitializer webRequestInitializer;
-
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
   DebuggerListener debuggerOutput;

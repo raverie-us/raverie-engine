@@ -22,6 +22,22 @@ WString::WString(const wchar_t* str)
   mData.SetData((byte*)wstr, mSize * sizeof(wchar_t), true);
 }
 
+WString::WString(const wchar_t* str, size_t lengthInWChars) :
+  // +1 for the null terminator (unlike String, WString actually adds to the size for null)
+  mSize(lengthInWChars + 1)
+{
+  if (!str)
+  {
+    mSize = 0;
+    return;
+  }
+
+  wchar_t* wstr = new wchar_t[mSize];
+  memcpy(wstr, str, lengthInWChars * sizeof(wchar_t));
+  wstr[lengthInWChars] = 0;
+  mData.SetData((byte*)wstr, mSize * sizeof(wchar_t), true);
+}
+
 WString::WString(StringParam str)
   : mSize(0)
 {

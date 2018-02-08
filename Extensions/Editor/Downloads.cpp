@@ -117,7 +117,7 @@ void DownloadTaskJob::OnPartialWebResponse(WebResponseEvent* e)
 void DownloadTaskJob::OnWebResponse(WebResponseEvent* e)
 {
   // The download failed if we didn't get the OK response
-  if(e->ResponseCode != WebResponseCode::OK)
+  if(e->ResponseCode != Os::WebResponseCode::OK)
   {
     Failed();
     UpdateDownloadProgress();

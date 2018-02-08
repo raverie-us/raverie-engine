@@ -15,7 +15,7 @@ const uint cMaxErrorMessageSize = 1024;
 // Convert a windows error code to a human readable string. If the errorCode
 // is zero uses the last error.
 Zero::String ToErrorString(uint errorCode=0);
-void FillWindowsErrorStatus(Zero::Status& status);
+void FillWindowsErrorStatus(Zero::Status& status, const char* windowsFunctionName = nullptr);
 
 // Check success and send error on failure.
 uint CheckWindowsErrorCode(uint success, ::cstr format=0, ...);

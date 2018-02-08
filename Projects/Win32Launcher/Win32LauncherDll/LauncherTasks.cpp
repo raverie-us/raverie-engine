@@ -23,7 +23,7 @@ int GetVersionListingTaskJob::Execute()
   
 void GetVersionListingTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == WebResponseCode::OK)
+  if(event->ResponseCode == Os::WebResponseCode::OK)
   {
     mData = event->Data;
     mState = BackgroundTaskState::Completed;
@@ -68,7 +68,7 @@ int DownloadImageTaskJob::Execute()
 
 void DownloadImageTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == WebResponseCode::OK)
+  if(event->ResponseCode == Os::WebResponseCode::OK)
   {
     //just save the data
     Status status;
@@ -136,7 +136,7 @@ int GetDataTaskJob::Execute()
 
 void GetDataTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == WebResponseCode::OK)
+  if(event->ResponseCode == Os::WebResponseCode::OK)
   {
     //just save the data
     mData = event->Data;
@@ -166,7 +166,7 @@ int DownloadStandaloneTaskJob::Execute()
 
 void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == WebResponseCode::OK)
+  if(event->ResponseCode == Os::WebResponseCode::OK)
   {
     String data = event->Data;
 
@@ -192,7 +192,7 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
     // Currently this should only happen if the server code is wrong.
     archive.ReadBuffer(ArchiveReadFlags::All, buffer);
     archive.ExportToDirectory(ArchiveExportMode::Overwrite, mInstallLocation);
-    mRequest.ClearData();
+    mRequest.Clear();
 
     mState = BackgroundTaskState::Completed;
   }
@@ -315,7 +315,7 @@ int GetTemplateListingTaskJob::Execute()
 
 void GetTemplateListingTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == WebResponseCode::OK)
+  if(event->ResponseCode == Os::WebResponseCode::OK)
   {
     mData = event->Data;
     mState = BackgroundTaskState::Completed;
@@ -360,7 +360,7 @@ int DownloadTemplateTaskJob::Execute()
 
 void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode != WebResponseCode::OK)
+  if(event->ResponseCode != Os::WebResponseCode::OK)
   {
     DoNotifyWarning("Failed Download", "Failed to download newest version");
     Failed();
@@ -425,7 +425,7 @@ CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(Projec
   if(mCachedProject != nullptr)
     return mCachedProject;
 
-  if(mRequest.mResponseCode != WebResponseCode::OK)
+  if(mRequest.mResponseCode != Os::WebResponseCode::OK)
   {
     DoNotifyWarning("Failed Download", "Failed to download newest version");
     Failed();
@@ -475,7 +475,7 @@ void CheckForLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
 {
   // Check if there's no new installer available, either from a failed request or getting no data back
   String data = event->Data;
-  if(event->ResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
+  if(event->ResponseCode != Os::WebResponseCode::OK || data.SizeInBytes() == 0)
   {
     mIsNewInstallerAvailable = false;
     return;
@@ -501,7 +501,7 @@ void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
 {
   // Check if there's no new installer available, either from a failed request or getting no data back
   String data = event->Data;
-  if(event->ResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
+  if(event->ResponseCode != Os::WebResponseCode::OK || data.SizeInBytes() == 0)
   {
     mIsNewInstallerAvailable = false;
     return;

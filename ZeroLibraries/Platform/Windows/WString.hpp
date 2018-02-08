@@ -14,6 +14,7 @@ class WString
 {
 public:
   explicit WString(const wchar_t* str);
+  explicit WString(const wchar_t* str, size_t lengthInWChars);
   explicit WString(StringParam str);
   WString();
   WString(const WString& rhs);

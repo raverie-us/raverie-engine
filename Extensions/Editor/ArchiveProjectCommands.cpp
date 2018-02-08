@@ -36,7 +36,7 @@ void ArchiveProjectFile(Cog* projectCog, StringParam filename)
 void UploadToDevelopers(StringParam projectName, StringParam filename)
 {
   BlockingWebRequest request;
-  request.AddFile(filename, "userfile");
+  request.AddFile("userfile", filename);
   request.AddField("project_name", projectName);
   request.mUrl = "https://uploadproject.zeroengine.io";
   String response = request.Run();

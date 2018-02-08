@@ -46,6 +46,83 @@ ZeroShared bool IsDebuggerAttached();
 // Debug break (only if a debugger is attached)
 ZeroShared void DebugBreak();
 
+namespace WebResponseCode
+{
+  enum Enum
+  {
+    Error                         = -1,
+    NoServerResponse              = 0,
+
+    // HTTP Log Codes:
+    // Informational:
+    Continue                      = 100,
+    SwitchingProtocols            = 101,
+    // Success:
+    OK                            = 200,
+    Created                       = 201,
+    Accepted                      = 202,
+    NonauthoritativeInformation   = 203,
+    NoContent                     = 204,
+    ResetContent                  = 205,
+    PartialContent                = 206,
+    // Redirection:
+    MovedPermanently              = 301,
+    ObjectMovedTemporarily        = 302,
+    SeeOther                      = 303,
+    NotModified                   = 304,
+    TemporaryRedirect             = 307,
+    // Client Error:
+    BadRequest                    = 400,
+    AccessDenied                  = 401,
+    Forbidden                     = 403,
+    NotFound                      = 404,
+    HTTPVerbNotAllowed            = 405,
+    ClientBrowserRejectsMIME      = 406,
+    ProxyAuthenticationRequired   = 407,
+    PreconditionFailed            = 412,
+    RequestEntityTooLarge         = 413,
+    RequestURITooLarge            = 414,
+    UnsupportedMediaType          = 415,
+    RequestedRangeNotSatisfiable  = 416,
+    ExecutionFailed               = 417,
+    LockedError                   = 423,
+    // Server Error
+    InternalServerError           = 500,
+    UnimplementedHeaderValueUsed  = 501,
+    GatewayProxyReceivedInvalid   = 502,
+    ServiceUnavailable            = 503,
+    GatewayTimedOut               = 504,
+    HTTPVersionNotSupported       = 505
+  };
+  typedef int Type;
+}
+
+typedef void(*WebRequestHeadersFn)(const Array<String>& headers, WebResponseCode::Enum code, void* userData);
+typedef void(*WebRequestDataFn)(const byte* data, size_t size, void* userData);
+
+class WebPostData
+{
+public:
+  // The name of the input field in the submitted form
+  String mName;
+
+  // Leave this empty if this is not a file
+  String mFileName;
+
+  // File contents or a value
+  ByteBufferBlock mValue;
+};
+
+// Perform an HTTP request (assumed GET, unless POST data is provided)
+ZeroShared void WebRequest(
+  Status& status,
+  StringParam url,
+  const Array<WebPostData>& postData,
+  const Array<String>& additionalRequestHeaders,
+  WebRequestHeadersFn onHeadersReceived,
+  WebRequestDataFn onDataReceived,
+  void* userData);
+
 // Verb used to open file
 DeclareEnum4(Verb, Default, Open, Edit, Run);
 

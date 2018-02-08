@@ -211,6 +211,47 @@ ByteBufferBlock::ByteBufferBlock()
   mOwnsData = false;
 }
 
+ByteBufferBlock::ByteBufferBlock(ByteBufferBlock&& rhs) :
+  mData(rhs.mData),
+  mSize(rhs.mSize),
+  mCurrent(rhs.mCurrent),
+  mOwnsData(rhs.mOwnsData)
+{
+  rhs.mData = nullptr;
+  rhs.mSize = 0;
+  rhs.mCurrent = nullptr;
+  rhs.mOwnsData = false;
+}
+
+ByteBufferBlock::ByteBufferBlock(MoveReference<ByteBufferBlock> rhs) :
+  mData(rhs->mData),
+  mSize(rhs->mSize),
+  mCurrent(rhs->mCurrent),
+  mOwnsData(rhs->mOwnsData)
+{
+  rhs->mData = nullptr;
+  rhs->mSize = 0;
+  rhs->mCurrent = nullptr;
+  rhs->mOwnsData = false;
+}
+
+ByteBufferBlock::ByteBufferBlock(const ByteBufferBlock& rhs) :
+  mSize(rhs.mSize),
+  mOwnsData(rhs.mOwnsData)
+{
+  if (mOwnsData)
+  {
+    mData = (byte*)zAllocate(rhs.mSize);
+    memcpy(mData, rhs.mData, mSize);
+    mCurrent = mData + (rhs.mCurrent - rhs.mData);
+  }
+  else
+  {
+    mData = rhs.mData;
+    mCurrent = rhs.mCurrent;
+  }
+}
+
 ByteBufferBlock::ByteBufferBlock(size_t size)
 {
   mData = (byte*)zAllocate(size);

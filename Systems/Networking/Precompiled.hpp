@@ -10,5 +10,4 @@
 #pragma once
 
 // External Library Dependencies
-#include "curl/curl.h"
 #include "NetworkingStandard.hpp"

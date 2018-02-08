@@ -55,10 +55,13 @@ Zero::String ToErrorString(uint errorCode)
       "Make sure that all executables and dlls have NOT been renamed");
   }
 
+  if (numberOfChars == 0)
+    string = Zero::String::Format("Error occurred with code: %d (hex %x)", errorCode, errorCode);
+
   return string;
 }
 
-void FillWindowsErrorStatus(Zero::Status& status)
+void FillWindowsErrorStatus(Zero::Status& status, const char* windowsFunctionName)
 {
   // If we already failed, don't bother adding more
   if (status.Failed())
@@ -66,7 +69,12 @@ void FillWindowsErrorStatus(Zero::Status& status)
 
   DWORD errorCode = GetLastError();
   if (errorCode != 0)
-    status.SetFailed(ToErrorString(errorCode), errorCode);
+  {
+    if (windowsFunctionName)
+      status.SetFailed(BuildString(ToErrorString(errorCode), " (at ", windowsFunctionName, ")"), errorCode);
+    else
+      status.SetFailed(ToErrorString(errorCode), errorCode);
+  }
 }
 
 uint CheckWindowsErrorCode(uint success, cstr format, ...)

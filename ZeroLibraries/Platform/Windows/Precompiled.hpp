@@ -31,7 +31,16 @@
 #include <stdio.h>
 #include <shlobj.h>
 #include <io.h>
+#include <winhttp.h>
 #include <VersionHelpers.h>
+#include <Lmcons.h>
+#include <shellapi.h>
+#include <iptypes.h>
+#include <iphlpapi.h>
+#pragma comment(lib, "IPHLPAPI.lib")
+#pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "Advapi32.lib")
+#pragma comment(lib, "Winhttp.lib")
 
 #include "StackWalker.hpp"
 #include "ThreadIo.hpp"

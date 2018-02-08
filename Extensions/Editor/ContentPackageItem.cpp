@@ -93,7 +93,7 @@ void ContentPackage::LoadLocalTexture(StringParam location)
 //******************************************************************************
 void ContentPackage::OnWebResponse(WebResponseEvent* e)
 {
-  if(e->ResponseCode != WebResponseCode::OK)
+  if(e->ResponseCode != Os::WebResponseCode::OK)
     return;
 
   String location = FilePath::Combine(GetTemporaryDirectory(), "StreamedImage.png");

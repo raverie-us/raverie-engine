@@ -18,70 +18,6 @@ namespace Events
   DeclareEvent(WebResponse);
 }
 
-namespace WebResponseCode
-{
-  enum Enum
-  {
-    NoServerResponse              = 0,
-
-    // HTTP Log Codes:
-    // Informational:
-    Continue                      = 100,
-    SwitchingProtocols            = 101,
-    // Success:
-    OK                            = 200,
-    Created                       = 201,
-    Accepted                      = 202,
-    NonauthoritativeInformation   = 203,
-    NoContent                     = 204,
-    ResetContent                  = 205,
-    PartialContent                = 206,
-    // Redirection:
-    MovedPermanently              = 301,
-    ObjectMovedTemporarily        = 302,
-    SeeOther                      = 303,
-    NotModified                   = 304,
-    TemporaryRedirect             = 307,
-    // Client Error:
-    BadRequest                    = 400,
-    AccessDenied                  = 401,
-    Forbidden                     = 403,
-    NotFound                      = 404,
-    HTTPVerbNotAllowed            = 405,
-    ClientBrowserRejectsMIME      = 406,
-    ProxyAuthenticationRequired   = 407,
-    PreconditionFailed            = 412,
-    RequestEntityTooLarge         = 413,
-    RequestURITooLarge            = 414,
-    UnsupportedMediaType          = 415,
-    RequestedRangeNotSatisfiable  = 416,
-    ExecutionFailed               = 417,
-    LockedError                   = 423,
-    // Server Error
-    InternalServerError           = 500,
-    UnimplementedHeaderValueUsed  = 501,
-    GatewayProxyReceivedInvalid   = 502,
-    ServiceUnavailable            = 503,
-    GatewayTimedOut               = 504,
-    HTTPVersionNotSupported       = 505
-    // cURL also returns FTP and SMTP codes
-    // Add if necessary
-  };
-  typedef int Type;
-}
-
-/// Curl is not safe to perform global initialization when any threads are active (not just any threads using curl).
-/// To ensure this we MUST globally initialize curl at the beginning of the application's lifetime. It's possible to
-/// use a statically initialized class which will unsure this happens once before main, but we also have to avoid
-/// performing this in a dll's static initializer otherwise we may have a loader lock deadlock happen.
-/// Hence this is the responsibility of each application to ensure this is called once in main.
-class WebRequestInitializer
-{
-public:
-  WebRequestInitializer();
-  ~WebRequestInitializer();
-};
-
 class WebResponseEvent;
 
 /// Lets us send out web requests generically.
@@ -103,39 +39,31 @@ public:
   /// Decodes a string from a Url using Percent-encoding.
   static String UrlParamDecode(StringParam string);
 
-  /// Add a file to be uploaded to a post request.
-  void AddFile(StringParam fileName, StringParam formFieldName);
-
-  /// Add a field to a post request.
-  void AddField(StringParam name, StringParam content);
-
-  /// Clear any attached post data (such as files).
-  void ClearPostData();
-
   /// Run the request on the given url and receive data back in the 'WebResponse' event.
-  /// This will clear any stored data from previous requests, and if mStoreData is set
+  /// This will clear any stored data from previous requests, and if StoreData is set
   /// it will return the entire response as a string (if not it will be empty).
   String Run();
 
   /// Cancels the web request.
   void Cancel();
 
-  // Clears any stored data
-  void ClearData();
+  /// Clears any stored data, post data (including files), headers, cancelled flag, etc.
+  void Clear();
+
+  /// Add a file to be uploaded to a post request.
+  void AddFile(StringParam formFieldName, StringParam fileName);
+
+  /// Add a field to a post request.
+  void AddField(StringParam name, StringParam content);
 
   /// The url we're going to fetch data from.
   String mUrl;
 
-  /// String based post data.
-  String mPostData;
-
-  WebResponseCode::Type mResponseCode;
-
   /// Additional headers.
   Array<String> mHeaders;
 
-  /// Array of response headers.
-  Array<String> mResponseHeaders;
+  /// All data to be added to the post section of a request.
+  Array<Os::WebPostData> mPosts;
 
   /// Whether or not we store the entire response or just send it out.
   /// By default, this is true for convenience.
@@ -145,27 +73,25 @@ public:
   /// used primarily for the version selector which needs to run before zero is loaded.
   bool mSendEvent;
 
-private:
+  /// Whether or not the request has been externally canceled.
+  Atomic<bool> mCanceled;
 
-  // Occurs when we receive data
-  static int OnDataReceived(char* data, size_t count, size_t elementSize, BlockingWebRequest* request);
+  /// The response code that was received from the server.
+  Os::WebResponseCode::Type mResponseCode;
 
-  static size_t OnHeaderReceived(char* data, size_t count, size_t elementSize, BlockingWebRequest* userdata);
+  /// Array of response headers.
+  Array<String> mResponseHeaders;
 
-private:
-
-  // Contains all data concatenated together from a request (only used when mStoreData is set)
+  /// Contains all data concatenated together from a response (only used when mStoreData is set)
   StringBuilder mStoredData;
 
-  // The interface we use to send the data (eg CURL)
-  void* mHandle;
+private:
 
-  // Other needed information for posting
-  void* mFormPostFile;
-  void* mLastPtr;
+  // Occurs when we receive http headers
+  static void OnHeadersReceived(const Array<String>& headers, Os::WebResponseCode::Enum code, void* userData);
 
-  // Whether or not the request has been externally canceled.
-  bool mCanceled;
+  // Occurs when we receive data
+  static void OnDataReceived(const byte* data, size_t size, void* userData);
 };
 
 class WebRequestJob;
@@ -199,7 +125,7 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   /// The response code we received from the server.
-  WebResponseCode::Type ResponseCode;
+  Os::WebResponseCode::Type ResponseCode;
 
   Array<String> ResponseHeaders;
 
@@ -226,11 +152,13 @@ public:
   void Clear();
 
   /// Add a header to the web request .
-  void SetHeader(StringParam name, StringParam data);
+  void AddHeader(StringParam name, StringParam data);
 
-  /// Add Post data to the request, this will also change
-  /// the request to a post request.
-  void SetPostData(StringParam data);
+  /// Add a file to be uploaded to a post request.
+  void AddFile(StringParam formFieldName, StringParam fileName);
+
+  /// Add a field to a post request.
+  void AddField(StringParam formFieldName, StringParam content);
 
   /// Run the web request (we should get data back in a WebResponse event).
   void Run();
@@ -245,6 +173,7 @@ private:
   /// The object we use to perform web requests.
   BlockingWebRequest mRequest;
 
+  size_t mDeprecatedPostDataIndex;
 };
 
 class WebRequestJob : public Job

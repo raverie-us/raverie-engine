@@ -227,13 +227,13 @@ int BugReportJob::Execute()
     projectArchive.WriteZipFile(mFileName);
 
     ++fileCount;
-    request.AddFile(mFileName, BuildString("File", ToString(fileCount)));
+    request.AddFile(BuildString("File", ToString(fileCount)), mFileName);
   }
 
   if(!mIncludedFile.Empty())
   {
     ++fileCount;
-    request.AddFile(mIncludedFile, BuildString("File", ToString(fileCount)));
+    request.AddFile(BuildString("File", ToString(fileCount)), mIncludedFile);
   }
 
   if(mClipboardImage.Data != NULL)
@@ -244,7 +244,7 @@ int BugReportJob::Execute()
     if(status.Succeeded())
     {
       ++fileCount;
-      request.AddFile(fileName, BuildString("File", ToString(fileCount)));
+      request.AddFile(BuildString("File", ToString(fileCount)), fileName);
     }
   }
 
@@ -256,7 +256,7 @@ int BugReportJob::Execute()
     if(status.Succeeded())
     {
       ++fileCount;
-      request.AddFile(fileName, BuildString("File", ToString(fileCount)));
+      request.AddFile(BuildString("File", ToString(fileCount)), fileName);
     }
   }
 
