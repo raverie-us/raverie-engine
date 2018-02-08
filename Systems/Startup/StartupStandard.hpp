@@ -14,9 +14,9 @@
 #include "Widget/WidgetStandard.hpp"
 #include "UiWidget/UiWidgetStandard.hpp"
 #include "Editor/EditorStandard.hpp"
-//#include "Pathfinding/PathfindingStandard.hpp"
 #include "Gameplay/GameplayStandard.hpp"
 #include "WindowsShell/WindowsShellSystemStandard.hpp"
 #include "ZilchScript/ZilchScriptStandard.hpp"
+#include "Platform/PlatformStandard.hpp"
 
 #include "Startup.hpp"

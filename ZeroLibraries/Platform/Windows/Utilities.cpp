@@ -55,6 +55,11 @@ bool IsDebuggerAttached()
   return IsDebuggerPresent() == TRUE;
 }
 
+ZeroShared void DebuggerOutput(const char* message)
+{
+  OutputDebugStringW(Widen(message).c_str());
+}
+
 u64 GetMacAddress()
 {
   static u64 macAddress = 0;
@@ -88,6 +93,120 @@ void DebugBreak()
   {
     // Trigger a break point!
     ZERO_DEBUG_BREAK;
+  }
+}
+
+void EnableMemoryLeakChecking(int breakOnAllocation)
+{
+  //Set the leak checking flag
+  int tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+  tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
+  _CrtSetDbgFlag(tmpDbgFlag);
+
+  //If a valid break alloc provided set the breakAlloc
+  if (breakOnAllocation != -1)
+    _CrtSetBreakAlloc(breakOnAllocation);
+}
+
+DeclareEnum4(ReturnCode, Continue, DebugBreak, Terminate, Ignore);
+
+bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
+{
+  // Stores the resulting quote removed message from below
+  String message;
+  String expression = errorData.Expression;
+  expression = expression.Replace("\"", "'");
+
+  // Check if no message was provided
+  if (errorData.Message != nullptr)
+  {
+    message = errorData.Message;
+    message = message.Replace("\"", "'");
+  }
+  else
+  {
+    message = "No message";
+  }
+
+  ZPrint("%s\n", message.c_str());
+
+  // Output the command line
+  String commandLine = String::Format("ErrorDialog.exe \"%s\" \"%s\" \"%s:%d\" %s",
+    message.c_str(), expression.c_str(), errorData.File, errorData.Line, "Default");
+
+  // Create a structure to facilitating starting of a process
+  STARTUPINFO startUpInfo;
+  memset(&startUpInfo, 0, sizeof(startUpInfo));
+
+  // Create another structure to store process information
+  PROCESS_INFORMATION processInfo;
+  memset(&processInfo, 0, sizeof(processInfo));
+
+  // Start the child process.
+  BOOL result = CreateProcess
+  (
+    NULL,                         // No module name (use command line)
+    (LPTSTR)commandLine.c_str(),  // Command line
+    NULL,                         // Process handle not inheritable
+    NULL,                         // Thread handle not inheritable
+    FALSE,                        // Set handle inheritance to FALSE
+    CREATE_NO_WINDOW,             // Creation flags
+    NULL,                         // Use parent's environment block
+    NULL,                         // Use parent's starting directory
+    &startUpInfo,                 // Pointer to STARTUPINFO structure
+    &processInfo
+  );
+
+  // If we failed to start the process...
+  if (!result)
+  {
+    Console::Print(Filter::ErrorFilter, message.c_str());
+
+    // Show a message box instead
+    message = BuildString(message, "\nWould you like to continue?");
+    int result = MessageBoxA(NULL, message.c_str(), "Error", MB_YESNO | MB_ICONEXCLAMATION);
+
+    // Trigger a break point
+    return result == IDNO;
+  }
+
+  // Now wait forever for the process to finish
+  WaitForSingleObject(processInfo.hProcess, INFINITE);
+
+  // Get the exit code of the process since it should have finished by now
+  DWORD exitCode = 0;
+  BOOL success = GetExitCodeProcess(processInfo.hProcess, &exitCode);
+
+  // Close unused thread handle
+  CloseHandle(processInfo.hThread);
+
+  // If we somehow failed to get the exit code, trigger a break point
+  if (!success)
+    return true;
+
+  // Based on the exit code...
+  switch (exitCode)
+  {
+  case ReturnCode::Continue:
+    // No debug break, just continue
+    return false;
+
+  case ReturnCode::DebugBreak:
+    // Returning true will cause a break point
+    return true;
+
+  case ReturnCode::Terminate:
+    // Immediately kill the application
+    TerminateProcess(GetCurrentProcess(), 0);
+    return false;
+
+  case ReturnCode::Ignore:
+    errorData.IgnoreFutureAssert = true;
+    return false;
+
+  default:
+    // Force a break point, we have no idea what we got back
+    return true;
   }
 }
 

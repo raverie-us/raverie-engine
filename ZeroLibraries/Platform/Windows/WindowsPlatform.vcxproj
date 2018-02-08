@@ -43,7 +43,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CommandLineSupport.cpp" />
-    <ClCompile Include="ConsoleListeners.cpp" />
     <ClCompile Include="CrashHandler.cpp" />
     <ClCompile Include="DebugClassMap.cpp" />
     <ClCompile Include="DebugSymbolInformation.cpp" />

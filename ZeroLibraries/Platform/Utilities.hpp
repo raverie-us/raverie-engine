@@ -8,9 +8,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "String/StringRange.hpp"
-#include "Utility/EnumDeclaration.hpp"
-#include "Utility/Status.hpp"
 
 namespace Zero
 {
@@ -43,8 +40,17 @@ ZeroShared u64 GetMacAddress();
 // Check if a debugger is attached
 ZeroShared bool IsDebuggerAttached();
 
+// Output a message to any attached debuggers
+ZeroShared void DebuggerOutput(const char* message);
+
 // Debug break (only if a debugger is attached)
 ZeroShared void DebugBreak();
+
+// Attempts to enable memory leak checking (break on 
+ZeroShared void EnableMemoryLeakChecking(int breakOnAllocation = -1);
+
+// When a diagnostic error occurs, this is the default response
+ZeroShared bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
 
 namespace WebResponseCode
 {

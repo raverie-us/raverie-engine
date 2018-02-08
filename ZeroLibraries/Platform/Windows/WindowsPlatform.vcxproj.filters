@@ -40,7 +40,6 @@
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="WString.cpp" />
     <ClCompile Include="CommandLineSupport.cpp" />
-    <ClCompile Include="ConsoleListeners.cpp" />
     <ClCompile Include="Peripherals.cpp" />
   </ItemGroup>
   <ItemGroup>

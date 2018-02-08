@@ -31,7 +31,7 @@ extern "C" __declspec(dllexport) int RunZeroLauncher(const char* dllPath)
   Zero::Console::Add(&fileListener);
 
   //Used custom dialog box
-  ErrorSignaler::SetErrorHandler(WindowsErrorProcessHandler);
+  ErrorSignaler::SetErrorHandler(ErrorProcessHandler);
 
   //Enable the crash handler
   CrashHandler::Enable();

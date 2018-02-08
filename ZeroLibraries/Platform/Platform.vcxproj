@@ -43,7 +43,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommandLineSupport.hpp" />
-    <ClInclude Include="ConsoleListeners.hpp" />
     <ClInclude Include="CrashHandler.hpp" />
     <ClInclude Include="Debug.hpp" />
     <ClInclude Include="DebugSymbolInformation.hpp" />

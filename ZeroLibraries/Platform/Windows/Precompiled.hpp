@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <shlobj.h>
 #include <io.h>
+#include <crtdbg.h>
 #include <winhttp.h>
 #include <VersionHelpers.h>
 #include <Lmcons.h>
@@ -47,3 +48,7 @@
 #include "ThreadIo.hpp"
 
 #include "WString.hpp"
+
+#ifdef RunVld
+#include <vld.h>
+#endif

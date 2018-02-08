@@ -5,13 +5,6 @@
 
 #include "Zilch.hpp"
 
-// Redirection header based on the platform
-#ifdef _MSC_VER
-  #include "DebuggingWindows.inl"
-#else
-  #include "DebuggingGeneric.inl"
-#endif
-
 namespace Zilch
 {
   //***************************************************************************

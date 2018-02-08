@@ -19,6 +19,6 @@ bool ShellIsClipboardImageAvailable(OsHandle windowHandle);
 
 bool ShellGetWindowImage(OsHandle windowHandle, Image* imageBuffer);
 bool ShellGetDesktopImage(Image* image);
-bool WindowsErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
+bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData);
 
 }//namespace Zero

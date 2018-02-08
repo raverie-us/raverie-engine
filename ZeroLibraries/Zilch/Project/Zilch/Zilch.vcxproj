@@ -198,8 +198,6 @@
   <ItemGroup>
     <None Include="DataDrivenLexer.inl" />
     <None Include="VirtualTableBinding.inl" />
-    <None Include="DebuggingGeneric.inl" />
-    <None Include="DebuggingWindows.inl" />
     <None Include="ConstructorBinding.inl" />
     <None Include="ErrorDatabaseEnum.inl" />
     <None Include="ErrorDatabaseSetup.inl" />

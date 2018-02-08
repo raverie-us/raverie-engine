@@ -1193,7 +1193,7 @@ WindowsShellSystem::~WindowsShellSystem()
 
 void WindowsShellSystem::Initialize(SystemInitializer& initializer)
 {
-  ErrorSignaler::SetErrorHandler(WindowsErrorProcessHandler);
+  ErrorSignaler::SetErrorHandler(ErrorProcessHandler);
 
   String displayName = Os::GetVersionString();
   ZPrint("Os: %s\n", displayName.c_str());

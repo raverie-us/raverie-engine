@@ -10,4 +10,3 @@
 #pragma once
 
 #include "Startup/StartupStandard.hpp"
-#include "Platform/Windows/Windows.hpp"

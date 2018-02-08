@@ -1,60 +1,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
 /// \file WinMain.cpp
-/// Windows Os Entry Point and Initialization
+/// Entry Point and Initialization
 ///
 /// Authors: Chris Peters
 /// Copyright 2010-2012, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "WindowsShell/WindowsSystem.hpp"
-#include "WindowsShell/WinUtility.hpp"
-#include "Platform/CommandLineSupport.hpp"
-#include "Platform/Windows/WString.hpp"
-#include "../Win32Shared/Importer.hpp"
-
-#ifdef _MSC_VER
-#include <crtdbg.h>
-#endif
 #include "ZeroCrashCallbacks.hpp"
-
-#ifdef RunVld
-#include <vld.h>
-#endif
 
 namespace Zero
 {
-
-void EnableMemoryLeakChecking(int breakAlloc = -1)
-{
-#ifdef _MSC_VER
-  //Set the leak checking flag
-  int tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-  tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
-  _CrtSetDbgFlag(tmpDbgFlag);
-
-  //If a valid break alloc provided set the breakAlloc
-  if(breakAlloc!=-1) _CrtSetBreakAlloc(breakAlloc);
-#endif
-}
-
-bool ErrorMessageBox(Zero::ErrorSignaler::ErrorData& errorData)
-{
-  const size_t bufferSize = 4096;
-  wchar_t OutputBuffer[bufferSize];
-
-  //Print into buffer
-  ZeroSWPrintf(OutputBuffer, bufferSize, L"%s(%d) : %s\n", 
-    Widen(errorData.File).c_str(), errorData.Line, Widen(errorData.Message).c_str());
-
-  //Print the message
-  Console::Print(Filter::ErrorFilter, Narrow(OutputBuffer).c_str());
-
-  //Message box
-  MessageBoxW(NULL, OutputBuffer, L"Zero Error", 0);
-  return true;
-}
 
 //Application Startup Function
 bool Startup(Engine* engine, StringMap& parameters);
@@ -69,11 +26,7 @@ void DebugRunEngine(void* voidEngine)
 
 using namespace Zero;
 
-//Os Specific Main
-int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   LPSTR     lpCmdLine,
-                   int       nCmdShow)
+int main(int argc, char** argv)
 {
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
@@ -88,9 +41,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
   TimerBlock totalEngineTimer("Total engine run time:");
 
   //This assert will bring up a dialog box.
-  //ErrorSignaler::SetErrorHandler(ErrorMessageBox);
-  //Used custom dialog box
-  ErrorSignaler::SetErrorHandler(WindowsErrorProcessHandler);
+  ErrorSignaler::SetErrorHandler(ErrorProcessHandler);
 
   //Enable the crash handler
   CrashHandler::Enable();
