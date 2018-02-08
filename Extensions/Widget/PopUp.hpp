@@ -25,7 +25,6 @@ class FloatingComposite : public Composite
 {
 public:
   ZilchDeclareType(FloatingComposite, TypeCopyMode::ReferenceType);
-  typedef FloatingComposite ZilchSelf;
   FloatingComposite(Composite* parent, StringParam className = PopUpNormal);
 
   void UpdateTransform() override;

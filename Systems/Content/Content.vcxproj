@@ -136,6 +136,7 @@
     <ClInclude Include="ContentComposition.hpp" />
     <ClInclude Include="ContentUtility.hpp" />
     <ClInclude Include="BaseBuilders.hpp" />
+    <ClInclude Include="ResourceLoaderTemplates.hpp" />
     <ClInclude Include="RichAnimation.hpp" />
     <ClInclude Include="SpriteBuilder.hpp" />
     <ClInclude Include="SupportComponents.hpp" />

@@ -230,7 +230,7 @@ ComponentType* ComponentHierarchy<ComponentType>::GetLastDirectChild()
 template <typename ComponentType>
 ComponentType* ComponentHierarchy<ComponentType>::GetLastDeepestChild()
 {
-  if (UiWidget* lastChild = GetLastDirectChild())
+  if (ComponentType* lastChild = GetLastDirectChild())
     return lastChild->GetLastDeepestChild();
   else
     return (ComponentType*)this;

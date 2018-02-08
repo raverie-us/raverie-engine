@@ -34,3 +34,5 @@ public:
 };
 
 }// namespace Zero
+
+#include "AnimationNode.inl"

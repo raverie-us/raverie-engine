@@ -73,7 +73,7 @@ void ValidateNode(PhysicsNode* node)
   if(cog == parentNodeCog)
     return;
 
-  ZERO_DEBUG_BREAK;
+  ZeroDebugBreak();
   ErrorIf(true, "Not valid link");
 }
 

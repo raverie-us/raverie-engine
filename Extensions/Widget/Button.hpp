@@ -25,8 +25,6 @@ class ButtonBase : public Composite
 public:
   ZilchDeclareType(ButtonBase, TypeCopyMode::ReferenceType);
 
-  typedef ButtonBase ZilchSelf;
-
   ButtonBase(Composite* parent, StringParam styleClass);
   void SetToolTip(StringParam text) { mToolTipText = text; }
 

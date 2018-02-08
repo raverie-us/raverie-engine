@@ -258,7 +258,7 @@ public:
   type* Get##name##index()                                                                     \
   {                                                                                            \
     if (mRenderSettings.IsNull())                                                              \
-      return DoNotifyException("Error", "Attempting to call member on null object."), nullptr; \
+    { DoNotifyException("Error", "Attempting to call member on null object."); return nullptr; }\
     return mRenderSettings->Get##name##Mrt(index);                                             \
   }
 

@@ -40,7 +40,7 @@ Verify(): Runs the function and generates an error if the function returns non
 #ifdef _MSC_VER
   #define ZERO_DEBUG_BREAK __debugbreak()
 #else
-  #define ZERO_DEBUG_BREAK
+  #define ZERO_DEBUG_BREAK asm("int $3")
 #endif
 
 namespace Zero

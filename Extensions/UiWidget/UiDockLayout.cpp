@@ -91,7 +91,7 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   // Debug break if set
   if (mDebug)
   {
-    ZERO_DEBUG_BREAK;
+    ZeroDebugBreak();
     mDebug = false;
   }
 

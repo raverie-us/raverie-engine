@@ -52,3 +52,11 @@ public:
 #include "TimerBlock.hpp"
 #include "DirectoryWatcher.hpp"
 #include "ConsoleListeners.hpp"
+
+#ifdef COMPILER_MICROSOFT
+#define ZeroDebugBreak() __debugbreak()
+#endif 
+
+#ifdef COMPILER_CLANG
+#define ZeroDebugBreak() asm("int $3")
+#endif
