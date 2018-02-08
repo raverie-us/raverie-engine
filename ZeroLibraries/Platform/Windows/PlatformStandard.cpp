@@ -11,6 +11,7 @@
 
 namespace Zero
 {
+void InitializeGamepad();
 
 //**************************************************************************************************
 void PlatformLibrary::Initialize()
@@ -19,6 +20,7 @@ void PlatformLibrary::Initialize()
   Zero::Status socketLibraryInitStatus;
   Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
   Assert(Zero::Socket::IsSocketLibraryInitialized());
+  InitializeGamepad();
 }
 
 //**************************************************************************************************

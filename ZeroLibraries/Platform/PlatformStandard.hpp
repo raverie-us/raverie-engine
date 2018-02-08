@@ -52,3 +52,4 @@ public:
 #include "TimerBlock.hpp"
 #include "DirectoryWatcher.hpp"
 #include "ConsoleListeners.hpp"
+#include "Peripherals.hpp"

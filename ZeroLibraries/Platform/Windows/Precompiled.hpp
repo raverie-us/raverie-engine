@@ -34,6 +34,7 @@
 #include <winhttp.h>
 #include <VersionHelpers.h>
 #include <Lmcons.h>
+#include <Xinput.h>
 #include <shellapi.h>
 #include <iptypes.h>
 #include <iphlpapi.h>

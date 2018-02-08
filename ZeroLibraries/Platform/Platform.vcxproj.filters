@@ -34,6 +34,7 @@
     <ClInclude Include="CommandLineSupport.hpp" />
     <ClInclude Include="TimerBlock.hpp" />
     <ClInclude Include="ConsoleListeners.hpp" />
+    <ClInclude Include="Peripherals.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompiled">

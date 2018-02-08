@@ -57,6 +57,7 @@
     <ClInclude Include="IpAddress.hpp" />
     <ClInclude Include="Lock.hpp" />
     <ClInclude Include="OsHandle.hpp" />
+    <ClInclude Include="Peripherals.hpp" />
     <ClInclude Include="PlatformSelector.hpp" />
     <ClInclude Include="PlatformStandard.hpp" />
     <ClInclude Include="Precompiled.hpp" />
