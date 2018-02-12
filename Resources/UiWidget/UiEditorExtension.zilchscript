@@ -63,7 +63,7 @@ class UiEditorExtension : ZilchComponent
         var offset = mouseOver.Transform.WorldTranslation;
         var line = DebugLine();
         line.Color = this.HighlightColor;
-        //line.OnTop = true;
+        
         this.DrawLine(line, offset, area.TopLeft, area.TopRight);
         this.DrawLine(line, offset, area.TopRight, area.BottomRight);
         this.DrawLine(line, offset, area.BottomRight, area.BottomLeft);
@@ -77,7 +77,7 @@ class UiEditorExtension : ZilchComponent
         
         var cog = this.Space.Create(archetype);
         cog.AttachTo(mouseOver);
-        cog.UiWidget.WorldBottomLeft = worldPos.XY;
+        cog.UiWidget.SetWorldLocation(cog.Area.Origin, worldPos.XY);
         
         opQueue.ObjectCreated(cog);
         opQueue.EndBatch();
