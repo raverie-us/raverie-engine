@@ -175,7 +175,7 @@ bool Widget::CheckClipping(Vec2Param screenPoint)
 {
   if(mClipping)
   {
-    Rect rect = GetLocalRect();
+    WidgetRect rect = GetLocalRect();
     Vec2 localMousePos = this->ToLocal(screenPoint);
     bool withIn = rect.Contains(localMousePos);
     if(!withIn)
@@ -364,26 +364,26 @@ Vec3 Widget::GetScreenPosition() const
   return mTranslation;
 }
 
-Rect Widget::GetRectInParent()
+WidgetRect Widget::GetRectInParent()
 {
-  Rect local = GetLocalRect();
+  WidgetRect local = GetLocalRect();
   local.X = mTranslation.x;
   local.Y = mTranslation.y;
   return local;
 }
 
-Rect Widget::GetLocalRect() const
+WidgetRect Widget::GetLocalRect() const
 {
   if(mOrigin == DisplayOrigin::Center)
-    return Rect::PointAndSize(mSize * 0.5f, mSize);
+    return WidgetRect::PointAndSize(mSize * 0.5f, mSize);
   else
-    return Rect::PointAndSize(Vec2::cZero, mSize);
+    return WidgetRect::PointAndSize(Vec2::cZero, mSize);
 }
 
-Rect Widget::GetScreenRect() const
+WidgetRect Widget::GetScreenRect() const
 {
   Vec3 screenPos = GetScreenPosition();
-  Rect rect = GetLocalRect();
+  WidgetRect rect = GetLocalRect();
   rect.X += screenPos.x;
   rect.Y += screenPos.y;
   return rect;
@@ -391,7 +391,7 @@ Rect Widget::GetScreenRect() const
 
 bool Widget::Contains(Vec2 screenPoint)
 {
-  Rect localRect = GetLocalRect();
+  WidgetRect localRect = GetLocalRect();
   Vec2 localMousePos = this->ToLocal(screenPoint);
   return localRect.Contains(localMousePos);
 }
@@ -456,11 +456,11 @@ float Widget::GetRotation()
 
 void Widget::ScreenCaptureBackBuffer(Image& image)
 {
-  Rect rect = GetLocalRect();
+  WidgetRect rect = GetLocalRect();
   ScreenCaptureBackBuffer(image, rect);
 }
 
-void Widget::ScreenCaptureBackBuffer(Image& image, Rect& subRect)
+void Widget::ScreenCaptureBackBuffer(Image& image, WidgetRect& subRect)
 {
   //GraphicsViewport viewport = GenerateSubViewport(mWorldTx, subRect.TopLeft(), subRect.Size());
 
@@ -500,14 +500,14 @@ void Widget::BuildLocalMatrix(Mat4& output)
   Build2dTransform(output, this->mTranslation, this->mAngle);
 }
 
-void Widget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void Widget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Mat4 localTx;
   BuildLocalMatrix(localTx);
   mWorldTx = localTx * parentTx;
 }
 
-ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Texture* texture)
+ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Texture* texture)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes.PushBack();
   ViewNode& viewNode = viewBlock.mViewNodes.PushBack();
@@ -516,6 +516,7 @@ ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, R
   viewNode.mGraphicalEntry = nullptr;
 
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
   frameNode.mLocalToWorld = mWorldTx.Transposed();
@@ -544,7 +545,7 @@ ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, R
   return viewNode;
 }
 
-void Widget::CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& vertices, PrimitiveType::Enum primitiveType)
+void Widget::CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& vertices, PrimitiveType::Enum primitiveType)
 {
   if (vertices.Empty())
     return;

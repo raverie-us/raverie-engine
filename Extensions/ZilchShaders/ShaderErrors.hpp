@@ -38,7 +38,9 @@ public:
   void SendTranslationError(Zilch::CodeLocation& location, StringParam shortMsg, StringParam fullMsg);
 
   void ListenForZilchErrors(Zilch::CompilationErrors& zilchErrors);
-  void ForwardEvent(Zilch::ErrorEvent* e);
+  void ListenForTypeParsed(Zilch::CompilationErrors& zilchErrors);
+  void ForwardErrorEvent(Zilch::ErrorEvent* e);
+  void ForwardGenericEvent(Zilch::EventData* e);
 
   /// Was an error triggered during compilation (either from translation or zilch)
   bool mErrorTriggered;

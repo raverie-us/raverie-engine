@@ -11,7 +11,8 @@
 namespace Zero
 {
 
-const uint MaxSpriteSize = 4096;
+const uint cMinFrameSize = 1;
+const uint cMaxSpriteSize = 4096;
 
 //------------------------------------------------------------------ Sprite Data 
 
@@ -35,7 +36,6 @@ DeclareEnum4(NineSlices, Left, Top, Right, Bottom);
   bool Looping;                 \
   Vec4 Slices;                  \
   u32 Fill;                     \
-  Guid AtlasId;                 \
   SpriteData& GetSpriteData() { return *(SpriteData*)&FrameSizeX; }
 
 //Sprite Data is the extra 'Tag' data passed along with a sprite

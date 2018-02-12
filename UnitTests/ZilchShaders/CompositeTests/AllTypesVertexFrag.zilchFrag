@@ -1,0 +1,43 @@
+[Vertex]
+struct InOutRealVectorsVertexFrag
+{
+  [Input][Output] var Real : Real;
+  [Input][Output] var Real2 : Real2;
+  [Input][Output] var Real3 : Real3;
+  [Input][Output] var Real4 : Real4;
+  
+  function Main()
+  {
+  }
+}
+
+[Vertex]
+struct InOutIntegerVectorsVertexFrag
+{
+  [Input][Output] var Integer : Integer;
+  [Input][Output] var Integer2 : Integer2;
+  [Input][Output] var Integer3 : Integer3;
+  [Input][Output] var Integer4 : Integer4;
+  
+  function Main()
+  {
+  }
+}
+
+[Vertex]
+struct InOutRealMatricesVertexFrag
+{
+  [Input][Output] var Real2x2 : Real2x2;
+  [Input][Output] var Real2x3 : Real2x3;
+  [Input][Output] var Real2x4 : Real2x4;
+  [Input][Output] var Real3x2 : Real3x2;
+  [Input][Output] var Real3x3 : Real3x3;
+  [Input][Output] var Real3x4 : Real3x4;
+  [Input][Output] var Real4x2 : Real4x2;
+  [Input][Output] var Real4x3 : Real4x3;
+  [Input][Output] var Real4x4 : Real4x4;
+  
+  function Main()
+  {
+  }
+}

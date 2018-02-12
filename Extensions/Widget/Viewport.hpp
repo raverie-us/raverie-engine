@@ -23,6 +23,8 @@ public:
 
   void OnDestroy();
 
+  void OnMouseFileDrop(MouseFileDropEvent* event);
+
   Space* GetTargetSpace();
   Camera* GetCamera();
 
@@ -68,7 +70,7 @@ class ViewportDisplay : public Widget
 public:
   ViewportDisplay(Composite* parent);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   Viewport* mViewport;
 };

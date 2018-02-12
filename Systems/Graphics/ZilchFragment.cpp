@@ -38,6 +38,62 @@ void AddResourceLibraries(Array<Zilch::LibraryRef>& libraries, ResourceLibrary* 
   libraries.PushBack(library->mSwapFragment.mCurrentLibrary);
 }
 
+void ZilchFragment::GetKeywords(Array<Completion>& keywordsOut)
+{
+  ZilchBase::GetKeywords(keywordsOut);
+
+  GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
+  ZilchShaderGenerator* shaderGenerator = graphicsEngine->mShaderGenerator;
+  NameSettings& nameSettings = shaderGenerator->mSettings->mNameSettings;
+
+  // Create a map of special keywords that we can't use in shaders
+  HashSet<String> badKeywords;
+  badKeywords.Insert("any");
+  badKeywords.Insert("class");
+  badKeywords.Insert("debug");
+  badKeywords.Insert("delegate");
+  badKeywords.Insert("delete");
+  badKeywords.Insert("destructor");
+  badKeywords.Insert("do");
+  badKeywords.Insert("enum");
+  badKeywords.Insert("foreach");
+  badKeywords.Insert("loop");
+  badKeywords.Insert("memberid");
+  badKeywords.Insert("new");
+  badKeywords.Insert("null");
+  badKeywords.Insert("sends");
+  badKeywords.Insert("set");
+  badKeywords.Insert("typeid");
+  badKeywords.Insert("typeof");
+  badKeywords.Insert("event");
+
+  AddKeywords(keywordsOut, Grammar::GetUsedKeywords(), badKeywords);
+  AddKeywords(keywordsOut, Grammar::GetSpecialKeywords(), badKeywords);
+
+  AddKeywords(keywordsOut, nameSettings.mAllowedClassAttributes);
+  AddKeywords(keywordsOut, nameSettings.mAllowedFunctionAttributes);
+  AddKeywords(keywordsOut, nameSettings.mAllowedFieldAttributes);
+}
+
+void ZilchFragment::AddKeywords(Array<Completion>& keywordsOut, const Array<String>& keyswords, HashSet<String>& keywordsToSkip)
+{
+  forRange(String& keyword, keyswords.All())
+  {
+    if(!keywordsToSkip.Contains(keyword))
+      keywordsOut.PushBack(keyword);
+  }
+}
+
+void ZilchFragment::AddKeywords(Array<Completion>& keywordsOut, const HashMap<String, AttributeInfo>& keyswordsToTest)
+{
+  typedef HashMap<String, AttributeInfo> AttributeMap;
+  forRange(AttributeMap::pair& pair, keyswordsToTest.All())
+  {
+    if(!pair.second.mHidden)
+      keywordsOut.PushBack(pair.first);
+  }
+}
+
 void ZilchFragment::GetLibraries(Array<Zilch::LibraryRef>& libraries)
 {
   // Add the core library so we get auto-completion on things like Console

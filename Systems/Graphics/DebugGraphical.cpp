@@ -39,6 +39,7 @@ void DebugGraphical::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlo
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
 }
 
 void DebugGraphical::AddToSpace()

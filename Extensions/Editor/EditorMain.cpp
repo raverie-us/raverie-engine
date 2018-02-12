@@ -81,7 +81,7 @@ void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
 
   // Tools
   uint keyPressed = keyEvent->Key;
-  if(keyPressed >= '0' && keyPressed <= '9')
+  if(keyPressed >= '0' && keyPressed <= '9' && keyEvent->GetModififierPressed() == false)
   {
     if(keyPressed == '0') keyPressed += 10;
     uint toolIndex = keyPressed - '0' - 1;
@@ -193,9 +193,9 @@ LibraryView* EditorMain::CreateLibraryView(bool showCore, bool autoDock)
   {
     library->AddHiddenLibrary("Loading");
     library->AddHiddenLibrary("ZeroCore");
+    library->AddHiddenLibrary("UiWidget");
     library->AddHiddenLibrary("Editor");
     library->AddHiddenLibrary("EditorUi");
-    library->AddHiddenLibrary("EditorScripts");
     library->AddHiddenLibrary("FragmentCore");
   }
   else
@@ -266,8 +266,8 @@ void EditorMain::ShowHotKeyEditor(CommandEvent* event)
   ////widget->SetSize(Pixels(850, 500));
   //widget->TakeFocus();
 
-  Z::gEditor->EditResource(HotKeyManager::GetDefault());
-  //((HotKeyEditor*)widget)->EditResource
+  Widget* widget = Z::gEditor->mManager->ShowWidget("Commands");
+  ((HotKeyEditor*)widget)->DisplayResource();
 }
 
 void EditorMain::ShowOperationHistroy(CommandEvent* event)
@@ -546,7 +546,7 @@ void EditorMain::OnScriptError(DebugEngineEvent* event)
   {
     // At the moment we always pause due to a syntax error or exception
     // If we are live editing, we really want to continue (live edit may need to be a mode)
-    PauseGame();
+    SetGamePaused(true);
 
     if(event->Script)
     {
@@ -786,18 +786,21 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   IntVec2 size = IntVec2(1280, 720);
   IntVec2 position = IntVec2(0, 0);
 
-  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable | WindowStyleFlags::ClientOnly);
+  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
 
   OsWindow* mainWindow = osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
   mainWindow->SetMinSize(IntVec2(800, 600));
   mainWindow->SetState(WindowState::Maximized);
 
   // Pass window handle to initialize the graphics api
-  Z::gEngine->has(GraphicsEngine)->CreateRenderer(mainWindow->GetWindowHandle());
+  Z::gEngine->has(GraphicsEngine)->CreateRenderer(mainWindow);
 
   if (Z::gRenderer->mDriverSupport.mIntel)
   {
+    // Borderless window with Windows Aero does not work correctly on Intel.
     mainStyle = (WindowStyleFlags::Enum)(mainStyle & ~WindowStyleFlags::Resizable);
+    // Specifying a titlebar does not work correctly on Intel.
+    mainStyle = (WindowStyleFlags::Enum)(mainStyle & ~WindowStyleFlags::TitleBar);
     // SetStyle sets state to windowed to force the window to update, so reset maximize after.
     mainWindow->SetStyle(mainStyle);
     mainWindow->SetState(WindowState::Maximized);
@@ -831,6 +834,9 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Menus.data"));
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Toolbars.data"));
 
+  // Copy commands from Command.data to the HotKeyCommands DataSource.
+  HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
+
   SetupTools(editorMain);
 
   commands->SetContext(editorMain, ZilchTypeId(Editor));
@@ -849,9 +855,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   BindDocumentationCommands(config, commands);
   BindProjectCommands(config, commands);
   BindContentCommands(config, commands);
-
-  //HotKeyManager *hkManager = HotKeyManager::Instance;// GetSystemObject(HotKeyManager);
-  //hkManager->RegisterSystemCommands(commands->mCommands);
 
   // Listen to the resource system if any unhandled exception or syntax error occurs
   Connect(Z::gResources, Events::UnhandledException, editorMain, &EditorMain::OnScriptError);
@@ -889,7 +892,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   //----------------------------------------------------------------------------
   {
     HotKeyEditor* hotkeyEditor = new HotKeyEditor(editorMain);
-    hotkeyEditor->SetName("CommandListViewer");
+    hotkeyEditor->SetName("Commands");
     hotkeyEditor->SetHideOnClose(true);
     hotkeyEditor->SetSize(Pixels(850, 500));
     editorMain->AddManagedWidget(hotkeyEditor, DockArea::Floating, false);
@@ -897,7 +900,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
 
   //----------------------------------------------------------------------------
   {
-    BindCommand("CommandListViewer", ShowHotKeyEditor);
+    BindCommand("Commands", ShowHotKeyEditor);
     BindCommand("OperationHistory", ShowOperationHistroy);
     BindCommand("Animator", ShowAnimator);
     BindCommand("FindNext", ShowFindNext);

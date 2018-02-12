@@ -667,6 +667,12 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
   }
 }
 
+void ResourceTagEditor::CleanTagEditor()
+{
+  mResources.Clear();
+  mTagChain->ClearTags();
+}
+
 //******************************************************************************
 void ResourceTagEditor::Modified()
 {
@@ -688,6 +694,7 @@ void ResourceTagEditor::Modified()
     e.Manager = resource->GetManager();
     e.EventResource = resource;
     resource->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
+    Z::gResources->DispatchEvent(Events::ResourceTagsModified, &e);
   }
 }
 
@@ -713,6 +720,7 @@ void ResourceTagEditor::OnTagDeleted(TagEvent* e)
       e.Manager = resource->GetManager();
       e.EventResource = resource;
       resource->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
+      Z::gResources->DispatchEvent(Events::ResourceTagsModified, &e);
     }
   }
 }

@@ -187,7 +187,7 @@ public:
     }
   }
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override
   {
     Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -255,7 +255,7 @@ public:
       space = editorGameSession->CreateSpaceFlags(spaceArchetype, creationFlags);
 
       String spaceName = BuildString("ResourcePreview ", initializer.Name);
-      space->SetName(Cog::SanatizeName(spaceName));
+      space->SetName(Cog::SanitizeName(spaceName));
       
       // Do not update the space
       space->has(TimeSpace)->SetPaused(true);
@@ -530,12 +530,21 @@ class ArchetypePreview : public SpacePreview
 {
 public:
   typedef ArchetypePreview ZilchSelf;
-
+  const float cSpritePreviewThreshold = 0.1f;
   //****************************************************************************
   ArchetypePreview(PreviewWidgetInitializer& initializer)
     : SpacePreview(initializer, initializer.Object.Get<Archetype*>()->ResourceIdName)
   {
     UpdateViewDistance(Vec3(-1.0f));
+    
+    if (Cog* cog = (Cog*)mObject)
+    {
+      Aabb aabb = GetAabb(cog);
+      // Our asset has a thin AABB on the z axis and is most likely a 2D asset
+      // Change the camera preview to be from the front of the object
+      if (aabb.GetExtents().z < cSpritePreviewThreshold)
+        UpdateViewDistance(Vec3(0.0f, 0.0f, -1.0f));
+    }
   }
 
   Handle GetEditObject() override
@@ -768,7 +777,7 @@ public:
     parent->SetClipping(true);
   }
 
-  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, SampleCurve* curveObject)
+  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, SampleCurve* curveObject)
   {
     Array<StreamedVertex> lines;
     Array<StreamedVertex> triangles;
@@ -811,7 +820,7 @@ public:
     CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
   }
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
   {
     Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 

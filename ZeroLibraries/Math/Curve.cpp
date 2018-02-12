@@ -376,8 +376,12 @@ void BakedCurve::Bake(const SplineCurve& curve, real error)
   //temp array for this, maybe figure something better out later)
   Vec3Array pts;
   curve.BakeAdaptive(pts, error);
-  if(pts.Size() == 0)
+  if (pts.Size() == 0)
+  {
+    // If we don't have any control points, the arc length table should be empty
+    mArcLengthTable.Clear();
     return;
+  }
 
   float totalLength = 0.0f;
   

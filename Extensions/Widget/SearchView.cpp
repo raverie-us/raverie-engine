@@ -187,7 +187,7 @@ void SearchView::PositionToolTip()
     Vec2 size = Vec2(mSize.x, SearchViewUi::RowSize);
 
     // Set the rect
-    Rect rect = Rect::PointAndSize(topLeft, size);
+    WidgetRect rect = WidgetRect::PointAndSize(topLeft, size);
     placement.SetScreenRect(rect);
 
     placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
@@ -317,7 +317,7 @@ void SearchView::BuildResults()
       toolTip->mContentPadding = Thickness(1,1,1,1);
 
       if(result.mStatus.Failed())
-        toolTip->SetColor(ToolTipColor::Red);
+        toolTip->SetColorScheme(ToolTipColorScheme::Red);
 
       // Defer border-display to the parent's (tooltip) border.
       if(MultiLineText* content = Type::DynamicCast<MultiLineText*>(composite))

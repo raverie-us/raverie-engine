@@ -30,9 +30,9 @@ public:
 
   void UpdateTransform() override;
   //Fade in the PopUp
-  void FadeIn();
+  void FadeIn(float time = 0.1f);
   //Fade out the PopUp
-  void FadeOut();
+  void FadeOut(float time = 0.1f);
   void Slide(Vec3Param offset, float time);
 
   //Internals
@@ -41,7 +41,7 @@ public:
   Element* mDropShadow;
 };
 
-DeclareEnum2(PopUpCloseMode, MouseOutTarget, MouseDistance);
+DeclareEnum3(PopUpCloseMode, MouseOutTarget, MouseDistance, DisableClose);
 
 ///A Floating Pop Up Mix in class.
 class PopUp : public FloatingComposite

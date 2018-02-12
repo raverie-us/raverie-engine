@@ -326,7 +326,7 @@ Commands commands =
 		string Description = "Pause / resume the game",
 		string IconName = "PauseGame",
 		string Shortcut = "F6",
-		string Function = "Editor.PauseGame",
+		string Function = "Editor.ToggleGamePaused",
 		string Tags = "Game",
 	},
 
@@ -455,22 +455,22 @@ Commands commands =
 
 	Command =
 	{
-		string Name = "CommandListViewer",
+		string Name = "Commands",
 		string Description = "Show the Command List Viewer",
-		string IconName = "CommandListViewer",
+		string IconName = "Commands",
 		string Shortcut = "Alt+Shift+H",
 		string Tags = "Windows",
 	},
-  
-  Command =
-	{
-		string Name = "OperationHistory",
-		string Description = "Show the Operation Queue",
-		string IconName = "OperationHistory",
-		string Shortcut = "Ctrl+Shift+O",
-		string Tags = "Windows",
-	},
 	
+  Command =
+ 	{
+ 		string Name = "OperationHistory",
+ 		string Description = "Show the Operation Queue",
+ 		string IconName = "OperationHistory",
+ 		string Shortcut = "Ctrl+Shift+O",
+ 		string Tags = "Windows",
+ 	},
+
 	Command =
 	{
 		string Name = "Tools",
@@ -507,13 +507,6 @@ Commands commands =
 	{
 		string Name = "Help",
 		string Description = "Display documentation for the engine",
-		string Tags = "Editor Help",
-	},
-
-	Command =
-	{
-		string Name = "Controls",
-		string Description = "Show the Controls Window",
 		string Tags = "Editor Help",
 	},
 
@@ -657,6 +650,7 @@ Commands commands =
 	{
 		string Name = "SelectTool",
 		string Description = "Picks objects in the scene.",
+		string Shortcut = "1",
 		string IconName = "SelectTool",
 		string Tags = "Tool",
 	},
@@ -665,6 +659,7 @@ Commands commands =
 	{
 		string Name = "TranslateTool",
 		string Description = "Enables the Translate Tool",
+		string Shortcut = "2",
 		string IconName = "TranslateGizmo",
 		string Tags = "Tool",
 	},
@@ -673,6 +668,7 @@ Commands commands =
 	{
 		string Name = "RotateTool",
 		string Description = "Enables the Rotate Tool",
+		string Shortcut = "3",
 		string IconName = "RotateGizmo",
 		string Tags = "Tool",
 	},
@@ -681,6 +677,7 @@ Commands commands =
 	{
 		string Name = "ScaleTool",
 		string Description = "Enables the Scale Tool",
+		string Shortcut = "4",
 		string IconName = "ScaleGizmo",
 		string Tags = "Tool",
 	},
@@ -688,6 +685,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "ManipulatorTool",
+		string Shortcut = "5",
 		string Description = "Enables the Manipulator Tool",
 		string IconName = "ManipulatorGizmo",
 		string Tags = "Tool",
@@ -696,6 +694,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "TileEditor2D",
+		string Shortcut = "6",
 		string Description = "Enables the TileEditor2D tool",
 		string IconName = "TileEditor2D",
 		string Tags = "Tool",
@@ -704,6 +703,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "HeightMapTool",
+		string Shortcut = "7",
 		string Description = "Enables the HeightMapTool tool",
 		string IconName = "HeightMapTool",
 		string Tags = "Tool",
@@ -712,6 +712,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "JointTool",
+		string Shortcut = "8",
 		string Description = "Enables the JointTool tool",
 		string IconName = "JointTool",
 		string Tags = "Tool",
@@ -720,8 +721,18 @@ Commands commands =
 	Command =
 	{
 		string Name = "CreationTool",
+		string Shortcut = "9",
 		string Description = "Enables the CreationTool tool",
 		string IconName = "CreationTool",
+		string Tags = "Tool",
+	},
+  
+  Command =
+	{
+		string Name = "ParentingTool",
+		string Shortcut = "0",
+		string Description = "Enables the ParentingTool tool",
+		string IconName = "ParentingTool",
 		string Tags = "Tool",
 	},
 
@@ -798,11 +809,11 @@ Commands commands =
 		string Shortcut = "",
 	},
 
-	Command =
-	{
-		string Name = "EditCommands",
-		string Description = "Displays all custom Commands for editing.",
-		string Tags = "",
-		string Shortcut = "",
-	},
+	//Command =
+	//{
+	//	string Name = "EditCommands",
+	//	string Description = "Displays all custom Commands for editing.",
+	//	string Tags = "",
+	//	string Shortcut = "",
+	//},
 },

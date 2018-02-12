@@ -24,8 +24,14 @@ public:
   /// store name conflicts.
   void SetStoreName(StringParam storeName);
 
-  // /Is an object in the store?
-  bool IsStored(StringParam name);
+  /// Is there an entry record for the object in the store?
+  bool IsEntryStored(StringParam name);
+
+  /// Get number of entries in the ObjectStore.
+  uint GetEntryCount();
+
+  /// Get the ObjectStore entry at the specified index.
+  String GetEntryAt(uint index);
 
   /// Store an object.
   StoreResult::Enum Store(StringParam name, Cog* object);
@@ -50,8 +56,14 @@ private:
   String GetFile(StringParam name);
   void SetupDirectory();
 
+  /// Populate the internal array of file names in the ObjectStore, if the proper
+  /// ObjectStore directory exists.
+  void PopulateEntries(StringParam storePath);
+
   String mStoreName;
   String mStorePath;
+
+  Array<String> mEntries;
 };
 
 }

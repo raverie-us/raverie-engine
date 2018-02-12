@@ -231,12 +231,12 @@ ZilchDefineType(SelectTool, builder, type)
   ZilchBindFieldProperty(mArchetypeSelect);
   ZilchBindFieldProperty(mRootSelect);
   ZilchBindFieldProperty(mSmartGroupSelect);
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZilchBindMethod(RayCast);
 
   ZeroBindEvent(Events::SelectToolPreSelect, ViewportMouseEvent);
 
-  type->Add(new RaycasterMetaComposition(offsetof(SelectTool, mRaycaster)));
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 //******************************************************************************
@@ -410,7 +410,10 @@ bool SelectTool::ArchetypeSelect(Cog* current, Cog* toSelect, RaycastResultList&
 {
   MetaSelection* selection = Z::gEditor->mSelection;
 
-  Cog* lastHitArchetype = current->FindNearestArchetype();
+  Cog* lastHitArchetype = nullptr;
+  if (current != nullptr)
+    lastHitArchetype = current->FindNearestArchetype();
+  
   Cog* nearestArchetype = toSelect->FindNearestArchetype();
 
   // we are not selecting an object within an archetype
@@ -426,7 +429,7 @@ bool SelectTool::ArchetypeSelect(Cog* current, Cog* toSelect, RaycastResultList&
   }
 
   // if the object we are attempting to select is a sibling of the last selected object, select it
-  if(current->GetParent() == toSelect->GetParent())
+  if(current && current->GetParent() == toSelect->GetParent())
   {
     selection->SelectOnly(toSelect);
     return true;
@@ -455,7 +458,6 @@ void SelectTool::Select(ViewportMouseEvent* e)
   bool multiSelect = keyboard->KeyIsDown(Keys::Shift);
 
   MetaSelection* selection = Z::gEditor->mSelection;
-  Cog* current = selection->GetPrimaryAs<Cog>();
 
   if (toSelect != nullptr)
   {
@@ -477,12 +479,11 @@ void SelectTool::Select(ViewportMouseEvent* e)
     {
       Cog* root = toSelect->FindRoot();
       Cog* current = selection->GetPrimaryAs<Cog>();
+      bool selected = false;
 
       // Are we already in the context of the root?
       if (current == root || root->IsDescendant(current))
       {
-        bool selected = false;
-
         // archetype select is enabled, attempt archetype selection
         if (mArchetypeSelect)
           selected  = ArchetypeSelect(current, toSelect, result);
@@ -491,18 +492,30 @@ void SelectTool::Select(ViewportMouseEvent* e)
         // attempt to select an object within the hierarchy
         if (selected == false && mRootSelect)
         {
-          toSelect = WalkRayCast(toSelect, result, SameRootCompare);
+          // We have already selected the root so attempt to select anything contained within the roots aabb
+          if (toSelect == current && toSelect == root)
+            toSelect = WalkRayCast(toSelect, result, SameRootCompare);
           selection->SelectOnly(toSelect);
+          selected = true;
         }
       }
       // we are not in the context of the root so select it
       else
       {
         if (mRootSelect)
+        {
           selection->SelectOnly(root);
+          selected = true;
+        }
         else
-          ArchetypeSelect(current, toSelect, result);
+        {
+          selected = ArchetypeSelect(current, toSelect, result);
+        }
       }
+
+      // We were selecting an object that is not an archetype and root select is not enabled
+      if (selected == false)
+        selection->SelectOnly(toSelect);
     }
 
     selection->FinalSelectionChanged();
@@ -510,7 +523,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
   // no object clicked on so clear out current selection
   else
   {
-    selection->Clear(SendsEvents::False);
+    selection->Clear();
     selection->FinalSelectionChanged();
   }
 }
@@ -632,9 +645,9 @@ ZilchDefineType(CreationTool, builder, type)
   ZilchBindFieldProperty(mDepth);
   ZilchBindFieldProperty(mDepthPlane);
 
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
-  type->Add(new RaycasterMetaComposition(offsetof(CreationTool, mRaycaster)));
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 //******************************************************************************
@@ -859,7 +872,7 @@ ZilchDefineType(ObjectConnectingTool, builder, type)
   ZeroBindDependency(MouseCapture);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 }
 
 //******************************************************************************
@@ -953,7 +966,7 @@ void ObjectConnectingTool::OnToolDeactivate(Event*)
 ZilchDefineType(ParentingTool, builder, type)
 {
   ZeroBindComponent();
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   ZilchBindFieldProperty(mMaintainPosition);

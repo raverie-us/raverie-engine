@@ -32,10 +32,10 @@
     <ClCompile Include="Aabb.cpp" />
     <ClCompile Include="Clipper.cpp" />
     <ClCompile Include="ClosestPoint.cpp" />
-    <ClCompile Include="ConvexMesh.cpp" />
     <ClCompile Include="ConvexMeshDecomposition.cpp" />
     <ClCompile Include="ConvexMeshShape.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="DebugDrawStack.cpp" />
     <ClCompile Include="Epa.cpp" />
     <ClCompile Include="ExtendedCollision.cpp" />
     <ClCompile Include="ExtendedIntersection.cpp" />
@@ -44,7 +44,6 @@
     <ClCompile Include="GeometryStandard.cpp" />
     <ClCompile Include="Gjk.cpp" />
     <ClCompile Include="Hull2D.cpp" />
-    <ClCompile Include="Hull3D.cpp" />
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="Intersection2D.cpp" />
     <ClCompile Include="LineTests.cpp" />
@@ -58,6 +57,7 @@
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="QuickHull3D.cpp" />
     <ClCompile Include="RayTests.cpp" />
     <ClCompile Include="SegmentTests.cpp" />
     <ClCompile Include="Shape2D.cpp" />
@@ -72,10 +72,10 @@
   <ItemGroup>
     <ClInclude Include="Aabb.hpp" />
     <ClInclude Include="Clipper.hpp" />
-    <ClInclude Include="ConvexMesh.hpp" />
     <ClInclude Include="ConvexMeshDecomposition.hpp" />
     <ClInclude Include="ConvexMeshShape.hpp" />
     <ClInclude Include="DebugDraw.hpp" />
+    <ClInclude Include="DebugDrawStack.hpp" />
     <ClInclude Include="Epa.hpp" />
     <ClInclude Include="ExtendedCollision.hpp" />
     <ClInclude Include="ExtendedIntersection.hpp" />
@@ -83,7 +83,6 @@
     <ClInclude Include="GeometryStandard.hpp" />
     <ClInclude Include="Gjk.hpp" />
     <ClInclude Include="Hull2D.hpp" />
-    <ClInclude Include="Hull3D.hpp" />
     <ClInclude Include="IndexPool.hpp" />
     <ClInclude Include="Intersection.hpp" />
     <ClInclude Include="GeodesicSphere.hpp" />
@@ -91,6 +90,7 @@
     <ClInclude Include="Mpr.hpp" />
     <ClInclude Include="Plane.hpp" />
     <ClInclude Include="Polygon.hpp" />
+    <ClInclude Include="QuickHull3D.hpp" />
     <ClInclude Include="Shape2D.hpp" />
     <ClInclude Include="ShapeHelpers.hpp" />
     <ClInclude Include="Shapes.hpp" />

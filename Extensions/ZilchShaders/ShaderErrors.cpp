@@ -54,12 +54,22 @@ void ShaderCompilationErrors::SendTranslationError(Zilch::CodeLocation& location
 
 void ShaderCompilationErrors::ListenForZilchErrors(Zilch::CompilationErrors& zilchErrors)
 {
-  EventConnect(&zilchErrors, Zilch::Events::CompilationError, &ShaderCompilationErrors::ForwardEvent, this);
+  EventConnect(&zilchErrors, Zilch::Events::CompilationError, &ShaderCompilationErrors::ForwardErrorEvent, this);
 }
 
-void ShaderCompilationErrors::ForwardEvent(Zilch::ErrorEvent* e)
+void ShaderCompilationErrors::ListenForTypeParsed(Zilch::CompilationErrors& zilchErrors)
+{
+  EventConnect(&zilchErrors, Zilch::Events::TypeParsed, &ShaderCompilationErrors::ForwardGenericEvent, this);
+}
+
+void ShaderCompilationErrors::ForwardErrorEvent(Zilch::ErrorEvent* e)
 {
   mErrorTriggered = true;
+  EventSend(this, e->EventName, e);
+}
+
+void ShaderCompilationErrors::ForwardGenericEvent(Zilch::EventData* e)
+{
   EventSend(this, e->EventName, e);
 }
 

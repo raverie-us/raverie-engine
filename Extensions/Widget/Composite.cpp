@@ -109,18 +109,18 @@ void Composite::DoLayout()
   mLayout->DoLayout(this, data);
 }
 
-void Composite::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void Composite::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
   if (mClipping)
   {
-    Rect rect;// = {mWorldTx.m30, mWorldTx.m31, mSize.x, mSize.y};
+    WidgetRect rect;// = {mWorldTx.m30, mWorldTx.m31, mSize.x, mSize.y};
     rect.X = mWorldTx.m30;
     rect.Y = mWorldTx.m31;
     rect.SizeX = mSize.x;
     rect.SizeY = mSize.y;
-    Rect newRect;
+    WidgetRect newRect;
     newRect.X = Math::Max(clipRect.X, rect.X);
     newRect.Y = Math::Max(clipRect.Y, rect.Y);
     newRect.SizeX = Math::Min(clipRect.X + clipRect.SizeX, rect.X + rect.SizeX) - newRect.X;

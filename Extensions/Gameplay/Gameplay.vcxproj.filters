@@ -91,6 +91,8 @@
     </ClInclude>
     <ClInclude Include="UnitTestSystem.hpp" />
     <ClInclude Include="PathFinder.hpp" />
+    <ClInclude Include="IndexedHalfEdgeMesh.hpp" />
+    <ClInclude Include="QuickHull3DBindings.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Precompiled.cpp">
@@ -156,5 +158,7 @@
     </ClCompile>
     <ClCompile Include="UnitTestSystem.cpp" />
     <ClCompile Include="PathFinder.cpp" />
+    <ClCompile Include="IndexedHalfEdgeMesh.cpp" />
+    <ClCompile Include="QuickHull3DBindings.cpp" />
   </ItemGroup>
 </Project>

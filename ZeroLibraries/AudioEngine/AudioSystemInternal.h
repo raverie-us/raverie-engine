@@ -21,6 +21,15 @@ namespace Audio
       return true;
   }
 
+  static void CopyIntoBuffer(BufferType* destinationBuffer, const BufferType& sourceBuffer,
+    unsigned sourceStartIndex, unsigned numberOfSamples)
+  {
+    unsigned destIndex = destinationBuffer->Size();
+    destinationBuffer->Resize(destinationBuffer->Size() + numberOfSamples);
+    memcpy(destinationBuffer->Data() + destIndex, sourceBuffer.Data() + sourceStartIndex,
+      sizeof(float) * numberOfSamples);
+  }
+
   //------------------------------------------------------------------------- Audio Channels Manager
 
   class AudioChannelsManager
@@ -95,10 +104,6 @@ namespace Audio
     void AddTask(Zero::Functor* function);
     // Adds a task from the mix thread for the main thread to handle
     void AddTaskThreaded(Zero::Functor* function);
-    // Adds a new decoding task to the list
-    void AddDecodingTask(Zero::Functor* function);
-    // Loop to execute decoding tasks
-    void DecodeLoopThreaded();
     // Adds a tag to the system
     void AddTag(TagObject* tag, bool threaded);
     // Removes a tag from the system
@@ -106,28 +111,18 @@ namespace Audio
     // Adds a tag to the list to delete
     void DelayDeleteTag(TagObject* tag, bool threaded);
     // Adds a non-threaded sound asset to the system
-    void AddAsset(SoundAssetNode* asset);
+    void AddAsset(SoundAsset* asset);
     // Removes a non-threaded sound asset from the system
-    void RemoveAsset(SoundAssetNode* asset);
+    void RemoveAsset(SoundAsset* asset);
     // Adds a new node to the threaded or non-threaded list
     bool AddSoundNode(SoundNode* node, const bool threaded);
     // Removes a node from the threaded or non-threaded list
     void RemoveSoundNode(SoundNode* node, const bool threaded);
-    // Returns a pointer to an available interpolator object
-    InterpolatingObject* GetInterpolatorThreaded();
-    // Releases an interpolator object that was in use
-    void ReleaseInterpolatorThreaded(InterpolatingObject* object);
     // Sets the threaded variable for the minimum volume threshold.
     void SetMinVolumeThresholdThreaded(const float volume);
-    // Resets the IO and updates resampling values if necessary
-    void ResetIO();
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
-    // Size of the system mix buffer.
-    unsigned MixBufferSizeThreaded;
-    // Used to lock for swapping pointers to buffers.
-    Zero::ThreadLock LockObject;
     // Notifies the system to reset Port Audio after a device change.
     bool ResetPA;
     // Current mix version number
@@ -145,7 +140,11 @@ namespace Audio
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
     // The sample rate used by the audio engine for the output mix
-    static const unsigned SampleRate = 48000;
+    static const unsigned SystemSampleRate = 48000;
+    // The time increment per audio frame corresponding to the sample rate
+    const double SystemTimeIncrement = 1.0 / 48000.0;
+    // The number of frames used to interpolate instant property changes
+    static const unsigned  PropertyChangeFrames = (unsigned)(48000 * 0.02f);
     
     AudioChannelsManager ChannelsManager;
     AudioInputOutput* AudioIO;
@@ -154,7 +153,7 @@ namespace Audio
     typedef Zero::Array<TagObject*> TagsToDeleteListType;
     typedef Zero::InList<TagObject> TagListType;
     typedef Zero::InList<SoundNode> NodeListType;
-    typedef Zero::InList<SoundAssetNode> AssetListType;
+    typedef Zero::InList<SoundAsset> AssetListType;
 
     // List of objects to be deleted on update.
     TagsToDeleteListType TagsToDelete;
@@ -168,14 +167,8 @@ namespace Audio
     AssetListType AssetList;
     // Array used to accumulate samples for output
     BufferType BufferForOutput;
-    // Thread for decoding tasks
-    Zero::Thread DecodeThread;
-    // Queue for decoding tasks
-    LockFreeQueue<Zero::Functor*> DecodingQueue;
-    // Used to signal the decoding thread when decoding tasks are added to the queue
-    Zero::OsEvent DecodeThreadEvent;
-    // Will be zero while running, set to 1 when the decoding thread should shut down
-    Type32Bit StopDecodeThread;
+    // Array for finished mixed output
+    BufferType MixedOutput;
     // Thread for mix loop
     Zero::Thread MixThread;
     // To tell the system to shut down once everything stops. 
@@ -186,8 +179,6 @@ namespace Audio
     float Volume;
     // For interpolating the overall system volume on the mix thread. 
     InterpolatingObject VolumeInterpolatorThreaded;
-    // Receives audio device change notifications (headphones plugged in etc.) 
-    DeviceNotificationObject DeviceInfo;
     // For low frequency channel on 5.1 or 7.1 mix 
     // Must be pointer because relies on audio system in constructor
     LowPassFilter* LowPass;
@@ -210,10 +201,6 @@ namespace Audio
     NodeListType NodeList;
     // Number of currently alive sound nodes
     unsigned NodeCount;
-    // List of interpolator objects
-    Zero::Array<InterpolatorContainer> InterpolatorArray;
-    // The index of the next available interpolator
-    int NextInterpolator;
     // The peak volume from the last mix, used to check whether to create a task
     float PreviousPeakVolumeThreaded;
     // The RMS volume from the last mix, used to check whether to create a task
@@ -242,16 +229,16 @@ namespace Audio
     // Sets the peak and RMS volume values.
     void SetVolumes(const float peak, const unsigned rms);
     // Sets whether to use the high or low latency values
-    void SetUseHighLatency(const bool useHighLatency);
+    void SetLatencyThreaded(const bool useHighLatency);
     // Checks for resampling and resets variables if applicable
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
-    void GetAudioInputDataThreaded();
+    void GetAudioInputDataThreaded(unsigned howManySamples);
 
     class NodeInterface : public ExternalNodeInterface
     {
     public:
-      void SendAudioEvent(const AudioEventType eventType, void* data) override {}
+      void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) override {}
     };
 
     NodeInterface NodeInt;

@@ -45,7 +45,7 @@ void ViewportMenuButton::UpdateTransform()
     float expandLeft = mExpandIcon->mTranslation.x;
 
     Vec2 minSize = activeWidget->GetMinSize();
-    Rect rect = Rect::PointAndSize(mSize * 0.5f - minSize * 0.5f, minSize);
+    WidgetRect rect = WidgetRect::PointAndSize(mSize * 0.5f - minSize * 0.5f, minSize);
     if(rect.Right() > expandLeft)
       rect.X -= (rect.Right() - expandLeft + Pixels(3));
     activeWidget->SetTranslation(ToVector3(rect.TopLeft()));

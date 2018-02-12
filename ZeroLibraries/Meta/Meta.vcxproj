@@ -44,6 +44,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AttributeExtension.hpp" />
     <ClInclude Include="NativeTypeConversion.hpp" />
     <ClInclude Include="CommonHandleManagers.hpp" />
     <ClInclude Include="HandleManagers.hpp" />
@@ -73,6 +74,7 @@
     <ClInclude Include="MetaLibraryExtensions.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AttributeExtension.cpp" />
     <ClCompile Include="NativeTypeConversion.cpp" />
     <ClCompile Include="CommonHandleManagers.cpp" />
     <ClCompile Include="MetaArray.cpp" />

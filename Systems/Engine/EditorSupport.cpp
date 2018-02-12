@@ -47,6 +47,7 @@ const String Default = "DefaultArchetype";
 const String Sprite = "Sprite";
 const String SpriteText = "SpriteText";
 const String SpriteParticles = "SpriteParticles";
+const String Spline = "Spline";
 const String SplineParticleSystem = "SplineParticleSystem";
 const String DirectionalLight = "DirectionalLight";
 const String DirectionalLightShadows = "DirectionalLightShadows";
@@ -59,5 +60,4 @@ const String ViewCube = "ViewCube";
 const String Wedge = "Wedge";
 }
 
-
-}
+}//namespace Zero

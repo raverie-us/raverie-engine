@@ -31,10 +31,10 @@ class BlurTexture[BlurFragmentType]
 
 // Same as BlurTexture except doesn't blur across edges that are too far apart based on depth values.
 class BlurTextureEdgeSafe[BlurFragmentType]
-{  
+{
   // depthThreshold is in world units.
   [Static]
-  function Call(event : RenderTasksEvent, target : RenderTarget, geometryBuffer0 : RenderTarget, depthThreshold : Real)
+  function Call(event : RenderTasksEvent, target : RenderTarget, geometryBuffer0 : RenderTarget, depthThreshold : Real, pixelStride : Real)
   {
     var size = target.Texture.Size;
     var samplerSettings = SamplerSettings() {Filtering = target.Texture.Filtering};
@@ -44,6 +44,7 @@ class BlurTextureEdgeSafe[BlurFragmentType]
     blur.InverseTextureSize = Real2(1.0) / size;
     blur.GeometryBuffer0 = geometryBuffer0.Texture;
     blur.DepthThreshold = depthThreshold;
+    blur.PixelStride = pixelStride;
     
     // Horizontal blur
     blur.Texture = target.Texture;

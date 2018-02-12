@@ -18,10 +18,6 @@ namespace Events
 DeclareEvent(AreaChanged);
 }
 
-DeclareEnum9(Location, TopLeft, TopCenter, TopRight,
-                       CenterLeft, Center, CenterRight,
-                       BottomLeft, BottomCenter, BottomRight);
-
 Vec2 ToOffset(Location::Enum origin);
 Vec2 OffsetOfOffset(Location::Enum base, Location::Enum corner);
 
@@ -64,6 +60,7 @@ public:
 
   /// Offset of the given location in local space
   Vec2 LocalOffsetOf(Location::Enum location);
+  Vec2 OffsetOfOffset(Location::Enum location);
 
   #define OffsetOfGetter(location) Vec2 Get##location() { return LocalOffsetOf(Location::location); }
   OffsetOfGetter(TopLeft)

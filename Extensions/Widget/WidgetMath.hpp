@@ -28,55 +28,17 @@ namespace SlicesIndex
 DeclareEnum3(VerticalAlignment, Top, Bottom, Center);
 DeclareEnum3(HorizontalAlignment, Left, Right, Center);
 
-//---------------------------------------------------------------------- Thickness
-struct Thickness
-{
-  ZilchDeclareType(TypeCopyMode::ValueType);
-
-  Thickness();
-  Thickness(float splat);
-
-  Thickness(float left, float top, float right, float bottom);
-  explicit Thickness(Vec4 vector);
-
-  Thickness(float leftRight, float topBottom);
-  explicit Thickness(Vec2 vector);
-
-  // Thickness equal to value in all directions
-  static Thickness All(float amount);
-
-  // Add Thickness
-  Thickness operator+(const Thickness& rhs);
-
-  float Left;
-  float Top;
-  float Right;
-  float Bottom;
-
-  Vec2 Size() const  {return Vec2(Width(), Height()); }
-  Vec2 TopLeft() const {return Vec2(Left, Top); }
-  Vec2 TopRight() const {return Vec2(Right, Top); }
-  Vec2 BottomLeft() const {return Vec2(Left, Bottom); }
-  Vec2 BottomRight() const {return Vec2(Right, Bottom); }
-  float Width() const {return Left + Right;}
-  float Height() const {return Top + Bottom;}
-
-  static const Thickness cZero;
-};
-
 //------------------------------------------------------------------------- Rect
-struct Rect;
-typedef const Rect& RectParam;
+struct WidgetRect;
+typedef const WidgetRect& RectParam;
 
-struct Rect
+struct WidgetRect
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  static const WidgetRect cZero;
 
-  static const Rect cZero;
-
-  static Rect PointAndSize(Vec2Param point, Vec2Param size);
-  static Rect CenterAndSize(Vec2Param point, Vec2Param size);
-  static Rect MinAndMax(Vec2Param min, Vec2Param max);
+  static WidgetRect PointAndSize(Vec2Param point, Vec2Param size);
+  static WidgetRect CenterAndSize(Vec2Param point, Vec2Param size);
+  static WidgetRect MinAndMax(Vec2Param min, Vec2Param max);
 
   float X;
   float Y;
@@ -91,9 +53,9 @@ struct Rect
   void SetTranslation(Vec2Param translation);
   void SetSize(Vec2Param size);
 
-  void Expand(const Rect& other);
+  void Expand(const WidgetRect& other);
   bool Contains(Vec2Param point) const;
-  bool Overlap(const Rect& other) const;
+  bool Overlap(const WidgetRect& other) const;
 
   void RemoveThickness(const Thickness& thickness);
 
@@ -109,8 +71,8 @@ struct Rect
   float Bottom() const {return Y + SizeY;}
 };
 
-void PlaceWithRect(const Rect& rect, Widget* widget);
-void PlaceCenterToRect(const Rect& rect, Widget* widget, Vec2Param offset = Vec2::cZero);
+void PlaceWithRect(const WidgetRect& rect, Widget* widget);
+void PlaceCenterToRect(const WidgetRect& rect, Widget* widget, Vec2Param offset = Vec2::cZero);
 
 Mat4 Invert2D(Mat4Param matrix);
 void Build2dTransform(Mat4& matrix, Vec3Param translation, float rotation);
@@ -127,6 +89,6 @@ inline Vec4 Pixels(float x, float y, float z, float w){return Vec4(x, y, z, w);}
 //Utility functions
 Vec2 ExpandSizeByThickness(Thickness thickness, Vec2Param size);
 
-Rect RemoveThicknessRect(Thickness thickness, Vec2Param outerSize);
+WidgetRect RemoveThicknessRect(Thickness thickness, Vec2Param outerSize);
 
 }

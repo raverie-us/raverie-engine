@@ -26,6 +26,7 @@ ZilchDefineType(ToolUiEvent, builder, type)
   ZilchBindFieldProperty(mNeedsPropertyGrid);
   ZilchBindGetterProperty(Parent);
   ZilchBindGetterProperty(SelectTool);
+  ZeroBindDocumented();
 }
 
 //******************************************************************************
@@ -95,14 +96,10 @@ public:
       {
         Handle subInstance = cogComposition->GetComponentAt(object, i);
 
-        // Any base class could have the tool tag, so search them all
-        forRange(CogComponentMeta* zeroMeta, subInstance.StoredType->HasAll<CogComponentMeta>())
+        if (subInstance.StoredType->HasAttributeInherited(ObjectAttributes::cTool))
         {
-          if (zeroMeta->mTags.Contains(Tags::Tool))
-          {
-            sValidComponentIndices.PushBack(i);
-            break;
-          }
+          sValidComponentIndices.PushBack(i);
+          break;
         }
       }
 
@@ -623,7 +620,7 @@ void ToolControl::BuildShortcutsToolTip(const ShortcutSet* entries)
   mShortcutsView->SetDataSource(&mShortcutSource);
 
   // Make the "Name" & "Shortcut" column width fit to the max-row's text
-  // size for their respective column.6
+  // size for their respective column.
   mShortcutsView->mFitToText[0] = true;
   mShortcutsView->mFitToText[1] = true;
 

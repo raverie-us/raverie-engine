@@ -346,8 +346,12 @@ void Sort(range r, Comparer comparer)
 template<typename iterator>
 void Reverse(iterator start, iterator end)
 {
+  // Range is empty
+  if(start == end)
+    return;
+
   --end;
-  while(start<end)
+  while(start < end)
   {
     Zero::Swap(*start, *end);
     ++start;

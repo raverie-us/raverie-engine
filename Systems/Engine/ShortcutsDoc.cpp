@@ -39,6 +39,7 @@ ZilchDefineType(Shortcuts, builder, type)
 /******************************************************************************/
 Shortcuts::~Shortcuts()
 {
+  DeleteObjectsInContainer(mShorcutSets);
 }
 
 /******************************************************************************/

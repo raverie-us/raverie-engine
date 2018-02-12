@@ -2,8 +2,7 @@
 ///
 /// \file ContextMenu.hpp
 ///
-///
-/// Authors: Chris Peters
+/// Authors: Chris Peters, Dane Curbow
 /// Copyright 2010, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,7 +16,9 @@ class MenuBarItem;
 
 namespace Events
 {
+  DeclareEvent(MenuDestroy);
   DeclareEvent(MenuItemSelected);
+  DeclareEvent(MouseHoverSibling);
 }
 
 namespace MenuUi
@@ -54,6 +55,8 @@ public:
   }
 };
 
+DeclareEnum4(SubMenuItemType, CommandName, Command, Divider, Item);
+
 ///Item on a context Menu.
 class ContextMenuItem : public Composite
 {
@@ -66,10 +69,20 @@ public:
   void UpdateTransform() override;
   Vec2 GetMinSize() override;
 
+  //Sub Menus
+  void AddDivider();
+  void LoadMenu(StringParam menuName);
+  void AddCommand(Command* command);
+  void AddCommandByName(StringParam commandName);
+  void CreateContextItem(StringParam name);
+
   //Events
   void OnLeftMouseUp(MouseEvent* event);
-  void OnMouseExit(MouseEvent* event);
   void OnMouseEnter(MouseEvent* event);
+  void OnMouseExit(MouseEvent* event);
+  void OnMouseHover(MouseEvent* event);
+  void OnSiblingHover(ObjectEvent* e);
+  void OnChildMenuDestroy(ObjectEvent* e);
 
   //String Name;
   String ClientData;
@@ -80,6 +93,9 @@ public:
   /// Whether or not the item is selectable.
   bool mEnabled;
 
+  // Used to store any specific context information for use by selecting a menu item
+  Any mContextData;
+
 private:
   Text* mText;
   Text* mShortcut;
@@ -88,6 +104,18 @@ private:
   Element* mBackground;
   Element* mBorder;
   Command* mCommand;
+  
+  struct SubMenuItem
+  {
+    SubMenuItem() {};
+    SubMenuItem(SubMenuItemType::Enum itemType) : ItemType(itemType) {};
+    
+    SubMenuItemType::Enum ItemType;
+    String ItemString;
+    Command* Command;
+  };
+  Array<SubMenuItem> mSubMenuContents;
+  ContextMenu* mSubMenu;
 };
 
 ///Content Menu PopUp
@@ -101,13 +129,16 @@ public:
   void UpdateTransform() override;
   void SizeToContents() override;
   Vec2 GetMinSize() override;
+  void OnDestroy() override;
+
   uint ItemCount();
   void LoadMenu(StringParam menuName);
   void CloseContextMenu();
+  void FitSubMenuOnScreen(Vec3 position, Vec2 parentSize);
 
   ContextMenuItem* AddCommand(Command* command);
   ContextMenuItem* AddCommandByName(StringParam commandName);
-  ContextMenuItem* CreateContextItem(StringParam name);
+  ContextMenuItem* CreateContextItem(StringParam name, StringParam icon = String());
 
   void AddDivider();
 

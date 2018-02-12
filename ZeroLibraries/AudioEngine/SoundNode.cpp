@@ -23,7 +23,7 @@ namespace Audio
     MixedListener(nullptr), 
     Threaded(isThreaded),
     Collapse(false), 
-    BypassPercent(0.0f),
+    BypassValue(0.0f),
     Name(name),
     NodeID(ID),
     ValidOutputLastMix(false),
@@ -379,23 +379,23 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float SoundNode::GetBypassPercent()
+  float SoundNode::GetBypassValue()
   {
-    return BypassPercent * 100.0f;
+    return BypassValue;
   }
 
   //************************************************************************************************
-  void SoundNode::SetBypassPercent(const float percent)
+  void SoundNode::SetBypassValue(const float bypassValue)
   {
-    BypassPercent = percent / 100.0f;
+    BypassValue = bypassValue;
 
     // If not threaded, send message to threaded node
     if (!Threaded && SiblingNode)
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::SetBypassPercent, SiblingNode, percent));
+      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::SetBypassValue, SiblingNode, bypassValue));
   }
 
   //************************************************************************************************
-  void SoundNode::SendEventToExternalData(const AudioEventType eventType, void* data)
+  void SoundNode::SendEventToExternalData(const AudioEventTypes::Enum eventType, void* data)
   {
     if (Threaded)
       return;
@@ -409,27 +409,16 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float SoundNode::GetAttenuatedVolume()
+  float SoundNode::GetVolumeChangeFromOutputs()
   {
     if (!Threaded)
       return 0.0f;
 
-    float volume(1.0f);
-    bool gotData(false);
+    float volume = 0.0f;
     forRange(SoundNode* node, Outputs.All())
-    {
-      float nodeVolume = node->GetAttenuatedVolume();
-      if (nodeVolume > 0)
-      {
-        volume *= nodeVolume;
-        gotData = true;
-      }
-    }
+      volume += node->GetVolumeChangeFromOutputs();
 
-    if (gotData)
-      return volume;
-    else
-      return -1.0f;
+    return volume;
   }
 
   //************************************************************************************************
@@ -500,11 +489,7 @@ namespace Audio
     // Hasn't been mixed yet
     else
     {
-      // Set variables
       InProcess = true;
-      Version = gAudioSystem->MixVersionNumber;
-      NumMixedChannels = numberOfChannels;
-      MixedListener = listener;
 
       // Set mixed array to same size as output array
       MixedOutput.Resize(outputBuffer->Size());
@@ -531,13 +516,20 @@ namespace Audio
       // If the output state has changed, notify the non-threaded node
       if (ValidOutputLastMix != hasOutput && GetSiblingNode())
           gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
-            GetSiblingNode(), ValidOutputLastMix));
+            GetSiblingNode(), hasOutput));
 
+      // Set variables
       ValidOutputLastMix = hasOutput;
+      Version = gAudioSystem->MixVersionNumber;
+      NumMixedChannels = numberOfChannels;
+      MixedListener = listener;
 
       // Copy mixed samples to output buffer if there is real data
       if (hasOutput)
-        memcpy(outputBuffer->Data(), MixedOutput.Data(), sizeof(float) * outputBuffer->Size());
+      {
+        ErrorIf(outputBuffer->Size() != MixedOutput.Size(), "Buffer sizes do not match when evaluating sound node");
+        memcpy(outputBuffer->Data(), MixedOutput.Data(), sizeof(float) * MixedOutput.Size());
+      }
 
       // Mark as finished
       InProcess = false;
@@ -553,17 +545,16 @@ namespace Audio
     if (!Threaded)
       return false;
 
-    // Reset buffer
-    InputSamples.Resize(howManySamples);
-    memset(InputSamples.Data(), 0, sizeof(float) * howManySamples);
-
     // No sources, do nothing
     if (Inputs.Empty())
       return false;
 
-    Zero::Array<float> tempBuffer(howManySamples);
-
+    BufferType tempBuffer(howManySamples);
     bool isThereInput(false);
+
+    // Reset buffer
+    InputSamples.Resize(howManySamples);
+    memset(InputSamples.Data(), 0, sizeof(float) * howManySamples);
 
     // Get samples from all inputs
     for (unsigned i = 0; i < Inputs.Size(); ++i)
@@ -615,13 +606,13 @@ namespace Audio
 
     // If some of the node's output should be bypassed, adjust the output buffer 
     // with a percentage of the input buffer
-    if (BypassPercent > 0.0f)
+    if (BypassValue > 0.0f)
     {
       unsigned bufferSize = outputBuffer->Size();
 
       for (unsigned i = 0; i < bufferSize; ++i)
-        (*outputBuffer)[i] = (InputSamples[i] * BypassPercent) + ((*outputBuffer)[i]
-          * (1.0f - BypassPercent));
+        (*outputBuffer)[i] = (InputSamples[i] * BypassValue) + ((*outputBuffer)[i]
+          * (1.0f - BypassValue));
     }
   }
 
@@ -637,8 +628,8 @@ namespace Audio
       // Send a message to the external interface if it exists
       if (ExternalData)
       {
-        ExternalData->SendAudioEvent(Notify_NodeDisconnected, (void*)nullptr);
-        gAudioSystem->ExternalInterface->SendAudioEvent(Notify_NodeDisconnected, (void*)ExternalData);
+        ExternalData->SendAudioEvent(AudioEventTypes::NodeDisconnected, (void*)nullptr);
+        gAudioSystem->ExternalInterface->SendAudioEvent(AudioEventTypes::NodeDisconnected, (void*)ExternalData);
       }
       // Otherwise, delete the node
       else
@@ -674,7 +665,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  bool OutputNode::GetOutputSamples(Zero::Array<float>* outputBuffer, const unsigned numberOfChannels,
+  bool OutputNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
     ListenerNode* listener, const bool firstRequest)
   {
     if (!Threaded)
@@ -691,9 +682,9 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float OutputNode::GetAttenuatedVolume()
+  float OutputNode::GetVolumeChangeFromOutputs()
   {
-    return -1.0f;
+    return 1.0f;
   }
 
   //--------------------------------------------------------------------------- Simple Collapse Node
@@ -748,20 +739,10 @@ namespace Audio
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
     Paused(false),
     Pausing(false),
-    VolumeInterpolator(nullptr),
     Interpolating(false)
   {
     if (!Threaded)
       SetSiblingNodes(new CombineAndPauseNode(status, name, ID, extInt, true), status);
-    else
-      VolumeInterpolator = gAudioSystem->GetInterpolatorThreaded();
-  }
-
-  //************************************************************************************************
-  CombineAndPauseNode::~CombineAndPauseNode()
-  {
-    if (VolumeInterpolator)
-      gAudioSystem->ReleaseInterpolatorThreaded(VolumeInterpolator);
   }
 
   //************************************************************************************************
@@ -782,14 +763,14 @@ namespace Audio
       {
         Pausing = true;
         Interpolating = true;
-        VolumeInterpolator->SetValues(1.0f, 0.0f, (unsigned)(0.05f * AudioSystemInternal::SampleRate));
+        VolumeInterpolator.SetValues(1.0f, 0.0f, AudioSystemInternal::PropertyChangeFrames);
       }
       // If we should un-pause and we are currently paused
       else if (!paused && Paused)
       {
         Paused = Pausing = false;
         Interpolating = true;
-        VolumeInterpolator->SetValues(0.0f, 1.0f, (unsigned)(0.05f * AudioSystemInternal::SampleRate));
+        VolumeInterpolator.SetValues(0.0f, 1.0f, AudioSystemInternal::PropertyChangeFrames);
       }
     }
   }
@@ -823,7 +804,7 @@ namespace Audio
         float volume;
         for (unsigned i = 0; i < outputBuffer->Size(); i += numberOfChannels)
         {
-          volume = VolumeInterpolator->NextValue();
+          volume = VolumeInterpolator.NextValue();
 
           // Apply the volume multiplier to all samples
           for (unsigned j = 0; j < numberOfChannels; ++j)
@@ -831,7 +812,7 @@ namespace Audio
         }
 
         // Check if we're done interpolating
-        if (VolumeInterpolator->Finished())
+        if (VolumeInterpolator.Finished())
         {
           Interpolating = false;
           if (Pausing)

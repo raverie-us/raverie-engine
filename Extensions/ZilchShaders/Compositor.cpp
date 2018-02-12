@@ -583,8 +583,10 @@ void ZilchCompositor::DetermineFragmentInputTypes(ShaderStageInfo& previousStage
       // this field failed to properly resolve and is an error
       if(containsInputAttribute && fieldInfo.mInputType == FieldInputType::Unknown)
       {
-        fieldInfo.mInputError = true;
-        fieldInfo.mInputType = FieldInputType::Property;
+        bool ignoreWarnings = field->mAttributes.FindFirstAttribute(nameSettings.mNoFallbackWarningAttributeName) != nullptr;
+        if(!ignoreWarnings)
+          fieldInfo.mInputError = true;
+        fieldInfo.mInputType = FieldInputType::Unknown;
       }
 
       // If this field also contains the output attribute then mark the current

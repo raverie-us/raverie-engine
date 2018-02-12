@@ -35,7 +35,7 @@ public:
   bool Zoomed;
   MultiDock* DockOwner;
   Vec2 FlexSize;
-  Rect PreDockSize;
+  WidgetRect PreDockSize;
   DockArea::Enum Area;
   int DockIndex;
   uint DockShell;

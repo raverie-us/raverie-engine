@@ -156,7 +156,7 @@ PropertyState DirectProperty::GetValue()
   return mProp->GetValue(mInstance, mProperty);
 }
 
-String DirectProperty::GetToolTip(ToolTipColor::Enum* color)
+String DirectProperty::GetToolTip(ToolTipColorScheme::Enum* color)
 {
   // Build the tool tip text
   StringBuilder toolTip;
@@ -170,7 +170,7 @@ String DirectProperty::GetToolTip(ToolTipColor::Enum* color)
     toolTip << "(right click to revert)\n";
     toolTip << "____________________\n\n";
     if(color)
-      *color = ToolTipColor::Orange;
+      *color = ToolTipColorScheme::Orange;
   }
 
   // Add the type name line
@@ -201,14 +201,18 @@ void DirectProperty::OnRightMouseUpLabel(MouseEvent* event)
 {
   ContextMenu* menu = new ContextMenu(this);
 
-  if(IsModified())
+  if(MetaDataInheritance::InheritsFromData(mInstance))
   {
-    ConnectMenu(menu, "Revert", OnRevert);
+    if (IsModified())
+    {
+      ConnectMenu(menu, "Revert", OnRevert);
+    }
+    else
+    {
+      ConnectMenu(menu, "Mark Modified", OnMarkModified);
+    }
   }
-  else
-  {
-    ConnectMenu(menu, "Mark Modified", OnMarkModified);
-  }
+
   // Send an event to let other widgets add items to the context menu
   ContextMenuEvent eventToSend;
   eventToSend.mMenu = menu;
@@ -252,8 +256,7 @@ void DirectProperty::OnRevert(Event* e)
   PropertyPath propertyPath;
   BuildPath(mNode, rootInstance, propertyPath);
 
-  OperationQueue* queue = Z::gEditor->GetOperationQueue();
-  RevertProperty(queue, rootInstance, propertyPath);
+  mProp->RevertProperty(rootInstance, propertyPath);
 }
 
 void DirectProperty::OnMarkModified(Event* e)
@@ -262,8 +265,7 @@ void DirectProperty::OnMarkModified(Event* e)
   PropertyPath propertyPath;
   BuildPath(mNode, rootInstance, propertyPath);
 
-  OperationQueue* queue = Z::gEditor->GetOperationQueue();
-  MarkPropertyAsModified(queue, rootInstance, propertyPath);
+  mProp->MarkPropertyModified(rootInstance, propertyPath);
 }
 
 void DirectProperty::OnMetaModified(Event* e)
@@ -397,6 +399,13 @@ public:
 
     Refresh();
 
+    if (mProperty->IsReadOnly())
+    {
+      // Read only values should not be selectable
+      mSelectorButton->SetSelectable(false);
+      mSelectBox->SetSelectable(false);
+    }
+
     ConnectThisTo(mSelectBox, Events::ItemSelected, OnIndexChanged);
     ConnectThisTo(mSelectorButton, Events::ItemSelected, OnSelectorIndexChanged);
   }
@@ -445,7 +454,7 @@ public:
     //Convert the list index to the enum index value
     uint enumIndex = mEnumIndexes[selectedIndex];
 
-    Any newValue = enumIndex;
+    Any newValue((byte*)&enumIndex, mProperty->PropertyType);
     CommitValue(newValue);
     if(mProperty->HasAttribute(PropertyAttributes::cInvalidatesObject))
       mGrid->Invalidate();
@@ -486,7 +495,7 @@ public:
     EditorRange* metaEdit = mProperty->HasInherited<EditorRange>();
 
     mSlider = new Slider(this, SliderType::Number);
-    mSlider->SetRange(metaEdit->MinValue, metaEdit->MaxValue);
+    mSlider->SetRange(metaEdit->Min, metaEdit->Max);
     mSlider->SetIncrement(metaEdit->Increment);
 
     Refresh();
@@ -671,11 +680,15 @@ public:
     mCurrentAngle = 0.0f;
     mType = Type::GetBoundType(startingValue.StoredType);
     mStart = ConvertValue(startingValue);
+    mIncrement = 0.1f;
+    if (startingValue.Is<int>())
+      mIncrement = 1;
 
     if(range)
     {
-      mMin = range->MinValue;
-      mMax = range->MaxValue;
+      mMin = range->Min;
+      mMax = range->Max;
+      mIncrement = range->Increment;
     }
     else
     {
@@ -700,6 +713,7 @@ public:
   // Storing a pointer to this is safe because when meta is changed, the entire property grid
   // is torn down and rebuilt. This should never point at a destroyed type.
   BoundType* mType;
+  float mIncrement;
 
   double mMin;
   double mMax;
@@ -738,7 +752,7 @@ public:
       angleDelta += Math::cTwoPi;
 
     // Update the adjustment value
-    const float cChangeScalar = 4.0f;
+    const float cChangeScalar = 4.0f * mIncrement;
     double previousChange = mCurrentChange;
     double newChange  = previousChange + double(angleDelta * cChangeScalar);
     double newValue = mStart + newChange;
@@ -793,9 +807,6 @@ public:
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
 
-    mEditText = new TextBox(this);
-    mEditText->SetEditable(true);
-
     mSpinButton = new IconButton(this);
     mSpinButton->SetIcon("Spin");
     mSpinButton->mBackgroundColor = ToByteColor(Vec4::cZero);
@@ -803,6 +814,10 @@ public:
     mSpinButton->mBackgroundClickedColor = ToByteColor(Vec4(1, 1, 1, 0.1f));
     mSpinButton->SetSize(Pixels(24, 16));
     mSpinButton->SetToolTip("Drag to change value");
+    mSpinButton->mTabFocusStop = false;
+
+    mEditText = new TextBox(this);
+    mEditText->SetEditable(true);
 
     mEditRange = initializer.Property->HasInherited<EditorRange>();
 
@@ -1178,6 +1193,7 @@ public:
 
   void PreviewElementValue(int index, float value) override
   {
+    CorrectNonFiniteValues(value);
     mCurrent[index] = (elementType)value;
     PropertyState newState = mState;
     newState.Value = mCurrent;
@@ -1187,6 +1203,7 @@ public:
 
   void CommitElementValue(int index, float value) override
   {
+    CorrectNonFiniteValues(value);
     mCurrent[index] = (elementType)value;
     PropertyState newState = mState;
     newState.Value = mCurrent;
@@ -1201,8 +1218,11 @@ public:
     mCurrent = typedValue;
 
     Vec4 displayValue = Vec4::cZero;
-    for(uint i=0;i<dimension;++i)
+    for (uint i = 0; i < dimension; ++i)
+    {
       displayValue[i] = (float)typedValue[i];
+      CorrectNonFiniteValues(displayValue[i]);
+    }
 
     return displayValue;
   }
@@ -1250,6 +1270,7 @@ public:
 
   void UpdateElement(PropertyState& newState, int index, float value)
   {
+    CorrectNonFiniteValues(value);
     mEulerCurrent[index] = value;
     if(mEulerMode)
     {
@@ -1473,6 +1494,7 @@ public:
     mEyeDropper->mBackgroundClickedColor = ToByteColor(Vec4(1, 1, 1, 0.1f));
     mEyeDropper->SetSize(Pixels(24, 16));
     mEyeDropper->SetToolTip("Drag to pick color");
+    mEyeDropper->mTabFocusStop = false;
 
     // Create the color buffer
     mColorDisplay = new ColorDisplay(this, 70, 20);
@@ -1608,7 +1630,8 @@ void RegisterGeneralEditors()
   ZilchTypeId(Quat   )->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotation>));
   ZilchTypeId(Enum   )->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorEnum>));
 
-  ZilchTypeId(EditorRange)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorRange>));
+  ZilchTypeId(EditorSlider)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorRange>));
+  ZilchTypeId(EditorRange)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
   ZilchTypeId(EditorRotationBasis)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotationBasis>));
   ZilchTypeId(EditorIndexedStringArray)->Add(new MetaPropertyEditor(&CreateProperty<PropertyIndexedStringArray>));
 }

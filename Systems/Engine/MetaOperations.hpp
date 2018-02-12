@@ -66,6 +66,8 @@ public:
 class PropertyOperation : public MetaOperation
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
   PropertyOperation(HandleParam object, PropertyPathParam property,
                     AnyParam before, AnyParam after);
   ~PropertyOperation();
@@ -81,6 +83,11 @@ public:
   void UpdateValueAfter();
 
 private:
+  /// When scripts change, the types in 'mValueBefore' and 'mValueAfter' could be deleted.
+  /// We need to update them to either the new types, or null them out.
+  void OnScriptsCompiled(ZilchCompileEvent* e);
+  void OnMetaRemoved(MetaLibraryEvent* e);
+
   PropertyPath mPropertyPath;
   Any mValueBefore;
   Any mValueAfter;
@@ -114,6 +121,8 @@ private:
   /// The meta of the component we're adding/removing.
   BoundTypeHandle mComponentType;
   MetaComponentHandle<MetaComposition> mComposition;
+
+  UndoHandle mComponentHandle;
 
   /// The index the component was at before it was removed so we can
   /// put it back in the same place.

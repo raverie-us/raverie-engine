@@ -5,6 +5,7 @@ DataContent
 	{
 		var Tags = Array
 		{
+			"OperationHistory"
 		}
 	}
 	DataBuilder 

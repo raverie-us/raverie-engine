@@ -18,7 +18,7 @@ PixelGridArea::PixelGridArea(Composite* parent, SpriteSheetImporter* owner)
   mOwner = owner;
 }
 
-void PixelGridArea::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void PixelGridArea::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
   mOwner->DrawRedirect(viewBlock, frameBlock, mWorldTx, colorTx, clipRect);
@@ -156,7 +156,7 @@ SpriteSheetImporter::SpriteSheetImporter(Composite* parent)
 
 void SpriteSheetImporter::ComputeFrameWidthAndCount(int& frameSize, int& frameCount, int newFrameSize, int spacing, int sourceSize, int offset)
 {
-  frameSize = Math::Clamp(newFrameSize, cMinFrameSize, sourceSize);
+  frameSize = Math::Clamp(newFrameSize, (int)cMinFrameSize, sourceSize);
   int fullFrameSize = frameSize + spacing;
   int area = sourceSize - offset;
   frameCount = area / fullFrameSize;
@@ -228,7 +228,6 @@ void SpriteSheetImporter::LoadImages(Array<String>& files)
   // Copy all frames out to an image for editing
   SpriteFrameLayout frameLayout(files.Size(), images[0].Width, images[0].Height);
   mSourcePixels.Allocate(frameLayout.TotalSize.SizeX, frameLayout.TotalSize.SizeY);
-  mSourcePixels.ClearColorTo(0);
 
   for (uint i = 0; i < files.Size(); ++i)
   {
@@ -243,8 +242,8 @@ void SpriteSheetImporter::LoadImages(Array<String>& files)
   FinishLoad();
 
   // Set the frame size to first frame size
-  SetFrameHeight(images[0].Width);
-  SetFrameWidth(images[0].Height);
+  SetFrameWidth(images[0].Width);
+  SetFrameHeight(images[0].Height);
 
   mFrames.Resize(files.Size());
   UpdatePreview();
@@ -284,7 +283,7 @@ void SpriteSheetImporter::LoadImage(StringParam filename)
     return;
   }
 
-  if (mSourcePixels.Width > MaxSpriteSize || mSourcePixels.Height > MaxSpriteSize)
+  if (mSourcePixels.Width > cMaxSpriteSize || mSourcePixels.Height > cMaxSpriteSize)
   {
     DoNotifyError("Import", "Image is too large");
     Close();
@@ -417,23 +416,45 @@ SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name, Image& ou
     return NULL;
   }
 
-  ResourceAdd resourceAdd;
-  resourceAdd.Library = Z::gEditor->mProjectLibrary;
-  resourceAdd.Name = name;
-  resourceAdd.SourceFile = fileName;
+  AddContentItemInfo addContent;
+  addContent.Library = Z::gEditor->mProjectLibrary;
+  addContent.FileName = BuildString(name, ".png");
+  addContent.BuilderType = "SpriteSource";
+  addContent.ExternalFile = fileName;
+  addContent.OnContentFileConflict = ContentFileConflict::FindNewName;
 
-  AddNewResource(SpriteSourceManager::GetInstance(), resourceAdd);
+  ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(status, addContent);
+  SpriteSourceBuilder* builder = newContentItem->has(SpriteSourceBuilder);
 
-  if (resourceAdd.WasSuccessful())
-  {
-    SpriteSource* spriteSource = (SpriteSource*)resourceAdd.SourceResource;
-    SaveDataToSpriteSource(spriteSource, frameSize, numberOfFrames);
-    return spriteSource;
-  }
-  else
-  {
-    return NULL;
-  }
+  Vec2 origin = ComputeOrigin(mOrigin, frameSize.SizeX, frameSize.SizeY);
+
+  builder->FrameCount = numberOfFrames;
+  builder->FrameSizeX = frameSize.SizeX;
+  builder->FrameSizeY = frameSize.SizeY;
+  builder->OriginX = origin.x;
+  builder->OriginY = origin.y;
+  builder->FrameDelay = 1.0f / mPreviewSprite->mFramesPerSecond;
+  builder->Sampling = Sampling;
+  builder->PixelsPerUnit = (float)PixelsPerUnit;
+  builder->Looping = true;
+
+  // Save builder data
+  newContentItem->SaveContent();
+
+  Array<ContentItem*> contentToBuild;
+  contentToBuild.PushBack(newContentItem);
+
+  ResourcePackage package;
+  Z::gContentSystem->BuildContentItems(status, contentToBuild, package);
+  DoNotifyStatus(status);
+
+  ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(addContent.Library->Name);
+  Z::gResources->ReloadPackage(resourceLibrary, &package);
+
+  ErrorIf(package.Resources.Size() != 1, "Should only be a single SpriteSource built.");
+  SpriteSource* spriteSource = (SpriteSource*)Z::gResources->GetResource(package.Resources.Front().mResourceId);
+
+  return spriteSource;
 }
 
 bool SpriteSheetImporter::AddFramesAsSprites()
@@ -511,8 +532,6 @@ bool SpriteSheetImporter::AddFramesAsSprites()
     AddNewResource(TilePaletteSourceManager::GetInstance(), resourceAdd);
   }
 
-  SpriteSourceManager::GetInstance()->RebuildSpriteSheets();
-
   return true;
 }
 
@@ -528,16 +547,15 @@ bool SpriteSheetImporter::AddMultiFrameSprite()
 
   SpriteFrameLayout frameLayout(frameCount, FrameSizeX, FrameSizeY);
 
-  if (frameLayout.TotalSize.SizeX > MaxSpriteSize ||
-      frameLayout.TotalSize.SizeY > MaxSpriteSize)
+  if (frameLayout.TotalSize.SizeX > cMaxSpriteSize ||
+      frameLayout.TotalSize.SizeY > cMaxSpriteSize)
   {
-    DoNotifyError("Error", "Sprite is too large");
+    DoNotifyError("Error", "Sprite is too large, must be within 4096x4096.");
     return false;
   }
 
   Image output;
   output.Allocate(frameLayout.TotalSize.SizeX, frameLayout.TotalSize.SizeY);
-  output.ClearColorTo(0);
 
   for (uint i = 0; i < mFrames.Size(); ++i)
   {
@@ -553,10 +571,7 @@ bool SpriteSheetImporter::AddMultiFrameSprite()
   if (source == nullptr)
     return false;
 
-  source->mAtlas->NeedsBuilding = true;
   mFrames.Clear();
-
-  SpriteSourceManager::GetInstance()->RebuildSpriteSheets();
 
   return true;
 }
@@ -800,7 +815,7 @@ void SpriteSheetImporter::DrawLines(Array<StreamedVertex>& lines, uint axis, flo
   }
 }
 
-void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Mat4 oldWorldTx = mWorldTx;
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);

@@ -16,7 +16,10 @@ namespace Audio
 
   class DynamicsProcessor;
 
-  enum ProcessorTypes { Compressor, Limiter, Expander, Gate };
+  namespace DynamicsProcessorTypes
+  {
+    enum Enum { Compressor, Limiter, Expander, Gate };
+  }
 
   class DynamicsProcessorNode : public SimpleCollapseNode
   {
@@ -53,9 +56,9 @@ namespace Audio
     // Sets the knee width of the filter
     void SetKneeWidth(const float kneeWidth);
     // Returns the current filter type
-    ProcessorTypes GetType();
+    DynamicsProcessorTypes::Enum GetType();
     // Sets the filter type
-    void SetType(const ProcessorTypes type);
+    void SetType(const DynamicsProcessorTypes::Enum type);
 
   private:
     ~DynamicsProcessorNode();
@@ -79,7 +82,7 @@ namespace Audio
     // Filter knee width value
     float KneeWidth;
     // Processor type
-    ProcessorTypes ProcessorType;
+    DynamicsProcessorTypes::Enum ProcessorType;
   };
 
 }

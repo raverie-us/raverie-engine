@@ -10,18 +10,12 @@
 #include "Precompiled.hpp"
 #include "Platform/ThreadSync.hpp"
 
-#if defined(ZeroStringStats)
-  #undef ZeroStringStats
-  #define ZeroStringStats(X) X
-#else
-  #define ZeroStringStats(X)
-#endif
-
 namespace Zero
 {
 
 //----------------------------------------------------------------------- StringPool
 #if defined(ZeroStringPooling)
+typedef HashSet<StringNode*, PoolPolicy> StringPoolSet;
 class StringPool
 {
 public:
@@ -32,8 +26,8 @@ public:
   // The empty node is an optimization for empty strings, but it still has to be in the pool
   StringNode& GetEmptyNode();
 
-  ThreadLock mLock;
-  HashSet<StringNode*, PoolPolicy> mPool;
+  SpinLock mLock;
+  StringPoolSet mPool;
 };
 
 StringPool::StringPool()
@@ -64,12 +58,6 @@ StringPool& StringPool::GetInstance()
   return pool;
 }
 #endif
-
-StringStats& StringStats::GetInstance()
-{
-  static StringStats stats;
-  return stats;
-}
 
 size_t PoolPolicy::operator()(const StringNode* node) const
 {
@@ -317,13 +305,66 @@ String::String(StringNode* node)
   poolOrDeleteNode(node);
 }
 
+class TemporaryString
+{
+public:
+  const char* mData;
+  size_t mSize;
+  size_t mHash;
+};
+
+class TemporaryStringHashPolicy
+{
+public:
+  inline size_t operator()(const TemporaryString& temp)
+  {
+    return temp.mHash;
+  }
+
+  bool Equal(const TemporaryString& temp, StringNode* node)
+  {
+    // Note that we MUST use memcmp here and not strcmp because the temporary string
+    // could not be null terminated (we could be constructing a string from a range)
+    return
+      temp.mSize == node->Size &&
+      temp.mHash == node->HashCode &&
+      memcmp(temp.mData, node->Data, temp.mSize) == 0;
+  }
+};
+
 void String::Assign(const_pointer data, size_type size)
 {
-  StringNode* node = AllocateNode(size);
-  memcpy(node->Data, data, size);
-  node->HashCode = HashString(data, size);
-  mNode = node;
-  poolOrDeleteNode(node);
+  size_t hash = HashString(data, size);
+
+#if defined(ZeroStringPooling)
+  TemporaryString temp;
+  temp.mData = data;
+  temp.mSize = size;
+  temp.mHash = hash;
+
+  StringPool& pool = StringPool::GetInstance();
+  pool.mLock.Lock();
+  {
+    TemporaryStringHashPolicy policy;
+    StringPoolSet::range foundRange = pool.mPool.FindAs(temp, policy);
+    if (foundRange.Empty())
+    {
+      CreateAndAssignNode(data, size, hash);
+      pool.mPool.InsertOrError(mNode);
+    }
+    else
+    {
+      // Note: It is OK if the existingNode's RefCount is 0 here
+      // This happens in the case where we're creating the SAME string on one thread
+      // but it's literally being released on another thread at the same time (already ref count 0)
+      StringNode* existingNode = foundRange.Front();
+      Assign(existingNode);
+    }
+  }
+  pool.mLock.Unlock();
+#else
+  CreateAndAssignNode(data, size, hash);
+#endif
 }
 
 void String::Assign(StringNode* node)
@@ -332,6 +373,13 @@ void String::Assign(StringNode* node)
   addRef();
 }
 
+void String::CreateAndAssignNode(const_pointer data, size_type size, size_t hash)
+{
+  StringNode* node = AllocateNode(size);
+  memcpy(node->Data, data, size);
+  node->HashCode = hash;
+  mNode = node;
+}
 
 void StringNode::addRef()
 {
@@ -373,7 +421,6 @@ void String::ComputeStringStats(StringStats& stats)
 
 void String::poolOrDeleteNode(StringNode* node)
 {
-  ZeroStringStats(StringStats& stats = StringStats::GetInstance());
 #if defined(ZeroStringPooling)
   StringPool& pool = StringPool::GetInstance();
   pool.mLock.Lock();
@@ -382,8 +429,6 @@ void String::poolOrDeleteNode(StringNode* node)
     if (existingNode == nullptr)
     {
       pool.mPool.InsertOrError(node);
-      ZeroStringStats(++stats.mTotalCount);
-      ZeroStringStats(stats.mTotalSize += node->Size);
     }
     else
     {
@@ -395,9 +440,6 @@ void String::poolOrDeleteNode(StringNode* node)
     }
   }
   pool.mLock.Unlock();
-#else
-  ZeroStringStats(++stats.mTotalCount);
-  ZeroStringStats(stats.mTotalSize += node->Size);
 #endif
 }
 
@@ -410,34 +452,23 @@ void StringNode::release()
   if (HashCode == StringPoolFreeHashCode)
   {
     if (AtomicPreDecrement(&RefCount) == 0)
-    {
-      ZeroStringStats(--stats.mTotalCount);
-      ZeroStringStats(stats.mTotalSize -= Size);
       zDeallocate(this);
-    }
     return;
   }
 
   StringPool& pool = StringPool::GetInstance();
   pool.mLock.Lock();
-#endif
 
   if (AtomicPreDecrement(&RefCount) == 0)
   {
-    ZeroStringStats(StringStats& stats = StringStats::GetInstance());
-
-#if defined(ZeroStringPooling)
     ErrorIf(pool.mPool.FindValue(this, nullptr) == nullptr, "Did not find node in pool");
     pool.mPool.Erase(this);
-    ZeroStringStats(--stats.mTotalCount);
-    ZeroStringStats(stats.mTotalSize -= Size);
-#endif
     zDeallocate(this);
   }
-
-
-#if defined(ZeroStringPooling)
   pool.mLock.Unlock();
+#else
+  if (AtomicPreDecrement(&RefCount) == 0)
+    zDeallocate(this);
 #endif
 }
 
@@ -445,16 +476,10 @@ bool StringNode::isEqual(StringNode* l, StringNode* r)
 {
   if(!(l == r))
   {
-    if(l->Size == r->Size &&
-        l->HashCode == r->HashCode && 
-        strcmp(l->Data, r->Data) == 0)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    return
+      l->Size == r->Size &&
+      l->HashCode == r->HashCode &&
+      memcmp(l->Data, r->Data, l->Size) == 0;
   }
   else
   {

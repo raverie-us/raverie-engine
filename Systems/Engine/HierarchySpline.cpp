@@ -25,6 +25,9 @@ ZilchDefineType(HierarchySpline, builder, type)
   ZilchBindGetterSetterProperty(Error)->ZeroSerialize(real(0.01f));
   ZilchBindGetterSetterProperty(DebugDrawSpline)->ZeroSerialize(true);
   ZilchBindGetterSetterProperty(SplineColor)->ZeroSerialize(Vec4(0, 0, 0, 1));
+
+  ZilchBindMethod(RebuildIfModified);
+  ZilchBindMethod(ForceRebuild);
 }
 
 HierarchySpline::HierarchySpline()
@@ -176,6 +179,9 @@ SplineSampleData HierarchySpline::SampleDistance(real distance)
 
 void HierarchySpline::OnQuerySpline(SplineEvent* e)
 {
+  // If the spline is being requested before the first frame update, we want to 
+  // make sure it's built
+  RebuildIfModified();
   e->mSpline = mSpline;
 }
 

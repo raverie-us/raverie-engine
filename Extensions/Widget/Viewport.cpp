@@ -36,12 +36,28 @@ Viewport::Viewport(Composite* parent, Space* space, Camera* camera)
 
   mViewportTexture = nullptr;
   new ViewportDisplay(this);
+
+  ConnectThisTo(this, Events::MouseFileDrop, OnMouseFileDrop);
 }
 
 void Viewport::OnDestroy()
 {
   Composite::OnDestroy();
   mViewportInterface = nullptr;
+}
+
+void Viewport::OnMouseFileDrop(MouseFileDropEvent* event)
+{
+  if(mTargetSpace != nullptr)
+    mTargetSpace->DispatchEvent(Events::MouseFileDrop, event);
+
+  if(mCamera != nullptr)
+  {
+    Cog* cog = mCamera->GetCameraViewportCog();
+    if(cog != nullptr)
+      cog->DispatchEvent(Events::MouseFileDrop, event);
+  }
+
 }
 
 Space* Viewport::GetTargetSpace()
@@ -289,7 +305,7 @@ ViewportDisplay::ViewportDisplay(Composite* parent)
   mViewport = (Viewport*)parent;
 }
 
-void ViewportDisplay::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void ViewportDisplay::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -301,6 +317,17 @@ void ViewportDisplay::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock,
 
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mViewport->mViewportTexture);
   frameBlock.mRenderQueues->AddStreamedQuad(viewNode, Vec3(0, 0, 0), Vec3(size, 0), Vec2(0, 0), Vec2(1, 1), color);
+
+  // override blend settings
+  FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
+
+  BlendSettings& blendSettings = frameBlock.mRenderQueues->mBlendSettingsOverrides.PushBack();
+  blendSettings.mBlendMode = BlendMode::Enabled;
+  blendSettings.mSourceFactor = BlendFactor::One;
+  blendSettings.mDestFactor = BlendFactor::InvSourceAlpha;
+
+  frameNode.mBlendSettingsOverride = true;
+  frameNode.mBlendSettingsIndex = frameBlock.mRenderQueues->mBlendSettingsOverrides.Size() - 1;
 }
 
 }//namespace Zero

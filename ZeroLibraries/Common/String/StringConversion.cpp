@@ -182,22 +182,22 @@ bool IsCharacter(char c, cstr search)
 // ToValue Functions
 //
 
-void ToValue(StringRange range, String& value)
+void ToValue(StringRangeParam range, String& value)
 {
   value = range;
 }
-void ToValue(StringRange range, StringRange& value)
+void ToValue(StringRangeParam range, StringRange& value)
 {
   value = range;
 }
 
-void ToValue(StringRange range, bool& value)
+void ToValue(StringRangeParam range, bool& value)
 {
   // True if string contains 'true', 'True', or '1', else false
   value = (IsCharacter(range.Front().value, "tT1"));
 }
 
-void ToValue(StringRange range, char& value)
+void ToValue(StringRangeParam range, char& value)
 {
   if(range.Empty())
     value = char(0);
@@ -205,50 +205,50 @@ void ToValue(StringRange range, char& value)
     value = range.mBegin[0];
 }
 
-void ToValue(StringRange range, int8& value, int base)
+void ToValue(StringRangeParam range, int8& value, int base)
 {
   value = (int8)strtol(range.mBegin, nullptr, base);
 }
-void ToValue(StringRange range, int16& value, int base)
+void ToValue(StringRangeParam range, int16& value, int base)
 {
   value = (int16)strtol(range.mBegin, nullptr, base);
 }
-void ToValue(StringRange range, int32& value, int base)
+void ToValue(StringRangeParam range, int32& value, int base)
 {
   value = (int32)strtol(range.mBegin, nullptr, base);
 }
-void ToValue(StringRange range, int64& value, int base)
+void ToValue(StringRangeParam range, int64& value, int base)
 {
   value = (int64)strtoll(range.mBegin, nullptr, base);
 }
 
-void ToValue(StringRange range, uint8& value, int base)
+void ToValue(StringRangeParam range, uint8& value, int base)
 {
   value = (uint8)strtoul(range.mBegin, nullptr, base);
 }
-void ToValue(StringRange range, uint16& value, int base)
+void ToValue(StringRangeParam range, uint16& value, int base)
 {
   value = (uint16)strtoul(range.mBegin, nullptr, base);
 }
-void ToValue(StringRange range, uint32& value, int base)
+void ToValue(StringRangeParam range, uint32& value, int base)
 {
   value = (uint32)strtoul(range.mBegin, nullptr, base);
 }
-void ToValue(StringRange range, uint64& value, int base)
+void ToValue(StringRangeParam range, uint64& value, int base)
 {
   value = (uint64)strtoull(range.mBegin, nullptr, base);
 }
 
-void ToValue(StringRange range, float& value)
+void ToValue(StringRangeParam range, float& value)
 {
   value = (float)atof(range.mBegin);
 }
-void ToValue(StringRange range, double& value)
+void ToValue(StringRangeParam range, double& value)
 {
   value = (double)atof(range.mBegin);
 }
 
-void ToValue(StringRange range, Guid& value)
+void ToValue(StringRangeParam range, Guid& value)
 {
   value = ReadHexString(range);
 }

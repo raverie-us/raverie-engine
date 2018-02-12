@@ -239,6 +239,9 @@ void ResourceLibrary::Remove(Resource* resource)
   // in the array was the last reference)
   HandleOf<Resource> resourceHandle = resource;
 
+  // Allow resources to do any required cleanup before being removed, same as when a library is unloaded.
+  resource->Unload();
+
   Resources.EraseValueError(resourceHandle);
 
   // Remove zilch resources from their containers
@@ -290,6 +293,38 @@ bool ResourceLibrary::BuiltType(BoundType* type)
   }
 
   return false;
+}
+
+//**************************************************************************************************
+BoundType* GetReplacingTypeFromSwapLibrary(SwapLibrary& swapLibrary, BoundType* oldType)
+{
+  LibraryRef sourceLib = oldType->SourceLibrary;
+
+  if (swapLibrary.mCurrentLibrary == sourceLib)
+  {
+    if (Library* pendingLibrary = swapLibrary.mPendingLibrary)
+      return pendingLibrary->BoundTypes.FindValue(oldType->Name, nullptr);
+  }
+
+  return nullptr;
+}
+
+//**************************************************************************************************
+BoundType* ResourceLibrary::GetReplacingType(BoundType* oldType)
+{
+  if (BoundType* newType = GetReplacingTypeFromSwapLibrary(mSwapScript, oldType))
+    return newType;
+
+  if (BoundType* newType = GetReplacingTypeFromSwapLibrary(mSwapFragment, oldType))
+    return newType;
+
+  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+  {
+    if (BoundType* newType = GetReplacingTypeFromSwapLibrary(swapPlugin, oldType))
+      return newType;
+  }
+
+  return nullptr;
 }
 
 //**************************************************************************************************
@@ -451,7 +486,7 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
     return true;
 
   // Currently the version is used to detect duplicate errors
-  // Since scripts are changing, we definately want to show duplicate errors.
+  // Since scripts are changing, we definitely want to show duplicate errors.
   ++ZilchManager::GetInstance()->mVersion;
 
   // Scripts cannot compile if fragments do not compile

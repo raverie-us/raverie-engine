@@ -240,6 +240,17 @@ public:
   CogPath mCogPath;
 };
 
+/// Allows the ability to query for Components directly on the cog path instead of having to first
+/// check the Cog for null.
+class CogPathMetaComposition : public MetaComposition
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  CogPathMetaComposition();
+
+  virtual Handle GetComponent(HandleParam owner, BoundType* componentType);
+};
+
 class CogPathMetaSerialization : public MetaSerialization
 {
 public:

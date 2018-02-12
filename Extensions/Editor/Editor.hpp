@@ -242,6 +242,7 @@ public:
   void SelectOnly(HandleParam object);
   void SelectPrimary(HandleParam object);
   virtual void OnEngineUpdate(UpdateEvent* event) {}
+  void OnResourcesUnloaded(ResourceEvent* event);
   void Update();
   void ExecuteCommand(StringParam commandName);
   Composite* OpenSearchWindow(Widget* returnFocus, bool noBorder = false);
@@ -257,6 +258,8 @@ public:
   void EditGameSpaces();
   void DestroyGames();
   void PauseGame();
+  void ToggleGamePaused();
+  void SetGamePaused(bool state);
   void StopGame();
   void StepGame();
   bool AreGamesRunning();

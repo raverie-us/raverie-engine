@@ -124,6 +124,7 @@ Tweakables
 				var ClickedColor = Vec4{0.194999993, 0.194999993, 0.194999993, 1}
 				var BorderColor = Vec4{0.180391997, 0.180391997, 0.180391997, 1}
 				var FocusBorderColor = Vec4{0.0189999994, 0.419330001, 0.949999988, 1}
+				var ReadOnlyColor = Vec4{0.36500001, 0.36500001, 0.36500001, 1}
 			}
 			CheckBox_ 
 			{
@@ -162,6 +163,7 @@ Tweakables
 				var TextColor = Vec4{0.774999976, 0.774999976, 0.774999976, 1}
 				var TextHoverColor = Vec4{1, 1, 1, 1}
 				var TextClickedColor = Vec4{0.664999962, 0.664999962, 0.664999962, 1}
+				var ReadOnlyTextColor = Vec4{0.644999981, 0.644999981, 0.644999981, 1}
 			}
 			Popup_ 
 			{
@@ -289,7 +291,9 @@ Tweakables
 			var FocusBorderColor = Vec4{0.196078002, 0.529411972, 0.917647004, 1}
 			var ListPrimaryColor = Vec4{0.239216, 0.239216, 0.239216, 1}
 			var ListSecondaryColor = Vec4{0.258823991, 0.258823991, 0.258823991, 1}
+			var ListReadOnlyColor = Vec4{0.644999981, 0.644999981, 0.644999981, 1}
 			var ListBackgroundColor = Vec4{0.258823991, 0.258823991, 0.258823991, 1}
+			var ReadOnlyBackgroundColor = Vec4{0.36500001, 0.36500001, 0.36500001, 1}
 		}
 		LogicGraph_ 
 		{
@@ -498,7 +502,7 @@ Tweakables
 				var SecondaryColor = Vec4{0.356862992, 0.266667008, 0.258823991, 1}
 				var MouseOverColor = Vec4{0.541176021, 0.247059003, 0.247235, 1}
 				var SelectedColor = Vec4{0.819999993, 0.180399999, 0.180784002, 0.300000012}
-				var ToolTipColor = Vec4{0.904999971, 0.230774999, 0.230774999, 1}
+				var ToolTipColorScheme = Vec4{0.904999971, 0.230774999, 0.230774999, 1}
 			}
 			ValidRows_ 
 			{
@@ -506,7 +510,7 @@ Tweakables
 				var SecondaryColor = Vec4{0.258823991, 0.258823991, 0.258823991, 1}
 				var MouseOverColor = Vec4{0.247059003, 0.407842994, 0.541176021, 0.810000002}
 				var SelectedColor = Vec4{0, 0.501960993, 0.92156899, 0.270000011}
-				var ToolTipColor = Vec4{1, 1, 1, 1}
+				var ToolTipColorScheme = Vec4{1, 1, 1, 1}
 			}
 		}
 		Viewport_ 

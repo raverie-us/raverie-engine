@@ -1,0 +1,107 @@
+[Version:1]
+Cog 
+{
+	var Name = "Spline"
+	Transform 
+	{
+		var Translation = Real3{0, 0, 0}
+		var Scale = Real3{1, 1, 1}
+		var Rotation = Quaternion{0, 0, 0, 1}
+	}
+	HierarchySpline 
+	{
+		var Closed = false
+		var SplineType = SplineType.CatmullRom
+		var Error = 0.00999999978
+		var DebugDrawSpline = true
+		var SplineColor = Real4{0, 0, 0, 1}
+	}
+	SelectionIcon 
+	{
+		var Visible = true
+		var VisibilityEvents = true
+		var Material = "56581e2bb81777be:DebugDrawOnTop"
+		var SpriteSource = "58f8e4be736fa133:SelectIcon"
+		var ViewScale = 1
+		var OverrideSelections = true
+	}
+	Hierarchy 
+	{
+		Cog [Id:0x59a4ff0724b8b78a]
+		{
+			var Name = "ControlPoint"
+			Transform 
+			{
+				var Translation = Real3{-4, -2, 0}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			SelectionIcon 
+			{
+				var Visible = true
+				var VisibilityEvents = true
+				var Material = "56581e2bb81777be:DebugDrawOnTop"
+				var SpriteSource = "58f8e4be736fa133:SelectIcon"
+				var ViewScale = 0.600000024
+				var OverrideSelections = true
+			}
+		}
+		Cog [Id:0x59a4fa03b8d1806a]
+		{
+			var Name = "ControlPoint"
+			Transform 
+			{
+				var Translation = Real3{-2, 1, 0}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			SelectionIcon 
+			{
+				var Visible = true
+				var VisibilityEvents = true
+				var Material = "56581e2bb81777be:DebugDrawOnTop"
+				var SpriteSource = "58f8e4be736fa133:SelectIcon"
+				var ViewScale = 0.600000024
+				var OverrideSelections = true
+			}
+		}
+		Cog [Id:0x59a4fa01b87864f4]
+		{
+			var Name = "ControlPoint"
+			Transform 
+			{
+				var Translation = Real3{2, -1, 0}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			SelectionIcon 
+			{
+				var Visible = true
+				var VisibilityEvents = true
+				var Material = "56581e2bb81777be:DebugDrawOnTop"
+				var SpriteSource = "58f8e4be736fa133:SelectIcon"
+				var ViewScale = 0.600000024
+				var OverrideSelections = true
+			}
+		}
+		Cog [Id:0x59a4fa1cba019b30]
+		{
+			var Name = "ControlPoint"
+			Transform 
+			{
+				var Translation = Real3{4, 2, 0}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			SelectionIcon 
+			{
+				var Visible = true
+				var VisibilityEvents = true
+				var Material = "56581e2bb81777be:DebugDrawOnTop"
+				var SpriteSource = "58f8e4be736fa133:SelectIcon"
+				var ViewScale = 0.600000024
+				var OverrideSelections = true
+			}
+		}
+	}
+}

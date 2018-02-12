@@ -9,6 +9,9 @@
 namespace Zero
 {
 
+// Ranges
+ZilchDefineRange(UiWidgetComponentHierarchy::ChildListRange);
+
 // Enums
 ZilchDefineEnum(UiSizePolicy);
 ZilchDefineEnum(UiVerticalAlignment);
@@ -22,6 +25,9 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
 {
   builder.CreatableInScriptDefault = false;
   
+  // Ranges
+  ZilchInitializeRangeAs(UiWidgetComponentHierarchy::ChildListRange, "UiWidgetRange");
+
   // Enums
   ZilchInitializeEnum(UiSizePolicy);
   ZilchInitializeEnum(UiVerticalAlignment);
@@ -35,19 +41,9 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
   ZilchInitializeType(UiTransformUpdateEvent);
 
   ZilchInitializeType(UiWidgetCastResultsRange);
+  ZilchInitializeType(UiWidgetComponentHierarchy);
   ZilchInitializeType(UiWidget);
   ZilchInitializeType(UiRootWidget);
-  ZilchInitializeType(UiRenderer);
-  ZilchInitializeType(UiRootInputRouter);
-  ZilchInitializeType(UiLayout);
-  ZilchInitializeType(UiStackLayout);
-  ZilchInitializeType(UiFillLayout);
-  ZilchInitializeType(UiDockLayout);
-
-  ZilchInitializeType(UiWidget);
-  ZilchInitializeType(UiRootWidget);
-  ZilchInitializeType(UiRootInputRouter);
-  ZilchInitializeType(UiRenderer);
   ZilchInitializeType(UiLayout);
   ZilchInitializeType(UiStackLayout);
   ZilchInitializeType(UiFillLayout);

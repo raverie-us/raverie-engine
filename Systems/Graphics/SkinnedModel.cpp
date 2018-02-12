@@ -69,6 +69,7 @@ void SkinnedModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock
   Array<uint>& indexRemapBuffer = frameBlock.mRenderQueues->mIndexRemapBuffer;
 
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Static;
   frameNode.mCoreVertexType = CoreVertexType::SkinnedMesh;
 

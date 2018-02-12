@@ -19,6 +19,7 @@ ZilchDefineType(GraphicsRaycastProvider, builder, type)
 {
   ZilchBindFieldProperty(mMultiSelectGraphical);
   ZilchBindFieldProperty(mVisibleOnly);
+  ZilchBindConstructor();
 
   type->ToStringFunction = GraphicsRaycastProviderToString;
   type->Add(new StringNameDisplay("Graphics"));
@@ -37,17 +38,22 @@ void GraphicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResul
 
   GraphicsRayCast rayCast;
   rayCast.mRay = ray;
+  rayCast.mObject = nullptr;
+  rayCast.mPosition = Vec3(0.0f);
+  rayCast.mNormal = Vec3(0.0f);
+  rayCast.mUv = Vec2(0.0f);
+  rayCast.mT = 0.0f;
 
   forRangeBroadphaseTree (GraphicsBroadPhase, graphicsSpace->mBroadPhase, Ray, ray)
   {
     if (RayTest(range.Front(), rayCast, castInfo))
-      results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, Vec3::cZero);
+      results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
   }
   
   forRange (Graphical& graphical, graphicsSpace->mGraphicalsNeverCulled.All())
   {
     if (RayTest(&graphical, rayCast, castInfo))
-      results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, Vec3::cZero);
+      results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
   }
 
   if (mVisibleOnly == false)
@@ -55,7 +61,7 @@ void GraphicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResul
     forRange (Graphical& graphical, graphicsSpace->mGraphicalsAlwaysCulled.All())
     {
       if (RayTest(&graphical, rayCast, castInfo))
-        results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, Vec3::cZero);
+        results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
     }
   }
 }

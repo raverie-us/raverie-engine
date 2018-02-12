@@ -143,7 +143,7 @@ PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initialize
 
     if(MetaResource* metaResource = objectType->HasInherited<MetaResource>())
     {
-      if(mNode->mProperty == nullptr)
+      if(mNode->mProperty == nullptr && !mNode->IsPropertyGroup())
       {
         mEditScriptButton = new IconButton(this);
         mEditScriptButton->SetIcon("EditScript");
@@ -177,7 +177,7 @@ PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initialize
   //Expanded
   if(objectType)
   {
-    if(mExpandedTypes.Contains(objectType->Name) || objectType->HasAttribute(ObjectAttributes::cExpanded))
+    if(mExpandedTypes.Contains(GetExpandId()) || objectType->HasAttribute(ObjectAttributes::cExpanded))
       OpenNode(false);
   }
 
@@ -207,11 +207,11 @@ void PropertyWidgetObject::OnMouseEnterTitle(MouseEvent* event)
   mMouseOverTitle = true;
 
   if(mProxyIcon)
-    CreateTooltip("This Component type does not exist. Either the type was removed or scripts aren't compiling. This is referred to as being proxied.", ToolTipColor::Yellow);
+    CreateTooltip("This Component type does not exist. Either the type was removed or scripts aren't compiling. This is referred to as being proxied.", ToolTipColorScheme::Yellow);
   if(mLocallyRemoved)
-    CreateTooltip("This Component has been locally removed from the Archetype", ToolTipColor::Red);
+    CreateTooltip("This Component has been locally removed from the Archetype", ToolTipColorScheme::Red);
   if(mLocallyAdded)
-    CreateTooltip("This Component has been locally added to the Archetype", ToolTipColor::Green);
+    CreateTooltip("This Component has been locally added to the Archetype", ToolTipColorScheme::Green);
   MarkAsNeedsUpdate();
 }
 
@@ -292,7 +292,9 @@ void PropertyWidgetObject::RefreshLabel()
   Handle instance = mNode->mObject;
   String text;
 
-  if(MetaDisplay* display = instance.StoredType->HasInherited<MetaDisplay>())
+  if (mNode->IsPropertyGroup())
+    text = mNode->mPropertyGroupName;
+  else if(MetaDisplay* display = instance.StoredType->HasInherited<MetaDisplay>())
     text = display->GetName(instance);
   else if(mNode && mNode->mProperty)
     text = mNode->mProperty->Name;
@@ -370,35 +372,63 @@ void PropertyWidgetObject::UpdateTransform()
       mEditScriptButton->SetTranslation(Pixels(20, 4, 0));
     if(mProxyIcon)
     {
-      if (mEditScriptButton)
+      if(mEditScriptButton)
         mProxyIcon->SetTranslation(Pixels(36, 3, 0));
       else
         mProxyIcon->SetTranslation(Pixels(20, 3, 0));
     }
 
-    // Center the name 
-    Vec2 namePos = SnapToPixels((mTitleBackground->GetSize() * 0.5f) - (mLabel->GetSize() * 0.5f));
-    namePos.y += Pixels(1);
-    if(mNode && mNode->mProperty)
-      namePos.x = Pixels(14);
-    mLabel->SetTranslation(ToVector3(namePos));
+    // Find the total area left for the component when taking the other icons into account
+    Vec2 labelArea = mTitleBackground->GetSize();
+    // Magic number is a buffer zone to account for the space between other elements on the title bar
+    // 7 looked the best in terms of spacing on items
+    float otherIconWidth = mExpandNode->GetSize().x + Pixels(7);
+    if(mRemoveIcon)
+      otherIconWidth += mRemoveIcon->GetSize().x;
+    if(mEditScriptButton)
+      otherIconWidth += mEditScriptButton->GetSize().x;
+    if(mProxyIcon)
+      otherIconWidth += mProxyIcon->GetSize().x;
+    labelArea.x -= otherIconWidth;
 
-    // Move the locally modified icon to the left of the name
-    if(mLocalModificationIcon)
+    // Find the offset for the label area before centering for edge case logic
+    Vec2 labelPos = Vec2::cZero;
+    if(mRemoveIcon)
+      otherIconWidth -= mRemoveIcon->GetSize().x;
+    labelPos.x += otherIconWidth;
+
+    // Text fits within the remaining area on the title bar so center it
+    if(mLabel->GetSize().x < labelArea.x)
     {
-      Vec2 iconPos = namePos;
-      iconPos.x -= Pixels(5) + mLocalModificationIcon->GetSize().x;
-      iconPos.y += Pixels(5);
-      mLocalModificationIcon->SetTranslation(ToVector3(iconPos));
-    }
+      // Center the name
+      Vec2 namePos = SnapToPixels((mTitleBackground->GetSize() * 0.5f) - (mLabel->GetSize() * 0.5f));
+      namePos.y = 0;
+      if(mNode && mNode->mProperty)
+        namePos.x = Pixels(14);
+      
+      // If centering logic puts our position before the clipped position, use the min label position
+      // this case is hit near the transition point because so many elements have manually set positions
+      // so proper spacing cannot be programmatically
+      if(namePos.x < labelPos.x)
+        namePos = labelPos;
+      
+      mLabel->SetTranslation(ToVector3(namePos));
 
-    // We've pushed over the translation of the name, so we need to
-    // fit the size of it correctly
-    //nameLayout.Size.x = mSize.x - nameLayout.Translation.x;
-    //nameLayout.Size.y = PropertyViewUi::PropertySize;
-    // Shift up to center it better
-    //nameLayout.Translation.y -= Pixels(2);
-    //PlaceWithLayout(nameLayout, mLabel);
+      // Move the locally modified icon to the left of the name
+      if(mLocalModificationIcon)
+      {
+        Vec2 iconPos = namePos;
+        iconPos.x -= Pixels(5) + mLocalModificationIcon->GetSize().x;
+        iconPos.y += Pixels(5);
+        mLocalModificationIcon->SetTranslation(ToVector3(iconPos));
+      }
+    }
+    else
+    {
+      // Set the text size to the area left to clip longer component names
+      mLabel->SetSize(labelArea);
+      mLabel->SetTranslation(ToVector3(labelPos));
+    }
 
     // Layout the remove icon if it exists
     if(mRemoveIcon)
@@ -511,7 +541,8 @@ void PropertyWidgetObject::CloseNode()
     return;
 
   mNodeState = NodeState::Closed;
-  mExpandedTypes.Erase(mNode->mObject.StoredType->Name);
+
+  mExpandedTypes.Erase(GetExpandId());
 
   //Change the icon
   mExpandNode->ChangeDefinition(mDefSet->GetDefinition(cPropArrowRight));
@@ -570,7 +601,8 @@ void PropertyWidgetObject::OpenNode(bool animate)
     return;
 
   mNodeState = NodeState::Open;
-  mExpandedTypes.Insert(mNode->mObject.StoredType->Name);
+
+  mExpandedTypes.Insert(GetExpandId());
 
   //Change the icon
   mExpandNode->ChangeDefinition(mDefSet->GetDefinition(cPropArrowDown));
@@ -1284,7 +1316,7 @@ void PropertyWidgetObject::HighlightRed(StringParam message)
   // Only create a tooltip if the message is valid and we don't
   // already have one made
   if(!message.Empty() && !mToolTip)
-    CreateTooltip(message, ToolTipColor::Red);
+    CreateTooltip(message, ToolTipColorScheme::Red);
 }
 
 //******************************************************************************
@@ -1310,7 +1342,7 @@ void PropertyWidgetObject::RemoveRedHighlight()
 }
 
 //******************************************************************************
-void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColor::Enum color)
+void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColorScheme::Enum color)
 {
   // Destroy it if one already exists
   mToolTip.SafeDestroy();
@@ -1318,7 +1350,7 @@ void PropertyWidgetObject::CreateTooltip(StringParam message, ToolTipColor::Enum
   // Create an indicator
   ToolTip* toolTip = new ToolTip(this);
   toolTip->SetText(message);
-  toolTip->SetColor(color);
+  toolTip->SetColorScheme(color);
   toolTip->SetDestroyOnMouseExit(false);
 
   ToolTipPlacement placement;
@@ -1344,11 +1376,12 @@ Handle PropertyWidgetObject::GetParentObject()
 void PropertyWidgetObject::StartChildDrag(Mouse* mouse, PropertyWidgetObject* child)
 {
   // Don't do anything if the components can't be reordered
-  if(MetaComposition* composition = mComposition)
-  {
-    if (!composition->mSupportsComponentReorder)
-      return;
-  }
+  MetaComposition* composition = mComposition;
+  if (composition == nullptr)
+    return;
+  
+  if (!composition->mSupportsComponentReorder)
+    return;
 
   // Dragging for meta arrays is disabled until fully supported
   if (mMetaArray.IsNotNull())
@@ -1379,6 +1412,15 @@ uint PropertyWidgetObject::GetComponentIndex()
   }
 
   return uint(-1);
+}
+
+//******************************************************************************
+String PropertyWidgetObject::GetExpandId()
+{
+  String typeName = mNode->mObject.StoredType->Name;
+  if(mNode->IsPropertyGroup())
+    return BuildString(typeName, ".", mNode->mPropertyGroupName);
+  return typeName;
 }
 
 //******************************************************************************

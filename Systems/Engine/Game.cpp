@@ -119,14 +119,17 @@ void GameSession::Destroy()
   if(mFlags.IsSet(CogFlags::Destroyed))
     return;
 
-  while(!mTrackedSpaces.Empty())
-  {
-    Space* space = mTrackedSpaces.Front().second;
-    space->Destroy();
-  }
+  // We want to disallow the creation of more Spaces on this GameSession when we
+  // destroy each Space. We have a guard in CreateSpace that checks to see if 
+  // we're destroyed, so set the flag before destroying all the Spaces
+  mFlags.SetFlag(CogFlags::Destroyed);
 
-  ErrorIf(!mTrackedSpaces.Empty(), "All spaces should have been cleaned up.");
-  mTrackedSpaces.Clear();
+  forRange(Space* space, mTrackedSpaces.AllValues())
+    space->Destroy();
+
+  // Cog::Destroy will do logic based on whether or not we're destroyed, so set it
+  // back to false to allow normal destruction
+  mFlags.ClearFlag(CogFlags::Destroyed);
 
   Cog::Destroy();
 

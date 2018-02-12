@@ -64,6 +64,7 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
 
   // Meta Components
   ZilchInitializeType(ContentMetaComposition);
+  ZilchInitializeType(ContentItemMetaOperations);
 
   // Events
   ZilchInitializeType(ContentSystemEvent);

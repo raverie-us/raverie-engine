@@ -167,10 +167,10 @@ void ZilchComponent::ScriptInitialize(CogInitializer& initializer)
 
   // Only run Initialize function if not in editor mode or if has RunInEditor attribute
   bool editorMode = false;
-  if (initializer.mGameSession != nullptr)
+  if (initializer.mSpace)
+    editorMode = initializer.mSpace->IsEditorMode();
+  else if (initializer.mGameSession != nullptr)
     editorMode = initializer.mGameSession->IsEditorMode();
-  if(initializer.mSpace)
-    editorMode |= initializer.mSpace->IsEditorMode();
   
   if(!editorMode || thisType->HasAttributeInherited(ObjectAttributes::cRunInEditor))
   {
@@ -298,11 +298,17 @@ void ZilchEvent::Delete()
 //**************************************************************************************************
 ZilchDefineType(ZilchObject, builder, type)
 {
+  type->HandleManager = ZilchManagerId(HeapManager);
   type->Sealed = false;
 
   type->CreatableInScript = true;
 
   ZilchBindMethod(DispatchEvent);
+
+  ZilchBindConstructor();
+  // Do not bind copy constructor. The only time it would be need is if this went from
+  // C++ to Zilch (because of HeapManager), and this should never be constructed in C++.
+  ZilchBindDestructor();
 }
 
 //**************************************************************************************************

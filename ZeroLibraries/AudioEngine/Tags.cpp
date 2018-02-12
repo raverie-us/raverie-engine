@@ -13,85 +13,166 @@ namespace Audio
 
   //************************************************************************************************
   TagObject::TagObject(bool isThreaded) : 
-    CurrentVolume(1.0f), 
-    ModifyingVolume(false), 
-    ThreadedTag(NULL), 
-    IsThreaded(isThreaded),
-    Paused(false),
-    LowPassGain(1.0f),
-    HighPassGain(1.0f),
-    Band1Gain(1.0f),
-    Band2Gain(1.0f),
-    Band3Gain(1.0f),
-    CompressorThresholdDB(0),
-    CompressorAttackMSec(20),
-    CompressorReleaseMSec(1000),
-    CompressorRatio(1),
-    CompressorKneeWidth(0),
-    UseEqualizer(false),
-    UseCompressor(false),
-    ExternalInterface(nullptr),
-    InstanceLimit(0),
-    CompressorInputTag(nullptr)
+    mThreadedTag(nullptr),
+    mIsThreaded(isThreaded),
+    mPaused(false),
+    mInstanceLimit(0),
+    mMixVersion(gAudioSystem->MixVersionNumber - 1),
+    mVolume(1.0f),
+    mModifyingVolume(false),
+    mUseEqualizer(false),
+    CompressorObject(nullptr),
+    mUseCompressor(false),
+    mCompressorInputTag(nullptr),
+    EqualizerSettings(nullptr)
   {
     if (!isThreaded)
     {
-      ThreadedTag = new TagObject(true);
+      mThreadedTag = new TagObject(true);
       gAudioSystem->AddTag(this, false);
     }
     else
     {
+      CompressorObject = new DynamicsProcessor();
+      EqualizerSettings = new Equalizer();
+
       // Constructor happens on main thread, so need to send a message to add to threaded list
       gAudioSystem->AddTask(Zero::CreateFunctor(&AudioSystemInternal::AddTag, gAudioSystem, this, true));
-
-      TotalOutput.Resize(gAudioSystem->MixBufferSizeThreaded, 0);
     }
   }
 
   //************************************************************************************************
   TagObject::~TagObject()
   {
-    // If threaded, remove from all threaded instances
-    if (IsThreaded)
+    if (!mIsThreaded)
     {
-      RemoveFromAllInstances();
+      // Delete the threaded tag
+      if (mThreadedTag)
+        delete mThreadedTag;
+
+      // Remove this tag from all non-threaded instances
+      forRange(SoundInstanceNode* instance, mSoundInstanceList.All())
+        instance->TagList.EraseValue(this);
     }
     else
     {
-      // Delete the threaded tag
-      if (ThreadedTag)
-        delete ThreadedTag;
+      // Remove this tag from all threaded instances
+      forRange(InstanceDataMapType::pair mapPair, DataPerInstance.All())
+      {
+        SoundInstanceNode* instance = mapPair.first;
+        InstanceData* data = mapPair.second;
 
-      // Remove this tag from all non-threaded instances
-      forRange (SoundInstanceNode* node, Instances.All())
-        node->TagList.EraseValue(this);
+        // If currently modifying volume, interpolate to avoid sudden changes
+        if (mModifyingVolume && data->mVolumeModifier)
+        {
+          data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(), 1.0f, 
+            AudioSystemInternal::PropertyChangeFrames, AudioSystemInternal::PropertyChangeFrames);
+          data->mVolumeModifier = nullptr;
+        }
+
+        // Remove this tag from the instance's list
+        instance->TagList.EraseValue(this);
+
+        delete data;
+      }
+
+      if (CompressorObject)
+        delete CompressorObject;
+      if (EqualizerSettings)
+        delete EqualizerSettings;
     }
 
-    gAudioSystem->RemoveTag(this, IsThreaded);
+    // Remove this tag from the audio system's list
+    gAudioSystem->RemoveTag(this, mIsThreaded);
+  }
+
+  //************************************************************************************************
+  void TagObject::UpdateForMix(unsigned howManyFrames, unsigned channels)
+  {
+    if (mMixVersion == gAudioSystem->MixVersionNumber)
+      return;
+
+    // Check if we are using the compressor
+    if (mUseCompressor)
+    {
+      BufferType* compressorInput;
+
+      // If we are not using another tag for the compressor input, get the output from this tag
+      if (!mCompressorInputTag)
+        compressorInput = GetTotalInstanceOutput(howManyFrames, channels);
+      // Otherwise get the output from the other tag
+      else
+        compressorInput = mCompressorInputTag->GetTotalInstanceOutput(howManyFrames, channels);
+
+      // Reset the buffer of volume modifiers
+      mCompressorVolumes.Clear();
+
+      // Check if there was output from the tag
+      if (!compressorInput->Empty())
+      {
+        // Reset the volume buffer to all 1.0 (this will become volume multipliers when 
+        // processed by the compressor filter)
+        mCompressorVolumes.Resize(compressorInput->Size(), 1.0f);
+
+        // Run the compressor filter, using the tag output as the envelope input
+        CompressorObject->ProcessBuffer(mCompressorVolumes.Data(), compressorInput->Data(),
+          mCompressorVolumes.Data(), channels, mCompressorVolumes.Size());
+      }
+    }
+
+    mMixVersion = gAudioSystem->MixVersionNumber;
+  }
+
+  //************************************************************************************************
+  void TagObject::ProcessInstance(BufferType* instanceOutput, unsigned channels, SoundInstanceNode* instance)
+  {
+    // If this is the first instance for this mix, update
+    if (mMixVersion != gAudioSystem->MixVersionNumber)
+      UpdateForMix(instanceOutput->Size() / channels, channels);
+
+    // Check if we are using the equalizer
+    if (mUseEqualizer)
+    {
+      InstanceData* data = DataPerInstance.FindValue(instance, nullptr);
+      ErrorIf(!data, "InstanceData was not created in tag's map");
+
+      // If the equalizer filter does not exist for this instance, create it
+      if (!data->mEqualizer)
+        data->mEqualizer = new Equalizer(*EqualizerSettings);
+
+      // Create a temporary buffer for the equalizer output
+      BufferType processedOutput(instanceOutput->Size());
+
+      // Apply the filter to all samples
+      data->mEqualizer->ProcessBuffer(instanceOutput->Data(), processedOutput.Data(), channels,
+        instanceOutput->Size());
+
+      // Move the equalizer output into the instanceOutput buffer
+      instanceOutput->Swap(processedOutput);
+    }
+
+    // Check if we are using the compressor and there are volume values
+    if (mUseCompressor && !mCompressorVolumes.Empty())
+    {
+      // Apply the corresponding compressor volume to each sample
+      int i = 0;
+      forRange(float& sample, instanceOutput->All())
+        sample *= mCompressorVolumes[i++];
+    }
   }
 
   //************************************************************************************************
   void TagObject::RemoveTag()
   {
     // If not threaded
-    if (!IsThreaded)
+    if (!mIsThreaded && mThreadedTag)
     {
-      // Check if the threaded tag exists
-      if (ThreadedTag)
-      {
         // Tell the threaded tag to remove itself
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::RemoveTag, ThreadedTag));
-        ThreadedTag = nullptr;
-      }
-    }
-    // If threaded
-    else 
-    {
-      // Remove this tag from all threaded instances
-      RemoveFromAllInstances();
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::RemoveTag, mThreadedTag));
+        mThreadedTag = nullptr;
     }
 
-    gAudioSystem->DelayDeleteTag(this, IsThreaded);
+    gAudioSystem->DelayDeleteTag(this, mIsThreaded);
   }
 
   //************************************************************************************************
@@ -101,58 +182,52 @@ namespace Audio
     if (!instance)
       return;
 
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
       // If already tagged, do nothing
-      if (Instances.Contains(instance))
+      if (mSoundInstanceList.Contains(instance))
         return;
 
-      // If the tag is currently paused, pause the instance
-      if (Paused)
-        instance->Pause();
-
       // Add the instance to the tag's list
-      Instances.PushBack(instance);
+      mSoundInstanceList.PushBack(instance);
       // Add the tag to the instance's list
       instance->TagList.PushBack(this);
 
+      // If the tag is currently paused, pause the instance
+      if (mPaused)
+        instance->SetPaused(true);
+
       // Notify the threaded tag to add the threaded instance
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::AddInstance, ThreadedTag, 
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::AddInstance, mThreadedTag, 
           (SoundInstanceNode*)instance->GetSiblingNode()));
 
       if (ExternalInterface)
-        ExternalInterface->SendAudioEvent(Notify_TagAddedInstance, (void*)nullptr);
+        ExternalInterface->SendAudioEvent(AudioEventTypes::TagAddedInstance, (void*)nullptr);
     }
     else
     {
       // If already playing max instances, mark this one as virtual
-      if (InstanceLimit > 0 && InstanceVolumeMap.Size() >= InstanceLimit)
-        instance->Virtual = true;
+      //if (InstanceLimit > 0 && InstanceVolumeMap.Size() >= InstanceLimit)
+      //  instance->mVirtual = true;
 
-      // Add this tag to the instance's list
+      // Add the tag to the instance's list
       instance->TagList.PushBack(this);
 
-      // If currently modifying volume, add modification to the instance
-      if (ModifyingVolume)
+      // Add a new data object to the map
+      InstanceData* data = new InstanceData();
+      DataPerInstance[instance] = data;
+
+      // If modifying volume, create the modifier
+      if (mModifyingVolume)
       {
-        // If this instance's volume was not already in the map, get a new modifier
-        if (!InstanceVolumeMap[instance])
-          InstanceVolumeMap[instance] = instance->GetAvailableVolumeMod();
-
-        // If there is a volume modifier, set the volume
-        if (InstanceVolumeMap[instance])
-          InstanceVolumeMap[instance]->Reset(1.0f, CurrentVolume, 0.02f, 0.0f, 0.0f, 0.0f);
+        data->mVolumeModifier = instance->GetAvailableVolumeMod();
+        data->mVolumeModifier->Reset(1.0f, mVolume, AudioSystemInternal::PropertyChangeFrames, 0);
       }
-      else
-        InstanceVolumeMap[instance] = NULL;
 
-      if (UseEqualizer)
-        instance->EqualizerFilter = new Equalizer(LowPassGain, Band1Gain, Band2Gain, Band3Gain, HighPassGain);
-
-      if (UseCompressor)
-        instance->CompressorFilter = new DynamicsProcessor(0, CompressorThresholdDB, CompressorAttackMSec,
-          CompressorReleaseMSec, CompressorRatio, 0, CompressorKneeWidth, Audio::DynamicsProcessor::Compressor);
+      // If using equalizer, create it and set the settings
+      if (mUseEqualizer)
+        data->mEqualizer = new Equalizer(*EqualizerSettings);
     }
   }
 
@@ -163,66 +238,80 @@ namespace Audio
     if (!instance)
       return;
 
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      // Notify the threaded tag to remove the threaded instance
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::RemoveInstance, ThreadedTag, 
-          (SoundInstanceNode*)instance->GetSiblingNode()));
+      // First check if the instance has been added to this tag
+      if (!mSoundInstanceList.Contains(instance))
+        return;
 
       // Remove the instance from this tag's list
-      Instances.EraseValue(instance);
-      // Remove this tag from the instance's list
-      instance->TagList.EraseValue(this);
+      mSoundInstanceList.EraseValue(instance);
 
-      if (ExternalInterface && Instances.Empty())
-        ExternalInterface->SendAudioEvent(Notify_TagIsUnreferenced, (void*)nullptr);
+      // Notify the threaded tag to remove the threaded instance
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::RemoveInstance, mThreadedTag, 
+          (SoundInstanceNode*)instance->GetSiblingNode()));
+
+      // If there are no more tagged instances, send a notification
+      if (ExternalInterface && mSoundInstanceList.Empty())
+        ExternalInterface->SendAudioEvent(AudioEventTypes::TagIsUnreferenced, (void*)nullptr);
     }
     else
     {
-      // If not in the map, do nothing
-      if (!InstanceVolumeMap.FindPointer(instance))
-        return;
+      // Find this instance's data in the map
+      InstanceData* data = DataPerInstance.FindValue(instance, nullptr);
+      if (data)
+      {
+        // If we are modifying the volume, interpolate back to 1.0
+        if (mModifyingVolume && data->mVolumeModifier)
+        {
+          data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(), 1.0f,
+            AudioSystemInternal::PropertyChangeFrames, AudioSystemInternal::PropertyChangeFrames);
+          data->mVolumeModifier = nullptr;
+        }
 
-      SetInstanceDataOnRemove(instance, InstanceVolumeMap.FindValue(instance, nullptr));
+        // Delete the data object
+        delete data;
 
-      // Remove the instance from the map of volume modifiers
-      InstanceVolumeMap.Erase(instance);
+        // Remove the instance from the map
+        DataPerInstance.Erase(instance);
+      }
     }
+
+    // Remove this tag from the instance's list
+    instance->TagList.EraseValue(this);
   }
 
   //************************************************************************************************
   void TagObject::SetVolume(const float volume, const float time)
   {
     // Set the current volume variable
-    CurrentVolume = volume;
+    mVolume = volume;
 
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
       // Notify the threaded tag to change its volume
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetVolume, ThreadedTag, volume, time));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetVolume, mThreadedTag, volume, time));
     }
     else
     {
-      ModifyingVolume = true;
+      mModifyingVolume = true;
 
-      // Walk through all instances
-      InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-      while (!instances.Empty())
+      // Determine how many frames to change the volume over, keeping a minimum value
+      unsigned frames = Math::Max((unsigned)(time * AudioSystemInternal::SystemSampleRate),
+        AudioSystemInternal::PropertyChangeFrames);
+
+      // Set the volume modifier for each tagged instance
+      forRange(InstanceDataMapType::pair mapPair, DataPerInstance.All())
       {
-        SoundInstanceNode* instanceNode = instances.Front().first;
+        SoundInstanceNode* instance = mapPair.first;
+        InstanceData* data = mapPair.second;
 
-        // If there is no volume modifier, create one
-        if (!instances.Front().second)
-          InstanceVolumeMap[instanceNode] = instanceNode->GetAvailableVolumeMod();
-
-        // If the modifier exists, set its values
-        ThreadedVolumeModifier* volumeMod = InstanceVolumeMap[instanceNode];
-        if (volumeMod)
-          volumeMod->Reset(volumeMod->GetCurrentVolume(), volume, time, 0.0f, 0.0f, 0.0f);
-
-        instances.PopFront();
+        if (!data->mVolumeModifier)
+          data->mVolumeModifier = instance->GetAvailableVolumeMod();
+        
+        data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(), volume, frames, 0);
       }
     }
   }
@@ -230,336 +319,220 @@ namespace Audio
   //************************************************************************************************
   float TagObject::GetVolume()
   {
-    return CurrentVolume;
+    return mVolume;
   }
 
   //************************************************************************************************
   void TagObject::PauseInstances()
   {
-    Paused = true;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      // Notify the threaded tag to pause its instances
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::PauseInstances, ThreadedTag));
-    }
-    else
-    {
-      // Pause all instances in the volume modifier map
-      InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-      while (!instances.Empty())
-      {
-        instances.Front().first->Pause();
+      mPaused = true;
 
-        instances.PopFront();
-      }
+      // Pause all instances in the list
+      forRange(SoundInstanceNode* instance, mSoundInstanceList.All())
+        instance->SetPaused(true);
     }
   }
 
   //************************************************************************************************
   void TagObject::ResumeInstances()
   {
-    Paused = false;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      // Notify the threaded tag to resume its instances
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::ResumeInstances, ThreadedTag));
-    }
-    else
-    {
-      // Resume all instances in the volume modifier map
-      InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-      while (!instances.Empty())
-      {
-        instances.Front().first->Resume();
+      mPaused = false;
 
-        instances.PopFront();
-      }
+      // Resume all instances in the list
+      forRange(SoundInstanceNode* instance, mSoundInstanceList.All())
+        instance->SetPaused(false);
     }
   }
 
   //************************************************************************************************
   void TagObject::StopInstances()
   {
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      // Notify the threaded tag to stop its instances
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::StopInstances, ThreadedTag));
-    }
-    else
-    {
-      // Stop all instances in the volume modifier map
-      InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-      while (!instances.Empty())
-      {
-        instances.Front().first->Stop();
-
-        instances.PopFront();
-      }
+      // Stop all instances in the list
+      forRange(SoundInstanceNode* instance, mSoundInstanceList.All())
+        instance->Stop();
     }
   }
 
   //************************************************************************************************
   bool TagObject::GetPaused()
   {
-    return Paused;
+    return mPaused;
   }
 
   //************************************************************************************************
   int TagObject::GetNumberOfInstances()
   {
-    return Instances.Size();
+    return mSoundInstanceList.Size();
   }
 
   //************************************************************************************************
   const Zero::Array<SoundInstanceNode*>* Audio::TagObject::GetInstances()
   {
-    return &Instances;
+    return &mSoundInstanceList;
   }
 
   //************************************************************************************************
   bool TagObject::GetUseEqualizer()
   {
-    return UseEqualizer;
+    return mUseEqualizer;
   }
 
   //************************************************************************************************
   void TagObject::SetUseEqualizer(const bool useEQ)
   {
-    if (!IsThreaded)
+    mUseEqualizer = useEQ;
+
+    if (!mIsThreaded)
     {
-      UseEqualizer = useEQ;
-
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetUseEqualizer, ThreadedTag, useEQ));
-    }
-    else
-    {
-      // Should use equalizer and currently aren't
-      if (useEQ && !UseEqualizer)
-      {
-        UseEqualizer = true;
-
-        // Go through all instances
-        for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-          !instances.Empty(); instances.PopFront())
-        {
-          SoundInstanceNode* instance = instances.Front().first;
-
-          // If there isn't an equalizer (there shouldn't be), add one
-          if (!instance->EqualizerFilter)
-            instance->EqualizerFilter = new Equalizer(LowPassGain, Band1Gain, Band2Gain, Band3Gain, 
-              HighPassGain);
-        }
-      }
-      // Should stop using equalizer and currently are using
-      else if (!useEQ && UseEqualizer)
-      {
-        UseEqualizer = false;
-
-        // Go through all instances
-        for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-          !instances.Empty(); instances.PopFront())
-        {
-          SoundInstanceNode* instance = instances.Front().first;
-
-          // If there is an equalizer (there should be), delete it
-          if (instance->EqualizerFilter)
-          {
-            delete instance->EqualizerFilter;
-            instance->EqualizerFilter = nullptr;
-          }
-        }
-      }
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetUseEqualizer, mThreadedTag, useEQ));
     }
   }
 
   //************************************************************************************************
   float TagObject::GetBelow80HzGain()
   {
-    return LowPassGain;
+    return EqualizerSettings->GetBelow80HzGain();
   }
 
   //************************************************************************************************
   void TagObject::SetBelow80HzGain(const float gain)
   {
-    LowPassGain = gain;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetBelow80HzGain, ThreadedTag, gain));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetBelow80HzGain, mThreadedTag, gain));
     }
-    else if (UseEqualizer)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
+      EqualizerSettings->SetBelow80HzGain(gain);
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
-
-        instance->EqualizerFilter->SetBelow80HzGain(gain);
-      }
+      // Set the value on existing equalizers. If new ones are created they will copy settings.
+      forRange(InstanceData* data, DataPerInstance.Values())
+        data->mEqualizer->SetBelow80HzGain(gain);
     }
   }
 
   //************************************************************************************************
   float TagObject::Get150HzGain()
   {
-    return Band1Gain;
+    return EqualizerSettings->Get150HzGain();
   }
 
   //************************************************************************************************
   void TagObject::Set150HzGain(const float gain)
   {
-    Band1Gain = gain;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::Set150HzGain, ThreadedTag, gain));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::Set150HzGain, mThreadedTag, gain));
     }
-    else if (UseEqualizer)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
+      EqualizerSettings->Set150HzGain(gain);
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
-
-        instance->EqualizerFilter->Set150HzGain(gain);
-      }
+      // Set the value on existing equalizers. If new ones are created they will copy settings.
+      forRange(InstanceData* data, DataPerInstance.Values())
+        data->mEqualizer->Set150HzGain(gain);
     }
   }
 
   //************************************************************************************************
   float TagObject::Get600HzGain()
   {
-    return Band2Gain;
+    return EqualizerSettings->Get600HzGain();
   }
 
   //************************************************************************************************
   void TagObject::Set600HzGain(const float gain)
   {
-    Band2Gain = gain;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::Set600HzGain, ThreadedTag, gain));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::Set600HzGain, mThreadedTag, gain));
     }
-    else if (UseEqualizer)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
+      EqualizerSettings->Set600HzGain(gain);
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
-
-        instance->EqualizerFilter->Set600HzGain(gain);
-      }
+      // Set the value on existing equalizers. If new ones are created they will copy settings.
+      forRange(InstanceData* data, DataPerInstance.Values())
+        data->mEqualizer->Set600HzGain(gain);
     }
   }
 
   //************************************************************************************************
   float TagObject::Get2500HzGain()
   {
-    return Band3Gain;
+    return EqualizerSettings->Get2500HzGain();
   }
 
   //************************************************************************************************
   void TagObject::Set2500HzGain(const float gain)
   {
-    Band3Gain = gain;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::Set2500HzGain, ThreadedTag, gain));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::Set2500HzGain, mThreadedTag, gain));
     }
-    else if (UseEqualizer)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
+      EqualizerSettings->Set2500HzGain(gain);
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
-
-        instance->EqualizerFilter->Set2500HzGain(gain);
-      }
+      // Set the value on existing equalizers. If new ones are created they will copy settings.
+      forRange(InstanceData* data, DataPerInstance.Values())
+        data->mEqualizer->Set2500HzGain(gain);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetAbove5000HzGain()
   {
-    return HighPassGain;
+    return EqualizerSettings->GetAbove5000HzGain();
   }
 
   //************************************************************************************************
   void TagObject::SetAbove5000HzGain(const float gain)
   {
-    HighPassGain = gain;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetAbove5000HzGain, ThreadedTag, gain));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetAbove5000HzGain, mThreadedTag, gain));
     }
-    else if (UseEqualizer)
+    else
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
+      EqualizerSettings->SetAbove5000HzGain(gain);
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
-
-        instance->EqualizerFilter->SetAbove5000HzGain(gain);
-      }
+      // Set the value on existing equalizers. If new ones are created they will copy settings.
+      forRange(InstanceData* data, DataPerInstance.Values())
+        data->mEqualizer->SetAbove5000HzGain(gain);
     }
   }
 
   //************************************************************************************************
   void TagObject::InterpolateAllBands(GainValues* values, const float timeToInterpolate)
   {
-    LowPassGain = values->Below80Hz;
-    Band1Gain = values->At150Hz;
-    Band2Gain = values->At600Hz;
-    Band3Gain = values->At2500Hz;
-    HighPassGain = values->Above5000Hz;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::InterpolateAllBands, ThreadedTag, values, timeToInterpolate));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::InterpolateAllBands, mThreadedTag, 
+          values, timeToInterpolate));
     }
-    else if (UseEqualizer)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
+      EqualizerSettings->InterpolateBands(values->mBelow80Hz, values->mAt150Hz, values->mAt600Hz,
+        values->mAt2500Hz, values->mAbove5000Hz, timeToInterpolate);
 
-        if (!instance->EqualizerFilter)
-          instance->EqualizerFilter = new Equalizer();
-
-        instance->EqualizerFilter->InterpolateBands(values->Below80Hz, values->At150Hz, values->At600Hz,
-          values->At2500Hz, values->Above5000Hz, timeToInterpolate);
-      }
+      // Set the value on existing equalizers. If new ones are created they will copy settings.
+      forRange(InstanceData* data, DataPerInstance.Values())
+        data->mEqualizer->InterpolateBands(values->mBelow80Hz, values->mAt150Hz, values->mAt600Hz,
+          values->mAt2500Hz, values->mAbove5000Hz, timeToInterpolate);
 
       delete values;
     }
@@ -568,341 +541,225 @@ namespace Audio
   //************************************************************************************************
   bool TagObject::GetUseCompressor()
   {
-    return UseCompressor;
+    return mUseCompressor;
   }
 
   //************************************************************************************************
   void TagObject::SetUseCompressor(const bool useCompressor)
   {
-    if (!IsThreaded)
+    mUseCompressor = useCompressor;
+
+    if (!mIsThreaded)
     {
-      UseCompressor = UseCompressor;
-
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetUseCompressor, ThreadedTag, useCompressor));
-    }
-    else
-    {
-      // Should use compressor and currently aren't
-      if (useCompressor && !UseCompressor)
-      {
-        UseCompressor = true;
-
-        // Go through all instances
-        for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-          !instances.Empty(); instances.PopFront())
-        {
-          SoundInstanceNode* instance = instances.Front().first;
-
-          // If there isn't a compressor (there shouldn't be), add one
-          if (!instance->CompressorFilter)
-            instance->CompressorFilter = new DynamicsProcessor(0, CompressorThresholdDB, CompressorAttackMSec,
-              CompressorReleaseMSec, CompressorRatio, 0, CompressorKneeWidth, Audio::DynamicsProcessor::Compressor);
-        }
-      }
-      // Should stop using compressor and currently are using
-      else if (!useCompressor && UseCompressor)
-      {
-        UseCompressor = false;
-
-        // Go through all instances
-        for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-          !instances.Empty(); instances.PopFront())
-        {
-          SoundInstanceNode* instance = instances.Front().first;
-
-          // If there is a compressor (there should be), delete it
-          if (instance->CompressorFilter)
-          {
-            delete instance->CompressorFilter;
-            instance->CompressorFilter = nullptr;
-          }
-        }
-      }
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetUseCompressor, mThreadedTag,
+          useCompressor));
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorThreshold()
   {
-    return CompressorThresholdDB;
+    return CompressorObject->GetThreshold();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorThreshold(const float value)
   {
-    CompressorThresholdDB = value;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorThreshold, ThreadedTag, value));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorThreshold, mThreadedTag, value));
     }
-    else if (UseCompressor)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
-
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
-
-        instance->CompressorFilter->SetThreshold(value);
-      }
+      CompressorObject->SetThreshold(value);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorAttackMSec()
   {
-    return CompressorAttackMSec;
+    return CompressorObject->GetAttackMSec();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorAttackMSec(const float value)
   {
-    CompressorAttackMSec = value;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorAttackMSec, ThreadedTag, value));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorAttackMSec, mThreadedTag, value));
     }
-    else if (UseCompressor)
+    else
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
-
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
-
-        instance->CompressorFilter->SetAttackMSec(value);
-      }
+      CompressorObject->SetAttackMSec(value);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorReleaseMSec()
   {
-    return CompressorReleaseMSec;
+    return CompressorObject->GetReleaseMSec();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorReleaseMsec(const float value)
   {
-    CompressorReleaseMSec = value;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorReleaseMsec, ThreadedTag, value));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorReleaseMsec, mThreadedTag, value));
     }
-    else if (UseCompressor)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
-
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
-
-        instance->CompressorFilter->SetReleaseMSec(value);
-      }
+      CompressorObject->SetReleaseMSec(value);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorRatio()
   {
-    return CompressorRatio;
+    return CompressorObject->GetRatio();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorRatio(const float value)
   {
-    CompressorRatio = value;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorRatio, ThreadedTag, value));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorRatio, mThreadedTag, value));
     }
-    else if (UseCompressor)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
-
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
-
-        instance->CompressorFilter->SetRatio(value);
-      }
+      CompressorObject->SetRatio(value);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorKneeWidth()
   {
-    return CompressorKneeWidth;
+    return CompressorObject->GetKneeWidth();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorKneeWidth(const float value)
   {
-    CompressorKneeWidth = value;
-
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorKneeWidth, ThreadedTag, value));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorKneeWidth, mThreadedTag, value));
     }
-    else if (UseCompressor)
+    else 
     {
-      for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-        !instances.Empty(); instances.PopFront())
-      {
-        SoundInstanceNode* instance = instances.Front().first;
-
-        if (!instance->CompressorFilter)
-          instance->CompressorFilter = new DynamicsProcessor();
-
-        instance->CompressorFilter->SetKneeWidth(value);
-      }
+      CompressorObject->SetKneeWidth(value);
     }
   }
 
   //************************************************************************************************
   unsigned TagObject::GetInstanceLimit()
   {
-    return InstanceLimit;
+    return mInstanceLimit;
   }
 
   //************************************************************************************************
-  void TagObject::SetInstanceLimit(const float limit)
+  void TagObject::SetInstanceLimit(const int limit)
   {
-    InstanceLimit = (unsigned)limit;
+    mInstanceLimit = limit;
 
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetInstanceLimit, ThreadedTag, limit));
+      if (mThreadedTag)
+        gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetInstanceLimit, mThreadedTag, limit));
     }
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorInputTag(TagObject* tag)
   {
-    if (!IsThreaded)
+    if (!mIsThreaded)
     {
-      if (ThreadedTag)
+      if (mThreadedTag)
       {
-        if (tag && tag->ThreadedTag)
-          gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorInputTag, ThreadedTag, 
-            tag->ThreadedTag));
+        if (tag && tag->mThreadedTag)
+          gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorInputTag, mThreadedTag,
+            tag->mThreadedTag));
         else
-          gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorInputTag, ThreadedTag, 
-            (TagObject*)nullptr));
+          gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorInputTag, mThreadedTag,
+          (TagObject*)nullptr));
       }
     }
     else
     {
-      CompressorInputTag = tag;
+      mCompressorInputTag = tag;
     }
   }
 
   //************************************************************************************************
-  void TagObject::UpdateCompressorInput()
+  BufferType* TagObject::GetTotalInstanceOutput(unsigned howManyFrames, unsigned channels)
   {
-    if (CompressorInputTag && UseCompressor && !InstanceVolumeMap.Empty())
-    {
-      const Zero::Array<float>* buffer = CompressorInputTag->GetTagOutput();
+    // Create a temporary buffer to get output from each instance
+    BufferType instanceBuffer(howManyFrames * channels);
+    // Resize the total output buffer
+    mTotalInstanceOutput.Resize(howManyFrames * channels);
+    // Set all samples to zero
+    memset(mTotalInstanceOutput.Data(), 0, sizeof(float) * mTotalInstanceOutput.Size());
 
-      for (InstanceVolumeMapType::range pairs = InstanceVolumeMap.All(); !pairs.Empty(); pairs.PopFront())
+    forRange(InstanceDataMapType::pair mapPair, DataPerInstance.All())
+    {
+      SoundInstanceNode* instance = mapPair.first;
+
+      // Check if the instance has valid output
+      if (instance->GetOutputForThisMix(&instanceBuffer, channels))
       {
-        pairs.Front().first->CompressorSideChainInput = buffer;
+        // Get the instance's attenuated volume (SoundEmitters, VolumeNodes, etc.)
+        float attenuatedVolume = instance->GetAttenuationThisMix();
+        // Use the size of either the total output or instance output, whichever is smaller
+        unsigned limit = Math::Min(mTotalInstanceOutput.Size(), instanceBuffer.Size());
+
+        // Add the instance output into the total output, adjusting with tag volume
+        // and attenuated instance volume
+        for (unsigned i = 0; i < limit; ++i)
+          mTotalInstanceOutput[i] += instanceBuffer[i] * attenuatedVolume * mVolume;
       }
     }
+
+    return &mTotalInstanceOutput;
   }
 
   //************************************************************************************************
-  const Zero::Array<float>* TagObject::GetTagOutput()
+  void TagObject::RemoveInstanceFromLists(SoundInstanceNode* instance)
   {
-    memset(TotalOutput.Data(), 0, sizeof(float) * TotalOutput.Size());
-
-    for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All(); !instances.Empty(); instances.PopFront())
+    if (!mIsThreaded)
     {
-      instances.Front().first->AddAttenuatedOutputToTag(this);
+      mSoundInstanceList.EraseValue(instance);
     }
-
-    return &TotalOutput;
-  }
-
-  //************************************************************************************************
-  void TagObject::RemoveFromAllInstances()
-  {
-    // Make sure this is the threaded tag
-    if (IsThreaded)
-    {
-      // Step through all instances
-      InstanceVolumeMapType::range instances = InstanceVolumeMap.All();
-      while (!instances.Empty())
-      {
-        SetInstanceDataOnRemove(instances.Front().first, instances.Front().second);
-
-        instances.PopFront();
-      }
-
-      InstanceVolumeMap.Clear();
-    }
-  }
-
-  //************************************************************************************************
-  void TagObject::SetInstanceDataOnRemove(SoundInstanceNode* instance, ThreadedVolumeModifier* modifier)
-  {
-    // Remove this tag from the instance's list
-    instance->TagList.EraseValue(this);
-
-    // If there is a volume modifier, deactivate it
-    if (modifier)
-    {
-      // If currently modifying volume, ramp volume back to 1
-      if (ModifyingVolume && modifier->Active)
-        modifier->Reset(modifier->GetCurrentVolume(), 1.0f, 0.05f, 0.0f, 0.05f, 0.0f);
-      // Otherwise, make sure it's set to not active
-      else
-        modifier->Active = false;
-    }
-  }
-
-  //************************************************************************************************
-  bool TagObject::CanInstanceUnVirtualize(SoundInstanceNode* instance)
-  {
-    // If instances are below limit, then yes
-    if (InstanceLimit == 0 || InstanceVolumeMap.Size() < InstanceLimit)
-      return true;
-
-    int overLimit = InstanceVolumeMap.Size() - InstanceLimit;
-    int count = 0;
-    // Count how many instances (other than the one that called this function) are virtual
-    for (InstanceVolumeMapType::range instances = InstanceVolumeMap.All(); !instances.Empty(); instances.PopFront())
-    {
-      SoundInstanceNode* thisInstance = instances.Front().first;
-      if (thisInstance->Virtual && thisInstance != instance)
-        ++count;
-
-      if (count > overLimit)
-        return true;
-    }
-
-    if (count >= overLimit)
-      return true;
     else
-      return false;
+    {
+      InstanceData* data = DataPerInstance.FindValue(instance, nullptr);
+      if (data)
+      {
+        delete data;
+        DataPerInstance.Erase(instance);
+      }
+    }
+  }
+
+  //************************************************************************************************
+  TagObject::InstanceData::InstanceData() : 
+    mVolumeModifier(nullptr), 
+    mEqualizer(nullptr)
+  {
+
+  }
+
+  //************************************************************************************************
+  TagObject::InstanceData::~InstanceData()
+  {
+    if (mEqualizer) 
+      delete mEqualizer;
+    if (mVolumeModifier) 
+      mVolumeModifier->Active = false;
   }
 }

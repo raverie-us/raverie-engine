@@ -85,7 +85,6 @@
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="HeightMapSource.cpp" />
     <ClCompile Include="HierarchyRange.cpp" />
-    <ClCompile Include="HotKeyManager.cpp" />
     <ClCompile Include="JoystickSystem.cpp" />
     <ClCompile Include="LauncherConfiguration.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -100,6 +99,7 @@
     <ClCompile Include="OsWindow.cpp" />
     <ClCompile Include="PropertyTrack.cpp" />
     <ClCompile Include="RaycastProvider.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="ResourcePropertyOperations.cpp" />
     <ClCompile Include="SampleCurve.cpp" />
     <ClCompile Include="Documentation.cpp" />
@@ -189,7 +189,6 @@
     <ClInclude Include="HeightMapSource.hpp" />
     <ClInclude Include="HierarchyRange.hpp" />
     <ClInclude Include="ErrorContext.hpp" />
-    <ClInclude Include="HotKeyManager.hpp" />
     <ClInclude Include="LauncherConfiguration.hpp" />
     <ClInclude Include="EngineLibraryExtensions.hpp" />
     <ClInclude Include="MetaOperations.hpp" />
@@ -199,6 +198,7 @@
     <ClInclude Include="Operation.hpp" />
     <ClInclude Include="OsWindow.hpp" />
     <ClInclude Include="PropertyTrack.hpp" />
+    <ClInclude Include="Rectangle.hpp" />
     <ClInclude Include="ResourceLoaderTemplates.hpp" />
     <ClInclude Include="HeightMap.hpp" />
     <ClInclude Include="JoystickSystem.hpp" />

@@ -23,9 +23,9 @@ ZilchDefineType(GjkDebug, builder, type)
   ZilchBindFieldProperty(mMaxExpands);
   ZilchBindFieldProperty(mDt);
   // ZilchBindFieldProperty(mShowCSO);
-  // ZilchBindFieldProperty(mSubdivisions)->Add(new EditorRange(12.0f, 48.0f, 1.0f));
-  // ZilchBindFieldProperty(mOpacityCSO)->Add(new EditorRange(0.0f, 255.0f, 1.0f));
-  // ZilchBindFieldProperty(mOpacitySimplex)->Add(new EditorRange(0.0f, 255.0f, 1.0f));
+  // ZilchBindFieldProperty(mSubdivisions)->Add(new EditorSlider(12.0f, 48.0f, 1.0f));
+  // ZilchBindFieldProperty(mOpacityCSO)->Add(new EditorSlider(0.0f, 255.0f, 1.0f));
+  // ZilchBindFieldProperty(mOpacitySimplex)->Add(new EditorSlider(0.0f, 255.0f, 1.0f));
 
   // ZilchBindMethod(InitEpa)->SetHidden(false);
   // ZilchBindMethod(AddPoint)->SetHidden(false);

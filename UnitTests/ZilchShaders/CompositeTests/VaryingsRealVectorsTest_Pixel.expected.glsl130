@@ -1,0 +1,110 @@
+#version 130
+//----- Shader Inputs/Outputs -----
+uniform float Time;
+in float psInReal;
+in vec2 psInReal2;
+in vec3 psInReal3;
+in vec4 psInReal4;
+out vec4 [4] outputs;
+
+//----- Struct Definitions -----
+struct InOutRealVectorsPixelFrag
+{
+  float Real;
+  vec2 Real2;
+  vec3 Real3;
+  vec4 Real4;
+};
+
+struct VaryingsRealVectorsTest_Pixel
+{
+  float Time;
+  float Real;
+  vec2 Real2;
+  vec3 Real3;
+  vec4 Real4;
+};
+
+//----- Forward Declarations -----
+void _InOutRealVectorsPixelFragPreConstructor(inout InOutRealVectorsPixelFrag self);
+InOutRealVectorsPixelFrag _InOutRealVectorsPixelFragConstructor();
+void _InOutRealVectorsPixelFragMain(inout InOutRealVectorsPixelFrag self);
+
+void _VaryingsRealVectorsTest_PixelPreConstructor(inout VaryingsRealVectorsTest_Pixel self);
+VaryingsRealVectorsTest_Pixel _VaryingsRealVectorsTest_PixelConstructor();
+void _VaryingsRealVectorsTest_PixelMain(inout VaryingsRealVectorsTest_Pixel self);
+void CopyInputs(inout VaryingsRealVectorsTest_Pixel self);
+void CopyOutputs(inout VaryingsRealVectorsTest_Pixel self);
+void main(void);
+
+//----- Global Variable Declarations -----
+//----- InOutRealVectorsPixelFrag Functions -----
+void _InOutRealVectorsPixelFragPreConstructor(inout InOutRealVectorsPixelFrag self)
+{
+  self.Real = float(0.0);
+  self.Real2 = vec2(0.0, 0.0);
+  self.Real3 = vec3(0.0, 0.0, 0.0);
+  self.Real4 = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+InOutRealVectorsPixelFrag _InOutRealVectorsPixelFragConstructor()
+{
+  InOutRealVectorsPixelFrag self;
+  _InOutRealVectorsPixelFragPreConstructor(self);
+  return self;
+}
+
+void _InOutRealVectorsPixelFragMain(inout InOutRealVectorsPixelFrag self)
+{
+}
+
+//----- VaryingsRealVectorsTest_Pixel Functions -----
+void _VaryingsRealVectorsTest_PixelPreConstructor(inout VaryingsRealVectorsTest_Pixel self)
+{
+  self.Time = float(0.0);
+  self.Real = float(0.0);
+  self.Real2 = vec2(0.0, 0.0);
+  self.Real3 = vec3(0.0, 0.0, 0.0);
+  self.Real4 = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
+VaryingsRealVectorsTest_Pixel _VaryingsRealVectorsTest_PixelConstructor()
+{
+  VaryingsRealVectorsTest_Pixel self;
+  _VaryingsRealVectorsTest_PixelPreConstructor(self);
+  return self;
+}
+
+void _VaryingsRealVectorsTest_PixelMain(inout VaryingsRealVectorsTest_Pixel self)
+{
+  InOutRealVectorsPixelFrag _inoutrealvectorspixelfrag = _InOutRealVectorsPixelFragConstructor();
+  _inoutrealvectorspixelfrag.Real = self.Real;
+  _inoutrealvectorspixelfrag.Real2 = self.Real2;
+  _inoutrealvectorspixelfrag.Real3 = self.Real3;
+  _inoutrealvectorspixelfrag.Real4 = self.Real4;
+  _InOutRealVectorsPixelFragMain(_inoutrealvectorspixelfrag);
+}
+
+//----- VaryingsRealVectorsTest_Pixel Final Shader Functions -----
+void CopyInputs(inout VaryingsRealVectorsTest_Pixel self)
+{
+  self.Time = Time;
+  self.Real = psInReal;
+  self.Real2 = psInReal2;
+  self.Real3 = psInReal3;
+  self.Real4 = psInReal4;
+}
+
+void CopyOutputs(inout VaryingsRealVectorsTest_Pixel self)
+{
+}
+
+//----- Main -----
+void main(void)
+{
+  VaryingsRealVectorsTest_Pixel varyingsrealvectorstest_pixel = _VaryingsRealVectorsTest_PixelConstructor(); 
+  CopyInputs(varyingsrealvectorstest_pixel);
+  _VaryingsRealVectorsTest_PixelMain(varyingsrealvectorstest_pixel);
+  CopyOutputs(varyingsrealvectorstest_pixel);
+}
+

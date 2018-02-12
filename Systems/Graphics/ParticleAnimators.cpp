@@ -432,8 +432,8 @@ ZilchDefineType(ParticleCollisionPlane, builder, type)
   ZilchBindFieldProperty(mPlaneSpace);
   ZilchBindFieldProperty(mPlanePosition);
   ZilchBindFieldProperty(mPlaneNormal);
-  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorRange(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Friction)->Add(new EditorRange(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
 }
 
 ParticleCollisionPlane::~ParticleCollisionPlane()
@@ -535,8 +535,8 @@ ZilchDefineType(ParticleCollisionHeightmap, builder, type)
   ZeroBindDependency(ParticleSystem);
   ZeroBindDocumented();
   ZilchBindFieldProperty(mHeightMap);
-  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorRange(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Friction)->Add(new EditorRange(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
 }
 
 ParticleCollisionHeightmap::~ParticleCollisionHeightmap()

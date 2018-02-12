@@ -15,18 +15,19 @@ namespace Audio
   //----------------------------------------------------------------------- Threaded Volume Modifier
 
   // Object to modify the volume of sound instances. Multiplies with the instance volume. 
-  class ThreadedVolumeModifier
+  class InstanceVolumeModifier
   {
   public:
-    ThreadedVolumeModifier();
-    ~ThreadedVolumeModifier();
+    InstanceVolumeModifier();
 
     // Applies this modification to a buffer of samples.
-    void ApplyModification(float *sampleBuffer, const unsigned bufferSize);
-    // Resets the modifier with new volume and time data. Keeps the same tag or instance.
-    void Reset(const float startVolume, const float endVolume, const float attackTime, 
-      const float releaseTime, const float totalTime, const float delayTime);
-    // Gets the current volume from the last Update call.
+    void ApplyVolume(float *sampleBuffer, const unsigned bufferSize, const unsigned channels);
+    // Resets the modifier with new volume and time data. 
+    void Reset(const float startVolume, const float endVolume, const float changeTime,
+      const float lifetime);
+    void Reset(const float startVolume, const float endVolume, const unsigned changeFrames,
+      const unsigned lifetimeFrames);
+    // Gets the current volume 
     float GetCurrentVolume();
     // Gets the volume at a specified number of frames ahead
     float GetFutureVolume(unsigned frames);
@@ -34,26 +35,14 @@ namespace Audio
     bool Active;
 
   private:
-    // The starting volume. 
-    float VolumeStart;
-    // The volume of the modification. 
-    float Volume;
-    // If true, currently in release phase. 
-    bool Release;
-    // If true, currently in attack phase. 
-    bool Attack;
-    // Number of frames to modify for. If 0, will keep going indefinitely. 
-    unsigned TotalFrames;
-    // Number of frames that have been processed so far. 
-    unsigned FramesProcessed;
-    // Number of frames to interpolate from final back to start volume. 
-    unsigned ReleaseFrames;
-    // Number of frames to wait before applying modification. 
-    unsigned DelayFrames;
-    // If true, currently delaying.
-    bool Delay;
+    // Current volume modification
+    float mCurrentVolume;
     // Used to interpolate between start and end volumes. 
-    InterpolatingObject* Interpolate;
+    InterpolatingObject Interpolator;
+    // Number of frames that this modifier should stay active. If zero, will be active indefinitely.
+    unsigned mLifetimeFrames;
+    // Keeps track of the number of frames this modifier has been active.
+    unsigned mLifetimeFrameCounter;
   };
 }
 

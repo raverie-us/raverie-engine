@@ -13,8 +13,75 @@
 namespace Audio
 {
   class TagObject;
-  class ThreadedVolumeModifier;
-  class SoundInstanceNodeData;
+  class InstanceVolumeModifier;
+
+  //------------------------------------------------------------------------------ Cross Fade Object
+
+  class AudioFadeObject
+  {
+  public:
+    AudioFadeObject();
+
+    void StartFade(float startingVolume, unsigned startingIndex, unsigned fadeFrames, 
+      SoundAsset* asset, bool crossFade);
+    void ApplyFade(float* buffer, unsigned howManyFrames);
+    void GetMoreSamples();
+
+    // If true, sound is currently fading
+    bool mFading;
+    // The current frame index of the fade
+    unsigned mFrameIndex;
+    // The asset frame at which the fade started
+    unsigned mStartFrame;
+    // If true, the audio will be cross-faded rather than just faded out
+    // (new audio will fade in proportionally to the audio fading out)
+    bool mCrossFade;
+    // The asset associated with this sound
+    SoundAsset* mAsset;
+    // Used to interpolate cross-fading volumes. 
+    InterpolatingObject VolumeInterpolator;
+    // The samples to use for cross-fading
+    BufferType FadeSamples;
+    // Number of frames to use for default fade
+    unsigned mDefaultFrames;
+  };
+
+  //---------------------------------------------------------------------- Music Notification Object
+
+  class MusicNotificationObject
+  {
+  public:
+    MusicNotificationObject() :
+      mSecondsPerBeat(0),
+      mBeatsPerBar(0),
+      mBeatsCount(0),
+      mBeatNoteType(0),
+      mSecondsPerEighth(0),
+      mEighthsPerBeat(0),
+      mEighthNoteCount(0),
+      mTotalEighths(0)
+    {}
+
+    void ProcessAndNotify(float currentTime, SoundNode* siblingNode);
+    void ResetBeats(float currentTime, SoundNode* siblingNode);
+
+    // Number of seconds per music beat
+    float mSecondsPerBeat;
+    // Number of music beats per music bar
+    int mBeatsPerBar;
+    // Accumulates beats to know when we hit another bar
+    int mBeatsCount;
+    // Type of note used for the beat (4 = quarter note, etc.)
+    int mBeatNoteType;
+    // Number of seconds for each eighth note
+    float mSecondsPerEighth;
+    // Number of eighth notes per music beat
+    int mEighthsPerBeat;
+    // Accumulates number of eighth notes (reset on each bar)
+    int mEighthNoteCount;
+    // Tracks the total number of eighth notes from the beginning of the music
+    unsigned mTotalEighths;
+  };
 
   //---------------------------------------------------------------------------- Sound Instance Node
 
@@ -22,162 +89,182 @@ namespace Audio
   {
   public:
     SoundInstanceNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, 
-      SoundAssetNode* parentAsset, const bool looping, const bool startPaused, 
+      SoundAsset* parentAsset, const bool looping, const bool startPaused, 
       ExternalNodeInterface* extInt, const bool isThreaded = false);
 
-    bool GetPaused() { return Paused; }
-    // Pauses the output of the instance
-    void Pause();
-    // Resumes output
-    void Resume();
-    // Stops the instance (will delete this object when finished if no external data)
+    // Returns true if the instance is currently paused.
+    bool GetPaused();
+    // Pass in true to pause a currently playing instance, then false to resume playing it.
+    void SetPaused(bool isPaused);
+    // Stops the instance (will delete this object when finished if no external data).
     void Stop();
-    // Returns true if instance is currently looping
+    // Returns true if instance is currently looping.
     bool GetLooping();
-    // Sets whether this instance should loop
+    // Sets whether this instance should loop.
     void SetLooping(const bool loop);
-    // Returns the time in seconds at which the instance will start playing
+    // Returns the time in seconds at which the instance will start playing.
     float GetStartTime();
-    // Sets the time in seconds from the beginning of the file at which playback should start
+    // Sets the time in seconds from the beginning of the file at which playback should start.
     void SetStartTime(const float startTime);
-    // Returns the time in seconds at which the instance will stop playing
+    // Returns the time in seconds at which the instance will stop playing.
     float GetEndTime();
-    // Sets the time in seconds from the beginning of the file at which the instance should stop
+    // Sets the time in seconds from the beginning of the file at which the instance should stop.
     void SetEndTime(const float seconds);
-    // The time in seconds from the beginning of the file to jump back to when looping
+    // The time in seconds from the beginning of the file to jump back to when looping.
     float GetLoopStartTime();
-    // Sets the time to jump back to when starting another loop
+    // Sets the time to jump back to when starting another loop.
     void SetLoopStartTime(const float time);
-    // The time in seconds from the beginning of the file to stop when looping
+    // The time in seconds from the beginning of the file to stop when looping.
     float GetLoopEndTime();
-    // Sets the time to stop and jump back when looping
+    // Sets the time to stop and jump back when looping.
     void SetLoopEndTime(const float time);
-    // The number of seconds to cross-fade after the loop end time 
+    // The number of seconds to cross-fade after the loop end time.
     float GetLoopTailTime();
-    // Sets the number of seconds to use for cross-fading after the loop end time
+    // Sets the number of seconds to use for cross-fading after the loop end time.
     void SetLoopTailTime(const float time);
     // If true, the loop tail will be cross-faded. If false, it will be added
     // but will fade out smoothly.
     bool GetCrossFadeTail();
     // Sets whether the loop tail cross-fades or is added and fades.
     void SetCrossFadeTail(bool crossFade);
-    // Sets the volume of the instance over a specified time in seconds
-    void SetVolume(const float newVolume, float timeToChange);
-    // Returns the current volume of the instance
+    // Returns the current volume of the instance.
     float GetVolume();
-    // Sets the pitch change of the instance (in cents) over a specified time in seconds
-    void SetPitch(const int pitchCents, const float timeToChange);
-    // Returns the current pitch change, in cents
+    // Sets the volume of the instance over a specified time in seconds.
+    void SetVolume(const float newVolume, float timeToChange);
+    // Returns the current pitch change, in cents.
     int GetPitch();
-    // Returns true if the instance is currently playing
+    // Sets the pitch change of the instance (in cents) over a specified time in seconds.
+    void SetPitch(const int pitchCents, const float timeToChange);
+    // Returns true if the instance is currently playing.
     bool IsPlaying();
-    // Changes the playback position to a specified time in seconds
+    // Changes the playback position to a specified time in seconds.
     void JumpTo(const float seconds);
-    // Returns the current (approximate) playback time
+    // Returns the current (approximate) playback time.
     float GetTime();
-    // Returns the current beats per minute
+    // Returns the current beats per minute.
     float GetBeatsPerMinute();
-    // Sets the beats per minute
+    // Sets the beats per minute.
     void SetBeatsPerMinute(const float bpm);
-    // Sets the time signature
+    // Sets the time signature.
     void SetTimeSignature(const int beats, const int noteType);
-    // Returns the time at which a notification will be sent
+    // Returns the time at which a notification will be sent.
     float GetCustomNotifyTime();
-    // Sets a time (in seconds, from file beginning) at which the instance will send a notification
+    // Sets a time (in seconds, from file beginning) at which the instance will send a notification.
     void SetCustomNotifyTime(const float time);
 
   private:
     ~SoundInstanceNode();
-    bool GetOutputSamples(Zero::Array<float>* outputBuffer, const unsigned numberOfChannels,
+
+    bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
-    void AddAttenuatedOutputToTag(TagObject* tag);
+    // Adds the requested number of audio frames to the back of the specified buffer
+    bool GetOutputForThisMix(BufferType* buffer, const unsigned numberOfChannels);
+    // Gets the cumulative volume attenuation from all output nodes
+    void AddSamplesToBuffer(BufferType* buffer, unsigned outputFrames, unsigned outputChannels);
+    // Fills the provided buffer with the audio data for the current mix
+    float GetAttenuationThisMix();
+    // Resets back to the loop start point
+    void Loop();
+    // Translates the audio data in the array to the specified output channels, and puts the data
+    // back into the array
+    static void TranslateChannels(BufferType* inputSamples, const unsigned inputFrames,
+      const unsigned inputChannels, const unsigned outputChannels);
+    // Sends notification and removes instance from any associated tags.
+    void FinishedCleanUp();
+    // Check for whether the total volume is lower than the minimum.
+    bool BelowMinimumVolume(unsigned frames);
+    // Returns a volume modifier from the array.
+    InstanceVolumeModifier* GetAvailableVolumeMod();
+    // Removes this instance from all tags it is associated with.
+    void RemoveFromAllTags();
+    // Handle music beat notifications.
+    void MusicNotifications();
+    // Resets the music beat tracking to the current location in the file.
+    void ResetMusicBeats();
+    // Calls the disconnect function on the base class and then calls FinishedCleanUp on 
+    // the threaded node.
+    void DisconnectThisAndAllInputs() override;
 
     typedef Zero::Array<TagObject*> TagListType;
-    // List of tags that the instance is currently associated with
+    // List of tags that the instance is currently associated with.
     TagListType TagList;
 
-    bool Virtual;
+    // Handles fading the audio when looping or jumping.
+    AudioFadeObject Fade;
+    // Handles sending music notifications to the external object.
+    MusicNotificationObject MusicNotify;
+    // Handles pitch changes.
+    PitchChangeHandler Pitch;
+    // The asset to use for audio sample data.
+    SoundAsset* Asset;
 
-    // The asset to use for sample data
-    SoundAssetNode* Asset;
-    // The data used by a threaded instance for playback
-    SoundInstanceNodeData* Data;
-    // The (approximate) current time position in the file
-    double CurrentTime;
-    // If true, sound will loop instead of stopping. 
-    bool Looping;
-    // If true, sound instance is paused. 
-    bool Paused;
-    // Current volume of this sound. 
-    float Volume;
-    // Current pitch shift
-    float PitchFactor;
-    // If true, the sound has finished playing. 
-    bool Finished;
-    // Number of seconds per music beat
-    float SecondsPerBeat;
-    // The time position in the file on the previous mix
-    double PreviousTime;
-    // Number of music beats per music bar
-    int BeatsPerBar;
-    // Accumulates beats to know when we hit another bar
-    int BeatsPerBarCount;
-    // Type of note used for the beat (4 = quarter note, etc.)
-    int BeatNoteType;
-    // Tracks accumulated time for eighth notes
-    double AccumulatedTime;
-    // Number of seconds for each eighth note
-    float SecondsPerEighth;
-    // Number of eighth notes per music beat
-    int EighthsPerBeat;
-    // Accumulates number of eighth notes (reset on each bar)
-    int EighthNoteCount;
-    // The time at which the instance will start playing
-    float StartTime;
-    // The time at which the instance will stop playing
-    float EndTime;
-    // The time to jump back to when looping
-    float LoopStartTime;
-    // The time to stop and jump back when looping
-    float LoopEndTime;
-    // The time after the LoopEndTime to use for cross-fading
-    float LoopTailTime;
-    // If true, the loop tail will be cross-faded rather than just faded out
-    bool CrossFadeTail;
-    // Time for custom notification
-    float NotifyTime;
-    // Tracks whether the custom notification has been sent
-    bool CustomNotifySent;
+    // The (approximate) current time position in the file.
+    double mCurrentTime;
+    // If true, sound will loop instead of stopping.
+    bool mLooping;
+    // If true, sound instance is paused.
+    bool mPaused;
+    // Current volume of this sound.
+    float mVolume;
+    // If true, the sound has finished playing.
+    bool mFinished;
+    // The time at which the instance will start playing.
+    float mStartTime;
+    // The time at which the instance will stop playing.
+    float mEndTime;
+    // The time to jump back to when looping.
+    float mLoopStartTime;
+    // The time to stop and jump back when looping.
+    float mLoopEndTime;
+    // The time after the LoopEndTime to use for cross-fading.
+    float mLoopTailTime;
+    // If true, the loop tail will cross-fade (new audio will fade in as the tail fades out).
+    bool mCrossFadeTail;
+    // Time for custom notification.
+    float mNotifyTime;
+    // Tracks whether the custom notification has been sent.
+    bool mCustomNotifySent;
+    // The current factor by which the pitch is being changed.
+    float mPitchFactor;
 
-    Equalizer* EqualizerFilter;
-    DynamicsProcessor* CompressorFilter;
-    const Zero::Array<float>* CompressorSideChainInput;
+    // ** Threaded object variables **
 
-    // Gets the next frame of sample data. Can only be accessed sequentially.
-    void GetNextFrame(FrameData &data);
-    // Skips forward the specified number of frames. Handles looping and interpolations.
-    void SkipForward(const unsigned howManyFrames);
-    // Checks for reaching end of file, handling looping or stopping
-    void CheckForEnd();
-    // Sends notification and removes instance from any associated tags. 
-    void FinishedCleanUp();
-    // Check for whether the total volume is lower than the minimum
-    bool BelowMinimumVolume(unsigned frames);
-    // Adds the cross-fade frames to the current frame
-    // Pass in 0 for resampleFactor if not resampling
-    void ApplyCrossFade(FrameData& frame, float resampleFactor);
-    // Increases the size of the cross-fading buffer
-    void IncreaseCrossFadeBuffer(unsigned channels, unsigned sampleIndex);
-    // Returns a volume modifier from the array
-    ThreadedVolumeModifier* GetAvailableVolumeMod();
-    // Removes this instance from all tags it is associated with
-    void RemoveFromAllTags();
-    // Handle music beat notifications
-    void MusicNotifications();
-    // Resets the music beat tracking to the current location in the file
-    void ResetMusicBeats();
+    // Index of the current audio frame. 
+    unsigned mFrameIndex;
+    // If true, sound is ramping volume down to zero to pause. 
+    bool mPausing;
+    // If true, sound is ramping volume down to zero to stop. 
+    bool mStopping;
+    // Counts number of frames until pausing or stopping. 
+    unsigned mStopFrameCount;
+    // Number of frames to wait until pausing or stopping. 
+    unsigned mStopFramesToWait;
+    // If true, volume is being interpolated. 
+    bool mInterpolatingVolume;
+    // If true, currently changing pitch. 
+    bool mPitchShifting;
+    // The frame the playback should start at.
+    unsigned mStartFrame;
+    // The frame this instance's playback should stop at.
+    unsigned mEndFrame;
+    // The frame to jump back to when looping.
+    unsigned mLoopStartFrame;
+    // The frame to stop and jump back when looping.
+    unsigned mLoopEndFrame;
+    // The frames after the LoopEndTime to use for fading.
+    unsigned mLoopTailFrames;
+    // Used to control volume modifications while pausing.
+    InstanceVolumeModifier *PausingModifier;
+    // Used to interpolate from one volume to another. 
+    InterpolatingObject VolumeInterpolator;
+    // Volume adjustments, used by the instance and by tags.
+    Zero::Array<InstanceVolumeModifier*> VolumeModList;
+    // The mix version of the audio data saved in InputSamples
+    unsigned mSavedOutputVersion;
+    // Processed samples that are saved between mixes
+    BufferType SavedSamples;
 
-    void DisconnectThisAndAllInputs() override;
+    bool mVirtual;
 
     friend class TagObject;
   };

@@ -210,9 +210,9 @@ bool LoadEditorContent(Cog* configCog)
 
   Array<String> coreLibs;
   coreLibs.PushBack("ZeroCore");
-  coreLibs.PushBack("Editor");
+  coreLibs.PushBack("UiWidget");
   coreLibs.PushBack("EditorUi");
-  coreLibs.PushBack("EditorScripts");
+  coreLibs.PushBack("Editor");
 
   forRange(String libraryName, coreLibs.All())
   {
@@ -310,6 +310,7 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<TextureManager>("ZeroRoughness");
 
   ShowBuiltInResource<FontManager>("NotoSans-Bold");
+  ShowBuiltInResource<FontManager>("Inconsolata");
 
   ShowBuiltInResource<ColorGradientManager>("FadeIn");
   ShowBuiltInResource<ColorGradientManager>("FadeOut");
@@ -351,7 +352,10 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<SpriteSourceManager>("CircleBordered");
   ShowBuiltInResource<SpriteSourceManager>("ConnectionIcon");
   ShowBuiltInResource<SpriteSourceManager>("LightIcon");
+  ShowBuiltInResource<SpriteSourceManager>("ParticleIcon");
+  ShowBuiltInResource<SpriteSourceManager>("PixelBorder");
   ShowBuiltInResource<SpriteSourceManager>("SelectIcon");
+  ShowBuiltInResource<SpriteSourceManager>("SoftCircle");
   ShowBuiltInResource<SpriteSourceManager>("Square");
   ShowBuiltInResource<SpriteSourceManager>("SquareBordered");
 

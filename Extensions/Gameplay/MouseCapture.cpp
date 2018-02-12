@@ -158,6 +158,12 @@ public:
 
     //viewport->DispatchEvent(Events::KeyDown, e);
     ForwardEvent(e);
+
+    // Event should be considered handled if the mouse is captured.
+    //   - Ex: A "Ctrl+Z" keyboard event left unhandled could cause an
+    //         OperationQueue::Undo to fire off.  Yet, if a gizmo is currently
+    //         being dragged then the undo is incorrect, unwanted behavior.
+    e->Handled = true;
   }
 
   //****************************************************************************
@@ -169,6 +175,19 @@ public:
 
     //viewport->DispatchEvent(Events::KeyUp, e);
     ForwardEvent(e);
+    e->Handled = true;
+  }
+
+  //****************************************************************************
+  void OnKeyRepeated(KeyboardEvent* e) override
+  {
+    Viewport* viewport = mViewport;
+    if(viewport == NULL)
+      return;
+
+    //viewport->DispatchEvent(Events::KeyRepeated, e);
+    ForwardEvent(e);
+    e->Handled = true;
   }
 };
 
@@ -184,7 +203,7 @@ ZilchDefineType(MouseCapture, builder, type)
   ZilchBindMethod(Capture);
   ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void));
   ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void, ViewportMouseEvent*));
-  ZilchBindGetterProperty(IsCaptured);
+  ZilchBindGetter(IsCaptured);
 
   ZeroBindEvent(Events::MouseDragStart, ViewportMouseEvent);
   ZeroBindEvent(Events::MouseDragMove, ViewportMouseEvent);

@@ -85,18 +85,19 @@ SoundTag::SoundTag() :
   mCompressorTag(nullptr),
   mTagObject(nullptr)
 {
-  mTagObject = new Audio::TagObject();
-  mTagObject->ExternalInterface = this;
+  Z::gSound->mSoundTags.PushBack(this);
+
+  if (Z::gSound->mSoundSpaceCounter > 0)
+    CreateTag();
 }
 
 //**************************************************************************************************
 SoundTag::~SoundTag()
 {
+  Z::gSound->mSoundTags.Erase(this);
+
   if (mTagObject)
-  {
-    mTagObject->ExternalInterface = nullptr;
-    mTagObject->RemoveTag();
-  }
+    ReleaseTag();
 }
 
 //**************************************************************************************************
@@ -109,7 +110,8 @@ void SoundTag::Unload()
 //**************************************************************************************************
 void SoundTag::TagSound(SoundInstance* instance)
 {
-  mTagObject->AddInstance((Audio::SoundInstanceNode*)instance->GetSoundNode()->mNode);
+  if (mTagObject)
+    mTagObject->AddInstance((Audio::SoundInstanceNode*)instance->GetSoundNode()->mNode);
   SoundInstanceList.PushBack(Handle(instance));
   instance->SoundTags.PushBack(this);
 }
@@ -117,7 +119,8 @@ void SoundTag::TagSound(SoundInstance* instance)
 //**************************************************************************************************
 void SoundTag::UnTagSound(SoundInstance* instance)
 {
-  mTagObject->RemoveInstance((Audio::SoundInstanceNode*)instance->GetSoundNode()->mNode);
+  if (mTagObject)
+    mTagObject->RemoveInstance((Audio::SoundInstanceNode*)instance->GetSoundNode()->mNode);
   SoundInstanceList.EraseValue(Handle(instance));
   instance->SoundTags.EraseValue(this);
 }
@@ -125,7 +128,8 @@ void SoundTag::UnTagSound(SoundInstance* instance)
 //**************************************************************************************************
 void SoundTag::StopSounds()
 {
-  mTagObject->StopInstances();
+  if (mTagObject)
+    mTagObject->StopInstances();
 }
 
 //**************************************************************************************************
@@ -140,19 +144,22 @@ bool SoundTag::GetPaused()
 //**************************************************************************************************
 void SoundTag::SetPaused(bool pause)
 {
-  if (mTagObject)
-  {
-    if (pause)
-      mTagObject->PauseInstances();
-    else
-      mTagObject->ResumeInstances();
-  }
+  if (!mTagObject)
+    return;
+
+  if (pause)
+    mTagObject->PauseInstances();
+  else
+    mTagObject->ResumeInstances();
 }
 
 //**************************************************************************************************
 int SoundTag::GetInstanceCount()
 {
-  return mTagObject->GetNumberOfInstances();
+  if (mTagObject)
+    return mTagObject->GetNumberOfInstances();
+  else
+    return 0;
 }
 
 //**************************************************************************************************
@@ -180,7 +187,7 @@ void SoundTag::SetVolume(float value)
 void SoundTag::InterpolateVolume(float value, float time)
 {
   if (mTagObject)
-    mTagObject->SetVolume(value, time);
+    mTagObject->SetVolume(Math::Max(value, 0.0f), time);
 }
 
 //**************************************************************************************************
@@ -218,7 +225,7 @@ float SoundTag::GetEQLowPassGain()
 void SoundTag::SetEQLowPassGain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetBelow80HzGain(gain);
+    mTagObject->SetBelow80HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -234,7 +241,7 @@ float SoundTag::GetEQBand1Gain()
 void SoundTag::SetEQBand1Gain(float gain)
 {
   if (mTagObject)
-    mTagObject->Set150HzGain(gain);
+    mTagObject->Set150HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -250,7 +257,7 @@ float SoundTag::GetEQBand2Gain()
 void SoundTag::SetEQBand2Gain(float gain)
 {
   if (mTagObject)
-    mTagObject->Set600HzGain(gain);
+    mTagObject->Set600HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -265,8 +272,8 @@ float SoundTag::GetEQBand3Gain()
 //**************************************************************************************************
 void SoundTag::SetEQBand3Gain(float gain)
 {
-  if (mTagObject) 
-    mTagObject->Set2500HzGain(gain);
+  if (mTagObject)
+    mTagObject->Set2500HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -282,7 +289,7 @@ float SoundTag::GetEQHighPassGain()
 void SoundTag::SetEQHighPassGain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetAbove5000HzGain(gain);
+    mTagObject->SetAbove5000HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -290,8 +297,9 @@ void SoundTag::EQSetAllBands(float below80Hz, float at150Hz, float at600Hz,
   float at2500Hz, float above5000Hz, float timeToInterpolate)
 {
   if (mTagObject)
-    mTagObject->InterpolateAllBands(new Audio::TagObject::GainValues(below80Hz, at150Hz, at600Hz, 
-      at2500Hz, above5000Hz), timeToInterpolate);
+    mTagObject->InterpolateAllBands(new Audio::TagObject::GainValues(Math::Max(below80Hz, 0.0f), 
+      Math::Max(at150Hz, 0.0f), Math::Max(at600Hz, 0.0f), Math::Max(at2500Hz, 0.0f), 
+      Math::Max(above5000Hz, 0.0f)), timeToInterpolate);
 }
 
 //**************************************************************************************************
@@ -323,7 +331,7 @@ float SoundTag::GetCompressorAttack()
 void SoundTag::SetCompressorAttack(float attack)
 {
   if (mTagObject)
-    mTagObject->SetCompressorAttackMSec(attack);
+    mTagObject->SetCompressorAttackMSec(Math::Max(attack, 0.0f));
 }
 
 //**************************************************************************************************
@@ -339,7 +347,7 @@ float SoundTag::GetCompressorRelease()
 void SoundTag::SetCompressorRelease(float release)
 {
   if (mTagObject)
-    mTagObject->SetCompressorReleaseMsec(release);
+    mTagObject->SetCompressorReleaseMsec(Math::Max(release, 0.0f));
 }
 
 //**************************************************************************************************
@@ -385,13 +393,13 @@ void SoundTag::SetTagForDucking(SoundTag* tag)
 {
   mCompressorTag = tag;
 
-  if (mTagObject)
-  {
-    if (tag)
-      mTagObject->SetCompressorInputTag(tag->mTagObject);
-    else
-      mTagObject->SetCompressorInputTag(nullptr);
-  }
+  if (!mTagObject)
+    return;
+
+  if (tag)
+    mTagObject->SetCompressorInputTag(tag->mTagObject);
+  else
+    mTagObject->SetCompressorInputTag(nullptr);
 }
 
 //**************************************************************************************************
@@ -439,21 +447,42 @@ float SoundTag::GetInstanceLimit()
 void SoundTag::SetInstanceLimit(float limit)
 {
   if (mTagObject)
-    mTagObject->SetInstanceLimit(limit);
+    mTagObject->SetInstanceLimit((int)limit);
 }
 
 //**************************************************************************************************
-void SoundTag::SendAudioEvent(const Audio::AudioEventType eventType, void * data)
+void SoundTag::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void * data)
 {
-  if (eventType == Audio::AudioEventType::Notify_TagAddedInstance)
+  if (eventType == Audio::AudioEventTypes::TagAddedInstance)
   {
     SoundEvent event;
     DispatchEvent(Events::AddedInstanceToTag, &event);
   }
-  else if (eventType == Audio::AudioEventType::Notify_TagIsUnreferenced)
+  else if (eventType == Audio::AudioEventTypes::TagIsUnreferenced)
   {
     SoundEvent event;
     DispatchEvent(Events::TagHasNoInstances, &event);
+  }
+}
+
+//**************************************************************************************************
+void SoundTag::CreateTag()
+{
+  if (!mTagObject)
+  {
+    mTagObject = new Audio::TagObject();
+    mTagObject->ExternalInterface = this;
+  }
+}
+
+//**************************************************************************************************
+void SoundTag::ReleaseTag()
+{
+  if (mTagObject)
+  {
+    mTagObject->ExternalInterface = nullptr;
+    mTagObject->RemoveTag();
+    mTagObject = nullptr;
   }
 }
 

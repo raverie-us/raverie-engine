@@ -301,7 +301,7 @@ Resource::Resource()
   mManager = nullptr;
   mResourceLibrary = nullptr;
   mContentItem = nullptr;
-  mBuilder = nullptr;
+  mBuilderType = nullptr;
   mIsRuntimeResource = false;
   mReferenceCount = 0;
 }
@@ -354,6 +354,13 @@ Resource::InheritRange Resource::GetBaseResources()
   return r;
 }
 
+BuilderComponent* Resource::GetBuilder()
+{
+  if(!mContentItem)
+    return nullptr;
+  return (BuilderComponent*)mContentItem->QueryComponentId(mBuilderType);
+}
+
 void Resource::AddReference()
 {
   AtomicPreIncrement(&mReferenceCount);
@@ -380,9 +387,13 @@ int Resource::Release()
 void Resource::GetDependencies(HashSet<ContentItem*>& dependencies,
                                HandleParam instance)
 {
+  Handle resourceInstance = instance;
+  if(resourceInstance.IsNull())
+    resourceInstance = this;
+
   // Get all resources used by this component
   HashSet<Resource*> usedResources;
-  GetResourcesFromProperties(this, usedResources);
+  GetResourcesFromProperties(resourceInstance, usedResources);
 
   // Filter runtime and non-writable resources
   forRange(Resource* resource, usedResources.All())
@@ -431,7 +442,7 @@ void Resource::GetTags(Array<String>& coreTags, Array<String>& userTags)
 
   // Add all tags from the content item
   if(mContentItem != nullptr)
-    mContentItem->AddTags(userTags);
+    mContentItem->GetTags(userTags);
 }
 
 void Resource::AddTags(HashSet<String>& tags)
@@ -623,6 +634,10 @@ Any ResourceMetaOperations::GetUndoData(HandleParam object)
 {
   Resource* resource = object.Get<Resource*>(GetOptions::AssertOnNull);
   bool isModified = Z::gResources->mModifiedResources.Contains(resource->mResourceId);
+
+  // Temporary until we fix issues with how this works
+  isModified = true;
+
   return isModified;
 }
 

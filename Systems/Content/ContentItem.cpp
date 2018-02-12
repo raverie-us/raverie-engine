@@ -14,6 +14,8 @@ namespace Zero
 ZilchDefineType(ContentItem, builder, type)
 {
   type->HandleManager = ZilchManagerId(ContentItemHandleManager);
+  type->Add(new ContentItemMetaOperations());
+
   ZilchBindGetterProperty(Name);
 }
 
@@ -101,14 +103,11 @@ String ContentItem::GetFullPath()
   return FilePath::Combine(mLibrary->SourcePath, Filename);
 }
 
-void ContentItem::AddTags(Array<String>& tags)
+void ContentItem::GetTags(Array<String>& tags)
 {
   ContentTags* contentTags = this->has(ContentTags);
   if (contentTags == nullptr)
-  {
-    contentTags = new ContentTags();
-    AddComponent(contentTags);
-  }
+    return;
 
   forRange(String currTag, contentTags->mTags.All())
   {
@@ -116,14 +115,11 @@ void ContentItem::AddTags(Array<String>& tags)
   }
 }
 
-void ContentItem::AddTags(HashSet<String>& tags)
+void ContentItem::GetTags(HashSet<String>& tags)
 {
   ContentTags* contentTags = this->has(ContentTags);
   if (contentTags == nullptr)
-  {
-    contentTags = new ContentTags();
-    AddComponent(contentTags);
-  }
+    return;
 
   forRange(String currTag, contentTags->mTags.All())
   {
@@ -221,6 +217,25 @@ ContentComponent* ContentItem::QueryComponentId(BoundType* typeId)
 void ContentItem::OnInitialize()
 {
 
+}
+
+//------------------------------------------------------------------------- Resource Meta Operations
+//**************************************************************************************************
+ZilchDefineType(ContentItemMetaOperations, builder, type)
+{
+
+}
+
+//**************************************************************************************************
+void ContentItemMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
+{
+  MetaOperations::ObjectModified(object, intermediateChange);
+
+  if(!intermediateChange)
+  {
+    ContentItem* contentItem = object.Get<ContentItem*>(GetOptions::AssertOnNull);
+    Z::gContentSystem->mModifiedContentItems.Insert(contentItem->Id);
+  }
 }
 
 }//namespace Zero

@@ -416,6 +416,26 @@ ZeroShared Matrix3 ToMatrix3(real xRadians, real yRadians, real zRadians)
   return Math::ToMatrix3(euler);
 }
 
+Matrix2 ToMatrix2(Mat3Param matrix3)
+{
+  Matrix2 mat2;
+  ToMatrix2(matrix3, &mat2);
+  return mat2;
+}
+
+void ToMatrix2(Mat3Param mat3, Mat2Ptr mat2)
+{
+  ErrorIf(mat2 == nullptr, "Math - Null pointer passed for matrix.");
+
+  //First "cross" components
+  mat2->m00 = mat3.m00;
+  mat2->m01 = mat3.m01;
+
+  //Second "cross" components
+  mat2->m10 = mat3.m10;
+  mat2->m11 = mat3.m11;
+}
+
 ///Convert a 4x4 matrix to a 3x3 matrix. Simply copies the 4x4 matrix's upper 
 ///3x3 matrix (rotation & scale) to the 3x3 matrix.
 Matrix3 ToMatrix3(Mat4Param matrix)
@@ -908,12 +928,27 @@ Quaternion RotationQuaternionBetween(Vec3Param start, Vec3Param end)
   Vec3 b = end;
   b.AttemptNormalize();
   Vec3 axis = Math::Cross(a, b);
-  float length = axis.AttemptNormalize();
   float dot = Dot(a, b);
-  float angle = Math::ArcCos(dot);
-  if(length == 0)
-    return Quat::cIdentity;
+  if (axis == Vec3::cZero)
+  {
+    // If the two vectors are in the same direction or either are zero...
+    if (dot >= 0)
+    {
+      return Quat::cIdentity;
+    }
+    // Otherwise they're in opposite directions
+    // This case technically has infinite possibilities
+    else
+    {
+      axis = Math::Cross(a, Vec3::cXAxis);
 
+      if (axis == Vec3::cZero)
+        axis = Math::Cross(a, Vec3::cZAxis);
+    }
+  }
+
+  // ToQuaternion will normalize the axis
+  float angle = Math::ArcCos(dot);
   return ToQuaternion(axis, angle);
 }
 

@@ -25,6 +25,7 @@ NameSettings::NameSettings()
   mGeometryAttributeName = "Geometry";
 
   mStaticAttribute = "Static";
+  mInputAttributeName = "Inline";
   mPreConstructorName = "PreConstructor";
   mConstructorName = "Constructor";
   mReferenceKeyword = "inout";
@@ -48,6 +49,7 @@ NameSettings::NameSettings()
   mStageOutputAttributeName = "StageOutput";
   mSystemValueInputAttributeName = "SVInput";
   mSystemValueOutputAttributeName = "SVOutput";
+  mNoFallbackWarningAttributeName = "NoFallbackWarning";
   mBuiltinInputAttributeName = "BuiltInInput";
   mPropertyInputAttributeName = "PropertyInput";
   mInputSubAttributes.PushBack(mFragmentInputAttributeName);
@@ -82,38 +84,47 @@ NameSettings::NameSettings()
   mGeometryShaderInputPrefix = "gsIn";
   mAttributePrefix = "att";
 
-  mAllowedClassAttributes.Insert(mVertexAttributeName);
-  mAllowedClassAttributes.Insert(mGeometryAttributeName);
-  mAllowedClassAttributes.Insert(mPixelAttributeName);
-  mAllowedClassAttributes.Insert(mStaticAttribute);
-  mAllowedClassAttributes.Insert(mIntrinsicAttribute);
-  mAllowedClassAttributes.Insert(mNonCopyableAttribute);
-  mAllowedClassAttributes.Insert(mForcedStaticAttribute);
-  mAllowedClassAttributes.Insert(mImplementAttribute);
+  mAllowedClassAttributes.Insert(mVertexAttributeName, AttributeInfo());
+  mAllowedClassAttributes.Insert(mGeometryAttributeName, AttributeInfo());
+  mAllowedClassAttributes.Insert(mPixelAttributeName, AttributeInfo());
+  mAllowedClassAttributes.Insert(mStaticAttribute, AttributeInfo());
+  mAllowedClassAttributes.Insert(mIntrinsicAttribute, AttributeInfo());
+  mAllowedClassAttributes.Insert(mImplementAttribute, AttributeInfo());
+  // Hidden
+  mAllowedClassAttributes.Insert(mNonCopyableAttribute, AttributeInfo(true));
+  mAllowedClassAttributes.Insert(mForcedStaticAttribute, AttributeInfo(true));
+  
 
-  mAllowedFunctionAttributes.Insert(mMainAttribute);
-  mAllowedFunctionAttributes.Insert(mStaticAttribute);
-  mAllowedFunctionAttributes.Insert(mExtensionAttribute);
-  mAllowedFunctionAttributes.Insert(mImplementAttribute);
-  mAllowedFunctionAttributes.Insert(mNoMangleAttributeName);
-  mAllowedFunctionAttributes.Insert(mVertexIntrinsicAttributeName);
-  mAllowedFunctionAttributes.Insert(mGeometryIntrinsicAttributeName);
-  mAllowedFunctionAttributes.Insert(mPixelIntrinsicAttributeName);
+  mAllowedFunctionAttributes.Insert(mStaticAttribute, AttributeInfo());
+  mAllowedFunctionAttributes.Insert(mExtensionAttribute, AttributeInfo());
+  mAllowedFunctionAttributes.Insert(mImplementAttribute, AttributeInfo());
+  mAllowedFunctionAttributes.Insert(mVertexIntrinsicAttributeName, AttributeInfo());
+  mAllowedFunctionAttributes.Insert(mGeometryIntrinsicAttributeName, AttributeInfo());
+  mAllowedFunctionAttributes.Insert(mPixelIntrinsicAttributeName, AttributeInfo());
+  // Hidden
+  mAllowedFunctionAttributes.Insert(mMainAttribute, AttributeInfo(true));
+  mAllowedFunctionAttributes.Insert(mNoMangleAttributeName, AttributeInfo(true));
+  // Currently don't display this attribute since it doesn't fully
+  // work everywhere yet and is only used on native types.
+  //mAllowedFunctionAttributes.Insert(mInputAttributeName, AttributeInfo(true));
+  
 
-  mAllowedFieldAttributes.Insert(mStaticAttribute);
-  mAllowedFieldAttributes.Insert(mSharedInputAttributeName);
-  mAllowedFieldAttributes.Insert(mNoMangleAttributeName);
-  mAllowedFieldAttributes.Insert(mInputAttributeName);
-  mAllowedFieldAttributes.Insert(mOutputAttributeName);
-  mAllowedFieldAttributes.Insert(mUniformName);
-  mAllowedFieldAttributes.Insert(mFragmentInputAttributeName);
-  mAllowedFieldAttributes.Insert(mStageInputAttributeName);
-  mAllowedFieldAttributes.Insert(mStageOutputAttributeName);
-  mAllowedFieldAttributes.Insert(mSystemValueInputAttributeName);
-  mAllowedFieldAttributes.Insert(mSystemValueOutputAttributeName);
-  mAllowedFieldAttributes.Insert(mBuiltinInputAttributeName);
-  mAllowedFieldAttributes.Insert(mPropertyInputAttributeName);
-  mAllowedFieldAttributes.Insert(mGeometryShaderOutputAttribute);
+  mAllowedFieldAttributes.Insert(mStaticAttribute, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mSharedInputAttributeName, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mInputAttributeName, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mFragmentInputAttributeName, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mStageInputAttributeName, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mBuiltinInputAttributeName, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mPropertyInputAttributeName, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mOutputAttributeName, AttributeInfo());
+  mAllowedFieldAttributes.Insert(mNoFallbackWarningAttributeName, AttributeInfo());
+  // Hidden
+  mAllowedFieldAttributes.Insert(mNoMangleAttributeName, AttributeInfo(true));
+  mAllowedFieldAttributes.Insert(mUniformName, AttributeInfo(true));
+  mAllowedFieldAttributes.Insert(mStageOutputAttributeName, AttributeInfo(true));
+  mAllowedFieldAttributes.Insert(mGeometryShaderOutputAttribute, AttributeInfo(true));
+  mAllowedFieldAttributes.Insert(mSystemValueInputAttributeName, AttributeInfo(true));
+  mAllowedFieldAttributes.Insert(mSystemValueOutputAttributeName, AttributeInfo(true));
 }
 
 //-------------------------------------------------------------------ShaderDefinitionSettings

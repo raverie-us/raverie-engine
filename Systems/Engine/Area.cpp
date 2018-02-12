@@ -68,7 +68,7 @@ ZilchDefineType(Area, builder, type)
   ZeroBindEvent(Events::AreaChanged, AreaEvent);
   ZeroBindDependency(Transform);
  
-  ZilchBindGetterSetterProperty(Origin)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(Origin)->ZeroLocalModificationOverride();
   ZilchBindGetter(TopLeft);
   ZilchBindGetter(TopCenter);
   ZilchBindGetter(TopRight);
@@ -78,7 +78,7 @@ ZilchDefineType(Area, builder, type)
   ZilchBindGetter(BottomLeft);
   ZilchBindGetter(BottomCenter);
   ZilchBindGetter(BottomRight);
-  ZilchBindGetterSetterProperty(Size)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(Size)->ZeroLocalModificationOverride();
 
   ZilchBindMethod(LocalOffsetOf);
 }
@@ -119,14 +119,21 @@ Location::Enum Area::GetOrigin()
 
 void Area::SetOrigin(Location::Enum origin)
 {
-  mOrigin = origin;
-  DoAreaChanged();
+  if(mOrigin != origin)
+  {
+    mOrigin = origin;
+    DoAreaChanged();
+  }
 }
 
 Vec2 Area::LocalOffsetOf(Location::Enum location)
 {
-  Vec2 offset = OffsetOfOffset(mOrigin, location);
-  return offset * mSize;
+  return OffsetOfOffset(location) * mSize;
+}
+
+Vec2 Area::OffsetOfOffset(Location::Enum location)
+{
+  return Zero::OffsetOfOffset(mOrigin, location);
 }
 
 Aabb Area::GetLocalAabb()

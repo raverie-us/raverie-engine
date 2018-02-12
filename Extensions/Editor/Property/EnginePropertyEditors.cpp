@@ -1023,7 +1023,7 @@ void CogPickerManipulation<PropertyEditor>::OnUpdate(UpdateEvent* event)
     SafeDestroy(mToolTip);
 
     ToolTipPlacement toolTipPlacement;
-    toolTipPlacement.SetScreenRect(Rect::CenterAndSize(mMousePosition, Vec2(15, 15)));
+    toolTipPlacement.SetScreenRect(WidgetRect::CenterAndSize(mMousePosition, Vec2(15, 15)));
     toolTipPlacement.SetPriority(IndicatorSide::Top, IndicatorSide::Bottom, IndicatorSide::Left, IndicatorSide::Right);
     mToolTip = new ToolTip(GetRootWidget());
 
@@ -1032,7 +1032,7 @@ void CogPickerManipulation<PropertyEditor>::OnUpdate(UpdateEvent* event)
     if (status.Failed())
     {
       selectText = BuildString(selectText, "\n", status.Message);
-      mToolTip->SetColor(ToolTipColor::Red);
+      mToolTip->SetColorScheme(ToolTipColorScheme::Red);
     }
     
     mToolTip->SetText(selectText);
@@ -1286,7 +1286,7 @@ public:
       mCloneButton->SetIgnoreInput(true);
       mCloneButton->mTabFocusStop = false;
       mCloneButton->SetToolTip("Cannot clone this Resource type");
-      mCloneButton->mToolTipColor = ToolTipColor::Yellow;
+      mCloneButton->mToolTipColor = ToolTipColorScheme::Yellow;
     }
 
     if(mResourceManager->mCanCreateNew == false)
@@ -1295,7 +1295,7 @@ public:
       mNewButton->SetIgnoreInput(true);
       mNewButton->mTabFocusStop = false;
       mNewButton->SetToolTip(String::Format("Cannot create new %s", mResourceType->Name.c_str()));
-      mNewButton->mToolTipColor = ToolTipColor::Yellow;
+      mNewButton->mToolTipColor = ToolTipColorScheme::Yellow;
     }
 
     ConnectThisTo(mNameArea, Events::MouseEnterHierarchy, OnMouseEnterMainArea);
@@ -1656,7 +1656,7 @@ public:
     ToolTip* toolTip = new ToolTip(this);
     toolTip->SetDestroyOnMouseExit(false);
     toolTip->mContentPadding = Thickness(2, 2, 2, 2);
-    toolTip->SetColor(ToolTipColor::Gray);
+    toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
     // Create the resource widget and attach it to the tooltip
     String name = resource->Name;
@@ -1670,7 +1670,7 @@ public:
     toolTip->SetContent(tileWidget);
 
     // Position the tooltip
-    Rect rect = this->GetScreenRect();
+    WidgetRect rect = this->GetScreenRect();
 
     // Offset out to look nicer
     float extraBorder = Pixels(15);
@@ -1883,7 +1883,7 @@ public:
     AddResourceWindow* addWidget = OpenAddWindow(mResourceType, &window);
     addWidget->ShowResourceTypeSearch(false);
 
-    Rect rect = mEditor->GetScreenRect();
+    WidgetRect rect = mEditor->GetScreenRect();
     Vec3 topRight = ToVector3(rect.TopRight());
 
     window->SetTranslation(topRight + Vec3(6.0f, -22.0f, 0));
@@ -2116,7 +2116,13 @@ public:
     , mAddOp(addOp)
     , mObjectHandle(object)
   {
-    mName = "ResourceListOperation";
+    mName = "Removed resource";
+    if(mAddOp)
+      mName = "Added resource";
+
+    if(Resource* resource = GetResourceList( )->mOwner)
+      BuildString(mName, ": ", resource->Name);
+    
     mMeta = object.StoredType;
   }
 
@@ -2217,15 +2223,24 @@ public:
 
     forRange (Resource* resource, resources.All())
     {
-      SearchViewResult result;
+      AttemptAddResource(search, resource);
+    }
+  }
+
+  void AttemptAddResource(SearchData& search, Resource* resource)
+  {
+    // Match on the name
+    int priority = PartialMatch(search.SearchString.All(), resource->Name.All(), CaseInsensitiveCompare);
+    if (priority != cNoMatch)
+    {
+      // Add a result
+      SearchViewResult& result = search.Results.PushBack();
       result.Data = resource;
       result.Interface = this;
       result.Name = resource->Name;
-      result.Priority = 0;
-
+      result.Priority = priority;
+      // Grey out resources options in the search view that cannot be added to the object
       mResourceList->CheckForAddition(result.mStatus, resource);
-
-      search.Results.PushBack(result);
     }
   }
 

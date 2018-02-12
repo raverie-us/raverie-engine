@@ -30,6 +30,7 @@ Handle GetActingObject(HandleParam componentOrSelection, HandleParam object)
 //---------------------------------------------------------------- MultiProperty
 //******************************************************************************
 MultiPropertyInterface::MultiPropertyInterface(OperationQueue* queue, MetaSelection* selection)
+  : PropertyToUndo(queue)
 {
   mOperationQueue = queue;
   mSelection = selection;
@@ -136,6 +137,30 @@ void MultiPropertyInterface::ChangeProperty(HandleParam object,
 
   if(action == PropertyAction::Commit)
     mOperationQueue->EndBatch();
+}
+
+//******************************************************************************
+void MultiPropertyInterface::MarkPropertyModified(HandleParam object, PropertyPathParam property)
+{
+  mOperationQueue->BeginBatch();
+  forRange(Handle instance, mSelection->All())
+  {
+    Handle actingObject = GetActingObject(object, instance);
+    PropertyToUndo::MarkPropertyModified(actingObject, property);
+  }
+  mOperationQueue->EndBatch();
+}
+
+//******************************************************************************
+void MultiPropertyInterface::RevertProperty(HandleParam object, PropertyPathParam property)
+{
+  mOperationQueue->BeginBatch();
+  forRange(Handle instance, mSelection->All())
+  {
+    Handle actingObject = GetActingObject(object, instance);
+    PropertyToUndo::RevertProperty(actingObject, property);
+  }
+  mOperationQueue->EndBatch();
 }
 
 //******************************************************************************
@@ -344,7 +369,8 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(ObjectPropertyNode* 
   forRange(Function* function, targetType->GetFunctions())
   {
     // Don't want to add hidden methods
-    if (function->HasAttribute(FunctionAttributes::cProperty))
+    if (function->HasAttribute(FunctionAttributes::cProperty) ||
+        function->HasAttribute(FunctionAttributes::cDisplay))
     {
       // METAREFACTOR - 0 param
       // We can only display methods with 0 parameters
@@ -572,6 +598,7 @@ void MultiMetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateActio
 void MultiMetaComposition::GetSharedComponents(MetaSelection* selection,
                                                Array<BoundType*>& sharedComponents)
 {
+  ReturnIf(selection == nullptr,, "The MetaSelection was null");
   Handle primary = selection->GetPrimary();
   if (primary.IsNull())
     return;

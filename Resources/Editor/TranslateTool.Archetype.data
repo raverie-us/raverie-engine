@@ -13,6 +13,6 @@ Cog
 		var Pivot = GizmoPivot.Average
 		var Snapping = false
 		var SnapDistance = 0.25
-		var SnapMode = GizmoSnapMode.WorldGrid
+		var SnapMode = GizmoSnapMode.Relative
 	}
 }

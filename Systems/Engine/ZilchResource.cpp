@@ -146,6 +146,25 @@ void AddTypesToAutoComplete(LibraryRef library, Array<Completion>& keywordsOut)
     {
       keywordsOut.PushBack(Completion(type->Name, type->Description));
     }
+    forRange(InstantiateTemplateInfo& templateHandler, library->TemplateHandlers.Values())
+    {
+      // Build the full name of the template
+      StringBuilder nameBuilder;
+      nameBuilder.Append(templateHandler.TemplateBaseName);
+      nameBuilder.Append("[");
+      size_t count = templateHandler.TemplateParameters.Size();
+      for(size_t i = 0; i < count; ++i)
+      {
+        nameBuilder.Append(templateHandler.TemplateParameters[i].Name);
+        if(i != count - 1)
+          nameBuilder.Append(", ");
+      }
+      nameBuilder.Append("]");
+
+      // Since auto-completion adds the full name, we can't put the default template argument names in there.
+      // For now put the full name in the description so the user can at least see the required arguments.
+      keywordsOut.PushBack(Completion(templateHandler.TemplateBaseName, nameBuilder.ToString()));
+    }
   }
 }
 
@@ -229,6 +248,33 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, 
   {
     Rune r = textRange.ReadCurrentRune();
 
+    // if we are in a comment scan until we reach a new line or the end of the text range
+    if (r == '/')
+    {
+      textRange.PopFront();
+      if (!textRange.Empty())
+      {
+        r = textRange.ReadCurrentRune();
+        if (r == '/')
+        {
+          StringRange newline = textRange.FindFirstOf("\n");
+          if (!newline.Empty())
+            textRange = textRange.SubString(newline.End(), textRange.End());
+        }
+        if (r == '*')
+        {
+          // Have to pop front after the star as /*/*/ is a valid c style comment
+          textRange.PopFront();
+          StringRange endComment = textRange.FindFirstOf("*/");
+          if (!endComment.Empty())
+            textRange = textRange.SubString(endComment.End(), textRange.End());
+        }
+      }
+      // we reached the end of the text range and need to break out of the for loop too
+      if (textRange.Empty())
+        break;
+    }
+
     if (r == '{')
       ++bracesCount;
 
@@ -266,7 +312,8 @@ void ZilchDocumentResource::ValidateScriptName(Status& status, StringParam name)
   // Because we do component access off of cogs using the . operator, then it might
   // conflict with an actual member of cog (name a component 'Destroy', what is Owner.Destroy?)
   // We must do this for Space and GameSession also (technically GameSession and Space doubly hit Cog, but that's fine).
-  if(ZilchTypeId(Cog)->GetMember(name) || ZilchTypeId(GameSession)->GetMember(name) || ZilchTypeId(Space)->GetMember(name))
+  if(ZilchTypeId(Cog)->GetMember(name)   || ZilchTypeId(GameSession)->GetMember(name) ||
+     ZilchTypeId(Space)->GetMember(name) || ZilchTypeId(CogPath)->GetMember(name))
   {
     String message = String::Format(
       "Components cannot have the same name as a property/method on Cog/Space/GameSession (this.Owner.%s would conflict)",

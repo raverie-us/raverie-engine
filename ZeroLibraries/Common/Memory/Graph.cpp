@@ -52,7 +52,7 @@ MemPtr zStaticAllocate(size_t size)
   //Static Memory graph nodes and other static objects
   //are allocated from a fixed size buffer this allows them to have controlled 
   //or optional initialization and prevents them from showing up in leaks
-  ErrorIf(BufferLocation >= StaticMemoryGraphBuffer + cStaticMemoryBufferSize,
+  ErrorIf(BufferLocation + size >= StaticMemoryGraphBuffer + cStaticMemoryBufferSize,
     "Allocated too many memory graph objects. Increase cStaticMemoryBufferSize.");
   byte* current = BufferLocation;
   BufferLocation+=size;
@@ -112,6 +112,7 @@ Heap* Root::StaticHeap = nullptr;
 void Shutdown()
 {
   GetRoot()->CleanUp();
+  GetRoot()->Shutdown();
 }
 
 void Root::Shutdown()

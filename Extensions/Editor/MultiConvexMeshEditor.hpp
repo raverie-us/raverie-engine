@@ -31,12 +31,12 @@ class MultiConvexMeshDrawer : public Widget
 public:
   MultiConvexMeshDrawer(Composite* parent, MultiConvexMeshEditor* editor);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
-  void DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect);
-  void DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect);
-  void DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect);
-  void DrawAutoComputedContours(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect);
+  void DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawAutoComputedContours(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
 
   MultiConvexMeshEditor* mEditor;
 };
@@ -252,6 +252,12 @@ public:
   void ClearSelection();
   /// Update the property view's text for the currently selected point.
   void UpdateSelectedPointText();
+
+  struct SourceData
+  {
+    SpriteSource* mSpriteSource;
+    Image* mSourceImage;
+  };
 
   static real SamplePixelAlpha(Vec2Param pixelCoord, void* userData);
   static real SamplePixelIntensity(Vec2Param pixelCoord, void* userData);

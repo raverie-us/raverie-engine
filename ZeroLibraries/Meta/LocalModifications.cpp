@@ -251,7 +251,7 @@ void ObjectState::ChildAdded(ChildIdParam childId)
   if(mRemovedChildren.Contains(childId))
     mRemovedChildren.Erase(childId);
   else
-    mAddedChildren.Insert(childId);
+    mAddedChildren.InsertOrError(childId);
 }
 
 //**************************************************************************************************
@@ -260,7 +260,7 @@ void ObjectState::ChildRemoved(ChildIdParam childId)
   if(mAddedChildren.Contains(childId))
     mAddedChildren.Erase(childId);
   else
-    mRemovedChildren.Insert(childId);
+    mRemovedChildren.InsertOrError(childId);
 }
 
 //**************************************************************************************************
@@ -668,18 +668,18 @@ bool MetaDataInheritance::ShouldStoreLocalModifications(HandleParam object)
      Which objects we want to store local modifications:
      (example is using Cogs)
 
-     Cog [Archetype]                       // Store
-         ChildA                            // Store
-         ChildB [LocallyAdded]             // Do not store
-             ChildA                        // Do not store
-             ChildB [Archetype]            // Store
-                 ChildA                    // Store (relative to direct parent)
-         ChildC [Archetype]                // Store
-             ChildA                        // Store
-             ChildB [LocallyAdded]         // Do not store
-         ChildD [Archetype][LocallyAdded]  // Store
-             ChildA                        // Store
-             ChildB [LocallyAdded]         // Do not store
+     Cog [Archetype]                      // Store
+         Child                            // Store
+         Child [LocallyAdded]             // Do not store
+             Child                        // Do not store
+             Child [Archetype]            // Store
+                 Child                    // Store (relative to direct parent)
+         Child [Archetype]                // Store
+             Child                        // Store
+             Child [LocallyAdded]         // Do not store
+         Child [Archetype][LocallyAdded]  // Store
+             Child                        // Store
+             Child [LocallyAdded]         // Do not store
 
      Observations:
      1. If it's an Archetype, we always store modifications
@@ -733,6 +733,16 @@ void MetaDataInheritance::SetPropertyModified(HandleParam object, PropertyPathPa
                                               bool state)
 {
   LocalModifications::GetInstance()->SetPropertyModified(object, propertyPath, state);
+}
+
+//**************************************************************************************************
+bool MetaDataInheritance::InheritsFromData(HandleParam object)
+{
+  ReturnIf(object.IsNull(), false, "Null object");
+
+  if (MetaDataInheritance* inheritance = object.StoredType->HasInherited<MetaDataInheritance>())
+    return inheritance->ShouldStoreLocalModifications(object);
+  return false;
 }
 
 }//namespace Zero

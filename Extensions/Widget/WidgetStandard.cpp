@@ -12,6 +12,8 @@ namespace Zero
 // Enums
 ZilchDefineEnum(VerticalAlignment);
 ZilchDefineEnum(HorizontalAlignment);
+ZilchDefineEnum(IndicatorSide);
+ZilchDefineEnum(ToolTipColorScheme);
 
 //**************************************************************************************************
 ZilchDefineStaticLibrary(WidgetLibrary)
@@ -21,6 +23,8 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   // Enums
   ZilchInitializeEnum(VerticalAlignment);
   ZilchInitializeEnum(HorizontalAlignment);
+  ZilchInitializeEnum(IndicatorSide);
+  ZilchInitializeEnum(ToolTipColorScheme);
 
   // Events
   ZilchInitializeType(FocusEvent);
@@ -46,8 +50,6 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(DockLayout);
   ZilchInitializeType(RatioLayout);
   ZilchInitializeType(GridLayout);
-  ZilchInitializeType(Thickness);
-  ZilchInitializeType(Rect);
   ZilchInitializeType(SizePolicies);
   ZilchInitializeType(Widget);
   ZilchInitializeType(Composite);

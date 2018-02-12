@@ -53,7 +53,7 @@ ZilchDefineType(SoundAttenuator, builder, type)
 
   ZilchBindGetterSetterProperty(StartDistance);
   ZilchBindGetterSetterProperty(StopDistance);
-  ZilchBindGetterSetterProperty(MinAttenuatedVolume)->Add(new EditorRange(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(MinAttenuatedVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
   ZilchBindGetterSetterProperty(UseLowPassFilter)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindGetterSetterProperty(LowPassStartDistance)->ZeroFilterBool(mUseLowPassFilter);
   ZilchBindGetterSetterProperty(LowPassCutoffFreq)->ZeroFilterBool(mUseLowPassFilter);
@@ -199,13 +199,13 @@ void SoundAttenuator::SetFalloffCurve(SampleCurve* newCurve)
 
     // Send the custom curve data to all existing nodes
     for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
-      nodes.Front().mNode->SetCurveType(Audio::CustomCurveType, &curveData);
+      nodes.Front().mNode->SetCurveType(Audio::CurveTypes::Custom, &curveData);
   }
   else
   {
     // Set the custom curve data to null on all existing nodes
     for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
-      nodes.Front().mNode->SetCurveType(Audio::CustomCurveType, nullptr);
+      nodes.Front().mNode->SetCurveType(Audio::CurveTypes::Custom, nullptr);
   }
 }
 
@@ -222,26 +222,26 @@ void SoundAttenuator::SetFalloffCurveType(FalloffCurveType::Enum newtype)
 
   if (newtype != FalloffCurveType::Custom)
   {
-    Audio::CurveTypes curve;
+    Audio::CurveTypes::Enum curve;
     switch (newtype)
     {
     case FalloffCurveType::Linear:
-      curve = Audio::LinearCurveType;
+      curve = Audio::CurveTypes::Linear;
       break;
     case FalloffCurveType::Squared:
-      curve = Audio::SquaredCurveType;
+      curve = Audio::CurveTypes::Squared;
       break;
     case FalloffCurveType::Sine:
-      curve = Audio::SineCurveType;
+      curve = Audio::CurveTypes::Sine;
       break;
     case FalloffCurveType::SquareRoot:
-      curve = Audio::SquareRootCurveType;
+      curve = Audio::CurveTypes::SquareRoot;
       break;
     case FalloffCurveType::Log:
-      curve = Audio::LogCurveType;
+      curve = Audio::CurveTypes::Log;
       break;
     default:
-      curve = Audio::LogCurveType;
+      curve = Audio::CurveTypes::Log;
       break;
     }
 
@@ -318,29 +318,29 @@ void SoundAttenuator::UpdateCurve(Event* event)
 SoundAttenuatorNode* SoundAttenuator::GetAttenuationNode(StringParam name, unsigned ID)
 {
   // Get the enum value for the curve type
-  Audio::CurveTypes curveType;
+  Audio::CurveTypes::Enum curveType;
   switch (mFalloffCurveType)
   {
   case FalloffCurveType::Linear:
-    curveType = Audio::LinearCurveType;
+    curveType = Audio::CurveTypes::Linear;
     break;
   case FalloffCurveType::Squared:
-    curveType = Audio::SquaredCurveType;
+    curveType = Audio::CurveTypes::Squared;
     break;
   case FalloffCurveType::Sine:
-    curveType = Audio::SineCurveType;
+    curveType = Audio::CurveTypes::Sine;
     break;
   case FalloffCurveType::SquareRoot:
-    curveType = Audio::SquareRootCurveType;
+    curveType = Audio::CurveTypes::SquareRoot;
     break;
   case FalloffCurveType::Log:
-    curveType = Audio::LogCurveType;
+    curveType = Audio::CurveTypes::Log;
     break;
   case FalloffCurveType::Custom:
-    curveType = Audio::CustomCurveType;
+    curveType = Audio::CurveTypes::Custom;
     break;
   default:
-    curveType = Audio::LogCurveType;
+    curveType = Audio::CurveTypes::Log;
     break;
   }
 

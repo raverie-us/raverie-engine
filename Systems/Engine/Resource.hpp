@@ -181,6 +181,8 @@ public:
 
   InheritRange GetBaseResources();
 
+  BuilderComponent* GetBuilder();
+
   /// Name of resource for display.
   String Name;
 
@@ -205,8 +207,10 @@ public:
   /// Content System Values only valid if content system is loaded.
   /// Content Item used to build this resource. 
   ContentItem* mContentItem;
-  /// Builder used for this content item.
-  BuilderComponent* mBuilder;
+
+  /// Builder type used for this content item. It's safe to store a pointer to the type
+  /// because it will always be a native type.
+  BoundType* mBuilderType;
 
   /// Denotes a resource created at runtime (not loaded from a file).
   bool mIsRuntimeResource;

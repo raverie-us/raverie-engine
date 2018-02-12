@@ -82,6 +82,7 @@ TextBox::TextBox(Composite* parent, StringParam styleName)
 
   SetStyle(TextBoxStyle::Classic);
 
+  ConnectThisTo(mBackground, Events::LeftMouseDown, OnLeftMouseDown);
   ConnectThisTo(mEditTextField, Events::MouseEnter, MouseEnter);
   ConnectThisTo(mEditTextField, Events::MouseExit, MouseExit);
   ConnectThisTo(mEditTextField, Events::TextSubmit, OnSubmit);
@@ -144,6 +145,7 @@ bool TextBox::TakeFocusOverride()
 {
   if(!mAllowEdit)
     return false;
+
   mEditTextField->HardTakeFocus();
   mEditTextField->SelectAll();
   return true;
@@ -279,6 +281,12 @@ void TextBox::OnFocusLost(Event*)
   mBorder->SetColor(ToFloatColor(mBorderColor));
 }
 
+void TextBox::OnLeftMouseDown(MouseEvent* event)
+{
+  // Forward the left mouse down event on the background to our edit text
+  mEditTextField->DispatchEvent(event->EventId, event);
+}
+
 void TextBox::SetPassword(bool passwordMode)
 {
   mEditTextField->mPassword = passwordMode;
@@ -344,7 +352,7 @@ void MultiLineText::UpdateTransform()
   mBackground->SetSize(mSize);
   mBorder->SetSize(mSize);
 
-  Rect rect = RemoveThicknessRect(mPadding, mSize);
+  WidgetRect rect = RemoveThicknessRect(mPadding, mSize);
   PlaceWithRect(rect, mTextField);
 
   Composite::UpdateTransform();

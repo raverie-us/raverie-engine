@@ -101,7 +101,7 @@ ZilchDefineType(ParticleEmitterShared, builder, type)
 
   ZilchBindFieldProperty(mRandomSpin);
 
-  ZilchBindFieldProperty(mFill)->Add(new EditorRange(0, 1, 0.01f))->HideOnDerivedType(MeshParticleEmitter);
+  ZilchBindFieldProperty(mFill)->Add(new EditorSlider(0, 1, 0.01f))->HideOnDerivedType(MeshParticleEmitter);
   ZilchBindFieldProperty(mEmitterVelocityPercent);
 
   ZilchBindFieldProperty(mStartVelocity);

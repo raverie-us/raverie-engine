@@ -14,6 +14,7 @@ ZilchDefineRange(HierarchyNameRange);
 ZilchDefineRange(HierarchyRange);
 ZilchDefineRange(CogNameRange);
 ZilchDefineRange(HierarchyList::range);
+ZilchDefineRange(HierarchyList::reverse_range);
 ZilchDefineRange(Space::range);
 ZilchDefineRange(SpaceMap::valueRange);
 ZilchDefineRange(ObjectLinkRange);
@@ -99,6 +100,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRange(HierarchyRange);
   ZilchInitializeRange(CogNameRange);
   ZilchInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
+  ZilchInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);
@@ -141,6 +143,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(System);
 
   // Meta Components
+  ZilchInitializeType(TransformMetaTransform);
   ZilchInitializeType(CogMetaComposition);
   ZilchInitializeType(CogMetaDataInheritance);
   ZilchInitializeType(CogMetaDisplay);
@@ -159,6 +162,11 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(ComponentMetaOperations);
   ZilchInitializeType(ResourceMetaOperations);
   ZilchInitializeType(CogArchetypePropertyFilter);
+  ZilchInitializeType(CogPathMetaComposition);
+  ZilchInitializeType(MetaEditorScriptObject);
+  ZilchInitializeType(MetaDependency);
+  ZilchInitializeType(MetaInterface);
+  ZilchInitializeType(RaycasterMetaComposition);
 
   // Events
   ZilchInitializeType(CogPathEvent);
@@ -257,6 +265,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Operation);
   ZilchInitializeType(OperationQueue);
   ZilchInitializeType(OperationBatch);
+  ZilchInitializeType(PropertyOperation);
   ZilchInitializeType(Tracker);
   ZilchInitializeType(Spline);
   ZilchInitializeType(SplineSampleData);
@@ -276,6 +285,9 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(ActionDelay);
 
   ZilchInitializeType(CogInitializer);
+
+  ZilchInitializeType(Thickness);
+  ZilchInitializeType(Rectangle);
 
   ZilchInitializeType(LinkId);
   ZilchInitializeType(Named);
@@ -348,8 +360,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Joystick);
   ZilchInitializeType(Joysticks);
 
-  ZilchInitializeType(HotKeyDataSet);
-
   ZilchInitializeType(EventDirectoryWatcher);
   ZilchInitializeType(Job);
   ZilchInitializeType(DocumentationLibrary);
@@ -373,6 +383,16 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   // Build meta
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
+
+  RegisterClassAttribute(ObjectAttributes::cRunInEditor)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cComponentInterface, MetaInterface)->TypeMustBe(Component);
+
+  RegisterPropertyAttributeType(PropertyAttributes::cDependency, MetaDependency)->TypeMustBe(Component);
+
+  RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty, EditorResource)->TypeMustBe(Resource);
 
   ZPrintFilter(Filter::DefaultFilter, "Engine Initialize...\n");
 
@@ -415,7 +435,6 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   InitializeResourceManager(LevelManager);
   InitializeResourceManager(AnimationManager);
   InitializeResourceManager(CurveManager);
-  InitializeResourceManager(HotKeyManager);
   InitializeResourceManager(ResourceTableManager);
   InitializeResourceManager(ColorGradientManager);
   InitializeResourceManager(TextBlockManager);

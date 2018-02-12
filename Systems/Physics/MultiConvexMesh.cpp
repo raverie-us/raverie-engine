@@ -268,6 +268,9 @@ void SubConvexMesh::Draw2d(VertexArrayParam verts, Mat4Param transform, bool dra
 
 void SubConvexMesh::DrawFaces(VertexArrayParam verts, Mat4Param transform, ByteColor color)
 {
+  Debug::ActiveDebugConfig config;
+  config.Alpha(100).Border(false).Filled(true);
+
   uint triCount = GetTriangleCount();
   for(uint i = 0; i < triCount; ++i)
   {
@@ -300,6 +303,9 @@ void SubConvexMesh::DrawEdges(VertexArrayParam verts, Mat4Param transform, ByteC
 
 void SubConvexMesh::DrawEdges2d(VertexArrayParam verts, Mat4Param transform, ByteColor color)
 {
+  Debug::ActiveDebugConfig config;
+  config.Alpha(100).Border(false).Filled(false);
+
   uint faceIndexCount = mIndices.Size() / 2;
   for(uint i = 0; i < faceIndexCount; ++i)
   {

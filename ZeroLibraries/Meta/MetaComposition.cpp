@@ -117,6 +117,12 @@ MetaComposition::MetaComposition(BoundType* componentType) :
 }
 
 //**************************************************************************************************
+uint MetaComposition::GetComponentCount(HandleParam owner)
+{
+  return 0;
+}
+
+//**************************************************************************************************
 bool MetaComposition::HasComponent(HandleParam owner, BoundType* componentType)
 {
   Handle component = GetComponent(owner, componentType);

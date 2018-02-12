@@ -54,9 +54,6 @@ public:
   /// Which version the package was built in (not the required version).
   uint mVersionBuilt;
 
-  /// Dimensions of the tile widget.
-  Vec2 mTileSize;
-
   bool mLocal;
 
   HandleOf<Texture> mPreview;

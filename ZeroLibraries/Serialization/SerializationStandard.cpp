@@ -47,6 +47,7 @@ ZilchDefineStaticLibrary(SerializationLibrary)
   ZeroBindSerializationPrimitiveExternal(Mat3);
   ZeroBindSerializationPrimitiveExternal(Mat4);
   ZeroBindSerializationPrimitiveExternal(Quat);
+  ZeroBindSerializationPrimitiveExternal(Enum);
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -71,7 +72,6 @@ void SerializationLibrary::Initialize()
   ZilchTypeId(Mat3)->Add(new PrimitiveMetaSerialization<Mat3>());
   ZilchTypeId(Mat4)->Add(new PrimitiveMetaSerialization<Mat4>());
   ZilchTypeId(Quat)->Add(new PrimitiveMetaSerialization<Quat>());
-  ZilchTypeId(Enum)->Add(new EnumMetaSerialization());
 }
 
 //**************************************************************************************************

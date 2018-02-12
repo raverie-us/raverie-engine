@@ -16,7 +16,6 @@ void AddPropertyRenamedAttribute(Zilch::ParseEvent* e, Property* property, Attri
 void MetaLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
 {
   // Loop through any SendsEvents on every type in this library, and add to MetaDatabase
-  // METAREFACTOR this should walk BoundTypes, but they are not filled out yet
   forRange(BoundType* type, builder.BoundTypes.Values())
     ProcessComposition(builder, type);
 
@@ -41,6 +40,9 @@ void MetaLibraryExtensions::AddExtensionsPostCompilation(LibraryBuilder& builder
 void MetaLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* userData)
 {
   BoundType* type = e->Type;
+
+  AttributeExtensions::GetInstance()->ProcessType(type, e->BuildingProject);
+
   ProcessComponent(*e->Builder, type);
 
   // Command and Tool attributes imply RunInEditor

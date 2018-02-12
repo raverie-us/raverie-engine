@@ -1,10 +1,9 @@
 [Version:1]
 Level 
 {
-	Cog 
+	Cog [ContextId:1]
 	{
 		var Name = "LevelSettings"
-		var LinkId = 1
 		GravityEffect 
 		{
 			var Active = true
@@ -40,22 +39,9 @@ Level
 			var FollowEditorCamera = false
 		}
 	}
-	Cog 
-	{
-		var Name = "Renderer"
-		var LinkId = 2
-		ZUiBasicRenderer 
-		{
-			var ClearColor = Real4{0, 0, 0, 1}
-			var DrawDebug = true
-			var DrawOpaque = false
-			var DrawAlphaBlend = false
-		}
-	}
-	Cog 
+	Cog [ContextId:2]
 	{
 		var Name = "DirectionalLight"
-		var LinkId = 3
 		Transform 
 		{
 			var Translation = Real3{0, 50, 50}
@@ -80,25 +66,19 @@ Level
 			var LocalAabbCenter = Real3{0, 0, 0}
 			var LocalAabbHalfExtents = Real3{1, 1, 1}
 			var GroupSortValue = 0
-			var Material = ""
-			var Mesh = ""
+			var Material = "583afb5e7bf75e18:ZeroMaterial"
+			var Mesh = "4de0354322b345ae:Cube"
 		}
 		DirectionalLight 
 		{
-			var LightColorValue = Real3{1, 1, 1}
-			var LightIntensityValue = 2
-			var CastShadowsValue = true
-			var NormalOffsetBias = 0.100000001
+			var LightColor = Real4{1, 1, 1, 1}
+			var LightIntensity = 1
 		}
 		CameraViewport 
 		{
 			var RenderInEditor = true
 			var RenderInGame = true
-			var RenderToViewport = false
-			var ForwardViewportEvents = false
 			var RenderOrder = -1
-			var NormalizedSize = Real2{1, 1}
-			var NormalizedOffset = Real2{0, 0}
 			var CameraPath = CogPath
 			{
 				var Path = "."
@@ -109,7 +89,7 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 3
+				var Cog = 2
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
@@ -124,14 +104,18 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 3
+				var Cog = 2
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
-			var Resolution = Real2{1, 1}
+			var ResolutionOrAspect = Integer2{1920, 1080}
+			var RenderToViewport = false
+			var ForwardViewportEvents = false
 			var ViewportScaling = ViewportScaling.Fill
 			var MarginColor = Real4{0, 0, 0, 1}
+			var NormalizedSize = Real2{1, 1}
+			var NormalizedOffset = Real2{0, 0}
 		}
 		Camera 
 		{
@@ -144,27 +128,23 @@ Level
 		ShadowRenderer 
 		{
 			var ResolutionValue = ShadowResolution.High
+			var NormalOffsetBias = 0.100000001
 		}
 	}
-	Cog 
+	Cog [ContextId:3]
 	{
 		var Name = "EditorCamera"
-		var LinkId = 4
 		Transform 
 		{
-			var Translation = Real3{187.792648, -126.688057, 200.000015}
+			var Translation = Real3{126, 180, 10}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{-0, -1.09278471e-08, 0, 1}
+			var Rotation = Quaternion{0, 0, 0, 1}
 		}
 		CameraViewport 
 		{
 			var RenderInEditor = true
 			var RenderInGame = false
-			var RenderToViewport = true
-			var ForwardViewportEvents = false
 			var RenderOrder = 0
-			var NormalizedSize = Real2{1, 1}
-			var NormalizedOffset = Real2{0, 0}
 			var CameraPath = CogPath
 			{
 				var Path = "."
@@ -175,14 +155,14 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 4
+				var Cog = 3
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
 			var RendererPath = CogPath
 			{
-				var Path = ":/Renderer"
+				var Path = ":/VolumeMeterWindow"
 				var ErrorOnResolveToNull = false
 				var ErrorOnPathCantCompute = false
 				var ErrorOnDirectLinkFail = false
@@ -190,38 +170,41 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 2
+				var Cog = 4
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
-			var Resolution = Real2{1920, 1080}
+			var ResolutionOrAspect = Integer2{1920, 1080}
+			var RenderToViewport = true
+			var ForwardViewportEvents = false
 			var ViewportScaling = ViewportScaling.Fill
 			var MarginColor = Real4{0, 0, 0, 1}
+			var NormalizedSize = Real2{1, 1}
+			var NormalizedOffset = Real2{0, 0}
 		}
 		Camera 
 		{
 			var NearPlane = 0.100000001
-			var FarPlane = 200
+			var FarPlane = 100
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 60
-			var Size = 443.957947
+			var Size = 747
 		}
 		EditorCameraController 
 		{
 			var ControlMode = ControlMode.ZPlane
 			var Previous3DMode = ControlMode.Orbit
-			var LookDistance = 200
+			var LookDistance = 100
 			var VerticalAngle = 0
 			var HorizontalAngle = 0
-			var LookTarget = Real3{187.792648, -126.688057, 8.20868354e-06}
+			var LookTarget = Real3{126.629517, 180.2229, 1.33288859e-05}
 			var MoveSensitivity = 1
 		}
 	}
-	Cog 
+	Cog [ContextId:5]
 	{
 		var Name = "GameCamera"
-		var LinkId = 5
 		Transform 
 		{
 			var Translation = Real3{0, 0, 50}
@@ -241,11 +224,7 @@ Level
 		{
 			var RenderInEditor = false
 			var RenderInGame = true
-			var RenderToViewport = true
-			var ForwardViewportEvents = false
 			var RenderOrder = 0
-			var NormalizedSize = Real2{1, 1}
-			var NormalizedOffset = Real2{0, 0}
 			var CameraPath = CogPath
 			{
 				var Path = "."
@@ -256,14 +235,14 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 5
+				var Cog = 5
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
 			var RendererPath = CogPath
 			{
-				var Path = ":/Renderer"
+				var Path = ":/VolumeMeterWindow"
 				var ErrorOnResolveToNull = false
 				var ErrorOnPathCantCompute = false
 				var ErrorOnDirectLinkFail = false
@@ -271,14 +250,18 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 2
+				var Cog = 4
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
-			var Resolution = Real2{1920, 1080}
+			var ResolutionOrAspect = Integer2{1920, 1080}
+			var RenderToViewport = true
+			var ForwardViewportEvents = false
 			var ViewportScaling = ViewportScaling.Fill
 			var MarginColor = Real4{0, 0, 0, 1}
+			var NormalizedSize = Real2{1, 1}
+			var NormalizedOffset = Real2{0, 0}
 		}
 		Camera 
 		{
@@ -288,24 +271,10 @@ Level
 			var FieldOfView = 60
 			var Size = 20
 		}
-		ZUiBasicRenderer 
-		{
-			var ClearColor = Real4{0, 0, 0, 1}
-			var DrawDebug = true
-			var DrawOpaque = false
-			var DrawAlphaBlend = false
-		}
-		ZUiSnapCameraSize 
-		{
-			var Active = true
-			var ZoomSpeed = 0.00999999978
-			var Zoom = 1
-		}
 	}
-	Cog 
+	Cog [ContextId:4]
 	{
 		var Name = "VolumeMeterWindow"
-		var LinkId = 6
 		Transform 
 		{
 			var Translation = Real3{0, 0, 0}
@@ -334,9 +303,9 @@ Level
 		Area 
 		{
 			var Size = Real2{300, 300}
-			var Origin = Location.TopLeft
+			var Origin = Location.BottomLeft
 		}
-		UiWidget 
+		UiRootWidget 
 		{
 			var Active = true
 			var Visible = true
@@ -357,16 +326,11 @@ Level
 			var MarginRight = 0
 			var MarginBottom = 0
 			var DockMode = UiDockMode.Left
-		}
-		UiRootWidget 
-		{
 			var MouseHoverTime = 0.100000001
 			var MouseHoldTime = 1
 			var DoubleClickTime = 0.300000012
 			var DepthSeparation = 0.00999999978
 			var DebugMouseInteraction = false
-			var SnapSize = 1
-			var AlwaysUpdate = true
 		}
 		Reactive 
 		{
@@ -374,43 +338,9 @@ Level
 		}
 		UiRenderer 
 		{
-		}
-		UiRootInputRouter 
-		{
-		}
-		ZUiFillViewport 
-		{
-			var Active = true
-			var CameraViewport = CogPath
-			{
-				var Path = ":/GameCamera"
-				var ErrorOnResolveToNull = false
-				var ErrorOnPathCantCompute = false
-				var ErrorOnDirectLinkFail = false
-				var UpdateCogOnPathChange = true
-				var UpdatePathOnCogChange = true
-				var UpdateCogOnInitialize = true
-				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 5
-				var PathPreference0 = CogPathPreference.CogRelative
-				var PathPreference1 = CogPathPreference.SpaceRelative
-				var PathPreference2 = CogPathPreference.Absolute
-			}
-			var Camera = CogPath
-			{
-				var Path = ":/GameCamera"
-				var ErrorOnResolveToNull = false
-				var ErrorOnPathCantCompute = false
-				var ErrorOnDirectLinkFail = false
-				var UpdateCogOnPathChange = true
-				var UpdatePathOnCogChange = true
-				var UpdateCogOnInitialize = true
-				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 5
-				var PathPreference0 = CogPathPreference.CogRelative
-				var PathPreference1 = CogPathPreference.SpaceRelative
-				var PathPreference2 = CogPathPreference.Absolute
-			}
+			var ClearColor = Real4{0, 0, 0, 0}
+			var EditorDebugDraw = true
+			var GameDebugDraw = true
 		}
 		UiFillLayout 
 		{
@@ -421,10 +351,9 @@ Level
 		}
 		Hierarchy 
 		{
-			Cog 
+			Cog [ContextId:6]
 			{
 				var Name = "VolumeMeter"
-				var LinkId = 7
 				Transform 
 				{
 					var Translation = Real3{0, 0, 0}
@@ -434,7 +363,7 @@ Level
 				Area 
 				{
 					var Size = Real2{300, 300}
-					var Origin = Location.TopLeft
+					var Origin = Location.BottomLeft
 				}
 				UiWidget 
 				{
@@ -469,20 +398,19 @@ Level
 				}
 				Hierarchy 
 				{
-					Cog 
+					Cog [ContextId:7]
 					{
 						var Name = "VolumeBarArea"
-						var LinkId = 8
 						Transform 
 						{
-							var Translation = Real3{10, -10, 0}
+							var Translation = Real3{10, 70, 0}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
 							var Size = Real2{40, 220}
-							var Origin = Location.TopLeft
+							var Origin = Location.BottomLeft
 						}
 						UiWidget 
 						{
@@ -515,15 +443,868 @@ Level
 							var StackDirection = UiStackLayoutDirection.TopToBottom
 							var Spacing = Real2{0, 2}
 						}
-						ZPeakVolumeBar 
+						ZUiPeakVolumeBar 
 						{
 						}
 						Hierarchy 
 						{
-							Cog 
+							Cog [ContextId:8]
 							{
 								var Name = "Bar"
-								var LinkId = 9
+								Transform 
+								{
+									var Translation = Real3{0, 208, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 12}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = 0
+									var Color = Real4{0.654901981, 0, 0, 1}
+								}
+							}
+							Cog [ContextId:9]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 193, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -3
+									var Color = Real4{0.843137324, 0.305882365, 0, 1}
+								}
+							}
+							Cog [ContextId:10]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 178, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -6
+									var Color = Real4{0.843137324, 0.305882365, 0, 1}
+								}
+							}
+							Cog [ContextId:11]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 163, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -9
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:12]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 148, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -12
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:13]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 134, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 12}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -15
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:14]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 119, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -18
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:15]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 104, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -21
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:16]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 89, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -24
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:17]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 74, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -27
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:18]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 60, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 12}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -30
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:19]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 45, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -33
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:20]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 30, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -36
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:21]
+							{
+								var Name = "Bar"
+								Transform 
+								{
+									var Translation = Real3{0, 15, 0}
+									var Scale = Real3{1, 1, 1}
+									var Rotation = Quaternion{0, 0, 0, 1}
+								}
+								Sprite 
+								{
+									var Visible = true
+									var ViewCulling = true
+									var VisibilityEvents = true
+									var OverrideBoundingBox = false
+									var LocalAabbCenter = Real3{0, 0, 0}
+									var LocalAabbHalfExtents = Real3{1, 1, 1}
+									var GroupSortValue = 0
+									var Material = "582c575af53d18c9:AlphaSprite"
+									var VertexColor = Real4{1, 1, 1, 1}
+									var GeometryMode = SpriteGeometryMode.ZPlane
+									var SpriteSource = "5275aa4d802dd6dc:Square"
+									var FlipX = false
+									var FlipY = false
+									var AnimationActive = true
+									var AnimationSpeed = 1
+									var StartFrame = 0
+								}
+								Area 
+								{
+									var Size = Real2{40, 13}
+									var Origin = Location.BottomLeft
+								}
+								UiWidget 
+								{
+									var Active = true
+									var Visible = true
+									var Interactive = false
+									var InLayout = true
+									var ClipChildren = false
+									var CanTakeFocus = false
+									var LocalColor = Real4{1, 1, 1, 1}
+									var HierarchyColor = Real4{1, 1, 1, 1}
+									var SizePolicyX = UiSizePolicy.Flex
+									var SizePolicyY = UiSizePolicy.Flex
+									var FlexSize = Real2{1, 1}
+									var AbsoluteMinSize = Real2{1, 1}
+									var VerticalAlignment = UiVerticalAlignment.Top
+									var HorizontalAlignment = UiHorizontalAlignment.Center
+									var MarginLeft = 0
+									var MarginTop = 0
+									var MarginRight = 0
+									var MarginBottom = 0
+									var DockMode = UiDockMode.Left
+								}
+								ZUiVolumeBarSegments 
+								{
+									var DecibelLimit = -39
+									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
+								}
+							}
+							Cog [ContextId:22]
+							{
+								var Name = "Bar"
 								Transform 
 								{
 									var Translation = Real3{0, 0, 0}
@@ -551,70 +1332,8 @@ Level
 								}
 								Area 
 								{
-									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = 0
-									var Color = Real4{0.654901981, 0, 0, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 10
-								Transform 
-								{
-									var Translation = Real3{0, -14, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -638,822 +1357,15 @@ Level
 									var MarginBottom = 0
 									var DockMode = UiDockMode.Left
 								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -3
-									var Color = Real4{0.843137324, 0.305882365, 0, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 11
-								Transform 
-								{
-									var Translation = Real3{0, -29, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -6
-									var Color = Real4{0.843137324, 0.305882365, 0, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 12
-								Transform 
-								{
-									var Translation = Real3{0, -44, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -9
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 13
-								Transform 
-								{
-									var Translation = Real3{0, -59, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -12
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 14
-								Transform 
-								{
-									var Translation = Real3{0, -74, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -15
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 15
-								Transform 
-								{
-									var Translation = Real3{0, -88, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -18
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 16
-								Transform 
-								{
-									var Translation = Real3{0, -103, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -21
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 17
-								Transform 
-								{
-									var Translation = Real3{0, -118, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -24
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 18
-								Transform 
-								{
-									var Translation = Real3{0, -133, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -27
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 19
-								Transform 
-								{
-									var Translation = Real3{0, -148, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -30
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 20
-								Transform 
-								{
-									var Translation = Real3{0, -162, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -33
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 21
-								Transform 
-								{
-									var Translation = Real3{0, -177, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -36
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 22
-								Transform 
-								{
-									var Translation = Real3{0, -192, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
-								{
-									var DecibelLimit = -39
-									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
-								}
-							}
-							Cog 
-							{
-								var Name = "Bar"
-								var LinkId = 23
-								Transform 
-								{
-									var Translation = Real3{0, -207, 0}
-									var Scale = Real3{1, 1, 1}
-									var Rotation = Quaternion{0, 0, 0, 1}
-								}
-								Sprite 
-								{
-									var Visible = true
-									var ViewCulling = true
-									var VisibilityEvents = true
-									var OverrideBoundingBox = false
-									var LocalAabbCenter = Real3{0, 0, 0}
-									var LocalAabbHalfExtents = Real3{1, 1, 1}
-									var GroupSortValue = 0
-									var Material = "582c575af53d18c9:AlphaSprite"
-									var VertexColor = Real4{1, 1, 1, 1}
-									var GeometryMode = SpriteGeometryMode.ZPlane
-									var SpriteSource = "5275aa4d802dd6dc:Square"
-									var FlipX = false
-									var FlipY = false
-									var AnimationActive = true
-									var AnimationSpeed = 1
-									var StartFrame = 0
-								}
-								Area 
-								{
-									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
-								}
-								UiWidget 
-								{
-									var Active = true
-									var Visible = true
-									var Interactive = false
-									var InLayout = true
-									var ClipChildren = false
-									var CanTakeFocus = false
-									var LocalColor = Real4{1, 1, 1, 1}
-									var HierarchyColor = Real4{1, 1, 1, 1}
-									var SizePolicyX = UiSizePolicy.Flex
-									var SizePolicyY = UiSizePolicy.Flex
-									var FlexSize = Real2{1, 1}
-									var AbsoluteMinSize = Real2{1, 1}
-									var VerticalAlignment = UiVerticalAlignment.Top
-									var HorizontalAlignment = UiHorizontalAlignment.Center
-									var MarginLeft = 0
-									var MarginTop = 0
-									var MarginRight = 0
-									var MarginBottom = 0
-									var DockMode = UiDockMode.Left
-								}
-								ZVolumeBarSegments 
+								ZUiVolumeBarSegments 
 								{
 									var DecibelLimit = -42
 									var Color = Real4{0.0500000007, 0.360000014, 0.0799999982, 1}
 								}
 							}
-							Cog 
+							Cog [ContextId:23]
 							{
 								var Name = "PeakVolumeBar"
-								var LinkId = 24
 								Transform 
 								{
 									var Translation = Real3{-5, 0, 9.10519793e-06}
@@ -1482,7 +1394,7 @@ Level
 								Area 
 								{
 									var Size = Real2{50, 4}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1509,20 +1421,19 @@ Level
 							}
 						}
 					}
-					Cog 
+					Cog [ContextId:24]
 					{
 						var Name = "VolumeTextArea"
-						var LinkId = 25
 						Transform 
 						{
-							var Translation = Real3{60, -10, 0}
+							var Translation = Real3{60, 70, 0}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
 							var Size = Real2{40, 220}
-							var Origin = Location.TopLeft
+							var Origin = Location.BottomLeft
 						}
 						UiWidget 
 						{
@@ -1557,13 +1468,12 @@ Level
 						}
 						Hierarchy 
 						{
-							Cog [Id:0x5963628ad87723f0]
+							Cog [Id:0x5963628ad87723f0][ContextId:25]
 							{
 								var Name = "Text"
-								var LinkId = 26
 								Transform 
 								{
-									var Translation = Real3{0, 0, 9.10519793e-06}
+									var Translation = Real3{0, 208, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1588,7 +1498,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1613,13 +1523,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x5963628ddaf30b04]
+							Cog [Id:0x5963628ddaf30b04][ContextId:26]
 							{
 								var Name = "Text"
-								var LinkId = 27
 								Transform 
 								{
-									var Translation = Real3{0, -14, 9.10519793e-06}
+									var Translation = Real3{0, 193, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1644,7 +1553,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1669,13 +1578,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x59636287e5395d65]
+							Cog [Id:0x59636287e5395d65][ContextId:27]
 							{
 								var Name = "Text"
-								var LinkId = 28
 								Transform 
 								{
-									var Translation = Real3{0, -29, 9.10519793e-06}
+									var Translation = Real3{0, 178, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1700,7 +1608,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1725,13 +1633,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x5963629de714e5e8]
+							Cog [Id:0x5963629de714e5e8][ContextId:28]
 							{
 								var Name = "Text"
-								var LinkId = 29
 								Transform 
 								{
-									var Translation = Real3{0, -44, 9.10519793e-06}
+									var Translation = Real3{0, 163, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1756,7 +1663,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1781,13 +1688,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x596362abe1333668]
+							Cog [Id:0x596362abe1333668][ContextId:29]
 							{
 								var Name = "Text"
-								var LinkId = 30
 								Transform 
 								{
-									var Translation = Real3{0, -59, 9.10519793e-06}
+									var Translation = Real3{0, 148, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1812,7 +1718,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1837,13 +1743,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x596362ade058d5ce]
+							Cog [Id:0x596362ade058d5ce][ContextId:30]
 							{
 								var Name = "Text"
-								var LinkId = 31
 								Transform 
 								{
-									var Translation = Real3{0, -74, 9.10519793e-06}
+									var Translation = Real3{0, 134, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1868,7 +1773,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1893,13 +1798,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x596362a6e36edea1]
+							Cog [Id:0x596362a6e36edea1][ContextId:31]
 							{
 								var Name = "Text"
-								var LinkId = 32
 								Transform 
 								{
-									var Translation = Real3{0, -88, 9.10519793e-06}
+									var Translation = Real3{0, 119, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1924,7 +1828,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -1949,13 +1853,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x596362b8edb0204f]
+							Cog [Id:0x596362b8edb0204f][ContextId:32]
 							{
 								var Name = "Text"
-								var LinkId = 33
 								Transform 
 								{
-									var Translation = Real3{0, -103, 9.10519793e-06}
+									var Translation = Real3{0, 104, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -1980,7 +1883,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2005,13 +1908,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x596362b2ecce7c08]
+							Cog [Id:0x596362b2ecce7c08][ContextId:33]
 							{
 								var Name = "Text"
-								var LinkId = 34
 								Transform 
 								{
-									var Translation = Real3{0, -118, 9.10519793e-06}
+									var Translation = Real3{0, 89, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2036,7 +1938,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2061,13 +1963,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x596362b7efdf0fad]
+							Cog [Id:0x596362b7efdf0fad][ContextId:34]
 							{
 								var Name = "Text"
-								var LinkId = 35
 								Transform 
 								{
-									var Translation = Real3{0, -133, 9.10519793e-06}
+									var Translation = Real3{0, 74, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2092,7 +1993,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2117,13 +2018,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x59636348eec165c3]
+							Cog [Id:0x59636348eec165c3][ContextId:35]
 							{
 								var Name = "Text"
-								var LinkId = 36
 								Transform 
 								{
-									var Translation = Real3{0, -148, 9.10519793e-06}
+									var Translation = Real3{0, 60, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2148,7 +2048,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 12}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2173,13 +2073,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x5963634de9fa6a79]
+							Cog [Id:0x5963634de9fa6a79][ContextId:36]
 							{
 								var Name = "Text"
-								var LinkId = 37
 								Transform 
 								{
-									var Translation = Real3{0, -162, 9.10519793e-06}
+									var Translation = Real3{0, 45, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2204,7 +2103,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2229,13 +2128,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x59636346e8f4a114]
+							Cog [Id:0x59636346e8f4a114][ContextId:37]
 							{
 								var Name = "Text"
-								var LinkId = 38
 								Transform 
 								{
-									var Translation = Real3{0, -177, 9.10519793e-06}
+									var Translation = Real3{0, 30, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2260,7 +2158,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2285,13 +2183,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x59636358eb12a5c3]
+							Cog [Id:0x59636358eb12a5c3][ContextId:38]
 							{
 								var Name = "Text"
-								var LinkId = 39
 								Transform 
 								{
-									var Translation = Real3{0, -192, 9.10519793e-06}
+									var Translation = Real3{0, 15, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2316,7 +2213,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2341,13 +2238,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog [Id:0x5963635dea36a2b7]
+							Cog [Id:0x5963635dea36a2b7][ContextId:39]
 							{
 								var Name = "Text"
-								var LinkId = 40
 								Transform 
 								{
-									var Translation = Real3{0, -207, 9.10519793e-06}
+									var Translation = Real3{0, 0, 9.10519793e-06}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -2372,7 +2268,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 13}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2399,20 +2295,19 @@ Level
 							}
 						}
 					}
-					Cog 
+					Cog [ContextId:40]
 					{
 						var Name = "SliderArea"
-						var LinkId = 41
 						Transform 
 						{
-							var Translation = Real3{100, -10, 9.10519793e-06}
+							var Translation = Real3{100, 70, 9.10519793e-06}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
 							var Size = Real2{50, 220}
-							var Origin = Location.TopLeft
+							var Origin = Location.BottomLeft
 						}
 						UiWidget 
 						{
@@ -2446,15 +2341,14 @@ Level
 						ZUiSlider 
 						{
 						}
-						ZVolumeSlider 
+						ZUiVolumeSlider 
 						{
 						}
 						Hierarchy 
 						{
-							Cog 
+							Cog [ContextId:41]
 							{
 								var Name = "BackgroundBar"
-								var LinkId = 42
 								Transform 
 								{
 									var Translation = Real3{24, 0, 1}
@@ -2483,7 +2377,7 @@ Level
 								Area 
 								{
 									var Size = Real2{2, 220}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2508,10 +2402,9 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:42]
 							{
 								var Name = "SliderMarkerArea"
-								var LinkId = 43
 								Transform 
 								{
 									var Translation = Real3{0, 0, 0}
@@ -2521,7 +2414,7 @@ Level
 								Area 
 								{
 									var Size = Real2{50, 220}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -2556,10 +2449,449 @@ Level
 								}
 								Hierarchy 
 								{
-									Cog 
+									Cog [ContextId:43]
 									{
 										var Name = "SliderMarker"
-										var LinkId = 44
+										Transform 
+										{
+											var Translation = Real3{0, 196, 0}
+											var Scale = Real3{1, 1, 1}
+											var Rotation = Quaternion{0, 0, 0, 1}
+										}
+										SpriteText 
+										{
+											var Visible = true
+											var ViewCulling = true
+											var VisibilityEvents = true
+											var OverrideBoundingBox = false
+											var LocalAabbCenter = Real3{0, 0, 0}
+											var LocalAabbHalfExtents = Real3{1, 1, 1}
+											var GroupSortValue = 0
+											var Material = "582c575af53d18c9:AlphaSprite"
+											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var GeometryMode = SpriteGeometryMode.ZPlane
+											var Text = "______"
+											var Font = "57343753bb4eaaec:NotoSans-Regular"
+											var FontSize = 11
+											var PixelsPerUnit = 1
+											var TextAlign = TextAlign.Center
+										}
+										Area 
+										{
+											var Size = Real2{50, 24}
+											var Origin = Location.BottomLeft
+										}
+										UiWidget 
+										{
+											var Active = true
+											var Visible = true
+											var Interactive = false
+											var InLayout = true
+											var ClipChildren = false
+											var CanTakeFocus = false
+											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var HierarchyColor = Real4{1, 1, 1, 1}
+											var SizePolicyX = UiSizePolicy.Flex
+											var SizePolicyY = UiSizePolicy.Flex
+											var FlexSize = Real2{1, 1}
+											var AbsoluteMinSize = Real2{1, 1}
+											var VerticalAlignment = UiVerticalAlignment.Top
+											var HorizontalAlignment = UiHorizontalAlignment.Left
+											var MarginLeft = 0
+											var MarginTop = 0
+											var MarginRight = 0
+											var MarginBottom = 0
+											var DockMode = UiDockMode.Left
+										}
+									}
+									Cog [ContextId:44]
+									{
+										var Name = "SliderMarker"
+										Transform 
+										{
+											var Translation = Real3{0, 172, 0}
+											var Scale = Real3{1, 1, 1}
+											var Rotation = Quaternion{0, 0, 0, 1}
+										}
+										SpriteText 
+										{
+											var Visible = true
+											var ViewCulling = true
+											var VisibilityEvents = true
+											var OverrideBoundingBox = false
+											var LocalAabbCenter = Real3{0, 0, 0}
+											var LocalAabbHalfExtents = Real3{1, 1, 1}
+											var GroupSortValue = 0
+											var Material = "582c575af53d18c9:AlphaSprite"
+											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var GeometryMode = SpriteGeometryMode.ZPlane
+											var Text = "______"
+											var Font = "57343753bb4eaaec:NotoSans-Regular"
+											var FontSize = 11
+											var PixelsPerUnit = 1
+											var TextAlign = TextAlign.Center
+										}
+										Area 
+										{
+											var Size = Real2{50, 24}
+											var Origin = Location.BottomLeft
+										}
+										UiWidget 
+										{
+											var Active = true
+											var Visible = true
+											var Interactive = false
+											var InLayout = true
+											var ClipChildren = false
+											var CanTakeFocus = false
+											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var HierarchyColor = Real4{1, 1, 1, 1}
+											var SizePolicyX = UiSizePolicy.Flex
+											var SizePolicyY = UiSizePolicy.Flex
+											var FlexSize = Real2{1, 1}
+											var AbsoluteMinSize = Real2{1, 1}
+											var VerticalAlignment = UiVerticalAlignment.Top
+											var HorizontalAlignment = UiHorizontalAlignment.Left
+											var MarginLeft = 0
+											var MarginTop = 0
+											var MarginRight = 0
+											var MarginBottom = 0
+											var DockMode = UiDockMode.Left
+										}
+									}
+									Cog [ContextId:45]
+									{
+										var Name = "SliderMarker"
+										Transform 
+										{
+											var Translation = Real3{0, 147, 0}
+											var Scale = Real3{1, 1, 1}
+											var Rotation = Quaternion{0, 0, 0, 1}
+										}
+										SpriteText 
+										{
+											var Visible = true
+											var ViewCulling = true
+											var VisibilityEvents = true
+											var OverrideBoundingBox = false
+											var LocalAabbCenter = Real3{0, 0, 0}
+											var LocalAabbHalfExtents = Real3{1, 1, 1}
+											var GroupSortValue = 0
+											var Material = "582c575af53d18c9:AlphaSprite"
+											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var GeometryMode = SpriteGeometryMode.ZPlane
+											var Text = "______"
+											var Font = "57343753bb4eaaec:NotoSans-Regular"
+											var FontSize = 11
+											var PixelsPerUnit = 1
+											var TextAlign = TextAlign.Center
+										}
+										Area 
+										{
+											var Size = Real2{50, 25}
+											var Origin = Location.BottomLeft
+										}
+										UiWidget 
+										{
+											var Active = true
+											var Visible = true
+											var Interactive = false
+											var InLayout = true
+											var ClipChildren = false
+											var CanTakeFocus = false
+											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var HierarchyColor = Real4{1, 1, 1, 1}
+											var SizePolicyX = UiSizePolicy.Flex
+											var SizePolicyY = UiSizePolicy.Flex
+											var FlexSize = Real2{1, 1}
+											var AbsoluteMinSize = Real2{1, 1}
+											var VerticalAlignment = UiVerticalAlignment.Top
+											var HorizontalAlignment = UiHorizontalAlignment.Left
+											var MarginLeft = 0
+											var MarginTop = 0
+											var MarginRight = 0
+											var MarginBottom = 0
+											var DockMode = UiDockMode.Left
+										}
+									}
+									Cog [ContextId:46]
+									{
+										var Name = "SliderMarker"
+										Transform 
+										{
+											var Translation = Real3{0, 123, 0}
+											var Scale = Real3{1, 1, 1}
+											var Rotation = Quaternion{0, 0, 0, 1}
+										}
+										SpriteText 
+										{
+											var Visible = true
+											var ViewCulling = true
+											var VisibilityEvents = true
+											var OverrideBoundingBox = false
+											var LocalAabbCenter = Real3{0, 0, 0}
+											var LocalAabbHalfExtents = Real3{1, 1, 1}
+											var GroupSortValue = 0
+											var Material = "582c575af53d18c9:AlphaSprite"
+											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var GeometryMode = SpriteGeometryMode.ZPlane
+											var Text = "______"
+											var Font = "57343753bb4eaaec:NotoSans-Regular"
+											var FontSize = 11
+											var PixelsPerUnit = 1
+											var TextAlign = TextAlign.Center
+										}
+										Area 
+										{
+											var Size = Real2{50, 24}
+											var Origin = Location.BottomLeft
+										}
+										UiWidget 
+										{
+											var Active = true
+											var Visible = true
+											var Interactive = false
+											var InLayout = true
+											var ClipChildren = false
+											var CanTakeFocus = false
+											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var HierarchyColor = Real4{1, 1, 1, 1}
+											var SizePolicyX = UiSizePolicy.Flex
+											var SizePolicyY = UiSizePolicy.Flex
+											var FlexSize = Real2{1, 1}
+											var AbsoluteMinSize = Real2{1, 1}
+											var VerticalAlignment = UiVerticalAlignment.Top
+											var HorizontalAlignment = UiHorizontalAlignment.Left
+											var MarginLeft = 0
+											var MarginTop = 0
+											var MarginRight = 0
+											var MarginBottom = 0
+											var DockMode = UiDockMode.Left
+										}
+									}
+									Cog [ContextId:47]
+									{
+										var Name = "SliderMarker"
+										Transform 
+										{
+											var Translation = Real3{0, 98, 0}
+											var Scale = Real3{1, 1, 1}
+											var Rotation = Quaternion{0, 0, 0, 1}
+										}
+										SpriteText 
+										{
+											var Visible = true
+											var ViewCulling = true
+											var VisibilityEvents = true
+											var OverrideBoundingBox = false
+											var LocalAabbCenter = Real3{0, 0, 0}
+											var LocalAabbHalfExtents = Real3{1, 1, 1}
+											var GroupSortValue = 0
+											var Material = "582c575af53d18c9:AlphaSprite"
+											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var GeometryMode = SpriteGeometryMode.ZPlane
+											var Text = "______"
+											var Font = "57343753bb4eaaec:NotoSans-Regular"
+											var FontSize = 11
+											var PixelsPerUnit = 1
+											var TextAlign = TextAlign.Center
+										}
+										Area 
+										{
+											var Size = Real2{50, 25}
+											var Origin = Location.BottomLeft
+										}
+										UiWidget 
+										{
+											var Active = true
+											var Visible = true
+											var Interactive = false
+											var InLayout = true
+											var ClipChildren = false
+											var CanTakeFocus = false
+											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var HierarchyColor = Real4{1, 1, 1, 1}
+											var SizePolicyX = UiSizePolicy.Flex
+											var SizePolicyY = UiSizePolicy.Flex
+											var FlexSize = Real2{1, 1}
+											var AbsoluteMinSize = Real2{1, 1}
+											var VerticalAlignment = UiVerticalAlignment.Top
+											var HorizontalAlignment = UiHorizontalAlignment.Left
+											var MarginLeft = 0
+											var MarginTop = 0
+											var MarginRight = 0
+											var MarginBottom = 0
+											var DockMode = UiDockMode.Left
+										}
+									}
+									Cog [ContextId:48]
+									{
+										var Name = "SliderMarker"
+										Transform 
+										{
+											var Translation = Real3{0, 74, 0}
+											var Scale = Real3{1, 1, 1}
+											var Rotation = Quaternion{0, 0, 0, 1}
+										}
+										SpriteText 
+										{
+											var Visible = true
+											var ViewCulling = true
+											var VisibilityEvents = true
+											var OverrideBoundingBox = false
+											var LocalAabbCenter = Real3{0, 0, 0}
+											var LocalAabbHalfExtents = Real3{1, 1, 1}
+											var GroupSortValue = 0
+											var Material = "582c575af53d18c9:AlphaSprite"
+											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var GeometryMode = SpriteGeometryMode.ZPlane
+											var Text = "______"
+											var Font = "57343753bb4eaaec:NotoSans-Regular"
+											var FontSize = 11
+											var PixelsPerUnit = 1
+											var TextAlign = TextAlign.Center
+										}
+										Area 
+										{
+											var Size = Real2{50, 24}
+											var Origin = Location.BottomLeft
+										}
+										UiWidget 
+										{
+											var Active = true
+											var Visible = true
+											var Interactive = false
+											var InLayout = true
+											var ClipChildren = false
+											var CanTakeFocus = false
+											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var HierarchyColor = Real4{1, 1, 1, 1}
+											var SizePolicyX = UiSizePolicy.Flex
+											var SizePolicyY = UiSizePolicy.Flex
+											var FlexSize = Real2{1, 1}
+											var AbsoluteMinSize = Real2{1, 1}
+											var VerticalAlignment = UiVerticalAlignment.Top
+											var HorizontalAlignment = UiHorizontalAlignment.Left
+											var MarginLeft = 0
+											var MarginTop = 0
+											var MarginRight = 0
+											var MarginBottom = 0
+											var DockMode = UiDockMode.Left
+										}
+									}
+									Cog [ContextId:49]
+									{
+										var Name = "SliderMarker"
+										Transform 
+										{
+											var Translation = Real3{0, 49, 0}
+											var Scale = Real3{1, 1, 1}
+											var Rotation = Quaternion{0, 0, 0, 1}
+										}
+										SpriteText 
+										{
+											var Visible = true
+											var ViewCulling = true
+											var VisibilityEvents = true
+											var OverrideBoundingBox = false
+											var LocalAabbCenter = Real3{0, 0, 0}
+											var LocalAabbHalfExtents = Real3{1, 1, 1}
+											var GroupSortValue = 0
+											var Material = "582c575af53d18c9:AlphaSprite"
+											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var GeometryMode = SpriteGeometryMode.ZPlane
+											var Text = "______"
+											var Font = "57343753bb4eaaec:NotoSans-Regular"
+											var FontSize = 11
+											var PixelsPerUnit = 1
+											var TextAlign = TextAlign.Center
+										}
+										Area 
+										{
+											var Size = Real2{50, 25}
+											var Origin = Location.BottomLeft
+										}
+										UiWidget 
+										{
+											var Active = true
+											var Visible = true
+											var Interactive = false
+											var InLayout = true
+											var ClipChildren = false
+											var CanTakeFocus = false
+											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var HierarchyColor = Real4{1, 1, 1, 1}
+											var SizePolicyX = UiSizePolicy.Flex
+											var SizePolicyY = UiSizePolicy.Flex
+											var FlexSize = Real2{1, 1}
+											var AbsoluteMinSize = Real2{1, 1}
+											var VerticalAlignment = UiVerticalAlignment.Top
+											var HorizontalAlignment = UiHorizontalAlignment.Left
+											var MarginLeft = 0
+											var MarginTop = 0
+											var MarginRight = 0
+											var MarginBottom = 0
+											var DockMode = UiDockMode.Left
+										}
+									}
+									Cog [ContextId:50]
+									{
+										var Name = "SliderMarker"
+										Transform 
+										{
+											var Translation = Real3{0, 25, 0}
+											var Scale = Real3{1, 1, 1}
+											var Rotation = Quaternion{0, 0, 0, 1}
+										}
+										SpriteText 
+										{
+											var Visible = true
+											var ViewCulling = true
+											var VisibilityEvents = true
+											var OverrideBoundingBox = false
+											var LocalAabbCenter = Real3{0, 0, 0}
+											var LocalAabbHalfExtents = Real3{1, 1, 1}
+											var GroupSortValue = 0
+											var Material = "582c575af53d18c9:AlphaSprite"
+											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var GeometryMode = SpriteGeometryMode.ZPlane
+											var Text = "______"
+											var Font = "57343753bb4eaaec:NotoSans-Regular"
+											var FontSize = 11
+											var PixelsPerUnit = 1
+											var TextAlign = TextAlign.Center
+										}
+										Area 
+										{
+											var Size = Real2{50, 24}
+											var Origin = Location.BottomLeft
+										}
+										UiWidget 
+										{
+											var Active = true
+											var Visible = true
+											var Interactive = false
+											var InLayout = true
+											var ClipChildren = false
+											var CanTakeFocus = false
+											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
+											var HierarchyColor = Real4{1, 1, 1, 1}
+											var SizePolicyX = UiSizePolicy.Flex
+											var SizePolicyY = UiSizePolicy.Flex
+											var FlexSize = Real2{1, 1}
+											var AbsoluteMinSize = Real2{1, 1}
+											var VerticalAlignment = UiVerticalAlignment.Top
+											var HorizontalAlignment = UiHorizontalAlignment.Left
+											var MarginLeft = 0
+											var MarginTop = 0
+											var MarginRight = 0
+											var MarginBottom = 0
+											var DockMode = UiDockMode.Left
+										}
+									}
+									Cog [ContextId:51]
+									{
+										var Name = "SliderMarker"
 										Transform 
 										{
 											var Translation = Real3{0, 0, 0}
@@ -2586,456 +2918,8 @@ Level
 										}
 										Area 
 										{
-											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
-										}
-										UiWidget 
-										{
-											var Active = true
-											var Visible = true
-											var Interactive = false
-											var InLayout = true
-											var ClipChildren = false
-											var CanTakeFocus = false
-											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var HierarchyColor = Real4{1, 1, 1, 1}
-											var SizePolicyX = UiSizePolicy.Flex
-											var SizePolicyY = UiSizePolicy.Flex
-											var FlexSize = Real2{1, 1}
-											var AbsoluteMinSize = Real2{1, 1}
-											var VerticalAlignment = UiVerticalAlignment.Top
-											var HorizontalAlignment = UiHorizontalAlignment.Left
-											var MarginLeft = 0
-											var MarginTop = 0
-											var MarginRight = 0
-											var MarginBottom = 0
-											var DockMode = UiDockMode.Left
-										}
-									}
-									Cog 
-									{
-										var Name = "SliderMarker"
-										var LinkId = 45
-										Transform 
-										{
-											var Translation = Real3{0, -24, 0}
-											var Scale = Real3{1, 1, 1}
-											var Rotation = Quaternion{0, 0, 0, 1}
-										}
-										SpriteText 
-										{
-											var Visible = true
-											var ViewCulling = true
-											var VisibilityEvents = true
-											var OverrideBoundingBox = false
-											var LocalAabbCenter = Real3{0, 0, 0}
-											var LocalAabbHalfExtents = Real3{1, 1, 1}
-											var GroupSortValue = 0
-											var Material = "582c575af53d18c9:AlphaSprite"
-											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var GeometryMode = SpriteGeometryMode.ZPlane
-											var Text = "______"
-											var Font = "57343753bb4eaaec:NotoSans-Regular"
-											var FontSize = 11
-											var PixelsPerUnit = 1
-											var TextAlign = TextAlign.Center
-										}
-										Area 
-										{
-											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
-										}
-										UiWidget 
-										{
-											var Active = true
-											var Visible = true
-											var Interactive = false
-											var InLayout = true
-											var ClipChildren = false
-											var CanTakeFocus = false
-											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var HierarchyColor = Real4{1, 1, 1, 1}
-											var SizePolicyX = UiSizePolicy.Flex
-											var SizePolicyY = UiSizePolicy.Flex
-											var FlexSize = Real2{1, 1}
-											var AbsoluteMinSize = Real2{1, 1}
-											var VerticalAlignment = UiVerticalAlignment.Top
-											var HorizontalAlignment = UiHorizontalAlignment.Left
-											var MarginLeft = 0
-											var MarginTop = 0
-											var MarginRight = 0
-											var MarginBottom = 0
-											var DockMode = UiDockMode.Left
-										}
-									}
-									Cog 
-									{
-										var Name = "SliderMarker"
-										var LinkId = 46
-										Transform 
-										{
-											var Translation = Real3{0, -48, 0}
-											var Scale = Real3{1, 1, 1}
-											var Rotation = Quaternion{0, 0, 0, 1}
-										}
-										SpriteText 
-										{
-											var Visible = true
-											var ViewCulling = true
-											var VisibilityEvents = true
-											var OverrideBoundingBox = false
-											var LocalAabbCenter = Real3{0, 0, 0}
-											var LocalAabbHalfExtents = Real3{1, 1, 1}
-											var GroupSortValue = 0
-											var Material = "582c575af53d18c9:AlphaSprite"
-											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var GeometryMode = SpriteGeometryMode.ZPlane
-											var Text = "______"
-											var Font = "57343753bb4eaaec:NotoSans-Regular"
-											var FontSize = 11
-											var PixelsPerUnit = 1
-											var TextAlign = TextAlign.Center
-										}
-										Area 
-										{
 											var Size = Real2{50, 25}
-											var Origin = Location.TopLeft
-										}
-										UiWidget 
-										{
-											var Active = true
-											var Visible = true
-											var Interactive = false
-											var InLayout = true
-											var ClipChildren = false
-											var CanTakeFocus = false
-											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var HierarchyColor = Real4{1, 1, 1, 1}
-											var SizePolicyX = UiSizePolicy.Flex
-											var SizePolicyY = UiSizePolicy.Flex
-											var FlexSize = Real2{1, 1}
-											var AbsoluteMinSize = Real2{1, 1}
-											var VerticalAlignment = UiVerticalAlignment.Top
-											var HorizontalAlignment = UiHorizontalAlignment.Left
-											var MarginLeft = 0
-											var MarginTop = 0
-											var MarginRight = 0
-											var MarginBottom = 0
-											var DockMode = UiDockMode.Left
-										}
-									}
-									Cog 
-									{
-										var Name = "SliderMarker"
-										var LinkId = 47
-										Transform 
-										{
-											var Translation = Real3{0, -73, 0}
-											var Scale = Real3{1, 1, 1}
-											var Rotation = Quaternion{0, 0, 0, 1}
-										}
-										SpriteText 
-										{
-											var Visible = true
-											var ViewCulling = true
-											var VisibilityEvents = true
-											var OverrideBoundingBox = false
-											var LocalAabbCenter = Real3{0, 0, 0}
-											var LocalAabbHalfExtents = Real3{1, 1, 1}
-											var GroupSortValue = 0
-											var Material = "582c575af53d18c9:AlphaSprite"
-											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var GeometryMode = SpriteGeometryMode.ZPlane
-											var Text = "______"
-											var Font = "57343753bb4eaaec:NotoSans-Regular"
-											var FontSize = 11
-											var PixelsPerUnit = 1
-											var TextAlign = TextAlign.Center
-										}
-										Area 
-										{
-											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
-										}
-										UiWidget 
-										{
-											var Active = true
-											var Visible = true
-											var Interactive = false
-											var InLayout = true
-											var ClipChildren = false
-											var CanTakeFocus = false
-											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var HierarchyColor = Real4{1, 1, 1, 1}
-											var SizePolicyX = UiSizePolicy.Flex
-											var SizePolicyY = UiSizePolicy.Flex
-											var FlexSize = Real2{1, 1}
-											var AbsoluteMinSize = Real2{1, 1}
-											var VerticalAlignment = UiVerticalAlignment.Top
-											var HorizontalAlignment = UiHorizontalAlignment.Left
-											var MarginLeft = 0
-											var MarginTop = 0
-											var MarginRight = 0
-											var MarginBottom = 0
-											var DockMode = UiDockMode.Left
-										}
-									}
-									Cog 
-									{
-										var Name = "SliderMarker"
-										var LinkId = 48
-										Transform 
-										{
-											var Translation = Real3{0, -97, 0}
-											var Scale = Real3{1, 1, 1}
-											var Rotation = Quaternion{0, 0, 0, 1}
-										}
-										SpriteText 
-										{
-											var Visible = true
-											var ViewCulling = true
-											var VisibilityEvents = true
-											var OverrideBoundingBox = false
-											var LocalAabbCenter = Real3{0, 0, 0}
-											var LocalAabbHalfExtents = Real3{1, 1, 1}
-											var GroupSortValue = 0
-											var Material = "582c575af53d18c9:AlphaSprite"
-											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var GeometryMode = SpriteGeometryMode.ZPlane
-											var Text = "______"
-											var Font = "57343753bb4eaaec:NotoSans-Regular"
-											var FontSize = 11
-											var PixelsPerUnit = 1
-											var TextAlign = TextAlign.Center
-										}
-										Area 
-										{
-											var Size = Real2{50, 25}
-											var Origin = Location.TopLeft
-										}
-										UiWidget 
-										{
-											var Active = true
-											var Visible = true
-											var Interactive = false
-											var InLayout = true
-											var ClipChildren = false
-											var CanTakeFocus = false
-											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var HierarchyColor = Real4{1, 1, 1, 1}
-											var SizePolicyX = UiSizePolicy.Flex
-											var SizePolicyY = UiSizePolicy.Flex
-											var FlexSize = Real2{1, 1}
-											var AbsoluteMinSize = Real2{1, 1}
-											var VerticalAlignment = UiVerticalAlignment.Top
-											var HorizontalAlignment = UiHorizontalAlignment.Left
-											var MarginLeft = 0
-											var MarginTop = 0
-											var MarginRight = 0
-											var MarginBottom = 0
-											var DockMode = UiDockMode.Left
-										}
-									}
-									Cog 
-									{
-										var Name = "SliderMarker"
-										var LinkId = 49
-										Transform 
-										{
-											var Translation = Real3{0, -122, 0}
-											var Scale = Real3{1, 1, 1}
-											var Rotation = Quaternion{0, 0, 0, 1}
-										}
-										SpriteText 
-										{
-											var Visible = true
-											var ViewCulling = true
-											var VisibilityEvents = true
-											var OverrideBoundingBox = false
-											var LocalAabbCenter = Real3{0, 0, 0}
-											var LocalAabbHalfExtents = Real3{1, 1, 1}
-											var GroupSortValue = 0
-											var Material = "582c575af53d18c9:AlphaSprite"
-											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var GeometryMode = SpriteGeometryMode.ZPlane
-											var Text = "______"
-											var Font = "57343753bb4eaaec:NotoSans-Regular"
-											var FontSize = 11
-											var PixelsPerUnit = 1
-											var TextAlign = TextAlign.Center
-										}
-										Area 
-										{
-											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
-										}
-										UiWidget 
-										{
-											var Active = true
-											var Visible = true
-											var Interactive = false
-											var InLayout = true
-											var ClipChildren = false
-											var CanTakeFocus = false
-											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var HierarchyColor = Real4{1, 1, 1, 1}
-											var SizePolicyX = UiSizePolicy.Flex
-											var SizePolicyY = UiSizePolicy.Flex
-											var FlexSize = Real2{1, 1}
-											var AbsoluteMinSize = Real2{1, 1}
-											var VerticalAlignment = UiVerticalAlignment.Top
-											var HorizontalAlignment = UiHorizontalAlignment.Left
-											var MarginLeft = 0
-											var MarginTop = 0
-											var MarginRight = 0
-											var MarginBottom = 0
-											var DockMode = UiDockMode.Left
-										}
-									}
-									Cog 
-									{
-										var Name = "SliderMarker"
-										var LinkId = 50
-										Transform 
-										{
-											var Translation = Real3{0, -146, 0}
-											var Scale = Real3{1, 1, 1}
-											var Rotation = Quaternion{0, 0, 0, 1}
-										}
-										SpriteText 
-										{
-											var Visible = true
-											var ViewCulling = true
-											var VisibilityEvents = true
-											var OverrideBoundingBox = false
-											var LocalAabbCenter = Real3{0, 0, 0}
-											var LocalAabbHalfExtents = Real3{1, 1, 1}
-											var GroupSortValue = 0
-											var Material = "582c575af53d18c9:AlphaSprite"
-											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var GeometryMode = SpriteGeometryMode.ZPlane
-											var Text = "______"
-											var Font = "57343753bb4eaaec:NotoSans-Regular"
-											var FontSize = 11
-											var PixelsPerUnit = 1
-											var TextAlign = TextAlign.Center
-										}
-										Area 
-										{
-											var Size = Real2{50, 25}
-											var Origin = Location.TopLeft
-										}
-										UiWidget 
-										{
-											var Active = true
-											var Visible = true
-											var Interactive = false
-											var InLayout = true
-											var ClipChildren = false
-											var CanTakeFocus = false
-											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var HierarchyColor = Real4{1, 1, 1, 1}
-											var SizePolicyX = UiSizePolicy.Flex
-											var SizePolicyY = UiSizePolicy.Flex
-											var FlexSize = Real2{1, 1}
-											var AbsoluteMinSize = Real2{1, 1}
-											var VerticalAlignment = UiVerticalAlignment.Top
-											var HorizontalAlignment = UiHorizontalAlignment.Left
-											var MarginLeft = 0
-											var MarginTop = 0
-											var MarginRight = 0
-											var MarginBottom = 0
-											var DockMode = UiDockMode.Left
-										}
-									}
-									Cog 
-									{
-										var Name = "SliderMarker"
-										var LinkId = 51
-										Transform 
-										{
-											var Translation = Real3{0, -171, 0}
-											var Scale = Real3{1, 1, 1}
-											var Rotation = Quaternion{0, 0, 0, 1}
-										}
-										SpriteText 
-										{
-											var Visible = true
-											var ViewCulling = true
-											var VisibilityEvents = true
-											var OverrideBoundingBox = false
-											var LocalAabbCenter = Real3{0, 0, 0}
-											var LocalAabbHalfExtents = Real3{1, 1, 1}
-											var GroupSortValue = 0
-											var Material = "582c575af53d18c9:AlphaSprite"
-											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var GeometryMode = SpriteGeometryMode.ZPlane
-											var Text = "______"
-											var Font = "57343753bb4eaaec:NotoSans-Regular"
-											var FontSize = 11
-											var PixelsPerUnit = 1
-											var TextAlign = TextAlign.Center
-										}
-										Area 
-										{
-											var Size = Real2{50, 24}
-											var Origin = Location.TopLeft
-										}
-										UiWidget 
-										{
-											var Active = true
-											var Visible = true
-											var Interactive = false
-											var InLayout = true
-											var ClipChildren = false
-											var CanTakeFocus = false
-											var LocalColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var HierarchyColor = Real4{1, 1, 1, 1}
-											var SizePolicyX = UiSizePolicy.Flex
-											var SizePolicyY = UiSizePolicy.Flex
-											var FlexSize = Real2{1, 1}
-											var AbsoluteMinSize = Real2{1, 1}
-											var VerticalAlignment = UiVerticalAlignment.Top
-											var HorizontalAlignment = UiHorizontalAlignment.Left
-											var MarginLeft = 0
-											var MarginTop = 0
-											var MarginRight = 0
-											var MarginBottom = 0
-											var DockMode = UiDockMode.Left
-										}
-									}
-									Cog 
-									{
-										var Name = "SliderMarker"
-										var LinkId = 52
-										Transform 
-										{
-											var Translation = Real3{0, -195, 0}
-											var Scale = Real3{1, 1, 1}
-											var Rotation = Quaternion{0, 0, 0, 1}
-										}
-										SpriteText 
-										{
-											var Visible = true
-											var ViewCulling = true
-											var VisibilityEvents = true
-											var OverrideBoundingBox = false
-											var LocalAabbCenter = Real3{0, 0, 0}
-											var LocalAabbHalfExtents = Real3{1, 1, 1}
-											var GroupSortValue = 0
-											var Material = "582c575af53d18c9:AlphaSprite"
-											var VertexColor = Real4{0.454999983, 0.454999983, 0.454999983, 1}
-											var GeometryMode = SpriteGeometryMode.ZPlane
-											var Text = "______"
-											var Font = "57343753bb4eaaec:NotoSans-Regular"
-											var FontSize = 11
-											var PixelsPerUnit = 1
-											var TextAlign = TextAlign.Center
-										}
-										Area 
-										{
-											var Size = Real2{50, 25}
-											var Origin = Location.TopLeft
+											var Origin = Location.BottomLeft
 										}
 										UiWidget 
 										{
@@ -3062,13 +2946,12 @@ Level
 									}
 								}
 							}
-							Cog 
+							Cog [ContextId:52]
 							{
 								var Name = "Handle"
-								var LinkId = 53
 								Transform 
 								{
-									var Translation = Real3{14, -54, 0}
+									var Translation = Real3{14, 155, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3094,7 +2977,7 @@ Level
 								Area 
 								{
 									var Size = Real2{23, 9}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3121,10 +3004,10 @@ Level
 								MouseCapture 
 								{
 								}
-								ZUiHighlight 
+								UiHighlight 
 								{
 									var Active = true
-									var MouseMode = ZUiHighlightMouseMode.Enter
+									var MouseMode = UiHighlightMouseMode.EnterHierarchy
 									var MouseOverCog = CogPath
 									{
 										var Path = "."
@@ -3135,7 +3018,7 @@ Level
 										var UpdatePathOnCogChange = true
 										var UpdateCogOnInitialize = true
 										var ResolvedNullErrorOccurred = false
-										var ResolvedCog = 53
+										var Cog = 52
 										var PathPreference0 = CogPathPreference.CogRelative
 										var PathPreference1 = CogPathPreference.SpaceRelative
 										var PathPreference2 = CogPathPreference.Absolute
@@ -3150,33 +3033,32 @@ Level
 										var UpdatePathOnCogChange = true
 										var UpdateCogOnInitialize = true
 										var ResolvedNullErrorOccurred = false
-										var ResolvedCog = 53
+										var Cog = 52
 										var PathPreference0 = CogPathPreference.CogRelative
 										var PathPreference1 = CogPathPreference.SpaceRelative
 										var PathPreference2 = CogPathPreference.Absolute
 									}
-									var ColorMode = ZUiHighlightColorMode.Local
+									var ColorMode = UiHighlightColorMode.Local
 									var MouseHoverColor = Real4{1, 1, 1, 1}
-									var MouseDownColor = Real4{0.485000014, 0.485000014, 0.485000014, 1}
+									var MouseDownColor = Real4{0.482352972, 0.482352972, 0.482352942, 1}
 									var AnimateTime = 0
 								}
 							}
 						}
 					}
-					Cog 
+					Cog [ContextId:53]
 					{
 						var Name = "SliderTextArea"
-						var LinkId = 54
 						Transform 
 						{
-							var Translation = Real3{150, -10, 9.10519793e-06}
+							var Translation = Real3{150, 70, 9.10519793e-06}
 							var Scale = Real3{1, 1, 1}
 							var Rotation = Quaternion{0, 0, 0, 1}
 						}
 						Area 
 						{
 							var Size = Real2{50, 220}
-							var Origin = Location.TopLeft
+							var Origin = Location.BottomLeft
 						}
 						UiWidget 
 						{
@@ -3211,13 +3093,12 @@ Level
 						}
 						Hierarchy 
 						{
-							Cog 
+							Cog [ContextId:54]
 							{
 								var Name = "SliderText"
-								var LinkId = 55
 								Transform 
 								{
-									var Translation = Real3{0, -6, 0}
+									var Translation = Real3{0, 194, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3242,7 +3123,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3267,13 +3148,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:55]
 							{
 								var Name = "SliderText"
-								var LinkId = 56
 								Transform 
 								{
-									var Translation = Real3{0, -30, 0}
+									var Translation = Real3{0, 170, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3298,7 +3178,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3323,13 +3203,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:56]
 							{
 								var Name = "SliderText"
-								var LinkId = 57
 								Transform 
 								{
-									var Translation = Real3{0, -54, 0}
+									var Translation = Real3{0, 146, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3354,7 +3233,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3379,13 +3258,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:57]
 							{
 								var Name = "SliderText"
-								var LinkId = 58
 								Transform 
 								{
-									var Translation = Real3{0, -79, 0}
+									var Translation = Real3{0, 121, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3410,7 +3288,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3435,13 +3313,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:58]
 							{
 								var Name = "SliderText"
-								var LinkId = 59
 								Transform 
 								{
-									var Translation = Real3{0, -103, 0}
+									var Translation = Real3{0, 97, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3466,7 +3343,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3491,13 +3368,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:59]
 							{
 								var Name = "SliderText"
-								var LinkId = 60
 								Transform 
 								{
-									var Translation = Real3{0, -127, 0}
+									var Translation = Real3{0, 73, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3522,7 +3398,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3547,13 +3423,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:60]
 							{
 								var Name = "SliderText"
-								var LinkId = 61
 								Transform 
 								{
-									var Translation = Real3{0, -151, 0}
+									var Translation = Real3{0, 49, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3578,7 +3453,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3603,13 +3478,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:61]
 							{
 								var Name = "SliderText"
-								var LinkId = 62
 								Transform 
 								{
-									var Translation = Real3{0, -175, 0}
+									var Translation = Real3{0, 25, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3634,7 +3508,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{
@@ -3659,13 +3533,12 @@ Level
 									var DockMode = UiDockMode.Left
 								}
 							}
-							Cog 
+							Cog [ContextId:62]
 							{
 								var Name = "SliderText"
-								var LinkId = 63
 								Transform 
 								{
-									var Translation = Real3{0, -200, 0}
+									var Translation = Real3{0, 0, 0}
 									var Scale = Real3{1, 1, 1}
 									var Rotation = Quaternion{0, 0, 0, 1}
 								}
@@ -3690,7 +3563,7 @@ Level
 								Area 
 								{
 									var Size = Real2{40, 20}
-									var Origin = Location.TopLeft
+									var Origin = Location.BottomLeft
 								}
 								UiWidget 
 								{

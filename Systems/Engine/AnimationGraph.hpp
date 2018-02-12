@@ -75,12 +75,13 @@ private:
   friend class Animator;
 
   /// Updates the root node on each from and applies it to the object tree.
+  void Update(float dt);
   void OnUpdate(UpdateEvent* e);
   void ApplyFrame(AnimationFrame& frame);
 
   /// We need to re-link all objects whenever the meta database has been
   /// modified. This should only ever happen if this object is in the editor.
-  void OnMetaModified(MetaModifiedEvent* e);
+  void OnMetaModified(MetaLibraryEvent* e);
 
   /// Whether or not the graph is updated.
   bool mActive;

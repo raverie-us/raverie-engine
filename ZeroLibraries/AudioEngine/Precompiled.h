@@ -14,10 +14,12 @@
 #include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
-#include "pa_ringbuffer.h"
-
 #include "Definitions.h"
+#include "LockFreeQueue.hpp"
+#include "RingBuffer.h"
+#include "Interpolator.h"
 #include "Resampler.h"
+#include "PitchChange.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
 #include "ListenerNode.h"
@@ -36,14 +38,14 @@
 #include "SoundInstances.h"
 #include "Tags.h"
 
-#include "Interpolator.h"
 #include "Filters.h"
 #include "AudioInputOutput.h"
-#include "DeviceNotifier.h"
+#ifdef _MSC_VER
+#include "WASAPI.h"
+#endif
 
 #include "MIDI.h"
 #include "Modifiers.h"
-#include "LockFreeQueue.hpp"
 #include "FileEncoder.h"
 #include "FileDecoder.h"
 #include "AudioSystemInterface.h"

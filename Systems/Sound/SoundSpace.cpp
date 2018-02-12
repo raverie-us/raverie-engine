@@ -27,8 +27,10 @@ ZilchDefineType(SoundSpace, builder, type)
   ZilchBindGetterSetter(Decibels);
   ZilchBindGetterSetter(Pitch);
   ZilchBindGetterSetter(Semitones);
-  ZilchBindGetter(InputNode);
-  ZilchBindGetter(OutputNode);
+  ZilchBindGetter(InputNode)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetter(OutputNode)->AddAttribute(DeprecatedAttribute);
+  ZilchBindGetter(SoundNodeInput);
+  ZilchBindGetter(SoundNodeOutput);
   ZilchBindMethod(InterpolatePitch);
   ZilchBindMethod(InterpolateSemitones);
   ZilchBindMethod(InterpolateVolume);
@@ -56,13 +58,13 @@ SoundSpace::SoundSpace() :
 SoundSpace::~SoundSpace()
 {
   // Remove this space from the system's list
-  Z::gSound->mSpaces.Erase(this);
+  Z::gSound->RemoveSoundSpace(this, mEditorMode);
   // Remove the output node from the audio system
-  if (mInputNode && mInputNode->mNode)
+  if (mSoundNodeInput && mSoundNodeInput->mNode)
   {
-      mInputNode->mNode->DisconnectThisAndAllInputs();
-      mInputNode->mNode->DeleteThisNode();
-      mInputNode->mNode = nullptr;
+      mSoundNodeInput->mNode->DisconnectThisAndAllInputs();
+      mSoundNodeInput->mNode->DeleteThisNode();
+      mSoundNodeInput->mNode = nullptr;
   }
   // If there is a pitch node, remove it
   if (mPitchNode)
@@ -72,49 +74,49 @@ SoundSpace::~SoundSpace()
     mVolumeNode->DeleteThisNode();
 
   // Keep the SoundNode from doing anything in destructor
-  if (mOutputNode)
-    mOutputNode->mNode = nullptr;
+  if (mSoundNodeOutput)
+    mSoundNodeOutput->mNode = nullptr;
 }
 
 //**************************************************************************************************
 void SoundSpace::Initialize(CogInitializer& config)
 {
-  // Add this space to the system's list
-  Z::gSound->mSpaces.PushBack(this);
   // Are we in editor mode?
-  mEditorMode = GetOwner()->IsEditorMode();
+  mEditorMode = !GetGameSession() || GetGameSession()->IsEditorMode();
+  // Add this space to the system's list
+  Z::gSound->AddSoundSpace(this, mEditorMode);
 
   // Create the input node
   mSpaceNodeID = Z::gSound->mCounter++;
-  mInputNode = new SoundNode();
+  mSoundNodeInput = new SoundNode();
   Status status;
-  String name("Space");
+  String name = "Space";
   if (mEditorMode)
     name = "EditorSpace";
-  mInputNode->SetNode(new Audio::CombineAndPauseNode(status, name, mSpaceNodeID, 
+  mSoundNodeInput->SetNode(new Audio::CombineAndPauseNode(status, name, mSpaceNodeID, 
     &mNodeInterface), status);
 
   if (status.Failed())
     return;
 
-  mInputNode->mCanInsertAfter = false;
-  mInputNode->mCanReplace = false;
-  mInputNode->mCanRemove = false;
+  mSoundNodeInput->mCanInsertAfter = false;
+  mSoundNodeInput->mCanReplace = false;
+  mSoundNodeInput->mCanRemove = false;
 
   // Create the volume node as the output node
-  mOutputNode = new SoundNode();
+  mSoundNodeOutput = new SoundNode();
   mVolumeNode = new Audio::VolumeNode(status, name, mSpaceNodeID, &mNodeInterface);
-  mOutputNode->SetNode(mVolumeNode, status);
+  mSoundNodeOutput->SetNode(mVolumeNode, status);
 
   if (status.Failed())
     return;
   
-  mVolumeNode->AddInput(mInputNode->mNode);
-  mOutputNode->mCanInsertBefore = false;
-  mOutputNode->mCanReplace = false;
-  mOutputNode->mCanRemove = false;
+  mVolumeNode->AddInput(mSoundNodeInput->mNode);
+  mSoundNodeOutput->mCanInsertBefore = false;
+  mSoundNodeOutput->mCanReplace = false;
+  mSoundNodeOutput->mCanRemove = false;
 
-  Z::gSound->mOutputNode->AddInputNode(mOutputNode);
+  Z::gSound->mOutputNode->AddInputNode(mSoundNodeOutput);
 }
 
 //**************************************************************************************************
@@ -139,7 +141,7 @@ void SoundSpace::SetVolume(float value)
 //**************************************************************************************************
 void SoundSpace::InterpolateVolume(float value, float interpolationTime)
 {
-  mVolume = value;
+  mVolume = Math::Max(value, 0.0f);
 
   if (mVolumeNode)
     mVolumeNode->SetVolume(mVolume, interpolationTime);
@@ -188,7 +190,7 @@ void SoundSpace::InterpolatePitch(float pitch, float time)
     Status status;
     mPitchNode = new Audio::PitchNode(status, "Space", mSpaceNodeID, &mNodeInterface);
     if (status.Succeeded())
-      mInputNode->mNode->InsertNodeAfter(mPitchNode);
+      mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
     else
     {
       DoNotifyWarning("Audio Error", status.Message);
@@ -223,7 +225,7 @@ void SoundSpace::InterpolateSemitones(float semitones, float time)
     Status status;
     mPitchNode = new Audio::PitchNode(status, "Space", mSpaceNodeID, &mNodeInterface);
     if (status.Succeeded())
-      mInputNode->mNode->InsertNodeAfter(mPitchNode);
+      mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
     else
     {
       DoNotifyWarning("Audio Error", status.Message);
@@ -245,16 +247,16 @@ bool SoundSpace::GetPaused()
 //**************************************************************************************************
 void SoundSpace::SetPaused(bool pause)
 {
-  if (!mInputNode->mNode)
+  if (!mSoundNodeInput->mNode)
     return;
 
   if (!mPause && pause)
   {
-    ((Audio::CombineAndPauseNode*)mInputNode->mNode)->SetPaused(true);
+    ((Audio::CombineAndPauseNode*)mSoundNodeInput->mNode)->SetPaused(true);
   }
   else if (mPause && !pause)
   {
-    ((Audio::CombineAndPauseNode*)mInputNode->mNode)->SetPaused(false);
+    ((Audio::CombineAndPauseNode*)mSoundNodeInput->mNode)->SetPaused(false);
   }
 
   mPause = pause;
@@ -266,7 +268,7 @@ HandleOf<SoundInstance> SoundSpace::PlayCue(SoundCue* cue)
   if (!cue)
     return nullptr;
 
-  HandleOf<SoundInstance> instance = cue->PlayCue(this, mInputNode->mNode, false);
+  HandleOf<SoundInstance> instance = cue->PlayCue(this, mSoundNodeInput->mNode, false);
 
   if (instance)
   {
@@ -283,7 +285,7 @@ HandleOf<SoundInstance> SoundSpace::PlayCuePaused(SoundCue* cue)
   if (!cue)
     return nullptr;
 
-  HandleOf<SoundInstance> instance = cue->PlayCue(this, mInputNode->mNode, true);
+  HandleOf<SoundInstance> instance = cue->PlayCue(this, mSoundNodeInput->mNode, true);
 
   if (instance)
   {
@@ -295,15 +297,27 @@ HandleOf<SoundInstance> SoundSpace::PlayCuePaused(SoundCue* cue)
 }
 
 //**************************************************************************************************
+Zilch::HandleOf<Zero::SoundNode> SoundSpace::GetSoundNodeInput()
+{
+  return mSoundNodeInput;
+}
+
+//**************************************************************************************************
 HandleOf<SoundNode> SoundSpace::GetInputNode()
 {
-  return mInputNode;
+  return mSoundNodeInput;
+}
+
+//**************************************************************************************************
+Zilch::HandleOf<Zero::SoundNode> SoundSpace::GetSoundNodeOutput()
+{
+  return mSoundNodeOutput;
 }
 
 //**************************************************************************************************
 HandleOf<SoundNode> SoundSpace::GetOutputNode()
 {
-  return mOutputNode;
+  return mSoundNodeOutput;
 }
 
 //**************************************************************************************************

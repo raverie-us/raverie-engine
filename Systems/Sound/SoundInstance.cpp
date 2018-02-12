@@ -73,7 +73,7 @@ ZilchDefineType(SoundInstance, builder, type)
 }
 
 //**************************************************************************************************
-SoundInstance::SoundInstance(Status& status, SoundSpace* space, Audio::SoundAssetNode* asset, 
+SoundInstance::SoundInstance(Status& status, SoundSpace* space, Audio::SoundAsset* asset, 
     float volume, float pitch) : 
   mSpace(space), 
   mAssetObject(asset), 
@@ -124,7 +124,7 @@ void SoundInstance::SetVolume(float newVolume)
 void SoundInstance::InterpolateVolume(float newVolume, float interpolationTime)
 {
   if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetVolume(newVolume, interpolationTime);
+    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetVolume(Math::Max(newVolume, 0.0f), interpolationTime);
 }
 
 //**************************************************************************************************
@@ -204,15 +204,10 @@ bool SoundInstance::GetPaused()
 //**************************************************************************************************
 void SoundInstance::SetPaused(bool pause)
 {
-  if (!mSoundNode->mNode)
-    return;
+  mIsPaused = pause;
 
-  // Should be set to pause and is not currently paused
-  if (pause && !mIsPaused)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->Pause();
-  // Should be set to un-paused and is currently paused
-  else if (!pause && mIsPaused)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->Resume();
+  if (mSoundNode->mNode)
+    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetPaused(pause);
 }
 
 //**************************************************************************************************
@@ -330,7 +325,7 @@ void SoundInstance::SetCustomEventTime(float seconds)
 //**************************************************************************************************
 Zero::StringParam SoundInstance::GetSoundName()
 {
-  return mAssetObject->Name;
+  return mAssetObject->mName;
 }
 
 //**************************************************************************************************
@@ -354,15 +349,15 @@ void SoundInstance::Play(bool loop, SoundTag* tag, Audio::SoundNode* outputNode,
   mIsPlaying = true;
 
   if (!startPaused)
-    instance->Resume();
+    instance->SetPaused(false);
   else
     mIsPaused = true;
 }
 
 //**************************************************************************************************
-void SoundInstance::SendAudioEvent(const Audio::AudioEventType eventType, void* data)
+void SoundInstance::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
 {
-  if (eventType == Audio::Notify_InstanceFinished)
+  if (eventType == Audio::AudioEventTypes::InstanceFinished)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::SoundStopped, &event);
@@ -379,47 +374,47 @@ void SoundInstance::SendAudioEvent(const Audio::AudioEventType eventType, void* 
       mSoundNode->mNode = nullptr;
     }
   }
-  else if (eventType == Audio::Notify_InstanceLooped)
+  else if (eventType == Audio::AudioEventTypes::InstanceLooped)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::SoundLooped, &event);
   }
-  else if (eventType == Audio::Notify_MusicBeat)
+  else if (eventType == Audio::AudioEventTypes::MusicBeat)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicBeat, &event);
   }
-  else if (eventType == Audio::Notify_MusicBar)
+  else if (eventType == Audio::AudioEventTypes::MusicBar)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicBar, &event);
   }
-  else if (eventType == Audio::Notify_MusicEighthNote)
+  else if (eventType == Audio::AudioEventTypes::MusicEighthNote)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicEighthNote, &event);
   }
-  else if (eventType == Audio::Notify_MusicQuarterNote)
+  else if (eventType == Audio::AudioEventTypes::MusicQuarterNote)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicQuarterNote, &event);
   }
-  else if (eventType == Audio::Notify_MusicHalfNote)
+  else if (eventType == Audio::AudioEventTypes::MusicHalfNote)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicHalfNote, &event);
   }
-  else if (eventType == Audio::Notify_MusicWholeNote)
+  else if (eventType == Audio::AudioEventTypes::MusicWholeNote)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicWholeNote, &event);
   }
-  else if (eventType == Audio::Notify_MusicCustomTime)
+  else if (eventType == Audio::AudioEventTypes::MusicCustomTime)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::MusicCustomTime, &event);
   }
-  else if (eventType == Audio::AudioEventType::Notify_InterpolationDone)
+  else if (eventType == Audio::AudioEventTypes::InterpolationDone)
   {
     SoundEvent event;
     DispatchEvent(Events::AudioInterpolationDone, &event);

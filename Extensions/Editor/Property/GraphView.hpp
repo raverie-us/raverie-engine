@@ -113,7 +113,7 @@ public:
   void OnSetKeyPressed(ObjectEvent* event);
   void OnClose(ObjectEvent* event);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
 private:
   //--------------------------------------------------------Mouse Event Response
@@ -125,11 +125,11 @@ private:
   Vec3 GetLabelPosition(uint labelNumber);
 
   /// Draw the label for each graph entry.
-  void DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect);
+  void DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
 
   /// Draw the line graph
-  void DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect);
-  void DrawGrid(Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect);
+  void DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawGrid(Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
 
   /// Draw the pie graph
   void DrawPieGraph();

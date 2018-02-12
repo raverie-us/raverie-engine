@@ -166,7 +166,7 @@ void ResourceManager::AddResource(ResourceEntry& entry, Resource* resource)
   resource->mResourceId = entry.mResourceId;
 
   resource->mContentItem = entry.mLibrarySource;
-  resource->mBuilder = entry.mBuilder;
+  resource->mBuilderType = ZilchVirtualTypeId(entry.mBuilder);
 
   // Send a resource added event on both this builder and on the resource system
   ResourceEvent event;

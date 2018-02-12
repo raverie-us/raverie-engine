@@ -33,7 +33,7 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* commandManager) override
   {
-    return commandManager->GetContext<Space>() != NULL;
+    return commandManager->GetContext<Space>() != nullptr;
   }
 };
 
@@ -41,27 +41,51 @@ public:
 void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manager)
 {
   Space* space = manager->GetContext<Space>();
-  if(space == NULL)
+  if(space == nullptr)
     return CommandFailed(command, ZilchTypeId(Space));
 
   Editor* editor = Z::gEditor;
 
   Cog* editorCameraObject = space->FindObjectByName(SpecialCogNames::EditorCamera);
-  if(editorCameraObject == NULL)
+  if(editorCameraObject == nullptr)
     return;
 
-  EditorCameraController* editorCameraController = editorCameraObject->has(EditorCameraController);
-  if(editorCameraController == NULL)
-    return;
-
+  // Create the object
   Archetype* archetype = ArchetypeManager::Find(ArchetypeName);
-  Vec3 creationPoint = editorCameraController->GetLookTarget();
-  Cog* cog = CreateFromArchetype(editor->GetOperationQueue(), space, archetype, creationPoint);
-  if(cog == NULL)
+  Cog* cog = space->Create(archetype);
+  if(cog == nullptr)
     return;
 
+  // We don't want it to be associated with the Archetype as they're all core Resources
   cog->ClearArchetype();
   cog->SetName(ArchetypeName);
+
+  // Create it at the origin
+  Transform* transform = cog->has(Transform);
+  if (transform)
+    transform->SetLocalTranslation(Vec3::cZero);
+
+  // If a cog command context has been set attach the new cog as a child
+  CommandManager* commandManager = CommandManager::GetInstance();
+  if (Cog* selectedCog = commandManager->GetContext<Cog>())
+  {
+    // Preserve local so that it is created under the parent
+    cog->AttachToPreserveLocal(selectedCog);
+  }
+  else
+  {
+    EditorCameraController* editorCameraController = editorCameraObject->has(EditorCameraController);
+    if (editorCameraController != nullptr)
+    {
+      if (transform)
+        transform->SetLocalTranslation(editorCameraController->GetLookTarget());
+    }
+  }
+
+  // Queue the creation of this object
+  OperationQueue* opQueue = editor->GetOperationQueue();
+  ObjectCreated(opQueue, cog);
+
   editor->SelectOnly(cog);
 }
 
@@ -87,13 +111,13 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* commandManager) override
   {
-    return commandManager->GetContext<Space>() != NULL;
+    return commandManager->GetContext<Space>() != nullptr;
   }
 
   void Execute(Command* command, CommandManager* manager)
   {
     Space* space = manager->GetContext<Space>();
-    if(space == NULL)
+    if(space == nullptr)
       return CommandFailed(command, ZilchTypeId(Space));
 
     (*Function)(space, Vec3(0,0,0), Size, Height, Width);
@@ -324,6 +348,7 @@ void BindCreationCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("CreateSprite", new EditorCreateObjectCommand(CoreArchetypes::Sprite));
   commands->AddCommand("CreateSpriteText", new EditorCreateObjectCommand(CoreArchetypes::SpriteText));
   commands->AddCommand("CreateSpriteParticles", new EditorCreateObjectCommand(CoreArchetypes::SpriteParticles));
+  commands->AddCommand("CreateSpline", new EditorCreateObjectCommand(CoreArchetypes::Spline));
   commands->AddCommand("CreateSplineParticleSystem", new EditorCreateObjectCommand(CoreArchetypes::SplineParticleSystem));
 
   commands->AddCommand("CreateGrid", new EditorCreateObjectCommand(CoreArchetypes::Grid));

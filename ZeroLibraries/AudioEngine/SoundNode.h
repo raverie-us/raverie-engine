@@ -7,8 +7,6 @@
 
 #pragma once
 
-typedef Zero::Array<float> BufferType;
-
 namespace Audio
 {
   class ListenerNode;
@@ -63,10 +61,10 @@ namespace Audio
     void SetCollapse(const bool shouldCollapse);
     // Return true if this sound node is currently outputting audio data
     bool HasAudibleOutput();
-    // Returns the current bypass percent for this sound node
-    float GetBypassPercent();
-    // Sets the bypass percentage (percent of output that is not altered by this node)
-    void SetBypassPercent(const float percent);
+    // Returns the current bypass value for this sound node (0 - 1.0)
+    float GetBypassValue();
+    // Sets the bypass value (fraction of output that is not altered by this node) (0 - 1.0)
+    void SetBypassValue(const float bypassValue);
 
     // The name given to this sound node by the external system when it was constructed
     const Zero::String Name;
@@ -77,16 +75,18 @@ namespace Audio
     // ***** These must be public but should not be used outside of this system *****
 
     // Sends an audio event to the external interface
-    void SendEventToExternalData(const AudioEventType eventType, void* data);
+    void SendEventToExternalData(const AudioEventTypes::Enum eventType, void* data);
     // Should be implemented by nodes if they keep track of data per listeners
     virtual void RemoveListener(ListenerNode* listener) {}
+    // Returns the sum of all volumes from outputs. Will return 0.0 by default. The output
+    // node will return 1.0. Nodes which modify volume should implement this function
+    // and multiply their volume with the return value.
+    virtual float GetVolumeChangeFromOutputs();
     // Used for InList
     Zero::Link<SoundNode> link;
 
   protected:
     virtual ~SoundNode();
-    // Returns -1 by default. Attenuator nodes return their current attenuated volume.
-    virtual float GetAttenuatedVolume();
     // Handles getting the output from the passed-in sound node
     bool Evaluate(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener);
     // Adds the output from all input nodes to the InputSamples buffer
@@ -96,17 +96,17 @@ namespace Audio
     bool HasExternalInterface();
     // Get this node's threaded or non-threaded counterpart
     SoundNode* GetSiblingNode();
-    // Sets the sibling node variables for both this node and it's threaded counterpart
+    // Sets the sibling node variables for both this node and its threaded counterpart
     void SetSiblingNodes(SoundNode* threadedNode, Zero::Status& previousStatus);
     // Returns the pointer to the node's external interface
     ExternalNodeInterface* GetExternalInterface() { return ExternalData; }
-    // Uses the BypassPercent to add a portion of the InputSamples buffer to the passed-in buffer
+    // Uses the BypassValue to add a portion of the InputSamples buffer to the passed-in buffer
     void AddBypass(BufferType* outputBuffer);
 
     // If true, this node is running on the mix thread. If false, it is on the game thread.
     const bool Threaded;
     // A buffer to hold the output of all input nodes
-    Zero::Array<float> InputSamples; 
+    BufferType InputSamples;
 
   private:
     // Must be implemented to provide the output of this sound node
@@ -137,7 +137,7 @@ namespace Audio
     // Version number of the mixed output
     unsigned Version;
     // Saved output for a mix version
-    Zero::Array<float> MixedOutput;
+    BufferType MixedOutput;
     // Number of channels in the mixed output
     unsigned NumMixedChannels;
     // The listener used for the mixed output
@@ -148,14 +148,13 @@ namespace Audio
     bool ValidOutputLastMix;
     // If true, this node has listener-specific data (such as an emitter)
     bool ListenerDependent;
-    // The percentage of output that shouldn't be affected by this node
-    float BypassPercent;
+    // The fraction of output that shouldn't be affected by this node (0 - 1.0)
+    float BypassValue;
     // If true, this is a node which generates audio
     bool Generator;
     
     friend class AudioSystemInternal;
     friend class AudioSystemInterface;
-    friend class SoundInstanceNode;
   };
 
   //------------------------------------------------------------------------------------ Output Node
@@ -166,7 +165,7 @@ namespace Audio
   public:
     OutputNode(Zero::Status& status, Zero::StringParam name, ExternalNodeInterface* extInt, bool isThreaded);
 
-    float GetAttenuatedVolume() override;
+    float GetVolumeChangeFromOutputs() override;
 
   private:
     ~OutputNode() {}
@@ -222,8 +221,6 @@ namespace Audio
 
   //------------------------------------------------------------------------- Combine And Pause Node
 
-  class InterpolatingObject;
-
   class CombineAndPauseNode : public SimpleCollapseNode
   {
   public:
@@ -234,13 +231,13 @@ namespace Audio
     bool GetPaused();
 
   private:
-    ~CombineAndPauseNode();
+    ~CombineAndPauseNode() {}
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
 
     bool Paused;
     bool Pausing;
-    InterpolatingObject* VolumeInterpolator;
+    InterpolatingObject VolumeInterpolator;
     bool Interpolating;
   };
 

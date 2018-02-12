@@ -34,10 +34,17 @@ struct ObjectPropertyNode
   /// destructed. So we need to release all handles immediately, before the types are freed.
   void ReleaseHandles();
 
+  bool IsPropertyGroup();
+
+  ObjectPropertyNode* FindChildGroup(StringRange groupName);
+
   ObjectPropertyNode* mParent;
 
   /// This object. This will be null for property nodes.
   Handle mObject;
+
+  /// Used to group up properties on an object into a dropdown for organizational purposes.
+  String mPropertyGroupName;
   
   /// The meta composition of the current object. The property interface may override the
   /// composition of the object, so that's why we use this instead of querying the object
@@ -95,8 +102,8 @@ struct PropertyStateCapture
 {
   struct CapturedProperty
   {
-    Property* Property;
-    Handle Object;
+    PropertyPath Property;
+    UndoHandle Object;
     Any Value;
   };
 
@@ -128,6 +135,9 @@ public:
   /// be added to a queue for undo/redo if applicable.
   virtual void ChangeProperty(HandleParam object, PropertyPathParam property,
                               PropertyState& state, PropertyAction::Enum action);
+
+  virtual void MarkPropertyModified(HandleParam object, PropertyPathParam property);
+  virtual void RevertProperty(HandleParam object, PropertyPathParam property);
 
   /// Returns whether or not the value is valid. For example, it could be
   /// invalid if this is a multi-selection and there is a conflict between

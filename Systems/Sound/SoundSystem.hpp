@@ -109,13 +109,7 @@ class SoundSystem : public System, Audio::ExternalSystemInterface
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  SoundSystem() :
-    mCounter(0), 
-    mPreviewInstance(0),
-    mLatency(AudioLatency::Low),
-    mSendMicEvents(false),
-    mSendCompressedMicEvents(false)
-  {}
+  SoundSystem();
   ~SoundSystem();
 
   //System Interface
@@ -146,6 +140,8 @@ public:
   /// compressed audio data received from the default audio input device.
   bool GetDispatchMicrophoneCompressedByteData();
   void SetDispatchMicrophoneCompressedByteData(bool dispatchData);
+  /// Returns the number of audio channels currently used by the audio engine for audio output.
+  int GetOutputChannels();
 
   /// Creates a new VolumeNode object
   static VolumeNode* VolumeNode() { return new Zero::VolumeNode(); }
@@ -197,21 +193,25 @@ public:
   float SemitonesToPitch(float semitones);
   float VolumeToDecibels(float volume);
   float DecibelsToVolume(float decibels);
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
   void SendAudioError(const Zero::String message) override;
+  void AddSoundSpace(SoundSpace* space, bool isEditor);
+  void RemoveSoundSpace(SoundSpace* space, bool isEditor);
 
   unsigned mCounter;
-  InList<SoundSpace> mSpaces;
+  InList<SoundTag> mSoundTags;
   HandleOf<SoundInstance> mPreviewInstance;
   String mAudioMessage;
   SoundNodeGraph NodeGraph;
   HandleOf<SoundNode> mOutputNode;
+  int mSoundSpaceCounter;
 
 private:
   Audio::AudioSystemInterface* mAudioSystem;
   AudioLatency::Enum mLatency;
   bool mSendMicEvents;
   bool mSendCompressedMicEvents;
+  InList<SoundSpace> mSpaces;
 
   friend class AudioSettings;
   friend class AudioStatics;

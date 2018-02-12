@@ -19,6 +19,9 @@ namespace Events
 {
   DefineEvent(GizmoRayTest);
   DefineEvent(GizmoModified);
+  DefineEvent(TranslateGizmoModified);
+  DefineEvent(ScaleGizmoModified);
+  DefineEvent(RotateGizmoModified);
   DefineEvent(GizmoTargetSet);
   DefineEvent(MouseEnterGizmo);
   DefineEvent(MouseEnterGizmoHierarchy);
@@ -100,6 +103,8 @@ ZilchDefineType(Gizmo, builder, type)
   ZeroBindEvent(Events::MouseEnterGizmoHierarchy, GizmoEvent);
   ZeroBindEvent(Events::MouseExitGizmo, GizmoEvent);
   ZeroBindEvent(Events::MouseExitGizmoHierarchy, GizmoEvent);
+
+  ZeroBindDocumented();
 }
 
 //******************************************************************************

@@ -117,9 +117,13 @@ public:
   /// settings those will always be used. If neither has settings, the sound will not be attenuated.
   SoundAttenuator* GetAttenuator();
   void SetAttenuator(SoundAttenuator* attenuator);
-  /// The SoundNode to use for attaching other nodes to the input of the SoundEmitter.
+  /// The SoundNode to use for attaching other nodes to the input of the SoundEmitter. 
+  HandleOf<SoundNode> GetSoundNodeInput();
+  /// DEPRECATED The SoundNodeInput property should be used instead.
   HandleOf<SoundNode> GetInputNode();
   /// The SoundNode to use for attaching other nodes to the output of the SoundEmitter.
+  HandleOf<SoundNode> GetSoundNodeOutput();
+  /// DEPRECATED The SoundNodeOutput property should be used instead.
   HandleOf<SoundNode> GetOutputNode();
 
 //Internals
@@ -138,8 +142,8 @@ private:
   Audio::PitchNode* mPitchNode;
   // After pitch node in graph (this one is output)
   Audio::VolumeNode* mVolumeNode;
-  HandleOf<SoundNode> mInputNode;
-  HandleOf<SoundNode> mOutputNode;
+  HandleOf<SoundNode> mSoundNodeInput;
+  HandleOf<SoundNode> mSoundNodeOutput;
   float mPitch;
   float mVolume;
   float mEmitAngle;
@@ -155,7 +159,7 @@ private:
 
   bool CheckAttenuatorInputs();
   void SetUpAttenuatorNode(SoundAttenuator* attenuator);
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
   SoundAttenuatorNode* IsAttenuatorInList(SoundAttenuator* attenuator);
 };
 

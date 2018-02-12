@@ -199,7 +199,11 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(PlayGame);
   ZilchBindMethod(PlaySingleGame);
   ZilchBindMethod(PlayNewGame);
-  ZilchBindMethod(PauseGame);
+  Zilch::Function* pauseFunction = ZilchBindMethod(PauseGame);
+  pauseFunction->AddAttribute(DeprecatedAttribute);
+  pauseFunction->Description = "PauseGame() is deprecated, please call ToggleGamePaused()";
+  ZilchBindMethod(ToggleGamePaused);
+  ZilchBindMethod(SetGamePaused);
   ZilchBindMethod(StopGame);
   ZilchBindMethod(StepGame);
   ZilchBindMethod(EditGameSpaces);
@@ -248,6 +252,7 @@ Editor::Editor(Composite* parent)
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
   ConnectThisTo(this, Events::SaveCheck, OnSaveCheck);
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+  ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesUnloaded);
 
   BoundType* editorMeta = ZilchTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
@@ -560,7 +565,7 @@ void Editor::OnSelectionFinal(SelectionChangedEvent* event)
 
 void Editor::OnSaveCheck(SavingEvent* event)
 {
-  if(!Z::gResources->mModifiedResources.Empty())
+  if(!Z::gResources->mModifiedResources.Empty() || !Z::gContentSystem->mModifiedContentItems.Empty())
     event->NeedSaving = true;
 }
 
@@ -848,7 +853,16 @@ Status Editor::SaveAll(bool showNotify)
 
   SaveConfig(Z::gEditor->mConfig);
 
-  // Save all resources that have been edited.
+  // Save all content items that have been edited
+  forRange(ContentItemId id, Z::gContentSystem->mModifiedContentItems.All())
+  {
+    ContentItem* contentItem = Z::gContentSystem->LoadedItems.FindValue(id, nullptr);
+    if (contentItem)
+      contentItem->SaveContent();
+  }
+  Z::gContentSystem->mModifiedContentItems.Clear();
+
+  // Save all resources that have been edited
   forRange(ResourceId id, Z::gResources->mModifiedResources.All())
   {
     Resource* resource = Z::gResources->ResourceIdMap.FindValue(id, nullptr);
@@ -1077,6 +1091,39 @@ void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibrar
     ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
 
   mReInitializeQueue.EndBatch();
+}
+
+void Editor::OnResourcesUnloaded(ResourceEvent* event)
+{
+  MetaSelection* selection = GetSelection();
+
+  Array<Handle> toRemove;
+  forRange (Handle handle, selection->All())
+  {
+    // Object is gone.
+    if (handle.IsNull())
+    {
+      toRemove.PushBack(handle);
+    }
+    // Currently, handles to resources will fallback to a default resource,
+    // making IsNull() return false.
+    else if (handle.StoredType->IsA(ZilchTypeId(Resource)))
+    {
+      // Manually query for resource but with fallback disabled.
+      ResourceHandleManager* manager = (ResourceHandleManager*)handle.Manager;
+      Resource* resource = manager->GetResource(handle, false);
+      if (resource == nullptr)
+        toRemove.PushBack(handle);
+    }
+  }
+
+  // Remove deleted objects from selection.
+  forRange (Handle handle, toRemove.All())
+    selection->Remove(handle);
+
+  // Don't need to call selection changed if nothing was removed.
+  if (!toRemove.Empty())
+    selection->FinalSelectionChanged();
 }
 
 void Editor::Update()
@@ -1373,18 +1420,28 @@ void Editor::StopGame()
 
 void Editor::PauseGame()
 {
+  ToggleGamePaused();
+}
+
+void Editor::ToggleGamePaused()
+{
   // We really don't want to just randomly toggle each game
   // take the first game, get it's pause state, then toggle that and apply
   // that to all games that are currently running
   GameRange games = GetGames();
-  if(!games.Empty())
+  if (!games.Empty())
   {
     GameSession* firstGame = games.Front();
     bool newPausedState = !firstGame->mPaused;
-
-    forRange(GameSession* game, games)
-      game->mPaused = newPausedState;
+    SetGamePaused(newPausedState);
   }
+}
+
+void Editor::SetGamePaused(bool state)
+{
+  // Set the new pause state on all currently running game sessions in the editor
+  forRange(GameSession* game, GetGames())
+    game->mPaused = state;
 
   // If the game pauses due to a script error, we need to undo trap
   // otherwise the mouse gets caught and you can't fix anything

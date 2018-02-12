@@ -15,20 +15,10 @@ namespace Audio
   VolumeNode::VolumeNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
     ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
-    Volume(1.0f),
-    Interpolate(nullptr)
+    Volume(1.0f)
   {
     if (!Threaded)
       SetSiblingNodes(new VolumeNode(status, name, ID, nullptr, true), status);
-    else
-      Interpolate = gAudioSystem->GetInterpolatorThreaded();
-  }
-
-  //************************************************************************************************
-  VolumeNode::~VolumeNode()
-  {
-    if (Interpolate)
-      gAudioSystem->ReleaseInterpolatorThreaded(Interpolate);
   }
 
   //************************************************************************************************
@@ -63,13 +53,24 @@ namespace Audio
       // Check if the volume is being interpolated
       if (CurrentData.Interpolating)
       {
-        Volume = Interpolate->ValueAtIndex(CurrentData.Index++);
+        // Get the current volume and increase the index
+        Volume = Interpolator.ValueAtIndex(CurrentData.Index++);
 
-        CurrentData.Interpolating = !Interpolate->Finished(GetSiblingNode());
+        // Check if the interpolation is finished
+        if (CurrentData.Index >= Interpolator.GetTotalFrames())
+        {
+          CurrentData.Interpolating = false;
+          if (firstRequest && GetSiblingNode())
+          {
+            // Set the volume on the non-threaded node
+            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&VolumeNode::Volume,
+              (VolumeNode*)GetSiblingNode(), Volume));
 
-        if (!CurrentData.Interpolating && firstRequest && GetSiblingNode())
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&VolumeNode::Volume,
-          (VolumeNode*)GetSiblingNode(), Volume));
+            // Tell the non-threaded node to send the event to the external system
+            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
+              GetSiblingNode(), AudioEventTypes::InterpolationDone, (void*)nullptr));
+          }
+        }
       }
 
       // Apply the volume multiplier to all samples
@@ -84,6 +85,22 @@ namespace Audio
         (VolumeNode*)GetSiblingNode(), Volume));
 
     return true;
+  }
+
+  //************************************************************************************************
+  float VolumeNode::GetVolumeChangeFromOutputs()
+  {
+    if (!Threaded)
+      return 0;
+
+    float outputVolume = 0.0f;
+
+    // Get all volumes from outputs
+    forRange(SoundNode* node, GetOutputs()->All())
+      outputVolume += node->GetVolumeChangeFromOutputs();
+
+    // Return the output volume modified by this node's volume
+    return outputVolume * Volume;
   }
 
   //************************************************************************************************
@@ -114,8 +131,8 @@ namespace Audio
         if (timeToInterpolate < 0.02f)
           timeToInterpolate = 0.02f;
 
-        Interpolate->SetValues(Volume, newVolume, (unsigned)(timeToInterpolate
-          * AudioSystemInternal::SampleRate));
+        Interpolator.SetValues(Volume, newVolume, (unsigned)(timeToInterpolate
+          * AudioSystemInternal::SystemSampleRate));
       }
     }
   }
@@ -129,28 +146,14 @@ namespace Audio
     SumToMono(false),
     LeftVolume(1.0f),
     RightVolume(1.0f),
-    Active(false),
-    LeftInterpolator(nullptr),
-    RightInterpolator(nullptr)
+    Active(false)
   {
     if (!isThreaded)
       SetSiblingNodes(new PanningNode(status, name, ID, nullptr, true), status);
     else
     {
-      LeftInterpolator = gAudioSystem->GetInterpolatorThreaded();
-      LeftInterpolator->SetValues(1.0f, 1.0f, (unsigned)0);
-      RightInterpolator = gAudioSystem->GetInterpolatorThreaded();
-      RightInterpolator->SetValues(1.0f, 1.0f, (unsigned)0);
-    }
-  }
-
-  //************************************************************************************************
-  PanningNode::~PanningNode()
-  {
-    if (LeftInterpolator)
-    {
-      gAudioSystem->ReleaseInterpolatorThreaded(LeftInterpolator);
-      gAudioSystem->ReleaseInterpolatorThreaded(RightInterpolator);
+      LeftInterpolator.SetValues(1.0f, 1.0f, (unsigned)0);
+      RightInterpolator.SetValues(1.0f, 1.0f, (unsigned)0);
     }
   }
 
@@ -204,8 +207,8 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        LeftInterpolator->SetValues(LeftVolume, volume, (unsigned)(time
-          * AudioSystemInternal::SampleRate));
+        LeftInterpolator.SetValues(LeftVolume, volume, (unsigned)(time
+          * AudioSystemInternal::SystemSampleRate));
       }
     }
   }
@@ -244,8 +247,8 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        RightInterpolator->SetValues(RightVolume, volume, (unsigned)(time
-          * AudioSystemInternal::SampleRate));
+        RightInterpolator.SetValues(RightVolume, volume, (unsigned)(time
+          * AudioSystemInternal::SystemSampleRate));
       }
     }
   }
@@ -295,17 +298,17 @@ namespace Audio
         // Check if we are interpolating the volume
         if (CurrentData.Interpolating)
         {
-          LeftVolume = LeftInterpolator->NextValue();
-          RightVolume = RightInterpolator->NextValue();
+          LeftVolume = LeftInterpolator.NextValue();
+          RightVolume = RightInterpolator.NextValue();
 
           // If we finished interpolating the volume, send a notification
-          if (LeftInterpolator->Finished() && RightInterpolator->Finished())
+          if (LeftInterpolator.Finished() && RightInterpolator.Finished())
           {
             CurrentData.Interpolating = false;
             if (firstRequest && GetSiblingNode())
             {
               gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-                GetSiblingNode(), Notify_InterpolationDone, (void*)nullptr));
+                GetSiblingNode(), AudioEventTypes::InterpolationDone, (void*)nullptr));
 
               // Set the final volume values on the non-threaded object
               gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&PanningNode::LeftVolume,
@@ -364,4 +367,16 @@ namespace Audio
 
     return true;
   }
+
+  //************************************************************************************************
+  float PanningNode::GetVolumeChangeFromOutputs()
+  {
+    float volume = (LeftVolume + RightVolume) / 2.0f;
+
+    forRange(SoundNode* node, GetOutputs()->All())
+      volume *= node->GetVolumeChangeFromOutputs();
+
+    return volume;
+  }
+
 }

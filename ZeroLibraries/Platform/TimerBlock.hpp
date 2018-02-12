@@ -28,6 +28,23 @@ public:
   Timer timer;
 };
 
+class PreciseTimerBlock
+{
+public:
+  String Name;
+  PreciseTimerBlock(StringParam name)
+    :Name(name)
+  {
+  }
+
+  ~PreciseTimerBlock()
+  {
+    double time = timer.UpdateAndGetTime();
+    ZPrintFilter(Filter::DefaultFilter, "%s %gs\n", Name.c_str(), time);
+  }
+  Timer timer;
+};
+
 #define DetectHitch(maxTime) HitchDetector hitchDetector((float)(maxTime));
 
 class HitchDetector

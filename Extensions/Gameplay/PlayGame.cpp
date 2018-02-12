@@ -55,7 +55,7 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   if (windowLaunch != nullptr)
     size = windowLaunch->mWindowedResolution;
 
-  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar);
+  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Close);
 
   OsWindow* mainWindow = osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
   if (windowLaunch == nullptr || windowLaunch->mLaunchFullscreen)
@@ -67,14 +67,17 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   mainWindow->SetTitle(project->ProjectName);
 
   // Pass window handle to initialize the graphics api
-  Z::gEngine->has(GraphicsEngine)->CreateRenderer(mainWindow->GetWindowHandle());
+  Z::gEngine->has(GraphicsEngine)->CreateRenderer(mainWindow);
   Z::gEngine->has(GraphicsEngine)->SetSplashscreenLoading();
+  Z::gEngine->has(GraphicsEngine)->SetLazyShaderCompilation(false);
 
   ZPrint("Loading resource packages...\n");
 
   LoadResourcePackageRelative(projectDirectory, "FragmentCore");
   LoadResourcePackageRelative(projectDirectory, "Loading");
   LoadResourcePackageRelative(projectDirectory, "ZeroCore");
+  LoadResourcePackageRelative(projectDirectory, "UiWidget");
+  LoadResourcePackageRelative(projectDirectory, "EditorUi");
   LoadResourcePackageRelative(projectDirectory, "Editor");
 
   // Hack!

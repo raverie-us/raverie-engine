@@ -1075,7 +1075,7 @@ void Window::UpdateTransform()
   mGripZones->SetSize(mSize);
 
   // Remove the border
-  Rect currentRect = Rect::PointAndSize(Vec2(0,0), mSize);
+  WidgetRect currentRect = WidgetRect::PointAndSize(Vec2(0,0), mSize);
   currentRect.RemoveThickness(borderThickness);
 
   if(mWindowStyle == WindowStyle::Normal)

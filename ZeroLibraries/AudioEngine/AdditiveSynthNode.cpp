@@ -19,7 +19,7 @@ namespace Audio
       mVolume(1.0f)
     {}
 
-    void SetValues(float frequency, float volume, EnvelopeSettings& envelope, Oscillator::Types waveType);
+    void SetValues(float frequency, float volume, EnvelopeSettings& envelope, OscillatorTypes::Enum waveType);
     float operator()();
     bool IsFinished();
     void Stop();
@@ -32,7 +32,7 @@ namespace Audio
 
   //************************************************************************************************
   void NoteHarmonic::SetValues(float frequency, float volume, EnvelopeSettings& envelope,
-    Oscillator::Types waveType)
+    OscillatorTypes::Enum waveType)
   {
     WaveSamples.SetFrequency(frequency);
     WaveSamples.SetType(waveType);
@@ -67,7 +67,7 @@ namespace Audio
   public:
 
     void AddHarmonic(float frequency, float volume, EnvelopeSettings& envelope,
-      Oscillator::Types waveType);
+      OscillatorTypes::Enum waveType);
     float operator()();
     bool IsFinished();
     void Stop();
@@ -81,7 +81,7 @@ namespace Audio
 
   //************************************************************************************************
   void AdditiveNote::AddHarmonic(float frequency, float volume, EnvelopeSettings& envelope,
-    Oscillator::Types waveType)
+    OscillatorTypes::Enum waveType)
   {
     Harmonics.PushBack().SetValues(frequency, volume, envelope, waveType);
   }
@@ -199,7 +199,7 @@ namespace Audio
       {
         HarmonicData& data = Harmonics[i];
         newNote->AddHarmonic(frequency * data.FrequencyMultiplier, data.Volume, data.Envelope,
-          (Oscillator::Types)data.WaveType);
+          data.WaveType);
       }
 
       ++CurrentNoteCount;
@@ -260,9 +260,9 @@ namespace Audio
     memset(outputBuffer->Data(), 0, sizeof(float) * bufferSize);
 
     // Look at each MIDI note in the map
-    for (NotesMapType::valuerange allLists = CurrentNotes.Values(); !allLists.Empty(); allLists.PopFront())
+    forRange(NotesListType* notesList, CurrentNotes.Values())
     {
-      NotesListType& list = *allLists.Front();
+      NotesListType& list = *notesList;
       // Step through each current note at this frequency
       for (unsigned i = 0; i < list.Size(); ++i)
       {

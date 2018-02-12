@@ -102,6 +102,7 @@ void HeightMapModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlo
   GraphicalHeightPatch& graphicalPatch = mGraphicalPatches[heightPatch];
 
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Static;
   frameNode.mCoreVertexType = CoreVertexType::Mesh;
 

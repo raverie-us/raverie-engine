@@ -24,7 +24,7 @@ ZilchDefineType(PhysicsMaterial, builder, type)
   ZilchBindMethod(RuntimeClone);
 
   ZilchBindGetterSetterProperty(Density);
-  ZilchBindFieldProperty(mRestitution)->Add(new EditorRange(0, 1, real(0.001f)));
+  ZilchBindFieldProperty(mRestitution)->Add(new EditorSlider(0, 1, real(0.001f)));
   ZilchBindGetterSetterProperty(Friction);
   ZilchBindFieldProperty(mHighPriority);
   ZilchBindMethod(UpdateAndNotifyIfModified);

@@ -621,7 +621,7 @@ void ResourceWeightedTableView::UpdateTransform()
   //set the scroll area's client area to the min size for displaying all of the weights
   mScrollArea->SetClientSize(minSize);
   
-  Rect graphRect = Rect::PointAndSize(Vec2::cZero, minSize);
+  WidgetRect graphRect = WidgetRect::PointAndSize(Vec2::cZero, minSize);
   graphRect.RemoveThickness(mMargins);
   PlaceWithRect(graphRect, mGraph);
 

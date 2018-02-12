@@ -103,6 +103,7 @@
     <ClCompile Include="Utility\Functor.cpp" />
     <ClCompile Include="Utility\HalfFloat.cpp" />
     <ClCompile Include="Utility\Misc.cpp" />
+    <ClCompile Include="Utility\SpinLock.cpp" />
     <ClCompile Include="Utility\Status.cpp" />
     <ClCompile Include="Utility\Variant.cpp" />
   </ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="Utility\MaxSizeof.hpp" />
     <ClInclude Include="Utility\NativeType.hpp" />
     <ClInclude Include="Utility\PointerCast.hpp" />
+    <ClInclude Include="Utility\SpinLock.hpp" />
     <ClInclude Include="Utility\Status.hpp" />
     <ClInclude Include="Utility\ForEachRange.hpp" />
     <ClInclude Include="Utility\Atomic.hpp" />

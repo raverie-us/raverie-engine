@@ -42,6 +42,21 @@ bool ZilchCompileEvent::WasTypeModified(BoundType* type)
   return false;
 }
 
+//**************************************************************************************************
+BoundType* ZilchCompileEvent::GetReplacingType(BoundType* oldType)
+{
+  if(!WasTypeModified(oldType))
+    return oldType;
+
+  forRange(ResourceLibrary* lib, mModifiedLibraries.All())
+  {
+    if (BoundType* newType = lib->GetReplacingType(oldType))
+      return newType;
+  }
+
+  return nullptr;
+}
+
 //------------------------------------------------------------------------------------ Zilch Manager
 //**************************************************************************************************
 ZilchManager::ZilchManager() :

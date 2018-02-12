@@ -303,8 +303,10 @@ void ShaderTranslationDebugHelper::ValidateComposition(ZilchShaderGenerator& gen
 
         // Print out fragment and field with the error.
         String attributesList = attributesBuilder.ToString();
-        errorsBuilder.AppendFormat("\tCouldn't resolve input attributes on '%s.%s'. Provided attributes were '%s'\n",
-          fragmentName.c_str(), fieldName.c_str(), attributesList.c_str());
+        String noFallbackName = generator.mSettings->mNameSettings.mNoFallbackWarningAttributeName;
+        errorsBuilder.AppendFormat("\tCouldn't resolve input attributes on '%s.%s'. Provided attributes were '%s'. "
+          "Input will fallback to the default value. To suppress this warning use the attribute '[%s]'.\n",
+          fragmentName.c_str(), fieldName.c_str(), attributesList.c_str(), noFallbackName.c_str());
       }
     }
   }

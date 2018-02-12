@@ -13,8 +13,12 @@ namespace Zero
 //******************************************************************************
 ZilchDefineType(UiFillLayout, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindComponent();
   ZeroBindInterface(UiLayout);
+
+  ZilchBindMethod(FillToParent);
+  ZilchBindMethod(FillToRectangle);
 }
 
 //******************************************************************************
@@ -24,13 +28,13 @@ void UiFillLayout::Initialize(CogInitializer& initializer)
 }
 
 //******************************************************************************
-Vec2 UiFillLayout::Measure(Rect& rect)
+Vec2 UiFillLayout::Measure(Rectangle& rect)
 {
   return MaxMeasure(rect);
 }
 
 //******************************************************************************
-Vec2 UiFillLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
+void UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if (mDebug)
@@ -44,9 +48,7 @@ Vec2 UiFillLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
   UpdateNotInLayout(e);
 
   // Apply the padding before laying out the children
-  ApplyPadding(mPadding, rect);
-  Vec2 pos = rect.GetPosition();
-  Vec2 size = rect.GetSize();
+  rect.RemoveThickness(mPadding);
 
   // Layout each child
   forRange(UiWidget* child, AllWidgetsInLayout())
@@ -54,55 +56,71 @@ Vec2 UiFillLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
     // Do nothing if it's not in the layout
     if(!child->GetInLayout())
       continue;
+    
+    FillToRectangle(rect, child);
+    child->Update(e);
+  }
+}
 
-    // Measure the child object
-    Rect tempRect;
-    Vec2 childSize = child->Measure(tempRect);
+//******************************************************************************
+void UiFillLayout::FillToParent(UiWidget* child)
+{
+  if (UiWidget* parent = child->mParent)
+  {
+    Rectangle rect = parent->GetBodyRectangle();
+    FillToRectangle(rect, child);
+  }
+}
 
-    const Thickness& childMargins = child->GetMargins();
+//******************************************************************************
+void UiFillLayout::FillToRectangle(RectangleParam rect, UiWidget* widget)
+{
+  // Measure the child object
+  Rectangle tempRect;
+  Vec2 childSize = widget->Measure(tempRect);
 
-    // Add the margins
-    childSize += child->GetMargins().Size();
+  const Thickness& childMargins = widget->GetMargins();
 
-    Vec2 childPos = pos;
+  // Add the margins
+  childSize += childMargins.Size();
 
-    if(child->GetSizePolicyX() == UiSizePolicy::Flex)
-    {
-      childSize.x = size.x;
-      childPos.x = pos.x;
-    }
-    else
-    {
-      if(child->GetSizePolicyX() == UiSizePolicy::Fixed)
-        childSize.x = child->GetSize().x + childMargins.Width();
+  Vec2 pos = rect.GetBottomLeft();
+  Vec2 size = rect.GetSize();
 
-      CalculateAlignment(Axis::X, child->GetHorizontalAlignment(), size, pos, childSize, childPos);
-    }
+  Vec2 childPos = pos;
 
-    if(child->GetSizePolicyY() == UiSizePolicy::Flex)
-    {
-      childSize.y = size.y;
-      childPos.y = pos.y;
-    }
-    else 
-    {
-      if(child->GetSizePolicyY() == UiSizePolicy::Fixed)
-        childSize.y = child->GetSize().y + childMargins.Height();
+  if (widget->GetSizePolicyX() == UiSizePolicy::Flex)
+  {
+    childSize.x = size.x;
+    childPos.x = pos.x;
+  }
+  else
+  {
+    if (widget->GetSizePolicyX() == UiSizePolicy::Fixed)
+      childSize.x = widget->GetSize().x + childMargins.Width();
 
-      CalculateAlignment(Axis::Y, child->GetVerticalAlignment(), size, pos, childSize, childPos);
-    }
-
-    Rect childRect = Rect::PointAndSize(childPos, childSize);
-
-    childRect.RemoveThickness(childMargins);
-
-    child->SetLocalTranslation(childRect.GetPosition());
-    child->SetSize(childRect.GetSize());
-    child->UpdateTransform(e);
+    CalculateAlignment(Axis::X, widget->GetHorizontalAlignment(), size, pos, childSize, childPos);
   }
 
-  RemovePadding(mPadding, rect);
-  return rect.GetSize();
+  if (widget->GetSizePolicyY() == UiSizePolicy::Flex)
+  {
+    childSize.y = size.y;
+    childPos.y = pos.y;
+  }
+  else
+  {
+    if (widget->GetSizePolicyY() == UiSizePolicy::Fixed)
+      childSize.y = widget->GetSize().y + childMargins.Height();
+
+    CalculateAlignment(Axis::Y, widget->GetVerticalAlignment(), size, pos, childSize, childPos);
+  }
+
+  Rectangle childRect = Rectangle::PointAndSize(childPos, childSize);
+
+  childRect.RemoveThickness(childMargins);
+
+  widget->SetSize(childRect.GetSize());
+  widget->SetLocalBottomLeft(childRect.GetBottomLeft());
 }
 
 }//namespace Zero

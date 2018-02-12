@@ -69,7 +69,7 @@ public:
   /// the tooltip popping up on top of the new Ui.
   bool mShowToolTip;
   String mToolTipText;
-  ToolTipColor::Enum mToolTipColor;
+  ToolTipColorScheme::Enum mToolTipColor;
   HandleOf<Widget> mToolTip;
 };
 
@@ -98,7 +98,7 @@ public:
   Thickness GetPadding();
 
   /// Text colors.
-  ByteColor mTextColor, mTextHoverColor, mTextClickedColor;
+  Vec4 mTextColor, mTextHoverColor, mTextClickedColor;
 
   /// The current style of the button.
   TextButtonStyle::Type mStyle;

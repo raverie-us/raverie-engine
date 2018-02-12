@@ -244,7 +244,7 @@ public:
   void OnRightMouseDown(MouseEvent* event);
   void OnMouseMove(MouseEvent* event);
   void OnMouseUp(MouseEvent* event);
-  void OnMouseDrop(MouseEvent* event);
+  void OnMouseFileDrop(MouseFileDropEvent* event);
   void OnMouseScroll(MouseEvent* event);
 
   void OnKeyUp(KeyboardEvent* event);

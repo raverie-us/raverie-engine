@@ -377,6 +377,9 @@ namespace Zilch
     this->TypeToCppName.Insert(ZilchTypeId(StringRangeExtended), NativeName("StringRangeExtended", "const Zilch::StringRangeExtended&", "Zilch::StringRangeExtended"));
     this->TypeToCppName.Insert(ZilchTypeId(StringSplitRangeExtended), NativeName("StringSplitRangeExtended", "const Zilch::StringSplitRangeExtended&", "Zilch::StringSplitRangeExtended"));
 
+    this->TypeToCppName.Insert(ZilchTypeId(ColorClass), NativeName("ColorClass", "const Zilch::ColorClass&", "Zilch::ColorClass"));
+    this->TypeToCppName.Insert(ZilchTypeId(ColorsClass), NativeName("ColorsClass", "const Zilch::ColorsClass&", "Zilch::ColorsClass"));
+
     this->TypeToCppName.Insert(ZilchTypeId(ParameterArray::range), NativeName("ParameterArray::range", "const Zilch::ParameterArray::range&", "Zilch::ParameterArray::range"));
     this->TypeToCppName.Insert(ZilchTypeId(MemberRange<Member>), NativeName("MemberRange<Zilch::Member>", "const Zilch::MemberRange<Zilch::Member>&", "Zilch::MemberRange<Zilch::Member>"));
     this->TypeToCppName.Insert(ZilchTypeId(MemberRange<Property>), NativeName("MemberRange<Zilch::Property>", "const Zilch::MemberRange<Zilch::Property>&", "Zilch::MemberRange<Zilch::Property>"));

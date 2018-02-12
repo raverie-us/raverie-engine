@@ -66,6 +66,16 @@ ZilchDefineType(AddResourceWindow, builder, type)
 }
 
 //**************************************************************************************************
+void CloseAddWindow(Composite* windowElement)
+{
+  Event e;
+  windowElement->DispatchBubble(Events::AddWindowCancelled, &e);
+  CloseTabContaining(windowElement);
+
+  Z::gEditor->GetCenterWindow()->TryTakeFocus();
+}
+
+//**************************************************************************************************
 AddResourceWindow::AddResourceWindow(Composite* parent) :
   Composite(parent)
 {
@@ -113,6 +123,16 @@ AddResourceWindow::AddResourceWindow(Composite* parent) :
   bottomBar->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   bottomBar->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(19.0f));
   bottomBar->SetNotInLayout(false);
+
+  ConnectThisTo(this, Events::KeyDown, OnKeyDown);
+}
+
+//**************************************************************************************************
+void AddResourceWindow::OnKeyDown(KeyboardEvent* e)
+{
+  // close the add window when escape is pressed
+  if (e->Key == Keys::Escape)
+    CloseAddWindow(this);
 }
 
 //**************************************************************************************************
@@ -133,6 +153,42 @@ void AddResourceWindow::ShowResourceTypeSearch(bool state)
     mMinSize = Pixels(960, 200);
   else
     mMinSize = Pixels(720, 200);
+}
+
+//**************************************************************************************************
+void AddResourceWindow::AddTags(TagList& tags)
+{
+  TextBox* tagsBox = mResourceTemplateDisplay->mTagsBox;
+  StringBuilder allTags;
+  
+  // Keep whatever current tags are already set
+  if(!tagsBox->GetText().Empty())
+  {
+    allTags.Append(tagsBox->GetText());
+    allTags.Append(", ");
+  }
+
+  // Add all the tags for the resource being created
+  forRange(StringParam& tag, tags.All())
+  {
+    // Only add tags that are not resource types as they are automatically added
+    // to resources upon their creation
+    BoundType* type = MetaDatabase::GetInstance()->FindType(tag);
+    if(type && type->IsA(ZilchTypeId(Resource)))
+      continue;
+
+    allTags.Append(tag);
+    allTags.Append(", ");
+  }
+
+  tagsBox->SetText(allTags.ToString());
+}
+
+//**************************************************************************************************
+void AddResourceWindow::TemplateSearchTakeFocus()
+{
+  mResourceTypeSearch->mSearchField->LoseFocus();
+  mResourceTemplateSearch->TakeFocus();
 }
 
 //**************************************************************************************************
@@ -230,13 +286,12 @@ ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
   {
     mSearchField = new TagChainTextBox(searchFieldArea);
     mSearchField->SetSizing(SizePolicy::Flex, 1.0f);
-    //mSearchField->SetEditable(this);
-    //mSearchField->SetHintText("search...");
    
     ConnectThisTo(mSearchField, Events::TextChanged, OnTextEntered);
     ConnectThisTo(mSearchField, Events::TextEnter, OnEnter);
     ConnectThisTo(mSearchField, Events::KeyDown, OnKeyDownSearch);
     ConnectThisTo(mSearchField, Events::KeyRepeated, OnKeyDownSearch);
+    ConnectThisTo(mSearchField, Events::KeyPreview, OnSearchKeyPreview);
   }
 
   ColoredComposite* importArea = new ColoredComposite(this, Vec4(1, 1, 1, 0.05f));
@@ -384,14 +439,15 @@ void ResourceTypeSearch::OnKeyDown(KeyboardEvent* e)
     mSearchField->mSearchBar->LoseFocus();
     mNextFocus->TakeFocus();
   }
+}
 
+//**************************************************************************************************
+void ResourceTypeSearch::OnSearchKeyPreview(KeyboardEvent* e)
+{
   if (e->Key == Keys::Escape)
   {
-    Event e;
-    GetDispatcher()->Dispatch(Events::AddWindowCancelled, &e);
-    CloseTabContaining(this);
-
-    Z::gEditor->GetCenterWindow()->TryTakeFocus();
+    // ResourceTypeSearch Parent = Main Area, Main Area Parent = Add Window
+    CloseAddWindow(this);
   }
 }
 
@@ -631,11 +687,6 @@ void ResourceTemplateSearch::OnKeyDown(KeyboardEvent* e)
   else if(e->Key == Keys::Enter)
   {
     mNextFocus->TakeFocus();
-  }
-  else if(e->Key == Keys::Escape)
-  {
-    CloseTabContaining(this);
-    Z::gEditor->GetCenterWindow()->TryTakeFocus();
   }
 }
 
@@ -891,7 +942,7 @@ void ResourceTemplateDisplay::CreateNameToolTip(StringParam message)
 
   ToolTip* toolTip = new ToolTip(mParent->mParent->mParent->mParent);
   toolTip->SetText(message);
-  toolTip->SetColor(ToolTipColor::Red);
+  toolTip->SetColorScheme(ToolTipColorScheme::Red);
   toolTip->SetDestroyOnMouseExit(false);
 
   ToolTipPlacement placement;
@@ -915,14 +966,14 @@ void ResourceTemplateDisplay::RemoveNameToolTip()
 }
 
 //**************************************************************************************************
-void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColor::Enum tagColor)
+void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColorScheme::Enum tagColor)
 {
   mTagsToolTip.SafeDestroy();
 
   ToolTip* toolTip = new ToolTip(mTagsBox);
   toolTip->SetText(message);
   toolTip->SetDestroyOnMouseExit(false);
-  toolTip->SetColor(tagColor);
+  toolTip->SetColorScheme(tagColor);
 
   ToolTipPlacement placement;
   placement.SetScreenRect(mTagsBox->GetScreenRect());
@@ -931,7 +982,7 @@ void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColor
   toolTip->SetArrowTipTranslation(placement);
 
   // if this is a warning tooltip also color the tag text box red
-  if (tagColor == ToolTipColor::Red)
+  if (tagColor == ToolTipColorScheme::Red)
   {
     mTagsBox->mBackgroundColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
     mTagsBox->mBorderColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
@@ -1046,10 +1097,10 @@ bool ResourceTemplateDisplay::ValidateTags()
   tagString = tagString.Replace(" ", "");
 
   // check to see if the tag string changed after being sanitized, if so it was invalid
-  String santiziedTags = Cog::SanatizeName(tagString);
+  String santiziedTags = Cog::SanitizeName(tagString);
   if(tagString != santiziedTags)
   {
-    CreateTagToolTip("Tags contain invalid symbols", ToolTipColor::Red);
+    CreateTagToolTip("Tags contain invalid symbols", ToolTipColorScheme::Red);
     return false;
   }
 
@@ -1074,11 +1125,11 @@ void ResourceTemplateDisplay::OnCreate(Event*)
   if (ValidateName(true) == false || ValidateTags() == false)
     return;
   
-  Resource* resource = mSelectedTemplate;
-  if (resource == nullptr)
+  Resource* resourceTemplate = mSelectedTemplate;
+  if (resourceTemplate == nullptr)
     return;
 
-  BoundType* resourceType = ZilchVirtualTypeId(resource);
+  BoundType* resourceType = ZilchVirtualTypeId(resourceTemplate);
   ResourceManager* manager = Z::gResources->GetResourceManager(resourceType);
 
   String newName = mNameField->GetText();
@@ -1090,7 +1141,7 @@ void ResourceTemplateDisplay::OnCreate(Event*)
   ResourceAdd resourceAdd;
   resourceAdd.Library = library;
   resourceAdd.Name = newName;
-  resourceAdd.Template = resource;
+  resourceAdd.Template = resourceTemplate;
   AddNewResource(manager, resourceAdd);
 
   if (resourceAdd.WasSuccessful())
@@ -1117,7 +1168,18 @@ void ResourceTemplateDisplay::OnCreate(Event*)
       if (!r.Empty())
         tags.Insert(r);
     }
+    // Add all the tags from the resource template to the newly created resource
+    resourceTemplate->GetTags(tags);
+    // Set all the collected tags on the newly created resource
     resourceAdd.SourceResource->mContentItem->SetTags(tags);
+
+    // Dispatch an event that the resource has been modified on the resource itself
+    // and on the resource system
+    ResourceEvent e;
+    e.Manager = resourceTemplate->GetManager();
+    e.EventResource = resourceTemplate;
+    resourceTemplate->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
+    Z::gResources->DispatchEvent(Events::ResourceTagsModified, &e);
   }
 
   Z::gEditor->GetCenterWindow()->TryTakeFocus();

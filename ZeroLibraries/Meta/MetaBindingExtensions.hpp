@@ -80,6 +80,15 @@ extern const String cNetProperty;
 // Inside an Event dispatched over the network, this integer will be automatically filled with
 // the sending NetPeer's NetPeerId.
 extern const String cNetPeerId;
+// Used to group properties in the property view. Must have a single string attribute parameter
+// which is the name of the group.
+extern const String cGroup;
+// Used to specify a range for numbers being edited in the property grid.
+extern const String cRange;
+// Used to specify that the value should be modified by a slider in the property grid.
+extern const String cSlider;
+// Used to mark attribute parameters as optional. This is an internal attribute (not exposed to user).
+extern const String cOptional;
 
 }//namespace PropertyFlags
 
@@ -119,17 +128,11 @@ extern const String cInvalidTypeName;
 #define ZeroBindInterface(Type)  type->HasOrAdd<::Zero::CogComponentMeta>(type)->AddInterface(ZilchTypeId(Type))
 #define ZeroBindTag(Tag)         type->HasOrAdd<::Zero::CogComponentMeta>(type)->mTags.Insert(Tag)
 #define ZeroBindPropertyRename(oldName)  Add(new ::Zero::MetaPropertyRename(oldName))
+#define ZeroSetPropertyGroup(groupName) Add(new ::Zero::MetaGroup(groupName))
+#define ZeroLocalModificationOverride() AddAttribute(::Zero::PropertyAttributes::cLocalModificationOverride)
 
 void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType);
 #define ZeroBindEvent(EventName, EventType)  BindEventSent(builder, type, (EventName), ZilchTypeId(EventType))
-
-// Used for adding custom Ui to the property grid
-class MetaCustomUi : public ReferenceCountedEventObject
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  virtual void CreateUi(void* parentComposite, HandleParam object) = 0;
-};
 
 //------------------------------------------------------------------------------------------- Events
 namespace Events
@@ -222,80 +225,7 @@ public:
   BoundType* mType;
 };
 
-class TemplateFilterBase
-{
-public:
-  virtual bool Filter(Member* prop, HandleParam instance) = 0;
-};
-
-template <typename ClassType, bool ClassType::* ClassMember>
-class TemplateFilterBool : public TemplateFilterBase
-{
-public:
-  bool Filter(Member* prop, HandleParam instance) override
-  {
-    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return pointer->*ClassMember;
-  }
-};
-
-template <typename ClassType, bool ClassType::* ClassMember>
-class TemplateFilterNotBool : public TemplateFilterBase
-{
-public:
-  bool Filter(Member* prop, HandleParam instance) override
-  {
-    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return !(pointer->*ClassMember);
-  }
-};
-
-template <typename ClassType, typename ValueType, ValueType ClassType::* ClassMember, ValueType Value>
-class TemplateFilterEquality : public TemplateFilterBase
-{
-public:
-  bool Filter(Member* prop, HandleParam instance) override
-  {
-    ClassType* pointer = instance.Get<ClassType*>(GetOptions::AssertOnNull);
-    return pointer->*ClassMember == Value;
-  }
-};
-
-class MetaPropertyFilter : public ReferenceCountedEventObject
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  virtual ~MetaPropertyFilter() {}
-
-  // Return false to hide the property
-  // (prop will be either a Property or Function with no parameters)
-  virtual bool Filter(Member* prop, HandleParam instance) = 0;
-};
-
-class MetaPropertyBasicFilter : public MetaPropertyFilter
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  MetaPropertyBasicFilter(TemplateFilterBase* filter = nullptr) : mActualFilter(filter) {}
-  ~MetaPropertyBasicFilter() { if (mActualFilter) delete mActualFilter; }
-
-  bool Filter(Member* prop, HandleParam instance)
-  {
-    return mActualFilter->Filter(prop, instance);
-  }
-
-  TemplateFilterBase* mActualFilter;
-};
-
-class MetaEditorGizmo : public ReferenceCountedEventObject
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  String mGizmoArchetype;
-};
-
+//------------------------------------------------------------------------------------- Meta Display
 class MetaDisplay : public ReferenceCountedEventObject
 {
 public:
@@ -305,6 +235,7 @@ public:
   virtual String GetDebugText(HandleParam object) = 0;
 };
 
+//-------------------------------------------------------------------------------- Type Name Display
 class TypeNameDisplay : public MetaDisplay
 {
 public:
@@ -314,6 +245,7 @@ public:
   String GetDebugText(HandleParam object) override;
 };
 
+//------------------------------------------------------------------------------ String Name Display
 class StringNameDisplay : public MetaDisplay
 {
 public:
@@ -326,16 +258,7 @@ public:
   String mString;
 };
 
-#define ZeroFilterBool(Member)                                      \
-  Add(new MetaPropertyBasicFilter(new TemplateFilterBool<ZilchSelf, &ZilchSelf::Member>()))
-
-#define ZeroFilterNotBool(Member)                                   \
-  Add(new MetaPropertyBasicFilter(new TemplateFilterNotBool<ZilchSelf, &ZilchSelf::Member>()))
-
-#define ZeroFilterEquality(Member, MemberType, ConstantValue)       \
-  Add(new MetaPropertyBasicFilter(new TemplateFilterEquality<ZilchSelf, MemberType, &ZilchSelf::Member, ConstantValue>()))
-
-//--------------------------------------------------------------- Meta Transform
+//-------------------------------------------------------------------------- Meta Transform Instance
 class MetaTransformInstance
 {
 public:
@@ -375,7 +298,7 @@ public:
   // World Matrix
   Mat4 GetParentWorldMatrix();
 
-  // Transform for cog, object instance for geoelement, etc...
+  // Transform for Cog, object instance for GeoElement, etc...
   Handle mInstance;
 
   // Consider removing this. It was added to mark the space as modified in Gizmos, but
@@ -400,6 +323,9 @@ public:
   Aabb mAabb;
 };
 
+typedef MetaTransformInstance& MetaTransformParam;
+
+//----------------------------------------------------------------------------------- Meta Transform
 // Allows objects to have transform type properties without the limitation of
 // the object type being a Cog
 class MetaTransform : public ReferenceCountedEventObject
@@ -432,16 +358,12 @@ public:
   ZilchInitializeTypeAs(ZeroMetaArray<arrayType>, "ZeroMetaArray" name);    \
   ZilchInitializeExternalTypeAs(arrayType, name);
 
-//---------------------------------------------------------------------------------- Property Rename
-/// Add to properties to handle old files with old property names.
-class MetaPropertyRename : public ReferenceCountedEventObject
+//----------------------------------------------------------------------------------- Meta Attribute
+class MetaAttribute : public ReferenceCountedEventObject
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  
-  MetaPropertyRename(StringParam oldName);
-
-  String mOldName;
+  virtual void PostProcess(Status& status, ReflectionObject* owner){}
 };
 
 } // namespace Zero

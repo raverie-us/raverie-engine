@@ -119,7 +119,7 @@ void LineSegment(Array<StreamedVertex>& streamedVertices, Vec3Param p0, Vec3Para
 
 void DrawBoxAround(Array<StreamedVertex>& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor color)
 {
-  Rect screenRect = widget->GetScreenRect();
+  WidgetRect screenRect = widget->GetScreenRect();
 
   Vec3 topLeft  = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.TopLeft()));
   Vec3 topRight = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.TopRight()));
@@ -151,7 +151,7 @@ void DrawChain(Array<StreamedVertex>& streamedVertices, ViewNode& lineNode, Widg
 void RootWidget::OnUiRenderUpdate(Event* event)
 {
   ColorTransform colorTx = {Vec4(1, 1, 1, 1)};
-  Rect clipRect = {0, 0, mSize.x, mSize.y};
+  WidgetRect clipRect = {0, 0, mSize.x, mSize.y};
 
   GraphicsEngine* graphics = Z::gEngine->has(GraphicsEngine);
   RenderTasks& renderTasks = *graphics->mRenderTasksBack;
@@ -260,7 +260,7 @@ void RootWidget::UpdateTransform()
   {
     mDebuggerOverlay->MoveToFront();
     mDebuggerText->MoveToFront();
-    Rect rect = this->GetLocalRect();
+    WidgetRect rect = this->GetLocalRect();
     PlaceCenterToRect(rect, mDebuggerText);
   }
 
@@ -916,7 +916,6 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
     else
       targetObject->DispatchBubble(namedMouseEvents[button], &mouseEvent);
   }
-
 }
 
 void RootWidget::OnOsMouseDrop(OsMouseDropEvent* mouseDrop)
@@ -930,6 +929,11 @@ void RootWidget::OnOsMouseDrop(OsMouseDropEvent* mouseDrop)
   mouseEvent.Source = targetObject;
 
   targetObject->DispatchBubble(Events::MouseDrop, &mouseEvent);
+
+  MouseFileDropEvent fileDrop(mouseEvent);
+  fileDrop.Copy(*mouseDrop);
+
+  targetObject->DispatchBubble(Events::MouseFileDrop, &fileDrop);
 }
 
 Composite* RootWidget::GetPopUp()

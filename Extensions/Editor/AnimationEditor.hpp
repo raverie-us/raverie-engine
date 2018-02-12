@@ -116,7 +116,7 @@ private:
   void UpdateNegativeArea();
 
   /// We want to modify the animation of the selected object.
-  void OnSelectionChanged(SelectionChangedEvent* event);
+  void OnSelectionFinal(SelectionChangedEvent* event);
 
   /// When an object is selected, we must make sure it is valid to edit.
   /// This will update any error states as well as creating the proper animation

@@ -71,9 +71,9 @@ MenuTextButton::MenuTextButton(Composite* parent, StringParam style,
 //******************************************************************************
 void MenuTextButton::Select()
 {
-  mTextColor = ToByteColor(LauncherUi::MenuTextSelected);
-  mTextHoverColor = ToByteColor(LauncherUi::MenuTextSelectedHighlight);
-  mTextClickedColor = ToByteColor(LauncherUi::MenuTextSelectedHighlight);
+  mTextColor = LauncherUi::MenuTextSelected;
+  mTextHoverColor = LauncherUi::MenuTextSelectedHighlight;
+  mTextClickedColor = LauncherUi::MenuTextSelectedHighlight;
   SetIgnoreInput(true);
   MarkAsNeedsUpdate();
 }
@@ -81,9 +81,9 @@ void MenuTextButton::Select()
 //******************************************************************************
 void MenuTextButton::DeSelect()
 {
-  mTextColor = ToByteColor(LauncherUi::MenuText);
-  mTextHoverColor = ToByteColor(LauncherUi::MenuTextHighlight);
-  mTextClickedColor = ToByteColor(LauncherUi::MenuTextClicked);
+  mTextColor = LauncherUi::MenuText;
+  mTextHoverColor = LauncherUi::MenuTextHighlight;
+  mTextClickedColor = LauncherUi::MenuTextClicked;
   SetIgnoreInput(false);
   MarkAsNeedsUpdate();
 }
@@ -368,9 +368,9 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   TextButton* browseButton = new TextButton(projectsCustomUi, "SubTabText");
   browseButton->SetStyle(TextButtonStyle::Modern);
   browseButton->SetText("BROWSE");
-  browseButton->mTextColor = ToByteColor(LauncherUi::MenuText);
-  browseButton->mTextHoverColor = ToByteColor(LauncherUi::MenuTextHighlight);
-  browseButton->mTextClickedColor = ToByteColor(LauncherUi::MenuTextHighlight);
+  browseButton->mTextColor = LauncherUi::MenuText;
+  browseButton->mTextHoverColor = LauncherUi::MenuTextHighlight;
+  browseButton->mTextClickedColor = LauncherUi::MenuTextHighlight;
   ConnectThisTo(browseButton, Events::ButtonPressed, OnBrowsePressed);
 
   mButtonArea->SizeToContents();
@@ -379,9 +379,9 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   mFileBugTextButton->SetNotInLayout(true);
   mFileBugTextButton->SetText("FILE BUG REPORT");
   mFileBugTextButton->SetStyle(TextButtonStyle::Modern);
-  mFileBugTextButton->mTextColor = ToByteColor(LauncherUi::MenuText);
-  mFileBugTextButton->mTextHoverColor = ToByteColor(LauncherUi::MenuTextHighlight);
-  mFileBugTextButton->mTextClickedColor = ToByteColor(LauncherUi::MenuTextSelected);
+  mFileBugTextButton->mTextColor = LauncherUi::MenuText;
+  mFileBugTextButton->mTextHoverColor = LauncherUi::MenuTextHighlight;
+  mFileBugTextButton->mTextClickedColor = LauncherUi::MenuTextSelected;
   mFileBugTextButton->SizeToContents();
   ConnectThisTo(mFileBugTextButton, Events::ButtonPressed, OnFileBugPressed);
 
@@ -620,7 +620,7 @@ void LauncherWindow::OnForcedBuildsModal(ModalButtonEvent* e)
 void LauncherWindow::UpdateTransform()
 {
   // Center the background
-  Rect centerRect = mCenterPanel->GetRectInParent();
+  WidgetRect centerRect = mCenterPanel->GetRectInParent();
   PlaceWithRect(centerRect, mCenterPanelBackground);
 
   mWindowGripper->SetSize(mTopBar->GetSize());
@@ -633,6 +633,9 @@ void LauncherWindow::UpdateTransform()
   float buttonSize = mFileBugTextButton->GetSize().x;
   float buttonLeftEdge = rightEdge - 36 - buttonSize;
   mFileBugTextButton->SetTranslation(Pixels(buttonLeftEdge, 33, 0));
+
+  if(mActiveModal != nullptr)
+    mActiveModal->UpdateTransform();
 
   Composite::UpdateTransform();
 }

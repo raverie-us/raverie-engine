@@ -26,11 +26,10 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float halfPI = 2.0f * Math::ArcTan(1.0f);
   static float GetValueSineCurve(const float current, const float total, const float startValue, 
     const float endValue)
   {
-    return (Math::Sin((current / total) * halfPI) * (endValue - startValue)) + startValue;
+    return (Math::Sin((current / total) * Math::cTwoPi) * (endValue - startValue)) + startValue;
   }
 
   //************************************************************************************************
@@ -54,66 +53,7 @@ namespace Audio
       (endValue - startValue)) + startValue;
   }
 
-
-  //------------------------------------------------------------------------- Interpolator Container
-
-  //************************************************************************************************
-  InterpolatorContainer::InterpolatorContainer() : 
-    Active(false), 
-    Object(new InterpolatingObject()) 
-  { 
-    Object->Container = this; 
-  }
-
-  //************************************************************************************************
-  InterpolatorContainer::InterpolatorContainer(const InterpolatorContainer& copy) :
-    Active(copy.Active),
-    Object(copy.Object)
-  {
-    Object->Container = this;
-  }
-
-  //************************************************************************************************
-  void InterpolatorContainer::Swap(InterpolatorContainer& other)
-  {
-    bool active = Active;
-    Active = other.Active;
-    other.Active = active;
-
-    InterpolatingObject* object = Object;
-    Object = other.Object;
-    other.Object = object;
-    Object->Container = this;
-    other.Object->Container = &other;
-  }
-
   //--------------------------------------------------------------------------- Interpolating Object
-
-  //************************************************************************************************
-  InterpolatingObject::InterpolatingObject(const float startValue, const float endValue, 
-      const unsigned numberOfFrames) :
-    StartValue(startValue),
-    EndValue(endValue), 
-    TotalFrames(numberOfFrames),
-    CurrentFrame(0), 
-    TotalDistance(0),
-    CurrentCurveType(LinearCurveType)
-  {
-    GetValue = GetValueLinearCurve;
-  }
-
-  //************************************************************************************************
-  InterpolatingObject::InterpolatingObject(const float startValue, const float endValue, 
-      const float distance) :
-    StartValue(startValue), 
-    EndValue(endValue), 
-    TotalFrames(0), 
-    CurrentFrame(0), 
-    TotalDistance(distance),
-    CurrentCurveType(LinearCurveType)
-  {
-    GetValue = GetValueLinearCurve;
-  }
 
   //************************************************************************************************
   InterpolatingObject::InterpolatingObject() : 
@@ -122,74 +62,36 @@ namespace Audio
     TotalFrames(0),
     CurrentFrame(0), 
     TotalDistance(0),
-    CurrentCurveType(LinearCurveType)
+    CurrentCurveType(CurveTypes::Linear)
   {
     GetValue = GetValueLinearCurve;
   }
 
   //************************************************************************************************
-  InterpolatingObject::InterpolatingObject(const InterpolatingObject &copy) : 
-    StartValue(copy.StartValue), 
-    EndValue(copy.EndValue), 
-    TotalFrames(copy.TotalFrames), 
-    CurrentFrame(copy.CurrentFrame), 
-    TotalDistance(copy.TotalDistance),
-    CurrentCurveType(copy.CurrentCurveType)
-  {
-    switch (copy.CurrentCurveType)
-    {
-    case LinearCurveType:
-      GetValue = GetValueLinearCurve;
-      break;
-    case SquaredCurveType:
-      GetValue = GetValueSquaredCurve;
-      break;
-    case SineCurveType:
-      GetValue = GetValueSineCurve;
-      break;
-    case SquareRootCurveType:
-      GetValue = GetValueSquareRootCurve;
-      break;
-    case LogCurveType:
-      GetValue = GetValueExponentialCurve;
-      break;
-    case CustomCurveType:
-      CustomCurveObject.CurveData->Clear();
-      (*CustomCurveObject.CurveData) = (*copy.CustomCurveObject.CurveData);
-      break;
-    }
-  }
-
-  //************************************************************************************************
   float InterpolatingObject::NextValue()
   {
-    if (TotalFrames == 0)
+    if (TotalFrames == 0 || CurrentFrame >= TotalFrames || EndValue == StartValue)
       return EndValue;
 
-    if (CurrentFrame >= TotalFrames)
-      return EndValue;
-
-    if (EndValue == StartValue)
-      return EndValue;
-
-    return GetValue((float)CurrentFrame++, (float)TotalFrames, StartValue, EndValue);
+    if (CurrentCurveType != CurveTypes::Custom)
+      return GetValue((float)CurrentFrame++, (float)TotalFrames, StartValue, EndValue);
+    else
+      return CustomCurveObject.GetValue((float)CurrentFrame++, (float)TotalFrames, StartValue, EndValue);
   }
 
   //************************************************************************************************
   float InterpolatingObject::ValueAtIndex(const unsigned index)
   {
-    if (TotalFrames == 0)
+    if (TotalFrames == 0 || index >= TotalFrames || EndValue == StartValue)
       return EndValue;
 
-    if (index >= TotalFrames)
-      return EndValue;
+    if (index == 0)
+      return StartValue;
 
-    if (EndValue == StartValue)
-      return EndValue;
-
-    CurrentFrame = index;
-
-    return GetValue((float)index, (float)TotalFrames, StartValue, EndValue);
+    if (CurrentCurveType != CurveTypes::Custom)
+      return GetValue((float)index, (float)TotalFrames, StartValue, EndValue);
+    else
+      return CustomCurveObject.GetValue((float)index, (float)TotalFrames, StartValue, EndValue);
   }
 
   //************************************************************************************************
@@ -198,13 +100,13 @@ namespace Audio
     if (currentDistance == 0.0f)
       return StartValue;
 
-    if (currentDistance >= TotalDistance)
+    if (currentDistance >= TotalDistance || EndValue == StartValue)
       return EndValue;
 
-    if (EndValue == StartValue)
-      return EndValue;
-
-    return GetValue(currentDistance, TotalDistance, StartValue, EndValue);
+    if (CurrentCurveType != CurveTypes::Custom)
+      return GetValue(currentDistance, TotalDistance, StartValue, EndValue);
+    else
+      return CustomCurveObject.GetValue(currentDistance, TotalDistance, StartValue, EndValue);
   }
 
   //************************************************************************************************
@@ -237,6 +139,15 @@ namespace Audio
   }
 
   //************************************************************************************************
+  void InterpolatingObject::JumpBackward(const unsigned howManyFrames)
+  {
+    if (CurrentFrame > howManyFrames)
+      CurrentFrame -= howManyFrames;
+    else
+      CurrentFrame = 0;
+  }
+
+  //************************************************************************************************
   bool InterpolatingObject::Finished()
   {
     return CurrentFrame >= TotalFrames;
@@ -252,7 +163,7 @@ namespace Audio
       if (nodeForEvent)
         // Notify the external object that the interpolation is done
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          nodeForEvent, Notify_InterpolationDone, (void*)nullptr));
+          nodeForEvent, AudioEventTypes::InterpolationDone, (void*)nullptr));
 
       return true;
     }
@@ -261,30 +172,30 @@ namespace Audio
   //************************************************************************************************
   void InterpolatingObject::SetCustomCurve(Zero::Array<Math::Vec3>* curveData)
   {
-    CurrentCurveType = CustomCurveType;
+    CurrentCurveType = CurveTypes::Custom;
     CustomCurveObject.SetCurveData(curveData);
   }
 
   //************************************************************************************************
-  void InterpolatingObject::SetCurve(const CurveTypes curveType)
+  void InterpolatingObject::SetCurve(const CurveTypes::Enum curveType)
   {
     CurrentCurveType = curveType;
 
     switch (curveType)
     {
-    case LinearCurveType:
+    case CurveTypes::Linear:
       GetValue = GetValueLinearCurve;
       break;
-    case SquaredCurveType:
+    case CurveTypes::Squared:
       GetValue = GetValueSquaredCurve;
       break;
-    case SineCurveType:
+    case CurveTypes::Sine:
       GetValue = GetValueSineCurve;
       break;
-    case SquareRootCurveType:
+    case CurveTypes::SquareRoot:
       GetValue = GetValueSquareRootCurve;
       break;
-    case LogCurveType:
+    case CurveTypes::Log:
       GetValue = GetValueExponentialCurve;
       break;
     default:
@@ -306,14 +217,18 @@ namespace Audio
   }
 
   //************************************************************************************************
-  const float InterpolatingObject::GetCurrentValue() const 
+  const float InterpolatingObject::GetCurrentValue()  
   {
     if (TotalFrames == 0 || CurrentFrame >= TotalFrames)
       return EndValue;
-    else if (CurrentFrame == 0)
+    
+    if (CurrentFrame == 0)
       return StartValue;
-    else
+
+    if (CurrentCurveType != CurveTypes::Custom)
       return GetValue((float)CurrentFrame, (float)TotalFrames, StartValue, EndValue);
+    else
+      return CustomCurveObject.GetValue((float)CurrentFrame, (float)TotalFrames, StartValue, EndValue);
   }
 
   //************************************************************************************************
@@ -335,7 +250,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  const CurveTypes InterpolatingObject::GetCurveType() const
+  const CurveTypes::Enum InterpolatingObject::GetCurveType() const
   {
     return CurrentCurveType;
   }

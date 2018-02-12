@@ -30,6 +30,8 @@ ZilchDefineType(Reactive, builder, type)
 
   ZilchBindFieldProperty(mActive);
 
+  ZeroBindEvent(Events::MouseFileDrop, MouseFileDropEvent);
+
   ZeroBindEvent(Events::MouseEnter, MouseEvent);
   ZeroBindEvent(Events::MouseEnterPreview, MouseEvent);
   ZeroBindEvent(Events::MouseExit, MouseEvent);
@@ -87,29 +89,23 @@ ZilchDefineType(ReactiveSpace, builder, type)
 
   ZeroBindDependency(Space);
 
-  ZilchBindGetterProperty(Over);
-
-  // Set meta composition
-  type->Add(new RaycasterMetaComposition(offsetof(ReactiveSpace, mRaycaster)));
-}
-
-ReactiveSpace::ReactiveSpace()
-{
-  mRaycaster.AddProvider(new PhysicsRaycastProvider());
-
-  GraphicsRaycastProvider* graphicsRaycaster = new GraphicsRaycastProvider();
-  mRaycaster.AddProvider(graphicsRaycaster);
-
-  graphicsRaycaster->mVisibleOnly = true;
-}
-
-void ReactiveSpace::Initialize(CogInitializer& initializer)
-{
+  ZilchBindGetter(Over);
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 void ReactiveSpace::Serialize(Serializer& stream)
 {
+  bool success = Serialization::Policy<Raycaster>::Serialize(stream, "Raycaster", mRaycaster);
+  if(success == false)
+  {
+    mRaycaster.AddProvider(new PhysicsRaycastProvider());
+
+    GraphicsRaycastProvider* graphicsRaycaster = new GraphicsRaycastProvider();
+    graphicsRaycaster->mVisibleOnly = true;
+    mRaycaster.AddProvider(graphicsRaycaster);
+  }
 }
+
 Cog* ReactiveSpace::GetOver()
 {
   return mOver;

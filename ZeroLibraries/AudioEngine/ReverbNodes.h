@@ -27,12 +27,12 @@ namespace Audio
     float GetTime();
     // Sets the length of the reverb tail in milliseconds
     void SetTime(const float timeInMSec);
-    // Returns the current wet percentage
-    float GetWetPercent();
-    // Sets the percentage of output that is filtered
-    void SetWetPercent(const float wetPercent);
-    // Sets the percentage of filtered output over the specified number of seconds
-    void InterpolateWetPercent(const float wetPercent, const float time);
+    // Returns the current wet level (0 - 1.0f)
+    float GetWetLevel();
+    // Sets the fraction of output that has the reverb filter applied to it (0 - 1.0f)
+    void SetWetLevel(const float wetLevel);
+    // Sets the wet level value over the specified number of seconds
+    void InterpolateWetLevel(const float newWetLevel, const float time);
 
   private:
     ~ReverbNode();
@@ -42,8 +42,8 @@ namespace Audio
 
     // The current length of reverb in milliseconds
     float TimeMSec;
-    // The current wet percentage
-    float WetPercent;
+    // The current wet level (0 - 1.0f)
+    float WetLevelValue;
     // Whether the reverb tail has finished
     bool OutputFinished;
     // The filter used for calculations

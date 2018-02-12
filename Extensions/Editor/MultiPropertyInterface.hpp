@@ -21,7 +21,7 @@ class MetaSelection;
 /// at once, as well as queuing operations for each object modification.
 /// The object given to the property view with this interface should 
 /// be a Selection object.
-class MultiPropertyInterface : public PropertyInterface
+class MultiPropertyInterface : public PropertyToUndo
 {
 public:
   MultiPropertyInterface(OperationQueue* queue, MetaSelection* selection);
@@ -29,6 +29,8 @@ public:
   /// PropertyInterface Interface.
   void ChangeProperty(HandleParam object, PropertyPathParam property, 
                       PropertyState& state, PropertyAction::Enum action) override;
+  void MarkPropertyModified(HandleParam object, PropertyPathParam property) override;
+  void RevertProperty(HandleParam object, PropertyPathParam property) override;
   PropertyState GetValue(HandleParam object, PropertyPathParam property) override;
   void InvokeFunction(HandleParam object, Function* method) override;
   HandleOf<MetaComposition> GetMetaComposition(BoundType* objectType) override;
@@ -47,8 +49,6 @@ private:
   void Undo() override;
   void Redo() override;
   void CaptureState(PropertyStateCapture& capture, HandleParam object, Property* property) override;
-
-  OperationQueue* mOperationQueue;
 };
 
 //--------------------------------------------------------------------------- Multi Meta Composition

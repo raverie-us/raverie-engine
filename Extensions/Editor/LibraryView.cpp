@@ -221,7 +221,7 @@ public:
     float tagWidth = mTagIcon->mSize.x;
 
     // Place the tag to the left of the text
-    Vec3 tagTranslation(mText->mTranslation.x - tagWidth - Pixels(2), Pixels(2), 0);
+    Vec3 tagTranslation(mEditableText->mTranslation.x - tagWidth - Pixels(2), Pixels(2), 0);
 
     // The amount the tag would be negative on the left
     float overflow = tagTranslation.x - Pixels(2);
@@ -231,10 +231,10 @@ public:
     mTagIcon->SetTranslation(tagTranslation);
 
     // Push the text to the right to account for the tag being stuck too far on the left
-    mText->mTranslation.x += overflow;
+    mEditableText->mTranslation.x += overflow;
 
     // Make sure the size isn't too large
-    mText->mSize.x = Math::Min(mText->mSize.x, mSize.x - tagWidth - Pixels(2));
+    mEditableText->mSize.x = Math::Min(mEditableText->mSize.x, mSize.x - tagWidth - Pixels(2));
 
     // We need to update our children again to let the ellipses (...) on mText process
     Composite::UpdateTransform();
@@ -351,6 +351,7 @@ LibraryView::LibraryView(Composite* parent)
   mTileView->SetActive(false);
   mTileView->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
   ConnectThisTo(mTileView, Events::TileViewRightClick, OnTileViewRightClick);
+  ConnectThisTo(mTileView, Events::KeyDown, OnKeyDown);
   ConnectThisTo(mTileView, Events::ScrolledAllTheWayOut, OnTilesScrolledAllTheWayOut);
 
   mTagEditor = new ResourceTagEditor(this);
@@ -364,11 +365,9 @@ LibraryView::LibraryView(Composite* parent)
 
   SetTagEditorHeight(0);
 
-  ConnectThisTo(Z::gResources, Events::ResourceAdded, OnResourcesModified);
-  ConnectThisTo(Z::gResources, Events::ResourceRemoved, OnResourcesModified);
-  ConnectThisTo(Z::gResources, Events::ResourceModified, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesLoaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesModified);
+  ConnectThisTo(Z::gResources, Events::ResourceTagsModified, OnResourcesModified);
 
   ConnectThisTo(mTreeView, Events::MouseScroll, OnMouseScroll);
 
@@ -376,6 +375,8 @@ LibraryView::LibraryView(Composite* parent)
 
   MetaSelection* selection = Z::gEditor->GetSelection();
   ConnectThisTo(selection, Events::SelectionFinal, OnEditorSelectionChanged);
+
+  ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
 }
 
 LibraryView::~LibraryView()
@@ -474,7 +475,7 @@ void LibraryView::SwitchToTileView()
 }
 
 //******************************************************************************
-void LibraryView::SetSearchTags(HashSet<String>& tags)
+void LibraryView::SetSearchTags(TagList& tags)
 {
   mSearchBox->ClearTags();
   forRange(String tag, tags.All())
@@ -675,8 +676,14 @@ void LibraryView::OnResourcesModified(ResourceEvent* event)
 {
   // If an archetype has a RunInEditor script that creates a runtime resource
   // we don't want the preview to cause itself to be recreated
-  if (event->EventResource != nullptr && event->EventResource->IsRuntime())
+  if(event->EventResource != nullptr && event->EventResource->IsRuntime())
     return;
+
+  // Whenever a resource is modified, added/removed, etc close the tag editor to
+  // clean up all handles to now potentially invalid data that results in an odd
+  // crash that hasn't been able to be reproduced. T941.
+  if(event->EventId != Events::ResourceTagsModified)
+    CloseTagEditor();
 
   mSearchBox->Refresh();
 
@@ -711,7 +718,6 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
   mCommandIndices.Clear();
   ContextMenu* menu = new ContextMenu(objectToAttachTo);
   Mouse* mouse = Z::gMouse;
-  menu->SetBelowMouse(mouse, Pixels(0,0));
 
   mDataSelection->GetSelected(mCommandIndices);
   mPrimaryCommandIndex = index;
@@ -746,14 +752,40 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
     {
       ConnectMenu(menu, "TranslateFragment", OnTranslateFragment);
     }
+
+    AddResourceOptionsToMenu(menu, resourceType->Name, true);
   }
   else
   {
+    // When right clicking on a resource tag show an "Add 'resourceType'" option if the user can add this type of resource
+    if(AddResourceOptionsToMenu(menu, entry->mTag))
+      menu->AddDivider();
     ConnectMenu(menu, "Add Tag To Search", OnAddTagToSearch);
-    //ConnectMenu(menu, "Just This Tag", OnRename);
   }
 
   menu->SizeToContents();
+  menu->ShiftOntoScreen(ToVector3(mouse->GetClientPosition()));
+}
+
+void LibraryView::OnRightMouseUp(MouseEvent* event)
+{
+  if (event->Handled)
+    return;
+
+  ContextMenu* menu = new ContextMenu(this);
+  // When in the context of a specific resource search show an "Add 'resourceType'" option
+  forRange(String& tag, mSearchBox->mSearch.ActiveTags.All())
+  {
+    if(AddResourceOptionsToMenu(menu, tag))
+    {
+      menu->ShiftOntoScreen(ToVector3(event->Position));
+      return;
+    }
+  }
+
+  // If a specific resource is not found pop up the generic add resources menu
+  menu->LoadMenu("Resources");
+  menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 
 //******************************************************************************
@@ -803,9 +835,8 @@ void LibraryView::OnKeyDown(KeyboardEvent* event)
       // make sure we have anything actively selected
       if(selectedIndices.Size())
       {
-        // get the row of the selected item and edit its name
-        TreeRow* row = mTreeView->FindRowByIndex(selectedIndices.Front());
-        row->Edit(CommonColumns::Name);
+        // get the data index of the selected item and edit its name
+        RenameAtIndex(selectedIndices.Front());
       }
     }
   }
@@ -838,7 +869,7 @@ void LibraryView::CreateResourceToolTip(Resource* resource, TreeRow* row)
   // Create the tooltip
   ToolTip* toolTip = new ToolTip(row);
   toolTip->mContentPadding = Thickness(2,2,2,2);
-  toolTip->SetColor(ToolTipColor::Gray);
+  toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
   // Create the resource widget and attach it to the tooltip
   String name = resource->Name;
@@ -869,7 +900,7 @@ void LibraryView::CreateTagToolTip(StringParam tagName, TreeRow* row)
   // Create the tooltip
   ToolTip* toolTip = new ToolTip(row);
   toolTip->mContentPadding = Thickness(2,2,2,2);
-  toolTip->SetColor(ToolTipColor::Gray);
+  toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
   PreviewWidgetGroup* group = CreatePreviewGroup(toolTip, tagName, 9);
   if(group == nullptr)
@@ -1045,8 +1076,7 @@ void LibraryView::OnRemove(ObjectEvent* event)
 //******************************************************************************
 void LibraryView::OnRename(ObjectEvent* event)
 {
-  TreeRow* row = mTreeView->FindRowByIndex(mPrimaryCommandIndex);
-  row->Edit(CommonColumns::Name);
+  RenameAtIndex(mPrimaryCommandIndex);
 }
 
 //******************************************************************************
@@ -1108,10 +1138,12 @@ void LibraryView::OnMessageBox(MessageBoxEvent* event)
       RemoveResource(resource);
     }
 
+    ResourceEvent eventToSend;
+    eventToSend.RemoveMode = RemoveMode::Unloading;
+    Z::gResources->DispatchEvent(Events::ResourcesUnloaded, &eventToSend);
+
     mPrimaryCommandIndex = 0;
     mCommandIndices.Clear();
-
-    Z::gEditor->GetSelection()->FinalSelectionChanged();
   }
 }
 
@@ -1200,6 +1232,54 @@ void LibraryView::OnAddTagToSearch(ObjectEvent* event)
 }
 
 //******************************************************************************
+bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName, bool addDivider)
+{
+  BoundType* boundType = MetaDatabase::GetInstance()->FindType(resouceName);
+
+  // Attempt to get bound type for the tag and if we have a type is it a resource
+  if (boundType && boundType->IsA(ZilchTypeId(Resource)))
+  {
+    ResourceManager* manager = Z::gResources->GetResourceManager(boundType);
+    if (manager->mCanAddFile || manager->mCanCreateNew)
+    {
+      if (addDivider)
+        menu->AddDivider();
+
+      // We have a resource so add the option to create a new resource of the viewed type
+      StringBuilder buttonTitle;
+      buttonTitle.Append("Add ");
+      buttonTitle.Append(boundType->Name);
+
+      ContextMenuItem* item = new ContextMenuItem(menu, buttonTitle.ToString());
+      ConnectThisTo(item, Zero::Events::MenuItemSelected, OnAddResource);
+      item->mContextData = Any(static_cast<ReflectionObject*>(boundType));
+      return true;
+     }
+   }
+
+   return false;
+}
+
+//******************************************************************************
+void LibraryView::OnAddResource(ObjectEvent* event)
+{
+  ContextMenuItem* item = (ContextMenuItem*)event->Source;
+  AddResourceWindow* resourceWindow = OpenAddWindow(nullptr);
+  if (item->mContextData.IsNotNull())
+  {
+    BoundType* resource = item->mContextData.Get<BoundType*>();
+    resourceWindow->SelectResourceType(resource);
+
+    TagList tags = mSearch->ActiveTags;
+    // The library view has an implicit "Resources" tag and we don't want to add this to
+    // all the newly created resources as a custom tag
+    tags.Erase("Resources");
+    resourceWindow->AddTags(tags);
+  }
+  resourceWindow->TemplateSearchTakeFocus();
+}
+
+//******************************************************************************
 void LibraryView::OnToggleViewButtonPressed(Event* e)
 {
   if (mToggleViewButton->GetEnabled())
@@ -1214,9 +1294,14 @@ void LibraryView::OnSearchDataModified(Event* e)
   if(mSearchBox->mSearchBar->HasFocus())
   {
     if(mTreeView->GetActive())
+    {
       mTreeView->SelectFirstRow();
+      mTreeView->ShowRow(mPrimaryCommandIndex);
+    }
     else if(mTileView->GetActive())
+    {
       mTileView->SelectFirstTile();
+    }
   }
   else if(mDataSelection)
   {
@@ -1345,6 +1430,21 @@ void LibraryView::SetTagEditorHeight(float height)
 }
 
 //******************************************************************************
+void LibraryView::RenameAtIndex(DataIndex& dataIndex)
+{
+  if (mTreeView->GetActive())
+  {
+    TreeRow* row = mTreeView->FindRowByIndex(dataIndex);
+    row->Edit(CommonColumns::Name);
+  }
+  else if (mTileView->GetActive())
+  {
+    TileViewWidget* tile = mTileView->FindTileByIndex(dataIndex);
+    tile->Edit();
+  }
+}
+
+//******************************************************************************
 bool LibraryView::TagEditorIsOpen()
 {
   // When it's closed the height should be 0
@@ -1383,6 +1483,9 @@ void LibraryView::OpenTagEditor()
 //******************************************************************************
 void LibraryView::CloseTagEditor()
 {
+  // Clean up all references to resource that the tag editor is holding onto
+  mTagEditor->CleanTagEditor();
+  
   float height = 0;
 
   ActionSequence* seq = new ActionSequence(this);

@@ -117,7 +117,7 @@ void GraphView::OnMouseScroll(MouseEvent* event)
   
 }
 
-void GraphView::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void GraphView::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -141,7 +141,7 @@ Vec3 GraphView::GetLabelPosition(uint labelNumber)
   return Vec3(25, float(labelNumber) * mFont->mFontHeight, 0.0f);
 }
 
-void GraphView::DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void GraphView::DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
   
@@ -160,7 +160,7 @@ void GraphView::DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& f
   }
 }
 
-void GraphView::DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void GraphView::DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   // For each entry, draw it's graph on the grid
   const float sampleSpacing = size.x / maxSamples;
@@ -221,7 +221,7 @@ void GraphView::DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& 
   }
 }
 
-void GraphView::DrawGrid(Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void GraphView::DrawGrid(Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
   FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(Color::Black));

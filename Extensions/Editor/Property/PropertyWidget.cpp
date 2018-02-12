@@ -89,13 +89,13 @@ PropertyWidget::~PropertyWidget()
 //******************************************************************************
 void PropertyWidget::OnMouseHover(MouseEvent* event)
 {
-  ToolTipColor::Enum color = ToolTipColor::Default;
+  ToolTipColorScheme::Enum color = ToolTipColorScheme::Default;
   String toolTipText = GetToolTip(&color);
   if(!toolTipText.Empty())
   {
     ToolTip* toolTip = new ToolTip(mLabel);
     toolTip->SetText(toolTipText);
-    toolTip->SetColor(color);
+    toolTip->SetColorScheme(color);
 
     ToolTipPlacement placement;
     placement.SetScreenRect(GetScreenRect());

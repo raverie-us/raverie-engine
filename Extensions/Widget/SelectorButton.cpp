@@ -32,7 +32,7 @@ ZilchDefineType(SelectorButton, builder, type)
 
 //******************************************************************************
 SelectorButton::SelectorButton(Composite* parent)
-  : Composite(parent)
+  : Composite(parent), mAllowSelect(true)
 {
   SetLayout(CreateStackLayout(LayoutDirection::LeftToRight ,Pixels(2,2),
                               Thickness::cZero));
@@ -62,6 +62,14 @@ Vec2 SelectorButton::GetMinSize()
 //******************************************************************************
 void SelectorButton::UpdateTransform()
 {
+  // The value is read only, grey out the displayed buttons
+  if (mAllowSelect == false)
+  {
+    for (size_t i = 0; i < mButtons.Size(); ++i)
+    {
+      mButtons[i]->SetInteractive(false);
+    }
+  }
   Composite::UpdateTransform();
 }
 
@@ -98,6 +106,9 @@ void SelectorButton::Clear()
 //******************************************************************************
 void SelectorButton::SetSelectedItem(int index, bool sendEvent)
 {
+  if (mButtons.Size() == 0)
+    return;
+
   SelectButton(mButtons[index]);
 }
 
@@ -105,6 +116,12 @@ void SelectorButton::SetSelectedItem(int index, bool sendEvent)
 int SelectorButton::GetSelectedItem()
 {
   return mSelectedItem;
+}
+
+//******************************************************************************
+void SelectorButton::SetSelectable(bool selectable)
+{
+  mAllowSelect = selectable;
 }
 
 //******************************************************************************
@@ -127,6 +144,9 @@ void SelectorButton::CreateButton(StringParam name)
 //******************************************************************************
 void SelectorButton::OnButtonPressed(ObjectEvent* e)
 {
+  if (mAllowSelect == false)
+    return;
+
   SelectButton((TextButton*)e->Source);
 
   ObjectEvent eventToSend(this);

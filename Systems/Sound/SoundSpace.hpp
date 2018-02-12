@@ -68,8 +68,12 @@ public:
   /// Plays the passed-in SoundCue non-positionally and returns the resulting SoundInstance, which starts off paused.
   HandleOf<SoundInstance> PlayCuePaused(SoundCue* cue);
   /// The SoundNode which is the ultimate output of all sounds in this space.
+  HandleOf<SoundNode> GetSoundNodeInput();
+  /// DEPRECATED The SoundNodeInput property should be used instead.
   HandleOf<SoundNode> GetInputNode();
   /// The SoundNode which can be used to attach other nodes which should process all audio in the SoundSpace.
+  HandleOf<SoundNode> GetSoundNodeOutput();
+  /// DEPRECATED The SoundNodeOutput property should be used instead.
   HandleOf<SoundNode> GetOutputNode();
 
 //Internals
@@ -88,13 +92,13 @@ private:
   bool mPause;
   bool mLevelPaused;
   bool mEditorMode;
-  HandleOf<SoundNode> mInputNode;
-  HandleOf<SoundNode> mOutputNode;
+  HandleOf<SoundNode> mSoundNodeInput;
+  HandleOf<SoundNode> mSoundNodeOutput;
   unsigned mSpaceNodeID;
 
   class NodeInterface : public Audio::ExternalNodeInterface
   {
-    void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override {}
+    void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override {}
   };
 
   NodeInterface mNodeInterface;

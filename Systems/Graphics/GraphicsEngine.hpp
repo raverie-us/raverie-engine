@@ -71,6 +71,9 @@ public:
   void SetSplashscreenLoading();
   void EndProgressDelayTerminate();
 
+  void OnOsWindowMinimized(Event* event);
+  void OnOsWindowRestored(Event* event);
+
   void OnProjectCogModified(Event* event);
   void SetVerticalSync(bool verticalSync);
 
@@ -81,7 +84,7 @@ public:
 
   // Methods for making RendererJobs
   void AddRendererJob(RendererJob* rendererJob);
-  void CreateRenderer(OsHandle mainWindowHandle);
+  void CreateRenderer(OsWindow* mainWindow);
   void DestroyRenderer();
   void AddMaterial(Material* material);
   void AddMesh(Mesh* mesh);
@@ -89,6 +92,7 @@ public:
   void RemoveMaterial(Material* material);
   void RemoveMesh(Mesh* mesh);
   void RemoveTexture(Texture* texture);
+  void SetLazyShaderCompilation(bool lazyShaderCompilation);
 
   void OnRenderGroupAdded(ResourceEvent* event);
   void OnRenderGroupRemoved(ResourceEvent* event);

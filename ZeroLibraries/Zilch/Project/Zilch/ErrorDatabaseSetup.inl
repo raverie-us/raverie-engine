@@ -841,7 +841,7 @@
 // MemberVariableTypesCannotBeInferred
 {
   ErrorInfo& error = this->Errors.PushBack();
-  error.Error = "The member variable '%s' can only be inferred in limited scenarios when being initialized from constructor calls, literals, type-casts, etc.";
+  error.Error = "The type of the member variable '%s' can only be inferred when being initialized from constructor calls, literals, or type-casts.";
   error.Name = "MemberVariableTypesCannotBeInferred";
   error.Reason = "";
 

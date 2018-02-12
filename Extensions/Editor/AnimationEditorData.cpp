@@ -151,8 +151,11 @@ void AnimationEditorData::SaveRichAnimation()
   // Save the rich animation
   if(Animation* animation = mAnimation)
   {
-    String file = animation->mContentItem->GetFullPath();
-    SaveToDataFile(*mRichAnimation, file);
+    if(animation != AnimationManager::GetDefault())
+    {
+      String file = animation->mContentItem->GetFullPath();
+      SaveToDataFile(*mRichAnimation, file);
+    }
   }
 }
 
@@ -235,8 +238,8 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
   forRange(ObjectTrack& objectTrack, animation->ObjectTracks.All())
   {
     // Create the object node
-    String objectName = GetObjectNameFromPath(objectTrack.FullPath);
-    TrackNode* objectNode = new TrackNode(objectName, objectTrack.FullPath,
+    String objectName = GetObjectNameFromPath(objectTrack.GetFullPath());
+    TrackNode* objectNode = new TrackNode(objectName, objectTrack.GetFullPath(),
                                        TrackType::Object, nullptr, nullptr, richAnim);
     objectTracks.Insert(objectNode->Path, objectNode);
 

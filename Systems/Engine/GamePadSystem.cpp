@@ -500,11 +500,24 @@ void Gamepads::ResumeVibration()
   }
 }
 
-void Gamepads::CheckGamepads()
+void Gamepads::UpdateGamepadsActiveState()
 {
   //Set mIsActive next update will test and reset value
-  for(uint i=0;i<cMaxUsers;++i)
-    mGamePads[i]->mIsActive = true;
+  for (uint i = 0; i < cMaxUsers; ++i)
+  {
+    XINPUT_STATE mInputState;
+    HRESULT result = GetGamepadState(i, &mInputState);
+    
+    if (result != ERROR_SUCCESS)
+    {
+      mGamePads[i]->Clear();
+      mGamePads[i]->mIsActive = false;
+    }
+    else
+    {
+      mGamePads[i]->mIsActive = true;
+    }
+  }
 }
 
 Gamepad* Gamepads::GetGamePad(uint i)
@@ -560,7 +573,7 @@ void Gamepads::OnUpdate(UpdateEvent* event)
 
 void Gamepads::OnDeviceChanged(Event* event)
 {
-  CheckGamepads();
+	UpdateGamepadsActiveState();
 }
 
 void Gamepads::Update()

@@ -131,6 +131,7 @@ namespace Zilch
     this->IntegerValue = 0;
     this->RealValue = 0.0;
     this->BooleanValue = false;
+    this->TypeValue = nullptr;
   }
   
   //***************************************************************************
@@ -161,6 +162,55 @@ namespace Zilch
   }
 
   //***************************************************************************
+  AttributeParameter::AttributeParameter(StringParam name, StringParam value) :
+    Constant(value),
+    Name(name)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(StringParam name, Integer value) :
+    Constant(value),
+    Name(name)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(StringParam name, DoubleInteger value) :
+    Constant(value),
+    Name(name)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(StringParam name, Real value) :
+    Constant(value),
+    Name(name)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(StringParam name, DoubleReal value) :
+    Constant(value),
+    Name(name)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(StringParam name, Boolean value) :
+    Constant(value),
+    Name(name)
+  {
+  }
+
+  //***************************************************************************
+  AttributeParameter::AttributeParameter(StringParam name, Zilch::Type* value) :
+    Constant(value),
+    Name(name)
+  {
+  }
+
+  //***************************************************************************
   Attribute::Attribute() :
     Owner(nullptr)
   {
@@ -182,6 +232,89 @@ namespace Zilch
     return nullptr;
   }
 
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(Integer value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(DoubleInteger value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(Real value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(DoubleReal value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(Boolean value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(Type* value)
+  {
+    Parameters.PushBack(AttributeParameter(value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, StringParam value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, Integer value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, DoubleInteger value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, Real value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, DoubleReal value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, Boolean value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
+
+  //***************************************************************************
+  void Attribute::AddParameter(StringParam name, Type* value)
+  {
+    Parameters.PushBack(AttributeParameter(name, value));
+  }
   //***************************************************************************
   Attribute* Attribute::AddAttribute(StringParam name)
   {
@@ -216,6 +349,7 @@ namespace Zilch
   {
     Attribute& attribute = this->Attributes.PushBack();
     attribute.Name = name;
+    attribute.Owner = this;
     return &attribute;
   }
 
@@ -354,6 +488,7 @@ namespace Zilch
     // Validate that the argument is of the same type (or raw convertable)
     Type* expectedType = this->PropertyType;
     Type* argumentType = value.StoredType;
+    ReturnIf(expectedType == nullptr, , "The PropertyType was null");
 
     // Look up a cast operator between the two types
     // Note that if the types are the same, a cast always technically exists of 'Raw' type
@@ -361,11 +496,19 @@ namespace Zilch
     CastOperator cast = Shared::GetInstance().GetCastOperator(argumentType, expectedType);
     if (cast.IsValid == false || cast.Operation != CastOperation::Raw)
     {
+      static String NullString("null");
+
+      String argumentTypeName;
+      if(argumentType != nullptr)
+        argumentTypeName = argumentType->ToString();
+      else
+        argumentTypeName = NullString;
+
       String message = String::Format
       (
         "The setter expected the type '%s' but was given '%s' (which could not be raw-converted)",
         expectedType->ToString().c_str(),
-        argumentType->ToString().c_str()
+        argumentTypeName.c_str()
       );
       return state->ThrowException(message);
     }

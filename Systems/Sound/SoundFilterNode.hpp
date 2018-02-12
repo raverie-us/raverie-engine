@@ -74,13 +74,16 @@ public:
   int GetInputCount();
   /// The number of output nodes that are currently attached to this node.
   int GetOutputCount();
-  /// The percentage of output (0 to 100) that should skip whatever processing the node does.
+  /// DEPRECATED The BypassValue property should be used instead.
   float GetBypassPercent();
   void SetBypassPercent(float percent);
+  /// The percentage of output (0 to 1.0) that should skip whatever processing the node does.
+  float GetBypassValue();
+  void SetBypassValue(float value);
 
 // Internals
   Audio::SoundNode* mNode;
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
   void SetNode(Audio::SoundNode* node, Status& status);
   void ReleaseNode();
   bool mCanInsertBefore;
@@ -145,7 +148,7 @@ public:
   void SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData);
 
 private:
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override;
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
   void SendToAudioEngine(float* samples, unsigned howManySamples);
 
   Audio::AudioStreamDecoder* AudioDecoder;
@@ -203,12 +206,17 @@ public:
   /// Interpolates the Decibels property from its current value to the value passed in 
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateDecibels(float decibels, float interpolationTime);
+  /// The percentage of the square wave (from 0 to 1.0) which should be up. This will have no effect
+  /// if a different wave type is chosen.
+  float GetSquareWavePulseValue();
+  void SetSquareWavePulseValue(float value);
 
 private:
-  Audio::SoundAssetNode *mAsset;
+  Audio::GeneratedWaveSoundAsset *mAsset;
   SynthWaveType::Enum mWaveType;
   float mWaveFrequency;
   float mVolume;
+  float mSquareWavePulseValue;
 
   void CreateAsset();
   void ReleaseAsset();
@@ -411,13 +419,18 @@ public:
   /// The length of the reverb tail, in seconds. The default value is 0.1.
   float GetLength();
   void SetLength(float time);
-  /// The percentage of the node's output which has the reverb filter applied to it. 
-  /// Setting this property to 0 will stop all reverb calculations. The default value is 50.0.
+  /// DEPRECATED The WetValue property should be used instead.
   float GetWetPercent();
   void SetWetPercent(float percent);
-  /// Interpolates the WetPercent property from its current value to the value passed in 
-  /// as the first parameter, over the number of seconds passed in as the second parameter.
+  /// The percentage of the node's output (0 - 1.0) which has the reverb filter applied to it. 
+  /// Setting this property to 0 will stop all reverb calculations. 
+  float GetWetValue();
+  void SetWetValue(float value);
+  /// DEPRECATED The InterpolateWetValue method should be used instead.
   void InterpolateWetPercent(float percent, float time);
+  /// Interpolates the WetValue property from its current value to the value passed in 
+  /// as the first parameter, over the number of seconds passed in as the second parameter.
+  void InterpolateWetValue(float value, float time);
 };
 
 //--------------------------------------------------------------------------------------- Delay Node
@@ -433,16 +446,24 @@ public:
   /// The length of the delay, in seconds. 
   float GetDelay();
   void SetDelay(float seconds);
-  /// The percentage of output which is fed back into the filter as input, 
-  /// creating an echo-like effect. 
+  /// DEPRECATED The FeedbackValue property should be used instead.
   float GetFeedbackPercent();
   void SetFeedbackPercent(float feedback);
-  /// The percentage of the node's output which has the delay filter applied to it. 
+  /// The percentage of output (from 0 to 1.0f) which is fed back into the filter as input, 
+  /// creating an echo-like effect. 
+  float GetFeedbackValue();
+  void SetFeedbackValue(float feedback);
+  /// DEPRECATED The WetValue property should be used instead.
   float GetWetPercent();
   void SetWetPercent(float wetLevel);
-  /// Interpolates the WetPercent property from its current value to the value passed in 
-  /// as the first parameter, over the number of seconds passed in as the second parameter.
+  /// The percentage of the node's output (0 - 1.0) which has the delay filter applied to it. 
+  float GetWetValue();
+  void SetWetValue(float wetLevel);
+  /// DEPRECATED The InterpolateWetValue method should be used instead.
   void InterpolateWetPercent(float wetPercent, float time);
+  /// Interpolates the WetValue property from its current value to the value passed in 
+  /// as the first parameter, over the number of seconds passed in as the second parameter.
+  void InterpolateWetValue(float wetPercent, float time);
 };
 
 //------------------------------------------------------------------------------------- Flanger Node
@@ -462,9 +483,12 @@ public:
   /// The frequency of the oscillator which varies the modulation. 
   float GetModulationFrequency();
   void SetModulationFrequency(float frequency);
-  /// The percentage of output which is fed back into the filter as input. 
+  /// DEPRECATED The FeedbackValue property should be used instead.
   float GetFeedbackPercent();
   void SetFeedbackPercent(float percent);
+  /// The percentage of output (0 - 1.0) which is fed back into the filter as input. 
+  float GetFeedbackValue();
+  void SetFeedbackValue(float value);
 };
 
 //-------------------------------------------------------------------------------------- Chorus Node
@@ -488,9 +512,12 @@ public:
   /// The frequency of the oscillator which varies the modulation. 
   float GetModulationFrequency();
   void SetModulationFrequency(float frequency);
-  /// The percentage of output which is fed back into the filter as input. 
+  /// DEPRECATED The FeedbackValue property should be used instead.
   float GetFeedbackPercent();
   void SetFeedbackPercent(float percent);
+  /// The percentage of output (0 - 1.0) which is fed back into the filter as input. 
+  float GetFeedbackValue();
+  void SetFeedbackValue(float value);
   /// The offset value of the chorus filter, in milliseconds. 
   float GetOffsetMillisec();
   void SetOffsetMillisec(float offset);
@@ -691,9 +718,12 @@ public:
   /// The frequency of the sine wave used for the modulation.
   float GetFrequency();
   void SetFrequency(float frequency);
-  /// The percentage of the input which should have the modulation applied to it.
+  /// DEPRECATED The WetValue property should be used instead.
   float GetWetPercent();
   void SetWetPercent(float percent);
+  /// The percentage of the input (0 - 1.0) which should have the modulation applied to it.
+  float GetWetValue();
+  void SetWetValue(float value);
 };
 
 //---------------------------------------------------------------------------- Microphone Input Node
@@ -705,6 +735,13 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   MicrophoneInputNode();
+
+  /// The volume modifier applied to all audio data received from the microphone.
+  float GetVolume();
+  void SetVolume(float volume);
+  /// Microphone input will only be played while the Active property is set to True.
+  bool GetActive();
+  void SetActive(bool active);
 };
 
 }

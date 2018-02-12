@@ -75,6 +75,10 @@ Space::~Space()
 {
   ErrorIf(!mCogList.Empty(), "Not all objects in space destroyed.");
   Z::gEngine->mSpaceList.Erase(this);
+
+  // Remove ourself from the game session list
+  if (GameSession* gameSession = GetGameSession())
+    gameSession->InternalRemove(this);
 }
 
 bool Space::IsEditorMode()
@@ -435,10 +439,6 @@ void Space::ForceDestroy()
     r.PopFront();
   }
   Cog::ForceDestroy();
-
-  // Remove ourself from the game session list
-  if(GameSession* gameSession = GetGameSession())
-    gameSession->InternalRemove(this);
 }
 
 void Space::SaveLevelFile(StringParam filename)
@@ -556,6 +556,7 @@ Cog* Space::FindLastRootObjectByName(StringParam name)
 
 void Space::LoadLevelAdditive(Level* level)
 {
+  // Set the level redundantly because AddObjectsFromLevel can send out an event.
   mLevelLoaded = level;
   mLevelLoaded = AddObjectsFromLevel(level);
 }
@@ -647,8 +648,12 @@ Level* Space::AddObjectsFromLevel(Level* level)
     {
       String message = String::Format("Failed to load level '%s' %s", level->Name.c_str(), status.Message.c_str());
       DoNotifyErrorWithContext(message);
+      mIsLoadingLevel = false;
+      return nullptr;
     }
 
+    // If we already cached the tree then take ownership
+    // back from the stream so it doesn't de-allocate it.
     level->mCacheTree = stream.TakeOwnershipOfFirstRoot();
   }
 

@@ -59,10 +59,19 @@ public:
 };
 
 //------------------------------------------------------- Object Transform Gizmo
-DeclareEnum2(GizmoBasis, Local, World);
+/// Set the pivot point when a gizmo affects translation during manipulation.
+/// <param name="Primary">
+///   Set the pivot point as the position of the primary object in the selection.
+/// </param>
+/// <param name="Center">
+///   Set the pivot point to be at the spacial center of the selection.
+/// </param>
+/// <param name="Average">
+///   Set the pivot point to be at the average position of all objects in the selection.
+/// </param>
 DeclareEnum3(GizmoPivot, Primary, Center, Average);
 
-/// 
+
 class ObjectTransformGizmo : public Component
 {
 public:
@@ -150,7 +159,7 @@ public:
   void OnMouseDragStart(ViewportMouseEvent* e) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(GizmoUpdateEvent* e);
+  void OnGizmoModified(TranslateGizmoUpdateEvent* e);
 
   /// Special command to place an object on the surface of another object.
   void SnapToSurface(GizmoUpdateEvent* e, Vec3* movementOut);
@@ -171,18 +180,18 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  bool GetSnapping( );
-  void SetSnapping(bool snapping);
-
   /// If they're holding down ctrl, we want to duplicate the objects.
   void OnMouseDragStart(ViewportMouseEvent* e) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(GizmoUpdateEvent* e);
+  void OnGizmoModified(ScaleGizmoUpdateEvent* e);
 
-  /// With multiple objects selected, the translation could be changed
-  /// when scaled.
+  /// With multiple objects selected, allow their spacial-offest to be affected
+  /// about the chosen pivot point, while being locally scaled with 'mAffectScale'.
   bool mAffectTranslation;
+  /// With multiple objects selected, allow their local scale to be affected
+  /// while being spacially-offset (with 'AffectTranslation') about the chosen pivot point.
+  bool mAffectScale;
 
   /// Used when dragging on the view axis to determine which direction 
   Vec3 mEyeDirection;
@@ -199,17 +208,17 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  bool GetSnapping( );
-  void SetSnapping(bool snapping);
-
   void OnMouseDragStart(ViewportMouseEvent* e) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(RingGizmoEvent* e);
+  void OnGizmoModified(RotateGizmoUpdateEvent* e);
 
-  /// With multiple objects selected, the translation could be changed
-  /// when rotated.
+  /// With multiple objects selected, allow their spacial-offest to be rotated
+  /// about the chosen pivot point, while being locally rotated with 'mAffectRotation'.
   bool mAffectTranslation;
+  /// With multiple objects selected, allow their local rotation to be affected
+  /// while being spacially-rotated (with 'AffectTranslation') about the chosen pivot point.
+  bool mAffectRotation;
 };
 
 

@@ -1,0 +1,49 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Controller for all functionlity related to a history entry row.
+////////////////////////////////////////////////////////////////////////////////
+class ZUiOperationHistoryToolTip
+{
+  [Static] var TypeColor : Real4 = Colors.PaleGoldenrod;
+  
+    // Color = Greyed-out
+  [Static] var OldValueColor : Real4 = Real4(1, 1, 1, 0.35);
+  [Static] var NewValueColor : Real4 = Colors.MediumSpringGreen;
+  
+  /******************************************************************************/
+  [Static]
+  function Fill(toolTip : UiLegacyToolTip, op : PropertyOperation) : Boolean
+  {
+    var before = "`op.ValueBefore`";
+    var after = "`op.ValueAfter`";
+    
+    if(before == "null" && after == "null")
+      return false;
+    
+    var typeString = typeid(op.ValueBefore).Name;
+    toolTip.AddText(typeString, ZUiOperationHistoryToolTip.TypeColor);
+    toolTip.AddText(String.Concatenate("  [Old] ", ZUiOperationHistoryToolTip.FormatType(typeString, before)), ZUiOperationHistoryToolTip.OldValueColor);
+    toolTip.AddText(String.Concatenate("  [New] ", ZUiOperationHistoryToolTip.FormatType(typeString, after)), ZUiOperationHistoryToolTip.NewValueColor);
+    
+    return true;
+  }
+  
+  /******************************************************************************/
+  [Static]
+  function FormatType(typeString : String, valueString : String) : String
+  {
+    if(typeString == "Quaternion")
+    {
+      var begin = valueString.FindFirstOf("Euler").Begin;
+      var result = valueString.SubString(begin, valueString.End);
+      
+      var end = result.FindFirstOf("), ").Begin;
+      end.MoveNext();
+      
+      result = result.SubString(result.Begin, end);
+      return result;
+    }
+    
+    return valueString;
+  }
+  
+}

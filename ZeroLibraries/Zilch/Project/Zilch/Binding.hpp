@@ -1061,12 +1061,12 @@ namespace Zilch
 
   // This function gets called when the static library we belong to is built
   template <typename InitializingType, typename StaticLibraryType, typename SetupFunction>
-  void InitializeType(const char* initializingTypeName, SetupFunction setupType = nullptr)
+  BoundType* InitializeType(const char* initializingTypeName, SetupFunction setupType = nullptr)
   {
     // Check if we've already been initialized
     BoundType* type = ZilchTypeId(InitializingType);
     if (type->IsInitialized())
-      return;
+      return type;
 
     // First initialize our base type...
     StaticLibraryType& library = StaticLibraryType::GetInstance();
@@ -1081,7 +1081,7 @@ namespace Zilch
         library.Name.c_str()
       );
       Error(message.c_str());
-      return;
+      return type;
     }
     String typeName = initializingTypeName;
     typeName = LibraryBuilder::FixIdentifier(typeName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
@@ -1091,6 +1091,7 @@ namespace Zilch
     type->RawNativeVirtualCount = TypeBinding::GetVirtualTableCount<InitializingType>();
     LibraryBuilder& builder = *library.GetBuilder();
     SetupType<InitializingType>(builder, type, setupType);
+    return type;
   }
 
   // This macro lets us pass in a dummy member function pointer (takes nothing and returns nothing)
@@ -1190,7 +1191,6 @@ namespace Zilch
   ZilchDefineExternalBaseType(enumType::Enum, TypeCopyMode::ValueType, builder, type)  \
   {                                                                                    \
     ZilchFullBindEnum(builder, type, SpecialType::Enumeration);                        \
-    type->AddAttribute(SerializationAttributes::cSerializationPrimitive);              \
                                                                                        \
     for(uint i = 0; i < enumType::Size; ++i)                                           \
     {                                                                                  \

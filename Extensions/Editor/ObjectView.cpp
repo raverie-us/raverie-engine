@@ -111,6 +111,9 @@ public:
   {
     mFilteredList.Clear();
 
+    if (!mSource)
+      return;
+
     if(filterString.Empty())
       return;
 
@@ -162,7 +165,11 @@ public:
 
   bool FilterComponentTypes(DataEntry* entry)
   {
-    Cog* cog = (Cog*)entry;
+    Object* object = (Object*)entry;
+    Cog* cog = Type::DynamicCast<Cog*>(object);
+
+    if (cog == nullptr)
+      return false;
 
     forRange(Component* component, cog->GetComponents())
     {
@@ -177,7 +184,11 @@ public:
 
   bool FilterResourceUsage(DataEntry* entry)
   {
-    Cog* cog = (Cog*)entry;
+    Object* object = (Object*)entry;
+    Cog* cog = Type::DynamicCast<Cog*>(object);
+
+    if (cog == nullptr)
+      return false;
 
     forRange(Component* component, cog->GetComponents())
     {
@@ -208,7 +219,12 @@ public:
 
   bool FilterNames(DataEntry* entry)
   {
-    Cog* cog = (Cog*)entry;
+    Object* object = (Object*)entry;
+    Cog* cog = Type::DynamicCast<Cog*>(object);
+
+    if (cog == nullptr)
+      return false;
+
     int priority = PartialMatch(SubFilterString, cog->GetName().All(), CaseInsensitiveCompare);
     return priority != cNoMatch;
   }
@@ -408,7 +424,7 @@ public:
     Object* object = (Object*)dataEntry;
     if(Cog* cog = Type::DynamicCast<Cog*>(object))
     {
-      CogId id = (Cog*)dataEntry;
+      CogId id = cog->GetId();
       return id.ToUint64();
     }
     else
@@ -528,6 +544,11 @@ public:
 
   DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
   {
+    Object* parentObject = (Object*)dataEntry;
+
+    // Removed entries will never have children, so this should only ever be called for Cogs.
+    ReturnIf(Type::DynamicCast<Cog*>(parentObject) == nullptr, nullptr, "This should always be a Cog");
+
     if(dataEntry == mSpace)
     {
       Cog* prevObject = (Cog*)prev;
@@ -541,7 +562,6 @@ public:
     }
     else
     {
-      Object* parentObject = (Object*)dataEntry;
       Cog* parentCog = (Cog*)parentObject;
 
       if(prev == nullptr)
@@ -747,19 +767,26 @@ public:
   void CanMove(Status& status, DataEntry* source, DataEntry* destination,
                InsertMode::Type insertMode)
   {
+    Object* sourceObject = (Object*)source;
+    Cog* sourceCog = Type::DynamicCast<Cog*>(sourceObject);
+
+    if (sourceCog == nullptr)
+    {
+      status.SetFailed("Cannot move removed children", InsertError::NotSupported);
+      return;
+    }
+
     if(destination == mSpace)
     {
       status.SetSucceeded("Unparent");
     }
     else
     {
-      Object* sourceObject = (Object*)source;
-      Cog* sourceCog = Type::DynamicCast<Cog*>(sourceObject);
       Cog* destinationObj = Type::DynamicCast<Cog*>((Object*)destination);
 
-      if(sourceCog == nullptr ||  destinationObj == nullptr)
+      if(destinationObj == nullptr)
       {
-        status.SetFailed("Cannot move removed children", InsertError::NotSupported);
+        status.SetFailed("Cannot move to removed children", InsertError::NotSupported);
         return;
       }
 
@@ -819,6 +846,9 @@ public:
 
   bool Move(DataEntry* destinationEntry, DataEntry* movingEntry, InsertMode::Type insertMode)
   {
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)movingEntry) == nullptr, nullptr, "This should always be a Cog");
+
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
     
     Cog* dest = (Cog*)destinationEntry;
@@ -853,6 +883,8 @@ public:
   bool Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMove,
             InsertMode::Type insertMode) override
   {
+    ReturnIf(indicesToMove.Empty(), false, "Nothing to move");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
     Cog* dest = (Cog*)destinationEntry;
 
@@ -919,15 +951,13 @@ public:
       }
       else if(mode == InsertMode::On)
       {
-        Cog* parent = (Cog*)mouseOver;
-        AttachObject(queue, newChild, parent, false);
+        AttachObject(queue, newChild, mouseOverCog, false);
       }
       else
       {
-        Cog* destination = (Cog*)mouseOver;
-        Cog* parent = destination->GetParent();
+        Cog* parent = mouseOverCog->GetParent();
 
-        uint destIndex = destination->GetHierarchyIndex();
+        uint destIndex = mouseOverCog->GetHierarchyIndex();
         if(mode == InsertMode::Before)
           MoveObject(queue, newChild, parent, destIndex, false);
         else
@@ -1084,6 +1114,8 @@ ObjectView::ObjectView(Composite* parent)
   ConnectThisTo(mTree, Events::KeyDown, OnKeyDown);
   ConnectThisTo(mTree, Events::MouseEnterRow, OnMouseEnterRow);
   ConnectThisTo(mTree, Events::MouseExitRow, OnMouseExitRow);
+
+  ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
 }
 
 ObjectView::~ObjectView()
@@ -1093,7 +1125,7 @@ ObjectView::~ObjectView()
 
 void ObjectView::UpdateTransform()
 {
-  Rect rect = mSearch->GetLocalRect();
+  WidgetRect rect = mSearch->GetLocalRect();
   PlaceWithRect(rect, mDimSearch);
 
   mNoSpaceText->SetColor(Vec4(1, 1, 1, 0.4f));
@@ -1168,9 +1200,31 @@ void ObjectView::OnKeyDown(KeyboardEvent* event)
   ExecuteShortCuts(mSpace, nullptr, event);
 }
 
+void ObjectView::OnMenuMouseEnter(MouseEvent* event)
+{
+  Object* object = (Object*)mSource->ToEntry(mCommandIndex);
+  if (Cog* cog = Type::DynamicCast<Cog*>(object))
+  {
+    // Set what cog is selected for the creation of new objects as children
+    // when using the right click create menu
+    CommandManager* commandManager = CommandManager::GetInstance();
+    commandManager->SetContext(cog, ZilchTypeId(Cog));
+  }
+}
+
+void ObjectView::OnMenuFocusLost(FocusEvent* event)
+{
+  // Clear the context so we don't accidentally create new objects
+  // as children of the last selected cog
+  CommandManager* commandManager = CommandManager::GetInstance();
+  commandManager->ClearContext(ZilchTypeId(Cog));
+}
 
 void ObjectView::ShowObject(Cog* cog)
 {
+  if (!mSource)
+    return;
+
   DataIndex index = mSource->ToIndex(cog);
   mTree->ShowRow(index);
 }
@@ -1283,20 +1337,23 @@ void ObjectView::OnSelectionChanged(Event* event)
 
 void ObjectView::OnMouseEnterRow(TreeEvent* e)
 {
+  if (!mSource)
+    return;
+
   mToolTip.SafeDestroy();
   Object* object = (Object*)mSource->ToEntry(e->Row->mIndex);
   if(object == nullptr)
     return;
   
   String toolTipMessage;
-  ToolTipColor::Enum toolTipColor;
+  ToolTipColorScheme::Enum toolTipColor;
 
   if(RemovedEntry* removed = Type::DynamicCast<RemovedEntry*>(object))
   {
     Cog* cog = removed->mParent->FindNearestArchetypeContext();
     toolTipMessage = "Object has been locally removed from the Archetype.\n\n"
                      "Right click to restore it.";
-    toolTipColor = ToolTipColor::Red;
+    toolTipColor = ToolTipColorScheme::Red;
   }
   else
   {
@@ -1306,7 +1363,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
       Cog* archetypeParent = cog->GetParent()->FindNearestArchetypeContext();
       String archetypeName = archetypeParent->GetArchetype()->Name;
       toolTipMessage = String::Format("Object is locally added to the '%s' Archetype.", archetypeName.c_str());
-      toolTipColor = ToolTipColor::Green;
+      toolTipColor = ToolTipColorScheme::Green;
     }
     else if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
     {
@@ -1314,7 +1371,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
                        "This objects children will ignore the order specified in the Archetype.\n\n"
                        "Right click to revert order.";
 
-      toolTipColor = ToolTipColor::Yellow;
+      toolTipColor = ToolTipColorScheme::Yellow;
     }
   }
 
@@ -1323,7 +1380,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
     ToolTip* toolTip = new ToolTip(this);
     toolTip->SetText(toolTipMessage);
 
-    Rect rect = e->Row->GetScreenRect();
+    WidgetRect rect = e->Row->GetScreenRect();
 
     ToolTipPlacement placement;
     placement.mScreenRect = rect;
@@ -1332,7 +1389,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
                           IndicatorSide::Bottom, IndicatorSide::Top);
 
     toolTip->SetArrowTipTranslation(placement);
-    toolTip->SetColor(toolTipColor);
+    toolTip->SetColorScheme(toolTipColor);
     mToolTip = toolTip;
   }
 }
@@ -1344,9 +1401,13 @@ void ObjectView::OnMouseExitRow(TreeEvent* e)
 
 void ObjectView::OnTreeRightClick(TreeEvent* event)
 {
+  if (!mSource)
+    return;
+
   ContextMenu* menu = new ContextMenu(event->Row);
+  menu->SetName("ObjectViewItemMenu");
+
   Mouse* mouse = Z::gMouse;
-  menu->SetBelowMouse(mouse, Pixels(0,0));
   mCommandIndex = event->Row->mIndex;
 
   Object* object = (Object*)mSource->ToEntry(mCommandIndex);
@@ -1356,21 +1417,54 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
     ConnectMenu(menu, "Delete", OnDelete);
     if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
       ConnectMenu(menu, "Restore Child Order", OnRestoreChildOrder);
+
+    menu->AddDivider();
+    // Set our icon to the arrow indicating a sub menu
+    ContextMenuItem* createSubMenu = menu->CreateContextItem("Create", "PropArrowRight");
+    createSubMenu->LoadMenu("Create");
+
+    MetaSelection* selection = Z::gEditor->GetSelection();
+    // Don't create objects as children if multiple objects are selected
+    if (selection->Count() == 1)
+    {
+      ConnectThisTo(createSubMenu, Events::MouseEnter, OnMenuMouseEnter);
+      ConnectThisTo(createSubMenu, Events::FocusLost, OnMenuFocusLost);
+    }
   }
   else
   {
     ConnectMenu(menu, "Restore", OnRestore);
   }
+
+  menu->ShiftOntoScreen(ToVector3(mouse->GetClientPosition()));
+}
+
+void ObjectView::OnRightMouseUp(MouseEvent* event)
+{
+  if (event->Handled)
+    return;
+
+  ContextMenu* menu = new ContextMenu(this);
+  menu->LoadMenu("Create");
+  menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 
 void ObjectView::OnRestore(ObjectEvent* event)
 {
-  RemovedEntry* removedEntry = (RemovedEntry*)mSource->ToEntry(mCommandIndex);
+  if (!mSource)
+    return;
+
+  Object* object = (Object*)mSource->ToEntry(mCommandIndex);
+  RemovedEntry* removedEntry = Type::DirectDynamicCast<RemovedEntry*>(object);
+  ReturnIf(removedEntry == nullptr, , "There should have been a RemovedEntry at the command index");
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   Cog* parent = removedEntry->mParent;
+  ReturnIf(parent == nullptr, , "The RemovedEntry should always have a parent");
   ObjectState::ChildId childId("Cog", removedEntry->mChildId);
-  RestoreLocallyRemovedChild(queue, parent->has(Hierarchy), childId);
+  Hierarchy* parentHierarchy = parent->has(Hierarchy);
+  ReturnIf(parentHierarchy == nullptr, , "The parent Cog should have had a Hierarchy");
+  RestoreLocallyRemovedChild(queue, parentHierarchy, childId);
 }
 
 void ObjectView::OnRestoreChildOrder(ObjectEvent* event)

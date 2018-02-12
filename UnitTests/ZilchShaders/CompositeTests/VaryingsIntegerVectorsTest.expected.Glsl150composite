@@ -1,0 +1,54 @@
+[Vertex]
+struct VaryingsIntegerVectorsTest_Vertex
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [SVOutput] var ApiPerspectivePosition : Real4;
+  [StageOutput] var Integer : Integer;
+  [StageOutput] var Integer2 : Integer2;
+  [StageOutput] var Integer3 : Integer3;
+  [StageOutput] var Integer4 : Integer4;
+  // Fragment Properties
+  [Uniform][Input] var InOutIntegerVectorsVertexFrag_Integer : Integer;
+  [Uniform][Input] var InOutIntegerVectorsVertexFrag_Integer2 : Integer2;
+  [Uniform][Input] var InOutIntegerVectorsVertexFrag_Integer3 : Integer3;
+  [Uniform][Input] var InOutIntegerVectorsVertexFrag_Integer4 : Integer4;
+
+  [Main]
+  function Main()
+  {
+    var inoutintegervectorsvertexfrag = InOutIntegerVectorsVertexFrag();
+    inoutintegervectorsvertexfrag.Integer = this.InOutIntegerVectorsVertexFrag_Integer;
+    inoutintegervectorsvertexfrag.Integer2 = this.InOutIntegerVectorsVertexFrag_Integer2;
+    inoutintegervectorsvertexfrag.Integer3 = this.InOutIntegerVectorsVertexFrag_Integer3;
+    inoutintegervectorsvertexfrag.Integer4 = this.InOutIntegerVectorsVertexFrag_Integer4;
+    inoutintegervectorsvertexfrag.Main();
+    this.Integer = inoutintegervectorsvertexfrag.Integer;
+    this.Integer2 = inoutintegervectorsvertexfrag.Integer2;
+    this.Integer3 = inoutintegervectorsvertexfrag.Integer3;
+    this.Integer4 = inoutintegervectorsvertexfrag.Integer4;
+  }
+}
+[Pixel]
+struct VaryingsIntegerVectorsTest_Pixel
+{
+  // Built-in Uniforms
+  [Uniform] var Time : Real;
+  // Stage Input/Outputs
+  [StageInput] var Integer : Integer;
+  [StageInput] var Integer2 : Integer2;
+  [StageInput] var Integer3 : Integer3;
+  [StageInput] var Integer4 : Integer4;
+
+  [Main]
+  function Main()
+  {
+    var inoutintegervectorspixelfrag = InOutIntegerVectorsPixelFrag();
+    inoutintegervectorspixelfrag.Integer = this.Integer;
+    inoutintegervectorspixelfrag.Integer2 = this.Integer2;
+    inoutintegervectorspixelfrag.Integer3 = this.Integer3;
+    inoutintegervectorspixelfrag.Integer4 = this.Integer4;
+    inoutintegervectorspixelfrag.Main();
+  }
+}

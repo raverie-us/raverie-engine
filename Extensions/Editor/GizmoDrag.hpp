@@ -29,19 +29,67 @@ public:
   /// Meta Initialization.
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  /// Constructor.
+  /// Constructors.
   GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e);
+  GizmoUpdateEvent(GizmoUpdateEvent* rhs);
 
-  /// Movement of the mouse in world space.
-  Vec3 mMouseWorldMovement;
+  /// Movement of the mouse (in world space) constrained against a gizmo's drag-mode.
+  Vec3 mConstrainedWorldMovement;
 
-  /// Movement of the mouse in world space with respect to it's position in the previous frame
-  Vec3 mMouseWorldDelta;
+  /// Difference of the mouse position (in world space) constrained against a
+  /// gizmo's drag-mode with that position last frame.
+  Vec3 mConstrainedWorldDelta;
 
-  /// Where the gizmo was initially grabbed.
+  /// Initial mouse-click position (in world space) constrained against a
+  /// gizmo's drag-mode.
   Vec3 mInitialGrabPoint;
 };
 
+//------------------------------------------------- Translate Gizmo Update Event
+class TranslateGizmoUpdateEvent : public GizmoUpdateEvent
+{
+public:
+  /// Meta Initialization.
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  /// Constructor.
+  TranslateGizmoUpdateEvent(GizmoUpdateEvent* e);
+
+  /// Mouse movement that has undergone alterations, ex: Snapping.
+  Vec3 mProcessedMovement;
+};
+
+//----------------------------------------------------- Scale Gizmo Update Event
+class ScaleGizmoUpdateEvent : public GizmoUpdateEvent
+{
+public:
+  /// Meta Initialization.
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  /// Constructor.
+  ScaleGizmoUpdateEvent(GizmoUpdateEvent* e);
+
+  /// Mouse movement that has undergone transformation to compute a change in
+  /// scale.  May or may not include snapping.
+  Vec3 mProcessedScale;
+};
+
+//---------------------------------------------------- Rotate Gizmo Update Event
+class RotateGizmoUpdateEvent : public GizmoUpdateEvent
+{
+public:
+  /// Meta Initialization.
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  /// Constructor.
+  RotateGizmoUpdateEvent(GizmoUpdateEvent* e);
+
+  /// RingGizmo rotation that has undergone alterations, ex: Snapping.
+  float mProcessedRotation;
+
+  /// Normalized axis of movement.
+  Vec3 mSelectedAxis;
+};
 //------------------------------------------------------------------- Gizmo Drag
 DeclareEnum3(GizmoDragMode, Line, Plane, ViewPlane);
 DeclareEnum2(GizmoGrabMode, Hold, Toggle);

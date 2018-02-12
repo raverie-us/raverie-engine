@@ -9,20 +9,21 @@
 namespace Zero
 {
 
-const float cDefaultSnapSize = 1.0f;
+const float cUiWidgetSnapSize = 1.0f;
 
 //------------------------------------------------------------------------------------------- Events
 namespace Events
 {
 
-DefineEvent(PreTransformUpdate);
-DefineEvent(PostTransformUpdate);
+DefineEvent(UiPreUpdate);
+DefineEvent(UiPostUpdate);
 
 }//namespace Events
 
  //**************************************************************************************************
 ZilchDefineType(UiTransformUpdateEvent, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindGetterProperty(RootWidget);
 }
 
@@ -32,10 +33,25 @@ UiRootWidget* UiTransformUpdateEvent::GetRootWidget()
   return mRootWidget;
 }
 
+//---------------------------------------------------------------------------------------- Dock Mode
+namespace UiDockMode
+{
+
+//**************************************************************************************************
+uint GetAxis(UiDockMode::Enum mode)
+{
+  if (mode == UiDockMode::Top || mode == UiDockMode::Bottom)
+    return 1;
+  return 0;
+}
+
+}//namespace DockMode
+
 //--------------------------------------------------------------------- Ui Widget Cast Results Range
 //**************************************************************************************************
 ZilchDefineType(UiWidgetCastResultsRange, builder, type)
 {
+  ZeroBindDocumented();
   // METAREFACTOR - range type?
   //BindAsRangeType();
   ZilchBindMethod(Empty);
@@ -92,6 +108,7 @@ uint UiWidgetCastResultsRange::Size()
 //**************************************************************************************************
 ZilchDefineType(UiWidget, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
@@ -99,59 +116,100 @@ ZilchDefineType(UiWidget, builder, type)
   ZeroBindDependency(Area);
 
   // Events
-  ZeroBindEvent(Events::PreTransformUpdate, UiTransformUpdateEvent);
-  ZeroBindEvent(Events::PostTransformUpdate, UiTransformUpdateEvent);
+  ZeroBindEvent(Events::UiPreUpdate, UiTransformUpdateEvent);
+  ZeroBindEvent(Events::UiPostUpdate, UiTransformUpdateEvent);
 
   ZilchBindGetterSetterProperty(Active);
   ZilchBindGetterSetterProperty(Visible);
   ZilchBindGetterSetterProperty(Interactive);
+  ZilchBindGetterSetterProperty(OnTop);
   ZilchBindGetterSetterProperty(LocalTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(RootTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterProperty(WorldTranslation);
+  ZilchBindGetterSetterProperty(WorldTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Size)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+
+  ZilchBindGetterSetter(LocalRectangle);
+  ZilchBindGetterSetter(WorldRectangle);
+
+  ZilchBindMethod(SetLocalLocation);
+  ZilchBindMethod(SetWorldLocation);
+  ZilchBindMethod(MarkAsNeedsUpdate);
+
+  ZilchBindGetterSetter(LocalTopLeft);
+  ZilchBindGetterSetter(WorldTopLeft);
+  ZilchBindGetterSetter(LocalTopCenter);
+  ZilchBindGetterSetter(WorldTopCenter);
+  ZilchBindGetterSetter(LocalTopRight);
+  ZilchBindGetterSetter(WorldTopRight);
+
+  ZilchBindGetterSetter(LocalCenterLeft);
+  ZilchBindGetterSetter(WorldCenterLeft);
+  ZilchBindGetterSetter(LocalCenter);
+  ZilchBindGetterSetter(WorldCenter);
+  ZilchBindGetterSetter(LocalCenterRight);
+  ZilchBindGetterSetter(WorldCenterRight);
+
+  ZilchBindGetterSetter(LocalBottomLeft);
+  ZilchBindGetterSetter(WorldBottomLeft);
+  ZilchBindGetterSetter(LocalBottomCenter);
+  ZilchBindGetterSetter(WorldBottomCenter);
+  ZilchBindGetterSetter(LocalBottomRight);
+  ZilchBindGetterSetter(WorldBottomRight);
+
+  ZilchBindGetterSetter(LocalTop);
+  ZilchBindGetterSetter(WorldTop);
+  ZilchBindGetterSetter(LocalRight);
+  ZilchBindGetterSetter(WorldRight);
+  ZilchBindGetterSetter(LocalBottom);
+  ZilchBindGetterSetter(WorldBottom);
+  ZilchBindGetterSetter(LocalLeft);
+  ZilchBindGetterSetter(WorldLeft);
+
   ZilchBindFieldProperty(mAbsoluteMinSize);
   ZilchBindFieldProperty(mLocalColor);
   ZilchBindFieldProperty(mHierarchyColor);
   ZilchBindGetterSetterProperty(ClipChildren);
-  ZilchBindGetterSetterProperty(InLayout)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(SizePolicyX)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(SizePolicyY)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindFieldProperty(mFlexSize)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterProperty(LocalRect);
-  ZilchBindGetterProperty(RectInParent);
-  ZilchBindGetterProperty(RootRect);
-  ZilchBindGetterSetterProperty(VerticalAlignment)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(HorizontalAlignment)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(InLayout)->ZeroLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(MarginLeft)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(MarginTop)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(MarginRight)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(MarginBottom)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  static const String sLayoutGroup = "Layout";
 
-  ZilchBindGetterSetterProperty(DockMode)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(SizePolicyX)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(SizePolicyY)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindFieldProperty(mFlexSize)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+
+  ZilchBindGetterSetterProperty(VerticalAlignment)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(HorizontalAlignment)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+
+  ZilchBindGetterSetterProperty(MarginLeft)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginTop)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginRight)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  ZilchBindGetterSetterProperty(MarginBottom)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+
+  ZilchBindGetterSetterProperty(DockMode)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
   ZilchBindGetterSetterProperty(CanTakeFocus);
   ZilchBindGetter(MouseOver);
   ZilchBindGetter(MouseOverHierarchy);
   ZilchBindGetter(HasFocus);
   ZilchBindGetter(HierarchyHasFocus);
 
-  ZilchBindGetter(ParentWidget);
-  ZilchBindGetter(RootWidget);
+  ZilchBindGetter(Root);
 
   ZilchBindMethodProperty(SizeToContents);
   ZilchBindMethod(TakeFocus);
   ZilchBindMethod(LoseFocus);
   ZilchBindMethod(TabJump);
   ZilchBindMethod(TabJumpDirection);
-  ZilchBindMethod(RootToLocal);
-  ZilchBindMethod(WorldToLocal);
-  ZilchBindMethod(LocalToRoot);
-  ZilchBindMethod(WorldToRoot);
-  ZilchBindMethod(LocalToWorld);
-  ZilchBindMethod(RootToWorld);
+  ZilchBindMethod(TransformPoint);
+  ZilchBindMethod(TransformPointInverse);
   ZilchBindMethod(CastPoint);
   ZilchBindMethod(CastRect);
-  ZilchBindMethod(UpdateTransform);
+  ZilchBindMethod(Update);
+}
+
+//**************************************************************************************************
+UiWidget::~UiWidget()
+{
+  // This will remove us from the the root widget on top list if we're in it
+  SetOnTop(false);
 }
 
 //**************************************************************************************************
@@ -188,6 +246,15 @@ void UiWidget::Initialize(CogInitializer& initializer)
 
   ConnectThisTo(GetOwner(), Events::AreaChanged, OnAreaChanged);
   ConnectThisTo(GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
+  ConnectThisTo(GetOwner(), Events::PropertyModified, OnPropertyModified);
+  ConnectThisTo(GetOwner(), Events::PropertyModifiedIntermediate, OnPropertyModified);
+
+  // Add ourself to the roots on top list for picking
+  if (GetOnTop())
+  {
+    if(UiRootWidget* root = GetRoot())
+      root->mOnTopWidgets.PushBack(this);
+  }
 
   // If we're dynamically added, we need to let our parent know that it needs
   // to update. Unfortunately, this means that when the Ui is created, the entire
@@ -202,8 +269,6 @@ void UiWidget::OnDestroy(uint flags)
   // We need to tell our parent that it needs to be updated
   if(mParent)
     mParent->MarkAsNeedsUpdate();
-
-  ComponentHierarchy::OnDestroy(flags);
 }
 
 //**************************************************************************************************
@@ -245,7 +310,7 @@ void UiWidget::OnChildrenOrderChanged(Event* e)
 }
 
 //**************************************************************************************************
-Vec2 UiWidget::Measure(Rect& data)
+Vec2 UiWidget::Measure(Rectangle& data)
 {
   bool xFixed = (GetSizePolicyX() == UiSizePolicy::Fixed);
   bool yFixed = (GetSizePolicyY() == UiSizePolicy::Fixed);
@@ -284,7 +349,7 @@ Vec2 UiWidget::GetMinSize()
   {
     // We don't want to set the size because we want the layout to return
     // the minimum size it needs
-    Rect defaultRect;
+    Rectangle defaultRect;
     return Math::Max(layout->Measure(defaultRect), mAbsoluteMinSize);
   }
 
@@ -305,15 +370,9 @@ Vec2 UiWidget::GetMinSize()
 }
 
 //**************************************************************************************************
-UiWidget* UiWidget::GetParentWidget()
+UiRootWidget* UiWidget::GetRoot()
 {
-  return mParent;
-}
-
-//**************************************************************************************************
-UiRootWidget* UiWidget::GetRootWidget()
-{
-  Cog* root = GetRoot()->GetOwner();
+  Cog* root = UiWidgetComponentHierarchy::GetRoot()->GetOwner();
   return root->has(UiRootWidget);
 }
 
@@ -326,20 +385,38 @@ void UiWidget::SizeToContents()
 }
 
 //**************************************************************************************************
-UiWidget* UiWidget::CastPoint(Vec2Param rootPoint, UiWidget* ignore, bool interactiveOnly)
+void UiWidget::SizeToContentsIfAuto()
+{
+  bool autoX = (GetSizePolicyX() == UiSizePolicy::Auto);
+  bool autoY = (GetSizePolicyY() == UiSizePolicy::Auto);
+
+  if(autoX || autoY)
+  {
+    Vec2 minSize = GetMinSize();
+    Vec2 size = GetSize();
+
+    size.x = Math::Lerp(size.x, minSize.x, autoX);
+    size.y = Math::Lerp(size.y, minSize.y, autoY);
+
+    SetSize(size);
+  }
+}
+
+//**************************************************************************************************
+UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool interactiveOnly)
 {
   // Check to see if it's ignoring this widget or any children
   if(ignore == this)
     return nullptr;
 
   // All reasons a Widget should not be picked
-  if(!GetActive() || !GetVisible() || GetOwner()->GetMarkedForDestruction())
+  bool destroyed = GetOwner()->GetMarkedForDestruction();
+  if(!GetActive() || !GetVisible() || destroyed || GetOnTop())
     return nullptr;
 
   // Check whether or not the position is within our rect
-  Rect rect = GetLocalRect();
-  Vec2 localPos = RootToLocal(rootPoint);
-  bool within = rect.Contains(localPos);
+  Rectangle worldRect = GetWorldRectangle();
+  bool within = worldRect.Contains(worldPoint);
 
   // If clipping is enabled on this Widget, we want to ignore any points
   // outside the clip region
@@ -350,7 +427,7 @@ UiWidget* UiWidget::CastPoint(Vec2Param rootPoint, UiWidget* ignore, bool intera
   // want to walk the children in reverse to find the front most first
   forRange(UiWidget& child, GetChildrenReverse())
   {
-    UiWidget* hit = child.CastPoint(rootPoint, ignore, interactiveOnly);
+    UiWidget* hit = child.CastPoint(worldPoint, ignore, interactiveOnly);
     if(hit)
       return hit;
   }
@@ -365,7 +442,7 @@ UiWidget* UiWidget::CastPoint(Vec2Param rootPoint, UiWidget* ignore, bool intera
 }
 
 //**************************************************************************************************
-void CastRectInternal(UiWidget* widget, const Rect& rootRect, UiWidget* ignore, bool interactiveOnly,
+void CastRectInternal(UiWidget* widget, RectangleParam worldRect, UiWidget* ignore, bool interactiveOnly,
                       UiWidgetArray& overlapping)
 {
   // Skip ignored widget
@@ -377,47 +454,59 @@ void CastRectInternal(UiWidget* widget, const Rect& rootRect, UiWidget* ignore, 
     return;
 
   // Check to see if the current widget overlaps with the given rect
-  Rect currRootRect = widget->GetRootRect();
-  if(currRootRect.Overlap(rootRect))
-  {
+  Rectangle currWorldRect = widget->GetWorldRectangle();
+  if(currWorldRect.Overlap(worldRect))
     overlapping.PushBack(widget);
-  }
   // If clipping is enabled and we didn't overlap, don't recurse the children
   else if(widget->GetClipChildren())
-  {
     return;
-  }
 
   // Walk children
   forRange(UiWidget& child, widget->GetChildren())
-    CastRectInternal(&child, rootRect, ignore, interactiveOnly, overlapping);
+    CastRectInternal(&child, worldRect, ignore, interactiveOnly, overlapping);
 }
 
 //**************************************************************************************************
-UiWidgetCastResultsRange UiWidget::CastRect(const Rect& rootRect, UiWidget* ignore, bool interactiveOnly)
+UiWidgetCastResultsRange UiWidget::CastRect(RectangleParam worldRect, UiWidget* ignore, bool interactiveOnly)
 {
   UiWidgetArray overlapping;
   overlapping.Reserve(15);
-  CastRectInternal(this, rootRect, ignore, interactiveOnly, overlapping);
+  CastRectInternal(this, worldRect, ignore, interactiveOnly, overlapping);
   return UiWidgetCastResultsRange(overlapping);
 }
 
 //**************************************************************************************************
-Rect UiWidget::GetLocalRect()
+Rectangle UiWidget::GetBodyRectangle()
 {
-  return Rect::PointAndSize(Vec2::cZero, GetSize());
+  Vec2 offset = mArea->OffsetOfOffset(Location::BottomLeft);
+  Vec2 size = GetSize();
+  return Rectangle::PointAndSize(offset * size, size);
 }
 
 //**************************************************************************************************
-Rect UiWidget::GetRectInParent()
+Rectangle UiWidget::GetLocalRectangle()
 {
-  return Rect::PointAndSize(GetLocalTranslation(), GetSize());
+  return Rectangle::PointAndSize(GetLocalBottomLeft(), GetSize());
 }
 
 //**************************************************************************************************
-Rect UiWidget::GetRootRect()
+void UiWidget::SetLocalRectangle(RectangleParam rectangle)
 {
-  return Rect::PointAndSize(GetRootTranslation(), GetSize());
+  SetLocalTopLeft(rectangle.GetTopLeft());
+  SetSize(rectangle.GetSize());
+}
+
+//**************************************************************************************************
+Rectangle UiWidget::GetWorldRectangle()
+{
+  return Rectangle::PointAndSize(GetWorldBottomLeft(), GetSize());
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldRectangle(RectangleParam rectangle)
+{
+  SetWorldTopLeft(rectangle.GetTopLeft());
+  SetSize(rectangle.GetSize());
 }
 
 //**************************************************************************************************
@@ -450,108 +539,52 @@ void UiWidget::SetActive(bool state)
 //**************************************************************************************************
 Vec2 UiWidget::GetLocalTranslation()
 {
-  Vec3 translation = mTransform->GetLocalTranslation();
-
-  // Flip the y so positive goes down
-  return Vec2(translation.x, -translation.y);
+  return ToVector2(mTransform->GetLocalTranslation());
 }
 
 //**************************************************************************************************
 void UiWidget::SetLocalTranslation(Vec2Param translation)
 {
-  float snapSize = GetSnapSize();
-
-  // Negate the y because positive y is up with Transform
   Vec3 localTranslation = mTransform->GetLocalTranslation();
 
   if(OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(mTransform, "Translation", localTranslation);
 
-  Vec3 newPos = localTranslation;
-  newPos.x = Snap(translation.x, snapSize);
-  newPos.y = Snap(-translation.y, snapSize);
+  Vec3 newPos = Vec3(Snap(translation, cUiWidgetSnapSize), localTranslation.z);
+
   mTransform->SetLocalTranslation(newPos);
   MarkAsNeedsUpdate();
 }
 
 //**************************************************************************************************
-Vec2 UiWidget::GetRootTranslation()
+Vec2 UiWidget::GetWorldTranslation()
 {
-  return LocalToRoot(Vec2::cZero);
+  return ToVector2(mTransform->GetWorldTranslation());
 }
 
 //**************************************************************************************************
-void UiWidget::SetRootTranslation(Vec2Param rootTranslation)
+void UiWidget::SetWorldTranslation(Vec2Param worldTranslation)
 {
-  Vec2 localTranslation = RootToLocal(rootTranslation);
+  Vec2 localTranslation = worldTranslation;
+  if (mParent)
+    localTranslation = mParent->TransformPointInverse(worldTranslation);
 
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(this, "LocalTranslation", localTranslation);
 
   SetLocalTranslation(localTranslation);
 }
 
 //**************************************************************************************************
-Vec3 UiWidget::GetWorldTranslation()
+Vec2 UiWidget::TransformPoint(Vec2Param localPosition)
 {
-  return mTransform->GetWorldTranslation();
+  return ToVector2(mTransform->TransformPoint(Vec3(localPosition)));
 }
 
 //**************************************************************************************************
-Vec2 UiWidget::RootToLocal(Vec2Param rootPosition)
+Vec2 UiWidget::TransformPointInverse(Vec2Param worldPosition)
 {
-  // Bring it to world then to the local of ourself
-  // An alternate would be to walk down and build the matrix from the root
-  // widget to ourself.
-  // This should change if we ever get cached transform matrices
-  Vec3 worldPos = RootToWorld(rootPosition);
-  return WorldToLocal(worldPos);
-}
-
-//**************************************************************************************************
-Vec2 UiWidget::WorldToLocal(Vec3Param worldPosition)
-{
-  Vec2 localPos = ToVector2(mTransform->TransformPointInverse(worldPosition));
-  localPos.y *= -1.0f;
-  return localPos;
-}
-
-//**************************************************************************************************
-Vec2 UiWidget::LocalToRoot(Vec2Param localPosition)
-{
-  // Bring to world then to root
-  // An alternate would be to walk down and build the matrix from the root
-  // widget to ourself.
-  // This should change if we ever get cached transform matrices
-  Vec3 worldPos = LocalToWorld(localPosition);
-  return WorldToRoot(worldPos);
-}
-
-//**************************************************************************************************
-Vec2 UiWidget::WorldToRoot(Vec3Param worldPosition)
-{
-  Transform* rootTransform = GetRoot()->mTransform;
-  Vec2 rootPos = ToVector2(rootTransform->TransformPointInverse(worldPosition));
-  rootPos.y *= -1.0f;
-  return rootPos;
-}
-
-//**************************************************************************************************
-Vec3 UiWidget::LocalToWorld(Vec2Param localPosition)
-{
-  Vec2 localPos = localPosition;
-  localPos.y *= -1.0f;
-  return mTransform->TransformPoint(Vec3(localPosition));
-}
-
-//**************************************************************************************************
-Vec3 UiWidget::RootToWorld(Vec2Param rootPosition)
-{
-  Vec2 rootPos = rootPosition;
-  rootPos.y *= -1.0f;
-
-  Transform* rootTransform = GetRoot()->mTransform;
-  return rootTransform->TransformPoint(Vec3(rootPos));
+  return ToVector2(mTransform->TransformPointInverse(Vec3(worldPosition)));
 }
 
 //**************************************************************************************************
@@ -566,30 +599,163 @@ void UiWidget::SetSize(Vec2Param size)
   if(OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(mArea, "Size", GetSize());
 
-  mArea->SetSize(Snap(size, GetSnapSize()));
+  mArea->SetSize(Snap(size, cUiWidgetSnapSize));
 
   // We don't need to call MarkAsNeeds update as we will respond to the 
   // Events::AreaChanged event when setting the size on Area
 }
 
 //**************************************************************************************************
-void UiWidget::OnAreaChanged(Event* e)
+Vec2 UiWidget::GetLocalLocation(Location::Enum location)
 {
-  MarkAsNeedsUpdate();
+  Vec2 offset = mArea->OffsetOfOffset(location);
+  return GetLocalTranslation() + Math::Floor(offset * GetSize());
 }
 
 //**************************************************************************************************
-float UiWidget::GetSnapSize()
+void UiWidget::SetLocalLocation(Location::Enum location, Vec2Param localTranslation)
 {
-  float snapSize = cDefaultSnapSize;
-  if(UiRootWidget* rootWidget = GetRootWidget())
-  {
-    snapSize = rootWidget->mSnapSize;
-    if(snapSize == 0.0f)
-      snapSize = 0.0001f;
-  }
+  Vec2 offset = mArea->OffsetOfOffset(location);
+  Vec2 size = GetSize();
+  offset *= size;
+  //offset = Math::Floor(offset);
+  SetLocalTranslation(localTranslation - offset);
+}
 
-  return snapSize;
+//**************************************************************************************************
+Vec2 UiWidget::GetWorldLocation(Location::Enum location)
+{
+  Vec2 localTranslation = GetLocalLocation(location);
+  if (mParent)
+    return mParent->TransformPoint(localTranslation);
+  return localTranslation;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldLocation(Location::Enum location, Vec2Param worldTranslation)
+{
+  Vec2 localTranslation = GetLocalLocation(location);
+  if (mParent)
+    localTranslation = mParent->TransformPointInverse(worldTranslation);
+  SetLocalLocation(location, localTranslation);
+}
+
+//**************************************************************************************************
+float UiWidget::GetLocalTop()
+{
+  return GetLocalTopRight().y;
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalTop(float localTop)
+{
+  Vec2 topRight = GetLocalTopRight();
+  topRight.y = localTop;
+  SetLocalTopRight(topRight);
+}
+
+//**************************************************************************************************
+float UiWidget::GetWorldTop()
+{
+  return GetWorldTopRight().y;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldTop(float worldTop)
+{
+  Vec2 topRight = GetWorldTopRight();
+  topRight.y = worldTop;
+  SetWorldTopRight(topRight);
+}
+
+//**************************************************************************************************
+float UiWidget::GetLocalRight()
+{
+  return GetLocalTopRight().x;
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalRight(float localRight)
+{
+  Vec2 topRight = GetLocalTopRight();
+  topRight.x = localRight;
+  SetLocalTopRight(topRight);
+}
+
+//**************************************************************************************************
+float UiWidget::GetWorldRight()
+{
+  return GetWorldTopRight().x;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldRight(float worldRight)
+{
+  Vec2 topRight = GetWorldTopRight();
+  topRight.x = worldRight;
+  SetWorldTopRight(topRight);
+}
+
+//**************************************************************************************************
+float UiWidget::GetLocalBottom()
+{
+  return GetLocalBottomLeft().y;
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalBottom(float localBottom)
+{
+  Vec2 bottomLeft = GetLocalBottomLeft();
+  bottomLeft.y = localBottom;
+  SetLocalBottomLeft(bottomLeft);
+}
+
+//**************************************************************************************************
+float UiWidget::GetWorldBottom()
+{
+  return GetWorldBottomLeft().y;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldBottom(float worldBottom)
+{
+  Vec2 bottomLeft = GetWorldBottomLeft();
+  bottomLeft.y = worldBottom;
+  SetWorldBottomLeft(bottomLeft);
+}
+
+//**************************************************************************************************
+float UiWidget::GetLocalLeft()
+{
+  return GetLocalBottomLeft().x;
+}
+
+//**************************************************************************************************
+void UiWidget::SetLocalLeft(float localLeft)
+{
+  Vec2 bottomLeft = GetLocalBottomLeft();
+  bottomLeft.x = localLeft;
+  SetLocalBottomLeft(bottomLeft);
+}
+
+//**************************************************************************************************
+float UiWidget::GetWorldLeft()
+{
+  return GetWorldBottomLeft().x;
+}
+
+//**************************************************************************************************
+void UiWidget::SetWorldLeft(float worldLeft)
+{
+  Vec2 bottomLeft = GetWorldBottomLeft();
+  bottomLeft.x = worldLeft;
+  SetWorldBottomLeft(bottomLeft);
+}
+
+//**************************************************************************************************
+void UiWidget::OnAreaChanged(Event* e)
+{
+  MarkAsNeedsUpdate();
 }
 
 //**************************************************************************************************
@@ -625,21 +791,23 @@ void UiWidget::MarkAsNeedsUpdateInternal(bool localUpdate)
 }
 
 //**************************************************************************************************
-void UiWidget::UpdateTransform(UiTransformUpdateEvent* e)
+void UiWidget::Update(UiTransformUpdateEvent* e)
 {
   // Skip this if we're already on our way out
   if(GetOwner()->GetMarkedForDestruction())
     return;
 
-  if(mTransformUpdateState != UiTransformUpdateState::Updated || e->mAlwaysUpdate)
+  // Until the TransformUpdateState is fully functional, we should always update
+  bool alwaysUpdate = true;
+  if(mTransformUpdateState != UiTransformUpdateState::Updated || alwaysUpdate)
   {
     // Send the pre-update
-    GetOwner()->DispatchEvent(Events::PreTransformUpdate, e);
+    GetOwner()->DispatchEvent(Events::UiPreUpdate, e);
 
     // Update our layout if it exists
     if(UiLayout* layout = GetOwner()->has(UiLayout))
     {
-      Rect layoutData = GetLocalRect();
+      Rectangle layoutData = GetBodyRectangle();
       layout->DoLayout(layoutData, e);
     }
     else
@@ -647,13 +815,16 @@ void UiWidget::UpdateTransform(UiTransformUpdateEvent* e)
       // Update our active children
       forRange(UiWidget& child, GetChildren())
       {
-        if(child.GetActive())
-          child.UpdateTransform(e);
+        if (child.GetActive())
+        {
+          child.SizeToContentsIfAuto();
+          child.Update(e);
+        }
       }
     }
 
     // Send the post-update
-    GetOwner()->DispatchEvent(Events::PostTransformUpdate, e);
+    GetOwner()->DispatchEvent(Events::UiPostUpdate, e);
 
     // We're now fully updated
     mTransformUpdateState = UiTransformUpdateState::Updated;
@@ -680,7 +851,7 @@ void UiWidget::MoveChildrenToFront(float& currWorldDepth, float amount)
   // Recurse down
   forRange(UiWidget& childWidget, mChildren.All())
   {
-    Cog* selectedObject = GetRootWidget()->mDebugSelectedWidget.GetOwner();
+    Cog* selectedObject = GetRoot()->mDebugSelectedWidget.GetOwner();
     bool parentSelected = ParentSelected(selectedObject, childWidget.GetOwner());
 
     Vec3 pos = childWidget.mTransform->GetWorldTranslation();
@@ -704,15 +875,19 @@ void UiWidget::MoveChildrenToFront(float& currWorldDepth, float amount)
 //**************************************************************************************************
 void UiWidget::TakeFocus()
 {
-  if(UiRootWidget* rootWidget = GetRootWidget())
-    rootWidget->RootChangeFocus(this);
+  if(UiRootWidget* rootWidget = GetRoot())
+    rootWidget->SetFocusWidget(this);
 }
 
 //**************************************************************************************************
 void UiWidget::LoseFocus()
 {
-  if(UiRootWidget* rootWidget = GetRootWidget())
-    rootWidget->RootChangeFocus(nullptr);
+  // Don't lose focus if we don't have focus
+  if (GetHasFocus() == false)
+    return;
+
+  if(UiRootWidget* rootWidget = GetRoot())
+    rootWidget->SetFocusWidget(nullptr);
 }
 
 //**************************************************************************************************
@@ -766,6 +941,9 @@ void UiWidget::SetSizePolicy(Axis::Enum axis, UiSizePolicy::Enum policy)
 //**************************************************************************************************
 void UiWidget::SetSizePolicyX(UiSizePolicy::Enum policy)
 {
+  if (OperationQueue::IsListeningForSideEffects())
+    OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+
   mSizePolicy[Axis::X] = policy;
   MarkAsNeedsUpdate();
 }
@@ -773,6 +951,9 @@ void UiWidget::SetSizePolicyX(UiSizePolicy::Enum policy)
 //**************************************************************************************************
 void UiWidget::SetSizePolicyY(UiSizePolicy::Enum policy)
 {
+  if (OperationQueue::IsListeningForSideEffects())
+    OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+
   mSizePolicy[Axis::Y] = policy;
   MarkAsNeedsUpdate();
 }
@@ -786,6 +967,14 @@ bool UiWidget::GetInLayout()
 //**************************************************************************************************
 void UiWidget::SetInLayout(bool state)
 {
+  // If the user enables in layout, hitting undo should move the translation and scale back
+  // to their previous values
+  if (OperationQueue::IsListeningForSideEffects())
+  {
+    OperationQueue::RegisterSideEffect(this, PropertyPath("LocalTranslation"), GetLocalTranslation());
+    OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+  }
+
   mFlags.SetState(UiWidgetFlags::InLayout, state);
   MarkAsNeedsUpdate();
 }
@@ -799,7 +988,7 @@ Vec2 UiWidget::GetFlexSize()
 //**************************************************************************************************
 void UiWidget::SetFlexSize(Vec2Param flexSize)
 {
-  mFlexSize = flexSize;
+  mFlexSize = Math::Max(flexSize, Vec2(0.00001f));
   MarkAsNeedsUpdate();
 }
 
@@ -889,42 +1078,86 @@ float UiWidget::GetMarginBottom()
 //**************************************************************************************************
 void UiWidget::SetMarginLeft(float val)
 {
-  mMargins.Left = Snap(val, GetSnapSize());
+  mMargins.Left = Snap(val, cUiWidgetSnapSize);
   MarkAsNeedsUpdate();
 }
 
 //**************************************************************************************************
 void UiWidget::SetMarginTop(float val)
 {
-  mMargins.Top = Snap(val, GetSnapSize());
+  mMargins.Top = Snap(val, cUiWidgetSnapSize);
   MarkAsNeedsUpdate();
 }
 
 //**************************************************************************************************
 void UiWidget::SetMarginRight(float val)
 {
-  mMargins.Right = Snap(val, GetSnapSize());
+  mMargins.Right = Snap(val, cUiWidgetSnapSize);
   MarkAsNeedsUpdate();
 }
 
 //**************************************************************************************************
 void UiWidget::SetMarginBottom(float val)
 {
-  mMargins.Bottom = Snap(val, GetSnapSize());
+  mMargins.Bottom = Snap(val, cUiWidgetSnapSize);
   MarkAsNeedsUpdate();
 }
 
+//**************************************************************************************************
+void UiWidget::OnPropertyModified(PropertyEvent* e)
+{
+  BoundType* modifiedType = e->mObject.StoredType;
+  if(modifiedType->IsA(ZilchTypeId(Transform)))
+    SetLocalTranslation(GetLocalTranslation());
+  else if (modifiedType->IsA(ZilchTypeId(Area)))
+    SetSize(GetSize());
+}
+
+//**************************************************************************************************
+bool UiWidget::GetOnTop()
+{
+  return mFlags.IsSet(UiWidgetFlags::OnTop);
+}
+
+//**************************************************************************************************
+void UiWidget::SetOnTop(bool state)
+{
+  // Don't do anything if the state isn't changing
+  if (GetOnTop() == state)
+    return;
+
+  // Add / remove ourself from the root on top list for picking
+  if(UiRootWidget* rootWidget = GetRoot())
+  {
+    if (state)
+      rootWidget->mOnTopWidgets.PushBack(this);
+    else
+      rootWidget->mOnTopWidgets.EraseValue(this);
+  }
+
+  mFlags.SetState(UiWidgetFlags::OnTop, state);
+}
 
 //**************************************************************************************************
 void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction)
 {
+  UiWidget* root = widget->GetRoot();
+
   while(widget != NULL)
   {
     // Get the next widget in the given direction
-    if(direction == UiFocusDirection::Forward)
+    if (direction == UiFocusDirection::Forward)
+    {
       widget = widget->GetNextInHierarchyOrder();
+      if (widget == nullptr)
+        widget = root;
+    }
     else
+    {
       widget = widget->GetPreviousInHierarchyOrder();
+      if (widget == nullptr)
+        widget = root->GetLastDeepestChild();
+    }
 
     if(widget && widget->GetActive() && widget->GetCanTakeFocus())
     {

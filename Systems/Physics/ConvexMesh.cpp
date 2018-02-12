@@ -5,6 +5,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
+#include "Geometry\QuickHull3D.hpp"
 
 namespace Zero
 {
@@ -63,38 +64,57 @@ void ConvexMesh::Draw(Mat4Param transform)
 
 void ConvexMesh::BuildFromPointSet(const Vec3Array& points)
 {
-  const Vec3* p = &(points[0]);
+  typedef QuickHull3D::QuickHullVertex Vertex;
+  typedef QuickHull3D::QuickHullEdge Edge;
+  typedef QuickHull3D::QuickHullFace Face;
+  typedef QuickHull3D::EdgeList EdgeList;
+  typedef QuickHull3D::FaceList FaceList;
 
-  Geometry::Hull3D hull;
-  bool success = hull.Build(p, uint(points.Size()));
+  QuickHull3D hull3D;
+  bool success = hull3D.Build(points);
   if(!success)
-  {
-    String msg = String::Format("Failed to build ConvexMesh '%s'", Name.c_str());
-    DoNotifyWarning("ConvexMesh building failed", msg);
     return;
-  }
 
-  Geometry::ConvexMesh geometryMesh;
-  geometryMesh.CopyInfo(hull);
+  mVertices.Clear();
+  mIndices.Clear();
 
-  uint count = geometryMesh.GetVertexCount();
-  mVertices.Resize(count);
-  for(uint i = 0; i < count; ++i)
+  size_t vertexCount = hull3D.ComputeVertexCount();
+  mVertices.Resize(vertexCount);
+
+  int currentVertexId = 0;
+  HashMap<Vertex*, int> vertexIdMap;
+  Array<int> faceVertexIndices;
+  for(FaceList::range faces = hull3D.GetFaces(); !faces.Empty(); faces.PopFront())
   {
-    mVertices[i] = geometryMesh.GetVertex(i).Position;
-  }
+    // Clear the list of vertices for this face
+    faceVertexIndices.Clear();
 
-  count = geometryMesh.GetFaceCount();
-  mIndices.Resize(count * 3);
-  for(uint i = 0; i < count; ++i)
-  {
-    uint a = i * 3;
-    uint b = (i * 3) + 1;
-    uint c = (i * 3) + 2;
+    Face* face = &faces.Front();
+    for(EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
+    {
+      Vertex* vertex = edges.Front().mTail;
+      int vertexId = 0;
+      // If we haven't seen this vertex then add it to the final list of vertices and give it a new id
+      if(!vertexIdMap.ContainsKey(vertex))
+      {
+        vertexIdMap[vertex] = currentVertexId;
+        mVertices[currentVertexId] = vertex->mPosition;
+        vertexId = currentVertexId;
+        ++currentVertexId;
+      }
+      // Otherwise grab the id it's already been assigned
+      else
+        vertexId = vertexIdMap[vertex];
 
-    mIndices[a] = geometryMesh.GetFace(i).Points[0];
-    mIndices[b] = geometryMesh.GetFace(i).Points[1];
-    mIndices[c] = geometryMesh.GetFace(i).Points[2];
+      faceVertexIndices.PushBack(vertexId);
+    }
+    // Create a triangle fan for the vertices in this face
+    for(size_t i = 2; i < faceVertexIndices.Size(); ++i)
+    {
+      mIndices.PushBack(faceVertexIndices[0]);
+      mIndices.PushBack(faceVertexIndices[i - 1]);
+      mIndices.PushBack(faceVertexIndices[i]);
+    }
   }
 }
 

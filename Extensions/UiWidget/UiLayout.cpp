@@ -19,6 +19,7 @@ bool NeedsLayout(UiWidget* widget)
 //******************************************************************************
 ZilchDefineType(UiLayout, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDependency(UiWidget);
 
@@ -75,28 +76,28 @@ float UiLayout::GetPaddingBottom()
 //******************************************************************************
 void UiLayout::SetPaddingLeft(float val)
 {
-  mPadding.Left = val;
+  mPadding.Left = Snap(val, cUiWidgetSnapSize);
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingTop(float val)
 {
-  mPadding.Top = val;
+  mPadding.Top = Snap(val, cUiWidgetSnapSize);
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingRight(float val)
 {
-  mPadding.Right = val;
+  mPadding.Right = Snap(val, cUiWidgetSnapSize);
   mWidget->MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void UiLayout::SetPaddingBottom(float val)
 {
-  mPadding.Bottom = val;
+  mPadding.Bottom = Snap(val, cUiWidgetSnapSize);
   mWidget->MarkAsNeedsUpdate();
 }
 
@@ -113,8 +114,11 @@ void UiLayout::UpdateNotInLayout(UiTransformUpdateEvent* e)
   {
     if(UiWidget* widget = child.has(UiWidget))
     {
-      if(widget->GetActive() && !widget->GetInLayout())
-        widget->UpdateTransform(e);
+      if (widget->GetActive() && !widget->GetInLayout())
+      {
+        widget->SizeToContentsIfAuto();
+        widget->Update(e);
+      }
     }
   }
 }
@@ -127,11 +131,11 @@ void UiLayout::CalculateAlignment(Axis::Type axis, uint alignment,
   switch (alignment)
   {
   case UiHorizontalAlignment::Left:
-    //case UiVerticalAlignment::Top:
+    //case UiVerticalAlignment::Bottom:
     childTranslation[axis] = areaPos[axis];
     break;
   case UiHorizontalAlignment::Right:
-    //case UiVerticalAlignment::Bottom:
+    //case UiVerticalAlignment::Top:
     childTranslation[axis] = areaPos[axis] + (areaSize[axis] - childSize[axis]);
     break;
   case UiHorizontalAlignment::Center:
@@ -142,7 +146,7 @@ void UiLayout::CalculateAlignment(Axis::Type axis, uint alignment,
 }
 
 //******************************************************************************
-Vec2 UiLayout::MaxMeasure(Rect& rect)
+Vec2 UiLayout::MaxMeasure(Rectangle& rect)
 {
   Vec2 neededSize = Vec2(0,0);
 
@@ -154,29 +158,6 @@ Vec2 UiLayout::MaxMeasure(Rect& rect)
   }
 
   return neededSize + mPadding.Size();
-}
-
-//******************************************************************************
-void UiLayout::ApplyPadding(Thickness& padding, Rect& area)
-{
-  Vec2 padTopLeft = padding.TopLeft();
-  Vec2 padSize = padding.Size();
-  area.X += padTopLeft.x;
-  area.Y += padTopLeft.y;
-  area.SizeX -= padSize.x;
-  area.SizeY -= padSize.y;
-}
-
-//******************************************************************************
-void UiLayout::RemovePadding(Thickness& padding, Rect& area)
-{
-  Vec2 padTopLeft = padding.TopLeft();
-  Vec2 padSize = padding.Size();
-
-  area.X -= padTopLeft.x;
-  area.Y -= padTopLeft.y;
-  area.SizeX += padSize.x;
-  area.SizeY += padSize.y;
 }
 
 //******************************************************************************

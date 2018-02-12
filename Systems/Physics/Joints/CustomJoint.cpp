@@ -331,6 +331,13 @@ CustomConstraintInfo* CustomJoint::CreateConstraint()
 
 void CustomJoint::AddConstraint(CustomConstraintInfo* constraint)
 {
+  if(constraint == nullptr)
+  {
+    DoNotifyException("Invalid constraint info", "Constraint info was null. A constraint "
+                      "must be allocated through CustomJoint.CreateConstraint() first.");
+    return;
+  }
+
   // If this constraint already has an owner then assert
   if(constraint->IsOwned())
   {

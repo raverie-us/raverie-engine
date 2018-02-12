@@ -14,20 +14,19 @@ struct OpusDecoder;
 
 namespace Audio
 {
+
   //--------------------------------------------------------------------------------- Decoded Packet
 
   struct DecodedPacket
   {
-    DecodedPacket() : Samples(nullptr) {}
+    DecodedPacket() {}
+    DecodedPacket(unsigned bufferSize);
     DecodedPacket(const DecodedPacket& copy);
 
-    // Deletes the sample buffer
-    void ReleaseSamples();
+    DecodedPacket& operator=(const DecodedPacket& other);
 
-    // The number of frames of audio data in this packet
-    unsigned FrameCount;
     // The buffer of samples for this channel
-    float* Samples;
+    Zero::Array<float> Samples;
   };
 
   //----------------------------------------------------------------------------------- File Decoder
@@ -35,58 +34,63 @@ namespace Audio
   class FileDecoder
   {
   public:
-    FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming,
-      SoundAssetFromFile* asset);
+    FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming);
     ~FileDecoder();
 
-    // Creates a task on the decoding thread to decode the next packet
-    void AddDecodingTask();
-    // Decodes the next packet of data (assumed that this is called on a decoding thread)
-    void DecodePacket();
     // Returns true if it is currently streaming audio data from a file
     bool StreamIsOpen();
     // Resets the streaming file to the beginning (if stream is open)
     void ResetStream();
-    // Closes the streaming file (if stream if open)
+    // Closes the streaming file (if stream is open)
     void CloseStream();
     // Opens the streaming file (if the decoder was created for streaming)
     void OpenStream();
+    // Tells the decoder to start decoding another packet from a streaming file
+    void DecodeStreamingPacket();
+    // Should only be called when starting the decoding thread
+    void DecodingLoop();
 
     // List of decoded packets
     LockFreeQueue<DecodedPacket> DecodedPacketQueue;
     // Number of channels of audio
-    short Channels;
+    short mChannels;
     // Number of samples per channel in the audio data
-    unsigned SamplesPerChannel;
-    // Keeps track of active decoding tasks - shared between threads!
-    Type32Bit DecodingTaskCount;
-    // Will be set to an object as long as the parent asset is alive, null when deleted
-    void* ParentAlive;
+    unsigned mSamplesPerChannel;
 
   private:
     // The data read in from the file, if not streaming
-    byte* InputFileData;
+    byte* mInputFileData;
     // The current read position for the file data
-    unsigned DataIndex;
+    unsigned mDataIndex;
     // The size of the file data
-    unsigned DataSize;
+    unsigned mDataSize;
     // Opus decoders for each channel
     OpusDecoder* Decoders[MaxChannels];
     // Buffers to hold the decoded data for a single packet per channel
     float DecodedPackets[MaxChannels][FileEncoder::PacketFrames];
     // If true, streaming from disk instead of using the saved buffer
-    bool Streaming;
+    bool mStreaming;
     // The name of the file to use for streaming
-    Zero::String FileName;
+    Zero::String mStreamingFileName;
     // The file object to use when streaming
-    Zero::File InputFile;
-
+    Zero::File mStreamingInputFile;
+    // Thread for decoding tasks
+    Zero::Thread DecodeThread;
+    // Tells the decoding thread it should decode another packet
+    Zero::Semaphore DecodingSemaphore;
+    // Tells the decoding thread it should shut down
+    AtomicType ShutDownSignal;
+    
+    // Opens a file and reads in its data
+    void OpenAndReadFile(Zero::Status& status, const Zero::String& fileName);
+    // Decodes the next packet of data (assumed that this is called on a decoding thread)
+    bool DecodePacket();
     // Adds decoded packets to the queue and translates the per-channel buffers to
     // an interleaved buffer
-    void QueueDecodedPackets(int numberOfFrames);
-    // Decrements the DecodingTaskCount and checks if it should delete itself
-    void FinishDecodingPacket();
+    void QueueDecodedPackets(unsigned numberOfFrames);
   };
+
+  Zero::OsInt StartDecodeThread(void* data);
 
   //--------------------------------------------------------------------------------- Packet Decoder
 

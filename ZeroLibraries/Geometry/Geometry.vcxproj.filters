@@ -60,9 +60,6 @@
     <ClCompile Include="Intersection2D.cpp">
       <Filter>Intersection</Filter>
     </ClCompile>
-    <ClCompile Include="Hull3D.cpp">
-      <Filter>Geometry\Hulling Algorithms</Filter>
-    </ClCompile>
     <ClCompile Include="Hull2D.cpp">
       <Filter>Geometry\Hulling Algorithms</Filter>
     </ClCompile>
@@ -111,9 +108,6 @@
     <ClCompile Include="Shape2D.cpp">
       <Filter>ConstructiveSolidGeometry</Filter>
     </ClCompile>
-    <ClCompile Include="ConvexMesh.cpp">
-      <Filter>Geometry\Hulling Algorithms</Filter>
-    </ClCompile>
     <ClCompile Include="Clipper.cpp">
       <Filter>ConstructiveSolidGeometry</Filter>
     </ClCompile>
@@ -135,6 +129,12 @@
     </ClCompile>
     <ClCompile Include="GeometryStandard.cpp" />
     <ClCompile Include="ToString.cpp" />
+    <ClCompile Include="QuickHull3D.cpp">
+      <Filter>Geometry\Hulling Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDrawStack.cpp">
+      <Filter>DebugDraw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Intersection.hpp">
@@ -152,14 +152,8 @@
     <ClInclude Include="ExtendedIntersection.hpp">
       <Filter>Extension</Filter>
     </ClInclude>
-    <ClInclude Include="Hull3D.hpp">
-      <Filter>Geometry\Hulling Algorithms</Filter>
-    </ClInclude>
     <ClInclude Include="Hull2D.hpp">
       <Filter>Geometry\Hulling Algorithms</Filter>
-    </ClInclude>
-    <ClInclude Include="ConvexMesh.hpp">
-      <Filter>Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Mpr.hpp">
       <Filter>Intersection\Algorithms</Filter>
@@ -222,6 +216,12 @@
       <Filter>Geometry</Filter>
     </ClInclude>
     <ClInclude Include="ToString.hpp" />
+    <ClInclude Include="QuickHull3D.hpp">
+      <Filter>Geometry\Hulling Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDrawStack.hpp">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugPrimitives.inl">

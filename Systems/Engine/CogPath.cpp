@@ -45,6 +45,7 @@ ZilchDefineType(CogPath, builder, type)
   ZilchBindDefaultCopyDestructor();
   ZilchBindConstructor(StringParam);
 
+  type->Add(new CogPathMetaComposition());
   type->Add(new CogPathMetaSerialization());
   type->CreatableInScript = true;
 
@@ -721,7 +722,7 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
     switch(element.mType)
     {
       case CogPathElementType::NamedCog:
-        resolvedCog = resolvedCog->FindChildByName(element.mValue);
+        resolvedCog = resolvedCog->FindDirectChildByName(element.mValue);
         if(!resolvedCog)
         {
           status.State = StatusState::Failure;
@@ -1202,6 +1203,25 @@ namespace Serialization
     }
     return false;
   }
+}
+
+ZilchDefineType(CogPathMetaComposition, builder, type)
+{
+
+}
+
+CogPathMetaComposition::CogPathMetaComposition()
+  : MetaComposition(ZilchTypeId(Component))
+{
+
+}
+
+Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
+{
+  CogPath* cogPath = owner.Get<CogPath*>();
+  if (Cog* cog = cogPath->GetCog())
+    return cog->QueryComponentType(componentType);
+  return nullptr;
 }
 
 bool CogPathMetaSerialization::SerializeReferenceProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)

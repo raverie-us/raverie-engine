@@ -138,8 +138,9 @@ namespace Audio
   public:
     LowPassFilter();
 
-    void ProcessSample(const float* input, float* output, const unsigned numChannels);
+    void ProcessFrame(const float* input, float* output, const unsigned numChannels);
 
+    float GetCutoffFrequency();
     void SetCutoffFrequency(const float value);
     void MergeWith(LowPassFilter& otherFilter);
 
@@ -160,7 +161,7 @@ namespace Audio
   public:
     HighPassFilter();
 
-    void ProcessSample(const float* input, float* output, const unsigned numChannels);
+    void ProcessFrame(const float* input, float* output, const unsigned numChannels);
 
     void SetCutoffFrequency(const float value);
     void MergeWith(HighPassFilter& otherFilter);
@@ -182,7 +183,7 @@ namespace Audio
   public:
     BandPassFilter();
 
-    void ProcessSample(const float* input, float* output, const unsigned numChannels);
+    void ProcessFrame(const float* input, float* output, const unsigned numChannels);
 
     void SetFrequency(const float frequency);
     void SetQuality(const float Q);
@@ -214,15 +215,6 @@ namespace Audio
 
     float GetNextSample();
 
-    enum Types
-    {
-      Sine = 0,
-      Saw,
-      Triangle,
-      Square,
-      Noise
-    };
-
     enum Polarities
     {
       Bipolar = 0,
@@ -230,13 +222,14 @@ namespace Audio
     };
 
     void SetFrequency(const float frequency);
-    void SetType(const Types type);
+    void SetType(const OscillatorTypes::Enum type);
     void SetPolarity(const Polarities polarity) { mPolarity = polarity; }
     void SetNoteOn(const bool isOn) { mNoteOn = isOn; }
+    void SetSquareWavePositiveFraction(const float positiveFraction);
 
   private:
     float mFrequency;
-    Types mType;
+    OscillatorTypes::Enum mType;
     Polarities mPolarity;
     unsigned mSampleRate;
     static const int ArraySize = 1024;
@@ -245,6 +238,7 @@ namespace Audio
     float mReadIndex;
     float mIncrement;
     bool mNoteOn;
+    float mSquareWavePositiveFraction;
   };
 
   //------------------------------------------------------------------------------------- Delay Line
@@ -262,23 +256,23 @@ namespace Audio
     void SetDelayMSec(float delay);
     // Returns the current length of delay
     float GetDelayMSec();
-    // Sets the percentage of output which is fed back in as input
-    void SetFeedbackPct(const float feedbackPercent);
-    // Returns the current feedback percentage
-    float GetFeedbackPct() { return Feedback * 100.0f; }
-    // Sets the percentage of output which is filtered
-    void SetWetLevelPct(const float wetLevelPercent);
-    // Returns the current wet percentage
-    float GetWetLevelPct() { return WetLevel * 100.0f; }
-    // Changes the wet level percentage over time
-    void InterpolateWetLevelPct(const float percent, const float time);
+    // Sets the fraction of output which is fed back in as input (0 - 1.0f)
+    void SetFeedback(const float feedbackValue);
+    // Returns the current feedback fraction (0 - 1.0f)
+    float GetFeedback() { return Feedback; }
+    // Sets the fraction of output which is filtered (0 - 1.0f)
+    void SetWetLevel(const float wetLevelValue);
+    // Returns the current wet level (0 - 1.0f)
+    float GetWetLevel() { return WetLevel; }
+    // Changes the wet level value over time
+    void InterpolateWetLevel(const float newValue, const float time);
 
   private:
     // Length of delay in samples
     float DelayInSamples;
-    // Feedback value
+    // Feedback value (0 - 1.0f)
     float Feedback;
-    // Wet level value
+    // Wet level value (0 - 1.0f)
     float WetLevel;
     // Array of delay buffers per channel
     float* BuffersPerChannel[MaxChannels];
@@ -398,6 +392,7 @@ namespace Audio
     Equalizer();
     Equalizer(const float below80Hz, const float at150Hz, const float at600Hz, const float at2500Hz, 
       const float above5000Hz);
+    Equalizer(const Equalizer& copy);
 
     void ProcessBuffer(const float *input, float *output, const unsigned numChannels, 
       const unsigned bufferSize);
@@ -479,10 +474,10 @@ namespace Audio
 
     // Sets the length of the reverb tail in milliseconds
     void SetTime(const float timeInMSec);
-    // Sets the percentage of output that is filtered
-    void SetWetPercent(const float wetPercent);
-    // Sets the percentage of filtered output over the specified number of seconds
-    void InterpolateWetPercent(const float wetPercent, const float time);
+    // Sets the fraction of output that is filtered (0 - 1.0)
+    void SetWetLevel(const float wetLevel);
+    // Sets the fraction of filtered output over the specified number of seconds
+    void InterpolateWetLevel(const float newWetLevel, const float time);
 
   private:
     void Initialize();
@@ -495,9 +490,9 @@ namespace Audio
     ReverbData Data[ChannelCount];
     // The low pass gain value
     float LPgain;
-    // The value of the wet percentage
+    // The value of the wet level
     float WetValue;
-    // Used to interpolate the wet percentage
+    // Used to interpolate the wet level
     InterpolatingObject WetValueInterpolator;
   };
 

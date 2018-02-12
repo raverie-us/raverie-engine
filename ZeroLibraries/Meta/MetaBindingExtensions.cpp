@@ -49,6 +49,10 @@ const String cRuntimeClone("RuntimeClone");
 const String cRenamedFrom("RenamedFrom");
 const String cNetProperty("NetProperty");
 const String cNetPeerId("NetPeerId");
+const String cGroup("Group");
+const String cRange("Range");
+const String cSlider("Slider");
+const String cOptional("Optional");
 
 }//namespace PropertyFlags
 
@@ -260,23 +264,7 @@ void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam ev
   builder.AddSendsEvent(boundType, eventName, eventType);
 }
 
-ZilchDefineType(MetaCustomUi, builder, type)
-{
-}
-
 ZilchDefineType(MetaOperations, builder, type)
-{
-}
-
-ZilchDefineType(MetaPropertyFilter, builder, type)
-{
-}
-
-ZilchDefineType(MetaPropertyBasicFilter, builder, type)
-{
-}
-
-ZilchDefineType(MetaEditorGizmo, builder, type)
 {
 }
 
@@ -413,18 +401,9 @@ Mat4 MetaTransformInstance::GetParentWorldMatrix()
   return Mat4::cIdentity;
 }
 
-
-//---------------------------------------------------------------------------------- Property Rename
-//**************************************************************************************************
-ZilchDefineType(MetaPropertyRename, builder, type)
+//----------------------------------------------------------------------------------- Meta Attribute
+ZilchDefineType(MetaAttribute, builder, type)
 {
-}
-
-//**************************************************************************************************
-MetaPropertyRename::MetaPropertyRename(StringParam oldName)
-  : mOldName(oldName)
-{
-
 }
 
 }//namespace Zero

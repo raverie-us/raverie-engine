@@ -6,7 +6,6 @@ namespace Zero
 void ForceCompileAllShaders(Editor* editor)
 {
   Z::gEngine->has(GraphicsEngine)->ForceCompileAllShaders();
-  DoNotify("Shaders Compiled", String(), "ZeroCommandDropdown");
 }
 
 void BindGraphicsCommands(Cog* config, CommandManager* commands)

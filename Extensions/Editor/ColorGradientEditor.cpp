@@ -143,7 +143,7 @@ GradientKeyDrawer::GradientKeyDrawer(ColorGradientEditor* gradientEditor)
   mGradientEditor = gradientEditor;
 }
 
-void GradientKeyDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void GradientKeyDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 

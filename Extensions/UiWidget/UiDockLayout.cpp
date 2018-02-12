@@ -13,6 +13,7 @@ namespace Zero
 //******************************************************************************
 ZilchDefineType(UiDockLayout, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindComponent();
   ZeroBindInterface(UiLayout);
   ZilchBindFieldProperty(mSpacing);
@@ -32,13 +33,60 @@ void UiDockLayout::Serialize(Serializer& stream)
 }
 
 //******************************************************************************
-Vec2 UiDockLayout::Measure(Rect& rect)
+Vec2 UiDockLayout::Measure(Rectangle& rect)
 {
   return MaxMeasure(rect);
 }
 
 //******************************************************************************
-Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
+UiWidget* FindPreviousInLayout(UiWidget* widget)
+{
+  do
+  {
+    widget = widget->GetPreviousSibling();
+  } while (widget && !widget->GetInLayout());
+
+  return widget;
+}
+
+//******************************************************************************
+float GetChildFlex(UiWidget* widget, uint axis)
+{
+  UiWidget* current = widget->mParent->GetLastDirectChild();
+  if(current->GetInLayout() == false)
+    current = FindPreviousInLayout(current);
+
+  float flexSize = 0.0f;
+
+  while(current != widget && current)
+  {
+    float currentFlexSize = current->GetFlexSize()[axis];
+    uint currentAxis = UiDockMode::GetAxis(current->GetDockMode());
+
+    if (currentAxis == axis)
+      flexSize += currentFlexSize;
+    else
+      flexSize = Math::Max(flexSize, currentFlexSize);
+
+    current = FindPreviousInLayout(current);
+  }
+
+  return flexSize;
+}
+
+//******************************************************************************
+float CalculateFlexedSize(UiWidget* widget, float flexSize, float totalSize)
+{
+  uint axis = UiDockMode::GetAxis(widget->GetDockMode());
+
+  float remainingFlex = GetChildFlex(widget, axis);
+  float totalFlex = flexSize + remainingFlex;
+  float flexRatio = totalSize / totalFlex;
+  return Math::Floor(flexSize * flexRatio);
+}
+
+//******************************************************************************
+void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
   if (mDebug)
@@ -51,8 +99,8 @@ Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
   // regardless of whether or not they're in the layout
   UpdateNotInLayout(e);
 
-  ApplyPadding(mPadding, rect);
-  Vec2 offset = rect.GetPosition();
+  rect.RemoveThickness(mPadding);
+  Vec2 offset = rect.GetBottomLeft();
   Vec2 size = rect.GetSize();
 
   Vec4 area = Vec4(offset.x, offset.y,
@@ -85,8 +133,15 @@ Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
       switch (mode)
       {
         //--------------------------------------------------------------------
-      case UiDockMode::Top:
+      case UiDockMode::Bottom:
         {
+          if (child->GetSizePolicyY() == UiSizePolicy::Flex)
+          {
+            float flexSize = child->GetFlexSize().y;
+            float totalSize = area[SlicesIndex::Bottom] - area[SlicesIndex::Top];
+            size.y = CalculateFlexedSize(child, flexSize, totalSize);
+          }
+
           float moveY = size.y;
           areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
           area[SlicesIndex::Top] += moveY + mSpacing[Axis::Y];
@@ -95,8 +150,15 @@ Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
         break;
 
         //--------------------------------------------------------------------
-      case UiDockMode::Bottom:
+      case UiDockMode::Top:
         {
+          if (child->GetSizePolicyY() == UiSizePolicy::Flex)
+          {
+            float flexSize = child->GetFlexSize().y;
+            float totalSize = area[SlicesIndex::Bottom] - area[SlicesIndex::Top];
+            size.y = CalculateFlexedSize(child, flexSize, totalSize);
+          }
+
           float moveY = size.y;
           areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Bottom] - moveY);
           area[SlicesIndex::Bottom] -= moveY + mSpacing[Axis::Y];
@@ -107,6 +169,12 @@ Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
         //--------------------------------------------------------------------
       case UiDockMode::Left:
         {
+          if (child->GetSizePolicyX() == UiSizePolicy::Flex)
+          {
+            float flexSize = child->GetFlexSize().x;
+            float totalSize = area[SlicesIndex::Right] - area[SlicesIndex::Left];
+            size.x = CalculateFlexedSize(child, flexSize, totalSize);
+          }
           float moveX = size.x;
           areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
           area[SlicesIndex::Left] += moveX + mSpacing[Axis::X];
@@ -117,10 +185,16 @@ Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
         //--------------------------------------------------------------------
       case UiDockMode::Right:
         {
+          if (child->GetSizePolicyX() == UiSizePolicy::Flex)
+          {
+            float flexSize = child->GetFlexSize().x;
+            float totalSize = area[SlicesIndex::Right] - area[SlicesIndex::Left];
+            size.x = CalculateFlexedSize(child, flexSize, totalSize);
+          }
           float moveX = size.x;
           areaPos = Vec2(area[SlicesIndex::Right] - moveX, area[SlicesIndex::Top]);
-          area[SlicesIndex::Right] -= moveX + +mSpacing[Axis::X];
-          areaSize = Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);          
+          area[SlicesIndex::Right] -= moveX + mSpacing[Axis::X];
+          areaSize = Vec2(moveX, area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
         }
         break;
       }
@@ -151,13 +225,10 @@ Vec2 UiDockLayout::DoLayout(Rect& rect, UiTransformUpdateEvent* e)
       CalculateAlignment(Axis::Y, child->GetVerticalAlignment(), areaSize, areaPos, childSize, childPos);
     }
 
-    child->SetLocalTranslation(childPos);
     child->SetSize(childSize);
-    child->UpdateTransform(e);
+    child->SetLocalBottomLeft(childPos);
+    child->Update(e);
   }
-
-  RemovePadding(mPadding, rect);
-  return rect.GetSize();
 }
 
 }//namespace Zero

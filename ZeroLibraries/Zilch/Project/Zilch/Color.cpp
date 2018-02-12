@@ -367,22 +367,27 @@ namespace Zilch
   {
     // Bind all the color definitions as getters
     const char* description = "RGBA color of Real4(%g, %g, %g, %g) or hex 0x%02X%02X%02X%02X";
-    #define DefineColor(name, r, g, b, a)         \
-      ZilchBindFieldGetter(name)->Description =   \
-        ZilchDocumentString                       \
-        (                                         \
-          String::Format                          \
-          (                                       \
-            description,                          \
-            r * CC::InvFactor,                    \
-            g * CC::InvFactor,                    \
-            b * CC::InvFactor,                    \
-            a * CC::InvFactor,                    \
-            r,                                    \
-            g,                                    \
-            b                                     \
-          )                                       \
-        );
+    #define DefineColor(name, r, g, b, a)                 \
+    {                                                     \
+      Zilch::Property* prop = ZilchBindFieldGetter(name); \
+      prop->ComplexUserData.WriteObject(name, 0);         \
+      prop->Description =                                 \
+      ZilchDocumentString                                 \
+      (                                                   \
+        String::Format                                    \
+        (                                                 \
+          description,                                    \
+          r * CC::InvFactor,                              \
+          g * CC::InvFactor,                              \
+          b * CC::InvFactor,                              \
+          a * CC::InvFactor,                              \
+          r,                                              \
+          g,                                              \
+          b,                                              \
+          a                                               \
+        )                                                 \
+      );                                                  \
+    }
     #include "Math/ColorDefinitions.hpp"
     #undef DefineColor
   }

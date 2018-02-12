@@ -160,8 +160,7 @@ void GraphicsEngine::Update()
   mReturnJobQueue->TakeAllJobs(returnJobs);
   forRange (RendererJob* job, returnJobs.All())
   {
-    ReturnRendererJob* returnJob = (ReturnRendererJob*)job;
-    returnJob->ReturnExecute();
+    job->ReturnExecute();
   }
 
   ++mFrameCounter;
@@ -380,6 +379,20 @@ void GraphicsEngine::SetSplashscreenLoading()
   mShowProgressJob->mSplashMode = true;
 }
 
+void GraphicsEngine::OnOsWindowMinimized(Event* event)
+{
+  Z::gRenderer->mThreadLock.Lock();
+  Z::gRenderer->mBackBufferSafe = false;
+  Z::gRenderer->mThreadLock.Unlock();
+}
+
+void GraphicsEngine::OnOsWindowRestored(Event* event)
+{
+  Z::gRenderer->mThreadLock.Lock();
+  Z::gRenderer->mBackBufferSafe = true;
+  Z::gRenderer->mThreadLock.Unlock();
+}
+
 void GraphicsEngine::OnProjectCogModified(Event* event)
 {
   if (FrameRateSettings* frameRate = mProjectCog.has(FrameRateSettings))
@@ -462,8 +475,10 @@ void GraphicsEngine::AddRendererJob(RendererJob* rendererJob)
   mRendererJobQueue->AddJob(rendererJob);
 }
 
-void GraphicsEngine::CreateRenderer(OsHandle mainWindowHandle)
+void GraphicsEngine::CreateRenderer(OsWindow* mainWindow)
 {
+  OsHandle mainWindowHandle = mainWindow->GetWindowHandle();
+
   CreateRendererJob* rendererJob = new CreateRendererJob();
   rendererJob->mMainWindowHandle = mainWindowHandle;
   AddRendererJob(rendererJob);
@@ -475,6 +490,9 @@ void GraphicsEngine::CreateRenderer(OsHandle mainWindowHandle)
   delete rendererJob;
 
   Z::gEngine->mIntel = Z::gRenderer->mDriverSupport.mIntel;
+
+  ConnectThisTo(mainWindow, Events::OsWindowMinimized, OnOsWindowMinimized);
+  ConnectThisTo(mainWindow, Events::OsWindowRestored, OnOsWindowRestored);
 }
 
 void GraphicsEngine::DestroyRenderer()
@@ -582,6 +600,7 @@ void GraphicsEngine::AddTexture(Texture* texture, bool subImage, uint xOffset, u
   rendererJob->mCompareFunc = texture->mCompareFunc;
   rendererJob->mAnisotropy = texture->mAnisotropy;
   rendererJob->mMipMapping = texture->mMipMapping;
+  rendererJob->mMaxMipOverride = texture->mMaxMipOverride;
 
   rendererJob->mSubImage = subImage;
   rendererJob->mXOffset = xOffset;
@@ -620,6 +639,13 @@ void GraphicsEngine::RemoveTexture(Texture* texture)
   RemoveTextureJob* rendererJob = new RemoveTextureJob();
   rendererJob->mRenderData = texture->mRenderData;
   texture->mRenderData = nullptr;
+  AddRendererJob(rendererJob);
+}
+
+void GraphicsEngine::SetLazyShaderCompilation(bool lazyShaderCompilation)
+{
+  SetLazyShaderCompilationJob* rendererJob = new SetLazyShaderCompilationJob();
+  rendererJob->mLazyShaderCompilation = lazyShaderCompilation;
   AddRendererJob(rendererJob);
 }
 
@@ -937,20 +963,15 @@ void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
 
       forRange (Property* metaProperty, type->GetProperties())
       {
-        Attribute* inputAttribute = metaProperty->HasAttribute(PropertyAttributes::cShaderInput);
-        if (inputAttribute == nullptr)
-          continue;
+        forRange(MetaShaderInput* shaderInput, metaProperty->HasAll<MetaShaderInput>())
+        {
+          ShaderMetaProperty shaderProperty;
+          shaderProperty.mMetaPropertyName = metaProperty->Name;
+          shaderProperty.mFragmentName = shaderInput->mFragmentName;
+          shaderProperty.mInputName = shaderInput->mInputName;
 
-        ShaderMetaProperty shaderProperty;
-        shaderProperty.mMetaPropertyName = metaProperty->Name;
-
-        uint parameterCount = inputAttribute->Parameters.Size();
-        if (parameterCount >= 2)
-          shaderProperty.mInputName = inputAttribute->Parameters[1].StringValue;
-        if (parameterCount >= 1)
-          shaderProperty.mFragmentName = inputAttribute->Parameters[0].StringValue;
-
-        mComponentShaderProperties[typeName].PushBack(shaderProperty);
+          mComponentShaderProperties[typeName].PushBack(shaderProperty);
+        }
       }
     }
 
@@ -988,19 +1009,23 @@ void GraphicsEngine::ClearRenderTargets()
 
 void GraphicsEngine::ForceCompileAllShaders()
 {
-  // METAREFACTOR Check how this was being used
-  //ShaderSet allShaders;
-  //allShaders.Append(mCompositeShaders.Values());
-  //allShaders.Append(mPostProcessShaders.Values());
-  //
-  //if(allShaders.Empty())
-  //  return;
-  //
-  //AddShadersJob* addShadersJob = new AddShadersJob();
-  //bool compiled = mShaderGenerator->BuildShadersLibrary(allShaders, mUniqueComposites, addShadersJob->mShaders);
-  //ErrorIf(!compiled, "Shaders did not compile after composition.");
-  //addShadersJob->mForceCompile = true;
-  //AddRendererJob(addShadersJob);
+  BlockingTaskEvent event("Compiling");
+  Z::gEngine->DispatchEvent(Events::BlockingTaskStart, &event);
+
+  ShaderSet allShaders;
+  allShaders.Append(mCompositeShaders.Values());
+  allShaders.Append(mPostProcessShaders.Values());
+  
+  if (allShaders.Empty())
+    return;
+  
+  AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
+  bool compiled = mShaderGenerator->BuildShaders(allShaders, mUniqueComposites, addShadersJob->mShaders);
+  ErrorIf(!compiled, "Shaders did not compile after composition.");
+
+  // Blocking task is ended in the return exectute of the job, mForceCompileBatchCount cannot be 0 here.
+  addShadersJob->mForceCompileBatchCount = 10;
+  AddRendererJob(addShadersJob);
 }
 
 void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type, StringParam name)
@@ -1292,10 +1317,9 @@ void GraphicsEngine::CompileShaders()
 
   if (shadersToCompile.Empty() == false)
   {
-    AddShadersJob* addShadersJob = new AddShadersJob();
+    AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
     bool compiled = mShaderGenerator->BuildShaders(shadersToCompile, mUniqueComposites, addShadersJob->mShaders);
     ErrorIf(!compiled, "Shaders did not compile after composition.");
-    addShadersJob->mForceCompile = false;
     AddRendererJob(addShadersJob);
   }
 }

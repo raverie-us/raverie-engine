@@ -47,8 +47,13 @@ class EnumMetaSerialization : public MetaSerialization
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  EnumMetaSerialization(BoundType* enumType);
+
   bool SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
+  bool ConvertFromString(StringParam input, Any& output) override;
+
+  BoundType* mEnumType;
 };
 
 //--------------------------------------------------------------------- Meta Serialization Primitive
@@ -166,6 +171,7 @@ bool PrimitiveMetaSerialization<T>::ConvertFromString(StringParam input, Any& ou
 {
   T value = T();
   ToValue(input.c_str(), value);
+  CorrectNonFiniteValues(value);
   output = value;
   return true;
 }

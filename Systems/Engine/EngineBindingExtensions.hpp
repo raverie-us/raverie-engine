@@ -33,4 +33,32 @@ public:
   CodeLocation mClassLocation;
 };
 
+//------------------------------------------------------------------------ Meta Editor Script Object
+class MetaEditorScriptObject : public MetaAttribute
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  MetaEditorScriptObject();
+
+  bool mAutoRegister;
+};
+
+//---------------------------------------------------------------------------------- Meta Dependency
+class MetaDependency : public MetaAttribute
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  void PostProcess(Status& status, ReflectionObject* owner) override;
+};
+
+//----------------------------------------------------------------------------------- Meta Interface
+class MetaInterface : public MetaAttribute
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  void PostProcess(Status& status, ReflectionObject* owner) override;
+};
+
 }//namespace Zero

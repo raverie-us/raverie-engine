@@ -54,6 +54,7 @@ ZilchShaderLibraryRef ZilchShaderProject::CompileAndTranslate(ZilchShaderModuleR
   BuildZilchProject(zilchProject);
   // Listen for compilation errors on this zilch project (so we can forward them back up)
   ListenForZilchErrors(zilchProject);
+  ListenForTypeParsed(zilchProject);
 
   // Compile the source code into a syntax tree
   Zilch::Array<Zilch::UserToken> tokensOut;

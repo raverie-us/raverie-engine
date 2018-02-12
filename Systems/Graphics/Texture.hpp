@@ -64,6 +64,8 @@ public:
   TextureMipMapping::Enum GetMipMapping();
   void SetMipMapping(TextureMipMapping::Enum mipMapping);
   TextureMipMapping::Enum mMipMapping;
+  // Limits how many gpu generated mip levels will be done, default is 0 for no limit.
+  uint mMaxMipOverride;
 
   /// If sampling in hardware should perform comparison instead of fetching. Requires using SamplerShadow2d in the shader.
   TextureCompareMode::Enum GetCompareMode();

@@ -16,7 +16,7 @@ namespace Audio
     ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
     TimeMSec(1000.0f),
-    WetPercent(50.0f),
+    WetLevelValue(0.5f),
     OutputFinished(false)
   {
     if (!Threaded)
@@ -58,44 +58,44 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float ReverbNode::GetWetPercent()
+  float ReverbNode::GetWetLevel()
   {
-    return WetPercent;
+    return WetLevelValue;
   }
 
   //************************************************************************************************
-  void ReverbNode::SetWetPercent(const float newPercent)
+  void ReverbNode::SetWetLevel(const float wetLevel)
   {
-    WetPercent = newPercent;
+    WetLevelValue = wetLevel;
 
     if (!Threaded)
     {
       if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ReverbNode::SetWetPercent,
-        (ReverbNode*)GetSiblingNode(), newPercent));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&ReverbNode::SetWetLevel,
+        (ReverbNode*)GetSiblingNode(), wetLevel));
     }
     else
     {
       forRange(Reverb* filter, FiltersPerListener.Values())
-        filter->SetWetPercent(newPercent);
+        filter->SetWetLevel(wetLevel);
     }
   }
 
   //************************************************************************************************
-  void ReverbNode::InterpolateWetPercent(const float newPercent, const float time)
+  void ReverbNode::InterpolateWetLevel(const float newWetLevel, const float time)
   {
-    WetPercent = newPercent;
+    WetLevelValue = newWetLevel;
 
     if (!Threaded)
     {
       if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ReverbNode::InterpolateWetPercent,
-        (ReverbNode*)GetSiblingNode(), newPercent, time));
+        gAudioSystem->AddTask(Zero::CreateFunctor(&ReverbNode::InterpolateWetLevel,
+        (ReverbNode*)GetSiblingNode(), newWetLevel, time));
     }
     else
     {
       forRange(Reverb* filter, FiltersPerListener.Values())
-        filter->InterpolateWetPercent(newPercent, time);
+        filter->InterpolateWetLevel(newWetLevel, time);
     }
   }
 
@@ -120,7 +120,7 @@ namespace Audio
     {
       filter = new Reverb;
       filter->SetTime(TimeMSec);
-      filter->SetWetPercent(WetPercent);
+      filter->SetWetLevel(WetLevelValue);
       FiltersPerListener[listener] = filter;
     }
 

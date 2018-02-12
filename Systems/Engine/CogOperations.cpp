@@ -33,7 +33,7 @@ void AttachObject(OperationQueue* queue, Cog* object, Cog* parent, bool relative
   // When re-attaching to ourself, just move it to the end
   if(object->GetParent() == parent)
   {
-    uint newIndex = parent->GetChildCount() - 1;
+    uint newIndex = parent->GetChildCount();
     MoveObjectIndex(queue, object, newIndex);
     return;
   }
@@ -604,15 +604,9 @@ CreateDestroyOperation::CreateDestroyOperation(Cog* object, ObjectOperationMode:
 void CreateDestroyOperation::Undo()
 {
   if(mMode == ObjectOperationMode::Destroy)
-  {
     mRestoreState.RestoreObject( );
-
-    mCanPatch = false;
-  }
   else
-  {
     mRestoreState.DestroyObject(true);
-  }
 }
 
 //******************************************************************************
@@ -620,7 +614,6 @@ void CreateDestroyOperation::Redo()
 {
   if(mMode == ObjectOperationMode::Destroy)
   {
-    mCanPatch = true;
     mRestoreState.DestroyObject(false);
   }
   else
@@ -945,9 +938,6 @@ void ClearArchetypeOperation::Redo()
     ObjectState::ChildId childId(ZilchTypeId(Cog), mNewChildId);
     modifications->ChildAdded(parent->has(Hierarchy), childId);
   }
-
-  // The object no longer has any modifications
-  modifications->ClearModifications(cog, true, false);
 
   if(Space* space = cog->GetSpace())
   {

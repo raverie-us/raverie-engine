@@ -330,7 +330,7 @@ namespace Audio
   void LowPassFilter::SetCutoffValues()
   {
     // LP coefficients
-    float tanValue = Math::cPi * CutoffFrequency / AudioSystemInternal::SampleRate;
+    float tanValue = Math::cPi * CutoffFrequency / AudioSystemInternal::SystemSampleRate;
     if (tanValue >= HalfPI)
       tanValue = HalfPI - 0.001f;
 
@@ -362,7 +362,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void LowPassFilter::ProcessSample(const float* input, float* output, const unsigned numChannels)
+  void LowPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
   {
     if (CutoffFrequency > 20000.0f)
     {
@@ -373,6 +373,12 @@ namespace Audio
       for (unsigned i = 0; i < numChannels; ++i)
         output[i] = BiQuadsPerChannel[i].DoBiQuad(input[i]);
     }
+  }
+
+  //************************************************************************************************
+  float LowPassFilter::GetCutoffFrequency()
+  {
+    return CutoffFrequency;
   }
 
   //------------------------------------------------------------------------------- High Pass Filter
@@ -392,7 +398,7 @@ namespace Audio
   //************************************************************************************************
   void HighPassFilter::SetCutoffValues()
   {
-    float tanValue = Math::cPi * CutoffFrequency / AudioSystemInternal::SampleRate;
+    float tanValue = Math::cPi * CutoffFrequency / AudioSystemInternal::SystemSampleRate;
     if (tanValue >= HalfPI)
       tanValue = HalfPI - 0.001f;
 
@@ -424,7 +430,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void HighPassFilter::ProcessSample(const float* input, float* output, const unsigned numChannels)
+  void HighPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
   {
     if (CutoffFrequency < 20.0f)
       memcpy(output, input, sizeof(float) * numChannels);
@@ -475,7 +481,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void BandPassFilter::ProcessSample(const float* input, float* output, const unsigned numChannels)
+  void BandPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
   {
     for (unsigned i = 0; i < numChannels; ++i)
     {
@@ -499,10 +505,10 @@ namespace Audio
     else
       LowPassCutoff = 0.0f;
 
-    AlphaLP = AudioSystemInternal::SampleRate / ((LowPassCutoff * 2.0f * Math::cPi) + 
-      AudioSystemInternal::SampleRate);
-    AlphaHP = AudioSystemInternal::SampleRate / ((HighPassCutoff * 2.0f * Math::cPi) + 
-      AudioSystemInternal::SampleRate);
+    AlphaLP = AudioSystemInternal::SystemSampleRate / ((LowPassCutoff * 2.0f * Math::cPi) + 
+      AudioSystemInternal::SystemSampleRate);
+    AlphaHP = AudioSystemInternal::SystemSampleRate / ((HighPassCutoff * 2.0f * Math::cPi) + 
+      AudioSystemInternal::SystemSampleRate);
   }
 
   //------------------------------------------------------------------------------------- Oscillator
@@ -510,15 +516,16 @@ namespace Audio
   //************************************************************************************************
   Oscillator::Oscillator() :
     mReadIndex(0),
-    mIncrement(0), 
-    mNoteOn(false), 
-    mSampleRate(AudioSystemInternal::SampleRate),
+    mIncrement(0),
+    mNoteOn(false),
+    mSampleRate(AudioSystemInternal::SystemSampleRate),
     mFrequency(1.0f),
-    mType(Noise), 
-    mPolarity(Bipolar)
+    mType(OscillatorTypes::Noise),
+    mPolarity(Bipolar),
+    mSquareWavePositiveFraction(0.5f)
   {
-    mIncrement = 1024.0f * mFrequency / mSampleRate;
-    SetType(Sine);
+    mIncrement = ArraySize * mFrequency / (float)mSampleRate;
+    SetType(OscillatorTypes::Sine);
   }
 
   //************************************************************************************************
@@ -542,8 +549,8 @@ namespace Audio
     if (!mNoteOn)
       return 0.0f;
 
-    if (mType == Noise)
-      return RandomObject.FloatRange(-1.0f, 1.0f) * WAVE_VOLUME;
+    if (mType == OscillatorTypes::Noise)
+      return RandomObject.FloatRange(-1.0f, 1.0f) * GeneratedWaveVolume;
 
     int readIndexInt = (int)mReadIndex;
 
@@ -579,19 +586,19 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void Oscillator::SetType(const Types newType)
+  void Oscillator::SetType(const OscillatorTypes::Enum newType)
   {
     if (newType == mType)
       return;
 
     mType = newType;
 
-    if (mType == Sine)
+    if (mType == OscillatorTypes::Sine)
     {
       for (int i = 0; i < ArraySize; ++i)
-        mWaveValues[i] = 0.99f * Math::Sin(((float)i / (float)ArraySize) * 2.0f * Math::cPi);
+        mWaveValues[i] = 0.99f * Math::Sin(((float)i / (float)ArraySize) * Math::cTwoPi);
     }
-    else if (mType == Saw)
+    else if (mType == OscillatorTypes::Saw)
     {
       int halfBuffer = ArraySize / 2;
       float sawtoothInc = 1.0f / halfBuffer;
@@ -603,18 +610,19 @@ namespace Audio
           mWaveValues[i] = ((i - halfBuffer - 1) * sawtoothInc - 1.0f);
       }
     }
-    else if (mType == Square)
+    else if (mType == OscillatorTypes::Square)
     {
-      int halfBuffer = ArraySize / 2;
+      int positiveSize = (int)(mSquareWavePositiveFraction * ArraySize);
+
       for (int i = 0; i < ArraySize; ++i)
       {
-        if (i < halfBuffer)
+        if (i < positiveSize)
           mWaveValues[i] = 1.0f;
         else
           mWaveValues[i] = -1.0f;
       }
     }
-    else if (mType == Triangle)
+    else if (mType == OscillatorTypes::Triangle)
     {
       int halfBuffer = ArraySize / 2;
       int quarterBuffer = halfBuffer / 2;
@@ -636,11 +644,31 @@ namespace Audio
     }
   }
 
+  //************************************************************************************************
+  void Oscillator::SetSquareWavePositiveFraction(const float positiveFraction)
+  {
+    mSquareWavePositiveFraction = positiveFraction;
+
+    // If necessary, re-create the wave data
+    if (mType == OscillatorTypes::Square)
+    {
+      int positiveSize = (int)(mSquareWavePositiveFraction * ArraySize);
+
+      for (int i = 0; i < ArraySize; ++i)
+      {
+        if (i < positiveSize)
+          mWaveValues[i] = 1.0f;
+        else
+          mWaveValues[i] = -1.0f;
+      }
+    }
+  }
+
   //------------------------------------------------------------------------------------- Delay Line
 
   //************************************************************************************************
   DelayLine::DelayLine() : 
-    DelayInSamples(100.0f * AudioSystemInternal::SampleRate / 1000.0f),
+    DelayInSamples(100.0f * AudioSystemInternal::SystemSampleRate / 1000.0f),
     Feedback(0),
     WetLevel(0.5f),
     ReadIndex(0), 
@@ -649,7 +677,7 @@ namespace Audio
     MaxDelaySec(2.0f),
     InterpolatingWetLevel(false)
   {
-    BufferSize = (int)(MaxDelaySec * AudioSystemInternal::SampleRate);
+    BufferSize = (int)(MaxDelaySec * AudioSystemInternal::SystemSampleRate);
     for (unsigned i = 0; i < MaxChannels; ++i)
     {
       BuffersPerChannel[i] = new float[BufferSize];
@@ -704,7 +732,7 @@ namespace Audio
         // Write input to delay buffer
         BuffersPerChannel[channel][WriteIndex] = inputSample + (Feedback * delayedSample);
 
-        // Check if we are interpolating the wet percent
+        // Check if we are interpolating the wet level
         if (InterpolatingWetLevel)
         {
           WetLevel = WetLevelInterpolator.NextValue();
@@ -731,7 +759,7 @@ namespace Audio
     if (delay > MaxDelaySec * 1000)
       delay = MaxDelaySec * 1000;
 
-    DelayInSamples = delay * AudioSystemInternal::SampleRate / 1000.0f;
+    DelayInSamples = delay * AudioSystemInternal::SystemSampleRate / 1000.0f;
 
     ReadIndex = WriteIndex - (int)DelayInSamples;
     while (ReadIndex < 0)
@@ -741,28 +769,29 @@ namespace Audio
   //************************************************************************************************
   float DelayLine::GetDelayMSec()
   {
-    return DelayInSamples / AudioSystemInternal::SampleRate * 1000.0f;
+    return DelayInSamples / AudioSystemInternal::SystemSampleRate * 1000.0f;
   }
 
   //************************************************************************************************
-  void DelayLine::SetFeedbackPct(const float feedbackPct)
+  void DelayLine::SetFeedback(const float feedbackValue)
   {
-    Feedback = feedbackPct / 100.0f;
+    Feedback = feedbackValue;
 
   }
 
   //************************************************************************************************
-  void DelayLine::SetWetLevelPct(const float wetPct)
+  void DelayLine::SetWetLevel(const float wetLevelValue)
   {
-    WetLevel = wetPct / 100.0f;
+    WetLevel = wetLevelValue;
 
   }
 
   //************************************************************************************************
-  void DelayLine::InterpolateWetLevelPct(const float percent, const float time)
+  void DelayLine::InterpolateWetLevel(const float newValue, const float time)
   {
     InterpolatingWetLevel = true;
-    WetLevelInterpolator.SetValues(WetLevel, percent / 100.0f, (unsigned)(time * AudioSystemInternal::SampleRate));
+    WetLevelInterpolator.SetValues(WetLevel, newValue, 
+      (unsigned)(time * AudioSystemInternal::SystemSampleRate));
   }
 
   //------------------------------------------------------------------------------ Envelope Detector
@@ -773,7 +802,7 @@ namespace Audio
     mReleaseTimeMSec(0.0f), 
     mAttackTime(0.0f),
     mReleaseTime(0.0f),
-    mSampleRate((float)AudioSystemInternal::SampleRate), 
+    mSampleRate((float)AudioSystemInternal::SystemSampleRate), 
     mEnvelope(0.0f),
     mDetectMode(DetectModes::Peak), 
     mSample(0),
@@ -1125,6 +1154,37 @@ namespace Audio
   }
 
   //************************************************************************************************
+  Equalizer::Equalizer(const Equalizer& copy) :
+    mLowPassGain(copy.mLowPassGain),
+    mHighPassGain(copy.mHighPassGain),
+    mBand1Gain(copy.mBand1Gain),
+    mBand2Gain(copy.mBand2Gain),
+    mBand3Gain(copy.mBand3Gain)
+  {
+    SetFilterData();
+
+    Equalizer& other = const_cast<Equalizer&>(copy);
+    if (!other.LowPassInterpolator.Finished())
+    {
+      LowPassInterpolator.SetValues(other.LowPassInterpolator.GetStartValue(),
+        other.LowPassInterpolator.GetEndValue(), other.LowPassInterpolator.GetTotalFrames());
+      LowPassInterpolator.JumpForward(other.LowPassInterpolator.GetCurrentFrame());
+      HighPassInterpolator.SetValues(other.HighPassInterpolator.GetStartValue(),
+        other.HighPassInterpolator.GetEndValue(), other.HighPassInterpolator.GetTotalFrames());
+      HighPassInterpolator.JumpForward(other.HighPassInterpolator.GetCurrentFrame());
+      Band1Interpolator.SetValues(other.Band1Interpolator.GetStartValue(),
+        other.Band1Interpolator.GetEndValue(), other.Band1Interpolator.GetTotalFrames());
+      Band1Interpolator.JumpForward(other.Band1Interpolator.GetCurrentFrame());
+      Band2Interpolator.SetValues(other.Band2Interpolator.GetStartValue(),
+        other.Band2Interpolator.GetEndValue(), other.Band2Interpolator.GetTotalFrames());
+      Band2Interpolator.JumpForward(other.Band2Interpolator.GetCurrentFrame());
+      Band3Interpolator.SetValues(other.Band3Interpolator.GetStartValue(),
+        other.Band3Interpolator.GetEndValue(), other.Band3Interpolator.GetTotalFrames());
+      Band3Interpolator.JumpForward(other.Band3Interpolator.GetCurrentFrame());
+    }
+  }
+
+  //************************************************************************************************
   void Equalizer::ProcessBuffer(const float* input, float* output, const unsigned numChannels, 
     const unsigned bufferSize)
   {
@@ -1132,31 +1192,31 @@ namespace Audio
 
     for (unsigned i = 0; i < bufferSize; i += numChannels)
     {
-      LowPass.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      LowPass.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!LowPassInterpolator.Finished())
         mLowPassGain = LowPassInterpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
         output[i + j] = resultSamples[j] * mLowPassGain;
 
-      Band1.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      Band1.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!Band1Interpolator.Finished())
         mBand1Gain = Band1Interpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
         output[i + j] += resultSamples[j] * mBand1Gain;
 
-      Band2.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      Band2.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!Band2Interpolator.Finished())
         mBand2Gain = Band2Interpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
         output[i + j] += resultSamples[j] * mBand2Gain;
 
-      Band3.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      Band3.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!Band3Interpolator.Finished())
         mBand3Gain = Band3Interpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
         output[i + j] += resultSamples[j] * mBand3Gain;
 
-      HighPass.ProcessSample(input + i, resultSamples.Data(), numChannels);
+      HighPass.ProcessFrame(input + i, resultSamples.Data(), numChannels);
       if (!HighPassInterpolator.Finished())
         mHighPassGain = HighPassInterpolator.NextValue();
       for (unsigned j = 0; j < numChannels; ++j)
@@ -1229,15 +1289,15 @@ namespace Audio
     const float at2500Hz, const float above5000Hz, const float timeToInterpolate)
   {
     LowPassInterpolator.SetValues(mLowPassGain, below80Hz, (unsigned)(timeToInterpolate * 
-      AudioSystemInternal::SampleRate));
+      AudioSystemInternal::SystemSampleRate));
     Band1Interpolator.SetValues(mBand1Gain, at150Hz, (unsigned)(timeToInterpolate * 
-      AudioSystemInternal::SampleRate));
+      AudioSystemInternal::SystemSampleRate));
     Band2Interpolator.SetValues(mBand2Gain, at600Hz, (unsigned)(timeToInterpolate *
-      AudioSystemInternal::SampleRate));
+      AudioSystemInternal::SystemSampleRate));
     Band3Interpolator.SetValues(mBand3Gain, at2500Hz, (unsigned)(timeToInterpolate * 
-      AudioSystemInternal::SampleRate));
+      AudioSystemInternal::SystemSampleRate));
     HighPassInterpolator.SetValues(mHighPassGain, above5000Hz, (unsigned)(timeToInterpolate * 
-      AudioSystemInternal::SampleRate));
+      AudioSystemInternal::SystemSampleRate));
   }
 
   //************************************************************************************************
@@ -1267,14 +1327,14 @@ namespace Audio
 
   //************************************************************************************************
   ReverbData::ReverbData() :
-    PreDelay(0.5f, AudioSystemInternal::SampleRate),
-    InputAP_1(0.5f, AudioSystemInternal::SampleRate),
-    InputAP_2(0.5f, AudioSystemInternal::SampleRate),
-    Comb_1(0.5f, AudioSystemInternal::SampleRate),
-    Comb_2(0.5f, AudioSystemInternal::SampleRate),
-    LPComb_1(0.5f, AudioSystemInternal::SampleRate),
-    LPComb_2(0.5f, AudioSystemInternal::SampleRate),
-    OutputAP(0.5f, AudioSystemInternal::SampleRate)
+    PreDelay(0.5f, AudioSystemInternal::SystemSampleRate),
+    InputAP_1(0.5f, AudioSystemInternal::SystemSampleRate),
+    InputAP_2(0.5f, AudioSystemInternal::SystemSampleRate),
+    Comb_1(0.5f, AudioSystemInternal::SystemSampleRate),
+    Comb_2(0.5f, AudioSystemInternal::SystemSampleRate),
+    LPComb_1(0.5f, AudioSystemInternal::SystemSampleRate),
+    LPComb_2(0.5f, AudioSystemInternal::SystemSampleRate),
+    OutputAP(0.5f, AudioSystemInternal::SystemSampleRate)
   {
   
   }
@@ -1400,16 +1460,16 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void Reverb::SetWetPercent(const float newPercent)
+  void Reverb::SetWetLevel(const float wetLevel)
   {
-    WetValue = newPercent / 100.0f;
+    WetValue = wetLevel;
   }
 
   //************************************************************************************************
-  void Reverb::InterpolateWetPercent(const float newPercent, const float time)
+  void Reverb::InterpolateWetLevel(const float newWetLevel, const float time)
   {
-    WetValueInterpolator.SetValues(WetValue, newPercent / 100.0f, (unsigned)(time * 
-      AudioSystemInternal::SampleRate));
+    WetValueInterpolator.SetValues(WetValue, newWetLevel, (unsigned)(time *
+      AudioSystemInternal::SystemSampleRate));
   }
 
   //************************************************************************************************
@@ -1794,7 +1854,7 @@ namespace Audio
     mSustainLevel(0.0f),
     mReleaseTime(0.0f),
     mCurrentTime(0.0f),
-    mTimeDelta(1.0f / AudioSystemInternal::SampleRate),
+    mTimeDelta(1.0f / AudioSystemInternal::SystemSampleRate),
     mCurrentState(DelayState),
     mLastAmplitude(0.0f)
   {
@@ -1932,7 +1992,7 @@ namespace Audio
     mVolume(0.0f),
     mPitchOffset(0.0f),
     mTime(0.0f),
-    mTimeDelta(1.0f / AudioSystemInternal::SampleRate)
+    mTimeDelta(1.0f / AudioSystemInternal::SystemSampleRate)
   {
 
   }

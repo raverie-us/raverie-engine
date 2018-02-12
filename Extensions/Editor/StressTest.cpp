@@ -1057,6 +1057,8 @@ Any StressTestDialog::GetVariantForEnumExtension(StressRandom& random, Property*
 {
   BoundType* propertyType = Type::GetBoundType(prop->PropertyType);
   Zilch::PropertyArray& properties = propertyType->AllProperties;
+  if(properties.Empty())
+    return Any(0);
   
   if(random.Chance(0.9f))
   {
@@ -1081,7 +1083,7 @@ Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random, Property
     if(random.Chance(0.9f))
       value = random.RandomFloat();
     else
-      value = random.RandomFloatRange(editorRange->MinValue,editorRange->MaxValue);
+      value = random.RandomFloatRange(editorRange->Min,editorRange->Max);
     return Any(value);
   }
   // Uint has not type, can't support for now
@@ -1097,7 +1099,7 @@ Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random, Property
     if(random.Chance(0.9f))
       value = random.RandomInt();
     else
-      value = random.RandomIntRange((int)editorRange->MinValue, (int)editorRange->MaxValue);
+      value = random.RandomIntRange((int)editorRange->Min, (int)editorRange->Max);
     return Any(value);
   }
   else

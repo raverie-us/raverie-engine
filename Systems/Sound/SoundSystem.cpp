@@ -89,6 +89,7 @@ ZilchDefineType(SoundSystem, builder, type)
   ZilchBindGetterSetter(LatencySetting);
   ZilchBindGetterSetter(DispatchMicrophoneUncompressedFloatData);
   ZilchBindGetterSetter(DispatchMicrophoneCompressedByteData);
+  ZilchBindGetter(OutputChannels);
 
   ZilchBindMethod(VolumeNode);
   ZilchBindMethod(PanningNode);
@@ -124,6 +125,18 @@ ZilchDefineType(SoundSystem, builder, type)
 }
 
 //**************************************************************************************************
+SoundSystem::SoundSystem() :
+  mCounter(0),
+  mPreviewInstance(0),
+  mLatency(AudioLatency::Low),
+  mSendMicEvents(false),
+  mSendCompressedMicEvents(false),
+  mSoundSpaceCounter(0)
+{
+
+}
+
+//**************************************************************************************************
 SoundSystem::~SoundSystem()
 {
   // If currently previewing a sound, stop
@@ -139,7 +152,6 @@ SoundSystem::~SoundSystem()
 
   Zero::Status status;
   mAudioSystem->StopSystem(status);
-  ErrorIf(status.Failed(), status.Message.c_str());
   SafeDelete(mAudioSystem);
 }
 
@@ -153,10 +165,9 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
   mAudioSystem = new Audio::AudioSystemInterface(this);
   mAudioSystem->StartSystem(status);
   if (status.Failed())
-    DoNotifyWarning("Audio Error", status.Message);
+    DoNotifyWarning("Audio Initialization Unsuccessful", status.Message);
 
-  mAudioMessage = status.Message;
-
+  status.Reset();
   SoundNode* node = new SoundNode();
   node->SetNode(new Audio::CombineNode(status, "AudioOutput", mCounter++, nullptr), status);
   mAudioSystem->AddNodeToOutput(node->mNode);
@@ -184,7 +195,7 @@ float SoundSystem::GetSystemVolume()
 //**************************************************************************************************
 void SoundSystem::SetSystemVolume(float volume)
 {
-  mAudioSystem->SetVolume(volume);
+  mAudioSystem->SetVolume(Math::Max(volume, 0.0f));
 }
 
 //**************************************************************************************************
@@ -255,6 +266,12 @@ void SoundSystem::SetDispatchMicrophoneCompressedByteData(bool dispatchData)
 }
 
 //**************************************************************************************************
+int SoundSystem::GetOutputChannels()
+{
+  return mAudioSystem->GetOutputChannels();
+}
+
+//**************************************************************************************************
 void SoundSystem::Update()
 {
   // Update audio system 
@@ -312,53 +329,53 @@ float SoundSystem::DecibelsToVolume(float decibels)
 }
 
 //**************************************************************************************************
-void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * data)
+void SoundSystem::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void * data)
 {
-  if (eventType == Audio::Notify_AudioClipping)
+  if (eventType == Audio::AudioEventTypes::AudioClipping)
     DoNotifyWarning("Audio Error", "Audio is too loud and is being clipped. Reduce volume or number of sounds to avoid audio problems.");
-  else if (eventType == Audio::Notify_MidiNoteOn)
+  else if (eventType == Audio::AudioEventTypes::MidiNoteOn)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, midiData->Value2);
     DispatchEvent(Events::MIDINoteOn, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiNoteOff)
+  else if (eventType == Audio::AudioEventTypes::MidiNoteOff)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, 0);
     DispatchEvent(Events::MIDINoteOff, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiPitchWheel)
+  else if (eventType == Audio::AudioEventTypes::MidiPitchWheel)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
     DispatchEvent(Events::MIDIPitchWheel, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiVolume)
+  else if (eventType == Audio::AudioEventTypes::MidiVolume)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
     DispatchEvent(Events::MIDIVolume, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiModWheel)
+  else if (eventType == Audio::AudioEventTypes::MidiModWheel)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
     DispatchEvent(Events::MIDIModWheel, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MidiControl)
+  else if (eventType == Audio::AudioEventTypes::MidiControl)
   {
     Audio::MidiData* midiData = (Audio::MidiData*)data;
     MidiEvent event((float)midiData->Channel, midiData->Value1, midiData->Value2);
     DispatchEvent(Events::MIDIOtherControl, &event);
     delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::Notify_MicInputData)
+  else if (eventType == Audio::AudioEventTypes::MicInputData)
   {
     Array<float>* buffer = (Array<float>*)data;
     AudioFloatDataEvent event;
@@ -367,7 +384,7 @@ void SoundSystem::SendAudioEvent(const Audio::AudioEventType eventType, void * d
     event.AudioData->NativeArray = *buffer;
     DispatchEvent(Events::MicrophoneUncompressedFloatData, &event);
   }
-  else if (eventType == Audio::Notify_CompressedMicInputData)
+  else if (eventType == Audio::AudioEventTypes::CompressedMicInputData)
   {
     Array<byte>* buffer = (Array<byte>*)data;
     AudioByteDataEvent event;
@@ -383,6 +400,44 @@ void SoundSystem::SendAudioError(const Zero::String message)
   DoNotifyWarning("Audio Error", message.c_str());
 }
 
+//**************************************************************************************************
+void SoundSystem::AddSoundSpace(SoundSpace* space, bool isEditor)
+{
+  mSpaces.PushBack(space);
+
+  // If not an editor space, increase the counter and notify tags if necessary
+  if (!isEditor)
+  {
+    ++mSoundSpaceCounter;
+
+    if (mSoundSpaceCounter == 1)
+    {
+      forRange(SoundTag& tag, mSoundTags.All())
+        tag.CreateTag();
+    }
+  }
+}
+
+//**************************************************************************************************
+void SoundSystem::RemoveSoundSpace(SoundSpace* space, bool isEditor)
+{
+  mSpaces.Erase(space);
+
+  // If not an editor space, decrease the counter and notify tags if necessary
+  if (!isEditor)
+  {
+    --mSoundSpaceCounter;
+
+    ErrorIf(mSoundSpaceCounter < 0, "SoundSystem's space tracking has become negative");
+
+    if (mSoundSpaceCounter == 0)
+    {
+      forRange(SoundTag& tag, mSoundTags.All())
+        tag.ReleaseTag();
+    }
+  }
+}
+
 //----------------------------------------------------------------------------------- Audio Settings
 
 //**************************************************************************************************
@@ -393,9 +448,9 @@ ZilchDefineType(AudioSettings, builder, type)
   ZeroBindTag(Tags::Sound);
   ZeroBindDocumented();
 
-  ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorRange(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
   ZilchBindGetterSetterProperty(MixType); 
-  ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorRange(0.0f, 0.2f, 0.001f));
+  ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
   ZilchBindGetterSetterProperty(LatencySetting);
 }
 
@@ -426,9 +481,9 @@ float AudioSettings::GetSystemVolume()
 //**************************************************************************************************
 void AudioSettings::SetSystemVolume(float volume)
 {
-  mSystemVolume = volume;
+  mSystemVolume = Math::Max(volume, 0.0f);
 
-  Z::gSound->mAudioSystem->SetVolume(volume);
+  Z::gSound->mAudioSystem->SetVolume(mSystemVolume);
 }
 
 //**************************************************************************************************
@@ -477,8 +532,8 @@ float AudioSettings::GetMinVolumeThreshold()
 //**************************************************************************************************
 void AudioSettings::SetMinVolumeThreshold(float volume)
 {
-  mMinVolumeThreshold = volume;
-  Z::gSound->mAudioSystem->SetMinimumVolumeThreshold(volume);
+  mMinVolumeThreshold = Math::Max(volume, 0.0f);
+  Z::gSound->mAudioSystem->SetMinimumVolumeThreshold(mMinVolumeThreshold);
 }
 
 //**************************************************************************************************

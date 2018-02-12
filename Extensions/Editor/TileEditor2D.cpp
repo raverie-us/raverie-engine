@@ -494,7 +494,7 @@ ZilchDefineType(TileEditor2D, builder, type)
 
   ZilchBindGetterSetterProperty(ToolType);
   ZilchBindMethodProperty(CreateTileMap);
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
   ZilchBindGetterSetterProperty(ShowCollision);
   ZilchBindGetterSetterProperty(ShowCoordinates);

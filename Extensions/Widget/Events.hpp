@@ -24,6 +24,9 @@ namespace Events
   // Update when mouse is over the object
   DeclareEvent(MouseUpdate);
 
+  // Mouse dropped files on a viewport
+  DeclareEvent(MouseFileDrop);
+
   // Mouse move from over an object to any other object including a child
   DeclareEvent(MouseEnter);
   DeclareEvent(MouseExit);
@@ -100,12 +103,15 @@ extern String NamedMouseDown[3];
 extern String NamedMouseUp[3];
 extern String NamedMouseClick[3];
 
+/// Basic event that can be "handled" to override default engine behavior.
 class HandleableEvent : public Event
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   HandleableEvent()
     :Handled(false){};
+  /// Set to true to signify that you have responded to this event, and that other
+  /// event responders should do nothing.
   bool Handled;
 };
 
@@ -141,7 +147,7 @@ public:
 
 
 //------------------------------------------------------------------ Mouse Event
-/// Mouse events for any every with the mouse.
+/// Mouse events for actions concerning the mouse.
 class MouseEvent : public Event
 {
 public:
@@ -190,6 +196,22 @@ class MouseDragEvent : public MouseEvent
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   Vec2 StartPosition;
+};
+
+//-------------------------------------------------------------------OsMouseDropEvent
+/// Files have been dropped on a viewport.
+class MouseFileDropEvent : public MouseEvent
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  MouseFileDropEvent();
+  MouseFileDropEvent(const MouseEvent& rhs);
+
+  void Copy(const OsMouseDropEvent& rhs);
+
+public:
+  HandleOf<ArrayClassString> Files;
 };
 
 }//namespace Zero

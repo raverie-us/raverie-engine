@@ -17,9 +17,10 @@ class KeyboardEvent;
 class DispatchAtParams;
 
 /// Add Pixel scalar to everything
+DeclareEnum4(StencilDrawMode, None, Add, Remove, Test);
 
-//------------------------------------------------------------------ Root Widget
-class UiRootWidget : public Component
+//--------------------------------------------------------------------------------- Root Widget
+class UiRootWidget : public UiWidget
 {
 public:
   /// Meta Initialization.
@@ -35,15 +36,16 @@ public:
   /// called right before rendering.
   void Update();
 
-  /// Used to update mouse hover and double click timing.
-  void UpdateMouseTimers(float dt, ViewportMouseEvent* e);
+  /// RootWidget overrides this to account for OnTop widgets.
+  UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr,
+                      bool interactiveOnly = false) override;
 
-  //------------------------------------------------------------ Keyboard Events
+  //--------------------------------------------------------------------------- Keyboard Events
   void PerformKeyDown(Keys::Enum key);
   void PerformKeyUp(Keys::Enum key);
   void PerformKeyboardEvent(KeyboardEvent* e);
 
-  //--------------------------------------------------------------- Mouse Events
+  //------------------------------------------------------------------------------ Mouse Events
   /// This must be called appropriately before mouse clicks.
   void PerformMouseMove(Vec2Param newRootPoint);
 
@@ -52,7 +54,10 @@ public:
   void PerformMouseDown(MouseButtons::Enum button, Vec2Param rootPoint);
   void PerformMouseUp(MouseButtons::Enum button, Vec2Param rootPoint);
   void PerformMouseScroll(Vec2Param rootPoint, Vec2Param scroll);
-
+  
+  /// Used to update mouse hover and double click timing.
+  void UpdateMouseTimers(float dt, ViewportMouseEvent* e);
+  
   void BuildMouseEvent(ViewportMouseEvent* e, Vec2Param rootPoint,
                        MouseButtons::Enum button = MouseButtons::None);
 
@@ -62,17 +67,65 @@ public:
   void MouseMove(ViewportMouseEvent* e);
   void MouseOver(ViewportMouseEvent* e, UiWidget* newMouseOver);
 
-  /// Focus.
-  void RootChangeFocus(UiWidget* newFocus);
-
   /// Finds the Widget at the given location and dispatches an event on the Widget.
   void DispatchAt(DispatchAtParams& dispatchParams);
 
+  //----------------------------------------------------------------------- Input Event Routing
+  /// If set, all input from the Os will be forwarded to the root widget.
+  void SetOsWindow(OsWindow* window);
+
+  /// Reactive event response
+  void OnMouseEvent(ViewportMouseEvent* e);
+  void OnMouseButton(ViewportMouseEvent* e);
+  void OnMouseUpdate(ViewportMouseEvent* e);
+  void OnKeyboardEvent(KeyboardEvent* e);
+
+  /// When we forward events through the RootWidget, they will bubble back up
+  /// and we'll get them again. This is used to ignore duplicate events.
+  bool mIgnoreEvents;
+
+  //--------------------------------------------------------------------------------- Rendering
+  /// Renders the Ui to the given color render target. The depth render target must have stencil.
+  void Render(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass);
+
+  //-------------- Internals
+  typedef Pair<UiWidget*, Vec4> CachedFloatingWidget;
+  void RenderWidgets(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
+                     MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform,
+                     Array<CachedFloatingWidget>* floatingWidgets);
+
+  void AddGraphical(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
+                    MaterialBlock* renderPass, Cog* widgetCog, StencilDrawMode::Enum stencilMode,
+                    uint stencilIncrement);
+
+  /// Clears the GraphicalRangeInterface and 
+  void FlushGraphicals(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
+                       MaterialBlock* renderPass);
+
+  /// All objects to be rendered will be added to this list.
+  GraphicalRangeInterface mGraphicals;
+
+  uint mStencilCount;
+  StencilDrawMode::Enum mStencilDrawMode;
+
+  RenderSettings mStencilAddSettings;
+  RenderSettings mStencilRemoveSettings;
+  RenderSettings mStencilTestSettings;
+
+  //------------------------------------------------------------------------------------- Other
+  /// The widget currently in focus.
+  void SetFocusWidget(UiWidget* newFocus);
+  UiWidget* GetFocusWidget();
+
+  /// The widget that the mouse is currently over.
+  UiWidget* GetMouseOverWidget();
+
+  /// Used for focus tab logic. This is for keyboard events that have
+  /// bubbled through the widget system.
+  void OnWidgetKeyDown(KeyboardEvent* e);
+
   void SetDebugSelected(Cog* selected);
   Cog* GetDebugSelected();
-
-  /// We must have a Widget Component.
-  UiWidget* mWidget;
 
   float mSnapSize;
 
@@ -83,8 +136,6 @@ public:
   /// Whether or not to print out debug information to the console about what
   /// the mouse is currently doing.
   bool mDebugMouseInteraction;
-
-  bool mAlwaysUpdate;
 
   /// Only send the MouseHover event when the mouse has been over
   /// a single widget for this amount of time.
@@ -127,6 +178,9 @@ public:
 
   /// The widget that currently has input captured.
   UiWidgetHandle mCapturedWidget;
+
+  /// All widgets marked on top so we can walk these first for picking.
+  Array<UiWidget*> mOnTopWidgets;
 };
 
 }//namespace Zero

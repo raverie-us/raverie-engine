@@ -32,15 +32,18 @@ DefineEvent(OperationRedo);
 ZilchDefineType(OperationQueueEvent, builder, type)
 {
   ZilchBindFieldProperty(mOperation);
+  ZeroBindDocumented();
 }
 
 //-------------------------------------------------------------------- Operation
 ZilchDefineType(Operation, builder, type)
 {
-  ZilchBindFieldProperty(mName);
-  ZilchBindFieldProperty(mDescription);
+  ZilchBindFieldGetter(mParent);
+  ZilchBindField(mName);
+  ZilchBindField(mInvalidReason);
 
-  ZilchBindGetterProperty(Children);
+  ZilchBindGetter(Children);
+  ZilchBindMethod(FindRoot);
 
   ZeroBindEvent(Events::OperationQueued, OperationQueueEvent);
   ZeroBindEvent(Events::OperationUndo, OperationQueueEvent);
@@ -59,6 +62,22 @@ void* Operation::operator new(size_t size)
 void Operation::operator delete(void* pMem, size_t size)
 {
   return sHeap->Deallocate(pMem, size);
+}
+
+//******************************************************************************
+Operation* Operation::FindRoot()
+{
+  Operation* root = this;
+  while(root->mParent != nullptr)
+    root = root->mParent;
+
+  return root;
+}
+
+//******************************************************************************
+bool Operation::GetInvalid()
+{
+  return mInvalidReason.Empty() == false;
 }
 
 //------------------------------------------------------------------- Meta Proxy
@@ -148,7 +167,7 @@ ZilchDefineType(OperationQueue, builder, type)
 
   ZilchBindMethod(StartListeningForSideEffects);
   ZilchBindMethod(IsListeningForSideEffects);
-  ZilchBindMethod(RegisterSideEffect);
+  ZilchBindMethodAs(RegisterSideEffectProperty, "RegisterSideEffect");
   ZilchBindMethod(QueueRegisteredSideEffects);
   ZilchBindMethod(PopSubPropertyContext);
   ZilchBindMethod(MarkPropertyAsModified);
@@ -168,15 +187,15 @@ OperationQueue::~OperationQueue()
 }
 
 //******************************************************************************
-void OperationQueue::Undo( )
+void OperationQueue::Undo()
 {
-  if(Commands.Empty( ))
+  if(mCommands.Empty())
     return;
 
-  Operation* last = &Commands.Back( );
-  last->Undo( );
-  Commands.Erase(last);
-  RedoCommands.PushFront(last);
+  Operation* last = &mCommands.Back();
+  last->Undo();
+  mCommands.Erase(last);
+  mRedoCommands.PushFront(last);
 
   OperationQueueEvent event(last);
   DispatchEvent(Events::OperationUndo, &event);
@@ -185,16 +204,19 @@ void OperationQueue::Undo( )
 //******************************************************************************
 bool OperationQueue::Undo(Operation* allbeforeThis)
 {
-  if(allbeforeThis == nullptr || Commands.Empty( ))
+  // Call most likely came from script.
+  if(allbeforeThis == nullptr || mCommands.Empty())
     return false;
+
+  Operation* searchCriteria = allbeforeThis->FindRoot();
 
   bool operationFound = false;
   Array<Operation*> toErase;
 
-  OperationListType::reverse_range rRange(Commands.Begin( ), Commands.End( ));
-  forRange(Operation& operation, rRange.All( ))
+  OperationListType::reverse_range rRange(mCommands.Begin(), mCommands.End());
+  forRange(Operation& operation, rRange.All())
   {
-    if(&operation == allbeforeThis)
+    if(&operation == searchCriteria)
     {
       operationFound = true;
       break;
@@ -205,30 +227,31 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
 
   if(!operationFound)
   {
-    Warn("Supplied operation does not exist in Undo Queue.  Undo will not occur.");
+    Warn("Supplied operation does not exist in the Undo Queue, or does not"
+      " have an ancestor in the Undo Queue.  Undo will not occur.");
     return operationFound;
   }
 
   int size = toErase.Size();
   for(int i = 0; i < size; ++i)
   {
-    toErase[i]->Undo( );
-    Commands.Erase(toErase[i]);
-    RedoCommands.PushFront(toErase[i]);
+    toErase[i]->Undo();
+    mCommands.Erase(toErase[i]);
+    mRedoCommands.PushFront(toErase[i]);
   }
 
   return operationFound;
 }
 
 //******************************************************************************
-void OperationQueue::Redo( )
+void OperationQueue::Redo()
 {
-  if(!RedoCommands.Empty( ))
+  if(!mRedoCommands.Empty())
   {
-    Operation* first = &RedoCommands.Front( );
-    first->Redo( );
-    RedoCommands.Erase(first);
-    Commands.PushBack(first);
+    Operation* first = &mRedoCommands.Front();
+    first->Redo();
+    mRedoCommands.Erase(first);
+    mCommands.PushBack(first);
 
     OperationQueueEvent event(first);
     DispatchEvent(Events::OperationRedo, &event);
@@ -239,18 +262,20 @@ void OperationQueue::Redo( )
 //******************************************************************************
 bool OperationQueue::Redo(Operation* upToAndThis)
 {
-    // Call most likely came from script.
-  if(upToAndThis == nullptr || RedoCommands.Empty())
+  // Call most likely came from script.
+  if(upToAndThis == nullptr || mRedoCommands.Empty())
     return false;
+
+  Operation* searchCriteria = upToAndThis->FindRoot();
 
   bool operationFound = false;
   Array<Operation*> toErase;
 
-  forRange(Operation& operation, RedoCommands.All( ))
+  forRange(Operation& operation, mRedoCommands.All())
   {
     toErase.PushBack(&operation);
 
-    if(&operation == upToAndThis)
+    if(&operation == searchCriteria)
     {
       operationFound = true;
       break;
@@ -260,16 +285,17 @@ bool OperationQueue::Redo(Operation* upToAndThis)
 
   if(!operationFound)
   {
-    Warn("Supplied operation does not exist in Redo Queue.  Redo will not occur.");
+    Warn("Supplied operation does not exist in the Redo Queue, or does not"
+      " have an ancestor in the Redo Queue.  Redo will not occur.");
     return operationFound;
   }
 
-  int size = toErase.Size( );
+  int size = toErase.Size();
   for(int i = 0; i < size; ++i)
   {
     toErase[i]->Redo();
-    RedoCommands.Erase(toErase[i]);
-    Commands.PushBack(toErase[i]);
+    mRedoCommands.Erase(toErase[i]);
+    mCommands.PushBack(toErase[i]);
   }
 
   return operationFound;
@@ -278,24 +304,24 @@ bool OperationQueue::Redo(Operation* upToAndThis)
 template<typename type, Link<type> type::* PtrToMember>
 void DeleteObjectsInTest(InList<type, PtrToMember>& container)
 {
-  container.SafeForEach(container.Begin( ), container.End( ), EraseAndDelete<type, PtrToMember>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDelete<type, PtrToMember>);
 }
 template<typename type, typename baseLinkType>
 void DeleteObjectsInTest(BaseInList<baseLinkType, type>& container)
 {
-  container.SafeForEach(container.Begin( ), container.End( ), EraseAndDeleteBase<type, baseLinkType>);
+  container.SafeForEach(container.Begin(), container.End(), EraseAndDeleteBase<type, baseLinkType>);
 }
 
 //******************************************************************************
 void OperationQueue::ClearUndo()
 {
-  DeleteObjectsIn(Commands);
+  DeleteObjectsIn(mCommands);
 }
 
 //******************************************************************************
 void OperationQueue::ClearRedo()
 {
-  DeleteObjectsIn(RedoCommands);
+  DeleteObjectsIn(mRedoCommands);
 }
 
 //******************************************************************************
@@ -306,15 +332,15 @@ void OperationQueue::ClearAll()
 }
 
 //******************************************************************************
-OperationListRange OperationQueue::GetCommands( )
+OperationListRange OperationQueue::GetCommands()
 {
-  return Commands.All();
+  return mCommands.All();
 }
 
 //******************************************************************************
-OperationListRange OperationQueue::GetRedoCommands( )
+OperationListRange OperationQueue::GetRedoCommands()
 {
-  return RedoCommands.All( );
+  return mRedoCommands.All();
 }
 
 //******************************************************************************
@@ -323,11 +349,12 @@ void OperationQueue::Queue(Operation* command)
   if(ActiveBatch)
   {
     ActiveBatch->BatchedCommands.PushBack(command);
+    command->mParent = ActiveBatch;
   }
   else
   {
     ClearRedo();
-    Commands.PushBack(command);
+    mCommands.PushBack(command);
 
     // Do NOT queue any operations that come about through updating the history
     // window, as that is what responds to 'OperationQueued'
@@ -359,19 +386,16 @@ void OperationQueue::SetActiveBatchName(StringParam batchName)
 }
 
 //******************************************************************************
-void OperationQueue::SetActiveBatchDescription(StringParam description)
-{
-  if(ActiveBatch != nullptr)
-    ActiveBatch->mDescription = description;
-}
-
-//******************************************************************************
 void OperationQueue::BeginBatch()
 {
   if(ActiveBatch)
   {
+    OperationBatch* parentBatch = ActiveBatch;
+
     BatchStack.PushBack(ActiveBatch);
     ActiveBatch = new OperationBatch();
+
+    ActiveBatch->mParent = parentBatch;
   }
   else
   {
@@ -393,7 +417,7 @@ void OperationQueue::EndBatch()
     QueueChanges(proxy);
 
   int operationCount = 0;
-  forRange(Operation& operation, ActiveBatch->GetChildren( ))
+  forRange(Operation& operation, ActiveBatch->GetChildren())
     ++operationCount;
 
   // Cleanup
@@ -404,16 +428,19 @@ void OperationQueue::EndBatch()
     OperationBatch* previous = (OperationBatch*)&BatchStack.Back();
 
     // Don't queue an empty batch.
-    if(ActiveBatch->BatchedCommands.Empty( ))
+    if(ActiveBatch->BatchedCommands.Empty())
     {
       SafeDelete(ActiveBatch);
     }
     // Promote Operation if there is only one in the batch
     else if(operationCount == 1)
     {
-      Operation* operation = &ActiveBatch->GetChildren( ).Front( );
+      Operation* operation = &ActiveBatch->GetChildren().Front();
       ActiveBatch->BatchedCommands.Erase(operation);
       previous->BatchedCommands.PushBack(operation);
+
+      // Promote parent.
+      operation->mParent = ActiveBatch->mParent;
 
       SafeDelete(ActiveBatch);
     }
@@ -441,15 +468,18 @@ void OperationQueue::EndBatch()
       // Promote Operation if there is only one in the batch
       if(operationCount == 1)
       {
-        Operation* operation = &ActiveBatch->GetChildren( ).Front( );
+        Operation* operation = &ActiveBatch->GetChildren().Front();
         ActiveBatch->BatchedCommands.Erase(operation);
-        Commands.PushBack(operation);
+        mCommands.PushBack(operation);
+
+        // Promote parent.
+        operation->mParent = ActiveBatch->mParent;
 
         SafeDelete(ActiveBatch);
       }
       else if(operationCount != 0)
       {
-        Commands.PushBack(ActiveBatch);
+        mCommands.PushBack(ActiveBatch);
       }
 
       // Do NOT queue any operations that come about through updating the history
@@ -458,7 +488,7 @@ void OperationQueue::EndBatch()
       sListeningForSideEffects = false;
 
       // ONLY send out the queue event when the root-batch in the stack has ended.
-      OperationQueueEvent event(&Commands.Back());
+      OperationQueueEvent event(&mCommands.Back());
       DispatchEvent(Events::OperationQueued, &event);
 
       sListeningForSideEffects = prevSideEffects;
@@ -778,6 +808,12 @@ bool OperationQueue::IsListeningForSideEffects()
 void OperationQueue::RegisterSideEffect(HandleParam object, PropertyPathParam propertyPath,
                                         const Any& oldValue)
 {
+  if(sListeningForSideEffects == false)
+  {
+    DoNotifyExceptionAssert("OperationQueue is not listening for side effects", "First check OperationQueue.IsListeningForSideEffects");
+    return;
+  }
+
   BoundType* objectType = object.StoredType;
   if(objectType->HasInherited<MetaDataInheritance>() != nullptr)
   {
@@ -805,6 +841,12 @@ void OperationQueue::RegisterSideEffect(HandleParam object, PropertyPathParam pr
     PropertyOperation* op = new PropertyOperation(context.mContext, finalPath, oldValue, dummyNewValue);
     sSideEffects.PushBack(op);
   }
+}
+
+//******************************************************************************
+void OperationQueue::RegisterSideEffectProperty(HandleParam object, StringParam propertyName, const Any& oldValue)
+{
+  RegisterSideEffect(object, propertyName, oldValue);
 }
 
 //******************************************************************************

@@ -19,6 +19,22 @@ struct FieldKeyMap : public HashMap<ShaderFieldKey, ShaderField*>
   }
 };
 
+/// Extra data to store for our allowed attributes.
+/// Currently only used to hide attributes from code completion.
+struct AttributeInfo
+{
+  AttributeInfo() 
+  {
+    mHidden = false;
+  }
+  AttributeInfo(bool hidden)
+  {
+    mHidden = hidden;
+  }
+
+  bool mHidden;
+};
+
 // What kind of shader stage an object is. The geometry stage is split into 2 parts:
 // the primitive inputs (per shader) and the vertex input/outputs (the per-vertex data).
 DeclareEnum4(ShaderStageType, Vertex, GeometryPrimitive, GeometryVertex, Pixel);
@@ -38,6 +54,9 @@ public:
   String mGeometryAttributeName;
 
   String mStaticAttribute;
+  // Marks a function as being inline. This assumes the raw-body of the function
+  // can be used instead of the function call. Currently only works on static get properties (like Color.Red).
+  String mInlineAttribute;
   String mPreConstructorName;
   String mConstructorName;
   String mReferenceKeyword;
@@ -65,6 +84,7 @@ public:
   String mPropertyInputAttributeName;
   String mSystemValueInputAttributeName;
   String mSystemValueOutputAttributeName;
+  String mNoFallbackWarningAttributeName;
   // Attributes that are implied by the [Input] attribute
   Array<String> mInputSubAttributes;
   String mGeometryShaderOutputTag;
@@ -92,9 +112,9 @@ public:
   String mGeometryShaderInputPrefix;
   String mAttributePrefix;
 
-  HashSet<String> mAllowedClassAttributes;
-  HashSet<String> mAllowedFunctionAttributes;
-  HashSet<String> mAllowedFieldAttributes;
+  HashMap<String, AttributeInfo> mAllowedClassAttributes;
+  HashMap<String, AttributeInfo> mAllowedFunctionAttributes;
+  HashMap<String, AttributeInfo> mAllowedFieldAttributes;
 
   static String mVertexIntrinsicAttributeName;
   static String mGeometryIntrinsicAttributeName;

@@ -32,21 +32,6 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInterface::Update()
   {
-    // Lock to change shared variables
-    System->LockObject.Lock();
-
-    // If we need to reset Port Audio, change the bool before unlocking, then reset
-    if (System->ResetPA)
-    {
-      System->ResetPA = false;
-      System->LockObject.Unlock();
-
-      System->ResetIO();
-    }
-    // Otherwise just unlock
-    else
-      System->LockObject.Unlock();
-
     // Run tasks from the mix thread
     System->HandleTasks();
 
@@ -85,7 +70,7 @@ namespace Audio
 
       // If we're sending uncompressed input data, send the entire buffer
       if (SendUncompressedInputData)
-        System->ExternalInterface->SendAudioEvent(Notify_MicInputData, (void*)&allInput);
+        System->ExternalInterface->SendAudioEvent(AudioEventTypes::MicInputData, (void*)&allInput);
 
       // Check if we're sending compressed data and have an encoder
       if (SendCompressedInputData)
@@ -124,7 +109,7 @@ namespace Audio
           System->Encoder.EncodePacket(monoSamples.Data(), PacketEncoder::PacketFrames, dataArray);
 
           // Send the event with the encoded data
-          System->ExternalInterface->SendAudioEvent(Notify_CompressedMicInputData, (void*)&dataArray);
+          System->ExternalInterface->SendAudioEvent(AudioEventTypes::CompressedMicInputData, (void*)&dataArray);
         }
       }
     }
@@ -162,7 +147,7 @@ namespace Audio
   //************************************************************************************************
   unsigned AudioSystemInterface::GetSampleRate()
   {
-    return AudioSystemInternal::SampleRate;
+    return AudioSystemInternal::SystemSampleRate;
   }
 
   //************************************************************************************************
@@ -179,9 +164,9 @@ namespace Audio
     {
       if (channels == 0)
       {
+        SystemOutputChannels = System->AudioIO->GetStreamChannels(StreamTypes::Output);
         System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System,
-          System->AudioIO->GetOutputChannels()));
-        SystemOutputChannels = System->AudioIO->GetOutputChannels();
+          SystemOutputChannels));
       }
       else
       {
@@ -228,7 +213,7 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInterface::UseHighLatency(const bool useHigh)
   {
-    System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetUseHighLatency, System, useHigh));
+    System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetLatencyThreaded, System, useHigh));
   }
 
   //************************************************************************************************

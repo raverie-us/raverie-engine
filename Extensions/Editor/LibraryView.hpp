@@ -74,7 +74,7 @@ public:
   void SwitchToTileView();
 
   /// Sets the current search to the given tags.
-  void SetSearchTags(HashSet<String>& tags);
+  void SetSearchTags(TagList& tags);
 
   /// Creates a preview group of the given tag with the current search as
   /// extra tags.
@@ -97,6 +97,7 @@ private:
   void OnTreeRightClick(TreeEvent* event);
   void OnTileViewRightClick(TileViewEvent* event);
   void OnRightClickObject(Composite* objectToAttachTo, DataIndex index);
+  void OnRightMouseUp(MouseEvent* event);
   void OnKeyDown(KeyboardEvent* event);
   void OnMouseEnterTreeRow(TreeEvent* event);
   void OnMouseExitTreeRow(TreeEvent* event);
@@ -127,6 +128,9 @@ private:
   void OnTranslateFragment(Event* event);
 
   void OnAddTagToSearch(ObjectEvent* event);
+  
+  bool AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName, bool addDivider = false);
+  void OnAddResource(ObjectEvent* event);
 
   /// Editor event response.
   void OnToggleViewButtonPressed(Event* e);
@@ -146,6 +150,8 @@ private:
 
   float GetTagEditorHeight();
   void SetTagEditorHeight(float height);
+
+  void RenameAtIndex(DataIndex& dataIndex);
 
 private:
   /// Tag editor functions.

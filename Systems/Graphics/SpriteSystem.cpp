@@ -53,12 +53,13 @@ String SpriteParticleSystem::GetDefaultMaterialName()
 void SpriteParticleSystem::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
 
   frameNode.mMeshRenderData = nullptr;
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
-  frameNode.mTextureRenderData = mSpriteSource->mTexture->mRenderData;
+  frameNode.mTextureRenderData = mSpriteSource->GetAtlasTextureRenderData();
 
   frameNode.mLocalToWorld = mTransform->GetWorldMatrix();
   frameNode.mLocalToWorldNormal = Mat3::cIdentity;

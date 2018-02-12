@@ -78,6 +78,7 @@ ZilchDefineType(Sprite, builder, type)
 {
   ZeroBindComponent();
   ZeroBindDocumented();
+  ZeroBindInterface(BaseSprite);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   ZilchBindGetterSetterProperty(SpriteSource);
@@ -136,12 +137,13 @@ Aabb Sprite::GetLocalAabb()
 void Sprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
 
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
   frameNode.mMeshRenderData = nullptr;
-  frameNode.mTextureRenderData = mSpriteSource->mTexture->mRenderData;
+  frameNode.mTextureRenderData = mSpriteSource->GetAtlasTextureRenderData();
 
   frameNode.mLocalToWorld = mTransform->GetWorldMatrix();
   frameNode.mLocalToWorldNormal = Mat3::cIdentity;
@@ -190,7 +192,7 @@ void Sprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBloc
 
   if (hasArea && mSpriteSource->Fill == SpriteFill::Tiled)
   {
-    Vec2 tileSize = mSpriteSource->GetSize() / mSpriteSource->PixelSize;
+    Vec2 tileSize = mSpriteSource->GetSize() / mSpriteSource->PixelsPerUnit;
     frameBlock.mRenderQueues->AddStreamedQuadTiled(viewNode, pos0, pos1, uv0, uv1, mVertexColor, tileSize, uvAux0, uvAux1);
   }
   else if (hasArea && mSpriteSource->Fill == SpriteFill::NineSlice)
@@ -328,9 +330,10 @@ ZilchDefineType(SpriteText, builder, type)
 {
   ZeroBindComponent();
   ZeroBindDocumented();
+  ZeroBindInterface(BaseSprite);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(Text);
+  ZilchBindGetterSetterProperty(Text)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Font);
   ZilchBindGetterSetterProperty(FontSize);
   ZilchBindGetterSetterProperty(PixelsPerUnit);
@@ -490,7 +493,7 @@ Vec3 SpriteText::GetCharacterPosition(int characterIndex)
   Vec2 widths = GetLocalWidths();
   Vec2 textStart = center + Vec2(-widths.x, widths.y);
 
-  characterIndex = Math::Clamp(characterIndex, 0, (int)mText.SizeInBytes());
+  characterIndex = Math::Clamp(characterIndex, 0, (int)mText.ComputeRuneCount());
 
   Vec2 size;
   if (Area* area = GetOwner()->has(Area))
@@ -605,6 +608,7 @@ void MultiSprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   Texture* atlas = (Texture*)entryData->mUtility;
 
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
 
@@ -889,7 +893,7 @@ void MultiSprite::AddCellEntries(MultiSpriteCell& cell, GroupMap& groupMap)
     IntVec2 entryIndex = pair.first;
     MultiSpriteEntry& spriteEntry = pair.second;
 
-    Texture* atlas = spriteEntry.mSource->mTexture;
+    Texture* atlas = spriteEntry.mSource->GetAtlasTexture();
     groupMap[atlas].mSpriteEntries.PushBack(spriteEntry);
   }
 }

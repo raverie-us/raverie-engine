@@ -91,3 +91,4 @@ namespace Zero
 #include "InternetHostDiscovery.hpp"
 #include "LanHostDiscovery.hpp"
 #include "NetPeer.hpp"
+#include "NetworkingBindingExtensions.hpp"

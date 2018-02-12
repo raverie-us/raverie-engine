@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
 /// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
+/// Copyright 2015-2017, DigiPen Institute of Technology
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma once
@@ -28,8 +28,8 @@ void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction);
 namespace Events
 {
 
-DeclareEvent(PreTransformUpdate);
-DeclareEvent(PostTransformUpdate);
+DeclareEvent(UiPreUpdate);
+DeclareEvent(UiPostUpdate);
 //DeclareEvent(UiWidgetGetMinSize);
 
 }//namespace Events
@@ -41,12 +41,11 @@ public:
   /// Meta Initialization.
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  UiTransformUpdateEvent() : mRootWidget(nullptr), mAlwaysUpdate(false) {}
+  UiTransformUpdateEvent() : mRootWidget(nullptr) {}
 
   UiRootWidget* GetRootWidget();
 
   UiRootWidget* mRootWidget;
-  bool mAlwaysUpdate;
 };
 
 DeclareEnum2(Axis, X, Y);
@@ -59,7 +58,7 @@ DeclareEnum3(UiSizePolicy,
              Flex); // Shares space with other widgets
 
 // Alignments used to shift widgets when in a layout.
-DeclareEnum3(UiVerticalAlignment, Top, Center, Bottom);
+DeclareEnum3(UiVerticalAlignment, Bottom, Center, Top);
 DeclareEnum3(UiHorizontalAlignment, Left, Center, Right);
 
 //---------------------------------------------------------------------------------------- Dock Mode
@@ -86,6 +85,8 @@ namespace UiDockMode
     Left, Top, Right, Bottom
   };
 
+  uint GetAxis(UiDockMode::Enum mode);
+
 }//namespace DockMode
 
 //--------------------------------------------------------------------------- Transform Update State
@@ -95,7 +96,7 @@ DeclareEnum3(UiTransformUpdateState,
              LocalUpdate);  // This Widget needs updating
 
 //------------------------------------------------------------------------------------- Widget Flags
-DeclareBitField10(UiWidgetFlags,
+DeclareBitField11(UiWidgetFlags,
   // If inactive, it will not draw this Widget and all children. It will
   // also not be updated in layouts.
   Active,
@@ -106,6 +107,8 @@ DeclareBitField10(UiWidgetFlags,
   // If true, we will be ignored when our parent updates the layout. Disable
   // this if you want to manually place this widget.
   InLayout,
+  // The widget will be rendered after all objects in the widget hierarchy.
+  OnTop,
   // Whether or not we want our children to display outside of our size.
   ClipChildren,
   // Mouse is over object
@@ -156,7 +159,8 @@ public:
 };
 
 //------------------------------------------------------------------------------------------- Widget
-class UiWidget : public ComponentHierarchy<UiWidget>
+typedef ComponentHierarchy<UiWidget> UiWidgetComponentHierarchy;
+class UiWidget : public UiWidgetComponentHierarchy
 {
 public:
   /// Typedefs.
@@ -164,7 +168,9 @@ public:
   typedef ComponentHierarchy<UiWidget> BaseType;
 
   /// Meta Initialization.
-  ZilchDeclareDerivedTypeExplicit(UiWidget, Component, TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  ~UiWidget();
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -183,68 +189,98 @@ public:
   void OnChildrenOrderChanged(Event* e);
 
   /// Returns the minimum size that this widget needs to be.
-  virtual Vec2 Measure(Rect& data);
+  virtual Vec2 Measure(Rectangle& data);
 
   Vec2 GetMinSize();
 
-  /// Returns the parent widget. Will return null on the root widget.
-  UiWidget* GetParentWidget();
-  UiRootWidget* GetRootWidget();
+  /// Hide the ComponentHierarchy with a more specific root type.
+  UiRootWidget* GetRoot();
 
   void SizeToContents();
+  void SizeToContentsIfAuto();
 
   /// Finds the Widget at the given point. All Widgets bellow and including
   /// the 'ignore' widget will not be included. The ignore was added for
   /// trying to find the widget underneath a dragging window. The window is
   /// directly under the mouse, so we want to ignore it.
-  UiWidget* CastPoint(Vec2Param rootPoint, UiWidget* ignore = nullptr,
-                      bool interactiveOnly = false);
-  UiWidgetCastResultsRange CastRect(const Rect& rootRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
+  virtual UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr,
+                              bool interactiveOnly = false);
+  UiWidgetCastResultsRange CastRect(RectangleParam worldRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
 
-  /// Returns our local rect (Translation should be at 0,0).
-  Rect GetLocalRect();
+  Rectangle GetBodyRectangle();
 
-  /// Returns our translation and size in our parents space.
-  Rect GetRectInParent();
+  /// Returns our rect relative to parent. The origin of this Rect is bottom left.
+  Rectangle GetLocalRectangle();
+  void SetLocalRectangle(RectangleParam rectangle);
 
-  /// Returns our local rect (Translation should be at 0,0).
-  Rect GetRootRect();
+  /// Returns our world rect. The origin of this Rect is bottom left.
+  Rectangle GetWorldRectangle();
+  void SetWorldRectangle(RectangleParam rectangle);
 
   /// Active getter / setter.
   bool GetActive();
   void SetActive(bool state);
   
-  /// Translation getter / setter. Shortcut to the Translation Component.
+  /// Local Translation relative to parent.
   Vec2 GetLocalTranslation();
   void SetLocalTranslation(Vec2Param localTranslation);
-  Vec2 GetRootTranslation();
-  void SetRootTranslation(Vec2Param rootTranslation);
-  Vec3 GetWorldTranslation();
 
-  /// Transformations.
-  /// Local Space: Local to Cog (positive y is down)
-  /// Root Space:  Local to the Root Widget (positive y is down)
-  /// World Space: Same world space as Cogs
-  ///
-  /// Basically, if you're dealing with a Vec3, it's the normal world space for Cogs
-  /// If you're dealing with a Vec2, it's in the "Ui Space" and the 'y' is flipped to
-  /// be positive down
-  Vec2 RootToLocal(Vec2Param rootPosition);
-  Vec2 WorldToLocal(Vec3Param worldPosition);
-  Vec2 LocalToRoot(Vec2Param localPosition);
-  Vec2 WorldToRoot(Vec3Param worldPosition);
-  Vec3 LocalToWorld(Vec2Param localPosition);
-  Vec3 RootToWorld(Vec2Param localPosition);
+  /// Translation in world space.
+  Vec2 GetWorldTranslation();
+  void SetWorldTranslation(Vec2Param worldTranslation);
+
+  /// Transforms a local point into world space.
+  Vec2 TransformPoint(Vec2Param localPosition);
+
+  /// Transforms a world point into this Widget's local space. Note, this is not the same space
+  /// as LocalTranslation. LocalTranslation is in this Widget's parent space.
+  Vec2 TransformPointInverse(Vec2Param worldPosition);
 
   /// Size getter / setter. This acts as a shortcut to the Area Component.
   Vec2 GetSize();
   void SetSize(Vec2Param size);
 
+  Vec2 GetLocalLocation(Location::Enum location);
+  void SetLocalLocation(Location::Enum location, Vec2Param localTranslation);
+  Vec2 GetWorldLocation(Location::Enum location);
+  void SetWorldLocation(Location::Enum location, Vec2Param worldTranslation);
+
+#define LocationGetterSetter(location)                                                                             \
+  Vec2 GetLocal##location() { return GetLocalLocation(Location::location); }                                       \
+  void SetLocal##location(Vec2Param localTranslation) { SetLocalLocation(Location::location, localTranslation); }  \
+  Vec2 GetWorld##location() { return GetWorldLocation(Location::location); }                                       \
+  void SetWorld##location(Vec2Param worldTranslation) { SetWorldLocation(Location::location, worldTranslation); }
+
+  LocationGetterSetter(TopLeft)
+  LocationGetterSetter(TopCenter)
+  LocationGetterSetter(TopRight)
+  LocationGetterSetter(CenterLeft)
+  LocationGetterSetter(Center)
+  LocationGetterSetter(CenterRight)
+  LocationGetterSetter(BottomLeft)
+  LocationGetterSetter(BottomCenter)
+  LocationGetterSetter(BottomRight)
+#undef LocationGetterSetter
+
+  float GetLocalTop();
+  void  SetLocalTop(float localTop);
+  float GetWorldTop();
+  void  SetWorldTop(float worldTop);
+  float GetLocalRight();
+  void  SetLocalRight(float localRight);
+  float GetWorldRight();
+  void  SetWorldRight(float worldRight);
+  float GetLocalBottom();
+  void  SetLocalBottom(float localBottom);
+  float GetWorldBottom();
+  void  SetWorldBottom(float worldBottom);
+  float GetLocalLeft();
+  void  SetLocalLeft(float localLeft);
+  float GetWorldLeft();
+  void  SetWorldLeft(float worldLeft);
+
   /// When the area changes, we want to mark ourselves as needing to be updated.
   void OnAreaChanged(Event* e);
-
-  /// Returns the snap size defined by the root widget.
-  float GetSnapSize();
 
   /// Lets the Widget system know that this object has been modified and needs
   /// to be re-laid out. 
@@ -255,7 +291,7 @@ public:
 
   /// Handles the updating of this Widget and the child Widgets. Once called,
   /// it will update the internal TransformUpdateState.
-  virtual void UpdateTransform(UiTransformUpdateEvent* e);
+  void Update(UiTransformUpdateEvent* e);
 
   /// Until we get a render in hierarchy order, we need to move our
   /// child widgets in front of us.
@@ -320,6 +356,8 @@ public:
   void SetMarginRight(float val);
   void SetMarginBottom(float val);
 
+  void OnPropertyModified(PropertyEvent* e);
+
   /// Flag getters / setters.
   DeclareWidgetFlagSetterGetter(Visible);
   DeclareWidgetFlagSetterGetter(Interactive);
@@ -329,6 +367,9 @@ public:
   DeclareWidgetFlagSetterGetter(CanTakeFocus);
   DeclareWidgetFlagSetterGetter(HasFocus);
   DeclareWidgetFlagSetterGetter(HierarchyHasFocus);
+
+  bool GetOnTop();
+  void SetOnTop(bool state);
 
   /// Dependencies.
   Transform* mTransform;
@@ -364,6 +405,8 @@ private:
   Thickness mMargins;
   UiTransformUpdateState::Type mTransformUpdateState;
 };
+
+extern const float cUiWidgetSnapSize;
 
 typedef ComponentHandle<UiWidget> UiWidgetHandle;
 

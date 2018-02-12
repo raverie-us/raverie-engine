@@ -26,6 +26,7 @@ ZilchDefineType(AnimationGraph, builder, type)
   ZilchBindGetterSetter(ActiveNode);
   ZilchBindMethod(IsPlayingInGraph);
   ZilchBindMethod(PrintGraph);
+  ZilchBindMethod(Update);
 
   ZilchBindGetterSetterProperty(Active);
   ZilchBindFieldProperty(mTimeScale);
@@ -115,23 +116,19 @@ void AnimationGraph::SetDefaults()
 }
 
 //******************************************************************************
-void AnimationGraph::OnUpdate(UpdateEvent* e)
+void AnimationGraph::Update(float dt)
 {
-  // Do nothing if we aren't active
-  if(!mActive)
-    return;
-
-  if(mActiveNode)
+  if (mActiveNode)
   {
     // Static so we can re-use memory and avoid extra allocations
     static Array<AnimationGraphEvent*> eventsToSend;
     eventsToSend.Clear();
 
     // Update the root node
-    mActiveNode = mActiveNode->Update(this, e->Dt, mFrameId++, eventsToSend);
+    mActiveNode = mActiveNode->Update(this, dt, mFrameId++, eventsToSend);
 
     // Apply the frame if we're given anything back
-    if(mActiveNode)
+    if (mActiveNode)
       ApplyFrame(mActiveNode->mFrameData);
 
     // Dispatch all events from the animation graph
@@ -147,6 +144,16 @@ void AnimationGraph::OnUpdate(UpdateEvent* e)
 
     return;
   }
+}
+
+//******************************************************************************
+void AnimationGraph::OnUpdate(UpdateEvent* e)
+{
+  // Do nothing if we aren't active
+  if(!mActive)
+    return;
+
+  Update(e->Dt);
 }
 
 //******************************************************************************
@@ -172,7 +179,7 @@ void AnimationGraph::ApplyFrame(AnimationFrame& frame)
 }
 
 //******************************************************************************
-void AnimationGraph::OnMetaModified(MetaModifiedEvent* e)
+void AnimationGraph::OnMetaModified(MetaLibraryEvent* e)
 {
   // The blend tracks store pointers to MetaProperties, and must be deleted
   DeleteObjectsInContainer(mBlendTracks);
@@ -234,32 +241,24 @@ AnimationNode* AnimationGraph::GetActiveNode()
 //******************************************************************************
 // ExamplePath:  /Stomach/Chest/LArm
 // RootPath:     /
-Cog* ResolveObjectPath(Cog* object, StringRange data)
+Cog* ResolveObjectPath(Cog* object, Array<String>& cogNames)
 {
-  // If it's the root, 
-  if(data == "/")
-    return object;
-
-  StringTokenRange r(data.Data(), cAnimationPathDelimiter);
-  String first = r.Front();
-  Cog* newObject = object->FindChildByName(first);
-  
-  //If the first node was not found
-  //search for the second node (issue with root objects)
-  if(newObject==NULL)
+  Cog* foundObject = nullptr;
+  for (size_t i = 0; i < cogNames.Size(); ++i)
   {
-    r.PopFront();
+    const String& name = cogNames[i];
 
-    newObject = object->FindChildByName(r.Front());
-    if(newObject==NULL)
-      return NULL; 
+    foundObject = object->FindChildByName(name);
+
+    // If we failed to find the object then this could be an error
+    // We'll at least attempt to find the next child by name incase name changes occurred
+    if (foundObject == nullptr)
+      continue;
+
+    object = foundObject;
   }
 
-  r.PopFront();
-  if(r.Empty())
-    return newObject;
-  else
-    return ResolveObjectPath(newObject, r.Front());
+  return foundObject;
 }
 
 //******************************************************************************
@@ -273,7 +272,7 @@ void AnimationGraph::SetUpPlayData(Animation* animation, PlayData& playData)
   {
     ObjectTrackPlayData& objectData = playData[track.ObjectTrackId];
     Cog* currentObject = objectData.ObjectHandle;
-    Cog* object = ResolveObjectPath(mOwner, track.FullPath.All());
+    Cog* object = ResolveObjectPath(mOwner, track.CogNames);
     if(object)
     {
       objectData.ObjectHandle = object;
@@ -287,13 +286,13 @@ void AnimationGraph::SetUpPlayData(Animation* animation, PlayData& playData)
         PropertyTrackPlayData& subTrackData = objectData.mSubTrackPlayData.PushBack();
         subTrackData.mComponent = NULL;
         subTrackData.mKeyframeIndex = 0;
-        subTrack.LinkInstance(objectData.mSubTrackPlayData.Back(), mBlendTracks, track.FullPath, object);
+        subTrack.LinkInstance(objectData.mSubTrackPlayData.Back(), mBlendTracks, track.GetFullPath(), object);
       }
 
     }
     else
     {
-      DebugPrint("Failed to find object in animation track. %s\n", track.FullPath.c_str());
+      DebugPrint("Failed to find object in animation track. %s\n", track.GetFullPath().c_str());
     }
   }
 }

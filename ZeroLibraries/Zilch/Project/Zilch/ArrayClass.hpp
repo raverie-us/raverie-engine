@@ -63,29 +63,33 @@ namespace Zilch
 
   // These are all the specializations that are optimized to store exactly that data type
   // All values that are unknown will be stored as the 'Any' type
-  #define ZilchDeclareDefinePrimitiveArray(ElementType, Linkage) \
+  #define ZilchDeclareDefinePrimitiveArray(ElementType, Linkage)  \
+    typedef ArrayClass<ElementType> Array##ElementType;           \
     ZilchDeclareCustomType(ArrayClass<ElementType>, ZZ::Core::GetInstance().GetBuilder()->InstantiateTemplate("Array", ZilchConstants(ZilchTypeId(ElementType)), LibraryArray(ZeroInit, Core::GetInstance().GetBuilder()->BuiltLibrary)).Type, Linkage);
   
   // Pre-existing useful declarations
-  ZilchDeclareDefinePrimitiveArray(Handle       , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Delegate     , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Boolean      , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Boolean2     , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Boolean3     , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Boolean4     , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Byte         , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Integer      , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Integer2     , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Integer3     , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Integer4     , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Real         , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Real2        , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Real3        , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Real4        , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Quaternion   , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(DoubleInteger, ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(DoubleReal   , ZeroShared);
-  ZilchDeclareDefinePrimitiveArray(Any          , ZeroShared);
+  typedef HandleOf<String> HandleOfString;
+  typedef ArrayClass<HandleOfString> ArrayClassString;
+  ZilchDeclareDefinePrimitiveArray(Handle        , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Delegate      , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Boolean       , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Boolean2      , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Boolean3      , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Boolean4      , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Byte          , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Integer       , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Integer2      , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Integer3      , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Integer4      , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Real          , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Real2         , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Real3         , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Real4         , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Quaternion    , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(DoubleInteger , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(DoubleReal    , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(Any           , ZeroShared);
+  ZilchDeclareDefinePrimitiveArray(HandleOfString, ZeroShared);
 }
 
 #endif

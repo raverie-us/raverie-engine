@@ -12,6 +12,7 @@
 #include "Geometry/GeometryStandard.hpp"
 #include "Sound/SoundStandard.hpp"
 #include "ZilchScript/ZilchScriptStandard.hpp"
+#include "UiWidget/UiWidgetStandard.hpp"
 
 namespace Zero
 {
@@ -166,6 +167,7 @@ public:
 #include "MetaDrop.hpp"
 #include "LibraryView.hpp"
 #include "ConsoleUi.hpp"
+#include "UiLegacyToolTip.hpp"
 
 // Animator
 #include "AnimationEditorData.hpp"

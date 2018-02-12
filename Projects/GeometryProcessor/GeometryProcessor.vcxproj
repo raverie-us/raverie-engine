@@ -29,19 +29,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|x64'" Label="Configuration">
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <WholeProgramOptimization>false</WholeProgramOptimization>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -70,14 +57,14 @@
     </Link>
     <PostBuildEvent>
       <Command>mkdir "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
-copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-331.dll" "$(TargetDir)"
-copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-331.dll" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"
-copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)"</Command>
+copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(TargetDir)" /y
+copy "$(ZERO_SOURCE)\External\Assimp\bin\assimp-vc140-mt.dll" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)" /y
+copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(Configuration)" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-331.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opusDebug.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -92,7 +79,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-331.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
     </Link>
@@ -102,7 +89,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-331.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>portaudio_x86.lib;opus.lib;assimp-vc140-mt.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
     </Link>

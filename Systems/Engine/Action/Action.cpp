@@ -141,12 +141,14 @@ ActionState::Enum ProcessActions(InActionList& list, float dt, bool blocking)
 
 ZilchDefineType(ActionSet, builder, type)
 {
+  ZeroBindDocumented();
 }
 
 //------------------------------------------------------------ Actions
 
 ZilchDefineType(Actions, builder, type)
 {
+  ZeroBindDocumented();
 }
 
 Actions::Actions(ActionSpace* space)
@@ -222,6 +224,7 @@ void Actions::Update(float dt, float realDt, ActionExecuteMode::Enum mode)
 
 ZilchDefineType(ActionGroup, builder, type)
 {
+  ZeroBindDocumented();
 }
 
 ActionGroup::ActionGroup()
@@ -264,6 +267,7 @@ void ActionGroup::CancelOverride()
 
 ZilchDefineType(ActionSequence, builder, type)
 {
+  ZeroBindDocumented();
 }
 
 ActionSequence::ActionSequence()

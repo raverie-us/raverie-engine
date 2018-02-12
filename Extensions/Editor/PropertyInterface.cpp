@@ -48,6 +48,24 @@ void ObjectPropertyNode::ReleaseHandles()
     childNode->ReleaseHandles();
 }
 
+//******************************************************************************
+bool ObjectPropertyNode::IsPropertyGroup()
+{
+  return !mPropertyGroupName.Empty();
+}
+
+//******************************************************************************
+ObjectPropertyNode* ObjectPropertyNode::FindChildGroup(StringRange groupName)
+{
+  forRange(ObjectPropertyNode* child, mContainedObjects.All())
+  {
+    if (child->mPropertyGroupName == groupName)
+      return child;
+  }
+
+  return nullptr;
+}
+
 //--------------------------------------------------------------- Property State
 //******************************************************************************
 PropertyState::PropertyState()
@@ -108,6 +126,22 @@ void PropertyInterface::ChangeProperty(HandleParam object, PropertyPathParam pro
 }
 
 //******************************************************************************
+void PropertyInterface::MarkPropertyModified(HandleParam object, PropertyPathParam property)
+{
+  BoundType* objectType = object.StoredType;
+  if (MetaDataInheritance* inheritance = objectType->HasInherited<MetaDataInheritance>())
+    inheritance->SetPropertyModified(object, property, true);
+}
+
+//******************************************************************************
+void PropertyInterface::RevertProperty(HandleParam object, PropertyPathParam property)
+{
+  BoundType* objectType = object.StoredType;
+  if (MetaDataInheritance* inheritance = objectType->HasInherited<MetaDataInheritance>())
+    inheritance->RevertProperty(object, property);
+}
+
+//******************************************************************************
 PropertyState PropertyInterface::GetValue(HandleParam object, PropertyPathParam property)
 {
   Any currValue = property.GetValue(object);
@@ -140,6 +174,46 @@ HandleOf<MetaArray> PropertyInterface::GetMetaArray(BoundType* objectType)
 }
 
 //******************************************************************************
+void AddProperty(Property* property, ObjectPropertyNode* parent, HandleParam object, PropertyInterface* propertyInterface)
+{
+  if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
+  {
+    parent->mProperties.PushBack(new ObjectPropertyNode(parent, property));
+  }
+  else if (property->PropertyType->HasInherited<MetaPropertyEditor>())
+  {
+    parent->mProperties.PushBack(new ObjectPropertyNode(parent, property));
+  }
+  else
+  {
+    Handle propertyObject = property->GetValue(object).ToHandle();
+    if (propertyObject.IsNotNull())
+      parent->mProperties.PushBack(propertyInterface->BuildObjectTree(parent, propertyObject, property));
+  }
+}
+
+//******************************************************************************
+void AddGroup(ObjectPropertyNode* parentNode, StringRange groupPath, Property* property,
+              HandleParam object, Property* objectProperty, PropertyInterface* propertyInterface)
+{
+  StringTokenRange r = StringTokenRange(groupPath, '/');
+  String groupName = r.Front();
+
+  ObjectPropertyNode* groupNode = parentNode->FindChildGroup(groupName);
+  if(groupNode == nullptr)
+  {
+    groupNode = new ObjectPropertyNode(parentNode, object, objectProperty);
+    parentNode->mContainedObjects.PushBack(groupNode);
+    groupNode->mPropertyGroupName = groupName;
+  }
+
+  if (!r.internalRange.Empty())
+    AddGroup(groupNode, r.internalRange, property, object, objectProperty, propertyInterface);
+  else
+    AddProperty(property, groupNode, object, propertyInterface);
+}
+
+//******************************************************************************
 ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty)
 {
   ReturnIf(object.IsNull(), nullptr, "Invalid object.");
@@ -164,20 +238,13 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
        property->HasAttribute(PropertyAttributes::cDisplay)  ||
        property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
     {
-      if(EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
+      if(MetaGroup* group = property->Has<MetaGroup>())
       {
-        node->mProperties.PushBack(new ObjectPropertyNode(node, property));
+        AddGroup(node, group->mName, property, object, objectProperty, this);
+        continue;
       }
-      else if(property->PropertyType->HasInherited<MetaPropertyEditor>())
-      {
-        node->mProperties.PushBack(new ObjectPropertyNode(node, property));
-      }
-      else
-      {
-        Handle propertyObject = property->GetValue(object).ToHandle();
-        if(propertyObject.IsNotNull())
-          node->mProperties.PushBack(BuildObjectTree(node, propertyObject, property));
-      }
+
+      AddProperty(property, node, object, this);
     }
   }
 
@@ -259,7 +326,10 @@ void PropertyInterface::RestoreState(PropertyStateCapture& capture)
 {
   // Restore all objects the state
   forRange(PropertyStateCapture::CapturedProperty& captured, capture.Properties.All())
-    captured.Property->SetValue(captured.Object, captured.Value);
+  {
+    Handle object = captured.Object.GetHandle();
+    captured.Property.SetValue(object, captured.Value);
+  }
 }
 
 //******************************************************************************

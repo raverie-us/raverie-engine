@@ -36,7 +36,7 @@ MultiConvexMeshDrawer::MultiConvexMeshDrawer(Composite* parent, MultiConvexMeshE
   mEditor = editor;
 }
 
-void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -57,7 +57,7 @@ void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frame
   DrawAutoComputedContours(viewBlock, frameBlock, clipRect);
 }
 
-void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   Array<StreamedVertex> lines;
 
@@ -111,7 +111,7 @@ void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock, FrameBlock& f
   }
 }
 
-void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   static Texture* white = TextureManager::FindOrNull("White");
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
@@ -139,7 +139,7 @@ void MultiConvexMeshDrawer::DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBl
   }
 }
 
-void MultiConvexMeshDrawer::DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void MultiConvexMeshDrawer::DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   //debug! shows the closest point on the closest edge (where just adding a new point will go to)
   Keyboard* keyboard = Keyboard::GetInstance();
@@ -158,7 +158,7 @@ void MultiConvexMeshDrawer::DrawClosestPointOnEdge(ViewBlock& viewBlock, FrameBl
   }
 }
 
-void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect)
+void MultiConvexMeshDrawer::DrawAutoComputedContours(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   bool debugging = ConvexMeshEditorUi::DebuggingMode;
   if(debugging == false)
@@ -548,7 +548,7 @@ public:
     }
   }
 
-  Rect GetSelectionRect(Vec2Param screenEndPosition)
+  WidgetRect GetSelectionRect(Vec2Param screenEndPosition)
   {
     Viewport* viewport = mEditor->mViewport;
     Vec2 startPosition = mEditor->ToLocal(viewport->ViewportToScreen(mViewportStartPosition));
@@ -558,7 +558,7 @@ public:
     //so construct the proper rect by getting the min and max corners
     Vec2 min = Math::Min(startPosition, currPosition);
     Vec2 max = Math::Max(startPosition, currPosition);
-    return Rect::MinAndMax(min, max);
+    return WidgetRect::MinAndMax(min, max);
   }
 
   void OnMouseUpdate(MouseEvent* e) override
@@ -573,7 +573,7 @@ public:
 
     //get the selection rect to raw
     Vec2 screenEndPosition = viewport->ViewportToScreen(viewportEndPosition);
-    Rect selection = GetSelectionRect(screenEndPosition);
+    WidgetRect selection = GetSelectionRect(screenEndPosition);
     mSelectBox->SetSize(selection.GetSize());
     mSelectBox->SetTranslation(ToVector3(selection.TopLeft()));
     
@@ -611,7 +611,7 @@ ZilchDefineType(MultiConvexMeshPropertyViewInfo, builder, type)
   ZilchBindFieldProperty(mDrawMode);
   ZilchBindMethodProperty(AutoCompute);
   ZilchBindFieldProperty(mAutoComputeMode);
-  ZilchBindFieldProperty(mSurfaceLevelThreshold)->Add(new EditorRange(0, 1, 0.05f));
+  ZilchBindFieldProperty(mSurfaceLevelThreshold)->Add(new EditorSlider(0, 1, 0.05f));
   ZilchBindFieldProperty(mAutoComputeMethod);
   ZilchBindFieldProperty(mSimplificationThreshold);
 }
@@ -1024,6 +1024,9 @@ void MultiConvexMeshEditor::AutoCompute()
     return;
 
   SpriteSource* spriteSource = sprite->mSpriteSource;
+  Image sourceImage;
+  spriteSource->LoadSourceImage(&sourceImage);
+  SourceData sourceData = {spriteSource, &sourceImage};
 
   mMarchingSquares = MarchingSquares();
   mMarchingSquares.mDensitySurfaceLevel = mPropertyViewInfo.mSurfaceLevelThreshold;
@@ -1047,13 +1050,13 @@ void MultiConvexMeshEditor::AutoCompute()
   {
     //sample with the pixel boundary positions and the pixel sampling method
     mMarchingSquares.mPositionSampler = &MultiConvexMeshEditor::SamplePixelWorldPosition;
-    mMarchingSquares.SamplePixels(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, spriteSource);
+    mMarchingSquares.SamplePixels(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, &sourceData);
   }
   else
   {
     //sample with the center of a pixel's position plus the regular marching cubes method
     mMarchingSquares.mPositionSampler = &MultiConvexMeshEditor::SamplePixelWorldPositionAtCenter;
-    mMarchingSquares.Sample(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, spriteSource);
+    mMarchingSquares.Sample(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, &sourceData);
   }
   
 
@@ -1499,7 +1502,9 @@ real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord, void* userDat
 {
   uint x = (uint)pixelCoord.x;
   uint y = (uint)pixelCoord.y;
-  SpriteSource* spriteSource = (SpriteSource*)userData;
+  SourceData* sourceData = (SourceData*)userData;
+  SpriteSource* spriteSource = sourceData->mSpriteSource;
+  Image* sourceImage = sourceData->mSourceImage;
 
   //bounds checking
   if(x < 0 || x >= (int)spriteSource->FrameSizeX)
@@ -1507,14 +1512,16 @@ real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord, void* userDat
   if(y < 0 || y >= (int)spriteSource->FrameSizeY)
     return real(0);
 
-  return ToFloatColor(spriteSource->SourceImage.GetPixel(x, y)).w;
+  return ToFloatColor(sourceImage->GetPixel(x, y)).w;
 }
 
 real MultiConvexMeshEditor::SamplePixelIntensity(Vec2Param pixelCoord, void* userData)
 {
   uint x = (uint)pixelCoord.x;
   uint y = (uint)pixelCoord.y;
-  SpriteSource* spriteSource = (SpriteSource*)userData;
+  SourceData* sourceData = (SourceData*)userData;
+  SpriteSource* spriteSource = sourceData->mSpriteSource;
+  Image* sourceImage = sourceData->mSourceImage;
 
   //bounds checking
   if(x < 0 || x >= (int)spriteSource->FrameSizeX)
@@ -1522,13 +1529,14 @@ real MultiConvexMeshEditor::SamplePixelIntensity(Vec2Param pixelCoord, void* use
   if(y < 0 || y >= (int)spriteSource->FrameSizeY)
     return real(0);
 
-  Vec4 color = ToFloatColor(spriteSource->SourceImage.GetPixel(x, y));
+  Vec4 color = ToFloatColor(sourceImage->GetPixel(x, y));
   return (color.x + color.y + color.z) / real(3.0) * color.w;
 }
 
 Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord, void* userData)
 {
-  SpriteSource* spriteSource = (SpriteSource*)userData;
+  SourceData* sourceData = (SourceData*)userData;
+  SpriteSource* spriteSource = sourceData->mSpriteSource;
 
   Vec2 size = Vec2((real)spriteSource->FrameSizeX, (real)spriteSource->FrameSizeY);
   Vec2 flippedPixels = Vec2(pixelCoord.x, size.y - pixelCoord.y);
@@ -1536,7 +1544,7 @@ Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord, void*
   Vec2 temp = flippedPixels - flippedOrigin;
   temp /= size;
 
-  Vec2 extents = spriteSource->PixelSize / spriteSource->PixelsPerUnit;
+  Vec2 extents = spriteSource->GetSize() / spriteSource->PixelsPerUnit;
   temp *= extents;
 
   return temp;
@@ -1544,8 +1552,7 @@ Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord, void*
 
 Vec2 MultiConvexMeshEditor::SamplePixelWorldPositionAtCenter(Vec2Param pixelCoord, void* userData)
 {
-  SpriteSource* spriteSource = (SpriteSource*)userData;
-  return SamplePixelWorldPosition(pixelCoord + Vec2(0.5f, 0.5f), spriteSource);
+  return SamplePixelWorldPosition(pixelCoord + Vec2(0.5f, 0.5f), userData);
 }
 
 void MultiConvexMeshEditor::SetMultiConvexMesh(MultiConvexMesh* multiConvexMesh)
@@ -1700,7 +1707,7 @@ void MultiConvexMeshEditor::TestConvexMeshes()
   {
     mQueue.Undo();
     //remove the last action from the redo list (so the user can't redo to a bad state)
-    mQueue.RedoCommands.PopBack();
+    mQueue.mRedoCommands.PopBack();
 
     DoNotifyWarning("Invalid Mesh", "The mesh resulting from the last operation is invalid. The last operation will be undone.");
   }

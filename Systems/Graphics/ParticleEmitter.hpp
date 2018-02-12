@@ -106,7 +106,7 @@ public:
   /// How a particle's starting lifetime is.
   float mLifetime;
 
-  /// Hom much lifetime can vary per particle.
+  /// How much lifetime can vary per particle.
   float mLifetimeVariance;
 
   /// Speed in rads per second of the particle.

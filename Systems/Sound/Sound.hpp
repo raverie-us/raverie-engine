@@ -30,7 +30,7 @@ public:
 private:
   Audio::SoundAssetFromFile* mSoundAsset;
   bool mStreaming;
-  void SendAudioEvent(const Audio::AudioEventType eventType, void* data) override {}
+  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override {}
 
   void CreateAsset(Status& status, StringParam assetName, StringParam fileName, bool streaming);
 

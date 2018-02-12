@@ -9,6 +9,8 @@
 namespace Zero
 {
 
+const bool cBindCogChildrenReverseRange = false;
+
 //------------------------------------------------------------------------------------------ Helpers
 void SetCogFlag(Cog* cog, CogFlags::Enum flag, cstr flagName, bool state);
 bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
@@ -100,6 +102,7 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindGetterSetter(EditorViewportHidden);
   ZilchBindGetterSetter(ObjectViewHidden);
   ZilchBindGetterSetter(Locked);
+  ZilchBindGetter(ChildCount);
 
   ZilchBindMethod(Destroy);
   ZilchBindMethod(Clone);
@@ -121,12 +124,16 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(FindRoot);
   ZilchBindGetter(Children);
 
+  if(cBindCogChildrenReverseRange)
+    ZilchBindGetter(ChildrenReversed);
+
   ZilchBindMethod(AttachToPreserveLocal);
   ZilchBindMethod(AttachTo);
   ZilchBindMethod(DetachPreserveLocal);
   ZilchBindMethod(Detach);
 
   ZilchBindMethod(FindChildByName);
+  ZilchBindMethod(FindDirectChildByName);
   ZilchBindMethod(FindAllChildrenByName);
 
   ZilchBindMethod(IsDescendant);
@@ -155,6 +162,7 @@ ZilchDefineType(Cog, builder, type)
   // Other
   ZilchBindGetter(MarkedForDestruction);
   ZilchBindMethod(DebugDraw);
+  ZilchBindMethod(SanitizeName);
 
   ZeroBindEvent(Events::CogNameChanged, ObjectEvent);
   ZeroBindEvent(Events::TransformUpdated, ObjectEvent);
@@ -242,7 +250,7 @@ void Cog::ForceDestroy()
 }
 
 //**************************************************************************************************
-String Cog::GetName( )
+StringParam Cog::GetName( )
 {
   return mName;
 }
@@ -253,19 +261,19 @@ void Cog::SetName(StringParam newName)
   if(!mName.Empty( ) && this->mFlags.IsSet(CogFlags::Protected))
     return;
 
-  String sanatizedName = SanatizeName(newName);
-  if(sanatizedName != newName)
+  String sanitizedName = SanitizeName(newName);
+  if(sanitizedName != newName)
     DoNotifyWarning("Invalid Symbols in Cog Name", "Invalid symbols were removed from cog name");
 
   if(mSpace)
   {
     mSpace->RemoveFromNameMap(this, mName);
-    mSpace->AddToNameMap(this, sanatizedName);
+    mSpace->AddToNameMap(this, sanitizedName);
 
     mSpace->ChangedObjects( );
   }
 
-  mName = sanatizedName;
+  mName = sanitizedName;
 
   Event event;
   DispatchEvent(Events::CogNameChanged, &event);
@@ -997,6 +1005,16 @@ HierarchyList::range Cog::GetChildren()
 }
 
 //**************************************************************************************************
+HierarchyList::reverse_range Cog::GetChildrenReversed( )
+{
+  Hierarchy* hierarchy = this->has(Hierarchy);
+  if(hierarchy)
+    return hierarchy->GetChildrenReversed();
+
+  return HierarchyList::reverse_range();
+}
+
+//**************************************************************************************************
 uint Cog::GetChildCount()
 {
   uint count = 0;
@@ -1114,6 +1132,12 @@ bool Cog::AttachToPreserveLocal(Cog* parent)
 //**************************************************************************************************
 bool Cog::AttachTo(Cog* parent)
 {
+  if (parent == nullptr)
+  {
+    DoNotifyException("Invalid attachment", "Cannot attach to null object");
+    return false;
+  }
+
   Transform* childTransform = this->has(Transform);
 
   // If the child has no Transform, there's no relative attachment needed
@@ -1252,34 +1276,39 @@ void Cog::Detach()
 //**************************************************************************************************
 Cog* Cog::FindChildByName(StringParam name)
 {
-  // Attempt to grab the hierarchy component
-  Hierarchy* hierarchy = this->has(Hierarchy);
-
-  // If we have a hierarchy
-  if (hierarchy != nullptr)
+  // Loop through all the children
+  forRange(Cog& child, GetChildren())
   {
-    // Loop through all the children
-    forRange(Cog& child, hierarchy->Children.All())
+    // Get the name of the object and compare it
+    if (child.GetName() == name)
     {
-      // Get the name of the object and compare it
-      if (child.GetName() == name)
-      {
-        // It's the object we wanted!
-        return &child;
-      }
-      else
-      {
-        // Otherwise, search the children of this object...
-        Cog* found = child.FindChildByName(name);
+      // It's the object we wanted!
+      return &child;
+    }
+    else
+    {
+      // Otherwise, search the children of this object...
+      Cog* found = child.FindChildByName(name);
 
-        // If we found it... return it
-        if (found != nullptr)
-          return found;
-      }
+      // If we found it... return it
+      if (found != nullptr)
+        return found;
     }
   }
 
   // Otherwise, we found nothing in this hierarchy
+  return nullptr;
+}
+
+//**************************************************************************************************
+Cog* Cog::FindDirectChildByName(StringParam name)
+{
+  forRange(Cog& child, GetChildren())
+  {
+    if (child.GetName() == name)
+      return &child;
+  }
+
   return nullptr;
 }
 
@@ -1465,23 +1494,63 @@ void Cog::ReplaceChild(Cog* oldChild, Cog* newChild)
 //**************************************************************************************************
 uint Cog::GetHierarchyIndex()
 {
+  if (GetMarkedForDestruction())
+  {
+    DoNotifyExceptionAssert("Invalid Operation", "Cannot get Hierarchy Index of Cog that is marked for destruction");
+    return 0;
+  }
+
   if (HierarchyList* list = GetParentHierarchyList())
-    return list->FindIndex(this);
+  {
+    size_t index = 0;
+    forRange(Cog& cog, list->All())
+    {
+      // Don't account for Cogs marked for destruction
+      if (cog.GetMarkedForDestruction())
+        continue;
+
+      if (&cog == this)
+        return index;
+
+      ++index;
+    }
+  }
   return 0;
 }
 
 //**************************************************************************************************
-void Cog::PlaceInHierarchy(uint index)
+void Cog::PlaceInHierarchy(uint destinationIndex)
 {
   HierarchyList* list = GetParentHierarchyList();
-  uint currIndex = list->FindIndex(this);
+  uint currIndex = GetHierarchyIndex();
   list->Erase(this);
 
   // We have to compensate for removing ourself from the list
-  if (currIndex < index)
-    list->InsertAt(index - 1, this);
+  if (currIndex < destinationIndex)
+    destinationIndex -= 1;
+  
+  if(destinationIndex == 0)
+  {
+    list->PushFront(this);
+  }
   else
-    list->InsertAt(index, this);
+  {
+    size_t currentIndex = 0;
+    forRange(Cog& cog, list->All())
+    {
+      // Don't account for Cogs marked for destruction
+      if (cog.GetMarkedForDestruction())
+        continue;
+
+      ++currentIndex;
+
+      if (currentIndex == destinationIndex)
+      {
+        list->InsertAfter(&cog, this);
+        break;
+      }
+    }
+  }
 
   Event eventToSend;
   if (GetParent())
@@ -1577,11 +1646,20 @@ bool Cog::IsModifiedFromArchetype()
 //**************************************************************************************************
 void Cog::ClearArchetype()
 {
-  // Clear all modifications
-  LocalModifications* modifications = LocalModifications::GetInstance();
-  modifications->ClearModifications(this, true, false);
+  if (mArchetype == nullptr)
+    return;
 
+  // To retain the correct state of any child Archetypes, we need to apply all modifications of our
+  // Archetype and any inherited Archetypes
+  mArchetype->GetAllCachedModifications().ApplyModificationsToObject(this);
+
+  // We need to clear the Archetype before calling ClearCogModifications because it 
+  // will keep around modifications if it thinks this Cog is still an Archetype.
   mArchetype = nullptr;
+
+  // The modifications to us don't matter (our Archetype is being cleared), so clear ours but 
+  // retain the newly applied child Archetype modifications
+  ClearCogModifications(this, true);
 }
 
 //**************************************************************************************************
@@ -1593,6 +1671,7 @@ void Cog::MarkNotModified()
 //**************************************************************************************************
 void Cog::UploadToArchetype()
 {
+  ReturnIf(GetMarkedForDestruction() || GetTransient(), , "Cannot upload to Archetype");
   if (!mArchetype)
   {
     DoNotifyError("No archetype", "No archetype to upload to.");
@@ -1669,7 +1748,7 @@ void Cog::UploadToArchetype()
   // to the Archetype definition (such as reverting a property)
   if(InArchetypeDefinitionMode() == false)
   {
-    CachedModifications& archetypeModifications = archetype->GetAllCachedModifications();
+    CachedModifications& archetypeModifications = archetype->GetLocalCachedModifications();
     archetypeModifications.ApplyModificationsToObject(this, true);
   }
 
@@ -1914,14 +1993,14 @@ void Cog::DebugDraw()
 }
 
 //**************************************************************************************************
-String Cog::SanatizeName(StringParam newName)
+String Cog::SanitizeName(StringParam newName)
 {
   // 'FixIdentifier' will return "empty" if the string is empty, so we need to special case it here
   // because we allow for empty names
   if (newName.Empty())
     return newName;
 
-  return LibraryBuilder::FixIdentifier(newName, TokenCheck::None, '\0');
+  return LibraryBuilder::FixIdentifier(newName, TokenCheck::RemoveOuterBrackets, '\0');
 }
 
 //**************************************************************************************************

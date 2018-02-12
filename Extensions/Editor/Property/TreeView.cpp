@@ -39,7 +39,7 @@ Tweakable(Vec4, PrimaryColor,   Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SecondaryColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, MouseOverColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SelectedColor,  Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ToolTipColor,   Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, ToolTipColorScheme,   Vec4(1,1,1,1), cLocation);
 }
 
 namespace TreeViewInvalidUi
@@ -49,7 +49,7 @@ Tweakable(Vec4, PrimaryColor,   Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SecondaryColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, MouseOverColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SelectedColor,  Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ToolTipColor,   Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, ToolTipColorScheme,   Vec4(1,1,1,1), cLocation);
 }
 
 namespace Events
@@ -871,9 +871,9 @@ void TreeRow::OnMouseEnter(MouseEvent* event)
   
     toolTip->SetText(message);
     if(mValid)
-      toolTip->SetColor(ToolTipColor::Default);
+      toolTip->SetColorScheme(ToolTipColorScheme::Default);
     else
-      toolTip->SetColor(ToolTipColor::Red);
+      toolTip->SetColorScheme(ToolTipColorScheme::Red);
   
     // Position the tooltip
     ToolTipPlacement placement;
@@ -1000,7 +1000,7 @@ void UpdateToolTipPlacement(TreeRow* row, InsertMode::Type mode, MetaDropEvent* 
   e->mUseTooltipPlacement = true;
 
   // Center it to the row
-  Rect rect = row->GetScreenRect();
+  WidgetRect rect = row->GetScreenRect();
   placement.SetScreenRect(rect);
 
   // If we're inserting before, make it point to the top left corner
@@ -1152,6 +1152,7 @@ void TreeRow::OnRightUp(MouseEvent* event)
   TreeEvent e;
   e.Row  = this;
   mTree->DispatchEvent(Events::TreeRightClick, &e);
+  event->Handled = true;
 }
 
 void TreeRow::OnKeyUp(KeyboardEvent* event)
@@ -1778,7 +1779,7 @@ void TreeView::OnRightClickBg(MouseEvent* event)
 
 TreeRow* TreeView::FindRowByIndex(DataIndex& index)
 {
-  return mRowMap.FindValue(index.Id, NULL);
+  return mRowMap.FindValue(index.Id, nullptr);
 }
 
 uint TreeView::FindRowIndex(TreeRow* row)

@@ -38,18 +38,18 @@ public:
   ScrubberDrawer(AnimationScrubber* parent);
 
   /// WidgetCustomDraw interface.
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   void DrawHashes(Array<StreamedVertex>& lines, ByteColor color, ScrollingGraph::range r, float hashHeight);
 
   /// Draw the vertical hash marks.
-  void DrawHashMarks(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines);
+  void DrawHashMarks(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
 
   /// Draws the ghost play head line.
-  void DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines);
+  void DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
 
   /// Draws the play head line and the text.
-  void DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines);
+  void DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
   
   /// The height of the hash marks.
   float mHashHeight;
@@ -565,7 +565,7 @@ public:
   }
 
   //****************************************************************************
-  Rect GetSelectionRect(MouseEvent* e)
+  WidgetRect GetSelectionRect(MouseEvent* e)
   {
     // Get the local position of the mouse
     Vec2 curr = mScrubber->ToLocal(e->Position);
@@ -590,13 +590,13 @@ public:
     //else
     //  max.y = mScrubber->mSize.y * 0.7f;
     
-    return Rect::MinAndMax(min, max);
+    return WidgetRect::MinAndMax(min, max);
   }
 
   //****************************************************************************
   void OnMouseMove(MouseEvent* e) override
   {
-    Rect selection = GetSelectionRect(e);
+    WidgetRect selection = GetSelectionRect(e);
     PlaceWithRect(selection, mScrubber->mSelectBox);
 
     // Make it visible now that we've moved
@@ -606,7 +606,7 @@ public:
   //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
-    Rect selection = GetSelectionRect(e);
+    WidgetRect selection = GetSelectionRect(e);
 
     // We're not adding to the selection if ctrl is pressed, so clear it
     if(!e->CtrlPressed)
@@ -615,7 +615,7 @@ public:
     // Add all overlapping key frames to the selection
     forRange(KeyFrameIcon* keyFrame, mScrubber->mKeyFrames.AllValues())
     {
-      Rect keyFrameRect = keyFrame->GetRectInParent();
+      WidgetRect keyFrameRect = keyFrame->GetRectInParent();
 
       if(selection.Overlap(keyFrameRect))
       {
@@ -1097,7 +1097,7 @@ ScrubberDrawer::ScrubberDrawer(AnimationScrubber* parent)
 }
 
 //******************************************************************************
-void ScrubberDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void ScrubberDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -1130,7 +1130,7 @@ void ScrubberDrawer::DrawHashes(Array<StreamedVertex>& lines, ByteColor color, S
 }
 
 //******************************************************************************
-void ScrubberDrawer::DrawHashMarks(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines)
+void ScrubberDrawer::DrawHashMarks(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
 {
   ScrollingGraph& graphData = *mScrubber->mGraphData;
 
@@ -1158,7 +1158,7 @@ void ScrubberDrawer::DrawHashMarks(ViewBlock& viewBlock, FrameBlock& frameBlock,
 }
 
 //******************************************************************************
-void ScrubberDrawer::DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines)
+void ScrubberDrawer::DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
 {
   if(!mScrubber->mShowGhostPlayHead)
     return;
@@ -1171,7 +1171,7 @@ void ScrubberDrawer::DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBl
 }
 
 //******************************************************************************
-void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, Array<StreamedVertex>& lines)
+void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
 {
   float playHead = mScrubber->GetPlayHead();
   float localX = mScrubber->ToPixels(playHead);

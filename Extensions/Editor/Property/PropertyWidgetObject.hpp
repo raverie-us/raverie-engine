@@ -83,7 +83,7 @@ public:
 
   void HighlightRed(StringParam message);
   void RemoveRedHighlight();
-  void CreateTooltip(StringParam message, ToolTipColor::Enum color);
+  void CreateTooltip(StringParam message, ToolTipColorScheme::Enum color);
 
   /// Called at the end of actions to let the parent know that
   /// it can start laying out this widget.
@@ -150,6 +150,7 @@ public:
   /// Access back to the property grid that owns us.
   PropertyView* mGrid;
 
+  String GetExpandId();
   static HashSet<String> mExpandedTypes;
 };
 

@@ -236,19 +236,19 @@ ZilchDefineType(SoundCue, builder, type)
 
   ZilchBindGetterSetterProperty(PlayMode);
   ZilchBindGetterSetterProperty(SelectMode);
-  ZilchBindGetterSetterProperty(Volume)->Add(new EditorRange(0.0f, 2.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Decibels)->Add(new EditorRange(-32.0f, 6.0f, 0.1f));
+  ZilchBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
   ZilchBindFieldProperty(mUseDecibelVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mVolumeVariation)->Add(new EditorRange(0.0f, 1.0f, 0.01f))->
+  ZilchBindFieldProperty(mVolumeVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.01f))->
     ZeroFilterNotBool(mUseDecibelVariation);
-  ZilchBindFieldProperty(mDecibelVariation)->Add(new EditorRange(0.0f, 6.0f, 0.1f))->
+  ZilchBindFieldProperty(mDecibelVariation)->Add(new EditorSlider(0.0f, 6.0f, 0.1f))->
     ZeroFilterBool(mUseDecibelVariation);
-  ZilchBindGetterSetterProperty(Pitch)->Add(new EditorRange(-2.0f, 2.0f, 0.1f));
-  ZilchBindGetterSetterProperty(Semitones)->Add(new EditorRange(-24.0f, 24.0f, 0.1f));
+  ZilchBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
+  ZilchBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
   ZilchBindFieldProperty(mUseSemitoneVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mPitchVariation)->Add(new EditorRange(0.0f, 1.0f, 0.1f))->
+  ZilchBindFieldProperty(mPitchVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->
     ZeroFilterNotBool(mUseSemitoneVariation);
-  ZilchBindFieldProperty(mSemitoneVariation)->Add(new EditorRange(0.0f, 12.0f, 0.1f))->
+  ZilchBindFieldProperty(mSemitoneVariation)->Add(new EditorSlider(0.0f, 12.0f, 0.1f))->
     ZeroFilterBool(mUseSemitoneVariation);
   ZilchBindGetterSetterProperty(Attenuator);
   ZilchBindFieldProperty(mShowMusicOptions)->AddAttribute(PropertyAttributes::cInvalidatesObject);
@@ -298,7 +298,6 @@ SoundCue::SoundCue() :
 //**************************************************************************************************
 SoundCue::~SoundCue()
 {
-  Unload();
 }
 
 //**************************************************************************************************
@@ -365,7 +364,7 @@ float SoundCue::GetVolume()
 //**************************************************************************************************
 void SoundCue::SetVolume(float newVolume)
 {
-  mVolume = newVolume;
+  mVolume = Math::Max(newVolume, 0.0f);
 }
 
 //**************************************************************************************************
@@ -512,7 +511,7 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
   }
 
   // Get asset
-  Audio::SoundAssetNode* asset = entry->GetSound()->mSoundAsset;
+  Audio::SoundAsset* asset = entry->GetSound()->mSoundAsset;
   ErrorIf(!asset, "No sound asset when playing SoundCue");
   if (!asset)
   {

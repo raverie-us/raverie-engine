@@ -1,10 +1,9 @@
 [Version:1]
 Level 
 {
-	Cog 
+	Cog [ContextId:1]
 	{
 		var Name = "LevelSettings"
-		var LinkId = 1
 		GravityEffect 
 		{
 			var Active = true
@@ -40,48 +39,9 @@ Level
 			var FollowEditorCamera = false
 		}
 	}
-	Cog 
-	{
-		var Name = "Renderer"
-		var LinkId = 2
-		DeferredRenderer 
-		{
-			var DrawDebug = true
-			var GeometryDebug = GeometryValue.None
-			var ShowDiffuse = true
-			var ShowSpecular = true
-			var Skybox = "5826e695131c0f51:Black"
-			var DrawSkybox = true
-			var DirectLighting = true
-			var IndirectLighting = true
-			var IndirectIntensity = 1
-			var ToneMap = true
-		}
-		Ssao 
-		{
-			var Active = true
-			var Radius = 1
-			var Intensity = 2.20000005
-			var BlurDepthThreshold = 0.0500000007
-			var DebugBuffer = false
-		}
-		Bloom 
-		{
-			var Active = true
-			var Intensity = 0.100000001
-			var Threshold = 1
-			var Bloom1 = true
-			var Bloom2 = true
-			var Bloom3 = true
-			var Bloom4 = true
-			var Bloom5 = true
-			var DebugBuffer = false
-		}
-	}
-	Cog 
+	Cog [ContextId:2]
 	{
 		var Name = "DirectionalLight"
-		var LinkId = 3
 		Transform 
 		{
 			var Translation = Real3{0, 50, 50}
@@ -91,7 +51,6 @@ Level
 		SelectionIcon 
 		{
 			var Visible = true
-			var ViewCulling = true
 			var VisibilityEvents = true
 			var Material = "56581e2bb81777be:DebugDrawOnTop"
 			var SpriteSource = "58f8e4be736f5ea2:LightIcon"
@@ -103,58 +62,60 @@ Level
 			var Visible = true
 			var ViewCulling = false
 			var VisibilityEvents = true
-			var Material = ""
-			var Mesh = ""
+			var OverrideBoundingBox = false
+			var LocalAabbCenter = Real3{0, 0, 0}
+			var LocalAabbHalfExtents = Real3{1, 1, 1}
+			var GroupSortValue = 0
+			var Material = "583afb5e7bf75e18:ZeroMaterial"
+			var Mesh = "4de0354322b345ae:Cube"
 		}
 		DirectionalLight 
 		{
-			var LightColorValue = Real3{1, 1, 1}
-			var LightIntensityValue = 2
-			var CastShadowsValue = true
-			var NormalOffsetBias = 0.100000001
+			var LightColor = Real4{1, 1, 1, 1}
+			var LightIntensity = 1
 		}
 		CameraViewport 
 		{
 			var RenderInEditor = true
 			var RenderInGame = true
+			var RenderOrder = -1
+			var CameraPath = CogPath
+			{
+				var Path = "."
+				var ErrorOnResolveToNull = false
+				var ErrorOnPathCantCompute = false
+				var ErrorOnDirectLinkFail = false
+				var UpdateCogOnPathChange = true
+				var UpdatePathOnCogChange = true
+				var UpdateCogOnInitialize = true
+				var ResolvedNullErrorOccurred = false
+				var Cog = 2
+				var PathPreference0 = CogPathPreference.CogRelative
+				var PathPreference1 = CogPathPreference.SpaceRelative
+				var PathPreference2 = CogPathPreference.Absolute
+			}
+			var RendererPath = CogPath
+			{
+				var Path = "."
+				var ErrorOnResolveToNull = false
+				var ErrorOnPathCantCompute = false
+				var ErrorOnDirectLinkFail = false
+				var UpdateCogOnPathChange = true
+				var UpdatePathOnCogChange = true
+				var UpdateCogOnInitialize = true
+				var ResolvedNullErrorOccurred = false
+				var Cog = 2
+				var PathPreference0 = CogPathPreference.CogRelative
+				var PathPreference1 = CogPathPreference.SpaceRelative
+				var PathPreference2 = CogPathPreference.Absolute
+			}
+			var ResolutionOrAspect = Integer2{1920, 1080}
 			var RenderToViewport = false
 			var ForwardViewportEvents = false
-			var RenderOrder = -1
-			var NormalizedSize = Real2{1, 1}
-			var NormalizedOffset = Real2{0, 0}
-			var Camera = CogPath
-			{
-				var Path = "."
-				var ErrorOnResolveToNull = false
-				var ErrorOnPathCantCompute = false
-				var ErrorOnDirectLinkFail = false
-				var UpdateCogOnPathChange = true
-				var UpdatePathOnCogChange = true
-				var UpdateCogOnInitialize = true
-				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 3
-				var PathPreference0 = CogPathPreference.CogRelative
-				var PathPreference1 = CogPathPreference.SpaceRelative
-				var PathPreference2 = CogPathPreference.Absolute
-			}
-			var Renderer = CogPath
-			{
-				var Path = "."
-				var ErrorOnResolveToNull = false
-				var ErrorOnPathCantCompute = false
-				var ErrorOnDirectLinkFail = false
-				var UpdateCogOnPathChange = true
-				var UpdatePathOnCogChange = true
-				var UpdateCogOnInitialize = true
-				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 3
-				var PathPreference0 = CogPathPreference.CogRelative
-				var PathPreference1 = CogPathPreference.SpaceRelative
-				var PathPreference2 = CogPathPreference.Absolute
-			}
-			var Resolution = Real2{1, 1}
 			var ViewportScaling = ViewportScaling.Fill
 			var MarginColor = Real4{0, 0, 0, 1}
+			var NormalizedSize = Real2{1, 1}
+			var NormalizedOffset = Real2{0, 0}
 		}
 		Camera 
 		{
@@ -167,28 +128,24 @@ Level
 		ShadowRenderer 
 		{
 			var ResolutionValue = ShadowResolution.High
+			var NormalOffsetBias = 0.100000001
 		}
 	}
-	Cog 
+	Cog [ContextId:3]
 	{
 		var Name = "EditorCamera"
-		var LinkId = 4
 		Transform 
 		{
-			var Translation = Real3{208.302612, -166.66629, 49.2403946}
+			var Translation = Real3{297.5, -229, 10}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{-0.0871557519, -1.09695906e-08, -1.90484961e-09, 0.99619478}
+			var Rotation = Quaternion{0, 0, 0, 1}
 		}
 		CameraViewport 
 		{
 			var RenderInEditor = true
 			var RenderInGame = false
-			var RenderToViewport = true
-			var ForwardViewportEvents = false
 			var RenderOrder = 0
-			var NormalizedSize = Real2{1, 1}
-			var NormalizedOffset = Real2{0, 0}
-			var Camera = CogPath
+			var CameraPath = CogPath
 			{
 				var Path = "."
 				var ErrorOnResolveToNull = false
@@ -198,14 +155,14 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 4
+				var Cog = 3
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
-			var Renderer = CogPath
+			var RendererPath = CogPath
 			{
-				var Path = ":/Renderer"
+				var Path = ":/SoundGraphWindow"
 				var ErrorOnResolveToNull = false
 				var ErrorOnPathCantCompute = false
 				var ErrorOnDirectLinkFail = false
@@ -213,37 +170,41 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 2
+				var Cog = 4
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
-			var Resolution = Real2{1920, 1080}
+			var ResolutionOrAspect = Integer2{1920, 1080}
+			var RenderToViewport = true
+			var ForwardViewportEvents = false
 			var ViewportScaling = ViewportScaling.Fill
 			var MarginColor = Real4{0, 0, 0, 1}
+			var NormalizedSize = Real2{1, 1}
+			var NormalizedOffset = Real2{0, 0}
 		}
 		Camera 
 		{
 			var NearPlane = 0.100000001
-			var FarPlane = 200
-			var PerspectiveMode = PerspectiveMode.Perspective
+			var FarPlane = 100
+			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 60
-			var Size = 662.30719
+			var Size = 1749
 		}
 		EditorCameraController 
 		{
-			var ControlMode = ControlMode.Orbit
-			var LookDistance = 50
-			var VerticalAngle = 0.17453292
+			var ControlMode = ControlMode.ZPlane
+			var Previous3DMode = ControlMode.Orbit
+			var LookDistance = 10
+			var VerticalAngle = 0
 			var HorizontalAngle = 0
-			var LookTarget = Real3{208.302612, -175.348694, 9.10519793e-06}
+			var LookTarget = Real3{297.412659, -228.09639, 2.07247285e-06}
 			var MoveSensitivity = 1
 		}
 	}
-	Cog 
+	Cog [ContextId:5]
 	{
 		var Name = "GameCamera"
-		var LinkId = 5
 		Transform 
 		{
 			var Translation = Real3{0, 0, 50}
@@ -253,7 +214,6 @@ Level
 		SelectionIcon 
 		{
 			var Visible = true
-			var ViewCulling = true
 			var VisibilityEvents = true
 			var Material = "56581e2bb81777be:DebugDrawOnTop"
 			var SpriteSource = "58f8e4be7360cf7c:CameraIcon"
@@ -264,12 +224,8 @@ Level
 		{
 			var RenderInEditor = false
 			var RenderInGame = true
-			var RenderToViewport = true
-			var ForwardViewportEvents = false
 			var RenderOrder = 0
-			var NormalizedSize = Real2{1, 1}
-			var NormalizedOffset = Real2{0, 0}
-			var Camera = CogPath
+			var CameraPath = CogPath
 			{
 				var Path = "."
 				var ErrorOnResolveToNull = false
@@ -279,14 +235,14 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 5
+				var Cog = 5
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
-			var Renderer = CogPath
+			var RendererPath = CogPath
 			{
-				var Path = ":/Renderer"
+				var Path = ":/SoundGraphWindow"
 				var ErrorOnResolveToNull = false
 				var ErrorOnPathCantCompute = false
 				var ErrorOnDirectLinkFail = false
@@ -294,14 +250,18 @@ Level
 				var UpdatePathOnCogChange = true
 				var UpdateCogOnInitialize = true
 				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 2
+				var Cog = 4
 				var PathPreference0 = CogPathPreference.CogRelative
 				var PathPreference1 = CogPathPreference.SpaceRelative
 				var PathPreference2 = CogPathPreference.Absolute
 			}
-			var Resolution = Real2{1920, 1080}
+			var ResolutionOrAspect = Integer2{1920, 1080}
+			var RenderToViewport = true
+			var ForwardViewportEvents = false
 			var ViewportScaling = ViewportScaling.Fill
 			var MarginColor = Real4{0, 0, 0, 1}
+			var NormalizedSize = Real2{1, 1}
+			var NormalizedOffset = Real2{0, 0}
 		}
 		Camera 
 		{
@@ -311,24 +271,10 @@ Level
 			var FieldOfView = 60
 			var Size = 20
 		}
-		ZUiBasicRenderer 
-		{
-			var ClearColor = Real4{0, 0, 0, 1}
-			var DrawDebug = true
-			var DrawOpaque = false
-			var DrawAlphaBlend = false
-		}
-		ZUiSnapCameraSize 
-		{
-			var Active = true
-			var ZoomSpeed = 0.00999999978
-			var Zoom = 1
-		}
 	}
-	Cog 
+	Cog [ContextId:4]
 	{
 		var Name = "SoundGraphWindow"
-		var LinkId = 6
 		Transform 
 		{
 			var Translation = Real3{0, 0, 0}
@@ -340,8 +286,12 @@ Level
 			var Visible = true
 			var ViewCulling = true
 			var VisibilityEvents = true
+			var OverrideBoundingBox = false
+			var LocalAabbCenter = Real3{0, 0, 0}
+			var LocalAabbHalfExtents = Real3{1, 1, 1}
+			var GroupSortValue = 0
 			var Material = "582c575af53d18c9:AlphaSprite"
-			var VertexColor = Real4{0.258823544, 0.258823544, 0.258823544, 1}
+			var VertexColor = Real4{1, 1, 1, 0}
 			var GeometryMode = SpriteGeometryMode.ZPlane
 			var SpriteSource = "5275aa4d802dd6dc:Square"
 			var FlipX = false
@@ -353,9 +303,9 @@ Level
 		Area 
 		{
 			var Size = Real2{500, 400}
-			var Origin = Location.TopLeft
+			var Origin = Location.BottomLeft
 		}
-		UiWidget 
+		UiRootWidget 
 		{
 			var Active = true
 			var Visible = true
@@ -363,7 +313,7 @@ Level
 			var InLayout = true
 			var ClipChildren = false
 			var CanTakeFocus = false
-			var LocalColor = Real4{1, 1, 1, 1}
+			var LocalColor = Real4{1, 1, 1, 0}
 			var HierarchyColor = Real4{1, 1, 1, 1}
 			var SizePolicyX = UiSizePolicy.Auto
 			var SizePolicyY = UiSizePolicy.Auto
@@ -376,16 +326,11 @@ Level
 			var MarginRight = 0
 			var MarginBottom = 0
 			var DockMode = UiDockMode.Left
-		}
-		UiRootWidget 
-		{
 			var MouseHoverTime = 0.100000001
 			var MouseHoldTime = 1
 			var DoubleClickTime = 0.300000012
 			var DepthSeparation = 0.00999999978
 			var DebugMouseInteraction = false
-			var SnapSize = 1
-			var AlwaysUpdate = true
 		}
 		Reactive 
 		{
@@ -393,57 +338,15 @@ Level
 		}
 		UiRenderer 
 		{
-		}
-		UiRootInputRouter 
-		{
-		}
-		ZUiFillViewport 
-		{
-			var Active = true
-			var CameraViewport = CogPath
-			{
-				var Path = ":/GameCamera"
-				var ErrorOnResolveToNull = false
-				var ErrorOnPathCantCompute = false
-				var ErrorOnDirectLinkFail = false
-				var UpdateCogOnPathChange = true
-				var UpdatePathOnCogChange = true
-				var UpdateCogOnInitialize = true
-				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 5
-				var PathPreference0 = CogPathPreference.CogRelative
-				var PathPreference1 = CogPathPreference.SpaceRelative
-				var PathPreference2 = CogPathPreference.Absolute
-			}
-			var Camera = CogPath
-			{
-				var Path = ":/GameCamera"
-				var ErrorOnResolveToNull = false
-				var ErrorOnPathCantCompute = false
-				var ErrorOnDirectLinkFail = false
-				var UpdateCogOnPathChange = true
-				var UpdatePathOnCogChange = true
-				var UpdateCogOnInitialize = true
-				var ResolvedNullErrorOccurred = false
-				var ResolvedCog = 5
-				var PathPreference0 = CogPathPreference.CogRelative
-				var PathPreference1 = CogPathPreference.SpaceRelative
-				var PathPreference2 = CogPathPreference.Absolute
-			}
-		}
-		UiFillLayout 
-		{
-			var PaddingLeft = 0
-			var PaddingTop = 0
-			var PaddingRight = 0
-			var PaddingBottom = 0
+			var ClearColor = Real4{0, 0, 0, 0}
+			var EditorDebugDraw = true
+			var GameDebugDraw = true
 		}
 		Hierarchy 
 		{
-			Cog 
+			Cog [ContextId:6]
 			{
 				var Name = "SoundNodeGraph"
-				var LinkId = 7
 				Transform 
 				{
 					var Translation = Real3{0, 0, 0}
@@ -452,7 +355,7 @@ Level
 				}
 				Area 
 				{
-					var Size = Real2{800, 800}
+					var Size = Real2{500, 400}
 					var Origin = Location.TopLeft
 				}
 				UiWidget 
@@ -489,7 +392,7 @@ Level
 				MouseCapture 
 				{
 				}
-				ZSoundNodeGraphScript 
+				ZUiSoundNodeGraph 
 				{
 				}
 				Hierarchy 

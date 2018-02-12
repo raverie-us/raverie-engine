@@ -183,7 +183,7 @@ void HeightManipulationTool::Draw(HeightMap* map)
 //------------------------------------------------------------- Raise/Lower Tool
 ZilchDefineType(RaiseLowerTool, builder, type)
 {
-  ZilchBindFieldProperty(mStrength)->Add(new EditorRange(0,1,0.001f));
+  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0,1,0.001f));
   ZilchBindFieldProperty(mRelative);
 
   ZeroBindExpanded();
@@ -225,7 +225,7 @@ void RaiseLowerTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent*
 //---------------------------------------------------------- Smooth/Sharpen Tool
 ZilchDefineType(SmoothSharpenTool, builder, type)
 {
-  ZilchBindFieldProperty(mStrength)->Add(new EditorRange(0,1,0.001f));
+  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0,1,0.001f));
   ZilchBindField(mUniformSamples);
   ZilchBindField(mRandomSamples);
   ZilchBindField(mRandomSampleDistance);
@@ -613,7 +613,7 @@ ZilchDefineType(WeightPainterTool, builder, type)
 {
   ZilchBindFieldProperty(mTextureChannel);
 
-  ZilchBindFieldProperty(mStrength)->Add(new EditorRange(0,1,0.001f));
+  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0,1,0.001f));
   ZilchBindFieldProperty(mRadius);
   ZilchBindFieldProperty(mFeatherRadius);
 
@@ -814,7 +814,7 @@ ZilchDefineType(HeightMapTool, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultConstructor);
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
   if(DeveloperConfig* devConfig = Z::gEngine->GetConfigCog( )->has(Zero::DeveloperConfig))
   {
@@ -938,12 +938,17 @@ void HeightMapTool::OnToolDeactivate(Event*)
 
 void HeightMapTool::OnKeyDown(KeyboardEvent* e)
 {
+  Cog* owner = GetOwner();
+  ObjectEvent eventToSend(owner);
+
   switch(e->Key)
   {
     case Keys::Num1:
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::CreateDestroy);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;
@@ -952,6 +957,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::RaiseLower);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;
@@ -960,6 +967,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::SmoothSharpen);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;
@@ -968,6 +977,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::Flatten);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;
@@ -976,6 +987,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
       if(e->ShiftPressed)
       {
         SetCurrentTool(HeightTool::WeightPainter);
+        owner->DispatchEvent(Events::ObjectStructureModified, &eventToSend);
+
         e->Handled = true;
       }
       break;

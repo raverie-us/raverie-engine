@@ -84,6 +84,19 @@ namespace Zilch
   class ZeroShared AttributeParameter : public Constant
   {
   public:
+    AttributeParameter() {}
+
+    using Constant::Constant;
+
+    // Helper constructors
+    AttributeParameter(StringParam name, StringParam value);
+    AttributeParameter(StringParam name, Integer value);
+    AttributeParameter(StringParam name, DoubleInteger value);
+    AttributeParameter(StringParam name, Real value);
+    AttributeParameter(StringParam name, DoubleReal value);
+    AttributeParameter(StringParam name, Boolean value);
+    AttributeParameter(StringParam name, Zilch::Type* value);
+
     // An optional name given to the parameter (if the user used name parameter calling)
     String Name;
   };
@@ -98,6 +111,22 @@ namespace Zilch
 
     // Checks to see if an attribute parameter exists (returns a pointer to the attribute parameter)
     AttributeParameter* HasAttributeParameter(StringParam name);
+
+    void AddParameter(StringParam value);
+    void AddParameter(Integer value);
+    void AddParameter(DoubleInteger value);
+    void AddParameter(Real value);
+    void AddParameter(DoubleReal value);
+    void AddParameter(Boolean value);
+    void AddParameter(Type* value);
+
+    void AddParameter(StringParam name, StringParam value);
+    void AddParameter(StringParam name, Integer value);
+    void AddParameter(StringParam name, DoubleInteger value);
+    void AddParameter(StringParam name, Real value);
+    void AddParameter(StringParam name, DoubleReal value);
+    void AddParameter(StringParam name, Boolean value);
+    void AddParameter(StringParam name, Type* value);
 
     // The reflection object that owns this attribute
     ReflectionObject* Owner;
@@ -135,6 +164,14 @@ namespace Zilch
 
     // If this documented object has a resulting type (or represents a type) this will return it
     virtual Type* GetTypeOrNull();
+
+    // Used to chain operations on reflection objects.
+    template <typename T>
+    ReflectionObject* Add(const T* component)
+    {
+      Composition::Add<T>(component);
+      return this;
+    }
 
     // The location of just the name/identifier for this document object
     // This is what gets selected in common IDE commands such as Go-To-Definition

@@ -37,6 +37,7 @@ public:
   ShaderInput CreateShaderInput(StringParam fragmentName, StringParam inputName, ShaderInputType::Enum type, AnyParam value);
 
   void OnZilchFragmentCompilationError(Zilch::ErrorEvent* event);
+  void OnZilchFragmentTypeParsed(Zilch::ParseEvent* event);
   void OnZilchFragmentTranslationError(TranslationErrorEvent* event);
   static void OnFragmentProjectPostSyntaxer(ParseEvent* e);
 

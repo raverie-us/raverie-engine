@@ -64,7 +64,10 @@ void OrientationGizmoViewport::OnDestroy()
 void OrientationGizmoViewport::UpdateTransform()
 {
   if (mCamera.IsNull())
+  {
+    Widget::UpdateTransform();
     return;
+  }
 
   CameraViewport* cameraViewport = mCamera->has(CameraViewport);
 

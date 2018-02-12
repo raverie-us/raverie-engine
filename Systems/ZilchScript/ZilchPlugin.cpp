@@ -201,9 +201,10 @@ void ZilchPluginSource::ForceCopyPluginDependencies()
   cppAttributes.WriteLine("{");
 
   HashSet<String> attributes;
-  attributes.Append(manager->mAllowedClassAttributes.All());
-  attributes.Append(manager->mAllowedFunctionAttributes.All());
-  attributes.Append(manager->mAllowedGetSetAttributes.All());
+  AttributeExtensions* attributeExtensions = AttributeExtensions::GetInstance();
+  attributes.Append(attributeExtensions->mClassExtensions.Keys());
+  attributes.Append(attributeExtensions->mPropertyExtensions.Keys());
+  attributes.Append(attributeExtensions->mFunctionExtensions.Keys());
 
   forRange(String& attribute, attributes.All())
   {
@@ -443,6 +444,9 @@ void CompletedCompilation(BackgroundTask* task, Job* job)
 
 bool ZilchPluginSource::CheckIdeAndInformUser()
 {
+  if (GetResourceTemplate())
+    return false;
+
   if (IsIdeInstalled() == false)
   {
     DoNotifyWarning("Zilch Plugin", "No IDE was detected, you must first install a C++ IDE for your platform");

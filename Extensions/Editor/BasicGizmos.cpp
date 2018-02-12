@@ -36,6 +36,9 @@ namespace Events
 //----------------------------------------------------------------- GizmoHelpers
 namespace GizmoHelpers
 {
+static const real sGizmoEpsilon = real(0.0001);
+
+
 
 //******************************************************************************
 float GetViewScale(Camera* camera, Vec3Param location)
@@ -46,11 +49,11 @@ float GetViewScale(Camera* camera, Vec3Param location)
 }
 
 //******************************************************************************
-int GetDragAxis(Vec3Param localMovement)
+int GetDragAxis(Vec3Param movement)
 {
   for(int axis = 0; axis < 3; ++axis)
   {
-    if(Math::Abs(localMovement[axis]) > Math::Epsilon( ))
+    if(Math::Abs(movement[axis]) > sGizmoEpsilon)
       return axis;
   }
 
@@ -58,24 +61,92 @@ int GetDragAxis(Vec3Param localMovement)
 }
 
 //******************************************************************************
-Vec3 GetOffAxisMovement(Vec3Param movement)
+Vec3 SingleAxisToOffAxesScale(Vec3Param movement)
 {
   Vec3 v(movement);
 
   int dragAxis = GizmoHelpers::GetDragAxis(v);
   if(dragAxis != INT_MAX)
-  {
-    float selectedAxisMovement = v[dragAxis];
-    Vec3 offAxis = Vec3(1, 1, 1);
-    offAxis[dragAxis] = 0.0f;
-
-    v = offAxis * selectedAxisMovement;
-  }
+    v = SingleAxisToOffAxesScale(dragAxis, movement);
 
   return v;
 }
 
 //******************************************************************************
+Vec3 SingleAxisToOffAxesScale(int dragAxis, Vec3Param movement)
+{
+  Vec3 v(movement);
+
+  float selectedAxisMovement = v[dragAxis];
+  Vec3 offAxis = Vec3(1, 1, 1);
+  offAxis[dragAxis] = 0.0f;
+
+  v = offAxis * selectedAxisMovement;
+
+  return v;
+}
+
+//******************************************************************************
+// Output is [-1, 1].  ie, up, down, none
+Vec3 GetMovementDirection(Vec3Param movement, Mat3Param bases)
+{
+  Vec3 direction = Vec3::cZero;
+
+  // Dot on all basis axes.
+  for(int axis = 0; axis < 3; ++axis)
+  {
+    Vec3 v = bases.GetBasis(axis).AttemptNormalized( );
+    float move = Math::Dot(v, movement);
+
+    // Don't assign a direction if no movement occurred on the current 'axis'.
+    if(Math::Abs(move) > sGizmoEpsilon)
+    {
+      // If false: 0 * 2 - 1 = -1 [ie, dir is scaling down].
+      // If true:  1 * 2 - 1 =  1 [ie, dir is scaling up].
+      direction[axis] = (float)((move >= 0.0f) * 2 - 1);
+    }
+
+  }
+
+  return direction;
+}
+
+//******************************************************************************
+// Input 'scaleDirection' is [-1, 1].  ie, up, down, none
+//  - Note: 'WorldToParent' & 'ParentToLocal' are not concatenated as object local
+//          scale & translation are undesired in final calculation.
+Vec3 MovementToUniformSignedLocalScale(float scaleDirection,
+  Vec3Param worldMovement, Mat4 worldToParent, QuatParam parentToLocal)
+{
+  Vec3 d(scaleDirection);
+  return MovementToUniformSignedLocalScale(d, worldMovement, worldToParent, parentToLocal);
+}
+
+//******************************************************************************
+// Input 'scaleDirection' is [-1, 1] on each axis (x, y, z).  ie, up, down, none
+//  - Note: 'WorldToParent' & 'ParentToLocal' are not concatenated as object local
+//          scale & translation are undesired in final calculation.
+Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection,
+  Vec3Param worldMovement, Mat4 worldToParent, QuatParam parentToLocal)
+{
+  Vec3 v(worldMovement);
+
+  // Movement in parent's space (if applicable).
+  v = Math::TransformNormal(worldToParent, v);
+  // Movement in local orientation.
+  v = Math::Multiply(parentToLocal, v);
+
+  // Non-uniform-signed scales are not allowed. 'scaleDirection' will dictate
+  // uniformly signed values.
+  v = Math::Abs(v);
+  // Scaling up or down? [ie, 1 or -1]
+  v *= scaleDirection;
+
+  return v;
+}
+
+//******************************************************************************
+// Expects 'vector0' to be normalized.
 Vec3 NormalToLocal(Vec3Param vector0, Transform* transform)
 {
   if(transform->TransformParent)
@@ -83,8 +154,9 @@ Vec3 NormalToLocal(Vec3Param vector0, Transform* transform)
     //Transform into local space
     Mat4 parentWorldInverse = transform->TransformParent->GetWorldMatrix( );
     parentWorldInverse.Invert( );
-    return TransformNormal(parentWorldInverse, vector0);//.Normalized();
+    return TransformNormal(parentWorldInverse, vector0);
   }
+
   return vector0;
 }
 
@@ -133,47 +205,43 @@ Vec3 ScaleVector(Vec3Param delta, float distance, Vec3Param start)
 namespace GizmoSnapping
 {
 
-#define SNAP_ON_AXIS(in,out) \
-  float ii = in*in;    out = (ii > Math::Epsilon() || ii < -Math::Epsilon())
-
 //******************************************************************************
-Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param deltaWorldMovement,
-  QuatParam basis, GizmoDragMode::Enum dragMode,
+Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param worldMovement,
+  QuatParam bases, GizmoDragMode::Enum dragMode,
   GizmoSnapMode::Enum snapMode, float snapDistance)
 {
-  Vec3 worldMovement = deltaWorldMovement;
+  Vec3 movement = worldMovement;
 
   if(snapMode == GizmoSnapMode::Relative)
   {
     if(dragMode == GizmoDragMode::Line)
     {
-      // Snap the distance that we're moving
-      float distance = Math::Length(worldMovement);
+      // Snap the distance moved.
+      float distance = Math::Length(movement);
       distance = Snap(distance, snapDistance);
 
-      // Apply the new distance to the movement
-      worldMovement.AttemptNormalize( );
-      worldMovement = worldMovement * distance;
+      // Apply the snapped distance to the movement.
+      movement.AttemptNormalize( );
+      movement = movement * distance;
     }
-    else  // Moving on a hyperplane, or the view-plane specifically
+    else  // Moving on a hyperplane, or the view-plane specifically.
     {
-      // Snap on all basis axes
-      //  - note: Doing so accounts for 'GizmoBasis::Local'
-      Mat3 m = ToMatrix3(basis);
+      // Snap on all basis axes.
+      Mat3 m = ToMatrix3(bases);
       // X
       Vec3 axis = m.BasisX( ).AttemptNormalized( );
-      float snap = Snap(Math::Dot(axis, worldMovement), snapDistance);
+      float snap = Snap(Math::Dot(axis, movement), snapDistance);
       Vec3 snappedMovement(snap * axis);
       // Y
       axis = m.BasisY( ).AttemptNormalized( );
-      snap = Snap(Math::Dot(axis, worldMovement), snapDistance);
+      snap = Snap(Math::Dot(axis, movement), snapDistance);
       snappedMovement += snap * axis;
       // Z
       axis = m.BasisZ( ).AttemptNormalized( );
-      snap = Snap(Math::Dot(axis, worldMovement), snapDistance);
+      snap = Snap(Math::Dot(axis, movement), snapDistance);
       snappedMovement += snap * axis;
 
-      worldMovement = snappedMovement;
+      movement = snappedMovement;
     }
 
   }
@@ -182,12 +250,11 @@ Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param deltaWorldMovement,
     Vec3 newPosition;
     for(int i = 0; i < 3; ++i)
     {
-      bool snapOnAxis;
-      SNAP_ON_AXIS(worldMovement[i], snapOnAxis);
+      bool snapOnAxis = (Math::Abs(movement[i]) > GizmoHelpers::sGizmoEpsilon);
 
       // If 'snapOnAxis * snapDistance' is 0, then 'currentPosition[i]' will be the final result.
       // [ie, don't snap on that axis]
-      newPosition[i] = Snap(currentPosition[i] + worldMovement[i], snapOnAxis * snapDistance);
+      newPosition[i] = Snap(currentPosition[i] + movement[i], snapOnAxis * snapDistance);
     }
 
     return newPosition;
@@ -195,11 +262,11 @@ Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param deltaWorldMovement,
   else if(snapMode == GizmoSnapMode::WorldGrid)
   {
     // Apply the movement, then snap to world-grid with units defined by 'snapDistance'
-    Vec3 worldGridPosition = Snap(currentPosition + worldMovement, snapDistance);
+    Vec3 worldGridPosition = Snap(currentPosition + movement, snapDistance);
     return worldGridPosition;
   }
 
-  return currentPosition + worldMovement;
+  return currentPosition + movement;
 }
 
 //******************************************************************************
@@ -234,8 +301,7 @@ Vec3 GetSnappedScale(Vec3Param startPosition, Vec3Param mouseWorldMovement,
     Vec3 newScale;
     for(int i = 0; i < 3; ++i)
     {
-      bool snapOnAxis;
-      SNAP_ON_AXIS(worldMovement[i], snapOnAxis);
+      bool snapOnAxis = (Math::Abs(worldMovement[i]) > GizmoHelpers::sGizmoEpsilon);
 
       // If 'snapOnAxis * snapDistance' is 0, then 'startPosition[i]' will be the final result.
       // [ie, don't snap on that axis]
@@ -484,10 +550,11 @@ void ArrowGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
 
   Intersection::IntersectionPoint point;
   Intersection::Type result = Intersection::RayCapsule(ray.Start, ray.Direction,
-    start, end, radius,
-    &point);
-  if(result != Intersection::None)
-    e->RegisterResult(GetOwner(), point.T, mPickingPriority);
+    start, end, radius, &point);
+  
+  // All negative values of 'Intersection::Type' are considered false.
+  if(result > 0)
+    e->RegisterResult(GetOwner( ), point.T, mPickingPriority);
 }
 
 //******************************************************************************
@@ -532,6 +599,8 @@ ZilchDefineType(RingGizmoEvent, builder, type)
   ZilchBindFieldProperty(mWorldRotationAxis);
   ZilchBindFieldProperty(mRadiansAroundAxis);
   ZilchBindFieldProperty(mDeltaRadiansAroundAxis);
+
+  ZeroBindDocumented( );
 }
 
 //******************************************************************************
@@ -641,25 +710,12 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
 
   Ray mouseRay = e->GetWorldRay();
 
-  Intersection::Interval interval;
-  Intersection::Type result = Intersection::RayCylinder(mouseRay.Start, mouseRay.Direction,
-    center - axis * tubeRadius, center + axis * tubeRadius, outerSphereRadius, &interval);
-
   Intersection::IntersectionPoint point;
-  if(interval.Min > real(0.0))
-  {
-    point.Points[0] = mouseRay.Start + interval.Min * mouseRay.Direction;
-    point.Points[1] = mouseRay.Start + interval.Max * mouseRay.Direction;
-    point.T = interval.Min;
-  }
-  else if(interval.Max > real(0.0))
-  {
-    point.Points[0] = mouseRay.Start + interval.Max * mouseRay.Direction;
-    point.Points[1] = point.Points[0];
-    point.T = interval.Max;
-  }
+  Intersection::Type result = Intersection::RayCylinder(mouseRay.Start, mouseRay.Direction,
+    center - axis * tubeRadius, center + axis * tubeRadius, outerSphereRadius, &point);
 
-  //if(result != Intersection::None)
+  // All negative values of 'Intersection::Type' are considered false.
+  if(result > 0)
   {
     const float cAngleSlop = 0.3f;
 
@@ -671,22 +727,13 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
       Vec3 dirToIntersection = point.Points[i] - center;
       float pointToAxisProjection = Dot(axis, dirToIntersection);
 
-        // Intersection point is outside cylinder caps
-        //  - NOTE: this is to catch the degenerate case (false positive from
-        //          'RayCylinder') when the caps are parallel to the ray
-        //             > ex: orthographic view
-        //
-        //  - @RYAN: remove this when 'RayCylinder gets fixed'
-      if(pointToAxisProjection*pointToAxisProjection - tubeRadius*tubeRadius > 0.000001f)
-        continue;
-
       Vec3 pointAlongAxis = center + pointToAxisProjection * axis;
       float distance = (point.Points[i] - pointAlongAxis).Length( );
 
-      // Check to see if the intersection is with the tube radius
-      // of the edge to make it a donut
+      // Check to see if the intersection is within the tube radius
+      // of the ring [ie, within the donut surrounding the ring gizmo].
       float distanceToEdge = Math::Abs(sphereRadius - distance);
-      bool withinEdge = (distanceToEdge <= tubeRadius+0.0001f);
+      bool withinEdge = (distanceToEdge <= tubeRadius + GizmoHelpers::sGizmoEpsilon);
 
       dirToIntersection.AttemptNormalize( );
       real angle = Dot(dirToIntersection, mouseRay.Direction);
@@ -895,28 +942,32 @@ void TranslateGizmo::OnGizmoModified(GizmoUpdateEvent* e)
 
   mDragMode = gizmoDrag->mDragMode;
 
-  Vec3 delta = ((mStartPosition + e->mMouseWorldMovement) - t->GetWorldTranslation( ));
+  // Update the translation of the gizmo itself, unsnapped.
+  t->SetWorldTranslation(mStartPosition + e->mConstrainedWorldMovement);
 
-  Vec3 newPosition = TranslateFromDrag(gizmoDrag, t->GetWorldTranslation( ),
-    delta, t->GetWorldRotation());
+  // Calculate a position that includes snapping, if applicable.
+  Vec3 newPosition = TranslateFromDrag(gizmoDrag, mStartPosition,
+    e->mConstrainedWorldMovement, t->GetWorldRotation( ));
 
-  // Update the final translation
-  t->SetWorldTranslation(newPosition);
+  TranslateGizmoUpdateEvent eventToSend(e);
+  eventToSend.mProcessedMovement = newPosition - mStartPosition;
+
+  DispatchEvent(Events::TranslateGizmoModified, &eventToSend);
 }
 
 //******************************************************************************
 Vec3 TranslateGizmo::TranslateFromDrag(GizmoDrag* gizmoDrag, Vec3Param startPosition,
-  Vec3Param localMovement, QuatParam rotation)
+  Vec3Param movement, QuatParam rotation)
 {
   Vec3 newPosition;
   if(GetSnapping( ))
   {
     newPosition = GizmoSnapping::GetSnappedPosition(startPosition,
-      localMovement, rotation, gizmoDrag->mDragMode, mSnapMode, mSnapDistance);
+      movement, rotation, gizmoDrag->mDragMode, mSnapMode, mSnapDistance);
   }
   else
   {
-    newPosition = startPosition + localMovement;
+    newPosition = startPosition + movement;
   }
 
   return newPosition;
@@ -942,10 +993,6 @@ ZilchDefineType(ScaleGizmo, builder, type)
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindFieldProperty(mSnapMode);
   ZilchBindFieldProperty(mSnapDistance);
-
-  //outputs of gizmo modified
-  ZilchBindField(mDirection);
-  ZilchBindField(mChangeInScale);
 }
 
 //******************************************************************************
@@ -986,8 +1033,6 @@ void ScaleGizmo::OnMouseDragStart(ViewportMouseEvent* e)
   
   Mat3 rotation = Math::ToMatrix3(viewport->GetCamera()->mTransform->GetWorldRotation( ));
   mEyeDirection = -rotation.BasisZ( );
-
-  mChangeInScale.Set(1, 1, 1);
 }
 
 //******************************************************************************
@@ -1001,22 +1046,16 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
   GizmoDrag* gizmoDrag = e->GetGizmo( )->has(GizmoDrag);
   ReturnIf(gizmoDrag == nullptr, , "Dragging gizmo has no GizmoDrag Component.");
 
-  mDragMode = gizmoDrag->mDragMode;
+  Vec3 worldMovement = e->mConstrainedWorldMovement;
 
-  // Transform of 'this' gizmo.
-  Mat3 m = Math::ToMatrix3(t->GetWorldRotation( ));
-
-  Vec3 worldMovement = e->mMouseWorldMovement;
-  Vec3 localMovement = Math::Transform(m.Inverted( ), worldMovement);
-
-  // The speed at which we scale will be determined by how far away
-  // it was grabbed from its center
+  // The speed at which scaling occurs is determined by how far away
+  // the gizmo was grabbed from its center.
   Vec3 grabDirection = (e->mInitialGrabPoint - t->GetWorldTranslation( ));
   float distance = grabDirection.Length( );
 
-  bool viewPlaneGizmo = (mDragMode == GizmoDragMode::ViewPlane);
+  mDragMode = gizmoDrag->mDragMode;
 
-  mDirection.Set(1, 1, 1);
+  bool viewPlaneGizmo = (mDragMode == GizmoDragMode::ViewPlane);
   mViewPlaneMove = 0.0f;
 
   Vec3 startScale(1, 1, 1);
@@ -1030,43 +1069,47 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     float a = Dot(side, worldMovement);
     float b = Dot(screenUp, worldMovement);
 
-      // Line from top-left to bottom-right, across view-plane, passing through grab-point.
-      //  - Drag movement in half-space to the left is scaling down
-      //  - Drag movement in half-space to the right is scaling up
+      // Line from top-left to bottom-right, across view-plane, passing through
+      // initial grab point on view-plane.
+      //  - Drag movement in half-space to the bottom-left is scaling down
+      //  - Drag movement in half-space to the top-right is scaling up
     mViewPlaneMove = -Dot(Vec2(a, b), Vec2(1, 1)) * distance;
 
       // If false: 0 * 2 - 1 = -1 [ie, dir is scaling down].
       // If true:  1 * 2 - 1 =  1 [ie, dir is scaling up].
-    float scalingDir = (float)((mViewPlaneMove > 0.0f) * 2 - 1);
+    float scalingDir = (float)((mViewPlaneMove >= 0.0f) * 2 - 1);
     mDirection.Set(scalingDir, scalingDir, scalingDir);
 
     Vec3 viewPlaneVector(mViewPlaneMove, mViewPlaneMove, mViewPlaneMove);
     mScaledLocalMovement = GizmoHelpers::ScaleVector(viewPlaneVector, distance, startScale);
   }
-  else  // Dot on all gizmo-basis axes.
+  else
   {
-    for(int axis = 0; axis < 3; ++axis)
-    {
-      Vec3 v = m.GetBasis(axis).AttemptNormalized( );
-
-      float moveDelta = Math::Dot(v, grabDirection + worldMovement);
-      float grab = Math::Dot(v, grabDirection);
-
-        // If false: 0 * 2 - 1 = -1 [ie, dir is scaling down].
-        // If true:  1 * 2 - 1 =  1 [ie, dir is scaling up].
-      mDirection[axis] = (float)((moveDelta > grab) * 2 - 1);
-    }
-
+    // Rotation of 'this' gizmo.
+    Mat3 m = Math::ToMatrix3(t->GetWorldRotation( ));
+    // Direction of drag on each axis.
+    mDirection = GizmoHelpers::GetMovementDirection(worldMovement, m);
+    // Scale the drag with respect to grab distance from gizmo pivot.
+    Vec3 localMovement = Math::Transform(m.Inverted( ), worldMovement);
     mScaledLocalMovement = GizmoHelpers::ScaleVector(localMovement, distance, startScale);
   }
 
-  mChangeInScale = ScaleFromDrag(gizmoDrag, distance, localMovement,
-    startScale, t->GetWorldRotation());
+  MetaTransformInstance transform = TransformMetaTransform::BuildInstance(t);
+
+  Vec3 newScale = ScaleFromDrag(GizmoBasis::Local, gizmoDrag, distance,
+    worldMovement, startScale, transform);
+
+  ScaleGizmoUpdateEvent eventToSend(e);
+  eventToSend.mProcessedScale = newScale - startScale;
+
+  DispatchEvent(Events::ScaleGizmoModified, &eventToSend);
+
 }
 
 //******************************************************************************
-Vec3 ScaleGizmo::ScaleFromDrag(GizmoDrag* gizmoDrag, float distance,
-  Vec3Param localMovement, Vec3Param startScale, QuatParam rotation)
+// Generate a new scale based on drag-type [ie: viewplane, gizmo-basis-plane, gizmo-axis].
+Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, float distance,
+  Vec3Param movement, Vec3Param startScale, MetaTransformParam transform)
 {
   GizmoDragMode::Enum dragMode = gizmoDrag->mDragMode;
   bool viewPlaneGizmo = (dragMode == GizmoDragMode::ViewPlane);
@@ -1074,9 +1117,8 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoDrag* gizmoDrag, float distance,
   // Off-axis scale if control is pressed
   //   - [ie, scale on each axis except the one being dragged]
   bool singleAxis = (dragMode == GizmoDragMode::Line);
-  bool offAxis = (Keyboard::Instance->KeyIsDown(Keys::Control) && singleAxis);
+  bool offAxes = (Keyboard::Instance->KeyIsDown(Keys::Control) && singleAxis);
 
-    // Generate a new scale based on drag-type [ie: viewplane, gizmo-basis-plane, gizmo-axis]
   Vec3 newScale;
   if(viewPlaneGizmo)
   {
@@ -1085,19 +1127,77 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoDrag* gizmoDrag, float distance,
   }
   else
   {
-    Vec3 movement(localMovement);
+    Vec3 localMovement = movement;
+    Mat4 worldToParent = transform.GetParentWorldMatrix( ).Inverted( );
+    Quat parentToLocal = transform.GetLocalRotation( ).Inverted( );
 
-      // Negative scale not allowed.
-    movement = Math::Abs(movement);
+    if(singleAxis)
+    {
+      int axis = GizmoHelpers::GetDragAxis(mDirection);
+      // No movement, can't do anything.
+      if(axis == INT_MAX)
+        return startScale;
 
-      // Scaling up or down?
-    movement = mDirection * movement;
+      // If in world, pre-process off-axis conversion before transform.
+      //
+      // The input world 'movement' vector is currently aligned with world xyz
+      // axes. but will NOT be aligned with local xyz axes after transformation.
+      // Meaning: drag-axis information is lost/destroyed by transformation.
+      if(basis ==  GizmoBasis::World && offAxes)
+        localMovement = GizmoHelpers::SingleAxisToOffAxesScale(axis, localMovement);
 
-      // Special command.
-    if(offAxis)
-      movement = GizmoHelpers::GetOffAxisMovement(movement);
+      localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection[axis],
+        movement, worldToParent, parentToLocal);
 
-    newScale = GizmoHelpers::ScaleVector(movement, distance, startScale);
+      // If in local, post-process off-axis conversion after transform.
+      //
+      // The input world 'movement' vector is not aligned with local xyz axes
+      // until after transformation.  Meaning: drag-axis information is not
+      // discretely available while a local movement is in world space.
+      if(basis ==  GizmoBasis::Local && offAxes)
+        localMovement = GizmoHelpers::SingleAxisToOffAxesScale(axis, localMovement);
+    }
+    else  // dragMode == GizmoDragMode::Plane
+    {
+      // 'movement' is expected to be in world, so bring it into local space.
+      // Doing so aligns the movement vector along the proper local-space plane.
+      //
+      // Directional information cannot be used until the movement is axis-aligned.
+      if(basis ==  GizmoBasis::Local)
+      {
+        localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection,
+          movement, worldToParent, parentToLocal);
+      }
+      else  // basis ==  GizmoBasis::World
+      {
+        // Final movement result must be put together piecewise as single
+        // axis-aligned drag value information will be destroyed after transformation.
+        localMovement = Vec3::cZero;
+        for(int axis = 0; axis < 3; ++axis)
+        {
+          // Don't do anything if there is no movement on the current world 'axis'.
+          if(mDirection[axis] == 0.0f)
+            continue;
+
+          Vec3 v = Vec3::cZero;
+          v[axis] = movement[axis];
+
+          // Directional information is preserved before axis-aligned world movement
+          // is lost. Single axis-aligned movement will no longer be axis-aligned
+          // after transformation, yet needs to remain singularly/uniformly
+          // directed after transformation.
+          v = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection[axis],
+            v, worldToParent, parentToLocal);
+
+          localMovement += v;
+        }
+
+      }
+
+    }
+
+    // Finally, scale the drag-movement with respect to grab distance from gizmo pivot.
+    newScale = GizmoHelpers::ScaleVector(localMovement, distance, startScale);
   }
 
   Vec3 scaleDelta = (newScale - startScale);
@@ -1105,18 +1205,15 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoDrag* gizmoDrag, float distance,
 
   if(GetSnapping())
   {
-    if(offAxis)
-    {
-      // Plane will snap on each off-axis individually if snapMode is RelativeUnits.
-      newScale = GizmoSnapping::GetSnappedPosition(startScale, scaleDelta,
-        rotation, GizmoDragMode::Plane, mSnapMode, mSnapDistance);
-    }
-    else
-    {
-      newScale = GizmoSnapping::GetSnappedPosition(startScale, scaleDelta,
-        rotation, dragMode, mSnapMode, mSnapDistance);
-    }
-
+    // 'GizmoDragMode::Plane' will snap on each off-axis individually if
+    // snapMode is 'RelativeUnits'.
+    if(offAxes)
+      dragMode = GizmoDragMode::Plane;
+    
+    // Pass in an Identity bases as the scale to be snapped is already
+    // in local space.
+    newScale = GizmoSnapping::GetSnappedPosition(startScale, scaleDelta,
+      Quat::cIdentity, dragMode, mSnapMode, mSnapDistance);
   }
 
   return newScale;
@@ -1134,10 +1231,6 @@ ZilchDefineType(RotateGizmo, builder, type)
 
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindFieldProperty(mSnapAngle);
-
-  //outputs of gizmo modified
-  ZilchBindField(mDirection);
-  ZilchBindField(mChangeInRotation);
 }
 
 //******************************************************************************
@@ -1174,7 +1267,6 @@ void RotateGizmo::SetSnapping(bool snapping)
 void RotateGizmo::OnMouseDragStart(ViewportMouseEvent* e)
 {
   mPreviousSnap = 0.0f;
-  mChangeInRotation = 0.0f;
 }
 
 //******************************************************************************
@@ -1183,39 +1275,41 @@ void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
   Transform* t = GetOwner()->has(Transform);
   ReturnIf(t == nullptr, , "RotateGizmo has no Transform. This should never happen.");
 
-  mDirection = e->mRadiansAroundAxis - mChangeInRotation;
-  mDirection /= Math::Abs(mDirection);
-
-  mChangeInRotation = e->mRadiansAroundAxis;
-
-  float deltaOnAxis = e->mDeltaRadiansAroundAxis;
+  float rotation = e->mRadiansAroundAxis;
+  float delta = e->mDeltaRadiansAroundAxis;
   Vec3 selectedAxis = e->mWorldRotationAxis;
 
   if(GetSnapping())
   {
-    mChangeInRotation = Snap(mChangeInRotation, Math::DegToRad(mSnapAngle));
+    rotation = Snap(rotation, Math::DegToRad(mSnapAngle));
 
-    float deltaSnap = Math::Abs(mChangeInRotation) - Math::Abs(mPreviousSnap);
+    float deltaSnap = Math::Abs(rotation) - Math::Abs(mPreviousSnap);
     if(deltaSnap > Math::Epsilon( ) || deltaSnap < -Math::Epsilon( ))
     {
-      deltaOnAxis = Math::DegToRad((mChangeInRotation - mPreviousSnap < 0.0f) ? -mSnapAngle : mSnapAngle);
-      mPreviousSnap = mChangeInRotation;
+      delta = Math::DegToRad((rotation - mPreviousSnap < 0.0f) ? -mSnapAngle : mSnapAngle);
+      mPreviousSnap = rotation;
     }
     else
     {
-      mPreviousSnap = mChangeInRotation;
+      delta= 0.0f;
+      mPreviousSnap = rotation;
       return;
     }
 
   }
 
-  Quat deltaRotation;
-  Math::ToQuaternion(selectedAxis, deltaOnAxis, &deltaRotation);
-  // sanity normalize to prevent rounding errors
+  Quat deltaRotation = Math::ToQuaternion(selectedAxis, delta);
+  // Sanity normalize to prevent rounding errors.
   deltaRotation.Normalize( );
 
-  // Rotate display
+  // Rotate the gizmo itself.
   t->RotateWorld(deltaRotation);
+
+  RotateGizmoUpdateEvent eventToSend(e);
+  eventToSend.mProcessedRotation = delta;
+  eventToSend.mSelectedAxis = selectedAxis;
+  
+  DispatchEvent(Events::RotateGizmoModified, &eventToSend);
 }
 
 }//namespace Zero

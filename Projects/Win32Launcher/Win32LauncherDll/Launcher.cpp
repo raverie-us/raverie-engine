@@ -130,7 +130,7 @@ void Launcher::Initialize()
   window->SetState(WindowState::Windowed);
   mOsWindow = window;
 
-  Z::gEngine->has(GraphicsEngine)->CreateRenderer(window->GetWindowHandle());
+  Z::gEngine->has(GraphicsEngine)->CreateRenderer(window);
 }
 
 //******************************************************************************

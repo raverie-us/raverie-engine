@@ -9,8 +9,6 @@ extern "C"
   _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 }
 
-const bool cLazyShaderCompilation = true;
-
 // temporary to prevent string constructions every frame
 // RenderQueue structures should have semantics for setting shader parameters
 namespace
@@ -478,6 +476,26 @@ GLuint GlCompareFunc(TextureCompareFunc::Enum value)
   }
 }
 
+void SetBlendSettings(const BlendSettings& blendSettings)
+{
+  switch (blendSettings.mBlendMode)
+  {
+    case BlendMode::Disabled:
+      glDisable(GL_BLEND);
+    break;
+    case BlendMode::Enabled:
+      glEnable(GL_BLEND);
+      glBlendEquation(GlBlendEquation(blendSettings.mBlendEquation));
+      glBlendFunc(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
+    break;
+    case BlendMode::Separate:
+      glEnable(GL_BLEND);
+      glBlendEquationSeparate(GlBlendEquation(blendSettings.mBlendEquation), GlBlendEquation(blendSettings.mBlendEquationAlpha));
+      glBlendFuncSeparate(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor), GlBlendFactor(blendSettings.mSourceFactorAlpha), GlBlendFactor(blendSettings.mDestFactorAlpha));
+    break;
+  }
+}
+
 void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBlend)
 {
   switch (renderSettings.mCullMode)
@@ -494,23 +512,7 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
 
   if (renderSettings.mSingleColorTarget || drawBuffersBlend == false)
   {
-    const BlendSettings& blendSettings = renderSettings.mBlendSettings[0];
-    switch (blendSettings.mBlendMode)
-    {
-      case BlendMode::Disabled:
-        glDisable(GL_BLEND);
-      break;
-      case BlendMode::Enabled:
-        glEnable(GL_BLEND);
-        glBlendEquation(GlBlendEquation(blendSettings.mBlendEquation));
-        glBlendFunc(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor));
-      break;
-      case BlendMode::Separate:
-        glEnable(GL_BLEND);
-        glBlendEquationSeparate(GlBlendEquation(blendSettings.mBlendEquation), GlBlendEquation(blendSettings.mBlendEquationAlpha));
-        glBlendFuncSeparate(GlBlendFactor(blendSettings.mSourceFactor), GlBlendFactor(blendSettings.mDestFactor), GlBlendFactor(blendSettings.mSourceFactorAlpha), GlBlendFactor(blendSettings.mDestFactorAlpha));
-      break;
-    }
+    SetBlendSettings(renderSettings.mBlendSettings[0]);
   }
   else
   {
@@ -711,6 +713,8 @@ OpenglRenderer::OpenglRenderer()
 
   //GLfloat maxAnisotropy;
   //glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+
+  mLazyShaderCompilation = true;
 
   mActiveShader = 0;
   mActiveMaterial = 0;
@@ -949,12 +953,15 @@ void OpenglRenderer::AddTexture(AddTextureJob* job)
 
     BindTexture(job->mType, 0, renderData->mId, mDriverSupport.mSamplerObjects);
 
-    if (job->mImageData == nullptr)
+    // RenderTarget upload if data size is 0 (not calculated).
+    // A texture resource with uploaded data will never set data size to 0.
+    if (job->mTotalDataSize == 0)
     {
-      // RenderTarget upload if no data, rendering to cubemap is not implemented
+      // Rendering to cubemap is not implemented.
       glTexImage2D(GL_TEXTURE_2D, 0, glEnums.mInternalFormat, job->mWidth, job->mHeight, 0, glEnums.mFormat, glEnums.mType, nullptr);
     }
-    else
+    // Do not try to reallocate texture data if no new data is given.
+    else if (job->mImageData != nullptr)
     {
       for (uint i = 0; i < job->mMipCount; ++i)
       {
@@ -988,7 +995,11 @@ void OpenglRenderer::AddTexture(AddTextureJob* job)
     glTexParameteri(GlTextureType(job->mType), GL_TEXTURE_MAX_LEVEL, GlTextureMipMapping(job->mMipMapping));
 
     if (job->mMipMapping == TextureMipMapping::GpuGenerated)
+    {
+      if (job->mMaxMipOverride > 0)
+        glTexParameteri(GlTextureType(job->mType), GL_TEXTURE_MAX_LEVEL, job->mMaxMipOverride);
       glGenerateMipmap(GlTextureType(job->mType));
+    }
 
     glBindTexture(GlTextureType(job->mType), 0);
   }
@@ -1024,24 +1035,37 @@ void OpenglRenderer::RemoveTexture(RemoveTextureJob* job)
   mTextureRenderDataToDestroy.PushBack((GlTextureRenderData*)job->mRenderData);
 }
 
+void OpenglRenderer::SetLazyShaderCompilation(SetLazyShaderCompilationJob* job)
+{
+  mLazyShaderCompilation = job->mLazyShaderCompilation;
+}
+
 void OpenglRenderer::AddShaders(AddShadersJob* job)
 {
-  if (cLazyShaderCompilation && !job->mForceCompile)
+  if (mLazyShaderCompilation && job->mForceCompileBatchCount == 0)
   {
     forRange (ShaderEntry& entry, job->mShaders.All())
     {
       ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
       mShaderEntries.Insert(shaderKey, entry);
     }
+    job->mShaders.Clear();
   }
   else
   {
-    forRange (ShaderEntry& entry, job->mShaders.All())
+    uint processCount = Math::Min(job->mForceCompileBatchCount, job->mShaders.Size());
+    if (processCount == 0)
+      processCount = job->mShaders.Size();
+
+    for (uint i = 0; i < processCount; ++i)
     {
+      ShaderEntry& entry = job->mShaders[i];
       ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
       mShaderEntries.Erase(shaderKey);
       CreateShader(entry);
     }
+
+    job->mShaders.Erase(job->mShaders.SubRange(0, processCount));
   }
 }
 
@@ -1354,6 +1378,9 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
   SetRenderSettings(task->mRenderSettings, mDriverSupport.mMultiTargetBlend);
   mClipMode = task->mRenderSettings.mScissorMode == ScissorMode::Enabled;
 
+  // For easily resetting blend settings after overriding
+  mCurrentBlendSettings = task->mRenderSettings.mBlendSettings[0];
+
   SetRenderTargets(task->mRenderSettings);
 
   glViewport(0, 0, mViewportSize.x, mViewportSize.y);
@@ -1436,18 +1463,17 @@ void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
   GlTextureRenderData* renderData = (GlTextureRenderData*)task->mColorTarget;
   ScreenViewport viewport = task->mViewport;
 
-  RECT rect;
-  GetClientRect((HWND)mWindow, &rect);
-  IntVec2 size = IntVec2(rect.right - rect.left, rect.bottom - rect.top);
-
   glBindFramebuffer(GL_READ_FRAMEBUFFER, mSingleTargetFbo);
   glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderData->mId, 0);
   glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
   glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
   CheckFramebufferStatus();
-  glBlitFramebuffer(0, 0, task->mTextureWidth, task->mTextureHeight, viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-  // Stretch texture to fill the whole back buffer
-  //glBlitFramebuffer(0, 0, task->mTextureWidth, task->mTextureHeight, 0, 0, size.x, size.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+  mThreadLock.Lock();
+  if (mBackBufferSafe)
+    glBlitFramebuffer(0, 0, task->mTextureWidth, task->mTextureHeight, viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+  mThreadLock.Unlock();
+
   glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 }
 
@@ -1621,9 +1647,22 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
     mActiveMaterial = 0;
   }
 
+  if (frameNode.mBlendSettingsOverride)
+  {
+    // Only overrides for target 0, temporary functionality for viewports
+    mStreamedVertexBuffer.FlushBuffer(false);
+    SetBlendSettings(mRenderQueues->mBlendSettingsOverrides[frameNode.mBlendSettingsIndex]);
+  }
+
   uint vertexStart = viewNode.mStreamedVertexStart;
   uint vertexCount = viewNode.mStreamedVertexCount;
   mStreamedVertexBuffer.AddVertices(&mRenderQueues->mStreamedVertices[vertexStart], vertexCount, viewNode.mStreamedVertexType);
+
+  if (frameNode.mBlendSettingsOverride)
+  {
+    mStreamedVertexBuffer.FlushBuffer(false);
+    SetBlendSettings(mCurrentBlendSettings);
+  }
 }
 
 void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, StringParam name, void* data)

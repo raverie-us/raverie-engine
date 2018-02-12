@@ -17,7 +17,12 @@ ZilchDefineType(ObjectStore, builder, type)
   type->HandleManager = ZilchManagerId(PointerManager);
 
   ZeroBindDocumented();
-  ZilchBindMethod(IsStored);
+
+  ZilchBindGetter(EntryCount);
+
+  ZilchBindMethodAs(IsEntryStored, "IsStored")->AddAttribute(DeprecatedAttribute);
+  ZilchBindMethod(IsEntryStored);
+  ZilchBindMethod(GetEntryAt);
   ZilchBindMethod(Store);
   ZilchBindMethod(Restore);
   ZilchBindMethod(RestoreOrArchetype);
@@ -28,6 +33,10 @@ ZilchDefineType(ObjectStore, builder, type)
 
 void ObjectStore::SetStoreName(StringParam storeName)
 {
+  String storePath = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", storeName);
+  if(DirectoryExists(storePath))
+    PopulateEntries(storePath);
+
   mStoreName = storeName;
   mStorePath = String();
 }
@@ -45,6 +54,20 @@ void ObjectStore::SetupDirectory()
 
     //save the path
     mStorePath = storePath;
+    PopulateEntries(storePath);
+  }
+}
+
+void ObjectStore::PopulateEntries(StringParam storePath)
+{
+  mEntries.Clear( );
+
+  FileRange filesInDirectory(storePath);
+  for(; !filesInDirectory.Empty( ); filesInDirectory.PopFront( ))
+  {
+    String filename = filesInDirectory.Front( );
+    String name = FilePath::GetFileNameWithoutExtension(filename);
+    mEntries.PushBack(name);
   }
 }
 
@@ -54,11 +77,42 @@ String ObjectStore::GetFile(StringParam name)
   return FilePath::CombineWithExtension(mStorePath, name, ".data");
 }
 
-bool ObjectStore::IsStored(StringParam name)
+bool ObjectStore::IsEntryStored(StringParam name)
 {
-  //Check to is if file exists.
-  String storeFile = GetFile(name);
-  return FileExists(storeFile);
+  if(!mEntries.Empty( ))
+  {
+    int count = mEntries.Size( );
+    for(int i = 0; i < count; ++i)
+    {
+      if(mEntries[i] == name)
+        return true;
+    }
+
+    return false;
+  }
+  else
+  {
+    //Check to is if file exists.
+    String storeFile = GetFile(name);
+    return FileExists(storeFile);
+  }
+}
+
+
+uint ObjectStore::GetEntryCount( )
+{
+  return (uint)mEntries.Size( );
+}
+
+String ObjectStore::GetEntryAt(uint index)
+{
+  if(mEntries.Empty( ))
+    return String( );
+
+  if(index < 0 || index >= mEntries.Size( ))
+    return String( );
+
+  return mEntries[index];
 }
 
 String ObjectStore::GetDirectoryPath()
@@ -83,7 +137,7 @@ StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
 
   Status status;
   //Create a text serializer
-  TextSaver saver;
+  ObjectSaver saver;
   // Add a saving context so that ids are relative
   CogSavingContext savingContext;
 
@@ -92,8 +146,11 @@ StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
 
   if(status)
   {
+    if(result == StoreResult::Added)
+      mEntries.PushBack(name);
+
     saver.SetSerializationContext(&savingContext);
-    saver.SerializePolymorphic(*object);
+    saver.SaveFullObject(object);
     saver.Close();
   }
   else
@@ -161,11 +218,15 @@ void ObjectStore::Erase(StringParam name)
 
     // Move the file
     MoveFile(fileDestination, storeFile);
+
+    mEntries.EraseValue(name);
   }
 }
 
 void ObjectStore::ClearStore()
 {
+  mEntries.Clear();
+
   SetupDirectory();
   String trashDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
 

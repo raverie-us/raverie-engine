@@ -45,7 +45,7 @@ namespace Audio
     if (message == MIM_DATA)
     {
       MidiData* data(nullptr);
-      AudioEventType type;
+      AudioEventTypes::Enum type;
 
       // Reinterpret message
       char byte1 = LOBYTE(LOWORD(param1));
@@ -58,7 +58,7 @@ namespace Audio
       if (command == 0x80)
       {
         data = new MidiData(channel, (float)data1, 0);
-        type = Notify_MidiNoteOff;
+        type = AudioEventTypes::MidiNoteOff;
       }
       // Note on
       else if (command == 0x90)
@@ -66,12 +66,12 @@ namespace Audio
         if (data2 > 0)
         {
           data = new MidiData(channel, (float)data1, (float)data2);
-          type = Notify_MidiNoteOn;
+          type = AudioEventTypes::MidiNoteOn;
         }
         else
         {
           data = new MidiData(channel, (float)data1, 0);
-          type = Notify_MidiNoteOff;
+          type = AudioEventTypes::MidiNoteOff;
         }
       }
       // Pitch wheel
@@ -80,7 +80,7 @@ namespace Audio
         float value = ((float)(data2 * (1 << 7)) + (float)data1) - (1 << 13);
         value *= 2.0f / (float)((1 << 14) - 1);
         data = new MidiData(channel, value, 0);
-        type = Notify_MidiPitchWheel;
+        type = AudioEventTypes::MidiPitchWheel;
       }
       // Control
       else if (command == 0xB0)
@@ -89,18 +89,18 @@ namespace Audio
         if (data1 == 7)
         {
           data = new MidiData(channel, (float)data2, 0);
-          type = Notify_MidiVolume;
+          type = AudioEventTypes::MidiVolume;
         }
         // Modulation wheel
         else if (data1 == 1)
         {
           data = new MidiData(channel, (float)data2, 0);
-          type = Notify_MidiModWheel;
+          type = AudioEventTypes::MidiModWheel;
         }
         else
         {
           data = new MidiData(channel, (float)data1, (float)data2);
-          type = Notify_MidiControl;
+          type = AudioEventTypes::MidiControl;
         }
       }
 

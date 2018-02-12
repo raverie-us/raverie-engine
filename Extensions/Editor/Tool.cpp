@@ -19,11 +19,6 @@ namespace Events
   DefineEvent(ToolDraw);
 }
 
-namespace Tags
-{
-  DefineTag(Tool);
-}
-
 ZilchDefineType(Tool, builder, type)
 {
   ZilchBindMethod(BeginDrag);

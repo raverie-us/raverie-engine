@@ -47,7 +47,7 @@ namespace Audio
 
   struct HarmonicData
   {
-    HarmonicData(float multiplier, float volume, EnvelopeSettings& envelope, OscillatorTypes type) :
+    HarmonicData(float multiplier, float volume, EnvelopeSettings& envelope, OscillatorTypes::Enum type) :
       FrequencyMultiplier(multiplier),
       Volume(volume),
       Envelope(envelope),
@@ -61,7 +61,7 @@ namespace Audio
     float FrequencyMultiplier;
     float Volume;
     EnvelopeSettings Envelope;
-    OscillatorTypes WaveType;
+    OscillatorTypes::Enum WaveType;
   };
 
   //---------------------------------------------------------------------------- Additive Synth Node

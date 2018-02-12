@@ -12,113 +12,13 @@
 namespace Zero
 {
 
-//---------------------------------------------------------------------- Margins
-const Thickness Thickness::cZero(0,0,0,0);
-
-ZilchDefineType(Thickness, builder, type)
-{
-  type->CreatableInScript = true;
-  
-  ZilchBindDestructor();
-  ZilchBindConstructor(float, float, float, float);
-  ZilchBindConstructor(Vec4);
-  ZilchBindConstructor(float, float);
-  ZilchBindConstructor(Vec2);
-
-  ZilchBindMethod(All);
-
-  ZilchBindFieldProperty(Left);
-  ZilchBindFieldProperty(Top);
-  ZilchBindFieldProperty(Right);
-  ZilchBindFieldProperty(Bottom);
-  ZilchBindFieldGetter(cZero);
-
-  ZilchBindMethod(Size);
-  ZilchBindMethod(TopLeft);
-}
-
-Thickness::Thickness()
-  : Left(0), Top(0), Right(0), Bottom(0)
-{
-
-}
-
-Thickness::Thickness(float splat)
-  : Left(splat), Top(splat), Right(splat), Bottom(splat)
-{
-}
-
-Thickness::Thickness(float left, float top, float right, float bottom)
-  : Left(left), Top(top), Right(right), Bottom(bottom)
-{
-
-}
-
-Thickness::Thickness(Vec4 vector)
-: Left(vector.x), Top(vector.y), Right(vector.z), Bottom(vector.w)
-{
-
-}
-
-Thickness::Thickness(float leftRight, float topBottom)
-  : Left(leftRight), Top(topBottom), Right(leftRight), Bottom(topBottom)
-{
-
-}
-
-Thickness::Thickness(Vec2 vector)
- : Left(vector.x), Top(vector.y), Right(vector.x), Bottom(vector.y)
-{
-
-}
-
-Thickness Thickness::All(float amount)
-{
-  return Thickness(amount, amount, amount, amount);
-}
-
-// Add Thickness
-Thickness Thickness::operator+(const Thickness& rhs)
-{
-  return Thickness(Left + rhs.Left, Top + rhs.Top, Right + rhs.Right, Bottom + rhs.Bottom);
-}
-
 //------------------------------------------------------------------------- Rect
 
-const Rect Rect::cZero = Rect::CenterAndSize(Vec2(0,0), Vec2(0,0));
+const WidgetRect WidgetRect::cZero = WidgetRect::CenterAndSize(Vec2(0,0), Vec2(0,0));
 
-ZilchDefineType(Rect, builder, type)
+WidgetRect WidgetRect::PointAndSize(Vec2Param point, Vec2Param size)
 {
-  type->CreatableInScript = true;
-
-  ZilchBindFieldProperty(X);
-  ZilchBindFieldProperty(Y);
-  //ZilchBindFieldProperty(Position);
-  ZilchBindFieldProperty(SizeX);
-  ZilchBindFieldProperty(SizeY);
-  //ZilchBindFieldProperty(Size);
-
-  ZilchBindMethod(SetTranslation);
-  ZilchBindMethod(SetSize);
-  ZilchBindMethod(Expand);
-  ZilchBindMethod(Contains);
-  ZilchBindMethod(Overlap);
-  ZilchBindMethod(RemoveThickness);
-  ZilchBindMethod(TopLeft);
-  ZilchBindMethod(TopRight);
-  ZilchBindMethod(BottomLeft);
-  ZilchBindMethod(BottomRight);
-  ZilchBindMethod(Center);
-
-  ZilchBindMethod(Left);
-  ZilchBindMethod(Right);
-  ZilchBindMethod(Top);
-  ZilchBindMethod(Bottom);
-}
-
-Rect Rect::PointAndSize(Vec2Param point, Vec2Param size)
-{
-  Rect r;
+  WidgetRect r;
   r.X = point.x;
   r.Y = point.y;
   r.SizeX = size.x;
@@ -126,11 +26,11 @@ Rect Rect::PointAndSize(Vec2Param point, Vec2Param size)
   return r;
 }
 
-Rect Rect::CenterAndSize(Vec2Param point, Vec2Param size)
+WidgetRect WidgetRect::CenterAndSize(Vec2Param point, Vec2Param size)
 {
   Vec2 halfSize = size / 2.0f;
 
-  Rect r;
+  WidgetRect r;
   r.X = point.x - halfSize.x;
   r.Y = point.y - halfSize.y;
   r.SizeX = size.x;
@@ -138,9 +38,9 @@ Rect Rect::CenterAndSize(Vec2Param point, Vec2Param size)
   return r;
 }
 
-Rect Rect::MinAndMax(Vec2Param min, Vec2Param max)
+WidgetRect WidgetRect::MinAndMax(Vec2Param min, Vec2Param max)
 {
-  Rect r;
+  WidgetRect r;
   r.X = min.x;
   r.Y = min.y;
   r.SizeX = (max.x - min.x);
@@ -148,7 +48,7 @@ Rect Rect::MinAndMax(Vec2Param min, Vec2Param max)
   return r;
 }
 
-bool Rect::operator==(RectParam rhs) const
+bool WidgetRect::operator==(RectParam rhs) const
 {
   bool result = Math::Abs(X - rhs.X) < Math::Epsilon();
   result &= Math::Abs(Y - rhs.Y) < Math::Epsilon( );
@@ -158,19 +58,19 @@ bool Rect::operator==(RectParam rhs) const
   return result;
 }
 
-void Rect::SetTranslation(Vec2Param translation)
+void WidgetRect::SetTranslation(Vec2Param translation)
 {
   X = translation.x;
   Y = translation.y;
 }
 
-void Rect::SetSize(Vec2Param size)
+void WidgetRect::SetSize(Vec2Param size)
 {
   SizeX = size.x;
   SizeY = size.y;
 }
 
-void Rect::Expand(const Rect& other)
+void WidgetRect::Expand(const WidgetRect& other)
 {
   float nx = Math::Min(X, other.X);
   float ny = Math::Min(Y, other.Y);
@@ -180,7 +80,7 @@ void Rect::Expand(const Rect& other)
   Y = ny;
 }
 
-bool Rect::Contains(Vec2Param point) const
+bool WidgetRect::Contains(Vec2Param point) const
 {
   if(point.x < X) return false;
   if(point.x > X + SizeX) return false;
@@ -189,7 +89,7 @@ bool Rect::Contains(Vec2Param point) const
   return true;
 }
 
-bool Rect::Overlap(const Rect& other) const
+bool WidgetRect::Overlap(const WidgetRect& other) const
 {
   bool nooverlap = (X > other.X + other.SizeX) || 
                    (Y > other.Y + other.SizeY) ||
@@ -199,7 +99,7 @@ bool Rect::Overlap(const Rect& other) const
   return !nooverlap;
 }
 
-void Rect::RemoveThickness(const Thickness& thickness)
+void WidgetRect::RemoveThickness(const Thickness& thickness)
 {
   X += thickness.Left;
   Y += thickness.Top;
@@ -207,13 +107,13 @@ void Rect::RemoveThickness(const Thickness& thickness)
   SizeY -= (thickness.Top + thickness.Bottom);
 }
 
-void PlaceWithRect(const Rect& rect, Widget* widget)
+void PlaceWithRect(const WidgetRect& rect, Widget* widget)
 {
   widget->SetTranslation(ToVector3(rect.TopLeft()));
   widget->SetSize(rect.GetSize());
 }
 
-void PlaceCenterToRect(const Rect& rect, Widget* widget, Vec2Param offset)
+void PlaceCenterToRect(const WidgetRect& rect, Widget* widget, Vec2Param offset)
 {
   Vec2 translation = rect.TopLeft();
   if(widget->mOrigin == DisplayOrigin::Center)
@@ -298,9 +198,9 @@ Vec2 ExpandSizeByThickness(Thickness thickness, Vec2Param size)
   return addBorder + size;
 }
 
-Rect RemoveThicknessRect(Thickness thickness, Vec2Param size)
+WidgetRect RemoveThicknessRect(Thickness thickness, Vec2Param size)
 {
-  Rect r;
+  WidgetRect r;
   r.SizeX = size.x - (thickness.Left + thickness.Right);
   r.SizeY = size.y - (thickness.Top + thickness.Bottom);
   r.X = thickness.Left;

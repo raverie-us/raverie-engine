@@ -12,16 +12,7 @@
 
 namespace Audio
 {
-#ifdef _MSC_VER
-#define Type32Bit long
-#endif
-
-  void* AtomicCompareExchangePointer(void** destination, void* exchange, void* comperand);
-  void AtomicSetPointer(void** target, void* value);
-  Type32Bit AtomicDecrement32(Type32Bit* value);
-  Type32Bit AtomicIncrement32(Type32Bit* value);
-  Type32Bit AtomicSet32(Type32Bit* target, Type32Bit value);
-  Type32Bit AtomicCompareExchange32(Type32Bit* destination, Type32Bit exchange, Type32Bit comperand);
+#define Type32Bit s32
 
   //-------------------------------------------------------------------------------- Lock Free Queue
 
@@ -43,6 +34,80 @@ namespace Audio
 
     ~LockFreeQueue()
     {
+      Clear();
+
+      // The Clear function does not remove the dummy node
+      delete First;
+    }
+
+    void Write(const T& object)
+    {
+      // Create the new object
+      Last->Next = new Node(object);
+      // Set the Last pointer
+      Zero::AtomicStore((void**)&Last, Last->Next);
+    }
+
+    bool Read(T& result)
+    {
+      // Check if there is anything on the queue
+      if (!Zero::AtomicCompareExchangeBool((void**)&First, (void*)Last, (void*)Last))
+      {
+        // Store the pointers
+        Node* firstNode = First;
+        Node* nextNode = First->Next;
+        // Get the value from the next node
+        result = nextNode->Value;
+        // Move the First pointer forward
+        First = First->Next;
+        // Delete the old First node
+        delete firstNode;
+
+        return true;
+      }
+
+      return false;
+    }
+
+    // This function assumes that nothing is currently writing to the queue
+    void Clear()
+    {
+      // Delete anything remaining on the queue
+      while (First != Last)
+      {
+        Node* temp = First;
+        First = temp->Next;
+        delete temp;
+      }
+    }
+
+  private:
+    // Only touched by reader
+    Node* First;
+    // Shared by writer and reader
+    Node* Last;
+  };
+
+  //-------------------------------------------------------------------------- Multiple Writer Queue
+
+  template <typename T>
+  class MultipleWriterQueue
+  {
+  private:
+    struct Node
+    {
+      Node(T value) : Value(value), Next(nullptr) {}
+
+      T Value;
+      Node* Next;
+    };
+
+  public:
+    // Create the dummy node
+    MultipleWriterQueue() : WriteLock(0) { First = Last = new Node(T()); }
+
+    ~MultipleWriterQueue()
+    {
       // Delete anything remaining on the queue
       while (First)
       {
@@ -55,16 +120,22 @@ namespace Audio
     void Write(const T& object)
     {
       // Create the new object
-      Last->Next = new Node(object);
-      // Set the Last pointer
-      AtomicSetPointer((void**)&Last, Last->Next);
+      Node* temp = new Node(object);
+      // Get access (wait until WriteLock is 0 and then set it to 1)
+      while (Zero::AtomicCompareExchangeBool(&WriteLock, 1, 0))
+      { }
+      // Set pointer on last object
+      Last->Next = temp;
+      // Set the Last pointer (shared with reader)
+      Zero::AtomicStore((void**)&Last, temp);
+      // Release access
+      Zero::AtomicStore(&WriteLock, 0);
     }
 
     bool Read(T& result)
     {
       // Check if there is anything on the queue
-      void* check = (void*)First;
-      if (AtomicCompareExchangePointer(&check, (void*)Last, (void*)Last) != Last)
+      if (!Zero::AtomicCompareExchangeBool((void**)&First, (void*)Last, (void*)Last))
       {
         // Store the pointers
         Node* firstNode = First;
@@ -85,8 +156,10 @@ namespace Audio
   private:
     // Only touched by reader
     Node* First;
-    // Shared by writer and reader
+    // Shared by writers and reader
     Node* Last;
+    // Shared by writers
+    Type32Bit WriteLock;
   };
 
 }

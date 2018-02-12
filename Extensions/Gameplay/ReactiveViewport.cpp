@@ -17,6 +17,7 @@ ZilchDefineType(ViewportMouseEvent, builder, type)
   ZilchBindFieldProperty(mRayDirection);
   ZilchBindFieldProperty(mHitPosition);
   ZilchBindFieldProperty(mHitNormal);
+  ZilchBindFieldProperty(mHitUv);
   ZilchBindFieldProperty(mHitDistance);
   ZilchBindGetterProperty(HitObject);
   ZilchBindGetterProperty(CameraViewport);
@@ -32,6 +33,7 @@ ViewportMouseEvent::ViewportMouseEvent() :
   mRayDirection(Vec3::cZero),
   mHitPosition(Vec3::cZero),
   mHitNormal(Vec3::cZero),
+  mHitUv(Vec2::cZero),
   mHitDistance(0.0f)
 {
 }
@@ -42,6 +44,7 @@ ViewportMouseEvent::ViewportMouseEvent(MouseEvent* event) :
   mRayDirection(Vec3::cZero),
   mHitPosition(Vec3::cZero),
   mHitNormal(Vec3::cZero),
+  mHitUv(Vec2::cZero),
   mHitDistance(0.0f)
 {
   // Copy the event into ourselves
@@ -179,7 +182,7 @@ void ReactiveViewport::OnMouseExit(MouseEvent* e)
   if (!reactiveSpace)
     return;
 
-  Cog* overObject = reactiveSpace->mOver;
+  Cog* overObject = mOverObject;
 
   if(overObject)
   {
@@ -194,7 +197,7 @@ void ReactiveViewport::OnMouseExit(MouseEvent* e)
 
       // Always make sure that, before we dispatch mouse exit, we release the 'over' object
       // so that any script checking for the hover object will not think its this
-      reactiveSpace->mOver = CogId();
+      mOverObject = CogId();
       dispatcher->Dispatch(Events::MouseExit, &viewportEvent);
     }
   }
@@ -254,7 +257,7 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
 
   // Keep track of the current hit object and the last hit object
   Handle objectHit;
-  Cog* oldOverObject = reactiveSpace->mOver.ToCog();
+  Cog* oldOverObject = mOverObject.ToCog();
 
   // As long as someone else didn't handle this mouse event (blocked by another reactive in a different viewport)
   // We need to still update, but act as if we just lost any reactive object
@@ -283,7 +286,12 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
         //store the mouse position info on the reactive component
         this->mReactiveHitPosition = result.HitWorldPosition;
         this->mReactiveHitNormal = result.HitWorldNormal;
+        this->mReactiveHitUv = result.HitUv;
         this->mReactiveHitDistance = result.T;
+
+        // Preserving old behavior of the space's over object being the result
+        // of the last viewport to process it's logic
+        reactiveSpace->mOver = newCog;
 
         // If we hit a new object and we were hitting an old object,
         // we need to send a mouse enter to the new object and
@@ -292,7 +300,7 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
         {
           // Always make sure that, before we dispatch mouse exit, we release the 'over' object
           // so that any script checking for the hover object will not think its this
-          reactiveSpace->mOver = newCog;
+          mOverObject = newCog;
 
           // Create the event to send out what cog has been entered
           ViewportMouseEvent viewportEvent(e);
@@ -321,7 +329,8 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
   {
     // Always make sure that, before we dispatch mouse exit, we release the 'over' object
     // so that any script checking for the hover object will not think its this
-    reactiveSpace->mOver = CogId();
+    mOverObject = CogId();
+    reactiveSpace->mOver = mOverObject;
     if(oldOverObject != nullptr)
     {
       ViewportMouseEvent viewportEvent(e);
@@ -341,7 +350,7 @@ void ReactiveViewport::ForwardReactiveEvent(StringParam eventName, MouseEvent* e
   // have to check for mViewportInterface to know if it's supposed to be active
   if (mViewportInterface != nullptr)
   {
-    if(eventName == Events::MouseUpdate)
+    if (eventName == Events::MouseUpdate)
       UpdateOverObject(e);
 
     // Check Reactive
@@ -366,9 +375,9 @@ void ReactiveViewport::ForwardReactiveEvent(StringParam eventName, MouseEvent* e
     space->DispatchEvent(eventName, &viewportEvent);
 
     // Dispatch on the object the mouse is over
-    if(reactiveSpace->mOver)
+    if (mOverObject)
     {
-      EventDispatcher* dispatcher = reactiveSpace->mOver.ToCog()->GetDispatcher();
+      EventDispatcher* dispatcher = mOverObject.ToCog()->GetDispatcher();
       dispatcher->Dispatch(eventName, &viewportEvent);
     }
 
@@ -379,18 +388,27 @@ void ReactiveViewport::ForwardReactiveEvent(StringParam eventName, MouseEvent* e
   }
 
   bool forwardToChildren = true;
-  if(CameraViewport* camViewport = mCameraViewport)
+  if (CameraViewport* camViewport = mCameraViewport)
     forwardToChildren = camViewport->mForwardViewportEvents;
   
-  if(mGameWidget && forwardToChildren && !e->Handled)
+  if (mGameWidget && forwardToChildren && !e->Handled)
   {
+    // Loop through all viewports until one has the mouse position over it
     ReactiveViewport* viewport = mGameWidget->GetViewportUnder(this);
-    if(viewport)
+    while (viewport)
     {
       // Make sure the mouse is actually within the viewport below us
-      Rect childRect = viewport->GetScreenRect();
-      if(childRect.Contains(e->Position))
+      WidgetRect childRect = viewport->GetScreenRect();
+      if (childRect.Contains(e->Position))
+      {
+        // Forward event and stop looping, it is up to the next viewport
+        // if the event is blocked or forwarded again
         viewport->ForwardReactiveEvent(eventName, e);
+        break;
+      }
+
+      // Get next viewport in the layer order
+      viewport = mGameWidget->GetViewportUnder(viewport);
     }
   }
 }
@@ -401,9 +419,10 @@ void ReactiveViewport::InitViewportEvent(ViewportMouseEvent& viewportEvent)
   this->mReactiveRay = ScreenToWorldRay(viewportEvent.Position);
 
   viewportEvent.mHitDistance = this->mReactiveHitDistance;
-  viewportEvent.mHitNormal = this->mReactiveHitNormal;
   viewportEvent.mHitPosition = this->mReactiveHitPosition;
-  viewportEvent.mHitObject = GetReactiveSpace()->mOver;
+  viewportEvent.mHitNormal = this->mReactiveHitNormal;
+  viewportEvent.mHitUv = this->mReactiveHitUv;
+  viewportEvent.mHitObject = mOverObject;
   viewportEvent.mWorldRay = this->mReactiveRay;
   viewportEvent.mRayStart = this->mReactiveRay.Start;
   viewportEvent.mRayDirection = this->mReactiveRay.Direction;
@@ -557,7 +576,7 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   viewBlock.mZeroPerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
 
   ColorTransform colorTx = {Vec4(1.0f)};
-  Rect clipRect = {0, 0, size.x, size.y};
+  WidgetRect clipRect = {0, 0, size.x, size.y};
   RenderUpdate(viewBlock, frameBlock, Mat4::cIdentity, colorTx, clipRect);
 
   IndexRange& indexRange = viewBlock.mRenderGroupRanges.PushBack();

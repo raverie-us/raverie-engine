@@ -236,7 +236,7 @@ ZeroSharedTemplate inline void Swap(T& a, T& b)
 template <typename Data, typename T>
 ZeroSharedTemplate inline Data Lerp(const Data& start, const Data& end, T interpolationValue)
 {
-  return (T(1.0) - interpolationValue) * start + interpolationValue * end;
+  return (Data)((T(1.0) - interpolationValue) * start + interpolationValue * end);
 }
 
 template <typename Data>

@@ -27,7 +27,7 @@ namespace Audio
 
   //************************************************************************************************
   AttenuatorNode::AttenuatorNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      Math::Vec3Param position, const AttenuationData& data, const CurveTypes curveType, 
+      Math::Vec3Param position, const AttenuationData& data, const CurveTypes::Enum curveType,
       Zero::Array<Math::Vec3> *customCurveData, ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, true, false, isThreaded), 
     AttenStartDist(data.StartDistance), 
@@ -36,8 +36,7 @@ namespace Audio
     AttenEndDist(data.EndDistance), 
     MinimumVolume(data.MinimumVolume), 
     Position(position),
-    DistanceInterpolator(nullptr),
-    LowPassInterpolator(nullptr)
+    LowPassCutoffStartValue(15000.0f)
   {
     if (!Threaded)
     {
@@ -47,21 +46,19 @@ namespace Audio
     else
     {
       // Set values on interpolator
-      DistanceInterpolator = gAudioSystem->GetInterpolatorThreaded();
-      DistanceInterpolator->SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
+      DistanceInterpolator.SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
 
       // Set the falloff curve on the interpolator
-      if (curveType == CustomCurveType)
+      if (curveType == CurveTypes::Custom)
       {
         if (customCurveData)
-          DistanceInterpolator->SetCustomCurve(customCurveData);
+          DistanceInterpolator.SetCustomCurve(customCurveData);
       }
       else
-        DistanceInterpolator->SetCurve(curveType);
+        DistanceInterpolator.SetCurve(curveType);
 
       // Set the low pass interpolator 
-      LowPassInterpolator = gAudioSystem->GetInterpolatorThreaded();
-      LowPassInterpolator->SetValues(15000.0f, 1000.0f, LowPassDistance);
+      LowPassInterpolator.SetValues(LowPassCutoffStartValue, 1000.0f, LowPassDistance);
     }
   }
 
@@ -70,9 +67,6 @@ namespace Audio
   {
     if (Threaded)
     {
-      gAudioSystem->ReleaseInterpolatorThreaded(DistanceInterpolator);
-      gAudioSystem->ReleaseInterpolatorThreaded(LowPassInterpolator);
-
       for (DataPerListenerMapType::valuerange data = DataPerListener.Values(); !data.Empty(); data.PopFront())
         delete data.Front();
     }
@@ -99,7 +93,7 @@ namespace Audio
       gAudioSystem->AddTask(Zero::CreateFunctor(&AttenuatorNode::SetAttenuationData,
           (AttenuatorNode*)GetSiblingNode(), data));
     else if (Threaded)
-      DistanceInterpolator->SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
+      DistanceInterpolator.SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
   }
 
   //************************************************************************************************
@@ -109,7 +103,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void AttenuatorNode::SetCurveType(const CurveTypes curveType, Zero::Array<Math::Vec3>* customCurveData)
+  void AttenuatorNode::SetCurveType(const CurveTypes::Enum curveType, Zero::Array<Math::Vec3>* customCurveData)
   {
     if (!Threaded)
     {
@@ -125,13 +119,13 @@ namespace Audio
     }
     else
     {
-      if (curveType == CustomCurveType)
+      if (curveType == CurveTypes::Custom)
       {
         if (customCurveData)
-          DistanceInterpolator->SetCustomCurve(customCurveData);
+          DistanceInterpolator.SetCustomCurve(customCurveData);
       }
       else
-        DistanceInterpolator->SetCurve(curveType);
+        DistanceInterpolator.SetCurve(curveType);
     }
   }
 
@@ -157,7 +151,8 @@ namespace Audio
             (AttenuatorNode*)GetSiblingNode(), distance));
     }
     else
-      LowPassInterpolator->SetValues(15000.0f, LowPassInterpolator->GetEndValue(), AttenEndDist - distance);
+      LowPassInterpolator.SetValues(LowPassCutoffStartValue, LowPassInterpolator.GetEndValue(), 
+        AttenEndDist - distance);
   }
 
   //************************************************************************************************
@@ -170,7 +165,7 @@ namespace Audio
             (AttenuatorNode*)GetSiblingNode(), frequency));
     }
     else
-      LowPassInterpolator->SetValues(15000.0f, frequency, AttenEndDist - LowPassDistance);
+      LowPassInterpolator.SetValues(LowPassCutoffStartValue, frequency, AttenEndDist - LowPassDistance);
   }
 
   //************************************************************************************************
@@ -195,7 +190,7 @@ namespace Audio
 
     // Get the relative position with the listener
     Math::Vec3 relativePosition = listener->GetRelativePosition(Position);
-
+    // Save the distance value
     float distance = relativePosition.Length();
 
     // If we are outside the max distance and the minimum volume is zero, there is no audio
@@ -214,7 +209,7 @@ namespace Audio
       attenuatedVolume = MinimumVolume;
     // Otherwise, get the value using the falloff curve on the interpolator
     else
-      attenuatedVolume = DistanceInterpolator->ValueAtDistance(distance - AttenStartDist);
+      attenuatedVolume = DistanceInterpolator.ValueAtDistance(distance - AttenStartDist);
 
     // Check if the listener needs to be added to the map
     if (!DataPerListener.FindValue(listener, nullptr))
@@ -241,7 +236,7 @@ namespace Audio
     if (UseLowPass && distance > LowPassDistance)
     {
       // Find cutoff frequency for this distance (will return end value if distance is past AttenEndDist)
-      float cutoffFreq = LowPassInterpolator->ValueAtDistance(distance - LowPassDistance);
+      float cutoffFreq = LowPassInterpolator.ValueAtDistance(distance - LowPassDistance);
 
       // Set the cutoff frequency on the filter
       listenerData.LowPass.SetCutoffFrequency(cutoffFreq);
@@ -249,7 +244,7 @@ namespace Audio
       // Apply the filter to each frame of audio samples
       float* buffer = outputBuffer->Data();
       for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-        listenerData.LowPass.ProcessSample(buffer + i, buffer + i, numberOfChannels);
+        listenerData.LowPass.ProcessFrame(buffer + i, buffer + i, numberOfChannels);
     }
 
     AddBypass(outputBuffer);
@@ -258,16 +253,24 @@ namespace Audio
   }
 
   //************************************************************************************************
-  float AttenuatorNode::GetAttenuatedVolume()
+  float AttenuatorNode::GetVolumeChangeFromOutputs()
   {
     if (!Threaded)
       return 0;
 
-    float volume(1.0);
-    forRange(AttenuationPerListener* data, DataPerListener.Values())
-      volume *= data->PreviousVolume;
+    float volume = 0.0f;
 
-    return volume;
+    // Get all volumes from outputs
+    forRange(SoundNode* node, GetOutputs()->All())
+      volume += node->GetVolumeChangeFromOutputs();
+
+    // If there are multiple listeners, the sounds they hear are added together
+    float attenuatorVolume = 0.0f;
+    forRange(AttenuationPerListener* data, DataPerListener.Values())
+      volume += data->PreviousVolume;
+
+    // Return the output volume modified by this node's volume
+    return volume * attenuatorVolume;
   }
 
   //************************************************************************************************

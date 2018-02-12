@@ -326,19 +326,7 @@ bool LibraryTranslator::ResolveMemberAccess(ZilchShaderTranslator* translator, Z
   if(memberAccessNode->AccessedProperty != nullptr)
   {
     Zilch::Property* prop = memberAccessNode->AccessedProperty;
-    MemberAccessResolverWrapper* wrapper = mMemberAccessPropertyResolvers.FindPointer(prop);
-    if(wrapper != nullptr)
-    {
-      wrapper->Translate(translator, memberAccessNode, context);
-      return true;
-    }
-    wrapper = mBackupMemberAccessResolvers.FindPointer(memberAccessNode->LeftOperand->ResultType);
-    if(wrapper != nullptr)
-    {
-      wrapper->Translate(translator, memberAccessNode, context);
-      return true;
-    }
-
+    
     // If this is actually a get/set property then mark a dependency on the type that actually implements the extension function
     Zilch::GetterSetter* getSet = memberAccessNode->AccessedGetterSetter;
     if(getSet != nullptr)
@@ -351,7 +339,39 @@ bool LibraryTranslator::ResolveMemberAccess(ZilchShaderTranslator* translator, Z
           context->mCurrentType->AddDependency(extensionFunction->mOwner);
           return false;
         }
+        // See if this function has been implemented by another class
+        ShaderFunction* implementsFunction = mTranslator->mCurrentLibrary->FindImplements(getSet->Get);
+        if(implementsFunction != nullptr)
+        {
+          // Mark the implementing class as a dependency of this one
+          context->mCurrentType->AddDependency(implementsFunction->mOwner);
+          // Instead of printing the function's name from zilch, replace it with the name of the implementing function
+          context->GetBuilder() << implementsFunction->mShaderName;
+
+          // Since we replaced a member with a function we have to manually add the function call parenthesis
+          context->GetBuilder() << "(";
+          // If this is an instance function then we have to pass through and translate 'this'
+          if(!implementsFunction->IsStatic())
+            context->Walker->Walk(translator, memberAccessNode->LeftOperand, context);
+          context->GetBuilder() << ")";
+          // Return that we replaced this member access
+          return true;
+        }
       }
+    }
+
+    MemberAccessResolverWrapper* wrapper = mMemberAccessPropertyResolvers.FindPointer(prop);
+    if(wrapper != nullptr)
+    {
+      wrapper->Translate(translator, memberAccessNode, context);
+      return true;
+    }
+    // Check backup resolvers last, after we've tried all other options
+    wrapper = mBackupMemberAccessResolvers.FindPointer(memberAccessNode->LeftOperand->ResultType);
+    if(wrapper != nullptr)
+    {
+      wrapper->Translate(translator, memberAccessNode, context);
+      return true;
     }
     else if(!mTranslator->IsInOwningLibrary(prop->GetOwningLibrary()))
     {
@@ -364,12 +384,7 @@ bool LibraryTranslator::ResolveMemberAccess(ZilchShaderTranslator* translator, Z
   if(memberAccessNode->AccessedFunction != nullptr)
   {
     Zilch::Function* fn = memberAccessNode->AccessedFunction;
-    MemberAccessResolverWrapper* wrapper = mMemberAccessFunctionResolvers.FindPointer(fn);
-    if(wrapper != nullptr)
-    {
-      wrapper->Translate(translator, memberAccessNode, context);
-      return true;
-    }
+    
 
     // See if this function has been implemented by another class
     ShaderFunction* implementsFunction = mTranslator->mCurrentLibrary->FindImplements(fn);
@@ -382,6 +397,13 @@ bool LibraryTranslator::ResolveMemberAccess(ZilchShaderTranslator* translator, Z
       // Return that we replaced this function name
       return true;
     }
+    MemberAccessResolverWrapper* wrapper = mMemberAccessFunctionResolvers.FindPointer(fn);
+    if(wrapper != nullptr)
+    {
+      wrapper->Translate(translator, memberAccessNode, context);
+      return true;
+    }
+
     // For now just mark that extension functions are not errors (let translation happen as normal)
     // @JoshD: Cleanup and merge somehow with the function call portion!
     ShaderFunction* extensionFunction = mTranslator->mCurrentLibrary->FindExtension(fn);

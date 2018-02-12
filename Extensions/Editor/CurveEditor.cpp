@@ -71,12 +71,12 @@ public:
   //****************************************************************************
   void OnMouseUpdate(MouseEvent* e) override
   {
-    Rect selection = GetSelectionRect(e);
+    WidgetRect selection = GetSelectionRect(e);
     PlaceWithRect(selection, mSelectBox);
   }
 
   //****************************************************************************
-  Rect GetSelectionRect(MouseEvent* e)
+  WidgetRect GetSelectionRect(MouseEvent* e)
   {
     Vec2 currPixels = mEditor->ToLocal(e->Position);
     Vec2 startPixels = mEditor->ToPixelPosition(mDragStartGraph);
@@ -84,7 +84,7 @@ public:
     Vec2 max = Math::Max(currPixels, startPixels);
     min = Math::Clamp(min, Vec2::cZero, mEditor->mSize);
     max = Math::Clamp(max, Vec2::cZero, mEditor->mSize);
-    return Rect::MinAndMax(min, max);
+    return WidgetRect::MinAndMax(min, max);
   }
 
   //****************************************************************************
@@ -98,7 +98,7 @@ public:
   }
 
   //****************************************************************************
-  bool Contains(CurveEditing::Draggable* target, Rect& selectionRect)
+  bool Contains(CurveEditing::Draggable* target, WidgetRect& selectionRect)
   {
     Vec2 center = ToVector2(target->GetTranslation()) + target->GetSize() * 0.5f;
     return selectionRect.Contains(center);
@@ -107,7 +107,7 @@ public:
   //****************************************************************************
   void OnMouseUp(MouseEvent* e) override
   {
-    Rect selection = GetSelectionRect(e);
+    WidgetRect selection = GetSelectionRect(e);
 
     static Array<CurveEditing::Draggable*> toSelect;
     toSelect.Clear();
@@ -151,7 +151,7 @@ CurveDrawer::CurveDrawer(CurveEditor* curveEditor)
   mCurveEditor = curveEditor;
 }
 
-void CurveDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void CurveDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -167,7 +167,7 @@ void CurveDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
   }
 }
 
-void CurveDrawer::AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, CurveObject* curveObject)
+void CurveDrawer::AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject)
 {
   Array<StreamedVertex> lines;
   Array<StreamedVertex> triangles;
@@ -219,7 +219,7 @@ void CurveDrawer::AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect cl
   CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
-void CurveDrawer::AddControlPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, Rect clipRect, CurveObject* curveObject)
+void CurveDrawer::AddControlPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject)
 {
   Array<StreamedVertex> tangentLines;
   Array<StreamedVertex> pointLines;

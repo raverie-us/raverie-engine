@@ -257,7 +257,7 @@ namespace Zilch
     // Make sure the index is within range
     if (index < 0 || index >= Components)
     {
-      call.GetState()->ThrowException(report, String::Format("The index used to access a component of a vector was out of range [0-%d]", Components - 1));
+      call.GetState()->ThrowException(report, String::Format("The index used to access a component of a vector was out of range [0-%d].", Components - 1));
       return;
     }
 
@@ -479,7 +479,7 @@ namespace Zilch
     // We can't invert a zero length quaternion
     if (lengthSq == 0.0f)
     {
-      call.GetState()->ThrowException(report, "Attempting to invert a zero length quaternion which would result in a 0 division");
+      call.GetState()->ThrowException(report, "Attempting to invert a zero length quaternion which would result in a 0 division.");
       return;
     }
     Real inverseLengthSq = 1.0f / lengthSq;
@@ -894,17 +894,22 @@ namespace Zilch
     RuneIterator start = call.Get<RuneIterator>(0);
     RuneIterator end = call.Get<RuneIterator>(1);
 
-    // Validate range contains the zilch throw exception so just return
+
+    // All validations present contains the zilch throw exception so just return
+    if(RuneIterator::ValidateIteratorPair(start, end) == false)
+      return;
     if(StringRangeExtended::ValidateRange(self, start.mRange) == false)
       return;
     if(StringRangeExtended::ValidateRange(self, end.mRange) == false)
+      return;
+    if(RuneIterator::ValidateIteratorOrder(start,end) == false)
       return;
 
     String result(start.mRange.Begin(), end.mRange.Begin());
     
     if(result.Empty() < 0)
     {
-      call.GetState()->ThrowException(report, "A negative substring length is not supported");
+      call.GetState()->ThrowException(report, "A negative substring length is not supported.");
       return;
     }
     
@@ -922,12 +927,12 @@ namespace Zilch
 
     if (startIndice < 0 || endIndice > stringCount)
     {
-      call.GetState()->ThrowException(report, "String index was out of bounds");
+      call.GetState()->ThrowException(report, "String index was out of bounds.");
       return;
     }
     if ((endIndice - startIndice) < 0)
     {
-      call.GetState()->ThrowException(report, "A negative substring length is not supported");
+      call.GetState()->ThrowException(report, "A negative substring length is not supported.");
       return;
     }
     StringIterator stringStart = self.Begin() + startIndice;
@@ -950,12 +955,12 @@ namespace Zilch
     // Check the character index (note that 'end' being equal to the string count is valid)
     if (start < 0 || end > stringCount)
     {
-      call.GetState()->ThrowException(report, "String index was out of bounds");
+      call.GetState()->ThrowException(report, "String index was out of bounds.");
       return;
     }
     if (length < 0)
     {
-      call.GetState()->ThrowException(report, "A negative substring length is not supported");
+      call.GetState()->ThrowException(report, "A negative substring length is not supported.");
       return;
     }
     cstr stringStart = self.c_str() + start;
@@ -1549,7 +1554,7 @@ namespace Zilch
     // If the print failed, let the user know
     if (sprintfLength < 0)
     {
-      state->ThrowException(report, String::Format("The format specifier '%s' was invalid. The argument was '%s' of type '%s'", format.c_str(), argument.ToString().c_str(), argumentType->ToString().c_str()));
+      state->ThrowException(report, String::Format("The format specifier '%s' was invalid. The argument was '%s' of type '%s'.", format.c_str(), argument.ToString().c_str(), argumentType->ToString().c_str()));
       return;
     }
 
@@ -1569,7 +1574,7 @@ namespace Zilch
     // This should basically never happen... but just in case it does!
     if (sprintfLength < 0)
     {
-      state->ThrowException(report, String::Format("The format specifier '%s' was invalid. The argument was '%s' of type '%s'", format.c_str(), argument.ToString().c_str(), argumentType->ToString().c_str()));
+      state->ThrowException(report, String::Format("The format specifier '%s' was invalid. The argument was '%s' of type '%s'.", format.c_str(), argument.ToString().c_str(), argumentType->ToString().c_str()));
       return;
     }
 
@@ -1669,7 +1674,7 @@ namespace Zilch
           // If we didn't transition, that means we found an invalid format specifier
           if (transitioned == false)
           {
-            state->ThrowException(report, BuildString("Invalid or unsupported format specifier: '", formatSpecifierRange, "'"));
+            state->ThrowException(report, BuildString("Invalid or unsupported format specifier: '", formatSpecifierRange, "'."));
             return;
           }
           // If we reached the end (parsed the format specifier)
@@ -1730,7 +1735,7 @@ namespace Zilch
                 // So long as we haven't run out of arguments...
                 if (argumentIndex >= argumentCount)
                 {
-                  state->ThrowException(report, "There are more '%' format specifiers or '*' operators then there are arguments");
+                  state->ThrowException(report, "There are more '%' format specifiers or '*' operators then there are arguments.");
                   return;
                 }
 
@@ -1756,7 +1761,7 @@ namespace Zilch
                   state->ThrowException
                   (
                     report,
-                    String::Format("When using * for %s an Integer must be provided before the argument, instead we found '%s' of type '%s' for the '%s' format specifier",
+                    String::Format("When using * for %s an Integer must be provided before the argument, instead we found '%s' of type '%s' for the '%s' format specifier.",
                     starType,
                     argument.ToString().c_str(),
                     argumentType->ToString().c_str(),
@@ -1776,7 +1781,7 @@ namespace Zilch
             // After we may have read any * arguments, we need to check if the current format specifier actually has a valid argument (too few?)
             if (argumentIndex >= argumentCount)
             {
-              state->ThrowException(report, "There are more '%' format specifiers or '*' operators then there are arguments");
+              state->ThrowException(report, "There are more '%' format specifiers or '*' operators then there are arguments.");
               return;
             }
 
@@ -1814,7 +1819,7 @@ namespace Zilch
                 value = (DoubleInteger)*(DoubleReal*)argumentData;
               else
                 // Anything else must be an error since we don't know what it is
-                return state->ThrowException(report, String::Format("The format specifier '%s' requires an integral or real type, instead we got '%s' of type '%s'", formatSpecifierRange.Data(), argument.ToString().c_str(), argumentType->ToString().c_str()));
+                return state->ThrowException(report, String::Format("The format specifier '%s' requires an integral or real type, instead we got '%s' of type '%s'.", formatSpecifierRange.Data(), argument.ToString().c_str(), argumentType->ToString().c_str()));
 
               // Print the value out and store it in the builder (this can throw an exception)
               FormatCPrint(state, report, builder, integralFormatSpecifierString, temporaryBuffer, widthStar, precisionStar, argument, value);
@@ -1840,7 +1845,7 @@ namespace Zilch
                 value = (DoubleReal)*(DoubleReal*)argumentData;
               else
                 // Anything else must be an error since we don't know what it is
-                return state->ThrowException(report, String::Format("The format specifier '%s' requires an integral or real type, instead we got '%s' of type '%s'", formatSpecifierRange.Data(), argument.ToString().c_str(), argumentType->ToString().c_str()));
+                return state->ThrowException(report, String::Format("The format specifier '%s' requires an integral or real type, instead we got '%s' of type '%s'.", formatSpecifierRange.Data(), argument.ToString().c_str(), argumentType->ToString().c_str()));
               
               // Print the value out and store it in the builder (this can throw an exception)
               FormatCPrint(state, report, builder, formatSpecifierRange, temporaryBuffer, widthStar, precisionStar, argument, value);
@@ -1881,7 +1886,7 @@ namespace Zilch
               // If we didn't detect the type of value, throw an exception
               if (isValidValue == false)
               {
-                state->ThrowException(report, String::Format("The format specifier '%s' requires a class, ref struct, or delegate type. Instead we got '%s' of type '%s'", formatSpecifierRange.Data(), argument.ToString().c_str(), argumentType->ToString().c_str()));
+                state->ThrowException(report, String::Format("The format specifier '%s' requires a class, ref struct, or delegate type. Instead we got '%s' of type '%s'.", formatSpecifierRange.Data(), argument.ToString().c_str(), argumentType->ToString().c_str()));
                 return;
               }
               
@@ -1910,7 +1915,7 @@ namespace Zilch
     // If we didn't consume all the arguments...
     if (argumentIndex != argumentCount)
     {
-      state->ThrowException(report, "There are more arguments then there are '%' format specifiers or '*' operators");
+      state->ThrowException(report, "There are more arguments then there are '%' format specifiers or '*' operators.");
       return;
     }
 
@@ -2419,6 +2424,28 @@ namespace Zilch
     // Set the entire array to zero (based upon the size of the element type and the number of elements)
     byte* returnData = call.GetReturnUnchecked();
     memset(returnData, 0, elementType->Size * userData.Count);
+  }
+
+  //***************************************************************************
+  void VectorOneFunction(Call& call, ExceptionReport& report)
+  {
+    call.DisableReturnChecks();
+
+    // Get the user data for the function
+    VectorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<VectorUserData>(0);
+
+    // Get the element type of the vector (Real, Integer, etc...)
+    Core& core = Core::GetInstance();
+
+    BoundType* elementType = core.VectorScalarBoundTypes[userData.ElementTypeIndex];
+    Core::ScalarTypeOneFunction oneFunction = core.ScalarTypeOneFunctions[userData.ElementTypeIndex];
+    // Set the entire array to one based upon a callback function for the bound type
+    byte* returnData = call.GetReturnUnchecked();
+    for(size_t i = 0; i < userData.Count; ++i)
+    {
+      oneFunction(returnData);
+      returnData += elementType->Size;
+    }
   }
 
   //***************************************************************************
@@ -3444,6 +3471,11 @@ namespace Zilch
         prop->Get->ComplexUserData.WriteObject(userData);
         prop->Description = ZilchDocumentString("The zero vector (a vector containing all zeroes).");
 
+        // Add a property for the one vector
+        prop = builder.AddBoundGetterSetter(vectorType, "One", vectorType, nullptr, VectorOneFunction, FunctionOptions::Static);
+        prop->Get->ComplexUserData.WriteObject(userData);
+        prop->Description = ZilchDocumentString("The one vector (a vector containing all ones).");
+
         // Add a property for each axis (e.g. Real3.XAxis, Real3.YAxis, etc...)
         for(size_t axis = 0; axis <= dimension; ++axis)
         {
@@ -3884,6 +3916,7 @@ namespace Zilch
     ZilchInitializeType(ArrayClass<DoubleInteger>);
     ZilchInitializeType(ArrayClass<DoubleReal>);
     ZilchInitializeType(ArrayClass<Any>);
+    ZilchInitializeType(ArrayClass<HandleOfString>);
 
     // Add multi primitive type components
     //doubleIntegerType->Add(new MultiPrimitive(doubleIntegerType,  1));

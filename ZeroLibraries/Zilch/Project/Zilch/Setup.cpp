@@ -109,7 +109,8 @@ namespace Zilch
     WebSockets::Destroy();
 
     // Shutdown the memory manager
-    Shutdown();
+    if (!(this->Flags & SetupFlags::DoNotShutdownMemory))
+      Shutdown();
 
     Instance = nullptr;
   }

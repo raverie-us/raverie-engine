@@ -29,6 +29,9 @@ public:
   Pool(cstr name, Graph* parent, size_t blockSize, size_t blocksPerPage, bool podStackPool = false);
   ~Pool();
 
+  static void* operator new(size_t size) { return malloc(size); }
+  static void operator delete(void* pMem, size_t size) { free(pMem); }
+
   template<typename type>
   type* AllocateType();
   template<typename type, typename P0>

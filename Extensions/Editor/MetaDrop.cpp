@@ -163,9 +163,9 @@ void MetaDrag::OnMouseMove(MouseEvent* event)
       mToolTip->SetText(dropEvent->Result);
       //If the drop event failed let the user know why
       if(dropEvent->Failed)
-        mToolTip->SetColor(ToolTipColor::Red);
+        mToolTip->SetColorScheme(ToolTipColorScheme::Red);
       else
-        mToolTip->SetColor(ToolTipColor::Default);
+        mToolTip->SetColorScheme(ToolTipColorScheme::Default);
 
       ToolTipPlacement placement;
 
@@ -175,7 +175,7 @@ void MetaDrag::OnMouseMove(MouseEvent* event)
       }
       else
       {
-        placement.SetScreenRect(Rect::PointAndSize(position, Vec2::cZero));
+        placement.SetScreenRect(WidgetRect::PointAndSize(position, Vec2::cZero));
         placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
                               IndicatorSide::Bottom, IndicatorSide::Top);
       }

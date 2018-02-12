@@ -3,7 +3,7 @@
 namespace Zero
 {
 
-const float SelectionIcon::cBaseScale = 0.75f;
+const float SelectionIcon::cBaseScale = 0.45f;
 
 ZilchDefineType(SelectionIcon, builder, type)
 {
@@ -60,12 +60,13 @@ Aabb SelectionIcon::GetLocalAabb()
 void SelectionIcon::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
+  frameNode.mBlendSettingsOverride = false;
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
 
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
   frameNode.mMeshRenderData = nullptr;
-  frameNode.mTextureRenderData = mSpriteSource->mTexture->mRenderData;
+  frameNode.mTextureRenderData = mSpriteSource->GetAtlasTextureRenderData();
 
   frameNode.mLocalToWorld = Mat4::cIdentity;
   frameNode.mLocalToWorldNormal = Mat3::cIdentity;

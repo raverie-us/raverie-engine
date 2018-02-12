@@ -41,7 +41,7 @@ public:
   ~ScintillaWidget();
   ScintillaZero* mScintilla;
   Scintilla::SurfaceImpl mSurface;
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 };
 
 //------------------------------------------------------------ ScintillaZero
@@ -109,7 +109,7 @@ ScintillaWidget::~ScintillaWidget()
   SafeDelete(mScintilla);
 }
 
-void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, Rect clipRect)
+void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -120,7 +120,7 @@ void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock,
   mSurface.mBaseRect = clipRect;
 
   // Setting clip rect here because scintilla is not getting the correct client rect
-  mSurface.mClipRect = Rect::PointAndSize(Vec2(parentTx.m30, parentTx.m31), mSize);
+  mSurface.mClipRect = WidgetRect::PointAndSize(Vec2(parentTx.m30, parentTx.m31), mSize);
 
   PRectangle rcPaint = mScintilla->GetClientRectangle();
   mScintilla->Paint(&mSurface, rcPaint);
@@ -203,7 +203,7 @@ TextEditor::TextEditor(Composite* parent)
   ConnectThisTo(mScinWidget, Events::FocusGained, OnFocusIn);
   ConnectThisTo(mScinWidget, Events::RightMouseDown, OnRightMouseDown);
   ConnectThisTo(mScinWidget, Events::MouseMove, OnMouseMove);
-  ConnectThisTo(mScinWidget, Events::MouseDrop, OnMouseDrop);
+  ConnectThisTo(mScinWidget, Events::MouseFileDrop, OnMouseFileDrop);
   ConnectThisTo(mScinWidget, Events::TextTyped, OnTextTyped);
 
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
@@ -622,7 +622,7 @@ void TextEditor::OnMouseUp(MouseEvent* event)
   mScintilla->ButtonUp(Point(p.x, p.y), mTime, false);
 }
 
-void TextEditor::OnMouseDrop(MouseEvent* event)
+void TextEditor::OnMouseFileDrop(MouseFileDropEvent* event)
 {
 }
 
@@ -898,16 +898,20 @@ void TextEditor::OnKeyUp(KeyboardEvent* event)
 
 void TextEditor::OnMouseScroll(MouseEvent* event)
 {
+  OsShell* shell = Z::gEngine->has(OsShell);
+  uint scroll = shell->GetScrollLineCount();
+  scroll *= event->Scroll.y;
+
   // vertical scroll
   if(!event->CtrlPressed && !event->ShiftPressed)
-    mScintilla->ScrollTo(mScintilla->topLine + event->Scroll.y * -1);
+    mScintilla->ScrollTo(mScintilla->topLine + scroll * -1);
   // horizontal scroll when holding shift
   else if(!event->CtrlPressed && event->ShiftPressed)
-    mScintilla->HorizontalScrollTo(mScintilla->xOffset + event->Scroll.y * -10);
+    mScintilla->HorizontalScrollTo(mScintilla->xOffset + scroll * -10);
   // change font size while holding control and scrolling
   else
   {
-    mFontSize = Math::Clamp(int(mFontSize + event->Scroll.y), cMinFontSize, cMaxFontSize);
+    mFontSize = Math::Clamp(int(mFontSize + scroll), cMinFontSize, cMaxFontSize);
     SetFontSize(mFontSize);
     SetColorScheme(*GetColorScheme());
   }
