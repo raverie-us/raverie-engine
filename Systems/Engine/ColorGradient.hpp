@@ -13,6 +13,7 @@ namespace Zero
 {
 
 //--------------------------------------------------------------- Color Gradient
+/// Specifies a range of colors that are interpolated when sampled.
 class ColorGradient : public DataResource
 {
 public:

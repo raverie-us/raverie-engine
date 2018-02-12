@@ -11,7 +11,7 @@
 namespace Zero
 {
 
-const uint cMinFrameSize = 4;
+const uint cMinFrameSize = 1;
 const uint cMaxSpriteSize = 4096;
 
 //------------------------------------------------------------------ Sprite Data 

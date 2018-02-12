@@ -16,7 +16,8 @@ namespace Zilch
       None = 0,
       CustomAssertHandlerOrNoAsserts = (1 << 0),
       NoDocumentationStrings = (1 << 1),
-      DoNotShutdown = (1 << 2)
+      DoNotShutdown = (1 << 2),
+      DoNotShutdownMemory = (1 << 3)
     };
     typedef unsigned Type;
   }

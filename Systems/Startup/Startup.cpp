@@ -40,7 +40,7 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   ZeroRegisterThreadSafeReferenceCountedHandleManager(DepthSettings);
 
   // Setup the core Zilch library
-  mZilchSetup = new ZilchSetup();
+  mZilchSetup = new ZilchSetup(SetupFlags::DoNotShutdownMemory);
 
   // We need the calling state to be set so we can create Handles for Meta Components
   Zilch::Module module;

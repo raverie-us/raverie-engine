@@ -152,18 +152,19 @@ void SpriteSource::LoadSourceImage(Image* image)
 
 HandleOf<Texture> SpriteSource::GetAtlasTexture()
 {
-  if (mAtlas.IsNull())
-    return nullptr;
+  if (Atlas* atlas = mAtlas)
+    return mAtlas->mTexture;
 
-  return mAtlas->mTexture;
+  return nullptr;
 }
 
 TextureRenderData* SpriteSource::GetAtlasTextureRenderData()
 {
-  if (mAtlas.IsNull() || mAtlas->mTexture.IsNull())
-    return nullptr;
+  if (Atlas* atlas = mAtlas)
+    if (Texture* texture = atlas->mTexture)
+      return texture->mRenderData;
 
-  return mAtlas->mTexture->mRenderData;
+  return nullptr;
 }
 
 //-------------------------------------------------------- Sprite Source Manager

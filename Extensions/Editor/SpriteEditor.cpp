@@ -101,7 +101,8 @@ SpriteFrameLayout::SpriteFrameLayout(uint frameCount, uint frameSizeX, uint fram
   FrameSizeY = frameSizeY;
   TotalSize.SizeX = sizeX;
   TotalSize.SizeY = sizeY;
-  FramesPerRow = sizeX / frameSizeX;
+  // Prevent division by 0 from bad input.
+  FramesPerRow = Math::Max(sizeX / frameSizeX, 1u);
 }
 
 PixelRect SpriteFrameLayout::GetFrame(uint frameIndex)

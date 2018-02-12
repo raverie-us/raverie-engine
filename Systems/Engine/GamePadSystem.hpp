@@ -180,7 +180,7 @@ public:
 
   void Startup();
   void Update();
-  void CheckGamepads();
+  void UpdateGamepadsActiveState();
 
   void OnUpdate(UpdateEvent* event);
   void OnDeviceChanged(Event* event);

@@ -41,6 +41,7 @@ ZilchDefineStaticLibrary(GameplayLibrary)
 
   // Events
   ZilchInitializeType(MouseEvent);
+  ZilchInitializeType(MouseFileDropEvent);
   ZilchInitializeType(ViewportMouseEvent);
   ZilchInitializeType(WebBrowserEvent);
   ZilchInitializeType(WebBrowserConsoleEvent);

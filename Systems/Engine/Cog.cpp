@@ -1132,6 +1132,12 @@ bool Cog::AttachToPreserveLocal(Cog* parent)
 //**************************************************************************************************
 bool Cog::AttachTo(Cog* parent)
 {
+  if (parent == nullptr)
+  {
+    DoNotifyException("Invalid attachment", "Cannot attach to null object");
+    return false;
+  }
+
   Transform* childTransform = this->has(Transform);
 
   // If the child has no Transform, there's no relative attachment needed

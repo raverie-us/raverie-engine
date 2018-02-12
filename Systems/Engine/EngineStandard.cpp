@@ -265,6 +265,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Operation);
   ZilchInitializeType(OperationQueue);
   ZilchInitializeType(OperationBatch);
+  ZilchInitializeType(PropertyOperation);
   ZilchInitializeType(Tracker);
   ZilchInitializeType(Spline);
   ZilchInitializeType(SplineSampleData);

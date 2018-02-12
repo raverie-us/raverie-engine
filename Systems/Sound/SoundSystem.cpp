@@ -125,6 +125,18 @@ ZilchDefineType(SoundSystem, builder, type)
 }
 
 //**************************************************************************************************
+SoundSystem::SoundSystem() :
+  mCounter(0),
+  mPreviewInstance(0),
+  mLatency(AudioLatency::Low),
+  mSendMicEvents(false),
+  mSendCompressedMicEvents(false),
+  mSoundSpaceCounter(0)
+{
+
+}
+
+//**************************************************************************************************
 SoundSystem::~SoundSystem()
 {
   // If currently previewing a sound, stop
@@ -386,6 +398,44 @@ void SoundSystem::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, v
 void SoundSystem::SendAudioError(const Zero::String message)
 {
   DoNotifyWarning("Audio Error", message.c_str());
+}
+
+//**************************************************************************************************
+void SoundSystem::AddSoundSpace(SoundSpace* space, bool isEditor)
+{
+  mSpaces.PushBack(space);
+
+  // If not an editor space, increase the counter and notify tags if necessary
+  if (!isEditor)
+  {
+    ++mSoundSpaceCounter;
+
+    if (mSoundSpaceCounter == 1)
+    {
+      forRange(SoundTag& tag, mSoundTags.All())
+        tag.CreateTag();
+    }
+  }
+}
+
+//**************************************************************************************************
+void SoundSystem::RemoveSoundSpace(SoundSpace* space, bool isEditor)
+{
+  mSpaces.Erase(space);
+
+  // If not an editor space, decrease the counter and notify tags if necessary
+  if (!isEditor)
+  {
+    --mSoundSpaceCounter;
+
+    ErrorIf(mSoundSpaceCounter < 0, "SoundSystem's space tracking has become negative");
+
+    if (mSoundSpaceCounter == 0)
+    {
+      forRange(SoundTag& tag, mSoundTags.All())
+        tag.ReleaseTag();
+    }
+  }
 }
 
 //----------------------------------------------------------------------------------- Audio Settings

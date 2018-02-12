@@ -168,7 +168,7 @@ private:
   void BuildContentLibraryList();
   void CreateNameToolTip(StringParam message);
   void RemoveNameToolTip();
-  void CreateTagToolTip(StringParam message, ToolTipColor::Enum tagColor = ToolTipColor::Default);
+  void CreateTagToolTip(StringParam message, ToolTipColorScheme::Enum tagColor = ToolTipColorScheme::Default);
   void RemoveTagToolTip();
   void OnTextTypedName(Event*);
   void OnTextTypedTag(Event*);

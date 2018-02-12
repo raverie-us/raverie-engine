@@ -34,13 +34,10 @@ namespace Audio
 
     ~LockFreeQueue()
     {
-      // Delete anything remaining on the queue
-      while (First)
-      {
-        Node* temp = First;
-        First = temp->Next;
-        delete temp;
-      }
+      Clear();
+
+      // The Clear function does not remove the dummy node
+      delete First;
     }
 
     void Write(const T& object)
@@ -70,6 +67,18 @@ namespace Audio
       }
 
       return false;
+    }
+
+    // This function assumes that nothing is currently writing to the queue
+    void Clear()
+    {
+      // Delete anything remaining on the queue
+      while (First != Last)
+      {
+        Node* temp = First;
+        First = temp->Next;
+        delete temp;
+      }
     }
 
   private:

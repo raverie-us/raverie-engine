@@ -129,30 +129,19 @@ namespace Audio
       // Remember that this constructor happens on the game thread
 
       // Create the decoder object
-      Decoder = new FileDecoder(status, fileName, streaming, this);
+      Decoder = new FileDecoder(status, fileName, streaming);
 
       // Make sure it was successful
       if (!status.Failed())
       {
         // Set the variables
-        mFileLength = (float)Decoder->SamplesPerChannel / AudioSystemInternal::SystemSampleRate;
-        mChannels = Decoder->Channels;
-        mFrameCount = Decoder->SamplesPerChannel;
+        mFileLength = (float)Decoder->mSamplesPerChannel / AudioSystemInternal::SystemSampleRate;
+        mChannels = Decoder->mChannels;
+        mFrameCount = Decoder->mSamplesPerChannel;
 
-        // If not streaming, make the Samples buffer big enough to hold all the audio samples,
-        // and start decoding the audio data
+        // If not streaming, make the Samples buffer big enough to hold all the audio samples
         if (!mStreaming)
-        {
           Samples.Reserve(mFrameCount * mChannels);
-
-          gAudioSystem->AddTask(Zero::CreateFunctor(&FileDecoder::AddDecodingTask, Decoder));
-        }
-      }
-      // If not successful, delete the decoder object
-      else
-      {
-        delete Decoder;
-        Decoder = nullptr;
       }
     }
   }
@@ -160,17 +149,8 @@ namespace Audio
   //************************************************************************************************
   SoundAssetFromFile::~SoundAssetFromFile()
   {
-    if (Threaded && Decoder)
-    {
-      // If the decoder isn't executing any tasks, go ahead and delete it
-      if (Zero::AtomicCompareExchangeBool(&Decoder->DecodingTaskCount, 0, 0))
-        delete Decoder;
-      else
-      {
-        // Otherwise set the Asset pointer to null so it will delete itself
-        Zero::AtomicStore((void**)Decoder->ParentAlive, (void*)nullptr);
-      }
-    }
+    if (Decoder)
+      delete Decoder;
   }
 
   //************************************************************************************************
@@ -192,8 +172,7 @@ namespace Audio
     // Handle samples when not streaming
     if (!mStreaming)
     {
-      if (Decoder)
-        ProcessAvailableDecodedPacket();
+      ProcessAvailableDecodedPacket();
       
       // Check if the number of samples would go past the available decoded samples
       if (sampleIndex + numberOfSamples >= Samples.Size())
@@ -206,7 +185,11 @@ namespace Audio
             break;
         }
 
-        int samplesToCopy = Samples.Size() - sampleIndex;
+        // The number of samples to copy is either the number we need or the number available
+        // (after checking for decoded packets we could have more than we need)
+        int samplesToCopy = Math::Min(numberOfSamples, Samples.Size() - sampleIndex);
+        // Make sure we don't try to use a negative number
+        samplesToCopy = Math::Max(samplesToCopy, (int)0);
 
         // Check if there are samples available to copy
         if (samplesToCopy > 0)
@@ -304,7 +287,7 @@ namespace Audio
         mHasStreamingInstance = true;
 
         ((SoundAssetFromFile*)ThreadedAsset)->Decoder->OpenStream();
-        gAudioSystem->AddTask(Zero::CreateFunctor(&FileDecoder::AddDecodingTask, 
+        gAudioSystem->AddTask(Zero::CreateFunctor(&FileDecoder::DecodeStreamingPacket, 
           ((SoundAssetFromFile*)ThreadedAsset)->Decoder));
         return true;
       }
@@ -345,13 +328,6 @@ namespace Audio
       {
         // Copy the decoded samples into the asset's array
         CopyIntoBuffer(&Samples, packet.Samples, 0, packet.Samples.Size());
-
-        // If this is the end, don't need the decoder any more (it won't be processing tasks)
-        if (Samples.Size() >= mFrameCount * mChannels)
-        {
-          delete Decoder;
-          Decoder = nullptr;
-        }
       }
       else
       {
@@ -360,7 +336,7 @@ namespace Audio
 
         // If the index hasn't reached the end, decode another packet
         if (mPreviousBufferSamples + NextStreamedSamples.Size() < mFrameCount * mChannels)
-          Decoder->AddDecodingTask();
+          Decoder->DecodeStreamingPacket();
 
         // Mark that the second buffer is filled
         mNeedSecondBuffer = false;

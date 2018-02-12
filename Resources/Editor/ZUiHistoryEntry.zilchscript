@@ -43,6 +43,8 @@ class ZUiHistoryEntry : ZilchComponent
   
     // Data for the operation that needs to be undone/redone.
   var OperationData : Operation;
+    // Display for OperationData description
+  var ToolTip : UiLegacyToolTip = UiLegacyToolTip();
   
   var ExpandArrow : SpriteSource = SpriteSource.HistoryArrowRight;
   var CollapseArrow : SpriteSource = SpriteSource.HistoryArrowDown;
@@ -75,10 +77,14 @@ class ZUiHistoryEntry : ZilchComponent
     
     Zero.Connect(this.Owner, Events.Attached, this.OnAttached);
     
-    // No way to tell which history entry rows are children to other history
-    // entry rows.  So for now, connect them all to mouse enter/exit.
-    Zero.Connect(this.Owner, Events.MouseEnterHierarchy, this.OnMouseEnter);
-    Zero.Connect(this.Owner, Events.MouseExitHierarchy, this.OnMouseExit);
+      // No way to tell which history entry rows are children to other history
+      // entry rows.  So for now, connect them all to mouse enter/exit.
+    Zero.Connect(this.Owner, Events.MouseEnterHierarchy, this.OnMouseEnterHierarchy);
+    Zero.Connect(this.Owner, Events.MouseExitHierarchy, this.OnMouseExitHierarchy);
+    
+      // Each history entry has the potential to spawn a tooltip.
+    Zero.Connect(this.HistoryInfo, Events.MouseEnterHierarchy, this.OnMouseEnter);
+    Zero.Connect(this.HistoryInfo, Events.MouseExitHierarchy, this.OnMouseExit);
     
     Zero.Connect(this.Icon, Events.LeftMouseUp, this.OnLeftClickExpand);
     Zero.Connect(this.RowName, Events.LeftMouseUp, this.OnLeftMouseUp);
@@ -184,7 +190,7 @@ class ZUiHistoryEntry : ZilchComponent
   
   /******************************************************************************/
   // Highlight entry row.
-  function OnMouseEnter(event : ViewportMouseEvent)
+  function OnMouseEnterHierarchy(event : ViewportMouseEvent)
   {
     this.UpdateHierarchyColor(this.HighlightColor, true);
     
@@ -193,11 +199,39 @@ class ZUiHistoryEntry : ZilchComponent
   
   /******************************************************************************/
   // Un-highlight entry row.
-  function OnMouseExit(event : ViewportMouseEvent)
+  function OnMouseExitHierarchy(event : ViewportMouseEvent)
   {
     this.OriginalHierarchyColor();
     
     event.HandledEvent = true;
+  }
+  
+  /******************************************************************************/
+  // Spawn a tooltip next to the history row if there is any extra info to display.
+  function OnMouseEnter(event : ViewportMouseEvent)
+  {
+    var op = this.OperationData as PropertyOperation;
+    if(op == null)
+      return;
+      
+    var localRect = this.UiWidget.WorldRectangle;
+    var rootRect = this.UiWidget.Root;
+    
+    localRect.TopLeft = Real2(rootRect.LocalTopLeft.X, localRect.TopLeft.Y);
+    localRect.BottomRight = Real2(rootRect.LocalBottomRight.X, localRect.BottomRight.Y);
+    
+    this.ToolTip = UiLegacyToolTip();
+    this.ToolTip.SetPlacement(event.CameraViewport, localRect);
+    
+    if(ZUiOperationHistoryToolTip.Fill(this.ToolTip, op) == false)
+      delete this.ToolTip;
+  }
+  
+  /******************************************************************************/
+  // Destroy this row's tooltip - if there is one.
+  function OnMouseExit(event : ViewportMouseEvent)
+  {
+    delete this.ToolTip;
   }
   
   /******************************************************************************/

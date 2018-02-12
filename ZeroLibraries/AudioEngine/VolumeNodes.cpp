@@ -53,13 +53,24 @@ namespace Audio
       // Check if the volume is being interpolated
       if (CurrentData.Interpolating)
       {
+        // Get the current volume and increase the index
         Volume = Interpolator.ValueAtIndex(CurrentData.Index++);
 
-        CurrentData.Interpolating = !Interpolator.Finished(GetSiblingNode());
+        // Check if the interpolation is finished
+        if (CurrentData.Index >= Interpolator.GetTotalFrames())
+        {
+          CurrentData.Interpolating = false;
+          if (firstRequest && GetSiblingNode())
+          {
+            // Set the volume on the non-threaded node
+            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&VolumeNode::Volume,
+              (VolumeNode*)GetSiblingNode(), Volume));
 
-        if (!CurrentData.Interpolating && firstRequest && GetSiblingNode())
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&VolumeNode::Volume,
-          (VolumeNode*)GetSiblingNode(), Volume));
+            // Tell the non-threaded node to send the event to the external system
+            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
+              GetSiblingNode(), AudioEventTypes::InterpolationDone, (void*)nullptr));
+          }
+        }
       }
 
       // Apply the volume multiplier to all samples

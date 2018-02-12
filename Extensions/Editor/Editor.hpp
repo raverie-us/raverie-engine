@@ -242,7 +242,7 @@ public:
   void SelectOnly(HandleParam object);
   void SelectPrimary(HandleParam object);
   virtual void OnEngineUpdate(UpdateEvent* event) {}
-  void OnResourceRemoved(ResourceEvent* event);
+  void OnResourcesUnloaded(ResourceEvent* event);
   void Update();
   void ExecuteCommand(StringParam commandName);
   Composite* OpenSearchWindow(Widget* returnFocus, bool noBorder = false);

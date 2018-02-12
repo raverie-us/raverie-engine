@@ -365,9 +365,6 @@ LibraryView::LibraryView(Composite* parent)
 
   SetTagEditorHeight(0);
 
-  ConnectThisTo(Z::gResources, Events::ResourceAdded, OnResourcesModified);
-  ConnectThisTo(Z::gResources, Events::ResourceRemoved, OnResourcesModified);
-  ConnectThisTo(Z::gResources, Events::ResourceModified, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesLoaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourceTagsModified, OnResourcesModified);
@@ -872,7 +869,7 @@ void LibraryView::CreateResourceToolTip(Resource* resource, TreeRow* row)
   // Create the tooltip
   ToolTip* toolTip = new ToolTip(row);
   toolTip->mContentPadding = Thickness(2,2,2,2);
-  toolTip->SetColor(ToolTipColor::Gray);
+  toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
   // Create the resource widget and attach it to the tooltip
   String name = resource->Name;
@@ -903,7 +900,7 @@ void LibraryView::CreateTagToolTip(StringParam tagName, TreeRow* row)
   // Create the tooltip
   ToolTip* toolTip = new ToolTip(row);
   toolTip->mContentPadding = Thickness(2,2,2,2);
-  toolTip->SetColor(ToolTipColor::Gray);
+  toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
   PreviewWidgetGroup* group = CreatePreviewGroup(toolTip, tagName, 9);
   if(group == nullptr)
@@ -1140,6 +1137,10 @@ void LibraryView::OnMessageBox(MessageBoxEvent* event)
     {
       RemoveResource(resource);
     }
+
+    ResourceEvent eventToSend;
+    eventToSend.RemoveMode = RemoveMode::Unloading;
+    Z::gResources->DispatchEvent(Events::ResourcesUnloaded, &eventToSend);
 
     mPrimaryCommandIndex = 0;
     mCommandIndices.Clear();

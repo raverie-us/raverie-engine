@@ -15,6 +15,7 @@ namespace Zero
 //--------------------------------------------------------------- Color Gradient
 ZilchDefineType(ColorGradient, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindMethod(Sample);
 }
 

@@ -30,6 +30,8 @@ ZilchDefineType(Reactive, builder, type)
 
   ZilchBindFieldProperty(mActive);
 
+  ZeroBindEvent(Events::MouseFileDrop, MouseFileDropEvent);
+
   ZeroBindEvent(Events::MouseEnter, MouseEvent);
   ZeroBindEvent(Events::MouseEnterPreview, MouseEvent);
   ZeroBindEvent(Events::MouseExit, MouseEvent);

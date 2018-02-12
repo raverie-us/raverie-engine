@@ -112,6 +112,7 @@ Heap* Root::StaticHeap = nullptr;
 void Shutdown()
 {
   GetRoot()->CleanUp();
+  GetRoot()->Shutdown();
 }
 
 void Root::Shutdown()

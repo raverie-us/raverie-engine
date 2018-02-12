@@ -317,7 +317,7 @@ void SearchView::BuildResults()
       toolTip->mContentPadding = Thickness(1,1,1,1);
 
       if(result.mStatus.Failed())
-        toolTip->SetColor(ToolTipColor::Red);
+        toolTip->SetColorScheme(ToolTipColorScheme::Red);
 
       // Defer border-display to the parent's (tooltip) border.
       if(MultiLineText* content = Type::DynamicCast<MultiLineText*>(composite))
