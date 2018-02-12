@@ -16,7 +16,7 @@ bool ZeroLauncherStartup(Engine* engine, StringMap& parameters, StringParam dllP
 
 using namespace Zero;
 
-extern "C" __declspec(dllexport) int RunZeroLauncher(const char* dllPath)
+extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
 {
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
@@ -31,7 +31,7 @@ extern "C" __declspec(dllexport) int RunZeroLauncher(const char* dllPath)
   Zero::Console::Add(&fileListener);
 
   //Used custom dialog box
-  ErrorSignaler::SetErrorHandler(ErrorProcessHandler);
+  ErrorSignaler::SetErrorHandler(Os::ErrorProcessHandler);
 
   //Enable the crash handler
   CrashHandler::Enable();
@@ -46,10 +46,8 @@ extern "C" __declspec(dllexport) int RunZeroLauncher(const char* dllPath)
   ZPrint("Loading ZeroLauncher %d.0.\n", GetLauncherMajorVersion());
 
   //Get the command line
-  int numArguments = 0;
-  wchar_t** commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &numArguments);
   Array<String> commandLineArray;
-  CommandLineToStringArray(commandLineArray, commandLineArgs, numArguments);
+  GetCommandLineStringArray(commandLineArray);
 
   // Initialize platform socket library
   Zero::Status socketLibraryInitStatus;

@@ -6,9 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#pragma comment(lib, "Shell32.lib")
-#pragma comment(lib, "Shlwapi.lib")
-
 namespace Zero
 {
 const Rune  cDirectorySeparatorRune = Rune('\\');

@@ -8,10 +8,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/File.hpp"
-#include "Memory/Memory.hpp"
-#include "String/FixedString.hpp"
-#include "../FileEvents.hpp"
 
 #define OSF_INVALID_HANDLE_VALUE ((intptr_t)INVALID_HANDLE_VALUE)
 

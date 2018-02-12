@@ -6,8 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include "Platform/Windows/WString.hpp"
-
 namespace Zero
 {
 
@@ -38,10 +36,6 @@ void LauncherCrashStartCallback(CrashInfo& info, void* userData)
 
 void LauncherCrashPreMemoryDumpCallback(void* userData)
 {
-  //// Include special regions in memory
-  //gMemoryRanges[gMemoryRangeCount].Begin = ZilchLastRunningOpcode;
-  //gMemoryRanges[gMemoryRangeCount].Length = ZilchLastRunningOpcodeLength;
-  //++gMemoryRangeCount;
 }
 
 bool LauncherCrashCustomMemoryCallback(MemoryRange& memRange, void* userData)
@@ -57,13 +51,10 @@ bool LauncherCrashCustomMemoryCallback(MemoryRange& memRange, void* userData)
 
 void LauncherCrashLoggingCallback(CrashHandlerParameters& params, CrashInfo& info, void* userData)
 {
-  const size_t MAX_TEMP_PATH = MAX_PATH - 14;
-  wchar_t logFileName[MAX_PATH] = { 0 };
-  char scriptFileName[MAX_PATH] = { 0 };
-
+  String tempDirectory = GetTemporaryDirectory();
+  
   //Get the log file
-  DWORD pathLength = GetTempPath(MAX_TEMP_PATH, logFileName);
-  ZeroStrCatW(logFileName, MAX_TEMP_PATH, Widen(info.mLogName).c_str());
+  String logFileName = FilePath::Combine(tempDirectory, info.mLogName);
   Console::FlushAll();
 
   //close the file listener so that there's no race condition on the log file.
@@ -72,10 +63,7 @@ void LauncherCrashLoggingCallback(CrashHandlerParameters& params, CrashInfo& inf
   Console::Remove(fileListener);
 
   // Parameters that we provide to shell execute
-  StringRange scriptFileNameRange = StringRange(scriptFileName);
-  if(!scriptFileNameRange.Empty())
-    params.AddParameter("Files", scriptFileNameRange.Data());
-  params.AddParameter("Log", Narrow(logFileName).c_str());
+  params.AddParameter("Log", logFileName.c_str());
 }
 
 String LauncherGetToolsPath()

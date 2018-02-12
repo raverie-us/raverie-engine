@@ -49,7 +49,9 @@
     <ClInclude Include="CsgExternalSerialization.hpp" />
     <ClInclude Include="DefaultGame.hpp" />
     <ClInclude Include="CameraViewport.hpp" />
+    <ClInclude Include="Exporter.hpp" />
     <ClInclude Include="GameplayStandard.hpp" />
+    <ClInclude Include="Importer.hpp" />
     <ClInclude Include="IndexedHalfEdgeMesh.hpp" />
     <ClInclude Include="MarchingCubes.hpp" />
     <ClInclude Include="MarchingSquares.hpp" />
@@ -78,7 +80,9 @@
   <ItemGroup>
     <ClCompile Include="DefaultGame.cpp" />
     <ClCompile Include="CameraViewport.cpp" />
+    <ClCompile Include="Exporter.cpp" />
     <ClCompile Include="GameplayStandard.cpp" />
+    <ClCompile Include="Importer.cpp" />
     <ClCompile Include="IndexedHalfEdgeMesh.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="MarchingSquares.cpp" />

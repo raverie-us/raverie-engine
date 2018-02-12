@@ -329,7 +329,6 @@
     <ClInclude Include="EditorImport.hpp" />
     <ClInclude Include="EditorSearchProviders.hpp" />
     <ClInclude Include="EditorUtility.hpp" />
-    <ClInclude Include="Export.hpp" />
     <ClInclude Include="ExtraWidgets.hpp" />
     <ClInclude Include="LibraryView.hpp" />
     <ClInclude Include="MainPropertyView.hpp" />

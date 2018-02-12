@@ -4,4 +4,4 @@
 /// Copyright 2015, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-extern "C" __declspec(dllexport) int RunZeroLauncher(const char* dllPath);
+extern "C" ZeroShared int RunZeroLauncher(const char* dllPath);

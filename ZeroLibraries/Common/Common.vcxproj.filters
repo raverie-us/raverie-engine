@@ -25,6 +25,9 @@
     <Filter Include="Lexer">
       <UniqueIdentifier>{fc2ab41e-68ba-4eb9-833d-9322fb4d59c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{76fc84f6-bb36-4ca0-a09d-c1bb3ffb4fb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Diagnostic\Diagnostic.cpp">
@@ -121,6 +124,27 @@
     </ClCompile>
     <ClCompile Include="Utility\SpinLock.cpp">
       <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\File.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\FileEvents.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\FilePath.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\FileSystem.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\IpAddress.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Process.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\UnicodeUtility.cpp">
+      <Filter>Platform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +396,99 @@
     </ClInclude>
     <ClInclude Include="Utility\SpinLock.hpp">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\CommandLineSupport.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\CrashHandler.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Debug.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\DebugSymbolInformation.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\DirectoryWatcher.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\ExternalLibrary.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\File.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\FileEvents.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\FilePath.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\FileSystem.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\FpControl.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\IpAddress.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Lock.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\OsHandle.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Peripherals.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\PlatformSelector.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\PlatformStandard.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\PrivateImplementation.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Process.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Registry.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Resolution.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Socket.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\SocketConstants.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\SocketEnums.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Thread.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\ThreadSync.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Timer.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\TimerBlock.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\UnicodeUtility.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Utilities.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\ExecutableResource.hpp">
+      <Filter>Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

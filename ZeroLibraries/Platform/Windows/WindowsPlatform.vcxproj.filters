@@ -41,6 +41,7 @@
     <ClCompile Include="WString.cpp" />
     <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="Peripherals.cpp" />
+    <ClCompile Include="ExecutableResource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Windows.hpp">

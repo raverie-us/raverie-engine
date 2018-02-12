@@ -43,6 +43,8 @@
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Advapi32.lib")
 #pragma comment(lib, "Winhttp.lib")
+#pragma comment(lib, "Shell32.lib")
+#pragma comment(lib, "Shlwapi.lib")
 
 #include "StackWalker.hpp"
 #include "ThreadIo.hpp"

@@ -9,21 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include "ZeroCrashCallbacks.hpp"
-
-#include "Engine/DocumentResource.hpp"
-#include "Support/FileSupport.hpp"
-#include "Support/FileConsoleListener.hpp"
-
-#include "Platform/CrashHandler.hpp"
-#include "Editor/Editor.hpp"
-#include "Engine/OsWindow.hpp"
-#include "Content/ContentSystem.hpp"
-#include "Utility/Status.hpp"
-#include "Engine/BuildVersion.hpp"
-
-#include "Platform/Windows/WString.hpp"
-
 namespace Zero
 {
 
@@ -72,9 +57,7 @@ bool CrashCustomMemoryCallback(MemoryRange& memRange, void* userData)
 
 void CrashLoggingCallback(CrashHandlerParameters& params, CrashInfo& info, void* userData)
 {
-  const size_t MAX_TEMP_PATH = MAX_PATH - 14;
-  wchar_t logFileName[MAX_PATH] = { 0 };
-  wchar_t scriptFileName[MAX_PATH] = {0};
+  String tempDirectory = GetTemporaryDirectory();
 
   // Collect all scripts on the stack
   Zilch::StackTrace stackTrace;
@@ -104,21 +87,16 @@ void CrashLoggingCallback(CrashHandlerParameters& params, CrashInfo& info, void*
     HashMap<String, String>::pair pair = range.Front();
     String fileName = pair.first;
     String fileData = pair.second;
-    DWORD pathLength = GetTempPath(MAX_TEMP_PATH, scriptFileName);
-    ZeroStrCatW(scriptFileName, MAX_TEMP_PATH, Widen(fileName).c_str());
-    ZeroStrCatW(scriptFileName, MAX_TEMP_PATH, L".txt");
-    String narrowScriptFileName = Narrow(scriptFileName);
-    WriteStringRangeToFile(narrowScriptFileName, fileData);
+    String scriptFileName = FilePath::Combine(tempDirectory, fileName, ".txt");
+    WriteStringRangeToFile(scriptFileName, fileData);
     
     // Add the file's name to parameters for what files we include
-    StringRange scriptFileNameRange = StringRange(narrowScriptFileName);
-    if(!scriptFileNameRange.Empty())
-      params.AddParameter("Files", scriptFileNameRange.Data());
+    if(!scriptFileName.Empty())
+      params.AddParameter("Files", scriptFileName.c_str());
   }
 
   //Get the log file
-  DWORD pathLength = GetTempPath(MAX_TEMP_PATH, logFileName);
-  ZeroStrCatW(logFileName, MAX_TEMP_PATH, Widen(info.mLogName).c_str());
+  String logFileName = FilePath::Combine(tempDirectory, info.mLogName);
   Console::FlushAll();
 
   //close the file listener so that there's no race condition on the log file.
@@ -126,7 +104,7 @@ void CrashLoggingCallback(CrashHandlerParameters& params, CrashInfo& info, void*
   fileListener->Close();
   Console::Remove(fileListener);
   
-  params.AddParameter("Log", Narrow(logFileName).c_str());
+  params.AddParameter("Log", logFileName.c_str());
 }
 
 String GetToolsPath()

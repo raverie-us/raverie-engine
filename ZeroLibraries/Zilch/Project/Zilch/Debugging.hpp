@@ -40,9 +40,6 @@ namespace Zilch
     CodeLocation* Location;
   };
 
-  // Every platform should define an error handler
-  ZeroShared bool DebugErrorHandler(ErrorSignaler::ErrorData& errorData);
-
   // Any data we receive from the debugger
   class ZeroShared DebuggerMessage
   {

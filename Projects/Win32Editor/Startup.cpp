@@ -5,18 +5,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Engine/OsShell.hpp"
-#include "Engine/Configuration.hpp"
-#include "Editor/Export.hpp"
-#include "Support/StringMap.hpp"
-#include "Widget/Command.hpp"
-#include "Engine/SystemObjectManager.hpp"
-#include "Platform/CrashHandler.hpp"
-#include "Engine/Tweakables.hpp"
-#include "Editor/BackgroundTask.hpp"
-#include "../Win32Shared/Importer.hpp"
-#include "Platform/FileSystem.hpp"
-#include "Platform/FilePath.hpp"
 
 namespace Zero
 {

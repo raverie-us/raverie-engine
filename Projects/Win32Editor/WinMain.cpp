@@ -8,7 +8,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "ZeroCrashCallbacks.hpp"
 
 namespace Zero
 {
@@ -26,7 +25,7 @@ void DebugRunEngine(void* voidEngine)
 
 using namespace Zero;
 
-int main(int argc, char** argv)
+ZeroGuiMain()
 {
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
@@ -41,7 +40,7 @@ int main(int argc, char** argv)
   TimerBlock totalEngineTimer("Total engine run time:");
 
   //This assert will bring up a dialog box.
-  ErrorSignaler::SetErrorHandler(ErrorProcessHandler);
+  ErrorSignaler::SetErrorHandler(Os::ErrorProcessHandler);
 
   //Enable the crash handler
   CrashHandler::Enable();
@@ -52,11 +51,9 @@ int main(int argc, char** argv)
   CrashHandler::SetCrashStartCallback(Zero::CrashStartCallback, NULL);
 
   // Get the command line
-  int numArguments = 0;
-  wchar_t** commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &numArguments);
   Array<String> commandLineArray;
-  CommandLineToStringArray(commandLineArray, commandLineArgs, numArguments);
-  
+  GetCommandLineStringArray(commandLineArray);
+
   // Initialize environments
   Environment* environment = Environment::GetInstance();
   environment->ParseCommandArgs(commandLineArray);

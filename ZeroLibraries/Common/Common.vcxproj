@@ -67,6 +67,13 @@
     <ClCompile Include="Memory\Graph.cpp" />
     <ClCompile Include="Memory\Heap.cpp" />
     <ClCompile Include="Memory\Pool.cpp" />
+    <ClCompile Include="Platform\File.cpp" />
+    <ClCompile Include="Platform\FileEvents.cpp" />
+    <ClCompile Include="Platform\FilePath.cpp" />
+    <ClCompile Include="Platform\FileSystem.cpp" />
+    <ClCompile Include="Platform\IpAddress.cpp" />
+    <ClCompile Include="Platform\Process.cpp" />
+    <ClCompile Include="Platform\UnicodeUtility.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
@@ -108,6 +115,37 @@
     <ClCompile Include="Utility\Variant.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Platform\CommandLineSupport.hpp" />
+    <ClInclude Include="Platform\CrashHandler.hpp" />
+    <ClInclude Include="Platform\Debug.hpp" />
+    <ClInclude Include="Platform\DebugSymbolInformation.hpp" />
+    <ClInclude Include="Platform\DirectoryWatcher.hpp" />
+    <ClInclude Include="Platform\ExternalLibrary.hpp" />
+    <ClInclude Include="Platform\File.hpp" />
+    <ClInclude Include="Platform\FileEvents.hpp" />
+    <ClInclude Include="Platform\FilePath.hpp" />
+    <ClInclude Include="Platform\FileSystem.hpp" />
+    <ClInclude Include="Platform\FpControl.hpp" />
+    <ClInclude Include="Platform\IpAddress.hpp" />
+    <ClInclude Include="Platform\Lock.hpp" />
+    <ClInclude Include="Platform\OsHandle.hpp" />
+    <ClInclude Include="Platform\Peripherals.hpp" />
+    <ClInclude Include="Platform\PlatformSelector.hpp" />
+    <ClInclude Include="Platform\PlatformStandard.hpp" />
+    <ClInclude Include="Platform\PrivateImplementation.hpp" />
+    <ClInclude Include="Platform\Process.hpp" />
+    <ClInclude Include="Platform\Registry.hpp" />
+    <ClInclude Include="Platform\Resolution.hpp" />
+    <ClInclude Include="Platform\ExecutableResource.hpp" />
+    <ClInclude Include="Platform\Socket.hpp" />
+    <ClInclude Include="Platform\SocketConstants.hpp" />
+    <ClInclude Include="Platform\SocketEnums.hpp" />
+    <ClInclude Include="Platform\Thread.hpp" />
+    <ClInclude Include="Platform\ThreadSync.hpp" />
+    <ClInclude Include="Platform\Timer.hpp" />
+    <ClInclude Include="Platform\TimerBlock.hpp" />
+    <ClInclude Include="Platform\UnicodeUtility.hpp" />
+    <ClInclude Include="Platform\Utilities.hpp" />
     <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="Utility\ByteEnum.hpp" />
     <ClInclude Include="CommonStandard.hpp" />

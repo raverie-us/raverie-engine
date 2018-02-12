@@ -41,14 +41,6 @@ String ComputerName()
   return Narrow(buffer);
 }
 
-#ifndef _MSC_VER
-BOOL CheckRemoteDebuggerPresent(HANDLE, PBOOL pbDebuggerPresent)
-{
-  *pbDebuggerPresent = FALSE;
-  return FALSE;
-}
-#endif
-
 // Check if a debugger is attached
 bool IsDebuggerAttached()
 {

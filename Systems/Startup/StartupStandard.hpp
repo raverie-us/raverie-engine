@@ -15,7 +15,6 @@
 #include "UiWidget/UiWidgetStandard.hpp"
 #include "Editor/EditorStandard.hpp"
 #include "Gameplay/GameplayStandard.hpp"
-#include "WindowsShell/WindowsShellSystemStandard.hpp"
 #include "ZilchScript/ZilchScriptStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 

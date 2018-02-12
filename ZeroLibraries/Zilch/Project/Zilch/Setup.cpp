@@ -47,7 +47,7 @@ namespace Zilch
     bool useZilchErrorHandler = !(flags & SetupFlags::CustomAssertHandlerOrNoAsserts);
     if (useZilchErrorHandler)
     {
-      ErrorSignaler::SetErrorHandler(DebugErrorHandler);
+      ErrorSignaler::SetErrorHandler(Zero::Os::ErrorProcessHandler);
     }
 
     // Register the command handle managers we use

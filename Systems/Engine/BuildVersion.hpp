@@ -73,4 +73,7 @@ cstr GetPlatformString();
 /// Get the full string description of the build version.
 cstr GetBuildVersionName();
 
+/// Read a version from a specified text file.
+int GetVersionId(StringParam versionIdFilePath);
+
 }// namespace Zero

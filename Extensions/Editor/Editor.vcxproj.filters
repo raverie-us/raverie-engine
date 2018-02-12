@@ -691,9 +691,6 @@
     <ClInclude Include="NotificationUi.hpp">
       <Filter>EditorUi\Notification</Filter>
     </ClInclude>
-    <ClInclude Include="Export.hpp">
-      <Filter>EditorCore</Filter>
-    </ClInclude>
     <ClInclude Include="GridDraw.hpp">
       <Filter>Editor3d</Filter>
     </ClInclude>

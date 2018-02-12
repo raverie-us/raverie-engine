@@ -35,7 +35,6 @@
 namespace Zero
 {
 
-// Engine library
 class ZeroNoImportExport CommonLibrary
 {
 public:
@@ -121,3 +120,33 @@ public:
 #include "Utility/Determinism.hpp"
 #include "Utility/SpinLock.hpp"
 #include "Singleton.hpp"
+#include "Platform/PlatformSelector.hpp"
+#include "Platform/PrivateImplementation.hpp"
+#include "Platform/Utilities.hpp"
+#include "Platform/OsHandle.hpp"
+#include "Platform/Thread.hpp"
+#include "Platform/ThreadSync.hpp"
+#include "Platform/CrashHandler.hpp"
+#include "Platform/Debug.hpp"
+#include "Platform/DebugSymbolInformation.hpp"
+#include "Platform/ExternalLibrary.hpp"
+#include "Platform/File.hpp"
+#include "Platform/FileEvents.hpp"
+#include "Platform/FilePath.hpp"
+#include "Platform/FileSystem.hpp"
+#include "Platform/FpControl.hpp"
+#include "Platform/Lock.hpp"
+#include "Platform/PlatformSelector.hpp"
+#include "Platform/Process.hpp"
+#include "Platform/Registry.hpp"
+#include "Platform/Resolution.hpp"
+#include "Platform/SocketEnums.hpp"
+#include "Platform/SocketConstants.hpp"
+#include "Platform/Socket.hpp"
+#include "Platform/IpAddress.hpp"
+#include "Platform/Timer.hpp"
+#include "Platform/TimerBlock.hpp"
+#include "Platform/DirectoryWatcher.hpp"
+#include "Platform/Peripherals.hpp"
+#include "Platform/ExecutableResource.hpp"
+#include "Platform/CommandLineSupport.hpp"

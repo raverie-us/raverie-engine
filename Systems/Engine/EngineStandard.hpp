@@ -80,7 +80,6 @@ private:
 #include "Component.hpp"
 #include "ComponentMeta.hpp"
 #include "CogMetaComposition.hpp"
-//#include "Cog.hpp"
 #include "CogMeta.hpp"
 #include "Space.hpp"
 #include "DocumentResource.hpp"

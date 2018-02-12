@@ -3,12 +3,23 @@
 /// Copyright 2010-2016, DigiPen Institute of Technology
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/CommandLineSupport.hpp"
-#include "String/StringBuilder.hpp"
-#include "WString.hpp"
 
 namespace Zero
 {
+
+String GetFullCommandLine()
+{
+  return Narrow(GetCommandLineW());
+}
+
+void GetCommandLineStringArray(Array<String>& strings)
+{
+  int numArguments = 0;
+  wchar_t** commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &numArguments);
+
+  if (commandLineArgs && commandLineArgs)
+    CommandLineToStringArray(strings, commandLineArgs, numArguments);
+}
 
 void CommandLineToStringArray(Array<String>& strings, cstr* argv, int numberOfParameters)
 {

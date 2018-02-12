@@ -47,6 +47,7 @@
     <ClCompile Include="DebugClassMap.cpp" />
     <ClCompile Include="DebugSymbolInformation.cpp" />
     <ClCompile Include="DirectoryWatcher.cpp" />
+    <ClCompile Include="ExecutableResource.cpp" />
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="FpControl.cpp" />

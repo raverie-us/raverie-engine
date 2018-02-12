@@ -8,6 +8,8 @@
 
 namespace Zero
 {
+const String mLauncherRegularFont = "NotoSans-Regular";
+const String mLauncherBoldFont = "NotoSans-Bold";
 
 ZilchDefineEnum(LauncherStartupArguments);
 

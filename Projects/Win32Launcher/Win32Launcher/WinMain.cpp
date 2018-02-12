@@ -8,23 +8,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include "Platform/FileSystem.hpp"
-#include "Platform/Utilities.hpp"
-#include "Networking/WebRequest.hpp"
-#include "Support/FileSupport.hpp"
-#include "Platform/FilePath.hpp"
-#include "Platform/Socket.hpp"
-#include "Support/Archive.hpp"
-#include "String/StringConversion.hpp"
-#include "String/ToString.hpp"
-#include "Win32LauncherDll/MiscHelpers.hpp"
-#include "Platform/Windows/WString.hpp"
-#include "Engine/BuildVersion.hpp"
-
-#ifdef RunVld
-#include <vld.h>
-#endif
-
 using namespace Zero;
 
 const String UrlRoot = "https://builds.zeroengine.io";
@@ -32,15 +15,16 @@ const String UrlRoot = "https://builds.zeroengine.io";
 //the startup function to run the version selector
 typedef int(*StartupFunction)(const char* workingDir);
 
-StartupFunction LoadDll(Zero::StringParam dllPath, HMODULE& module)
+StartupFunction LoadDll(Zero::StringParam libraryPath, ExternalLibrary& library)
 {
-  //try to load the dll
-  module = LoadLibrary(Widen(dllPath).c_str());
-  if(module == NULL)
-    return NULL;
+  Status status;
+  library.Load(status, libraryPath.c_str());
+
+  if (status.Failed())
+    return nullptr;
 
   //return the run function
-  return (StartupFunction)GetProcAddress(module, "RunZeroLauncher");
+  return (StartupFunction)library.GetFunctionByName("RunZeroLauncher");
 }
 
 void DownloadPackageFromServer(Zero::StringParam downloadLauncherPackagePath, Zero::StringParam versionIdFilePath, int serverVersionId)
@@ -86,14 +70,10 @@ String ChooseDllPath(Zero::StringParam localDllPath, int localDllVersionId, Zero
   return downloadedDllPath;
 }
 
-//Os Specific Main
-int WINAPI WinMain(HINSTANCE hInstance,
-  HINSTANCE hPrevInstance,
-  LPSTR     lpCmdLine,
-  int       nCmdShow)
+ZeroGuiMain()
 {
   int restart = 1;
-  HMODULE module;
+  ExternalLibrary library;
 
   // Register that we can be restarted. This is primarily so an installer can
   // restart the launcher if it was already running.
@@ -138,12 +118,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
     //built version of the dll which is next to the exe
     if(Os::IsDebuggerAttached())
     {
-      StartupFunction startupFunction = LoadDll(localDllPath, module);
-      if(startupFunction != NULL)
+      StartupFunction startupFunction = LoadDll(localDllPath, library);
+      if (startupFunction != nullptr)
       {
         restart = startupFunction(localVersionPath.c_str());
         // Make sure to free the module (otherwise the statics don't get cleaned up)
-        FreeModule(module);
+        library.Unload();
         continue;
       }
       
@@ -158,7 +138,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
     //the downloaded one and if the server was newer we would've already downloaded it)
     String dllDirectoryPath = ChooseDllPath(localVersionPath, localVersionId, downloadPath, downloadedVersionId);
     String dllPath = FilePath::Combine(dllDirectoryPath, launcherDllName);
-    StartupFunction startupFunction = LoadDll(dllPath, module);
+    StartupFunction startupFunction = LoadDll(dllPath, library);
 
     //if we didn't get back a valid function pointer then the there wasn't a valid dll to run
     if(startupFunction == nullptr)
@@ -167,7 +147,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
     //run the startup function
     restart = startupFunction(dllDirectoryPath.c_str());
     // Make sure to free the module (otherwise the statics don't get cleaned up)
-    FreeModule(module);
+    library.Unload();
   }
 
   // Uninitialize platform socket library

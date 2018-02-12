@@ -10,6 +10,8 @@
 
 namespace Zero
 {
+extern const String mLauncherRegularFont;
+extern const String mLauncherBoldFont;
 
 // LauncherDll library
 class ZeroNoImportExport LauncherDllLibrary : public Zilch::StaticLibrary
@@ -34,7 +36,6 @@ public:
 #include "Launcher.hpp"
 #include "LauncherTasks.hpp"
 #include "LauncherWindow.hpp"
-#include "MiscHelpers.hpp"
 #include "ProjectCache.hpp"
 #include "TagFiltering.hpp"
 
@@ -51,3 +52,7 @@ public:
 #include "SettingsMenu.hpp"
 
 #include "ExtraModals.hpp"
+
+#include "LauncherStartup.hpp"
+#include "LauncherCrashCallbacks.hpp"
+

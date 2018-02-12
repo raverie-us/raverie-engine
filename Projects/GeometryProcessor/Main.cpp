@@ -1,26 +1,12 @@
 #include "Precompiled.hpp"
 
-#include "Platform/Windows/WString.hpp"
-#include "Platform/CommandLineSupport.hpp"
-#include <windows.h>
-
 using namespace Zero;
-
-// ConsoleListeners copied from Win32Editor for now
-class VisualStudioListener : public ConsoleListener
-{
-public:
-  void Print(FilterType filterType, cstr message) override
-  {
-    OutputDebugStringW(Widen(message).c_str());
-  }
-};
 
 int main(int argc, char** argv)
 {
-  VisualStudioListener vsListener;
+  DebuggerListener debuggerListener;
   StdOutListener stdListener;
-  Zero::Console::Add(&vsListener);
+  Zero::Console::Add(&debuggerListener);
   Zero::Console::Add(&stdListener);
   ZPrint("Running Geometry Processor\n");
 

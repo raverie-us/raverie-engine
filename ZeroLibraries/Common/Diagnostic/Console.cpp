@@ -21,7 +21,7 @@ ConsoleListener::~ConsoleListener()
 //-------------------------------------------------------------------DebuggerListener
 void DebuggerListener::Print(FilterType filterType, cstr message)
 {
-  DebuggerOutput(message);
+  Os::DebuggerOutput(message);
 }
 
 //-------------------------------------------------------------------StdOutListener

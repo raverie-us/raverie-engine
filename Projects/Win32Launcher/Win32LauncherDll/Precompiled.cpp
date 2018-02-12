@@ -5,9 +5,3 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-
-namespace Zero
-{
-  const String mLauncherRegularFont = "NotoSans-Regular";
-  const String mLauncherBoldFont = "NotoSans-Bold";
-}// namespace Zero

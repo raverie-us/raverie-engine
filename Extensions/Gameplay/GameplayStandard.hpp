@@ -65,3 +65,6 @@ public:
 #include "MarketWidget.hpp"
 #include "TileMapSourceLoadPattern.hpp"
 #include "Zero.hpp"
+
+#include "Importer.hpp"
+#include "Exporter.hpp"
