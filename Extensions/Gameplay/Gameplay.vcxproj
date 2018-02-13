@@ -57,8 +57,10 @@
     <ClInclude Include="MarketWidget.hpp" />
     <ClInclude Include="MouseCapture.hpp" />
     <ClInclude Include="Orientation.hpp" />
+    <ClInclude Include="PathFinderGrid.hpp" />
     <ClInclude Include="PlayGame.hpp" />
     <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="PriorityQueue.hpp" />
     <ClInclude Include="QuickHull3DBindings.hpp" />
     <ClInclude Include="RandomContext.hpp" />
     <ClInclude Include="Reactive.hpp" />
@@ -87,6 +89,7 @@
     <ClCompile Include="MarketWidget.cpp" />
     <ClCompile Include="MouseCapture.cpp" />
     <ClCompile Include="Orientation.cpp" />
+    <ClCompile Include="PathFinderGrid.cpp" />
     <ClCompile Include="PlayGame.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>

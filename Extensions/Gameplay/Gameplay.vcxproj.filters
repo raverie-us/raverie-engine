@@ -23,6 +23,9 @@
     <Filter Include="ZilchZero">
       <UniqueIdentifier>{47acc0ac-f829-49df-9d50-77fecdf6f426}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Navigation">
+      <UniqueIdentifier>{8bd48f81-3315-4721-98f2-333099c1716d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">
@@ -90,9 +93,17 @@
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="UnitTestSystem.hpp" />
-    <ClInclude Include="PathFinder.hpp" />
     <ClInclude Include="IndexedHalfEdgeMesh.hpp" />
     <ClInclude Include="QuickHull3DBindings.hpp" />
+    <ClInclude Include="PathFinder.hpp">
+      <Filter>Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinderGrid.hpp">
+      <Filter>Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue.hpp">
+      <Filter>Navigation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Precompiled.cpp">
@@ -157,8 +168,13 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="UnitTestSystem.cpp" />
-    <ClCompile Include="PathFinder.cpp" />
     <ClCompile Include="IndexedHalfEdgeMesh.cpp" />
     <ClCompile Include="QuickHull3DBindings.cpp" />
+    <ClCompile Include="PathFinder.cpp">
+      <Filter>Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinderGrid.cpp">
+      <Filter>Navigation</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
