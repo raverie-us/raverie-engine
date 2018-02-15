@@ -66,7 +66,7 @@ namespace Audio
         if (mModifyingVolume && data->mVolumeModifier)
         {
           data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(), 1.0f, 
-            AudioSystemInternal::PropertyChangeFrames, AudioSystemInternal::PropertyChangeFrames);
+            PropertyChangeFrames, PropertyChangeFrames);
           data->mVolumeModifier = nullptr;
         }
 
@@ -222,7 +222,7 @@ namespace Audio
       if (mModifyingVolume)
       {
         data->mVolumeModifier = instance->GetAvailableVolumeMod();
-        data->mVolumeModifier->Reset(1.0f, mVolume, AudioSystemInternal::PropertyChangeFrames, 0);
+        data->mVolumeModifier->Reset(1.0f, mVolume, PropertyChangeFrames, 0);
       }
 
       // If using equalizer, create it and set the settings
@@ -266,7 +266,7 @@ namespace Audio
         if (mModifyingVolume && data->mVolumeModifier)
         {
           data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(), 1.0f,
-            AudioSystemInternal::PropertyChangeFrames, AudioSystemInternal::PropertyChangeFrames);
+            PropertyChangeFrames, PropertyChangeFrames);
           data->mVolumeModifier = nullptr;
         }
 
@@ -299,8 +299,8 @@ namespace Audio
       mModifyingVolume = true;
 
       // Determine how many frames to change the volume over, keeping a minimum value
-      unsigned frames = Math::Max((unsigned)(time * AudioSystemInternal::SystemSampleRate),
-        AudioSystemInternal::PropertyChangeFrames);
+      unsigned frames = Math::Max((unsigned)(time * SystemSampleRate),
+        PropertyChangeFrames);
 
       // Set the volume modifier for each tagged instance
       forRange(InstanceDataMapType::pair mapPair, DataPerInstance.All())

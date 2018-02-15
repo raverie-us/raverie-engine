@@ -185,6 +185,8 @@ public:
   static ModulationNode* ModulationNode() { return new Zero::ModulationNode(); }
   /// Creates a new MicrophoneInputNode object
   static MicrophoneInputNode* MicrophoneInputNode() { return new Zero::MicrophoneInputNode(); }
+  /// Creates a new GranularSynthNode object
+  static GranularSynthNode* GranularSynthNode() { return new Zero::GranularSynthNode(); }
 
 //Internals
   void Update();

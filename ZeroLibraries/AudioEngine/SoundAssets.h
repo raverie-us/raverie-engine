@@ -71,6 +71,7 @@ namespace Audio
     friend class SoundInstanceNode;
     friend class AudioFadeObject;
     friend class AudioSystemInternal;
+    friend class GranularSynthNode;
   };
 
   //-------------------------------------------------------------------------- Sound Asset From File

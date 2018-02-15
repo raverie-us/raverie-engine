@@ -139,12 +139,6 @@ namespace Audio
     Zero::Array<float> InputBuffer;
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
-    // The sample rate used by the audio engine for the output mix
-    static const unsigned SystemSampleRate = 48000;
-    // The time increment per audio frame corresponding to the sample rate
-    const double SystemTimeIncrement = 1.0 / 48000.0;
-    // The number of frames used to interpolate instant property changes
-    static const unsigned  PropertyChangeFrames = (unsigned)(48000 * 0.02f);
     
     AudioChannelsManager ChannelsManager;
     AudioInputOutput* AudioIO;

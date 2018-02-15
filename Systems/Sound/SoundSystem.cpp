@@ -110,6 +110,7 @@ ZilchDefineType(SoundSystem, builder, type)
   ZilchBindMethod(RecordingNode);
   ZilchBindMethod(AddNoiseNode);
   ZilchBindMethod(AdditiveSynthNode);
+  ZilchBindMethod(GranularSynthNode);
   ZilchBindMethod(ModulationNode);
   ZilchBindMethod(MicrophoneInputNode);
 

@@ -22,6 +22,7 @@
 #include "EqualizerNode.h"
 #include "ReverbNodes.h"
 #include "AdditiveSynthNode.h"
+#include "GranularSynthNode.h"
 #include "DynamicsProcessorNode.h"
 #include "MicrophoneInputNode.h"
 #include "CustomDataNode.h"

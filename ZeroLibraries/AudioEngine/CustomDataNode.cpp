@@ -17,7 +17,6 @@ namespace Audio
     SoundNode(status, name, ID, extInt, false, true, isThreaded), 
     WaitingForSamples(false), 
     Channels(1), 
-    SampleRate(AudioSystemInternal::SystemSampleRate),
     TotalSamplesInBuffers(0), 
     SamplesInExtraBuffers(0)
   {
@@ -73,7 +72,7 @@ namespace Audio
   //************************************************************************************************
   unsigned CustomDataNode::GetSystemSampleRate()
   {
-    return AudioSystemInternal::SystemSampleRate;
+    return SystemSampleRate;
   }
 
   //************************************************************************************************
@@ -112,7 +111,7 @@ namespace Audio
   {
     if (Channels > 0)
     {
-      MinimumBufferSize = (unsigned)(AudioSystemInternal::SystemSampleRate * 0.01f * Channels * 4);
+      MinimumBufferSize = (unsigned)(SystemSampleRate * 0.01f * Channels * 4);
 
       MinimumSamplesNeededInBuffers = MinimumBufferSize * 3;
     }

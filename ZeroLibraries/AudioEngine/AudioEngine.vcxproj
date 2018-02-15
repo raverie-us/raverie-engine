@@ -73,6 +73,7 @@
     <ClCompile Include="FileEncoder.cpp" />
     <ClCompile Include="FilterNodes.cpp" />
     <ClCompile Include="Filters.cpp" />
+    <ClCompile Include="GranularSynthNode.cpp" />
     <ClCompile Include="MicrophoneInputNode.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="ListenerNode.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="FileEncoder.h" />
     <ClInclude Include="FilterNodes.h" />
     <ClInclude Include="Filters.h" />
+    <ClInclude Include="GranularSynthNode.h" />
     <ClInclude Include="MicrophoneInputNode.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="ListenerNode.h" />

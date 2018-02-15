@@ -67,7 +67,7 @@ namespace Audio
     int error;
     for (short i = 0; i < mChannels; ++i)
     {
-      Decoders[i] = opus_decoder_create(AudioSystemInternal::SystemSampleRate, 1, &error);
+      Decoders[i] = opus_decoder_create(SystemSampleRate, 1, &error);
 
       // Check if there was an error creating the decoder
       if (error < 0)
@@ -162,7 +162,7 @@ namespace Audio
     // Create new decoders
     int error;
     for (short i = 0; i < mChannels; ++i)
-      Decoders[i] = opus_decoder_create(AudioSystemInternal::SystemSampleRate, 1, &error);
+      Decoders[i] = opus_decoder_create(SystemSampleRate, 1, &error);
 
     // Restart the decoding thread
     DecodeThread.Initialize(StartDecodeThread, this, "Audio decoding");
@@ -411,7 +411,7 @@ namespace Audio
       opus_decoder_destroy(Decoder);
 
     int error;
-    Decoder = opus_decoder_create(AudioSystemInternal::SystemSampleRate, PacketEncoder::Channels, &error);
+    Decoder = opus_decoder_create(SystemSampleRate, PacketEncoder::Channels, &error);
   }
 
   //************************************************************************************************

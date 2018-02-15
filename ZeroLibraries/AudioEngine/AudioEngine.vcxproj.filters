@@ -123,6 +123,9 @@
     <ClCompile Include="PitchChange.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GranularSynthNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modifiers.h">
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="PitchChange.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GranularSynthNode.h">
+      <Filter>Source Files\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -197,7 +197,7 @@ namespace Audio
       else
         CurrentData.mInterpolating = true;
 
-      mFramesToInterpolate = (unsigned)(timeToInterpolate * AudioSystemInternal::SystemSampleRate);
+      mFramesToInterpolate = (unsigned)(timeToInterpolate * SystemSampleRate);
       PitchInterpolator.SetValues(mPitchFactor, factor, mFramesToInterpolate);
       CurrentData.mInterpolationFramesProcessed = 0;
     }
