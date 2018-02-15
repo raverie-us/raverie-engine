@@ -101,6 +101,9 @@
     <ClInclude Include="PathFinderGrid.hpp">
       <Filter>Navigation</Filter>
     </ClInclude>
+    <ClInclude Include="PathFinderMesh.hpp">
+      <Filter>Navigation</Filter>
+    </ClInclude>
     <ClInclude Include="PriorityQueue.hpp">
       <Filter>Navigation</Filter>
     </ClInclude>
@@ -174,6 +177,9 @@
       <Filter>Navigation</Filter>
     </ClCompile>
     <ClCompile Include="PathFinderGrid.cpp">
+      <Filter>Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinderMesh.cpp">
       <Filter>Navigation</Filter>
     </ClCompile>
   </ItemGroup>

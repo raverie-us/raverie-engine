@@ -12,7 +12,6 @@ namespace Events
 {
 DeclareEvent(PathFinderFinishedGeneric);
 DeclareEvent(PathFinderFinished);
-DeclareEvent(PathFinderGridFinished);
 }
 
 //------------------------------------------------------------------------------ PathFinderAlgorithm

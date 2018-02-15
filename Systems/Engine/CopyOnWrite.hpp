@@ -100,6 +100,11 @@ public:
     return mData->mObject;
   }
 
+  operator T*() const
+  {
+    return &mData->mObject;
+  }
+
   // Called right before we make a write or modification to the data.
   // This only copies if the reference count is 1 (meaning we own the object).
   void CopyIfNeeded()

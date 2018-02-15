@@ -79,6 +79,7 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(PathFinder);
   ZilchInitializeType(PathFinderRequest);
   ZilchInitializeType(PathFinderGrid);
+  ZilchInitializeType(PathFinderMesh);
 
   ZilchInitializeType(SplineParticleEmitter);
   ZilchInitializeType(SplineParticleAnimator);

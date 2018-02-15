@@ -46,6 +46,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="PathFinderMesh.hpp" />
     <ClInclude Include="PathFinder.hpp" />
     <ClInclude Include="CsgExternalSerialization.hpp" />
     <ClInclude Include="DefaultGame.hpp" />
@@ -79,6 +80,7 @@
     <ClInclude Include="Zero.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PathFinderMesh.cpp" />
     <ClCompile Include="PathFinder.cpp" />
     <ClCompile Include="DefaultGame.cpp" />
     <ClCompile Include="CameraViewport.cpp" />
