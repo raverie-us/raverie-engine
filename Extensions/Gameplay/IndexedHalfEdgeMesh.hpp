@@ -15,13 +15,13 @@ class BoundArrayRange;
 /// Base functionality for binding a pre-existing array. Currently designed as
 /// a templated base to reduce code duplication, especially while prototyping. Possibly split to
 /// individual classes (due to differences, code documentation, etc...) or make generic enough to use elsewhere later.
-template <typename OwningType, typename DataType>
+template <typename OwningType, typename DataTypeT>
 class BoundArray : public SafeId32Object
 {
 public:
-  typedef BoundArray<OwningType, DataType> SelfType;
-  typedef DataType DataType;
-  typedef Array<DataType> ArrayType;
+  typedef BoundArray<OwningType, DataTypeT> SelfType;
+  typedef DataTypeT DataType;
+  typedef Array<DataTypeT> ArrayType;
   typedef BoundArrayRange<SelfType> RangeType;
 
   BoundArray()
@@ -39,10 +39,10 @@ public:
     return (*mBoundArray)[index];
   }
 
-  DataType Get(int arrayIndex) const
+  DataTypeT Get(int arrayIndex) const
   {
     if(!ValidateArrayIndex(arrayIndex))
-      return DataType();
+      return DataTypeT();
 
     return (*mBoundArray)[arrayIndex];
   }
@@ -73,14 +73,14 @@ public:
   ArrayType* mBoundArray;
 };
 
-template <typename ArrayType>
+template <typename ArrayTypeT>
 class BoundArrayRange
 {
 public:
-  typedef BoundArrayRange<ArrayType> SelfType;
-  typedef ArrayType ArrayType;
+  typedef BoundArrayRange<ArrayTypeT> SelfType;
+  typedef ArrayTypeT ArrayType;
   // Required for binding
-  typedef typename ArrayType::DataType FrontResult;
+  typedef typename ArrayTypeT::DataType FrontResult;
 
   BoundArrayRange()
   {
@@ -88,7 +88,7 @@ public:
     mIndex = 0;
   }
 
-  BoundArrayRange(ArrayType* array)
+  BoundArrayRange(ArrayTypeT* array)
   {
     mArray = array;
     mIndex = 0;
@@ -129,7 +129,7 @@ public:
   }
 
 private:
-  HandleOf<ArrayType> mArray;
+  HandleOf<ArrayTypeT> mArray;
   size_t mIndex;
 };
 

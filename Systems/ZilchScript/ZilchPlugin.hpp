@@ -12,8 +12,9 @@ namespace Zero
 {
 //-------------------------------------------------------------------ZilchPluginSource
 class BackgroundTask;
-class ZilchPluginConfig;
 class UpdateEvent;
+class ZilchPluginConfig;
+class ZilchPluginLibrary;
 
 class ZilchPluginSource : public DataResource
 {

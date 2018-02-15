@@ -53,6 +53,9 @@
   <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
     <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='Emscripten'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\Emscripten.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\Emscripten.$(Configuration).props')" />
+  </ImportGroup>
   <!--Add Static library with no CharacterSet for all x86 project configurations-->
   <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -67,15 +70,15 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
     <PlatformToolset>emcc</PlatformToolset>
-    <ConfigurationType>HTMLPage</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
     <PlatformToolset>emcc</PlatformToolset>
-    <ConfigurationType>HTMLPage</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
     <PlatformToolset>emcc</PlatformToolset>
-    <ConfigurationType>HTMLPage</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -130,6 +133,9 @@
     <ClInclude Include="WebBrowserChrome.hpp">
       <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="WebBrowserWidget.hpp" />
     <ClInclude Include="Zero.hpp" />
@@ -161,9 +167,15 @@
     <ClCompile Include="WebBrowserChrome.cpp">
       <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="WebBrowserNo.cpp">
       <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'==''">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="WebBrowserWidget.cpp" />
     <ClCompile Include="Zero.cpp" />

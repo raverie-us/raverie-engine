@@ -5,7 +5,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "WebBrowserChrome.hpp"
+#include "WebBrowser.hpp"
 
 #include "IndexedHalfEdgeMesh.hpp"
 #include "QuickHull3DBindings.hpp"

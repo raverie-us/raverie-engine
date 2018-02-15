@@ -15,7 +15,7 @@
 #if defined __cplusplus >= 201103L || COMPILER_MICROSOFT
 #define ZeroPreAlign16 __declspec(align(16))
 #define ZeroPostAlign16 
-#elif COMPILER_CLANG
+#else
 #define ZeroPreAlign16
 #define ZeroPostAlign16 __attribute__((__aligned__(16)))
 #endif
