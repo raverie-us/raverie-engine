@@ -58,7 +58,7 @@ struct ObjectPropertyNode
 
   /// This objects properties and methods.
   Array<ObjectPropertyNode*> mProperties;
-  Array<Function*> mFunctions;
+  Array<Zilch::Function*> mFunctions;
 
   /// Dynamically contained objects.
   Array<ObjectPropertyNode*> mContainedObjects;
@@ -142,7 +142,7 @@ public:
   virtual PropertyState GetValue(HandleParam object, PropertyPathParam property);
 
   /// Invokes the given method on the given object(s).
-  virtual void InvokeFunction(HandleParam object, Function* method);
+  virtual void InvokeFunction(HandleParam object, Zilch::Function* method);
 
   /// The reason we have a custom MetaComposition and MetaArray is because we want to add events for some modifications,
   /// undo/redo for some, and support for multi-select operations.

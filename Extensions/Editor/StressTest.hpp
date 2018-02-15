@@ -131,7 +131,6 @@ class StressTestDialog : public Composite
 public:
   // Type-defines
   ZilchDeclareType(StressTestDialog, TypeCopyMode::ReferenceType);
-  typedef StressTestDialog ZilchSelf;
 
   // Constructor
   StressTestDialog(Composite* parent);

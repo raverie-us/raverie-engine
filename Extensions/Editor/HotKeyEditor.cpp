@@ -156,11 +156,11 @@ public:
     char m1[16];  const char *pm1 = m1;
     char m2[16];  const char *pm2 = m2;
 
-    pm0 = (mMainKey == Keys::Unknown) ? '\0' : HotKeyEditor::sKeyMap[mMainKey].c_str();
-    pm1 = (mModifier1 == Keys::Unknown) ? '\0' : HotKeyEditor::sKeyMap[mModifier1].c_str();
-    pm2 = (mModifier2 == Keys::Unknown) ? '\0' : HotKeyEditor::sKeyMap[mModifier2].c_str();
+    pm0 = (mMainKey == Keys::Unknown)   ? "\0" : HotKeyEditor::sKeyMap[mMainKey].c_str();
+    pm1 = (mModifier1 == Keys::Unknown) ? "\0" : HotKeyEditor::sKeyMap[mModifier1].c_str();
+    pm2 = (mModifier2 == Keys::Unknown) ? "\0" : HotKeyEditor::sKeyMap[mModifier2].c_str();
 
-    out = BuildString(pm1, (pm1 && (pm2 || pm0)) ? " + " : '\0', pm2, (pm2 && pm0) ? " + " : '\0', pm0);
+    out = BuildString(pm1, (pm1 && (pm2 || pm0)) ? " + " : "\0", pm2, (pm2 && pm0) ? " + " : "\0", pm0);
   }
 
   void Edit( )
@@ -482,7 +482,7 @@ uint HotKeyCommands::ChildCount(DataEntry* dataEntry)
 /******************************************************************************/
 DataEntry* HotKeyCommands::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
 {
-  if(index >= 0 && index < mSet->mCommand.Size())
+  if(index < mSet->mCommand.Size())
   {
     //mSet->mCommand[index].mIndex = index;
     return &mSet->mCommand[index];

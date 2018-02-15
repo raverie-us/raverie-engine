@@ -32,7 +32,6 @@ class ConsoleUi : public TextEditor
 {
 public:
   ZilchDeclareType(ConsoleUi, TypeCopyMode::ReferenceType);
-  typedef ConsoleUi ZilchSelf;
 
   ConsoleUi(Composite* parent);
   ~ConsoleUi();

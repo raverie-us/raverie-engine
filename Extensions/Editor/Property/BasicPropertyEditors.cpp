@@ -702,7 +702,7 @@ public:
     mUserData = userData;
   }
 
-  NumberManipulation::~NumberManipulation()
+  ~NumberManipulation()
   {
     mSpinOverlay->Destroy();
   }
@@ -725,7 +725,7 @@ public:
   double mCurrentChange;
   uint mUserData;
 
-  void NumberManipulation::OnMouseMove(MouseEvent* event)
+  void OnMouseMove(MouseEvent* event)
   {
     Vec2 mousePos = mOwner->ToLocal(event->Position);
 
@@ -784,7 +784,7 @@ public:
     DispatchEvent(Events::NumberValueChanged, &valueEvent);
   }
 
-  void NumberManipulation::OnMouseUp(MouseEvent* event)
+  void OnMouseUp(MouseEvent* event)
   {
     ValueEvent valueEvent;
     valueEvent.NewValue = ConvertValue(mType, mCurrentValue);

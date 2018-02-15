@@ -39,7 +39,6 @@ public:
 // Misc.
 #include "LauncherCommunicationEvent.hpp"
 #include "NetOperations.hpp"
-#include "EditorScriptObject.hpp"
 #include "BackgroundTask.hpp"
 #include "Downloads.hpp"
 #include "EditorSearchProviders.hpp"
@@ -51,7 +50,6 @@ public:
 // Commands
 #include "CommandSelector.hpp"
 #include "AllCommands.hpp"
-#include "CogCommand.hpp"
 #include "EditorCommands.hpp"
 #include "GraphicsCommands.hpp"
 
@@ -89,6 +87,10 @@ public:
 #include "EditorUtility.hpp"
 #include "Export.hpp"
 #include "MainPropertyView.hpp"
+
+// Depends on Editor.hpp
+#include "EditorScriptObject.hpp"
+#include "CogCommand.hpp"
 
 // Scintilla
 #include "ColorScheme.hpp"

@@ -25,7 +25,7 @@ public:
   /// PropertyInterface Interface.
   void ChangeProperty(HandleParam object, PropertyPathParam property,
                       PropertyState& state, PropertyAction::Enum action) override;
-  void InvokeFunction(HandleParam object, Function* function) override;
+  void InvokeFunction(HandleParam object, Zilch::Function* function) override;
   HandleOf<MetaComposition> GetMetaComposition(BoundType* objectType) override;
 
   void Undo() override;

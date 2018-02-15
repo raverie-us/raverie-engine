@@ -55,7 +55,6 @@ class ViewportTextWidget : public Text
 
 public:
   ZilchDeclareType(ViewportTextWidget, TypeCopyMode::ReferenceType);
-  typedef ViewportTextWidget ZilchSelf;
 
   ViewportTextWidget(Composite* parent) : Text(parent, "Text")
   {

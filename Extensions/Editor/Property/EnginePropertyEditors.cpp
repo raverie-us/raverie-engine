@@ -293,9 +293,9 @@ public:
     {
       singleCog = GetCog();
       commonArchetypeContextCog = singleCog->FindNearestArchetypeContext();
-      if (commonArchetypeContextCog == singleCog)
+      if(commonArchetypeContextCog == singleCog)
         commonArchetypeContextCog = nullptr;
-      if(singleArchetype = singleCog->GetArchetype())
+      if((singleArchetype = singleCog->GetArchetype()))
         archetypes.Insert(singleArchetype);
 
       if(singleCog->FindNearestArchetype())

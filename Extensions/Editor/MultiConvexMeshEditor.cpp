@@ -1497,8 +1497,8 @@ void MultiConvexMeshEditor::UpdateSelectedPointText()
 
 real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord, void* userData)
 {
-  uint x = (uint)pixelCoord.x;
-  uint y = (uint)pixelCoord.y;
+  int x = (int)pixelCoord.x;
+  int y = (int)pixelCoord.y;
   SpriteSource* spriteSource = (SpriteSource*)userData;
 
   //bounds checking
@@ -1512,8 +1512,8 @@ real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord, void* userDat
 
 real MultiConvexMeshEditor::SamplePixelIntensity(Vec2Param pixelCoord, void* userData)
 {
-  uint x = (uint)pixelCoord.x;
-  uint y = (uint)pixelCoord.y;
+  int x = (int)pixelCoord.x;
+  int y = (int)pixelCoord.y;
   SpriteSource* spriteSource = (SpriteSource*)userData;
 
   //bounds checking

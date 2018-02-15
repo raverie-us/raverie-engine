@@ -18,11 +18,11 @@ class PropertyEditAction : public PropertyWidget
 public:
   typedef PropertyEditAction ZilchSelf;
 
-  PropertyEditAction(PropertyWidgetInitializer& init, Function* method, HandleParam instance);
+  PropertyEditAction(PropertyWidgetInitializer& init, Zilch::Function* method, HandleParam instance);
 
   void OnButtonPress(Event* event);
 
-  Function* mMethod;
+  Zilch::Function* mMethod;
   Handle mInstance;
   Element* mAction;
   TextButton* mButton;

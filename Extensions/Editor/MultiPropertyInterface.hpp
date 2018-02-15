@@ -30,7 +30,7 @@ public:
   void ChangeProperty(HandleParam object, PropertyPathParam property, 
                       PropertyState& state, PropertyAction::Enum action) override;
   PropertyState GetValue(HandleParam object, PropertyPathParam property) override;
-  void InvokeFunction(HandleParam object, Function* method) override;
+  void InvokeFunction(HandleParam object, Zilch::Function* method) override;
   HandleOf<MetaComposition> GetMetaComposition(BoundType* objectType) override;
   ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent, HandleParam instance, Property* objectProperty = nullptr) override;
   void GetObjects(HandleParam instance, Array<Handle>& objects) override;

@@ -56,7 +56,7 @@ PropertyWidget::PropertyWidget(PropertyWidgetInitializer& init, StyleMode::Enum 
       if(init.ObjectNode && init.ObjectNode->mObject.IsNotNull())
         object = init.ObjectNode->mObject;
       
-      void* clientData = mGrid->mCallbackClientData.FindValue(callback, nullptr);
+      void* clientData = mGrid->mCallbackClientData.FindValue((void*)callback, nullptr);
       callback(mCustomIcons, object, init.Property, clientData);
     }
 

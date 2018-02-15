@@ -16,7 +16,6 @@ public:
   ZilchDeclareType(EditorMain, TypeCopyMode::ReferenceType);
   float mTimeSinceEscape;
   bool mDisableInput;
-  typedef EditorMain ZilchSelf;
 
   EditorMain(Composite* parent, OsWindow* window);
   ~EditorMain();
