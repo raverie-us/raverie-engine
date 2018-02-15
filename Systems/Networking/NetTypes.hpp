@@ -214,7 +214,8 @@ struct NetUserAddRequestData
 
 /// Serializes network user add request data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddRequestData& netUserAddRequestData);
+template <>
+Bits Serialize<NetUserAddRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddRequestData& netUserAddRequestData);
 
 //---------------------------------------------------------------------------------//
 //                             NetUserAddResponseData                              //
@@ -233,7 +234,8 @@ struct NetUserAddResponseData
 
 /// Serializes network user add response data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddResponseData& netUserAddResponseData);
+template <>
+Bits Serialize<NetUserAddResponseData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddResponseData& netUserAddResponseData);
 
 //---------------------------------------------------------------------------------//
 //                            NetUserRemoveRequestData                             //
@@ -250,7 +252,8 @@ struct NetUserRemoveRequestData
 
 /// Serializes network user remove request data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUserRemoveRequestData& netUserRemoveRequestData);
+template <>
+Bits Serialize<NetUserRemoveRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserRemoveRequestData& netUserRemoveRequestData);
 
 //---------------------------------------------------------------------------------//
 //                            NetLevelLoadStartedData                              //
@@ -267,7 +270,8 @@ struct NetLevelLoadStartedData
 
 /// Serializes network level load started protocol data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadStartedData& netLevelLoadStartedData);
+template <>
+Bits Serialize<NetLevelLoadStartedData>(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadStartedData& netLevelLoadStartedData);
 
 //---------------------------------------------------------------------------------//
 //                            NetLevelLoadFinishedData                             //
@@ -282,7 +286,8 @@ struct NetLevelLoadFinishedData
 
 /// Serializes network level load finished protocol data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadFinishedData& netLevelLoadFinishedData);
+template <>
+Bits Serialize<NetLevelLoadFinishedData>(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadFinishedData& netLevelLoadFinishedData);
 
 //---------------------------------------------------------------------------------//
 //                              NetConnectRequestData                              //
@@ -299,7 +304,8 @@ struct NetConnectRequestData
 
 /// Serializes network connect link request protocol data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetConnectRequestData& netConnectRequestData);
+template <>
+Bits Serialize<NetConnectRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetConnectRequestData& netConnectRequestData);
 
 //---------------------------------------------------------------------------------//
 //                                 NetHostPingData                                 //
@@ -322,7 +328,8 @@ struct NetHostPingData
 
 /// Serializes network host ping protocol data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPingData& netHostPingData);
+template <>
+Bits Serialize<NetHostPingData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPingData& netHostPingData);
 
 //---------------------------------------------------------------------------------//
 //                                 NetHostPongData                                 //
@@ -345,7 +352,8 @@ struct NetHostPongData
 
 /// Serializes network host pong protocol data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPongData& netHostPongData);
+template <>
+Bits Serialize<NetHostPongData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPongData& netHostPongData);
 
 //---------------------------------------------------------------------------------//
 //                                NetHostRecordList                                //
@@ -360,7 +368,8 @@ struct NetHostRecordListData
 
 /// Serializes network host record list data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRecordListData& netHostRecordList);
+template <>
+Bits Serialize<NetHostRecordListData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRecordListData& netHostRecordList);
 
 //---------------------------------------------------------------------------------//
 //                                NetHostPublishData                               //
@@ -377,7 +386,8 @@ struct NetHostPublishData
 
 /// Serializes network host record list data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPublishData& netHostRecordList);
+template <>
+Bits Serialize<NetHostPublishData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPublishData& netHostRecordList);
 
 //---------------------------------------------------------------------------------//
 //                                NetRequestHostRefreshData                        //
@@ -394,7 +404,8 @@ struct NetRequestHostRefreshData
 
 /// Serializes network host record list data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetRequestHostRefreshData& netRequestHostRefreshData);
+template <>
+Bits Serialize<NetRequestHostRefreshData>(SerializeDirection::Enum direction, BitStream& bitStream, NetRequestHostRefreshData& netRequestHostRefreshData);
 
 //---------------------------------------------------------------------------------//
 //                                NetHostRefreshData                               //
@@ -411,7 +422,8 @@ struct NetHostRefreshData
 
 /// Serializes network host record list data.
 /// Returns the number of bits serialized if successful, else 0.
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRefreshData& netRequestHostRefreshData);
+template <>
+Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRefreshData& netRequestHostRefreshData);
 
 //---------------------------------------------------------------------------------//
 //                                 FamilyTree                                      //

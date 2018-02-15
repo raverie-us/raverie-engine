@@ -18,7 +18,7 @@ namespace Zero
 class NetObject : public Replica, public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetObject, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetObject();
@@ -398,7 +398,7 @@ public:
 class EditInGameFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditInGameFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 

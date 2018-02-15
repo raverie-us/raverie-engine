@@ -1549,7 +1549,8 @@ bool NetPeer::AddUser()
 
 Cog* NetPeer::GetUser(NetUserId netUserId) const
 {
-  return mAddedUsers.FindValue(netUserId, nullptr);
+  CogId notFound;
+  return mAddedUsers.FindValue(netUserId, notFound);
 }
 
 NetUserRange NetPeer::GetUsersAddedByMyPeer() const
@@ -2005,8 +2006,6 @@ NetUser* NetPeer::HandleReceivedUserAddRequest(NetPeerId theirNetPeerId, const I
   event.mTheirIpAddress       = theirIpAddress;
   event.mTheirRequestBundle   = *theirRequestBundle;
   event.mReturnOurAddResponse = true;           // Optionally set by the event receiver
-  event.mReturnOurResponseBundle;               // Optionally set by the event receiver
-  event.mReturnTheirNetUser;                    // Optionally set by the event receiver
   event.mTheirNetUserId       = theirNetUserId; // (Released back to the store if not accepted)
 
   // Set active net user add request (used temporarily during net user creation)
@@ -2359,7 +2358,6 @@ BitStream NetPeer::GetBasicNetHostInfo()
 
   // Create event
   AcquireNetHostInfo event(owner);
-  event.mReturnHostInfo; // Optionally set by the event receiver
 
   // Dispatch event
   owner->DispatchEvent(Events::AcquireBasicNetHostInfo, &event);
@@ -2386,7 +2384,6 @@ BitStream NetPeer::GetExtraNetHostInfo()
 
   // Create event
   AcquireNetHostInfo event(owner);
-  event.mReturnHostInfo; // Optionally set by the event receiver
 
   // Dispatch event
   owner->DispatchEvent(Events::AcquireExtraNetHostInfo, &event);
@@ -4560,7 +4557,6 @@ Pair<bool, BitStream> NetPeer::ServerOnConnectRequest(ReplicatorLink* link, Conn
   event.mTheirPendingUserAddRequestCount = netConnectRequestData.mAddUserRequestCount;
   event.mOurIpAddress                    = connectRequestData.mIpAddress;
   event.mReturnOurConnectResponse        = true; // Optionally set by the event receiver
-  event.mReturnOurResponseBundle;                // Optionally set by the event receiver
 
   // Dispatch event
   owner->DispatchEvent(Events::NetPeerReceivedConnectRequest, &event);

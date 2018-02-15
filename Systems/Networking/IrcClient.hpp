@@ -83,7 +83,7 @@ namespace Irc
 class IrcClient : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IrcClient, TypeCopyMode::ReferenceType);
 
   // Constructor
   IrcClient();

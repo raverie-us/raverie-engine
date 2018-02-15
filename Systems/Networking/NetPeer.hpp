@@ -19,7 +19,7 @@ namespace Zero
 class NetPeer : public NetObject, public Peer, public Replicator
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeer, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeer();

@@ -205,7 +205,7 @@ public:
 class AcquireNetHostInfo : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AcquireNetHostInfo, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   AcquireNetHostInfo(GameSession* gameSession);
@@ -226,7 +226,7 @@ public:
 class NetHostUpdate : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetHostUpdate, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetHostUpdate();
@@ -246,7 +246,7 @@ public:
 class NetHostListUpdate : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetHostListUpdate, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetHostListUpdate();
@@ -270,7 +270,7 @@ public:
 class NetPeerOpened : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerOpened, TypeCopyMode::ReferenceType);
 };
 
 //---------------------------------------------------------------------------------//
@@ -281,7 +281,7 @@ public:
 class NetPeerClosed : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerClosed, TypeCopyMode::ReferenceType);
 };
 
 ////////////////
@@ -296,7 +296,7 @@ public:
 class NetGameStarted : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetGameStarted, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetGameStarted();
@@ -321,7 +321,7 @@ public:
 class NetPeerSentConnectRequest : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerSentConnectRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerSentConnectRequest(GameSession* gameSession);
@@ -342,7 +342,7 @@ public:
 class NetPeerReceivedConnectRequest : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerReceivedConnectRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerReceivedConnectRequest(GameSession* gameSession);
@@ -365,7 +365,7 @@ public:
 class NetPeerSentConnectResponse : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerSentConnectResponse, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerSentConnectResponse(GameSession* gameSession);
@@ -390,7 +390,7 @@ public:
 class NetPeerReceivedConnectResponse : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerReceivedConnectResponse, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerReceivedConnectResponse(GameSession* gameSession);
@@ -417,7 +417,7 @@ public:
 class NetLinkConnected : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetLinkConnected, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetLinkConnected();
@@ -437,7 +437,7 @@ public:
 class NetLinkDisconnected : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetLinkDisconnected, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetLinkDisconnected(GameSession* gameSession);
@@ -466,7 +466,7 @@ public:
 class NetLevelStarted : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetLevelStarted, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetLevelStarted();
@@ -493,7 +493,7 @@ public:
 class NetPeerSentUserAddRequest : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerSentUserAddRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerSentUserAddRequest(GameSession* gameSession);
@@ -512,7 +512,7 @@ public:
 class NetPeerReceivedUserAddRequest : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerReceivedUserAddRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerReceivedUserAddRequest(GameSession* gameSession);
@@ -535,7 +535,7 @@ public:
 class NetPeerSentUserAddResponse : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerSentUserAddResponse, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerSentUserAddResponse(GameSession* gameSession);
@@ -558,7 +558,7 @@ public:
 class NetPeerReceivedUserAddResponse : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerReceivedUserAddResponse, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerReceivedUserAddResponse(GameSession* gameSession);
@@ -584,7 +584,7 @@ public:
 class NetUserLostObjectOwnership : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetUserLostObjectOwnership, TypeCopyMode::ReferenceType);
 
   // Data
   Cog* mLostObject;           ///< The object this user just lost network ownership of.
@@ -599,7 +599,7 @@ public:
 class NetUserAcquiredObjectOwnership : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetUserAcquiredObjectOwnership, TypeCopyMode::ReferenceType);
 
   // Data
   Cog* mAcquiredObject;       ///< The object this user just acquired network ownership of.
@@ -622,7 +622,7 @@ public:
 class RegisterCppNetProperties : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RegisterCppNetProperties, TypeCopyMode::ReferenceType);
 };
 
 //////////////////
@@ -637,7 +637,7 @@ public:
 class NetObjectOnline : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetObjectOnline, TypeCopyMode::ReferenceType);
 
   // Data
   GameSession* mGameSession;       ///< Network game session.
@@ -654,7 +654,7 @@ public:
 class NetObjectOffline : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetObjectOffline, TypeCopyMode::ReferenceType);
 
   // Data
   GameSession* mGameSession;     ///< Network game session.
@@ -675,7 +675,7 @@ public:
 class NetUserOwnerChanged : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetUserOwnerChanged, TypeCopyMode::ReferenceType);
 
   // Data
   Cog* mPreviousNetUserOwner; ///< The object's previous network user owner.
@@ -694,7 +694,7 @@ public:
 class NetChannelPropertyChange : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetChannelPropertyChange, TypeCopyMode::ReferenceType);
 
   // Data
   float                       mTimestamp;        ///< The time this change occurred.
@@ -722,7 +722,7 @@ public:
 class NetEventSent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetEventSent, TypeCopyMode::ReferenceType);
 
   // Data
   NetPeerId mTheirNetPeerId; ///< Their net peer ID.
@@ -738,7 +738,7 @@ public:
 class NetEventReceived : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetEventReceived, TypeCopyMode::ReferenceType);
 
   // Data
   NetPeerId mTheirNetPeerId; ///< Their net peer ID.
@@ -755,7 +755,7 @@ public:
 class NetHostRecordEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetHostRecordEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetHostRecordEvent();

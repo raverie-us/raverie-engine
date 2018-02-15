@@ -51,7 +51,7 @@ class BitStreamExtended : public BitStream
   static const float DefaultFloatingPointQuantum;
 
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BitStreamExtended, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   BitStreamExtended();
@@ -486,88 +486,12 @@ inline bool BitStreamCanSerializeType(Type* zilchType)
 
 /// Serializes a Variant.
 /// Returns the number of bits serialized if successful, else 0.
-inline Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Variant& value)
-{
-  // Variants serialized through the standard BitStream Read/Write/Serialize functions, etc.
-  // must contain known types that we support (which can be queried via BitStreamCanSerializeAnyType)
-  return SerializeKnownExtendedVariant(direction, bitStream, value);
-}
+template <>
+Bits Serialize<Variant>(SerializeDirection::Enum direction, BitStream& bitStream, Variant& value);
 
 /// Serializes a BitStreamExtended.
 /// Returns the number of bits serialized if successful, else 0.
-inline Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, BitStreamExtended& value)
-{
-  // Write operation?
-  if(direction == SerializeDirection::Write)
-  {
-    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
-
-    // Get bitstream extended size
-    Bits valueBits = value.GetBitsWritten();
-
-    // Bitstream extended is too large to write?
-    if(valueBits > BitStreamExtendedLargeSizeBitsMax)
-    {
-      DoNotifyError("BitStream", String::Format("BitStream is too large to write at %u bytes. BitStreams must be less than %u bytes", BITS_TO_BYTES(valueBits), BITS_TO_BYTES(POW2(BitStreamExtendedLargeSizeBits))));
-      return 0;
-    }
-
-    // Is a small bitstream?
-    if(valueBits < BitStreamExtendedSmallSizeIsLargeValue)
-    {
-      // Write small bitstream extended size
-      bitStream.WriteQuantized(valueBits, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax);
-    }
-    // Is a large bitstream?
-    else
-    {
-      // Write small bitstream extended size
-      // But instead write the 'Is Large' Value
-      bitStream.WriteQuantized(BitStreamExtendedSmallSizeIsLargeValue, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax);
-
-      // Write large bitstream extended size
-      bitStream.WriteQuantized(valueBits, BitStreamExtendedLargeSizeBitsMin, BitStreamExtendedLargeSizeBitsMax);
-    }
-
-    // Write bitstream extended data
-    bitStream.AppendAll(value);
-
-    // Success
-    return bitStream.GetBitsWritten() - bitsWrittenStart;
-  }
-  // Read operation?
-  else
-  {
-    const Bits bitsReadStart = bitStream.GetBitsRead();
-
-    // Read small bitstream extended size
-    Bits valueBits = 0;
-    ReturnIf(!bitStream.ReadQuantized(valueBits, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax), 0);
-
-    // 'Is Large' Value?
-    if(valueBits == BitStreamExtendedSmallSizeIsLargeValue)
-    {
-      // Read large bitstream extended size
-      ReturnIf(!bitStream.ReadQuantized(valueBits, BitStreamExtendedLargeSizeBitsMin, BitStreamExtendedLargeSizeBitsMax), 0);
-    }
-
-    // (There should be enough bits available to be read)
-    Assert(bitStream.GetBitsUnread() >= valueBits);
-
-    // Clear current bitstream extended data (if any)
-    value.Clear(false);
-
-    // Read bitstream extended data
-    if(value.Append(bitStream, valueBits) != valueBits) // Unable?
-    {
-      DoNotifyError("BitStream", "Error reading BitStream data.");
-      return 0;
-    }
-    Assert(value.GetBitsWritten() == valueBits);
-
-    // Success
-    return bitStream.GetBitsRead() - bitsReadStart;
-  }
-}
+template <>
+Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream& bitStream, BitStreamExtended& value);
 
 } // namespace Zero

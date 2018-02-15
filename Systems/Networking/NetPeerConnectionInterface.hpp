@@ -19,7 +19,7 @@ namespace Zero
 class NetPeerConnectionInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPeerConnectionInterface, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   NetPeerConnectionInterface(NetPeer* netPeer);

@@ -560,8 +560,8 @@ NetObjectId GetNetPropertyCogAsNetObjectId(Property* property, const Any& instan
 //---------------------------------------------------------------------------------//
 //                             NetUserAddRequestData                               //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddRequestData& netUserAddRequestData)
+template <>
+Bits Serialize<NetUserAddRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddRequestData& netUserAddRequestData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -586,7 +586,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUser
     // Read dummy bit
     // TODO: Refactor BitStream interface to allow for serialization of empty structures without appearing to be an error
     bool dummy;
-    ReturnIf(!bitStream.Read(dummy), 0);
+    ReturnIf(!bitStream.Read(dummy), 0, "");
 
     // Read event bundle data (if any)
     netUserAddRequestData.mEventBundleData.AssignRemainder(bitStream);
@@ -599,8 +599,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUser
 //---------------------------------------------------------------------------------//
 //                             NetUserAddResponseData                              //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddResponseData& netUserAddResponseData)
+template <>
+Bits Serialize<NetUserAddResponseData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddResponseData& netUserAddResponseData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -629,13 +629,13 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUser
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read network user add response
-    ReturnIf(!bitStream.ReadQuantized(netUserAddResponseData.mAddResponse, NetUserAddResponseMin, NetUserAddResponseMax), 0);
+    ReturnIf(!bitStream.ReadQuantized(netUserAddResponseData.mAddResponse, NetUserAddResponseMin, NetUserAddResponseMax), 0, "");
 
     // Accepted?
     if(netUserAddResponseData.mAddResponse == NetUserAddResponse::Accept)
     {
       // Read network user identifier
-      ReturnIf(!bitStream.Read(netUserAddResponseData.mNetUserId), 0);
+      ReturnIf(!bitStream.Read(netUserAddResponseData.mNetUserId), 0, "");
     }
 
     // Read event bundle data (if any)
@@ -649,8 +649,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUser
 //---------------------------------------------------------------------------------//
 //                            NetUserRemoveRequestData                             //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUserRemoveRequestData& netUserRemoveRequestData)
+template <>
+Bits Serialize<NetUserRemoveRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserRemoveRequestData& netUserRemoveRequestData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -672,7 +672,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUser
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read network user identifier
-    ReturnIf(!bitStream.Read(netUserRemoveRequestData.mNetUserId), 0);
+    ReturnIf(!bitStream.Read(netUserRemoveRequestData.mNetUserId), 0, "");
 
     // Read event bundle data (if any)
     netUserRemoveRequestData.mEventBundleData.AssignRemainder(bitStream);
@@ -685,8 +685,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetUser
 //---------------------------------------------------------------------------------//
 //                            NetLevelLoadStartedData                              //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadStartedData& netLevelLoadStartedData)
+template <>
+Bits Serialize<NetLevelLoadStartedData>(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadStartedData& netLevelLoadStartedData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -721,7 +721,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetLeve
     netLevelLoadStartedData.mNetSpaceObjectId = netSpaceObjectId.value();
 
     // Read level resource identifier
-    ReturnIf(!bitStream.Read(netLevelLoadStartedData.mLevelResourceId), 0);
+    ReturnIf(!bitStream.Read(netLevelLoadStartedData.mLevelResourceId), 0, "");
 
     // Success
     return bitStream.GetBitsRead() - bitsReadStart;
@@ -731,8 +731,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetLeve
 //---------------------------------------------------------------------------------//
 //                            NetLevelLoadFinishedData                             //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadFinishedData& netLevelLoadFinishedData)
+template <>
+Bits Serialize<NetLevelLoadFinishedData>(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadFinishedData& netLevelLoadFinishedData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -771,8 +771,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetLeve
 //---------------------------------------------------------------------------------//
 //                              NetConnectRequestData                              //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetConnectRequestData& netConnectRequestData)
+template <>
+Bits Serialize<NetConnectRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetConnectRequestData& netConnectRequestData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -794,7 +794,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetConn
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read pending user add request count
-    ReturnIf(!bitStream.Read(netConnectRequestData.mAddUserRequestCount), 0);
+    ReturnIf(!bitStream.Read(netConnectRequestData.mAddUserRequestCount), 0, "");
 
     // Read event bundle data (if any)
     netConnectRequestData.mEventBundleData.AssignRemainder(bitStream);
@@ -807,8 +807,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetConn
 //---------------------------------------------------------------------------------//
 //                                 NetHostPingData                                 //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPingData& netHostPingData)
+template <>
+Bits Serialize<NetHostPingData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPingData& netHostPingData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -839,16 +839,16 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read unique project identifier
-    ReturnIf(!bitStream.Read((u64&)netHostPingData.mProjectGuid), 0);
+    ReturnIf(!bitStream.Read((u64&)netHostPingData.mProjectGuid), 0, "");
 
     // Read unique ping request identifier
-    ReturnIf(!bitStream.Read(netHostPingData.mPingId), 0);
+    ReturnIf(!bitStream.Read(netHostPingData.mPingId), 0, "");
 
     // Read unique send attempt identifier
-    ReturnIf(!bitStream.Read(netHostPingData.mSendAttemptId), 0);
+    ReturnIf(!bitStream.Read(netHostPingData.mSendAttemptId), 0, "");
 
     // Read unique send attempt identifier
-    ReturnIf(!bitStream.Read(netHostPingData.mManagerId), 0);
+    ReturnIf(!bitStream.Read(netHostPingData.mManagerId), 0, "");
 
     // Read event bundle data (if any)
     netHostPingData.mEventBundleData.AssignRemainder(bitStream);
@@ -861,8 +861,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
 //---------------------------------------------------------------------------------//
 //                                 NetHostPongData                                 //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPongData& netHostPongData)
+template <>
+Bits Serialize<NetHostPongData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPongData& netHostPongData)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -893,16 +893,16 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read unique project identifier
-    ReturnIf(!bitStream.Read((u64&)netHostPongData.mProjectGuid), 0);
+    ReturnIf(!bitStream.Read((u64&)netHostPongData.mProjectGuid), 0, "");
 
     // Read unique ping request identifier
-    ReturnIf(!bitStream.Read(netHostPongData.mPingId), 0);
+    ReturnIf(!bitStream.Read(netHostPongData.mPingId), 0, "");
 
     // Read unique send attempt identifier
-    ReturnIf(!bitStream.Read(netHostPongData.mSendAttemptId), 0);
+    ReturnIf(!bitStream.Read(netHostPongData.mSendAttemptId), 0, "");
 
     // Read unique manager id
-    ReturnIf(!bitStream.Read(netHostPongData.mManagerId), 0);
+    ReturnIf(!bitStream.Read(netHostPongData.mManagerId), 0, "");
 
     // Read event bundle data (if any)
     netHostPongData.mEventBundleData.AssignRemainder(bitStream);
@@ -915,8 +915,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
 //---------------------------------------------------------------------------------//
 //                                NetHostRecordList                                //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRecordListData& netHostRecordList)
+template <>
+Bits Serialize<NetHostRecordListData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRecordListData& netHostRecordList)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -973,15 +973,15 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
     {
       NetHostRecord record;
       //Read in IP address of record.
-      ReturnIf(!bitStream.Read(record.mIpAddress), 0);
+      ReturnIf(!bitStream.Read(record.mIpAddress), 0, "");
       //Read in the size of the BitStream written.
       Bits bitsToRead = 0;
-      ReturnIf(!bitStream.Read(bitsToRead), 0);
+      ReturnIf(!bitStream.Read(bitsToRead), 0, "");
       //Create a temp bitstream, and have Reserve enough space for it to read the bitstream in.
       BitStream tempBitStream;
       tempBitStream.Reserve(bitsToRead / 8); // Reserve enough space to write the bits into the stream directly.
       //Read in the bitstream containing the BasicHostInfo eventbundle.
-      ReturnIf(!bitStream.ReadBits(tempBitStream.GetDataExposed(), bitsToRead), 0);
+      ReturnIf(!bitStream.ReadBits(tempBitStream.GetDataExposed(), bitsToRead), 0, "");
       //Set the number of bits we wrote into it (because we manually assigned bit data into it)
       tempBitStream.SetBitsWritten(bitsToRead);
       //move the bitstream
@@ -998,8 +998,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
 //---------------------------------------------------------------------------------//
 //                              NetHostPublishData                                 //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPublishData& netHostPingData)
+template <>
+Bits Serialize<NetHostPublishData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPublishData& netHostPingData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -1021,7 +1021,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read unique project identifier
-    ReturnIf(!bitStream.Read((u64&)netHostPingData.mProjectGuid), 0);
+    ReturnIf(!bitStream.Read((u64&)netHostPingData.mProjectGuid), 0, "");
 
     // Read event bundle data (if any)
     netHostPingData.mBasicHostInfo.AssignRemainder(bitStream);
@@ -1034,8 +1034,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
 //---------------------------------------------------------------------------------//
 //                              NetRequestHostRefreshData                          //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetRequestHostRefreshData& netRequestHostRefreshData)
+template <>
+Bits Serialize<NetRequestHostRefreshData>(SerializeDirection::Enum direction, BitStream& bitStream, NetRequestHostRefreshData& netRequestHostRefreshData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -1057,10 +1057,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetRequ
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read unique project identifier
-    ReturnIf(!bitStream.Read((u64&)netRequestHostRefreshData.mProjectGuid), 0);
+    ReturnIf(!bitStream.Read((u64&)netRequestHostRefreshData.mProjectGuid), 0, "");
 
     // Read event bundle data (if any)
-    ReturnIf(!bitStream.Read(netRequestHostRefreshData.mHostIp), 0);
+    ReturnIf(!bitStream.Read(netRequestHostRefreshData.mHostIp), 0, "");
 
     // Success
     return bitStream.GetBitsRead() - bitsReadStart;
@@ -1070,8 +1070,8 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetRequ
 //---------------------------------------------------------------------------------//
 //                              NetHostRefreshData                                 //
 //---------------------------------------------------------------------------------//
-
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRefreshData& netHostRefreshData)
+template <>
+Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRefreshData& netHostRefreshData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -1092,7 +1092,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, NetHost
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read IP address of host that is being refreshed.
-    ReturnIf(!bitStream.Read(netHostRefreshData.mHostIp), 0);
+    ReturnIf(!bitStream.Read(netHostRefreshData.mHostIp), 0, "");
     // Read event bundle data (if any)
     netHostRefreshData.mBasicHostInfo.AssignRemainder(bitStream);
     // Success

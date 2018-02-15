@@ -47,13 +47,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!--Import the Win32 property sheet (from the build folder) for each configuration-->
-  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
-    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
-    <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Platform)'=='Emscripten'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props" Condition="exists('$(ZeroExtensionLibrariesSource)\Build\ExtensionLibraries.props')" />
   </ImportGroup>
   <!--Add Static library with no CharacterSet for all x86 project configurations-->
@@ -66,7 +60,7 @@
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <PlatformToolset>LLVM-vs2014</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
     <PlatformToolset>emcc</PlatformToolset>

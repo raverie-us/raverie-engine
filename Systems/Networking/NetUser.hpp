@@ -18,7 +18,7 @@ namespace Zero
 class NetUser : public NetObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetUser, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetUser();

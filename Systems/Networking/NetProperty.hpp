@@ -18,7 +18,7 @@ namespace Zero
 class NetProperty : public SafeId32Object, public ReplicaProperty
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetProperty, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetProperty(const String& name, NetPropertyType* netPropertyType, const Variant& propertyData);
@@ -55,7 +55,7 @@ public:
 class NetPropertyType : public SafeId32Object, public ReplicaPropertyType
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPropertyType, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPropertyType(const String& name, NativeType* nativeType, SerializeValueFn serializeValueFn, GetValueFn getValueFn, SetValueFn setValueFn);
@@ -112,7 +112,7 @@ type Get##property##typeName() const
 class NetPropertyConfig : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPropertyConfig, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPropertyConfig();
@@ -266,7 +266,7 @@ public:
 class NetPropertyInfo : public SafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPropertyInfo, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   NetPropertyInfo();
@@ -328,7 +328,7 @@ typedef Array<NetPropertyInfo> NetPropertyInfoArray;
 class PropertyFilter##typeName : public MetaPropertyFilter                            \
 {                                                                                     \
 public:                                                                               \
-  ZilchDeclareType(TypeCopyMode::ReferenceType);                                      \
+  ZilchDeclareType(PropertyFilter##typeName, TypeCopyMode::ReferenceType);            \
   bool Filter(Member* prop, HandleParam instance) override;                           \
 }
 
@@ -351,21 +351,21 @@ DeclarePropertyFilterForType(String);
 class PropertyFilterMultiPrimitiveTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyFilterMultiPrimitiveTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterFloatingPointTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyFilterFloatingPointTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterArithmeticTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyFilterArithmeticTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 

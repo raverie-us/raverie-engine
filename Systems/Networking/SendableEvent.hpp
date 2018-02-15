@@ -22,7 +22,7 @@ struct ConnectionData;
 class SendableEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SendableEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   SendableEvent();

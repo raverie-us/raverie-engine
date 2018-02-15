@@ -66,6 +66,7 @@ template <typename ReturnType, typename P0>
 class Callback1
 {
 public:
+  virtual ~Callback1();
   virtual ReturnType operator()(P0 p0) = 0;
 };
 
@@ -118,6 +119,7 @@ template <typename ReturnType, typename P0, typename P1>
 class Callback2
 {
 public:
+  virtual ~Callback2();
   virtual ReturnType operator()(P0 p0, P1 p1) = 0;
 };
 
@@ -170,6 +172,7 @@ template <typename ReturnType, typename P0, typename P1, typename P2>
 class Callback3
 {
 public:
+  virtual ~Callback3();
   virtual ReturnType operator()(P0 p0, P1 p1, P2 p2) = 0;
 };
 
