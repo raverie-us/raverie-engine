@@ -207,14 +207,14 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
 
   new Spacer(this, SizePolicy::Flex, Vec2(1, 1));
 
+  // Check for updates (builds/etc...)
+  TextButton* checkForUpdatesButton = new TextButton(this);
+  checkForUpdatesButton->SetText("Check for Updates");
+  ConnectThisTo(checkForUpdatesButton, Events::ButtonPressed, OnCheckForUpdates);
+
+  mWidgetsToAnimate.PushBack(checkForUpdatesButton);
   if(Z::gEngine->GetConfigCog()->has(DeveloperConfig))
   {
-    // Check for updates (might go away)
-    TextButton* checkForUpdatesButton = new TextButton(this);
-    checkForUpdatesButton->SetText("Check for Updates");
-    ConnectThisTo(checkForUpdatesButton, Events::ButtonPressed, OnCheckForUpdates);
-    mWidgetsToAnimate.PushBack(checkForUpdatesButton);
-
     // Check for updates (might go away)
     TextButton* checkForLauncherUpdatesButton = new TextButton(this);
     checkForLauncherUpdatesButton->SetText("Check for Launcher Updates");

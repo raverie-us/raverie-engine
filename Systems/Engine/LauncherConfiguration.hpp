@@ -69,10 +69,13 @@ public:
   /// Should the launcher only show the preferred (current) platform builds or show all.
   /// Hardcoded to true for now since we only have one platform.
   bool mDisplayOnlyPreferredPlatform;
+  /// How often the launcher should check for new builds/templates/etc...
+  float mAutoUpdateFrequencyInSeconds;
 
   /// Number used to force the launcher to reinstall all versions
   int mForcedUpdateVersion;
   static int mCurrentForcedUpdateVersionNumber;
+  static float mDefaultReloadFrequency;
 
   String mCachedData;
 

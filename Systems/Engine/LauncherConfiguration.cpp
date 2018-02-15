@@ -16,6 +16,7 @@ namespace Events
 }//namespace Events
 
 int LauncherConfig::mCurrentForcedUpdateVersionNumber = 1;
+float LauncherConfig::mDefaultReloadFrequency = 60.0f * 60.0f;
 
 ZilchDefineType(LauncherConfig, builder, type)
 {
@@ -32,6 +33,8 @@ LauncherConfig::LauncherConfig()
   mDisplayOnlyPreferredPlatform = true;
   mAutoCheckForMajorUpdates = true;
   mShowExperimentalBranches = false;
+  // Check every hour
+  mAutoUpdateFrequencyInSeconds = mDefaultReloadFrequency;
 }
 
 void LauncherConfig::Serialize(Serializer& stream)
@@ -47,6 +50,7 @@ void LauncherConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mAutoCheckForMajorUpdates, true);
   SerializeNameDefault(mShowExperimentalBranches, false);
   SerializeNameDefault(mForcedUpdateVersion, 0);
+  SerializeNameDefault(mAutoUpdateFrequencyInSeconds, mDefaultReloadFrequency);
 }
 
 void LauncherConfig::ApplyCommandLineArguments(const StringMap& arguments)

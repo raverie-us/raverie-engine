@@ -429,6 +429,12 @@ void LauncherWindow::CheckForUpdates()
   BackgroundTask* templateTask = mVersionSelector->GetTemplateListing();
   ConnectThisTo(templateTask, Events::BackgroundTaskCompleted, OnTemplateListing);
   ConnectThisTo(templateTask, Events::BackgroundTaskFailed, OnTemplateListing);
+
+  // Queue up actions to auto-recheck for new builds, etc...
+  float secondsForRecheck = GetConfig()->mAutoUpdateFrequencyInSeconds;
+  ActionSequence* sequence = new ActionSequence(this);
+  sequence->Add(new ActionDelay(secondsForRecheck));
+  sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::CheckForUpdates>(this));
 }
 
 //******************************************************************************
