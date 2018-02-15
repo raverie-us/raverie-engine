@@ -419,6 +419,7 @@ void NewProjectMenu::OnMenuDisplayed(Event* e)
   }
 
   // When it's pressed, we want to install
+  ConnectThisTo(mNameBox, Events::TextEnter, OnTryCreateNewProject);
   ConnectThisTo(button, Events::ButtonPressed, OnCreateProject);
 
   // If no template is currently selected then select the first on
@@ -538,6 +539,17 @@ void NewProjectMenu::SelectTemplate(TemplateProjectItem* selectedItem)
   }
 
   mSelectedTemplate = selectedItem;
+}
+
+//******************************************************************************
+void NewProjectMenu::OnTryCreateNewProject(Event* e)
+{
+  // Validate the project name, path, etc...
+  ValidateProjectCreation();
+  if(!mLauncher->mMainButton->mEnabled)
+    return;
+
+  OnCreateProject(e);
 }
 
 //******************************************************************************
