@@ -168,8 +168,8 @@ SearchView* ShaderTranslationDebugHelper::CreateSearchView(SearchProvider* searc
   viewPopUp->UpdateTransformExternal();
   mActiveSearch = viewPopUp;
 
-  GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
-  graphicsEngine->mShaderGenerator->mCoreVertexFragments;
+  //GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
+  //graphicsEngine->mShaderGenerator->mCoreVertexFragments;
 
   // Filter based upon the provided search provider
   SearchView* searchView = viewPopUp->mView;
