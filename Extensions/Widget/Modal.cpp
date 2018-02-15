@@ -327,10 +327,14 @@ void ModalButtonsAction::CreateButtons(StringParam title, Array<String>& buttonN
     {
       Composite* extraTextComposite = new Composite(center);
       extraTextComposite->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(15, 0), Thickness::cZero));
+      extraTextComposite->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
       Label* extraTextUi = new Label(extraTextComposite, "ModalConfirmExtraText");
+      // Hardcoded max to prevent things from scrolling off the side because text
+      // resizing is really bad (forces things outside the max layout size)
+      extraTextUi->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(1024));
       extraTextUi->SetName("ExtraText");
       extraTextUi->SetText(extraText);
-      extraTextUi->SizeToContents();
+      extraTextUi->SetTextClipping(true);
       ProxyAndAnimateIn(extraTextUi, Pixels(-400, 0, 0), 0.22f, 0.1f, 0);
     }
 
