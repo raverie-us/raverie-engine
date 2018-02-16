@@ -948,6 +948,31 @@ void VersionSelector::ForceUpdateAllBuilds()
   }
 }
 
+BackgroundTask* VersionSelector::CheckForPatchLauncherUpdate()
+{
+  // Ask if there's a new launcher installer given our current major version
+  BuildId currentBuild = BuildId::GetCurrentLauncherId();
+  String url = BuildString(GetLauncherPhpUrl(), "?Commands=ListVersionId&MajorId=", ToString(currentBuild.mMajorVersion));
+
+  DownloadTaskJob* job = new DownloadTaskJob(url);
+  job->mName = "Check For Patch Installer";
+
+  return Z::gBackgroundTasks->Execute(job, job->mName);
+}
+
+BackgroundTask* VersionSelector::DownloadPatchLauncherUpdate()
+{
+  // Ask if there's a new launcher patch given our current major version
+  String majorVersionIdStr = ToString(GetLauncherMajorVersion());
+  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestZeroLauncherPackage&MajorId=", majorVersionIdStr);
+
+  String launcherFolderName = FilePath::Combine(GetUserLocalDirectory(), BuildString("ZeroLauncher_", majorVersionIdStr, ".0"));
+  DownloadLauncherPatchInstallerJob* job = new DownloadLauncherPatchInstallerJob(url, launcherFolderName);
+  job->mName = "Download Patch Installer";
+
+  return Z::gBackgroundTasks->Execute(job, job->mName);
+}
+
 BackgroundTask* VersionSelector::CheckForMajorLauncherUpdate()
 {
   // Ask if there's a new launcher installer given our current major version

@@ -62,7 +62,7 @@ public:
   /// Whether or not to display the build and build state on each
   /// project in the Recent Projects page.
   bool mDisplayBuildOnProjects;
-  bool mAutoCheckForMajorUpdates;
+  bool mAutoCheckForLauncherUpdates;
   bool mShowDevelopmentBuilds;
   bool mShowExperimentalBranches;
   bool mRunDebuggerMode;
@@ -76,6 +76,7 @@ public:
   int mForcedUpdateVersion;
   static int mCurrentForcedUpdateVersionNumber;
   static float mDefaultReloadFrequency;
+  float mNewLauncherUpdateCheckFrequency;
 
   String mCachedData;
 
