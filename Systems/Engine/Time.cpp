@@ -60,7 +60,7 @@ ZilchDefineType(TimeSpace, builder, type)
   ZilchBindGetterSetterProperty(TimeMode);
   ZilchBindFieldProperty(mMinDt);
   ZilchBindFieldProperty(mMaxDt);
-  ZilchBindFieldProperty(mTimeScale);
+  ZilchBindGetterSetterProperty(TimeScale);
   ZilchBindFieldProperty(mPaused);
   ZilchBindFieldGetterAs(mScaledClampedDt, "Dt");
   ZilchBindFieldGetter(mRealDt);
@@ -123,6 +123,16 @@ bool TimeSpace::GetGloballyPaused()
   if(GameSession* gameSession = this->GetGameSession())
     return mPaused || gameSession->mPaused;
   return mPaused;
+}
+
+float TimeSpace::GetTimeScale()
+{
+  return mTimeScale;
+}
+
+void TimeSpace::SetTimeScale(float timeScale)
+{
+  mTimeScale = Math::Max(timeScale, 0.0f);
 }
 
 void TimeSpace::Update(float dt)
