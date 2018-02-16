@@ -71,7 +71,7 @@ namespace Zilch
     typedef ArrayClass<ElementType> Array##ElementType;
 
   #define ZilchDeclareDefineHandleArray(ElementType, Linkage)     \
-    ZilchDeclareDefineArray(ElementType, Linkage)                 \
+    ZilchDeclareDefineArray(HandleOf<ElementType>, Linkage)       \
     typedef ArrayClass<HandleOf<ElementType>> Array##ElementType;
 
   // Pre-existing useful declarations
