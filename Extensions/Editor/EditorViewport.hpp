@@ -107,6 +107,7 @@ public:
   void OnObjectPoll(ObjectPollEvent* e);
   void OnCaptureContext(CommandCaptureContextEvent* e);
   void OnResourcesRemoved(ResourceEvent* e);
+  void OnResourceModified(ResourceEvent* event);
   void OnMouseEnter(MouseEvent* e);
   void OnMiddleMouseDown(MouseEvent* e);
   void OnRightMouseDown(MouseEvent* e);

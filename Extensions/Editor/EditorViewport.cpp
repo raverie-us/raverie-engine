@@ -41,6 +41,8 @@ EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership)
   ConnectThisTo(this, Events::ObjectPoll, OnObjectPoll);
 
   ConnectThisTo(Z::gResources, Events::ResourceRemoved, OnResourcesRemoved);
+  ConnectThisTo(Z::gResources, Events::ResourceModified, OnResourceModified);
+
   ConnectThisTo(this, Events::CommandCaptureContext, OnCaptureContext);
   ConnectThisTo(this, Events::TabFind, OnTabFind);
   ConnectThisTo(this, Events::FocusGainedHierarchy, OnFocusGained);
@@ -428,6 +430,22 @@ void EditorViewport::OnResourcesRemoved(ResourceEvent* event)
 
   if (editLevel && resourceBeingEdited)
     CloseTabContaining(this);
+}
+
+void EditorViewport::OnResourceModified(ResourceEvent* event)
+{
+  Space* editSpace = mEditSpace;
+  if(editSpace == NULL)
+    return;
+
+  Level* editLevel = editSpace->mLevelLoaded;
+  
+  // Is the level this viewport is editing the modified resource?
+  if(editLevel == (Level*)event->EventResource)
+  {
+    TabRenamedEvent eventToSend(event->EventResource->Name);
+    this->DispatchEvent(Events::TabRenamed, &eventToSend);
+  }
 }
 
 void EditorViewport::OnCaptureContext(CommandCaptureContextEvent* event)
