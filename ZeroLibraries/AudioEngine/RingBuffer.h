@@ -10,7 +10,11 @@
 #ifndef RINGBUFFER_H
 #define RINGBUFFER_H
 
+#ifdef _MSC_VER
 #define RingBufferType32 long
+#else
+#define RingBufferType32 int32
+#endif
 
 namespace Audio
 {

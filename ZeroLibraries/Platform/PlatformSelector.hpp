@@ -47,7 +47,7 @@
     #error "Unsupported platform"
   #endif
 
-#elif defined(EMSCRIPTEN)
+#elif defined(__EMSCRIPTEN__)
   #define PLATFORM_EMSCRIPTEN 1
   #define PLATFORM_HARDWARE 1
 

@@ -404,8 +404,8 @@ namespace Audio
     if (ExternalData)
       ExternalData->SendAudioEvent(eventType, data);
     // Delete any allocated data
-    if (data)
-      delete data;
+//     if (data)
+//       delete data;
   }
 
   //************************************************************************************************

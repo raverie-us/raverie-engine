@@ -200,8 +200,8 @@ Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool ove
 
   // Force certain config components to exist. There's a few upgrade cases
   // where one of these could be missing otherwise.
-  *HasOrAdd<TextEditorConfig>(configCog);
-  *HasOrAdd<ContentConfig>(configCog);
+  HasOrAdd<TextEditorConfig>(configCog);
+  HasOrAdd<ContentConfig>(configCog);
 
   MainConfig* mainConfig = HasOrAdd<MainConfig>(configCog);
   mainConfig->ApplicationName = "ZeroLauncher";

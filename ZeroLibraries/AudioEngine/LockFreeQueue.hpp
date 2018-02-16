@@ -14,6 +14,8 @@ namespace Audio
 {
 #ifdef _MSC_VER
 #define Type32Bit long
+#else
+#define Type32Bit int32
 #endif
 
   // If Destination == Comperand sets Destination to Exchange. Returns initial value of Destination.

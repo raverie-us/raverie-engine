@@ -109,7 +109,7 @@ String ObjectStore::GetEntryAt(uint index)
   if(mEntries.Empty( ))
     return String( );
 
-  if(index < 0 || index >= mEntries.Size( ))
+  if(index >= mEntries.Size( ))
     return String( );
 
   return mEntries[index];

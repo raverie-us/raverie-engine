@@ -26,6 +26,7 @@ class Object;
 class ObjectRestoreState
 {
 public:
+  virtual ~ObjectRestoreState();
   /// Stores the object in its current state.
   virtual void StoreObjectState(Object* object) = 0;
 

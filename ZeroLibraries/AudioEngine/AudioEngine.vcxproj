@@ -48,7 +48,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!--Import the Win32 property sheet (from the build folder) for each configuration-->
-  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
@@ -64,15 +64,15 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">
     <PlatformToolset>emcc</PlatformToolset>
-    <ConfigurationType>HTMLPage</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
     <PlatformToolset>emcc</PlatformToolset>
-    <ConfigurationType>HTMLPage</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
     <PlatformToolset>emcc</PlatformToolset>
-    <ConfigurationType>HTMLPage</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -124,6 +124,7 @@
     <ClCompile>
       <AdditionalOptions>-s WASM=1 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__EMSCRIPTEN__;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
@@ -151,7 +152,11 @@
     <ClCompile Include="ListenerNode.cpp" />
     <ClCompile Include="LockFreeQueue.cpp" />
     <ClCompile Include="Modifiers.cpp" />
-    <ClCompile Include="pa_win_util.cpp" />
+    <ClCompile Include="pa_win_util.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="PitchChange.cpp" />
     <ClCompile Include="PitchNode.cpp" />
     <ClCompile Include="Precompiled.cpp">
@@ -168,8 +173,16 @@
     <ClCompile Include="stb_vorbis.cpp" />
     <ClCompile Include="Tags.cpp" />
     <ClCompile Include="VolumeNodes.cpp" />
-    <ClCompile Include="WASAPI.cpp" />
-    <ClCompile Include="WindowsMIDI.cpp" />
+    <ClCompile Include="WASAPI.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="WindowsMIDI.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdditiveSynthNode.h" />
@@ -197,11 +210,23 @@
     <ClInclude Include="opus_defines.h" />
     <ClInclude Include="opus_multistream.h" />
     <ClInclude Include="opus_types.h" />
-    <ClInclude Include="pa_memorybarrier.h" />
-    <ClInclude Include="pa_util.h" />
+    <ClInclude Include="pa_memorybarrier.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="pa_util.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="PitchChange.h" />
     <ClInclude Include="PitchNode.h" />
-    <ClInclude Include="portaudio.h" />
+    <ClInclude Include="portaudio.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="RecordNode.h" />
     <ClInclude Include="Resampler.h" />
@@ -213,8 +238,16 @@
     <ClInclude Include="stb_vorbis.h" />
     <ClInclude Include="Tags.h" />
     <ClInclude Include="VolumeNodes.h" />
-    <ClInclude Include="WASAPI.h" />
-    <ClInclude Include="WindowsMIDI.h" />
+    <ClInclude Include="WASAPI.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="WindowsMIDI.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="portaudio_x86.lib" />

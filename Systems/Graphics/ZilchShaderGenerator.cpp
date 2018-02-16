@@ -360,7 +360,7 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Arr
 
   ZilchShaderLibraryRef fragmentsLibrary = mFragmentsProject.CompileAndTranslate(internalDependencies, mTranslator, mSettings);
   if (fragmentsLibrary == nullptr)
-    return false;
+    return nullptr;
 
   // Write to the complex user data of each shader type the name of the resource they came from.
   // This has to be done as a second pass because complex user currently can't be written per file (we also need per type).

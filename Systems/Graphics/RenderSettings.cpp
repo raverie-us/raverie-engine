@@ -379,8 +379,10 @@ void RenderSettings::SetColorTargetMrt(RenderTarget* target, uint index)
 BlendSettings* RenderSettings::GetBlendSettingsMrt(uint index)
 {
   if (index >= 8)
-    return DoNotifyException("Error", "Invalid index. Must be 0-7."), nullptr;
-
+  {
+    DoNotifyException("Error", "Invalid index. Must be 0-7.");
+    return nullptr;
+  }
   return &mBlendSettings[index];
 }
 
@@ -457,7 +459,10 @@ void BlendSettingsMrt::Set(uint index, BlendSettings* blendSettings)
 BlendSettings* BlendSettingsMrt::Get(uint index)
 {
   if (mRenderSettings.IsNull())
-    return DoNotifyException("Error", "Attempting to call member on null object."), nullptr;
+  {
+    DoNotifyException("Error", "Attempting to call member on null object.");
+    return nullptr;
+  }
   return mRenderSettings->GetBlendSettingsMrt(index);
 }
 

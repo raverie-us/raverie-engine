@@ -46,7 +46,7 @@ String ReplaceTypeIfTemplated(StringParam typeString)
   }
 }
 
-MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Function* function)
+MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Function* function)
 {
   uint matchIndex = (uint)-1;
 

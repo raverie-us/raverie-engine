@@ -24,7 +24,7 @@ namespace Zero
   ///// HELPERS ///// 
 
   /// Find the method doc in a list that has the same parameters as the meta method passed in
-  MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Function* metaMeth);
+  MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Function* metaMeth);
 
 
   /// Loads from zilch, saves to data file, then safe deletes
@@ -203,7 +203,7 @@ namespace Zero
     void FillDocumentation(BoundType* classType);
 
     PropertyDoc* GetPropertyDoc(StringParam propertyName);
-    MethodDoc* GetMethodDoc(Function* function);
+    MethodDoc* GetMethodDoc(Zilch::Function* function);
 
     HashMap<String, PropertyDoc*> mPropertiesMap;
 

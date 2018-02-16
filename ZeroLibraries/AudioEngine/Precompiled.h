@@ -10,6 +10,7 @@
 #ifndef Precompiled_H
 #define Precompiled_H
 
+#include "float.h"
 #include "Common/CommonStandard.hpp"
 #include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"

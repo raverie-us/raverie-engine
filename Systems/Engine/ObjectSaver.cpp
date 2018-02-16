@@ -156,7 +156,7 @@ void ObjectSaver::SaveProperties(Object* object, Object* propertyPathParent, Pro
         BoundType* propertyType = Type::GetBoundType(metaProperty->PropertyType);
         
         if (propertyType && !metaProperty->IsStatic &&
-           propertyType->HasAttributeInherited(SerializationAttributes::cSerializationPrimitive) == false)
+           propertyType->HasAttributeInherited(SerializationAttributes::cSerializationPrimitive) == nullptr)
         {
           path.AddPropertyToPath(metaProperty);
           

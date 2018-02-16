@@ -130,7 +130,7 @@ DataEntry* ShortcutSource::Parent(DataEntry* dataEntry)
 //******************************************************************************
 DataEntry* ShortcutSource::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
 {
-  if(index >= 0 && index < mSet.Size( ))
+  if(index < mSet.Size( ))
     return &mSet[index];
 
   IF_ROOT(&mSet.Front( ));

@@ -12,6 +12,7 @@
 
 namespace Zero
 {
+
 namespace Events
 {
   // Sent on the document to inform any editors that they should clear annotations (such as errors)
@@ -167,7 +168,7 @@ public:
   static bool UnindentOnCharacter(ICodeEditor* editor, Rune added, Rune lookFor);
 
   /// Takes a meta method and populates a call tip (always attempts to look for a DocMethod first)
-  static void AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* owner, Function* method);
+  static void AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* owner, Zilch::Function* method);
   
   /// Takes a meta method and populates a call tip (always attempts to look for a DocMethod first)
   static void AddCompletionsFromMetaType(Array<Completion>& completions, BoundType* type);
