@@ -332,7 +332,7 @@ void DiscoverMenu::OnDeveloperNotesDownloaded(BackgroundTaskEvent* e)
     for(uint i = 0; i < DevUpdates.Size(); ++i)
     {
       DevUpdateEntry* entry = new DevUpdateEntry(mDevUpdatesArea, DevUpdates[i]);
-      entry->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(270));
+      entry->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(260));
       entry->SizeToContents();
       mDevUpdateEntries.PushBack(entry);
     }
