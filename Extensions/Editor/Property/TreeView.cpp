@@ -39,7 +39,6 @@ Tweakable(Vec4, PrimaryColor,   Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SecondaryColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, MouseOverColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SelectedColor,  Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ToolTipColorScheme,   Vec4(1,1,1,1), cLocation);
 }
 
 namespace TreeViewInvalidUi
@@ -49,7 +48,6 @@ Tweakable(Vec4, PrimaryColor,   Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SecondaryColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, MouseOverColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SelectedColor,  Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ToolTipColorScheme,   Vec4(1,1,1,1), cLocation);
 }
 
 namespace Events
