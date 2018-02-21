@@ -339,7 +339,7 @@ void ModalButtonsAction::CreateButtons(StringParam title, Array<String>& buttonN
     }
 
     Composite* buttons = new Composite(center);
-    buttons->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(15, 0), Thickness::cZero));
+    buttons->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(15, 0), Thickness(10, 0)));
 
     // Spacer to right justify the buttons
     new Spacer(buttons);
