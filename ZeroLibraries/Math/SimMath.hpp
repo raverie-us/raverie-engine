@@ -12,7 +12,7 @@
 #include <xmmintrin.h>
 #include <emmintrin.h>
 
-#if defined __cplusplus >= 201103L || COMPILER_MICROSOFT
+#if defined COMPILER_MICROSOFT
 #define ZeroPreAlign16 __declspec(align(16))
 #define ZeroPostAlign16 
 #else

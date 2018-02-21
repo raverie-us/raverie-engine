@@ -20,7 +20,7 @@ DeclareEvent(ScreenshotUpdated);
 class LauncherProjectInfo : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherProjectInfo, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 

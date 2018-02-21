@@ -43,6 +43,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DBE8E33A-7E70-402C-BCF6-D1EFEE93FA76}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!--Import the environment paths needed to find all our different repositories-->

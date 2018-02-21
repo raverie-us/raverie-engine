@@ -1000,7 +1000,7 @@ namespace Zilch
   BoundType* InitializeType(const char* initializingTypeName, SetupFunction setupType = nullptr);
 
   // A helper for initializing types that belong to a library
-#define ZilchInitializeTypeAs(Type, Name)                                                                                                             \
+#define ZilchInitializeTypeAs(Type, Name)                                                                                                              \
     ZZ::InitializeType<Type, ZilchLibrary, void(*)(Type*, ZZ::LibraryBuilder&, ZZ::BoundType*)>(Name)
 #define ZilchInitializeType(Type)                                                                                                                     \
     ZilchInitializeTypeAs(Type, #Type)

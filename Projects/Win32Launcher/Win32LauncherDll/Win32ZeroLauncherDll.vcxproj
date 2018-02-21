@@ -43,6 +43,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EBD67762-3D8B-4F8A-8080-FC4D04013988}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!--Import the Win32 property sheet (from the build folder) for each configuration-->

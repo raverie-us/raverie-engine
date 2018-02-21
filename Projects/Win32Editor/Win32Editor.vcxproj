@@ -44,6 +44,7 @@
     <ProjectName>Win32Editor</ProjectName>
     <ProjectGuid>{F5630AC8-F0C7-4B26-A2C0-BECCBD633B97}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!--Import the Win32 property sheet (from the build folder) for each configuration-->

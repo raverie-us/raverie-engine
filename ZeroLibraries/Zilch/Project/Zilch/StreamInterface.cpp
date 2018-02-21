@@ -82,6 +82,11 @@ namespace Zilch
     ZilchFullBindMethod(builder, type, &IStreamClass::ReadAllText, (String (IStreamClass::*)(IEncoding&)), "ReadAllText", nullptr)->IsVirtual = true;
     ZilchFullBindMethod(builder, type, &IStreamClass::ReadAllText, (String (IStreamClass::*)()), "ReadAllText", nullptr)->IsVirtual = true;
   }
+  
+  //***************************************************************************
+  IEncoding::~IEncoding()
+  {
+  }
 
   //***************************************************************************
   AsciiEncoding& IEncoding::GetAscii()
@@ -173,7 +178,12 @@ namespace Zilch
     Rune rune = Zero::UTF8::ReadUtf8Rune(utf8Bytes);
     return rune;
   }
-  
+
+  //***************************************************************************
+  IStreamClass::~IStreamClass()
+  {
+  }
+
   //***************************************************************************
   StreamCapabilities::Enum IStreamClass::GetCapabilities()
   {

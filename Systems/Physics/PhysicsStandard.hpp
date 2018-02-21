@@ -9,6 +9,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include "Platform/PlatformSelector.hpp"
+
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
 #pragma clang diagnostic ignored "-Wunused-variable"
