@@ -252,7 +252,7 @@ Vec2 Sprite::GetLocalCenter()
   if (Area* area = mOwner->has(Area))
   {
     Vec2 size = area->GetSize();
-    Vec2 offset = ToOffset(area->GetOrigin());
+    Vec2 offset = -Location::GetDirection(area->GetOrigin());
 
     return offset * size;
   }
@@ -515,7 +515,7 @@ Vec2 SpriteText::GetLocalCenter()
   {
     Vec2 size = area->GetSize();
     // Area offset is a normalized value
-    Vec2 offset = ToOffset(area->GetOrigin());
+    Vec2 offset = -Location::GetDirection(area->GetOrigin());
     return offset * size;
   }
   else
@@ -529,7 +529,7 @@ Vec2 SpriteText::GetLocalCenter()
     }
 
     Vec2 size = MeasureText();
-    Vec2 offset = OffsetOfOffset(origin, Location::Center);
+    Vec2 offset = Location::GetDirection(origin, Location::Center);
     return offset * size;
   }
 }

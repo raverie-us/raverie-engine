@@ -334,7 +334,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
 
               Vec3 startOffset = collider->GetOffset();
               Vec3 startSize = collider->GetSize();
-              Vec3 endOffset = Vec3(OffsetOfOffset(area->GetOrigin(), Location::Center) * area->GetSize(), 0);
+              Vec3 endOffset = Vec3(Location::GetDirection(area->GetOrigin(), Location::Center) * area->GetSize(), 0);
 
               Property* offsetProperty = colliderType->GetProperty("Offset");
               collider->SetOffset(startOffset);

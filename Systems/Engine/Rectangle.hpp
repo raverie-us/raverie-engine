@@ -9,9 +9,31 @@
 namespace Zero
 {
 
+  //----------------------------------------------------------------------------------------- Location
 DeclareEnum9(Location, TopLeft,    TopCenter,    TopRight,
                        CenterLeft, Center,       CenterRight,
                        BottomLeft, BottomCenter, BottomRight);
+
+// Extensions
+namespace Location
+{
+  // Returns whether or not the given location is a cardinal direction (CenterLeft, TopCenter,
+  // CenterRight, BottomCenter).
+  bool IsCardinal(Location::Enum location);
+
+  // Returns the axis of the given location. This is only valid for the cardinal directions
+  // (CenterLeft, TopCenter, CenterRight, BottomCenter).
+  int GetCardinalAxis(Location::Enum location);
+
+  // Returns the direction of the given location from the center.
+  Vec2 GetDirection(Location::Enum location);
+
+  // Returns the direction from 'from' to 'to'.
+  Vec2 GetDirection(Location::Enum from, Location::Enum to);
+
+  // Returns the location on the opposite side of the given location.
+  Location::Enum GetOpposite(Location::Enum location);
+} //namespace Location
 
 //---------------------------------------------------------------------------------------- Thickness
 struct Thickness
@@ -95,6 +117,7 @@ struct Rectangle
 
   Vec2 GetSize() const;
   void SetSize(Location::Enum origin, Vec2Param size);
+  void ResizeToPoint(Location::Enum location, float position);
   void ResizeToPoint(Location::Enum location, Vec2Param position);
   void ResizeToPoint(Location::Enum location, Vec2Param position, Vec2Param minSize);
   
@@ -124,6 +147,11 @@ struct Rectangle
   void SetTop(float top);
   float GetBottom() const;
   void SetBottom(float bottom);
+
+  float GetCardinalLocation(Location::Enum location);
+  void SetLocation(Location::Enum location, float value);
+  Vec2 GetLocation(Location::Enum location);
+  void SetLocation(Location::Enum location, Vec2Param value);
 
   Vec2 Min;
   Vec2 Max;

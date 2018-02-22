@@ -38,7 +38,6 @@ ZilchDefineEnum(FlickedStick);
 ZilchDefineEnum(InputDevice);
 ZilchDefineEnum(KeyState);
 ZilchDefineEnum(LauncherAutoRunMode);
-ZilchDefineEnum(Location);
 ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
 ZilchDefineEnum(SplineType);
@@ -49,6 +48,21 @@ ZilchDefineEnum(TimeMode);
 ZilchDefineEnum(Verbosity);
 ZilchDefineEnum(WindowState);
 ZilchDefineEnum(WindowStyleFlags);
+
+ZilchDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, type)
+{
+  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
+  ZilchBindEnumValues(Location);
+  
+  // We need to alias ZilchSelf for the method binding macros
+  namespace ZilchSelf = Location;
+
+  ZilchBindMethod(IsCardinal);
+  ZilchBindMethod(GetCardinalAxis);
+  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum));
+  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum, Location::Enum));
+  ZilchBindMethod(GetOpposite);
+}
 
 // Arrays
 ZeroDefineArrayType(Array<ContentLibraryReference>);
