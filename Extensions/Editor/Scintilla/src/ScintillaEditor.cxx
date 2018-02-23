@@ -2093,7 +2093,8 @@ bool BadUTF(const char *s, int len, int &trailBytes) {
 	} else if (*us >= 0xC2) {
 		// 2 bytes
     // ZERO ENGINE EDIT to make all UTF8 appear as hexits
-    return true;
+    if(*us > 255)
+      return true;
 		if (len < 2)
 			return true;
 		if (GoodTrailByte(us[1])) {

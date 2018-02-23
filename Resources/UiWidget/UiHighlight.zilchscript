@@ -78,13 +78,15 @@ class UiHighlight : ZilchComponent
   //***************************************************************************
   function OnLeftMouseDown(event : ViewportMouseEvent)
   {
-    this.SetColor(this.MouseDownColor);
+    if(event.HandledEvent == false)
+      this.SetColor(this.MouseDownColor);
   }
   
   //***************************************************************************
   function OnLeftMouseUp(event : ViewportMouseEvent)
   {
-    this.SetColor(this.MouseHoverColor);
+    if(event.HandledEvent == false)
+      this.SetColor(this.MouseHoverColor);
   }
   
   //***************************************************************************

@@ -118,6 +118,8 @@ EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
     cancelButton->SetStyle(TextButtonStyle::Modern);
     ConnectThisTo(cancelButton, Events::ButtonPressed, OnCancel);
   }
+
+  ConnectThisTo(parent, Events::Closing, OnCancel);
 }
 
 //******************************************************************************

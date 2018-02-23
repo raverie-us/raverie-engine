@@ -463,7 +463,7 @@ void TextEditor::SetWordWrap(bool enabled)
 {
   if(enabled)
   {
-    SendEditor(SCI_SETWRAPMODE, SC_WRAP_CHAR, 0);
+    SendEditor(SCI_SETWRAPMODE, SC_WRAP_WORD, 0);
   }
   else
   {

@@ -29,6 +29,9 @@ namespace Events
   /// Sent on the owned widget of a tab when the contents of the widget
   /// have been modified (or saved)
   DeclareEvent(TabModified);
+  /// Sent on the owned widget of a tab when the resource displayed in that
+  /// tab is modified
+  DeclareEvent(TabRenamed);
   /// Name Change
   DeclareEvent(NamedChanged);
   /// When sent on the window composite, it will create a highlight around the
@@ -99,6 +102,14 @@ public:
   bool Modified;
 };
 
+class TabRenamedEvent : public Event
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  TabRenamedEvent(StringParam name) : Name(name) {}
+  String Name;
+};
+
 class QueryModifiedSaveEvent : public Event
 {
 public:
@@ -133,6 +144,7 @@ public:
   void OnRightClick(Event* event);
   void OnCloseAllOtherTabs(Event* event);
   void OnOwnedWidgetModified(TabModifiedEvent* e);
+  void OnOwnedWidgetResourceModified(TabRenamedEvent* e);
   void OnOwnedChangedFocus(FocusEvent* event);
   void OnNewWindow(Event* event);
 

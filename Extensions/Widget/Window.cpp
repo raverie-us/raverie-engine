@@ -47,6 +47,7 @@ namespace Events
   DefineEvent(CloseWindow);
   DefineEvent(CloseCheck);
   DefineEvent(TabModified);
+  DefineEvent(TabRenamed);
   DefineEvent(QueryModifiedSave);
   DefineEvent(ConfirmModifiedSave);
   DefineEvent(NamedChanged);
@@ -62,6 +63,10 @@ ZilchDefineType(HighlightBorderEvent, builder, type)
 }
 
 ZilchDefineType(TabModifiedEvent, builder, type)
+{
+}
+
+ZilchDefineType(TabRenamedEvent, builder, type)
 {
 }
 
@@ -275,6 +280,7 @@ void TabWidget::SetOwnedWidget(Widget* widget)
 
   if(widget)
   {
+    ConnectThisTo(widget, Events::TabRenamed, OnOwnedWidgetResourceModified);
     ConnectThisTo(widget, Events::TabModified, OnOwnedWidgetModified);
     ConnectThisTo(widget, Events::FocusGainedHierarchy, OnOwnedChangedFocus);
     ConnectThisTo(widget, Events::FocusLostHierarchy, OnOwnedChangedFocus);
@@ -289,6 +295,15 @@ void TabWidget::OnOwnedChangedFocus(FocusEvent* event)
   this->MarkAsNeedsUpdate();
 }
 
+void TabWidget::OnOwnedWidgetResourceModified(TabRenamedEvent* e)
+{
+  String title = BuildString("Level: ", e->Name);
+
+  if(mOwned != nullptr)
+    mOwned->mName = title;
+
+  mTitle->SetText(title);
+}
 
 void TabWidget::OnOwnedWidgetModified(TabModifiedEvent* e)
 {

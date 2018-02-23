@@ -25,7 +25,7 @@ bool AnyNewLine(Rune rune)
 //character > 255 quick fix for UTF8 needs to be improved to be accurate
 bool IsPrintable(Rune rune)
 {
-  return (rune >= 32 && rune < 127) || rune == 169 || rune == 149 || rune > 255;
+  return (rune >= 32 && rune < 127) || rune == 169 || rune == 149 || rune == 245 || rune > 255;
 }
 
 //------------------------------------------------------------ Render Font 

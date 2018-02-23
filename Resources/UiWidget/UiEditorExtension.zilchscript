@@ -27,7 +27,18 @@ class UiEditorExtension : ZilchComponent
     var hitWidget = this.GetHitCog(event.ToWorldZPlane(0));
     if(hitWidget != null)
     {
-      Zero.Editor.Selection.SelectOnly(hitWidget);
+      var selection = Zero.Editor.Selection;
+      if(event.ShiftPressed)
+      {
+        if(selection.Contains(hitWidget))
+          selection.Remove(hitWidget);
+        else
+          selection.Add(hitWidget);
+      }
+      else
+      {
+        selection.SelectOnly(hitWidget);
+      }
       Zero.Editor.Selection.FinalSelectionChanged();
       event.HandledEvent = true;
     }
