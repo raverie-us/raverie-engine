@@ -78,7 +78,7 @@ private:
   
   bool ObjectsValid(Cog* a, Cog* b, StringParam jointName);
   void ConfigureInfo(ConnectionInfo& info);
-  static Cog* CreateJoint(StringParam fileName, ConnectionInfo& info);
+  Cog* CreateJoint(StringParam fileName, ConnectionInfo& info);
   void SetBasicProperties(Joint* joint);
   template <typename JointType>
   void CallJointFunctions(Joint* joint, ConnectionInfo& info);

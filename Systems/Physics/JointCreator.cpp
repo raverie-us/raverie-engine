@@ -133,17 +133,6 @@ Cog* JointCreator::AttachInternal(ConnectionInfo& info, StringParam jointName)
   Cog* cog = CreateJoint(jointName, info);
   if(cog == nullptr)
     return nullptr;
-  
-  // Attach the joint to the common parent if it exists
-  if(mFlags.IsSet(JointCreatorFlags::AttachToCommonParent))
-  {
-    Cog* cogA = info.a;
-    Cog* cogB = info.b;
-    Cog* commonParent = FindCommonParent(cogA, cogB);
-
-    if(commonParent != nullptr)
-      cog->AttachToPreserveLocal(commonParent);
-  }
 
   Joint* joint = cog->has(Joint);
 
@@ -332,6 +321,18 @@ Cog* JointCreator::CreateJoint(StringParam fileName, ConnectionInfo& info)
   {
     ErrorIf(true, "Joint data file %s did not contain a ObjectLink.", fileName.c_str());
     return nullptr;
+  }
+
+  // Attach the joint to the common parent if it exists.
+  // This needs to happen before linking the objects up so the relative paths are computed correctly.
+  if(mFlags.IsSet(JointCreatorFlags::AttachToCommonParent))
+  {
+    Cog* cogA = info.a;
+    Cog* cogB = info.b;
+    Cog* commonParent = FindCommonParent(cogA, cogB);
+
+    if(commonParent != nullptr)
+      cog->AttachToPreserveLocal(commonParent);
   }
 
   objLink->SetCogAInternal(info.a);
