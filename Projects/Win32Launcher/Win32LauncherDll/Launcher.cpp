@@ -20,7 +20,7 @@ void OnLauncherTweakablesModified()
   Tweakables::Save();
 }
 
-IntVec2 Launcher::mEulaWindowSize = IntVec2(457, 520);
+IntVec2 Launcher::mEulaWindowSize = IntVec2(700, 520);
 IntVec2 Launcher::mLauncherWindowSize = IntVec2(1024, 595);
 
 //--------------------------------------------------------------------- Launcher
