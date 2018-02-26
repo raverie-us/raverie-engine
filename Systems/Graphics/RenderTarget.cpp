@@ -5,6 +5,8 @@ namespace Zero
 
 ZilchDefineType(SamplerSettings, builder, type)
 {
+  ZeroBindDocumented();
+
   type->CreatableInScript = true;
   ZilchBindFieldProperty(mAddressingX);
   ZilchBindFieldProperty(mAddressingY);
@@ -108,6 +110,8 @@ void SamplerSettings::FillDefaults(u32& samplerSettings, u32 defaultSettings)
 
 ZilchDefineType(RenderTarget, builder, type)
 {
+  ZeroBindDocumented();
+
   ZilchBindFieldGetter(mTexture);
   ZilchBindMethod(Release);
 }

@@ -5,6 +5,7 @@ namespace Zero
 
 ZilchDefineType(ShaderInputs, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 
@@ -106,6 +107,7 @@ void ShaderInputs::Clear()
 DefineThreadSafeReferenceCountedHandle(BlendSettings);
 ZilchDefineType(BlendSettings, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindThreadSafeReferenceCountedHandle();
   ZilchBindDefaultCopyDestructor();
   type->CreatableInScript = true;
@@ -166,6 +168,7 @@ void BlendSettings::SetBlendAdditive()
 DefineThreadSafeReferenceCountedHandle(DepthSettings);
 ZilchDefineType(DepthSettings, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindThreadSafeReferenceCountedHandle();
   ZilchBindDefaultCopyDestructor();
   type->CreatableInScript = true;
@@ -274,6 +277,7 @@ void DepthSettings::SetStencilDecrement()
 
 ZilchDefineType(RenderSettings, builder, type)
 {
+  ZeroBindDocumented();
   ZilchBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 
@@ -431,6 +435,8 @@ MultiRenderTarget* RenderSettings::GetMultiRenderTarget()
 
 ZilchDefineType(ColorTargetMrt, builder, type)
 {
+  ZeroBindDocumented();
+
   ZilchBindMethod(Set);
 }
 
@@ -443,6 +449,8 @@ void ColorTargetMrt::Set(uint index, RenderTarget* colorTarget)
 
 ZilchDefineType(BlendSettingsMrt, builder, type)
 {
+  ZeroBindDocumented();
+
   ZilchBindMethod(Get);
   ZilchBindMethod(Set);
 }
@@ -463,6 +471,8 @@ BlendSettings* BlendSettingsMrt::Get(uint index)
 
 ZilchDefineType(MultiRenderTarget, builder, type)
 {
+  ZeroBindDocumented();
+
   ZilchBindGetterAs(ColorTargetMrt, "ColorTarget");
   ZilchBindSetter(ColorTarget0);
   ZilchBindSetter(ColorTarget1);

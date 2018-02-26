@@ -11,6 +11,8 @@ namespace Events
 
 ZilchDefineType(GraphicalRangeInterface, builder, type)
 {
+  ZeroBindDocumented();
+
   ZilchBindMethod(Add);
   ZilchBindMethod(Clear);
   ZilchBindGetterProperty(Count);
@@ -246,6 +248,7 @@ bool RenderTaskRange::operator<(const RenderTaskRange& other) const
 //------------------------------------------------------------- RenderTasksEvent
 ZilchDefineType(RenderTasksEvent, builder, type)
 {
+  ZeroBindDocumented();
   ZeroBindEvent(Events::RenderTasksUpdate, RenderTasksEvent);
 
   ZilchBindGetter(ViewportSize);
