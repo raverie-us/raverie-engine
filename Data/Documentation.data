@@ -85518,7 +85518,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "TimeScale"
 					var Type = "Real"
-					var Description = "Scale the speed of time for interesting effects like bullet time or fast paced gameplay."
+					var Description = "Scale the speed of time for interesting effects like bullet time or fast paced gameplay. TimeScale is clamped to be positive."
 					var ReadOnly = false
 					var Static = false
 				}

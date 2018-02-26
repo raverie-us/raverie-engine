@@ -271,7 +271,6 @@ void ParameterDoc::Serialize(Serializer& stream)
   SerializeName(mName);
   SerializeName(mType);
   SerializeName(mDescription);
-
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -295,6 +294,111 @@ MethodDoc::~MethodDoc()
     delete except;
   }
 }
+
+////////////////////////////////////////////////////////////////////////
+// AttributeDoc
+////////////////////////////////////////////////////////////////////////
+AttributeDoc::AttributeDoc(AttributeExtension* attribute)
+{
+  mName = attribute->mAttributeName;
+  mAllowStatic = attribute->mAllowStatic;
+  mAllowMultiple = attribute->mAllowMultiple;
+  mDeveloperAttribute = false;
+}
+
+
+bool AttributeDocCompareFn(AttributeDoc* lhs, AttributeDoc* rhs)
+{
+  return lhs->mName < rhs->mName;
+}
+
+void AttributeDoc::Serialize(Serializer& stream)
+{
+  SerializeName(mName);
+  SerializeName(mDescription);
+  SerializeName(mAllowStatic);
+  SerializeName(mAllowMultiple);
+  SerializeName(mDeveloperAttribute);
+}
+
+////////////////////////////////////////////////////////////////////////
+// AttributeDocList
+////////////////////////////////////////////////////////////////////////
+Zero::AttributeDocList::~AttributeDocList()
+{
+  forRange(AttributeDoc* attribToDelete, mObjectAttributes.All())
+  {
+    delete attribToDelete;
+  }
+  forRange(AttributeDoc* attribToDelete, mFunctionAttributes.All())
+  {
+    delete attribToDelete;
+  }
+  forRange(AttributeDoc* attribToDelete, mPropertyAttributes.All())
+  {
+    delete attribToDelete;
+  }
+}
+
+void AttributeDocList::Serialize(Serializer& stream)
+{
+  SerializeName(mObjectAttributes);
+  SerializeName(mFunctionAttributes);
+  SerializeName(mPropertyAttributes);
+}
+
+// we have a seperate saveToFile since the doc tool can't use Serialize function
+bool AttributeDocList::SaveToFile(StringParam fileName)
+{
+  Status status;
+  TextSaver saver;
+
+  saver.Open(status, fileName.c_str());
+
+  if (status.Failed())
+  {
+    Error("Unable to save attribute list file: %s\n", fileName);
+    return false;
+  }
+
+  saver.StartPolymorphic("AttributeDocList");
+
+  saver.SerializeField("ObjectAttributes", mObjectAttributes);
+  saver.SerializeField("FunctionAttributes", mFunctionAttributes);
+  saver.SerializeField("PropertyAttributes", mPropertyAttributes);
+
+  saver.EndPolymorphic();
+
+  saver.Close();
+
+  return true;
+}
+
+void AttributeDocList::CreateAttributeMap(void)
+{
+  forRange(AttributeDoc* attrib, mObjectAttributes.All())
+  {
+    mObjectAttributesMap[attrib->mName] = attrib;
+  }
+  forRange(AttributeDoc* attrib, mFunctionAttributes.All())
+  {
+    mFunctionAttributesMap[attrib->mName] = attrib;
+  }
+  forRange(AttributeDoc* attrib, mPropertyAttributes.All())
+  {
+    mPropertyAttributesMap[attrib->mName] = attrib;
+  }
+}
+
+
+
+void AttributeDocList::Sort(void)
+{
+  Zero::Sort(mObjectAttributes.All(), AttributeDocCompareFn);
+  Zero::Sort(mFunctionAttributes.All(), AttributeDocCompareFn);
+  Zero::Sort(mPropertyAttributes.All(), AttributeDocCompareFn);
+}
+
 
 void MethodDoc::Serialize(Serializer& stream)
 {
@@ -736,16 +840,16 @@ void DocumentationLibrary::LoadFromMeta()
      }
    }
 
-   // add constructors to method list so we get them into the documentation too.
-
+   // get list of all functions (except constructors)
    Array<Function *> allFunctions = metaType->AllFunctions;
 
+   // add constructors to method list so we get them into the documentation too.
    forRange(Function* constructor, metaType->Constructors.All())
    {
      allFunctions.Append(constructor);
    }
 
-   // Get all methods
+   // Save all methods
    forRange(Function* method, allFunctions.All())
    {
      if (functionSet.Contains(method))

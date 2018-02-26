@@ -69,7 +69,6 @@ namespace Zero
     Array<String> mTags;
   };
 
-
   /// Wrapper around our command documentation list so we can serialize it properly
   class CommandDocList : public Object
   {
@@ -79,6 +78,44 @@ namespace Zero
     void Sort(void);
 
     Array<CommandDoc*> mCommands;
+  };
+
+  /// class for documenting all the attributes usable in zero
+  class AttributeDoc : public Object
+  {
+  public:
+    AttributeDoc(){}
+    AttributeDoc(AttributeExtension* attribute);
+    void Serialize(Serializer& stream);
+
+    String mName;
+    String mDescription;
+    bool mAllowStatic;
+    bool mAllowMultiple;
+    bool mDeveloperAttribute;
+  };
+
+  /// Wrapper around our attribute documentation list so we can serialize it properly
+  class AttributeDocList : public Object
+  {
+  public:
+    ~AttributeDocList();
+
+    void Serialize(Serializer& stream);
+
+    bool SaveToFile(StringParam fileName);
+
+    void CreateAttributeMap(void);
+
+    void Sort(void);
+
+    HashMap<String, AttributeDoc *> mObjectAttributesMap;
+    HashMap<String, AttributeDoc *> mFunctionAttributesMap;
+    HashMap<String, AttributeDoc *> mPropertyAttributesMap;
+
+    Array<AttributeDoc *> mObjectAttributes;
+    Array<AttributeDoc *> mFunctionAttributes;
+    Array<AttributeDoc *> mPropertyAttributes;
   };
 
 
