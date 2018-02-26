@@ -56,7 +56,7 @@ cstr GetLauncherGuidString()
 uint GetLauncherMajorVersion()
 {
   // Hardcoded to 1 for all legacy versions. The first version on the new server will be 2
-  return 3;
+  return 4;
 }
 
 uint GetMajorVersion()
