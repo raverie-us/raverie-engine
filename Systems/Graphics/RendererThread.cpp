@@ -186,7 +186,13 @@ void DoRenderTasksJob::Execute()
   mWaitEvent.Signal();
 }
 
-void GetTextureDataJob::Execute()
+void ReturnRendererJob::Execute()
+{
+  OnExecute();
+  Z::gEngine->has(GraphicsEngine)->mReturnJobQueue->AddJob(this);
+}
+
+void GetTextureDataJob::OnExecute()
 {
   Z::gRenderer->GetTextureData(this);
 }

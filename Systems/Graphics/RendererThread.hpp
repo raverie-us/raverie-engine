@@ -218,10 +218,17 @@ public:
   RenderQueues* mRenderQueues;
 };
 
-class GetTextureDataJob : public RendererJob
+class ReturnRendererJob : public RendererJob
 {
 public:
   void Execute() override;
+  virtual void OnExecute() = 0;
+};
+
+class GetTextureDataJob : public ReturnRendererJob
+{
+public:
+  void OnExecute() override;
 
   TextureRenderData* mRenderData;
   TextureFormat::Enum mFormat;
