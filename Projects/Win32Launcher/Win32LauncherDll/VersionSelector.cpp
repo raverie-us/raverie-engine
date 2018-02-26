@@ -192,6 +192,7 @@ void VersionSelector::SaveInstalledBuildsMeta()
 
 BackgroundTask* VersionSelector::GetServerListing()
 {
+  ZPrint("Requesting build list from server.\n");
   //start the task to get the version listing
   String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestBuildList");
   
@@ -207,6 +208,7 @@ BackgroundTask* VersionSelector::GetServerListing()
 
 void VersionSelector::UpdatePackageListing(GetVersionListingTaskJob* job)
 {
+  ZPrint("Updating build list.\n");
   //clear out whether or not each version is on the server
   //(so that if one was removed then it will be updated)
   for(uint i = 0; i < mVersions.Size(); ++i)
@@ -322,6 +324,7 @@ void VersionSelector::UpdatePackageListing(GetVersionListingTaskJob* job)
 
 void VersionSelector::AddCustomBuild(StringParam buildPath, bool shouldInstall)
 {
+  ZPrint("Adding custom user build.\n");
   ZeroBuild* localBuild = new ZeroBuild();
 
   // Load the build id for this archive. This may come from a meta file in the archive,
@@ -533,6 +536,7 @@ void VersionSelector::FindDownloadedTemplatesRecursive(StringParam searchPath)
 
 BackgroundTask* VersionSelector::GetTemplateListing()
 {
+  ZPrint("Checking server for project templates.\n");
   String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestTemplateList");
 
   // If we have dev config then add an extra command to get some extra templates (for testing)
@@ -547,6 +551,7 @@ BackgroundTask* VersionSelector::GetTemplateListing()
 
 void VersionSelector::UpdateTemplateListing(GetTemplateListingTaskJob* templates)
 {
+  ZPrint("Updating template project listing.\n");
   // Mark all templates as not being on the server (so we know which ones to get rid of later)
   for(size_t i = 0; i < mTemplates.Size(); ++i)
     mTemplates[i]->mIsOnServer = false;
@@ -621,7 +626,9 @@ void VersionSelector::UpdateTemplateListing(GetTemplateListingTaskJob* templates
 
 BackgroundTask* VersionSelector::DownloadTemplateProject(TemplateProject* project)
 {
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestTemplateProject&TemplatePath=", project->GetTemplateUrl());
+  String templateUrl = project->GetTemplateUrl();
+  ZPrint("Downloading template project '%s'.\n", templateUrl.c_str());
+  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestTemplateProject&TemplatePath=", templateUrl);
   DownloadTemplateTaskJob* job = new DownloadTemplateTaskJob(url, project);
 
   ZeroTemplate* zeroTemplate = project->GetZeroTemplate(true);
@@ -950,6 +957,7 @@ void VersionSelector::ForceUpdateAllBuilds()
 
 BackgroundTask* VersionSelector::CheckForPatchLauncherUpdate()
 {
+  ZPrint("Checking for launcher patch update.\n");
   // Ask if there's a new launcher installer given our current major version
   BuildId currentBuild = BuildId::GetCurrentLauncherId();
   String url = BuildString(GetLauncherPhpUrl(), "?Commands=ListVersionId&MajorId=", ToString(currentBuild.mMajorVersion));
@@ -962,6 +970,7 @@ BackgroundTask* VersionSelector::CheckForPatchLauncherUpdate()
 
 BackgroundTask* VersionSelector::DownloadPatchLauncherUpdate()
 {
+  ZPrint("Downloading launcher patch update.\n");
   // Ask if there's a new launcher patch given our current major version
   String majorVersionIdStr = ToString(GetLauncherMajorVersion());
   String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestZeroLauncherPackage&MajorId=", majorVersionIdStr);
@@ -975,6 +984,7 @@ BackgroundTask* VersionSelector::DownloadPatchLauncherUpdate()
 
 BackgroundTask* VersionSelector::CheckForMajorLauncherUpdate()
 {
+  ZPrint("Checking for launcher major update.\n");
   // Ask if there's a new launcher installer given our current major version
   BuildId currentBuild = BuildId::GetCurrentLauncherId();
   String url = BuildString(GetLauncherPhpUrl(), "?Commands=CheckForMajorLauncherUpdate&MajorId=", ToString(currentBuild.mMajorVersion));
@@ -987,6 +997,7 @@ BackgroundTask* VersionSelector::CheckForMajorLauncherUpdate()
 
 BackgroundTask* VersionSelector::DownloadMajorLauncherUpdate()
 {
+  ZPrint("Downloading launcher major update.\n");
   // Ask if there's a new launcher installer given our current major version
   BuildId currentBuild = BuildId::GetCurrentLauncherId();
   String url = BuildString(GetLauncherPhpUrl(), "?Commands=DownloadMajorLauncherUpdate");

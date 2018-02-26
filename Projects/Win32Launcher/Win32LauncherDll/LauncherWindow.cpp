@@ -250,6 +250,7 @@ void MainButton::OnMouseExit(MouseEvent* e)
 LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   : Composite(parent)
 {
+  ZPrint("Displaying Launcher Window\n");
   mUpdateModalName = "UpdateModal";
   mIsLauncherUpdateCheckQueued = false;
 
@@ -496,10 +497,12 @@ void LauncherWindow::OnCheckForMajorLauncherUpdates(BackgroundTaskEvent* e)
   CheckForLauncherMajorInstallerJob* job = (CheckForLauncherMajorInstallerJob*)e->mTask->GetFinishedJob();
   if(!job->mIsNewInstallerAvailable)
   {
+    ZPrint("No new major update found.\n");
     CheckForLauncherPatch();
     return;
   }
 
+  ZPrint("New major update found. Asking user to upgrade.\n");
   // There is a new major version. Notify the user and ask them to install.
   String msg = "New Launcher installer available. Close and run?";
   msg = msg.ToUpper();
@@ -516,7 +519,10 @@ void LauncherWindow::OnInstallMajorVersion(ModalConfirmEvent* e)
   // If the user said no then just close the dialog (kinda bad that
   // they can continue through, but whatever for now...)
   if(!e->mConfirmed)
+  {
+    ZPrint("User cancelled major version install.\n");
     return;
+  }
 
   BackgroundTask* task = mVersionSelector->DownloadMajorLauncherUpdate();
   ConnectThisTo(task, Events::BackgroundTaskCompleted, OnMajorLauncherUpdateDownloaded);
@@ -530,13 +536,17 @@ void LauncherWindow::OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 {
   // If the task failed then something bad happened, just return
   if(!e->mTask->IsCompleted())
+  {
+    ZPrint("Downloading major update failed.\n");
     return;
+  }
 
   // Check the job to see if there's a new major version, if not then
   // queue up a job to check for a new patch version.
   DownloadLauncherMajorInstallerJob* job = (DownloadLauncherMajorInstallerJob*)e->mTask->GetFinishedJob();
   if(!job->mIsNewInstallerAvailable)
   {
+    ZPrint("No major update available.\n");
     CheckForLauncherPatch();
     return;
   }
@@ -573,6 +583,7 @@ void LauncherWindow::OnCheckForLauncherPatch(BackgroundTaskEvent* e)
   // If the server has a newer package then ask the user if they want to update
   if(localId < serverVersionId)
   {
+    ZPrint("New launcher patch version available. Asking user to upgrade.\n");
     // There is a new patch version. Notify the user and ask them to install.
     String msg = "New Launcher update available. Close and run?";
     msg = msg.ToUpper();
@@ -590,7 +601,10 @@ void LauncherWindow::OnInstallPatchVersion(ModalConfirmEvent* e)
   // If the user said no then just close the dialog (kinda bad that
   // they can continue through, but whatever for now...)
   if(!e->mConfirmed)
+  {
+    ZPrint("User cancelled patch update.\n");
     return;
+  }
 
   BackgroundTask* task = mVersionSelector->DownloadPatchLauncherUpdate();
   ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPatchLauncherUpdateDownloaded);
@@ -603,15 +617,22 @@ void LauncherWindow::OnPatchLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 {
   // If the task failed then something bad happened, just return
   if(!e->mTask->IsCompleted())
+  {
+    ZPrint("Patch update failed.\n");
     return;
+  }
 
   // Check the job to see if there's a new major version, if not then
   // queue up a job to check for a new minor version (ignored for now, needs further
   // testing and minor versions are auto-downloaded on launcher).
   DownloadLauncherPatchInstallerJob* job = (DownloadLauncherPatchInstallerJob*)e->mTask->GetFinishedJob();
   if(!job->mIsNewPatchAvailable)
+  {
+    ZPrint("No patch downloaded.\n");
     return;
+  }
 
+  ZPrint("Patch installed. Restarting launcher.\n");
   mConfigCog->has(LauncherConfig)->mRestartOnClose = true;
   Z::gEngine->Terminate();
 }
@@ -1022,7 +1043,7 @@ void LauncherWindow::CheckForForcedBuildUpdate()
 void LauncherWindow::OnNewBuildAvailable(Event* e)
 {
   // Display some special notification letting them know something new is available?
-  ZPrint("New Build Available");
+  ZPrint("New Build Available\n");
 }
 
 //******************************************************************************

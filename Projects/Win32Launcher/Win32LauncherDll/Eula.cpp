@@ -53,6 +53,7 @@ public:
 EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
   Composite(parent)
 {
+  ZPrint("Displaying Eula Window\n");
   SetLayout(CreateStackLayout());
 
   Composite* eulaArea = new Composite(this);
@@ -125,12 +126,14 @@ EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
 //******************************************************************************
 void EulaWindow::OnAccept(Event*)
 {
+  ZPrint("Eula Accepted\n");
   Z::gLauncher->EulaAccepted();
 }
 
 //******************************************************************************
 void EulaWindow::OnCancel(Event*)
 {
+  ZPrint("Eula Rejected\n");
   Z::gEngine->Terminate();
 }
 
