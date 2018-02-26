@@ -241,7 +241,7 @@ public:
   RuntimeEditorImpl* mRuntimeEditorImpl;
   void SelectOnly(HandleParam object);
   void SelectPrimary(HandleParam object);
-  virtual void OnEngineUpdate(UpdateEvent* event) {}
+  virtual void OnEngineUpdate(UpdateEvent* event);
   void OnResourcesUnloaded(ResourceEvent* event);
   void Update();
   void ExecuteCommand(StringParam commandName);
@@ -278,6 +278,7 @@ public:
   void OnSaveRestartMessageBox(MessageBoxEvent* event);
   GameArray mGames;
   bool mGamePending;
+  bool mStopGame;
 
   Array<CogId> mSelectionGizmos;
   UniquePointer<EventObject> mSimpleDebuggerListener;
