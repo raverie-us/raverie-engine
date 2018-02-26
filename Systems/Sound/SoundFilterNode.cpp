@@ -503,6 +503,7 @@ void CustomAudioNode::SendAudioEvent(const Audio::AudioEventTypes::Enum eventTyp
   {
     CustomAudioNodeEvent event(((Audio::CustomDataSampleRequest*)data)->SamplesNeeded);
     mDispatcher.Dispatch(Events::CustomAudioNodeSamplesNeeded, &event);
+    delete (Audio::CustomDataSampleRequest*)data;
   }
 }
 

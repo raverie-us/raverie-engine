@@ -403,9 +403,6 @@ namespace Audio
     // If the interface exists, send the event
     if (ExternalData)
       ExternalData->SendAudioEvent(eventType, data);
-    // Delete any allocated data
-    if (data)
-      delete data;
   }
 
   //************************************************************************************************
