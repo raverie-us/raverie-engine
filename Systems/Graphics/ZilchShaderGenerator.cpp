@@ -1,8 +1,12 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 void CustomEmitVertexCallback(ShaderCodeBuilder& builder, ZilchShaderSettingsRef& settings, EmitVertexCallbackData& data)
 {
   ShaderDefinitionSettings& shaderSettings = settings->mShaderDefinitionSettings;
@@ -22,6 +26,7 @@ void CustomEmitVertexCallback(ShaderCodeBuilder& builder, ZilchShaderSettingsRef
   }
 }
 
+//**************************************************************************************************
 ZilchShaderGenerator* CreateZilchShaderGenerator()
 {
   ZilchShaderGenerator* shaderGenerator = new ZilchShaderGenerator();
@@ -30,17 +35,19 @@ ZilchShaderGenerator* CreateZilchShaderGenerator()
   return shaderGenerator;
 }
 
+//**************************************************************************************************
 ZilchShaderGenerator::ZilchShaderGenerator()
   : mFragmentsProject("Fragments")
 {
   mSettings = new ZilchShaderSettings();
 }
 
+//**************************************************************************************************
 ZilchShaderGenerator::~ZilchShaderGenerator()
 {
-  
 }
 
+//**************************************************************************************************
 void ZilchShaderGenerator::Initialize()
 {
   if(mTranslator == nullptr)
@@ -199,6 +206,7 @@ void ZilchShaderGenerator::Initialize()
     settings->mNameSettings.mAllowedFieldAttributes.Insert(attribute, AttributeInfo());
 }
 
+//**************************************************************************************************
 // Quick fix function for turning a zilch any into a string (the to-string function isn't always correct
 String DefaultValueToString(StringParam propertyType, Zilch::Any& defaultValue)
 {
@@ -227,6 +235,7 @@ String DefaultValueToString(StringParam propertyType, Zilch::Any& defaultValue)
   return String();
 }
 
+//**************************************************************************************************
 LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
 {
   // METAREFACTOR This whole function is temporary. It should build the types in a custom way
@@ -327,6 +336,7 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
   return project.Compile(wrapperProjectName, module, EvaluationMode::Project);
 }
 
+//**************************************************************************************************
 LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Array<ZilchDocumentResource*>& fragments, StringParam libraryName)
 {
   mFragmentsProject.Clear();
@@ -415,6 +425,7 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Arr
   return library;
 }
 
+//**************************************************************************************************
 bool ZilchShaderGenerator::Commit(ZilchCompileEvent* e)
 {
   // Don't need to do anything if there are no pending libraries
@@ -445,6 +456,7 @@ bool ZilchShaderGenerator::Commit(ZilchCompileEvent* e)
   return true;
 }
 
+//**************************************************************************************************
 void ZilchShaderGenerator::MapFragmentTypes()
 {
   mPendingFragmentTypes.Clear();
@@ -487,6 +499,7 @@ void ZilchShaderGenerator::MapFragmentTypes()
   }
 }
 
+//**************************************************************************************************
 bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, UniqueComposite>& composites, Array<ShaderEntry>& shaderEntries, Array<ZilchShaderDefinition>* compositeShaderDefs)
 {
   ZilchCompositor compositor;
@@ -604,6 +617,7 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
   return true;
 }
 
+//**************************************************************************************************
 ShaderInput ZilchShaderGenerator::CreateShaderInput(StringParam fragmentName, StringParam inputName, ShaderInputType::Enum type, AnyParam value)
 {
   ShaderInput shaderInput;
@@ -640,6 +654,7 @@ ShaderInput ZilchShaderGenerator::CreateShaderInput(StringParam fragmentName, St
   return shaderInput;
 }
 
+//**************************************************************************************************
 void ZilchShaderGenerator::OnZilchFragmentCompilationError(Zilch::ErrorEvent* event)
 {
   String shortMessage = event->ExactError;
@@ -647,6 +662,7 @@ void ZilchShaderGenerator::OnZilchFragmentCompilationError(Zilch::ErrorEvent* ev
   ZilchFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, shortMessage, fullMessage, event->Location);
 }
 
+//**************************************************************************************************
 void ZilchShaderGenerator::OnZilchFragmentTypeParsed(Zilch::ParseEvent* event)
 {
   // There are a lot of attributes in zilch fragments that aren't valid for zilch script.
@@ -655,17 +671,20 @@ void ZilchShaderGenerator::OnZilchFragmentTypeParsed(Zilch::ParseEvent* event)
   AttributeExtensions::GetInstance()->ProcessType(event->Type, event->BuildingProject, true);
 }
 
+//**************************************************************************************************
 void ZilchShaderGenerator::OnZilchFragmentTranslationError(TranslationErrorEvent* event)
 {
   String fullMessage = event->GetFormattedMessage(Zilch::MessageFormat::Python);
   ZilchFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, event->mShortMessage, fullMessage, event->mLocation);
 }
 
+//**************************************************************************************************
 void ZilchShaderGenerator::OnFragmentProjectPostSyntaxer(ParseEvent* e)
 {
   MetaLibraryExtensions::AddExtensionsPostCompilation(*e->Builder);
 }
 
+//**************************************************************************************************
 ZilchShaderLibraryRef ZilchShaderGenerator::GetInternalLibrary(LibraryRef library)
 {
   if(library == nullptr)
@@ -683,26 +702,31 @@ ZilchShaderLibraryRef ZilchShaderGenerator::GetInternalLibrary(LibraryRef librar
   return internalLibrary;
 }
 
+//**************************************************************************************************
 ZilchShaderLibraryRef ZilchShaderGenerator::GetCurrentInternalLibrary(LibraryRef library)
 {
   return mCurrentToInternal.FindValue(library, nullptr);
 }
 
+//**************************************************************************************************
 ZilchShaderLibraryRef ZilchShaderGenerator::GetPendingInternalLibrary(LibraryRef library)
 {
   return mPendingToPendingInternal.FindValue(library, nullptr);
 }
 
+//**************************************************************************************************
 ZilchShaderGenerator::InternalLibraryRange ZilchShaderGenerator::GetCurrentInternalLibraries()
 {
   return mCurrentToInternal.Values();
 }
 
+//**************************************************************************************************
 ZilchShaderLibraryRef ZilchShaderGenerator::GetCurrentInternalProjectLibrary()
 {
   return GetInternalLibrary(ZilchManager::GetInstance()->mCurrentFragmentProjectLibrary);
 }
 
+//**************************************************************************************************
 ZilchShaderLibraryRef ZilchShaderGenerator::GetPendingInternalProjectLibrary()
 {
   return GetInternalLibrary(ZilchManager::GetInstance()->mPendingFragmentProjectLibrary);

@@ -1,8 +1,12 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 void StreamedVertexBuffer::Initialize()
 {
   mBufferSize = 1 << 18; // 256Kb, 1213 sprites at 216 bytes per sprite
@@ -30,12 +34,14 @@ void StreamedVertexBuffer::Initialize()
   mActive = false;
 }
 
+//**************************************************************************************************
 void StreamedVertexBuffer::Destroy()
 {
   glDeleteBuffers(1, &mVertexBuffer);
   glDeleteVertexArrays(1, &mVertexArray);
 }
 
+//**************************************************************************************************
 void StreamedVertexBuffer::AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType)
 {
   if (!mActive)
@@ -76,6 +82,7 @@ void StreamedVertexBuffer::AddVertices(StreamedVertex* vertices, uint count, Pri
   mCurrentBufferOffset += uploadSize;
 }
 
+//**************************************************************************************************
 void StreamedVertexBuffer::FlushBuffer(bool deactivate)
 {
   if (mCurrentBufferOffset > 0)

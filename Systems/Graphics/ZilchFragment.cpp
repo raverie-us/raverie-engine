@@ -1,23 +1,22 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Nathan Carlson
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Joshua Davis, Nathan Carlson
+// Copyright 2014, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ZilchFragment
+//**************************************************************************************************
 ZilchDefineType(ZilchFragment, builder, type)
 {
 }
 
+//**************************************************************************************************
 ZilchFragment::ZilchFragment()
 {
 }
 
+//**************************************************************************************************
 void ZilchFragment::ReloadData(StringRange data)
 {
   ZilchDocumentResource::ReloadData(data);
@@ -30,6 +29,7 @@ void ZilchFragment::ReloadData(StringRange data)
   event.Manager->DispatchEvent(Events::ResourceModified, &event);
 }
 
+//**************************************************************************************************
 void AddResourceLibraries(Array<Zilch::LibraryRef>& libraries, ResourceLibrary* library)
 {
   forRange(ResourceLibrary* dependency, library->Dependencies.All())
@@ -38,6 +38,7 @@ void AddResourceLibraries(Array<Zilch::LibraryRef>& libraries, ResourceLibrary* 
   libraries.PushBack(library->mSwapFragment.mCurrentLibrary);
 }
 
+//**************************************************************************************************
 void ZilchFragment::GetKeywords(Array<Completion>& keywordsOut)
 {
   ZilchBase::GetKeywords(keywordsOut);
@@ -75,6 +76,7 @@ void ZilchFragment::GetKeywords(Array<Completion>& keywordsOut)
   AddKeywords(keywordsOut, nameSettings.mAllowedFieldAttributes);
 }
 
+//**************************************************************************************************
 void ZilchFragment::AddKeywords(Array<Completion>& keywordsOut, const Array<String>& keyswords, HashSet<String>& keywordsToSkip)
 {
   forRange(String& keyword, keyswords.All())
@@ -84,6 +86,7 @@ void ZilchFragment::AddKeywords(Array<Completion>& keywordsOut, const Array<Stri
   }
 }
 
+//**************************************************************************************************
 void ZilchFragment::AddKeywords(Array<Completion>& keywordsOut, const HashMap<String, AttributeInfo>& keyswordsToTest)
 {
   typedef HashMap<String, AttributeInfo> AttributeMap;
@@ -94,6 +97,7 @@ void ZilchFragment::AddKeywords(Array<Completion>& keywordsOut, const HashMap<St
   }
 }
 
+//**************************************************************************************************
 void ZilchFragment::GetLibraries(Array<Zilch::LibraryRef>& libraries)
 {
   // Add the core library so we get auto-completion on things like Console
@@ -105,6 +109,7 @@ void ZilchFragment::GetLibraries(Array<Zilch::LibraryRef>& libraries)
   GetLibrariesRecursive(libraries, mResourceLibrary);
 }
 
+//**************************************************************************************************
 void ZilchFragment::GetLibrariesRecursive(Array<LibraryRef>& libraries, ResourceLibrary* library)
 {
   forRange(ResourceLibrary* dependency, library->Dependencies.All())
@@ -120,12 +125,13 @@ void ZilchFragment::GetLibrariesRecursive(Array<LibraryRef>& libraries, Resource
   }
 }
 
+//**************************************************************************************************
 void ZilchFragment::AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition)
 {
   ZilchDocumentResource::AttemptGetDefinition(editor, cursorPosition, definition);
 }
 
-//-------------------------------------------------------------------ZilchFragmentLoader
+//**************************************************************************************************
 HandleOf<Resource> ZilchFragmentLoader::LoadFromFile(ResourceEntry& entry)
 {
   ZilchFragmentManager* manager = ZilchFragmentManager::GetInstance();
@@ -136,6 +142,7 @@ HandleOf<Resource> ZilchFragmentLoader::LoadFromFile(ResourceEntry& entry)
   return fragment;
 }
 
+//**************************************************************************************************
 HandleOf<Resource> ZilchFragmentLoader::LoadFromBlock(ResourceEntry& entry)
 {
   ZilchFragmentManager* manager = ZilchFragmentManager::GetInstance();
@@ -146,14 +153,15 @@ HandleOf<Resource> ZilchFragmentLoader::LoadFromBlock(ResourceEntry& entry)
   return fragment;
 }
 
+//**************************************************************************************************
 void ZilchFragmentLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 {
   ((ZilchFragment*)resource)->ReloadData(ReadFileIntoString(entry.FullPath));
 }
 
-//-------------------------------------------------------------------ZilchFragmentManager
 ImplementResourceManager(ZilchFragmentManager, ZilchFragment);
 
+//**************************************************************************************************
 ZilchFragmentManager::ZilchFragmentManager(BoundType* resourceType)
   : ResourceManager(resourceType),
     mLastExceptionVersion(-1)
@@ -171,11 +179,12 @@ ZilchFragmentManager::ZilchFragmentManager(BoundType* resourceType)
   AddLoader("ZilchFragment", new ZilchFragmentLoader());
 }
 
+//**************************************************************************************************
 ZilchFragmentManager::~ZilchFragmentManager()
 {
-
 }
 
+//**************************************************************************************************
 void ZilchFragmentManager::ValidateName(Status& status, StringParam name)
 {
   ZilchDocumentResource::ValidateScriptName(status, name);
@@ -192,6 +201,7 @@ void ZilchFragmentManager::ValidateName(Status& status, StringParam name)
   }
 }
 
+//**************************************************************************************************
 String ZilchFragmentManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
 {
   ZilchFragment* fragmentTemplate = Type::DynamicCast<ZilchFragment*, Resource*>(resourceAdd.Template);
@@ -225,6 +235,7 @@ String ZilchFragmentManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
   return sourceFile;
 }
 
+//**************************************************************************************************
 void ZilchFragmentManager::DispatchScriptError(StringParam eventId, StringParam shortMessage,
                                                StringParam fullMessage, const Zilch::CodeLocation& location)
 {
@@ -256,4 +267,4 @@ void ZilchFragmentManager::DispatchScriptError(StringParam eventId, StringParam 
   Console::Print(Filter::DefaultFilter, "%s", fullMessage.c_str());
 }
 
-}//namespace Zero
+} // namespace Zero

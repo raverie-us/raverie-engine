@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 // As Of NVidia Driver 302 exporting this symbol will enable GPU hardware accelerated 
@@ -44,6 +47,7 @@ void GLAPIENTRY EmptyUniformFunc(GLint, GLsizei, const void*) {}
 
 const bool cTransposeMatrices = !(ColumnBasis == 1);
 
+//**************************************************************************************************
 OpenglRenderer* CreateOpenglRenderer(OsHandle windowHandle, String& error)
 {
   HWND window = (HWND)windowHandle;
@@ -148,6 +152,7 @@ OpenglRenderer* CreateOpenglRenderer(OsHandle windowHandle, String& error)
   return renderer;
 }
 
+//**************************************************************************************************
 void DestroyOpenglRenderer()
 {
   OpenglRenderer* renderer = (OpenglRenderer*)Z::gRenderer;
@@ -159,11 +164,13 @@ void DestroyOpenglRenderer()
   wglDeleteContext(renderContext);
 }
 
+//**************************************************************************************************
 void CreateRenderer(OsHandle windowHandle, String& error)
 {
   Z::gRenderer = CreateOpenglRenderer(windowHandle, error);
 }
 
+//**************************************************************************************************
 void DestroyRenderer()
 {
   DestroyOpenglRenderer();
@@ -205,6 +212,7 @@ GlTextureEnums gTextureEnums[] =
   {GL_DEPTH32F_STENCIL8 , GL_DEPTH_STENCIL  , GL_FLOAT_32_UNSIGNED_INT_24_8_REV}  // Depth32fStencil8Pad24
 };
 
+//**************************************************************************************************
 GLint GlInternalFormat(TextureCompression::Enum compression)
 {
   switch (compression)
@@ -220,6 +228,7 @@ GLint GlInternalFormat(TextureCompression::Enum compression)
   }
 }
 
+//**************************************************************************************************
 GLuint ToOpenglType(VertexElementType::Enum type)
 {
   switch(type)
@@ -242,6 +251,7 @@ GLuint ToOpenglType(VertexElementType::Enum type)
   }
 }
 
+//**************************************************************************************************
 GLuint GlPrimitiveType(PrimitiveType::Enum value)
 {
   switch (value)
@@ -253,6 +263,7 @@ GLuint GlPrimitiveType(PrimitiveType::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlTextureType(TextureType::Enum value)
 {
   switch (value)
@@ -263,6 +274,7 @@ GLuint GlTextureType(TextureType::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlTextureFace(TextureFace::Enum value)
 {
   switch (value)
@@ -278,6 +290,7 @@ GLuint GlTextureFace(TextureFace::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlTextureAddressing(TextureAddressing::Enum value)
 {
   switch (value)
@@ -289,6 +302,7 @@ GLuint GlTextureAddressing(TextureAddressing::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlTextureFilteringMin(TextureFiltering::Enum value)
 {
   switch (value)
@@ -300,6 +314,7 @@ GLuint GlTextureFilteringMin(TextureFiltering::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlTextureFilteringMag(TextureFiltering::Enum value)
 {
   switch (value)
@@ -311,6 +326,7 @@ GLuint GlTextureFilteringMag(TextureFiltering::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLfloat GlTextureAnisotropy(TextureAnisotropy::Enum value)
 {
   switch (value)
@@ -324,6 +340,7 @@ GLfloat GlTextureAnisotropy(TextureAnisotropy::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlTextureMipMapping(TextureMipMapping::Enum value)
 {
   switch (value)
@@ -335,6 +352,7 @@ GLuint GlTextureMipMapping(TextureMipMapping::Enum value)
   }
 }
 
+//**************************************************************************************************
 void CheckShader(GLuint shader)
 {
   GLint status = 0;
@@ -349,6 +367,7 @@ void CheckShader(GLuint shader)
   }
 }
 
+//**************************************************************************************************
 void SetClearData(void* clearData, TextureFormat::Enum format, Vec4 color, float depth)
 {
   switch (format)
@@ -382,6 +401,7 @@ void SetClearData(void* clearData, TextureFormat::Enum format, Vec4 color, float
   }
 }
 
+//**************************************************************************************************
 GLuint GlCullFace(CullMode::Enum value)
 {
   switch (value)
@@ -392,6 +412,7 @@ GLuint GlCullFace(CullMode::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlBlendFactor(BlendFactor::Enum value)
 {
   switch (value)
@@ -411,6 +432,7 @@ GLuint GlBlendFactor(BlendFactor::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlBlendEquation(BlendEquation::Enum blendEquation)
 {
   switch (blendEquation)
@@ -424,6 +446,7 @@ GLuint GlBlendEquation(BlendEquation::Enum blendEquation)
   }
 }
 
+//**************************************************************************************************
 GLboolean GlDepthMode(DepthMode::Enum value)
 {
   switch (value)
@@ -434,6 +457,7 @@ GLboolean GlDepthMode(DepthMode::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlStencilOp(StencilOp::Enum value)
 {
   switch (value)
@@ -450,6 +474,7 @@ GLuint GlStencilOp(StencilOp::Enum value)
   }
 }
 
+//**************************************************************************************************
 GLuint GlCompareMode(TextureCompareMode::Enum compareMode)
 {
   switch (compareMode)
@@ -460,6 +485,7 @@ GLuint GlCompareMode(TextureCompareMode::Enum compareMode)
   }
 }
 
+//**************************************************************************************************
 GLuint GlCompareFunc(TextureCompareFunc::Enum value)
 {
   switch (value)
@@ -476,6 +502,7 @@ GLuint GlCompareFunc(TextureCompareFunc::Enum value)
   }
 }
 
+//**************************************************************************************************
 void SetBlendSettings(const BlendSettings& blendSettings)
 {
   switch (blendSettings.mBlendMode)
@@ -496,6 +523,7 @@ void SetBlendSettings(const BlendSettings& blendSettings)
   }
 }
 
+//**************************************************************************************************
 void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBlend)
 {
   switch (renderSettings.mCullMode)
@@ -586,6 +614,7 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
   }
 }
 
+//**************************************************************************************************
 void BindTexture(TextureType::Enum textureType, uint textureSlot, uint textureId, bool samplerObjects)
 {
   // Clear anything bound to this texture unit
@@ -598,6 +627,7 @@ void BindTexture(TextureType::Enum textureType, uint textureSlot, uint textureId
   glBindTexture(GlTextureType(textureType), textureId);
 }
 
+//**************************************************************************************************
 void CheckFramebufferStatus()
 {
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -616,6 +646,7 @@ void CheckFramebufferStatus()
   ErrorIf(status != GL_FRAMEBUFFER_COMPLETE, "Framebuffer incomplete");
 }
 
+//**************************************************************************************************
 void SetSingleRenderTargets(GLuint fboId, TextureRenderData** colorTargets, TextureRenderData* depthTarget)
 {
   glBindFramebuffer(GL_FRAMEBUFFER, fboId);
@@ -645,6 +676,7 @@ void SetSingleRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Text
   CheckFramebufferStatus();
 }
 
+//**************************************************************************************************
 void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, TextureRenderData* depthTarget)
 {
   glBindFramebuffer(GL_FRAMEBUFFER, fboId);
@@ -684,7 +716,7 @@ void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Textu
   CheckFramebufferStatus();
 }
 
-//--------------------------------------------------------------- OpenglRenderer
+//**************************************************************************************************
 OpenglRenderer::OpenglRenderer()
 {
   // V-Sync off by default
@@ -782,6 +814,7 @@ OpenglRenderer::OpenglRenderer()
   CreateShader(LoadingShaderVertex, String(), LoadingShaderPixel, mLoadingShader);
 }
 
+//**************************************************************************************************
 OpenglRenderer::~OpenglRenderer()
 {
   ErrorIf(mGlShaders.Empty() == false, "Not all shaders were deleted.");
@@ -805,22 +838,26 @@ OpenglRenderer::~OpenglRenderer()
   mSamplers.Clear();
 }
 
+//**************************************************************************************************
 void OpenglRenderer::BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float near, float far)
 {
   BuildOrthographicTransformGl(matrix, size, aspect, near, far);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float near, float far)
 {
   BuildPerspectiveTransformGl(matrix, fov, aspect, near, far);
 }
 
+//**************************************************************************************************
 bool OpenglRenderer::YInvertImageData(TextureType::Enum type)
 {
   // OpenGL convention for cubemaps is not Y-inverted
   return (type != TextureType::TextureCube);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::CreateRenderData(Material* material)
 {
   GlMaterialRenderData* renderData = (GlMaterialRenderData*)material->mRenderData;
@@ -832,6 +869,7 @@ void OpenglRenderer::CreateRenderData(Material* material)
   material->mRenderData = renderData;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::CreateRenderData(Mesh* mesh)
 {
   GlMeshRenderData* renderData = (GlMeshRenderData*)mesh->mRenderData;
@@ -846,6 +884,7 @@ void OpenglRenderer::CreateRenderData(Mesh* mesh)
   mesh->mRenderData = renderData;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::CreateRenderData(Texture* texture)
 {
   GlTextureRenderData* renderData = (GlTextureRenderData*)texture->mRenderData;
@@ -858,6 +897,7 @@ void OpenglRenderer::CreateRenderData(Texture* texture)
   texture->mRenderData = renderData;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::AddMaterial(AddMaterialJob* job)
 {
   GlMaterialRenderData* renderData = (GlMaterialRenderData*)job->mRenderData;
@@ -866,6 +906,7 @@ void OpenglRenderer::AddMaterial(AddMaterialJob* job)
   renderData->mResourceId = job->mMaterialId;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::AddMesh(AddMeshJob* job)
 {
   GlMeshRenderData* renderData = (GlMeshRenderData*)job->mRenderData;
@@ -927,6 +968,7 @@ void OpenglRenderer::AddMesh(AddMeshJob* job)
   renderData->mBones.Assign(job->mBones.All());
 }
 
+//**************************************************************************************************
 void OpenglRenderer::AddTexture(AddTextureJob* job)
 {
   GlTextureRenderData* renderData = (GlTextureRenderData*)job->mRenderData;
@@ -1020,26 +1062,31 @@ void OpenglRenderer::AddTexture(AddTextureJob* job)
   delete[] job->mMipHeaders;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::RemoveMaterial(RemoveMaterialJob* job)
 {
   mMaterialRenderDataToDestroy.PushBack((GlMaterialRenderData*)job->mRenderData);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::RemoveMesh(RemoveMeshJob* job)
 {
   mMeshRenderDataToDestroy.PushBack((GlMeshRenderData*)job->mRenderData);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::RemoveTexture(RemoveTextureJob* job)
 {
   mTextureRenderDataToDestroy.PushBack((GlTextureRenderData*)job->mRenderData);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetLazyShaderCompilation(SetLazyShaderCompilationJob* job)
 {
   mLazyShaderCompilation = job->mLazyShaderCompilation;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::AddShaders(AddShadersJob* job)
 {
   if (mLazyShaderCompilation && job->mForceCompileBatchCount == 0)
@@ -1069,6 +1116,7 @@ void OpenglRenderer::AddShaders(AddShadersJob* job)
   }
 }
 
+//**************************************************************************************************
 void OpenglRenderer::RemoveShaders(RemoveShadersJob* job)
 {
   forRange (ShaderEntry& entry, job->mShaders.All())
@@ -1083,12 +1131,14 @@ void OpenglRenderer::RemoveShaders(RemoveShadersJob* job)
   }
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetVSync(SetVSyncJob* job)
 {
   int swapInterval = job->mVSync ? 1 : 0;
   wglSwapIntervalEXT(swapInterval);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::GetTextureData(GetTextureDataJob* job)
 {
   GlTextureRenderData* renderData = (GlTextureRenderData*)job->mRenderData;
@@ -1121,6 +1171,7 @@ void OpenglRenderer::GetTextureData(GetTextureDataJob* job)
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::ShowProgress(ShowProgressJob* job)
 {
   // Get data off job
@@ -1267,6 +1318,7 @@ void OpenglRenderer::ShowProgress(ShowProgressJob* job)
   SwapBuffers((HDC)mDeviceContext);
 }
 
+//**************************************************************************************************
 GlShader* OpenglRenderer::GetShader(ShaderKey& shaderKey)
 {
   // Check if new shader is pending
@@ -1288,6 +1340,7 @@ GlShader* OpenglRenderer::GetShader(ShaderKey& shaderKey)
   return nullptr;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues)
 {
   mRenderTasks = renderTasks;
@@ -1303,6 +1356,7 @@ void OpenglRenderer::DoRenderTasks(RenderTasks* renderTasks, RenderQueues* rende
   DestroyUnusedSamplers();
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DoRenderTaskRange(RenderTaskRange& taskRange)
 {
   mFrameBlock = &mRenderQueues->mFrameBlocks[taskRange.mFrameBlockIndex];
@@ -1348,6 +1402,7 @@ void OpenglRenderer::DoRenderTaskRange(RenderTaskRange& taskRange)
   }
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DoRenderTaskClearTarget(RenderTaskClearTarget* task)
 {
   SetRenderTargets(task->mRenderSettings);
@@ -1366,6 +1421,7 @@ void OpenglRenderer::DoRenderTaskClearTarget(RenderTaskClearTarget* task)
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
 {
   mViewportSize = IntVec2(task->mRenderSettings.mTargetsWidth, task->mRenderSettings.mTargetsHeight);
@@ -1416,6 +1472,7 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
 {
   mViewportSize = IntVec2(task->mRenderSettings.mTargetsWidth, task->mRenderSettings.mTargetsHeight);
@@ -1458,6 +1515,7 @@ void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
 {
   GlTextureRenderData* renderData = (GlTextureRenderData*)task->mColorTarget;
@@ -1477,6 +1535,7 @@ void OpenglRenderer::DoRenderTaskBackBufferBlit(RenderTaskBackBufferBlit* task)
   glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DoRenderTaskTextureUpdate(RenderTaskTextureUpdate* task)
 {
   AddTextureJob job;
@@ -1501,6 +1560,7 @@ void OpenglRenderer::DoRenderTaskTextureUpdate(RenderTaskTextureUpdate* task)
   AddTexture(&job);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetRenderTargets(RenderSettings& renderSettings)
 {
   if (renderSettings.mSingleColorTarget)
@@ -1509,6 +1569,7 @@ void OpenglRenderer::SetRenderTargets(RenderSettings& renderSettings)
     SetMultiRenderTargets(mMultiTargetFbo, renderSettings.mColorTargets, renderSettings.mDepthTarget);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
 {
   GlMeshRenderData* meshData = (GlMeshRenderData*)frameNode.mMeshRenderData;
@@ -1576,6 +1637,7 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
   glBindVertexArray(0);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
 {
   GlMaterialRenderData* materialData = (GlMaterialRenderData*)frameNode.mMaterialRenderData;
@@ -1665,24 +1727,28 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   }
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, StringParam name, void* data)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
   mUniformFunctions[uniformType](location, 1, data);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat3& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
   glUniformMatrix3fv(location, 1, cTransposeMatrices, transform.array);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat4& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
   glUniformMatrix4fv(location, 1, cTransposeMatrices, transform.array);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat3& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
@@ -1693,6 +1759,7 @@ void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat3& transfo
   }
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat4& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
@@ -1703,6 +1770,7 @@ void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat4& transfo
   }
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameters(FrameBlock* frameBlock, ViewBlock* viewBlock)
 {
   SetShaderParameter(ShaderInputType::Float, cFrameTime, &frameBlock->mFrameTime);
@@ -1720,6 +1788,7 @@ void OpenglRenderer::SetShaderParameters(FrameBlock* frameBlock, ViewBlock* view
   SetShaderParameter(ShaderInputType::Vec2, cInverseViewportSize, viewBlock->mInverseViewportSize.array);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameters(FrameNode* frameNode, ViewNode* viewNode)
 {
   SetShaderParameterMatrix(cLocalToWorld, frameNode->mLocalToWorld);
@@ -1755,6 +1824,7 @@ void OpenglRenderer::SetShaderParameters(FrameNode* frameNode, ViewNode* viewNod
   SetShaderParameterMatrixInv(cViewToLocalNormal, viewNode->mLocalToViewNormal);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameters(IndexRange inputRange, uint& nextTextureSlot)
 {
   Array<ShaderInput>::range shaderInputs = mRenderTasks->mShaderInputs.SubRange(inputRange.start, inputRange.Count());
@@ -1801,6 +1871,7 @@ void OpenglRenderer::SetShaderParameters(IndexRange inputRange, uint& nextTextur
   }
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint& nextTextureSlot)
 {
   Pair<u64, uint> pair(objectId, shaderInputsId);
@@ -1808,6 +1879,7 @@ void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint
   SetShaderParameters(inputRange, nextTextureSlot);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::CreateShader(ShaderEntry& entry)
 {
   ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
@@ -1828,6 +1900,7 @@ void OpenglRenderer::CreateShader(ShaderEntry& entry)
   mGlShaders.Insert(shaderKey, shader);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometrySource, StringParam pixelSource, GLuint& shader)
 {
   //DebugPrint("%s\n", vertexSource.c_str());
@@ -1914,12 +1987,14 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     glDeleteProgram(program);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::SetShader(GLuint shader)
 {
   mActiveShader = shader;
   glUseProgram(mActiveShader);
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DelayedRenderDataDestruction()
 {
   forRange (GlMaterialRenderData* renderData, mMaterialRenderDataToDestroy.All())
@@ -1934,11 +2009,13 @@ void OpenglRenderer::DelayedRenderDataDestruction()
   mTextureRenderDataToDestroy.Clear();
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DestroyRenderData(GlMaterialRenderData* renderData)
 {
   delete renderData;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DestroyRenderData(GlMeshRenderData* renderData)
 {
   GlMeshRenderData* glRenderData = (GlMeshRenderData*)renderData;
@@ -1949,6 +2026,7 @@ void OpenglRenderer::DestroyRenderData(GlMeshRenderData* renderData)
   delete renderData;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DestroyRenderData(GlTextureRenderData* renderData)
 {
   GlTextureRenderData* glRenderData = (GlTextureRenderData*)renderData;
@@ -1956,6 +2034,7 @@ void OpenglRenderer::DestroyRenderData(GlTextureRenderData* renderData)
   delete renderData;
 }
 
+//**************************************************************************************************
 GLuint OpenglRenderer::GetSampler(u32 samplerSettings)
 {
   // Sampler objects can be reused for any number of texture units
@@ -1986,6 +2065,7 @@ GLuint OpenglRenderer::GetSampler(u32 samplerSettings)
   return newSampler;
 }
 
+//**************************************************************************************************
 void OpenglRenderer::DestroyUnusedSamplers()
 {
   forRange (u32 id, mUnusedSamplers.All())

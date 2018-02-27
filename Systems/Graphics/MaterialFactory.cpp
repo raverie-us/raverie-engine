@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -5,11 +8,13 @@ namespace Zero
 
 MaterialFactory* MaterialFactory::sInstance = nullptr;
 
+//**************************************************************************************************
 ZilchDefineType(MaterialFactory, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 MaterialFactory::MaterialFactory()
 {
   sInstance = this;
@@ -31,6 +36,7 @@ MaterialFactory::MaterialFactory()
   ErrorIf(shaderInputTypes.FindPointer(nullptr) != nullptr, "A MetaType was not found.");
 }
 
+//**************************************************************************************************
 void MaterialFactory::MoveComponent(HandleParam instance, HandleParam componentToMove, uint destination)
 {
   uint indexToMove = GetComponentIndex(instance, componentToMove.StoredType);
@@ -50,12 +56,14 @@ void MaterialFactory::MoveComponent(HandleParam instance, HandleParam componentT
   material->SendModified();
 }
 
+//**************************************************************************************************
 uint MaterialFactory::GetComponentIndex(HandleParam instance, BoundType* typeId)
 {
   Material* resource = instance.Get<Material*>();
   return resource->GetBlockIndex(typeId);
 }
 
+//**************************************************************************************************
 bool MaterialFactory::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
 {
   // If component is a restricted type
@@ -87,6 +95,7 @@ bool MaterialFactory::CanAddComponent(HandleParam owner, BoundType* typeToAdd, A
   return MetaComposition::CanAddComponent(owner, typeToAdd, info);
 }
 
+//**************************************************************************************************
 void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderLibraryRef>& libraries, ZilchFragmentTypeMap& fragmentTypes)
 {
   mRestrictedComponents.Clear();
@@ -107,6 +116,7 @@ void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShader
   }
 }
 
+//**************************************************************************************************
 ShaderInputType::Enum MaterialFactory::GetShaderInputType(Type* type)
 {
   return mShaderInputTypes.FindValue(type, ShaderInputType::Invalid);
