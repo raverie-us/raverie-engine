@@ -237,6 +237,7 @@ Editor::Editor(Composite* parent)
   mCodeTranslatorListener = nullptr;
   mProjectDirectoryWatcher = nullptr;
   mSimpleDebuggerListener = nullptr;
+  mStopGame = false;
 
   mQueue = new OperationQueue();
 
@@ -769,6 +770,16 @@ void Editor::SelectPrimary(HandleParam object)
 {
   mSelection->SetPrimary(object);
   mSelection->FinalSelectionChanged();
+}
+
+void Editor::OnEngineUpdate(UpdateEvent* event)
+{
+  if (mStopGame)
+  {
+    forRange(GameSession* game, GetGames())
+      game->Quit();
+    mStopGame = false;
+  }
 }
 
 Space* Editor::CreateNewSpace(uint flags)
@@ -1414,8 +1425,10 @@ void Editor::DestroyGames()
 
 void Editor::StopGame()
 {
-  forRange(GameSession* game, GetGames())
-    game->Quit();
+  // Wait until after system updates to stop game.
+  // This prevents events such as LogicUpdate from happening in an unexpected state.
+  if (GetGames().Empty() == false)
+    mStopGame = true;
 }
 
 void Editor::PauseGame()

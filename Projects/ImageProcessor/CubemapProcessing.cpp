@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 #include "Engine/ThreadDispatch.hpp"
@@ -82,6 +85,7 @@ namespace Zero
 
 DeclareEnum8(CubemapLayout, Invalid, Ratio1_6, Ratio6_1, Ratio2_3, Ratio3_2, Ratio3_4, Ratio4_3, Ratio4_2);
 
+//**************************************************************************************************
 CubemapLayout::Enum GetCubemapLayout(uint width, uint height)
 {
   if      (width * 6 == height)                         return CubemapLayout::Ratio1_6;
@@ -94,6 +98,7 @@ CubemapLayout::Enum GetCubemapLayout(uint width, uint height)
   else                                                  return CubemapLayout::Invalid;
 }
 
+//**************************************************************************************************
 void CopyFaces(const byte* image, uint offsets[6], uint dim, uint pixelSize, uint stride, byte* faces[6])
 {
   for (uint f = 0; f < 6; ++f)
@@ -113,6 +118,7 @@ void CopyFaces(const byte* image, uint offsets[6], uint dim, uint pixelSize, uin
   }
 }
 
+//**************************************************************************************************
 void SetToFaceData(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, uint width, uint height, uint size, byte* faces[6])
 {
   TextureFace::Enum faceEnums[] =
@@ -144,6 +150,7 @@ void SetToFaceData(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, uint w
   imageData.EraseAt(0);
 }
 
+//**************************************************************************************************
 void RotateFace(byte* imageData, uint width, uint height, uint pixelSize)
 {
   uint byteWidth = width * pixelSize;
@@ -172,6 +179,7 @@ void RotateFace(byte* imageData, uint width, uint height, uint pixelSize)
   }
 }
 
+//**************************************************************************************************
 void ProcessCubemap1_6(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format)
 {
   uint pixelSize = GetPixelSize(format);
@@ -198,6 +206,7 @@ void ProcessCubemap1_6(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Te
   SetToFaceData(mipHeaders, imageData, faceWidth, faceHeight, faceSize, faces);
 }
 
+//**************************************************************************************************
 void ProcessCubemap6_1(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format)
 {
   uint pixelSize = GetPixelSize(format);
@@ -224,6 +233,7 @@ void ProcessCubemap6_1(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Te
   SetToFaceData(mipHeaders, imageData, faceWidth, faceHeight, faceSize, faces);
 }
 
+//**************************************************************************************************
 void ProcessCubemap2_3(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format)
 {
   uint pixelSize = GetPixelSize(format);
@@ -251,6 +261,7 @@ void ProcessCubemap2_3(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Te
   SetToFaceData(mipHeaders, imageData, faceWidth, faceHeight, faceSize, faces);
 }
 
+//**************************************************************************************************
 void ProcessCubemap3_2(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format)
 {
   uint pixelSize = GetPixelSize(format);
@@ -278,6 +289,7 @@ void ProcessCubemap3_2(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Te
   SetToFaceData(mipHeaders, imageData, faceWidth, faceHeight, faceSize, faces);
 }
 
+//**************************************************************************************************
 void ProcessCubemap3_4(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format)
 {
   uint pixelSize = GetPixelSize(format);
@@ -307,6 +319,7 @@ void ProcessCubemap3_4(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Te
   RotateFace(imageData[5], faceWidth, faceHeight, pixelSize);
 }
 
+//**************************************************************************************************
 void ProcessCubemap4_3(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format)
 {
   uint pixelSize = GetPixelSize(format);
@@ -334,6 +347,7 @@ void ProcessCubemap4_3(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Te
   SetToFaceData(mipHeaders, imageData, faceWidth, faceHeight, faceSize, faces);
 }
 
+//**************************************************************************************************
 // Helper functions for sphere mapping
 Vec3 GetFaceDirection(TextureFace::Enum face, float x, float y, float halfWidth)
 {
@@ -350,6 +364,7 @@ Vec3 GetFaceDirection(TextureFace::Enum face, float x, float y, float halfWidth)
   return Vec3::cZero;
 }
 
+//**************************************************************************************************
 Vec2 DirectionToUv(Vec3 dir)
 {
   dir.AttemptNormalize();
@@ -364,6 +379,7 @@ Vec2 DirectionToUv(Vec3 dir)
   return uv;
 }
 
+//**************************************************************************************************
 int WrapCoord(int value, int size)
 {
   if (value < 0)
@@ -373,6 +389,7 @@ int WrapCoord(int value, int size)
   return value;
 }
 
+//**************************************************************************************************
 void ProcessCubemap4_2(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format)
 {
   uint pixelSize = GetPixelSize(format);
@@ -482,6 +499,7 @@ void ProcessCubemap4_2(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Te
   imageData.EraseAt(0);
 }
 
+//**************************************************************************************************
 void ExtractCubemapFaces(Status& status, Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format)
 {
   if (mipHeaders.Empty() || imageData.Empty())
@@ -507,16 +525,19 @@ void ExtractCubemapFaces(Status& status, Array<MipHeader>& mipHeaders, Array<byt
   }
 }
 
+//**************************************************************************************************
 TextureFace::Enum FaceIndexToEnum(uint index)
 {
   return (TextureFace::Enum)(index + 1);
 }
 
+//**************************************************************************************************
 uint FaceEnumToIndex(TextureFace::Enum face)
 {
   return (face - 1);
 }
 
+//**************************************************************************************************
 void FaceToWorldDir(TextureFace::Enum face, Vec2 uv, Vec3& worldDir)
 {
   uv -= Vec2(0.5f);
@@ -533,6 +554,7 @@ void FaceToWorldDir(TextureFace::Enum face, Vec2 uv, Vec3& worldDir)
   Math::Normalize(worldDir);
 }
 
+//**************************************************************************************************
 void WorldDirToFace(Vec3 worldDir, TextureFace::Enum& face, Vec2& uv)
 {
   float absX = Math::Abs(worldDir.x);
@@ -569,6 +591,7 @@ void WorldDirToFace(Vec3 worldDir, TextureFace::Enum& face, Vec2& uv)
   uv = Math::Clamp(uv, Vec2(0.0f), Vec2(1.0f));
 }
 
+// These are pretty rad!
 const float gRadicalInverses[1024] =
 {
   0.000000, 0.500000, 0.250000, 0.750000, 0.125000, 0.625000, 0.375000, 0.875000, 0.062500, 0.562500, 0.312500, 0.812500, 0.187500, 0.687500, 0.437500, 0.937500, 0.031250, 0.531250, 0.281250, 0.781250, 0.156250, 0.656250, 0.406250, 0.906250, 0.093750, 0.593750, 0.343750, 0.843750, 0.218750, 0.718750, 0.468750, 0.968750,
@@ -605,16 +628,19 @@ const float gRadicalInverses[1024] =
   0.030273, 0.530273, 0.280273, 0.780273, 0.155273, 0.655273, 0.405273, 0.905273, 0.092773, 0.592773, 0.342773, 0.842773, 0.217773, 0.717773, 0.467773, 0.967773, 0.061523, 0.561523, 0.311523, 0.811523, 0.186523, 0.686523, 0.436523, 0.936523, 0.124023, 0.624023, 0.374023, 0.874023, 0.249023, 0.749023, 0.499023, 0.999023,
 };
 
+//**************************************************************************************************
 float RadicalInverse(uint i)
 {
   return gRadicalInverses[i];
 }
 
+//**************************************************************************************************
 Vec2 Hammersley(uint i, uint count)
 {
   return Vec2(i / (float)count, RadicalInverse(i));
 }
 
+//**************************************************************************************************
 Vec3 ImportanceSampleGgx(Vec2 xi, float alpha, float random)
 {
   // Random rotation on angle phi so sample pattern does not cause banding/ghosting
@@ -629,17 +655,20 @@ Vec3 ImportanceSampleGgx(Vec2 xi, float alpha, float random)
   return direction;
 }
 
+//**************************************************************************************************
 float Random(Vec2 uv)
 {
   // http://stackoverflow.com/questions/12964279/whats-the-origin-of-this-glsl-rand-one-liner
   return Math::Fractional(Math::Sin(uv.x * 12.9898f + uv.y * 78.233f) * 43758.5453f);
 }
 
+//**************************************************************************************************
 float Luminance(Vec3 linearColor)
 {
   return Math::Dot(linearColor, Vec3(0.2126f, 0.7152f, 0.0722f));
 }
 
+//**************************************************************************************************
 Vec3 SampleEnvMap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, uint pixelSize, uint index, Vec3 dir)
 {
   TextureFace::Enum face;
@@ -657,6 +686,7 @@ Vec3 SampleEnvMap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, uint pi
   return sample;
 }
 
+//**************************************************************************************************
 Vec3 FilterEnvMap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, uint pixelSize, uint index, Vec3 n, float alpha, float random)
 {
   Vec3 v = n;
@@ -737,6 +767,7 @@ public:
   CountdownEvent* mCountdownEvent;
 };
 
+//**************************************************************************************************
 void MipmapCubemap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format, bool compressed)
 {
   if (mipHeaders.Size() != 6 || imageData.Size() != 6)

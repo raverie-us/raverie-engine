@@ -36,6 +36,9 @@ EditorMain::~EditorMain()
 
 void EditorMain::OnEngineUpdate(UpdateEvent* event)
 {
+  // Call base behavior for game management.
+  Editor::OnEngineUpdate(event);
+
   mTimeSinceEscape += event->RealDt;
   Update();
 

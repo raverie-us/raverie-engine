@@ -379,10 +379,13 @@ bool SameRootCompare(Cog* toSelect, Cog* hitCog)
 //******************************************************************************
 bool SameArchetypeCompare(Cog* toSelect, Cog* hitCog)
 {
-  if (toSelect == nullptr || hitCog == nullptr)
+  Cog* toSelectArchetype = toSelect->FindRootArchetype();
+  Cog* hitCogArchetype = hitCog->FindRootArchetype();
+
+  if (toSelect == nullptr || hitCog == nullptr || toSelectArchetype == nullptr || hitCogArchetype == nullptr)
     return false;
 
-  return toSelect->FindRootArchetype() == hitCog->FindRootArchetype();
+  return toSelectArchetype == hitCogArchetype;
 }
 
 //******************************************************************************

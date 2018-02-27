@@ -68,12 +68,15 @@ SetupIconFile="{#ZeroSource}\Projects\Win32Shared\ZeroLauncherIcon.ico"
 Compression=lzma
 SolidCompression=yes
 WizardImageFile=ZeroInstall.bmp
+WizardSmallImageFile=ZeroLogo.bmp
+WizardImageAlphaFormat=defined
 ChangesEnvironment=yes
 ChangesAssociations=yes
 PrivilegesRequired=none
 LicenseFile="{#ZeroSource}\Data\ZeroLauncherEula.txt"
 CloseApplications=yes
 RestartApplications=no
+DisableWelcomePage=no
                                                                 
 [Registry] 
 Root: HKCR; Subkey: ".zeroproj"; ValueType: string; ValueName: ""; ValueData: "ZeroProject"; Flags: uninsdeletevalue  noerror

@@ -1,14 +1,19 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 void BuildOrthographicTransformZero(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
 {
   // Zero maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
   BuildOrthographicTransformGl(matrix, verticalSize, aspectRatio, nearDistance, farDistance);
 }
 
+//**************************************************************************************************
 // Column major formula for NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
 // | 1/r   0     0             0      |
 // |  0   1/t    0             0      |
@@ -34,6 +39,7 @@ void BuildOrthographicTransformGl(Mat4& matrix, float verticalSize, float aspect
   matrix.m23 = -(farDistance + nearDistance) / depth;
 }
 
+//**************************************************************************************************
 // Column major formula for NDC [-1,-1,0] to [1,1,1] ([l,b,n] to [r,t,f])
 // | 1/r   0     0             0      |
 // |  0   1/t    0             0      |
@@ -59,12 +65,14 @@ void BuildOrthographicTransformDx(Mat4& matrix, float verticalSize, float aspect
   matrix.m23 = -nearDistance / depth;
 }
 
+//**************************************************************************************************
 void BuildPerspectiveTransformZero(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
 {
   // Zero maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
   BuildPerspectiveTransformGl(matrix, verticalFov, aspectRatio, nearDistance, farDistance);
 }
 
+//**************************************************************************************************
 // Column major formula for NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
 // | n/r   0         0           0      |
 // |  0   n/t        0           0      |
@@ -103,6 +111,7 @@ void BuildPerspectiveTransformGl(Mat4& matrix, float verticalFov, float aspectRa
   matrix.m32 = -1.0f;
 }
 
+//**************************************************************************************************
 // Column major formula for NDC [-1,-1,0] to [1,1,1] ([l,b,n] to [r,t,f])
 // | n/r   0         0           0      |
 // |  0   n/t        0           0      |

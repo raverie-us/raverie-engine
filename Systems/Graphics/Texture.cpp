@@ -1,7 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Nathan Carlson
-/// Copyright 2016, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 #define CheckProtected() if (mProtected) return DoNotifyException("Error", "Cannot modify non-runtime Textures.");
@@ -15,6 +14,7 @@
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(Texture, builder, type)
 {
   ZeroBindDocumented();
@@ -39,6 +39,7 @@ ZilchDefineType(Texture, builder, type)
   ZilchBindOverloadedMethod(SubUpload, ZilchInstanceOverload(void, TextureData&, int, int));
 }
 
+//**************************************************************************************************
 HandleOf<Texture> Texture::CreateRuntime()
 {
   Texture* texture = TextureManager::CreateRuntime();
@@ -50,6 +51,7 @@ HandleOf<Texture> Texture::CreateRuntime()
   return texture;
 }
 
+//**************************************************************************************************
 Texture::Texture()
   : mRenderData(nullptr)
 {
@@ -78,11 +80,13 @@ Texture::Texture()
   mDirty = false;
 }
 
+//**************************************************************************************************
 IntVec2 Texture::GetSize()
 {
   return IntVec2(mWidth, mHeight);
 }
 
+//**************************************************************************************************
 void Texture::SetSize(IntVec2 size)
 {
   CheckProtected();
@@ -96,66 +100,78 @@ void Texture::SetSize(IntVec2 size)
   mDirty = true;
 }
 
+//**************************************************************************************************
 TextureFormat::Enum Texture::GetFormat()
 {
   return mFormat;
 }
 
+//**************************************************************************************************
 void Texture::SetFormat(TextureFormat::Enum format)
 {
   CheckProtected();
   SetValue(mFormat, format);
 }
 
+//**************************************************************************************************
 TextureAddressing::Enum Texture::GetAddressingX()
 {
   return mAddressingX;
 }
 
+//**************************************************************************************************
 void Texture::SetAddressingX(TextureAddressing::Enum addressingX)
 {
   CheckProtected();
   SetValue(mAddressingX, addressingX);
 }
 
+//**************************************************************************************************
 TextureAddressing::Enum Texture::GetAddressingY()
 {
   return mAddressingY;
 }
 
+//**************************************************************************************************
 void Texture::SetAddressingY(TextureAddressing::Enum addressingY)
 {
   CheckProtected();
   SetValue(mAddressingY, addressingY);
 }
 
+//**************************************************************************************************
 TextureFiltering::Enum Texture::GetFiltering()
 {
   return mFiltering;
 }
 
+//**************************************************************************************************
 void Texture::SetFiltering(TextureFiltering::Enum filtering)
 {
   CheckProtected();
   SetValue(mFiltering, filtering);
 }
 
+//**************************************************************************************************
 TextureAnisotropy::Enum Texture::GetAnisotropy()
 {
   return mAnisotropy;
 }
 
+//**************************************************************************************************
 void Texture::SetAnisotropy(TextureAnisotropy::Enum anisotropy)
 {
   CheckProtected();
   SetValue(mAnisotropy, anisotropy);
 }
 
+//**************************************************************************************************
 TextureMipMapping::Enum Texture::GetMipMapping()
 {
   return mMipMapping;
 }
 
+//**************************************************************************************************
 void Texture::SetMipMapping(TextureMipMapping::Enum mipMapping)
 {
   CheckProtected();
@@ -166,28 +182,33 @@ void Texture::SetMipMapping(TextureMipMapping::Enum mipMapping)
   SetValue(mMipMapping, mipMapping);
 }
 
+//**************************************************************************************************
 TextureCompareMode::Enum Texture::GetCompareMode()
 {
   return mCompareMode;
 }
 
+//**************************************************************************************************
 void Texture::SetCompareMode(TextureCompareMode::Enum compareMode)
 {
   CheckProtected();
   SetValue(mCompareMode, compareMode);
 }
 
+//**************************************************************************************************
 TextureCompareFunc::Enum Texture::GetCompareFunc()
 {
   return mCompareFunc;
 }
 
+//**************************************************************************************************
 void Texture::SetCompareFunc(TextureCompareFunc::Enum compareFunc)
 {
   CheckProtected();
   SetValue(mCompareFunc, compareFunc);
 }
 
+//**************************************************************************************************
 void Texture::Upload(TextureData& textureData)
 {
   CheckProtected();
@@ -216,6 +237,7 @@ void Texture::Upload(TextureData& textureData)
   Z::gEngine->has(GraphicsEngine)->AddTexture(this);
 }
 
+//**************************************************************************************************
 void Texture::SubUpload(TextureData& textureData, int xOffset, int yOffset)
 {
   CheckProtected();
@@ -248,6 +270,7 @@ void Texture::SubUpload(TextureData& textureData, int xOffset, int yOffset)
   Z::gEngine->has(GraphicsEngine)->AddTexture(this, true, xOffset, yOffset);
 }
 
+//**************************************************************************************************
 void Texture::Upload(uint width, uint height, TextureFormat::Enum format, byte* data, uint size, bool copyData)
 {
   mWidth = width;
@@ -281,6 +304,7 @@ void Texture::Upload(uint width, uint height, TextureFormat::Enum format, byte* 
   Z::gEngine->has(GraphicsEngine)->AddTexture(this);
 }
 
+//**************************************************************************************************
 void Texture::Upload(Image& image)
 {
   mWidth = image.Width;
@@ -304,6 +328,7 @@ void Texture::Upload(Image& image)
   Z::gEngine->has(GraphicsEngine)->AddTexture(this);
 }
 
+//**************************************************************************************************
 void Texture::SubUpload(Image& image, int xOffset, int yOffset)
 {
   xOffset = Math::Max(xOffset, 0);
@@ -333,6 +358,7 @@ void Texture::SubUpload(Image& image, int xOffset, int yOffset)
 
 ImplementResourceManager(TextureManager, Texture);
 
+//**************************************************************************************************
 TextureManager::TextureManager(BoundType* resourceType)
   : ResourceManager(resourceType)
 {

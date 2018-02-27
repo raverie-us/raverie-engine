@@ -1,8 +1,12 @@
+// Authors: Nathan Carlson
+// Copyright 2016, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(RenderGroup, builder, type)
 {
   ZeroBindDocumented();
@@ -13,6 +17,7 @@ ZilchDefineType(RenderGroup, builder, type)
   ZilchBindFieldProperty(mGraphicalSortMethod);
 }
 
+//**************************************************************************************************
 RenderGroup::RenderGroup()
   : mSortId(-1)
   , mSerializedList(this)
@@ -29,6 +34,7 @@ RenderGroup::RenderGroup()
   ConnectThisTo(&mSerializedList, Events::ResourceListItemRemoved, OnResourceListItemRemoved);
 }
 
+//**************************************************************************************************
 void RenderGroup::Serialize(Serializer& stream)
 {
   stream.SerializeFieldDefault("Materials", mSerializedList.mResourceIdNames, Array<String>());
@@ -36,6 +42,7 @@ void RenderGroup::Serialize(Serializer& stream)
   SerializeEnumNameDefault(GraphicalSortMethod, mGraphicalSortMethod, GraphicalSortMethod::None);
 }
 
+//**************************************************************************************************
 void RenderGroup::OnResourceListItemAdded(ResourceListEvent* event)
 {
   Material* material = MaterialManager::FindOrNull(event->mResourceIdName);
@@ -43,6 +50,7 @@ void RenderGroup::OnResourceListItemAdded(ResourceListEvent* event)
     ResourceListEntryAdded(this, material);
 }
 
+//**************************************************************************************************
 void RenderGroup::OnResourceListItemRemoved(ResourceListEvent* event)
 {
   Material* material = MaterialManager::FindOrNull(event->mResourceIdName);
@@ -52,6 +60,7 @@ void RenderGroup::OnResourceListItemRemoved(ResourceListEvent* event)
 
 ImplementResourceManager(RenderGroupManager, RenderGroup);
 
+//**************************************************************************************************
 RenderGroupManager::RenderGroupManager(BoundType* resourceType)
   : ResourceManager(resourceType)
 {

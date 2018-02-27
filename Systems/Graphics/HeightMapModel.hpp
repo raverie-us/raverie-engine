@@ -1,18 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file HeightMapModel.hpp
-/// Declaration of the HeightMapModel class.
-///
-/// Authors: Trevor Sundberg, Nathan Carlson
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------- GraphicalPatchIndices
 class GraphicalPatchIndices
 {
 public:
@@ -22,7 +15,6 @@ public:
   Array<uint> mIndices;
 };
 
-//--------------------------------------------------------- GraphicalHeightPatch
 class GraphicalHeightPatch
 {
 public:

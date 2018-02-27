@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -74,6 +77,7 @@ public:
   String GetResourceTypeName();
 };
 
+//**************************************************************************************************
 template <typename SelfResource, typename OtherResource>
 void ResourceListResourceAdded(SelfResource* selfResource, OtherResource* otherResource, String* listName = nullptr)
 {
@@ -100,6 +104,7 @@ void ResourceListResourceAdded(SelfResource* selfResource, OtherResource* otherR
   }
 }
 
+//**************************************************************************************************
 template <typename SelfResource, typename OtherResource>
 void ResourceListResourceRemoved(SelfResource* selfResource, OtherResource* otherResource)
 {
@@ -117,6 +122,7 @@ void ResourceListResourceRemoved(SelfResource* selfResource, OtherResource* othe
   otherResource->mActiveResources.EraseValue(selfResource);
 }
 
+//**************************************************************************************************
 template <typename SelfResource, typename OtherResource>
 void ResourceListEntryAdded(SelfResource* selfResource, OtherResource* otherResource)
 {
@@ -137,6 +143,7 @@ void ResourceListEntryAdded(SelfResource* selfResource, OtherResource* otherReso
   }
 }
 
+//**************************************************************************************************
 template <typename SelfResource, typename OtherResource>
 void ResourceListEntryRemoved(SelfResource* selfResource, OtherResource* otherResource)
 {

@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -8,6 +11,7 @@ namespace Z
   Renderer* gRenderer;
 }
 
+//**************************************************************************************************
 ZilchDefineType(GraphicsDriverSupport, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -17,6 +21,7 @@ ZilchDefineType(GraphicsDriverSupport, builder, type)
   ZilchBindFieldGetter(mSamplerObjects);
 }
 
+//**************************************************************************************************
 GraphicsDriverSupport::GraphicsDriverSupport()
   : mTextureCompression(false)
   , mMultiTargetBlend(false)
@@ -25,11 +30,13 @@ GraphicsDriverSupport::GraphicsDriverSupport()
 {
 }
 
+//**************************************************************************************************
 Renderer::Renderer()
   : mBackBufferSafe(true)
 {
 }
 
+//**************************************************************************************************
 Renderer::~Renderer()
 {
 }

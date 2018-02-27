@@ -1,12 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Mesh.hpp
-/// Declaration of the Mesh class and Manager.
-///
-/// Authors: Chris Peters, Nathan Carlson
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -115,6 +109,7 @@ public:
   uint mDataSize;
 };
 
+//**************************************************************************************************
 template <typename T>
 void VertexBuffer::WriteData(const T& value)
 {
@@ -126,6 +121,7 @@ void VertexBuffer::WriteData(const T& value)
   mDataSize += valueSize;
 }
 
+//**************************************************************************************************
 template <typename T>
 T VertexBuffer::GetData(uint vertexIndex, VertexSemantic::Enum semantic)
 {
@@ -220,6 +216,7 @@ public:
   bool mBuildTree;
 };
 
+//**************************************************************************************************
 template <typename T>
 bool Mesh::GetPrimitiveData(uint primitiveIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count, T* data)
 {

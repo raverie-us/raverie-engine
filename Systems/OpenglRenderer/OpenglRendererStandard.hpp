@@ -1,9 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Trevor Sundberg
-/// Copyright 2016 DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 #include "Common/CommonStandard.hpp"
@@ -43,13 +40,6 @@
 #else
 #pragma comment(lib, "glew32sd.lib")
 #endif
-
-namespace Zero
-{
-// Forward declarations
-class X;
-
-}//namespace Zero
 
 #include "StreamedVertexBuffer.hpp"
 #include "OpenglRenderer.hpp"
