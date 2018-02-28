@@ -488,8 +488,11 @@ void RootWidget::RootCaptureMouse(Widget* widget)
 
 void RootWidget::RootReleaseMouseCapture(Widget* object)
 {
-  mCaptured = NULL;
-  mOsWindow->SetMouseCapture(false);
+  if((Widget*)mCaptured == object)
+  {
+    mCaptured = nullptr;
+    mOsWindow->SetMouseCapture(false);
+  }
 }
 
 void RootWidget::MouseUpdate(float dt)
