@@ -738,7 +738,7 @@ void PropertyWidgetObject::OpenNode(bool animate)
   if(MetaComposition* composition = mComposition)
   {
     Array<BoundType*> types;
-    composition->Enumerate(types, EnumerateAction::All, instance);
+    composition->Enumerate(types, EnumerateAction::AllAddableToObject, instance);
     canAdd = (types.Empty() == false);
   }
   else if(MetaArray* metaArray = mMetaArray)
