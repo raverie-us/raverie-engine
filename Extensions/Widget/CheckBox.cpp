@@ -134,8 +134,11 @@ void CheckBox::UpdateTransform()
 void CheckBox::OnKeyDown(KeyboardEvent* event)
 {
   if(event->Key == Keys::Space || event->Key == Keys::Enter)
-    ToggleChecked();
-
+  {
+    if (!event->GetModififierPressed())
+      ToggleChecked();
+  }
+  
   TabJump(this, event);
 }
 
