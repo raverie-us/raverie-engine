@@ -453,9 +453,9 @@ Agreement and all other actions or arbitrations.
 
 20. U.S. Government End Users
 The Licensed Technology and related documentation are "Commercial Items" (
-as defined at 48 C.F.R. 2.101), consisting of "Commercial Computer 
+as defined at 48 C.F.R.§2.101), consisting of "Commercial Computer 
 Software" and "Commercial Computer Software Documentation" (as used in 48 
-C.F.R. 12.212 or 48 C.F.R. 227.7202, as applicable). The Licensed Technology 
+C.F.R.§12.212 or 48 C.F.R.§227.7202, as applicable). The Licensed Technology 
 is being licensed to U.S. Government end users only as Commercial Items and 
 with only those rights as are granted to other licensees (other than Academic 
 Institutions) under this Agreement. 
