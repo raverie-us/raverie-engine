@@ -623,8 +623,18 @@ void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
       {
         if(mCaretPos > 0)
         {
-          SetEditSelection(mCaretPos - 1, mCaretPos);
-          ReplaceSelection(StringRange());
+          // When holding control delete the entire previous token
+          if (ctrlPressed)
+          {
+            ExtendSelection(SelectMode::Left);
+            ReplaceSelection(StringRange());
+          }
+          // Otherwise delete just the previous rune from the text
+          else
+          {
+            SetEditSelection(mCaretPos - 1, mCaretPos);
+            ReplaceSelection(StringRange());
+          }
         }
       }
 
@@ -645,8 +655,18 @@ void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
       {
         if(mCaretPos < size)
         {
-          SetEditSelection(mCaretPos, mCaretPos + 1);
-          ReplaceSelection(StringRange());
+          // When holding control delete the entire following token
+          if (ctrlPressed)
+          {
+            ExtendSelection(SelectMode::Right);
+            ReplaceSelection(StringRange());
+          }
+          // Otherwise delete just the following rune from the text
+          else
+          {
+            SetEditSelection(mCaretPos, mCaretPos + 1);
+            ReplaceSelection(StringRange());
+          }
         }
       }
 

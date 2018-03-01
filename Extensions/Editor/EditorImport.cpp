@@ -255,6 +255,10 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent, Cog* object
   // Find the archetype
   Archetype* archetype = ArchetypeManager::FindOrNull(archetypeId);
 
+  // Temporary, do not allow GeneratedArchetype to replace existing Archetype.
+  if (archetype != nullptr)
+    return;
+
   UniquePointer<SceneGraphSource> sceneGraph = new SceneGraphSource();
   LoadFromDataFile(*sceneGraph, graphFile);
   sceneGraph->MapNames();

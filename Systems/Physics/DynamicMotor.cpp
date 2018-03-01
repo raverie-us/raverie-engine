@@ -15,6 +15,7 @@ ZilchDefineType(DynamicMotor, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
 
+  ZeroBindDependency(Transform);
   ZeroBindDependency(Collider);
   ZeroBindDependency(RigidBody);
 
@@ -49,7 +50,10 @@ void DynamicMotor::Initialize(CogInitializer& initializer)
   mSpace = initializer.mSpace->has(PhysicsSpace);
   mTransform = GetOwner()->has(Transform);
   mBody = GetOwner()->has(RigidBody);
+}
 
+void DynamicMotor::ScriptInitialize(CogInitializer& initializer)
+{
   CreateJoint();
 }
 

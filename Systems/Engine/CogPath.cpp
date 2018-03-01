@@ -1224,6 +1224,11 @@ Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* compon
   return nullptr;
 }
 
+bool CogPathMetaComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
+{
+  return false;
+}
+
 bool CogPathMetaSerialization::SerializeReferenceProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)
 {
   // If we are saving a cog path

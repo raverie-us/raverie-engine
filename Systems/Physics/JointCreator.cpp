@@ -174,6 +174,9 @@ Cog* JointCreator::FindCommonParent(Cog* cogA, Cog* cogB)
 
 JointLimit* JointCreator::AddJointLimit(Cog* joint)
 {
+  if(joint == nullptr)
+    return nullptr;
+
   JointLimit* limit = new JointLimit();
   DefaultSerializer stream;
   limit->Serialize(stream);
@@ -184,6 +187,9 @@ JointLimit* JointCreator::AddJointLimit(Cog* joint)
 
 JointMotor* JointCreator::AddJointMotor(Cog* joint)
 {
+  if(joint == nullptr)
+    return nullptr;
+
   JointMotor* motor = new JointMotor();
   DefaultSerializer stream;
   motor->Serialize(stream);
@@ -194,6 +200,9 @@ JointMotor* JointCreator::AddJointMotor(Cog* joint)
 
 JointSpring* JointCreator::AddJointSpring(Cog* joint)
 {
+  if(joint == nullptr)
+    return nullptr;
+  
   JointSpring* spring = new JointSpring();
   DefaultSerializer stream;
   spring->Serialize(stream);
@@ -254,7 +263,7 @@ void JointCreator::SetAttachToCommonParent(bool attachToCommonParent)
 
 bool JointCreator::ObjectsValid(Cog* a, Cog* b, StringParam jointName)
 {
-  if(a->GetMarkedForDestruction() || b->GetMarkedForDestruction())
+  if(a == nullptr || b == nullptr || a->GetMarkedForDestruction() || b->GetMarkedForDestruction())
     return false;
 
   Transform* transformA = a->has(Transform);
