@@ -80,6 +80,12 @@ public:
   /// Used to forward all mouse events to one function.
   void OnMouseGeneric(MouseEvent* e);
 
+  /// Used to track which object the mouse was over on a down click
+  void OnMouseGenericDown(MouseEvent* e);
+
+  /// Checks which object the mouse click ended on to determine whether to forward the click event
+  void OnMouseGenericClick(MouseEvent* e);
+
   /// Updates which object the mouse is currently over.
   void UpdateOverObject(MouseEvent* e);
 
@@ -103,6 +109,7 @@ public:
 
   /// First object that the mouse is over for this viewport.
   CogId mOverObject;
+  CogId mDownObject;
 };
 
 //------------------------------------------------------------------ Game Widget
