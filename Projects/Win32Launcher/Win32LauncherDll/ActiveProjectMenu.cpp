@@ -311,7 +311,15 @@ void ActiveProjectMenu::SelectProject(CachedProject* cachedProject)
 {
   mCachedProject = cachedProject;
   // The project file could've changed out from underneath us (version control for example)
-  mLauncher->mProjectCache->ReloadProjectFile(mCachedProject, false);
+  bool successfulReload = mLauncher->mProjectCache->ReloadProjectFile(mCachedProject, false);
+  // The project was deleted out from under us so close the modal.
+  if(!successfulReload)
+  {
+    Modal* modal = mLauncher->mActiveProjectModal;
+    if(modal != nullptr)
+      modal->Close();
+    return;
+  }
 
   String projectPath = mCachedProject->GetProjectPath();
   mProjectName->SetText(mCachedProject->GetProjectName());
@@ -382,7 +390,7 @@ void ActiveProjectMenu::OnKeyDown(KeyboardEvent* e)
 {
   // If F2 is hit then have the project take focus
   // (so they can rename without leaving the keyboard)
-  if(!e->Handled && e->Key == Keys::F2 )
+  if(!e->Handled && e->Key == Keys::F2)
     mProjectName->TakeFocus();
 }
 

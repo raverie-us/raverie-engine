@@ -107,7 +107,7 @@ public:
   /// Load the project and create a cache entry for it.
   CachedProject* LoadProjectFile(StringParam projectFilePath);
   /// Reload the Project on a cached project (get any new property changes from a running zero)
-  void ReloadProjectFile(CachedProject* cachedProject, bool preserveVersionId);
+  bool ReloadProjectFile(CachedProject* cachedProject, bool preserveVersionId);
   /// Create a project from a template file zip
   CachedProject* CreateProjectFromTemplate(StringParam projectName, StringParam projectDir, StringParam templatePath, const BuildId& buildId,
     const HashSet<String>& projectTags);
