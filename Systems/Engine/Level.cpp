@@ -1,7 +1,4 @@
 ///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Level.cpp
-///
 /// 
 /// Authors: Chris Peters
 /// Copyright 2010-2012, DigiPen Institute of Technology
@@ -125,4 +122,15 @@ LevelManager::LevelManager(BoundType* resourceType)
   mExtension = DataResourceExtension;
 }
 
+void LevelManager::ClearCachedLevels()
+{
+  return;
+  LevelManager* manager = LevelManager::GetInstance();
+  forRange(Resource* resource, manager->AllResources())
+  {
+    Level* level = static_cast<Level*>(resource);
+    SafeDelete(level->mCacheTree);
+  }
 }
+
+}//namespace Zero

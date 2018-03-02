@@ -483,6 +483,11 @@ void ArchetypeManager::ArchetypeModified(Archetype* archetype)
       resource = resource->GetBaseResource();
     }
   }
+
+  // We need to clear Level caches so they appropriately reflect the changes to this Archetype.
+  // For now, we're going to just clear all Level caches. However, in the future we should
+  // optimize this to clear only Levels that contain the modified Archetype
+  LevelManager::ClearCachedLevels();
 }
 
 }//namespace Zero
