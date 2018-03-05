@@ -3,7 +3,7 @@
 /// \file Tools.hpp
 /// Declaration of the Tools classes.
 /// 
-/// Authors: Chris Peters
+/// Authors: Chris Peters, Dane Curbow
 /// Copyright 2010-2012, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
