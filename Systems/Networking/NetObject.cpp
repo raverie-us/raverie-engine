@@ -617,13 +617,21 @@ void NetObject::AddConfiguredNetProperties()
   // For all net property infos
   forRange(NetPropertyInfo& netPropertyInfo, mNetPropertyInfos.All())
   {
+    if(!netPropertyInfo.mComponentType) // Unable?
+    {
+      DoNotifyWarning("Unable To Add Configured NetProperty",
+        String::Format("Unable to add NetProperty '%s' to the NetChannel '%s' on the NetObject '%s' - Unable to get component property meta",
+          netPropertyInfo.mPropertyName.c_str(), netPropertyInfo.mNetChannelConfig->Name.c_str(), owner->GetDescription().c_str()));
+      continue; // Skip net property info
+    }
+
     // Get meta property (specified by component and property name)
     Property* property = netPropertyInfo.mComponentType->GetProperty(netPropertyInfo.mPropertyName);
     if(!property) // Unable?
     {
       DoNotifyWarning("Unable To Add Configured NetProperty",
                       String::Format("Unable to add NetProperty '%s' configured on Component '%s' to the NetChannel '%s' on the NetObject '%s' - Unable to get component property meta",
-                      property->Name.c_str(), netPropertyInfo.mComponentType->Name.c_str(), netPropertyInfo.mNetChannelConfig->Name.c_str(), owner->GetDescription().c_str()));
+                        netPropertyInfo.mPropertyName.c_str(), netPropertyInfo.mComponentType->Name.c_str(), netPropertyInfo.mNetChannelConfig->Name.c_str(), owner->GetDescription().c_str()));
       continue; // Skip net property info
     }
 
