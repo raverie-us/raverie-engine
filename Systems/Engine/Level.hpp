@@ -1,7 +1,4 @@
 ///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Level.hpp
-/// 
 /// 
 /// Authors: Chris Peters
 /// Copyright 2010-2012, DigiPen Institute of Technology
@@ -46,6 +43,8 @@ class LevelManager : public ResourceManager
 public:
   DeclareResourceManager(LevelManager, Level);
   LevelManager(BoundType* resourceType);
+
+  static void ClearCachedLevels();
 };
 
 }
