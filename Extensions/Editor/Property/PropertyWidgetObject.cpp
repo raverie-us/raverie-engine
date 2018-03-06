@@ -816,6 +816,13 @@ void PropertyWidgetObject::RemoveSelf()
 //******************************************************************************
 void PropertyWidgetObject::AnimateRemoveSelf()
 {
+  // Verify that the widget object exists
+  if(mParentWidgetObject == nullptr)
+  {
+    DoNotifyWarning("Can't remove component", "No object selected. Cannot remove component.");
+    return;
+  }
+
   Handle parentInstance = mParentWidgetObject->mNode->mObject;
   Handle selfInstance = mNode->mObject;
 
