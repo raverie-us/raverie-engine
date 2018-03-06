@@ -1191,6 +1191,7 @@ void SpriteSourceEditor::SaveToSpriteSource()
   // Check to see if the resource was renamed
   if(spriteSource->Name != mSpriteName)
     RenameResource(spriteSource, mSpriteName);
+  sourceFile = spriteSource->mContentItem->GetFullPath();
 
   SpriteSourceBuilder* builder = spriteSource->mContentItem->has(SpriteSourceBuilder);
 
