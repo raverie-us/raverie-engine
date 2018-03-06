@@ -940,7 +940,7 @@ void OpenglRenderer::AddMesh(AddMeshJob* job)
   {
     bool normalized = element.mType >= VertexElementType::NormByte;
     glEnableVertexAttribArray(element.mSemantic);
-    if (element.mSemantic == VertexSemantic::BoneIndices)
+    if (element.mType == VertexElementType::Byte || element.mType == VertexElementType::Short)
       glVertexAttribIPointer(element.mSemantic, element.mCount, ToOpenglType(element.mType), job->mVertexSize, (void*)element.mOffset);
     else
       glVertexAttribPointer(element.mSemantic, element.mCount, ToOpenglType(element.mType), normalized, job->mVertexSize, (void*)element.mOffset);
