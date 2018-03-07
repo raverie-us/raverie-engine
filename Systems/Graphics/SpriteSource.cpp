@@ -138,12 +138,18 @@ UvRect SpriteSource::GetUvRect(uint currentFrame)
 }
 
 //**************************************************************************************************
-void SpriteSource::LoadSourceImage(Image* image)
+void SpriteSource::LoadSourceImage(Status& status, Image* image)
 {
-  mContentItem->GetFullPath();
-  DataBlock block = ReadFileIntoDataBlock(mContentItem->GetFullPath().c_str());
+  String fullPath = mContentItem->GetFullPath();
+  if(!FileExists(fullPath))
+  {
+    String msg = String::Format("File '%s' didn't exist.", fullPath.c_str());
+    status.SetFailed(msg);
+    return;
+  }
 
-  Status status;
+  DataBlock block = ReadFileIntoDataBlock(fullPath.c_str());
+
   LoadFromPng(status, image, block.Data, block.Size);
 
   FreeBlock(block);

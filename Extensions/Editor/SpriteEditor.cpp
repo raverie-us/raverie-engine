@@ -1257,8 +1257,10 @@ void SpriteSourceEditor::EditSpriteSource(SpriteSource* spriteSource)
   mOrigin = ComputeOrigin(Vec2(mOriginX, mOriginY), mFrameSizeX, mFrameSizeY);
 
   Image sourceImage;
-  spriteSource->LoadSourceImage(&sourceImage);
-  LoadFramesFromSheet(sourceImage, frameCount);
+  Status status;
+  spriteSource->LoadSourceImage(status, &sourceImage);
+  if(status.Succeeded())
+    LoadFramesFromSheet(sourceImage, frameCount);
 
   mSpriteProperties->SetObject(this);
 

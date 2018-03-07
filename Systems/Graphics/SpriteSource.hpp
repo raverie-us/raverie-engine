@@ -26,7 +26,7 @@ public:
   UvRect GetUvRect(uint currentFrame);
 
   // Loads content image file into memory.
-  void LoadSourceImage(Image* image);
+  void LoadSourceImage(Status& status, Image* image);
 
   HandleOf<Texture> GetAtlasTexture();
   TextureRenderData* GetAtlasTextureRenderData();

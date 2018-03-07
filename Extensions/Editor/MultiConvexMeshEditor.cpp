@@ -1025,7 +1025,11 @@ void MultiConvexMeshEditor::AutoCompute()
 
   SpriteSource* spriteSource = sprite->mSpriteSource;
   Image sourceImage;
-  spriteSource->LoadSourceImage(&sourceImage);
+  Status status;
+  spriteSource->LoadSourceImage(status, &sourceImage);
+  if(status.Failed())
+    return;
+
   SourceData sourceData = {spriteSource, &sourceImage};
 
   mMarchingSquares = MarchingSquares();
