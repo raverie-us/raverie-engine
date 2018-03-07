@@ -236,6 +236,9 @@ struct MatrixMathTests[MatrixType, VectorType]
         
         var transposed = Math.Transpose(a);
         var result = Math.Multiply(a, v);
+        var m = Math.Multiply(a, transposed);
+        // Also test grouping
+        result = Math.Multiply(a, v + v);
     }
 }
 
@@ -253,6 +256,7 @@ struct SquareMatrixMathTests[MatrixType, VectorType, PointVectorType]
     }
 }
 
+[Pixel]
 struct MathLibraryTests
 {
     function TestMatrices()

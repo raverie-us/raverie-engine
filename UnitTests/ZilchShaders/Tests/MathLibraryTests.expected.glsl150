@@ -57,12 +57,12 @@ struct template_MatrixMathTests_Real4x4_Real4_
   int Dummy;
 };
 
-struct MathMuliplyPoint
+struct MathMultiplyPoint
 {
   int Dummy;
 };
 
-struct MathMuliplyNormal
+struct MathMultiplyNormal
 {
   int Dummy;
 };
@@ -323,14 +323,14 @@ void _template_MatrixMathTests_Real4x4_Real4_PreConstructor(inout template_Matri
 template_MatrixMathTests_Real4x4_Real4_ _template_MatrixMathTests_Real4x4_Real4_Constructor();
 void _template_MatrixMathTests_Real4x4_Real4_Test(inout template_MatrixMathTests_Real4x4_Real4_ self);
 
-void _MathMuliplyPointPreConstructor(inout MathMuliplyPoint self);
-MathMuliplyPoint _MathMuliplyPointConstructor();
+void _MathMultiplyPointPreConstructor(inout MathMultiplyPoint self);
+MathMultiplyPoint _MathMultiplyPointConstructor();
 float _MathMultiplyPoint(mat2x2 _by, float _the);
 vec2 _MathMultiplyPoint(mat3x3 _by, vec2 _the);
 vec3 _MathMultiplyPoint(mat4x4 _by, vec3 _the);
 
-void _MathMuliplyNormalPreConstructor(inout MathMuliplyNormal self);
-MathMuliplyNormal _MathMuliplyNormalConstructor();
+void _MathMultiplyNormalPreConstructor(inout MathMultiplyNormal self);
+MathMultiplyNormal _MathMultiplyNormalConstructor();
 float _MathMultiplyNormal(mat2x2 _by, float _the);
 vec2 _MathMultiplyNormal(mat3x3 _by, vec2 _the);
 vec3 _MathMultiplyNormal(mat4x4 _by, vec3 _the);
@@ -733,7 +733,10 @@ void _template_MatrixMathTests_Real2x2_Real2_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat2x2 _transposed = transpose(_a);
-  vec2 _result = (_v * _a);
+  vec2 _result = ((_v) * (_a));
+  mat2x2 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
 //----- MatrixMathTests[Real2x3, Real3] Functions -----
@@ -773,7 +776,10 @@ void _template_MatrixMathTests_Real2x3_Real3_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat3x2 _transposed = transpose(_a);
-  vec2 _result = (_v * _a);
+  vec2 _result = ((_v) * (_a));
+  mat2x2 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
 //----- MatrixMathTests[Real2x4, Real4] Functions -----
@@ -813,7 +819,10 @@ void _template_MatrixMathTests_Real2x4_Real4_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat4x2 _transposed = transpose(_a);
-  vec2 _result = (_v * _a);
+  vec2 _result = ((_v) * (_a));
+  mat2x2 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
 //----- MatrixMathTests[Real3x2, Real2] Functions -----
@@ -853,7 +862,10 @@ void _template_MatrixMathTests_Real3x2_Real2_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat2x3 _transposed = transpose(_a);
-  vec3 _result = (_v * _a);
+  vec3 _result = ((_v) * (_a));
+  mat3x3 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
 //----- MatrixMathTests[Real3x3, Real3] Functions -----
@@ -893,7 +905,10 @@ void _template_MatrixMathTests_Real3x3_Real3_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat3x3 _transposed = transpose(_a);
-  vec3 _result = (_v * _a);
+  vec3 _result = ((_v) * (_a));
+  mat3x3 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
 //----- MatrixMathTests[Real3x4, Real4] Functions -----
@@ -933,7 +948,10 @@ void _template_MatrixMathTests_Real3x4_Real4_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat4x3 _transposed = transpose(_a);
-  vec3 _result = (_v * _a);
+  vec3 _result = ((_v) * (_a));
+  mat3x3 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
 //----- MatrixMathTests[Real4x2, Real2] Functions -----
@@ -973,7 +991,10 @@ void _template_MatrixMathTests_Real4x2_Real2_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat2x4 _transposed = transpose(_a);
-  vec4 _result = (_v * _a);
+  vec4 _result = ((_v) * (_a));
+  mat4x4 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
 //----- MatrixMathTests[Real4x3, Real3] Functions -----
@@ -1013,7 +1034,10 @@ void _template_MatrixMathTests_Real4x3_Real3_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat3x4 _transposed = transpose(_a);
-  vec4 _result = (_v * _a);
+  vec4 _result = ((_v) * (_a));
+  mat4x4 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
 //----- MatrixMathTests[Real4x4, Real4] Functions -----
@@ -1053,69 +1077,78 @@ void _template_MatrixMathTests_Real4x4_Real4_Test(inout template_MatrixMathTests
   float _val = _a[0][1];
   
   mat4x4 _transposed = transpose(_a);
-  vec4 _result = (_v * _a);
+  vec4 _result = ((_v) * (_a));
+  mat4x4 _m = ((_transposed) * (_a));
+  
+  _result = ((_v + _v) * (_a));
 }
 
-//----- MathMuliplyPoint Functions -----
-void _MathMuliplyPointPreConstructor(inout MathMuliplyPoint self)
+//----- MathMultiplyPoint Functions -----
+void _MathMultiplyPointPreConstructor(inout MathMultiplyPoint self)
 {
   self.Dummy = 0;
 }
 
-MathMuliplyPoint _MathMuliplyPointConstructor()
+MathMultiplyPoint _MathMultiplyPointConstructor()
 {
-  MathMuliplyPoint self;
-  _MathMuliplyPointPreConstructor(self);
+  MathMultiplyPoint self;
+  _MathMultiplyPointPreConstructor(self);
   return self;
 }
 
 float _MathMultiplyPoint(mat2x2 _by, float _the)
 {
   vec2 _promotedVector = vec2(_the, float(1));
-  return (_promotedVector * _by).x;
+  vec2 _transformedVector = ((_promotedVector) * (_by));
+  float _result = _transformedVector.x / _transformedVector.y;
+  return _result;
 }
 
 vec2 _MathMultiplyPoint(mat3x3 _by, vec2 _the)
 {
   vec3 _promotedVector = vec3(_the, float(1));
-  return (_promotedVector * _by).xy;
+  vec3 _transformedVector = ((_promotedVector) * (_by));
+  vec2 _result = _transformedVector.xy / _transformedVector.z;
+  return _result;
 }
 
 vec3 _MathMultiplyPoint(mat4x4 _by, vec3 _the)
 {
   vec4 _promotedVector = vec4(_the, float(1));
-  return (_promotedVector * _by).xyz;
+  vec4 _transformedVector = ((_promotedVector) * (_by));
+  vec3 _result = _transformedVector.xyz / _transformedVector.w;
+  return _result;
 }
 
-//----- MathMuliplyNormal Functions -----
-void _MathMuliplyNormalPreConstructor(inout MathMuliplyNormal self)
+//----- MathMultiplyNormal Functions -----
+void _MathMultiplyNormalPreConstructor(inout MathMultiplyNormal self)
 {
   self.Dummy = 0;
 }
 
-MathMuliplyNormal _MathMuliplyNormalConstructor()
+MathMultiplyNormal _MathMultiplyNormalConstructor()
 {
-  MathMuliplyNormal self;
-  _MathMuliplyNormalPreConstructor(self);
+  MathMultiplyNormal self;
+  _MathMultiplyNormalPreConstructor(self);
   return self;
 }
 
 float _MathMultiplyNormal(mat2x2 _by, float _the)
 {
   vec2 _promotedVector = vec2(_the, float(0));
-  return (_promotedVector * _by).x;
+  return ((_promotedVector) * (_by)).x;
 }
 
 vec2 _MathMultiplyNormal(mat3x3 _by, vec2 _the)
 {
   vec3 _promotedVector = vec3(_the, float(0));
-  return (_promotedVector * _by).xy;
+  return ((_promotedVector) * (_by)).xy;
 }
 
 vec3 _MathMultiplyNormal(mat4x4 _by, vec3 _the)
 {
   vec4 _promotedVector = vec4(_the, float(0));
-  return (_promotedVector * _by).xyz;
+  return ((_promotedVector) * (_by)).xyz;
 }
 
 //----- MathMatrixDeterminant Functions -----
