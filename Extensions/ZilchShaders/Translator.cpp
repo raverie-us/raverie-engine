@@ -1331,6 +1331,10 @@ void ZilchShaderTranslator::WalkBinaryOperationNode(Zilch::BinaryOperatorNode*& 
   if(parentUnaryOp != nullptr)
     needsGrouping = true;
 
+  Zilch::MemberAccessNode* parentMemberAccess = Zilch::Type::DynamicCast<Zilch::MemberAccessNode*>(node->Parent);
+  if(parentMemberAccess != nullptr)
+    needsGrouping = true;
+
   // Otherwise, if the parent is a binary op then we need to check if we need parenthesis
   Zilch::BinaryOperatorNode* parentBinaryOp = Zilch::Type::DynamicCast<Zilch::BinaryOperatorNode*>(node->Parent);
   if(parentBinaryOp != nullptr)

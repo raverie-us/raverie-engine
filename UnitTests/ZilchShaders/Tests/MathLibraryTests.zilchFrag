@@ -116,6 +116,10 @@ struct VectorMathTests[Type]
         var y = Type();
         var z = Type();
         
+        // Test grouping operators
+        var r = (x + y)[0];
+        r = (x + y).X;
+        
         var count = x.Count;
         var axis = Type.GetAxis(0);
         var zero = Type.Zero;

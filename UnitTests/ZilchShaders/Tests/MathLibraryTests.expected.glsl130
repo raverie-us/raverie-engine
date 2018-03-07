@@ -2118,6 +2118,10 @@ void _template_VectorMathTests_Real2_Test(inout template_VectorMathTests_Real2_ 
   vec2 _y = vec2(0.0, 0.0);
   vec2 _z = vec2(0.0, 0.0);
   
+  
+  float _r = (_x + _y)[0];
+  _r = (_x + _y).x;
+  
   int _count = 2;
   vec2 _axis = _vec2GetAxis(0);
   vec2 _zero = vec2(0, 0);
@@ -2322,6 +2326,10 @@ void _template_VectorMathTests_Real3_Test(inout template_VectorMathTests_Real3_ 
   vec3 _y = vec3(0.0, 0.0, 0.0);
   vec3 _z = vec3(0.0, 0.0, 0.0);
   
+  
+  float _r = (_x + _y)[0];
+  _r = (_x + _y).x;
+  
   int _count = 3;
   vec3 _axis = _vec3GetAxis(0);
   vec3 _zero = vec3(0, 0, 0);
@@ -2473,6 +2481,10 @@ void _template_VectorMathTests_Real4_Test(inout template_VectorMathTests_Real4_ 
   vec4 _x = vec4(0.0, 0.0, 0.0, 0.0);
   vec4 _y = vec4(0.0, 0.0, 0.0, 0.0);
   vec4 _z = vec4(0.0, 0.0, 0.0, 0.0);
+  
+  
+  float _r = (_x + _y)[0];
+  _r = (_x + _y).x;
   
   int _count = 4;
   vec4 _axis = _vec4GetAxis(0);
