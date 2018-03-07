@@ -41,19 +41,19 @@ ContentMetaComposition::ContentMetaComposition() : MetaComposition(ZilchTypeId(C
 uint ContentMetaComposition::GetComponentCount(HandleParam owner)
 {
   ContentComposition* comp = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
-  return comp->Components.Size();
+  return comp->mComponents.Size();
 }
 
 Handle ContentMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
 {
   ContentComposition* comp = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
-  return comp->Components.FindValue(componentType, nullptr);
+  return comp->mComponentMap.FindValue(componentType, nullptr);
 }
 
 Handle ContentMetaComposition::GetComponentAt(HandleParam owner, uint index)
 {
   ContentComposition* comp = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
-  return comp->Components[index].second;
+  return comp->mComponents[index];
 }
 
 Handle ContentMetaComposition::MakeObject(BoundType* typeToCreate)
@@ -88,7 +88,8 @@ void ContentMetaComposition::RemoveComponent(HandleParam owner, HandleParam comp
   ContentComposition* comp = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
   ContentComponent* component = componentToRemove.Get<ContentComponent*>();
   ReturnIf(component->mOwner != comp, , "Component belongs to different owner");
-  comp->Components.EraseEqualValues(component);
+  comp->mComponents.EraseValue(component);
+  comp->mComponentMap.EraseEqualValues(component);
 }
 
 ContentComposition::ContentComposition()
@@ -104,12 +105,11 @@ ContentComposition::~ContentComposition()
 
 void ContentComposition::ClearComponents()
 {
-  forRange(ComponentMapType::value_type entry, Components.All())
-  {
-    ContentComponent* cc = entry.second;
-    delete cc;
-  }
-  Components.Clear();
+  forRange(ContentComponent* component, mComponents.All())
+    delete component;
+  
+  mComponents.Clear();
+  mComponentMap.Clear();
   Builders.Clear();
 }
 
@@ -117,11 +117,8 @@ void SerializeComponents(Serializer& stream, ContentComposition* contentItem)
 {
   if(stream.GetMode() == SerializerMode::Saving)
   {
-    forRange(ContentComposition::ComponentMapType::value_type entry, contentItem->Components.All())
-    {
-      ContentComponent* component = entry.second;
+    forRange(ContentComponent* component, contentItem->mComponents.All())
       stream.SerializePolymorphic(*component);
-    }
   }
 
   if(stream.GetMode() == SerializerMode::Loading)
@@ -150,7 +147,8 @@ void SerializeComponents(Serializer& stream, ContentComposition* contentItem)
 
 void ContentComposition::AddComponent(ContentComponent* cc)
 {
-  this->Components.Insert(ZilchVirtualTypeId(cc), cc);
+  mComponents.PushBack(cc);
+  mComponentMap.Insert(ZilchVirtualTypeId(cc), cc);
   cc->mOwner = this;
 
   ObjectEvent e(this);
@@ -191,16 +189,22 @@ void ContentComposition::BuildListing(ResourceListing& listing)
 
 ContentComponent* ContentComposition::QueryComponentId(BoundType* typeId)
 {
-  return Components.FindValue(typeId, nullptr);
+  return mComponentMap.FindValue(typeId, nullptr);
+}
+
+void ContentComposition::RemoveComponent(BoundType* componentType)
+{
+  if(ContentComponent* component = QueryComponentId(componentType))
+  {
+    mComponents.EraseValue(component);
+    mComponentMap.EraseEqualValues(component);
+  }
 }
 
 void ContentComposition::OnInitialize()
 {
-  forRange(ComponentMapType::value_type entry, Components.All())
-  {
-    ContentComponent* cc = entry.second;
-    cc->Initialize(this);
-  }
+  forRange(ContentComponent* component, mComponents.All())
+    component->Initialize(this);
 
   mResourceIsContentItem = Builders.Size() == 1;
 }

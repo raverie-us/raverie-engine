@@ -83,11 +83,16 @@ public:
   void OnInitialize() override;
   ContentComponent* QueryComponentId(BoundType* typeId) override;
 
+  void RemoveComponent(BoundType*  componentType);
+
+  typedef Array<ContentComponent*> ComponentArray;
+  typedef ComponentArray::range ComponentRange;
   typedef ArrayMultiMap<BoundType*, ContentComponent*> ComponentMapType;
-  typedef ComponentMapType::valueRange ComponentRange;
+  typedef ComponentMapType::valueRange ComponentMapRange;
 
   //Content Components
-  ComponentMapType Components;
+  ComponentArray mComponents;
+  ComponentMapType mComponentMap;
 
   //Content Builders. Builders are currently in both the builders and
   //components list. Some times explicit iteration through the builders
