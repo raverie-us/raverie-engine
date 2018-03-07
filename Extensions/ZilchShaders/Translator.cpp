@@ -1300,8 +1300,10 @@ void ZilchShaderTranslator::WalkExpressionInitializerNode(Zilch::ExpressionIniti
 
   // Otherwise just walk the left operand and all the initializer statements
   // @JoshD: This probably won't work correctly right now. Test initializer lists of non-array types later!
-  context->Walker->Walk(this, node->LeftOperand, context);
-  context->Walker->Walk(this, node->InitializerStatements, context);
+  //context->Walker->Walk(this, node->LeftOperand, context);
+  //context->Walker->Walk(this, node->InitializerStatements, context);
+
+  SendTranslationError(node->Location, "Initializer expressions currently are not supported on non-array types.");
 }
 
 void ZilchShaderTranslator::WalkUnaryOperationNode(Zilch::UnaryOperatorNode*& node, ZilchShaderTranslatorContext* context)
