@@ -195,7 +195,7 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(SetFocus);
   ZilchBindMethod(DisplayGameSession);
   ZilchBindMethod(ExecuteCommand);
-  ZilchBindMethod(SelectPrimary);
+  ZilchBindMethod(SelectPrimary)->AddAttribute(DeprecatedAttribute);
   ZilchBindMethod(PlayGame);
   ZilchBindMethod(PlaySingleGame);
   ZilchBindMethod(PlayNewGame);
@@ -758,12 +758,6 @@ Composite* Editor::OpenSearchWindow(Widget* returnFocus, bool noBorder)
   cs->StartSearch();
 
   return newWindow;
-}
-
-void Editor::SelectOnly(HandleParam object)
-{
-  mSelection->SelectOnly(object);
-  mSelection->FinalSelectionChanged();
 }
 
 void Editor::SelectPrimary(HandleParam object)

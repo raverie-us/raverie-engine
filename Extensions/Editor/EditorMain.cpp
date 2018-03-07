@@ -306,13 +306,15 @@ void EditorMain::ShowProperties(CommandEvent* event)
 void EditorMain::ShowConfig(CommandEvent* event)
 {
   ShowProperties(event);
-  SelectOnly(mConfig);
+  mSelection->SelectOnly(mConfig);
+  mSelection->FinalSelectionChanged();
 }
 
 void EditorMain::ShowProject(CommandEvent* event)
 {
   ShowProperties(event);
-  SelectOnly(mProject);
+  mSelection->SelectOnly(mProject);
+  mSelection->FinalSelectionChanged();
 }
 
 void EditorMain::SelectTweakables(CommandEvent* event)

@@ -83,7 +83,9 @@ void DisplayCodeDefinition(CodeDefinition& definition)
     // This allows us to 'Go To Definition' on extension properties such as Mesh.Cube
   if (resource != nullptr && documentResource == nullptr)
   {
-    editor->SelectOnly(resource);
+    MetaSelection* selection = editor->GetSelection();
+    selection->SelectOnly(resource);
+    selection->FinalSelectionChanged();
     return;
   }
 

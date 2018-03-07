@@ -724,7 +724,9 @@ Cog* CreationTool::CreateAt(Viewport* viewport, Archetype* archetype,
 {
   Space* space = viewport->GetTargetSpace();
   Cog* object = CreateFromArchetype(Z::gEditor->mQueue, space, archetype,  position);
-  Z::gEditor->SelectOnly(object);
+  MetaSelection* selection = Z::gEditor->GetSelection();
+  selection->SelectOnly(object);
+  selection->FinalSelectionChanged();
 
   // Mark the transform as modified 
   object->MarkTransformModified();

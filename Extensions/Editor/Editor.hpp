@@ -239,7 +239,7 @@ public:
 //Internals
   void OnSaveCheck(SavingEvent* event);
   RuntimeEditorImpl* mRuntimeEditorImpl;
-  void SelectOnly(HandleParam object);
+  /// This function is marked for removal from Zero.Editor, use Zero.Editor.Selection's functionality instead.
   void SelectPrimary(HandleParam object);
   virtual void OnEngineUpdate(UpdateEvent* event);
   void OnResourcesUnloaded(ResourceEvent* event);
