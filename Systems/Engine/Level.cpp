@@ -124,7 +124,6 @@ LevelManager::LevelManager(BoundType* resourceType)
 
 void LevelManager::ClearCachedLevels()
 {
-  return;
   LevelManager* manager = LevelManager::GetInstance();
   forRange(Resource* resource, manager->AllResources())
   {
