@@ -993,8 +993,18 @@ void ResetCamera(Editor* editor)
   {
     if(Cog* editorCamera = viewport->mEditorCamera)
     {
-      EditorCameraController* cam = editorCamera->has(EditorCameraController);
-      cam->Reset();
+      EditorCameraController* camController = editorCamera->has(EditorCameraController);
+      camController->Reset();
+      if (editor->GetEditMode() == EditorMode::Mode2D)
+      {
+        if(Camera* cam = editorCamera->has(Camera))
+        {
+          // In the future when the ability to set/load default values from data values is available
+          // this value should be set from that interface
+          float size = 20.f;
+          cam->SetSize(size);
+        }
+      }
     }
   }
 }
