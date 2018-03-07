@@ -64,15 +64,28 @@ void DuplicateSelection(Editor* editor, Space* space)
   OperationQueue* opQueue = editor->GetOperationQueue();
   opQueue->BeginBatch();
 
+  Array<Cog*> duplicateCogs;
   // Duplicate all valid selected objects
   forRange(Cog* cog, cogs.All())
   {
     Cog* duplicateCog = cog->Clone();
+    duplicateCogs.PushBack(duplicateCog);
     ObjectCreated(opQueue, duplicateCog);
   }
 
   // End the batch operation
   opQueue->EndBatch();
+
+  // If any cogs were successfully duplicated select the duplicates over the originals
+  if (!duplicateCogs.Empty())
+  {
+    selection->Clear(SendsEvents::False);
+    forRange(Cog* cog, duplicateCogs.All())
+    {
+      selection->Add(cog, SendsEvents::False);
+    }
+    selection->FinalSelectionChanged();
+  }
 }
 
 void DeleteSelectedObjects(Editor* editor, Space* space)
