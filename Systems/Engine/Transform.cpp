@@ -828,8 +828,11 @@ void Transform::OnDestroy(uint flags /*= 0*/)
       transform->TransformParent = nullptr;
   }
 
-  if (mCachedWorldMatrix != nullptr)
+  if(mCachedWorldMatrix != nullptr)
+  {
     sCachedWorldMatrixPool->Deallocate(mCachedWorldMatrix, sizeof(Mat4));
+    mCachedWorldMatrix = nullptr;
+  }
 }
 
 void Transform::SetRotationBases(Vec3Param facing, Vec3Param up, Vec3Param right)
