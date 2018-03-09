@@ -36,6 +36,8 @@ ZilchDefineType(Camera, builder, type)
   ZilchBindGetter(WorldTranslation);
   ZilchBindGetter(WorldDirection);
   ZilchBindGetter(WorldUp);
+
+  ZilchBindMethod(GetFrustum);
 }
 
 //**************************************************************************************************

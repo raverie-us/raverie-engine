@@ -77,7 +77,7 @@ public:
   Mat4 GetApiPerspectiveTransform();
   // Fills ViewBlock with Camera specific data for rendering.
   void GetViewData(ViewBlock& block);
-  // Creates a frustum using the Camera's settings along with the given aspect ratio.
+  /// Creates a frustum using the Camera's settings along with the given aspect ratio.
   Frustum GetFrustum(float aspect) const;
 
   Link<Camera> SpaceLink;
