@@ -86,7 +86,7 @@ public:
   /// Step the game one frame
   void Step();
 
-  /// Pause all space on game
+  /// Pauses the game session which prevents updates to all spaces owned by this game.
   void Pause();
 
   /// Create a space in the game. Use the archetype's name.
@@ -140,7 +140,7 @@ public:
   /// Is the game running in edit mode?
   BitField<CreationFlags::Enum> mCreationFlags;
 
-  /// Used to control pausing on all spaces
+  /// Controls if the game session is paused which prevents updates to all spaces owned by this game.
   bool mPaused;
 
   /// Has the game started prevents double starts
