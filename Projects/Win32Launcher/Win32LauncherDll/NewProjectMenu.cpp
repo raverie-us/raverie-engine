@@ -468,6 +468,7 @@ void NewProjectMenu::OnFirstInstallStarted(Event* e)
   }
 
   mBuildSelector->SetBuild(latestInstalledBuild);
+  OnVersionChange(e);
 }
 
 //******************************************************************************
