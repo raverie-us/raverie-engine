@@ -35,7 +35,7 @@ void Epa::Init(const Simplex &simplex)
   {
     Face &face = mFaces[i];
     face.normal = (mVertices[face.p1].cso - mVertices[face.p0].cso).Cross(mVertices[face.p2].cso - mVertices[face.p0].cso);
-    face.normal.Normalize();
+    face.normal.AttemptNormalize();
   }
 
   mDistClosest = FLT_MAX;
@@ -143,8 +143,9 @@ bool Epa::Expand(CSOVertex newPoint)
     Edge &edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
     newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso).Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
-    newFace.normal.Normalize();
-    mFaces.PushBack(newFace);
+    float length = newFace.normal.AttemptNormalize();
+    if(length != 0)
+      mFaces.PushBack(newFace);
   }
   mEdges.Clear();
 
@@ -212,7 +213,7 @@ bool Epa::DebugStep(void)
     Edge &edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
     newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso).Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
-    newFace.normal.Normalize();
+    newFace.normal.AttemptNormalize();
     mFaces.PushBack(newFace);
   }
   mEdges.Clear();
