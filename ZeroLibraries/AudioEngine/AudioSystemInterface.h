@@ -15,6 +15,8 @@
 #include "PitchChange.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
+#include "Filters.h"
+#include "FilterNodes.h"
 #include "ListenerNode.h"
 #include "RecordNode.h"
 #include "VolumeNodes.h"

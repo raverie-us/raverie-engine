@@ -267,7 +267,7 @@ namespace Audio
     // If there are multiple listeners, the sounds they hear are added together
     float attenuatorVolume = 0.0f;
     forRange(AttenuationPerListener* data, DataPerListener.Values())
-      volume += data->PreviousVolume;
+      attenuatorVolume += data->PreviousVolume;
 
     // Return the output volume modified by this node's volume
     return volume * attenuatorVolume;

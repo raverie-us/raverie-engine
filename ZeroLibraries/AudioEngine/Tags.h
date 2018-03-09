@@ -155,7 +155,7 @@ namespace Audio
     // If true, the equalizer filter will be applied to tagged instances
     bool mUseEqualizer;
     // The compressor filter applied to tagged instances
-    DynamicsProcessor* CompressorObject;
+    DynamicsProcessor CompressorObject;
     // If true, the compressor filter will be applied
     bool mUseCompressor;
     // The volume adjustment per sample created by the compressor filter
@@ -179,7 +179,7 @@ namespace Audio
     typedef Zero::HashMap<SoundInstanceNode*, InstanceData*> InstanceDataMapType;
     InstanceDataMapType DataPerInstance;
     // Used to store equalizer settings
-    Equalizer* EqualizerSettings;
+    Equalizer EqualizerSettings;
 
     Zero::Link<TagObject> link;
 

@@ -21,10 +21,8 @@ namespace Audio
     mVolume(1.0f),
     mModifyingVolume(false),
     mUseEqualizer(false),
-    CompressorObject(nullptr),
     mUseCompressor(false),
-    mCompressorInputTag(nullptr),
-    EqualizerSettings(nullptr)
+    mCompressorInputTag(nullptr)
   {
     if (!isThreaded)
     {
@@ -33,9 +31,6 @@ namespace Audio
     }
     else
     {
-      CompressorObject = new DynamicsProcessor();
-      EqualizerSettings = new Equalizer();
-
       // Constructor happens on main thread, so need to send a message to add to threaded list
       gAudioSystem->AddTask(Zero::CreateFunctor(&AudioSystemInternal::AddTag, gAudioSystem, this, true));
     }
@@ -75,11 +70,6 @@ namespace Audio
 
         delete data;
       }
-
-      if (CompressorObject)
-        delete CompressorObject;
-      if (EqualizerSettings)
-        delete EqualizerSettings;
     }
 
     // Remove this tag from the audio system's list
@@ -89,6 +79,9 @@ namespace Audio
   //************************************************************************************************
   void TagObject::UpdateForMix(unsigned howManyFrames, unsigned channels)
   {
+    if (!mIsThreaded)
+      return;
+
     if (mMixVersion == gAudioSystem->MixVersionNumber)
       return;
 
@@ -115,7 +108,7 @@ namespace Audio
         mCompressorVolumes.Resize(compressorInput->Size(), 1.0f);
 
         // Run the compressor filter, using the tag output as the envelope input
-        CompressorObject->ProcessBuffer(mCompressorVolumes.Data(), compressorInput->Data(),
+        CompressorObject.ProcessBuffer(mCompressorVolumes.Data(), compressorInput->Data(),
           mCompressorVolumes.Data(), channels, mCompressorVolumes.Size());
       }
     }
@@ -126,6 +119,9 @@ namespace Audio
   //************************************************************************************************
   void TagObject::ProcessInstance(BufferType* instanceOutput, unsigned channels, SoundInstanceNode* instance)
   {
+    if (!mIsThreaded)
+      return;
+
     // If this is the first instance for this mix, update
     if (mMixVersion != gAudioSystem->MixVersionNumber)
       UpdateForMix(instanceOutput->Size() / channels, channels);
@@ -138,7 +134,7 @@ namespace Audio
 
       // If the equalizer filter does not exist for this instance, create it
       if (!data->mEqualizer)
-        data->mEqualizer = new Equalizer(*EqualizerSettings);
+        data->mEqualizer = new Equalizer(EqualizerSettings);
 
       // Create a temporary buffer for the equalizer output
       BufferType processedOutput(instanceOutput->Size());
@@ -227,7 +223,7 @@ namespace Audio
 
       // If using equalizer, create it and set the settings
       if (mUseEqualizer)
-        data->mEqualizer = new Equalizer(*EqualizerSettings);
+        data->mEqualizer = new Equalizer(EqualizerSettings);
     }
   }
 
@@ -398,12 +394,14 @@ namespace Audio
   //************************************************************************************************
   float TagObject::GetBelow80HzGain()
   {
-    return EqualizerSettings->GetBelow80HzGain();
+    return EqualizerSettings.GetBelow80HzGain();
   }
 
   //************************************************************************************************
   void TagObject::SetBelow80HzGain(const float gain)
   {
+    EqualizerSettings.SetBelow80HzGain(gain);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
@@ -411,8 +409,6 @@ namespace Audio
     }
     else 
     {
-      EqualizerSettings->SetBelow80HzGain(gain);
-
       // Set the value on existing equalizers. If new ones are created they will copy settings.
       forRange(InstanceData* data, DataPerInstance.Values())
         data->mEqualizer->SetBelow80HzGain(gain);
@@ -422,12 +418,14 @@ namespace Audio
   //************************************************************************************************
   float TagObject::Get150HzGain()
   {
-    return EqualizerSettings->Get150HzGain();
+    return EqualizerSettings.Get150HzGain();
   }
 
   //************************************************************************************************
   void TagObject::Set150HzGain(const float gain)
   {
+    EqualizerSettings.Set150HzGain(gain);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
@@ -435,8 +433,6 @@ namespace Audio
     }
     else 
     {
-      EqualizerSettings->Set150HzGain(gain);
-
       // Set the value on existing equalizers. If new ones are created they will copy settings.
       forRange(InstanceData* data, DataPerInstance.Values())
         data->mEqualizer->Set150HzGain(gain);
@@ -446,12 +442,14 @@ namespace Audio
   //************************************************************************************************
   float TagObject::Get600HzGain()
   {
-    return EqualizerSettings->Get600HzGain();
+    return EqualizerSettings.Get600HzGain();
   }
 
   //************************************************************************************************
   void TagObject::Set600HzGain(const float gain)
   {
+    EqualizerSettings.Set600HzGain(gain);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
@@ -459,8 +457,6 @@ namespace Audio
     }
     else 
     {
-      EqualizerSettings->Set600HzGain(gain);
-
       // Set the value on existing equalizers. If new ones are created they will copy settings.
       forRange(InstanceData* data, DataPerInstance.Values())
         data->mEqualizer->Set600HzGain(gain);
@@ -470,12 +466,14 @@ namespace Audio
   //************************************************************************************************
   float TagObject::Get2500HzGain()
   {
-    return EqualizerSettings->Get2500HzGain();
+    return EqualizerSettings.Get2500HzGain();
   }
 
   //************************************************************************************************
   void TagObject::Set2500HzGain(const float gain)
   {
+    EqualizerSettings.Set2500HzGain(gain);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
@@ -483,8 +481,6 @@ namespace Audio
     }
     else 
     {
-      EqualizerSettings->Set2500HzGain(gain);
-
       // Set the value on existing equalizers. If new ones are created they will copy settings.
       forRange(InstanceData* data, DataPerInstance.Values())
         data->mEqualizer->Set2500HzGain(gain);
@@ -494,12 +490,14 @@ namespace Audio
   //************************************************************************************************
   float TagObject::GetAbove5000HzGain()
   {
-    return EqualizerSettings->GetAbove5000HzGain();
+    return EqualizerSettings.GetAbove5000HzGain();
   }
 
   //************************************************************************************************
   void TagObject::SetAbove5000HzGain(const float gain)
   {
+    EqualizerSettings.SetAbove5000HzGain(gain);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
@@ -507,8 +505,6 @@ namespace Audio
     }
     else
     {
-      EqualizerSettings->SetAbove5000HzGain(gain);
-
       // Set the value on existing equalizers. If new ones are created they will copy settings.
       forRange(InstanceData* data, DataPerInstance.Values())
         data->mEqualizer->SetAbove5000HzGain(gain);
@@ -523,10 +519,16 @@ namespace Audio
       if (mThreadedTag)
         gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::InterpolateAllBands, mThreadedTag, 
           values, timeToInterpolate));
+
+      EqualizerSettings.SetBelow80HzGain(values->mBelow80Hz);
+      EqualizerSettings.Set150HzGain(values->mAt150Hz);
+      EqualizerSettings.Set600HzGain(values->mAt600Hz);
+      EqualizerSettings.Set2500HzGain(values->mAt2500Hz);
+      EqualizerSettings.SetAbove5000HzGain(values->mAbove5000Hz);
     }
     else 
     {
-      EqualizerSettings->InterpolateBands(values->mBelow80Hz, values->mAt150Hz, values->mAt600Hz,
+      EqualizerSettings.InterpolateBands(values->mBelow80Hz, values->mAt150Hz, values->mAt600Hz,
         values->mAt2500Hz, values->mAbove5000Hz, timeToInterpolate);
 
       // Set the value on existing equalizers. If new ones are created they will copy settings.
@@ -560,100 +562,90 @@ namespace Audio
   //************************************************************************************************
   float TagObject::GetCompressorThreshold()
   {
-    return CompressorObject->GetThreshold();
+    return CompressorObject.GetThreshold();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorThreshold(const float value)
   {
+    CompressorObject.SetThreshold(value);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
         gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorThreshold, mThreadedTag, value));
-    }
-    else 
-    {
-      CompressorObject->SetThreshold(value);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorAttackMSec()
   {
-    return CompressorObject->GetAttackMSec();
+    return CompressorObject.GetAttackMSec();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorAttackMSec(const float value)
   {
+    CompressorObject.SetAttackMSec(value);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
         gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorAttackMSec, mThreadedTag, value));
-    }
-    else
-    {
-      CompressorObject->SetAttackMSec(value);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorReleaseMSec()
   {
-    return CompressorObject->GetReleaseMSec();
+    return CompressorObject.GetReleaseMSec();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorReleaseMsec(const float value)
   {
+    CompressorObject.SetReleaseMSec(value);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
         gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorReleaseMsec, mThreadedTag, value));
-    }
-    else 
-    {
-      CompressorObject->SetReleaseMSec(value);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorRatio()
   {
-    return CompressorObject->GetRatio();
+    return CompressorObject.GetRatio();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorRatio(const float value)
   {
+    CompressorObject.SetRatio(value);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
         gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorRatio, mThreadedTag, value));
-    }
-    else 
-    {
-      CompressorObject->SetRatio(value);
     }
   }
 
   //************************************************************************************************
   float TagObject::GetCompressorKneeWidth()
   {
-    return CompressorObject->GetKneeWidth();
+    return CompressorObject.GetKneeWidth();
   }
 
   //************************************************************************************************
   void TagObject::SetCompressorKneeWidth(const float value)
   {
+    CompressorObject.SetKneeWidth(value);
+
     if (!mIsThreaded)
     {
       if (mThreadedTag)
         gAudioSystem->AddTask(Zero::CreateFunctor(&TagObject::SetCompressorKneeWidth, mThreadedTag, value));
-    }
-    else 
-    {
-      CompressorObject->SetKneeWidth(value);
     }
   }
 
@@ -699,6 +691,9 @@ namespace Audio
   //************************************************************************************************
   BufferType* TagObject::GetTotalInstanceOutput(unsigned howManyFrames, unsigned channels)
   {
+    if (!mIsThreaded)
+      return nullptr;
+
     // Create a temporary buffer to get output from each instance
     BufferType instanceBuffer(howManyFrames * channels);
     // Resize the total output buffer
