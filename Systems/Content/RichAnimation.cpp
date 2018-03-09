@@ -1775,7 +1775,10 @@ Archetype* RichAnimationBuilder::GetPreviewArchetype()
 //******************************************************************************
 void RichAnimationBuilder::SetPreviewArchetype(Archetype* archetype)
 {
-  mPreviewArchetype = archetype->ResourceIdName;
+  if(archetype)
+    mPreviewArchetype = archetype->ResourceIdName;
+  else
+    mPreviewArchetype = "";
 }
 
 //******************************************************************************
