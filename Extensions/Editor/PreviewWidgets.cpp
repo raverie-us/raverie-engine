@@ -14,983 +14,854 @@ namespace PreviewWidgetUi
 const cstr cLocation = "EditorUi/PreviewWidgets";
 Tweakable(Vec2, ColorGradientSize, Pixels(170,30), cLocation);
 Tweakable(Vec2, SpacePreviewSize, Pixels(200, 200), cLocation);
-
 }
 
 //-------------------------------------------------------------------- Icon Item
-class IconPreview : public PreviewWidget
+//****************************************************************************
+IconPreview::IconPreview(PreviewWidgetInitializer& initializer, StringParam icon)
+  : PreviewWidget(initializer)
 {
-public:
-  Element* mIcon;
+  static const String className = "TextButton";
+  mDefSet = mDefSet->GetDefinitionSet(className);
+  mIcon = CreateAttached<Element>(icon);
+}
 
-  //****************************************************************************
-  IconPreview(PreviewWidgetInitializer& initializer, StringParam icon)
-    : PreviewWidget(initializer)
-  {
-    static const String className = "TextButton";
-    mDefSet = mDefSet->GetDefinitionSet(className);
-    mIcon = CreateAttached<Element>(icon);
-  }
-
-  //****************************************************************************
-  void UpdateTransform()
-  {
-    Vec2 background = mSize;
-    Vec2 iconSize = mIcon->GetMinSize();
-    iconSize = Math::Min(iconSize, mMinSize);
-
-    Vec3 p = GetCenterPosition(background, iconSize);
-    mIcon->SetSize(iconSize);
-    mIcon->SetTranslation(p);
-    PreviewWidget::UpdateTransform();
-  }
-};
-
-//------------------------------------------------------------------ Script Item
-class ScriptPreview : public IconPreview
+//****************************************************************************
+void IconPreview::UpdateTransform()
 {
-public:
-  //****************************************************************************
-  ScriptPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "ScriptIcon")
-  {
-    //
-  }
-};
+  Vec2 background = mSize;
+  Vec2 iconSize = mIcon->GetMinSize();
+  iconSize = Math::Min(iconSize, mMinSize);
 
-//------------------------------------------------------------------ Script Item
-class RenderGroupPreview : public IconPreview
-{
-public:
-  //****************************************************************************
-  RenderGroupPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "RenderGroupIcon")
-  {
-    //
-  }
-};
-
-//------------------------------------------------------------------ Script Item
-class SoundPreview : public IconPreview
-{
-public:
-  //****************************************************************************
-  SoundPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "SoundIcon")
-  {
-    //
-  }
-};
-
-//------------------------------------------------------------------ Script Item
-class NetworkingPreview : public IconPreview
-{
-public:
-  //****************************************************************************
-  NetworkingPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "NetworkingIcon")
-  {
-    //
-  }
-};
-
-//------------------------------------------------------------------ Script Item
-class PhysicsPreview : public IconPreview
-{
-public:
-  //****************************************************************************
-  PhysicsPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "PhysicsIcon")
-  {
-    //
-  }
-};
-
-//------------------------------------------------------------------- Level Item
-class LevelPreview : public IconPreview
-{
-public:
-  //****************************************************************************
-  LevelPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "LevelIcon")
-  {
-    //
-  }
-};
+  Vec3 p = GetCenterPosition(background, iconSize);
+  mIcon->SetSize(iconSize);
+  mIcon->SetTranslation(p);
+  PreviewWidget::UpdateTransform();
+}
 
 //--------------------------------------------------------------- Sound Cue Item
-class SoundCuePreview : public IconPreview
+//****************************************************************************
+SoundCuePreview::SoundCuePreview(PreviewWidgetInitializer& initializer)
+  : IconPreview(initializer, "SoundIcon")
 {
-public:
-  typedef SoundCuePreview ZilchSelf;
+  ConnectThisTo(this, Events::LeftClick, OnLeftClick);
+}
 
-  //****************************************************************************
-  SoundCuePreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "SoundIcon")
-  {
-    ConnectThisTo(this, Events::LeftClick, OnLeftClick);
-  }
-
-  //****************************************************************************
-  void OnLeftClick(MouseEvent* event)
-  {
-    if(SoundCue* cue = mObject.Get<SoundCue*>())
-      cue->Preview();
-  }
-};
-
-
-//-------------------------------------------------------- Physics Material Item
-class PhysicsMaterialPreview : public IconPreview
+//****************************************************************************
+void SoundCuePreview::OnLeftClick(MouseEvent* event)
 {
-public:
-  //****************************************************************************
-  PhysicsMaterialPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "PhysicsMaterial")
-  {
-    //
-  }
-};
+  if(SoundCue* cue = mObject.Get<SoundCue*>())
+    cue->Preview();
+}
 
-//------------------------------------------------------------------- Empty Item
-class EmptyPreview : public IconPreview
+//--------------------------------------------------------- CameraViewportDrawer
+//****************************************************************************
+CameraViewportDrawer::CameraViewportDrawer(Composite* parent, Cog* cameraObject)
+  : Widget(parent)
+  , mCameraObject(cameraObject)
 {
-public:
-  //****************************************************************************
-  EmptyPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "LargeFolder")
-  {
-    mIcon->SetColor(Vec4(0,0,0,0));
-  }
-};
+}
 
-class CameraViewportDrawer : public Widget
+//****************************************************************************
+void CameraViewportDrawer::SetSize(Vec2 newSize)
 {
-public:
-  HandleOf<Cog> mCameraObject;
-
-  CameraViewportDrawer(Composite* parent, Cog* cameraObject)
-    : Widget(parent)
-    , mCameraObject(cameraObject)
+  Widget::SetSize(newSize);
+  if (Cog* cameraObject = mCameraObject)
   {
-  }
-
-  void SetSize(Vec2 newSize)
-  {
-    Widget::SetSize(newSize);
-    if (Cog* cameraObject = mCameraObject)
+    if (CameraViewport* cameraViewport = cameraObject->has(CameraViewport))
     {
-      if (CameraViewport* cameraViewport = cameraObject->has(CameraViewport))
+      cameraViewport->SetResolutionOrAspect(Math::ToIntVec2(mSize));
+    }
+  }
+}
+
+//****************************************************************************
+void CameraViewportDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+{
+  Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
+
+  if (Cog* cameraObject = mCameraObject)
+  {
+    if (CameraViewport* cameraViewport = cameraObject->has(CameraViewport))
+    {
+      if (Texture* texture = cameraViewport->mFinalTexture)
       {
-        cameraViewport->SetResolutionOrAspect(Math::ToIntVec2(mSize));
+        Vec2 size = mSize;
+        Vec4 color(1, 1, 1, 1);
+
+        ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, texture);
+        frameBlock.mRenderQueues->AddStreamedQuad(viewNode, Vec3(0, 0, 0), Vec3(size, 0), Vec2(0, 0), Vec2(1, 1), color);
       }
     }
   }
+}
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override
-  {
-    Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
-
-    if (Cog* cameraObject = mCameraObject)
-    {
-      if (CameraViewport* cameraViewport = cameraObject->has(CameraViewport))
-      {
-        if (Texture* texture = cameraViewport->mFinalTexture)
-        {
-          Vec2 size = mSize;
-          Vec4 color(1, 1, 1, 1);
-
-          ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, texture);
-          frameBlock.mRenderQueues->AddStreamedQuad(viewNode, Vec3(0, 0, 0), Vec3(size, 0), Vec2(0, 0), Vec2(1, 1), color);
-        }
-      }
-    }
-  }
-};
-
-//---------------------------------------------------------------- World Preview
-class SpacePreview : public PreviewWidget
+//--------------------------------------------- Space Preview Mouse Manipulation
+SpacePreviewMouseDrag::SpacePreviewMouseDrag(Mouse* mouse, SpacePreview* preview)
+  : MouseManipulation(mouse, preview),
+    mPreview(preview)
 {
-public:
-  typedef SpacePreview ZilchSelf;
-  PreviewAnimate::Enum mPreviewAnimate;
-  CameraViewportDrawer* mCameraViewportDrawer;
-  HandleOf<Space> mSpace;
-  bool mOwnsSpace;
-  bool mHasGraphical;
-  CogId mCamera;
-  CogId mObject;
+}
 
-  //****************************************************************************
-  SpacePreview(PreviewWidgetInitializer& initializer, StringParam objectArchetype = CoreArchetypes::Default, Cog* objectToView = nullptr)
-    : PreviewWidget(initializer)
+void SpacePreviewMouseDrag::OnMouseMove(MouseEvent* event)
+{
+  float sensitivity = Math::DegToRad(1.0f) * 0.5f;
+  mPreview->mHorizontalAngle += event->Movement.x * sensitivity;
+  mPreview->mVerticalAngle += event->Movement.y * sensitivity;
+  mPreview->mVerticalAngle = Math::Clamp(mPreview->mVerticalAngle, -Math::cPi * 0.5f, Math::cPi * 0.5f);
+  mPreview->UpdateCameraPosition();
+}
+
+void SpacePreviewMouseDrag::OnRightMouseUp(MouseEvent* event)
+{
+  CloseAndReturnFocus();
+}
+
+//---------------------------------------------------------------- Space Preview
+//****************************************************************************
+SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer, StringParam objectArchetype, Cog* objectToView)
+  : PreviewWidget(initializer)
+{
+  mPreviewAnimate = PreviewAnimate::None;
+
+  Space* space = nullptr;
+  if(objectToView)
   {
-    mPreviewAnimate = PreviewAnimate::None;
+    // Sharing a space
+    mOwnsSpace = false;
+    space = objectToView->GetSpace();
+  }
+  else
+  {
+    // Create a local space
+    mOwnsSpace = true;
 
-    Space* space = nullptr;
-    if(objectToView)
-    {
-      // Sharing a space
-      mOwnsSpace = false;
-      space = objectToView->GetSpace();
-    }
-    else
-    {
-      // Create a local space
-      mOwnsSpace = true;
-
-      // By default, proxy the objects in the preview space
-      uint creationFlags = CreationFlags::Editing | CreationFlags::Preview;
-
-      // Unless specified otherwise by the dev config
-      if(DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
-      {
-        if(devConfig->mProxyObjectsInPreviews == false)
-          creationFlags = 0;
-      }
-
-      // Create the space
-      GameSession* editorGameSession = Z::gEditor->GetEditGameSession();
-      Archetype* spaceArchetype = ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
-      space = editorGameSession->CreateSpaceFlags(spaceArchetype, creationFlags);
-
-      String spaceName = BuildString("ResourcePreview ", initializer.Name);
-      space->SetName(Cog::SanitizeName(spaceName));
-      
-      // Do not update the space
-      space->has(TimeSpace)->SetPaused(true);
-    }
-    
+    // By default, proxy the objects in the preview space
     uint creationFlags = CreationFlags::Editing | CreationFlags::Preview;
-    Cog* camera = Z::gFactory->Create(space, CoreArchetypes::PreviewCamera, creationFlags, Z::gEditor->GetEditGameSession());
-    mCameraViewportDrawer = new CameraViewportDrawer(this, camera);
-    if(GravityEffect* g = space->has(GravityEffect))
-      g->SetActive(false);
 
-    Component* renderer = camera->GetComponentByName("ForwardRenderer");
-    if (renderer != nullptr)
+    // Unless specified otherwise by the dev config
+    if(DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
     {
-      Texture* skybox = TextureManager::FindOrNull("WhiteSkybox");
-      renderer->SetProperty("Skybox", skybox);
+      if(devConfig->mProxyObjectsInPreviews == false)
+        creationFlags = 0;
     }
 
-    // Create preview object if necessary
-    if(objectToView == nullptr)
+    // Create the space
+    GameSession* editorGameSession = Z::gEditor->GetEditGameSession();
+    Archetype* spaceArchetype = ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
+    space = editorGameSession->CreateSpaceFlags(spaceArchetype, creationFlags);
+
+    String spaceName = BuildString("ResourcePreview ", initializer.Name);
+    space->SetName(Cog::SanitizeName(spaceName));
+      
+    // Do not update the space
+    space->has(TimeSpace)->SetPaused(true);
+  }
+    
+  uint creationFlags = CreationFlags::Editing | CreationFlags::Preview;
+  Cog* camera = Z::gFactory->Create(space, CoreArchetypes::PreviewCamera, creationFlags, Z::gEditor->GetEditGameSession());
+  mCameraViewportDrawer = new CameraViewportDrawer(this, camera);
+  if(GravityEffect* g = space->has(GravityEffect))
+    g->SetActive(false);
+
+  Component* renderer = camera->GetComponentByName("ForwardRenderer");
+  if (renderer != nullptr)
+  {
+    Texture* skybox = TextureManager::FindOrNull("WhiteSkybox");
+    renderer->SetProperty("Skybox", skybox);
+  }
+
+  // Create preview object if necessary
+  if(objectToView == nullptr)
+  {
+    if(!objectArchetype.Empty())
     {
-      if(!objectArchetype.Empty())
+      objectToView = space->CreateAt(objectArchetype, Vec3(0, 0, 0));
+      if(objectToView != nullptr)
       {
-        objectToView = space->CreateAt(objectArchetype, Vec3(0, 0, 0));
-        if(objectToView != nullptr)
-        {
-          // This is being used in the preview space, apply its modifications so that they can
-          // be modified in the Archetypes context
-          Archetype* archetype = objectToView->GetArchetype();
-          archetype->GetLocalCachedModifications().ApplyModificationsToObject(objectToView);
-        }
-      }
-    }
-
-    mHasGraphical = false;
-    if (objectToView != nullptr)
-      mHasGraphical = objectToView->has(Graphical) != nullptr;
-
-    mObject = objectToView;
-    mCamera = camera;
-    mSpace = space;
-  }
-
-  //****************************************************************************
-  void OnDestroy()
-  {
-    PreviewWidget::OnDestroy();
-  }
-
-  //****************************************************************************
-  ~SpacePreview()
-  {
-    if(mOwnsSpace)
-      mSpace.SafeDestroy();
-
-    mCamera.SafeDestroy();
-  }
-
-  //****************************************************************************
-  Vec2 GetMinSize() override
-  {
-    return PreviewWidgetUi::SpacePreviewSize;
-  }
-
-  //****************************************************************************
-  void OnUpdate(UpdateEvent* updateEvent)
-  {
-    Cog* object = mObject;
-
-    if(!object)
-      return;
-
-    bool mouseOverUpdate = (IsMouseOver() && mPreviewAnimate == PreviewAnimate::MouseOver);
-    bool alwaysUpdate = (mPreviewAnimate == PreviewAnimate::Always);
-
-    if(mouseOverUpdate ||  alwaysUpdate)
-    {
-      Debug::ActiveDrawSpace drawSpace(object->GetSpace()->GetId().Id);
-
-      // We only want to debug draw the components if there's no
-      // graphical components
-      //if(!mHasGraphical)
-      {
-        forRange(Component* component, object->GetComponents())
-        {
-          component->DebugDraw();
-        }
+        // This is being used in the preview space, apply its modifications so that they can
+        // be modified in the Archetypes context
+        Archetype* archetype = objectToView->GetArchetype();
+        archetype->GetLocalCachedModifications().ApplyModificationsToObject(objectToView);
       }
     }
   }
 
-  //****************************************************************************
-  void UpdateViewDistance()
+  mHasGraphical = false;
+  if (objectToView != nullptr)
+    mHasGraphical = objectToView->has(Graphical) != nullptr;
+
+  mObject = objectToView;
+  mCamera = camera;
+  mSpace = space;
+
+  UpdateViewDistance();
+  SetInteractive(mInteractive);
+}
+
+//****************************************************************************
+SpacePreview::~SpacePreview()
+{
+  if (mOwnsSpace)
+    mSpace.SafeDestroy();
+
+  mCamera.SafeDestroy();
+}
+
+//****************************************************************************
+void SpacePreview::SetInteractive(bool interactive)
+{
+  mInteractive = interactive;
+  if (mInteractive)
   {
-    Cog* object = mObject;
-    if(object)
+    ConnectThisTo(this, Events::RightMouseDown, OnRightMouseDown);
+    ConnectThisTo(this, Events::MouseScroll, OnMouseScroll);
+  }
+  else
+  {
+    GetDispatcher()->DisconnectEvent(Events::RightMouseDown, this);
+    GetDispatcher()->DisconnectEvent(Events::MouseScroll, this);
+  }
+}
+
+//****************************************************************************
+void SpacePreview::OnRightMouseDown(MouseEvent* event)
+{
+  // The space preview was right clicked on, create
+  event->Handled = true;
+  new SpacePreviewMouseDrag(event->EventMouse, this);
+}
+
+//****************************************************************************
+void SpacePreview::OnMouseScroll(MouseEvent* event)
+{
+  // How many steps it takes to jump a level
+  const float cScrollExponentScalar = 0.1f;
+
+  float expLookDistance = Math::Log(mLookAtDistance);
+  expLookDistance += -event->Scroll.y * cScrollExponentScalar;
+  mLookAtDistance = Math::Exp(expLookDistance);
+  UpdateCameraPosition();
+}
+
+//****************************************************************************
+void SpacePreview::OnDestroy()
+{
+  PreviewWidget::OnDestroy();
+}
+
+//****************************************************************************
+void SpacePreview::OnUpdate(UpdateEvent* updateEvent)
+{
+  Cog* object = mObject;
+
+  if(!object)
+    return;
+
+  bool mouseOverUpdate = (IsMouseOver() && mPreviewAnimate == PreviewAnimate::MouseOver);
+  bool alwaysUpdate = (mPreviewAnimate == PreviewAnimate::Always);
+
+  if(mouseOverUpdate ||  alwaysUpdate)
+  {
+    Debug::ActiveDrawSpace drawSpace(object->GetSpace()->GetId().Id);
+
+    // We only want to debug draw the components if there's no
+    // graphical components
+    //if(!mHasGraphical)
     {
-      Aabb aabb = GetAabb(object);
-      float lookDistance = GetViewDistance(aabb);
-
-      Cog* camera = mCamera;
-
-      Camera* cameraComponent = camera->has(Camera);
-      if(cameraComponent)
+      forRange(Component* component, object->GetComponents())
       {
-        float nearWithBias = cameraComponent->mNearPlane + 0.01f;
-        if(lookDistance < nearWithBias)
-          lookDistance = nearWithBias;
+        component->DebugDraw();
       }
-
-      Vec3 lookAt = aabb.GetCenter();
-      camera->has(Transform)->SetTranslation(aabb.GetCenter() + Vec3(0, 0, lookDistance));
     }
   }
+}
 
-  void UpdateViewDistance(Vec3 viewDirection)
+//****************************************************************************
+Vec2 SpacePreview::GetMinSize()
+{
+  return PreviewWidgetUi::SpacePreviewSize;
+}
+
+//****************************************************************************
+void SpacePreview::UpdateViewDistance()
+{
+  Cog* object = mObject;
+  if(object)
   {
-    Cog* cameraCog = mCamera;
-    Transform* transform = cameraCog->has(Transform);
-    transform->SetTranslation(-viewDirection.Normalized());
-    SetRotationLookAt(transform, Vec3::cZero, Vec3::cYAxis, Facing::NegativeZ);
+    Aabb aabb = GetAabb(object);
+    mLookAtDistance = GetViewDistance(aabb);
 
-    Cog* object = mObject;
-    if (object != nullptr && object->has(Transform) != nullptr)
+    Cog* camera = mCamera;
+
+    Camera* cameraComponent = camera->has(Camera);
+    if(cameraComponent)
     {
-      Quat rotation = transform->GetWorldRotation().Inverted();
-
-      Aabb aabb = GetAabb(object);
-      aabb.Transform(Math::ToMatrix3(rotation));
-
-      object->has(Transform)->SetWorldTranslation(-aabb.GetCenter());
-
-      float size = Math::Max(aabb.mMax.x - aabb.mMin.x, aabb.mMax.y - aabb.mMin.y);
-      float distance = size / (2.0f * Math::Tan(Math::DegToRad(22.5f)));
-      distance += (aabb.mMax.z - aabb.mMin.z) * 0.5f;
-
-      Camera* camera = cameraCog->has(Camera);
-      distance = Math::Clamp(distance, camera->mNearPlane, camera->mFarPlane);
-      transform->SetTranslation(-viewDirection.Normalized() * distance);
+      float nearWithBias = cameraComponent->mNearPlane + 0.01f;
+      if(mLookAtDistance < nearWithBias)
+        mLookAtDistance = nearWithBias;
     }
-  }
 
-  //****************************************************************************
-  void AnimatePreview(PreviewAnimate::Enum value) override
-  {
-    mPreviewAnimate = value;
-    Space* space = mSpace;
-    if(value != PreviewAnimate::None && mOwnsSpace)
-      space->has(TimeSpace)->SetPaused(false);
-    if(space)
-      ConnectThisTo(space, Events::FrameUpdate, OnUpdate);
+    Vec3 cameraDirection = cameraComponent->GetWorldDirection().Normalized();
+    mVerticalAngle = -Math::ArcSin(cameraDirection.y);
+    mHorizontalAngle = Math::ArcTan2(cameraDirection.x, -cameraDirection.z);
+    Vec3 cameraPos = -cameraDirection * mLookAtDistance;
+    camera->has(Transform)->SetTranslation(cameraPos);
   }
+}
 
-  //****************************************************************************
-  void UpdateTransform()
+//****************************************************************************
+void SpacePreview::UpdateViewDistance(Vec3 viewDirection)
+{
+  Cog* camera = mCamera;
+  Transform* transform = camera->has(Transform);
+  transform->SetTranslation(-viewDirection.Normalized());
+  SetRotationLookAt(transform, Vec3::cZero, Vec3::cYAxis, Facing::NegativeZ);
+
+  Cog* object = mObject;
+  if (object != nullptr && object->has(Transform) != nullptr)
   {
-    mCameraViewportDrawer->SetSize(mSize);
-    PreviewWidget::UpdateTransform();
+    Quat rotation = transform->GetWorldRotation().Inverted();
+
+    Aabb aabb = GetAabb(object);
+    aabb.Transform(Math::ToMatrix3(rotation));
+
+    object->has(Transform)->SetWorldTranslation(-aabb.GetCenter());
+
+    float size = Math::Max(aabb.mMax.x - aabb.mMin.x, aabb.mMax.y - aabb.mMin.y);
+    mLookAtDistance = size / (2.0f * Math::Tan(Math::DegToRad(22.5f)));
+    mLookAtDistance += (aabb.mMax.z - aabb.mMin.z) * 0.5f;
+
+    Camera* cameraComponent = camera->has(Camera);
+    Vec3 cameraDirection = viewDirection.Normalized();
+    mVerticalAngle = -Math::ArcSin(cameraDirection.y);
+    mHorizontalAngle = Math::ArcTan2(cameraDirection.x, -cameraDirection.z);
+    mLookAtDistance = Math::Clamp(mLookAtDistance, cameraComponent->mNearPlane, cameraComponent->mFarPlane);
+    transform->SetTranslation(-cameraDirection * mLookAtDistance);
   }
-};
+}
+
+//****************************************************************************
+void SpacePreview::UpdateCameraPosition()
+{
+  mVerticalAngle = Math::Clamp(mVerticalAngle, -Math::cPi * 0.5f, Math::cPi * 0.5f);
+
+  Vec3 cameraDirection;
+  cameraDirection.x = Math::Sin(mHorizontalAngle) * Math::Cos(mVerticalAngle);
+  cameraDirection.y = -Math::Sin(mVerticalAngle);
+  cameraDirection.z = -Math::Cos(mHorizontalAngle) * Math::Cos(mVerticalAngle);
+
+  Vec3 cameraRight;
+  cameraRight.x = Math::Sin(mHorizontalAngle + Math::cPi * 0.5f);
+  cameraRight.y = 0.0f;
+  cameraRight.z = -Math::Cos(mHorizontalAngle + Math::cPi * 0.5f);
+
+  Vec3 cameraUp = Cross(cameraRight, cameraDirection).Normalized();
+  Vec3 cameraPos = -cameraDirection.Normalized() * mLookAtDistance;
+  Quat rotation = Math::ToQuaternion(cameraDirection, cameraUp, cameraRight);
+
+  Cog* camera = mCamera;
+  Transform* transform = camera->has(Transform);
+  transform->SetRotation(rotation);
+  transform->SetTranslation(cameraPos);
+  transform->UpdateAll();
+}
+
+//****************************************************************************
+void SpacePreview::AnimatePreview(PreviewAnimate::Enum value)
+{
+  mPreviewAnimate = value;
+  Space* space = mSpace;
+  if(value != PreviewAnimate::None && mOwnsSpace)
+    space->has(TimeSpace)->SetPaused(false);
+  if(space)
+    ConnectThisTo(space, Events::FrameUpdate, OnUpdate);
+}
+
+//****************************************************************************
+void SpacePreview::UpdateTransform()
+{
+  mCameraViewportDrawer->SetSize(mSize);
+  PreviewWidget::UpdateTransform();
+}
 
 //----------------------------------------------------------- Material Grid Tile
-class MaterialPreview : public SpacePreview
-{
-public:
-  //****************************************************************************
-  MaterialPreview(PreviewWidgetInitializer& initializer)
+MaterialPreview::MaterialPreview(PreviewWidgetInitializer& initializer)
     : SpacePreview(initializer)
+{
+  Material* material = initializer.Object.Get<Material*>();
+  if (Cog* object = mObject)
   {
-    Material* material = initializer.Object.Get<Material*>();
-    if(Cog* object = mObject)
-    {
-      object->has(Model)->SetMesh(MeshManager::FindOrNull("Sphere"));
-      object->has(Model)->SetMaterial(material);
-    }
-    UpdateViewDistance(Vec3(-1.0f));
+    object->has(Model)->SetMesh(MeshManager::FindOrNull("Sphere"));
+    object->has(Model)->SetMaterial(material);
   }
-};
+  UpdateViewDistance(Vec3(-1.0f));
+}
 
 //--------------------------------------------------------------- Mesh Grid Item
-class MeshPreview : public SpacePreview
+//****************************************************************************
+MeshPreview::MeshPreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer)
 {
-public:
-  //****************************************************************************
-  MeshPreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer)
+  Mesh* mesh = initializer.Object.Get<Mesh*>();
+  if(Cog* object = mObject)
   {
-    Mesh* mesh = initializer.Object.Get<Mesh*>();
-    if(Cog* object = mObject)
-    {
-      object->has(Model)->SetMesh(mesh);
-      object->has(Model)->SetMaterial(MaterialManager::GetDefault());
-    }
-    UpdateViewDistance(Vec3(-1.0f));
+    object->has(Model)->SetMesh(mesh);
+    object->has(Model)->SetMaterial(MaterialManager::GetDefault());
   }
-};
+  UpdateViewDistance(Vec3(-1.0f));
+}
 
 //------------------------------------------------------- Physics Mesh Grid Item
-class PhysicsMeshPreview : public SpacePreview
+//****************************************************************************
+PhysicsMeshPreview::PhysicsMeshPreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer, CoreArchetypes::Transform)
 {
-public:
-  //****************************************************************************
-  PhysicsMeshPreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer, CoreArchetypes::Transform)
+  PhysicsMesh* mesh = initializer.Object.Get<PhysicsMesh*>();
+  if(Cog* object = mObject)
   {
-    PhysicsMesh* mesh = initializer.Object.Get<PhysicsMesh*>();
-    if(Cog* object = mObject)
-    {
-      object->AddComponentByName("MeshCollider");
-      MeshCollider* collider = object->has(MeshCollider);
-      collider->SetPhysicsMesh(mesh);
-    }
-
-    UpdateViewDistance(Vec3(-1.0f));
-    //We want to be called for update every frame so we debug draw
-    AnimatePreview(PreviewAnimate::Always);
+    object->AddComponentByName("MeshCollider");
+    MeshCollider* collider = object->has(MeshCollider);
+    collider->SetPhysicsMesh(mesh);
   }
-};
+
+  UpdateViewDistance(Vec3(-1.0f));
+  //We want to be called for update every frame so we debug draw
+  AnimatePreview(PreviewAnimate::Always);
+}
 
 //------------------------------------------------------- Convex Mesh Grid Item
-class ConvexMeshPreview : public SpacePreview
+//****************************************************************************
+ConvexMeshPreview::ConvexMeshPreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer, CoreArchetypes::Transform)
 {
-public:
-  //****************************************************************************
-  ConvexMeshPreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer, CoreArchetypes::Transform)
+  ConvexMesh* mesh = initializer.Object.Get<ConvexMesh*>();
+  if(Cog* object = mObject)
   {
-    ConvexMesh* mesh = initializer.Object.Get<ConvexMesh*>();
-    if(Cog* object = mObject)
-    {
-      object->AddComponentByName("ConvexMeshCollider");
-      ConvexMeshCollider* collider = object->has(ConvexMeshCollider);
-      collider->SetConvexMesh(mesh);
-    }
-
-    UpdateViewDistance(Vec3(-1.0f));
-    //We want to be called for update every frame so we debug draw
-    AnimatePreview(PreviewAnimate::Always);
+    object->AddComponentByName("ConvexMeshCollider");
+    ConvexMeshCollider* collider = object->has(ConvexMeshCollider);
+    collider->SetConvexMesh(mesh);
   }
-};
+
+  UpdateViewDistance(Vec3(-1.0f));
+  //We want to be called for update every frame so we debug draw
+  AnimatePreview(PreviewAnimate::Always);
+}
 
 //------------------------------------------------------- Physics Mesh Grid Item
-class MultiConvexMeshPreview : public SpacePreview
+//****************************************************************************
+MultiConvexMeshPreview::MultiConvexMeshPreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer, CoreArchetypes::Transform)
 {
-public:
-  //****************************************************************************
-  MultiConvexMeshPreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer, CoreArchetypes::Transform)
+  MultiConvexMesh* mesh = initializer.Object.Get<MultiConvexMesh*>();
+  if(Cog* object = mObject)
   {
-    MultiConvexMesh* mesh = initializer.Object.Get<MultiConvexMesh*>();
-    if(Cog* object = mObject)
-    {
-      object->AddComponentByName("MultiConvexMeshCollider");
-      MultiConvexMeshCollider* collider = object->has(MultiConvexMeshCollider);
-      collider->SetMesh(mesh);
-    }
-    UpdateViewDistance();
-    //We want to be called for update every frame so we debug draw
-    AnimatePreview(PreviewAnimate::Always);
-
-    //To make it easier to see the debug drawing, change to orthographic and zoom in
-    Camera* camera = mCamera.has(Camera);
-    if(camera != nullptr)
-    {
-      camera->mPerspectiveMode = PerspectiveMode::Orthographic;
-      camera->mSize = 2.0f;
-    }
-    
+    object->AddComponentByName("MultiConvexMeshCollider");
+    MultiConvexMeshCollider* collider = object->has(MultiConvexMeshCollider);
+    collider->SetMesh(mesh);
   }
-};
+  UpdateViewDistance();
+  //We want to be called for update every frame so we debug draw
+  AnimatePreview(PreviewAnimate::Always);
+
+  //To make it easier to see the debug drawing, change to orthographic and zoom in
+  Camera* camera = mCamera.has(Camera);
+  if(camera != nullptr)
+  {
+    camera->mPerspectiveMode = PerspectiveMode::Orthographic;
+    camera->mSize = 2.0f;
+  }
+}
 
 //---------------------------------------------------------- Archetype Grid Item
-class ArchetypePreview : public SpacePreview
+//****************************************************************************
+ArchetypePreview::ArchetypePreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer, initializer.Object.Get<Archetype*>()->ResourceIdName)
 {
-public:
-  typedef ArchetypePreview ZilchSelf;
-  const float cSpritePreviewThreshold = 0.1f;
-  //****************************************************************************
-  ArchetypePreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer, initializer.Object.Get<Archetype*>()->ResourceIdName)
-  {
-    UpdateViewDistance(Vec3(-1.0f));
+  UpdateViewDistance(Vec3(-1.0f));
     
-    if (Cog* cog = (Cog*)mObject)
-    {
-      Aabb aabb = GetAabb(cog);
-      // Our asset has a thin AABB on the z axis and is most likely a 2D asset
-      // Change the camera preview to be from the front of the object
-      if (aabb.GetExtents().z < cSpritePreviewThreshold)
-        UpdateViewDistance(Vec3(0.0f, 0.0f, -1.0f));
-    }
-  }
-
-  Handle GetEditObject() override
+  if (Cog* cog = (Cog*)mObject)
   {
-    return (Cog*)mObject;
+    Aabb aabb = GetAabb(cog);
+    // Our asset has a thin AABB on the z axis and is most likely a 2D asset
+    // Change the camera preview to be from the front of the object
+    if (aabb.GetExtents().z < cSpritePreviewThreshold)
+      UpdateViewDistance(Vec3(0.0f, 0.0f, -1.0f));
   }
-};
+}
+
+//****************************************************************************
+Handle ArchetypePreview::GetEditObject()
+{
+  return (Cog*)mObject;
+}
 
 //------------------------------------------------------------- SpriteSourceTile
-class SpriteSourcePreview : public SpacePreview
+//****************************************************************************
+SpriteSourcePreview::SpriteSourcePreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer, CoreArchetypes::Sprite)
 {
-public:
-  //****************************************************************************
-  SpriteSourcePreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer, CoreArchetypes::Sprite)
+  Space* space = mSpace;
+  if(space)
+  {
+    SpriteSource* spriteSource = initializer.Object.Get<SpriteSource*>();
+    mObject.has(Sprite)->SetSpriteSource(spriteSource);
+  }
+  UpdateViewDistance(-Vec3::cZAxis);
+}
+
+//---------------------------------------------------------- Animation Grid Item
+//****************************************************************************
+AnimationPreview::AnimationPreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer, "")
+{
+  // Destroy the object that was created by the space preview
+  mObject.SafeDestroy();
+
+  Animation* animation = initializer.Object.Get<Animation*>();
+  mObject = CreateAnimationPreview(mSpace, animation);
+
+  mAnimation = animation;
+
+  UpdateViewDistance();
+}
+
+//****************************************************************************
+Handle AnimationPreview::GetEditObject()
+{
+  if(Cog* object = mObject)
+    return object;
+    
+  return Handle();
+}
+
+//****************************************************************************
+void AnimationPreview::OnReload(ResourceEvent* event)
+{
+  if(event->EventResource == (Resource*)mAnimation)
   {
     Space* space = mSpace;
     if(space)
     {
-      SpriteSource* spriteSource = initializer.Object.Get<SpriteSource*>();
-      mObject.has(Sprite)->SetSpriteSource(spriteSource);
-    }
-    UpdateViewDistance(-Vec3::cZAxis);
-  }
-};
+      mObject.SafeDestroy();
+      mObject = CreateAnimationPreview(mSpace, mAnimation);
+      UpdateViewDistance();
 
-//---------------------------------------------------------- Animation Grid Item
-class AnimationPreview : public SpacePreview
-{
-public:
-  HandleOf<Animation> mAnimation;
-  typedef AnimationPreview ZilchSelf;
-
-  //****************************************************************************
-  AnimationPreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer, "")
-  {
-    // Destroy the object that was created by the space preview
-    mObject.SafeDestroy();
-
-    Animation* animation = initializer.Object.Get<Animation*>();
-    mObject = CreateAnimationPreview(mSpace, animation);
-
-    mAnimation = animation;
-
-    UpdateViewDistance();
-  }
-
-  //****************************************************************************
-  Handle GetEditObject() override
-  {
-    if(Cog* object = mObject)
-      return object;
-    
-    return Handle();
-  }
-
-  //****************************************************************************
-  void OnReload(ResourceEvent* event)
-  {
-    if(event->EventResource == (Resource*)mAnimation)
-    {
-      Space* space = mSpace;
-      if(space)
-      {
-        mObject.SafeDestroy();
-        mObject = CreateAnimationPreview(mSpace, mAnimation);
-        UpdateViewDistance();
-
-        ObjectEvent e(mObject);
-        this->DispatchBubble(Events::PreviewObjectChanged, &e);
-      }
+      ObjectEvent e(mObject);
+      this->DispatchBubble(Events::PreviewObjectChanged, &e);
     }
   }
-};
+}
 
 //------------------------------------------------------------------ CogGridItem
-class CogPreview : public SpacePreview
+//****************************************************************************
+CogPreview::CogPreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer, String(), initializer.Object.Get<Cog*>())
 {
-public:
-  //****************************************************************************
-  CogPreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer, String(), initializer.Object.Get<Cog*>())
-  {
-    UpdateViewDistance(Vec3(-1.0f));
-  }
-};
+  UpdateViewDistance(Vec3(-1.0f));
+}
 
 //------------------------------------------------------------------ TextureTile
-class TexturePreview : public PreviewWidget
+//****************************************************************************
+TexturePreview::TexturePreview(PreviewWidgetInitializer& initializer)
+  : PreviewWidget(initializer)
 {
-public:
-  TextureView* mImage;
+  Texture* texture = initializer.Object.Get<Texture*>();
+  mImage = new TextureView(this);
+  mImage->SetTexture(texture);
+}
 
-  //****************************************************************************
-  TexturePreview(PreviewWidgetInitializer& initializer)
-    : PreviewWidget(initializer)
-  {
-    Texture* texture = initializer.Object.Get<Texture*>();
-    mImage = new TextureView(this);
-    mImage->SetTexture(texture);
-  }
-
-  //****************************************************************************
-  void UpdateTransform()
-  {
-    mImage->SetSize(mSize);
-    PreviewWidget::UpdateTransform();
-  }
-};
+//****************************************************************************
+void TexturePreview::UpdateTransform()
+{
+  mImage->SetSize(mSize);
+  PreviewWidget::UpdateTransform();
+}
 
 //------------------------------------------------------------------ Font preview
-class FontPreview : public SpacePreview
+//****************************************************************************
+FontPreview::FontPreview(PreviewWidgetInitializer& initializer)
+  : SpacePreview(initializer, CoreArchetypes::SpriteText)
 {
-public:
-  //****************************************************************************
-  FontPreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer, CoreArchetypes::SpriteText)
+  Font* font = initializer.Object.Get<Font*>();
+
+  Space* space = mSpace;
+  if (space)
   {
-    Font* font = initializer.Object.Get<Font*>();
-
-    Space* space = mSpace;
-    if (space)
-    {
-      SpriteText* spriteText = mObject.has(SpriteText);
-      spriteText->SetFont(font);
-      spriteText->SetFontSize(64);
-      spriteText->SetText("Aa");
-    }
-
-    UpdateViewDistance(-Vec3::cZAxis);
+    SpriteText* spriteText = mObject.has(SpriteText);
+    spriteText->SetFont(font);
+    spriteText->SetFontSize(64);
+    spriteText->SetText("Aa");
   }
-};
+
+  UpdateViewDistance(-Vec3::cZAxis);
+}
 
 //------------------------------------------------------------------ TextureTile
-class TilePaletteSourcePreview : public PreviewWidget
+//****************************************************************************
+TilePaletteSourcePreview::TilePaletteSourcePreview(PreviewWidgetInitializer& initializer)
+  : PreviewWidget(initializer)
 {
-  TilePaletteView* mTilePaletteView;
-  HandleOf<TilePaletteSource> mSource;
-public:
-  //****************************************************************************
-  TilePaletteSourcePreview(PreviewWidgetInitializer& initializer)
-    : PreviewWidget(initializer)
+  mSource = initializer.Object.Get<TilePaletteSource*>();
+  mTilePaletteView = new TilePaletteView(this, nullptr);
+  mTilePaletteView->SetTilePalette(mSource);
+  mTilePaletteView->mSelectionBorder->SetVisible(false);
+  // the base tile view has scroll bars which in the preview cover the image
+  // so disable them for the preview
+  mTilePaletteView->mScrollArea->DisableScrollBar(0);
+  mTilePaletteView->mScrollArea->DisableScrollBar(1);
+}
+
+//****************************************************************************
+void TilePaletteSourcePreview::SizeToContents()
+{
+  if (mSource.IsNull())
   {
-    mSource = initializer.Object.Get<TilePaletteSource*>();
-    mTilePaletteView = new TilePaletteView(this, nullptr);
-    mTilePaletteView->SetTilePalette(mSource);
-    mTilePaletteView->mSelectionBorder->SetVisible(false);
-    // the base tile view has scroll bars which in the preview cover the image
-    // so disable them for the preview
-    mTilePaletteView->mScrollArea->DisableScrollBar(0);
-    mTilePaletteView->mScrollArea->DisableScrollBar(1);
+    Destroy();
+    return;
   }
 
-  //****************************************************************************
-  void SizeToContents()
-  {
-    if (mSource.IsNull())
-    {
-      Destroy();
-      return;
-    }
-
-    // scale the tile view to fit within the preview widget they are displayed
-    // widget size and tile size are in pixels
-    IntVec2 paletteTiles = mSource->GetTileDimensions();
-    if (paletteTiles.x > paletteTiles.y)
-      mTilePaletteView->mTileSize = (int)Math::Floor(mSize.x / float(paletteTiles.x));
-    else
-      mTilePaletteView->mTileSize = (int)Math::Floor(mSize.y / float(paletteTiles.y));
-  }
+  // scale the tile view to fit within the preview widget they are displayed
+  // widget size and tile size are in pixels
+  IntVec2 paletteTiles = mSource->GetTileDimensions();
+  if (paletteTiles.x > paletteTiles.y)
+    mTilePaletteView->mTileSize = (int)Math::Floor(mSize.x / float(paletteTiles.x));
+  else
+    mTilePaletteView->mTileSize = (int)Math::Floor(mSize.y / float(paletteTiles.y));
+}
 
   //****************************************************************************
-  void UpdateTransform()
+void TilePaletteSourcePreview::UpdateTransform()
+{
+  if (mSource.IsNull())
   {
-    if (mSource.IsNull())
-    {
-      Destroy();
-      return;
-    }
-
-    SizeToContents();
-    mTilePaletteView->SetSize(mSize);
-    PreviewWidget::UpdateTransform();
+    Destroy();
+    return;
   }
-};
+
+  SizeToContents();
+  mTilePaletteView->SetSize(mSize);
+  PreviewWidget::UpdateTransform();
+}
 
 //---------------------------------------------------------- Color Gradient Tile
-class ColorGradientPreview : public PreviewWidget
+//****************************************************************************
+ColorGradientPreview::ColorGradientPreview(PreviewWidgetInitializer& initializer)
+  : PreviewWidget(initializer)
 {
-public:
-  //****************************************************************************
-  ColorGradientPreview(PreviewWidgetInitializer& initializer)
-    : PreviewWidget(initializer)
-  {
-    mMinSize = PreviewWidgetUi::ColorGradientSize;
+  mMinSize = PreviewWidgetUi::ColorGradientSize;
 
-    mGradientBlockBuffer = new PixelBuffer(Color::Black, 256, 30);
+  mGradientBlockBuffer = new PixelBuffer(Color::Black, 256, 30);
 
-    // Create the display and set the texture
-    mGradientBlockDisplay = new TextureView(this);
-    mGradientBlockDisplay->SetTexture(mGradientBlockBuffer->Image);
+  // Create the display and set the texture
+  mGradientBlockDisplay = new TextureView(this);
+  mGradientBlockDisplay->SetTexture(mGradientBlockBuffer->Image);
 
-    ColorGradient* gradient = initializer.Object.Get<ColorGradient*>();
-    DrawColorGradient(gradient, mGradientBlockBuffer);
-  }
+  ColorGradient* gradient = initializer.Object.Get<ColorGradient*>();
+  DrawColorGradient(gradient, mGradientBlockBuffer);
+}
 
-  ~ColorGradientPreview()
-  {
-    SafeDelete(mGradientBlockBuffer);
-  }
+//****************************************************************************
+ColorGradientPreview::~ColorGradientPreview()
+{
+  SafeDelete(mGradientBlockBuffer);
+}
 
-  //****************************************************************************
-  void UpdateTransform() override
-  {
-    mGradientBlockDisplay->SetTranslation(Vec3::cZero);
-    mGradientBlockDisplay->SetSize(mSize);
-    PreviewWidget::UpdateTransform();
-  }
+//****************************************************************************
+void ColorGradientPreview::UpdateTransform()
+{
+  mGradientBlockDisplay->SetTranslation(Vec3::cZero);
+  mGradientBlockDisplay->SetSize(mSize);
+  PreviewWidget::UpdateTransform();
+}
 
-  //****************************************************************************
-  Vec2 GetHalfSize() override
-  {
-    return GetMinSize() * 0.75f;
-  }
-
-  PixelBuffer* mGradientBlockBuffer;
-  TextureView* mGradientBlockDisplay;
-};
+//****************************************************************************
+Vec2 ColorGradientPreview::GetHalfSize()
+{
+  return GetMinSize() * 0.75f;
+}
 
 //---------------------------------------------------------- Sample Curve Drawer
-class SampleCurveDrawer : public Widget
+//****************************************************************************
+SampleCurveDrawer::SampleCurveDrawer(Composite* parent, HandleParam object)
+  : Widget(parent)
 {
-public:
-  Handle mObject;
+  mObject = object;
+  parent->SetClipping(true);
+}
 
-  //****************************************************************************
-  SampleCurveDrawer(Composite* parent, HandleParam object)
-    : Widget(parent)
+//****************************************************************************
+void SampleCurveDrawer::AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, SampleCurve* curveObject)
+{
+  Array<StreamedVertex> lines;
+  Array<StreamedVertex> triangles;
+
+  // The color of the curve
+  Vec4 color = ToFloatColor(Color::Orange);
+
+  // Create the curve
+  Vec3Array curve;
+  curveObject->GetCurve(curve);
+
+  // If there are no segments, do nothing
+  if (curve.Size() < 2)
+    return;
+
+  for (uint i = 0; i < curve.Size() - 1; ++i)
   {
-    mObject = object;
-    parent->SetClipping(true);
-  }
+    Vec2 p1(curve[i].x, curve[i].y);
+    Vec2 p2(curve[i + 1].x, curve[i + 1].y);
 
-  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, SampleCurve* curveObject)
-  {
-    Array<StreamedVertex> lines;
-    Array<StreamedVertex> triangles;
+    p1.y = (1.0f - p1.y);
+    p2.y = (1.0f - p2.y);
+    p1 *= mSize;
+    p2 *= mSize;
 
-    // The color of the curve
-    Vec4 color = ToFloatColor(Color::Orange);
-
-    // Create the curve
-    Vec3Array curve;
-    curveObject->GetCurve(curve);
-
-    // If there are no segments, do nothing
-    if (curve.Size() < 2)
-      return;
-
-    for (uint i = 0; i < curve.Size() - 1; ++i)
+    if (p1.x == p2.x)
     {
-      Vec2 p1(curve[i].x, curve[i].y);
-      Vec2 p2(curve[i + 1].x, curve[i + 1].y);
-
-      p1.y = (1.0f - p1.y);
-      p2.y = (1.0f - p2.y);
-      p1 *= mSize;
-      p2 *= mSize;
-
-      if (p1.x == p2.x)
-      {
-        // Vertical segments
-        lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p1)), Vec2::cZero, ToFloatColor(Color::Black)));
-        lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, ToFloatColor(Color::Black)));
-      }
-      else
-      {
-        // Curve segments
-        lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p1)), Vec2::cZero, color));
-        lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, color));
-      }
-    }
-
-    CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
-  }
-
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
-  {
-    Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
-
-    SampleCurve* sampleCurve = mObject.Get<SampleCurve*>();
-    if (sampleCurve == nullptr)
-      return;
-
-    AddCurve(viewBlock, frameBlock, clipRect, sampleCurve);
-  }
-};
-
-//------------------------------------------------------------ SampleCurvePreview
-class SampleCurvePreview : public PreviewWidget
-{
-public:
-  Element* mBackground;
-  GraphWidget* mGraph;
-  SampleCurveDrawer* mDrawer;
-
-  //****************************************************************************
-  SampleCurvePreview(PreviewWidgetInitializer& initializer)
-    : PreviewWidget(initializer)
-  {
-    mBackground = CreateAttached<Element>(cWhiteSquare);
-    mBackground->SetColor(WindowUi::BackgroundColor);
-    mGraph = new GraphWidget(this);
-    mGraph->mDrawLabels = false;
-    mDrawer = new SampleCurveDrawer(this, initializer.Object);
-  }
-
-  //****************************************************************************
-  void UpdateTransform() override
-  {
-    SampleCurve* curve = mObject.Get<SampleCurve*>();
-    if(curve == nullptr)
-    {
-      PreviewWidget::UpdateTransform();
-      return;
-    }
-    mBackground->SetSize(mSize);
-    mGraph->SetWidthRange(curve->GetWidthMin(), curve->GetWidthMax());
-    mGraph->SetHeightRange(curve->GetHeightMin(), curve->GetHeightMax());
-    mGraph->SetSize(mSize);
-    mDrawer->SetSize(mSize);
-
-    PreviewWidget::UpdateTransform();
-  }
-};
-
-//------------------------------------------------------- Resource Table Preview
-class ResourceTablePreview : public PreviewWidget
-{
-public:
-  PreviewWidgetGroup* mGroup;
-
-  //****************************************************************************
-  ResourceTablePreview(PreviewWidgetInitializer& initializer)
-    : PreviewWidget(initializer)
-  {
-    mGroup = new PreviewWidgetGroup(this);
-    ResourceTable* table = initializer.Object.Get<ResourceTable*>();
-
-    uint size = table->Size();
-    size = Math::Min(size, (uint)9);
-    for (uint i = 0; i < size; ++i)
-    {
-      Resource* resource = (*table)[i]->GetResource();
-      if (resource)
-        mGroup->AddPreviewWidget(resource->Name, resource, PreviewImportance::Simple);
-    }
-  }
-
-  //****************************************************************************
-  void AnimatePreview(PreviewAnimate::Enum value) override
-  {
-    mGroup->AnimatePreview(value);
-  }
-
-  //****************************************************************************
-  void UpdateTransform() override
-  {
-    mGroup->SetSize(mSize);
-    PreviewWidget::UpdateTransform();
-  }
-};
-
-//--------------------------------------------------------- Space Archetype Tile
-class SpaceArchetypePreview : public IconPreview
-{
-public:
-  HandleOf<Space> mObject;
-
-  //****************************************************************************
-  SpaceArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype)
-    : IconPreview (initializer, "Level")
-  {
-    //Space archetype
-    Space* space =  Z::gFactory->CreateSpace(archetype->ResourceIdName, CreationFlags::Editing, Z::gEditor->GetEditGameSession());
-    mObject = space;
-  }
-
-  //****************************************************************************
-  ~SpaceArchetypePreview()
-  {
-    mObject.SafeDestroy();
-  }
-
-  //****************************************************************************
-  Handle GetEditObject() override
-  {
-    Space* space = mObject;
-    return space;
-  }
-  
-};
-
-
-class GameArchetypePreview : public IconPreview
-{
-public:
-  HandleOf<GameSession> mObject;
-  bool UsingEditorGameSession;
-
-  //****************************************************************************
-  GameArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype)
-    : IconPreview (initializer, "Level")
-  {
-    // If this is the same archetype as the main game session reuse
-    // the game session object
-    if(Z::gEditor->GetEditGameSession()->GetArchetype() == archetype)
-    {
-      mObject = Z::gEditor->GetEditGameSession();
-      UsingEditorGameSession = true;
+      // Vertical segments
+      lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p1)), Vec2::cZero, ToFloatColor(Color::Black)));
+      lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, ToFloatColor(Color::Black)));
     }
     else
     {
-      mObject = (GameSession*)Z::gFactory->CreateCheckedType(ZilchTypeId(GameSession), nullptr, 
-        archetype->Name, CreationFlags::Editing | CreationFlags::Preview, nullptr);
-      UsingEditorGameSession = false;
+      // Curve segments
+      lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p1)), Vec2::cZero, color));
+      lines.PushBack(StreamedVertex(SnapToPixels(Vec3(p2)), Vec2::cZero, color));
     }
   }
 
-  //****************************************************************************
-  ~GameArchetypePreview()
-  {
-    if(!UsingEditorGameSession)
-      mObject.SafeDestroy();
-  }
+  CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+}
 
-  //****************************************************************************
-  Handle GetEditObject() override
+void SampleCurveDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+{
+  Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
+
+  SampleCurve* sampleCurve = mObject.Get<SampleCurve*>();
+  if (sampleCurve == nullptr)
+    return;
+
+  AddCurve(viewBlock, frameBlock, clipRect, sampleCurve);
+}
+
+//------------------------------------------------------------ SampleCurvePreview
+//****************************************************************************
+SampleCurvePreview::SampleCurvePreview(PreviewWidgetInitializer& initializer)
+  : PreviewWidget(initializer)
+{
+  mBackground = CreateAttached<Element>(cWhiteSquare);
+  mBackground->SetColor(WindowUi::BackgroundColor);
+  mGraph = new GraphWidget(this);
+  mGraph->mDrawLabels = false;
+  mDrawer = new SampleCurveDrawer(this, initializer.Object);
+}
+
+//****************************************************************************
+void SampleCurvePreview::UpdateTransform()
+{
+  SampleCurve* curve = mObject.Get<SampleCurve*>();
+  if(curve == nullptr)
   {
-    GameSession* game = mObject;
-    return game;
+    PreviewWidget::UpdateTransform();
+    return;
   }
-};
+  mBackground->SetSize(mSize);
+  mGraph->SetWidthRange(curve->GetWidthMin(), curve->GetWidthMax());
+  mGraph->SetHeightRange(curve->GetHeightMin(), curve->GetHeightMax());
+  mGraph->SetSize(mSize);
+  mDrawer->SetSize(mSize);
+
+  PreviewWidget::UpdateTransform();
+}
+
+//------------------------------------------------------- Resource Table Preview
+//****************************************************************************
+ResourceTablePreview::ResourceTablePreview(PreviewWidgetInitializer& initializer)
+  : PreviewWidget(initializer)
+{
+  mGroup = new PreviewWidgetGroup(this);
+  ResourceTable* table = initializer.Object.Get<ResourceTable*>();
+
+  uint size = table->Size();
+  size = Math::Min(size, (uint)9);
+  for (uint i = 0; i < size; ++i)
+  {
+    Resource* resource = (*table)[i]->GetResource();
+    if (resource)
+      mGroup->AddPreviewWidget(resource->Name, resource, PreviewImportance::Simple);
+  }
+}
+
+//****************************************************************************
+void ResourceTablePreview::AnimatePreview(PreviewAnimate::Enum value)
+{
+  mGroup->AnimatePreview(value);
+}
+
+//****************************************************************************
+void ResourceTablePreview::UpdateTransform()
+{
+  mGroup->SetSize(mSize);
+  PreviewWidget::UpdateTransform();
+}
+
+//--------------------------------------------------------- Space Archetype Tile
+//****************************************************************************
+SpaceArchetypePreview::SpaceArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype)
+  : IconPreview (initializer, "Level")
+{
+  //Space archetype
+  Space* space =  Z::gFactory->CreateSpace(archetype->ResourceIdName, CreationFlags::Editing, Z::gEditor->GetEditGameSession());
+  mObject = space;
+}
+
+//****************************************************************************
+SpaceArchetypePreview::~SpaceArchetypePreview()
+{
+  mObject.SafeDestroy();
+}
+
+//****************************************************************************
+Handle SpaceArchetypePreview::GetEditObject()
+{
+  Space* space = mObject;
+  return space;
+}
+
+//--------------------------------------------------------- GameArchetypePreview
+//****************************************************************************
+GameArchetypePreview::GameArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype)
+  : IconPreview (initializer, "Level")
+{
+  // If this is the same archetype as the main game session reuse
+  // the game session object
+  if(Z::gEditor->GetEditGameSession()->GetArchetype() == archetype)
+  {
+    mObject = Z::gEditor->GetEditGameSession();
+    UsingEditorGameSession = true;
+  }
+  else
+  {
+    mObject = (GameSession*)Z::gFactory->CreateCheckedType(ZilchTypeId(GameSession), nullptr, 
+      archetype->Name, CreationFlags::Editing | CreationFlags::Preview, nullptr);
+    UsingEditorGameSession = false;
+  }
+}
+
+//****************************************************************************
+GameArchetypePreview::~GameArchetypePreview()
+{
+  if(!UsingEditorGameSession)
+    mObject.SafeDestroy();
+}
+
+//****************************************************************************
+Handle GameArchetypePreview::GetEditObject()
+{
+  GameSession* game = mObject;
+  return game;
+}
 
 //****************************************************************************
 PreviewWidget* CreateArchetypePreviewWidget(PreviewWidgetInitializer& initializer)

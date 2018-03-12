@@ -429,6 +429,8 @@ Handle MainPropertyView::PreviewResource(HandleParam object)
   if (tile == nullptr)
     return Handle();
 
+  // Property grid PreviewWidgets should be interactive
+  tile->SetInteractive(true);
   // We want it to be active
   tile->AnimatePreview(PreviewAnimate::Always);
 

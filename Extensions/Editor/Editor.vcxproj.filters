@@ -1155,5 +1155,8 @@
     <ClInclude Include="UiLegacyToolTip.hpp">
       <Filter>EditorUi</Filter>
     </ClInclude>
+    <ClInclude Include="PreviewWidgets.hpp">
+      <Filter>EditorUi\PreviewWidget</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
