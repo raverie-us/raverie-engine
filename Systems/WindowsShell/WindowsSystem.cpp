@@ -245,8 +245,11 @@ void WindowsOsWindow::SetStyle(WindowStyleFlags::Enum windowStyle)
   mWindowStyle = windowStyle;
   mBorderless = (windowStyle & WindowStyleFlags::ClientOnly);
   DWORD win32 = Win32StyleFromWindowStyle(windowStyle);
-  SendMessage(mWindowHandle, WM_SYSCOMMAND, SC_RESTORE, 0);
   SetWindowLong(mWindowHandle, GWL_STYLE, win32);
+  SendMessage(mWindowHandle, WM_SYSCOMMAND, SC_RESTORE, 0);
+  // Force window to update
+  SetWindowPos(mWindowHandle, nullptr, 0, 0, 0, 0,
+    SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 }
 
 bool WindowsOsWindow::GetVisible()
