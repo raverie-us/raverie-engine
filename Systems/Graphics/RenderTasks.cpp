@@ -450,16 +450,7 @@ void RenderTasksEvent::AddRenderTaskRenderPass(RenderSettings& renderSettings, G
   if (fragmentType != ZilchFragmentType::RenderPass)
     return DoNotifyException("Error", "Fragment is not a [RenderPass]");
 
-  uint count = graphicalRange.mGraphicals.Size();
-  if (count == 0)
-    return;
-
   HashSet<Material*> materials;
-
-  // Adding to render group counts will make the camera setup a range for nodes that will end up in view block
-  // The indexes of this array correspond to render group id's, adding to it acts as a custom render group
-  mCamera->mRenderGroupCounts.PushBack(count);
-  uint groupId = mCamera->mRenderGroupCounts.Size() - 1;
 
   // Need to add an index range for this set of entries
   IndexRange indexRange;
@@ -467,7 +458,7 @@ void RenderTasksEvent::AddRenderTaskRenderPass(RenderSettings& renderSettings, G
 
   forRange (Graphical* graphical, graphicalRange.mGraphicals.All())
   {
-    // Check if graphical is from a different space
+    // Do not allow a graphical from a different space
     if (graphical->GetSpace() != mGraphicsSpace->GetOwner())
       continue;
 
@@ -476,8 +467,17 @@ void RenderTasksEvent::AddRenderTaskRenderPass(RenderSettings& renderSettings, G
     materials.Insert(graphical->mMaterial);
   }
 
+  // Skip task if no objects
   indexRange.end = mGraphicsSpace->mVisibleGraphicals.Size();
+  if (indexRange.Count() == 0)
+    return;
+
   mCamera->mGraphicalIndexRanges.PushBack(indexRange);
+
+  // Adding to render group counts will make the camera setup a range for nodes that will end up in view block
+  // The indexes of this array correspond to render group id's, adding to it acts as a custom render group
+  mCamera->mRenderGroupCounts.PushBack(indexRange.Count());
+  uint groupId = mCamera->mRenderGroupCounts.Size() - 1;
 
   uint shaderInputsId = GetUniqueShaderInputsId();
 
