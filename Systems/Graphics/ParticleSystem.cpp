@@ -125,17 +125,16 @@ void ParticleSystem::Initialize(CogInitializer& initializer)
   mParticleList.Initialize();
   mTimeAlive = 0.0f;
   mDebugDrawing = false;
+  mSystemUpdated = false;
 
   if (Z::gRuntimeEditor)
   {
     Z::gRuntimeEditor->Visualize(this, "SpriteParticleSystem");
     ConnectThisTo(Z::gRuntimeEditor->GetActiveSelection(), Events::SelectionFinal, OnSelectionFinal);
+    ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnClearUpdated);
   }
 
-  if (mPreviewInEditor && GetSpace()->IsEditorMode())
-    ConnectThisTo(GetSpace(), Events::FrameUpdate, OnUpdate);
-  else
-    ConnectThisTo(GetSpace(), Events::LogicUpdate, OnUpdate);
+  SetPreviewInEditor(mPreviewInEditor);
 }
 
 //******************************************************************************
@@ -210,12 +209,20 @@ void ParticleSystem::DebugDraw()
     return;
 
   // Don't update twice if we're in preview mode
-  if (mPreviewInEditor && editorMode)
+  if (IsParticleGroupPreviewInEditor() && editorMode)
     return;
 
   mDebugDrawing = true;
-  TimeSpace* timeSpace = GetSpace()->has(TimeSpace);
-  SystemUpdate(timeSpace->mScaledClampedDt);
+
+  // Get the root system and call SystemUpdate only on this system if it has
+  // not been updated yet this engine update
+  ParticleSystem* rootSystem = GetRootSystem();
+  if (!rootSystem->mSystemUpdated)
+  {
+    TimeSpace* timeSpace = GetSpace()->has(TimeSpace);
+    rootSystem->SystemUpdate(timeSpace->mScaledClampedDt);
+    rootSystem->mSystemUpdated = true;
+  }
 }
 
 //******************************************************************************
@@ -285,30 +292,60 @@ bool ParticleSystem::GetPreviewInEditor()
 //******************************************************************************
 void ParticleSystem::SetPreviewInEditor(bool previewInEditor)
 {
-  if (previewInEditor == mPreviewInEditor)
-    return;
-
   mPreviewInEditor = previewInEditor;
 
-  bool inEditor = GetSpace()->IsEditorMode();
   if (!GetSpace()->IsEditorMode())
     return;
 
-  if (mPreviewInEditor)
+  if (IsParticleGroupPreviewInEditor())
   {
     mDebugDrawing = false;
-    ConnectThisTo(GetSpace(), Events::FrameUpdate, OnUpdate);
-    GetSpace()->GetDispatcher()->DisconnectEvent(Events::LogicUpdate, this);
+    ParticleSystem* rootSystem = GetRootSystem();
+    // Disconnect both event types to avoid a duplicate event connection as
+    // children/parent preview in editor settings alter the root systems connections
+    GetSpace()->GetDispatcher()->DisconnectEvent(Events::LogicUpdate, rootSystem);
+    GetSpace()->GetDispatcher()->DisconnectEvent(Events::FrameUpdate, rootSystem);
+    Zero::Connect(GetSpace(), Events::FrameUpdate, rootSystem, &ZilchSelf::OnUpdate);
   }
   else
   {
-    ConnectThisTo(GetSpace(), Events::LogicUpdate, OnUpdate);
-    GetSpace()->GetDispatcher()->DisconnectEvent(Events::FrameUpdate, this);
+    ParticleSystem* rootSystem = GetRootSystem();
+    // Disconnect both event types to avoid a duplicate event connection as
+    // children/parent preview in editor settings alter the root systems connections
+    GetSpace()->GetDispatcher()->DisconnectEvent(Events::LogicUpdate, rootSystem);
+    GetSpace()->GetDispatcher()->DisconnectEvent(Events::FrameUpdate, rootSystem);
+    Zero::Connect(GetSpace(), Events::LogicUpdate, rootSystem, &ZilchSelf::OnUpdate);
 
     // If we're selected in the editor, it's being updated by DebugDraw(), so don't clear the particles
-    if (!IsSelectedInEditor())
-      Clear();
+    if (!IsParticleGroupSelectedInEditor())
+      ClearParticleGroup();
   }
+}
+
+//******************************************************************************
+bool ParticleSystem::IsParticleGroupPreviewInEditor()
+{
+  // We need to check if any parent or children systems are preview in editor
+  // in the hierarchy so start from the top and search down
+  return GetRootSystem()->IsPreviewInEditorInteral();
+}
+
+//******************************************************************************
+bool ParticleSystem::IsPreviewInEditorInteral()
+{
+  bool previewInEditor = mPreviewInEditor;
+  if (!previewInEditor)
+  {
+    forRange(ParticleSystem& childSystem, mChildSystems.All())
+    {
+      if (childSystem.IsPreviewInEditorInteral())
+      {
+        previewInEditor = true;
+        break;
+      }
+    }
+  }
+  return previewInEditor;
 }
 
 //******************************************************************************
@@ -320,7 +357,23 @@ ParticleListRange ParticleSystem::AllParticles()
 //******************************************************************************
 void ParticleSystem::Clear()
 {
+  mParticleList.ClearDestroyed();
   mParticleList.FreeParticles();
+}
+
+//******************************************************************************
+void ParticleSystem::ClearParticleGroup()
+{
+  GetRootSystem()->ClearInternal();
+}
+
+//******************************************************************************
+void ParticleSystem::ClearInternal()
+{
+  Clear();
+
+  forRange(ParticleSystem& childSystem, mChildSystems.All())
+    childSystem.ClearInternal();
 }
 
 //******************************************************************************
@@ -330,13 +383,20 @@ void ParticleSystem::OnUpdate(UpdateEvent* event)
 }
 
 //******************************************************************************
+void ParticleSystem::OnClearUpdated(UpdateEvent* event)
+{
+  mSystemUpdated = false;
+}
+
+//******************************************************************************
 void ParticleSystem::SystemUpdate(float dt)
 {
-  // Our parent will update us if we're a child system
-  if (mChildSystem == false)
+  // The root system will update all children systems that are not the root system itself
+  if (mChildSystem && GetParentSystem())
+    GetRootSystem()->SystemUpdate(dt);
+  else
     BaseUpdate(dt);
 
-  UpdateLifetimes(dt);
   mParticleList.ClearDestroyed();
 }
 
@@ -374,6 +434,8 @@ uint ParticleSystem::BaseUpdate(float dt)
   for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
     r.Front().ChildUpdate(dt, &mParticleList, emitCount);
 
+  UpdateLifetimes(dt);
+
   return emitCount;
 }
 
@@ -400,7 +462,8 @@ void ParticleSystem::ChildUpdate(float dt, ParticleList* parentList, uint parent
 
   for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
     r.Front().ChildUpdate(dt, &mParticleList, emitCount);
-
+  
+  UpdateLifetimes(dt);
   mParticleList.ClearDestroyed();
 }
 
@@ -477,21 +540,69 @@ ParticleSystem* ParticleSystem::GetParentSystem()
 }
 
 //******************************************************************************
-void ParticleSystem::OnSelectionFinal(SelectionChangedEvent* selectionEvent)
+ParticleSystem* ParticleSystem::GetRootSystem()
 {
-  if (mDebugDrawing && !IsSelectedInEditor())
+  ParticleSystem* root = this;
+  ParticleSystem* parent = GetParentSystem();
+  while (parent)
   {
-    mDebugDrawing = false;
-    Clear();
-    forRange (ParticleEmitter& emitter, mEmitters.All())
-      emitter.ResetCount();
+    root = parent;
+    parent = parent->GetParentSystem();
   }
+
+  return root;
 }
 
 //******************************************************************************
-bool ParticleSystem::IsSelectedInEditor()
+void ParticleSystem::ResetParticleGroupEmitterCount()
 {
-  return Z::gRuntimeEditor->GetActiveSelection()->Contains(GetOwner());
+  GetRootSystem()->ResetEmitterCountInternal();
+}
+
+//******************************************************************************
+void ParticleSystem::ResetEmitterCountInternal()
+{
+  Clear();
+  mDebugDrawing = false;
+
+  forRange(ParticleEmitter& emitter, mEmitters.All())
+    emitter.ResetCount();
+
+  forRange(ParticleSystem& childSystem, mChildSystems.All())
+    childSystem.ResetEmitterCountInternal();
+}
+
+//******************************************************************************
+void ParticleSystem::OnSelectionFinal(SelectionChangedEvent* selectionEvent)
+{
+  if (mDebugDrawing && !IsParticleGroupSelectedInEditor() && !IsParticleGroupPreviewInEditor())
+      ResetParticleGroupEmitterCount();
+}
+
+//******************************************************************************
+bool ParticleSystem::IsParticleGroupSelectedInEditor()
+{
+  // We need to check if any parent or children systems are selected
+  // in the hierarchy so start from the top and search down
+  return GetRootSystem()->IsSelectedInEditorInternal();
+}
+
+//******************************************************************************
+bool ParticleSystem::IsSelectedInEditorInternal()
+{
+  bool isSelected = Z::gRuntimeEditor->GetActiveSelection()->Contains(GetOwner());
+  if (!isSelected)
+  {
+    forRange(ParticleSystem& childSystem, mChildSystems.All())
+    {
+      if (childSystem.IsSelectedInEditorInternal())
+      {
+        isSelected = true;
+        break;
+      }
+    }
+  }
+  return isSelected;
 }
 
 } // namespace Zero

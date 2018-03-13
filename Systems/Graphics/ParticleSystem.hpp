@@ -40,7 +40,6 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   // Component Interface
-
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
   void ScriptInitialize(CogInitializer& initializer) override;
@@ -50,7 +49,6 @@ public:
   void DebugDraw() override;
 
   // Graphical Interface
-
   Aabb GetLocalAabb() override;
 
   // Properties
@@ -79,6 +77,8 @@ public:
   /// If the particle system should run on frame update in the editor instead of logic update.
   bool GetPreviewInEditor();
   void SetPreviewInEditor(bool state);
+  bool IsParticleGroupPreviewInEditor();
+  bool IsPreviewInEditorInteral();
   bool mPreviewInEditor;
 
   /// A list of all particles currently active in the system.
@@ -86,6 +86,8 @@ public:
 
   /// Clear all current particles.
   void Clear();
+  void ClearParticleGroup();
+  void ClearInternal();
 
   // Internal
 
@@ -93,6 +95,7 @@ public:
   typedef InList<ParticleSystem, &ParticleSystem::SystemLink> ParticleSystemList;
 
   void OnUpdate(UpdateEvent* event);
+  void OnClearUpdated(UpdateEvent* event);
 
   void SystemUpdate(float dt);
   uint BaseUpdate(float dt);
@@ -104,9 +107,15 @@ public:
   void AddChildSystem(ParticleSystem* child);
   void RemoveChildSystem(ParticleSystem* child);
   ParticleSystem* GetParentSystem();
+  ParticleSystem* GetRootSystem();
+
+  void ResetParticleGroupEmitterCount();
+  void ResetEmitterCountInternal();
 
   void OnSelectionFinal(SelectionChangedEvent* selectionEvent);
-  bool IsSelectedInEditor();
+
+  bool IsParticleGroupSelectedInEditor();
+  bool IsSelectedInEditorInternal();
 
   // Particles on this system.
   ParticleList mParticleList;
@@ -120,6 +129,8 @@ public:
   float mTimeAlive;
   // Flag for resetting particles when selection changes.
   bool mDebugDrawing;
+  // Flag that tracks when a particle group has been updated for in editor selection only
+  bool mSystemUpdated;
 };
 
 } // namespace Zero
