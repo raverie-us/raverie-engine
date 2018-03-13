@@ -220,7 +220,7 @@ void DiscoverMenu::UpdateTransform()
 //******************************************************************************
 void DiscoverMenu::CreateTiles(Composite* parent)
 {
-  cstr zeroHubUrl = "https://www.zeroengine.io";
+  cstr zeroHubUrl = "https://dev.zeroengine.io";
   cstr docUrl = "https://docs.zeroengine.io";
   cstr zilchUrl = "https://zilch.zeroengine.io";
   cstr roadmapUrl = "https://roadmap.zeroengine.io";

@@ -10,7 +10,7 @@ void OpenHelp()
 
 void OpenZeroHub()
 {
-  Os::SystemOpenNetworkFile("https://www.zeroengine.io");
+  Os::SystemOpenNetworkFile("https://dev.zeroengine.io");
 }
 
 void ExitEditor()

@@ -1260,7 +1260,7 @@ void LauncherWindow::OnOpenProjectFile(OsFileSelection* e)
 //******************************************************************************
 void LauncherWindow::OnFileBugPressed(Event* e)
 {
-  Os::SystemOpenNetworkFile("https://www.zeroengine.io/u/reportbug");
+  Os::SystemOpenNetworkFile("https://dev.zeroengine.io/u/reportbug");
 }
 
 //******************************************************************************
