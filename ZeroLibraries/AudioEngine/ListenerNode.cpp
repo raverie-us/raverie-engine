@@ -58,7 +58,8 @@ namespace Audio
     ListenerWorldPositionInfo positionInfo, ExternalNodeInterface* extInt, bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
     ThreadedData(nullptr),
-    Active(true)
+    Active(true),
+    mAttenuationScale(1.0f)
   {
     if (!Threaded)
       SetSiblingNodes(new ListenerNode(status, name, ID, positionInfo, nullptr, true), status);
@@ -210,6 +211,22 @@ namespace Audio
   bool ListenerNode::GetActive()
   {
     return Active;
+  }
+
+  //************************************************************************************************
+  float ListenerNode::GetAttenuationScale()
+  {
+    return mAttenuationScale;
+  }
+
+  //************************************************************************************************
+  void ListenerNode::SetAttenuationScale(float scale)
+  {
+    mAttenuationScale = scale;
+
+    if (!Threaded && GetSiblingNode())
+      gAudioSystem->AddTask(Zero::CreateFunctor(&ListenerNode::SetAttenuationScale,
+      (ListenerNode*)GetSiblingNode(), scale));
   }
 
   //************************************************************************************************
