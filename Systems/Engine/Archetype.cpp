@@ -256,6 +256,8 @@ public:
 
     // Pull the inherit id from the Cog node
     DataNode* root = loader.GetNext();
+    if (root == nullptr)
+      return nullptr;
     archetype->mBaseResourceIdName = root->mInheritedFromId;
 
     ArchetypeManager::GetInstance()->AddResource(entry, archetype);
