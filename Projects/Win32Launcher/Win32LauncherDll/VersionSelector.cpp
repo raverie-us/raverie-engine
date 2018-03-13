@@ -1130,7 +1130,7 @@ void VersionSelector::FindTemplateWithTags(const BuildId& buildId, TagSet& activ
     }
 
     // Log a warning
-    ZPrint("Project template conflict of SKU '%s'. Picking latest version", currentTemplate->mSKU.c_str());
+    ZPrint("Project template conflict of SKU '%s'. Picking latest version.\n", currentTemplate->mSKU.c_str());
     // Get the previous template project for this SKU and determine which one is a more exact range
     ZeroTemplate* previousTemplate = uniqueTemplates[currentTemplate->mSKU]->GetZeroTemplate(false);
     if(currentTemplate->IsMoreExactRangeThan(buildId, previousTemplate))
