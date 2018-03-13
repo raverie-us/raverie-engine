@@ -239,6 +239,9 @@ void GraphicsSpace::RenderTasksUpdate(RenderTasks& renderTasks)
 //**************************************************************************************************
 void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& renderQueues)
 {
+  if (mRenderTaskRangeIndices.Size() == 0)
+    return;
+
   FrameBlock& frameBlock = renderQueues.mFrameBlocks.PushBack();
   frameBlock.mRenderQueues = &renderQueues;
   Array<FrameNode>& frameNodes = frameBlock.mFrameNodes;
