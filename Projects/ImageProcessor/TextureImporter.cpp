@@ -398,6 +398,38 @@ void TextureImporter::ProcessTexture(Status& status)
     return;
   }
 
+  // Progressive downsample, done before any other processing
+  if (mBuilder->mHalfScaleCount > 0)
+  {
+    for (int i = 0; i < mBuilder->mHalfScaleCount; ++i)
+    {
+      uint width = mMipHeaders[0].mWidth;
+      uint height = mMipHeaders[0].mHeight;
+      uint pixelSize = GetPixelSize(mLoadFormat);
+
+      // Stop if image can't be down scaled anymore
+      if (width > 1 || height > 1)
+      {
+        // Downscale by 1/2
+        uint newWidth = Math::Max(width / 2, 1u);
+        uint newHeight = Math::Max(height / 2, 1u);
+        uint newSize = newWidth * newHeight * pixelSize;
+        byte* newImageData = new byte[newSize];
+        ResizeImage(mLoadFormat, mImageData[0], width, height, newImageData, newWidth, newHeight);
+
+        mMipHeaders[0].mWidth = newWidth;
+        mMipHeaders[0].mHeight = newHeight;
+        mMipHeaders[0].mDataSize = newSize;
+        delete mImageData[0];
+        mImageData[0] = newImageData;
+      }
+      else
+      {
+        break;
+      }
+    }
+  }
+
   // Convert to bytes for nvtt if image is going to be compressed
   if (mLoadFormat == TextureFormat::RGBA16 && mBuilder->mCompression != TextureCompression::None)
   {
