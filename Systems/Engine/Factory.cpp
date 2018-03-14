@@ -178,11 +178,14 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     stream.SerializeFieldDefault("LinkId", localContextId, localContextId);
 
     // Check for a link id attribute
-    static String sContextId = "ContextId";
-    forRange(DataAttribute& attribute, cogNode.mAttributes->All())
+    if(cogNode.mAttributes != nullptr)
     {
-      if(attribute.mName == sContextId)
-        ToValue(attribute.mValue, localContextId);
+      static String sContextId = "ContextId";
+      forRange(DataAttribute& attribute, cogNode.mAttributes->All( ))
+      {
+        if(attribute.mName == sContextId)
+          ToValue(attribute.mValue, localContextId);
+      }
     }
 
     while(stream.GetPolymorphic(componentNode))
