@@ -150,7 +150,7 @@ struct Rectangle
 
   float GetCardinalLocation(Location::Enum location);
   void SetLocation(Location::Enum location, float value);
-  Vec2 GetLocation(Location::Enum location);
+  Vec2 GetLocation(Location::Enum location) const;
   void SetLocation(Location::Enum location, Vec2Param value);
 
   Vec2 Min;

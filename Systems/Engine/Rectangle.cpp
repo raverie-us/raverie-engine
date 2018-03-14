@@ -680,7 +680,7 @@ void Rectangle::SetLocation(Location::Enum location, float value)
 }
 
 //**************************************************************************************************
-Vec2 Rectangle::GetLocation(Location::Enum location)
+Vec2 Rectangle::GetLocation(Location::Enum location) const
 {
   Vec2 bottomLeft = GetBottomLeft();
   Vec2 size = GetSize();
