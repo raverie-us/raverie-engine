@@ -19,6 +19,7 @@ ZilchDefineType(MetaSerialization, builder, type)
 void MetaSerialization::SerializeProperty(HandleParam instance, Property* property, Serializer& serializer)
 {
   BoundType* propertyType = Type::GetBoundType(property->PropertyType);
+  ReturnIf(propertyType == nullptr,, "A property that was attempting to be serialized was not a BoundType");
 
   SerializerMode::Enum mode = serializer.GetMode();
 
@@ -398,16 +399,23 @@ bool SerializeVariant(cstr fieldName, Variant& value, Serializer& serializer)
 void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer)
 {
   BoundType* type = Type::GetBoundType(property->PropertyType);
-  MetaSerialization* meta = type->HasInherited<MetaSerialization>();
 
-  if(meta)
+  // This may be a non BoundType (for example, a DelegateType)
+  // Note that a Function marked as [Property] never goes through this code path because we only
+  // loop through Properties including Fields and GetterSetters, which does not include Function (methods).
+  if (type != nullptr)
   {
-    meta->SerializeProperty(instance, property, serializer);
-  }
-  else
-  {
-    MetaSerialization defaultSerialization;
-    defaultSerialization.SerializeProperty(instance, property, serializer);
+    MetaSerialization* meta = type->HasInherited<MetaSerialization>();
+
+    if (meta)
+    {
+      meta->SerializeProperty(instance, property, serializer);
+    }
+    else
+    {
+      MetaSerialization defaultSerialization;
+      defaultSerialization.SerializeProperty(instance, property, serializer);
+    }
   }
 }
 
