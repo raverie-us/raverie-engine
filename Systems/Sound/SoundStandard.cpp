@@ -100,6 +100,7 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeType(GranularSynthNode);
   ZilchInitializeType(ModulationNode);
   ZilchInitializeType(MicrophoneInputNode);
+  ZilchInitializeType(SaveAudioNode);
   ZilchInitializeType(SoundTagDisplay);
   ZilchInitializeType(SoundTag);
   ZilchInitializeType(NodePrintInfo);

@@ -113,6 +113,7 @@ ZilchDefineType(SoundSystem, builder, type)
   ZilchBindMethod(GranularSynthNode);
   ZilchBindMethod(ModulationNode);
   ZilchBindMethod(MicrophoneInputNode);
+  ZilchBindMethod(SaveAudioNode);
 
   ZeroBindEvent(Events::MIDINoteOn, MidiEvent);
   ZeroBindEvent(Events::MIDINoteOff, MidiEvent);

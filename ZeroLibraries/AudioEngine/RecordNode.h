@@ -70,6 +70,36 @@ namespace Audio
       unsigned data_chunk_size;
     };
   };
+  
+  //-------------------------------------------------------------------------------- Save Audio Node
+
+  class SaveAudioNode : public SimpleCollapseNode
+  {
+  public:
+    SaveAudioNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
+      ExternalNodeInterface* extInt, bool isThreaded = false);
+
+    // Returns true if the node is currently saving audio.
+    bool GetSaveAudio();
+    // Sets whether audio should be saved. Passing in True will start saving audio, False will stop.
+    void SetSaveAudio(bool save);
+    // Starts playing the saved audio.
+    void PlaySavedAudio();
+    // Stops playing saved audio.
+    void StopPlaying();
+    // Removes all saved audio data.
+    void ClearSavedAudio();
+
+  private:
+    ~SaveAudioNode() {}
+    bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
+      ListenerNode* listener, const bool firstRequest) override;
+
+    bool mSaveData;
+    bool mPlayData;
+    BufferType mSavedSamples;
+    size_t mPlaybackIndex;
+  };
 }
 
 #endif

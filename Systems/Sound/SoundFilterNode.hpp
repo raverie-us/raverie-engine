@@ -744,7 +744,7 @@ public:
   void SetActive(bool active);
 };
 
-//------------------------------------------------------------------------------ Granular Synth Node
+//---------------------------------------------------------------------------------- Save Audio Node
 
 /// Types of windows (volume envelopes) that can be used for individual grains generated 
 /// by the GranularSynthNode.
@@ -753,6 +753,25 @@ public:
 /// <param name="RaisedCosine">Uses cosine curves to smoothly ramp up and down during attack and release times.</param>
 /// <param name="Trapezoid">Uses linear ramps during attack and release times. More efficient than RaisedCosine but not as smooth.</param>
 DeclareEnum4(GranularSynthWindows, Linear, Parabolic, RaisedCosine, Trapezoid);
+/// Saves audio from its input SoundNodes and then plays it. All audio from inputs is passed to outputs.
+class SaveAudioNode : public SoundNode 
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  SaveAudioNode();
+
+  /// When true, audio from input SoundNodes will be saved. Setting this to true will remove any
+  /// existing saved audio before saving more.
+  bool GetSaveAudio();
+  void SetSaveAudio(bool save);
+  /// Plays the saved audio.
+  void PlaySavedAudio();
+  /// Stops playing the saved audio.
+  void StopPlaying();
+  /// Removes all currently saved audio.
+  void ClearSavedAudio();
+};
 
 class GranularSynthNode : public SoundNode 
 {

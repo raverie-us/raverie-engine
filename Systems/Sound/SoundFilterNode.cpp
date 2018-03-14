@@ -2570,4 +2570,62 @@ void GranularSynthNode::SetWindowRelease(int releaseMS)
   ((Audio::GranularSynthNode*)mNode)->SetWindowRelease(releaseMS);
 }
 
+//---------------------------------------------------------------------------------- Save Audio Node
+
+//**************************************************************************************************
+ZilchDefineType(SaveAudioNode, builder, type)
+{
+  ZeroBindDocumented();
+
+  ZilchBindGetterSetterProperty(SaveAudio);
+  ZilchBindMethod(PlaySavedAudio);
+  ZilchBindMethod(StopPlaying);
+  ZilchBindMethod(ClearSavedAudio);
+}
+
+//**************************************************************************************************
+SaveAudioNode::SaveAudioNode()
+{
+  Status status;
+  SetNode(new Audio::SaveAudioNode(status, "SaveAudioNode",
+    Z::gSound->mCounter++, this), status);
+}
+
+//**************************************************************************************************
+bool SaveAudioNode::GetSaveAudio()
+{
+  if (mNode)
+    return ((Audio::SaveAudioNode*)mNode)->GetSaveAudio();
+  else
+    return false;
+}
+
+//**************************************************************************************************
+void SaveAudioNode::SetSaveAudio(bool save)
+{
+  if (mNode)
+    ((Audio::SaveAudioNode*)mNode)->SetSaveAudio(save);
+}
+
+//**************************************************************************************************
+void SaveAudioNode::PlaySavedAudio()
+{
+  if (mNode)
+    ((Audio::SaveAudioNode*)mNode)->PlaySavedAudio();
+}
+
+//**************************************************************************************************
+void SaveAudioNode::StopPlaying()
+{
+  if (mNode)
+    ((Audio::SaveAudioNode*)mNode)->StopPlaying();
+}
+
+//**************************************************************************************************
+void SaveAudioNode::ClearSavedAudio()
+{
+  if (mNode)
+    ((Audio::SaveAudioNode*)mNode)->ClearSavedAudio();
+}
+
 }
