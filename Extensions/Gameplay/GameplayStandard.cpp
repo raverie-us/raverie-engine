@@ -61,7 +61,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   WebBrowserManager::PlatformInitializeMeta<ZilchLibrary>();
   ZilchInitializeType(WebBrowserManager);
   ZilchInitializeType(WebBrowserWidget);
-  ZilchInitializeType(MarketWidget);
   ZilchInitializeType(TileMapSource);
   ZilchInitializeType(Reactive);
   ZilchInitializeType(ReactiveSpace);

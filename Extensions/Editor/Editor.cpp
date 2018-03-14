@@ -582,14 +582,10 @@ Widget* Editor::ToggleConsole()
 
 Widget* Editor::ShowBrowser()
 {
-  Widget* widget = ShowWindow("Browser");
-  if (widget != nullptr)
-    return widget;
-
   WebBrowserSetup setup;
   WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Browser");
-  browser->SetHideOnClose(true);
+  browser->SetHideOnClose(false);
 
   this->AddManagedWidget(browser, DockArea::Center, true);
   return browser;
@@ -597,13 +593,25 @@ Widget* Editor::ShowBrowser()
 
 Widget* Editor::ShowMarket()
 {
-  Widget* widget = ShowWindow("Market");
-  if (widget != nullptr)
-    return widget;
+  const char* cURL = "https://market.zeroengine.io/?q=products";
+  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
-  MarketWidget* browser = new MarketWidget(this);
+  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Market");
-  browser->SetHideOnClose(true);
+  browser->SetHideOnClose(false);
+
+  this->AddManagedWidget(browser, DockArea::Center, true);
+  return browser;
+}
+
+Widget* Editor::ShowChat()
+{
+  const char* cURL = "https://dev.zeroengine.io/u/chat";
+  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+
+  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
+  browser->SetName("Chat");
+  browser->SetHideOnClose(false);
 
   this->AddManagedWidget(browser, DockArea::Center, true);
   return browser;

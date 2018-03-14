@@ -94,6 +94,7 @@ public:
   Widget* ToggleConsole();
   Widget* ShowBrowser();
   Widget* ShowMarket();
+  Widget* ShowChat();
 
   /// Selects a tool with the given name.
   void SelectTool(StringParam toolName);

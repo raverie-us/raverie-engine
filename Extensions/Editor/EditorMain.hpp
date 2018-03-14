@@ -29,6 +29,7 @@ public:
   void ToggleConsole(CommandEvent* event);
   void ShowBrowser(CommandEvent* event);
   void ShowMarket(CommandEvent* event);
+  void ShowChat(CommandEvent* event);
   void ShowObjects(CommandEvent* event);
   void ShowAnimator(CommandEvent* event);
   void ShowHotKeyEditor(CommandEvent* event);

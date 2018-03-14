@@ -711,6 +711,16 @@ CommandList
 		}
 		Object
 		{
+			var Name = "Chat"
+			var Description = "A place where users can talk to each other and share content"
+			var Shortcut = ""
+			var Tags = Array
+			{
+				"Windows"
+			}
+		}
+		Object
+		{
 			var Name = "Memory"
 			var Description = "Displays a memory graph"
 			var Shortcut = ""

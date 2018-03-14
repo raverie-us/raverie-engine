@@ -252,6 +252,11 @@ void EditorMain::ShowMarket(CommandEvent* event)
   Editor::ShowMarket();
 }
 
+void EditorMain::ShowChat(CommandEvent* event)
+{
+  Editor::ShowChat();
+}
+
 void EditorMain::ShowObjects(CommandEvent* event)
 {
   this->ShowWindow("Objects");
@@ -922,6 +927,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("Console", ToggleConsole);
     BindCommand("Browser", ShowBrowser);
     BindCommand("Market", ShowMarket);
+    BindCommand("Chat", ShowChat);
     BindCommand("Objects", ShowObjects);
     BindCommand("BroadPhaseTracker", ShowBroadPhaseTracker);
     BindCommand("VolumeMeter", ShowVolumeMeter);
