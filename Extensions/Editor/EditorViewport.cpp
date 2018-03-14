@@ -174,7 +174,10 @@ void EditorViewport::SetUpEditorCamera()
 ReactiveViewport* EditorViewport::GetReactiveViewport()
 {
   CameraViewport* cameraViewport = mEditorCamera.has(CameraViewport);
-  return Type::DynamicCast<ReactiveViewport*>((Viewport*)cameraViewport->mViewport);
+  if (cameraViewport != nullptr)
+    return Type::DynamicCast<ReactiveViewport*>((Viewport*)cameraViewport->mViewport);
+  else
+    return nullptr;
 }
 
 void EditorViewport::SetTargetSpace(Space* space)

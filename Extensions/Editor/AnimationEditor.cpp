@@ -515,11 +515,11 @@ void AnimationEditor::ObjectSelected(Cog* cog)
       EditorViewport* editorViewport = Type::DynamicCast<EditorViewport*>(widget);
       ReturnIf(editorViewport == nullptr, , "Widget found was not an EditorViewport.");
 
-      Viewport* viewport = editorViewport->GetReactiveViewport();
+      mMainViewport = editorViewport->GetReactiveViewport();
 
       // Connect to keyboard events
-      ConnectThisTo(viewport, Events::KeyDown, OnKeyDownViewport);
-      mMainViewport = viewport;
+      if(Viewport* viewport = mMainViewport)
+        ConnectThisTo(viewport, Events::KeyDown, OnKeyDownViewport);
     }
   }
 
