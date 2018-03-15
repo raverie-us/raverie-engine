@@ -172,17 +172,15 @@ Aabb Aabb::Expand(const Aabb& aabb, Vec3Param pt)
 
 void Aabb::Transform(Mat3Param rot)
 {
-  Vec3 e = GetHalfExtents();
-  Vec3 halfExtents;
-
-  //some black magic from real time collision detection
-  for(uint i = 0; i < 3; ++i)
-  {
-    halfExtents[i] = Math::Abs(rot(i, 0)) * e[0];
-    halfExtents[i] += Math::Abs(rot(i, 1)) * e[1];
-    halfExtents[i] += Math::Abs(rot(i, 2)) * e[2];
-  }
-
+  Vec3 halfExtents = GetHalfExtents();
+  
+  Mat3 absRot;
+  absRot.SetBasis(0, Math::Abs(rot.BasisX()));
+  absRot.SetBasis(1, Math::Abs(rot.BasisY()));
+  absRot.SetBasis(2, Math::Abs(rot.BasisZ()));
+  
+  halfExtents = Math::Multiply(absRot, halfExtents);
+  
   SetHalfExtents(halfExtents);
 }
 
@@ -216,8 +214,23 @@ Aabb Aabb::TransformAabb(Vec3Param worldScale, Mat3Param worldRotation, Vec3Para
 
 Aabb Aabb::TransformAabb(Mat4Param transformation) const
 {
-  Math::DecomposedMatrix4 decomposedMatrix(transformation);
-  return TransformAabb(decomposedMatrix.Scale, decomposedMatrix.Rotation, decomposedMatrix.Translation);
+  Aabb result = *this;
+  Vec3 center, halfExtents;
+  result.GetCenterAndHalfExtents(center, halfExtents);
+
+  // Build the upper 3x3 absolute value matrix to transform the half-extentS by
+  Mat3 absMat = Math::ToMatrix3(transformation);
+  absMat.SetBasis(0, Math::Abs(absMat.BasisX()));
+  absMat.SetBasis(1, Math::Abs(absMat.BasisY()));
+  absMat.SetBasis(2, Math::Abs(absMat.BasisZ()));
+  
+  halfExtents = Math::Multiply(absMat, halfExtents);
+
+  // Transform the point as normal
+  center = Math::MultiplyPoint(transformation, center);
+
+  result.SetCenterAndHalfExtents(center, halfExtents);
+  return result;
 }
 
 Obb Aabb::Transform(Mat4Param transformation) const
