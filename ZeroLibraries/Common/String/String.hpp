@@ -266,6 +266,9 @@ public:
   // Compute how many strings and bytes of string data do we have in the pool
   static void ComputeStringStats(StringStats& stats);
 
+  // This function should never be called by a user (only for crashes)
+  static void DebugForceReleaseStringPoolLock();
+
 private:
   void InitializeCharacter(int character);
   void InitializeCharacterNonPreallocated(int character);
