@@ -153,6 +153,9 @@ private:
   /// We want to update the animation while scrubbing.
   void OnPlayHeadModified(Event* event);
 
+  /// When the animator is deactivated remove the key frame icons from the property grid
+  void OnAnimatorDeactivated(Event* event);
+
   /// Updates the objects in the active animation to the given time.
   void UpdateToTime(float t);
 

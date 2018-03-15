@@ -256,6 +256,7 @@ AnimationEditor::AnimationEditor(Composite* parent)
 
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyRepeated, OnKeyRepeated);
+  ConnectThisTo(this, Events::Deactivated, OnAnimatorDeactivated);
 }
 
 //******************************************************************************
@@ -744,6 +745,13 @@ void AnimationEditor::OnComponentsChanged(ObjectEvent* event)
 void AnimationEditor::OnPlayHeadModified(Event* event)
 {
   UpdateToScrubber();
+}
+
+//******************************************************************************
+void AnimationEditor::OnAnimatorDeactivated(Event* event)
+{
+  mErrorToolTip.SafeDestroy();
+  mPropertyView->GetPropertyView()->RemoveCustomPropertyIcon(&CreateKeyFrameIcon);
 }
 
 //******************************************************************************
