@@ -66,9 +66,8 @@ void Launcher::EulaAccepted()
   OpenLauncherWindow();
 
   // Store that we've accepted the eula
-  TimeType eulaTime = GetEulaDateTime();
   UserConfig* userConfig = HasOrAdd<UserConfig>(mConfigCog);
-  userConfig->LastAcceptedEula = (u64)eulaTime;
+  userConfig->LastAcceptedEulaHash = GetEulaHash();
   SaveLauncherConfig(mConfigCog);
   mEulaWindow->SetActive(false);
   mEulaWindow->Destroy();
@@ -193,19 +192,18 @@ void Launcher::OpenTweakablesWindow()
 }
 
 //******************************************************************************
-TimeType Launcher::GetEulaDateTime()
+size_t Launcher::GetEulaHash()
 {
   String eulaFile = GetEulaFilePath(mConfigCog);
-  return GetFileModifiedTime(eulaFile);
+  String eulaText = ReadFileIntoString(eulaFile);
+  return eulaText.Hash();
 }
 
 //******************************************************************************
 bool Launcher::ShouldOpenEula()
 {
   UserConfig* userConfig = HasOrAdd<UserConfig>(mConfigCog);
-  TimeType eulaModifiedDate = GetEulaDateTime();
-
-  return (userConfig->LastAcceptedEula < (u64)eulaModifiedDate);
+  return userConfig->LastAcceptedEulaHash != GetEulaHash();
 }
 
 //******************************************************************************

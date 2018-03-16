@@ -31,7 +31,7 @@ private:
   void OpenLauncherWindow();
   void OpenTweakablesWindow();
 
-  TimeType GetEulaDateTime();
+  size_t GetEulaHash();
   bool ShouldOpenEula();
   MainWindow* CreateOsWindow(Cog* configCog, const IntVec2& minWindowSize,
                              StringParam windowName, bool mainWindow,
