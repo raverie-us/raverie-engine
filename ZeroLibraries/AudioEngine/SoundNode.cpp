@@ -434,11 +434,11 @@ namespace Audio
       // Check for errors 
       Zero::String message;
       if (InProcess)
-        message = Zero::String("Loop in sound node structure, disconnected node");
+        message = Zero::String::Format("Loop in sound node structure, disconnected %s", Name.c_str());
       else if (outputBuffer->Size() != MixedOutput.Size())
-        message = Zero::String("Mismatch in buffer size requests on sound node, disconnected node");
+        message = Zero::String::Format("Mismatch in buffer size requests on sound node, disconnected %s", Name.c_str());
       else if (numberOfChannels != NumMixedChannels)
-        message = Zero::String("Mismatch in channel requests on sound node, disconnected node");
+        message = Zero::String::Format("Mismatch in channel requests on sound node, disconnected %s", Name.c_str());
       if (!message.Empty())
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioError, 
@@ -487,6 +487,9 @@ namespace Audio
     else
     {
       InProcess = true;
+      Version = gAudioSystem->MixVersionNumber;
+      NumMixedChannels = numberOfChannels;
+      MixedListener = listener;
 
       // Set mixed array to same size as output array
       MixedOutput.Resize(outputBuffer->Size());
@@ -515,11 +518,7 @@ namespace Audio
           gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::ValidOutputLastMix,
             GetSiblingNode(), hasOutput));
 
-      // Set variables
       ValidOutputLastMix = hasOutput;
-      Version = gAudioSystem->MixVersionNumber;
-      NumMixedChannels = numberOfChannels;
-      MixedListener = listener;
 
       // Copy mixed samples to output buffer if there is real data
       if (hasOutput)
