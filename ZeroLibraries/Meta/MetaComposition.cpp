@@ -415,7 +415,11 @@ bool MetaComposition::CanRemoveComponent(HandleParam owner, BoundType* component
   Handle component = GetComponent(owner, componentType);
   if(component.IsNotNull())
     return CanRemoveComponent(owner, component, reason);
-  reason = String::Format("Component %s doesn't exist on object", componentType->Name.c_str());
+  if(componentType != nullptr)
+    reason = String::Format("Component %s doesn't exist on object", componentType->Name.c_str());
+  // The component type can be null (can happen when archetype editing a multi-selection)
+  else 
+    reason = String::Format("Component type doesn't exist.");
   return false;
 }
 
