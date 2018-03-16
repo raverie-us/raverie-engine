@@ -63,11 +63,29 @@ void DirectBuilderComponent::BuildContent(BuildOptions& buildOptions)
 
   // Copy the file.
   bool success = CopyFile(destFile, sourceFile);
+  if(!success)
+  {
+    // Try to create any missing parent directories of the destination path and try again
+    CreateDirectoryAndParents(FilePath::GetDirectoryPath(destFile));
+    success = CopyFile(destFile, sourceFile);
+  }
 
   if(!success)
   {
     buildOptions.Failure = true;
-    buildOptions.Message = String::Format("Failed to copy file %s to %s", sourceFile.c_str(), destFile.c_str());
+    buildOptions.Message = String::Format("Failed to copy file '%s' to '%s'", sourceFile.c_str(), destFile.c_str());
+
+    // Log what part of the source path was missing (if any)
+    String sourceFileMissingDir = FindFirstMissingDirectory(sourceFile);
+    if(sourceFileMissingDir != sourceFile)
+      buildOptions.Message = String::Format("%s. The source path '%s' doesn't exist", buildOptions.Message.c_str(), sourceFileMissingDir.c_str());
+
+    // Log what part of the destination path was missing (if any)
+    String destFileMissingDir = FindFirstMissingDirectory(destFile);
+    if(destFileMissingDir != destFile)
+      buildOptions.Message = String::Format("%s. The destination path '%s' doesn't exist", buildOptions.Message.c_str(), destFileMissingDir.c_str());
+
+    return;
   }
 
   // Update the file time so that NeedsBuilding works.
