@@ -97,7 +97,9 @@ EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
 
       // Set the text
       String eulaFilePath = GetEulaFilePath(configCog);
+      eulaText->SetReadOnly(false);
       eulaText->SetAllText(ReadFileIntoString(eulaFilePath));
+      eulaText->SetReadOnly(true);
       // Mark the text after we set it as read-only so the user can't change it.
       eulaText->SizeToContents();
     }
