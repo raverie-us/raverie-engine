@@ -111,7 +111,7 @@ void UserConfig::Serialize(Serializer& stream)
 
   SerializeNameDefault(LastVersionKnown, 0u);
   SerializeNameDefault(LastVersionUsed, 0u);
-  SerializeNameDefault(LastAcceptedEula, (u64)0);
+  SerializeNameDefault(LastAcceptedEulaHash, (size_t)0);
 }
 
 //------------------------------------------------------------- Developer Config

@@ -130,6 +130,7 @@ public:
   GLuint mActiveTexture;
   ResourceId mActiveMaterial;
   uint mNextTextureSlot;
+  uint mNextTextureSlotMaterial;
 
   float mCurrentLineWidth;
   bool mClipMode;

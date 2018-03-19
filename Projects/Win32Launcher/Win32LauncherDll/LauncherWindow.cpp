@@ -633,7 +633,9 @@ void LauncherWindow::OnPatchLauncherUpdateDownloaded(BackgroundTaskEvent* e)
   }
 
   ZPrint("Patch installed. Restarting launcher.\n");
-  mConfigCog->has(LauncherConfig)->mRestartOnClose = true;
+  LauncherConfig* launcherConfig = GetConfig();
+  if(launcherConfig != nullptr)
+    launcherConfig->mRestartOnClose = true;
   Z::gEngine->Terminate();
 }
 

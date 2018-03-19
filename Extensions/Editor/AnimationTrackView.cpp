@@ -360,6 +360,7 @@ AnimationTrackView::AnimationTrackView(Composite* parent, AnimationEditor* edito
   mTree->SetFormat(formatting);
 
   ConnectThisTo(mTree, Events::TreeRightClick, OnTreeRightClick);
+  ConnectThisTo(editor, Events::Deactivated, OnAnimatorDeactivated);
 }
 
 //******************************************************************************
@@ -521,6 +522,12 @@ void AnimationTrackView::UpdateToolTip()
   placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
                         IndicatorSide::Top, IndicatorSide::Bottom);
   toolTip->SetArrowTipTranslation(placement);
+}
+
+//******************************************************************************
+void AnimationTrackView::OnAnimatorDeactivated(Event* event)
+{
+  mToolTip.SafeDestroy();
 }
 
 //******************************************************************************

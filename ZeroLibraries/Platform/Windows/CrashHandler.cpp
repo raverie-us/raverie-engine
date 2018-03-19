@@ -569,6 +569,9 @@ void CrashHandler::FatalError(int errorCode)
 
 void CrashHandler::DefaultRunCrashHandlerCallback(void* crashData, bool doRescueCall, void* userData)
 {
+  // Force string pool's spin lock to be released so we won't infinite loop
+  String::DebugForceReleaseStringPoolLock();
+
   CrashInfo info;
   CrashHandler::InvokeCrashStartCallback(info);
 
