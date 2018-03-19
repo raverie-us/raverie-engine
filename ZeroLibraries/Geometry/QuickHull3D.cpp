@@ -405,12 +405,16 @@ bool QuickHull3D::BuildInitialHull()
 
   // Find the point furthest away from the line [v0, v1].
   QuickHullVertex* v2 = FindVertexFurthestFrom(v0, v1);
-  ErrorIf(v2 == nullptr, "Invalid furthest point from line");
+  // If we had colinear geometry we'd fail to find this point
+  if(v2 == nullptr)
+    return false;
   mVertices.Erase(v2);
 
   // Find the point furthest away from the triangle [v0, v1, v2].
   QuickHullVertex* v3 = FindVertexFurthestFrom(v0, v1, v2);
-  ErrorIf(v2 == nullptr, "Invalid furthest point from triangle");
+  // If we had coplanar geometry we'd fail to find this point
+  if(v3 == nullptr)
+    return false;
   mVertices.Erase(v3);
 
   // The signed volume of a tetrahedron can be computed as 1/6 the determinant of this matrix.

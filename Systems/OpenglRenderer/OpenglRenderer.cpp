@@ -1604,16 +1604,20 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
   // On change of materials, material inputs followed by global inputs have to be reset
   if (materialData->mResourceId != mActiveMaterial)
   {
-    SetShaderParameters((u64)materialData->mResourceId, mShaderInputsId, mNextTextureSlot);
-    SetShaderParameters(cGlobalShaderInputsId, mShaderInputsId, mNextTextureSlot);
+    mNextTextureSlotMaterial = mNextTextureSlot;
+    SetShaderParameters((u64)materialData->mResourceId, mShaderInputsId, mNextTextureSlotMaterial);
+    SetShaderParameters(cGlobalShaderInputsId, mShaderInputsId, mNextTextureSlotMaterial);
 
     mActiveMaterial = (u64)materialData->mResourceId;
   }
 
+  // Don't need to use a permanent texture slot
+  uint textureSlot = mNextTextureSlotMaterial;
+
   // Per object shader inputs
   if (frameNode.mShaderInputRange.Count() != 0)
   {
-    SetShaderParameters(frameNode.mShaderInputRange, mNextTextureSlot);
+    SetShaderParameters(frameNode.mShaderInputRange, textureSlot);
     // Since object input overrides could apply to other fragments that aren't from the material (i.e. RenderPass)
     // have to trigger a reset of all inputs, done by resetting active material, but shader does not have to be reset
     mActiveMaterial = 0;
@@ -1622,8 +1626,6 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
   GlTextureRenderData* textureData = (GlTextureRenderData*)frameNode.mTextureRenderData;
   if (textureData != nullptr)
   {
-    // Don't need to use a permanent texture slot
-    uint textureSlot = mNextTextureSlot;
     BindTexture(TextureType::Texture2D, textureSlot, textureData->mId, mDriverSupport.mSamplerObjects);
     SetShaderParameter(ShaderInputType::Texture, "HeightMapWeights", &textureSlot);
   }
