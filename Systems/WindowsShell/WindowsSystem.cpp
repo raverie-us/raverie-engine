@@ -167,6 +167,7 @@ WindowsOsWindow::WindowsOsWindow()
   mMinSize = IntVec2(10, 10);
   mWindowStyle = (WindowStyleFlags::Enum)WindowStyleFlags::None;
   mBorderless = false;
+  mPreviousMousePosition = IntVec2::cZero;
 }
 
 WindowsOsWindow::~WindowsOsWindow()
@@ -1082,7 +1083,13 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
     {
       OsMouseEvent mouseEvent;
       FillMouseEventData(PositionFromLParam(lParam), MouseButtons::None, mouseEvent);
-      
+      // WM_MOUSEMOVE can be sent as a side effect of many other windows messages and 
+      // OS operations even if the mouse has not moved. Check against the previous position
+      // and only process the event if the mouse has moved since the last time this
+      // message was recieved
+      if (mPreviousMousePosition == mouseEvent.ClientPosition)
+        return MessageHandled;
+
       // If the mouse is trapped, we either need to ignore the move back message, or just tell the mouse to move back
       if(mMouseTrapped)
       {
@@ -1112,6 +1119,9 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
 
       // Set the current cursor
       SetCursor(mCursor);
+
+      // Track the last position the mouse was at when this message was processed
+      mPreviousMousePosition = mouseEvent.ClientPosition;
 
       return MessageHandled;
     }

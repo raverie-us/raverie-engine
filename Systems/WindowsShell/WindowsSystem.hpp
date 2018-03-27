@@ -111,6 +111,7 @@ private:
   ITaskbarList3* mTaskBar;
   uint mTaskBarButtonCreated;
   WindowsOsWindow* mParent;
+  IntVec2 mPreviousMousePosition;
 };
 
 //-------------------------------------------------------------------WindowsShellSystem
