@@ -145,7 +145,8 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     else if(compositionMeta)
     {
       gameObject = ZilchAllocate(Cog, compositionMeta, HeapFlags::NonReferenceCounted);
-
+      // Allocate can return a null object if it can't be defaultly constructed
+      ReturnIf(gameObject == nullptr, nullptr, "Factory can only create objects of type Cog.");
       gameObject->mChildId = cogNode.UniqueNodeId;
 
       // We entered an Archetype, so we need to start a sub context so that
