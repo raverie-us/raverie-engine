@@ -66,7 +66,7 @@ ZilchDefineType(DebugGraphicalPrimitive, builder, type)
 void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
-  Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   viewNode.mLocalToView = Mat4::cIdentity;
   viewNode.mLocalToViewNormal = Mat3::cIdentity;
@@ -128,7 +128,7 @@ ZilchDefineType(DebugGraphicalText, builder, type)
 void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
-  Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   viewNode.mStreamedVertexType = mPrimitiveType;
   viewNode.mStreamedVertexStart = streamedVertices.Size();

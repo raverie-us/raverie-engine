@@ -550,7 +550,7 @@ void Widget::CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, Widg
   if (vertices.Empty())
     return;
 
-  Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   static Texture* white = TextureManager::Find("White");
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);

@@ -49,7 +49,7 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
-  Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   // Get the spacing for each
   float widthRange = GetWidthRange();

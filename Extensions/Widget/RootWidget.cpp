@@ -109,7 +109,7 @@ void RootWidget::OnUiUpdate(UpdateEvent* event)
   MouseUpdate(event->Dt);
 }
 
-void LineSegment(Array<StreamedVertex>& streamedVertices, Vec3Param p0, Vec3Param p1, Vec4Param color)
+void LineSegment(StreamedVertexArray& streamedVertices, Vec3Param p0, Vec3Param p1, Vec4Param color)
 {
   StreamedVertex start(p0, Vec2::cZero, color);
   StreamedVertex end(p1, Vec2::cZero, color);
@@ -117,7 +117,7 @@ void LineSegment(Array<StreamedVertex>& streamedVertices, Vec3Param p0, Vec3Para
   streamedVertices.PushBack(end);
 }
 
-void DrawBoxAround(Array<StreamedVertex>& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor color)
+void DrawBoxAround(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor color)
 {
   WidgetRect screenRect = widget->GetScreenRect();
 
@@ -134,7 +134,7 @@ void DrawBoxAround(Array<StreamedVertex>& streamedVertices, ViewNode& lineNode, 
   LineSegment(streamedVertices, topRight, botRight, color4);
 }
 
-void DrawChain(Array<StreamedVertex>& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor base, ByteColor parents)
+void DrawChain(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor base, ByteColor parents)
 {
   if(widget)
   {
@@ -176,7 +176,7 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   // Interaction debug draw
   if(Interaction::DebugMouseInteraction)
   {
-    Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+    StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
     ViewNode& lineNode = AddRenderNodes(viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
     lineNode.mStreamedVertexType = PrimitiveType::Lines;
 

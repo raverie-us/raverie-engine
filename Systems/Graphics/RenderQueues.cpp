@@ -25,6 +25,7 @@ void RenderQueues::Clear()
   mViewBlocks.Clear();
 
   mStreamedVertices.Clear();
+  mStreamedVertices.Deallocate();
 
   mSkinningBuffer.Clear();
   mIndexRemapBuffer.Clear();
