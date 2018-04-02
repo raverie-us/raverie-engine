@@ -1592,17 +1592,39 @@ bool ScriptEditor::AutoCompleteZeroConnect()
     // 'GetCompleteZeroConnectInfo' wouldn't return true if it wasn't
     ICodeInspector* code = this->GetCodeInspector();
 
-    // Get the type of the event
-    BoundType* eventType = MetaDatabase::GetInstance()->mEventMap.FindValue(eventName, nullptr);
+    String eventTypeName;
+    Regex sendsDeclaration(BuildString("sends\\s+", eventName, "\\s*\\:\\s*([a-zA-Z0-9_]+)"));
 
-    // If we could not find an event type, assume it's just event
-    if(eventType == nullptr)
-      eventType = ZilchTypeId(Event);
+    // Search all script documents and look for a sends declaration
+    forRange(Document* document, DocumentManager::GetInstance()->Documents.Values())
+    {
+      StringRange text;
 
-    //HACK for gameplay
-    String eventTypeName = eventType->Name;
-    if(eventType == ZilchTypeId(MouseEvent))
-      eventTypeName = "ViewportMouseEvent";
+      if (document->mEditor)
+        text = document->mEditor->GetAllText();
+      else
+        text = document->GetTextData();
+
+      Matches matches;
+      sendsDeclaration.Search(text, matches);
+
+      if (matches.Size() == 2)
+      {
+        eventTypeName = matches[1];
+        break;
+      }
+    }
+
+    if (eventTypeName.Empty())
+    {
+      // If we could not find an event type, assume it's just event
+      // Get the type of the event
+      BoundType* eventType = MetaDatabase::GetInstance()->mEventMap.FindValue(eventName, nullptr);
+      if (eventType == nullptr)
+        eventType = ZilchTypeId(Event);
+
+      eventTypeName = eventType->Name;
+    }
 
     String functionName = BuildString("On", eventName);
   
