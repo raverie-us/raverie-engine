@@ -488,7 +488,9 @@ void RootWidget::RootCaptureMouse(Widget* widget)
 
 void RootWidget::RootReleaseMouseCapture(Widget* object)
 {
-  if((Widget*)mCaptured == object)
+  // If the widget releasing capture is being destroyed then we need to use the
+  // handle id to check for equality since the handle would otherwise give a null pointer.
+  if(WidgetHandleManager::HandleToId(mCaptured) == object->mId)
   {
     mCaptured = nullptr;
     mOsWindow->SetMouseCapture(false);
