@@ -57,9 +57,9 @@ namespace Audio
       mBeatsCount(0),
       mBeatNoteType(0),
       mSecondsPerEighth(0),
-      mEighthsPerBeat(0),
       mEighthNoteCount(0),
-      mTotalEighths(0)
+      mTotalEighths(0),
+      mTotalBeats(0)
     {}
 
     void ProcessAndNotify(float currentTime, SoundNode* siblingNode);
@@ -75,12 +75,12 @@ namespace Audio
     int mBeatNoteType;
     // Number of seconds for each eighth note
     float mSecondsPerEighth;
-    // Number of eighth notes per music beat
-    int mEighthsPerBeat;
     // Accumulates number of eighth notes (reset on each bar)
     int mEighthNoteCount;
     // Tracks the total number of eighth notes from the beginning of the music
-    unsigned mTotalEighths;
+    int mTotalEighths;
+    // Tracks the total number of music beats from the beginning of the music
+    int mTotalBeats;
   };
 
   //---------------------------------------------------------------------------- Sound Instance Node
