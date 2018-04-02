@@ -51,6 +51,17 @@ bool WidgetHandleManager::CanDelete(const Handle& handle)
   return true;
 }
 
+u64 WidgetHandleManager::HandleToId(const Handle& handle)
+{
+  if (handle.StoredType == nullptr)
+    return 0;
+
+  ReturnIf(!Type::BoundIsA(handle.StoredType, ZilchTypeId(Widget)), 0,
+    "A handle to a non widget was passed in.");
+
+  return handle.HandleU64;
+}
+
 
 Widget::Widget(Composite* parent, AttachType::Enum attachType)
 {
