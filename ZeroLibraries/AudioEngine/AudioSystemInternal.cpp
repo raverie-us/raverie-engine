@@ -100,7 +100,7 @@ namespace Audio
     AudioIO->StartStream(StreamTypes::Output);
     AudioIO->StartStream(StreamTypes::Input);
 
-    ZPrint("Audio was successfully initialized\n");
+    ZPrint("Audio initialization completed\n");
   }
 
   //************************************************************************************************

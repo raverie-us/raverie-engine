@@ -504,113 +504,128 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
 {
   ZilchCompositor compositor;
   compositor.mEmitVertexCallback = CustomEmitVertexCallback;
-  ZilchShaderProject shaderProject("ShaderProject");
 
   ZilchShaderLibraryRef fragmentsLibrary = GetCurrentInternalProjectLibrary();
 
-  forRange (Shader* shader, shaders.All())
+  Array<Shader*> shaderArray;
+  shaderArray.Append(shaders.All());
+
+  // Value should not be very large to prevent unnecessary memory consumption to compile.
+  const size_t compositeBatchCount = 20;
+
+  size_t totalShaderCount = shaderArray.Size();
+  for (size_t startIndex = 0; startIndex < totalShaderCount; startIndex += compositeBatchCount)
   {
-    ZilchShaderDefinition shaderDef;
+    ZilchShaderProject shaderProject("ShaderProject");
 
-    // make shader def
-    shaderDef.mShaderName = shader->mName;
+    // All batches are added to this array, get start index for this batch.
+    size_t entryStartIndex = shaderEntries.Size();
 
-    ZilchShaderLibrary* lib = fragmentsLibrary;
-
-    // CoreVertex
-    ErrorIf(fragmentsLibrary->FindType(shader->mCoreVertex) == nullptr, "No fragment.");
-    shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(shader->mCoreVertex));
-
-    // Composition
-    if (composites.ContainsKey(shader->mComposite))
+    size_t endIndex = Math::Min(startIndex + compositeBatchCount, totalShaderCount);
+    for (size_t i = startIndex; i < endIndex; ++i)
     {
-      forRange (String fragmentName, composites[shader->mComposite].mFragmentNames.All())
+      Shader* shader = shaderArray[i];
+
+      // Make shader def.
+      ZilchShaderDefinition shaderDef;
+      shaderDef.mShaderName = shader->mName;
+
+      ZilchShaderLibrary* lib = fragmentsLibrary;
+
+      // CoreVertex
+      ErrorIf(fragmentsLibrary->FindType(shader->mCoreVertex) == nullptr, "No fragment.");
+      shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(shader->mCoreVertex));
+
+      // Composition
+      if (composites.ContainsKey(shader->mComposite))
       {
+        forRange (String fragmentName, composites[shader->mComposite].mFragmentNames.All())
+        {
+          ErrorIf(fragmentsLibrary->FindType(fragmentName) == nullptr, "No fragment.");
+          shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(fragmentName));
+        }
+      }
+      else
+      {
+        String fragmentName = shader->mComposite;
         ErrorIf(fragmentsLibrary->FindType(fragmentName) == nullptr, "No fragment.");
         shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(fragmentName));
       }
+
+      // ApiPerspective
+      ShaderType* apiPerspectiveOutput = fragmentsLibrary->FindType("ApiPerspectiveOutput");
+      ErrorIf(apiPerspectiveOutput == nullptr, "Missing fragment from core library.");
+      shaderDef.mFragmentTypes.PushBack(apiPerspectiveOutput);
+
+      // RenderPass
+      if (shader->mRenderPass.Empty() == false)
+      {
+        ErrorIf(fragmentsLibrary->FindType(shader->mRenderPass) == nullptr, "No fragment.");
+        shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(shader->mRenderPass));
+      }
+
+      compositor.BuildCompositedShader(mTranslator, fragmentsLibrary, shaderDef, mSettings);
+
+      // If the user requested it, then add the resulting shader def as an output.
+      // Used for debugging purposes to display the zilch composites.
+      if(compositeShaderDefs != nullptr)
+        compositeShaderDefs->PushBack(shaderDef);
+
+      ZilchFragmentInfo& vertexInfo = shaderDef.mShaderData[FragmentType::Vertex];
+      ZilchFragmentInfo& geometryInfo = shaderDef.mShaderData[FragmentType::Geometry];
+      ZilchFragmentInfo& pixelInfo = shaderDef.mShaderData[FragmentType::Pixel];
+
+      shaderProject.AddCodeFromString(vertexInfo.mZilchCode, vertexInfo.mZilchClassName, nullptr);
+      shaderProject.AddCodeFromString(geometryInfo.mZilchCode, geometryInfo.mZilchClassName, nullptr);
+      shaderProject.AddCodeFromString(pixelInfo.mZilchCode, pixelInfo.mZilchClassName, nullptr);
+
+      ShaderEntry entry(shader);
+      entry.mVertexShader = vertexInfo.mZilchClassName;
+      entry.mGeometryShader = geometryInfo.mZilchClassName;
+      entry.mPixelShader = pixelInfo.mZilchClassName;
+      shaderEntries.PushBack(entry);
     }
-    else
+
+    ZilchShaderModuleRef shaderDependencies = new ZilchShaderModule();
+    shaderDependencies->PushBack(fragmentsLibrary);
+
+    EventConnect(&shaderProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);
+    ZilchShaderLibraryRef shaderLibrary = shaderProject.CompileAndTranslate(shaderDependencies, mTranslator, mSettings);
+
+    if (shaderLibrary == nullptr)
     {
-      String fragmentName = shader->mComposite;
-      ErrorIf(fragmentsLibrary->FindType(fragmentName) == nullptr, "No fragment.");
-      shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(fragmentName));
+      DoNotifyError("Shader Error", "Failed to build shader library.");
+      return false;
     }
 
-    // ApiPerspective
-    ShaderType* apiPerspectiveOutput = fragmentsLibrary->FindType("ApiPerspectiveOutput");
-    ErrorIf(apiPerspectiveOutput == nullptr, "Missing fragment from core library.");
-    shaderDef.mFragmentTypes.PushBack(apiPerspectiveOutput);
-
-    // RenderPass
-    if (shader->mRenderPass.Empty() == false)
+    for (size_t i = entryStartIndex; i < shaderEntries.Size(); ++i)
     {
-      ErrorIf(fragmentsLibrary->FindType(shader->mRenderPass) == nullptr, "No fragment.");
-      shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(shader->mRenderPass));
-    }
+      ShaderEntry& entry = shaderEntries[i];
 
-    compositor.BuildCompositedShader(mTranslator, fragmentsLibrary, shaderDef, mSettings);
+      ShaderType* vertexShader = shaderLibrary->FindType(entry.mVertexShader);
+      ShaderType* geometryShader = shaderLibrary->FindType(entry.mGeometryShader);
+      ShaderType* pixelShader = shaderLibrary->FindType(entry.mPixelShader);
+      ErrorIf(vertexShader == nullptr || pixelShader == nullptr, "Invalid shader entry");
 
-    // If the user requested it, then add the resulting shader def as an output.
-    // Used for debugging purposes to display the zilch composites.
-    if(compositeShaderDefs != nullptr)
-      compositeShaderDefs->PushBack(shaderDef);
+      ShaderTypeTranslation vertexShaderResults, geometryShaderResults, pixelShaderResults;
+      mTranslator->BuildFinalShader(vertexShader, vertexShaderResults);
+      mTranslator->BuildFinalShader(geometryShader, geometryShaderResults);
+      mTranslator->BuildFinalShader(pixelShader, pixelShaderResults);
 
-    ZilchFragmentInfo& vertexInfo = shaderDef.mShaderData[FragmentType::Vertex];
-    ZilchFragmentInfo& geometryInfo = shaderDef.mShaderData[FragmentType::Geometry];
-    ZilchFragmentInfo& pixelInfo = shaderDef.mShaderData[FragmentType::Pixel];
+      entry.mVertexShader = vertexShaderResults.mTranslation;
+      entry.mGeometryShader = geometryShaderResults.mTranslation;
+      entry.mPixelShader = pixelShaderResults.mTranslation;
 
-    shaderProject.AddCodeFromString(vertexInfo.mZilchCode, vertexInfo.mZilchClassName, nullptr);
-    shaderProject.AddCodeFromString(geometryInfo.mZilchCode, geometryInfo.mZilchClassName, nullptr);
-    shaderProject.AddCodeFromString(pixelInfo.mZilchCode, pixelInfo.mZilchClassName, nullptr);
-
-    ShaderEntry entry(shader);
-    entry.mVertexShader = vertexInfo.mZilchClassName;
-    entry.mGeometryShader = geometryInfo.mZilchClassName;
-    entry.mPixelShader = pixelInfo.mZilchClassName;
-    shaderEntries.PushBack(entry);
-  }
-
-  ZilchShaderModuleRef shaderDependencies = new ZilchShaderModule();
-  shaderDependencies->PushBack(fragmentsLibrary);
-
-  EventConnect(&shaderProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);
-  ZilchShaderLibraryRef shaderLibrary = shaderProject.CompileAndTranslate(shaderDependencies, mTranslator, mSettings);
-
-  if (shaderLibrary == nullptr)
-  {
-    DoNotifyError("Shader Error", "Failed to build shader library.");
-    return false;
-  }
-
-  forRange (Shader* shader, shaders.All())
-    shader->mLibrary = shaderLibrary;
-
-  forRange (ShaderEntry& entry, shaderEntries.All())
-  {
-    ShaderType* vertexShader = shaderLibrary->FindType(entry.mVertexShader);
-    ShaderType* geometryShader = shaderLibrary->FindType(entry.mGeometryShader);
-    ShaderType* pixelShader = shaderLibrary->FindType(entry.mPixelShader);
-    ErrorIf(vertexShader == nullptr || pixelShader == nullptr, "Invalid shader entry");
-
-    ShaderTypeTranslation vertexShaderResults, geometryShaderResults, pixelShaderResults;
-    mTranslator->BuildFinalShader(vertexShader, vertexShaderResults);
-    mTranslator->BuildFinalShader(geometryShader, geometryShaderResults);
-    mTranslator->BuildFinalShader(pixelShader, pixelShaderResults);
-
-    entry.mVertexShader = vertexShaderResults.mTranslation;
-    entry.mGeometryShader = geometryShaderResults.mTranslation;
-    entry.mPixelShader = pixelShaderResults.mTranslation;
-
-    // Debug
-    if (false)
-    {
-      String path = FilePath::Combine(GetTemporaryDirectory(), "Shaders");
-      CreateDirectoryAndParents(path);
-      String baseName = BuildString(entry.mComposite, entry.mCoreVertex, entry.mRenderPass);
-      WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Vertex.glsl")), entry.mVertexShader);
-      WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Geometry.glsl")), entry.mGeometryShader);
-      WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Pixel.glsl")), entry.mPixelShader);
+      // Debug
+      if (false)
+      {
+        String path = FilePath::Combine(GetTemporaryDirectory(), "Shaders");
+        CreateDirectoryAndParents(path);
+        String baseName = BuildString(entry.mComposite, entry.mCoreVertex, entry.mRenderPass);
+        WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Vertex.glsl")), entry.mVertexShader);
+        WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Geometry.glsl")), entry.mGeometryShader);
+        WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Pixel.glsl")), entry.mPixelShader);
+      }
     }
   }
 

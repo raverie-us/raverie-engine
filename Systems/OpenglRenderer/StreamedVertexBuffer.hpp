@@ -13,6 +13,7 @@ public:
   void Destroy();
 
   void AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType);
+  void AddVertices(StreamedVertexArray& vertices, uint start, uint count, PrimitiveType::Enum primitiveType);
   void FlushBuffer(bool deactivate);
 
   uint mBufferSize;

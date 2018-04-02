@@ -167,6 +167,7 @@ WindowsOsWindow::WindowsOsWindow()
   mMinSize = IntVec2(10, 10);
   mWindowStyle = (WindowStyleFlags::Enum)WindowStyleFlags::None;
   mBorderless = false;
+  mPreviousMousePosition = IntVec2::cZero;
 }
 
 WindowsOsWindow::~WindowsOsWindow()
@@ -632,14 +633,14 @@ RECT WindowsOsWindow::GetDesktopClientRect()
   return clientRect;
 }
 
-POINT WindowsOsWindow::GetMouseTrapScreenPosition()
+IntVec2 WindowsOsWindow::GetMouseTrapScreenPosition()
 {
   // Trap the mouse in the center of the window
   RECT clientRect = this->GetDesktopClientRect();
   int sizeX = clientRect.right - clientRect.left;
   int sizeY = clientRect.bottom - clientRect.top;
 
-  POINT result;
+  IntVec2 result;
   result.x = clientRect.left + sizeX / 2;
   result.y = clientRect.top + sizeY / 2;
   return result;
@@ -1080,10 +1081,20 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
     // Mouse has moved on the window
     case WM_MOUSEMOVE:
     {
-      OsMouseEvent mouseEvent;
-      FillMouseEventData(PositionFromLParam(lParam), MouseButtons::None, mouseEvent);
+      IntVec2 screen = PositionFromLParam(lParam);
       
-      // If the mouse is trapped, we either need to ignore the move back message, or just tell the mouse to move back
+      // WM_MOUSEMOVE can be sent as a side effect of many other windows messages and 
+      // OS operations even if the mouse has not moved. Check against the previous position
+      // and only process the event if the mouse has moved since the last time this
+      // message was recieved
+      if (mPreviousMousePosition == screen)
+        return MessageHandled;
+
+      OsMouseEvent mouseEvent;
+      FillMouseEventData(screen, MouseButtons::None, mouseEvent);
+
+      // If the mouse is trapped, move it back to the trap position.
+      // Or, mark that it's already there.
       if(mMouseTrapped)
       {
         // Keep setting mouse clip to the main window
@@ -1093,18 +1104,18 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
         // Invisible cursor in MouseTrap mode
         mCursor = nullptr;
 
-        DWORD messagePos = GetMessagePos();
-        POINTS cursorScreen = MAKEPOINTS(messagePos);
-
-        // If the mouse is moving to the trap position, set its position back to the center
-        POINT mouseTrapPointScreen = GetMouseTrapScreenPosition();
-        if(cursorScreen.x != mouseTrapPointScreen.x || cursorScreen.y != mouseTrapPointScreen.y)
+        // Set the mouse position to the trap position if it isn't already there.
+        IntVec2 mouseTrapPointScreen = GetMouseTrapScreenPosition();
+        if(screen.x != mouseTrapPointScreen.x || screen.y != mouseTrapPointScreen.y)
         {
+          // The call to '::ClipCursor' above sets an internal state to ensure
+          // the mouse's position stays inside the client area.  Even if the
+          // position passed into 'SetCursorPos' is outside the client area.
           SetCursorPos(mouseTrapPointScreen.x, mouseTrapPointScreen.y);
         }
         else
         {
-          mouseEvent.IsTrapMoveBack = true;
+          mouseEvent.IsMouseAtTrapPosition = true;
         }
       }
 
@@ -1112,6 +1123,9 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
 
       // Set the current cursor
       SetCursor(mCursor);
+
+      // Track the last position the mouse was at when this message was processed
+      mPreviousMousePosition = mouseEvent.ClientPosition;
 
       return MessageHandled;
     }

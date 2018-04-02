@@ -34,7 +34,7 @@ namespace Audio
       0,
       nullptr) != 0)
     {
-      Zero::String string(Zero::String::Format("%s 0x%08x: %s", message.c_str(), hr, errorMessage));
+      Zero::String string(Zero::String::Format("%s 0x%08x %s", message.c_str(), hr, errorMessage));
       LocalFree(errorMessage);
       return string;
     }
@@ -60,6 +60,7 @@ namespace Audio
     FallbackSleepTime((unsigned)((float)FallbackFrames / (float)FallbackSampleRate * 1000.0f))
   {
     memset(ThreadEvents, 0, sizeof(void*) * ThreadEventTypes::NumThreadEvents);
+    DeviceName[0] = 0;
   }
 
   //************************************************************************************************
@@ -88,6 +89,11 @@ namespace Audio
   void WasapiDevice::Initialize(IMMDeviceEnumerator* enumerator, bool render, StreamStatus::Enum& status,
     Zero::String& message)
   {
+    if (render)
+      ZPrint("Initializing audio output device\n");
+    else
+      ZPrint("Initializing audio input device\n");
+
     if (!Enumerator)
     {
       Enumerator = enumerator;
@@ -106,10 +112,7 @@ namespace Audio
     if (FAILED(result))
     {
       status = StreamStatus::DeviceProblem;
-      if (render)
-        LogAudioIoError(GetMessageForHresult("Unable to get default output device.", result), &message);
-      else
-        LogAudioIoError(GetMessageForHresult("Unable to get default input device.", result), &message);
+      LogAudioIoError(GetMessageForHresult("Unable to get default device:", result), &message);
       goto ErrorExit;
     }
 
@@ -119,10 +122,7 @@ namespace Audio
     if (deviceState != DEVICE_STATE_ACTIVE)
     {
       status = StreamStatus::DeviceProblem;
-      if (render)
-        LogAudioIoError("Default output device not active.", &message);
-      else
-       LogAudioIoError("Default input device not active.", &message);
+      LogAudioIoError("Default device not active:", &message);
       goto ErrorExit;
     }
 
@@ -138,8 +138,12 @@ namespace Audio
 
       // Translate the name format
       if (value.pwszVal)
+      {
         WideCharToMultiByte(CP_UTF8, 0, value.pwszVal, (int)wcslen(value.pwszVal), DeviceName,
           NameLength, 0, 0);
+
+        DeviceName[wcslen(value.pwszVal)] = 0;
+      }
     }
 
     // Create the audio client
@@ -147,7 +151,7 @@ namespace Audio
     if (FAILED(result))
     {
       status = StreamStatus::DeviceProblem;
-      LogAudioIoError(GetMessageForHresult("Unable to create audio client.", result), &message);
+      LogAudioIoError(GetMessageForHresult("Unable to create audio client:", result), &message);
       goto ErrorExit;
     }
 
@@ -156,7 +160,7 @@ namespace Audio
     if (FAILED(result))
     {
       status = StreamStatus::DeviceProblem;
-      LogAudioIoError(GetMessageForHresult("Unable to get audio client format.", result), &message);
+      LogAudioIoError(GetMessageForHresult("Unable to get audio client format:", result), &message);
       goto ErrorExit;
     }
 
@@ -171,6 +175,11 @@ namespace Audio
       goto ErrorExit;
     }
 
+    ZPrint("Device name : %s\n", DeviceName);
+    ZPrint("Channels    : %d\n", Format->nChannels);
+    ZPrint("Sample rate : %d\n", Format->nSamplesPerSec);
+    ZPrint("Bit rate    : %d\n", Format->wBitsPerSample / 2);
+
     // Initialize the audio client with the smallest acceptable buffer size
     result = AudioClient->Initialize(
       AUDCLNT_SHAREMODE_SHARED,            // Shared mode, not exclusive
@@ -182,7 +191,7 @@ namespace Audio
     if (FAILED(result))
     {
       status = StreamStatus::DeviceProblem;
-      LogAudioIoError(GetMessageForHresult("Unable to initialize audio client.", result), &message);
+      LogAudioIoError(GetMessageForHresult("Unable to initialize audio client:", result), &message);
       goto ErrorExit;
     }
 
@@ -191,7 +200,7 @@ namespace Audio
     if (FAILED(result))
     {
       status = StreamStatus::DeviceProblem;
-      LogAudioIoError(GetMessageForHresult("Unable to get buffer size from audio client.", result),
+      LogAudioIoError(GetMessageForHresult("Unable to get buffer size from audio client:", result),
         &message);
       goto ErrorExit;
     }
@@ -205,9 +214,9 @@ namespace Audio
     {
       status = StreamStatus::DeviceProblem;
       if (render)
-        LogAudioIoError(GetMessageForHresult("Unable to get audio render client.", result), &message);
+        LogAudioIoError(GetMessageForHresult("Unable to get audio render client:", result), &message);
       else
-        LogAudioIoError(GetMessageForHresult("Unable to get audio capture client.", result), &message);
+        LogAudioIoError(GetMessageForHresult("Unable to get audio capture client:", result), &message);
       goto ErrorExit;
     }
 
@@ -220,7 +229,7 @@ namespace Audio
     if (FAILED(result))
     {
       status = StreamStatus::DeviceProblem;
-      LogAudioIoError(GetMessageForHresult("Unable to set event handle on audio client.", result),
+      LogAudioIoError(GetMessageForHresult("Unable to set event handle on audio client:", result),
         &message);
       goto ErrorExit;
     }
@@ -672,7 +681,7 @@ namespace Audio
       SAFE_RELEASE(Enumerator);
       CoUninitialize();
 
-      ZPrint("Shut down WASAPI audio IO\n");
+      ZPrint("WASAPI audio IO was shut down\n");
     }
   }
 

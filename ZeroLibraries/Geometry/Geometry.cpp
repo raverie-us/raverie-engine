@@ -630,6 +630,10 @@ void CalculateTriMeshCenterOfMassAndVolume(const Vec3* triMeshPoints,
     volume += tetraVol;
   }
 
+  // @JoshD: revist later. For now avoid a zero division here.
+  if(volume == 0)
+    return;
+
   centerOfMass /= (real(4.0) * volume);
 }
 

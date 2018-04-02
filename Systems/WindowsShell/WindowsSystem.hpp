@@ -94,7 +94,7 @@ private:
   void FillMouseEventData(IntVec2Param mousePosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
 
   RECT GetDesktopClientRect();
-  POINT GetMouseTrapScreenPosition();
+  IntVec2 GetMouseTrapScreenPosition() override;
   void CleanUp();
 
   WindowsShellSystem* mSystem;
@@ -111,6 +111,7 @@ private:
   ITaskbarList3* mTaskBar;
   uint mTaskBarButtonCreated;
   WindowsOsWindow* mParent;
+  IntVec2 mPreviousMousePosition;
 };
 
 //-------------------------------------------------------------------WindowsShellSystem

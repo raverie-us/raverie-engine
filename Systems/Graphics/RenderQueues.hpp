@@ -19,6 +19,9 @@ public:
   Vec2 mUvAux;
 };
 
+// 1.375MB per block at 44 bytes per StreamedVertex.
+typedef PodBlockArray<StreamedVertex, 15> StreamedVertexArray;
+
 class FrameNode
 {
 public:
@@ -125,7 +128,7 @@ public:
 
   Array<FrameBlock> mFrameBlocks;
   Array<ViewBlock> mViewBlocks;
-  Array<StreamedVertex> mStreamedVertices;
+  StreamedVertexArray mStreamedVertices;
 
   uint mSkinningBufferVersion;
   Array<Mat4> mSkinningBuffer;

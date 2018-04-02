@@ -109,7 +109,7 @@ void RootWidget::OnUiUpdate(UpdateEvent* event)
   MouseUpdate(event->Dt);
 }
 
-void LineSegment(Array<StreamedVertex>& streamedVertices, Vec3Param p0, Vec3Param p1, Vec4Param color)
+void LineSegment(StreamedVertexArray& streamedVertices, Vec3Param p0, Vec3Param p1, Vec4Param color)
 {
   StreamedVertex start(p0, Vec2::cZero, color);
   StreamedVertex end(p1, Vec2::cZero, color);
@@ -117,7 +117,7 @@ void LineSegment(Array<StreamedVertex>& streamedVertices, Vec3Param p0, Vec3Para
   streamedVertices.PushBack(end);
 }
 
-void DrawBoxAround(Array<StreamedVertex>& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor color)
+void DrawBoxAround(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor color)
 {
   WidgetRect screenRect = widget->GetScreenRect();
 
@@ -134,7 +134,7 @@ void DrawBoxAround(Array<StreamedVertex>& streamedVertices, ViewNode& lineNode, 
   LineSegment(streamedVertices, topRight, botRight, color4);
 }
 
-void DrawChain(Array<StreamedVertex>& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor base, ByteColor parents)
+void DrawChain(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor base, ByteColor parents)
 {
   if(widget)
   {
@@ -176,7 +176,7 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   // Interaction debug draw
   if(Interaction::DebugMouseInteraction)
   {
-    Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+    StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
     ViewNode& lineNode = AddRenderNodes(viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
     lineNode.mStreamedVertexType = PrimitiveType::Lines;
 
@@ -488,7 +488,9 @@ void RootWidget::RootCaptureMouse(Widget* widget)
 
 void RootWidget::RootReleaseMouseCapture(Widget* object)
 {
-  if((Widget*)mCaptured == object)
+  // If the widget releasing capture is being destroyed then we need to use the
+  // handle id to check for equality since the handle would otherwise give a null pointer.
+  if(WidgetHandleManager::HandleToId(mCaptured) == object->mId)
   {
     mCaptured = nullptr;
     mOsWindow->SetMouseCapture(false);
@@ -741,7 +743,18 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
 
   UpdateMouseButtons(osMouseEvent);
 
-  Vec2 mouseMovement = ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
+  Vec2 mouseMovement = Vec2::cZero;
+  if(Z::gMouse->GetTrapped())
+  {
+    OsWindow* window = osMouseEvent->Window;
+    if(window)
+      mouseMovement = ToVec2(osMouseEvent->ClientPosition - window->GetMouseTrapScreenPosition());
+  }
+  else
+  {
+    mouseMovement = ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
+  }
+
   Z::gMouse->mClientPosition = ToVec2(osMouseEvent->ClientPosition);
   Z::gMouse->mCursorMovement = mouseMovement;
 
@@ -751,7 +764,7 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
   // We must update the mScreenPostion above before exiting out
   // Normally we ignore mouse movements due to the 'mouse trapped' feature (moving to center over and over)
   // but we need to at least update the mouse's screen position (which should have moved to the center)
-  if(osMouseEvent->IsTrapMoveBack)
+  if(osMouseEvent->IsMouseAtTrapPosition)
     return;
 
   // Find the widget the mouse is over

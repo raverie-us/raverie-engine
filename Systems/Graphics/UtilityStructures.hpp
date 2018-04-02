@@ -53,7 +53,6 @@ public:
   String mCoreVertex;
   String mComposite;
   String mRenderPass;
-  ZilchShaderLibraryRef mLibrary;
 
   static Memory::Pool* sPool;
 };

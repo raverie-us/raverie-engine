@@ -1720,7 +1720,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
 
   uint vertexStart = viewNode.mStreamedVertexStart;
   uint vertexCount = viewNode.mStreamedVertexCount;
-  mStreamedVertexBuffer.AddVertices(&mRenderQueues->mStreamedVertices[vertexStart], vertexCount, viewNode.mStreamedVertexType);
+  mStreamedVertexBuffer.AddVertices(mRenderQueues->mStreamedVertices, vertexStart, vertexCount, viewNode.mStreamedVertexType);
 
   if (frameNode.mBlendSettingsOverride)
   {

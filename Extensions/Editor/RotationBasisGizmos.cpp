@@ -209,6 +209,10 @@ Aabb RotationBasisGizmo::GetCogAabb(Cog* cog)
 
 void RotationBasisGizmo::OnGizmoDragStart(Event* e)
 {
+  Quat rotation = mTransform->GetWorldRotation();
+  mStartingWorldRotation = Math::Normalized(rotation);
+  mFinalWorldRotation = mStartingWorldRotation;
+
   Event toSend;
   GetOwner()->DispatchEvent(Events::RotationBasisGizmoBegin, &toSend);
 }
@@ -227,8 +231,6 @@ void RotationBasisGizmo::OnRingGizmoModified(RingGizmoEvent* e)
 
 void RotationBasisGizmo::OnGizmoDragEnd(Event * e)
 {
-  mStartingWorldRotation = mFinalWorldRotation;
-  
   Event toSend;
   GetOwner()->DispatchEvent(Events::RotationBasisGizmoEnd, &toSend);
 }
@@ -333,10 +335,10 @@ void OrientationBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
   // initial rotation to the gizmo's final rotation
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
-  queue->SetActiveBatchName("UndoRotations batch");
+  queue->SetActiveBatchName("OrientationGizmo batch");
 
   for(size_t i = 0; i < mCogs.Size(); ++i)
-    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mStartingWorldRotation);
+    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
 
   queue->EndBatch();
 }
@@ -557,10 +559,10 @@ void PhysicsCarWheelBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
   // initial rotation to the gizmo's final rotation
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
-  queue->SetActiveBatchName("Undo CarWheel rotations batch");
+  queue->SetActiveBatchName("CarWheel rotations batch");
 
   for(size_t i = 0; i < mCogs.Size(); ++i)
-    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mStartingWorldRotation);
+    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
 
   queue->EndBatch();
 }
@@ -736,10 +738,10 @@ void RevoluteBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
   // initial rotation to the gizmo's final rotation
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
-  queue->SetActiveBatchName("Undo RevoluteBasis batch");
+  queue->SetActiveBatchName("RevoluteBasis batch");
 
   for(size_t i = 0; i < mCogs.Size(); ++i)
-    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mStartingWorldRotation);
+    QueueRotationsWithUndo(queue, mCogs[i], mRotationBasisGizmo->mFinalWorldRotation);
 
   queue->EndBatch();
 }
