@@ -159,6 +159,8 @@ struct ProtocolSetup
   PodArray<byte> Delimiter;
 };
 
+DeclareEnum2(TcpSocketBind, Any, Loopback);
+
 //------------------------------------------------------------------- TCP SocketHandle
 /// Manages all the client/server/peer connections .
 class TcpSocket : public EventObject
@@ -190,6 +192,7 @@ public:
   /// Listen for incoming connections.
   bool Listen(int port);
   bool Listen(int port, uint maxConnections);
+  bool Listen(int port, uint maxConnections, TcpSocketBind::Enum bindTo);
 
   /// Get the number of connections we have.
   uint GetConnectionCount();

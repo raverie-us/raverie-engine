@@ -166,6 +166,7 @@ public:
 #include "MetaDrop.hpp"
 #include "LibraryView.hpp"
 #include "ConsoleUi.hpp"
+#include "UiLegacyToolTip.hpp"
 
 // Animator
 #include "AnimationEditorData.hpp"

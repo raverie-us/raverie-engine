@@ -69,7 +69,7 @@ public:
   /// the tooltip popping up on top of the new Ui.
   bool mShowToolTip;
   String mToolTipText;
-  ToolTipColor::Enum mToolTipColor;
+  ToolTipColorScheme::Enum mToolTipColor;
   HandleOf<Widget> mToolTip;
 };
 

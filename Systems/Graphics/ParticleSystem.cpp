@@ -320,7 +320,14 @@ ParticleListRange ParticleSystem::AllParticles()
 //******************************************************************************
 void ParticleSystem::Clear()
 {
+  mParticleList.ClearDestroyed();
   mParticleList.FreeParticles();
+
+  forRange (ParticleEmitter& emitter, mEmitters.All())
+    emitter.ResetCount();
+
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
+    r.Front().Clear();
 }
 
 //******************************************************************************
@@ -333,9 +340,10 @@ void ParticleSystem::OnUpdate(UpdateEvent* event)
 void ParticleSystem::SystemUpdate(float dt)
 {
   // Our parent will update us if we're a child system
-  if (mChildSystem == false)
-    BaseUpdate(dt);
+  if (mChildSystem)
+    return;
 
+  BaseUpdate(dt);
   UpdateLifetimes(dt);
   mParticleList.ClearDestroyed();
 }
@@ -442,6 +450,9 @@ void ParticleSystem::UpdateLifetimes(float dt)
       particle = particle->Next;
     }
   }
+
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
+    r.Front().UpdateLifetimes(dt);
 }
 
 //******************************************************************************
@@ -483,8 +494,6 @@ void ParticleSystem::OnSelectionFinal(SelectionChangedEvent* selectionEvent)
   {
     mDebugDrawing = false;
     Clear();
-    forRange (ParticleEmitter& emitter, mEmitters.All())
-      emitter.ResetCount();
   }
 }
 

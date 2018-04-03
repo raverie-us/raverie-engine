@@ -34,7 +34,6 @@ namespace Audio
     PreviousPeakVolumeThreaded(0),
     PreviousRMSVolumeThreaded(0),
     Resampling(false),
-    StopDecodeThread(0),
     SendMicrophoneInputData(false)
   {
     gAudioSystem = this;
@@ -52,13 +51,6 @@ namespace Audio
   Zero::OsInt StartMix(void *system)
   {
     ((Audio::AudioSystemInternal*)system)->MixLoopThreaded();
-    return 0;
-  }
-
-  //************************************************************************************************
-  Zero::OsInt StartDecoding(void* system)
-  {
-    ((Audio::AudioSystemInternal*)system)->DecodeLoopThreaded();
     return 0;
   }
 
@@ -91,19 +83,6 @@ namespace Audio
     LowPass = new LowPassFilter();
     LowPass->SetCutoffFrequency(120.0f);
 
-    // Start up the decoding thread
-    DecodeThreadEvent.Initialize();
-    DecodeThread.Initialize(StartDecoding, this, "Audio decoding");
-    DecodeThread.Resume();
-    if (!DecodeThread.IsValid())
-    {
-      ZPrint("Error creating audio decoding thread\n");
-      status.SetFailed("Error creating audio decoding thread");
-      return;
-    }
-
-    ZPrint("Audio decoding thread initialized\n");
-
     AudioIO->OutputRingBuffer.ResetBuffer();
 
     // Start up the mix thread
@@ -121,7 +100,7 @@ namespace Audio
     AudioIO->StartStream(StreamTypes::Output);
     AudioIO->StartStream(StreamTypes::Input);
 
-    ZPrint("Audio was successfully initialized\n");
+    ZPrint("Audio initialization completed\n");
   }
 
   //************************************************************************************************
@@ -137,14 +116,6 @@ namespace Audio
       // Wait for the mix thread to finish shutting down
       MixThread.WaitForCompletion();
       MixThread.Close();
-    }
-
-    if (DecodeThread.IsValid())
-    {
-      Zero::AtomicStore(&StopDecodeThread, 1);
-      DecodeThreadEvent.Signal();
-      DecodeThread.WaitForCompletion();
-      DecodeThread.Close();
     }
 
     // Shut down audio output, input, and API
@@ -393,29 +364,6 @@ namespace Audio
   void AudioSystemInternal::AddTaskThreaded(Zero::Functor* function)
   {
     TasksForGameThread.Write(function);
-  }
-
-  //************************************************************************************************
-  void AudioSystemInternal::AddDecodingTask(Zero::Functor* function)
-  {
-    DecodingQueue.Write(function);
-    DecodeThreadEvent.Signal();
-  }
-
-  //************************************************************************************************
-  void AudioSystemInternal::DecodeLoopThreaded()
-  {
-    while (Zero::AtomicCompareExchangeBool(&StopDecodeThread, 0, 0))
-    {
-      Zero::Functor* function;
-      while (DecodingQueue.Read(function))
-      {
-        function->Execute();
-        delete function;
-      }
-
-      DecodeThreadEvent.Wait();
-    }
   }
 
   //************************************************************************************************
@@ -971,8 +919,7 @@ namespace Audio
   //------------------------------------------------------------------------------------ Audio Frame
 
   //************************************************************************************************
-  AudioFrame::AudioFrame(float* samples, unsigned channels) : 
-    HowManyChannels(channels)
+  AudioFrame::AudioFrame(float* samples, unsigned channels)
   {
     SetSamples(samples, channels);
 
@@ -988,7 +935,7 @@ namespace Audio
 
   //************************************************************************************************
   AudioFrame::AudioFrame() :
-    HowManyChannels(0)
+    HowManyChannels(1)
   {
     memset(Samples, 0, sizeof(float) * MaxChannels);
 
@@ -1038,7 +985,7 @@ namespace Audio
   //************************************************************************************************
   void AudioFrame::SetSamples(float* samples, unsigned channels)
   {
-    HowManyChannels = channels;
+    HowManyChannels = Math::Max(channels, (unsigned)1);
 
     memset(Samples, 0, sizeof(float) * MaxChannels);
 

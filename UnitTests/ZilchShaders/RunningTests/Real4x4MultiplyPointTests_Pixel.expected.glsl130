@@ -54,10 +54,10 @@ Real4x4MultiplyTests _Real4x4MultiplyTestsConstructor()
 
 void _Real4x4MultiplyTestsMain(inout Real4x4MultiplyTests self)
 {
-  self.Target0 = (vec4(float(1), float(1), float(1), float(1)) * self.Matrix);
-  self.Target1 = (vec4(float(1), float(2), float(3), float(4)) * self.Matrix);
-  self.Target2 = (vec4(-0.5f, 1.7f, -1.1f, 0.1f) * self.Matrix);
-  self.Target3 = (vec4(float(0)) * self.Matrix);
+  self.Target0 = ((vec4(float(1), float(1), float(1), float(1))) * (self.Matrix));
+  self.Target1 = ((vec4(float(1), float(2), float(3), float(4))) * (self.Matrix));
+  self.Target2 = ((vec4(-0.5f, 1.7f, -1.1f, 0.1f)) * (self.Matrix));
+  self.Target3 = ((vec4(float(0))) * (self.Matrix));
 }
 
 //----- Real4x4MultiplyPointTests_Pixel Functions -----

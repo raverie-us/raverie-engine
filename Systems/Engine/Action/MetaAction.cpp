@@ -50,12 +50,24 @@ Easer GetEaser(uint easeType)
 {
   switch(easeType)
   {
-    case EaseType::QuadIn:    return Ease::Quad::In;
-    case EaseType::QuadOut:   return Ease::Quad::Out;
-    case EaseType::QuadInOut: return Ease::Quad::InOut;
-    case EaseType::SinIn:     return Ease::Sin::In;
-    case EaseType::SinOut:    return Ease::Sin::Out;
-    case EaseType::SinInOut:  return Ease::Sin::InOut;
+    case EaseType::QuadIn:        return Ease::Quad::In;
+    case EaseType::QuadOut:       return Ease::Quad::Out;
+    case EaseType::QuadInOut:     return Ease::Quad::InOut;
+    case EaseType::SinIn:         return Ease::Sin::In;
+    case EaseType::SinOut:        return Ease::Sin::Out;
+    case EaseType::SinInOut:      return Ease::Sin::InOut;
+    case EaseType::ElasticIn:     return Ease::Elastic::In;
+    case EaseType::ElasticOut:    return Ease::Elastic::Out;
+    case EaseType::ElasticInOut:  return Ease::Elastic::InOut;
+    case EaseType::BounceIn:      return Ease::Bounce::In;
+    case EaseType::BounceOut:     return Ease::Bounce::Out;
+    case EaseType::BounceInOut:   return Ease::Bounce::InOut;
+    case EaseType::BackIn:        return Ease::Back::In;
+    case EaseType::BackOut:       return Ease::Back::Out;
+    case EaseType::BackInOut:     return Ease::Back::InOut;
+    case EaseType::WarpIn:        return Ease::Warp::In;
+    case EaseType::WarpOut:       return Ease::Warp::Out;
+    case EaseType::WarpInOut:     return Ease::Warp::InOut;
   }
   return Ease::Linear::InOut;
 }

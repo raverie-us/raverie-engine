@@ -176,6 +176,23 @@ void CreateDirectoryAndParents(StringParam directory)
   CreateDirectory(directory);
 }
 
+String FindFirstMissingDirectory(StringParam directory)
+{
+  // Keep iterating over the parent directories until we find one that does exist.
+  // When we do return the previous path as this was the first one to not exist.
+  String subPath = directory;
+  do
+  {
+    String sourceDirPath = FilePath::GetDirectoryPath(subPath);
+    if(DirectoryExists(sourceDirPath))
+      return subPath;
+    subPath = sourceDirPath;
+  } while(!subPath.Empty());
+
+  // Otherwise all of the parent directories don't exist so return an empty string
+  return subPath;
+}
+
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
   BOOL success = ::CopyFileW(Widen(source).c_str(), Widen(dest).c_str(), FALSE);

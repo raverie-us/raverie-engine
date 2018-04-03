@@ -39,7 +39,7 @@ struct ToolTipPlacement
 };
 
 //--------------------------------------------------------------------- Tool Tip
-DeclareEnum6(ToolTipColor, Default, Gray, Red, Yellow, Green, Orange);
+DeclareEnum6(ToolTipColorScheme, Default, Gray, Red, Yellow, Green, Orange);
 
 class ToolTip : public Composite
 {
@@ -60,8 +60,15 @@ public:
   /// GetMinSize will be called on the given widget to lay out the tooltip.
   void SetContent(Widget* content);
 
-  /// Creates a text object and sets it as the content.
+  /// If the content isn't already text, create a stack of one multitext object
+  /// and set it as the content.  Else set the text on the already present multitext object.
   Text* SetText(StringParam text);
+  /// If the content isn't already text, create a multitext stack.
+  /// Then, add a new multitext object to the content's stack.
+  /// Else, just to the add operation only.
+  Text* AddText(StringParam text, Vec4Param color);
+  /// Clear stack of multitext objects.
+  void ClearText();
 
   /// Simple compound setter.  Calls 'SetText' with the additional ability
   /// to set the tooltip's position.
@@ -77,7 +84,7 @@ public:
   /// Whether or not to destroy the object when the mouse moves off the source.
   void SetDestroyOnMouseExit(bool state);
 
-  void SetColor(ToolTipColor::Enum color);
+  void SetColorScheme(ToolTipColorScheme::Enum color);
 
   /// The side the tooltip is meant to be on.
   IndicatorSide::Type mSide;
@@ -107,6 +114,8 @@ private:
 
   /// The content contained in the tooltip.
   Widget* mContent;
+  /// The content, but only if using text objects.
+  Composite* mTextStack;
 
   /// Whether or not to destroy the object when the mouse moves off the source.
   bool mDestroyOnMouseExitSource;

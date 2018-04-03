@@ -1,12 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Camera.hpp
-/// Declaration of the Camera component class.
-///
-/// Authors: Chris Peters, Nathan Carlson
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -83,7 +77,7 @@ public:
   Mat4 GetApiPerspectiveTransform();
   // Fills ViewBlock with Camera specific data for rendering.
   void GetViewData(ViewBlock& block);
-  // Creates a frustum using the Camera's settings along with the given aspect ratio.
+  /// Creates a frustum using the Camera's settings along with the given aspect ratio.
   Frustum GetFrustum(float aspect) const;
 
   Link<Camera> SpaceLink;

@@ -9,24 +9,25 @@ namespace Zilch
 {
   //***************************************************************************
   // Unfortunately because there's some sort of bug in the MSVC linker, we have to make a bunch of non-inlined comparison functions
-  ZilchNoInline bool LinkerEquals(Boolean         a, Boolean          b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Boolean2Param   a, Boolean2Param    b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Boolean3Param   a, Boolean3Param    b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Boolean4Param   a, Boolean4Param    b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Integer         a, Integer          b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Integer2Param   a, Integer2Param    b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Integer3Param   a, Integer3Param    b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Integer4Param   a, Integer4Param    b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Real            a, Real             b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Real2Param      a, Real2Param       b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Real3Param      a, Real3Param       b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(Real4Param      a, Real4Param       b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(QuaternionParam a, QuaternionParam  b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(DoubleInteger   a, DoubleInteger    b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(DoubleReal      a, DoubleReal       b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(const Handle&   a, const Handle&    b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(const Delegate& a, const Delegate&  b) { return a == b; }
-  ZilchNoInline bool LinkerEquals(const Any&      a, const Any&       b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Boolean                 a, Boolean                 b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Boolean2Param           a, Boolean2Param           b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Boolean3Param           a, Boolean3Param           b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Boolean4Param           a, Boolean4Param           b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Integer                 a, Integer                 b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Integer2Param           a, Integer2Param           b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Integer3Param           a, Integer3Param           b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Integer4Param           a, Integer4Param           b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Real                    a, Real                    b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Real2Param              a, Real2Param              b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Real3Param              a, Real3Param              b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(Real4Param              a, Real4Param              b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(QuaternionParam         a, QuaternionParam         b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(DoubleInteger           a, DoubleInteger           b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(DoubleReal              a, DoubleReal              b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(const Handle&           a, const Handle&           b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(const Delegate&         a, const Delegate&         b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(const Any&              a, const Any&              b) { return a == b; }
+  ZilchNoInline bool LinkerEquals(const HandleOf<String>& a, const HandleOf<String>& b) { return a == b; }
   
   //***************************************************************************
   ArrayUserData::ArrayUserData() :

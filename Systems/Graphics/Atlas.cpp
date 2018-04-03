@@ -1,28 +1,25 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Atlas.cpp
-///
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(Atlas, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 HandleOf<Atlas> Atlas::CreateRuntime()
 {
   Atlas* atlas = AtlasManager::CreateRuntime();
   return atlas;
 }
 
+//**************************************************************************************************
 Atlas::Atlas()
 {
   mTexture = Texture::CreateRuntime();
@@ -33,6 +30,7 @@ Atlas::Atlas()
   mTexture->Upload(cAtlasSize, cAtlasSize, TextureFormat::RGBA8, image, size, false);
 }
 
+//**************************************************************************************************
 bool Atlas::AddSpriteSource(SpriteSource* source, Image* image)
 {
   TextureFiltering::Enum filtering = source->Sampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Trilinear;
@@ -130,6 +128,7 @@ bool Atlas::AddSpriteSource(SpriteSource* source, Image* image)
   return false;
 }
 
+//**************************************************************************************************
 void Atlas::RemoveSpriteSource(SpriteSource* source)
 {
   ErrorIf(mAabbTreeProxies.ContainsKey(source) == false, "Atlas is missing an entry for a source that references it.");
@@ -145,15 +144,16 @@ void Atlas::RemoveSpriteSource(SpriteSource* source)
   mAabbTreeProxies.Erase(source);
 }
 
-//------------------------------------------------------------
 ImplementResourceManager(AtlasManager, Atlas);
 
+//**************************************************************************************************
 AtlasManager::AtlasManager(BoundType* resourceType)
   : ResourceManager(resourceType)
 {
   mNoFallbackNeeded = true;
 }
 
+//**************************************************************************************************
 void AtlasManager::AddSpriteSource(SpriteSource* source, Image* image)
 {
   ErrorIf(source->mAtlas.IsNotNull(), "SpriteSource is already on an Atlas.");
@@ -209,6 +209,7 @@ void AtlasManager::AddSpriteSource(SpriteSource* source, Image* image)
   source->mPerFrameUvOffset = frameUvSize + padUv * 2.0f;
 }
 
+//**************************************************************************************************
 void AtlasManager::RemoveSpriteSource(SpriteSource* source)
 {
   ErrorIf(source->mAtlas.IsNull(), "SpriteSource is not on an Atlas.");

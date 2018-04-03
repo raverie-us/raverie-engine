@@ -1,12 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Sprite.hpp
-/// Declaration of the Sprite component class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -15,7 +9,6 @@ namespace Zero
 const float cMaxFrameRate = 100000.0f;
 const float cMinFrameRate = 0.001f;
 
-//---------------------------------------------------------------- Sprite Source
 class SpriteSource : public Resource
 {
 public:
@@ -33,7 +26,7 @@ public:
   UvRect GetUvRect(uint currentFrame);
 
   // Loads content image file into memory.
-  void LoadSourceImage(Image* image);
+  void LoadSourceImage(Status& status, Image* image);
 
   HandleOf<Texture> GetAtlasTexture();
   TextureRenderData* GetAtlasTextureRenderData();
@@ -51,7 +44,6 @@ public:
   uint mFramesPerRow;
 };
 
-//-------------------------------------------------------- Sprite Source Manager
 class SpriteSourceManager : public ResourceManager
 {
 public:
@@ -60,4 +52,4 @@ public:
   SpriteSourceManager(BoundType* resourceType);
 };
 
-}
+} // namespace Zero

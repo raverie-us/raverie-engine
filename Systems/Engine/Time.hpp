@@ -80,6 +80,11 @@ public:
   // Returns true if either the space is paused, or the game is globally paused
   bool GetGloballyPaused();
 
+  /// Scale the speed of time for interesting effects like bullet time or
+  /// fast paced gameplay. TimeScale is clamped to be positive.
+  float GetTimeScale();
+  void SetTimeScale(float timeScale);
+
   /// The events that the time space sends out
   String mSystemLogicUpdateEvent;
   String mFrameUpdateEvent;

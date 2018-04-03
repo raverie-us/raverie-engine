@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -50,7 +53,6 @@ public:
   String mCoreVertex;
   String mComposite;
   String mRenderPass;
-  ZilchShaderLibraryRef mLibrary;
 
   static Memory::Pool* sPool;
 };

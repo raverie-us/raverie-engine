@@ -1,8 +1,12 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(TextureData, builder, type)
 {
   ZeroBindDocumented();
@@ -22,6 +26,7 @@ ZilchDefineType(TextureData, builder, type)
   ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, uint, uint, Vec4));
 }
 
+//**************************************************************************************************
 TextureData::TextureData(TextureFormat::Enum format, int width, int height)
   : mPixelCount(0)
   , mData(nullptr)
@@ -46,11 +51,13 @@ TextureData::TextureData(TextureFormat::Enum format, int width, int height)
   memset(mData, 0, mDataSize);
 }
 
+//**************************************************************************************************
 TextureData::~TextureData()
 {
   delete[] mData;
 }
 
+//**************************************************************************************************
 Vec4 TextureData::Get(uint index)
 {
   Vec4 value = Vec4::cZero;
@@ -67,6 +74,7 @@ Vec4 TextureData::Get(uint index)
   return value;
 }
 
+//**************************************************************************************************
 Vec4 TextureData::Get(uint x, uint y)
 {
   if (x >= mWidth || y >= mHeight)
@@ -78,6 +86,7 @@ Vec4 TextureData::Get(uint x, uint y)
   return Get(x + y * mWidth);
 }
 
+//**************************************************************************************************
 void TextureData::Set(uint index, Vec4 value)
 {
   if (index >= mPixelCount)
@@ -90,6 +99,7 @@ void TextureData::Set(uint index, Vec4 value)
   SetPixelData(mData, dataIndex, value, mFormat);
 }
 
+//**************************************************************************************************
 void TextureData::Set(uint x, uint y, Vec4 value)
 {
   if (x >= mWidth || y >= mHeight)

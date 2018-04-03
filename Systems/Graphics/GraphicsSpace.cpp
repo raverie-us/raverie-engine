@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -9,7 +12,7 @@ namespace Events
   DefineEvent(UpdateSkeletons);
 }
 
-//---------------------------------------------------------------- GraphicsSpace
+//**************************************************************************************************
 ZilchDefineType(GraphicsSpace, builder, type)
 {
   ZeroBindComponent();
@@ -24,6 +27,7 @@ ZilchDefineType(GraphicsSpace, builder, type)
   ZilchBindFieldProperty(mSeed)->ZeroFilterEquality(mRandomSeed, bool, false);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mActive, true);
@@ -31,6 +35,7 @@ void GraphicsSpace::Serialize(Serializer& stream)
   SerializeNameDefault(mSeed, 0u);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::Initialize(CogInitializer& initializer)
 {
   mFrameTime = 0.0f;
@@ -50,21 +55,25 @@ void GraphicsSpace::Initialize(CogInitializer& initializer)
   //ConnectThisTo(GetOwner(), Events::GraphicsFrameUpdate, OnFrameUpdate);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::OnSpaceDestroyed(ObjectEvent* event)
 {
   mGraphicsEngine->RemoveSpace(this);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::AddGraphical(Graphical* graphical)
 {
   mGraphicalsToAdd.PushBack(graphical);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::AddDebugGraphical(Graphical* graphical)
 {
   mDebugGraphicals.PushBack(graphical);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::RemoveGraphical(Graphical* graphical)
 {
   QueueVisibilityEvents(*graphical);
@@ -78,23 +87,27 @@ void GraphicsSpace::RemoveGraphical(Graphical* graphical)
   }
 }
 
+//**************************************************************************************************
 void GraphicsSpace::AddCamera(Camera* camera)
 {
   mCameras.PushBack(camera);
   RegisterVisibility(camera);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::RemoveCamera(Camera* camera)
 {
   CameraList::Unlink(camera);
   UnregisterVisibility(camera);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::OnLogicUpdate(UpdateEvent* event)
 {
   mLogicTime += event->Dt;
 }
 
+//**************************************************************************************************
 // currently considering keeping this as a part of graphics update and not frame update
 void GraphicsSpace::OnFrameUpdate(float frameDt)
 {
@@ -214,6 +227,7 @@ void GraphicsSpace::OnFrameUpdate(float frameDt)
   mRemovedCameras.Clear();
 }
 
+//**************************************************************************************************
 void GraphicsSpace::RenderTasksUpdate(RenderTasks& renderTasks)
 {
   RenderTasksEvent event;
@@ -222,8 +236,12 @@ void GraphicsSpace::RenderTasksUpdate(RenderTasks& renderTasks)
   DispatchEvent(Events::RenderTasksUpdateInternal, &event);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& renderQueues)
 {
+  if (mRenderTaskRangeIndices.Size() == 0)
+    return;
+
   FrameBlock& frameBlock = renderQueues.mFrameBlocks.PushBack();
   frameBlock.mRenderQueues = &renderQueues;
   Array<FrameNode>& frameNodes = frameBlock.mFrameNodes;
@@ -336,6 +354,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
   }
 }
 
+//**************************************************************************************************
 void GraphicsSpace::AddToVisibleGraphicals(Graphical& graphical, Camera& camera, Vec3 cameraPos, Vec3 cameraDir, Frustum* frustum)
 {
   if (GetOwner()->IsEditorMode() && graphical.GetOwner()->GetEditorViewportHidden())
@@ -367,6 +386,7 @@ void GraphicsSpace::AddToVisibleGraphicals(Graphical& graphical, Camera& camera,
   }
 }
 
+//**************************************************************************************************
 void GraphicsSpace::CreateDebugGraphicals()
 {
   if (mDebugDrawGraphicals[0] == nullptr)
@@ -440,6 +460,7 @@ void GraphicsSpace::CreateDebugGraphicals()
   }
 }
 
+//**************************************************************************************************
 // void GraphicsSpace::CastAabb(Aabb& aabb, Array<Cog*>& cogs)
 // {
 //   forRangeBroadphaseTree(GraphicsBroadPhase,BroadPhase,Aabb,aabb)
@@ -448,6 +469,7 @@ void GraphicsSpace::CreateDebugGraphicals()
 //   }
 // }
 
+//**************************************************************************************************
 void GraphicsSpace::RegisterVisibility(Camera* camera)
 {
   ErrorIf(camera->mVisibilityId <= VisibilityFlag::sMaxVisibilityId, "Visibility is already registered");
@@ -470,6 +492,7 @@ void GraphicsSpace::RegisterVisibility(Camera* camera)
   ErrorIf(true, "Exceeded maximum visibility sets");
 }
 
+//**************************************************************************************************
 void GraphicsSpace::UnregisterVisibility(Camera* camera)
 {
   uint visibilityId = camera->mVisibilityId;
@@ -488,6 +511,7 @@ void GraphicsSpace::UnregisterVisibility(Camera* camera)
   camera->mVisibilityId = (uint)-1;
 }
 
+//**************************************************************************************************
 void GraphicsSpace::QueueVisibilityEvents(Graphical& graphical)
 {
   if (graphical.mVisibilityEvents == false)
@@ -531,12 +555,14 @@ void GraphicsSpace::QueueVisibilityEvents(Graphical& graphical)
   graphical.mVisibleFlags.ClearAll();
 }
 
+//**************************************************************************************************
 void GraphicsSpace::QueueVisibilityEvents(GraphicalList& graphicals)
 {
   forRange(Graphical& graphical, graphicals.All())
     QueueVisibilityEvents(graphical);
 }
 
+//**************************************************************************************************
 void GraphicsSpace::QueueVisibilityEvents(GraphicalList& graphicals, Camera* camera)
 {
   uint visibilityId = camera->mVisibilityId;
@@ -558,6 +584,7 @@ void GraphicsSpace::QueueVisibilityEvents(GraphicalList& graphicals, Camera* cam
   }
 }
 
+//**************************************************************************************************
 void GraphicsSpace::SendVisibilityEvents()
 {
   GraphicalEvent graphicalEvent;

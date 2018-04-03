@@ -206,7 +206,6 @@ TileViewWidget::TileViewWidget(Composite* parent, TileView* tileView,
   ConnectThisTo(this, Events::LeftMouseDrag, OnMouseDrag);
   ConnectThisTo(this, Events::RightMouseUp, OnRightUp);
   ConnectThisTo(this, Events::DoubleClick, OnDoubleClick);
-  ConnectThisTo(this, Events::RightClick, OnMouseRightClick);
 }
 
 //******************************************************************************
@@ -319,6 +318,9 @@ void TileViewWidget::OnRightUp(MouseEvent* event)
   if (!mTileView->GetSelection()->IsSelected(mIndex))
     OnMouseClick(event);
 
+  TileViewEvent eventToSend;
+  eventToSend.mTile = this;
+  mTileView->GetDispatcher()->Dispatch(Events::TileViewRightClick, &eventToSend);
   event->Handled = true;
 }
 
@@ -337,14 +339,6 @@ void TileViewWidget::OnDoubleClick(MouseEvent* event)
 void TileViewWidget::OnMouseDrag(MouseEvent* event)
 {
   new MetaDrag(event->GetMouse(), this->GetRootWidget(), mObject);
-}
-
-//******************************************************************************
-void TileViewWidget::OnMouseRightClick(MouseEvent* event)
-{
-  TileViewEvent eventToSend;
-  eventToSend.mTile = this;
-  mTileView->GetDispatcher()->Dispatch(Events::TileViewRightClick, &eventToSend);
 }
 
 //******************************************************************************

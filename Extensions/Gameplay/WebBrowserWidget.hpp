@@ -21,12 +21,14 @@ public:
   void OnReloadPressed(ObjectEvent* event);
   void OnAddressTextSubmit(ObjectEvent* event);
 
+  void OnWebBrowserPopup(WebBrowserPopupCreateEvent* event);
   void OnWebBrowserPointQuery(WebBrowserPointQueryEvent* event);
   void OnWebBrowserUrlChanged(WebBrowserUrlEvent* event);
   void OnWebBrowserCursorChanged(WebBrowserCursorEvent* event);
   void OnWebBrowserTitleChanged(WebBrowserTextEvent* event);
   void OnWebBrowserStatusChanged(WebBrowserTextEvent* event);
   void OnWebBrowserConsoleMessage(WebBrowserConsoleEvent* event);
+  void OnWebBrowserDownloadStarted(WebBrowserDownloadEvent* event);
 
   void OnFocusGained(FocusEvent* event);
   void OnFocusLost(FocusEvent* event);
@@ -51,6 +53,7 @@ public:
   TextBox* mStatusBar;
   TextureView* mBrowserView;
   HandleOf<WebBrowser> mBrowser;
+  bool mIsPopup;
 };
 
 } // namespace Zero

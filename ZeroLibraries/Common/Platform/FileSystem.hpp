@@ -51,6 +51,9 @@ ZeroShared void CreateDirectory(StringParam dest);
 /// Create a directory and any parent directories required
 ZeroShared void CreateDirectoryAndParents(StringParam directory);
 
+/// Finds the first part of the given directory path that doesn't exist. Primarily used for error message printing.
+ZeroShared String FindFirstMissingDirectory(StringParam directory);
+
 /// -1 Destination is older or does not exist.
 ///  0 Destination and source are the same.
 ///  1 Destination is newer.

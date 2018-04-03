@@ -213,23 +213,27 @@ Handle MetaOperation::GetUndoObject()
 }
 
 //----------------------------------------------------------- Property Operation
+ZilchDefineType(PropertyOperation, builder, type)
+{
+  ZilchBindFieldGetter(mValueBefore);
+  ZilchBindFieldGetter(mValueAfter);
+}
+
 //******************************************************************************
 PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam property,
   AnyParam before, AnyParam after) :
   MetaOperation(object),
   mPropertyPath(property)
 {
-  MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>( );
-  if(owner && owner->GetOwner(object).IsNotNull( ))
+  MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>();
+  if(owner && owner->GetOwner(object).IsNotNull())
   {
     mName = BuildString(GetNameFromHandle(owner->GetOwner(object)), ".",
-      GetNameFromHandle(object), ".", property.GetStringPath(), " ",
-      after.ToString());
+      GetNameFromHandle(object), ".", property.GetStringPath());
   }
   else
   {
-    mName = BuildString(GetNameFromHandle(object), ".", property.GetStringPath(),
-      " ", after.ToString());
+    mName = BuildString(GetNameFromHandle(object), ".", property.GetStringPath());
   }
 
   mValueBefore = before;

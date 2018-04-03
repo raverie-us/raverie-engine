@@ -744,4 +744,100 @@ public:
   void SetActive(bool active);
 };
 
+//---------------------------------------------------------------------------------- Save Audio Node
+
+/// Types of windows (volume envelopes) that can be used for individual grains generated 
+/// by the GranularSynthNode.
+/// <param name="Linear">A triangle-shaped linear envelope. Does not use attack and release times.</param>
+/// <param name="Parabolic">A smoothly curved envelope. Does not use attack and release times.</param>
+/// <param name="RaisedCosine">Uses cosine curves to smoothly ramp up and down during attack and release times.</param>
+/// <param name="Trapezoid">Uses linear ramps during attack and release times. More efficient than RaisedCosine but not as smooth.</param>
+DeclareEnum4(GranularSynthWindows, Linear, Parabolic, RaisedCosine, Trapezoid);
+/// Saves audio from its input SoundNodes and then plays it. All audio from inputs is passed to outputs.
+class SaveAudioNode : public SoundNode 
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  SaveAudioNode();
+
+  /// When true, audio from input SoundNodes will be saved. Setting this to true will remove any
+  /// existing saved audio before saving more.
+  bool GetSaveAudio();
+  void SetSaveAudio(bool save);
+  /// Plays the saved audio.
+  void PlaySavedAudio();
+  /// Stops playing the saved audio.
+  void StopPlaying();
+  /// Removes all currently saved audio.
+  void ClearSavedAudio();
+};
+
+class GranularSynthNode : public SoundNode 
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  GranularSynthNode();
+
+  /// Starts playing new grains.
+  void Play();
+  /// Stops playing new grains but continues to play current ones.
+  void Stop();
+  /// Sets the Sound resource that will be used for the grains, along with an optional start and 
+  /// stop time. If the stopTime is 0.0, all audio from the Sound will be used.
+  void SetSound(HandleOf<Sound> sound, float startTime, float stopTime);
+  /// The volume modifier applied to the grains.
+  float GetGrainVolume();
+  void SetGrainVolume(float volume);
+  /// The variance for randomizing the grain volume.
+  float GetGrainVolumeVariance();
+  void SetGrainVolumeVariance(float variance);
+  /// The number of milliseconds to wait before playing another grain.
+  int GetGrainDelay();
+  void SetGrainDelay(int delayMS);
+  /// The variance for randomizing the grain delay, in milliseconds. 
+  int GetGrainDelayVariance();
+  void SetGrainDelayVariance(int delayVarianceMS);
+  /// The length of a grain, in milliseconds.
+  int GetGrainLength();
+  void SetGrainLength(int lengthMS);
+  /// The variance for randomizing the grain length, in milliseconds. 
+  int GetGrainLengthVariance();
+  void SetGrainLengthVariance(int lengthVarianceMS);
+  /// The rate at which grains resample their audio data. A value of 1.0 will play normally,
+  /// 0.5 will play at half speed, and -1.0 will play at normal speed backward. Cannot be 0.
+  float GetGrainResampleRate();
+  void SetGrainResampleRate(float resampleRate);
+  /// The variance for randomizing the grain resample rate.
+  float GetGrainResampleRateVariance();
+  void SetGrainResampleRateVariance(float resampleVariance);
+  /// The rate at which the synthesizer scans the buffer as it creates grains. A value of 1.0
+  /// will move through the audio data at the same rate as it would normally be played, 0.5 will
+  /// move at half speed, and -1.0 will move at normal speed backward. A value of 0.0 will make
+  /// the synthesizer repeat the same audio continuously.
+  float GetBufferScanRate();
+  void SetBufferScanRate(float bufferRate);
+  /// The value used to pan the grains left or right. A value of 0 will be heard equally from 
+  /// the left and right, 1.0 will be heard only on the right, and -1.0 will be only left.
+  float GetGrainPanningValue();
+  void SetGrainPanningValue(float panValue);
+  /// The variance for randomizing the grain panning value.
+  float GetGrainPanningVariance();
+  void SetGrainPanningVariance(float panValueVariance);
+  /// The value for controlling how many grains have randomized starting positions in the audio.
+  /// A value of 0 will be completely sequential, while 1.0 will be completely random. 
+  float GetRandomLocationValue();
+  void SetRandomLocationValue(float randomLocationValue);
+  /// The type of window, or volume envelope, used for each grain.
+  GranularSynthWindows::Enum GetWindowType();
+  void SetWindowType(GranularSynthWindows::Enum type);
+  /// The window attack time, in milliseconds. Does not have an effect on some windows.
+  int GetWindowAttack();
+  void SetWindowAttack(int attackMS);
+  /// The window release time, in milliseconds. Does not have an effect on some windows.
+  int GetWindowRelease();
+  void SetWindowRelease(int releaseMS);
+};
+
 }

@@ -271,6 +271,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(PropertyWidget);
   ZilchInitializeType(PropertyWidgetObject);
   ZilchInitializeType(AddObjectWidget);
+  ZilchInitializeType(UiLegacyToolTip);
   
   // Animator
   ZilchInitializeType(AnimationEditorData);

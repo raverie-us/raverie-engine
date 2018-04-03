@@ -280,11 +280,13 @@ public:
       if(!objectArchetype.Empty())
       {
         objectToView = space->CreateAt(objectArchetype, Vec3(0, 0, 0));
-
-        // This is being used in the preview space, apply its modifications so that they can
-        // be modified in the Archetypes context
-        Archetype* archetype = objectToView->GetArchetype();
-        archetype->GetLocalCachedModifications().ApplyModificationsToObject(objectToView);
+        if(objectToView != nullptr)
+        {
+          // This is being used in the preview space, apply its modifications so that they can
+          // be modified in the Archetypes context
+          Archetype* archetype = objectToView->GetArchetype();
+          archetype->GetLocalCachedModifications().ApplyModificationsToObject(objectToView);
+        }
       }
     }
 

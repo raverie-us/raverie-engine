@@ -69,11 +69,11 @@ void ResolveMatrixMultiply(ZilchShaderTranslator* translator, Zilch::FunctionCal
 {
   ShaderCodeBuilder& builder = context->GetBuilder();
   // For now ensure order of operations by wrapping in parenthesis
-  builder << "(";
+  builder << "((";
   context->Walker->Walk(translator, fnCallNode->Arguments[1], context);
-  builder << " * ";
+  builder << ") * (";
   context->Walker->Walk(translator, fnCallNode->Arguments[0], context);
-  builder << ")";
+  builder << "))";
 }
 
 void ResolveFixedArrayDefaultConstructor(ZilchShaderTranslator* translator, Zilch::FunctionCallNode* fnCallNode, Zilch::StaticTypeNode* staticTypeNode, ZilchShaderTranslatorContext* context)

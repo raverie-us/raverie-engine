@@ -399,6 +399,14 @@ Commands commands =
 		string IconName = "Market",
 		string Tags = "Windows",
 	},
+
+	Command =
+	{
+		string Name = "Chat",
+		string Description = "A place where users can talk to each other and share content",
+		string IconName = "Chat",
+		string Tags = "Windows",
+	},
 	
 	Command =
 	{

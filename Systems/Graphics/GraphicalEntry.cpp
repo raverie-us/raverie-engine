@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -8,22 +11,26 @@ namespace Events
   DefineEvent(GraphicalSort);
 }
 
+//**************************************************************************************************
 ZilchDefineType(GraphicalEntry, builder, type)
 {
   ZilchBindGetter(Cog);
   ZilchBindMethod(SetGraphicalSortValue);
 }
 
+//**************************************************************************************************
 bool GraphicalEntry::operator<(const GraphicalEntry& other) const
 {
   return mSort < other.mSort;
 }
 
+//**************************************************************************************************
 Cog* GraphicalEntry::GetCog()
 {
   return mData->mGraphical->mOwner;
 }
 
+//**************************************************************************************************
 void GraphicalEntry::SetGraphicalSortValue(s32 sortValue)
 {
   mSort &= 0xFFFFFFFF00000000;
@@ -33,12 +40,14 @@ void GraphicalEntry::SetGraphicalSortValue(s32 sortValue)
     mSort |= (u64)(sortValue ^ 0x80000000);
 }
 
+//**************************************************************************************************
 void GraphicalEntry::SetRenderGroupSortValue(s32 sortValue)
 {
   mSort &= 0x00000000FFFFFFFF;
   mSort |= (u64)sortValue << 32;
 }
 
+//**************************************************************************************************
 ZilchDefineType(GraphicalSortEvent, builder, type)
 {
   ZilchBindGetterProperty(GraphicalEntries);
@@ -47,6 +56,7 @@ ZilchDefineType(GraphicalSortEvent, builder, type)
   ZeroBindEvent(Events::GraphicalSort, GraphicalSortEvent);
 }
 
+//**************************************************************************************************
 s32 GetGraphicalSortValue(Graphical& graphical, GraphicalSortMethod::Enum sortMethod, Vec3 pos, Vec3 camPos, Vec3 camDir)
 {
   s32 value = 0;

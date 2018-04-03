@@ -258,7 +258,11 @@ void CachedProject::Save(bool overwriteRevisionNumber)
 
   // Save out the entire tree
   mLoader.Reset();
-  mLoader.GetNext()->SaveToStream(saver);
+  DataNode* root = mLoader.GetNext();
+  if(root == nullptr)
+    return;
+
+  root->SaveToStream(saver);
   saver.Close();
 }
 
@@ -297,6 +301,8 @@ DataNode* CachedProject::GetComponentPropertyNode(StringParam componentType, Str
   // Reset to tree otherwise the root won't be correct
   mLoader.Reset();
   DataNode* root = mLoader.GetNext();
+  if(root == nullptr)
+    return nullptr;
 
   // Find the component node
   bool dummy;
@@ -335,6 +341,8 @@ void CachedProject::AddOrReplaceDataNodeComponent(Component* component)
 
   mLoader.Reset();
   DataNode* root = mLoader.GetNext();
+  if(root == nullptr)
+    return;
 
   // Remove an old node by the same name if it exists
   bool foundDuplicate;
@@ -421,15 +429,17 @@ CachedProject* ProjectCache::LoadProjectFile(StringParam projectFilePath)
   return cachedProject;
 }
 
-void ProjectCache::ReloadProjectFile(CachedProject* cachedProject, bool preserveVersionId)
+bool ProjectCache::ReloadProjectFile(CachedProject* cachedProject, bool preserveVersionId)
 {
   BuildId buildId = cachedProject->GetBuildId();
 
   String projectFilePath = cachedProject->GetProjectPath();
-  cachedProject->Load(projectFilePath);
+  bool successfulLoad = cachedProject->Load(projectFilePath);
 
   if(preserveVersionId)
     cachedProject->SetBuildId(buildId);
+
+  return successfulLoad;
 }
 
 CachedProject* ProjectCache::CreateProjectFromTemplate(StringParam projectName, StringParam projectDir, StringParam templatePath, const BuildId& buildId,

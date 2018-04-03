@@ -606,6 +606,11 @@ void BuildsMenu::UpdateTransform()
 //******************************************************************************
 void BuildsMenu::CreateBuildItems()
 {
+  // Try to preserve the user's old selected build
+  BuildId oldSelectedBuild;
+  if(mSelectedBuild.IsNotNull())
+    oldSelectedBuild = mSelectedBuild->mVersion->GetBuildId();
+
   // Delete all old build items
   for(size_t i = 0; i < mBuildItems.Size(); ++i)
     mBuildItems[i]->Destroy();
@@ -648,11 +653,14 @@ void BuildsMenu::CreateBuildItems()
     ++index;
   }
 
-  // Select the latest build by default
+  // Select a build if possible. Ideally select whatever the user
+  // used to have selected, otherwise select the newest build.
   if(!mBuildItems.Empty())
   {
-    BuildItem* latestBuild = mBuildItems.Front();
-    SelectBuild(latestBuild);
+    BuildItem* buildToSelect = FindBuildItem(oldSelectedBuild);
+    if(buildToSelect == nullptr)
+      buildToSelect = mBuildItems.Front();
+    SelectBuild(buildToSelect);
   }
 
   // Update the size of the scroll area client widget
@@ -790,6 +798,19 @@ void BuildsMenu::UpdateInstallButton()
 
   ZeroBuild* version = selectedBuild->mVersion;
   button->SetVersionAndProject(version, nullptr);
+}
+
+//******************************************************************************
+BuildItem* BuildsMenu::FindBuildItem(BuildId& buildId)
+{
+  // Just do a linear search right now. This is currently never big enough to matter
+  for(size_t i = 0; i < mBuildItems.Size(); ++i)
+  {
+    BuildItem* buildItem = mBuildItems[i];
+    if(buildItem->mVersion->GetBuildId() == buildId)
+      return buildItem;
+  }
+  return nullptr;
 }
 
 }//namespace Zero

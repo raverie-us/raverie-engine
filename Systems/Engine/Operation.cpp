@@ -40,7 +40,7 @@ ZilchDefineType(Operation, builder, type)
 {
   ZilchBindFieldGetter(mParent);
   ZilchBindField(mName);
-  ZilchBindField(mDescription);
+  ZilchBindField(mInvalidReason);
 
   ZilchBindGetter(Children);
   ZilchBindMethod(FindRoot);
@@ -383,13 +383,6 @@ void OperationQueue::SetActiveBatchName(StringParam batchName)
 {
   if(ActiveBatch != nullptr)
     ActiveBatch->mName = batchName;
-}
-
-//******************************************************************************
-void OperationQueue::SetActiveBatchDescription(StringParam description)
-{
-  if(ActiveBatch != nullptr)
-    ActiveBatch->mDescription = description;
 }
 
 //******************************************************************************

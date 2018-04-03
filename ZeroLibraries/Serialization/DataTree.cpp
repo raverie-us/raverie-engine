@@ -110,7 +110,9 @@ void DataTreeLoader::Reset()
 {
   mNodeStack.Clear();
   mNodeStack.PushBack(mFileRoot);
-  mNext = mFileRoot->GetFirstChild();
+  mNext = nullptr;
+  if(mFileRoot != nullptr)
+    mNext = mFileRoot->GetFirstChild();
 }
 
 //******************************************************************************

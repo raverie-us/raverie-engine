@@ -56,6 +56,26 @@ void ResourceSystem::OnResourcesLoaded(ResourceEvent* event)
   }
 }
 
+ResourceLibrary* ResourceSystem::GetResourceLibraryFromCurrentType(BoundType* currentType)
+{
+  forRange(ResourceLibrary* library, LoadedResourceLibraries.Values( ))
+  {
+    if(currentType->SourceLibrary == library->mSwapScript.mCurrentLibrary)
+      return library;
+
+    if(currentType->SourceLibrary == library->mSwapFragment.mCurrentLibrary)
+      return library;
+
+    forRange(SwapLibrary& swapPlugin, library->mSwapPlugins.Values( ))
+    {
+      if(currentType->SourceLibrary == swapPlugin.mCurrentLibrary)
+        return library;
+    }
+  }
+
+  return nullptr;
+}
+
 void ResourceSystem::RegisterManager(ResourceManager* manager)
 {
   Managers.InsertOrError(manager->mResourceType->Name, manager, "Only one resource manager for each type");

@@ -91,6 +91,12 @@ bool ReadPngInfo(StringParam filename, PngInfo& info)
 
 void LoadFromPng(Status& status, byte** output, uint* width, uint* height, uint* bitDepth, const byte* data, uint size, bool stripBitDepth)
 {
+  if (data == nullptr || size == 0)
+  {
+    status.SetFailed("Can not read png file");
+    return;
+  }
+
   // Init pointer value so memory can be cleaned up if an error occurs after allocation
   byte* imageData = nullptr;
 

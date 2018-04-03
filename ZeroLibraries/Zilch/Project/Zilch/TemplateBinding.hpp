@@ -55,7 +55,9 @@ namespace Zilch
       Class* self = (Class*)selfHandle.Dereference();
 
       // Explicitly call the destructor of the class
-      self->~Class();
+      // If this is being destructed in an exception scenario the handle could be null
+      if (self)
+        self->~Class();
     }
     
     //*** BUILDER DESTRUCTOR ***// Generates a Zilch function to call a class destructor

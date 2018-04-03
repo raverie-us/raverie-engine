@@ -64,15 +64,28 @@ void DuplicateSelection(Editor* editor, Space* space)
   OperationQueue* opQueue = editor->GetOperationQueue();
   opQueue->BeginBatch();
 
+  Array<Cog*> duplicateCogs;
   // Duplicate all valid selected objects
   forRange(Cog* cog, cogs.All())
   {
     Cog* duplicateCog = cog->Clone();
+    duplicateCogs.PushBack(duplicateCog);
     ObjectCreated(opQueue, duplicateCog);
   }
 
   // End the batch operation
   opQueue->EndBatch();
+
+  // If any cogs were successfully duplicated select the duplicates over the originals
+  if (!duplicateCogs.Empty())
+  {
+    selection->Clear(SendsEvents::False);
+    forRange(Cog* cog, duplicateCogs.All())
+    {
+      selection->Add(cog, SendsEvents::False);
+    }
+    selection->FinalSelectionChanged();
+  }
 }
 
 void DeleteSelectedObjects(Editor* editor, Space* space)
@@ -993,8 +1006,18 @@ void ResetCamera(Editor* editor)
   {
     if(Cog* editorCamera = viewport->mEditorCamera)
     {
-      EditorCameraController* cam = editorCamera->has(EditorCameraController);
-      cam->Reset();
+      EditorCameraController* camController = editorCamera->has(EditorCameraController);
+      camController->Reset();
+      if (editor->GetEditMode() == EditorMode::Mode2D)
+      {
+        if(Camera* cam = editorCamera->has(Camera))
+        {
+          // In the future when the ability to set/load default values from data values is available
+          // this value should be set from that interface
+          float size = 20.f;
+          cam->SetSize(size);
+        }
+      }
     }
   }
 }

@@ -71,7 +71,6 @@ public:
   Operation* mParent;
 
   String mName;
-  String mDescription;
   String mInvalidReason;
 
 private:

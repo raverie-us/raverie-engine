@@ -14,16 +14,6 @@ namespace Zero
 {
 
 //******************************************************************************
-template<typename type>
-u64 GetId(type* change)
-{
-  MetaType* meta = change->GetMeta();
-  MetaHandleData handle;
-  meta->ObjectToHandle(meta, &handle, change);
-  return handle.HandleId;
-}
-
-//******************************************************************************
 void AttachObject(OperationQueue* queue, Cog* object, Cog* parent, bool relative)
 {
   //Do not queue protected

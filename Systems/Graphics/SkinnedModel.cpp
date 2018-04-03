@@ -1,17 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SkinnedModel.cpp
-/// Implementation of the SkinnedModel class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(SkinnedModel, builder, type)
 {
   ZeroBindComponent();
@@ -23,6 +18,7 @@ ZilchDefineType(SkinnedModel, builder, type)
   ZilchBindGetterSetterProperty(SkeletonPath);
 }
 
+//**************************************************************************************************
 void SkinnedModel::Serialize(Serializer& stream)
 {
   Graphical::Serialize(stream);
@@ -30,6 +26,7 @@ void SkinnedModel::Serialize(Serializer& stream)
   SerializeNameDefault(mSkeletonPath, CogPath("."));
 }
 
+//**************************************************************************************************
 void SkinnedModel::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
@@ -39,11 +36,13 @@ void SkinnedModel::Initialize(CogInitializer& initializer)
   ConnectThisTo(&mSkeletonPath, Events::CogPathCogChanged, OnSkeletonPathChanged);
 }
 
+//**************************************************************************************************
 void SkinnedModel::OnAllObjectsCreated(CogInitializer& initializer)
 {
   mSkeletonPath.RestoreLink(initializer, this, "SkeletonPath");
 }
 
+//**************************************************************************************************
 void SkinnedModel::DebugDraw()
 {
   Obb obb = GetWorldObb();
@@ -58,11 +57,13 @@ void SkinnedModel::DebugDraw()
   }
 }
 
+//**************************************************************************************************
 Aabb SkinnedModel::GetLocalAabb()
 {
   return mMesh->mAabb;
 }
 
+//**************************************************************************************************
 void SkinnedModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   Array<Mat4>& skinningBuffer = frameBlock.mRenderQueues->mSkinningBuffer;
@@ -124,6 +125,7 @@ void SkinnedModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock
   frameNode.mIndexRemapRange.end = indexRemapBuffer.Size();
 }
 
+//**************************************************************************************************
 void SkinnedModel::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
@@ -133,6 +135,7 @@ void SkinnedModel::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, Fra
   viewNode.mLocalToPerspective = viewBlock.mViewToPerspective * viewNode.mLocalToView;
 }
 
+//**************************************************************************************************
 bool SkinnedModel::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   if (mSkeleton != nullptr && mSkeleton->TestRay(rayCast))
@@ -141,11 +144,13 @@ bool SkinnedModel::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
     return Graphical::TestRay(rayCast, castInfo);
 }
 
+//**************************************************************************************************
 Mesh* SkinnedModel::GetMesh()
 {
   return mMesh;
 }
 
+//**************************************************************************************************
 void SkinnedModel::SetMesh(Mesh* mesh)
 {
   if (mesh == nullptr || mesh == mMesh)
@@ -156,11 +161,13 @@ void SkinnedModel::SetMesh(Mesh* mesh)
   UpdateBoneIndexRemap();
 }
 
+//**************************************************************************************************
 CogPath SkinnedModel::GetSkeletonPath()
 {
   return mSkeletonPath;
 }
 
+//**************************************************************************************************
 void SkinnedModel::SetSkeletonPath(CogPath path)
 {
   // Disconnect events from previous Skeleton
@@ -170,6 +177,7 @@ void SkinnedModel::SetSkeletonPath(CogPath path)
   mSkeletonPath = path;
 }
 
+//**************************************************************************************************
 void SkinnedModel::UpdateBoneIndexRemap()
 {
   mBoneIndexRemap.Clear();
@@ -186,12 +194,14 @@ void SkinnedModel::UpdateBoneIndexRemap()
   }
 }
 
+//**************************************************************************************************
 void SkinnedModel::OnMeshModified(ResourceEvent* event)
 {
   if ((Mesh*)event->EventResource == mMesh)
     SetMesh(mMesh);
 }
 
+//**************************************************************************************************
 void SkinnedModel::OnSkeletonPathChanged(CogPathEvent* event)
 {
   mSkeleton = nullptr;
@@ -207,6 +217,7 @@ void SkinnedModel::OnSkeletonPathChanged(CogPathEvent* event)
   UpdateBoneIndexRemap();
 }
 
+//**************************************************************************************************
 void SkinnedModel::OnSkeletonComponentsChanged(Event* event)
 {
   if (Cog* cog = mSkeletonPath.GetCog())
@@ -220,11 +231,13 @@ void SkinnedModel::OnSkeletonComponentsChanged(Event* event)
   }
 }
 
+//**************************************************************************************************
 void SkinnedModel::OnSkeletonModified(Event* event)
 {
   UpdateBoneIndexRemap();
 }
 
+//**************************************************************************************************
 void SkinnedModel::OnSkeletonDestroyed(Event* event)
 {
   mSkeleton = nullptr;

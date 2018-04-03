@@ -62,7 +62,6 @@ namespace Audio
 
     bool WaitingForSamples;
     unsigned Channels;
-    unsigned SampleRate;
     unsigned TotalSamplesInBuffers;
     unsigned SamplesInExtraBuffers;
     Zero::Array<float> SamplesThisFrame;

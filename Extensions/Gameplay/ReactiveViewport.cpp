@@ -123,20 +123,20 @@ ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* came
   ConnectThisTo(this, Events::MouseScroll, OnMouseGeneric);
   ConnectThisTo(this, Events::MouseMove, OnMouseGeneric);
 
-  ConnectThisTo(this, Events::LeftClick, OnMouseGeneric);
-  ConnectThisTo(this, Events::RightClick, OnMouseGeneric);
-  ConnectThisTo(this, Events::MiddleClick, OnMouseGeneric);
+  ConnectThisTo(this, Events::LeftClick, OnMouseGenericClick);
+  ConnectThisTo(this, Events::RightClick, OnMouseGenericClick);
+  ConnectThisTo(this, Events::MiddleClick, OnMouseGenericClick);
   ConnectThisTo(this, Events::DoubleClick, OnMouseGeneric);
 
   ConnectThisTo(this, Events::MouseDown, OnMouseGeneric);
   ConnectThisTo(this, Events::MouseUp, OnMouseGeneric);
 
-  ConnectThisTo(this, Events::LeftMouseDown, OnMouseGeneric);
+  ConnectThisTo(this, Events::LeftMouseDown, OnMouseGenericDown);
   ConnectThisTo(this, Events::LeftMouseUp, OnMouseGeneric);
-  ConnectThisTo(this, Events::RightMouseDown, OnMouseGeneric);
+  ConnectThisTo(this, Events::RightMouseDown, OnMouseGenericDown);
   ConnectThisTo(this, Events::RightMouseUp, OnMouseGeneric);
+  ConnectThisTo(this, Events::MiddleMouseDown, OnMouseGenericDown);
   ConnectThisTo(this, Events::MiddleMouseUp, OnMouseGeneric);
-  ConnectThisTo(this, Events::MiddleMouseDown, OnMouseGeneric);
 }
 
 //******************************************************************************
@@ -215,6 +215,22 @@ void ReactiveViewport::OnMouseUpdate(MouseEvent* e)
 void ReactiveViewport::OnMouseGeneric(MouseEvent* e)
 {
   ForwardReactiveEvent(e->EventId, e);
+}
+
+//******************************************************************************
+void ReactiveViewport::OnMouseGenericDown(MouseEvent* e)
+{
+  mDownObject = mOverObject;
+  ForwardReactiveEvent(e->EventId, e);
+}
+
+//******************************************************************************
+void ReactiveViewport::OnMouseGenericClick(MouseEvent* e)
+{
+  // If the mouse is still over the same object as the initial button down press
+  // forward the click event
+  if (mDownObject == mOverObject)
+    ForwardReactiveEvent(e->EventId, e);
 }
 
 //******************************************************************************

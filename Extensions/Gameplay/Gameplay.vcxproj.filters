@@ -73,9 +73,6 @@
     <ClInclude Include="TileMapSourceLoadPattern.hpp">
       <Filter>TileMap</Filter>
     </ClInclude>
-    <ClInclude Include="MarketWidget.hpp">
-      <Filter>WebBrowser</Filter>
-    </ClInclude>
     <ClInclude Include="GameplayStandard.hpp" />
     <ClInclude Include="Zero.hpp">
       <Filter>ZilchZero</Filter>
@@ -143,9 +140,6 @@
     </ClCompile>
     <ClCompile Include="TileMapSource.cpp">
       <Filter>TileMap</Filter>
-    </ClCompile>
-    <ClCompile Include="MarketWidget.cpp">
-      <Filter>WebBrowser</Filter>
     </ClCompile>
     <ClCompile Include="GameplayStandard.cpp" />
     <ClCompile Include="Zero.cpp">

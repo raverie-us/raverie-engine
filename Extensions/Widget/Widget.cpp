@@ -51,6 +51,17 @@ bool WidgetHandleManager::CanDelete(const Handle& handle)
   return true;
 }
 
+u64 WidgetHandleManager::HandleToId(const Handle& handle)
+{
+  if (handle.StoredType == nullptr)
+    return 0;
+
+  ReturnIf(!Type::BoundIsA(handle.StoredType, ZilchTypeId(Widget)), 0,
+    "A handle to a non widget was passed in.");
+
+  return handle.HandleU64;
+}
+
 
 Widget::Widget(Composite* parent, AttachType::Enum attachType)
 {
@@ -550,7 +561,7 @@ void Widget::CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, Widg
   if (vertices.Empty())
     return;
 
-  Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   static Texture* white = TextureManager::Find("White");
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);

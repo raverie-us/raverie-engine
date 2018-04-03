@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -15,6 +18,9 @@ public:
   Vec4 mColor;
   Vec2 mUvAux;
 };
+
+// 1.375MB per block at 44 bytes per StreamedVertex.
+typedef PodBlockArray<StreamedVertex, 15> StreamedVertexArray;
 
 class FrameNode
 {
@@ -122,7 +128,7 @@ public:
 
   Array<FrameBlock> mFrameBlocks;
   Array<ViewBlock> mViewBlocks;
-  Array<StreamedVertex> mStreamedVertices;
+  StreamedVertexArray mStreamedVertices;
 
   uint mSkinningBufferVersion;
   Array<Mat4> mSkinningBuffer;

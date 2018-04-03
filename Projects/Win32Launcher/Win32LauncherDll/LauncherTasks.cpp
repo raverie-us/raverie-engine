@@ -459,6 +459,70 @@ void DownloadAndCreateTemplateTaskJob::CreateFromTemplateFile(StringParam templa
     mState = BackgroundTaskState::Completed;
 }
 
+//-------------------------------------------------------------------DownloadLauncherPatchInstallerJob
+DownloadLauncherPatchInstallerJob::DownloadLauncherPatchInstallerJob(StringParam url, StringParam rootDownloadLocation) : DownloadTaskJob(url)
+{
+  mRootDownloadLocation = rootDownloadLocation;
+  mIsNewPatchAvailable = false;
+}
+
+int DownloadLauncherPatchInstallerJob::Execute()
+{
+  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
+  return DownloadTaskJob::Execute();
+}
+
+void DownloadLauncherPatchInstallerJob::OnReponse(WebResponseEvent* event)
+{
+  // Check if there's no new installer available, either from a failed request or getting no data back
+  String data = event->Data;
+  if(event->ResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
+  {
+    mIsNewPatchAvailable = false;
+    return;
+  }
+
+  // Otherwise, we have a new installer
+  mIsNewPatchAvailable = true;
+
+  //extract the archive to the download directory
+  Archive archive(ArchiveMode::Decompressing);
+  ByteBufferBlock buffer((byte*)data.Data(), data.SizeInBytes(), false);
+  archive.ReadBuffer(ArchiveReadFlags::All, buffer);
+
+  // Find the patch id from the archive. If we failed to find one
+  // then something is wrong so report a failure.
+  String patchId = FindPatchId(archive);
+  if(patchId.Empty())
+  {
+    mState = BackgroundTaskState::Failed;
+    mIsNewPatchAvailable = false;
+    return;
+  }
+
+  // Extract the patch to the patch folder location
+  String downloadPath = FilePath::Combine(mRootDownloadLocation, patchId);
+  archive.ExportToDirectory(ArchiveExportMode::Overwrite, downloadPath);
+
+  mState = BackgroundTaskState::Completed;
+}
+
+String DownloadLauncherPatchInstallerJob::FindPatchId(Archive& archive)
+{
+  // Find the version id file and return it's contents
+  for(Archive::range range = archive.GetEntries(); !range.Empty(); range.PopFront())
+  {
+    ArchiveEntry& entry = range.Front();
+    if(entry.Name != "ZeroLauncherVersionId.txt")
+      continue;
+
+    String patchId((cstr)entry.Full.Data, entry.Full.Size);
+    return patchId;
+  }
+  // Otherwise return an empty string
+  return String();
+}
+
 //-------------------------------------------------------------------CheckForLauncherMajorInstallerJob
 CheckForLauncherMajorInstallerJob::CheckForLauncherMajorInstallerJob(StringParam url) : DownloadTaskJob(url)
 {

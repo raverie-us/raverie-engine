@@ -16,7 +16,7 @@ namespace Audio
     mFading(false),
     mFrameIndex(0),
     mStartFrame(0),
-    mDefaultFrames(AudioSystemInternal::PropertyChangeFrames),
+    mDefaultFrames(PropertyChangeFrames),
     mCrossFade(false),
     mAsset(nullptr)
   {
@@ -35,8 +35,8 @@ namespace Audio
     VolumeInterpolator.SetValues(startingVolume, 0.0f, fadeFrames);
 
     // We can only get a second of samples at a time (will get the rest later)
-    if (fadeFrames > AudioSystemInternal::SystemSampleRate)
-      fadeFrames = AudioSystemInternal::SystemSampleRate;
+    if (fadeFrames > SystemSampleRate)
+      fadeFrames = SystemSampleRate;
 
     asset->AppendSamples(&FadeSamples, startingIndex, fadeFrames * asset->GetChannels());
   }
@@ -86,7 +86,7 @@ namespace Audio
   void AudioFadeObject::GetMoreSamples()
   {
     // Get another second of samples
-    unsigned newFramesToGet = AudioSystemInternal::SystemSampleRate;
+    unsigned newFramesToGet = SystemSampleRate;
     // If this would be more than we need, adjust the amount
     if (mFrameIndex + newFramesToGet > VolumeInterpolator.GetTotalFrames())
       newFramesToGet -= mFrameIndex + newFramesToGet - VolumeInterpolator.GetTotalFrames();
@@ -104,37 +104,45 @@ namespace Audio
       return;
 
     float eighths = currentTime / mSecondsPerEighth;
+    float beats = currentTime / mSecondsPerBeat;
 
-    // Check for eighth notes
-    if ((unsigned)eighths > mTotalEighths)
+    // Check for beats
+    if ((int)beats > mTotalBeats)
     {
-      ++mTotalEighths;
-      ++mEighthNoteCount;
+      // There should never be a jump in the time without calling ResetBeats, so we don't need
+      // to handle increases of more than one beat
+      ++mTotalBeats;
+      ++mBeatsCount;
 
-      // Check for beat
-      if (mEighthNoteCount % mEighthsPerBeat == 0)
+      // Check for new bar
+      if (mBeatsCount == mBeatsPerBar)
       {
-        ++mBeatsCount;
-
-        // Check for new bar
-        if (mBeatsCount == mBeatsPerBar)
-        {
-          mEighthNoteCount = 0;
-          mBeatsCount = 0;
-
-          // Send notification
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-            siblingNode, AudioEventTypes::MusicBar, (void*)nullptr));
-        }
+        mEighthNoteCount = -1;
+        mBeatsCount = 0;
 
         // Send notification
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicBeat, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicBar, (void*)nullptr));
       }
+
+      // Send notification
+      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
+        siblingNode, AudioEventTypes::MusicBeat, (void*)nullptr));
+    }
+
+    // Check for eighth notes
+    if ((int)eighths > mTotalEighths)
+    {
+      // There should never be a jump in the time without calling ResetBeats, so we don't need
+      // to handle increases of more than one beat
+      ++mTotalEighths;
+      ++mEighthNoteCount;
 
       // Send notification for eighth note
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
         siblingNode, AudioEventTypes::MusicEighthNote, (void*)nullptr));
+
+      // Check for other note values
 
       // Check for quarter note
       if (mEighthNoteCount % 2 == 0)
@@ -162,7 +170,7 @@ namespace Audio
   //************************************************************************************************
   void MusicNotificationObject::ResetBeats(float currentTime, SoundNode* siblingNode)
   {
-    if (mSecondsPerEighth == 0)
+    if (mSecondsPerEighth == 0.0f)
       return;
 
     float timePerMeasure = mSecondsPerBeat * mBeatsPerBar;
@@ -170,9 +178,10 @@ namespace Audio
     float timeSinceLastBar = currentTime - ((int)measuresSoFar * timePerMeasure);
 
     // If we are at or very close to the beginning of a measure, reset everything
-    if (timeSinceLastBar < 0.00001f)
+    if (timeSinceLastBar < 0.0001f)
     {
       mTotalEighths = 0;
+      mTotalBeats = 0;
       mBeatsCount = 0;
       mEighthNoteCount = 0;
 
@@ -194,20 +203,11 @@ namespace Audio
     }
     else
     {
-      float eighthNotesThisMeasure = timeSinceLastBar / mSecondsPerEighth;
-      mTotalEighths = (unsigned)(currentTime / mSecondsPerEighth);
+      mTotalEighths = (int)(currentTime / mSecondsPerEighth);
+      mEighthNoteCount = (int)(timeSinceLastBar / mSecondsPerEighth);
 
-      // Haven't hit first eighth note yet
-      if (eighthNotesThisMeasure < 1.0f)
-      {
-        mBeatsCount = 0;
-        mEighthNoteCount = 0;
-      }
-      else
-      {
-        mEighthNoteCount = (int)eighthNotesThisMeasure;
-        mBeatsCount = mEighthNoteCount / mEighthsPerBeat;
-      }
+      mTotalBeats = (int)(currentTime / mSecondsPerBeat);
+      mBeatsCount = (int)(timeSinceLastBar / mSecondsPerBeat);
     }
   }
 
@@ -225,9 +225,9 @@ namespace Audio
     mPaused(startPaused), 
     mCurrentTime(0),
     mStartTime(0),
-    mEndTime((float)parentAsset->GetNumberOfFrames() / AudioSystemInternal::SystemSampleRate),
+    mEndTime((float)parentAsset->GetNumberOfFrames() / SystemSampleRate),
     mLoopStartTime(0),
-    mLoopEndTime((float)parentAsset->GetNumberOfFrames() / AudioSystemInternal::SystemSampleRate),
+    mLoopEndTime((float)parentAsset->GetNumberOfFrames() / SystemSampleRate),
     mLoopTailTime(0),
     mCrossFadeTail(false),
     mNotifyTime(0),
@@ -274,8 +274,8 @@ namespace Audio
       {
         InstanceVolumeModifier *volumeMod = GetAvailableVolumeMod();
         if (volumeMod)
-          volumeMod->Reset(0.0f, 1.0f, AudioSystemInternal::PropertyChangeFrames,
-            AudioSystemInternal::PropertyChangeFrames);
+          volumeMod->Reset(0.0f, 1.0f, PropertyChangeFrames,
+            PropertyChangeFrames);
 
         ResetMusicBeats();
       }
@@ -316,12 +316,12 @@ namespace Audio
       {
         mPausing = true;
         mStopFrameCount = 0;
-        mStopFramesToWait = AudioSystemInternal::PropertyChangeFrames + 10;
+        mStopFramesToWait = PropertyChangeFrames + 10;
         InstanceVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
         {
-          mod->Reset(1.0f, 0.0f, AudioSystemInternal::PropertyChangeFrames,
-            AudioSystemInternal::PropertyChangeFrames);
+          mod->Reset(1.0f, 0.0f, PropertyChangeFrames,
+            PropertyChangeFrames);
           PausingModifier = mod;
         }
       }
@@ -332,8 +332,8 @@ namespace Audio
         mPausing = false;
         InstanceVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
-          mod->Reset(0.0f, 1.0f, AudioSystemInternal::PropertyChangeFrames, 
-            AudioSystemInternal::PropertyChangeFrames);
+          mod->Reset(0.0f, 1.0f, PropertyChangeFrames, 
+            PropertyChangeFrames);
 
         if (mCurrentTime == 0)
           ResetMusicBeats();
@@ -355,11 +355,11 @@ namespace Audio
     {
       mStopping = true;
       mStopFrameCount = 0;
-      mStopFramesToWait = AudioSystemInternal::PropertyChangeFrames + 10;
+      mStopFramesToWait = PropertyChangeFrames + 10;
       InstanceVolumeModifier* mod = GetAvailableVolumeMod();
       if (mod)
-        mod->Reset(1.0f, 0.0f, AudioSystemInternal::PropertyChangeFrames,
-          AudioSystemInternal::PropertyChangeFrames);
+        mod->Reset(1.0f, 0.0f, PropertyChangeFrames,
+          PropertyChangeFrames);
     }
   }
 
@@ -391,7 +391,7 @@ namespace Audio
     if (!Threaded)
     {
       mStartTime = startTime;
-      if (mStartTime < 0.0f || mStartTime * AudioSystemInternal::SystemSampleRate >= Asset->GetNumberOfFrames())
+      if (mStartTime < 0.0f || mStartTime * SystemSampleRate >= Asset->GetNumberOfFrames())
         mStartTime = 0.0f;
 
       if (GetSiblingNode())
@@ -400,7 +400,7 @@ namespace Audio
     }
     else
     {
-      mStartFrame = (unsigned)(startTime * AudioSystemInternal::SystemSampleRate);
+      mStartFrame = (unsigned)(startTime * SystemSampleRate);
 
       if (mFrameIndex < mStartFrame)
         mFrameIndex = mStartFrame;
@@ -421,8 +421,8 @@ namespace Audio
       mEndTime = endTime;
       if (mEndTime < 0.0f)
         mEndTime = 0.0f;
-      else if (mEndTime * AudioSystemInternal::SystemSampleRate >= Asset->GetNumberOfFrames())
-        mEndTime = (float)Asset->GetNumberOfFrames() / (float)AudioSystemInternal::SystemSampleRate;
+      else if (mEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
+        mEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetEndTime,
@@ -430,7 +430,7 @@ namespace Audio
     }
     else
     {
-      mEndFrame = (unsigned)(endTime * AudioSystemInternal::SystemSampleRate);
+      mEndFrame = (unsigned)(endTime * SystemSampleRate);
       if (mEndFrame >= Asset->GetNumberOfFrames())
         mEndFrame = Asset->GetNumberOfFrames() - 1;
     }
@@ -448,7 +448,7 @@ namespace Audio
     if (!Threaded)
     {
       mLoopStartTime = time;
-      if (mLoopStartTime < 0.0f || mLoopStartTime * AudioSystemInternal::SystemSampleRate 
+      if (mLoopStartTime < 0.0f || mLoopStartTime * SystemSampleRate 
           >= Asset->GetNumberOfFrames())
         mLoopStartTime = 0.0f;
 
@@ -458,7 +458,7 @@ namespace Audio
     }
     else
     {
-      mLoopStartFrame = (unsigned)(time *AudioSystemInternal::SystemSampleRate);
+      mLoopStartFrame = (unsigned)(time *SystemSampleRate);
     }
   }
 
@@ -476,8 +476,8 @@ namespace Audio
       mLoopEndTime = time;
       if (mLoopEndTime < 0.0f)
         mLoopEndTime = 0.0f;
-      else if (mLoopEndTime * AudioSystemInternal::SystemSampleRate >= Asset->GetNumberOfFrames())
-        mLoopEndTime = (float)Asset->GetNumberOfFrames() / (float)AudioSystemInternal::SystemSampleRate;
+      else if (mLoopEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
+        mLoopEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetLoopEndTime,
@@ -485,7 +485,7 @@ namespace Audio
     }
     else
     {
-      mLoopEndFrame = (unsigned)(time * AudioSystemInternal::SystemSampleRate);
+      mLoopEndFrame = (unsigned)(time * SystemSampleRate);
     }
   }
 
@@ -510,7 +510,7 @@ namespace Audio
     }
     else
     {
-      mLoopTailFrames = (unsigned)(time * AudioSystemInternal::SystemSampleRate);
+      mLoopTailFrames = (unsigned)(time * SystemSampleRate);
     }
   }
 
@@ -566,7 +566,7 @@ namespace Audio
           time = 0.02f;
 
         VolumeInterpolator.SetValues(mVolume, newVolume, 
-          (unsigned)(time * AudioSystemInternal::SystemSampleRate));
+          (unsigned)(time * SystemSampleRate));
       }
     }
   }
@@ -630,13 +630,13 @@ namespace Audio
       if (mFrameIndex > mStartFrame)
         Fade.StartFade(mVolume, mFrameIndex, Fade.mDefaultFrames, Asset, true);
 
-      mFrameIndex = (unsigned)(seconds * gAudioSystem->SystemSampleRate);
+      mFrameIndex = (unsigned)(seconds * SystemSampleRate);
       if (mFrameIndex > mEndFrame)
         mFrameIndex = mEndFrame;
       else if (mFrameIndex < mStartFrame)
         mFrameIndex = mStartFrame;
 
-      mCurrentTime = mFrameIndex * gAudioSystem->SystemTimeIncrement;
+      mCurrentTime = mFrameIndex * SystemTimeIncrement;
       ResetMusicBeats();
     }
   }
@@ -681,12 +681,10 @@ namespace Audio
     if (MusicNotify.mBeatsPerBar == 0 || MusicNotify.mBeatNoteType == 0)
     {
       MusicNotify.mSecondsPerEighth = 0.0f;
-      MusicNotify.mEighthsPerBeat = 0;
     }
     else
     {
       MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
-      MusicNotify.mEighthsPerBeat = 8 / MusicNotify.mBeatNoteType;
     }
 
     if (!Threaded && GetSiblingNode())
@@ -986,7 +984,7 @@ namespace Audio
     }
 
     // Advance time and handle music notifications
-    mCurrentTime = mFrameIndex * gAudioSystem->SystemTimeIncrement;
+    mCurrentTime = mFrameIndex * SystemTimeIncrement;
     MusicNotifications();
   }
 
@@ -1004,7 +1002,7 @@ namespace Audio
   void SoundInstanceNode::Loop()
   {
     // Handle fading if we're not at the end of the audio
-    if (mLoopEndFrame != mEndFrame)
+    if (mLoopEndFrame < mEndFrame)
     {
       // Use the default cross fade size if streaming or if the variable hasn't been set
       unsigned fadeSize = Fade.mDefaultFrames;
@@ -1023,7 +1021,7 @@ namespace Audio
 
     // Reset variables
     mFrameIndex = mLoopStartFrame;
-    mCurrentTime = mFrameIndex * gAudioSystem->SystemTimeIncrement;
+    mCurrentTime = mFrameIndex * SystemTimeIncrement;
     ResetMusicBeats();
 
     // If streaming, reset to the beginning of the file

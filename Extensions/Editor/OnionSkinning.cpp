@@ -105,13 +105,21 @@ void OnionSkinning::CreateObjects()
   Cog* selected = mEditor->GetSelectedObject();
 
   // Save out the current object so we can copy it
-  DataBlock data = Cog::SaveToDataBlock(selected);
+  // **NOTE: 'Cog::Serialize' and 'Factory::BuildFromStream' have become out of
+  //         sync.  Specifically: 'Cog::Serialize' does not save out 'LinkId',
+  //         whereas 'Factory::BuildFromStream' blindly tries to load in a LinkId.
+  //         So, binary saving/loading is no longer a valid operation with cogs.
+  //         'Cog::SaveToDataBlock' and 'Cog::CreateFromDataBlock' use binary
+  //         saving and loading, respectively.  Instead use text saving/loading. 
+  //DataBlock data = Cog::SaveToDataBlock(selected);
+  String stringData = CogSerialization::SaveToStringForCopy(selected);
 
   // Create all objects
   for(uint i = 0; i < mObjectCount; ++i)
   {
-    // Create the object
-    Cog* newObject = Cog::CreateFromDataBlock(selected->GetSpace(), data);
+    // Create the object.  (See **NOTE above for info on 'Cog::CreateFromDataBlock')
+    //Cog* newObject = Cog::CreateFromDataBlock(selected->GetSpace(), data);
+    Cog* newObject = selected->CreateFromString(selected->GetSpace(), stringData);
 
     // Attach to our parent if we're not a root object
     if(Cog* parent = selected->GetParent())

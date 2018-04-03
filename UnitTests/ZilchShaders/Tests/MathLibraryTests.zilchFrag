@@ -116,6 +116,10 @@ struct VectorMathTests[Type]
         var y = Type();
         var z = Type();
         
+        // Test grouping operators
+        var r = (x + y)[0];
+        r = (x + y).X;
+        
         var count = x.Count;
         var axis = Type.GetAxis(0);
         var zero = Type.Zero;
@@ -236,6 +240,9 @@ struct MatrixMathTests[MatrixType, VectorType]
         
         var transposed = Math.Transpose(a);
         var result = Math.Multiply(a, v);
+        var m = Math.Multiply(a, transposed);
+        // Also test grouping
+        result = Math.Multiply(a, v + v);
     }
 }
 
@@ -253,6 +260,7 @@ struct SquareMatrixMathTests[MatrixType, VectorType, PointVectorType]
     }
 }
 
+[Pixel]
 struct MathLibraryTests
 {
     function TestMatrices()

@@ -306,6 +306,11 @@ public:
       mAllocator.Deallocate(mData[i], sizeof(value_type) * BucketSize);
     //now deallocate the array of our buckets
     mAllocator.Deallocate(mData, sizeof(pointer) * bucketCount);
+
+    //reset members so array can still be used
+    mSize = 0;
+    mCapacity = 0;
+    mData = nullptr;
   }
 
   void ChangeCapacity(size_type newCapacity)

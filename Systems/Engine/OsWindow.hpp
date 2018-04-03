@@ -179,6 +179,7 @@ public:
   /// Locks the mouse to prevent it from moving.
   virtual bool GetMouseTrap() = 0;
   virtual void SetMouseTrap(bool trapped) = 0;
+  virtual IntVec2 GetMouseTrapScreenPosition() = 0;
 
   /// Set the cursor for the mouse.
   virtual void SetMouseCursor(Cursor::Enum cursorId) = 0;
@@ -234,7 +235,7 @@ public:
   bool CtrlPressed;
   IntVec2 ClientPosition;
   Vec2 ScrollMovement;
-  bool IsTrapMoveBack;
+  bool IsMouseAtTrapPosition;
 
   //Button For this Event
   MouseButtons::Enum MouseButton;
@@ -255,5 +256,6 @@ public:
 
   Array<String> Files;
 };
+
 
 }//namespace Zero

@@ -94,6 +94,7 @@ public:
   Widget* ToggleConsole();
   Widget* ShowBrowser();
   Widget* ShowMarket();
+  Widget* ShowChat();
 
   /// Selects a tool with the given name.
   void SelectTool(StringParam toolName);
@@ -239,9 +240,9 @@ public:
 //Internals
   void OnSaveCheck(SavingEvent* event);
   RuntimeEditorImpl* mRuntimeEditorImpl;
-  void SelectOnly(HandleParam object);
+  /// This function is marked for removal from Zero.Editor, use Zero.Editor.Selection's functionality instead.
   void SelectPrimary(HandleParam object);
-  virtual void OnEngineUpdate(UpdateEvent* event) {}
+  virtual void OnEngineUpdate(UpdateEvent* event);
   void OnResourcesUnloaded(ResourceEvent* event);
   void Update();
   void ExecuteCommand(StringParam commandName);
@@ -278,6 +279,7 @@ public:
   void OnSaveRestartMessageBox(MessageBoxEvent* event);
   GameArray mGames;
   bool mGamePending;
+  bool mStopGame;
 
   Array<CogId> mSelectionGizmos;
   UniquePointer<EventObject> mSimpleDebuggerListener;

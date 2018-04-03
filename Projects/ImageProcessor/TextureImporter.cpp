@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 #define ReturnStatusIf(condition, string) \
@@ -10,6 +13,7 @@ if ((condition))                          \
 namespace Zero
 {
 
+//**************************************************************************************************
 //float CubicHermite(float t, float f0, float f1, float f2, float f3)
 //{
 //  float a = 0.0f * f0 + 2.0f * f1 + 0.0f * f2 + 0.0f * f3;
@@ -20,6 +24,7 @@ namespace Zero
 //  return 0.5f * (a + t * b + t*t * c + t*t*t * d);
 //}
 
+//**************************************************************************************************
 template <typename T>
 T* GetPixelClamped(T* image, int width, int height, uint numChannels, int x, int y)
 {
@@ -28,6 +33,7 @@ T* GetPixelClamped(T* image, int width, int height, uint numChannels, int x, int
   return &image[(x + y * width) * numChannels];
 }
 
+//**************************************************************************************************
 template <typename T, unsigned Channels>
 void ResizeImage(const byte* srcImage, uint srcWidth, uint srcHeight, byte* dstImage, uint dstWidth, uint dstHeight, void (*ClampFunc)(float&))
 {
@@ -65,21 +71,25 @@ void ResizeImage(const byte* srcImage, uint srcWidth, uint srcHeight, byte* dstI
   }
 }
 
+//**************************************************************************************************
 void FloatClamp(float& value)
 {
   // No op
 }
 
+//**************************************************************************************************
 void ByteClamp(float& value)
 {
   value = Math::Clamp(value, 0.0f, 255.0f);
 }
 
+//**************************************************************************************************
 void ShortClamp(float& value)
 {
   value = Math::Clamp(value, 0.0f, 65535.0f);
 }
 
+//**************************************************************************************************
 void ResizeImage(TextureFormat::Enum format, const byte* srcImage, uint srcWidth, uint srcHeight, byte* dstImage, uint dstWidth, uint dstHeight)
 {
   if (format == TextureFormat::RGB32f)
@@ -90,6 +100,7 @@ void ResizeImage(TextureFormat::Enum format, const byte* srcImage, uint srcWidth
     ResizeImage<byte, 4>(srcImage, srcWidth, srcHeight, dstImage, dstWidth, dstHeight, ByteClamp);
 }
 
+//**************************************************************************************************
 void MipmapTexture(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format, bool compressed)
 {
   if (mipHeaders.Size() != 1 || imageData.Size() != 1)
@@ -217,6 +228,7 @@ public:
   }
 };
 
+//**************************************************************************************************
 void ToNvttSurface(nvtt::Surface& surface, uint width, uint height, TextureFormat::Enum format, const byte* image)
 {
   byte* convertedImage = nullptr;
@@ -255,6 +267,7 @@ void ToNvttSurface(nvtt::Surface& surface, uint width, uint height, TextureForma
   delete[] convertedImage;
 }
 
+//**************************************************************************************************
 void FromNvttSurface(const nvtt::Surface& surface, uint& width, uint& height, TextureFormat::Enum format, byte*& image)
 {
   const float* srcImage = surface.data();
@@ -287,6 +300,7 @@ void FromNvttSurface(const nvtt::Surface& surface, uint& width, uint& height, Te
   }
 }
 
+//**************************************************************************************************
 TextureImporter::TextureImporter(StringParam inputFile, StringParam outputFile, StringParam metaFile)
   : mInputFile(inputFile)
   , mOutputFile(outputFile)
@@ -298,6 +312,7 @@ TextureImporter::TextureImporter(StringParam inputFile, StringParam outputFile, 
 {
 }
 
+//**************************************************************************************************
 TextureImporter::~TextureImporter()
 {
   for (size_t i = 0; i < mImageData.Size(); ++i)
@@ -307,6 +322,7 @@ TextureImporter::~TextureImporter()
     delete[] mBackupImageData[i];
 }
 
+//**************************************************************************************************
 nvtt::Format NvttFormat(TextureCompression::Enum compression)
 {
   switch (compression)
@@ -321,6 +337,7 @@ nvtt::Format NvttFormat(TextureCompression::Enum compression)
   }
 }
 
+//**************************************************************************************************
 uint GetBlockSize(TextureCompression::Enum compression)
 {
   switch (compression)
@@ -336,6 +353,7 @@ uint GetBlockSize(TextureCompression::Enum compression)
   }
 }
 
+//**************************************************************************************************
 float GetCompressionRatio(TextureCompression::Enum compression)
 {
   switch (compression)
@@ -350,6 +368,7 @@ float GetCompressionRatio(TextureCompression::Enum compression)
   }
 }
 
+//**************************************************************************************************
 void TextureImporter::ProcessTexture(Status& status)
 {
   ReturnStatusIf(!FileExists(mInputFile), String::Format("Missing image file '%s'", mInputFile.c_str()));
@@ -377,6 +396,38 @@ void TextureImporter::ProcessTexture(Status& status)
     mBuilder = nullptr;
     delete mImageContent;
     return;
+  }
+
+  // Progressive downsample, done before any other processing
+  if (mBuilder->mHalfScaleCount > 0)
+  {
+    for (int i = 0; i < mBuilder->mHalfScaleCount; ++i)
+    {
+      uint width = mMipHeaders[0].mWidth;
+      uint height = mMipHeaders[0].mHeight;
+      uint pixelSize = GetPixelSize(mLoadFormat);
+
+      // Stop if image can't be down scaled anymore
+      if (width > 1 || height > 1)
+      {
+        // Downscale by 1/2
+        uint newWidth = Math::Max(width / 2, 1u);
+        uint newHeight = Math::Max(height / 2, 1u);
+        uint newSize = newWidth * newHeight * pixelSize;
+        byte* newImageData = new byte[newSize];
+        ResizeImage(mLoadFormat, mImageData[0], width, height, newImageData, newWidth, newHeight);
+
+        mMipHeaders[0].mWidth = newWidth;
+        mMipHeaders[0].mHeight = newHeight;
+        mMipHeaders[0].mDataSize = newSize;
+        delete mImageData[0];
+        mImageData[0] = newImageData;
+      }
+      else
+      {
+        break;
+      }
+    }
   }
 
   // Convert to bytes for nvtt if image is going to be compressed
@@ -628,6 +679,7 @@ void TextureImporter::ProcessTexture(Status& status)
   delete mImageContent;
 }
 
+//**************************************************************************************************
 void TextureImporter::LoadImageData(Status& status, StringParam extension)
 {
   File file;
@@ -684,6 +736,7 @@ void TextureImporter::LoadImageData(Status& status, StringParam extension)
   mImageData.PushBack(imageData);
 }
 
+//**************************************************************************************************
 void TextureImporter::WriteTextureFile(Status& status)
 {
   File file;

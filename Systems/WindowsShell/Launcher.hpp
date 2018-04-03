@@ -33,6 +33,9 @@ public:
   void UpdateResolutions();
   void ApplySettings();
   void ReadSettings();
+  String GetEulaAcceptedFilePath();
+
+  String mEulaText;
 };
 
 ///Run the launcher window. Launcher will block until config is complete.

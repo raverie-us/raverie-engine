@@ -1191,6 +1191,7 @@ void SpriteSourceEditor::SaveToSpriteSource()
   // Check to see if the resource was renamed
   if(spriteSource->Name != mSpriteName)
     RenameResource(spriteSource, mSpriteName);
+  sourceFile = spriteSource->mContentItem->GetFullPath();
 
   SpriteSourceBuilder* builder = spriteSource->mContentItem->has(SpriteSourceBuilder);
 
@@ -1256,8 +1257,10 @@ void SpriteSourceEditor::EditSpriteSource(SpriteSource* spriteSource)
   mOrigin = ComputeOrigin(Vec2(mOriginX, mOriginY), mFrameSizeX, mFrameSizeY);
 
   Image sourceImage;
-  spriteSource->LoadSourceImage(&sourceImage);
-  LoadFramesFromSheet(sourceImage, frameCount);
+  Status status;
+  spriteSource->LoadSourceImage(status, &sourceImage);
+  if(status.Succeeded())
+    LoadFramesFromSheet(sourceImage, frameCount);
 
   mSpriteProperties->SetObject(this);
 

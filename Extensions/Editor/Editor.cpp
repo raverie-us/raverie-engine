@@ -195,7 +195,7 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(SetFocus);
   ZilchBindMethod(DisplayGameSession);
   ZilchBindMethod(ExecuteCommand);
-  ZilchBindMethod(SelectPrimary);
+  ZilchBindMethod(SelectPrimary)->AddAttribute(DeprecatedAttribute);
   ZilchBindMethod(PlayGame);
   ZilchBindMethod(PlaySingleGame);
   ZilchBindMethod(PlayNewGame);
@@ -237,6 +237,7 @@ Editor::Editor(Composite* parent)
   mCodeTranslatorListener = nullptr;
   mProjectDirectoryWatcher = nullptr;
   mSimpleDebuggerListener = nullptr;
+  mStopGame = false;
 
   mQueue = new OperationQueue();
 
@@ -581,14 +582,10 @@ Widget* Editor::ToggleConsole()
 
 Widget* Editor::ShowBrowser()
 {
-  Widget* widget = ShowWindow("Browser");
-  if (widget != nullptr)
-    return widget;
-
   WebBrowserSetup setup;
   WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Browser");
-  browser->SetHideOnClose(true);
+  browser->SetHideOnClose(false);
 
   this->AddManagedWidget(browser, DockArea::Center, true);
   return browser;
@@ -596,13 +593,25 @@ Widget* Editor::ShowBrowser()
 
 Widget* Editor::ShowMarket()
 {
-  Widget* widget = ShowWindow("Market");
-  if (widget != nullptr)
-    return widget;
+  const char* cURL = "https://market.zeroengine.io/?q=products";
+  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
-  MarketWidget* browser = new MarketWidget(this);
+  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Market");
-  browser->SetHideOnClose(true);
+  browser->SetHideOnClose(false);
+
+  this->AddManagedWidget(browser, DockArea::Center, true);
+  return browser;
+}
+
+Widget* Editor::ShowChat()
+{
+  const char* cURL = "https://dev.zeroengine.io/u/chat";
+  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+
+  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
+  browser->SetName("Chat");
+  browser->SetHideOnClose(false);
 
   this->AddManagedWidget(browser, DockArea::Center, true);
   return browser;
@@ -759,16 +768,20 @@ Composite* Editor::OpenSearchWindow(Widget* returnFocus, bool noBorder)
   return newWindow;
 }
 
-void Editor::SelectOnly(HandleParam object)
-{
-  mSelection->SelectOnly(object);
-  mSelection->FinalSelectionChanged();
-}
-
 void Editor::SelectPrimary(HandleParam object)
 {
   mSelection->SetPrimary(object);
   mSelection->FinalSelectionChanged();
+}
+
+void Editor::OnEngineUpdate(UpdateEvent* event)
+{
+  if (mStopGame)
+  {
+    forRange(GameSession* game, GetGames())
+      game->Quit();
+    mStopGame = false;
+  }
 }
 
 Space* Editor::CreateNewSpace(uint flags)
@@ -1414,8 +1427,10 @@ void Editor::DestroyGames()
 
 void Editor::StopGame()
 {
-  forRange(GameSession* game, GetGames())
-    game->Quit();
+  // Wait until after system updates to stop game.
+  // This prevents events such as LogicUpdate from happening in an unexpected state.
+  if (GetGames().Empty() == false)
+    mStopGame = true;
 }
 
 void Editor::PauseGame()

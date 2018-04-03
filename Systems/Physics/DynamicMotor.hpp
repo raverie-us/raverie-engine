@@ -37,6 +37,7 @@ public:
   // Component Interface
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
+  void ScriptInitialize(CogInitializer& initializer) override;
 
   RelativeVelocityJoint* CreateJoint();
   RelativeVelocityJoint* GetJoint();

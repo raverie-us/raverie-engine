@@ -1,7 +1,11 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 using namespace Zero;
 
+//**************************************************************************************************
 int main(int argc, char** argv)
 {
   DebuggerListener debuggerListener;

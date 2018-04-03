@@ -634,13 +634,15 @@ void TileEditor2D::SetTileMapPalette(TilePaletteSource* tilePalette)
 
 void TileEditor2D::OnToolActivate(Event*)
 {
-  ConnectThisTo(Z::gEditor->GetSelection(), Events::SelectionFinal, OnSelectionFinal);
+  MetaSelection* selection = Z::gEditor->GetSelection();
+  ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
 
   TileMap* tileMap = GetTileMap();
   if (tileMap)
   {
     Cog* cog = tileMap->GetOwner();
-    Z::gEditor->SelectOnly(cog);
+    selection->SelectOnly(cog);
+    selection->FinalSelectionChanged();
   }
 }
 
@@ -925,7 +927,9 @@ void TileEditor2D::CreateTileMap()
 
       mAddTileMapWidget.SafeDestroy();
 
-      Z::gEditor->SelectOnly(created);
+      MetaSelection* selection = Z::gEditor->GetSelection();
+      selection->SelectOnly(created);
+      selection->FinalSelectionChanged();
     }
   }
 }

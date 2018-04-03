@@ -13,6 +13,10 @@ Cog
 		var Size = Real2{78, 28}
 		var Origin = Location.BottomLeft
 	}
+    ZUiSoundNodeIcon
+    {
+    
+    }
 	UiWidget 
 	{
 		var Active = true

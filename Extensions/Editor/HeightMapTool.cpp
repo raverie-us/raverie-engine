@@ -925,7 +925,9 @@ void HeightMapTool::OnToolActivate(Event*)
   if (heightMap)
   {
     Cog* cog = heightMap->GetOwner();
-    Z::gEditor->SelectOnly(cog);
+    MetaSelection* selection = Z::gEditor->GetSelection();
+    selection->SelectOnly(cog);
+    selection->FinalSelectionChanged();
     mSubTool->Refresh(heightMap);
   }
 }
@@ -1183,8 +1185,9 @@ void HeightMapTool::CreateHeightMap()
       ObjectCreated(queue, created);
 
       mAddHeightMapWidget.SafeDestroy();
-
-      Z::gEditor->SelectOnly(created);
+      MetaSelection* selection = Z::gEditor->GetSelection();
+      selection->SelectOnly(created);
+      selection->FinalSelectionChanged();
     }
   }
 }

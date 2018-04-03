@@ -40,6 +40,7 @@ TagLabel::TagLabel(Composite* parent, StringParam name, bool removeable) : Compo
 
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnterBackground);
   ConnectThisTo(this, Events::MouseExit, OnMouseExitBackground);
+  ConnectThisTo(this, Events::MiddleClick, OnDelete);
 
   mName = new Text(this, cText);
   mName->SetText(name);
@@ -97,6 +98,9 @@ void TagLabel::OnMouseExitBackground(MouseEvent* e)
 //******************************************************************************
 void TagLabel::OnDelete(MouseEvent* e)
 {
+  if (mRemoveable == false)
+    return;
+
   TagEvent tagEvent;
   tagEvent.mTag = this;
   tagEvent.mTagName = mName->GetText();
@@ -569,7 +573,7 @@ TagChain* TagEditor::GetTagChain()
 void TagEditor::SubmitText(StringParam text)
 {
   Status status;
-  if(!IsValidName(text, status))
+  if(!IsValidFilename(text, status))
   {
     DoNotify("Invalid Tag", status.Message, "Warning");
     return;

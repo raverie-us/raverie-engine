@@ -372,6 +372,9 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="Action\ActionEase.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.hpp">

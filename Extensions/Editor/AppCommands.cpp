@@ -10,7 +10,12 @@ void OpenHelp()
 
 void OpenZeroHub()
 {
-  Os::SystemOpenNetworkFile("https://www.zeroengine.io");
+  Os::SystemOpenNetworkFile("https://dev.zeroengine.io");
+}
+
+void OpenDocumentation()
+{
+	Os::SystemOpenNetworkFile("https://docs.zeroengine.io");
 }
 
 void ExitEditor()
@@ -213,6 +218,7 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   //commands->AddCommand("RunZilchDebugger", BindCommandFunction(RunZilchDebugger));
   commands->AddCommand("Help", BindCommandFunction(OpenHelp));
   commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub));
+  commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation));
 }
 
 }

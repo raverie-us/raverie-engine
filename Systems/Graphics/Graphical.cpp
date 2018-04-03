@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -19,6 +22,7 @@ namespace Events
 static float sMinimumBoundingSize = 0.01f;
 static float sMinimumBoundingHalfSize = sMinimumBoundingSize * 0.5f;
 
+//**************************************************************************************************
 void MakeLocalToViewAligned(Mat4& localToView, Mat4Param localToWorld, Mat4Param worldToView, Vec3Param translation)
 {
   // Get just the camera's rotation
@@ -52,7 +56,7 @@ ZilchDefineType(GraphicalEvent, builder, type)
   ZilchBindFieldProperty(mViewingObject);
 }
 
-//-------------------------------------------------------------------- Graphical
+//**************************************************************************************************
 ZilchDefineType(Graphical, builder, type)
 {
   ZeroBindDocumented();
@@ -79,6 +83,7 @@ ZilchDefineType(Graphical, builder, type)
   ZeroBindTag(Tags::Graphical);
 }
 
+//**************************************************************************************************
 void Graphical::Initialize(CogInitializer& initializer)
 {
   mTransform = GetOwner()->has(Transform);
@@ -92,6 +97,7 @@ void Graphical::Initialize(CogInitializer& initializer)
   ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceModified, OnMaterialModified);
 }
 
+//**************************************************************************************************
 void Graphical::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mVisible, true);
@@ -104,26 +110,31 @@ void Graphical::Serialize(Serializer& stream)
   SerializeResourceNameDefault(mMaterial, MaterialManager, GetDefaultMaterialName());
 }
 
+//**************************************************************************************************
 void Graphical::OnDestroy(uint flags)
 {
   mGraphicsSpace->RemoveGraphical(this);
 }
 
+//**************************************************************************************************
 void Graphical::TransformUpdate(TransformUpdateInfo& info)
 {
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 void Graphical::AttachTo(AttachmentInfo& info)
 {
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 void Graphical::Detached(AttachmentInfo& info)
 {
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 void Graphical::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
 {
   mGraphicalEntryData.mGraphical = this;
@@ -138,6 +149,7 @@ void Graphical::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Fr
   entries.PushBack(entry);
 }
 
+//**************************************************************************************************
 bool Graphical::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   Ray ray = rayCast.mRay;
@@ -155,26 +167,31 @@ bool Graphical::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   return true;
 }
 
+//**************************************************************************************************
 bool Graphical::TestFrustum(const Frustum& frustum, CastInfo& castInfo)
 {
   return Overlap(frustum, GetWorldObb());
 }
 
+//**************************************************************************************************
 void Graphical::AddToSpace()
 {
   mGraphicsSpace->AddGraphical(this);
 }
 
+//**************************************************************************************************
 String Graphical::GetDefaultMaterialName()
 {
   return MaterialManager::GetInstance()->DefaultResourceName;
 }
 
+//**************************************************************************************************
 bool Graphical::GetVisible()
 {
   return mVisible;
 }
 
+//**************************************************************************************************
 void Graphical::SetVisible(bool visible)
 {
   if (visible == mVisible)
@@ -186,11 +203,13 @@ void Graphical::SetVisible(bool visible)
   AddToSpace();
 }
 
+//**************************************************************************************************
 bool Graphical::GetViewCulling()
 {
   return mViewCulling;
 }
 
+//**************************************************************************************************
 void Graphical::SetViewCulling(bool culling)
 {
   if (culling == mViewCulling)
@@ -202,11 +221,13 @@ void Graphical::SetViewCulling(bool culling)
   AddToSpace();
 }
 
+//**************************************************************************************************
 bool Graphical::GetOverrideBoundingBox()
 {
   return mOverrideBoundingBox;
 }
 
+//**************************************************************************************************
 void Graphical::SetOverrideBoundingBox(bool overrideBoundingBox)
 {
   if (overrideBoundingBox == mOverrideBoundingBox)
@@ -216,33 +237,39 @@ void Graphical::SetOverrideBoundingBox(bool overrideBoundingBox)
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 Vec3 Graphical::GetLocalAabbCenter()
 {
   return mLocalAabbCenter;
 }
 
+//**************************************************************************************************
 void Graphical::SetLocalAabbCenter(Vec3 center)
 {
   mLocalAabbCenter = center;
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 Vec3 Graphical::GetLocalAabbHalfExtents()
 {
   return mLocalAabbHalfExtents;
 }
 
+//**************************************************************************************************
 void Graphical::SetLocalAabbHalfExtents(Vec3 halfExtents)
 {
   mLocalAabbHalfExtents = Math::Max(halfExtents, Vec3(sMinimumBoundingHalfSize));
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 Material* Graphical::GetMaterial()
 {
   return mMaterial;
 }
 
+//**************************************************************************************************
 void Graphical::SetMaterial(Material* material)
 {
   if (material != nullptr && material != mMaterial)
@@ -254,16 +281,19 @@ void Graphical::SetMaterial(Material* material)
   }
 }
 
+//**************************************************************************************************
 ShaderInputs* Graphical::GetShaderInputs()
 {
   return mShaderInputs;
 }
 
+//**************************************************************************************************
 void Graphical::SetShaderInputs(ShaderInputs* shaderInputs)
 {
   mShaderInputs = shaderInputs;
 }
 
+//**************************************************************************************************
 Aabb Graphical::GetWorldAabb()
 {
   Aabb localAabb = GetLocalAabbInternal();
@@ -271,6 +301,7 @@ Aabb Graphical::GetWorldAabb()
   return localAabb.TransformAabb(mTransform->GetWorldMatrix());
 }
 
+//**************************************************************************************************
 Obb Graphical::GetWorldObb()
 {
   Aabb localAabb = GetLocalAabbInternal();
@@ -278,6 +309,7 @@ Obb Graphical::GetWorldObb()
   return localAabb.Transform(mTransform->GetWorldMatrix());
 }
 
+//**************************************************************************************************
 Aabb Graphical::GetLocalAabbInternal()
 {
  if (mOverrideBoundingBox)
@@ -286,6 +318,7 @@ Aabb Graphical::GetLocalAabbInternal()
     return GetLocalAabb();
  }
 
+//**************************************************************************************************
 void Graphical::UpdateBroadPhaseAabb()
 {
   if (mProxy.ToVoidPointer() != nullptr)
@@ -299,6 +332,7 @@ void Graphical::UpdateBroadPhaseAabb()
   }
 }
 
+//**************************************************************************************************
 void Graphical::OnShaderInputsModified(ShaderInputsEvent* event)
 {
   // Valid pointer already checked by GraphicsEngine
@@ -318,17 +352,20 @@ void Graphical::OnShaderInputsModified(ShaderInputsEvent* event)
   AddComponentShaderInputs(component);
 }
 
+//**************************************************************************************************
 void Graphical::OnMaterialModified(ResourceEvent* event)
 {
   if ((Material*)event->EventResource == mMaterial)
     RebuildComponentShaderInputs();
 }
 
+//**************************************************************************************************
 void Graphical::ComponentAdded(BoundType* typeId, Component* component)
 {
   AddComponentShaderInputs(component);
 }
 
+//**************************************************************************************************
 void Graphical::ComponentRemoved(BoundType* typeId, Component* component)
 {
   for (uint i = mPropertyShaderInputs.Size() - 1; i < mPropertyShaderInputs.Size(); --i)
@@ -338,6 +375,7 @@ void Graphical::ComponentRemoved(BoundType* typeId, Component* component)
   }
 }
 
+//**************************************************************************************************
 void Graphical::RebuildComponentShaderInputs()
 {
   mPropertyShaderInputs.Clear();
@@ -346,6 +384,7 @@ void Graphical::RebuildComponentShaderInputs()
     AddComponentShaderInputs(component);
 }
 
+//**************************************************************************************************
 void Graphical::AddComponentShaderInputs(Component* component)
 {
   // If a ZilchComponent becomes a proxy, the GraphicsEngine does not spend time

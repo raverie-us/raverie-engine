@@ -1,24 +1,31 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 void FrameNode::Extract(FrameBlock& frameBlock)
 {
   mGraphicalEntry->mData->mGraphical->ExtractFrameData(*this, frameBlock);
 }
 
+//**************************************************************************************************
 void ViewNode::Extract(ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   mGraphicalEntry->mData->mGraphical->ExtractViewData(*this, viewBlock, frameBlock);
 }
 
+//**************************************************************************************************
 void RenderQueues::Clear()
 {
   mFrameBlocks.Clear();
   mViewBlocks.Clear();
 
   mStreamedVertices.Clear();
+  mStreamedVertices.Deallocate();
 
   mSkinningBuffer.Clear();
   mIndexRemapBuffer.Clear();
@@ -26,6 +33,7 @@ void RenderQueues::Clear()
   mBlendSettingsOverrides.Clear();
 }
 
+//**************************************************************************************************
 void RenderQueues::AddStreamedLineRect(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
 {
   StreamedVertex v0(Math::TransformPoint(viewNode.mLocalToView, pos0),                    uv0,                color, uvAux0);
@@ -46,6 +54,7 @@ void RenderQueues::AddStreamedLineRect(ViewNode& viewNode, Vec3 pos0, Vec3 pos1,
   viewNode.mStreamedVertexType = PrimitiveType::Lines;
 }
 
+//**************************************************************************************************
 void RenderQueues::AddStreamedQuad(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
 {
   StreamedVertex v0(Math::TransformPoint(viewNode.mLocalToView, pos0),                    uv0,                color, uvAux0);
@@ -63,6 +72,7 @@ void RenderQueues::AddStreamedQuad(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec
   viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
+//**************************************************************************************************
 void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 tileSize, Vec2 uvAux0, Vec2 uvAux1)
 {
   Vec2 size = Vec2(pos1.x - pos0.x, pos0.y - pos1.y);
@@ -122,6 +132,7 @@ void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1
   }
 }
 
+//**************************************************************************************************
 void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec4 posSlices, Vec4 uvSlices, Vec2 uvAux0, Vec2 uvAux1)
 {
   Vec4 posX = Vec4(pos0.x, pos0.x + posSlices[NineSlices::Left], pos1.x - posSlices[NineSlices::Right], pos1.x);
@@ -203,6 +214,7 @@ void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode, Vec3 pos0, Vec3
   viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
+//**************************************************************************************************
 void RenderQueues::AddStreamedQuadView(ViewNode& viewNode, Vec3 pos[4], Vec2 uv0, Vec2 uv1, Vec4 color)
 {
   StreamedVertex v0(pos[0], uv0,                color, Vec2(0, 0));

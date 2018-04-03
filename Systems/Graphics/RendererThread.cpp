@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -5,6 +8,7 @@ namespace Zero
 
 static const float cAcceptableLoadtime = 0.15f;
 
+//**************************************************************************************************
 OsInt RendererThreadMain(void* rendererThreadJobQueue)
 {
   RendererThreadJobQueue* jobQueue = (RendererThreadJobQueue*)rendererThreadJobQueue;
@@ -27,6 +31,7 @@ OsInt RendererThreadMain(void* rendererThreadJobQueue)
   return 0;
 }
 
+//**************************************************************************************************
 void RendererJobQueue::AddJob(RendererJob* rendererJob)
 {
   mThreadLock.Lock();
@@ -34,6 +39,7 @@ void RendererJobQueue::AddJob(RendererJob* rendererJob)
   mThreadLock.Unlock();
 }
 
+//**************************************************************************************************
 void RendererJobQueue::TakeAllJobs(Array<RendererJob*>& rendererJobs)
 {
   mThreadLock.Lock();
@@ -42,17 +48,20 @@ void RendererJobQueue::TakeAllJobs(Array<RendererJob*>& rendererJobs)
   mThreadLock.Unlock();
 }
 
+//**************************************************************************************************
 void RendererThreadJobQueue::AddJob(RendererJob* rendererJob)
 {
   RendererJobQueue::AddJob(rendererJob);
   mRendererThreadEvent.Signal();
 }
 
+//**************************************************************************************************
 void RendererThreadJobQueue::WaitForJobs()
 {
   mRendererThreadEvent.Wait();
 }
 
+//**************************************************************************************************
 bool RendererThreadJobQueue::HasJobs()
 {
   bool hasJobs;
@@ -62,27 +71,32 @@ bool RendererThreadJobQueue::HasJobs()
   return hasJobs;
 }
 
+//**************************************************************************************************
 bool RendererThreadJobQueue::ShouldExitThread()
 {
   return mExitThread;
 }
 
+//**************************************************************************************************
 WaitRendererJob::WaitRendererJob()
 {
   mWaitEvent.Initialize();
 }
 
+//**************************************************************************************************
 void WaitRendererJob::WaitOnThisJob()
 {
   mWaitEvent.Wait();
 }
 
+//**************************************************************************************************
 void CreateRendererJob::Execute()
 {
   CreateRenderer(mMainWindowHandle, mError);
   mWaitEvent.Signal();
 }
 
+//**************************************************************************************************
 void DestroyRendererJob::Execute()
 {
   DestroyRenderer();
@@ -90,48 +104,56 @@ void DestroyRendererJob::Execute()
   mWaitEvent.Signal();
 }
 
+//**************************************************************************************************
 void AddMaterialJob::Execute()
 {
   Z::gRenderer->AddMaterial(this);
   delete this;
 }
 
+//**************************************************************************************************
 void AddMeshJob::Execute()
 {
   Z::gRenderer->AddMesh(this);
   delete this;
 }
 
+//**************************************************************************************************
 void AddTextureJob::Execute()
 {
   Z::gRenderer->AddTexture(this);
   delete this;
 }
 
+//**************************************************************************************************
 void RemoveMaterialJob::Execute()
 {
   Z::gRenderer->RemoveMaterial(this);
   delete this;
 }
 
+//**************************************************************************************************
 void RemoveMeshJob::Execute()
 {
   Z::gRenderer->RemoveMesh(this);
   delete this;
 }
 
+//**************************************************************************************************
 void RemoveTextureJob::Execute()
 {
   Z::gRenderer->RemoveTexture(this);
   delete this;
 }
 
+//**************************************************************************************************
 void SetLazyShaderCompilationJob::Execute()
 {
   Z::gRenderer->SetLazyShaderCompilation(this);
   delete this;
 }
 
+//**************************************************************************************************
 AddShadersJob::AddShadersJob(RendererThreadJobQueue* jobQueue)
   : RepeatingJob(jobQueue)
   , mForceCompileBatchCount(0)
@@ -140,11 +162,13 @@ AddShadersJob::AddShadersJob(RendererThreadJobQueue* jobQueue)
   Start();
 }
 
+//**************************************************************************************************
 void AddShadersJob::OnExecute()
 {
   Z::gRenderer->AddShaders(this);
 }
 
+//**************************************************************************************************
 bool AddShadersJob::OnShouldRun()
 {
   bool shouldRun = !mShaders.Empty();
@@ -156,6 +180,7 @@ bool AddShadersJob::OnShouldRun()
   return shouldRun;
 }
 
+//**************************************************************************************************
 void AddShadersJob::ReturnExecute()
 {
   // Blocking task is assumed only used when mForceCompileBatchCount is not 0.
@@ -168,29 +193,40 @@ void AddShadersJob::ReturnExecute()
   delete this;
 }
 
+//**************************************************************************************************
 void RemoveShadersJob::Execute()
 {
   Z::gRenderer->RemoveShaders(this);
   delete this;
 }
 
+//**************************************************************************************************
 void SetVSyncJob::Execute()
 {
   Z::gRenderer->SetVSync(this);
   delete this;
 }
 
+//**************************************************************************************************
 void DoRenderTasksJob::Execute()
 {
   Z::gRenderer->DoRenderTasks(mRenderTasks, mRenderQueues);
   mWaitEvent.Signal();
 }
 
-void GetTextureDataJob::Execute()
+//**************************************************************************************************
+void ReturnRendererJob::Execute()
+{
+  OnExecute();
+  Z::gEngine->has(GraphicsEngine)->mReturnJobQueue->AddJob(this);
+}
+
+void GetTextureDataJob::OnExecute()
 {
   Z::gRenderer->GetTextureData(this);
 }
 
+//**************************************************************************************************
 void SaveImageToFileJob::ReturnExecute()
 {
   if (mImage == nullptr)
@@ -236,6 +272,7 @@ void SaveImageToFileJob::ReturnExecute()
   delete this;
 }
 
+//**************************************************************************************************
 RepeatingJob::RepeatingJob(RendererThreadJobQueue* jobQueue)
   : mRendererJobQueue(jobQueue)
   , mExecuteDelay(16)
@@ -247,6 +284,7 @@ RepeatingJob::RepeatingJob(RendererThreadJobQueue* jobQueue)
 {
 }
 
+//**************************************************************************************************
 void RepeatingJob::Execute()
 {
   if (ShouldRun())
@@ -261,16 +299,19 @@ void RepeatingJob::Execute()
   }
 }
 
+//**************************************************************************************************
 void RepeatingJob::Lock()
 {
   mThreadLock.Lock();
 }
 
+//**************************************************************************************************
 void RepeatingJob::Unlock()
 {
   mThreadLock.Unlock();
 }
 
+//**************************************************************************************************
 bool RepeatingJob::ShouldRun()
 {
   Lock();
@@ -286,6 +327,7 @@ bool RepeatingJob::ShouldRun()
   return running;
 }
 
+//**************************************************************************************************
 bool RepeatingJob::IsRunning()
 {
   Lock();
@@ -294,6 +336,7 @@ bool RepeatingJob::IsRunning()
   return running;
 }
 
+//**************************************************************************************************
 void RepeatingJob::Start()
 {
   Lock();
@@ -302,6 +345,7 @@ void RepeatingJob::Start()
   Unlock();
 }
 
+//**************************************************************************************************
 void RepeatingJob::Terminate()
 {
   Lock();
@@ -309,6 +353,7 @@ void RepeatingJob::Terminate()
   Unlock();
 }
 
+//**************************************************************************************************
 void RepeatingJob::ForceTerminate()
 {
   Lock();
@@ -316,6 +361,7 @@ void RepeatingJob::ForceTerminate()
   Unlock();
 }
 
+//**************************************************************************************************
 ShowProgressJob::ShowProgressJob(RendererThreadJobQueue* jobQueue)
   : RepeatingJob(jobQueue)
   , mSplashMode(false)
@@ -323,6 +369,7 @@ ShowProgressJob::ShowProgressJob(RendererThreadJobQueue* jobQueue)
 {
 }
 
+//**************************************************************************************************
 void ShowProgressJob::OnExecute()
 {
   mTimer.Update();
@@ -351,6 +398,7 @@ void ShowProgressJob::OnExecute()
   }
 }
 
+//**************************************************************************************************
 bool ShowProgressJob::OnShouldRun()
 {
   // Allows job to complete its behavior before actually terminating

@@ -254,7 +254,7 @@ void LauncherOpenProjectComposite::SendEvent(StringParam eventType)
 void LauncherOpenProjectComposite::FailedToOpenLauncher()
 {
   DoNotifyError("Launcher not found", "Couldn't find 'ZeroLauncher.exe'. "
-    "Please download the installer from https://www.zeroengine.io.");
+    "Please download the installer from https://dev.zeroengine.io.");
 }
 
 bool LauncherOpenProjectComposite::RunLauncherExe(StringParam exePath)
@@ -337,6 +337,14 @@ LauncherSingletonCommunication::LauncherSingletonCommunication(const StringMap& 
 {
   mArguments = arguments;
   mTimesTryingToConnect = 0;
+
+  ZPrint("Sending launcher communication event with parameters:\n");
+  AutoDeclare(argRange, arguments.All());
+  for(; !argRange.Empty(); argRange.PopFront())
+  {
+    AutoDeclare(pair, argRange.Front());
+    ZPrint("\t(%s, %s)\n", pair.first.c_str(), pair.second.c_str());
+  }
 
   mSocket = new TcpSocket(Protocol::Events | Protocol::Chunks, "Launcher");
   ConnectThisTo(mSocket, Events::ConnectionCompleted, OnConnectionCompleted);

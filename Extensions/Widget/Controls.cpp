@@ -135,7 +135,7 @@ void Splitter::OnLeftMouseDown(MouseEvent* event)
 
 void Splitter::OnLeftMouseUp(MouseEvent* event)
 {
-  ReleaseMouseCapture();
+  mBackground->ReleaseMouseCapture();
   mDragging = false;
 }
 

@@ -41,6 +41,7 @@ ZilchDefineStaticLibrary(GameplayLibrary)
 
   // Events
   ZilchInitializeType(MouseEvent);
+  ZilchInitializeType(MouseFileDropEvent);
   ZilchInitializeType(ViewportMouseEvent);
   ZilchInitializeType(WebBrowserEvent);
   ZilchInitializeType(WebBrowserConsoleEvent);
@@ -60,7 +61,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   WebBrowserManager::PlatformInitializeMeta<ZilchLibrary>();
   ZilchInitializeType(WebBrowserManager);
   ZilchInitializeType(WebBrowserWidget);
-  ZilchInitializeType(MarketWidget);
   ZilchInitializeType(TileMapSource);
   ZilchInitializeType(Reactive);
   ZilchInitializeType(ReactiveSpace);

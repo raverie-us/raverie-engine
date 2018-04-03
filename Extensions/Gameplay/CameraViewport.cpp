@@ -52,6 +52,9 @@ ZilchDefineType(CameraViewport, builder, type)
   ZilchBindGetter(ViewportResolutionWithMargin);
   ZilchBindGetter(ViewportOffset);
   ZilchBindGetter(ViewportOffsetWithMargin);
+
+  ZilchBindGetter(Camera);
+  ZilchBindGetter(Frustum);
 }
 
 void CameraViewport::Serialize(Serializer& stream)
@@ -136,6 +139,20 @@ Cog* CameraViewport::GetCameraCog()
   if (mActiveCamera != nullptr)
     return mActiveCamera->GetOwner();
   return nullptr;
+}
+
+Frustum CameraViewport::GetFrustum()
+{
+  Camera* camera = GetCamera();
+  if (!camera)
+    DoNotifyException("CameraViewport", "The Camera was null so we could not create a Frustum");
+
+  return camera->GetFrustum(GetAspectRatio());
+}
+
+Camera* CameraViewport::GetCamera()
+{
+  return mCameraPath.has(Camera);
 }
 
 bool CameraViewport::GetRenderInEditor()
@@ -427,13 +444,13 @@ void CameraViewport::OnRenderTasksUpdateInternal(RenderTasksEvent* event)
 
 void CameraViewport::OnUpdateActiveCameras(Event* event)
 {
-  Camera* camera = mCameraPath.has(Camera);
+  Camera* camera = GetCamera();
   SetActiveCamera(camera);
 }
 
 void CameraViewport::OnCameraPathChanged(CogPathEvent* event)
 {
-  Camera* camera = mCameraPath.has(Camera);
+  Camera* camera = GetCamera();
   SetActiveCamera(camera);
 }
 

@@ -86,7 +86,9 @@ void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manage
   OperationQueue* opQueue = editor->GetOperationQueue();
   ObjectCreated(opQueue, cog);
 
-  editor->SelectOnly(cog);
+  MetaSelection* selection = editor->GetSelection();
+  selection->SelectOnly(cog);
+  selection->FinalSelectionChanged();
 }
 
 

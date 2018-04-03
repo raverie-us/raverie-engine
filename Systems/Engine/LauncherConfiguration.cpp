@@ -16,6 +16,7 @@ namespace Events
 }//namespace Events
 
 int LauncherConfig::mCurrentForcedUpdateVersionNumber = 1;
+float LauncherConfig::mDefaultReloadFrequency = 60.0f * 60.0f;
 
 ZilchDefineType(LauncherConfig, builder, type)
 {
@@ -30,8 +31,10 @@ LauncherConfig::LauncherConfig()
   mRestartOnClose = false;
   mShowDevelopmentBuilds = false;
   mDisplayOnlyPreferredPlatform = true;
-  mAutoCheckForMajorUpdates = true;
+  mAutoCheckForLauncherUpdates = true;
   mShowExperimentalBranches = false;
+  // Check every hour
+  mAutoUpdateFrequencyInSeconds = mDefaultReloadFrequency;
 }
 
 void LauncherConfig::Serialize(Serializer& stream)
@@ -44,9 +47,12 @@ void LauncherConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mDisplayBuildOnProjects, false);
   SerializeNameDefault(mShowDevelopmentBuilds, false);
   SerializeRename(mShowDevelopmentBuilds, "ShowNightlies");
-  SerializeNameDefault(mAutoCheckForMajorUpdates, true);
+  SerializeNameDefault(mAutoCheckForLauncherUpdates, true);
   SerializeNameDefault(mShowExperimentalBranches, false);
   SerializeNameDefault(mForcedUpdateVersion, 0);
+  SerializeNameDefault(mAutoUpdateFrequencyInSeconds, mDefaultReloadFrequency);
+  float everyTwoHours = 60 * 60 * 2;
+  SerializeNameDefault(mNewLauncherUpdateCheckFrequency, everyTwoHours);
 }
 
 void LauncherConfig::ApplyCommandLineArguments(const StringMap& arguments)

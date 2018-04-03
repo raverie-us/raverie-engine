@@ -22,6 +22,8 @@ public:
 
   /// Constructor.
   ActiveProjectMenu(Composite* parent, LauncherWindow* launcher);
+  void UpdateTransform() override;
+  void SetSizeXToRemainder(Widget* widgetToSize);
 
   /// Update the launcher button when we're closed.
   void OnModalClosed(Event* e);
@@ -38,8 +40,12 @@ public:
 
   /// Check for F2 to attempt to rename the project file
   void OnKeyDown(KeyboardEvent* e);
+  /// The user clicked the Edit Project Name button.
+  void OnEditProjectName(Event* e);
   /// The user changed their project's name, attempt to confirm
   void OnProjectNameTextSubmit(Event* e);
+  void OnProjectNameFocusLost(Event* e);
+  void OnProjectRenameCanceled(Event* e);
   /// The user has confirmed if they want to rename their project file
   void OnProjectRenameConfirmed(ModalButtonEvent* e);
 
@@ -70,6 +76,7 @@ public:
   Text* mTags;
   Text* mLocation;
 
+  IconButton* mEditProjectNameIconButton;  
   IconButton* mInstallBuild;
   TextButton* mRunWithDebugger;
 

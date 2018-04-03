@@ -526,7 +526,7 @@ namespace Zilch
       if (isDoubleSize)
       {
         // If we found a real instead of an integer...
-        if (isRealPos < lastAcceptedPos)
+        if (isRealPos < lastAcceptedPos || isScientificNotation)
           outToken->TokenId = Grammar::DoubleRealLiteral;
         else
           outToken->TokenId = Grammar::DoubleIntegerLiteral;
@@ -534,7 +534,7 @@ namespace Zilch
       else
       {
         // If we found a real instead of an integer...
-        if (isRealPos < lastAcceptedPos)
+        if (isRealPos < lastAcceptedPos || isScientificNotation)
           outToken->TokenId = Grammar::RealLiteral;
         else
           outToken->TokenId = Grammar::IntegerLiteral;

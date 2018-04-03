@@ -77,6 +77,11 @@ MouseManipulation::MouseManipulation(Mouse* mouse, Composite* parent)
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
 }
 
+MouseManipulation::~MouseManipulation()
+{
+  ReleaseCapture();
+}
+
 void MouseManipulation::ReleaseCapture()
 {
   ReleaseMouseCapture();
@@ -100,11 +105,6 @@ void MouseManipulation::OnFocusReset(FocusEvent* event)
 void MouseManipulation::OnMouseUp(MouseEvent* event)
 {
   CloseAndReturnFocus();
-}
-
-MouseManipulation::~MouseManipulation()
-{
-  ReleaseCapture();
 }
 
 //---------------------------------------------------------------------- Gripper

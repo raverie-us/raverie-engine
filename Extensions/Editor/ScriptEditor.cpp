@@ -1089,10 +1089,21 @@ ToolTip* ScriptEditor::ShowToolTip(StringParam text, Vec3Param screenPos)
   return tip;
 }
 
-void ScriptEditor::ShowCallTips(Array<CallTip>& tips, StringParam functionName)
+void ScriptEditor::ShowCallTips(Array<CallTip>& tips, StringParam functionName, size_t parameterIndex)
 {
   if (tips.Empty())
     return;
+
+  CallTipPopUp* lastTips = mCallTip;
+  if (lastTips != nullptr)
+  {
+    // Leave the current dialog up if it's the same
+    if (lastTips->mFunctionName == functionName && lastTips->mTips.Size() == tips.Size())
+    {
+      lastTips->SetParameterIndex(parameterIndex);
+      return;
+    }
+  }
 
   ICodeEditor::SortCallTips(tips);
 
@@ -1104,6 +1115,7 @@ void ScriptEditor::ShowCallTips(Array<CallTip>& tips, StringParam functionName)
   mCallTipLine = GetCurrentLine();
   mCallTipStart = GetCurrentPosition();
 
+  popup->mParameterIndex = parameterIndex;
   popup->SetTips(tips, functionName);
 
   Vec3 cursorScreenPos = GetScreenPositionOfCursor();
@@ -1221,14 +1233,10 @@ void ScriptEditor::CheckPopups()
     else
     {
       size_t linePosition = GetPositionFromLine(currentLine);
+      
       size_t cursorColumn = cursorPosition - linePosition;
-      StringRange lineText = GetLineText(currentLine);
-
-      // Just for safety we make sure the cursor column is within the line text size
-      // The -1 is because the cursor is because indexing the line at that
-      // value gets the character to the right instead of the left
-      cursorColumn = Math::Min(cursorColumn - 1, lineText.ComputeRuneCount() - 1);
-
+      StringRange lineTextFull = GetLineText(currentLine);
+      StringRange lineText = lineTextFull.SubString(lineTextFull.Begin(), lineTextFull.Begin() + cursorColumn);
 
       // Closers are any type of symbol such as [] {} ()
       int closerCount = 0;
@@ -1236,7 +1244,7 @@ void ScriptEditor::CheckPopups()
 
       // Walk backwards through the text looking for commas
       // We have to be careful because of nested function calls / types
-      for (;!lineText.Empty(); lineText.PopBack())
+      for (; !lineText.Empty(); lineText.PopBack())
       {
         Rune r = lineText.Back();
 
@@ -1592,17 +1600,39 @@ bool ScriptEditor::AutoCompleteZeroConnect()
     // 'GetCompleteZeroConnectInfo' wouldn't return true if it wasn't
     ICodeInspector* code = this->GetCodeInspector();
 
-    // Get the type of the event
-    BoundType* eventType = MetaDatabase::GetInstance()->mEventMap.FindValue(eventName, nullptr);
+    String eventTypeName;
+    Regex sendsDeclaration(BuildString("sends\\s+", eventName, "\\s*\\:\\s*([a-zA-Z0-9_]+)"));
 
-    // If we could not find an event type, assume it's just event
-    if(eventType == nullptr)
-      eventType = ZilchTypeId(Event);
+    // Search all script documents and look for a sends declaration
+    forRange(Document* document, DocumentManager::GetInstance()->Documents.Values())
+    {
+      StringRange text;
 
-    //HACK for gameplay
-    String eventTypeName = eventType->Name;
-    if(eventType == ZilchTypeId(MouseEvent))
-      eventTypeName = "ViewportMouseEvent";
+      if (document->mEditor)
+        text = document->mEditor->GetAllText();
+      else
+        text = document->GetTextData();
+
+      Matches matches;
+      sendsDeclaration.Search(text, matches);
+
+      if (matches.Size() == 2)
+      {
+        eventTypeName = matches[1];
+        break;
+      }
+    }
+
+    if (eventTypeName.Empty())
+    {
+      // If we could not find an event type, assume it's just event
+      // Get the type of the event
+      BoundType* eventType = MetaDatabase::GetInstance()->mEventMap.FindValue(eventName, nullptr);
+      if (eventType == nullptr)
+        eventType = ZilchTypeId(Event);
+
+      eventTypeName = eventType->Name;
+    }
 
     String functionName = BuildString("On", eventName);
   

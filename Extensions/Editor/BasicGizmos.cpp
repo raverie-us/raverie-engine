@@ -1147,7 +1147,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, flo
         localMovement = GizmoHelpers::SingleAxisToOffAxesScale(axis, localMovement);
 
       localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection[axis],
-        movement, worldToParent, parentToLocal);
+        localMovement, worldToParent, parentToLocal);
 
       // If in local, post-process off-axis conversion after transform.
       //
@@ -1166,7 +1166,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, flo
       if(basis ==  GizmoBasis::Local)
       {
         localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection,
-          movement, worldToParent, parentToLocal);
+          localMovement, worldToParent, parentToLocal);
       }
       else  // basis ==  GizmoBasis::World
       {

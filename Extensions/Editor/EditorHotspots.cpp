@@ -116,7 +116,9 @@ void ObjectHotspot::OnClick(Matches& matches)
     if(cog)
     {
       // Focus on the object
-      Z::gEditor->SelectOnly(cog);
+      MetaSelection* selection = Z::gEditor->GetSelection();
+      selection->SelectOnly(cog);
+      selection->FinalSelectionChanged();
       Space* space = cog->GetSpace();
       //the space could be null if we were selecting the game or something not in a space
       if(space != NULL)

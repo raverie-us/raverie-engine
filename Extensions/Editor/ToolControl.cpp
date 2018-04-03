@@ -620,7 +620,7 @@ void ToolControl::BuildShortcutsToolTip(const ShortcutSet* entries)
   mShortcutsView->SetDataSource(&mShortcutSource);
 
   // Make the "Name" & "Shortcut" column width fit to the max-row's text
-  // size for their respective column.6
+  // size for their respective column.
   mShortcutsView->mFitToText[0] = true;
   mShortcutsView->mFitToText[1] = true;
 

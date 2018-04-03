@@ -1,18 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Sprite.cpp
-/// Implementation of the Sprite component class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Base Sprite
+//**************************************************************************************************
 ZilchDefineType(BaseSprite, builder, type)
 {
   ZeroBindDocumented();
@@ -23,6 +17,7 @@ ZilchDefineType(BaseSprite, builder, type)
   ZilchBindFieldProperty(mGeometryMode);
 }
 
+//**************************************************************************************************
 void BaseSprite::Serialize(Serializer& stream)
 {
   Graphical::Serialize(stream);
@@ -30,11 +25,13 @@ void BaseSprite::Serialize(Serializer& stream)
   SerializeEnumNameDefault(SpriteGeometryMode, mGeometryMode, SpriteGeometryMode::ZPlane);
 }
 
+//**************************************************************************************************
 void BaseSprite::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
 }
 
+//**************************************************************************************************
 void BaseSprite::ComponentAdded(BoundType* typeId, Component* component)
 {
   Graphical::ComponentAdded(typeId, component);
@@ -42,6 +39,7 @@ void BaseSprite::ComponentAdded(BoundType* typeId, Component* component)
     UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 void BaseSprite::ComponentRemoved(BoundType* typeId, Component* component)
 {
   Graphical::ComponentRemoved(typeId, component);
@@ -49,11 +47,13 @@ void BaseSprite::ComponentRemoved(BoundType* typeId, Component* component)
     UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 String BaseSprite::GetDefaultMaterialName()
 {
   return "AlphaSprite";
 }
 
+//**************************************************************************************************
 Aabb BaseSprite::GetViewPlaneAabb(Aabb localAabb)
 {
   Vec3 center = localAabb.GetCenter();
@@ -65,6 +65,7 @@ Aabb BaseSprite::GetViewPlaneAabb(Aabb localAabb)
   return Aabb(Vec3(0.0f), Vec3(1.0f) * radius / worldSize);
 }
 
+//**************************************************************************************************
 void BaseSprite::ComputeLocalToViewMatrix(Mat4& localToView, Mat4& localToWorld, Mat4& worldToView)
 {
   if (mGeometryMode == SpriteGeometryMode::ViewPlane)
@@ -73,7 +74,7 @@ void BaseSprite::ComputeLocalToViewMatrix(Mat4& localToView, Mat4& localToWorld,
     localToView = worldToView * localToWorld;
 }
 
-//----------------------------------------------------------------------- Sprite
+//**************************************************************************************************
 ZilchDefineType(Sprite, builder, type)
 {
   ZeroBindComponent();
@@ -90,6 +91,7 @@ ZilchDefineType(Sprite, builder, type)
   ZilchBindGetterSetterProperty(CurrentFrame);
 }
 
+//**************************************************************************************************
 void Sprite::Serialize(Serializer& stream)
 {
   BaseSprite::Serialize(stream);
@@ -101,6 +103,7 @@ void Sprite::Serialize(Serializer& stream)
   SerializeNameDefault(mStartFrame, 0u);
 }
 
+//**************************************************************************************************
 void Sprite::Initialize(CogInitializer& initializer)
 {
   BaseSprite::Initialize(initializer);
@@ -110,6 +113,7 @@ void Sprite::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetSpace(), Events::LogicUpdate, OnLogicUpdate);
 }
 
+//**************************************************************************************************
 void Sprite::DebugDraw()
 {
   if (mAnimationActive)
@@ -124,6 +128,7 @@ void Sprite::DebugDraw()
   }
 }
 
+//**************************************************************************************************
 Aabb Sprite::GetLocalAabb()
 {
   Aabb localAabb = Aabb(Vec3(GetLocalCenter(), 0.0f), Vec3(GetLocalWidths(), 0.0f));
@@ -134,6 +139,7 @@ Aabb Sprite::GetLocalAabb()
   return localAabb;
 }
 
+//**************************************************************************************************
 void Sprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
@@ -153,6 +159,7 @@ void Sprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
+//**************************************************************************************************
 void Sprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
@@ -210,11 +217,13 @@ void Sprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBloc
   }
 }
 
+//**************************************************************************************************
 SpriteSource* Sprite::GetSpriteSource()
 {
   return mSpriteSource;
 }
 
+//**************************************************************************************************
 void Sprite::SetSpriteSource(SpriteSource* spriteSource)
 {
   if (spriteSource == nullptr)
@@ -227,32 +236,37 @@ void Sprite::SetSpriteSource(SpriteSource* spriteSource)
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 uint Sprite::GetStartFrame()
 {
   return mStartFrame;
 }
 
+//**************************************************************************************************
 void Sprite::SetStartFrame(uint frameIndex)
 {
   mStartFrame = WrapIndex(frameIndex);
 }
 
+//**************************************************************************************************
 uint Sprite::GetCurrentFrame()
 {
   return mCurrentFrame;
 }
 
+//**************************************************************************************************
 void Sprite::SetCurrentFrame(uint frameIndex)
 {
   mCurrentFrame = WrapIndex(frameIndex);
 }
 
+//**************************************************************************************************
 Vec2 Sprite::GetLocalCenter()
 {
   if (Area* area = mOwner->has(Area))
   {
     Vec2 size = area->GetSize();
-    Vec2 offset = ToOffset(area->GetOrigin());
+    Vec2 offset = -Location::GetDirection(area->GetOrigin());
 
     return offset * size;
   }
@@ -268,6 +282,7 @@ Vec2 Sprite::GetLocalCenter()
   }
 }
 
+//**************************************************************************************************
 Vec2 Sprite::GetLocalWidths()
 {
   if (Area* area = mOwner->has(Area))
@@ -276,11 +291,13 @@ Vec2 Sprite::GetLocalWidths()
     return mSpriteSource->GetSize() * 0.5f / mSpriteSource->PixelsPerUnit;
 }
 
+//**************************************************************************************************
 void Sprite::OnLogicUpdate(UpdateEvent* event)
 {
   UpdateAnimation(event->Dt);
 }
 
+//**************************************************************************************************
 void Sprite::UpdateAnimation(float time)
 {
   if (mAnimationActive && mSpriteSource->FrameCount > 1)
@@ -314,6 +331,7 @@ void Sprite::UpdateAnimation(float time)
   }
 }
 
+//**************************************************************************************************
 uint Sprite::WrapIndex(uint index)
 {
   if (mSpriteSource->FrameCount == 0)
@@ -325,7 +343,7 @@ uint Sprite::WrapIndex(uint index)
   return index % mSpriteSource->FrameCount;
 }
 
-//------------------------------------------------------------------ Sprite Text
+//**************************************************************************************************
 ZilchDefineType(SpriteText, builder, type)
 {
   ZeroBindComponent();
@@ -344,6 +362,7 @@ ZilchDefineType(SpriteText, builder, type)
   ZilchBindMethod(GetCharacterPosition);
 }
 
+//**************************************************************************************************
 void SpriteText::Serialize(Serializer& stream)
 {
   BaseSprite::Serialize(stream);
@@ -354,11 +373,13 @@ void SpriteText::Serialize(Serializer& stream)
   SerializeEnumNameDefault(TextAlign, mTextAlign, TextAlign::Center);
 }
 
+//**************************************************************************************************
 void SpriteText::Initialize(CogInitializer& initializer)
 {
   BaseSprite::Initialize(initializer);
 }
 
+//**************************************************************************************************
 Aabb SpriteText::GetLocalAabb()
 {
   Aabb localAabb = Aabb(Vec3(GetLocalCenter(), 0.0f), Vec3(GetLocalWidths(), 0.0f));
@@ -369,6 +390,7 @@ Aabb SpriteText::GetLocalAabb()
   return localAabb;
 }
 
+//**************************************************************************************************
 void SpriteText::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mRenderingType = RenderingType::Streamed;
@@ -384,6 +406,7 @@ void SpriteText::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
+//**************************************************************************************************
 void SpriteText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
@@ -405,22 +428,26 @@ void SpriteText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, Frame
   ProcessTextRange(fontProcessor, font, mText, startLocation, mTextAlign, Vec2(1.0f, -1.0f) * pixelScale, widths * 2.0f);
 }
 
+//**************************************************************************************************
 String SpriteText::GetText()
 {
   return mText;
 }
 
+//**************************************************************************************************
 void SpriteText::SetText(StringParam text)
 {
   mText = text;
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 Font* SpriteText::GetFont()
 {
   return mFont;
 }
 
+//**************************************************************************************************
 void SpriteText::SetFont(Font* font)
 {
   if (font == nullptr || font == mFont)
@@ -430,11 +457,13 @@ void SpriteText::SetFont(Font* font)
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 uint SpriteText::GetFontSize()
 {
   return mFontSize;
 }
 
+//**************************************************************************************************
 void SpriteText::SetFontSize(uint size)
 {
   size = Math::Min(size, 128u);
@@ -445,33 +474,39 @@ void SpriteText::SetFontSize(uint size)
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 float SpriteText::GetPixelsPerUnit()
 {
   return mPixelsPerUnit;
 }
 
+//**************************************************************************************************
 void SpriteText::SetPixelsPerUnit(float pixelsPerUnit)
 {
   mPixelsPerUnit = pixelsPerUnit;
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 TextAlign::Enum SpriteText::GetTextAlign()
 {
   return mTextAlign;
 }
 
+//**************************************************************************************************
 void SpriteText::SetTextAlign(TextAlign::Enum textAlign)
 {
   mTextAlign = textAlign;
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 Vec2 SpriteText::MeasureText()
 {
   return MeasureGivenText(mText);
 }
 
+//**************************************************************************************************
 Vec2 SpriteText::MeasureGivenText(StringParam text)
 {
   if(Area* area = GetOwner()->has(Area))
@@ -487,6 +522,7 @@ Vec2 SpriteText::MeasureGivenText(StringParam text)
   }
 }
 
+//**************************************************************************************************
 Vec3 SpriteText::GetCharacterPosition(int characterIndex)
 {
   Vec2 center = GetLocalCenter();
@@ -509,13 +545,14 @@ Vec3 SpriteText::GetCharacterPosition(int characterIndex)
   return mTransform->TransformPoint(Vec3(findPosition.mCharPosition, 0.0f));
 }
 
+//**************************************************************************************************
 Vec2 SpriteText::GetLocalCenter()
 {
   if (Area* area = mOwner->has(Area))
   {
     Vec2 size = area->GetSize();
     // Area offset is a normalized value
-    Vec2 offset = ToOffset(area->GetOrigin());
+    Vec2 offset = -Location::GetDirection(area->GetOrigin());
     return offset * size;
   }
   else
@@ -529,19 +566,21 @@ Vec2 SpriteText::GetLocalCenter()
     }
 
     Vec2 size = MeasureText();
-    Vec2 offset = OffsetOfOffset(origin, Location::Center);
+    Vec2 offset = Location::GetDirection(origin, Location::Center);
     return offset * size;
   }
 }
 
-Vec2 SpriteText::GetLocalWidths( )
+//**************************************************************************************************
+Vec2 SpriteText::GetLocalWidths()
 {
   if(Area* area = mOwner->has(Area))
-    return area->GetSize( ) * 0.5f;
+    return area->GetSize() * 0.5f;
   else
-    return MeasureText( ) * 0.5f;
+    return MeasureText() * 0.5f;
 }
 
+//**************************************************************************************************
 ZilchDefineType(MultiSpriteEntry, builder, type)
 {
   ZilchBindCopyConstructor();
@@ -551,17 +590,19 @@ ZilchDefineType(MultiSpriteEntry, builder, type)
   ZilchBindGetterProperty(SpriteSource);
 }
 
+//**************************************************************************************************
 IntVec2 MultiSpriteEntry::GetIndex()
 {
   return mIndex;
 }
 
+//**************************************************************************************************
 SpriteSource* MultiSpriteEntry::GetSpriteSource()
 {
   return mSource;
 }
 
-//------------------------------------------------------------MultiSprite
+//**************************************************************************************************
 ZilchDefineType(MultiSprite, builder, type)
 {
   ZeroBindComponent();
@@ -576,6 +617,7 @@ ZilchDefineType(MultiSprite, builder, type)
   ZilchBindMethod(All);
 }
 
+//**************************************************************************************************
 void MultiSprite::Serialize(Serializer& stream)
 {
   BaseSprite::Serialize(stream);
@@ -584,6 +626,7 @@ void MultiSprite::Serialize(Serializer& stream)
   SerializeNameDefault(mAnimationSpeed, 1.0f);
 }
 
+//**************************************************************************************************
 void MultiSprite::Initialize(CogInitializer& initializer)
 {
   BaseSprite::Initialize(initializer);
@@ -593,6 +636,7 @@ void MultiSprite::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetSpace(), Events::LogicUpdate, OnLogicUpdate);
 }
 
+//**************************************************************************************************
 Aabb MultiSprite::GetLocalAabb()
 {
   if (mGeometryMode == SpriteGeometryMode::ViewPlane)
@@ -601,6 +645,7 @@ Aabb MultiSprite::GetLocalAabb()
   return mLocalAabb;
 }
 
+//**************************************************************************************************
 void MultiSprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   GraphicalEntryData* entryData = frameNode.mGraphicalEntry->mData;
@@ -624,6 +669,7 @@ void MultiSprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
+//**************************************************************************************************
 void MultiSprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   GraphicalEntryData* entryData = viewNode.mGraphicalEntry->mData;
@@ -665,6 +711,7 @@ void MultiSprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, Fram
   }
 }
 
+//**************************************************************************************************
 void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
 {
   CogId cameraId = camera.GetOwner()->GetId();
@@ -754,6 +801,7 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, 
   }
 }
 
+//**************************************************************************************************
 bool MultiSprite::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   Ray localRay = rayCast.mRay.TransformInverse(mTransform->GetWorldMatrix());
@@ -778,6 +826,7 @@ bool MultiSprite::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   return true;
 }
 
+//**************************************************************************************************
 MultiSpriteEntry MultiSprite::Get(IntVec2 index)
 {
   MultiSpriteEntry entry;
@@ -791,6 +840,7 @@ MultiSpriteEntry MultiSprite::Get(IntVec2 index)
   return entry;
 }
 
+//**************************************************************************************************
 void MultiSprite::Set(IntVec2 index, SpriteSource* spriteSource)
 {
   if (spriteSource == nullptr)
@@ -821,6 +871,7 @@ void MultiSprite::Set(IntVec2 index, SpriteSource* spriteSource)
   mCells[cellIndex].mEntries[index] = spriteEntry;
 }
 
+//**************************************************************************************************
 void MultiSprite::Clear()
 {
   mCells.Clear();
@@ -828,6 +879,7 @@ void MultiSprite::Clear()
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 MultiSpriteEntryRange MultiSprite::All()
 {
   MultiSpriteEntryRange range;
@@ -842,6 +894,7 @@ MultiSpriteEntryRange MultiSprite::All()
   return range;
 }
 
+//**************************************************************************************************
 void MultiSprite::Remove(IntVec2 index)
 {
   IntVec2 cellIndex = LocationToCellIndex(index);
@@ -866,17 +919,20 @@ void MultiSprite::Remove(IntVec2 index)
   }
 }
 
+//**************************************************************************************************
 void MultiSprite::OnLogicUpdate(UpdateEvent* event)
 {
   UpdateAnimation(event->Dt);
 }
 
+//**************************************************************************************************
 void MultiSprite::UpdateAnimation(float dt)
 {
   if (mAnimationActive)
     mFrameTime += dt * mAnimationSpeed;
 }
 
+//**************************************************************************************************
 IntVec2 MultiSprite::LocationToCellIndex(IntVec2 location)
 {
   IntVec2 cellIndex;
@@ -885,6 +941,7 @@ IntVec2 MultiSprite::LocationToCellIndex(IntVec2 location)
   return cellIndex;
 }
 
+//**************************************************************************************************
 void MultiSprite::AddCellEntries(MultiSpriteCell& cell, GroupMap& groupMap)
 {
   typedef HashMap<IntVec2, MultiSpriteEntry>::pair EntryPair;

@@ -13,29 +13,29 @@ namespace Zero
 namespace ObjectAttributes
 {
 
-// Object is not visible to default inspection
+/// Object is not visible to default inspection
 extern const String cHidden;
-// Object has documentation
+/// Object has documentation
 extern const String cDocumented;
-// Object is always expanded in the property grid
+/// Object is always expanded in the property grid
 extern const String cExpanded;
-// Core objects can not be removed from owner or added to new owner
+/// Core objects can not be removed from owner or added to new owner
 extern const String cCore;
-// Signifies that this object should store the local property modifications
+/// Signifies that this object should store the local property modifications
 extern const String cStoreLocalModifications;
-// Object is a Proxy for another class
+/// Object is a Proxy for another class
 extern const String cProxy;
-// The proxy was created because we failed to construct an object of this type (likely due to 
-// an exception in the constructor)
+/// The proxy was created because we failed to construct an object of this type (likely due to 
+/// an exception in the constructor)
 extern const String cExceptionProxy;
-// For ZilchComponent's, Initialize isn't called in an Editor Space. However, it the Component has
-// this attribute, Initialize will be called.
+/// For ZilchComponent's, Initialize isn't called in an Editor Space. However, it the Component has
+/// this attribute, Initialize will be called.
 extern const String cRunInEditor;
-// Used to determine whether a type that 'IsA(Resource)' is an interface, or an actual resource type.
+/// Used to determine whether a type that 'IsA(Resource)' is an interface, or an actual resource type.
 extern const String cResourceInterface;
-// Used for scripts. Allows a component to declare it is an interface for other types (i.e. Collider for BoxCollider)
+/// Used for scripts. Allows a component to declare it is an interface for other types (i.e. Collider for BoxCollider)
 extern const String cComponentInterface;
-// Used to specify that this component has a gizmo (via the archetype parameter)
+/// Used to specify that this component has a gizmo (via the archetype parameter)
 extern const String cGizmo;
 extern const String cCommand;
 extern const String cTool;
@@ -46,48 +46,48 @@ extern const String cTool;
 namespace PropertyAttributes
 {
 
-// Implies both [Display] and [Serialize].
+/// Implies both [Display] and [Serialize].
 extern const String cProperty;
-// When this property is modified in the property grid, the property grid
-// will do a full rebuild allowing for custom property filters to be run
+/// When this property is modified in the property grid, the property grid
+/// will do a full rebuild allowing for custom property filters to be run
 extern const String cInvalidatesObject;
-// When a Graphical is rendered, if this property exists on a Component of the same Cog 
-// as the Graphical, it will look for a matching input on the objects material 
-// and set the shader parameter.
+/// When a Graphical is rendered, if this property exists on a Component of the same Cog 
+/// as the Graphical, it will look for a matching input on the objects material 
+/// and set the shader parameter.
 extern const String cShaderInput;
-// When reverting an object, properties marked with this flag will not be reverted. This is
-// used for things like 'Transform::Translation'. When we revert an object's modifications,
-// we still want it to stay in the same location.
+/// When reverting an object, properties marked with this flag will not be reverted. This is
+/// used for things like 'Transform::Translation'. When we revert an object's modifications,
+/// we still want it to stay in the same location.
 extern const String cLocalModificationOverride;
-// Should this property be serialized. This is implied by PropertyAttributes::cProperty.
+/// Should this property be serialized. This is implied by PropertyAttributes::cProperty.
 extern const String cSerialize;
-// Deprecated. Same functionality as cSerialize. Kept around for legacy files.
+/// Deprecated. Same functionality as cSerialize. Kept around for legacy files.
 extern const String cDeprecatedSerialized;
-// Mark the property as being a dependency on another component.
+/// Mark the property as being a dependency on another component.
 extern const String cDependency;
-// Should this property show up in the property grid. This is implied by PropertyAttributes::cProperty.
+/// Should this property show up in the property grid. This is implied by PropertyAttributes::cProperty.
 extern const String cDisplay;
-// Deprecated. Same functionality as cDisplay. Kept around for legacy files.
+/// Deprecated. Same functionality as cDisplay. Kept around for legacy files.
 extern const String cDeprecatedEditable;
-// Used for customizing resource properties in scripts.
+/// Used for customizing resource properties in scripts.
 extern const String cResourceProperty;
-// Clones the Resource 
+/// Clones the Resource 
 extern const String cRuntimeClone;
-// Used for renaming properties. First attribute parameter should be the old name.
+/// Used for renaming properties. First attribute parameter should be the old name.
 extern const String cRenamedFrom;
-// Indicates the property should be replicated over the network.
+/// Indicates the property should be replicated over the network.
 extern const String cNetProperty;
-// Inside an Event dispatched over the network, this integer will be automatically filled with
-// the sending NetPeer's NetPeerId.
+/// Inside an Event dispatched over the network, this integer will be automatically filled with
+/// the sending NetPeer's NetPeerId.
 extern const String cNetPeerId;
-// Used to group properties in the property view. Must have a single string attribute parameter
-// which is the name of the group.
+/// Used to group properties in the property view. Must have a single string attribute parameter
+/// which is the name of the group.
 extern const String cGroup;
-// Used to specify a range for numbers being edited in the property grid.
+/// Used to specify a range for numbers being edited in the property grid.
 extern const String cRange;
-// Used to specify that the value should be modified by a slider in the property grid.
+/// Used to specify that the value should be modified by a slider in the property grid.
 extern const String cSlider;
-// Used to mark attribute parameters as optional. This is an internal attribute (not exposed to user).
+/// Used to mark attribute parameters as optional. This is an internal attribute (not exposed to user).
 extern const String cOptional;
 
 }//namespace PropertyFlags
@@ -96,11 +96,11 @@ extern const String cOptional;
 namespace FunctionAttributes
 {
 
-// The function shows up in the property grid.
+/// The function shows up in the property grid.
 extern const String cProperty;
-// The function shows up in the property grid.
+/// The function shows up in the property grid.
 extern const String cDisplay;
-// When this function is called from the property grid, the property grid will do a full rebuild
+/// When this function is called from the property grid, the property grid will do a full rebuild
 extern const String cInvalidatesObject;
 
 }//namespace FunctionFlags

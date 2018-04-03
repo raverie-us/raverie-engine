@@ -1,18 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SpriteDefinition.cpp
-/// Implementation of the SpriteDefinition class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Sprite Source Loader
 class SpriteSourceLoader : public ResourceLoader
 {
 public:
@@ -94,7 +87,7 @@ public:
   }
 };
 
-//---------------------------------------------------------------- Sprite Source
+//**************************************************************************************************
 ZilchDefineType(SpriteSource, builder, type)
 {
   ZeroBindDocumented();
@@ -105,26 +98,31 @@ ZilchDefineType(SpriteSource, builder, type)
   ZilchBindMethod(GetOrigin);
 }
 
+//**************************************************************************************************
 void SpriteSource::Unload()
 {
   AtlasManager::GetInstance()->RemoveSpriteSource(this);
 }
 
+//**************************************************************************************************
 Vec2 SpriteSource::GetSize()
 {
   return Vec2((float)FrameSizeX, (float)FrameSizeY);
 }
 
+//**************************************************************************************************
 Vec2 SpriteSource::GetOrigin()
 {
   return Vec2(OriginX, OriginY);
 }
 
+//**************************************************************************************************
 float SpriteSource::GetFrameRate()
 {
   return 1.0f / FrameDelay;
 }
 
+//**************************************************************************************************
 UvRect SpriteSource::GetUvRect(uint currentFrame)
 {
   if (mFramesPerRow == 0)
@@ -139,17 +137,25 @@ UvRect SpriteSource::GetUvRect(uint currentFrame)
   return frameUv;
 }
 
-void SpriteSource::LoadSourceImage(Image* image)
+//**************************************************************************************************
+void SpriteSource::LoadSourceImage(Status& status, Image* image)
 {
-  mContentItem->GetFullPath();
-  DataBlock block = ReadFileIntoDataBlock(mContentItem->GetFullPath().c_str());
+  String fullPath = mContentItem->GetFullPath();
+  if(!FileExists(fullPath))
+  {
+    String msg = String::Format("File '%s' didn't exist.", fullPath.c_str());
+    status.SetFailed(msg);
+    return;
+  }
 
-  Status status;
+  DataBlock block = ReadFileIntoDataBlock(fullPath.c_str());
+
   LoadFromPng(status, image, block.Data, block.Size);
 
   FreeBlock(block);
 }
 
+//**************************************************************************************************
 HandleOf<Texture> SpriteSource::GetAtlasTexture()
 {
   if (Atlas* atlas = mAtlas)
@@ -158,6 +164,7 @@ HandleOf<Texture> SpriteSource::GetAtlasTexture()
   return nullptr;
 }
 
+//**************************************************************************************************
 TextureRenderData* SpriteSource::GetAtlasTextureRenderData()
 {
   if (Atlas* atlas = mAtlas)
@@ -167,9 +174,9 @@ TextureRenderData* SpriteSource::GetAtlasTextureRenderData()
   return nullptr;
 }
 
-//-------------------------------------------------------- Sprite Source Manager
 ImplementResourceManager(SpriteSourceManager, SpriteSource);
 
+//**************************************************************************************************
 SpriteSourceManager::SpriteSourceManager(BoundType* resourceType)
   : ResourceManager(resourceType)
 {
@@ -183,4 +190,4 @@ SpriteSourceManager::SpriteSourceManager(BoundType* resourceType)
   mExtension = "png";
 }
 
-}// namespace Zero
+} // namespace Zero

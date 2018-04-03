@@ -86,6 +86,7 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   mutex.Initialize(status, mutexId.c_str(), true);
   if(status.Failed())
   {
+    ZPrint("Mutex is already open. Sending a message to the open launcher and closing\n");
     Zero::LauncherSingletonCommunication communicator(environment->mParsedCommandLineArguments);
     return 0;
   }

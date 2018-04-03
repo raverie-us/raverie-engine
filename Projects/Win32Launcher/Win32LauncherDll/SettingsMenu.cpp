@@ -166,11 +166,11 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
 
     new Spacer(this, SizePolicy::Fixed, Pixels(0, -9));
 
-    mAutoCheckForMajorUpdatesCheckBox = new CheckBox(this);
-    mAutoCheckForMajorUpdatesCheckBox->SetChecked(config->mAutoCheckForMajorUpdates);
-    mAutoCheckForMajorUpdatesCheckBox->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(12));
-    ConnectThisTo(mAutoCheckForMajorUpdatesCheckBox, Events::ValueChanged, OnAutoCheckForMajorUpdatesModified);
-    mWidgetsToAnimate.PushBack(mAutoCheckForMajorUpdatesCheckBox);
+    mAutoCheckForLauncherUpdatesCheckBox = new CheckBox(this);
+    mAutoCheckForLauncherUpdatesCheckBox->SetChecked(config->mAutoCheckForLauncherUpdates);
+    mAutoCheckForLauncherUpdatesCheckBox->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(12));
+    ConnectThisTo(mAutoCheckForLauncherUpdatesCheckBox, Events::ValueChanged, OnAutoCheckForMajorUpdatesModified);
+    mWidgetsToAnimate.PushBack(mAutoCheckForLauncherUpdatesCheckBox);
   }
 
   // Show development builds
@@ -207,14 +207,14 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
 
   new Spacer(this, SizePolicy::Flex, Vec2(1, 1));
 
+  // Check for updates (builds/etc...)
+  TextButton* checkForUpdatesButton = new TextButton(this);
+  checkForUpdatesButton->SetText("Check for Updates");
+  ConnectThisTo(checkForUpdatesButton, Events::ButtonPressed, OnCheckForUpdates);
+
+  mWidgetsToAnimate.PushBack(checkForUpdatesButton);
   if(Z::gEngine->GetConfigCog()->has(DeveloperConfig))
   {
-    // Check for updates (might go away)
-    TextButton* checkForUpdatesButton = new TextButton(this);
-    checkForUpdatesButton->SetText("Check for Updates");
-    ConnectThisTo(checkForUpdatesButton, Events::ButtonPressed, OnCheckForUpdates);
-    mWidgetsToAnimate.PushBack(checkForUpdatesButton);
-
     // Check for updates (might go away)
     TextButton* checkForLauncherUpdatesButton = new TextButton(this);
     checkForLauncherUpdatesButton->SetText("Check for Launcher Updates");
@@ -460,10 +460,14 @@ void SettingsMenu::OnMaxRecentProjectsModified(Event* e)
 void SettingsMenu::OnAutoCheckForMajorUpdatesModified(Event* e)
 {
   LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
-  config->mAutoCheckForMajorUpdates = mAutoCheckForMajorUpdatesCheckBox->GetChecked();
+  config->mAutoCheckForLauncherUpdates = mAutoCheckForLauncherUpdatesCheckBox->GetChecked();
 
   // Save the config now with the new settings
   SaveConfig();
+
+  // Start checking for auto-updates now (needs to queue up actions)
+  if(config->mAutoCheckForLauncherUpdates && !mLauncher->mIsLauncherUpdateCheckQueued)
+    mLauncher->AutoCheckForLauncherUpdates();
 }
 
 //******************************************************************************

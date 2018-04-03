@@ -144,24 +144,29 @@ public:
   /// Check for the server for templates and builds.
   void CheckForUpdates();
   void OnCheckForUpdates(Event* e);
+  /// The auto check for launcher updates that happens on certain frequencies
+  void AutoCheckForLauncherUpdates();
   /// Check to see if there is a new launcher available
   void CheckForLauncherUpdates();
+
   /// Check for launcher major updates (requires running a new installer)
   void CheckForMajorLauncherUpdates();
   /// Response for check if a new installer is available. May invoke the installer to close and restart the launcher.
   void OnCheckForMajorLauncherUpdates(BackgroundTaskEvent* e);
-  /// Check if there is a new patch to the launcher (dll to download)
-  void CheckForLauncherPatch();
-  /// Response for a launcher patch (dll)
-  void OnCheckForLauncherPatch(BackgroundTaskEvent* e);
   /// Prompt response for asking if a user wants to install a new major version (runs installer).
   void OnInstallMajorVersion(ModalConfirmEvent* e);
   /// Response for a launcher installer being downloaded.
   void OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e);
-  /// After trying to download the version id from the server, check if the id is newer.
-  void OnLauncherIdCheck(BackgroundTaskEvent* e);
-  /// Callback from prompting the user to restart and update the launcher.
-  void OnRestartPrompt(ModalConfirmEvent* e);
+
+  /// Check if there is a new patch to the launcher (dll to download)
+  void CheckForLauncherPatch();
+  /// Response for a launcher patch (dll)
+  void OnCheckForLauncherPatch(BackgroundTaskEvent* e);
+  /// Prompt response for asking if a user wants to install a new patch version (downloads/extracts/restarts).
+  void OnInstallPatchVersion(ModalConfirmEvent* e);
+  /// Response for a launcher patch being downloaded.
+  void OnPatchLauncherUpdateDownloaded(BackgroundTaskEvent* e);
+  
   /// Tell the user that all of their builds must be updated. Needed for emergency patches to old builds.
   void ForceUpdateBuilds();
   void ForceUpdateBuildsAndUpdateConfig();
@@ -288,6 +293,9 @@ public:
   /// Various event objects created to send data via tcpsockets. They need to live for
   /// an undetermined amount of time so we're just storing them to clean up at the end.
   Array<EventObject*> mDummyCommunicators;
+
+  String mUpdateModalName;
+  bool mIsLauncherUpdateCheckQueued;
 };
 
 }//namespace Zero

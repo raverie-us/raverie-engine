@@ -27,39 +27,33 @@ StartupFunction LoadDll(Zero::StringParam libraryPath, ExternalLibrary& library)
   return (StartupFunction)library.GetFunctionByName("RunZeroLauncher");
 }
 
-void DownloadPackageFromServer(Zero::StringParam downloadLauncherPackagePath, Zero::StringParam versionIdFilePath, int serverVersionId)
+Zero::String GetLauncherDownloadedPath()
 {
-  //download the dll/content package from the server
   String majorVersionIdStr = ToString(GetLauncherMajorVersion());
-  String url = BuildString(UrlRoot, "?Commands=RequestZeroLauncherPackage&MajorId=", majorVersionIdStr);
-  BlockingWebRequest request;
-  request.mUrl = url;
-  request.mSendEvent = false;
-  String data = request.Run();
+  String launcherFolderName = BuildString("ZeroLauncher_", majorVersionIdStr, ".0");
+  String searchLocation = FilePath::Combine(GetUserLocalDirectory(), launcherFolderName);
 
-  // Delete the old directory if it existed (so we don't keep any old resource files around)
-  DeleteDirectory(downloadLauncherPackagePath);
-
-  //extract the archive to the download directory
-  Archive archive(ArchiveMode::Decompressing);
-  ByteBufferBlock buffer((byte*)data.Data(), data.SizeInBytes(), false);
-  archive.ReadBuffer(ArchiveReadFlags::All, buffer);
-  archive.ExportToDirectory(ArchiveExportMode::Overwrite, downloadLauncherPackagePath);
-
-  //save out a file that Contains the version id (so we know what the download's id is)
-  String versionIdString = ToString(serverVersionId);
-  WriteStringRangeToFile(versionIdFilePath, versionIdString);
-}
-
-void DownloadFromServerIfNewer(Zero::StringParam downloadPath, Zero::StringParam downloadVersionIdFilePath, int& downloadedVersionId, int serverVersionId)
-{
-  //if the server package is newer than the downloaded package then download from the server
-  if(serverVersionId > downloadedVersionId)
+  String foundPath;
+  int bestId = -1;
+  // Find any directory that is just a number
+  FileRange range(searchLocation);
+  for(; !range.Empty(); range.PopFront())
   {
-    DownloadPackageFromServer(downloadPath, downloadVersionIdFilePath, serverVersionId);
-    //update the download id to be what was on the server
-    downloadedVersionId = serverVersionId;
+    FileEntry entry = range.frontEntry();
+    if(!IsDirectory(entry.GetFullPath()))
+      continue;
+
+    int id = -1;
+    ToValue(entry.mFileName, id);
+
+    // Keep the largest number
+    if(id > bestId)
+    {
+      bestId = id;
+      foundPath = entry.GetFullPath();
+    }
   }
+  return foundPath;
 }
 
 String ChooseDllPath(Zero::StringParam localDllPath, int localDllVersionId, Zero::StringParam downloadedDllPath, int downloadedDllVersionId)
@@ -87,29 +81,20 @@ ZeroGuiMain()
   // As long as the program wants to restart keep trying to load a new dll and running it
   while(restart)
   {
-    // Get the id of the dll on the server
-    String majorVersionIdStr = ToString(GetLauncherMajorVersion());
-    String url = BuildString(UrlRoot, "?Commands=CheckPatchId&MajorId=", majorVersionIdStr);
-    BlockingWebRequest request;
-    request.mUrl = url;
-    request.mSendEvent = false;
-    String serverDllDate = request.Run();
-    int serverVersionId;
-    ToValue(serverDllDate.c_str(), serverVersionId);
-
     String versionIdFileName = "ZeroLauncherVersionId.txt";
     String launcherDllName = "ZeroLauncherDll.dll";
     String appDir = GetApplicationDirectory();
-    String downloadsRootDir = GetUserLocalDirectory();
 
     String localVersionPath = appDir;
     String localVersionIdPath = FilePath::Combine(localVersionPath, versionIdFileName);
     String localDllPath = FilePath::Combine(localVersionPath, launcherDllName);
 
-    String launcherFolderName = BuildString("ZeroLauncher_", majorVersionIdStr, ".0");
-    String downloadPath = FilePath::Combine(downloadsRootDir, launcherFolderName);
-    String downloadedVersionIdPath = FilePath::Combine(downloadPath, versionIdFileName);
-    String downloadedDllPath = FilePath::Combine(downloadPath, launcherDllName);
+    String downloadPath = GetLauncherDownloadedPath();
+    String downloadedVersionIdPath;
+    // If there was no download available then leave the version id path as an empty string.
+    // This will cause us to fail to open the file and get back a default id value.
+    if(!downloadPath.Empty())
+      downloadedVersionIdPath = FilePath::Combine(downloadPath, versionIdFileName);
 
     int localVersionId = GetVersionId(localVersionIdPath);
     int downloadedVersionId = GetVersionId(downloadedVersionIdPath);
@@ -129,9 +114,6 @@ ZeroGuiMain()
       
       return 1;
     }
-
-    //if the server Contains a newer dll then download it always (even though we might not run it)
-    DownloadFromServerIfNewer(downloadPath, downloadedVersionIdPath, downloadedVersionId, serverVersionId);
 
     //load whatever dll is newer between the installed one and the downloaded one
     //(if they install a newer version selector we want to run that dll instead of

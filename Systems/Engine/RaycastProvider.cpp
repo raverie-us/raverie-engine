@@ -148,11 +148,14 @@ void RaycastResultList::AddList(RaycastResultList& list)
   for(uint i = 0; i < list.mSize; ++i)
   {
     RayCastEntry& entry = list.mEntries[i];
-    RayCastEntry* foundEntry = map.FindPointer(entry.Instance);
-    if(foundEntry == nullptr)
-      map.Insert(entry.Instance, entry);
-    else if(*foundEntry > entry)
-      *foundEntry = entry;
+
+    CastMap::InsertResult result = map.InsertNoOverwrite(entry.Instance, entry);
+    if(!result.mIsNewInsert)
+    {
+      RayCastEntry& existing = result.mValue->second;
+      if(existing > entry)
+        existing = entry;
+    }
   }
 
   // Now the list contains all of the items with their smallest times.

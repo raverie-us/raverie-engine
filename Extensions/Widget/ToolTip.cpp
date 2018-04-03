@@ -102,7 +102,7 @@ void ToolTip::Initialize(Widget* source)
   mSource = source;
 
   // The default border color
-  SetColor(ToolTipColor::Default);
+  SetColorScheme(ToolTipColorScheme::Default);
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquareBorder);
@@ -116,6 +116,7 @@ void ToolTip::Initialize(Widget* source)
   // Default margins
   mContentPadding = Thickness(6, 4, 6, 4);
   mContent = nullptr;
+  mTextStack = nullptr;
   mArrowOffset = Vec2::cZero;
   mSide = IndicatorSide::Right;
 
@@ -251,23 +252,62 @@ void ToolTip::SizeToContents()
 //******************************************************************************
 Text* ToolTip::SetText(StringParam text)
 {
-  // Create the text object
-  Text* textObject = new Text(this, cText);
-  textObject->SetText(text);
+  if(mTextStack != nullptr)
+    mTextStack->DestroyChildren( );
+  
+  return AddText(text, Vec4(1));
+}
 
-  textObject->SetMultiLine(true);
-  textObject->FitToWidth(ToolTipUi::ToolTipWrapWidth, Pixels(1000));
+//******************************************************************************
+Text* ToolTip::AddText(StringParam text, Vec4Param color)
+{
+    // If the content wasn't text already then destroy it.
+  if(mContent != mTextStack)
+    SafeDestroy(mContent);
 
-  // Set it as the content
-  SetContent(textObject);
-  return textObject;
+  if(mTextStack == nullptr)
+  {
+    // Prep text stacking;
+    mTextStack = new Composite(this);
+    mTextStack->SetLayout(CreateStackLayout( ));
+
+    // The text stack will always be the content when adding text.
+    mContent = mTextStack;
+  }
+
+  MultiLineText* textObject = (MultiLineText*)CreateTextPreview(mTextStack, text);
+  if(textObject != nullptr)
+  {
+    textObject->mTextField->FitToWidth(ToolTipUi::ToolTipWrapWidth, Pixels(1000));
+
+    // Defer border-display to this tooltip's border.
+    textObject->mBorder->SetVisible(false);
+    textObject->mTextField->SetColor(color);
+  }
+
+  SizeToContents();
+  UpdateTransform();
+  MarkAsNeedsUpdate();
+
+  return textObject->mTextField;
+}
+
+//******************************************************************************
+void ToolTip::ClearText()
+{
+  if(mTextStack != nullptr)
+    mTextStack->DestroyChildren();
+
+  SizeToContents();
+  UpdateTransform();
+  MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
 void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
 {
   SetText(text);
-  SetColor(ToolTipColor::Default);
+  SetColorScheme(ToolTipColorScheme::Default);
 
   ToolTipPlacement placement;
   placement.SetScreenRect(placementRect);
@@ -281,11 +321,13 @@ void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
 //******************************************************************************
 void ToolTip::SetContent(Widget* content)
 {
-  // Destroy the old one if it exists
+  // Destroy the old contexts if they exist.
   SafeDestroy(mContent);
+  SafeDestroy(mTextStack);
 
   // Attach it to ourself
   AttachChildWidget(content);
+
   mContent = content;
 
   // Update the size based on the new content
@@ -427,34 +469,34 @@ void ToolTip::SetDestroyOnMouseExit(bool state)
 }
 
 //******************************************************************************
-void ToolTip::SetColor(ToolTipColor::Enum color)
+void ToolTip::SetColorScheme(ToolTipColorScheme::Enum color)
 {
-  if(color == ToolTipColor::Default)
+  if(color == ToolTipColorScheme::Default)
   {
     mBackgroundColor = FloatColorRGBA(42, 90, 120, 255);
     mBorderColor = FloatColorRGBA(63, 135, 180, 255);
   }
-  else if (color == ToolTipColor::Gray)
+  else if (color == ToolTipColorScheme::Gray)
   {
     mBackgroundColor = ToolTipUi::BackgroundColor;
     mBorderColor = ToolTipUi::BorderColor;
   }
-  else if (color == ToolTipColor::Red)
+  else if (color == ToolTipColorScheme::Red)
   {
     mBackgroundColor = FloatColorRGBA(120, 42, 44, 255);
     mBorderColor = FloatColorRGBA(180, 63, 66, 255);
   }
-  else if (color == ToolTipColor::Yellow)
+  else if (color == ToolTipColorScheme::Yellow)
   {
     mBackgroundColor = FloatColorRGBA(135, 110, 43, 255);
     mBorderColor = FloatColorRGBA(195, 165, 65, 255);
   }
-  else if (color == ToolTipColor::Green)
+  else if (color == ToolTipColorScheme::Green)
   {
     mBackgroundColor = FloatColorRGBA(49, 113, 48, 255);
     mBorderColor = FloatColorRGBA(74, 170, 72, 255);
   }
-  else if (color == ToolTipColor::Orange)
+  else if (color == ToolTipColorScheme::Orange)
   {
     mBackgroundColor = FloatColorRGBA(128, 69, 34, 255);
     mBorderColor = FloatColorRGBA(192, 104, 51, 255);

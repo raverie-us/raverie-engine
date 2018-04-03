@@ -370,7 +370,7 @@ public:
   }
 
   template <typename Option, typename T>
-  void SetSocketOption(Status& status, Option option, T value)
+  void SetSocketOption(Status& status, Option option, const T& value)
   {
     size_t valueLength = sizeof(value);
     T temp = value;
@@ -387,7 +387,7 @@ public:
   }
 
   template <typename Option>
-  void SetSocketOption(Status& status, Option option, bool value)
+  void SetSocketOption(Status& status, Option option, const bool& value)
   {
     size_t temp = size_t(value);
     size_t tempLength = sizeof(temp);

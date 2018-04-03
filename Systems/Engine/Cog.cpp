@@ -136,7 +136,9 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(FindDirectChildByName);
   ZilchBindMethod(FindAllChildrenByName);
 
-  ZilchBindMethod(IsDescendant);
+  ZilchBindMethod(IsDescendant)->AddAttribute(DeprecatedAttribute);
+  ZilchBindMethod(IsDescendantOf);
+  ZilchBindMethod(IsAncestorOf);
 
   ZilchBindMethod(FindNextSibling);
   ZilchBindMethod(FindPreviousSibling);
@@ -1132,6 +1134,12 @@ bool Cog::AttachToPreserveLocal(Cog* parent)
 //**************************************************************************************************
 bool Cog::AttachTo(Cog* parent)
 {
+  if (parent == nullptr)
+  {
+    DoNotifyException("Invalid attachment", "Cannot attach to null object");
+    return false;
+  }
+
   Transform* childTransform = this->has(Transform);
 
   // If the child has no Transform, there's no relative attachment needed
@@ -1332,11 +1340,28 @@ Cog* Cog::FindChildByChildId(Guid childId)
 //**************************************************************************************************
 bool Cog::IsDescendant(Cog* cog)
 {
-  while (cog)
-  {
-    cog = cog->GetParent();
+  return IsAncestorOf(cog);
+}
 
-    if (cog == this)
+//**************************************************************************************************
+bool Cog::IsDescendantOf(Cog* ancestor)
+{
+  if (ancestor == nullptr)
+  {
+    DoNotifyException("Cog", "null object given");
+    return false;
+  }
+
+  return ancestor->IsAncestorOf(this);
+}
+
+//**************************************************************************************************
+bool Cog::IsAncestorOf(Cog* descendant)
+{
+  while (descendant)
+  {
+    descendant = descendant->GetParent();
+    if (descendant == this)
       return true;
   }
 

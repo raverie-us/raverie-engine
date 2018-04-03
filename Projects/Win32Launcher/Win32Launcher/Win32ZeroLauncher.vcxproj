@@ -110,7 +110,6 @@
     <Copy_Data_File Include="$(ZERO_SOURCE)\External\Freetype\bin\freetype28.dll" />
     <Copy_Data_File Include="$(ZERO_SOURCE)\External\Freetype\bin\zlib1.dll" />
     <Copy_Data_File Include="$(ZERO_SOURCE)\Projects\Win32Shared\ErrorDialog.exe" />
-    <Copy_Data_File Include="$(ZERO_SOURCE)\External\PortAudio\portaudio_x86.dll" />
     <Copy_Data_File Include="$(ZERO_SOURCE)\Projects\Win32Shared\Configuration.data" />
     <Copy_Data_File Include="$(ZERO_SOURCE)\Projects\Win32Shared\DefaultLauncherConfiguration.data" />
   </ItemGroup>

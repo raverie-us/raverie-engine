@@ -156,7 +156,7 @@ PropertyState DirectProperty::GetValue()
   return mProp->GetValue(mInstance, mProperty);
 }
 
-String DirectProperty::GetToolTip(ToolTipColor::Enum* color)
+String DirectProperty::GetToolTip(ToolTipColorScheme::Enum* color)
 {
   // Build the tool tip text
   StringBuilder toolTip;
@@ -170,7 +170,7 @@ String DirectProperty::GetToolTip(ToolTipColor::Enum* color)
     toolTip << "(right click to revert)\n";
     toolTip << "____________________\n\n";
     if(color)
-      *color = ToolTipColor::Orange;
+      *color = ToolTipColorScheme::Orange;
   }
 
   // Add the type name line

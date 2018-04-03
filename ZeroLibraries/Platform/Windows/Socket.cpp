@@ -525,9 +525,14 @@ SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam
   hints.ai_socktype = type;
   hints.ai_flags    = addressResolutionFlags;
 
+  // This allows us to bind to the loopback by providing an empty host and NOT specifying AnyAddress
+  const char* hostName = host.c_str();
+  if (host.Empty())
+    hostName = nullptr;
+
   // Resolve host list
   ADDRESS_INFO* hosts = nullptr;
-  int result = getaddrinfo(chooseAnyAddress ? nullptr : host.c_str(),
+  int result = getaddrinfo(chooseAnyAddress ? nullptr : hostName,
                            service.c_str(),
                            &hints,
                            &hosts);
@@ -908,7 +913,7 @@ size_t Socket::GetMaxListenBacklog()
 }
 
 bool Socket::IsCommonReceiveError(int extendedErrorCode)
-{`
+{
   switch(extendedErrorCode)
   {
   case WSAENETRESET:

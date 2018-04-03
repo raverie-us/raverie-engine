@@ -1,12 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file HeightMapModel.cpp
-/// Implementation of the HeightMapModel class.
-///
-/// Authors: Trevor Sundberg, Nathan Carlson
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,13 +8,14 @@ namespace Zero
 
 const uint WeightTextureSize = 128;
 
-//-------------------------------------------------------- GraphicalPatchIndices
+//**************************************************************************************************
 GraphicalPatchIndices* GraphicalPatchIndices::GetInstance()
 {
   static GraphicalPatchIndices sInstance;
   return &sInstance;
 }
 
+//**************************************************************************************************
 GraphicalPatchIndices::GraphicalPatchIndices()
 {
   mIndices.Reserve(HeightPatch::NumIndicesTotal);
@@ -41,7 +36,7 @@ GraphicalPatchIndices::GraphicalPatchIndices()
   }
 }
 
-//--------------------------------------------------------------- HeightMapModel
+//**************************************************************************************************
 ZilchDefineType(HeightMapModel, builder, type)
 {
   ZeroBindComponent();
@@ -51,11 +46,13 @@ ZilchDefineType(HeightMapModel, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 }
 
+//**************************************************************************************************
 void HeightMapModel::Serialize(Serializer& stream)
 {
   Graphical::Serialize(stream);
 }
 
+//**************************************************************************************************
 void HeightMapModel::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
@@ -79,6 +76,7 @@ void HeightMapModel::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner(), Events::HeightMapSave, OnSave);
 }
 
+//**************************************************************************************************
 void HeightMapModel::OnDestroy(uint flags)
 {
   Graphical::OnDestroy(flags);
@@ -88,11 +86,13 @@ void HeightMapModel::OnDestroy(uint flags)
     delete patch.mWeightTexture;
 }
 
+//**************************************************************************************************
 Aabb HeightMapModel::GetLocalAabb()
 {
   return mLocalAabb;
 }
 
+//**************************************************************************************************
 void HeightMapModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   GraphicalEntryData* entryData = frameNode.mGraphicalEntry->mData;
@@ -119,6 +119,7 @@ void HeightMapModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlo
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
+//**************************************************************************************************
 void HeightMapModel::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
@@ -128,6 +129,7 @@ void HeightMapModel::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, F
   viewNode.mLocalToPerspective = viewBlock.mViewToPerspective * viewNode.mLocalToView;
 }
 
+//**************************************************************************************************
 void HeightMapModel::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
 {
   typedef HashMap<HeightPatch*, GraphicalHeightPatch>::pair GraphicalPatchPair;
@@ -156,6 +158,7 @@ void HeightMapModel::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camer
   }
 }
 
+//**************************************************************************************************
 bool HeightMapModel::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   HeightMapRayRange results = mMap->CastWorldRay(rayCast.mRay);
@@ -170,11 +173,13 @@ bool HeightMapModel::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   return true;
 }
 
+//**************************************************************************************************
 String HeightMapModel::GetDefaultMaterialName()
 {
   return "DefaultHeightMapMaterial";
 }
 
+//**************************************************************************************************
 void HeightMapModel::AddGraphicalPatchEntry(Array<GraphicalEntry>& entries, GraphicalHeightPatch& graphicalPatch, PatchIndex index)
 {
   GraphicalEntryData& entryData = graphicalPatch.mGraphicalEntryData;
@@ -190,6 +195,7 @@ void HeightMapModel::AddGraphicalPatchEntry(Array<GraphicalEntry>& entries, Grap
   entries.PushBack(entry);
 }
 
+//**************************************************************************************************
 void HeightMapModel::OnPatchAdded(HeightMapEvent* event)
 {
   HeightPatch* heightPatch = event->Patch;
@@ -205,6 +211,7 @@ void HeightMapModel::OnPatchAdded(HeightMapEvent* event)
   CreateGraphicalPatchMesh(heightPatch);
 }
 
+//**************************************************************************************************
 void HeightMapModel::OnPatchRemoved(HeightMapEvent* event)
 {
   HeightPatch* heightPatch = event->Patch;
@@ -216,6 +223,7 @@ void HeightMapModel::OnPatchRemoved(HeightMapEvent* event)
   RebuildLocalAabb();
 }
 
+//**************************************************************************************************
 void HeightMapModel::OnPatchModified(HeightMapEvent* event)
 {
   HeightPatch* heightPatch = event->Patch;
@@ -224,6 +232,7 @@ void HeightMapModel::OnPatchModified(HeightMapEvent* event)
   RebuildLocalAabb();
 }
 
+//**************************************************************************************************
 void HeightMapModel::OnSave(HeightMapEvent* event)
 {
   HeightMapSource* source = event->Source;
@@ -243,6 +252,7 @@ void HeightMapModel::OnSave(HeightMapEvent* event)
   }
 }
 
+//**************************************************************************************************
 void HeightMapModel::RebuildLocalAabb()
 {
   if (mGraphicalPatches.Empty())
@@ -259,6 +269,7 @@ void HeightMapModel::RebuildLocalAabb()
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 void HeightMapModel::CreateGraphicalPatchMesh(HeightPatch* heightPatch)
 {
   Aabb patchAabb = mMap->GetPatchLocalAabb(heightPatch);

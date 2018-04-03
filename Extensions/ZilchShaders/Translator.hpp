@@ -162,7 +162,7 @@ public:
   LibraryTranslator mLibraryTranslator;
 
   ZilchShaderProject* mCurrentProject;
-  ZilchShaderLibrary* mCurrentLibrary;
+  ZilchShaderLibraryRef mCurrentLibrary;
   
   // Quick fix variable to allow the same translator to be used more than once. 
   // This is used to prevent registering branch walkers multiple times.

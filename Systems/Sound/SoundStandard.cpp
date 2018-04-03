@@ -21,6 +21,7 @@ ZilchDefineEnum(SoundSelectMode);
 ZilchDefineEnum(SynthWaveType);
 ZilchDefineEnum(AudioMixTypes);
 ZilchDefineEnum(AudioLatency);
+ZilchDefineEnum(GranularSynthWindows);
 
 // Arrays
 ZeroDefineArrayType(Array<SoundEntry>);
@@ -42,6 +43,7 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeEnum(SynthWaveType);
   ZilchInitializeEnum(AudioMixTypes);
   ZilchInitializeEnum(AudioLatency);
+  ZilchInitializeEnum(GranularSynthWindows);
   
   // Arrays
   ZeroInitializeArrayTypeAs(Array<SoundEntry>, "Sounds");
@@ -95,8 +97,10 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeType(AddNoiseNode);
   ZilchInitializeType(AdsrEnvelope);
   ZilchInitializeType(AdditiveSynthNode);
+  ZilchInitializeType(GranularSynthNode);
   ZilchInitializeType(ModulationNode);
   ZilchInitializeType(MicrophoneInputNode);
+  ZilchInitializeType(SaveAudioNode);
   ZilchInitializeType(SoundTagDisplay);
   ZilchInitializeType(SoundTag);
   ZilchInitializeType(NodePrintInfo);

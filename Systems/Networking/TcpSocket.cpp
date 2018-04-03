@@ -140,6 +140,8 @@ ZilchDefineType(TcpSocket, builder, type)
 
   ZilchBindMethod(Connect);
   ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int));
+  ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int, uint));
+  ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int, uint, TcpSocketBind::Enum));
   ZilchBindMethod(Close);
   ZilchBindMethod(CloseConnection);
   ZilchBindMethod(SendTo);
@@ -310,8 +312,13 @@ bool TcpSocket::Listen(int port)
   return Listen(port, MaxPossibleConnections);
 }
 
-// Listen for incoming connections
 bool TcpSocket::Listen(int port, uint maxConnections)
+{
+  return Listen(port, MaxPossibleConnections, TcpSocketBind::Any);
+}
+
+// Listen for incoming connections
+bool TcpSocket::Listen(int port, uint maxConnections, TcpSocketBind::Enum bindTo)
 {
   // Quit out if we have an invalid socket (or it can't be created)
   if (ValidateServer() == false)
@@ -320,7 +327,11 @@ bool TcpSocket::Listen(int port, uint maxConnections)
   // Create a socket address info that lets us bind to the local network adapter (probably the primary)
   Status status;
   SocketAddress localAddress;
-  localAddress.SetIpv4(status, String(), ushort(port), SocketAddressResolutionFlags::AnyAddress);
+  if (bindTo == TcpSocketBind::Any)
+    localAddress.SetIpv4(status, String(), ushort(port), SocketAddressResolutionFlags::AnyAddress);
+  else
+    localAddress.SetIpv4(status, String(), ushort(port), SocketAddressResolutionFlags::None);
+  
   if (status.Failed())
   {
     // Dispatch out an error and return a failure

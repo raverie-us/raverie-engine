@@ -41,6 +41,8 @@ EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership)
   ConnectThisTo(this, Events::ObjectPoll, OnObjectPoll);
 
   ConnectThisTo(Z::gResources, Events::ResourceRemoved, OnResourcesRemoved);
+  ConnectThisTo(Z::gResources, Events::ResourceModified, OnResourceModified);
+
   ConnectThisTo(this, Events::CommandCaptureContext, OnCaptureContext);
   ConnectThisTo(this, Events::TabFind, OnTabFind);
   ConnectThisTo(this, Events::FocusGainedHierarchy, OnFocusGained);
@@ -65,7 +67,7 @@ EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership)
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyUp, OnKeyUp);
 
-  ConnectThisTo(this, Events::MouseDrop, OnMouseDrop);
+  ConnectThisTo(this, Events::MouseFileDrop, OnMouseFileDrop);
   ConnectThisTo(this, Events::MetaDrop, OnMetaDrop);
   ConnectThisTo(this, Events::MetaDropTest, OnMetaDrop);
   ConnectThisTo(this, Events::MetaDropUpdate, OnMetaDrop);
@@ -172,7 +174,10 @@ void EditorViewport::SetUpEditorCamera()
 ReactiveViewport* EditorViewport::GetReactiveViewport()
 {
   CameraViewport* cameraViewport = mEditorCamera.has(CameraViewport);
-  return Type::DynamicCast<ReactiveViewport*>((Viewport*)cameraViewport->mViewport);
+  if (cameraViewport != nullptr)
+    return Type::DynamicCast<ReactiveViewport*>((Viewport*)cameraViewport->mViewport);
+  else
+    return nullptr;
 }
 
 void EditorViewport::SetTargetSpace(Space* space)
@@ -430,6 +435,22 @@ void EditorViewport::OnResourcesRemoved(ResourceEvent* event)
     CloseTabContaining(this);
 }
 
+void EditorViewport::OnResourceModified(ResourceEvent* event)
+{
+  Space* editSpace = mEditSpace;
+  if(editSpace == NULL)
+    return;
+
+  Level* editLevel = editSpace->mLevelLoaded;
+  
+  // Is the level this viewport is editing the modified resource?
+  if(editLevel == (Level*)event->EventResource)
+  {
+    TabRenamedEvent eventToSend(event->EventResource->Name);
+    this->DispatchEvent(Events::TabRenamed, &eventToSend);
+  }
+}
+
 void EditorViewport::OnCaptureContext(CommandCaptureContextEvent* event)
 {
   event->ActiveSet->SetContext(this);
@@ -676,23 +697,14 @@ void EditorViewport::OnMouseScroll(MouseEvent* e)
     controller->MouseScroll(e->Scroll);
 }
 
-void EditorViewport::OnMouseDrop(MouseEvent* event)
+void EditorViewport::OnMouseFileDrop(MouseFileDropEvent* event)
 {
   ReactiveViewport* viewport = GetReactiveViewport();
   if (viewport == nullptr)
     return;
 
   if (Space* space = mEditSpace)
-  {
-    if (event->OsEvent)
-    {
-      Vec2 mousePos = ToLocal(event->Position);
-      SelectionResult result = EditorRayCast(viewport, mousePos);
-
-      OsMouseDropEvent* mouseDrop = (OsMouseDropEvent*)event->OsEvent;
-      LoadFilesDroppedOnViewport(event, viewport, space, result.Object, mouseDrop->Files);
-    }
-  }
+      LoadFilesDroppedOnViewport(event->Files->NativeArray);
 }
 
 void EditorViewport::OnMetaDrop(MetaDropEvent* e)

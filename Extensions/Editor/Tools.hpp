@@ -3,7 +3,7 @@
 /// \file Tools.hpp
 /// Declaration of the Tools classes.
 /// 
-/// Authors: Chris Peters
+/// Authors: Chris Peters, Dane Curbow
 /// Copyright 2010-2012, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,13 +81,17 @@ public:
   void OnLeftMouseUp(ViewportMouseEvent* e);
 
   typedef bool(*CogSelectFilter)(Cog*, Cog*);
-  Cog* WalkRayCast(Cog* current, RaycastResultList& result, CogSelectFilter func);
-  bool ArchetypeSelect(Cog* current, Cog* toSelect, RaycastResultList& result);
+
+  static Cog* WalkRayCast(Cog* current, RaycastResultList& result, CogSelectFilter func);
+  // Checks the object to select against the archetype selection setup if it is an archetype
+  static Cog* ArchetypeSelect(MetaSelection* selection, Cog* toSelect);
+  // Check the object to select in the context of an archetype or hierarchy depending on the selection options
+  static Cog* SmartSelect(MetaSelection* selection, Cog* toSelect, bool rootSelect, bool archetypeSelect);
 
   void Select(ViewportMouseEvent* e);
   SelectionResult RayCastSelect(Viewport* viewport, Vec2 mousePosition);
   RaycastResultList RayCastSelectInternal(Viewport* viewport, Vec2 mousePosition);
-
+  
   Cog* RayCast(Viewport* viewport, Vec2 mousePosition);
 
   /// Add a provider for testing raycasting. Note: The tool expects

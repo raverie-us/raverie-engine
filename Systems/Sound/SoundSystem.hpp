@@ -109,13 +109,7 @@ class SoundSystem : public System, Audio::ExternalSystemInterface
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  SoundSystem() :
-    mCounter(0), 
-    mPreviewInstance(0),
-    mLatency(AudioLatency::Low),
-    mSendMicEvents(false),
-    mSendCompressedMicEvents(false)
-  {}
+  SoundSystem();
   ~SoundSystem();
 
   //System Interface
@@ -191,6 +185,10 @@ public:
   static ModulationNode* ModulationNode() { return new Zero::ModulationNode(); }
   /// Creates a new MicrophoneInputNode object
   static MicrophoneInputNode* MicrophoneInputNode() { return new Zero::MicrophoneInputNode(); }
+  /// Creates a new SaveAudioNode object
+  static SaveAudioNode* SaveAudioNode() { return new Zero::SaveAudioNode(); }
+  /// Creates a new GranularSynthNode object
+  static GranularSynthNode* GranularSynthNode() { return new Zero::GranularSynthNode(); }
 
 //Internals
   void Update();
@@ -201,19 +199,23 @@ public:
   float DecibelsToVolume(float decibels);
   void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
   void SendAudioError(const Zero::String message) override;
+  void AddSoundSpace(SoundSpace* space, bool isEditor);
+  void RemoveSoundSpace(SoundSpace* space, bool isEditor);
 
   unsigned mCounter;
-  InList<SoundSpace> mSpaces;
+  InList<SoundTag> mSoundTags;
   HandleOf<SoundInstance> mPreviewInstance;
   String mAudioMessage;
   SoundNodeGraph NodeGraph;
   HandleOf<SoundNode> mOutputNode;
+  int mSoundSpaceCounter;
 
 private:
   Audio::AudioSystemInterface* mAudioSystem;
   AudioLatency::Enum mLatency;
   bool mSendMicEvents;
   bool mSendCompressedMicEvents;
+  InList<SoundSpace> mSpaces;
 
   friend class AudioSettings;
   friend class AudioStatics;

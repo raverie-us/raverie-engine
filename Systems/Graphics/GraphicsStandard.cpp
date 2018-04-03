@@ -1,9 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson, Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -166,6 +163,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
+//**************************************************************************************************
 void GraphicsLibrary::Initialize()
 {
   BuildStaticLibrary();
@@ -187,6 +185,7 @@ void GraphicsLibrary::Initialize()
   ResourceLibrary::sFragmentType = ZilchTypeId(ZilchFragment);
 }
 
+//**************************************************************************************************
 void GraphicsLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();

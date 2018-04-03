@@ -61,7 +61,6 @@ public:
 
 #include "WebBrowser.hpp"
 #include "WebBrowserWidget.hpp"
-#include "MarketWidget.hpp"
 #include "TileMapSourceLoadPattern.hpp"
 #include "Zero.hpp"
 

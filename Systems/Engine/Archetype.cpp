@@ -256,6 +256,8 @@ public:
 
     // Pull the inherit id from the Cog node
     DataNode* root = loader.GetNext();
+    if (root == nullptr)
+      return nullptr;
     archetype->mBaseResourceIdName = root->mInheritedFromId;
 
     ArchetypeManager::GetInstance()->AddResource(entry, archetype);
@@ -332,7 +334,7 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog, StringParam newName,
   {
     // Check the archetype name
     Status status;
-    if(!IsValidName(newName, status))
+    if(!IsValidFilename(newName, status))
     {
       String errorString = String::Format("The name %s is not valid. %s", newName.c_str(), status.Message.c_str());
       DoNotifyWarning("Invalid name", errorString.c_str());
@@ -483,6 +485,11 @@ void ArchetypeManager::ArchetypeModified(Archetype* archetype)
       resource = resource->GetBaseResource();
     }
   }
+
+  // We need to clear Level caches so they appropriately reflect the changes to this Archetype.
+  // For now, we're going to just clear all Level caches. However, in the future we should
+  // optimize this to clear only Levels that contain the modified Archetype
+  LevelManager::ClearCachedLevels();
 }
 
 }//namespace Zero

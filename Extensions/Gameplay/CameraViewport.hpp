@@ -33,6 +33,13 @@ public:
   void SendSortEvent(GraphicalSortEvent* event) override;
   Cog* GetCameraCog() override;
 
+  /// Creates a frustum using the CameraViewport's settings (including aspect ratio).
+  /// If the Camera is null, then this will throw an exception.
+  Frustum GetFrustum();
+
+  /// Find the Camera component from the CameraPath (or null if it doesn't exist).
+  Camera* GetCamera();
+
   // Properties
 
   /// If rendering will be ran in edit mode.

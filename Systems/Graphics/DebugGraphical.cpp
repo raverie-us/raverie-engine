@@ -1,14 +1,19 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(DebugGraphical, builder, type)
 {
   ZeroBindInterface(Graphical);
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 void DebugGraphical::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
@@ -16,12 +21,14 @@ void DebugGraphical::Initialize(CogInitializer& initializer)
   GetReceiver()->Disconnect(Events::ShaderInputsModified);
 }
 
+//**************************************************************************************************
 Aabb DebugGraphical::GetLocalAabb()
 {
   // stub
   return Aabb();
 }
 
+//**************************************************************************************************
 void DebugGraphical::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mRenderingType = RenderingType::Streamed;
@@ -42,21 +49,24 @@ void DebugGraphical::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlo
   frameNode.mBlendSettingsOverride = false;
 }
 
+//**************************************************************************************************
 void DebugGraphical::AddToSpace()
 {
   mGraphicsSpace->AddDebugGraphical(this);
 }
 
+//**************************************************************************************************
 ZilchDefineType(DebugGraphicalPrimitive, builder, type)
 {
   ZeroBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
-  Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   viewNode.mLocalToView = Mat4::cIdentity;
   viewNode.mLocalToViewNormal = Mat3::cIdentity;
@@ -93,29 +103,32 @@ void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode, ViewBlock& vie
   viewNode.mStreamedVertexCount = streamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
-
+//**************************************************************************************************
 ZilchDefineType(DebugGraphicalThickLine, builder, type)
 {
   ZeroBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 void DebugGraphicalThickLine::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   DebugGraphicalPrimitive::ExtractFrameData(frameNode, frameBlock);
   frameNode.mBorderThickness = 2.0f;
 }
 
+//**************************************************************************************************
 ZilchDefineType(DebugGraphicalText, builder, type)
 {
   ZeroBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
-  Array<StreamedVertex>& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
 
   viewNode.mStreamedVertexType = mPrimitiveType;
   viewNode.mStreamedVertexStart = streamedVertices.Size();

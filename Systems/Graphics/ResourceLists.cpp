@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -9,6 +12,7 @@ namespace Events
   DefineEvent(ResourceListItemRemoved);
 }
 
+//**************************************************************************************************
 ZilchDefineType(ResourceListEvent, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
@@ -19,6 +23,7 @@ bool GraphicsResourceList::mMaterialRuntimeExpanded = false;
 bool GraphicsResourceList::mRenderGroupSerializedExpanded = false;
 bool GraphicsResourceList::mRenderGroupRuntimeExpanded = false;
 
+//**************************************************************************************************
 GraphicsResourceList::GraphicsResourceList(Resource* owner)
   : mReadOnly(false)
   , mExpanded(nullptr)
@@ -26,27 +31,32 @@ GraphicsResourceList::GraphicsResourceList(Resource* owner)
 {
 }
 
+//**************************************************************************************************
 GraphicsResourceList::GraphicsResourceList(const GraphicsResourceList& rhs)
 {
   mResourceIdNames = rhs.mResourceIdNames;
 }
 
+//**************************************************************************************************
 GraphicsResourceList& GraphicsResourceList::operator=(const GraphicsResourceList& graphicsResourceList)
 {
   mResourceIdNames = graphicsResourceList.mResourceIdNames;
   return *this;
 }
 
+//**************************************************************************************************
 Array<String>::range GraphicsResourceList::All()
 {
   return mResourceIdNames.All();
 }
 
+//**************************************************************************************************
 uint GraphicsResourceList::GetResourceIndex(StringParam resourceIdName)
 {
   return mResourceIdNames.FindIndex(resourceIdName);
 }
 
+//**************************************************************************************************
 void GraphicsResourceList::CheckForAddition(Status& status, Resource* resource)
 {
   // If id part is not up to date this will query incorrectly
@@ -54,6 +64,7 @@ void GraphicsResourceList::CheckForAddition(Status& status, Resource* resource)
     status.SetFailed("Resource already added");
 }
 
+//**************************************************************************************************
 void GraphicsResourceList::AddResource(StringParam resourceIdName, uint index)
 {
   if (index <= mResourceIdNames.Size())
@@ -66,6 +77,7 @@ void GraphicsResourceList::AddResource(StringParam resourceIdName, uint index)
   DispatchEvent(Events::ResourceListItemAdded, &event);
 }
 
+//**************************************************************************************************
 void GraphicsResourceList::RemoveResource(StringParam resourceIdName)
 {
   if (mResourceIdNames.EraseValue(resourceIdName))
@@ -76,38 +88,45 @@ void GraphicsResourceList::RemoveResource(StringParam resourceIdName)
   }
 }
 
+//**************************************************************************************************
 ZilchDefineType(RenderGroupList, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 RenderGroupList::RenderGroupList(Resource* owner)
   : GraphicsResourceList(owner)
 {
 }
 
+//**************************************************************************************************
 String RenderGroupList::GetResourceTypeName()
 {
   return "RenderGroup";
 }
 
+//**************************************************************************************************
 ZilchDefineType(MaterialList, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 MaterialList::MaterialList(Resource* owner)
   : GraphicsResourceList(owner)
 {
 }
 
+//**************************************************************************************************
 String MaterialList::GetResourceTypeName()
 {
   return "Material";
 }
 
+//**************************************************************************************************
 void ResourceListAdd(Material* material)
 {
   forRange (String& resourceIdName, material->mSerializedList.All())
@@ -118,6 +137,7 @@ void ResourceListAdd(Material* material)
   }
 }
 
+//**************************************************************************************************
 void ResourceListAdd(RenderGroup* renderGroup)
 {
   forRange (String& resourceIdName, renderGroup->mSerializedList.All())
@@ -128,6 +148,7 @@ void ResourceListAdd(RenderGroup* renderGroup)
   }
 }
 
+//**************************************************************************************************
 void ResourceListRemove(Material* material)
 {
   forRange (RenderGroup* renderGroup, material->mActiveResources.All())
@@ -138,6 +159,7 @@ void ResourceListRemove(Material* material)
   material->mActiveResources.Clear();
 }
 
+//**************************************************************************************************
 void ResourceListRemove(RenderGroup* renderGroup)
 {
   forRange (Material* material, renderGroup->mActiveResources.All())
@@ -148,6 +170,7 @@ void ResourceListRemove(RenderGroup* renderGroup)
   renderGroup->mActiveResources.Clear();
 }
 
+//**************************************************************************************************
 void ResourceListResolveReferences(Material* material)
 {
   // Find any entries in serialized list that previously didn't exist
@@ -163,6 +186,7 @@ void ResourceListResolveReferences(Material* material)
   }
 }
 
+//**************************************************************************************************
 void ResourceListResolveReferences(RenderGroup* renderGroup)
 {
   // Find any entries in serialized list that previously didn't exist

@@ -99,6 +99,7 @@ Menus menus =
 		string Name = "HelpToolbar",
 		Array Entries = 
 		[
+			"Chat",
 			"Market",
 			"Divider",
 			"ReportBug",

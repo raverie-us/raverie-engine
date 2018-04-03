@@ -249,6 +249,7 @@ public:
   CogPathMetaComposition();
 
   virtual Handle GetComponent(HandleParam owner, BoundType* componentType);
+  bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override;
 };
 
 class CogPathMetaSerialization : public MetaSerialization

@@ -58,7 +58,7 @@ SoundSpace::SoundSpace() :
 SoundSpace::~SoundSpace()
 {
   // Remove this space from the system's list
-  Z::gSound->mSpaces.Erase(this);
+  Z::gSound->RemoveSoundSpace(this, mEditorMode);
   // Remove the output node from the audio system
   if (mSoundNodeInput && mSoundNodeInput->mNode)
   {
@@ -81,16 +81,16 @@ SoundSpace::~SoundSpace()
 //**************************************************************************************************
 void SoundSpace::Initialize(CogInitializer& config)
 {
-  // Add this space to the system's list
-  Z::gSound->mSpaces.PushBack(this);
   // Are we in editor mode?
-  mEditorMode = GetOwner()->IsEditorMode();
+  mEditorMode = !GetGameSession() || GetGameSession()->IsEditorMode();
+  // Add this space to the system's list
+  Z::gSound->AddSoundSpace(this, mEditorMode);
 
   // Create the input node
   mSpaceNodeID = Z::gSound->mCounter++;
   mSoundNodeInput = new SoundNode();
   Status status;
-  String name("Space");
+  String name = "Space";
   if (mEditorMode)
     name = "EditorSpace";
   mSoundNodeInput->SetNode(new Audio::CombineAndPauseNode(status, name, mSpaceNodeID, 

@@ -17,6 +17,7 @@ namespace Events
   DefineEvent(HoverKeyDown);
   DefineEvent(HoverKeyUp);
   DefineEvent(HoverKeyRepeated);
+  DefineEvent(MouseFileDrop);
   DefineEvent(MouseUpdate);
   DefineEvent(MouseEnter);
   DefineEvent(MouseExit);
@@ -110,5 +111,30 @@ ZilchDefineType(MouseEvent, builder, type)
 
   ZilchBindFieldPropertyAs(HandledEventScript, "HandledEvent");
 }
+
+//------------------------------------------------------------MouseFileDropEvent
+ZilchDefineType(MouseFileDropEvent, builder, type)
+{
+  ZilchBindMember(Files);
+}
+
+MouseFileDropEvent::MouseFileDropEvent()
+  : MouseEvent()
+{
+  Files = ZilchAllocate(ArrayString);
+}
+
+MouseFileDropEvent::MouseFileDropEvent(const MouseEvent& rhs)
+  : MouseEvent(rhs)
+{
+  Files = ZilchAllocate(ArrayString);
+}
+
+void MouseFileDropEvent::Copy(const OsMouseDropEvent& rhs)
+{
+  Array<HandleOfString>& files = Files->NativeArray;
+  files.Insert(files.Begin(), rhs.Files.Begin(), rhs.Files.End());
+}
+
 
 }

@@ -53,6 +53,7 @@ public:
 EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
   Composite(parent)
 {
+  ZPrint("Displaying Eula Window\n");
   SetLayout(CreateStackLayout());
 
   Composite* eulaArea = new Composite(this);
@@ -83,23 +84,23 @@ EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
     pleaseRead->SetColor(EulaUi::TextColor);
 
     new Spacer(eulaArea, SizePolicy::Fixed, Pixels(0,20));
-
-    ScrollArea* scrollArea = new ScrollArea(eulaArea);
-    scrollArea->GetClientWidget()->SetLayout(CreateStackLayout());
-    scrollArea->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
     {
-      MultiLineText* eulaText = new MultiLineText(scrollArea, mLauncherRegularFont, 12);
-      eulaText->mMaxLineWidth = Pixels(380);
-      eulaText->mBackground->SetVisible(false);
-      eulaText->mBorder->SetVisible(false);
-      eulaText->mTextField->SetColor(EulaUi::TextColor);
+      TextEditor* eulaText = new TextEditor(eulaArea);
+      eulaText->SetSizing(SizePolicy::Flex, 1);
 
+      // Set the font size (requires re-setting the color scheme for this to go through...)
+      eulaText->SetFontSize(12);
+      auto colorScheme = GetColorScheme();
+      colorScheme->Gutter = colorScheme->Background = Vec4::cZero;
+      colorScheme->Default = EulaUi::TextColor;
+      eulaText->SetColorScheme(*colorScheme);
+
+      // Set the text
       String eulaFilePath = GetEulaFilePath(configCog);
-      eulaText->SetText(ReadFileIntoString(eulaFilePath));
-      
+      eulaText->SetAllText(ReadFileIntoString(eulaFilePath));
+      // Mark the text after we set it as read-only so the user can't change it.
       eulaText->SizeToContents();
     }
-    scrollArea->GetClientWidget()->SizeToContents();
   }
 
   EulaBottom* bottom = new EulaBottom(this);
@@ -118,17 +119,21 @@ EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
     cancelButton->SetStyle(TextButtonStyle::Modern);
     ConnectThisTo(cancelButton, Events::ButtonPressed, OnCancel);
   }
+
+  ConnectThisTo(parent, Events::Closing, OnCancel);
 }
 
 //******************************************************************************
 void EulaWindow::OnAccept(Event*)
 {
+  ZPrint("Eula Accepted\n");
   Z::gLauncher->EulaAccepted();
 }
 
 //******************************************************************************
 void EulaWindow::OnCancel(Event*)
 {
+  ZPrint("Eula Rejected\n");
   Z::gEngine->Terminate();
 }
 

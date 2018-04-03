@@ -21,6 +21,7 @@
 #include "PitchChange.h"
 #include "SoundNode.h"
 #include "FilterNodes.h"
+#include "Filters.h"
 #include "ListenerNode.h"
 #include "RecordNode.h"
 #include "VolumeNodes.h"
@@ -28,6 +29,7 @@
 #include "EqualizerNode.h"
 #include "ReverbNodes.h"
 #include "AdditiveSynthNode.h"
+#include "GranularSynthNode.h"
 #include "DynamicsProcessorNode.h"
 #include "Emitter.h"
 #include "Attenuator.h"
@@ -37,7 +39,6 @@
 #include "SoundInstances.h"
 #include "Tags.h"
 
-#include "Filters.h"
 #include "AudioInputOutput.h"
 #ifdef _MSC_VER
 #include "WASAPI.h"

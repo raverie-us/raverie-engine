@@ -46,6 +46,16 @@ struct JointCreator
   /// Create a joint (by component name) attached to the two given cogs.
   Cog* CreateLocalPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param localPointA, Vec3Param localPointB);
 
+  /// Create a joint (by archetype) attached to the two given cogs.
+  Cog* Create(Cog* objectA, Cog* objectB, Archetype* jointArchetype);
+  /// Create a joint (by archetype) attached to the two given cogs.
+  /// Both world points on the joint are set to the same world point value.
+  Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param bothWorldPoints);
+  /// Create a joint (by archetype) attached to the two given cogs.
+  Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param worldPointA, Vec3Param worldPointB);
+  /// Create a joint (by archetype) attached to the two given cogs.
+  Cog* CreateLocalPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param localPointA, Vec3Param localPointB);
+
   /// Add a JointLimit to the given joint cog.
   JointLimit* AddJointLimit(Cog* joint);
   /// Add a JointMotor to the given joint cog.
@@ -73,12 +83,12 @@ struct JointCreator
   void SetAttachToCommonParent(bool attachToCommonParent);
 
 private:
-  Cog* AttachInternal(ConnectionInfo& info, StringParam jointName);
+  Cog* AttachInternal(ConnectionInfo& info, StringParam jointName, Archetype* archetype = nullptr);
   Cog* FindCommonParent(Cog* cogA, Cog* cogB);
   
   bool ObjectsValid(Cog* a, Cog* b, StringParam jointName);
   void ConfigureInfo(ConnectionInfo& info);
-  static Cog* CreateJoint(StringParam fileName, ConnectionInfo& info);
+  Cog* CreateJoint(StringParam fileName, ConnectionInfo& info, Archetype* archetype);
   void SetBasicProperties(Joint* joint);
   template <typename JointType>
   void CallJointFunctions(Joint* joint, ConnectionInfo& info);

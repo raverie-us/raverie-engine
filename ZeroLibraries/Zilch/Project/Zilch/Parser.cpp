@@ -37,9 +37,15 @@ namespace Zilch
   Parser::Parser(Project& project) :
     TokenIndex(0),
     Errors(*(CompilationErrors*)&project),
-    ParentProject(&project)
+    ParentProject(&project),
+    Tree(nullptr)
   {
     ZilchErrorIfNotStarted(Parser);
+  }
+
+  //***************************************************************************
+  Parser::~Parser()
+  {
   }
   
   //***************************************************************************
@@ -48,6 +54,8 @@ namespace Zilch
     // If we have no tokens, don't do anything
     if (IsTokenStreamEmpty(tokens))
       return;
+
+    this->Tree = &syntaxTree;
 
     // Clear all token positions, just in case we reuse this parser
     this->TokenIndex = 0;
@@ -200,6 +208,8 @@ namespace Zilch
     // If we have no expression tokens, don't do anything
     if (IsTokenStreamEmpty(expression))
       return;
+
+    this->Tree = &syntaxTree;
 
     // Get the location where the expression is occuring
     CodeLocation location = expression.Front().Location;
@@ -677,12 +687,21 @@ namespace Zilch
     // Retrieve the next token from the stream and store it
     const UserToken* userToken = &(*this->TokenStream)[this->TokenIndex];
 
+    outToken = nullptr;
+
     // If the next token in the token stream was not the same symbol...
     if (userToken->TokenId != grammarConstant)
     {
+      if (this->Errors.TolerantMode)
+      {
+        outToken = new UserToken(grammarConstant, const_cast<CodeLocation*>(&userToken->Location));
+        this->Tree->InvalidTokens.PushBack(outToken);
+        return true;
+      }
+
       // Anything extra we decide to Append to the error
       String extra;
-
+      
       bool foundWasKeyword = (userToken->TokenId >= Grammar::Abstract && userToken->TokenId <= Grammar::While);
 
       if (grammarConstant == Grammar::LowerIdentifier || grammarConstant == Grammar::UpperIdentifier)
@@ -1106,8 +1125,11 @@ namespace Zilch
       if (ExpectAndRetrieve(Grammar::LowerIdentifier, variableName, ErrorCode::VariableNameNotFound))
       {
         // Store the name of the node
-        node->Name = *variableName;
-        this->SetNodeLocationPrimaryToToken(node, *variableName);
+        if (variableName != nullptr)
+        {
+          node->Name = *variableName;
+          this->SetNodeLocationPrimaryToToken(node, *variableName);
+        }
 
         // Return if we successfully parsed the type at the end or not
         if (AcceptOptionalTypeSpecifier(node->ResultSyntaxType, ErrorCode::VariableTypeNotFound, node->Name.c_str()))
@@ -1261,7 +1283,8 @@ namespace Zilch
       if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, nameToken, ErrorCode::VariableNameNotFound))
       {
         // Store the name of the node
-        node->Name = *nameToken;
+        if (nameToken != nullptr)
+          node->Name = *nameToken;
 
         // Look for any virtual and static attributes
         this->ApplyVirtualStaticExtensionAttributes(node);
@@ -1412,7 +1435,7 @@ namespace Zilch
     if (Accept(1, Grammar::BeginAttribute))
     {
       // Every attribute starts with a type name
-      const UserToken* typeName;
+      const UserToken* typeName = nullptr;
 
       // Read the attribute name
       if (ExpectAndRetrieve(Grammar::UpperIdentifier, typeName, ErrorCode::AttributeTypeNotFound))
@@ -1422,7 +1445,8 @@ namespace Zilch
         this->SetNodeLocationStartToLastSave(node);
 
         // Save the type name on the node
-        node->TypeName = typeName;
+        if (typeName != nullptr)
+          node->TypeName = typeName;
 
         // Read an optional function call after the attribute node
         node->AttributeCall = this->FunctionCall(nullptr);
@@ -1544,11 +1568,12 @@ namespace Zilch
       node->IsFlags = (enumType->TokenId == Grammar::Flags);
       
       // Get the name of the enum
-      const UserToken* name;
+      const UserToken* name = nullptr;
       if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, name, ErrorCode::EnumNameNotFound))
       {
         // Set the name of the class node
-        node->Name = *name;
+        if (name != nullptr)
+          node->Name = *name;
         
         // Are we inheriting from a type (or implementing an interface?)
         if (this->Accept(1, Grammar::Inheritance))
@@ -1661,11 +1686,12 @@ namespace Zilch
       }
 
       // Get the name of the class
-      const UserToken* name;
+      const UserToken* name = nullptr;
       if (ExpectAndRetrieve(Grammar::UpperIdentifier, name, ErrorCode::ClassNameNotFound))
       {
         // Set the name of the class node
-        node->Name = *name;
+        if (name != nullptr)
+          node->Name = *name;
 
         // Is this a template type?
         if (Accept(1, Grammar::BeginTemplate))
@@ -1674,13 +1700,14 @@ namespace Zilch
           ZilchLoop
           {
             // Get the name of the argument
-            const UserToken* argumentName;
+            const UserToken* argumentName = nullptr;
 
             // Look for an identifier...
             if (ExpectAndRetrieve(Grammar::UpperIdentifier, argumentName, ErrorCode::TemplateArgumentNotFound))
             {
               // Add it to the arguments list
-              node->TemplateArguments.PushBack(argumentName);
+              if (argumentName != nullptr)
+                node->TemplateArguments.PushBack(argumentName);
             }
             else
             {
@@ -1801,7 +1828,7 @@ namespace Zilch
           }
 
           // As long as we finished this node (either via correct parsing or tolerance)
-          if (finishedNode)
+          if (finishedNode || this->Errors.TolerantMode)
           {
             // We read the entire class definition
             // Accept the token position, and return the class node
@@ -2121,11 +2148,12 @@ namespace Zilch
       this->AttachLastAttributeToNode(node->Attributes);
 
       // Get the name of the function
-      const UserToken* functionName;
+      const UserToken* functionName = nullptr;
       if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, functionName, ErrorCode::FunctionNameNotFound))
       {
         // Store the name on the function
-        node->Name = *functionName;
+        if (functionName != nullptr)
+          node->Name = *functionName;
 
         // Look for any virtual and static attributes
         this->ApplyVirtualStaticExtensionAttributes(node);
@@ -2391,7 +2419,9 @@ namespace Zilch
       if (ExpectAndRetrieve(Grammar::UpperIdentifier, node->Name, ErrorCode::SendsEventStatementNameNotFound))
       {
         // Grab the string name for convenience
-        String name = node->Name->Token;
+        String name;
+        if (node->Name != nullptr)
+          name = node->Name->Token;
 
         // Look for a type after the member variable
         SyntaxType* syntaxType = nullptr;
@@ -3050,7 +3080,7 @@ namespace Zilch
           node->ArgumentNames.PushBack(argumentName->Token);
 
           // Attempt to parse an argument to the indexer
-          if (node->Arguments.Add(Expression()) == nullptr)
+          if (node->Arguments.Add(Expression()) == nullptr && !this->Errors.TolerantMode)
           {
             // Show an error message
             this->ErrorHere(ErrorCode::FunctionCallNamedArgumentNotFound, argumentName->Token.c_str());
@@ -3074,7 +3104,7 @@ namespace Zilch
           }
         }
         // As long as we didn't yet parse the first argument...
-        else if (parsedFirstArgument == false)
+        else if (parsedFirstArgument == false || this->Errors.TolerantMode)
         {
           break;
         }
@@ -3110,7 +3140,7 @@ namespace Zilch
             }
           }
           // As long as we didn't yet parse the first argument...
-          else if (parsedFirstArgument == false)
+          else if (parsedFirstArgument == false || this->Errors.TolerantMode)
           {
             break;
           }
@@ -3128,7 +3158,7 @@ namespace Zilch
       }
 
       // Now that we parsed all the arguments, we need to parse the end of the function call
-      if (this->Accept(1, Grammar::EndFunctionCall))
+      if (this->Accept(1, Grammar::EndFunctionCall) || this->Errors.TolerantMode)
       {
         // Accept the token position, and return the function call node
         this->AcceptTokenPosition();
@@ -3162,10 +3192,10 @@ namespace Zilch
     if (this->AcceptAny(2, &accessOperator, Grammar::Access, Grammar::NonVirtualAccess))
     {
       // Hold the member we attempted to access
-      const UserToken* member;
+      const UserToken* member = nullptr;
 
       // Get the member name that we're trying to access
-      if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, member, ErrorCode::MemberAccessNameNotFound))
+      if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, member, ErrorCode::MemberAccessNameNotFound) || this->Errors.TolerantMode)
       {
         // We started a member access, so allocate the corresponding node
         MemberAccessNode* node = new MemberAccessNode();
@@ -3176,7 +3206,8 @@ namespace Zilch
         node->Operator = accessOperator->TokenId;
 
         // Set the name
-        node->Name = member->Token;
+        if (member)
+          node->Name = member->Token;
 
         // Accept the token position, and return the function call node
         this->AcceptTokenPosition();
@@ -3424,7 +3455,7 @@ namespace Zilch
       else
       {
         // Check to see that the statement was properly delimited
-        if (this->Expect(Grammar::StatementSeparator, ErrorCode::StatementSeparatorNotFound))
+        if (this->Expect(Grammar::StatementSeparator, ErrorCode::StatementSeparatorNotFound) || this->Errors.TolerantMode)
         {
           // Accept the token position, and return the node
           AcceptTokenPosition();
@@ -3700,7 +3731,9 @@ namespace Zilch
           if (this->Expect(Grammar::EndGroup, ErrorCode::TimeoutSecondsNotComplete))
           {
             // Set the number of seconds on the node
-            int seconds = atoi(secondsToken->Token.c_str());
+            int seconds = 0;
+            if (secondsToken != nullptr)
+              seconds = atoi(secondsToken->Token.c_str());
 
             // If the user specified a zero or negative time...
             if (seconds <= 0)
@@ -3872,7 +3905,7 @@ namespace Zilch
           if (range != nullptr)
           {
             // Look for the end parenthasis
-            if (this->Expect(Grammar::EndGroup, ErrorCode::ForLoopExpressionsNotComplete))
+            if (this->Expect(Grammar::EndGroup, ErrorCode::ForLoopExpressionsNotComplete) || this->Errors.TolerantMode)
             {
               // Create a for node since this is a valid for statement
               ForEachNode* node = new ForEachNode();
@@ -3882,17 +3915,26 @@ namespace Zilch
               node->NonTraversedVariable = valueVariable->Clone();
               node->NonTraversedRange = (ExpressionNode*)range->Clone();
 
+              // Use the range location, but don't give it any width (as if it's a 0 length)
+              // This makes it so when you hover over a name it doesn't show the generated details.
+              CodeLocation location = range->Location;
+              location.EndPosition = location.StartPosition;
+              location.EndLine = location.StartLine;
+              location.EndCharacter = location.StartCharacter;
+
               // Access the 'All' element of the range expression
               // Note that even ranges have a subsequent 'All' which returns itself
               MemberAccessNode* allAccessNode = new MemberAccessNode();
-              allAccessNode->Location = range->Location;
+              allAccessNode->IsGenerated = true;
+              allAccessNode->Location = location;
               allAccessNode->Name = "All";
               allAccessNode->Operator = Grammar::Access;
               allAccessNode->LeftOperand = range;
 
               // Create a variable that will store the range
               LocalVariableNode* rangeVariable = new LocalVariableNode();
-              rangeVariable->Location = range->Location;
+              rangeVariable->IsGenerated = true;
+              rangeVariable->Location = location;
               rangeVariable->Name.Location = range->Location;
               rangeVariable->Name.Token = BuildString("[", valueVariable->Name.Token, "Range]");
               rangeVariable->InitialValue = allAccessNode;
@@ -3900,18 +3942,22 @@ namespace Zilch
 
               // Create a local variable reference to the range variable
               LocalVariableReferenceNode* rangeLocal = new LocalVariableReferenceNode();
+              rangeLocal->IsGenerated = true;
+              rangeLocal->Location = location;
               rangeLocal->Value = rangeVariable->Name;
 
               // We need to access the 'MoveNext' function on the range
               MemberAccessNode* moveNextAccessNode = new MemberAccessNode();
-              moveNextAccessNode->Location = range->Location;
+              moveNextAccessNode->IsGenerated = true;
+              moveNextAccessNode->Location = location;
               moveNextAccessNode->Name = "MoveNext";
               moveNextAccessNode->Operator = Grammar::Access;
               moveNextAccessNode->LeftOperand = rangeLocal;
 
               // We want to call the 'MoveNext' function
               FunctionCallNode* moveNextCallNode = new FunctionCallNode();
-              moveNextCallNode->Location = range->Location;
+              moveNextCallNode->IsGenerated = true;
+              moveNextCallNode->Location = location;
               moveNextCallNode->LeftOperand = moveNextAccessNode;
 
               // For iteration, we call the 'MoveNext' functoin on the range
@@ -3919,7 +3965,8 @@ namespace Zilch
 
               // Access the 'IsNotEmpty' element of the range expression
               MemberAccessNode* isNotEmptyAccessNode = new MemberAccessNode();
-              isNotEmptyAccessNode->Location = range->Location;
+              isNotEmptyAccessNode->IsGenerated = true;
+              isNotEmptyAccessNode->Location = location;
               isNotEmptyAccessNode->Name = "IsNotEmpty";
               isNotEmptyAccessNode->Operator = Grammar::Access;
               isNotEmptyAccessNode->LeftOperand = rangeLocal->Clone();
@@ -3929,7 +3976,8 @@ namespace Zilch
 
               // Access the 'Current' element of the range expression
               MemberAccessNode* currentAccessNode = new MemberAccessNode();
-              currentAccessNode->Location = range->Location;
+              currentAccessNode->IsGenerated = true;
+              currentAccessNode->Location = location;
               currentAccessNode->Name = "Current";
               currentAccessNode->Operator = Grammar::Access;
               currentAccessNode->LeftOperand = rangeLocal->Clone();
@@ -3939,7 +3987,7 @@ namespace Zilch
               node->Statements.Add(valueVariable);
 
               // Parse all the statements inside the foreach-statement
-              if (this->ExpectScopedStatements(node->Statements, Grammar::ForEach))
+              if (this->ExpectScopedStatements(node->Statements, Grammar::ForEach) || this->Errors.TolerantMode)
               {
                 // Accept the token position, and return the "return node"
                 this->AcceptTokenPosition();
@@ -4000,7 +4048,7 @@ namespace Zilch
       }
     }
     // Try and parse a single statement, if that fails, then throw an error
-    else if (statements.Add(this->Statement()))
+    else if (statements.Add(this->Statement()) || this->Errors.TolerantMode)
     {
       return true;
     }
@@ -4149,7 +4197,7 @@ namespace Zilch
         if (condition != nullptr)
         {
           // Look for the end parenthasis
-          if (this->Expect(Grammar::EndGroup, ErrorCode::WhileConditionalExpressionNotComplete))
+          if (this->Expect(Grammar::EndGroup, ErrorCode::WhileConditionalExpressionNotComplete) || this->Errors.TolerantMode)
           {
             // Create a while node since this is a valid while statement
             WhileNode* node = new WhileNode();
@@ -4204,7 +4252,7 @@ namespace Zilch
       if (this->ExpectScopedStatements(node->Statements, Grammar::Do))
       {
         // Now parse the while statement
-        if (Accept(1, Grammar::While))
+        if (this->Expect(Grammar::While, ErrorCode::DoWhileConditionalExpressionNotFound))
         {
           // Look for the beginning of a conditional expression
           if (Expect(Grammar::BeginGroup, ErrorCode::DoWhileConditionalExpressionNotFound))
@@ -4213,7 +4261,7 @@ namespace Zilch
             ExpressionNode* condition = Expression();
 
             // If we properly parsed the conditional expression...
-            if (condition != nullptr)
+            if (condition != nullptr || this->Errors.TolerantMode)
             {
               // Look for the end parenthasis
               if (Expect(Grammar::EndGroup, ErrorCode::DoWhileConditionalExpressionNotComplete))
@@ -4758,6 +4806,12 @@ namespace Zilch
             this->SetNodeLocationEndHere(node);
             return node;
           }
+        }
+        else if (this->Errors.TolerantMode)
+        {
+          this->AcceptTokenPosition();
+          this->SetNodeLocationEndHere(node);
+          return node;
         }
         else
         {

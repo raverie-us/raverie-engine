@@ -48,10 +48,10 @@ public:
 #include "SoundSpace.hpp"
 #include "SoundNodeGraph.hpp"
 #include "SoundInstance.hpp"
+#include "SoundTag.hpp"
 #include "SoundSystem.hpp"
 #include "Sound.hpp"
 #include "SoundCue.hpp"
 #include "SimpleSound.hpp"
-#include "SoundTag.hpp"
 #include "SimpleSound.hpp"
 

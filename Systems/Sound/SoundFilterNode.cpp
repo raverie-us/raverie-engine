@@ -503,6 +503,7 @@ void CustomAudioNode::SendAudioEvent(const Audio::AudioEventTypes::Enum eventTyp
   {
     CustomAudioNodeEvent event(((Audio::CustomDataSampleRequest*)data)->SamplesNeeded);
     mDispatcher.Dispatch(Events::CustomAudioNodeSamplesNeeded, &event);
+    delete (Audio::CustomDataSampleRequest*)data;
   }
 }
 
@@ -2317,6 +2318,314 @@ void MicrophoneInputNode::SetActive(bool active)
 {
   if (mNode)
     ((Audio::MicrophoneInputNode*)mNode)->SetActive(active);
+}
+
+//------------------------------------------------------------------------------ Granular Synth Node
+
+//**************************************************************************************************
+ZilchDefineType(GranularSynthNode, builder, type)
+{
+  ZeroBindDocumented();
+
+  ZilchBindMethod(SetSound);
+  ZilchBindMethod(Play);
+  ZilchBindMethod(Stop);
+  ZilchBindGetterSetterProperty(GrainVolume);
+  ZilchBindGetterSetterProperty(GrainVolumeVariance);
+  ZilchBindGetterSetterProperty(GrainDelay);
+  ZilchBindGetterSetterProperty(GrainDelayVariance);
+  ZilchBindGetterSetterProperty(GrainLength);
+  ZilchBindGetterSetterProperty(GrainLengthVariance);
+  ZilchBindGetterSetterProperty(GrainResampleRate);
+  ZilchBindGetterSetterProperty(GrainResampleRateVariance);
+  ZilchBindGetterSetterProperty(BufferScanRate);
+  ZilchBindGetterSetterProperty(GrainPanningValue);
+  ZilchBindGetterSetterProperty(GrainPanningVariance);
+  ZilchBindGetterSetterProperty(RandomLocationValue);
+  ZilchBindGetterSetterProperty(WindowType);
+  ZilchBindGetterSetterProperty(WindowAttack);
+  ZilchBindGetterSetterProperty(WindowRelease);
+}
+
+//**************************************************************************************************
+GranularSynthNode::GranularSynthNode()
+{
+  Status status;
+  SetNode(new Audio::GranularSynthNode(status, "GranularSynthNode",
+    Z::gSound->mCounter++, this), status);
+}
+
+//**************************************************************************************************
+void GranularSynthNode::Play()
+{
+  ((Audio::GranularSynthNode*)mNode)->Play();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::Stop()
+{
+  ((Audio::GranularSynthNode*)mNode)->Stop();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetSound(HandleOf<Sound> sound, float startTime, float stopTime)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetAsset(sound->mSoundAsset, startTime, stopTime);
+}
+
+//**************************************************************************************************
+float GranularSynthNode::GetGrainVolume()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainVolume();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainVolume(float volume)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainVolume(volume);
+}
+
+//**************************************************************************************************
+float GranularSynthNode::GetGrainVolumeVariance()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainVolumeVariance();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainVolumeVariance(float variance)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainVolumeVariance(variance);
+}
+
+//**************************************************************************************************
+int GranularSynthNode::GetGrainDelay()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainDelay();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainDelay(int delayMS)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainDelay(delayMS);
+}
+
+//**************************************************************************************************
+int GranularSynthNode::GetGrainDelayVariance()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainDelayVariance();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainDelayVariance(int delayVarianceMS)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainDelayVariance(delayVarianceMS);
+}
+
+//**************************************************************************************************
+int GranularSynthNode::GetGrainLength()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainLength();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainLength(int lengthMS)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainLength(lengthMS);
+}
+
+//**************************************************************************************************
+int GranularSynthNode::GetGrainLengthVariance()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainLengthVariance();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainLengthVariance(int lengthVarianceMS)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainLengthVariance(lengthVarianceMS);
+}
+
+//**************************************************************************************************
+float GranularSynthNode::GetGrainResampleRate()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainResampleRate();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainResampleRate(float resampleRate)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainResampleRate(resampleRate);
+}
+
+//**************************************************************************************************
+float GranularSynthNode::GetGrainResampleRateVariance()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainResampleRateVariance();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainResampleRateVariance(float resampleVariance)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainResampleRateVariance(resampleVariance);
+}
+
+//**************************************************************************************************
+float GranularSynthNode::GetBufferScanRate()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetBufferScanRate();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetBufferScanRate(float bufferRate)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetBufferScanRate(bufferRate);
+}
+
+//**************************************************************************************************
+float GranularSynthNode::GetGrainPanningValue()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainPanningValue();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainPanningValue(float panValue)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainPanningValue(panValue);
+}
+
+//**************************************************************************************************
+float GranularSynthNode::GetGrainPanningVariance()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetGrainPanningVariance();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetGrainPanningVariance(float panValueVariance)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetGrainPanningVariance(panValueVariance);
+}
+
+//**************************************************************************************************
+float GranularSynthNode::GetRandomLocationValue()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetRandomLocationValue();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetRandomLocationValue(float randomLocationValue)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetRandomLocationValue(randomLocationValue);
+}
+
+//**************************************************************************************************
+GranularSynthWindows::Enum GranularSynthNode::GetWindowType()
+{
+  Audio::GrainWindowTypes::Enum type = ((Audio::GranularSynthNode*)mNode)->GetWindowType();
+  if (type == Audio::GrainWindowTypes::Parabolic)
+    return GranularSynthWindows::Parabolic;
+  else if (type == Audio::GrainWindowTypes::RaisedCosine)
+    return GranularSynthWindows::RaisedCosine;
+  else if (type == Audio::GrainWindowTypes::Trapezoid)
+    return GranularSynthWindows::Trapezoid;
+  else
+    return GranularSynthWindows::Linear;
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetWindowType(GranularSynthWindows::Enum type)
+{
+  Audio::GrainWindowTypes::Enum windowType;
+  if (type == GranularSynthWindows::Parabolic)
+    windowType = Audio::GrainWindowTypes::Parabolic;
+  else if (type == GranularSynthWindows::RaisedCosine)
+    windowType = Audio::GrainWindowTypes::RaisedCosine;
+  else if (type == GranularSynthWindows::Trapezoid)
+    windowType = Audio::GrainWindowTypes::Trapezoid;
+  else windowType = Audio::GrainWindowTypes::Linear;
+
+  ((Audio::GranularSynthNode*)mNode)->SetWindowType(windowType);
+}
+
+//**************************************************************************************************
+int GranularSynthNode::GetWindowAttack()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetWindowAttack();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetWindowAttack(int attackMS)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetWindowAttack(attackMS);
+}
+
+//**************************************************************************************************
+int GranularSynthNode::GetWindowRelease()
+{
+  return ((Audio::GranularSynthNode*)mNode)->GetWindowRelease();
+}
+
+//**************************************************************************************************
+void GranularSynthNode::SetWindowRelease(int releaseMS)
+{
+  ((Audio::GranularSynthNode*)mNode)->SetWindowRelease(releaseMS);
+}
+
+//---------------------------------------------------------------------------------- Save Audio Node
+
+//**************************************************************************************************
+ZilchDefineType(SaveAudioNode, builder, type)
+{
+  ZeroBindDocumented();
+
+  ZilchBindGetterSetterProperty(SaveAudio);
+  ZilchBindMethod(PlaySavedAudio);
+  ZilchBindMethod(StopPlaying);
+  ZilchBindMethod(ClearSavedAudio);
+}
+
+//**************************************************************************************************
+SaveAudioNode::SaveAudioNode()
+{
+  Status status;
+  SetNode(new Audio::SaveAudioNode(status, "SaveAudioNode",
+    Z::gSound->mCounter++, this), status);
+}
+
+//**************************************************************************************************
+bool SaveAudioNode::GetSaveAudio()
+{
+  if (mNode)
+    return ((Audio::SaveAudioNode*)mNode)->GetSaveAudio();
+  else
+    return false;
+}
+
+//**************************************************************************************************
+void SaveAudioNode::SetSaveAudio(bool save)
+{
+  if (mNode)
+    ((Audio::SaveAudioNode*)mNode)->SetSaveAudio(save);
+}
+
+//**************************************************************************************************
+void SaveAudioNode::PlaySavedAudio()
+{
+  if (mNode)
+    ((Audio::SaveAudioNode*)mNode)->PlaySavedAudio();
+}
+
+//**************************************************************************************************
+void SaveAudioNode::StopPlaying()
+{
+  if (mNode)
+    ((Audio::SaveAudioNode*)mNode)->StopPlaying();
+}
+
+//**************************************************************************************************
+void SaveAudioNode::ClearSavedAudio()
+{
+  if (mNode)
+    ((Audio::SaveAudioNode*)mNode)->ClearSavedAudio();
 }
 
 }

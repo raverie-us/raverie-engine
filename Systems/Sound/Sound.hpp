@@ -38,6 +38,7 @@ private:
   friend class SoundEntry;
   friend class SoundBuffer;
   friend class SoundLoader;
+  friend class GranularSynthNode;
 };
 
 class SoundDisplay : public MetaDisplay

@@ -56,7 +56,7 @@ ZilchDefineType(ButtonBase, builder, type)
 
 ButtonBase::ButtonBase(Composite* parent, StringParam styleClass)
   : Composite(parent)
-  , mToolTipColor(ToolTipColor::Default)
+  , mToolTipColor(ToolTipColorScheme::Default)
 {
   mCommand = NULL;
   mDefSet = mDefSet->GetDefinitionSet(styleClass);
@@ -165,7 +165,7 @@ void ButtonBase::OnHover(MouseEvent* event)
   {
     ToolTip* toolTip = new ToolTip(this);
     toolTip->SetText(mToolTipText);
-    toolTip->SetColor(mToolTipColor);
+    toolTip->SetColorScheme(mToolTipColor);
 
     ToolTipPlacement placement;
     placement.SetScreenRect(GetScreenRect());

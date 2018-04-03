@@ -192,6 +192,12 @@ namespace Audio
     Math::Vec3 relativePosition = listener->GetRelativePosition(Position);
     // Save the distance value
     float distance = relativePosition.Length();
+    
+    // Account for the listener's attenuation scale
+    if (listener->GetAttenuationScale() <= 0.0f)
+      distance = AttenEndDist;
+    else
+      distance /= listener->GetAttenuationScale();
 
     // If we are outside the max distance and the minimum volume is zero, there is no audio
     if (distance >= AttenEndDist && MinimumVolume == 0)
@@ -205,7 +211,7 @@ namespace Audio
     else if (distance <= AttenStartDist)
       attenuatedVolume = 1.0f;
     // If the attenuation start and end are too close together than just use end volume
-    else if (AttenEndDist - AttenStartDist == 0.1f)
+    else if (AttenEndDist - AttenStartDist <= 0.1f)
       attenuatedVolume = MinimumVolume;
     // Otherwise, get the value using the falloff curve on the interpolator
     else
@@ -267,7 +273,7 @@ namespace Audio
     // If there are multiple listeners, the sounds they hear are added together
     float attenuatorVolume = 0.0f;
     forRange(AttenuationPerListener* data, DataPerListener.Values())
-      volume += data->PreviousVolume;
+      attenuatorVolume += data->PreviousVolume;
 
     // Return the output volume modified by this node's volume
     return volume * attenuatorVolume;
