@@ -491,6 +491,7 @@ void AudioSettings::Initialize(CogInitializer& initializer)
 //**************************************************************************************************
 float AudioSettings::GetSystemVolume()
 {
+  mSystemVolume = Z::gSound->mAudioSystem->GetVolume();
   return mSystemVolume;
 }
 
