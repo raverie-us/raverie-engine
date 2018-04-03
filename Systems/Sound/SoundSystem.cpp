@@ -90,6 +90,7 @@ ZilchDefineType(SoundSystem, builder, type)
   ZilchBindGetterSetter(DispatchMicrophoneUncompressedFloatData);
   ZilchBindGetterSetter(DispatchMicrophoneCompressedByteData);
   ZilchBindGetter(OutputChannels);
+  ZilchBindGetterSetter(MuteAllAudio);
 
   ZilchBindMethod(VolumeNode);
   ZilchBindMethod(PanningNode);
@@ -198,6 +199,18 @@ float SoundSystem::GetSystemVolume()
 void SoundSystem::SetSystemVolume(float volume)
 {
   mAudioSystem->SetVolume(Math::Max(volume, 0.0f));
+}
+
+//**************************************************************************************************
+bool SoundSystem::GetMuteAllAudio()
+{
+  return mAudioSystem->GetMuteAllAudio();
+}
+
+//**************************************************************************************************
+void SoundSystem::SetMuteAllAudio(bool muteAudio)
+{
+  mAudioSystem->SetMuteAllAudio(muteAudio);
 }
 
 //**************************************************************************************************
@@ -451,6 +464,7 @@ ZilchDefineType(AudioSettings, builder, type)
   ZeroBindDocumented();
 
   ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(MuteAllAudio);
   ZilchBindGetterSetterProperty(MixType); 
   ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
   ZilchBindGetterSetterProperty(LatencySetting);
@@ -486,6 +500,18 @@ void AudioSettings::SetSystemVolume(float volume)
   mSystemVolume = Math::Max(volume, 0.0f);
 
   Z::gSound->mAudioSystem->SetVolume(mSystemVolume);
+}
+
+//**************************************************************************************************
+bool AudioSettings::GetMuteAllAudio()
+{
+  return Z::gSound->GetMuteAllAudio();
+}
+
+//**************************************************************************************************
+void AudioSettings::SetMuteAllAudio(bool muteAudio)
+{
+  Z::gSound->SetMuteAllAudio(muteAudio);
 }
 
 //**************************************************************************************************

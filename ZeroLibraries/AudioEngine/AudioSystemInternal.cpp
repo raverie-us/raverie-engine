@@ -34,7 +34,10 @@ namespace Audio
     PreviousPeakVolumeThreaded(0),
     PreviousRMSVolumeThreaded(0),
     Resampling(false),
-    SendMicrophoneInputData(false)
+    SendMicrophoneInputData(false),
+    Muted(false),
+    MutedThreaded(false),
+    MutingThreaded(false)
   {
     gAudioSystem = this;
 
@@ -326,12 +329,24 @@ namespace Audio
       AddTaskThreaded(Zero::CreateFunctor(&AudioSystemInternal::SetVolumes, this, peakVolume, rmsVolume));
     }
 
+    // Check if there is a volume adjustment to apply
+    if (!VolumeInterpolatorThreaded.Finished())
+    {
+      // Apply the interpolated volume to each frame
+      for (unsigned i = 0; i < MixedOutput.Size(); i += outputChannels)
+      {
+        float volume = VolumeInterpolatorThreaded.NextValue();
+
+        for (unsigned j = 0; j < outputChannels; ++j)
+          MixedOutput[i + j] *= volume;
+      }
+    }
+
     // If shutting down, wait for volume to ramp down to zero
     if (ShuttingDownThreaded)
     {
+      // Ramp the volume down to zero
       VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, outputFrames);
-
-      // Volume will interpolate down to zero
       for (unsigned i = 0; i < MixedOutput.Size(); i += outputChannels)
       {
         float volume = VolumeInterpolatorThreaded.NextValue();
@@ -344,6 +359,17 @@ namespace Audio
       AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
 
       return false;
+    }
+
+    // If muted, don't actually output any audio data, set everything to zero
+    if (MutedThreaded)
+      memset(MixedOutput.Data(), 0, sizeof(float) * MixedOutput.Size());
+
+    // Check if we are switching to muted
+    if (MutingThreaded && VolumeInterpolatorThreaded.Finished())
+    {
+      MutingThreaded = false;
+      MutedThreaded = true;
     }
 
     // Copy the data to the ring buffer
@@ -444,6 +470,21 @@ namespace Audio
   void AudioSystemInternal::SetMinVolumeThresholdThreaded(const float volume)
   {
     MinimumVolumeThresholdThreaded = volume;
+  }
+
+  //************************************************************************************************
+  void AudioSystemInternal::SetMutedThreaded(bool muteAudio)
+  {
+    if (muteAudio && !MutedThreaded && !MutingThreaded)
+    {
+      MutingThreaded = true;
+      VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, PropertyChangeFrames);
+    }
+    else if (!muteAudio && MutedThreaded)
+    {
+      MutedThreaded = false;
+      VolumeInterpolatorThreaded.SetValues(0.0f, 1.0f, PropertyChangeFrames);
+    }
   }
 
   //************************************************************************************************
