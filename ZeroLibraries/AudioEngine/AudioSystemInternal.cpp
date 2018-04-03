@@ -260,7 +260,7 @@ namespace Audio
     ++MixVersionNumber;
 
     // Set the size of the MixedOutput buffer
-    MixedOutput.Resize(BufferForOutput.Size());
+    MixedOutput.Resize(samplesNeeded);
 
     float peakVolume(0.0f);
     unsigned rmsVolume(0);
@@ -562,6 +562,9 @@ namespace Audio
   {
     unsigned inputChannels = AudioIO->GetStreamChannels(StreamTypes::Input);
     unsigned inputRate = AudioIO->GetStreamSampleRate(StreamTypes::Input);
+
+    if (inputChannels == 0 || inputRate == 0)
+      return;
 
     // Channels and sample rates match, don't need to process anything
     if (inputChannels == SystemChannelsThreaded && inputRate == SystemSampleRate)
