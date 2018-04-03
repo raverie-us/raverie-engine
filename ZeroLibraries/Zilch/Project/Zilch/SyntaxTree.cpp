@@ -147,6 +147,9 @@ namespace Zilch
   SyntaxTree::~SyntaxTree()
   {
     delete this->Root;
+
+    ZilchForEach(const UserToken* token, this->InvalidTokens)
+      delete token;
   }
 
   //***************************************************************************
@@ -318,7 +321,8 @@ namespace Zilch
 
   //***************************************************************************
   SyntaxNode::SyntaxNode() :
-    Parent(nullptr)
+    Parent(nullptr),
+    IsGenerated(false)
   {
   }
 
@@ -915,16 +919,16 @@ namespace Zilch
   //***************************************************************************
   LocalVariableNode::LocalVariableNode() :
     CreatedVariable(nullptr),
-    ForwardLocalAccessIfPossible(false),
-    IsGenerated(false)
+    ForwardLocalAccessIfPossible(false)
   {
   }
     
   //***************************************************************************
   LocalVariableNode::LocalVariableNode(StringParam baseName, Project* parentProject, ExpressionNode* optionalInitialValue) :
-    CreatedVariable(nullptr),
-    IsGenerated(true)
+    CreatedVariable(nullptr)
   {
+    this->IsGenerated = true;
+
     // The variable name includes the base name as well as brackets (so that the user cannot type the name in via the parser)
     if (optionalInitialValue != nullptr)
       this->Name.Location = optionalInitialValue->Location;

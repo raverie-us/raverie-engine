@@ -1089,10 +1089,21 @@ ToolTip* ScriptEditor::ShowToolTip(StringParam text, Vec3Param screenPos)
   return tip;
 }
 
-void ScriptEditor::ShowCallTips(Array<CallTip>& tips, StringParam functionName)
+void ScriptEditor::ShowCallTips(Array<CallTip>& tips, StringParam functionName, size_t parameterIndex)
 {
   if (tips.Empty())
     return;
+
+  CallTipPopUp* lastTips = mCallTip;
+  if (lastTips != nullptr)
+  {
+    // Leave the current dialog up if it's the same
+    if (lastTips->mFunctionName == functionName && lastTips->mTips.Size() == tips.Size())
+    {
+      lastTips->SetParameterIndex(parameterIndex);
+      return;
+    }
+  }
 
   ICodeEditor::SortCallTips(tips);
 
@@ -1104,6 +1115,7 @@ void ScriptEditor::ShowCallTips(Array<CallTip>& tips, StringParam functionName)
   mCallTipLine = GetCurrentLine();
   mCallTipStart = GetCurrentPosition();
 
+  popup->mParameterIndex = parameterIndex;
   popup->SetTips(tips, functionName);
 
   Vec3 cursorScreenPos = GetScreenPositionOfCursor();
@@ -1221,14 +1233,10 @@ void ScriptEditor::CheckPopups()
     else
     {
       size_t linePosition = GetPositionFromLine(currentLine);
+      
       size_t cursorColumn = cursorPosition - linePosition;
-      StringRange lineText = GetLineText(currentLine);
-
-      // Just for safety we make sure the cursor column is within the line text size
-      // The -1 is because the cursor is because indexing the line at that
-      // value gets the character to the right instead of the left
-      cursorColumn = Math::Min(cursorColumn - 1, lineText.ComputeRuneCount() - 1);
-
+      StringRange lineTextFull = GetLineText(currentLine);
+      StringRange lineText = lineTextFull.SubString(lineTextFull.Begin(), lineTextFull.Begin() + cursorColumn);
 
       // Closers are any type of symbol such as [] {} ()
       int closerCount = 0;
@@ -1236,7 +1244,7 @@ void ScriptEditor::CheckPopups()
 
       // Walk backwards through the text looking for commas
       // We have to be careful because of nested function calls / types
-      for (;!lineText.Empty(); lineText.PopBack())
+      for (; !lineText.Empty(); lineText.PopBack())
       {
         Rune r = lineText.Back();
 

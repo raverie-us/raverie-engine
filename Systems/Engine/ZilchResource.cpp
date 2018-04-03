@@ -97,7 +97,7 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
     editor->ShowAutoComplete(completions, CompletionConfidence::Perfect);
   }
   // Are we attempting to call a function? (this may just be a grouping operator)
-  else if (value == '(')
+  else if (value == '(' || value == ',')
   {
     AutoCompleteInfo info;
     GetAutoCompleteInfo(editor, info);
@@ -119,7 +119,8 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
           paramTip.Type = param.Type;
         }
       }
-      editor->ShowCallTips(tips, info.FunctionName);
+      
+      editor->ShowCallTips(tips, info.FunctionName, info.CallArgumentIndex);
     }
   }
 }

@@ -65,7 +65,7 @@ public:
   virtual void HideAutoComplete() = 0;
 
   /// Tells the text editor to show a call-tip at the current cursor position (supports overloads)
-  virtual void ShowCallTips(Array<CallTip>& tips, StringParam functionName) = 0;
+  virtual void ShowCallTips(Array<CallTip>& tips, StringParam functionName, size_t parameterIndex) = 0;
   
   /// Tells the text editor to hide any call-tips
   virtual void HideCallTips() = 0;
