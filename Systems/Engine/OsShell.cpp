@@ -42,36 +42,26 @@ ZilchDefineType(OsFileSelection, builder, type)
 {
 }
 
-//-------------------------------------------------------------------FileDialogFilter
-FileDialogFilter::FileDialogFilter()
-{
-
-}
-
-FileDialogFilter::FileDialogFilter(StringParam filter) 
-  : mDescription(filter)
-  , mFilter(filter)
-{
-
-}
-
-FileDialogFilter::FileDialogFilter(StringParam description, StringParam filter)
-  : mDescription(description)
-  , mFilter(filter)
-{
-
-}
-
 //-------------------------------------------------------------------FileDialogConfig
 FileDialogConfig::FileDialogConfig()
 {
-  Flags = 0;
   CallbackObject = nullptr;
+  mCallback = &Callback;
+  mUserData = this;
 }
 
-void FileDialogConfig::AddFilter(StringParam description, StringParam filter)
+void FileDialogConfig::Callback(Array<String>& files, bool success, void* userData)
 {
-  mSearchFilters.PushBack(FileDialogFilter(description, filter));
+  FileDialogConfig* self = (FileDialogConfig*)userData;
+  
+  if (self->CallbackObject)
+  {
+    OsFileSelection fileEvent;
+    fileEvent.Files = files;
+    fileEvent.Success = success;
+    EventDispatcher* dispatcher = self->CallbackObject->GetDispatcherObject();
+    dispatcher->Dispatch(self->EventName, &fileEvent);
+  }
 }
 
 }//namespace Zero

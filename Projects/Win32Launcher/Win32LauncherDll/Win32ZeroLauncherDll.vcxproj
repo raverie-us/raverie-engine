@@ -166,9 +166,6 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     <ProjectReference Include="$(ZeroExtensionLibrariesSource)\Geometry\Geometry.vcxproj">
       <Project>{787f598d-f96e-48f5-8075-25d31fc7ed60}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Math\Math.vcxproj">
-      <Project>{767a1157-b18f-478e-b580-f6f624f9282a}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(ZeroStandardLibrariesSource)\Platform\Windows\WindowsPlatform.vcxproj">
       <Project>{dbe8e33a-7e70-402c-bcf6-d1efee93fa76}</Project>
     </ProjectReference>

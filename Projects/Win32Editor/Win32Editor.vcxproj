@@ -258,9 +258,6 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     <ProjectReference Include="$(ZeroStandardLibrariesSource)\Common\Common.vcxproj">
       <Project>{3a62ce69-835e-4d16-86c2-5326625a18bc}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(ZeroStandardLibrariesSource)\Math\Math.vcxproj">
-      <Project>{767a1157-b18f-478e-b580-f6f624f9282a}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(ZeroExtensionLibrariesSource)\Serialization\Serialization.vcxproj">
       <Project>{35d4371c-b7a6-4fc4-aba3-0be750125ce3}</Project>
     </ProjectReference>

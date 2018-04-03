@@ -7,7 +7,7 @@
 #pragma once
 
 // Standard includes
-#include "Math/MathStandard.hpp"
+#include "Common/CommonStandard.hpp"
 
 #include "Zilch/Zilch.hpp"
 using namespace Zilch;

@@ -29,6 +29,11 @@
 #include <ctime>
 #include <limits>
 #include <unordered_map>
+#include <cmath>
+#include <limits>
+#include <cstdio>
+#include <cstdlib>
+#include <cfloat>
 
 #include "Utility/Standard.hpp"
 
@@ -120,6 +125,67 @@ public:
 #include "Utility/Determinism.hpp"
 #include "Utility/SpinLock.hpp"
 #include "Singleton.hpp"
+
+namespace Math
+{
+#include "Utility/Typedefs.hpp"
+}// namespace Math
+
+#include "Math/Reals.hpp"
+#include "Math/MatrixStorage.hpp"
+#include "Math/Vector2.hpp"
+#include "Math/Vector3.hpp"
+#include "Math/Vector4.hpp"
+#include "Math/Matrix2.hpp"
+#include "Math/Matrix3.hpp"
+#include "Math/Matrix4.hpp"
+#include "Math/IntVector2.hpp"
+#include "Math/IntVector3.hpp"
+#include "Math/IntVector4.hpp"
+#include "Math/BoolVector2.hpp"
+#include "Math/BoolVector3.hpp"
+#include "Math/BoolVector4.hpp"
+#include "Math/Quaternion.hpp"
+#include "Math/Math.hpp"
+#include "Math/SharedVectorFunctions.hpp"
+
+#include "Math/Random.hpp"
+#include "Math/ByteColor.hpp"
+#include "Math/Curve.hpp"
+#include "Math/DecomposedMatrix4.hpp"
+#include "Math/EulerOrder.hpp"
+#include "Math/EulerAngles.hpp"
+#include "Math/Numerical.hpp"
+
+#include "Math/VectorHashPolicy.hpp"
+#include "Math/WeightedProbabilityTable.hpp"
+
+#include "Math/GenericVector.hpp"
+#include "Math/ExtendableMath.hpp"
+#include "Math/ErrorCallbacks.hpp"
+#include "Math/BlockVector3.hpp"
+#include "Math/IndexPolicies.hpp"
+#include "Math/JacobiSolver.hpp"
+#include "Math/ConjugateGradient.hpp"
+#include "Math/SimpleCgPolicies.hpp"
+#include "Math/GaussSeidelSolver.hpp"
+
+#include "Math/MathToString.hpp"
+
+#include "Math/SimMath.hpp"
+#include "Math/SimVectors.hpp"
+#include "Math/SimMatrix3.hpp"
+#include "Math/SimMatrix4.hpp"
+#include "Math/SimConversion.hpp"
+
+namespace Zero
+{
+#include "Math/BasicNativeTypesMath.inl"
+}
+
+#include "Utility/Rect.hpp"
+#include "Utility/Image.hpp"
+
 #include "Platform/PlatformSelector.hpp"
 #include "Platform/PrivateImplementation.hpp"
 #include "Platform/Utilities.hpp"
@@ -150,3 +216,4 @@ public:
 #include "Platform/Peripherals.hpp"
 #include "Platform/ExecutableResource.hpp"
 #include "Platform/CommandLineSupport.hpp"
+#include "Platform/Shell.hpp"

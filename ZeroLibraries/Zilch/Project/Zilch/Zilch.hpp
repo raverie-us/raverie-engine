@@ -16,7 +16,6 @@
 
 // Zero includes
 #include "Common/CommonStandard.hpp"
-#include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
 // Bring Zero primitives into the Zilch namespace

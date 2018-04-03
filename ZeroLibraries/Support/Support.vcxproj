@@ -51,7 +51,6 @@
     <ClCompile Include="Archive.cpp" />
     <ClCompile Include="HdrSupport.cpp" />
     <ClCompile Include="NameValidation.cpp" />
-    <ClCompile Include="Image.cpp" />
     <ClCompile Include="LoadHdr.cpp" />
     <ClCompile Include="PartialMatch.cpp" />
     <ClCompile Include="PngSupport.cpp">
@@ -75,11 +74,9 @@
     <ClInclude Include="FileConsoleListener.hpp" />
     <ClInclude Include="HdrSupport.hpp" />
     <ClInclude Include="NameValidation.hpp" />
-    <ClInclude Include="Image.hpp" />
     <ClInclude Include="LoadHdr.hpp" />
     <ClInclude Include="PartialMatch.hpp" />
     <ClInclude Include="PngSupport.hpp" />
-    <ClInclude Include="Rect.hpp" />
     <ClInclude Include="StringMap.hpp" />
     <ClInclude Include="FileSupport.hpp" />
     <ClInclude Include="Precompiled.hpp" />

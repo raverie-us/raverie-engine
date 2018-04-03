@@ -8,8 +8,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "WinUtility.hpp"
-#include "Support/Image.hpp"
 
 namespace Zero
 {

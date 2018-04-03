@@ -10,7 +10,6 @@
 #include "Platform/PlatformStandard.hpp"
 #include "Serialization/SerializationStandard.hpp"
 #include "Meta/MetaStandard.hpp"
-#include "Math/MathStandard.hpp"
 #include "Support/SupportStandard.hpp"
 
 namespace Zero

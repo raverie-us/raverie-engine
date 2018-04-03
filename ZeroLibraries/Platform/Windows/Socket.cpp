@@ -35,9 +35,6 @@ typedef SOCKADDR_STORAGE SOCKET_ADDRESS_STORAGE;
 #define TRANSLATE_TO_PLATFORM_ENUM(value)   ((void)0)
 #define TRANSLATE_FROM_PLATFORM_ENUM(value) ((void)0)
 
-#include "Platform/Socket.hpp"
-#include "Utility/Atomic.hpp"
-
 #define CAST_HANDLE_TO_SOCKET(value) (static_cast<SOCKET_TYPE>(reinterpret_cast<size_t>(value)))
 #define CAST_SOCKET_TO_HANDLE(value) (reinterpret_cast<OsHandle>(value))
 
@@ -911,7 +908,7 @@ size_t Socket::GetMaxListenBacklog()
 }
 
 bool Socket::IsCommonReceiveError(int extendedErrorCode)
-{
+{`
   switch(extendedErrorCode)
   {
   case WSAENETRESET:
@@ -1178,15 +1175,25 @@ void Socket::Shutdown(Status& status, SocketIo::Enum io)
     return FailOnLastError(status);
 }
 
+void Socket::Close()
+{
+  // Ignore any errors that are returned
+  Status status;
+  Close(status);
+}
+
 void Socket::Close(Status& status)
 {
-  int result = 0;
+  if (IsOpen())
+  {
+    int result = 0;
 
-  // Close socket
-  result = closesocket(CAST_HANDLE_TO_SOCKET(mHandle));
+    // Close socket
+    result = closesocket(CAST_HANDLE_TO_SOCKET(mHandle));
 
-  if(result == SOCKET_ERROR) // Unable?
-    FailOnLastError(status);
+    if (result == SOCKET_ERROR) // Unable?
+      FailOnLastError(status);
+  }
 
   // Clear values
   Clear(*this);

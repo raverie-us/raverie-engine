@@ -36,15 +36,32 @@
 #include <VersionHelpers.h>
 #include <Lmcons.h>
 #include <Xinput.h>
-#include <shellapi.h>
 #include <iptypes.h>
 #include <iphlpapi.h>
+#include <setupapi.h>
+#include <devguid.h>
+#include <commctrl.h>
+#include <dlgs.h>
+#include <commdlg.h>
+#include <shobjidl.h>
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Advapi32.lib")
 #pragma comment(lib, "Winhttp.lib")
 #pragma comment(lib, "Shell32.lib")
 #pragma comment(lib, "Shlwapi.lib")
+#pragma comment(lib, "hid.lib")
+#pragma comment(lib, "Setupapi.lib")
+
+#pragma comment(linker,"\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
+extern "C"
+{
+// This should probably be setup to not use ..
+#include "../External/WinHid/include/hidsdi.h"
+}
 
 #include "StackWalker.hpp"
 #include "ThreadIo.hpp"

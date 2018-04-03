@@ -11,7 +11,6 @@
 #define Precompiled_H
 
 #include "Common/CommonStandard.hpp"
-#include "Math/MathStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
 #include "Definitions.h"

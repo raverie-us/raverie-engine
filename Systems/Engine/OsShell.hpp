@@ -14,7 +14,6 @@ namespace Events
 DeclareEvent(OsShellUpdate);
 }
 
-class Image;
 class OsWindow;
 class OsWindow;
 struct FileDialogConfig;
@@ -91,41 +90,21 @@ class OsFileSelection : public Event
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   bool Success;
-  String EventName;
   Array<String> Files;
-};
-
-//-----------------------------------------------------------FileDialogFilter
-DeclareBitField2(FileDialogFlags, MultiSelect, Folder);
-
-struct FileDialogFilter
-{
-  FileDialogFilter();
-  FileDialogFilter(StringParam filter);
-  FileDialogFilter(StringParam description, StringParam filter);
-
-  String mDescription;
-  // i.e. "*.fbx"
-  String mFilter;
 };
 
 //-------------------------------------------------------------------FileDialogConfig
 /// FileDialogConfig is used to configure the Open File Dialog
 /// and the Save File Dialog.
-struct FileDialogConfig
+struct FileDialogConfig : public FileDialogSetup
 {
   FileDialogConfig();
-  void AddFilter(StringParam description, StringParam filter);
 
-  String Title;
   String EventName;
-  String StartingDirectory;
-  Array<FileDialogFilter> mSearchFilters;
-  // Should not include '.'
-  String mDefaultSaveExtension;
-  String DefaultFileName;
-  FileDialogFlags::Type Flags;
   Object* CallbackObject;
+
+private:
+  static void Callback(Array<String>& files, bool success, void* userData);
 };
 
 }//namespace Zero

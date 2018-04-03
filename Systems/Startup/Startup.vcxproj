@@ -78,9 +78,6 @@
     <ProjectReference Include="$(ZeroLibraries)\Common\Common.vcxproj">
       <Project>{3a62ce69-835e-4d16-86c2-5326625a18bc}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(ZeroLibraries)\Math\Math.vcxproj">
-      <Project>{767a1157-b18f-478e-b580-f6f624f9282a}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(ZeroLibraries)\Platform\Windows\WindowsPlatform.vcxproj">
       <Project>{dbe8e33a-7e70-402c-bcf6-d1efee93fa76}</Project>
     </ProjectReference>

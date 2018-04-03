@@ -306,6 +306,11 @@ public:
   /// The socket is still considered open after this call, to free socket resources use close
   void Shutdown(Status& status, SocketIo::Enum io);
 
+  /// Closes the open socket and frees associated resources (ignores errors)
+  /// Safe to call from other threads (blocking calls will simply terminate with an error)
+  /// The socket is considered closed after this call
+  void Close();
+
   /// Closes the open socket and frees associated resources
   /// Safe to call from other threads (blocking calls will simply terminate with an error)
   /// The socket is considered closed after this call
@@ -363,6 +368,15 @@ public:
     size_t valueLength = sizeof(value);
     SetSocketOption(status, option, &value, valueLength);
   }
+
+  template <typename Option, typename T>
+  void SetSocketOption(Status& status, Option option, T value)
+  {
+    size_t valueLength = sizeof(value);
+    T temp = value;
+    SetSocketOption(status, option, &temp, valueLength);
+  }
+
   template <typename Option>
   void SetSocketOption(Status& status, Option option, bool& value)
   {
@@ -370,6 +384,14 @@ public:
     size_t tempLength = sizeof(temp);
     SetSocketOption(status, option, &temp, tempLength);
     value = bool(temp);
+  }
+
+  template <typename Option>
+  void SetSocketOption(Status& status, Option option, bool value)
+  {
+    size_t temp = size_t(value);
+    size_t tempLength = sizeof(temp);
+    SetSocketOption(status, option, &temp, tempLength);
   }
   void SetSocketOption(Status& status, SocketOption::Enum option, const void* value, size_t valueLength);
   void SetSocketOption(Status& status, SocketIpv4Option::Enum option, const void* value, size_t valueLength);

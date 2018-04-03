@@ -2,7 +2,6 @@
 
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
-#include "Support/Image.hpp"
 #include "Support/PngSupport.hpp"
 #include "Support/HdrSupport.hpp"
 #include "Content/ContentStandard.hpp"

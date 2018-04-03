@@ -41,10 +41,11 @@ struct ConnectionData
   // Constructor
   ConnectionData();
 
+  String GetHost() const;
+  uint GetPort() const;
+
   // Connection data
-  String Host;
-  uint Address;
-  uint Port;
+  SocketAddress AddressAndPort;
   uint Index;
   bool Incoming;
 };
@@ -61,7 +62,6 @@ public:
 
   // Connection data available to the user
   String Host;
-  uint Address;
   uint Port;
   uint Index;
   bool Incoming;
@@ -85,17 +85,22 @@ public:
 };
 
 // Type-defines
-typedef u64 SocketHandle;
 typedef u32 NetGuid;
 
 //------------------------------------------------------------------ SocketHandle Data
 // A structure to represent socket data
 struct SocketData
 {
+  SocketData();
+
+  // This isn't the best, but our copy constructor steals the socket
+  SocketData(const SocketData& rhs);
+  SocketData& operator=(const SocketData& rhs);
+
   ConnectionData ConnectionInfo;
 
   // A socket id of 0 indicates that it this slot is not being used
-  SocketHandle Handle;
+  Socket Handle;
 
   // Received data that is being buffered because it was not a full packet
   PodArray<byte> PartialReceivedData;
@@ -154,8 +159,6 @@ struct ProtocolSetup
   PodArray<byte> Delimiter;
 };
 
-DeclareEnum2(TcpSocketBind, Any, Loopback);
-
 //------------------------------------------------------------------- TCP SocketHandle
 /// Manages all the client/server/peer connections .
 class TcpSocket : public EventObject
@@ -185,8 +188,8 @@ public:
   void Connect(StringParam host, int port);
 
   /// Listen for incoming connections.
-  bool Listen(int port, uint maxConnections = MaxPossibleConnections);
-  bool Listen(int port, uint maxConnections, TcpSocketBind::Enum bindTo);
+  bool Listen(int port);
+  bool Listen(int port, uint maxConnections);
 
   /// Get the number of connections we have.
   uint GetConnectionCount();
@@ -237,28 +240,14 @@ private:
   void Update(UpdateEvent* event);
 
   // Dispatch an error event
-  void DispatchError();
+  void DispatchError(StringParam error, u32 errorCode = 0);
+  void DispatchError(Status& status);
 
   // Validates a server socket or creates one if it's invalid
   bool ValidateServer();
 
-  // Resolve a name into an IP address
-  unsigned long ResolveHost(StringParam host);
-
-  // Create a new socket with all the options we want
-  SocketHandle CreateSocket();
-
   // Setup all the socket options that we want
-  static void SetSocketOptions(SocketHandle socket);
-
-  // Get an error string for a particular error code
-  static String GetErrorString(int errorCode);
-
-  // Check if the last error was a problem or not
-  bool IsError(int result);
-
-  // Verify that nothing went wrong
-  void VerifyResult(int result);
+  static void SetSocketOptions(Socket& socket);
 
   // Close a particular connection
   void CloseConnection(uint index);
@@ -271,10 +260,10 @@ private:
   void RawSend(SocketData& socketData, const byte* data, size_t size);
 
   // Track a send
-  void TrackSend(const byte* data, size_t size, SocketHandle socket);
+  void TrackSend(const byte* data, size_t size, Socket& socket);
 
   // Track a receive
-  void TrackReceive(const byte* data, size_t size, SocketHandle socket);
+  void TrackReceive(const byte* data, size_t size, Socket& socket);
 
   // Print our data
   void PrintData(const char* mode, const byte* data, size_t size);
@@ -364,7 +353,7 @@ private:
   size_t mMaxIncomingConnections;
 
   // The socket we use as the main server or client socket
-  SocketHandle mServer;
+  Socket mServer;
 
   // Store the extra protocols we're using
   ProtocolSetup mProtocolSetup;

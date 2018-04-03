@@ -142,10 +142,6 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
       <Project>{787f598d-f96e-48f5-8075-25d31fc7ed60}</Project>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\..\ZeroLibraries\Math\Math.vcxproj">
-      <Project>{767a1157-b18f-478e-b580-f6f624f9282a}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
-    </ProjectReference>
     <ProjectReference Include="..\..\ZeroLibraries\Meta\Meta.vcxproj">
       <Project>{b45f9232-8734-47ea-ac16-29f418d6d676}</Project>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>

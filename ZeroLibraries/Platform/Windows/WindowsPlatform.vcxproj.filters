@@ -42,6 +42,7 @@
     <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="ExecutableResource.cpp" />
+    <ClCompile Include="Shell.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Windows.hpp">

@@ -7,7 +7,6 @@
 #pragma once
 
 #include "Common/CommonStandard.hpp"
-#include "Math/MathStandard.hpp"
 #include "Zilch/Zilch.hpp"
 
 #include "ForwardDeclarations.hpp"

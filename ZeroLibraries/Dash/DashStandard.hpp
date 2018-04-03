@@ -9,7 +9,6 @@
 // Standard Library Dependencies
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
-#include "Math/MathStandard.hpp"
 #include "Meta/MetaStandard.hpp"       // TODO: Investigate Dash dependency on Notifications
 #include "Support/SupportStandard.hpp" // TODO: Investigate Dash dependency on Profiler
 

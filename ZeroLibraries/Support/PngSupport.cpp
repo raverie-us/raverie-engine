@@ -5,10 +5,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Image.hpp"
-#include "Utility/Status.hpp"
-#include "PngSupport.hpp"
-#include "Platform/File.hpp"
 
 #include "png.h"
 #ifdef ZeroDebug

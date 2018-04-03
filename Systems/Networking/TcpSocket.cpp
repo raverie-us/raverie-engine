@@ -9,17 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include <WinSock2.h>
-
-// Defines
-#define infinite_loop for(;;)
-
-// Include the winsock library
-#pragma comment(lib, "ws2_32.lib")
-
-// Make sure our socket definition is the proper size
-StaticAssert(SocketSize, sizeof(Zero::SocketHandle) >= sizeof(SOCKET), "The socket sizes do not match (they must so we don't have to include winsock in our header!)");
-
 // The general max size of temporary buffers
 const size_t BufferSize = 8192;
 
@@ -43,9 +32,8 @@ namespace Events
 
 ZilchDefineType(ConnectionData, builder, type)
 {
-  ZilchBindFieldProperty(Host);
-  ZilchBindFieldProperty(Address);
-  ZilchBindFieldProperty(Port);
+  ZilchBindGetterProperty(Host);
+  ZilchBindGetterProperty(Port);
   ZilchBindFieldProperty(Index);
   ZilchBindFieldProperty(Incoming);
 }
@@ -57,10 +45,23 @@ ConnectionData::ConnectionData()
   Incoming = false;
 }
 
+String ConnectionData::GetHost() const
+{
+  Status status;
+  status.AssertOnFailure();
+  return ResolveHostAndServiceNames(status, AddressAndPort).first;
+}
+
+uint ConnectionData::GetPort() const
+{
+  Status status;
+  status.AssertOnFailure();
+  return AddressAndPort.GetIpPort(status);
+}
+
 ZilchDefineType(ConnectionEvent, builder, type)
 {
   ZilchBindFieldProperty(Host);
-  ZilchBindFieldProperty(Address);
   ZilchBindFieldProperty(Port);
   ZilchBindFieldProperty(Index);
   ZilchBindFieldProperty(Incoming);
@@ -70,9 +71,8 @@ ZilchDefineType(ConnectionEvent, builder, type)
 ConnectionEvent::ConnectionEvent(const ConnectionData* connectionInfo)
 {
   // Set the connection data
-  Host      = connectionInfo->Host;
-  Address   = connectionInfo->Address;
-  Port      = connectionInfo->Port;
+  Host      = connectionInfo->GetHost();
+  Port      = connectionInfo->GetPort();
   Index     = connectionInfo->Index;
   Incoming  = connectionInfo->Incoming;
 }
@@ -92,6 +92,29 @@ ReceivedDataEvent::ReceivedDataEvent(const ConnectionData* connectionInfo, const
   memcpy(Data.Data(), data, size);
 
   Buffer = StringRange((const char*)data, (const char*)data, (const char*)data + size);
+}
+
+
+SocketData::SocketData()
+{
+}
+
+SocketData::SocketData(const SocketData& rhs) :
+  ConnectionInfo(rhs.ConnectionInfo),
+  PartialReceivedData(rhs.PartialReceivedData),
+  PartialSentData(rhs.PartialSentData)
+{
+  Handle = ZeroMove(const_cast<SocketData&>(rhs).Handle);
+}
+
+SocketData& SocketData::operator=(const SocketData& rhs)
+{
+  if (this == &rhs)
+    return *this;
+
+  this->~SocketData();
+  new (this) SocketData(rhs);
+  return *this;
 }
 
 // Constructor
@@ -116,8 +139,7 @@ ZilchDefineType(TcpSocket, builder, type)
   ZeroBindDocumented();
 
   ZilchBindMethod(Connect);
-  ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int, uint));
-  ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int, uint, TcpSocketBind::Enum));
+  ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int));
   ZilchBindMethod(Close);
   ZilchBindMethod(CloseConnection);
   ZilchBindMethod(SendTo);
@@ -200,23 +222,11 @@ void TcpSocket::Initialize()
   // Set the maximum number of connections
   mMaxIncomingConnections = 0;
 
-  // Store winsock startup data
-  WSADATA wsaData;
-
-  // If the startup resulted in an error
-  if (WSAStartup(MAKEWORD(2, 2), &wsaData) != NO_ERROR)
-  {
-    // Dispatch an error
-    DispatchError();
-  }
-  else
-  {
-    // Connect to the frame update event
-    ConnectThisTo(Z::gEngine, Events::EngineUpdate, Update);
-  }
+  // Connect to the frame update event
+  ConnectThisTo(Z::gEngine, Events::EngineUpdate, Update);
 
   // Set the socket to an invalid socket
-  mServer = INVALID_SOCKET;
+  mServer.Close();
 
   // Initialize all the statistics to zero
   mSendCount = 0;
@@ -230,9 +240,6 @@ TcpSocket::~TcpSocket()
 {
   // Close out of the socket
   Close();
-
-  // Cleanup winsock references
-  WSACleanup();
 }
 
 // Attempt to connect to a server on the given port
@@ -240,71 +247,57 @@ void TcpSocket::Connect(StringParam host, int port)
 {
   // Fill out a connection data structure
   ConnectionData info;
-  info.Address = ResolveHost(host);
-  info.Port = port;
-  info.Host = host;
+  Status status;
+  status.AssertOnFailure();
+  info.AddressAndPort = ResolveSocketAddress(status, host, PortToString(port), SocketAddressResolutionFlags::None);
 
   // Do the connection
   InternalConnect(info);
 }
 
-// Resolve an IP address into a name
-String ResolveIP(in_addr address)
-{
-  auto host = gethostbyaddr((char*) &address.S_un.S_addr, sizeof(address.S_un.S_addr), AF_INET);
-
-  if (host != nullptr)
-  {
-    return host->h_name;
-  }
-  else
-  {
-    return inet_ntoa(address);
-  }
-}
-
 // Internal connection function
 void TcpSocket::InternalConnect(const ConnectionData& info)
 {
-  // Setup a host address structure
-  sockaddr_in hostAddress;
-  hostAddress.sin_family = AF_INET;
-  hostAddress.sin_addr.s_addr = info.Address;
-  hostAddress.sin_port = htons(info.Port);
-
   // Setup a new socket
-  SOCKET newSocket = (SOCKET)CreateSocket();
-  
-  ConnectionEvent e(&info);
+  Socket newSocket;
+
+  Status status;
+  newSocket.Open(status, SocketAddressFamily::InternetworkV4, SocketType::Stream, SocketProtocol::Tcp);
+
   // If we got a valid socket
-  if (newSocket == INVALID_SOCKET)
+  if (status.Failed())
   {
     // Dispatch an error
-    DispatchError();
+    DispatchError(status);
 
     // Dispatch a connection failed event
+    ConnectionEvent e(&info);
     mDispatcher.Dispatch(Events::ConnectionFailed, &e);
   }
   else
   {
+    SetSocketOptions(newSocket);
+
     // Start the connection process
-    if (IsError(connect(newSocket, (SOCKADDR*) &hostAddress, sizeof(hostAddress))))
+    newSocket.Connect(status, info.AddressAndPort);
+    if (status.Failed() && !Socket::IsCommonConnectError(status.Context))
     {
       // Dispatch an error
-      DispatchError();
+      DispatchError(status);
 
       // Dispatch a connection failed event
+      ConnectionEvent e(&info);
       mDispatcher.Dispatch(Events::ConnectionFailed, &e);
 
       // Close the socket
-      closesocket(newSocket);
+      newSocket.Close();
     }
     else
     {
       // Create a socket data structure to be added to the pending connections list
       SocketData newSocketData;
       newSocketData.ConnectionInfo = info;
-      newSocketData.Handle = newSocket;
+      newSocketData.Handle = ZeroMove(newSocket);
 
       // Add the socket to the pending connections list
       mPendingOutgoingConnections.PushBack(newSocketData);
@@ -312,44 +305,42 @@ void TcpSocket::InternalConnect(const ConnectionData& info)
   }
 }
 
-bool TcpSocket::Listen(int port, uint maxConnections)
+bool TcpSocket::Listen(int port)
 {
-  return Listen(port, maxConnections, TcpSocketBind::Any);
+  return Listen(port, MaxPossibleConnections);
 }
 
 // Listen for incoming connections
-bool TcpSocket::Listen(int port, uint maxConnections, TcpSocketBind::Enum bindTo)
+bool TcpSocket::Listen(int port, uint maxConnections)
 {
   // Quit out if we have an invalid socket (or it can't be created)
   if (ValidateServer() == false)
     return false;
 
   // Create a socket address info that lets us bind to the local network adapter (probably the primary)
-  sockaddr_in service;
-  service.sin_family      = AF_INET;
-  service.sin_port        = htons(port);
-  if(bindTo == TcpSocketBind::Loopback)
-    service.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-  else
-    service.sin_addr.s_addr = htonl(INADDR_ANY);
-
-  // Bind the socket to the local port
-  if (IsError(bind((SOCKET)mServer, (SOCKADDR*) &service, sizeof(service))))
+  Status status;
+  SocketAddress localAddress;
+  localAddress.SetIpv4(status, String(), ushort(port), SocketAddressResolutionFlags::AnyAddress);
+  if (status.Failed())
   {
     // Dispatch out an error and return a failure
-    DispatchError();
+    DispatchError(status);
     return false;
   }
 
-  // Use the defined constant for maximum connections
-  if (maxConnections == MaxPossibleConnections)
-    maxConnections = SOMAXCONN;
-
-  // Set the maximum number of connections
-  if (IsError(listen((SOCKET)mServer, maxConnections)))
+  mServer.Bind(status, localAddress);
+  if (status.Failed())
   {
     // Dispatch out an error and return a failure
-    DispatchError();
+    DispatchError(status);
+    return false;
+  }
+
+  mServer.Listen(status, Socket::GetMaxListenBacklog());
+  if (status.Failed())
+  {
+    // Dispatch out an error and return a failure
+    DispatchError(status);
     return false;
   }
 
@@ -363,11 +354,8 @@ bool TcpSocket::Listen(int port, uint maxConnections, TcpSocketBind::Enum bindTo
 // Close all activity (whether listening or connected to a server)
 void TcpSocket::Close()
 {
-  // No longer need server socket
-  closesocket((SOCKET)mServer);
-
   // Set the socket to an invalid socket
-  mServer = INVALID_SOCKET;
+  mServer.Close();
 
   // Loop through all the connections and close them
   for (size_t i = 0; i < mConnections.Size(); ++i)
@@ -377,7 +365,7 @@ void TcpSocket::Close()
 void TcpSocket::RawSend(SocketData& socketData, const byte* data, size_t size)
 {
   // Ignore this send if it's to an invalid socket
-  if(socketData.Handle == 0)
+  if(!socketData.Handle.IsOpen())
     return;
 
   // Assume we sent nothing...
@@ -387,12 +375,11 @@ void TcpSocket::RawSend(SocketData& socketData, const byte* data, size_t size)
   if(socketData.PartialSentData.Empty())
   {
     // Send the data to the current socket
-    int result = send((SOCKET)socketData.Handle, (const char*)data, size, 0);
-    VerifyResult(result);
+    Status status;
+    size_t result = socketData.Handle.Send(status, data, size);
 
-    // If we didn't send all the data, figure out how much we did send
-    if(result != SOCKET_ERROR)
-      dataSent = (size_t)result;
+    if (status.Succeeded())
+      dataSent = result;
   }
   
   // Compute how much data we did not sent (needs to be queued)
@@ -657,7 +644,7 @@ size_t TcpSocket::ExtractIntoBuffer(const BinaryBufferSaver& messageConst, byte*
 }
 
 // Track a send
-void TcpSocket::TrackSend(const byte* data, size_t size, SocketHandle socket)
+void TcpSocket::TrackSend(const byte* data, size_t size, Socket& socket)
 {
   return;
 
@@ -672,7 +659,7 @@ void TcpSocket::TrackSend(const byte* data, size_t size, SocketHandle socket)
 }
 
 // Track a receive
-void TcpSocket::TrackReceive(const byte* data, size_t size, SocketHandle socket)
+void TcpSocket::TrackReceive(const byte* data, size_t size, Socket& socket)
 {
   return;
 
@@ -717,7 +704,7 @@ SocketData& TcpSocket::FindOpenOrCreateSocketData()
   {
     // Look for an open connection, and take its place!
     SocketData& socketData = mConnections[i];
-    if(socketData.Handle == 0)
+    if(!socketData.Handle.IsOpen())
       return socketData;
   }
 
@@ -737,34 +724,24 @@ void TcpSocket::HandleIncomingConnections()
   if(incomingConnections >= mMaxIncomingConnections)
     return;
 
-  // Store socket address information
-  sockaddr_in sockAddress;
-  memset(&sockAddress, 0, sizeof(sockAddress));
-  int sockAddrSize = sizeof(sockaddr_in);
-
-  // Accept any incoming connections
-  SocketHandle newSocket = accept((SOCKET)mServer, (SOCKADDR*) &sockAddress, &sockAddrSize);
+  // Accept any incoming connections (accept will fail if there's nothing to accept)
+  Status status;
+  Socket newSocket;
+  mServer.Accept(status, &newSocket);
 
   // If the socket is valid..
-  if (newSocket != INVALID_SOCKET)
+  if (status.Succeeded())
   {
     // Now that we created a socket, make sure to set all the options we want
     SetSocketOptions(newSocket);
-
-    // Get the IP as an integer
-    unsigned long ip = sockAddress.sin_addr.s_addr;
-      
-    ResolveIP(sockAddress.sin_addr);
 
     // Find an open connection slot or create one
     SocketData& newSocketData = this->FindOpenOrCreateSocketData();
 
     // Create a socket data structure to be added to the pending connections list
-    newSocketData.ConnectionInfo.Host     = ResolveIP(sockAddress.sin_addr);
-    newSocketData.ConnectionInfo.Address  = ip;
-    newSocketData.ConnectionInfo.Port     = htons(sockAddress.sin_port);
+    newSocketData.ConnectionInfo.AddressAndPort = newSocket.GetConnectedRemoteAddress();
     newSocketData.ConnectionInfo.Incoming = true;
-    newSocketData.Handle = newSocket;
+    newSocketData.Handle = ZeroMove(newSocket);
 
     ConnectionEvent e(&newSocketData.ConnectionInfo);
     // Dispatch an event to inform the user of a connection
@@ -788,7 +765,7 @@ void TcpSocket::HandleIncomingConnections()
         RawSend(newSocketData, data.Data(), data.Size());
 
         // Statistics
-        TrackSend(data.Data(), data.Size(), newSocket);
+        TrackSend(data.Data(), data.Size(), newSocketData.Handle);
       }
     }
   }
@@ -797,41 +774,22 @@ void TcpSocket::HandleIncomingConnections()
 // Handle outgoing connections
 void TcpSocket::HandleOutgoingConnections()
 {
-  // Make the 'select' call instant (no timeout)
-  timeval time;
-  time.tv_sec = 0;
-  time.tv_usec = 0;
-
   // Loop through all pending connections to see if they've connected
   for (size_t i = 0; i < mPendingOutgoingConnections.Size();)
   {
-    int writeCount = 0;
-    int errorCount = 0;
+    bool isWritable = false;
+    bool isError = false;
 
     // Get the socket data
-    SocketData socketData = mPendingOutgoingConnections[i];
+    SocketData& socketData = mPendingOutgoingConnections[i];
 
-    {
-      // Create a set for all sockets
-      fd_set writableSet;
-      writableSet.fd_count = 1;
+    Status status;
 
-      // Test the socket for readability using select
-      memcpy(writableSet.fd_array, &socketData.Handle, sizeof(Zero::SocketHandle));
-      writeCount = select(0, nullptr, &writableSet, nullptr, &time);
-    }
-    {
-      // Create a set for all sockets
-      fd_set errorSet;
-      errorSet.fd_count = 1;
+    isWritable = socketData.Handle.Select(status, SocketSelect::Write, 0);
+    isError = socketData.Handle.Select(status, SocketSelect::Error, 0);
 
-      // Test the socket for readability using select
-      memcpy(errorSet.fd_array, &socketData.Handle, sizeof(Zero::SocketHandle));
-      errorCount = select(0, nullptr, nullptr, &errorSet, &time);
-    }
-    
     // If we had an error
-    if (errorCount == 1)
+    if (isError)
     {
       ConnectionEvent e(&socketData.ConnectionInfo);
       // Dispatch a connection failed event
@@ -841,13 +799,13 @@ void TcpSocket::HandleOutgoingConnections()
       mPendingOutgoingConnections.EraseAt(i);
     }
     // If we have a writable socket
-    else if (writeCount == 1)
+    else if (isWritable)
     {
       // Find an open connection slot or create one
       SocketData& newSocketData = this->FindOpenOrCreateSocketData();
       socketData.ConnectionInfo.Index = newSocketData.ConnectionInfo.Index;
       socketData.ConnectionInfo.Incoming = false;
-      newSocketData = socketData;
+      newSocketData = socketData; // Moves the socket...
       
       // If we enabled the Guid protocol...
       if (mProtocolSetup.Protocols & Protocol::Guid)
@@ -887,7 +845,7 @@ void TcpSocket::HandleOutgoingData()
     SocketData& socketData = mConnections[i];
 
     // If the socket has nothing on it, just skip it
-    if(socketData.Handle == 0)
+    if(!socketData.Handle.IsOpen())
     {
       // Just make sure the data is cleared, and skip this index
       socketData.PartialSentData.Clear();
@@ -905,8 +863,11 @@ void TcpSocket::HandleOutgoingData()
     size_t amountToSend = partialData.Size();
 
     // Send the data to the current socket
-    int result = send((SOCKET)socketData.Handle, (const char*)partialData.Data(), amountToSend, 0);
-    VerifyResult(result);
+    Status status;
+    int result = socketData.Handle.Send(status, partialData.Data(), amountToSend);
+
+    if (status.Failed())
+      continue;
 
     // If we sent all the data, clear the partial data
     if (result == amountToSend)
@@ -914,9 +875,6 @@ void TcpSocket::HandleOutgoingData()
       partialData.Clear();
       continue;
     }
-
-    if (result == SOCKET_ERROR)
-      continue;
 
     // We sent some of the data, remove that range
     PodArray<byte>::range range(partialData.Begin(), partialData.Begin() + result);
@@ -933,7 +891,7 @@ void TcpSocket::HandleIncomingData()
     SocketData& socketData = mConnections[i];
 
     // If the socket has nothing on it, just skip it
-    if(socketData.Handle == 0)
+    if(!socketData.Handle.IsOpen())
     {
       // Just make sure the data is cleared, and skip this index
       socketData.PartialReceivedData.Clear();
@@ -988,10 +946,11 @@ TcpSocket::ReceiveState TcpSocket::ReceiveData(SocketData& socketData, size_t in
   byte buffer[BufferSize];
 
   // Receive data from each of the connections
-  int result = recv((SOCKET)socketData.Handle, (char*)buffer, BufferSize, 0);
+  Status status;
+  size_t result = socketData.Handle.Receive(status, buffer, BufferSize);
 
   // If we didn't get an error...
-  if (result != SOCKET_ERROR)
+  if (status.Succeeded())
   {
     // If the connection was closed...
     if (result == 0)
@@ -1021,14 +980,14 @@ TcpSocket::ReceiveState TcpSocket::ReceiveData(SocketData& socketData, size_t in
   else
   {
     // Break out if we hit a "would block" error
-    if (WSAGetLastError() == WSAEWOULDBLOCK)
+    if (Socket::IsCommonReceiveError(status.Context))
     {
       // We can continue to the next connection
       return cNextConnection;
     }
 
     // Otherwise, dispatch an error
-    DispatchError();
+    DispatchError(status);
 
     // Remove the connection
     return cCloseConnection;
@@ -1310,23 +1269,20 @@ void TcpSocket::CloseConnection(uint index)
   SocketData& socketData = mConnections[index];
 
   // If we have no socket at this location, ignore this!
-  if (socketData.Handle == 0)
+  if (!socketData.Handle.IsOpen())
     return;
 
   // Close the connection and remove it from the list
-  closesocket((SOCKET)socketData.Handle);
+  socketData.Handle.Close();
   
   // We need to make a copy of the connection data so that when we dispatch the 'Disconnected event'
   // we don't need to worry about them touching the socket or closing the connection
   ConnectionData tempCopy = socketData.ConnectionInfo;
 
   // Clear out this socket to be re-used later
-  socketData.Handle = 0;
   socketData.PartialReceivedData.Clear();
   socketData.PartialSentData.Clear();
-  socketData.ConnectionInfo.Address = 0;
-  socketData.ConnectionInfo.Host = String();
-  socketData.ConnectionInfo.Port = 0;
+  socketData.ConnectionInfo.AddressAndPort = SocketAddress();
   socketData.ConnectionInfo.Incoming = false;
 
   ConnectionEvent e(&tempCopy);
@@ -1335,151 +1291,43 @@ void TcpSocket::CloseConnection(uint index)
 }
 
 // Broadcast an error event
-void TcpSocket::DispatchError()
+void TcpSocket::DispatchError(StringParam error, u32 errorCode)
 {
-  // Get the error code
-  int errorCode = WSAGetLastError();
-
-  // Get the error string
-  String error = GetErrorString(errorCode);
-
   TextErrorEvent e(error, errorCode);
   // Dispatch an error
   mDispatcher.Dispatch(Events::SocketError, &e);
+}
+
+void TcpSocket::DispatchError(Status& status)
+{
+  if (status.Failed())
+    DispatchError(status.Message, (u32)status.Context);
 }
 
 // Validates a server socket or creates one if it's invalid
 bool TcpSocket::ValidateServer()
 {
   // If the socket is invalid...
-  if (mServer == INVALID_SOCKET)
+  if (!mServer.IsOpen())
   {
     // Create the socket
-    mServer = CreateSocket();
-
+    Status status;
+    mServer.Open(status, SocketAddressFamily::InternetworkV4, SocketType::Stream, SocketProtocol::Tcp);
+    
     // Return true if the server is not invalid, false otherwise
-    return mServer != INVALID_SOCKET;
+    return status.Succeeded();
   }
 
   // Otherwise, it should be valid
   return true;
 }
 
-// Create a new socket with all the options we want
-SocketHandle TcpSocket::CreateSocket()
+void TcpSocket::SetSocketOptions(Socket& socket)
 {
-  // Create the socket
-  SocketHandle newSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-  // If for some reason the socket is invalid...
-  if (newSocket == INVALID_SOCKET)
-  {
-    // Dispatch an error and the socket was not valid
-    DispatchError();
-  }
-  else
-  {
-    // Now that we created a socket, make sure to set all the options we want
-    SetSocketOptions(newSocket);
-  }
-
-  // Return the socket (whether it was created or not
-  return newSocket;
-}
-
-// Setup all the socket options that we want
-void TcpSocket::SetSocketOptions(SocketHandle socket)
-{
-  // Make sure to set it so the socket won't buffer up small packets (turn off the Nagle algorithm)
-  BOOL noDelay = 1;
-  setsockopt((SOCKET)socket, IPPROTO_TCP, TCP_NODELAY, (char*) &noDelay, sizeof(noDelay));
-
-  // Turn socket blocking off
-  u_long noBlocking = 1;
-  ioctlsocket((SOCKET)socket, FIONBIO, &noBlocking);
-}
-
-// Resolve a name into an IP address
-unsigned long TcpSocket::ResolveHost(StringParam host)
-{
-  // Is the string an IP address?
-  unsigned long ip = inet_addr(host.c_str());
-
-  // If we didn't parse into an IP...
-  if (ip == INADDR_NONE)
-  {
-    // Is the string a host name?
-    hostent* result = gethostbyname(host.c_str());
-
-    // If no result was returned from the name resolution
-    if (result == nullptr)
-    {
-      // Dispatch an error
-      DispatchError();
-    }
-    else
-    {
-      // set the first IP that was found
-      ip = *(unsigned long*)result->h_addr_list[0];
-    }
-  }
-
-  // Return the IP that we parsed
-  return ip;
-}
-
-// Get an error string for a particular error code
-String TcpSocket::GetErrorString(int errorCode)
-{
-  // Allocate the error string and store it in a temporary
-  LPSTR errorString = nullptr;
-  FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, errorCode, 0, (LPSTR)&errorString, 0, 0);
-  
-  // Copy the string to our own string
-  String result = errorString;
-
-  // Free the one allocated by the system
-  LocalFree(errorString);
-
-  // Return our own string result
-  return result;
-}
-
-// Check if the last error was a problem or not
-bool TcpSocket::IsError(int result)
-{
-  // If the result was an error value...
-  if (result == SOCKET_ERROR)
-  {
-    // Get the last error code
-    unsigned long error = WSAGetLastError();
-
-    // Return if it's not the would block error
-    return error != WSAEWOULDBLOCK;
-  }
-
-  // Otherwise, we didn't have an error!
-  return false;
-}
-
-// Verify that nothing went wrong
-void TcpSocket::VerifyResult(int result)
-{
-  // If there was an error
-  if (IsError(result))
-  {
-    // Get the last error code
-    unsigned long error = WSAGetLastError();
-
-    // Skip the 'connection disconnected error'
-    if(error == WSAECONNABORTED || error == WSAECONNRESET || error == WSAENETRESET)
-      return;
-
-    char errorMessage[1024] = {0};
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, error, 0, errorMessage, 1023, nullptr);
-    Warn("SocketHandle failure '%s'", errorMessage);
-    DoNotifyWarning("TcpSocket", String::Format("A socket call returned a failing result of '%s'", errorMessage).c_str());
-  }
+  Status status;
+  status.AssertOnFailure();
+  socket.SetSocketOption(status, SocketTcpOption::NoDelay, true);
+  socket.SetBlocking(status, false);
 }
 
 } // namespace Zero

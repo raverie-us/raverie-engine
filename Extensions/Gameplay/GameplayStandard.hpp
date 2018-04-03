@@ -9,7 +9,6 @@
 // Standard Library Dependencies
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
-#include "Math/MathStandard.hpp"
 #include "Geometry/GeometryStandard.hpp"
 #include "Meta/MetaStandard.hpp"
 #include "Support/SupportStandard.hpp"
