@@ -685,7 +685,7 @@ public:
 class TilePaletteSourcePreview : public PreviewWidget
 {
   TilePaletteView* mTilePaletteView;
-  TilePaletteSource* mSource;
+  HandleOf<TilePaletteSource> mSource;
 public:
   //****************************************************************************
   TilePaletteSourcePreview(PreviewWidgetInitializer& initializer)
@@ -704,6 +704,12 @@ public:
   //****************************************************************************
   void SizeToContents()
   {
+    if (mSource.IsNull())
+    {
+      Destroy();
+      return;
+    }
+
     // scale the tile view to fit within the preview widget they are displayed
     // widget size and tile size are in pixels
     IntVec2 paletteTiles = mSource->GetTileDimensions();
@@ -716,6 +722,12 @@ public:
   //****************************************************************************
   void UpdateTransform()
   {
+    if (mSource.IsNull())
+    {
+      Destroy();
+      return;
+    }
+
     SizeToContents();
     mTilePaletteView->SetSize(mSize);
     PreviewWidget::UpdateTransform();
