@@ -16,9 +16,6 @@
 
 namespace Zero
 { 
-
-void DestroyRenderer();
-
 OsShell* CreateOsShellSystem()
 {
   return new WindowsShellSystem();
@@ -141,13 +138,6 @@ DWORD GetWin32ExStyle(WindowStyleFlags::Enum styleFlags)
     return WS_EX_APPWINDOW;
   else
     return WS_EX_TOOLWINDOW;
-}
-
-//-------------------------------------------------------------------WindowsOsWindow
-ZilchDefineType(WindowsOsWindow, builder, type)
-{
-  ZilchBindConstructor();
-  ZilchBindDestructor();
 }
 
 WindowsOsWindow::WindowsOsWindow()

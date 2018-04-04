@@ -43,6 +43,8 @@
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="ExecutableResource.cpp" />
     <ClCompile Include="Shell.cpp" />
+    <ClCompile Include="ComPort.cpp" />
+    <ClCompile Include="WinUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Windows.hpp">
@@ -59,5 +61,6 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="WString.hpp" />
+    <ClInclude Include="WinUtility.hpp" />
   </ItemGroup>
 </Project>

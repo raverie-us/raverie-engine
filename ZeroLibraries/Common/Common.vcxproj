@@ -185,6 +185,7 @@
     <ClInclude Include="Math\VectorHashPolicy.hpp" />
     <ClInclude Include="Math\WeightedProbabilityTable.hpp" />
     <ClInclude Include="Platform\CommandLineSupport.hpp" />
+    <ClInclude Include="Platform\ComPort.hpp" />
     <ClInclude Include="Platform\CrashHandler.hpp" />
     <ClInclude Include="Platform\Debug.hpp" />
     <ClInclude Include="Platform\DebugSymbolInformation.hpp" />

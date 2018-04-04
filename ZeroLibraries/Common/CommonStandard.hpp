@@ -217,3 +217,4 @@ namespace Zero
 #include "Platform/ExecutableResource.hpp"
 #include "Platform/CommandLineSupport.hpp"
 #include "Platform/Shell.hpp"
+#include "Platform/ComPort.hpp"

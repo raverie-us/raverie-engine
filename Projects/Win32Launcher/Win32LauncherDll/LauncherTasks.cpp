@@ -476,7 +476,7 @@ void DownloadLauncherPatchInstallerJob::OnReponse(WebResponseEvent* event)
 {
   // Check if there's no new installer available, either from a failed request or getting no data back
   String data = event->Data;
-  if(event->ResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
+  if(event->ResponseCode != Os::WebResponseCode::OK || data.SizeInBytes() == 0)
   {
     mIsNewPatchAvailable = false;
     return;

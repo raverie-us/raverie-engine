@@ -709,6 +709,9 @@
     <ClInclude Include="Math\MathToString.hpp">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\ComPort.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="ZeroVisualizers.natvis" />

@@ -47,31 +47,13 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ComPort.cpp" />
-    <ClCompile Include="Launcher.cpp" />
-    <ClCompile Include="Precompiled.cpp">
-      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="RawInput.cpp" />
-    <ClCompile Include="RcInput.cpp" />
-    <ClCompile Include="WindowsShell.cpp" />
-    <ClCompile Include="WindowsShellSystemStandard.cpp" />
     <ClCompile Include="WindowsSystem.cpp" />
-    <ClCompile Include="WinUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ComPort.hpp" />
-    <ClInclude Include="Launcher.hpp" />
-    <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="RawInput.hpp" />
-    <ClInclude Include="RcInput.hpp" />
-    <ClInclude Include="ResourceDef.hpp" />
-    <ClInclude Include="WindowsShell.hpp" />
-    <ClInclude Include="WindowsShellSystemStandard.hpp" />
     <ClInclude Include="WindowsSystem.hpp" />
     <ClInclude Include="WinInputs.inl" />
-    <ClInclude Include="WinUtility.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

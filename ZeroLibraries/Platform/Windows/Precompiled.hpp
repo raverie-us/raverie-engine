@@ -67,6 +67,7 @@ extern "C"
 #include "ThreadIo.hpp"
 
 #include "WString.hpp"
+#include "WinUtility.hpp"
 
 #ifdef RunVld
 #include <vld.h>

@@ -9,7 +9,11 @@
 namespace Zero
 {
 
-bool RunLauncher(CogId config, CogId projectCogId);
+bool RunLauncher(CogId config, CogId projectCogId)
+{
+  Error("This must be implemented");
+  return true;
+}
 
 OsShell* CreateOsShellSystem();
 System* CreateSoundSystem();

@@ -43,6 +43,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CommandLineSupport.cpp" />
+    <ClCompile Include="ComPort.cpp" />
     <ClCompile Include="CrashHandler.cpp" />
     <ClCompile Include="DebugClassMap.cpp" />
     <ClCompile Include="DebugSymbolInformation.cpp" />
@@ -69,6 +70,7 @@
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="WinUtility.cpp" />
     <ClCompile Include="WString.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +79,7 @@
     <ClInclude Include="WindowsError.hpp" />
     <ClInclude Include="Windows.hpp" />
     <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="WinUtility.hpp" />
     <ClInclude Include="WString.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
