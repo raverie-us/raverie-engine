@@ -18,20 +18,16 @@ public:
 
   bool SceneEmpty();
   void CollectNodeData();
+
   // returns the unique name of the node, takes the parent nodes name that has potentially been
   // generated/made unique as to properly reference it among nodes with the same name.
   String ExtractDataFromNodesRescursive(aiNode* node, String parentName);
   void SingleMeshHierarchyEntry(HierarchyData& hierarchyData, uint meshIndex);
   void MultipleMeshsHierarchicalEntry(HierarchyData& hierarchyData, aiNode* node);
+  void FindAnimationNodes();
 
   void ComputeMeshTransforms();
   bool UpdateBuilderMetaData();
-
-  // if the node name contains the fbx impot identifier remove it,
-  // just having _descriptionOfTransform is enough
-
-//   void GenerateNormals(MeshData& meshData);
-//   void SmoothNormals(MeshData& meshData);
 
   // zero meta data
   GeometryContent* mGeometryContent;
@@ -50,7 +46,7 @@ public:
   String mBaseMeshName;
   MeshDataMap mMeshDataMap;
   HierarchyDataMap mHierarchyDataMap;
-
+  AnimationNodeRedirectMap mAnimationRedirectMap;
   //
   uint mUniquifyingIndex;
 };

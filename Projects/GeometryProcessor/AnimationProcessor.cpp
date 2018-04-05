@@ -7,9 +7,10 @@
 namespace Zero
 {
 
-AnimationProcessor::AnimationProcessor(AnimationBuilder* animationBuilder, HierarchyDataMap& hierarchyData)
+AnimationProcessor::AnimationProcessor(AnimationBuilder* animationBuilder, HierarchyDataMap& hierarchyData, AnimationNodeRedirectMap& animationRedirectMap)
   : mBuilder(animationBuilder),
-    mHierarchyDataMap(hierarchyData)
+    mHierarchyDataMap(hierarchyData),
+    mAnimationRedirectMap(animationRedirectMap)
 {
 
 }
@@ -40,7 +41,7 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
     zeroAnimationData.AnimationDuration = (float)sceneAnimation->mDuration / ticksPerSecond;
     zeroAnimationData.FramesPerSecond = ticksPerSecond;
 
-    // collect each of the animations channel data (Zero Object Tracks)
+    // Collect each of the animations channel data (Zero Object Tracks)
     aiNodeAnim** sceneAnimationChannels = sceneAnimation->mChannels;
     size_t numChannels = sceneAnimation->mNumChannels;
     for (size_t channelIndex = 0; channelIndex < numChannels; ++channelIndex)
@@ -50,15 +51,48 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
       aiNodeAnim* sceneChannelNode = sceneAnimationChannels[channelIndex];
       String name = CleanAssetName(sceneChannelNode->mNodeName.C_Str());
 
-      // entire node hierarchy path to this particular animation node
-      zeroTrackData.FullPath = mHierarchyDataMap[name].mNodePath;
+      // Check if the animation has been corrected and collapsed into a different node
+      if (mAnimationRedirectMap.ContainsKey(name))
+        name = mAnimationRedirectMap.FindValue(name, String());
+      // Some animations have been removed completely if they were just taking a node out of bind pose
+      // and used as a local transform on a collapsed node when animating
+      else if (!mHierarchyDataMap.ContainsKey(name))
+        continue;
 
-      // collect all the channels position, rotation, and scale keys
+      // Entire node hierarchy path to this particular animation node
+      HierarchyData& node = mHierarchyDataMap[name];
+      
+      zeroTrackData.FullPath = node.mNodePath;
+
+      // These variables are used to decompose the transform matrix to extract the scale for animation correction
+      Vec3 translation;
+      Mat3 rotation;
+      Vec3 preScaleCorrection;
+      Vec3 postScaleCorrection;
+      
+      // Animation correction matrices for collapsed pivot nodes
+      Mat4 preAnimationCorrection = Mat4::cIdentity;
+      Mat4 postAnimationCorrection = Mat4::cIdentity;
+      if (node.mIsAnimatedPivot)
+      {
+        preAnimationCorrection = node.mPreAnimationCorrection;
+        postAnimationCorrection = node.mPostAnimationCorrection;
+      }
+
+      // Collect all the channels position, rotation, and scale keys
       size_t numPositionKeys = sceneChannelNode->mNumPositionKeys;
       for (size_t i = 0; i < numPositionKeys; i++)
       {
         PositionKey positionKey = AssimpToZeroPositionKey(sceneChannelNode->mPositionKeys[i]);
         positionKey.Keytime /= ticksPerSecond;
+        
+        // Animation Correction if pivots were collapsed
+        if (node.mIsAnimatedPivot)
+        {
+          Mat4 translateTransform;
+          positionKey.Position = Math::TransformPoint(preAnimationCorrection * postAnimationCorrection, positionKey.Position);
+        }
+
         positionKey.Position = Math::TransformPoint(transform, positionKey.Position);
         zeroTrackData.PositionKeys.PushBack(positionKey);
       }
@@ -68,6 +102,13 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
       {
         RotationKey rotationKey = AssimpToZeroRotationKey(sceneChannelNode->mRotationKeys[i]);
         rotationKey.Keytime /= ticksPerSecond;
+
+        // Animation Correction if pivots were collapsed
+        if (node.mIsAnimatedPivot)
+        {
+          rotationKey.Rotation = ToQuaternion(preAnimationCorrection) * rotationKey.Rotation * ToQuaternion(postAnimationCorrection);
+        }
+
         rotationKey.Rotation = changeOfBasis * rotationKey.Rotation * changeOfBasis.Inverted();
         zeroTrackData.RotationKeys.PushBack(rotationKey);
       }
@@ -77,6 +118,15 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
       {
         ScalingKey scalingKey = AssimpToZeroScalingKey(sceneChannelNode->mScalingKeys[i]);
         scalingKey.Keytime /= ticksPerSecond;
+
+        // Animation Correction if pivots were collapsed
+        if (node.mIsAnimatedPivot)
+        {
+          Mat4::Decompose(preAnimationCorrection, translation, rotation, preScaleCorrection);
+          Mat4::Decompose(postAnimationCorrection, translation, rotation, postScaleCorrection);
+          scalingKey.Scale = preScaleCorrection * scalingKey.Scale * postScaleCorrection;
+        }
+
         zeroTrackData.ScalingKeys.PushBack(scalingKey);
       }
 
@@ -267,30 +317,6 @@ void AnimationProcessor::ExportAnimationData(String outputPath)
   }
 
   mBuilder->mAnimations = entries;
-}
-
-PositionKey AnimationProcessor::AssimpToZeroPositionKey(aiVectorKey positionKey)
-{
-  PositionKey zKey;
-  zKey.Keytime = (float)positionKey.mTime;
-  zKey.Position = Vec3(positionKey.mValue.x, positionKey.mValue.y, positionKey.mValue.z);
-  return zKey;
-}
-
-RotationKey AnimationProcessor::AssimpToZeroRotationKey(aiQuatKey rotationKey)
-{
-  RotationKey zKey;
-  zKey.Keytime = (float)rotationKey.mTime;
-  zKey.Rotation = Quat(rotationKey.mValue.x, rotationKey.mValue.y, rotationKey.mValue.z, rotationKey.mValue.w);
-  return zKey;
-}
-
-ScalingKey AnimationProcessor::AssimpToZeroScalingKey(aiVectorKey scalingKey)
-{
-  ScalingKey zKey;
-  zKey.Keytime = (float)scalingKey.mTime;
-  zKey.Scale = Vec3(scalingKey.mValue.x, scalingKey.mValue.y, scalingKey.mValue.z);
-  return zKey;
 }
 
 }// namespace Zero

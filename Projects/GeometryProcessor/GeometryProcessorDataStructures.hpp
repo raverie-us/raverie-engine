@@ -78,23 +78,42 @@ typedef HashMap<uint, MeshData> MeshDataMap;
 class HierarchyData
 {
 public:
-  HierarchyData() : mHasMesh(false), mIsSkeletonRoot(false) {};
+  HierarchyData()
+    : mLocalTransform(Mat4::cIdentity),
+      mHasMesh(false),
+      mIsSkeletonRoot(false),
+      mIsPivot(false),
+      mIsAnimatedPivot(false),
+      mPreAnimationCorrection(Mat4::cIdentity),
+      mPostAnimationCorrection(Mat4::cIdentity),
+      mAnimationNode(nullptr)
+  {};
 
   String mParentNodeName;
-  // I need the node name despite it also being the key
+  // The node name is needed for data processing despite it also being the key
   String mNodeName;
-  // hierarchy structure of the animation nodes
+  // Hierarchy structure of the animation nodes
   String mNodePath;
-  // must be combined with parent transforms to prior to being used for its updated location
+  // Must be combined with parent transforms to prior to being used for its updated location
   Mat4 mLocalTransform;
-  // all children of this node by name
+  // All children of this node by name
   Array<String> mChildren;
-  // 
+
   bool mHasMesh;
   String mMeshName;
-  // information defining the necessary nodes should bones be present
+  // Information defining the necessary nodes should bones be present
   String mSkeletonRootNodePath;
   bool mIsSkeletonRoot;
+
+  // Flag to mark if a node is a pivot for consideration when collapsing pivots is enabled
+  bool mIsPivot;
+  // Flag to mark whether a node is an animated pivot and may needs its animations corrected
+  bool mIsAnimatedPivot;
+  // Combined transforms of removed nodes for correcting animations
+  Mat4 mPreAnimationCorrection;
+  Mat4 mPostAnimationCorrection;
+  // This nodes animation node data, only used when collapsing pivots
+  aiNodeAnim* mAnimationNode;
 };
 
 // animation data is keyed by node name

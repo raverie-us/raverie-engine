@@ -56,6 +56,7 @@ Vec3 GetBasisVector(BasisType::Enum basisEnum)
 
 void SetGeometryContentImportOptions(GeometryImport* importOptions, GeometryOptions* geoOptions)
 {
+  importOptions->mCollapsePivots = geoOptions->mCollapsePivots;
   importOptions->mOriginOffset = geoOptions->mOriginOffset;
   importOptions->mScaleFactor  = geoOptions->mScaleFactor;
   importOptions->mChangeBasis  = geoOptions->mChangeBasis;
@@ -282,7 +283,8 @@ ZilchDefineType(GeometryImport, builder, type)
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::CallSetDefaults);
   ZeroBindDependency(GeometryContent);
-  
+
+  ZilchBindFieldProperty(mCollapsePivots);
   ZilchBindFieldProperty(mOriginOffset);
   ZilchBindFieldProperty(mScaleFactor);
   ZilchBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
@@ -293,6 +295,7 @@ ZilchDefineType(GeometryImport, builder, type)
 
 void GeometryImport::Serialize(Serializer& stream)
 {
+  SerializeNameDefault(mCollapsePivots, false);
   SerializeNameDefault(mOriginOffset, Vec3::cZero);
   SerializeNameDefault(mScaleFactor, 1.0f);
   SerializeNameDefault(mChangeBasis, false);
@@ -303,6 +306,7 @@ void GeometryImport::Serialize(Serializer& stream)
 
 void GeometryImport::Generate(ContentInitializer& initializer)
 {
+  mCollapsePivots = false;
   mOriginOffset = Vec3::cZero;
   mScaleFactor = 1.0f;
   mChangeBasis = false;

@@ -110,6 +110,14 @@ int GeometryImporter::ProcessModelFiles()
     skeletonProcess.ProcessSkeletonHierarchy(mScene);
   }
 
+  // The pivot processor needs the skeleton data to properly collapse pivots with animations
+  // so run this step after the SkeletonProcessor
+  if (mGeometryContent->has(GeometryImport)->mCollapsePivots)
+  {
+    PivotProcessor pivotProcessor(mHierarchyDataMap, mRootNodeName, mAnimationRedirectMap);
+    pivotProcessor.ProccessAndCollapsePivots();
+  }
+
   // process the data into our format and export the files
   MeshBuilder* meshBuilder = mGeometryContent->has(MeshBuilder);
   if (meshBuilder && mScene->HasMeshes())
@@ -137,7 +145,7 @@ int GeometryImporter::ProcessModelFiles()
   if (animationBuilder && mScene->HasAnimations())
   {
     animationBuilder->Name = mBaseMeshName;
-    AnimationProcessor animationProcessor(animationBuilder, mHierarchyDataMap);
+    AnimationProcessor animationProcessor(animationBuilder, mHierarchyDataMap, mAnimationRedirectMap);
     animationProcessor.ExtractAndProcessAnimationData(mScene);
     animationProcessor.ExportAnimationData(mOutputPath);
   }
@@ -181,6 +189,12 @@ void GeometryImporter::CollectNodeData()
   mRootNodeName = CleanAssetName(rootNode->mName.C_Str());
   ExtractDataFromNodesRescursive(rootNode, "");
 
+  // Find all nodes with animations if they are present
+  // and collapse pivots has been enabled
+  AnimationBuilder* animationBuilder = mGeometryContent->has(AnimationBuilder);
+  if (animationBuilder && mScene->HasAnimations() && mGeometryContent->has(GeometryImport)->mCollapsePivots)
+    FindAnimationNodes();
+
   ComputeMeshTransforms();
 }
 
@@ -189,6 +203,7 @@ String GeometryImporter::ExtractDataFromNodesRescursive(aiNode* node, String par
   uint numChildren = node->mNumChildren;
 
   // collect the hierarchy data, used for animations if the scene has any
+  bool isPivot = IsPivot(node->mName.C_Str());
   String nodeName = CleanAssetName(node->mName.C_Str());
   // check to see if this node name is a unique entry, if no append an number to the end to make it unique
   if (mHierarchyDataMap.ContainsKey(nodeName))
@@ -203,7 +218,8 @@ String GeometryImporter::ExtractDataFromNodesRescursive(aiNode* node, String par
   hierarchyData.mNodeName = nodeName;
   hierarchyData.mNodePath = nodePath;
   hierarchyData.mLocalTransform = AiMat4ToZeroMat4(node->mTransformation);
-  
+  hierarchyData.mIsPivot = isPivot;
+
   // if the node has a mesh store the mesh keyed to its name
   if (node->mNumMeshes == 1)
   {
@@ -261,6 +277,44 @@ void GeometryImporter::MultipleMeshsHierarchicalEntry(HierarchyData& hierarchyDa
 
     hierarchyData.mChildren.PushBack(childHierarchyData.mNodeName);
     mHierarchyDataMap.Insert(childHierarchyData.mNodeName, childHierarchyData);
+  }
+}
+
+void GeometryImporter::FindAnimationNodes()
+{
+  // Search through the animation tree
+  aiAnimation** animations = mScene->mAnimations;
+  size_t numAnimations = mScene->mNumAnimations;
+  for (size_t animIndex = 0; animIndex < numAnimations; ++animIndex)
+  {
+    aiAnimation* sceneAnimation = animations[animIndex];
+    aiNodeAnim** sceneAnimationChannels = sceneAnimation->mChannels;
+    size_t numChannels = sceneAnimation->mNumChannels;
+    for (size_t channelIndex = 0; channelIndex < numChannels; ++channelIndex)
+    {
+      aiNodeAnim* sceneChannelNode = sceneAnimationChannels[channelIndex];
+      String name = CleanAssetName(sceneChannelNode->mNodeName.C_Str());
+      // Mark each animation in the hierarchy as needing to have its
+      // animation corrected and remove any animated nodes status
+      // as a pivot as it should not be collapsed
+      HierarchyData& node = mHierarchyDataMap[name];
+      if (node.mIsPivot)
+      {
+        // If the node has a single value track for translation, rotation, and scale
+        // it does not count as an animation and will be collapsed as these values
+        // are only used to take the model out of bind pose and are effectively
+        // the nodes local transform
+        if (sceneChannelNode->mNumPositionKeys > 1 || sceneChannelNode->mNumRotationKeys > 1 || sceneChannelNode->mNumScalingKeys > 1)
+        {
+          node.mIsPivot = false;
+          node.mIsAnimatedPivot = true;
+        }
+        else if (sceneChannelNode->mNumPositionKeys == 1 || sceneChannelNode->mNumRotationKeys == 1 || sceneChannelNode->mNumScalingKeys == 1)
+        {
+          node.mAnimationNode = sceneChannelNode;
+        }
+      }
+    }
   }
 }
 
@@ -464,80 +518,5 @@ bool GeometryImporter::UpdateBuilderMetaData()
     SaveToDataFile(*mGeometryContent, mMetaFile);
   return metaChanges;
 }
-
-//   void GeometryImporter::GenerateNormals(MeshData& meshData)
-//   {
-//     // zero out all the existing normals or garbage data
-//     size_t vertexBufferSize = meshData.mVertexBuffer.Size();
-//     for (size_t i = 0; i < vertexBufferSize; ++i)
-//       meshData.mVertexBuffer[i].mNormal = Vec3(0, 0, 0);
-// 
-//     Array<float> vertexInfluence;
-//     vertexInfluence.Resize(vertexBufferSize, 0.0f);
-//     // loop through and generate all the face normals
-//     size_t indexBufferSize = meshData.mIndexBuffer.Size();
-//     for (size_t i = 0; i < indexBufferSize; i += 3)
-//     {
-//       uint indexA = meshData.mIndexBuffer[i];
-//       uint indexB = meshData.mIndexBuffer[i + 1];
-//       uint indexC = meshData.mIndexBuffer[i + 2];
-//       VertexData& vertexA = meshData.mVertexBuffer[indexA];
-//       VertexData& vertexB = meshData.mVertexBuffer[indexB];
-//       VertexData& vertexC = meshData.mVertexBuffer[indexC];
-// 
-//       Vec3 faceNormal = Geometry::GenerateNormal(vertexA.mPosition, vertexB.mPosition, vertexC.mPosition);
-//       vertexA.mNormal += faceNormal;
-//       vertexB.mNormal += faceNormal;
-//       vertexC.mNormal += faceNormal;
-//       vertexInfluence[indexA] += 1.f;
-//       vertexInfluence[indexB] += 1.f;
-//       vertexInfluence[indexC] += 1.f;
-//     }
-// 
-//     for (size_t i = 0; i < vertexBufferSize; ++i)
-//       meshData.mVertexBuffer[i].mNormal /= vertexInfluence[i];
-// 
-//   }
-
-//   void GeometryImporter::SmoothNormals(MeshData& meshData)
-//   {
-//     MeshBuilder* meshBuilder = mGeometryContent->has(MeshBuilder);
-//     float smoothingThresholdRadians = Math::DegToRad(meshBuilder->mSmoothingAngleDegreesThreshold);
-// 
-//     typedef  HashMap<Vec3, Array<uint>> VertexMultiMap;
-//     VertexMultiMap vertexDataMultiMap;
-// 
-//     // collect all vertices at the same position into arrays
-//     size_t vertexBufferSize = meshData.mVertexBuffer.Size();
-//     for (size_t i = 0; i < vertexBufferSize; ++i)
-//       vertexDataMultiMap[meshData.mVertexBuffer[i].mPosition].PushBack(i);
-// 
-//     VertexMultiMap::valuerange range = vertexDataMultiMap.Values();
-//     // go over all the arrays of collected alike vertices
-//     while (!range.Empty())
-//     {
-//       Array<uint>& alikeVertices = range.Front();
-//       range.PopFront();
-// 
-//       while (alikeVertices.Size() > 1)
-//       {
-//         size_t indexA = alikeVertices.Back();
-//         alikeVertices.PopBack();
-//         size_t indexB = alikeVertices.Back();
-//         alikeVertices.PopBack();
-//         VertexData& vertexA = meshData.mVertexBuffer[indexA];
-//         VertexData& vertexB = meshData.mVertexBuffer[indexB];
-//         ErrorIf(vertexA.mPosition != vertexB.mPosition, "Two vertices considered the same are different");
-//         if (acos(vertexA.mNormal.Dot(vertexB.mNormal)) <= smoothingThresholdRadians)
-//         {
-//           Vec3 smoothedNormal = vertexA.mNormal + vertexB.mNormal;
-//           smoothedNormal /= 2.f;
-//           smoothedNormal.Normalize();
-//           vertexA.mNormal = vertexB.mNormal = smoothedNormal;
-//         }
-//         alikeVertices.PushBack(indexB);
-//       }
-//     }
-//   }
 
 }// namespace Zero

@@ -7,6 +7,8 @@
 namespace Zero
 {
 
+typedef HashMap<String, String> AnimationNodeRedirectMap;
+
 struct SceneTrack
 {
   String FullPath;
@@ -29,19 +31,16 @@ typedef Array<AnimationData> AnimationDataArray;
 class AnimationProcessor
 {
 public:
-  AnimationProcessor(AnimationBuilder* animationBuilder, HierarchyDataMap& hierarchyData);
+  AnimationProcessor(AnimationBuilder* animationBuilder, HierarchyDataMap& hierarchyData, AnimationNodeRedirectMap& animationRedirectMap);
   ~AnimationProcessor();
 
   void ExtractAndProcessAnimationData(const aiScene* scene);
   void ExportAnimationData(String outputPath);
 
-  PositionKey AssimpToZeroPositionKey(aiVectorKey positionKey);
-  RotationKey AssimpToZeroRotationKey(aiQuatKey  rotationKey);
-  ScalingKey  AssimpToZeroScalingKey(aiVectorKey scalingKey);
-
   AnimationBuilder* mBuilder;
   HierarchyDataMap& mHierarchyDataMap;
   AnimationDataArray mAnimationDataArray;
+  AnimationNodeRedirectMap& mAnimationRedirectMap;
 };
 
 }// namespace Zero

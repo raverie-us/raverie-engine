@@ -105,6 +105,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MeshProcessor.cpp" />
     <ClCompile Include="PhysicsMeshProcessor.cpp" />
+    <ClCompile Include="PivotProcessor.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -120,6 +121,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\GeometryProcessor\$(C
     <ClInclude Include="GeometryUtility.hpp" />
     <ClInclude Include="MeshProcessor.hpp" />
     <ClInclude Include="PhysicsMeshProcessor.hpp" />
+    <ClInclude Include="PivotProcessor.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="SkeletonProcessor.hpp" />
     <ClInclude Include="TextureProcessor.hpp" />

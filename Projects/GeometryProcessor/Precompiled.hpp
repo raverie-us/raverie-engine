@@ -23,3 +23,5 @@
 #include "PhysicsMeshProcessor.hpp"
 #include "SkeletonProcessor.hpp"
 #include "TextureProcessor.hpp"
+// Pivot needs to come after skeleton processor for constant variable access
+#include "PivotProcessor.hpp"
