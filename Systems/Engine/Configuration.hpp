@@ -66,6 +66,9 @@ public:
 
   /// Project level to load in project.
   String EditingLevel;
+
+  /// Username that's used by the bug reporter.
+  String ZeroHubUsername;
 };
 
 //-----------------------------------------------------------------------------

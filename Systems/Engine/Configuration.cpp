@@ -60,12 +60,14 @@ ZilchDefineType(EditorConfig, builder, type)
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
+  ZilchBindFieldProperty(ZeroHubUsername);
 }
 
 void EditorConfig::Serialize(Serializer& stream)
 {
   SerializeNameDefault(EditingProject, String());
   SerializeNameDefault(EditingLevel, String());
+  SerializeNameDefault(ZeroHubUsername, String());
 }
 
 //--------------------------------------------------------------- Content Config

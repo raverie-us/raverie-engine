@@ -77,6 +77,8 @@ public:
   /// Set checked without sending ValueChanged message
   void SetCheckedDirect(bool value);
 
+  void OnLeftClick(MouseEvent* event);
+
 //private:
   Label* mText;
   CheckBox* mCheckBox;
