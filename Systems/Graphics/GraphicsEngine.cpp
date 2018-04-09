@@ -103,6 +103,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
 
   // Event connections for ResourceManagers
   ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceAdded, OnRenderGroupAdded);
+  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceModified, OnRenderGroupModified);
   ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceRemoved, OnRenderGroupRemoved);
 
   ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceAdded, OnMaterialAdded);
@@ -697,6 +698,17 @@ void GraphicsEngine::OnRenderGroupAdded(ResourceEvent* event)
 }
 
 //**************************************************************************************************
+void GraphicsEngine::OnRenderGroupModified(ResourceEvent* event)
+{
+  if (!event->LastIdName.Empty())
+  {
+    Array<Resource*> materials;
+    MaterialManager::GetInstance()->EnumerateResources(materials);
+    ResourceListResetIdNames<Material, RenderGroupManager>(materials);
+  }
+}
+
+//**************************************************************************************************
 void GraphicsEngine::OnRenderGroupRemoved(ResourceEvent* event)
 {
   RenderGroup* renderGroup = (RenderGroup*)event->EventResource;
@@ -725,6 +737,13 @@ void GraphicsEngine::OnMaterialModified(ResourceEvent* event)
     AddMaterial(material);
 
     CompileShaders();
+  }
+
+  if (!event->LastIdName.Empty())
+  {
+    Array<Resource*> renderGroups;
+    RenderGroupManager::GetInstance()->EnumerateResources(renderGroups);
+    ResourceListResetIdNames<RenderGroup, MaterialManager>(renderGroups);
   }
 }
 
