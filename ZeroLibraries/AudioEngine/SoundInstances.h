@@ -132,9 +132,9 @@ namespace Audio
     // Sets the volume of the instance over a specified time in seconds.
     void SetVolume(const float newVolume, float timeToChange);
     // Returns the current pitch change, in cents.
-    int GetPitch();
-    // Sets the pitch change of the instance (in cents) over a specified time in seconds.
-    void SetPitch(const int pitchCents, const float timeToChange);
+    float GetPitch();
+    // Sets the pitch change of the instance (in semitones) over a specified time in seconds.
+    void SetPitch(const float pitchSemitones, const float timeToChange);
     // Returns true if the instance is currently playing.
     bool IsPlaying();
     // Changes the playback position to a specified time in seconds.

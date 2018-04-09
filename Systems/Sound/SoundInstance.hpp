@@ -125,7 +125,7 @@ public:
   /// The name of the Sound being played by this SoundInstance.
   StringParam GetSoundName();
 
-  // Internals
+// Internals
   Array<SoundTag*> SoundTags;
   // The speed of the music in beats per minute.
   float GetBeatsPerMinute();
@@ -137,11 +137,10 @@ private:
   HandleOf<SoundNode> mSoundNode;
   void Play(bool loop, SoundTag *tag, Audio::SoundNode* outputNode, bool startPaused);
   void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  Audio::SoundInstanceNode* GetNode();
 
   Audio::SoundAsset* mAssetObject;
   SoundSpace* mSpace;
-  bool mIsPaused;
-  bool mIsPlaying;
 
   friend class SoundEmitter;
   friend class SoundSpace;

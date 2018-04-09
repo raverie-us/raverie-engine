@@ -217,7 +217,7 @@ namespace Audio
   SoundInstanceNode::SoundInstanceNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
       SoundAsset* parentAsset, const bool looping, const bool startPaused, 
       ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, true, isThreaded), 
+    SimpleCollapseNode(name, ID, extInt, false, true, isThreaded), 
     Asset(parentAsset), 
     mVolume(0.8f), 
     mFinished(false), 
@@ -253,7 +253,7 @@ namespace Audio
       if (parentAsset->AddReference())
       {
         SetSiblingNodes(new SoundInstanceNode(status, name, ID, parentAsset->ThreadedAsset, looping, 
-          startPaused, nullptr, true), status);
+          startPaused, nullptr, true));
       }
       // Couldn't attach to this asset
       else
@@ -572,30 +572,30 @@ namespace Audio
   }
 
   //************************************************************************************************
-  int SoundInstanceNode::GetPitch()
+  float SoundInstanceNode::GetPitch()
   {
     if (mPitchFactor == 0)
       return 0;
     else
-      return (int)(1200.0f * Math::Log2(mPitchFactor));
+      return 12.0f * Math::Log2(mPitchFactor);
   }
 
   //************************************************************************************************
-  void SoundInstanceNode::SetPitch(const int pitchCents, const float time)
+  void SoundInstanceNode::SetPitch(const float pitchSemitones, const float time)
   {
     if (!Threaded)
     {
       // If not interpolating, set the pitch value
       if (time == 0)
-        mPitchFactor = Math::Pow(2.0f, pitchCents / 1200.0f);
+        mPitchFactor = Math::Pow(2.0f, pitchSemitones / 12.0f);
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetPitch,
-        (SoundInstanceNode*)GetSiblingNode(), pitchCents, time));
+        (SoundInstanceNode*)GetSiblingNode(), pitchSemitones, time));
     }
     else
     {
       // Check for no pitch shift and no interpolation
-      if (pitchCents == 0 && time == 0)
+      if (pitchSemitones == 0 && time == 0)
       {
         mPitchShifting = false;
         Pitch.SetPitchFactor(1.0f, 0.0f);
@@ -603,7 +603,7 @@ namespace Audio
       else
       {
         mPitchShifting = true;
-        Pitch.SetPitchFactor(Math::Pow(2.0f, pitchCents / 1200.0f), time);
+        Pitch.SetPitchFactor(Math::Pow(2.0f, pitchSemitones / 12.0f), time);
       }
     }
   }

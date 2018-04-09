@@ -12,13 +12,13 @@ namespace Audio
   //------------------------------------------------------------------------------------ Volume Node
 
   //************************************************************************************************
-  VolumeNode::VolumeNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-    ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  VolumeNode::VolumeNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     Volume(1.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new VolumeNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new VolumeNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -139,16 +139,16 @@ namespace Audio
   //----------------------------------------------------------------------------------- Panning Node
 
   //************************************************************************************************
-  PanningNode::PanningNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-    ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  PanningNode::PanningNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     SumToMono(false),
     LeftVolume(1.0f),
     RightVolume(1.0f),
     Active(false)
   {
     if (!isThreaded)
-      SetSiblingNodes(new PanningNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new PanningNode(name, ID, nullptr, true));
     else
     {
       LeftInterpolator.SetValues(1.0f, 1.0f, (unsigned)0);

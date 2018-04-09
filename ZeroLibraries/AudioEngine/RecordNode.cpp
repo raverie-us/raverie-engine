@@ -12,9 +12,9 @@ namespace Audio
   //------------------------------------------------------------------------------------ Record Node
 
   //************************************************************************************************
-  RecordNode::RecordNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-    ExternalNodeInterface* extInt, bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  RecordNode::RecordNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     MaxValue((float)((1 << 15) - 1)),
     FileName("RecordedOutput.wav"),
     Recording(false),
@@ -23,7 +23,7 @@ namespace Audio
     Paused(false)
   {
     if (!Threaded)
-      SetSiblingNodes(new RecordNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new RecordNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -222,15 +222,15 @@ namespace Audio
   //-------------------------------------------------------------------------------- Save Audio Node
 
   //************************************************************************************************
-  SaveAudioNode::SaveAudioNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-    ExternalNodeInterface* extInt, bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  SaveAudioNode::SaveAudioNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     mSaveData(false),
     mPlayData(false),
     mPlaybackIndex(0)
   {
     if (!Threaded)
-      SetSiblingNodes(new SaveAudioNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new SaveAudioNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************

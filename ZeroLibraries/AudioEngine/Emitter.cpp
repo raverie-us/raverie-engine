@@ -91,13 +91,13 @@ namespace Audio
   //----------------------------------------------------------------------------------- Emitter Node
 
   //************************************************************************************************
-  EmitterNode::EmitterNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, 
-      Math::Vec3Param position, Math::Vec3Param velocity, ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, true, false, isThreaded), 
+  EmitterNode::EmitterNode(Zero::StringParam name, const unsigned ID, Math::Vec3Param position, 
+      Math::Vec3Param velocity, ExternalNodeInterface* extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, true, false, isThreaded), 
     Data(nullptr)
   {
     if (!Threaded)
-      SetSiblingNodes(new EmitterNode(status, name, ID, position, velocity, nullptr, true), status);
+      SetSiblingNodes(new EmitterNode(name, ID, position, velocity, nullptr, true));
     else
     {
       Data = new EmitterData(position, velocity);

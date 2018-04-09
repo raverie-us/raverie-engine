@@ -12,9 +12,8 @@ namespace Audio
   //------------------------------------------------------------------------------------- Sound Node
 
   //************************************************************************************************
-  SoundNode::SoundNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, 
-      ExternalNodeInterface* extInt, const bool listenerDependent, const bool generator, 
-      const bool isThreaded) :
+  SoundNode::SoundNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool listenerDependent, const bool generator, const bool isThreaded) :
     SiblingNode(nullptr),
     InProcess(false), 
     ExternalData(extInt), 
@@ -581,10 +580,10 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void SoundNode::SetSiblingNodes(SoundNode* threadedNode, Zero::Status& previousStatus)
+  void SoundNode::SetSiblingNodes(SoundNode* threadedNode)
   {
     // Only run this on the non-threaded node
-    if (previousStatus.Succeeded() && !Threaded && threadedNode)
+    if (!Threaded && threadedNode)
     {
       // Set this node's sibling pointer
       SiblingNode = threadedNode;
@@ -652,12 +651,11 @@ namespace Audio
   //------------------------------------------------------------------------------------ Output Node
 
   //************************************************************************************************
-  OutputNode::OutputNode(Zero::Status& status, Zero::StringParam name, ExternalNodeInterface* nodeInt,
-    bool isThreaded) :
-    SoundNode(status, name, 0, nodeInt, false, false, isThreaded)
+  OutputNode::OutputNode(Zero::StringParam name, ExternalNodeInterface* nodeInt, bool isThreaded) :
+    SoundNode(name, 0, nodeInt, false, false, isThreaded)
   {
     if (!isThreaded)
-      SetSiblingNodes(new OutputNode(status, "ThreadedOutputNode", nodeInt, true), status);
+      SetSiblingNodes(new OutputNode("ThreadedOutputNode", nodeInt, true));
   }
 
   //************************************************************************************************
@@ -702,12 +700,12 @@ namespace Audio
   //----------------------------------------------------------------------------------- Combine Node
 
   //************************************************************************************************
-  CombineNode::CombineNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-      ExternalNodeInterface* extInt, bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded)
+  CombineNode::CombineNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded)
   {
     if (!Threaded)
-      SetSiblingNodes(new CombineNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new CombineNode(name, ID, extInt, true));
   }
 
   //************************************************************************************************
@@ -730,15 +728,15 @@ namespace Audio
   //------------------------------------------------------------------------- Combine And Pause Node
 
   //************************************************************************************************
-  CombineAndPauseNode::CombineAndPauseNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
+  CombineAndPauseNode::CombineAndPauseNode(Zero::StringParam name, unsigned ID, 
       ExternalNodeInterface* extInt, bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     Paused(false),
     Pausing(false),
     Interpolating(false)
   {
     if (!Threaded)
-      SetSiblingNodes(new CombineAndPauseNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new CombineAndPauseNode(name, ID, extInt, true));
   }
 
   //************************************************************************************************

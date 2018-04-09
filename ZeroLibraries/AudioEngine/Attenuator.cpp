@@ -26,10 +26,10 @@ namespace Audio
   //-------------------------------------------------------------------------------- Attenuator Node
 
   //************************************************************************************************
-  AttenuatorNode::AttenuatorNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      Math::Vec3Param position, const AttenuationData& data, const CurveTypes::Enum curveType,
-      Zero::Array<Math::Vec3> *customCurveData, ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, true, false, isThreaded), 
+  AttenuatorNode::AttenuatorNode(Zero::StringParam name, const unsigned ID, Math::Vec3Param position, 
+      const AttenuationData& data, const CurveTypes::Enum curveType, Zero::Array<Math::Vec3> *customCurveData, 
+      ExternalNodeInterface* extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, true, false, isThreaded), 
     AttenStartDist(data.StartDistance), 
     UseLowPass(false), 
     LowPassDistance(data.EndDistance / 2.0f),
@@ -40,8 +40,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      SetSiblingNodes(new AttenuatorNode(status, name, ID, position, data, curveType, 
-        customCurveData, extInt, true), status);
+      SetSiblingNodes(new AttenuatorNode(name, ID, position, data, curveType, customCurveData, extInt, true));
     }
     else
     {

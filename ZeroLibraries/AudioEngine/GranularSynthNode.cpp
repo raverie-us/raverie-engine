@@ -422,9 +422,9 @@ namespace Audio
   //---------------------------------------------------------------------------- Granular Synth Node
 
   //************************************************************************************************
-  GranularSynthNode::GranularSynthNode(Zero::Status& status, Zero::StringParam name,
-    const unsigned ID, ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, true, isThreaded),
+  GranularSynthNode::GranularSynthNode(Zero::StringParam name, const unsigned ID, 
+      ExternalNodeInterface* extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, true, isThreaded),
     mActive(false),
     mSampleChannels(0),
     mFirstInactiveGrainIndex(0),
@@ -447,7 +447,7 @@ namespace Audio
     mWindowReleaseFrames(200)
   {
     if (!Threaded)
-      SetSiblingNodes(new GranularSynthNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new GranularSynthNode(name, ID, nullptr, true));
     else
       GrainList.Resize(16);
   }

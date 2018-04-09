@@ -345,28 +345,19 @@ SoundAttenuatorNode* SoundAttenuator::GetAttenuationNode(StringParam name, unsig
   }
 
   SoundAttenuatorNode* node;
-  Zero::Status status;
   // If using a custom curve, create the SoundAttenuatorNode with that curve
   if (mFalloffCurveType == FalloffCurveType::Custom && mCustomFalloffCurve)
   {
     Array<Vec3> curve;
     mCustomFalloffCurve->GetCurve(curve);
 
-    node = new SoundAttenuatorNode(new Audio::AttenuatorNode(status, name, ID, Math::Vec3(0, 0, 0), 
+    node = new SoundAttenuatorNode(new Audio::AttenuatorNode(name, ID, Math::Vec3(0, 0, 0), 
       Audio::AttenuationData(mStartDistance, mStopDistance, mMinAttenuatedVolume), curveType, &curve, this));
   }
   // Otherwise create it for the specified curve type
   else
-    node = new SoundAttenuatorNode(new Audio::AttenuatorNode(status, name, ID, Math::Vec3(0, 0, 0), 
+    node = new SoundAttenuatorNode(new Audio::AttenuatorNode(name, ID, Math::Vec3(0, 0, 0), 
       Audio::AttenuationData(mStartDistance, mStopDistance, mMinAttenuatedVolume), curveType, nullptr, this));
-
-  if (status.Failed())
-  {
-    DoNotifyWarning("Audio Error", status.Message);
-    node->mNode->DeleteThisNode();
-    delete node;
-    return nullptr;
-  }
 
   node->mNode->SetUsingLowPass(mUseLowPassFilter);
   if (mUseLowPassFilter)

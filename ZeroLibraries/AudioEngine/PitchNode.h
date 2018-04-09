@@ -18,13 +18,13 @@ namespace Audio
   class PitchNode : public SimpleCollapseNode
   {
   public:
-    PitchNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    PitchNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
 
-    // Returns the current pitch
-    int GetPitch();
-    // Sets the pitch over a specified time
-    void SetPitch(const int pitchCents, const float timeToInterpolate);
+    // Returns the current pitch, in semitones
+    float GetPitch();
+    // Sets the pitch, in semitones, over a specified time
+    void SetPitch(const float pitchSemitones, const float timeToInterpolate);
 
   private:
     ~PitchNode() {}
@@ -33,8 +33,8 @@ namespace Audio
 
     PitchChangeHandler PitchObject;
 
-    // Current pitch change in cents
-    int PitchCents;
+    // Current pitch change in semitones
+    float PitchSemitones;
   };
 }
 

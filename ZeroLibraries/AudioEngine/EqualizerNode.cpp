@@ -12,9 +12,9 @@ namespace Audio
   //--------------------------------------------------------------------------------- Equalizer Node
 
   //************************************************************************************************
-  EqualizerNode::EqualizerNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-    ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  EqualizerNode::EqualizerNode(Zero::StringParam name, const unsigned ID, 
+      ExternalNodeInterface* extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     LowPassGain(1.0f),
     HighPassGain(1.0f),
     Band1Gain(1.0f),
@@ -22,7 +22,7 @@ namespace Audio
     Band3Gain(1.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new EqualizerNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new EqualizerNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************

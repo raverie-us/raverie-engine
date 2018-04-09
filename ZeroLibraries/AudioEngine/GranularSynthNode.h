@@ -142,8 +142,8 @@ namespace Audio
   class GranularSynthNode : public SimpleCollapseNode
   {
   public:
-    GranularSynthNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool threaded = false);
+    GranularSynthNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool threaded = false);
 
     // Starts playing new grains.
     void Play();

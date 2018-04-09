@@ -170,9 +170,8 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
   if (status.Failed())
     DoNotifyWarning("Audio Initialization Unsuccessful", status.Message);
 
-  status.Reset();
   SoundNode* node = new SoundNode();
-  node->SetNode(new Audio::CombineNode(status, "AudioOutput", mCounter++, nullptr), status);
+  node->mNode = new Audio::CombineNode("AudioOutput", mCounter++, nullptr);
   mAudioSystem->AddNodeToOutput(node->mNode);
   mOutputNode = node;
   

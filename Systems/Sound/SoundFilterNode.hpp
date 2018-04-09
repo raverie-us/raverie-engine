@@ -84,8 +84,6 @@ public:
 // Internals
   Audio::SoundNode* mNode;
   void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
-  void SetNode(Audio::SoundNode* node, Status& status);
-  void ReleaseNode();
   bool mCanInsertBefore;
   bool mCanInsertAfter;
   bool mCanReplace;
@@ -150,6 +148,7 @@ public:
 private:
   void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
   void SendToAudioEngine(float* samples, unsigned howManySamples);
+  Audio::CustomDataNode* GetNode();
 
   Audio::AudioStreamDecoder* AudioDecoder;
 
@@ -251,6 +250,8 @@ public:
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateDecibels(float volumeDB, float interpolationTime);
 
+private:
+  Audio::VolumeNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------- Panning Node
@@ -284,6 +285,9 @@ public:
   /// is the value to change the LeftVolume to, the second is the RightVolume,
   /// and the third is the number of seconds to use for the interpolation.
   void InterpolateVolumes(float leftVolume, float rightVolume, float time);
+
+private:
+  Audio::PanningNode* GetNode();
 };
 
 //--------------------------------------------------------------------------------------- Pitch Node
@@ -315,6 +319,8 @@ public:
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateSemitones(float pitchSemitones, float interpolationTime);
 
+private:
+  Audio::PitchNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------ Low Pass Node
@@ -332,6 +338,8 @@ public:
   float GetCutoffFrequency();
   void SetCutoffFrequency(float frequency);
 
+private:
+  Audio::LowPassNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- High Pass Node
@@ -349,6 +357,8 @@ public:
   float GetCutoffFrequency();
   void SetCutoffFrequency(float frequency);
 
+private:
+  Audio::HighPassNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- Band Pass Node
@@ -368,6 +378,9 @@ public:
   /// while smaller numbers make it wider. The default value is 0.669.
   float GetQualityFactor();
   void SetQualityFactor(float Q);
+
+private:
+  Audio::BandPassNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- Equalizer Node
@@ -404,6 +417,9 @@ public:
   /// band 3, high pass) over the number of seconds passed in as the final parameter.
   void InterpolateAllBands(float lowPass, float band1, float band2, float band3, float highPass, 
     float timeToInterpolate);
+
+private:
+  Audio::EqualizerNode* GetNode();
 };
 
 //-------------------------------------------------------------------------------------- Reverb Node
@@ -431,6 +447,9 @@ public:
   /// Interpolates the WetValue property from its current value to the value passed in 
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateWetValue(float value, float time);
+
+private:
+  Audio::ReverbNode* GetNode();
 };
 
 //--------------------------------------------------------------------------------------- Delay Node
@@ -464,6 +483,9 @@ public:
   /// Interpolates the WetValue property from its current value to the value passed in 
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateWetValue(float wetPercent, float time);
+
+private:
+  Audio::DelayNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------- Flanger Node
@@ -489,6 +511,9 @@ public:
   /// The percentage of output (0 - 1.0) which is fed back into the filter as input. 
   float GetFeedbackValue();
   void SetFeedbackValue(float value);
+
+private:
+  Audio::FlangerNode* GetNode();
 };
 
 //-------------------------------------------------------------------------------------- Chorus Node
@@ -521,6 +546,9 @@ public:
   /// The offset value of the chorus filter, in milliseconds. 
   float GetOffsetMillisec();
   void SetOffsetMillisec(float offset);
+
+private:
+  Audio::ChorusNode* GetNode();
 };
 
 //---------------------------------------------------------------------------------- Compressor Node
@@ -553,6 +581,9 @@ public:
   /// The knee width of the compressor, in decibels.
   float GetKneeWidth();
   void SetKneeWidth(float knee);
+
+private:
+  Audio::DynamicsProcessorNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------ Expander Node
@@ -585,6 +616,9 @@ public:
   /// The knee width of the expander, in decibels.
   float GetKneeWidth();
   void SetKneeWidth(float knee);
+
+private:
+  Audio::DynamicsProcessorNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- Recording Node
@@ -614,6 +648,9 @@ public:
   /// constantly during every update frame, and nothing will be saved.
   bool GetStreamToDisk();
   void SetStreamToDisk(bool stream);
+
+private:
+  Audio::RecordNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- Add Noise Node
@@ -638,6 +675,9 @@ public:
   /// The cutoff frequency used for the multiplicative noise component, in Hz.
   float GetMultiplicativeCutoff();
   void SetMultiplicativeCutoff(float frequency);
+
+private:
+  Audio::AddNoiseNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------ ADSR Envelope
@@ -698,6 +738,9 @@ public:
   void NoteOff(float midiNote);
   /// Stops playing all current notes.
   void StopAllNotes();
+
+private:
+  Audio::AdditiveSynthNode* GetNode();
 }; 
 
 //---------------------------------------------------------------------------------- Modulation Node
@@ -724,6 +767,9 @@ public:
   /// The percentage of the input (0 - 1.0) which should have the modulation applied to it.
   float GetWetValue();
   void SetWetValue(float value);
+
+private:
+  Audio::ModulationNode* GetNode();
 };
 
 //---------------------------------------------------------------------------- Microphone Input Node
@@ -742,6 +788,9 @@ public:
   /// Microphone input will only be played while the Active property is set to True.
   bool GetActive();
   void SetActive(bool active);
+
+private:
+  Audio::MicrophoneInputNode* GetNode();
 };
 
 //---------------------------------------------------------------------------------- Save Audio Node
@@ -771,7 +820,12 @@ public:
   void StopPlaying();
   /// Removes all currently saved audio.
   void ClearSavedAudio();
+
+private:
+  Audio::SaveAudioNode* GetNode();
 };
+
+//------------------------------------------------------------------------------ Granular Synth Node
 
 class GranularSynthNode : public SoundNode 
 {
@@ -838,6 +892,9 @@ public:
   /// The window release time, in milliseconds. Does not have an effect on some windows.
   int GetWindowRelease();
   void SetWindowRelease(int releaseMS);
+
+private:
+  Audio::GranularSynthNode* GetNode();
 };
 
 }
