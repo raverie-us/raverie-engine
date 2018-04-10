@@ -40,6 +40,8 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   MetaEditorScriptObject();
 
+  void PostProcess(Status& status, ReflectionObject* owner) override;
+
   bool mAutoRegister;
 };
 
