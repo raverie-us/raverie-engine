@@ -506,24 +506,7 @@ void SelectTool::Select(ViewportMouseEvent* e)
     }
     else
     {
-      Cog* prevSelect = toSelect;
       toSelect = SmartSelect(selection, toSelect, mRootSelect, mArchetypeSelect);
-
-      // Check for selecting objects within the aabb of their parent archetype
-      Cog* root = toSelect->FindRoot();
-      Cog* current = selection->GetPrimaryAs<Cog>();
-
-      // If smart select did no result in a new selection and we already in the context of the root
-      if (prevSelect == toSelect && (selection->Contains(root) || root->IsDescendant(current)))
-      {
-        // archetype select is enabled and the object we are clicking is already within the selection
-        if (mArchetypeSelect)
-        {
-          // ray cast and discard the object as we already selected it and might be 
-          // attempting to select a child object contained within the parents aabb
-          toSelect = WalkRayCast(toSelect, result, SameArchetypeCompare);
-        }
-      }
       selection->SelectOnly(toSelect);
     }
 
