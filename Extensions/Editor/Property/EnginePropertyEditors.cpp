@@ -285,6 +285,10 @@ public:
     Cog* singleCog = nullptr;
     Cog* commonArchetypeContextCog = nullptr;
 
+    // Disable reverting of game and space until we resolve some issues
+    bool revertTypeDisabled = (mInstance.StoredType->IsA(ZilchTypeId(GameSession)) ||
+                               mInstance.StoredType->IsA(ZilchTypeId(Space)));
+
     // Update button tooltips
     if(MetaSelection* selection = mInstance.Get<MetaSelection*>())
     {
@@ -361,7 +365,7 @@ public:
     }
 
     // Revert button
-    if(revertableModifications)
+    if(revertableModifications && !revertTypeDisabled)
     {
       mRevert->SetIcon("Revert");
       mRevert->SetIgnoreInput(false);
@@ -384,7 +388,11 @@ public:
     {
       mRevert->SetIcon("RevertDisabled");
       mRevert->SetIgnoreInput(true);
-      mRevert->SetToolTip("Nothing to revert");
+
+      if(revertTypeDisabled)
+        mRevert->SetToolTip("GameSessions and Spaces currently cannot be reverted");
+      else
+        mRevert->SetToolTip("Nothing to revert");
     }
 
     // Label text
