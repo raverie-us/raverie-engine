@@ -158,7 +158,7 @@ void AddGraph(Editor* editor)
 
 void SetupGraphCommands(Cog* configCog, CommandManager* commands)
 {
-  commands->AddCommand("Memory", BindCommandFunction(AddMemory));
+  //commands->AddCommand("Memory", BindCommandFunction(AddMemory));
   commands->AddCommand("Performance", BindCommandFunction(AddPerformance));
   commands->AddCommand("Graph", BindCommandFunction(AddGraph));
 }

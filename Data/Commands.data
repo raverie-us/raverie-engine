@@ -138,7 +138,7 @@ Commands commands =
 	{
 		string Name = "Delete",
 		string Description = "Delete selected objects",
-		string Shortcut = "Del",
+		string Shortcut = "Delete",
 		string Tags = "Edit",
 	},
 
@@ -214,7 +214,6 @@ Commands commands =
 		string Name = "SelectAllInTree",
 		string Description = "Select all in tree",
 		string IconName = "DoubleDown",
-		string Shortcut = "Shift+E",
 		string Tags = "Select",
 	},
 
@@ -245,15 +244,15 @@ Commands commands =
 		string Tags = "Select",
 	},
 
-	Command =
-	{
-		string Name = "Tweakables",
-		string Description = "Select the Tweakables object",
-		string IconName = "",
-		string Shortcut = "Shift+T",
-		string Tags = "Select",
-		bool DevOnly = true,
-	},
+	//Command =
+	//{
+	//	string Name = "Tweakables",
+	//	string Description = "Select the Tweakables object",
+	//	string IconName = "",
+	//	string Shortcut = "Shift+T",
+	//	string Tags = "Select",
+	//	bool DevOnly = true,
+	//},
 
 	Command =
 	{
@@ -590,13 +589,13 @@ Commands commands =
 		string Tags = "Editor",
 	},
 
-	Command =
-	{
-		string Name = "Memory",
-		string Description = "Displays a memory graph",
-		string IconName = "Memory",
-		string Tags = "Editor",
-	},
+	//Command =
+	//{
+	//	string Name = "Memory",
+	//	string Description = "Displays a memory graph",
+	//	string IconName = "Memory",
+	//	string Tags = "Editor",
+	//},
 
 	Command =
 	{

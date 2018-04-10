@@ -922,7 +922,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("Properties", ShowProperties);
     BindCommand("SelectEditorConfig", ShowConfig);
     BindCommand("SelectProject", ShowProject);
-    BindCommand("Tweakables", SelectTweakables);
+    //BindCommand("Tweakables", SelectTweakables);
     BindCommand("Library", ShowLibrary);
     BindCommand("Console", ToggleConsole);
     BindCommand("Browser", ShowBrowser);
