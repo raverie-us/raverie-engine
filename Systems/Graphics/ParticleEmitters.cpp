@@ -16,6 +16,7 @@ namespace Zero
 ZilchDefineType(SphericalParticleEmitter, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindInterface(ParticleEmitterShared);
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
 }
@@ -122,6 +123,7 @@ int SphericalParticleEmitter::EmitParticles(ParticleList* particleList, float dt
 ZilchDefineType(BoxParticleEmitter, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindInterface(ParticleEmitterShared);
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
 }
