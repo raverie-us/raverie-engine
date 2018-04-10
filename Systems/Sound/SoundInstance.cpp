@@ -58,6 +58,8 @@ ZilchDefineType(SoundInstance, builder, type)
   ZilchBindGetterSetter(Time);
   ZilchBindGetter(FileLength);
   ZilchBindGetterSetter(EndTime);
+  ZilchBindGetterSetter(LoopStartTime);
+  ZilchBindGetterSetter(LoopEndTime);
   ZilchBindGetterSetter(CustomEventTime);
   ZilchBindGetter(SoundName);
 
@@ -281,6 +283,38 @@ void SoundInstance::SetEndTime(float seconds)
 {
   if (mSoundNode->mNode)
     ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetEndTime(seconds);
+}
+
+//**************************************************************************************************
+float SoundInstance::GetLoopStartTime()
+{
+  if (mSoundNode->mNode)
+    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetLoopStartTime();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void SoundInstance::SetLoopStartTime(float seconds)
+{
+  if (mSoundNode->mNode)
+    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetLoopStartTime(seconds);
+}
+
+//**************************************************************************************************
+float SoundInstance::GetLoopEndTime()
+{
+  if (mSoundNode->mNode)
+    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetLoopEndTime();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void SoundInstance::SetLoopEndTime(float seconds)
+{
+  if (mSoundNode->mNode)
+    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetLoopEndTime(seconds);
 }
 
 //**************************************************************************************************

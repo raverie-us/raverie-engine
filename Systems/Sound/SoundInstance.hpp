@@ -113,6 +113,12 @@ public:
   /// The time in seconds from the beginning of the file that the instance will stop.
   float GetEndTime();
   void SetEndTime(float seconds);
+  /// The time in seconds from the beginning of the file that the instance will jump back to when it loops.
+  float GetLoopStartTime();
+  void SetLoopStartTime(float seconds);
+  /// The time in seconds from the beginning of the file that the instance will stop and jump back when looping.
+  float GetLoopEndTime();
+  void SetLoopEndTime(float seconds);
   /// The time (in seconds from the beginning of the file) to get a MusicCustomTime event.
   float GetCustomEventTime();
   void SetCustomEventTime(float seconds);
