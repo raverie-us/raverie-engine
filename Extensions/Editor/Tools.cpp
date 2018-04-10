@@ -705,6 +705,15 @@ void CreationTool::UpdateMouse(Viewport* viewport, Vec2 screenPosition)
 Cog* CreationTool::CreateAt(Viewport* viewport, Archetype* archetype, 
                             Vec3Param position)
 {
+  // Cannot create GameSession or Space
+  BoundType* cogType = archetype->mStoredType;
+  if (cogType->IsA(ZilchTypeId(GameSession)) || cogType->IsA(ZilchTypeId(Space)))
+  {
+    String message = String::Format("Creation tool cannot create Cogs of type %s", cogType->Name.c_str());
+    DoNotifyWarning("Cannot Create Cog", message);
+    return nullptr;
+  }
+
   Space* space = viewport->GetTargetSpace();
   Cog* object = CreateFromArchetype(Z::gEditor->mQueue, space, archetype,  position);
   MetaSelection* selection = Z::gEditor->GetSelection();
