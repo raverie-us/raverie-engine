@@ -573,9 +573,13 @@ void GraphicsEngine::AddMesh(Mesh* mesh)
     rendererJob->mVertexSize = vertices->mFixedDesc.mVertexSize;
     rendererJob->mVertexCount = vertices->mDataSize / vertices->mFixedDesc.mVertexSize;
 
-    uint vertexDataSize = rendererJob->mVertexSize * rendererJob->mVertexCount;
-    rendererJob->mVertexData = new byte[vertexDataSize];
-    memcpy(rendererJob->mVertexData, vertices->mData, vertexDataSize);
+    // Do not try allocating without a full vertex worth of data.
+    if (rendererJob->mVertexCount > 0)
+    {
+      uint vertexDataSize = rendererJob->mVertexSize * rendererJob->mVertexCount;
+      rendererJob->mVertexData = new byte[vertexDataSize];
+      memcpy(rendererJob->mVertexData, vertices->mData, vertexDataSize);
+    }
 
     rendererJob->mVertexAttributes.Reserve(8);
     for (uint i = 0; i < FixedVertexDescription::sMaxElements; ++i)
