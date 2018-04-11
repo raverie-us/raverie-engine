@@ -378,8 +378,12 @@ void TreeRow::UpdateColumnsTransform(Vec2Param size)
   float indentWidth = TreeViewUi::IndentSize * float(mDepth - 1);
   mExpandIcon->SetTranslation(SnapToPixels(Vec3(indentWidth, 2, 0)));
 
-  // Add extra room for the expand icon
-  indentWidth += Pixels(16);
+  // Add extra room for the expand/collapse icon if the datasource requires it.
+  if(mTree->mDataSource->IsExpandable())
+    indentWidth += Pixels(16);
+  else
+    indentWidth += Pixels(4);
+
 
   TreeFormatting& formatting = mTree->mFormatting;
 

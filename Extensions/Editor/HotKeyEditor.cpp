@@ -497,6 +497,12 @@ DataEntry* HotKeyCommands::GetChild(DataEntry* dataEntry, uint index, DataEntry*
 }
 
 /******************************************************************************/
+bool HotKeyCommands::IsExpandable()
+{
+  return false;
+}
+
+/******************************************************************************/
 bool HotKeyCommands::IsExpandable(DataEntry* dataEntry)
 {
     //only the root is expandable

@@ -72,6 +72,7 @@ public:
 
   uint ChildCount(DataEntry* dataEntry) override;
 
+  bool IsExpandable() override;
   bool IsExpandable(DataEntry* dataEntry) override;
 
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
