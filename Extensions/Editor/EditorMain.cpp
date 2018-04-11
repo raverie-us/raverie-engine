@@ -860,7 +860,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   SetupGraphCommands(config, commands);
   BindArchiveCommands(config, commands);
   BindGraphicsCommands(config, commands);
-  //BindGeometryCommands(config, commands);
   BindCreationCommands(config, commands);
   BindDocumentationCommands(config, commands);
   BindProjectCommands(config, commands);
@@ -922,7 +921,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("Properties", ShowProperties);
     BindCommand("SelectEditorConfig", ShowConfig);
     BindCommand("SelectProject", ShowProject);
-    //BindCommand("Tweakables", SelectTweakables);
     BindCommand("Library", ShowLibrary);
     BindCommand("Console", ToggleConsole);
     BindCommand("Browser", ShowBrowser);
