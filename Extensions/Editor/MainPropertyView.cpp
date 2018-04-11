@@ -284,9 +284,11 @@ void MainPropertyView::EditResource(HandleParam object)
     mLocalOpQueue->ClearAll();
     mUndoInterface->mOperationQueue = mLocalOpQueue;
 
-    Cog* cog = editObject.Get<Cog*>();
-    cog->SetArchetypeDefinitionMode();
-    ConnectThisTo(cog, Events::CogReplaced, OnSelectedArchetypeReplaced);
+    if(Cog* cog = editObject.Get<Cog*>())
+    {
+      cog->SetArchetypeDefinitionMode();
+      ConnectThisTo(cog, Events::CogReplaced, OnSelectedArchetypeReplaced);
+    }
 
     // Edit the archetype object in the preview
     mPropertyView->SetObject(editObject, mUndoInterface);
