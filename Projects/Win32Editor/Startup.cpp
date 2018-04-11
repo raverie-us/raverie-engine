@@ -33,15 +33,9 @@ System* CreateActionSystem();
 void CreateEditor(Cog* config, StringParam project, StringParam newProjectName);
 void CreateGame(Cog* config, Cog* projectCog, StringParam projectFile);
 
-bool Startup(Engine* engine, StringMap& arguments)
+bool Startup(Engine* engine, StringMap& arguments, String projectFile)
 {
   TimerBlock startUp("Engine Startup");
-
-  Importer import;
-  ImporterResult::Enum importResult = import.CheckForImport();
-  if (importResult == ImporterResult::ExecutedAnotherProcess)
-    return false;
-  bool embededPackage = (importResult == ImporterResult::Embeded);
 
   String project = GetStringValue<String>(arguments, "file", String());
   bool playGame = GetStringValue<bool>(arguments, "play", false);
@@ -53,25 +47,9 @@ bool Startup(Engine* engine, StringMap& arguments)
   if(autoRestart)
     CrashHandler::RestartOnCrash(true);
 
-  // Is there a file named "Project.zeroproj" next to the exe
-  String appDirectory = GetApplicationDirectory();
-  String projectFile = FilePath::Combine(appDirectory, "Project.zeroproj");
-
   if(FileExists(projectFile))
     playGame = true;
-
-  // Fix the project file path for exports to be in the import's output directory
-  if(embededPackage)
-    projectFile = FilePath::Combine(import.mOutputDirectory, "Project.zeroproj");
   
-  if(embededPackage || playGame)
-  {
-    // EmbededPackage always run in game mode
-    playGame = true;
-    // Project is always named the same.
-    project = "Project.zeroproj";
-  }
-
   // Load config object
   Cog* configCog = Z::gEngine->GetConfigCog();
 
@@ -98,19 +76,6 @@ bool Startup(Engine* engine, StringMap& arguments)
   // Initialize Extensions
   ZPrint("Loading Extensions\n");
 
-  // Commented out because we currently don't require the "Loading" resource package to be loaded here anymore.
-  // This was previously needed to provide the spinning loading wheel progress splash window.
-  //if(embededPackage)
-  //{
-  //  ZPrint("Waiting for importing to finish.\n");
-  //  import.EngineInitialized();
-  //  while(!import.CheckImportFinished())
-  //  {
-  //    engine->BlockingUpdate("Importing", String(), String(), ProgressType::Indeterminate);
-  //    Os::Sleep(40);
-  //  }
-  //}
-
   if(playGame)
   {
     // Creating project cog outside of CreateGame() so that launcher can make changes if needed.
@@ -122,7 +87,7 @@ bool Startup(Engine* engine, StringMap& arguments)
     }
 
     RunLauncher(configCog, projectCog);
-    CreateGame(configCog, projectCog, project);
+    CreateGame(configCog, projectCog, projectFile);
   }
   else
   {
