@@ -18,6 +18,7 @@ namespace Events
   DeclareEvent(FrameUpdate);
   //DeclareEvent(GraphicsFrameUpdate);
   DeclareEvent(LogicUpdate);
+  DeclareEvent(PreviewUpdate);
   DeclareEvent(EngineUpdate);
   DeclareEvent(EngineShutdown);
   DeclareEvent(ActionFrameUpdate);
@@ -84,13 +85,6 @@ public:
   /// fast paced gameplay. TimeScale is clamped to be positive.
   float GetTimeScale();
   void SetTimeScale(float timeScale);
-
-  /// The events that the time space sends out
-  String mSystemLogicUpdateEvent;
-  String mFrameUpdateEvent;
-  String mLogicUpdateEvent;
-  String mActionFrameUpdateEvent;
-  String mActionLogicUpdateEvent;
 
   /// The maximum amount of time we send when running in 'ActualFrametime' mode
   /// If this value is set too high and the user does anything to pause their system or the game (example grabbing the window)

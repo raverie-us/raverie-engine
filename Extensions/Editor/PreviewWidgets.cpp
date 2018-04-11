@@ -153,7 +153,7 @@ SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer, StringParam ob
 
     String spaceName = BuildString("ResourcePreview ", initializer.Name);
     space->SetName(Cog::SanitizeName(spaceName));
-      
+
     // Do not update the space
     space->has(TimeSpace)->SetPaused(true);
   }
@@ -372,8 +372,6 @@ void SpacePreview::AnimatePreview(PreviewAnimate::Enum value)
 {
   mPreviewAnimate = value;
   Space* space = mSpace;
-  if(value != PreviewAnimate::None && mOwnsSpace)
-    space->has(TimeSpace)->SetPaused(false);
   if(space)
     ConnectThisTo(space, Events::FrameUpdate, OnUpdate);
 }
@@ -523,7 +521,16 @@ AnimationPreview::AnimationPreview(PreviewWidgetInitializer& initializer)
 
   mAnimation = animation;
 
-  UpdateViewDistance();
+  UpdateViewDistance(Vec3(-1.0f));
+
+  if (Cog* cog = (Cog*)mObject)
+  {
+    Aabb aabb = GetAabb(cog);
+    // Our asset has a thin AABB on the z axis and is most likely a 2D asset
+    // Change the camera preview to be from the front of the object
+    if (aabb.GetExtents().z < 0.1f)
+      UpdateViewDistance(Vec3(0.0f, 0.0f, -1.0f));
+  }
 }
 
 //****************************************************************************

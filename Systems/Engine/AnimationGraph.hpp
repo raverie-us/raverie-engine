@@ -70,6 +70,8 @@ public:
   static DebugPreviewFunction mOnGraphCreated;
   u64 mDebugPreviewId;
 
+  void SetPreviewMode();
+
 private:
   friend class ObjectTrack;
   friend class Animator;
