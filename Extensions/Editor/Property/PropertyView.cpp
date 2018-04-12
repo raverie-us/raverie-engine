@@ -25,12 +25,7 @@ namespace Events
 {
   DefineEvent(NameActivated);
   DefineEvent(OpenAdd);
-  DefineEvent(PropertyContextMenu);
 }//namespace Events
-
-ZilchDefineType(ContextMenuEvent, builder, type)
-{
-}
 
 //---------------------------------------------------------------- Property Grid
 ZilchDefineType(PropertyView, builder, type)

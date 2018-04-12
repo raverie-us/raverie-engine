@@ -316,7 +316,7 @@ public:
     ContextMenu* menu = new ContextMenu(this);
     Mouse* mouse = Z::gMouse;
     menu->SetBelowMouse(mouse, Pixels(0,0) );
-
+ 
     ConnectMenu(menu, "Broad Search", OnBroadSearch);
     ConnectMenu(menu, "By Name (#)", OnName);
     ConnectMenu(menu, "By Component (.)", OnComponent);
@@ -1492,10 +1492,11 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
     if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
       ConnectMenu(menu, "Restore Child Order", OnRestoreChildOrder);
 
+
     menu->AddDivider();
     // Set our icon to the arrow indicating a sub menu
-    ContextMenuItem* createSubMenu = menu->CreateContextItem("Create", "PropArrowRight");
-    createSubMenu->LoadMenu("Create");
+    ContextMenuEntry* createSubMenu = menu->AddEntry("Create");
+    createSubMenu->AddEntry(new ContextMenuEntryMenu("Create"));
 
     MetaSelection* selection = Z::gEditor->GetSelection();
     // Don't create objects as children if multiple objects are selected
@@ -1504,6 +1505,12 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
       ConnectThisTo(createSubMenu, Events::MouseEnter, OnMenuMouseEnter);
       ConnectThisTo(createSubMenu, Events::FocusLost, OnMenuFocusLost);
     }
+
+    // Send out the ContextMenuEntry tree root to potentially alter the context menus structure/items
+    ContextMenuEvent event(menu->GetRootEntry());
+    cog->DispatchEvent(Events::ContextMenuCreated, &event);
+    cog->DispatchUp(Events::ContextMenuCreated, &event);
+    this->DispatchEvent(Events::ContextMenuCreated, &event);
   }
   else
   {
@@ -1519,7 +1526,7 @@ void ObjectView::OnRightMouseUp(MouseEvent* event)
     return;
 
   ContextMenu* menu = new ContextMenu(this);
-  menu->LoadMenu("Create");
+  menu->AddZeroContextMenu("Create");
   menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 

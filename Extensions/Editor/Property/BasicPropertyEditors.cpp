@@ -40,6 +40,10 @@ ZilchDefineType(ObjectPollEvent, builder, type)
 {
 }
 
+ZilchDefineType(DirectProperty, builder, type)
+{
+}
+
 DirectProperty::DirectProperty(PropertyWidgetInitializer& initializer)
   :PropertyWidget(initializer)
 {
@@ -214,14 +218,11 @@ void DirectProperty::OnRightMouseUpLabel(MouseEvent* event)
   }
 
   // Send an event to let other widgets add items to the context menu
-  ContextMenuEvent eventToSend;
-  eventToSend.mMenu = menu;
-  eventToSend.mProperty = mProperty;
-  eventToSend.mInstance = mInstance;
-  DispatchBubble(Events::PropertyContextMenu, &eventToSend);
+  ContextMenuEvent eventToSend(menu->GetRootEntry(), this);
+  DispatchBubble(Events::ContextMenuCreated, &eventToSend);
 
   // If nothing was added, don't display the menu
-  if(menu->ItemCount() <= 0)
+  if(menu->IsEmpty())
   {
     menu->Destroy();
   }

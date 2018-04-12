@@ -9,6 +9,9 @@
 namespace Zero
 {
 
+// Ranges
+ZilchDefineRange(ContextMenuEntryChildren::range);
+
 // Enums
 ZilchDefineEnum(VerticalAlignment);
 ZilchDefineEnum(HorizontalAlignment);
@@ -19,6 +22,9 @@ ZilchDefineEnum(ToolTipColorScheme);
 ZilchDefineStaticLibrary(WidgetLibrary)
 {
   builder.CreatableInScriptDefault = false;
+  
+  // Ranges
+  ZilchInitializeRangeAs(ContextMenuEntryChildren::range, "ContextMenuEntryChildrenRange");
 
   // Enums
   ZilchInitializeEnum(VerticalAlignment);
@@ -42,6 +48,7 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(ModalButtonEvent);
   ZilchInitializeType(SearchViewEvent);
   ZilchInitializeType(TagEvent);
+  ZilchInitializeType(ContextMenuEvent);
 
   ZilchInitializeType(LayoutArea);
   ZilchInitializeType(Layout);
@@ -88,6 +95,10 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(TabArea);
   ZilchInitializeType(Window);
   ZilchInitializeType(Viewport);
+  ZilchInitializeType(ContextMenuEntry);
+  ZilchInitializeType(ContextMenuEntryDivider);
+  ZilchInitializeType(ContextMenuEntryCommand);
+  ZilchInitializeType(ContextMenuEntryMenu);
   ZilchInitializeType(MenuBarItem);
   ZilchInitializeType(MenuBar);
   ZilchInitializeType(MultiManager);

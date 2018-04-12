@@ -25,18 +25,7 @@ namespace Events
 {
   DeclareEvent(NameActivated);
   DeclareEvent(OpenAdd);
-  DeclareEvent(PropertyContextMenu);
 }//namespace Events
-
-/// Used to allow external objects to add items to a context menu.
-class ContextMenuEvent : public Event
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  ContextMenu* mMenu;
-  Property* mProperty;
-  Handle mInstance;
-};
 
 //---------------------------------------------------------------- Property Grid
 typedef Widget* (*CustomIconCreatorFunction)(Composite* parent, HandleParam object,
