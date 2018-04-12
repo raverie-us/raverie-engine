@@ -17,6 +17,9 @@ const String cArrowRight = "ArrowRight";
 const String cArrowDown = "ArrowDown";
 const String cItemIcon = "ItemIcon";
 const float cResizerWidth = Pixels(10.0f);
+const float cHeaderRowIndent = Pixels(2.0f);
+
+const Vec2 cDefaultColumnIconSize = Pixels(16,16);
 
 namespace TreeViewUi
 {
@@ -138,6 +141,23 @@ public:
   }
 };
 
+//---------------------------------------------------------------- Column Format
+ColumnFormat::ColumnFormat( )
+{
+  ColumnType = ColumnType::Flex;
+  IconSizePolicy = ColumnIconSizePolicy::AutoSize;
+  IconSize = cDefaultColumnIconSize;
+  IconColor = Vec4(1);
+  Index = 0;
+  FlexSize = 1.0;
+  MinWidth = Pixels(16.0f);
+  Editable = false;
+  StartX = 0.0f;
+  FixedSize = Pixels(1, 1);
+  CurrSize = Pixels(1, 1);
+  Flags = 0;
+}
+
 //--------------------------------------------------------------------- Tree Row
 ZilchDefineType(TreeRow, builder, type)
 {
@@ -177,7 +197,7 @@ TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry)
     mSeparator = CreateAttached<Element>("HorizontalDivider");
     mSeparator->SetColor(Vec4(1,1,1,0.2f));
   }
-  
+
   //Create the expand icon
   mExpandIcon = CreateAttached<Element>(cArrowRight);
   //Clicking on it will expand the row
@@ -1192,12 +1212,30 @@ void ColumnHeader::SetText(StringParam name)
 }
 
 //******************************************************************************
-void ColumnHeader::SetIcon(StringParam iconName)
+void ColumnHeader::SetIcon(ColumnFormat& format)
 {
   if(mIcon == NULL)
-    mIcon = CreateAttached<Element>(iconName);
-  mIcon->SetSize(Pixels(16, 16));
-  mIcon->SetTranslation(SnapToPixels(Pixels(2, 2, 0)));
+    mIcon = CreateAttached<Element>(format.HeaderIcon);
+
+  mIcon->SetColor(format.IconColor);
+
+  if(format.IconSizePolicy == ColumnIconSizePolicy::AutoSize)
+  {
+    mIcon->SetSize(cDefaultColumnIconSize);
+    mIcon->SetTranslation(SnapToPixels(Pixels(2, 2, 0)));
+  }
+  else  // ColumnIconSizePolicy::CustomSize
+  {
+    Vec2& size = format.IconSize;
+    size = size.Clamp(size, Pixels(0,0), format.FixedSize);
+
+    float padX = 0.5f * (format.FixedSize.x - size.x);
+    float padY = 0.5f * (format.FixedSize.y - size.y);
+
+    mIcon->SetSize(size);
+    mIcon->SetTranslation(SnapToPixels(Pixels(padX, padY, 0)));
+  }
+
 }
 
 //******************************************************************************
@@ -2099,7 +2137,7 @@ void TreeView::UpdateColumnTransforms()
   }
 
   // Used to keep track of where each column should start
-  float currentX = 0.0f;
+  float currentX = cHeaderRowIndent;
 
   // Walk through each column and set its size and translation
   forRange(ColumnFormat& column, mFormatting.Columns.All())
@@ -2178,7 +2216,7 @@ void TreeView::UpdateHeaders()
     if(!format.HeaderName.Empty())
       header->SetText(format.HeaderName);
     else
-      header->SetIcon(format.HeaderIcon);
+      header->SetIcon(format);
 
     // Update the column resizers
     if(mFormatting.Flags.IsSet(FormatFlags::ColumnsResizable))
