@@ -20,8 +20,8 @@ namespace Audio
   class ReverbNode : public SimpleCollapseNode
   {
   public:
-    ReverbNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    ReverbNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
 
     // Returns the current reverb length
     float GetTime();

@@ -12,36 +12,36 @@ namespace Audio
   //------------------------------------------------------------------------------------- Pitch Node
 
   //************************************************************************************************
-  PitchNode::PitchNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-    ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
-    PitchCents(0)
+  PitchNode::PitchNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
+    PitchSemitones(0)
   {
     if (!Threaded)
-      SetSiblingNodes(new PitchNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new PitchNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
-  void PitchNode::SetPitch(const int pitchCents, const float timeToInterpolate)
+  void PitchNode::SetPitch(const float pitchSemitones, const float timeToInterpolate)
   {
     if (!Threaded)
     {
-      PitchCents = pitchCents;
+      PitchSemitones = pitchSemitones;
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&PitchNode::SetPitch, (PitchNode*)GetSiblingNode(),
-          pitchCents, timeToInterpolate));
+          pitchSemitones, timeToInterpolate));
     }
     else
     {
-      float newFactor = Math::Pow(2.0f, pitchCents / 1200.0f);
+      float newFactor = Math::Pow(2.0f, pitchSemitones / 12.0f);
       PitchObject.SetPitchFactor(newFactor, timeToInterpolate);
     }
   }
 
   //************************************************************************************************
-  int PitchNode::GetPitch()
+  float PitchNode::GetPitch()
   {
-    return PitchCents;
+    return PitchSemitones;
   }
 
   //************************************************************************************************

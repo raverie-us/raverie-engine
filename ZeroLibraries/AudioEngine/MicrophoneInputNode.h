@@ -14,8 +14,8 @@ namespace Audio
   class MicrophoneInputNode : public SoundNode
   {
   public:
-    MicrophoneInputNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-      ExternalNodeInterface* extInt, bool isThreaded = false);
+    MicrophoneInputNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded = false);
 
     // Returns the current volume
     float GetVolume();

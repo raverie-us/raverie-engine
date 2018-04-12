@@ -25,9 +25,11 @@ DeclareEnum3(PreviewImportance,
 //--------------------------------------------------- Preview Widget Initializer
 struct PreviewWidgetInitializer
 {
+  PreviewWidgetInitializer() : Area(nullptr), Interactive(false) {};
   Composite* Area;
   String Name;
   Handle Object;
+  bool Interactive;
 };
 
 DeclareEnum3(PreviewAnimate, None, MouseOver, Always);
@@ -43,6 +45,7 @@ public:
 
   virtual void AnimatePreview(PreviewAnimate::Enum value){}
   virtual Handle GetEditObject(){return Handle();}
+  virtual void SetInteractive(bool interactive) { mInteractive = interactive; };
 
   /// Widget Interface.
   void UpdateTransform() override;
@@ -51,6 +54,7 @@ public:
   TextureView* mBackground;
   String mName;
   Handle mObject;
+  bool mInteractive;
 };
 
 //--------------------------------------------------------- Preview Widget Group

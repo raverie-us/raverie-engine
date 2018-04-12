@@ -17,8 +17,7 @@ namespace Audio
   class RecordNode : public SimpleCollapseNode
   {
   public:
-    RecordNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-      ExternalNodeInterface* extInt, bool isThreaded = false);
+    RecordNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, bool isThreaded = false);
 
     // Returns the name currently set for the output file
     Zero::StringParam GetFileName() { return FileName; }
@@ -76,8 +75,7 @@ namespace Audio
   class SaveAudioNode : public SimpleCollapseNode
   {
   public:
-    SaveAudioNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-      ExternalNodeInterface* extInt, bool isThreaded = false);
+    SaveAudioNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, bool isThreaded = false);
 
     // Returns true if the node is currently saving audio.
     bool GetSaveAudio();

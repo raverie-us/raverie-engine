@@ -28,12 +28,12 @@ public:
   void OnBrowseSelected(OsFileSelection* event);
   void OnUpdate(UpdateEvent* event);
   
-  TextBox* mUserName;
+  TextBox* mUsername;
   TextBox* mTitle;
-  TextButton* mSend;
-  TextEditor* mExpected;
-  TextEditor* mHappened;
+  TextEditor* mDescription;
   TextEditor* mRepro;
+  TextButton* mSend;
+  SelectorButton* mSelectorButton;
   
   TextBox* mIncludeFile;
   TextButton* mBrowse;
@@ -51,11 +51,11 @@ public:
 
   String mFileName;
   CogId mProject;
-  String mUserName;
+  String mUsername;
+  String mReportType;
   String mTitle;
+  String mDescription;
   String mRepro;
-  String mExpected;
-  String mHappened;
   String mIncludedFile;
   Image mScreenshot;
   Image mClipboardImage;

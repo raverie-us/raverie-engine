@@ -72,7 +72,8 @@ namespace Zilch
     IsLiteral(false),
     RemoveDuplicateNameEntries(true),
     BestCompletionOverload(-1),
-    Success(false)
+    Success(false),
+    CallArgumentIndex(-1)
   {
   }
   
@@ -393,17 +394,32 @@ namespace Zilch
       // We need to start by looking in the file/origin where the comment existed
       OriginInfo& origin = info[comment.Location.Origin];
 
-      // Now start at the comment line and loop downward until we find a node to attach it to (stop at the last line)
-      for (size_t j = comment.Location.StartLine; j <= origin.MaxLine; ++j)
+      // Check only if it's on the same line or the next line (don't attach comments if they have one line space in between)
+      for (size_t j = comment.Location.StartLine; j <= origin.MaxLine && j <= comment.Location.EndLine + 1; ++j)
       {
         // Attempt to find a node at the current line
         SyntaxNode* node = origin.LineToNode.FindValue(j, nullptr);
 
-        // If we found a node...
-        if (node != nullptr)
+        // If we found a node and that node's primary location is the line we're attaching to...
+        if (node != nullptr && node->Location.PrimaryLine == j)
         {
-          // Append the comment to the node and move on to the next comment!
+          // Append the comment to the node
           node->Comments.PushBack(comment.Token);
+
+          // Check if we need to attach this comment to any children who are at the exact same position
+          // This handles nodes such as IfRootNode and the first IfNode under it
+          // LineToNode will always start with the most root node
+          NodeChildren children;
+          node->PopulateChildren(children);
+          ZilchForEach(SyntaxNode** childPtr, children)
+          {
+            SyntaxNode* child = *childPtr;
+
+            // Append the comment to the child also if the child has the same primary line and start position
+            if (child->Location.StartPosition == node->Location.StartPosition && child->Location.PrimaryLine == j)
+              child->Comments.PushBack(comment.Token);
+          }
+
           break;
         }
       }
@@ -470,7 +486,7 @@ namespace Zilch
   }
   
   //***************************************************************************
-  LibraryRef Project::Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut)
+  LibraryRef Project::Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut, Array<UserToken>& tokensOut)
   {
     // We're about to generate a library so we need a builder
     LibraryBuilder builder(libraryName);
@@ -485,11 +501,8 @@ namespace Zilch
     // Let the library know what source was used to build it
     builder.SetEntries(this->Entries);
 
-    // Store the array of tokens that we generate
-    Array<UserToken> tokens;
-
     // Compile the code into a checked syntax tree
-    if (this->CompileCheckedSyntaxTree(treeOut, builder, tokens, dependencies, evaluation) == false)
+    if (this->CompileCheckedSyntaxTree(treeOut, builder, tokensOut, dependencies, evaluation) == false)
       return nullptr;
 
     // Let the user know the library finished running the syntaxer (the user may add types here)
@@ -521,7 +534,8 @@ namespace Zilch
   {
     // The syntax tree holds a more intuitive representation of the parsed program and is easy to traverse
     SyntaxTree syntaxTree;
-    return this->Compile(libraryName, dependencies, evaluation, syntaxTree);
+    Array<UserToken> tokens;
+    return this->Compile(libraryName, dependencies, evaluation, syntaxTree, tokens);
   }
   
   //***************************************************************************
@@ -635,43 +649,59 @@ namespace Zilch
   {
     GetDefinitionInfoInternal(dependencies, cursorPosition, cursorOrigin, resultOut);
 
-    // If we have a name such as a member or a variable...
-    if (!resultOut.Name.Empty())
+    if (resultOut.ToolTip.Empty())
     {
-      // In almost all cases we should have gotten a valid type, so append it to the end with a ':'
-      if (resultOut.ResolvedType != nullptr)
+      // If we have a name such as a member or a variable...
+      if (!resultOut.Name.Empty())
       {
-        resultOut.ToolTip = BuildString(resultOut.Name, " : ", GetFriendlyTypeName(resultOut.ResolvedType));
+        // In almost all cases we should have gotten a valid type, so append it to the end with a ':'
+        if (resultOut.ResolvedType != nullptr)
+        {
+          resultOut.ToolTip = BuildString(resultOut.Name, " : ", GetFriendlyTypeName(resultOut.ResolvedType));
+        }
+        // If we didn't get a type somehow, our tooltip is just the name
+        else
+        {
+          resultOut.ToolTip = resultOut.Name;
+        }
       }
-      // If we didn't get a type somehow, our tooltip is just the name
-      else
+      // Otherwise, we have no name, but we do have a type
+      // This occurs when we're pointing at a class/struct definition, or any expression, etc
+      else if (resultOut.ResolvedType != nullptr)
       {
-        resultOut.ToolTip = resultOut.Name;
+        resultOut.ToolTip = GetFriendlyTypeName(resultOut.ResolvedType);
       }
-    }
-    // Otherwise, we have no name, but we do have a type
-    // This occurs when we're pointing at a class/struct definition, or any expression, etc
-    else if (resultOut.ResolvedType != nullptr)
-    {
-      resultOut.ToolTip = GetFriendlyTypeName(resultOut.ResolvedType);
-    }
 
-    // Finally, if we're pointing at the definition of anything...
-    if (resultOut.DefinedObject != nullptr)
-    {
-      // Put the type of the definition at the beginning to give users more info
-      resultOut.ToolTip = BuildString(
-        ZilchVirtualTypeId(resultOut.DefinedObject)->ToString(),
-        " - ",
-        resultOut.ToolTip);
-
-      // If the definition has a description, append that with a newline to the end
-      if (!resultOut.DefinedObject->Description.Empty())
+      // Finally, if we're pointing at the definition of anything...
+      if (resultOut.DefinedObject != nullptr)
       {
+        String name = ZilchVirtualTypeId(resultOut.DefinedObject)->ToString();
+
+        if (GetterSetter* getterSetter = Type::DynamicCast<GetterSetter*>(resultOut.DefinedObject))
+        {
+          if (getterSetter->Get != nullptr && getterSetter->Set != nullptr)
+            name = BuildString(name, " (get/set)");
+          else if (getterSetter->Get != nullptr)
+            name = BuildString(name, " (get)");
+          else if (getterSetter->Set != nullptr)
+            name = BuildString(name, " (set)");
+        }
+
+        // Put the type of the definition at the beginning to give users more info
         resultOut.ToolTip = BuildString(
-          resultOut.ToolTip,
-          "\n",
-          resultOut.DefinedObject->Description);
+          name,
+          " - ",
+          resultOut.ToolTip);
+
+
+        // If the definition has a description, append that with a newline to the end
+        if (!resultOut.DefinedObject->Description.Empty())
+        {
+          resultOut.ToolTip = BuildString(
+            resultOut.ToolTip,
+            "\n",
+            resultOut.DefinedObject->Description);
+        }
       }
     }
   }
@@ -685,7 +715,8 @@ namespace Zilch
     // Compile the entirety of the project and get the syntax tree out of it
     // We MUST store the library or all the resources will be released
     SyntaxTree syntaxTree;
-    resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree);
+    Array<UserToken> tokens;
+    resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, tokens);
 
     // Get all the syntax nodes under the cursor
     Array<SyntaxNode*> nodes;
@@ -695,16 +726,54 @@ namespace Zilch
     if (nodes.Empty())
       return;
 
+    bool isValidToken = false;
+
+    // Find where we are in the token stream
+    for (size_t i = 0; i < tokens.Size(); ++i)
+    {
+      UserToken& token = tokens[i];
+      if (token.Location.Origin != cursorOrigin)
+        continue;
+      
+      // If we found the token that our cursor is over...
+      if (cursorPosition >= token.Location.StartPosition && cursorPosition <= token.Location.EndPosition)
+      {
+        Grammar::Enum id = token.TokenId;
+
+        isValidToken =
+          id != Grammar::Invalid      &&
+          id != Grammar::End          &&
+          id != Grammar::Error        &&
+          id != Grammar::Whitespace   &&
+          id != Grammar::CommentStart &&
+          id != Grammar::CommentLine  &&
+          id != Grammar::CommentEnd;
+        break;
+      }
+    }
+
+    if (!isValidToken)
+      return;
+
     // Walk through the nodes backwards (since the more leaf nodes end up at the back)
     for (int i = (int)nodes.Size() - 1; i >= 0; --i)
     {
       // Grab the current node
       SyntaxNode* node = nodes[i];
-      
+
       // Definitions
       if (ClassNode* typedNode = Type::DynamicCast<ClassNode*>(node))
       {
         BoundType* resolvedType = typedNode->Type;
+        if (resolvedType != nullptr)
+        {
+          this->InitializeDefinitionInfo(resultOut, resolvedType);
+          return;
+        }
+      }
+      else if (EnumNode* enumNode = Type::DynamicCast<EnumNode*>(node))
+      {
+        BoundType* resolvedType = enumNode->Type;
         if (resolvedType != nullptr)
         {
           this->InitializeDefinitionInfo(resultOut, resolvedType);
@@ -808,6 +877,72 @@ namespace Zilch
           this->InitializeDefinitionInfo(resultOut, resultType);
           return;
         }
+      }
+
+      // If we just have a node then use its description
+      if (node != nullptr)
+      {
+        String comments = node->GetMergedComments();
+        BoundType* nodeType = ZilchVirtualTypeId(node);
+        resultOut.Name = nodeType->Name;
+        resultOut.ResolvedType = nodeType;
+        resultOut.ElementLocation = node->Location;
+        resultOut.NameLocation = node->Location;
+        if (!nodeType->Description.Empty())
+        {
+          resultOut.ToolTip = nodeType->Description;
+        }
+        else
+        {
+          String code;
+          size_t startPosition = (size_t)-1;
+          size_t endPosition = (size_t)-1;
+          for (size_t i = 0; i < tokens.Size(); ++i)
+          {
+            UserToken& token = tokens[i];
+
+            if (token.Location.StartLine == node->Location.StartLine)
+            {
+              if (startPosition == (size_t)-1)
+              {
+                startPosition = token.Location.StartPosition;
+                code = token.Location.Code;
+              }
+
+              endPosition = token.Location.EndPosition;
+            }
+            else if (token.Location.StartLine > node->Location.StartLine)
+            {
+              break;
+            }
+          }
+
+          if (!code.Empty() && startPosition != (size_t)-1 && endPosition != (size_t)-1 && startPosition != endPosition)
+          {
+            String line = code.SubStringFromByteIndices(startPosition, endPosition);
+            resultOut.ToolTip = line;
+          }
+          else
+          {
+            static const String Node("Node");
+            static const size_t NodeStringByteCount = Node.SizeInBytes();
+
+            if (nodeType->Name.EndsWith(Node))
+              resultOut.ToolTip = nodeType->Name.SubStringFromByteIndices(0, nodeType->Name.SizeInBytes() - NodeStringByteCount);
+            else
+              resultOut.ToolTip = nodeType->Name;
+          }
+        }
+
+        // If the node has any comments then attach them
+        if (!comments.Empty())
+        {
+          resultOut.ToolTip = BuildString(
+            comments,
+            "\n",
+            resultOut.ToolTip);
+        }
+        return;
       }
     }
   }
@@ -975,414 +1110,89 @@ namespace Zilch
     // Later on if we fail, we'll try to parse a type and therefore it may be a static
     resultOut.IsStatic = false;
 
-    // Store the array of tokens that we generate
-    Array<UserToken> tokens;
-    Array<UserToken> comments;
-    this->Tokenize(tokens, comments);
-
-    const size_t InvalidIndex = (size_t) -1;
-    size_t closestTokenIndex = InvalidIndex;
-
-    for (size_t i = 0; i < tokens.Size(); ++i)
-    {
-      UserToken& token = tokens[i];
-
-      if (token.Location.Origin == cursorOrigin)
-      {
-        if (token.Start >= cursorPosition)
-        {
-          break;
-        }
-
-        closestTokenIndex = i;
-      }
-    }
-
-    // If there's a dot right where the cursor is, backup until we hit no dots or function calls
-    if (closestTokenIndex != InvalidIndex)
-    {
-      while (closestTokenIndex != InvalidIndex)
-      {
-        Grammar::Enum tokenId = tokens[closestTokenIndex].TokenId;
-        if (tokenId != Grammar::Access && tokenId != Grammar::BeginFunctionCall)
-        {
-          break;
-        }
-
-        --closestTokenIndex;
-      }
-    }
-
-    // If we still have a valid cursor token
-    if (closestTokenIndex == InvalidIndex)
-    {
-      return;
-    }
-    
-    Array<UserToken> expressionTokens;
-
-    int parenthesesCount = 0;
-    int bracketsCount = 0;
-    bool done = false;
-    bool wasUpperIdentifier = false;
-
-    size_t end = closestTokenIndex;
-    size_t i = end;
-    while (i != InvalidIndex)
-    {
-      UserToken& token = tokens[i];
-
-      if (wasUpperIdentifier)
-      {
-        Grammar::Enum id = token.TokenId;
-        if (id != Grammar::Access && id != Grammar::DynamicAccess && id != Grammar::NonVirtualAccess &&
-            bracketsCount <= 0 && parenthesesCount <= 0)
-        {
-          done = true;
-          break;
-        }
-        wasUpperIdentifier = false;
-      }
-
-      switch (token.TokenId)
-      {
-        case Grammar::New:
-        case Grammar::Local:
-        case Grammar::LowerIdentifier:
-        case Grammar::RealLiteral:
-        case Grammar::DoubleRealLiteral:
-        case Grammar::IntegerLiteral:
-        case Grammar::DoubleIntegerLiteral:
-        case Grammar::StringLiteral:
-        case Grammar::True:
-        case Grammar::False:
-        case Grammar::TypeId:
-        case Grammar::MemberId:
-          if (parenthesesCount == 0 && bracketsCount == 0)
-          {
-            --i;
-            done = true;
-          }
-          break;
-          
-        case Grammar::UpperIdentifier:
-          wasUpperIdentifier = true;
-          break;
-        case Grammar::Access:
-        case Grammar::DynamicAccess:
-        case Grammar::NonVirtualAccess:
-        case Grammar::As:
-          break;
-
-        case Grammar::EndGroup: /* also EndFunctionCall */
-          ++parenthesesCount;
-          break;
-
-        case Grammar::BeginGroup: /* also BeginFunctionCall */
-          --parenthesesCount;
-
-          if (parenthesesCount == -1)
-            done = true;
-          break;
-
-        case Grammar::EndIndex:
-          ++bracketsCount;
-          break;
-
-        case Grammar::BeginIndex:
-          --bracketsCount;
-
-          if (bracketsCount == -1)
-            done = true;
-          break;
-
-        default:
-          if (parenthesesCount == 0 && bracketsCount == 0)
-          {
-            done = true;
-          }
-          break;
-      }
-
-      if (done)
-        break;
-
-      --i;
-    }
-
-    size_t start = i + 1;
-
-    for (size_t j = start; j <= end; ++j)
-    {
-      expressionTokens.PushBack(tokens[j]);
-    }
-    
-    if (expressionTokens.Empty())
-    {
-      return;
-    }
-    
-    
-    Array<UserToken> functionTokens;
-    Array<UserToken> classTokensWithoutFunction;
-    {
-      int functionStart = -1;
-      int functionKeywordStart = -1;
-      int functionEnd = -1;
-      for (int j = (int)closestTokenIndex; j >= 0 && functionStart == -1; --j)
-      {
-        UserToken& token = tokens[j];
-
-        switch (token.TokenId)
-        {
-          case Grammar::Get:
-          case Grammar::Set:
-          case Grammar::Function:
-          case Grammar::Constructor:
-          case Grammar::Destructor:
-            functionStart = j;
-            functionKeywordStart = j;
-            break;
-        }
-      }
-
-      if (functionStart != -1)
-      {
-        size_t attributeBracketCount = 0;
-        
-        // Parse backwards and look for attributes above the function
-        int attributeStart = functionStart - 1;
-        if (attributeStart >= 0 && tokens[attributeStart].TokenId == Grammar::EndAttribute)
-        {
-          for (int j = attributeStart; j >= 0; --j)
-          {
-            UserToken& token = tokens[j];
-            if (token.TokenId == Grammar::EndAttribute)
-            {
-              ++attributeBracketCount;
-            }
-            else if (token.TokenId == Grammar::BeginAttribute)
-            {
-              --attributeBracketCount;
-            }
-
-            if (attributeBracketCount <= 0)
-            {
-              functionStart = j;
-              break;
-            }
-          }
-        }
-
-        size_t scopeCount = 0;
-
-        for (int j = functionKeywordStart; j < (int)tokens.Size(); ++j)
-        {
-          UserToken& token = tokens[j];
-
-          if (token.TokenId == Grammar::BeginScope)
-          {
-            ++scopeCount;
-          }
-          else if (token.TokenId == Grammar::EndScope)
-          {
-            --scopeCount;
-
-            if (scopeCount == 0)
-            {
-              functionEnd = j;
-              break;
-            }
-          }
-          else if (j != functionKeywordStart && 
-                   (token.TokenId == Grammar::Function    ||
-                    token.TokenId == Grammar::Constructor ||
-                    token.TokenId == Grammar::Destructor  ||
-                    token.TokenId == Grammar::Get         ||
-                    token.TokenId == Grammar::Set         ||
-                    token.TokenId == Grammar::Class       ||
-                    token.TokenId == Grammar::Struct))
-          {
-            functionEnd = j - 1;
-            break;
-          }
-        }
-      }
-
-      if (functionEnd != -1 && functionEnd > functionStart)
-      {
-        for (int j = functionStart; j <= functionEnd; ++j)
-        {
-          UserToken& token = tokens[j];
-          functionTokens.PushBack(token);
-        }
-
-        // Lets handle getting all the class tokens (without this function inside)
-        {
-          int classStart = -1;
-          int classEnd = -1;
-
-          for (int j = functionStart; j >= 0; --j)
-          {
-            UserToken& token = tokens[j];
-
-            if (token.TokenId == Grammar::Class || token.TokenId == Grammar::Struct)
-            {
-              classStart = j;
-              break;
-            }
-          }
-
-          if (classStart != -1)
-          {
-            size_t scopeCount = 0;
-
-            for (int j = classStart; j < (int)tokens.Size(); ++j)
-            {
-              UserToken& token = tokens[j];
-
-              if (token.TokenId == Grammar::BeginScope)
-              {
-                ++scopeCount;
-              }
-              else if (token.TokenId == Grammar::EndScope)
-              {
-                --scopeCount;
-
-                if (scopeCount == 0)
-                {
-                  classEnd = j;
-                  break;
-                }
-              }
-              else if (j != classStart && (token.TokenId == Grammar::Class || token.TokenId == Grammar::Struct))
-              {
-                functionEnd = j - 1;
-                break;
-              }
-            }
-          }
-
-          if (classEnd != -1 && classEnd > classStart)
-          {
-            for (int j = classStart; j <= classEnd; ++j)
-            {
-              // If we're not within the function...
-              if (j < functionStart || j > functionEnd)
-              {
-                UserToken& token = tokens[j];
-                classTokensWithoutFunction.PushBack(token);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    Tokenizer tokenizer(*this);
-    tokenizer.Finalize(expressionTokens);
-    tokenizer.Finalize(functionTokens);
-    tokenizer.Finalize(classTokensWithoutFunction);
-
-    // The syntax tree holds a more intuitive representation of the parsed program and is easy to traverse
+    // Compile the entirety of the project and get the syntax tree out of it
+    // We MUST store the library or all the resources will be released
     SyntaxTree syntaxTree;
+    Array<UserToken> tokens;
+    resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, tokens);
 
-    // We're about to generate a library so we need a builder
-    LibraryBuilder builder("CodeCompletion");
+    // Get all the syntax nodes under the cursor
+    Array<SyntaxNode*> nodes;
+    syntaxTree.GetNodesAtCursor(cursorPosition, cursorOrigin, nodes);
 
-    // The parser parses the list of tokens into a syntax tree
-    Parser parser(*this);
-    
-    // Apply the parser to the token stream, which should output a syntax tree!
-    parser.ParseExpressionInFunctionAndClass(expressionTokens, functionTokens, classTokensWithoutFunction, syntaxTree);
+    // If we received no nodes, then return nothing (CodeDefinition will remain empty)
+    if (nodes.Empty())
+      return;
 
-    // The syntaxer holds information about all the internal and parsed types
-    // It is also responsible for checking syntax for things like scope, etc
-    Syntaxer syntaxer(*this);
-
-    // We need to check if we actually parsed an expression
-    ScopeNode* singleExpressionScope = syntaxTree.SingleExpressionScope;
-    size_t singleExpressionIndex = syntaxTree.SingleExpressionIndex;
-    if (singleExpressionScope != nullptr && singleExpressionIndex != (size_t)-1)
+    for (int i = (int)nodes.Size() - 1; i >= 0; --i)
     {
-      // Make sure to attach all the comments we parsed to
-      // any nodes, so we can collect them for documentation
-      this->AttachCommentsToNodes(syntaxTree, comments);
+      SyntaxNode* node = nodes[i];
 
-      // After the tree is generated, the child to parent pointers are not set so do that now
-      // These can get used if anyone wants to traverse the tree upward
-      SyntaxNode::FixParentPointers(syntaxTree.Root, nullptr);
+      if (node->IsGenerated)
+        continue;
 
-      // Collect all the types, Assign types where they are needed, and perform syntax checking
-      syntaxer.ApplyToTree(syntaxTree, builder, *this, dependencies);
+      ExpressionNode* expression = nullptr;
 
-      // Fix up any parent pointers (in case anything gets moved around)
-      // This may be unnecessary... but we'd still like to do it
-      SyntaxNode::FixParentPointers(syntaxTree.Root, nullptr);
-
-      if (singleExpressionIndex < singleExpressionScope->Statements.Size())
+      if (MemberAccessNode* memberAccess = Type::DynamicCast<MemberAccessNode*>(node))
       {
-        // Grab the statements from the scope (it should be an expression...)
-        StatementNode* singleStatement = singleExpressionScope->Statements[singleExpressionIndex];
+        expression = memberAccess->LeftOperand;
+        resultOut.PartialMemberName = memberAccess->Name;
+      }
+      else if (FunctionCallNode* call = Type::DynamicCast<FunctionCallNode*>(node))
+      {
+        expression = call->LeftOperand;
 
-        // Cast the statement into the expression that we're looking for, it should be the right one
-        ExpressionNode* singleExpression = Type::DynamicCast<ExpressionNode*>(singleStatement);
-        if (singleExpression != nullptr)
+        resultOut.CallArgumentIndex = 0;
+        // Find the argument that our cursor query is within
+        for (size_t j = 0; j < call->Arguments.Size(); ++j)
         {
-          // The result type may be null if it was unable to resolve... return whatever we found
-          resultOut.NearestType = singleExpression->ResultType;
-
-          // Create the library so it will keep references to types
-          resultOut.IncompleteLibrary = builder.CreateLibrary();
-
-          // If the value we're accessing is a value node, then it's a literal
-          resultOut.IsLiteral = (Type::DynamicCast<ValueNode*>(singleExpression) != nullptr);
-
-          // Look to see if we're accessing a single function or a bunch of overloads
-          const FunctionArray* overloads = nullptr;
-          Function* singleFunction = nullptr;
-
-          // If the expression is a member access...
-          if (MemberAccessNode* memberAccess = Type::DynamicCast<MemberAccessNode*>(singleExpression))
-          {
-            overloads = memberAccess->OverloadedFunctions;
-            singleFunction = memberAccess->AccessedFunction;
-          }
-          // If this is a creation call, we also want to pull out constructor overloads
-          else if (StaticTypeNode* staticType = Type::DynamicCast<StaticTypeNode*>(singleExpression))
-          {
-            resultOut.IsStatic = true;
-            overloads = staticType->OverloadedConstructors;
-            singleFunction = staticType->ConstructorFunction;
-          }
-
-          // If we resolved to an overload group... (but did not pick one yet)
-          if (overloads != nullptr)
-          {
-            // Also let the user know what the overloads are
-            resultOut.FunctionOverloads = *overloads;
-          }
-          // If we just resolved a single function...
-          else if (singleFunction != nullptr)
-          {
-            // Add the single function (so that the user can get more documentation from it)
-            resultOut.FunctionOverloads.PushBack(singleFunction);
-          }
+          if (cursorPosition >= call->Arguments[j]->Location.EndPosition)
+            resultOut.CallArgumentIndex = (int)j + 1;
         }
       }
-    }
-    else
-    {
-      // We might have been trying to access a static property/function/variable on a class
-      SyntaxType* syntaxType = parser.ParseType(expressionTokens);
-      
-      // We may have parsed a syntax type, but we still need to resolve it into a real type
-      if (syntaxType != nullptr)
+      else
+      {
+        continue;
+      }
+
+      // The result type may be null if it was unable to resolve... return whatever we found
+      resultOut.NearestType = expression->ResultType;
+
+      // If the value we're accessing is a value node specifically, then it's a literal
+      // (note that LocalVariableReferenceNode inherits from ValueNode and is NOT a literal, hence the ZilchGetDerivedType == check).
+      resultOut.IsLiteral = (expression->ZilchGetDerivedType() == ZilchTypeId(ValueNode));
+
+      // Look to see if we're accessing a single function or a bunch of overloads
+      const FunctionArray* overloads = nullptr;
+      Function* singleFunction = nullptr;
+
+      // If the expression is a member access...
+      if (MemberAccessNode* memberAccess = Type::DynamicCast<MemberAccessNode*>(expression))
+      {
+        overloads = memberAccess->OverloadedFunctions;
+        singleFunction = memberAccess->AccessedFunction;
+      }
+      // If this is a creation call, we also want to pull out constructor overloads
+      else if (StaticTypeNode* staticType = Type::DynamicCast<StaticTypeNode*>(expression))
       {
         resultOut.IsStatic = true;
-        resultOut.NearestType = syntaxer.RetrieveType(syntaxType, expressionTokens.Front().Location, dependencies);
-        delete syntaxType;
+        overloads = staticType->OverloadedConstructors;
+        singleFunction = staticType->ConstructorFunction;
       }
+
+      // If we resolved to an overload group... (but did not pick one yet)
+      if (overloads != nullptr)
+      {
+        // Also let the user know what the overloads are
+        resultOut.FunctionOverloads = *overloads;
+      }
+      // If we just resolved a single function...
+      else if (singleFunction != nullptr)
+      {
+        // Add the single function (so that the user can get more documentation from it)
+        resultOut.FunctionOverloads.PushBack(singleFunction);
+      }
+      break;
     }
   }
 }

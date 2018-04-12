@@ -21,7 +21,7 @@ namespace Audio
   class EmitterNode : public SimpleCollapseNode
   {
   public:
-    EmitterNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, Math::Vec3Param position, 
+    EmitterNode(Zero::StringParam name, const unsigned ID, Math::Vec3Param position, 
       Math::Vec3Param velocity, ExternalNodeInterface* extInt, const bool isThreaded = false);
 
     // Pauses all output (doesn't process inputs while paused)

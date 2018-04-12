@@ -131,10 +131,22 @@ public:
     String archetypeName = mEditText->GetText();
 
     Cog* cog = GetCog();
-    Archetype* oldArchetype = cog->GetArchetype();
-
     OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
-    UploadToArchetype(opQueue, cog, archetypeName, oldArchetype);
+
+    // Consider empty archetype text on UploadInherited to be the same as pressing
+    // enter after emptying out the text.
+    if(archetypeName.Empty())
+    {
+      if(cog->GetArchetype())
+        ClearArchetype(opQueue, cog);
+
+      return;
+    }
+    else
+    {
+      Archetype* oldArchetype = cog->GetArchetype( );
+      UploadToArchetype(opQueue, cog, archetypeName, oldArchetype);
+    }
 
     // If the object had a locally removed Component, we need to rebuild the property grid
     mGrid->Invalidate();
@@ -192,9 +204,18 @@ public:
       Cog* cog = GetCog();
       Archetype* oldArchetype = cog->GetArchetype();
 
+      // Consider empty archetype text on upload to be the same as pressing
+      // enter after emptying out the text.
+      if(archetypeName.Empty())
+      {
+        if(cog->GetArchetype())
+          ClearArchetype(opQueue, cog);
+
+        return;
+      }
       // User may have just change archetype text and clicked upload
       // before pressing enter
-      if(oldArchetype == nullptr || oldArchetype->Name != archetypeName)
+      else if(oldArchetype == nullptr || oldArchetype->Name != archetypeName)
       {
         UploadToArchetype(opQueue, cog, archetypeName);
         return;
@@ -252,7 +273,7 @@ public:
       {
         mEditText->SetInvalid();
       }
-  }
+    }
 
     LocalModifications* modifications = LocalModifications::GetInstance();
 
@@ -263,6 +284,10 @@ public:
     Archetype* singleArchetype = nullptr;
     Cog* singleCog = nullptr;
     Cog* commonArchetypeContextCog = nullptr;
+
+    // Disable reverting of game and space until we resolve some issues
+    bool revertTypeDisabled = (mInstance.StoredType->IsA(ZilchTypeId(GameSession)) ||
+                               mInstance.StoredType->IsA(ZilchTypeId(Space)));
 
     // Update button tooltips
     if(MetaSelection* selection = mInstance.Get<MetaSelection*>())
@@ -340,7 +365,7 @@ public:
     }
 
     // Revert button
-    if(revertableModifications)
+    if(revertableModifications && !revertTypeDisabled)
     {
       mRevert->SetIcon("Revert");
       mRevert->SetIgnoreInput(false);
@@ -363,7 +388,11 @@ public:
     {
       mRevert->SetIcon("RevertDisabled");
       mRevert->SetIgnoreInput(true);
-      mRevert->SetToolTip("Nothing to revert");
+
+      if(revertTypeDisabled)
+        mRevert->SetToolTip("GameSessions and Spaces currently cannot be reverted");
+      else
+        mRevert->SetToolTip("Nothing to revert");
     }
 
     // Label text

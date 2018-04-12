@@ -1251,6 +1251,8 @@ Cog* CreateAnimationPreview(Space* space, Animation* animation,
     
     if(AnimationGraph* animGraph = object->has(AnimationGraph))
     {
+      animGraph->SetPreviewMode();
+
       AnimationNode* node = BuildBasic(animGraph, animation, 0, AnimationPlayMode::Loop);
       animGraph->SetActiveNode(node);
     }

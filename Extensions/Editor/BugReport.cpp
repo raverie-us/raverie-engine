@@ -12,34 +12,36 @@ BugReporter::BugReporter(Composite* parent) :
 {
   mSent = false;
   this->SetLayout(CreateStackLayout());
-  mMinSize = Vec2(500, 600);
+  mMinSize = Vec2(10, 10);
+  this->SetSize(Vec2(500, 600));
 
   new Label(this, cText, "ZeroHub Username:");
-  mUserName = new TextBox(this);
-  mUserName->SetEditable(true);
+  mUsername = new TextBox(this);
+  mUsername->SetEditable(true);
+
+  mSelectorButton = new SelectorButton(this);
+  mSelectorButton->CreateButton("Bug Report");
+  mSelectorButton->CreateButton("Feature Request");
+  mSelectorButton->SetSelectedItem(0, false);
 
   new Label(this, cText, "Title:");
   mTitle = new TextBox(this);
   mTitle->SetEditable(true);
 
-  new Label(this, cText, "Reproduction steps:");
+  new Label(this, cText, "Description:");
+  mDescription = new TextEditor(this);
+  mDescription->SetMinSize(Vec2(10, 10));
+  mDescription->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
+  mDescription->SetWordWrap(true);
+  mDescription->DisableScrollBar(0);
+
+  new Label(this, cText, "Reproduction Steps:");
   mRepro = new TextEditor(this);
-  mRepro->SetMinSize(Vec2(100, 60));
+  mRepro->SetMinSize(Vec2(10, 10));
   mRepro->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
-  mRepro->Append("\n\n");
+  mRepro->SetWordWrap(true);
+  mRepro->DisableScrollBar(0);
 
-  new Label(this, cText, "What's expected:");
-  mExpected = new TextEditor(this);
-  mExpected->SetMinSize(Vec2(100, 60));
-  mExpected->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
-  mExpected->Append("\n\n");
-
-  new Label(this, cText, "What happened:");
-  mHappened = new TextEditor(this);
-  mHappened->SetMinSize(Vec2(100, 60));
-  mHappened->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
-  mHappened->Append("\n\n");
-  
   new Label(this, cText, "Include File:");
 
   auto fileRow = new Composite(this);
@@ -76,16 +78,29 @@ BugReporter::~BugReporter()
 void BugReporter::Reset()
 {
   mSent = false;
-  mUserName->SetText(String());
+  mUsername->SetText(String());
   mTitle->SetText(String());
-  mExpected->SetAllText(String());
-  mHappened->SetAllText(String());
+  mDescription->SetAllText(String());
   mRepro->SetAllText(String());
   mIncludeFile->SetText(String());
   mIncludeClipboardImage->SetChecked(false);
   mIncludeScreenshot->SetChecked(false);
   mIncludeProject->SetChecked(false);
-  mUserName->TakeFocus();
+
+  mSelectorButton->SetSelectedItem(0, false);
+
+  // Check for saved username from user's config.
+  if (Z::gEditor != nullptr && Z::gEditor->mConfig != nullptr)
+  {
+    if (EditorConfig* editorConfig = Z::gEditor->mConfig->has(EditorConfig))
+      mUsername->SetText(editorConfig->ZeroHubUsername);
+  }
+
+  // Set focus on username field if it's empty.
+  if (mUsername->GetText().Empty())
+    mUsername->TakeFocus();
+  else
+    mTitle->TakeFocus();
 }
 
 void BugReporter::OnBrowse(Event* event)
@@ -153,14 +168,22 @@ void BugReporter::OnSend(Event* event)
   if (mSent)
     return;
 
+  // Set the entered username on the config.
+  if (Z::gEditor != nullptr && Z::gEditor->mConfig != nullptr)
+  {
+    if (EditorConfig* editorConfig = Z::gEditor->mConfig->has(EditorConfig))
+      editorConfig->ZeroHubUsername = mUsername->GetText();
+  }
+
   BugReportJob* job = new BugReportJob();
 
-  job->mUserName = mUserName->GetText();
+  job->mUsername = mUsername->GetText();
   job->mTitle = mTitle->GetText();
+  job->mDescription = mDescription->GetAllText();
   job->mRepro = mRepro->GetAllText();
-  job->mExpected = mExpected->GetAllText();
-  job->mHappened = mHappened->GetAllText();
   job->mIncludedFile = mIncludeFile->GetText();
+
+  job->mReportType = mSelectorButton->mButtons[mSelectorButton->GetSelectedItem()]->mButtonText->GetText();
 
   OsShell* shell = Z::gEngine->has(OsShell);
 
@@ -206,11 +229,13 @@ int BugReportJob::Execute()
   bugReportUrl.Append("https://bugs.zeroengine.io");
 
   request.AddField("Key", "kcy43UsUp4Rz/X0OFnCHDmgZECqB9NZbUTdx7chShJA=");
-  request.AddField("UserName", mUserName);
+  request.AddField("UserName", mUsername);
   request.AddField("Title", mTitle);
-  request.AddField("Repro", mRepro);
-  request.AddField("Expected", mExpected);
-  request.AddField("Happened", mHappened);
+  request.AddField("ReportType", mReportType);
+  if (!mDescription.Empty())
+    request.AddField("Description", mDescription);
+  if (!mRepro.Empty())
+    request.AddField("Repro", mRepro);
   request.AddField("Revision", GetRevisionNumberString());
   request.AddField("ChangeSet", GetChangeSetString());
   request.AddField("Platform", GetPlatformString());

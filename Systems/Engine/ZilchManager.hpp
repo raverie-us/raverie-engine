@@ -16,6 +16,9 @@ DeclareEvent(ScriptsCompiledPrePatch);
 // Sent out if scripts successfully compiled before setting mLibrary
 // Sync point for other systems to commit their pending libraries
 DeclareEvent(ScriptsCompiledCommit);
+// Sent out immediately before 'ScriptsCompiledPostPatch', allowing the editor
+// to build script objects back up before post patch event handlers execute.
+DeclareEvent(ScriptsCompiledPatch);
 // Sent out if scripts successfully compiled after setting mLibrary
 DeclareEvent(ScriptsCompiledPostPatch);
 // Sent if scripts failed to compile

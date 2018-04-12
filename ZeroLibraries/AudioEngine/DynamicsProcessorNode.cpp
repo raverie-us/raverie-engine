@@ -12,9 +12,9 @@ namespace Audio
   //------------------------------------------------------------------------ Dynamics Processor Node
 
   //************************************************************************************************
-  DynamicsProcessorNode::DynamicsProcessorNode(Zero::Status& status, Zero::StringParam name, 
-      const unsigned ID, ExternalNodeInterface *extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  DynamicsProcessorNode::DynamicsProcessorNode(Zero::StringParam name, const unsigned ID, 
+      ExternalNodeInterface *extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     Filter(nullptr),
     InputGainDB(0),
     ThresholdDB(0),
@@ -27,7 +27,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      SetSiblingNodes(new DynamicsProcessorNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new DynamicsProcessorNode(name, ID, extInt, true));
     }
     else
     {

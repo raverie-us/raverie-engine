@@ -21,17 +21,13 @@ DeclareEnum3(ImporterResult, NotEmbeded, Embeded, ExecutedAnotherProcess);
 class Importer
 {
 public:
-  Importer();
-  ImporterResult::Enum CheckForImport();
-  bool CheckImportFinished();
-  bool EngineInitialized();
-  OsInt DoImport();
-  File* mFile;
-  byte* mData;
-  uint mSize;
-  Thread* mThread;
-  bool mAlreadyExtracted;
+  static const uint cEmptyPackageSize;
+
+  ImporterResult::Type CheckForImport();
   String mOutputDirectory;
+
+private:
+  OsInt DoImport(ByteBufferBlock& buffer);
 };
 
 }

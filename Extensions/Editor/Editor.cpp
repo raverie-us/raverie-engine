@@ -247,7 +247,7 @@ Editor::Editor(Composite* parent)
   
   ZilchManager* zilchManager = ZilchManager::GetInstance();
   ConnectThisTo(zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPostPatch, OnScriptsCompiledPostPatch);
+  ConnectThisTo(zilchManager, Events::ScriptsCompiledPatch, OnScriptsCompiledPatch);
 
   ConnectThisTo(this, Events::CommandCaptureContext, OnCaptureContext);
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
@@ -1064,7 +1064,7 @@ void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
   TearDownZilchStateOnGames(e->mModifiedLibraries);
 }
 
-void Editor::OnScriptsCompiledPostPatch(ZilchCompileEvent* e)
+void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
 {
   //ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
   //

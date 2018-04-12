@@ -161,19 +161,19 @@ void AtlasManager::AddSpriteSource(SpriteSource* source, Image* image)
   // Get frame count before adding pixel borders (if applicable). Must not be 0.
   source->mFramesPerRow = Math::Max(image->Width / source->FrameSizeX, 1u);
 
-  if (source->Sampling == SpriteSampling::Linear)
+  int borderWidth = (source->Sampling == SpriteSampling::Linear) ? Atlas::sBorderWidth : 1;
+
+  uint paddedSizeX = image->Width + (image->Width / source->FrameSizeX) * borderWidth * 2;
+  uint paddedSizeY = image->Height + (image->Height / source->FrameSizeY) * borderWidth * 2;
+  if (paddedSizeX > cMaxSpriteSize || paddedSizeY > cMaxSpriteSize)
   {
-    uint paddedSizeX = image->Width + (image->Width / source->FrameSizeX) * Atlas::sBorderWidth * 2;
-    uint paddedSizeY = image->Height + (image->Height / source->FrameSizeY) * Atlas::sBorderWidth * 2;
-    if (paddedSizeX > cMaxSpriteSize || paddedSizeY > cMaxSpriteSize)
-    {
-      source->Sampling = SpriteSampling::Nearest;
-      DoNotifyError("Error", String::Format("Cannot pad Sprite '%s' for Linear sampling, resulting image is too large.", source->Name.c_str()));
-    }
-    else
-    {
-      AddPixelBorders(image, source->FrameSizeX, source->FrameSizeY, Atlas::sBorderWidth);
-    }
+    borderWidth = 0;
+    DoNotifyWarning("Warning", String::Format("Cannot pad Sprite '%s', resulting image is too large. "
+                                              "Sampling at sprite edge may be wrong.", source->Name.c_str()));
+  }
+  else
+  {
+    AddPixelBorders(image, source->FrameSizeX, source->FrameSizeY, borderWidth);
   }
 
   bool added = false;
@@ -197,10 +197,7 @@ void AtlasManager::AddSpriteSource(SpriteSource* source, Image* image)
   ErrorIf(atlasTexture == nullptr, "Failed to place SpriteSource into an Atlas.");
 
   // Calculate frame uv's.
-  Vec2 padUv(0.0f);
-  if (source->Sampling == SpriteSampling::Linear)
-    padUv = Vec2((float)Atlas::sBorderWidth, (float)Atlas::sBorderWidth) / Math::ToVec2(atlasTexture->GetSize());
-
+  Vec2 padUv = Vec2((float)borderWidth, (float)borderWidth) / Math::ToVec2(atlasTexture->GetSize());
   Vec2 frameUvSize = Vec2((float)source->FrameSizeX, (float)source->FrameSizeY) / Math::ToVec2(atlasTexture->GetSize());
 
   source->mBaseFrameUv.TopLeft = source->mAtlasUvRect.TopLeft + padUv;

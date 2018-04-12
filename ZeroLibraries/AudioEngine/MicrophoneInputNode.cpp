@@ -12,16 +12,16 @@ namespace Audio
   //-------------------------------------------------------------------------- Microphone Input Node
 
   //************************************************************************************************
-  MicrophoneInputNode::MicrophoneInputNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-    ExternalNodeInterface* extInt, bool isThreaded) :
-    SoundNode(status, name, ID, extInt, false, false, isThreaded),
+  MicrophoneInputNode::MicrophoneInputNode(Zero::StringParam name, unsigned ID, 
+      ExternalNodeInterface* extInt, bool isThreaded) :
+    SoundNode(name, ID, extInt, false, false, isThreaded),
     Active(true),
     Volume(1.0f),
     Stopping(false),
     CurrentVolume(1.0f)
   {
     if (!isThreaded)
-      SetSiblingNodes(new MicrophoneInputNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new MicrophoneInputNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************

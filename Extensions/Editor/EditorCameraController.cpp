@@ -195,12 +195,12 @@ void EditorCameraController::DragMovement(Vec2Param movement, Viewport* viewport
   if(mDragMode == CameraDragMode::Rotation)
   {
     // Default rotation is 0.3f degrees per pixel
-    float rotateSen = mRotateSensitivity * Math::DegToRad(0.3f);
+    float sensitivity = mRotateSensitivity * Math::DegToRad(0.3f);
     if(mControlMode == ControlMode::FirstPerson)
-      rotateSen *= 0.5f;
+      sensitivity *= 0.5f;
 
-    float horizontalChange = movement.x * rotateSen;
-    float verticalChange = movement.y * rotateSen;
+    float horizontalChange = movement.x * sensitivity;
+    float verticalChange = movement.y * sensitivity;
 
     if(mControlMode == ControlMode::FirstPerson)
     {
@@ -292,16 +292,16 @@ void EditorCameraController::AlignToCamera(Cog* cameraCog)
 {
   if(Camera* camera = cameraCog->has(Camera))
   {
-    // compute the look at target we want to set
+    // Compute the look at target we want to set
     Vec3 camPos = camera->GetWorldTranslation();
     Vec3 camDir = camera->GetWorldDirection();
     Vec3 lookAtTarget = camPos + camDir * mLookDistance;
 
-    // get the camera we are aligning withs vertical and horizontal angle
+    // Get the camera we are aligning withs vertical and horizontal angle
     // we directly set the angle values here over using the setters to save on
     // converting this to degrees to just be converted back to radians
     camDir.Normalize();
-    mVerticalAngle = -Math::Sin(camDir.y);
+    mVerticalAngle = -Math::ArcSin(camDir.y);
     mHorizontalAngle = Math::ArcTan2(camDir.x, -camDir.z);
 
     // Set look at target calls update transform for us and uses our new

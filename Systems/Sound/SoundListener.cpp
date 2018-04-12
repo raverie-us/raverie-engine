@@ -68,19 +68,15 @@ void SoundListener::Initialize(CogInitializer& initializer)
   // Add a new listener to audio engine 
   SoundNode* newNode = new SoundNode();
   mSoundNode = newNode;
-  Status status;
   String name;
   if (!mSpace->GetOwner()->IsEditorMode())
     name = "Listener";
   else
     name = "EditorListener";
 
-  newNode->SetNode(new Audio::ListenerNode(status, name, Z::gSound->mCounter++,
+  mSoundNode->mNode = new Audio::ListenerNode(name, Z::gSound->mCounter++,
     Audio::ListenerWorldPositionInfo(mTransform->GetWorldTranslation(), Math::Vec3(0, 0, 0), 
-      -forward, y), newNode), status);
-
-  if (status.Failed())
-    return;
+      -forward, y), newNode);
 
   newNode->mCanRemove = false;
   newNode->mCanReplace = false;

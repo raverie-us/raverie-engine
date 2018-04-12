@@ -104,37 +104,45 @@ namespace Audio
       return;
 
     float eighths = currentTime / mSecondsPerEighth;
+    float beats = currentTime / mSecondsPerBeat;
 
-    // Check for eighth notes
-    if ((unsigned)eighths > mTotalEighths)
+    // Check for beats
+    if ((int)beats > mTotalBeats)
     {
-      ++mTotalEighths;
-      ++mEighthNoteCount;
+      // There should never be a jump in the time without calling ResetBeats, so we don't need
+      // to handle increases of more than one beat
+      ++mTotalBeats;
+      ++mBeatsCount;
 
-      // Check for beat
-      if (mEighthNoteCount % mEighthsPerBeat == 0)
+      // Check for new bar
+      if (mBeatsCount == mBeatsPerBar)
       {
-        ++mBeatsCount;
-
-        // Check for new bar
-        if (mBeatsCount == mBeatsPerBar)
-        {
-          mEighthNoteCount = 0;
-          mBeatsCount = 0;
-
-          // Send notification
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-            siblingNode, AudioEventTypes::MusicBar, (void*)nullptr));
-        }
+        mEighthNoteCount = -1;
+        mBeatsCount = 0;
 
         // Send notification
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicBeat, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicBar, (void*)nullptr));
       }
+
+      // Send notification
+      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
+        siblingNode, AudioEventTypes::MusicBeat, (void*)nullptr));
+    }
+
+    // Check for eighth notes
+    if ((int)eighths > mTotalEighths)
+    {
+      // There should never be a jump in the time without calling ResetBeats, so we don't need
+      // to handle increases of more than one beat
+      ++mTotalEighths;
+      ++mEighthNoteCount;
 
       // Send notification for eighth note
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
         siblingNode, AudioEventTypes::MusicEighthNote, (void*)nullptr));
+
+      // Check for other note values
 
       // Check for quarter note
       if (mEighthNoteCount % 2 == 0)
@@ -162,7 +170,7 @@ namespace Audio
   //************************************************************************************************
   void MusicNotificationObject::ResetBeats(float currentTime, SoundNode* siblingNode)
   {
-    if (mSecondsPerEighth == 0)
+    if (mSecondsPerEighth == 0.0f)
       return;
 
     float timePerMeasure = mSecondsPerBeat * mBeatsPerBar;
@@ -170,9 +178,10 @@ namespace Audio
     float timeSinceLastBar = currentTime - ((int)measuresSoFar * timePerMeasure);
 
     // If we are at or very close to the beginning of a measure, reset everything
-    if (timeSinceLastBar < 0.00001f)
+    if (timeSinceLastBar < 0.0001f)
     {
       mTotalEighths = 0;
+      mTotalBeats = 0;
       mBeatsCount = 0;
       mEighthNoteCount = 0;
 
@@ -194,20 +203,11 @@ namespace Audio
     }
     else
     {
-      float eighthNotesThisMeasure = timeSinceLastBar / mSecondsPerEighth;
-      mTotalEighths = (unsigned)(currentTime / mSecondsPerEighth);
+      mTotalEighths = (int)(currentTime / mSecondsPerEighth);
+      mEighthNoteCount = (int)(timeSinceLastBar / mSecondsPerEighth);
 
-      // Haven't hit first eighth note yet
-      if (eighthNotesThisMeasure < 1.0f)
-      {
-        mBeatsCount = 0;
-        mEighthNoteCount = 0;
-      }
-      else
-      {
-        mEighthNoteCount = (int)eighthNotesThisMeasure;
-        mBeatsCount = mEighthNoteCount / mEighthsPerBeat;
-      }
+      mTotalBeats = (int)(currentTime / mSecondsPerBeat);
+      mBeatsCount = (int)(timeSinceLastBar / mSecondsPerBeat);
     }
   }
 
@@ -217,7 +217,7 @@ namespace Audio
   SoundInstanceNode::SoundInstanceNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
       SoundAsset* parentAsset, const bool looping, const bool startPaused, 
       ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, true, isThreaded), 
+    SimpleCollapseNode(name, ID, extInt, false, true, isThreaded), 
     Asset(parentAsset), 
     mVolume(0.8f), 
     mFinished(false), 
@@ -253,7 +253,7 @@ namespace Audio
       if (parentAsset->AddReference())
       {
         SetSiblingNodes(new SoundInstanceNode(status, name, ID, parentAsset->ThreadedAsset, looping, 
-          startPaused, nullptr, true), status);
+          startPaused, nullptr, true));
       }
       // Couldn't attach to this asset
       else
@@ -572,30 +572,30 @@ namespace Audio
   }
 
   //************************************************************************************************
-  int SoundInstanceNode::GetPitch()
+  float SoundInstanceNode::GetPitch()
   {
     if (mPitchFactor == 0)
       return 0;
     else
-      return (int)(1200.0f * Math::Log2(mPitchFactor));
+      return 12.0f * Math::Log2(mPitchFactor);
   }
 
   //************************************************************************************************
-  void SoundInstanceNode::SetPitch(const int pitchCents, const float time)
+  void SoundInstanceNode::SetPitch(const float pitchSemitones, const float time)
   {
     if (!Threaded)
     {
       // If not interpolating, set the pitch value
       if (time == 0)
-        mPitchFactor = Math::Pow(2.0f, pitchCents / 1200.0f);
+        mPitchFactor = Math::Pow(2.0f, pitchSemitones / 12.0f);
       if (GetSiblingNode())
         gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetPitch,
-        (SoundInstanceNode*)GetSiblingNode(), pitchCents, time));
+        (SoundInstanceNode*)GetSiblingNode(), pitchSemitones, time));
     }
     else
     {
       // Check for no pitch shift and no interpolation
-      if (pitchCents == 0 && time == 0)
+      if (pitchSemitones == 0 && time == 0)
       {
         mPitchShifting = false;
         Pitch.SetPitchFactor(1.0f, 0.0f);
@@ -603,7 +603,7 @@ namespace Audio
       else
       {
         mPitchShifting = true;
-        Pitch.SetPitchFactor(Math::Pow(2.0f, pitchCents / 1200.0f), time);
+        Pitch.SetPitchFactor(Math::Pow(2.0f, pitchSemitones / 12.0f), time);
       }
     }
   }
@@ -681,12 +681,10 @@ namespace Audio
     if (MusicNotify.mBeatsPerBar == 0 || MusicNotify.mBeatNoteType == 0)
     {
       MusicNotify.mSecondsPerEighth = 0.0f;
-      MusicNotify.mEighthsPerBeat = 0;
     }
     else
     {
       MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
-      MusicNotify.mEighthsPerBeat = 8 / MusicNotify.mBeatNoteType;
     }
 
     if (!Threaded && GetSiblingNode())

@@ -162,6 +162,8 @@ TextCheckBox::TextCheckBox(Composite* parent) : Composite(parent)
   this->SetLayout(CreateRowLayout());
   mCheckBox = new CheckBox(this);
   mText = new Label(this);
+
+  ConnectThisTo(mText, Events::LeftClick, OnLeftClick);
 }
 
 TextCheckBox::~TextCheckBox()
@@ -198,6 +200,11 @@ void TextCheckBox::SetText(StringParam text)
   mText->SetText(text);
   mText->SizeToContents();
   mSize = mText->GetSize();
+}
+
+void TextCheckBox::OnLeftClick(MouseEvent* event)
+{
+  mCheckBox->ToggleChecked();
 }
 
 }

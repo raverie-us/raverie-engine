@@ -12,9 +12,9 @@ namespace Audio
   //------------------------------------------------------------------------------------- Input Node
 
   //************************************************************************************************
-  CustomDataNode::CustomDataNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
+  CustomDataNode::CustomDataNode(Zero::StringParam name, const unsigned ID,
       ExternalNodeInterface* extInt, const bool isThreaded) :
-    SoundNode(status, name, ID, extInt, false, true, isThreaded), 
+    SoundNode(name, ID, extInt, false, true, isThreaded), 
     WaitingForSamples(false), 
     Channels(1), 
     TotalSamplesInBuffers(0), 
@@ -23,7 +23,7 @@ namespace Audio
     SetMinimumBufferSize();
 
     if (!Threaded)
-      SetSiblingNodes(new CustomDataNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new CustomDataNode(name, ID, nullptr, true));
     else
       SamplesThisFrame.Resize(1);
   }

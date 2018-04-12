@@ -405,8 +405,9 @@ DataNode* RemovedEntry::FindRemovedCogNode(DataNode* dataTree, Cog* currParent, 
   }
 
   DataNode* hierarchyNode = dataTree->FindChildWithTypeName("Hierarchy");
-  DataNode* cogNode = hierarchyNode->FindChildWithUniqueNodeId(childGuid);
-  return cogNode;
+  if(hierarchyNode)
+    return hierarchyNode->FindChildWithUniqueNodeId(childGuid);
+  return nullptr;
 }
 
 String RemovedEntry::GetNameFromCogNode(DataNode* cogNode)

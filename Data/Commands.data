@@ -138,7 +138,7 @@ Commands commands =
 	{
 		string Name = "Delete",
 		string Description = "Delete selected objects",
-		string Shortcut = "Del",
+		string Shortcut = "Delete",
 		string Tags = "Edit",
 	},
 
@@ -214,7 +214,6 @@ Commands commands =
 		string Name = "SelectAllInTree",
 		string Description = "Select all in tree",
 		string IconName = "DoubleDown",
-		string Shortcut = "Shift+E",
 		string Tags = "Select",
 	},
 
@@ -243,16 +242,6 @@ Commands commands =
 		string IconName = "",
 		string Shortcut = "Shift+S",
 		string Tags = "Select",
-	},
-
-	Command =
-	{
-		string Name = "Tweakables",
-		string Description = "Select the Tweakables object",
-		string IconName = "",
-		string Shortcut = "Shift+T",
-		string Tags = "Select",
-		bool DevOnly = true,
 	},
 
 	Command =
@@ -592,35 +581,11 @@ Commands commands =
 
 	Command =
 	{
-		string Name = "Memory",
-		string Description = "Displays a memory graph",
-		string IconName = "Memory",
-		string Tags = "Editor",
-	},
-
-	Command =
-	{
 		string Name = "Graph",
 		string Description = "Displays a graph",
 		string IconName = "Performance",
 		string Tags = "Editor",
 	},
-
-	//Command =
-	//{
-	//	string Name = "MergeGeometricShapes",
-	//	string Description = "Merges any selected geometric shapes together. All selected shapes must be on the same layer",
-	//	string IconName = "Performance",
-	//	string Tags = "Geometry",
-	//},
-	//
-	//Command =
-	//{
-	//	string Name = "SubtractGeometryShapeFromAll",
-	//	string Description = "Uses a geometry shape as a cookie cutter and cuts holes out of every other shape that it touches",
-	//	string IconName = "Performance",
-	//	string Tags = "Geometry",
-	//},
 
 	Command =
 	{
@@ -744,20 +709,6 @@ Commands commands =
 		string Tags = "Tool",
 	},
 
-	//Command =
-	//{
-	//	string Name = "GeometryPainter2D",
-	//	string Description = "Enables the GeometryPainter2D tool",
-	//	string Tags = "Tool",
-	//},
-
-	//Command =
-	//{
-	//	string Name = "GeometryPointManipulator",
-	//	string Description = "Enables the GeometryPointManipulator tool",
-	//	string Tags = "Tool",
-	//},
-
 	Command =
 	{
 		string Name = "ShowCoreLibrary",
@@ -817,11 +768,4 @@ Commands commands =
 		string Shortcut = "",
 	},
 
-	//Command =
-	//{
-	//	string Name = "EditCommands",
-	//	string Description = "Displays all custom Commands for editing.",
-	//	string Tags = "",
-	//	string Shortcut = "",
-	//},
 },

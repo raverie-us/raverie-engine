@@ -48,6 +48,7 @@ public:
   ResourceEvent(ResourceManager* manager, Resource* resource);
   String Name;
   String Path;
+  String LastIdName;
   ResourceManager* Manager;
   Resource* EventResource;
   ResourceLibrary* EventResourceLibrary;

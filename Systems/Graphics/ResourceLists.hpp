@@ -162,6 +162,35 @@ void ResourceListEntryRemoved(SelfResource* selfResource, OtherResource* otherRe
   }
 }
 
+//**************************************************************************************************
+template <typename ResourceManagerType>
+void ResetIdName(String& idName)
+{
+  ResourceManagerType::ResourceType* resource = ResourceManagerType::FindOrNull(idName);
+  // Serialized list can have entries for removed resources.
+  if (resource != nullptr)
+    idName = resource->ResourceIdName;
+}
+
+//**************************************************************************************************
+template <typename SelfResource, typename OtherManager>
+void ResourceListResetIdNames(Array<Resource*>& resources)
+{
+  forRange (Resource* resource, resources.All())
+  {
+    SelfResource* selfResource = (SelfResource*)resource;
+
+    forRange (String& idName, selfResource->mReferencedByList.mResourceIdNames.All())
+      ResetIdName<OtherManager>(idName);
+
+    if (selfResource->IsWritable())
+    {
+      forRange (String& idName, selfResource->mSerializedList.mResourceIdNames.All())
+        ResetIdName<OtherManager>(idName);
+    }
+  }
+}
+
 // Should be called when a resource is added to the engine
 void ResourceListAdd(Material* material);
 void ResourceListAdd(RenderGroup* renderGroup);

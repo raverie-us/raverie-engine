@@ -17,7 +17,7 @@ namespace Audio
   class SoundNode 
   {
   public:
-    SoundNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt,
+    SoundNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt,
       const bool listenerDependent, const bool generator, const bool isThreaded);
 
     // ***** Virtual functions that CAN be overridden, but usually shouldn't. Be careful. *****
@@ -97,7 +97,7 @@ namespace Audio
     // Get this node's threaded or non-threaded counterpart
     SoundNode* GetSiblingNode();
     // Sets the sibling node variables for both this node and its threaded counterpart
-    void SetSiblingNodes(SoundNode* threadedNode, Zero::Status& previousStatus);
+    void SetSiblingNodes(SoundNode* threadedNode);
     // Returns the pointer to the node's external interface
     ExternalNodeInterface* GetExternalInterface() { return ExternalData; }
     // Uses the BypassValue to add a portion of the InputSamples buffer to the passed-in buffer
@@ -163,7 +163,7 @@ namespace Audio
   class OutputNode : public SoundNode
   {
   public:
-    OutputNode(Zero::Status& status, Zero::StringParam name, ExternalNodeInterface* extInt, bool isThreaded);
+    OutputNode(Zero::StringParam name, ExternalNodeInterface* extInt, bool isThreaded);
 
     float GetVolumeChangeFromOutputs() override;
 
@@ -189,9 +189,9 @@ namespace Audio
   class SimpleCollapseNode : public SoundNode
   {
   public:
-    SimpleCollapseNode(Zero::Status& status, Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+    SimpleCollapseNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
         bool listenerDependent, bool generator, bool threaded) :
-      SoundNode(status, name, ID, extInt, listenerDependent, generator, threaded) 
+      SoundNode(name, ID, extInt, listenerDependent, generator, threaded) 
     {}
 
   protected:
@@ -209,8 +209,8 @@ namespace Audio
   class CombineNode : public SimpleCollapseNode
   {
   public:
-    CombineNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-      ExternalNodeInterface* extInt, bool isThreaded = false);
+    CombineNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded = false);
 
   private:
     ~CombineNode() {}
@@ -224,8 +224,8 @@ namespace Audio
   class CombineAndPauseNode : public SimpleCollapseNode
   {
   public:
-    CombineAndPauseNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-      ExternalNodeInterface* extInt, bool isThreaded = false);
+    CombineAndPauseNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded = false);
 
     void SetPaused(const bool paused);
     bool GetPaused();

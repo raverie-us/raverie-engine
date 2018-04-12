@@ -145,6 +145,22 @@ namespace Audio
   }
 
   //************************************************************************************************
+  bool AudioSystemInterface::GetMuteAllAudio()
+  {
+    return System->Muted;
+  }
+
+  //************************************************************************************************
+  void AudioSystemInterface::SetMuteAllAudio(const bool muteAudio)
+  {
+    // Set the non-threaded variable
+    System->Muted = muteAudio;
+
+    // Send an asynchronous task to the threaded system
+    System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetMutedThreaded, System, muteAudio));
+  }
+
+  //************************************************************************************************
   unsigned AudioSystemInterface::GetSampleRate()
   {
     return SystemSampleRate;

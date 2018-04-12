@@ -910,6 +910,10 @@ void RigidBody::ComputeVelocities(Vec3Param oldTranslation, Mat3Param oldRotatio
   if(!mState.IsSet(RigidBodyStates::Kinematic))
     return;
 
+  // Ignore this in the editor
+  if(mSpace->GetOwner()->IsEditorMode())
+    return;
+
   // Get the current translation and orientation
   WorldTransformation* transform = mPhysicsNode->GetTransform();
   Vec3 worldTranslation = transform->GetWorldTranslation();

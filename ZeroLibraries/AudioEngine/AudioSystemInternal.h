@@ -120,6 +120,8 @@ namespace Audio
     void RemoveSoundNode(SoundNode* node, const bool threaded);
     // Sets the threaded variable for the minimum volume threshold.
     void SetMinVolumeThresholdThreaded(const float volume);
+    // Sets whether or not all audio should be muted
+    void SetMutedThreaded(bool muteAudio);
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
@@ -228,6 +230,11 @@ namespace Audio
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
     void GetAudioInputDataThreaded(unsigned howManySamples);
+    // If true, audio will be processed normally but will not be sent to the output device
+    bool Muted;
+    bool MutedThreaded;
+    // Used to know when to set the Muted variable
+    bool MutingThreaded;
 
     class NodeInterface : public ExternalNodeInterface
     {

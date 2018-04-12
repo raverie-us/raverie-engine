@@ -83,6 +83,12 @@ namespace Audio
     // Changes the overall system volume
     void SetVolume(const float volume);
 
+    // Returns true if the audio is currently muted
+    bool GetMuteAllAudio();
+
+    // If set to true, all audio will be processed as normal but will be silent
+    void SetMuteAllAudio(const bool muteAudio);
+
     // Returns the sample rate used by the audio system
     unsigned GetSampleRate();
 

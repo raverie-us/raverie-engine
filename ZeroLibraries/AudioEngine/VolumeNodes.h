@@ -18,8 +18,8 @@ namespace Audio
   class VolumeNode : public SimpleCollapseNode
   {
   public:
-    VolumeNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    VolumeNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
 
     // Returns the current volume
     float GetVolume();
@@ -61,8 +61,8 @@ namespace Audio
   class PanningNode : public SimpleCollapseNode
   {
   public:
-    PanningNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    PanningNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
 
     // Returns whether the node combines all audio into one channel before panning
     bool GetSumToMono();

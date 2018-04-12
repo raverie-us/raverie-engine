@@ -30,39 +30,39 @@ ZilchDefineType(Reactive, builder, type)
 
   ZilchBindFieldProperty(mActive);
 
-  ZeroBindEvent(Events::MouseFileDrop, MouseFileDropEvent);
+ZeroBindEvent(Events::MouseFileDrop, MouseFileDropEvent);
 
-  ZeroBindEvent(Events::MouseEnter, MouseEvent);
-  ZeroBindEvent(Events::MouseEnterPreview, MouseEvent);
-  ZeroBindEvent(Events::MouseExit, MouseEvent);
+  ZeroBindEvent(Events::MouseEnter, ViewportMouseEvent);
+  ZeroBindEvent(Events::MouseEnterPreview, ViewportMouseEvent);
+  ZeroBindEvent(Events::MouseExit, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MouseEnterHierarchy, MouseEvent);
-  ZeroBindEvent(Events::MouseExitHierarchy, MouseEvent);
+  ZeroBindEvent(Events::MouseEnterHierarchy, ViewportMouseEvent);
+  ZeroBindEvent(Events::MouseExitHierarchy, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MouseMove, MouseEvent);
-  ZeroBindEvent(Events::MouseUpdate, MouseEvent);
-  ZeroBindEvent(Events::MouseScroll, MouseEvent);
+  ZeroBindEvent(Events::MouseMove, ViewportMouseEvent);
+  ZeroBindEvent(Events::MouseUpdate, ViewportMouseEvent);
+  ZeroBindEvent(Events::MouseScroll, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::DoubleClick, MouseEvent);
+  ZeroBindEvent(Events::DoubleClick, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MouseDown, MouseEvent);
-  ZeroBindEvent(Events::MouseUp, MouseEvent);
+  ZeroBindEvent(Events::MouseDown, ViewportMouseEvent);
+  ZeroBindEvent(Events::MouseUp, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::LeftMouseDown, MouseEvent);
-  ZeroBindEvent(Events::LeftMouseUp, MouseEvent);
+  ZeroBindEvent(Events::LeftMouseDown, ViewportMouseEvent);
+  ZeroBindEvent(Events::LeftMouseUp, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::RightMouseDown, MouseEvent);
-  ZeroBindEvent(Events::RightMouseUp, MouseEvent);
+  ZeroBindEvent(Events::RightMouseDown, ViewportMouseEvent);
+  ZeroBindEvent(Events::RightMouseUp, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MiddleMouseDown, MouseEvent);
-  ZeroBindEvent(Events::MiddleMouseUp, MouseEvent);
+  ZeroBindEvent(Events::MiddleMouseDown, ViewportMouseEvent);
+  ZeroBindEvent(Events::MiddleMouseUp, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::LeftClick, MouseEvent);
-  ZeroBindEvent(Events::RightClick, MouseEvent);
-  ZeroBindEvent(Events::MiddleClick, MouseEvent);
+  ZeroBindEvent(Events::LeftClick, ViewportMouseEvent);
+  ZeroBindEvent(Events::RightClick, ViewportMouseEvent);
+  ZeroBindEvent(Events::MiddleClick, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MouseHold, MouseEvent);
-  ZeroBindEvent(Events::MouseHover, MouseEvent);
+  ZeroBindEvent(Events::MouseHold, ViewportMouseEvent);
+  ZeroBindEvent(Events::MouseHover, ViewportMouseEvent);
 }
 
 void Reactive::SetDefaults()

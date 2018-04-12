@@ -116,10 +116,10 @@ public:
     const keyrange& All() const { return *this; }
   };
 
-  // range of all the values in the map.
+  /// range of all the values in the map.
   valuerange Values() const { return valuerange(base_type::All()); }
 
-  // range of all the keys in the map.
+  /// range of all the keys in the map.
   keyrange Keys() const { return keyrange(base_type::All()); }
 
   data_type& operator[](const key_type& key)
