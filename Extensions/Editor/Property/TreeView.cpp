@@ -145,7 +145,7 @@ public:
 ColumnFormat::ColumnFormat( )
 {
   ColumnType = ColumnType::Flex;
-  IconSizePolicy = ColumnIconSizePolicy::AutoSize;
+  IconSizePolicy = ColumnIconSizePolicy::Auto;
   IconSize = cDefaultColumnIconSize;
   IconColor = Vec4(1);
   Index = 0;
@@ -1219,7 +1219,7 @@ void ColumnHeader::SetIcon(ColumnFormat& format)
 
   mIcon->SetColor(format.IconColor);
 
-  if(format.IconSizePolicy == ColumnIconSizePolicy::AutoSize)
+  if(format.IconSizePolicy == ColumnIconSizePolicy::Auto)
   {
     mIcon->SetSize(cDefaultColumnIconSize);
     mIcon->SetTranslation(SnapToPixels(Pixels(2, 2, 0)));
