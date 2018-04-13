@@ -199,7 +199,7 @@ namespace Audio
           (SoundInstanceNode*)instance->GetSiblingNode()));
 
       if (ExternalInterface)
-        ExternalInterface->SendAudioEvent(AudioEventTypes::TagAddedInstance, (void*)nullptr);
+        ExternalInterface->SendAudioEvent(AudioEventTypes::TagAddedInstance);
     }
     else
     {
@@ -250,7 +250,7 @@ namespace Audio
 
       // If there are no more tagged instances, send a notification
       if (ExternalInterface && mSoundInstanceList.Empty())
-        ExternalInterface->SendAudioEvent(AudioEventTypes::TagIsUnreferenced, (void*)nullptr);
+        ExternalInterface->SendAudioEvent(AudioEventTypes::TagIsUnreferenced);
     }
     else
     {

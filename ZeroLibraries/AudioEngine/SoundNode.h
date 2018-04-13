@@ -11,6 +11,7 @@ namespace Audio
 {
   class ListenerNode;
   class ExternalNodeInterface;
+  class EventData;
 
   //------------------------------------------------------------------------------------- Sound Node
 
@@ -75,7 +76,8 @@ namespace Audio
     // ***** These must be public but should not be used outside of this system *****
 
     // Sends an audio event to the external interface
-    void SendEventToExternalData(const AudioEventTypes::Enum eventType, void* data);
+    void SendEventToExternalData(AudioEventTypes::Enum eventType);
+    void SendEventDataToExternalData(EventData* data);
     // Should be implemented by nodes if they keep track of data per listeners
     virtual void RemoveListener(ListenerNode* listener) {}
     // Returns the sum of all volumes from outputs. Will return 0.0 by default. The output

@@ -83,7 +83,7 @@ public:
 
 // Internals
   Audio::SoundNode* mNode;
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
   bool mCanInsertBefore;
   bool mCanInsertAfter;
   bool mCanReplace;
@@ -146,7 +146,7 @@ public:
   void SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData);
 
 private:
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  void SendAudioEventData(Audio::EventData* data) override;
   void SendToAudioEngine(float* samples, unsigned howManySamples);
   Audio::CustomDataNode* GetNode();
 

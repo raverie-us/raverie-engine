@@ -95,7 +95,7 @@ namespace Audio
       if (!ExternalData)
         delete this;
       else
-        ExternalData->SendAudioEvent(AudioEventTypes::AssetUnreferenced, (void*)nullptr);
+        ExternalData->SendAudioEvent(AudioEventTypes::AssetUnreferenced);
     }
   }
 

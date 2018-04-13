@@ -340,7 +340,7 @@ void SoundInstance::Play(bool loop, SoundTag* tag, Audio::SoundNode* outputNode,
 }
 
 //**************************************************************************************************
-void SoundInstance::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
+void SoundInstance::SendAudioEvent(Audio::AudioEventTypes::Enum eventType)
 {
   if (eventType == Audio::AudioEventTypes::InstanceFinished)
   {
@@ -397,7 +397,13 @@ void SoundInstance::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType,
     DispatchEvent(Events::AudioInterpolationDone, &event);
   }
   else
-    mSoundNode->SendAudioEvent(eventType, data);
+    mSoundNode->SendAudioEvent(eventType);
+}
+
+//**************************************************************************************************
+void SoundInstance::SendAudioEventData(Audio::EventData* data)
+{
+  mSoundNode->SendAudioEventData(data);
 }
 
 //**************************************************************************************************

@@ -200,7 +200,8 @@ public:
   float SemitonesToPitch(float semitones);
   float VolumeToDecibels(float volume);
   float DecibelsToVolume(float decibels);
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
+  void SendAudioEventData(Audio::EventData* data) override;
   void SendAudioError(const Zero::String message) override;
   void AddSoundSpace(SoundSpace* space, bool isEditor);
   void RemoveSoundSpace(SoundSpace* space, bool isEditor);

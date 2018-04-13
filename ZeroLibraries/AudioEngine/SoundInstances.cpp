@@ -122,12 +122,12 @@ namespace Audio
 
         // Send notification
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicBar, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicBar));
       }
 
       // Send notification
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        siblingNode, AudioEventTypes::MusicBeat, (void*)nullptr));
+        siblingNode, AudioEventTypes::MusicBeat));
     }
 
     // Check for eighth notes
@@ -140,7 +140,7 @@ namespace Audio
 
       // Send notification for eighth note
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        siblingNode, AudioEventTypes::MusicEighthNote, (void*)nullptr));
+        siblingNode, AudioEventTypes::MusicEighthNote));
 
       // Check for other note values
 
@@ -148,21 +148,21 @@ namespace Audio
       if (mEighthNoteCount % 2 == 0)
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicQuarterNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicQuarterNote));
       }
 
       // Check for half note
       if (mEighthNoteCount % 4 == 0)
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicHalfNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicHalfNote));
       }
 
       // Check for whole note
       if (mEighthNoteCount % 8 == 0)
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicWholeNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicWholeNote));
       }
     }
   }
@@ -188,17 +188,17 @@ namespace Audio
       if (siblingNode)
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicBar, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicBar));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicBeat, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicBeat));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicWholeNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicWholeNote));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicEighthNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicEighthNote));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicQuarterNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicQuarterNote));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicHalfNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicHalfNote));
       }
     }
     else
@@ -1017,7 +1017,7 @@ namespace Audio
 
     if (GetSiblingNode())
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        GetSiblingNode(), AudioEventTypes::InstanceLooped, (void*)nullptr));
+        GetSiblingNode(), AudioEventTypes::InstanceLooped));
 
     // Reset variables
     mFrameIndex = mLoopStartFrame;
@@ -1064,7 +1064,7 @@ namespace Audio
     {
       // Send notification that this instance is finished
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        GetSiblingNode(), AudioEventTypes::InstanceFinished, (void*)nullptr));
+        GetSiblingNode(), AudioEventTypes::InstanceFinished));
 
       // Call the non-threaded versions of the clean-up functions
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::FinishedCleanUp,
@@ -1158,7 +1158,7 @@ namespace Audio
       // Send notification
       if (GetSiblingNode())
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
-            GetSiblingNode(), AudioEventTypes::MusicCustomTime, (void*)nullptr));
+            GetSiblingNode(), AudioEventTypes::MusicCustomTime));
     }
 
     MusicNotify.ProcessAndNotify((float)mCurrentTime, GetSiblingNode());

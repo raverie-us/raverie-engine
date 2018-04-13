@@ -394,14 +394,25 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void SoundNode::SendEventToExternalData(const AudioEventTypes::Enum eventType, void* data)
+  void SoundNode::SendEventToExternalData(AudioEventTypes::Enum eventType)
   {
     if (Threaded)
       return;
 
     // If the interface exists, send the event
     if (ExternalData)
-      ExternalData->SendAudioEvent(eventType, data);
+      ExternalData->SendAudioEvent(eventType);
+  }
+
+  //************************************************************************************************
+  void SoundNode::SendEventDataToExternalData(EventData* data)
+  {
+    if (Threaded)
+      return;
+
+    // If the interface exists, send the event
+    if (ExternalData)
+      ExternalData->SendAudioEventData(data);
   }
 
   //************************************************************************************************
@@ -622,10 +633,7 @@ namespace Audio
     {
       // Send a message to the external interface if it exists
       if (ExternalData)
-      {
-        ExternalData->SendAudioEvent(AudioEventTypes::NodeDisconnected, (void*)nullptr);
-        gAudioSystem->ExternalInterface->SendAudioEvent(AudioEventTypes::NodeDisconnected, (void*)ExternalData);
-      }
+        ExternalData->SendAudioEvent(AudioEventTypes::NodeDisconnected);
       // Otherwise, delete the node
       else
         DeleteThisNode();

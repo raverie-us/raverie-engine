@@ -44,9 +44,6 @@ namespace Audio
   {
     if (message == MIM_DATA)
     {
-      MidiData* data(nullptr);
-      AudioEventTypes::Enum type;
-
       // Reinterpret message
       char byte1 = LOBYTE(LOWORD(param1));
       int data1 = HIBYTE(LOWORD(param1));
@@ -54,24 +51,28 @@ namespace Audio
       int channel = byte1 & 0x0F;
       int command = byte1 & 0xF0;
 
+      EventData3<int, float, float> data;
+      data.mData1 = channel;
+
       // Note off
       if (command == 0x80)
       {
-        data = new MidiData(channel, (float)data1, 0);
-        type = AudioEventTypes::MidiNoteOff;
+        data.mData2 = (float)data1;
+        data.mEventType = AudioEventTypes::MidiNoteOff;
       }
       // Note on
       else if (command == 0x90)
       {
         if (data2 > 0)
         {
-          data = new MidiData(channel, (float)data1, (float)data2);
-          type = AudioEventTypes::MidiNoteOn;
+          data.mData2 = (float)data1;
+          data.mData3 = (float)data2;
+          data.mEventType = AudioEventTypes::MidiNoteOn;
         }
         else
         {
-          data = new MidiData(channel, (float)data1, 0);
-          type = AudioEventTypes::MidiNoteOff;
+          data.mData2 = (float)data1;
+          data.mEventType = AudioEventTypes::MidiNoteOff;
         }
       }
       // Pitch wheel
@@ -79,8 +80,8 @@ namespace Audio
       {
         float value = ((float)(data2 * (1 << 7)) + (float)data1) - (1 << 13);
         value *= 2.0f / (float)((1 << 14) - 1);
-        data = new MidiData(channel, value, 0);
-        type = AudioEventTypes::MidiPitchWheel;
+        data.mData2 = value;
+        data.mEventType = AudioEventTypes::MidiPitchWheel;
       }
       // Control
       else if (command == 0xB0)
@@ -88,25 +89,29 @@ namespace Audio
         // Volume
         if (data1 == 7)
         {
-          data = new MidiData(channel, (float)data2, 0);
-          type = AudioEventTypes::MidiVolume;
+          data.mData2 = (float)data2;
+          data.mEventType = AudioEventTypes::MidiVolume;
         }
         // Modulation wheel
         else if (data1 == 1)
         {
-          data = new MidiData(channel, (float)data2, 0);
-          type = AudioEventTypes::MidiModWheel;
+          data.mData2 = (float)data2;
+          data.mEventType = AudioEventTypes::MidiModWheel;
         }
         else
         {
-          data = new MidiData(channel, (float)data1, (float)data2);
-          type = AudioEventTypes::MidiControl;
+          data.mData2 = (float)data1;
+          data.mData3 = (float)data2;
+          data.mEventType = AudioEventTypes::MidiControl;
         }
       }
 
-      if (data)
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEvent, 
-          gAudioSystem->ExternalInterface, type, (void*)data));
+      if (data.mEventType != AudioEventTypes::NotSet)
+      {
+        EventData* eventData = new EventData3<int, float, float>(data);
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEventData,
+          gAudioSystem->ExternalInterface, eventData));
+      }
     }
   }
 

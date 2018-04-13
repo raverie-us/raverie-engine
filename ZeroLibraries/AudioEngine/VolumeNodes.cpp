@@ -68,7 +68,7 @@ namespace Audio
 
             // Tell the non-threaded node to send the event to the external system
             gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-              GetSiblingNode(), AudioEventTypes::InterpolationDone, (void*)nullptr));
+              GetSiblingNode(), AudioEventTypes::InterpolationDone));
           }
         }
       }
@@ -305,7 +305,7 @@ namespace Audio
             if (firstRequest && GetSiblingNode())
             {
               gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-                GetSiblingNode(), AudioEventTypes::InterpolationDone, (void*)nullptr));
+                GetSiblingNode(), AudioEventTypes::InterpolationDone));
 
               // Set the final volume values on the non-threaded object
               gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&PanningNode::LeftVolume,

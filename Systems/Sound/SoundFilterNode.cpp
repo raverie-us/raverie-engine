@@ -320,7 +320,7 @@ void SoundNode::SetBypassValue(float value)
 }
 
 //**************************************************************************************************
-void SoundNode::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
+void SoundNode::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType)
 {
   if (eventType == Audio::AudioEventTypes::InterpolationDone)
   {
@@ -481,14 +481,15 @@ void CustomAudioNode::SendMicCompressedData(const HandleOf<ArrayClass<byte>>& au
 }
 
 //**************************************************************************************************
-void CustomAudioNode::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
+void CustomAudioNode::SendAudioEventData(Audio::EventData* data)
 {
-  if (eventType == Audio::AudioEventTypes::NeedInputSamples)
+  if (data->mEventType == Audio::AudioEventTypes::NeedInputSamples)
   {
-    CustomAudioNodeEvent event(((Audio::CustomDataSampleRequest*)data)->SamplesNeeded);
+    CustomAudioNodeEvent event(((Audio::EventData1<unsigned>*)data)->mData);
     mDispatcher.Dispatch(Events::CustomAudioNodeSamplesNeeded, &event);
-    delete (Audio::CustomDataSampleRequest*)data;
   }
+
+  delete data;
 }
 
 //**************************************************************************************************
