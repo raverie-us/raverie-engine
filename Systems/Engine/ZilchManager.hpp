@@ -77,6 +77,9 @@ public:
   // This lets us know elsewhere that anything related to types or scripts have changed.
   // For example: We prevent duplicate exceptions until this version changes.
   int mVersion;
+
+  // The debugger interface that we register states with
+  Debugger mDebugger;
 };
 
 }//namespace Zero

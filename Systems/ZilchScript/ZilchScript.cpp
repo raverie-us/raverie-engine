@@ -174,11 +174,6 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   : ResourceManager(resourceType),
     mLastExceptionVersion(-1)
 {
-  //mDebugger.AddProject(&mProject);
-  //EventConnect(&mDebugger, Events::DebuggerPause, OnDebuggerPause);
-  //EventConnect(&mDebugger, Events::DebuggerResume, OnDebuggerResume);
-  //EventConnect(&mDebugger, Events::DebuggerPauseUpdate, OnDebuggerPauseUpdate);
-
   mCategory = "Code";
   mCanAddFile = true;
   mOpenFileFilters.PushBack(FileDialogFilter("All Zilch Scripts", "*.zilchscript;*.z"));
@@ -195,7 +190,6 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   AddLoader("ZilchScript", new ZilchScriptLoader());
 
   //listen for when we should compile
-  ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::UnhandledException, ZeroZilchExceptionCallback);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::FatalError, ZeroZilchFatalErrorCallback);
 
@@ -243,12 +237,6 @@ String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
 void ZilchScriptManager::OnPreZilchProjectCompilation(ZilchPreCompilationEvent* e)
 {
   EventConnect(e->mProject, Zilch::Events::CompilationError, ZeroZilchErrorCallback);
-}
-
-void ZilchScriptManager::OnEngineUpdate(Event* event)
-{
-  //METAREFACTOR
-  //mDebugger.Update();
 }
 
 void ZilchScriptManager::DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location)

@@ -664,7 +664,7 @@ namespace Zilch
         escapedString.Append(r.mValue);
         break;
       }
-      value.PopBack();
+      value.PopFront();
     }
 
     // Finish with an ending quote
