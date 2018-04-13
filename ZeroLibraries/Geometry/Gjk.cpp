@@ -12,7 +12,7 @@
 namespace Intersection
 {
 
-const float Gjk::sEpsilon = 0.001f;
+const float Gjk::sEpsilon = 0.00001f;
 
 Type Gjk::Test(const SupportShape *shapeA, const SupportShape *shapeB, Manifold *manifold, unsigned maxIter)
 {
@@ -21,7 +21,7 @@ Type Gjk::Test(const SupportShape *shapeA, const SupportShape *shapeB, Manifold 
 
   // If shape centers are on top of each other, default to any direction
   // Any direction is valid unless shape centers are on the surface...
-  if (mSupportVector.Length() == 0.0f)
+  if (mSupportVector.Length() < sEpsilon)
     mSupportVector.Set(1, 0, 0);
 
   unsigned iter_count = 0;
@@ -43,7 +43,8 @@ Type Gjk::Test(const SupportShape *shapeA, const SupportShape *shapeB, Manifold 
 
     if (mSimplex.ContainsOrigin())
     {
-      ComputeContactData(manifold);
+      if (!ComputeContactData(manifold))
+        return Intersection::None;
       return Intersection::Other;
     }
 
@@ -62,7 +63,7 @@ Type Gjk::TestDebug(const SupportShape *shapeA, const SupportShape *shapeB, Mani
 
   // If shape centers are on top of each other, default to any direction
   // Any direction is valid unless shape centers are on the surface...
-  if (mSupportVector.Length() == 0.0f)
+  if (mSupportVector.Length() < sEpsilon)
     mSupportVector.Set(1, 0, 0);
 
   unsigned iter_count = 0;
@@ -96,7 +97,9 @@ Type Gjk::TestDebug(const SupportShape *shapeA, const SupportShape *shapeB, Mani
       if (mSimplex.mCount == 1)
         return Intersection::None;
 
-      ComputeContactData(manifold);
+      if (!ComputeContactData(manifold))
+        return Intersection::None;
+
       if (manifold->Points[0].Depth > 0.0f)
         return Intersection::Other;
       else
@@ -262,11 +265,13 @@ void Gjk::DrawCSO(void)
 
 bool Gjk::ComputeContactData(Manifold *manifold, unsigned maxExpands, bool debug)
 {
-  if (!manifold) return false;
+  if (!manifold) return true;
   manifold->PointCount = 0;
 
   // Handle non tetrahedron
   CompleteSimplex();
+  if (mSimplex.mCount < 4)
+    return false;
 
   mEpa.Init(mSimplex);
 
@@ -299,6 +304,8 @@ bool Gjk::ComputeContactData(Manifold *manifold, unsigned maxExpands, bool debug
     while (count < maxExpands)
     {
       mSupportVector = mEpa.GetClosestFaceNormal();
+      if (mSupportVector.Length() < sEpsilon)
+        return false;
       CSOVertex support = ComputeSupport(mSupportVector);
       if (!mEpa.Expand(support))
         break;
@@ -358,7 +365,7 @@ void Gjk::CompleteSimplex(void)
       // so expand until we find a valid support point that can create a triangle
       for (unsigned i = 0; i < 6; ++i)
       {
-        if (perpVectors[i].Length() == 0.0f)
+        if (perpVectors[i].Length() < sEpsilon)
           continue;
 
         perpVectors[i].Normalize();
@@ -370,7 +377,7 @@ void Gjk::CompleteSimplex(void)
         }
       }
 
-      ErrorIf(mSimplex.mCount < 3, "Failed to complete simplex, possibly a degenerate CSO.");
+      ReturnIf(mSimplex.mCount < 3, , "Failed to complete simplex, possibly a degenerate CSO.");
     }
 
     case 3:
@@ -379,17 +386,20 @@ void Gjk::CompleteSimplex(void)
       Vec3 p0p1 = mSimplex.mPoints[1].cso - mSimplex.mPoints[0].cso;
       Vec3 p0p2 = mSimplex.mPoints[2].cso - mSimplex.mPoints[0].cso;
       Vec3 normal = p0p1.Cross(p0p2);
-      normal.Normalize();
+      normal.AttemptNormalize();
+      // Can't complete simplex
+      if (normal.Length() < sEpsilon)
+        return;
 
       CSOVertex support = ComputeSupport(normal);
       // It is possible that the triangle is on the surface of the cso and the normal points outward
       // if this happens, just need to expand the opposite direction and flip two vertices
       // to maintain the expected winding order in the simplex
-      if (normal.Dot(support.cso - mSimplex.mPoints[0].cso) <= 0.0f)
+      if (normal.Dot(support.cso - mSimplex.mPoints[0].cso) <= sEpsilon)
       {
         normal *= -1.0f;
         support = ComputeSupport(normal);
-        ErrorIf(normal.Dot(support.cso - mSimplex.mPoints[0].cso) <= 0.0f, "Failed to complete simplex, possibly a degenerate CSO.");
+        ReturnIf(normal.Dot(support.cso - mSimplex.mPoints[0].cso) <= sEpsilon, , "Failed to complete simplex, possibly a degenerate CSO.");
 
         CSOVertex temp = mSimplex.mPoints[1];
         mSimplex.mPoints[1] = mSimplex.mPoints[2];
