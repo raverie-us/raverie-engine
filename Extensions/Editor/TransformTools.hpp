@@ -15,29 +15,66 @@ class ViewportMouseEvent;
 DeclareEnum3(GizmoMode, Inactive, Active, Transforming);
 DeclareEnum2(GizmoGrab, Hold, Toggle);
 
+// ManipulatorTool Events
+namespace Events
+{
+DeclareEvent(ManipulatorToolStart);
+DeclareEvent(ManipulatorToolModified);
+DeclareEvent(ManipulatorToolEnd);
+}
+
+//----------------------------------------------------- ManipulatorToolEvent ---
+class ManipulatorToolEvent : public ViewportMouseEvent
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  ManipulatorToolEvent(ViewportMouseEvent* event);
+
+  OperationQueue* GetOperationQueue();
+  bool GetFinished();
+
+  HandleOf<OperationQueue> mOperationQueue;
+
+  Location::Enum mGrabLocation;
+  Rectangle mStartWorldRectangle;
+
+  /// If marking the event as HandledEventScript == false, then modifications
+  /// to 'EndWorldRectangle' will be applied internally by the ManipulatorTool.
+  Rectangle mEndWorldRectangle;
+};
+
 //------------------------------------------------------------------------------
 
 //Store data about each object being transformed
 struct TransformingObject
 {
-  Handle ObjectMeta;
-
   CogId ObjectId;
+  Vec2 StartAreaTranslation;
   Vec3 StartWorldTranslation;
   Vec3 StartTranslation;
   Quat StartRotation;
   Vec3 StartScale;
   Vec2 StartSize;
+  Vec3 StartColliderSize;
 
   Vec3 EndTranslation;
   Quat EndRotation;
   Vec3 EndScale;
   Vec2 EndSize;
 
-  Aabb WorldAabb;
+  Rectangle StartRect;
 };
 
 //------------------------------------------------------------- Manipulator Tool
+/// <Commands>
+///   <command name = "Maintain Aspect Ratio">
+///     <shortcut> Shift + Drag </shortcut>
+///     <description>
+///       While held, maintain aspect ratio of the object being manipulated.
+///     </description>
+///   </command>
+/// </Commands>
 class ManipulatorTool : public Component
 {
 public:
@@ -55,7 +92,7 @@ public:
   float GetSnapDistance();
   void SetSnapDistance(float distance);
 
-  bool OnGizmo();
+  bool IsActiveAndHasValidSelection();
   bool CheckMouseManipulation(ViewportMouseEvent* e);
 
   /// Set the gizmo mode when activated / deactivated.
@@ -71,7 +108,7 @@ public:
   void TestMouseMove(ViewportMouseEvent* e);
   void OnMouseDragStart(ViewportMouseEvent* e);
   void OnMouseDragMove(ViewportMouseEvent* e);
-  void OnMouseDragEnd(Event*);
+  void OnMouseDragEnd(ViewportMouseEvent* e);
 
   void OnToolDraw(Event*);
 
@@ -89,6 +126,7 @@ public:
   Vec2 mMouseDragStart;
 
   int mSelectedPoint;
+  Location::Enum mLocation;
   Aabb mActiveAabb;
   Aabb mStartAabb;
 

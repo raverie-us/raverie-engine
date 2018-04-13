@@ -79,6 +79,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   // Events
   ZilchInitializeType(BackgroundTaskEvent);
   ZilchInitializeType(ToolGizmoEvent);
+  ZilchInitializeType(ManipulatorToolEvent);
   ZilchInitializeType(TreeEvent);
   ZilchInitializeType(ValueEvent);
   ZilchInitializeType(ContextMenuEvent);

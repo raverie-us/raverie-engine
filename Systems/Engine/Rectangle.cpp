@@ -261,6 +261,15 @@ Rectangle Rectangle::MinAndMax(Vec2Param min, Vec2Param max)
 }
 
 //**************************************************************************************************
+Rectangle Rectangle::MinAndMax(Vec3Param min, Vec3Param max)
+{
+  Rectangle r;
+  r.Min = Vec2(min.x, min.y);
+  r.Max = Vec2(max.x, max.y);
+  return r;
+}
+
+//**************************************************************************************************
 bool Rectangle::operator==(RectangleParam rhs) const
 {
   return (Min == rhs.Min) && (Max == rhs.Max);

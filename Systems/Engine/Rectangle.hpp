@@ -83,6 +83,7 @@ struct Rectangle
   static Rectangle PointAndSize(Vec2Param point, Vec2Param size);
   static Rectangle CenterAndSize(Vec2Param point, Vec2Param size);
   static Rectangle MinAndMax(Vec2Param min, Vec2Param max);
+  static Rectangle MinAndMax(Vec3Param min, Vec3Param max);
 
   bool operator==(RectangleParam rhs) const;
   
