@@ -1155,6 +1155,11 @@ namespace Zilch
         continue;
       }
 
+      // We could have a Call node that exists on an Attribute
+      // with no LeftOperand, therefore expression can be null
+      if (expression == nullptr)
+        continue;
+
       // The result type may be null if it was unable to resolve... return whatever we found
       resultOut.NearestType = expression->ResultType;
 
