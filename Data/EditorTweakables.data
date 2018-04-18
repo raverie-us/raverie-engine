@@ -131,6 +131,7 @@ Tweakables
 				var BackgroundColor = Vec4{0.2, 0.2, 0.2, 1}
 				var BorderColor = Vec4{0.01, 0.01, 0.01, 1}
 				var CheckColor = Vec4{0.795000017, 0.795000017, 0.795000017, 1}
+				var ReadOnlyCheckColor = Vec4{0.644999981, 0.644999981, 0.644999981, 1}
 				var FocusBorderColor = Vec4{0.196078002, 0.527999997, 0.917647004, 1}
 				var CheckSize = Vec2{10, 10}
 			}

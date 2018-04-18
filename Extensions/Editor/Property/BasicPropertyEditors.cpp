@@ -935,6 +935,9 @@ public:
 
     ConnectThisTo(mCheckBox, Events::ValueChanged, CheckChanged);
     ConnectThisTo(mLabel, Events::LeftMouseDown, MouseDownOnLabel);
+
+    if(mProperty->IsReadOnly())
+      mCheckBox->SetEditable(false);
   }
 
   void Refresh() override

@@ -20,11 +20,12 @@ const String cCheckInvalidIcon = "InvalidIcon";
 namespace CheckBoxUi
 {
   const cstr cLocation = "EditorUi/Controls/CheckBox";
-  Tweakable(Vec4, BackgroundColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BorderColor,     Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, CheckColor,      Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, FocusBorderColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec2, CheckSize, Vec2(12,12), cLocation);
+  Tweakable(Vec4, BackgroundColor,    Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, BorderColor,        Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, CheckColor,         Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, ReadOnlyCheckColor, Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec4, FocusBorderColor,   Vec4(1,1,1,1), cLocation);
+  Tweakable(Vec2, CheckSize,          Vec2(12,12), cLocation);
 }
 
 ZilchDefineType(CheckBox, builder, type)
@@ -38,6 +39,7 @@ CheckBox::CheckBox(Composite* parent)
   mDefSet = mDefSet->GetDefinitionSet(className);
 
   mChecked = false;
+  mAllowEdit = true;
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquareBorder);
   mCheckIcon = CreateAttached<Element>(cCheckIcon);
@@ -49,6 +51,9 @@ CheckBox::CheckBox(Composite* parent)
   ConnectThisTo(this, Events::FocusLost, OnFocusGained);
 
   SetCheckedDirect(false);
+
+  mCheckIcon->SetColor(CheckBoxUi::CheckColor);
+  mBackground->SetColor(CheckBoxUi::BackgroundColor);
 }
 
 CheckBox::~CheckBox()
@@ -60,6 +65,22 @@ void CheckBox::SetInvalid()
 {
   mCheckIcon->SetVisible(true);
   mCheckIcon->ChangeDefinition(mDefSet->GetDefinition(cCheckInvalidIcon));
+}
+
+void CheckBox::SetEditable(bool editable)
+{
+  mAllowEdit = editable;
+  if (editable)
+    mCheckIcon->SetColor(CheckBoxUi::CheckColor);
+  else
+    mCheckIcon->SetColor(CheckBoxUi::ReadOnlyCheckColor);
+
+  mBorder->SetVisible(editable);
+}
+
+bool CheckBox::GetEditable()
+{
+  return mAllowEdit;
 }
 
 bool CheckBox::GetChecked()
@@ -95,6 +116,9 @@ void CheckBox::ToggleChecked()
 
 bool CheckBox::TakeFocusOverride()
 {
+  if(!mAllowEdit)
+    return false;
+
   this->HardTakeFocus();
   return true;
 }
@@ -119,14 +143,10 @@ void CheckBox::UpdateTransform()
   mBackground->SetTranslation(boxOffset);
   mBackground->SetSize(boxSize);
 
-  mCheckIcon->SetColor(CheckBoxUi::CheckColor);
-
   if(HasFocus())
     mBorder->SetColor(CheckBoxUi::FocusBorderColor);
   else
     mBorder->SetColor(CheckBoxUi::BorderColor);
-
-  mBackground->SetColor(CheckBoxUi::BackgroundColor);
 
   Composite::UpdateTransform();
 }

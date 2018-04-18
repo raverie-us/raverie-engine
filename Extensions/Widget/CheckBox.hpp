@@ -24,6 +24,10 @@ public:
   ~CheckBox();
 
   void SetInvalid();
+  
+  //Is the check box editable?
+  void SetEditable(bool editable);
+  bool GetEditable();
 
   /// Is the check box checked
   void SetChecked(bool value);
@@ -45,6 +49,8 @@ private:
   void OnLeftClick(MouseEvent* event);
   void OnKeyDown(KeyboardEvent* event);
   void OnFocusGained(FocusEvent* event);
+
+  bool mAllowEdit;
 
   Element* mCheckIcon;
   Element* mBorder;
