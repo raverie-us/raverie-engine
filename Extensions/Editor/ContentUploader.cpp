@@ -420,6 +420,9 @@ void ContentPackageExporter::OnExportPressed(Event* e)
     filename = mTempPackage.mName;
   config.DefaultFileName = BuildString(filename, ".zeropack");
   Z::gEngine->has(OsShell)->SaveFile(config);
+
+  // Close the export window after exporting a content package
+  CloseTabContaining(this);
 }
 
 //******************************************************************************
