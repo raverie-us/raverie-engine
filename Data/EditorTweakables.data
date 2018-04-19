@@ -492,7 +492,7 @@ Tweakables
 			var ColumnSeparatorColor = Vec4{0.185000002, 0.185000002, 0.185000002, 1}
 			var ItemHeight = 20
 			var ItemSpacing = 2
-			var IndentSize = 24
+			var IndentSize = 12
 			var MaxDragScrollSpeed = 15
 			var DragScrollSize = 30
 			var DragInsertSize = 5
