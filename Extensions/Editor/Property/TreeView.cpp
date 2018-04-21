@@ -1539,6 +1539,14 @@ void TreeView::ShowRow(DataIndex& index)
   MarkAsNeedsUpdate();
 }
 
+void TreeView::ShowSelected()
+{
+  Array<DataIndex> selected;
+  GetSelection()->GetSelected(selected);
+  if (!selected.Empty())
+    ShowRow(selected.Front());
+}
+
 void TreeView::SetRefreshOnValueChange(bool state)
 {
   mRefreshOnValueChange = state;
@@ -1548,6 +1556,7 @@ void TreeView::Refresh()
 {
   if(mRoot)
     mRoot->Refresh();
+
   UpdateTransform();
 }
 
