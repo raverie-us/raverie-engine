@@ -2290,7 +2290,7 @@ public:
 // void CheckForAddition(Status& status, Resource* resource);
 // void AddResource(StringParam resourceIdName, uint index);
 // void RemoveResource(StringParam resourceIdName);
-// Array<String>::range All();
+// Array<String>::range GetIdNames();
 template <typename ResourceList>
 class ResourceListEditor : public PropertyWidget
 {
@@ -2347,7 +2347,7 @@ public:
 
     mItemStack = new ItemStack(this, Pixels(0, 2), Thickness(PropertyViewUi::IndentSize, 2, 2, 2));
 
-    forRange (StringParam resourceIdName, mResourceList->All())
+    forRange (StringParam resourceIdName, mResourceList->GetIdNames())
     {
       StringRange listName = resourceIdName.FindFirstOf(':');
       listName = StringRange(listName.End(), resourceIdName.End());

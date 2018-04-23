@@ -19,7 +19,7 @@ public:
   String mResourceIdName;
 };
 
-class GraphicsResourceList : public EventObject
+class GraphicsResourceList : public SafeId32EventObject
 {
 public:
   GraphicsResourceList(Resource* owner);
@@ -28,7 +28,8 @@ public:
   GraphicsResourceList& operator=(const GraphicsResourceList& graphicsResourceList);
 
   // Interface required by ResourceListEditor
-  Array<String>::range All();
+  /// Returns the IdName of all resources in the list.
+  Array<String>::range GetIdNames();
   uint GetResourceIndex(StringParam resourceIdName);
   void CheckForAddition(Status& status, Resource* resource);
   void AddResource(StringParam resourceIdName, uint index = -1);
@@ -63,6 +64,14 @@ public:
   // Interface required by ResourceListEditor
   typedef RenderGroupManager ManagerType;
   String GetResourceTypeName();
+
+  // For script to modify runtime resources
+  /// Adds the RenderGroup to this Material's list. Runtime resources only.
+  void Add(RenderGroup& renderGroup);
+  /// Removes the RenderGroup from this Material's list. Runtime resources only.
+  void Remove(RenderGroup& renderGroup);
+  /// Range of all resources in the list.
+  Array<HandleOf<RenderGroup>> All();
 };
 
 class MaterialList : public GraphicsResourceList
@@ -75,6 +84,14 @@ public:
   // Interface required by ResourceListEditor
   typedef MaterialManager ManagerType;
   String GetResourceTypeName();
+
+  // For script to modify runtime resources
+  /// Adds the Material to this RenderGroups's list. Runtime resources only.
+  void Add(Material& material);
+  /// Removes the Material from this RenderGroups's list. Runtime resources only.
+  void Remove(Material& material);
+  /// Range of all resources in the list.
+  Array<HandleOf<Material>> All();
 };
 
 //**************************************************************************************************
