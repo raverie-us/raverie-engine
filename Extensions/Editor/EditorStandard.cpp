@@ -95,6 +95,8 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ObjectPollEvent);
   ZilchInitializeType(GizmoRayTestEvent);
   ZilchInitializeType(MessageBoxEvent);
+  ZilchInitializeType(BugReporter);
+  ZilchInitializeType(BugReporterResponse);
 
   ZilchInitializeType(MetaPropertyEditor);
   ZilchInitializeType(MetaCompositionWrapper);

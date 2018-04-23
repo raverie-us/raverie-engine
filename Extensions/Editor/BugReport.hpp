@@ -12,9 +12,25 @@ class WebResponseEvent;
 class UpdateEvent;
 class TextButton;
 
+namespace Events
+{
+	DeclareEvent(BugReporterResponse);
+}//namespace Events
+
+/// Event carrying the string http response from the waypoint server between the BugReportJob and the BugReporter instance
+class BugReporterResponse : public Event
+{
+public:
+	ZilchDeclareType(TypeCopyMode::ReferenceType);
+	BugReporterResponse();
+	BugReporterResponse(String response);
+	String mResponse;
+};
+
 class BugReporter : public Composite
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
   typedef BugReporter ZilchSelf;
 
   BugReporter(Composite* parent);
@@ -27,6 +43,7 @@ public:
   void OnBrowse(Event* event);
   void OnBrowseSelected(OsFileSelection* event);
   void OnUpdate(UpdateEvent* event);
+  void OnBugReporterResponse(BugReporterResponse* event);
   
   TextBox* mUsername;
   TextBox* mTitle;
