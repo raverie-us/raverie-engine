@@ -50,58 +50,23 @@ namespace Audio
     int Channel2;
   };
 
-  //----------------------------------------------------------------------------------- Emitter Data
-
-  class EmitterData
-  {
-  public:
-    EmitterData(Math::Vec3 position, Math::Vec3 velocity) :
-      Position(position),
-      Velocity(velocity),
-      FacingDirection(0,0,0),
-      InterpolatingVolume(false),
-      Pausing(false),
-      Paused(false),
-      MinimumVolume(0.2f),
-      DirectionalAngleRadians(0)
-    {}
-
-    // Current emitter position. 
-    Math::Vec3 Position;
-    // Current emitter velocity. 
-    Math::Vec3 Velocity;
-    // Direction object is facing. 
-    Math::Vec3 FacingDirection;
-    // Used for interpolating between volume changes when pausing. 
-    InterpolatingObject VolumeInterpolator;
-    // If true, currently interpolating volume. 
-    bool InterpolatingVolume;
-    // If true, currently interpolating volume to 0 before pausing
-    bool Pausing;
-    // If true, emitter is paused
-    bool Paused;
-    // The angle, in radians, of half the directional cone
-    float DirectionalAngleRadians;
-    // Used to interpolate volume from edge of angle to directly behind emitter
-    InterpolatingObject DirectionalInterpolator;
-    // The minimum volume of audio applied to all channels
-    float MinimumVolume;
-  };
-
   //----------------------------------------------------------------------------------- Emitter Node
 
   //************************************************************************************************
   EmitterNode::EmitterNode(Zero::StringParam name, const unsigned ID, Math::Vec3Param position, 
       Math::Vec3Param velocity, ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(name, ID, extInt, true, false, isThreaded), 
-    Data(nullptr)
+    SimpleCollapseNode(name, ID, extInt, true, false, isThreaded),
+    Position(position),
+    Velocity(velocity),
+    FacingDirection(0, 0, 0),
+    InterpolatingVolume(false),
+    Pausing(false),
+    Paused(false),
+    MinimumVolume(0.2f),
+    DirectionalAngleRadians(0)
   {
     if (!Threaded)
       SetSiblingNodes(new EmitterNode(name, ID, position, velocity, nullptr, true));
-    else
-    {
-      Data = new EmitterData(position, velocity);
-    }
   }
 
   //************************************************************************************************
@@ -111,8 +76,6 @@ namespace Audio
     {
       forRange(EmitterDataPerListener* data, DataPerListener.Values())
         delete data;
-
-      delete Data;
     }
   }
 
@@ -126,11 +89,11 @@ namespace Audio
     }
     else
     {
-      if (!Data->Paused && !Data->Pausing)
+      if (!Paused && !Pausing)
       {
-        Data->Pausing = true;
-        Data->InterpolatingVolume = true;
-        Data->VolumeInterpolator.SetValues(1.0f, 0.0f, PropertyChangeFrames);
+        Pausing = true;
+        InterpolatingVolume = true;
+        VolumeInterpolator.SetValues(1.0f, 0.0f, PropertyChangeFrames);
       }
     }
   }
@@ -145,12 +108,12 @@ namespace Audio
     }
     else
     {
-      if (Data->Paused || Data->Pausing)
+      if (Paused || Pausing)
       {
-        Data->Paused = false;
-        Data->Pausing = false;
-        Data->InterpolatingVolume = true;
-        Data->VolumeInterpolator.SetValues(Data->VolumeInterpolator.GetCurrentValue(), 1.0f, 
+        Paused = false;
+        Pausing = false;
+        InterpolatingVolume = true;
+        VolumeInterpolator.SetValues(VolumeInterpolator.GetCurrentValue(), 1.0f, 
           PropertyChangeFrames);
       }
     }
@@ -167,8 +130,8 @@ namespace Audio
     }
     else
     {
-      Data->Velocity = newVelocity;
-      Data->Position = newPosition;
+      Velocity = newVelocity;
+      Position = newPosition;
     }
   }
 
@@ -182,7 +145,7 @@ namespace Audio
             (EmitterNode*)GetSiblingNode(), forwardDirection));
     }
     else
-      Data->FacingDirection = forwardDirection;
+      FacingDirection = forwardDirection;
   }
 
   //************************************************************************************************
@@ -197,9 +160,9 @@ namespace Audio
     else
     {
       // Store half angle, in radians
-      Data->DirectionalAngleRadians = (angleInDegrees * Math::cPi / 180.0f) / 2.0f;
+      DirectionalAngleRadians = (angleInDegrees * Math::cPi / 180.0f) / 2.0f;
 
-      Data->DirectionalInterpolator.SetValues(1.0f, reducedVolume, Math::cPi - Data->DirectionalAngleRadians);
+      DirectionalInterpolator.SetValues(1.0f, reducedVolume, Math::cPi - DirectionalAngleRadians);
     }
   }
 
@@ -213,7 +176,7 @@ namespace Audio
     unsigned bufferSize = outputBuffer->Size();
 
     // If paused, do nothing
-    if (Data->Paused)
+    if (Paused)
       return false;
 
     // Get input and return if there is no data
@@ -229,7 +192,7 @@ namespace Audio
     }
 
     // Get the relative position between emitter and listener
-    Math::Vec3 relativePosition = listener->GetRelativePosition(Data->Position);
+    Math::Vec3 relativePosition = listener->GetRelativePosition(Position);
 
     // If necessary, add new listener data
     if (!DataPerListener.FindPointer(listener))
@@ -268,15 +231,15 @@ namespace Audio
     {
       float volume = 1.0f;
       // If interpolating volume, get new volume value
-      if (Data->InterpolatingVolume)
+      if (InterpolatingVolume)
       {
-        volume = Data->VolumeInterpolator.NextValue();
-        if (Data->VolumeInterpolator.Finished())
+        volume = VolumeInterpolator.NextValue();
+        if (VolumeInterpolator.Finished())
         {
-          Data->InterpolatingVolume = false;
+          InterpolatingVolume = false;
 
-          if (Data->Pausing)
-            Data->Paused = true;
+          if (Pausing)
+            Paused = true;
         }
       }
 
@@ -300,7 +263,7 @@ namespace Audio
 
       // Unspatialized audio to all channels at minimum volume
       for (unsigned j = 0; j < numberOfChannels; ++j)
-        (*outputBuffer)[i + j] = buffer[i + j] * Data->MinimumVolume * volume;
+        (*outputBuffer)[i + j] = buffer[i + j] * MinimumVolume * volume;
 
       // Spatialized gain to two channels
       (*outputBuffer)[i + listenerData.Channel1] += monoValue * listenerData.Gain1Interpolator.NextValue();
@@ -341,17 +304,17 @@ namespace Audio
     float distanceSq = relativePosition.LengthSq();
 
     // Check if the emitter should be limited by direction and is not too close
-    if (Data->DirectionalAngleRadians > 0.0f && distanceSq > 0.01f)
+    if (DirectionalAngleRadians > 0.0f && distanceSq > 0.01f)
     {
       // Get the emitter's facing direction relative to the listener
-      Math::Vec3 relativeFacing = listener->GetRelativeFacing(Data->FacingDirection);
+      Math::Vec3 relativeFacing = listener->GetRelativeFacing(FacingDirection);
       // Get the relative angle (facing should always be normalized)
       float angle = Math::ArcCos(Math::Dot(relativePosition.Normalized(), relativeFacing));
 
       // If the angle to the listener is greater than the emitter's angle, reduce volume
-      if (angle > Data->DirectionalAngleRadians)
-        listenerData.DirectionalVolume = Data->DirectionalInterpolator.ValueAtDistance(angle 
-          - Data->DirectionalAngleRadians);
+      if (angle > DirectionalAngleRadians)
+        listenerData.DirectionalVolume = DirectionalInterpolator.ValueAtDistance(angle 
+          - DirectionalAngleRadians);
     }
     else
       listenerData.DirectionalVolume = 1.0f;
@@ -428,10 +391,10 @@ namespace Audio
       }
 
       // Make sure the gain is at least the minimum
-      if (listenerData.Gain1 < Data->MinimumVolume)
-        listenerData.Gain1 = Data->MinimumVolume;
-      if (listenerData.Gain2 < Data->MinimumVolume)
-        listenerData.Gain2 = Data->MinimumVolume;
+      if (listenerData.Gain1 < MinimumVolume)
+        listenerData.Gain1 = MinimumVolume;
+      if (listenerData.Gain2 < MinimumVolume)
+        listenerData.Gain2 = MinimumVolume;
 
       // Normalize
       float scaleFactor = 1.0f / Math::Sqrt(listenerData.Gain1 * listenerData.Gain1
