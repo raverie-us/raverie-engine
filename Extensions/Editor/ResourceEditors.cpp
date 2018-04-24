@@ -257,7 +257,9 @@ void ResourceEditors::FindResourceEditor(Resource* resource)
   }
 
   // Just use property grid
-  editor->mMainPropertyView->EditObject(resource, true);
+  MetaSelection* selection = editor->GetSelection();
+  selection->SelectOnly(resource);
+  selection->FinalSelectionChanged();
 }
 
 }
