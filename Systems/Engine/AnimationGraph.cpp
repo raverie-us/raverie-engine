@@ -366,7 +366,7 @@ ZilchDefineType(SimpleAnimation, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDependency(AnimationGraph);
   ZilchBindFieldProperty(mPlayMode);
-  ZilchBindGetterSetterProperty(Animation)->Add(new EditorResource());
+  ZilchBindGetterSetterProperty(Animation)->Add(new MetaEditorResource());
 
   ZilchBindMethod(PlaySingle);
   ZilchBindMethod(DirectBlend);

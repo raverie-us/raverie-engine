@@ -83,13 +83,22 @@ public:
 };
 
 //---------------------------------------------------------------------------------- Editor Resource
-class EditorResource : public EditorPropertyExtension
+class MetaEditorResource : public EditorPropertyExtension
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  EditorResource(bool allowAdd = false, bool allowNone = false,
-                 StringParam filterTag = "", bool forceCompact = false);
+  typedef bool(*SearchFilter)(HandleParam object, Property* property,
+                              HandleParam result, Status& status);
+
+  MetaEditorResource(bool allowAdd = false, bool allowNone = false,
+                     StringParam filterTag = "", bool forceCompact = false);
+  MetaEditorResource(SearchFilter filter);
+
+  /// Custom filter for the Resource search for this property. Return false to not show the result.
+  /// Set the status to failed to make it not selectable, but still shown.
+  virtual bool FilterPropertySearchResult(HandleParam object, Property* property,
+                                          HandleParam result, Status& status);
 
   /// If not empty only match resources with same FilterTag
   String FilterTag;
@@ -98,6 +107,7 @@ public:
   /// Are null resources allowed?
   bool AllowNone;
   bool ForceCompact;
+  SearchFilter Filter;
 };
 
 //----------------------------------------------------------------------------- Meta Property Filter

@@ -1036,7 +1036,6 @@ Property* StressTestDialog::GetRandomSetProperty(BoundType* boundType)
 
 Any StressTestDialog::GetVariantForResourceExtension(StressRandom& random, Property* prop, Component* component)
 {
-  EditorResource* editorResource = prop->HasInherited<EditorResource>();
   // Get the resource manager for this editor resource type
   BoundType* resourceType = Type::GetBoundType(prop->PropertyType);
   ResourceManager* manager = Z::gResources->Managers.FindValue(resourceType->Name, NULL);

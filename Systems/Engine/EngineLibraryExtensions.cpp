@@ -274,7 +274,7 @@ void ProcessResourceProperties(BoundType* type)
           filterTag = param->StringValue;
       }
 
-      property->Add(new EditorResource(allowAdd, nullable, filterTag));
+      property->Add(new MetaEditorResource(allowAdd, nullable, filterTag));
     }
   }
 }

@@ -107,7 +107,7 @@ EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam 
 
 //---------------------------------------------------------------------------------- Editor Resource
 //**************************************************************************************************
-ZilchDefineType(EditorResource, builder, type)
+ZilchDefineType(MetaEditorResource, builder, type)
 {
   ZilchBindField(FilterTag)->AddAttribute(PropertyAttributes::cOptional);
   ZilchBindField(AllowAdd)->AddAttribute(PropertyAttributes::cOptional);
@@ -115,13 +115,34 @@ ZilchDefineType(EditorResource, builder, type)
 }
 
 //**************************************************************************************************
-EditorResource::EditorResource(bool allowAdd, bool allowNone, StringParam filterTag, bool forceCompact)
+MetaEditorResource::MetaEditorResource(bool allowAdd, bool allowNone, StringParam filterTag, bool forceCompact)
   : AllowAdd(allowAdd)
   , AllowNone(allowNone)
   , FilterTag(filterTag)
   , ForceCompact(forceCompact)
+  , Filter(nullptr)
 {
 
+}
+
+//**************************************************************************************************
+MetaEditorResource::MetaEditorResource(SearchFilter filter)
+  : AllowAdd(false)
+  , AllowNone(false)
+  , FilterTag("")
+  , ForceCompact(false)
+  , Filter(filter)
+{
+
+}
+
+//**************************************************************************************************
+bool MetaEditorResource::FilterPropertySearchResult(HandleParam object, Property* property,
+                                                    HandleParam result, Status& status)
+{
+  if (Filter)
+    return Filter(object, property, result, status);
+  return true;
 }
 
 //----------------------------------------------------------------------------- Meta Property Filter

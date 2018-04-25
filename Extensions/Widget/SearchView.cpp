@@ -399,6 +399,13 @@ public:
   }
 };
 
+bool SearchProvider::FilterResult(SearchViewResult& result)
+{
+  if (mFilter)
+    return mFilter->FilterResult(result);
+  return true;
+}
+
 void SearchData::Search()
 {
   forRange(SearchProvider* provider, SearchProviders.All())
