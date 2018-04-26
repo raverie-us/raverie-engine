@@ -272,6 +272,7 @@ void DirectProperty::OnMetaModified(Event* e)
 {
   mProperty = nullptr;
   mInstance = Handle();
+  mCapture.Clear();
 }
 
 //******************************************************************************
