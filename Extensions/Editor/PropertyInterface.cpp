@@ -311,10 +311,10 @@ void PropertyInterface::GetObjects(HandleParam instance,  Array<Handle>& objects
 
 //******************************************************************************
 void PropertyInterface::CaptureState(PropertyStateCapture& capture, HandleParam object,
-                                     Property* property)
+                                     PropertyPathParam property)
 {
   // Capture the property's value for this object
-  Any currValue = property->GetValue(object);
+  Any currValue = property.GetValue(object);
   PropertyStateCapture::CapturedProperty& captured = capture.Properties.PushBack();
   captured.Object = object;
   captured.Value = currValue;

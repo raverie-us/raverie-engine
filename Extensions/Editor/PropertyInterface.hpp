@@ -166,7 +166,7 @@ public:
   virtual void GetObjects(HandleParam instance, Array<Handle>& objects);
 
   /// Capture the state of a property for all objects
-  virtual void CaptureState(PropertyStateCapture& capture, HandleParam object, Property* property);
+  virtual void CaptureState(PropertyStateCapture& capture, HandleParam object, PropertyPathParam property);
 
   /// Restore the state of all properties on all objects
   virtual void RestoreState(PropertyStateCapture& capture);

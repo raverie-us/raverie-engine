@@ -54,7 +54,11 @@ DirectProperty::DirectProperty(PropertyWidgetInitializer& initializer)
 
 void DirectProperty::BeginPreviewChanges()
 {
-  mProp->CaptureState(mCapture, mInstance, mProperty);
+  Handle rootInstance;
+  PropertyPath propertyPath;
+  BuildPath(mNode, rootInstance, propertyPath);
+
+  mProp->CaptureState(mCapture, rootInstance, propertyPath);
 }
 
 void DirectProperty::EndPreviewChanges()
@@ -76,7 +80,11 @@ void DirectProperty::PreviewValue(PropertyState& state)
 {
   ErrorIf(!mCapture.HasCapture(), "Must call BeginPreviewChanges");
 
-  mProp->ChangeProperty(mInstance, mProperty, state, PropertyAction::Preview);
+  Handle rootInstance;
+  PropertyPath propertyPath;
+  BuildPath(mNode, rootInstance, propertyPath);
+
+  mProp->ChangeProperty(rootInstance, propertyPath, state, PropertyAction::Preview);
 }
 
 void DirectProperty::CommitValue(AnyParam var)
