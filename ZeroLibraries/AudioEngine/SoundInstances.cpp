@@ -1042,10 +1042,9 @@ namespace Audio
     {
       // Create the AudioFrame object
       AudioFrame thisFrame(inputSamples->Data() + inputIndex, inputChannels);
-      // Translate the channels 
-      thisFrame.TranslateChannels(outputChannels);
       // Copy the translated samples into the other array
-      memcpy(adjustedSamples.Data() + outputIndex, thisFrame.Samples, sizeof(float) * outputChannels);
+      memcpy(adjustedSamples.Data() + outputIndex, thisFrame.GetSamples(outputChannels), 
+        sizeof(float) * outputChannels);
     }
 
     // Move the translated data into the other array

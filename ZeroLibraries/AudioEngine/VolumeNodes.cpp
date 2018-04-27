@@ -333,8 +333,7 @@ namespace Audio
         {
           float values[2] = { leftValue, rightValue };
           AudioFrame frame(values, 2);
-          frame.TranslateChannels(numberOfChannels);
-          memcpy(outputBuffer->Data() + (currentFrame * numberOfChannels), frame.Samples,
+          memcpy(outputBuffer->Data() + (currentFrame * numberOfChannels), frame.GetSamples(numberOfChannels),
             sizeof(float) * numberOfChannels);
         }
       }
