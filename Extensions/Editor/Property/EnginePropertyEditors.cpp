@@ -1905,6 +1905,20 @@ public:
     ResourcesChanged();
   }
 
+  MetaSelection* GetMetaSelection()
+  {
+    ObjectPropertyNode* node = mNode;
+    while (node)
+    {
+      Handle object = node->mObject;
+      if (object.StoredType && object.StoredType->IsA(ZilchTypeId(MetaSelection)))
+        return object.Get<MetaSelection*>();
+      node = node->mParent;
+    }
+
+    return nullptr;
+  }
+
   void OnAdd(Event* event)
   {
     mTooltip.SafeDestroy();
@@ -1916,8 +1930,31 @@ public:
     Vec3 topRight = ToVector3(rect.TopRight());
 
     window->SetTranslation(topRight + Vec3(6.0f, -22.0f, 0));
+    
+    Handle rootInstance;
+    PropertyPath propertyPath;
+    BuildPath(mNode, rootInstance, propertyPath);
 
-    addWidget->mPostAdd.mObject = mInstance;
+    if (MetaSelection* selection = GetMetaSelection())
+    {
+      BoundType* targetType = rootInstance.StoredType;
+      forRange(Handle object, selection->All())
+      {
+        if (MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>())
+        {
+          Handle component = composition->GetComponent(object, targetType);
+          if (component.StoredType->IsA(targetType))
+          {
+            addWidget->mPostAdd.mObjects.PushBack(component);
+          }
+        }
+      }
+    }
+    else
+    {
+      addWidget->mPostAdd.mObjects.PushBack(rootInstance);
+    }
+
     addWidget->mPostAdd.mProperty = PropertyPath(mProperty->Name);
   }
 
