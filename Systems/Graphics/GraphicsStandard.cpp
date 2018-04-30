@@ -11,6 +11,8 @@ ZilchDefineRange(GraphicalEntryRange);
 ZilchDefineRange(MultiSpriteEntryRange);
 ZilchDefineRange(VertexSemanticRange);
 ZilchDefineRange(ParticleListRange);
+ZilchDefineRange(Array<HandleOf<Material>>);
+ZilchDefineRange(Array<HandleOf<RenderGroup>>);
 
 // Enums
 ZilchDefineEnum(BlendMode);
@@ -45,6 +47,8 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeRange(MultiSpriteEntryRange);
   ZilchInitializeRange(ParticleListRange);
   ZilchInitializeRange(VertexSemanticRange);
+  ZilchInitializeRange(Array<HandleOf<Material>>);
+  ZilchInitializeRange(Array<HandleOf<RenderGroup>>);
 
   // Enums
   ZilchInitializeEnum(BlendMode);
