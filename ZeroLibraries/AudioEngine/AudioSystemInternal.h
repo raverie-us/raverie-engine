@@ -87,7 +87,7 @@ namespace Audio
   //-------------------------------------------------------------------------- Audio System Internal
 
   // Main audio system. 
-  class AudioSystemInternal
+  class AudioSystemInternal : public ExternalNodeInterface
   {
   public:
     AudioSystemInternal(ExternalSystemInterface* extInterface);
@@ -235,14 +235,6 @@ namespace Audio
     bool MutedThreaded;
     // Used to know when to set the Muted variable
     bool MutingThreaded;
-
-    class NodeInterface : public ExternalNodeInterface
-    {
-    public:
-      void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) override {}
-    };
-
-    NodeInterface NodeInt;
 
     friend class AudioSystemInterface;
     friend class AudioInputOutput;

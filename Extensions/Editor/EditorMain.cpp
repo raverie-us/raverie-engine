@@ -365,6 +365,11 @@ void EditorMain::EditColorScheme(CommandEvent* event)
   mMainPropertyView->EditObject( GetColorScheme(), true);
 }
 
+void EditorMain::ClearConsole(CommandEvent* event)
+{
+  mConsole->ClearAllReadOnly();
+}
+
 void EditorMain::OnNameActivated(TypeEvent* event)
 {
   BoundType* boundType = event->mType;
@@ -930,8 +935,8 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("BroadPhaseTracker", ShowBroadPhaseTracker);
     BindCommand("VolumeMeter", ShowVolumeMeter);
     BindCommand("SoundNodeGraph", ShowSoundNodeGraph);
-
     BindCommand("EditColorScheme", EditColorScheme);
+    BindCommand("ClearConsole", ClearConsole);
     BindCommand("ShowCoreLibrary", ShowCoreLibrary);
 
     Connect(Z::gEngine, Events::BlockingTaskStart, editorMain, &EditorMain::OnBlockingTaskStart);

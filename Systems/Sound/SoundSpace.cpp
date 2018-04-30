@@ -92,7 +92,7 @@ void SoundSpace::Initialize(CogInitializer& config)
   String name = "Space";
   if (mEditorMode)
     name = "EditorSpace";
-  mSoundNodeInput->mNode = new Audio::CombineAndPauseNode(name, mSpaceNodeID, &mNodeInterface);
+  mSoundNodeInput->mNode = new Audio::CombineAndPauseNode(name, mSpaceNodeID, this);
 
   mSoundNodeInput->mCanInsertAfter = false;
   mSoundNodeInput->mCanReplace = false;
@@ -100,7 +100,7 @@ void SoundSpace::Initialize(CogInitializer& config)
 
   // Create the volume node as the output node
   mSoundNodeOutput = new SoundNode();
-  mVolumeNode = new Audio::VolumeNode(name, mSpaceNodeID, &mNodeInterface);
+  mVolumeNode = new Audio::VolumeNode(name, mSpaceNodeID, this);
   mSoundNodeOutput->mNode = mVolumeNode;
   
   mVolumeNode->AddInput(mSoundNodeInput->mNode);
@@ -179,7 +179,7 @@ void SoundSpace::InterpolatePitch(float pitch, float time)
 
   if (!mPitchNode)
   {
-    mPitchNode = new Audio::PitchNode("Space", mSpaceNodeID, &mNodeInterface);
+    mPitchNode = new Audio::PitchNode("Space", mSpaceNodeID, this);
     mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
   }
 
@@ -205,7 +205,7 @@ void SoundSpace::InterpolateSemitones(float semitones, float time)
 
   if (!mPitchNode)
   {
-    mPitchNode = new Audio::PitchNode("Space", mSpaceNodeID, &mNodeInterface);
+    mPitchNode = new Audio::PitchNode("Space", mSpaceNodeID, this);
     mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
   }
 

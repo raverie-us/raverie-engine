@@ -124,7 +124,7 @@ public:
   InstanceList SoundInstanceList;
   Link<SoundTag> link;
 
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
   void CreateTag();
   void ReleaseTag();
 

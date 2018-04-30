@@ -78,7 +78,7 @@ namespace Audio
     CheckForResampling();
 
     // Create output nodes
-    FinalOutputNode = new OutputNode("FinalOutputNode", &NodeInt, false);
+    FinalOutputNode = new OutputNode("FinalOutputNode", this, false);
     FinalOutputNodeThreaded = (OutputNode*)FinalOutputNode->GetSiblingNode();
 
     // For low frequency channel (uses audio system in constructor)

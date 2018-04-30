@@ -514,7 +514,15 @@ Commands commands =
 		string IconName = "CautionTriangle",
 		string Tags = "Editor",
 	},
-	
+
+	Command =
+	{
+		string Name = "ClearConsole",
+		string Description = "Clears output text from the console",
+		string IconName = "Commands",
+		string Tags = "Editor",
+	},
+
 	Command =
 	{
 		string Name = "SelectProject",

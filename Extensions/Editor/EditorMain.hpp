@@ -45,6 +45,7 @@ public:
   void ShowReplaceAll(CommandEvent* event);
   void ShowBugReporter(CommandEvent* event);
   void EditColorScheme(CommandEvent* event);
+  void ClearConsole(CommandEvent* event);
   void OnNameActivated(TypeEvent* event);
   void ShowLibrary(StringParam libraryName);
   void ShowCoreLibrary(CommandEvent* event);

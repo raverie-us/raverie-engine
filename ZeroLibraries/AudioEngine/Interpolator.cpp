@@ -161,9 +161,11 @@ namespace Audio
     else
     {
       if (nodeForEvent)
+      {
         // Notify the external object that the interpolation is done
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          nodeForEvent, AudioEventTypes::InterpolationDone, (void*)nullptr));
+          nodeForEvent, AudioEventTypes::InterpolationDone));
+      }
 
       return true;
     }

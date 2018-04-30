@@ -20,7 +20,7 @@ ZilchDefineType(Material, builder, type)
 
   ZilchBindMethod(RuntimeClone);
 
-  ZilchBindFieldGetterProperty(mSerializedList);
+  ZilchBindFieldGetterPropertyAs(mSerializedList, "RenderGroups");
   ZilchBindFieldGetterProperty(mReferencedByList);
 
   ZilchBindGetterProperty(CompositionLabel)->Add(new CompositionLabelExtension());
@@ -365,7 +365,7 @@ void MaterialManager::ResourceDuplicated(Resource* resource, Resource* duplicate
 
   // If any resources are not writable then they are added to the duplicate instead
   // so the content item needs to be re-saved
-  forRange (StringParam resourceIdName, material->mReferencedByList.All())
+  forRange (StringParam resourceIdName, material->mReferencedByList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
 

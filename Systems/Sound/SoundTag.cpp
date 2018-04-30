@@ -451,7 +451,7 @@ void SoundTag::SetInstanceLimit(float limit)
 }
 
 //**************************************************************************************************
-void SoundTag::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void * data)
+void SoundTag::SendAudioEvent(Audio::AudioEventTypes::Enum eventType)
 {
   if (eventType == Audio::AudioEventTypes::TagAddedInstance)
   {
