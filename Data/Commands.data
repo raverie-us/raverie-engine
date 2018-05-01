@@ -369,7 +369,7 @@ Commands commands =
 		string Name = "Console",
 		string Description = "Toggle the Console Window",
 		string IconName = "Console",
-		string Shortcut = "Tilde",
+		string Shortcut = "~",
 		string Tags = "Windows",
 	},
 

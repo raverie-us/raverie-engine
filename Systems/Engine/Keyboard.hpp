@@ -60,7 +60,7 @@ namespace Keys
     X = 'X',
     Z = 'Z',
 
-    Space = ' ',
+    Space = ' ',  // Rename in next major, should be Spacebar
 
   //Numbers
     Num0 = '0',
@@ -107,17 +107,17 @@ namespace Keys
 
   //Special Keys
     Delete,
-    Back,
+    Back,    // Rename in next major, should be Backspace
     Home,
     End,
     Tilde,
     Tab,
     Shift,
     Alt,
-    Control,
-    Capital,
+    Control,  // Rename in next major, should be Ctrl
+    Capital,  // Rename in next major, should be CapsLock
     Enter,
-    Escape,
+    Escape,   // Rename in next major, should be Esc
     PageUp,
     PageDown,
     Equal,
@@ -133,11 +133,11 @@ namespace Keys
     NumPad7,
     NumPad8,
     NumPad9,
-    Add,
-    Multiply,
-    Subtract,
-    Divide,
-    Decimal,
+    Add,      // Rename in next major, should be NumPadPlus
+    Multiply, // Rename in next major, should be NumPadMinus
+    Subtract, // Rename in next major, should be NumPadMultiply
+    Divide,   // Rename in next major, should be NumPadDivide
+    Decimal,  // Rename in next major, should be NumPadDecimal
 
     None,
 
@@ -180,6 +180,22 @@ public:
 
   /// Gets a string name of a particular key.
   String GetKeyName(Keys::Enum key);
+
+  /// Gets a the key by it's actual name or keyboard symbol.
+  String GetKeyLiteral(Keys::Enum key);
+
+  /// Validate that the key is a Keys::Enum that is not 'Unknown', or 'None', or
+  /// an integer value that doesn't map to a known Keys::Enum value.
+  bool Valid(Keys::Enum key);
+
+  /// Validate that the input string can be mapped back to an enum.
+  bool Valid(StringParam key);
+
+  /// String to Key::Enum conversion.  Returns Keys::Unknown if key is not found.
+  Keys::Enum ToKey(StringParam key);
+
+  /// Convert a key name to it's keyboard symbol if it has one.
+  String ToSymbol(StringParam keyName);
 
   void Update();
   void Clear();
