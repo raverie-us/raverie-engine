@@ -87,6 +87,8 @@ void PropertyView::Invalidate()
   // Destroy the tree
   SafeDestroy(mRoot);
 
+  mSelectedObjects.Clear();
+
   // Clear the additional widgets
   forRange(Widget* widget, mAddtionalWidgets.All())
     widget->Destroy();
