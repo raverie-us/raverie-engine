@@ -124,7 +124,13 @@ struct Rectangle
   
   void Expand(Vec2Param point);
 
+  /// Returns true if the given point is inside the Rectangle.
   bool Contains(Vec2Param point) const;
+
+  /// Returns true if this Rectangle completely contains the given Rectangle.
+  bool Contains(RectangleParam other) const;
+
+  /// Returns true if this Rectangle and the given Rectangle overlap in any way.
   bool Overlap(RectangleParam other) const;
 
   void RemoveThickness(const Thickness& thickness);
