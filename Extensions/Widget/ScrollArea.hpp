@@ -50,6 +50,8 @@ private:
   void MouseEnterDown(MouseEvent* event);
   void MouseExitDown(MouseEvent* event);
 
+  void OnRightMouseUp(MouseEvent* event);
+
   Element* mUp;   //up or left
   Element* mDown; //down or right
   Element* mSlider;

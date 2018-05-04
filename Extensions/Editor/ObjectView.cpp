@@ -1116,7 +1116,7 @@ ObjectView::ObjectView(Composite* parent)
   ConnectThisTo(mTree, Events::MouseEnterRow, OnMouseEnterRow);
   ConnectThisTo(mTree, Events::MouseExitRow, OnMouseExitRow);
 
-  ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
+  ConnectThisTo(mTree->mArea->mClientArea, Events::RightMouseUp, OnRightMouseUp);
 }
 
 ObjectView::~ObjectView()
