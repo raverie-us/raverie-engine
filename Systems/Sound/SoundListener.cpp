@@ -27,7 +27,9 @@ ZilchDefineType(SoundListener, builder, type)
 }
 
 //**************************************************************************************************
-SoundListener::SoundListener() : mActive(true)
+SoundListener::SoundListener() : 
+  mActive(true),
+  mAttenuationScale(1.0f)
 {
 }
 
