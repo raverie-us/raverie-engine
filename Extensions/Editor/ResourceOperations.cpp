@@ -292,6 +292,7 @@ bool RenameResource(Resource* resource, StringParam newName)
   resource->UpdateContentItem(contentItem);
 
   ResourceEvent event;
+  event.Name = newName;
   event.Manager = resourceManager;
   event.EventResource = resource;
   event.LastIdName = lastIdName;

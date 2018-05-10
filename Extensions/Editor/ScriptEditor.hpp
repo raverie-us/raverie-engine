@@ -46,6 +46,7 @@ public:
   void OnDocumentRemoved(Event* event);
   void OnDocumentReload(Event* event);
   void OnTextModified(Event* event);
+  void OnResourceModified(ResourceEvent* event);
 
   void OnSave(SavingEvent* event);
   void OnSaveCheck(SavingEvent* event);
