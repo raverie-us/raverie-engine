@@ -976,14 +976,12 @@ void ImportGroup(Editor* editor)
 
 void SelectSpace(Editor* editor, Space* space)
 {
-  editor->ShowWindow("Properties");
-  editor->mMainPropertyView->EditObject(space, true);
+  editor->SelectSpace();
 }
 
 void SelectGame(Editor* editor, Space* space)
 {
-  editor->ShowWindow("Properties");
-  editor->mMainPropertyView->EditObject(space->GetGameSession(), true);
+  editor->SelectGame();
 }
 
 void PreviousSelection(Editor* editor)
