@@ -44,6 +44,7 @@ class ContextMenuEvent : public Event
 };
 
 typedef Array<ContextMenuEntry*> ContextMenuEntryChildren;
+
 class ContextMenuEntry : public SafeId32EventObject
 {
 public:
@@ -84,12 +85,19 @@ public:
   void OnItemHover(ObjectEvent* e);
   void OnChildMenuClose(ObjectEvent* e);
 
+  void SetEnabled(bool state, String disabledText = String());
+
   String mName;
   String mIcon;
   ContextMenuEntryChildren mChildren;
 
   // Used to store any specific context information for use by selecting a menu item
   Any mContextData;
+  
+  // Used to disable a menu item from being selectable and greys out the item text
+  bool mEnabled;
+  // If provided a tooltip can display the reason why the item is disabled
+  String mDisabledText;
 };
 
 class ContextMenuEntryDivider : public ContextMenuEntry
@@ -161,6 +169,7 @@ private:
   Element* mBackground;
   Element* mBorder;
   Command* mCommand;
+  HandleOf<ToolTip> mToolTip;
 
   HandleOf<ContextMenu> mParentMenu;
   ContextMenuEntry* mEntry;

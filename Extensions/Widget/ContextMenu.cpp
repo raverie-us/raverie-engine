@@ -81,7 +81,8 @@ ZilchDefineType(ContextMenuEntry, builder, type)
 
 ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon)
   : mName(name),
-    mIcon(icon)
+    mIcon(icon),
+    mEnabled(true)
 {
   ConnectThisTo(this, Events::MenuItemSelected, OnItemSelected);
   ConnectThisTo(this, Events::MenuItemHover, OnItemHover);
@@ -118,6 +119,12 @@ void ContextMenuEntry::OnChildMenuClose(ObjectEvent* e)
 
   menuClosed->mParentMenu->mCloseMode = PopUpCloseMode::MouseDistance;
   menuClosed->mParentMenu->mSubMenu = nullptr;
+}
+
+void ContextMenuEntry::SetEnabled(bool state, String disabledText)
+{
+  mEnabled = state;
+  mDisabledText = disabledText;
 }
 
 void ContextMenuEntry::AddEntry(ContextMenuEntry* entry)
@@ -382,7 +389,7 @@ ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry)
   mIcon = nullptr;
 
   mCommand = nullptr;
-  mEnabled = true;
+  mEnabled = mEntry->mEnabled;
   mActive = false;
   
   ConnectThisTo(this, Events::LeftClick, OnLeftClick);
@@ -442,23 +449,25 @@ void ContextMenuItem::UpdateTransform()
   Vec3 checkPos(Pixels(1), mSize.y * 0.5f - mCheck->GetSize().y * 0.5f, 0);
   mCheck->SetTranslation(checkPos);
 
+  mBackground->SetColor(MenuUi::ItemBackgroundColor);
+  mBorder->SetColor(MenuUi::ItemBackgroundColor);
+  
   if(!mEnabled)
   {
     mText->SetColor(MenuUi::ItemDisabledTextColor);
     mShortcut->SetColor(MenuUi::ItemDisabledTextColor);
-    Composite::UpdateTransform();
-    return;
-  }
 
-  if(IsMouseOver())
+    // If a reason was provided for why this item was disabled create a tooltip displaying it
+    if (mToolTip.IsNull() && !mEntry->mDisabledText.Empty())
+    {
+      ToolTip* toolTip = new ToolTip(this);
+      toolTip->SetTextAndPlace(mEntry->mDisabledText, GetScreenRect());
+    }
+  }
+  else if(IsMouseOver())
   {
     mBackground->SetColor(MenuUi::ItemSelectedBackgroundColor);
     mBorder->SetColor(MenuUi::ItemSelectedBackgroundColor);
-  }
-  else
-  {
-    mBackground->SetColor(MenuUi::ItemBackgroundColor);
-    mBorder->SetColor(MenuUi::ItemBackgroundColor);
   }
 
   if(mIcon)
@@ -501,6 +510,9 @@ void ContextMenuItem::SetCommand(Command* command)
 
 void ContextMenuItem::OnLeftClick(MouseEvent* event)
 {
+  if (!mEnabled)
+    return;
+
   ObjectEvent eventToSend(this);
   mEntry->DispatchEvent(Events::MenuItemSelected, &eventToSend);
 
