@@ -81,7 +81,6 @@ void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* use
   boundType->Add(new MetaResource(resource));
 
   ProcessComponentInterfaces(boundType);
-  ProcessResourceProperties(boundType);
 }
 
 //**************************************************************************************************
@@ -250,33 +249,6 @@ void FindNamedResource(Call& call, ExceptionReport& report)
   Resource* resource = manager->GetResource(name, ResourceNotFound::ErrorFallback);
 
   call.Set(Call::Return, resource);
-}
-
-//**************************************************************************************************
-void ProcessResourceProperties(BoundType* type)
-{
-  BoundType* resourceType = ZilchTypeId(Resource);
-  forRange(Property* property, type->GetProperties(Members::Instance))
-  {
-    if (property->PropertyType->IsA(resourceType))
-    {
-      bool nullable = true;
-      bool allowAdd = false;
-      String filterTag;
-
-      if (Attribute* attribute = property->HasAttribute(PropertyAttributes::cResourceProperty))
-      {
-        if (AttributeParameter* param = attribute->HasAttributeParameter("nullable"))
-          nullable = param->BooleanValue;
-        if (AttributeParameter* param = attribute->HasAttributeParameter("allowAdd"))
-          allowAdd = param->BooleanValue;
-        if (AttributeParameter* param = attribute->HasAttributeParameter("filterTag"))
-          filterTag = param->StringValue;
-      }
-
-      property->Add(new MetaEditorResource(allowAdd, nullable, filterTag));
-    }
-  }
 }
 
 //**************************************************************************************************

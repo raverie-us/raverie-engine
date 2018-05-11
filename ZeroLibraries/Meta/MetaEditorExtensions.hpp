@@ -92,7 +92,8 @@ public:
                               HandleParam result, Status& status);
 
   MetaEditorResource(bool allowAdd = false, bool allowNone = false,
-                     StringParam filterTag = "", bool forceCompact = false);
+                     StringParam filterTag = "", bool forceCompact = false,
+                     bool searchPreview = true);
   MetaEditorResource(SearchFilter filter);
 
   /// Custom filter for the Resource search for this property. Return false to not show the result.
@@ -107,6 +108,9 @@ public:
   /// Are null resources allowed?
   bool AllowNone;
   bool ForceCompact;
+  /// If true, when mousing over a Resource in the search view for this property, it will
+  /// temporarily set the property to the current Resource as to preview the outcome.
+  bool SearchPreview;
   SearchFilter Filter;
 };
 

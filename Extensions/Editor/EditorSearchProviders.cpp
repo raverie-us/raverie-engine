@@ -130,7 +130,7 @@ public:
   {
     // Use the general resource preview
     Resource* resource = (Resource*)element.Data;
-    PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(parent, resource->Name, resource);
+    PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(parent, resource->Name, resource, PreviewImportance::High);
     
     if (preview)
     {

@@ -943,7 +943,7 @@ void RegisterEditorTileViewWidgets()
   previewFactory->Creators["NetChannelConfig"] =  PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<NetworkingPreview>);
 
   //Cog Object
-  previewFactory->Creators["Cog"] =             PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<CogPreview>);
+  previewFactory->Creators["Cog"] =               PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<CogPreview>);
 }
 
 }//namespace Zero

@@ -1874,7 +1874,8 @@ public:
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
       searchView->Search(String());
-      ConnectThisTo(searchView, Events::SearchPreview, OnSearchPreview);
+      if(mMetaEdit == nullptr || mMetaEdit->SearchPreview)
+        ConnectThisTo(searchView, Events::SearchPreview, OnSearchPreview);
       ConnectThisTo(searchView, Events::SearchCompleted, OnSearchCompleted);
       ConnectThisTo(searchView, Events::SearchCanceled, OnSearchCanceled);
 

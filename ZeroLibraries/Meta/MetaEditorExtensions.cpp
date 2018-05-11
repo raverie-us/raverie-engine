@@ -112,14 +112,17 @@ ZilchDefineType(MetaEditorResource, builder, type)
   ZilchBindField(FilterTag)->AddAttribute(PropertyAttributes::cOptional);
   ZilchBindField(AllowAdd)->AddAttribute(PropertyAttributes::cOptional);
   ZilchBindField(AllowNone)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindField(SearchPreview)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 //**************************************************************************************************
-MetaEditorResource::MetaEditorResource(bool allowAdd, bool allowNone, StringParam filterTag, bool forceCompact)
+MetaEditorResource::MetaEditorResource(bool allowAdd, bool allowNone, StringParam filterTag,
+                                       bool forceCompact, bool searchPreview)
   : AllowAdd(allowAdd)
   , AllowNone(allowNone)
   , FilterTag(filterTag)
   , ForceCompact(forceCompact)
+  , SearchPreview(searchPreview)
   , Filter(nullptr)
 {
 
@@ -131,6 +134,7 @@ MetaEditorResource::MetaEditorResource(SearchFilter filter)
   , AllowNone(false)
   , FilterTag("")
   , ForceCompact(false)
+  , SearchPreview(true)
   , Filter(filter)
 {
 
