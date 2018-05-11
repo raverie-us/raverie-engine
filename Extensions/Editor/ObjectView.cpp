@@ -1323,13 +1323,7 @@ void ObjectView::OnSelectionChanged(Event* event)
   // Need to update selected objects
   mTree->MarkAsNeedsUpdate();
 
-  // Do not show row when focus change is 
-  // caused by the object view itself
-  if(this->HasFocus())
-    return;
-
   // Show the object row that was selected
-  
   MetaSelection* selection = Z::gEditor->GetSelection();
   Cog* primary = selection->GetPrimaryAs<Cog>();
   if(primary && selection->Count() == 1)
