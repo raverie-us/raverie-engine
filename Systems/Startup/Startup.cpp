@@ -64,7 +64,6 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   SpatialPartitionLibrary::Initialize();
 
   EngineLibrary::Initialize(settings);
-  WindowsShellSystemLibrary::Initialize();
   GraphicsLibrary::Initialize();
   PhysicsLibrary::Initialize();
   NetworkingLibrary::Initialize();
@@ -83,6 +82,8 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
 
   // Load documentation for all native libraries
   DocumentationLibrary::GetInstance()->LoadDocumentation(FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Documentation.data"));
+
+  ZPrint("Os: %s\n", Os::GetVersionString().c_str());
 }
 
 //**************************************************************************************************
@@ -110,7 +111,6 @@ void ZeroStartup::Shutdown()
   NetworkingLibrary::Shutdown();
   PhysicsLibrary::Shutdown();
   GraphicsLibrary::Shutdown();
-  WindowsShellSystemLibrary::Shutdown();
   EngineLibrary::Shutdown();
 
   SpatialPartitionLibrary::Shutdown();
@@ -132,7 +132,6 @@ void ZeroStartup::Shutdown()
   NetworkingLibrary::GetInstance().ClearLibrary();
   PhysicsLibrary::GetInstance().ClearLibrary();
   GraphicsLibrary::GetInstance().ClearLibrary();
-  WindowsShellSystemLibrary::GetInstance().ClearLibrary();
   EngineLibrary::GetInstance().ClearLibrary();
 
   SpatialPartitionLibrary::GetInstance().ClearLibrary();
@@ -153,7 +152,6 @@ void ZeroStartup::Shutdown()
   NetworkingLibrary::Destroy();
   PhysicsLibrary::Destroy();
   GraphicsLibrary::Destroy();
-  WindowsShellSystemLibrary::Destroy();
   EngineLibrary::Destroy();
 
   SpatialPartitionLibrary::Destroy();

@@ -1324,6 +1324,7 @@ bool TcpSocket::ValidateServer()
     // Create the socket
     Status status;
     mServer.Open(status, SocketAddressFamily::InternetworkV4, SocketType::Stream, SocketProtocol::Tcp);
+    SetSocketOptions(mServer);
     
     // Return true if the server is not invalid, false otherwise
     return status.Succeeded();

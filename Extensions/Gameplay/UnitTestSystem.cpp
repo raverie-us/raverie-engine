@@ -590,9 +590,9 @@ OsWindow* UnitTestSystem::SubProcessSetupWindow()
   window->SetStyle((WindowStyleFlags::Enum)(window->GetStyle() & ~WindowStyleFlags::Resizable));
   window->SetClientSize(cWindowSize);
 
-  IntVec2 screenSize = window->GetPrimaryScreenSize();
-  IntVec2 centeredPosition = screenSize / 2 - window->GetSize() / 2;
-  window->SetPosition(centeredPosition);
+  IntVec2 monitorSize = Z::gEngine->has(OsShell)->GetPrimaryMonitorSize();
+  IntVec2 centeredPosition = monitorSize / 2 - window->GetClientSize() / 2;
+  window->SetMonitorClientPosition(centeredPosition);
 
   ProjectSettings* settings = Z::gEngine->GetProjectSettings();
   mRecordedEventsFile = FilePath::Combine(settings->ProjectFolder, "..", "Playback.data");

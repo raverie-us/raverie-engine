@@ -5,6 +5,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EBD67762-3D8B-4F8A-8080-FC4D04013988}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>ZeroLauncherSharedObject</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!--Import the Win32 property sheet (from the build folder) for each configuration-->
@@ -104,7 +105,7 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     <ClCompile Include="BuildStatus.cpp" />
     <ClCompile Include="DeveloperNotes.cpp" />
     <ClCompile Include="DiscoverMenu.cpp" />
-    <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Eula.cpp" />
     <ClCompile Include="ExtraModals.cpp" />
     <ClCompile Include="Launcher.cpp" />
@@ -130,7 +131,7 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     <ClInclude Include="BuildStatus.hpp" />
     <ClInclude Include="DeveloperNotes.hpp" />
     <ClInclude Include="DiscoverMenu.hpp" />
-    <ClInclude Include="DllMain.hpp" />
+    <ClInclude Include="Main.hpp" />
     <ClInclude Include="Eula.hpp" />
     <ClInclude Include="ExtraModals.hpp" />
     <ClInclude Include="ForwardDeclarations.hpp" />
@@ -198,9 +199,6 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     </ProjectReference>
     <ProjectReference Include="$(ZERO_SOURCE)\Systems\Sound\Sound.vcxproj">
       <Project>{ca0735f3-8ce7-4663-bfe5-96fef5ea0880}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(ZERO_SOURCE)\Systems\WindowsShell\WindowsShellSystem.vcxproj">
-      <Project>{fae35cec-66e1-4c73-bc88-1a001610440a}</Project>
     </ProjectReference>
     <ProjectReference Include="$(ZERO_SOURCE)\Systems\ZilchScript\ZilchScript.vcxproj">
       <Project>{175480cf-83df-4510-801f-68824c1b9f70}</Project>

@@ -100,7 +100,6 @@ Engine::Engine()
   mFrameCounter = 0;
   mHaveLoadingResources = false;
   mTimePassed = 0.0f;
-  mIntel = false;
 }
 
 //******************************************************************************

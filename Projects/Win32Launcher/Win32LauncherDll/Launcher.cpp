@@ -74,21 +74,21 @@ void Launcher::EulaAccepted()
   mEulaWindow = nullptr;
 
   // Display the launcher
-  mOsWindow->SetSize(mLauncherWindowSize);
-  mOsWindow->SetMinSize(mLauncherWindowSize);
+  mOsWindow->SetClientSize(mLauncherWindowSize);
+  mOsWindow->SetMinClientSize(mLauncherWindowSize);
 
   // Re-center the window
   OsShell* osShell = Z::gEngine->has(OsShell);
-  PixelRect desktopRect = osShell->GetDesktopRect();
-  IntVec2 position = desktopRect.Center(mLauncherWindowSize);
-  mOsWindow->SetPosition(position);
+  IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
+  IntVec2 monitorClientPosition = monitorRect.Center(mLauncherWindowSize);
+  mOsWindow->SetMonitorClientPosition(monitorClientPosition);
 }
 
 //******************************************************************************
 void Launcher::OpenEulaWindow()
 {
-  mOsWindow->SetMinSize(mEulaWindowSize);
-  mOsWindow->SetSize(mEulaWindowSize);
+  mOsWindow->SetMinClientSize(mEulaWindowSize);
+  mOsWindow->SetClientSize(mEulaWindowSize);
   
   EulaWindow* window = new EulaWindow(mConfigCog, mMainWindow);
   window->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
@@ -99,7 +99,7 @@ void Launcher::Initialize()
 {
   // Hack for BraveCobra
   Cog* configCog = mConfigCog;
-  IntVec2 minWindowSize = mLauncherWindowSize;
+  IntVec2 minClientSize = mLauncherWindowSize;
   // Ideally we should change the window size here, but the loading progress bar looks wrong with
   // the window of this size. Fix later when we can override the loading.
   //if(ShouldOpenEula())
@@ -110,10 +110,10 @@ void Launcher::Initialize()
   bool visible = false;
 
   OsShell* osShell = Z::gEngine->has(OsShell);
-  PixelRect desktopRect = osShell->GetDesktopRect();
+  IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
 
-  IntVec2 size = minWindowSize;
-  IntVec2 position = desktopRect.Center(size);
+  IntVec2 clientSize = minClientSize;
+  IntVec2 monitorClientPos = monitorRect.Center(clientSize);
 
   BitField<WindowStyleFlags::Enum> mainStyle;
   mainStyle.U32Field = WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly;
@@ -124,22 +124,15 @@ void Launcher::Initialize()
   if(!visible)
     mainStyle.SetFlag(WindowStyleFlags::NotVisible);
 
-  OsWindow* window = osShell->CreateOsWindow(windowName, size, position, nullptr, mainStyle.Field);
-  window->SetMinSize(minWindowSize);
+  OsWindow* window = osShell->CreateOsWindow(windowName, clientSize, monitorClientPos, nullptr, mainStyle.Field);
+  window->SetMinClientSize(minClientSize);
   window->SetState(WindowState::Windowed);
   mOsWindow = window;
 
   Z::gEngine->has(GraphicsEngine)->CreateRenderer(window);
-
-  if (Z::gRenderer->mDriverSupport.mIntel)
-  {
-    // Borderless window with Windows Aero does not work correctly on Intel.
-    mainStyle.ClearFlag(WindowStyleFlags::Resizable);
-    // Specifying a titlebar does not work correctly on Intel.
-    mainStyle.ClearFlag(WindowStyleFlags::TitleBar);
-    // SetStyle sets state to windowed to force the window to update.
-    window->SetStyle(mainStyle.Field);
-  }
+  
+  // Fix any issue for Intel Drivers
+  window->PlatformSpecificFixup();
 }
 
 //******************************************************************************
@@ -177,8 +170,8 @@ void Launcher::OpenTweakablesWindow()
 {
   return;
   OsShell* osShell = Z::gEngine->has(OsShell);
-  PixelRect desktopRect = osShell->GetDesktopRect();
-  IntVec2 size = IntVec2(230, desktopRect.SizeY);
+  IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
+  IntVec2 size = IntVec2(230, monitorRect.SizeY);
 
   // Create a window to hold the tweakables (so they can be moved, closed, etc...)
   Window* tweakablesWindow = new Window(mMainWindow);
@@ -212,10 +205,10 @@ MainWindow* Launcher::CreateOsWindow(Cog* configCog, const IntVec2& minWindowSiz
                                      bool visible)
 {
   OsShell* osShell = Z::gEngine->has(OsShell);
-  PixelRect desktopRect = osShell->GetDesktopRect();
+  IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
 
-  IntVec2 size = minWindowSize;
-  IntVec2 position = desktopRect.Center(size);
+  IntVec2 clientSize = minWindowSize;
+  IntVec2 monitorClientPosition = monitorRect.Center(clientSize);
 
   BitField<WindowStyleFlags::Enum> mainStyle;
   mainStyle.SetFlag(WindowStyleFlags::OnTaskBar);
@@ -229,8 +222,8 @@ MainWindow* Launcher::CreateOsWindow(Cog* configCog, const IntVec2& minWindowSiz
   if(!visible)
     mainStyle.SetFlag(WindowStyleFlags::NotVisible);
 
-  OsWindow* window = osShell->CreateOsWindow(windowName, size, position, nullptr, mainStyle.Field);
-  window->SetMinSize(minWindowSize);
+  OsWindow* window = osShell->CreateOsWindow(windowName, clientSize, monitorClientPosition, nullptr, mainStyle.Field);
+  window->SetMinClientSize(minWindowSize);
 
   MainWindow* rootWidget = new MainWindow(window);
   rootWidget->SetTitle("");

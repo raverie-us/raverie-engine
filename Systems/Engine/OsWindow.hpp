@@ -20,7 +20,7 @@ DeclareEvent(OsKeyDown);
 DeclareEvent(OsKeyUp);
 DeclareEvent(OsKeyRepeated);
 DeclareEvent(OsKeyTyped);
-DeclareEvent(OsDeviceAdded);
+DeclareEvent(OsDeviceChanged);
 DeclareEvent(OsResized);
 DeclareEvent(OsMoved);
 DeclareEvent(OsClose);
@@ -39,61 +39,7 @@ class KeyboardTextEvent;
 class OsMouseEvent;
 class OsMouseDropEvent;
 class OsWindowEvent;
-
-/// Flags used to control the behavior of an OsWindow
-DeclareBitField7(WindowStyleFlags,
-  // Is the window visible. This is 'NotVisible' instead of visible so that the
-  // default is visible.
-  NotVisible,
-  // Main window
-  MainWindow,
-  // Does the window appear on the task bar
-  OnTaskBar, 
-  // Does the window have a title bar area
-  TitleBar,
-  // Does this window have resizable borders
-  Resizable, 
-  // Does this window have a close button
-  Close,
-  // Window has client area only
-  ClientOnly);
-
-/// The state of the window for minimizing / maximizing
-DeclareEnum5(WindowState,
-  // Shrink the window to the taskbar
-  Minimized, 
-  // Expand the window to fill the current desktop
-  Maximized,
-  // Arbitrarily sized window
-  Windowed,
-  // Window covers everything including the taskbar and is minimized without focus
-  Fullscreen,
-  // Restore window to previous state before being minimizing
-  Restore);
-
-/// Standard Mouse Cursors
-DeclareEnum11(Cursor,
-  Arrow,
-  Wait,
-  Cross,
-  SizeNWSE,
-  SizeNESW,
-  SizeWE,
-  SizeNS,
-  SizeAll,
-  TextBeam,
-  Hand,
-  Invisible);
-
-/// Border of the window for manipulation
-DeclareEnum9(WindowBorderArea, 
-  Title, 
-  TopLeft, Top, TopRight,
-  Left, Right, 
-  BottomLeft, Bottom, BottomRight);
-
-/// As the extra mouse buttons are typically Back and Forward they have been named accordingly.
-DeclareEnum6(MouseButtons, Left, Right, Middle, XOneBack, XTwoForward, None);
+class OsShell;
 
 class OsInputHook
 {
@@ -112,88 +58,93 @@ class OsWindow : public ThreadSafeId32EventObject
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  OsWindow();
-  virtual ~OsWindow() {};
+  OsWindow(
+    OsShell* shell,
+    StringParam windowName,
+    IntVec2Param clientSize,
+    IntVec2Param monitorClientPos,
+    OsWindow* parentWindow,
+    WindowStyleFlags::Enum flags);
+  virtual ~OsWindow();
 
-  /// Position of the window in screen coordinates
-  virtual IntVec2 GetPosition() = 0;
-  virtual void SetPosition(IntVec2Param newScreenPosition) = 0;
+  OsShell* GetShell();
+
+  /// Position of the window's client area in monitor coordinates
+  IntVec2 GetMonitorClientPosition();
+  void SetMonitorClientPosition(IntVec2Param monitorPosition);
 
   /// The size of the window including the border
-  virtual IntVec2 GetSize() = 0;
-  virtual void SetSize(IntVec2Param newSize) = 0;
+  IntVec2 GetBorderedSize();
+  void SetBorderedSize(IntVec2Param borderedSize);
 
-  // Set the minimum size of the window
-  virtual void SetMinSize(IntVec2Param minSize) = 0;
+  /// Set the minimum size of the window
+  void SetMinClientSize(IntVec2Param minClientSize);
 
   /// The current client size of the window
-  virtual IntVec2 GetClientSize() = 0;
-  virtual void SetClientSize(IntVec2Param newClientSize) = 0;
+  IntVec2 GetClientSize();
+  void SetClientSize(IntVec2Param clientSize);
 
   /// Parent window of this window. Null for Desktop windows.
-  virtual OsWindow* GetParent() = 0;
+  OsWindow* GetParent();
 
   /// Convert screen coordinates to client coordinates
-  virtual IntVec2 ScreenToClient(IntVec2Param screenPoint) = 0;
+  IntVec2 MonitorToClient(IntVec2Param monitorPosition);
 
   /// Convert client coordinates to screen coordinates
-  virtual IntVec2 ClientToScreen(IntVec2Param clientPoint) = 0;
+  IntVec2 ClientToMonitor(IntVec2Param clientPosition);
 
   /// Style flags control border style, title bar, and other features.
-  virtual WindowStyleFlags::Enum GetStyle() = 0;
-  virtual void SetStyle(WindowStyleFlags::Enum style) = 0;
+  WindowStyleFlags::Enum GetStyle();
+  void SetStyle(WindowStyleFlags::Enum style);
 
   /// Is the window visible on the desktop?
-  virtual bool GetVisible() = 0;
-  virtual void SetVisible(bool visible) = 0;
+  bool GetVisible();
+  void SetVisible(bool visible);
 
   /// Set the title of window displayed in the title bar.
-  virtual void SetTitle(StringParam title) = 0;
+  void SetTitle(StringParam title);
 
   /// State of the Window, Set state to Minimize, Maximize, or Restore the window
-  virtual WindowState::Enum GetState() = 0;
-  virtual void SetState(WindowState::Enum windowState) = 0;
-
-  /// Query the primary monitor for its size.
-  virtual IntVec2 GetPrimaryScreenSize() = 0;
+  WindowState::Enum GetState();
+  void SetState(WindowState::Enum windowState);
 
   /// Try to take Focus and bring the window to the foreground.
   /// The OS may prevent this from working if this app is not the foreground app.
-  virtual void TakeFocus() = 0;
+  void TakeFocus();
   /// Does this window have focus?
-  virtual bool HasFocus() = 0;
+  bool HasFocus();
 
   /// Try to close the window. The OsClose event is sent and can be canceled
-  virtual void Close() = 0;
+  void Close();
 
   /// Destroy the window
-  virtual void Destroy() = 0;
+  void Destroy();
 
   /// Resize or move the window using the default OS method
-  virtual void ManipulateWindow(WindowBorderArea::Enum borderArea) = 0;
+  void ManipulateWindow(WindowBorderArea::Enum borderArea);
 
   /// Capturing the mouse prevents messages from being sent to other windows and
   /// getting mouse movements outside the window (e.g. dragging).
-  virtual void SetMouseCapture(bool enabled) = 0;
+  void SetMouseCapture(bool enabled);
 
   /// Locks the mouse to prevent it from moving.
-  virtual bool GetMouseTrap() = 0;
-  virtual void SetMouseTrap(bool trapped) = 0;
-  virtual IntVec2 GetMouseTrapScreenPosition() = 0;
+  bool GetMouseTrap();
+  void SetMouseTrap(bool trapped);
+  IntVec2 GetMouseTrapMonitorPosition();
 
-  /// Set the cursor for the mouse.
-  virtual void SetMouseCursor(Cursor::Enum cursorId) = 0;
+  OsHandle GetWindowHandle();
 
-  virtual OsHandle GetWindowHandle() = 0;
+  /// Apply any fixes to the window (after creation) due to driver specific issues (OpenGl + Intel for example)
+  void PlatformSpecificFixup();
 
-  // Set application progress
-  virtual void SendProgress(ProgressType::Enum progressType, float progress) {}
+  /// Set application progress which may show up in the task bar.
+  void SetProgress(ProgressType::Enum progressType, float progress = 0.0f);
 
-  virtual void SendKeyboardEvent(KeyboardEvent& event, bool simulated) = 0;
-  virtual void SendKeyboardTextEvent(KeyboardTextEvent& event, bool simulated) = 0;
-  virtual void SendMouseEvent(OsMouseEvent& event, bool simulated) = 0;
-  virtual void SendMouseDropEvent(OsMouseDropEvent& event, bool simulated) = 0;
-  virtual void SendWindowEvent(OsWindowEvent& event, bool simulated) = 0;
+  void SendKeyboardEvent(KeyboardEvent& event, bool simulated);
+  void SendKeyboardTextEvent(KeyboardTextEvent& event, bool simulated);
+  void SendMouseEvent(OsMouseEvent& event, bool simulated);
+  void SendMouseDropEvent(OsMouseDropEvent& event, bool simulated);
+  void SendWindowEvent(OsWindowEvent& event, bool simulated);
 
   // If this is set, we must send input events to this
   // first before dispatching them to the rest of the engine.
@@ -202,6 +153,37 @@ public:
   // Blocks all input generated by the user. Does not block simulated inputs.
   // This is used for running recorded playbacks (such as the PlayUnitTestFile command).
   bool mBlockUserInput;
+
+  // Internal
+
+  void FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent);
+  void FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent);
+
+  // ShellWindow interface
+  static void ShellWindowOnClose(ShellWindow* window);
+  static void ShellWindowOnFocusChanged(bool activated, ShellWindow* window);
+  static void ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition, const Array<String>& files, ShellWindow* window);
+  static void ShellWindowOnFrozenUpdate(ShellWindow* window);
+  static void ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window);
+  static void ShellWindowOnMinimized(ShellWindow* window);
+  static void ShellWindowOnRestored(ShellWindow* window);
+  static void ShellWindowOnTextTyped(Rune rune, ShellWindow* window);
+  static void ShellWindowOnKeyDown(Keys::Enum key, uint osKey, bool repeated, ShellWindow* window);
+  static void ShellWindowOnKeyUp(Keys::Enum key, uint osKey, ShellWindow* window);
+  static void ShellWindowOnMouseDown(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
+  static void ShellWindowOnMouseUp(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
+  static void ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWindow* window);
+  static void ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
+  static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
+  static void ShellWindowOnDevicesChanged(ShellWindow* window);
+  static void ShellWindowOnRawMouseChanged(Math::IntVec2Param movement, ShellWindow* window);
+  static void ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
+
+  // If the mouse is currently trapped (not visible and centered on the window).
+  bool mMouseTrapped;
+
+  // The platform shell window.
+  ShellWindow mWindow;
 };
 
 //-------------------------------------------------------------------OsWindowEvent
@@ -210,7 +192,7 @@ class OsWindowEvent : public Event
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  OsWindowEvent() {}
+  OsWindowEvent();
 
   void Serialize(Serializer& stream);
 

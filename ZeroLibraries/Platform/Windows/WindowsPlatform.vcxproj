@@ -82,6 +82,10 @@
     <ClInclude Include="WinUtility.hpp" />
     <ClInclude Include="WString.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Keys.inl" />
+    <None Include="MouseButtons.inl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

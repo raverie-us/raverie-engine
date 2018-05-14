@@ -9,7 +9,7 @@
     <ClCompile Include="Precompiled.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="WinMain.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

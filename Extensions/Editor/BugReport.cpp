@@ -122,7 +122,7 @@ void BugReporter::OnUpdate(UpdateEvent* event)
   if (isClipboardChecked)
   {
     OsShell* shell = Z::gEngine->has(OsShell);
-    bool imageOnClipboard = shell->IsClipboardImageAvailable();
+    bool imageOnClipboard = shell->IsClipboardImage();
 
     if (!imageOnClipboard)
     {
@@ -171,7 +171,7 @@ void BugReporter::OnSend(Event* event)
 
   if (mIncludeScreenshot->GetChecked())
   {
-    shell->GetWindowImage(&job->mScreenshot);
+    shell->GetPrimaryMonitorImage(&job->mScreenshot);
   }
 
   if (mIncludeProject->GetChecked())

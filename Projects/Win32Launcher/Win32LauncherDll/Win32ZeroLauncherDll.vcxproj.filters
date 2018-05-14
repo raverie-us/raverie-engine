@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="VersionSelector.cpp" />
     <ClCompile Include="LauncherStartup.cpp" />
@@ -37,9 +36,9 @@
     <ClCompile Include="LauncherComponents.cpp" />
     <ClCompile Include="LauncherDllStandard.cpp" />
     <ClCompile Include="ExtraModals.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DllMain.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="Standalone.hpp" />
     <ClInclude Include="VersionSelector.hpp" />
@@ -77,6 +76,7 @@
     <ClInclude Include="LauncherStartup.hpp" />
     <ClInclude Include="ForwardDeclarations.hpp" />
     <ClInclude Include="ExtraModals.hpp" />
+    <ClInclude Include="Main.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Menus">

@@ -36,7 +36,7 @@ MainWindow::MainWindow(OsWindow* window)
   static const String className = "Window";
   mDefSet = mDefSet->GetDefinitionSet(className);
 
-  mSize = Math::ToVec2(window->GetSize());
+  mSize = Math::ToVec2(window->GetClientSize());
 
   mWindowWidget = new Composite(this, AttachType::Direct);
   mPopUp = new Composite(this, AttachType::Direct);
@@ -180,7 +180,7 @@ Composite* MainWindow::GetPopUp()
 
 void MainWindow::UpdateTransform()
 {
-  Vec2 size = ToVec2(GetOsWindow()->GetSize());
+  Vec2 size = ToVec2(GetOsWindow()->GetClientSize());
   mSizeGrips->MoveToFront();
   mPopUp->MoveToFront();
 

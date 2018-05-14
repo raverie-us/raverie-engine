@@ -419,7 +419,7 @@ ColorPicker* ColorPicker::EditColor(Widget* target, Vec4 color)
 
       OsWindow* window = osShell->CreateOsWindow("TweakablesWindow", size, position,
                                                  target->GetRootWidget()->GetOsWindow(), style.Field);
-      window->SetMinSize(size);
+      window->SetMinClientSize(size);
 
       MainWindow* rootWidget = new MainWindow(window);
       rootWidget->SetTitle("Color Picker");

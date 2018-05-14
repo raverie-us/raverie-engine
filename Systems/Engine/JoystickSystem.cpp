@@ -34,9 +34,44 @@ ZilchDefineType(RawControlMapping, builder, type)
 {
 }
 
-RawControlMapping::RawControlMapping() :
-  mIsParsed(false)
+RawControlMapping::RawControlMapping()
 {
+}
+
+RawControlMapping::RawControlMapping(const PlatformInputDevice& device)
+{
+  mName = device.mName;
+  forRange(const PlatformAxis& platformAxis, device.mAxes)
+  {
+    RawAxis& rawAxis = mAxes.PushBack();
+    rawAxis.Name = platformAxis.mName;
+    rawAxis.Offset = platformAxis.mOffset;
+    rawAxis.Size = platformAxis.mSize;
+    rawAxis.Min = platformAxis.mMin;
+    rawAxis.Max = platformAxis.mMax;
+
+    rawAxis.Mid = (rawAxis.Max + rawAxis.Min) / 2;
+    rawAxis.DeadZonePercent = 0.16f;
+    rawAxis.CanCalibrate = true;
+    rawAxis.UseMid = true;
+    rawAxis.Reversed = false;
+
+    // If this is a hat, we need to make sure it doesn't get calibrated
+    if (platformAxis.mUsbUsage == UsbUsage::HatSwitch)
+    {
+      rawAxis.CanCalibrate = false;
+      rawAxis.UseMid = false;
+      rawAxis.DeadZonePercent = 0.0f;
+    }
+  }
+
+  forRange(const PlatformButton& platformButton, device.mButtons)
+  {
+    RawButton& rawButton = mButtons.PushBack();
+    rawButton.Name = platformButton.mName;
+    rawButton.Offset = platformButton.mOffset;
+    rawButton.Bit = platformButton.mBit;
+  }
 }
 
 void RawAxis::Serialize(Serializer& stream)
@@ -64,7 +99,6 @@ void RawButton::Serialize(Serializer& stream)
 void RawControlMapping::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mName, cUnknownString);
-  SerializeNameDefault(mIsParsed, false);
   SerializeName(mAxes);
   SerializeName(mButtons);
 }
@@ -318,11 +352,6 @@ bool Joystick::Calibrating(void)
   return mAutoCalibrate;
 }
 
-bool Joystick::IsParsedInput()
-{
-  return mRawMapping->mIsParsed;
-}
-
 void Joystick::RawSetAxis(uint index, uint rawValue)
 {
   ReturnIf(mIsActive == false,,
@@ -483,6 +512,9 @@ void Joysticks::DeactivateAll()
 {
   forRange(Joystick* joyStick, mDeviceToJoystick.Values())
   {
+    if (!joyStick->mIsActive)
+      continue;
+    
     // Set the joystick as not active and clear its state
     joyStick->mIsActive = false;
     joyStick->InactiveClear();
@@ -509,27 +541,30 @@ uint Joysticks::GetJoystickCount()
   return mDeviceToJoystick.Size();
 }
 
-Joystick* Joysticks::GetJoystickByDevice(uint id)
+Joystick* Joysticks::GetJoystickByDevice(OsHandle handle)
 {
   // Give back the joystick at that index
-  return mDeviceToJoystick.FindValue(id, nullptr);
+  return mDeviceToJoystick.FindValue(handle, nullptr);
 }
 
-JoystickRange Joysticks::GetJoysticks()
+JoystickDeviceRange Joysticks::GetJoysticks()
 {
   return mDeviceToJoystick.Values();
 }
 
-void Joysticks::AddJoystickDevice(uint deviceHandle, uint hardwareGuid, StringParam name, RawControlMapping* map)
+void Joysticks::AddJoystickDevice(const PlatformInputDevice& device)
 {
   // Look for the joystick by device
-  Joystick* joyStick = mDeviceToJoystick.FindValue(deviceHandle, nullptr);
+  Joystick* joyStick = mDeviceToJoystick.FindValue(device.mDeviceHandle, nullptr);
+
+  // This will either be 'stolen' below or will be deleted in the internal set functions
+  RawControlMapping* map = new RawControlMapping(device);
 
   // If we didn't find the joystick by device...
   if(joyStick == nullptr)
   {
     // Attempt to look for the joystick by guid
-    joyStick = mGuidToJoystick.FindValue(hardwareGuid, nullptr);
+    joyStick = mGuidToJoystick.FindValue(device.mGuid, nullptr);
 
     // We found the joystick by guid, which means it's probably one that was already plugged in!
     // This actually may not be the case if it turns out two joysticks had the same guid...
@@ -545,22 +580,22 @@ void Joysticks::AddJoystickDevice(uint deviceHandle, uint hardwareGuid, StringPa
 
       // We need to update the device of the joystick
       mDeviceToJoystick.Erase(joyStick->mDeviceHandle);
-      joyStick->mDeviceHandle = deviceHandle;
-      mDeviceToJoystick.Insert(deviceHandle, joyStick);
+      joyStick->mDeviceHandle = device.mDeviceHandle;
+      mDeviceToJoystick.Insert(device.mDeviceHandle, joyStick);
     }
     else
     {
       // Create a new joystick
       joyStick = new Joystick();
       joyStick->mIsActive = true;
-      joyStick->mName = name;
-      joyStick->mDeviceHandle = deviceHandle;
-      joyStick->mHardwareGuid = hardwareGuid;
+      joyStick->mName = device.mName;
+      joyStick->mDeviceHandle = device.mDeviceHandle;
+      joyStick->mHardwareGuid = device.mGuid;
       joyStick->InternalSetInputMapping(map);
 
       // Add the joystick to the maps
-      mDeviceToJoystick.InsertOrError(deviceHandle, joyStick);
-      mGuidToJoystick.InsertNoOverwrite(hardwareGuid, joyStick);
+      mDeviceToJoystick.InsertOrError(device.mDeviceHandle, joyStick);
+      mGuidToJoystick.InsertNoOverwrite(device.mGuid, joyStick);
     }
   }
   else

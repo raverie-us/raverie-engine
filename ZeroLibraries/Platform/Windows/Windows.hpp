@@ -48,6 +48,7 @@
 #include <Mmsystem.h>
 #include <Regstr.h>
 #include <WinBase.h>
+#include <windowsx.h>
 
 //Undef windows defines that overlap with core functions
 #undef CopyFile

@@ -3,7 +3,7 @@
   <Import Project="$(SolutionDir)\Paths.props" />
   <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
   <PropertyGroup Label="Globals">
-    <ProjectName>Win32Editor</ProjectName>
+    <ProjectName>ZeroEditor</ProjectName>
     <ProjectGuid>{F5630AC8-F0C7-4B26-A2C0-BECCBD633B97}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
@@ -167,7 +167,7 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Startup.cpp" />
-    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
@@ -286,9 +286,6 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     </ProjectReference>
     <ProjectReference Include="..\..\Systems\Sound\Sound.vcxproj">
       <Project>{ca0735f3-8ce7-4663-bfe5-96fef5ea0880}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Systems\WindowsShell\WindowsShellSystem.vcxproj">
-      <Project>{fae35cec-66e1-4c73-bc88-1a001610440a}</Project>
     </ProjectReference>
     <ProjectReference Include="..\ChromeSubProcess\ChromeSubProcess.vcxproj">
       <Project>{fad16d53-662c-47c1-9a7a-c0653d25c070}</Project>

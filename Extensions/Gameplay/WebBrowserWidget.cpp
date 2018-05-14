@@ -180,7 +180,7 @@ void WebBrowserWidget::OnWebBrowserPointQuery(WebBrowserPointQueryEvent* event)
 {
   Vec2 browserClient = Math::ToVec2(event->mViewPixelPosition);
   Vec2 zeroScreen = mBrowserView->ToScreen(browserClient);
-  IntVec2 desktopScreen = GetRootWidget()->GetOsWindow()->ClientToScreen(Math::ToIntVec2(zeroScreen));
+  IntVec2 desktopScreen = GetRootWidget()->GetOsWindow()->ClientToMonitor(Math::ToIntVec2(zeroScreen));
   event->mScreenPixelPosition = desktopScreen;
 }
 

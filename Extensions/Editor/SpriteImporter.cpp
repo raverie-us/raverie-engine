@@ -232,7 +232,7 @@ void SpriteSheetImporter::LoadImages(Array<String>& files)
   for (uint i = 0; i < files.Size(); ++i)
   {
     Image& frameImage = images[i];
-    PixelRect place = frameLayout.GetFrame(i);
+    IntRect place = frameLayout.GetFrame(i);
     CopyImage(&mSourcePixels, &frameImage, place.X, place.Y, 0, 0, place.SizeX, place.SizeY);
   }
 
@@ -350,7 +350,7 @@ void SpriteSheetImporter::AddAllFrames()
   {
     for (int x = 0; x < FramesX; ++x)
     {
-      PixelRect rect = { OffsetX + x * strideX, OffsetY + y * strideY, FrameSizeX, FrameSizeY };
+      IntRect rect = { OffsetX + x * strideX, OffsetY + y * strideY, FrameSizeX, FrameSizeY };
       FrameArea frameArea = { false, rect };
       mFrames.PushBack(frameArea);
     }
@@ -386,7 +386,7 @@ void SpriteSheetImporter::OnClearPressed(ObjectEvent* event)
   SetImportFrames(ImportFrames::SelectedFrames);
 }
 
-void SpriteSheetImporter::SaveDataToSpriteSource(SpriteSource* sprite, PixelRect frameSize, uint numberOfFrames)
+void SpriteSheetImporter::SaveDataToSpriteSource(SpriteSource* sprite, IntRect frameSize, uint numberOfFrames)
 {
   Vec2 origin = ComputeOrigin(mOrigin, frameSize.SizeX, frameSize.SizeY);
 
@@ -403,7 +403,7 @@ void SpriteSheetImporter::SaveDataToSpriteSource(SpriteSource* sprite, PixelRect
   sprite->mContentItem->SaveContent();
 }
 
-SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name, Image& output, PixelRect frameSize, uint numberOfFrames)
+SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name, Image& output, IntRect frameSize, uint numberOfFrames)
 {
   String fileName = FilePath::Combine(GetTemporaryDirectory(), "SpriteTemp.png");
 
@@ -472,7 +472,7 @@ bool SpriteSheetImporter::AddFramesAsSprites()
   Image output;
   output.Allocate(FrameSizeX, FrameSizeY);
 
-  PixelRect frameRect;
+  IntRect frameRect;
   frameRect.X = 0;
   frameRect.Y = 0;
   frameRect.SizeX = FrameSizeX;
@@ -559,7 +559,7 @@ bool SpriteSheetImporter::AddMultiFrameSprite()
 
   for (uint i = 0; i < mFrames.Size(); ++i)
   {
-    PixelRect destRect = frameLayout.GetFrame(i);
+    IntRect destRect = frameLayout.GetFrame(i);
     FrameArea& sourceFrame = mFrames[i];
     CopyImage(&output, &mSourcePixels, destRect.X, destRect.Y, sourceFrame.Rect.X, sourceFrame.Rect.Y, sourceFrame.Rect.SizeX, sourceFrame.Rect.SizeY);
   }
@@ -917,9 +917,9 @@ void SpriteSheetImporter::RemoveFrame(int frameIndex)
   UpdatePreview();
 }
 
-PixelRect SpriteSheetImporter::GetRectAtIndex(IntVec2 gridCell)
+IntRect SpriteSheetImporter::GetRectAtIndex(IntVec2 gridCell)
 {
-  PixelRect r;
+  IntRect r;
   r.X = gridCell.x * (FrameSizeX + SpacingX) + OffsetX;
   r.Y = gridCell.y * (FrameSizeY + SpacingY) + OffsetY;
   r.SizeX = FrameSizeX;
@@ -951,7 +951,7 @@ IntVec2 SpriteSheetImporter::GetGridIndex(IntVec2 imagePos)
   int y = offsetPos.y / frameSpacing.y;
 
   IntVec2 gridIndex = IntVec2(x, y);
-  PixelRect rect = GetRectAtIndex(gridIndex);
+  IntRect rect = GetRectAtIndex(gridIndex);
 
   if (rect.Contains(imagePos))
     return gridIndex;

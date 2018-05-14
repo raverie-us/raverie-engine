@@ -53,7 +53,6 @@
   <ItemGroup>
     <ClInclude Include="RawInput.hpp" />
     <ClInclude Include="WindowsSystem.hpp" />
-    <ClInclude Include="WinInputs.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

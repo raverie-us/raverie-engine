@@ -23,17 +23,181 @@ ZilchDefineType(OsShell, builder, type)
 
   ZilchBindGetterProperty(WindowCount);
   ZilchBindMethod(GetWindow);
+  ZilchBindSetter(MouseCursor);
 
   ZilchBindMethod(DumpMemoryDebuggerStats);
 }
 
-OsShell::OsShell() :
-  mOsShellHook(nullptr)
+OsShell* CreateOsShellSystem()
 {
+  return new OsShell();
 }
-uint OsShell::GetScrollLineCount( )
+
+OsShell::OsShell() :
+  mOsShellHook(nullptr),
+  mIsUpdating(false)
 {
-  return 1;
+  mShell.mUserData = this;
+}
+
+cstr OsShell::GetName()
+{
+  return "OsShell";
+}
+
+
+void OsShell::Update()
+{
+  // Prevent recursion due to cases where call Z::gEngine->Update(),
+  // such as in the WM_TIMER message handling
+  if (mIsUpdating)
+    return;
+
+  mIsUpdating = true;
+
+  Keyboard* keyboard = Keyboard::GetInstance();
+  keyboard->Update();
+
+  // Zero the cursor movement before the windows message pump to clear last frames movement
+  Z::gMouse->mCursorMovement = Vec2::cZero;
+  Z::gMouse->mRawMovement = Vec2(0, 0);
+
+  if (mOsShellHook)
+    mOsShellHook->HookUpdate();
+
+  ProfileScopeTree("ShellSystem", "Engine", Color::Red);
+
+  mShell.Update();
+
+  // This is a special place to update for other systems like the
+  // CEF WebBrowser that may cause the message pump to run.
+  Event toSend;
+  DispatchEvent(Events::OsShellUpdate, &toSend);
+
+  mIsUpdating = false;
+}
+
+String OsShell::GetOsName()
+{
+  return mShell.GetOsName();
+}
+
+uint OsShell::GetScrollLineCount()
+{
+  return mShell.GetScrollLineCount();
+}
+
+OsWindow* OsShell::FindWindowAt(IntVec2Param screenPosition)
+{
+  ShellWindow* window = mShell.FindWindowAt(screenPosition);
+  if (window)
+    return (OsWindow*)window->mUserData;
+  return nullptr;
+}
+
+IntRect OsShell::GetPrimaryMonitorRectangle()
+{
+  return mShell.GetPrimaryMonitorRectangle();
+}
+
+IntVec2 OsShell::GetPrimaryMonitorSize()
+{
+  return mShell.GetPrimaryMonitorSize();
+}
+
+OsWindow* OsShell::CreateOsWindow(
+  StringParam windowName,
+  IntVec2Param clientSize,
+  IntVec2Param monitorClientPos,
+  OsWindow* parentWindow,
+  WindowStyleFlags::Enum flags)
+{
+  return new OsWindow(this, windowName, clientSize, monitorClientPos, parentWindow, flags);
+}
+
+ByteColor OsShell::GetColorAtMouse()
+{
+  return mShell.GetColorAtMouse();
+}
+
+void OsShell::SetMouseCursor(Cursor::Enum cursorId)
+{
+  return mShell.SetMouseCursor(cursorId);
+}
+
+bool OsShell::IsClipboardText()
+{
+  return mShell.IsClipboardText();
+}
+
+String OsShell::GetClipboardText()
+{
+  return mShell.GetClipboardText();
+}
+
+void OsShell::SetClipboardText(StringParam text)
+{
+  return mShell.SetClipboardText(text);
+}
+
+bool OsShell::IsClipboardImage()
+{
+  return mShell.IsClipboardImage();
+}
+
+bool OsShell::GetClipboardImage(Image* imageBuffer)
+{
+  return mShell.GetClipboardImage(imageBuffer);
+}
+
+bool OsShell::GetPrimaryMonitorImage(Image* imageBuffer)
+{
+  return mShell.GetPrimaryMonitorImage(imageBuffer);
+}
+
+bool OsShell::OpenFile(FileDialogConfig& config)
+{
+  return mShell.OpenFile(config);
+}
+
+bool OsShell::SaveFile(FileDialogConfig& config)
+{
+  return mShell.SaveFile(config);
+}
+
+void OsShell::ShowMessageBox(StringParam title, StringParam message)
+{
+  return mShell.ShowMessageBox(title, message);
+}
+
+void OsShell::ScanInputDevices()
+{
+  // DeactivateAll because joysticks may have been removed in device changed
+  Z::gJoysticks->DeactivateAll();
+
+  const Array<PlatformInputDevice>& devices = mShell.ScanInputDevices();
+  forRange(PlatformInputDevice& device, devices)
+  {
+    // Tell the Joysticks system that a Joystick is present
+    Z::gJoysticks->AddJoystickDevice(device);
+  }
+
+  Z::gJoysticks->JoysticksChanged();
+}
+
+size_t OsShell::GetWindowCount()
+{
+  return mShell.mWindows.Size();
+}
+
+OsWindow* OsShell::GetWindow(size_t index)
+{
+  if (index >= mShell.mWindows.Size())
+  {
+    DoNotifyException("Shell", "Invalid window index");
+    return nullptr;
+  }
+  return (OsWindow*)mShell.mWindows[index]->mUserData;
 }
 
 void OsShell::DumpMemoryDebuggerStats()
@@ -54,18 +218,18 @@ FileDialogConfig::FileDialogConfig()
   mUserData = this;
 }
 
-void FileDialogConfig::Callback(Array<String>& files, bool success, void* userData)
+void FileDialogConfig::Callback(Array<String>& files, void* userData)
 {
   FileDialogConfig* self = (FileDialogConfig*)userData;
   
-  if (self->CallbackObject)
-  {
-    OsFileSelection fileEvent;
-    fileEvent.Files = files;
-    fileEvent.Success = success;
-    EventDispatcher* dispatcher = self->CallbackObject->GetDispatcherObject();
-    dispatcher->Dispatch(self->EventName, &fileEvent);
-  }
+  if (!self->CallbackObject)
+    return;
+  
+  OsFileSelection fileEvent;
+  fileEvent.Files = files;
+  fileEvent.Success = !files.Empty();
+  EventDispatcher* dispatcher = self->CallbackObject->GetDispatcherObject();
+  dispatcher->Dispatch(self->EventName, &fileEvent);
 }
 
 }//namespace Zero

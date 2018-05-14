@@ -129,9 +129,6 @@
     <ProjectReference Include="..\Sound\Sound.vcxproj">
       <Project>{ca0735f3-8ce7-4663-bfe5-96fef5ea0880}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\WindowsShell\WindowsShellSystem.vcxproj">
-      <Project>{fae35cec-66e1-4c73-bc88-1a001610440a}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\ZilchScript\ZilchScript.vcxproj">
       <Project>{175480cf-83df-4510-801f-68824c1b9f70}</Project>
     </ProjectReference>

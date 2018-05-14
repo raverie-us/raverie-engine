@@ -69,7 +69,7 @@ public:
     DataBuffer = buffer->Data;
   }
 
-  PixelRange(Image* buffer, PixelRect area)
+  PixelRange(Image* buffer, IntRect area)
   {
     X = startX = area.X;
     Y = startY = area.Y;

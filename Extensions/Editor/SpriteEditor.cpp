@@ -25,7 +25,7 @@ namespace SpriteTileViewUi
   static float MaxTileSize = 500.0f;
 }
 
-UvRect ComputeTextureRect(PixelRect pixelRect, Vec2 textureSize)
+UvRect ComputeTextureRect(IntRect pixelRect, Vec2 textureSize)
 {
   Vec2 inverseTextureSize = Vec2(1.0f, 1.0f) / textureSize;
   UvRect texRect;
@@ -105,9 +105,9 @@ SpriteFrameLayout::SpriteFrameLayout(uint frameCount, uint frameSizeX, uint fram
   FramesPerRow = Math::Max(sizeX / frameSizeX, 1u);
 }
 
-PixelRect SpriteFrameLayout::GetFrame(uint frameIndex)
+IntRect SpriteFrameLayout::GetFrame(uint frameIndex)
 {
-  PixelRect rect;
+  IntRect rect;
   rect.X = (frameIndex % FramesPerRow) * FrameSizeX;
   rect.Y = (frameIndex / FramesPerRow) * FrameSizeY;
   rect.SizeX = FrameSizeX;
@@ -172,7 +172,7 @@ SpriteFrame::~SpriteFrame()
 }
 
 // Allocate a texture to display a sprite frame
-void SpriteFrame::AllocateFrame(uint frameIndex, Image& sourceImage, PixelRect sourceRect)
+void SpriteFrame::AllocateFrame(uint frameIndex, Image& sourceImage, IntRect sourceRect)
 {
   mFrameTexture = NULL;
 
@@ -180,7 +180,7 @@ void SpriteFrame::AllocateFrame(uint frameIndex, Image& sourceImage, PixelRect s
 
   uint textureSize = GetNextPowerOfTwo( Math::Max(sourceRect.SizeX, sourceRect.SizeY) );;
 
-  PixelRect localFrameRect = {0,0, sourceRect.SizeX, sourceRect.SizeY};
+  IntRect localFrameRect = {0,0, sourceRect.SizeX, sourceRect.SizeY};
   mFrameRect = localFrameRect;
   mTexRect = ComputeTextureRect(localFrameRect, Vec2(float(textureSize), float(textureSize)));
   mFrameImage.Allocate(textureSize, textureSize);
@@ -832,7 +832,7 @@ void SpriteSourceEditor::ConvertToSpriteSheet(Image& output)
 
   forRange(SpriteFrame* frame, mSpriteData.All())
   {
-    PixelRect frameRect = frameLayout.GetFrame(frame->mFrameIndex);
+    IntRect frameRect = frameLayout.GetFrame(frame->mFrameIndex);
     CopyImage(&output, &frame->mFrameImage, frameRect.X, frameRect.Y, 0,0, mFrameSizeX, mFrameSizeY);
   }
 }
@@ -883,7 +883,7 @@ void SpriteSourceEditor::OnExportAllFrames(Event* event)
   forRange(SpriteFrame* spriteFrame, mSpriteData.All())
   {
     // Copy frame into image
-    PixelRect frameRect = spriteFrame->mFrameRect;
+    IntRect frameRect = spriteFrame->mFrameRect;
     Image buffer;
     buffer.Allocate(frameRect.SizeX, frameRect.SizeY);
     CopyImage(&buffer, &spriteFrame->mFrameImage, 0, 0, frameRect.X, frameRect.Y, frameRect.SizeX, frameRect.SizeY);
@@ -995,7 +995,7 @@ void SpriteSourceEditor::OnSelectionActivated(DataEvent* event)
   EditFrameImage(event->Index);
 }
 
-bool ValidateImage(PixelRect expectedSize, Image& newImage)
+bool ValidateImage(IntRect expectedSize, Image& newImage)
 {
   if(expectedSize.SizeY != newImage.Height ||
     expectedSize.SizeX != newImage.Width)
@@ -1018,7 +1018,7 @@ void SpriteSourceEditor::OnFileModified(FileEditEvent* event)
     LoadFromPng(status, &newImage, fullPath);
 
     // Get the frame size
-    PixelRect oldFrameRect = frameEdited->mFrameRect;
+    IntRect oldFrameRect = frameEdited->mFrameRect;
 
     // Prevent external edit
     if(!ValidateImage(oldFrameRect, newImage))
@@ -1043,7 +1043,7 @@ void SpriteSourceEditor::OnFileModified(FileEditEvent* event)
 
     // Recalculate how big it should be
     SpriteFrameLayout frameLayout(mSpriteData.Size(), mFrameSizeX, mFrameSizeY);
-    PixelRect sheetRect = frameLayout.TotalSize;
+    IntRect sheetRect = frameLayout.TotalSize;
 
     // Prevent external resize
     if(!ValidateImage(sheetRect, newImage))
@@ -1073,7 +1073,7 @@ void SpriteSourceEditor::EditFrameImage(DataIndex frameIndex)
   SpriteFrame* spriteFrame = (SpriteFrame*)mSpriteData.ToEntry(frameIndex);
 
   // Copy frame into image
-  PixelRect frameRect = spriteFrame->mFrameRect;
+  IntRect frameRect = spriteFrame->mFrameRect;
   Image buffer;
   buffer.Allocate(frameRect.SizeX, frameRect.SizeY);
   CopyImage(&buffer, &spriteFrame->mFrameImage, 0, 0, frameRect.X, frameRect.Y, frameRect.SizeX, frameRect.SizeY);
@@ -1134,7 +1134,7 @@ void SpriteSourceEditor::UpdatePreview()
   }
 }
 
-void SpriteSourceEditor::CreateSpriteFrame(uint frameIndex, Image& image, PixelRect rect)
+void SpriteSourceEditor::CreateSpriteFrame(uint frameIndex, Image& image, IntRect rect)
 {
   // Create a sprite frame
   SpriteFrame* frame = new SpriteFrame();
@@ -1151,7 +1151,7 @@ void SpriteSourceEditor::LoadFramesFromSheet(Image& sourceImage, uint frameCount
 
   for(uint i=0;i<frameCount;++i)
   {
-    PixelRect rect = frameLayout.GetFrame(i);
+    IntRect rect = frameLayout.GetFrame(i);
     CreateSpriteFrame(i, sourceImage, rect);
   }
 

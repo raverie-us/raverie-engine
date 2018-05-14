@@ -25,7 +25,7 @@ DeclareEnum2(ImportFrames, AllFrames, SelectedFrames);
 struct FrameArea
 {
   bool Active;
-  PixelRect Rect;
+  IntRect Rect;
 };
 
 //------------------------------------------------------------------------ Pixel Grid Area
@@ -62,8 +62,8 @@ public:
   void ClearSelectedFrames();
   void OnClearPressed(ObjectEvent* event);
   
-  void SaveDataToSpriteSource(SpriteSource* sprite, PixelRect frameSize, uint numberOfFrames);
-  SpriteSource* AddSpriteResource(StringParam name, Image& output, PixelRect frameSize, uint numberOfFrames);
+  void SaveDataToSpriteSource(SpriteSource* sprite, IntRect frameSize, uint numberOfFrames);
+  SpriteSource* AddSpriteResource(StringParam name, Image& output, IntRect frameSize, uint numberOfFrames);
   bool AddFramesAsSprites();
   bool AddMultiFrameSprite();
 
@@ -88,7 +88,7 @@ public:
   void NudgePosition(IntVec2 move);
   void AddFrame(IntVec2 gridCell);
   void RemoveFrame(int frameIndex);
-  PixelRect GetRectAtIndex(IntVec2 gridCell);
+  IntRect GetRectAtIndex(IntVec2 gridCell);
   bool CheckFramesAt(IntVec2 loction, int& frameSelected);
   IntVec2 GetGridIndex(IntVec2 imagePos);
   IntVec2 ToImagePosition(Vec2 screenPoint);

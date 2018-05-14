@@ -475,7 +475,7 @@ void Gamepads::Startup()
   }
 
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnUpdate);
-  ConnectThisTo(Z::gEngine, Events::OsDeviceAdded, OnDeviceChanged);
+  ConnectThisTo(Z::gEngine, Events::OsDeviceChanged, OnDeviceChanged);
 
   Update();
 }

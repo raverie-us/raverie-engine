@@ -63,6 +63,7 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   RawControlMapping();
+  RawControlMapping(const PlatformInputDevice& device);
   void Serialize(Serializer& stream);
 
   bool IsSame(RawControlMapping* map);
@@ -70,7 +71,6 @@ public:
   String mName;
   Array<RawAxis> mAxes;
   Array<RawButton> mButtons;
-  bool mIsParsed;
 };
 
 /// Joystick events are sent when a game pad button state is changed
@@ -156,11 +156,11 @@ private:
   RawControlMapping* mRawMapping;
 
   /// The OS device handle that's sending input
-  uint mDeviceHandle;
+  OsHandle mDeviceHandle;
 
   /// The guid allows us to mostly uniquely identify joysticks, so that when a joystick is
   /// unplugged and then plugged back in, we can map it back to the same joystick
-  uint mHardwareGuid;
+  Guid mHardwareGuid;
 
   /// The name of the joystick
   String mName;
@@ -179,8 +179,10 @@ private:
   uint mButtons;
 };
 
-typedef HashMap<uint, Joystick*> JoystickMap;
-typedef JoystickMap::valuerange JoystickRange;
+typedef HashMap<Guid, Joystick*> JoystickGuidMap;
+typedef JoystickGuidMap::valuerange JoystickGuidRange;
+typedef HashMap<OsHandle, Joystick*> JoystickDeviceMap;
+typedef JoystickDeviceMap::valuerange JoystickDeviceRange;
 
 /// Joysticks is a collection of all joysticks available
 class Joysticks : public ExplicitSingleton<Joysticks, EventObject>
@@ -192,10 +194,10 @@ public:
   uint GetJoystickCount();
 
   /// Get the joystick for a given hardware id
-  Joystick* GetJoystickByDevice(uint id);
+  Joystick* GetJoystickByDevice(OsHandle handle);
 
   // Get a range of joystick objects
-  JoystickRange GetJoysticks();
+  JoystickDeviceRange GetJoysticks();
 
   /// Creates the joystick system and attempts to acquire any available joysticks
   Joysticks();
@@ -205,12 +207,12 @@ public:
 
   // Signal that a joystick has been added
   void DeactivateAll();
-  void AddJoystickDevice(uint deviceHandle, uint hardwardGuid, StringParam name, RawControlMapping* map);
+  void AddJoystickDevice(const PlatformInputDevice& device);
   void JoysticksChanged();
 private:
   
-  JoystickMap mDeviceToJoystick;
-  JoystickMap mGuidToJoystick;
+  JoystickDeviceMap mDeviceToJoystick;
+  JoystickGuidMap mGuidToJoystick;
 };
 
 namespace Z

@@ -18,7 +18,7 @@ ZilchDefineRange(HierarchyList::reverse_range);
 ZilchDefineRange(Space::range);
 ZilchDefineRange(SpaceMap::valueRange);
 ZilchDefineRange(ObjectLinkRange);
-ZilchDefineRange(JoystickRange);
+ZilchDefineRange(JoystickDeviceRange);
 ZilchDefineRange(CogHashSetRange);
 ZilchDefineRange(ResourceTableEntryList::range);
 ZilchDefineRange(OperationListRange);
@@ -70,7 +70,6 @@ ZeroDefineArrayType(Array<ContentLibraryReference>);
 // The keys enum has to be declared special since it skips values
 ZilchDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
 {
-  SetUpKeyNames();
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
 
   // For now, just iterate over all keys in the name map and if there was no saved name then
@@ -118,7 +117,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);
-  ZilchInitializeRange(JoystickRange);
+  ZilchInitializeRangeAs(JoystickDeviceRange, "JoystickRange");
   ZilchInitializeRange(CogHashSetRange);
   ZilchInitializeRangeAs(ResourceTableEntryList::range, "ResourceTableEntryRange");
   ZilchInitializeRange(OperationListRange);

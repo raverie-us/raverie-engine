@@ -37,7 +37,6 @@ public:
 };
 
 //--------------------------------------------------------------- Progress Event
-DeclareEnum3(ProgressType, Normal, Indeterminate, None);
 
 class ProgressEvent : public Event
 {

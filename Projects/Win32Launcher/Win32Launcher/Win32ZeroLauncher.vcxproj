@@ -5,6 +5,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C47C1FA4-409A-4300-905F-D4CC179BABC0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>ZeroLauncher</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!--Import the Win32 property sheet (from the build folder) for each configuration-->
@@ -88,7 +89,7 @@
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp" />
@@ -164,9 +165,6 @@
     </ProjectReference>
     <ProjectReference Include="$(ZERO_SOURCE)\Systems\Sound\Sound.vcxproj">
       <Project>{ca0735f3-8ce7-4663-bfe5-96fef5ea0880}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(ZERO_SOURCE)\Systems\WindowsShell\WindowsShellSystem.vcxproj">
-      <Project>{fae35cec-66e1-4c73-bc88-1a001610440a}</Project>
     </ProjectReference>
     <ProjectReference Include="$(ZERO_SOURCE)\Systems\ZilchScript\ZilchScript.vcxproj">
       <Project>{175480cf-83df-4510-801f-68824c1b9f70}</Project>

@@ -63,4 +63,8 @@
     <ClInclude Include="WString.hpp" />
     <ClInclude Include="WinUtility.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Keys.inl" />
+    <None Include="MouseButtons.inl" />
+  </ItemGroup>
 </Project>

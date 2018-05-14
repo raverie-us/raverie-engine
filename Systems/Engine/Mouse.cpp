@@ -57,11 +57,8 @@ Cursor::Enum Mouse::GetCursor()
 
 void Mouse::SetCursor(Cursor::Enum cursor)
 {
-  if(mActiveWindow)
-  {
-    mCurrentCursor = cursor;
-    mActiveWindow->SetMouseCursor(cursor);
-  }
+  Z::gEngine->has(OsShell)->SetMouseCursor(cursor);
+  mCurrentCursor = cursor;
 }
 
 bool Mouse::GetTrapped()

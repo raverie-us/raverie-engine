@@ -12,7 +12,7 @@
 namespace Zero
 {
 
-UvRect ComputeTextureRect(PixelRect pixelRect, Vec2 textureSize);
+UvRect ComputeTextureRect(IntRect pixelRect, Vec2 textureSize);
 
 const float cMinZoom = 0.1f;
 const float cMaxZoom = 20.0f;
@@ -23,12 +23,12 @@ public:
   SpriteFrameLayout(uint frameCount, uint frameSizeX, uint frameSizeY);
   SpriteFrameLayout(uint frameCount, uint frameSizeX, uint frameSizeY, uint sizeX, uint sizeY);
 
-  PixelRect TotalSize;
+  IntRect TotalSize;
   int FrameSizeX;
   int FrameSizeY;
   int FramesPerRow;
   int FramesPerCol;
-  PixelRect GetFrame(uint frameIndex);
+  IntRect GetFrame(uint frameIndex);
 };
 
 class SpriteSource;
@@ -51,11 +51,11 @@ public:
 
   SpriteFrame(SpriteFrame& spriteFrame);
 
-  void AllocateFrame(uint frameNumber, Image& sourceImage, PixelRect sourceRect);
+  void AllocateFrame(uint frameNumber, Image& sourceImage, IntRect sourceRect);
 
   int mFrameIndex;
   UvRect mTexRect;
-  PixelRect mFrameRect;
+  IntRect mFrameRect;
   Image mFrameImage;
   HandleOf<Texture> mFrameTexture;
 };
@@ -267,7 +267,7 @@ public:
   void SaveToSpriteSource();
 
   void ConvertToSpriteSheet(Image& output);
-  void CreateSpriteFrame(uint frameNumber, Image& image, PixelRect rect);
+  void CreateSpriteFrame(uint frameNumber, Image& image, IntRect rect);
   void UpdatePreview();
   void InvalidateEdits();
 

@@ -14,16 +14,17 @@ namespace Zero
 {
 using Math::IntVec2;
 
-struct PixelRect
+/// Integer rectangle where the origin is the top left.
+struct IntRect
 {
-  IntVec2 TopLeft(){return IntVec2(X, Y);}
-  IntVec2 Size(){return IntVec2(SizeX, SizeY); }
-  int Left(){return X;}
-  int Right(){return X + SizeX;}
-  int Top(){return Y;}
-  int Bottom(){return Y + SizeY;}
+  IntVec2 TopLeft() const {return IntVec2(X, Y);}
+  IntVec2 Size() const {return IntVec2(SizeX, SizeY); }
+  int Left() const {return X;}
+  int Right() const {return X + SizeX;}
+  int Top() const {return Y;}
+  int Bottom() const {return Y + SizeY;}
 
-  bool Contains(IntVec2& v)
+  bool Contains(IntVec2& v) const
   {
     if(v.x < X) return false;
     if(v.y < Y) return false;
@@ -32,7 +33,7 @@ struct PixelRect
     return true;
   }
 
-  IntVec2 Center(IntVec2 size)
+  IntVec2 Center(IntVec2 size) const
   {
     IntVec2 v;
     v.x = X + (SizeX - size.x) / 2;

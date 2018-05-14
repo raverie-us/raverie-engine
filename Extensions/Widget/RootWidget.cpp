@@ -241,7 +241,7 @@ void RootWidget::OnManagerUpdate(UpdateEvent* event)
 
 void RootWidget::UpdateTransform()
 {
-  Vec2 size = ToVec2(mOsWindow->GetSize());
+  Vec2 size = ToVec2(mOsWindow->GetClientSize());
   if(mSize != size)
   {
     WindowState::Type windowState = GetOsWindow()->GetState();
@@ -748,7 +748,7 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
   {
     OsWindow* window = osMouseEvent->Window;
     if(window)
-      mouseMovement = ToVec2(osMouseEvent->ClientPosition - window->GetMouseTrapScreenPosition());
+      mouseMovement = ToVec2(osMouseEvent->ClientPosition - window->MonitorToClient(window->GetMouseTrapMonitorPosition()));
   }
   else
   {

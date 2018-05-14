@@ -197,14 +197,14 @@ void MultiManager::Transfer(TabWidget* tabWidget, Widget* widget)
 
     // Open window on current location
     IntVec2 windowPos = ToIntVec2(ToVector2(currentWindow->GetScreenPosition()));
-    windowPos += currentOsWindow->GetPosition();
+    windowPos += currentOsWindow->GetMonitorClientPosition();
     IntVec2 windowSize = Math::ToIntVec2( currentWindow->GetSize() );
     String name = tabWidget->mTitle->GetText();
 
     // Create a new top level window
     WindowStyleFlags::Enum windowFlags = (WindowStyleFlags::Enum)(WindowStyleFlags::Resizable | WindowStyleFlags::OnTaskBar | WindowStyleFlags::ClientOnly);
     OsWindow* newOsWindow = shell->CreateOsWindow(name, windowSize, windowPos, currentOsWindow, windowFlags);
-    newOsWindow->SetMinSize(IntVec2(500, 500));
+    newOsWindow->SetMinClientSize(IntVec2(500, 500));
     MainWindow* rootWidget = new MainWindow(newOsWindow);
     rootWidget->SetTitle(name);
 
@@ -213,7 +213,7 @@ void MultiManager::Transfer(TabWidget* tabWidget, Widget* widget)
     // Attach a window to it
     Window* window = new Window(rootWidget);
     ManageWidget(window);
-    newOsWindow->SetMinSize( ToIntVec2(currentWindow->GetMinSize()));
+    newOsWindow->SetMinClientSize( ToIntVec2(currentWindow->GetMinSize()));
     window->mDocker = new OsDocker();
     window->AttachAsTab(widget);
 

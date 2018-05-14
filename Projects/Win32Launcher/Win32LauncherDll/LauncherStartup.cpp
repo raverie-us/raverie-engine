@@ -57,11 +57,6 @@ bool LoadContent(Cog* configCog)
 
 bool LoadResources(Cog* configCog)
 {
-  OsShell* osShell = Z::gEngine->has(OsShell);
-  PixelRect desktopRect = osShell->GetDesktopRect();
-  IntVec2 loadingSize = IntVec2(400, 400);
-  IntVec2 center = desktopRect.Center(loadingSize);
-
   LoadContentConfig(configCog);
 
   Z::gLauncher->Initialize();

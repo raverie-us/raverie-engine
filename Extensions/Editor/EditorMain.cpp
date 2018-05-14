@@ -799,22 +799,15 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
 
   OsWindow* mainWindow = osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
-  mainWindow->SetMinSize(IntVec2(800, 600));
+  mainWindow->SetMinClientSize(IntVec2(800, 600));
   mainWindow->SetState(WindowState::Maximized);
 
   // Pass window handle to initialize the graphics api
   Z::gEngine->has(GraphicsEngine)->CreateRenderer(mainWindow);
 
-  if (Z::gRenderer->mDriverSupport.mIntel)
-  {
-    // Borderless window with Windows Aero does not work correctly on Intel.
-    mainStyle = (WindowStyleFlags::Enum)(mainStyle & ~WindowStyleFlags::Resizable);
-    // Specifying a titlebar does not work correctly on Intel.
-    mainStyle = (WindowStyleFlags::Enum)(mainStyle & ~WindowStyleFlags::TitleBar);
-    // SetStyle sets state to windowed to force the window to update, so reset maximize after.
-    mainWindow->SetStyle(mainStyle);
-    mainWindow->SetState(WindowState::Maximized);
-  }
+  // Fix any issues related to Intel drivers
+  mainWindow->PlatformSpecificFixup();
+  mainWindow->SetState(WindowState::Maximized);
 
   // This is after CreateRenderer so that the graphics api is initialized for graphics resources
   if (!LoadEditorContent(config))

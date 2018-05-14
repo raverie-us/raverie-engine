@@ -15,7 +15,6 @@ DeclareEvent(OsShellUpdate);
 }
 
 class OsWindow;
-class OsWindow;
 struct FileDialogConfig;
 
 class OsShellHook
@@ -34,48 +33,65 @@ public:
 
   OsShell();
 
+  /// System interface
+  cstr GetName() override;
+  void Update() override;
+
   /// Name of the Shell's operating system.
-  virtual String GetOsName() = 0;
+  String GetOsName();
 
   /// OS specific line-scroll setting when using the mouse scroll wheel.
-  virtual uint GetScrollLineCount();
+  uint GetScrollLineCount();
 
   /// Find what OsWindow is underneath the given screen position.
-  virtual OsWindow* FindWindowAt(IntVec2Param screenPosition) = 0;
+  OsWindow* FindWindowAt(IntVec2Param screenPosition);
 
-  // Get the desktop rectangle.
-  virtual PixelRect GetDesktopRect() = 0;
+  /// Get the rectangle of the primary monitor (desktop size).
+  IntRect GetPrimaryMonitorRectangle();
+
+  /// Get the size of the primary monitor (desktop size).
+  IntVec2 GetPrimaryMonitorSize();
 
   /// Create an OS window.
-  virtual OsWindow* CreateOsWindow(StringParam windowName, IntVec2Param windowSize, IntVec2Param windowPos,
-                                   OsWindow* parentWindow, WindowStyleFlags::Enum flags) = 0;
+  OsWindow* CreateOsWindow(
+    StringParam windowName,
+    IntVec2Param clientSize,
+    IntVec2Param monitorClientPos,
+    OsWindow* parentWindow,
+    WindowStyleFlags::Enum flags);
 
   /// Get the pixel color at the mouse position.
-  virtual ByteColor GetColorAtMouse() = 0;
+  ByteColor GetColorAtMouse();
+
+  /// Set the cursor for the mouse.
+  void SetMouseCursor(Cursor::Enum cursorId);
   
   /// Check if the current clipboard Contains text.
-  virtual bool IsClipboardText() = 0;
+  bool IsClipboardText();
   /// The current clipboard text.
-  virtual String GetClipboardText() = 0;
-  virtual void SetClipboardText(StringParam text) = 0;
+  String GetClipboardText();
+  void SetClipboardText(StringParam text);
   
   /// Checks if the clipboard holds an image
-  virtual bool IsClipboardImageAvailable() = 0;
+  bool IsClipboardImage();
   /// Get an image from clipboard.
-  virtual bool GetClipboardImage(Image* imageBuffer) = 0;
-  /// Get an image from window
-  virtual bool GetWindowImage(Image* imageBuffer) = 0;
+  bool GetClipboardImage(Image* imageBuffer);
+  /// Get an image of the desktop / primary monitor.
+  bool GetPrimaryMonitorImage(Image* imageBuffer);
 
-  // Use the file open dialog.
-  virtual void OpenFile(FileDialogConfig& config) = 0;
-  // Use the save file dialog.
-  virtual void SaveFile(FileDialogConfig& config) = 0;
-  // Message box used for critical failures.
-  virtual void ShowMessageBox(StringParam title, StringParam message) = 0;
+  /// Use the file open dialog.
+  bool OpenFile(FileDialogConfig& config);
+  /// Use the save file dialog.
+  bool SaveFile(FileDialogConfig& config);
+  /// Message box used for critical failures.
+  void ShowMessageBox(StringParam title, StringParam message);
+
+  /// Scan for new input devices and register them with Zero.
+  void ScanInputDevices();
 
   /// How many OsWindows current exist
-  virtual size_t GetWindowCount() = 0;
-  virtual OsWindow* GetWindow(size_t index) = 0;
+  size_t GetWindowCount();
+  OsWindow* GetWindow(size_t index);
   
   /// Debug helper to print out memory logging information
   void DumpMemoryDebuggerStats();
@@ -84,6 +100,11 @@ public:
   /// during the middle of our update after the keyboard has
   /// been updated but before we send input events.
   OsShellHook* mOsShellHook;
+
+  bool mIsUpdating;
+
+  /// Platform specific shell
+  Shell mShell;
 };
 
 //-------------------------------------------------------------------- Os Events
@@ -99,7 +120,7 @@ public:
 //-------------------------------------------------------------------FileDialogConfig
 /// FileDialogConfig is used to configure the Open File Dialog
 /// and the Save File Dialog.
-struct FileDialogConfig : public FileDialogSetup
+struct FileDialogConfig : public FileDialogInfo
 {
   FileDialogConfig();
 
@@ -107,7 +128,7 @@ struct FileDialogConfig : public FileDialogSetup
   Object* CallbackObject;
 
 private:
-  static void Callback(Array<String>& files, bool success, void* userData);
+  static void Callback(Array<String>& files, void* userData);
 };
 
 }//namespace Zero

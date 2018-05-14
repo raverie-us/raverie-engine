@@ -135,19 +135,17 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   memset(&processInfo, 0, sizeof(processInfo));
 
   // Start the child process.
-  BOOL result = CreateProcess
-  (
-    NULL,                         // No module name (use command line)
-    (LPTSTR)commandLine.c_str(),  // Command line
-    NULL,                         // Process handle not inheritable
-    NULL,                         // Thread handle not inheritable
-    FALSE,                        // Set handle inheritance to FALSE
-    CREATE_NO_WINDOW,             // Creation flags
-    NULL,                         // Use parent's environment block
-    NULL,                         // Use parent's starting directory
-    &startUpInfo,                 // Pointer to STARTUPINFO structure
-    &processInfo
-  );
+  BOOL result = CreateProcess(
+    NULL,                 // No module name (use command line)
+    (LPTSTR)Widen(commandLine).c_str(),  // Command line
+    NULL,                 // Process handle not inheritable
+    NULL,                 // Thread handle not inheritable
+    FALSE,                // Set handle inheritance to FALSE
+    CREATE_NO_WINDOW,     // Creation flags
+    NULL,                 // Use parent's environment block
+    NULL,                 // Use parent's starting directory
+    &startUpInfo,         // Pointer to STARTUPINFO structure
+    &processInfo);
 
   // If we failed to start the process...
   if (!result)

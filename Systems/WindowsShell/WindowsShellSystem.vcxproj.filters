@@ -20,8 +20,5 @@
     <ClInclude Include="RawInput.hpp">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="WinInputs.inl">
-      <Filter>System</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
