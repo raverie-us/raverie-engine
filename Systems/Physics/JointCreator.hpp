@@ -87,6 +87,8 @@ private:
   Cog* FindCommonParent(Cog* cogA, Cog* cogB);
   
   bool ObjectsValid(Cog* a, Cog* b, StringParam jointName);
+  bool ObjectValid(Cog* cog, StringParam jointName);
+
   void ConfigureInfo(ConnectionInfo& info);
   Cog* CreateJoint(StringParam fileName, ConnectionInfo& info, Archetype* archetype);
   void SetBasicProperties(Joint* joint);

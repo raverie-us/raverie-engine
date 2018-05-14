@@ -315,21 +315,28 @@ void JointCreator::SetAttachToCommonParent(bool attachToCommonParent)
 
 bool JointCreator::ObjectsValid(Cog* a, Cog* b, StringParam jointName)
 {
-  if(a == nullptr || b == nullptr || a->GetMarkedForDestruction() || b->GetMarkedForDestruction())
+  bool isValid = ObjectValid(a, jointName);
+  // If we're not attaching to world then we have to validate cog b.
+  if(!mFlags.IsSet(JointCreatorFlags::AttachToWorld))
+    isValid &= ObjectValid(b, jointName);
+  return isValid;
+}
+
+bool JointCreator::ObjectValid(Cog* cog, StringParam jointName)
+{
+  if(cog == nullptr || cog->GetMarkedForDestruction())
     return false;
 
-  Transform* transformA = a->has(Transform);
-  Transform* transformB = b->has(Transform);
+  Transform* transform = cog->has(Transform);
   // Need a transforms
-  if(transformA == nullptr || transformB == nullptr)
+  if(transform == nullptr)
     return false;
 
   if(jointName != "ObjectLink")
   {
-    Collider* colliderA = a->has(Collider);
-    Collider* colliderB = b->has(Collider);
+    Collider* collider = cog->has(Collider);
     // Need a valid collider
-    if(colliderA == nullptr || colliderB == nullptr)
+    if(collider == nullptr)
       return false;
   }
   return true;
