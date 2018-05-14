@@ -166,9 +166,11 @@ namespace Audio
   void PanningNode::SetSumToMono(const bool isMono)
   {
     SumToMono = isMono;
+    if (SumToMono)
+      Active = true;
 
     if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&PanningNode::SumToMono,
+      gAudioSystem->AddTask(Zero::CreateFunctor(&PanningNode::SetSumToMono,
         (PanningNode*)GetSiblingNode(), isMono));
   }
 
@@ -268,6 +270,7 @@ namespace Audio
 
     if (Active)
     {
+      unsigned totalFrames = bufferSize / numberOfChannels;
       unsigned channelsToGet;
       if (SumToMono)
         channelsToGet = 1;
@@ -275,17 +278,16 @@ namespace Audio
         channelsToGet = 2;
 
       // Get input and return if there is no data
-      if (!AccumulateInputSamples(bufferSize, channelsToGet, listener))
+      if (!AccumulateInputSamples(totalFrames * channelsToGet, channelsToGet, listener))
         return false;
 
-      unsigned totalFrames = bufferSize / numberOfChannels;
       // Step through each frame of audio data
       for (unsigned currentFrame = 0; currentFrame < totalFrames; ++currentFrame)
       {
         float leftValue, rightValue;
         // If requested 1 channel of audio, copy this to left and right channels
         if (SumToMono)
-          leftValue = rightValue = InputSamples[currentFrame] * 0.5f;
+          leftValue = rightValue = InputSamples[currentFrame];
         else
         {
           leftValue = InputSamples[currentFrame * 2];
@@ -331,8 +333,7 @@ namespace Audio
         {
           float values[2] = { leftValue, rightValue };
           AudioFrame frame(values, 2);
-          frame.TranslateChannels(numberOfChannels);
-          memcpy(outputBuffer->Data() + (currentFrame * numberOfChannels), frame.Samples,
+          memcpy(outputBuffer->Data() + (currentFrame * numberOfChannels), frame.GetSamples(numberOfChannels),
             sizeof(float) * numberOfChannels);
         }
       }
@@ -340,7 +341,7 @@ namespace Audio
       AddBypass(outputBuffer);
 
       // Check for both volumes being at or near 1.0, and if true mark as not active
-      if (!CurrentData.Interpolating && IsWithinLimit(1.0f - LeftVolume, 0.0f, 0.01f)
+      if (!CurrentData.Interpolating && !SumToMono && IsWithinLimit(1.0f - LeftVolume, 0.0f, 0.01f)
         && IsWithinLimit(1.0f - RightVolume, 0.0f, 0.01f))
         Active = false;
 

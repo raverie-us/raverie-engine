@@ -1149,13 +1149,15 @@ void ResourceTemplateDisplay::OnCreate(Event*)
     Z::gEditor->EditResource(resourceAdd.SourceResource);
 
     // If a post operation was set update the property
-    Handle instance = mPostAdd.mObject;
-    if (instance.IsNotNull())
+    forRange(Handle instance, mPostAdd.mObjects)
     {
-      Property* property = mPostAdd.mProperty.GetPropertyFromRoot(instance);
+      if (instance.IsNotNull())
+      {
+        Property* property = mPostAdd.mProperty.GetPropertyFromRoot(instance);
 
-      if (property && property->PropertyType == ZilchVirtualTypeId(resourceAdd.SourceResource))
-        ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(), instance, mPostAdd.mProperty, resourceAdd.SourceResource);
+        if (property && property->PropertyType == ZilchVirtualTypeId(resourceAdd.SourceResource))
+          ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(), instance, mPostAdd.mProperty, resourceAdd.SourceResource);
+      }
     }
 
     // Add all the tags set in the add window on our new resource

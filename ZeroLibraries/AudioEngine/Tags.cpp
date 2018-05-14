@@ -203,10 +203,6 @@ namespace Audio
     }
     else
     {
-      // If already playing max instances, mark this one as virtual
-      //if (InstanceLimit > 0 && InstanceVolumeMap.Size() >= InstanceLimit)
-      //  instance->mVirtual = true;
-
       // Add the tag to the instance's list
       instance->TagList.PushBack(this);
 

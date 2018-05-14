@@ -246,12 +246,7 @@ namespace Audio
       InputDataQueue.Write(new Zero::Array<float>(InputBuffer));
 
     // Resize BufferForOutput to match samplesNeeded
-    if (!Resampling)
-      BufferForOutput.Resize(samplesNeeded);
-    else
-    {
-      BufferForOutput.Resize(mixFrames * SystemChannelsThreaded);
-    }
+    BufferForOutput.Resize(mixFrames * SystemChannelsThreaded);
 
     // Get samples from output node
     bool isThereData = FinalOutputNodeThreaded->GetOutputSamples(&BufferForOutput, 
@@ -290,8 +285,6 @@ namespace Audio
           frame.SetSamples(samples.Data(), SystemChannelsThreaded);
         }
 
-        // If the mix and output channels don't match, translate the samples
-        frame.TranslateChannels(outputChannels);
         // Apply the system volume
         frame *= SystemVolumeThreaded;
         // Keep the samples between -1.0 and 1.0
@@ -306,15 +299,17 @@ namespace Audio
         unsigned value = (unsigned)(Math::Abs(frame.GetMonoValue()) * ((1 << 15) - 1));
         rmsVolume += value * value;
 
+        float* frameSamples = frame.GetSamples(outputChannels);
+
         // If 5.1 or 7.1, handle low frequency channel
         if (outputChannels == 6 || outputChannels == 8)
         {
           float monoSample = frame.GetMonoValue();
-          LowPass->ProcessFrame(&monoSample, &frame.Samples[3], 1);
+          LowPass->ProcessFrame(&monoSample, frameSamples + 3, 1);
         }
 
         // Copy this frame of samples to the output buffer
-        memcpy(MixedOutput.Data() + (frameIndex * outputChannels), frame.Samples,
+        memcpy(MixedOutput.Data() + (frameIndex * outputChannels), frameSamples,
           sizeof(float) * outputChannels);
       }
     }
@@ -591,9 +586,9 @@ namespace Audio
         for (unsigned i = 0; i < inputSamples.Size(); i += inputChannels)
         {
           AudioFrame frame(inputSamples.Data() + i, inputChannels);
-          frame.TranslateChannels(SystemChannelsThreaded);
+          float* samples = frame.GetSamples(SystemChannelsThreaded);
           for (unsigned j = 0; j < SystemChannelsThreaded; ++j)
-            InputBuffer.PushBack(frame.Samples[j]);
+            InputBuffer.PushBack(samples[j]);
         }
       }
       // Not adjusting channels, just get input
@@ -966,100 +961,144 @@ namespace Audio
   {
     SetSamples(samples, channels);
 
-    Matrices[0] = ChannelMatrix1;
-    Matrices[1] = ChannelMatrix2;
-    Matrices[2] = ChannelMatrix3;
-    Matrices[3] = ChannelMatrix4;
-    Matrices[4] = ChannelMatrix5;
-    Matrices[5] = ChannelMatrix6;
-    Matrices[6] = ChannelMatrix7;
-    Matrices[7] = ChannelMatrix8;
+    Matrices[0] = nullptr;
+    Matrices[1] = ChannelMatrix1;
+    Matrices[2] = ChannelMatrix2;
+    Matrices[3] = ChannelMatrix3;
+    Matrices[4] = ChannelMatrix4;
+    Matrices[5] = ChannelMatrix5;
+    Matrices[6] = ChannelMatrix6;
+    Matrices[7] = ChannelMatrix7;
+    Matrices[8] = ChannelMatrix8;
   }
 
   //************************************************************************************************
   AudioFrame::AudioFrame() :
-    HowManyChannels(1)
+    mStoredChannels(1)
   {
-    memset(Samples, 0, sizeof(float) * MaxChannels);
+    memset(mSamples, 0, sizeof(float) * MaxChannels);
 
-    Matrices[0] = ChannelMatrix1;
-    Matrices[1] = ChannelMatrix2;
-    Matrices[2] = ChannelMatrix3;
-    Matrices[3] = ChannelMatrix4;
-    Matrices[4] = ChannelMatrix5;
-    Matrices[5] = ChannelMatrix6;
-    Matrices[6] = ChannelMatrix7;
-    Matrices[7] = ChannelMatrix8;
+    Matrices[0] = nullptr;
+    Matrices[1] = ChannelMatrix1;
+    Matrices[2] = ChannelMatrix2;
+    Matrices[3] = ChannelMatrix3;
+    Matrices[4] = ChannelMatrix4;
+    Matrices[5] = ChannelMatrix5;
+    Matrices[6] = ChannelMatrix6;
+    Matrices[7] = ChannelMatrix7;
+    Matrices[8] = ChannelMatrix8;
   }
 
   //************************************************************************************************
   AudioFrame::AudioFrame(const AudioFrame& copy) :
-    HowManyChannels(copy.HowManyChannels)
+    mStoredChannels(copy.mStoredChannels)
   {
-    memset(Samples, 0, sizeof(float) * MaxChannels);
-    memcpy(Samples, copy.Samples, sizeof(float) * HowManyChannels);
+    memcpy(mSamples, copy.mSamples, sizeof(float) * MaxChannels);
+
+    Matrices[0] = nullptr;
+    Matrices[1] = ChannelMatrix1;
+    Matrices[2] = ChannelMatrix2;
+    Matrices[3] = ChannelMatrix3;
+    Matrices[4] = ChannelMatrix4;
+    Matrices[5] = ChannelMatrix5;
+    Matrices[6] = ChannelMatrix6;
+    Matrices[7] = ChannelMatrix7;
+    Matrices[8] = ChannelMatrix8;
   }
 
   //************************************************************************************************
-  void AudioFrame::TranslateChannels(const unsigned channels)
+  float* AudioFrame::GetSamples(const unsigned outputChannels)
   {
-    if (channels == HowManyChannels)
-      return;
-
-    float output[MaxChannels] = { 0 };
-
-    const float* matrix;
-    if (channels < HowManyChannels)
-      matrix = Matrices[channels - 1];
-    else
-      matrix = Matrices[HowManyChannels - 1];
-
-    for (unsigned outChannel = 0; outChannel < channels; ++outChannel)
+    if (outputChannels != mStoredChannels)
     {
-      for (unsigned sourceChannel = 0; sourceChannel < MaxChannels; ++sourceChannel)
-      {
-        output[outChannel] += Samples[sourceChannel] * matrix[(sourceChannel * channels) + outChannel];
-      }
-    }
+      float output[MaxChannels] = { 0 };
 
-    memcpy(Samples, output, sizeof(float) * MaxChannels);
+      // Down-mixing
+      if (outputChannels < mStoredChannels)
+      {
+        for (unsigned outChannel = 0; outChannel < outputChannels; ++outChannel)
+        {
+          for (unsigned i = 0; i < MaxChannels; ++i)
+          {
+            output[outChannel] += mSamples[i] * Matrices[outputChannels][i + (outChannel * MaxChannels)];
+          }
+        }
+      }
+      // Up-mixing
+      else
+      {
+        if (mStoredChannels == 1)
+        {
+          for (unsigned i = 0; i < outputChannels; ++i)
+            output[i] = mSamples[0];
+
+          output[LowFreq] = 0.0f;
+        }
+        else
+        {
+          if (mStoredChannels < 5)
+          {
+            output[0] = mSamples[0];
+            output[1] = mSamples[1];
+
+            if (mStoredChannels == 3)
+              output[Center] = mSamples[Center];
+            else
+              output[Center] = (mSamples[0] + mSamples[1]) * Sqrt2Inv;
+
+            output[BackLeft] = output[BackRight] = output[SideLeft] = output[SideRight] = (mSamples[0] - mSamples[1]) * Sqrt2Inv;
+          }
+          else
+          {
+            memcpy(output, mSamples, sizeof(float) * 6);
+            memcpy(output + BackLeft, mSamples + SideLeft, sizeof(float) * 2);
+          }
+        }
+      }
+
+      CopySamples(output, mCopiedSamples, outputChannels);
+    }
+    else
+      CopySamples(mSamples, mCopiedSamples, outputChannels);
+
+    return mCopiedSamples;
   }
 
   //************************************************************************************************
-  void AudioFrame::SetSamples(float* samples, unsigned channels)
+  void AudioFrame::SetSamples(const float* samples, unsigned channels)
   {
-    HowManyChannels = Math::Max(channels, (unsigned)1);
+    mStoredChannels = Math::Max(channels, (unsigned)1);
 
-    memset(Samples, 0, sizeof(float) * MaxChannels);
+    memset(mSamples, 0, sizeof(float) * MaxChannels);
 
     switch (channels)
     {
     case 1:
-      Samples[0] = samples[0];
+      mSamples[0] = samples[0];
       break;
     case 2:
-      memcpy(Samples, samples, sizeof(float) * 2);
+      memcpy(mSamples, samples, sizeof(float) * 2);
       break;
     case 3:
-      memcpy(Samples, samples, sizeof(float) * 3);
+      memcpy(mSamples, samples, sizeof(float) * 3);
       break;
     case 4:
-      memcpy(Samples, samples, sizeof(float) * 2);
-      memcpy(Samples + BackLeft, samples + 2, sizeof(float) * 2);
+      memcpy(mSamples, samples, sizeof(float) * 2);
+      memcpy(mSamples + BackLeft, samples + 2, sizeof(float) * 2);
       break;
     case 5:
-      memcpy(Samples, samples, sizeof(float) * 3);
-      memcpy(Samples + SideLeft, samples + 3, sizeof(float) * 2);
+      memcpy(mSamples, samples, sizeof(float) * 3);
+      memcpy(mSamples + SideLeft, samples + 3, sizeof(float) * 2);
       break;
     case 6:
-      memcpy(Samples, samples, sizeof(float) * 6);
+      memcpy(mSamples, samples, sizeof(float) * 6);
       break;
     case 7:
-      memcpy(Samples, samples, sizeof(float) * 3);
-      memcpy(Samples + SideLeft, samples + 3, sizeof(float) * 4);
+      memcpy(mSamples, samples, sizeof(float) * 3);
+      memcpy(mSamples + SideLeft, samples + 3, sizeof(float) * 4);
       break;
     case 8:
-      memcpy(Samples, samples, sizeof(float) * 8);
+      memcpy(mSamples, samples, sizeof(float) * 8);
       break;
     default:
       break;
@@ -1069,18 +1108,18 @@ namespace Audio
   //************************************************************************************************
   void AudioFrame::Clamp()
   {
-    for (unsigned i = 0; i < HowManyChannels; ++i)
-      Samples[i] = Math::Clamp(Samples[i], -1.0f, 1.0f);
+    for (unsigned i = 0; i < MaxChannels; ++i)
+      mSamples[i] = Math::Clamp(mSamples[i], -1.0f, 1.0f);
   }
 
   //************************************************************************************************
   float AudioFrame::GetMaxValue()
   {
-    float value = Math::Abs(Samples[0]);
+    float value = Math::Abs(mSamples[0]);
 
-    for (unsigned i = 1; i < HowManyChannels; ++i)
+    for (unsigned i = 1; i < MaxChannels; ++i)
     {
-      float newValue = Math::Abs(Samples[i]);
+      float newValue = Math::Abs(mSamples[i]);
       if (newValue > value)
         value = newValue;
     }
@@ -1091,15 +1130,15 @@ namespace Audio
   //************************************************************************************************
   float AudioFrame::GetMonoValue()
   {
-    if (HowManyChannels == 1)
-      return Samples[0];
+    if (mStoredChannels == 1)
+      return mSamples[0];
 
-    float value = Samples[0];
+    float value = mSamples[0];
 
-    for (unsigned i = 1; i < HowManyChannels; ++i)
-      value += Samples[i];
+    for (unsigned i = 1; i < MaxChannels; ++i)
+      value += mSamples[i];
 
-    value /= HowManyChannels;
+    value /= mStoredChannels;
 
     return value;
   }
@@ -1107,15 +1146,52 @@ namespace Audio
   //************************************************************************************************
   void AudioFrame::operator*=(float multiplier)
   {
-    for (unsigned i = 0; i < HowManyChannels; ++i)
-      Samples[i] *= multiplier;
+    for (unsigned i = 0; i < MaxChannels; ++i)
+      mSamples[i] *= multiplier;
   }
 
   //************************************************************************************************
   void AudioFrame::operator=(const AudioFrame& copy)
   {
-    HowManyChannels = copy.HowManyChannels;
-    memcpy(Samples, copy.Samples, sizeof(float) * MaxChannels);
+    mStoredChannels = copy.mStoredChannels;
+    memcpy(mSamples, copy.mSamples, sizeof(float) * MaxChannels);
+  }
+
+  //************************************************************************************************
+  void AudioFrame::CopySamples(const float* source, float* destination, const unsigned channels)
+  {
+    switch (channels)
+    {
+    case 1:
+      destination[0] = source[0];
+      break;
+    case 2:
+      memcpy(destination, source, sizeof(float) * 2);
+      break;
+    case 3:
+      memcpy(destination, source, sizeof(float) * 3);
+      break;
+    case 4:
+      memcpy(destination, source, sizeof(float) * 2);
+      memcpy(destination + 2, source + BackLeft, sizeof(float) * 2);
+      break;
+    case 5:
+      memcpy(destination, source, sizeof(float) * 3);
+      memcpy(destination + 3, source + SideLeft, sizeof(float) * 2);
+      break;
+    case 6:
+      memcpy(destination, source, sizeof(float) * 6);
+      break;
+    case 7:
+      memcpy(destination, source, sizeof(float) * 3);
+      memcpy(destination + 3, source + SideLeft, sizeof(float) * 4);
+      break;
+    case 8:
+      memcpy(destination, source, sizeof(float) * 8);
+      break;
+    default:
+      break;
+    }
   }
 
 }

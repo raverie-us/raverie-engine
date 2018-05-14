@@ -390,8 +390,8 @@ namespace Audio
       {
         float samples[2] = { sample * mLeftVolume, sample * mRightVolume };
         AudioFrame frameSamples(samples, 2);
-        frameSamples.TranslateChannels(outputChannels);
-        memcpy(outputBuffer + (frame * outputChannels), frameSamples.Samples, sizeof(float) * outputChannels);
+        memcpy(outputBuffer + (frame * outputChannels), frameSamples.GetSamples(outputChannels), 
+          sizeof(float) * outputChannels);
       }
     }
 

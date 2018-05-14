@@ -19,7 +19,7 @@ namespace Events
 // After we create a new Resource, it will be assigned to the object and property defined here.
 struct PostAddOp
 {
-  Handle mObject;
+  Array<Handle> mObjects;
   PropertyPath mProperty;
 };
 

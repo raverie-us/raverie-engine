@@ -15,6 +15,7 @@ GeometryImporter::GeometryImporter(String inputFile, String outputPath, String m
     mBaseMeshName(FilePath::GetFileNameWithoutExtension(inputFile)),
     mUniquifyingIndex(0)
 {
+  mAssetImporter.SetPropertyBool(AI_CONFIG_IMPORT_FBX_STRICT_MODE, true);
 }
 
 GeometryImporter::~GeometryImporter()
@@ -90,6 +91,7 @@ int GeometryImporter::ProcessModelFiles()
   if (!mScene)
   {
     String error(mAssetImporter.GetErrorString());
+    error = ProcessAssimpErrorMessage(error);
     ZPrint("Geometry Processor Error: %s\n", error.c_str());
     return Zero::GeometryProcessorCodes::Failed;
   }
@@ -517,6 +519,16 @@ bool GeometryImporter::UpdateBuilderMetaData()
   if (metaChanges)
     SaveToDataFile(*mGeometryContent, mMetaFile);
   return metaChanges;
+}
+
+String GeometryImporter::ProcessAssimpErrorMessage(StringParam errorMessage)
+{
+  // This string is output when the FBX file experiences a parsing error, most likely a result of the format
+  // but assimp attempts to parse the entire FBX DOM before checking if the format is supported
+  if (errorMessage.Contains("FBX-Tokenize"))
+    return String("FBX Parsing Error. Supported formats are FBX 2011, FBX 2012 and FBX 2013.");
+
+  return errorMessage;
 }
 
 }// namespace Zero

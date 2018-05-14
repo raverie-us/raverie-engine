@@ -144,6 +144,7 @@ TabWidget::TabWidget(Composite* parent)
   ConnectThisTo(this, Events::RightClick, OnRightClick);
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
+  ConnectThisTo(this, Events::MouseHover, OnMouseHover);
 }
 
 void TabWidget::LockTab()
@@ -240,6 +241,24 @@ void TabWidget::OnMouseDrag(MouseEvent* event)
     floatWindow->SetTranslation(mousePos);
     floatWindow->mTabArea->TransferTab(this, -1, true);
     floatWindow->ForwardMouseDown(event);
+  }
+}
+
+void TabWidget::OnMouseHover(MouseEvent* event)
+{
+  if (mToolTip.IsNull() && mTitle->IsTextClipped())
+  {
+    ToolTip* toolTip = new ToolTip(this);
+    toolTip->SetText(mTitle->GetText());
+    toolTip->SetColorScheme(ToolTipColorScheme::Default);
+
+    ToolTipPlacement placement;
+    placement.SetScreenRect(GetScreenRect());
+    placement.SetPriority(IndicatorSide::Top, IndicatorSide::Left,
+      IndicatorSide::Right, IndicatorSide::Bottom);
+    toolTip->SetArrowTipTranslation(placement);
+    toolTip->UpdateTransform();
+    mToolTip = toolTip;
   }
 }
 

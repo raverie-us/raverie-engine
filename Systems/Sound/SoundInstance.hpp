@@ -135,7 +135,7 @@ public:
 
 private:
   HandleOf<SoundNode> mSoundNode;
-  void Play(bool loop, SoundTag *tag, Audio::SoundNode* outputNode, bool startPaused);
+  void Play(bool loop, Audio::SoundNode* outputNode, bool startPaused);
   void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
   void SendAudioEventData(Audio::EventData* data) override;
   Audio::SoundInstanceNode* GetNode();

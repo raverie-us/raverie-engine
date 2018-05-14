@@ -64,13 +64,6 @@ or through a network ("Distribute") as follows:
  permitted under this Agreement. Recipients of such a Distribution have a 
  limited license to use, reproduce, display, perform, and modify that Content 
  to develop your Product as outlined above, and for no other purpose.   
- - (e) Distribution of Contributions to DigiPen: To the extent that You 
- modify, adapt, translate, reverse engineer, make alterations, decompile, 
- disassemble, or make derivative works based on the Licensed Technology as part 
- of the development of Your Product ("Contributions"), You will provide all 
- such Contributions, including the object code and source code thereof, to 
- DigiPen and grant DigiPen an exclusive, fully-paid, irrevocable product use 
- license. 
 - 1.3 Limitations and Restrictions:
  - (a) No Sublicensing: You may not sublicense the Licensed Technology in 
  Source Code format. You may not sublicense the Licensed Technology in object 

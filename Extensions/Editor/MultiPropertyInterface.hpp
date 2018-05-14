@@ -48,7 +48,7 @@ private:
 
   void Undo() override;
   void Redo() override;
-  void CaptureState(PropertyStateCapture& capture, HandleParam object, Property* property) override;
+  void CaptureState(PropertyStateCapture& capture, HandleParam object, PropertyPathParam property) override;
 };
 
 //--------------------------------------------------------------------------- Multi Meta Composition

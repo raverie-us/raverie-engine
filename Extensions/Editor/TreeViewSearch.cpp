@@ -14,7 +14,7 @@ TreeViewSearch::TreeViewSearch(Composite* parent, TreeView* treeView, DataSource
 {
   mTreeView = treeView;
   mFiltered = filter;
-  mUnFiltered = NULL;
+  mUnFiltered = nullptr;
   this->SetLayout(CreateRowLayout());
 
   Composite* searchRow = new Composite(this);
@@ -90,7 +90,7 @@ void TreeViewSearch::OnTextEntered(Event* event)
   }
 
   // Change to filtered list if not already active
-  if(mUnFiltered == NULL)
+  if(mUnFiltered == nullptr)
   {
     mUnFiltered = mTreeView->mDataSource;
     ConnectThisTo(mUnFiltered, Events::DataDestroyed, OnSourceDestroy);
@@ -108,7 +108,7 @@ void TreeViewSearch::OnSourceDestroy(Event* event)
 {
   // Data source that is being filtered has been destroyed 
   // Cancel the filter
-  mUnFiltered = NULL;
+  mUnFiltered = nullptr;
   CancelFilter();
 }
 
@@ -117,20 +117,12 @@ void TreeViewSearch::OnDataModified(Event* event)
   // The data source that is being filtered has 
   // been modified
 
-  // There is two options cancel the search
-  // or refilter the data
-
   // Refilter the list with new objects
   if(mFiltered)
   {
     mFiltered->Filter(mSearchField->GetText());
     mTreeView->Refresh();
   }
-
-  // or
-
-  // CancelFilter();
-
 }
 
 void TreeViewSearch::CancelFilter()
@@ -140,10 +132,11 @@ void TreeViewSearch::CancelFilter()
   {
     mUnFiltered->GetDispatcher()->Disconnect(this);
     mTreeView->SetDataSource(mUnFiltered);
-    mUnFiltered = NULL;
+    mUnFiltered = nullptr;
   }
 
-  mFiltered->SetSource(NULL);
+  mFiltered->SetSource(nullptr);
+  mTreeView->ShowSelected();
 }
 
 }

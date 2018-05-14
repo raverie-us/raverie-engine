@@ -68,20 +68,22 @@ namespace Audio
     AudioFrame();
     AudioFrame(const AudioFrame& copy);
 
-    void TranslateChannels(const unsigned channels);
-    void SetSamples(float* samples, unsigned channels);
+    float* GetSamples(const unsigned channels);
+    void SetSamples(const float* samples, unsigned channels);
     void Clamp();
     float GetMaxValue();
     float GetMonoValue();
     void operator*=(float multiplier);
     void operator=(const AudioFrame& copy);
-
-    float Samples[8];
-
+    
   private:
     enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
-    unsigned HowManyChannels;
-    const float* Matrices[MaxChannels];
+    unsigned mStoredChannels;
+    const float* Matrices[MaxChannels + 1];
+    float mSamples[MaxChannels];
+    float mCopiedSamples[MaxChannels];
+
+    static void CopySamples(const float* source, float* destination, const unsigned channels);
   };
   
   //-------------------------------------------------------------------------- Audio System Internal
@@ -253,29 +255,31 @@ namespace Audio
   When up-sampling it's reversed
   Order is FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight
   */
+  
+  static const float Sqrt2Inv = 1.0f / Math::Sqrt(2.0f);
 
   static const float ChannelMatrix1[MaxChannels] =
   {
-    0.707f, 0.707f, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
+    Sqrt2Inv, Sqrt2Inv, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
   };
 
   static const float ChannelMatrix2[MaxChannels * 2] =
   {
-    1.0f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f,
-    0.0f, 1.0f, 0.707f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f
+    1.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
+    0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv
   };
 
   static const float ChannelMatrix3[MaxChannels * 3] =
   {
-    1.0f, 0.0f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f,
+    1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv,
     0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
   };
 
   static const float ChannelMatrix4[MaxChannels * 4] =
   {
-    1.0f, 0.0f, 0.707f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.707f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, 0.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };

@@ -36,8 +36,8 @@ void ChangeAndQueueProperty(OperationQueue* queue, HandleParam object,
   queue->SetActiveBatchName(BuildString(propertyOperation->mName, " Batch"));
 
   // Remove the property from the path, so we have a sub object
-  // Turns CameraViewport's "CameraPath.Cog" to "CameraPath". This allows other
-  // the CogPath to also change the "Path" property on CogPath.
+  // Turns CameraViewport's "CameraPath.Cog" to "CameraPath". This allows the
+  // other CogPath to also change the "Path" property on CogPath.
   PropertyPath localPath = property;
   localPath.PopEntry();
   OperationQueue::PushSubPropertyContext(object, localPath);

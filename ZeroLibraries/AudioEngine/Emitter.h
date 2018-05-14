@@ -44,7 +44,28 @@ namespace Audio
       ListenerNode* listener, const unsigned numberOfChannels);
 
     // Data used by the threaded node
-    EmitterData* Data;
+
+    // Current emitter position. 
+    Math::Vec3 Position;
+    // Current emitter velocity. 
+    Math::Vec3 Velocity;
+    // Direction object is facing. 
+    Math::Vec3 FacingDirection;
+    // Used for interpolating between volume changes when pausing. 
+    InterpolatingObject VolumeInterpolator;
+    // If true, currently interpolating volume. 
+    bool InterpolatingVolume;
+    // If true, currently interpolating volume to 0 before pausing
+    bool Pausing;
+    // If true, emitter is paused
+    bool Paused;
+    // The angle, in radians, of half the directional cone
+    float DirectionalAngleRadians;
+    // Used to interpolate volume from edge of angle to directly behind emitter
+    InterpolatingObject DirectionalInterpolator;
+    // The minimum volume of audio applied to all channels
+    float MinimumVolume;
+
     // Stored data for each listener
     Zero::HashMap<ListenerNode*, EmitterDataPerListener*> DataPerListener;
 

@@ -224,22 +224,17 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
     if(transform.IsNull())
       continue;
 
-    // Used for queuing property changes
-    //Property* translationProperty = transform.mTranslation;
-    //Property* rotationProperty = transform.mRotation;
-    //Property* scaleProperty = transform.mScale;
+    String name;
+    if(MetaDisplay* display = target.StoredType->HasInherited<MetaDisplay>())
+      name = display->GetName(target);
+    else
+      name = target.StoredType->Name;
 
     //@RYAN: COG_NOT_GENERIC
     // If the object was newly created, queue an operation for its creation
     Cog* cog = target.Get<Cog*>();
     if(cog && mNewObjects.Contains(target))
     {
-      String name;
-      if (MetaDisplay* display = target.StoredType->HasInherited<MetaDisplay>())
-        name = display->GetName(target);
-      else
-        name = target.StoredType->Name;
-
       queue->SetActiveBatchName(BuildString("Create ", name));
 
       ObjectCreated(queue, cog);
@@ -267,12 +262,6 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
       PropertyPath propertyPath(transform.mLocalTranslation);
       ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, objectState.EndTranslation);
 
-      String name;
-      if (MetaDisplay* display = target.StoredType->HasInherited<MetaDisplay>())
-        name = display->GetName(target);
-      else
-        name = target.StoredType->Name;
-
       queue->SetActiveBatchName(BuildString("Translate '", name, "'"));
     }
 
@@ -286,12 +275,6 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
         PropertyPath propertyPath(transform.mLocalRotation);
         ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, objectState.EndRotation);
 
-        String name;
-        if(MetaDisplay* display = target.StoredType->HasInherited<MetaDisplay>( ))
-          name = display->GetName(target);
-        else
-          name = target.StoredType->Name;
-
         queue->SetActiveBatchName(BuildString("Rotate '", name, "'"));
        }
     }
@@ -303,12 +286,6 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
       // Queue the change
       PropertyPath propertyPath(transform.mLocalScale);
       ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, objectState.EndScale);
-
-      String name;
-      if (MetaDisplay* display = target.StoredType->HasInherited<MetaDisplay>())
-        name = display->GetName(target);
-      else
-        name = target.StoredType->Name;
 
       queue->SetActiveBatchName(BuildString("Scale '", name, "'"));
     }
@@ -352,12 +329,6 @@ void ObjectTransformGizmo::OnMouseDragEnd(Event* e)
               PropertyPath colliderSizePath(sizeProperty);
               ChangeAndQueueProperty(queue, collider, colliderSizePath, endSize);
             }
-
-            String name;
-            if (MetaDisplay* display = target.StoredType->HasInherited<MetaDisplay>())
-              name = display->GetName(target);
-            else
-              name = target.StoredType->Name;
 
             queue->SetActiveBatchName(BuildString("'", name, "' size change"));
           }

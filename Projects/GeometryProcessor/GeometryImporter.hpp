@@ -18,8 +18,7 @@ public:
 
   bool SceneEmpty();
   void CollectNodeData();
-
-  // returns the unique name of the node, takes the parent nodes name that has potentially been
+  // Returns the unique name of the node, takes the parent nodes name that has potentially been
   // generated/made unique as to properly reference it among nodes with the same name.
   String ExtractDataFromNodesRescursive(aiNode* node, String parentName);
   void SingleMeshHierarchyEntry(HierarchyData& hierarchyData, uint meshIndex);
@@ -29,25 +28,30 @@ public:
   void ComputeMeshTransforms();
   bool UpdateBuilderMetaData();
 
-  // zero meta data
+  // If Assimp fails and provides an error message that is not descriptive enough
+  // return a new error message that better informs the user of what went wrong
+  // if a better message has not been specified return the original message
+  String ProcessAssimpErrorMessage(StringParam errorMessage);
+
+  // Zero meta data
   GeometryContent* mGeometryContent;
 
-  // assimp data
+  // Assimp data
   Assimp::Importer mAssetImporter;
   const aiScene* mScene;
   String mRootNodeName;
 
-  // provided data
+  // Provided data
   String mInputFile;
   String mOutputPath;
   String mMetaFile;
   
-  // processed and generated data
+  // Processed and generated data
   String mBaseMeshName;
   MeshDataMap mMeshDataMap;
   HierarchyDataMap mHierarchyDataMap;
   AnimationNodeRedirectMap mAnimationRedirectMap;
-  //
+  // An every increasing value appended to node names to result in unique names in the hierarchy
   uint mUniquifyingIndex;
 };
 

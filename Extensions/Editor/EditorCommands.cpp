@@ -452,31 +452,37 @@ void GroupSelected(Editor* editor, Space* space)
     }
   }
 
-  //If any of the objects have a transform
-  if(transformCount > 0)
-  {
-    float inverseCount = 1.0f / float(transformCount);
-    center *= inverseCount;
-  }
+  Cog* rootObject;
 
   OperationQueue* queue = editor->GetOperationQueue();
   queue->BeginBatch();
   queue->SetActiveBatchName("ObjectGroupSelection");
 
-  // Snap the center if snapping is enabled in the translation gizmo.
-  // This snapping is a convenience for now.  In the future it really
-  // needs to be a toggle-property on a command-component for 'GroupSelected'
-  Cog* translateToolCog = editor->Tools->GetToolByName("TranslateTool");
-
-  ObjectTranslateTool* tTool = translateToolCog->has(ObjectTranslateTool);
-  if(tTool && tTool->GetSnapping( ))
+  //If any of the objects have a transform
+  if(transformCount > 0)
   {
-    center = GizmoSnapping::GetSnappedPosition(center, Vec3(0, 0, 0), Quat::cIdentity,
-      tTool->GetDragMode( ), GizmoSnapMode::WorldGrid, tTool->GetSnapDistance( ));
-  }
+    float inverseCount = 1.0f / float(transformCount);
+    center *= inverseCount;
 
-  //Create the transform object
-  Cog* rootObject = space->CreateAt(CoreArchetypes::Transform, center);
+    // Snap the center if snapping is enabled in the translation gizmo.
+    // This snapping is a convenience for now.  In the future it really
+    // needs to be a toggle-property on a command-component for 'GroupSelected'
+    Cog* translateToolCog = editor->Tools->GetToolByName("TranslateTool");
+
+    ObjectTranslateTool* tTool = translateToolCog->has(ObjectTranslateTool);
+    if(tTool && tTool->GetSnapping())
+    {
+      center = GizmoSnapping::GetSnappedPosition(center, Vec3(0, 0, 0), Quat::cIdentity,
+        tTool->GetDragMode(), GizmoSnapMode::WorldGrid, tTool->GetSnapDistance());
+    }
+
+    //Create the transform object
+    rootObject = space->CreateAt(CoreArchetypes::Transform, center);
+  }
+  else
+  {
+    rootObject = space->CreateNamed(CoreArchetypes::Empty);
+  }
 
   rootObject->SetName("Root");
   rootObject->ClearArchetype();

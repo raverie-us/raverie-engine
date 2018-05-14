@@ -1220,7 +1220,15 @@ Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* compon
 {
   CogPath* cogPath = owner.Get<CogPath*>();
   if (Cog* cog = cogPath->GetCog())
-    return cog->QueryComponentType(componentType);
+  {
+    Handle component = cog->QueryComponentType(componentType);
+
+    // If the component is null, the constructed Handle will be of type 'Component' instead of
+    // the actual type we were querying. This can cause a problem when building a Zilch::Call.
+    component.StoredType = componentType;
+    return component;
+  }
+
   return nullptr;
 }
 

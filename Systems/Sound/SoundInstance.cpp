@@ -318,13 +318,10 @@ Zero::StringParam SoundInstance::GetSoundName()
 }
 
 //**************************************************************************************************
-void SoundInstance::Play(bool loop, SoundTag* tag, Audio::SoundNode* outputNode, bool startPaused)
+void SoundInstance::Play(bool loop, Audio::SoundNode* outputNode, bool startPaused)
 {
   // Save a pointer to the SoundInstance
   Audio::SoundInstanceNode* instance = (Audio::SoundInstanceNode*)mSoundNode->mNode;
-
-  if (tag)
-    tag->TagSound(this);
   
   instance->SetLooping(loop);
 

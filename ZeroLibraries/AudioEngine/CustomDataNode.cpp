@@ -199,8 +199,7 @@ namespace Audio
       else
       {
         AudioFrame frame(SamplesThisFrame.Data(), Channels);
-        frame.TranslateChannels(numberOfChannels);
-        memcpy(outputBufferPosition, frame.Samples, sizeof(float) * numberOfChannels);
+        memcpy(outputBufferPosition, frame.GetSamples(numberOfChannels), sizeof(float) * numberOfChannels);
       }
     }
 

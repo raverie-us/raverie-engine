@@ -561,17 +561,17 @@ void GeometryContent::BuildContent(BuildOptions& options)
       // it worked
       case Zero::GeometryProcessorCodes::Success:
         return;
-      // something went wrong, build the error message
+      // something went wrong, abort processing imported file. 
+      // the geometry processor outputs its own error messages to the console.
       case Zero::GeometryProcessorCodes::Failed:
       {
-        // first build our error message
-        String errorMessage = Os::TranslateErrorCode(exitCode);
         options.Failure = true;
-        options.Message = String::Format("Failed to process Geometry. File '%s' Error: %s",
-                                         Filename.c_str(), errorMessage.c_str());
+        options.Message = String::Format("Failed to process Geometry. File '%s', See above Geometry Processor Error.", Filename.c_str());
 
-        // then remove the content items that were added despite failing
+        // then remove the content items that were added because importing failed
         String metaFile = BuildString(fullFilePath, ".meta");
+        DeleteFile(metaFile);
+        DeleteFile(fullFilePath);
         return;
       }
       // let editor side importing know we have to load/reload the scene graph or textures
