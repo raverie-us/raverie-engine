@@ -412,9 +412,9 @@ namespace Audio
     if (!Threaded)
     {
       mEndTime = endTime;
-      if (mEndTime < 0.0f)
-        mEndTime = 0.0f;
-      else if (mEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
+
+      // If the end time is at zero or past the end of the file, set it to the length of the file
+      if (mEndTime <= 0.0f || mEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
         mEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
       AddTaskForSibling(&SoundInstanceNode::SetEndTime, mEndTime);
@@ -463,9 +463,9 @@ namespace Audio
     if (!Threaded)
     {
       mLoopEndTime = time;
-      if (mLoopEndTime < 0.0f)
-        mLoopEndTime = 0.0f;
-      else if (mLoopEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
+
+      // If the end time is at zero or past the end of the file, set it to the length of the file
+      if (mLoopEndTime <= 0.0f || mLoopEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
         mLoopEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
       AddTaskForSibling(&SoundInstanceNode::SetLoopEndTime, mLoopEndTime);
