@@ -88,6 +88,8 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
   else if (value == ':' || (value == ' ' && currentLine.FindLastNonWhitespaceRune() == ':'))
   {
     Array<Completion> completions;
+    // The any keyword is special. Just force add it to our possible completion list.
+    completions.PushBack(Completion("any"));
 
     Array<LibraryRef> libraries;
     GetLibraries(libraries);
