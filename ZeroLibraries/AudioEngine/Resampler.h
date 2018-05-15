@@ -24,7 +24,7 @@ namespace Audio
 
 
   private:
-    float PreviousFrame[MaxChannels];
+    float PreviousFrame[cMaxChannels];
     double ResampleFactor;
     double ResampleFrameIndex;
     double BufferFraction;

@@ -131,7 +131,7 @@ namespace Audio
         if (timeToInterpolate < 0.02f)
           timeToInterpolate = 0.02f;
 
-        Interpolator.SetValues(Volume, newVolume, (unsigned)(timeToInterpolate * SystemSampleRate));
+        Interpolator.SetValues(Volume, newVolume, (unsigned)(timeToInterpolate * cSystemSampleRate));
       }
     }
   }
@@ -208,7 +208,7 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        LeftInterpolator.SetValues(LeftVolume, volume, (unsigned)(time * SystemSampleRate));
+        LeftInterpolator.SetValues(LeftVolume, volume, (unsigned)(time * cSystemSampleRate));
       }
     }
   }
@@ -247,7 +247,7 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        RightInterpolator.SetValues(RightVolume, volume, (unsigned)(time * SystemSampleRate));
+        RightInterpolator.SetValues(RightVolume, volume, (unsigned)(time * cSystemSampleRate));
       }
     }
   }

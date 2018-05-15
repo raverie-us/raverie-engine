@@ -197,7 +197,7 @@ namespace Audio
       else
         CurrentData.mInterpolating = true;
 
-      mFramesToInterpolate = (unsigned)(timeToInterpolate * SystemSampleRate);
+      mFramesToInterpolate = (unsigned)(timeToInterpolate * cSystemSampleRate);
       PitchInterpolator.SetValues(mPitchFactor, factor, mFramesToInterpolate);
       CurrentData.mInterpolationFramesProcessed = 0;
     }
@@ -206,7 +206,7 @@ namespace Audio
   //************************************************************************************************
   void PitchChangeHandler::ResetLastSamples()
   {
-    memset(CurrentData.LastSamples, 0, sizeof(float) * MaxChannels);
+    memset(CurrentData.LastSamples, 0, sizeof(float) * cMaxChannels);
   }
 
   //************************************************************************************************
@@ -228,7 +228,7 @@ namespace Audio
     mPitchFrameIndex(0.0),
     mBufferSizeFraction(0.0)
   {
-    memset(LastSamples, 0, sizeof(float) * MaxChannels);
+    memset(LastSamples, 0, sizeof(float) * cMaxChannels);
   }
 
   //************************************************************************************************
@@ -238,7 +238,7 @@ namespace Audio
     mInterpolating = other.mInterpolating;
     mPitchFrameIndex = other.mPitchFrameIndex;
     mBufferSizeFraction = other.mBufferSizeFraction;
-    memcpy(LastSamples, other.LastSamples, sizeof(float) * MaxChannels);
+    memcpy(LastSamples, other.LastSamples, sizeof(float) * cMaxChannels);
 
     return *this;
   }

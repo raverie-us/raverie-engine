@@ -203,7 +203,7 @@ public:
 class MouseFileDropEvent : public MouseEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MouseFileDropEvent, TypeCopyMode::ReferenceType);
 
   MouseFileDropEvent();
   MouseFileDropEvent(const MouseEvent& rhs);

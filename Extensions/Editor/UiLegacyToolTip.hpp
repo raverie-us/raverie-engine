@@ -13,7 +13,7 @@ namespace Zero
 class UiLegacyToolTip
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UiLegacyToolTip, TypeCopyMode::ReferenceType);
 
   UiLegacyToolTip( );
   ~UiLegacyToolTip( );

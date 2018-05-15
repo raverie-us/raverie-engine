@@ -93,7 +93,7 @@ namespace Audio
       {
         Pausing = true;
         InterpolatingVolume = true;
-        VolumeInterpolator.SetValues(1.0f, 0.0f, PropertyChangeFrames);
+        VolumeInterpolator.SetValues(1.0f, 0.0f, cPropertyChangeFrames);
       }
     }
   }
@@ -114,7 +114,7 @@ namespace Audio
         Pausing = false;
         InterpolatingVolume = true;
         VolumeInterpolator.SetValues(VolumeInterpolator.GetCurrentValue(), 1.0f, 
-          PropertyChangeFrames);
+          cPropertyChangeFrames);
       }
     }
   }

@@ -765,14 +765,14 @@ namespace Audio
       {
         Pausing = true;
         Interpolating = true;
-        VolumeInterpolator.SetValues(1.0f, 0.0f, PropertyChangeFrames);
+        VolumeInterpolator.SetValues(1.0f, 0.0f, cPropertyChangeFrames);
       }
       // If we should un-pause and we are currently paused
       else if (!paused && Paused)
       {
         Paused = Pausing = false;
         Interpolating = true;
-        VolumeInterpolator.SetValues(0.0f, 1.0f, PropertyChangeFrames);
+        VolumeInterpolator.SetValues(0.0f, 1.0f, cPropertyChangeFrames);
       }
     }
   }

@@ -135,7 +135,7 @@ namespace Audio
       if (!status.Failed())
       {
         // Set the variables
-        mFileLength = (float)Decoder->mSamplesPerChannel / SystemSampleRate;
+        mFileLength = (float)Decoder->mSamplesPerChannel / cSystemSampleRate;
         mChannels = Decoder->mChannels;
         mFrameCount = Decoder->mSamplesPerChannel;
 
@@ -457,7 +457,7 @@ namespace Audio
 
     for (unsigned i = startingIndex; i < startingIndex + numberOfSamples; ++i)
     {
-      (*buffer)[i] = WaveData->GetNextSample() * GeneratedWaveVolume;
+      (*buffer)[i] = WaveData->GetNextSample() * cGeneratedWaveVolume;
 
       if (!FrequencyInterpolator.Finished())
       {
@@ -470,7 +470,7 @@ namespace Audio
   //************************************************************************************************
   unsigned GeneratedWaveSoundAsset::GetNumberOfFrames()
   {
-    return SystemSampleRate;
+    return cSystemSampleRate;
   }
 
   //************************************************************************************************
@@ -504,7 +504,7 @@ namespace Audio
       }
       else
         FrequencyInterpolator.SetValues(mFrequency, newFrequency,
-          (unsigned)(time * SystemSampleRate));
+          (unsigned)(time * cSystemSampleRate));
     }
   }
 

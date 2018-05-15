@@ -79,9 +79,9 @@ namespace Audio
   private:
     enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
     unsigned mStoredChannels;
-    const float* Matrices[MaxChannels + 1];
-    float mSamples[MaxChannels];
-    float mCopiedSamples[MaxChannels];
+    const float* Matrices[cMaxChannels + 1];
+    float mSamples[cMaxChannels];
+    float mCopiedSamples[cMaxChannels];
 
     static void CopySamples(const float* source, float* destination, const unsigned channels);
   };
@@ -258,25 +258,25 @@ namespace Audio
   
   static const float Sqrt2Inv = 1.0f / Math::Sqrt(2.0f);
 
-  static const float ChannelMatrix1[MaxChannels] =
+  static const float ChannelMatrix1[cMaxChannels] =
   {
     Sqrt2Inv, Sqrt2Inv, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
   };
 
-  static const float ChannelMatrix2[MaxChannels * 2] =
+  static const float ChannelMatrix2[cMaxChannels * 2] =
   {
     1.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
     0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv
   };
 
-  static const float ChannelMatrix3[MaxChannels * 3] =
+  static const float ChannelMatrix3[cMaxChannels * 3] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv,
     0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
   };
 
-  static const float ChannelMatrix4[MaxChannels * 4] =
+  static const float ChannelMatrix4[cMaxChannels * 4] =
   {
     1.0f, 0.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -284,7 +284,7 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };
 
-  static const float ChannelMatrix5[MaxChannels * 5] =
+  static const float ChannelMatrix5[cMaxChannels * 5] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -293,7 +293,7 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };
 
-  static const float ChannelMatrix6[MaxChannels * 6] =
+  static const float ChannelMatrix6[cMaxChannels * 6] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -303,7 +303,7 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };
 
-  static const float ChannelMatrix7[MaxChannels * 7] =
+  static const float ChannelMatrix7[cMaxChannels * 7] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -314,7 +314,7 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
   };
 
-  static const float ChannelMatrix8[MaxChannels * 8] =
+  static const float ChannelMatrix8[cMaxChannels * 8] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,

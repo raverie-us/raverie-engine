@@ -806,7 +806,7 @@ DeclareEnum4(GranularSynthWindows, Linear, Parabolic, RaisedCosine, Trapezoid);
 class SaveAudioNode : public SoundNode 
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SaveAudioNode, TypeCopyMode::ReferenceType);
 
   SaveAudioNode();
 
@@ -830,7 +830,7 @@ private:
 class GranularSynthNode : public SoundNode 
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GranularSynthNode, TypeCopyMode::ReferenceType);
 
   GranularSynthNode();
 

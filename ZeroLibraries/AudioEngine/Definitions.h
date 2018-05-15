@@ -16,15 +16,15 @@ namespace Audio
   typedef intptr_t AtomicType;
 
   // The sample rate used by the audio engine for the output mix
-  static const unsigned SystemSampleRate = 48000;
+  static const unsigned cSystemSampleRate = 48000;
   // The time increment per audio frame corresponding to the sample rate
-  static const double SystemTimeIncrement = 1.0 / 48000.0;
+  static const double cSystemTimeIncrement = 1.0 / 48000.0;
   // The number of frames used to interpolate instant property changes
-  static const unsigned  PropertyChangeFrames = (unsigned)(48000 * 0.02f);
+  static const unsigned  cPropertyChangeFrames = (unsigned)(48000 * 0.02f);
   // Maximum number of channels in audio output
-  static const unsigned MaxChannels = 8;
+  static const unsigned cMaxChannels = 8;
   // Volume modifier applied to all generated waves
-  static const float GeneratedWaveVolume = 0.5f;
+  static const float cGeneratedWaveVolume = 0.5f;
 
   // Types of curves used for interpolation. 
   namespace CurveTypes

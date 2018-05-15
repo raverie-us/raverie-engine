@@ -72,7 +72,7 @@ namespace Audio
   //************************************************************************************************
   unsigned CustomDataNode::GetSystemSampleRate()
   {
-    return SystemSampleRate;
+    return cSystemSampleRate;
   }
 
   //************************************************************************************************
@@ -111,7 +111,7 @@ namespace Audio
   {
     if (Channels > 0)
     {
-      MinimumBufferSize = (unsigned)(SystemSampleRate * 0.01f * Channels * 4);
+      MinimumBufferSize = (unsigned)(cSystemSampleRate * 0.01f * Channels * 4);
 
       MinimumSamplesNeededInBuffers = MinimumBufferSize * 3;
     }

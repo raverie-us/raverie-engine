@@ -71,9 +71,7 @@ namespace Zilch
     Success(false),
     NearestType(nullptr),
     IsLiteral(false),
-    RemoveDuplicateNameEntries(true),
     BestCompletionOverload(-1),
-    Success(false),
     CallArgumentIndex(-1)
   {
   }

@@ -105,7 +105,7 @@ public:
 class TabRenamedEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TabRenamedEvent, TypeCopyMode::ReferenceType);
   TabRenamedEvent(StringParam name) : Name(name) {}
   String Name;
 };
