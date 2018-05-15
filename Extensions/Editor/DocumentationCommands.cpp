@@ -10,15 +10,22 @@
 
 namespace Zero
 {
+  String GetDocumentationLocation()
+  {
+    String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
+    String documentationLocation = FilePath::Combine(sourceDir.All(), "Projects", "Editor");
+
+
+    if (!FileExists(documentationLocation))
+      CreateDirectoryAndParents(documentationLocation);
+    return documentationLocation;
+  }
+
   /// This exists just in case you want to get all unbound meta types with the documentation tool
   void SaveNonZilchMetaDocumentation()
   {
     // obviously, this command is only meant to be ran by developers since this saves in source directory
-    String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
-    String documentationLocation = FilePath::Combine(sourceDir.All(), "Projects", "Editor");
-
-    if (!FileExists(documentationLocation))
-      CreateDirectoryAndParents(documentationLocation);
+    String documentationLocation = GetDocumentationLocation();
 
     String fileName = FilePath::Combine(documentationLocation.All(), "UnboundMetaTypesDocumentationSkeleton.data");
     SaveInfoFromMetaToFile(fileName, true);
@@ -27,12 +34,7 @@ namespace Zero
   /// Saves the list of all non dev-only commands to file
   void SaveListOfCommandsToDataFile()
   {
-    String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
-    String documentationLocation = FilePath::Combine(sourceDir.All(), "Projects", "Editor");
-
-
-    if (!FileExists(documentationLocation))
-      CreateDirectoryAndParents(documentationLocation);
+    String documentationLocation = GetDocumentationLocation();
 
     String fileName = FilePath::Combine(documentationLocation.All(), "CommandList.data");
 
@@ -82,8 +84,6 @@ namespace Zero
     saver.EndPolymorphic();
 
     saver.Close();
-
-    //SaveToDataFile(commandDocs, fileName);
   }
 
   void SaveListOfCommands()
@@ -96,12 +96,7 @@ namespace Zero
   /// saves list of all events in the MetaDataBase to file
   void SaveEventListToDataFile()
   {
-    String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
-    String documentationLocation = FilePath::Combine(sourceDir.All(), "Projects", "Editor");
-
-
-    if (!FileExists(documentationLocation))
-      CreateDirectoryAndParents(documentationLocation);
+    String documentationLocation = GetDocumentationLocation();
 
     String fileName = FilePath::Combine(documentationLocation.All(), "EventList.data");
 
@@ -135,8 +130,6 @@ namespace Zero
     saver.EndPolymorphic();
 
     saver.Close();
-
-    //SaveToDataFile(allTheEvents, fileName);
   }
 
   void SaveEventList()
@@ -144,6 +137,40 @@ namespace Zero
     SaveEventListToDataFile();
 
     Z::gEngine->Terminate();
+  }
+  
+  void SaveUserAttributeListToFile()
+  {
+    // getting list of user attributes
+    AttributeExtensions* userExtensions = AttributeExtensions::GetInstance();
+
+    AttributeDocList attribDocumentation;
+
+    typedef Pair<String, AttributeExtension*> AttribPairType;
+    // object attributes
+    forRange(AttribPairType& attrib, userExtensions->mClassExtensions.All())
+    {
+      attribDocumentation.mObjectAttributes.PushBack(new AttributeDoc(attrib.second));
+    }
+
+    // function attributes
+    forRange(AttribPairType& attrib, userExtensions->mFunctionExtensions.All())
+    {
+      attribDocumentation.mFunctionAttributes.PushBack(new AttributeDoc(attrib.second));
+    }
+
+    // property attributes
+    forRange(AttribPairType& attrib, userExtensions->mPropertyExtensions.All())
+    {
+      attribDocumentation.mPropertyAttributes.PushBack(new AttributeDoc(attrib.second));
+    }
+
+    // file creation and opening
+    String documentationLocation = GetDocumentationLocation();
+
+    String fileName = FilePath::Combine(documentationLocation.All(), "UserAttributeList.data");
+
+    attribDocumentation.SaveToFile(fileName);
   }
 
   /// saves all bound classes(with methods + properties) to file, then does same for commands and events
@@ -161,6 +188,8 @@ namespace Zero
     SaveListOfCommandsToDataFile();
 
     SaveEventListToDataFile();
+
+    SaveUserAttributeListToFile();
 
     Z::gEngine->Terminate();
   }

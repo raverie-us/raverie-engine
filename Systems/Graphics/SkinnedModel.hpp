@@ -1,12 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SkinnedModel.hpp
-/// Declaration of the SkinnedModel component class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero

@@ -89,27 +89,35 @@ class ZUiVolumeBarSegments : ZilchComponent
 class ZUiVolumeSlider : ZilchComponent
 {
   [Dependency] var Slider : ZUiSlider;
+  
+  var Volume : Real;
+  
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Owner, Events.ZUiSliderChanged, this.OnVolumeChange);
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
     
-    var volume = Zero.Audio.SystemVolume;
-    var decibels = this.ToDecibels(volume);
-    decibels -= 12;
-    decibels *= -1;
-    var percent = 1.0 - (decibels / 48.0);
-    this.Slider.SetHandlePosition(percent);
+    this.Volume = Zero.Audio.SystemVolume;
+    this.Slider.SetHandlePosition(this.GetPercent());
   }
 
   function OnVolumeChange(event : ZUiSliderEvent)
   {
-    Console.WriteLine(event.SliderPercentage);
     var decibels = (1.0 - event.SliderPercentage) * -48.0;
     decibels += 12;
     
-    var volume = Math.Pow(10.0, decibels / 20.0);
+    this.Volume = Math.Pow(10.0, decibels / 20.0);
     
-    Zero.Audio.SystemVolume = volume;
+    Zero.Audio.SystemVolume = this.Volume;
+  }
+  
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    if (Zero.Audio.SystemVolume != this.Volume)
+    {
+      this.Volume = Zero.Audio.SystemVolume;
+      this.Slider.SetHandlePosition(this.GetPercent());
+    }
   }
     
   function ToDecibels(volume : Real) : Real
@@ -117,8 +125,14 @@ class ZUiVolumeSlider : ZilchComponent
     if (volume == 0.0)
       return -100.0;
     
-    var decibels = 20.0 * Math.Log10(volume);
-    
-    return decibels;
+    return 20.0 * Math.Log10(volume);
+  }
+  
+  function GetPercent() : Real
+  {
+    var decibels = this.ToDecibels(this.Volume);
+    decibels -= 12;
+    decibels *= -1;
+    return Math.Clamp(1.0 - (decibels / 48.0), 0.0, 1.0);
   }
 }

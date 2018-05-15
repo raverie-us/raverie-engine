@@ -9,6 +9,109 @@
 namespace Zero
 {
 
+namespace Location
+{
+
+//**************************************************************************************************
+bool IsCardinal(Location::Enum location)
+{
+  switch(location)
+  {
+  case Location::CenterLeft:
+  case Location::TopCenter:
+  case Location::CenterRight:
+  case Location::BottomCenter:
+    return true;
+  default:
+    return false;
+  }
+}
+
+//**************************************************************************************************
+int GetCardinalAxis(Location::Enum location)
+{
+  switch(location)
+  {
+  case Location::CenterLeft:
+  case Location::CenterRight:
+    return 0;
+  case Location::TopCenter:
+  case Location::BottomCenter:
+    return 1;
+  default:
+    DoNotifyException("Location not supported.", "The given location is not a cardinal axis");
+    return -1;
+  }
+}
+
+//**************************************************************************************************
+Vec2 GetDirection(Location::Enum location)
+{
+  switch(location)
+  {
+  case Location::TopLeft:
+    return Vec2(-0.5f, 0.5f);
+  case Location::TopCenter:
+    return Vec2(0, 0.5f);
+  case Location::TopRight:
+    return Vec2(0.5f, 0.5f);
+
+  case Location::CenterLeft:
+    return Vec2(-0.5f, 0);
+  case Location::CenterRight:
+    return Vec2(0.5f, 0);
+  case Location::Center:
+  default:
+    return Vec2(0, 0);
+
+  case Location::BottomLeft:
+    return Vec2(-0.5f, -0.5f);
+  case Location::BottomCenter:
+    return Vec2(0, -0.5f);
+  case Location::BottomRight:
+    return Vec2(0.5f, -0.5f);
+  }
+}
+
+//**************************************************************************************************
+Vec2 GetDirection(Location::Enum from, Location::Enum to)
+{
+  Vec2 centerToFrom = GetDirection(from);
+  Vec2 centerToTo = GetDirection(to);
+  return centerToTo - centerToFrom;
+}
+
+//**************************************************************************************************
+Location::Enum GetOpposite(Location::Enum location)
+{
+  switch(location)
+  {
+  case Location::TopLeft:
+    return Location::BottomRight;
+  case Location::TopCenter:
+    return Location::BottomCenter;
+  case Location::TopRight:
+    return Location::BottomLeft;
+
+  case Location::CenterLeft:
+    return Location::CenterRight;
+  case Location::CenterRight:
+    return Location::CenterLeft;
+  case Location::Center:
+  default:
+    return Location::Center;
+
+  case Location::BottomLeft:
+    return Location::TopRight;
+  case Location::BottomCenter:
+    return Location::TopCenter;
+  case Location::BottomRight:
+    return Location::TopLeft;
+  }
+}
+
+} //namespace Location
+
 //---------------------------------------------------------------------------------------- Thickness
 const Thickness Thickness::cZero(0, 0, 0, 0);
 
@@ -100,6 +203,7 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindFieldProperty(Max);
   ZilchBindGetterProperty(Size);
   ZilchBindMethod(SetSize);
+  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, float));
   ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
   ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
   ZilchBindMethod(Expand);
@@ -125,6 +229,12 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindMethod(Contains);
   ZilchBindMethod(Overlap);
   ZilchBindMethod(RemoveThickness);
+
+  ZilchBindMethod(GetCardinalLocation);
+  ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, float));
+  ZilchBindMethod(GetLocation);
+  ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
+
 }
 
 //**************************************************************************************************
@@ -286,6 +396,29 @@ void Rectangle::SetSize(Location::Enum origin, Vec2Param size)
     Max = center + halfSize;
     return;
   }
+  }
+}
+
+//**************************************************************************************************
+void Rectangle::ResizeToPoint(Location::Enum location, float position)
+{
+  switch(location)
+  {
+  case Location::CenterLeft:
+  case Location::TopCenter:
+  case Location::CenterRight:
+  case Location::BottomCenter:
+    {
+      Vec2 position2 = Vec2::cZero;
+      int axis = Location::GetCardinalAxis(location);
+      position2[axis] = position;
+      ResizeToPoint(location, position2);
+      break;
+    }
+  default:
+    {
+    DoNotifyException("Location not supported.", "The given location is not a cardinal axis");
+    }
   }
 }
 
@@ -494,6 +627,100 @@ float Rectangle::GetBottom() const
 void Rectangle::SetBottom(float bottom)
 {
   Translate(Vec2(0, bottom - GetBottom()));
+}
+
+//**************************************************************************************************
+float Rectangle::GetCardinalLocation(Location::Enum location)
+{
+  switch(location)
+  {
+  case Location::CenterLeft:
+    return GetLeft();
+  case Location::TopCenter:
+    return GetTop();
+  case Location::CenterRight:
+    return GetRight();
+  case Location::BottomCenter:
+    return GetBottom();
+  default:
+    DoNotifyException("Location not supported.", "Only cardinal axes are supported.");
+  }
+
+  return 0.0f;
+}
+
+//**************************************************************************************************
+void Rectangle::SetLocation(Location::Enum location, float value)
+{
+  switch(location)
+  {
+  case Location::CenterLeft:
+  {
+    SetLeft(value);
+    break;
+  }
+  case Location::TopCenter:
+  {
+    SetTop(value);
+    break;
+  }
+  case Location::CenterRight:
+  {
+    SetRight(value);
+    break;
+  }
+  case Location::BottomCenter:
+  {
+    SetBottom(value);
+    break;
+  }
+  default:
+    DoNotifyException("Location not supported.", "Only cardinal axes are supported.");
+  }
+}
+
+//**************************************************************************************************
+Vec2 Rectangle::GetLocation(Location::Enum location)
+{
+  Vec2 bottomLeft = GetBottomLeft();
+  Vec2 size = GetSize();
+  Vec2 toLocation = Location::GetDirection(Location::BottomLeft, location);
+  return bottomLeft + (toLocation * size);
+}
+
+//**************************************************************************************************
+void Rectangle::SetLocation(Location::Enum location, Vec2Param value)
+{
+  switch(location)
+  {
+  case Location::TopLeft:
+  {
+    SetTopLeft(value);
+    break;
+  }
+  case Location::TopRight:
+  {
+    SetTopRight(value);
+    break;
+  }
+  case Location::BottomRight:
+  {
+    SetBottomRight(value);
+    break;
+  }
+  case Location::BottomLeft:
+  {
+    SetBottomLeft(value);
+    break;
+  }
+  case Location::Center:
+  {
+    SetCenter(value);
+    break;
+  }
+  default:
+    DoNotifyException("Location not supported.", "Only non-cardinal axes are supported.");
+  }
 }
 
 }//namespace Zero

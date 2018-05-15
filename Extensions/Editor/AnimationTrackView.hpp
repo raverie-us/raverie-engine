@@ -58,6 +58,7 @@ public:
 
 private:
   void UpdateToolTip();
+  void OnAnimatorDeactivated(Event* event);
 
   /// We want to know when the selection is modified outside of the tree view.
   void OnSelectionModified(Event* e);

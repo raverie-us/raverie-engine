@@ -9,8 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include "Eula.hpp"
-
 namespace Zero
 {
 
@@ -59,7 +57,6 @@ INT_PTR CALLBACK DialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
   }
 }
 
-
 INT_PTR CALLBACK EulaProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
   switch (msg) 
@@ -67,7 +64,11 @@ INT_PTR CALLBACK EulaProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
   case WM_INITDIALOG:
     {
       HWND editText = GetDlgItem(hwnd, IDC_EDITEULA);
-      SetWindowText(editText, Eula);
+      HWND parentHwnd = GetParent(hwnd);
+      // Get the eula file's contents to display
+      WinLaunchWindow* window = (WinLaunchWindow*)PointerFromWindow(parentHwnd);
+      WString wideEula = Widen(window->mEulaText);
+      SetWindowText(editText, wideEula.c_str());
       ShowWindow(hwnd, TRUE);
       return FALSE;
     }
@@ -75,12 +76,18 @@ INT_PTR CALLBACK EulaProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     switch (LOWORD(wParam)) 
     { 
     case IDOK:
+    {
+      HWND parentHwnd = GetParent(hwnd);
+      // Write out that they accepted the eula
+      WinLaunchWindow* window = (WinLaunchWindow*)PointerFromWindow(parentHwnd);
+      String eulaFilePath = window->GetEulaAcceptedFilePath();
+      WriteStringRangeToFile(eulaFilePath, "Accepted");
       EndDialog(hwnd, LOWORD(wParam));
-      return TRUE; 
+      return TRUE;
+    }
     case IDCANCEL:
       HWND parentHwnd = GetParent(hwnd);
       WinLaunchWindow* window = (WinLaunchWindow*)PointerFromWindow(parentHwnd);
-      RemoveConfig(window->mConfig);
       exit(0);
       return TRUE; 
     } 
@@ -97,12 +104,15 @@ WinLaunchWindow::WinLaunchWindow(CogId config, CogId projectCog)
 
   MainConfig* mainConfig = mConfig.has(MainConfig);
 
+  String eulaPath = FilePath::CombineWithExtension(mainConfig->DataDirectory, "ZeroLauncherEula", ".txt");
+  mEulaText = ReadFileIntoString(eulaPath);
+
   HINSTANCE hInstance = (HINSTANCE)GetModuleHandle(NULL);
   mWindowHandle = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_CONFIGDIALOG), NULL, DialogProc);
   SetWindowPointer(mWindowHandle, this);
 
-  // Show eula
-  if (mainConfig->mConfigDidNotExist)
+  // Check if the user has accepted this eula
+  if (!FileExists(GetEulaAcceptedFilePath()))
     DialogBox(hInstance, MAKEINTRESOURCE(IDD_EULA), mWindowHandle, EulaProc);
 
   // Skip popup if not using it
@@ -201,6 +211,17 @@ void WinLaunchWindow::RunMessageLoop()
     TranslateMessage(&msg);
     DispatchMessage(&msg);
   }
+}
+
+String WinLaunchWindow::GetEulaAcceptedFilePath()
+{
+  MainConfig* mainConfig = mConfig.has(MainConfig);
+
+  // Make a file for each unique eula (use the hash to identify)
+  String eulaGuid = ToString(mEulaText.Hash());
+  String eulaFileName = BuildString("EulaAccepted", eulaGuid);
+  String path = FilePath::Combine(GetUserDocumentsDirectory(), "Zero");
+  return FilePath::CombineWithExtension(path, eulaFileName, ".txt");
 }
 
 bool RunLauncher(CogId configId, CogId projectCogId)

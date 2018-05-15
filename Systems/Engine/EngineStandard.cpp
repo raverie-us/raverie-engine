@@ -14,6 +14,7 @@ ZilchDefineRange(HierarchyNameRange);
 ZilchDefineRange(HierarchyRange);
 ZilchDefineRange(CogNameRange);
 ZilchDefineRange(HierarchyList::range);
+ZilchDefineRange(HierarchyList::reverse_range);
 ZilchDefineRange(Space::range);
 ZilchDefineRange(SpaceMap::valueRange);
 ZilchDefineRange(ObjectLinkRange);
@@ -37,7 +38,6 @@ ZilchDefineEnum(FlickedStick);
 ZilchDefineEnum(InputDevice);
 ZilchDefineEnum(KeyState);
 ZilchDefineEnum(LauncherAutoRunMode);
-ZilchDefineEnum(Location);
 ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
 ZilchDefineEnum(SplineType);
@@ -48,6 +48,21 @@ ZilchDefineEnum(TimeMode);
 ZilchDefineEnum(Verbosity);
 ZilchDefineEnum(WindowState);
 ZilchDefineEnum(WindowStyleFlags);
+
+ZilchDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, type)
+{
+  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
+  ZilchBindEnumValues(Location);
+  
+  // We need to alias ZilchSelf for the method binding macros
+  namespace ZilchSelf = Location;
+
+  ZilchBindMethod(IsCardinal);
+  ZilchBindMethod(GetCardinalAxis);
+  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum));
+  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum, Location::Enum));
+  ZilchBindMethod(GetOpposite);
+}
 
 // Arrays
 ZeroDefineArrayType(Array<ContentLibraryReference>);
@@ -99,6 +114,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRange(HierarchyRange);
   ZilchInitializeRange(CogNameRange);
   ZilchInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
+  ZilchInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);
@@ -164,6 +180,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(MetaEditorScriptObject);
   ZilchInitializeType(MetaDependency);
   ZilchInitializeType(MetaInterface);
+  ZilchInitializeType(RaycasterMetaComposition);
 
   // Events
   ZilchInitializeType(CogPathEvent);
@@ -262,6 +279,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Operation);
   ZilchInitializeType(OperationQueue);
   ZilchInitializeType(OperationBatch);
+  ZilchInitializeType(PropertyOperation);
   ZilchInitializeType(Tracker);
   ZilchInitializeType(Spline);
   ZilchInitializeType(SplineSampleData);
@@ -356,8 +374,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Joystick);
   ZilchInitializeType(Joysticks);
 
-  ZilchInitializeType(HotKeyDataSet);
-
   ZilchInitializeType(EventDirectoryWatcher);
   ZilchInitializeType(Job);
   ZilchInitializeType(DocumentationLibrary);
@@ -433,7 +449,6 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   InitializeResourceManager(LevelManager);
   InitializeResourceManager(AnimationManager);
   InitializeResourceManager(CurveManager);
-  InitializeResourceManager(HotKeyManager);
   InitializeResourceManager(ResourceTableManager);
   InitializeResourceManager(ColorGradientManager);
   InitializeResourceManager(TextBlockManager);

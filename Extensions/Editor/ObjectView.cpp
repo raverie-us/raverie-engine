@@ -332,8 +332,9 @@ DataNode* RemovedEntry::FindRemovedCogNode(DataNode* dataTree, Cog* currParent, 
   }
 
   DataNode* hierarchyNode = dataTree->FindChildWithTypeName("Hierarchy");
-  DataNode* cogNode = hierarchyNode->FindChildWithUniqueNodeId(childGuid);
-  return cogNode;
+  if(hierarchyNode)
+    return hierarchyNode->FindChildWithUniqueNodeId(childGuid);
+  return nullptr;
 }
 
 String RemovedEntry::GetNameFromCogNode(DataNode* cogNode)
@@ -1348,14 +1349,14 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
     return;
   
   String toolTipMessage;
-  ToolTipColor::Enum toolTipColor;
+  ToolTipColorScheme::Enum toolTipColor;
 
   if(RemovedEntry* removed = Type::DynamicCast<RemovedEntry*>(object))
   {
     Cog* cog = removed->mParent->FindNearestArchetypeContext();
     toolTipMessage = "Object has been locally removed from the Archetype.\n\n"
                      "Right click to restore it.";
-    toolTipColor = ToolTipColor::Red;
+    toolTipColor = ToolTipColorScheme::Red;
   }
   else
   {
@@ -1365,7 +1366,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
       Cog* archetypeParent = cog->GetParent()->FindNearestArchetypeContext();
       String archetypeName = archetypeParent->GetArchetype()->Name;
       toolTipMessage = String::Format("Object is locally added to the '%s' Archetype.", archetypeName.c_str());
-      toolTipColor = ToolTipColor::Green;
+      toolTipColor = ToolTipColorScheme::Green;
     }
     else if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
     {
@@ -1373,7 +1374,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
                        "This objects children will ignore the order specified in the Archetype.\n\n"
                        "Right click to revert order.";
 
-      toolTipColor = ToolTipColor::Yellow;
+      toolTipColor = ToolTipColorScheme::Yellow;
     }
   }
 
@@ -1391,7 +1392,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
                           IndicatorSide::Bottom, IndicatorSide::Top);
 
     toolTip->SetArrowTipTranslation(placement);
-    toolTip->SetColor(toolTipColor);
+    toolTip->SetColorScheme(toolTipColor);
     mToolTip = toolTip;
   }
 }

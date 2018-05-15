@@ -15,7 +15,7 @@ class SoundInstance;
 //-------------------------------------------------------------------------------------- Sound Space
 
 /// Sound functionality associated with a Space
-class SoundSpace : public Component
+class SoundSpace : public Component, public Audio::ExternalNodeInterface
 {
 public:
   ZilchDeclareType(SoundSpace, TypeCopyMode::ReferenceType);
@@ -95,13 +95,6 @@ private:
   HandleOf<SoundNode> mSoundNodeInput;
   HandleOf<SoundNode> mSoundNodeOutput;
   unsigned mSpaceNodeID;
-
-  class NodeInterface : public Audio::ExternalNodeInterface
-  {
-    void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override {}
-  };
-
-  NodeInterface mNodeInterface;
 
   friend class SoundSystem;
   friend class SoundNodeGraph;

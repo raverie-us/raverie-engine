@@ -1164,19 +1164,21 @@ namespace Zilch
     template <typename ZilchSelf, typename ZilchBase>                                                                                                 \
     void ZilchSetupExternalType(SelfType*, ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
 
-  #define ZilchDefineExternalBaseType(SelfType, CopyMode, builder, type)                                                                              \
+#define ZilchDefineExternalBaseType(SelfType, CopyMode, builder, type)                                                                              \
     ZilchDefineExternalDerivedType(SelfType, ZZ::NoType, CopyMode, builder, type)
 
   /************************************* ENUM ************************************/
+#define ZilchBindEnumValues(enumType)                                                  \
+  for(uint i = 0; i < enumType::Size; ++i)                                             \
+  {                                                                                    \
+    ZilchFullBindEnumValue(builder, type, enumType::Values[i], enumType::Names[i]);    \
+  }
+
 #define ZilchDefineEnum(enumType)                                                      \
   ZilchDefineExternalBaseType(enumType::Enum, TypeCopyMode::ValueType, builder, type)  \
   {                                                                                    \
     ZilchFullBindEnum(builder, type, SpecialType::Enumeration);                        \
-                                                                                       \
-    for(uint i = 0; i < enumType::Size; ++i)                                           \
-    {                                                                                  \
-      ZilchFullBindEnumValue(builder, type, enumType::Values[i], enumType::Names[i]);  \
-    }                                                                                  \
+    ZilchBindEnumValues(enumType);                                                     \
   }
 
 #define ZilchInitializeEnum(enumType) ZilchInitializeExternalTypeAs(enumType::Enum, #enumType);

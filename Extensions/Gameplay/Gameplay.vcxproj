@@ -139,7 +139,6 @@
     <ClInclude Include="IndexedHalfEdgeMesh.hpp" />
     <ClInclude Include="MarchingCubes.hpp" />
     <ClInclude Include="MarchingSquares.hpp" />
-    <ClInclude Include="MarketWidget.hpp" />
     <ClInclude Include="MouseCapture.hpp" />
     <ClInclude Include="Orientation.hpp" />
     <ClInclude Include="PlayGame.hpp" />
@@ -172,7 +171,6 @@
     <ClCompile Include="IndexedHalfEdgeMesh.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="MarchingSquares.cpp" />
-    <ClCompile Include="MarketWidget.cpp" />
     <ClCompile Include="MouseCapture.cpp" />
     <ClCompile Include="Orientation.cpp" />
     <ClCompile Include="PlayGame.cpp" />

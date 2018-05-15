@@ -13,6 +13,7 @@ namespace Events
 {
 DefineEvent(ScriptsCompiledPrePatch);
 DefineEvent(ScriptsCompiledCommit);
+DefineEvent(ScriptsCompiledPatch);
 DefineEvent(ScriptsCompiledPostPatch);
 DefineEvent(ScriptCompilationFailed);
 }//namespace Events
@@ -45,6 +46,9 @@ bool ZilchCompileEvent::WasTypeModified(BoundType* type)
 //**************************************************************************************************
 BoundType* ZilchCompileEvent::GetReplacingType(BoundType* oldType)
 {
+  if(!WasTypeModified(oldType))
+    return oldType;
+
   forRange(ResourceLibrary* lib, mModifiedLibraries.All())
   {
     if (BoundType* newType = lib->GetReplacingType(oldType))
@@ -120,6 +124,7 @@ void ZilchManager::InternalCompile()
     mPendingFragmentProjectLibrary = nullptr;
   }
 
+  this->DispatchEvent(Events::ScriptsCompiledPatch, &compileEvent);
   this->DispatchEvent(Events::ScriptsCompiledPostPatch, &compileEvent);
 
   MetaDatabase::GetInstance()->ClearRemovedLibraries();

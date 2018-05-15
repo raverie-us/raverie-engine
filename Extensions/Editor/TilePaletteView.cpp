@@ -51,7 +51,7 @@ void TilePaletteSprite::SetBackground(bool background)
 void TilePaletteSprite::SetFrame(uint frameIndex, SpriteSource* sprite)
 {
   UvRect rect = sprite->GetUvRect(frameIndex);
-  mFrameDisplay->SetTexture(sprite->mTexture);
+  mFrameDisplay->SetTexture(sprite->GetAtlasTexture());
   mFrameDisplay->SetUv(rect.TopLeft, rect.BotRight);
 }
 
@@ -696,14 +696,13 @@ void TilePaletteView::CreateNewEntry(IntVec2 location, bool defaults)
   if (defaults)
     SetDefaultResources();
 
-  if (mSprite == nullptr)
-    return;
+  ReturnIf(mArchetype.IsNull(), , "Archetype should not be nullable.");
 
   TilePaletteEntry entry;
   entry.frame = CreateTilePaletteSprite(mSprite, mCollision);
   entry.tile.ArchetypeResource = mArchetype->mResourceId;
-  entry.tile.SpriteResource = mSprite->mResourceId;
-  entry.tile.CollisionResource = mCollision->mResourceId;
+  entry.tile.SpriteResource = mSprite.IsNotNull() ? mSprite->mResourceId : 0;
+  entry.tile.CollisionResource = mCollision.IsNotNull() ? mCollision->mResourceId : 0;
   entry.tile.Merge = mMergeable;
   mPaletteTiles[location] = entry;
 

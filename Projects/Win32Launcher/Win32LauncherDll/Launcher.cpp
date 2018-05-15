@@ -20,7 +20,7 @@ void OnLauncherTweakablesModified()
   Tweakables::Save();
 }
 
-IntVec2 Launcher::mEulaWindowSize = IntVec2(457, 520);
+IntVec2 Launcher::mEulaWindowSize = IntVec2(700, 520);
 IntVec2 Launcher::mLauncherWindowSize = IntVec2(1024, 595);
 
 //--------------------------------------------------------------------- Launcher
@@ -66,9 +66,8 @@ void Launcher::EulaAccepted()
   OpenLauncherWindow();
 
   // Store that we've accepted the eula
-  TimeType eulaTime = GetEulaDateTime();
   UserConfig* userConfig = HasOrAdd<UserConfig>(mConfigCog);
-  userConfig->LastAcceptedEula = (u64)eulaTime;
+  userConfig->LastAcceptedEulaHash = GetEulaHash();
   SaveLauncherConfig(mConfigCog);
   mEulaWindow->SetActive(false);
   mEulaWindow->Destroy();
@@ -117,7 +116,7 @@ void Launcher::Initialize()
   IntVec2 position = desktopRect.Center(size);
 
   BitField<WindowStyleFlags::Enum> mainStyle;
-  mainStyle.U32Field = WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::ClientOnly;
+  mainStyle.U32Field = WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly;
 
   if(mainWindow)
     mainStyle.SetFlag(WindowStyleFlags::MainWindow);
@@ -131,6 +130,16 @@ void Launcher::Initialize()
   mOsWindow = window;
 
   Z::gEngine->has(GraphicsEngine)->CreateRenderer(window);
+
+  if (Z::gRenderer->mDriverSupport.mIntel)
+  {
+    // Borderless window with Windows Aero does not work correctly on Intel.
+    mainStyle.ClearFlag(WindowStyleFlags::Resizable);
+    // Specifying a titlebar does not work correctly on Intel.
+    mainStyle.ClearFlag(WindowStyleFlags::TitleBar);
+    // SetStyle sets state to windowed to force the window to update.
+    window->SetStyle(mainStyle.Field);
+  }
 }
 
 //******************************************************************************
@@ -183,19 +192,18 @@ void Launcher::OpenTweakablesWindow()
 }
 
 //******************************************************************************
-TimeType Launcher::GetEulaDateTime()
+size_t Launcher::GetEulaHash()
 {
   String eulaFile = GetEulaFilePath(mConfigCog);
-  return GetFileModifiedTime(eulaFile);
+  String eulaText = ReadFileIntoString(eulaFile);
+  return eulaText.Hash();
 }
 
 //******************************************************************************
 bool Launcher::ShouldOpenEula()
 {
   UserConfig* userConfig = HasOrAdd<UserConfig>(mConfigCog);
-  TimeType eulaModifiedDate = GetEulaDateTime();
-
-  return (userConfig->LastAcceptedEula < (u64)eulaModifiedDate);
+  return userConfig->LastAcceptedEulaHash != GetEulaHash();
 }
 
 //******************************************************************************

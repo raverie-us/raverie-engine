@@ -71,7 +71,6 @@ public:
   Operation* mParent;
 
   String mName;
-  String mDescription;
   String mInvalidReason;
 
 private:
@@ -177,6 +176,7 @@ public:
   String GetActiveBatchName();
   void SetActiveBatchName(StringParam batchName);
   void SetActiveBatchDescription(StringParam description);
+  void BeginBatch(StringParam batchName);
   void BeginBatch();
   void EndBatch();
   void ClearAll();

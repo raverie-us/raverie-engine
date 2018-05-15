@@ -57,7 +57,7 @@ bool ErrorMessageBox(Zero::ErrorSignaler::ErrorData& errorData)
 }
 
 //Application Startup Function
-bool Startup(Engine* engine, StringMap& parameters);
+bool Startup(Engine* engine, StringMap& parameters, String projectFile);
 
 }
 
@@ -75,8 +75,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR     lpCmdLine,
                    int       nCmdShow)
 {
-  WebRequestInitializer webRequestInitializer;
-
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
   DebuggerListener debuggerOutput;
@@ -102,12 +100,19 @@ int WINAPI WinMain(HINSTANCE hInstance,
   CrashHandler::SetSendCrashReportCallback(Zero::SendCrashReport, NULL);
   CrashHandler::SetCrashStartCallback(Zero::CrashStartCallback, NULL);
 
+  Importer importer;
+  ImporterResult::Type importResult = importer.CheckForImport();
+  if(importResult == ImporterResult::ExecutedAnotherProcess)
+    return 1;
+
+  WebRequestInitializer webRequestInitializer;
+
   // Get the command line
   int numArguments = 0;
   wchar_t** commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &numArguments);
   Array<String> commandLineArray;
   CommandLineToStringArray(commandLineArray, commandLineArgs, numArguments);
-  
+
   // Initialize environments
   Environment* environment = Environment::GetInstance();
   environment->ParseCommandArgs(commandLineArray);
@@ -117,23 +122,25 @@ int WINAPI WinMain(HINSTANCE hInstance,
   if(!environment->GetParsedArgument("logStdOut").Empty())
     Zero::Console::Add(&stdoutListener);
 
-  // Importer is used 
-  Importer import;
-  ImporterResult::Enum importResult = import.CheckForImport();
-  if(importResult == ImporterResult::ExecutedAnotherProcess)
-    return 1;
+  String appDirectory = GetApplicationDirectory();
+  String projectFile = FilePath::Combine(appDirectory, "Project.zeroproj");
+  
+  // Fix the project file path for exports to be in the import's output directory
+  bool embededPackage = (importResult == ImporterResult::Embeded);
+  if(embededPackage)
+    projectFile = FilePath::Combine(importer.mOutputDirectory, "Project.zeroproj");
 
   // Startup the engine
   ZeroStartupSettings settings;
   settings.mTweakableFileName = "EditorTweakables";
-  settings.mEmbeddedPackage = (importResult == ImporterResult::Embeded);
-  settings.mEmbeddedWorkingDirectory = import.mOutputDirectory;
+  settings.mEmbeddedPackage = embededPackage;
+  settings.mEmbeddedWorkingDirectory = importer.mOutputDirectory;
 
   ZeroStartup startup;
   Engine* engine = startup.Initialize(settings);
 
   //Run application specific startup
-  bool success = Zero::Startup(engine, environment->mParsedCommandLineArguments);
+  bool success = Zero::Startup(engine, environment->mParsedCommandLineArguments, projectFile);
 
   //Failed startup do not run
   if(!success)

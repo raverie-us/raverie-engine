@@ -41,6 +41,9 @@
     <ClCompile Include="Hull3dTests.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="AabbTests.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UnitTestCommon.hpp">

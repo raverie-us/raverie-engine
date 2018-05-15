@@ -39,11 +39,9 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType, "IndexedHalfEdgeFaceEdgeIndexArrayRange");
   ZilchInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType, "IndexedHalfEdgeMeshFaceArrayRange");
 
-  // Meta Components
-  ZilchInitializeType(RaycasterMetaComposition);
-
   // Events
   ZilchInitializeType(MouseEvent);
+  ZilchInitializeType(MouseFileDropEvent);
   ZilchInitializeType(ViewportMouseEvent);
   ZilchInitializeType(WebBrowserEvent);
   ZilchInitializeType(WebBrowserConsoleEvent);
@@ -62,7 +60,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(WebBrowserSetup);
   ZilchInitializeType(WebBrowserManager);
   ZilchInitializeType(WebBrowserWidget);
-  ZilchInitializeType(MarketWidget);
   ZilchInitializeType(TileMapSource);
   ZilchInitializeType(Reactive);
   ZilchInitializeType(ReactiveSpace);

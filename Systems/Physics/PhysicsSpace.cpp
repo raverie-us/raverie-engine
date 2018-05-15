@@ -352,7 +352,7 @@ void PhysicsSpace::AddPairFilter(Cog* cog1, Cog* cog2)
 {
   if(cog1 == nullptr || cog2 == nullptr)
   {
-    DoNotifyWarning("Invalid parameters", "Invalid cogs passed in. One of them is null");
+    DoNotifyException("Invalid parameters", "Invalid cogs passed in to AddPairFilter. One of them is null");
     return;
   }
 
@@ -368,7 +368,7 @@ void PhysicsSpace::AddHierarchyPairFilter(Cog* cog1, Cog* cog2)
 {
   if(cog1 == nullptr || cog2 == nullptr)
   {
-    DoNotifyWarning("Invalid parameters", "Invalid cogs passed in. One of them is null");
+    DoNotifyException("Invalid parameters", "Invalid cogs passed in to AddHierarchyPairFilter. One of them is null");
     return;
   }
 
@@ -416,7 +416,7 @@ void PhysicsSpace::RemovePairFilter(Cog* cog1, Cog* cog2)
 {
   if(cog1 == nullptr || cog2 == nullptr)
   {
-    DoNotifyWarning("Invalid parameters", "Invalid cogs passed in. One of them are null");
+    DoNotifyException("Invalid parameters", "Invalid cogs passed in to RemovePairFilter. One of them are null");
     return;
   }
 
@@ -432,7 +432,7 @@ void PhysicsSpace::RemoveHierarchyPairFilter(Cog* cog1, Cog* cog2)
 {
   if(cog1 == nullptr || cog2 == nullptr)
   {
-    DoNotifyWarning("Invalid parameters", "Invalid cogs passed in. One of them are null");
+    DoNotifyException("Invalid parameters", "Invalid cogs passed in to RemoveHierarchyPairFilter. One of them are null");
     return;
   }
 

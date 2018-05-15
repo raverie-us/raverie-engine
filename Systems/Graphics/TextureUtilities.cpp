@@ -1,8 +1,12 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 void SetPixelData(byte* data, uint index, Vec4 value, TextureFormat::Enum format)
 {
   switch (format)
@@ -32,6 +36,7 @@ void SetPixelData(byte* data, uint index, Vec4 value, TextureFormat::Enum format
   }
 }
 
+//**************************************************************************************************
 void ReadPixelData(byte* data, uint index, Vec4& value, TextureFormat::Enum format)
 {
   switch (format)
@@ -61,6 +66,7 @@ void ReadPixelData(byte* data, uint index, Vec4& value, TextureFormat::Enum form
   }
 }
 
+//**************************************************************************************************
 void SetPixelDataByte(byte* data, uint index, Vec4 value, uint elementCount)
 {
   const uint maxByte = 0xFF;
@@ -74,6 +80,7 @@ void SetPixelDataByte(byte* data, uint index, Vec4 value, uint elementCount)
   }
 }
 
+//**************************************************************************************************
 void SetPixelDataShort(byte* data, uint index, Vec4 value, uint elementCount)
 {
   const uint maxShort = 0xFFFF;
@@ -87,6 +94,7 @@ void SetPixelDataShort(byte* data, uint index, Vec4 value, uint elementCount)
   }
 }
 
+//**************************************************************************************************
 void SetPixelDataHalfFloat(byte* data, uint index, Vec4 value, uint elementCount)
 {
   switch (elementCount)
@@ -98,6 +106,7 @@ void SetPixelDataHalfFloat(byte* data, uint index, Vec4 value, uint elementCount
   }
 }
 
+//**************************************************************************************************
 void SetPixelDataFloat(byte* data, uint index, Vec4 value, uint elementCount)
 {
   switch (elementCount)
@@ -109,6 +118,7 @@ void SetPixelDataFloat(byte* data, uint index, Vec4 value, uint elementCount)
   }
 }
 
+//**************************************************************************************************
 void SetPixelDataGamma(byte* data, uint index, Vec4 value, uint elementCount)
 {
   const uint maxByte = 0xFF;
@@ -123,6 +133,7 @@ void SetPixelDataGamma(byte* data, uint index, Vec4 value, uint elementCount)
   }
 }
 
+//**************************************************************************************************
 void ReadPixelDataByte(byte* data, uint index, Vec4& value, uint elementCount)
 {
   const uint maxByte = 0xFF;
@@ -137,6 +148,7 @@ void ReadPixelDataByte(byte* data, uint index, Vec4& value, uint elementCount)
   }
 }
 
+//**************************************************************************************************
 void ReadPixelDataShort(byte* data, uint index, Vec4& value, uint elementCount)
 {
   const uint maxShort = 0xFFFF;
@@ -151,6 +163,7 @@ void ReadPixelDataShort(byte* data, uint index, Vec4& value, uint elementCount)
   }
 }
 
+//**************************************************************************************************
 void ReadPixelDataHalfFloat(byte* data, uint index, Vec4& value, uint elementCount)
 {
   switch (elementCount)
@@ -162,6 +175,7 @@ void ReadPixelDataHalfFloat(byte* data, uint index, Vec4& value, uint elementCou
   }
 }
 
+//**************************************************************************************************
 void ReadPixelDataFloat(byte* data, uint index, Vec4& value, uint elementCount)
 {
   switch (elementCount)
@@ -173,6 +187,7 @@ void ReadPixelDataFloat(byte* data, uint index, Vec4& value, uint elementCount)
   }
 }
 
+//**************************************************************************************************
 void ReadPixelDataGamma(byte* data, uint index, Vec4& value, uint elementCount)
 {
   const uint maxByte = 0xFF;
@@ -188,26 +203,31 @@ void ReadPixelDataGamma(byte* data, uint index, Vec4& value, uint elementCount)
   }
 }
 
+//**************************************************************************************************
 bool IsColorFormat(TextureFormat::Enum format)
 {
   return (format > TextureFormat::None && format < TextureFormat::Depth16);
 }
 
+//**************************************************************************************************
 bool IsShortColorFormat(TextureFormat::Enum format)
 {
   return (format >= TextureFormat::R16 && format <= TextureFormat::RGBA16);
 }
 
+//**************************************************************************************************
 bool IsFloatColorFormat(TextureFormat::Enum format)
 {
   return (format >= TextureFormat::R16f && format <= TextureFormat::RGBA32f);
 }
 
+//**************************************************************************************************
 bool IsDepthFormat(TextureFormat::Enum format)
 {
   return (format >= TextureFormat::Depth16);
 }
 
+//**************************************************************************************************
 bool IsDepthStencilFormat(TextureFormat::Enum format)
 {
   return (format >= TextureFormat::Depth24Stencil8);
@@ -262,6 +282,7 @@ const PartitionPattern cPartitionPatterns[32] =
   {0xe07fc0, 0x03fe07, 27,  true,  true, false}, // 31
 };
 
+//**************************************************************************************************
 uint GetBlockSize(TextureCompression::Enum compression)
 {
   switch (compression)
@@ -277,12 +298,14 @@ uint GetBlockSize(TextureCompression::Enum compression)
   }
 }
 
+//**************************************************************************************************
 void YInvertBC1Block(byte* block)
 {
   Math::Swap(block[4], block[7]);
   Math::Swap(block[5], block[6]);
 }
 
+//**************************************************************************************************
 void YInvertBC3Block(byte* block)
 {
   u32 indices0_7 = block[2] + 256 * (block[3] + 256 * block[4]);
@@ -300,6 +323,7 @@ void YInvertBC3Block(byte* block)
   block[7] = (indices0_7 & 0x00ff0000) >> 16;
 }
 
+//**************************************************************************************************
 void YInvertBC6Mode10Block(byte* block)
 {
   u32 indices0_7 = block[10] + 256 * (block[11] + 256 * block[12]);
@@ -452,6 +476,7 @@ void YInvertBC6Mode10Block(byte* block)
   block[15] = (indices8_15 & 0x00ff0000) >> 16;
 }
 
+//**************************************************************************************************
 void YInvertBC6Mode11Block(byte* block)
 {
   // Swap indices
@@ -500,6 +525,7 @@ void YInvertBC6Mode11Block(byte* block)
   block[15] = (indices8_15 & 0xff000000) >> 24;
 }
 
+//**************************************************************************************************
 void YInvertNonCompressed(byte* imageData, uint width, uint height, uint pixelSize)
 {
   uint byteWidth = width * pixelSize;
@@ -515,6 +541,7 @@ void YInvertNonCompressed(byte* imageData, uint width, uint height, uint pixelSi
   }
 }
 
+//**************************************************************************************************
 void YInvertBlockCompressed(byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression)
 {
   ReturnIf((width >= 3 && width % 4 != 0) || (height >= 3 && height % 4 != 0), , "Block compressed image dimensions must be multiple of 4");

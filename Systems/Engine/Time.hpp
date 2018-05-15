@@ -18,6 +18,7 @@ namespace Events
   DeclareEvent(FrameUpdate);
   //DeclareEvent(GraphicsFrameUpdate);
   DeclareEvent(LogicUpdate);
+  DeclareEvent(PreviewUpdate);
   DeclareEvent(EngineUpdate);
   DeclareEvent(EngineShutdown);
   DeclareEvent(ActionFrameUpdate);
@@ -80,12 +81,10 @@ public:
   // Returns true if either the space is paused, or the game is globally paused
   bool GetGloballyPaused();
 
-  /// The events that the time space sends out
-  String mSystemLogicUpdateEvent;
-  String mFrameUpdateEvent;
-  String mLogicUpdateEvent;
-  String mActionFrameUpdateEvent;
-  String mActionLogicUpdateEvent;
+  /// Scale the speed of time for interesting effects like bullet time or
+  /// fast paced gameplay. TimeScale is clamped to be positive.
+  float GetTimeScale();
+  void SetTimeScale(float timeScale);
 
   /// The maximum amount of time we send when running in 'ActualFrametime' mode
   /// If this value is set too high and the user does anything to pause their system or the game (example grabbing the window)

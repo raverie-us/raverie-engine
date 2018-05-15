@@ -1300,8 +1300,10 @@ void ZilchShaderTranslator::WalkExpressionInitializerNode(Zilch::ExpressionIniti
 
   // Otherwise just walk the left operand and all the initializer statements
   // @JoshD: This probably won't work correctly right now. Test initializer lists of non-array types later!
-  context->Walker->Walk(this, node->LeftOperand, context);
-  context->Walker->Walk(this, node->InitializerStatements, context);
+  //context->Walker->Walk(this, node->LeftOperand, context);
+  //context->Walker->Walk(this, node->InitializerStatements, context);
+
+  SendTranslationError(node->Location, "Initializer expressions currently are not supported on non-array types.");
 }
 
 void ZilchShaderTranslator::WalkUnaryOperationNode(Zilch::UnaryOperatorNode*& node, ZilchShaderTranslatorContext* context)
@@ -1329,6 +1331,10 @@ void ZilchShaderTranslator::WalkBinaryOperationNode(Zilch::BinaryOperatorNode*& 
   // If the parent node is a unary op then we need to add parenthesis
   Zilch::UnaryOperatorNode* parentUnaryOp = Zilch::Type::DynamicCast<Zilch::UnaryOperatorNode*>(node->Parent);
   if(parentUnaryOp != nullptr)
+    needsGrouping = true;
+
+  Zilch::MemberAccessNode* parentMemberAccess = Zilch::Type::DynamicCast<Zilch::MemberAccessNode*>(node->Parent);
+  if(parentMemberAccess != nullptr)
     needsGrouping = true;
 
   // Otherwise, if the parent is a binary op then we need to check if we need parenthesis

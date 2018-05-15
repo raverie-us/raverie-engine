@@ -19,7 +19,7 @@ namespace Events
 // After we create a new Resource, it will be assigned to the object and property defined here.
 struct PostAddOp
 {
-  Handle mObject;
+  Array<Handle> mObjects;
   PropertyPath mProperty;
 };
 
@@ -168,7 +168,7 @@ private:
   void BuildContentLibraryList();
   void CreateNameToolTip(StringParam message);
   void RemoveNameToolTip();
-  void CreateTagToolTip(StringParam message, ToolTipColor::Enum tagColor = ToolTipColor::Default);
+  void CreateTagToolTip(StringParam message, ToolTipColorScheme::Enum tagColor = ToolTipColorScheme::Default);
   void RemoveTagToolTip();
   void OnTextTypedName(Event*);
   void OnTextTypedTag(Event*);

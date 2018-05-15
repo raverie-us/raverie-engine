@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -95,6 +98,7 @@ public:
   void SetLazyShaderCompilation(bool lazyShaderCompilation);
 
   void OnRenderGroupAdded(ResourceEvent* event);
+  void OnRenderGroupModified(ResourceEvent* event);
   void OnRenderGroupRemoved(ResourceEvent* event);
 
   void OnMaterialAdded(ResourceEvent* event);

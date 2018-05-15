@@ -43,8 +43,8 @@ namespace Audio
   class ListenerNode : public SimpleCollapseNode
   {
   public:
-    ListenerNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-      ListenerWorldPositionInfo positionInfo, ExternalNodeInterface* extInt, bool isThreaded = false);
+    ListenerNode(Zero::StringParam name, unsigned ID, ListenerWorldPositionInfo positionInfo, 
+      ExternalNodeInterface* extInt, bool isThreaded = false);
 
     // Updates the position and velocity of the listener
     void SetPositionData(ListenerWorldPositionInfo positionInfo);
@@ -52,6 +52,10 @@ namespace Audio
     void SetActive(const bool active);
     // Returns true if currently active
     bool GetActive();
+    // Returns the current scale modifier applied to all attenuation heard by this listener
+    float GetAttenuationScale();
+    // Sets the scale modifier applied to all attenuation heard by this listener
+    void SetAttenuationScale(float scale);
 
   private:
     ~ListenerNode();
@@ -69,6 +73,8 @@ namespace Audio
     ListenerNodeData* ThreadedData;
     // If false, listener will not pass on output
     bool Active;
+    // The scale applied to attenuation heard by this listener
+    float mAttenuationScale;
 
     friend class EmitterNode;
     friend class AttenuatorNode;

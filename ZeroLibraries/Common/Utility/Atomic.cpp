@@ -31,6 +31,10 @@ void AtomicStore(volatile s64* target, s64 value)
 {
   AtomicExchange(target, value);
 }
+void AtomicStore(void* volatile* target, void* value)
+{
+  AtomicExchange(target, value);
+}
 
 // AtomicLoad
 s8  AtomicLoad(volatile s8*  target)
@@ -48,6 +52,10 @@ s32 AtomicLoad(volatile s32* target)
 s64 AtomicLoad(volatile s64* target)
 {
   return AtomicCompareExchange(target, s64(0), s64(0));
+}
+void* AtomicLoad(void* volatile* target)
+{
+  return AtomicCompareExchange(target, nullptr, nullptr);
 }
 
 } // namespace Zero
@@ -79,16 +87,18 @@ extern "C"
 {
 
 // InterlockedExchange
-char    __cdecl _InterlockedExchange8 (char volatile*    target, char    value);
-short   __cdecl _InterlockedExchange16(short volatile*   target, short   value);
-long    __cdecl _InterlockedExchange  (long volatile*    target, long    value);
-//__int64 __cdecl _InterlockedExchange64(__int64 volatile* target, __int64 value);
+char    __cdecl _InterlockedExchange8      (char volatile*    target, char    value);
+short   __cdecl _InterlockedExchange16     (short volatile*   target, short   value);
+long    __cdecl _InterlockedExchange       (long volatile*    target, long    value);
+//__int64 __cdecl _InterlockedExchange64     (__int64 volatile* target, __int64 value);
+void*   __cdecl _InterlockedExchangePointer(void* volatile*   target, void*   value);
 
 // InterlockedCompareExchange
-char    __cdecl _InterlockedCompareExchange8 (char volatile*    target, char    value, char    comparison);
-short   __cdecl _InterlockedCompareExchange16(short volatile*   target, short   value, short   comparison);
-long    __cdecl _InterlockedCompareExchange  (long volatile*    target, long    value, long    comparison);
-__int64 __cdecl _InterlockedCompareExchange64(__int64 volatile* target, __int64 value, __int64 comparison);
+char    __cdecl _InterlockedCompareExchange8      (char volatile*    target, char    value, char    comparison);
+short   __cdecl _InterlockedCompareExchange16     (short volatile*   target, short   value, short   comparison);
+long    __cdecl _InterlockedCompareExchange       (long volatile*    target, long    value, long    comparison);
+__int64 __cdecl _InterlockedCompareExchange64     (__int64 volatile* target, __int64 value, __int64 comparison);
+void*   __cdecl _InterlockedCompareExchangePointer(void* volatile*   target, void*   value, void*   comparison);
 
 // InterlockedExchangeAdd
 char    __cdecl _InterlockedExchangeAdd8 (char volatile*    target, char    value);
@@ -115,16 +125,18 @@ long    __cdecl _InterlockedDecrement  (long volatile*    target);
 //
 
 // InterlockedExchange
-#pragma intrinsic (_InterlockedExchange8 )
-#pragma intrinsic (_InterlockedExchange16)
-#pragma intrinsic (_InterlockedExchange  )
-//#pragma intrinsic (_InterlockedExchange64)
+#pragma intrinsic (_InterlockedExchange8      )
+#pragma intrinsic (_InterlockedExchange16     )
+#pragma intrinsic (_InterlockedExchange       )
+//#pragma intrinsic (_InterlockedExchange64     )
+#pragma intrinsic (_InterlockedExchangePointer)
 
 // InterlockedCompareExchange
-#pragma intrinsic (_InterlockedCompareExchange8 )
-#pragma intrinsic (_InterlockedCompareExchange16)
-#pragma intrinsic (_InterlockedCompareExchange  )
-#pragma intrinsic (_InterlockedCompareExchange64)
+#pragma intrinsic (_InterlockedCompareExchange8      )
+#pragma intrinsic (_InterlockedCompareExchange16     )
+#pragma intrinsic (_InterlockedCompareExchange       )
+#pragma intrinsic (_InterlockedCompareExchange64     )
+#pragma intrinsic (_InterlockedCompareExchangePointer)
 
 // InterlockedExchangeAdd
 #pragma intrinsic (_InterlockedExchangeAdd8 )
@@ -164,6 +176,10 @@ s64 AtomicExchange(volatile s64* target, s64 value)
 {
   return (s64)::InterlockedExchange64((__int64 volatile*)target, (__int64)value); // _InterlockedExchange64 Unavailable
 }
+void* AtomicExchange(void* volatile* target, void* value)
+{
+  return _InterlockedExchangePointer(target, value);
+}
 
 // AtomicCompareExchange
 s8  AtomicCompareExchange(volatile s8*  target, s8  value, s8  comparison)
@@ -182,6 +198,10 @@ s64 AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison)
 {
   return (s64)::_InterlockedCompareExchange64((__int64 volatile*)target, (__int64)value, (__int64)comparison);
 }
+void* AtomicCompareExchange(void* volatile* target, void* value, void* comparison)
+{
+  return _InterlockedCompareExchangePointer(target, value, comparison);
+}
 
 // AtomicCompareExchangeBool
 bool AtomicCompareExchangeBool(volatile s8*  target, s8  value, s8  comparison)
@@ -199,6 +219,10 @@ bool AtomicCompareExchangeBool(volatile s32* target, s32 value, s32 comparison)
 bool AtomicCompareExchangeBool(volatile s64* target, s64 value, s64 comparison)
 {
   return (s64)::_InterlockedCompareExchange64((__int64 volatile*)target, (__int64)value, (__int64)comparison) == comparison;
+}
+bool AtomicCompareExchangeBool(void* volatile* target, void* value, void* comparison)
+{
+  return _InterlockedCompareExchangePointer(target, value, comparison) == comparison;
 }
 
 // AtomicFetchAdd
@@ -334,6 +358,10 @@ s64 AtomicExchange(volatile s64* target, s64 value)
 {
   return __sync_lock_test_and_set(target, value);
 }
+void* AtomicExchange(void* volatile* target, void* value)
+{
+  return __sync_lock_test_and_set(target, value);
+}
 
 // AtomicCompareExchange
 s8  AtomicCompareExchange(volatile s8*  target, s8  value, s8  comparison)
@@ -352,6 +380,10 @@ s64 AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison)
 {
   return __sync_val_compare_and_swap(target, comparison, value);
 }
+void* AtomicCompareExchange(void* volatile* target, void* value, void* comparison)
+{
+  return __sync_val_compare_and_swap(target, comparison, value);
+}
 
 // AtomicCompareExchangeBool
 bool AtomicCompareExchangeBool(volatile s8*  target, s8  value, s8  comparison)
@@ -367,6 +399,10 @@ bool AtomicCompareExchangeBool(volatile s32* target, s32 value, s32 comparison)
   return __sync_bool_compare_and_swap(target, comparison, value);
 }
 bool AtomicCompareExchangeBool(volatile s64* target, s64 value, s64 comparison)
+{
+  return __sync_bool_compare_and_swap(target, comparison, value);
+}
+bool AtomicCompareExchangeBool(void* volatile* target, void* value, void* comparison)
 {
   return __sync_bool_compare_and_swap(target, comparison, value);
 }

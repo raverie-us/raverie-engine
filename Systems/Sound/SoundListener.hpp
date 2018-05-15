@@ -33,6 +33,10 @@ public:
   void SetActive(bool value);
   /// The SoundNode associated with this SoundListener.
   HandleOf<SoundNode> GetSoundNode();
+  /// The scale value applied to the attenuation of sounds heard by this listener. If a sound uses
+  /// a SoundAttenuator StopDistance of 20, and this value is 1.5, the attenuation will stop at 30.
+  float GetAttenuationScale();
+  void SetAttenuationScale(float scale);
 
 //internals
   Link<SoundListener> link;
@@ -45,6 +49,7 @@ private:
   Transform* mTransform;
   Vec3 mPrevPosition;
   Vec3 mPrevForward;
+  float mAttenuationScale;
 
   friend class SoundSpace;
   friend class SoundSystem;

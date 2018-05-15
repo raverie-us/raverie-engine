@@ -159,7 +159,6 @@ private:
 #include "SimpleResourceFactory.hpp"
 #include "GamePadSystem.hpp"
 #include "JoystickSystem.hpp"
-#include "HotKeyManager.hpp"
 #include "EventDirectoryWatcher.hpp"
 #include "CogRange.hpp"
 #include "CogHelpers.hpp"

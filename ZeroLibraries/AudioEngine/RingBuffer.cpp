@@ -94,7 +94,7 @@ namespace Audio
     }
 
     // Advance the write index, wrapping at 2 * BufferSize
-    AtomicSet32(&WriteIndex, (WriteIndex + elementCount) & BigMask);
+    Zero::AtomicStore(&WriteIndex, (WriteIndex + elementCount) & BigMask);
 
     // Return the number of elements actually written
     return elementCount;
@@ -134,7 +134,7 @@ namespace Audio
     }
 
     // Advance the read index, wrapping at 2 * BufferSize
-    AtomicSet32(&ReadIndex, (ReadIndex + elementCount) & BigMask);
+    Zero::AtomicStore(&ReadIndex, (ReadIndex + elementCount) & BigMask);
 
     // Return the number of elements actually read
     return elementCount;

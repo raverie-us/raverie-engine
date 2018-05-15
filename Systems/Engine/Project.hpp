@@ -109,7 +109,7 @@ private:
 };
 
 //---------------------------------------------------- Content Library Reference
-class ContentLibraryReference : public Object
+class ContentLibraryReference : public SafeId32Object
 {
 public:
   ZilchDeclareType(ContentLibraryReference, TypeCopyMode::ReferenceType);

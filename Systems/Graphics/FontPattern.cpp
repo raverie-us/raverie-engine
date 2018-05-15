@@ -1,8 +1,12 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 FontProcessor::FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec4 vertexColor)
   : mRenderQueues(renderQueues)
   , mViewNode(viewNode)
@@ -10,6 +14,7 @@ FontProcessor::FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec
 {
 }
 
+//**************************************************************************************************
 void FontProcessor::ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale)
 {
   Vec2 pos0 = position + rune.Offset * pixelScale;
@@ -20,11 +25,13 @@ void FontProcessor::ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixe
   mRenderQueues->AddStreamedQuad(*mViewNode, Vec3(pos0, 0), Vec3(pos1, 0), uv0, uv1, mVertexColor);
 }
 
+//**************************************************************************************************
 FontProcessorVertexArray::FontProcessorVertexArray(Vec4 vertexColor)
   : mVertexColor(vertexColor)
 {
 }
 
+//**************************************************************************************************
 void FontProcessorVertexArray::ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale)
 {
   Vec2 pos0 = position + rune.Offset * pixelScale;
@@ -45,6 +52,7 @@ void FontProcessorVertexArray::ProcessRenderRune(RenderRune& rune, Vec2 position
   mVertices.PushBack(v0);
 }
 
+//**************************************************************************************************
 FontProcessorFindCharPosition::FontProcessorFindCharPosition(int charIndex, Vec2 startPositon)
   : mFindIndex(charIndex)
   , mCurrentIndex(0)
@@ -52,6 +60,7 @@ FontProcessorFindCharPosition::FontProcessorFindCharPosition(int charIndex, Vec2
 {
 }
 
+//**************************************************************************************************
 void FontProcessorFindCharPosition::ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale)
 {
   // If we never make it to the requested index then we want the position
@@ -64,4 +73,4 @@ void FontProcessorFindCharPosition::ProcessRenderRune(RenderRune& rune, Vec2 pos
   ++mCurrentIndex;
 }
 
-}
+} // namespace Zero

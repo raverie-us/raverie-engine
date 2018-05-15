@@ -54,7 +54,11 @@ DirectProperty::DirectProperty(PropertyWidgetInitializer& initializer)
 
 void DirectProperty::BeginPreviewChanges()
 {
-  mProp->CaptureState(mCapture, mInstance, mProperty);
+  Handle rootInstance;
+  PropertyPath propertyPath;
+  BuildPath(mNode, rootInstance, propertyPath);
+
+  mProp->CaptureState(mCapture, rootInstance, propertyPath);
 }
 
 void DirectProperty::EndPreviewChanges()
@@ -76,7 +80,11 @@ void DirectProperty::PreviewValue(PropertyState& state)
 {
   ErrorIf(!mCapture.HasCapture(), "Must call BeginPreviewChanges");
 
-  mProp->ChangeProperty(mInstance, mProperty, state, PropertyAction::Preview);
+  Handle rootInstance;
+  PropertyPath propertyPath;
+  BuildPath(mNode, rootInstance, propertyPath);
+
+  mProp->ChangeProperty(rootInstance, propertyPath, state, PropertyAction::Preview);
 }
 
 void DirectProperty::CommitValue(AnyParam var)
@@ -156,7 +164,7 @@ PropertyState DirectProperty::GetValue()
   return mProp->GetValue(mInstance, mProperty);
 }
 
-String DirectProperty::GetToolTip(ToolTipColor::Enum* color)
+String DirectProperty::GetToolTip(ToolTipColorScheme::Enum* color)
 {
   // Build the tool tip text
   StringBuilder toolTip;
@@ -170,7 +178,7 @@ String DirectProperty::GetToolTip(ToolTipColor::Enum* color)
     toolTip << "(right click to revert)\n";
     toolTip << "____________________\n\n";
     if(color)
-      *color = ToolTipColor::Orange;
+      *color = ToolTipColorScheme::Orange;
   }
 
   // Add the type name line
@@ -256,8 +264,7 @@ void DirectProperty::OnRevert(Event* e)
   PropertyPath propertyPath;
   BuildPath(mNode, rootInstance, propertyPath);
 
-  OperationQueue* queue = Z::gEditor->GetOperationQueue();
-  RevertProperty(queue, rootInstance, propertyPath);
+  mProp->RevertProperty(rootInstance, propertyPath);
 }
 
 void DirectProperty::OnMarkModified(Event* e)
@@ -266,14 +273,14 @@ void DirectProperty::OnMarkModified(Event* e)
   PropertyPath propertyPath;
   BuildPath(mNode, rootInstance, propertyPath);
 
-  OperationQueue* queue = Z::gEditor->GetOperationQueue();
-  MarkPropertyAsModified(queue, rootInstance, propertyPath);
+  mProp->MarkPropertyModified(rootInstance, propertyPath);
 }
 
 void DirectProperty::OnMetaModified(Event* e)
 {
   mProperty = nullptr;
   mInstance = Handle();
+  mCapture.Clear();
 }
 
 //******************************************************************************
@@ -937,6 +944,9 @@ public:
 
     ConnectThisTo(mCheckBox, Events::ValueChanged, CheckChanged);
     ConnectThisTo(mLabel, Events::LeftMouseDown, MouseDownOnLabel);
+
+    if(mProperty->IsReadOnly())
+      mCheckBox->SetEditable(false);
   }
 
   void Refresh() override

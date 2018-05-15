@@ -13,7 +13,9 @@ namespace Zero
 {
 
 // Easing functions
-DeclareEnum7(EaseType, Linear, QuadIn, QuadOut, QuadInOut, SinIn, SinOut, SinInOut);
+DeclareEnum19(EaseType, Linear, QuadIn, QuadOut, QuadInOut, SinIn, SinOut, SinInOut,
+  ElasticIn, ElasticOut, ElasticInOut, BounceIn, BounceOut, BounceInOut,
+  BackIn, BackOut, BackInOut, WarpIn, WarpOut, WarpInOut);
 typedef float (*Easer)(float linearT);
 Easer GetEaser(uint easeType);
 

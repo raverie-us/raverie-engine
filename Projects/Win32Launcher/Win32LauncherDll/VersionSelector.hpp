@@ -95,6 +95,10 @@ public:
   void ForceCloseRunningBuilds(ZeroBuild* build);
   /// Take all installed builds and uninstall->reinstall them (mostly for patching old issues).
   void ForceUpdateAllBuilds();
+  /// Run a background task to check if there's a new patch version of the launcher.
+  BackgroundTask* CheckForPatchLauncherUpdate();
+  /// Run a background task to download a new patch version of the launcher.
+  BackgroundTask* DownloadPatchLauncherUpdate();
   /// Run a background task to check if there's a new major version of the launcher.
   BackgroundTask* CheckForMajorLauncherUpdate();
   /// Run a background task to download a new major version of the launcher.

@@ -58,7 +58,7 @@ public:
 
   /// Called when the property grid refreshes.
   virtual void Refresh() {}
-  virtual String GetToolTip(ToolTipColor::Enum* color){return String();}
+  virtual String GetToolTip(ToolTipColorScheme::Enum* color){return String();}
 
   //Helper functions for layout
   LayoutResult GetNameLayout();

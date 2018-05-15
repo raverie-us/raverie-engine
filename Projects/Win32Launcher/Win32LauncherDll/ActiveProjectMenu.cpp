@@ -66,16 +66,33 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent, LauncherWindow* launcher
     // Spacing between project name and back button
     new Spacer(topArea, SizePolicy::Fixed, Pixels(6, 0));
 
-    mProjectName = new TextBox(topArea, "ActiveProjectName");
-    mProjectName->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
+    Composite* projectNameArea = new Composite(topArea);
+    projectNameArea->SetLayout(CreateStackLayout(LayoutDirection::RightToLeft, Pixels(0, 0), Thickness::cZero));
+    projectNameArea->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
+
+    mEditProjectNameIconButton = new IconButton(projectNameArea);
+    mEditProjectNameIconButton->SetIcon("EditScript");
+    mEditProjectNameIconButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, 32);
+    mEditProjectNameIconButton->mBackground->SetVisible(false);
+    mEditProjectNameIconButton->mBorder->SetVisible(false);
+    mEditProjectNameIconButton->mIconColor = ToByteColor(Vec4(0.8, 0.8, 0.8, 1));
+    mEditProjectNameIconButton->mIconHoverColor = Color::White;
+    mEditProjectNameIconButton->mIconClickedColor = ToByteColor(Vec4(0.6, 0.6, 0.6, 1));
+    mEditProjectNameIconButton->SetToolTip("Rename Project");
+    mEditProjectNameIconButton->SizeToContents();
+    ConnectThisTo(mEditProjectNameIconButton, Events::ButtonPressed, OnEditProjectName);
+
+    mProjectName = new TextBox(projectNameArea, "ActiveProjectName");
+    mProjectName->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(300));
     // Text box doesn't properly take the font definition from the provided style, forcibly override the font for now...
     mProjectName->mEditTextField->mFont = FontManager::GetInstance()->GetRenderFont(mLauncherRegularFont, 24, 0);
-    mProjectName->SetEditable(true);
+    mProjectName->SetTextClipping(true);
     mProjectName->HideBackground(true);
     mProjectName->SetColor(ActiveProjectUi::TextColor);
     ConnectThisTo(parent, Events::KeyDown, OnKeyDown);
     // Listen for the text changing on the project name so the user can rename their project
     ConnectThisTo(mProjectName, Events::TextSubmit, OnProjectNameTextSubmit);
+    ConnectThisTo(mProjectName, Events::FocusLostHierarchy, OnProjectNameFocusLost);
 
     Element* e = textArea->CreateAttached<Element>(cWhiteSquare);
     e->SetNotInLayout(false);
@@ -103,6 +120,7 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent, LauncherWindow* launcher
 
       IconButton* showFolder = new IconButton(folderRow);
       showFolder->SetIcon("OpenFolderIcon");
+      showFolder->SetToolTip("Open Folder");
 
       // Icon colors
       showFolder->mIconColor = ToByteColor(Vec4(0.8, 0.8, 0.8, 1));
@@ -166,10 +184,12 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent, LauncherWindow* launcher
   new Spacer(this, SizePolicy::Fixed, Pixels(58, 1));
 
   Composite* imageParent = new Composite(this);
+  imageParent->mName = "ImageParent";
   // Keep the screenshot's ratio, and push it to the right to maintain a
   // constant distance between the screenshot and the edge of the window
   imageParent->SetLayout(CreateRatioLayout());
   imageParent->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
+  imageParent->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
   {
     // Default to no screenshot available
     mNoScreenshotImage = new NoScreenshotAvailable(imageParent);
@@ -201,6 +221,32 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent, LauncherWindow* launcher
 }
 
 //******************************************************************************
+void ActiveProjectMenu::UpdateTransform()
+{
+  SetSizeXToRemainder(mProjectName);
+  SetSizeXToRemainder(mLocation);
+  Composite::UpdateTransform();
+}
+
+//******************************************************************************
+void ActiveProjectMenu::SetSizeXToRemainder(Widget* widgetToSize)
+{
+  Composite* parent = widgetToSize->GetParent();
+  float remainingSize = parent->GetSize().x;
+  AutoDeclare(range, parent->GetChildren());
+  for(; !range.Empty(); range.PopFront())
+  {
+    Widget* widget = &range.Front();
+    if(widget == widgetToSize)
+      continue;
+
+    remainingSize -= widget->GetSize().x;
+  }
+
+  widgetToSize->SetSizing(SizeAxis::X, SizePolicy::Fixed, remainingSize);
+}
+
+//******************************************************************************
 void ActiveProjectMenu::OnModalClosed(Event* e)
 {
   // Ideally we should have already checked to see if the user was editing
@@ -222,8 +268,6 @@ void ActiveProjectMenu::OnModalClosed(Event* e)
     Event eventToSend;
     data->mClientArea->DispatchEvent(Events::MenuDisplayed, &eventToSend);
   }
-
-  Composite::OnDestroy();
 
   // Destruction doesn't seem to disconnect events, so manually disconnect from some
   DisconnectAll(mBuildSelector->mCurrentBuild, this);
@@ -267,7 +311,15 @@ void ActiveProjectMenu::SelectProject(CachedProject* cachedProject)
 {
   mCachedProject = cachedProject;
   // The project file could've changed out from underneath us (version control for example)
-  mLauncher->mProjectCache->ReloadProjectFile(mCachedProject, false);
+  bool successfulReload = mLauncher->mProjectCache->ReloadProjectFile(mCachedProject, false);
+  // The project was deleted out from under us so close the modal.
+  if(!successfulReload)
+  {
+    Modal* modal = mLauncher->mActiveProjectModal;
+    if(modal != nullptr)
+      modal->Close();
+    return;
+  }
 
   String projectPath = mCachedProject->GetProjectPath();
   mProjectName->SetText(mCachedProject->GetProjectName());
@@ -338,8 +390,19 @@ void ActiveProjectMenu::OnKeyDown(KeyboardEvent* e)
 {
   // If F2 is hit then have the project take focus
   // (so they can rename without leaving the keyboard)
-  if(!e->Handled && e->Key == Keys::F2 )
+  if(!e->Handled && e->Key == Keys::F2)
     mProjectName->TakeFocus();
+}
+
+//******************************************************************************
+void ActiveProjectMenu::OnEditProjectName(Event* e)
+{
+  mProjectName->SetEditable(true);
+  // Text clipping must be turned off when the text is selected otherwise the
+  // textbox displays the clipped text with "..." and a bunch of white space.
+  mProjectName->SetTextClipping(false);
+  mProjectName->TakeFocus();
+  mProjectName->mEditTextField->SelectAll();
 }
 
 //******************************************************************************
@@ -383,7 +446,22 @@ void ActiveProjectMenu::OnProjectNameTextSubmit(Event* e)
                                                                    newProjectFolderName.c_str(), newProjectName.c_str());
   ModalButtonsAction* modal = new ModalButtonsAction(this, "RENAME PROJECT?", buttonNames, confirmMsg.ToUpper());
   mLauncher->mActiveModal = modal;
+  ConnectThisTo(modal, Events::ModalClosed, OnProjectRenameCanceled);
   ConnectThisTo(modal, Events::ModalButtonPressed, OnProjectRenameConfirmed);
+}
+
+//******************************************************************************
+void ActiveProjectMenu::OnProjectNameFocusLost(Event* e)
+{
+  // See OnEditProjectName for why this is turned on dynamically
+  mProjectName->SetTextClipping(true);
+  mProjectName->SetEditable(false);
+}
+
+//******************************************************************************
+void ActiveProjectMenu::OnProjectRenameCanceled(Event* e)
+{
+  SelectProject(mCachedProject);
 }
 
 //******************************************************************************

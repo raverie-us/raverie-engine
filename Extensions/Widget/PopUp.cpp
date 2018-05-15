@@ -57,19 +57,19 @@ void FloatingComposite::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-void FloatingComposite::FadeIn()
+void FloatingComposite::FadeIn(float time)
 {
   this->SetColor(Vec4(1,1,1,0));
   ActionSequence* seq = new ActionSequence(this);
-  seq->Add( Fade(this, Vec4(1,1,1,1), 0.1f) );
+  seq->Add( Fade(this, Vec4(1,1,1,1), time) );
   this->GetParent()->MarkAsNeedsUpdate();
   this->SetSize( Pixels(180,48));
 }
 
-void FloatingComposite::FadeOut()
+void FloatingComposite::FadeOut(float time)
 {
   ActionSequence* seq = new ActionSequence(this);
-  seq->Add( Fade(this, Vec4(1,1,1,0), 0.1f) );
+  seq->Add( Fade(this, Vec4(1,1,1,0), time) );
   seq->Add( DestroyAction(this) );
 
   Event eventToSend;

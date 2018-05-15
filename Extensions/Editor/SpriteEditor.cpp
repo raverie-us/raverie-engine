@@ -101,7 +101,8 @@ SpriteFrameLayout::SpriteFrameLayout(uint frameCount, uint frameSizeX, uint fram
   FrameSizeY = frameSizeY;
   TotalSize.SizeX = sizeX;
   TotalSize.SizeY = sizeY;
-  FramesPerRow = sizeX / frameSizeX;
+  // Prevent division by 0 from bad input.
+  FramesPerRow = Math::Max(sizeX / frameSizeX, 1u);
 }
 
 PixelRect SpriteFrameLayout::GetFrame(uint frameIndex)
@@ -828,7 +829,6 @@ void SpriteSourceEditor::ConvertToSpriteSheet(Image& output)
 {
   SpriteFrameLayout frameLayout(mSpriteData.Size(), mFrameSizeX, mFrameSizeY);
   output.Allocate(frameLayout.TotalSize.SizeX, frameLayout.TotalSize.SizeY);
-  output.ClearColorTo(0);
 
   forRange(SpriteFrame* frame, mSpriteData.All())
   {
@@ -1188,40 +1188,45 @@ void SpriteSourceEditor::SaveToSpriteSource()
   Status status;
   SaveToPng(status, &output, sourceFile);
 
-  // Update data
-  spriteSource->FrameCount = mSpriteData.Size();
-  spriteSource->FrameSizeX = mFrameSizeX;
-  spriteSource->FrameSizeY = mFrameSizeY;
-  spriteSource->OriginX = mOriginX;
-  spriteSource->OriginY = mOriginY;
-  spriteSource->Looping = mLooping;
-  spriteSource->FrameDelay = 1.0f / mFrameRate;
-  spriteSource->PixelsPerUnit = mPixelsPerUnit;
-  spriteSource->Sampling = mSampling;
-
-  spriteSource->Slices[NineSlices::Left] = float(mLeft);
-  spriteSource->Slices[NineSlices::Top] = float(mTop);
-  spriteSource->Slices[NineSlices::Right] = float(mRight);
-  spriteSource->Slices[NineSlices::Bottom] = float(mBottom);
-
-  spriteSource->Fill = mSpriteFill;
-
-  if(spriteSource->mAtlas != mAtlas)
-    spriteSource->SetAtlas(mAtlas);
-
   // Check to see if the resource was renamed
   if(spriteSource->Name != mSpriteName)
     RenameResource(spriteSource, mSpriteName);
+  sourceFile = spriteSource->mContentItem->GetFullPath();
 
-  // Save to context so updated data is saved
+  SpriteSourceBuilder* builder = spriteSource->mContentItem->has(SpriteSourceBuilder);
+
+  // Update data
+  builder->FrameCount = mSpriteData.Size();
+  builder->FrameSizeX = mFrameSizeX;
+  builder->FrameSizeY = mFrameSizeY;
+  builder->OriginX = mOriginX;
+  builder->OriginY = mOriginY;
+  builder->Looping = mLooping;
+  builder->FrameDelay = 1.0f / mFrameRate;
+  builder->PixelsPerUnit = mPixelsPerUnit;
+  builder->Sampling = mSampling;
+  builder->Slices[NineSlices::Left] = float(mLeft);
+  builder->Slices[NineSlices::Top] = float(mTop);
+  builder->Slices[NineSlices::Right] = float(mRight);
+  builder->Slices[NineSlices::Bottom] = float(mBottom);
+  builder->Fill = mSpriteFill;
+
+  // Save builder data to meta file
   spriteSource->mContentItem->SaveContent();
 
-  // Swap in the new image
-  spriteSource->SourceImage.Swap(&output);
+  // Reload resource
+  ResourceEntry entry;
+  entry.Type = "SpriteSource";
+  entry.mResourceId = spriteSource->mResourceId;
+  entry.mLibrary = spriteSource->mResourceLibrary;
+  entry.FullPath = sourceFile;
+  entry.mLibrarySource = spriteSource->mContentItem;
+  entry.mBuilder = builder;
+  Z::gResources->ReloadEntry(spriteSource, entry);
 
-  // Rebuild the sprite sheet since it may have changed size
-  spriteSource->mAtlas->NeedsBuilding = true;
-  SpriteSourceManager::GetInstance()->RebuildSpriteSheets();
+  ResourceEvent event;
+  event.Name = spriteSource->mResourceLibrary->Name;
+  Z::gResources->DispatchEvent(Events::ResourcesLoaded, &event);
 
   CloseTabContaining(this);
 }
@@ -1239,7 +1244,6 @@ void SpriteSourceEditor::EditSpriteSource(SpriteSource* spriteSource)
   mOriginY = spriteSource->OriginY;
   mFrameRate = 1.0f / spriteSource->FrameDelay;
   mPixelsPerUnit = spriteSource->PixelsPerUnit;
-  mAtlas = spriteSource->mAtlas;
   mSampling = spriteSource->Sampling;
 
   mLeft = int(spriteSource->Slices[NineSlices::Left]);
@@ -1252,7 +1256,11 @@ void SpriteSourceEditor::EditSpriteSource(SpriteSource* spriteSource)
 
   mOrigin = ComputeOrigin(Vec2(mOriginX, mOriginY), mFrameSizeX, mFrameSizeY);
 
-  LoadFramesFromSheet(spriteSource->SourceImage, frameCount);
+  Image sourceImage;
+  Status status;
+  spriteSource->LoadSourceImage(status, &sourceImage);
+  if(status.Succeeded())
+    LoadFramesFromSheet(sourceImage, frameCount);
 
   mSpriteProperties->SetObject(this);
 

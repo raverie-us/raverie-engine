@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -16,7 +19,7 @@ public:
   String mResourceIdName;
 };
 
-class GraphicsResourceList : public EventObject
+class GraphicsResourceList : public SafeId32EventObject
 {
 public:
   GraphicsResourceList(Resource* owner);
@@ -25,7 +28,8 @@ public:
   GraphicsResourceList& operator=(const GraphicsResourceList& graphicsResourceList);
 
   // Interface required by ResourceListEditor
-  Array<String>::range All();
+  /// Returns the IdName of all resources in the list.
+  Array<String>::range GetIdNames();
   uint GetResourceIndex(StringParam resourceIdName);
   void CheckForAddition(Status& status, Resource* resource);
   void AddResource(StringParam resourceIdName, uint index = -1);
@@ -60,6 +64,14 @@ public:
   // Interface required by ResourceListEditor
   typedef RenderGroupManager ManagerType;
   String GetResourceTypeName();
+
+  // For script to modify runtime resources
+  /// Adds the RenderGroup to this Material's list. Runtime resources only.
+  void Add(RenderGroup& renderGroup);
+  /// Removes the RenderGroup from this Material's list. Runtime resources only.
+  void Remove(RenderGroup& renderGroup);
+  /// Range of all resources in the list.
+  Array<HandleOf<RenderGroup>> All();
 };
 
 class MaterialList : public GraphicsResourceList
@@ -72,8 +84,17 @@ public:
   // Interface required by ResourceListEditor
   typedef MaterialManager ManagerType;
   String GetResourceTypeName();
+
+  // For script to modify runtime resources
+  /// Adds the Material to this RenderGroups's list. Runtime resources only.
+  void Add(Material& material);
+  /// Removes the Material from this RenderGroups's list. Runtime resources only.
+  void Remove(Material& material);
+  /// Range of all resources in the list.
+  Array<HandleOf<Material>> All();
 };
 
+//**************************************************************************************************
 template <typename SelfResource, typename OtherResource>
 void ResourceListResourceAdded(SelfResource* selfResource, OtherResource* otherResource, String* listName = nullptr)
 {
@@ -100,6 +121,7 @@ void ResourceListResourceAdded(SelfResource* selfResource, OtherResource* otherR
   }
 }
 
+//**************************************************************************************************
 template <typename SelfResource, typename OtherResource>
 void ResourceListResourceRemoved(SelfResource* selfResource, OtherResource* otherResource)
 {
@@ -117,6 +139,7 @@ void ResourceListResourceRemoved(SelfResource* selfResource, OtherResource* othe
   otherResource->mActiveResources.EraseValue(selfResource);
 }
 
+//**************************************************************************************************
 template <typename SelfResource, typename OtherResource>
 void ResourceListEntryAdded(SelfResource* selfResource, OtherResource* otherResource)
 {
@@ -137,6 +160,7 @@ void ResourceListEntryAdded(SelfResource* selfResource, OtherResource* otherReso
   }
 }
 
+//**************************************************************************************************
 template <typename SelfResource, typename OtherResource>
 void ResourceListEntryRemoved(SelfResource* selfResource, OtherResource* otherResource)
 {
@@ -152,6 +176,35 @@ void ResourceListEntryRemoved(SelfResource* selfResource, OtherResource* otherRe
   {
     otherResource->mActiveResources.EraseValue(selfResource);
     selfResource->mActiveResources.EraseValue(otherResource);
+  }
+}
+
+//**************************************************************************************************
+template <typename ResourceManagerType>
+void ResetIdName(String& idName)
+{
+  ResourceManagerType::ResourceType* resource = ResourceManagerType::FindOrNull(idName);
+  // Serialized list can have entries for removed resources.
+  if (resource != nullptr)
+    idName = resource->ResourceIdName;
+}
+
+//**************************************************************************************************
+template <typename SelfResource, typename OtherManager>
+void ResourceListResetIdNames(Array<Resource*>& resources)
+{
+  forRange (Resource* resource, resources.All())
+  {
+    SelfResource* selfResource = (SelfResource*)resource;
+
+    forRange (String& idName, selfResource->mReferencedByList.mResourceIdNames.All())
+      ResetIdName<OtherManager>(idName);
+
+    if (selfResource->IsWritable())
+    {
+      forRange (String& idName, selfResource->mSerializedList.mResourceIdNames.All())
+        ResetIdName<OtherManager>(idName);
+    }
   }
 }
 

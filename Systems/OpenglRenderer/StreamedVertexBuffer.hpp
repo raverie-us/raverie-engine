@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -10,6 +13,7 @@ public:
   void Destroy();
 
   void AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType);
+  void AddVertices(StreamedVertexArray& vertices, uint start, uint count, PrimitiveType::Enum primitiveType);
   void FlushBuffer(bool deactivate);
 
   uint mBufferSize;

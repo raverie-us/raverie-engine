@@ -97,7 +97,7 @@ void OsMouseEvent::Clear()
   AltPressed = false;
   CtrlPressed = false;
   MouseButton = MouseButton;
-  IsTrapMoveBack = false;
+  IsMouseAtTrapPosition = false;
   for(uint i = 0; i < MouseButtons::Size; ++i)
     ButtonDown[i] = false;
 }
@@ -110,7 +110,7 @@ void OsMouseEvent::Serialize(Serializer& stream)
   SerializeNameDefault(CtrlPressed, false);
   SerializeNameDefault(ClientPosition, IntVec2::cZero);
   SerializeNameDefault(ScrollMovement, Vec2::cZero);
-  SerializeNameDefault(IsTrapMoveBack, false);
+  SerializeNameDefault(IsMouseAtTrapPosition, false);
 
   SerializeEnumNameDefault(MouseButtons, MouseButton, MouseButtons::None);
 

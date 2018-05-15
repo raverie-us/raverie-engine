@@ -130,6 +130,7 @@ ConvexMeshManager::ConvexMeshManager(BoundType* resourceType)
   AddGeometryFileFilters(this);
   DefaultResourceName = "Cube";
   mExtension = "convexmesh";
+  mCanReload = true;
   mCanCreateNew = true;
   mCanDuplicate = true;
 }

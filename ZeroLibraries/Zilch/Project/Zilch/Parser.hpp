@@ -18,6 +18,9 @@ namespace Zilch
     // Constructor
     Parser(Project& project);
 
+    // Destructor
+    ~Parser();
+
     // Parses all scripts in a project into an syntax tree (with classes, functions, members, etc)
     void ParseIntoTree(const Array<UserToken>& tokens, SyntaxTree& syntaxTree, EvaluationMode::Enum evaluation);
 
@@ -335,6 +338,9 @@ namespace Zilch
 
     // The index of the token we're currently parsing
     size_t TokenIndex;
+
+    // The syntax tree we're currently parsing
+    SyntaxTree* Tree;
 
     // Not copyable
     ZilchNoCopy(Parser);

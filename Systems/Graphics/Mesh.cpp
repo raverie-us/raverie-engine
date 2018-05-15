@@ -1,12 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Mesh.cpp
-/// Implementation of the Mesh class and Manager.
-///
-/// Authors: Chris Peters, Nathan Carlson
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace
@@ -17,12 +11,14 @@ namespace
 namespace Zero
 {
 
+//**************************************************************************************************
 VertexSemanticRange::VertexSemanticRange(const FixedVertexDescription& fixedDesc)
   : mFixedDesc(fixedDesc)
   , mCurrentIndex(0)
 {
 }
 
+//**************************************************************************************************
 bool VertexSemanticRange::Empty()
 {
   if (mCurrentIndex >= mFixedDesc.sMaxElements)
@@ -31,17 +27,19 @@ bool VertexSemanticRange::Empty()
     return mFixedDesc.mAttributes[mCurrentIndex].mSemantic == VertexSemantic::None;
 }
 
+//**************************************************************************************************
 VertexSemantic::Enum VertexSemanticRange::Front()
 {
   return mFixedDesc.mAttributes[mCurrentIndex].mSemantic;
 }
 
+//**************************************************************************************************
 void VertexSemanticRange::PopFront()
 {
   ++mCurrentIndex;
 }
 
-//----------------------------------------------------------------- VertexBuffer
+//**************************************************************************************************
 ZilchDefineType(VertexBuffer, builder, type)
 {
   ZeroBindDocumented();
@@ -73,6 +71,7 @@ ZilchDefineType(VertexBuffer, builder, type)
   ZilchBindGetterProperty(VertexCount);
 }
 
+//**************************************************************************************************
 VertexBuffer::VertexBuffer()
 {
   mFixedDesc.mVertexSize = 0;
@@ -82,11 +81,13 @@ VertexBuffer::VertexBuffer()
   mDataSize = 0;
 }
 
+//**************************************************************************************************
 VertexBuffer::~VertexBuffer()
 {
   delete[] mData;
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum elementType, uint elementCount)
 {
   if (elementCount < 1 || elementCount > 4)
@@ -141,22 +142,26 @@ void VertexBuffer::AddAttribute(VertexSemantic::Enum semantic, VertexElementType
   }
 }
 
+//**************************************************************************************************
 VertexSemanticRange VertexBuffer::GetAttributes()
 {
   return VertexSemanticRange(mFixedDesc);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddByte(int value)
 {
   WriteData((byte)value);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddByte(IntVec2 value)
 {
   WriteData((byte)value.x);
   WriteData((byte)value.y);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddByte(IntVec3 value)
 {
   WriteData((byte)value.x);
@@ -164,6 +169,7 @@ void VertexBuffer::AddByte(IntVec3 value)
   WriteData((byte)value.z);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddByte(IntVec4 value)
 {
   WriteData((byte)value.x);
@@ -172,17 +178,20 @@ void VertexBuffer::AddByte(IntVec4 value)
   WriteData((byte)value.w);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddShort(int value)
 {
   WriteData((u16)value);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddShort(IntVec2 value)
 {
   WriteData((u16)value.x);
   WriteData((u16)value.y);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddShort(IntVec3 value)
 {
   WriteData((u16)value.x);
@@ -190,6 +199,7 @@ void VertexBuffer::AddShort(IntVec3 value)
   WriteData((u16)value.z);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddShort(IntVec4 value)
 {
   WriteData((u16)value.x);
@@ -198,26 +208,31 @@ void VertexBuffer::AddShort(IntVec4 value)
   WriteData((u16)value.w);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddReal(real value)
 {
   WriteData(value);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddReal(Vec2 value)
 {
   WriteData(value);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddReal(Vec3 value)
 {
   WriteData(value);
 }
 
+//**************************************************************************************************
 void VertexBuffer::AddReal(Vec4 value)
 {
   WriteData(value);
 }
 
+//**************************************************************************************************
 Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic)
 {
   Vec4 value = Vec4::cZero;
@@ -237,6 +252,7 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic
   return value;
 }
 
+//**************************************************************************************************
 Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count)
 {
   Vec4 value = Vec4::cZero;
@@ -274,6 +290,7 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic
   return value;
 }
 
+//**************************************************************************************************
 bool VertexBuffer::IsValidVertexData(uint vertexIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count)
 {
   VertexAttribute attribute = GetAttribute(semantic);
@@ -294,17 +311,20 @@ bool VertexBuffer::IsValidVertexData(uint vertexIndex, VertexSemantic::Enum sema
   return true;
 }
 
+//**************************************************************************************************
 void VertexBuffer::ClearAttributes()
 {
   mFixedDesc.mVertexSize = 0;
   mFixedDesc.mAttributes[0].mSemantic = VertexSemantic::None;
 }
 
+//**************************************************************************************************
 void VertexBuffer::ClearData()
 {
   mDataSize = 0;
 }
 
+//**************************************************************************************************
 VertexElementType::Enum VertexBuffer::GetElementType(VertexSemantic::Enum semantic)
 {
   VertexAttribute attribute = GetAttribute(semantic);
@@ -313,6 +333,7 @@ VertexElementType::Enum VertexBuffer::GetElementType(VertexSemantic::Enum semant
   return attribute.mType;
 }
 
+//**************************************************************************************************
 uint VertexBuffer::GetElementCount(VertexSemantic::Enum semantic)
 {
   VertexAttribute attribute = GetAttribute(semantic);
@@ -321,6 +342,7 @@ uint VertexBuffer::GetElementCount(VertexSemantic::Enum semantic)
   return attribute.mCount;
 }
 
+//**************************************************************************************************
 uint VertexBuffer::GetVertexCount()
 {
   if (mFixedDesc.mVertexSize == 0)
@@ -328,6 +350,7 @@ uint VertexBuffer::GetVertexCount()
   return mDataSize / mFixedDesc.mVertexSize;
 }
 
+//**************************************************************************************************
 void VertexBuffer::Grow(uint minExtra)
 {
   uint newCapacity = mDataCapacity == 0 ? 128 : mDataCapacity * 2;
@@ -341,6 +364,7 @@ void VertexBuffer::Grow(uint minExtra)
   mDataCapacity = newCapacity;
 }
 
+//**************************************************************************************************
 VertexAttribute VertexBuffer::GetAttribute(VertexSemantic::Enum semantic)
 {
   VertexAttribute attribute;
@@ -358,6 +382,7 @@ VertexAttribute VertexBuffer::GetAttribute(VertexSemantic::Enum semantic)
   return attribute;
 }
 
+//**************************************************************************************************
 uint VertexBuffer::GetElementSize(VertexElementType::Enum type)
 {
   switch (type)
@@ -371,6 +396,7 @@ uint VertexBuffer::GetElementSize(VertexElementType::Enum type)
   }
 }
 
+//**************************************************************************************************
 void VertexBuffer::ReadVertexData(byte* vertexData, VertexAttribute& attribute, Vec4& output)
 {
   for (uint i = 0; i < attribute.mCount; ++i)
@@ -386,7 +412,7 @@ void VertexBuffer::ReadVertexData(byte* vertexData, VertexAttribute& attribute, 
   }
 }
 
-//------------------------------------------------------------------ IndexBuffer
+//**************************************************************************************************
 ZilchDefineType(IndexBuffer, builder, type)
 {
   ZeroBindDocumented();
@@ -398,6 +424,7 @@ ZilchDefineType(IndexBuffer, builder, type)
   ZilchBindMethod(Clear);
 }
 
+//**************************************************************************************************
 IndexBuffer::IndexBuffer()
 {
   mIndexSize = 4;
@@ -405,15 +432,18 @@ IndexBuffer::IndexBuffer()
   mGenerated = true;
 }
 
+//**************************************************************************************************
 IndexBuffer::~IndexBuffer()
 {
 }
 
+//**************************************************************************************************
 uint IndexBuffer::GetCount()
 {
   return mIndexCount;
 }
 
+//**************************************************************************************************
 void IndexBuffer::SetCount(uint count)
 {
   mData.Clear();
@@ -421,6 +451,7 @@ void IndexBuffer::SetCount(uint count)
   mGenerated = false;
 }
 
+//**************************************************************************************************
 void IndexBuffer::Add(uint value)
 {
   mData.PushBack(value);
@@ -428,6 +459,7 @@ void IndexBuffer::Add(uint value)
   mGenerated = false;
 }
 
+//**************************************************************************************************
 uint IndexBuffer::Get(uint index)
 {
   if (index >= mIndexCount)
@@ -442,6 +474,7 @@ uint IndexBuffer::Get(uint index)
     return mData[index];
 }
 
+//**************************************************************************************************
 void IndexBuffer::Clear()
 {
   mData.Clear();
@@ -449,7 +482,7 @@ void IndexBuffer::Clear()
   mGenerated = true;
 }
 
-//------------------------------------------------------------------------- Mesh
+//**************************************************************************************************
 ZilchDefineType(Mesh, builder, type)
 {
   ZeroBindDocumented();
@@ -463,6 +496,7 @@ ZilchDefineType(Mesh, builder, type)
   ZilchBindMethod(Upload);
 }
 
+//**************************************************************************************************
 HandleOf<Mesh> Mesh::CreateRuntime()
 {
   Mesh* mesh = MeshManager::CreateRuntime();
@@ -473,12 +507,14 @@ HandleOf<Mesh> Mesh::CreateRuntime()
   return mesh;
 }
 
+//**************************************************************************************************
 Mesh::Mesh()
 {
   mRenderData = nullptr;
   mPrimitiveType = PrimitiveType::Triangles;
 }
 
+//**************************************************************************************************
 void Mesh::Unload()
 {
   mAabb.SetCenterAndHalfExtents(Vec3::cZero, Vec3(0.5f));
@@ -490,6 +526,7 @@ void Mesh::Unload()
   mBuildTree = true;
 }
 
+//**************************************************************************************************
 void Mesh::Upload()
 {
   if (!IsRuntime())
@@ -510,17 +547,20 @@ void Mesh::Upload()
   Z::gEngine->has(GraphicsEngine)->AddMesh(this);
 }
 
+//**************************************************************************************************
 uint Mesh::GetPrimitiveCount()
 {
   uint verticesPerPrimitve = GetVerticesPerPrimitive();
   return mIndices.mIndexCount / verticesPerPrimitve;
 }
 
+//**************************************************************************************************
 uint Mesh::GetVerticesPerPrimitive()
 {
   return mPrimitiveType + 1;
 }
 
+//**************************************************************************************************
 void Mesh::BuildTree()
 {
   mTree.Clear();
@@ -565,6 +605,7 @@ void Mesh::BuildTree()
   mAabb = boundingBox;
 }
 
+//**************************************************************************************************
 bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
 {
   Ray localRay = raycast.mRay.TransformInverse(worldTransform);
@@ -667,6 +708,7 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
   return true;
 }
 
+//**************************************************************************************************
 bool Mesh::TestFrustum(const Frustum& frustum)
 {
   forRangeBroadphaseTree (AvlDynamicAabbTree<uint>, mTree, Frustum, frustum)
@@ -695,6 +737,7 @@ bool Mesh::TestFrustum(const Frustum& frustum)
   return false;
 }
 
+//**************************************************************************************************
 uint GetIndexSize(IndexElementType::Enum indexType)
 {
   switch (indexType)
@@ -709,6 +752,7 @@ uint GetIndexSize(IndexElementType::Enum indexType)
   return 0;
 }
 
+//**************************************************************************************************
 template<typename T>
 void FillIndexBuffer(IndexBuffer* indexBuffer, byte* indexBufferData, uint indexCount)
 {
@@ -717,10 +761,9 @@ void FillIndexBuffer(IndexBuffer* indexBuffer, byte* indexBufferData, uint index
     indexBuffer->Add(indexData[i]);
 }
 
-// --------------------
+//**************************************************************************************************
 // vertex buffer chunk : ('vert')
 // fixed vertex description, vertex count, vertex data
-// --------------------
 template<typename streamType>
 void LoadVertexChunk(Mesh& mesh, streamType& file)
 {
@@ -741,10 +784,9 @@ void LoadVertexChunk(Mesh& mesh, streamType& file)
   vertexBuffer->mDataSize = vertexBufferSize;
 }
 
-// --------------------
+//**************************************************************************************************
 // index buffer chunk : ('indx')
 // index type, index count, index data
-// --------------------
 template<typename streamType>
 void LoadIndexChunk(Mesh& mesh, streamType& file)
 {
@@ -773,6 +815,7 @@ void LoadIndexChunk(Mesh& mesh, streamType& file)
   delete [] indexBufferData;
 }
 
+//**************************************************************************************************
 template<typename streamType>
 void LoadSkeletonChunk(Mesh& mesh, streamType& file)
 {
@@ -787,7 +830,7 @@ void LoadSkeletonChunk(Mesh& mesh, streamType& file)
   }
 }
 
-//------------------------------------------------------------------ MeshLoadePattern
+// MeshLoadePattern
 // Mesh contents file format, chunks may be present but can be omitted
 // --------------------
 // mesh header :
@@ -799,7 +842,6 @@ void LoadSkeletonChunk(Mesh& mesh, streamType& file)
 // index buffer chunk : ('indx')
 // index type, index count, index data
 // --------------------
-
 struct MeshLoadPattern
 {
   template<typename readerType>
@@ -840,10 +882,9 @@ struct MeshLoadPattern
   }
 };
 
-//----------------------------------------------------------------- Mesh Manager 
-
 ImplementResourceManager(MeshManager, Mesh);
 
+//**************************************************************************************************
 MeshManager::MeshManager(BoundType* resourceType)
   : ResourceManager(resourceType)
 {

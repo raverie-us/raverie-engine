@@ -24,6 +24,9 @@ namespace Events
   // Update when mouse is over the object
   DeclareEvent(MouseUpdate);
 
+  // Mouse dropped files on a viewport
+  DeclareEvent(MouseFileDrop);
+
   // Mouse move from over an object to any other object including a child
   DeclareEvent(MouseEnter);
   DeclareEvent(MouseExit);
@@ -193,6 +196,22 @@ class MouseDragEvent : public MouseEvent
 public:
   ZilchDeclareType(MouseDragEvent, TypeCopyMode::ReferenceType);
   Vec2 StartPosition;
+};
+
+//-------------------------------------------------------------------OsMouseDropEvent
+/// Files have been dropped on a viewport.
+class MouseFileDropEvent : public MouseEvent
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  MouseFileDropEvent();
+  MouseFileDropEvent(const MouseEvent& rhs);
+
+  void Copy(const OsMouseDropEvent& rhs);
+
+public:
+  HandleOf<ArrayString> Files;
 };
 
 }//namespace Zero

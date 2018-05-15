@@ -68,26 +68,28 @@ namespace Audio
     AudioFrame();
     AudioFrame(const AudioFrame& copy);
 
-    void TranslateChannels(const unsigned channels);
-    void SetSamples(float* samples, unsigned channels);
+    float* GetSamples(const unsigned channels);
+    void SetSamples(const float* samples, unsigned channels);
     void Clamp();
     float GetMaxValue();
     float GetMonoValue();
     void operator*=(float multiplier);
     void operator=(const AudioFrame& copy);
-
-    float Samples[8];
-
+    
   private:
     enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
-    unsigned HowManyChannels;
-    const float* Matrices[MaxChannels];
+    unsigned mStoredChannels;
+    const float* Matrices[MaxChannels + 1];
+    float mSamples[MaxChannels];
+    float mCopiedSamples[MaxChannels];
+
+    static void CopySamples(const float* source, float* destination, const unsigned channels);
   };
   
   //-------------------------------------------------------------------------- Audio System Internal
 
   // Main audio system. 
-  class AudioSystemInternal
+  class AudioSystemInternal : public ExternalNodeInterface
   {
   public:
     AudioSystemInternal(ExternalSystemInterface* extInterface);
@@ -104,10 +106,6 @@ namespace Audio
     void AddTask(Zero::Functor* function);
     // Adds a task from the mix thread for the main thread to handle
     void AddTaskThreaded(Zero::Functor* function);
-    // Adds a new decoding task to the list
-    void AddDecodingTask(Zero::Functor* function);
-    // Loop to execute decoding tasks
-    void DecodeLoopThreaded();
     // Adds a tag to the system
     void AddTag(TagObject* tag, bool threaded);
     // Removes a tag from the system
@@ -124,11 +122,11 @@ namespace Audio
     void RemoveSoundNode(SoundNode* node, const bool threaded);
     // Sets the threaded variable for the minimum volume threshold.
     void SetMinVolumeThresholdThreaded(const float volume);
+    // Sets whether or not all audio should be muted
+    void SetMutedThreaded(bool muteAudio);
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
-    // Used to lock for swapping pointers to buffers.
-    Zero::ThreadLock LockObject;
     // Notifies the system to reset Port Audio after a device change.
     bool ResetPA;
     // Current mix version number
@@ -145,12 +143,6 @@ namespace Audio
     Zero::Array<float> InputBuffer;
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
-    // The sample rate used by the audio engine for the output mix
-    static const unsigned SystemSampleRate = 48000;
-    // The time increment per audio frame corresponding to the sample rate
-    const double SystemTimeIncrement = 1.0 / 48000.0;
-    // The number of frames used to interpolate instant property changes
-    static const unsigned  PropertyChangeFrames = (unsigned)(48000 * 0.02f);
     
     AudioChannelsManager ChannelsManager;
     AudioInputOutput* AudioIO;
@@ -175,14 +167,6 @@ namespace Audio
     BufferType BufferForOutput;
     // Array for finished mixed output
     BufferType MixedOutput;
-    // Thread for decoding tasks
-    Zero::Thread DecodeThread;
-    // Queue for decoding tasks
-    MultipleWriterQueue<Zero::Functor*> DecodingQueue;
-    // Used to signal the decoding thread when decoding tasks are added to the queue
-    Zero::OsEvent DecodeThreadEvent;
-    // Will be zero while running, set to 1 when the decoding thread should shut down
-    Type32Bit StopDecodeThread;
     // Thread for mix loop
     Zero::Thread MixThread;
     // To tell the system to shut down once everything stops. 
@@ -248,14 +232,11 @@ namespace Audio
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
     void GetAudioInputDataThreaded(unsigned howManySamples);
-
-    class NodeInterface : public ExternalNodeInterface
-    {
-    public:
-      void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) override {}
-    };
-
-    NodeInterface NodeInt;
+    // If true, audio will be processed normally but will not be sent to the output device
+    bool Muted;
+    bool MutedThreaded;
+    // Used to know when to set the Muted variable
+    bool MutingThreaded;
 
     friend class AudioSystemInterface;
     friend class AudioInputOutput;
@@ -274,29 +255,31 @@ namespace Audio
   When up-sampling it's reversed
   Order is FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight
   */
+  
+  static const float Sqrt2Inv = 1.0f / Math::Sqrt(2.0f);
 
   static const float ChannelMatrix1[MaxChannels] =
   {
-    0.707f, 0.707f, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
+    Sqrt2Inv, Sqrt2Inv, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
   };
 
   static const float ChannelMatrix2[MaxChannels * 2] =
   {
-    1.0f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f,
-    0.0f, 1.0f, 0.707f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f
+    1.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
+    0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv
   };
 
   static const float ChannelMatrix3[MaxChannels * 3] =
   {
-    1.0f, 0.0f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f,
+    1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv,
     0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
   };
 
   static const float ChannelMatrix4[MaxChannels * 4] =
   {
-    1.0f, 0.0f, 0.707f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.707f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, 0.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };

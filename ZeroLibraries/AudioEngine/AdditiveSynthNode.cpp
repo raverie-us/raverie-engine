@@ -117,13 +117,13 @@ namespace Audio
   //---------------------------------------------------------------------------- Additive Synth Node
 
   //************************************************************************************************
-  AdditiveSynthNode::AdditiveSynthNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-    ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, true, isThreaded),
+  AdditiveSynthNode::AdditiveSynthNode(Zero::StringParam name, const unsigned ID,
+      ExternalNodeInterface* extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, true, isThreaded),
     CurrentNoteCount(0)
   {
     if (!Threaded)
-      SetSiblingNodes(new AdditiveSynthNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new AdditiveSynthNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************

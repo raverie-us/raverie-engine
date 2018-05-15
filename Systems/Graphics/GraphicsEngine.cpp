@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -8,21 +11,25 @@ namespace Events
   DefineEvent(ShaderInputsModified);
 }
 
+//**************************************************************************************************
 ZilchDefineType(ShaderInputsEvent, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 ZilchDefineType(GraphicsStatics, builder, type)
 {
   ZilchBindGetter(DriverSupport);
 }
 
+//**************************************************************************************************
 GraphicsDriverSupport* GraphicsStatics::GetDriverSupport()
 {
   return &Z::gRenderer->mDriverSupport;
 }
 
+//**************************************************************************************************
 System* CreateGraphicsSystem()
 {
   return new GraphicsEngine();
@@ -30,11 +37,12 @@ System* CreateGraphicsSystem()
 
 Memory::Pool* Shader::sPool = nullptr;
 
-//--------------------------------------------------------------- GraphicsEngine
+//**************************************************************************************************
 ZilchDefineType(GraphicsEngine, builder, type)
 {
 }
 
+//**************************************************************************************************
 GraphicsEngine::GraphicsEngine()
   : mNewLibrariesCommitted(false)
   , mRenderGroupCount(0)
@@ -43,6 +51,7 @@ GraphicsEngine::GraphicsEngine()
   mEngineShutdown = false;
 }
 
+//**************************************************************************************************
 GraphicsEngine::~GraphicsEngine()
 {
   ShaderSettingsLibrary::GetInstance().ClearLibrary();
@@ -66,11 +75,13 @@ GraphicsEngine::~GraphicsEngine()
   mRenderQueuesFront->Clear();
 }
 
+//**************************************************************************************************
 cstr GraphicsEngine::GetName()
 {
   return "Graphics";
 }
 
+//**************************************************************************************************
 void GraphicsEngine::Initialize(SystemInitializer& initializer)
 {
   // This needs to be initialized only once and multiple shader generators might be created
@@ -92,6 +103,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
 
   // Event connections for ResourceManagers
   ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceAdded, OnRenderGroupAdded);
+  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceModified, OnRenderGroupModified);
   ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceRemoved, OnRenderGroupRemoved);
 
   ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceAdded, OnMaterialAdded);
@@ -147,6 +159,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   mVerticalSync = false;
 }
 
+//**************************************************************************************************
 void GraphicsEngine::Update()
 {
   // Do not try to run rendering while this job is going.
@@ -239,6 +252,7 @@ void GraphicsEngine::Update()
   gDebugDraw->ClearObjects();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnEngineShutdown(Event* event)
 {
   mRenderTargetManager.Shutdown();
@@ -275,16 +289,19 @@ void GraphicsEngine::OnEngineShutdown(Event* event)
   while (mRendererJobQueue->HasJobs());
 }
 
+//**************************************************************************************************
 void GraphicsEngine::AddSpace(GraphicsSpace* space)
 {
   mSpaces.PushBack(space);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::RemoveSpace(GraphicsSpace* space)
 {
   mSpaces.Erase(space);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::StartProgress(Event* event)
 {
   if (mEngineShutdown)
@@ -314,6 +331,7 @@ void GraphicsEngine::StartProgress(Event* event)
   mRendererJobQueue->AddJob(mShowProgressJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::UpdateProgress(ProgressEvent* event)
 {
   if (mEngineShutdown)
@@ -336,6 +354,7 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
   mShowProgressJob->Unlock();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::EndProgress(Event* event)
 {
   if (mEngineShutdown)
@@ -344,6 +363,7 @@ void GraphicsEngine::EndProgress(Event* event)
   mShowProgressJob->Terminate();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnProjectLoaded(ObjectEvent* event)
 {
   if (mProjectCog.IsNotNull())
@@ -356,11 +376,13 @@ void GraphicsEngine::OnProjectLoaded(ObjectEvent* event)
   EndProgressDelayTerminate();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnNoProjectLoaded(Event* event)
 {
   EndProgressDelayTerminate();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::EndProgressDelayTerminate()
 {
   // Allows job to terminate after startup completes for the first time.
@@ -374,11 +396,13 @@ void GraphicsEngine::EndProgressDelayTerminate()
     Os::Sleep(mShowProgressJob->mExecuteDelay);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::SetSplashscreenLoading()
 {
   mShowProgressJob->mSplashMode = true;
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnOsWindowMinimized(Event* event)
 {
   Z::gRenderer->mThreadLock.Lock();
@@ -386,6 +410,7 @@ void GraphicsEngine::OnOsWindowMinimized(Event* event)
   Z::gRenderer->mThreadLock.Unlock();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnOsWindowRestored(Event* event)
 {
   Z::gRenderer->mThreadLock.Lock();
@@ -393,6 +418,7 @@ void GraphicsEngine::OnOsWindowRestored(Event* event)
   Z::gRenderer->mThreadLock.Unlock();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnProjectCogModified(Event* event)
 {
   if (FrameRateSettings* frameRate = mProjectCog.has(FrameRateSettings))
@@ -401,6 +427,7 @@ void GraphicsEngine::OnProjectCogModified(Event* event)
     SetVerticalSync(false);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::SetVerticalSync(bool verticalSync)
 {
   if (verticalSync == mVerticalSync)
@@ -413,11 +440,13 @@ void GraphicsEngine::SetVerticalSync(bool verticalSync)
   AddRendererJob(setVSyncJob);
 }
 
+//**************************************************************************************************
 uint GraphicsEngine::GetRenderGroupCount()
 {
   return mRenderGroupCount;
 }
 
+//**************************************************************************************************
 void GraphicsEngine::UpdateRenderGroups()
 {
   if (mUpdateRenderGroupCount)
@@ -437,6 +466,7 @@ void GraphicsEngine::UpdateRenderGroups()
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::CheckTextureYInvert(Texture* texture)
 {
   // Check for Y-invert
@@ -470,11 +500,13 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::AddRendererJob(RendererJob* rendererJob)
 {
   mRendererJobQueue->AddJob(rendererJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::CreateRenderer(OsWindow* mainWindow)
 {
   OsHandle mainWindowHandle = mainWindow->GetWindowHandle();
@@ -495,6 +527,7 @@ void GraphicsEngine::CreateRenderer(OsWindow* mainWindow)
   ConnectThisTo(mainWindow, Events::OsWindowRestored, OnOsWindowRestored);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::DestroyRenderer()
 {
   DestroyRendererJob* rendererJob = new DestroyRendererJob();
@@ -504,6 +537,7 @@ void GraphicsEngine::DestroyRenderer()
   delete rendererJob;
 }
 
+//**************************************************************************************************
 void GraphicsEngine::AddMaterial(Material* material)
 {
   Z::gRenderer->CreateRenderData(material);
@@ -515,6 +549,7 @@ void GraphicsEngine::AddMaterial(Material* material)
   AddRendererJob(rendererJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::AddMesh(Mesh* mesh)
 {
   Z::gRenderer->CreateRenderData(mesh);
@@ -538,9 +573,13 @@ void GraphicsEngine::AddMesh(Mesh* mesh)
     rendererJob->mVertexSize = vertices->mFixedDesc.mVertexSize;
     rendererJob->mVertexCount = vertices->mDataSize / vertices->mFixedDesc.mVertexSize;
 
-    uint vertexDataSize = rendererJob->mVertexSize * rendererJob->mVertexCount;
-    rendererJob->mVertexData = new byte[vertexDataSize];
-    memcpy(rendererJob->mVertexData, vertices->mData, vertexDataSize);
+    // Do not try allocating without a full vertex worth of data.
+    if (rendererJob->mVertexCount > 0)
+    {
+      uint vertexDataSize = rendererJob->mVertexSize * rendererJob->mVertexCount;
+      rendererJob->mVertexData = new byte[vertexDataSize];
+      memcpy(rendererJob->mVertexData, vertices->mData, vertexDataSize);
+    }
 
     rendererJob->mVertexAttributes.Reserve(8);
     for (uint i = 0; i < FixedVertexDescription::sMaxElements; ++i)
@@ -566,6 +605,7 @@ void GraphicsEngine::AddMesh(Mesh* mesh)
   AddRendererJob(rendererJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::AddTexture(Texture* texture, bool subImage, uint xOffset, uint yOffset)
 {
   // Do y inverting on main thread (if needed)
@@ -609,6 +649,7 @@ void GraphicsEngine::AddTexture(Texture* texture, bool subImage, uint xOffset, u
   AddRendererJob(rendererJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::RemoveMaterial(Material* material)
 {
   // Handle double remove events
@@ -620,6 +661,7 @@ void GraphicsEngine::RemoveMaterial(Material* material)
   AddRendererJob(rendererJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::RemoveMesh(Mesh* mesh)
 {
   // Handle double remove events
@@ -631,6 +673,7 @@ void GraphicsEngine::RemoveMesh(Mesh* mesh)
   AddRendererJob(rendererJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::RemoveTexture(Texture* texture)
 {
   // Handle double remove events
@@ -642,6 +685,7 @@ void GraphicsEngine::RemoveTexture(Texture* texture)
   AddRendererJob(rendererJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::SetLazyShaderCompilation(bool lazyShaderCompilation)
 {
   SetLazyShaderCompilationJob* rendererJob = new SetLazyShaderCompilationJob();
@@ -649,6 +693,7 @@ void GraphicsEngine::SetLazyShaderCompilation(bool lazyShaderCompilation)
   AddRendererJob(rendererJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnRenderGroupAdded(ResourceEvent* event)
 {
   mAddedRenderGroups.PushBack((RenderGroup*)event->EventResource);
@@ -656,6 +701,18 @@ void GraphicsEngine::OnRenderGroupAdded(ResourceEvent* event)
   mUpdateRenderGroupCount = true;
 }
 
+//**************************************************************************************************
+void GraphicsEngine::OnRenderGroupModified(ResourceEvent* event)
+{
+  if (!event->LastIdName.Empty())
+  {
+    Array<Resource*> materials;
+    MaterialManager::GetInstance()->EnumerateResources(materials);
+    ResourceListResetIdNames<Material, RenderGroupManager>(materials);
+  }
+}
+
+//**************************************************************************************************
 void GraphicsEngine::OnRenderGroupRemoved(ResourceEvent* event)
 {
   RenderGroup* renderGroup = (RenderGroup*)event->EventResource;
@@ -665,11 +722,13 @@ void GraphicsEngine::OnRenderGroupRemoved(ResourceEvent* event)
   mUpdateRenderGroupCount = true;
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnMaterialAdded(ResourceEvent* event)
 {
   mAddedMaterials.PushBack((Material*)event->EventResource);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnMaterialModified(ResourceEvent* event)
 {
   Material* material = (Material*)event->EventResource;
@@ -683,8 +742,16 @@ void GraphicsEngine::OnMaterialModified(ResourceEvent* event)
 
     CompileShaders();
   }
+
+  if (!event->LastIdName.Empty())
+  {
+    Array<Resource*> renderGroups;
+    RenderGroupManager::GetInstance()->EnumerateResources(renderGroups);
+    ResourceListResetIdNames<RenderGroup, MaterialManager>(renderGroups);
+  }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnMaterialRemoved(ResourceEvent* event)
 {
   Material* material = (Material*)event->EventResource;
@@ -699,18 +766,21 @@ void GraphicsEngine::OnMaterialRemoved(ResourceEvent* event)
   RemoveMaterial(material);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnZilchFragmentAdded(ResourceEvent* event)
 {
   // OnResourcesAdded will invoke a compile after this
   mModifiedFragmentFiles.PushBack(event->EventResource->Name);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnZilchFragmentModified(ResourceEvent* event)
 {
   // Happens on save, wait for successful compilation to process
   mModifiedFragmentFiles.PushBack(event->EventResource->Name);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnZilchFragmentRemoved(ResourceEvent* event)
 {
   // Only need removed fragments if going to send compile in removed resources
@@ -720,36 +790,43 @@ void GraphicsEngine::OnZilchFragmentRemoved(ResourceEvent* event)
   mModifiedFragmentFiles.EraseValue(event->EventResource->Name);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnMeshAdded(ResourceEvent* event)
 {
   AddMesh((Mesh*)event->EventResource);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnMeshModified(ResourceEvent* event)
 {
   AddMesh((Mesh*)event->EventResource);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnMeshRemoved(ResourceEvent* event)
 {
   RemoveMesh((Mesh*)event->EventResource);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnTextureAdded(ResourceEvent* event)
 {
   AddTexture((Texture*)event->EventResource);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnTextureModified(ResourceEvent* event)
 {
   AddTexture((Texture*)event->EventResource);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnTextureRemoved(ResourceEvent* event)
 {
   RemoveTexture((Texture*)event->EventResource);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnResourcesAdded(ResourceEvent* event)
 {
   forRange (Material* material, mAddedMaterials.All())
@@ -795,6 +872,7 @@ void GraphicsEngine::OnResourcesAdded(ResourceEvent* event)
   }
 }
 
+//**************************************************************************************************
 // should this invoke a compile if there are removed fragment files?
 void GraphicsEngine::OnResourcesRemoved(ResourceEvent* event)
 {
@@ -805,6 +883,7 @@ void GraphicsEngine::OnResourcesRemoved(ResourceEvent* event)
   //BuildFragmentsLibrary();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::AddComposite(Material* material)
 {
   String compositeName = material->mCompositeName;
@@ -824,6 +903,7 @@ void GraphicsEngine::AddComposite(Material* material)
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::RemoveComposite(StringParam compositeName)
 {
   ErrorIf(mUniqueComposites.ContainsKey(compositeName) == false, "Reference count error.");
@@ -838,6 +918,7 @@ void GraphicsEngine::RemoveComposite(StringParam compositeName)
   }
 }
 
+//**************************************************************************************************
 Shader* GraphicsEngine::GetOrCreateShader(StringParam coreVertex, StringParam composite, StringParam renderPass, ShaderMap& shaderMap)
 {
   String name = BuildString(coreVertex, composite, renderPass);
@@ -855,6 +936,7 @@ Shader* GraphicsEngine::GetOrCreateShader(StringParam coreVertex, StringParam co
   return shader;
 }
 
+//**************************************************************************************************
 void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange, Array<String>& compositeRange, Array<String>& renderPassRange, ShaderSetMap& testMap, uint index, ShaderSet& shaders)
 {
   Array<String>* ranges[] = {&coreVertexRange, &compositeRange, &renderPassRange};
@@ -900,6 +982,7 @@ void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange, Array<
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::FindShadersToRemove(Array<String>& elementRange, ShaderSetMap& testMap, ShaderSet& shaders)
 {
   forRange (String name, elementRange.All())
@@ -917,6 +1000,7 @@ void GraphicsEngine::FindShadersToRemove(Array<String>& elementRange, ShaderSetM
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::AddToShaderMaps(ShaderSet& shaders)
 {
   forRange (Shader* shader, shaders.All())
@@ -927,6 +1011,7 @@ void GraphicsEngine::AddToShaderMaps(ShaderSet& shaders)
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::RemoveFromShaderMaps(ShaderSet& shaders)
 {
   forRange (Shader* shader, shaders.All())
@@ -937,6 +1022,7 @@ void GraphicsEngine::RemoveFromShaderMaps(ShaderSet& shaders)
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::RemoveFromShaderMap(ShaderSetMap& shaderMap, StringParam elementName, Shader* shader)
 {
   if (shaderMap.ContainsKey(elementName))
@@ -947,6 +1033,7 @@ void GraphicsEngine::RemoveFromShaderMap(ShaderSetMap& shaderMap, StringParam el
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
 {
   forRange (BoundType* type, library->BoundTypes.Values())
@@ -987,26 +1074,31 @@ void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
   }
 }
 
+//**************************************************************************************************
 ZilchFragmentType::Enum GraphicsEngine::GetFragmentType(MaterialBlock* materialBlock)
 {
   return mShaderGenerator->mFragmentTypes.FindValue(ZilchVirtualTypeId(materialBlock)->Name, ZilchFragmentType::Fragment);
 }
 
+//**************************************************************************************************
 HandleOf<RenderTarget> GraphicsEngine::GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings)
 {
   return mRenderTargetManager.GetRenderTarget(width, height, format, samplerSettings);
 }
 
+//**************************************************************************************************
 HandleOf<RenderTarget> GraphicsEngine::GetRenderTarget(HandleOf<Texture> texture)
 {
   return mRenderTargetManager.GetRenderTarget(texture);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::ClearRenderTargets()
 {
   mRenderTargetManager.ClearRenderTargets();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::ForceCompileAllShaders()
 {
   BlockingTaskEvent event("Compiling");
@@ -1028,6 +1120,7 @@ void GraphicsEngine::ForceCompileAllShaders()
   AddRendererJob(addShadersJob);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type, StringParam name)
 {
   switch (type)
@@ -1038,6 +1131,7 @@ void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type, StringParam 
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::RemovedFragment(ZilchFragmentType::Enum type, StringParam name)
 {
   switch (type)
@@ -1048,12 +1142,14 @@ void GraphicsEngine::RemovedFragment(ZilchFragmentType::Enum type, StringParam n
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnCompileZilchFragments(ZilchCompileFragmentEvent* event)
 {
   String libraryName = BuildString(event->mOwningLibrary->Name, "Fragments");
   event->mReturnedLibrary = mShaderGenerator->BuildFragmentsLibrary(event->mDependencies, event->mFragments, libraryName);
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
 {
   forRange (ResourceLibrary* modifiedLibrary, event->mModifiedLibraries.All())
@@ -1157,6 +1253,7 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
   mModifiedFragmentFiles.Clear();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnScriptsCompiledCommit(ZilchCompileEvent* event)
 {
   // Update the old libraries with the new ones
@@ -1170,6 +1267,7 @@ void GraphicsEngine::OnScriptsCompiledCommit(ZilchCompileEvent* event)
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnScriptsCompiledPostPatch(ZilchCompileEvent* event)
 {
   // Don't do anything if no new fragment libraries were made
@@ -1201,6 +1299,7 @@ void GraphicsEngine::OnScriptsCompiledPostPatch(ZilchCompileEvent* event)
   CompileShaders();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::OnScriptCompilationFailed(Event* event)
 {
   forRange (Material* material, mAddedMaterialsForComposites.All())
@@ -1215,6 +1314,7 @@ void GraphicsEngine::OnScriptCompilationFailed(Event* event)
     CompileShaders();
 }
 
+//**************************************************************************************************
 void GraphicsEngine::UpdateUniqueComposites(Material* material, UniqueCompositeOp::Enum uniqueCompositeOp)
 {
   if (uniqueCompositeOp == UniqueCompositeOp::Add)
@@ -1242,6 +1342,7 @@ void GraphicsEngine::UpdateUniqueComposites(Material* material, UniqueCompositeO
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::CompileShaders()
 {
   if (mShaderGenerator->mCurrentToInternal.Empty())
@@ -1324,11 +1425,13 @@ void GraphicsEngine::CompileShaders()
   }
 }
 
+//**************************************************************************************************
 void GraphicsEngine::WriteTextureToFile(HandleOf<Texture> texture, StringParam filename)
 {
   mDelayedTextureToFile.PushBack(TextureToFile(texture, filename));
 }
 
+//**************************************************************************************************
 int SaveToPngJob::Execute()
 {
   Status status;
@@ -1337,6 +1440,7 @@ int SaveToPngJob::Execute()
   return 0;
 }
 
+//**************************************************************************************************
 int SaveToHdrJob::Execute()
 {
   Status status;

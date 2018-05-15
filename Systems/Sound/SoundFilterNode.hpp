@@ -83,9 +83,7 @@ public:
 
 // Internals
   Audio::SoundNode* mNode;
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
-  void SetNode(Audio::SoundNode* node, Status& status);
-  void ReleaseNode();
+  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
   bool mCanInsertBefore;
   bool mCanInsertAfter;
   bool mCanReplace;
@@ -148,8 +146,9 @@ public:
   void SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData);
 
 private:
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  void SendAudioEventData(Audio::EventData* data) override;
   void SendToAudioEngine(float* samples, unsigned howManySamples);
+  Audio::CustomDataNode* GetNode();
 
   Audio::AudioStreamDecoder* AudioDecoder;
 
@@ -251,6 +250,8 @@ public:
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateDecibels(float volumeDB, float interpolationTime);
 
+private:
+  Audio::VolumeNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------- Panning Node
@@ -284,6 +285,9 @@ public:
   /// is the value to change the LeftVolume to, the second is the RightVolume,
   /// and the third is the number of seconds to use for the interpolation.
   void InterpolateVolumes(float leftVolume, float rightVolume, float time);
+
+private:
+  Audio::PanningNode* GetNode();
 };
 
 //--------------------------------------------------------------------------------------- Pitch Node
@@ -315,6 +319,8 @@ public:
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateSemitones(float pitchSemitones, float interpolationTime);
 
+private:
+  Audio::PitchNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------ Low Pass Node
@@ -332,6 +338,8 @@ public:
   float GetCutoffFrequency();
   void SetCutoffFrequency(float frequency);
 
+private:
+  Audio::LowPassNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- High Pass Node
@@ -349,6 +357,8 @@ public:
   float GetCutoffFrequency();
   void SetCutoffFrequency(float frequency);
 
+private:
+  Audio::HighPassNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- Band Pass Node
@@ -368,6 +378,9 @@ public:
   /// while smaller numbers make it wider. The default value is 0.669.
   float GetQualityFactor();
   void SetQualityFactor(float Q);
+
+private:
+  Audio::BandPassNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- Equalizer Node
@@ -404,6 +417,9 @@ public:
   /// band 3, high pass) over the number of seconds passed in as the final parameter.
   void InterpolateAllBands(float lowPass, float band1, float band2, float band3, float highPass, 
     float timeToInterpolate);
+
+private:
+  Audio::EqualizerNode* GetNode();
 };
 
 //-------------------------------------------------------------------------------------- Reverb Node
@@ -431,6 +447,9 @@ public:
   /// Interpolates the WetValue property from its current value to the value passed in 
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateWetValue(float value, float time);
+
+private:
+  Audio::ReverbNode* GetNode();
 };
 
 //--------------------------------------------------------------------------------------- Delay Node
@@ -464,6 +483,9 @@ public:
   /// Interpolates the WetValue property from its current value to the value passed in 
   /// as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateWetValue(float wetPercent, float time);
+
+private:
+  Audio::DelayNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------- Flanger Node
@@ -489,6 +511,9 @@ public:
   /// The percentage of output (0 - 1.0) which is fed back into the filter as input. 
   float GetFeedbackValue();
   void SetFeedbackValue(float value);
+
+private:
+  Audio::FlangerNode* GetNode();
 };
 
 //-------------------------------------------------------------------------------------- Chorus Node
@@ -521,6 +546,9 @@ public:
   /// The offset value of the chorus filter, in milliseconds. 
   float GetOffsetMillisec();
   void SetOffsetMillisec(float offset);
+
+private:
+  Audio::ChorusNode* GetNode();
 };
 
 //---------------------------------------------------------------------------------- Compressor Node
@@ -553,6 +581,9 @@ public:
   /// The knee width of the compressor, in decibels.
   float GetKneeWidth();
   void SetKneeWidth(float knee);
+
+private:
+  Audio::DynamicsProcessorNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------ Expander Node
@@ -585,6 +616,9 @@ public:
   /// The knee width of the expander, in decibels.
   float GetKneeWidth();
   void SetKneeWidth(float knee);
+
+private:
+  Audio::DynamicsProcessorNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- Recording Node
@@ -614,6 +648,9 @@ public:
   /// constantly during every update frame, and nothing will be saved.
   bool GetStreamToDisk();
   void SetStreamToDisk(bool stream);
+
+private:
+  Audio::RecordNode* GetNode();
 };
 
 //----------------------------------------------------------------------------------- Add Noise Node
@@ -638,6 +675,9 @@ public:
   /// The cutoff frequency used for the multiplicative noise component, in Hz.
   float GetMultiplicativeCutoff();
   void SetMultiplicativeCutoff(float frequency);
+
+private:
+  Audio::AddNoiseNode* GetNode();
 };
 
 //------------------------------------------------------------------------------------ ADSR Envelope
@@ -698,6 +738,9 @@ public:
   void NoteOff(float midiNote);
   /// Stops playing all current notes.
   void StopAllNotes();
+
+private:
+  Audio::AdditiveSynthNode* GetNode();
 }; 
 
 //---------------------------------------------------------------------------------- Modulation Node
@@ -724,6 +767,9 @@ public:
   /// The percentage of the input (0 - 1.0) which should have the modulation applied to it.
   float GetWetValue();
   void SetWetValue(float value);
+
+private:
+  Audio::ModulationNode* GetNode();
 };
 
 //---------------------------------------------------------------------------- Microphone Input Node
@@ -742,6 +788,113 @@ public:
   /// Microphone input will only be played while the Active property is set to True.
   bool GetActive();
   void SetActive(bool active);
+
+private:
+  Audio::MicrophoneInputNode* GetNode();
+};
+
+//---------------------------------------------------------------------------------- Save Audio Node
+
+/// Types of windows (volume envelopes) that can be used for individual grains generated 
+/// by the GranularSynthNode.
+/// <param name="Linear">A triangle-shaped linear envelope. Does not use attack and release times.</param>
+/// <param name="Parabolic">A smoothly curved envelope. Does not use attack and release times.</param>
+/// <param name="RaisedCosine">Uses cosine curves to smoothly ramp up and down during attack and release times.</param>
+/// <param name="Trapezoid">Uses linear ramps during attack and release times. More efficient than RaisedCosine but not as smooth.</param>
+DeclareEnum4(GranularSynthWindows, Linear, Parabolic, RaisedCosine, Trapezoid);
+/// Saves audio from its input SoundNodes and then plays it. All audio from inputs is passed to outputs.
+class SaveAudioNode : public SoundNode 
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  SaveAudioNode();
+
+  /// When true, audio from input SoundNodes will be saved. Setting this to true will remove any
+  /// existing saved audio before saving more.
+  bool GetSaveAudio();
+  void SetSaveAudio(bool save);
+  /// Plays the saved audio.
+  void PlaySavedAudio();
+  /// Stops playing the saved audio.
+  void StopPlaying();
+  /// Removes all currently saved audio.
+  void ClearSavedAudio();
+
+private:
+  Audio::SaveAudioNode* GetNode();
+};
+
+//------------------------------------------------------------------------------ Granular Synth Node
+
+class GranularSynthNode : public SoundNode 
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  GranularSynthNode();
+
+  /// Starts playing new grains.
+  void Play();
+  /// Stops playing new grains but continues to play current ones.
+  void Stop();
+  /// Sets the Sound resource that will be used for the grains, along with an optional start and 
+  /// stop time. If the stopTime is 0.0, all audio from the Sound will be used.
+  void SetSound(HandleOf<Sound> sound, float startTime, float stopTime);
+  /// The volume modifier applied to the grains.
+  float GetGrainVolume();
+  void SetGrainVolume(float volume);
+  /// The variance for randomizing the grain volume.
+  float GetGrainVolumeVariance();
+  void SetGrainVolumeVariance(float variance);
+  /// The number of milliseconds to wait before playing another grain.
+  int GetGrainDelay();
+  void SetGrainDelay(int delayMS);
+  /// The variance for randomizing the grain delay, in milliseconds. 
+  int GetGrainDelayVariance();
+  void SetGrainDelayVariance(int delayVarianceMS);
+  /// The length of a grain, in milliseconds.
+  int GetGrainLength();
+  void SetGrainLength(int lengthMS);
+  /// The variance for randomizing the grain length, in milliseconds. 
+  int GetGrainLengthVariance();
+  void SetGrainLengthVariance(int lengthVarianceMS);
+  /// The rate at which grains resample their audio data. A value of 1.0 will play normally,
+  /// 0.5 will play at half speed, and -1.0 will play at normal speed backward. Cannot be 0.
+  float GetGrainResampleRate();
+  void SetGrainResampleRate(float resampleRate);
+  /// The variance for randomizing the grain resample rate.
+  float GetGrainResampleRateVariance();
+  void SetGrainResampleRateVariance(float resampleVariance);
+  /// The rate at which the synthesizer scans the buffer as it creates grains. A value of 1.0
+  /// will move through the audio data at the same rate as it would normally be played, 0.5 will
+  /// move at half speed, and -1.0 will move at normal speed backward. A value of 0.0 will make
+  /// the synthesizer repeat the same audio continuously.
+  float GetBufferScanRate();
+  void SetBufferScanRate(float bufferRate);
+  /// The value used to pan the grains left or right. A value of 0 will be heard equally from 
+  /// the left and right, 1.0 will be heard only on the right, and -1.0 will be only left.
+  float GetGrainPanningValue();
+  void SetGrainPanningValue(float panValue);
+  /// The variance for randomizing the grain panning value.
+  float GetGrainPanningVariance();
+  void SetGrainPanningVariance(float panValueVariance);
+  /// The value for controlling how many grains have randomized starting positions in the audio.
+  /// A value of 0 will be completely sequential, while 1.0 will be completely random. 
+  float GetRandomLocationValue();
+  void SetRandomLocationValue(float randomLocationValue);
+  /// The type of window, or volume envelope, used for each grain.
+  GranularSynthWindows::Enum GetWindowType();
+  void SetWindowType(GranularSynthWindows::Enum type);
+  /// The window attack time, in milliseconds. Does not have an effect on some windows.
+  int GetWindowAttack();
+  void SetWindowAttack(int attackMS);
+  /// The window release time, in milliseconds. Does not have an effect on some windows.
+  int GetWindowRelease();
+  void SetWindowRelease(int releaseMS);
+
+private:
+  Audio::GranularSynthNode* GetNode();
 };
 
 }

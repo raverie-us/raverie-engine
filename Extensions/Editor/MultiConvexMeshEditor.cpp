@@ -1024,6 +1024,13 @@ void MultiConvexMeshEditor::AutoCompute()
     return;
 
   SpriteSource* spriteSource = sprite->mSpriteSource;
+  Image sourceImage;
+  Status status;
+  spriteSource->LoadSourceImage(status, &sourceImage);
+  if(status.Failed())
+    return;
+
+  SourceData sourceData = {spriteSource, &sourceImage};
 
   mMarchingSquares = MarchingSquares();
   mMarchingSquares.mDensitySurfaceLevel = mPropertyViewInfo.mSurfaceLevelThreshold;
@@ -1047,13 +1054,13 @@ void MultiConvexMeshEditor::AutoCompute()
   {
     //sample with the pixel boundary positions and the pixel sampling method
     mMarchingSquares.mPositionSampler = &MultiConvexMeshEditor::SamplePixelWorldPosition;
-    mMarchingSquares.SamplePixels(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, spriteSource);
+    mMarchingSquares.SamplePixels(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, &sourceData);
   }
   else
   {
     //sample with the center of a pixel's position plus the regular marching cubes method
     mMarchingSquares.mPositionSampler = &MultiConvexMeshEditor::SamplePixelWorldPositionAtCenter;
-    mMarchingSquares.Sample(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, spriteSource);
+    mMarchingSquares.Sample(Vec2(-1, -1), size + Vec2(2, 2), sampleFrequency, &sourceData);
   }
   
 
@@ -1499,7 +1506,9 @@ real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord, void* userDat
 {
   int x = (int)pixelCoord.x;
   int y = (int)pixelCoord.y;
-  SpriteSource* spriteSource = (SpriteSource*)userData;
+  SourceData* sourceData = (SourceData*)userData;
+  SpriteSource* spriteSource = sourceData->mSpriteSource;
+  Image* sourceImage = sourceData->mSourceImage;
 
   //bounds checking
   if(x < 0 || x >= (int)spriteSource->FrameSizeX)
@@ -1507,14 +1516,16 @@ real MultiConvexMeshEditor::SamplePixelAlpha(Vec2Param pixelCoord, void* userDat
   if(y < 0 || y >= (int)spriteSource->FrameSizeY)
     return real(0);
 
-  return ToFloatColor(spriteSource->SourceImage.GetPixel(x, y)).w;
+  return ToFloatColor(sourceImage->GetPixel(x, y)).w;
 }
 
 real MultiConvexMeshEditor::SamplePixelIntensity(Vec2Param pixelCoord, void* userData)
 {
   int x = (int)pixelCoord.x;
   int y = (int)pixelCoord.y;
-  SpriteSource* spriteSource = (SpriteSource*)userData;
+  SourceData* sourceData = (SourceData*)userData;
+  SpriteSource* spriteSource = sourceData->mSpriteSource;
+  Image* sourceImage = sourceData->mSourceImage;
 
   //bounds checking
   if(x < 0 || x >= (int)spriteSource->FrameSizeX)
@@ -1522,13 +1533,14 @@ real MultiConvexMeshEditor::SamplePixelIntensity(Vec2Param pixelCoord, void* use
   if(y < 0 || y >= (int)spriteSource->FrameSizeY)
     return real(0);
 
-  Vec4 color = ToFloatColor(spriteSource->SourceImage.GetPixel(x, y));
+  Vec4 color = ToFloatColor(sourceImage->GetPixel(x, y));
   return (color.x + color.y + color.z) / real(3.0) * color.w;
 }
 
 Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord, void* userData)
 {
-  SpriteSource* spriteSource = (SpriteSource*)userData;
+  SourceData* sourceData = (SourceData*)userData;
+  SpriteSource* spriteSource = sourceData->mSpriteSource;
 
   Vec2 size = Vec2((real)spriteSource->FrameSizeX, (real)spriteSource->FrameSizeY);
   Vec2 flippedPixels = Vec2(pixelCoord.x, size.y - pixelCoord.y);
@@ -1536,7 +1548,7 @@ Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord, void*
   Vec2 temp = flippedPixels - flippedOrigin;
   temp /= size;
 
-  Vec2 extents = spriteSource->PixelSize / spriteSource->PixelsPerUnit;
+  Vec2 extents = spriteSource->GetSize() / spriteSource->PixelsPerUnit;
   temp *= extents;
 
   return temp;
@@ -1544,8 +1556,7 @@ Vec2 MultiConvexMeshEditor::SamplePixelWorldPosition(Vec2Param pixelCoord, void*
 
 Vec2 MultiConvexMeshEditor::SamplePixelWorldPositionAtCenter(Vec2Param pixelCoord, void* userData)
 {
-  SpriteSource* spriteSource = (SpriteSource*)userData;
-  return SamplePixelWorldPosition(pixelCoord + Vec2(0.5f, 0.5f), spriteSource);
+  return SamplePixelWorldPosition(pixelCoord + Vec2(0.5f, 0.5f), userData);
 }
 
 void MultiConvexMeshEditor::SetMultiConvexMesh(MultiConvexMesh* multiConvexMesh)

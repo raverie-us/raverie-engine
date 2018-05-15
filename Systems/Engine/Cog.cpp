@@ -9,6 +9,8 @@
 namespace Zero
 {
 
+const bool cBindCogChildrenReverseRange = false;
+
 //------------------------------------------------------------------------------------------ Helpers
 void SetCogFlag(Cog* cog, CogFlags::Enum flag, cstr flagName, bool state);
 bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
@@ -122,6 +124,9 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(FindRoot);
   ZilchBindGetter(Children);
 
+  if(cBindCogChildrenReverseRange)
+    ZilchBindGetter(ChildrenReversed);
+
   ZilchBindMethod(AttachToPreserveLocal);
   ZilchBindMethod(AttachTo);
   ZilchBindMethod(DetachPreserveLocal);
@@ -131,7 +136,9 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(FindDirectChildByName);
   ZilchBindMethod(FindAllChildrenByName);
 
-  ZilchBindMethod(IsDescendant);
+  ZilchBindMethod(IsDescendant)->AddAttribute(DeprecatedAttribute);
+  ZilchBindMethod(IsDescendantOf);
+  ZilchBindMethod(IsAncestorOf);
 
   ZilchBindMethod(FindNextSibling);
   ZilchBindMethod(FindPreviousSibling);
@@ -1000,6 +1007,16 @@ HierarchyList::range Cog::GetChildren()
 }
 
 //**************************************************************************************************
+HierarchyList::reverse_range Cog::GetChildrenReversed( )
+{
+  Hierarchy* hierarchy = this->has(Hierarchy);
+  if(hierarchy)
+    return hierarchy->GetChildrenReversed();
+
+  return HierarchyList::reverse_range();
+}
+
+//**************************************************************************************************
 uint Cog::GetChildCount()
 {
   uint count = 0;
@@ -1117,6 +1134,12 @@ bool Cog::AttachToPreserveLocal(Cog* parent)
 //**************************************************************************************************
 bool Cog::AttachTo(Cog* parent)
 {
+  if (parent == nullptr)
+  {
+    DoNotifyException("Invalid attachment", "Cannot attach to null object");
+    return false;
+  }
+
   Transform* childTransform = this->has(Transform);
 
   // If the child has no Transform, there's no relative attachment needed
@@ -1317,11 +1340,28 @@ Cog* Cog::FindChildByChildId(Guid childId)
 //**************************************************************************************************
 bool Cog::IsDescendant(Cog* cog)
 {
-  while (cog)
-  {
-    cog = cog->GetParent();
+  return IsAncestorOf(cog);
+}
 
-    if (cog == this)
+//**************************************************************************************************
+bool Cog::IsDescendantOf(Cog* ancestor)
+{
+  if (ancestor == nullptr)
+  {
+    DoNotifyException("Cog", "null object given");
+    return false;
+  }
+
+  return ancestor->IsAncestorOf(this);
+}
+
+//**************************************************************************************************
+bool Cog::IsAncestorOf(Cog* descendant)
+{
+  while (descendant)
+  {
+    descendant = descendant->GetParent();
+    if (descendant == this)
       return true;
   }
 
@@ -1473,23 +1513,63 @@ void Cog::ReplaceChild(Cog* oldChild, Cog* newChild)
 //**************************************************************************************************
 uint Cog::GetHierarchyIndex()
 {
+  if (GetMarkedForDestruction())
+  {
+    DoNotifyExceptionAssert("Invalid Operation", "Cannot get Hierarchy Index of Cog that is marked for destruction");
+    return 0;
+  }
+
   if (HierarchyList* list = GetParentHierarchyList())
-    return list->FindIndex(this);
+  {
+    size_t index = 0;
+    forRange(Cog& cog, list->All())
+    {
+      // Don't account for Cogs marked for destruction
+      if (cog.GetMarkedForDestruction())
+        continue;
+
+      if (&cog == this)
+        return index;
+
+      ++index;
+    }
+  }
   return 0;
 }
 
 //**************************************************************************************************
-void Cog::PlaceInHierarchy(uint index)
+void Cog::PlaceInHierarchy(uint destinationIndex)
 {
   HierarchyList* list = GetParentHierarchyList();
-  uint currIndex = list->FindIndex(this);
+  uint currIndex = GetHierarchyIndex();
   list->Erase(this);
 
   // We have to compensate for removing ourself from the list
-  if (currIndex < index)
-    list->InsertAt(index - 1, this);
+  if (currIndex < destinationIndex)
+    destinationIndex -= 1;
+  
+  if(destinationIndex == 0)
+  {
+    list->PushFront(this);
+  }
   else
-    list->InsertAt(index, this);
+  {
+    size_t currentIndex = 0;
+    forRange(Cog& cog, list->All())
+    {
+      // Don't account for Cogs marked for destruction
+      if (cog.GetMarkedForDestruction())
+        continue;
+
+      ++currentIndex;
+
+      if (currentIndex == destinationIndex)
+      {
+        list->InsertAfter(&cog, this);
+        break;
+      }
+    }
+  }
 
   Event eventToSend;
   if (GetParent())

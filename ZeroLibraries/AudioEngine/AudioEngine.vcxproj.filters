@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\PortAudio">
-      <UniqueIdentifier>{32c3476c-abb3-4ff7-b4d5-60f0d9e75630}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Nodes">
       <UniqueIdentifier>{822b0b4a-0c31-4168-9e57-bf08e9c1022b}</UniqueIdentifier>
     </Filter>
@@ -51,9 +48,6 @@
     <ClCompile Include="Precompiled.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pa_win_util.cpp">
-      <Filter>Source Files\PortAudio</Filter>
-    </ClCompile>
     <ClCompile Include="Attenuator.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
@@ -77,9 +71,6 @@
     </ClCompile>
     <ClCompile Include="WindowsMIDI.cpp">
       <Filter>Source Files\PlatformSpecific</Filter>
-    </ClCompile>
-    <ClCompile Include="LockFreeQueue.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ListenerNode.cpp">
       <Filter>Source Files\Nodes</Filter>
@@ -132,6 +123,9 @@
     <ClCompile Include="PitchChange.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GranularSynthNode.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modifiers.h">
@@ -139,15 +133,6 @@
     </ClInclude>
     <ClInclude Include="Interpolator.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pa_memorybarrier.h">
-      <Filter>Source Files\PortAudio</Filter>
-    </ClInclude>
-    <ClInclude Include="pa_util.h">
-      <Filter>Source Files\PortAudio</Filter>
-    </ClInclude>
-    <ClInclude Include="portaudio.h">
-      <Filter>Source Files\PortAudio</Filter>
     </ClInclude>
     <ClInclude Include="AudioSystemInternal.h">
       <Filter>Source Files</Filter>
@@ -263,10 +248,8 @@
     <ClInclude Include="PitchChange.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="portaudio_x86.lib">
-      <Filter>Resource Files</Filter>
-    </Library>
+    <ClInclude Include="GranularSynthNode.h">
+      <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

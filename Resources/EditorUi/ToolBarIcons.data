@@ -179,6 +179,14 @@ DefinitionSet =
 		float[] Uv1 = [ 41 , 20 ],
 	},
 	
+	ImageDefinition Chat =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 74, 143 ],
+		float[] Uv1 = [ 28 , 20 ],
+	},
+	
 	//---------------------------------------------------------------------- Row 4
 	ImageDefinition ToolGroup =
 	{

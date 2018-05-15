@@ -140,6 +140,7 @@ ZilchDefineType(TextureBuilder, builder, type)
   ZilchBindFieldProperty(mFiltering);
   ZilchBindFieldProperty(mAnisotropy);
   ZilchBindFieldProperty(mMipMapping);
+  ZilchBindGetterSetterProperty(HalfScaleCount);
   ZilchBindFieldProperty(mPremultipliedAlpha)->Add(new ShowPremultipliedAlphaFilter());
   ZilchBindFieldProperty(mGammaCorrection)->Add(new ShowGammaCorrectionFilter());
 }
@@ -156,7 +157,7 @@ void TextureBuilder::Serialize(Serializer& stream)
   SerializeEnumNameDefault(TextureFiltering, mFiltering, TextureFiltering::Trilinear);
   SerializeEnumNameDefault(TextureAnisotropy, mAnisotropy, TextureAnisotropy::x16);
   SerializeEnumNameDefault(TextureMipMapping, mMipMapping, TextureMipMapping::PreGenerated);
-
+  SerializeNameDefault(mHalfScaleCount, 0);
   SerializeNameDefault(mPremultipliedAlpha, false);
   SerializeNameDefault(mGammaCorrection, false);
 }
@@ -257,6 +258,16 @@ void TextureBuilder::BuildContent(BuildOptions& buildOptions)
 void TextureBuilder::Rename(StringParam newName)
 {
   Name = newName;
+}
+
+int TextureBuilder::GetHalfScaleCount()
+{
+  return mHalfScaleCount;
+}
+
+void TextureBuilder::SetHalfScaleCount(int halfScaleCount)
+{
+  mHalfScaleCount = Math::Max(halfScaleCount, 0);
 }
 
 String TextureBuilder::GetOutputFile()

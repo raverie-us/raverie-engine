@@ -203,7 +203,7 @@ TextEditor::TextEditor(Composite* parent)
   ConnectThisTo(mScinWidget, Events::FocusGained, OnFocusIn);
   ConnectThisTo(mScinWidget, Events::RightMouseDown, OnRightMouseDown);
   ConnectThisTo(mScinWidget, Events::MouseMove, OnMouseMove);
-  ConnectThisTo(mScinWidget, Events::MouseDrop, OnMouseDrop);
+  ConnectThisTo(mScinWidget, Events::MouseFileDrop, OnMouseFileDrop);
   ConnectThisTo(mScinWidget, Events::TextTyped, OnTextTyped);
 
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
@@ -463,7 +463,7 @@ void TextEditor::SetWordWrap(bool enabled)
 {
   if(enabled)
   {
-    SendEditor(SCI_SETWRAPMODE, SC_WRAP_CHAR, 0);
+    SendEditor(SCI_SETWRAPMODE, SC_WRAP_WORD, 0);
   }
   else
   {
@@ -622,7 +622,7 @@ void TextEditor::OnMouseUp(MouseEvent* event)
   mScintilla->ButtonUp(Point(p.x, p.y), mTime, false);
 }
 
-void TextEditor::OnMouseDrop(MouseEvent* event)
+void TextEditor::OnMouseFileDrop(MouseFileDropEvent* event)
 {
 }
 
@@ -898,16 +898,20 @@ void TextEditor::OnKeyUp(KeyboardEvent* event)
 
 void TextEditor::OnMouseScroll(MouseEvent* event)
 {
+  OsShell* shell = Z::gEngine->has(OsShell);
+  uint scroll = shell->GetScrollLineCount();
+  scroll *= event->Scroll.y;
+
   // vertical scroll
   if(!event->CtrlPressed && !event->ShiftPressed)
-    mScintilla->ScrollTo(mScintilla->topLine + event->Scroll.y * -1);
+    mScintilla->ScrollTo(mScintilla->topLine + scroll * -1);
   // horizontal scroll when holding shift
   else if(!event->CtrlPressed && event->ShiftPressed)
-    mScintilla->HorizontalScrollTo(mScintilla->xOffset + event->Scroll.y * -10);
+    mScintilla->HorizontalScrollTo(mScintilla->xOffset + scroll * -10);
   // change font size while holding control and scrolling
   else
   {
-    mFontSize = Math::Clamp(int(mFontSize + event->Scroll.y), cMinFontSize, cMaxFontSize);
+    mFontSize = Math::Clamp(int(mFontSize + scroll), cMinFontSize, cMaxFontSize);
     SetFontSize(mFontSize);
     SetColorScheme(*GetColorScheme());
   }

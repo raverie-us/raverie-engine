@@ -24,8 +24,8 @@ namespace Audio
   class DynamicsProcessorNode : public SimpleCollapseNode
   {
   public:
-    DynamicsProcessorNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool threaded = false);
+    DynamicsProcessorNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool threaded = false);
 
     // Returns the current input gain in decibels
     float GetInputGain();

@@ -154,6 +154,7 @@
     <ClCompile Include="ItemList.cpp" />
     <ClCompile Include="EditorCameraMouseDrag.cpp" />
     <ClCompile Include="ListView.cpp" />
+    <ClCompile Include="UiLegacyToolTip.cpp" />
     <ClCompile Include="UndoPropertyInterface.cpp" />
     <ClCompile Include="CollisionTableEditor.cpp" />
     <ClCompile Include="ColorGradientEditor.cpp" />
@@ -319,11 +320,13 @@
     <ClInclude Include="ItemList.hpp" />
     <ClInclude Include="ListView.hpp" />
     <ClInclude Include="MetaCompositionWrapper.hpp" />
+    <ClInclude Include="PreviewWidgets.hpp" />
     <ClInclude Include="RotationBasisGizmos.hpp" />
     <ClInclude Include="BroadPhaseEditor.hpp" />
     <ClInclude Include="BugReport.hpp" />
     <ClInclude Include="CogCommand.hpp" />
     <ClInclude Include="TileLayout.hpp" />
+    <ClInclude Include="UiLegacyToolTip.hpp" />
     <ClInclude Include="UndoPropertyInterface.hpp" />
     <ClInclude Include="CollisionTableEditor.hpp" />
     <ClInclude Include="ColorGradientEditor.hpp" />

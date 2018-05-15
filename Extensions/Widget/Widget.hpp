@@ -135,6 +135,8 @@ public:
   byte* HandleToObject(const Handle& handle) override;
   void Delete(const Handle& handle) override;
   bool CanDelete(const Handle& handle) override;
+
+  static u64 HandleToId(const Handle& handle);
 };
 
 /// Widget UI base class. Widget is the base class for all user interface system

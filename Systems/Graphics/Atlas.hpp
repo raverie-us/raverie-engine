@@ -1,18 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Atlas.hpp
-///
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
 {
 
-class Atlas : public DataResource
+const uint cAtlasSize = 4096;
+
+class Atlas : public Resource
 {
 public:
   ZilchDeclareType(Atlas, TypeCopyMode::ReferenceType);
@@ -22,17 +18,17 @@ public:
   // leave a minimum of a 1 pixel border for bilinear sampling
   static const int sBorderWidth = 1 << sMaxMipLevel;
 
+  static HandleOf<Atlas> CreateRuntime();
+
   Atlas();
-  ~Atlas();
 
-  void Serialize(Serializer& stream) override {}
-  void Unload() override;
-  void ClearTextures();
-  void AddSpriteSource(SpriteSource* source);
-  bool NeedsBuilding;
+  bool AddSpriteSource(SpriteSource* source, Image* image);
+  void RemoveSpriteSource(SpriteSource* source);
+  
+  HandleOf<Texture> mTexture;
 
-  InList<SpriteSource> Sources;
-  Array< HandleOf<Texture> > Textures;
+  AvlDynamicAabbTree<Aabb> mPlacedAabbs;
+  HashMap<SpriteSource*, BroadPhaseProxy> mAabbTreeProxies;
 };
 
 class AtlasManager : public ResourceManager
@@ -41,7 +37,9 @@ public:
   DeclareResourceManager(AtlasManager, Atlas);
 
   AtlasManager(BoundType* resourceType);
-  ~AtlasManager();
+
+  void AddSpriteSource(SpriteSource* source, Image* image);
+  void RemoveSpriteSource(SpriteSource* source);
 };
 
-}
+} // namespace Zero

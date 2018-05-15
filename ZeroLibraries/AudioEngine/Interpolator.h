@@ -67,7 +67,7 @@ namespace Audio
     // Gets the start value of the interpolation.
     float GetStartValue();
     // Gets the current value of a sequential interpolation.
-    const float GetCurrentValue() const;
+    const float GetCurrentValue();
     // Gets the type of curve currently being used. 
     const CurveTypes::Enum GetCurveType() const;
     // Sets a new custom curve for this interpolator. Relies on curves being in 0-1 range.

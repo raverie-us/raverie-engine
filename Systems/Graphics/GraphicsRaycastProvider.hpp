@@ -1,9 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Nathan Carlson
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Joshua Davis, Nathan Carlson
+// Copyright 2010, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -31,4 +28,4 @@ public:
   bool mVisibleOnly;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -30,7 +30,8 @@ ZilchDefineType(WebBrowserWidget, builder, type)
 }
 
 WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& setup) :
-  Composite(composite)
+  Composite(composite),
+  mIsPopup(false)
 {
   mBrowser = WebBrowser::Create(setup);
   SetLayout(new StackLayout(LayoutDirection::TopToBottom, Vec2(WebBrowserUi::ElementSpacing)));
@@ -80,12 +81,14 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& 
 
   ConnectThisTo(mAddressText, Events::TextSubmit, OnAddressTextSubmit);
 
+  ConnectThisTo(browser, Events::WebBrowserPopup, OnWebBrowserPopup);
   ConnectThisTo(browser, Events::WebBrowserPointQuery, OnWebBrowserPointQuery);
   ConnectThisTo(browser, Events::WebBrowserUrlChanged, OnWebBrowserUrlChanged);
   ConnectThisTo(browser, Events::WebBrowserCursorChanged, OnWebBrowserCursorChanged);
   ConnectThisTo(browser, Events::WebBrowserTitleChanged, OnWebBrowserTitleChanged);
   ConnectThisTo(browser, Events::WebBrowserStatusChanged, OnWebBrowserStatusChanged);
   ConnectThisTo(browser, Events::WebBrowserConsoleMessage, OnWebBrowserConsoleMessage);
+  ConnectThisTo(browser, Events::WebBrowserDownloadStarted, OnWebBrowserDownloadStarted);
   
   ConnectThisTo(mBrowserView, Events::FocusGained, OnFocusGained);
   ConnectThisTo(mBrowserView, Events::FocusLost, OnFocusLost);
@@ -154,6 +157,23 @@ WebBrowserModifiers::Enum GetModifiers(MouseEvent* event)
   if (event->IsButtonDown(MouseButtons::Right))
     value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::RightMouse);
   return value;
+}
+
+void WebBrowserWidget::OnWebBrowserPopup(WebBrowserPopupCreateEvent* event)
+{
+  if (!mManager)
+    return;
+
+  WebBrowserSetup setup;
+  setup.mUrl = event->mUrl;
+  setup.mSize = mBrowser->GetSize();
+
+  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
+  browser->mIsPopup = true;
+  browser->SetName(event->mName);
+
+  browser->SetHideOnClose(false);
+  mManager->AddManagedWidget(browser, DockArea::Center, true);
 }
 
 void WebBrowserWidget::OnWebBrowserPointQuery(WebBrowserPointQueryEvent* event)
@@ -232,6 +252,48 @@ void WebBrowserWidget::OnWebBrowserConsoleMessage(WebBrowserConsoleEvent* event)
   String fullMessage = builder.ToString();
 
   ZPrint("%s", fullMessage.c_str());
+}
+
+void OnPackageDownloadCallback(BackgroundTask* task, Job* job)
+{
+  DownloadTaskJob* downloadJob = (DownloadTaskJob*)job;
+  String location = FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
+  WriteStringRangeToFile(location, downloadJob->mData);
+
+  ContentImporter::OpenImportWindow(location);
+}
+
+void OnGenericDownloadCallback(BackgroundTask* task, Job* job)
+{
+  DownloadTaskJob* downloadJob = (DownloadTaskJob*)job;
+  String location = FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
+  WriteStringRangeToFile(location, downloadJob->mData);
+  Os::SystemOpenFile(location.c_str());
+}
+
+void WebBrowserWidget::OnWebBrowserDownloadStarted(WebBrowserDownloadEvent* event)
+{
+  BackgroundTask* task = DownloadTaskJob::DownloadToBuffer(event->mUrl, event->mSuggestedFileName);
+
+  String extension = FilePath::GetExtension(event->mSuggestedFileName);
+
+  static const String ZeroPack("zeropack");
+
+  if (extension == ZeroPack)
+    task->mCallback = &OnPackageDownloadCallback;
+  else
+    task->mCallback = &OnGenericDownloadCallback;
+
+  // Since we started our own download, cancel the browser download
+  event->mCancel = true;
+
+  // If this is a popup whose sole purpose was to start a download, then close the tab (like other browsers)
+  if (mIsPopup)
+  {
+    String currentUrl = mBrowser->GetUrl();
+    if (event->mUrl == currentUrl || event->mOriginalUrl == currentUrl)
+      CloseTabContaining(this);
+  }
 }
 
 void WebBrowserWidget::OnFocusGained(FocusEvent* event)

@@ -195,6 +195,26 @@ private:
   CachedProject* mCachedProject;
 };
 
+//-------------------------------------------------------------------DownloadLauncherPatchInstallerJob
+// A background task to check if there's a new patch version installer for the launcher and if so download it.
+class DownloadLauncherPatchInstallerJob : public DownloadTaskJob
+{
+public:
+  typedef DownloadLauncherPatchInstallerJob ZilchSelf;
+  DownloadLauncherPatchInstallerJob(StringParam url, StringParam rootDownloadLocation);
+
+  /// Job Interface.
+  int Execute() override;
+  void OnReponse(WebResponseEvent* event);
+
+  // Extract the patch id of this build from the given archive
+  String FindPatchId(Archive& archive);
+
+  /// Is there a new major-version installer for the launcher available?
+  bool mIsNewPatchAvailable;
+  String mRootDownloadLocation;
+};
+
 //-------------------------------------------------------------------DownloadLauncherMajorInstallerJob
 // A background task to check if there's a new major version installer for the launcher and if so download it.
 class CheckForLauncherMajorInstallerJob : public DownloadTaskJob

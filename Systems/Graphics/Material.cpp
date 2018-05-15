@@ -1,21 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Material.cpp
-/// Implementation of the Material class and Manager.
-///
-/// Authors: Chris Peters, Nathan Carlson
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(CompositionLabelExtension, builder, type)
 {
 }
 
+//**************************************************************************************************
 ZilchDefineType(Material, builder, type)
 {
   type->Add(new MaterialFactory());
@@ -24,12 +20,13 @@ ZilchDefineType(Material, builder, type)
 
   ZilchBindMethod(RuntimeClone);
 
-  ZilchBindFieldGetterProperty(mSerializedList);
+  ZilchBindFieldGetterPropertyAs(mSerializedList, "RenderGroups");
   ZilchBindFieldGetterProperty(mReferencedByList);
 
   ZilchBindGetterProperty(CompositionLabel)->Add(new CompositionLabelExtension());
 }
 
+//**************************************************************************************************
 Material::Material()
   : mRenderData(nullptr)
   , mSerializedList(this)
@@ -46,10 +43,12 @@ Material::Material()
   mReferencedByList.mExpanded = &GraphicsResourceList::mMaterialRuntimeExpanded;
 }
 
+//**************************************************************************************************
 Material::~Material()
 {
 }
 
+//**************************************************************************************************
 void Material::Serialize(Serializer& stream)
 {
   // Must serialize before polymorphic data
@@ -58,6 +57,7 @@ void Material::Serialize(Serializer& stream)
   SerializeMaterialBlocks(stream);
 }
 
+//**************************************************************************************************
 void Material::SerializeMaterialBlocks(Serializer& stream)
 {
   if(stream.GetMode() == SerializerMode::Saving)
@@ -118,17 +118,20 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
   }
 }
 
+//**************************************************************************************************
 void Material::Initialize()
 {
   ConnectThisTo(&mSerializedList, Events::ResourceListItemAdded, OnResourceListItemAdded);
   ConnectThisTo(&mSerializedList, Events::ResourceListItemRemoved, OnResourceListItemRemoved);
 }
 
+//**************************************************************************************************
 void Material::Unload()
 {
   mMaterialBlocks.Clear();
 }
 
+//**************************************************************************************************
 void Material::ReInitialize()
 {
   TextSaver saver;
@@ -153,11 +156,13 @@ void Material::ReInitialize()
   }
 }
 
+//**************************************************************************************************
 void Material::ResourceModified()
 {
   mPropertiesChanged = true;
 }
 
+//**************************************************************************************************
 HandleOf<Material> Material::RuntimeClone()
 {
   HandleOf<Material> resourceHandle = DataResource::Clone();
@@ -178,11 +183,13 @@ HandleOf<Material> Material::RuntimeClone()
   return resourceHandle;
 }
 
+//**************************************************************************************************
 uint Material::GetSize() const
 {
   return mMaterialBlocks.Size();
 }
 
+//**************************************************************************************************
 MaterialBlockHandle Material::GetBlockAt(uint index)
 {
   if (index >= mMaterialBlocks.Size())
@@ -191,6 +198,7 @@ MaterialBlockHandle Material::GetBlockAt(uint index)
     return mMaterialBlocks[index];
 }
 
+//**************************************************************************************************
 MaterialBlockHandle Material::GetById(BoundType* typeId)
 {
   for (uint i = 0; i < mMaterialBlocks.Size(); ++i)
@@ -202,6 +210,7 @@ MaterialBlockHandle Material::GetById(BoundType* typeId)
   return nullptr;
 }
 
+//**************************************************************************************************
 uint Material::GetBlockIndex(BoundType* typeId)
 {
   for (uint i = 0; i < mMaterialBlocks.Size(); ++i)
@@ -213,6 +222,7 @@ uint Material::GetBlockIndex(BoundType* typeId)
   return (uint)-1;
 }
 
+//**************************************************************************************************
 void Material::Add(MaterialBlockHandle blockHandle, int index)
 {
   MaterialBlock* block = blockHandle.Get<MaterialBlock*>();
@@ -228,6 +238,7 @@ void Material::Add(MaterialBlockHandle blockHandle, int index)
   SendModified();
 }
 
+//**************************************************************************************************
 bool Material::Remove(MaterialBlockHandle block)
 {
   uint index = mMaterialBlocks.FindIndex(block);
@@ -240,6 +251,7 @@ bool Material::Remove(MaterialBlockHandle block)
   return true;
 }
 
+//**************************************************************************************************
 void Material::OnResourceListItemAdded(ResourceListEvent* event)
 {
   RenderGroup* renderGroup = RenderGroupManager::FindOrNull(event->mResourceIdName);
@@ -247,6 +259,7 @@ void Material::OnResourceListItemAdded(ResourceListEvent* event)
     ResourceListEntryAdded(this, renderGroup);
 }
 
+//**************************************************************************************************
 void Material::OnResourceListItemRemoved(ResourceListEvent* event)
 {
   RenderGroup* renderGroup = RenderGroupManager::FindOrNull(event->mResourceIdName);
@@ -254,6 +267,7 @@ void Material::OnResourceListItemRemoved(ResourceListEvent* event)
     ResourceListEntryRemoved(this, renderGroup);
 }
 
+//**************************************************************************************************
 IndexRange Material::AddShaderInputs(Array<ShaderInput>& shaderInputs, uint version)
 {
   if (mPropertiesChanged == false && mInputRangeVersion == version)
@@ -271,6 +285,7 @@ IndexRange Material::AddShaderInputs(Array<ShaderInput>& shaderInputs, uint vers
   return mCachedInputRange;
 }
 
+//**************************************************************************************************
 void Material::UpdateCompositeName()
 {
   MaterialFactory* factory = MaterialFactory::GetInstance();
@@ -321,6 +336,7 @@ void Material::UpdateCompositeName()
 
 ImplementResourceManager(MaterialManager, Material);
 
+//**************************************************************************************************
 MaterialManager::MaterialManager(BoundType* resourceType)
   : ResourceManager(resourceType)
 {
@@ -337,6 +353,7 @@ MaterialManager::MaterialManager(BoundType* resourceType)
   mExtension = DataResourceExtension;
 }
 
+//**************************************************************************************************
 void MaterialManager::ResourceDuplicated(Resource* resource, Resource* duplicate)
 {
   Material* material = (Material*)resource;
@@ -348,7 +365,7 @@ void MaterialManager::ResourceDuplicated(Resource* resource, Resource* duplicate
 
   // If any resources are not writable then they are added to the duplicate instead
   // so the content item needs to be re-saved
-  forRange (StringParam resourceIdName, material->mReferencedByList.All())
+  forRange (StringParam resourceIdName, material->mReferencedByList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
 

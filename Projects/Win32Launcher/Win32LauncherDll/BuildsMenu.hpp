@@ -147,6 +147,9 @@ public:
   /// Updates the state of the install button based on the selected build.
   void UpdateInstallButton();
 
+  /// Finds the build item for the associated build if it exists.
+  BuildItem* FindBuildItem(BuildId& buildId);
+
   /// All displayed build items.
   Array<BuildItem*> mBuildItems;
 

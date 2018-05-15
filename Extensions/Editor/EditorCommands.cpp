@@ -64,15 +64,28 @@ void DuplicateSelection(Editor* editor, Space* space)
   OperationQueue* opQueue = editor->GetOperationQueue();
   opQueue->BeginBatch();
 
+  Array<Cog*> duplicateCogs;
   // Duplicate all valid selected objects
   forRange(Cog* cog, cogs.All())
   {
     Cog* duplicateCog = cog->Clone();
+    duplicateCogs.PushBack(duplicateCog);
     ObjectCreated(opQueue, duplicateCog);
   }
 
   // End the batch operation
   opQueue->EndBatch();
+
+  // If any cogs were successfully duplicated select the duplicates over the originals
+  if (!duplicateCogs.Empty())
+  {
+    selection->Clear(SendsEvents::False);
+    forRange(Cog* cog, duplicateCogs.All())
+    {
+      selection->Add(cog, SendsEvents::False);
+    }
+    selection->FinalSelectionChanged();
+  }
 }
 
 void DeleteSelectedObjects(Editor* editor, Space* space)
@@ -439,31 +452,37 @@ void GroupSelected(Editor* editor, Space* space)
     }
   }
 
-  //If any of the objects have a transform
-  if(transformCount > 0)
-  {
-    float inverseCount = 1.0f / float(transformCount);
-    center *= inverseCount;
-  }
+  Cog* rootObject;
 
   OperationQueue* queue = editor->GetOperationQueue();
   queue->BeginBatch();
   queue->SetActiveBatchName("ObjectGroupSelection");
 
-  // Snap the center if snapping is enabled in the translation gizmo.
-  // This snapping is a convenience for now.  In the future it really
-  // needs to be a toggle-property on a command-component for 'GroupSelected'
-  Cog* translateToolCog = editor->Tools->GetToolByName("TranslateTool");
-
-  ObjectTranslateTool* tTool = translateToolCog->has(ObjectTranslateTool);
-  if(tTool && tTool->GetSnapping( ))
+  //If any of the objects have a transform
+  if(transformCount > 0)
   {
-    center = GizmoSnapping::GetSnappedPosition(center, Vec3(0, 0, 0), Quat::cIdentity,
-      tTool->GetDragMode( ), GizmoSnapMode::WorldGrid, tTool->GetSnapDistance( ));
-  }
+    float inverseCount = 1.0f / float(transformCount);
+    center *= inverseCount;
 
-  //Create the transform object
-  Cog* rootObject = space->CreateAt(CoreArchetypes::Transform, center);
+    // Snap the center if snapping is enabled in the translation gizmo.
+    // This snapping is a convenience for now.  In the future it really
+    // needs to be a toggle-property on a command-component for 'GroupSelected'
+    Cog* translateToolCog = editor->Tools->GetToolByName("TranslateTool");
+
+    ObjectTranslateTool* tTool = translateToolCog->has(ObjectTranslateTool);
+    if(tTool && tTool->GetSnapping())
+    {
+      center = GizmoSnapping::GetSnappedPosition(center, Vec3(0, 0, 0), Quat::cIdentity,
+        tTool->GetDragMode(), GizmoSnapMode::WorldGrid, tTool->GetSnapDistance());
+    }
+
+    //Create the transform object
+    rootObject = space->CreateAt(CoreArchetypes::Transform, center);
+  }
+  else
+  {
+    rootObject = space->CreateNamed(CoreArchetypes::Empty);
+  }
 
   rootObject->SetName("Root");
   rootObject->ClearArchetype();
@@ -489,6 +508,7 @@ void GroupSelected(Editor* editor, Space* space)
   queue->EndBatch();
 
   editor->GetSelection()->SelectOnly(rootObject);
+  editor->GetSelection()->FinalSelectionChanged();
 }
 
 void SelectSibling(Editor* editor, Space* space)
@@ -992,8 +1012,18 @@ void ResetCamera(Editor* editor)
   {
     if(Cog* editorCamera = viewport->mEditorCamera)
     {
-      EditorCameraController* cam = editorCamera->has(EditorCameraController);
-      cam->Reset();
+      EditorCameraController* camController = editorCamera->has(EditorCameraController);
+      camController->Reset();
+      if (editor->GetEditMode() == EditorMode::Mode2D)
+      {
+        if(Camera* cam = editorCamera->has(Camera))
+        {
+          // In the future when the ability to set/load default values from data values is available
+          // this value should be set from that interface
+          float size = 20.f;
+          cam->SetSize(size);
+        }
+      }
     }
   }
 }
@@ -1238,10 +1268,6 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("DisableAutoProjectScreenshot", BindCommandFunction(DisableAutoProjectScreenshot));
 
   commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition));
-
-  // Currently EditCommands just opens the command list and no editing functionality exists
-  // Entry commented out in Commands.data needs to be added back in also
-  // commands->AddCommand("EditCommands", BindCommandFunction(EditCommands));
 
   if(DeveloperConfig* config = configCog->has(DeveloperConfig))
   {

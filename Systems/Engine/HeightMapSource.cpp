@@ -185,7 +185,7 @@ void HeightMapSource::Save(StringParam filename)
 
 void HeightMapSource::Unload()
 {
- DeleteObjectsInContainer(mData);
+  DeleteObjectsInContainer(mData);
 }
 
 }//namespace Zero

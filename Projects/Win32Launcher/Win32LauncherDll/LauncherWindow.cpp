@@ -250,6 +250,10 @@ void MainButton::OnMouseExit(MouseEvent* e)
 LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   : Composite(parent)
 {
+  ZPrint("Displaying Launcher Window\n");
+  mUpdateModalName = "UpdateModal";
+  mIsLauncherUpdateCheckQueued = false;
+
   mSelectedMenu = nullptr;
   for(uint i = 0; i < LauncherMenu::MenuCount; ++i)
     mMenus[i] = nullptr;
@@ -400,8 +404,7 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   ConnectThisTo(osWindow, Events::OsMouseFileDrop, OnOsMouseDrop);
 
   // Check to see if a new installer is available for the launcher
-  if(launcherConfig->mAutoCheckForMajorUpdates)
-    CheckForMajorLauncherUpdates();
+  AutoCheckForLauncherUpdates();
 }
 
 //******************************************************************************
@@ -429,6 +432,12 @@ void LauncherWindow::CheckForUpdates()
   BackgroundTask* templateTask = mVersionSelector->GetTemplateListing();
   ConnectThisTo(templateTask, Events::BackgroundTaskCompleted, OnTemplateListing);
   ConnectThisTo(templateTask, Events::BackgroundTaskFailed, OnTemplateListing);
+
+  // Queue up actions to auto-recheck for new builds, etc...
+  float secondsForRecheck = GetConfig()->mAutoUpdateFrequencyInSeconds;
+  ActionSequence* sequence = new ActionSequence(this);
+  sequence->Add(new ActionDelay(secondsForRecheck));
+  sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::CheckForUpdates>(this));
 }
 
 //******************************************************************************
@@ -438,9 +447,35 @@ void LauncherWindow::OnCheckForUpdates(Event* e)
 }
 
 //******************************************************************************
+void LauncherWindow::AutoCheckForLauncherUpdates()
+{
+  // Mark that we finished the last queue up of the actions
+  mIsLauncherUpdateCheckQueued = false;
+
+  // Queue up actions to auto-recheck for new builds, etc...
+  // Only do this if the launcher auto-checks for updates though
+  LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
+  if(!launcherConfig->mAutoCheckForLauncherUpdates)
+    return;
+
+  CheckForLauncherUpdates();
+
+  // Mark that we've queued up an action
+  mIsLauncherUpdateCheckQueued = true;
+  float secondsForRecheck = GetConfig()->mNewLauncherUpdateCheckFrequency;
+  ActionSequence* sequence = new ActionSequence(this);
+  sequence->Add(new ActionDelay(secondsForRecheck));
+  sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::AutoCheckForLauncherUpdates>(this));
+}
+
+//******************************************************************************
 void LauncherWindow::CheckForLauncherUpdates()
 {
-  CheckForMajorLauncherUpdates();
+  // Check for updates if we don't already have the
+  // modal up that tells the user about an update.
+  Modal* activeModal = mActiveModal;
+  if(activeModal == nullptr || activeModal->mName != "UpdateModal")
+    CheckForMajorLauncherUpdates();
 }
 
 //******************************************************************************
@@ -458,61 +493,24 @@ void LauncherWindow::OnCheckForMajorLauncherUpdates(BackgroundTaskEvent* e)
     return;
 
   // Check the job to see if there's a new major version, if not then
-  // queue up a job to check for a new minor version (ignored for now, needs further
-  // testing and minor versions are auto-downloaded on launcher).
+  // queue up a job to check for a new patch version.
   CheckForLauncherMajorInstallerJob* job = (CheckForLauncherMajorInstallerJob*)e->mTask->GetFinishedJob();
   if(!job->mIsNewInstallerAvailable)
   {
-    //CheckForMinorLauncherUpdates();
+    ZPrint("No new major update found.\n");
+    CheckForLauncherPatch();
     return;
   }
 
+  ZPrint("New major update found. Asking user to upgrade.\n");
   // There is a new major version. Notify the user and ask them to install.
-  String msg = "New Launcher update available. Close and run installer?";
+  String msg = "New Launcher installer available. Close and run?";
   msg = msg.ToUpper();
   ModalConfirmAction* modal = new ModalConfirmAction(GetRootWidget(), msg);
   modal->mCloseOnSelection = true;
+  modal->mName = mUpdateModalName;
   mActiveModal = modal;
   ConnectThisTo(modal, Events::ModalConfirmResult, OnInstallMajorVersion);
-}
-
-//******************************************************************************
-void LauncherWindow::CheckForLauncherPatch()
-{
-  String url = BuildString(VersionSelector::GetLauncherPhpUrl(), "?Commands=ListVersionId");
-  DownloadTaskJob* job = new DownloadTaskJob(url);
-  job->mName = "Version Id Check";
-  BackgroundTask* task = Z::gBackgroundTasks->Execute(job, job->mName);
-
-  ConnectThisTo(task, Events::BackgroundTaskCompleted, OnCheckForLauncherPatch);
-}
-
-//******************************************************************************
-void LauncherWindow::OnCheckForLauncherPatch(BackgroundTaskEvent* e)
-{
-  if(e->mTask->IsCompleted())
-  {
-    // Load the available builds into the version selector
-    DownloadTaskJob* job = (DownloadTaskJob*)e->mTask->GetFinishedJob();
-    int serverVersionId;
-    ToValue(job->mData.c_str(), serverVersionId);
-
-    // Load the id of the current running dll
-    MainConfig* mainConfig = mConfigCog->has(MainConfig);
-    String localIdFile = FilePath::Combine(mainConfig->ApplicationDirectory, "ZeroLauncherVersionId.txt");
-    int localId = GetVersionId(localIdFile);
-
-    // If the server has a newer package then ask the user if they want to update
-    if(localId < serverVersionId)
-    {
-      String msg = "Launcher update available. Restart Launcher?";
-      msg = msg.ToUpper();
-      ModalConfirmAction* modal = new ModalConfirmAction(GetRootWidget(), msg);
-      modal->mCloseOnSelection = true;
-      mActiveModal = modal;
-      ConnectThisTo(modal, Events::ModalConfirmResult, OnRestartPrompt);
-    }
-  }
 }
 
 //******************************************************************************
@@ -521,7 +519,10 @@ void LauncherWindow::OnInstallMajorVersion(ModalConfirmEvent* e)
   // If the user said no then just close the dialog (kinda bad that
   // they can continue through, but whatever for now...)
   if(!e->mConfirmed)
+  {
+    ZPrint("User cancelled major version install.\n");
     return;
+  }
 
   BackgroundTask* task = mVersionSelector->DownloadMajorLauncherUpdate();
   ConnectThisTo(task, Events::BackgroundTaskCompleted, OnMajorLauncherUpdateDownloaded);
@@ -535,15 +536,18 @@ void LauncherWindow::OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 {
   // If the task failed then something bad happened, just return
   if(!e->mTask->IsCompleted())
+  {
+    ZPrint("Downloading major update failed.\n");
     return;
+  }
 
   // Check the job to see if there's a new major version, if not then
-  // queue up a job to check for a new minor version (ignored for now, needs further
-  // testing and minor versions are auto-downloaded on launcher).
+  // queue up a job to check for a new patch version.
   DownloadLauncherMajorInstallerJob* job = (DownloadLauncherMajorInstallerJob*)e->mTask->GetFinishedJob();
   if(!job->mIsNewInstallerAvailable)
   {
-    //CheckForMinorLauncherUpdates();
+    ZPrint("No major update available.\n");
+    CheckForLauncherPatch();
     return;
   }
 
@@ -554,15 +558,85 @@ void LauncherWindow::OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 }
 
 //******************************************************************************
-void LauncherWindow::OnRestartPrompt(ModalConfirmEvent* e)
+void LauncherWindow::CheckForLauncherPatch()
 {
-  // If the user confirmed that they want to restart
-  if(e->mConfirmed)
+  BackgroundTask* task = mVersionSelector->CheckForPatchLauncherUpdate();
+  ConnectThisTo(task, Events::BackgroundTaskCompleted, OnCheckForLauncherPatch);
+}
+
+//******************************************************************************
+void LauncherWindow::OnCheckForLauncherPatch(BackgroundTaskEvent* e)
+{
+  if(!e->mTask->IsCompleted())
+    return;
+
+  // Load the available builds into the version selector
+  DownloadTaskJob* job = (DownloadTaskJob*)e->mTask->GetFinishedJob();
+  int serverVersionId;
+  ToValue(job->mData.c_str(), serverVersionId);
+
+  // Load the id of the current running dll
+  MainConfig* mainConfig = mConfigCog->has(MainConfig);
+  String localIdFile = FilePath::Combine(mainConfig->ApplicationDirectory, "ZeroLauncherVersionId.txt");
+  int localId = GetVersionId(localIdFile);
+
+  // If the server has a newer package then ask the user if they want to update
+  if(localId < serverVersionId)
   {
-    // Mark that we should restart when closing and terminate the engine
-    mConfigCog->has(LauncherConfig)->mRestartOnClose = true;
-    Z::gEngine->Terminate();
+    ZPrint("New launcher patch version available. Asking user to upgrade.\n");
+    // There is a new patch version. Notify the user and ask them to install.
+    String msg = "New Launcher update available. Close and run?";
+    msg = msg.ToUpper();
+    ModalConfirmAction* modal = new ModalConfirmAction(GetRootWidget(), msg);
+    modal->mCloseOnSelection = true;
+    modal->mName = mUpdateModalName;
+    mActiveModal = modal;
+    ConnectThisTo(modal, Events::ModalConfirmResult, OnInstallPatchVersion);
   }
+}
+
+//******************************************************************************
+void LauncherWindow::OnInstallPatchVersion(ModalConfirmEvent* e)
+{
+  // If the user said no then just close the dialog (kinda bad that
+  // they can continue through, but whatever for now...)
+  if(!e->mConfirmed)
+  {
+    ZPrint("User cancelled patch update.\n");
+    return;
+  }
+
+  BackgroundTask* task = mVersionSelector->DownloadPatchLauncherUpdate();
+  ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPatchLauncherUpdateDownloaded);
+
+  ModalBackgroundTaskProgessBar* modal = new ModalBackgroundTaskProgessBar(GetRootWidget(), "Downloading", task);
+  mActiveModal = modal;
+}
+//******************************************************************************
+void LauncherWindow::OnPatchLauncherUpdateDownloaded(BackgroundTaskEvent* e)
+{
+  // If the task failed then something bad happened, just return
+  if(!e->mTask->IsCompleted())
+  {
+    ZPrint("Patch update failed.\n");
+    return;
+  }
+
+  // Check the job to see if there's a new major version, if not then
+  // queue up a job to check for a new minor version (ignored for now, needs further
+  // testing and minor versions are auto-downloaded on launcher).
+  DownloadLauncherPatchInstallerJob* job = (DownloadLauncherPatchInstallerJob*)e->mTask->GetFinishedJob();
+  if(!job->mIsNewPatchAvailable)
+  {
+    ZPrint("No patch downloaded.\n");
+    return;
+  }
+
+  ZPrint("Patch installed. Restarting launcher.\n");
+  LauncherConfig* launcherConfig = GetConfig();
+  if(launcherConfig != nullptr)
+    launcherConfig->mRestartOnClose = true;
+  Z::gEngine->Terminate();
 }
 
 //******************************************************************************
@@ -971,7 +1045,7 @@ void LauncherWindow::CheckForForcedBuildUpdate()
 void LauncherWindow::OnNewBuildAvailable(Event* e)
 {
   // Display some special notification letting them know something new is available?
-  ZPrint("New Build Available");
+  ZPrint("New Build Available\n");
 }
 
 //******************************************************************************
@@ -1188,7 +1262,7 @@ void LauncherWindow::OnOpenProjectFile(OsFileSelection* e)
 //******************************************************************************
 void LauncherWindow::OnFileBugPressed(Event* e)
 {
-  Os::SystemOpenNetworkFile("https://www.zeroengine.io/u/reportbug");
+  Os::SystemOpenNetworkFile("https://dev.zeroengine.io/u/reportbug");
 }
 
 //******************************************************************************

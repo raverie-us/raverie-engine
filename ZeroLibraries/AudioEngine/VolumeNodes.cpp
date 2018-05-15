@@ -12,13 +12,13 @@ namespace Audio
   //------------------------------------------------------------------------------------ Volume Node
 
   //************************************************************************************************
-  VolumeNode::VolumeNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-    ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  VolumeNode::VolumeNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     Volume(1.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new VolumeNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new VolumeNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -53,13 +53,24 @@ namespace Audio
       // Check if the volume is being interpolated
       if (CurrentData.Interpolating)
       {
+        // Get the current volume and increase the index
         Volume = Interpolator.ValueAtIndex(CurrentData.Index++);
 
-        CurrentData.Interpolating = !Interpolator.Finished(GetSiblingNode());
+        // Check if the interpolation is finished
+        if (CurrentData.Index >= Interpolator.GetTotalFrames())
+        {
+          CurrentData.Interpolating = false;
+          if (firstRequest && GetSiblingNode())
+          {
+            // Set the volume on the non-threaded node
+            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&VolumeNode::Volume,
+              (VolumeNode*)GetSiblingNode(), Volume));
 
-        if (!CurrentData.Interpolating && firstRequest && GetSiblingNode())
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&VolumeNode::Volume,
-          (VolumeNode*)GetSiblingNode(), Volume));
+            // Tell the non-threaded node to send the event to the external system
+            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
+              GetSiblingNode(), AudioEventTypes::InterpolationDone));
+          }
+        }
       }
 
       // Apply the volume multiplier to all samples
@@ -120,8 +131,7 @@ namespace Audio
         if (timeToInterpolate < 0.02f)
           timeToInterpolate = 0.02f;
 
-        Interpolator.SetValues(Volume, newVolume, (unsigned)(timeToInterpolate
-          * AudioSystemInternal::SystemSampleRate));
+        Interpolator.SetValues(Volume, newVolume, (unsigned)(timeToInterpolate * SystemSampleRate));
       }
     }
   }
@@ -129,16 +139,16 @@ namespace Audio
   //----------------------------------------------------------------------------------- Panning Node
 
   //************************************************************************************************
-  PanningNode::PanningNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-    ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  PanningNode::PanningNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     SumToMono(false),
     LeftVolume(1.0f),
     RightVolume(1.0f),
     Active(false)
   {
     if (!isThreaded)
-      SetSiblingNodes(new PanningNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new PanningNode(name, ID, nullptr, true));
     else
     {
       LeftInterpolator.SetValues(1.0f, 1.0f, (unsigned)0);
@@ -156,9 +166,11 @@ namespace Audio
   void PanningNode::SetSumToMono(const bool isMono)
   {
     SumToMono = isMono;
+    if (SumToMono)
+      Active = true;
 
     if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&PanningNode::SumToMono,
+      gAudioSystem->AddTask(Zero::CreateFunctor(&PanningNode::SetSumToMono,
         (PanningNode*)GetSiblingNode(), isMono));
   }
 
@@ -196,8 +208,7 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        LeftInterpolator.SetValues(LeftVolume, volume, (unsigned)(time
-          * AudioSystemInternal::SystemSampleRate));
+        LeftInterpolator.SetValues(LeftVolume, volume, (unsigned)(time * SystemSampleRate));
       }
     }
   }
@@ -236,8 +247,7 @@ namespace Audio
         if (time < 0.02f)
           time = 0.02f;
 
-        RightInterpolator.SetValues(RightVolume, volume, (unsigned)(time
-          * AudioSystemInternal::SystemSampleRate));
+        RightInterpolator.SetValues(RightVolume, volume, (unsigned)(time * SystemSampleRate));
       }
     }
   }
@@ -260,6 +270,7 @@ namespace Audio
 
     if (Active)
     {
+      unsigned totalFrames = bufferSize / numberOfChannels;
       unsigned channelsToGet;
       if (SumToMono)
         channelsToGet = 1;
@@ -267,17 +278,16 @@ namespace Audio
         channelsToGet = 2;
 
       // Get input and return if there is no data
-      if (!AccumulateInputSamples(bufferSize, channelsToGet, listener))
+      if (!AccumulateInputSamples(totalFrames * channelsToGet, channelsToGet, listener))
         return false;
 
-      unsigned totalFrames = bufferSize / numberOfChannels;
       // Step through each frame of audio data
       for (unsigned currentFrame = 0; currentFrame < totalFrames; ++currentFrame)
       {
         float leftValue, rightValue;
         // If requested 1 channel of audio, copy this to left and right channels
         if (SumToMono)
-          leftValue = rightValue = InputSamples[currentFrame] * 0.5f;
+          leftValue = rightValue = InputSamples[currentFrame];
         else
         {
           leftValue = InputSamples[currentFrame * 2];
@@ -297,7 +307,7 @@ namespace Audio
             if (firstRequest && GetSiblingNode())
             {
               gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-                GetSiblingNode(), AudioEventTypes::InterpolationDone, (void*)nullptr));
+                GetSiblingNode(), AudioEventTypes::InterpolationDone));
 
               // Set the final volume values on the non-threaded object
               gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&PanningNode::LeftVolume,
@@ -323,8 +333,7 @@ namespace Audio
         {
           float values[2] = { leftValue, rightValue };
           AudioFrame frame(values, 2);
-          frame.TranslateChannels(numberOfChannels);
-          memcpy(outputBuffer->Data() + (currentFrame * numberOfChannels), frame.Samples,
+          memcpy(outputBuffer->Data() + (currentFrame * numberOfChannels), frame.GetSamples(numberOfChannels),
             sizeof(float) * numberOfChannels);
         }
       }
@@ -332,7 +341,7 @@ namespace Audio
       AddBypass(outputBuffer);
 
       // Check for both volumes being at or near 1.0, and if true mark as not active
-      if (!CurrentData.Interpolating && IsWithinLimit(1.0f - LeftVolume, 0.0f, 0.01f)
+      if (!CurrentData.Interpolating && !SumToMono && IsWithinLimit(1.0f - LeftVolume, 0.0f, 0.01f)
         && IsWithinLimit(1.0f - RightVolume, 0.0f, 0.01f))
         Active = false;
 

@@ -71,6 +71,10 @@ ZilchDefineType(JointCreator, builder, type)
   ZilchBindOverloadedMethod(CreateWorldPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param));
   ZilchBindOverloadedMethod(CreateWorldPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
   ZilchBindOverloadedMethod(CreateLocalPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
+  ZilchBindOverloadedMethod(Create, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*));
+  ZilchBindOverloadedMethod(CreateWorldPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param));
+  ZilchBindOverloadedMethod(CreateWorldPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
+  ZilchBindOverloadedMethod(CreateLocalPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
 
   ZilchBindMethod(AddJointLimit);
   ZilchBindMethod(AddJointMotor);
@@ -127,23 +131,60 @@ Cog* JointCreator::CreateLocalPoints(Cog* objectA, Cog* objectB, StringParam joi
   return AttachInternal(info, jointName);
 }
 
-Cog* JointCreator::AttachInternal(ConnectionInfo& info, StringParam jointName)
+Cog* JointCreator::Create(Cog* objectA, Cog* objectB, Archetype* jointArchetype)
+{
+  String jointName;
+  if(!ObjectsValid(objectA, objectB, jointName))
+    return nullptr;
+
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  info.SetLocalPoints(Vec3::cZero, Vec3::cZero);
+  info.mLength = mLength;
+  return AttachInternal(info, jointName, jointArchetype);
+}
+
+Cog* JointCreator::CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param bothWorldPoints)
+{
+  String jointName;
+  if(!ObjectsValid(objectA, objectB, jointName))
+    return nullptr;
+
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  info.SetWorldPoint(bothWorldPoints);
+  info.mLength = mLength;
+  return AttachInternal(info, jointName, jointArchetype);
+}
+
+Cog* JointCreator::CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param worldPointA, Vec3Param worldPointB)
+{
+  String jointName;
+  if(!ObjectsValid(objectA, objectB, jointName))
+    return nullptr;
+
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  info.SetWorldPoints(worldPointA, worldPointB);
+  info.mLength = mLength;
+  return AttachInternal(info, jointName, jointArchetype);
+}
+
+Cog* JointCreator::CreateLocalPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param localPointA, Vec3Param localPointB)
+{
+  String jointName;
+  if(!ObjectsValid(objectA, objectB, jointName))
+    return nullptr;
+
+  ConnectionInfo info(objectA, objectB, mFlags.IsSet(JointCreatorFlags::AttachToWorld));
+  info.SetLocalPoints(localPointA, localPointB);
+  info.mLength = mLength;
+  return AttachInternal(info, jointName, jointArchetype);
+}
+
+Cog* JointCreator::AttachInternal(ConnectionInfo& info, StringParam jointName, Archetype* archetype)
 {
   ConfigureInfo(info);
-  Cog* cog = CreateJoint(jointName, info);
+  Cog* cog = CreateJoint(jointName, info, archetype);
   if(cog == nullptr)
     return nullptr;
-  
-  // Attach the joint to the common parent if it exists
-  if(mFlags.IsSet(JointCreatorFlags::AttachToCommonParent))
-  {
-    Cog* cogA = info.a;
-    Cog* cogB = info.b;
-    Cog* commonParent = FindCommonParent(cogA, cogB);
-
-    if(commonParent != nullptr)
-      cog->AttachToPreserveLocal(commonParent);
-  }
 
   Joint* joint = cog->has(Joint);
 
@@ -185,6 +226,9 @@ Cog* JointCreator::FindCommonParent(Cog* cogA, Cog* cogB)
 
 JointLimit* JointCreator::AddJointLimit(Cog* joint)
 {
+  if(joint == nullptr)
+    return nullptr;
+
   JointLimit* limit = new JointLimit();
   DefaultSerializer stream;
   limit->Serialize(stream);
@@ -195,6 +239,9 @@ JointLimit* JointCreator::AddJointLimit(Cog* joint)
 
 JointMotor* JointCreator::AddJointMotor(Cog* joint)
 {
+  if(joint == nullptr)
+    return nullptr;
+
   JointMotor* motor = new JointMotor();
   DefaultSerializer stream;
   motor->Serialize(stream);
@@ -205,6 +252,9 @@ JointMotor* JointCreator::AddJointMotor(Cog* joint)
 
 JointSpring* JointCreator::AddJointSpring(Cog* joint)
 {
+  if(joint == nullptr)
+    return nullptr;
+  
   JointSpring* spring = new JointSpring();
   DefaultSerializer stream;
   spring->Serialize(stream);
@@ -265,7 +315,7 @@ void JointCreator::SetAttachToCommonParent(bool attachToCommonParent)
 
 bool JointCreator::ObjectsValid(Cog* a, Cog* b, StringParam jointName)
 {
-  if(a->GetMarkedForDestruction() || b->GetMarkedForDestruction())
+  if(a == nullptr || b == nullptr || a->GetMarkedForDestruction() || b->GetMarkedForDestruction())
     return false;
 
   Transform* transformA = a->has(Transform);
@@ -318,11 +368,16 @@ void JointCreator::ConfigureInfo(ConnectionInfo& info)
     info.mLength = length;
 }
 
-Cog* JointCreator::CreateJoint(StringParam fileName, ConnectionInfo& info)
+Cog* JointCreator::CreateJoint(StringParam fileName, ConnectionInfo& info, Archetype* archetype)
 {
   // Create an object link, we dynamically add the appropriate joint type later
   Space* space = info.a->GetSpace();
-  Cog* cog = space->Create(ArchetypeManager::Find(CoreArchetypes::ObjectLink));
+  if(archetype == nullptr)
+    archetype = ArchetypeManager::Find(CoreArchetypes::ObjectLink);
+
+  Cog* cog = space->Create(archetype);
+  if(cog == nullptr || cog->has(ObjectLink) == nullptr)
+    cog = space->Create(ArchetypeManager::Find(CoreArchetypes::ObjectLink));
   if(cog == nullptr)
     return nullptr;
 
@@ -332,6 +387,18 @@ Cog* JointCreator::CreateJoint(StringParam fileName, ConnectionInfo& info)
   {
     ErrorIf(true, "Joint data file %s did not contain a ObjectLink.", fileName.c_str());
     return nullptr;
+  }
+
+  // Attach the joint to the common parent if it exists.
+  // This needs to happen before linking the objects up so the relative paths are computed correctly.
+  if(mFlags.IsSet(JointCreatorFlags::AttachToCommonParent))
+  {
+    Cog* cogA = info.a;
+    Cog* cogB = info.b;
+    Cog* commonParent = FindCommonParent(cogA, cogB);
+
+    if(commonParent != nullptr)
+      cog->AttachToPreserveLocal(commonParent);
   }
 
   objLink->SetCogAInternal(info.a);
@@ -348,7 +415,7 @@ Cog* JointCreator::CreateJoint(StringParam fileName, ConnectionInfo& info)
   // Now that the object is fully created, we can dynamically add the appropriate
   // joint type (as long as it's not an object link). Using add component by name
   // so I don't have to figure out how to create the component from it's name.
-  if(fileName != CoreArchetypes::ObjectLink)
+  if(fileName != CoreArchetypes::ObjectLink && !fileName.Empty())
     cog->AddComponentByName(fileName);
   return cog;
 }

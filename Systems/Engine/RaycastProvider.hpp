@@ -81,13 +81,16 @@ public:
 //-------------------------------------------------------------------RaycastProvider
 /// Base class for providing an interface for editor raycasting.
 /// This interface only supports raycasting and frustum casting at the moment.
-class RaycastProvider : public Object
+class RaycastProvider : public SafeId32Object
 {
 public:
   ZilchDeclareType(RaycastProvider, TypeCopyMode::ReferenceType);
 
   RaycastProvider() {mActive = true;}
   virtual ~RaycastProvider() {};
+
+  // Serialization
+  void Serialize(Serializer& stream) override;
 
   /// Fills out the hit items from a raycast into the result list.
   /// The list should be set to the desired capacity beforehand.
@@ -102,11 +105,14 @@ public:
 
 //-------------------------------------------------------------------Raycaster
 /// Stores all of the providers and manages casting and merging through all of them.
-class Raycaster
+class Raycaster : public SafeId32
 {
 public:
   ZilchDeclareType(Raycaster, TypeCopyMode::ReferenceType);
   ~Raycaster();
+
+  void Serialize(Serializer& stream);
+  void SerializeProviders(Serializer& stream);
 
   /// Adds a new provider (that is owned by this class) to cast with during editor casts.
   void AddProvider(RaycastProvider* provider);
@@ -128,15 +134,11 @@ class RaycasterMetaComposition : public MetaComposition
 public:
   ZilchDeclareType(RaycasterMetaComposition, TypeCopyMode::ReferenceType);
 
-  RaycasterMetaComposition(size_t raycasterClassOffset);
+  RaycasterMetaComposition();
 
   uint GetComponentCount(HandleParam owner) override;
   Handle GetComponentAt(HandleParam owner, uint index) override;
   Handle GetComponent(HandleParam owner, BoundType* componentType) override;
-
-  Raycaster* GetRaycaster(HandleParam instance);
-
-  size_t mRaycasterClassOffset;
 };
 
 }//namespace Zero

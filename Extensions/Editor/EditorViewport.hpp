@@ -107,6 +107,7 @@ public:
   void OnObjectPoll(ObjectPollEvent* e);
   void OnCaptureContext(CommandCaptureContextEvent* e);
   void OnResourcesRemoved(ResourceEvent* e);
+  void OnResourceModified(ResourceEvent* event);
   void OnMouseEnter(MouseEvent* e);
   void OnMiddleMouseDown(MouseEvent* e);
   void OnRightMouseDown(MouseEvent* e);
@@ -120,7 +121,7 @@ public:
   void OnRightMouseUp(MouseEvent* e);
   void OnMouseScroll(MouseEvent* e);
   void OnMetaDrop(MetaDropEvent* e);
-  void OnMouseDrop(MouseEvent* e);
+  void OnMouseFileDrop(MouseFileDropEvent* e);
   void OnKeyDown(KeyboardEvent* e);
   void OnKeyUp(KeyboardEvent* e);
   void OnFocusLost(FocusEvent* focusEvent);

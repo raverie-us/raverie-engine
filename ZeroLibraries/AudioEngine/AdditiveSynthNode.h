@@ -71,8 +71,8 @@ namespace Audio
   class AdditiveSynthNode : public SimpleCollapseNode
   {
   public:
-    AdditiveSynthNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool threaded = false);
+    AdditiveSynthNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool threaded = false);
 
     // Adds a new note harmonic
     void AddHarmonic(HarmonicData harmonic);

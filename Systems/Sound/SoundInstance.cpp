@@ -58,6 +58,8 @@ ZilchDefineType(SoundInstance, builder, type)
   ZilchBindGetterSetter(Time);
   ZilchBindGetter(FileLength);
   ZilchBindGetterSetter(EndTime);
+  ZilchBindGetterSetter(LoopStartTime);
+  ZilchBindGetterSetter(LoopEndTime);
   ZilchBindGetterSetter(CustomEventTime);
   ZilchBindGetter(SoundName);
 
@@ -74,11 +76,9 @@ ZilchDefineType(SoundInstance, builder, type)
 
 //**************************************************************************************************
 SoundInstance::SoundInstance(Status& status, SoundSpace* space, Audio::SoundAsset* asset, 
-    float volume, float pitch) :
-  mAssetObject(asset),
-  mSpace(space),
-  mIsPaused(false),
-  mIsPlaying(false)
+    float volume, float pitch) : 
+  mSpace(space), 
+  mAssetObject(asset)
 {
   // Create the SoundInstance
   Audio::SoundInstanceNode* instance = new Audio::SoundInstanceNode(status, "SoundInstance", 
@@ -88,7 +88,7 @@ SoundInstance::SoundInstance(Status& status, SoundSpace* space, Audio::SoundAsse
   {
     instance->SetVolume(volume, 0.0f);
     if (pitch != 0.0f)
-      instance->SetPitch((int)(Z::gSound->PitchToSemitones(pitch) * 100.0f), 0.0f);
+      instance->SetPitch(Z::gSound->PitchToSemitones(pitch), 0.0f);
 
     SoundNode* node = new SoundNode();
     node->mNode = instance;
@@ -108,10 +108,7 @@ SoundInstance::SoundInstance(Status& status, SoundSpace* space, Audio::SoundAsse
 //**************************************************************************************************
 float SoundInstance::GetVolume()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetVolume();
-  else
-    return 0.0f;
+  return GetNode()->GetVolume();
 }
 
 //**************************************************************************************************
@@ -123,17 +120,13 @@ void SoundInstance::SetVolume(float newVolume)
 //**************************************************************************************************
 void SoundInstance::InterpolateVolume(float newVolume, float interpolationTime)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetVolume(newVolume, interpolationTime);
+  GetNode()->SetVolume(Math::Max(newVolume, 0.0f), interpolationTime);
 }
 
 //**************************************************************************************************
 float SoundInstance::GetDecibels()
 {
-  if (mSoundNode->mNode)
-    return Z::gSound->VolumeToDecibels(((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetVolume());
-  else
-    return 0.0f;
+  return Z::gSound->VolumeToDecibels(GetNode()->GetVolume());
 }
 
 //**************************************************************************************************
@@ -145,18 +138,13 @@ void SoundInstance::SetDecibels(float decibels)
 //**************************************************************************************************
 void SoundInstance::InterpolateDecibels(float decibels, float interpolationTime)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetVolume(Z::gSound->DecibelsToVolume(decibels), 
-      interpolationTime);
+  GetNode()->SetVolume(Z::gSound->DecibelsToVolume(decibels), interpolationTime);
 }
 
 //**************************************************************************************************
 float SoundInstance::GetPitch()
 {
-  if (mSoundNode->mNode)
-    return Z::gSound->SemitonesToPitch(((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetPitch() / 100.0f);
-  else
-    return 0.0f;
+  return Z::gSound->SemitonesToPitch(GetNode()->GetPitch());
 }
 
 //**************************************************************************************************
@@ -168,18 +156,13 @@ void SoundInstance::SetPitch(float newPitch)
 //**************************************************************************************************
 void SoundInstance::InterpolatePitch(float newPitch, float interpolationTime)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetPitch((int)(Z::gSound->PitchToSemitones(newPitch) 
-      * 100.0f), interpolationTime);
+  GetNode()->SetPitch(Z::gSound->PitchToSemitones(newPitch), interpolationTime);
 }
 
 //**************************************************************************************************
 float SoundInstance::GetSemitones()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetPitch() / 100.0f;
-  else
-    return 0.0f;
+  return GetNode()->GetPitch();
 }
 
 //**************************************************************************************************
@@ -191,36 +174,31 @@ void SoundInstance::SetSemitones(float newSemitones)
 //**************************************************************************************************
 void SoundInstance::InterpolateSemitones(float newSemitones, float interpolationTime)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetPitch((int)(newSemitones * 100), interpolationTime);
+  GetNode()->SetPitch(newSemitones, interpolationTime);
 }
 
 //**************************************************************************************************
 bool SoundInstance::GetPaused()
 {
-  return mIsPaused;
+  return GetNode()->GetPaused();
 }
 
 //**************************************************************************************************
 void SoundInstance::SetPaused(bool pause)
 {
-  mIsPaused = pause;
-
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetPaused(pause);
+  GetNode()->SetPaused(pause);
 }
 
 //**************************************************************************************************
 void SoundInstance::Stop()
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->Stop();
+  GetNode()->Stop();
 }
 
 //**************************************************************************************************
 bool SoundInstance::GetIsPlaying()
 {
-  return mIsPlaying;
+  return GetNode()->IsPlaying();
 }
 
 //**************************************************************************************************
@@ -232,33 +210,25 @@ SoundNode* SoundInstance::GetSoundNode()
 //**************************************************************************************************
 bool SoundInstance::GetLooping()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetLooping();
-  else
-    return false;
+  return GetNode()->GetLooping();
 }
 
 //**************************************************************************************************
 void SoundInstance::SetLooping(bool loop)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetLooping(loop);
+  GetNode()->SetLooping(loop);
 }
 
 //**************************************************************************************************
 float SoundInstance::GetTime()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetTime();
-  else
-    return 0.0f;
+  return GetNode()->GetTime();
 }
 
 //**************************************************************************************************
 void SoundInstance::SetTime(float seconds)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->JumpTo(seconds);
+  GetNode()->JumpTo(seconds);
 }
 
 //**************************************************************************************************
@@ -270,56 +240,75 @@ float SoundInstance::GetFileLength()
 //**************************************************************************************************
 float SoundInstance::GetEndTime()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetEndTime();
-  else
-    return 0.0f;
+  return GetNode()->GetEndTime();
 }
 
 //**************************************************************************************************
 void SoundInstance::SetEndTime(float seconds)
 {
+  GetNode()->SetEndTime(seconds);
+}
+
+//**************************************************************************************************
+float SoundInstance::GetLoopStartTime()
+{
   if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetEndTime(seconds);
+    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetLoopStartTime();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void SoundInstance::SetLoopStartTime(float seconds)
+{
+  if (mSoundNode->mNode)
+    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetLoopStartTime(seconds);
+}
+
+//**************************************************************************************************
+float SoundInstance::GetLoopEndTime()
+{
+  if (mSoundNode->mNode)
+    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetLoopEndTime();
+  else
+    return 0.0f;
+}
+
+//**************************************************************************************************
+void SoundInstance::SetLoopEndTime(float seconds)
+{
+  if (mSoundNode->mNode)
+    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetLoopEndTime(seconds);
 }
 
 //**************************************************************************************************
 float SoundInstance::GetBeatsPerMinute()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetBeatsPerMinute();
-  else
-    return 0.0f;
+  return GetNode()->GetBeatsPerMinute();
 }
 
 //**************************************************************************************************
 void SoundInstance::SetBeatsPerMinute(float beats)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetBeatsPerMinute(beats);
+  GetNode()->SetBeatsPerMinute(beats);
 }
 
 //**************************************************************************************************
 void SoundInstance::SetTimeSignature(float beats, float noteType)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetTimeSignature((int)beats, (int)noteType);
+  GetNode()->SetTimeSignature((int)beats, (int)noteType);
 }
 
 //**************************************************************************************************
 float SoundInstance::GetCustomEventTime()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetCustomNotifyTime();
-  else
-    return 0.0f;
+  return GetNode()->GetCustomNotifyTime();
 }
 
 //**************************************************************************************************
 void SoundInstance::SetCustomEventTime(float seconds)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetCustomNotifyTime(seconds);
+  GetNode()->SetCustomNotifyTime(seconds);
 }
 
 //**************************************************************************************************
@@ -329,13 +318,10 @@ Zero::StringParam SoundInstance::GetSoundName()
 }
 
 //**************************************************************************************************
-void SoundInstance::Play(bool loop, SoundTag* tag, Audio::SoundNode* outputNode, bool startPaused)
+void SoundInstance::Play(bool loop, Audio::SoundNode* outputNode, bool startPaused)
 {
   // Save a pointer to the SoundInstance
   Audio::SoundInstanceNode* instance = (Audio::SoundInstanceNode*)mSoundNode->mNode;
-
-  if (tag)
-    tag->TagSound(this);
   
   instance->SetLooping(loop);
 
@@ -346,33 +332,21 @@ void SoundInstance::Play(bool loop, SoundTag* tag, Audio::SoundNode* outputNode,
   else if (mSpace)
     mSpace->GetInputNode()->AddInputNode(mSoundNode);
 
-  mIsPlaying = true;
-
   if (!startPaused)
     instance->SetPaused(false);
-  else
-    mIsPaused = true;
 }
 
 //**************************************************************************************************
-void SoundInstance::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
+void SoundInstance::SendAudioEvent(Audio::AudioEventTypes::Enum eventType)
 {
   if (eventType == Audio::AudioEventTypes::InstanceFinished)
   {
     SoundInstanceEvent event(this);
     DispatchEvent(Events::SoundStopped, &event);
-    mIsPlaying = false;
 
     // Remove from any SoundTags
     for (unsigned i = 0; i < SoundTags.Size(); ++i)
       SoundTags[i]->SoundInstanceList.EraseValue(Handle(this));
-
-    // Remove the SoundNode
-    if (mSoundNode->mNode)
-    {
-      mSoundNode->mNode->DeleteThisNode();
-      mSoundNode->mNode = nullptr;
-    }
   }
   else if (eventType == Audio::AudioEventTypes::InstanceLooped)
   {
@@ -420,7 +394,21 @@ void SoundInstance::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType,
     DispatchEvent(Events::AudioInterpolationDone, &event);
   }
   else
-    mSoundNode->SendAudioEvent(eventType, data);
+    mSoundNode->SendAudioEvent(eventType);
+}
+
+//**************************************************************************************************
+void SoundInstance::SendAudioEventData(Audio::EventData* data)
+{
+  mSoundNode->SendAudioEventData(data);
+}
+
+//**************************************************************************************************
+Audio::SoundInstanceNode* SoundInstance::GetNode()
+{
+  ErrorIf(!mSoundNode->mNode, "SoundInstance node pointer is null");
+
+  return (Audio::SoundInstanceNode*)(mSoundNode->mNode);
 }
 
 }//namespace Zero

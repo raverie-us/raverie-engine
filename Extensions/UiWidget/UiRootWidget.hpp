@@ -120,6 +120,9 @@ public:
   /// The widget that the mouse is currently over.
   UiWidget* GetMouseOverWidget();
 
+  /// The widget that the mouse was pressed down on.
+  UiWidget* GetMouseDownWidget();
+
   /// Used for focus tab logic. This is for keyboard events that have
   /// bubbled through the widget system.
   void OnWidgetKeyDown(KeyboardEvent* e);

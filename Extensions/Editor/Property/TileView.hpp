@@ -73,7 +73,6 @@ public:
   virtual void OnMouseExit(MouseEvent* event);
   virtual void OnMouseHover(MouseEvent* event);
   virtual void OnMouseDrag(MouseEvent* event);
-  virtual void OnMouseRightClick(MouseEvent* event);
   void OnValueChanged(ObjectEvent* event);
   void OnTextChanged(TextUpdatedEvent* event);
 

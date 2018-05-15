@@ -1,9 +1,12 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------ Model
+//**************************************************************************************************
 ZilchDefineType(Model, builder, type)
 {
   ZeroBindComponent();
@@ -14,23 +17,27 @@ ZilchDefineType(Model, builder, type)
   ZilchBindGetterSetterProperty(Mesh);
 }
 
+//**************************************************************************************************
 void Model::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
   ConnectThisTo(MeshManager::GetInstance(), Events::ResourceModified, OnMeshModified);
 }
 
+//**************************************************************************************************
 void Model::Serialize(Serializer& stream)
 {
   Graphical::Serialize(stream);
   SerializeResourceName(mMesh, MeshManager);
 }
 
+//**************************************************************************************************
 Aabb Model::GetLocalAabb()
 {
   return mMesh->mAabb;
 }
 
+//**************************************************************************************************
 void Model::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
@@ -51,6 +58,7 @@ void Model::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
+//**************************************************************************************************
 void Model::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
@@ -60,23 +68,27 @@ void Model::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock
   viewNode.mLocalToPerspective = viewBlock.mViewToPerspective * viewNode.mLocalToView;
 }
 
+//**************************************************************************************************
 bool Model::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   rayCast.mObject = GetOwner();
   return mMesh->TestRay(rayCast, mTransform->GetWorldMatrix());
 }
 
+//**************************************************************************************************
 bool Model::TestFrustum(const Frustum& frustum, CastInfo& castInfo)
 {
   Frustum localFrustum = frustum.TransformInverse(mTransform->GetWorldMatrix());
   return mMesh->TestFrustum(localFrustum);
 }
 
+//**************************************************************************************************
 Mesh* Model::GetMesh()
 {
   return mMesh;
 }
 
+//**************************************************************************************************
 void Model::SetMesh(Mesh* mesh)
 {
   if (mesh == nullptr || mesh == mMesh)
@@ -86,6 +98,7 @@ void Model::SetMesh(Mesh* mesh)
   UpdateBroadPhaseAabb();
 }
 
+//**************************************************************************************************
 void Model::OnMeshModified(ResourceEvent* event)
 {
   if ((Mesh*)event->EventResource == mMesh)

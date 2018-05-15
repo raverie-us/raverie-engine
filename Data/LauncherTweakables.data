@@ -504,7 +504,6 @@ Tweakables
 				var SecondaryColor = Vec4{0.356862992, 0.266667008, 0.258823991, 1}
 				var MouseOverColor = Vec4{0.541176021, 0.247059003, 0.247235, 1}
 				var SelectedColor = Vec4{0.819999993, 0.180399999, 0.180784002, 0.300000012}
-				var ToolTipColor = Vec4{0.904999971, 0.230774999, 0.230774999, 1}
 			}
 			ValidRows_ 
 			{
@@ -512,7 +511,6 @@ Tweakables
 				var SecondaryColor = Vec4{0.258823991, 0.258823991, 0.258823991, 1}
 				var MouseOverColor = Vec4{0.247059003, 0.407842994, 0.541176021, 0.810000002}
 				var SelectedColor = Vec4{0, 0.501960993, 0.92156899, 0.270000011}
-				var ToolTipColor = Vec4{1, 1, 1, 1}
 			}
 		}
 		Viewport_ 

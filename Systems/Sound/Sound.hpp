@@ -30,7 +30,6 @@ public:
 private:
   Audio::SoundAssetFromFile* mSoundAsset;
   bool mStreaming;
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override {}
 
   void CreateAsset(Status& status, StringParam assetName, StringParam fileName, bool streaming);
 
@@ -38,6 +37,7 @@ private:
   friend class SoundEntry;
   friend class SoundBuffer;
   friend class SoundLoader;
+  friend class GranularSynthNode;
 };
 
 class SoundDisplay : public MetaDisplay

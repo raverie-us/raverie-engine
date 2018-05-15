@@ -24,7 +24,6 @@ Image::Image()
   Width = 0;
   Height = 0;
   SizeInBytes = 0;
-  UserIndex = -1;
   Data = nullptr;
 }
 
@@ -42,7 +41,6 @@ void Image::Deallocate()
     Width = 0;
     Height = 0;
     SizeInBytes = 0;
-    UserIndex = -1;
   }
 }
 
@@ -64,6 +62,7 @@ void Image::Allocate(int width, int height)
   Data = (ImagePixel*)zAllocate(SizeInBytes);
   Height = height;
   Width = width;
+  memset(Data, 0, SizeInBytes);
 }
 
 void Image::Swap(Image* other)
@@ -284,34 +283,36 @@ void FillPixelBorders(Image* image, IntVec2 topLeft, IntVec2 bottomRight, int bo
   }
 }
 
-void AddPixelBorders(Image* input, Image* output, int frameWidth, int frameHeight, int borderWidth)
+void AddPixelBorders(Image* image, int frameWidth, int frameHeight, int borderWidth)
 {
-  int width = input->Width;
-  int height = input->Height;
+  int width = image->Width;
+  int height = image->Height;
   int framesX = width / frameWidth;
   int framesY = height / frameHeight;
 
-  int outputWidth = width + (framesX - 1) * borderWidth * 2;
-  int outputHeight = height + (framesY - 1) * borderWidth * 2;
+  int outputWidth = width + framesX * borderWidth * 2;
+  int outputHeight = height + framesY * borderWidth * 2;
 
-  output->Allocate(outputWidth, outputHeight);
-  output->ClearColorTo(0);
+  Image output;
+  output.Allocate(outputWidth, outputHeight);
 
   for (int y = 0; y < framesY; ++y)
   {
     int sourceY = y * frameHeight;
-    int destY = y * (frameHeight + borderWidth * 2);
+    int destY = y * (frameHeight + borderWidth * 2) + borderWidth;
 
     for (int x = 0; x < framesX; ++x)
     {
       int sourceX = x * frameWidth;
-      int destX = x * (frameWidth + borderWidth * 2);
+      int destX = x * (frameWidth + borderWidth * 2) + borderWidth;
 
-      CopyImage(output, input, destX, destY, sourceX, sourceY, frameWidth, frameHeight);
+      CopyImage(&output, image, destX, destY, sourceX, sourceY, frameWidth, frameHeight);
 
-      FillPixelBorders(output, IntVec2(destX, destY), IntVec2(destX + frameWidth - 1, destY + frameHeight - 1), borderWidth);
+      FillPixelBorders(&output, IntVec2(destX, destY), IntVec2(destX + frameWidth - 1, destY + frameHeight - 1), borderWidth);
     }
   }
+
+  image->Swap(&output);
 }
 
 }

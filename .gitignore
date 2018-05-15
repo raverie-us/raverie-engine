@@ -42,3 +42,4 @@ enc_temp_folder/
 *.cache
 *.TMP
 *.d
+DevTools/

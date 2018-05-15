@@ -239,6 +239,9 @@ void ResourceLibrary::Remove(Resource* resource)
   // in the array was the last reference)
   HandleOf<Resource> resourceHandle = resource;
 
+  // Allow resources to do any required cleanup before being removed, same as when a library is unloaded.
+  resource->Unload();
+
   Resources.EraseValueError(resourceHandle);
 
   // Remove zilch resources from their containers
@@ -465,6 +468,11 @@ bool AddDependencies(Module& module, ResourceLibrary* library,
 //**************************************************************************************************
 void ResourceLibrary::OnScriptProjectPreParser(ParseEvent* e)
 {
+  // This isnt' the best solution, however because we can't intercept the plugin library before
+  // its done we need to add extensions for the plugins here (such as .YourComponent).
+  forRange(SwapLibrary& swapLibrary, mSwapPlugins.Values())
+    EngineLibraryExtensions::AddNativeExtensions(*e->Builder, swapLibrary.GetNewestLibrary()->BoundTypes);
+
   EngineLibraryExtensions::AddExtensionsPreCompilation(*e->Builder, this);
 }
 

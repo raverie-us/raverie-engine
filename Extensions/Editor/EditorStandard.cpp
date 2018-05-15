@@ -252,7 +252,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
 
   // Editor Ui
   ZilchInitializeType(ObjectView);
-  ZilchInitializeType(HotKeyCommands);
   ZilchInitializeType(HotKeyEditor);
   ZilchInitializeType(MetaDropEvent);
   ZilchInitializeType(LibraryView);
@@ -272,6 +271,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(PropertyWidget);
   ZilchInitializeType(PropertyWidgetObject);
   ZilchInitializeType(AddObjectWidget);
+  ZilchInitializeType(UiLegacyToolTip);
   
   // Animator
   ZilchInitializeType(AnimationEditorData);
@@ -300,6 +300,7 @@ void EditorLibrary::Initialize()
   EditorPackageLoader::Initialize();
   ValueEditorFactory::Initialize();
   ColorScheme::Initialize();
+  HotKeyCommands::Initialize();
 
   RegisterGeneralEditors();
   RegisterEngineEditors();
@@ -307,12 +308,16 @@ void EditorLibrary::Initialize()
   RegisterHotKeyEditors();
   RegisterAnimationTrackViewEditors();
 
+  // Raycaster should start expanded when opening the property grid
+  PropertyWidgetObject::mExpandedTypes.Insert("Raycaster");
+
   InitializeResourceManager(TilePaletteSourceManager);
 }
 
 //**************************************************************************************************
 void EditorLibrary::Shutdown()
 {
+  HotKeyCommands::Destroy();
   ColorScheme::Destroy();
   ValueEditorFactory::Destroy();
   EditorPackageLoader::Destroy();

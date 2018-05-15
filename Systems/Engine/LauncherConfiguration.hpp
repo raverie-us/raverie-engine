@@ -62,17 +62,21 @@ public:
   /// Whether or not to display the build and build state on each
   /// project in the Recent Projects page.
   bool mDisplayBuildOnProjects;
-  bool mAutoCheckForMajorUpdates;
+  bool mAutoCheckForLauncherUpdates;
   bool mShowDevelopmentBuilds;
   bool mShowExperimentalBranches;
   bool mRunDebuggerMode;
   /// Should the launcher only show the preferred (current) platform builds or show all.
   /// Hardcoded to true for now since we only have one platform.
   bool mDisplayOnlyPreferredPlatform;
+  /// How often the launcher should check for new builds/templates/etc...
+  float mAutoUpdateFrequencyInSeconds;
 
   /// Number used to force the launcher to reinstall all versions
   int mForcedUpdateVersion;
   static int mCurrentForcedUpdateVersionNumber;
+  static float mDefaultReloadFrequency;
+  float mNewLauncherUpdateCheckFrequency;
 
   String mCachedData;
 

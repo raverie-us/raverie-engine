@@ -234,31 +234,48 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
   Cog* cog = object.Get<Cog*>();
   ReturnIf(cog == nullptr, MetaTransformInstance(), "Invalid object given");
 
+  Handle instanceHandle = nullptr;
+  BoundType* type = nullptr;
+
+  // Try to get a transform or object link
   Transform* transform = cog->has(Transform);
-  if (transform == nullptr)
+  if(transform != nullptr)
+  {
+    instanceHandle = transform;
+    type = ZilchTypeId(Transform);
+  }
+  else
+  {
+    ObjectLink* objectLink = cog->has(ObjectLink);
+    if(objectLink != nullptr)
+    {
+      instanceHandle = objectLink;
+      type = ZilchTypeId(ObjectLink);
+    }
+  }
+
+  if(type == nullptr)
     return MetaTransformInstance();
 
-  BoundType* t = ZilchTypeId(Transform);
-
-  MetaTransformInstance instance(transform);
+  MetaTransformInstance instance(instanceHandle);
   instance.mSpace = cog->GetSpace();
-  instance.mLocalTranslation = t->GetProperty("Translation");
-  instance.mLocalRotation = t->GetProperty("Rotation");
-  instance.mLocalScale = t->GetProperty("Scale");
+  instance.mLocalTranslation = type->GetProperty("Translation");
+  instance.mLocalRotation = type->GetProperty("Rotation");
+  instance.mLocalScale = type->GetProperty("Scale");
 
-  instance.mWorldTranslation = t->GetProperty("WorldTranslation");
-  instance.mWorldRotation = t->GetProperty("WorldRotation");
-  instance.mWorldScale = t->GetProperty("WorldScale");
+  instance.mWorldTranslation = type->GetProperty("WorldTranslation");
+  instance.mWorldRotation = type->GetProperty("WorldRotation");
+  instance.mWorldScale = type->GetProperty("WorldScale");
 
   if (Cog* parent = cog->GetParent())
   {
     if (Transform* parentTransform = parent->has(Transform))
     {
       instance.mParentInstance = parentTransform;
+      BoundType* t = ZilchTypeId(Transform);
       instance.mParentWorldMatrix = t->GetProperty("WorldMatrix");
     }
   }
-
   return instance;
 }
 

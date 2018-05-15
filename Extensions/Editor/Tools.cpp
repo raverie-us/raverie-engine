@@ -3,7 +3,7 @@
 /// \file Tools.cpp
 /// Implementation of the Tools classes.
 /// 
-/// Authors: Chris Peters
+/// Authors: Chris Peters, Dane Curbow
 /// Copyright 2010-2012, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -231,12 +231,13 @@ ZilchDefineType(SelectTool, builder, type)
   ZilchBindFieldProperty(mArchetypeSelect);
   ZilchBindFieldProperty(mRootSelect);
   ZilchBindFieldProperty(mSmartGroupSelect);
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZilchBindMethod(RayCast);
+  ZilchBindMethod(SmartSelect);
 
   ZeroBindEvent(Events::SelectToolPreSelect, ViewportMouseEvent);
 
-  type->Add(new RaycasterMetaComposition(offsetof(SelectTool, mRaycaster)));
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 //******************************************************************************
@@ -378,10 +379,13 @@ bool SameRootCompare(Cog* toSelect, Cog* hitCog)
 //******************************************************************************
 bool SameArchetypeCompare(Cog* toSelect, Cog* hitCog)
 {
-  if (toSelect == nullptr || hitCog == nullptr)
+  Cog* toSelectArchetype = toSelect->FindRootArchetype();
+  Cog* hitCogArchetype = hitCog->FindRootArchetype();
+
+  if (toSelect == nullptr || hitCog == nullptr || toSelectArchetype == nullptr || hitCogArchetype == nullptr)
     return false;
 
-  return toSelect->FindRootArchetype() == hitCog->FindRootArchetype();
+  return toSelectArchetype == hitCogArchetype;
 }
 
 //******************************************************************************
@@ -406,46 +410,68 @@ Cog* SelectTool::WalkRayCast(Cog* toSelect, RaycastResultList& result, CogSelect
 }
 
 //******************************************************************************
-bool SelectTool::ArchetypeSelect(Cog* current, Cog* toSelect, RaycastResultList& result)
+Cog* SelectTool::ArchetypeSelect(MetaSelection* selection, Cog* toSelect)
 {
-  MetaSelection* selection = Z::gEditor->mSelection;
-
+  Cog* nearestArchetype = toSelect->FindNearestArchetype();
+  // current is used to check the context of the selection in relation to the root of a hierarchy during single selection operation
   Cog* lastHitArchetype = nullptr;
+  Cog* current = selection->GetPrimaryAs<Cog>();
   if (current != nullptr)
     lastHitArchetype = current->FindNearestArchetype();
-  
-  Cog* nearestArchetype = toSelect->FindNearestArchetype();
 
   // we are not selecting an object within an archetype
   if (nearestArchetype == nullptr)
-    return false;
-  
-  // check whether we are selecting the last hit archetype
-  if (lastHitArchetype == toSelect)
-  {
-    // ray cast and discard the object as we already selected it and might be 
-    // attempting to select a child object contained within the parents aabb
-    toSelect = WalkRayCast(toSelect, result, SameArchetypeCompare);
-  }
+    return nullptr;
 
-  // if the object we are attempting to select is a sibling of the last selected object, select it
-  if(current && current->GetParent() == toSelect->GetParent())
+  // if the object we are attempting to select any sibling of the current nearest archetype select it
+  if(current && current->FindNearestArchetype() == toSelect->FindNearestArchetype())
   {
-    selection->SelectOnly(toSelect);
-    return true;
+    return toSelect;
   }
 
   // check if we are attempting to selected an object within the context of the last
   // selected archetype
-  if (nearestArchetype == lastHitArchetype)
+  if (nearestArchetype->IsDescendant(lastHitArchetype) || selection->Contains(nearestArchetype))
   {
-    selection->SelectOnly(toSelect);
-    return true;
+    return toSelect;
   }
 
   // otherwise we should just select the nearest archetype
-  selection->SelectOnly(nearestArchetype);
-  return true;
+  return nearestArchetype;
+}
+
+//******************************************************************************
+Cog* SelectTool::SmartSelect(MetaSelection* selection, Cog* toSelect, bool rootSelect, bool archetypeSelect)
+{
+  Cog* root = toSelect->FindRoot();
+  // current is used to check the context of the selection in relation to the root of a hierarchy during single selection operation
+  Cog* current = selection->GetPrimaryAs<Cog>();
+  Cog* finalSelect = nullptr;
+
+  // Are we already in the context of the root?
+  if (selection->Contains(root) || root->IsDescendant(current))
+  {
+    // archetype select is enabled, attempt archetype selection
+    if (archetypeSelect)
+    {
+      finalSelect = ArchetypeSelect(selection, toSelect);
+    }
+  }
+  // we are not in the context of the root so select it
+  else
+  {
+    if (rootSelect)
+      finalSelect = root;
+    else
+      finalSelect = ArchetypeSelect(selection, toSelect);
+  }
+
+  // We have found the object to select
+  if (finalSelect)
+    return finalSelect;
+
+  // We were selecting an object that is not an archetype and root select is not enabled
+  return toSelect;
 }
 
 //******************************************************************************
@@ -468,7 +494,10 @@ void SelectTool::Select(ViewportMouseEvent* e)
       if (selection->Contains(toSelect))
         selection->Remove(toSelect);
       else
+      {
+        toSelect = SmartSelect(selection, toSelect, mRootSelect, mArchetypeSelect);
         selection->Add(toSelect, SendsEvents::False);
+      }
     }
     // archetype and root select are not enabled so just select the object the user clicked on
     else if (!mArchetypeSelect && !mRootSelect)
@@ -477,45 +506,8 @@ void SelectTool::Select(ViewportMouseEvent* e)
     }
     else
     {
-      Cog* root = toSelect->FindRoot();
-      Cog* current = selection->GetPrimaryAs<Cog>();
-      bool selected = false;
-
-      // Are we already in the context of the root?
-      if (current == root || root->IsDescendant(current))
-      {
-        // archetype select is enabled, attempt archetype selection
-        if (mArchetypeSelect)
-          selected  = ArchetypeSelect(current, toSelect, result);
-        
-        // if root select is enabled and we haven't selected anything
-        // attempt to select an object within the hierarchy
-        if (selected == false && mRootSelect)
-        {
-          // We have already selected the root so attempt to select anything contained within the roots aabb
-          if (toSelect == current && toSelect == root)
-            toSelect = WalkRayCast(toSelect, result, SameRootCompare);
-          selection->SelectOnly(toSelect);
-          selected = true;
-        }
-      }
-      // we are not in the context of the root so select it
-      else
-      {
-        if (mRootSelect)
-        {
-          selection->SelectOnly(root);
-          selected = true;
-        }
-        else
-        {
-          selected = ArchetypeSelect(current, toSelect, result);
-        }
-      }
-
-      // We were selecting an object that is not an archetype and root select is not enabled
-      if (selected == false)
-        selection->SelectOnly(toSelect);
+      toSelect = SmartSelect(selection, toSelect, mRootSelect, mArchetypeSelect);
+      selection->SelectOnly(toSelect);
     }
 
     selection->FinalSelectionChanged();
@@ -645,9 +637,9 @@ ZilchDefineType(CreationTool, builder, type)
   ZilchBindFieldProperty(mDepth);
   ZilchBindFieldProperty(mDepthPlane);
 
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 
-  type->Add(new RaycasterMetaComposition(offsetof(CreationTool, mRaycaster)));
+  ZilchBindFieldProperty(mRaycaster);
 }
 
 //******************************************************************************
@@ -713,9 +705,20 @@ void CreationTool::UpdateMouse(Viewport* viewport, Vec2 screenPosition)
 Cog* CreationTool::CreateAt(Viewport* viewport, Archetype* archetype, 
                             Vec3Param position)
 {
+  // Cannot create GameSession or Space
+  BoundType* cogType = archetype->mStoredType;
+  if (cogType->IsA(ZilchTypeId(GameSession)) || cogType->IsA(ZilchTypeId(Space)))
+  {
+    String message = String::Format("Creation tool cannot create Cogs of type %s", cogType->Name.c_str());
+    DoNotifyWarning("Cannot Create Cog", message);
+    return nullptr;
+  }
+
   Space* space = viewport->GetTargetSpace();
   Cog* object = CreateFromArchetype(Z::gEditor->mQueue, space, archetype,  position);
-  Z::gEditor->SelectOnly(object);
+  MetaSelection* selection = Z::gEditor->GetSelection();
+  selection->SelectOnly(object);
+  selection->FinalSelectionChanged();
 
   // Mark the transform as modified 
   object->MarkTransformModified();
@@ -872,7 +875,7 @@ ZilchDefineType(ObjectConnectingTool, builder, type)
   ZeroBindDependency(MouseCapture);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
 }
 
 //******************************************************************************
@@ -966,7 +969,7 @@ void ObjectConnectingTool::OnToolDeactivate(Event*)
 ZilchDefineType(ParentingTool, builder, type)
 {
   ZeroBindComponent();
-  ZeroBindTag(Tags::Tool);
+  type->AddAttribute(ObjectAttributes::cTool);
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   ZilchBindFieldProperty(mMaintainPosition);

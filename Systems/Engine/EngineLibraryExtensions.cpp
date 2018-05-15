@@ -21,19 +21,27 @@ void ProcessComponentInterfaces(BoundType* type);
 //**************************************************************************************************
 void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
 {
+  return AddNativeExtensions(builder, builder.BoundTypes);
+}
+
+//**************************************************************************************************
+void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder, BoundTypeMap& boundTypes)
+{
   BoundType* resourceType = ZilchTypeId(Resource);
 
-  forRange(BoundType* type, builder.BoundTypes.Values())
+  forRange(BoundType* type, boundTypes.Values())
   {
     // Add Resource.Find functions
     if(type->IsA(resourceType) && !type->HasAttribute(ObjectAttributes::cResourceInterface))
       AddResourceFind(builder, type);
 
-    if (type->IsEnumOrFlags())
+    // The only reason we need to check if 'EnumMetaSerialization' already exists is because
+    // we call this for a plugin library (more than once unfortunately).
+    if (type->IsEnumOrFlags() && type->has(EnumMetaSerialization) == nullptr)
       type->Add(new EnumMetaSerialization(type));
   }
 
-  MetaLibraryExtensions::AddNativeExtensions(builder);
+  MetaLibraryExtensions::AddNativeExtensions(builder, boundTypes);
 }
 
 //**************************************************************************************************

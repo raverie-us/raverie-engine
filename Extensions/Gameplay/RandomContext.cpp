@@ -28,9 +28,13 @@ ZilchDefineType(RandomContext, builder, type)
   ZilchBindMethod(Real);
   ZilchBindMethod(DoubleReal);
   ZilchBindMethod(UnitVector2);
+  ZilchBindMethod(UnitReal2);
   ZilchBindMethod(Vector2);
+  ZilchBindMethod(Real2);
   ZilchBindMethod(UnitVector3);
+  ZilchBindMethod(UnitReal3);
   ZilchBindMethod(Vector3);
+  ZilchBindMethod(Real3);
   ZilchBindMethod(Quaternion);
   ZilchBindMethod(RangeInclusiveMax);
   ZilchBindMethod(RangeExclusiveMax);
@@ -73,7 +77,7 @@ void RandomContext::SetSeed(uint seed)
 
 int RandomContext::GetMaxInt()
 {
-  return Math::Random::cRandMaxS32;
+  return Math::Random::cRandMax;
 }
 
 bool RandomContext::Bool()
@@ -83,7 +87,7 @@ bool RandomContext::Bool()
 
 int RandomContext::Int()
 {
-  return mRandom.Int();
+  return mRandom.Next();
 }
 
 float RandomContext::Float()
@@ -106,9 +110,19 @@ Vec2 RandomContext::UnitVector2()
   return mRandom.PointOnUnitCircle();
 }
 
+Vec2 RandomContext::UnitReal2()
+{
+  return UnitVector2();
+}
+
 Vec2 RandomContext::Vector2(float minLength, float maxLength)
 {
   return mRandom.ScaledVector2(minLength, maxLength);
+}
+
+Vec2 RandomContext::Real2(float minLength, float maxLength)
+{
+  return Vector2(minLength, maxLength);
 }
 
 Vec3 RandomContext::UnitVector3()
@@ -116,9 +130,19 @@ Vec3 RandomContext::UnitVector3()
   return mRandom.PointOnUnitSphere();
 }
 
+Vec3 RandomContext::UnitReal3()
+{
+  return UnitVector3();
+}
+
 Vec3 RandomContext::Vector3(float minLength, float maxLength)
 {
   return mRandom.ScaledVector3(minLength, maxLength);
+}
+
+Vec3 RandomContext::Real3(float minLength, float maxLength)
+{
+  return Vector3(minLength, maxLength);
 }
 
 Quat RandomContext::Quaternion()

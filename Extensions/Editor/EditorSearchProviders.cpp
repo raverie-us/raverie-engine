@@ -152,6 +152,7 @@ public:
       MetaSelection* select = Z::gEditor->GetSelection();
       select->SelectOnly(cog);
       FocusOnSelectedObjects();
+      select->FinalSelectionChanged();
     }
   }
 

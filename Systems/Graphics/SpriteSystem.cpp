@@ -1,17 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SpriteSystem.cpp
-/// Implementation of the Particle Rendering component class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(SpriteParticleSystem, builder, type)
 {
   ZeroBindComponent();
@@ -28,6 +23,7 @@ ZilchDefineType(SpriteParticleSystem, builder, type)
   ZilchBindFieldProperty(mBeamVelocityScale)->ZeroFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
 }
 
+//**************************************************************************************************
 void SpriteParticleSystem::Serialize(Serializer& stream)
 {
   ParticleSystem::Serialize(stream);
@@ -40,16 +36,19 @@ void SpriteParticleSystem::Serialize(Serializer& stream)
   SerializeNameDefault(mBeamVelocityScale, 1.0f);
 }
 
+//**************************************************************************************************
 void SpriteParticleSystem::Initialize(CogInitializer& initializer)
 {
   ParticleSystem::Initialize(initializer);
 }
 
+//**************************************************************************************************
 String SpriteParticleSystem::GetDefaultMaterialName()
 {
   return "AdditiveSprite";
 }
 
+//**************************************************************************************************
 void SpriteParticleSystem::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
@@ -59,7 +58,7 @@ void SpriteParticleSystem::ExtractFrameData(FrameNode& frameNode, FrameBlock& fr
 
   frameNode.mMeshRenderData = nullptr;
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
-  frameNode.mTextureRenderData = mSpriteSource->mTexture->mRenderData;
+  frameNode.mTextureRenderData = mSpriteSource->GetAtlasTextureRenderData();
 
   frameNode.mLocalToWorld = mTransform->GetWorldMatrix();
   frameNode.mLocalToWorldNormal = Mat3::cIdentity;
@@ -69,6 +68,7 @@ void SpriteParticleSystem::ExtractFrameData(FrameNode& frameNode, FrameBlock& fr
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
+//**************************************************************************************************
 void SpriteParticleSystem::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   viewNode.mLocalToView = viewBlock.mWorldToView;
@@ -223,6 +223,7 @@ struct LocalSpriteSorter
   }
 };
 
+//**************************************************************************************************
 u32 GetParticleSortValue(SpriteParticleSortMode::Enum sortMode, Vec3 pos, Vec3 camPos, Vec3 camDir)
 {
   u32 value = 0;
@@ -246,6 +247,7 @@ u32 GetParticleSortValue(SpriteParticleSortMode::Enum sortMode, Vec3 pos, Vec3 c
   return value;
 }
 
+//**************************************************************************************************
 void SpriteParticleSystem::CheckSort(ViewBlock& viewBlock)
 {
   Particle* particle = mParticleList.Particles;

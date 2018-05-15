@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -127,6 +130,7 @@ public:
   GLuint mActiveTexture;
   ResourceId mActiveMaterial;
   uint mNextTextureSlot;
+  uint mNextTextureSlotMaterial;
 
   float mCurrentLineWidth;
   bool mClipMode;

@@ -57,6 +57,14 @@ Array Shaders =
 		],
 	},
   {
+		string ShaderName = "Real4x4MultiplyGroupingTests",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4MultiplyGroupingTests",
+		],
+	},
+  {
 		string ShaderName = "QuatSimple1",
 		Array FragmentNames = 
 		[

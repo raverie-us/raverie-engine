@@ -23,6 +23,8 @@ public:
 
   void OnDestroy();
 
+  void OnMouseFileDrop(MouseFileDropEvent* event);
+
   Space* GetTargetSpace();
   Camera* GetCamera();
 

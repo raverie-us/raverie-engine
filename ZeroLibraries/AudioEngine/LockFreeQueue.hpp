@@ -12,20 +12,7 @@
 
 namespace Audio
 {
-#ifdef _MSC_VER
-#define Type32Bit long
-#else
-#define Type32Bit int32
-#endif
-
-  // If Destination == Comperand sets Destination to Exchange. Returns initial value of Destination.
-  void* AtomicCompareExchangePointer(void** destination, void* exchange, void* comperand);
-  void AtomicSetPointer(void** target, void* value);
-  Type32Bit AtomicDecrement32(Type32Bit* value);
-  Type32Bit AtomicIncrement32(Type32Bit* value);
-  Type32Bit AtomicSet32(Type32Bit* target, Type32Bit value);
-  // If Destination == Comperand sets Destination to Exchange. Returns initial value of Destination.
-  Type32Bit AtomicCompareExchange32(Type32Bit* destination, Type32Bit exchange, Type32Bit comperand);
+#define Type32Bit s32
 
   //-------------------------------------------------------------------------------- Lock Free Queue
 
@@ -47,13 +34,10 @@ namespace Audio
 
     ~LockFreeQueue()
     {
-      // Delete anything remaining on the queue
-      while (First)
-      {
-        Node* temp = First;
-        First = temp->Next;
-        delete temp;
-      }
+      Clear();
+
+      // The Clear function does not remove the dummy node
+      delete First;
     }
 
     void Write(const T& object)
@@ -61,13 +45,13 @@ namespace Audio
       // Create the new object
       Last->Next = new Node(object);
       // Set the Last pointer
-      AtomicSetPointer((void**)&Last, Last->Next);
+      Zero::AtomicStore((void**)&Last, Last->Next);
     }
 
     bool Read(T& result)
     {
       // Check if there is anything on the queue
-      if (AtomicCompareExchangePointer((void**)&First, (void*)Last, (void*)Last) != Last)
+      if (!Zero::AtomicCompareExchangeBool((void**)&First, (void*)Last, (void*)Last))
       {
         // Store the pointers
         Node* firstNode = First;
@@ -83,6 +67,18 @@ namespace Audio
       }
 
       return false;
+    }
+
+    // This function assumes that nothing is currently writing to the queue
+    void Clear()
+    {
+      // Delete anything remaining on the queue
+      while (First != Last)
+      {
+        Node* temp = First;
+        First = temp->Next;
+        delete temp;
+      }
     }
 
   private:
@@ -126,20 +122,20 @@ namespace Audio
       // Create the new object
       Node* temp = new Node(object);
       // Get access (wait until WriteLock is 0 and then set it to 1)
-      while (AtomicCompareExchange32(&WriteLock, 1, 0) == 1)
+      while (Zero::AtomicCompareExchangeBool(&WriteLock, 1, 0))
       { }
       // Set pointer on last object
       Last->Next = temp;
       // Set the Last pointer (shared with reader)
-      AtomicSetPointer((void**)&Last, temp);
+      Zero::AtomicStore((void**)&Last, temp);
       // Release access
-      AtomicSet32(&WriteLock, 0);
+      Zero::AtomicStore(&WriteLock, 0);
     }
 
     bool Read(T& result)
     {
       // Check if there is anything on the queue
-      if (AtomicCompareExchangePointer((void**)&First, (void*)Last, (void*)Last) != Last)
+      if (!Zero::AtomicCompareExchangeBool((void**)&First, (void*)Last, (void*)Last))
       {
         // Store the pointers
         Node* firstNode = First;

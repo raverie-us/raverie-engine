@@ -3906,6 +3906,7 @@ namespace Zilch
     ZilchInitializeType(ArrayClass<DoubleInteger>);
     ZilchInitializeType(ArrayClass<DoubleReal>);
     ZilchInitializeType(ArrayClass<Any>);
+    ZilchInitializeType(ArrayClass<HandleOfString>);
 
     // Add multi primitive type components
     //doubleIntegerType->Add(new MultiPrimitive(doubleIntegerType,  1));

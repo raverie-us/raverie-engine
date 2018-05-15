@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -5,6 +8,7 @@ namespace Zero
 
 const float SelectionIcon::cBaseScale = 0.45f;
 
+//**************************************************************************************************
 ZilchDefineType(SelectionIcon, builder, type)
 {
   // Not requiring a Transform component, but this means that
@@ -27,6 +31,7 @@ ZilchDefineType(SelectionIcon, builder, type)
   ZilchBindGetterSetterProperty(OverrideSelections);
 }
 
+//**************************************************************************************************
 void SelectionIcon::Serialize(Serializer& stream)
 {
   // Graphical data
@@ -40,23 +45,27 @@ void SelectionIcon::Serialize(Serializer& stream)
   SerializeNameDefault(mOverrideSelections, true);
 }
 
+//**************************************************************************************************
 void SelectionIcon::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
   SetSelectionFlag(mOverrideSelections);
 }
 
+//**************************************************************************************************
 void SelectionIcon::OnDestroy(uint flags)
 {
   Graphical::OnDestroy(flags);
   SetSelectionFlag(false);
 }
 
+//**************************************************************************************************
 Aabb SelectionIcon::GetLocalAabb()
 {
   return Aabb(Vec3(0.0f), Vec3(0.5f));
 }
 
+//**************************************************************************************************
 void SelectionIcon::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
@@ -66,7 +75,7 @@ void SelectionIcon::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBloc
 
   frameNode.mMaterialRenderData = mMaterial->mRenderData;
   frameNode.mMeshRenderData = nullptr;
-  frameNode.mTextureRenderData = mSpriteSource->mTexture->mRenderData;
+  frameNode.mTextureRenderData = mSpriteSource->GetAtlasTextureRenderData();
 
   frameNode.mLocalToWorld = Mat4::cIdentity;
   frameNode.mLocalToWorldNormal = Mat3::cIdentity;
@@ -76,6 +85,7 @@ void SelectionIcon::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBloc
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
+//**************************************************************************************************
 void SelectionIcon::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
@@ -104,6 +114,7 @@ void SelectionIcon::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, Fr
   frameBlock.mRenderQueues->AddStreamedQuad(viewNode, pos0, pos1, uv0, uv1, Vec4(1.0f), uvAux0, uvAux1);
 }
 
+//**************************************************************************************************
 void SelectionIcon::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
 {
   mGraphicalEntryData.mGraphical = this;
@@ -118,6 +129,7 @@ void SelectionIcon::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera
   entries.PushBack(entry);
 }
 
+//**************************************************************************************************
 bool SelectionIcon::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   float radius = GetRadius(castInfo.mCameraCog->has(Camera));
@@ -131,6 +143,7 @@ bool SelectionIcon::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   return true;
 }
 
+//**************************************************************************************************
 bool SelectionIcon::TestFrustum(const Frustum& frustum, CastInfo& castInfo)
 {
   float radius = GetRadius(castInfo.mCameraCog->has(Camera));
@@ -138,6 +151,7 @@ bool SelectionIcon::TestFrustum(const Frustum& frustum, CastInfo& castInfo)
   return result;
 }
 
+//**************************************************************************************************
 void SelectionIcon::AddToSpace()
 {
   if (mVisible)
@@ -146,33 +160,39 @@ void SelectionIcon::AddToSpace()
     mGraphicsSpace->mGraphicalsAlwaysCulled.PushBack(this);
 }
 
+//**************************************************************************************************
 String SelectionIcon::GetDefaultMaterialName()
 {
   return "DebugDrawOnTop";
 }
 
+//**************************************************************************************************
 SpriteSource* SelectionIcon::GetSpriteSource()
 {
   return mSpriteSource;
 }
 
+//**************************************************************************************************
 void SelectionIcon::SetSpriteSource(SpriteSource* spriteSource)
 {
   if (spriteSource != nullptr)
     mSpriteSource = spriteSource;
 }
 
+//**************************************************************************************************
 bool SelectionIcon::GetOverrideSelections()
 {
   return mOverrideSelections;
 }
 
+//**************************************************************************************************
 void SelectionIcon::SetOverrideSelections(bool overrideSelections)
 {
   mOverrideSelections = overrideSelections;
   SetSelectionFlag(mOverrideSelections);
 }
 
+//**************************************************************************************************
 float SelectionIcon::GetRadius(Camera* camera)
 {
   float viewDistance = Debug::GetViewDistance(GetWorldTranslation(), camera->GetWorldTranslation(), camera->GetWorldDirection());
@@ -181,6 +201,7 @@ float SelectionIcon::GetRadius(Camera* camera)
   return viewScale * mViewScale * cBaseScale * 0.5f;
 }
 
+//**************************************************************************************************
 float SelectionIcon::GetRadius(ViewBlock& viewBlock)
 {
   float viewDistance = Debug::GetViewDistance(GetWorldTranslation(), viewBlock.mEyePosition, viewBlock.mEyeDirection);
@@ -188,6 +209,7 @@ float SelectionIcon::GetRadius(ViewBlock& viewBlock)
   return viewScale * mViewScale * cBaseScale * 0.5f;
 }
 
+//**************************************************************************************************
 Vec3 SelectionIcon::GetWorldTranslation()
 {
   Vec3 worldTranslation = Vec3::cZero;
@@ -198,6 +220,7 @@ Vec3 SelectionIcon::GetWorldTranslation()
   return worldTranslation;
 }
 
+//**************************************************************************************************
 void SelectionIcon::SetSelectionFlag(bool selectionLimited)
 {
   if (selectionLimited)

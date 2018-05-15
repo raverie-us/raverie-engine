@@ -218,23 +218,6 @@ void EditSpriteSource(Editor* editor, Resource* resource)
   EditSprite(spriteSource);
 }
 
-void EditHotKeys(Editor* editor, Resource* resource)
-{
-  HotKeyDataSet* hotKeys = (HotKeyDataSet*)resource;
-  
-  //HotKeyEditor* hotKeyEditor = new HotKeyEditor(editor);
-
-  Widget* widget = editor->mManager->ShowWidget("Commands");
-  //widget->SetSize(Pixels(850, 500));
-  //widget->TakeFocus();
-
-  ((HotKeyEditor*)widget)->EditResource(hotKeys, (HotKeyManager*)Z::gResources->Managers["HotKeyDataSet"]);
-  //hotKeyEditor->SetName("HotKey Editor");
-  //hotKeyEditor->SetSize(Pixels(850, 500));
-
-  //editor->AddManagedWidget(hotKeyEditor, DockArea::Floating, true);
-}
-
 ResourceEditors::ResourceEditors()
 {
   Editors[ZilchTypeId(Archetype)] = EditArchetype;
@@ -247,7 +230,6 @@ ResourceEditors::ResourceEditors()
   Editors[ZilchTypeId(MultiConvexMesh)] = EditMultiConvexMesh;
   Editors[ZilchTypeId(Animation)] = EditAnimation;
   Editors[ZilchTypeId(SpriteSource)] = EditSpriteSource;
-  Editors[ZilchTypeId(HotKeyDataSet)] = EditHotKeys;
 }
 
 void ResourceEditors::FindResourceEditor(Resource* resource)
@@ -275,7 +257,9 @@ void ResourceEditors::FindResourceEditor(Resource* resource)
   }
 
   // Just use property grid
-  editor->mMainPropertyView->EditObject(resource, true);
+  MetaSelection* selection = editor->GetSelection();
+  selection->SelectOnly(resource);
+  selection->FinalSelectionChanged();
 }
 
 }

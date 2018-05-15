@@ -1,36 +1,38 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Nathan Carlson
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Joshua Davis, Nathan Carlson
+// Copyright 2010, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 String GraphicsRaycastProviderToString(const BoundType* type, const byte* value)
 {
   static String Name("Graphics");
   return Name;
 }
 
+//**************************************************************************************************
 ZilchDefineType(GraphicsRaycastProvider, builder, type)
 {
   ZilchBindFieldProperty(mMultiSelectGraphical);
   ZilchBindFieldProperty(mVisibleOnly);
+  ZilchBindConstructor();
 
   type->ToStringFunction = GraphicsRaycastProviderToString;
   type->Add(new StringNameDisplay("Graphics"));
   ZeroBindExpanded();
 }
 
+//**************************************************************************************************
 GraphicsRaycastProvider::GraphicsRaycastProvider()
 {
   mMultiSelectGraphical = true;
   mVisibleOnly = false;
 }
 
+//**************************************************************************************************
 void GraphicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results)
 {
   GraphicsSpace* graphicsSpace = castInfo.mTargetSpace->has(GraphicsSpace);
@@ -65,6 +67,7 @@ void GraphicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResul
   }
 }
 
+//**************************************************************************************************
 void GraphicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results)
 {
   // Skip Graphical tests
@@ -95,6 +98,7 @@ void GraphicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, 
   }
 }
 
+//**************************************************************************************************
 bool GraphicsRaycastProvider::RayTest(Graphical* graphical, GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   Cog* cog = graphical->GetOwner();
@@ -107,6 +111,7 @@ bool GraphicsRaycastProvider::RayTest(Graphical* graphical, GraphicsRayCast& ray
   return graphical->TestRay(rayCast, castInfo);
 }
 
+//**************************************************************************************************
 bool GraphicsRaycastProvider::FrustumTest(Graphical* graphical, Frustum& frustum, CastInfo& castInfo)
 {
   Cog* cog = graphical->GetOwner();
@@ -119,4 +124,4 @@ bool GraphicsRaycastProvider::FrustumTest(Graphical* graphical, Frustum& frustum
   return graphical->TestFrustum(frustum, castInfo);
 }
 
-}//namespace Zero
+} // namespace Zero

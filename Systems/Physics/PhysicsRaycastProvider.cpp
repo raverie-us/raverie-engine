@@ -19,6 +19,7 @@ ZilchDefineType(PhysicsRaycastProvider, builder, type)
 {
   ZeroBindDocumented();
   ZeroBindExpanded();
+  ZilchBindConstructor();
 
   ZilchBindFieldProperty(mDynamicColliders);
   ZilchBindFieldProperty(mSelectGhosts);

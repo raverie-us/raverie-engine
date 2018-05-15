@@ -179,6 +179,9 @@ SplineSampleData HierarchySpline::SampleDistance(real distance)
 
 void HierarchySpline::OnQuerySpline(SplineEvent* e)
 {
+  // If the spline is being requested before the first frame update, we want to 
+  // make sure it's built
+  RebuildIfModified();
   e->mSpline = mSpline;
 }
 

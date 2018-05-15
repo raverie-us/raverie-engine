@@ -28,6 +28,7 @@ public:
   void ToggleConsole(CommandEvent* event);
   void ShowBrowser(CommandEvent* event);
   void ShowMarket(CommandEvent* event);
+  void ShowChat(CommandEvent* event);
   void ShowObjects(CommandEvent* event);
   void ShowAnimator(CommandEvent* event);
   void ShowHotKeyEditor(CommandEvent* event);
@@ -43,6 +44,7 @@ public:
   void ShowReplaceAll(CommandEvent* event);
   void ShowBugReporter(CommandEvent* event);
   void EditColorScheme(CommandEvent* event);
+  void ClearConsole(CommandEvent* event);
   void OnNameActivated(TypeEvent* event);
   void ShowLibrary(StringParam libraryName);
   void ShowCoreLibrary(CommandEvent* event);

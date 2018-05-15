@@ -231,7 +231,6 @@ namespace Audio
     float mFrequency;
     OscillatorTypes::Enum mType;
     Polarities mPolarity;
-    unsigned mSampleRate;
     static const int ArraySize = 1024;
     float mWaveValues[ArraySize];
     Math::Random RandomObject;
@@ -579,7 +578,6 @@ namespace Audio
     ADSR(const ADSR& copy);
 
     void SetValues(const EnvelopeSettings* settings);
-    void SetSampleRate(const unsigned rate);
     float operator()();
     void Release();
     bool IsFinished();
@@ -592,7 +590,6 @@ namespace Audio
     float mSustainLevel;
     float mReleaseTime;
     float mCurrentTime;
-    float mTimeDelta;
     float mLastAmplitude;
 
     enum States { DelayState, AttackState, DecayState, SustainState, ReleaseState, OffState };
@@ -618,7 +615,6 @@ namespace Audio
     ADSR Envelope;
     float mPitchOffset;
     double mTime;
-    float mTimeDelta;
   };
 }
 

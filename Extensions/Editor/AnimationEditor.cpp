@@ -256,6 +256,7 @@ AnimationEditor::AnimationEditor(Composite* parent)
 
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyRepeated, OnKeyRepeated);
+  ConnectThisTo(this, Events::Deactivated, OnAnimatorDeactivated);
 }
 
 //******************************************************************************
@@ -515,11 +516,11 @@ void AnimationEditor::ObjectSelected(Cog* cog)
       EditorViewport* editorViewport = Type::DynamicCast<EditorViewport*>(widget);
       ReturnIf(editorViewport == nullptr, , "Widget found was not an EditorViewport.");
 
-      Viewport* viewport = editorViewport->GetReactiveViewport();
+      mMainViewport = editorViewport->GetReactiveViewport();
 
       // Connect to keyboard events
-      ConnectThisTo(viewport, Events::KeyDown, OnKeyDownViewport);
-      mMainViewport = viewport;
+      if(Viewport* viewport = mMainViewport)
+        ConnectThisTo(viewport, Events::KeyDown, OnKeyDownViewport);
     }
   }
 
@@ -744,6 +745,13 @@ void AnimationEditor::OnComponentsChanged(ObjectEvent* event)
 void AnimationEditor::OnPlayHeadModified(Event* event)
 {
   UpdateToScrubber();
+}
+
+//******************************************************************************
+void AnimationEditor::OnAnimatorDeactivated(Event* event)
+{
+  mErrorToolTip.SafeDestroy();
+  mPropertyView->GetPropertyView()->RemoveCustomPropertyIcon(&CreateKeyFrameIcon);
 }
 
 //******************************************************************************
@@ -1243,6 +1251,8 @@ Cog* CreateAnimationPreview(Space* space, Animation* animation,
     
     if(AnimationGraph* animGraph = object->has(AnimationGraph))
     {
+      animGraph->SetPreviewMode();
+
       AnimationNode* node = BuildBasic(animGraph, animation, 0, AnimationPlayMode::Loop);
       animGraph->SetActiveNode(node);
     }

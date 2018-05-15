@@ -39,7 +39,6 @@ Tweakable(Vec4, PrimaryColor,   Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SecondaryColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, MouseOverColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SelectedColor,  Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ToolTipColor,   Vec4(1,1,1,1), cLocation);
 }
 
 namespace TreeViewInvalidUi
@@ -49,7 +48,6 @@ Tweakable(Vec4, PrimaryColor,   Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SecondaryColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, MouseOverColor, Vec4(1,1,1,1), cLocation);
 Tweakable(Vec4, SelectedColor,  Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ToolTipColor,   Vec4(1,1,1,1), cLocation);
 }
 
 namespace Events
@@ -871,9 +869,9 @@ void TreeRow::OnMouseEnter(MouseEvent* event)
   
     toolTip->SetText(message);
     if(mValid)
-      toolTip->SetColor(ToolTipColor::Default);
+      toolTip->SetColorScheme(ToolTipColorScheme::Default);
     else
-      toolTip->SetColor(ToolTipColor::Red);
+      toolTip->SetColorScheme(ToolTipColorScheme::Red);
   
     // Position the tooltip
     ToolTipPlacement placement;
@@ -1535,12 +1533,20 @@ void TreeView::ShowRow(DataIndex& index)
   if(dataRow)
   {
     uint rowIndex = dataRow->mVisibleRowIndex;
-    float y = float(rowIndex+1) / (float)mScrollAreaRows;
-    mArea->SetScrolledPercentage(Vec2(0, y));
+    float yPos = rowIndex * mRowHeight;
+    mArea->ScrollAreaToView(Vec2(0, yPos), Vec2(0, yPos + mRowHeight));
   }
 
 
   MarkAsNeedsUpdate();
+}
+
+void TreeView::ShowSelected()
+{
+  Array<DataIndex> selected;
+  GetSelection()->GetSelected(selected);
+  if (!selected.Empty())
+    ShowRow(selected.Front());
 }
 
 void TreeView::SetRefreshOnValueChange(bool state)
@@ -1552,6 +1558,7 @@ void TreeView::Refresh()
 {
   if(mRoot)
     mRoot->Refresh();
+
   UpdateTransform();
 }
 

@@ -419,6 +419,19 @@ void String::ComputeStringStats(StringStats& stats)
   pool.mLock.Unlock();
 }
 
+void String::DebugForceReleaseStringPoolLock()
+{
+  // On rare occasions, a crash could've happened when the string pool's spin lock
+  // was locked. This forces it to be unlocked so that crash handler can continue.
+  // There's a chance we could be in an invalid state but we're already crashing.
+  // This makes the worst case scenario that we double crash and get no report
+  // instead of infinite looping on a background process.
+#if defined(ZeroStringPooling)
+  StringPool& pool = StringPool::GetInstance();
+  pool.mLock.Unlock();
+#endif
+}
+
 void String::poolOrDeleteNode(StringNode* node)
 {
 #if defined(ZeroStringPooling)

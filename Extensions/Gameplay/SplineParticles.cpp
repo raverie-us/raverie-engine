@@ -49,6 +49,8 @@ ZilchDefineType(SplineParticleEmitter, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
+  ZeroBindInterface(ParticleEmitterShared);
+
   ZilchBindFieldProperty(mEmitRadius);
   ZilchBindFieldProperty(mSpawnT)->Add(new EditorSlider(0, 1, 0.001f));
   ZilchBindFieldProperty(mSpawnTVariance)->Add(new EditorSlider(0, 0.5f, 0.001f));
@@ -279,11 +281,15 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
   const float hhoo = dt * hoo;
   const float detInv = 1.0f / (f + hhoo);
 
-  Spline* spline = mEmitter->mSpline;
+  Spline* spline = mEmitter->GetSpline();
   if(spline == nullptr)
     return;
 
   float curveLength = spline->GetTotalDistance();
+
+  // We must have some distance to animate over
+  if (curveLength < 0.0001f)
+    return;
 
   /// The time required for each particle to travel the entire spline
   float timeToFinish = curveLength / mSpeed;

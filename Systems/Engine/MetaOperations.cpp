@@ -36,8 +36,8 @@ void ChangeAndQueueProperty(OperationQueue* queue, HandleParam object,
   queue->SetActiveBatchName(BuildString(propertyOperation->mName, " Batch"));
 
   // Remove the property from the path, so we have a sub object
-  // Turns CameraViewport's "CameraPath.Cog" to "CameraPath". This allows other
-  // the CogPath to also change the "Path" property on CogPath.
+  // Turns CameraViewport's "CameraPath.Cog" to "CameraPath". This allows the
+  // other CogPath to also change the "Path" property on CogPath.
   PropertyPath localPath = property;
   localPath.PopEntry();
   OperationQueue::PushSubPropertyContext(object, localPath);
@@ -213,23 +213,27 @@ Handle MetaOperation::GetUndoObject()
 }
 
 //----------------------------------------------------------- Property Operation
+ZilchDefineType(PropertyOperation, builder, type)
+{
+  ZilchBindFieldGetter(mValueBefore);
+  ZilchBindFieldGetter(mValueAfter);
+}
+
 //******************************************************************************
 PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam property,
   AnyParam before, AnyParam after) :
   MetaOperation(object),
   mPropertyPath(property)
 {
-  MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>( );
-  if(owner && owner->GetOwner(object).IsNotNull( ))
+  MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>();
+  if(owner && owner->GetOwner(object).IsNotNull())
   {
     mName = BuildString(GetNameFromHandle(owner->GetOwner(object)), ".",
-      GetNameFromHandle(object), ".", property.GetStringPath(), " ",
-      after.ToString());
+      GetNameFromHandle(object), ".", property.GetStringPath());
   }
   else
   {
-    mName = BuildString(GetNameFromHandle(object), ".", property.GetStringPath(),
-      " ", after.ToString());
+    mName = BuildString(GetNameFromHandle(object), ".", property.GetStringPath());
   }
 
   mValueBefore = before;

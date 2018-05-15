@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
@@ -230,6 +233,7 @@ public:
   Camera* mCamera;
 };
 
+//**************************************************************************************************
 template <typename T>
 T* RenderTaskBuffer::NewRenderTask()
 {

@@ -431,11 +431,14 @@ UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool inter
     if(hit)
       return hit;
   }
+
+  bool spaceInEditMode = GetSpace()->IsEditorMode();
+  bool editorLocked = spaceInEditMode && GetOwner()->GetLocked();
   
   // We were hit if we didn't hit a child but we were within our boundaries
   // Check to see if we only want interactive objects
   bool failedInteractive = (interactiveOnly && !GetInteractive());
-  if(within && !failedInteractive)
+  if(within && !failedInteractive && !editorLocked)
     return this;
   
   return nullptr;
@@ -492,8 +495,8 @@ Rectangle UiWidget::GetLocalRectangle()
 //**************************************************************************************************
 void UiWidget::SetLocalRectangle(RectangleParam rectangle)
 {
-  SetLocalTopLeft(rectangle.GetTopLeft());
   SetSize(rectangle.GetSize());
+  SetLocalTopLeft(rectangle.GetTopLeft());
 }
 
 //**************************************************************************************************
@@ -505,8 +508,8 @@ Rectangle UiWidget::GetWorldRectangle()
 //**************************************************************************************************
 void UiWidget::SetWorldRectangle(RectangleParam rectangle)
 {
-  SetWorldTopLeft(rectangle.GetTopLeft());
   SetSize(rectangle.GetSize());
+  SetWorldTopLeft(rectangle.GetTopLeft());
 }
 
 //**************************************************************************************************
@@ -634,7 +637,7 @@ Vec2 UiWidget::GetWorldLocation(Location::Enum location)
 //**************************************************************************************************
 void UiWidget::SetWorldLocation(Location::Enum location, Vec2Param worldTranslation)
 {
-  Vec2 localTranslation = GetLocalLocation(location);
+  Vec2 localTranslation = worldTranslation;
   if (mParent)
     localTranslation = mParent->TransformPointInverse(worldTranslation);
   SetLocalLocation(location, localTranslation);
@@ -942,7 +945,10 @@ void UiWidget::SetSizePolicy(Axis::Enum axis, UiSizePolicy::Enum policy)
 void UiWidget::SetSizePolicyX(UiSizePolicy::Enum policy)
 {
   if (OperationQueue::IsListeningForSideEffects())
+  {
     OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+    OperationQueue::RegisterSideEffect(mArea, PropertyPath("Size"), GetSize());
+  }
 
   mSizePolicy[Axis::X] = policy;
   MarkAsNeedsUpdate();
@@ -952,7 +958,10 @@ void UiWidget::SetSizePolicyX(UiSizePolicy::Enum policy)
 void UiWidget::SetSizePolicyY(UiSizePolicy::Enum policy)
 {
   if (OperationQueue::IsListeningForSideEffects())
+  {
     OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+    OperationQueue::RegisterSideEffect(mArea, PropertyPath("Size"), GetSize());
+  }
 
   mSizePolicy[Axis::Y] = policy;
   MarkAsNeedsUpdate();
@@ -973,6 +982,7 @@ void UiWidget::SetInLayout(bool state)
   {
     OperationQueue::RegisterSideEffect(this, PropertyPath("LocalTranslation"), GetLocalTranslation());
     OperationQueue::RegisterSideEffect(this, PropertyPath("Size"), GetSize());
+    OperationQueue::RegisterSideEffect(mArea, PropertyPath("Size"), GetSize());
   }
 
   mFlags.SetState(UiWidgetFlags::InLayout, state);

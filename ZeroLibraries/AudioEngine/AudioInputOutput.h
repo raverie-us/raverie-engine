@@ -10,8 +10,6 @@
 #ifndef AudioInputOutput_H
 #define AudioInputOutput_H
 
-struct PaStreamParameters;
-struct PaHostApiInfo;
 struct IMMDeviceEnumerator;
 
 namespace Audio
@@ -115,53 +113,6 @@ namespace Audio
     void SaveInputSamples(const float* inputBuffer, unsigned howManySamples);
   };
 
-  //------------------------------------------------------------- Audio Input Output using PortAudio
-  
-  class AudioIOPortAudio : public AudioInputOutput
-  {
-  public:
-    AudioIOPortAudio();
-    ~AudioIOPortAudio();
-
-    // Initializes the underlying audio API
-    StreamStatus::Enum InitializeAPI() override;
-    // Initializes the specified audio stream
-    StreamStatus::Enum InitializeStream(StreamTypes::Enum whichStream) override;
-    // Starts the specified audio stream
-    StreamStatus::Enum StartStream(StreamTypes::Enum whichStream) override;
-    // Stops the specified audio stream
-    StreamStatus::Enum StopStream(StreamTypes::Enum whichStream) override;
-    // Shuts down the specified audio stream
-    StreamStatus::Enum ShutDownStream(StreamTypes::Enum whichStream) override;
-    // Shuts down the underlying audio API
-    void ShutDownAPI() override;
-    // Returns the number of channels in the specified audio stream
-    unsigned GetStreamChannels(StreamTypes::Enum whichStream) override;
-    // Returns the sample rate of the specified audio stream
-    unsigned GetStreamSampleRate(StreamTypes::Enum whichStream) override;
-
-    int HandleCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
-
-  private:
-    const PaHostApiInfo* ApiInfo;
-
-    // Pointer to the Port Audio output stream
-    void* PaOutputStream;
-    // Port audio output stream parameters
-    PaStreamParameters* OutputParameters;
-    // Sample rate of the audio output
-    unsigned OutputSampleRate;
-
-    // Pointer to the Port Audio input stream
-    void* PaInputStream;
-    // Port audio input stream parameters
-    PaStreamParameters* InputParameters;
-    // Sample rate of the audio input
-    unsigned InputSampleRate;
-
-    void InitializeInput();
-    void InitializeOutput();
-  };
 }
 
 #endif

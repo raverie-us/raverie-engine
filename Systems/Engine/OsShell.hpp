@@ -38,6 +38,9 @@ public:
   /// Name of the Shell's operating system.
   virtual String GetOsName() = 0;
 
+  /// OS specific line-scroll setting when using the mouse scroll wheel.
+  virtual uint GetScrollLineCount();
+
   /// Find what OsWindow is underneath the given screen position.
   virtual OsWindow* FindWindowAt(IntVec2Param screenPosition) = 0;
 

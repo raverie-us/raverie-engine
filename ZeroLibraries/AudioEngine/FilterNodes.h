@@ -22,8 +22,8 @@ namespace Audio
   class LowPassNode : public SimpleCollapseNode
   {
   public:
-    LowPassNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    LowPassNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
 
     // Returns the current cutoff frequency
     float GetCutoffFrequency();
@@ -51,8 +51,8 @@ namespace Audio
   class HighPassNode : public SimpleCollapseNode
   {
   public:
-    HighPassNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    HighPassNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
 
     // Returns the current cutoff frequency
     float GetCutoffFrequency();
@@ -80,8 +80,8 @@ namespace Audio
   class BandPassNode : public SimpleCollapseNode
   {
   public:
-    BandPassNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    BandPassNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
 
     // Returns the central frequency of the band
     float GetCentralFrequency();
@@ -114,8 +114,8 @@ namespace Audio
   class DelayNode : public SimpleCollapseNode
   {
   public:
-    DelayNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool threaded = false);
+    DelayNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool threaded = false);
 
     // Returns the current length of delay
     float GetDelayMSec();
@@ -163,8 +163,8 @@ namespace Audio
   class FlangerNode : public SimpleCollapseNode
   {
   public:
-    FlangerNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool threaded = false);
+    FlangerNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool threaded = false);
 
     // Returns the current max delay in milliseconds
     float GetMaxDelayMSec();
@@ -218,8 +218,8 @@ namespace Audio
   class ChorusNode : public SimpleCollapseNode
   {
   public:
-    ChorusNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool threaded = false);
+    ChorusNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool threaded = false);
 
     // Returns the current max delay in milliseconds
     float GetMaxDelayMSec();
@@ -285,8 +285,8 @@ namespace Audio
   class AddNoiseNode : public SimpleCollapseNode
   {
   public:
-    AddNoiseNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool threaded = false);
+    AddNoiseNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool threaded = false);
 
     // Returns the gain of the additive noise in decibels
     float GetAdditiveNoiseGainDB();
@@ -335,8 +335,8 @@ namespace Audio
   class ModulationNode : public SimpleCollapseNode
   {
   public:
-    ModulationNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool threaded = false);
+    ModulationNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool threaded = false);
     
     // Returns true if using amplitude modulation, false if using ring modulation
     bool GetUsingAmplitude();

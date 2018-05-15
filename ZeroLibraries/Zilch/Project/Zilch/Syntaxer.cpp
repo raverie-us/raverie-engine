@@ -2572,7 +2572,7 @@ namespace Zilch
     {
       // If we hit a point where all code paths return,
       // yet we still have a statement left to parse...
-      if (node->AllPathsReturn && node->IsDebugReturn == false)
+      if (node->AllPathsReturn && node->IsDebugReturn == false && !this->Errors.TolerantMode)
       {
         // Statements after this point will never be reached!
         return ErrorAt(node->Statements[i], ErrorCode::StatementsWillNotBeExecutedEarlyReturn);
@@ -2605,6 +2605,14 @@ namespace Zilch
   // Check the condition and statements in a conditional loop
   void Syntaxer::CheckConditionalLoop(ConditionalLoopNode* node, TypingContext* context)
   {
+    // This is only the case when we're in tolerant mode
+    if (node->Condition == nullptr)
+    {
+      ErrorIf(!this->Errors.TolerantMode, "We should always have a condition in non-tolerant mode");
+      this->ProcessScopeStatements(node, context);
+      return;
+    }
+
     // Process the initial value expression
     context->Walker->Walk(this, node->Condition, context);
 

@@ -81,6 +81,12 @@ Vec2 Text::GetBoundedSize(float maxWidth, float maxHeight)
   return ProcessTextRange(noRender, mFont, mText, Vec2(0, 0), mAlign, Vec2(1, 1), limitedSize);
 }
 
+bool Text::IsTextClipped()
+{
+  Vec2 textSize = mFont->MeasureText(mText, 1.0f);
+  return textSize.x > mSize.x || textSize.y > mSize.y;
+}
+
 void Text::FitToWidth(float maxWidth, float maxHeight)
 {
   mSize = GetBoundedSize(maxWidth, maxHeight);

@@ -1,92 +1,55 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Sprite.hpp
-/// Declaration of the Sprite component class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
 {
 
-const int cMinFrameSize = 4;
 const float cMaxFrameRate = 100000.0f;
 const float cMinFrameRate = 0.001f;
 
-//---------------------------------------------------------------- Sprite Source
-//class SpriteSource : public TextureRegion
 class SpriteSource : public Resource
 {
 public:
   ZilchDeclareType(SpriteSource, TypeCopyMode::ReferenceType);
   
-  SpriteSource();
-  ~SpriteSource();
-
   SpriteDataMembers();
-  void Save(StringParam filename) override;
-  void SetAtlas(Atlas* atlas);
-
-  //TextureRegionInfo GetData() override;
+  void Unload() override;
 
   Vec2 GetSize();
   Vec2 GetOrigin();
 
   float GetFrameRate();
-  void SetFrameRate(float newFrameRate);
 
-  /// Shared texture from sprite Group
-  Atlas* mAtlas;
-  Texture* mTexture;
-  UvRect mUvRect;
-
-  Image SourceImage;
-
-  /// Local Frame Data
-  uint FramesX;
-  uint FramesY;
-  Vec2 PixelSize;
-  Vec2 FrameTexSize;
-  void FrameSetup();
-
-  //ByteColor Sample(SoftwareSampleMode::Enum mode, real mip, uint currFrame, Vec2Param uv);
-
-  /// Get the texture rect for the given frame.
+  // Get the texture uv rect for the given frame.
   UvRect GetUvRect(uint currentFrame);
 
-  SpriteSourceBuilder* mBuilder;
-  Link<SpriteSource> link;
-  Array<UvRect> mUvRects;
+  // Loads content image file into memory.
+  void LoadSourceImage(Status& status, Image* image);
+
+  HandleOf<Texture> GetAtlasTexture();
+  TextureRenderData* GetAtlasTextureRenderData();
+
+  // Below members are set by AtlasManager.
+  // Texture atlas where sprite images are placed.
+  HandleOf<Atlas> mAtlas;
+  // UV's in texture where image of all frames was placed, including pixel padding.
+  UvRect mAtlasUvRect;
+  // UV's of sprite frame 0, the top left frame.
+  UvRect mBaseFrameUv;
+  // UV translation per x/y frame count.
+  Vec2 mPerFrameUvOffset;
+  // Number of frames in one row of the whole sprite image.
+  uint mFramesPerRow;
 };
 
-//-------------------------------------------------------- Sprite Source Manager
 class SpriteSourceManager : public ResourceManager
 {
 public:
   DeclareResourceManager(SpriteSourceManager, SpriteSource);
 
   SpriteSourceManager(BoundType* resourceType);
-  ~SpriteSourceManager();
-
-  void OnResourcesLoaded(ResourceEvent* event);
-  void RebuildSpriteSheets();
 };
 
-struct PlacedSprite
-{
-  Image* Source;
-  int OutputSheet;
-  int Index;
-  PixelRect Rect;
-};
-
-// Outputs is generated sprite sheets with all images placed on sprite
-// Input is image buffer to be placed on sprite sheets
-// PlacedSprites is location of each sprite
-// Generated is image buffer that was created (needed to be cleaned up)
-void GenerateSpriteSheets(Array<Image*>& Outputs, Array<Image*>& Inputs, Array<PlacedSprite>& placed, Array<Image*>& Generated, int outputSheetOffset);
-
-}
+} // namespace Zero

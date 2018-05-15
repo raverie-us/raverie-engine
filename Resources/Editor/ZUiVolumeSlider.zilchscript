@@ -68,7 +68,6 @@ class ZUiSlider : ZilchComponent
   //***************************************************************************
   function SetHandlePosition(percent : Real)
   {
-    Console.WriteLine(percent);
     var handle = this.Handle.UiWidget;
     var max = this.UiWidget.Size.Y - handle.Size.Y;
     var position = max * percent;

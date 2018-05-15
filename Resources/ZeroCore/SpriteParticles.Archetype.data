@@ -23,7 +23,7 @@ Cog
 		var SystemSpace = SystemSpace.WorldSpace
 		var WarmUpTime = 0
 		var PreviewInEditor = false
-		var VertexColor = Real4{7, 7, 7, 1}
+		var VertexColor = Real4{1, 1, 1, 1}
 		var GeometryMode = SpriteParticleGeometryMode.Billboarded
 		var SpriteSource = "59a4f6f4a01bac09:SoftCircle"
 		var ParticleAnimation = SpriteParticleAnimationMode.Single

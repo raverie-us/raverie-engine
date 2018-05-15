@@ -62,8 +62,8 @@ namespace Audio
   void InstanceVolumeModifier::Reset(const float startVolume, const float endVolume, 
     const float time, const float lifetime)
   {
-    Reset(startVolume, endVolume, (unsigned)(time * AudioSystemInternal::SystemSampleRate),
-      (unsigned)(lifetime * AudioSystemInternal::SystemSampleRate));
+    Reset(startVolume, endVolume, (unsigned)(time * SystemSampleRate),
+      (unsigned)(lifetime * SystemSampleRate));
   }
 
   //************************************************************************************************

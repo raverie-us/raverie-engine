@@ -195,7 +195,7 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(SetFocus);
   ZilchBindMethod(DisplayGameSession);
   ZilchBindMethod(ExecuteCommand);
-  ZilchBindMethod(SelectPrimary);
+  ZilchBindMethod(SelectPrimary)->AddAttribute(DeprecatedAttribute);
   ZilchBindMethod(PlayGame);
   ZilchBindMethod(PlaySingleGame);
   ZilchBindMethod(PlayNewGame);
@@ -237,6 +237,7 @@ Editor::Editor(Composite* parent)
   mCodeTranslatorListener = nullptr;
   mProjectDirectoryWatcher = nullptr;
   mSimpleDebuggerListener = nullptr;
+  mStopGame = false;
 
   mQueue = new OperationQueue();
 
@@ -246,12 +247,13 @@ Editor::Editor(Composite* parent)
   
   ZilchManager* zilchManager = ZilchManager::GetInstance();
   ConnectThisTo(zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPostPatch, OnScriptsCompiledPostPatch);
+  ConnectThisTo(zilchManager, Events::ScriptsCompiledPatch, OnScriptsCompiledPatch);
 
   ConnectThisTo(this, Events::CommandCaptureContext, OnCaptureContext);
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
   ConnectThisTo(this, Events::SaveCheck, OnSaveCheck);
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+  ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesUnloaded);
 
   BoundType* editorMeta = ZilchTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
@@ -580,14 +582,10 @@ Widget* Editor::ToggleConsole()
 
 Widget* Editor::ShowBrowser()
 {
-  Widget* widget = ShowWindow("Browser");
-  if (widget != nullptr)
-    return widget;
-
   WebBrowserSetup setup;
   WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Browser");
-  browser->SetHideOnClose(true);
+  browser->SetHideOnClose(false);
 
   this->AddManagedWidget(browser, DockArea::Center, true);
   return browser;
@@ -595,13 +593,25 @@ Widget* Editor::ShowBrowser()
 
 Widget* Editor::ShowMarket()
 {
-  Widget* widget = ShowWindow("Market");
-  if (widget != nullptr)
-    return widget;
+  const char* cURL = "https://market.zeroengine.io/?q=products";
+  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
-  MarketWidget* browser = new MarketWidget(this);
+  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Market");
-  browser->SetHideOnClose(true);
+  browser->SetHideOnClose(false);
+
+  this->AddManagedWidget(browser, DockArea::Center, true);
+  return browser;
+}
+
+Widget* Editor::ShowChat()
+{
+  const char* cURL = "https://dev.zeroengine.io/u/chat";
+  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+
+  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
+  browser->SetName("Chat");
+  browser->SetHideOnClose(false);
 
   this->AddManagedWidget(browser, DockArea::Center, true);
   return browser;
@@ -758,16 +768,20 @@ Composite* Editor::OpenSearchWindow(Widget* returnFocus, bool noBorder)
   return newWindow;
 }
 
-void Editor::SelectOnly(HandleParam object)
-{
-  mSelection->SelectOnly(object);
-  mSelection->FinalSelectionChanged();
-}
-
 void Editor::SelectPrimary(HandleParam object)
 {
   mSelection->SetPrimary(object);
   mSelection->FinalSelectionChanged();
+}
+
+void Editor::OnEngineUpdate(UpdateEvent* event)
+{
+  if (mStopGame)
+  {
+    forRange(GameSession* game, GetGames())
+      game->Quit();
+    mStopGame = false;
+  }
 }
 
 Space* Editor::CreateNewSpace(uint flags)
@@ -943,6 +957,9 @@ bool Editor::TakeProjectScreenshot()
 void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue,
                                  HashSet<ResourceLibrary*>& modifiedLibraries)
 {
+  forRange(Cog& child, cog->GetChildren())
+    ReInitializeScriptsOnObject(&child, queue, modifiedLibraries);
+
   BoundType* zilchComponentType = ZilchTypeId(ZilchComponent);
 
   // We want to walk the components in reverse so we don't run into issues
@@ -981,8 +998,6 @@ void ReInitializeScriptsOnGame(GameSession* game, OperationQueue& queue,
   if(game == nullptr)
     return;
 
-  ReInitializeScriptsOnObject(game, queue, modifiedLibraries);
-
   // Reinitialize 
   forRange(Space* space, game->GetAllSpaces())
   {
@@ -990,13 +1005,15 @@ void ReInitializeScriptsOnGame(GameSession* game, OperationQueue& queue,
     bool spaceModified = space->GetModified();
     spaceModifiedStates.Insert(space, spaceModified);
 
+    // All cogs in the space
+    forRange(Cog& cog, space->AllRootObjects())
+      ReInitializeScriptsOnObject(&cog, queue, modifiedLibraries);
+
     // The space itself can have script components
     ReInitializeScriptsOnObject(space, queue, modifiedLibraries);
-
-    // All cogs in the space
-    forRange(Cog& cog, space->AllObjects())
-      ReInitializeScriptsOnObject(&cog, queue, modifiedLibraries);
   }
+
+  ReInitializeScriptsOnObject(game, queue, modifiedLibraries);
 }
 
 void RevertSpaceModifiedState(GameSession* game,
@@ -1050,7 +1067,7 @@ void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
   TearDownZilchStateOnGames(e->mModifiedLibraries);
 }
 
-void Editor::OnScriptsCompiledPostPatch(ZilchCompileEvent* e)
+void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
 {
   //ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
   //
@@ -1090,6 +1107,39 @@ void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibrar
     ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
 
   mReInitializeQueue.EndBatch();
+}
+
+void Editor::OnResourcesUnloaded(ResourceEvent* event)
+{
+  MetaSelection* selection = GetSelection();
+
+  Array<Handle> toRemove;
+  forRange (Handle handle, selection->All())
+  {
+    // Object is gone.
+    if (handle.IsNull())
+    {
+      toRemove.PushBack(handle);
+    }
+    // Currently, handles to resources will fallback to a default resource,
+    // making IsNull() return false.
+    else if (handle.StoredType->IsA(ZilchTypeId(Resource)))
+    {
+      // Manually query for resource but with fallback disabled.
+      ResourceHandleManager* manager = (ResourceHandleManager*)handle.Manager;
+      Resource* resource = manager->GetResource(handle, false);
+      if (resource == nullptr)
+        toRemove.PushBack(handle);
+    }
+  }
+
+  // Remove deleted objects from selection.
+  forRange (Handle handle, toRemove.All())
+    selection->Remove(handle);
+
+  // Don't need to call selection changed if nothing was removed.
+  if (!toRemove.Empty())
+    selection->FinalSelectionChanged();
 }
 
 void Editor::Update()
@@ -1380,8 +1430,10 @@ void Editor::DestroyGames()
 
 void Editor::StopGame()
 {
-  forRange(GameSession* game, GetGames())
-    game->Quit();
+  // Wait until after system updates to stop game.
+  // This prevents events such as LogicUpdate from happening in an unexpected state.
+  if (GetGames().Empty() == false)
+    mStopGame = true;
 }
 
 void Editor::PauseGame()

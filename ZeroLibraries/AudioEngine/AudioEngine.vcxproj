@@ -180,17 +180,11 @@
     <ClCompile Include="FileEncoder.cpp" />
     <ClCompile Include="FilterNodes.cpp" />
     <ClCompile Include="Filters.cpp" />
+    <ClCompile Include="GranularSynthNode.cpp" />
     <ClCompile Include="MicrophoneInputNode.cpp" />
     <ClCompile Include="Interpolator.cpp" />
     <ClCompile Include="ListenerNode.cpp" />
-    <ClCompile Include="LockFreeQueue.cpp" />
     <ClCompile Include="Modifiers.cpp" />
-    <ClCompile Include="pa_win_util.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="PitchChange.cpp" />
     <ClCompile Include="PitchNode.cpp" />
     <ClCompile Include="Precompiled.cpp">
@@ -235,6 +229,7 @@
     <ClInclude Include="FileEncoder.h" />
     <ClInclude Include="FilterNodes.h" />
     <ClInclude Include="Filters.h" />
+    <ClInclude Include="GranularSynthNode.h" />
     <ClInclude Include="MicrophoneInputNode.h" />
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="ListenerNode.h" />
@@ -246,26 +241,8 @@
     <ClInclude Include="opus_defines.h" />
     <ClInclude Include="opus_multistream.h" />
     <ClInclude Include="opus_types.h" />
-    <ClInclude Include="pa_memorybarrier.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="pa_util.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="PitchChange.h" />
     <ClInclude Include="PitchNode.h" />
-    <ClInclude Include="portaudio.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="RecordNode.h" />
     <ClInclude Include="Resampler.h" />
@@ -289,9 +266,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">true</ExcludedFromBuild>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="portaudio_x86.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

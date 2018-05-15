@@ -15,12 +15,18 @@ void AddPropertyRenamedAttribute(Zilch::ParseEvent* e, Property* property, Attri
 //**************************************************************************************************
 void MetaLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
 {
+  return AddNativeExtensions(builder, builder.BoundTypes);
+}
+
+//**************************************************************************************************
+void MetaLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder, BoundTypeMap& boundTypes)
+{
   // Loop through any SendsEvents on every type in this library, and add to MetaDatabase
-  forRange(BoundType* type, builder.BoundTypes.Values())
+  forRange(BoundType* type, boundTypes.Values())
     ProcessComposition(builder, type);
 
   // Process all Components now that compositions have been processed
-  forRange(BoundType* type, builder.BoundTypes.Values())
+  forRange(BoundType* type, boundTypes.Values())
     ProcessComponent(builder, type);
 }
 

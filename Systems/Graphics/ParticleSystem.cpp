@@ -139,9 +139,15 @@ void ParticleSystem::Initialize(CogInitializer& initializer)
 }
 
 //******************************************************************************
-void ParticleSystem::OnAllObjectsCreated(CogInitializer& initializer)
+void ParticleSystem::ScriptInitialize(CogInitializer& initializer)
 {
-  // Use the engines dt
+  // We're warming up the particle system on ScriptInitialize to accommodate for
+  // the SplineParticleEmitter. SplineParticleEmitter resolves its serialized CogPath
+  // target to the spline in OnAllObjectsCreated. It has a dependency on us, which means
+  // its OnAllObjectsCreated will be called after ours. Because of this, we have to
+  // warm up the particle system at a later point, hence the use of ScriptInitialize
+  
+  // Use the engines dt for simulating the warm up
   float timeStep = Z::gEngine->has(TimeSystem)->GetTargetDt();
 
   float timeLeft = mWarmUpTime;
@@ -314,7 +320,14 @@ ParticleListRange ParticleSystem::AllParticles()
 //******************************************************************************
 void ParticleSystem::Clear()
 {
+  mParticleList.ClearDestroyed();
   mParticleList.FreeParticles();
+
+  forRange (ParticleEmitter& emitter, mEmitters.All())
+    emitter.ResetCount();
+
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
+    r.Front().Clear();
 }
 
 //******************************************************************************
@@ -327,9 +340,10 @@ void ParticleSystem::OnUpdate(UpdateEvent* event)
 void ParticleSystem::SystemUpdate(float dt)
 {
   // Our parent will update us if we're a child system
-  if (mChildSystem == false)
-    BaseUpdate(dt);
+  if (mChildSystem)
+    return;
 
+  BaseUpdate(dt);
   UpdateLifetimes(dt);
   mParticleList.ClearDestroyed();
 }
@@ -436,6 +450,9 @@ void ParticleSystem::UpdateLifetimes(float dt)
       particle = particle->Next;
     }
   }
+
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
+    r.Front().UpdateLifetimes(dt);
 }
 
 //******************************************************************************
@@ -477,8 +494,6 @@ void ParticleSystem::OnSelectionFinal(SelectionChangedEvent* selectionEvent)
   {
     mDebugDrawing = false;
     Clear();
-    forRange (ParticleEmitter& emitter, mEmitters.All())
-      emitter.ResetCount();
   }
 }
 

@@ -15,6 +15,7 @@ class EngineLibraryExtensions
 public:
   // Only called for native libraries.
   static void AddNativeExtensions(LibraryBuilder& builder);
+  static void AddNativeExtensions(LibraryBuilder& builder, BoundTypeMap& boundTypes);
 
   // Called before each library is compiled (only called for Resource Libraries)
   static void AddExtensionsPreCompilation(LibraryBuilder& builder, ResourceLibrary* resources);

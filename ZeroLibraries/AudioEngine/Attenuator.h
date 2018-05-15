@@ -43,8 +43,8 @@ namespace Audio
   class AttenuatorNode : public SimpleCollapseNode
   {
   public:
-    AttenuatorNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, 
-      Math::Vec3Param position, const AttenuationData& data, const CurveTypes::Enum curveType, 
+    AttenuatorNode(Zero::StringParam name, const unsigned ID, Math::Vec3Param position, 
+      const AttenuationData& data, const CurveTypes::Enum curveType, 
       Zero::Array<Math::Vec3> *customCurveData, ExternalNodeInterface* extInt, const bool isThreaded = false);
     
     // Sets the current position of the attenuator

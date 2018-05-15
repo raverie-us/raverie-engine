@@ -49,6 +49,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AabbTests.cpp" />
     <ClCompile Include="Hull3dTests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ClosestPointTests.cpp" />

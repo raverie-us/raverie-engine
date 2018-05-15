@@ -1,10 +1,16 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 ZilchDefineType(SamplerSettings, builder, type)
 {
+  ZeroBindDocumented();
+
   type->CreatableInScript = true;
   ZilchBindFieldProperty(mAddressingX);
   ZilchBindFieldProperty(mAddressingY);
@@ -16,6 +22,7 @@ ZilchDefineType(SamplerSettings, builder, type)
   ZilchBindConstructor();
 }
 
+//**************************************************************************************************
 SamplerSettings::SamplerSettings()
   : mAddressingX(TextureAddressing::Clamp)
   , mAddressingY(TextureAddressing::Clamp)
@@ -25,6 +32,7 @@ SamplerSettings::SamplerSettings()
 {
 }
 
+//**************************************************************************************************
 u32 SamplerSettings::GetSettings()
 {
   u32 settings = 0;
@@ -36,56 +44,67 @@ u32 SamplerSettings::GetSettings()
   return settings;
 }
 
+//**************************************************************************************************
 u32 SamplerSettings::AddressingX(TextureAddressing::Enum addressingX)
 {
   return (0x08 | (u32)addressingX) << 0;
 }
 
+//**************************************************************************************************
 u32 SamplerSettings::AddressingY(TextureAddressing::Enum addressingY)
 {
   return (0x08 | (u32)addressingY) << 4;
 }
 
+//**************************************************************************************************
 u32 SamplerSettings::Filtering(TextureFiltering::Enum filtering)
 {
   return (0x08 | (u32)filtering) << 8;
 }
 
+//**************************************************************************************************
 u32 SamplerSettings::CompareMode(TextureCompareMode::Enum compareMode)
 {
   return (0x08 | (u32)compareMode) << 12;
 }
 
+//**************************************************************************************************
 u32 SamplerSettings::CompareFunc(TextureCompareFunc::Enum compareFunc)
 {
   return (0x08 | (u32)compareFunc) << 16;
 }
 
+//**************************************************************************************************
 TextureAddressing::Enum SamplerSettings::AddressingX(u32 samplerSettings)
 {
   return (TextureAddressing::Enum)((samplerSettings & 0x00000007) >> 0);
 }
 
+//**************************************************************************************************
 TextureAddressing::Enum SamplerSettings::AddressingY(u32 samplerSettings)
 {
   return (TextureAddressing::Enum)((samplerSettings & 0x00000070) >> 4);
 }
 
+//**************************************************************************************************
 TextureFiltering::Enum SamplerSettings::Filtering(u32 samplerSettings)
 {
   return (TextureFiltering::Enum)((samplerSettings & 0x00000700) >> 8);
 }
 
+//**************************************************************************************************
 TextureCompareMode::Enum SamplerSettings::CompareMode(u32 samplerSettings)
 {
   return (TextureCompareMode::Enum)((samplerSettings & 0x00007000) >> 12);
 }
 
+//**************************************************************************************************
 TextureCompareFunc::Enum SamplerSettings::CompareFunc(u32 samplerSettings)
 {
   return (TextureCompareFunc::Enum)((samplerSettings & 0x00070000) >> 16);
 }
 
+//**************************************************************************************************
 void SamplerSettings::AddValue(u32& samplerSettings, u32 value)
 {
   // If value has been set already then the extra check bit will overlap
@@ -95,6 +114,7 @@ void SamplerSettings::AddValue(u32& samplerSettings, u32 value)
   samplerSettings |= value;
 }
 
+//**************************************************************************************************
 void SamplerSettings::FillDefaults(u32& samplerSettings, u32 defaultSettings)
 {
   // Each value from defaults is multiplied by whether or not the check bit is already present in the settings
@@ -106,21 +126,27 @@ void SamplerSettings::FillDefaults(u32& samplerSettings, u32 defaultSettings)
   samplerSettings |= (defaultSettings & 0x000F0000) * (u32)((samplerSettings & 0x00080000) == 0);
 }
 
+//**************************************************************************************************
 ZilchDefineType(RenderTarget, builder, type)
 {
+  ZeroBindDocumented();
+
   ZilchBindFieldGetter(mTexture);
   ZilchBindMethod(Release);
 }
 
+//**************************************************************************************************
 RenderTarget::RenderTarget(RenderTargetManager* manager)
   : mManager(manager)
 {
 }
 
+//**************************************************************************************************
 RenderTarget::~RenderTarget()
 {
 }
 
+//**************************************************************************************************
 void RenderTarget::Release()
 {
   if (mTexture->mProtected == false)
@@ -129,6 +155,7 @@ void RenderTarget::Release()
   mManager->ClearRenderTarget(this);
 }
 
+//**************************************************************************************************
 void RenderTargetManager::Shutdown()
 {
   forRange (RenderTarget* renderTarget, mRenderTargets.All())
@@ -140,6 +167,7 @@ void RenderTargetManager::Shutdown()
   mUnusedTextures.Clear();
 }
 
+//**************************************************************************************************
 HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings)
 {
   RenderTarget* renderTarget = new RenderTarget(this);
@@ -177,6 +205,7 @@ HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(uint width, uint hei
   return renderTarget;
 }
 
+//**************************************************************************************************
 HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(HandleOf<Texture> texture)
 {
   if (texture == nullptr)
@@ -199,6 +228,7 @@ HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(HandleOf<Texture> te
   return renderTarget;
 }
 
+//**************************************************************************************************
 void RenderTargetManager::ClearRenderTarget(RenderTarget* renderTarget)
 {
   for (uint i = 0; i < mUsedTextures.Size(); ++i)
@@ -216,6 +246,7 @@ void RenderTargetManager::ClearRenderTarget(RenderTarget* renderTarget)
   Error("RenderTarget's texture was not found in used list.");
 }
 
+//**************************************************************************************************
 void RenderTargetManager::ClearRenderTargets()
 {
   // Delete RenderTargets to invalidate any handles that might be held in script
@@ -229,6 +260,7 @@ void RenderTargetManager::ClearRenderTargets()
   mUsedTextures.Clear();
 }
 
+//**************************************************************************************************
 void RenderTargetManager::ClearUnusedTextures()
 {
   mUnusedTextures.Clear();
@@ -236,6 +268,7 @@ void RenderTargetManager::ClearUnusedTextures()
   mAvailableTextures.Clear();
 }
 
+//**************************************************************************************************
 u64 RenderTargetManager::MakeLookupId(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings)
 {
   u64 lookupId = 0;
@@ -248,6 +281,7 @@ u64 RenderTargetManager::MakeLookupId(uint width, uint height, TextureFormat::En
   return lookupId;
 }
 
+//**************************************************************************************************
 HandleOf<Texture> RenderTargetManager::FindTexture(u64 lookupId, RenderTargetTextureMap& textureMap)
 {
   if (textureMap.ContainsKey(lookupId))

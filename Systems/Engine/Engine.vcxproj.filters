@@ -82,9 +82,6 @@
     <Filter Include="Operation">
       <UniqueIdentifier>{67a12853-f8fc-482d-9485-313bf292144e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="EngineComponents\HotKeys">
-      <UniqueIdentifier>{1715f1c6-7f11-4ab3-b3f7-b59969a53644}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DebugDraw">
       <UniqueIdentifier>{58ea2c75-3e75-4a02-8b84-4e63b93b955c}</UniqueIdentifier>
     </Filter>
@@ -315,9 +312,6 @@
     <ClCompile Include="CogOperations.cpp">
       <Filter>Operation</Filter>
     </ClCompile>
-    <ClCompile Include="HotKeyManager.cpp">
-      <Filter>EngineComponents\HotKeys</Filter>
-    </ClCompile>
     <ClCompile Include="DebugDraw.cpp">
       <Filter>DebugDraw</Filter>
     </ClCompile>
@@ -378,6 +372,9 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="Action\ActionEase.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.hpp">
@@ -610,9 +607,6 @@
     </ClInclude>
     <ClInclude Include="CogOperations.hpp">
       <Filter>Operation</Filter>
-    </ClInclude>
-    <ClInclude Include="HotKeyManager.hpp">
-      <Filter>EngineComponents\HotKeys</Filter>
     </ClInclude>
     <ClInclude Include="DebugDraw.hpp">
       <Filter>DebugDraw</Filter>

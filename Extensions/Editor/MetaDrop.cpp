@@ -163,9 +163,9 @@ void MetaDrag::OnMouseMove(MouseEvent* event)
       mToolTip->SetText(dropEvent->Result);
       //If the drop event failed let the user know why
       if(dropEvent->Failed)
-        mToolTip->SetColor(ToolTipColor::Red);
+        mToolTip->SetColorScheme(ToolTipColorScheme::Red);
       else
-        mToolTip->SetColor(ToolTipColor::Default);
+        mToolTip->SetColorScheme(ToolTipColorScheme::Default);
 
       ToolTipPlacement placement;
 

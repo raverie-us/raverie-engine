@@ -764,20 +764,17 @@ void Collider::UnlinkAllJoints()
     Joint* joint = jointRange.Front().mJoint;
     jointRange.PopFront();
     
+    // Wake up the other object in the connection
+    Physics::JointHelpers::ForceAwakeJoint(joint);
+
     // We need to remove ourself from the joint however due to joints being allowed to
     // live even when they're invalid we can't just tell the joint to unlink itself.
     // Instead we need to remove ourself from this joint while keeping the other collider
     // in-tact so it can become valid again. Afterwards the joint should be marked invalid.
     if(joint->GetCollider(0) == this)
-    {
-      joint->mEdges[0].mCollider = nullptr;
-      JointEdgeList::Unlink(&joint->mEdges[0]);
-    }
+      joint->Relink(0, nullptr);
     else if(joint->GetCollider(1) == this)
-    {
-      joint->mEdges[1].mCollider = nullptr;
-      JointEdgeList::Unlink(&joint->mEdges[1]); 
-    }
+      joint->Relink(1, nullptr);
     joint->SetValid(false);
   }
   mJointEdges.Clear();

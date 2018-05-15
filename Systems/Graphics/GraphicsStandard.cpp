@@ -1,9 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson, Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,6 +11,8 @@ ZilchDefineRange(GraphicalEntryRange);
 ZilchDefineRange(MultiSpriteEntryRange);
 ZilchDefineRange(VertexSemanticRange);
 ZilchDefineRange(ParticleListRange);
+ZilchDefineRange(Array<HandleOf<Material>>);
+ZilchDefineRange(Array<HandleOf<RenderGroup>>);
 
 // Enums
 ZilchDefineEnum(BlendMode);
@@ -48,6 +47,8 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeRange(MultiSpriteEntryRange);
   ZilchInitializeRange(ParticleListRange);
   ZilchInitializeRange(VertexSemanticRange);
+  ZilchInitializeRange(Array<HandleOf<Material>>);
+  ZilchInitializeRange(Array<HandleOf<RenderGroup>>);
 
   // Enums
   ZilchInitializeEnum(BlendMode);
@@ -166,6 +167,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
+//**************************************************************************************************
 void GraphicsLibrary::Initialize()
 {
   BuildStaticLibrary();
@@ -187,6 +189,7 @@ void GraphicsLibrary::Initialize()
   ResourceLibrary::sFragmentType = ZilchTypeId(ZilchFragment);
 }
 
+//**************************************************************************************************
 void GraphicsLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();

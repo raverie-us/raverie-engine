@@ -60,12 +60,14 @@ ZilchDefineType(EditorConfig, builder, type)
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
+  ZilchBindFieldProperty(ZeroHubUsername);
 }
 
 void EditorConfig::Serialize(Serializer& stream)
 {
   SerializeNameDefault(EditingProject, String());
   SerializeNameDefault(EditingLevel, String());
+  SerializeNameDefault(ZeroHubUsername, String());
 }
 
 //--------------------------------------------------------------- Content Config
@@ -111,7 +113,7 @@ void UserConfig::Serialize(Serializer& stream)
 
   SerializeNameDefault(LastVersionKnown, 0u);
   SerializeNameDefault(LastVersionUsed, 0u);
-  SerializeNameDefault(LastAcceptedEula, (u64)0);
+  SerializeNameDefault(LastAcceptedEulaHash, (size_t)0);
 }
 
 //------------------------------------------------------------- Developer Config

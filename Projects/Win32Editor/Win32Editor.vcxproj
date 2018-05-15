@@ -150,8 +150,8 @@
       <StackReserveSize>8388608</StackReserveSize>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <DelayLoadDLLs>freetype28.dll;dbghelp.dll;portaudio_x86.dll;libcef.dll;</DelayLoadDLLs>
-      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;portaudio_x86.lib;Winmm.lib;opusDebug.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>freetype28.dll;dbghelp.dll;libcef.dll</DelayLoadDLLs>
+      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;Winmm.lib;Avrt.lib;opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>CALL CreateBuildInfo.cmd $(ProjectName) "$(ZeroSource)" "$(ZERO_OUTPUT)" &gt; "$(OutDir)BuildInfo.data"
@@ -336,7 +336,6 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     <Copy_Data_File Include="..\..\External\Freetype\bin\freetype28.dll" />
     <Copy_Data_File Include="..\..\External\Freetype\bin\zlib1.dll" />
     <Copy_Data_File Include="..\Win32Shared\ErrorDialog.exe" />
-    <Copy_Data_File Include="..\..\External\PortAudio\portaudio_x86.dll" />
     <Copy_Data_File Include="..\Win32Shared\Configuration.data" />
   </ItemGroup>
   <ItemGroup>

@@ -78,6 +78,8 @@ public:
 
   void OnResourcesLoaded(ResourceEvent* event);
 
+  ResourceLibrary* GetResourceLibraryFromCurrentType(BoundType* currentType);
+
   // Resources that were modified in the editor.
   HashSet<ResourceId> mModifiedResources;
 

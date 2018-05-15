@@ -40,6 +40,14 @@ void Chrome::OnChromePopup(ChromePopupEvent* event)
   WebBrowserPopupCreateEvent toSend;
   toSend.mWebBrowser = webBrowser;
   toSend.mName = event->mTargetFrameName;
+  if (toSend.mName.Empty())
+  {
+    toSend.mName = CefString(&event->mWindowInfo.window_name).ToString().c_str();
+
+    if (toSend.mName.Empty())
+      toSend.mName = "Popup";
+  }
+
   toSend.mUrl = event->mTargetUrl;
   webBrowser->DispatchEvent(Events::WebBrowserPopup, &toSend);
 }
@@ -383,6 +391,36 @@ bool Chrome::OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> f
   toSend.mWebBrowser = webBrowser;
   toSend.mUrl = request->GetURL().ToString().c_str();
   webBrowser->DispatchEvent(Events::WebBrowserUrlChanged, &toSend);
+
+  // Check to see if the scheme is supported. If not, don't handle it.
+  CefURLParts urlParts;
+  if (CefParseURL(request->GetURL(), urlParts))
+  {
+    String scheme = String(CefString(&urlParts.scheme).ToString().c_str()).ToLower();
+
+    // This list was gleaned from cef_scheme.h and posts on the CEF forum
+    static const String cHttp("http");
+    static const String cHttps("https");
+    static const String cFile("file");
+    static const String cFtp("ftp");
+    static const String cAbout("about");
+    static const String cViewCache("view-cache");
+
+    // If the scheme is not one of the above, then respond as if we handled the url
+    bool isUnknownScheme =
+      scheme != cHttp &&
+      scheme != cHttps &&
+      scheme != cFile &&
+      scheme != cFtp &&
+      scheme != cAbout &&
+      scheme != cViewCache;
+
+    // Always handle the event in the case of an unknown scheme
+    // otherwise the browser will bring the user to an error page
+    if (isUnknownScheme)
+      return true;
+  }
+
   return toSend.mHandled;
 }
 

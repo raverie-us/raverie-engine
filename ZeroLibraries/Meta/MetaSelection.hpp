@@ -109,7 +109,7 @@ public:
   void FinalSelectionUpdated();
 
   //------------------------------------------------------------- SelectionRange
-  typedef HashSet<Handle>::range SetRange;
+  typedef OrderedHashSet<Handle>::range SetRange;
 
   class range
   {
@@ -194,7 +194,8 @@ protected:
   /// The primary selected object. The primary is also inserted into the
   /// selected objects set.
   Handle mPrimary;
-  HashSet<Handle> mSelectedObjects;
+  OrderedHashSet<Handle> mSelectedObjects;
+
 public:
   static MetaSelectionArray sSelections;
 };

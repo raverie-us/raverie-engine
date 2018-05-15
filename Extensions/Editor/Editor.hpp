@@ -94,6 +94,7 @@ public:
   Widget* ToggleConsole();
   Widget* ShowBrowser();
   Widget* ShowMarket();
+  Widget* ShowChat();
 
   /// Selects a tool with the given name.
   void SelectTool(StringParam toolName);
@@ -220,7 +221,7 @@ public:
   /// To re-initialize script objects, we need to remove all live script that
   /// run in editor, then re-add them after the scripts have been compiled.
   void OnScriptsCompiledPrePatch(ZilchCompileEvent* e);
-  void OnScriptsCompiledPostPatch(ZilchCompileEvent* e);
+  void OnScriptsCompiledPatch(ZilchCompileEvent* e);
 
   /// Removes all live zilch objects on all game sessions. It will add all
   /// removal operations to the mReInitializeQueue so they can all be
@@ -239,9 +240,10 @@ public:
 //Internals
   void OnSaveCheck(SavingEvent* event);
   RuntimeEditorImpl* mRuntimeEditorImpl;
-  void SelectOnly(HandleParam object);
+  /// This function is marked for removal from Zero.Editor, use Zero.Editor.Selection's functionality instead.
   void SelectPrimary(HandleParam object);
-  virtual void OnEngineUpdate(UpdateEvent* event) {}
+  virtual void OnEngineUpdate(UpdateEvent* event);
+  void OnResourcesUnloaded(ResourceEvent* event);
   void Update();
   void ExecuteCommand(StringParam commandName);
   Composite* OpenSearchWindow(Widget* returnFocus, bool noBorder = false);
@@ -277,6 +279,7 @@ public:
   void OnSaveRestartMessageBox(MessageBoxEvent* event);
   GameArray mGames;
   bool mGamePending;
+  bool mStopGame;
 
   Array<CogId> mSelectionGizmos;
   UniquePointer<EventObject> mSimpleDebuggerListener;

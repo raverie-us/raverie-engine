@@ -12,16 +12,16 @@ namespace Audio
   //-------------------------------------------------------------------------- Microphone Input Node
 
   //************************************************************************************************
-  MicrophoneInputNode::MicrophoneInputNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-    ExternalNodeInterface* extInt, bool isThreaded) :
-    SoundNode(status, name, ID, extInt, false, false, isThreaded),
+  MicrophoneInputNode::MicrophoneInputNode(Zero::StringParam name, unsigned ID, 
+      ExternalNodeInterface* extInt, bool isThreaded) :
+    SoundNode(name, ID, extInt, false, false, isThreaded),
     Active(true),
     Volume(1.0f),
     Stopping(false),
     CurrentVolume(1.0f)
   {
     if (!isThreaded)
-      SetSiblingNodes(new MicrophoneInputNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new MicrophoneInputNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -52,7 +52,7 @@ namespace Audio
       // Don't change volume if we are currently not active or deactivating
       if (Active && !Stopping)
         VolumeInterpolator.SetValues(CurrentVolume, newVolume,
-          AudioSystemInternal::PropertyChangeFrames);
+          PropertyChangeFrames);
     }
   }
 
@@ -87,7 +87,7 @@ namespace Audio
         Stopping = true;
         // Interpolate volume to 0
         VolumeInterpolator.SetValues(CurrentVolume, 0.0f,
-          AudioSystemInternal::PropertyChangeFrames);
+          PropertyChangeFrames);
       }
       // Activating
       else
@@ -97,7 +97,7 @@ namespace Audio
         Stopping = false;
         // Interpolate volume to its previous setting
         VolumeInterpolator.SetValues(CurrentVolume, Volume,
-          AudioSystemInternal::PropertyChangeFrames);
+          PropertyChangeFrames);
       }
     }
   }

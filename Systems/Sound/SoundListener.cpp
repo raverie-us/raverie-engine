@@ -23,10 +23,13 @@ ZilchDefineType(SoundListener, builder, type)
 
   ZilchBindGetterSetterProperty(Active);
   ZilchBindGetter(SoundNode);
+  ZilchBindGetterSetterProperty(AttenuationScale);
 }
 
 //**************************************************************************************************
-SoundListener::SoundListener() : mActive(true)
+SoundListener::SoundListener() : 
+  mActive(true),
+  mAttenuationScale(1.0f)
 {
 }
 
@@ -67,19 +70,15 @@ void SoundListener::Initialize(CogInitializer& initializer)
   // Add a new listener to audio engine 
   SoundNode* newNode = new SoundNode();
   mSoundNode = newNode;
-  Status status;
   String name;
   if (!mSpace->GetOwner()->IsEditorMode())
     name = "Listener";
   else
     name = "EditorListener";
 
-  newNode->SetNode(new Audio::ListenerNode(status, name, Z::gSound->mCounter++,
+  mSoundNode->mNode = new Audio::ListenerNode(name, Z::gSound->mCounter++,
     Audio::ListenerWorldPositionInfo(mTransform->GetWorldTranslation(), Math::Vec3(0, 0, 0), 
-      -forward, y), newNode), status);
-
-  if (status.Failed())
-    return;
+      -forward, y), newNode);
 
   newNode->mCanRemove = false;
   newNode->mCanReplace = false;
@@ -87,6 +86,8 @@ void SoundListener::Initialize(CogInitializer& initializer)
   // If not currently active, tell the audio engine
   if (!mActive)
     ((Audio::ListenerNode*)newNode->mNode)->SetActive(false);
+  // Set the attenuation scale
+  ((Audio::ListenerNode*)newNode->mNode)->SetAttenuationScale(mAttenuationScale);
 
   // Add to all existing SoundEmitters
   forRange(SoundEmitter& emitter, mSpace->mEmitters.All())
@@ -101,6 +102,7 @@ void SoundListener::Initialize(CogInitializer& initializer)
 void SoundListener::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mActive, true);
+  SerializeNameDefault(mAttenuationScale, 1.0f);
 }
 
 //**************************************************************************************************
@@ -137,6 +139,19 @@ void SoundListener::SetActive(bool newActive)
 HandleOf<SoundNode> SoundListener::GetSoundNode()
 {
   return mSoundNode;
+}
+
+//**************************************************************************************************
+float SoundListener::GetAttenuationScale()
+{
+  return mAttenuationScale;
+}
+
+//**************************************************************************************************
+void SoundListener::SetAttenuationScale(float scale)
+{
+  mAttenuationScale = scale;
+  ((Audio::ListenerNode*)mSoundNode->mNode)->SetAttenuationScale(scale);
 }
 
 //**************************************************************************************************

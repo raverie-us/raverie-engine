@@ -27,12 +27,14 @@ void AtomicStore(volatile s8*  target, s8  value);
 void AtomicStore(volatile s16* target, s16 value);
 void AtomicStore(volatile s32* target, s32 value);
 void AtomicStore(volatile s64* target, s64 value);
+void AtomicStore(void* volatile* target, void* value);
 
 /// Returns the value stored in target
 s8  AtomicLoad(volatile s8*  target);
 s16 AtomicLoad(volatile s16* target);
 s32 AtomicLoad(volatile s32* target);
 s64 AtomicLoad(volatile s64* target);
+void* AtomicLoad(void* volatile* target);
 
 /// Sets the value stored in target
 /// Returns the previous value stored in target
@@ -40,6 +42,7 @@ s8  AtomicExchange(volatile s8*  target, s8  value);
 s16 AtomicExchange(volatile s16* target, s16 value);
 s32 AtomicExchange(volatile s32* target, s32 value);
 s64 AtomicExchange(volatile s64* target, s64 value);
+void* AtomicExchange(void* volatile* target, void* value);
 
 /// Sets the value stored in target if target is bit-wise equal to comparison
 /// Returns the previous value stored in target
@@ -47,6 +50,7 @@ s8  AtomicCompareExchange(volatile s8*  target, s8  value, s8  comparison);
 s16 AtomicCompareExchange(volatile s16* target, s16 value, s16 comparison);
 s32 AtomicCompareExchange(volatile s32* target, s32 value, s32 comparison);
 s64 AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison);
+void* AtomicCompareExchange(void* volatile* target, void* value, void* comparison);
 
 /// Sets the value stored in target if target is bit-wise equal to comparison
 /// Returns true if the exchange took place, else false
@@ -54,6 +58,7 @@ bool AtomicCompareExchangeBool(volatile s8*  target, s8  value, s8  comparison);
 bool AtomicCompareExchangeBool(volatile s16* target, s16 value, s16 comparison);
 bool AtomicCompareExchangeBool(volatile s32* target, s32 value, s32 comparison);
 bool AtomicCompareExchangeBool(volatile s64* target, s64 value, s64 comparison);
+bool AtomicCompareExchangeBool(void* volatile* target, void* value, void* comparison);
 
 /// Adds the specified value to the value stored in target
 /// Returns the previous value stored in target

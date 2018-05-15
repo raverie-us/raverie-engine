@@ -43,11 +43,6 @@ namespace Events
   DeclareEvent(ToolDraw);
 }
 
-namespace Tags
-{
-  DeclareTag(Tool);
-}
-
 class ViewportTextWidget : public Text
 {
   ByteColor mTextNonHoverColor;

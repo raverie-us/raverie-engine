@@ -138,12 +138,19 @@ namespace Zilch
     // Whether or not we were accessing statics or instance members of the type
     bool IsStatic;
 
+    // If we're pressing . in the middle of an already existing expression 'this.Lives' then
+    // we'll get the right hand side of what is already filled out, specifically 'Lives'.
+    String PartialMemberName;
+
     // A convenient array of completion names and descriptions to show in any text editor (sorted by name)
     Array<CompletionEntry> CompletionEntries;
 
     // The name of the function when overloads are involved
     // If the overloads are generated from a delegate, the name will be "delegate"
     String FunctionName;
+
+    // If this is a function call, then this will contain which argument index we're on, or -1 if it's not valid
+    int CallArgumentIndex;
 
     // When performing a function call these are all the possible overloads that we should show (also works on single delegates)
     // This includes descriptions, parameter names, and the types
@@ -244,7 +251,7 @@ namespace Zilch
     );
 
     // Compiles the project into a single library and also returns the syntax tree
-    LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut);
+    LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut, Array<UserToken>& tokensOut);
 
     // Compiles the project into a single library
     LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation);

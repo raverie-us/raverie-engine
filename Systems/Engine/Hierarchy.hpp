@@ -64,6 +64,7 @@ public:
 
   HierarchyList Children;
   HierarchyList::range GetChildren();
+  HierarchyList::reverse_range GetChildrenReversed();
   void DestroyChildren();
 };
 

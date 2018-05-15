@@ -2,8 +2,7 @@
 ///
 /// \file ContextMenu.hpp
 ///
-///
-/// Authors: Chris Peters
+/// Authors: Chris Peters, Dane Curbow
 /// Copyright 2010, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,9 +16,9 @@ class MenuBarItem;
 
 namespace Events
 {
-  DeclareEvent(MenuClosed);
+  DeclareEvent(MenuDestroy);
   DeclareEvent(MenuItemSelected);
-  DeclareEvent(MouseEnterSibling);
+  DeclareEvent(MouseHoverSibling);
 }
 
 namespace MenuUi
@@ -81,9 +80,9 @@ public:
   void OnLeftMouseUp(MouseEvent* event);
   void OnMouseEnter(MouseEvent* event);
   void OnMouseExit(MouseEvent* event);
-  void OnMouseEnterHierarchy(MouseEvent* event);
-  void OnChildMenuClosed(ObjectEvent* e);
-  void OnSiblingEntered(ObjectEvent* e);
+  void OnMouseHover(MouseEvent* event);
+  void OnSiblingHover(ObjectEvent* e);
+  void OnChildMenuDestroy(ObjectEvent* e);
 
   //String Name;
   String ClientData;
@@ -130,6 +129,8 @@ public:
   void UpdateTransform() override;
   void SizeToContents() override;
   Vec2 GetMinSize() override;
+  void OnDestroy() override;
+
   uint ItemCount();
   void LoadMenu(StringParam menuName);
   void CloseContextMenu();

@@ -1,15 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Nathan Carlson
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Joshua Davis, Nathan Carlson
+// Copyright 2014, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ZilchFragment
 /// Zilch shader fragment file Resource.
 class ZilchFragment : public ZilchDocumentResource
 {
@@ -33,7 +29,6 @@ public:
   void GetLibrariesRecursive(Array<LibraryRef>& libraries, ResourceLibrary* library);
 };
 
-//-------------------------------------------------------------------ZilchFragmentLoader
 class ZilchFragmentLoader : public ResourceLoader
 {
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override;
@@ -41,7 +36,6 @@ class ZilchFragmentLoader : public ResourceLoader
   void ReloadFromFile(Resource* resource, ResourceEntry& entry) override;
 };
 
-//-------------------------------------------------------------------ZilchFragmentManager
 class ZilchFragmentManager : public ResourceManager
 {
 public:
@@ -64,4 +58,4 @@ public:
   int mLastExceptionVersion;
 };
 
-}//namespace Zero
+} // namespace Zero

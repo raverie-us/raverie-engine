@@ -91,13 +91,15 @@ MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Functio
 template<typename T>
 bool TrimCompareFn(const T* lhs, const T* rhs)
 {
-  return lhs->mName < rhs->mName;
+  return lhs->mName.ToLower() < rhs->mName.ToLower();
 }
 
 template<>
 bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
 {
-  int nameComparison = lhs->mName.CompareTo(rhs->mName);
+  String lhsName = lhs->mName.ToLower();
+  String rhsName = rhs->mName.ToLower();
+  int nameComparison = lhsName.CompareTo(rhsName);
 
   if (nameComparison != 0)
   {
@@ -106,10 +108,12 @@ bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
 
   uint iterLimit = Math::Min(lhs->mParameterList.Size(), rhs->mParameterList.Size());
 
-  // if the names are the same, sort by parameter name
+  // if the names are the same, sort by parameter type
   for (uint i = 0; i < iterLimit; ++i)
   {
-    int typeComparison = lhs->mParameterList[i]->mType.CompareTo(rhs->mParameterList[i]->mType);
+    String lhsTypeName = lhs->mParameterList[i]->mType.ToLower();
+    String rhsTypeName = rhs->mParameterList[i]->mType.ToLower();
+    int typeComparison = lhsTypeName.CompareTo(rhsTypeName);
 
     if (typeComparison != 0)
       return typeComparison < 0;
@@ -118,6 +122,116 @@ bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
   // if we get here, all the param types up to min param count were the same
   return lhs->mParameterList.Size() < rhs->mParameterList.Size();
 }
+
+// creates the full template name but with the template type names instead of the instance type names
+String BuildDocumentationFullTemplateName(StringParam baseName, Array<Constant>& templateArgs
+  , TypeReplacementMap& replacements)
+{
+  String argument = templateArgs[0].ToString();
+
+  StringBuilder builder;
+  builder << baseName << "[" << ReplaceTypeIfOnList(argument, &replacements);
+
+  for (uint32_t i = 1; i < templateArgs.Size(); ++i)
+  {
+    argument = templateArgs[i].ToString();
+
+    builder << ", " << ReplaceTypeIfOnList(argument, &replacements);
+  }
+
+  builder << "]";
+  return builder.ToString();
+}
+
+
+String ReplaceTypeIfOnList(String& type, TypeReplacementMap *replacements)
+{
+  String returnString = type;
+
+  // if we have no replacements to search, just return the type
+  if (replacements == nullptr)
+    return type;
+
+  // replace the type if it is in our replacements list
+  if (replacements->FindPairPointer(type) != nullptr)
+  {
+    return replacements->FindPairPointer(type)->second;
+  }
+
+  // check if this type contains one of our replacements
+  Tokenizer typeTokenizer;
+
+  TempToken currToken;
+
+  typeTokenizer.Load(type);
+
+  while (!typeTokenizer.AtEnd())
+  {
+    typeTokenizer.ReadToken(currToken);
+
+    auto *replacementPair = replacements->FindPairPointer(currToken.Text);
+
+    if (!replacementPair)
+      continue;
+
+    // make sure we are not just appending more template params by replacing base with full type
+    if (type == replacementPair->second)
+      return returnString;
+
+    returnString = returnString.Replace(replacementPair->first, replacementPair->second);
+  }
+
+  return returnString;
+}
+
+// inserts new replacements into the the replacement map from template and returns full doc name
+String InsertIntoReplacementsMap(String& baseName, String& fullInstanceName,
+  InstantiateTemplateInfo& templateHandler, Array<Constant>& dummyTypes,
+  ArrayMap<String, String>& replacements, String *fullDocName = nullptr)
+{
+  Array<TemplateParameter>&params = templateHandler.TemplateParameters;
+
+  // maybe theway this has to wok is if we see a mismatch we have to do some replacement shit
+  if (params.Size() != dummyTypes.Size())
+  {
+    Error("Template Parameter and type replacement length mismatch, unable to document template.");
+    return "";
+  }
+
+  // get the full name with the nice template param names, instead of the dummy type names
+  String fullDocTemplateName;
+
+  if (fullDocName == nullptr)
+  {
+    StringBuilder fullNameBuilder;
+
+    fullNameBuilder << baseName << "[" << params[0].Name;
+
+    for (uint32_t i = 1; i < params.Size(); ++i)
+    {
+      fullNameBuilder << ", " << params[i].Name;
+    }
+
+    fullNameBuilder << "]";
+
+    fullDocTemplateName = fullNameBuilder.ToString();
+  }
+  else
+  {
+    fullDocTemplateName = *fullDocName;
+  }
+
+  replacements.InsertOrAssign(baseName, fullDocTemplateName);
+  replacements.InsertOrAssign(fullInstanceName, fullDocTemplateName);
+
+  for (uint32_t i = 0; i < params.Size(); ++i)
+  {
+    replacements.InsertOrAssign(dummyTypes[i].ToString(), params[i].Name);
+  }
+
+  return fullDocTemplateName;
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 // ExceptionDoc
@@ -271,7 +385,6 @@ void ParameterDoc::Serialize(Serializer& stream)
   SerializeName(mName);
   SerializeName(mType);
   SerializeName(mDescription);
-
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -290,7 +403,116 @@ MethodDoc::~MethodDoc()
   {
     delete param;
   }
+  forRange(ExceptionDoc* except, mPossibleExceptionThrows.All())
+  {
+    delete except;
+  }
 }
+
+////////////////////////////////////////////////////////////////////////
+// AttributeDoc
+////////////////////////////////////////////////////////////////////////
+AttributeDoc::AttributeDoc(AttributeExtension* attribute)
+{
+  mName = attribute->mAttributeName;
+  mAllowStatic = attribute->mAllowStatic;
+  mAllowMultiple = attribute->mAllowMultiple;
+  mDeveloperAttribute = false;
+}
+
+
+bool AttributeDocCompareFn(AttributeDoc* lhs, AttributeDoc* rhs)
+{
+  return lhs->mName < rhs->mName;
+}
+
+void AttributeDoc::Serialize(Serializer& stream)
+{
+  SerializeName(mName);
+  SerializeName(mDescription);
+  SerializeName(mAllowStatic);
+  SerializeName(mAllowMultiple);
+  SerializeName(mDeveloperAttribute);
+}
+
+////////////////////////////////////////////////////////////////////////
+// AttributeDocList
+////////////////////////////////////////////////////////////////////////
+Zero::AttributeDocList::~AttributeDocList()
+{
+  forRange(AttributeDoc* attribToDelete, mObjectAttributes.All())
+  {
+    delete attribToDelete;
+  }
+  forRange(AttributeDoc* attribToDelete, mFunctionAttributes.All())
+  {
+    delete attribToDelete;
+  }
+  forRange(AttributeDoc* attribToDelete, mPropertyAttributes.All())
+  {
+    delete attribToDelete;
+  }
+}
+
+void AttributeDocList::Serialize(Serializer& stream)
+{
+  SerializeName(mObjectAttributes);
+  SerializeName(mFunctionAttributes);
+  SerializeName(mPropertyAttributes);
+}
+
+// we have a seperate saveToFile since the doc tool can't use Serialize function
+bool AttributeDocList::SaveToFile(StringParam fileName)
+{
+  Status status;
+  TextSaver saver;
+
+  saver.Open(status, fileName.c_str());
+
+  if (status.Failed())
+  {
+    Error("Unable to save attribute list file: %s\n", fileName);
+    return false;
+  }
+
+  saver.StartPolymorphic("AttributeDocList");
+
+  saver.SerializeField("ObjectAttributes", mObjectAttributes);
+  saver.SerializeField("FunctionAttributes", mFunctionAttributes);
+  saver.SerializeField("PropertyAttributes", mPropertyAttributes);
+
+  saver.EndPolymorphic();
+
+  saver.Close();
+
+  return true;
+}
+
+void AttributeDocList::CreateAttributeMap(void)
+{
+  forRange(AttributeDoc* attrib, mObjectAttributes.All())
+  {
+    mObjectAttributesMap[attrib->mName] = attrib;
+  }
+  forRange(AttributeDoc* attrib, mFunctionAttributes.All())
+  {
+    mFunctionAttributesMap[attrib->mName] = attrib;
+  }
+  forRange(AttributeDoc* attrib, mPropertyAttributes.All())
+  {
+    mPropertyAttributesMap[attrib->mName] = attrib;
+  }
+}
+
+
+
+void AttributeDocList::Sort(void)
+{
+  Zero::Sort(mObjectAttributes.All(), AttributeDocCompareFn);
+  Zero::Sort(mFunctionAttributes.All(), AttributeDocCompareFn);
+  Zero::Sort(mPropertyAttributes.All(), AttributeDocCompareFn);
+}
+
 
 void MethodDoc::Serialize(Serializer& stream)
 {
@@ -465,6 +687,104 @@ MethodDoc* ClassDoc::GetMethodDoc(Function* function)
   return nullptr;
 }
 
+void ClassDoc::CreateMethodDocFromBoundType(Function* method,TypeReplacementMap *replacements
+  , bool exportDoc)
+{
+
+  MethodDoc* newMethod = new MethodDoc();
+
+  newMethod->mStatic = method->IsStatic;
+
+  // Currently, the majority of methods contain angle brackets that we have to strip.
+  if (method->Name.StartsWith("["))
+  {
+    newMethod->mName = method->Name.SubString(method->Name.Begin() + 1, method->Name.End() - 1);
+    if (newMethod->mName == "Constructor")
+    {
+      newMethod->mName = mName;
+    }
+  }
+  else
+    newMethod->mName = method->Name;
+
+  if (exportDoc)
+    newMethod->mDescription = method->Description;
+
+  mMethodsMap[method->Name].PushBack(newMethod);
+
+  mMethods.PushBack(newMethod);
+
+  DelegateType* type = method->FunctionType;
+
+  Zilch::Type* returnType = type->Return;
+
+  if (returnType)
+  {
+    newMethod->mReturnType = ReplaceTypeIfTemplated(returnType->ToString());
+
+    // if empty, this was a template type we shouldn't replace
+    if (newMethod->mReturnType.Empty())
+    {
+      newMethod->mReturnType = returnType->ToString();
+    }
+    // replace the type if it is in our replacements list
+    newMethod->mReturnType = ReplaceTypeIfOnList(newMethod->mReturnType, replacements);
+  }
+
+  forRange(DelegateParameter& param, type->GetParameters().All())
+  {
+    ParameterDoc* newParam = new ParameterDoc();
+
+    newParam->mName = param.Name;
+    newParam->mType = ReplaceTypeIfTemplated(param.ParameterType->ToString());
+
+    // if empty, this was a template type we shouldn't replace
+    if (newParam->mType.Empty())
+      newParam->mType = param.ParameterType->ToString();
+
+    // replace the type if it is in our replacements list
+    newParam->mType = ReplaceTypeIfOnList(newParam->mType, replacements);
+
+    newMethod->mParameterList.PushBack(newParam);
+  }
+}
+
+void ClassDoc::CreatePropertyDocFromBoundType(Property* metaProperty, 
+  TypeReplacementMap *replacements, bool exportDoc)
+{
+  // Skip this property if we have already seen it
+  if (mPropertiesMap.ContainsKey(metaProperty->Name))
+  {
+    return;
+  }
+
+  PropertyDoc* newProp = new PropertyDoc();
+
+  // if we have no set function, this is a read-only property
+  if (metaProperty->IsReadOnly())
+    newProp->mReadOnly = true;
+
+  newProp->mStatic = metaProperty->IsStatic;
+
+  newProp->mName = metaProperty->Name;
+
+  if (exportDoc)
+    newProp->mDescription = metaProperty->Description;
+
+  newProp->mType = ReplaceTypeIfTemplated(metaProperty->PropertyType->ToString());
+
+  // if empty, this was a template type we shouldn't replace
+  if (newProp->mType.Empty())
+    newProp->mType = metaProperty->PropertyType->ToString();
+
+  // replace the type if it is in our replacements list
+  newProp->mType = ReplaceTypeIfOnList(newProp->mType, replacements);
+
+  mProperties.PushBack(newProp);
+
+  mPropertiesMap[newProp->mName] = newProp;
+}
+
 ////////////////////////////////////////////////////////////////////////
 // EnumDoc
 ////////////////////////////////////////////////////////////////////////
@@ -599,241 +919,300 @@ void DocumentationLibrary::FinalizeDocumentation(void)
 }
 
 
+// due to not all templates filling out their base name, strip everything after to bracket to make our own
+String GetTemplateBaseName(StringParam templateName)
+{
+  StringRange paramSubstring = templateName.FindFirstOf("[");
+
+  if (paramSubstring.Empty())
+    return templateName;
+
+  return templateName.SubString(templateName.Begin(), paramSubstring.Begin());
+}
+
+void DocumentationLibrary::CreateFlagOrEnumDocFromBoundType(BoundType *type, bool exportDoc)
+{
+  // save the enum
+  EnumDoc *newEnumDoc = new EnumDoc();
+
+  newEnumDoc->mName = type->Name;
+
+  if (exportDoc)
+    newEnumDoc->mDescription = type->Description;
+
+  // typedef used due to template type causing forRange macro to fail
+  typedef Pair<Integer, StringArray> pairType;
+
+  forRange(pairType &enumPair, type->EnumValueToStrings.All())
+  {
+    forRange(StringParam enumValueName, enumPair.second.All())
+    {
+      newEnumDoc->mEnumValues.FindOrInsert(enumValueName, "");
+    }
+  }
+
+  // save flags and enums separately
+  if (type->SpecialType == SpecialType::Flags)
+    mFlags.PushBack(newEnumDoc);
+  else
+    mEnums.PushBack(newEnumDoc);
+}
+
+void ClassDoc::CreateEventDocFromBoundType(SendsEvent *eventSent)
+{
+  EventDoc* eventDoc;
+  BoundType* eventType = Type::GetBoundType(eventSent->SentType);
+
+  // If we have not seen this event before, create a new event doc
+  if (!mEventsMap.ContainsKey(eventSent->Name))
+  {
+    eventDoc = new EventDoc();
+
+    eventDoc->mName = eventSent->Name;
+
+    if (eventSent->SentType)
+      eventDoc->mType = eventType->Name;
+
+    mEventsSent.PushBack(eventDoc);
+
+    eventDoc->mSenders.PushBack(mName);
+
+    mEventsMap[eventDoc->mName] = eventDoc;
+  }
+  // Otherwise, if we have it, check if it is missing data
+  else
+  {
+    // Check if we are missing type information for this event
+    if (eventDoc->mType == "")
+    {
+      // If we were missing the event type, see if the version we just found has it
+      if (eventType)
+        eventDoc->mType = eventType->Name;
+    }
+  }
+}
+
+ClassDoc *DocumentationLibrary::CreateClassDocFromBoundType(BoundType *type, TypeReplacementMap* replacements)
+{
+  HashSet<Function*> functionSet;
+
+  // so we can check if we should export internal description of type
+  bool exportDoc = type->HasAttribute(ExportDocumentation);
+
+  // check for enum types
+  if (type->SpecialType != SpecialType::Standard)
+  {
+    CreateFlagOrEnumDocFromBoundType(type, exportDoc);
+  }
+
+  // If the type is not documented and is not from a core library or template library, just skip it
+  Zilch::Library* owningLibrary = type->SourceLibrary;
+  if (!exportDoc
+    && !type->HasAttribute(ObjectAttributes::cDocumented)
+    && !type->HasAttribute(ImportDocumentation))
+  {
+    return nullptr;
+  }
+
+  // Used to remove a couple of core types that should not be documented
+  if (type->Name.Contains(":"))
+  {
+    ZPrint("Warning: type '%s' is improperly named and unreferenceable.\n", type->Name);
+    return nullptr;
+  }
+
+  // check if we have to do template name replacement
+  String name = type->Name;
+
+  String nonTemplatedName = name.SubString(name.Begin(), name.FindFirstOf("[").Begin());
+
+  name = ReplaceTypeIfTemplated(type->Name);
+
+  // either grab class we have seen before, or create a new one
+  ClassDoc* classDoc;
+
+  if (name.Empty())
+  {
+    if (!nonTemplatedName.Empty() && mClassMap.ContainsKey(nonTemplatedName))
+    {
+      classDoc = mClassMap[nonTemplatedName];
+    }
+    else
+    {
+      return nullptr;
+    }
+  }
+  // If we have already seen this class before, grab it from the map
+  else if (mClassMap.ContainsKey(name))
+  {
+    classDoc = mClassMap[name];
+  }
+  // Otherwise, create a new classdoc and add it to the array and map
+  else
+  {
+    classDoc = new ClassDoc();
+    classDoc->mName = name;
+
+    classDoc->mLibrary = type->SourceLibrary->Name;
+
+    // if we have a baseType, save it
+    if (type->BaseType)
+      classDoc->mBaseClass = ReplaceTypeIfTemplated(type->BaseType->Name);
+
+    mClasses.PushBack(classDoc);
+    mClassMap[classDoc->mName] = classDoc;
+  }
+
+  // This is to tell the doc tool to only import doxygen descriptions if we had either of these
+  classDoc->mImportDocumentation = type->HasAttribute(ObjectAttributes::cDocumented)
+    || type->HasAttribute(ImportDocumentation);
+
+  if (exportDoc)
+    classDoc->mDescription = type->Description;
+
+  forRange(CogComponentMeta* metaComponent, type->HasAll<CogComponentMeta>())
+    classDoc->mTags.Assign(metaComponent->mTags.All());
+
+  // Loop over all events this meta type sends and save them
+  forRange(SendsEvent* eventSent, type->SendsEvents.All())
+  {
+    classDoc->CreateEventDocFromBoundType(eventSent);
+  }
+
+  // get list of all functions (except constructors)
+  Array<Function *> allFunctions = type->AllFunctions;
+
+  // add constructors to method list so we get them into the documentation too.
+  forRange(Function* constructor, type->Constructors.All())
+  {
+    allFunctions.Append(constructor);
+  }
+
+  // Save all methods
+  forRange(Function* method, allFunctions.All())
+  {
+    if (functionSet.Contains(method))
+      continue;
+
+    classDoc->CreateMethodDocFromBoundType(method, replacements, exportDoc);
+
+    // Insert the new method into the map so we can make sure to check for repeats.
+    functionSet.Insert(method);
+  }
+
+  // Get all properties
+  forRange(Property* metaProperty, type->AllProperties.All())
+  {
+    classDoc->CreatePropertyDocFromBoundType(metaProperty, replacements, exportDoc);
+  }
+  return classDoc;
+}
+
+void DocumentationLibrary::GetDocumentationFromTemplateHandler(StringParam libName, 
+  InstantiateTemplateInfo& templateHandler, LibraryBuilder& builder, 
+  ArrayMap<String, String>& replacements)
+{
+  // base name for the template
+  String baseName;
+
+  String fullDocTemplateName;
+
+  Array<Constant> dummyTypes;
+
+  // if we have two params, use Wrapper and Utf8Encoding as replaceable dummy types
+  if (templateHandler.TemplateParameters.Size() == 2)
+  {
+    dummyTypes.PushBack(Constant(ZilchTypeId(Wrapper)));
+    dummyTypes.PushBack(Constant(ZilchTypeId(Utf8Encoding)));
+  }
+  
+  // if we have one params, use Void as replaceable dummy types
+  else if (templateHandler.TemplateParameters.Size() == 1)
+  {
+    //Array<Constant> dummyTypes;
+    dummyTypes.PushBack(Constant(ZilchTypeId(Wrapper)));
+  }
+
+  String instanceFullName = templateHandler.GetFullName(dummyTypes);
+  // currently some types are missing their base name, so create it ourself from the full name
+  baseName = GetTemplateBaseName(instanceFullName);
+
+  // save our type replacements so we can remove the dummy types after instantiation
+  fullDocTemplateName = InsertIntoReplacementsMap(baseName, instanceFullName, templateHandler, dummyTypes, replacements);
+
+  // create the template instance, possibly instantiating more then one template type
+  templateHandler.Delegate.Callback(builder,baseName,fullDocTemplateName,dummyTypes, nullptr);
+
+  // instantiating that template type could have instantiated more then one template
+  // get type replacements for them all
+  forRange(BoundType* boundTemplateType, builder.BoundTypes.Values().All())
+  {
+    String newInstanceBaseName = GetTemplateBaseName(boundTemplateType->Name);
+
+    String newInstanceFullName = newInstanceBaseName;
+
+    // if the bound type also has template arguments, add them to the name
+    if (!boundTemplateType->TemplateArguments.Empty())
+    {
+      newInstanceFullName
+        = BuildDocumentationFullTemplateName(newInstanceBaseName, boundTemplateType->TemplateArguments, replacements);
+    }
+
+    if (replacements.FindPairPointer(newInstanceBaseName) == nullptr)
+    {
+      InsertIntoReplacementsMap(newInstanceBaseName, boundTemplateType->Name, templateHandler, dummyTypes, replacements, &newInstanceFullName);
+    }
+  }
+
+  String name = fullDocTemplateName;
+
+  ClassDoc* classDoc = new ClassDoc();
+  classDoc->mName = name;
+
+  classDoc->mLibrary = libName;
+
+  mClasses.PushBack(classDoc);
+  mClassMap[classDoc->mName] = classDoc;
+  // add version of the class name without template params so it is easier to search for
+  mClassMap[GetTemplateBaseName(name)] = classDoc;
+}
+
 void DocumentationLibrary::LoadFromMeta()
 {
   // First get the range of types from the MetaDatabase
   MetaDatabase* database = MetaDatabase::GetInstance();
 
-  // Loop over every type
+  // used to  house the template instances we need to get methods and property
+  LibraryBuilder builder("templateLibrary");
+
+  ArrayMap<String, String> allTemplateReplacements;
+
+  forRange(Library *lib, database->mLibraries.All())
+  {
+    forRange(InstantiateTemplateInfo& templateHandler, lib->TemplateHandlers.Values())
+    {
+      GetDocumentationFromTemplateHandler(lib->Name, templateHandler, builder, allTemplateReplacements);
+    }
+  }
+
+  LibraryRef templateLibrary = builder.CreateLibrary();
+
+  forRange(auto& boundTemplate, templateLibrary->BoundTypes.All())
+  {
+    BoundType* templatedType = boundTemplate.second;
+
+    templatedType->AddAttribute(Zilch::ImportDocumentation);
+  }
+
+  // loop over every template type
+  forRange(BoundType* metaType, templateLibrary->BoundTypes.Values())
+  {
+    ClassDoc* newDoc = CreateClassDocFromBoundType(metaType, &allTemplateReplacements);
+  }
+  // Loop over every nontemplate type
   forRange(BoundType* metaType, database->mTypeMap.Values())
   {
-    // Keep map of function pointers to check for stuff we have already found
-    HashSet<Function*> functionSet;
-
-    // so we can check if we should export internal description of type
-    bool exportDoc = metaType->HasAttribute(ExportDocumentation);
-
-    // check for enum types
-    if (metaType->SpecialType != SpecialType::Standard)
-    {
-      // save the enum
-      EnumDoc *newEnumDoc = new EnumDoc();
-
-      newEnumDoc->mName = metaType->Name;
-
-      if (exportDoc)
-        newEnumDoc->mDescription = metaType->Description;
-
-      // typedef used due to template type causing forRange macro to fail
-      typedef Pair<Integer, StringArray> pairType;
-
-      forRange(pairType &enumPair, metaType->EnumValueToStrings.All())
-      {
-        forRange(StringParam enumValueName, enumPair.second.All())
-        {
-          newEnumDoc->mEnumValues.FindOrInsert(enumValueName,"");
-        }
-      }
-
-      // save flags and enums separately
-      if (metaType->SpecialType == SpecialType::Flags)
-        mFlags.PushBack(newEnumDoc);
-      else
-        mEnums.PushBack(newEnumDoc);
-    }
-
-    // If the type is not even documented and is not from a core library, just skip it
-    Zilch::Library* owningLibrary = metaType->SourceLibrary;
-    if (!exportDoc
-      && !metaType->HasAttribute(ObjectAttributes::cDocumented)
-      && !metaType->HasAttribute(ImportDocumentation))
-    {
-       continue;
-    }
-
-    // Used to remove a couple of core types that should not be documented
-    if (metaType->Name.Contains(":"))
-    {
-      ZPrint("Warning: type '%s' is improperly named and unreferenceable.\n", metaType->Name.c_str());
-      continue;
-    }
-
-    // check if we have to do template name replacement
-    String name = ReplaceTypeIfTemplated(metaType->Name);
-
-    if (name.Empty())
-      continue;
-
-    ClassDoc* classDoc;
-
-    // If we have already seen this class before, grab it from the map
-    if (mClassMap.ContainsKey(name))
-    {
-      classDoc = mClassMap[name];
-    }
-    // Otherwise, create a new classdoc and add it to the array and map
-    else
-    {
-      classDoc = new ClassDoc();
-      classDoc->mName = name;
-
-      classDoc->mLibrary = metaType->SourceLibrary->Name;
-
-      // if we have a baseType, save it
-      if (metaType->BaseType)
-        classDoc->mBaseClass = ReplaceTypeIfTemplated(metaType->BaseType->Name);
-
-      mClasses.PushBack(classDoc);
-      mClassMap[classDoc->mName] = classDoc;
-    }
-
-    // This is to tell the doc tool to only import doxygen descriptions if we had either of these
-    classDoc->mImportDocumentation = metaType->HasAttribute(ObjectAttributes::cDocumented)
-      || metaType->HasAttribute(ImportDocumentation);
-
-    if (exportDoc)
-      classDoc->mDescription = metaType->Description;
-
-    forRange(CogComponentMeta* metaComponent, metaType->HasAll<CogComponentMeta>())
-      classDoc->mTags.Assign(metaComponent->mTags.All());
-
-   // Loop over all events this meta type sends and save them
-   forRange(SendsEvent* eventSent, metaType->SendsEvents.All())
-   {
-     EventDoc* eventDoc;
-     BoundType* eventType = Type::GetBoundType(eventSent->SentType);
-
-     // If we have not seen this event before, create a new event doc
-     if (!classDoc->mEventsMap.ContainsKey(eventSent->Name))
-     {
-       eventDoc = new EventDoc();
-
-       eventDoc->mName = eventSent->Name;
-
-       if (eventSent->SentType)
-         eventDoc->mType = eventType->Name;
-
-       classDoc->mEventsSent.PushBack(eventDoc);
-
-       eventDoc->mSenders.PushBack(classDoc->mName);
-
-       classDoc->mEventsMap[eventDoc->mName] = eventDoc;
-     }
-     // Otherwise, if we have it, check if it is missing data
-     else
-     {
-       // Check if we are missing type information for this event
-       if (eventDoc->mType == "")
-       {
-         // If we were missing the event type, see if the version we just found has it
-         if (eventType)
-           eventDoc->mType = eventType->Name;
-       }
-     }
-   }
-
-   // add constructors to method list so we get them into the documentation too.
-
-   Array<Function *> allFunctions = metaType->AllFunctions;
-
-   forRange(Function* constructor, metaType->Constructors.All())
-   {
-     allFunctions.Append(constructor);
-   }
-
-   // Get all methods
-   forRange(Function* method, allFunctions.All())
-   {
-     if (functionSet.Contains(method))
-       continue;
-
-     MethodDoc* newMethod = new MethodDoc();
-
-     newMethod->mStatic = method->IsStatic;
-
-     // Currently, the majority of methods contain angle brackets that we have to strip.
-     if (method->Name.StartsWith("["))
-     {
-       newMethod->mName = method->Name.SubString(method->Name.Begin() + 1, method->Name.End() - 1);
-       if (newMethod->mName == "Constructor")
-       {
-         newMethod->mName = classDoc->mName;
-       }
-     }
-     else
-       newMethod->mName = method->Name;
-
-     if (exportDoc)
-      newMethod->mDescription = method->Description;
-
-     classDoc->mMethodsMap[method->Name].PushBack(newMethod);
-
-     classDoc->mMethods.PushBack(newMethod);
-
-     DelegateType* type = method->FunctionType;
-
-     Zilch::Type* returnType = type->Return;
-
-     if (returnType)
-     {
-       newMethod->mReturnType = ReplaceTypeIfTemplated(returnType->ToString());
-
-       // if empty, this was a template type we shouldn't replace
-       if (newMethod->mReturnType.Empty())
-         newMethod->mReturnType = returnType->ToString();
-     }
-
-     forRange(DelegateParameter& param, type->GetParameters().All())
-     {
-       ParameterDoc* newParam = new ParameterDoc();
-
-       newParam->mName = param.Name;
-       newParam->mType = ReplaceTypeIfTemplated(param.ParameterType->ToString());
-
-       // if empty, this was a template type we shouldn't replace
-       if (newParam->mType.Empty())
-         newParam->mType = param.ParameterType->ToString();
-
-       newMethod->mParameterList.PushBack(newParam);
-     }
-
-     // Insert the new method into the map so we can make sure to check for repeats.
-     functionSet.Insert(method);
-   }
-
-   // Get all properties
-   forRange(Property* metaProperty, metaType->AllProperties.All())
-   {
-     // Skip this property if we have already seen it
-     if (classDoc->mPropertiesMap.ContainsKey(metaProperty->Name))
-     {
-       continue;
-     }
-
-     PropertyDoc* newProp = new PropertyDoc();
-
-     // if we have no set function, this is a read-only property
-     if (metaProperty->IsReadOnly())
-       newProp->mReadOnly = true;
-
-     newProp->mStatic = metaProperty->IsStatic;
-
-     newProp->mName = metaProperty->Name;
-
-     if (exportDoc)
-      newProp->mDescription = metaProperty->Description;
-
-     newProp->mType = ReplaceTypeIfTemplated(metaProperty->PropertyType->ToString());
-
-     // if empty, this was a template type we shouldn't replace
-     if (newProp->mType.Empty())
-       newProp->mType = metaProperty->PropertyType->ToString();
-
-     classDoc->mProperties.PushBack(newProp);
-
-     classDoc->mPropertiesMap[newProp->mName] = newProp;
-   }
-
+    ClassDoc* newDoc = CreateClassDocFromBoundType(metaType, nullptr);
   }
 }
 

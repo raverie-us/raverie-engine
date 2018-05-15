@@ -629,6 +629,9 @@
     <ClCompile Include="ListView.cpp">
       <Filter>EditorUi</Filter>
     </ClCompile>
+    <ClCompile Include="UiLegacyToolTip.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClothTools.hpp">
@@ -1148,6 +1151,12 @@
     </ClInclude>
     <ClInclude Include="ListView.hpp">
       <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="UiLegacyToolTip.hpp">
+      <Filter>EditorUi</Filter>
+    </ClInclude>
+    <ClInclude Include="PreviewWidgets.hpp">
+      <Filter>EditorUi\PreviewWidget</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

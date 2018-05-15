@@ -67,8 +67,18 @@ JobSystem::~JobSystem()
   forRange(Job& job, ActiveJobs.All())
     job.Cancel();
 
-  //Delete all pending jobs
-  DeleteObjectsIn(PendingJobs);
+  // Delete all pending jobs that we own. 
+  // if a job is marked to not be deleted on completion then it's likely a background task. 
+  // Leave this to the background task manager to delete otherwise a double deletion will happen.
+  while(!PendingJobs.Empty())
+  {
+    Job* job = &PendingJobs.Front();
+    PendingJobs.PopFront();
+    if(job->mDeletedOnCompletion)
+    {
+      SafeDelete(job);
+    }
+  }
 
   mLock.Unlock();
 

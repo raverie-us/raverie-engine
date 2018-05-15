@@ -1,8 +1,12 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
+//**************************************************************************************************
 void LoadTexture(StringParam filename, Texture* texture)
 {
   texture->mFormat = TextureFormat::None;
@@ -72,6 +76,7 @@ void LoadTexture(StringParam filename, Texture* texture)
   texture->mMipMapping = (TextureMipMapping::Enum)header.mMipMapping;
 }
 
+//**************************************************************************************************
 HandleOf<Resource> TextureLoader::LoadFromFile(ResourceEntry& entry)
 {
   Texture* texture = new Texture();
@@ -80,6 +85,7 @@ HandleOf<Resource> TextureLoader::LoadFromFile(ResourceEntry& entry)
   return texture;
 }
 
+//**************************************************************************************************
 void TextureLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 {
   Texture* texture = (Texture*)resource;
@@ -87,6 +93,7 @@ void TextureLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
   texture->SendModified();
 }
 
+//**************************************************************************************************
 HandleOf<Resource> TextureLoader::LoadFromBlock(ResourceEntry& entry)
 {
   return nullptr;

@@ -125,7 +125,7 @@ void SoundEntry::Preview()
   {
     // If instance was created successfully, play it without looping, 
     // without a tag, and without an output node
-    instance->Play(false, nullptr, nullptr, false);
+    instance->Play(false, nullptr, false);
     // Save the SoundInstance
     Z::gSound->mPreviewInstance = instance;
     // Connect it to the audio system's output node
@@ -298,7 +298,6 @@ SoundCue::SoundCue() :
 //**************************************************************************************************
 SoundCue::~SoundCue()
 {
-  Unload();
 }
 
 //**************************************************************************************************
@@ -365,7 +364,7 @@ float SoundCue::GetVolume()
 //**************************************************************************************************
 void SoundCue::SetVolume(float newVolume)
 {
-  mVolume = newVolume;
+  mVolume = Math::Max(newVolume, 0.0f);
 }
 
 //**************************************************************************************************
@@ -542,9 +541,12 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
     instanceNode->SetCrossFadeTail(entry->mCrossFadeLoopTail);
   }
 
+  // Create the handle to avoid deleting the instance object
+  HandleOf<SoundInstance> instanceHandle = instance;
+
   // Add any applicable tags
   for (unsigned i = 0; i < SoundTags.Size(); ++i)
-    SoundTags[i].GetSoundTag()->TagSound(instance);
+    SoundTags[i].GetSoundTag()->TagSound(instanceHandle);
 
   // If the music options have data, set the data on the sound instance
   if (mBeatsPerMinute > 0)
@@ -557,12 +559,12 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
   DispatchEvent(Events::SoundCuePrePlay, &event);
 
   // Tell the sound instance to start playing
-  instance->Play(mPlayMode == SoundPlayMode::Looping, nullptr, outputNode, startPaused);
+  instance->Play(mPlayMode == SoundPlayMode::Looping, outputNode, startPaused);
 
   // Send the post-play event
   DispatchEvent(Events::SoundCuePostPlay, &event);
 
-  return instance;
+  return instanceHandle;
 }
 
 //-------------------------------------------------------------------------------- Sound Cue Manager

@@ -45,14 +45,26 @@ public:
   ///Generates a unit length Vec2
   Vec2 UnitVector2();
 
+  ///Generates a unit length Real2
+  Vec2 UnitReal2();
+
   ///Randomly generates a Vec2 with its length between min and max
   Vec2 Vector2(float minLength, float maxLength);
+
+  ///Randomly generates a Real2 with its length between min and max
+  Vec2 Real2(float minLength, float maxLength);
 
   ///Generates a unit length Vec3
   Vec3 UnitVector3();
 
+  ///Generates a unit length Real3
+  Vec3 UnitReal3();
+
   ///Randomly generates a Vec3 with its length between min and max
   Vec3 Vector3(float minLength, float maxLength);
+
+  ///Randomly generates a Real3 with its length between min and max
+  Vec3 Real3(float minLength, float maxLength);
 
   ///Random unit length quaternion. This is also a unit quaternion
   Quat Quaternion();

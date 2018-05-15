@@ -26,11 +26,18 @@ namespace Audio
   //-------------------------------------------------------------------------------- Attenuator Node
 
   //************************************************************************************************
+<<<<<<< HEAD
   AttenuatorNode::AttenuatorNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
       Math::Vec3Param position, const AttenuationData& data, const CurveTypes::Enum curveType,
       Zero::Array<Math::Vec3> *customCurveData, ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, true, false, isThreaded), 
     Position(position),
+=======
+  AttenuatorNode::AttenuatorNode(Zero::StringParam name, const unsigned ID, Math::Vec3Param position, 
+      const AttenuationData& data, const CurveTypes::Enum curveType, Zero::Array<Math::Vec3> *customCurveData, 
+      ExternalNodeInterface* extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, true, false, isThreaded), 
+>>>>>>> 1537f84b22a16e68a85b06ab3eff767c3a29a6e4
     AttenStartDist(data.StartDistance), 
     AttenEndDist(data.EndDistance), 
     MinimumVolume(data.MinimumVolume), 
@@ -40,8 +47,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      SetSiblingNodes(new AttenuatorNode(status, name, ID, position, data, curveType, 
-        customCurveData, extInt, true), status);
+      SetSiblingNodes(new AttenuatorNode(name, ID, position, data, curveType, customCurveData, extInt, true));
     }
     else
     {
@@ -192,6 +198,12 @@ namespace Audio
     Math::Vec3 relativePosition = listener->GetRelativePosition(Position);
     // Save the distance value
     float distance = relativePosition.Length();
+    
+    // Account for the listener's attenuation scale
+    if (listener->GetAttenuationScale() <= 0.0f)
+      distance = AttenEndDist;
+    else
+      distance /= listener->GetAttenuationScale();
 
     // If we are outside the max distance and the minimum volume is zero, there is no audio
     if (distance >= AttenEndDist && MinimumVolume == 0)
@@ -205,7 +217,7 @@ namespace Audio
     else if (distance <= AttenStartDist)
       attenuatedVolume = 1.0f;
     // If the attenuation start and end are too close together than just use end volume
-    else if (AttenEndDist - AttenStartDist == 0.1f)
+    else if (AttenEndDist - AttenStartDist <= 0.1f)
       attenuatedVolume = MinimumVolume;
     // Otherwise, get the value using the falloff curve on the interpolator
     else
@@ -267,7 +279,7 @@ namespace Audio
     // If there are multiple listeners, the sounds they hear are added together
     float attenuatorVolume = 0.0f;
     forRange(AttenuationPerListener* data, DataPerListener.Values())
-      volume += data->PreviousVolume;
+      attenuatorVolume += data->PreviousVolume;
 
     // Return the output volume modified by this node's volume
     return volume * attenuatorVolume;

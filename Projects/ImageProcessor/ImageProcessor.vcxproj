@@ -131,11 +131,12 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;Avrt.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Avrt.lib;nvtt.lib;opusDebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -158,9 +159,10 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;Avrt.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Avrt.lib;nvtt.lib;opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -168,9 +170,10 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>portaudio_x86.lib;opus.lib;Avrt.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Avrt.lib;nvtt.lib;opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <DelayLoadDLLs>portaudio_x86.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Emscripten'">

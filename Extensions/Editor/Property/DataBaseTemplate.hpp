@@ -467,7 +467,7 @@ public:
       {
         String folderName = variant.Get<String>();
         Status status;
-        if(IsValidName(folderName,status))
+        if(IsValidFilename(folderName,status))
         {
           node->Name = folderName;
           EventOnNode(node, Events::DataModified);

@@ -69,6 +69,7 @@ public:
   void OnLauncherConfigChanged(Event* e);
   void OnTemplateSelected(ObjectEvent* e);
   void SelectTemplate(TemplateProjectItem* selectedItem);
+  void OnTryCreateNewProject(Event* e);
   void OnCreateProject(Event* e);
   void OnTemplateInstallFinished(BackgroundTaskEvent* e);
   void RunNewlyCreatedProject(CachedProject* project);

@@ -1,3 +1,6 @@
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -8,6 +11,7 @@ ZilchDefineTemplateType(ProxyObject<MaterialBlock>, builder, type)
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
+//**************************************************************************************************
 ZilchDefineType(MaterialBlock, builder, type)
 {
   type->CreatableInScript = true;
@@ -17,16 +21,19 @@ ZilchDefineType(MaterialBlock, builder, type)
   type->Add(new MetaSerialization());
 }
 
+//**************************************************************************************************
 MaterialBlock::MaterialBlock() :
   mOwner(nullptr)
 {
 }
 
+//**************************************************************************************************
 void MaterialBlock::Serialize(Serializer& stream)
 {
   MetaSerializeProperties(this, stream);
 }
 
+//**************************************************************************************************
 IndexRange MaterialBlock::AddShaderInputs(Array<ShaderInput>& shaderInputs)
 {
   IndexRange range;

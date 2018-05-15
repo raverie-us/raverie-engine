@@ -18,9 +18,6 @@ namespace Events
 DeclareEvent(AreaChanged);
 }
 
-Vec2 ToOffset(Location::Enum origin);
-Vec2 OffsetOfOffset(Location::Enum base, Location::Enum corner);
-
 // Thickness used for converting an Area to an Aabb
 const float AreaThickness = 0.001f;
 

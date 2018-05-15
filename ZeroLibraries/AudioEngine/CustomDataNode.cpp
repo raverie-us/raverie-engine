@@ -12,19 +12,18 @@ namespace Audio
   //------------------------------------------------------------------------------------- Input Node
 
   //************************************************************************************************
-  CustomDataNode::CustomDataNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
+  CustomDataNode::CustomDataNode(Zero::StringParam name, const unsigned ID,
       ExternalNodeInterface* extInt, const bool isThreaded) :
-    SoundNode(status, name, ID, extInt, false, true, isThreaded), 
+    SoundNode(name, ID, extInt, false, true, isThreaded), 
     WaitingForSamples(false), 
     Channels(1), 
-    SampleRate(AudioSystemInternal::SystemSampleRate),
     TotalSamplesInBuffers(0), 
     SamplesInExtraBuffers(0)
   {
     SetMinimumBufferSize();
 
     if (!Threaded)
-      SetSiblingNodes(new CustomDataNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new CustomDataNode(name, ID, nullptr, true));
     else
       SamplesThisFrame.Resize(1);
   }
@@ -73,7 +72,7 @@ namespace Audio
   //************************************************************************************************
   unsigned CustomDataNode::GetSystemSampleRate()
   {
-    return AudioSystemInternal::SystemSampleRate;
+    return SystemSampleRate;
   }
 
   //************************************************************************************************
@@ -102,8 +101,8 @@ namespace Audio
       unsigned samplesNeeded = MinimumSamplesNeededInBuffers - TotalSamplesInBuffers 
         + MinimumSamplesNeededInBuffers;
       samplesNeeded -= samplesNeeded % Channels;
-      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
-        GetSiblingNode(), AudioEventTypes::NeedInputSamples, (void*)new CustomDataSampleRequest(samplesNeeded)));
+      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventDataToExternalData, 
+        GetSiblingNode(), (EventData*)(new EventData1<unsigned>(AudioEventTypes::NeedInputSamples, samplesNeeded))));
     }
   }
 
@@ -112,7 +111,7 @@ namespace Audio
   {
     if (Channels > 0)
     {
-      MinimumBufferSize = (unsigned)(AudioSystemInternal::SystemSampleRate * 0.01f * Channels * 4);
+      MinimumBufferSize = (unsigned)(SystemSampleRate * 0.01f * Channels * 4);
 
       MinimumSamplesNeededInBuffers = MinimumBufferSize * 3;
     }
@@ -134,9 +133,11 @@ namespace Audio
       {
         WaitingForSamples = true;
         if (GetSiblingNode())
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
-            GetSiblingNode(), AudioEventTypes::NeedInputSamples,
-            (void*)new CustomDataSampleRequest(MinimumSamplesNeededInBuffers * 2)));
+        {
+          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventDataToExternalData,
+            GetSiblingNode(), (EventData*)(new EventData1<unsigned>(AudioEventTypes::NeedInputSamples,
+              MinimumSamplesNeededInBuffers * 2))));
+        }
       }
       return false;
     }
@@ -198,8 +199,7 @@ namespace Audio
       else
       {
         AudioFrame frame(SamplesThisFrame.Data(), Channels);
-        frame.TranslateChannels(numberOfChannels);
-        memcpy(outputBufferPosition, frame.Samples, sizeof(float) * numberOfChannels);
+        memcpy(outputBufferPosition, frame.GetSamples(numberOfChannels), sizeof(float) * numberOfChannels);
       }
     }
 
@@ -210,8 +210,8 @@ namespace Audio
         + MinimumSamplesNeededInBuffers;
       samplesNeeded -= samplesNeeded % Channels;
       if (GetSiblingNode())
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
-          GetSiblingNode(), AudioEventTypes::NeedInputSamples, (void*)new CustomDataSampleRequest(samplesNeeded)));
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventDataToExternalData,
+          GetSiblingNode(), (EventData*)(new EventData1<unsigned>(AudioEventTypes::NeedInputSamples, samplesNeeded))));
     }
 
     return true;

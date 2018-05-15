@@ -15,6 +15,9 @@ class ZCogChildrenUtilities
     
   }
   
+  // Array implementation of 'ChildrenReversed' will be deprecated in the future;
+  // 'ChildrenReversed' will be a range in the future.
+  // So 'ChildrenReversedArray', below, should be used instead.
   [Extension(typeid(Cog))]
   var ChildrenReversed : ReverseArrayRange[Array[Cog], Cog]
   {
@@ -25,7 +28,18 @@ class ZCogChildrenUtilities
     }
     
   }
+  
+  [Extension(typeid(Cog))]
+  var ChildrenReversedArray : ReverseArrayRange[Array[Cog], Cog]
+  {
+    get
+    {
+      var self = this as Cog;
+      return ReverseArrayRange[Array[Cog], Cog](self.ChildrenArray);
+    }
     
+  }
+  
 }
 
 class CogRangeToArray
@@ -43,23 +57,6 @@ class CogRangeToArray
   }
   
 }
-
-// Temporarily remove. This currently causes a memory leak in zilch.
-//class RangeToArray[RangeType, ElementType]
-//{
-//  [Static]
-//  function Convert(input : RangeType) : Array[ElementType]
-//  {
-//    var array = Array[ElementType]();
-//    foreach (var value in input)
-//    {
-//      array.Add(value);
-//    }
-//    
-//    return array;
-//  }
-//  
-//}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Required implementation methods of a range.

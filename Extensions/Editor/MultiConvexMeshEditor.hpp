@@ -253,6 +253,12 @@ public:
   /// Update the property view's text for the currently selected point.
   void UpdateSelectedPointText();
 
+  struct SourceData
+  {
+    SpriteSource* mSpriteSource;
+    Image* mSourceImage;
+  };
+
   static real SamplePixelAlpha(Vec2Param pixelCoord, void* userData);
   static real SamplePixelIntensity(Vec2Param pixelCoord, void* userData);
   static Vec2 SamplePixelWorldPosition(Vec2Param pixelCoord, void* userData);

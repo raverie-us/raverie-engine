@@ -12,9 +12,16 @@ namespace Audio
   //------------------------------------------------------------------------------------ Record Node
 
   //************************************************************************************************
+<<<<<<< HEAD
   RecordNode::RecordNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
     ExternalNodeInterface* extInt, bool isThreaded) :
     SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+=======
+  RecordNode::RecordNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
+    MaxValue((float)((1 << 15) - 1)),
+>>>>>>> 1537f84b22a16e68a85b06ab3eff767c3a29a6e4
     FileName("RecordedOutput.wav"),
     MaxValue((float)((1 << 15) - 1)),
     Recording(false),
@@ -23,7 +30,7 @@ namespace Audio
     Streaming(true)
   {
     if (!Threaded)
-      SetSiblingNodes(new RecordNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new RecordNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -117,8 +124,8 @@ namespace Audio
             16, // fmt chunk size
             1, // audio format
             (unsigned short)Channels, // number of channels
-            AudioSystemInternal::SystemSampleRate, // sampling rate
-            AudioSystemInternal::SystemSampleRate * Channels * 16 / 8, // bytes per second
+            SystemSampleRate, // sampling rate
+            SystemSampleRate * Channels * 16 / 8, // bytes per second
             2 * 16 / 8, // bytes per sample
             16, // bits per sample
             { 'd', 'a', 't', 'a' },
@@ -216,6 +223,131 @@ namespace Audio
     }
 
     delete buffer;
+  }
+
+
+  //-------------------------------------------------------------------------------- Save Audio Node
+
+  //************************************************************************************************
+  SaveAudioNode::SaveAudioNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
+    mSaveData(false),
+    mPlayData(false),
+    mPlaybackIndex(0)
+  {
+    if (!Threaded)
+      SetSiblingNodes(new SaveAudioNode(name, ID, nullptr, true));
+  }
+
+  //************************************************************************************************
+  bool SaveAudioNode::GetSaveAudio()
+  {
+    return mSaveData;
+  }
+
+  //************************************************************************************************
+  void SaveAudioNode::SetSaveAudio(bool save)
+  {
+    if (!Threaded)
+      gAudioSystem->AddTask(Zero::CreateFunctor(&SaveAudioNode::SetSaveAudio,
+      (SaveAudioNode*)GetSiblingNode(), save));
+    else if (save)
+      ClearSavedAudio();
+
+    mSaveData = save;
+  }
+
+  //************************************************************************************************
+  void SaveAudioNode::PlaySavedAudio()
+  {
+    if (!Threaded)
+      gAudioSystem->AddTask(Zero::CreateFunctor(&SaveAudioNode::PlaySavedAudio,
+      (SaveAudioNode*)GetSiblingNode()));
+
+    mPlayData = true;
+  }
+
+  //************************************************************************************************
+  void SaveAudioNode::StopPlaying()
+  {
+    if (!Threaded)
+      gAudioSystem->AddTask(Zero::CreateFunctor(&SaveAudioNode::StopPlaying,
+      (SaveAudioNode*)GetSiblingNode()));
+
+    mPlayData = false;
+  }
+
+  //************************************************************************************************
+  void SaveAudioNode::ClearSavedAudio()
+  {
+    if (!Threaded)
+      gAudioSystem->AddTask(Zero::CreateFunctor(&SaveAudioNode::ClearSavedAudio,
+      (SaveAudioNode*)GetSiblingNode()));
+    else
+    {
+      mSavedSamples.Clear();
+      mPlaybackIndex = 0;
+    }
+  }
+
+  //************************************************************************************************
+  bool SaveAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
+    ListenerNode* listener, const bool firstRequest)
+  {
+    if (!Threaded)
+      return false;
+
+    // Get input data
+    bool isInputData = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
+
+    // If there is input data and we are saving, append the samples to the buffer
+    if (mSaveData && isInputData)
+      CopyIntoBuffer(&mSavedSamples, InputSamples, 0, outputBuffer->Size());
+
+    // If there is input data, move it to the output buffer
+    if (isInputData)
+      outputBuffer->Swap(InputSamples);
+
+    // Check if we are playing saved data
+    if (mPlayData)
+    {
+      // The samples to copy can't be more than the samples available
+      size_t samplesToCopy = Math::Min(outputBuffer->Size(), mSavedSamples.Size() - mPlaybackIndex);
+
+      // If there's no input data, copy the saved samples into the output buffer
+      if (!isInputData)
+      {
+        memcpy(outputBuffer->Data(), mSavedSamples.Data() + mPlaybackIndex, sizeof(float) * samplesToCopy);
+
+        // If there are extra samples in the output buffer, set them all to zero
+        if (samplesToCopy < outputBuffer->Size())
+        {
+          memset(outputBuffer->Data() + (outputBuffer->Size() - samplesToCopy), 0,
+            outputBuffer->Size() - samplesToCopy);
+        }
+      }
+      // If there is input data, add the saved samples to the existing data
+      else
+      {
+        for (size_t i = 0; i < samplesToCopy; ++i)
+          (*outputBuffer)[i] += mSavedSamples[mPlaybackIndex + i];
+      }
+
+      // Move the playback index forward
+      mPlaybackIndex += samplesToCopy;
+      // Check if we've reached the end of the saved data
+      if (mPlaybackIndex >= mSavedSamples.Size())
+      {
+        mPlayData = false;
+        mPlaybackIndex = 0;
+      }
+
+      // Mark that we do have valid data to return
+      isInputData = true;
+    }
+
+    return isInputData;
   }
 
 }

@@ -187,6 +187,10 @@ public:
   /// If color data should be stored in linear color space instead of sRGB color space.
   /// Important for albedo values used in lighting.
   bool mGammaCorrection;
+  /// Progressively downsamples the image by half the size the specified number of times.
+  int GetHalfScaleCount();
+  void SetHalfScaleCount(int halfScaleCount);
+  int mHalfScaleCount;
 
   // Internal
 

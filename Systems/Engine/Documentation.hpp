@@ -21,6 +21,11 @@ namespace Zero
   class MethodDoc;
   class DocumentationLibrary;
 
+  ///// TYPEDEFS ///// 
+
+  /// Replacement map used when loading documentation library from meta
+  typedef ArrayMap<String, String> TypeReplacementMap;
+
   ///// HELPERS ///// 
 
   /// Find the method doc in a list that has the same parameters as the meta method passed in
@@ -38,6 +43,16 @@ namespace Zero
 
   /// Generates a giant string containing nearly all documentation for class by the passed in name
   String GenerateDocumentationString(StringParam className);
+
+  /// Creates the full template name but with the template type names instead of the instance type names
+  String BuildDocumentationFullTemplateName(StringParam baseName, Array<Constant>& templateArgs
+    , TypeReplacementMap& replacements);
+
+  /// If type is in replacement map (or contains a token that is) return type with that replaced
+  String ReplaceTypeIfOnList(String& type, TypeReplacementMap *replacements);
+
+  /// Insert templated type into the replacement map, used when loading templated types from meta.
+  void InsertIntoReplacementsMap(InstantiateTemplateInfo& templateHandler, Array<Constant>& dummyTypes, ArrayMap<String, String>& replacements, String *fullName);
 
   ///// CLASSES /////
   class ExceptionDoc : public Object
@@ -69,7 +84,6 @@ namespace Zero
     Array<String> mTags;
   };
 
-
   /// Wrapper around our command documentation list so we can serialize it properly
   class CommandDocList : public Object
   {
@@ -79,6 +93,44 @@ namespace Zero
     void Sort(void);
 
     Array<CommandDoc*> mCommands;
+  };
+
+  /// class for documenting all the attributes usable in zero
+  class AttributeDoc : public Object
+  {
+  public:
+    AttributeDoc(){}
+    AttributeDoc(AttributeExtension* attribute);
+    void Serialize(Serializer& stream);
+
+    String mName;
+    String mDescription;
+    bool mAllowStatic;
+    bool mAllowMultiple;
+    bool mDeveloperAttribute;
+  };
+
+  /// Wrapper around our attribute documentation list so we can serialize it properly
+  class AttributeDocList : public Object
+  {
+  public:
+    ~AttributeDocList();
+
+    void Serialize(Serializer& stream);
+
+    bool SaveToFile(StringParam fileName);
+
+    void CreateAttributeMap(void);
+
+    void Sort(void);
+
+    HashMap<String, AttributeDoc *> mObjectAttributesMap;
+    HashMap<String, AttributeDoc *> mFunctionAttributesMap;
+    HashMap<String, AttributeDoc *> mPropertyAttributesMap;
+
+    Array<AttributeDoc *> mObjectAttributes;
+    Array<AttributeDoc *> mFunctionAttributes;
+    Array<AttributeDoc *> mPropertyAttributes;
   };
 
 
@@ -205,6 +257,15 @@ namespace Zero
     PropertyDoc* GetPropertyDoc(StringParam propertyName);
     MethodDoc* GetMethodDoc(Zilch::Function* function);
 
+    /// Helper for CreateClassDocFromBoundType to load events
+    void CreateEventDocFromBoundType(SendsEvent* eventSent);
+
+    /// Helper for CreateClassDocFromBoundType to load methods
+    void CreateMethodDocFromBoundType(Function* method, TypeReplacementMap *replacements, bool exportDoc);
+
+    /// Helper for CreateClassDocFromBoundType to load properties
+    void CreatePropertyDocFromBoundType(Property* metaProperty, TypeReplacementMap *replacements, bool exportDoc);
+
     HashMap<String, PropertyDoc*> mPropertiesMap;
 
     // This is causing the array to be copied when the MethodsMap is changed.
@@ -249,7 +310,6 @@ namespace Zero
     String mDescription;
   };
 
-
   /// Contains list of documented classes, unlike Raw Documentation this is all saved to one file
   class DocumentationLibrary : public LazySingleton<DocumentationLibrary, EventObject>
   {
@@ -264,6 +324,15 @@ namespace Zero
 
     /// Finalize the documentation for saving/loading (builds maps and fills out missing data)
     void FinalizeDocumentation();
+
+    /// Helper for CreateClassDocFromBoundType to load enums and flags
+    void CreateFlagOrEnumDocFromBoundType(BoundType *type, bool exportDoc);
+
+    /// Helper for LoadFromMeta, checks if a type is in the replacements map
+    ClassDoc* CreateClassDocFromBoundType(BoundType *type, TypeReplacementMap* replacements);
+
+    /// Helper for LoadFromMeta, loop for instantiating and loading information from templated types
+    void GetDocumentationFromTemplateHandler(StringParam libName, InstantiateTemplateInfo& templateHandler, LibraryBuilder& builder, ArrayMap<String, String>& allTemplateReplacements);
 
     /// Load list of classes from the Meta Database
     void LoadFromMeta();

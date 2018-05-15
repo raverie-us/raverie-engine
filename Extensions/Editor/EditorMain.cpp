@@ -36,6 +36,9 @@ EditorMain::~EditorMain()
 
 void EditorMain::OnEngineUpdate(UpdateEvent* event)
 {
+  // Call base behavior for game management.
+  Editor::OnEngineUpdate(event);
+
   mTimeSinceEscape += event->RealDt;
   Update();
 
@@ -249,6 +252,11 @@ void EditorMain::ShowMarket(CommandEvent* event)
   Editor::ShowMarket();
 }
 
+void EditorMain::ShowChat(CommandEvent* event)
+{
+  Editor::ShowChat();
+}
+
 void EditorMain::ShowObjects(CommandEvent* event)
 {
   this->ShowWindow("Objects");
@@ -266,8 +274,8 @@ void EditorMain::ShowHotKeyEditor(CommandEvent* event)
   ////widget->SetSize(Pixels(850, 500));
   //widget->TakeFocus();
 
-  Z::gEditor->EditResource(HotKeyManager::GetDefault());
-  //((HotKeyEditor*)widget)->EditResource
+  Widget* widget = Z::gEditor->mManager->ShowWidget("Commands");
+  ((HotKeyEditor*)widget)->DisplayResource();
 }
 
 void EditorMain::ShowOperationHistroy(CommandEvent* event)
@@ -303,13 +311,15 @@ void EditorMain::ShowProperties(CommandEvent* event)
 void EditorMain::ShowConfig(CommandEvent* event)
 {
   ShowProperties(event);
-  SelectOnly(mConfig);
+  mSelection->SelectOnly(mConfig);
+  mSelection->FinalSelectionChanged();
 }
 
 void EditorMain::ShowProject(CommandEvent* event)
 {
   ShowProperties(event);
-  SelectOnly(mProject);
+  mSelection->SelectOnly(mProject);
+  mSelection->FinalSelectionChanged();
 }
 
 void EditorMain::SelectTweakables(CommandEvent* event)
@@ -353,6 +363,11 @@ void EditorMain::EditColorScheme(CommandEvent* event)
 {
   this->ShowWindow("Properties");
   mMainPropertyView->EditObject( GetColorScheme(), true);
+}
+
+void EditorMain::ClearConsole(CommandEvent* event)
+{
+  mConsole->ClearAllReadOnly();
 }
 
 void EditorMain::OnNameActivated(TypeEvent* event)
@@ -834,6 +849,9 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Menus.data"));
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Toolbars.data"));
 
+  // Copy commands from Command.data to the HotKeyCommands DataSource.
+  HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
+
   SetupTools(editorMain);
 
   commands->SetContext(editorMain, ZilchTypeId(Editor));
@@ -847,14 +865,10 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   SetupGraphCommands(config, commands);
   BindArchiveCommands(config, commands);
   BindGraphicsCommands(config, commands);
-  //BindGeometryCommands(config, commands);
   BindCreationCommands(config, commands);
   BindDocumentationCommands(config, commands);
   BindProjectCommands(config, commands);
   BindContentCommands(config, commands);
-
-  //HotKeyManager *hkManager = HotKeyManager::Instance;// GetSystemObject(HotKeyManager);
-  //hkManager->RegisterSystemCommands(commands->mCommands);
 
   // Listen to the resource system if any unhandled exception or syntax error occurs
   Connect(Z::gResources, Events::UnhandledException, editorMain, &EditorMain::OnScriptError);
@@ -912,17 +926,17 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("Properties", ShowProperties);
     BindCommand("SelectEditorConfig", ShowConfig);
     BindCommand("SelectProject", ShowProject);
-    BindCommand("Tweakables", SelectTweakables);
     BindCommand("Library", ShowLibrary);
     BindCommand("Console", ToggleConsole);
     BindCommand("Browser", ShowBrowser);
     BindCommand("Market", ShowMarket);
+    BindCommand("Chat", ShowChat);
     BindCommand("Objects", ShowObjects);
     BindCommand("BroadPhaseTracker", ShowBroadPhaseTracker);
     BindCommand("VolumeMeter", ShowVolumeMeter);
     BindCommand("SoundNodeGraph", ShowSoundNodeGraph);
-
     BindCommand("EditColorScheme", EditColorScheme);
+    BindCommand("ClearConsole", ClearConsole);
     BindCommand("ShowCoreLibrary", ShowCoreLibrary);
 
     Connect(Z::gEngine, Events::BlockingTaskStart, editorMain, &EditorMain::OnBlockingTaskStart);

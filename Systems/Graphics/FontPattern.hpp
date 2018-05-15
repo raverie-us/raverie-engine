@@ -1,17 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file FontPattern.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// Authors: Nathan Carlson
+// Copyright 2015, DigiPen Institute of Technology
+
 #pragma once
 
 namespace Zero
 {
 
+//**************************************************************************************************
 inline Vec2 Align(TextAlign::Enum textAlignement, Vec2& cur, float textOnLineSize, float lineSize, float scale)
 {
   float extraSpaceOnLine = lineSize - textOnLineSize;
@@ -24,6 +19,7 @@ inline Vec2 Align(TextAlign::Enum textAlignement, Vec2& cur, float textOnLineSiz
   }
 }
 
+//**************************************************************************************************
 inline StringRange SkipRestOfLine(StringRange range)
 {
   while(!range.Empty())
@@ -55,6 +51,7 @@ inline StringRange SkipRestOfLine(StringRange range)
   return range;
 }
 
+//**************************************************************************************************
 template <typename FontProcessor>
 void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, Vec2 textStart, TextAlign::Enum align, Vec2 pixelScale, Vec2 textAreaSize, bool clipText = false)
 {
@@ -100,6 +97,7 @@ void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, 
   }
 }
 
+//**************************************************************************************************
 template <typename FontProcessor>
 Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange text, Vec2 textStart, TextAlign::Enum textAlign, Vec2 pixelScale, Vec2 textAreaSize)
 {
@@ -205,4 +203,4 @@ public:
   void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale) {}
 };
 
-}
+} // namespace Zero

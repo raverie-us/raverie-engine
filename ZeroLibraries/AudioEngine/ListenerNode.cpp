@@ -54,14 +54,15 @@ namespace Audio
   //---------------------------------------------------------------------------------- Listener Node
 
   //************************************************************************************************
-  ListenerNode::ListenerNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-    ListenerWorldPositionInfo positionInfo, ExternalNodeInterface* extInt, bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  ListenerNode::ListenerNode(Zero::StringParam name, unsigned ID,
+      ListenerWorldPositionInfo positionInfo, ExternalNodeInterface* extInt, bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     ThreadedData(nullptr),
-    Active(true)
+    Active(true),
+    mAttenuationScale(1.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new ListenerNode(status, name, ID, positionInfo, nullptr, true), status);
+      SetSiblingNodes(new ListenerNode(name, ID, positionInfo, nullptr, true));
     else
       ThreadedData = new ListenerNodeData(positionInfo);
   }
@@ -192,7 +193,7 @@ namespace Audio
         ThreadedData->Deactivating = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          0.0f, AudioSystemInternal::PropertyChangeFrames);
+          0.0f, PropertyChangeFrames);
       }
       // If currently not active and setting to active
       else if ((!Active || ThreadedData->Deactivating) && active)
@@ -201,7 +202,7 @@ namespace Audio
         Active = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          1.0f, AudioSystemInternal::PropertyChangeFrames);
+          1.0f, PropertyChangeFrames);
       }
     }
   }
@@ -210,6 +211,22 @@ namespace Audio
   bool ListenerNode::GetActive()
   {
     return Active;
+  }
+
+  //************************************************************************************************
+  float ListenerNode::GetAttenuationScale()
+  {
+    return mAttenuationScale;
+  }
+
+  //************************************************************************************************
+  void ListenerNode::SetAttenuationScale(float scale)
+  {
+    mAttenuationScale = scale;
+
+    if (!Threaded && GetSiblingNode())
+      gAudioSystem->AddTask(Zero::CreateFunctor(&ListenerNode::SetAttenuationScale,
+      (ListenerNode*)GetSiblingNode(), scale));
   }
 
   //************************************************************************************************

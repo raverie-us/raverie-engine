@@ -60,6 +60,13 @@ void ZilchTypeCollector::WalkClassDeclaration(Zilch::ClassNode*& node, ZilchType
     context->mErrors->SendTranslationError(node->Location, msg);
     return;
   }
+  // Check for inheritance
+  if(node->Inheritance.Size() != 0)
+  {
+    String msg = "Inheritance is not supported in zilch fragments.";
+    context->mErrors->SendTranslationError(node->Inheritance[0]->Location, msg);
+    return;
+  }
 
   // Cache this type on the context
   context->mCurrentType = type;

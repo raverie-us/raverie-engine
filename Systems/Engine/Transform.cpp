@@ -168,7 +168,10 @@ Transform::Transform( )
 
 Transform::~Transform( )
 {
-
+  // There's a chance that someone could've caused us to re-allocate the cached
+  // world matrix after OnDestroy which would cause us to leak memory. Cleanup the
+  // cached matrix if we have one here no matter what.
+  FreeCachedMatrix();
 }
 
 void Transform::Serialize(Serializer& stream)
@@ -778,8 +781,7 @@ void Transform::SetDirty()
     return;
 
   // Free the memory
-  sCachedWorldMatrixPool->Deallocate(mCachedWorldMatrix, sizeof(Mat4));
-  mCachedWorldMatrix = nullptr;
+  FreeCachedMatrix();
 
   forRange(Cog& child, GetOwner()->GetChildren())
   {
@@ -828,8 +830,7 @@ void Transform::OnDestroy(uint flags /*= 0*/)
       transform->TransformParent = nullptr;
   }
 
-  if (mCachedWorldMatrix != nullptr)
-    sCachedWorldMatrixPool->Deallocate(mCachedWorldMatrix, sizeof(Mat4));
+  FreeCachedMatrix();
 }
 
 void Transform::SetRotationBases(Vec3Param facing, Vec3Param up, Vec3Param right)
@@ -892,11 +893,6 @@ void Transform::RotateAround(Vec3 point, Quat rotation)
   RotateWorld(rotation);
 }
 
-void Transform::NormalizeRotation()
-{
-
-}
-
 Vec3 Transform::TransformNormal(Vec3Param normal)
 {
   Mat4 m = GetWorldMatrix();
@@ -950,6 +946,17 @@ Aabb FromMatrix(Mat4Param worldMatrix, Vec3Param extents, Vec3Param translation)
   Vec3 modelTrans = Math::TransformNormal(worldMatrix, translation);
   aabb.Translate(modelTrans);
   return aabb;
+}
+
+void Transform::FreeCachedMatrix()
+{
+  // If we have a cached world matrix then deallocate it
+  if(mCachedWorldMatrix != nullptr)
+  {
+    sCachedWorldMatrixPool->Deallocate(mCachedWorldMatrix, sizeof(Mat4));
+    // Make sure to always null out the cached matrix to prevent double frees
+    mCachedWorldMatrix = nullptr;
+  }
 }
 
 }//namespace Zero

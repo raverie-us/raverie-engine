@@ -69,7 +69,7 @@ public:
   TextBoxButton* mDownloadLocation;
   LauncherWindow* mLauncher;
   TextBox* mMaxNumberOfRecentProjects;
-  CheckBox* mAutoCheckForMajorUpdatesCheckBox;
+  CheckBox* mAutoCheckForLauncherUpdatesCheckBox;
   CheckBox* mShowDevelopCheckBox;
   CheckBox* mShowExperimentalBranchesCheckBox;
   /// Handle to the modal so that we can remove it if the page switches.

@@ -70,8 +70,5 @@
     <ClInclude Include="WinInputs.inl">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="Eula.hpp">
-      <Filter>System</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

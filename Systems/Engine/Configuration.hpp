@@ -66,6 +66,9 @@ public:
 
   /// Project level to load in project.
   String EditingLevel;
+
+  /// Username that's used by the bug reporter.
+  String ZeroHubUsername;
 };
 
 //-----------------------------------------------------------------------------
@@ -99,9 +102,9 @@ public:
   /// show release notes.
   uint LastVersionUsed;
 
-  /// NOTE* the TimeType is casted to a u64 to be saved. This can possibly be
-  /// an issue depending how time_t is defined on some compilers.
-  u64 LastAcceptedEula;
+  /// The hash of the last accepted Eula. Used to uniquely identify each
+  /// eula and auto-detect if the eula text changes.
+  size_t LastAcceptedEulaHash;
 };
 
 //------------------------------------------------------------------------------

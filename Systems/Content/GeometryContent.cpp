@@ -193,7 +193,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if (!options->mGeometryOptions->mImportMeshes && geometryContent->has(MeshBuilder))
   {
     // we no longer have this option selected, delete it
-    geometryContent->Components.Erase(ZilchTypeId(MeshBuilder));
+    geometryContent->RemoveComponent(ZilchTypeId(MeshBuilder));
   }
   else if (geometryContent->has(MeshBuilder))
   {
@@ -213,7 +213,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if ((options->mGeometryOptions->mPhysicsImport == PhysicsImport::NoMesh) && geometryContent->has(PhysicsMeshBuilder))
   {
     // we no longer have this option selected, delete it
-    geometryContent->Components.Erase(ZilchTypeId(PhysicsMeshBuilder));
+    geometryContent->RemoveComponent(ZilchTypeId(PhysicsMeshBuilder));
   }
   else if (geometryContent->has(PhysicsMeshBuilder))
   {
@@ -230,7 +230,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if (!options->mGeometryOptions->mImportAnimations && geometryContent->has(AnimationBuilder))
   {
     // we no longer have this option selected, delete it
-    geometryContent->Components.Erase(ZilchTypeId(AnimationBuilder));
+    geometryContent->RemoveComponent(ZilchTypeId(AnimationBuilder));
   }
 
   if (options->mGeometryOptions->mCreateArchetype && !geometryContent->has(GeneratedArchetype))
@@ -241,8 +241,8 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   }
   else if (!options->mGeometryOptions->mCreateArchetype && geometryContent->has(GeneratedArchetype))
   {
-    // we no longer have this option selected, delete it
-    geometryContent->Components.Erase(ZilchTypeId(GeneratedArchetype));
+    // we no longer have this option selected, delete it;
+    geometryContent->RemoveComponent(ZilchTypeId(GeneratedArchetype));
   }
 
   if (options->mGeometryOptions->mImportTextures && !geometryContent->has(TextureContent))
@@ -254,7 +254,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if (!options->mGeometryOptions->mImportTextures && geometryContent->has(TextureContent))
   {
     // we no longer have this option selected, delete it
-    geometryContent->Components.Erase(ZilchTypeId(TextureContent));
+    geometryContent->RemoveComponent(ZilchTypeId(TextureContent));
   }
 
   return geometryContent;
@@ -557,17 +557,17 @@ void GeometryContent::BuildContent(BuildOptions& options)
       // it worked
       case Zero::GeometryProcessorCodes::Success:
         return;
-      // something went wrong, build the error message
+      // something went wrong, abort processing imported file. 
+      // the geometry processor outputs its own error messages to the console.
       case Zero::GeometryProcessorCodes::Failed:
       {
-        // first build our error message
-        String errorMessage = Os::TranslateErrorCode(exitCode);
         options.Failure = true;
-        options.Message = String::Format("Failed to process Geometry. File '%s' Error: %s",
-                                         Filename.c_str(), errorMessage.c_str());
+        options.Message = String::Format("Failed to process Geometry. File '%s', See above Geometry Processor Error.", Filename.c_str());
 
-        // then remove the content items that were added despite failing
+        // then remove the content items that were added because importing failed
         String metaFile = BuildString(fullFilePath, ".meta");
+        DeleteFile(metaFile);
+        DeleteFile(fullFilePath);
         return;
       }
       // let editor side importing know we have to load/reload the scene graph or textures

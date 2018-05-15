@@ -18,7 +18,7 @@ ZilchDefineType(Region, builder, type)
   ZeroBindDependency(Cog);
   ZeroBindDependency(Collider);
 
-  ZilchBindFieldProperty(mWakeUpOnEffectChange);
+  ZilchBindFieldProperty(mWakeUpOnEffectChange)->ZeroSerialize(true);
 
   ZilchBindMethod(DispatchEvent);
   ZeroBindTag(Tags::Physics);
@@ -31,7 +31,7 @@ Region::Region()
 
 void Region::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(mWakeUpOnEffectChange, false);
+  SerializeNameDefault(mWakeUpOnEffectChange, true);
 }
 
 void Region::Initialize(CogInitializer& initializer)

@@ -15,14 +15,15 @@ class NodePrintInfo
 {
 public:
   ZilchDeclareType(NodePrintInfo, TypeCopyMode::ReferenceType);
-  NodePrintInfo(int level, const String& name, bool hasOutput) 
-  : mLevel(level)
-  , mName(name)
-  , mPosition(Vec2(0.0f,0.0f))
-  , mConnectAvgPos(0.0f)
-  , mHasOutput(hasOutput)
-  , mMoved(false)
-  , mPositionSet(false)
+  NodePrintInfo(int level, const String& name, int ID, bool hasOutput, Audio::SoundNode* node) : 
+    mLevel(level),
+    mName(name),
+    mHasOutput(hasOutput),
+    mMoved(false), 
+    mPositionSet(false),
+    mPosition(Vec2(0.0f, 0.0f)),
+    mID(ID),
+    mNode(node)
   {}
 
   Array<NodePrintInfo*>::range GetConnections() { return mChildren.All(); }
@@ -32,29 +33,14 @@ public:
   Array<NodePrintInfo*> mChildren;
   String mName;
   Vec2 mPosition;
-  float mConnectAvgPos;
   bool mHasOutput;
   bool mMoved;
   bool mPositionSet;
+  int mID;
+  Audio::SoundNode* mNode;
 };
 
 typedef Array<NodePrintInfo*> NodeInfoListType;
-
-//----------------------------------------------------------------------- Node Info Sorting Position
-
-class NodeInfoSortingPosition
-{
-public:
-  NodeInfoSortingPosition() : mNodeInfo(nullptr) {}
-  NodeInfoSortingPosition(NodePrintInfo* node) : mNodeInfo(node) {}
-
-  bool operator<(const NodeInfoSortingPosition& other) const 
-  { 
-    return mNodeInfo->mConnectAvgPos < other.mNodeInfo->mConnectAvgPos; 
-  }
-
-  NodePrintInfo* mNodeInfo;
-};
 
 //--------------------------------------------------------------------------------- Sound Node Graph
 
@@ -63,7 +49,7 @@ class SoundNodeGraph
 public:
   SoundNodeGraph() : 
     mNodeWidth(100),
-    mNodeHeight(80),
+    mNodeHeight(100),
     mMaxLevel(0)
   {}
   ~SoundNodeGraph();
@@ -79,11 +65,11 @@ private:
   int mMaxLevel;
 
   void CreateInfo(Audio::SoundNode* node, Audio::SoundNode* outputNode, int level);
-  void CheckForCollision(NodeInfoListType& list, float& minXpos);
+  void CheckForCollision(NodeInfoListType& list, bool checkOrphanNodes);
   void AddSpacePadding(NodePrintInfo* node, float addToXPos);
   void FirstPassPositioning(Array<NodeInfoListType>& infoByLevel, int largestLevel);
-  void SecondPassPositioning(Array<NodeInfoListType>& infoByLevel, int largestLevel, float& minXpos);
-  void PositionCleanUp(Array<NodeInfoListType>& infoByLevel, int largestLevel, float& minXpos);
+  void SecondPassPositioning(Array<NodeInfoListType>& infoByLevel, int largestLevel);
+  void PositionCleanUp(Array<NodeInfoListType>& infoByLevel, int largestLevel);
 };
 
 }

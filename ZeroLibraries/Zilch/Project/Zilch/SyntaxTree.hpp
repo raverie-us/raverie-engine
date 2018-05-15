@@ -62,6 +62,9 @@ namespace Zilch
     ScopeNode* SingleExpressionScope;
     size_t SingleExpressionIndex;
 
+    // These tokens are generated in response to an 'expect' call that failes in tolerant mode.
+    Array<const UserToken*> InvalidTokens;
+
     // Not copyable
     ZilchNoCopy(SyntaxTree);
   };
@@ -148,6 +151,10 @@ namespace Zilch
 
     // Any comments collected for this syntax node (used for documentation / translation)
     StringArray Comments;
+
+    // In cases where we generate a temporary (such as creation call nodes for initializer lists, indexers, etc)
+    // we will create a local variable node as an expression that need not be walked by formatters and translators
+    bool IsGenerated;
   };
 
   // A pre-type representation for the syntax tree
@@ -792,10 +799,6 @@ namespace Zilch
 
     // A pointer to the attributes this function has
     NodeList<AttributeNode> Attributes;
-
-    // In cases where we generate a temporary (such as creation call nodes for initializer lists, indexers, etc)
-    // we will create a local variable node as an expression that need not be walked by formatters and translators
-    bool IsGenerated;
   };
 
   // A parameter node represents the parameter of a function

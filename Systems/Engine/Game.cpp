@@ -57,6 +57,7 @@ ZilchDefineType(GameSession, builder, type)
   ZilchBindMethod(RequestQuit);
   ZilchBindMethod(CreateSpace);
   ZilchBindMethod(CreateNamedSpace);
+  ZilchBindMethod(Pause);
 
   ZilchBindMethod(FindSpaceByName);
   ZilchBindMethod(FindAllSpacesByName);
@@ -66,6 +67,8 @@ ZilchDefineType(GameSession, builder, type)
   ZilchBindGetter(Focused);
   ZilchBindGetter(Resolution);
   ZilchBindGetter(FullScreen);
+
+  ZilchBindField(mPaused);
 
   ZeroBindEvent(Events::GameSetup, GameEvent);
   ZeroBindEvent(Events::GameLoad, GameEvent);

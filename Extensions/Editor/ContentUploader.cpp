@@ -210,10 +210,17 @@ void ContentExportTile::GetMissingDependencies(HashSet<ContentItem*>& missingDep
 
   forRange(ContentItem* dependency, missingDependencies.All())
   {
-    // If it already Contains the content item, we can remove it from the list
+    // If it already contains the content item, we can remove it from the list
     if(mExporter->mContentItems.Contains(dependency))
-      missingDependencies.Erase(dependency);
+      toRemove.Insert(dependency);
   }
+
+  // Remove the dependencies already listed in the content items
+  forRange(ContentItem* item, toRemove)
+  {
+    missingDependencies.Erase(item);
+  }
+
 }
 
 //******************************************************************************
@@ -413,6 +420,9 @@ void ContentPackageExporter::OnExportPressed(Event* e)
     filename = mTempPackage.mName;
   config.DefaultFileName = BuildString(filename, ".zeropack");
   Z::gEngine->has(OsShell)->SaveFile(config);
+
+  // Close the export window after exporting a content package
+  CloseTabContaining(this);
 }
 
 //******************************************************************************

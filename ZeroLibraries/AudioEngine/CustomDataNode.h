@@ -23,8 +23,8 @@ namespace Audio
   class CustomDataNode : public SoundNode
   {
   public:
-    CustomDataNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, 
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    CustomDataNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
     
     // Hands off a buffer of samples to be played by this node. The node will handle deleting the data.
     void AddSamples(float* samples, const unsigned sampleCount);
@@ -62,7 +62,6 @@ namespace Audio
 
     bool WaitingForSamples;
     unsigned Channels;
-    unsigned SampleRate;
     unsigned TotalSamplesInBuffers;
     unsigned SamplesInExtraBuffers;
     Zero::Array<float> SamplesThisFrame;

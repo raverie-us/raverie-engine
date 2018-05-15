@@ -69,19 +69,24 @@ class UiHighlight : ZilchComponent
   //***************************************************************************
   function OnMouseEnter(event : ViewportMouseEvent)
   {
-    this.SetColor(this.MouseHoverColor);
+    if(this.UiWidget.Root.MouseDownWidget == this.UiWidget)
+      this.SetColor(this.MouseDownColor);
+    else
+      this.SetColor(this.MouseHoverColor);
   }
   
   //***************************************************************************
   function OnLeftMouseDown(event : ViewportMouseEvent)
   {
-    this.SetColor(this.MouseDownColor);
+    if(event.HandledEvent == false)
+      this.SetColor(this.MouseDownColor);
   }
   
   //***************************************************************************
   function OnLeftMouseUp(event : ViewportMouseEvent)
   {
-    this.SetColor(this.MouseHoverColor);
+    if(event.HandledEvent == false)
+      this.SetColor(this.MouseHoverColor);
   }
   
   //***************************************************************************
@@ -115,7 +120,7 @@ class UiHighlight : ZilchComponent
     this.SetColor(this.MouseDownColor);
     
     var seq = Action.Sequence(this.Owner.Actions);
-    Action.Delay(seq, 0.1);
+    Action.Delay(seq, 0.05);
     Action.Property(seq, @this.HighlightCog.Cog.UiWidget.LocalColor, currColor, this.AnimateTime, Ease.QuadOut);
   }
 }

@@ -243,7 +243,7 @@ AnimationNode* AnimationGraph::GetActiveNode()
 // RootPath:     /
 Cog* ResolveObjectPath(Cog* object, Array<String>& cogNames)
 {
-  Cog* foundObject = nullptr;
+  Cog* foundObject = object;
   for (size_t i = 0; i < cogNames.Size(); ++i)
   {
     const String& name = cogNames[i];
@@ -302,6 +302,12 @@ void AnimationGraph::PreviewGraph()
 {
   if(mOnPreviewPressed)
     mOnPreviewPressed(this);
+}
+
+//******************************************************************************
+void AnimationGraph::SetPreviewMode()
+{
+  ConnectThisTo(GetSpace(), Events::PreviewUpdate, OnUpdate);
 }
 
 //******************************************************************************

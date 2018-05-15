@@ -41,6 +41,7 @@ namespace Zero
 {
 ZilchDefineType(DebugDraw, builder, type)
 {
+  ZeroBindDocumented();
   #define ZeroDebugPrimitive(X) AddBindings(X);
   #include "Geometry/DebugPrimitives.inl"
   #undef ZeroDebugPrimitive

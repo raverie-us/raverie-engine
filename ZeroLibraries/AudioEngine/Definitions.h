@@ -13,9 +13,16 @@
 
 namespace Audio
 {
+  typedef intptr_t AtomicType;
+
+  // The sample rate used by the audio engine for the output mix
+  static const unsigned SystemSampleRate = 48000;
+  // The time increment per audio frame corresponding to the sample rate
+  static const double SystemTimeIncrement = 1.0 / 48000.0;
+  // The number of frames used to interpolate instant property changes
+  static const unsigned  PropertyChangeFrames = (unsigned)(48000 * 0.02f);
   // Maximum number of channels in audio output
   static const unsigned MaxChannels = 8;
-
   // Volume modifier applied to all generated waves
   static const float GeneratedWaveVolume = 0.5f;
 
@@ -26,16 +33,6 @@ namespace Audio
   };
 
   typedef Zero::Array<float> BufferType;
-
-  struct MidiData
-  {
-    MidiData() : Channel(0), Value1(0), Value2(0) {}
-    MidiData(int channel, float value1, float value2) : Channel(channel), Value1(value1), Value2(value2) {}
-
-    int Channel;
-    float Value1;
-    float Value2;
-  };
 
   namespace AudioEventTypes
   {
@@ -84,6 +81,77 @@ namespace Audio
       CompressedMicInputData
     };
   }
+
+  class EventData
+  {
+  public:
+    EventData() : mEventType(AudioEventTypes::NotSet) {}
+    EventData(AudioEventTypes::Enum type) : mEventType(type) {}
+    EventData(const EventData& copy) : mEventType(copy.mEventType) {}
+    virtual ~EventData() {}
+
+    AudioEventTypes::Enum mEventType;
+  };
+
+  template <typename T>
+  class EventData1 : public EventData
+  {
+  public:
+    EventData1() {}
+    EventData1(AudioEventTypes::Enum type, T data) : 
+      EventData(type), 
+      mData(data) 
+    {}
+    EventData1(const EventData1<T>& copy) : 
+      EventData(copy.mEventType),
+      mData(copy.mData) 
+    {}
+
+    T mData;
+  };
+
+  template <typename T1, typename T2>
+  class EventData2 : public EventData
+  {
+  public:
+    EventData2() {}
+    EventData2(AudioEventTypes::Enum type, T1 data1, T2 data2) :
+      EventData(type), 
+      mData1(data1),
+      mData2(data2)
+    {}
+    EventData2(const EventData2<T1, T2>& copy) :
+      EventData(copy.mEventType), 
+      mData1(copy.mData1),
+      mData2(copy.mData2)
+    {}
+
+    T1 mData1;
+    T2 mData2;
+  };
+
+  template <typename T1, typename T2, typename T3>
+  class EventData3 : public EventData
+  {
+  public:
+    EventData3() {}
+    EventData3(AudioEventTypes::Enum type, T1 data1, T2 data2, T3 data3) :
+      EventData(type), 
+      mData1(data1),
+      mData2(data2),
+      mData3(data3)
+    {}
+    EventData3(const EventData3<T1, T2, T3>& copy) : 
+      EventData(copy.mEventType), 
+      mData1(copy.mData1),
+      mData2(copy.mData2),
+      mData3(copy.mData3)
+    {}
+
+    T1 mData1;
+    T2 mData2;
+    T3 mData3;
+  };
 }
 
 #endif

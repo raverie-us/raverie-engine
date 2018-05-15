@@ -19,6 +19,7 @@ ZilchDefineType(NodePrintInfo, builder, type)
   ZilchBindField(mPosition);
   ZilchBindField(mName);
   ZilchBindField(mHasOutput);
+  ZilchBindField(mID);
 }
 
 //--------------------------------------------------------------------------------- Sound Node Graph
@@ -55,16 +56,12 @@ void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* output
     return;
   }
 
-  // Keep track of the highest level
-  if (level > mMaxLevel)
-    mMaxLevel = level;
-
   NodePrintInfo* info = mNodeMap.FindValue(node->NodeID, nullptr);
 
   // Node wasn't in the map, so we need to create it
   if (!info)
   {
-    info = new NodePrintInfo(level, node->Name, node->HasAudibleOutput());
+    info = new NodePrintInfo(level, node->Name, node->NodeID, node->HasAudibleOutput(), node);
     mNodeMap[node->NodeID] = info;
 
     // If there is an output connection, add it to the list
@@ -78,8 +75,9 @@ void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* output
       }
     }
   }
-  // A node with this ID is already in the map
-  else
+  // A node with this ID is already in the map, but it's not the same node
+  // (i.e. Emitter and Volume nodes that should be displayed as one node)
+  else if (info->mNode != node)
   {
     // Don't count this as a level
     --level;
@@ -95,6 +93,27 @@ void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* output
       }
     }
   }
+  // This particular node is already in the map (it has multiple output connections)
+  else
+  {
+    // If there is an output connection, add it to the list
+    if (outputNode)
+    {
+      NodePrintInfo* child = mNodeMap.FindValue(outputNode->NodeID, nullptr);
+      if (child)
+      {
+        info->mChildren.PushBack(child);
+        child->mParents.PushBack(info);
+      }
+    }
+
+    // Don't check inputs, already handled
+    return;
+  }
+
+  // Keep track of the highest level
+  if (level > mMaxLevel)
+    mMaxLevel = level;
 
   // Call this function on all inputs of this node
   const Array<Audio::SoundNode*>* inputs = node->GetInputs();
@@ -107,16 +126,19 @@ void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* output
 //**************************************************************************************************
 // Helper function for GetNodeInfoList
 // Moves overlapping nodes away from each other
-void SoundNodeGraph::CheckForCollision(NodeInfoListType& list, float& minXpos)
+void SoundNodeGraph::CheckForCollision(NodeInfoListType& list, bool checkOrphanNodes)
 {
-  float moveIncrement(mNodeWidth * 0.1f);
-  float minDistance(mNodeWidth * 0.85f);
+  float minDistance(mNodeWidth * 0.95f);
 
   bool foundSomething(true);
   unsigned count(0);
 
+  // We need to avoid possible infinite loops if there is no good position for the nodes,
+  // and this value seems to work. Could be adjusted if needed.
+  unsigned maxCount = 20;
+
   // Keep looking as long as something was moved last loop and we haven't reached max loops
-  while (foundSomething && count < 5)
+  while (foundSomething && count < maxCount)
   {
     ++count;
     foundSomething = false;
@@ -129,46 +151,32 @@ void SoundNodeGraph::CheckForCollision(NodeInfoListType& list, float& minXpos)
         if (i == j)
           continue;
 
-        // If the distance between the two nodes is too close
-        if (Math::Abs(list[i]->mPosition.x - list[j]->mPosition.x) < minDistance)
+        NodePrintInfo* info1 = list[i];
+        NodePrintInfo* info2 = list[j];
+
+        // If we're not supposed to check orphan nodes and one of the nodes has no parents, skip
+        if (!checkOrphanNodes && (info1->mParents.Empty() || info2->mParents.Empty()))
+          continue;
+
+        // Check if the distance between the two nodes is too close
+        float distance = Math::Abs(info1->mPosition.x - info2->mPosition.x);
+        if (distance < minDistance)
         {
-          foundSomething = true;
+          // Move the nodes to be the minimum distance apart
+          float moveAmount = (minDistance - distance) * 0.5f;
 
-          NodePrintInfo* info1 = list[i];
-          NodePrintInfo* info2 = list[j];
-
-          // Check if one node has parents and the other doesn't
-          NodePrintInfo* noParentNode(nullptr);
-          if (info1->mParents.Empty() && !info2->mParents.Empty())
-            noParentNode = info1;
-          else if (!info1->mParents.Empty() && info2->mParents.Empty())
-            noParentNode = info2;
-
-          // If yes, and the orphan node would be moved, don't do anything
-          if (noParentNode && noParentNode->mChildren.Size() == 1 
-            && noParentNode->mChildren[0]->mParents.Size() >= 3)
+          if (info1->mPosition.x <= info2->mPosition.x)
           {
-            foundSomething = false;
+            info1->mPosition.x -= moveAmount;
+            info2->mPosition.x += moveAmount;
           }
-          // Otherwise move the two nodes apart
           else
           {
-            if (info1->mPosition.x <= info2->mPosition.x)
-            {
-              info1->mPosition.x -= moveIncrement;
-              info2->mPosition.x += moveIncrement;
-            }
-            else
-            {
-              info1->mPosition.x += moveIncrement;
-              info2->mPosition.x -= moveIncrement;
-            }
-
-            if (info1->mPosition.x < minXpos)
-              minXpos = info1->mPosition.x;
-            if (info2->mPosition.x < minXpos)
-              minXpos = info2->mPosition.x;
+            info1->mPosition.x += moveAmount;
+            info2->mPosition.x -= moveAmount;
           }
+
+          foundSomething = true;
         }
       }
     }
@@ -193,98 +201,67 @@ void SoundNodeGraph::AddSpacePadding(NodePrintInfo* node, float addToXPos)
 //**************************************************************************************************
 // Helper function for GetNodeInfoList
 // Does the first pass of positioning nodes up to and including the largest level
-// (calculates positions based on top left corner being [0,0])
 void SoundNodeGraph::FirstPassPositioning(Array<NodeInfoListType>& infoByLevel, int largestLevel)
 {
-  float width = (float)infoByLevel[largestLevel].Size() * mNodeWidth;
-  float height = (float)(infoByLevel.Size() - 1) * mNodeHeight;
+  // First level node should always be audio output
+  infoByLevel[0][0]->mPosition = Vec2(0.0f, 0.0f);
+  ErrorIf(infoByLevel[0].Size() != 1, "Too many nodes on first row for sound node graph");
 
-  // Find positions of nodes on first level
-  // If only one node, just place in the center
-  if (infoByLevel[0].Size() == 1)
-    infoByLevel[0][0]->mPosition = Vec2(width * 0.5f, -height - mNodeHeight);
-  // If multiple nodes, space equally
-  else
+  // If there's only one level, we're done
+  if (infoByLevel.Size() == 1)
+    return;
+  
+  float halfWidth = (float)infoByLevel[largestLevel].Size() * mNodeWidth * 0.5f;
+
+  // Go up to the largest level, starting at the bottom
+  for (int level = 0; level < largestLevel; ++level)
   {
-    float spacing = 1.0f / infoByLevel[0].Size() * width;
-    for (unsigned i = 0; i < infoByLevel[0].Size(); ++i)
-      infoByLevel[0][i]->mPosition = Vec2((spacing * 0.5f) + (i * spacing), -height - mNodeHeight);
-  }
+    NodeInfoListType tempList;
 
-  // Find positions of other nodes, up to largest level
-  float totalLevels = (float)infoByLevel.Size() - 1.0f;
-  for (int level = 1; level <= largestLevel; ++level)
-  {
-    float yPos = ((1.0f - ((float)level / totalLevels)) * -height) - mNodeHeight;
-    unsigned levelCount = infoByLevel[level].Size();
-    float spacing = 1.0f / levelCount * width;
-    float halfSpacing = spacing * 0.5f;
-
-    // Go through all nodes in this level
-    for (unsigned j = 0; j < levelCount; ++j)
+    // Step through each node on this level
+    forRange(NodePrintInfo* child, infoByLevel[level].All())
     {
-      NodePrintInfo* info = infoByLevel[level][j];
-
-      // Find average position of all connections
-      if (info->mChildren.Size() == 1)
-        info->mConnectAvgPos = info->mChildren[0]->mPosition.x;
-      else
+      // Step through the parents of the node
+      forRange(NodePrintInfo* parent, child->mParents.All())
       {
-        info->mConnectAvgPos = 0.0f;
-        for (unsigned k = 0; k < info->mChildren.Size(); ++k)
-          info->mConnectAvgPos += info->mChildren[k]->mPosition.x;
-        info->mConnectAvgPos /= info->mChildren.Size();
-      }
-
-      // If there are multiple nodes, space them equally
-      if (levelCount > 1)
-        info->mPosition = Vec2(halfSpacing + (j * spacing), yPos);
-      // Otherwise, just set to the connection average position
-      else
-        info->mPosition = Vec2(info->mConnectAvgPos, yPos);
-
-      info->mPositionSet = true;
-    }
-
-    // If there are multiple nodes in this level, make sure they're close to their connections
-    if (levelCount > 1)
-    {
-      // Sort by average connection position
-      SortedArray<NodeInfoSortingPosition> sortedNodes;
-      for (unsigned j = 0; j < levelCount; ++j)
-        sortedNodes.Insert(NodeInfoSortingPosition(infoByLevel[level][j]));
-
-      // Move node positions to match with connection positions
-      bool foundSomething(true);
-      while (foundSomething)
-      {
-        foundSomething = false;
-        for (unsigned j = 0; j < levelCount - 1; ++j)
+        // If the parent is only one level above, add it to the temporary list
+        if (parent->mLevel == level + 1)
         {
-          NodePrintInfo* first = sortedNodes[j].mNodeInfo;
-          NodePrintInfo* second = sortedNodes[j + 1].mNodeInfo;
-          if (first->mPosition.x > second->mPosition.x)
-          {
-            float temp = first->mPosition.x;
-            first->mPosition.x = second->mPosition.x;
-            second->mPosition.x = temp;
-            foundSomething = true;
-          }
+          tempList.PushBack(parent);
+          parent->mPositionSet = true;
         }
       }
     }
+    // Step through each node in the level above this one
+    forRange(NodePrintInfo* parent, infoByLevel[level + 1].All())
+    {
+      // If it wasn't added to the temporary list, add it now
+      if (!parent->mPositionSet)
+      {
+        tempList.PushBack(parent);
+        parent->mPositionSet = true;
+      }
+    }
+
+    // Make sure the sizes of the two lists are the same
+    ErrorIf(tempList.Size() != infoByLevel[level + 1].Size(), "Sizes don't match");
+
+    // Step through each node in the temporary list and set its position depending on 
+    // its position in the list and the height of the level
+    float yPos = (float)(level + 1) * mNodeHeight;
+    for (unsigned i = 0; i < tempList.Size(); ++i)
+      tempList[i]->mPosition = Vec2((i * (float)mNodeWidth) - halfWidth, yPos);
   }
 }
 
 //**************************************************************************************************
 // Helper function for GetNodeInfoList
 // Does the final positioning on all levels except the largest
-void SoundNodeGraph::SecondPassPositioning(Array<NodeInfoListType> &infoByLevel, 
-  int largestLevel, float& minXpos)
+void SoundNodeGraph::SecondPassPositioning(Array<NodeInfoListType> &infoByLevel, int largestLevel)
 {
-  // For levels lower than largest, set their positions to the average 
-  // of their parents, then space out with collision checking
-  for (int level = largestLevel - 1; level >= 0; --level)
+  // For levels lower than largest, set their positions to the average of their parents, then 
+  // space out with collision checking (don't need to do bottom row)
+  for (int level = largestLevel - 1; level > 0; --level)
   {
     // Go through each node in the level
     for (unsigned i = 0; i < infoByLevel[level].Size(); ++i)
@@ -313,24 +290,18 @@ void SoundNodeGraph::SecondPassPositioning(Array<NodeInfoListType> &infoByLevel,
 
         // Set the node's position to the parent average
         info->mPosition.x = parentAverage;
-
-        if (parentAverage < minXpos)
-          minXpos = parentAverage;
       }
     }
 
     // Check for overlapping and resolve
-    CheckForCollision(infoByLevel[level], minXpos);
+    CheckForCollision(infoByLevel[level], false);
   }
 
-  // For levels above largest, set their positions to the average 
-  // of their children, then space out with collision checking
-  // (these nodes haven't had their y position set yet)
-  float totalLevels = (float)infoByLevel.Size() - 1.0f;
-  float height = (float)(infoByLevel.Size() - 1) * mNodeHeight;
+  // For levels above largest, set their positions to the average of their children, then space 
+  // out with collision checking (these nodes haven't had their y position set yet)
   for (unsigned level = largestLevel + 1; level < infoByLevel.Size(); ++level)
   {
-    float yPos = ((1.0f - ((float)level / totalLevels)) * -height) - mNodeHeight;
+    float yPos = (float)level * (float)mNodeHeight;
 
     // Go through all nodes in this level
     for (unsigned i = 0; i < infoByLevel[level].Size(); ++i)
@@ -352,105 +323,28 @@ void SoundNodeGraph::SecondPassPositioning(Array<NodeInfoListType> &infoByLevel,
       info->mPosition = Vec2(childAverage, yPos);
 
       info->mPositionSet = true;
-
-      if (childAverage < minXpos)
-        minXpos = childAverage;
     }
 
     // Check for overlapping and resolve
-    CheckForCollision(infoByLevel[level], minXpos);
+    CheckForCollision(infoByLevel[level], false);
   }
 }
 
 //**************************************************************************************************
 // Helper function for GetNodeInfoList
 // Cleans up node positions for certain scenarios
-void SoundNodeGraph::PositionCleanUp(Array<NodeInfoListType> &infoByLevel, 
-  int largestLevel, float& minXpos)
+void SoundNodeGraph::PositionCleanUp(Array<NodeInfoListType> &infoByLevel, int largestLevel)
 {
-  // Go through all levels
+  // Go through all levels 
   for (unsigned level = 0; level < infoByLevel.Size(); ++level)
   {
+    SortedArray<float> positions;
+    Array<NodePrintInfo*> orphans;
+
     // Go through all nodes in this level
     for (unsigned i = 0; i < infoByLevel[level].Size(); ++i)
     {
       NodePrintInfo* node = infoByLevel[level][i];
-
-      // Don't do this check for nodes on the largest level
-      if (level != largestLevel - 1)
-      {
-        // Walk through parents of this node, saving positions of nodes with parents
-        // and indexes of nodes without parent
-        SortedArray<float> positions;
-        Array<unsigned> orphans;
-        for (unsigned j = 0; j < node->mParents.Size(); ++j)
-        {
-          if (node->mParents[j]->mParents.Empty())
-            orphans.PushBack(j);
-          else
-            positions.Insert(node->mParents[j]->mPosition.x);
-        }
-
-        // Is there at least one orphan and at least two with parents?
-        if (orphans.Size() >= 1 && positions.Size() >= 2)
-        {
-          // Walk through this node's parents with no parents
-          for (unsigned j = 0; j < orphans.Size(); ++j)
-          {
-            NodePrintInfo* orphan = node->mParents[orphans[j]];
-
-            // Find largest gap
-            float gap(0.0f);
-            int gapIndex(-1);
-            for (unsigned k = 1; k < positions.Size(); ++k)
-            {
-              float thisGap = positions[k] - positions[k - 1];
-              if (thisGap > mNodeWidth && thisGap > gap)
-              {
-                gapIndex = k;
-                gap = thisGap;
-              }
-            }
-
-            // If there is a valid gap, move the orphan node there
-            if (gapIndex > 0)
-            {
-              // If the gap is big enough for two nodes and there is another node in the list,
-              // space them both equally in the gap
-              if (gap / mNodeWidth > 2 && j + 1 < orphans.Size())
-              {
-                // Set this node's position
-                orphan->mPosition.x = positions[gapIndex] - (gap / 3.0f * 2.0f);
-                // Set the other node's position and add it to the sorted list
-                node->mParents[orphans[j + 1]]->mPosition.x = positions[gapIndex] - (gap / 3.0f);
-                positions.Insert(node->mParents[orphans[j + 1]]->mPosition.x);
-                // Skip the next node
-                ++j;
-              }
-              // Otherwise, put this node in the center of the gap
-              else
-                orphan->mPosition.x = positions[gapIndex] - (gap * 0.5f);
-            }
-            // If there is no gap, move the node to one of the ends
-            else
-            {
-              // Is the left side closest to the node?
-              if (node->mPosition.x - positions.Front() < positions.Back() - node->mPosition.x)
-              {
-                orphan->mPosition.x = positions.Front() - mNodeWidth;
-
-                if (orphan->mPosition.x < minXpos)
-                  minXpos = orphan->mPosition.x;
-              }
-              else
-                orphan->mPosition.x = positions.Back() + mNodeWidth;
-            }
-
-            // Add the orphan to the sorted positions
-            positions.Insert(orphan->mPosition.x);
-          }
-        }
-      }
 
       // Does this node have one parent, the parent has other children,
       // the node has one child, and the child has other parents?
@@ -461,7 +355,7 @@ void SoundNodeGraph::PositionCleanUp(Array<NodeInfoListType> &infoByLevel,
         NodePrintInfo* parent = node->mParents[0];
 
         // Find which of the child's parents are closest to the node's parent
-        float distance(100000.0f);
+        float distance = FLT_MAX;
         int index(0);
         for (unsigned k = 0; k < child->mParents.Size(); ++k)
         {
@@ -487,19 +381,120 @@ void SoundNodeGraph::PositionCleanUp(Array<NodeInfoListType> &infoByLevel,
           parent->mPosition.x = childAverage / parent->mChildren.Size();
         }
       }
+
+      // Save parent nodes without parents and positions of parent nodes with parents
+      forRange(NodePrintInfo* parent, node->mParents.All())
+      {
+        if (parent->mLevel == level + 1)
+        {
+          if (parent->mParents.Empty() && node->mParents.Size() > 1)
+            orphans.PushBack(parent);
+          else 
+            positions.Insert(parent->mPosition.x);
+        }
+      }
     }
+
+    // Don't do this check for nodes on the largest level
+    // Is there at least one orphan and at least two with parents?
+    if (level + 1 != largestLevel && orphans.Size() >= 1 && positions.Size() >= 2)
+    {
+      // Step through all orphans
+      for (unsigned index = 0; index < orphans.Size(); ++index)
+      {
+        NodePrintInfo* orphan = orphans[index];
+
+        // Find closest gap to the orphan's child
+        float childPosition = orphan->mChildren[0]->mPosition.x;
+        float gap(0.0f);
+        int gapIndex(-1);
+        float positionDifference = FLT_MAX;
+        for (unsigned i = 1; i < positions.Size(); ++i)
+        {
+          float thisGap = Math::Abs(positions[i] - positions[i - 1]);
+          if (thisGap > mNodeWidth && positions[i] - childPosition < positionDifference)
+          {
+            gapIndex = i;
+            gap = thisGap;
+            positionDifference = positions[i] - childPosition;
+          }
+        }
+
+        // If there is a valid gap, move the orphan node there
+        if (gapIndex > 0)
+        {
+          // Check if the gap is big enough for multiple nodes and there are more nodes in the list
+          if (gap / mNodeWidth > 2 && index + 1 < orphans.Size())
+          {
+            // The number if nodes to move is either the number that will fit in the gap or all of them
+            unsigned nodesToMove = Math::Min((unsigned)(gap / mNodeWidth), orphans.Size() - index);
+            // Save the base X position
+            float startingXpos = positions[gapIndex];
+
+            // Set the position of the first orphan 
+            orphan->mPosition.x = startingXpos - (gap / (nodesToMove + 1));
+
+            // Set the positions of the rest of the orphans to be moved, moving the index forward
+            for (unsigned i = 1; i < nodesToMove; ++i)
+            {
+              ++index;
+              orphans[index]->mPosition.x = startingXpos - (gap / (nodesToMove + 1) * (i + 1));
+              positions.Insert(orphans[index]->mPosition.x);
+            }
+          }
+          // Otherwise, put this node in the center of the gap
+          else
+            orphan->mPosition.x = positions[gapIndex] - (gap * 0.5f);
+        }
+        // If there is no gap, move the node to one of the ends
+        else
+        {
+          // Is the left side closest to the node?
+          if (Math::Abs(orphan->mPosition.x - positions.Front()) < Math::Abs(orphan->mPosition.x - positions.Back()))
+            orphan->mPosition.x = positions.Front() - mNodeWidth;
+          else
+            orphan->mPosition.x = positions.Back() + mNodeWidth;
+        }
+
+        // Add the orphan to the sorted positions
+        positions.Insert(orphan->mPosition.x);
+      }
+    }
+
+    CheckForCollision(infoByLevel[level], true);
   }
 }
 
 //**************************************************************************************************
 NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
 {
-  float minXpos(0.0f);
   mNodeMap.Clear();
   mMaxLevel = 0;
 
   // Create all node info objects, starting with the system's output node
   CreateInfo(Z::gSound->mOutputNode->mNode, nullptr, 0);
+
+  // Make sure no children are above their parents
+  bool foundSomething = true;
+  while (foundSomething)
+  {
+    foundSomething = false;
+
+    // Step through each node
+    forRange(NodePrintInfo* nodeInfo, mNodeMap.Values())
+    {
+      // Look at all of the node's children
+      forRange(NodePrintInfo* childInfo, nodeInfo->mChildren.All())
+      {
+        // If the level of the child is higher, change the node's level
+        if (childInfo->mLevel > nodeInfo->mLevel)
+        {
+          foundSomething = true;
+          nodeInfo->mLevel = childInfo->mLevel + 1;
+        }
+      }
+    }
+  }
 
   // Sort nodes by level
   Array<Array<NodePrintInfo*>> infoByLevel(mMaxLevel + 1);
@@ -518,23 +513,10 @@ NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
   FirstPassPositioning(infoByLevel, largestLevel);
 
   // Do second pass of positioning
-  SecondPassPositioning(infoByLevel, largestLevel, minXpos);
+  SecondPassPositioning(infoByLevel, largestLevel);
 
   // Handle some specific scenarios
-  PositionCleanUp(infoByLevel, largestLevel, minXpos);
-
-  // Move everything over if there are nodes with a negative X position
-  // (for UI display, X positions have to be positive)
-  if (minXpos < 0)
-  {
-    for (unsigned i = 0; i < infoByLevel.Size(); ++i)
-    {
-      for (unsigned j = 0; j < infoByLevel[i].Size(); ++j)
-      {
-        infoByLevel[i][j]->mPosition.x -= minXpos;
-      }
-    }
-  }
+  PositionCleanUp(infoByLevel, largestLevel);
 
   // If there are already node objects in the list, delete them and clear the list
   forRange(NodePrintInfo* info, mNodeInfoList.All())

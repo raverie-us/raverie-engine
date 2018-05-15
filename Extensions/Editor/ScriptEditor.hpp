@@ -175,7 +175,7 @@ public:
   // ICodeEditor interface
   void ShowAutoComplete(Array<Completion>& tips, CompletionConfidence::Enum confidence) override;
   void HideAutoComplete() override;
-  void ShowCallTips(Array<CallTip>& tips, StringParam functionName) override;
+  void ShowCallTips(Array<CallTip>& tips, StringParam functionName, size_t parameterIndex) override;
   void HideCallTips() override;
   StringRange GetAllText() override;
   DocumentResource* GetDocumentResource() override;

@@ -148,11 +148,14 @@ void RaycastResultList::AddList(RaycastResultList& list)
   for(uint i = 0; i < list.mSize; ++i)
   {
     RayCastEntry& entry = list.mEntries[i];
-    RayCastEntry* foundEntry = map.FindPointer(entry.Instance);
-    if(foundEntry == nullptr)
-      map.Insert(entry.Instance, entry);
-    else if(*foundEntry > entry)
-      *foundEntry = entry;
+
+    CastMap::InsertResult result = map.InsertNoOverwrite(entry.Instance, entry);
+    if(!result.mIsNewInsert)
+    {
+      RayCastEntry& existing = result.mValue->second;
+      if(existing > entry)
+        existing = entry;
+    }
   }
 
   // Now the list contains all of the items with their smallest times.
@@ -189,13 +192,24 @@ void CastInfo::SetInfo(Space* targetSpace, Cog* cameraCog, Vec2Param dragStart, 
 //-------------------------------------------------------------------RaycastProvider
 ZilchDefineType(RaycastProvider, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  ZeroBindSetup(SetupMode::DefaultSerialization);
   ZilchBindFieldProperty(mActive);
+
+  type->Add(new MetaSerialization());
+}
+
+void RaycastProvider::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(mActive, true);
 }
 
 //-------------------------------------------------------------------Raycaster
 ZilchDefineType(Raycaster, builder, type)
 {
+  ZeroBindSetup(SetupMode::DefaultSerialization);
+
+  // Set meta composition
+  type->Add(new RaycasterMetaComposition());
 }
 
 Raycaster::~Raycaster()
@@ -204,6 +218,78 @@ Raycaster::~Raycaster()
   for(uint i = 0; i < mProviders.Size(); ++i)
     delete mProviders[i];
   mProviders.Clear();
+}
+
+void Raycaster::Serialize(Serializer& stream)
+{
+  SerializeProviders(stream);
+}
+
+// If the given block requests to be setup via default serialization then run that
+void SetupBlock(Handle& handle, BoundType* blockMeta)
+{
+  RaycastProvider* block = handle.Get<RaycastProvider*>();
+  // This should probably be done with SFINAE at some point
+  CogComponentMeta* metaComponent = blockMeta->HasInherited<CogComponentMeta>();
+  if (metaComponent != nullptr)
+  {
+    SetupMode::Enum constructionMode = metaComponent->mSetupMode;
+    if (constructionMode == SetupMode::DefaultSerialization)
+    {
+      DefaultSerializer defaultSerializer;
+      block->Serialize(defaultSerializer);
+    }
+  }
+}
+
+Handle AllocateBlock(BoundType* blockMeta, bool runSetup)
+{
+  Handle handle = ZilchAllocate(RaycastProvider, blockMeta);
+
+  // Run default serialization if necessary
+  if (runSetup)
+    SetupBlock(handle, blockMeta);
+
+  return handle;
+}
+
+void Raycaster::SerializeProviders(Serializer& stream)
+{
+  // Polymorphic serialization for block types
+  if (stream.GetMode() == SerializerMode::Saving)
+  {
+    // If we're saving, grab each block and serialize it
+    ProviderArray::range range = mProviders.All();
+    for (; !range.Empty(); range.PopFront())
+    {
+      RaycastProvider* provider = range.Front();
+      MetaSerializeObject(provider, stream);
+    }
+  }
+  else
+  {
+    // If we're loading things are a little more complicated
+    PolymorphicNode node;
+    while (stream.GetPolymorphic(node))
+    {
+      // For every node, create a block from it's typename and id
+      BoundType* type = MetaDatabase::FindType(node.TypeName);
+      if (type == nullptr)
+      {
+        Error("Type not found");
+        continue;
+      }
+
+      RaycastProvider* provider = AllocateBlock(type, false).Get<RaycastProvider*>();
+      if (provider)
+      {
+        // Serialize the block and then add it to our list
+        MetaSerializeObject(provider, stream);
+        mProviders.PushBack(provider);
+      }
+      stream.EndPolymorphic();
+    }
+  }
 }
 
 void Raycaster::AddProvider(RaycastProvider* provider)
@@ -249,41 +335,34 @@ ZilchDefineType(RaycasterMetaComposition, builder, type)
 {
 }
 
-RaycasterMetaComposition::RaycasterMetaComposition(size_t raycasterClassOffset) :
-  MetaComposition(ZilchTypeId(Raycaster)),
-  mRaycasterClassOffset(raycasterClassOffset)
+RaycasterMetaComposition::RaycasterMetaComposition() :
+  MetaComposition(ZilchTypeId(RaycastProvider))
 {
   mSupportsComponentRemoval = false;
 }
 
 uint RaycasterMetaComposition::GetComponentCount(HandleParam owner)
 {
-  Raycaster* raycaster = GetRaycaster(owner);
+  Raycaster* raycaster = owner.Get<Raycaster*>();
   return raycaster->mProviders.Size();
 }
 
 Handle RaycasterMetaComposition::GetComponentAt(HandleParam owner, uint index)
 {
-  Raycaster* raycaster = GetRaycaster(owner);
+  Raycaster* raycaster = owner.Get<Raycaster*>();
   RaycastProvider* provider = raycaster->mProviders[index];
   return provider;
 }
 
 Handle RaycasterMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
 {
-  Raycaster* raycaster = GetRaycaster(owner);
+  Raycaster* raycaster = owner.Get<Raycaster*>();
   forRange(RaycastProvider* provider, raycaster->mProviders.All())
   {
     if(ZilchVirtualTypeId(provider)->IsA(componentType))
       return provider;
   }
   return Handle();
-}
-
-Raycaster* RaycasterMetaComposition::GetRaycaster(HandleParam instance)
-{
-  byte* instanceData = instance.Dereference();
-  return (Raycaster*)(((byte*)instanceData) + mRaycasterClassOffset);
 }
 
 }//namespace Zero

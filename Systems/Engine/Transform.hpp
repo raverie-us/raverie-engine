@@ -135,8 +135,6 @@ public:
   /// Rotate around a given point with the given rotation
   void RotateAround(Vec3 point, Quat rotation);
 
-  void NormalizeRotation();
-
   /// Transforms a local normal (direction) into world space.
   Vec3 TransformNormal(Vec3Param normal);
 
@@ -170,6 +168,7 @@ public:
 
 private:
   void OnDestroy(uint flags = 0) override;
+  void FreeCachedMatrix();
 
   /// If null, the matrix is dirty.
   Mat4* mCachedWorldMatrix;
