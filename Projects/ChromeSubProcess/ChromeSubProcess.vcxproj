@@ -161,7 +161,8 @@
       <AdditionalIncludeDirectories>$(ZERO_SOURCE)\External\CEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <MinimalRebuild />
-      <ForcedIncludeFiles>Precompiled.hpp</ForcedIncludeFiles>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\CEF\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

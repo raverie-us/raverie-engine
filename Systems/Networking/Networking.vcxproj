@@ -119,6 +119,7 @@
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'">Precompiled.hpp</ForcedIncludeFiles>
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'">None</DebugInformationFormat>
       <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'" />
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'">false</TreatWarningAsError>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">

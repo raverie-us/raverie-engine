@@ -1103,7 +1103,7 @@ namespace Zilch
     /* Get the most derived type from an instance of the class */                                                                                     \
     /* Inheriting from 'IZilchObject' will make these virtual */                                                                                      \
     /* We don't want to implicitly introduce v-tables to anyone's structures */                                                                       \
-    /*virtual*/ ZZ::BoundType* ZilchGetDerivedType() const                                                                                            \
+    virtual ZZ::BoundType* ZilchGetDerivedType() const                                                                                            \
     {                                                                                                                                                 \
       return ZZ::GetDerivedTypeOverride<ZilchSelf>(this);                                                                                             \
     }                                                                                                                                                 \

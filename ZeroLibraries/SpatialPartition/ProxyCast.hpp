@@ -120,6 +120,8 @@ typedef const CastData& CastDataParam;
 /// Stores a single result from a broadphase query.
 struct ProxyResult
 {
+  ZilchDeclareType(ProxyResult, TypeCopyMode::ReferenceType);
+
   ProxyResult() {}
   ProxyResult(void* proxy, Vec3Param p1, Vec3Param p2,
               Vec3Param contactNormal, real time);

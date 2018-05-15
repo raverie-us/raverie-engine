@@ -108,6 +108,10 @@
       <AdditionalIncludeDirectories>$(ZERO_SOURCE)\Libraries;$(ZERO_SOURCE)\Systems;$(ZERO_SOURCE)\Utilities;$(ZERO_SOURCE)\External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'">Precompiled.hpp</ForcedIncludeFiles>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'">None</DebugInformationFormat>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'" />
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'">false</TreatWarningAsError>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
