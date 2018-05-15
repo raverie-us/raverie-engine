@@ -241,7 +241,7 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, 
   
   // Find the indent space leading up the start of non-whitespace text to account for
   // potential attribute tags and get the correct indent size
-  StringRange textBeforeFunction = allText.SubString(newlineBeforeFunction.Begin(), function.Begin());
+  StringRange textBeforeFunction = allText.SubString(newlineBeforeFunction.Begin(), function.End());
   Rune indentEndRune = textBeforeFunction.FindFirstNonWhitespaceRune();
   StringRange indentEnd = textBeforeFunction.FindFirstOf(indentEndRune);
 
