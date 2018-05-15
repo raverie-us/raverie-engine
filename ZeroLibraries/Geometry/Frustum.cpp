@@ -331,6 +331,7 @@ void Frustum::PointsAtDepth(Vec3 boxPoints[4], float depth) const
 
   // Compute the eye/center vector
   Vec3 centerDir = (farCenter - nearCenter);
+  centerDir.Normalize();
 
   // Build a view aligned plane at depth
   Plane plane(centerDir, nearCenter + centerDir * depth);
