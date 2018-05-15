@@ -11,6 +11,7 @@
 
 namespace Zero
 {
+
 ZilchDefineType(ContentComponent, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -22,6 +23,7 @@ ZilchDefineType(BuilderComponent, builder, type)
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
+DefineSafeIdHandle(ContentComposition);
 ZilchDefineType(ContentComposition, builder, type)
 {
   ZeroBindHandle();

@@ -17,17 +17,9 @@ namespace Events
   DefineEvent(ChromePopup);
 }
 
-ZilchDefineType(ChromePopupEvent, builder, type)
-{
-
-}
-
 //------------------------------------------------------------------ Chrome
 // We need to keep this global object alive
 CefRefPtr<Chrome> gPlatform;
-ZilchDefineType(Chrome, builder, type)
-{
-}
 
 Chrome::Chrome() :
   mCreatedWebBrowser(nullptr)

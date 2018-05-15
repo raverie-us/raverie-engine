@@ -60,7 +60,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
 
   ZilchInitializeType(WebBrowser);
   ZilchInitializeType(WebBrowserSetup);
-  WebBrowserManager::PlatformInitializeMeta<ZilchLibrary>();
   ZilchInitializeType(WebBrowserManager);
   ZilchInitializeType(WebBrowserWidget);
   ZilchInitializeType(MarketWidget);

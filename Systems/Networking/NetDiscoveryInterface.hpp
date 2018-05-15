@@ -60,8 +60,6 @@ public:
 class OpenHostRequest
 {
 public:
-  virtual ~OpenHostRequest();
-
   /// Called in order to prematurely shutdown a host request. Dispatches events, expects that this host request cleans up anything it created
   virtual void FlushHostRequest(NetPeer& netPeer, NetDiscoveryInterface& netDisoveryInstance) = 0;
   /// It will test the passed in IpAddress, and if it was a newly discovered host it will return true.

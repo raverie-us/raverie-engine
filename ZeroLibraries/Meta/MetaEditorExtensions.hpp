@@ -118,7 +118,6 @@ public:
 class TemplateFilterBase
 {
 public:
-  virtual ~TemplateFilterBase();
   virtual bool Filter(Member* prop, HandleParam instance) = 0;
 };
 

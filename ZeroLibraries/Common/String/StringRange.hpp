@@ -324,4 +324,27 @@ struct MoveWithoutDestructionOperator<String>
 // Wraps text input on space boundaries (does not add -)
 String WordWrap(StringRange input, size_t maxLineLength);
 
+template <typename RangeType, typename PolicyType>
+String String::JoinRange(StringRangeParam separator, RangeType range, PolicyType policy)
+{
+  // First we need to know how big the range is, so copy the range and iterate over to count
+  RangeType counterRange = range;
+  size_t count = 0;
+  for (; !counterRange.Empty(); counterRange.PopFront())
+    ++count;
+
+  // Now allocate enough pointers for the ranges and copy them over
+  StringRange* values = (StringRange*)alloca(sizeof(StringRange) * count);
+  size_t i = 0;
+  // Fill out the array of StringRanges
+  for (; !range.Empty(); range.PopFront())
+  {
+    new(values + i) StringRange();
+    values[i] = policy.ToStringRange(range.Front());
+    ++i;
+  }
+
+  return JoinInternal(separator, values, count);
+}
+
 } // namespace Zero

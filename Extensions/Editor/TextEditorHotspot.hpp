@@ -23,7 +23,6 @@ class TextEditorHotspot
 public:
   Regex mSearchRegex;
   TextEditorHotspot(StringRange regex);
-  virtual ~TextEditorHotspot();
 
   /// Called when hotspot is matched. Matches
   /// are provides so capture groups can be used

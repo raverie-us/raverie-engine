@@ -65,7 +65,6 @@
     <ClInclude Include="PropertyHandle.hpp">
       <Filter>Meta</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleResourceFactory.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="SourceControl">

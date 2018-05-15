@@ -39,7 +39,7 @@ namespace Audio
   {
     gAudioSystem = this;
 
-    AudioIO = nullptr;
+    AudioIO = new AudioIOWindows();
   }
 
   //************************************************************************************************

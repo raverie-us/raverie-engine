@@ -18,6 +18,9 @@ namespace Zero
 //---------------------------------------------------------------------------------//
 //                                  IpAddress                                      //
 //---------------------------------------------------------------------------------//
+class IpAddress;
+
+void UpdateHostPortString(Status& status, IpAddress& ipAddress);
 
 /// IPv4/IPv6 network host identifier
 /// Provided for convenience
@@ -97,6 +100,34 @@ public:
 /// Serializes an IP address
 /// Returns the number of bits serialized if successful, else 0
 template <>
-ZeroShared Bits Serialize<IpAddress>(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress);
+inline ZeroShared Bits Serialize<IpAddress>(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress)
+{
+  // Serialize socket address
+  Bits result = Serialize(direction, bitStream, static_cast<SocketAddress&>(ipAddress));
+
+  // Read operation?
+  if (direction == SerializeDirection::Read)
+  {
+    // Update internal host port string
+    if (ipAddress.IsValid())
+    {
+      Status status;
+      UpdateHostPortString(status, ipAddress);
+      if (status.Failed()) // Unable?
+      {
+        ipAddress.Clear();
+        return 0;
+      }
+    }
+    else
+    {
+      ipAddress.Clear();
+      return 0;
+    }
+  }
+
+  // Success
+  return result;
+};
 
 } // namespace Zero

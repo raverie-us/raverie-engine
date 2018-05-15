@@ -267,34 +267,4 @@ void IpAddress::Clear()
   mHostPortString.Clear();
 }
 
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress)
-{
-  // Serialize socket address
-  Bits result = Serialize(direction, bitStream, static_cast<SocketAddress&>(ipAddress));
-
-  // Read operation?
-  if(direction == SerializeDirection::Read)
-  {
-    // Update internal host port string
-    if(ipAddress.IsValid())
-    {
-      Status status;
-      UpdateHostPortString(status, ipAddress);
-      if(status.Failed()) // Unable?
-      {
-        ipAddress.Clear();
-        return 0;
-      }
-    }
-    else
-    {
-      ipAddress.Clear();
-      return 0;
-    }
-  }
-
-  // Success
-  return result;
-}
-
 } // namespace Zero

@@ -415,7 +415,7 @@ namespace Zilch
       static void ErrorOnDoNotBind(P_DISABLE_IF(HasDoNotBind<U>::value))
       {
       }
-
+      
       static BoundType*& GetType();
 
       static void AssertBadType(const char* prependedMessage)
@@ -608,6 +608,41 @@ namespace Zilch
 
     // Increment the reference count since we're now referencing the same thing
     this->AddReference();
+  }
+
+  template <typename T>
+  Handle::Handle(const T& value, HandleManager* manager, ExecutableState* state)
+  {
+    typedef typename TypeBinding::StripQualifiers<T>::Type UnqualifiedType;
+    const UnqualifiedType* pointer = TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
+    BoundType* type = ZilchVirtualTypeId(pointer);
+    type->IsInitializedAssert();
+    ZilchTypeId(T)->IsInitializedAssert();
+    this->Initialize((byte*)pointer, type, manager, state);
+  }
+
+  template <typename T>
+  T Handle::Get(GetOptions::Enum options) const
+  {
+    if (this->StoredType == nullptr)
+    {
+      ErrorIf(options == GetOptions::AssertOnNull,
+              "The value inside the Handle was null");
+      return T();
+    }
+
+    // Check if we can directly convert the stored type into the requested type
+    // This supports derived -> base class casting (but not visa versa), enums to integers, etc
+    BoundType* toType = ZilchTypeId(T);
+    if (this->StoredType->IsRawCastableTo(toType) == false)
+    {
+      ErrorIf(options == GetOptions::AssertOnNull,
+              "There was a value inside the Handle of type '%s' but it cannot be converted",
+              this->StoredType->Name.c_str());
+      return T();
+    }
+
+    return InternalReadRef<T>((byte*)this);
   }
 
   template <typename T>
@@ -990,14 +1025,59 @@ namespace Zilch
   // This helper allows us to use SFINAE to detect if we have a base type (only for internal binding)
   // If we do not have internal binding, then we have to explicitly set the base type
   template <typename ZilchSelf, typename SetupFunction>
-  void SetupType(LibraryBuilder& builder, BoundType* type, SetupFunction setupType, P_ENABLE_IF(HasZilchSetupType<ZilchSelf>::value));
+  void SetupType(LibraryBuilder& builder, BoundType* type, SetupFunction setupType, P_ENABLE_IF(HasZilchSetupType<ZilchSelf>::value))
+  {
+    builder.AddNativeBoundType(type, ZilchTypeId(typename ZilchSelf::ZilchBase), ZilchSelf::ZilchCopyMode);
+    if (setupType != nullptr)
+      setupType(nullptr, builder, type);
+    ZilchSelf::ZilchSetupType(builder, type);
+  };
 
   template <typename ZilchSelf, typename SetupFunction>
-  void SetupType(LibraryBuilder& builder, BoundType* type, SetupFunction setupType, P_DISABLE_IF(HasZilchSetupType<ZilchSelf>::value));
+  void SetupType(LibraryBuilder& builder, BoundType* type, SetupFunction setupType, P_DISABLE_IF(HasZilchSetupType<ZilchSelf>::value))
+  {
+    ErrorIf(setupType == nullptr,
+            "No setup function provided for externally BoundType %s. "
+            "Be sure you are calling the correct initialize function: ZilchInitializeExternalType,"
+            "ZilchInitializeRange, or ZilchInitializeEnum.",
+            type->Name.c_str());
+    setupType(nullptr, builder, type);
+  };
 
   // This function gets called when the static library we belong to is built
   template <typename InitializingType, typename StaticLibraryType, typename SetupFunction>
-  BoundType* InitializeType(const char* initializingTypeName, SetupFunction setupType = nullptr);
+  BoundType* InitializeType(const char* initializingTypeName, SetupFunction setupType = nullptr)
+  {
+    // Check if we've already been initialized
+    BoundType* type = ZilchTypeId(InitializingType);
+    if (type->IsInitialized())
+      return type;
+
+    // First initialize our base type...
+    StaticLibraryType& library = StaticLibraryType::GetInstance();
+    if (library.CanBuildTypes() == false)
+    {
+      String message = String::Format
+      (
+        "ZilchInitializeType can only be called on "
+        "the type %s when its library is in the process of being "
+        "initialized via %s::GetInstance().BuildLibrary()",
+        initializingTypeName,
+        library.Name.c_str()
+      );
+      Error(message.c_str());
+      return type;
+    }
+    String typeName = initializingTypeName;
+    typeName = LibraryBuilder::FixIdentifier(typeName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
+    type->Name = typeName;
+    type->TemplateBaseName = typeName;
+    type->Size = sizeof(InitializingType);
+    type->RawNativeVirtualCount = TypeBinding::GetVirtualTableCount<InitializingType>();
+    LibraryBuilder& builder = *library.GetBuilder();
+    SetupType<InitializingType>(builder, type, setupType);
+    return type;
+  };
 
   // A helper for initializing types that belong to a library
 #define ZilchInitializeTypeAs(Type, Name)                                                                                                              \
@@ -1043,7 +1123,7 @@ namespace Zilch
   static void ZilchDoNotBind();
 
   // Declares a zilch type (belongs inside the type definition)
-  // Implicitly deduces self and base types being bound
+  // Implicitly deduces self and base types being bound 
 #define ZilchDeclareType(ClassType, CopyMode)                                                                                                         \
     public:                                                                                                                                           \
     /* Binding macros need the current class being bound */                                                                                           \

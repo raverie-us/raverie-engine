@@ -64,7 +64,7 @@ public:
 class ContentComposition : public ContentItem
 {
 public:
-  ZilchDeclareType(ContentComposition, TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentComposition, TypeCopyMode::ReferenceType); 
   DeclareSafeIdHandle(u64);
 
   ContentComposition();

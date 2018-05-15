@@ -44,8 +44,6 @@ public:
   ///////////////////////////////////////////////////
   // BEGIN PLATFORM
   ///////////////////////////////////////////////////
-  template <typename ZilchLibrary>
-  static void PlatformInitializeMeta();
   void PlatformCreate();
   void PlatformDestroy();
   void PlatformUpdate();

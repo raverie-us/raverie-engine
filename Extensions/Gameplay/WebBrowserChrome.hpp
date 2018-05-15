@@ -47,7 +47,8 @@ public:
 class ChromePopupEvent : public Event
 {
 public:
-  ZilchDeclareType(ChromePopupEvent, TypeCopyMode::ReferenceType);
+  typedef Event ZilchBase;
+  typedef ChromePopupEvent ZilchSelf;
 
   CefRefPtr<CefBrowser> mBrowser;
   CefRefPtr<CefFrame> mFrame;
@@ -72,7 +73,9 @@ class Chrome :
   public CefDownloadHandler
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(Chrome, ThreadSafeId32EventObject, TypeCopyMode::ReferenceType);
+  typedef ThreadSafeId32EventObject ZilchBase;
+  typedef Chrome ZilchSelf;
+
   Chrome();
   ~Chrome();
 
@@ -156,12 +159,5 @@ public:
 
   IMPLEMENT_REFCOUNTING(Chrome);
 };
-
-template <typename ZilchLibrary>
-void WebBrowserManager::PlatformInitializeMeta()
-{
-  ZilchInitializeType(Chrome);
-  ZilchInitializeType(ChromePopupEvent);
-}
 
 } // namespace Zero
