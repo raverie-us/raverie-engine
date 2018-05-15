@@ -494,13 +494,14 @@ ZilchDefineType(Mesh, builder, type)
   ZilchBindFieldProperty(mPrimitiveType);
 
   ZilchBindMethod(Upload);
+  ZilchBindMethod(UploadNoRayCastInfo);
+  ZilchBindMethod(UploadNoRayCastInfoOrAabb);
 }
 
 //**************************************************************************************************
 HandleOf<Mesh> Mesh::CreateRuntime()
 {
   Mesh* mesh = MeshManager::CreateRuntime();
-  mesh->mBuildTree = false;
   mesh->mAabb.SetCenterAndHalfExtents(Vec3::cZero, Vec3(0.5f));
 
   Z::gEngine->has(GraphicsEngine)->AddMesh(mesh);
@@ -522,14 +523,30 @@ void Mesh::Unload()
   mVertices.ClearAttributes();
   mVertices.ClearData();
   mIndices.Clear();
-
-  mBuildTree = true;
 }
 
 //**************************************************************************************************
 void Mesh::Upload()
 {
-  if (!IsRuntime())
+  UploadInternal(true, true);
+}
+
+//**************************************************************************************************
+void Mesh::UploadNoRayCastInfo()
+{
+  UploadInternal(true, false);
+}
+
+//**************************************************************************************************
+void Mesh::UploadNoRayCastInfoOrAabb()
+{
+  UploadInternal(false, false);
+}
+
+//**************************************************************************************************
+void Mesh::UploadInternal(bool updateAabb, bool updateTree)
+{
+  if(!IsRuntime())
     DoNotifyException("Invalid Upload", "Cannot upload to a non-runtime Mesh.");
   
   uint vertexSize = mVertices.mFixedDesc.mVertexSize;
@@ -541,10 +558,17 @@ void Mesh::Upload()
     mIndices.mIndexCount = vertexCount;
   }
 
-  if (mBuildTree)
-    BuildTree();
-  
+  if (updateAabb)
+  {
+    if (updateTree)
+      BuildAabbAndTree<true>();
+    else
+      BuildAabbAndTree<false>();
+  }
+
   Z::gEngine->has(GraphicsEngine)->AddMesh(this);
+
+  SendModified();
 }
 
 //**************************************************************************************************
@@ -561,12 +585,14 @@ uint Mesh::GetVerticesPerPrimitive()
 }
 
 //**************************************************************************************************
-void Mesh::BuildTree()
+template <bool BuildTree>
+void Mesh::BuildAabbAndTree()
 {
-  mTree.Clear();
+  if(BuildTree)
+    mTree.Clear();
 
-  uint verticesPerPrimitve = GetVerticesPerPrimitive();
-  uint primitiveCount = mIndices.mIndexCount / verticesPerPrimitve;
+  uint verticesPerPrimitive = GetVerticesPerPrimitive();
+  uint primitiveCount = mIndices.mIndexCount / verticesPerPrimitive;
 
   Aabb boundingBox;
   boundingBox.SetInvalid();
@@ -580,7 +606,7 @@ void Mesh::BuildTree()
 
     BaseBroadPhaseData<uint> data;
     data.mClientData = i;
-    data.mAabb.Compute(points, verticesPerPrimitve);
+    data.mAabb.Compute(points, verticesPerPrimitive);
 
     // Accumulate unaltered aabb's for final bounding box
     boundingBox.Combine(data.mAabb);
@@ -590,8 +616,11 @@ void Mesh::BuildTree()
     halfExtents = Math::Max(Vec3(cMinMeshThickness), halfExtents);
     data.mAabb.SetCenterAndHalfExtents(data.mAabb.GetCenter(), halfExtents);
 
-    BroadPhaseProxy proxy;
-    mTree.CreateProxy(proxy, data);
+    if (BuildTree)
+    {
+      BroadPhaseProxy proxy;
+      mTree.CreateProxy(proxy, data);
+    }
   }
 
   if (boundingBox.Valid() == false)
@@ -863,7 +892,7 @@ struct MeshLoadPattern
       switch (chunk.Type)
       {
         case 0:
-          mesh->BuildTree();
+          mesh->BuildAabbAndTree<true>();
           return;
         case VertexChunk:
           LoadVertexChunk(*mesh, reader);
