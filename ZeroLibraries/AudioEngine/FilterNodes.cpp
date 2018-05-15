@@ -66,8 +66,7 @@ namespace Audio
     }
 
     // Apply filter
-    for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-      filter->ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+    filter->ProcessBuffer(InputSamples.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
     AddBypass(outputBuffer);
 

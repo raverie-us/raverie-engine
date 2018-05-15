@@ -30,35 +30,6 @@ namespace Audio
       sizeof(float) * numberOfSamples);
   }
 
-  //------------------------------------------------------------------------- Audio Channels Manager
-
-  class AudioChannelsManager
-  {
-  public:
-    AudioChannelsManager();
-    ~AudioChannelsManager();
-
-    void GetClosestSpeakerValues(Math::Vec2 sourceVec, unsigned numberOfChannels, float& gain1, 
-      float& gain2, int& channel1, int& channel2);
-
-  private:
-    struct SpeakerInfo
-    {
-      SpeakerInfo() : Channel1(-1), Channel2(-1) {}
-
-      Math::Mat2 SpeakerMatrix;
-      int Channel1;
-      int Channel2;
-
-      void GetGainValues(const Math::Vec2& sourceVec, float& gain1, float& gain2);
-    };
-
-    SpeakerInfo* SpeakerMatrixArrays[9];
-
-    void CreateSpeakerMatrix();
-
-  };
-
   //------------------------------------------------------------------------------------ Audio Frame
   
   class AudioFrame
@@ -144,7 +115,6 @@ namespace Audio
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
     
-    AudioChannelsManager ChannelsManager;
     AudioInputOutput* AudioIO;
     
   private:

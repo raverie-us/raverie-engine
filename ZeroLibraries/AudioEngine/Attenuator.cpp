@@ -247,9 +247,8 @@ namespace Audio
       listenerData.LowPass.SetCutoffFrequency(cutoffFreq);
 
       // Apply the filter to each frame of audio samples
-      float* buffer = outputBuffer->Data();
-      for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-        listenerData.LowPass.ProcessFrame(buffer + i, buffer + i, numberOfChannels);
+      listenerData.LowPass.ProcessBuffer(outputBuffer->Data(), outputBuffer->Data(), numberOfChannels,
+        outputBuffer->Size());
     }
 
     AddBypass(outputBuffer);
