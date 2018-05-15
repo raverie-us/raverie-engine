@@ -841,14 +841,14 @@ namespace Audio
     mFrameIndex += inputFrames;
 
     // Check if we are looping and will reach the loop end frame
-    if (mLooping && mFrameIndex >= mLoopEndFrame)
+    if (mLooping && (mFrameIndex >= mLoopEndFrame || mFrameIndex >= mEndFrame)) 
     {
       unsigned sectionFrames = 0;
 
       if (startingFrameIndex < mLoopEndFrame)
       {
         // Save the number of frames in the first section
-        sectionFrames = inputFrames - (mFrameIndex - mLoopEndFrame);
+        sectionFrames = inputFrames - (mFrameIndex - Math::Min(mLoopEndFrame, mEndFrame));
         // Get the samples from the asset
         Asset->AppendSamples(&samples, startingFrameIndex, sectionFrames * inputChannels);
       }
