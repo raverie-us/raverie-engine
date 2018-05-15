@@ -436,12 +436,6 @@ void ZilchPluginSource::CompileRelease()
   CompileConfiguration("Release");
 }
 
-void CompletedCompilation(BackgroundTask* task, Job* job)
-{
-  ZilchPluginSourceManager* manager = ZilchPluginSourceManager::GetInstance();
-  --manager->mCompilingPluginCount;
-}
-
 bool ZilchPluginSource::CheckIdeAndInformUser()
 {
   if (GetResourceTemplate())
@@ -490,7 +484,9 @@ void ZilchPluginSource::CompileConfiguration(StringParam configuration)
   ExecuteProcessTaskJob* job = new ExecuteProcessTaskJob(process);
   mCompileTask = Z::gBackgroundTasks->Execute(job, taskName);
   mCompileTask->mActivateOnCompleted = true;
-  mCompileTask->mCallback = CompletedCompilation;
+  // Listen for the task completion events
+  ConnectThisTo(mCompileTask, Events::BackgroundTaskCompleted, OnCompilationCompleted);
+  ConnectThisTo(mCompileTask, Events::BackgroundTaskFailed, OnCompilationCompleted);
 
   // We can't get progress, so we'll have to estimate the time to complete
   mCompileTask->mIndeterminate = true;
@@ -503,6 +499,20 @@ void ZilchPluginSource::CompileConfiguration(StringParam configuration)
 #else
   DoNotifyErrorNoAssert("Zilch Plugin", "Cannot automatically compile the plugin for this platform");
 #endif
+}
+
+void ZilchPluginSource::OnCompilationCompleted(BackgroundTaskEvent* e)
+{
+  ZilchPluginSourceManager* manager = ZilchPluginSourceManager::GetInstance();
+  --manager->mCompilingPluginCount;
+
+  ExecuteProcessTaskJob* job = (ExecuteProcessTaskJob*)e->mTask->GetFinishedJob();
+  // Check for failure
+  if(e->State == BackgroundTaskState::Failed || job->mExitCode != 0)
+  {
+    String msg = String::Format("Plugin '%s' failed to compile", Name.c_str());
+    DoNotifyError("Plugin Compilation Failed", msg);
+  }
 }
 
 //-------------------------------------------------------------------ZilchPluginSourceLoader
