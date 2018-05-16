@@ -202,25 +202,25 @@ public:
 // CreateRuntime should not be used directly, implement a static CreateRuntime method on the resource type
 // and call the manager's CreateRuntime from there, along with any other required setup of the resource for runtime usage.
 // If creation of a runtime resource in script is intended then bind the resource's CreateRuntime method.
-#define DeclareResourceManager(ManagerType, ManagerResourceType)                                                            \
-  typedef ResourceManager ZilchBase;                                                                                        \
-  typedef ManagerType ZilchSelf;                                                                                            \
-  typedef ManagerResourceType ResourceType;   typedef ManagerResourceType RT;    typedef ManagerType self_type;             \
-  static void Initialize();                                                                                                 \
-  static ManagerType* Instance;                                                                                             \
-  static ManagerType* GetInstance(){return Instance;}                                                                       \
-  static bool IsValid(){return Instance != NULL; }                                                                          \
-  static RT* GetDefault(){return (RT*)Instance->GetDefaultResource();}                                                      \
-  static RT* GetFallback(){return (RT*)Instance->GetFallbackResource();}                                                    \
-  static RT* Find(ResourceId resourceId){return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ErrorFallback);}   \
+#define DeclareResourceManager(ManagerType, ManagerResourceType)                                                              \
+  typedef ResourceManager ZilchBase;                                                                                          \
+  typedef ManagerType ZilchSelf;                                                                                              \
+  typedef ManagerResourceType ResourceType;   typedef ManagerResourceType RT;    typedef ManagerType self_type;               \
+  static void Initialize();                                                                                                   \
+  static ManagerType* Instance;                                                                                               \
+  static ManagerType* GetInstance(){return Instance;}                                                                         \
+  static bool IsValid(){return Instance != NULL; }                                                                            \
+  static RT* GetDefault(){return (RT*)Instance->GetDefaultResource();}                                                        \
+  static RT* GetFallback(){return (RT*)Instance->GetFallbackResource();}                                                      \
+  static RT* Find(ResourceId resourceId){return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ErrorFallback);}     \
   static RT* Find(StringParam nameId){return (RT*)Instance->GetResource(nameId, ResourceNotFound::ErrorFallback);}            \
   static RT* FindOrNull(ResourceId resourceId){return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ReturnNull);}  \
   static RT* FindOrNull(StringParam nameId){return (RT*)Instance->GetResource(nameId, ResourceNotFound::ReturnNull);}         \
-  static RT* CreateNewResource(StringParam name){return (RT*)Instance->CreateNewResourceInternal(name);}                    \
-  private:                                                                                                                  \
-  friend class ManagerResourceType;                                                                                         \
-  static RT* CreateRuntime(StringParam name = String()){return (RT*)Instance->CreateRuntimeInternal(name);}                 \
-  Resource* AllocateDefaultConstructed() override {return new RT();}                                                        \
+  static RT* CreateNewResource(StringParam name){return (RT*)Instance->CreateNewResourceInternal(name);}                      \
+  private:                                                                                                                    \
+  friend class ManagerResourceType;                                                                                           \
+  static RT* CreateRuntime(StringParam name = String()){return (RT*)Instance->CreateRuntimeInternal(name);}                   \
+  Resource* AllocateDefaultConstructed() override {return new RT();}                                                          \
   public:
 
 // Implement native resource managers

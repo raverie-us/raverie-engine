@@ -183,7 +183,7 @@ void ResourceListEntryRemoved(SelfResource* selfResource, OtherResource* otherRe
 template <typename ResourceManagerType>
 void ResetIdName(String& idName)
 {
-  ResourceManagerType::ResourceType* resource = ResourceManagerType::FindOrNull(idName);
+  typename ResourceManagerType::ResourceType* resource = ResourceManagerType::FindOrNull(idName);
   // Serialized list can have entries for removed resources.
   if (resource != nullptr)
     idName = resource->ResourceIdName;
