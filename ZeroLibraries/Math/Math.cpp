@@ -947,6 +947,29 @@ Quaternion RotationQuaternionBetween(Vec3Param start, Vec3Param end)
   return ToQuaternion(axis, angle);
 }
 
+Vec2 GeneratePerpendicularVector(Vec2Param input)
+{
+  return Vec2(-input.y, input.x);
+}
+
+Vec3 GeneratePerpendicularVector(Vec3Param input)
+{
+  Vec3 result;
+  if((Math::Abs(input.x) >= Math::Abs(input.y)) && (Math::Abs(input.x) >= Math::Abs(input.z)))
+  {
+    result.x = -input.y;
+    result.y = input.x;
+    result.z = real(0.0);
+  }
+  else
+  {
+    result.x = real(0.0);
+    result.y = input.z;
+    result.z = -input.y;
+  }
+  return result;
+}
+
 ///Generates a set of orthonormal vectors from the given vectors, modifying u 
 ///and v.
 void GenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v)
@@ -954,18 +977,8 @@ void GenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v)
   ErrorIf(u == nullptr, "Math - Null pointer passed for vector U.");
   ErrorIf(v == nullptr, "Math - Null pointer passed for vector V.");
 
-  if((Math::Abs(w.x) >= Math::Abs(w.y)) && (Math::Abs(w.x) >= Math::Abs(w.z)))
-  {
-    u->x = -w.y;
-    u->y = w.x;
-    u->z = real(0.0);
-  }
-  else
-  {
-    u->x = real(0.0);
-    u->y = w.z;
-    u->z = -w.y;
-  }
+  *u = GeneratePerpendicularVector(w);
+
   Normalize(*u);
   *v = Cross(w, *u);
   Normalize(*v);
@@ -978,18 +991,8 @@ void DebugGenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v)
   ErrorIf(u == nullptr, "Math - Null pointer passed for vector U.");
   ErrorIf(v == nullptr, "Math - Null pointer passed for vector V.");
 
-  if((Math::Abs(w.x) >= Math::Abs(w.y)) && (Math::Abs(w.x) >= Math::Abs(w.z)))
-  {
-    u->x = -w.y;
-    u->y = w.x;
-    u->z = real(0.0);
-  }
-  else
-  {
-    u->x = real(0.0);
-    u->y = w.z;
-    u->z = -w.y;
-  }
+  *u = GeneratePerpendicularVector(w);
+
   AttemptNormalize(*u);
   *v = Cross(w, *u);
   AttemptNormalize(*v);

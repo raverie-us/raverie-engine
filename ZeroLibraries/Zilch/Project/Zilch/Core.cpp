@@ -3563,12 +3563,19 @@ namespace Zilch
     ZilchFullBindMethod(builder, math, &Math::AngleBetween, (Real (*)(QuaternionParam, QuaternionParam)), "AngleBetween", ZilchNoNames)
       ->Description = ZilchDocumentString("Returns the angle between two Quaternions in radians.");
 
-    ZilchFullBindMethod(builder, math, &Math::SafeSlerp, (Real2       (*)(Real2Param,       Real2Param,       Real)), "Slerp", "start, end, t")
+    ZilchFullBindMethod(builder, math, &Math::Slerp, (Real2      (*)(Real2Param,      Real2Param,      Real)), "Slerp", "start, end, t")
       ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate between two vectors by the parameter t.");
-    ZilchFullBindMethod(builder, math, &Math::SafeSlerp, (Real3       (*)(Real3Param,       Real3Param,       Real)), "Slerp", "start, end, t")
+    ZilchFullBindMethod(builder, math, &Math::Slerp, (Real3      (*)(Real3Param,      Real3Param,      Real)), "Slerp", "start, end, t")
       ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate between two vectors by the parameter t.");
-    ZilchFullBindMethod(builder, math, &Math::Slerp,     (Quaternion  (*)(QuaternionParam,  QuaternionParam,  Real)), "Slerp", "start, end, t")
+    ZilchFullBindMethod(builder, math, &Math::Slerp, (Quaternion (*)(QuaternionParam, QuaternionParam, Real)), "Slerp", "start, end, t")
       ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate between two rotations by the parameter t.");
+
+    ZilchFullBindMethod(builder, math, &Math::SlerpUnnormalized, (Real2(*)(Real2Param, Real2Param, Real)), "SlerpUnnormalized", "start, end, t")
+      ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate between two vectors by the parameter t. This is "
+        "the 'pure' mathematical Slerp function that works on un-normalized input. This effectively traces along an ellipse defined by the two input vectors.");
+    ZilchFullBindMethod(builder, math, &Math::SlerpUnnormalized, (Real3(*)(Real3Param, Real3Param, Real)), "SlerpUnnormalized", "start, end, t")
+      ->Description = ZilchDocumentString("Spherical linear interpolation. Used to interpolate between two vectors by the parameter t. This is "
+        "the 'pure' mathematical Slerp function that works on un-normalized input. This effectively traces along an ellipse defined by the two input vectors.");
 
     ZilchFullBindMethod(builder, math, &Math::SafeRotateTowards, (Real2 (*)(Real2Param, Real2Param, Real)), "RotateTowards", "p0, p1, maxRadians")
       ->Description = ZilchDocumentString("Rotate a vector towards another vector changing at most maxRadians.");
