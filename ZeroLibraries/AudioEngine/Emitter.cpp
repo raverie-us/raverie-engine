@@ -87,8 +87,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::Pause, (EmitterNode*)GetSiblingNode()));
+      AddTaskForSibling(&EmitterNode::Pause);
     }
     else
     {
@@ -105,8 +104,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::Resume, (EmitterNode*)GetSiblingNode()));
+      AddTaskForSibling(&EmitterNode::Resume);
     }
     else
     {
@@ -125,9 +123,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::SetPosition, 
-            (EmitterNode*)GetSiblingNode(), newPosition, newVelocity));
+      AddTaskForSibling(&EmitterNode::SetPosition, newPosition, newVelocity);
     }
     else
     {
@@ -140,11 +136,7 @@ namespace Audio
   void EmitterNode::SetForwardDirection(const Math::Vec3 forwardDirection)
   {
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::SetForwardDirection, 
-            (EmitterNode*)GetSiblingNode(), forwardDirection));
-    }
+      AddTaskForSibling(&EmitterNode::SetForwardDirection, forwardDirection);
     else
       FacingDirection = forwardDirection;
   }
@@ -154,9 +146,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::SetDirectionalAngle, 
-            (EmitterNode*)GetSiblingNode(), angleInDegrees, reducedVolume));
+      AddTaskForSibling(&EmitterNode::SetDirectionalAngle, angleInDegrees, reducedVolume);
     }
     else
     {
