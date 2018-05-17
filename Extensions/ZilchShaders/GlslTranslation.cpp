@@ -599,6 +599,7 @@ void ParseCoreLibrary(ZilchShaderTranslator* translator, ZilchShaderLibrary* cor
   }
 
   coreLibrary->CreateNativeType("Math", "Math", refType);
+  coreLibrary->CreateNativeType("Color", "Color", refType);
 
   // Parse the colors class
   ParseColors(translator, coreLibrary);
