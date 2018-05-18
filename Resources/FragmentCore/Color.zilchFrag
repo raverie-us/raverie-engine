@@ -1,0 +1,85 @@
+struct ColorExtensions
+{
+  //https://www.laurivan.com/rgb-to-hsv-to-rgb-for-shaders/
+  [Extension(typeid(Color))][Static][Implements]
+  function ToHsva(rgba : Real4) : Real4
+  {
+    // This is an optimization of:
+    //var k = 0.0;
+    //var tmp = 0.0;
+    //
+    //if (g < b)
+    //{
+    //  Swap(g, b);
+    //  k = -1.0;
+    //}
+    //if (r < g)
+    //{
+    //  Swap(r, g);
+    //  k = -2.0 / 6.0 - k;
+    //}
+    //
+    //var chroma = r - Math.Min(g, b);
+    //var h = Math.Abs(k + (g - b) / (6.0 * chroma + 1e-20));
+    //var s = chroma / (r + 1e-20);
+    //var v = r;
+    //return Real4(h, s, v, rgba.W);
+    
+    var a = rgba.W;
+    
+    var scalars = Real4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    var gLessThanB = Math.Step(rgba.Y, rgba.Z);
+    var p = Math.Lerp(Real4(rgba.XYZ, scalars.X), Real4(rgba.XZY, scalars.W), gLessThanB);
+    
+    var rLessThanG = Math.Step(p.X, p.Y);
+    var q = Math.Lerp(Real4(p.XYZ, p.W), Real4(p.YXZ, scalars.Y - p.W), rLessThanG);
+    
+    var chroma = q.X - Math.Min(q.Y, q.Z);
+    var h = Math.Abs(q.W + (q.Y - q.Z) / (6.0 * chroma + 1e-20));
+    var s = chroma / (q.X + 1e-20);
+    var v = q.X;
+    
+    return Real4(h, s, v, a);
+  }
+  
+  [Extension(typeid(Color))][Static][Implements]
+  function ToHsva(r : Real, g : Real, b : Real, a : Real) : Real4
+  {
+    return Color.ToHsva(Real4(r, g, b, a));
+  }
+  
+  [Extension(typeid(Color))][Static][Implements]
+  function ToHsva(r : Real, g : Real, b : Real) : Real4
+  {
+    return Color.ToHsva(Real4(r, g, b, 1.0));
+  }
+  
+  //https://www.laurivan.com/rgb-to-hsv-to-rgb-for-shaders/
+  [Extension(typeid(Color))][Static][Implements]
+  function FromHsva(hsva : Real4) : Real4
+  {
+    var h = hsva.X;
+    var s = hsva.Y;
+    var v = hsva.Z;
+    var a = hsva.W;
+    
+    var k = Real4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    var p = Math.Frac(h.XXX + k.XYZ) * 6.0 - k.WWW;
+    p = Math.Abs(p);
+    var x = Math.Saturate(p - k.XXX);
+    var rgb = v * Math.Lerp(k.XXX, x, s);
+    return Real4(rgb, a);
+  }
+  
+  [Extension(typeid(Color))][Static][Implements]
+  function FromHsva(h : Real, s : Real, v : Real, a : Real) : Real4
+  {
+    return Color.FromHsva(Real4(h, s, v, a));
+  }
+  
+  [Extension(typeid(Color))][Static][Implements]
+  function FromHsva(h : Real, s : Real, v : Real) : Real4
+  {
+    return Color.FromHsva(Real4(h, s, v, 1.0));
+  }
+}
