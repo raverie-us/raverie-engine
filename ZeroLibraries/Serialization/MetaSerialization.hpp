@@ -35,6 +35,8 @@ public:
 
   virtual void AddCustomAttributes(HandleParam object, TextSaver* saver){}
 
+  virtual String ConvertToString(AnyParam input);
+
   // Overload this if the value can be converted from a string and return true
   virtual bool ConvertFromString(StringParam input, Any& output);
 
@@ -51,6 +53,7 @@ public:
 
   bool SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
+  String ConvertToString(AnyParam input) override;
   bool ConvertFromString(StringParam input, Any& output) override;
 
   BoundType* mEnumType;
@@ -64,6 +67,7 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   bool SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
+  String ConvertToString(AnyParam input) override;
   bool ConvertFromString(StringParam input, Any& output) override;
 };
 
@@ -74,6 +78,7 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer) override;
+  String ConvertToString(AnyParam input) override;
   bool ConvertFromString(StringParam input, Any& output) override;
 };
 
@@ -175,5 +180,13 @@ bool PrimitiveMetaSerialization<T>::ConvertFromString(StringParam input, Any& ou
   output = value;
   return true;
 }
+
+//**************************************************************************************************
+template <typename T>
+String PrimitiveMetaSerialization<T>::ConvertToString(AnyParam input)
+{
+  return ToString(input.Get<T>());
+}
+
 
 }//namespace Zero
