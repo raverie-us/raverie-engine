@@ -394,7 +394,7 @@ bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
     builder << "Alt+";
   if(event->ShiftPressed)
     builder << "Shift+";
-  builder << event->mKeyboard->GetKeyName(event->Key);
+  builder << event->mKeyboard->ToSymbol(event->Key);
   String shortcutString = builder.ToString();
 
   // ZPrint("Shortcut %s\n", shortcutString.c_str());

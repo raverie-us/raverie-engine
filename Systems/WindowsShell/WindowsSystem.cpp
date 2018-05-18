@@ -1008,7 +1008,7 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
         keyState = KeyState::Repeated;
       }
 
-      Keys::Enum  key = TranslateKeyCode(wParam);
+      Keys::Enum key = TranslateKeyCode(wParam);
 
       KeyboardEvent keyEvent;
       keyEvent.OsKey = wParam;

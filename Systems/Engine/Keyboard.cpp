@@ -110,6 +110,7 @@ void SetUpKeyNames()
   KeyNameToEnum["F11"] = Keys::F11;
   KeyNameToEnum["F12"] = Keys::F12;
 
+  SetKeyName(Insert);
   SetKeyName(Delete);
   SetKeyName(Back);
   SetKeyName(Home);
@@ -127,6 +128,7 @@ void SetUpKeyNames()
   SetKeyName(PageUp);
   SetKeyName(PageDown);
 
+  KeyNameToEnum["Insert"] = Keys::Insert;
   KeyNameToEnum["Delete"] = Keys::Delete;
   KeyNameToEnum["Back"] = Keys::Back;
   KeyNameToEnum["BackSpace"] = Keys::Back;
@@ -295,6 +297,7 @@ void SetUpKeyNames()
   SetKeyName(None);
 
   KeyNameToEnum["None"] = Keys::None;
+  
 }
 
 
@@ -310,8 +313,16 @@ ZilchDefineType(Keyboard, builder, type)
   ZilchBindMethod(KeyIsUp);
   ZilchBindMethod(KeyIsPressed);
   ZilchBindMethod(KeyIsReleased);
+
   ZilchBindMethod(GetKeyName);
-  ZilchBindMethod(GetKeyLiteral);
+
+  ZilchBindOverloadedMethod(Valid, ZilchInstanceOverload(bool, Keys::Enum));
+  ZilchBindOverloadedMethod(Valid, ZilchInstanceOverload(bool, StringParam));
+
+  ZilchBindMethod(ToKey);
+  ZilchBindOverloadedMethod(ToSymbol, ZilchInstanceOverload(String, Keys::Enum));
+  ZilchBindOverloadedMethod(ToSymbol, ZilchInstanceOverload(String, StringParam));
+
   ZeroBindEvent(Events::KeyUp, KeyboardEvent);
   ZeroBindEvent(Events::KeyDown, KeyboardEvent);
   ZeroBindEvent(Events::KeyRepeated, KeyboardEvent);
@@ -352,26 +363,6 @@ String Keyboard::GetKeyName(Keys::Enum key)
     return String();
 }
 
-String Keyboard::GetKeyLiteral(Keys::Enum key)
-{
-  if(key == Keys::Space)
-    return KeyNames[key];
-
-  if(key <= Keys::Backslash)
-  {
-    StringBuilder buffer;
-    buffer.Append(Rune(key));
-
-    return buffer.ToString();
-  }
-
-  String symbol = KeyNameToSymbol.FindValue(KeyNames[key], String());
-  if(!symbol.Empty())
-    return symbol;
-
-  return GetKeyName(key);
-}
-
 bool Keyboard::Valid(Keys::Enum key)
 {
   bool isValid = (key == Keys::Space)
@@ -399,14 +390,34 @@ bool Keyboard::Valid(StringParam key)
     return ToKey(key) != Keys::Unknown;
 }
 
-Keys::Enum Keyboard::ToKey(StringParam key)
+String Keyboard::ToSymbol(Keys::Enum key)
 {
-  return KeyNameToEnum.FindValue(key, Keys::Unknown);
+  if(!Valid(key))
+    return "Unknown";
+
+  if(key <= Keys::Backslash)
+  {
+    StringBuilder buffer;
+    buffer.Append(Rune(key));
+
+    return buffer.ToString();
+  }
+
+  String symbol = KeyNameToSymbol.FindValue(KeyNames[key], String());
+  if(!symbol.Empty())
+    return symbol;
+
+  return GetKeyName(key);
 }
 
 String Keyboard::ToSymbol(StringParam keyName)
 {
   return KeyNameToSymbol.FindValue(keyName, keyName);
+}
+
+Keys::Enum Keyboard::ToKey(StringParam key)
+{
+  return KeyNameToEnum.FindValue(key, Keys::Unknown);
 }
 
 void Keyboard::Update()

@@ -106,6 +106,7 @@ namespace Keys
     F12,
 
   //Special Keys
+    Insert,
     Delete,
     Back,    // Rename in next major, should be Backspace
     Home,
@@ -181,9 +182,6 @@ public:
   /// Gets a string name of a particular key.
   String GetKeyName(Keys::Enum key);
 
-  /// Gets a the key by it's actual name or keyboard symbol.
-  String GetKeyLiteral(Keys::Enum key);
-
   /// Validate that the key is a Keys::Enum that is not 'Unknown', or 'None', or
   /// an integer value that doesn't map to a known Keys::Enum value.
   bool Valid(Keys::Enum key);
@@ -191,11 +189,17 @@ public:
   /// Validate that the input string can be mapped back to an enum.
   bool Valid(StringParam key);
 
-  /// String to Key::Enum conversion.  Returns Keys::Unknown if key is not found.
-  Keys::Enum ToKey(StringParam key);
+  /// Convert key value to it's actual name or keyboard symbol, if it has one.
+  /// Returns "Unknown" String if key is not found.
+  String ToSymbol(Keys::Enum key);
 
-  /// Convert a key name to it's keyboard symbol if it has one.
+  /// Convert a key name to it's keyboard symbol, if it has one.
+  /// Returns input String if key is not found.
   String ToSymbol(StringParam keyName);
+
+  /// Counterpart to 'ToSymbol'.  Converts a key's name or symbol to the key value.
+  /// Returns Keys::Unknown if key is not found.
+  Keys::Enum ToKey(StringParam key);
 
   void Update();
   void Clear();
