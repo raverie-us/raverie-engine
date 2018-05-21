@@ -8,6 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
+
 #include "Utility/Typedefs.hpp"
 #include "Common/Time.hpp"
 
@@ -114,13 +115,6 @@ extern const TimeType cTimeMax;
 
 /// Test if the current machine is big or little endian
 bool IsBigEndian();
-
-/// Returns number of least significant zeros
-/// If x is strictly a power of 2, will result in n where 2^n=x, values [0, 31]
-/// More information: http://en.wikipedia.org/wiki/Find_first_set
-u32 CountTrailingZeros(u32 x);
-/// Returns number of most significant zeros
-u32 CountLeadingZeros(u32 x);
 
 /// Will result in zero if most significant bit is set
 u32 NextPowerOfTwo(u32 x);

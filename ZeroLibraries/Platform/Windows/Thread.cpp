@@ -9,8 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#ifdef _MSC_VER
-
 ///Used to set the thread name in Visual Studio. This raises an exception that 
 //Visual Studio catches and then sets the thread name.
 typedef struct tagTHREADNAME_INFO
@@ -42,14 +40,6 @@ inline void SetThreadDebugName(DWORD dwThreadID, LPCSTR szThreadName)
   {
   }
 }
-
-#else
-
-inline void SetThreadDebugName(DWORD dwThreadID, LPCSTR szThreadName)
-{
-}
-
-#endif
 
 namespace Zero
 {

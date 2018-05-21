@@ -6,10 +6,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-// Disable a warning for noexcept when exception handling is off
-#ifdef _MSC_VER
-#pragma warning(disable:4577)
-#endif
+// The first thing we do is detect the platform.
+// The next thing we do is define macros that all platforms may use
+// We also ignore any compiler or platform specific warnings here
+#include "Platform.hpp"
+
 #include <algorithm>
 #include <ctype.h>
 #include <cstddef>
@@ -34,8 +35,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cfloat>
-
-#include "Utility/Standard.hpp"
+#include <malloc.h>
 
 namespace Zero
 {
@@ -49,10 +49,18 @@ public:
 
 }//namespace Zero
 
+#include "Utility/Standard.hpp"
+#include "Utility/Typedefs.hpp"
+#include "Time.hpp"
+#include "Utility/Misc.hpp"
+#include "Utility/Guid.hpp"
+#include "Containers/TypeTraits.hpp"
+#include "Utility/BitTypes.hpp"
+#include "Utility/BitMath.hpp"
+#include "Platform/Atomic.hpp"
 #include "Containers/InList.hpp"
 #include "Containers/ArrayMap.hpp"
 #include "Containers/ArraySet.hpp"
-#include "Containers/BitStream.hpp"
 #include "Containers/BlockArray.hpp"
 #include "Containers/ByteBuffer.hpp"
 #include "Containers/CyclicArray.hpp"
@@ -66,7 +74,6 @@ public:
 #include "Containers/Algorithm.hpp"
 #include "Containers/Allocator.hpp"
 #include "Containers/Array.hpp"
-#include "Containers/TypeTraits.hpp"
 #include "Containers/ContainerCommon.hpp"
 #include "Containers/Hashing.hpp"
 #include "Containers/HashMap.hpp"
@@ -80,20 +87,18 @@ public:
 #include "Memory/Pool.hpp"
 #include "Memory/Stack.hpp"
 #include "Memory/ZeroAllocator.hpp"
-#include "NullPtr.hpp"
-#include "Regex/Regex.hpp"
 #include "String/Rune.hpp"
-#include "String/CharacterTraits.hpp"
+#include "String/String.hpp"
 #include "String/FixedString.hpp"
+#include "String/CharacterTraits.hpp"
 #include "String/StringRange.hpp"
 #include "String/StringBuilder.hpp"
 #include "String/StringConversion.hpp"
 #include "String/StringUtility.hpp"
 #include "String/ToString.hpp"
-#include "Time.hpp"
+#include "Containers/BitStream.hpp"
+#include "Regex/Regex.hpp"
 #include "Utility/BitField.hpp"
-#include "Utility/BitMath.hpp"
-#include "Utility/BitTypes.hpp"
 #include "Utility/ByteEnum.hpp"
 #include "Utility/ConditionalRange.hpp"
 #include "Utility/EnumDeclaration.hpp"
@@ -108,7 +113,6 @@ public:
 #include "Utility/Log2.hpp"
 #include "Utility/Status.hpp"
 #include "Utility/ForEachRange.hpp"
-#include "Utility/Atomic.hpp"
 #include "Utility/Misc.hpp"
 #include "Utility/Standard.hpp"
 #include "Utility/Typedefs.hpp"
@@ -186,7 +190,6 @@ namespace Zero
 #include "Utility/Rect.hpp"
 #include "Utility/Image.hpp"
 
-#include "Platform/PlatformSelector.hpp"
 #include "Platform/PrivateImplementation.hpp"
 #include "Platform/Utilities.hpp"
 #include "Platform/OsHandle.hpp"
@@ -202,7 +205,6 @@ namespace Zero
 #include "Platform/FileSystem.hpp"
 #include "Platform/FpControl.hpp"
 #include "Platform/Lock.hpp"
-#include "Platform/PlatformSelector.hpp"
 #include "Platform/Process.hpp"
 #include "Platform/Registry.hpp"
 #include "Platform/Resolution.hpp"
@@ -218,3 +220,4 @@ namespace Zero
 #include "Platform/CommandLineSupport.hpp"
 #include "Platform/Shell.hpp"
 #include "Platform/ComPort.hpp"
+#include "Platform/Intrinsics.hpp"

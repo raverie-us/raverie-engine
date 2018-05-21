@@ -1,8 +1,3 @@
-/**************************************************************\
-* Author: Trevor Sundberg
-* Copyright 2016, DigiPen Institute of Technology
-\**************************************************************/
-
 template <typename FunctionType, FunctionType function, typename Class>
 void VirtualThunk()
 {
@@ -25,13 +20,13 @@ void VirtualThunk()
   call.SetHandle(Call::This, thisHandle);
   ExceptionReport report;
   call.Invoke(report);
-  return;
+  return ;
 }
 template <typename FunctionType, FunctionType function, typename Class>
 static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)())
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class>;
-  ZilchAutoVal(thunk, (&VirtualThunk<FunctionType, function, Class, void>));
+  auto thunk = (&VirtualThunk<FunctionType, function, Class, void>);
   ParameterArray parameters;
   ParseParameterArrays(parameters, spaceDelimitedNames);
   NativeVirtualInfo nativeVirtual;
@@ -76,13 +71,13 @@ void VirtualThunk(Arg0 arg0)
   call.Set<Arg0>(0, arg0);
   ExceptionReport report;
   call.Invoke(report);
-  return;
+  return ;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0>
 static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0>;
-  ZilchAutoVal(thunk, (&VirtualThunk<FunctionType, function, Class, void, Arg0>));
+  auto thunk = (&VirtualThunk<FunctionType, function, Class, void, Arg0>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -130,13 +125,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1)
   call.Set<Arg1>(1, arg1);
   ExceptionReport report;
   call.Invoke(report);
-  return;
+  return ;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1>
 static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1>;
-  ZilchAutoVal(thunk, (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1>));
+  auto thunk = (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -187,13 +182,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2)
   call.Set<Arg2>(2, arg2);
   ExceptionReport report;
   call.Invoke(report);
-  return;
+  return ;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2>
 static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2>;
-  ZilchAutoVal(thunk, (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2>));
+  auto thunk = (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -247,13 +242,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3)
   call.Set<Arg3>(3, arg3);
   ExceptionReport report;
   call.Invoke(report);
-  return;
+  return ;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3>;
-  ZilchAutoVal(thunk, (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2, Arg3>));
+  auto thunk = (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2, Arg3>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -310,13 +305,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
   call.Set<Arg4>(4, arg4);
   ExceptionReport report;
   call.Invoke(report);
-  return;
+  return ;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4>;
-  ZilchAutoVal(thunk, (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2, Arg3, Arg4>));
+  auto thunk = (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2, Arg3, Arg4>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -376,13 +371,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 ar
   call.Set<Arg5>(5, arg5);
   ExceptionReport report;
   call.Invoke(report);
-  return;
+  return ;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
-  ZilchAutoVal(thunk, (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>));
+  auto thunk = (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -445,13 +440,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 ar
   call.Set<Arg6>(6, arg6);
   ExceptionReport report;
   call.Invoke(report);
-  return;
+  return ;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
-  ZilchAutoVal(thunk, (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>));
+  auto thunk = (&VirtualThunk<FunctionType, function, Class, void, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -512,10 +507,10 @@ Return VirtualThunkReturn()
   return call.Get<Return>(Call::Return);
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return>
-static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return(Class::*)())
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)())
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return>;
-  ZilchAutoVal(thunk, (&VirtualThunkReturn<FunctionType, function, Class, Return>));
+  auto thunk = (&VirtualThunkReturn<FunctionType, function, Class, Return>);
   ParameterArray parameters;
   ParseParameterArrays(parameters, spaceDelimitedNames);
   NativeVirtualInfo nativeVirtual;
@@ -563,10 +558,10 @@ Return VirtualThunkReturn(Arg0 arg0)
   return call.Get<Return>(Call::Return);
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0>
-static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return(Class::*)(Arg0))
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0>;
-  ZilchAutoVal(thunk, (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0>));
+  auto thunk = (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -617,10 +612,10 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1)
   return call.Get<Return>(Call::Return);
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1>
-static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return(Class::*)(Arg0, Arg1))
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1>;
-  ZilchAutoVal(thunk, (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1>));
+  auto thunk = (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -674,10 +669,10 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2)
   return call.Get<Return>(Call::Return);
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2>
-static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return(Class::*)(Arg0, Arg1, Arg2))
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2>;
-  ZilchAutoVal(thunk, (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2>));
+  auto thunk = (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -734,10 +729,10 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3)
   return call.Get<Return>(Call::Return);
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return(Class::*)(Arg0, Arg1, Arg2, Arg3))
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3>;
-  ZilchAutoVal(thunk, (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3>));
+  auto thunk = (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -797,10 +792,10 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
   return call.Get<Return>(Call::Return);
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return(Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4))
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4>;
-  ZilchAutoVal(thunk, (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4>));
+  auto thunk = (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -863,10 +858,10 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4,
   return call.Get<Return>(Call::Return);
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
-static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return(Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
-  ZilchAutoVal(thunk, (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>));
+  auto thunk = (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);
@@ -932,10 +927,10 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4,
   return call.Get<Return>(Call::Return);
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
-static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return(Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
+static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
-  ZilchAutoVal(thunk, (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>));
+  auto thunk = (&VirtualThunkReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>);
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = ZilchTypeId(Arg0);

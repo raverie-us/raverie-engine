@@ -130,7 +130,7 @@ bool ComplexCollideCollidersInternal(Collider* complexCollider, Collider* collid
     //space and just convert the collider shape once...)
     AutoDeclare(worldShape, functor.ToWorldShape(item.Shape));
     //need to get the type of the world shape for IntersectionToPhysicsManifold
-    typedef TypeOf(worldShape) WorldShapeType;
+    typedef decltype(worldShape) WorldShapeType;
 
     //deal with a boolean vs needing info test (maybe remove?)
     if(manifolds)
@@ -237,7 +237,7 @@ bool ComplexVsComplexCollidersInternal(Collider* collider0, Collider* collider1,
     //space and just convert the collider shape once...)
     AutoDeclare(worldShape0, functor0.ToWorldShape(item0.Shape));
     //need to get the type of the world shape for IntersectionToPhysicsManifold
-    typedef TypeOf(worldShape0) WorldShape0Type;
+    typedef decltype(worldShape0) WorldShape0Type;
 
     //now we need to take each sub-shape in collider0 and check to
     //see what sub-shapes in collider1 they could hit
@@ -251,7 +251,7 @@ bool ComplexVsComplexCollidersInternal(Collider* collider0, Collider* collider1,
       //space and just convert the collider shape once...)
       AutoDeclare(worldShape1, functor1.ToWorldShape(item1.Shape));
       //need to get the type of the world shape for IntersectionToPhysicsManifold
-      typedef TypeOf(worldShape1) WorldShape1Type;
+      typedef decltype(worldShape1) WorldShape1Type;
 
       //deal with a boolean vs needing info test (maybe remove?)
       if(manifolds)

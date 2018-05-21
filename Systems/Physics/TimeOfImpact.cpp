@@ -301,7 +301,7 @@ void TimeOfImpactComplexInternal(TimeOfImpactData* data, bool parametersSwapped)
 
     Physics::Manifold manifold;
     manifold.SetPair(pair);
-    IntersectionToPhysicsManifold<TypeOf(worldShape), ShapeType>(&iManifold, &manifold);
+    IntersectionToPhysicsManifold<decltype(worldShape), ShapeType>(&iManifold, &manifold);
     manifold.ContactId = shapeObject.Index;
     FixInternalEdges(complexCollider, &manifold, shapeObject.Index);
 
@@ -372,7 +372,7 @@ void TimeOfImpactComplexVsComplexInternal(TimeOfImpactData* data)
     //space and just convert the collider shape once...)
     AutoDeclare(worldShape0, functor0.ToWorldShape(item0.Shape));
     //need to get the type of the world shape for IntersectionToPhysicsManifold
-    typedef TypeOf(worldShape0) WorldShape0Type;
+    typedef decltype(worldShape0) WorldShape0Type;
 
     //update the sub-shape for objectA
     objA.shape = Intersection::MakeSupport(&worldShape0, true);
@@ -400,7 +400,7 @@ void TimeOfImpactComplexVsComplexInternal(TimeOfImpactData* data)
       //space and just convert the collider shape once...)
       AutoDeclare(worldShape1, functor1.ToWorldShape(item1.Shape));
       //need to get the type of the world shape for IntersectionToPhysicsManifold
-      typedef TypeOf(worldShape1) WorldShape1Type;
+      typedef decltype(worldShape1) WorldShape1Type;
 
       //update the sub-shape for objectB
       objB.shape = Intersection::MakeSupport(&worldShape1, true);

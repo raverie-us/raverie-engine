@@ -10,9 +10,8 @@ namespace Zilch
   //***************************************************************************
   // To simplify our parsing, we work with generic nodes (and only specific nodes in specific cases)
   // Because of this, we need to ensure that the sizes always match
-  ZilchStaticAssert(sizeof(GrammarNode<Character>) == sizeof(GrammarNode<Token>),
-    "The sizes of the grammar nodes do not match",
-    SizesOfGrammarNodesDoNotMatch);
+  static_assert(sizeof(GrammarNode<Character>) == sizeof(GrammarNode<Token>),
+    "The sizes of the grammar nodes do not match");
 
   //***************************************************************************
   DataDrivenLexerShared::DataDrivenLexerShared()

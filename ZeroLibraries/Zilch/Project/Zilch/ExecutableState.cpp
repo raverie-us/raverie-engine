@@ -1084,7 +1084,7 @@ namespace Zilch
         // Let the state know that we're patching
         this->PatchedBoundTypes.Insert(oldType, newTypeOrNull);
         
-        ZilchTodo("We MUST respect the HeapManagerExtraPatchSize to make sure we don't go outside! What do we do in that case though... fail patching?");
+        ZeroTodo("We MUST respect the HeapManagerExtraPatchSize to make sure we don't go outside! What do we do in that case though... fail patching?");
 
         // Loop through all heap objects and check if any of them are the old type
         ZilchForEach(const byte* object, this->HeapObjects->LiveObjects)
@@ -1490,7 +1490,7 @@ namespace Zilch
     if (this->DoNotAllowAllocation != 0)
     {
       // Even though the exception cannot be allocated, it will still be reported to C++ callbacks and will still unroll
-      ZilchTodo("We should make this throw an exception, but then it cannot be allocated currently... InternalException?");
+      ZeroTodo("We should make this throw an exception, but then it cannot be allocated currently... InternalException?");
       return Handle();
     }
 
@@ -1632,7 +1632,7 @@ namespace Zilch
   //***************************************************************************
   void ExecutableState::ThrowException(ExceptionReport& report, Handle& handle)
   {
-    ZilchTodo("We need to verify that this handle is indeed a handle to an Exception type");
+    ZeroTodo("We need to verify that this handle is indeed a handle to an Exception type");
     
     // Dereference a handle and grab a pointer to the exception object
     Exception* exception = (Exception*)handle.Dereference();
@@ -2271,7 +2271,7 @@ namespace Zilch
   Call::~Call()
   {
     //HACK WE CURRENTLY DONT HANDLE EXCEPTIONS
-    ZilchTodo("Make sure we handle exceptions here (could have thrown before returning)");
+    ZeroTodo("Make sure we handle exceptions here (could have thrown before returning)");
 
     // For convenience, get the current function
     Function* function = this->Data->CurrentFunction;

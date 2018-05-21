@@ -140,7 +140,7 @@ namespace Zilch
 
     // Get the type of the pointer (using virtual behavior if possible)
     #define ZilchVirtualTypeId(Pointer) \
-      ZZ::TypeBinding::DiscoverDerivedType<ZilchStrip(ZilchTypeOf(Pointer)), ZZ::TypeBinding::CanGetDerivedType<ZilchStrip(ZilchTypeOf(Pointer))>::value>::Get(Pointer)
+      ZZ::TypeBinding::DiscoverDerivedType<ZilchStrip(decltype(Pointer)), ZZ::TypeBinding::CanGetDerivedType<ZilchStrip(decltype(Pointer))>::value>::Get(Pointer)
 
     template <typename T>
     class StripQualifiers
@@ -231,7 +231,7 @@ namespace Zilch
     // Takes any expression and turns it into a pointer of the core type
     // Examples: const int** -> int*, or const int& -> int*
     // To just get the type as a pointer rather than the expression, use ZilchStrip(T)*
-    #define ZilchToPointer(Expression) (ZZ::TypeBinding::InternalToPointer<ZilchStrip(ZilchTypeOf(Expression))>(Expression))
+    #define ZilchToPointer(Expression) (ZZ::TypeBinding::InternalToPointer<ZilchStrip(decltype(Expression))>(Expression))
 
 
     // Strips all forms of const from a type
@@ -870,11 +870,10 @@ namespace Zilch
     {
       // Check that the derived type is bigger than the
       // base type (should be since we have Debug_SizeTest)
-      ZilchStaticAssert
+      static_assert
       (
         sizeof(SelfType) >= sizeof(BaseType),
-        "It appears either the derived class or parent class is incorrect",
-        TypeNotRelatedDerivedOrBase
+        "It appears either the derived class or parent class is incorrect"
       );
 
       // Attempt a static cast to ensure the types given were related
@@ -905,9 +904,8 @@ namespace Zilch
       void ZilchDebugChecks()                                                                                                                           \
       {                                                                                                                                                 \
         /* Check that the sizes of the type we declared as 'our type' is the same as the size of the this reference */                                  \
-        ZilchStaticAssert(sizeof(SelfType) == sizeof(*this),                                                                                            \
-          "The type passed into the macro wasn't the same as the class it was declared in",                                                             \
-          TypeNotTheSameAsDeclared);                                                                                                                    \
+        static_assert(sizeof(SelfType) == sizeof(*this),                                                                                                \
+          "The type passed into the macro wasn't the same as the class it was declared in");                                                            \
         /* Check that the two types are related via static casting */                                                                                   \
         ZZ::CheckTypesAreRelated<SelfType, BaseType>::Test();                                                                                           \
       }                                                                                                                                                 \
@@ -1158,8 +1156,8 @@ namespace Zilch
     template <typename T>                                                                                                                             \
     static ZZ::NoType SfinaeBase(...);                                                                                                                \
     void ZilchDiscoverClass() {}                                                                                                                      \
-    typedef typename ZE::remove_pointer<ZilchTypeOf(ZZ::DiscoverClass(&ZilchDiscoverClass))>::type ZilchTempSelf;                                     \
-    typedef typename ZE::remove_pointer<ZilchTypeOf(SfinaeBase<ZilchTempSelf>((ZilchTempSelf*)nullptr))>::type ZilchTempBase;                         \
+    typedef typename ZE::remove_pointer<decltype(ZZ::DiscoverClass(&ZilchDiscoverClass))>::type ZilchTempSelf;                                     \
+    typedef typename ZE::remove_pointer<decltype(SfinaeBase<ZilchTempSelf>((ZilchTempSelf*)nullptr))>::type ZilchTempBase;                         \
     ZilchDeclareDerivedTypeExplicit(ZilchTempSelf, ZilchTempBase, CopyMode)
 
 #define ZilchDefineType(SelfType, builder, type)                                                                                                      \

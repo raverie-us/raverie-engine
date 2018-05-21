@@ -394,7 +394,7 @@ namespace Zilch
     while (type != nullptr)
     {
       // If the base type is the same as the current type...
-      ZilchTodo("Using the names of the BoundType to compare isn't technically correct");
+      ZeroTodo("Using the names of the BoundType to compare isn't technically correct");
       if (base == type || base->Name == type->Name)
         return true;
 

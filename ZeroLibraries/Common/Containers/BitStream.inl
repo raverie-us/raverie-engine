@@ -15,28 +15,28 @@ class BitStream;
 template<typename T>
 inline Bits Measure(T& value)
 {
-  StaticAssert(MissingUserDefinedMeasure, false, "Requires a user-defined Measure function");
+  static_assert( false, "Requires a user-defined Measure function");
   return 0;
 }
 
 template<typename R>
 inline Bits MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_)
 {
-  StaticAssert(MissingUserDefinedMeasureQuantized, false, "Requires a user-defined MeasureQuantized function");
+  static_assert(false, "Requires a user-defined MeasureQuantized function");
   return 0;
 }
 
 template<typename T>
 inline Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, T& value)
 {
-  StaticAssert(MissingUserDefinedSerialize, false, "Requires a user-defined Serialize function");
+  static_assert(false, "Requires a user-defined Serialize function");
   return 0;
 }
 
 template<typename T, typename R>
 inline Bits SerializeQuantized(SerializeDirection::Enum direction, BitStream& bitStream, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
 {
-  StaticAssert(MissingUserDefinedSerializeQuantized, false, "Requires a user-defined SerializeQuantized function");
+  static_assert(false, "Requires a user-defined SerializeQuantized function");
   return 0;
 }
 

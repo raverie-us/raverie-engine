@@ -54,9 +54,6 @@
     <ClCompile Include="Utility\Misc.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\Atomic.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
     <ClCompile Include="Containers\ByteBuffer.cpp">
       <Filter>Containers</Filter>
     </ClCompile>
@@ -227,6 +224,12 @@
     <ClCompile Include="Math\MathToString.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Platform\Intrinsics.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Atomic.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">
@@ -316,9 +319,6 @@
     <ClInclude Include="Regex\Regex.hpp">
       <Filter>Regex</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Atomic.hpp">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Memory\Memory.hpp">
       <Filter>Memory</Filter>
     </ClInclude>
@@ -363,9 +363,6 @@
     </ClInclude>
     <ClInclude Include="String\StringUtility.hpp">
       <Filter>String</Filter>
-    </ClInclude>
-    <ClInclude Include="NullPtr.hpp">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="String\CharacterTraits.hpp">
       <Filter>String</Filter>
@@ -521,9 +518,6 @@
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="Platform\Peripherals.hpp">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\PlatformSelector.hpp">
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="Platform\PlatformStandard.hpp">
@@ -710,6 +704,13 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Platform\ComPort.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Intrinsics.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.hpp" />
+    <ClInclude Include="Platform\Atomic.hpp">
       <Filter>Platform</Filter>
     </ClInclude>
   </ItemGroup>

@@ -97,11 +97,11 @@ inline Action* GenerateAction(objectType* instance, float duration, const elemen
 }
 
 #define AnimateMember(memberPointer, easeType, instance, duration, dest)  \
-  GenerateAction< TypeOf(memberPointer), memberPointer, easeType> \
+  GenerateAction< decltype(memberPointer), memberPointer, easeType> \
   (instance, duration, dest)
 
 #define AnimatePropertyGetSet(objectType, propName, easeType, instance, duration, dest)  \
-  GenerateAction< TypeOf(&objectType::Get##propName), TypeOf(&objectType::Set##propName),  \
+  GenerateAction< decltype(&objectType::Get##propName), decltype(&objectType::Set##propName),  \
      &objectType::Get##propName,  &objectType::Set##propName, easeType>(                \
     &objectType::Get##propName, &objectType::Set##propName, static_cast<objectType*>(instance), duration, dest)
 

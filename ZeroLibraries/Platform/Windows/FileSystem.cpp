@@ -364,7 +364,7 @@ FileRange::FileRange(StringParam filePath)
   // Copy String into temporary
   uint size = mPath.SizeInBytes();
   wchar_t path[MAX_PATH];
-  ZeroCStringCopyW(path, MAX_PATH, Widen(mPath).c_str(), Widen(mPath).Size());
+  wcsncpy_s(path, MAX_PATH, Widen(mPath).c_str(), Widen(mPath).Size());
 
   // Check for trailing slash and add if not there
   if(path[size-1] != '\\')

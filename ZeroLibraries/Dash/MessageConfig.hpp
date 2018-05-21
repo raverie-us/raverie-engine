@@ -151,7 +151,7 @@ static const TimeMs cInvalidMessageTimestamp = std::numeric_limits<TimeMs>::min(
 
 // (Sanity check)
 static const Bits MessageTimestampBitsNeeded = BITS_NEEDED_TO_REPRESENT(MessageTimestampRange);
-StaticAssert(MessageTimestampSize, MessageTimestampBits == MessageTimestampBitsNeeded,
+static_assert(MessageTimestampBits == MessageTimestampBitsNeeded,
             "Declared message timestamp bits do not match the actual bits needed to represent the declared message timestamp range");
 
 //---------------------------------------------------------------------------------//

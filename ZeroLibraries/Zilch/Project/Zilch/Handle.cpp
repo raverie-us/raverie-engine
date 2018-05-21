@@ -345,7 +345,7 @@ namespace Zilch
     bool nullLhs = (objectLhs == nullptr);
     bool nullRhs = (objectRhs == nullptr);
 
-    ZilchTodo("There are two dereferences for comparing user handles, we should refactor this code path to make it one");
+    ZeroTodo("There are two dereferences for comparing user handles, we should refactor this code path to make it one");
 
     // If both are non null, then we need to do more checking
     if (!nullLhs && !nullRhs)
@@ -461,7 +461,7 @@ namespace Zilch
     if (this->Manager == nullptr || this->StoredType == nullptr)
       return nullptr;
 
-    ZilchTodo("If a handle returns null but is not the 'null handle manager' then it should be an optimization to Clear it");
+    ZeroTodo("If a handle returns null but is not the 'null handle manager' then it should be an optimization to Clear it");
 
     // Dereference the handle and get a pointer to the object (or nullptr if it's a null handle)
     return this->Manager->HandleToObject(*this) + this->Offset;

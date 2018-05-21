@@ -18,11 +18,8 @@
   #define ZeroConfiguration "Unknown"
 #endif
   
-#if _WIN64
-  #define ZeroPlatform "Win64"
-#else
-  #define ZeroPlatform "Win32"
-#endif
+// This name concatenates the platform name and bitness (e.g. Win32, Linux64, etc).
+#define ZeroPlatform PLATFORM_NAME PLATFORM_BITS
 
 namespace Zero
 {

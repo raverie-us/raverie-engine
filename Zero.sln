@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Application
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform", "Platform", "{BFA616BA-20B4-4210-A078-840A6BBC6F62}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Editor", "Projects\Win32Editor\Win32Editor.vcxproj", "{F5630AC8-F0C7-4B26-A2C0-BECCBD633B97}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeroEditor", "Projects\ZeroEditor\ZeroEditor.vcxproj", "{F5630AC8-F0C7-4B26-A2C0-BECCBD633B97}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6AAAA7A6-682E-40A3-A344-5602CF144A8F} = {6AAAA7A6-682E-40A3-A344-5602CF144A8F}
 	EndProjectSection
@@ -56,12 +56,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geometry", "ZeroLibraries\G
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WindowsPlatform", "ZeroLibraries\Platform\Windows\WindowsPlatform.vcxproj", "{DBE8E33A-7E70-402C-BCF6-D1EFEE93FA76}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32ZeroLauncher", "Projects\Win32Launcher\Win32Launcher\Win32ZeroLauncher.vcxproj", "{C47C1FA4-409A-4300-905F-D4CC179BABC0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeroLauncher", "Projects\ZeroLauncher\ZeroLauncher\ZeroLauncher.vcxproj", "{C47C1FA4-409A-4300-905F-D4CC179BABC0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6AAAA7A6-682E-40A3-A344-5602CF144A8F} = {6AAAA7A6-682E-40A3-A344-5602CF144A8F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32ZeroLauncherDll", "Projects\Win32Launcher\Win32LauncherDll\Win32ZeroLauncherDll.vcxproj", "{EBD67762-3D8B-4F8A-8080-FC4D04013988}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeroLauncherSharedLibrary", "Projects\ZeroLauncher\ZeroLauncherSharedLibrary\ZeroLauncherSharedLibrary.vcxproj", "{EBD67762-3D8B-4F8A-8080-FC4D04013988}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dash", "ZeroLibraries\Dash\Dash.vcxproj", "{F1597A26-9F2D-473A-827C-0CE8C758763D}"
 EndProject

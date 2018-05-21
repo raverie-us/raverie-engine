@@ -81,7 +81,7 @@ namespace Zilch
   void ReconstructSingleton()
   {
     // Explicitly destructs a singleton then uses placement new to create it again (should be reset)
-    ZilchTodo("Make singletons into pointers so we don't have to do this silly stuff");
+    ZeroTodo("Make singletons into pointers so we don't have to do this silly stuff");
     T* singleton = &T::GetInstance();
     singleton->~T();
     new (singleton) T();

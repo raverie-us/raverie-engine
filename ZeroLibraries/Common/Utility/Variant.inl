@@ -139,7 +139,7 @@ void Variant::DefaultConstruct()
   typedef typename Decay<T>::Type UnqualifiedType;
 
   // (Verify type is copy constructible and destructible, else fail to compile)
-  StaticAssert(VariantTypeRequiresCopyConstructorAndDestructor0,
+  static_assert(
                has_copy_constructor<UnqualifiedType>::value && has_destructor<UnqualifiedType>::value,
                "Types assigned to variant must have both an accessible copy constructor and destructor.");
 
@@ -166,7 +166,7 @@ void Variant::Assign(const T& rhs)
   typedef typename Decay<T>::Type UnqualifiedType;
 
   // (Verify type is copy constructible and destructible, else fail to compile)
-  StaticAssert(VariantTypeRequiresCopyConstructorAndDestructor1,
+  static_assert(
                has_copy_constructor<UnqualifiedType>::value && has_destructor<UnqualifiedType>::value,
                "Types assigned to variant must have both an accessible copy constructor and destructor.");
 
@@ -193,7 +193,7 @@ void Variant::Assign(MoveReference<T> rhs)
   typedef typename Decay<T>::Type UnqualifiedType;
 
   // (Verify type is copy constructible and destructible, else fail to compile)
-  StaticAssert(VariantTypeRequiresCopyConstructorAndDestructor2,
+  static_assert(,
                has_copy_constructor<UnqualifiedType>::value && has_destructor<UnqualifiedType>::value,
                "Types assigned to variant must have both an accessible copy constructor and destructor.");
 

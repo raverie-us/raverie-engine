@@ -13,9 +13,6 @@
 namespace Zero
 {
 
-// If this is the Microsoft compiler
-#ifdef _MSC_VER
-
 ///by default, we want all of the fpu exceptions apart from inexact
 ///(inexact happens in lots of odd places...) and underflow
 uint FpuControlSystem::DefaultMask = _EM_INEXACT | _EM_UNDERFLOW;
@@ -80,31 +77,5 @@ ScopeFpuExceptionsDisabler::~ScopeFpuExceptionsDisabler()
   //now reset the exceptions to what they were
   _controlfp_s(0, mOldState, _MCW_EM);
 }
-
-// Any other compiler
-#else
-
-///the mask is 0 in the generic system since we aren't funning any fp exceptions.
-uint FpuControlSystem::DefaultMask = 0;
-///The system is not active because we're on some random platform
-bool FpuControlSystem::Active = false;
-
-ScopeFpuExceptionsEnabler::ScopeFpuExceptionsEnabler()
-{
-}
-
-ScopeFpuExceptionsEnabler::~ScopeFpuExceptionsEnabler()
-{
-}
-
-ScopeFpuExceptionsDisabler::ScopeFpuExceptionsDisabler()
-{
-}
-
-ScopeFpuExceptionsDisabler::~ScopeFpuExceptionsDisabler()
-{
-}
-
-#endif
 
 }//namespace Zero

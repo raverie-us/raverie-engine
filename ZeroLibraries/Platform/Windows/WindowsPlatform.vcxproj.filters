@@ -45,6 +45,8 @@
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ComPort.cpp" />
     <ClCompile Include="WinUtility.cpp" />
+    <ClCompile Include="Intrinsics.cpp" />
+    <ClCompile Include="Atomic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Windows.hpp">

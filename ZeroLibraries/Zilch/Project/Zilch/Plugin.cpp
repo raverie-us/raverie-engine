@@ -1013,7 +1013,7 @@ namespace Zilch
       builder.WriteLineIndented();
     }
 
-    builder.WriteLineIndented("#if defined(_MSC_VER)");
+    builder.WriteLineIndented("#if defined(COMPILER_MICROSOFT)");
     builder.WriteLineIndented("#pragma optimize(\"\", off)");
     builder.WriteLineIndented("#endif");
 

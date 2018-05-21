@@ -12,7 +12,6 @@
 #include "Platform/FileSystem.hpp"
 #include "Platform/FilePath.hpp"
 #include "Platform/Utilities.hpp"
-#include "Platform/PlatformSelector.hpp"
 #include "Support/FileSupport.hpp"
 #include "ContentSystem.hpp"
 #include "ContentLibrary.hpp"

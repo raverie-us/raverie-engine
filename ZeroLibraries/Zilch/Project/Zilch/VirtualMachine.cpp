@@ -326,7 +326,7 @@ namespace Zilch
   //***************************************************************************
   // Get a reference to a member variable (field), given the place in the registers that the handle exists, and the member index...
   template <typename T>
-  ZilchForceInline T& GetField(PerFrameData* stackFrame, PerFrameData* reportFrame, OperandIndex handleOperand, size_t memberOperand)
+  ZeroForceInline T& GetField(PerFrameData* stackFrame, PerFrameData* reportFrame, OperandIndex handleOperand, size_t memberOperand)
   {
     // Grab the handle to the object
     Handle& handle = *(Handle*)(stackFrame->Frame + handleOperand);
@@ -351,7 +351,7 @@ namespace Zilch
   //***************************************************************************
   // Get a particular constant from a function
   template <typename T>
-  ZilchForceInline T& GetConstant(Function* function, OperandIndex constantOperand)
+  ZeroForceInline T& GetConstant(Function* function, OperandIndex constantOperand)
   {
     // Make sure the value we're grabbing is inside the constant buffer (error checking)
     ErrorIf(constantOperand < 0 || constantOperand + sizeof(T) > function->Constants.GetSize(),
@@ -364,7 +364,7 @@ namespace Zilch
   //***************************************************************************
   // Get a particular local from a function
   template <typename T>
-  ZilchForceInline T& GetLocal(byte* frame, OperandIndex localOperand)
+  ZeroForceInline T& GetLocal(byte* frame, OperandIndex localOperand)
   {
     return *(T*)(frame + localOperand);
   }
@@ -372,7 +372,7 @@ namespace Zilch
   //***************************************************************************
   // Get a particular static from an operand
   template <typename T>
-  ZilchForceInline T& GetStatic(PerFrameData* stackFrame, PerFrameData* reportFrame, const Operand& operand)
+  ZeroForceInline T& GetStatic(PerFrameData* stackFrame, PerFrameData* reportFrame, const Operand& operand)
   {
     // Look for the static memory in a map of the fields on our state
     // Static fields are done per executable state, so they get wiped each time we quit
@@ -383,7 +383,7 @@ namespace Zilch
   //***************************************************************************
   // Get an operand (we don't know what type it is)
   template <typename T>
-  ZilchForceInline T& GetOperand(PerFrameData* stackFrame, PerFrameData* reportFrame, const Operand& operand)
+  ZeroForceInline T& GetOperand(PerFrameData* stackFrame, PerFrameData* reportFrame, const Operand& operand)
   {
     // Based on what kind of operand it is...
     switch (operand.Type)
@@ -414,7 +414,7 @@ namespace Zilch
   //***************************************************************************
   // Reusable code for the if opcodes
   template <Boolean IfTrue>
-  ZilchForceInline void IfHandler(PerFrameData* stackFrame, const Opcode& opcode)
+  ZeroForceInline void IfHandler(PerFrameData* stackFrame, const Opcode& opcode)
   {
     // Validate the timeout (this will throw an exception if we go beyond the time we need to)
     // This only really needs to be ran in jumps
@@ -445,7 +445,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  ZilchForceInline void CopyHandlerEx(PerFrameData* ourFrame, PerFrameData* topFrame, const byte*& sourceOut, byte*& destinationOut, const CopyOpcode& op)
+  ZeroForceInline void CopyHandlerEx(PerFrameData* ourFrame, PerFrameData* topFrame, const byte*& sourceOut, byte*& destinationOut, const CopyOpcode& op)
   {
     // When we copy to parameters, it's always a destination
     // (we are placing parameters in the place they must go before we call)
@@ -482,7 +482,7 @@ namespace Zilch
   // (where we copied to) unless we're performing a 'FromReturn' copy, where
   // it will return a pointer to the source handle (for cleanup purposes!)
   template <typename CopyType>
-  ZilchForceInline void CopyHandler
+  ZeroForceInline void CopyHandler
   (
     PerFrameData* ourFrame,
     PerFrameData* topFrame,
@@ -823,7 +823,7 @@ namespace Zilch
   ZilchVirtualInstruction(InternalDebugBreakpoint)
   {
     // Trigger the breakpoint
-    ZilchDebugBreak();
+    ZERO_DEBUG_BREAK;
 
     // Move the instruction counter past this opcode
     programCounter += sizeof(Opcode);

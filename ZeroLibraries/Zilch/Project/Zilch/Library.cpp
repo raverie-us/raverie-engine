@@ -537,7 +537,7 @@ namespace Zilch
     else
     {
       // This isn't quite correct, but since we don't actually care about the event type...
-      ZilchTodo("Don't allow two sends events with the same name, unless maybe they are the same type?");
+      ZeroTodo("Don't allow two sends events with the same name, unless maybe they are the same type?");
       sendsEvent->EventProperty = existingProperty;
     }
 

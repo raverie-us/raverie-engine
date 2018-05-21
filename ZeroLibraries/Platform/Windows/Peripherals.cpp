@@ -34,7 +34,7 @@ void InitializeGamepad()
   }
 }
 
-StaticAssert(XInputStateSize, sizeof(XINPUT_STATE) == sizeof(GamepadState),
+static_assert(sizeof(XINPUT_STATE) == sizeof(GamepadState),
   "The size of the state in Platform.hpp must match the size of XINPUT_STATE");
 
 bool AreGamepadsEnabled()

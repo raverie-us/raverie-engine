@@ -12,15 +12,6 @@
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
-#ifdef _MSC_VER
-#ifdef UNICODE
-#define ZeroCStringCopyW(dest, destSize, source, sourceSize) wcsncpy_s(dest, (destSize), source, sourceSize);
-#endif
-#define ZeroCStringCopy(dest, destSize, source, sourceSize) strncpy_s(dest, (destSize), source, sourceSize);
-#else 
-#define ZeroCStringCopy(dest, destSize, source, sourceSize) strncpy(dest, source, sourceSize);
-#endif
-
 //Include the windows header.
 #include "Windows.hpp"
 #include "WindowsError.hpp"
@@ -44,6 +35,7 @@
 #include <dlgs.h>
 #include <commdlg.h>
 #include <shobjidl.h>
+#include <dbghelp.h>
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Advapi32.lib")
@@ -52,6 +44,8 @@
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "hid.lib")
 #pragma comment(lib, "Setupapi.lib")
+#pragma comment(lib, "dbghelp.lib")
+#pragma comment(lib, "user32.lib")
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \

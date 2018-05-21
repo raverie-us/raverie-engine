@@ -66,7 +66,7 @@ template <typename T> static false_type is_base_of_helper(...);
 
 /// Provides a constant defined as true if DerivedType derives from BaseType
 template <typename BaseType, typename DerivedType>
-struct is_base_of : public TypeOf(is_base_of_helper<BaseType>((DerivedType*)nullptr)) {};
+struct is_base_of : public decltype(is_base_of_helper<BaseType>((DerivedType*)nullptr)) {};
 
 //
 // Make Type
@@ -232,10 +232,10 @@ struct is_enum : public integral_constant<bool, (!is_void< T >::value
 
 /// Use SFINAE to detect if we have a member
 /// This must be a macro because the name of the member cannot be provided as a template argument
-#define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                        \
-  template <typename T> static ::Zero::true_type  check_##TypeTraitName(TypeOf(&T::MemberName)*);   \
-  template <typename T> static ::Zero::false_type check_##TypeTraitName(...);                       \
-  template <typename T> struct TypeTraitName : public TypeOf(check_##TypeTraitName<T>(nullptr)) {};
+#define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                          \
+  template <typename T> static ::Zero::true_type  check_##TypeTraitName(decltype(&T::MemberName)*);   \
+  template <typename T> static ::Zero::false_type check_##TypeTraitName(...);                         \
+  template <typename T> struct TypeTraitName : public decltype(check_##TypeTraitName<T>(nullptr)) {};
 
 /// Provides a constant defined as true if T is an enum or integral type, else defined as false
 template<typename T>

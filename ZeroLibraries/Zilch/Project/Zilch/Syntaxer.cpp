@@ -740,7 +740,7 @@ namespace Zilch
         return atoi(token);
 
       case Grammar::DoubleIntegerLiteral:
-        return ZilchStringToDoubleInteger(token, 10);
+        return (DoubleInteger)strtoull(token, nullptr, 10);
 
       case Grammar::RealLiteral:
         return (Real)atof(token);
@@ -1040,7 +1040,7 @@ namespace Zilch
 
               // Add ourselves to the roots. Note this will not be traversed
               // as the walker already grabbed the child list from the root
-              ZilchTodo("Make sure we traverse the added class");
+              ZeroTodo("Make sure we traverse the added class");
               this->Tree->Root->Classes.Add(cloneTree);
 
               // Now we need to walk the class node we just generated,
@@ -1077,7 +1077,7 @@ namespace Zilch
               // If we failed to instantiate the template due to an argument mismatch
               else if (instantiatedTemplate.Result == TemplateResult::FailedArgumentTypeMismatch)
               {
-                ZilchTodo("This error message can be made a lot better with context");
+                ZeroTodo("This error message can be made a lot better with context");
                 return this->Errors.Raise(location, ErrorCode::TemplateParameterTypeMismatch);
               }
               else if (instantiatedTemplate.Result == TemplateResult::FailedInstantiatorDidNotReturnType)
@@ -1672,7 +1672,7 @@ namespace Zilch
     // Otherwise, this is an extension method, so add it specially via the library
     else
     {
-      ZilchTodo("Handle extension function overload collisions");
+      ZeroTodo("Handle extension function overload collisions");
       this->Builder->AddRawExtensionFunction(function);
     }
   }
@@ -1995,7 +1995,7 @@ namespace Zilch
   //***************************************************************************
   void Syntaxer::CheckInitializerList(ConstructorNode* node)
   {
-    ZilchTodo("Finish up initializer lists (at least checking if they pass type validation)");
+    ZeroTodo("Finish up initializer lists (at least checking if they pass type validation)");
     //DecorateCheckFunctionCall(node, node->BaseInitializer,
     //node->BaseInitializer
   }
@@ -3278,7 +3278,7 @@ namespace Zilch
       else
       {
         // We need to handle 'this' constructor calling
-        ZilchTodo("Handle constructor calling");
+        ZeroTodo("Handle constructor calling");
         Error("We don't currently handle constructor calling");
       }
     }

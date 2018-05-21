@@ -1,9 +1,3 @@
-#ifndef _MSC_VER
-  #define VK_OEM_PLUS       0xBB   // '+' any country
-  #define VK_OEM_COMMA      0xBC   // ',' any country
-  #define VK_OEM_MINUS      0xBD   // '-' any country
-  #define VK_OEM_PERIOD     0xBE   // '.' any country
-#endif
 
 ProcessInput(VK_SPACE, Keys::Space)
 

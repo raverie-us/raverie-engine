@@ -91,10 +91,12 @@
     <ClCompile Include="Memory\Graph.cpp" />
     <ClCompile Include="Memory\Heap.cpp" />
     <ClCompile Include="Memory\Pool.cpp" />
+    <ClCompile Include="Platform\Atomic.cpp" />
     <ClCompile Include="Platform\File.cpp" />
     <ClCompile Include="Platform\FileEvents.cpp" />
     <ClCompile Include="Platform\FilePath.cpp" />
     <ClCompile Include="Platform\FileSystem.cpp" />
+    <ClCompile Include="Platform\Intrinsics.cpp" />
     <ClCompile Include="Platform\IpAddress.cpp" />
     <ClCompile Include="Platform\Process.cpp" />
     <ClCompile Include="Platform\Shell.cpp" />
@@ -123,9 +125,6 @@
     </ClCompile>
     <ClCompile Include="$(N3DS_SOURCE)/StandardLibraries/TimeNP1.cpp">
       <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'==''">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Utility\Atomic.cpp">
-      <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'!=''">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(N3DS_SOURCE)\StandardLibraries\AtomicNP1.cpp">
       <ExcludedFromBuild Condition="'$(PLATFORM_3DS)'==''">true</ExcludedFromBuild>
@@ -184,6 +183,8 @@
     <ClInclude Include="Math\Vector4.hpp" />
     <ClInclude Include="Math\VectorHashPolicy.hpp" />
     <ClInclude Include="Math\WeightedProbabilityTable.hpp" />
+    <ClInclude Include="Platform.hpp" />
+    <ClInclude Include="Platform\Atomic.hpp" />
     <ClInclude Include="Platform\CommandLineSupport.hpp" />
     <ClInclude Include="Platform\ComPort.hpp" />
     <ClInclude Include="Platform\CrashHandler.hpp" />
@@ -196,11 +197,11 @@
     <ClInclude Include="Platform\FilePath.hpp" />
     <ClInclude Include="Platform\FileSystem.hpp" />
     <ClInclude Include="Platform\FpControl.hpp" />
+    <ClInclude Include="Platform\Intrinsics.hpp" />
     <ClInclude Include="Platform\IpAddress.hpp" />
     <ClInclude Include="Platform\Lock.hpp" />
     <ClInclude Include="Platform\OsHandle.hpp" />
     <ClInclude Include="Platform\Peripherals.hpp" />
-    <ClInclude Include="Platform\PlatformSelector.hpp" />
     <ClInclude Include="Platform\PlatformStandard.hpp" />
     <ClInclude Include="Platform\PrivateImplementation.hpp" />
     <ClInclude Include="Platform\Process.hpp" />
@@ -254,7 +255,6 @@
     <ClInclude Include="Memory\Pool.hpp" />
     <ClInclude Include="Memory\Stack.hpp" />
     <ClInclude Include="Memory\ZeroAllocator.hpp" />
-    <ClInclude Include="NullPtr.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="Regex\Regex.hpp" />
     <ClInclude Include="String\CharacterTraits.hpp" />
@@ -289,7 +289,6 @@
     <ClInclude Include="Utility\SpinLock.hpp" />
     <ClInclude Include="Utility\Status.hpp" />
     <ClInclude Include="Utility\ForEachRange.hpp" />
-    <ClInclude Include="Utility\Atomic.hpp" />
     <ClInclude Include="Utility\Misc.hpp" />
     <ClInclude Include="Utility\Standard.hpp" />
     <ClInclude Include="Utility\Typedefs.hpp" />

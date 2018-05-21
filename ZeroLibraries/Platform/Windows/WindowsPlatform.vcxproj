@@ -42,6 +42,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="ComPort.cpp" />
     <ClCompile Include="CrashHandler.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="FpControl.cpp" />
+    <ClCompile Include="Intrinsics.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Process.cpp" />

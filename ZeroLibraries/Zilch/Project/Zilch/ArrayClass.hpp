@@ -57,9 +57,8 @@ namespace Zilch
     Integer ModifyId;
   };
 
-  ZilchStaticAssert(offsetof(ArrayClass<int>, NativeArray) == 0,
-    "The native array must be at offset 0 so that we can binary reinterpret a Zilch ArrayClass as just a normal native Array (unsafe, but performant)",
-    NativeArrayOffsetMustBeZero);
+  static_assert(offsetof(ArrayClass<int>, NativeArray) == 0,
+    "The native array must be at offset 0 so that we can binary reinterpret a Zilch ArrayClass as just a normal native Array (unsafe, but performant)");
 
   // These are all the specializations that are optimized to store exactly that data type
   // All values that are unknown will be stored as the 'Any' type

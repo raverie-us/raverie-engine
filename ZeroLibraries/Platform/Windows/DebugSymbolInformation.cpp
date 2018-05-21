@@ -6,13 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-// Dbghelp has warnings in VS2015 (unnamed typedef)
-#pragma warning(disable : 4091)
-#ifdef _MSC_VER
-#include <dbghelp.h>
-
-#pragma comment(lib, "dbghelp.lib")
-
 namespace Zero
 {
 
@@ -206,30 +199,3 @@ String SimpleStackWalker::GetFinalOutput()
 }
 
 }//namespace Zero
-
-// For non microsoft on windows just stub for now
-#else
-
-namespace Zero
-{
-
-void GetSymbolInfo(OsInt processHandle, SymbolInfo& symbolInfo)
-{
-}
-
-void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPaths, int stacksToSkip)
-{
-}
-
-void SimpleStackWalker::AddSymbolInformation(SymbolInfo& symbolInfo)
-{
-}
-
-String SimpleStackWalker::GetFinalOutput()
-{
-  return String();
-}
-
-}//namespace Zero
-
-#endif

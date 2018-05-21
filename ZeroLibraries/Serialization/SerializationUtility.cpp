@@ -16,22 +16,14 @@ namespace Zero
 template <>
 bool IsFinite<float>(float value)
 {
-#ifdef _MSC_VER
-  return _finite(value) != 0;
-#else
-  return true;
-#endif
+  return isfinite(value);
 }
 
 // Validation that a double is not NAN/IND/INF
 template <>
 bool IsFinite<double>(double value)
 {
-#ifdef _MSC_VER
-  return _finite(value) != 0;
-#else
-  return true;
-#endif
+  return isfinite(value);
 }
   
 // Correct floats that are NAN/IND/INF to zero

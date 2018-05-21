@@ -306,11 +306,11 @@ namespace Zilch
 
   // Workhorse macro for binding methods
   #define ZilchFullBindMethod(ZilchBuilder, ZilchType, MethodPointer, OverloadResolution, Name, SpaceDelimitedParameterNames) \
-    ZZ::TemplateBinding::FromMethod<ZilchTypeOf(OverloadResolution MethodPointer), MethodPointer>(ZilchBuilder, ZilchType, Name, SpaceDelimitedParameterNames, OverloadResolution(MethodPointer))
+    ZZ::TemplateBinding::FromMethod<decltype(OverloadResolution MethodPointer), MethodPointer>(ZilchBuilder, ZilchType, Name, SpaceDelimitedParameterNames, OverloadResolution(MethodPointer))
 
   // Workhorse macro for binding virtual methods
   #define ZilchFullBindVirtualMethod(ZilchBuilder, ZilchType, MethodPointer, NameOrNull) \
-    ZZ::TemplateBinding::FromVirtual<ZilchTypeOf(MethodPointer), MethodPointer>(ZilchBuilder, ZilchType, Name, SpaceDelimitedParameterNames, (MethodPointer))
+    ZZ::TemplateBinding::FromVirtual<decltype(MethodPointer), MethodPointer>(ZilchBuilder, ZilchType, Name, SpaceDelimitedParameterNames, (MethodPointer))
 
   // Bind a constructor that takes any number of arguments
   // Due to the inability to get a 'member function pointer' to a constructor, the arguments must always be specified
@@ -329,24 +329,24 @@ namespace Zilch
 
   // Bind data members as properties
   #define ZilchFullBindField(ZilchBuilder, ZilchType, FieldPointer, Name, PropertyBinding) \
-    ZZ::TemplateBinding::FromField<ZilchTypeOf(FieldPointer), FieldPointer>(ZilchBuilder, ZilchType, Name, FieldPointer, PropertyBinding)
+    ZZ::TemplateBinding::FromField<decltype(FieldPointer), FieldPointer>(ZilchBuilder, ZilchType, Name, FieldPointer, PropertyBinding)
 
   // Bind data members with an offset
   #define ZilchFullBindMember(ZilchBuilder, ZilchType, MemberName, Name, PropertyBinding)                                                           \
   [&]()                                                                                                                                             \
   {                                                                                                                                                 \
     ErrorIf(                                                                                                                                        \
-      ZilchTypeId(ZilchTypeOf(ZilchSelf::MemberName))->GetCopyableSize() != sizeof(ZilchSelf::MemberName),                                          \
+      ZilchTypeId(decltype(ZilchSelf::MemberName))->GetCopyableSize() != sizeof(ZilchSelf::MemberName),                                          \
       "When binding a member the type must match the exact size it is expected to be in Zilch "                                                     \
       "(e.g. all reference types must be a Handle). Most likely you want ZilchBindField.");                                                         \
-      return ZilchBuilder.AddBoundField(ZilchType, Name, ZilchTypeId(ZilchTypeOf(ZilchSelf::MemberName)),                                           \
+      return ZilchBuilder.AddBoundField(ZilchType, Name, ZilchTypeId(decltype(ZilchSelf::MemberName)),                                           \
         offsetof(ZilchSelf, MemberName), PropertyBinding);                                                                                          \
   }()
 
   // Bind a property (getter and setter in C++) to Zilch
   // A property will appear like a member, but it will invoke the getter when being read, and the setter when being written to
   #define ZilchFullBindGetterSetter(ZilchBuilder, ZilchType, GetterMethodPointer, GetterOverload, SetterMethodPointer, SetterOverload, Name) \
-    ZZ::TemplateBinding::FromGetterSetter<ZilchTypeOf(GetterOverload GetterMethodPointer), GetterMethodPointer, ZilchTypeOf(SetterOverload SetterMethodPointer), SetterMethodPointer>(ZilchBuilder, ZilchType, Name, GetterMethodPointer, SetterMethodPointer)
+    ZZ::TemplateBinding::FromGetterSetter<decltype(GetterOverload GetterMethodPointer), GetterMethodPointer, decltype(SetterOverload SetterMethodPointer), SetterMethodPointer>(ZilchBuilder, ZilchType, Name, GetterMethodPointer, SetterMethodPointer)
   
   // Bind a type as being an enum (verifies that the size matches)
   #define ZilchFullBindEnum(ZilchBuilder, ZilchType, SpecialTypeEnum)                                                         \

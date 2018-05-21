@@ -35,17 +35,8 @@ struct ZeroSharedTemplate Link
   type* Prev;
 };
 
-#if defined(_MSC_VER) && _MSC_VER <= 1600
-///Intrusive is used for debugging in Visual Studio
-#define IntrusiveLink(objectType, linkName) \
-union{ \
-  struct{Link<objectType> linkName;}; \
-  struct{objectType* Next; objectType* Prev;}; \
-}
-#else
 #define IntrusiveLink(objectType, linkName) \
   Link<objectType> linkName
-#endif
 
 class ZeroShared LinkBase
 {

@@ -10,7 +10,7 @@
 // We need to make a specialization because the hash maps do not work with enums
 // On other compilers, the 'Enum' type is actually an int, which would produce a
 // duplicate definition compiler error since a specialization of int already exists
-#ifdef _MSC_VER
+#ifdef COMPILER_MICROSOFT
 template<>
 struct ZeroShared Zero::HashPolicy<Zilch::Grammar::Enum> : public Zero::ComparePolicy<size_t>
 {
@@ -290,7 +290,7 @@ namespace Zilch
     HashSet<CastOperator> CastOperators;
 
     // Associate all the cast operators from this type to any other type
-    ZilchTodo("This should actually use some kind of policy because we're not hashing types correctly (works because we only care about BoundType* right now, Real/Integer, etc )");
+    ZeroTodo("This should actually use some kind of policy because we're not hashing types correctly (works because we only care about BoundType* right now, Real/Integer, etc )");
     HashMap<Type*, Array<CastOperator> > PrimitiveCastOperatorsFrom;
 
     // We use this as a key into a hash map

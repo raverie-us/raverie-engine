@@ -489,9 +489,9 @@ struct BroadPhaseTreeSelfRange : public QueryCheck
   Array<treeType::NodeType*,LocalStackAllocator> nodeArray_;                      \
   uint totalProxyCount_ = tree.GetTotalProxyCount();                              \
   LocalStackAllocator stackAllocator_(alloca(totalProxyCount_ * sizeof(void*)));  \
-  nodeArray_.SetAllocator(stackAllocator_);                                      \
+  nodeArray_.SetAllocator(stackAllocator_);                                       \
   nodeArray_.Reserve(totalProxyCount_);                                           \
-  typedef TypeOf(tree.Query(queryObj,nodeArray_)) _RangeType;                     \
+  typedef decltype(tree.Query(queryObj,nodeArray_)) _RangeType;                   \
   _RangeType range = tree.Query(queryObj,nodeArray_);                             \
   for(; !range.Empty(); range.PopFront())
 
@@ -501,9 +501,9 @@ struct BroadPhaseTreeSelfRange : public QueryCheck
   Array<treeType::NodeType*,LocalStackAllocator> nodeArray_;                     \
   uint totalProxyCount_ = tree.GetTotalProxyCount();                             \
   LocalStackAllocator stackAllocator_(alloca(totalProxyCount_ * sizeof(void*))); \
-  nodeArray_.SetAllocator(stackAllocator_);                                     \
+  nodeArray_.SetAllocator(stackAllocator_);                                      \
   nodeArray_.Reserve(totalProxyCount_);                                          \
-  typedef TypeOf(tree.QueryWithPolicy(queryObj,nodeArray_,policy)) _RangeType;   \
+  typedef decltype(tree.QueryWithPolicy(queryObj,nodeArray_,policy)) _RangeType; \
   _RangeType range = tree.QueryWithPolicy(queryObj,nodeArray_,policy);           \
   for(; !range.Empty(); range.PopFront())
 

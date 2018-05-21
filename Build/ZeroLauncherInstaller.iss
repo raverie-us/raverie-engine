@@ -26,7 +26,7 @@
 
 ;this should be replaced via the command line arg /d{define}={value}. Also must be called with iscc.exe, not the .iss file itself.
 #ifndef ZeroLauncherOutputSuffix
-#define ZeroLauncherOutputSuffix "\Out\Win32\" + Configuration + "\Win32ZeroLauncher"
+#define ZeroLauncherOutputSuffix "\Out\Win32\" + Configuration + "\ZeroLauncher"
 #endif
 #ifndef MajorId
 #define MajorId = 1
@@ -39,7 +39,7 @@
 ; If we're in testing mode then change the exe output path to the built path and look at debug instead of release
 #ifdef TestingMode
 #define Configuration "Debug"
-#define ZeroLauncherOutputSuffix "\Out\Win32\" + Configuration + "\Win32ZeroLauncher"
+#define ZeroLauncherOutputSuffix "\Out\Win32\" + Configuration + "\ZeroLauncher"
 #define ExePath ZeroOutput + "\" + ZeroLauncherOutputSuffix + "\" + MyAppExeName
 #define IconPath ZeroSource + "\Projects\Win32Shared\"
 #endif

@@ -63,7 +63,7 @@ namespace Zilch
     this->StartNativeLocation(type->Location);
     this->GenerateHeader(type);
 
-    ZilchTodo("We may want to handle attributes for GetEventHandlerFunction being non-null (may be an interface) / CreatableInScript / Native");
+    ZeroTodo("We may want to handle attributes for GetEventHandlerFunction being non-null (may be an interface) / CreatableInScript / Native");
 
 
     if (type->CopyMode == TypeCopyMode::ReferenceType)
@@ -388,7 +388,7 @@ namespace Zilch
       codeBuilder.WriteLineIndented();
     }
 
-    ZilchTodo("We may want to handle the 'IsHidden' attribute specially here because it may not exist inside 'Attributes'");
+    ZeroTodo("We may want to handle the 'IsHidden' attribute specially here because it may not exist inside 'Attributes'");
 
     // Write out all attributes
     ZilchForEach(Attribute& attribute, attributes)

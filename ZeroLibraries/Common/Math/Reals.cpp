@@ -324,11 +324,7 @@ real DegToRad(real degrees)
 
 bool IsValid(real val)
 {
-#ifdef _MSC_VER
-  return _finite(val) != 0;
-#else
-  return val == val;
-#endif
+  return isfinite(val);
 }
 
 ZeroShared double DoublePositiveMax()

@@ -35,20 +35,14 @@
 #define NOMINMAX
 #endif
 
-// Get rid of an annoying gcc warning that is incorrect
-// (complains about winsock being included after windows, it's not)
-#ifndef _MSC_VER
-#ifdef _WINSOCKAPI_
-#undef _WINSOCKAPI_
-#endif
-#endif
-#include <winsock2.h> // Includes windows.h (we get a warning in gcc otherwise)
+#include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <Wspiapi.h>
 #include <Mmsystem.h>
 #include <Regstr.h>
 #include <WinBase.h>
 #include <windowsx.h>
+#include <intrin.h>
 
 //Undef windows defines that overlap with core functions
 #undef CopyFile

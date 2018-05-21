@@ -37,12 +37,6 @@ Verify(): Runs the function and generates an error if the function returns non
           error code will be removed.
 */
 
-#ifdef _MSC_VER
-  #define ZERO_DEBUG_BREAK __debugbreak()
-#else
-  #define ZERO_DEBUG_BREAK
-#endif
-
 namespace Zero
 {
 
@@ -85,14 +79,6 @@ private:
 #   else
 #       define ZERO_ENABLE_ERROR 0
 #   endif
-#endif
-
-#if defined(_MSC_VER) && _MSC_VER >= 1600
-  #define StaticAssert(name, Expression, error) \
-    static_assert(Expression, error)
-#else
-  #define StaticAssert(name, Expression, error) \
-    static int name = (sizeof(char[1 - 2 * !(Expression)]))
 #endif
 
 static int gConditionalFalseConstant = 0;
@@ -157,4 +143,4 @@ static int gConditionalFalseConstant = 0;
   Assert((min) <= (value) && (value) <= (max))
 /// Statically asserts value is within [min, max]
 #define StaticAssertWithinRange(name, value, min, max) \
-  StaticAssert(name, (min) <= (value) && (value) <= (max), "Value outside range")
+  static_assert((min) <= (value) && (value) <= (max), "Value outside range")

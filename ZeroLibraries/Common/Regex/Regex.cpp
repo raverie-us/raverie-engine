@@ -13,14 +13,7 @@
 
 // Using directives
 using namespace std;
-
-// Bring in the namespaces (cross platform)
-#ifdef _MSC_VER
-  using namespace std::tr1;
-  namespace reg = std::tr1::regex_constants;
-#else
-  namespace reg = std::regex_constants;
-#endif
+namespace reg = std::regex_constants;
 
 namespace Zero
 {

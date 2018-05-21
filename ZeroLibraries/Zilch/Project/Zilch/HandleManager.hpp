@@ -251,9 +251,8 @@ namespace Zilch
     ObjectHeader* Header;
     Uid           UniqueId;
   };
-  ZilchStaticAssert(sizeof(HeapHandleData) <= HandleUserDataSize,
-    "The HeapHandleData class must fit within Handle::Data (make handle Data bigger)",
-    HeapHandleDataMustFitWithinHandleData);
+  static_assert(sizeof(HeapHandleData) <= HandleUserDataSize,
+    "The HeapHandleData class must fit within Handle::Data (make handle Data bigger)");
 
   // This setting is potentially dangerous!!!
   // Currently we add an extra amount to the end of every allocation to support patching and adding fields
@@ -304,9 +303,8 @@ namespace Zilch
     PerScopeData* Scope;
     byte*         StackLocation;
   };
-  ZilchStaticAssert(sizeof(StackHandleData) <= HandleUserDataSize,
-    "The StackHandleData class must fit within Handle::Data (make handle Data bigger)",
-    StackHandleDataMustFitWithinHandleData);
+  static_assert(sizeof(StackHandleData) <= HandleUserDataSize,
+    "The StackHandleData class must fit within Handle::Data (make handle Data bigger)");
 
   // This manages stack objects initialized in the language (including references to stack members via offset)
   class ZeroShared StackManager : public HandleManager
@@ -355,9 +353,8 @@ namespace Zilch
       const byte* objectRhs
     ) override;
   };
-  ZilchStaticAssert(sizeof(String) <= HandleUserDataSize,
-    "The String class must fit within Handle::Data (make handle Data bigger)",
-    StringMustFitWithinHandleData);
+  static_assert(sizeof(String) <= HandleUserDataSize,
+    "The String class must fit within Handle::Data (make handle Data bigger)");
 }
 
 #endif

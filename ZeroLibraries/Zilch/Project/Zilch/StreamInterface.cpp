@@ -353,7 +353,7 @@ namespace Zilch
     Integer totalWritten = 0;
 
     // Technically this should be iterating through runes
-    ZilchTodo("Unicode");
+    ZeroTodo("Unicode");
     StringRange range = text.All();
     ZilchForEach(Zero::Rune r, range)
     {

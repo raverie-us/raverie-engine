@@ -8,15 +8,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-// Only compile this on the MSVC compiler (not supported by other compilers on Windows)
-#ifdef _MSC_VER
-
-// Dbghelp has warnings in VS2015 (unnamed typedef)
-#pragma warning(disable : 4091)
-#define _NO_CVCONST_H
-#include <dbghelp.h>
-
-#pragma comment(lib, "dbghelp.lib")
 
 namespace Zero
 {
@@ -334,4 +325,3 @@ void CheckClassMemory(cstr className, byte* classMemory)
 }
 
 }
-#endif

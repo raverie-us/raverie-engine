@@ -507,13 +507,13 @@ namespace Zilch
     byte* GetNextStackFrame();
 
     // Push a new stack frame and returns the location on the stack
-    ZilchForceInline PerFrameData* PushFrame(Function* function);
+    ZeroForceInline PerFrameData* PushFrame(Function* function);
 
     // A slightly more optimal version of pushing a stack frame (used internally in execution)
-    ZilchForceInline PerFrameData* PushFrame(byte* frame, Function* function);
+    ZeroForceInline PerFrameData* PushFrame(byte* frame, Function* function);
 
     // Pops a stack frame and return a pointer to where the return value should be
-    ZilchForceInline PerFrameData* PopFrame();
+    ZeroForceInline PerFrameData* PopFrame();
 
     // Initialize a handle to point at a location on the stack
     void InitializeStackHandle(Handle& handle, byte* location, PerScopeData* scope, BoundType* type);
@@ -539,7 +539,7 @@ namespace Zilch
     bool PopTimeout(PerFrameData* frame);
 
     // Send an opcode event (generally used for debuggers or profilers)
-    ZilchForceInline void SendOpcodeEvent(StringParam eventId, PerFrameData* frame);
+    ZeroForceInline void SendOpcodeEvent(StringParam eventId, PerFrameData* frame);
 
   public:
 

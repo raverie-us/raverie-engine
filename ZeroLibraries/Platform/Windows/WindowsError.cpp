@@ -10,8 +10,6 @@
 #include "Precompiled.hpp"
 #include "WindowsError.hpp"
 
-#pragma comment(lib, "user32.lib")
-
 Zero::String ToErrorString(uint errorCode)
 {
   //If no error code was provided default to the last error

@@ -92,13 +92,13 @@ namespace Zilch
       if (ref->Object->Referencers.SharedReferences.Empty())
       {
         // Get a range so we can walk over all weak references
-        ZilchAutoVal(weakRefs, ref->Object->Referencers.WeakReferences.All());
+        auto weakRefs = ref->Object->Referencers.WeakReferences.All();
 
         // Loop until we run out of weak references
         while (weakRefs.Empty() == false)
         {
           // Get the current weak reference and iterate to the next one
-          ZilchAutoRef(weakRef, weakRefs.Front());
+          auto& weakRef = weakRefs.Front();
           weakRefs.PopFront();
 
           // Set the weak reference's object to null

@@ -2706,7 +2706,7 @@ namespace Zilch
     void FullNoParameterSplatAs(Call& call, ExceptionReport& report)
   {
     FullNoParameterSplat<ResultType,
-      TypeOfFunctionPointer(Function), Function>(call, report);
+      decltype(Function), Function>(call, report);
   }
 
   //***************************************************************************
@@ -2744,7 +2744,7 @@ namespace Zilch
   {
     FullOneParameterSplat<ScalarType0, ResultType,
       ScalarType0Offset,
-      TypeOfFunctionPointer(Function), Function>(call, report);
+      decltype(Function), Function>(call, report);
   }
 
   //***************************************************************************
@@ -2787,7 +2787,7 @@ namespace Zilch
   {
     FullTwoParameterSplat<ScalarType0, ScalarType1, ResultType,
       ScalarType0Offset, ScalarType1Offset,
-      TypeOfFunctionPointer(Function), Function>(call, report);
+      decltype(Function), Function>(call, report);
   }
 
   //***************************************************************************
@@ -2832,7 +2832,7 @@ namespace Zilch
   {
     FullThreeParameterSplat<ScalarType0, ScalarType1, ScalarType2, ResultType,
       ScalarType0Offset, ScalarType1Offset, ScalarType2Offset,
-      TypeOfFunctionPointer(Function), Function>(call, report);
+      decltype(Function), Function>(call, report);
 
   }
 
@@ -3036,7 +3036,7 @@ namespace Zilch
   }
 
 #define ZilchFullThreeParameterSplatBinder(Type0, Type1, Type2, ReturnType, Offset0, Offset1, Offset2, BoundFunction) \
-  FullThreeParameterSplat<Type0, Type1, Type2, ReturnType, Offset0, Offset1, Offset2, ZilchTypeOfFunctionPointer(BoundFunction) , BoundFunction>
+  FullThreeParameterSplat<Type0, Type1, Type2, ReturnType, Offset0, Offset1, Offset2, decltype(BoundFunction) , BoundFunction>
 
 #define ZilchComplexThreeParameterSplatBinder(scalarType0, scalarType1, scalarType2, returnType, offset0, offset1, offset2, function) \
   FullThreeParameterSplatAs<scalarType0, scalarType1, scalarType2, returnType, scalarType0, scalarType1, scalarType2, offset0, offset1, offset2, function>

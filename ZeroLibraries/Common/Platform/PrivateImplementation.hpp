@@ -29,7 +29,7 @@
   Type* self = (Type*)mPrivateData;
 
 #define ZeroAssertPrivateDataSize(Type)                                           \
-  StaticAssert(IncreaseSizeOfPrivateData_PrivateTypeTooBig,                       \
+  static_assert(                                                                  \
     sizeof(Type) <= sizeof(mPrivateData),                                         \
     "Increase the size of the private data because the private type is too big");
 

@@ -388,7 +388,7 @@ namespace Zilch
         BoundType* boundType = Type::DynamicCast<BoundType*>(type);
         if (boundType != nullptr && boundType->CopyMode == TypeCopyMode::ValueType)
         {
-          ZilchTodo("This is unsafe, should this be allocated and boxed?");
+          ZeroTodo("This is unsafe, should this be allocated and boxed?");
           HandleManager* manager = HandleManagers::GetInstance().GetManager(ZilchManagerId(PointerManager));
           thisHandle.StoredType = boundType;
           thisHandle.Manager = manager;

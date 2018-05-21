@@ -76,9 +76,8 @@ namespace Zilch
   #define ZilchDefineEventDelegateHelpers(SelfType)                                     \
     void CopyInto(byte* destination) override                                           \
     {                                                                                   \
-      ZilchStaticAssert(sizeof(SelfType) <= MaxEventDelegateSize,                       \
-        "The size of the event delegate must not exceed MaxEventDelegateSize",          \
-        EventDelegateExceedsMaxEventDelegateSize);                                      \
+      static_assert(sizeof(SelfType) <= MaxEventDelegateSize,                           \
+        "The size of the event delegate must not exceed MaxEventDelegateSize");         \
       SelfType* copy = new (destination) SelfType(*this);                               \
       copy->OutgoingLink.Next = nullptr;                                                \
       copy->IncomingLink.Next = nullptr;                                                \

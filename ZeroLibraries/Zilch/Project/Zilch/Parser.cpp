@@ -4379,7 +4379,7 @@ namespace Zilch
     ZilchSaveAndVerifyTokenPosition();
 
     // Let the user know that the syntax has changed
-    ZilchTodo("This can be removed once a considerable time period has passed or when we give it a new meaning");
+    ZeroTodo("This can be removed once a considerable time period has passed or when we give it a new meaning");
     if (this->Accept(1, Grammar::OldBeginInitializer))
     {
       // Show an error and recall back to the saved position
@@ -4633,7 +4633,7 @@ namespace Zilch
         this->SaveTokenPosition();
 
         // We may alternatively try to get the typeid of a type
-        ZilchTodo("Investigate changing typeid(Type) to just parsing an expression because now we have "
+        ZeroTodo("Investigate changing typeid(Type) to just parsing an expression because now we have "
                   "StaticTypeNode (Decorate StaticTypeNode would need to allow typeid as a parent)");
         SyntaxType* type = this->ReadTypeInfo();
 

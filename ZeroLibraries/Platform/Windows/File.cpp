@@ -253,7 +253,7 @@ void File::Open(Status& status, FILE* file, FileMode::Enum mode)
   HANDLE handle = (HANDLE)self->mOsfHandle;
   if (handle == INVALID_HANDLE_VALUE)
   {
-    status.SetFailed("Unable to get a valid Win32 handle to the file descriptor");
+    status.SetFailed("Unable to get a valid handle to the file descriptor");
     return;
   }
 

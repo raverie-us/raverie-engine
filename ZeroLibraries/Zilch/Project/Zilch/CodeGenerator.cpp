@@ -229,7 +229,7 @@ namespace Zilch
   void CodeGenerator::GenerateOutOfScope(ScopeNode*& node, GeneratorContext* context)
   {
     VariableValueRange variables = node->ScopedVariables.Values();
-    ZilchTodo("Todo: Generate out of scope destructors")
+    ZeroTodo("Todo: Generate out of scope destructors")
 
     //// Loop through all the variables in this scope
     //while (variables.Empty() == false)
@@ -247,7 +247,7 @@ namespace Zilch
   {
     // Get a reference to the current function that we're building
     Function* function = context->FunctionStack.Back();
-    ZilchTodo("Default parameter values (expressions)");
+    ZeroTodo("Default parameter values (expressions)");
 
     // We already allocated space for this parameter inside the delegate's parameter computing
     // Just set our variable's local position to the delegate's same parameter stack position
@@ -1842,7 +1842,7 @@ namespace Zilch
     // Generate opcode for calling the function (we still need to copy arguments ourselves)
     GenerateCallOpcodePreArgs(function, delegateType, delegateLocal, node->Location, debugOrigin);
 
-    ZilchTodo("Parameters are currently not re-ordered");
+    ZeroTodo("Parameters are currently not re-ordered");
 
     // Loop through all the function's parameters
     for (size_t i = 0; i < node->Arguments.Size(); ++i)
@@ -2032,7 +2032,7 @@ namespace Zilch
       case Grammar::DoubleIntegerLiteral:
       {
         // Read the value as an Integer (and allocate a constant for it)
-        function->AllocateConstant<DoubleInteger>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) = ZilchStringToDoubleInteger(node->Value.Token.c_str(), 10);
+        function->AllocateConstant<DoubleInteger>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) = (DoubleInteger)strtoull(node->Value.Token.c_str(), nullptr, 10);
         break;
       }
       
@@ -2100,7 +2100,7 @@ namespace Zilch
       // The value is a null
       case Grammar::Null:
       {
-        ZilchTodo("We probably want to eventually share null constants, also examine the behavior of using sizeof(Delegate)!");
+        ZeroTodo("We probably want to eventually share null constants, also examine the behavior of using sizeof(Delegate)!");
 
         // At the moment, since we use null for handles, delegates, etc, we just allocate wiped space (with 0s) that
         // is big enough to support all nullable things (all primitives support being set to all 0)

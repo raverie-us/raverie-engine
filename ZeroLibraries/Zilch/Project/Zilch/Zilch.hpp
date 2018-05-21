@@ -31,7 +31,6 @@ namespace Zilch
   using Zero::ExternalLibrary;
   using Zero::File;
   using Zero::FixedArray;
-  using Zero::FixedString;
   using Zero::FindFirstIndex;
   using Zero::HashMap;
   using Zero::HashPolicy;
@@ -41,7 +40,6 @@ namespace Zilch
   using Zero::JoinStrings;
   using Zero::Link;
   using Zero::Memory::Shutdown;
-  using Zero::NullPointerType;
   using Zero::OsEvent;
   using Zero::OsInt;
   using Zero::OwnedArray;

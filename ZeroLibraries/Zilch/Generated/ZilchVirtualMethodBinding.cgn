@@ -80,7 +80,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
 {
   BoundFn boundFunction = BoundInstance$Return$<FunctionType, function, Class[,]$Return$[,]$ArgumentTypes$>;
   
-  ZilchAutoVal(thunk, (&VirtualThunk$Return$<FunctionType, function, Class, $ReturnType$[,]$ArgumentTypes$>));
+  auto thunk = (&VirtualThunk$Return$<FunctionType, function, Class, $ReturnType$[,]$ArgumentTypes$>);
   
   ParameterArray parameters;
 $ZilchArguments$

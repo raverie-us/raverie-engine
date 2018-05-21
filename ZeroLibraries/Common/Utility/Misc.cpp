@@ -9,10 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#if _MSC_VER
-#include <intrin.h>
-#endif  
-
 namespace Zero
 {
 
@@ -78,71 +74,6 @@ bool IsBigEndian()
 
   return (*lowByte == 0);
 }
-
-#if _MSC_VER
-
-#pragma intrinsic(_BitScanForward)
-#pragma intrinsic(_BitScanReverse)
-
-u32 CountTrailingZeros(u32 x)
-{
-  unsigned long ret = 32;
-  _BitScanForward(&ret, x);
-  return ret;
-}
-
-u32 CountLeadingZeros(u32 x)
-{
-  unsigned long ret = 32;
-  _BitScanReverse(&ret, x);
-  return 31 - ret;
-}
-
-#else
-
-static const u32 CtzLookupTable[] =
-{
-  8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  7, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-  4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-};
-
-u32 CountTrailingZeros(u32 x)
-{
-  u32 n = 0;
-  if ((x & 0x0000FFFF) == 0) { n += 16; x >>= 16; }
-  if ((x & 0x000000FF) == 0) { n +=  8; x >>=  8; }
-  // if ((x & 0x0000000F) == 0) { n +=  4; x >>=  4; }
-  // if ((x & 0x00000003) == 0) { n +=  2; x >>=  2; }
-  // if ((x & 0x00000001) == 0) { n +=  1; }
-  return n + CtzLookupTable[x & 0xFF];
-}
-
-u32 CountLeadingZeros(u32 x)
-{
-  u32 n = 0;
-  if ((x & 0xFFFF0000) == 0) { n += 16; x <<= 16; }
-  if ((x & 0xFF000000) == 0) { n +=  8; x <<=  8; }
-  if ((x & 0xF0000000) == 0) { n +=  4; x <<=  4; }
-  if ((x & 0xC0000000) == 0) { n +=  2; x <<=  2; }
-  if ((x & 0x80000000) == 0) { n +=  1; }
-  return n;
-}
-
-#endif
 
 u32 NextPowerOfTwo(u32 x)
 {

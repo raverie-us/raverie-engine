@@ -8,7 +8,7 @@
 namespace Zilch
 {
   //***************************************************************************
-  ZilchThreadLocal bool BuildingLibrary = false;
+  ZeroThreadLocal bool BuildingLibrary = false;
 
   //***************************************************************************
   NativeBindingList::NativeBindingList()
