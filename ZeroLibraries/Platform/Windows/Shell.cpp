@@ -232,7 +232,9 @@ bool GetWindowImage(HWND windowHandle, Image* image)
 RECT GetClientRectInMonitor(HWND windowHandle)
 {
   RECT clientRect;
-  GetClientRect(windowHandle, &clientRect);
+  // GetClientRect will set the left/top to (0,0), since the
+  // client area in client space is always at the origin...
+  ::GetClientRect(windowHandle, &clientRect);
   ::ClientToScreen(windowHandle, (LPPOINT)&clientRect.left);
   ::ClientToScreen(windowHandle, (LPPOINT)&clientRect.right);
   return clientRect;
@@ -1560,8 +1562,7 @@ void ShellWindow::Destroy()
 
 IntRect ShellWindow::GetMonitorClientRectangle()
 {
-  RECT monitorClientRect;
-  ::GetClientRect((HWND)mHandle, &monitorClientRect);
+  RECT monitorClientRect = GetClientRectInMonitor((HWND)mHandle);
   return FromRECT(monitorClientRect);
 }
 
