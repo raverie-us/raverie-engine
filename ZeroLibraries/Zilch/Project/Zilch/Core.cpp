@@ -3102,6 +3102,7 @@ namespace Zilch
     BoundType* errorType              = builder.AddBoundType("[ErrorType]", TypeCopyMode::ValueType, 0, 0);
     BoundType* overloadedMethodsType  = builder.AddBoundType("[MultipleMethodsOfTheSameName]", TypeCopyMode::ValueType, 0, 0);
     DelegateType* anyDelegateType     = builder.GetDelegateType(ParameterArray(), voidType);
+    DelegateType* errorDelegateType   = builder.GetDelegateType(ParameterArray(), errorType);
 
     // Store the primitive types as global constants
     this->ByteType              = byteType;
@@ -3128,6 +3129,7 @@ namespace Zilch
     this->ErrorType             = errorType;
     this->OverloadedMethodsType = overloadedMethodsType;
     this->AnyDelegateType       = anyDelegateType;
+    this->ErrorDelegateType     = errorDelegateType;
     this->AnyHandleType         = anyHandleType;
 
     // Fill out the real array
