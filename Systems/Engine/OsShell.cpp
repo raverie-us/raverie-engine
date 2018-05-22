@@ -73,7 +73,8 @@ void OsShell::Update()
   // CEF WebBrowser that may cause the message pump to run.
   Event toSend;
   DispatchEvent(Events::OsShellUpdate, &toSend);
-
+  Z::gEngine->DispatchEvent(Events::OsShellUpdate, &toSend);
+  
   mIsUpdating = false;
 }
 

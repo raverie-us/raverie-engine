@@ -129,33 +129,33 @@ void WebBrowserWidget::OnEngineUpdate(UpdateEvent* event)
     mForward->SetColor(WebBrowserUi::ButtonDisabledColor);
 }
 
-WebBrowserModifiers::Enum GetModifiers(KeyboardEvent* event)
+BrowserModifiers::Enum GetModifiers(KeyboardEvent* event)
 {
-  WebBrowserModifiers::Enum value = (WebBrowserModifiers::Enum)0;
+  BrowserModifiers::Enum value = (BrowserModifiers::Enum)0;
   if (event->CtrlPressed)
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::Control);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::Control);
   if (event->AltPressed)
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::Alt);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::Alt);
   if (event->ShiftPressed)
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::Shift);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::Shift);
   return value;
 }
 
-WebBrowserModifiers::Enum GetModifiers(MouseEvent* event)
+BrowserModifiers::Enum GetModifiers(MouseEvent* event)
 {
-  WebBrowserModifiers::Enum value = (WebBrowserModifiers::Enum)0;
+  BrowserModifiers::Enum value = (BrowserModifiers::Enum)0;
   if (event->CtrlPressed)
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::Control);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::Control);
   if (event->AltPressed)
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::Alt);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::Alt);
   if (event->ShiftPressed)
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::Shift);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::Shift);
   if (event->IsButtonDown(MouseButtons::Left))
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::LeftMouse);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::LeftMouse);
   if (event->IsButtonDown(MouseButtons::Middle))
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::MiddleMouse);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::MiddleMouse);
   if (event->IsButtonDown(MouseButtons::Right))
-    value = (WebBrowserModifiers::Enum)(value | WebBrowserModifiers::RightMouse);
+    value = (BrowserModifiers::Enum)(value | BrowserModifiers::RightMouse);
   return value;
 }
 
@@ -178,10 +178,10 @@ void WebBrowserWidget::OnWebBrowserPopup(WebBrowserPopupCreateEvent* event)
 
 void WebBrowserWidget::OnWebBrowserPointQuery(WebBrowserPointQueryEvent* event)
 {
-  Vec2 browserClient = Math::ToVec2(event->mViewPixelPosition);
-  Vec2 zeroScreen = mBrowserView->ToScreen(browserClient);
-  IntVec2 desktopScreen = GetRootWidget()->GetOsWindow()->ClientToMonitor(Math::ToIntVec2(zeroScreen));
-  event->mScreenPixelPosition = desktopScreen;
+  Vec2 browserClient = Math::ToVec2(event->mBrowserPixelPosition);
+  Vec2 zeroClient = mBrowserView->ToScreen(browserClient);
+  IntVec2 desktopScreen = GetRootWidget()->GetOsWindow()->ClientToMonitor(Math::ToIntVec2(zeroClient));
+  event->mMonitorPixelPosition = desktopScreen;
 }
 
 void WebBrowserWidget::OnBackPressed(ObjectEvent* event)
@@ -328,7 +328,7 @@ void WebBrowserWidget::OnKeyUp(KeyboardEvent* event)
 
 void WebBrowserWidget::OnTextTyped(KeyboardTextEvent* event)
 {
-  mBrowser->SimulateTextTyped(event->mRune.value, (WebBrowserModifiers::Enum)0);
+  mBrowser->SimulateTextTyped(event->mRune.value, (BrowserModifiers::Enum)0);
   event->mHandled = true;
 }
 

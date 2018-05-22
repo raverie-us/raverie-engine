@@ -5,7 +5,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "WebBrowserChrome.hpp"
 
 #include "IndexedHalfEdgeMesh.hpp"
 #include "QuickHull3DBindings.hpp"
@@ -14,7 +13,7 @@ namespace Zero
 {
 
 // Enums
-ZilchDefineEnum(WebBrowserModifiers);
+ZilchDefineEnum(BrowserModifiers);
 ZilchDefineEnum(OrientationBases);
 ZilchDefineEnum(SplineAnimatorMode);
 
@@ -29,7 +28,7 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   builder.CreatableInScriptDefault = false;
   
   // Enums
-  ZilchInitializeEnum(WebBrowserModifiers);
+  ZilchInitializeEnumAs(BrowserModifiers, "WebBrowserModifiers");
   ZilchInitializeEnum(OrientationBases);
   ZilchInitializeEnum(SplineAnimatorMode);
 
@@ -58,7 +57,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
 
   ZilchInitializeType(WebBrowser);
   ZilchInitializeType(WebBrowserSetup);
-  WebBrowserManager::PlatformInitializeMeta<ZilchLibrary>();
   ZilchInitializeType(WebBrowserManager);
   ZilchInitializeType(WebBrowserWidget);
   ZilchInitializeType(TileMapSource);
@@ -108,12 +106,16 @@ void GameplayLibrary::Initialize()
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   InitializeResourceManager(TileMapSourceManager);
+
+  WebBrowserManager::Initialize();
 }
 
 //**************************************************************************************************
 void GameplayLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();
+
+  WebBrowserManager::Destroy();
 }
 
 } // namespace Zero

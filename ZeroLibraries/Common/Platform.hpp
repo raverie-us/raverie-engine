@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// \file PlatformSelector.hpp
+/// \file Platform.hpp
 /// 
-/// Authors: Trevor sundberg
+/// Authors: Trevor Sundberg
 /// Copyright 2014, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -179,7 +179,7 @@
 #pragma warning(disable : 4189)
 
 // We get a warning about an outer structure being padded due to inner members having alignment specifications
-// An example of this is using jmp_buf anywhere (such as in PerFrameData) especially with 64-bit compatability warnings
+// An example of this is using jmp_buf anywhere (such as in PerFrameData) especially with 64-bit computability warnings
 #pragma warning(disable : 4324)
 
 // We really don't care about C++ initializing POD types to zero
@@ -197,7 +197,7 @@
 // (seems to be when combined with SFINAE testing for the virtual member)
 #pragma warning(disable : 4505)
 
-// Disable the execption handling warning. We don't use exceptions in Zilch
+// Disable the exception handling warning. We don't use exceptions in Zilch
 // because many console and embedded systems do not support them)
 #pragma warning(disable : 4530)
 
@@ -231,7 +231,7 @@
 #pragma warning(disable : 6011)
 
 // Comparing a constant to another constant (not caught by the W4 via templates) is considered bad by static analysis, even though
-// it completly makes sense and will be optimized out if it is in fact a constant
+// it completely makes sense and will be optimized out if it is in fact a constant
 #pragma warning(disable : 6326)
 
 // This particular warning complains about the dereferencing a null pointer because it implied

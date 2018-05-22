@@ -58,9 +58,6 @@
     <ClInclude Include="WebBrowserWidget.hpp">
       <Filter>WebBrowser</Filter>
     </ClInclude>
-    <ClInclude Include="WebBrowserChrome.hpp">
-      <Filter>WebBrowser</Filter>
-    </ClInclude>
     <ClInclude Include="ReactiveViewport.hpp">
       <Filter>Game</Filter>
     </ClInclude>
@@ -124,12 +121,6 @@
       <Filter>WebBrowser</Filter>
     </ClCompile>
     <ClCompile Include="WebBrowserWidget.cpp">
-      <Filter>WebBrowser</Filter>
-    </ClCompile>
-    <ClCompile Include="WebBrowserChrome.cpp">
-      <Filter>WebBrowser</Filter>
-    </ClCompile>
-    <ClCompile Include="WebBrowserNo.cpp">
       <Filter>WebBrowser</Filter>
     </ClCompile>
     <ClCompile Include="ReactiveViewport.cpp">

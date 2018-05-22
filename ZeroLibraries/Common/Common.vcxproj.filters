@@ -230,6 +230,9 @@
     <ClCompile Include="Platform\Atomic.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\Web.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">
@@ -712,6 +715,12 @@
     <ClInclude Include="Platform.hpp" />
     <ClInclude Include="Platform\Atomic.hpp">
       <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Browser.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Web.hpp">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

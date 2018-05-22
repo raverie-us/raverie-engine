@@ -9,7 +9,6 @@
 namespace Zero
 {
 //**************************************************************************************************
-void InitializeGamepad();
 void InitializeKeyboard();
 
 //**************************************************************************************************
@@ -23,8 +22,7 @@ void CommonLibrary::Initialize()
   Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
   Assert(Zero::Socket::IsSocketLibraryInitialized());
 
-  // Setup input devices
-  InitializeGamepad();
+  // Setup keyboard enumerations
   InitializeKeyboard();
 }
 

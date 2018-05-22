@@ -52,7 +52,7 @@
       <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\GLEW\lib;$(ZERO_SOURCE)\External\freetype\lib;$(ZERO_SOURCE)\External\WinHid\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <DelayLoadDLLs>dbghelp.dll;</DelayLoadDLLs>
+      <DelayLoadDLLs>dbghelp.dll;libcef.dll</DelayLoadDLLs>
       <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;zlib.lib;libcurl.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -97,6 +97,21 @@
   <ItemDefinitionGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">
     <Link>
       <AdditionalLibraryDirectories>$(ZeroStandardLibrariesSource)\External\MemoryDebugger;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|x64'">
+    <Link>
+      <DelayLoadDLLs>libcef.dll</DelayLoadDLLs>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <DelayLoadDLLs>libcef.dll</DelayLoadDLLs>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <DelayLoadDLLs>libcef.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup Condition="'$(USEMEMORYDEBUGGER)'!=''">

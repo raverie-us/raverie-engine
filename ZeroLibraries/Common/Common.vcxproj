@@ -138,6 +138,7 @@
     <ClCompile Include="Utility\SpinLock.cpp" />
     <ClCompile Include="Utility\Status.cpp" />
     <ClCompile Include="Utility\Variant.cpp" />
+    <ClCompile Include="Utility\Web.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\BlockVector3.hpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Platform\TimerBlock.hpp" />
     <ClInclude Include="Platform\UnicodeUtility.hpp" />
     <ClInclude Include="Platform\Utilities.hpp" />
+    <ClInclude Include="Platform\Browser.hpp" />
     <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="Utility\ByteEnum.hpp" />
     <ClInclude Include="CommonStandard.hpp" />
@@ -299,6 +301,7 @@
     <ClInclude Include="Utility\UniquePointer.hpp" />
     <ClInclude Include="Utility\Variant.hpp" />
     <ClInclude Include="Utility\VariantConfig.hpp" />
+    <ClInclude Include="Utility\Web.hpp" />
     <ClInclude Include="VirtualAny.hpp" />
   </ItemGroup>
   <ItemGroup>

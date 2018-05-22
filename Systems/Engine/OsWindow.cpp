@@ -396,8 +396,8 @@ void OsWindow::ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition, co
   OsWindow* self = (OsWindow*)window->mUserData;
 
   OsMouseDropEvent mouseDrop;
-  mouseDrop.Files = files;
   self->FillMouseEvent(clientPosition, MouseButtons::None, mouseDrop);
+  mouseDrop.Files = files;
 
   mouseDrop.EventId = Events::OsMouseFileDrop;
   self->SendMouseDropEvent(mouseDrop, false);
@@ -461,8 +461,8 @@ void OsWindow::ShellWindowOnMouseDown(Math::IntVec2Param clientPosition, MouseBu
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsMouseEvent mouseEvent;
-  mouseEvent.EventId = Events::OsMouseDown;
   self->FillMouseEvent(clientPosition, button, mouseEvent);
+  mouseEvent.EventId = Events::OsMouseDown;
   self->SendMouseEvent(mouseEvent, false);
 }
 
@@ -470,8 +470,8 @@ void OsWindow::ShellWindowOnMouseUp(Math::IntVec2Param clientPosition, MouseButt
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsMouseEvent mouseEvent;
-  mouseEvent.EventId = Events::OsMouseUp;
   self->FillMouseEvent(clientPosition, button, mouseEvent);
+  mouseEvent.EventId = Events::OsMouseUp;
   self->SendMouseEvent(mouseEvent, false);
 }
 
@@ -482,8 +482,8 @@ void OsWindow::ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWi
   Shell* shell = window->mShell;
 
   OsMouseEvent mouseEvent;
-  mouseEvent.EventId = Events::OsMouseMove;
   self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
+  mouseEvent.EventId = Events::OsMouseMove;
   
   // If the mouse is trapped, move it back to the trap position.
   // Or, mark that it's already there.
@@ -520,9 +520,9 @@ void OsWindow::ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, floa
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsMouseEvent mouseEvent;
+  self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseScroll;
   mouseEvent.ScrollMovement.y = scrollAmount;
-  self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   self->SendMouseEvent(mouseEvent, false);
 }
 
@@ -530,9 +530,9 @@ void OsWindow::ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, floa
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsMouseEvent mouseEvent;
-  mouseEvent.EventId = Events::OsMouseScroll;
-  mouseEvent.ScrollMovement.y = scrollAmount;
   self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
+  mouseEvent.EventId = Events::OsMouseScroll;
+  mouseEvent.ScrollMovement.x = scrollAmount;
   self->SendMouseEvent(mouseEvent, false);
 }
 

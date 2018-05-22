@@ -69,10 +69,6 @@
     <ClInclude Include="TileMapSourceLoadPattern.hpp" />
     <ClInclude Include="UnitTestSystem.hpp" />
     <ClInclude Include="WebBrowser.hpp" />
-    <ClInclude Include="WebBrowserChrome.hpp">
-      <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="WebBrowserWidget.hpp" />
     <ClInclude Include="Zero.hpp" />
   </ItemGroup>
@@ -101,13 +97,6 @@
     <ClCompile Include="TileMapSource.cpp" />
     <ClCompile Include="UnitTestSystem.cpp" />
     <ClCompile Include="WebBrowser.cpp" />
-    <ClCompile Include="WebBrowserChrome.cpp">
-      <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="WebBrowserNo.cpp">
-      <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'==''">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="WebBrowserWidget.cpp" />
     <ClCompile Include="Zero.cpp" />
   </ItemGroup>

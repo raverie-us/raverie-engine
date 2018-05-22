@@ -128,6 +128,7 @@ public:
 #include "Utility/Variant.hpp"
 #include "Utility/Determinism.hpp"
 #include "Utility/SpinLock.hpp"
+#include "Utility/Web.hpp"
 #include "Singleton.hpp"
 
 namespace Math
@@ -221,3 +222,4 @@ namespace Zero
 #include "Platform/Shell.hpp"
 #include "Platform/ComPort.hpp"
 #include "Platform/Intrinsics.hpp"
+#include "Platform/Browser.hpp"

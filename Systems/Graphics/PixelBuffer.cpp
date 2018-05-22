@@ -132,6 +132,11 @@ void PixelBuffer::Resize(uint width, uint height, bool copyOldContents, bool cle
   Image->Upload(width, height, TextureFormat::RGBA8, (byte*)newData, dataSize);
 }
 
+IntVec2 PixelBuffer::GetSize()
+{
+  return Image->GetSize();
+}
+
 // Clear the pixel buffer
 void PixelBuffer::Clear(ByteColor color)
 {

@@ -25,11 +25,9 @@ namespace Events
 class UpdateEvent;
 class WebBrowser;
 
-DeclareBitField12(WebBrowserModifiers, CapsLock, Shift, Control, Alt, LeftMouse, MiddleMouse, RightMouse, Command, NumLock, IsKeyPad, IsLeft, IsRight);
-
 // Everything we need to startup and shutdown browsers (singleton)
 // Also manages all instances of browsers
-class WebBrowserManager : public EventObject
+class WebBrowserManager : public ExplicitSingleton<WebBrowserManager, EventObject>
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -38,20 +36,6 @@ public:
   ~WebBrowserManager();
   static WebBrowserManager& GetInstance();
   void OnOsShellUpdate(Event* event);
-
-  // These functions get implemented by the platform
-
-  ///////////////////////////////////////////////////
-  // BEGIN PLATFORM
-  ///////////////////////////////////////////////////
-  template <typename ZilchLibrary>
-  static void PlatformInitializeMeta();
-  void PlatformCreate();
-  void PlatformDestroy();
-  void PlatformUpdate();
-  ///////////////////////////////////////////////////
-  // END PLATFORM
-  ///////////////////////////////////////////////////
 };
 
 extern const String cWebBrowserDefaultUrl;
@@ -92,9 +76,6 @@ public:
   static HandleOf<WebBrowser> Create();
   static HandleOf<WebBrowser> Create(const WebBrowserSetup& setup);
 
-  /// Reloads the browser (full forced without cache)
-  void Reload();
-
   void ExecuteScript(StringParam script);
 
   void SetSize(IntVec2Param size);
@@ -115,20 +96,11 @@ public:
   void SetUrl(StringParam url);
   String GetUrl();
 
-  String mLastSetUrl;
-  String mStatus;
-  String mTitle;
-  Vec2 mScrollSpeed;
-  Vec4 mBackgroundColor;
-  bool mTransparent;
+  String GetStatus();
+  String GetTitle();
 
-  ///////////////////////////////////////////////////
-  // BEGIN PLATFORM
-  ///////////////////////////////////////////////////
-
-  void CreatePlatformBrowser(const WebBrowserSetup& setup);
-  void DestroyPlatformBrowser();
-  void ResizePlatformBrowser(IntVec2Param size);
+  Vec2 GetScrollSpeed();
+  void SetScrollSpeed(Vec2Param pixelsPerScroll);
 
   bool GetCanGoForward();
   bool GetCanGoBackward();
@@ -137,6 +109,9 @@ public:
   void GoBackward();
 
   bool GetIsLoading();
+
+  /// Reloads the browser (full forced without cache)
+  void Reload();
   void Reload(bool useCache);
 
   void SetFocus(bool focus);
@@ -145,30 +120,30 @@ public:
   void SetVisible(bool visible);
   bool GetVisible();
 
-  void SetBackgroundColorPlatform(Vec4Param color);
-  void SetTransparentPlatform(bool transparent);
-
-  void SetUrlPlatform(StringParam url);
-  String GetUrlPlatform();
-
   void ExecuteScriptFromLocation(StringParam script, StringParam url, int line);
 
-  void SimulateKey(int key, bool down, WebBrowserModifiers::Enum modifiers);
-  void SimulateTextTyped(int character, WebBrowserModifiers::Enum modifiers);
-  void SimulateMouseMove(IntVec2Param localPosition, WebBrowserModifiers::Enum modifiers);
-  void SimulateMouseClick(IntVec2Param localPosition, MouseButtons::Enum button, bool down, WebBrowserModifiers::Enum modifiers);
-  void SimulateMouseDoubleClick(IntVec2Param localPosition, MouseButtons::Enum button, WebBrowserModifiers::Enum modifiers);
-  void SimulateMouseScroll(IntVec2Param localPosition, Vec2Param delta, WebBrowserModifiers::Enum modifiers);
+  void SimulateKey(int key, bool down, BrowserModifiers::Enum modifiers);
+  void SimulateTextTyped(int character, BrowserModifiers::Enum modifiers);
+  void SimulateMouseMove(IntVec2Param localPosition, BrowserModifiers::Enum modifiers);
+  void SimulateMouseClick(IntVec2Param localPosition, MouseButtons::Enum button, bool down, BrowserModifiers::Enum modifiers);
+  void SimulateMouseDoubleClick(IntVec2Param localPosition, MouseButtons::Enum button, BrowserModifiers::Enum modifiers);
+  void SimulateMouseScroll(IntVec2Param localPosition, Vec2Param delta, BrowserModifiers::Enum modifiers);
 
-  ///////////////////////////////////////////////////
-  // END PLATFORM
-  ///////////////////////////////////////////////////
-    
   // Internal
-  void Initialize(const WebBrowserSetup& setup);
-  void ReInitializePlatformBrowser();
   PixelBuffer mBuffer;
-  void* mPlatformBrowser;
+  Browser mBrowser;
+
+private:
+  static void OnPaint(BrowserColorFormat::Enum format, const byte* data, Math::IntVec2Param bufferSize, const Array<IntRect>& dirtyRectangles, Browser* browser);
+  static void OnPopup(StringParam name, StringParam url, Browser* browser);
+  static void OnPointQuery(Math::IntVec2Param browserPixelPosition, Math::IntVec2* monitorPixelPositionOut, Browser* browser);
+  static void OnConsoleMessage(StringParam message, StringParam source, int line, bool* handledOut, Browser* browser);
+  static void OnStatusChanged(StringParam text, Browser* browser);
+  static void OnTitleChanged(StringParam text, Browser* browser);
+  static void OnUrlChanged(StringParam url, bool* handledOut, Browser* browser);
+  static void OnCursorChanged(Cursor::Enum cursor, Browser* browser);
+  static void OnDownloadStarted(BrowserDownload& download, bool* cancelOut, Browser* browser);
+  static void OnDownloadUpdated(const BrowserDownload& download, bool* cancelOut, Browser* browser);
 };
 
 class WebBrowserEvent : public Event
@@ -207,14 +182,10 @@ public:
   WebBrowserPointQueryEvent();
 
   /// The position on the browser that we're querying for
-  IntVec2 mViewPixelPosition;
+  IntVec2 mBrowserPixelPosition;
 
   /// We must output this position given the view position
-  IntVec2 mScreenPixelPosition;
-
-  /// The web browser that was requesting the point query
-  WebBrowser* GetWebBrowser();
-  HandleOf<WebBrowser> mWebBrowser;
+  IntVec2 mMonitorPixelPosition;
 };
 
 class WebBrowserConsoleEvent : public WebBrowserEvent
@@ -264,11 +235,11 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   WebBrowserDownloadEvent();
 
-  /// The file path may be filled out by the download handler
-  String mFilePath;
-
   /// If we set this to true, then we cancel the event
   bool mCancel;
+
+  /// The file path may be filled out by the download handler
+  String mFilePath;
 
   bool mIsInProgress;
   bool mIsComplete;

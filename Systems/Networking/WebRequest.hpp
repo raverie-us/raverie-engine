@@ -32,13 +32,6 @@ public:
   /// Destructor.
   ~BlockingWebRequest();
 
-  /// Encodes a string to be safely passed as a parameter
-  /// in a Url using Percent-encoding.
-  static String UrlParamEncode(StringParam string);
-
-  /// Decodes a string from a Url using Percent-encoding.
-  static String UrlParamDecode(StringParam string);
-
   /// Run the request on the given url and receive data back in the 'WebResponse' event.
   /// This will clear any stored data from previous requests, and if StoreData is set
   /// it will return the entire response as a string (if not it will be empty).

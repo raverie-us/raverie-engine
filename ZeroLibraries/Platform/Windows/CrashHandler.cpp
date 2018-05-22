@@ -9,15 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#pragma warning(push)
-#pragma warning(disable:4091)
-#include <DbgHelp.h>
-#pragma warning(pop)
-
-//#define OUTPUT_MODULES_AND_OTHER
-
-#pragma comment(lib, "dbghelp.lib")
-
 namespace Zero
 {
 
