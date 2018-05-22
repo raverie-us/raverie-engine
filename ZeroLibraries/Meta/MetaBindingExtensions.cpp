@@ -219,8 +219,10 @@ void MetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 
 //----------------------------------------------------------------------------------- Property Event
 //**************************************************************************************************
-ZilchDefineType(PropertyEvent, builder, Type)
+ZilchDefineType(PropertyEvent, builder, type)
 {
+  ZeroBindEvent(Events::PropertyModified,             PropertyEvent);
+  ZeroBindEvent(Events::PropertyModifiedIntermediate, PropertyEvent);
 }
 
 //**************************************************************************************************
@@ -236,7 +238,7 @@ PropertyEvent::PropertyEvent(HandleParam object, PropertyPathParam property,
 
 //--------------------------------------------------------------------------------------- Type Event
 //**************************************************************************************************
-ZilchDefineType(TypeEvent, builder, Type)
+ZilchDefineType(TypeEvent, builder, type)
 {
 }
 
