@@ -1315,4 +1315,10 @@ Vector3 QuatToEulerDegrees(QuatParam rotation)
   return newData;
 }
 
+//----------------------------------------------------------- Misc Functions
+float Luminance(Vector3 linearColor)
+{
+  return Math::Dot(linearColor, Vec3(0.2126f, 0.7152f, 0.0722f));
+}
+
 }// namespace Math

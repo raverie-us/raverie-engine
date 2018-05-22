@@ -205,4 +205,7 @@ ZeroShared Quat EulerDegreesToQuat(Vec3Param eulerDegrees);
 /// Converts a quaternion to Euler degrees.
 ZeroShared Vector3 QuatToEulerDegrees(QuatParam rotation);
 
+//----------------------------------------------------------- Misc Functions
+ZeroShared float Luminance(Vector3 linearColor);
+
 }// namespace Math

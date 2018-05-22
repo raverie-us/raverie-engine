@@ -85,6 +85,8 @@ public:
   /// Sets the target.
   static ColorPicker* EditColor(Widget* target, Vec4 startingColor);
   static bool sOpenInNewOsWindow;
+  static const float cColorDisplaySize;
+  static const float cLuminanceThreshold;
 
   /// Closes the color picker
   static void Close();
@@ -135,6 +137,13 @@ private:
   /// Updates all values in the text boxes.
   void UpdateTextBoxes();
 
+  /// Updates the color slider selection indicators color based on luminance.
+  void UpdateColorSliderIndicator();
+  /// Updates the alpha slider selection indicators color based on luminance.
+  void UpdateAlphaSliderIndicator();
+  /// Updates the block selection indicators color based on luminance.
+  void UpdateBlockIndicator();
+
   /// Converts RGB to HSV and stores them.
   void UpdateHSVFromRGB();
   /// Converts HSV to RGB and stores them.
@@ -149,9 +158,12 @@ private:
   void UpdateRGBFromSelection();
 
   /// Used by the manipulators to set the selections.
-  void SetColorBlockSelection(Vec2Param pos);
-  void SetColorSliderSelection(float pos);
-  void SetAlphaSliderSelection(float pos);
+  void  SetColorBlockSelectionValue(Vec2Param val);
+  Vec2  GetColorBlockSelectionValue();
+  void  SetColorSliderSelectionValue(float val);
+  float GetColorSliderSelectionValue();
+  void  SetAlphaSliderSelectionValue(float val);
+  float GetAlphaSliderSelectionValue();
 
   /// Button response.
   void OnOkClicked(Event* event);
@@ -202,19 +214,20 @@ private:
   ColorDisplay* mFinalColorDisplay;
 
   // Color block
+  Composite*   mColorBlockArea;
   PixelBuffer* mColorBlockBuffer;
   TextureView* mColorBlockDisplay;
-  Vec2 mColorBlockSelection;
+  ImageWidget* mColorBlockSelection;
 
   // Color slider
   PixelBuffer* mColorSliderBuffer;
   TextureView* mColorSliderDisplay;
-  float mColorSliderSelection;
+  ImageWidget* mColorSliderSelection;
 
   // Alpha slider
   PixelBuffer* mAlphaSliderBuffer;
   TextureView* mAlphaSliderDisplay;
-  float mAlphaSliderSelection;
+  ImageWidget* mAlphaSliderSelection;
   
   // Alpha text box
   Label* mAlphaLabel;
