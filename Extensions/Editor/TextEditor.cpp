@@ -982,10 +982,24 @@ void TextEditor::BlockComment(cstr comment)
   //Get the selection information
   int selectionStart = SendEditor(SCI_GETSELECTIONSTART);
   int selectionEnd = SendEditor(SCI_GETSELECTIONEND);
-  int caretPosition = SendEditor(SCI_GETCURRENTPOS);
   int selStartLine = SendEditor(SCI_LINEFROMPOSITION, selectionStart);
   int selEndLine = SendEditor(SCI_LINEFROMPOSITION, selectionEnd);
-  int lengthDoc = SendEditor(SCI_GETLENGTH);
+
+  //Get all of the current caret positions
+  Array<int> caretPositions;
+  GetAllCaretPositions(caretPositions);
+
+  //Get the lines that have active carets without duplicate entries
+  HashSet<int> linesSelected;
+  forRange(int caretPos, caretPositions.All())
+  {
+    int line = SendEditor(SCI_LINEFROMPOSITION, caretPos);
+    linesSelected.Insert(line);
+  }
+
+  // If there is a selection get all the lines selected
+  for (int currentLine = selStartLine; currentLine <= selEndLine; ++currentLine)
+    linesSelected.Insert(currentLine);
 
   //Buffer for testing text for comments
   const int bufferSize = commentLen+1;
@@ -995,7 +1009,7 @@ void TextEditor::BlockComment(cstr comment)
 
   //Check lines for indent level and comment mode
   int minIndentLevel = INT_MAX;
-  for(int currentLine=selStartLine;currentLine<=selEndLine;++currentLine)
+  forRange(int currentLine, linesSelected.All())
   {
     int lineStart = SendEditor(SCI_POSITIONFROMLINE, currentLine);
     int lineEnd = SendEditor(SCI_GETLINEENDPOSITION, currentLine);
@@ -1020,7 +1034,7 @@ void TextEditor::BlockComment(cstr comment)
 
   //Comment and uncomment all the lines
   SendEditor(SCI_BEGINUNDOACTION);
-  for(int currentLine=selStartLine;currentLine<=selEndLine;++currentLine)
+  forRange(int currentLine, linesSelected.All())
   {
     int lineStart = SendEditor(SCI_POSITIONFROMLINE, currentLine);
     int lineEnd = SendEditor(SCI_GETLINEENDPOSITION, currentLine);
