@@ -239,10 +239,9 @@ void LoadObjectFromClipboard(Editor* editor, Space* space)
       queue->BeginBatch();
       queue->SetActiveBatchName("LoadObjectFromClipboard");
 
-      bool first = true;
       for(; !objects.Empty(); objects.PopFront())
       {
-        Cog* object = &objects.Front();        
+        Cog* object = &objects.Front();
 
         // If the object doesn't have a parent, it was a root object in the
         // object list
@@ -266,12 +265,8 @@ void LoadObjectFromClipboard(Editor* editor, Space* space)
           // This object was created
           ObjectCreated(queue, object);
 
-          // For now, we're only 
-          if(first && sharedParent && editor->mPasteHierarchyIndex != uint(-1))
-          {
+          if(editor->mPasteHierarchyIndex != uint(-1))
             MoveObjectIndex(queue, object, editor->mPasteHierarchyIndex);
-            first = false;
-          }
 
           // Add the object to the selection, wait until the end to push changes
           selection->Add(object, SendsEvents::False);
