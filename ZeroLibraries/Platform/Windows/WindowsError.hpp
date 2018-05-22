@@ -9,8 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Utility/Typedefs.hpp"
-
 const uint cMaxErrorMessageSize = 1024;
 // Convert a windows error code to a human readable string. If the errorCode
 // is zero uses the last error.

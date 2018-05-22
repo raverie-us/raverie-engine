@@ -23,14 +23,6 @@
 #include <include/wrapper/cef_helpers.h>
 #include <include/cef_parser.h>
 
-#pragma comment(lib, "libcef.lib")
-
-#if defined(ZeroDebug)
-#pragma comment(lib, "libcef_dll_wrapper_debug.lib")
-#else
-#pragma comment(lib, "libcef_dll_wrapper_release.lib")
-#endif
-
 namespace Zero
 {
 
@@ -657,7 +649,7 @@ void Browser::PlatformCreate()
   // We do this so we don't get the 'out of date' chrome suggestions
   // This is mainly because the latest builds of CEF are unstable on Windows
   CefString(&settings.user_agent) = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/9999.0.9999.0 Safari/537.36";
-  CefString(&settings.browser_subprocess_path).FromASCII("ChromeSubProcess.exe");
+  CefString(&settings.browser_subprocess_path).FromASCII("BrowserSubProcess.exe");
 
   CefInitialize(args, settings, nullptr, nullptr);
 
@@ -1010,6 +1002,38 @@ void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition, Math::Vec2Pa
   toSend.y = localPosition.y;
   gPlatform->GetCefBrowser(this)->GetHost()->SendMouseWheelEvent(
     toSend, (int)Math::Round(deltaScroll.x), (int)Math::Round(deltaScroll.y));
+}
+
+const bool BrowserSubProcess::IsRequired = true;
+
+class ZeroApp : public CefApp
+{
+public:
+  void OnBeforeCommandLineProcessing(const CefString& process, CefRefPtr<CefCommandLine> commands) override
+  {
+    // These options are set for best performance
+    commands->AppendSwitchWithValue("disable-surfaces", "1");
+    commands->AppendSwitchWithValue("disable-gpu", "1");
+    commands->AppendSwitchWithValue("disable-gpu-vsync", "1");
+    commands->AppendSwitchWithValue("disable-gpu-async-worker-context", "1");
+    commands->AppendSwitchWithValue("disable-webgl", "1");
+    commands->AppendSwitchWithValue("disable-extensions", "1");
+    //commands->AppendSwitchWithValue("disable-threaded-compositing", "1");
+    commands->AppendSwitchWithValue("disable-threaded-scrolling", "1");
+    commands->AppendSwitchWithValue("enable-begin-frame-scheduling", "1");
+  }
+
+  IMPLEMENT_REFCOUNTING(ZeroApp);
+};
+
+int BrowserSubProcess::Execute()
+{
+  // Execute the sub-process logic. This will block until the sub-process should exit
+  // Note: We purposefully do not care about main arguments
+  CefMainArgs main_args;
+  CefRefPtr<ZeroApp> app(new ZeroApp());
+  int result = CefExecuteProcess(main_args, app, nullptr);
+  return result;
 }
 
 } // namespace Zero

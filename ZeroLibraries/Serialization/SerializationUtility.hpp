@@ -7,7 +7,7 @@
 /// Copyright 2010-2014, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-#pragma  once
+#pragma once
 
 namespace Zero
 {

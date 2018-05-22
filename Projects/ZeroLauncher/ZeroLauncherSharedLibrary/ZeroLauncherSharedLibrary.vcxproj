@@ -52,7 +52,7 @@
     <PostBuildEvent>
       <Command>"$(ProjectDir)PostBuild.cmd" "$(ZERO_OUTPUT)\Out\$(Platform)\$(Configuration)\"
 XCOPY /Q /E /Y "$(ZERO_SOURCE)\External\CEF\bin" "$(OutDir)"
-COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSubProcess.exe"
+COPY /Y "$(OutDir)\..\BrowserSubProcess\BrowserSubProcess.exe" "$(OutDir)\BrowserSubProcess.exe"
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -223,9 +223,6 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     </ProjectReference>
     <ProjectReference Include="..\..\..\ZeroLibraries\Zilch\Project\Zilch\Zilch.vcxproj">
       <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ChromeSubProcess\ChromeSubProcess.vcxproj">
-      <Project>{fad16d53-662c-47c1-9a7a-c0653d25c070}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

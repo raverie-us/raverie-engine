@@ -20,10 +20,6 @@
   }
 #endif
 
-// Include Winsock (nearly POSIX-compliant sockets)
-#include <ws2tcpip.h>
-#pragma comment(lib, "Ws2_32.lib")
-
 // Platform Conversion Types and Macros
 typedef SOCKET           SOCKET_TYPE;
 typedef ADDRESS_FAMILY   SOCKET_ADDRESS_FAMILY;

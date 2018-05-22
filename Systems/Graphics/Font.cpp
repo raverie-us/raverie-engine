@@ -9,8 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#pragma comment(lib, "freetype28.lib")
-
 #include "ft2build.h"
 #include FT_FREETYPE_H
 

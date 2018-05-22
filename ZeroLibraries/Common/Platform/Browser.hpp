@@ -121,4 +121,12 @@ public:
   OsHandle mHandle;
 };
 
+// The implementation of this may remain empty for platforms that do not require a sub-process.
+class BrowserSubProcess
+{
+public:
+  static const bool IsRequired;
+  static int Execute();
+};
+
 } // namespace Zero

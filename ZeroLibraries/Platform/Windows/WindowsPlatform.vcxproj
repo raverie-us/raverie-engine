@@ -86,7 +86,6 @@
     <ClInclude Include="StackWalker.hpp" />
     <ClInclude Include="ThreadIo.hpp" />
     <ClInclude Include="WindowsError.hpp" />
-    <ClInclude Include="Windows.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="WinUtility.hpp" />
     <ClInclude Include="WString.hpp" />

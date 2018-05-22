@@ -11,12 +11,6 @@
 
 #include "zlib.h"
 
-#if ZeroRelease
-#pragma comment(lib, "zlib.lib")
-#else
-#pragma comment(lib, "zlibd.lib")
-#endif
-
 //------------------------------------------------------------
 namespace Zero
 {

@@ -41,18 +41,6 @@ namespace ZilchToOneCpp
 					standardLibraries = Path.Combine(zeroPath, @"ZeroLibraries");
 
 				compactor.FilesToProcess.AddFilesFromDirectory(Path.Combine(standardLibraries, @"Common"), "*.cpp");
-				compactor.FilesToProcess.AddFilesFromDirectory(Path.Combine(standardLibraries, @"Math"), "*.cpp");
-				compactor.FilesToProcess.AddFilesFromDirectory(Path.Combine(standardLibraries, @"Platform"), "*.cpp", false);
-
-				// These files get conditionally included into the 'Debugging.cpp'
-				compactor.FilesToProcess.RemoveFilesByName("DebuggingWindows.cpp");
-				compactor.FilesToProcess.RemoveFilesByName("DebuggingGeneric.cpp");
-
-				// At the moment, we don't use regex, so just only include NoRegex.cpp
-				compactor.FilesToProcess.RemoveFilesByName("Regex.cpp");
-
-				// We explicitly need to process the platform selector header file first
-				compactor.FilesToProcess.Add(Path.Combine(standardLibraries, @"Platform\PlatformSelector.hpp"));
 
 				// Windows platform
 				{
@@ -83,10 +71,6 @@ namespace ZilchToOneCpp
 					});
 					compactor.FilesToProcess.AddFilesFromDirectory(Path.Combine(standardLibraries, @"Platform\Empty"), "*.cpp");
 				}
-
-				// This file brings in dependencies upon the engine and other bad things!
-				compactor.FilesToProcess.RemoveFilesByName("CrashHandler.cpp");
-				compactor.FilesToProcess.RemoveFilesByName("StackWalker.cpp");
 
 				compactor.HppDirectories.Add(Path.Combine(standardLibraries, @"Common"));
 				compactor.HppDirectories.Add(standardLibraries);

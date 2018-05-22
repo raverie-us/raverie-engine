@@ -102,9 +102,6 @@
     <ProjectReference Include="..\..\Extensions\ZilchShaders\ZilchShaders.vcxproj">
       <Project>{34f0e1c6-c7fc-405f-9bf3-2cdbf6bbaaf7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Projects\ChromeSubProcess\ChromeSubProcess.vcxproj">
-      <Project>{fad16d53-662c-47c1-9a7a-c0653d25c070}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(ZeroLibraries)\Zilch\Project\Zilch\Zilch.vcxproj">
       <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>
     </ProjectReference>

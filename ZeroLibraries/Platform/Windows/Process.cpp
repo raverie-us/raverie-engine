@@ -12,10 +12,6 @@
 #include "Platform/Process.hpp"
 #include "Platform/FilePath.hpp"
 
-// Bring in the Process Status API library for process information parsing
-#include <Psapi.h>
-#pragma comment(lib, "Psapi.lib")
-
 namespace Zero
 {
 struct ProcessPrivateData

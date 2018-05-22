@@ -12,9 +12,26 @@
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
-//Include the windows header.
-#include "Windows.hpp"
-#include "WindowsError.hpp"
+// Prevent including winsock1.
+#define _WINSOCKAPI_
+
+// Only include frequently used elements.
+#define WIN32_LEAN_AND_MEAN
+#define NOCOMM
+
+// Prevent MIN ans MAX macros from being defined.
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+#include <Wspiapi.h>
+#include <Mmsystem.h>
+#include <Regstr.h>
+#include <WinBase.h>
+#include <windowsx.h>
+#include <intrin.h>
 #include <shellapi.h>
 #include <shlwapi.h>
 #include <direct.h>
@@ -36,6 +53,10 @@
 #include <commdlg.h>
 #include <shobjidl.h>
 #include <dbghelp.h>
+#include <Psapi.h>
+#include <ws2tcpip.h>
+
+#pragma comment(lib, "Psapi.lib")
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Advapi32.lib")
@@ -46,6 +67,21 @@
 #pragma comment(lib, "Setupapi.lib")
 #pragma comment(lib, "dbghelp.lib")
 #pragma comment(lib, "user32.lib")
+#pragma comment(lib, "Ws2_32.lib")
+
+// Non-windows libraries that we link in
+#pragma comment(lib, "freetype28.lib")
+#pragma comment(lib, "libcef.lib")
+
+#if ZeroRelease
+#pragma comment(lib, "zlib.lib")
+#pragma comment(lib, "libpng.lib")
+#pragma comment(lib, "libcef_dll_wrapper_release.lib")
+#else
+#pragma comment(lib, "zlibd.lib")
+#pragma comment(lib, "libpngd.lib")
+#pragma comment(lib, "libcef_dll_wrapper_debug.lib")
+#endif
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -57,9 +93,15 @@ extern "C"
 #include "../External/WinHid/include/hidsdi.h"
 }
 
+//Undef windows defines that overlap with core functions
+#undef CopyFile
+#undef MoveFile
+#undef DeleteFile
+#undef CreateDirectory
+
+#include "WindowsError.hpp"
 #include "StackWalker.hpp"
 #include "ThreadIo.hpp"
-
 #include "WString.hpp"
 #include "WinUtility.hpp"
 

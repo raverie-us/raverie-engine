@@ -7,11 +7,6 @@
 #include "Precompiled.hpp"
 
 #include "png.h"
-#ifdef ZeroDebug
-#pragma comment(lib, "libpngd.lib")
-#else
-#pragma comment(lib, "libpng.lib")
-#endif
 
 namespace Zero
 {

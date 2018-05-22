@@ -50,9 +50,6 @@
     <ClCompile Include="Browser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Windows.hpp">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="Precompiled.hpp">
       <Filter>Precompiled</Filter>
     </ClInclude>
