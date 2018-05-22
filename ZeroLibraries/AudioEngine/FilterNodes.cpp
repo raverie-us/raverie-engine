@@ -13,13 +13,13 @@ namespace Audio
   //---------------------------------------------------------------------------------- Low Pass Node
 
   //************************************************************************************************
-  LowPassNode::LowPassNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  LowPassNode::LowPassNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     CutoffFrequency(20001.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new LowPassNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new LowPassNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -66,8 +66,7 @@ namespace Audio
     }
 
     // Apply filter
-    for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-      filter->ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+    filter->ProcessBuffer(InputSamples.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
     AddBypass(outputBuffer);
 
@@ -103,9 +102,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&LowPassNode::SetCutoffFrequency, 
-          (LowPassNode*)GetSiblingNode(), freq));
+      AddTaskForSibling(&LowPassNode::SetCutoffFrequency, freq);
     }
     else
     {
@@ -117,13 +114,13 @@ namespace Audio
   //---------------------------------------------------------------------------------- HighPass Node
 
   //************************************************************************************************
-  HighPassNode::HighPassNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  HighPassNode::HighPassNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     CutoffFrequency(10.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new HighPassNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new HighPassNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -146,9 +143,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&HighPassNode::SetCutoffFrequency,
-        (HighPassNode*)GetSiblingNode(), freq));
+      AddTaskForSibling(&HighPassNode::SetCutoffFrequency, freq);
     }
     else
     {
@@ -221,14 +216,14 @@ namespace Audio
   //--------------------------------------------------------------------------------- Band Pass Node
 
   //************************************************************************************************
-  BandPassNode::BandPassNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  BandPassNode::BandPassNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     CentralFrequency(0.0f), 
     Quality(0.669f)
   {
     if (!Threaded)
-      SetSiblingNodes(new BandPassNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new BandPassNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -251,9 +246,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&BandPassNode::SetCentralFrequency, 
-            (BandPassNode*)GetSiblingNode(), frequency));
+      AddTaskForSibling(&BandPassNode::SetCentralFrequency, frequency);
     }
     else
     {
@@ -275,9 +268,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&BandPassNode::SetQuality, 
-          (BandPassNode*)GetSiblingNode(), Q));
+      AddTaskForSibling(&BandPassNode::SetQuality, Q);
     }
     else
     {
@@ -343,16 +334,16 @@ namespace Audio
   //------------------------------------------------------------------------------------- Delay Node
 
   //************************************************************************************************
-  DelayNode::DelayNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  DelayNode::DelayNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     DelayMSec(100.0f), 
     FeedbackValue(0),
     WetValue(0.5f),
     HasHadInput(false)
   {
     if (!Threaded)
-      SetSiblingNodes(new DelayNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new DelayNode(name, ID, extInt, true));
   }
 
   //************************************************************************************************
@@ -369,9 +360,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::SetDelayMSec, 
-          (DelayNode*)GetSiblingNode(), delay));
+      AddTaskForSibling(&DelayNode::SetDelayMSec, delay);
     }
     else
     {
@@ -399,9 +388,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::SetFeedback, 
-          (DelayNode*)GetSiblingNode(), feedbackValue));
+      AddTaskForSibling(&DelayNode::SetFeedback, feedbackValue);
     }
     else
     {
@@ -423,9 +410,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::SetWetLevel,
-          (DelayNode*)GetSiblingNode(), wetLevelValue));
+      AddTaskForSibling(&DelayNode::SetWetLevel, wetLevelValue);
     }
     else
     {
@@ -441,9 +426,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&DelayNode::InterpolateWetLevel, 
-            (DelayNode*)GetSiblingNode(), newValue, time));
+      AddTaskForSibling(&DelayNode::InterpolateWetLevel, newValue, time);
     }
     else
     {
@@ -536,16 +519,16 @@ namespace Audio
   //----------------------------------------------------------------------------------- Flanger Node
 
   //************************************************************************************************
-  FlangerNode::FlangerNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  FlangerNode::FlangerNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     MaxDelay(5.0f),
     ModFrequency(0.18f), 
     Feedback(0), 
     OscillatorType(OscillatorTypes::Sine)
   {
     if (!Threaded)
-      SetSiblingNodes(new FlangerNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new FlangerNode(name, ID, extInt, true));
   }
 
   //************************************************************************************************
@@ -569,9 +552,8 @@ namespace Audio
   {
     MaxDelay = delay;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&FlangerNode::SetMaxDelayMSec, 
-          (FlangerNode*)GetSiblingNode(), delay));
+    if (!Threaded)
+      AddTaskForSibling(&FlangerNode::SetMaxDelayMSec, delay);
   }
 
   //************************************************************************************************
@@ -587,9 +569,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&FlangerNode::SetModFrequency, 
-            (FlangerNode*)GetSiblingNode(), frequency));
+      AddTaskForSibling(&FlangerNode::SetModFrequency, frequency);
     }
     else
     {
@@ -611,9 +591,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&FlangerNode::SetFeedback, 
-            (FlangerNode*)GetSiblingNode(), feedbackValue));
+      AddTaskForSibling(&FlangerNode::SetFeedback, feedbackValue);
     }
     else
     {
@@ -635,9 +613,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&FlangerNode::SetOscillatorType, 
-            (FlangerNode*)GetSiblingNode(), type));
+      AddTaskForSibling(&FlangerNode::SetOscillatorType, type);
     }
     else
     {
@@ -719,9 +695,9 @@ namespace Audio
   //------------------------------------------------------------------------------------ Chorus Node
 
   //************************************************************************************************
-  ChorusNode::ChorusNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface *extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  ChorusNode::ChorusNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface *extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     MinDelay(5.0f),
     MaxDelay(20.0f), 
     ModFrequency(0.1f), 
@@ -730,7 +706,7 @@ namespace Audio
     ChorusOffset(40.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new ChorusNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new ChorusNode(name, ID, extInt, true));
   }
 
   //************************************************************************************************
@@ -754,9 +730,8 @@ namespace Audio
   {
     MaxDelay = delay;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&ChorusNode::SetMaxDelayMSec, 
-        (ChorusNode*)GetSiblingNode(), delay));
+    if (!Threaded)
+      AddTaskForSibling(&ChorusNode::SetMaxDelayMSec, delay);
   }
 
   //************************************************************************************************
@@ -770,9 +745,8 @@ namespace Audio
   {
     MinDelay = delay;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&ChorusNode::SetMaxDelayMSec, 
-        (ChorusNode*)GetSiblingNode(), delay));
+    if (!Threaded)
+      AddTaskForSibling(&ChorusNode::SetMaxDelayMSec, delay);
   }
 
   //************************************************************************************************
@@ -788,9 +762,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ChorusNode::SetModFrequency, 
-          (ChorusNode*)GetSiblingNode(), frequency));
+      AddTaskForSibling(&ChorusNode::SetModFrequency, frequency);
     }
     else
     {
@@ -812,9 +784,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ChorusNode::SetFeedback, 
-          (ChorusNode*)GetSiblingNode(), feedbackValue));
+      AddTaskForSibling(&ChorusNode::SetFeedback, feedbackValue);
     }
     else
     {
@@ -836,9 +806,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ChorusNode::SetOscillatorType, 
-          (ChorusNode*)GetSiblingNode(), type));
+      AddTaskForSibling(&ChorusNode::SetOscillatorType, type);
     }
     else
     {
@@ -858,9 +826,8 @@ namespace Audio
   {
     ChorusOffset = offset;
 
-    if (!Threaded && GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ChorusNode::ChorusOffset, 
-        (ChorusNode*)GetSiblingNode(), offset));
+    if (!Threaded)
+      AddTaskForSibling(&ChorusNode::ChorusOffset, offset);
   }
 
   //************************************************************************************************
@@ -915,9 +882,9 @@ namespace Audio
   //--------------------------------------------------------------------------------- Add Noise Node
 
   //************************************************************************************************
-  AddNoiseNode::AddNoiseNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  AddNoiseNode::AddNoiseNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     AdditiveNoiseDB(-40.0f),
     MultipleNoiseDB(-10.0f),
     AdditiveNoiseCutoffHz(2000.0f),
@@ -928,7 +895,7 @@ namespace Audio
     MultiplyNoise(0.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new AddNoiseNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new AddNoiseNode(name, ID, nullptr, true));
     else
     {
       AddPeriod = SystemSampleRate * 0.5f / AdditiveNoiseCutoffHz;
@@ -944,11 +911,7 @@ namespace Audio
     AdditiveNoiseDB = decibels;
 
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AddNoiseNode::SetAdditiveNoiseGainDB, 
-          (AddNoiseNode*)GetSiblingNode(), decibels));
-    }
+      AddTaskForSibling(&AddNoiseNode::SetAdditiveNoiseGainDB, decibels);
     else
       AddGain = Math::Pow(10.0f, 0.05f * AdditiveNoiseDB);
   }
@@ -965,11 +928,7 @@ namespace Audio
     MultipleNoiseDB = decibels;
 
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AddNoiseNode::SetMultipleNoiseGainDB, 
-          (AddNoiseNode*)GetSiblingNode(), decibels));
-    }
+      AddTaskForSibling(&AddNoiseNode::SetMultipleNoiseGainDB, decibels);
     else
       MultiplyGain = Math::Pow(10.0f, 0.05f * MultipleNoiseDB);
   }
@@ -986,11 +945,7 @@ namespace Audio
     AdditiveNoiseCutoffHz = cutoff;
 
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AddNoiseNode::SetAdditiveCutoffHz, 
-          (AddNoiseNode*)GetSiblingNode(), cutoff));
-    }
+      AddTaskForSibling(&AddNoiseNode::SetAdditiveCutoffHz, cutoff);
     else
       AddPeriod = SystemSampleRate * 0.5f / AdditiveNoiseCutoffHz;
   }
@@ -1007,11 +962,7 @@ namespace Audio
     MultipleNoiseCutoffHz = cutoff;
 
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AddNoiseNode::SetMultipleCutoffHz, 
-          (AddNoiseNode*)GetSiblingNode(), cutoff));
-    }
+      AddTaskForSibling(&AddNoiseNode::SetMultipleCutoffHz, cutoff);
     else
       MultiplyPeriod = SystemSampleRate * 0.5f / MultipleNoiseCutoffHz;
   }
@@ -1066,15 +1017,15 @@ namespace Audio
   //-------------------------------------------------------------------------------- Modulation Node
 
   //************************************************************************************************
-  ModulationNode::ModulationNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
+  ModulationNode::ModulationNode(Zero::StringParam name, const unsigned ID,
       ExternalNodeInterface * extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     Amplitude(false),
     Frequency(10.0f),
     WetLevelValue(1.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new ModulationNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new ModulationNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -1100,9 +1051,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ModulationNode::SetUsingAmplitude,
-            (ModulationNode*)GetSiblingNode(), useAmplitudeMod));
+      AddTaskForSibling(&ModulationNode::SetUsingAmplitude, useAmplitudeMod);
     }
     else
     {
@@ -1129,9 +1078,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ModulationNode::SetFrequency, 
-            (ModulationNode*)GetSiblingNode(), newFrequency));
+      AddTaskForSibling(&ModulationNode::SetFrequency, newFrequency);
     }
     else
     {
@@ -1156,9 +1103,8 @@ namespace Audio
     if (WetLevelValue > 1.0f)
       WetLevelValue = 1.0f;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&ModulationNode::SetWetLevel, 
-          (ModulationNode*)GetSiblingNode(), wetLevel));
+    if (!Threaded)
+      AddTaskForSibling(&ModulationNode::SetWetLevel, wetLevel);
   }
 
   //************************************************************************************************

@@ -93,6 +93,7 @@ public:
   Widget* ShowConsole();
   Widget* ToggleConsole();
   Widget* ShowBrowser();
+  Widget* ShowBrowser(StringParam url, StringParam tabName);
   Widget* ShowMarket();
   Widget* ShowChat();
 
@@ -221,7 +222,7 @@ public:
   /// To re-initialize script objects, we need to remove all live script that
   /// run in editor, then re-add them after the scripts have been compiled.
   void OnScriptsCompiledPrePatch(ZilchCompileEvent* e);
-  void OnScriptsCompiledPostPatch(ZilchCompileEvent* e);
+  void OnScriptsCompiledPatch(ZilchCompileEvent* e);
 
   /// Removes all live zilch objects on all game sessions. It will add all
   /// removal operations to the mReInitializeQueue so they can all be

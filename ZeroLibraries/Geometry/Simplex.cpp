@@ -224,7 +224,7 @@ void Simplex::ComputeSupportVector(void)
     Vec3 p0p1 = mPoints[1].cso - mPoints[0].cso;
     Vec3 p0p2 = mPoints[2].cso - mPoints[0].cso;
     Vec3 normal = p0p1.Cross(p0p2);
-    normal.Normalize();
+    normal.AttemptNormalize();
 
     real distance = normal.Dot(-mPoints[0].cso);
     mSupportVector = normal * distance;
@@ -243,7 +243,11 @@ void Simplex::ComputeSupportVector(void)
   }
 
   // If the result is the zero vector, then the origin is contained in our simplex
-  if (mSupportVector.Length() == 0.0f)
+  // In the case of a degenerate triangle it is logically invalid to say that
+  // the origin is contained and that more progress can't be made.
+  // If that happens, a false collision will be returned when failing to complete the simplex.
+  // Note: This will incorrectly return collision if it happens in a true/false only query.
+  if (mSupportVector.Length() < Gjk::sEpsilon)
     mContainsOrigin = true;
   else
     mSupportVector.Normalize();

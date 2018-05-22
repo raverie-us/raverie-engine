@@ -36,14 +36,14 @@
 
 namespace Audio
 {
-
   //------------------------------------------------------------------------ External System Interface
 
   class ExternalSystemInterface
   {
   public:
-    virtual void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) = 0;
-    virtual void SendAudioError(const Zero::String message) = 0;
+    virtual void SendAudioEvent(AudioEventTypes::Enum eventType) {}
+    virtual void SendAudioEventData(EventData* data) { delete data; }
+    virtual void SendAudioError(const Zero::String message) {}
   };
 
   //------------------------------------------------------------------------ External Node Interface
@@ -51,7 +51,8 @@ namespace Audio
   class ExternalNodeInterface
   {
   public:
-    virtual void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) = 0;
+    virtual void SendAudioEvent(AudioEventTypes::Enum eventType) {}
+    virtual void SendAudioEventData(EventData* data) { delete data; }
   };
 
   //------------------------------------------------------------------------- Audio System Interface
@@ -82,6 +83,12 @@ namespace Audio
 
     // Changes the overall system volume
     void SetVolume(const float volume);
+
+    // Returns true if the audio is currently muted
+    bool GetMuteAllAudio();
+
+    // If set to true, all audio will be processed as normal but will be silent
+    void SetMuteAllAudio(const bool muteAudio);
 
     // Returns the sample rate used by the audio system
     unsigned GetSampleRate();

@@ -247,7 +247,7 @@ Editor::Editor(Composite* parent)
   
   ZilchManager* zilchManager = ZilchManager::GetInstance();
   ConnectThisTo(zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPostPatch, OnScriptsCompiledPostPatch);
+  ConnectThisTo(zilchManager, Events::ScriptsCompiledPatch, OnScriptsCompiledPatch);
 
   ConnectThisTo(this, Events::CommandCaptureContext, OnCaptureContext);
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
@@ -589,6 +589,18 @@ Widget* Editor::ShowBrowser()
 
   this->AddManagedWidget(browser, DockArea::Center, true);
   return browser;
+}
+
+Widget* Editor::ShowBrowser(StringParam url, StringParam tabName)
+{
+	WebBrowserSetup setup;
+	setup.mUrl = url;
+	WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
+	browser->SetName(tabName);
+	browser->SetHideOnClose(false);
+
+	this->AddManagedWidget(browser, DockArea::Center, true);
+	return browser;
 }
 
 Widget* Editor::ShowMarket()
@@ -957,6 +969,9 @@ bool Editor::TakeProjectScreenshot()
 void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue,
                                  HashSet<ResourceLibrary*>& modifiedLibraries)
 {
+  forRange(Cog& child, cog->GetChildren())
+    ReInitializeScriptsOnObject(&child, queue, modifiedLibraries);
+
   BoundType* zilchComponentType = ZilchTypeId(ZilchComponent);
 
   // We want to walk the components in reverse so we don't run into issues
@@ -995,8 +1010,6 @@ void ReInitializeScriptsOnGame(GameSession* game, OperationQueue& queue,
   if(game == nullptr)
     return;
 
-  ReInitializeScriptsOnObject(game, queue, modifiedLibraries);
-
   // Reinitialize 
   forRange(Space* space, game->GetAllSpaces())
   {
@@ -1004,13 +1017,15 @@ void ReInitializeScriptsOnGame(GameSession* game, OperationQueue& queue,
     bool spaceModified = space->GetModified();
     spaceModifiedStates.Insert(space, spaceModified);
 
+    // All cogs in the space
+    forRange(Cog& cog, space->AllRootObjects())
+      ReInitializeScriptsOnObject(&cog, queue, modifiedLibraries);
+
     // The space itself can have script components
     ReInitializeScriptsOnObject(space, queue, modifiedLibraries);
-
-    // All cogs in the space
-    forRange(Cog& cog, space->AllObjects())
-      ReInitializeScriptsOnObject(&cog, queue, modifiedLibraries);
   }
+
+  ReInitializeScriptsOnObject(game, queue, modifiedLibraries);
 }
 
 void RevertSpaceModifiedState(GameSession* game,
@@ -1064,7 +1079,7 @@ void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
   TearDownZilchStateOnGames(e->mModifiedLibraries);
 }
 
-void Editor::OnScriptsCompiledPostPatch(ZilchCompileEvent* e)
+void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
 {
   //ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
   //

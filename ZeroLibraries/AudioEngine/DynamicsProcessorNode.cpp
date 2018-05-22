@@ -12,9 +12,9 @@ namespace Audio
   //------------------------------------------------------------------------ Dynamics Processor Node
 
   //************************************************************************************************
-  DynamicsProcessorNode::DynamicsProcessorNode(Zero::Status& status, Zero::StringParam name, 
-      const unsigned ID, ExternalNodeInterface *extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  DynamicsProcessorNode::DynamicsProcessorNode(Zero::StringParam name, const unsigned ID, 
+      ExternalNodeInterface *extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     Filter(nullptr),
     InputGainDB(0),
     ThresholdDB(0),
@@ -27,7 +27,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      SetSiblingNodes(new DynamicsProcessorNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new DynamicsProcessorNode(name, ID, extInt, true));
     }
     else
     {
@@ -54,11 +54,7 @@ namespace Audio
     InputGainDB = gainDB;
 
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetInputGain,
-        (DynamicsProcessorNode*)GetSiblingNode(), gainDB));
-    }
+      AddTaskForSibling(&DynamicsProcessorNode::SetInputGain, gainDB);
     else if (Filter)
       Filter->SetInputGain(gainDB);
   }
@@ -74,9 +70,8 @@ namespace Audio
   {
     ThresholdDB = thresholdDB;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetThreshold,
-      (DynamicsProcessorNode*)GetSiblingNode(), thresholdDB));
+    if (!Threaded)
+      AddTaskForSibling(&DynamicsProcessorNode::SetThreshold, thresholdDB);
     else if (Filter)
       Filter->SetThreshold(thresholdDB);
   }
@@ -92,9 +87,8 @@ namespace Audio
   {
     AttackMSec = attack;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetAttackMSec,
-      (DynamicsProcessorNode*)GetSiblingNode(), attack));
+    if (!Threaded)
+      AddTaskForSibling(&DynamicsProcessorNode::SetAttackMSec, attack);
     else if (Filter)
       Filter->SetAttackMSec(attack);
   }
@@ -110,9 +104,8 @@ namespace Audio
   {
     ReleaseMSec = release;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetReleaseMsec,
-      (DynamicsProcessorNode*)GetSiblingNode(), release));
+    if (!Threaded)
+      AddTaskForSibling(&DynamicsProcessorNode::SetReleaseMsec, release);
     else if (Filter)
       Filter->SetReleaseMSec(release);
   }
@@ -128,9 +121,8 @@ namespace Audio
   {
     Ratio = ratio;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetRatio,
-      (DynamicsProcessorNode*)GetSiblingNode(), ratio));
+    if (!Threaded)
+      AddTaskForSibling(&DynamicsProcessorNode::SetRatio, ratio);
     else if (Filter)
       Filter->SetRatio(ratio);
   }
@@ -141,14 +133,13 @@ namespace Audio
     return OutputGainDB;
   }
 
-  //****************************************************************************
+  //************************************************************************************************
   void DynamicsProcessorNode::SetOutputGain(const float gainDB)
   {
     OutputGainDB = gainDB;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetOutputGain,
-      (DynamicsProcessorNode*)GetSiblingNode(), gainDB));
+    if (!Threaded)
+      AddTaskForSibling(&DynamicsProcessorNode::SetOutputGain, gainDB);
     else if (Filter)
       Filter->SetOutputGain(gainDB);
   }
@@ -164,9 +155,8 @@ namespace Audio
   {
     KneeWidth = knee;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetKneeWidth,
-      (DynamicsProcessorNode*)GetSiblingNode(), knee));
+    if (!Threaded)
+      AddTaskForSibling(&DynamicsProcessorNode::SetKneeWidth, knee);
     else if (Filter)
       Filter->SetKneeWidth(knee);
   }
@@ -182,9 +172,8 @@ namespace Audio
   {
     ProcessorType = type;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&DynamicsProcessorNode::SetType,
-      (DynamicsProcessorNode*)GetSiblingNode(), type));
+    if (!Threaded)
+      AddTaskForSibling(&DynamicsProcessorNode::SetType, type);
     else if (Filter)
       Filter->SetType((DynamicsProcessor::ProcessorTypes)type);
   }

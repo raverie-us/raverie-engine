@@ -34,7 +34,10 @@ namespace Audio
     PreviousPeakVolumeThreaded(0),
     PreviousRMSVolumeThreaded(0),
     Resampling(false),
-    SendMicrophoneInputData(false)
+    SendMicrophoneInputData(false),
+    Muted(false),
+    MutedThreaded(false),
+    MutingThreaded(false)
   {
     gAudioSystem = this;
 
@@ -75,8 +78,7 @@ namespace Audio
     CheckForResampling();
 
     // Create output nodes
-    Zero::Status tempStatus;
-    FinalOutputNode = new OutputNode(tempStatus, "FinalOutputNode", &NodeInt, false);
+    FinalOutputNode = new OutputNode("FinalOutputNode", this, false);
     FinalOutputNodeThreaded = (OutputNode*)FinalOutputNode->GetSiblingNode();
 
     // For low frequency channel (uses audio system in constructor)
@@ -244,12 +246,7 @@ namespace Audio
       InputDataQueue.Write(new Zero::Array<float>(InputBuffer));
 
     // Resize BufferForOutput to match samplesNeeded
-    if (!Resampling)
-      BufferForOutput.Resize(samplesNeeded);
-    else
-    {
-      BufferForOutput.Resize(mixFrames * SystemChannelsThreaded);
-    }
+    BufferForOutput.Resize(mixFrames * SystemChannelsThreaded);
 
     // Get samples from output node
     bool isThereData = FinalOutputNodeThreaded->GetOutputSamples(&BufferForOutput, 
@@ -257,7 +254,7 @@ namespace Audio
     ++MixVersionNumber;
 
     // Set the size of the MixedOutput buffer
-    MixedOutput.Resize(BufferForOutput.Size());
+    MixedOutput.Resize(samplesNeeded);
 
     float peakVolume(0.0f);
     unsigned rmsVolume(0);
@@ -288,8 +285,6 @@ namespace Audio
           frame.SetSamples(samples.Data(), SystemChannelsThreaded);
         }
 
-        // If the mix and output channels don't match, translate the samples
-        frame.TranslateChannels(outputChannels);
         // Apply the system volume
         frame *= SystemVolumeThreaded;
         // Keep the samples between -1.0 and 1.0
@@ -304,15 +299,17 @@ namespace Audio
         unsigned value = (unsigned)(Math::Abs(frame.GetMonoValue()) * ((1 << 15) - 1));
         rmsVolume += value * value;
 
+        float* frameSamples = frame.GetSamples(outputChannels);
+
         // If 5.1 or 7.1, handle low frequency channel
         if (outputChannels == 6 || outputChannels == 8)
         {
           float monoSample = frame.GetMonoValue();
-          LowPass->ProcessFrame(&monoSample, &frame.Samples[3], 1);
+          LowPass->ProcessFrame(&monoSample, frameSamples + 3, 1);
         }
 
         // Copy this frame of samples to the output buffer
-        memcpy(MixedOutput.Data() + (frameIndex * outputChannels), frame.Samples,
+        memcpy(MixedOutput.Data() + (frameIndex * outputChannels), frameSamples,
           sizeof(float) * outputChannels);
       }
     }
@@ -326,12 +323,24 @@ namespace Audio
       AddTaskThreaded(Zero::CreateFunctor(&AudioSystemInternal::SetVolumes, this, peakVolume, rmsVolume));
     }
 
+    // Check if there is a volume adjustment to apply
+    if (!VolumeInterpolatorThreaded.Finished())
+    {
+      // Apply the interpolated volume to each frame
+      for (unsigned i = 0; i < MixedOutput.Size(); i += outputChannels)
+      {
+        float volume = VolumeInterpolatorThreaded.NextValue();
+
+        for (unsigned j = 0; j < outputChannels; ++j)
+          MixedOutput[i + j] *= volume;
+      }
+    }
+
     // If shutting down, wait for volume to ramp down to zero
     if (ShuttingDownThreaded)
     {
+      // Ramp the volume down to zero
       VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, outputFrames);
-
-      // Volume will interpolate down to zero
       for (unsigned i = 0; i < MixedOutput.Size(); i += outputChannels)
       {
         float volume = VolumeInterpolatorThreaded.NextValue();
@@ -344,6 +353,17 @@ namespace Audio
       AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
 
       return false;
+    }
+
+    // If muted, don't actually output any audio data, set everything to zero
+    if (MutedThreaded)
+      memset(MixedOutput.Data(), 0, sizeof(float) * MixedOutput.Size());
+
+    // Check if we are switching to muted
+    if (MutingThreaded && VolumeInterpolatorThreaded.Finished())
+    {
+      MutingThreaded = false;
+      MutedThreaded = true;
     }
 
     // Copy the data to the ring buffer
@@ -447,6 +467,21 @@ namespace Audio
   }
 
   //************************************************************************************************
+  void AudioSystemInternal::SetMutedThreaded(bool muteAudio)
+  {
+    if (muteAudio && !MutedThreaded && !MutingThreaded)
+    {
+      MutingThreaded = true;
+      VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, PropertyChangeFrames);
+    }
+    else if (!muteAudio && MutedThreaded)
+    {
+      MutedThreaded = false;
+      VolumeInterpolatorThreaded.SetValues(0.0f, 1.0f, PropertyChangeFrames);
+    }
+  }
+
+  //************************************************************************************************
   void AudioSystemInternal::HandleTasksThreaded()
   {
     int counter(0);
@@ -522,6 +557,9 @@ namespace Audio
     unsigned inputChannels = AudioIO->GetStreamChannels(StreamTypes::Input);
     unsigned inputRate = AudioIO->GetStreamSampleRate(StreamTypes::Input);
 
+    if (inputChannels == 0 || inputRate == 0)
+      return;
+
     // Channels and sample rates match, don't need to process anything
     if (inputChannels == SystemChannelsThreaded && inputRate == SystemSampleRate)
     {
@@ -548,9 +586,9 @@ namespace Audio
         for (unsigned i = 0; i < inputSamples.Size(); i += inputChannels)
         {
           AudioFrame frame(inputSamples.Data() + i, inputChannels);
-          frame.TranslateChannels(SystemChannelsThreaded);
+          float* samples = frame.GetSamples(SystemChannelsThreaded);
           for (unsigned j = 0; j < SystemChannelsThreaded; ++j)
-            InputBuffer.PushBack(frame.Samples[j]);
+            InputBuffer.PushBack(samples[j]);
         }
       }
       // Not adjusting channels, just get input
@@ -585,337 +623,6 @@ namespace Audio
     }
   }
 
-  //------------------------------------------------------------------------- Audio Channels Manager
-
-  //************************************************************************************************
-  AudioChannelsManager::AudioChannelsManager()
-  {
-    CreateSpeakerMatrix();
-  }
-
-  //************************************************************************************************
-  AudioChannelsManager::~AudioChannelsManager()
-  {
-    // Delete speaker data, starting with the data for 2 channels
-    delete SpeakerMatrixArrays[2];
-    // Continue deleting data for other channel setups
-    for (unsigned i = 3; i < 9; ++i)
-    {
-      if (SpeakerMatrixArrays[i])
-        delete[] SpeakerMatrixArrays[i];
-    }
-  }
-
-  //************************************************************************************************
-  bool CheckGains(float& largestSmallestGain, const float gainCheck1, const float gainCheck2, 
-    float& gain1, float& gain2)
-  {
-    if (gainCheck1 < gainCheck2 && gainCheck1 > largestSmallestGain)
-    {
-      gain1 = gainCheck1;
-      gain2 = gainCheck2;
-      largestSmallestGain = gainCheck1;
-      return true;
-    }
-    else if (gainCheck2 < gainCheck1 && gainCheck2 > largestSmallestGain)
-    {
-      gain1 = gainCheck1;
-      gain2 = gainCheck2;
-      largestSmallestGain = gainCheck2;
-      return true;
-    }
-    else
-      return false;
-  }
-
-  //************************************************************************************************
-  void AudioChannelsManager::GetClosestSpeakerValues(Math::Vec2 sourceVec, unsigned numberOfChannels, 
-    float& gain1, float& gain2, int& channel1, int& channel2)
-  {
-    // Only valid for two channels or more
-    if (numberOfChannels < 2)
-      return;
-
-    float largestSmallestGain = 0.0f;
-    SpeakerInfo& info = SpeakerMatrixArrays[numberOfChannels][0];
-
-    // Get gain values from first speaker pair
-    info.GetGainValues(sourceVec, gain1, gain2);
-    if (gain1 < gain2)
-      largestSmallestGain = gain1;
-    else
-      largestSmallestGain = gain2;
-
-    if (numberOfChannels > 2)
-    {
-      // Check to see if any other speaker pairs are better
-      for (unsigned i = 1; i < numberOfChannels; ++i)
-      {
-        // 6 and 8 channels only have 5 and 7 speakers (LF handled separately)
-        if ((numberOfChannels == 6 && i == 5) || (numberOfChannels == 8 && i == 7))
-          break;
-
-        float tempGain1, tempGain2;
-        SpeakerMatrixArrays[numberOfChannels][i].GetGainValues(sourceVec, tempGain1, tempGain2);
-        if (CheckGains(largestSmallestGain, tempGain1, tempGain2, gain1, gain2))
-        {
-          info = SpeakerMatrixArrays[numberOfChannels][i];
-        }
-      }
-    }
-
-    // Get channels from best speaker pair
-    channel1 = info.Channel1;
-    channel2 = info.Channel2;
-  }
-
-  //************************************************************************************************
-  void AudioChannelsManager::CreateSpeakerMatrix()
-  {
-    float radianMultiplier = Math::cTwoPi / 360.0f;
-    Math::Mat2 rotationMatrix;
-    Math::Vec2 normalVec(1.0f, 0.0f);
-
-    Math::Vec2 speaker1Vector = normalVec;
-
-    rotationMatrix.Rotate(30.0f * radianMultiplier);
-    Math::Vec2 speaker2Vector = rotationMatrix.Transform(normalVec);
-
-    rotationMatrix.Rotate(110.0f * radianMultiplier);
-    Math::Vec2 speaker3Vector = rotationMatrix.Transform(normalVec);
-
-    rotationMatrix.Rotate(145.0f * radianMultiplier);
-    Math::Vec2 speaker4Vector = rotationMatrix.Transform(normalVec);
-
-    rotationMatrix.Rotate(215.0f * radianMultiplier);
-    Math::Vec2 speaker5Vector = rotationMatrix.Transform(normalVec);
-
-    rotationMatrix.Rotate(250.0f * radianMultiplier);
-    Math::Vec2 speaker6Vector = rotationMatrix.Transform(normalVec);
-
-    rotationMatrix.Rotate(330.0f * radianMultiplier);
-    Math::Vec2 speaker7Vector = rotationMatrix.Transform(normalVec);
-
-    Math::Mat2 Speaker1_2MatrixInv = Math::Mat2(speaker1Vector.x, speaker1Vector.y, speaker2Vector.x, 
-      speaker2Vector.y).Inverted();
-    Math::Mat2 Speaker2_3MatrixInv = Math::Mat2(speaker2Vector.x, speaker2Vector.y, speaker3Vector.x,
-      speaker3Vector.y).Inverted();
-    Math::Mat2 Speaker3_4MatrixInv = Math::Mat2(speaker3Vector.x, speaker3Vector.y, speaker4Vector.x,
-      speaker4Vector.y).Inverted();
-    Math::Mat2 Speaker4_5MatrixInv = Math::Mat2(speaker4Vector.x, speaker4Vector.y, speaker5Vector.x, 
-      speaker5Vector.y).Inverted();
-    Math::Mat2 Speaker5_6MatrixInv = Math::Mat2(speaker5Vector.x, speaker5Vector.y, speaker6Vector.x,
-      speaker6Vector.y).Inverted();
-    Math::Mat2 Speaker6_7MatrixInv = Math::Mat2(speaker6Vector.x, speaker6Vector.y, speaker7Vector.x, 
-      speaker7Vector.y).Inverted();
-    Math::Mat2 Speaker7_1MatrixInv = Math::Mat2(speaker7Vector.x, speaker7Vector.y, speaker1Vector.x, 
-      speaker1Vector.y).Inverted();
-    Math::Mat2 Speaker2_7MatrixInv = Math::Mat2(speaker2Vector.x, speaker2Vector.y, speaker7Vector.x, 
-      speaker7Vector.y).Inverted();
-    Math::Mat2 Speaker3_6MatrixInv = Math::Mat2(speaker3Vector.x, speaker3Vector.y, speaker6Vector.x, 
-      speaker6Vector.y).Inverted();
-
-    // No matrices for these numbers of channels
-    SpeakerMatrixArrays[0] = nullptr;
-    SpeakerMatrixArrays[1] = nullptr;
-
-    // **** 2 channels ****
-    SpeakerMatrixArrays[2] = new SpeakerInfo;
-    SpeakerInfo* info = SpeakerMatrixArrays[2];
-    // Front left to front right
-    info->SpeakerMatrix = Speaker2_7MatrixInv;
-    info->Channel1 = 0;
-    info->Channel2 = 1;
-
-    // **** 3 channels ****
-    SpeakerMatrixArrays[3] = new SpeakerInfo[3];
-    // Center to front left
-    info = &SpeakerMatrixArrays[3][0];
-    info->SpeakerMatrix = Speaker1_2MatrixInv;
-    info->Channel1 = 2;
-    info->Channel2 = 0;
-    // Front left to front right
-    info = &SpeakerMatrixArrays[3][1];
-    info->SpeakerMatrix = Speaker2_7MatrixInv;
-    info->Channel1 = 0;
-    info->Channel1 = 1;
-    // Front right to center
-    info = &SpeakerMatrixArrays[3][2];
-    info->SpeakerMatrix = Speaker7_1MatrixInv;
-    info->Channel1 = 1;
-    info->Channel2 = 2;
-
-    // **** 4 channels ****
-    SpeakerMatrixArrays[4] = new SpeakerInfo[4];
-    // Front left to side left
-    info = &SpeakerMatrixArrays[4][0];
-    info->SpeakerMatrix = Speaker2_3MatrixInv;
-    info->Channel1 = 0;
-    info->Channel2 = 2;
-    // Side left to side right
-    info = &SpeakerMatrixArrays[4][1];
-    info->SpeakerMatrix = Speaker3_6MatrixInv;
-    info->Channel1 = 2;
-    info->Channel2 = 3;
-    // Side right to front right
-    info = &SpeakerMatrixArrays[4][2];
-    info->SpeakerMatrix = Speaker6_7MatrixInv;
-    info->Channel1 = 3;
-    info->Channel2 = 1;
-    // Front left to front right
-    info = &SpeakerMatrixArrays[4][3];
-    info->SpeakerMatrix = Speaker2_7MatrixInv;
-    info->Channel1 = 0;
-    info->Channel2 = 1;
-
-    // **** 5 channels **** 
-    SpeakerMatrixArrays[5] = new SpeakerInfo[5];
-    // Center to front left
-    info = &SpeakerMatrixArrays[5][0];
-    info->SpeakerMatrix = Speaker1_2MatrixInv;
-    info->Channel1 = 2;
-    info->Channel2 = 0;
-    // Front left to side left
-    info = &SpeakerMatrixArrays[5][1];
-    info->SpeakerMatrix = Speaker2_3MatrixInv;
-    info->Channel1 = 0;
-    info->Channel2 = 3;
-    // Side left to side right
-    info = &SpeakerMatrixArrays[5][2];
-    info->SpeakerMatrix = Speaker3_6MatrixInv;
-    info->Channel1 = 3;
-    info->Channel2 = 4;
-    // Side right to front right
-    info = &SpeakerMatrixArrays[5][3];
-    info->SpeakerMatrix = Speaker6_7MatrixInv;
-    info->Channel1 = 4;
-    info->Channel2 = 1;
-    // Front right to center
-    info = &SpeakerMatrixArrays[5][4];
-    info->SpeakerMatrix = Speaker7_1MatrixInv;
-    info->Channel1 = 1;
-    info->Channel2 = 2;
-
-    // **** 6 channels (5.1) **** 
-    SpeakerMatrixArrays[6] = new SpeakerInfo[5];
-    // Center to front left
-    info = &SpeakerMatrixArrays[6][0];
-    info->SpeakerMatrix = Speaker1_2MatrixInv;
-    info->Channel1 = 2;
-    info->Channel2 = 0;
-    // Front left to side left
-    info = &SpeakerMatrixArrays[6][1];
-    info->SpeakerMatrix = Speaker2_3MatrixInv;
-    info->Channel1 = 0;
-    info->Channel2 = 4;
-    // Side left to side right
-    info = &SpeakerMatrixArrays[6][2];
-    info->SpeakerMatrix = Speaker3_6MatrixInv;
-    info->Channel1 = 4;
-    info->Channel2 = 5;
-    // Side right to front right
-    info = &SpeakerMatrixArrays[6][3];
-    info->SpeakerMatrix = Speaker6_7MatrixInv;
-    info->Channel1 = 5;
-    info->Channel2 = 1;
-    // Front right to center
-    info = &SpeakerMatrixArrays[6][4];
-    info->SpeakerMatrix = Speaker7_1MatrixInv;
-    info->Channel1 = 1;
-    info->Channel2 = 2;
-
-    // **** 7 channels ****
-    SpeakerMatrixArrays[7] = new SpeakerInfo[7];
-    // Center to front left
-    info = &SpeakerMatrixArrays[7][0];
-    info->SpeakerMatrix = Speaker1_2MatrixInv;
-    info->Channel1 = 2;
-    info->Channel2 = 0;
-    // Front left to side left
-    info = &SpeakerMatrixArrays[7][1];
-    info->SpeakerMatrix = Speaker2_3MatrixInv;
-    info->Channel1 = 0;
-    info->Channel2 = 3;
-    // Side left to back left
-    info = &SpeakerMatrixArrays[7][2];
-    info->SpeakerMatrix = Speaker3_4MatrixInv;
-    info->Channel1 = 3;
-    info->Channel2 = 5;
-    // Back left to back right
-    info = &SpeakerMatrixArrays[7][3];
-    info->SpeakerMatrix = Speaker4_5MatrixInv;
-    info->Channel1 = 5;
-    info->Channel2 = 6;
-    // Back right to side right
-    info = &SpeakerMatrixArrays[7][4];
-    info->SpeakerMatrix = Speaker5_6MatrixInv;
-    info->Channel1 = 6;
-    info->Channel2 = 4;
-    // Side right to front right
-    info = &SpeakerMatrixArrays[7][5];
-    info->SpeakerMatrix = Speaker6_7MatrixInv;
-    info->Channel1 = 4;
-    info->Channel2 = 1;
-    // Front right to center
-    info = &SpeakerMatrixArrays[7][6];
-    info->SpeakerMatrix = Speaker7_1MatrixInv;
-    info->Channel1 = 1;
-    info->Channel2 = 2;
-
-    // **** 8 channels (7.1) ****
-    SpeakerMatrixArrays[8] = new SpeakerInfo[7];
-    // Center to front left
-    info = &SpeakerMatrixArrays[8][0];
-    info->SpeakerMatrix = Speaker1_2MatrixInv;
-    info->Channel1 = 2;
-    info->Channel2 = 0;
-    // Front left to side left
-    info = &SpeakerMatrixArrays[8][1];
-    info->SpeakerMatrix = Speaker2_3MatrixInv;
-    info->Channel1 = 0;
-    info->Channel2 = 4;
-    // Side left to back left
-    info = &SpeakerMatrixArrays[8][2];
-    info->SpeakerMatrix = Speaker3_4MatrixInv;
-    info->Channel1 = 4;
-    info->Channel2 = 6;
-    // Back left to back right
-    info = &SpeakerMatrixArrays[8][3];
-    info->SpeakerMatrix = Speaker4_5MatrixInv;
-    info->Channel1 = 6;
-    info->Channel2 = 7;
-    // Back right to side right
-    info = &SpeakerMatrixArrays[8][4];
-    info->SpeakerMatrix = Speaker5_6MatrixInv;
-    info->Channel1 = 7;
-    info->Channel2 = 5;
-    // Side right to front right
-    info = &SpeakerMatrixArrays[8][5];
-    info->SpeakerMatrix = Speaker6_7MatrixInv;
-    info->Channel1 = 5;
-    info->Channel2 = 1;
-    // Front right to center
-    info = &SpeakerMatrixArrays[8][6];
-    info->SpeakerMatrix = Speaker7_1MatrixInv;
-    info->Channel1 = 1;
-    info->Channel2 = 2;
-  }
-
-  //************************************************************************************************
-  void AudioChannelsManager::SpeakerInfo::GetGainValues(const Math::Vec2& sourceVec, float& gain1, 
-    float& gain2)
-  {
-    if (Channel1 < 0)
-    {
-      gain1 = 0;
-      gain2 = 0;
-      return;
-    }
-
-    gain1 = (sourceVec.x * SpeakerMatrix.m00 + sourceVec.y * SpeakerMatrix.m10);
-    gain2 = (sourceVec.x * SpeakerMatrix.m01 + sourceVec.y * SpeakerMatrix.m11);
-  }
-
   //------------------------------------------------------------------------------------ Audio Frame
 
   //************************************************************************************************
@@ -923,100 +630,144 @@ namespace Audio
   {
     SetSamples(samples, channels);
 
-    Matrices[0] = ChannelMatrix1;
-    Matrices[1] = ChannelMatrix2;
-    Matrices[2] = ChannelMatrix3;
-    Matrices[3] = ChannelMatrix4;
-    Matrices[4] = ChannelMatrix5;
-    Matrices[5] = ChannelMatrix6;
-    Matrices[6] = ChannelMatrix7;
-    Matrices[7] = ChannelMatrix8;
+    Matrices[0] = nullptr;
+    Matrices[1] = ChannelMatrix1;
+    Matrices[2] = ChannelMatrix2;
+    Matrices[3] = ChannelMatrix3;
+    Matrices[4] = ChannelMatrix4;
+    Matrices[5] = ChannelMatrix5;
+    Matrices[6] = ChannelMatrix6;
+    Matrices[7] = ChannelMatrix7;
+    Matrices[8] = ChannelMatrix8;
   }
 
   //************************************************************************************************
   AudioFrame::AudioFrame() :
-    HowManyChannels(1)
+    mStoredChannels(1)
   {
-    memset(Samples, 0, sizeof(float) * MaxChannels);
+    memset(mSamples, 0, sizeof(float) * MaxChannels);
 
-    Matrices[0] = ChannelMatrix1;
-    Matrices[1] = ChannelMatrix2;
-    Matrices[2] = ChannelMatrix3;
-    Matrices[3] = ChannelMatrix4;
-    Matrices[4] = ChannelMatrix5;
-    Matrices[5] = ChannelMatrix6;
-    Matrices[6] = ChannelMatrix7;
-    Matrices[7] = ChannelMatrix8;
+    Matrices[0] = nullptr;
+    Matrices[1] = ChannelMatrix1;
+    Matrices[2] = ChannelMatrix2;
+    Matrices[3] = ChannelMatrix3;
+    Matrices[4] = ChannelMatrix4;
+    Matrices[5] = ChannelMatrix5;
+    Matrices[6] = ChannelMatrix6;
+    Matrices[7] = ChannelMatrix7;
+    Matrices[8] = ChannelMatrix8;
   }
 
   //************************************************************************************************
   AudioFrame::AudioFrame(const AudioFrame& copy) :
-    HowManyChannels(copy.HowManyChannels)
+    mStoredChannels(copy.mStoredChannels)
   {
-    memset(Samples, 0, sizeof(float) * MaxChannels);
-    memcpy(Samples, copy.Samples, sizeof(float) * HowManyChannels);
+    memcpy(mSamples, copy.mSamples, sizeof(float) * MaxChannels);
+
+    Matrices[0] = nullptr;
+    Matrices[1] = ChannelMatrix1;
+    Matrices[2] = ChannelMatrix2;
+    Matrices[3] = ChannelMatrix3;
+    Matrices[4] = ChannelMatrix4;
+    Matrices[5] = ChannelMatrix5;
+    Matrices[6] = ChannelMatrix6;
+    Matrices[7] = ChannelMatrix7;
+    Matrices[8] = ChannelMatrix8;
   }
 
   //************************************************************************************************
-  void AudioFrame::TranslateChannels(const unsigned channels)
+  float* AudioFrame::GetSamples(const unsigned outputChannels)
   {
-    if (channels == HowManyChannels)
-      return;
-
-    float output[MaxChannels] = { 0 };
-
-    const float* matrix;
-    if (channels < HowManyChannels)
-      matrix = Matrices[channels - 1];
-    else
-      matrix = Matrices[HowManyChannels - 1];
-
-    for (unsigned outChannel = 0; outChannel < channels; ++outChannel)
+    if (outputChannels != mStoredChannels)
     {
-      for (unsigned sourceChannel = 0; sourceChannel < MaxChannels; ++sourceChannel)
-      {
-        output[outChannel] += Samples[sourceChannel] * matrix[(sourceChannel * channels) + outChannel];
-      }
-    }
+      float output[MaxChannels] = { 0 };
 
-    memcpy(Samples, output, sizeof(float) * MaxChannels);
+      // Down-mixing
+      if (outputChannels < mStoredChannels)
+      {
+        for (unsigned outChannel = 0; outChannel < outputChannels; ++outChannel)
+        {
+          for (unsigned i = 0; i < MaxChannels; ++i)
+          {
+            output[outChannel] += mSamples[i] * Matrices[outputChannels][i + (outChannel * MaxChannels)];
+          }
+        }
+      }
+      // Up-mixing
+      else
+      {
+        if (mStoredChannels == 1)
+        {
+          for (unsigned i = 0; i < outputChannels; ++i)
+            output[i] = mSamples[0];
+
+          output[LowFreq] = 0.0f;
+        }
+        else
+        {
+          if (mStoredChannels < 5)
+          {
+            output[0] = mSamples[0];
+            output[1] = mSamples[1];
+
+            if (mStoredChannels == 3)
+              output[Center] = mSamples[Center];
+            else
+              output[Center] = (mSamples[0] + mSamples[1]) * Sqrt2Inv;
+
+            output[BackLeft] = output[BackRight] = output[SideLeft] = output[SideRight] = (mSamples[0] - mSamples[1]) * Sqrt2Inv;
+          }
+          else
+          {
+            memcpy(output, mSamples, sizeof(float) * 6);
+            memcpy(output + BackLeft, mSamples + SideLeft, sizeof(float) * 2);
+          }
+        }
+      }
+
+      CopySamples(output, mCopiedSamples, outputChannels);
+    }
+    else
+      CopySamples(mSamples, mCopiedSamples, outputChannels);
+
+    return mCopiedSamples;
   }
 
   //************************************************************************************************
-  void AudioFrame::SetSamples(float* samples, unsigned channels)
+  void AudioFrame::SetSamples(const float* samples, unsigned channels)
   {
-    HowManyChannels = Math::Max(channels, (unsigned)1);
+    mStoredChannels = Math::Max(channels, (unsigned)1);
 
-    memset(Samples, 0, sizeof(float) * MaxChannels);
+    memset(mSamples, 0, sizeof(float) * MaxChannels);
 
     switch (channels)
     {
     case 1:
-      Samples[0] = samples[0];
+      mSamples[0] = samples[0];
       break;
     case 2:
-      memcpy(Samples, samples, sizeof(float) * 2);
+      memcpy(mSamples, samples, sizeof(float) * 2);
       break;
     case 3:
-      memcpy(Samples, samples, sizeof(float) * 3);
+      memcpy(mSamples, samples, sizeof(float) * 3);
       break;
     case 4:
-      memcpy(Samples, samples, sizeof(float) * 2);
-      memcpy(Samples + BackLeft, samples + 2, sizeof(float) * 2);
+      memcpy(mSamples, samples, sizeof(float) * 2);
+      memcpy(mSamples + BackLeft, samples + 2, sizeof(float) * 2);
       break;
     case 5:
-      memcpy(Samples, samples, sizeof(float) * 3);
-      memcpy(Samples + SideLeft, samples + 3, sizeof(float) * 2);
+      memcpy(mSamples, samples, sizeof(float) * 3);
+      memcpy(mSamples + SideLeft, samples + 3, sizeof(float) * 2);
       break;
     case 6:
-      memcpy(Samples, samples, sizeof(float) * 6);
+      memcpy(mSamples, samples, sizeof(float) * 6);
       break;
     case 7:
-      memcpy(Samples, samples, sizeof(float) * 3);
-      memcpy(Samples + SideLeft, samples + 3, sizeof(float) * 4);
+      memcpy(mSamples, samples, sizeof(float) * 3);
+      memcpy(mSamples + SideLeft, samples + 3, sizeof(float) * 4);
       break;
     case 8:
-      memcpy(Samples, samples, sizeof(float) * 8);
+      memcpy(mSamples, samples, sizeof(float) * 8);
       break;
     default:
       break;
@@ -1026,18 +777,18 @@ namespace Audio
   //************************************************************************************************
   void AudioFrame::Clamp()
   {
-    for (unsigned i = 0; i < HowManyChannels; ++i)
-      Samples[i] = Math::Clamp(Samples[i], -1.0f, 1.0f);
+    for (unsigned i = 0; i < MaxChannels; ++i)
+      mSamples[i] = Math::Clamp(mSamples[i], -1.0f, 1.0f);
   }
 
   //************************************************************************************************
   float AudioFrame::GetMaxValue()
   {
-    float value = Math::Abs(Samples[0]);
+    float value = Math::Abs(mSamples[0]);
 
-    for (unsigned i = 1; i < HowManyChannels; ++i)
+    for (unsigned i = 1; i < MaxChannels; ++i)
     {
-      float newValue = Math::Abs(Samples[i]);
+      float newValue = Math::Abs(mSamples[i]);
       if (newValue > value)
         value = newValue;
     }
@@ -1048,15 +799,15 @@ namespace Audio
   //************************************************************************************************
   float AudioFrame::GetMonoValue()
   {
-    if (HowManyChannels == 1)
-      return Samples[0];
+    if (mStoredChannels == 1)
+      return mSamples[0];
 
-    float value = Samples[0];
+    float value = mSamples[0];
 
-    for (unsigned i = 1; i < HowManyChannels; ++i)
-      value += Samples[i];
+    for (unsigned i = 1; i < MaxChannels; ++i)
+      value += mSamples[i];
 
-    value /= HowManyChannels;
+    value /= mStoredChannels;
 
     return value;
   }
@@ -1064,15 +815,52 @@ namespace Audio
   //************************************************************************************************
   void AudioFrame::operator*=(float multiplier)
   {
-    for (unsigned i = 0; i < HowManyChannels; ++i)
-      Samples[i] *= multiplier;
+    for (unsigned i = 0; i < MaxChannels; ++i)
+      mSamples[i] *= multiplier;
   }
 
   //************************************************************************************************
   void AudioFrame::operator=(const AudioFrame& copy)
   {
-    HowManyChannels = copy.HowManyChannels;
-    memcpy(Samples, copy.Samples, sizeof(float) * MaxChannels);
+    mStoredChannels = copy.mStoredChannels;
+    memcpy(mSamples, copy.mSamples, sizeof(float) * MaxChannels);
+  }
+
+  //************************************************************************************************
+  void AudioFrame::CopySamples(const float* source, float* destination, const unsigned channels)
+  {
+    switch (channels)
+    {
+    case 1:
+      destination[0] = source[0];
+      break;
+    case 2:
+      memcpy(destination, source, sizeof(float) * 2);
+      break;
+    case 3:
+      memcpy(destination, source, sizeof(float) * 3);
+      break;
+    case 4:
+      memcpy(destination, source, sizeof(float) * 2);
+      memcpy(destination + 2, source + BackLeft, sizeof(float) * 2);
+      break;
+    case 5:
+      memcpy(destination, source, sizeof(float) * 3);
+      memcpy(destination + 3, source + SideLeft, sizeof(float) * 2);
+      break;
+    case 6:
+      memcpy(destination, source, sizeof(float) * 6);
+      break;
+    case 7:
+      memcpy(destination, source, sizeof(float) * 3);
+      memcpy(destination + 3, source + SideLeft, sizeof(float) * 4);
+      break;
+    case 8:
+      memcpy(destination, source, sizeof(float) * 8);
+      break;
+    default:
+      break;
+    }
   }
 
 }

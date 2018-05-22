@@ -43,8 +43,8 @@ namespace Audio
   class ListenerNode : public SimpleCollapseNode
   {
   public:
-    ListenerNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-      ListenerWorldPositionInfo positionInfo, ExternalNodeInterface* extInt, bool isThreaded = false);
+    ListenerNode(Zero::StringParam name, unsigned ID, ListenerWorldPositionInfo positionInfo, 
+      ExternalNodeInterface* extInt, bool isThreaded = false);
 
     // Updates the position and velocity of the listener
     void SetPositionData(ListenerWorldPositionInfo positionInfo);

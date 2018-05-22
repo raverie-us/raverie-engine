@@ -446,7 +446,7 @@ void EditorViewport::OnResourceModified(ResourceEvent* event)
   // Is the level this viewport is editing the modified resource?
   if(editLevel == (Level*)event->EventResource)
   {
-    TabRenamedEvent eventToSend(event->EventResource->Name);
+    TabRenamedEvent eventToSend(BuildString("Level: ", event->EventResource->Name));
     this->DispatchEvent(Events::TabRenamed, &eventToSend);
   }
 }

@@ -12,9 +12,9 @@ namespace Audio
   //--------------------------------------------------------------------------------- Equalizer Node
 
   //************************************************************************************************
-  EqualizerNode::EqualizerNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-    ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  EqualizerNode::EqualizerNode(Zero::StringParam name, const unsigned ID, 
+      ExternalNodeInterface* extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     LowPassGain(1.0f),
     HighPassGain(1.0f),
     Band1Gain(1.0f),
@@ -22,7 +22,7 @@ namespace Audio
     Band3Gain(1.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new EqualizerNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new EqualizerNode(name, ID, nullptr, true));
   }
 
   //************************************************************************************************
@@ -45,9 +45,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EqualizerNode::SetBelow80HzGain,
-        (EqualizerNode*)GetSiblingNode(), gain));
+      AddTaskForSibling(&EqualizerNode::SetBelow80HzGain, gain);
     }
     else
     {
@@ -69,9 +67,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EqualizerNode::SetAbove5000HzGain,
-        (EqualizerNode*)GetSiblingNode(), gain));
+      AddTaskForSibling(&EqualizerNode::SetAbove5000HzGain, gain);
     }
     else
     {
@@ -93,9 +89,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EqualizerNode::Set150HzGain,
-        (EqualizerNode*)GetSiblingNode(), gain));
+      AddTaskForSibling(&EqualizerNode::Set150HzGain, gain);
     }
     else
     {
@@ -117,9 +111,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EqualizerNode::Set600HzGain,
-        (EqualizerNode*)GetSiblingNode(), gain));
+      AddTaskForSibling(&EqualizerNode::Set600HzGain, gain);
     }
     else
     {
@@ -141,9 +133,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EqualizerNode::Set2500HzGain,
-        (EqualizerNode*)GetSiblingNode(), gain));
+      AddTaskForSibling(&EqualizerNode::Set2500HzGain, gain);
     }
     else
     {
@@ -163,9 +153,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EqualizerNode::InterpolateBands,
-        (EqualizerNode*)GetSiblingNode(), gainValues, timeToInterpolate));
+      AddTaskForSibling(&EqualizerNode::InterpolateBands, gainValues, timeToInterpolate);
     }
     else
     {

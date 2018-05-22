@@ -199,14 +199,10 @@ namespace Audio
           (SoundInstanceNode*)instance->GetSiblingNode()));
 
       if (ExternalInterface)
-        ExternalInterface->SendAudioEvent(AudioEventTypes::TagAddedInstance, (void*)nullptr);
+        ExternalInterface->SendAudioEvent(AudioEventTypes::TagAddedInstance);
     }
     else
     {
-      // If already playing max instances, mark this one as virtual
-      //if (InstanceLimit > 0 && InstanceVolumeMap.Size() >= InstanceLimit)
-      //  instance->mVirtual = true;
-
       // Add the tag to the instance's list
       instance->TagList.PushBack(this);
 
@@ -250,7 +246,7 @@ namespace Audio
 
       // If there are no more tagged instances, send a notification
       if (ExternalInterface && mSoundInstanceList.Empty())
-        ExternalInterface->SendAudioEvent(AudioEventTypes::TagIsUnreferenced, (void*)nullptr);
+        ExternalInterface->SendAudioEvent(AudioEventTypes::TagIsUnreferenced);
     }
     else
     {

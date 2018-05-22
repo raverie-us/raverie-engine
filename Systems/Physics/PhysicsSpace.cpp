@@ -1160,6 +1160,10 @@ SweepResultRange PhysicsSpace::SweepCollider(Collider* collider, Vec3Param veloc
   if (!collider)
     return SweepResultRange(SweepResultArray());
 
+  // Flush the physics queue here. This is necessary if any operations have happened
+  // that have removed an object (e.g. destroying an object in a collision event).
+  FlushPhysicsQueue();
+
   // Update position changes due to game logic
   collider->mPhysicsNode->ReadTransform();
   collider->mPhysicsNode->RecomputeWorldTransform();

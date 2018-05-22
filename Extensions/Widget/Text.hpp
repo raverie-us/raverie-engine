@@ -28,8 +28,8 @@ public:
   void SetMultiLine(bool multiLine);
 
   void FitToWidth(float maxWidth, float maxHeight);
-
   Vec2 GetBoundedSize(float maxWidth, float maxHeight);
+  bool IsTextClipped();
 
   // Widget Interface
   Vec2 GetMinSize() override;

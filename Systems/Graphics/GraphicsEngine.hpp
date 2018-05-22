@@ -98,6 +98,7 @@ public:
   void SetLazyShaderCompilation(bool lazyShaderCompilation);
 
   void OnRenderGroupAdded(ResourceEvent* event);
+  void OnRenderGroupModified(ResourceEvent* event);
   void OnRenderGroupRemoved(ResourceEvent* event);
 
   void OnMaterialAdded(ResourceEvent* event);

@@ -643,8 +643,10 @@ void DocumentEditor::SetDocument(Document* doc)
 
   DocumentResource* resource = doc->GetResource();
   if(resource != nullptr)
+  {
     ConnectThisTo(resource->GetManager(), Events::ClearAllAnnotations, OnClearAllAnnotations);
-
+    ConnectThisTo(resource->GetManager(), Events::ResourceModified, OnResourceModified);
+  }
   mDocument = doc;
   ++mDocument->mEditCounter;
   mDocument->mEditor = this;
@@ -663,6 +665,17 @@ void DocumentEditor::OnTextModified(Event* event)
 
   TabModifiedEvent e(IsModified());
   GetDispatcher()->Dispatch(Events::TabModified, &e);
+}
+
+void DocumentEditor::OnResourceModified(ResourceEvent* event)
+{
+  DocumentResource* resource = mDocument->GetResource();
+  if(event->EventResource != resource)
+    return;
+
+  mName = event->EventResource->Name;
+  TabRenamedEvent eventToSend(mName);
+  DispatchEvent(Events::TabRenamed, &eventToSend);
 }
 
 void DocumentEditor::OnDocumentReload(Event* event)

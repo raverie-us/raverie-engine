@@ -468,7 +468,7 @@ namespace Zilch
     if (report.HasThrownExceptions())
       return Any();
     
-    // Fetch the return value and construct and any from it
+    // Fetch the return value and construct an any from it
     byte* returnValue = call.GetReturnUnchecked();
     return Any(returnValue, this->PropertyType);
   }

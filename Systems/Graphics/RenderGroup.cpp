@@ -11,7 +11,7 @@ ZilchDefineType(RenderGroup, builder, type)
 {
   ZeroBindDocumented();
 
-  ZilchBindFieldGetterProperty(mSerializedList);
+  ZilchBindFieldGetterPropertyAs(mSerializedList, "Materials");
   ZilchBindFieldGetterProperty(mReferencedByList);
 
   ZilchBindFieldProperty(mGraphicalSortMethod);

@@ -350,6 +350,8 @@ public:
 
   /// Expands all parent rows and scrolls to the row at the given index.
   void ShowRow(DataIndex& index);
+  /// Shows the currently selected row
+  void ShowSelected();
 
   /// Determines if the tree will refresh whenever a value is changed. Set
   /// this to true if setting a property might alter the input value such

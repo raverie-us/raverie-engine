@@ -141,6 +141,7 @@ public:
   void OnMouseEnter(MouseEvent* event);
   void OnMouseExit(MouseEvent* event);
   void OnMouseDrag(MouseEvent* event);
+  void OnMouseHover(MouseEvent* event);
   void OnRightClick(Event* event);
   void OnCloseAllOtherTabs(Event* event);
   void OnOwnedWidgetModified(TabModifiedEvent* e);
@@ -164,6 +165,7 @@ public:
 private:
   friend class TabArea;
   HandleOf<Widget> mOwned;
+  HandleOf<ToolTip> mToolTip;
 };
 
 // TabArea Manages Tabs on a Window

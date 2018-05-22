@@ -376,6 +376,20 @@ namespace Audio
   }
 
   //************************************************************************************************
+  void LowPassFilter::ProcessBuffer(const float* input, float* output, const unsigned numChannels, 
+    const unsigned numSamples)
+  {
+    if (CutoffFrequency > 20000.0f)
+    {
+      memcpy(output, input, sizeof(float) * numSamples);
+      return;
+    }
+
+    for (unsigned i = 0; i < numSamples; i += numChannels)
+      ProcessFrame(input + i, output + i, numChannels);
+  }
+
+  //************************************************************************************************
   float LowPassFilter::GetCutoffFrequency()
   {
     return CutoffFrequency;
@@ -434,9 +448,11 @@ namespace Audio
   {
     if (CutoffFrequency < 20.0f)
       memcpy(output, input, sizeof(float) * numChannels);
-
-    for (unsigned i = 0; i < numChannels; ++i)
-      output[i] = BiQuadsPerChannel[i].DoBiQuad(input[i]);
+    else
+    {
+      for (unsigned i = 0; i < numChannels; ++i)
+        output[i] = BiQuadsPerChannel[i].DoBiQuad(input[i]);
+    }
   }
 
   //------------------------------------------------------------------------------- Band Pass Filter
@@ -1144,10 +1160,10 @@ namespace Audio
   Equalizer::Equalizer(const float below80Hz, const float at150Hz, const float at600Hz, 
       const float at2500Hz, const float above5000Hz) :
     mLowPassGain(below80Hz),
-    mHighPassGain(at150Hz),
-    mBand1Gain(at600Hz),
-    mBand2Gain(at2500Hz),
-    mBand3Gain(above5000Hz)
+    mBand1Gain(at150Hz),
+    mBand2Gain(at600Hz),
+    mBand3Gain(at2500Hz),
+    mHighPassGain(above5000Hz)
   {
     SetFilterData();
   }

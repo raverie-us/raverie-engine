@@ -46,8 +46,8 @@ namespace Audio
   class EqualizerNode : public SimpleCollapseNode
   {
   public:
-    EqualizerNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
-      ExternalNodeInterface* extInt, const bool isThreaded = false);
+    EqualizerNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool isThreaded = false);
 
     // Returns the volume adjustment applied to sounds below 80 Hz
     float GetBelow80HzGain();

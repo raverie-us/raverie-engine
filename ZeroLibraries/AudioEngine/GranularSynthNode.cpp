@@ -390,8 +390,8 @@ namespace Audio
       {
         float samples[2] = { sample * mLeftVolume, sample * mRightVolume };
         AudioFrame frameSamples(samples, 2);
-        frameSamples.TranslateChannels(outputChannels);
-        memcpy(outputBuffer + (frame * outputChannels), frameSamples.Samples, sizeof(float) * outputChannels);
+        memcpy(outputBuffer + (frame * outputChannels), frameSamples.GetSamples(outputChannels), 
+          sizeof(float) * outputChannels);
       }
     }
 
@@ -422,9 +422,9 @@ namespace Audio
   //---------------------------------------------------------------------------- Granular Synth Node
 
   //************************************************************************************************
-  GranularSynthNode::GranularSynthNode(Zero::Status& status, Zero::StringParam name,
-    const unsigned ID, ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, true, isThreaded),
+  GranularSynthNode::GranularSynthNode(Zero::StringParam name, const unsigned ID, 
+      ExternalNodeInterface* extInt, const bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, true, isThreaded),
     mActive(false),
     mSampleChannels(0),
     mFirstInactiveGrainIndex(0),
@@ -447,7 +447,7 @@ namespace Audio
     mWindowReleaseFrames(200)
   {
     if (!Threaded)
-      SetSiblingNodes(new GranularSynthNode(status, name, ID, nullptr, true), status);
+      SetSiblingNodes(new GranularSynthNode(name, ID, nullptr, true));
     else
       GrainList.Resize(16);
   }
@@ -456,10 +456,7 @@ namespace Audio
   void GranularSynthNode::Play()
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::Play,
-        (GranularSynthNode*)GetSiblingNode()));
-    }
+      AddTaskForSibling(&GranularSynthNode::Play);
 
     mActive = true;
   }
@@ -468,10 +465,7 @@ namespace Audio
   void GranularSynthNode::Stop()
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::Stop,
-        (GranularSynthNode*)GetSiblingNode()));
-    }
+      AddTaskForSibling(&GranularSynthNode::Stop);
 
     mActive = false;
   }
@@ -481,8 +475,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetAsset,
-        (GranularSynthNode*)GetSiblingNode(), asset->ThreadedAsset, startTime, stopTime));
+      AddTaskForSibling(&GranularSynthNode::SetAsset, asset->ThreadedAsset, startTime, stopTime);
     }
     else
     {
@@ -517,8 +510,7 @@ namespace Audio
     {
       volume = Math::Max(volume, 0.0f);
 
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainVolume,
-        (GranularSynthNode*)GetSiblingNode(), volume));
+      AddTaskForSibling(&GranularSynthNode::SetGrainVolume, volume);
     }
 
     mGrainVolume = volume;
@@ -534,10 +526,7 @@ namespace Audio
   void GranularSynthNode::SetGrainVolumeVariance(float variance)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainVolumeVariance,
-        (GranularSynthNode*)GetSiblingNode(), variance));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetGrainVolumeVariance, variance);
 
     mGrainVolumeVariance = variance;
   }
@@ -555,8 +544,7 @@ namespace Audio
     {
       delayMS = Math::Max(delayMS, 0);
 
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainDelay,
-        (GranularSynthNode*)GetSiblingNode(), delayMS));
+      AddTaskForSibling(&GranularSynthNode::SetGrainDelay, delayMS);
     }
 
     mGrainDelayFrames = MsToFrames(delayMS);
@@ -572,10 +560,7 @@ namespace Audio
   void GranularSynthNode::SetGrainDelayVariance(int delayVarianceMS)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainDelayVariance,
-        (GranularSynthNode*)GetSiblingNode(), delayVarianceMS));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetGrainDelayVariance, delayVarianceMS);
 
     mGrainDelayVariance = MsToFrames(delayVarianceMS);
   }
@@ -593,8 +578,7 @@ namespace Audio
     {
       lengthMS = Math::Max(lengthMS, 0);
 
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainLength,
-        (GranularSynthNode*)GetSiblingNode(), lengthMS));
+      AddTaskForSibling(&GranularSynthNode::SetGrainLength, lengthMS);
     }
 
     mGrainLengthFrames = MsToFrames(lengthMS);
@@ -611,10 +595,7 @@ namespace Audio
   void GranularSynthNode::SetGrainLengthVariance(int lengthVarianceMS)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainLengthVariance,
-        (GranularSynthNode*)GetSiblingNode(), lengthVarianceMS));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetGrainLengthVariance, lengthVarianceMS);
 
     mGrainLengthVariance = MsToFrames(lengthVarianceMS);
   }
@@ -629,10 +610,7 @@ namespace Audio
   void GranularSynthNode::SetGrainResampleRate(float resampleRate)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainResampleRate,
-        (GranularSynthNode*)GetSiblingNode(), resampleRate));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetGrainResampleRate, resampleRate);
 
     mGrainResampleRate = resampleRate;
   }
@@ -647,10 +625,7 @@ namespace Audio
   void GranularSynthNode::SetGrainResampleRateVariance(float resampleVariance)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainResampleRateVariance,
-        (GranularSynthNode*)GetSiblingNode(), resampleVariance));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetGrainResampleRateVariance, resampleVariance);
 
     mGrainResampleVariance = resampleVariance;
   }
@@ -665,10 +640,7 @@ namespace Audio
   void GranularSynthNode::SetBufferScanRate(float bufferRate)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetBufferScanRate,
-        (GranularSynthNode*)GetSiblingNode(), bufferRate));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetBufferScanRate, bufferRate);
 
     mBufferScanRate = bufferRate;
   }
@@ -687,8 +659,7 @@ namespace Audio
       panValue = Math::Max(panValue, -1.0f);
       panValue = Math::Min(panValue, 1.0f);
 
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainPanningValue,
-        (GranularSynthNode*)GetSiblingNode(), panValue));
+      AddTaskForSibling(&GranularSynthNode::SetGrainPanningValue, panValue);
     }
 
     mGrainPanningValue = panValue;
@@ -704,10 +675,7 @@ namespace Audio
   void GranularSynthNode::SetGrainPanningVariance(float panValueVariance)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetGrainPanningVariance,
-        (GranularSynthNode*)GetSiblingNode(), panValueVariance));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetGrainPanningVariance, panValueVariance);
 
     mGrainPanningVariance = panValueVariance;
   }
@@ -722,10 +690,7 @@ namespace Audio
   void GranularSynthNode::SetRandomLocationValue(float randomLocationValue)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetRandomLocationValue,
-        (GranularSynthNode*)GetSiblingNode(), randomLocationValue));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetRandomLocationValue, randomLocationValue);
     
     mRandomLocationValue = randomLocationValue;
   }
@@ -740,10 +705,7 @@ namespace Audio
   void GranularSynthNode::SetWindowType(GrainWindowTypes::Enum type)
   {
     if (!Threaded)
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetWindowType,
-        (GranularSynthNode*)GetSiblingNode(), type));
-    }
+      AddTaskForSibling(&GranularSynthNode::SetWindowType, type);
 
     mWindowType = type;
   }
@@ -761,8 +723,7 @@ namespace Audio
     {
       attackMS = Math::Max(attackMS, 0);
 
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetWindowAttack,
-        (GranularSynthNode*)GetSiblingNode(), attackMS));
+      AddTaskForSibling(&GranularSynthNode::SetWindowAttack, attackMS);
     }
 
     mWindowAttackFrames = MsToFrames(attackMS);
@@ -781,8 +742,7 @@ namespace Audio
     {
       releaseMS = Math::Max(releaseMS, 0);
 
-      gAudioSystem->AddTask(Zero::CreateFunctor(&GranularSynthNode::SetWindowRelease,
-        (GranularSynthNode*)GetSiblingNode(), releaseMS));
+      AddTaskForSibling(&GranularSynthNode::SetWindowRelease, releaseMS);
     }
 
     mWindowReleaseFrames = MsToFrames(releaseMS);

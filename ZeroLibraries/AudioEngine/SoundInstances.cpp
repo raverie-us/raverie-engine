@@ -122,12 +122,12 @@ namespace Audio
 
         // Send notification
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicBar, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicBar));
       }
 
       // Send notification
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        siblingNode, AudioEventTypes::MusicBeat, (void*)nullptr));
+        siblingNode, AudioEventTypes::MusicBeat));
     }
 
     // Check for eighth notes
@@ -140,7 +140,7 @@ namespace Audio
 
       // Send notification for eighth note
       gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        siblingNode, AudioEventTypes::MusicEighthNote, (void*)nullptr));
+        siblingNode, AudioEventTypes::MusicEighthNote));
 
       // Check for other note values
 
@@ -148,21 +148,21 @@ namespace Audio
       if (mEighthNoteCount % 2 == 0)
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicQuarterNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicQuarterNote));
       }
 
       // Check for half note
       if (mEighthNoteCount % 4 == 0)
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicHalfNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicHalfNote));
       }
 
       // Check for whole note
       if (mEighthNoteCount % 8 == 0)
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicWholeNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicWholeNote));
       }
     }
   }
@@ -188,17 +188,17 @@ namespace Audio
       if (siblingNode)
       {
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicBar, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicBar));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicBeat, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicBeat));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicWholeNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicWholeNote));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicEighthNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicEighthNote));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicQuarterNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicQuarterNote));
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-          siblingNode, AudioEventTypes::MusicHalfNote, (void*)nullptr));
+          siblingNode, AudioEventTypes::MusicHalfNote));
       }
     }
     else
@@ -217,7 +217,7 @@ namespace Audio
   SoundInstanceNode::SoundInstanceNode(Zero::Status& status, Zero::StringParam name, const unsigned ID,
       SoundAsset* parentAsset, const bool looping, const bool startPaused, 
       ExternalNodeInterface* extInt, const bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, true, isThreaded), 
+    SimpleCollapseNode(name, ID, extInt, false, true, isThreaded), 
     Asset(parentAsset), 
     mVolume(0.8f), 
     mFinished(false), 
@@ -253,7 +253,7 @@ namespace Audio
       if (parentAsset->AddReference())
       {
         SetSiblingNodes(new SoundInstanceNode(status, name, ID, parentAsset->ThreadedAsset, looping, 
-          startPaused, nullptr, true), status);
+          startPaused, nullptr, true));
       }
       // Couldn't attach to this asset
       else
@@ -305,9 +305,7 @@ namespace Audio
     if (!Threaded)
     {
       mPaused = isPaused;
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetPaused,
-          (SoundInstanceNode*)GetSiblingNode(), isPaused));
+      AddTaskForSibling(&SoundInstanceNode::SetPaused, isPaused);
     }
     else
     {
@@ -347,9 +345,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::Stop, 
-          (SoundInstanceNode*)GetSiblingNode()));
+      AddTaskForSibling(&SoundInstanceNode::Stop);
     }
     else
     {
@@ -374,9 +370,8 @@ namespace Audio
   {
     mLooping = loop;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetLooping, 
-        (SoundInstanceNode*)GetSiblingNode(), loop));
+    if (!Threaded)
+      AddTaskForSibling(&SoundInstanceNode::SetLooping, loop);
   }
 
   //************************************************************************************************
@@ -394,9 +389,7 @@ namespace Audio
       if (mStartTime < 0.0f || mStartTime * SystemSampleRate >= Asset->GetNumberOfFrames())
         mStartTime = 0.0f;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetStartTime,
-          (SoundInstanceNode*)GetSiblingNode(), mStartTime));
+      AddTaskForSibling(&SoundInstanceNode::SetStartTime, mStartTime);
     }
     else
     {
@@ -424,9 +417,7 @@ namespace Audio
       else if (mEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
         mEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetEndTime,
-          (SoundInstanceNode*)GetSiblingNode(), mEndTime));
+      AddTaskForSibling(&SoundInstanceNode::SetEndTime, mEndTime);
     }
     else
     {
@@ -452,9 +443,7 @@ namespace Audio
           >= Asset->GetNumberOfFrames())
         mLoopStartTime = 0.0f;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetLoopStartTime,
-          (SoundInstanceNode*)GetSiblingNode(), mLoopStartTime));
+      AddTaskForSibling(&SoundInstanceNode::SetLoopStartTime, mLoopStartTime);
     }
     else
     {
@@ -479,9 +468,7 @@ namespace Audio
       else if (mLoopEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
         mLoopEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetLoopEndTime,
-        (SoundInstanceNode*)GetSiblingNode(), mLoopEndTime));
+      AddTaskForSibling(&SoundInstanceNode::SetLoopEndTime, mLoopEndTime);
     }
     else
     {
@@ -504,9 +491,7 @@ namespace Audio
       if (mLoopTailTime < 0.0f)
         mLoopTailTime = 0.0f;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetLoopTailTime,
-        (SoundInstanceNode*)GetSiblingNode(), mLoopTailTime));
+      AddTaskForSibling(&SoundInstanceNode::SetLoopTailTime, mLoopTailTime);
     }
     else
     {
@@ -525,9 +510,8 @@ namespace Audio
   {
     mCrossFadeTail = crossFade;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetCrossFadeTail,
-        (SoundInstanceNode*)GetSiblingNode(), crossFade));
+    if (!Threaded)
+      AddTaskForSibling(&SoundInstanceNode::SetCrossFadeTail, crossFade);
   }
 
   //************************************************************************************************
@@ -545,9 +529,7 @@ namespace Audio
       if (time == 0 || mPaused || IsWithinLimit(newVolume, mVolume, 0.01f))
         mVolume = newVolume;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetVolume,
-          (SoundInstanceNode*)GetSiblingNode(), newVolume, time));
+      AddTaskForSibling(&SoundInstanceNode::SetVolume, newVolume, time);
     }
     else
     {
@@ -572,30 +554,28 @@ namespace Audio
   }
 
   //************************************************************************************************
-  int SoundInstanceNode::GetPitch()
+  float SoundInstanceNode::GetPitch()
   {
     if (mPitchFactor == 0)
       return 0;
     else
-      return (int)(1200.0f * Math::Log2(mPitchFactor));
+      return 12.0f * Math::Log2(mPitchFactor);
   }
 
   //************************************************************************************************
-  void SoundInstanceNode::SetPitch(const int pitchCents, const float time)
+  void SoundInstanceNode::SetPitch(const float pitchSemitones, const float time)
   {
     if (!Threaded)
     {
       // If not interpolating, set the pitch value
       if (time == 0)
-        mPitchFactor = Math::Pow(2.0f, pitchCents / 1200.0f);
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetPitch,
-        (SoundInstanceNode*)GetSiblingNode(), pitchCents, time));
+        mPitchFactor = Math::Pow(2.0f, pitchSemitones / 12.0f);
+      AddTaskForSibling(&SoundInstanceNode::SetPitch, pitchSemitones, time);
     }
     else
     {
       // Check for no pitch shift and no interpolation
-      if (pitchCents == 0 && time == 0)
+      if (pitchSemitones == 0 && time == 0)
       {
         mPitchShifting = false;
         Pitch.SetPitchFactor(1.0f, 0.0f);
@@ -603,7 +583,7 @@ namespace Audio
       else
       {
         mPitchShifting = true;
-        Pitch.SetPitchFactor(Math::Pow(2.0f, pitchCents / 1200.0f), time);
+        Pitch.SetPitchFactor(Math::Pow(2.0f, pitchSemitones / 12.0f), time);
       }
     }
   }
@@ -620,9 +600,8 @@ namespace Audio
     if (!Threaded)
     {
       // Can't jump when using a streaming asset
-      if (!Asset->GetStreaming() && GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::JumpTo,
-          (SoundInstanceNode*)GetSiblingNode(), seconds));
+      if (!Asset->GetStreaming())
+        AddTaskForSibling(&SoundInstanceNode::JumpTo, seconds);
     }
     else
     {
@@ -667,9 +646,8 @@ namespace Audio
       MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
     }
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetBeatsPerMinute,
-      (SoundInstanceNode*)GetSiblingNode(), bpm));
+    if (!Threaded)
+      AddTaskForSibling(&SoundInstanceNode::SetBeatsPerMinute, bpm);
   }
 
   //************************************************************************************************
@@ -687,9 +665,8 @@ namespace Audio
       MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat *  MusicNotify.mBeatNoteType / 8.0f;
     }
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetTimeSignature,
-      (SoundInstanceNode*)GetSiblingNode(), beats, noteType));
+    if (!Threaded)
+      AddTaskForSibling(&SoundInstanceNode::SetTimeSignature, beats, noteType);
   }
 
   //************************************************************************************************
@@ -704,9 +681,8 @@ namespace Audio
     mNotifyTime = time;
     mCustomNotifySent = false;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::SetCustomNotifyTime,
-      (SoundInstanceNode*)GetSiblingNode(), time));
+    if (!Threaded)
+      AddTaskForSibling(&SoundInstanceNode::SetCustomNotifyTime, time);
   }
 
   //************************************************************************************************
@@ -808,18 +784,15 @@ namespace Audio
       if (GetSiblingNode())
       {
         // Set the time variable on the non-threaded node
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mCurrentTime,
-          (SoundInstanceNode*)GetSiblingNode(), mCurrentTime));
+        AddTaskForSiblingThreaded(&SoundInstanceNode::mCurrentTime, mCurrentTime);
 
         // Update the volume on the non-threaded instance
         if (mInterpolatingVolume)
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mVolume,
-          (SoundInstanceNode*)GetSiblingNode(), mVolume));
+          AddTaskForSiblingThreaded(&SoundInstanceNode::mVolume, mVolume);
 
         // Update the pitch on the non-threaded instance
         if (Pitch.Interpolating())
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mPitchFactor,
-          (SoundInstanceNode*)GetSiblingNode(), Pitch.GetPitchFactor()));
+          AddTaskForSiblingThreaded(&SoundInstanceNode::mPitchFactor, Pitch.GetPitchFactor());
       }
 
       return true;
@@ -868,14 +841,14 @@ namespace Audio
     mFrameIndex += inputFrames;
 
     // Check if we are looping and will reach the loop end frame
-    if (mLooping && mFrameIndex >= mLoopEndFrame)
+    if (mLooping && (mFrameIndex >= mLoopEndFrame || mFrameIndex >= mEndFrame)) 
     {
       unsigned sectionFrames = 0;
 
       if (startingFrameIndex < mLoopEndFrame)
       {
         // Save the number of frames in the first section
-        sectionFrames = inputFrames - (mFrameIndex - mLoopEndFrame);
+        sectionFrames = inputFrames - (mFrameIndex - Math::Min(mLoopEndFrame, mEndFrame));
         // Get the samples from the asset
         Asset->AppendSamples(&samples, startingFrameIndex, sectionFrames * inputChannels);
       }
@@ -950,9 +923,8 @@ namespace Audio
           mInterpolatingVolume = !VolumeInterpolator.Finished(GetSiblingNode());
 
           // Update the non-threaded instance with the final volume
-          if (!mInterpolatingVolume && GetSiblingNode())
-            gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::mVolume,
-              (SoundInstanceNode*)GetSiblingNode(), mVolume));
+          if (!mInterpolatingVolume)
+            AddTaskForSiblingThreaded(&SoundInstanceNode::mVolume, mVolume);
         }
 
         // Adjust volume for all samples on this frame
@@ -1015,9 +987,7 @@ namespace Audio
       Fade.StartFade(mVolume, mLoopEndFrame, fadeSize, Asset, mCrossFadeTail);
     }
 
-    if (GetSiblingNode())
-      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        GetSiblingNode(), AudioEventTypes::InstanceLooped, (void*)nullptr));
+    AddTaskForSiblingThreaded(&SoundNode::SendEventToExternalData, AudioEventTypes::InstanceLooped);
 
     // Reset variables
     mFrameIndex = mLoopStartFrame;
@@ -1042,10 +1012,9 @@ namespace Audio
     {
       // Create the AudioFrame object
       AudioFrame thisFrame(inputSamples->Data() + inputIndex, inputChannels);
-      // Translate the channels 
-      thisFrame.TranslateChannels(outputChannels);
       // Copy the translated samples into the other array
-      memcpy(adjustedSamples.Data() + outputIndex, thisFrame.Samples, sizeof(float) * outputChannels);
+      memcpy(adjustedSamples.Data() + outputIndex, thisFrame.GetSamples(outputChannels), 
+        sizeof(float) * outputChannels);
     }
 
     // Move the translated data into the other array
@@ -1063,14 +1032,11 @@ namespace Audio
     if (Threaded && GetSiblingNode())
     {
       // Send notification that this instance is finished
-      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData,
-        GetSiblingNode(), AudioEventTypes::InstanceFinished, (void*)nullptr));
+      AddTaskForSiblingThreaded(&SoundNode::SendEventToExternalData, AudioEventTypes::InstanceFinished);
 
       // Call the non-threaded versions of the clean-up functions
-      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::FinishedCleanUp,
-        (SoundInstanceNode*)GetSiblingNode()));
-      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundInstanceNode::RemoveFromAllTags,
-        (SoundInstanceNode*)GetSiblingNode()));
+      AddTaskForSiblingThreaded(&SoundInstanceNode::FinishedCleanUp);
+      AddTaskForSiblingThreaded(&SoundInstanceNode::RemoveFromAllTags);
     }
     // If not threaded and no external interface, can delete
     else if (!Threaded && !GetExternalInterface())
@@ -1156,9 +1122,7 @@ namespace Audio
       mCustomNotifySent = true;
 
       // Send notification
-      if (GetSiblingNode())
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::SendEventToExternalData, 
-            GetSiblingNode(), AudioEventTypes::MusicCustomTime, (void*)nullptr));
+      AddTaskForSiblingThreaded(&SoundNode::SendEventToExternalData, AudioEventTypes::MusicCustomTime);
     }
 
     MusicNotify.ProcessAndNotify((float)mCurrentTime, GetSiblingNode());
@@ -1181,10 +1145,6 @@ namespace Audio
 
     SoundNode::DisconnectThisAndAllInputs();
 
-    if (GetSiblingNode())
-    {
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundInstanceNode::FinishedCleanUp, 
-        ((SoundInstanceNode*)GetSiblingNode())));
-    }
+    AddTaskForSibling(&SoundInstanceNode::FinishedCleanUp);
   }
 }

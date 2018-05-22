@@ -7,39 +7,63 @@
 namespace Zero
 {
 
+namespace Events
+{
+	DefineEvent(BugReporterResponse);
+}//namespace Events
+
+ZilchDefineType(BugReporter, builder, type)
+{
+}
+
+ZilchDefineType(BugReporterResponse, builder, type)
+{
+	ZilchBindFieldProperty(mResponse);
+}
+
+BugReporterResponse::BugReporterResponse() : mResponse()
+{
+}
+
+BugReporterResponse::BugReporterResponse(String response) : mResponse(response)
+{
+}
+
 BugReporter::BugReporter(Composite* parent) :
   Composite(parent)
 {
   mSent = false;
   this->SetLayout(CreateStackLayout());
-  mMinSize = Vec2(500, 600);
+  mMinSize = Vec2(10, 10);
+  this->SetSize(Vec2(500, 600));
 
   new Label(this, cText, "ZeroHub Username:");
-  mUserName = new TextBox(this);
-  mUserName->SetEditable(true);
+  mUsername = new TextBox(this);
+  mUsername->SetEditable(true);
+
+  mSelectorButton = new SelectorButton(this);
+  mSelectorButton->CreateButton("Bug Report");
+  mSelectorButton->CreateButton("Feature Request");
+  mSelectorButton->SetSelectedItem(0, false);
 
   new Label(this, cText, "Title:");
   mTitle = new TextBox(this);
   mTitle->SetEditable(true);
 
-  new Label(this, cText, "Reproduction steps:");
+  new Label(this, cText, "Description:");
+  mDescription = new TextEditor(this);
+  mDescription->SetMinSize(Vec2(10, 10));
+  mDescription->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
+  mDescription->SetWordWrap(true);
+  mDescription->DisableScrollBar(0);
+
+  new Label(this, cText, "Reproduction Steps:");
   mRepro = new TextEditor(this);
-  mRepro->SetMinSize(Vec2(100, 60));
+  mRepro->SetMinSize(Vec2(10, 10));
   mRepro->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
-  mRepro->Append("\n\n");
+  mRepro->SetWordWrap(true);
+  mRepro->DisableScrollBar(0);
 
-  new Label(this, cText, "What's expected:");
-  mExpected = new TextEditor(this);
-  mExpected->SetMinSize(Vec2(100, 60));
-  mExpected->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
-  mExpected->Append("\n\n");
-
-  new Label(this, cText, "What happened:");
-  mHappened = new TextEditor(this);
-  mHappened->SetMinSize(Vec2(100, 60));
-  mHappened->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
-  mHappened->Append("\n\n");
-  
   new Label(this, cText, "Include File:");
 
   auto fileRow = new Composite(this);
@@ -67,6 +91,7 @@ BugReporter::BugReporter(Composite* parent) :
   ConnectThisTo(mSend, Events::ButtonPressed, OnSend);
   ConnectThisTo(mBrowse, Events::ButtonPressed, OnBrowse);
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
+  ConnectThisTo(this, Events::BugReporterResponse, OnBugReporterResponse);
 }
 
 BugReporter::~BugReporter()
@@ -76,16 +101,29 @@ BugReporter::~BugReporter()
 void BugReporter::Reset()
 {
   mSent = false;
-  mUserName->SetText(String());
+  mUsername->SetText(String());
   mTitle->SetText(String());
-  mExpected->SetAllText(String());
-  mHappened->SetAllText(String());
+  mDescription->SetAllText(String());
   mRepro->SetAllText(String());
   mIncludeFile->SetText(String());
   mIncludeClipboardImage->SetChecked(false);
   mIncludeScreenshot->SetChecked(false);
   mIncludeProject->SetChecked(false);
-  mUserName->TakeFocus();
+
+  mSelectorButton->SetSelectedItem(0, false);
+
+  // Check for saved username from user's config.
+  if (Z::gEditor != nullptr && Z::gEditor->mConfig != nullptr)
+  {
+    if (EditorConfig* editorConfig = Z::gEditor->mConfig->has(EditorConfig))
+      mUsername->SetText(editorConfig->ZeroHubUsername);
+  }
+
+  // Set focus on username field if it's empty.
+  if (mUsername->GetText().Empty())
+    mUsername->TakeFocus();
+  else
+    mTitle->TakeFocus();
 }
 
 void BugReporter::OnBrowse(Event* event)
@@ -140,6 +178,48 @@ String GenerateTempFile(StringParam name, StringParam extension)
   return FilePath::Combine(directory, fileName);
 }
 
+void BugReporter::OnBugReporterResponse(BugReporterResponse* event)
+{
+	// Check if http response indicates fail or success.
+	// Waypoint returns the following on success of both filing the task and uploading associated files:
+	// "Success: T%taskId% | %Title% successfully added to phabricator"
+	// Waypoint returns the following on failure of either filing the task or uploading associated files:
+	// "HTTP %ErrorCode% Upload Failed: %Error Message%"
+	String response = event->mResponse;
+	if (response.StartsWith("Success:"))
+	{
+		// Extract the task ID
+		Regex taskIdRegex("T\\d+");
+		Matches taskIdMatches;
+		taskIdRegex.Search(response, taskIdMatches);
+
+		// If there are no task Id's in the response then direct to user to the latest bug reports
+		if (taskIdMatches.Empty())
+		{
+			DoNotifyWarning("Bug Reporter", "ZeroHub returned success, but did not include a TaskID. Please visit https://dev.zeroengine.io/u/latestbugs to find your task, or contact a ZeroHub administrator.");
+			return;
+		}
+
+		// Build the notify message
+		String taskId = taskIdMatches.Front();
+		StringBuilder notifyBuilder;
+		notifyBuilder.Append(response);
+		notifyBuilder.Append("Bug URL: https://dev.zeroengine.io/");
+		notifyBuilder.Append(taskId);
+
+		// Notify the user that their bug was submitted successfully
+		DoNotify("Bug Reporter", notifyBuilder.ToString(), "Disk");
+	}
+	// If the response does not start with "Success:" then it failed, in which case the server response is returned to the user.
+	else
+	{
+		DoNotifyWarning("Bug Reporter", response);
+
+		// Open the browser to the bug report form if the bug reporter failed to file the bug from the editor
+		Z::gEditor->ShowBrowser("https://dev.zeroengine.io/u/BugReport", "Bug Report Form");
+	}
+}
+
 void BugReporter::OnSend(Event* event)
 {
   // Verify that the user entered a title
@@ -153,14 +233,22 @@ void BugReporter::OnSend(Event* event)
   if (mSent)
     return;
 
+  // Set the entered username on the config.
+  if (Z::gEditor != nullptr && Z::gEditor->mConfig != nullptr)
+  {
+    if (EditorConfig* editorConfig = Z::gEditor->mConfig->has(EditorConfig))
+      editorConfig->ZeroHubUsername = mUsername->GetText();
+  }
+
   BugReportJob* job = new BugReportJob();
 
-  job->mUserName = mUserName->GetText();
+  job->mUsername = mUsername->GetText();
   job->mTitle = mTitle->GetText();
+  job->mDescription = mDescription->GetAllText();
   job->mRepro = mRepro->GetAllText();
-  job->mExpected = mExpected->GetAllText();
-  job->mHappened = mHappened->GetAllText();
   job->mIncludedFile = mIncludeFile->GetText();
+
+  job->mReportType = mSelectorButton->mButtons[mSelectorButton->GetSelectedItem()]->mButtonText->GetText();
 
   OsShell* shell = Z::gEngine->has(OsShell);
 
@@ -206,11 +294,13 @@ int BugReportJob::Execute()
   bugReportUrl.Append("https://bugs.zeroengine.io");
 
   request.AddField("Key", "kcy43UsUp4Rz/X0OFnCHDmgZECqB9NZbUTdx7chShJA=");
-  request.AddField("UserName", mUserName);
+  request.AddField("UserName", mUsername);
   request.AddField("Title", mTitle);
-  request.AddField("Repro", mRepro);
-  request.AddField("Expected", mExpected);
-  request.AddField("Happened", mHappened);
+  request.AddField("ReportType", mReportType);
+  if (!mDescription.Empty())
+    request.AddField("Description", mDescription);
+  if (!mRepro.Empty())
+    request.AddField("Repro", mRepro);
   request.AddField("Revision", GetRevisionNumberString());
   request.AddField("ChangeSet", GetChangeSetString());
   request.AddField("Platform", GetPlatformString());
@@ -263,6 +353,11 @@ int BugReportJob::Execute()
   // File the bug
   request.mUrl = bugReportUrl.ToString();
   response = request.Run();
+
+  // Pipe the http response back to the BugReporter
+  BugReporterResponse* eventToSend = new BugReporterResponse(response);
+  Z::gDispatch->Dispatch(Z::gEditor->mBugReporter, Events::BugReporterResponse, eventToSend);
+
 
   SendBlockingTaskFinish();
   return true;

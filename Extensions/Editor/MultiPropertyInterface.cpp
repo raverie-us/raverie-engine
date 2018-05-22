@@ -435,7 +435,7 @@ void MultiPropertyInterface::Redo()
 
 //******************************************************************************
 void MultiPropertyInterface::CaptureState(PropertyStateCapture& capture, HandleParam multiObject,
-                                          Property* property)
+                                          PropertyPathParam property)
 {
   // For every selected object capture the state
   forRange(Object* objectInstance, mSelection->AllOfType<Object>())

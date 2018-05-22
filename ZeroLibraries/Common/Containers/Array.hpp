@@ -40,6 +40,7 @@ public:
   typedef ptrdiff_t                             difference_type;
   typedef Array<ValueType, Allocator, value_tt> this_type;
   typedef AllocationContainer<Allocator>        base_type;
+  typedef reference                             FrontResult;
   using base_type::mAllocator;
 
   /// Type Traits

@@ -72,6 +72,7 @@ public:
     Link<Node> link;
   };
 
+  typedef OrderedHashSet<T> this_type;
   typedef HashMap<T, Node*> MapType;
   typedef InList<Node> ListType;
   typedef typename ListType::range ListTypeRange;
@@ -101,6 +102,11 @@ public:
   bool Empty() const
   {
     return mMap.Empty();
+  }
+
+  void Insert(const T& value)
+  {
+    InsertOrIgnore(value);
   }
 
   void InsertInternal(const T& value)
@@ -187,6 +193,13 @@ public:
     Range range;
     range.mRange = mList.All();
     return range;
+  }
+
+  typedef Range range;
+
+  bool operator==(const this_type& other)
+  {
+    return mMap == other.mMap;
   }
 
   MapType mMap;

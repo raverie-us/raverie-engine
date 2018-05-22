@@ -154,7 +154,8 @@ ZilchDefineType(OperationQueue, builder, type)
   ZilchBindGetterProperty(Commands);
   ZilchBindGetterProperty(RedoCommands);
 
-  ZilchBindMethod(BeginBatch);
+  ZilchBindOverloadedMethod(BeginBatch, ZilchInstanceOverload(void, StringParam));
+  ZilchBindOverloadedMethod(BeginBatch, ZilchInstanceOverload(void));
   ZilchBindMethod(EndBatch);
 
   ZilchBindMethod(SaveObjectState);
@@ -383,6 +384,14 @@ void OperationQueue::SetActiveBatchName(StringParam batchName)
 {
   if(ActiveBatch != nullptr)
     ActiveBatch->mName = batchName;
+}
+
+//******************************************************************************
+void OperationQueue::BeginBatch(StringParam batchName)
+{
+  BeginBatch();
+
+  ActiveBatch->mName = batchName;
 }
 
 //******************************************************************************

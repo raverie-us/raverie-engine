@@ -93,6 +93,7 @@
     <ClCompile Include="SoundNode.cpp" />
     <ClCompile Include="stb_vorbis.cpp" />
     <ClCompile Include="Tags.cpp" />
+    <ClCompile Include="VBAP.cpp" />
     <ClCompile Include="VolumeNodes.cpp" />
     <ClCompile Include="WASAPI.cpp" />
     <ClCompile Include="WindowsMIDI.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="SoundNode.h" />
     <ClInclude Include="stb_vorbis.h" />
     <ClInclude Include="Tags.h" />
+    <ClInclude Include="VBAP.h" />
     <ClInclude Include="VolumeNodes.h" />
     <ClInclude Include="WASAPI.h" />
     <ClInclude Include="WindowsMIDI.h" />

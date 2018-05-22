@@ -30,35 +30,6 @@ namespace Audio
       sizeof(float) * numberOfSamples);
   }
 
-  //------------------------------------------------------------------------- Audio Channels Manager
-
-  class AudioChannelsManager
-  {
-  public:
-    AudioChannelsManager();
-    ~AudioChannelsManager();
-
-    void GetClosestSpeakerValues(Math::Vec2 sourceVec, unsigned numberOfChannels, float& gain1, 
-      float& gain2, int& channel1, int& channel2);
-
-  private:
-    struct SpeakerInfo
-    {
-      SpeakerInfo() : Channel1(-1), Channel2(-1) {}
-
-      Math::Mat2 SpeakerMatrix;
-      int Channel1;
-      int Channel2;
-
-      void GetGainValues(const Math::Vec2& sourceVec, float& gain1, float& gain2);
-    };
-
-    SpeakerInfo* SpeakerMatrixArrays[9];
-
-    void CreateSpeakerMatrix();
-
-  };
-
   //------------------------------------------------------------------------------------ Audio Frame
   
   class AudioFrame
@@ -68,26 +39,28 @@ namespace Audio
     AudioFrame();
     AudioFrame(const AudioFrame& copy);
 
-    void TranslateChannels(const unsigned channels);
-    void SetSamples(float* samples, unsigned channels);
+    float* GetSamples(const unsigned channels);
+    void SetSamples(const float* samples, unsigned channels);
     void Clamp();
     float GetMaxValue();
     float GetMonoValue();
     void operator*=(float multiplier);
     void operator=(const AudioFrame& copy);
-
-    float Samples[8];
-
+    
   private:
     enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
-    unsigned HowManyChannels;
-    const float* Matrices[MaxChannels];
+    unsigned mStoredChannels;
+    const float* Matrices[MaxChannels + 1];
+    float mSamples[MaxChannels];
+    float mCopiedSamples[MaxChannels];
+
+    static void CopySamples(const float* source, float* destination, const unsigned channels);
   };
   
   //-------------------------------------------------------------------------- Audio System Internal
 
   // Main audio system. 
-  class AudioSystemInternal
+  class AudioSystemInternal : public ExternalNodeInterface
   {
   public:
     AudioSystemInternal(ExternalSystemInterface* extInterface);
@@ -120,6 +93,8 @@ namespace Audio
     void RemoveSoundNode(SoundNode* node, const bool threaded);
     // Sets the threaded variable for the minimum volume threshold.
     void SetMinVolumeThresholdThreaded(const float volume);
+    // Sets whether or not all audio should be muted
+    void SetMutedThreaded(bool muteAudio);
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
@@ -140,7 +115,6 @@ namespace Audio
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
     
-    AudioChannelsManager ChannelsManager;
     AudioInputOutput* AudioIO;
     
   private:
@@ -228,14 +202,11 @@ namespace Audio
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
     void GetAudioInputDataThreaded(unsigned howManySamples);
-
-    class NodeInterface : public ExternalNodeInterface
-    {
-    public:
-      void SendAudioEvent(const AudioEventTypes::Enum eventType, void* data) override {}
-    };
-
-    NodeInterface NodeInt;
+    // If true, audio will be processed normally but will not be sent to the output device
+    bool Muted;
+    bool MutedThreaded;
+    // Used to know when to set the Muted variable
+    bool MutingThreaded;
 
     friend class AudioSystemInterface;
     friend class AudioInputOutput;
@@ -254,29 +225,31 @@ namespace Audio
   When up-sampling it's reversed
   Order is FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight
   */
+  
+  static const float Sqrt2Inv = 1.0f / Math::Sqrt(2.0f);
 
   static const float ChannelMatrix1[MaxChannels] =
   {
-    0.707f, 0.707f, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
+    Sqrt2Inv, Sqrt2Inv, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
   };
 
   static const float ChannelMatrix2[MaxChannels * 2] =
   {
-    1.0f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f,
-    0.0f, 1.0f, 0.707f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f
+    1.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
+    0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv
   };
 
   static const float ChannelMatrix3[MaxChannels * 3] =
   {
-    1.0f, 0.0f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.707f, 0.0f, 0.707f,
+    1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv,
     0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
   };
 
   static const float ChannelMatrix4[MaxChannels * 4] =
   {
-    1.0f, 0.0f, 0.707f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.707f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, 0.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };

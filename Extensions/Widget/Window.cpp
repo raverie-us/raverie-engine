@@ -144,6 +144,7 @@ TabWidget::TabWidget(Composite* parent)
   ConnectThisTo(this, Events::RightClick, OnRightClick);
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
+  ConnectThisTo(this, Events::MouseHover, OnMouseHover);
 }
 
 void TabWidget::LockTab()
@@ -243,6 +244,24 @@ void TabWidget::OnMouseDrag(MouseEvent* event)
   }
 }
 
+void TabWidget::OnMouseHover(MouseEvent* event)
+{
+  if (mToolTip.IsNull() && mTitle->IsTextClipped())
+  {
+    ToolTip* toolTip = new ToolTip(this);
+    toolTip->SetText(mTitle->GetText());
+    toolTip->SetColorScheme(ToolTipColorScheme::Default);
+
+    ToolTipPlacement placement;
+    placement.SetScreenRect(GetScreenRect());
+    placement.SetPriority(IndicatorSide::Top, IndicatorSide::Left,
+      IndicatorSide::Right, IndicatorSide::Bottom);
+    toolTip->SetArrowTipTranslation(placement);
+    toolTip->UpdateTransform();
+    mToolTip = toolTip;
+  }
+}
+
 void TabWidget::OnNewWindow(Event* event)
 {
   if(mTabArea->mParentWindow->mManager)
@@ -297,7 +316,7 @@ void TabWidget::OnOwnedChangedFocus(FocusEvent* event)
 
 void TabWidget::OnOwnedWidgetResourceModified(TabRenamedEvent* e)
 {
-  String title = BuildString("Level: ", e->Name);
+  String title = e->Name;
 
   if(mOwned != nullptr)
     mOwned->mName = title;

@@ -54,15 +54,15 @@ namespace Audio
   //---------------------------------------------------------------------------------- Listener Node
 
   //************************************************************************************************
-  ListenerNode::ListenerNode(Zero::Status& status, Zero::StringParam name, unsigned ID,
-    ListenerWorldPositionInfo positionInfo, ExternalNodeInterface* extInt, bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+  ListenerNode::ListenerNode(Zero::StringParam name, unsigned ID,
+      ListenerWorldPositionInfo positionInfo, ExternalNodeInterface* extInt, bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     ThreadedData(nullptr),
     Active(true),
     mAttenuationScale(1.0f)
   {
     if (!Threaded)
-      SetSiblingNodes(new ListenerNode(status, name, ID, positionInfo, nullptr, true), status);
+      SetSiblingNodes(new ListenerNode(name, ID, positionInfo, nullptr, true));
     else
       ThreadedData = new ListenerNodeData(positionInfo);
   }
@@ -150,9 +150,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ListenerNode::SetPositionData,
-        (ListenerNode*)GetSiblingNode(), positionInfo));
+      AddTaskForSibling(&ListenerNode::SetPositionData, positionInfo);
     }
     else
     {
@@ -181,9 +179,7 @@ namespace Audio
     {
       Active = active;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ListenerNode::SetActive,
-        (ListenerNode*)GetSiblingNode(), active));
+      AddTaskForSibling(&ListenerNode::SetActive, active);
     }
     else
     {
@@ -224,9 +220,8 @@ namespace Audio
   {
     mAttenuationScale = scale;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&ListenerNode::SetAttenuationScale,
-      (ListenerNode*)GetSiblingNode(), scale));
+    if (!Threaded)
+      AddTaskForSibling(&ListenerNode::SetAttenuationScale, scale);
   }
 
   //************************************************************************************************

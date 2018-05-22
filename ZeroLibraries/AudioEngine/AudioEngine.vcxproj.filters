@@ -126,6 +126,9 @@
     <ClCompile Include="GranularSynthNode.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="VBAP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modifiers.h">
@@ -250,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="GranularSynthNode.h">
       <Filter>Source Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="VBAP.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

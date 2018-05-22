@@ -1191,11 +1191,11 @@ namespace Zilch
     ZilchFullBindEnumValue(builder, type, enumType::Values[i], enumType::Names[i]);    \
   }
 
-#define ZilchDefineEnum(enumType)                                                      \
-  ZilchDefineExternalBaseType(enumType::Enum, TypeCopyMode::ValueType, builder, type)  \
-  {                                                                                    \
-    ZilchFullBindEnum(builder, type, SpecialType::Enumeration);                        \
-    ZilchBindEnumValues(enumType);                                                     \
+#define ZilchDefineEnum(enumType)                                                         \
+  ZilchDefineExternalBaseType(enumType::Enum, ZZ::TypeCopyMode::ValueType, builder, type) \
+  {                                                                                       \
+    ZilchFullBindEnum(builder, type, ZZ::SpecialType::Enumeration);                       \
+    ZilchBindEnumValues(enumType);                                                        \
   }
 
 #define ZilchInitializeEnum(enumType) ZilchInitializeExternalTypeAs(enumType::Enum, #enumType);

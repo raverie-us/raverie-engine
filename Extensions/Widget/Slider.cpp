@@ -254,6 +254,14 @@ void Slider::SetPercentage(float percentage, bool sendMessage)
   // Set the new value based on the percentage
   float valueRange = (mMaxValue - mMinValue);
   float newValue = mMinValue + valueRange * percentage;
+
+  // Snap the value to the given increment
+  newValue = Snap(newValue, mIncrement);
+
+  // Even with the increment clamped, 'Value' can go outside of the valid range if the
+  // increment doesn't evenly divide the total range size.
+  newValue = Math::Clamp(newValue, mMinValue, mMaxValue);
+
   SetValue(newValue, sendMessage);
 }
 
@@ -264,21 +272,12 @@ float Slider::GetValue()
 }
 
 //******************************************************************************
-float SnapIncrement(float input, float increment)
-{
-  float normalized = input / increment;
-  float rounded = floor(normalized + 0.5f) * increment;
-  return rounded;
-}
-
-//******************************************************************************
 void Slider::SetValue(float newValue, bool sendEvents)
 {
   // We're now considered valid
   mInvalid = false;
 
-  // Snap the value
-  mValue = SnapIncrement(newValue, mIncrement);
+  mValue = newValue;
 
   // Update the progress bar
   mProgressBar->SetPercentage(GetPercentage());

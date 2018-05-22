@@ -11,13 +11,14 @@ namespace Audio
 {
   class ListenerNode;
   class ExternalNodeInterface;
+  class EventData;
 
   //------------------------------------------------------------------------------------- Sound Node
 
   class SoundNode 
   {
   public:
-    SoundNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt,
+    SoundNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt,
       const bool listenerDependent, const bool generator, const bool isThreaded);
 
     // ***** Virtual functions that CAN be overridden, but usually shouldn't. Be careful. *****
@@ -75,7 +76,8 @@ namespace Audio
     // ***** These must be public but should not be used outside of this system *****
 
     // Sends an audio event to the external interface
-    void SendEventToExternalData(const AudioEventTypes::Enum eventType, void* data);
+    void SendEventToExternalData(AudioEventTypes::Enum eventType);
+    void SendEventDataToExternalData(EventData* data);
     // Should be implemented by nodes if they keep track of data per listeners
     virtual void RemoveListener(ListenerNode* listener) {}
     // Returns the sum of all volumes from outputs. Will return 0.0 by default. The output
@@ -97,7 +99,7 @@ namespace Audio
     // Get this node's threaded or non-threaded counterpart
     SoundNode* GetSiblingNode();
     // Sets the sibling node variables for both this node and its threaded counterpart
-    void SetSiblingNodes(SoundNode* threadedNode, Zero::Status& previousStatus);
+    void SetSiblingNodes(SoundNode* threadedNode);
     // Returns the pointer to the node's external interface
     ExternalNodeInterface* GetExternalInterface() { return ExternalData; }
     // Uses the BypassValue to add a portion of the InputSamples buffer to the passed-in buffer
@@ -155,6 +157,79 @@ namespace Audio
     
     friend class AudioSystemInternal;
     friend class AudioSystemInterface;
+
+  protected:
+    // Set a variable 
+    template <typename InstanceType, typename MemberType>
+    void AddTaskForSibling(MemberType InstanceType::*memberPointer, MemberType value)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(memberPointer, (InstanceType*)SiblingNode, value));
+    }
+
+    // Set a variable from mix thread
+    template <typename InstanceType, typename MemberType>
+    void AddTaskForSiblingThreaded(MemberType InstanceType::*memberPointer, MemberType value)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(memberPointer, (InstanceType*)SiblingNode, value));
+    }
+
+    // Call a function with no parameters
+    template <typename ReturnType, typename InstanceType>
+    void AddTaskForSibling(ReturnType(InstanceType::*functionPointer)())
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode));
+    }
+
+    // Call a function with no parameters from mix thread
+    template <typename ReturnType, typename InstanceType>
+    void AddTaskForSiblingThreaded(ReturnType(InstanceType::*functionPointer)())
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode));
+    }
+
+    // Call a function with one parameter
+    template <typename ReturnType, typename InstanceType, typename P0>
+    void AddTaskForSibling(ReturnType(InstanceType::*functionPointer)(P0), P0 p0)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0));
+    }
+
+    // Call a function with one parameter from mix thread
+    template <typename ReturnType, typename InstanceType, typename P0>
+    void AddTaskForSiblingThreaded(ReturnType(InstanceType::*functionPointer)(P0), P0 p0)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0));
+    }
+
+    // Call a function with two parameters
+    template <typename ReturnType, typename InstanceType, typename P0, typename P1>
+    void AddTaskForSibling(ReturnType(InstanceType::*functionPointer)(P0, P1), P0 p0, P1 p1)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0, p1));
+    }
+
+    // Call a function with two parameters from mix thread
+    template <typename ReturnType, typename InstanceType, typename P0, typename P1>
+    void AddTaskForSiblingThreaded(ReturnType(InstanceType::*functionPointer)(P0, P1), P0 p0, P1 p1)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0, p1));
+    }
+
+    // Call a function with three parameters
+    template <typename ReturnType, typename InstanceType, typename P0, typename P1, typename P2>
+    void AddTaskForSibling(ReturnType(InstanceType::*functionPointer)(P0, P1, P2), P0 p0, P1 p1, P2 p2)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0, p1, p2));
+    }
   };
 
   //------------------------------------------------------------------------------------ Output Node
@@ -163,7 +238,7 @@ namespace Audio
   class OutputNode : public SoundNode
   {
   public:
-    OutputNode(Zero::Status& status, Zero::StringParam name, ExternalNodeInterface* extInt, bool isThreaded);
+    OutputNode(Zero::StringParam name, ExternalNodeInterface* extInt, bool isThreaded);
 
     float GetVolumeChangeFromOutputs() override;
 
@@ -189,9 +264,9 @@ namespace Audio
   class SimpleCollapseNode : public SoundNode
   {
   public:
-    SimpleCollapseNode(Zero::Status& status, Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+    SimpleCollapseNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
         bool listenerDependent, bool generator, bool threaded) :
-      SoundNode(status, name, ID, extInt, listenerDependent, generator, threaded) 
+      SoundNode(name, ID, extInt, listenerDependent, generator, threaded) 
     {}
 
   protected:
@@ -209,8 +284,8 @@ namespace Audio
   class CombineNode : public SimpleCollapseNode
   {
   public:
-    CombineNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-      ExternalNodeInterface* extInt, bool isThreaded = false);
+    CombineNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded = false);
 
   private:
     ~CombineNode() {}
@@ -224,8 +299,8 @@ namespace Audio
   class CombineAndPauseNode : public SimpleCollapseNode
   {
   public:
-    CombineAndPauseNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-      ExternalNodeInterface* extInt, bool isThreaded = false);
+    CombineAndPauseNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded = false);
 
     void SetPaused(const bool paused);
     bool GetPaused();

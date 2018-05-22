@@ -13,7 +13,7 @@ namespace Zero
 {
 
 //Application Startup Function
-bool Startup(Engine* engine, StringMap& parameters);
+bool Startup(Engine* engine, StringMap& parameters, String projectFile);
 
 }
 
@@ -50,6 +50,11 @@ ZeroGuiMain()
   CrashHandler::SetSendCrashReportCallback(Zero::SendCrashReport, NULL);
   CrashHandler::SetCrashStartCallback(Zero::CrashStartCallback, NULL);
 
+  Importer importer;
+  ImporterResult::Type importResult = importer.CheckForImport();
+  if(importResult == ImporterResult::ExecutedAnotherProcess)
+    return 1;
+
   // Get the command line
   Array<String> commandLineArray;
   GetCommandLineStringArray(commandLineArray);
@@ -63,23 +68,25 @@ ZeroGuiMain()
   if(!environment->GetParsedArgument("logStdOut").Empty())
     Zero::Console::Add(&stdoutListener);
 
-  // Importer is used 
-  Importer import;
-  ImporterResult::Enum importResult = import.CheckForImport();
-  if(importResult == ImporterResult::ExecutedAnotherProcess)
-    return 1;
+  String appDirectory = GetApplicationDirectory();
+  String projectFile = FilePath::Combine(appDirectory, "Project.zeroproj");
+  
+  // Fix the project file path for exports to be in the import's output directory
+  bool embededPackage = (importResult == ImporterResult::Embeded);
+  if(embededPackage)
+    projectFile = FilePath::Combine(importer.mOutputDirectory, "Project.zeroproj");
 
   // Startup the engine
   ZeroStartupSettings settings;
   settings.mTweakableFileName = "EditorTweakables";
-  settings.mEmbeddedPackage = (importResult == ImporterResult::Embeded);
-  settings.mEmbeddedWorkingDirectory = import.mOutputDirectory;
+  settings.mEmbeddedPackage = embededPackage;
+  settings.mEmbeddedWorkingDirectory = importer.mOutputDirectory;
 
   ZeroStartup startup;
   Engine* engine = startup.Initialize(settings);
 
   //Run application specific startup
-  bool success = Zero::Startup(engine, environment->mParsedCommandLineArguments);
+  bool success = Zero::Startup(engine, environment->mParsedCommandLineArguments, projectFile);
 
   //Failed startup do not run
   if(!success)

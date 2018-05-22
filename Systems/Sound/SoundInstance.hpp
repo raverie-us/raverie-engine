@@ -113,13 +113,19 @@ public:
   /// The time in seconds from the beginning of the file that the instance will stop.
   float GetEndTime();
   void SetEndTime(float seconds);
+  /// The time in seconds from the beginning of the file that the instance will jump back to when it loops.
+  float GetLoopStartTime();
+  void SetLoopStartTime(float seconds);
+  /// The time in seconds from the beginning of the file that the instance will stop and jump back when looping.
+  float GetLoopEndTime();
+  void SetLoopEndTime(float seconds);
   /// The time (in seconds from the beginning of the file) to get a MusicCustomTime event.
   float GetCustomEventTime();
   void SetCustomEventTime(float seconds);
   /// The name of the Sound being played by this SoundInstance.
   StringParam GetSoundName();
 
-  // Internals
+// Internals
   Array<SoundTag*> SoundTags;
   // The speed of the music in beats per minute.
   float GetBeatsPerMinute();
@@ -129,13 +135,13 @@ public:
 
 private:
   HandleOf<SoundNode> mSoundNode;
-  void Play(bool loop, SoundTag *tag, Audio::SoundNode* outputNode, bool startPaused);
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  void Play(bool loop, Audio::SoundNode* outputNode, bool startPaused);
+  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
+  void SendAudioEventData(Audio::EventData* data) override;
+  Audio::SoundInstanceNode* GetNode();
 
   Audio::SoundAsset* mAssetObject;
   SoundSpace* mSpace;
-  bool mIsPaused;
-  bool mIsPlaying;
 
   friend class SoundEmitter;
   friend class SoundSpace;

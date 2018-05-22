@@ -18,6 +18,7 @@ namespace Events
   DefineEvent(FrameUpdate);
   DefineEvent(GraphicsFrameUpdate);
   DefineEvent(LogicUpdate);
+  DefineEvent(PreviewUpdate);
   DefineEvent(EngineUpdate);
   DefineEvent(EngineShutdown);
   DefineEvent(ActionFrameUpdate);
@@ -50,6 +51,7 @@ ZilchDefineType(TimeSpace, builder, type)
 
   ZeroBindEvent(Events::LogicUpdate, UpdateEvent);
   ZeroBindEvent(Events::FrameUpdate, UpdateEvent);
+  ZeroBindEvent(Events::PreviewUpdate, UpdateEvent);
 
   ZeroBindDependency(Space);
 
@@ -73,13 +75,7 @@ ZilchDefineType(TimeSpace, builder, type)
 TimeSpace::TimeSpace()
 {
   mTimeSystem = NULL;
-
-  mSystemLogicUpdateEvent = Events::SystemLogicUpdate;
-  mFrameUpdateEvent = Events::FrameUpdate;
-  mLogicUpdateEvent = Events::LogicUpdate;
-  mActionFrameUpdateEvent = Events::ActionFrameUpdate;
-  mActionLogicUpdateEvent = Events::ActionLogicUpdate;
-
+  
   mPaused = false;
   mFrame = 0;
 
@@ -145,7 +141,7 @@ void TimeSpace::Update(float dt)
   // If this is a preview space and we're sending out update (should include any special preview update)
   // we don't want notifications to happen which we're previewing, as its very annoying to the user
   NotificationCallback notify = nullptr;
-  if(space->mCreationFlags.IsSet(CreationFlags::Preview))
+  if(space->IsPreviewMode())
     notify = IgnoreDoNotify;
   TemporaryDoNotifyOverride doNotifyOverride(notify);
   Array<NotificationCallback>& cb = Z::gNotifyCallbackStack;
@@ -190,12 +186,18 @@ void TimeSpace::Update(float dt)
 
     {
       ProfileScopeTree("FrameUpdate", "TimeSystem", Color::PaleGoldenrod);
-      dispatcher->Dispatch(mFrameUpdateEvent, &updateEvent);
+      dispatcher->Dispatch(Events::FrameUpdate, &updateEvent);
     }
 
     {
       ProfileScopeTree("ActionFrameUpdateEvent", "TimeSystem", Color::BlueViolet);
-      dispatcher->Dispatch(mActionFrameUpdateEvent, &updateEvent);
+      dispatcher->Dispatch(Events::ActionFrameUpdate, &updateEvent);
+    }
+
+    if(space->IsPreviewMode())
+    {
+      ProfileScopeTree("PreviewUpdateEvent", "TimeSystem", Color::Gainsboro);
+      dispatcher->Dispatch(Events::PreviewUpdate, &updateEvent);
     }
 
     if(!GetGloballyPaused())
@@ -225,17 +227,17 @@ void TimeSpace::Step()
 
   {
     ProfileScopeTree("SystemLogicUpdate", "TimeSystem", Color::RoyalBlue);
-    dispatcher->Dispatch(mSystemLogicUpdateEvent, &updateEvent);
+    dispatcher->Dispatch(Events::SystemLogicUpdate, &updateEvent);
   }
 
   {
     ProfileScopeTree("LogicUpdate", "TimeSystem", Color::Gainsboro);
-    dispatcher->Dispatch(mLogicUpdateEvent, &updateEvent);
+    dispatcher->Dispatch(Events::LogicUpdate, &updateEvent);
   }
 
   {
     ProfileScopeTree("ActionLogicUpdateEvent", "TimeSystem", Color::BlanchedAlmond);
-    dispatcher->Dispatch(mActionLogicUpdateEvent, &updateEvent);
+    dispatcher->Dispatch(Events::ActionLogicUpdate, &updateEvent);
   }
 }
 

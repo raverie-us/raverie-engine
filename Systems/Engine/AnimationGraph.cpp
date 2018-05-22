@@ -305,6 +305,12 @@ void AnimationGraph::PreviewGraph()
 }
 
 //******************************************************************************
+void AnimationGraph::SetPreviewMode()
+{
+  ConnectThisTo(GetSpace(), Events::PreviewUpdate, OnUpdate);
+}
+
+//******************************************************************************
 bool AnimationGraph::IsPlayingInGraph(Animation* animation)
 {
   if(mActiveNode)

@@ -108,20 +108,31 @@ void SoundTag::Unload()
 }
 
 //**************************************************************************************************
-void SoundTag::TagSound(SoundInstance* instance)
+void SoundTag::TagSound(HandleOf<SoundInstance>& instance)
 {
+  // Check if this sound is already tagged
+  if (SoundInstanceList.Contains(instance))
+    return;
+
+  // If we have an instance limit and we've reached it, stop the sound and return
+  if (GetInstanceLimit() > 0 && SoundInstanceList.Size() >= GetInstanceLimit())
+  {
+    instance->Stop();
+    return;
+  }
+
   if (mTagObject)
     mTagObject->AddInstance((Audio::SoundInstanceNode*)instance->GetSoundNode()->mNode);
-  SoundInstanceList.PushBack(Handle(instance));
+  SoundInstanceList.PushBack(instance);
   instance->SoundTags.PushBack(this);
 }
 
 //**************************************************************************************************
-void SoundTag::UnTagSound(SoundInstance* instance)
+void SoundTag::UnTagSound(HandleOf<SoundInstance>& instance)
 {
   if (mTagObject)
     mTagObject->RemoveInstance((Audio::SoundInstanceNode*)instance->GetSoundNode()->mNode);
-  SoundInstanceList.EraseValue(Handle(instance));
+  SoundInstanceList.EraseValue(instance);
   instance->SoundTags.EraseValue(this);
 }
 
@@ -451,7 +462,7 @@ void SoundTag::SetInstanceLimit(float limit)
 }
 
 //**************************************************************************************************
-void SoundTag::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void * data)
+void SoundTag::SendAudioEvent(Audio::AudioEventTypes::Enum eventType)
 {
   if (eventType == Audio::AudioEventTypes::TagAddedInstance)
   {

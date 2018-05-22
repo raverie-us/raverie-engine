@@ -36,8 +36,8 @@ void ChangeAndQueueProperty(OperationQueue* queue, HandleParam object,
   queue->SetActiveBatchName(BuildString(propertyOperation->mName, " Batch"));
 
   // Remove the property from the path, so we have a sub object
-  // Turns CameraViewport's "CameraPath.Cog" to "CameraPath". This allows other
-  // the CogPath to also change the "Path" property on CogPath.
+  // Turns CameraViewport's "CameraPath.Cog" to "CameraPath". This allows the
+  // other CogPath to also change the "Path" property on CogPath.
   PropertyPath localPath = property;
   localPath.PopEntry();
   OperationQueue::PushSubPropertyContext(object, localPath);
@@ -424,7 +424,14 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
 {
   // Attempt to grab the object from the undo map
   Handle object = MetaOperation::GetUndoObject();
-  ReturnIf(object == NULL, , "Invalid undo object handle.");
+  ReturnIf(object == nullptr, , "Invalid undo object handle.");
+
+  // Check if the component type meta is still valid
+  if (mComponentType == nullptr)
+  {
+    DoNotifyWarning("Invalid Undo/Redo Operation", "Attempting to add a component type that has been deleted from the project.");
+    return;
+  }
 
   // Create the component
   BoundType* componentType = mComponentType;

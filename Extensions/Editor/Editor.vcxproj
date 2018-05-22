@@ -234,6 +234,7 @@
     <ClInclude Include="ItemList.hpp" />
     <ClInclude Include="ListView.hpp" />
     <ClInclude Include="MetaCompositionWrapper.hpp" />
+    <ClInclude Include="PreviewWidgets.hpp" />
     <ClInclude Include="RotationBasisGizmos.hpp" />
     <ClInclude Include="BroadPhaseEditor.hpp" />
     <ClInclude Include="BugReport.hpp" />

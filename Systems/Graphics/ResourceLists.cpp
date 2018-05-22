@@ -45,7 +45,7 @@ GraphicsResourceList& GraphicsResourceList::operator=(const GraphicsResourceList
 }
 
 //**************************************************************************************************
-Array<String>::range GraphicsResourceList::All()
+Array<String>::range GraphicsResourceList::GetIdNames()
 {
   return mResourceIdNames.All();
 }
@@ -91,8 +91,11 @@ void GraphicsResourceList::RemoveResource(StringParam resourceIdName)
 //**************************************************************************************************
 ZilchDefineType(RenderGroupList, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  type->AddAttribute(ObjectAttributes::cHidden);
+  ZeroBindDocumented();
+
+  ZilchBindMethod(Add);
+  ZilchBindMethod(Remove);
+  ZilchBindMethod(All);
 }
 
 //**************************************************************************************************
@@ -108,10 +111,57 @@ String RenderGroupList::GetResourceTypeName()
 }
 
 //**************************************************************************************************
+void RenderGroupList::Add(RenderGroup& renderGroup)
+{
+  if (mReadOnly)
+    return DoNotifyException("Error", "Cannot modify ReferencedBy list.");
+
+  if (!mOwner->IsRuntime())
+    return DoNotifyException("Error", "Cannot modify non-runtime resource.");
+
+  if (mResourceIdNames.Contains(renderGroup.ResourceIdName))
+    return;
+
+  AddResource(renderGroup.ResourceIdName);
+}
+
+//**************************************************************************************************
+void RenderGroupList::Remove(RenderGroup& renderGroup)
+{
+  if (mReadOnly)
+    return DoNotifyException("Error", "Cannot modify ReferencedBy list.");
+
+  if (!mOwner->IsRuntime())
+    return DoNotifyException("Error", "Cannot modify non-runtime resource.");
+
+  if (!mResourceIdNames.Contains(renderGroup.ResourceIdName))
+    return;
+
+  RemoveResource(renderGroup.ResourceIdName);
+}
+
+//**************************************************************************************************
+Array<HandleOf<RenderGroup>> RenderGroupList::All()
+{
+  Array<HandleOf<RenderGroup>> resources;
+  forRange (String idName, mResourceIdNames.All())
+  {
+    RenderGroup* renderGroup = RenderGroupManager::Instance->FindOrNull(idName);
+    if (renderGroup != nullptr)
+      resources.PushBack(renderGroup);
+  }
+
+  return resources;
+}
+
+//**************************************************************************************************
 ZilchDefineType(MaterialList, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  type->AddAttribute(ObjectAttributes::cHidden);
+  ZeroBindDocumented();
+
+  ZilchBindMethod(Add);
+  ZilchBindMethod(Remove);
+  ZilchBindMethod(All);
 }
 
 //**************************************************************************************************
@@ -127,9 +177,53 @@ String MaterialList::GetResourceTypeName()
 }
 
 //**************************************************************************************************
+void MaterialList::Add(Material& material)
+{
+  if (mReadOnly)
+    return DoNotifyException("Error", "Cannot modify ReferencedBy list.");
+
+  if (!mOwner->IsRuntime())
+    return DoNotifyException("Error", "Cannot modify non-runtime resource.");
+
+  if (mResourceIdNames.Contains(material.ResourceIdName))
+    return;
+
+  AddResource(material.ResourceIdName);
+}
+
+//**************************************************************************************************
+void MaterialList::Remove(Material& material)
+{
+  if (mReadOnly)
+    return DoNotifyException("Error", "Cannot modify ReferencedBy list.");
+
+  if (!mOwner->IsRuntime())
+    return DoNotifyException("Error", "Cannot modify non-runtime resource.");
+
+  if (!mResourceIdNames.Contains(material.ResourceIdName))
+    return;
+
+  RemoveResource(material.ResourceIdName);
+}
+
+//**************************************************************************************************
+Array<HandleOf<Material>> MaterialList::All()
+{
+  Array<HandleOf<Material>> resources;
+  forRange (String idName, mResourceIdNames.All())
+  {
+    Material* material = MaterialManager::Instance->FindOrNull(idName);
+    if (material != nullptr)
+      resources.PushBack(material);
+  }
+
+  return resources;
+}
+
+//**************************************************************************************************
 void ResourceListAdd(Material* material)
 {
-  forRange (String& resourceIdName, material->mSerializedList.All())
+  forRange (String& resourceIdName, material->mSerializedList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
     if (renderGroup != nullptr)
@@ -140,7 +234,7 @@ void ResourceListAdd(Material* material)
 //**************************************************************************************************
 void ResourceListAdd(RenderGroup* renderGroup)
 {
-  forRange (String& resourceIdName, renderGroup->mSerializedList.All())
+  forRange (String& resourceIdName, renderGroup->mSerializedList.GetIdNames())
   {
     Material* material = MaterialManager::FindOrNull(resourceIdName);
     if (material != nullptr)
@@ -174,7 +268,7 @@ void ResourceListRemove(RenderGroup* renderGroup)
 void ResourceListResolveReferences(Material* material)
 {
   // Find any entries in serialized list that previously didn't exist
-  forRange (String& resourceIdName, material->mSerializedList.All())
+  forRange (String& resourceIdName, material->mSerializedList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
     if (renderGroup != nullptr)
@@ -190,7 +284,7 @@ void ResourceListResolveReferences(Material* material)
 void ResourceListResolveReferences(RenderGroup* renderGroup)
 {
   // Find any entries in serialized list that previously didn't exist
-  forRange (String& resourceIdName, renderGroup->mSerializedList.All())
+  forRange (String& resourceIdName, renderGroup->mSerializedList.GetIdNames())
   {
     Material* material = MaterialManager::FindOrNull(resourceIdName);
     if (material != nullptr)

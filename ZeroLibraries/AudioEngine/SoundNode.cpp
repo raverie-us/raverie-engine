@@ -12,9 +12,8 @@ namespace Audio
   //------------------------------------------------------------------------------------- Sound Node
 
   //************************************************************************************************
-  SoundNode::SoundNode(Zero::Status& status, Zero::StringParam name, const unsigned ID, 
-      ExternalNodeInterface* extInt, const bool listenerDependent, const bool generator, 
-      const bool isThreaded) :
+  SoundNode::SoundNode(Zero::StringParam name, const unsigned ID, ExternalNodeInterface* extInt, 
+      const bool listenerDependent, const bool generator, const bool isThreaded) :
     SiblingNode(nullptr),
     InProcess(false), 
     ExternalData(extInt), 
@@ -69,11 +68,9 @@ namespace Audio
     newNode->Outputs.PushBack(this);
 
     // If not threaded, send a message to the threaded node
-    if (!Threaded)
+    if (!Threaded && newNode->SiblingNode)
     {
-      if (SiblingNode && newNode->SiblingNode)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::AddInput, SiblingNode, 
-          newNode->SiblingNode));
+      AddTaskForSibling(&SoundNode::AddInput, newNode->SiblingNode);
     }
   }
 
@@ -89,9 +86,8 @@ namespace Audio
     // If not threaded, send a message to the threaded node
     if (!Threaded)
     {
-      if (SiblingNode && node->SiblingNode)
-        gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::RemoveInput, SiblingNode, 
-          node->SiblingNode));
+      if (node->SiblingNode)
+        AddTaskForSibling(&SoundNode::RemoveInput, node->SiblingNode);
 
       if (Inputs.Empty())
       {
@@ -285,7 +281,7 @@ namespace Audio
         DisconnectOnlyThis();
 
       // Send a message to the threaded node
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::DeleteThisNode, SiblingNode));
+      AddTaskForSibling(&SoundNode::DeleteThisNode);
 
       // Can't send any more messages to threaded node, so get rid of pointer
       SiblingNode = NULL;
@@ -368,8 +364,8 @@ namespace Audio
     Collapse = shouldCollapse;
 
     // If not threaded, send message to threaded node
-    if (!Threaded && SiblingNode)
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::Collapse, SiblingNode, shouldCollapse));
+    if (!Threaded)
+      AddTaskForSibling(&SoundNode::SetCollapse, shouldCollapse);
   }
 
   //************************************************************************************************
@@ -390,19 +386,30 @@ namespace Audio
     BypassValue = bypassValue;
 
     // If not threaded, send message to threaded node
-    if (!Threaded && SiblingNode)
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundNode::SetBypassValue, SiblingNode, bypassValue));
+    if (!Threaded)
+      AddTaskForSibling(&SoundNode::SetBypassValue, bypassValue);
   }
 
   //************************************************************************************************
-  void SoundNode::SendEventToExternalData(const AudioEventTypes::Enum eventType, void* data)
+  void SoundNode::SendEventToExternalData(AudioEventTypes::Enum eventType)
   {
     if (Threaded)
       return;
 
     // If the interface exists, send the event
     if (ExternalData)
-      ExternalData->SendAudioEvent(eventType, data);
+      ExternalData->SendAudioEvent(eventType);
+  }
+
+  //************************************************************************************************
+  void SoundNode::SendEventDataToExternalData(EventData* data)
+  {
+    if (Threaded)
+      return;
+
+    // If the interface exists, send the event
+    if (ExternalData)
+      ExternalData->SendAudioEventData(data);
   }
 
   //************************************************************************************************
@@ -444,9 +451,7 @@ namespace Audio
         gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioError, 
             gAudioSystem->ExternalInterface, message));
 
-        if (GetSiblingNode())
-          gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&SoundNode::DisconnectOnlyThis, 
-            GetSiblingNode()));
+        AddTaskForSiblingThreaded(&SoundNode::DisconnectOnlyThis);
 
         return false;
       }
@@ -581,10 +586,10 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void SoundNode::SetSiblingNodes(SoundNode* threadedNode, Zero::Status& previousStatus)
+  void SoundNode::SetSiblingNodes(SoundNode* threadedNode)
   {
     // Only run this on the non-threaded node
-    if (previousStatus.Succeeded() && !Threaded && threadedNode)
+    if (!Threaded && threadedNode)
     {
       // Set this node's sibling pointer
       SiblingNode = threadedNode;
@@ -623,10 +628,7 @@ namespace Audio
     {
       // Send a message to the external interface if it exists
       if (ExternalData)
-      {
-        ExternalData->SendAudioEvent(AudioEventTypes::NodeDisconnected, (void*)nullptr);
-        gAudioSystem->ExternalInterface->SendAudioEvent(AudioEventTypes::NodeDisconnected, (void*)ExternalData);
-      }
+        ExternalData->SendAudioEvent(AudioEventTypes::NodeDisconnected);
       // Otherwise, delete the node
       else
         DeleteThisNode();
@@ -652,12 +654,11 @@ namespace Audio
   //------------------------------------------------------------------------------------ Output Node
 
   //************************************************************************************************
-  OutputNode::OutputNode(Zero::Status& status, Zero::StringParam name, ExternalNodeInterface* nodeInt,
-    bool isThreaded) :
-    SoundNode(status, name, 0, nodeInt, false, false, isThreaded)
+  OutputNode::OutputNode(Zero::StringParam name, ExternalNodeInterface* nodeInt, bool isThreaded) :
+    SoundNode(name, 0, nodeInt, false, false, isThreaded)
   {
     if (!isThreaded)
-      SetSiblingNodes(new OutputNode(status, "ThreadedOutputNode", nodeInt, true), status);
+      SetSiblingNodes(new OutputNode("ThreadedOutputNode", nodeInt, true));
   }
 
   //************************************************************************************************
@@ -702,12 +703,12 @@ namespace Audio
   //----------------------------------------------------------------------------------- Combine Node
 
   //************************************************************************************************
-  CombineNode::CombineNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
-      ExternalNodeInterface* extInt, bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded)
+  CombineNode::CombineNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
+      bool isThreaded) :
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded)
   {
     if (!Threaded)
-      SetSiblingNodes(new CombineNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new CombineNode(name, ID, extInt, true));
   }
 
   //************************************************************************************************
@@ -730,15 +731,15 @@ namespace Audio
   //------------------------------------------------------------------------- Combine And Pause Node
 
   //************************************************************************************************
-  CombineAndPauseNode::CombineAndPauseNode(Zero::Status& status, Zero::StringParam name, unsigned ID, 
+  CombineAndPauseNode::CombineAndPauseNode(Zero::StringParam name, unsigned ID, 
       ExternalNodeInterface* extInt, bool isThreaded) :
-    SimpleCollapseNode(status, name, ID, extInt, false, false, isThreaded),
+    SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     Paused(false),
     Pausing(false),
     Interpolating(false)
   {
     if (!Threaded)
-      SetSiblingNodes(new CombineAndPauseNode(status, name, ID, extInt, true), status);
+      SetSiblingNodes(new CombineAndPauseNode(name, ID, extInt, true));
   }
 
   //************************************************************************************************
@@ -746,9 +747,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&CombineAndPauseNode::SetPaused, 
-          (CombineAndPauseNode*)GetSiblingNode(), paused));
+      AddTaskForSibling(&CombineAndPauseNode::SetPaused, paused);
 
       Paused = paused;
     }

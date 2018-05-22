@@ -15,6 +15,7 @@ GeometryImporter::GeometryImporter(String inputFile, String outputPath, String m
     mBaseMeshName(FilePath::GetFileNameWithoutExtension(inputFile)),
     mUniquifyingIndex(0)
 {
+  mAssetImporter.SetPropertyBool(AI_CONFIG_IMPORT_FBX_STRICT_MODE, true);
 }
 
 GeometryImporter::~GeometryImporter()
@@ -90,6 +91,7 @@ int GeometryImporter::ProcessModelFiles()
   if (!mScene)
   {
     String error(mAssetImporter.GetErrorString());
+    error = ProcessAssimpErrorMessage(error);
     ZPrint("Geometry Processor Error: %s\n", error.c_str());
     return Zero::GeometryProcessorCodes::Failed;
   }
@@ -465,79 +467,14 @@ bool GeometryImporter::UpdateBuilderMetaData()
   return metaChanges;
 }
 
-//   void GeometryImporter::GenerateNormals(MeshData& meshData)
-//   {
-//     // zero out all the existing normals or garbage data
-//     size_t vertexBufferSize = meshData.mVertexBuffer.Size();
-//     for (size_t i = 0; i < vertexBufferSize; ++i)
-//       meshData.mVertexBuffer[i].mNormal = Vec3(0, 0, 0);
-// 
-//     Array<float> vertexInfluence;
-//     vertexInfluence.Resize(vertexBufferSize, 0.0f);
-//     // loop through and generate all the face normals
-//     size_t indexBufferSize = meshData.mIndexBuffer.Size();
-//     for (size_t i = 0; i < indexBufferSize; i += 3)
-//     {
-//       uint indexA = meshData.mIndexBuffer[i];
-//       uint indexB = meshData.mIndexBuffer[i + 1];
-//       uint indexC = meshData.mIndexBuffer[i + 2];
-//       VertexData& vertexA = meshData.mVertexBuffer[indexA];
-//       VertexData& vertexB = meshData.mVertexBuffer[indexB];
-//       VertexData& vertexC = meshData.mVertexBuffer[indexC];
-// 
-//       Vec3 faceNormal = Geometry::GenerateNormal(vertexA.mPosition, vertexB.mPosition, vertexC.mPosition);
-//       vertexA.mNormal += faceNormal;
-//       vertexB.mNormal += faceNormal;
-//       vertexC.mNormal += faceNormal;
-//       vertexInfluence[indexA] += 1.f;
-//       vertexInfluence[indexB] += 1.f;
-//       vertexInfluence[indexC] += 1.f;
-//     }
-// 
-//     for (size_t i = 0; i < vertexBufferSize; ++i)
-//       meshData.mVertexBuffer[i].mNormal /= vertexInfluence[i];
-// 
-//   }
+String GeometryImporter::ProcessAssimpErrorMessage(StringParam errorMessage)
+{
+  // This string is output when the FBX file experiences a parsing error, most likely a result of the format
+  // but assimp attempts to parse the entire FBX DOM before checking if the format is supported
+  if (errorMessage.Contains("FBX-Tokenize"))
+    return String("FBX Parsing Error. Supported formats are FBX 2011, FBX 2012 and FBX 2013.");
 
-//   void GeometryImporter::SmoothNormals(MeshData& meshData)
-//   {
-//     MeshBuilder* meshBuilder = mGeometryContent->has(MeshBuilder);
-//     float smoothingThresholdRadians = Math::DegToRad(meshBuilder->mSmoothingAngleDegreesThreshold);
-// 
-//     typedef  HashMap<Vec3, Array<uint>> VertexMultiMap;
-//     VertexMultiMap vertexDataMultiMap;
-// 
-//     // collect all vertices at the same position into arrays
-//     size_t vertexBufferSize = meshData.mVertexBuffer.Size();
-//     for (size_t i = 0; i < vertexBufferSize; ++i)
-//       vertexDataMultiMap[meshData.mVertexBuffer[i].mPosition].PushBack(i);
-// 
-//     VertexMultiMap::valuerange range = vertexDataMultiMap.Values();
-//     // go over all the arrays of collected alike vertices
-//     while (!range.Empty())
-//     {
-//       Array<uint>& alikeVertices = range.Front();
-//       range.PopFront();
-// 
-//       while (alikeVertices.Size() > 1)
-//       {
-//         size_t indexA = alikeVertices.Back();
-//         alikeVertices.PopBack();
-//         size_t indexB = alikeVertices.Back();
-//         alikeVertices.PopBack();
-//         VertexData& vertexA = meshData.mVertexBuffer[indexA];
-//         VertexData& vertexB = meshData.mVertexBuffer[indexB];
-//         ErrorIf(vertexA.mPosition != vertexB.mPosition, "Two vertices considered the same are different");
-//         if (acos(vertexA.mNormal.Dot(vertexB.mNormal)) <= smoothingThresholdRadians)
-//         {
-//           Vec3 smoothedNormal = vertexA.mNormal + vertexB.mNormal;
-//           smoothedNormal /= 2.f;
-//           smoothedNormal.Normalize();
-//           vertexA.mNormal = vertexB.mNormal = smoothedNormal;
-//         }
-//         alikeVertices.PushBack(indexB);
-//       }
-//     }
-//   }
+  return errorMessage;
+}
 
 }// namespace Zero

@@ -365,6 +365,11 @@ void EditorMain::EditColorScheme(CommandEvent* event)
   mMainPropertyView->EditObject( GetColorScheme(), true);
 }
 
+void EditorMain::ClearConsole(CommandEvent* event)
+{
+  mConsole->ClearAllReadOnly();
+}
+
 void EditorMain::OnNameActivated(TypeEvent* event)
 {
   BoundType* boundType = event->mType;
@@ -853,7 +858,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   SetupGraphCommands(config, commands);
   BindArchiveCommands(config, commands);
   BindGraphicsCommands(config, commands);
-  //BindGeometryCommands(config, commands);
   BindCreationCommands(config, commands);
   BindDocumentationCommands(config, commands);
   BindProjectCommands(config, commands);
@@ -915,7 +919,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("Properties", ShowProperties);
     BindCommand("SelectEditorConfig", ShowConfig);
     BindCommand("SelectProject", ShowProject);
-    BindCommand("Tweakables", SelectTweakables);
     BindCommand("Library", ShowLibrary);
     BindCommand("Console", ToggleConsole);
     BindCommand("Browser", ShowBrowser);
@@ -925,8 +928,8 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("BroadPhaseTracker", ShowBroadPhaseTracker);
     BindCommand("VolumeMeter", ShowVolumeMeter);
     BindCommand("SoundNodeGraph", ShowSoundNodeGraph);
-
     BindCommand("EditColorScheme", EditColorScheme);
+    BindCommand("ClearConsole", ClearConsole);
     BindCommand("ShowCoreLibrary", ShowCoreLibrary);
 
     Connect(Z::gEngine, Events::BlockingTaskStart, editorMain, &EditorMain::OnBlockingTaskStart);

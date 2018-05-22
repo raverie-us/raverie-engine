@@ -167,6 +167,7 @@ public:
 #include "LibraryView.hpp"
 #include "ConsoleUi.hpp"
 #include "UiLegacyToolTip.hpp"
+#include "PreviewWidgets.hpp"
 
 // Animator
 #include "AnimationEditorData.hpp"

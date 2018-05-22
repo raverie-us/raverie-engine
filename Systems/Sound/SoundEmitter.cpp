@@ -160,20 +160,10 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
   ErrorIf(!mSpace, "No SoundSpace when initializing SoundEmitter");
   if (mSpace)
   {
-    Zero::Status status;
-
     // Add emitter to the space
     mSpace->mEmitters.PushBack(this);
     // Add a new emitter to the audio engine
-    mEmitterObject = new Audio::EmitterNode(status, "Emitter", mNodeID, mPrevPosition, 
-      Math::Vec3(0, 0, 0), this);
-    if (status.Failed())
-    {
-      DoNotifyError("Error Initializing SoundEmitter", status.Message);
-      mEmitterObject->DeleteThisNode();
-      mEmitterObject = nullptr;
-      return;
-    }
+    mEmitterObject = new Audio::EmitterNode("Emitter", mNodeID, mPrevPosition, Math::Vec3(0, 0, 0), this);
 
     // If directional, set directional information in audio engine
     if (mDirectional)
@@ -192,35 +182,14 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
     }
 
     // Add a new pitch node below the emitter node
-    mPitchNode = new Audio::PitchNode(status, "Emitter", mNodeID, this);
-    if (status.Succeeded())
-    {
-      mPitchNode->SetPitch((int)(Z::gSound->PitchToSemitones(mPitch) * 100.0f), 0.0f);
-      mPitchNode->AddInput(mEmitterObject);
-    }
-    else
-    {
-      DoNotifyWarning("Error Creating SoundEmitter PitchNode", status.Message);
-      mPitchNode->DeleteThisNode();
-      mPitchNode = nullptr;
-    }
+    mPitchNode = new Audio::PitchNode("Emitter", mNodeID, this);
+    mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), 0.0f);
+    mPitchNode->AddInput(mEmitterObject);
 
     // Add a new volume node below the emitter node
-    mVolumeNode = new Audio::VolumeNode(status, "Emitter", mNodeID, this);
-    if (status.Succeeded())
-    {
-      mVolumeNode->SetVolume(mVolume, 0.0f);
-      if (mPitchNode)
-        mVolumeNode->AddInput(mPitchNode);
-      else
-        mVolumeNode->AddInput(mEmitterObject);
-    }
-    else
-    {
-      DoNotifyWarning("Error Creating SoundEmitter VolumeNode", status.Message);
-      mVolumeNode->DeleteThisNode();
-      mVolumeNode = nullptr;
-    }
+    mVolumeNode = new Audio::VolumeNode("Emitter", mNodeID, this);
+    mVolumeNode->SetVolume(mVolume, 0.0f);
+    mVolumeNode->AddInput(mPitchNode);
 
     // Create the SoundNode for the OutputNode
     SoundNode* outNode = new SoundNode();
@@ -335,7 +304,7 @@ void SoundEmitter::InterpolatePitch(float pitch, float interpolationTime)
   mPitch = pitch;
 
   if (mPitchNode)
-    mPitchNode->SetPitch((int)(Z::gSound->PitchToSemitones(mPitch) * 100.0f), interpolationTime);
+    mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), interpolationTime);
 }
 
 //**************************************************************************************************
@@ -356,7 +325,7 @@ void SoundEmitter::InterpolateSemitones(float pitch, float interpolationTime)
   mPitch = Z::gSound->SemitonesToPitch(pitch);
 
   if (mPitchNode)
-    mPitchNode->SetPitch((int)(pitch * 100.0f), interpolationTime);
+    mPitchNode->SetPitch(pitch, interpolationTime);
 }
 
 //**************************************************************************************************
@@ -684,7 +653,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
 }
 
 //**************************************************************************************************
-void SoundEmitter::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data)
+void SoundEmitter::SendAudioEvent(Audio::AudioEventTypes::Enum eventType)
 {
   if (eventType == Audio::AudioEventTypes::InterpolationDone)
   {

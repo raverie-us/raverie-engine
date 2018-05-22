@@ -30,7 +30,7 @@ ZilchDefineType(PreviewWidget, builder, type)
 
 //******************************************************************************
 PreviewWidget::PreviewWidget(Composite* parent)
-  : Composite(parent)
+  : Composite(parent), mBackground(nullptr), mInteractive(false)
 {
   mMinSize = PreviewWidgetUi::DefaultSize;
 }
@@ -42,6 +42,7 @@ PreviewWidget::PreviewWidget(PreviewWidgetInitializer& initializer)
   mObject = initializer.Object;
   mName = initializer.Name;
   mMinSize = PreviewWidgetUi::DefaultSize;
+  mInteractive = initializer.Interactive;
 }
 
 //******************************************************************************
@@ -206,6 +207,7 @@ PreviewWidget* ResourcePreview::CreatePreviewWidget(Composite* parent, StringPar
     initializer.Area = parent;
     initializer.Name = name;
     initializer.Object = instance;
+    initializer.Interactive = false;
 
     PreviewWidget* tileViewWidget = (*createTileWidget.Creator)(initializer);
     return tileViewWidget;

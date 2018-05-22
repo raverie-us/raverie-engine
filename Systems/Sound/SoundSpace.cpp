@@ -89,15 +89,10 @@ void SoundSpace::Initialize(CogInitializer& config)
   // Create the input node
   mSpaceNodeID = Z::gSound->mCounter++;
   mSoundNodeInput = new SoundNode();
-  Status status;
   String name = "Space";
   if (mEditorMode)
     name = "EditorSpace";
-  mSoundNodeInput->SetNode(new Audio::CombineAndPauseNode(status, name, mSpaceNodeID, 
-    &mNodeInterface), status);
-
-  if (status.Failed())
-    return;
+  mSoundNodeInput->mNode = new Audio::CombineAndPauseNode(name, mSpaceNodeID, this);
 
   mSoundNodeInput->mCanInsertAfter = false;
   mSoundNodeInput->mCanReplace = false;
@@ -105,11 +100,8 @@ void SoundSpace::Initialize(CogInitializer& config)
 
   // Create the volume node as the output node
   mSoundNodeOutput = new SoundNode();
-  mVolumeNode = new Audio::VolumeNode(status, name, mSpaceNodeID, &mNodeInterface);
-  mSoundNodeOutput->SetNode(mVolumeNode, status);
-
-  if (status.Failed())
-    return;
+  mVolumeNode = new Audio::VolumeNode(name, mSpaceNodeID, this);
+  mSoundNodeOutput->mNode = mVolumeNode;
   
   mVolumeNode->AddInput(mSoundNodeInput->mNode);
   mSoundNodeOutput->mCanInsertBefore = false;
@@ -187,20 +179,11 @@ void SoundSpace::InterpolatePitch(float pitch, float time)
 
   if (!mPitchNode)
   {
-    Status status;
-    mPitchNode = new Audio::PitchNode(status, "Space", mSpaceNodeID, &mNodeInterface);
-    if (status.Succeeded())
-      mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
-    else
-    {
-      DoNotifyWarning("Audio Error", status.Message);
-      mPitchNode->DeleteThisNode();
-      mPitchNode = nullptr;
-      return;
-    }
+    mPitchNode = new Audio::PitchNode("Space", mSpaceNodeID, this);
+    mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
   }
 
-  mPitchNode->SetPitch((int)(Z::gSound->PitchToSemitones(mPitch) * 100.0f), time);
+  mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), time);
 }
 
 //**************************************************************************************************
@@ -222,20 +205,11 @@ void SoundSpace::InterpolateSemitones(float semitones, float time)
 
   if (!mPitchNode)
   {
-    Status status;
-    mPitchNode = new Audio::PitchNode(status, "Space", mSpaceNodeID, &mNodeInterface);
-    if (status.Succeeded())
-      mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
-    else
-    {
-      DoNotifyWarning("Audio Error", status.Message);
-      mPitchNode->DeleteThisNode();
-      mPitchNode = nullptr;
-      return;
-    }
+    mPitchNode = new Audio::PitchNode("Space", mSpaceNodeID, this);
+    mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
   }
 
-  mPitchNode->SetPitch((int)(semitones * 100.0f), time);
+  mPitchNode->SetPitch(semitones, time);
 }
 
 //**************************************************************************************************

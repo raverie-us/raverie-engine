@@ -13,6 +13,7 @@ namespace Events
 {
 DefineEvent(ScriptsCompiledPrePatch);
 DefineEvent(ScriptsCompiledCommit);
+DefineEvent(ScriptsCompiledPatch);
 DefineEvent(ScriptsCompiledPostPatch);
 DefineEvent(ScriptCompilationFailed);
 }//namespace Events
@@ -123,6 +124,7 @@ void ZilchManager::InternalCompile()
     mPendingFragmentProjectLibrary = nullptr;
   }
 
+  this->DispatchEvent(Events::ScriptsCompiledPatch, &compileEvent);
   this->DispatchEvent(Events::ScriptsCompiledPostPatch, &compileEvent);
 
   MetaDatabase::GetInstance()->ClearRemovedLibraries();

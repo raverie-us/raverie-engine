@@ -49,6 +49,8 @@ ZilchDefineType(SplineParticleEmitter, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
+  ZeroBindInterface(ParticleEmitterShared);
+
   ZilchBindFieldProperty(mEmitRadius);
   ZilchBindFieldProperty(mSpawnT)->Add(new EditorSlider(0, 1, 0.001f));
   ZilchBindFieldProperty(mSpawnTVariance)->Add(new EditorSlider(0, 0.5f, 0.001f));

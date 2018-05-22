@@ -134,6 +134,8 @@ ScrollBar::ScrollBar(BaseScrollArea* scrollparent, uint orientation)
   ConnectThisTo(mDown, Events::LeftMouseDown, MouseDownDown);
   ConnectThisTo(mDown, Events::MouseEnter, MouseEnterDown);
   ConnectThisTo(mDown, Events::MouseExit, MouseExitDown);
+
+  ConnectThisTo(mSlider, Events::RightMouseUp, OnRightMouseUp);
 }
 
 
@@ -196,6 +198,11 @@ void ScrollBar::MouseEnterDown(MouseEvent* event)
 void ScrollBar::MouseExitDown(MouseEvent* event)
 {
   mDown->ChangeDefinition(mDefSet->GetDefinition(cScrollerButton));
+}
+
+void ScrollBar::OnRightMouseUp(MouseEvent* event)
+{
+  event->Handled = true;
 }
 
 //------------------------------------------------------------- Base Scroll Area

@@ -178,7 +178,6 @@ namespace Audio
     ZPrint("Device name : %s\n", DeviceName);
     ZPrint("Channels    : %d\n", Format->nChannels);
     ZPrint("Sample rate : %d\n", Format->nSamplesPerSec);
-    ZPrint("Bit rate    : %d\n", Format->wBitsPerSample / 2);
 
     // Initialize the audio client with the smallest acceptable buffer size
     result = AudioClient->Initialize(
@@ -451,9 +450,12 @@ namespace Audio
       Reset();
       return true;
     }
-    // If we timed out waiting for WASAPI, return and stop
+    // If we timed out waiting for WASAPI, try to reset (will use fallback if it fails)
     else if (waitResult == WAIT_TIMEOUT)
-      return false;
+    {
+      Reset();
+      return true;
+    }
 
     HRESULT result;
 

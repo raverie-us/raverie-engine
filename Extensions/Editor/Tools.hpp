@@ -50,10 +50,22 @@ public:
 //------------------------------------------------------------------ Select Tool
 /// <Commands>
 ///   <command name = "MultiSelect">
+///     <shortcut> Shift + Click </shortcut>
+///     <description>
+///       Add/Remove the object click on to/from the current selection.
+///     </description>
+///   </command>
+///   <command name = "MultiSelection">
 ///     <shortcut> Shift + Drag </shortcut>
 ///     <description>
-///       Select all objects inside the box bound by the initial drag point and
-///       the current mouse cursor position.
+///       Add all objects inside the selection box to the current selection.
+///     </description>
+///   </command>
+///   <command name = "SmartMultiSelection">
+///     <shortcut> Ctrl + Shift + Drag </shortcut>
+///     <description>
+///       Add all objects that belong to a currently selected hierarchy
+///       inside the selection box to the current selection.
 ///     </description>
 ///   </command>
 /// </Commands>

@@ -433,7 +433,8 @@ bool ComplexCastVsShape(const CastType& castShape, Collider* complexCollider,
     {
       result->mPoints[0] = Math::TransformPoint(transform, result->mPoints[0]);
       result->mPoints[1] = Math::TransformPoint(transform, result->mPoints[1]);
-      result->mContactNormal = Math::TransformNormal(transform, result->mContactNormal).Normalized();
+      result->mContactNormal = worldTransform->TransformSurfaceNormal(result->mContactNormal);
+      result->mContactNormal.AttemptNormalize();
     }
   }
   else
@@ -505,7 +506,8 @@ bool SpecialComplexCastVsShape(const CastType& castShape, Collider* complexColli
   if(ColliderType::RangeInLocalSpace::value)
   {
     //if local, we have to transform the shape back into local space
-    Mat4 transform = complexCollider->GetWorldTransform()->GetWorldMatrix();
+    WorldTransformation* worldTransform = complexCollider->GetWorldTransform();
+    Mat4 transform = worldTransform->GetWorldMatrix();
     Mat4 invTransform = transform.Inverted();
 
     AutoDeclare(localShape, castShape.Transform(invTransform));
@@ -518,7 +520,8 @@ bool SpecialComplexCastVsShape(const CastType& castShape, Collider* complexColli
     {
       result->mPoints[0] = Math::TransformPoint(transform, result->mPoints[0]);
       result->mPoints[1] = Math::TransformPoint(transform, result->mPoints[1]);
-      result->mContactNormal = Math::TransformNormal(transform, result->mContactNormal).Normalized();
+      result->mContactNormal = worldTransform->TransformSurfaceNormal(result->mContactNormal);
+      result->mContactNormal.AttemptNormalize();
     }
   }
   else

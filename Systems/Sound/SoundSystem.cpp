@@ -90,6 +90,7 @@ ZilchDefineType(SoundSystem, builder, type)
   ZilchBindGetterSetter(DispatchMicrophoneUncompressedFloatData);
   ZilchBindGetterSetter(DispatchMicrophoneCompressedByteData);
   ZilchBindGetter(OutputChannels);
+  ZilchBindGetterSetter(MuteAllAudio);
 
   ZilchBindMethod(VolumeNode);
   ZilchBindMethod(PanningNode);
@@ -169,9 +170,8 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
   if (status.Failed())
     DoNotifyWarning("Audio Initialization Unsuccessful", status.Message);
 
-  status.Reset();
   SoundNode* node = new SoundNode();
-  node->SetNode(new Audio::CombineNode(status, "AudioOutput", mCounter++, nullptr), status);
+  node->mNode = new Audio::CombineNode("AudioOutput", mCounter++, nullptr);
   mAudioSystem->AddNodeToOutput(node->mNode);
   mOutputNode = node;
   
@@ -198,6 +198,18 @@ float SoundSystem::GetSystemVolume()
 void SoundSystem::SetSystemVolume(float volume)
 {
   mAudioSystem->SetVolume(Math::Max(volume, 0.0f));
+}
+
+//**************************************************************************************************
+bool SoundSystem::GetMuteAllAudio()
+{
+  return mAudioSystem->GetMuteAllAudio();
+}
+
+//**************************************************************************************************
+void SoundSystem::SetMuteAllAudio(bool muteAudio)
+{
+  mAudioSystem->SetMuteAllAudio(muteAudio);
 }
 
 //**************************************************************************************************
@@ -331,69 +343,70 @@ float SoundSystem::DecibelsToVolume(float decibels)
 }
 
 //**************************************************************************************************
-void SoundSystem::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void * data)
+void SoundSystem::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType)
 {
   if (eventType == Audio::AudioEventTypes::AudioClipping)
     DoNotifyWarning("Audio Error", "Audio is too loud and is being clipped. Reduce volume or number of sounds to avoid audio problems.");
-  else if (eventType == Audio::AudioEventTypes::MidiNoteOn)
+}
+
+//**************************************************************************************************
+void SoundSystem::SendAudioEventData(Audio::EventData* data)
+{
+  if (data->mEventType == Audio::AudioEventTypes::MidiNoteOn)
   {
-    Audio::MidiData* midiData = (Audio::MidiData*)data;
-    MidiEvent event((float)midiData->Channel, midiData->Value1, midiData->Value2);
+    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
+    MidiEvent event((float)midiData->mData1, midiData->mData2, midiData->mData3);
     DispatchEvent(Events::MIDINoteOn, &event);
-    delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::AudioEventTypes::MidiNoteOff)
+  else if (data->mEventType == Audio::AudioEventTypes::MidiNoteOff)
   {
-    Audio::MidiData* midiData = (Audio::MidiData*)data;
-    MidiEvent event((float)midiData->Channel, midiData->Value1, 0);
+    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
+    MidiEvent event((float)midiData->mData1, midiData->mData2, 0);
     DispatchEvent(Events::MIDINoteOff, &event);
-    delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::AudioEventTypes::MidiPitchWheel)
+  else if (data->mEventType == Audio::AudioEventTypes::MidiPitchWheel)
   {
-    Audio::MidiData* midiData = (Audio::MidiData*)data;
-    MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
+    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
+    MidiEvent event((float)midiData->mData1, 0, midiData->mData2);
     DispatchEvent(Events::MIDIPitchWheel, &event);
-    delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::AudioEventTypes::MidiVolume)
+  else if (data->mEventType == Audio::AudioEventTypes::MidiVolume)
   {
-    Audio::MidiData* midiData = (Audio::MidiData*)data;
-    MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
+    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
+    MidiEvent event((float)midiData->mData1, 0, midiData->mData2);
     DispatchEvent(Events::MIDIVolume, &event);
-    delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::AudioEventTypes::MidiModWheel)
+  else if (data->mEventType == Audio::AudioEventTypes::MidiModWheel)
   {
-    Audio::MidiData* midiData = (Audio::MidiData*)data;
-    MidiEvent event((float)midiData->Channel, 0, midiData->Value1);
+    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
+    MidiEvent event((float)midiData->mData1, 0, midiData->mData2);
     DispatchEvent(Events::MIDIModWheel, &event);
-    delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::AudioEventTypes::MidiControl)
+  else if (data->mEventType == Audio::AudioEventTypes::MidiControl)
   {
-    Audio::MidiData* midiData = (Audio::MidiData*)data;
-    MidiEvent event((float)midiData->Channel, midiData->Value1, midiData->Value2);
+    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
+    MidiEvent event((float)midiData->mData1, midiData->mData2, midiData->mData3);
     DispatchEvent(Events::MIDIOtherControl, &event);
-    delete (Audio::MidiData*)data;
   }
-  else if (eventType == Audio::AudioEventTypes::MicInputData)
+  else if (data->mEventType == Audio::AudioEventTypes::MicInputData)
   {
-    Array<float>* buffer = (Array<float>*)data;
+    Array<float>* buffer = ((Audio::EventData1<Array<float>*>*)data)->mData;
     AudioFloatDataEvent event;
     event.Channels = 2;
     event.AudioData = ZilchAllocate(ArrayClass<float>);
     event.AudioData->NativeArray = *buffer;
     DispatchEvent(Events::MicrophoneUncompressedFloatData, &event);
   }
-  else if (eventType == Audio::AudioEventTypes::CompressedMicInputData)
+  else if (data->mEventType == Audio::AudioEventTypes::CompressedMicInputData)
   {
-    Array<byte>* buffer = (Array<byte>*)data;
+    Array<byte>* buffer = ((Audio::EventData1<Array<byte>*>*)data)->mData;
     AudioByteDataEvent event;
     event.AudioData = ZilchAllocate(ArrayClass<byte>);
     event.AudioData->NativeArray = *buffer;
     DispatchEvent(Events::MicrophoneCompressedByteData, &event);
   }
+
+  delete data;
 }
 
 //**************************************************************************************************
@@ -451,6 +464,7 @@ ZilchDefineType(AudioSettings, builder, type)
   ZeroBindDocumented();
 
   ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(MuteAllAudio);
   ZilchBindGetterSetterProperty(MixType); 
   ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
   ZilchBindGetterSetterProperty(LatencySetting);
@@ -477,6 +491,7 @@ void AudioSettings::Initialize(CogInitializer& initializer)
 //**************************************************************************************************
 float AudioSettings::GetSystemVolume()
 {
+  mSystemVolume = Z::gSound->mAudioSystem->GetVolume();
   return mSystemVolume;
 }
 
@@ -486,6 +501,18 @@ void AudioSettings::SetSystemVolume(float volume)
   mSystemVolume = Math::Max(volume, 0.0f);
 
   Z::gSound->mAudioSystem->SetVolume(mSystemVolume);
+}
+
+//**************************************************************************************************
+bool AudioSettings::GetMuteAllAudio()
+{
+  return Z::gSound->GetMuteAllAudio();
+}
+
+//**************************************************************************************************
+void AudioSettings::SetMuteAllAudio(bool muteAudio)
+{
+  Z::gSound->SetMuteAllAudio(muteAudio);
 }
 
 //**************************************************************************************************

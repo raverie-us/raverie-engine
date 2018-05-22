@@ -281,6 +281,8 @@ bool RenameResource(Resource* resource, StringParam newName)
   // Map it under new name
   resourceManager->ResourceNameMap[newName] = resource->mResourceId;
 
+  String lastIdName = resource->ResourceIdName;
+
   // Set the new name and build the combined string.
   resource->Name = newName;
   // Converting the resourceId to u64 so we don't get the '0x' at the start
@@ -290,8 +292,10 @@ bool RenameResource(Resource* resource, StringParam newName)
   resource->UpdateContentItem(contentItem);
 
   ResourceEvent event;
+  event.Name = newName;
   event.Manager = resourceManager;
   event.EventResource = resource;
+  event.LastIdName = lastIdName;
   resourceManager->DispatchEvent(Events::ResourceModified, &event);
   Z::gResources->DispatchEvent(Events::ResourceModified, &event);
 

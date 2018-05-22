@@ -12,9 +12,25 @@ class WebResponseEvent;
 class UpdateEvent;
 class TextButton;
 
+namespace Events
+{
+	DeclareEvent(BugReporterResponse);
+}//namespace Events
+
+/// Event carrying the string http response from the waypoint server between the BugReportJob and the BugReporter instance
+class BugReporterResponse : public Event
+{
+public:
+	ZilchDeclareType(TypeCopyMode::ReferenceType);
+	BugReporterResponse();
+	BugReporterResponse(String response);
+	String mResponse;
+};
+
 class BugReporter : public Composite
 {
 public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
   typedef BugReporter ZilchSelf;
 
   BugReporter(Composite* parent);
@@ -27,13 +43,14 @@ public:
   void OnBrowse(Event* event);
   void OnBrowseSelected(OsFileSelection* event);
   void OnUpdate(UpdateEvent* event);
+  void OnBugReporterResponse(BugReporterResponse* event);
   
-  TextBox* mUserName;
+  TextBox* mUsername;
   TextBox* mTitle;
-  TextButton* mSend;
-  TextEditor* mExpected;
-  TextEditor* mHappened;
+  TextEditor* mDescription;
   TextEditor* mRepro;
+  TextButton* mSend;
+  SelectorButton* mSelectorButton;
   
   TextBox* mIncludeFile;
   TextButton* mBrowse;
@@ -51,11 +68,11 @@ public:
 
   String mFileName;
   CogId mProject;
-  String mUserName;
+  String mUsername;
+  String mReportType;
   String mTitle;
+  String mDescription;
   String mRepro;
-  String mExpected;
-  String mHappened;
   String mIncludedFile;
   Image mScreenshot;
   Image mClipboardImage;

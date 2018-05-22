@@ -1531,12 +1531,20 @@ void TreeView::ShowRow(DataIndex& index)
   if(dataRow)
   {
     uint rowIndex = dataRow->mVisibleRowIndex;
-    float y = float(rowIndex+1) / (float)mScrollAreaRows;
-    mArea->SetScrolledPercentage(Vec2(0, y));
+    float yPos = rowIndex * mRowHeight;
+    mArea->ScrollAreaToView(Vec2(0, yPos - mRowHeight), Vec2(0, yPos + mRowHeight));
   }
 
 
   MarkAsNeedsUpdate();
+}
+
+void TreeView::ShowSelected()
+{
+  Array<DataIndex> selected;
+  GetSelection()->GetSelected(selected);
+  if (!selected.Empty())
+    ShowRow(selected.Front());
 }
 
 void TreeView::SetRefreshOnValueChange(bool state)
@@ -1548,6 +1556,7 @@ void TreeView::Refresh()
 {
   if(mRoot)
     mRoot->Refresh();
+
   UpdateTransform();
 }
 

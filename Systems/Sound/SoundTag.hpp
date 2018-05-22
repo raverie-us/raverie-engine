@@ -40,9 +40,9 @@ public:
   void Unload() override;
 
   /// Adds a new SoundInstance to this SoundTag.
-  void TagSound(SoundInstance* instance);
+  void TagSound(HandleOf<SoundInstance>& instance);
   /// Removes a SoundInstance from this SoundTag.
-  void UnTagSound(SoundInstance* instance);
+  void UnTagSound(HandleOf<SoundInstance>& instance);
   /// Stops all currently tagged SoundInstances.
   void StopSounds();
   /// Setting this property to true will pause all tagged instances. Setting it to false will resume playback.
@@ -124,7 +124,7 @@ public:
   InstanceList SoundInstanceList;
   Link<SoundTag> link;
 
-  void SendAudioEvent(const Audio::AudioEventTypes::Enum eventType, void* data) override;
+  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
   void CreateTag();
   void ReleaseTag();
 

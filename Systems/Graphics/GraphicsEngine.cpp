@@ -103,6 +103,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
 
   // Event connections for ResourceManagers
   ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceAdded, OnRenderGroupAdded);
+  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceModified, OnRenderGroupModified);
   ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceRemoved, OnRenderGroupRemoved);
 
   ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceAdded, OnMaterialAdded);
@@ -572,9 +573,13 @@ void GraphicsEngine::AddMesh(Mesh* mesh)
     rendererJob->mVertexSize = vertices->mFixedDesc.mVertexSize;
     rendererJob->mVertexCount = vertices->mDataSize / vertices->mFixedDesc.mVertexSize;
 
-    uint vertexDataSize = rendererJob->mVertexSize * rendererJob->mVertexCount;
-    rendererJob->mVertexData = new byte[vertexDataSize];
-    memcpy(rendererJob->mVertexData, vertices->mData, vertexDataSize);
+    // Do not try allocating without a full vertex worth of data.
+    if (rendererJob->mVertexCount > 0)
+    {
+      uint vertexDataSize = rendererJob->mVertexSize * rendererJob->mVertexCount;
+      rendererJob->mVertexData = new byte[vertexDataSize];
+      memcpy(rendererJob->mVertexData, vertices->mData, vertexDataSize);
+    }
 
     rendererJob->mVertexAttributes.Reserve(8);
     for (uint i = 0; i < FixedVertexDescription::sMaxElements; ++i)
@@ -697,6 +702,17 @@ void GraphicsEngine::OnRenderGroupAdded(ResourceEvent* event)
 }
 
 //**************************************************************************************************
+void GraphicsEngine::OnRenderGroupModified(ResourceEvent* event)
+{
+  if (!event->LastIdName.Empty())
+  {
+    Array<Resource*> materials;
+    MaterialManager::GetInstance()->EnumerateResources(materials);
+    ResourceListResetIdNames<Material, RenderGroupManager>(materials);
+  }
+}
+
+//**************************************************************************************************
 void GraphicsEngine::OnRenderGroupRemoved(ResourceEvent* event)
 {
   RenderGroup* renderGroup = (RenderGroup*)event->EventResource;
@@ -725,6 +741,13 @@ void GraphicsEngine::OnMaterialModified(ResourceEvent* event)
     AddMaterial(material);
 
     CompileShaders();
+  }
+
+  if (!event->LastIdName.Empty())
+  {
+    Array<Resource*> renderGroups;
+    RenderGroupManager::GetInstance()->EnumerateResources(renderGroups);
+    ResourceListResetIdNames<RenderGroup, MaterialManager>(renderGroups);
   }
 }
 
