@@ -130,26 +130,31 @@ ZilchDefineType(WebBrowserManager, builder, type)
 {
 }
 
-WebBrowserManager::WebBrowserManager()
+WebBrowserManager::WebBrowserManager() :
+  mInitializedPlatform(false)
 {
-  Browser::PlatformCreate();
   ConnectThisTo(Z::gEngine, Events::OsShellUpdate, OnOsShellUpdate);
 }
 
 WebBrowserManager::~WebBrowserManager()
 {
-  Browser::PlatformDestroy();
-}
-
-WebBrowserManager& WebBrowserManager::GetInstance()
-{
-  static WebBrowserManager instance;
-  return instance;
+  if (mInitializedPlatform)
+    Browser::PlatformDestroy();
 }
 
 void WebBrowserManager::OnOsShellUpdate(Event* event)
 {
-  Browser::PlatformUpdate();
+  if (mInitializedPlatform)
+    Browser::PlatformUpdate();
+}
+
+void WebBrowserManager::EnsurePlatformInitailized()
+{
+  if (mInitializedPlatform)
+    return;
+
+  mInitializedPlatform = true;
+  Browser::PlatformCreate();
 }
 
 //------------------------------------------------------------------ WebBrowserSetup
@@ -236,8 +241,10 @@ WebBrowser::WebBrowser() :
 {
 }
 
-BrowserSetup ToBrowserSetup(const WebBrowserSetup& setup)
+BrowserSetup ConvertSetupAndEnsurePlatformInitialized(const WebBrowserSetup& setup)
 {
+  WebBrowserManager::GetInstance()->EnsurePlatformInitailized();
+
   BrowserSetup browserSetup;
   browserSetup.mUrl = setup.mUrl;
   browserSetup.mSize = setup.mSize;
@@ -248,7 +255,7 @@ BrowserSetup ToBrowserSetup(const WebBrowserSetup& setup)
 }
 
 WebBrowser::WebBrowser(const WebBrowserSetup& setup) :
-  mBrowser(ToBrowserSetup(setup))
+  mBrowser(ConvertSetupAndEnsurePlatformInitialized(setup))
 {
   mBrowser.mUserData = this;
   

@@ -1484,12 +1484,6 @@ ShellWindow::ShellWindow(
   mOnRawMouseChanged(nullptr),
   mOnInputDeviceChanged(nullptr)
 {
-  //mMouseTrapped = false;
-  //mMouseCaptured = false;
-  //mCursor = nullptr;
-  //mPosition = IntVec2::cZero;
-  //mPreviousMousePosition = IntVec2::cZero;
-
   // Get the parent window
   HWND parentWindowHwnd = nullptr;
 
@@ -1520,9 +1514,6 @@ ShellWindow::ShellWindow(
 
   ReturnIf(windowHandle == nullptr,, "Failed to create application window");
 
-  SetMonitorClientPosition(monitorClientPos);
-  SetClientSize(clientSize);
-
   SetWindowPos(windowHandle, nullptr, 0, 0, 0, 0,
     SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
@@ -1530,8 +1521,11 @@ ShellWindow::ShellWindow(
   mHandle = windowHandle;
   UpdateWindow(windowHandle);
 
-  //mCursor = LoadCursor(nullptr, IDC_ARROW);
   DragAcceptFiles(windowHandle, TRUE);
+
+  // The client size must be set before the monitor position
+  SetClientSize(clientSize);
+  SetMonitorClientPosition(monitorClientPos);
 
   if (WindowStyleFlags::MainWindow & flags)
   {

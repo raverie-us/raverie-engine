@@ -34,8 +34,9 @@ public:
 
   WebBrowserManager();
   ~WebBrowserManager();
-  static WebBrowserManager& GetInstance();
   void OnOsShellUpdate(Event* event);
+  void EnsurePlatformInitailized();
+  bool mInitializedPlatform;
 };
 
 extern const String cWebBrowserDefaultUrl;

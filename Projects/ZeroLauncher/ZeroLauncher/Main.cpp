@@ -82,7 +82,7 @@ ZeroGuiMain()
   while(restart)
   {
     String versionIdFileName = "ZeroLauncherVersionId.txt";
-    String launcherDllName = "ZeroLauncherDll.dll";
+    String launcherDllName = "ZeroLauncherSharedLibrary.dll";
     String appDir = GetApplicationDirectory();
 
     String localVersionPath = appDir;
