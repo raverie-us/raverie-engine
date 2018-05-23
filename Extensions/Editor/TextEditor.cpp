@@ -1051,14 +1051,13 @@ void TextEditor::BlockComment(cstr comment)
     }
     else
     {
-      //Un comment the line by replacing the comment
+      //Get the text where a comment would be present on this line
       GetText(lineIndent, lineIndent+commentLen, buffer, bufferSize);
       //Is it a comment?
-      if(strncmp(buffer, comment, commentLen)==0)
+      if(strncmp(buffer, comment, commentLen) == 0)
       {
-        //replace with nothing
-        SendEditor(SCI_SETSEL, lineIndent, lineIndent + commentLen);
-        SendEditor(SCI_REPLACESEL, 0, (sptr_t)"");
+        //Remove the comment
+        RemoveRange(lineIndent, commentLen);
       }
     }
   }
