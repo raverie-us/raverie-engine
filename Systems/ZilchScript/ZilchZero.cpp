@@ -14,6 +14,7 @@ namespace Zero
 ZilchDefineType(ZilchComponent, builder, type)
 {
   ZeroBindComponent();
+  ZeroBindDocumented();
   type->Sealed = false;
 
   type->Add(new MetaSerialization());
