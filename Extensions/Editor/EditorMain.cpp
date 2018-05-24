@@ -458,6 +458,21 @@ void EditorMain::ShowSoundNodeGraph(CommandEvent* event)
   CreateDockableWindow("SoundNodeGraphWindow", cameraViewport, Vec2(700, 500), true);
 }
 
+void EditorMain::ShowRenderGroupHierarchies(CommandEvent* event)
+{
+  // Just show current window if it already exists.
+  if (Widget* widget = mManager->FindWidget("RenderGroupHierarchies"))
+  {
+    Zero::ShowWidget(widget);
+    return;
+  }
+
+  RenderGroupHierarchies* hierarchies = new RenderGroupHierarchies(this);
+  hierarchies->SetName("RenderGroupHierarchies");
+  hierarchies->SetSize(Pixels(280, 400));
+  AddManagedWidget(hierarchies, DockArea::Floating, true);
+}
+
 void EditorMain::AttachDocumentEditor(StringParam name, DocumentEditor* docEditor)
 {
   docEditor->SetName(name);
@@ -950,6 +965,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("BroadPhaseTracker", ShowBroadPhaseTracker);
     BindCommand("VolumeMeter", ShowVolumeMeter);
     BindCommand("SoundNodeGraph", ShowSoundNodeGraph);
+    BindCommand("RenderGroupHierarchies", ShowRenderGroupHierarchies);
     BindCommand("EditColorScheme", EditColorScheme);
     BindCommand("ClearConsole", ClearConsole);
     BindCommand("ShowCoreLibrary", ShowCoreLibrary);

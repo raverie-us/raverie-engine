@@ -571,6 +571,13 @@ Commands commands =
 		string Tags = "Windows Sound",
 	},
 	
+	Command =
+	{
+		string Name = "RenderGroupHierarchies",
+		string Description = "Show the RenderGroup Hierarchies Window",
+		string Tags = "Editor",
+	},
+	
 	// ------------------------------------------ More editor commands	
 	Command =
 	{

@@ -199,6 +199,7 @@
     <ClInclude Include="OsWindow.hpp" />
     <ClInclude Include="PropertyTrack.hpp" />
     <ClInclude Include="Rectangle.hpp" />
+    <ClInclude Include="ResourceListOperation.hpp" />
     <ClInclude Include="ResourceLoaderTemplates.hpp" />
     <ClInclude Include="HeightMap.hpp" />
     <ClInclude Include="JoystickSystem.hpp" />

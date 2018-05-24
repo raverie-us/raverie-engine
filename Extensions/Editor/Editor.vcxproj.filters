@@ -632,6 +632,9 @@
     <ClCompile Include="UiLegacyToolTip.cpp">
       <Filter>EditorUi</Filter>
     </ClCompile>
+    <ClCompile Include="RenderGroupHierarchies.cpp">
+      <Filter>EditorUi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClothTools.hpp">
@@ -1157,6 +1160,9 @@
     </ClInclude>
     <ClInclude Include="PreviewWidgets.hpp">
       <Filter>EditorUi\PreviewWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderGroupHierarchies.hpp">
+      <Filter>EditorUi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

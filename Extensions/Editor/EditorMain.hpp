@@ -53,6 +53,7 @@ public:
   void ShowCoreLibrary(CommandEvent* event);
   void ShowVolumeMeter(CommandEvent* event);
   void ShowSoundNodeGraph(CommandEvent* event);
+  void ShowRenderGroupHierarchies(CommandEvent* event);
   LibraryView* CreateLibraryView(bool showCore, bool autoDock = true);
   void AttachDocumentEditor(StringParam name, DocumentEditor* docEditor);
   DocumentEditor* OpenTextString(StringParam name, StringParam text, StringParam extension = String()) override;

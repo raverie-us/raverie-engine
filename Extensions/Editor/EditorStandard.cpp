@@ -284,6 +284,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(PropertyWidgetObject);
   ZilchInitializeType(AddObjectWidget);
   ZilchInitializeType(UiLegacyToolTip);
+  ZilchInitializeType(RenderGroupHierarchies);
 
   ZilchInitializeType(DirectProperty);
   
