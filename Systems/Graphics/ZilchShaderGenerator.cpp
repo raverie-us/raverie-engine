@@ -664,7 +664,7 @@ ShaderInput ZilchShaderGenerator::CreateShaderInput(StringParam fragmentName, St
 
   // If unsuccessful returned ShaderInput's type will be Invalid, otherwise it will be the passed in type
   shaderInput.mShaderInputType = type;
-  shaderInput.SetValue(value);
+  ShaderInputSetValue(shaderInput, value);
 
   return shaderInput;
 }

@@ -622,13 +622,14 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   graphics->AddTexture(texture);
   RenderTarget* renderTarget = graphics->GetRenderTarget(texture);
 
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(renderTarget);
   renderSettings.mBlendSettings[0].SetBlendAlpha();
   renderSettings.mScissorMode = ScissorMode::Enabled;
 
-  renderTasks.mRenderTaskBuffer.AddRenderTaskClearTarget(renderSettings, GetRootWidget()->mClearColor, 0, 0, 0);
-  renderTasks.mRenderTaskBuffer.AddRenderTaskRenderPass(renderSettings, 0, "ColorOutput", 0);
+  RenderTaskHelper helper(renderTasks.mRenderTaskBuffer);
+  helper.AddRenderTaskClearTarget(renderSettings, GetRootWidget()->mClearColor, 0, 0, 0);
+  helper.AddRenderTaskRenderPass(renderSettings, 0, "ColorOutput", 0);
   renderTaskRange.mTaskCount = 2;
 
   graphics->WriteTextureToFile(textureHandle, mScreenshotFilename);

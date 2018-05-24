@@ -94,12 +94,10 @@ public:
 };
 
 // Call within the class definition
-#define DeclareThreadSafeReferenceCountedHandle(type)                                 \
+#define DeclareThreadSafeReferenceCountedHandleNoData(type)                           \
   static ThreadLock mLock;                                                            \
   static u64 mCurrentId;                                                              \
   static HashMap<u64, type*> mLiveObjects;                                            \
-  HandleIdData<u64> mHandleId;                                                        \
-  ReferenceCountData mReferenceCount;                                                 \
   int GetReferenceCount() { return mReferenceCount.mCount; }                          \
   void AddReference() { ++mReferenceCount.mCount; }                                   \
   int Release()                                                                       \
@@ -109,6 +107,12 @@ public:
     if (referenceCount == 0) delete this;                                             \
     return referenceCount;                                                            \
   }
+
+// Call within the class definition
+#define DeclareThreadSafeReferenceCountedHandle(type)                                 \
+  DeclareThreadSafeReferenceCountedHandleNoData(type)                                 \
+  HandleIdData<u64> mHandleId;                                                        \
+  ReferenceCountData mReferenceCount;
 
 // Call in the cpp file next to the class implementation
 #define DefineThreadSafeReferenceCountedHandle(type) \

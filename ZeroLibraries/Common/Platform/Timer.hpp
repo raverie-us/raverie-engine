@@ -54,6 +54,9 @@ public:
   /// Destructor
   ~Timer();
 
+  Timer(const Timer& rhs);
+  Timer& operator= (const Timer& rhs);
+
   /// Resets the time to zero
   void Reset();
   /// Updates the clock
@@ -80,7 +83,7 @@ public:
   double TicksToSeconds(TickType ticks) const;
 
 private:
-  ZeroDeclarePrivateData(Timer, 50);
+  ZeroDeclarePrivateDataBytes(50);
 };
 
 } // namespace Zero

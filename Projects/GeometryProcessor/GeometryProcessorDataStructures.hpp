@@ -19,6 +19,8 @@ public:
 typedef HashMap<size_t, Array<BoneData>> BoneDataMap;
 
 //------------------------------------------------------------------------ Used for meshs
+const size_t cMaxBonesWeights = 4;
+
 class VertexData
 {
 public:

@@ -92,14 +92,14 @@ void WaitRendererJob::WaitOnThisJob()
 //**************************************************************************************************
 void CreateRendererJob::Execute()
 {
-  CreateRenderer(mMainWindowHandle, mError);
+  Z::gRenderer = CreateRenderer(mMainWindowHandle, mError);
   mWaitEvent.Signal();
 }
 
 //**************************************************************************************************
 void DestroyRendererJob::Execute()
 {
-  DestroyRenderer();
+  DestroyRenderer(Z::gRenderer);
   mRendererJobQueue->mExitThread = true;
   mWaitEvent.Signal();
 }
@@ -128,21 +128,21 @@ void AddTextureJob::Execute()
 //**************************************************************************************************
 void RemoveMaterialJob::Execute()
 {
-  Z::gRenderer->RemoveMaterial(this);
+  Z::gRenderer->RemoveMaterial(this->mRenderData);
   delete this;
 }
 
 //**************************************************************************************************
 void RemoveMeshJob::Execute()
 {
-  Z::gRenderer->RemoveMesh(this);
+  Z::gRenderer->RemoveMesh(this->mRenderData);
   delete this;
 }
 
 //**************************************************************************************************
 void RemoveTextureJob::Execute()
 {
-  Z::gRenderer->RemoveTexture(this);
+  Z::gRenderer->RemoveTexture(this->mRenderData);
   delete this;
 }
 
@@ -165,7 +165,7 @@ AddShadersJob::AddShadersJob(RendererThreadJobQueue* jobQueue)
 //**************************************************************************************************
 void AddShadersJob::OnExecute()
 {
-  Z::gRenderer->AddShaders(this);
+  Z::gRenderer->AddShaders(mShaders, mForceCompileBatchCount);
 }
 
 //**************************************************************************************************
@@ -196,14 +196,14 @@ void AddShadersJob::ReturnExecute()
 //**************************************************************************************************
 void RemoveShadersJob::Execute()
 {
-  Z::gRenderer->RemoveShaders(this);
+  Z::gRenderer->RemoveShaders(mShaders);
   delete this;
 }
 
 //**************************************************************************************************
 void SetVSyncJob::Execute()
 {
-  Z::gRenderer->SetVSync(this);
+  Z::gRenderer->SetVSync(mVSync);
   delete this;
 }
 
@@ -364,8 +364,6 @@ void RepeatingJob::ForceTerminate()
 //**************************************************************************************************
 ShowProgressJob::ShowProgressJob(RendererThreadJobQueue* jobQueue)
   : RepeatingJob(jobQueue)
-  , mSplashMode(false)
-  , mSplashFade(0.0f)
 {
 }
 
@@ -384,7 +382,7 @@ void ShowProgressJob::OnExecute()
     else
       mSplashFade = Math::Min(mSplashFade + 0.02f, 1.0f);
 
-    Z::gRenderer->ShowProgress(this);
+    ShowCurrentProgress();
   }
   else
   {
@@ -394,8 +392,17 @@ void ShowProgressJob::OnExecute()
     // It's OK if the UI freezes for a small acceptable amount of time
     // During this time we don't show the loading screen (for example, when creating a script or material)
     if (mPerJobTimer.Time() >= cAcceptableLoadtime)
-      Z::gRenderer->ShowProgress(this);
+      ShowCurrentProgress();
   }
+}
+
+//**************************************************************************************************
+void ShowProgressJob::ShowCurrentProgress()
+{
+  Lock();
+  ShowProgressInfo info = *this;
+  Unlock();
+  Z::gRenderer->ShowProgress(this);
 }
 
 //**************************************************************************************************

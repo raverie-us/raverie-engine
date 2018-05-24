@@ -186,6 +186,7 @@ namespace Math
 namespace Zero
 {
 #include "Math/BasicNativeTypesMath.inl"
+#include "Math/MathImports.hpp"
 }
 
 #include "Utility/Rect.hpp"
@@ -223,3 +224,5 @@ namespace Zero
 #include "Platform/ComPort.hpp"
 #include "Platform/Intrinsics.hpp"
 #include "Platform/Browser.hpp"
+#include "Platform/RendererEnumerations.hpp"
+#include "Platform/Renderer.hpp"

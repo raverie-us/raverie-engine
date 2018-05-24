@@ -33,18 +33,18 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">$(ZERO_SOURCE)\External\CEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ZERO_SOURCE)\External\CEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ZERO_SOURCE)\External\CEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">$(ZERO_SOURCE)\External\CEF;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ZERO_SOURCE)\External\CEF;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ZERO_SOURCE)\External\CEF;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Production|x64'">$(ZERO_SOURCE)\External\CEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ZERO_SOURCE)\External\CEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ZERO_SOURCE)\External\CEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Production|x64'">$(ZERO_SOURCE)\External\CEF;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ZERO_SOURCE)\External\CEF;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ZERO_SOURCE)\External\CEF;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -61,6 +61,7 @@
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="FpControl.cpp" />
     <ClCompile Include="Intrinsics.cpp" />
+    <ClCompile Include="OpenglRenderer.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Process.cpp" />
@@ -69,6 +70,7 @@
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="StackWalker.cpp" />
+    <ClCompile Include="StreamedVertexBuffer.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ThreadSync.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -83,7 +85,9 @@
     <ClCompile Include="WString.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="OpenglRenderer.hpp" />
     <ClInclude Include="StackWalker.hpp" />
+    <ClInclude Include="StreamedVertexBuffer.hpp" />
     <ClInclude Include="ThreadIo.hpp" />
     <ClInclude Include="WindowsError.hpp" />
     <ClInclude Include="Precompiled.hpp" />
@@ -92,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Keys.inl" />
+    <None Include="LoadingShader.inl" />
     <None Include="MouseButtons.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

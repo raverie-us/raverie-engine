@@ -26,17 +26,6 @@ public:
   float mT;
 };
 
-class IndexRange
-{
-public:
-  IndexRange() {}
-  IndexRange(uint s, uint e) : start(s), end(e) {}
-
-  uint Count() {return end - start;}
-
-  uint start, end;
-};
-
 class UniqueComposite
 {
 public:
@@ -44,49 +33,6 @@ public:
   Array<String> mFragmentNames;
   HashSet<String> mFragmentNameMap;
   uint mReferences;
-};
-
-class Shader
-{
-public:
-  String mName;
-  String mCoreVertex;
-  String mComposite;
-  String mRenderPass;
-
-  static Memory::Pool* sPool;
-};
-
-class ShaderEntry
-{
-public:
-  ShaderEntry() {}
-  ShaderEntry(Shader* shader)
-    : mCoreVertex(shader->mCoreVertex), mComposite(shader->mComposite), mRenderPass(shader->mRenderPass) {}
-
-  String mCoreVertex;
-  String mComposite;
-  String mRenderPass;
-  // Used for shader names in the library for lookup first,
-  // and then they are the translated shaders' source for the renderer
-  String mVertexShader;
-  String mGeometryShader;
-  String mPixelShader;
-};
-
-class ShaderInput
-{
-public:
-  ShaderInput() : mShaderInputType(ShaderInputType::Invalid), mSamplerSettings(0) {}
-
-  void SetValue(AnyParam value);
-
-  ShaderInputType::Enum mShaderInputType;
-  String mTranslatedInputName;
-  u32 mSamplerSettings;
-
-  static const size_t MaxSize = sizeof(Mat4);
-  byte mValue[MaxSize];
 };
 
 class UvRect
@@ -101,5 +47,7 @@ public:
 typedef HashSet<Shader*> ShaderSet;
 typedef HashMap<String, Shader*> ShaderMap;
 typedef HashMap<String, ShaderSet> ShaderSetMap;
+
+void ShaderInputSetValue(ShaderInput& input, AnyParam value);
 
 } // namespace Zero

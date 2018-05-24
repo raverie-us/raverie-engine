@@ -20,8 +20,6 @@ DeclareEnum2(SpriteSampling, Nearest, Linear);
 
 DeclareEnum3(SpriteFill, Stretch, NineSlice, Tiled);
 
-DeclareEnum4(NineSlices, Left, Top, Right, Bottom);
-
 // Put u64 at the bottom so when this is in a structure with other members
 // the structure padding is self contained
 #define SpriteDataMembers()     \

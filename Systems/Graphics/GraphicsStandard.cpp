@@ -38,6 +38,9 @@ ZilchDefineEnum(VertexElementType);
 ZilchDefineEnum(VertexSemantic);
 ZilchDefineEnum(ViewportScaling);
 
+ZilchDeclareExternalType(GraphicsDriverSupport);
+ZilchDeclareExternalType(SamplerSettings);
+
 ZilchDefineStaticLibrary(GraphicsLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -92,7 +95,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
 
   ZilchInitializeType(Atlas);
   ZilchInitializeType(BaseSprite);
-  ZilchInitializeType(BlendSettings);
+  ZilchInitializeTypeAs(GraphicsBlendSettings, "BlendSettings");
   ZilchInitializeType(BlendSettingsMrt);
   ZilchInitializeType(Bone);
   ZilchInitializeType(Camera);
@@ -102,12 +105,12 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeType(DebugGraphicalThickLine);
   ZilchInitializeType(DebugGraphicalText);
   ZilchInitializeType(DefinitionSet);
-  ZilchInitializeType(DepthSettings);
+  ZilchInitializeTypeAs(GraphicsDepthSettings, "DepthSettings");
   //ZilchInitializeType(DynamicMeshParticleEmitter);
   ZilchInitializeType(Font);
   ZilchInitializeType(GraphicalEntry);
   ZilchInitializeType(GraphicalRangeInterface);
-  ZilchInitializeType(GraphicsDriverSupport);
+  ZilchInitializeExternalType(GraphicsDriverSupport);
   ZilchInitializeType(GraphicsEngine);
   ZilchInitializeType(GraphicsRaycastProvider);
   ZilchInitializeType(GraphicsSpace);
@@ -131,9 +134,9 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeTypeAs(ProxyObject<MaterialBlock>, "MaterialBlockProxy");
   ZilchInitializeType(RenderGroup);
   ZilchInitializeType(RenderGroupList);
-  ZilchInitializeType(RenderSettings);
+  ZilchInitializeTypeAs(GraphicsRenderSettings, "RenderSettings");
   ZilchInitializeType(RenderTarget);
-  ZilchInitializeType(SamplerSettings);
+  ZilchInitializeExternalType(SamplerSettings);
   ZilchInitializeType(SelectionIcon);
   ZilchInitializeType(ShaderInputs);
   ZilchInitializeType(Skeleton);

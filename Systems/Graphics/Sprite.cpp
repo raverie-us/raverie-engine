@@ -648,7 +648,7 @@ Aabb MultiSprite::GetLocalAabb()
 //**************************************************************************************************
 void MultiSprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
-  GraphicalEntryData* entryData = frameNode.mGraphicalEntry->mData;
+  GraphicalEntryData* entryData = ((GraphicalEntry*)frameNode.mGraphicalEntry)->mData;
 
   Texture* atlas = (Texture*)entryData->mUtility;
 
@@ -672,11 +672,11 @@ void MultiSprite::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 //**************************************************************************************************
 void MultiSprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
 {
-  GraphicalEntryData* entryData = viewNode.mGraphicalEntry->mData;
+  GraphicalEntryData* entryData = ((GraphicalEntry*)viewNode.mGraphicalEntry)->mData;
 
   Texture* atlas = (Texture*)entryData->mUtility;
   // Should never get extract calls on missing data
-  GroupMap& groupMap = mGroupMaps[viewBlock.mCameraId];
+  GroupMap& groupMap = mGroupMaps[CogId(viewBlock.mCameraId)];
   MultiSpriteTextureGroup& group = groupMap[atlas];
 
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];

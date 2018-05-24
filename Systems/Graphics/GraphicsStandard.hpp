@@ -27,7 +27,6 @@ public:
 } // namespace Zero
 
 #include "ForwardDeclarations.hpp"
-#include "Enumerations.hpp"
 #include "UtilityStructures.hpp"
 #include "ResourceLists.hpp"
 
@@ -45,9 +44,8 @@ public:
 #include "ParticleEmitter.hpp"
 #include "PerspectiveTransforms.hpp"
 #include "PixelBuffer.hpp"
-#include "Renderer.hpp"
 #include "RenderGroup.hpp"
-#include "RenderQueues.hpp"
+#include "RendererGlobal.hpp"
 #include "RenderSettings.hpp"
 #include "RenderTarget.hpp"
 #include "RenderTasks.hpp"

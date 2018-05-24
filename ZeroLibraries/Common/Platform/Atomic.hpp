@@ -121,11 +121,13 @@ public:
   /// Constructors
   Atomic()                 : mValue()                                          {}
   Atomic(value_type value) : mValue(reinterpret_cast<underlying_type&>(value)) {}
+  Atomic(const Atomic& rhs) : mValue(rhs.mValue) {}
 
   /// Assignment Operator
   /// Sets the current value (equivalent to Store())
-  value_type operator =(value_type value)          { Store(value); return value; }
-  value_type operator =(value_type value) volatile { Store(value); return value; }
+  Atomic& operator =(value_type value)          { Store(value); return *this; }
+  Atomic& operator =(value_type value) volatile { Store(value); return *this; }
+  Atomic& operator =(const Atomic& rhs) volatile { Store(rhs.mValue); return *this; }
 
   /// Conversion Operator
   /// Returns the current value (equivalent to Load())
@@ -200,10 +202,6 @@ public:
   value_type operator --(int) volatile { underlying_type result = AtomicPostDecrement(&mValue); return reinterpret_cast<value_type&>(result); }
 
 private:
-  /// No Copy Constructor
-  Atomic(const Atomic&);
-  /// No Copy Assignment Operator
-  Atomic& operator =(const Atomic&);
 
   /// Value object
   volatile underlying_type mValue;

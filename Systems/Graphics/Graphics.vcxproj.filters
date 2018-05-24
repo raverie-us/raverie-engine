@@ -13,11 +13,9 @@
     <ClCompile Include="GraphicsSpace.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="Graphical.cpp" />
-    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Material.cpp" />
-    <ClCompile Include="RenderQueues.cpp" />
     <ClCompile Include="RenderTasks.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
@@ -34,7 +32,6 @@
     <ClCompile Include="SpriteSource.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="GraphicalEntry.cpp" />
-    <ClCompile Include="RendererThread.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleAnimator.cpp" />
     <ClCompile Include="ParticleAnimators.cpp" />
@@ -59,6 +56,8 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PixelBuffer.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="RendererGlobal.cpp" />
+    <ClCompile Include="RendererThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">
@@ -67,8 +66,6 @@
     <ClInclude Include="GraphicsSpace.hpp" />
     <ClInclude Include="GraphicsEngine.hpp" />
     <ClInclude Include="Graphical.hpp" />
-    <ClInclude Include="Renderer.hpp" />
-    <ClInclude Include="RenderQueues.hpp" />
     <ClInclude Include="RenderTasks.hpp" />
     <ClInclude Include="Model.hpp" />
     <ClInclude Include="Camera.hpp" />
@@ -90,8 +87,6 @@
     <ClInclude Include="SpriteSource.hpp" />
     <ClInclude Include="Sprite.hpp" />
     <ClInclude Include="GraphicalEntry.hpp" />
-    <ClInclude Include="RendererThread.hpp" />
-    <ClInclude Include="Enumerations.hpp" />
     <ClInclude Include="UtilityStructures.hpp" />
     <ClInclude Include="GraphicsStandard.hpp" />
     <ClInclude Include="ParticleSystem.hpp" />
@@ -118,5 +113,7 @@
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="PixelBuffer.hpp" />
     <ClInclude Include="Text.hpp" />
+    <ClInclude Include="RendererGlobal.hpp" />
+    <ClInclude Include="RendererThread.hpp" />
   </ItemGroup>
 </Project>

@@ -12,39 +12,6 @@
 namespace Zero
 {
 
-uint GetPixelSize(TextureFormat::Enum format)
-{
-  switch (format)
-  {
-    case TextureFormat::None:                  return 0;
-    case TextureFormat::R8:                    return 1;
-    case TextureFormat::RG8:                   return 2;
-    case TextureFormat::RGB8:                  return 3;
-    case TextureFormat::RGBA8:                 return 4;
-    case TextureFormat::R16:                   return 2;
-    case TextureFormat::RG16:                  return 4;
-    case TextureFormat::RGB16:                 return 6;
-    case TextureFormat::RGBA16:                return 8;
-    case TextureFormat::R16f:                  return 2;
-    case TextureFormat::RG16f:                 return 4;
-    case TextureFormat::RGB16f:                return 6;
-    case TextureFormat::RGBA16f:               return 8;
-    case TextureFormat::R32f:                  return 4;
-    case TextureFormat::RG32f:                 return 8;
-    case TextureFormat::RGB32f:                return 12;
-    case TextureFormat::RGBA32f:               return 16;
-    case TextureFormat::SRGB8:                 return 3;
-    case TextureFormat::SRGB8A8:               return 4;
-    case TextureFormat::Depth16:               return 2;
-    case TextureFormat::Depth24:               return 3;
-    case TextureFormat::Depth32:               return 4;
-    case TextureFormat::Depth32f:              return 4;
-    case TextureFormat::Depth24Stencil8:       return 4;
-    case TextureFormat::Depth32fStencil8Pad24: return 8;
-    default:                                   return 0;
-  }
-}
-
 ZilchDefineType(TextureInfo, builder, type)
 {
   ZeroBindComponent();

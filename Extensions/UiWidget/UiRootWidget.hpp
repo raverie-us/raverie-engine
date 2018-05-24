@@ -108,9 +108,9 @@ public:
   uint mStencilCount;
   StencilDrawMode::Enum mStencilDrawMode;
 
-  RenderSettings mStencilAddSettings;
-  RenderSettings mStencilRemoveSettings;
-  RenderSettings mStencilTestSettings;
+  GraphicsRenderSettings mStencilAddSettings;
+  GraphicsRenderSettings mStencilRemoveSettings;
+  GraphicsRenderSettings mStencilTestSettings;
 
   //------------------------------------------------------------------------------------- Other
   /// The widget currently in focus.

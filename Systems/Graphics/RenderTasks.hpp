@@ -12,10 +12,6 @@ namespace Events
   DeclareEvent(RenderTasksUpdateInternal);
 }
 
-static const u64 cFragmentShaderInputsId = 0;
-static const u64 cGlobalShaderInputsId = 1;
-static const u64 cGraphicalShaderInputsId = 2;
-
 /// A list for custom specifying which Graphicals and in what draw order for a RenderPass.
 class GraphicalRangeInterface
 {
@@ -32,122 +28,6 @@ public:
   uint GetCount();
 
   Array<Graphical*> mGraphicals;
-};
-
-class ScreenViewport
-{
-public:
-  int x, y, width, height;
-};
-
-class RenderTask
-{
-public:
-  byte mId;
-};
-
-class RenderTaskClearTarget : public RenderTask
-{
-public:
-  RenderSettings mRenderSettings;
-  Vec4 mColor;
-  float mDepth;
-  uint mStencil;
-  uint mStencilWriteMask;
-};
-
-class RenderTaskRenderPass : public RenderTask
-{
-public:
-  RenderSettings mRenderSettings;
-  uint mRenderGroupIndex;
-  String mRenderPassName;
-  uint mShaderInputsId;
-};
-
-class RenderTaskPostProcess : public RenderTask
-{
-public:
-  RenderSettings mRenderSettings;
-  String mPostProcessName;
-  MaterialRenderData* mMaterialRenderData;
-  uint mShaderInputsId;
-};
-
-class RenderTaskBackBufferBlit : public RenderTask
-{
-public:
-  TextureRenderData* mColorTarget;
-  uint mTextureWidth;
-  uint mTextureHeight;
-  ScreenViewport mViewport;
-};
-
-class RenderTaskTextureUpdate : public RenderTask
-{
-public:
-  TextureRenderData* mRenderData;
-  uint mWidth;
-  uint mHeight;
-  TextureType::Enum mType;
-  TextureFormat::Enum mFormat;
-  TextureAddressing::Enum mAddressingX;
-  TextureAddressing::Enum mAddressingY;
-  TextureFiltering::Enum mFiltering;
-  TextureCompareMode::Enum mCompareMode;
-  TextureCompareFunc::Enum mCompareFunc;
-  TextureAnisotropy::Enum mAnisotropy;
-  TextureMipMapping::Enum mMipMapping;
-};
-
-class RenderTaskBuffer
-{
-public:
-
-  RenderTaskBuffer();
-
-  void Clear();
-
-  template <typename T>
-  T* NewRenderTask();
-
-  void AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
-  void AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputRangesId);
-  void AddRenderTaskPostProcess(RenderSettings& renderSettings, StringParam postProcessName, uint shaderInputsId);
-  void AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialRenderData* materialRenderData, uint shaderInputsId);
-  void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport);
-  void AddRenderTaskTextureUpdate(Texture* texture);
-
-  bool ValidateRenderTargets(RenderSettings& renderSettings);
-
-  uint mTaskCount;
-  uint mCurrentIndex;
-  Array<byte> mRenderTaskData;
-};
-
-class RenderTaskRange
-{
-public:
-  bool operator<(const RenderTaskRange& other) const;
-
-  int mRenderOrder;
-  uint mTaskIndex;
-  uint mTaskCount;
-  uint mFrameBlockIndex;
-  uint mViewBlockIndex;
-};
-
-class RenderTasks
-{
-public:
-  void Clear();
-
-  Array<RenderTaskRange> mRenderTaskRanges;
-  RenderTaskBuffer mRenderTaskBuffer;
-
-  HashMap<Pair<u64, uint>, IndexRange> mShaderInputRanges;
-  Array<ShaderInput> mShaderInputs;
-  uint mShaderInputsVersion;
 };
 
 /// Interface for adding tasks for the renderer, essentially defining a rendering pipeline.
@@ -187,27 +67,27 @@ public:
   /// Initializes all the internal texture data for the given RenderTargets.
   void AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color);
+  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth);
+  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil);
+  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
+  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
 
   /// Renders a group of objects with the given settings. The RenderPass fragment defines what data is written to RenderTargets.
-  void AddRenderTaskRenderPass(RenderSettings& renderSettings, RenderGroup& renderGroup, MaterialBlock& renderPass);
+  void AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings, RenderGroup& renderGroup, MaterialBlock& renderPass);
   /// Renders a group of objects with the given settings. The RenderPass fragment defines what data is written to RenderTargets.
-  void AddRenderTaskRenderPass(RenderSettings& renderSettings, GraphicalRangeInterface& graphicalRange, MaterialBlock& renderPass);
+  void AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings, GraphicalRangeInterface& graphicalRange, MaterialBlock& renderPass);
 
   /// Invokes the pixel shader for every pixel of the RenderTargets.
   void AddRenderTaskPostProcess(RenderTarget* renderTarget, Material& material);
   /// Invokes the pixel shader for every pixel of the RenderTargets.
   void AddRenderTaskPostProcess(RenderTarget* renderTarget, MaterialBlock& postProcess);
   /// Invokes the pixel shader for every pixel of the RenderTargets.
-  void AddRenderTaskPostProcess(RenderSettings& renderSettings, Material& material);
+  void AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, Material& material);
   /// Invokes the pixel shader for every pixel of the RenderTargets.
-  void AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialBlock& postProcess);
+  void AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, MaterialBlock& postProcess);
 
   // Internal for the graphics engine.
   void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport);
@@ -233,18 +113,39 @@ public:
   Camera* mCamera;
 };
 
+class RenderTaskHelper
+{
+public:
+  RenderTaskHelper(RenderTaskBuffer& buffer);
+
+  template <typename T>
+  T* NewRenderTask();
+
+  void AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
+  void AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputRangesId);
+  void AddRenderTaskPostProcess(RenderSettings& renderSettings, StringParam postProcessName, uint shaderInputsId);
+  void AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialRenderData* materialRenderData, uint shaderInputsId);
+  void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport);
+  void AddRenderTaskTextureUpdate(Texture* texture);
+
+  bool ValidateRenderTargets(RenderSettings& renderSettings);
+
+  RenderTaskBuffer& mBuffer;
+};
+
 //**************************************************************************************************
 template <typename T>
-T* RenderTaskBuffer::NewRenderTask()
+T* RenderTaskHelper::NewRenderTask()
 {
-  if (mCurrentIndex + sizeof(T) > mRenderTaskData.Size())
+  if (mBuffer.mCurrentIndex + sizeof(T) > mBuffer.mRenderTaskData.Size())
   {
-    uint newSize = Math::Max(mRenderTaskData.Size() * 2, mCurrentIndex + sizeof(T));
-    mRenderTaskData.Resize(newSize);
+    uint newSize = Math::Max(mBuffer.mRenderTaskData.Size() * 2, mBuffer.mCurrentIndex + sizeof(T));
+    mBuffer.mRenderTaskData.Resize(newSize);
   }
 
-  T* renderTask = new (&mRenderTaskData[mCurrentIndex]) T;
-  mCurrentIndex += sizeof(T);
+  T* renderTask = new (&mBuffer.mRenderTaskData[mBuffer.mCurrentIndex]) T;
+  mBuffer.mCurrentIndex += sizeof(T);
+  ++mBuffer.mTaskCount;
   return renderTask;
 }
 

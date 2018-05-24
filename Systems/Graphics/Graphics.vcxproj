@@ -66,7 +66,6 @@
     <ClCompile Include="PerspectiveTransforms.cpp" />
     <ClCompile Include="RendererThread.cpp" />
     <ClCompile Include="RenderGroup.cpp" />
-    <ClCompile Include="RenderQueues.cpp" />
     <ClCompile Include="RenderSettings.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RenderTasks.cpp" />
@@ -78,7 +77,7 @@
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="GraphicsEngine.cpp" />
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RendererGlobal.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="SelectionIcon.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -103,7 +102,6 @@
   <ItemGroup>
     <ClInclude Include="Atlas.hpp" />
     <ClInclude Include="DebugGraphical.hpp" />
-    <ClInclude Include="Enumerations.hpp" />
     <ClInclude Include="GraphicalEntry.hpp" />
     <ClInclude Include="Definition.hpp" />
     <ClInclude Include="ForwardDeclarations.hpp" />
@@ -122,7 +120,6 @@
     <ClInclude Include="PerspectiveTransforms.hpp" />
     <ClInclude Include="RendererThread.hpp" />
     <ClInclude Include="RenderGroup.hpp" />
-    <ClInclude Include="RenderQueues.hpp" />
     <ClInclude Include="RenderSettings.hpp" />
     <ClInclude Include="RenderTarget.hpp" />
     <ClInclude Include="RenderTasks.hpp" />
@@ -132,7 +129,7 @@
     <ClInclude Include="PixelBuffer.hpp" />
     <ClInclude Include="Precompiled.hpp" />
     <ClInclude Include="GraphicsEngine.hpp" />
-    <ClInclude Include="Renderer.hpp" />
+    <ClInclude Include="RendererGlobal.hpp" />
     <ClInclude Include="FileElements.hpp" />
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="SelectionIcon.hpp" />

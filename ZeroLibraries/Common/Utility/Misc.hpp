@@ -20,6 +20,17 @@ u64 GetLexicographicId(u32 id1, u32 id2);
 //Unpacks the pair id into the two ids. Id1 is the lower 32 bits.
 void UnPackLexicographicId(u32& id1, u32& id2, u64 pairId);
 
+class IndexRange
+{
+public:
+  IndexRange() {}
+  IndexRange(uint s, uint e) : start(s), end(e) {}
+
+  uint Count() { return end - start; }
+
+  uint start, end;
+};
+
 template <typename T>
 size_t RangeCount(T range)
 {

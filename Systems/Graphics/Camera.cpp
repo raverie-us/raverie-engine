@@ -254,7 +254,7 @@ void Camera::GetViewData(ViewBlock& block)
   block.mOrthographicSize = mSize;
   block.mOrthographic = mPerspectiveMode == PerspectiveMode::Orthographic;
 
-  block.mCameraId = GetOwner()->GetId();
+  block.mCameraId = GetOwner()->GetId().ToUint64();
 }
 
 //**************************************************************************************************

@@ -36,8 +36,8 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
 
   // Graphics specific
   ZeroRegisterThreadSafeReferenceCountedHandleManager(ThreadSafeReferenceCounted);
-  ZeroRegisterThreadSafeReferenceCountedHandleManager(BlendSettings);
-  ZeroRegisterThreadSafeReferenceCountedHandleManager(DepthSettings);
+  ZeroRegisterThreadSafeReferenceCountedHandleManager(GraphicsBlendSettings);
+  ZeroRegisterThreadSafeReferenceCountedHandleManager(GraphicsDepthSettings);
 
   // Setup the core Zilch library
   mZilchSetup = new ZilchSetup(SetupFlags::DoNotShutdownMemory);

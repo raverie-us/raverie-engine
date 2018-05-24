@@ -7,7 +7,7 @@ namespace Zero
 {
 
 //**************************************************************************************************
-ZilchDefineType(SamplerSettings, builder, type)
+ZilchDefineExternalBaseType(SamplerSettings, TypeCopyMode::ReferenceType, builder, type)
 {
   ZeroBindDocumented();
 
@@ -20,110 +20,6 @@ ZilchDefineType(SamplerSettings, builder, type)
 
   ZilchBindDestructor();
   ZilchBindConstructor();
-}
-
-//**************************************************************************************************
-SamplerSettings::SamplerSettings()
-  : mAddressingX(TextureAddressing::Clamp)
-  , mAddressingY(TextureAddressing::Clamp)
-  , mFiltering(TextureFiltering::Nearest)
-  , mCompareMode(TextureCompareMode::Disabled)
-  , mCompareFunc(TextureCompareFunc::Never)
-{
-}
-
-//**************************************************************************************************
-u32 SamplerSettings::GetSettings()
-{
-  u32 settings = 0;
-  settings |= AddressingX(mAddressingX);
-  settings |= AddressingY(mAddressingY);
-  settings |= Filtering(mFiltering);
-  settings |= CompareMode(mCompareMode);
-  settings |= CompareFunc(mCompareFunc);
-  return settings;
-}
-
-//**************************************************************************************************
-u32 SamplerSettings::AddressingX(TextureAddressing::Enum addressingX)
-{
-  return (0x08 | (u32)addressingX) << 0;
-}
-
-//**************************************************************************************************
-u32 SamplerSettings::AddressingY(TextureAddressing::Enum addressingY)
-{
-  return (0x08 | (u32)addressingY) << 4;
-}
-
-//**************************************************************************************************
-u32 SamplerSettings::Filtering(TextureFiltering::Enum filtering)
-{
-  return (0x08 | (u32)filtering) << 8;
-}
-
-//**************************************************************************************************
-u32 SamplerSettings::CompareMode(TextureCompareMode::Enum compareMode)
-{
-  return (0x08 | (u32)compareMode) << 12;
-}
-
-//**************************************************************************************************
-u32 SamplerSettings::CompareFunc(TextureCompareFunc::Enum compareFunc)
-{
-  return (0x08 | (u32)compareFunc) << 16;
-}
-
-//**************************************************************************************************
-TextureAddressing::Enum SamplerSettings::AddressingX(u32 samplerSettings)
-{
-  return (TextureAddressing::Enum)((samplerSettings & 0x00000007) >> 0);
-}
-
-//**************************************************************************************************
-TextureAddressing::Enum SamplerSettings::AddressingY(u32 samplerSettings)
-{
-  return (TextureAddressing::Enum)((samplerSettings & 0x00000070) >> 4);
-}
-
-//**************************************************************************************************
-TextureFiltering::Enum SamplerSettings::Filtering(u32 samplerSettings)
-{
-  return (TextureFiltering::Enum)((samplerSettings & 0x00000700) >> 8);
-}
-
-//**************************************************************************************************
-TextureCompareMode::Enum SamplerSettings::CompareMode(u32 samplerSettings)
-{
-  return (TextureCompareMode::Enum)((samplerSettings & 0x00007000) >> 12);
-}
-
-//**************************************************************************************************
-TextureCompareFunc::Enum SamplerSettings::CompareFunc(u32 samplerSettings)
-{
-  return (TextureCompareFunc::Enum)((samplerSettings & 0x00070000) >> 16);
-}
-
-//**************************************************************************************************
-void SamplerSettings::AddValue(u32& samplerSettings, u32 value)
-{
-  // If value has been set already then the extra check bit will overlap
-  if ((samplerSettings & value) != 0)
-    return;
-
-  samplerSettings |= value;
-}
-
-//**************************************************************************************************
-void SamplerSettings::FillDefaults(u32& samplerSettings, u32 defaultSettings)
-{
-  // Each value from defaults is multiplied by whether or not the check bit is already present in the settings
-  // If settings already has a particular value set then 0 is or'd, resulting in no change
-  samplerSettings |= (defaultSettings & 0x0000000F) * (u32)((samplerSettings & 0x00000008) == 0);
-  samplerSettings |= (defaultSettings & 0x000000F0) * (u32)((samplerSettings & 0x00000080) == 0);
-  samplerSettings |= (defaultSettings & 0x00000F00) * (u32)((samplerSettings & 0x00000800) == 0);
-  samplerSettings |= (defaultSettings & 0x0000F000) * (u32)((samplerSettings & 0x00008000) == 0);
-  samplerSettings |= (defaultSettings & 0x000F0000) * (u32)((samplerSettings & 0x00080000) == 0);
 }
 
 //**************************************************************************************************

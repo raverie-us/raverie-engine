@@ -123,9 +123,9 @@ void ShaderInputs::Clear()
   mShaderInputs.Clear();
 }
 
-DefineThreadSafeReferenceCountedHandle(BlendSettings);
+DefineThreadSafeReferenceCountedHandle(GraphicsBlendSettings);
 //**************************************************************************************************
-ZilchDefineType(BlendSettings, builder, type)
+ZilchDefineType(GraphicsBlendSettings, builder, type)
 {
   ZeroBindDocumented();
   ZeroBindThreadSafeReferenceCountedHandle();
@@ -143,56 +143,38 @@ ZilchDefineType(BlendSettings, builder, type)
   ZilchBindGetterSetterProperty(BlendEquationAlpha);
   ZilchBindGetterSetterProperty(SourceFactorAlpha);
   ZilchBindGetterSetterProperty(DestFactorAlpha);
+
+  BlendSettings::Constructed = &GraphicsBlendSettings::ConstructedStatic;
+  BlendSettings::Destructed = &GraphicsBlendSettings::DestructedStatic;
 }
 
 //**************************************************************************************************
-BlendSettings::BlendSettings()
+void GraphicsBlendSettings::ConstructedStatic(BlendSettings* settings)
+{
+  ((GraphicsBlendSettings*)settings)->ConstructedInstance();
+}
+
+//**************************************************************************************************
+void GraphicsBlendSettings::DestructedStatic(BlendSettings* settings)
+{
+  ((GraphicsBlendSettings*)settings)->DestructedInstance();
+}
+
+//**************************************************************************************************
+void GraphicsBlendSettings::ConstructedInstance()
 {
   ConstructThreadSafeReferenceCountedHandle();
-
-  mBlendMode = BlendMode::Disabled;
-  mBlendEquation = BlendEquation::Add;
-  mSourceFactor = BlendFactor::Zero;
-  mDestFactor = BlendFactor::Zero;
-  mBlendEquationAlpha = BlendEquation::Add;
-  mSourceFactorAlpha = BlendFactor::Zero;
-  mDestFactorAlpha = BlendFactor::Zero;
 }
 
 //**************************************************************************************************
-BlendSettings::BlendSettings(const BlendSettings& other)
-{
-  ConstructThreadSafeReferenceCountedHandle();
-  *this = other;
-}
-
-//**************************************************************************************************
-BlendSettings::~BlendSettings()
+void GraphicsBlendSettings::DestructedInstance()
 {
   DestructThreadSafeReferenceCountedHandle();
 }
 
+DefineThreadSafeReferenceCountedHandle(GraphicsDepthSettings);
 //**************************************************************************************************
-void BlendSettings::SetBlendAlpha()
-{
-  mBlendMode = BlendMode::Separate;
-  mSourceFactor = BlendFactor::SourceAlpha;
-  mDestFactor = BlendFactor::InvSourceAlpha;
-  mSourceFactorAlpha = BlendFactor::One;
-  mDestFactorAlpha = BlendFactor::One;
-}
-
-//**************************************************************************************************
-void BlendSettings::SetBlendAdditive()
-{
-  mBlendMode = BlendMode::Enabled;
-  mSourceFactor = BlendFactor::SourceAlpha;
-  mDestFactor = BlendFactor::One;
-}
-
-DefineThreadSafeReferenceCountedHandle(DepthSettings);
-//**************************************************************************************************
-ZilchDefineType(DepthSettings, builder, type)
+ZilchDefineType(GraphicsDepthSettings, builder, type)
 {
   ZeroBindDocumented();
   ZeroBindThreadSafeReferenceCountedHandle();
@@ -224,93 +206,37 @@ ZilchDefineType(DepthSettings, builder, type)
   ZilchBindFieldProperty(mStencilReadMaskBackFace);
   ZilchBindFieldProperty(mStencilWriteMaskBackFace);
   ZilchBindFieldProperty(mStencilTestValueBackFace);
+
+  DepthSettings::Constructed = &GraphicsDepthSettings::ConstructedStatic;
+  DepthSettings::Destructed = &GraphicsDepthSettings::DestructedStatic;
 }
 
 //**************************************************************************************************
-DepthSettings::DepthSettings()
+void GraphicsDepthSettings::ConstructedStatic(DepthSettings* settings)
+{
+  ((GraphicsDepthSettings*)settings)->ConstructedInstance();
+}
+
+//**************************************************************************************************
+void GraphicsDepthSettings::DestructedStatic(DepthSettings* settings)
+{
+  ((GraphicsDepthSettings*)settings)->DestructedInstance();
+}
+
+//**************************************************************************************************
+void GraphicsDepthSettings::ConstructedInstance()
 {
   ConstructThreadSafeReferenceCountedHandle();
-
-  mDepthMode = DepthMode::Disabled;
-  mDepthCompareFunc = TextureCompareFunc::Never;
-
-  mStencilMode = StencilMode::Disabled;
-  mStencilCompareFunc = TextureCompareFunc::Never;
-  mStencilFailOp = StencilOp::Zero;
-  mDepthFailOp = StencilOp::Zero;
-  mDepthPassOp = StencilOp::Zero;
-  mStencilReadMask = 0xFF;
-  mStencilWriteMask = 0xFF;
-  mStencilTestValue = 0;
-
-  mStencilCompareFuncBackFace = TextureCompareFunc::Never;
-  mStencilFailOpBackFace = StencilOp::Zero;
-  mDepthFailOpBackFace = StencilOp::Zero;
-  mDepthPassOpBackFace = StencilOp::Zero;
-  mStencilReadMaskBackFace = 0xFF;
-  mStencilWriteMaskBackFace = 0xFF;
-  mStencilTestValueBackFace = 0;
 }
 
 //**************************************************************************************************
-DepthSettings::DepthSettings(const DepthSettings& other)
-{
-  ConstructThreadSafeReferenceCountedHandle();
-  *this = other;
-}
-
-//**************************************************************************************************
-DepthSettings::~DepthSettings()
+void GraphicsDepthSettings::DestructedInstance()
 {
   DestructThreadSafeReferenceCountedHandle();
 }
 
 //**************************************************************************************************
-void DepthSettings::SetDepthRead(TextureCompareFunc::Enum depthCompareFunc)
-{
-  mDepthMode = DepthMode::Read;
-  mDepthCompareFunc = depthCompareFunc;
-}
-
-//**************************************************************************************************
-void DepthSettings::SetDepthWrite(TextureCompareFunc::Enum depthCompareFunc)
-{
-  mDepthMode = DepthMode::Write;
-  mDepthCompareFunc = depthCompareFunc;
-}
-
-//**************************************************************************************************
-void DepthSettings::SetStencilTestMode(TextureCompareFunc::Enum stencilCompareFunc)
-{
-  mStencilMode = StencilMode::Enabled;
-  mStencilCompareFunc = stencilCompareFunc;
-  mStencilFailOp = StencilOp::Keep;
-  mDepthFailOp = StencilOp::Keep;
-  mDepthPassOp = StencilOp::Keep;
-}
-
-//**************************************************************************************************
-void DepthSettings::SetStencilIncrement()
-{
-  mStencilMode = StencilMode::Enabled;
-  mStencilCompareFunc = TextureCompareFunc::Always;
-  mStencilFailOp = StencilOp::Keep;
-  mDepthFailOp = StencilOp::Keep;
-  mDepthPassOp = StencilOp::Increment;
-}
-
-//**************************************************************************************************
-void DepthSettings::SetStencilDecrement()
-{
-  mStencilMode = StencilMode::Enabled;
-  mStencilCompareFunc = TextureCompareFunc::Always;
-  mStencilFailOp = StencilOp::Keep;
-  mDepthFailOp = StencilOp::Keep;
-  mDepthPassOp = StencilOp::Decrement;
-}
-
-//**************************************************************************************************
-ZilchDefineType(RenderSettings, builder, type)
+ZilchDefineType(GraphicsRenderSettings, builder, type)
 {
   ZeroBindDocumented();
   ZilchBindDefaultCopyDestructor();
@@ -327,52 +253,20 @@ ZilchDefineType(RenderSettings, builder, type)
 }
 
 //**************************************************************************************************
-RenderSettings::RenderSettings()
+GraphicsRenderSettings::GraphicsRenderSettings()
 {
   ClearAll();
 }
 
 //**************************************************************************************************
-void RenderSettings::ClearAll()
+void GraphicsRenderSettings::ClearAll()
 {
-  ClearTargets();
-  ClearSettings();
-  mCullMode = CullMode::Disabled;
-  mScissorMode = ScissorMode::Disabled;
+  RenderSettings::ClearAll();
   mGlobalShaderInputs = nullptr;
 }
 
 //**************************************************************************************************
-void RenderSettings::ClearTargets()
-{
-  mTargetsWidth = 0;
-  mTargetsHeight = 0;
-
-  for (uint i = 0; i < 8; ++i)
-  {
-    mColorTextures[i] = nullptr;
-    mColorTargets[i] = nullptr;
-    mBlendSettings[i] = BlendSettings();
-  }
-
-  mDepthTexture = nullptr;
-  mDepthTarget = nullptr;
-  mDepthSettings = DepthSettings();
-
-  mSingleColorTarget = true;
-}
-
-//**************************************************************************************************
-void RenderSettings::ClearSettings()
-{
-  for (uint i = 0; i < 8; ++i)
-    mBlendSettings[i] = BlendSettings();
-
-  mDepthSettings = DepthSettings();
-}
-
-//**************************************************************************************************
-void RenderSettings::SetColorTarget(RenderTarget* target)
+void GraphicsRenderSettings::SetColorTarget(RenderTarget* target)
 {
   if (target == nullptr)
   {
@@ -387,7 +281,7 @@ void RenderSettings::SetColorTarget(RenderTarget* target)
 }
 
 //**************************************************************************************************
-void RenderSettings::SetDepthTarget(RenderTarget* target)
+void GraphicsRenderSettings::SetDepthTarget(RenderTarget* target)
 {
   if (target == nullptr)
   {
@@ -402,7 +296,7 @@ void RenderSettings::SetDepthTarget(RenderTarget* target)
 }
 
 //**************************************************************************************************
-void RenderSettings::SetColorTargetMrt(RenderTarget* target, uint index)
+void GraphicsRenderSettings::SetColorTargetMrt(RenderTarget* target, uint index)
 {
   if (index >= 8)
     return DoNotifyException("Error", "Invalid index. Must be 0-7.");
@@ -423,16 +317,40 @@ void RenderSettings::SetColorTargetMrt(RenderTarget* target, uint index)
 }
 
 //**************************************************************************************************
-BlendSettings* RenderSettings::GetBlendSettingsMrt(uint index)
+GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettings()
+{
+  return (GraphicsBlendSettings*)RenderSettings::GetBlendSettings();
+}
+
+//**************************************************************************************************
+void GraphicsRenderSettings::SetBlendSettings(GraphicsBlendSettings* blendSettings)
+{
+  RenderSettings::SetBlendSettings(blendSettings);
+}
+
+//**************************************************************************************************
+GraphicsDepthSettings* GraphicsRenderSettings::GetDepthSettings()
+{
+  return (GraphicsDepthSettings*)RenderSettings::GetDepthSettings();
+}
+
+//**************************************************************************************************
+void GraphicsRenderSettings::SetDepthSettings(GraphicsDepthSettings* depthSettings)
+{
+  RenderSettings::SetDepthSettings(depthSettings);
+}
+
+//**************************************************************************************************
+GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettingsMrt(uint index)
 {
   if (index >= 8)
     return DoNotifyException("Error", "Invalid index. Must be 0-7."), nullptr;
 
-  return &mBlendSettings[index];
+  return (GraphicsBlendSettings*)&mBlendSettings[index];
 }
 
 //**************************************************************************************************
-void RenderSettings::SetBlendSettingsMrt(BlendSettings* blendSettings, uint index)
+void GraphicsRenderSettings::SetBlendSettingsMrt(GraphicsBlendSettings* blendSettings, uint index)
 {
   if (index >= 8)
     return DoNotifyException("Error", "Invalid index. Must be 0-7.");
@@ -441,43 +359,19 @@ void RenderSettings::SetBlendSettingsMrt(BlendSettings* blendSettings, uint inde
 }
 
 //**************************************************************************************************
-BlendSettings* RenderSettings::GetBlendSettings()
-{
-  return mBlendSettings;
-}
-
-//**************************************************************************************************
-void RenderSettings::SetBlendSettings(BlendSettings* blendSettings)
-{
-  mBlendSettings[0] = *blendSettings;
-}
-
-//**************************************************************************************************
-DepthSettings* RenderSettings::GetDepthSettings()
-{
-  return &mDepthSettings;
-}
-
-//**************************************************************************************************
-void RenderSettings::SetDepthSettings(DepthSettings* depthSettings)
-{
-  mDepthSettings = *depthSettings;
-}
-
-//**************************************************************************************************
-ShaderInputs* RenderSettings::GetGlobalShaderInputs()
+ShaderInputs* GraphicsRenderSettings::GetGlobalShaderInputs()
 {
   return mGlobalShaderInputs;
 }
 
 //**************************************************************************************************
-void RenderSettings::SetGlobalShaderInputs(ShaderInputs* shaderInputs)
+void GraphicsRenderSettings::SetGlobalShaderInputs(ShaderInputs* shaderInputs)
 {
   mGlobalShaderInputs = shaderInputs;
 }
 
 //**************************************************************************************************
-MultiRenderTarget* RenderSettings::GetMultiRenderTarget()
+MultiRenderTarget* GraphicsRenderSettings::GetMultiRenderTarget()
 {
   MultiRenderTarget* multiRenderTarget = new MultiRenderTarget(this);
   multiRenderTarget->mReferenceCount.mCount--;
@@ -510,7 +404,7 @@ ZilchDefineType(BlendSettingsMrt, builder, type)
 }
 
 //**************************************************************************************************
-void BlendSettingsMrt::Set(uint index, BlendSettings* blendSettings)
+void BlendSettingsMrt::Set(uint index, GraphicsBlendSettings* blendSettings)
 {
   if (mRenderSettings.IsNull())
     return DoNotifyException("Error", "Attempting to call member on null object.");
@@ -518,7 +412,7 @@ void BlendSettingsMrt::Set(uint index, BlendSettings* blendSettings)
 }
 
 //**************************************************************************************************
-BlendSettings* BlendSettingsMrt::Get(uint index)
+GraphicsBlendSettings* BlendSettingsMrt::Get(uint index)
 {
   if (mRenderSettings.IsNull())
     return DoNotifyException("Error", "Attempting to call member on null object."), nullptr;
@@ -552,7 +446,7 @@ ZilchDefineType(MultiRenderTarget, builder, type)
 }
 
 //**************************************************************************************************
-MultiRenderTarget::MultiRenderTarget(HandleOf<RenderSettings> renderSettings)
+MultiRenderTarget::MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings)
   : mRenderSettings(renderSettings)
   , mColorTargetMrt(renderSettings)
   , mBlendSettingsMrt(renderSettings)

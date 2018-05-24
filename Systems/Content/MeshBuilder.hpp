@@ -6,61 +6,6 @@
 
 namespace Zero
 {
-
-const size_t cMaxBonesWeights = 4;
-
-// Do not reorder, value used to calculate number of vertices per primitive
-DeclareEnum3(PrimitiveType, Points, Lines, Triangles);
-
-// Semantics are used to communicate what this element is
-// with the vertex shader
-DeclareEnum17(VertexSemantic,
-              Position,
-              Normal,
-              Tangent,
-              Bitangent,
-              Uv,
-              UvAux,
-              Color,
-              ColorAux,
-              BoneWeights,
-              BoneIndices,
-              Aux0,
-              Aux1,
-              Aux2,
-              Aux3,
-              Aux4,
-              Aux5,
-              None);
-
-// Type of element in vertex
-DeclareEnum6(VertexElementType,
-             Byte,
-             Short,
-             Half,
-             Real,
-             // Normalized Types map 0 to 1
-             NormByte,
-             NormShort);
-
-DeclareEnum3(IndexElementType,
-             Byte,
-             Ushort,
-             Uint
-);
-
-class VertexAttribute
-{
-public:
-  VertexAttribute() {};
-  VertexAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count, byte offset);
-
-  VertexSemantic::Enum mSemantic : 8;
-  VertexElementType::Enum mType : 8;
-  byte mCount;
-  byte mOffset;
-};
-
 class FixedVertexDescription
 {
 public:
@@ -69,13 +14,6 @@ public:
   uint mVertexSize;
   static const size_t sMaxElements = 16;
   VertexAttribute mAttributes[sMaxElements];
-};
-
-class MeshBone
-{
-public:
-  String mName;
-  Mat4 mBindTransform;
 };
 
 const String cMeshOutputType = "Mesh";

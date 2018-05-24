@@ -56,6 +56,23 @@
 #include <Psapi.h>
 #include <ws2tcpip.h>
 
+// Using static GLEW
+#define GLEW_STATIC
+
+// Include glew before OpenGl
+#include <GL/glew.h>
+#include <GL/wglew.h>
+
+// Include OpenGl
+#include <GL/GL.h>
+
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
+
 #pragma comment(lib, "Psapi.lib")
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Winmm.lib")
@@ -72,15 +89,18 @@
 // Non-windows libraries that we link in
 #pragma comment(lib, "freetype28.lib")
 #pragma comment(lib, "libcef.lib")
+#pragma comment(lib, "OpenGL32.Lib")
 
 #if ZeroRelease
 #pragma comment(lib, "zlib.lib")
 #pragma comment(lib, "libpng.lib")
 #pragma comment(lib, "libcef_dll_wrapper_release.lib")
+#pragma comment(lib, "glew32s.lib")
 #else
 #pragma comment(lib, "zlibd.lib")
 #pragma comment(lib, "libpngd.lib")
 #pragma comment(lib, "libcef_dll_wrapper_debug.lib")
+#pragma comment(lib, "glew32sd.lib")
 #endif
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
@@ -104,6 +124,8 @@ extern "C"
 #include "ThreadIo.hpp"
 #include "WString.hpp"
 #include "WinUtility.hpp"
+#include "StreamedVertexBuffer.hpp"
+#include "OpenglRenderer.hpp"
 
 #ifdef RunVld
 #include <vld.h>

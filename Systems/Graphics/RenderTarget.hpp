@@ -6,52 +6,6 @@
 namespace Zero
 {
 
-/// Used when requesting a RenderTarget to configure how its texture is sampled.
-class SamplerSettings
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  SamplerSettings();
-
-  /// How to treat uv coordinates outside of [0, 1] along the Texture's width.
-  TextureAddressing::Enum mAddressingX;
-  /// How to treat uv coordinates outside of [0, 1] along the Texture's height.
-  TextureAddressing::Enum mAddressingY;
-  /// How samples should be blended under minification/magnification.
-  TextureFiltering::Enum mFiltering;
-  /// If sampling in hardware should perform comparison instead of fetching. Requires using SamplerShadow2d in the shader.
-  TextureCompareMode::Enum mCompareMode;
-  /// Which method of comparison should be used if CompareMode is set to Enable.
-  TextureCompareFunc::Enum mCompareFunc;
-
-  // Internal
-
-  // Converts all settings on current object to one compact integer
-  u32 GetSettings();
-
-  // Compacts values that can be binary or'd together, used for hashing
-  // Converted values use an extra bit so that unused values can be detected
-  static u32 AddressingX(TextureAddressing::Enum addressingX);
-  static u32 AddressingY(TextureAddressing::Enum addressingY);
-  static u32 Filtering(TextureFiltering::Enum filtering);
-  static u32 CompareMode(TextureCompareMode::Enum compareMode);
-  static u32 CompareFunc(TextureCompareFunc::Enum compareFunc);
-
-  // Retrieves individual enum values from the compacted integer
-  // Results in 0 if the requested value was never set
-  static TextureAddressing::Enum AddressingX(u32 samplerSettings);
-  static TextureAddressing::Enum AddressingY(u32 samplerSettings);
-  static TextureFiltering::Enum Filtering(u32 samplerSettings);
-  static TextureCompareMode::Enum CompareMode(u32 samplerSettings);
-  static TextureCompareFunc::Enum CompareFunc(u32 samplerSettings);
-
-  // Adds a converted value only if it hasn't been set already
-  static void AddValue(u32& samplerSettings, u32 value);
-  // Uses values from defaults to fill any unset values
-  static void FillDefaults(u32& samplerSettings, u32 defaultSettings);
-};
-
 /// Interface for rendering output. Texture data is managed and recycled by the engine.
 class RenderTarget : public SafeId32
 {

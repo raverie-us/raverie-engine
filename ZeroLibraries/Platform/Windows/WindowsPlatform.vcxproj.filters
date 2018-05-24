@@ -48,6 +48,8 @@
     <ClCompile Include="Intrinsics.cpp" />
     <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Browser.cpp" />
+    <ClCompile Include="OpenglRenderer.cpp" />
+    <ClCompile Include="StreamedVertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">
@@ -62,9 +64,12 @@
     </ClInclude>
     <ClInclude Include="WString.hpp" />
     <ClInclude Include="WinUtility.hpp" />
+    <ClInclude Include="OpenglRenderer.hpp" />
+    <ClInclude Include="StreamedVertexBuffer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Keys.inl" />
     <None Include="MouseButtons.inl" />
+    <None Include="LoadingShader.inl" />
   </ItemGroup>
 </Project>

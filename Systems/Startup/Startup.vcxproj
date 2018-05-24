@@ -117,9 +117,6 @@
     <ProjectReference Include="..\Networking\Networking.vcxproj">
       <Project>{a0359e52-6512-4c5c-916b-f70b35e49242}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\OpenglRenderer\OpenglRenderer.vcxproj">
-      <Project>{b12cf952-9a77-4d6e-80a6-798699763451}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Physics\Physics.vcxproj">
       <Project>{b1397fe7-b02a-4689-8f19-719bf0e70e7c}</Project>
     </ProjectReference>

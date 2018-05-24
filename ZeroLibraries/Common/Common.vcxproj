@@ -99,6 +99,7 @@
     <ClCompile Include="Platform\Intrinsics.cpp" />
     <ClCompile Include="Platform\IpAddress.cpp" />
     <ClCompile Include="Platform\Process.cpp" />
+    <ClCompile Include="Platform\Renderer.cpp" />
     <ClCompile Include="Platform\Shell.cpp" />
     <ClCompile Include="Platform\UnicodeUtility.cpp" />
     <ClCompile Include="Precompiled.cpp">
@@ -207,6 +208,8 @@
     <ClInclude Include="Platform\PrivateImplementation.hpp" />
     <ClInclude Include="Platform\Process.hpp" />
     <ClInclude Include="Platform\Registry.hpp" />
+    <ClInclude Include="Platform\Renderer.hpp" />
+    <ClInclude Include="Platform\RendererEnumerations.hpp" />
     <ClInclude Include="Platform\Resolution.hpp" />
     <ClInclude Include="Platform\ExecutableResource.hpp" />
     <ClInclude Include="Platform\Shell.hpp" />

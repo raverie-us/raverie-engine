@@ -45,223 +45,6 @@ uint GraphicalRangeInterface::GetCount()
 }
 
 //**************************************************************************************************
-RenderTaskBuffer::RenderTaskBuffer()
-  : mTaskCount(0)
-  , mCurrentIndex(0)
-{
-  mRenderTaskData.Resize(128);
-}
-
-//**************************************************************************************************
-void RenderTaskBuffer::Clear()
-{
-  // Have to manually destruct render tasks because they're stored in a generic buffer
-  uint taskIndex = 0;
-  while (taskIndex < mCurrentIndex)
-  {
-    byte* task = &mRenderTaskData[taskIndex];
-    switch (*task)
-    {
-      case RenderTaskType::ClearTarget:
-      ((RenderTaskClearTarget*)task)->~RenderTaskClearTarget();
-      taskIndex += sizeof(RenderTaskClearTarget);
-      break;
-
-      case RenderTaskType::RenderPass:
-      ((RenderTaskRenderPass*)task)->~RenderTaskRenderPass();
-      taskIndex += sizeof(RenderTaskRenderPass);
-      break;
-
-      case RenderTaskType::PostProcess:
-      ((RenderTaskPostProcess*)task)->~RenderTaskPostProcess();
-      taskIndex += sizeof(RenderTaskPostProcess);
-      break;
-
-      case RenderTaskType::BackBufferBlit:
-      ((RenderTaskBackBufferBlit*)task)->~RenderTaskBackBufferBlit();
-      taskIndex += sizeof(RenderTaskBackBufferBlit);
-      break;
-
-      case RenderTaskType::TextureUpdate:
-      ((RenderTaskTextureUpdate*)task)->~RenderTaskTextureUpdate();
-      taskIndex += sizeof(RenderTaskTextureUpdate);
-      break;
-
-      default:
-      Error("Render task destruction not implemented.");
-      break;
-    }
-  }
-
-  mTaskCount = 0;
-  mCurrentIndex = 0;
-}
-
-//**************************************************************************************************
-void RenderTaskBuffer::AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
-{
-  if (!ValidateRenderTargets(renderSettings))
-    return;
-
-  RenderTaskClearTarget* renderTask = NewRenderTask<RenderTaskClearTarget>();
-  renderTask->mId = RenderTaskType::ClearTarget;
-  renderTask->mRenderSettings = renderSettings;
-  renderTask->mColor = color;
-  renderTask->mDepth = depth;
-  renderTask->mStencil = stencil;
-  renderTask->mStencilWriteMask = stencilWriteMask;
-
-  ++mTaskCount;
-}
-
-//**************************************************************************************************
-void RenderTaskBuffer::AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputsId)
-{
-  if (!ValidateRenderTargets(renderSettings))
-    return;
-
-  RenderTaskRenderPass* renderTask = NewRenderTask<RenderTaskRenderPass>();
-  renderTask->mId = RenderTaskType::RenderPass;
-  renderTask->mRenderSettings = renderSettings;
-  renderTask->mRenderGroupIndex = renderGroupIndex;
-  renderTask->mRenderPassName = renderPassName;
-  renderTask->mShaderInputsId = shaderInputsId;
-
-  ++mTaskCount;
-}
-
-//**************************************************************************************************
-void RenderTaskBuffer::AddRenderTaskPostProcess(RenderSettings& renderSettings, StringParam postProcessName, uint shaderInputsId)
-{
-  if (!ValidateRenderTargets(renderSettings))
-    return;
-
-  RenderTaskPostProcess* renderTask = NewRenderTask<RenderTaskPostProcess>();
-  renderTask->mId = RenderTaskType::PostProcess;
-  renderTask->mRenderSettings = renderSettings;
-  renderTask->mPostProcessName = postProcessName;
-  renderTask->mMaterialRenderData = nullptr;
-  renderTask->mShaderInputsId = shaderInputsId;
-
-  ++mTaskCount;
-}
-
-//**************************************************************************************************
-void RenderTaskBuffer::AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialRenderData* materialRenderData, uint shaderInputsId)
-{
-  if (!ValidateRenderTargets(renderSettings))
-    return;
-
-  RenderTaskPostProcess* renderTask = NewRenderTask<RenderTaskPostProcess>();
-  renderTask->mId = RenderTaskType::PostProcess;
-  renderTask->mRenderSettings = renderSettings;
-  renderTask->mPostProcessName = String();
-  renderTask->mMaterialRenderData = materialRenderData;
-  renderTask->mShaderInputsId = shaderInputsId;
-
-  ++mTaskCount;
-}
-
-//**************************************************************************************************
-void RenderTaskBuffer::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport)
-{
-  // Don't need to validate render target, only used internally
-  RenderTaskBackBufferBlit* renderTask = NewRenderTask<RenderTaskBackBufferBlit>();
-  renderTask->mId = RenderTaskType::BackBufferBlit;
-  Texture* texture = colorTarget->mTexture;
-  renderTask->mColorTarget = texture->mRenderData;
-  renderTask->mTextureWidth = texture->mWidth;
-  renderTask->mTextureHeight = texture->mHeight;
-  renderTask->mViewport = viewport;
-
-  ++mTaskCount;
-}
-
-//**************************************************************************************************
-void RenderTaskBuffer::AddRenderTaskTextureUpdate(Texture* texture)
-{
-  RenderTaskTextureUpdate* renderTask = NewRenderTask<RenderTaskTextureUpdate>();
-  renderTask->mId = RenderTaskType::TextureUpdate;
-  renderTask->mRenderData = texture->mRenderData;
-  renderTask->mWidth = texture->mWidth;
-  renderTask->mHeight = texture->mHeight;
-  renderTask->mType = texture->mType;
-  renderTask->mFormat = texture->mFormat;
-  renderTask->mAddressingX = texture->mAddressingX;
-  renderTask->mAddressingY = texture->mAddressingY;
-  renderTask->mFiltering = texture->mFiltering;
-  renderTask->mCompareMode = texture->mCompareMode;
-  renderTask->mCompareFunc = texture->mCompareFunc;
-  renderTask->mAnisotropy = texture->mAnisotropy;
-  renderTask->mMipMapping = texture->mMipMapping;
-
-  texture->mDirty = false;
-
-  ++mTaskCount;
-}
-
-//**************************************************************************************************
-bool RenderTaskBuffer::ValidateRenderTargets(RenderSettings& renderSettings)
-{
-  static Array<IntVec2> sizes;
-  sizes.Clear();
-
-  uint targetCount = renderSettings.mSingleColorTarget ? 1 : 8;
-
-  // Format validations
-  for (uint i = 0; i < targetCount; ++i)
-  {
-    Texture* texture = renderSettings.mColorTextures[i];
-    if (texture != nullptr)
-    {
-      if (IsColorFormat(texture->mFormat))
-        sizes.PushBack(texture->GetSize());
-      else
-        return DoNotifyException("Error", "Invalid color attachment."), false;
-    }
-  }
-
-  Texture* depthTexture = renderSettings.mDepthTexture;
-  if (depthTexture != nullptr)
-  {
-    if (IsDepthFormat(depthTexture->mFormat))
-      sizes.PushBack(depthTexture->GetSize());
-    else
-      return DoNotifyException("Error", "Invalid depth attachment."), false;
-  }
-
-  // Size validations
-  if (sizes.Empty())
-    return DoNotifyException("Error", "No RenderTargets."), false;
-
-  for (uint i = 1; i < sizes.Size(); ++i)
-    if (sizes[i] != sizes[i - 1])
-      return DoNotifyException("Error", "Mismatching RenderTarget sizes."), false;
-
-  renderSettings.mTargetsWidth = (uint)sizes[0].x;
-  renderSettings.mTargetsHeight = (uint)sizes[0].y;
-
-  // Add render tasks for dirty textures
-  for (uint i = 0; i < targetCount; ++i)
-  {
-    Texture* texture = renderSettings.mColorTextures[i];
-    if (texture != nullptr && texture->mDirty)
-      AddRenderTaskTextureUpdate(texture);
-  }
-
-  if (renderSettings.mDepthTexture && renderSettings.mDepthTexture->mDirty)
-    AddRenderTaskTextureUpdate(renderSettings.mDepthTexture);
-
-  return true;
-}
-
-//**************************************************************************************************
-bool RenderTaskRange::operator<(const RenderTaskRange& other) const
-{
-  return mRenderOrder < other.mRenderOrder;
-}
-
-//**************************************************************************************************
 ZilchDefineType(RenderTasksEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -281,18 +64,18 @@ ZilchDefineType(RenderTasksEvent, builder, type)
   ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float));
   ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint));
   ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint, uint));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderSettings&, Vec4));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderSettings&, Vec4, float));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderSettings&, Vec4, float, uint));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderSettings&, Vec4, float, uint, uint));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint));
+  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint, uint));
 
-  ZilchBindOverloadedMethod(AddRenderTaskRenderPass, ZilchInstanceOverload(void, RenderSettings&, RenderGroup&, MaterialBlock&));
-  ZilchBindOverloadedMethod(AddRenderTaskRenderPass, ZilchInstanceOverload(void, RenderSettings&, GraphicalRangeInterface&, MaterialBlock&));
+  ZilchBindOverloadedMethod(AddRenderTaskRenderPass, ZilchInstanceOverload(void, GraphicsRenderSettings&, RenderGroup&, MaterialBlock&));
+  ZilchBindOverloadedMethod(AddRenderTaskRenderPass, ZilchInstanceOverload(void, GraphicsRenderSettings&, GraphicalRangeInterface&, MaterialBlock&));
 
   ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderTarget*, Material&));
   ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderTarget*, MaterialBlock&));
-  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderSettings&, Material&));
-  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderSettings&, MaterialBlock&));
+  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, GraphicsRenderSettings&, Material&));
+  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, GraphicsRenderSettings&, MaterialBlock&));
 
   ZilchBindOverloadedMethod(GetFinalTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
   ZilchBindOverloadedMethod(GetFinalTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
@@ -344,7 +127,7 @@ HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(HandleOf<Texture> textu
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, Vec4 color)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   AddRenderTaskClearTarget(renderSettings, color, 0.0f, 0, 0xFF);
 }
@@ -352,7 +135,7 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, Vec4 
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetDepthTarget(depthTarget);
   AddRenderTaskClearTarget(renderSettings, Vec4::cZero, depth, 0, 0xFF);
 }
@@ -360,7 +143,7 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth, uint stencil)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetDepthTarget(depthTarget);
   AddRenderTaskClearTarget(renderSettings, Vec4::cZero, depth, stencil, 0xFF);
 }
@@ -368,7 +151,7 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth, uint stencil, uint stencilWriteMask)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetDepthTarget(depthTarget);
   AddRenderTaskClearTarget(renderSettings, Vec4::cZero, depth, stencil, stencilWriteMask);
 }
@@ -376,7 +159,7 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   renderSettings.SetDepthTarget(depthTarget);
   AddRenderTaskClearTarget(renderSettings, color, depth, 0, 0xFF);
@@ -385,7 +168,7 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, Rende
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   renderSettings.SetDepthTarget(depthTarget);
   AddRenderTaskClearTarget(renderSettings, color, depth, stencil, 0xFF);
@@ -394,38 +177,38 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, Rende
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   renderSettings.SetDepthTarget(depthTarget);
   AddRenderTaskClearTarget(renderSettings, color, depth, stencil, stencilWriteMask);
 }
 
 //**************************************************************************************************
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color)
 {
   AddRenderTaskClearTarget(renderSettings, color, 0, 0, 0xFF);
 }
 
 //**************************************************************************************************
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth)
 {
   AddRenderTaskClearTarget(renderSettings, color, depth, 0, 0xFF);
 }
 
 //**************************************************************************************************
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil)
 {
   AddRenderTaskClearTarget(renderSettings, color, depth, stencil, 0xFF);
 }
 
 //**************************************************************************************************
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
 {
-  mRenderTasks->mRenderTaskBuffer.AddRenderTaskClearTarget(renderSettings, color, depth, stencil, stencilWriteMask);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskClearTarget(renderSettings, color, depth, stencil, stencilWriteMask);
 }
 
 //**************************************************************************************************
-void RenderTasksEvent::AddRenderTaskRenderPass(RenderSettings& renderSettings, RenderGroup& renderGroup, MaterialBlock& renderPass)
+void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings, RenderGroup& renderGroup, MaterialBlock& renderPass)
 {
   ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
   if (fragmentType != ZilchFragmentType::RenderPass)
@@ -440,11 +223,11 @@ void RenderTasksEvent::AddRenderTaskRenderPass(RenderSettings& renderSettings, R
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
   String renderPassName = ZilchVirtualTypeId(&renderPass)->Name;
-  mRenderTasks->mRenderTaskBuffer.AddRenderTaskRenderPass(renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskRenderPass(renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
 }
 
 //**************************************************************************************************
-void RenderTasksEvent::AddRenderTaskRenderPass(RenderSettings& renderSettings, GraphicalRangeInterface& graphicalRange, MaterialBlock& renderPass)
+void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings, GraphicalRangeInterface& graphicalRange, MaterialBlock& renderPass)
 {
   ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
   if (fragmentType != ZilchFragmentType::RenderPass)
@@ -488,13 +271,13 @@ void RenderTasksEvent::AddRenderTaskRenderPass(RenderSettings& renderSettings, G
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
   String renderPassName = ZilchVirtualTypeId(&renderPass)->Name;
-  mRenderTasks->mRenderTaskBuffer.AddRenderTaskRenderPass(renderSettings, groupId, renderPassName, shaderInputsId);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskRenderPass(renderSettings, groupId, renderPassName, shaderInputsId);
 }
 
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskPostProcess(RenderTarget* colorTarget, Material& material)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   AddRenderTaskPostProcess(renderSettings, material);
 }
@@ -502,24 +285,24 @@ void RenderTasksEvent::AddRenderTaskPostProcess(RenderTarget* colorTarget, Mater
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskPostProcess(RenderTarget* colorTarget, MaterialBlock& postProcess)
 {
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
   AddRenderTaskPostProcess(renderSettings, postProcess);
 }
 
 //**************************************************************************************************
-void RenderTasksEvent::AddRenderTaskPostProcess(RenderSettings& renderSettings, Material& material)
+void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, Material& material)
 {
   uint shaderInputsId = GetUniqueShaderInputsId();
   AddShaderInputs(&material, shaderInputsId);
 
   AddShaderInputs(renderSettings.mGlobalShaderInputs.Dereference(), shaderInputsId);
 
-  mRenderTasks->mRenderTaskBuffer.AddRenderTaskPostProcess(renderSettings, material.mRenderData, shaderInputsId);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskPostProcess(renderSettings, material.mRenderData, shaderInputsId);
 }
 
 //**************************************************************************************************
-void RenderTasksEvent::AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialBlock& postProcess)
+void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, MaterialBlock& postProcess)
 {
   ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&postProcess);
   if (fragmentType != ZilchFragmentType::PostProcess)
@@ -531,13 +314,13 @@ void RenderTasksEvent::AddRenderTaskPostProcess(RenderSettings& renderSettings, 
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
   String postProcessName = ZilchVirtualTypeId(&postProcess)->Name;
-  mRenderTasks->mRenderTaskBuffer.AddRenderTaskPostProcess(renderSettings, postProcessName, shaderInputsId);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskPostProcess(renderSettings, postProcessName, shaderInputsId);
 }
 
 //**************************************************************************************************
 void RenderTasksEvent::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport)
 {
-  mRenderTasks->mRenderTaskBuffer.AddRenderTaskBackBufferBlit(colorTarget, viewport);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskBackBufferBlit(colorTarget, viewport);
 }
 
 //**************************************************************************************************
@@ -615,6 +398,156 @@ void RenderTasks::Clear()
 
   mShaderInputRanges.Clear();
   mShaderInputs.Clear();
+}
+
+//**************************************************************************************************
+RenderTaskHelper::RenderTaskHelper(RenderTaskBuffer& buffer)
+  : mBuffer(buffer)
+{
+}
+
+//**************************************************************************************************
+void RenderTaskHelper::AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
+{
+  if (!ValidateRenderTargets(renderSettings))
+    return;
+
+  RenderTaskClearTarget* renderTask = NewRenderTask<RenderTaskClearTarget>();
+  renderTask->mId = RenderTaskType::ClearTarget;
+  renderTask->mRenderSettings = renderSettings;
+  renderTask->mColor = color;
+  renderTask->mDepth = depth;
+  renderTask->mStencil = stencil;
+  renderTask->mStencilWriteMask = stencilWriteMask;
+}
+
+//**************************************************************************************************
+void RenderTaskHelper::AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputsId)
+{
+  if (!ValidateRenderTargets(renderSettings))
+    return;
+
+  RenderTaskRenderPass* renderTask = NewRenderTask<RenderTaskRenderPass>();
+  renderTask->mId = RenderTaskType::RenderPass;
+  renderTask->mRenderSettings = renderSettings;
+  renderTask->mRenderGroupIndex = renderGroupIndex;
+  renderTask->mRenderPassName = renderPassName;
+  renderTask->mShaderInputsId = shaderInputsId;
+}
+
+//**************************************************************************************************
+void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings, StringParam postProcessName, uint shaderInputsId)
+{
+  if (!ValidateRenderTargets(renderSettings))
+    return;
+
+  RenderTaskPostProcess* renderTask = NewRenderTask<RenderTaskPostProcess>();
+  renderTask->mId = RenderTaskType::PostProcess;
+  renderTask->mRenderSettings = renderSettings;
+  renderTask->mPostProcessName = postProcessName;
+  renderTask->mMaterialRenderData = nullptr;
+  renderTask->mShaderInputsId = shaderInputsId;
+}
+
+//**************************************************************************************************
+void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialRenderData* materialRenderData, uint shaderInputsId)
+{
+  if (!ValidateRenderTargets(renderSettings))
+    return;
+
+  RenderTaskPostProcess* renderTask = NewRenderTask<RenderTaskPostProcess>();
+  renderTask->mId = RenderTaskType::PostProcess;
+  renderTask->mRenderSettings = renderSettings;
+  renderTask->mPostProcessName = String();
+  renderTask->mMaterialRenderData = materialRenderData;
+  renderTask->mShaderInputsId = shaderInputsId;
+}
+
+//**************************************************************************************************
+void RenderTaskHelper::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport)
+{
+  // Don't need to validate render target, only used internally
+  RenderTaskBackBufferBlit* renderTask = NewRenderTask<RenderTaskBackBufferBlit>();
+  renderTask->mId = RenderTaskType::BackBufferBlit;
+  Texture* texture = colorTarget->mTexture;
+  renderTask->mColorTarget = texture->mRenderData;
+  renderTask->mViewport = viewport;
+}
+
+//**************************************************************************************************
+void RenderTaskHelper::AddRenderTaskTextureUpdate(Texture* texture)
+{
+  RenderTaskTextureUpdate* renderTask = NewRenderTask<RenderTaskTextureUpdate>();
+  renderTask->mId = RenderTaskType::TextureUpdate;
+  renderTask->mRenderData = texture->mRenderData;
+  renderTask->mWidth = texture->mWidth;
+  renderTask->mHeight = texture->mHeight;
+  renderTask->mType = texture->mType;
+  renderTask->mFormat = texture->mFormat;
+  renderTask->mAddressingX = texture->mAddressingX;
+  renderTask->mAddressingY = texture->mAddressingY;
+  renderTask->mFiltering = texture->mFiltering;
+  renderTask->mCompareMode = texture->mCompareMode;
+  renderTask->mCompareFunc = texture->mCompareFunc;
+  renderTask->mAnisotropy = texture->mAnisotropy;
+  renderTask->mMipMapping = texture->mMipMapping;
+
+  texture->mDirty = false;
+}
+
+//**************************************************************************************************
+bool RenderTaskHelper::ValidateRenderTargets(RenderSettings& renderSettings)
+{
+  static Array<IntVec2> sizes;
+  sizes.Clear();
+
+  uint targetCount = renderSettings.mSingleColorTarget ? 1 : 8;
+
+  // Format validations
+  for (uint i = 0; i < targetCount; ++i)
+  {
+    Texture* texture = (Texture*)renderSettings.mColorTextures[i];
+    if (texture != nullptr)
+    {
+      if (IsColorFormat(texture->mFormat))
+        sizes.PushBack(texture->GetSize());
+      else
+        return DoNotifyException("Error", "Invalid color attachment."), false;
+    }
+  }
+
+  Texture* depthTexture = (Texture*)renderSettings.mDepthTexture;
+  if (depthTexture != nullptr)
+  {
+    if (IsDepthFormat(depthTexture->mFormat))
+      sizes.PushBack(depthTexture->GetSize());
+    else
+      return DoNotifyException("Error", "Invalid depth attachment."), false;
+  }
+
+  // Size validations
+  if (sizes.Empty())
+    return DoNotifyException("Error", "No RenderTargets."), false;
+
+  for (uint i = 1; i < sizes.Size(); ++i)
+    if (sizes[i] != sizes[i - 1])
+      return DoNotifyException("Error", "Mismatching RenderTarget sizes."), false;
+
+  renderSettings.mTargetsWidth = (uint)sizes[0].x;
+  renderSettings.mTargetsHeight = (uint)sizes[0].y;
+
+  // Add render tasks for dirty textures
+  for (uint i = 0; i < targetCount; ++i)
+  {
+    Texture* texture = (Texture*)renderSettings.mColorTextures[i];
+    if (texture != nullptr && texture->mDirty)
+      AddRenderTaskTextureUpdate(texture);
+  }
+
+  if (depthTexture && depthTexture->mDirty)
+    AddRenderTaskTextureUpdate(depthTexture);
+
+  return true;
 }
 
 //**************************************************************************************************

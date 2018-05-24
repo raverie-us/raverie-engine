@@ -198,7 +198,7 @@ void RootWidget::OnUiRenderUpdate(Event* event)
 
   HandleOf<RenderTarget> renderTarget = Z::gEngine->has(GraphicsEngine)->GetRenderTarget((uint)mSize.x, (uint)mSize.y, TextureFormat::RGBA8);
 
-  RenderSettings renderSettings;
+  GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(renderTarget);
   renderSettings.mBlendSettings[0].SetBlendAlpha();
   renderSettings.mScissorMode = ScissorMode::Enabled;
@@ -223,11 +223,12 @@ void RootWidget::OnUiRenderUpdate(Event* event)
     renderTasks.mShaderInputRanges.Insert(key, range);
   }
 
-  renderTasks.mRenderTaskBuffer.AddRenderTaskClearTarget(renderSettings, mClearColor, 0, 0, 0xFF);
-  renderTasks.mRenderTaskBuffer.AddRenderTaskRenderPass(renderSettings, 0, defaultRenderPass->Name, shaderInputsId);
+  RenderTaskHelper helper(renderTasks.mRenderTaskBuffer);
+  helper.AddRenderTaskClearTarget(renderSettings, mClearColor, 0, 0, 0xFF);
+  helper.AddRenderTaskRenderPass(renderSettings, 0, defaultRenderPass->Name, shaderInputsId);
 
   ScreenViewport viewport = {0, 0, (int)mSize.x, (int)mSize.y};
-  renderTasks.mRenderTaskBuffer.AddRenderTaskBackBufferBlit(renderTarget, viewport);
+  helper.AddRenderTaskBackBufferBlit(renderTarget, viewport);
 
   renderTaskRange.mTaskCount = 3;
 

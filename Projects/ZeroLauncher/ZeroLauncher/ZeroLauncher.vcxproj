@@ -184,9 +184,6 @@
     <ProjectReference Include="$(ZERO_SOURCE)\Systems\ZilchScript\ZilchScript.vcxproj">
       <Project>{175480cf-83df-4510-801f-68824c1b9f70}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Systems\OpenglRenderer\OpenglRenderer.vcxproj">
-      <Project>{b12cf952-9a77-4d6e-80a6-798699763451}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(ZeroExtensionLibrariesSource)\Dash\Dash.vcxproj">
       <Project>{f1597a26-9f2d-473a-827c-0ce8c758763d}</Project>
     </ProjectReference>

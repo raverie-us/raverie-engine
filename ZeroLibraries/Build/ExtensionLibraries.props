@@ -9,7 +9,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-	  <AdditionalLibraryDirectories>$(ZeroSource)\External\libpng\lib;$(ZeroSource)\External\zlib\lib;$(ZERO_SOURCE)\External\CEF\lib;$(ZERO_SOURCE)\External\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	  <AdditionalLibraryDirectories>$(ZeroSource)\External\libpng\lib;$(ZeroSource)\External\zlib\lib;$(ZERO_SOURCE)\External\CEF\lib;$(ZERO_SOURCE)\External\GL\lib;$(ZERO_SOURCE)\External\GLEW\lib;$(ZERO_SOURCE)\External\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

@@ -38,6 +38,21 @@ Timer::~Timer()
   ZeroDestructPrivateData(TimerPrivateData);
 }
 
+Timer::Timer(const Timer& rhs)
+{
+  // Our entire structure is mem-copyable
+  memcpy(this, &rhs, sizeof(*this));
+}
+
+Timer& Timer::operator= (const Timer& rhs)
+{
+  if (this == &rhs)
+    return *this;
+  // Our entire structure is mem-copyable
+  memcpy(this, &rhs, sizeof(*this));
+  return *this;
+}
+
 void Timer::Reset()
 {
   ZeroGetPrivateData(TimerPrivateData);

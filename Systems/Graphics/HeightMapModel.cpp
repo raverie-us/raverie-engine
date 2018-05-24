@@ -95,7 +95,7 @@ Aabb HeightMapModel::GetLocalAabb()
 //**************************************************************************************************
 void HeightMapModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
 {
-  GraphicalEntryData* entryData = frameNode.mGraphicalEntry->mData;
+  GraphicalEntryData* entryData = ((GraphicalEntry*)frameNode.mGraphicalEntry)->mData;
 
   PatchIndex patchIndex = *(PatchIndex*)&entryData->mUtility;
   HeightPatch* heightPatch = mMap->GetPatchAtIndex(patchIndex);

@@ -212,9 +212,6 @@ COPY /Y "$(OutDir)\..\BrowserSubProcess\BrowserSubProcess.exe" "$(OutDir)\Browse
     <ProjectReference Include="$(ZERO_SOURCE)\Extensions\ZilchShaders\ZilchShaders.vcxproj">
       <Project>{34f0e1c6-c7fc-405f-9bf3-2cdbf6bbaaf7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Systems\OpenglRenderer\OpenglRenderer.vcxproj">
-      <Project>{b12cf952-9a77-4d6e-80a6-798699763451}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Systems\Startup\Startup.vcxproj">
       <Project>{d435e236-c996-4e7d-a4d6-dcdc20cc835d}</Project>
     </ProjectReference>

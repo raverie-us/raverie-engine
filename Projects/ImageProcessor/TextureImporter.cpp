@@ -338,22 +338,6 @@ nvtt::Format NvttFormat(TextureCompression::Enum compression)
 }
 
 //**************************************************************************************************
-uint GetBlockSize(TextureCompression::Enum compression)
-{
-  switch (compression)
-  {
-    case TextureCompression::BC1: return 8;
-    case TextureCompression::BC2: return 16;
-    case TextureCompression::BC3: return 16;
-    case TextureCompression::BC4: return 8;
-    case TextureCompression::BC5: return 16;
-    case TextureCompression::BC6: return 16;
-    //case TextureCompression::BC7: return 16;
-    default: return 0;
-  }
-}
-
-//**************************************************************************************************
 float GetCompressionRatio(TextureCompression::Enum compression)
 {
   switch (compression)

@@ -35,7 +35,7 @@ System* CreateGraphicsSystem()
   return new GraphicsEngine();
 }
 
-Memory::Pool* Shader::sPool = nullptr;
+Memory::Pool* gShaderPool = nullptr;
 
 //**************************************************************************************************
 ZilchDefineType(GraphicsEngine, builder, type)
@@ -129,7 +129,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptCompilationFailed, OnScriptCompilationFailed);
 
   ParticleList::Memory = new Memory::Pool("Particles", Memory::GetRoot(), sizeof(Particle), 1024);
-  Shader::sPool = new Memory::Pool("Shaders", Memory::GetRoot(), sizeof(Shader), 1024);
+  gShaderPool = new Memory::Pool("Shaders", Memory::GetRoot(), sizeof(Shader), 1024);
 
   mFrameCounter = 0;
 
@@ -272,7 +272,7 @@ void GraphicsEngine::OnEngineShutdown(Event* event)
       removeShadersJob->mShaders.PushBack(entry);
 
       mCompositeShaders.Erase(shader->mName);
-      Shader::sPool->DeallocateType(shader);
+      gShaderPool->DeallocateType(shader);
     }
 
     AddRendererJob(removeShadersJob);
@@ -540,11 +540,13 @@ void GraphicsEngine::DestroyRenderer()
 //**************************************************************************************************
 void GraphicsEngine::AddMaterial(Material* material)
 {
-  Z::gRenderer->CreateRenderData(material);
+  if (!material->mRenderData)
+    material->mRenderData = Z::gRenderer->CreateMaterialRenderData();
+
   AddMaterialJob* rendererJob = new AddMaterialJob();
   rendererJob->mRenderData = material->mRenderData;
   rendererJob->mCompositeName = material->mCompositeName;
-  rendererJob->mMaterialId = material->mResourceId;
+  rendererJob->mMaterialId = material->mResourceId.mValue;
 
   AddRendererJob(rendererJob);
 }
@@ -552,7 +554,9 @@ void GraphicsEngine::AddMaterial(Material* material)
 //**************************************************************************************************
 void GraphicsEngine::AddMesh(Mesh* mesh)
 {
-  Z::gRenderer->CreateRenderData(mesh);
+  if (!mesh->mRenderData)
+    mesh->mRenderData = Z::gRenderer->CreateMeshRenderData();
+
   AddMeshJob* rendererJob = new AddMeshJob();
   rendererJob->mRenderData = mesh->mRenderData;
 
@@ -615,7 +619,9 @@ void GraphicsEngine::AddTexture(Texture* texture, bool subImage, uint xOffset, u
   // also takes a decent amount of time.
   CheckTextureYInvert(texture);
 
-  Z::gRenderer->CreateRenderData(texture);
+  if (!texture->mRenderData)
+    texture->mRenderData = Z::gRenderer->CreateTextureRenderData();
+
   AddTextureJob* rendererJob = new AddTextureJob();
 
   rendererJob->mRenderData = texture->mRenderData;
@@ -925,7 +931,7 @@ Shader* GraphicsEngine::GetOrCreateShader(StringParam coreVertex, StringParam co
   if (shaderMap.ContainsKey(name))
     return shaderMap.FindValue(name, nullptr);
 
-  Shader* shader = Shader::sPool->AllocateType<Shader>();
+  Shader* shader = gShaderPool->AllocateType<Shader>();
   shader->mCoreVertex = coreVertex;
   shader->mComposite = composite;
   shader->mRenderPass = renderPass;
@@ -1376,7 +1382,7 @@ void GraphicsEngine::CompileShaders()
       ShaderEntry entry(shader);
       removeShadersJob->mShaders.PushBack(entry);
 
-      Shader::sPool->DeallocateType(shader);
+      gShaderPool->DeallocateType(shader);
     }
 
     AddRendererJob(removeShadersJob);

@@ -92,61 +92,22 @@ public:
   RendererThreadJobQueue* mRendererJobQueue;
 };
 
-class AddMaterialJob : public RendererJob
+class AddMaterialJob : public RendererJob, public AddMaterialInfo
 {
 public:
   void Execute() override;
-
-  MaterialRenderData* mRenderData;
-  String mCompositeName;
-  ResourceId mMaterialId;
 };
 
-class AddMeshJob : public RendererJob
+class AddMeshJob : public RendererJob, public AddMeshInfo
 {
 public:
   void Execute() override;
-
-  MeshRenderData* mRenderData;
-  uint mVertexSize;
-  uint mVertexCount;
-  byte* mVertexData;
-  uint mIndexSize;
-  uint mIndexCount;
-  byte* mIndexData;
-  Array<VertexAttribute> mVertexAttributes;
-  PrimitiveType::Enum mPrimitiveType;
-  Array<MeshBone> mBones;
 };
 
-class AddTextureJob : public RendererJob
+class AddTextureJob : public RendererJob, public AddTextureInfo
 {
 public:
   void Execute() override;
-
-  TextureRenderData* mRenderData;
-  uint mWidth;
-  uint mHeight;
-  uint mMipCount;
-  uint mTotalDataSize;
-  MipHeader* mMipHeaders;
-  byte* mImageData;
-
-  TextureType::Enum mType;
-  TextureFormat::Enum mFormat;
-  TextureCompression::Enum mCompression;
-  TextureAddressing::Enum mAddressingX;
-  TextureAddressing::Enum mAddressingY;
-  TextureFiltering::Enum mFiltering;
-  TextureCompareMode::Enum mCompareMode;
-  TextureCompareFunc::Enum mCompareFunc;
-  TextureAnisotropy::Enum mAnisotropy;
-  TextureMipMapping::Enum mMipMapping;
-  uint mMaxMipOverride;
-
-  bool mSubImage;
-  uint mXOffset;
-  uint mYOffset;
 };
 
 class RemoveMaterialJob : public RendererJob
@@ -228,16 +189,10 @@ public:
   virtual void OnExecute() = 0;
 };
 
-class GetTextureDataJob : public ReturnRendererJob
+class GetTextureDataJob : public ReturnRendererJob, public GetTextureDataInfo
 {
 public:
   void OnExecute() override;
-
-  TextureRenderData* mRenderData;
-  TextureFormat::Enum mFormat;
-  uint mWidth;
-  uint mHeight;
-  byte* mImage;
 };
 
 class SaveImageToFileJob : public GetTextureDataJob
@@ -248,7 +203,7 @@ public:
   String mFilename;
 };
 
-class ShowProgressJob : public RepeatingJob
+class ShowProgressJob : public RepeatingJob, public ShowProgressInfo
 {
 public:
   ShowProgressJob(RendererThreadJobQueue* jobQueue);
@@ -256,20 +211,9 @@ public:
   void OnExecute() override;
   bool OnShouldRun() override;
 
-  TextureRenderData* mLoadingTexture;
-  TextureRenderData* mLogoTexture;
-  TextureRenderData* mWhiteTexture;
-  TextureRenderData* mSplashTexture;
-  uint mLogoFrameSize;
-  float mCurrentPercent;
-  float mTargetPercent;
-  uint mProgressWidth;
-  TextureRenderData* mFontTexture;
-  Array<StreamedVertex> mProgressText;
-  bool mSplashMode;
-  float mSplashFade;
-  Timer mTimer;
-  Timer mPerJobTimer;
+  // Capture the state of whatever our progress
+  // values are and give it to the renderer.
+  void ShowCurrentProgress();
 };
 
 } // namespace Zero

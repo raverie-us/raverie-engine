@@ -302,16 +302,17 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
       // assign references to graphicals in view nodes
       forRange (GraphicalEntry& entry, graphicals)
       {
-        Graphical* graphical = entry.mData->mGraphical;
+        GraphicalEntryData* data = entry.mData;
+        Graphical* graphical = data->mGraphical;
         ViewNode& viewNode = viewBlock.mViewNodes.PushBack();
         viewNode.mGraphicalEntry = &entry;
 
         // no frame node made for this entry yet
-        if (entry.mData->mFrameNodeIndex == -1)
+        if (data->mFrameNodeIndex == -1)
         {
           FrameNode& frameNode = frameNodes.PushBack();
           frameNode.mGraphicalEntry = &entry;
-          entry.mData->mFrameNodeIndex = frameNodes.Size() - 1;
+          data->mFrameNodeIndex = frameNodes.Size() - 1;
 
           // per object shader input overrides
           frameNode.mShaderInputRange.start = renderTasks.mShaderInputs.Size();
@@ -319,7 +320,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
           // from meta properties
           forRange (PropertyShaderInput& input, graphical->mPropertyShaderInputs.All())
           {
-            input.mShaderInput.SetValue(input.mMetaProperty->GetValue(input.mComponent));
+            ShaderInputSetValue(input.mShaderInput, input.mMetaProperty->GetValue(input.mComponent));
             renderTasks.mShaderInputs.PushBack(input.mShaderInput);
           }
 
@@ -331,7 +332,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
         }
 
         // assign references to frame nodes in view nodes
-        viewNode.mFrameNodeIndex = entry.mData->mFrameNodeIndex;
+        viewNode.mFrameNodeIndex = data->mFrameNodeIndex;
       }
     }
   }
@@ -339,7 +340,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
   // extract frame node data
   forRange (FrameNode& node, frameNodes.All())
   {
-    node.Extract(frameBlock);
+    ((GraphicalEntry*)node.mGraphicalEntry)->mData->mGraphical->ExtractFrameData(node, frameBlock);
   }
 
   // only process view blocks from this graphics space
@@ -349,7 +350,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
     ViewBlock& viewBlock = renderQueues.mViewBlocks[i];
     forRange (ViewNode& node, viewBlock.mViewNodes.All())
     {
-      node.Extract(viewBlock, frameBlock);
+      ((GraphicalEntry*)node.mGraphicalEntry)->mData->mGraphical->ExtractViewData(node, viewBlock, frameBlock);
     }
   }
 }
