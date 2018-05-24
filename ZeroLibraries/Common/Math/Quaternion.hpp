@@ -107,8 +107,10 @@ struct ZeroShared Quaternion
 
   /// Linearly interpolate between two quaternions (n-lerp). This should rarely be used over Slerp.
   static Quaternion Lerp(QuatParam start, QuatParam end, real tValue);
-  /// Spherical linear interpolation between two quaternions. Used to interpolate between two rotations.
+  /// Spherical linear interpolation between two quaternions. Used to interpolate between two rotations. Will normalize the inputs.
   static Quaternion Slerp(QuatParam start, QuatParam end, real tValue);
+  /// Spherical linear interpolation between two quaternions. Used to interpolate between two rotations. Assumes the inputs are normalized.
+  static Quaternion SlerpUnnormalized(QuatParam start, QuatParam end, real tValue);
   /// Compute the exponential of a quaternion.
   static Quaternion Exponent(QuatParam value);
   /// Compute the logarithm of a quaternion.
@@ -143,6 +145,7 @@ ZeroShared Quaternion Multiply(QuatParam lhs, QuatParam rhs);
 ZeroShared Vector3 Multiply(QuatParam lhs, Vec3Param rhs);
 ZeroShared Quaternion Lerp(QuatParam start, QuatParam end, real tValue);
 ZeroShared Quaternion Slerp(QuatParam start, QuatParam end, real tValue);
+ZeroShared Quaternion SlerpUnnormalized(QuatParam start, QuatParam end, real tValue);
 ZeroShared real AngleBetween(QuatParam a, QuatParam b);
 
 //-------------------------------------------------------------------Legacy

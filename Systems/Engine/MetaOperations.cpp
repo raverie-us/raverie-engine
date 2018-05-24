@@ -319,8 +319,8 @@ void PropertyOperation::OnScriptsCompiled(ZilchCompileEvent* e)
     MetaSerialization* metaSerialize = newType->HasInherited<MetaSerialization>();
     if(metaSerialize)
     {
-      String stringBefore = mValueBefore.ToString();
-      String stringAfter = mValueAfter.ToString();
+      String stringBefore = metaSerialize->ConvertToString(mValueBefore);
+      String stringAfter = metaSerialize->ConvertToString(mValueAfter);
 
       bool succeeded = true;
       succeeded &= metaSerialize->ConvertFromString(stringBefore, mValueBefore);

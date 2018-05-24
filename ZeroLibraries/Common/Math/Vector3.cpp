@@ -271,40 +271,16 @@ Vector3 Vector3::Lerp(Vec3Param start, Vec3Param end, real tValue)
 
 Vector3 Vector3::Slerp(Vec3Param start, Vec3Param end, real tValue)
 {
-  real dot = Dot(start, end);
-  real theta = Math::ArcCos(dot) * tValue;
-  Vector3 relativeVec = end - start * dot;
-  relativeVec.Normalize();
-  return (start * Math::Cos(theta)) + (relativeVec * Math::Sin(theta));
+  return SafeGeometricSlerp(start, end, tValue);
 }
 
-Vector3 Vector3::SafeSlerp(Vec3Param start, Vec3Param end, real tValue)
+Vector3 Vector3::SlerpFast(Vec3Param start, Vec3Param end, real tValue)
 {
-  Vec3 normalizedStart = start.AttemptNormalized();
-  Vec3 normalizedEnd = end.AttemptNormalized();
-
-  real dot = Dot(normalizedStart, normalizedEnd);
-  // Safeguard for non-normalized and slight floating point errors
-  dot = Math::Clamp(dot, real(-1.0), real(1.0));
-  real theta = Math::ArcCos(dot) * tValue;
-
-  Vector3 relativeVec;
-  // If end is the negative of start, no direction is better to interpolate than
-  // another, so generate a random perpendicular vector to rotate towards
-  if(dot == -real(1.0))
-  {
-    // Unfortunately, a 3d perpendicular vector is not as simple, so try doing the 2d
-    // perpendicular with [x,y], but if x is zero then switch to [y,z] instead
-    if(normalizedStart.x != real(0.0))
-      relativeVec = Vec3(-normalizedStart.y, normalizedStart.x, normalizedStart.z);
-    else
-      relativeVec = Vec3(normalizedStart.x, -normalizedStart.z, normalizedStart.y);
-  }
-  else
-    relativeVec = normalizedEnd - normalizedStart * dot;
-  // Attempt normalize (zero vectors and start == end)
-  relativeVec.AttemptNormalize();
-  return (normalizedStart * Math::Cos(theta)) + (relativeVec * Math::Sin(theta));
+  return FastGeometricSlerp(start, end, tValue);
+}
+Vector3 Vector3::SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue)
+{
+  return SafeGeometricSlerpUnnormalized(start, end, tValue);
 }
 
 Vector3 Vector3::ProjectOnVector(Vec3Param input, Vec3Param normalizedVector)
@@ -553,9 +529,14 @@ Vector3 Slerp(Vec3Param start, Vec3Param end, real tValue)
   return Vector3::Slerp(start, end, tValue);
 }
 
-Vector3 SafeSlerp(Vec3Param start, Vec3Param end, real tValue)
+Vector3 SlerpFast(Vec3Param start, Vec3Param end, real tValue)
 {
-  return Vector3::SafeSlerp(start, end, tValue);
+  return Vector3::SlerpFast(start, end, tValue);
+}
+
+Vector3 SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue)
+{
+  return Vector3::SlerpUnnormalized(start, end, tValue);
 }
 
 Vector3 ProjectOnVector(Vec3Param input, Vec3Param normalizedVector)

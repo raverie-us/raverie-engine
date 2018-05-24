@@ -257,35 +257,38 @@ Quaternion Quaternion::Lerp(QuatParam start, QuatParam end, real tValue)
 
 Quaternion Quaternion::Slerp(QuatParam start, QuatParam end, real tValue)
 {
-  WarnIf(!Math::InRange(tValue, real(0.0), real(1.0)), 
-         "Quaternion - Interpolation value is not in the range of [0, 1]");
+  Quat startNormalized = start.Normalized();
+  Quat endNormalized = end.Normalized();
+  return Quaternion::SlerpUnnormalized(startNormalized, endNormalized, tValue);
+}
 
+Quaternion Quaternion::SlerpUnnormalized(QuatParam start, QuatParam end, real tValue)
+{
   //
   // Quaternion Interpolation With Extra Spins, pp. 96f, 461f
   // Jack Morrison, Graphics Gems III, AP Professional
   //
 
-  const real cSlerpEpsilon = real(0.00001);
+  real cosTheta = Dot(start, end);
 
-  bool flip;
-
-  real cosTheta = Dot(start, end); 
-
-  //Check to ensure that the shortest path is taken (cosine of the angle between 
-  //the two quaternions is positive).
-  flip = cosTheta < real(0.0);
+  // Check to ensure that the shortest path is taken (cosine of the angle between 
+  // the two quaternions is positive).
+  bool flip = cosTheta < real(0.0);
   if(flip)
   {
     cosTheta = -cosTheta;
   }
 
   real startVal, endVal;
+  const real cSlerpEpsilon = real(0.00001);
   if((real(1.0) - cosTheta) > cSlerpEpsilon)
   {
     real theta = Math::ArcCos(cosTheta);
     real sinTheta = Math::Sin(theta);
-    startVal = real(Math::Sin((real(1.0) - tValue) * theta) / sinTheta);
-    endVal = real(Math::Sin(tValue * theta) / sinTheta);
+    startVal = Math::Sin((real(1.0) - tValue) * theta);
+    endVal = Math::Sin(tValue * theta);
+    startVal /= sinTheta;
+    endVal /= sinTheta;
   }
   else
   {
@@ -298,10 +301,8 @@ Quaternion Quaternion::Slerp(QuatParam start, QuatParam end, real tValue)
     endVal = -endVal;
   }
 
-  return Quaternion(startVal * start.x + endVal * end.x,
-                    startVal * start.y + endVal * end.y,
-                    startVal * start.z + endVal * end.z,
-                    startVal * start.w + endVal * end.w);
+  Quaternion result = startVal * start + endVal * end;
+  return result;
 }
 
 Quaternion Quaternion::Exponent(QuatParam value)
@@ -456,6 +457,11 @@ Quaternion Lerp(QuatParam start, QuatParam end, real tValue)
 Quaternion Slerp(QuatParam start, QuatParam end, real tValue)
 {
   return Quaternion::Slerp(start, end, tValue);
+}
+
+Quaternion SlerpUnNormalized(QuatParam start, QuatParam end, real tValue)
+{
+  return Quaternion::SlerpUnnormalized(start, end, tValue);
 }
 
 real AngleBetween(QuatParam a, QuatParam b)

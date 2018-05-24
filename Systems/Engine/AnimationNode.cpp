@@ -11,8 +11,6 @@ namespace Zero
 
 const uint cInvalidFrameId = uint(-1);
 
-Quat Slerp2(const Quat& q1, const Quat& q2, float param);
-
 void PrintTabs(uint tabs)
 {
   for(uint i = 0; i < tabs; ++i)
@@ -38,7 +36,7 @@ void LerpFrame(AnimationFrame& a, AnimationFrame& b, float t,
       if(valA.StoredType == ZilchTypeId(Vec3))
         dest = Math::Lerp(valA.Get<Vec3>(), valB.Get<Vec3>(), t);
       else if (valA.StoredType == ZilchTypeId(Quat))
-        dest = Slerp2(valA.Get<Quat>(), valB.Get<Quat>(), t);
+        dest = Quat::SlerpUnnormalized(valA.Get<Quat>(), valB.Get<Quat>(), t);
       else
         dest = valA;
     }

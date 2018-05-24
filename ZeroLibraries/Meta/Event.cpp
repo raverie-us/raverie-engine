@@ -84,6 +84,10 @@ ZilchDefineType(ObjectEvent, builder, type)
 {
   ZeroBindDocumented();
   ZilchBindFieldGetterProperty(Source);
+
+  ZeroBindEvent(Events::ComponentsModified,      ObjectEvent);
+  ZeroBindEvent(Events::ObjectModified,          ObjectEvent);
+  ZeroBindEvent(Events::ObjectStructureModified, ObjectEvent);
 }
 
 Object* ObjectEvent::GetSource()

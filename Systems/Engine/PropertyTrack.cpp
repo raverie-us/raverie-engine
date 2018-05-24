@@ -13,51 +13,6 @@ namespace Zero
 {
 
 //******************************************************************************
-Quat Slerp2(const Quat& q1, const Quat& q2, float param)
-{
-  //
-  // Quaternion Interpolation With Extra Spins, pp. 96f, 461f
-  // Jack Morrison, Graphics Gems III, AP Professional
-  //
-
-  Quat qt;
-  float slerp_epsilon = 0.00001f;
-
-  float cosom = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w; 
-  bool flip = cosom < 0;
-  if(flip)
-  {
-    cosom = -cosom;
-  }
-
-  float startVal, endVal;
-  if((1.0f - cosom) > slerp_epsilon)
-  {
-    float omega = Math::ArcCos(cosom);
-    float sinom = Math::Sin(omega);
-    startVal = (float)(Math::Sin((1.0f - param) * omega) / sinom);
-    endVal = (float)(Math::Sin(param * omega) / sinom);
-  }
-  else
-  {
-    startVal = (float)(1.0) - param;
-    endVal = (float)param;
-  }
-
-  if(flip)
-  {
-    endVal = -endVal;
-  }
-
-  qt.x = (float) (startVal*q1.x + endVal*q2.x);
-  qt.y = (float) (startVal*q1.y + endVal*q2.y);
-  qt.z = (float) (startVal*q1.z + endVal*q2.z);
-  qt.w = (float) (startVal*q1.w + endVal*q2.w);
-
-  return qt;
-}
-
-//******************************************************************************
 template<typename type>
 type LerpValue(type& a, type& b, float t)
 {
@@ -75,7 +30,7 @@ Resource* LerpValue(Resource*& a, Resource*& b, float t)
 //******************************************************************************
 Quat LerpValue(Quat& a, Quat& b, float t)
 {
-  return Slerp2(a, b, t);
+  return Quat::SlerpUnnormalized(a, b, t);
 }
 
 //******************************************************************************
