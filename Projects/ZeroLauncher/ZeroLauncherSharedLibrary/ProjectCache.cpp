@@ -28,9 +28,9 @@ void LauncherProjectInfo::Serialize(Serializer& stream)
   SerializeNameDefault(mTags, String());
   mBuildId.Serialize(stream, false);
 
-  // If we're loading and we have no platform then default to Win32 (legacy builds)
+  // If we're loading and we have no platform then default to the current build (legacy builds)
   if(stream.GetMode() == SerializerMode::Loading && mBuildId.mPlatform.Empty())
-    mBuildId.mPlatform = "Win32";
+    mBuildId.mPlatform = ZeroPlatform;
 }
 
 void LauncherProjectInfo::AddTag(StringParam tag)
@@ -99,7 +99,7 @@ bool CachedProject::Load(StringParam projectFilePath)
     // and platform and then re-set the build id
     BuildId buildId = mLauncherInfo->GetBuildId();
     ToValue(buildNumberText, buildId.mRevisionId);
-    buildId.mPlatform = "Win32";
+    buildId.mPlatform = ZeroPlatform;
     mLauncherInfo->SetBuildId(buildId);
 
     // Load the project tags
