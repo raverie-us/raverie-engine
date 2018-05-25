@@ -12,7 +12,7 @@
 #include <xmmintrin.h>
 #include <emmintrin.h>
 
-#if defined COMPILER_MICROSOFT
+#if defined(PLATFORM_WINDOWS)
 #define ZeroPreAlign16 __declspec(align(16))
 #define ZeroPostAlign16 
 #else
@@ -26,11 +26,7 @@ namespace Math
 namespace Simd
 {
 
-#ifdef _MSC_VER
-  #define SimInline __forceinline
-#else
-  #define SimInline inline //__attribute__((always_inline))
-#endif
+#define SimInline ZeroForceInline
 
 //wrapper for the shuffle intrinsic so that the rest
 //of the library can be platform independent.

@@ -84,7 +84,7 @@ void GetExceptionPointers(DWORD dwExceptionCode,
   CONTEXT ContextRecord;
   memset(&ContextRecord, 0, sizeof(CONTEXT));
 
-#ifdef _X86_
+#if defined(_X86_) && !defined(COMPILER_CLANG)
   __asm {
     mov dword ptr[ContextRecord.Eax], eax
       mov dword ptr[ContextRecord.Ecx], ecx

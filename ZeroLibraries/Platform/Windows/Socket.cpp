@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#if defined(COMPILER_GCC) ||  defined(COMPILER_CLANG)
+#if defined(COMPILER_GCC)
   // This is not at all correct for GCC, but we just want it to
   // compile on GCC for Windows (POSIX takes a different path anyways)
   typedef int socklen_t;

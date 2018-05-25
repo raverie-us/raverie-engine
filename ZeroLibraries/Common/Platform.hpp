@@ -80,6 +80,8 @@
   #define PLATFORM_POSIX 1
   #define PLATFORM_HARDWARE 1
   #define PLATFORM_NAME "Posix"
+#else
+  #error "Unknown Platform"
 #endif
 
 // Detect compilers
@@ -91,8 +93,9 @@
   #define COMPILER_GCC 1
 #elif defined(__llvm__)
   #define COMPILER_LLVM 1
+#else
+  #error "Unknown Compiler"
 #endif
-
 
 //-----------------------------------------------------------------------------Debug
 // Detect debug or release settings.
@@ -102,10 +105,9 @@
 #define ZeroDebug 1
 #endif
 
-
 //-----------------------------------------------------------------------------Main
 // Main is different depending on the OS
-#ifdef COMPILER_MICROSOFT
+#if defined(PLATFORM_WINDOWS)
 #define ZeroConsoleMain(argc, argv)       int main(int argc, char** argv)
 #define ZeroGuiMain()                     int __stdcall WinMain(void*, void*, char*, int)
 #define ZeroSharedLibraryMain()           int __stdcall DllMain(void*, unsigned long, void*)
@@ -116,15 +118,15 @@
 #endif
 
 //-----------------------------------------------------------------------------Warnings
-#ifdef COMPILER_MICROSOFT
-
-#ifndef ZeroDebug
+#if defined(PLATFORM_WINDOWS)
 #define _SECURE_SCL 0
-#endif
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #define _NO_CVCONST_H
+#endif
+
+#ifdef COMPILER_MICROSOFT
 
 // Enable these warnings by setting them to level 3
 // Enable warning function does not override any base class virtual member function
@@ -279,15 +281,79 @@
 
 #endif
 
-#if defined(COMPILER_CLANG) || defined(COMPILER_GCC)
-
-#if defined(COMPILER_CLANG)
+#if defined(COMPILER_CLANG) 
 // Ignore unknown pragma warnings...
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
-#else
+#pragma clang diagnostic ignored "-Wpragmas"
+// ZilchDeclareType is used on classes that sometimes derive from a base class with ZilchGetDerivedType() creating a discrepancy we can't avoid
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+// Many event handlers take an event and do not utilize the parameter or variable
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wunused-variable"
+// Adding a virtual destructor to all classes this appears on results in various linker errors for scintilla
+#pragma clang diagnostic ignored "-Wdelete-non-virtual-dtor"
+// Many classes have a function on them that are not directly utilized or are solely bound to script
+#pragma clang diagnostic ignored "-Wunused-function"
+
+// These should be investigated later
+#pragma clang diagnostic ignored "-Wunknown-warning-option"
+#pragma clang diagnostic ignored "-Werror"
+
+#pragma clang diagnostic ignored "-Wunused-command-line-argument"
+#pragma clang diagnostic ignored "-Wclang-cl-pch"
+
+#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+#pragma clang diagnostic ignored "-Wpragma-pack"
+#pragma clang diagnostic ignored "-Wreorder"
+#pragma clang diagnostic ignored "-Wsometimes-uninitialized"
+#pragma clang diagnostic ignored "-Wunused-private-field"
+#pragma clang diagnostic ignored "-Wparentheses"
+#pragma clang diagnostic ignored "-Wmultichar"
+#pragma clang diagnostic ignored "-Wwritable-strings"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wlogical-op-parentheses"
+#pragma clang diagnostic ignored "-Wsign-compare"
+#pragma clang diagnostic ignored "-Wnull-conversion"
+#pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wself-assign-field"
+#pragma clang diagnostic ignored "-Wuninitialized"
+#pragma clang diagnostic ignored "-Wchar-subscripts"
+#pragma clang diagnostic ignored "-Wreturn-std-move"
+#pragma clang diagnostic ignored "-Wmissing-braces"
+#pragma clang diagnostic ignored "-Wunused-local-typedef"
+#pragma clang diagnostic ignored "-Wunused-const-variable"
+
+#pragma clang diagnostic ignored "-Wswitch"
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wint-to-pointer-cast"
+#pragma clang diagnostic ignored "-Wunused-function"
+#pragma clang diagnostic ignored "-Wunused-local-typedefs"
+#pragma clang diagnostic ignored "-Wmismatched-new-delete"
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wundefined-bool-conversion"
+#pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
+#pragma clang diagnostic ignored "-Wempty-body"
+
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wlogical-op-parentheses"
+#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#pragma clang diagnostic ignored "-Wbackslash-newline-escape"
+#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wunused-const-variable"
+#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wunused-const-variable"
+#pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wtautological-pointer-compare"
+
+#undef __STDC__
+#endif
+
+#if defined(COMPILER_GCC)
 // Ignore unknown pragma warnings...
 #pragma GCC diagnostic ignored "-Wpragmas"
-#endif
 
 // We have many valid switch statements that don't handle all values
 #pragma GCC diagnostic ignored "-Wswitch"
@@ -305,7 +371,6 @@
 
 // We declare typedefs that may be useful for people using Zilch, but we don't use them ourselves
 #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
-
 #endif
 
 //-----------------------------------------------------------------------------Built-Ins
@@ -317,28 +382,23 @@
 #define ZeroStringDeref(text) #text
 #define ZeroStringize(text) ZeroStringDeref(text)
 
-#ifdef COMPILER_MICROSOFT
+#if defined(PLATFORM_WINDOWS)
 #define ZeroThreadLocal __declspec(thread)
 #define ZeroImport __declspec(dllimport)
 #define ZeroExport __declspec(dllexport)
 #define ZeroExportC extern "C" __declspec(dllexport)
 #define ZeroDebugBreak() __debugbreak()
-//#define ZeroTodo(text) __pragma(message(__FILE__ "(" ZeroStringize(__LINE__) ") : Todo: " text))
-#define ZeroTodo(text)
+#define ZeroTodo(text) /* __pragma(message(__FILE__ "(" ZeroStringize(__LINE__) ") : Todo: " text)) */
 #define ZeroForceInline inline __forceinline
 #define ZeroNoInline __declspec(noinline)
-#endif
-
-#ifndef COMPILER_MICROSOFT
+#else
 #define ZeroThreadLocal __thread
-#define ZeroImport
-#define ZeroExport
+#define ZeroImport __attribute__((visibility("default")))
+#define ZeroExport __attribute__((visibility("default")))
 #define ZeroExportC extern "C" __attribute__((visibility("default")))
-#define ZeroShared __attribute__((visibility("default")))
-#define ZeroDebugBreak()
-#define ZeroTodo(text) asm("int $3")
-// There seems to be issues with __attribute__((always_inline)) wit GCC linking
-#define ZeroForceInline inline
+#define ZeroDebugBreak() asm("int $3")
+#define ZeroTodo(text)
+#define ZeroForceInline /* GCC has issues with __attribute__((always_inline)) */ inline
 #define ZeroNoInline
 #endif
 

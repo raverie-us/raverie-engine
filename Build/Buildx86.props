@@ -6,7 +6,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\External\Freetype\include\;$(ZERO_SOURCE)\Systems;$(ZERO_SOURCE)\Extensions;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ZERO_SOURCE)\External\Freetype\include\;$(ZERO_SOURCE)\Systems;$(ZERO_SOURCE)\Extensions;$(ZERO_SOURCE)\External\GL;$(ZERO_SOURCE)\External\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsManaged>false</CompileAsManaged>
       <TreatWarningAsError>true</TreatWarningAsError>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName)$(Configuration)$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>

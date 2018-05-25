@@ -7,10 +7,6 @@
 #ifndef ZILCH_BINDING_HPP
 #define ZILCH_BINDING_HPP
 
-#ifdef COMPILER_CLANG
-  #pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
-#endif
-
 namespace Zilch
 {
   /****************************** CONTAINER RANGE ********************************/

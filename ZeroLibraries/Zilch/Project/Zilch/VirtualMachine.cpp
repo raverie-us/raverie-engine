@@ -5,10 +5,6 @@
 
 #include "Zilch.hpp"
 
-#ifdef COMPILER_CLANG
-#pragma clang diagnostic ignored "-Wunused-value"
-#endif
-
 namespace Zilch
 {
   //***************************************************************************

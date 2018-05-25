@@ -5,12 +5,6 @@
 
 #include "Zilch.hpp"
 
-#ifdef __clang__
-  // At the moment, these are missing from the clang libc (no idea what they are!)
-  void* __gxx_personality_v0 = NULL;
-  void* _Unwind_Resume = NULL;
-#endif
-
 namespace Zilch
 {
   //***************************************************************************

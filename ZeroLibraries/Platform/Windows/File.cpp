@@ -362,7 +362,7 @@ bool File::HasData(Status& status)
     {
       int errorCode = (int)GetLastError();
       String errorString = ToErrorString(errorCode);
-      String message = String::Format("Failed to peek file '%s': %s", mFilePath, errorString.c_str());
+      String message = String::Format("Failed to peek file '%s': %s", mFilePath.c_str(), errorString.c_str());
       status.SetFailed(message, errorCode);
     }
 

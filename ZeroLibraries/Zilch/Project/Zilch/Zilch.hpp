@@ -8,21 +8,14 @@
 #ifndef ZILCH_PRECOMPILED_HPP
 #define ZILCH_PRECOMPILED_HPP
 
-#ifdef COMPILER_CLANG
-  #pragma clang diagnostic ignored "-Wunused-parameter"
-  #pragma clang diagnostic ignored "-Wlogical-op-parentheses"
-  #pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
-  #pragma clang diagnostic ignored "-Winconsistent-missing-override"
-#endif
+// Zero includes
+#include "Common/CommonStandard.hpp"
+#include "Platform/PlatformStandard.hpp"
 
 // This needs to be included before anything else
 // since it disables warnings and defines macros we use
 #include "LocalBuild.hpp"
 #include "General.hpp"
-
-// Zero includes
-#include "Common/CommonStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
 
 // Bring Zero primitives into the Zilch namespace
 namespace Zilch

@@ -11,46 +11,6 @@
 // We also ignore any compiler or platform specific warnings here
 #include "Platform.hpp"
 
-
-#ifdef __clang__
-// ZilchDeclareType is used on classes that sometimes derive from a base class with ZilchGetDerivedType() creating a discrepancy we can't avoid
-#pragma clang diagnostic ignored "-Winconsistent-missing-override"
-// Many event handlers take an event and do not utilize the parameter or variable
-#pragma clang diagnostic ignored "-Wunused-parameter"
-#pragma clang diagnostic ignored "-Wunused-variable"
-// Adding a virtual destructor to all classes this appears on results in various linker errors for scintilla
-#pragma clang diagnostic ignored "-Wdelete-non-virtual-dtor"
-// Many classes have a function on them that are not directly utilized or are solely bound to script
-#pragma clang diagnostic ignored "-Wunused-function"
-
-// These should be investigated later
-#pragma clang diagnostic ignored "-Wunused-command-line-argument"
-#pragma clang diagnostic ignored "-Wclang-cl-pch"
-
-#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
-#pragma clang diagnostic ignored "-Wpragma-pack"
-#pragma clang diagnostic ignored "-Wreorder"
-#pragma clang diagnostic ignored "-Wsometimes-uninitialized"
-#pragma clang diagnostic ignored "-Wunused-private-field"
-#pragma clang diagnostic ignored "-Wparentheses"
-#pragma clang diagnostic ignored "-Wmultichar"
-#pragma clang diagnostic ignored "-Wwritable-strings"
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wlogical-op-parentheses"
-#pragma clang diagnostic ignored "-Wsign-compare"
-#pragma clang diagnostic ignored "-Wnull-conversion"
-#pragma clang diagnostic ignored "-Wunused-value"
-#pragma clang diagnostic ignored "-Wself-assign-field"
-#pragma clang diagnostic ignored "-Wuninitialized"
-#pragma clang diagnostic ignored "-Wchar-subscripts"
-#pragma clang diagnostic ignored "-Wreturn-std-move"
-#pragma clang diagnostic ignored "-Wmissing-braces"
-#pragma clang diagnostic ignored "-Wunused-local-typedef"
-#pragma clang diagnostic ignored "-Wunused-const-variable"
-
-#undef __STDC__
-#endif
-
 #include <algorithm>
 #include <ctype.h>
 #include <cstddef>

@@ -6,12 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
-#pragma clang diagnostic ignored "-Wunused-variable"
-#pragma clang diagnostic ignored "-Wunused-const-variable"
-#endif
-
 #include "Widget/WidgetStandard.hpp"
 #include "Networking/NetworkingStandard.hpp"
 #include "Gameplay/GameplayStandard.hpp"
