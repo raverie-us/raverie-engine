@@ -9,7 +9,7 @@
 // Includes
 #include "Utility/EnumDeclaration.hpp"
 #include "Utility/BitMath.hpp"
-#include "Utility/UintN.hpp"
+#include "Utility/UintNType.hpp"
 #include "String/String.hpp"
 
 //---------------------------------------------------------------------------------//

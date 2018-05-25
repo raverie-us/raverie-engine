@@ -27,12 +27,6 @@ ThreadDispatch::~ThreadDispatch()
 
 void ThreadDispatch::DispatchOn(HandleParam object, EventDispatcher* eventDispatcher, StringParam eventId, Event* event)
 {
-  //If this is null, ThreadDispatch has been shutdown. To prevent
-  //crashes with destruction order just do nothing.
-  // 'this' pointer cannot be null in well-defined C++ code; compariision may be assumed to always evaluate to false [-Werror, -Wtautological-undefined-compare]
-//   if(this == nullptr) 
-//     return;
-
   QueuedEvent queuedEvent;
   queuedEvent.Object = object;
   queuedEvent.EventToSend = event;

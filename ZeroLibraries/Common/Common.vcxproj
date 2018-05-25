@@ -348,7 +348,7 @@
     <ClInclude Include="StlBinding\Array.hpp" />
     <ClInclude Include="StlBinding\Associative.hpp" />
     <ClInclude Include="StlBinding\String.hpp" />
-    <ClInclude Include="Utility\UintN.hpp" />
+    <ClInclude Include="Utility\UintNType.hpp" />
     <ClInclude Include="Utility\UniquePointer.hpp" />
     <ClInclude Include="Utility\Variant.hpp" />
     <ClInclude Include="Utility\VariantConfig.hpp" />

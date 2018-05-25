@@ -27,7 +27,7 @@ namespace Audio
       mCounter(0),
       mType(type)
     {}
-    GrainWindow(GrainWindow& other) { CopySettings(&other); }
+    GrainWindow(GrainWindow& other) { /*CopySettings(&other); PLATFORMREFACTOR It is NOT legal to call a pure virtual from a constructor! */ }
     
     virtual float GetNextValue() = 0;
     virtual void Reset(unsigned length, unsigned attack, unsigned release) = 0;

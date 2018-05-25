@@ -71,8 +71,8 @@ bool DataSource::Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMo
 u32 ArrayDataSource::DataEntryToArrayIndex(DataEntry* entry)
 {
   u32 index = (u32)entry;
-//   if(index == RootIndex)
-//     return (u32)-1;
+  if (index == RootIndex)
+    return (u32)-1;
 
   return index - 1;
 }
@@ -80,8 +80,8 @@ u32 ArrayDataSource::DataEntryToArrayIndex(DataEntry* entry)
 u32 ArrayDataSource::DataIndexToArrayIndex(DataIndex dataIndex)
 {
   u32 index = (u32)dataIndex.Id;
-//   if(index == RootIndex)
-//     return (u32)-1;
+  if (index == RootIndex)
+    return (u32)-1;
   return index - 1;
 }
 
@@ -137,8 +137,8 @@ bool ArrayDataSource::IsExpandable(DataEntry* dataEntry)
 void ArrayDataSource::GetData(DataEntry* dataEntry, Any& any, StringParam column)
 {
   u32 index = (u32)dataEntry;
-//   if(index == RootIndex)
-//     return;
+  if(index == RootIndex)
+    return;
 
   //we had to add one to avoid returning NULL, so shift back to the actual array index
   u32 arrayIndex = index - 1;
@@ -148,8 +148,8 @@ void ArrayDataSource::GetData(DataEntry* dataEntry, Any& any, StringParam column
 bool ArrayDataSource::SetData(DataEntry* dataEntry, const Any& any, StringParam column)
 {
   u32 index = (u32)dataEntry;
-//   if(index == RootIndex)
-//     return false;
+  if(index == RootIndex)
+    return false;
 
   //we had to add one to avoid returning NULL, so shift back to the actual array index
   u32 arrayIndex = index - 1;

@@ -308,9 +308,6 @@
     <ClInclude Include="Utility\IdSequence.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\UintN.hpp">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\ItemCache.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -377,6 +374,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Utility\SpinLock.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\UintNType.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>

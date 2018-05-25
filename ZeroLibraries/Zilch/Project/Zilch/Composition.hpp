@@ -87,7 +87,7 @@ namespace Zilch
     T* HasInheritedOrAdd()
     {
       // Attempt to get the component, and if we fail then create it immediately
-      T* component = this->GetInherited<T>();
+      T* component = this->HasInherited<T>();
       if (component == nullptr)
       {
         component = new T();
