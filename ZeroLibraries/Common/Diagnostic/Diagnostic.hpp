@@ -89,27 +89,27 @@ static int gConditionalFalseConstant = 0;
 
 #define WarnIf(Expression, ...) \
   do { static bool __ignore = false; if((Expression) && ::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Warning,#Expression, __FILE__, __LINE__, __ignore,##__VA_ARGS__)) \
-  ZERO_DEBUG_BREAK; } while(gConditionalFalseConstant)
+  ZeroDebugBreak(); } while(gConditionalFalseConstant)
 
 #define ErrorIf(Expression, ...) \
   do { static bool __ignore = false; if((Expression) && ::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Error,#Expression, __FILE__, __LINE__, __ignore,##__VA_ARGS__)) \
-  ZERO_DEBUG_BREAK; } while(gConditionalFalseConstant)
+  ZeroDebugBreak(); } while(gConditionalFalseConstant)
 
 #define Assert(Expression, ...) \
   do { static bool __ignore = false; if(!(Expression) && ::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Error,#Expression, __FILE__, __LINE__, __ignore,##__VA_ARGS__)) \
-  ZERO_DEBUG_BREAK; } while(gConditionalFalseConstant)
+  ZeroDebugBreak(); } while(gConditionalFalseConstant)
 
 #define Error(...)\
   do { static bool __ignore = false; if(::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Error,"", __FILE__, __LINE__, __ignore,##__VA_ARGS__)) \
-  ZERO_DEBUG_BREAK; } while(gConditionalFalseConstant)
+  ZeroDebugBreak(); } while(gConditionalFalseConstant)
 
 #define Warn(...)\
   do { static bool __ignore = false; if(::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::Warning,"", __FILE__, __LINE__, __ignore,##__VA_ARGS__)) \
-  ZERO_DEBUG_BREAK; } while(gConditionalFalseConstant)
+  ZeroDebugBreak(); } while(gConditionalFalseConstant)
 
 #define FileErrorIf(Expression, file, Line, ...) \
   do { static bool __ignore = false; if((Expression) && ::Zero::ErrorSignaler::SignalError(::Zero::ErrorSignaler::FileError,#Expression, file, Line, __ignore,##__VA_ARGS__)) \
-  ZERO_DEBUG_BREAK; } while(gConditionalConstant)
+  ZeroDebugBreak(); } while(gConditionalConstant)
 
 #define Verify(funccall) ErrorIf(funcall != 0);
 

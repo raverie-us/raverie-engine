@@ -55,7 +55,7 @@ public:
 class GraphicsBlendSettings : public BlendSettings
 {
 public:
-  ZilchDeclareType(BlendSettings, TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicsBlendSettings, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandleNoData(GraphicsBlendSettings);
 
   static void ConstructedStatic(BlendSettings* settings);
@@ -68,7 +68,7 @@ public:
 class GraphicsDepthSettings : public DepthSettings
 {
 public:
-  ZilchDeclareType(DepthSettings, TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicsDepthSettings, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandleNoData(GraphicsDepthSettings);
 
   static void ConstructedStatic(DepthSettings* settings);
@@ -81,7 +81,7 @@ public:
 class GraphicsRenderSettings : public RenderSettings
 {
 public:
-  ZilchDeclareType(RenderSettings, TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicsRenderSettings, TypeCopyMode::ReferenceType);
 
   GraphicsRenderSettings();
 

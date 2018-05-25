@@ -30,7 +30,6 @@
 #pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
 #pragma clang diagnostic ignored "-Wpragma-pack"
 #pragma clang diagnostic ignored "-Wreorder"
-#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
 #pragma clang diagnostic ignored "-Wsometimes-uninitialized"
 #pragma clang diagnostic ignored "-Wunused-private-field"
 #pragma clang diagnostic ignored "-Wparentheses"
@@ -46,6 +45,8 @@
 #pragma clang diagnostic ignored "-Wchar-subscripts"
 #pragma clang diagnostic ignored "-Wreturn-std-move"
 #pragma clang diagnostic ignored "-Wmissing-braces"
+#pragma clang diagnostic ignored "-Wunused-local-typedef"
+#pragma clang diagnostic ignored "-Wunused-const-variable"
 
 #undef __STDC__
 #endif

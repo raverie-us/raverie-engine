@@ -319,10 +319,6 @@ void GraphicsRenderSettings::SetColorTargetMrt(RenderTarget* target, uint index)
 //**************************************************************************************************
 GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettings()
 {
-  {
-    DoNotifyException("Error", "Invalid index. Must be 0-7.")
-    return nullptr;
-  }
   return (GraphicsBlendSettings*)RenderSettings::GetBlendSettings();
 }
 
@@ -348,7 +344,10 @@ void GraphicsRenderSettings::SetDepthSettings(GraphicsDepthSettings* depthSettin
 GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettingsMrt(uint index)
 {
   if (index >= 8)
-    return DoNotifyException("Error", "Invalid index. Must be 0-7."), nullptr;
+  {
+    DoNotifyException("Error", "Invalid index. Must be 0-7.");
+    return nullptr;
+  }
 
   return (GraphicsBlendSettings*)&mBlendSettings[index];
 }

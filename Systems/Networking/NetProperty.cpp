@@ -250,18 +250,18 @@ void NetPropertyType::SetConfig(NetPropertyConfig* netPropertyConfig)
 //---------------------------------------------------------------------------------//
 
 // Variant Configuration Helper Macros
-#define DefineVariantGetSetForArithmeticTypes(property)                                                                                                                     \
-DefineVariantGetSetForType(property, Integer,       int,        int(DefaultInt##property));                                                                                 \
-DefineVariantGetSetForType(property, DoubleInteger, s64,        s64(DefaultInt##property));                                                                                 \
-DefineVariantGetSetForType(property, Integer2,      Integer2,   Integer2(DefaultInt##property, DefaultInt##property));                                                      \
-DefineVariantGetSetForType(property, Integer3,      Integer3,   Integer3(DefaultInt##property, DefaultInt##property, DefaultInt##property));                                \
-DefineVariantGetSetForType(property, Integer4,      Integer4,   Integer4(DefaultInt##property, DefaultInt##property, DefaultInt##property, DefaultInt##property));          \
-DefineVariantGetSetForType(property, Real,          float,      float(DefaultFloat##property));                                                                             \
-DefineVariantGetSetForType(property, DoubleReal,    double,     double(DefaultFloat##property));                                                                            \
-DefineVariantGetSetForType(property, Real2,         Real2,      Real2(DefaultFloat##property, DefaultFloat##property));                                                     \
-DefineVariantGetSetForType(property, Real3,         Real3,      Real3(DefaultFloat##property, DefaultFloat##property, DefaultFloat##property));                             \
-DefineVariantGetSetForType(property, Real4,         Real4,      Real4(DefaultFloat##property, DefaultFloat##property, DefaultFloat##property, DefaultFloat##property));     \
-DefineVariantGetSetForType(property, Quaternion,    Quaternion, Quaternion(DefaultFloat##property, DefaultFloat##property, DefaultFloat##property, DefaultFloat##property))
+#define DefineVariantGetSetForArithmeticTypes(property)                                                                                                                                                 \
+DefineVariantGetSetForType(property, Integer,       int,        int(DefaultInt##property));                                                                                                             \
+DefineVariantGetSetForType(property, DoubleInteger, s64,        s64(DefaultInt##property));                                                                                                             \
+DefineVariantGetSetForType(property, Integer2,      Integer2,   Integer2(DefaultInt##property, DefaultInt##property));                                                                                  \
+DefineVariantGetSetForType(property, Integer3,      Integer3,   Integer3(DefaultInt##property, DefaultInt##property, DefaultInt##property));                                                            \
+DefineVariantGetSetForType(property, Integer4,      Integer4,   Integer4(DefaultInt##property, DefaultInt##property, DefaultInt##property, DefaultInt##property));                                      \
+DefineVariantGetSetForType(property, Real,          float,      float(DefaultFloat##property));                                                                                                         \
+DefineVariantGetSetForType(property, DoubleReal,    double,     double(DefaultFloat##property));                                                                                                        \
+DefineVariantGetSetForType(property, Real2,         Real2,      Real2(float(DefaultFloat##property), float(DefaultFloat##property)));                                                                   \
+DefineVariantGetSetForType(property, Real3,         Real3,      Real3(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)));                                    \
+DefineVariantGetSetForType(property, Real4,         Real4,      Real4(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)));     \
+DefineVariantGetSetForType(property, Quaternion,    Quaternion, Quaternion(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)))
 
 #define DefineVariantGetSetForType(property, typeName, type, defaultValue)         \
 void NetPropertyConfig::Set##property##typeName(type value)                        \

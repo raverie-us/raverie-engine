@@ -6,7 +6,6 @@
 namespace Zero
 {
 
-  ZilchDeclareType(SamplerSettings, TypeCopyMode::ReferenceType);
 /// Interface for rendering output. Texture data is managed and recycled by the engine.
 class RenderTarget : public SafeId32
 {

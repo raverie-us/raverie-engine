@@ -476,7 +476,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  ZilchForceInline PerFrameData* ExecutableState::PushFrame(Function* function)
+  ZeroForceInline PerFrameData* ExecutableState::PushFrame(Function* function)
   {
     // Get the next frame before we push our own frame data
     byte* frame = this->GetNextStackFrame();
@@ -486,7 +486,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  ZilchForceInline PerFrameData* ExecutableState::PushFrame(byte* frame, Function* function)
+  ZeroForceInline PerFrameData* ExecutableState::PushFrame(byte* frame, Function* function)
   {
     // Unfortunately we incur an overhead for patched functions, however, this should
     // be descently quick if the patched functions hash table is empty (it 'early outs' internally)
@@ -576,7 +576,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  ZilchForceInline PerFrameData* ExecutableState::PopFrame()
+  ZeroForceInline PerFrameData* ExecutableState::PopFrame()
   {
     // Get the frame we're about to pop
     PerFrameData* frame = this->StackFrames.Back();
@@ -800,7 +800,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  ZilchForceInline void ExecutableState::SendOpcodeEvent(StringParam eventId, PerFrameData* frame)
+  ZeroForceInline void ExecutableState::SendOpcodeEvent(StringParam eventId, PerFrameData* frame)
   {
     // If the user didn't enable debug events, then early out
     if (this->EnableDebugEvents == false)

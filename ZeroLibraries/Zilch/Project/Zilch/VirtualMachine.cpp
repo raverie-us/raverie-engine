@@ -827,7 +827,7 @@ namespace Zilch
   ZilchVirtualInstruction(InternalDebugBreakpoint)
   {
     // Trigger the breakpoint
-    ZERO_DEBUG_BREAK;
+    ZeroDebugBreak();
 
     // Move the instruction counter past this opcode
     programCounter += sizeof(Opcode);

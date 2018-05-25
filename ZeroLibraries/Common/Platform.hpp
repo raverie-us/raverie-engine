@@ -322,7 +322,7 @@
 #define ZeroImport __declspec(dllimport)
 #define ZeroExport __declspec(dllexport)
 #define ZeroExportC extern "C" __declspec(dllexport)
-#define ZERO_DEBUG_BREAK __debugbreak()
+#define ZeroDebugBreak() __debugbreak()
 //#define ZeroTodo(text) __pragma(message(__FILE__ "(" ZeroStringize(__LINE__) ") : Todo: " text))
 #define ZeroTodo(text)
 #define ZeroForceInline inline __forceinline
@@ -335,8 +335,8 @@
 #define ZeroExport
 #define ZeroExportC extern "C" __attribute__((visibility("default")))
 #define ZeroShared __attribute__((visibility("default")))
-#define ZERO_DEBUG_BREAK
-#define ZeroTodo(text)
+#define ZeroDebugBreak()
+#define ZeroTodo(text) asm("int $3")
 // There seems to be issues with __attribute__((always_inline)) wit GCC linking
 #define ZeroForceInline inline
 #define ZeroNoInline
