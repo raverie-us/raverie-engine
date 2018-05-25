@@ -49,6 +49,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Atomic.cpp" />
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Browser.cpp" />
     <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="ComPort.cpp" />

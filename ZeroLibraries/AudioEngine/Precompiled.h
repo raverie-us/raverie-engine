@@ -40,12 +40,8 @@
 #include "SoundInstances.h"
 #include "Tags.h"
 
-#ifdef _MSC_VER
-#include "WASAPI.h"
-#endif
 #include "AudioInputOutput.h"
 
-#include "MIDI.h"
 #include "Modifiers.h"
 #include "FileEncoder.h"
 #include "FileDecoder.h"

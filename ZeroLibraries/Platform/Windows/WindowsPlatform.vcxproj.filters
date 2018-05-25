@@ -50,6 +50,7 @@
     <ClCompile Include="Browser.cpp" />
     <ClCompile Include="OpenglRenderer.cpp" />
     <ClCompile Include="StreamedVertexBuffer.cpp" />
+    <ClCompile Include="Audio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">

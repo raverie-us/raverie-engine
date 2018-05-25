@@ -731,6 +731,9 @@
     <ClInclude Include="Platform\RendererEnumerations.hpp">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\Audio.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="ZeroVisualizers.natvis" />

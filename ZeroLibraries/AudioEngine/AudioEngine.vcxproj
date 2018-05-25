@@ -95,8 +95,6 @@
     <ClCompile Include="Tags.cpp" />
     <ClCompile Include="VBAP.cpp" />
     <ClCompile Include="VolumeNodes.cpp" />
-    <ClCompile Include="WASAPI.cpp" />
-    <ClCompile Include="WindowsMIDI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdditiveSynthNode.h" />
@@ -118,7 +116,6 @@
     <ClInclude Include="Interpolator.h" />
     <ClInclude Include="ListenerNode.h" />
     <ClInclude Include="LockFreeQueue.hpp" />
-    <ClInclude Include="MIDI.h" />
     <ClInclude Include="Modifiers.h" />
     <ClInclude Include="opus.h" />
     <ClInclude Include="opus_custom.h" />
@@ -139,8 +136,6 @@
     <ClInclude Include="Tags.h" />
     <ClInclude Include="VBAP.h" />
     <ClInclude Include="VolumeNodes.h" />
-    <ClInclude Include="WASAPI.h" />
-    <ClInclude Include="WindowsMIDI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

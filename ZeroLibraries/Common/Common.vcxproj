@@ -187,6 +187,7 @@
     <ClInclude Include="Math\WeightedProbabilityTable.hpp" />
     <ClInclude Include="Platform.hpp" />
     <ClInclude Include="Platform\Atomic.hpp" />
+    <ClInclude Include="Platform\Audio.hpp" />
     <ClInclude Include="Platform\CommandLineSupport.hpp" />
     <ClInclude Include="Platform\ComPort.hpp" />
     <ClInclude Include="Platform\CrashHandler.hpp" />

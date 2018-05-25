@@ -68,7 +68,7 @@ namespace Audio
       MusicCustomTime,
       // Sound node was disconnected
       NodeDisconnected,
-      // MIDI notifications
+      // MIDI notifications (must *always* match MidiEvent enum)
       MidiNoteOn,
       MidiNoteOff,
       MidiPitchWheel,

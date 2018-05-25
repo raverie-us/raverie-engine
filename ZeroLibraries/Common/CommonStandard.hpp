@@ -226,3 +226,4 @@ namespace Zero
 #include "Platform/Browser.hpp"
 #include "Platform/RendererEnumerations.hpp"
 #include "Platform/Renderer.hpp"
+#include "Platform/Audio.hpp"

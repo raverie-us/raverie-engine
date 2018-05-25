@@ -12,6 +12,8 @@
 
 namespace Audio
 {
+  using namespace Zero;
+
   inline static void LogAudioIoError(Zero::StringParam message, Zero::String* savedMessage = nullptr)
   {
     ZPrint(Zero::String::Format(message.c_str(), "\n").c_str());
@@ -85,7 +87,7 @@ namespace Audio
     // Buffer used for the OutputRingBuffer
     float* MixedOutputBuffer;
     // The number of mix buffer frames for each latency setting
-    unsigned OutputBufferSizePerLatency[LatencyValues::Count];
+    unsigned OutputBufferSizePerLatency[LatencyValues::Size];
     // Current latency setting for the audio output
     LatencyValues::Enum mOutputStreamLatency;
     // Size of the buffer for input data
@@ -97,7 +99,7 @@ namespace Audio
     // For notifying the mix thread when a new buffer is needed.
     Zero::Semaphore MixThreadSemaphore;
     // List of info objects for each stream type
-    StreamInfo StreamInfoList[StreamTypes::Count];
+    StreamInfo StreamInfoList[StreamTypes::Size];
     // The multiplier used to find the mix frames for a certain sample rate
     const float BufferSizeMultiplier = 0.04f;
     // The value used to start calculating the mix frames

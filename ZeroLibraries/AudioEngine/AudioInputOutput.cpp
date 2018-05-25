@@ -16,7 +16,7 @@ namespace Audio
     mOutputStreamLatency(LatencyValues::LowLatency),
     MixedOutputBuffer(nullptr)
   {
-    memset(OutputBufferSizePerLatency, 0, sizeof(unsigned) * LatencyValues::Count);
+    memset(OutputBufferSizePerLatency, 0, sizeof(unsigned) * LatencyValues::Size);
 
     InputRingBuffer.Initialize(sizeof(float), InputBufferSize, InputBuffer);
   }

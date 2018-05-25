@@ -161,7 +161,7 @@ namespace Audio
     // The RMS volume value from the last mix.
     float RmsVolumeLastMix;
     // Object to get MIDI data from the operating system.
-    MidiIn MidiObject;
+    MidiInput MidiObject;
     // List of all current threaded sound nodes
     NodeListType NodeListThreaded;
     // List of all current sound nodes

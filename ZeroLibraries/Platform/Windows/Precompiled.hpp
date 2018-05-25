@@ -55,6 +55,13 @@
 #include <dbghelp.h>
 #include <Psapi.h>
 #include <ws2tcpip.h>
+#include <mmreg.h>
+#include <Audioclient.h>
+#include <mmdeviceapi.h>
+#include <audiopolicy.h>
+#include <functiondiscoverykeys.h>
+#include <process.h>
+#include <avrt.h>
 
 // Using static GLEW
 #define GLEW_STATIC

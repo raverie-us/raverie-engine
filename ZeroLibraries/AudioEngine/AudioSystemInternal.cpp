@@ -50,8 +50,23 @@ namespace Audio
   }
 
   //************************************************************************************************
+  void MidiDataCallback(MidiData* data, MidiInput* input)
+  {
+    // The MidiEvent enum aligns with the AudioEventTypes enum for midi events,
+    // so to translate between the two we just do a bit of integer offset
+    AudioEventTypes::Enum eventType = (AudioEventTypes::Enum)(AudioEventTypes::MidiNoteOn + (int)data->mEventType);
+
+    EventData* eventData = new EventData3<int, float, float>(eventType, data->mData1, data->mData2, data->mData3);
+    gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioEventData,
+      gAudioSystem->ExternalInterface, eventData));
+  }
+
+  //************************************************************************************************
   void AudioSystemInternal::StartSystem(Zero::Status &status)
   {
+    // Whenever a midi event occurs it will invoke this callback
+    MidiObject.mOnMidiData = &MidiDataCallback;
+
     // Initialize the audio API and the input & output streams
     // If initialization was not successful, set the message on the status object
     if (!InputOutputInterface.Initialize())
