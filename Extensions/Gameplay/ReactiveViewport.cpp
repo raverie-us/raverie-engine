@@ -349,8 +349,17 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
     reactiveSpace->mOver = mOverObject;
     if(oldOverObject != nullptr)
     {
+      // Clear out all Reactive hit information.  If a new Reactive object was
+      // hit: then code-control wouldn't reach this point.  If a non-Reactive
+      // object was hit, then this information shouldn't be valid anyway.
+      mReactiveHitPosition = Vec3::cZero;
+      mReactiveHitNormal = Vec3::cZAxis;
+      mReactiveHitUv = Vec2::cZero;
+      mReactiveHitDistance = 0.0f;
+
       ViewportMouseEvent viewportEvent(e);
       InitViewportEvent(viewportEvent);
+
       oldOverObject->GetDispatcher()->Dispatch(Events::MouseExit, &viewportEvent);
     }
   }

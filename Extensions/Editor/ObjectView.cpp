@@ -1118,7 +1118,7 @@ ObjectView::ObjectView(Composite* parent)
   ConnectThisTo(mTree, Events::MouseEnterRow, OnMouseEnterRow);
   ConnectThisTo(mTree, Events::MouseExitRow, OnMouseExitRow);
 
-  ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
+  ConnectThisTo(mTree->mArea->mClientArea, Events::RightMouseUp, OnRightMouseUp);
 }
 
 ObjectView::~ObjectView()
@@ -1325,13 +1325,7 @@ void ObjectView::OnSelectionChanged(Event* event)
   // Need to update selected objects
   mTree->MarkAsNeedsUpdate();
 
-  // Do not show row when focus change is 
-  // caused by the object view itself
-  if(this->HasFocus())
-    return;
-
   // Show the object row that was selected
-  
   MetaSelection* selection = Z::gEditor->GetSelection();
   Cog* primary = selection->GetPrimaryAs<Cog>();
   if(primary && selection->Count() == 1)

@@ -170,9 +170,9 @@ private:
   void RemoveNameToolTip();
   void CreateTagToolTip(StringParam message, ToolTipColorScheme::Enum tagColor = ToolTipColorScheme::Default);
   void RemoveTagToolTip();
-  void OnTextTypedName(Event*);
   void OnTextTypedTag(Event*);
   void OnKeyDownNameField(KeyboardEvent* e);
+  void OnKeyUpNameField(KeyboardEvent* e);
   bool ValidateName(bool finalValidation);
   bool ValidateTags();
   void OnCancel(Event*);

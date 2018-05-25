@@ -39,11 +39,11 @@ ZilchDefineType(CastFilter, builder, type)
   type->CreatableInScript = true;
 
   ZeroBindDocumented();
-  ZilchBindGetterSetterProperty(CollisionGroup);
-
+  
   ZilchBindDefaultCopyDestructor();
 
   ZilchBindGetterSetterProperty(IgnoreCog);
+  ZilchBindGetterSetterProperty(CollisionGroup);
 
   ZeroBindEvent(Events::CastFilterCallback, CastFilterEvent);
   ZilchBindFieldProperty(mCallbackObject);

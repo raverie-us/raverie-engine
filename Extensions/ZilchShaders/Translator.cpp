@@ -1216,7 +1216,7 @@ void ZilchShaderTranslator::WalkFunctionCallNode(Zilch::FunctionCallNode*& node,
     ShaderCodeBuilder& builder = context->GetBuilder();
     // We need to mangle the function call's name based upon the class' type
     Zilch::Type* thisType = memberAccessNode->AccessedFunction->This->ResultType;
-    String fnCallName = MangleName(memberAccessNode->Name, thisType);
+    String fnCallName = MangleName(memberAccessNode->Name, thisType, memberAccessNode);
     builder << fnCallName;
   }
 
@@ -1282,7 +1282,7 @@ void ZilchShaderTranslator::WalkStaticTypeOrCreationCallNode(Zilch::StaticTypeNo
     ShaderType* createdShaderType = FindShaderType(zilchCreatedType, node);
     context->mCurrentType->AddDependency(createdShaderType);
     // Since this type is from their library, call the "constructor" function instead of the type's constructor
-    builder << MangleName(mSettings->mNameSettings.mConstructorName, zilchCreatedType);
+    builder << MangleName(mSettings->mNameSettings.mConstructorName, zilchCreatedType, node);
   }
   else
   {
@@ -1484,7 +1484,7 @@ void ZilchShaderTranslator::WalkMemberAccessNode(Zilch::MemberAccessNode*& node,
 
   if(node->IsStatic || isForcedStatic)
   {
-    String mangledMemberName = MangleName(node->Name, node->LeftOperand->ResultType);
+    String mangledMemberName = MangleName(node->Name, node->LeftOperand->ResultType, node);
     // We don't actually know if this member access node is on a field of a type
     // we already know about. If it is then we should use whatever the pre-established
     // shader name is for the field (especially when it comes to built-in samplers),
@@ -1794,9 +1794,9 @@ String ZilchShaderTranslator::ApplyVariableReplacement(StringParam varName)
   return BuildString("_", varName);
 }
 
-String ZilchShaderTranslator::MangleName(StringParam name, Zilch::Type* classType)
+String ZilchShaderTranslator::MangleName(StringParam name, Zilch::Type* classType, Zilch::SyntaxNode* locationNode)
 {
-  ShaderType* shaderType = FindShaderType(classType, nullptr);
+  ShaderType* shaderType = FindShaderType(classType, locationNode);
   // If we have a shader type then get the correct mangled name from it (it stores the correct shader type name)
   if(shaderType != nullptr)
     return MangleName(name, shaderType);
@@ -1865,7 +1865,7 @@ String ZilchShaderTranslator::GenerateDefaultConstructorString(Zilch::Type* type
     }
   }
   // Otherwise, this is a user defined type so just call the constructor function.
-  return BuildString(MangleName(mSettings->mNameSettings.mConstructorName, type), "()");
+  return BuildString(MangleName(mSettings->mNameSettings.mConstructorName, type, nullptr), "()");
 }
 
 bool ZilchShaderTranslator::IsTemplateType(Zilch::BoundType* type)
@@ -2032,8 +2032,10 @@ ShaderType* ZilchShaderTranslator::FindShaderType(Zilch::Type* type, Zilch::Synt
 
 ShaderType* ZilchShaderTranslator::FindAndReportUnknownType(Zilch::Type* type, Zilch::SyntaxNode* syntaxNode)
 {
+  ErrorIf(syntaxNode == nullptr, "Shader error at unknown location.");
   String msg = String::Format("Type '%s' is not a valid type for use in a shader", type->ToString().c_str());
-  SendTranslationError(syntaxNode->Location, msg);
+  if(syntaxNode != nullptr)
+    SendTranslationError(syntaxNode->Location, msg);
   return mCurrentLibrary->FindType("[Unknown]");
 }
 

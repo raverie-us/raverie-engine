@@ -41,9 +41,7 @@ namespace Audio
 
       Volume = newVolume;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&MicrophoneInputNode::SetVolume,
-          (MicrophoneInputNode*)GetSiblingNode(), newVolume));
+      AddTaskForSiblingThreaded(&MicrophoneInputNode::SetVolume, newVolume);
     }
     else
     {
@@ -74,9 +72,7 @@ namespace Audio
       Active = active;
 
       // Send task to threaded node
-      if (GetSiblingNode())
-        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&MicrophoneInputNode::SetActive,
-          (MicrophoneInputNode*)GetSiblingNode(), active));
+      AddTaskForSiblingThreaded(&MicrophoneInputNode::SetActive, active);
     }
     else
     {

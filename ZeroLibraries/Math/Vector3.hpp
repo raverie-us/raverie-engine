@@ -117,12 +117,15 @@ struct ZeroShared Vector3
 
   /// Linearly interpolate between the two vectors, the t-value is restricted to [0, 1].
   static Vector3 Lerp(Vec3Param start, Vec3Param end, real tValue);
-  /// Spherical linear interpolation.
-  /// Interpolates along the surface of the unit sphere.
+  /// Spherical linear interpolation. Interpolates along the surface of the unit sphere.
+  /// Normalizes input, checks for degenerate/ambiguous cases.
   static Vector3 Slerp(Vec3Param start, Vec3Param end, real tValue);
-  /// Same as slerp except this function deals with
-  /// invalid vectors. Used for binding to scripting languages.
-  static Vector3 SafeSlerp(Vec3Param start, Vec3Param end, real tValue);
+  /// Same as Slerp except this function assumes the user has deal with degenerate/ambiguous cases.
+  /// Used when multiple calls are made to Slerp and the user wants to fix degeneracies once ahead of time.
+  static Vector3 SlerpFast(Vec3Param start, Vec3Param end, real tValue);
+  /// Same as Slerp except this function does not normalize the input vectors. This is the 'pure' mathematical
+  /// Slerp function. This effectively traces along an ellipse defined by the two input vectors.
+  static Vector3 SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue);
   /// Projects the input vector onto the given vector (must be normalized)
   static Vector3 ProjectOnVector(Vec3Param input, Vec3Param normalizedVector);
   /// Projects the input vector onto a plane (the normal must be normalized)
@@ -246,12 +249,15 @@ ZeroShared Vector3 Round(Vec3Param value);
 
 /// Linearly interpolate between the two vectors, the t-value is restricted to [0, 1].
 ZeroShared Vector3 Lerp(Vec3Param start, Vec3Param end, real tValue);
-/// Spherical linear interpolation.
-/// Interpolates along the surface of the unit sphere.
+/// Spherical linear interpolation. Interpolates along the surface of the unit sphere.
+/// Normalizes input, checks for degenerate/ambiguous cases.
 ZeroShared Vector3 Slerp(Vec3Param start, Vec3Param end, real tValue);
-/// Same as slerp except this function deals with
-/// invalid vectors. Used for binding to scripting languages.
-ZeroShared Vector3 SafeSlerp(Vec3Param start, Vec3Param end, real tValue);
+/// Same as Slerp except this function assumes the user has deal with degenerate/ambiguous cases.
+/// Used when multiple calls are made to Slerp and the user wants to fix degeneracies once ahead of time.
+ZeroShared Vector3 SlerpFast(Vec3Param start, Vec3Param end, real tValue);
+/// Same as Slerp except this function does not normalize the input vectors. This is the 'pure' mathematical
+/// Slerp function. This effectively traces along an ellipse defined by the two input vectors.
+ZeroShared Vector3 SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue);
 
 /// Projects the input vector onto the given vector (must be normalized)
 ZeroShared Vector3 ProjectOnVector(Vec3Param input, Vec3Param normalizedVector);

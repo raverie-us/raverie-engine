@@ -46,14 +46,16 @@ public:
   /// A value of 0 will start the Sound at the beginning of the audio file.
   float mStartTime;
   /// The time (in seconds) at which the Sound will stop playing. Defaults to the length of the audio file.
-  float mEndTime;
+  float GetEndTime();
+  void SetEndTime(float time);
   /// The time (in seconds) from the beginning of the audio file that a looping SoundInstance will jump back to 
   /// after it reaches the LoopEndTime. The Sound will still start at the StartTime when it is played, 
   /// but after it begins looping it will start at the LoopStartTime. 
   float mLoopStartTime;
   /// The time (in seconds) from the beginning of the audio file at which a looping SoundInstance 
   /// jumps back to the LoopStartTime. If it stops looping while playing it will continue to the EndTime and then stop. 
-  float mLoopEndTime;
+  float GetLoopEndTime();
+  void SetLoopEndTime(float time);
   /// The length (in seconds) of the tail, from the LoopEndTime, which will continue to play 
   /// after the Sound jumps back to the LoopStartTime. The loop tail will fade out smoothly.
   float mLoopTailLength;
@@ -63,6 +65,8 @@ public:
 
 private:
   HandleOf<Sound> mSound;
+  float mEndTime;
+  float mLoopEndTime;
 };
 
 class SoundEntryDisplay : public MetaDisplay

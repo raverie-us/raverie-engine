@@ -143,7 +143,7 @@ inline bool operator<(cstr left, const StringRange& right);
 
 //----------------------------------------------------------- String Iterator
 // An iterator for StringRange to make moving backwards in the StringRange safe
-class StringIterator
+class ZeroShared StringIterator
 {
 public:
   typedef const StringIterator& StringIteratorParam;
@@ -190,7 +190,7 @@ public:
 };
 
 //----------------------------------------------------------- String Token Range
-class StringTokenRange
+class ZeroShared StringTokenRange
 {
 public:
   StringTokenRange(StringRange stringRange, Rune delim);
@@ -312,7 +312,7 @@ struct ZeroShared HashPolicy<String>
 
 //------------------------------------------------------- Move Operator (String)
 template<>
-struct MoveWithoutDestructionOperator<String>
+struct ZeroShared MoveWithoutDestructionOperator<String>
 {
   static inline void MoveWithoutDestruction(String* dest, String* source)
   {

@@ -113,6 +113,9 @@ namespace Zilch
     // This can currently not be declared in language, but can be used from C++
     DelegateType* AnyDelegateType;
 
+    // A special delegate type that we use as a dummy for errors.
+    DelegateType* ErrorDelegateType;
+
     // A very special type that allows us to take a handle of any type
     // This can currently not be declared in language, but can be used from C++
     BoundType* AnyHandleType;

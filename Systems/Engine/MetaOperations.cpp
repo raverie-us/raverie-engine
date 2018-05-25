@@ -319,8 +319,8 @@ void PropertyOperation::OnScriptsCompiled(ZilchCompileEvent* e)
     MetaSerialization* metaSerialize = newType->HasInherited<MetaSerialization>();
     if(metaSerialize)
     {
-      String stringBefore = mValueBefore.ToString();
-      String stringAfter = mValueAfter.ToString();
+      String stringBefore = metaSerialize->ConvertToString(mValueBefore);
+      String stringAfter = metaSerialize->ConvertToString(mValueAfter);
 
       bool succeeded = true;
       succeeded &= metaSerialize->ConvertFromString(stringBefore, mValueBefore);
@@ -424,7 +424,14 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
 {
   // Attempt to grab the object from the undo map
   Handle object = MetaOperation::GetUndoObject();
-  ReturnIf(object == NULL, , "Invalid undo object handle.");
+  ReturnIf(object == nullptr, , "Invalid undo object handle.");
+
+  // Check if the component type meta is still valid
+  if (mComponentType == nullptr)
+  {
+    DoNotifyWarning("Invalid Undo/Redo Operation", "Attempting to add a component type that has been deleted from the project.");
+    return;
+  }
 
   // Create the component
   BoundType* componentType = mComponentType;

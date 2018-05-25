@@ -35,6 +35,56 @@ BaseCastFilter::BaseCastFilter(const BaseCastFilter& rhs)
   mFlags.U32Field = rhs.mFlags.U32Field;
 }
 
+bool BaseCastFilter::GetIgnoreStatic()
+{
+  return IsSet(BaseCastFilterFlags::IgnoreStatic);
+}
+
+void BaseCastFilter::SetIgnoreStatic(bool state)
+{
+  SetState(BaseCastFilterFlags::IgnoreStatic, state);
+}
+
+bool BaseCastFilter::GetIgnoreDynamic()
+{
+  return IsSet(BaseCastFilterFlags::IgnoreDynamic);
+}
+
+void BaseCastFilter::SetIgnoreDynamic(bool state)
+{
+  SetState(BaseCastFilterFlags::IgnoreDynamic, state);
+}
+
+bool BaseCastFilter::GetIgnoreKinematic()
+{
+  return IsSet(BaseCastFilterFlags::IgnoreKinematic);
+}
+
+void BaseCastFilter::SetIgnoreKinematic(bool state)
+{
+  SetState(BaseCastFilterFlags::IgnoreKinematic, state);
+}
+
+bool BaseCastFilter::GetIgnoreGhost()
+{
+  return IsSet(BaseCastFilterFlags::IgnoreGhost);
+}
+
+void BaseCastFilter::SetIgnoreGhost(bool state)
+{
+  SetState(BaseCastFilterFlags::IgnoreGhost, state);
+}
+
+bool BaseCastFilter::GetIgnoreChildren()
+{
+  return IsSet(BaseCastFilterFlags::IgnoreChildren);
+}
+
+void BaseCastFilter::SetIgnoreChildren(bool state)
+{
+  SetState(BaseCastFilterFlags::IgnoreChildren, state);
+}
+
 bool BaseCastFilter::IsSet(BaseCastFilterFlags::Enum flag)
 {
   return mFlags.IsSet(flag);

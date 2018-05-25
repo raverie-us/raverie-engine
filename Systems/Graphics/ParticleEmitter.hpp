@@ -100,7 +100,7 @@ public:
   /// Size of each particle spawned.
   float mSize;
 
-  /// How much the emit can vary per sample.
+  /// How much the size can vary from the base size per particle.
   float mSizeVariance;
 
   /// How a particle's starting lifetime is.

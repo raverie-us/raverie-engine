@@ -109,7 +109,7 @@ public:
   void AddSelfParameter(Zilch::Type* zilchSelfType, StringParam selfType, ZilchShaderTranslatorContext* context);
   String ApplyValueReplacement(StringParam value);
   String ApplyVariableReplacement(StringParam varName);
-  String MangleName(StringParam name, Zilch::Type* classType);
+  String MangleName(StringParam name, Zilch::Type* classType, Zilch::SyntaxNode* locationNode);
   String MangleName(StringParam name, ShaderType* type);
   String FixClassName(Zilch::Type* type);
   String GenerateDefaultConstructorString(Zilch::Type* type, ZilchShaderTranslatorContext* context);

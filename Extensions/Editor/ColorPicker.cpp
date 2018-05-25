@@ -160,11 +160,11 @@ public:
 
   void SetColor(Vec2Param localPos)
   {
-    float pos = 1.0f - localPos.y / mDisplay->GetSize().y;
-
+    float val = 1.0f - localPos.y / mDisplay->GetSize().y;
     // Clamp the value to the range [0, 1]
-    pos = Math::Clamp(pos, 0.0f, 1.0f);
-    (mColorPicker->*mCallback)(pos);
+    val = Math::Clamp(val, 0.0f, 1.0f);
+    (mColorPicker->*mCallback)(val);
+    mColorPicker->SelectionChanged();
   }
 
   void OnMouseUp(MouseEvent* event) override
@@ -200,15 +200,16 @@ public:
 
   void SetColor(Vec2Param localPos)
   {
-    Vec2 pos = localPos;
-    pos.x = pos.x / mDisplay->GetSize().x;
-    pos.y = 1.0f - pos.y / mDisplay->GetSize().y;
+    Vec2 val = localPos;
+    val.x = val.x / mDisplay->GetSize().x;
+    val.y = 1.0f - val.y / mDisplay->GetSize().y;
 
     // Clamp the value to the range [0, 1]
-    pos.x = Math::Clamp(pos.x, 0.0f, 1.0f);
-    pos.y = Math::Clamp(pos.y, 0.0f, 1.0f);
+    val.x = Math::Clamp(val.x, 0.0f, 1.0f);
+    val.y = Math::Clamp(val.y, 0.0f, 1.0f);
 
-    mColorPicker->SetColorBlockSelection(pos);
+    mColorPicker->SetColorBlockSelectionValue(val);
+    mColorPicker->SelectionChanged();
   }
 
   void OnMouseUp(MouseEvent* event) override
@@ -220,6 +221,8 @@ public:
 //----------------------------------------------------------------- Color Picker
 ColorPicker* ColorPicker::Instance;
 bool ColorPicker::sOpenInNewOsWindow = false;
+const float ColorPicker::cColorDisplaySize = 200.0f;
+const float ColorPicker::cLuminanceThreshold = 0.5f;
 
 ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
 {
@@ -235,9 +238,6 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mValues[Blue] = 1.0f;
   mAlpha = 1.0f;
   mHdr = 1.0f;
-  mColorBlockSelection.Set(0, 0);
-  mColorSliderSelection = 0.0f;
-  mAlphaSliderSelection = 1.0f;
 
   //----------------------------------------------------- Create the Final Color
   mFinalColorDisplay = new ColorDisplay(this, 70, 20);
@@ -245,13 +245,23 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mFinalColorDisplay->SetSize(Pixels(70,20));
 
   //----------------------------------------------------- Create the color block
+  // Parent composite for the color block area to allow for proper widget clipping
+  mColorBlockArea = new Composite(this);
+  mColorBlockArea->SetTranslation(Pixels(0, 0, 0));
+  mColorBlockArea->SetSize(Pixels(200, 200));
+  mColorBlockArea->SetClipping(true);
   // Create the color buffer
   mColorBlockBuffer = new PixelBuffer(Color::Black, 256, 256);
   // Create the display and set the texture
-  mColorBlockDisplay = new TextureView(this);
+  mColorBlockDisplay = new TextureView(mColorBlockArea);
   mColorBlockDisplay->SetTexture(mColorBlockBuffer->Image);
-  mColorBlockDisplay->SetTranslation(Pixels(0,0,0));
   mColorBlockDisplay->SetSize(Pixels(200, 200));
+  // Create the selection widget for the color block
+  mColorBlockSelection = new ImageWidget(mColorBlockArea, "WhiteSquareBorder");
+  mColorBlockSelection->SetSize(Pixels(5, 5));
+  mColorBlockSelection->SetDisplayOrigin(DisplayOrigin::Center);
+  mColorBlockSelection->SetColor(ToFloatColor(Color::Black));
+
   ConnectThisTo(mColorBlockDisplay, Events::LeftMouseDown, OnColorBlockMouseDown);
 
   //---------------------------------------------------- Create the color slider
@@ -262,6 +272,12 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mColorSliderDisplay->SetTexture(mColorSliderBuffer->Image);
   mColorSliderDisplay->SetTranslation(Pixels(205, 0, 0));
   mColorSliderDisplay->SetSize(Pixels(15, 200));
+  // Create the selection widget for the color bar
+  mColorSliderSelection = new ImageWidget(this, "White");
+  mColorSliderSelection->SetSize(Pixels(15, 1));
+  mColorSliderSelection->SetTranslation(Pixels(205, 0, 0));
+  mColorSliderSelection->SetColor(ToFloatColor(Color::Black));
+
   ConnectThisTo(mColorSliderDisplay, Events::LeftMouseDown, OnColorSliderMouseDown);
 
   //---------------------------------------------------- Create the alpha slider
@@ -272,6 +288,12 @@ ColorPicker::ColorPicker(Composite* parent) : Composite(parent)
   mAlphaSliderDisplay->SetTexture(mAlphaSliderBuffer->Image);
   mAlphaSliderDisplay->SetTranslation(Pixels(225, 0, 0));
   mAlphaSliderDisplay->SetSize(Pixels(7, 200));
+  // Create the selection widget for the alpha bar
+  mAlphaSliderSelection = new ImageWidget(this, "White");
+  mAlphaSliderSelection->SetSize(Pixels(7, 1));
+  mAlphaSliderSelection->SetTranslation(Pixels(225, 0, 0));
+  mAlphaSliderSelection->SetColor(ToFloatColor(Color::Black));
+
   ConnectThisTo(mAlphaSliderDisplay, Events::LeftMouseDown, OnAlphaSliderMouseDown);
 
   //---------------------------------------------------------- Create Text Boxes
@@ -381,7 +403,7 @@ ColorPicker::~ColorPicker()
 {
   if(!mColorPicked)
     DispatchOnTarget(Events::ColorPickCancelled);
-  Instance = NULL;
+  Instance = nullptr;
 
   SafeDelete(mColorBlockBuffer);
   SafeDelete(mColorSliderBuffer);
@@ -395,6 +417,9 @@ void ColorPicker::Update()
   UpdateColorSlider();
   UpdateAlphaSlider();
   UpdateTextBoxes();
+  UpdateColorSliderIndicator();
+  UpdateAlphaSliderIndicator();
+  UpdateBlockIndicator();
 }
 
 ColorPicker* ColorPicker::EditColor(Widget* target, Vec4 color)
@@ -503,7 +528,7 @@ float ColorPicker::GetAlpha()
 void ColorPicker::SetAlpha(float alpha)
 {
   mAlpha = alpha;
-  mAlphaSliderSelection = alpha;
+  SetAlphaSliderSelectionValue(alpha);
   Update();
 }
 
@@ -536,9 +561,12 @@ void ColorPicker::SetMode(uint mode)
   mMode = mode;
   mCheckBoxes[mode]->SetCheckedDirect(true);
 
-  mColorSliderSelection = mValues[mode];
+  SetColorSliderSelectionValue(mValues[mode]);
 
   ColorChanged();
+  UpdateColorBlock();
+  UpdateColorSlider();
+  UpdateAlphaSlider();
 }
 
 void ColorPicker::UpdateFinalColor()
@@ -570,32 +598,27 @@ void ColorPicker::UpdateColorSlider()
   float step = 1.0f / float(height);
 
   // Walk the height
-  for(uint y = 0; y < height; ++y)
+  for (uint y = 0; y < height; ++y)
   {
-    float sliderPosition = float(y) * step;
+    float yPos = float(y) * step;
 
     Vec4 color;
-    if(mMode == Hue)
-      color = HSVToFloatColor(sliderPosition, 1.0f, 1.0f);
-    else if(mMode == Saturation)
-      color = HSVToFloatColor(mValues[Hue], sliderPosition, Math::Max(0.27f, mValues[Value]));
-    else if(mMode == Value)
-      color = HSVToFloatColor(mValues[Hue], mValues[Saturation], sliderPosition);
+    if (mMode == Hue)
+      color = HSVToFloatColor(yPos, 1.0f, 1.0f);
+    else if (mMode == Saturation)
+      color = HSVToFloatColor(mValues[Hue], yPos, Math::Max(0.27f, mValues[Value]));
+    else if (mMode == Value)
+      color = HSVToFloatColor(mValues[Hue], mValues[Saturation], yPos);
     else // The mode is R, G, or B
     {
       color = Vec4(mValues[Red], mValues[Green], mValues[Blue], 1.0f);
-      color[mMode - 3] = sliderPosition;
+      color[mMode - 3] = yPos;
     }
 
     // Set the color for each pixel wide
-    for(uint x = 0; x < width; ++x)
+    for (uint x = 0; x < width; ++x)
       mColorSliderBuffer->SetPixel(x, height - 1 - y, ToByteColor(color));
   }
-
-  // Draw a horizontal line on the selected value
-  uint y = (uint)(mColorSliderSelection * (float)(height - 1));
-  for(uint x = 0; x < width; ++x)
-    mColorSliderBuffer->SetPixel(x, height - 1 - y, Color::Black);
 
   // Upload the changes
   mColorSliderBuffer->Upload();
@@ -611,22 +634,16 @@ void ColorPicker::UpdateAlphaSlider()
   uint width = mAlphaSliderBuffer->Width;
 
   // Walk the texture
-  for(uint y = 0; y < height; ++y)
+  for (uint y = 0; y < height; ++y)
   {
-    float valY = float(y) / (height - 1);
+    float yPos = float(y) / (height - 1);
 
-    for(uint x = 0; x < width; ++x)
+    for (uint x = 0; x < width; ++x)
     {
-      color.w = valY;
+      color.w = yPos;
       mAlphaSliderBuffer->AddToPixel(x, height - 1 - y, ToByteColor(color));
     }
   }
-
-  // Draw a horizontal line on the selected value
-  uint y = (uint)(mAlphaSliderSelection * (float)height);
-  y = Math::Clamp(y, (uint)0, (uint)(height - 1));
-  for(uint x = 0; x < width; ++x)
-    mAlphaSliderBuffer->SetPixel(x, height - 1 - y, Color::Black);
 
   mAlphaSliderBuffer->Upload();
 }
@@ -638,53 +655,32 @@ void ColorPicker::UpdateColorBlock()
   uint width = mColorBlockBuffer->Width;
 
   // Walk the texture
-  for(uint y = 0; y < height; ++y)
+  for (uint y = 0; y < height; ++y)
   {
     float valY = float(y) / (height - 1);
 
-    for(uint x = 0; x < width; ++x)
+    for (uint x = 0; x < width; ++x)
     {
       float valX = float(x) / (width - 1);
 
       Vec4 color;
 
-      if(mMode == Hue)
+      if (mMode == Hue)
         color = HSVToFloatColor(Vec4(mValues[Hue], valX, valY, 1.0f));
-      else if(mMode == Saturation)
+      else if (mMode == Saturation)
         color = HSVToFloatColor(Vec4(valX, mValues[Saturation], valY, 1.0f));
-      else if(mMode == Value)
+      else if (mMode == Value)
         color = HSVToFloatColor(Vec4(valX, valY, mValues[Value], 1.0f));
-      else if(mMode == Red)
+      else if (mMode == Red)
         color = Vec4(mValues[Red], valX, valY, 1.0f);
-      else if(mMode == Green)
+      else if (mMode == Green)
         color = Vec4(valX, mValues[Green], valY, 1.0f);
-      else if(mMode == Blue)
+      else if (mMode == Blue)
         color = Vec4(valX, valY, mValues[Blue], 1.0f);
 
       // Set the color of the pixel
       mColorBlockBuffer->SetPixel(x, height - 1 - y, ToByteColor(color));
     }
-  }
-
-  // Draw a box around the selected value
-  uint boxSize = 3;
-  uint posY = uint((1.0f - mColorBlockSelection.y) * height);
-  uint posX = uint(mColorBlockSelection.x * width);
-
-  for(uint y = posY - boxSize; y <= posY + boxSize; ++y)
-  {
-    if(mColorBlockBuffer->IsValid(posX - boxSize, y))
-      mColorBlockBuffer->SetPixel(posX - boxSize, y, Color::Black);
-    if(mColorBlockBuffer->IsValid(posX + boxSize, y))
-      mColorBlockBuffer->SetPixel(posX + boxSize, y, Color::Black);
-  }
-
-  for(uint x = posX - boxSize; x <= posX + boxSize; ++x)
-  {
-    if(mColorBlockBuffer->IsValid(x, posY - boxSize))
-      mColorBlockBuffer->SetPixel(x, posY - boxSize, Color::Black);
-    if(mColorBlockBuffer->IsValid(x, posY + boxSize))
-      mColorBlockBuffer->SetPixel(x, posY + boxSize, Color::Black);
   }
 
   // Upload the changes
@@ -710,6 +706,47 @@ void ColorPicker::UpdateTextBoxes()
   // Update the hex text box
   ByteColor color = ToByteColor(Vec4(mValues[Blue], mValues[Green], mValues[Red], 0.0f));
   mHexTextBox->SetText(String::Format("%06X", color));
+}
+
+void ColorPicker::UpdateBlockIndicator()
+{
+  // Using the RGB of the currently selected color find the luminance
+  // and select an appropriate color the selection box
+  Vec3 rgbColor(mValues[Red], mValues[Blue], mValues[Green]);
+  if (Math::Luminance(rgbColor) < cLuminanceThreshold)
+    mColorBlockSelection->SetColor(ToFloatColor(Color::White));
+  else
+    mColorBlockSelection->SetColor(ToFloatColor(Color::Black));
+}
+
+void ColorPicker::UpdateColorSliderIndicator()
+{
+  float yPos = mColorSliderSelection->GetTranslation().y;
+
+  // Get the color of the color slider that the selection is over and check the
+  // luminance to determine the color of the sliders selection indicator
+  ByteColor color = mColorSliderBuffer->GetPixel(0, (uint)yPos);
+  Vec4 floatColor = ToFloatColor(color);
+  Vec3 rgbColor(floatColor.x, floatColor.y, floatColor.z);
+  if (Math::Luminance(rgbColor) < cLuminanceThreshold)
+    mColorSliderSelection->SetColor(ToFloatColor(Color::White));
+  else
+    mColorSliderSelection->SetColor(ToFloatColor(Color::Black));
+}
+
+void ColorPicker::UpdateAlphaSliderIndicator()
+{
+  float yPos = mColorSliderSelection->GetTranslation().y;
+
+  // Get the value of the alpha slider that the selection is over and check the
+  // luminance to determine the color of the sliders selection indicator
+  ByteColor color = mAlphaSliderBuffer->GetPixel(0, (uint)yPos);
+  Vec4 floatColor = ToFloatColor(color);
+  Vec3 rgbColor(floatColor.x, floatColor.y, floatColor.z);
+  if (Math::Luminance(rgbColor) < cLuminanceThreshold)
+    mAlphaSliderSelection->SetColor(ToFloatColor(Color::White));
+  else
+    mAlphaSliderSelection->SetColor(ToFloatColor(Color::Black));
 }
 
 void ColorPicker::UpdateHSVFromRGB()
@@ -763,32 +800,32 @@ void ColorPicker::ColorPicked()
 
 void ColorPicker::UpdateSelectionFromHSV()
 {
-  mColorSliderSelection = mValues[mMode];
+  SetColorSliderSelectionValue(mValues[mMode]);
   if(mMode == Hue)
-    mColorBlockSelection.Set(mValues[Saturation], mValues[Value]);
+    SetColorBlockSelectionValue(Vec2(mValues[Saturation], mValues[Value]));
   else if(mMode == Saturation)
-    mColorBlockSelection.Set(mValues[Hue], mValues[Value]);
+    SetColorBlockSelectionValue(Vec2(mValues[Hue], mValues[Value]));
   else if(mMode == Value)
-    mColorBlockSelection.Set(mValues[Hue], mValues[Saturation]);
-  mAlphaSliderSelection = mAlpha;
+    SetColorBlockSelectionValue(Vec2(mValues[Hue], mValues[Saturation]));
+  SetAlphaSliderSelectionValue(mAlpha);
 }
 
 void ColorPicker::UpdateSelectionFromRGB()
 {
-  mColorSliderSelection = mValues[mMode];
+  SetColorSliderSelectionValue(mValues[mMode]);
   if(mMode == Red)
-    mColorBlockSelection.Set(mValues[Green], mValues[Blue]);
+    SetColorBlockSelectionValue(Vec2(mValues[Green], mValues[Blue]));
   else if(mMode == Green)
-    mColorBlockSelection.Set(mValues[Red], mValues[Blue]);
+    SetColorBlockSelectionValue(Vec2(mValues[Red], mValues[Blue]));
   else if(mMode == Blue)
-    mColorBlockSelection.Set(mValues[Red], mValues[Green]);
-  mAlphaSliderSelection = mAlpha;
+    SetColorBlockSelectionValue(Vec2(mValues[Red], mValues[Green]));
+  SetAlphaSliderSelectionValue(mAlpha);
 }
 
 void ColorPicker::SelectionChanged()
 {
   // Update the alpha
-  mAlpha = mAlphaSliderSelection;
+  mAlpha = GetAlphaSliderSelectionValue();
 
   // If the mode is in HSV
   if(mMode <= Value)
@@ -807,67 +844,95 @@ void ColorPicker::SelectionChanged()
 
 void ColorPicker::UpdateHSVFromSelection()
 {
+  Vec2 colorBlockVal = GetColorBlockSelectionValue();
+  float colorSliderVal = GetColorSliderSelectionValue();
+
   if(mMode == Hue)
   {
-    mValues[Hue] = mColorSliderSelection;
-    mValues[Saturation] = mColorBlockSelection.x;
-    mValues[Value] = mColorBlockSelection.y;
+    mValues[Hue] = colorSliderVal;
+    mValues[Saturation] = colorBlockVal.x;
+    mValues[Value] = colorBlockVal.y;
   }
   else if(mMode == Saturation)
   {
-    mValues[Hue] = mColorBlockSelection.x;
-    mValues[Saturation] = mColorSliderSelection;
-    mValues[Value] = mColorBlockSelection.y;
+    mValues[Hue] = colorBlockVal.x;
+    mValues[Saturation] = colorSliderVal;
+    mValues[Value] = colorBlockVal.y;
   }
   else if(mMode == Value)
   {
-    mValues[Hue] = mColorBlockSelection.x;
-    mValues[Saturation] = mColorBlockSelection.y;
-    mValues[Value] = mColorSliderSelection;
+    mValues[Hue] = colorBlockVal.x;
+    mValues[Saturation] = colorBlockVal.y;
+    mValues[Value] = colorSliderVal;
   }
 }
 
 void ColorPicker::UpdateRGBFromSelection()
 {
+  Vec2 colorBlockVal = GetColorBlockSelectionValue();
+  float colorSliderVal = GetColorSliderSelectionValue();
+
   if(mMode == Red)
   {
-    mValues[Red] = mColorSliderSelection;
-    mValues[Green] = mColorBlockSelection.x;
-    mValues[Blue] = mColorBlockSelection.y;
+    mValues[Red] = colorSliderVal;
+    mValues[Green] = colorBlockVal.x;
+    mValues[Blue] = colorBlockVal.y;
   }
   else if(mMode == Green)
   {
-    mValues[Red] = mColorBlockSelection.x;
-    mValues[Green] = mColorSliderSelection;
-    mValues[Blue] = mColorBlockSelection.y;
+    mValues[Red] = colorBlockVal.x;
+    mValues[Green] = colorSliderVal;
+    mValues[Blue] = colorBlockVal.y;
   }
   else if(mMode == Blue)
   {
-    mValues[Red] = mColorBlockSelection.x;
-    mValues[Green] = mColorBlockSelection.y;
-    mValues[Blue] = mColorSliderSelection;
+    mValues[Red] = colorBlockVal.x;
+    mValues[Green] = colorBlockVal.y;
+    mValues[Blue] = colorSliderVal;
   }
 }
 
-void ColorPicker::SetColorBlockSelection(Vec2Param pos)
+void ColorPicker::SetColorBlockSelectionValue(Vec2Param val)
 {
   // Set the selection
-  mColorBlockSelection = pos;
-  SelectionChanged();
+  Vec3 newPos(val.x * cColorDisplaySize, (1.0f - val.y) * cColorDisplaySize, 0);
+  mColorBlockSelection->SetTranslation(newPos);
 }
 
-void ColorPicker::SetColorSliderSelection(float pos)
+Vec2 ColorPicker::GetColorBlockSelectionValue()
 {
-  // Set the selection
-  mColorSliderSelection = pos;
-  SelectionChanged();
+  Vec3 curPos = mColorBlockSelection->GetTranslation();
+  return Vec2(curPos.x / cColorDisplaySize, 1.0f - curPos.y / cColorDisplaySize);
 }
 
-void ColorPicker::SetAlphaSliderSelection(float pos)
+void ColorPicker::SetColorSliderSelectionValue(float val)
 {
   // Set the selection
-  mAlphaSliderSelection = pos;
-  SelectionChanged();
+  Vec3 newPos = mColorSliderSelection->GetTranslation();
+  newPos.y = (1.0f - val) * cColorDisplaySize;
+  mColorSliderSelection->SetTranslation(newPos);
+
+  UpdateColorSliderIndicator();
+}
+
+float ColorPicker::GetColorSliderSelectionValue()
+{
+  return 1.0f - mColorSliderSelection->GetTranslation().y / cColorDisplaySize;
+}
+
+void ColorPicker::SetAlphaSliderSelectionValue(float val)
+{
+  // Set the selection
+  Vec3 newPos = mAlphaSliderSelection->GetTranslation();
+  newPos.y = (1.0f - val) * cColorDisplaySize;
+  mAlphaSliderSelection->SetTranslation(newPos);
+
+  UpdateAlphaSliderIndicator();
+}
+
+float ColorPicker::GetAlphaSliderSelectionValue()
+{
+  return 1.0f - mAlphaSliderSelection->GetTranslation().y / cColorDisplaySize;
 }
 
 void ColorPicker::OnOkClicked(Event* event)
@@ -895,14 +960,14 @@ void ColorPicker::OnEyeDropColorChagned(ColorEvent* event)
 
 void ColorPicker::OnColorSliderMouseDown(MouseEvent* event)
 {
-  new SliderManipulator(event->GetMouse(), this, mColorSliderDisplay, 
-                        &ColorPicker::SetColorSliderSelection);
+   new SliderManipulator(event->GetMouse(), this, mColorSliderDisplay, 
+                         &ColorPicker::SetColorSliderSelectionValue);
 }
 
 void ColorPicker::OnAlphaSliderMouseDown(MouseEvent* event)
 {
-  new SliderManipulator(event->GetMouse(), this, mAlphaSliderDisplay, 
-                        &ColorPicker::SetAlphaSliderSelection);
+   new SliderManipulator(event->GetMouse(), this, mAlphaSliderDisplay, 
+                         &ColorPicker::SetAlphaSliderSelectionValue);
 }
 
 void ColorPicker::OnColorBlockMouseDown(MouseEvent* event)

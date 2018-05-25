@@ -599,6 +599,7 @@ void ParseCoreLibrary(ZilchShaderTranslator* translator, ZilchShaderLibrary* cor
   }
 
   coreLibrary->CreateNativeType("Math", "Math", refType);
+  coreLibrary->CreateNativeType("Color", "Color", refType);
 
   // Parse the colors class
   ParseColors(translator, coreLibrary);
@@ -712,6 +713,9 @@ void SetupGlsl_1_3(ZilchShaderTranslator* translator)
       // Also bind the Zero property (Real3.Zero)
       String zeroVectorValue = BuildVectorAxis(glslType, dimension, 0, "0", "0");
       libraryTranslator.RegisterMemberAccessResolver(GetStaticProperty(zilchBoundType, "Zero"), zeroVectorValue);
+      // Also bind the one property (Real3.One)
+      String oneVectorValue = BuildVectorAxis(glslType, dimension, 0, "1", "1");
+      libraryTranslator.RegisterMemberAccessResolver(GetStaticProperty(zilchBoundType, "One"), oneVectorValue);
     }
   }
 

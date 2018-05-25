@@ -139,6 +139,8 @@ namespace Audio
     LowPassFilter();
 
     void ProcessFrame(const float* input, float* output, const unsigned numChannels);
+    void ProcessBuffer(const float* input, float* output, const unsigned numChannels,
+      const unsigned numSamples);
 
     float GetCutoffFrequency();
     void SetCutoffFrequency(const float value);

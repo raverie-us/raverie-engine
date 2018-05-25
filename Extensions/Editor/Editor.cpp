@@ -591,6 +591,18 @@ Widget* Editor::ShowBrowser()
   return browser;
 }
 
+Widget* Editor::ShowBrowser(StringParam url, StringParam tabName)
+{
+	WebBrowserSetup setup;
+	setup.mUrl = url;
+	WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
+	browser->SetName(tabName);
+	browser->SetHideOnClose(false);
+
+	this->AddManagedWidget(browser, DockArea::Center, true);
+	return browser;
+}
+
 Widget* Editor::ShowMarket()
 {
   const char* cURL = "https://market.zeroengine.io/?q=products";

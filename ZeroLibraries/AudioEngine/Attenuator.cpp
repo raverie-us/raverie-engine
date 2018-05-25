@@ -75,9 +75,8 @@ namespace Audio
   {
     Position = newPosition;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&AttenuatorNode::Position,
-          (AttenuatorNode*)GetSiblingNode(), newPosition));
+    if (!Threaded)
+      AddTaskForSibling(&AttenuatorNode::Position, newPosition);
   }
 
   //************************************************************************************************
@@ -87,10 +86,9 @@ namespace Audio
     AttenEndDist = data.EndDistance;
     MinimumVolume = data.MinimumVolume;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&AttenuatorNode::SetAttenuationData,
-          (AttenuatorNode*)GetSiblingNode(), data));
-    else if (Threaded)
+    if (!Threaded)
+      AddTaskForSibling(&AttenuatorNode::SetAttenuationData, data);
+    else 
       DistanceInterpolator.SetValues(1.0f, MinimumVolume, AttenEndDist - AttenStartDist);
   }
 
@@ -111,8 +109,7 @@ namespace Audio
         if (customCurveData)
           // Interpolator will delete curve on destruction or when replaced with another curve
           curve = new Zero::Array<Math::Vec3>(*customCurveData);
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AttenuatorNode::SetCurveType, 
-          (AttenuatorNode*)GetSiblingNode(), curveType, curve));
+        AddTaskForSibling(&AttenuatorNode::SetCurveType, curveType, curve);
       }
     }
     else
@@ -132,9 +129,8 @@ namespace Audio
   {
     UseLowPass = useLP;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&AttenuatorNode::UseLowPass, 
-          (AttenuatorNode*)GetSiblingNode(), useLP));
+    if (!Threaded)
+      AddTaskForSibling(&AttenuatorNode::UseLowPass, useLP);
   }
 
   //************************************************************************************************
@@ -143,11 +139,7 @@ namespace Audio
     LowPassDistance = distance;
 
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AttenuatorNode::SetLowPassDistance,
-            (AttenuatorNode*)GetSiblingNode(), distance));
-    }
+      AddTaskForSibling(&AttenuatorNode::SetLowPassDistance, distance);
     else
       LowPassInterpolator.SetValues(LowPassCutoffStartValue, LowPassInterpolator.GetEndValue(), 
         AttenEndDist - distance);
@@ -157,11 +149,7 @@ namespace Audio
   void AttenuatorNode::SetLowPassCutoffFreq(const float frequency)
   {
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AttenuatorNode::SetLowPassCutoffFreq, 
-            (AttenuatorNode*)GetSiblingNode(), frequency));
-    }
+      AddTaskForSibling(&AttenuatorNode::SetLowPassCutoffFreq, frequency);
     else
       LowPassInterpolator.SetValues(LowPassCutoffStartValue, frequency, AttenEndDist - LowPassDistance);
   }
@@ -246,9 +234,8 @@ namespace Audio
       listenerData.LowPass.SetCutoffFrequency(cutoffFreq);
 
       // Apply the filter to each frame of audio samples
-      float* buffer = outputBuffer->Data();
-      for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-        listenerData.LowPass.ProcessFrame(buffer + i, buffer + i, numberOfChannels);
+      listenerData.LowPass.ProcessBuffer(outputBuffer->Data(), outputBuffer->Data(), numberOfChannels,
+        outputBuffer->Size());
     }
 
     AddBypass(outputBuffer);

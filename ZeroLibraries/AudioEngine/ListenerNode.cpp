@@ -150,9 +150,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ListenerNode::SetPositionData,
-        (ListenerNode*)GetSiblingNode(), positionInfo));
+      AddTaskForSibling(&ListenerNode::SetPositionData, positionInfo);
     }
     else
     {
@@ -181,9 +179,7 @@ namespace Audio
     {
       Active = active;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ListenerNode::SetActive,
-        (ListenerNode*)GetSiblingNode(), active));
+      AddTaskForSibling(&ListenerNode::SetActive, active);
     }
     else
     {
@@ -224,9 +220,8 @@ namespace Audio
   {
     mAttenuationScale = scale;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&ListenerNode::SetAttenuationScale,
-      (ListenerNode*)GetSiblingNode(), scale));
+    if (!Threaded)
+      AddTaskForSibling(&ListenerNode::SetAttenuationScale, scale);
   }
 
   //************************************************************************************************

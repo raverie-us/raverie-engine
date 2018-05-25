@@ -155,6 +155,11 @@ ZeroShared Quaternion ToQuaternion(real x, real y, real z);
 ///Generates the quaternion that rotates start to end.
 ZeroShared Quaternion RotationQuaternionBetween(Vec3Param start, Vec3Param end);
 
+///Generates a vector perpendicular to the given vector. The result is not normalized.
+ZeroShared Vec2 GeneratePerpendicularVector(Vec2Param input);
+///Generates a vector perpendicular to the given vector. The result is not normalized.
+ZeroShared Vec3 GeneratePerpendicularVector(Vec3Param input);
+
 ///Generates a set of orthonormal vectors from the given vectors, modifying u 
 ///and v.
 ZeroShared void GenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v);
@@ -199,5 +204,8 @@ ZeroShared Quat EulerDegreesToQuat(Vec3Param eulerDegrees);
 
 /// Converts a quaternion to Euler degrees.
 ZeroShared Vector3 QuatToEulerDegrees(QuatParam rotation);
+
+//----------------------------------------------------------- Misc Functions
+ZeroShared float Luminance(Vector3 linearColor);
 
 }// namespace Math

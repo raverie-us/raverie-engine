@@ -137,6 +137,13 @@ void MetaSerialization::SetDefault(Type* type, Any& any)
 }
 
 //**************************************************************************************************
+String MetaSerialization::ConvertToString(AnyParam input)
+{
+  ErrorIf("This method MUST be implemented on any class inheriting from MetaSerialization.");
+  return String();
+}
+
+//**************************************************************************************************
 bool MetaSerialization::ConvertFromString(StringParam input, Any& output)
 {
   return false;
@@ -175,6 +182,13 @@ void EnumMetaSerialization::SetDefault(Type* meta, Any& any)
   any = Any(type);
   Integer& value = any.Get<Integer&>();
   value = type->DefaultEnumValue;
+}
+
+//**************************************************************************************************
+String EnumMetaSerialization::ConvertToString(AnyParam input)
+{
+  Integer& value = input.Get<Integer&>();
+  return mEnumType->EnumValueToStrings.FindValue(value, Array<String>(1)).Front();
 }
 
 //**************************************************************************************************
@@ -291,6 +305,12 @@ bool MetaStringSerialization::SerializeReferenceProperty(BoundType* propertyType
 
     return false;
   }
+}
+
+//**************************************************************************************************
+String MetaStringSerialization::ConvertToString(AnyParam input)
+{
+  return input.Get<String>();
 }
 
 //**************************************************************************************************

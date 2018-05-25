@@ -56,8 +56,7 @@ namespace Audio
         memset(outputBuffer->Data(), 0, sizeof(float) * outputBuffer->Size());
 
       Zero::Array<float>* buffer = new Zero::Array<float>(*outputBuffer);
-      gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(&RecordNode::WriteBuffer,
-        (RecordNode*)GetSiblingNode(), buffer, numberOfChannels));
+      AddTaskForSiblingThreaded(&RecordNode::WriteBuffer, buffer, numberOfChannels);
     }
 
     return isThereOutput;
@@ -88,8 +87,7 @@ namespace Audio
           WavHeader header;
           FileStream.Write(reinterpret_cast<byte*>(&header), sizeof(header));
 
-          gAudioSystem->AddTask(Zero::CreateFunctor(&RecordNode::StartRecording,
-            (RecordNode*)GetSiblingNode()));
+          AddTaskForSibling(&RecordNode::StartRecording);
         }
       }
     }
@@ -145,9 +143,7 @@ namespace Audio
           FileStream.Close();
         }
 
-        if (GetSiblingNode())
-          gAudioSystem->AddTask(Zero::CreateFunctor(&RecordNode::StopRecording,
-          (RecordNode*)GetSiblingNode()));
+        AddTaskForSibling(&RecordNode::StopRecording);
       }
     }
     else
@@ -165,9 +161,8 @@ namespace Audio
   {
     Paused = paused;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&RecordNode::SetPaused,
-      (RecordNode*)GetSiblingNode(), paused));
+    if (!Threaded)
+      AddTaskForSibling(&RecordNode::SetPaused, paused);
   }
 
   //************************************************************************************************
@@ -181,9 +176,8 @@ namespace Audio
   {
     Streaming = streamToDisk;
 
-    if (!Threaded && GetSiblingNode())
-      gAudioSystem->AddTask(Zero::CreateFunctor(&RecordNode::SetStreamToDisk,
-      (RecordNode*)GetSiblingNode(), streamToDisk));
+    if (!Threaded)
+      AddTaskForSibling(&RecordNode::SetStreamToDisk, streamToDisk);
   }
 
   //************************************************************************************************
@@ -243,8 +237,7 @@ namespace Audio
   void SaveAudioNode::SetSaveAudio(bool save)
   {
     if (!Threaded)
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SaveAudioNode::SetSaveAudio,
-      (SaveAudioNode*)GetSiblingNode(), save));
+      AddTaskForSibling(&SaveAudioNode::SetSaveAudio, save);
     else if (save)
       ClearSavedAudio();
 
@@ -255,8 +248,7 @@ namespace Audio
   void SaveAudioNode::PlaySavedAudio()
   {
     if (!Threaded)
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SaveAudioNode::PlaySavedAudio,
-      (SaveAudioNode*)GetSiblingNode()));
+      AddTaskForSibling(&SaveAudioNode::PlaySavedAudio);
 
     mPlayData = true;
   }
@@ -265,8 +257,7 @@ namespace Audio
   void SaveAudioNode::StopPlaying()
   {
     if (!Threaded)
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SaveAudioNode::StopPlaying,
-      (SaveAudioNode*)GetSiblingNode()));
+      AddTaskForSibling(&SaveAudioNode::StopPlaying);
 
     mPlayData = false;
   }
@@ -275,8 +266,7 @@ namespace Audio
   void SaveAudioNode::ClearSavedAudio()
   {
     if (!Threaded)
-      gAudioSystem->AddTask(Zero::CreateFunctor(&SaveAudioNode::ClearSavedAudio,
-      (SaveAudioNode*)GetSiblingNode()));
+      AddTaskForSibling(&SaveAudioNode::ClearSavedAudio);
     else
     {
       mSavedSamples.Clear();

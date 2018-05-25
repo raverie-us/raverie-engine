@@ -27,9 +27,7 @@ namespace Audio
     if (!Threaded)
     {
       PitchSemitones = pitchSemitones;
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&PitchNode::SetPitch, (PitchNode*)GetSiblingNode(),
-          pitchSemitones, timeToInterpolate));
+      AddTaskForSibling(&PitchNode::SetPitch, pitchSemitones, timeToInterpolate);
     }
     else
     {

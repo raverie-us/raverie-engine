@@ -47,6 +47,11 @@ ZilchDefineStaticLibrary(EditorLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
+  // External Event Bindings
+  ZeroBindExternalEvent(Events::ToolActivate, Event, Cog);
+  ZeroBindExternalEvent(Events::ToolDeactivate, Event, Cog);
+  ZeroBindExternalEvent(Events::ToolDraw, Event, Cog);
+
   // Enums
   ZilchInitializeEnum(GizmoGrab);
   ZilchInitializeEnum(GizmoBasis);
@@ -90,6 +95,8 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ObjectPollEvent);
   ZilchInitializeType(GizmoRayTestEvent);
   ZilchInitializeType(MessageBoxEvent);
+  ZilchInitializeType(BugReporter);
+  ZilchInitializeType(BugReporterResponse);
 
   ZilchInitializeType(MetaPropertyEditor);
   ZilchInitializeType(MetaCompositionWrapper);

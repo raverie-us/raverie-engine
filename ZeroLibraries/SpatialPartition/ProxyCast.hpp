@@ -38,18 +38,23 @@ struct BaseCastFilter
   BaseCastFilter(const BaseCastFilter& rhs);
   virtual ~BaseCastFilter(){}
 
-  #define FlagSetter(Name)                                                   \
-  bool Get##Name() { return IsSet(BaseCastFilterFlags::Name); }              \
-  void Set##Name(bool state) { SetState(BaseCastFilterFlags::Name, state); }
-
-  FlagSetter(IgnoreStatic);
-  FlagSetter(IgnoreDynamic);
-  FlagSetter(IgnoreKinematic);
-  FlagSetter(IgnoreGhost);
-  FlagSetter(IgnoreChildren);
-
-
-  #undef FlagSetter
+  /// Should Colliders with RigidBodies marked Static be ignored during casts?
+  /// Note: Collider's with no RigidBody are treated as static.
+  bool GetIgnoreStatic();
+  void SetIgnoreStatic(bool state);
+  /// Should Colliders with RigidBodies marked Dynamic be ignored during casts?
+  bool GetIgnoreDynamic();
+  void SetIgnoreDynamic(bool state);
+  /// Should Colliders with RigidBodies marked Kinematic be ignored during casts?
+  bool GetIgnoreKinematic();
+  void SetIgnoreKinematic(bool state);
+  /// Should Colliders marked Ghost be ignored during casts?
+  bool GetIgnoreGhost();
+  void SetIgnoreGhost(bool state);
+  /// This flag is currently only used for SweepCollider tests on PhysicsSpace.
+  /// This is used to ignore all objects that are a child of the Collider that is being swept.
+  bool GetIgnoreChildren();
+  void SetIgnoreChildren(bool state);
 
   /// Checks if a flag is set.
   bool IsSet(BaseCastFilterFlags::Enum flag);

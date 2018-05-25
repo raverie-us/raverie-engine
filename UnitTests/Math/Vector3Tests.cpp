@@ -744,3 +744,254 @@ TEST(Vector3_Global_Lerp_3)
   Vec3 expected(real(0.0), real(2.0), real(1.0));
   CHECK_VEC3(expected, result);
 }
+
+//---------------------------------------------------------------- Slerp 1
+TEST(Vector3_Slerp_1)
+{
+  Vec3 start(1, 0, 0);
+  Vec3 end(0, 1, 0);
+  real t = 0.25f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  Vec3 nStart = start.AttemptNormalized();
+  Vec3 nEnd = end.AttemptNormalized();
+
+  Vec3 rSlerpFast = Vec3::SlerpFast(nStart, nEnd, t);
+
+  Vec3 eNormalized = Vec3(0.92388f, 0.382683f, 0);
+  Vec3 eUnNormalized = eNormalized;
+  CHECK_VEC3_CLOSE(eNormalized, rSlerpFast, 0.001f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerp, 0.001f);
+  CHECK_VEC3_CLOSE(eUnNormalized, rSlerpUnnormalized, 0.001f);
+}
+
+//---------------------------------------------------------------- Slerp 2
+TEST(Vector3_Slerp_2)
+{
+  Vec3 start(0, 0, 1);
+  Vec3 end(0, 1, 0);
+  real t = 0.25f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  Vec3 nStart = start.AttemptNormalized();
+  Vec3 nEnd = end.AttemptNormalized();
+
+  Vec3 rSlerpFast = Vec3::SlerpFast(nStart, nEnd, t);
+
+  Vec3 eNormalized = Vec3(0, 0.382683f, 0.92388f);
+  Vec3 eUnNormalized = eNormalized;
+  CHECK_VEC3_CLOSE(eNormalized, rSlerpFast, 0.001f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerp, 0.001f);
+  CHECK_VEC3_CLOSE(eUnNormalized, rSlerpUnnormalized, 0.001f);
+}
+
+//---------------------------------------------------------------- Slerp 3
+TEST(Vector3_Slerp_3)
+{
+  Vec3 start(1, 0.5f, 1);
+  Vec3 end(0, 0.5f, -1);
+  real t = 0.75f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  Vec3 nStart = start.AttemptNormalized();
+  Vec3 nEnd = end.AttemptNormalized();
+
+  Vec3 rSlerpFast = Vec3::SlerpFast(nStart, nEnd, t);
+
+  Vec3 eNormalized = Vec3(0.362962f, 0.680976f, -0.636027f);
+  Vec3 eUnNormalized = Vec3(0.544443f, 0.830673f, -0.572461f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerpFast, 0.001f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerp, 0.001f);
+  CHECK_VEC3_CLOSE(eUnNormalized, rSlerpUnnormalized, 0.001f);
+}
+
+//---------------------------------------------------------------- Slerp 4
+TEST(Vector3_Slerp_4)
+{
+  Vec3 start(-0.5, 0, 1);
+  Vec3 end(-0.5, 0, -2);
+  real t = 0.75f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  Vec3 nStart = start.AttemptNormalized();
+  Vec3 nEnd = end.AttemptNormalized();
+
+  Vec3 rSlerpFast = Vec3::SlerpFast(nStart, nEnd, t);
+
+  Vec3 eNormalized = Vec3(-0.753402f, 0, -0.657561f);
+  Vec3 eUnNormalized = Vec3(-1.18268f, 0, -2.09659f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerpFast, 0.001f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerp, 0.001f);
+  CHECK_VEC3_CLOSE(eUnNormalized, rSlerpUnnormalized, 0.001f);
+}
+
+//---------------------------------------------------------------- Slerp 5
+TEST(Vector3_Slerp_5)
+{
+  // Degenerate case for Fast (that'll crash)
+  Vec3 start(1, 0, 0);
+  Vec3 end(-1, 0, 0);
+  real t = 0.5f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  CHECK(rSlerp != Vec3::cZero);
+  CHECK(rSlerpUnnormalized != Vec3::cZero);
+}
+
+//---------------------------------------------------------------- Slerp 6
+TEST(Vector3_Slerp_6)
+{
+  // Degenerate case for Fast (that'll crash)
+  Vec3 start(0, 1, 0);
+  Vec3 end(0, -1, 0);
+  real t = 0.5f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  CHECK(rSlerp != Vec3::cZero);
+  CHECK(rSlerpUnnormalized != Vec3::cZero);
+}
+
+//---------------------------------------------------------------- Slerp 7
+TEST(Vector3_Slerp_7)
+{
+  // Degenerate case for Fast (that'll crash)
+  Vec3 start(0, 0, 1);
+  Vec3 end(0, 0, -1);
+  real t = 0.5f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  CHECK(rSlerp != Vec3::cZero);
+  CHECK(rSlerpUnnormalized != Vec3::cZero);
+}
+
+//---------------------------------------------------------------- Slerp 8
+TEST(Vector3_Slerp_8)
+{
+  // Degenerate case (start is zero)
+  Vec3 start(0, 0, 0);
+  Vec3 end(0, 0, -1);
+  real t = 0.5f;
+
+  // Simply make sure these don't crash
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+}
+
+//---------------------------------------------------------------- Slerp 9
+TEST(Vector3_Slerp_9)
+{
+  // Degenerate case (start is zero)
+  Vec3 start(0, 0, 1);
+  Vec3 end(0, 0, 0);
+  real t = 0.5f;
+
+  // Simply make sure these don't crash
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+}
+
+//---------------------------------------------------------------- Slerp 10
+TEST(Vector3_Slerp_10)
+{
+  // Checking near parallel case
+  Vec3 start(1, 0, 0);
+  Vec3 end(1, 0.001f, 0);
+  real t = 0.25f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  Vec3 nStart = start.AttemptNormalized();
+  Vec3 nEnd = end.AttemptNormalized();
+
+  Vec3 rSlerpFast = Vec3::SlerpFast(nStart, nEnd, t);
+
+  Vec3 eNormalized = start;
+  Vec3 eUnNormalized = eNormalized;
+  CHECK_VEC3_CLOSE(eNormalized, rSlerpFast, 0.001f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerp, 0.001f);
+  CHECK_VEC3_CLOSE(eUnNormalized, rSlerpUnnormalized, 0.001f);
+}
+
+//---------------------------------------------------------------- Slerp 11
+TEST(Vector3_Slerp_11)
+{
+  // Checking near parallel case
+  Vec3 start(0, 1, 0);
+  Vec3 end(0, 1, 0.001f);
+  real t = 0.25f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  Vec3 nStart = start.AttemptNormalized();
+  Vec3 nEnd = end.AttemptNormalized();
+
+  Vec3 rSlerpFast = Vec3::SlerpFast(nStart, nEnd, t);
+
+  Vec3 eNormalized = start;
+  Vec3 eUnNormalized = eNormalized;
+  CHECK_VEC3_CLOSE(eNormalized, rSlerpFast, 0.001f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerp, 0.001f);
+  CHECK_VEC3_CLOSE(eUnNormalized, rSlerpUnnormalized, 0.001f);
+}
+
+//---------------------------------------------------------------- Slerp 12
+TEST(Vector3_Slerp_12)
+{
+  // Checking near parallel case
+  Vec3 start(0, 0, 1);
+  Vec3 end(0.001f, 0, 1);
+  real t = 0.25f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  Vec3 nStart = start.AttemptNormalized();
+  Vec3 nEnd = end.AttemptNormalized();
+
+  Vec3 rSlerpFast = Vec3::SlerpFast(nStart, nEnd, t);
+
+  Vec3 eNormalized = start;
+  Vec3 eUnNormalized = eNormalized;
+  CHECK_VEC3_CLOSE(eNormalized, rSlerpFast, 0.001f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerp, 0.001f);
+  CHECK_VEC3_CLOSE(eUnNormalized, rSlerpUnnormalized, 0.001f);
+}
+
+//---------------------------------------------------------------- Slerp 13
+TEST(Vector3_Slerp_13)
+{
+  // Checking near parallel case
+  Vec3 start(0, 0, 1);
+  Vec3 end = start;
+  real t = 0.25f;
+
+  Vec3 rSlerp = Vec3::Slerp(start, end, t);
+  Vec3 rSlerpUnnormalized = Vec3::SlerpUnnormalized(start, end, t);
+
+  Vec3 nStart = start.AttemptNormalized();
+  Vec3 nEnd = end.AttemptNormalized();
+
+  Vec3 rSlerpFast = Vec3::SlerpFast(nStart, nEnd, t);
+
+  Vec3 eNormalized = start;
+  Vec3 eUnNormalized = eNormalized;
+  CHECK_VEC3_CLOSE(eNormalized, rSlerpFast, 0.001f);
+  CHECK_VEC3_CLOSE(eNormalized, rSlerp, 0.001f);
+  CHECK_VEC3_CLOSE(eUnNormalized, rSlerpUnnormalized, 0.001f);
+}

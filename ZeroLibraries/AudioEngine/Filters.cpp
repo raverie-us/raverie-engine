@@ -376,6 +376,20 @@ namespace Audio
   }
 
   //************************************************************************************************
+  void LowPassFilter::ProcessBuffer(const float* input, float* output, const unsigned numChannels, 
+    const unsigned numSamples)
+  {
+    if (CutoffFrequency > 20000.0f)
+    {
+      memcpy(output, input, sizeof(float) * numSamples);
+      return;
+    }
+
+    for (unsigned i = 0; i < numSamples; i += numChannels)
+      ProcessFrame(input + i, output + i, numChannels);
+  }
+
+  //************************************************************************************************
   float LowPassFilter::GetCutoffFrequency()
   {
     return CutoffFrequency;

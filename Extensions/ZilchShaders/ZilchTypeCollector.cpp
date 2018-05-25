@@ -323,7 +323,8 @@ void ZilchTypeCollector::ValidateAttribute(ShaderType* shaderType, Zilch::Attrib
   // Check if this attribute isn't allowed
   if(!nameSettings.mAllowedClassAttributes.ContainsKey(shaderAttribute.mAttributeName))
   {
-    Error("Unknown attribute %s", shaderAttribute.mAttributeName.c_str());
+    String msg = String::Format("Unknown attribute %s", shaderAttribute.mAttributeName.c_str());
+    context->mErrors->SendTranslationError(attributeNode->Location, msg);
   }
 }
 
@@ -367,7 +368,8 @@ void ZilchTypeCollector::ValidateAttribute(ShaderFunction* shaderFunction, Zilch
   // Check if this attribute isn't allowed
   if(!nameSettings.mAllowedFunctionAttributes.ContainsKey(shaderAttribute.mAttributeName))
   {
-    Error("Unknown attribute %s", shaderAttribute.mAttributeName.c_str());
+    String msg = String::Format("Unknown attribute %s", shaderAttribute.mAttributeName.c_str());
+    context->mErrors->SendTranslationError(attributeNode->Location, msg);
   }
 }
 

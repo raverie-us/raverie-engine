@@ -14,9 +14,9 @@ namespace Audio
 {
   //----------------------------------------------------------------------------------- Emitter Node
 
-  class EmitterData;
   class ListenerNode;
   class EmitterDataPerListener;
+  class VBAP;
 
   class EmitterNode : public SimpleCollapseNode
   {
@@ -40,7 +40,7 @@ namespace Audio
     bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
       ListenerNode* listener, const bool firstRequest) override;
     void RemoveListener(ListenerNode* listener) override;
-    void CalculateData(EmitterDataPerListener* data, Math::Vec3& relativePosition,
+    void CalculateData(EmitterDataPerListener* data, const Math::Vec3& relativePosition,
       ListenerNode* listener, const unsigned numberOfChannels);
 
     // Data used by the threaded node
@@ -53,8 +53,6 @@ namespace Audio
     Math::Vec3 FacingDirection;
     // Used for interpolating between volume changes when pausing. 
     InterpolatingObject VolumeInterpolator;
-    // If true, currently interpolating volume. 
-    bool InterpolatingVolume;
     // If true, currently interpolating volume to 0 before pausing
     bool Pausing;
     // If true, emitter is paused
@@ -63,12 +61,11 @@ namespace Audio
     float DirectionalAngleRadians;
     // Used to interpolate volume from edge of angle to directly behind emitter
     InterpolatingObject DirectionalInterpolator;
-    // The minimum volume of audio applied to all channels
-    float MinimumVolume;
+    // Object used to calculate channel gains for panning
+    VBAP* PanningObject;
 
     // Stored data for each listener
     Zero::HashMap<ListenerNode*, EmitterDataPerListener*> DataPerListener;
-
   };
 
 }

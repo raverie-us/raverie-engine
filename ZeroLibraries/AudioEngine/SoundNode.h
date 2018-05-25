@@ -157,6 +157,79 @@ namespace Audio
     
     friend class AudioSystemInternal;
     friend class AudioSystemInterface;
+
+  protected:
+    // Set a variable 
+    template <typename InstanceType, typename MemberType>
+    void AddTaskForSibling(MemberType InstanceType::*memberPointer, MemberType value)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(memberPointer, (InstanceType*)SiblingNode, value));
+    }
+
+    // Set a variable from mix thread
+    template <typename InstanceType, typename MemberType>
+    void AddTaskForSiblingThreaded(MemberType InstanceType::*memberPointer, MemberType value)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(memberPointer, (InstanceType*)SiblingNode, value));
+    }
+
+    // Call a function with no parameters
+    template <typename ReturnType, typename InstanceType>
+    void AddTaskForSibling(ReturnType(InstanceType::*functionPointer)())
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode));
+    }
+
+    // Call a function with no parameters from mix thread
+    template <typename ReturnType, typename InstanceType>
+    void AddTaskForSiblingThreaded(ReturnType(InstanceType::*functionPointer)())
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode));
+    }
+
+    // Call a function with one parameter
+    template <typename ReturnType, typename InstanceType, typename P0>
+    void AddTaskForSibling(ReturnType(InstanceType::*functionPointer)(P0), P0 p0)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0));
+    }
+
+    // Call a function with one parameter from mix thread
+    template <typename ReturnType, typename InstanceType, typename P0>
+    void AddTaskForSiblingThreaded(ReturnType(InstanceType::*functionPointer)(P0), P0 p0)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0));
+    }
+
+    // Call a function with two parameters
+    template <typename ReturnType, typename InstanceType, typename P0, typename P1>
+    void AddTaskForSibling(ReturnType(InstanceType::*functionPointer)(P0, P1), P0 p0, P1 p1)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0, p1));
+    }
+
+    // Call a function with two parameters from mix thread
+    template <typename ReturnType, typename InstanceType, typename P0, typename P1>
+    void AddTaskForSiblingThreaded(ReturnType(InstanceType::*functionPointer)(P0, P1), P0 p0, P1 p1)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTaskThreaded(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0, p1));
+    }
+
+    // Call a function with three parameters
+    template <typename ReturnType, typename InstanceType, typename P0, typename P1, typename P2>
+    void AddTaskForSibling(ReturnType(InstanceType::*functionPointer)(P0, P1, P2), P0 p0, P1 p1, P2 p2)
+    {
+      if (SiblingNode)
+        gAudioSystem->AddTask(Zero::CreateFunctor(functionPointer, (InstanceType*)SiblingNode, p0, p1, p2));
+    }
   };
 
   //------------------------------------------------------------------------------------ Output Node

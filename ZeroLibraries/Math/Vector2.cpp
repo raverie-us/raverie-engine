@@ -333,28 +333,17 @@ Vector2 Vector2::Lerp(Vec2Param start, Vec2Param end, real tValue)
 
 Vector2 Vector2::Slerp(Vec2Param start, Vec2Param end, real tValue)
 {
-  real dot = Math::Dot(start, end);
-  real theta = Math::ArcCos(dot) * tValue;
-  Vector2 relativeVec = end - start * dot;
-  relativeVec.Normalize();
-  return (start * Math::Cos(theta)) + (relativeVec * Math::Sin(theta));
+  return SafeGeometricSlerp(start, end, tValue);
 }
 
-Vector2 Vector2::SafeSlerp(Vec2Param start, Vec2Param end, real t)
+Vector2 Vector2::SlerpFast(Vec2Param start, Vec2Param end, real tValue)
 {
-  real dot = Math::Dot(start, end);
-  real theta = Math::ArcCos(dot) * t;
+  return FastGeometricSlerp(start, end, tValue);
+}
 
-  Vector2 relativeVec;
-  //if end is the negative of start, no direction is better to interpolate than
-  //another, so generate a random perpendicular vector to rotate towards
-  if(dot == -real(1.0))
-    relativeVec = Vec2(-start.y, start.x);
-  else
-    relativeVec = end - start * dot;
-  //attempt normalize (zero vectors and start == end)
-  relativeVec.AttemptNormalize();
-  return (start * Math::Cos(theta)) + (relativeVec * Math::Sin(theta));
+Vector2 Vector2::SlerpUnnormalized(Vec2Param start, Vec2Param end, real tValue)
+{
+  return SafeGeometricSlerpUnnormalized(start, end, tValue);
 }
 
 Vector2 Vector2::ProjectOnVector(Vec2Param input, Vec2Param normalizedVector)
@@ -623,9 +612,14 @@ Vector2 Slerp(Vec2Param start, Vec2Param end, real tValue)
   return Vector2::Slerp(start, end, tValue);
 }
 
-Vector2 SafeSlerp(Vec2Param start, Vec2Param end, real tValue)
+Vector2 SlerpFast(Vec2Param start, Vec2Param end, real tValue)
 {
-  return Vector2::SafeSlerp(start, end, tValue);
+  return Vector2::SlerpFast(start, end, tValue);
+}
+
+Vector2 SlerpUnnormalized(Vec2Param start, Vec2Param end, real tValue)
+{
+  return Vector2::SlerpUnnormalized(start, end, tValue);
 }
 
 Vector2 ProjectOnVector(Vec2Param input, Vec2Param normalizedVector)

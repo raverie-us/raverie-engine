@@ -557,18 +557,154 @@ TEST(Quaternion_Global_Lerp)
   CHECK_QUAT(expected, lerp);
 }
 
-//----------------------------------------------------------------- Global Slerp
-TEST(Quaternion_Global_Slerp)
+//----------------------------------------------------------------- Quaternion Slerp 1
+TEST(Quaternion_Slerp_1)
 {
   //Spherical linear interpolation
   Quat quat(real(0.0), real(0.0), real(0.70710678118654752440084436210485), 
             real(0.70710678118654752440084436210485));
   Quat tauq(real(0.0), real(0.0), real(0.0), real(1.0));
-  Quat slerp = Slerp(quat, tauq, real(0.75));
+  Quat slerp = Quat::Slerp(quat, tauq, real(0.75));
 
   real expected[4] = QUAT(0.0, 0.0, 0.19509032201612826784828486847702,
                           0.98078528040323044912618223613423);
   CHECK_QUAT_CLOSE(expected, slerp,real(.00001));
+}
+
+//----------------------------------------------------------------- Quaternion Slerp 2
+TEST(Quaternion_Slerp_2)
+{
+  //Spherical linear interpolation
+  Quat start(0, 0, 0, 1);
+  Quat end(0, 0.3826834323650898f, 0, 0.9238795325112867f);
+  real t = 0.25f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = QUAT(0, 0.09801714032956059f, 0, 0.9951847266721968f);
+  CHECK_QUAT_CLOSE(expected, result, real(.00001));
+}
+
+//----------------------------------------------------------------- Quaternion Slerp 3
+TEST(Quaternion_Slerp_3)
+{
+  //Spherical linear interpolation
+  Quat start(0, 0, 0, 1);
+  Quat end(0, 0.3826834323650898f, 0, 0.9238795325112867f);
+  real t = 0.75f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = QUAT(0, 0.29028467725446233f, 0, 0.9569403357322087f);
+  CHECK_QUAT_CLOSE(expected, result, real(.00001));
+}
+
+
+//----------------------------------------------------------------- Quaternion Slerp 4
+TEST(Quaternion_Slerp_4)
+{
+  // Euler (0, 90, 0)
+  Quat start(0, 0.70710678118654760f, 0, 0.7071067811865476f);
+  // Euler (90, 0, 90)
+  Quat end(0.5f, -0.5f, -0.5f, 0.5f);
+  real t = 0.25f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = QUAT(0.19134171618254495f, 0.46193976625564337f, -0.19134171618254495f, 0.8446231986207332f);
+  CHECK_QUAT_CLOSE(expected, result, real(.00001));
+}
+
+//----------------------------------------------------------------- Quaternion Slerp 5
+TEST(Quaternion_Slerp_5)
+{
+  // Euler (0, 90, 0)
+  Quat start(0, 0.70710678118654760f, 0, 0.7071067811865476f);
+  // Euler (90, 0, 90)
+  Quat end(0.5f, -0.5f, -0.5f, 0.5f);
+  end.Normalize();
+  real t = 0.75f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = QUAT(0.4619397662556435f, -0.19134171618254486f, -0.46193976625564337f, 0.7325378163287419f);
+  CHECK_QUAT_CLOSE(expected, result, real(.00001));
+}
+
+//----------------------------------------------------------------- Quaternion Slerp 6
+TEST(Quaternion_Slerp_6)
+{
+  // Euler (-45, 0, 0)
+  Quat start(-0.3826834323650898f, 0, 0, 0.9238795325112867f);
+  // Euler (90, -90, 0)
+  Quat end(0.5f, -0.5f, 0.5f, 0.5f);
+  real t = 0.5f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = QUAT(0.07359363561442969f, -0.31365406053923034f, 0.31365406053923034f, 0.8932111941817322f);
+  CHECK_QUAT_CLOSE(expected, result, real(.00001));
+}
+
+//----------------------------------------------------------------- Quaternion Slerp 7
+TEST(Quaternion_Slerp_7)
+{
+  // Degenerate case for 2-1 mapping
+
+  // Euler (90, -90, 0)
+  Quat start(0.5f, -0.5f, 0.5f, 0.5f);
+  Quat end = -start;
+  real t = 0.5f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = QUAT(0.5f, -0.5f, 0.5f, 0.5f);
+  CHECK_QUAT_CLOSE(expected, result, real(.00001));
+}
+
+//----------------------------------------------------------------- Quaternion Slerp 8
+TEST(Quaternion_Slerp_8)
+{
+  // Degenerate case
+
+  // Euler (90, -90, 0)
+  Quat start(0.5f, -0.5f, 0.5f, 0.5f);
+  Quat end = start;
+  real t = 0.5f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = QUAT(0.5f, -0.5f, 0.5f, 0.5f);
+  CHECK_QUAT_CLOSE(expected, result, real(.00001));
+}
+
+//----------------------------------------------------------------- Quaternion Slerp 9
+TEST(Quaternion_Slerp_9)
+{
+  // Euler (90, 0, 90)
+  Quat start(0.5f, 0.5f, 0.5f, 0.5f);
+  // Euler (90, 0, 90.01)
+  Quat end(0.4999563648648967f, 0.5000436313273856f, 0.5000436313273856f, 0.4999563648648967f);
+  real t = 0.25f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = {start.x, start.y, start.z, start.w};
+  CHECK_QUAT_CLOSE(expected, result, real(.001));
+}
+
+//----------------------------------------------------------------- Quaternion Slerp 10
+TEST(Quaternion_Slerp_10)
+{
+  // Euler (90, 0, 90)
+  Quat start(0.5f, -0.5f, -0.5f, 0.5f);;
+  Quat end = start;
+  real t = 0.25f;
+
+  Quat result = Quat::Slerp(start, end, t);
+
+  real expected[4] = {start.x, start.y, start.z, start.w};
+  CHECK_QUAT_CLOSE(expected, result, real(.00001));
 }
 
 #undef QUAT

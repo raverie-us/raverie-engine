@@ -316,7 +316,7 @@ void TabWidget::OnOwnedChangedFocus(FocusEvent* event)
 
 void TabWidget::OnOwnedWidgetResourceModified(TabRenamedEvent* e)
 {
-  String title = BuildString("Level: ", e->Name);
+  String title = e->Name;
 
   if(mOwned != nullptr)
     mOwned->mName = title;
