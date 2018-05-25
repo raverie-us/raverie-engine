@@ -246,7 +246,7 @@ namespace Audio
   //************************************************************************************************
   void VBAP::ComputeGains(Math::Vec2 sourceVec, const float sourceExtent, float* gainsOutput)
   {
-    memset(gainsOutput, 0, sizeof(float) * MaxChannels);
+    memset(gainsOutput, 0, sizeof(float) * cMaxChannels); 
 
     // One speaker, no calculations needed
     if (mNumberOfChannels == 1)

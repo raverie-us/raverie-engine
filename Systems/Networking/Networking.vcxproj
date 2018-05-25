@@ -120,6 +120,7 @@
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'">None</DebugInformationFormat>
       <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'" />
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='ClangDebug|Win32'">false</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWarningAsError>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
