@@ -184,7 +184,7 @@ namespace Audio
     {
       if (channels == 0)
       {
-        SystemOutputChannels = System->AudioIO->GetStreamChannels(StreamTypes::Output);
+        SystemOutputChannels = System->InputOutputInterface.GetStreamChannels(StreamTypes::Output);
         System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSystemChannelsThreaded, System,
           SystemOutputChannels));
       }

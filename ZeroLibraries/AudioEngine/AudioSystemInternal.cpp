@@ -40,14 +40,6 @@ namespace Audio
     MutingThreaded(false)
   {
     gAudioSystem = this;
-
-    AudioIO = new AudioIOWindows();
-  }
-
-  //************************************************************************************************
-  AudioSystemInternal::~AudioSystemInternal()
-  {
-    delete AudioIO;
   }
 
   //************************************************************************************************
@@ -60,20 +52,15 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::StartSystem(Zero::Status &status)
   {
-    // Initialize the audio API
-    StreamStatus::Enum ioStatus = AudioIO->InitializeAPI();
+    // Initialize the audio API and the input & output streams
     // If initialization was not successful, set the message on the status object
-    if (ioStatus != StreamStatus::Initialized)
-      status.SetFailed(AudioIO->LastErrorMessage);
-
-    // Initialize audio output
-    StreamStatus::Enum outputStatus = AudioIO->InitializeStream(StreamTypes::Output);
-    // If initializing stream failed but initializing API succeeded, set the message on the status
-    if (outputStatus != StreamStatus::Initialized && status.Succeeded())
-      status.SetFailed(AudioIO->GetStreamInfo(StreamTypes::Output).ErrorMessage);
-
-    // Initialize audio input (non-essential)
-    StreamStatus::Enum inputStatus = AudioIO->InitializeStream(StreamTypes::Input);
+    if (!InputOutputInterface.Initialize())
+      status.SetFailed(InputOutputInterface.GetSystemErrorMessage());
+    
+    // If initializing output stream failed but initializing API succeeded, set the message on the status
+    // Audio input is non-essential so we don't need to check its status
+    if (InputOutputInterface.GetStreamStatus(StreamTypes::Output) != StreamStatus::Initialized && status.Succeeded())
+      status.SetFailed(InputOutputInterface.GetStreamErrorMessage(StreamTypes::Output));
 
     CheckForResampling();
 
@@ -85,7 +72,7 @@ namespace Audio
     LowPass = new LowPassFilter();
     LowPass->SetCutoffFrequency(120.0f);
 
-    AudioIO->OutputRingBuffer.ResetBuffer();
+    InputOutputInterface.OutputRingBuffer.ResetBuffer();
 
     // Start up the mix thread
     MixThread.Initialize(StartMix, this, "Audio mix");
@@ -99,8 +86,8 @@ namespace Audio
 
     ZPrint("Audio mix thread initialized\n");
 
-    AudioIO->StartStream(StreamTypes::Output);
-    AudioIO->StartStream(StreamTypes::Input);
+    // Start audio streams
+    InputOutputInterface.StartStreams(true, true);
 
     ZPrint("Audio initialization completed\n");
   }
@@ -109,6 +96,8 @@ namespace Audio
   void AudioSystemInternal::StopSystem(Zero::Status &status)
   {
     Zero::TimerBlock block("Stopping Audio System.");
+
+    ZPrint("Shutting down audio\n");
 
     if (MixThread.IsValid())
     {
@@ -121,9 +110,8 @@ namespace Audio
     }
 
     // Shut down audio output, input, and API
-    AudioIO->ShutDownStream(StreamTypes::Input);
-    AudioIO->ShutDownStream(StreamTypes::Output);
-    AudioIO->ShutDownAPI();
+    InputOutputInterface.StopStreams(true, true);
+    InputOutputInterface.ShutDown();
 
     while (!TagsToDelete.Empty())
     {
@@ -167,7 +155,7 @@ namespace Audio
   void AudioSystemInternal::MixLoopThreaded()
   {
 #ifdef TRACK_TIME 
-    double maxTime = (double)AudioIO->OutputBufferSizeThreaded / (double)AudioIO->GetOutputChannels() 
+    double maxTime = (double)InputOutputInterface->OutputBufferSizeThreaded / (double)InputOutputInterface->GetOutputChannels() 
       / (double)SystemSampleRate;
 #endif
     
@@ -201,7 +189,7 @@ namespace Audio
 
       // Wait until more data is needed
       if (running)
-        AudioIO->WaitUntilOutputNeededThreaded();
+        InputOutputInterface.WaitUntilOutputNeededThreaded();
     }
 
   }
@@ -218,14 +206,14 @@ namespace Audio
     }
 
     // Find out how many samples we can write to the ring buffer
-    unsigned samplesNeeded = AudioIO->OutputRingBuffer.GetWriteAvailable();
+    unsigned samplesNeeded = InputOutputInterface.OutputRingBuffer.GetWriteAvailable();
 
     // Check to make sure there is available write space
     if (samplesNeeded == 0)
       return true;
 
     // Save the number of channels in the audio output
-    unsigned outputChannels = AudioIO->GetStreamChannels(StreamTypes::Output);
+    unsigned outputChannels = InputOutputInterface.GetStreamChannels(StreamTypes::Output);
     // Number of frames in the output
     unsigned outputFrames = samplesNeeded / outputChannels;
 
@@ -350,7 +338,7 @@ namespace Audio
       }
 
       // Copy the data to the ring buffer
-      AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
+      InputOutputInterface.OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
 
       return false;
     }
@@ -367,7 +355,7 @@ namespace Audio
     }
 
     // Copy the data to the ring buffer
-    AudioIO->OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
+    InputOutputInterface.OutputRingBuffer.Write(MixedOutput.Data(), MixedOutput.Size());
 
     // Still running, return true
     return true;
@@ -530,15 +518,15 @@ namespace Audio
   void AudioSystemInternal::SetLatencyThreaded(const bool useHighLatency)
   {
     if (!useHighLatency)
-      AudioIO->SetOutputLatency(LatencyValues::LowLatency);
+      InputOutputInterface.SetOutputLatency(LatencyValues::LowLatency);
     else
-      AudioIO->SetOutputLatency(LatencyValues::HighLatency);
+      InputOutputInterface.SetOutputLatency(LatencyValues::HighLatency);
   }
 
   //************************************************************************************************
   void AudioSystemInternal::CheckForResampling()
   {
-    unsigned outputSampleRate = AudioIO->GetStreamSampleRate(StreamTypes::Output);
+    unsigned outputSampleRate = InputOutputInterface.GetStreamSampleRate(StreamTypes::Output);
 
     if (SystemSampleRate != outputSampleRate)
     {
@@ -554,8 +542,8 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInternal::GetAudioInputDataThreaded(unsigned howManySamples)
   {
-    unsigned inputChannels = AudioIO->GetStreamChannels(StreamTypes::Input);
-    unsigned inputRate = AudioIO->GetStreamSampleRate(StreamTypes::Input);
+    unsigned inputChannels = InputOutputInterface.GetStreamChannels(StreamTypes::Input);
+    unsigned inputRate = InputOutputInterface.GetStreamSampleRate(StreamTypes::Input);
 
     if (inputChannels == 0 || inputRate == 0)
       return;
@@ -563,7 +551,7 @@ namespace Audio
     // Channels and sample rates match, don't need to process anything
     if (inputChannels == SystemChannelsThreaded && inputRate == SystemSampleRate)
     {
-      AudioIO->GetInputDataThreaded(InputBuffer, howManySamples);
+      InputOutputInterface.GetInputDataThreaded(InputBuffer, howManySamples);
     }
     else
     {
@@ -577,7 +565,7 @@ namespace Audio
       {
         // Get input data in a temporary array
         Zero::Array<float> inputSamples;
-        AudioIO->GetInputDataThreaded(inputSamples, inputFrames * inputChannels);
+        InputOutputInterface.GetInputDataThreaded(inputSamples, inputFrames * inputChannels);
 
         // Reset the InputBuffer
         InputBuffer.Clear();
@@ -593,7 +581,7 @@ namespace Audio
       }
       // Not adjusting channels, just get input
       else
-        AudioIO->GetInputDataThreaded(InputBuffer, inputFrames * SystemChannelsThreaded);
+        InputOutputInterface.GetInputDataThreaded(InputBuffer, inputFrames * SystemChannelsThreaded);
 
       // Need to resample
       if (inputRate != SystemSampleRate)

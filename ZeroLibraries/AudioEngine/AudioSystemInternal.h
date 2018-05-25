@@ -64,7 +64,6 @@ namespace Audio
   {
   public:
     AudioSystemInternal(ExternalSystemInterface* extInterface);
-    ~AudioSystemInternal();
 
     // Sets up variables, initializes audio output, starts mix thread.
     void StartSystem(Zero::Status &status);
@@ -115,7 +114,7 @@ namespace Audio
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
     
-    AudioInputOutput* AudioIO;
+    AudioIOInterface InputOutputInterface;
     
   private:
     typedef Zero::Array<TagObject*> TagsToDeleteListType;
@@ -209,7 +208,6 @@ namespace Audio
     bool MutingThreaded;
 
     friend class AudioSystemInterface;
-    friend class AudioInputOutput;
     friend class ListenerNode;
   };
 

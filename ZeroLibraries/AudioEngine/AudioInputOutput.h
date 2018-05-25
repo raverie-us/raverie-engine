@@ -7,26 +7,11 @@
 
 #pragma once
 
-#ifndef AudioInputOutput_H
-#define AudioInputOutput_H
-
-struct IMMDeviceEnumerator;
+#ifndef AudioIOInterface_H
+#define AudioIOInterface_H
 
 namespace Audio
 {
-  namespace LatencyValues 
-  {
-    enum Enum { LowLatency, HighLatency, Count };
-  }
-  namespace StreamTypes
-  {
-    enum Enum { Output, Input, Count };
-  }
-  namespace StreamStatus
-  {
-    enum Enum { Uninitialized, Initialized, Started, Stopped, ApiProblem, DeviceProblem };
-  }
-
   inline static void LogAudioIoError(Zero::StringParam message, Zero::String* savedMessage = nullptr)
   {
     ZPrint(Zero::String::Format(message.c_str(), "\n").c_str());
@@ -34,60 +19,75 @@ namespace Audio
       *savedMessage = message;
   }
 
-  struct StreamInfo
+  class StreamInfo
   {
-    StreamInfo() : Status(StreamStatus::Uninitialized) {}
+  public:
+    StreamInfo() : 
+      mStatus(StreamStatus::Uninitialized),
+      mChannels(0),
+      mSampleRate(0)
+    {}
 
-    StreamStatus::Enum Status;
-    Zero::String ErrorMessage;
+    StreamStatus::Enum mStatus;
+    Zero::String mErrorMessage;
+    unsigned mChannels;
+    unsigned mSampleRate;
   };
+
+  void IOCallback(float* outputBuffer, float* inputBuffer, unsigned framesPerBuffer, void* data);
 
   //----------------------------------------------------------------------------- Audio Input Output
 
-  class AudioInputOutput
+  class AudioIOInterface
   {
   public:
-    AudioInputOutput();
-    virtual ~AudioInputOutput();
+    AudioIOInterface();
+    ~AudioIOInterface();
 
+    // Initializes the audio API and the input & output streams
+    bool Initialize();
+    // Shuts down the audio API. Streams should be already stopped.
+    void ShutDown();
+    // Starts the output and/or input streams, depending on parameters
+    bool StartStreams(bool startOutput, bool startInput);
+    // Stops the output and/or input streams, depending on parameters
+    bool StopStreams(bool stopOutput, bool stopInput);
+    // Returns the current status of the specified audio stream
+    StreamStatus::Enum GetStreamStatus(StreamTypes::Enum whichStream);
+    // Returns the last error message associated with the specified audio stream
+    const Zero::String& GetStreamErrorMessage(StreamTypes::Enum whichStream);
+    // Returns the last error message associated with the audio API
+    const Zero::String& GetSystemErrorMessage();
+    // Returns the number of channels in the specified audio stream
+    unsigned GetStreamChannels(StreamTypes::Enum whichStream);
+    // Returns the sample rate of the specified audio stream
+    unsigned GetStreamSampleRate(StreamTypes::Enum whichStream);
     // Waits until another mix is needed, using semaphore counter
     void WaitUntilOutputNeededThreaded();
     // Fills the buffer with the requested number of audio samples, or the max available if lower
     void GetInputDataThreaded(Zero::Array<float>& buffer, unsigned howManySamples);
     // Sets whether the system should use a low or high latency value
     void SetOutputLatency(LatencyValues::Enum latency);
-    // Returns the StreamInfo data for the specified audio stream
-    virtual const StreamInfo& GetStreamInfo(StreamTypes::Enum whichStream);
 
-    // Initializes the underlying audio API
-    virtual StreamStatus::Enum InitializeAPI() = 0;
-    // Initializes the specified audio stream
-    virtual StreamStatus::Enum InitializeStream(StreamTypes::Enum whichStream) = 0;
-    // Starts the specified audio stream
-    virtual StreamStatus::Enum StartStream(StreamTypes::Enum whichStream) = 0;
-    // Stops the specified audio stream
-    virtual StreamStatus::Enum StopStream(StreamTypes::Enum whichStream) = 0;
-    // Shuts down the specified audio stream
-    virtual StreamStatus::Enum ShutDownStream(StreamTypes::Enum whichStream) = 0;
-    // Shuts down the underlying audio API
-    virtual void ShutDownAPI() = 0;
-    // Returns the number of channels in the specified audio stream
-    virtual unsigned GetStreamChannels(StreamTypes::Enum whichStream) = 0;
-    // Returns the sample rate of the specified audio stream
-    virtual unsigned GetStreamSampleRate(StreamTypes::Enum whichStream) = 0;
-
-    // Last error message pertaining to the audio API
-    Zero::String LastErrorMessage;
     // Ring buffer used for mixed output
     RingBuffer OutputRingBuffer;
 
-  protected:
+    // The following two functions are called from the audio IO thread using the callback
+
+    // Gets the mixed buffer that is ready to output
+    void GetMixedOutputSamples(float* outputBuffer, const unsigned frames);
+    // Saves the input buffer from the microphone
+    void SaveInputSamples(const float* inputBuffer, unsigned frames);
+
+  private:
+    // Object to handle OS-specific audio input and output
+    AudioInputOutput AudioIO;
     // Buffer used for the OutputRingBuffer
     float* MixedOutputBuffer;
     // The number of mix buffer frames for each latency setting
     unsigned OutputBufferSizePerLatency[LatencyValues::Count];
     // Current latency setting for the audio output
-    LatencyValues::Enum OutputStreamLatency;
+    LatencyValues::Enum mOutputStreamLatency;
     // Size of the buffer for input data
     static const unsigned InputBufferSize = 8192;
     // Buffer of input data
@@ -102,15 +102,13 @@ namespace Audio
     const float BufferSizeMultiplier = 0.04f;
     // The value used to start calculating the mix frames
     const unsigned BufferSizeStartValue = 512;
+    // Last error message pertaining to the audio API
+    Zero::String mApiErrorMessage;
 
     // Sets variables and initializes output buffers at the appropriate size
     void InitializeOutputBuffers();
     // Creates output buffers using the specified size
     void SetUpOutputBuffers();
-    // Gets the mixed buffer that is ready to output
-    void GetMixedOutputSamples(float* outputBuffer, const unsigned howManySamples);
-    // Saves the input buffer from the microphone
-    void SaveInputSamples(const float* inputBuffer, unsigned howManySamples);
   };
 
 }
