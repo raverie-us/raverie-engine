@@ -28,7 +28,7 @@ class MouseCapture : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MouseCapture, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;

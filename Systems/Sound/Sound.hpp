@@ -15,7 +15,7 @@ namespace Zero
 class Sound : public Resource, Audio::ExternalNodeInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Sound, TypeCopyMode::ReferenceType);
   
   Sound() :mSoundAsset(nullptr), mStreaming(false) {}
   ~Sound();
@@ -42,7 +42,7 @@ private:
 
 class SoundDisplay : public MetaDisplay
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;

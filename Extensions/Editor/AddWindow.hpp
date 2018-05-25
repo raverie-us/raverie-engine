@@ -38,7 +38,7 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window = NULL
 class AddResourceWindow : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AddResourceWindow, TypeCopyMode::ReferenceType);
 
   AddResourceWindow(Composite* parent);
 
@@ -76,7 +76,7 @@ private:
 class ResourceTypeSearch : public ColoredComposite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceTypeSearch, TypeCopyMode::ReferenceType);
   ResourceTypeSearch(Composite* parent);
 
   BoundType* GetSelectedResourceType();
@@ -113,7 +113,7 @@ private:
 class ResourceTemplateSearch : public ColoredComposite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceTemplateSearch, TypeCopyMode::ReferenceType);
 
   ResourceTemplateSearch(Composite* parent);
 
@@ -151,7 +151,7 @@ private:
 class ResourceTemplateDisplay : public ColoredComposite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceTemplateDisplay, TypeCopyMode::ReferenceType);
   ResourceTemplateDisplay(Composite* parent, PostAddOp& postAdd);
 
   void ShowResourceTemplate(Resource* resourceTemplate);
@@ -203,7 +203,7 @@ private:
 class ImportButton : public ColoredComposite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ImportButton, TypeCopyMode::ReferenceType);
   ImportButton(Composite* parent);
 
   void OnMouseEnter(Event*);

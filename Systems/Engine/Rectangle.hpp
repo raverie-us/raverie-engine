@@ -38,7 +38,7 @@ namespace Location
 //---------------------------------------------------------------------------------------- Thickness
 struct Thickness
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Thickness, TypeCopyMode::ValueType);
 
   Thickness();
   Thickness(float splat);
@@ -78,7 +78,7 @@ typedef const Rectangle& RectangleParam;
 /// Two dimensional, unrotated rectangle.
 struct Rectangle
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Rectangle, TypeCopyMode::ValueType);
 
   static Rectangle PointAndSize(Vec2Param point, Vec2Param size);
   static Rectangle CenterAndSize(Vec2Param point, Vec2Param size);

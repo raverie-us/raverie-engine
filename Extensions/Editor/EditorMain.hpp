@@ -13,10 +13,9 @@ namespace Zero
 class EditorMain : public Editor
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorMain, TypeCopyMode::ReferenceType);
   float mTimeSinceEscape;
   bool mDisableInput;
-  typedef EditorMain ZilchSelf;
 
   EditorMain(Composite* parent, OsWindow* window);
   ~EditorMain();

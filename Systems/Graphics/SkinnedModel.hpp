@@ -10,7 +10,7 @@ namespace Zero
 class SkinnedModel : public Graphical
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SkinnedModel, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;

@@ -16,7 +16,7 @@ DeclareBitField3(JointDebugDrawConfigFlags, ObjectAPerspective, ObjectBPerspecti
 /// change the size of drawn data.
 struct JointDebugDrawConfig : public Component
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointDebugDrawConfig, TypeCopyMode::ReferenceType);
 
   JointDebugDrawConfig();
   virtual ~JointDebugDrawConfig();

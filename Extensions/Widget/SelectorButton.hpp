@@ -20,7 +20,7 @@ class TextButton;
 class SelectorButton : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SelectorButton, TypeCopyMode::ReferenceType);
 
   SelectorButton(Composite* parent);
 

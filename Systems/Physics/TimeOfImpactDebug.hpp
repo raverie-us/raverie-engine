@@ -12,7 +12,7 @@ namespace Zero
 class TimeOfImpactDebug : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TimeOfImpactDebug, TypeCopyMode::ReferenceType);
 
   TimeOfImpactDebug();
 

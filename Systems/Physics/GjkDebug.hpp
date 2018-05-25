@@ -12,7 +12,7 @@ namespace Zero
 class GjkDebug : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GjkDebug, TypeCopyMode::ReferenceType);
 
   void InitEpa(void);
   void AddPoint(void);

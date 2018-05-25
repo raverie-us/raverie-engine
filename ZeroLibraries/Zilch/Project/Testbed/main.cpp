@@ -11,14 +11,14 @@ using namespace Zilch;
 class Animal
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Animal, TypeCopyMode::ReferenceType);
   String mName;
 };
 
 class Horse : public Animal
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Horse, TypeCopyMode::ReferenceType);
 };
 
 ZilchDefineType(Animal, builder, type)
@@ -47,7 +47,7 @@ public:
     }
   }
 
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Farm, TypeCopyMode::ReferenceType);
   Animal GetPig()
   {
     Animal pig;

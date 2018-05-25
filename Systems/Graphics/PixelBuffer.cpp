@@ -16,8 +16,8 @@ PixelBuffer::PixelBuffer() :
   Height(0),
   Total(0),
   Data(nullptr),
-  Image(Texture::CreateRuntime()),
-  MaxMipLevel(-1)
+  MaxMipLevel(-1),
+  Image(Texture::CreateRuntime())
 {
 }
 
@@ -26,8 +26,8 @@ PixelBuffer::PixelBuffer(MoveReference<PixelBuffer> rhs) :
   Height(rhs->Height),
   Total(rhs->Total),
   Data(rhs->Data),
-  Image(rhs->Image),
-  MaxMipLevel(rhs->MaxMipLevel)
+  MaxMipLevel(rhs->MaxMipLevel),
+  Image(rhs->Image)
 {
   rhs->Width = 0;
   rhs->Height = 0;
@@ -42,8 +42,8 @@ PixelBuffer::PixelBuffer(ByteColor clearColor, uint width, uint height) :
   Height(height),
   Total(width * height),
   Data(new ByteColor[Total]),
-  Image(Texture::CreateRuntime()),
-  MaxMipLevel(-1)
+  MaxMipLevel(-1),
+  Image(Texture::CreateRuntime())
 {
   Clear(clearColor);
 

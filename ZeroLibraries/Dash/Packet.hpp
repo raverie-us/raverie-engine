@@ -159,6 +159,8 @@ public:
 
   /// Friends
   friend class LinkOutbox;
+
+  template <typename OutPacket>
   friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket);
 };
 
@@ -174,7 +176,8 @@ struct MoveWithoutDestructionOperator<OutPacket>
 
 /// Serializes an outgoing packet (write only)
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket);
+template <>
+Bits Serialize<OutPacket>(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket);
 
 //---------------------------------------------------------------------------------//
 //                                   InPacket                                      //
@@ -216,6 +219,7 @@ public:
   Array<Message> mMessages;
 
   /// Friends
+  template <typename InPacket>
   friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket);
 };
 
@@ -231,7 +235,8 @@ struct MoveWithoutDestructionOperator<InPacket>
 
 /// Serializes an incoming packet (read only)
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket);
+template <>
+Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket);
 
 //---------------------------------------------------------------------------------//
 //                               Packet Constants                                  //

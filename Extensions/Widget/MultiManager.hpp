@@ -40,7 +40,7 @@ public:
 class MultiManager : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiManager, TypeCopyMode::ReferenceType);
 
   MultiManager(RootWidget* rootWidget, MultiDock* mainDock);
 

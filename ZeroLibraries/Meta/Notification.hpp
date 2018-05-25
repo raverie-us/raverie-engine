@@ -24,7 +24,7 @@ DeclareEnum2(NotifyException, None, Script);
 class NotifyEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NotifyEvent, TypeCopyMode::ReferenceType);
   NotifyType::Enum Type;
   String Name;
   String Message;

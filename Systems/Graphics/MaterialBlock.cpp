@@ -6,8 +6,7 @@
 namespace Zero
 {
 
-//**************************************************************************************************
-ZilchDefineType(ProxyObject<MaterialBlock>, builder, type)
+ZilchDefineTemplateType(ProxyObject<MaterialBlock>, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }

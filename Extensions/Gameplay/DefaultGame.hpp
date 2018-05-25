@@ -13,7 +13,7 @@ namespace Zero
 class DefaultGameSetup : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DefaultGameSetup, TypeCopyMode::ReferenceType);
 
   DefaultGameSetup();
 

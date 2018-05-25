@@ -232,7 +232,8 @@ Bits OutPacket::GetTotalBits() const
   return result;
 }
 
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket)
+template <>
+Bits Serialize<OutPacket>(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket)
 {
   // Write operation only
   Assert(direction == SerializeDirection::Write);
@@ -334,7 +335,8 @@ Bits InPacket::GetTotalBits() const
   return result;
 }
 
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket)
+template <>
+Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket)
 {
   // Read operation only
   Assert(direction == SerializeDirection::Read);
@@ -347,19 +349,19 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, InPacke
 
   // Read protocol ID
   ProtocolId protocolId;
-  ReturnIf(!bitStream.Read(protocolId), 0);
+  ReturnIf(!bitStream.Read(protocolId), 0, "");
 
   // (Their protocol ID should match ours, as we discard invalid packets at the raw packet receive stage)
   Assert(protocolId == Peer::GetProtocolId());
 
   // Read 'Is standalone?' flag
-  ReturnIf(!bitStream.Read(inPacket.mIsStandalone), 0);
+  ReturnIf(!bitStream.Read(inPacket.mIsStandalone), 0, "");
 
   // Not a standalone packet?
   if(!inPacket.mIsStandalone)
   {
     // Read packet sequence ID
-    ReturnIf(!bitStream.Read(inPacket.mSequenceId), 0);
+    ReturnIf(!bitStream.Read(inPacket.mSequenceId), 0, "");
   }
 
   // (Packet header size should be correct)

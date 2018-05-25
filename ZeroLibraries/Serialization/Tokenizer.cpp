@@ -345,8 +345,6 @@ StringRange Tokenizer::ReadUntil(char value)
   StringRange text = mPosition;
   StringRange range = mPosition;
 
-  int depth = 0;
-
   while(!range.Empty())
   {
     if(range.Front() == value)

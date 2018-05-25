@@ -19,7 +19,7 @@ class UiLayout : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UiLayout, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;

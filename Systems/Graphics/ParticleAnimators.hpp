@@ -14,7 +14,7 @@ namespace Zero
 class LinearParticleAnimator : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LinearParticleAnimator, TypeCopyMode::ReferenceType);
 
   LinearParticleAnimator();
   ~LinearParticleAnimator();
@@ -53,7 +53,7 @@ private:
 class ParticleWander : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleWander, TypeCopyMode::ReferenceType);
 
   ParticleWander();
   ~ParticleWander();
@@ -75,7 +75,7 @@ private:
 class ParticleColorAnimator : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleColorAnimator, TypeCopyMode::ReferenceType);
 
   ~ParticleColorAnimator();
 
@@ -98,7 +98,7 @@ private:
 class ParticleAttractor : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleAttractor, TypeCopyMode::ReferenceType);
 
   ~ParticleAttractor();
 
@@ -122,7 +122,7 @@ private:
 class ParticleTwister : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleTwister, TypeCopyMode::ReferenceType);
 
   ParticleTwister();
   ~ParticleTwister();
@@ -145,7 +145,7 @@ private:
 class ParticleCollisionPlane : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleCollisionPlane, TypeCopyMode::ReferenceType);
 
   ~ParticleCollisionPlane();
 
@@ -181,7 +181,7 @@ private:
 class ParticleCollisionHeightmap : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleCollisionHeightmap, TypeCopyMode::ReferenceType);
 
   ~ParticleCollisionHeightmap();
 

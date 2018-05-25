@@ -503,9 +503,6 @@
     <ClInclude Include="RaycastProvider.hpp">
       <Filter>Raycast</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceLoaderTemplates.hpp">
-      <Filter>Resources</Filter>
-    </ClInclude>
     <ClInclude Include="HeightMapSource.hpp">
       <Filter>EngineComponents\HeightMap</Filter>
     </ClInclude>
@@ -674,6 +671,8 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Rectangle.hpp" />
+    <ClInclude Include="ProxyObject.hpp" />
+    <ClInclude Include="SimpleResourceFactory.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertyTrack.inl">

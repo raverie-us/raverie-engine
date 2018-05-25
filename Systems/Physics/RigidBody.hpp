@@ -57,7 +57,7 @@ public:
 class RigidBody : public BaseRigidBody
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RigidBody, TypeCopyMode::ReferenceType);
   typedef InList<Collider, &Collider::mBodyLink> CompositeColliderList;
   typedef CompositeColliderList::range CompositeColliderRange;
   typedef BaseInList<BaseRigidBody, RigidBody, &BaseRigidBody::RigidBodyHierarchyLink> ChildBodyList;

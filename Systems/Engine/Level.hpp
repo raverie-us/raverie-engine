@@ -16,7 +16,7 @@ namespace Zero
 class Level : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Level, TypeCopyMode::ReferenceType);
 
   Level();
   ~Level();

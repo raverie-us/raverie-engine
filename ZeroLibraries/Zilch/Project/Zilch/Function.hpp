@@ -62,7 +62,7 @@ namespace Zilch
   {
   public:
     // Declare the class for RTTI
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Function, TypeCopyMode::ReferenceType);
 
     // Constructor
     Function();

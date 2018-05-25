@@ -50,7 +50,9 @@ namespace Zilch
   class ZeroShared IEncoding
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(IEncoding, TypeCopyMode::ReferenceType);
+
+    virtual ~IEncoding();
 
     /// Ascii encoding will strip wide characters and turn them into spaces
     /// All characters that fit within a single byte will be directly written to the stream
@@ -74,7 +76,7 @@ namespace Zilch
   class ZeroShared AsciiEncoding : public IEncoding
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(AsciiEncoding, TypeCopyMode::ReferenceType);
     Integer Write(Rune rune, IStreamClass& stream) override;
     Rune Read(IStreamClass& stream) override;
   };
@@ -84,7 +86,7 @@ namespace Zilch
   class ZeroShared Utf8Encoding : public IEncoding
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Utf8Encoding, TypeCopyMode::ReferenceType);
     Integer Write(Rune rune, IStreamClass& stream) override;
     Rune Read(IStreamClass& stream) override;
   };
@@ -93,7 +95,9 @@ namespace Zilch
   class ZeroShared IStreamClass
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(IStreamClass, TypeCopyMode::ReferenceType);
+
+    virtual ~IStreamClass();
 
     /// Lets us query what a stream is capable of doing before we try it
     virtual StreamCapabilities::Enum GetCapabilities();

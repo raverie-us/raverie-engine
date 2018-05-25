@@ -27,6 +27,8 @@ namespace Zilch
   template <typename RangeAdapterBaseType>
   class RangeAdapter : public RangeAdapterBaseType
   {
+    typedef typename RangeAdapterBaseType::FrontResult FrontResult;
+
   public:
     RangeAdapterBaseType* All()
     {
@@ -41,7 +43,7 @@ namespace Zilch
         if (ExecutableState::CallingState)
           ExecutableState::CallingState->ThrowException("The range reached the end and an attempt was made to get the current value");
 
-        return GetInvalid<RangeAdapterBaseType::FrontResult>();
+        return GetInvalid<FrontResult>();
       }
 
       return this->Front();

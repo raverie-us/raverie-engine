@@ -119,8 +119,8 @@ namespace Zilch
   //***************************************************************************
   LibraryBuilder::LibraryBuilder(StringParam name, StringParam namespaceForPlugins) :
     UserData(nullptr),
-    ComputedDelegateAndFunctionSizes(false),
-    CreatableInScriptDefault(true)
+    CreatableInScriptDefault(true),
+    ComputedDelegateAndFunctionSizes(false)
   {
     // Start out by creating a new library that we'll populate
     this->BuiltLibrary = LibraryRef(new Library());
@@ -1199,14 +1199,14 @@ namespace Zilch
           if (isUpper && expectLowerIdentifier)
           {
             // Append an lowercase version of the first letter
-            ErrorIf(asserts, "The first letter '%c' must be lowercase", r);
+            ErrorIf(asserts, "The first letter '%c' must be lowercase", r.mValue);
             builder.Append(Zero::UTF8::ToLower(r.mValue));
             readFirstLetter = true;
           }
           else if (isLower && expectUpperIdentifier)
           {
             // Append an uppercase version of the first letter
-            ErrorIf(asserts, "The first letter '%c' must be uppercase", r);
+            ErrorIf(asserts, "The first letter '%c' must be uppercase", r.mValue);
             // As a special case, we ignore the Hungarian notations (starting with a lowercase letter then an uppercase)
             // (below we also ignore the '_' prefix by not appending symbols at the start)
             // We need to peek at the next character (and make sure that's even valid)
@@ -1231,13 +1231,13 @@ namespace Zilch
         else
         {
           // We don't Append anything here because we haven't hit the first character yet...
-          ErrorIf(asserts, "The first character '%c' must be a letter", r);
+          ErrorIf(asserts, "The first character '%c' must be a letter", r.mValue);
         }
       }
       // If any part of the rest of the identifier is NOT alpha-numeric or underscore
       else if (CharacterUtilities::IsAlphaNumeric(r.mValue) == false && r.mValue != '_')
       {
-        ErrorIf(asserts, "Character '%c' in the identifier must be either a letter, number, or underscore (no other symbols)", r);
+        ErrorIf(asserts, "Character '%c' in the identifier must be either a letter, number, or underscore (no other symbols)", r.mValue);
         // We should only Append invalid characters if the user specified one (not null)
         // and if the user doesn't want multiple of the same character
         bool shouldAppendInvalidCharacter =
@@ -1547,8 +1547,8 @@ namespace Zilch
 
   //***************************************************************************
   Library::Library() :
-    UserData(nullptr),
     GeneratedDefinitionStubCode(false),
+    UserData(nullptr),
     TolerantMode(false),
     Plugin(nullptr)
   {
@@ -2427,8 +2427,8 @@ namespace Zilch
   //***************************************************************************
   InstantiatedTemplate::InstantiatedTemplate() :
     Type(nullptr),
-    Result(TemplateResult::FailedInstantiatorDidNotReturnType),
-    ExpectedArguments(0)
+    ExpectedArguments(0),
+    Result(TemplateResult::FailedInstantiatorDidNotReturnType)
   {
   }
 

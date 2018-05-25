@@ -19,7 +19,7 @@ DeclareEvent(DuplicateFirstChance);
 class ToolGizmoEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ToolGizmoEvent, TypeCopyMode::ReferenceType);
   ToolGizmoEvent(Cog* gizmo) { mGizmo = gizmo; }
 
 public:
@@ -30,7 +30,7 @@ public:
 class GizmoCreator : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GizmoCreator, TypeCopyMode::ReferenceType);
 
   GizmoCreator();
 
@@ -56,7 +56,7 @@ public:
 class ObjectTransformTool : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectTransformTool, TypeCopyMode::ReferenceType);
 
   ObjectTransformTool();
 
@@ -141,7 +141,7 @@ public:
 class ObjectTranslateTool : public ObjectTransformTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectTranslateTool, TypeCopyMode::ReferenceType);
 
   ObjectTranslateTool();
 
@@ -194,7 +194,7 @@ public:
 class ObjectScaleTool : public ObjectTransformTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectScaleTool, TypeCopyMode::ReferenceType);
 
   ObjectScaleTool();
 
@@ -249,7 +249,7 @@ public:
 class ObjectRotateTool : public ObjectTransformTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectRotateTool, TypeCopyMode::ReferenceType);
 
   ObjectRotateTool();
 

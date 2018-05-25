@@ -30,7 +30,7 @@ public:
 class Bone : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Bone, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -59,7 +59,7 @@ public:
 class Skeleton : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Skeleton, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;

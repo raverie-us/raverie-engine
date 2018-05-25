@@ -137,7 +137,6 @@ void Permute(StringParam src, Array<String>& perms)
 {
   // convert to std string which is char writable
   uint srclen = src.SizeInBytes();
-  const char *csrc = src.c_str();
 
   // create a temp buffer on the stack to manipulate src
   char *buf = (char *)alloca(srclen + 1);

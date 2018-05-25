@@ -123,7 +123,7 @@ ZilchDefineType(ObjectTransformTool, builder, type)
 ObjectTransformTool::ObjectTransformTool( ) : mRegisteredObjects()
 {
   mChangeFromUs = false;
-  mGizmo = nullptr;
+  mGizmo = CogId();
 }
 
 /******************************************************************************/
@@ -155,7 +155,7 @@ void ObjectTransformTool::DestroyGizmo( )
   if(gizmo != nullptr)
     gizmo->Destroy( );
 
-  mGizmo = nullptr;
+  mGizmo = CogId();
 
   GizmoCreator* gizmoCreator = GetOwner( )->has(GizmoCreator);
   if(gizmoCreator != nullptr)
@@ -368,7 +368,7 @@ void ObjectTransformTool::UpdateGrabState(GizmoGrabMode::Enum state)
   forRange(Cog& child, gizmo->GetChildren( ))
   {
     GizmoDrag* drag;
-    if(drag = child.has(GizmoDrag))
+    if((drag = child.has(GizmoDrag)))
       drag->mGrabMode = state;
   }
 

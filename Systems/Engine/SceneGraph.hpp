@@ -66,7 +66,7 @@ public:
 class SceneGraphSource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SceneGraphSource, TypeCopyMode::ReferenceType);
 
   String Name;
 

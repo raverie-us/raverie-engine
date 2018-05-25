@@ -471,10 +471,10 @@ bool ReplicatorLink::DeserializeSpawn(const Message& message, ReplicaArray& repl
   }
 
   // (All replicas should be invalid)
-  AssertReplicas(replicas, replica->IsInvalid());
+  AssertReplicas(replicas, replica->IsInvalid(), "");
 
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // Success
   return true;
@@ -482,10 +482,10 @@ bool ReplicatorLink::DeserializeSpawn(const Message& message, ReplicaArray& repl
 bool ReplicatorLink::HandleSpawn(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // (All replicas should not be clones)
-  AssertReplicas(replicas, !replica->IsCloned());
+  AssertReplicas(replicas, !replica->IsCloned(), "");
 
   // Outgoing spawn command?
   if(direction == TransmissionDirection::Outgoing)
@@ -530,7 +530,7 @@ bool ReplicatorLink::SendSpawn(const ReplicaArray& replicas, TimeMs timestamp)
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // (They should not already have any of these replicas)
-  AssertReplicas(replicas, !HasReplica(replica));
+  AssertReplicas(replicas, !HasReplica(replica), "");
 
   // Serialize spawn command
   Message message(ReplicatorMessageType::Spawn);
@@ -573,8 +573,8 @@ bool ReplicatorLink::ReceiveSpawn(const Message& message)
     return false;
 
   // (We should not already have any of these replicas)
-  AssertReplicas(replicas, !GetReplicator()->HasReplica(replica));
-  AssertReplicas(replicas, !HasReplica(replica));
+  AssertReplicas(replicas, !GetReplicator()->HasReplica(replica), "");
+  AssertReplicas(replicas, !HasReplica(replica), "");
 
   // Handle incoming spawn command
   if(!HandleSpawn(replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
@@ -624,10 +624,10 @@ bool ReplicatorLink::DeserializeClone(const Message& message, ReplicaArray& repl
   }
 
   // (All replicas should be either invalid (clone-from-spawn) or emplaced (clone-from-emplace))
-  AssertReplicas(replicas, replica->IsInvalid() || replica->IsEmplaced());
+  AssertReplicas(replicas, replica->IsInvalid() || replica->IsEmplaced(), "");
 
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // Success
   return true;
@@ -635,7 +635,7 @@ bool ReplicatorLink::DeserializeClone(const Message& message, ReplicaArray& repl
 bool ReplicatorLink::HandleClone(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // Outgoing clone command?
   if(direction == TransmissionDirection::Outgoing)
@@ -643,7 +643,7 @@ bool ReplicatorLink::HandleClone(const ReplicaArray& replicas, TransmissionDirec
     Assert(GetReplicator()->GetRole() == Role::Server);
 
     // (All replicas should not be clones - these are the originals on the server!)
-    AssertReplicas(replicas, !replica->IsCloned());
+    AssertReplicas(replicas, !replica->IsCloned(), "");
 
     // *** Clone already handled locally ***
   }
@@ -653,7 +653,7 @@ bool ReplicatorLink::HandleClone(const ReplicaArray& replicas, TransmissionDirec
     Assert(GetReplicator()->GetRole() == Role::Client);
 
     // (All replicas should be clones - these are copies on the client!)
-    AssertReplicas(replicas, replica->IsCloned());
+    AssertReplicas(replicas, replica->IsCloned(), "");
 
     // Handle clone locally
     if(!GetReplicator()->HandleClone(replicas, direction, timestamp)) // Unable?
@@ -686,7 +686,7 @@ bool ReplicatorLink::SendClone(const ReplicaArray& replicas, TimeMs timestamp)
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // (They should not already have any of these replicas)
-  AssertReplicas(replicas, !HasReplica(replica));
+  AssertReplicas(replicas, !HasReplica(replica), "");
 
   // Serialize clone command
   Message message(ReplicatorMessageType::Clone);
@@ -729,8 +729,8 @@ bool ReplicatorLink::ReceiveClone(const Message& message)
     return false;
 
   // (We should not already have any of these replicas)
-  AssertReplicas(replicas, !GetReplicator()->HasReplica(replica));
-  AssertReplicas(replicas, !HasReplica(replica));
+  AssertReplicas(replicas, !GetReplicator()->HasReplica(replica), "");
+  AssertReplicas(replicas, !HasReplica(replica), "");
 
   // Handle incoming clone command
   if(!HandleClone(replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
@@ -780,7 +780,7 @@ bool ReplicatorLink::DeserializeForget(const Message& message, ReplicaArray& rep
   }
 
   // (All replicas should be live)
-  AssertReplicas(replicas, replica->IsLive());
+  AssertReplicas(replicas, replica->IsLive(), "");
 
   // Success
   return true;
@@ -788,7 +788,7 @@ bool ReplicatorLink::DeserializeForget(const Message& message, ReplicaArray& rep
 bool ReplicatorLink::HandleForget(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // For all replicas
   forRange(Replica* replica, replicas.All())
@@ -806,7 +806,7 @@ bool ReplicatorLink::HandleForget(const ReplicaArray& replicas, TransmissionDire
     Assert(GetReplicator()->GetRole() == Role::Server);
 
     // (All replicas should be still be live)
-    AssertReplicas(replicas, replica->IsLive());
+    AssertReplicas(replicas, replica->IsLive(), "");
 
     // *** Forget not yet handled locally ***
   }
@@ -820,7 +820,7 @@ bool ReplicatorLink::HandleForget(const ReplicaArray& replicas, TransmissionDire
     Assert(result);
 
     // (All replicas should be invalid)
-    AssertReplicas(replicas, replica->IsInvalid());
+    AssertReplicas(replicas, replica->IsInvalid(), "");
   }
 
   // Success
@@ -831,7 +831,7 @@ bool ReplicatorLink::SendForget(const ReplicaArray& replicas, TimeMs timestamp)
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // (They should already have all of these replicas)
-  AssertReplicas(replicas, HasReplica(replica));
+  AssertReplicas(replicas, HasReplica(replica), "");
 
   // Serialize forget command
   Message message(ReplicatorMessageType::Forget);
@@ -874,8 +874,8 @@ bool ReplicatorLink::ReceiveForget(const Message& message)
     return false;
 
   // (We should already have all of these replicas)
-  AssertReplicas(replicas, GetReplicator()->HasReplica(replica));
-  AssertReplicas(replicas, HasReplica(replica));
+  AssertReplicas(replicas, GetReplicator()->HasReplica(replica), "");
+  AssertReplicas(replicas, HasReplica(replica), "");
 
   // Handle incoming forget command
   if(!HandleForget(replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
@@ -916,7 +916,7 @@ bool ReplicatorLink::DeserializeDestroy(const Message& message, ReplicaArray& re
   }
 
   // (All replicas should be live)
-  AssertReplicas(replicas, replica->IsLive());
+  AssertReplicas(replicas, replica->IsLive(), "");
 
   // Success
   return true;
@@ -924,7 +924,7 @@ bool ReplicatorLink::DeserializeDestroy(const Message& message, ReplicaArray& re
 bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
-  AssertReplicas(replicas, replica->GetReplicaId() != 0);
+  AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // For all replicas
   forRange(Replica* replica, replicas.All())
@@ -942,7 +942,7 @@ bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas, TransmissionDir
     Assert(GetReplicator()->GetRole() == Role::Server);
 
     // (All replicas should be still be live)
-    AssertReplicas(replicas, replica->IsLive());
+    AssertReplicas(replicas, replica->IsLive(), "");
 
     // *** Destroy not yet handled locally ***
   }
@@ -956,7 +956,7 @@ bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas, TransmissionDir
     Assert(result);
 
     // (All replicas should be invalid)
-    AssertReplicas(replicas, replica->IsInvalid());
+    AssertReplicas(replicas, replica->IsInvalid(), "");
 
     // Release replicas
     GetReplicator()->ReleaseReplicas(replicas);
@@ -970,7 +970,7 @@ bool ReplicatorLink::SendDestroy(const ReplicaArray& replicas, TimeMs timestamp)
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // (They should already have all of these replicas)
-  AssertReplicas(replicas, HasReplica(replica));
+  AssertReplicas(replicas, HasReplica(replica), "");
 
   // Serialize destroy command
   Message message(ReplicatorMessageType::Destroy);
@@ -1013,8 +1013,8 @@ bool ReplicatorLink::ReceiveDestroy(const Message& message)
     return false;
 
   // (We should already have all of these replicas)
-  AssertReplicas(replicas, GetReplicator()->HasReplica(replica));
-  AssertReplicas(replicas, HasReplica(replica));
+  AssertReplicas(replicas, GetReplicator()->HasReplica(replica), "");
+  AssertReplicas(replicas, HasReplica(replica), "");
 
   // Handle incoming destroy command
   if(!HandleDestroy(replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
@@ -1074,7 +1074,7 @@ bool ReplicatorLink::SendReverseReplicaChannels(const ReplicaArray& replicas, Ti
   Assert(GetReplicator()->GetRole() == Role::Client);
 
   // (They should already have all of these replicas)
-  AssertReplicas(replicas, HasReplica(replica));
+  AssertReplicas(replicas, HasReplica(replica), "");
 
   // Serialize reverse replica channel mappings
   bool containsChannels = false;

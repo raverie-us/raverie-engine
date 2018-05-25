@@ -318,9 +318,9 @@ public:
     {
       singleCog = GetCog();
       commonArchetypeContextCog = singleCog->FindNearestArchetypeContext();
-      if (commonArchetypeContextCog == singleCog)
+      if(commonArchetypeContextCog == singleCog)
         commonArchetypeContextCog = nullptr;
-      if(singleArchetype = singleCog->GetArchetype())
+      if((singleArchetype = singleCog->GetArchetype()))
         archetypes.Insert(singleArchetype);
 
       if(singleCog->FindNearestArchetype())
@@ -2177,10 +2177,10 @@ public:
   bool mAddOp;
 
   ResourceListOperation(HandleParam object, StringParam resourceIdName, uint index = -1, bool addOp = true)
-    : mResourceIdName(resourceIdName)
+    : mObjectHandle(object)
+    , mResourceIdName(resourceIdName)
     , mIndex(index)
     , mAddOp(addOp)
-    , mObjectHandle(object)
   {
     mName = "Removed resource";
     if(mAddOp)

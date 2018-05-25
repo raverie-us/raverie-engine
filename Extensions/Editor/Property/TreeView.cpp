@@ -155,7 +155,7 @@ TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry)
   mIndex = treeView->mDataSource->ToIndex(entry);
   mTree->mRowMap[mIndex.Id] = this;
   treeView->mRows.PushBack(this);
-  mExpandIcon = NULL;
+  mExpandIcon = nullptr;
   mGraphicBackground = CreateAttached<Element>(cWhiteSquare);
   mGraphicBackground->SetInteractive(false);
   mBackground = new Spacer(this);
@@ -436,7 +436,7 @@ void TreeRow::Refresh()
 {
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
 
-  if(entry==NULL)
+  if(entry == nullptr)
     return;
   
   bool isExpandable = mTree->mDataSource->IsExpandable(entry);
@@ -476,18 +476,18 @@ TreeRow::~TreeRow()
   //Remove from parent
   if(mParentRow)
   {
-    mParentRow = NULL;
+    mParentRow = nullptr;
     TreeRowList::Unlink(this);
 
     //If the index still refers to this row
     //erase this row, it will be rebuilt if needed
-    if(mTree->mRowMap.FindValue(mIndex.Id, NULL) == this)
+    if(mTree->mRowMap.FindValue(mIndex.Id, nullptr) == this)
       mTree->mRowMap.Erase(mIndex.Id);
   }
 
   while(!mChildren.Empty())
   {
-    mChildren.Front().mParentRow = NULL;
+    mChildren.Front().mParentRow = nullptr;
     TreeRowList::Unlink(&mChildren.Front());
   }
  
@@ -549,7 +549,7 @@ void TreeRow::RebuildChildren()
   //Look up the entry
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
 
-  if(entry == NULL)
+  if(entry == nullptr)
     return;
 
   uint numChildren = mTree->mDataSource->ChildCount(entry);
@@ -558,7 +558,7 @@ void TreeRow::RebuildChildren()
   TreeRowList oldChildren;
   oldChildren.Swap(mChildren);
 
-  DataEntry* prev = NULL;
+  DataEntry* prev = nullptr;
   for(uint i = 0;i<numChildren;++i)
   {
     DataEntry* child = mTree->mDataSource->GetChild(entry, i, prev);
@@ -632,7 +632,7 @@ void TreeRow::Expand()
 
   //Tell the data source to expand
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
-  if(entry == NULL)
+  if(entry == nullptr)
     return;
 
   mTree->mDataSource->Expand(entry);
@@ -1023,7 +1023,7 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
   {
     //Do not drop on self
     TreeRow* sourceRow = event->Instance.Get<TreeRow*>();
-    if(sourceRow == NULL || this == sourceRow)
+    if(sourceRow == nullptr || this == sourceRow)
       return;
 
     //Do not drop on rows from other trees
@@ -1166,12 +1166,14 @@ void TreeRow::OnKeyUp(KeyboardEvent* event)
 //---------------------------------------------------------------- Column Header
 //******************************************************************************
 ColumnHeader::ColumnHeader(TreeView* tree, ColumnFormat* format)
-  : Composite(tree), mTree(tree), mFormat(format)
+  : Composite(tree)
+  , mFormat(format)
+  , mTree(tree)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(TreeViewUi::HeaderColor);
-  mLabel = NULL;
-  mIcon = NULL;
+  mLabel = nullptr;
+  mIcon = nullptr;
   mSortFlip = false;
 
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
@@ -1182,7 +1184,7 @@ ColumnHeader::ColumnHeader(TreeView* tree, ColumnFormat* format)
 //******************************************************************************
 void ColumnHeader::SetText(StringParam name)
 {
-  if(mLabel == NULL)
+  if(mLabel == nullptr)
     mLabel = new Label(this, "BoldText");
   mLabel->SetText(name);
 }
@@ -1190,7 +1192,7 @@ void ColumnHeader::SetText(StringParam name)
 //******************************************************************************
 void ColumnHeader::SetIcon(StringParam iconName)
 {
-  if(mIcon == NULL)
+  if(mIcon == nullptr)
     mIcon = CreateAttached<Element>(iconName);
   mIcon->SetSize(Pixels(16, 16));
   mIcon->SetTranslation(SnapToPixels(Pixels(2, 2, 0)));
@@ -1226,7 +1228,7 @@ void ColumnHeader::OnLeftClick(MouseEvent* e)
 {
   if (DataSource* source = mTree->GetDataSource())
   {
-    source->Sort(NULL, mFormat->Name, mSortFlip);
+    source->Sort(nullptr, mFormat->Name, mSortFlip);
     mTree->Refresh();
 
     mSortFlip = !mSortFlip;
@@ -1371,9 +1373,9 @@ TreeView::TreeView(Composite* parent)
 
   mSelection = new HashDataSelection();
   mExpanded = new HashDataSelection();
-  mDataSource = NULL;
+  mDataSource = nullptr;
 
-  mRoot = NULL;
+  mRoot = nullptr;
 
   SetFormatNameAndType();
 
@@ -1474,7 +1476,7 @@ void TreeView::SetFormat(TreeFormatting& format)
   {
     //Build new Tree
     DataEntry* root = mDataSource->GetRoot();
-    mRoot = new TreeRow(this, NULL, root);
+    mRoot = new TreeRow(this, nullptr, root);
     mRoot->Expand();
   }
 }
@@ -1488,7 +1490,7 @@ void TreeView::SetRowHeight(float height)
 void TreeView::ShowRow(DataIndex& index)
 {
   DataEntry* entry = mDataSource->ToEntry(index);
-  if(entry == NULL)
+  if(entry == nullptr)
     return;
 
   TreeRow* row = FindRowByIndex(index);
@@ -1566,7 +1568,7 @@ void TreeView::SetDataSource(DataSource* dataSource)
   {
     //Stop listening to old data source
     mDataSource->GetDispatcher()->Disconnect(this);
-    mDataSource = NULL;
+    mDataSource = nullptr;
   }
 
   ClearAllRows();
@@ -1583,7 +1585,7 @@ void TreeView::SetDataSource(DataSource* dataSource)
 
     //Build new Tree
     DataEntry* root = mDataSource->GetRoot();
-    mRoot = new TreeRow(this, NULL, root);
+    mRoot = new TreeRow(this, nullptr, root);
     mRoot->Expand();
   }
 }
@@ -1604,7 +1606,7 @@ void TreeView::ClearAllRows()
   if(mRoot)
   {
     mRoot->RecursiveDestroy();
-    mRoot = NULL;
+    mRoot = nullptr;
   }
 }
 
@@ -1820,7 +1822,7 @@ TreeRow* TreeView::FindRowByColumnValue(StringParam column, StringParam value)
       return row;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void TreeView::SelectFirstRow()
@@ -1905,7 +1907,7 @@ void TreeView::GetSelectionRange(uint* minIndex, uint* maxIndex)
 
 void TreeView::SelectRowsInRange(uint min, uint max)
 {
-  if(mDataSource == NULL)
+  if(mDataSource == nullptr)
     return;
 
   // Clear the selection
@@ -2189,8 +2191,8 @@ void TreeView::UpdateHeaders()
     if(mFormatting.Flags.IsSet(FormatFlags::ColumnsResizable))
     {
       // Attempt to find the current resizer for this header
-      ColumnResizer* resizer = mHeaderResizers.FindValue(header, NULL);
-      if(resizer == NULL)
+      ColumnResizer* resizer = mHeaderResizers.FindValue(header, nullptr);
+      if(resizer == nullptr)
       {
         if((i + 1) < mFormatting.Columns.Size())
         {

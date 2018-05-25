@@ -25,7 +25,7 @@ using Math::Simd::SimMat3;
 using Math::Simd::SimMat3Param;
 using namespace Math;
 
-__declspec(align(16))
+ZeroPreAlign16
 struct Vec3_16 : public Vec3
 {
   Vec3_16& operator=(Vec3Param data)
@@ -33,9 +33,9 @@ struct Vec3_16 : public Vec3
     Vec3::operator=(data);
     return *this;
   }
-};
+} ZeroPostAlign16;
 
-__declspec(align(16))
+ZeroPreAlign16
 struct Vec4_16 : public Vec4
 {
   Vec4_16& operator=(Vec4Param data)
@@ -43,7 +43,7 @@ struct Vec4_16 : public Vec4
     Vec4::operator=(data);
     return *this;
   }
-};
+} ZeroPostAlign16;
 
 SimInline real SimVecToReal(SimVecParam v)
 {

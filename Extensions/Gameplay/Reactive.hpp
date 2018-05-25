@@ -23,7 +23,7 @@ class Reactive : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Reactive, TypeCopyMode::ReferenceType);
 
   Reactive();
   ~Reactive();
@@ -50,7 +50,7 @@ class ReactiveSpace : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ReactiveSpace, TypeCopyMode::ReferenceType);
 
   //Component Interface
   void Serialize(Serializer& stream) override;

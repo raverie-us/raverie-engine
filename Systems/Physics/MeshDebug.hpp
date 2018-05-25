@@ -17,7 +17,7 @@ class HeightMapCollider;
 class MeshDebug : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MeshDebug, TypeCopyMode::ReferenceType);
   void CacheData();
 
   void Initialize(CogInitializer& initializer) override;

@@ -85,8 +85,10 @@ String ShaderTranslationEntry::ToString(bool shortFormat) const
 
 //-------------------------------------------------------------------ShaderTranslationDebugHelper
 ShaderTranslationDebugHelper::ShaderTranslationDebugHelper(Composite* parent)
-  : Composite(parent), mLanguagesDataSource(&mLanguages),
-    mTranslationEntriesDataSource(&mTranslationEntries), mShaderGenerator(nullptr)
+  : Composite(parent)
+  , mShaderGenerator(nullptr)
+  , mLanguagesDataSource(&mLanguages)
+  , mTranslationEntriesDataSource(&mTranslationEntries)
 {
   SetName("Shader Translation Debug Helper");
 
@@ -166,8 +168,8 @@ SearchView* ShaderTranslationDebugHelper::CreateSearchView(SearchProvider* searc
   viewPopUp->UpdateTransformExternal();
   mActiveSearch = viewPopUp;
 
-  GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
-  graphicsEngine->mShaderGenerator->mCoreVertexFragments;
+  //GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
+  //graphicsEngine->mShaderGenerator->mCoreVertexFragments;
 
   // Filter based upon the provided search provider
   SearchView* searchView = viewPopUp->mView;

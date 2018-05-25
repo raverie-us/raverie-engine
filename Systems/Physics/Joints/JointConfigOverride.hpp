@@ -18,7 +18,7 @@ struct JointNode;
 /// Error correction is only used when the joint is solved with post stabilization.
 struct JointConfigOverride : public Component
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointConfigOverride, TypeCopyMode::ReferenceType);
 
   JointConfigOverride();
   virtual ~JointConfigOverride();

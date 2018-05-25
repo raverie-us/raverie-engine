@@ -46,7 +46,7 @@ String ReplaceTypeIfTemplated(StringParam typeString)
   }
 }
 
-MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Function* function)
+MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Function* function)
 {
   uint matchIndex = (uint)-1;
 
@@ -471,7 +471,7 @@ bool AttributeDocList::SaveToFile(StringParam fileName)
 
   if (status.Failed())
   {
-    Error("Unable to save attribute list file: %s\n", fileName);
+    Error("Unable to save attribute list file: %s\n", fileName.c_str());
     return false;
   }
 
@@ -1017,7 +1017,7 @@ ClassDoc *DocumentationLibrary::CreateClassDocFromBoundType(BoundType *type, Typ
   // Used to remove a couple of core types that should not be documented
   if (type->Name.Contains(":"))
   {
-    ZPrint("Warning: type '%s' is improperly named and unreferenceable.\n", type->Name);
+    ZPrint("Warning: type '%s' is improperly named and unreferenceable.\n", type->Name.c_str());
     return nullptr;
   }
 

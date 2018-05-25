@@ -108,10 +108,12 @@ public:
   {
     //error C2061:
     ScriptError* error = (ScriptError*)dataEntry;
+    static const String RedX("RedX");
+    static const String FrozenTestBed("FrozenTestBed");
 
     if(column == Column::Icon)
     {
-      variant = "RedX";
+      variant = RedX;
     }
     if(column == Column::Description)
     {
@@ -127,7 +129,7 @@ public:
     }
     if(column == Column::Library)
     {
-      variant = "FrozenTestBed";
+      variant = FrozenTestBed;
     }
   }
 

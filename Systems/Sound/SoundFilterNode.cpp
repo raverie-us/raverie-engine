@@ -57,10 +57,10 @@ ZilchDefineType(SoundNode, builder, type)
 //**************************************************************************************************
 SoundNode::SoundNode() :
   mNode(nullptr),
-  mCanInsertAfter(true),
   mCanInsertBefore(true),
-  mCanRemove(true),
-  mCanReplace(true)
+  mCanInsertAfter(true),
+  mCanReplace(true),
+  mCanRemove(true)
 {
 
 }
@@ -532,9 +532,9 @@ ZilchDefineType(GeneratedWaveNode, builder, type)
 
 //**************************************************************************************************
 GeneratedWaveNode::GeneratedWaveNode() :
+  mAsset(nullptr), 
   mWaveType(SynthWaveType::SineWave),
   mWaveFrequency(440.0f), 
-  mAsset(nullptr), 
   mVolume(1.0f),
   mSquareWavePulseValue(0.5f)
 {

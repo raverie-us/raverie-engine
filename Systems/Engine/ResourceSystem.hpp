@@ -39,7 +39,7 @@ DeclareEnum3(ContentEditMode,
 class ResourceSystem : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceSystem, TypeCopyMode::ReferenceType);
 
   ResourceSystem();
   static void Initialize();

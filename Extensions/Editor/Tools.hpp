@@ -33,7 +33,7 @@ DeclareEvent(SelectToolPreDraw);
 class SelectToolFrustumEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SelectToolFrustumEvent, TypeCopyMode::ReferenceType);
 
   SelectToolFrustumEvent( ) : Handled(false), HandledEventScript(false) {}
 
@@ -74,7 +74,7 @@ class SelectTool : public Component
 public:
   typedef RaycastResultList::RayCastEntries RayCastEntries;
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SelectTool, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   SelectTool();
@@ -138,7 +138,7 @@ class CreationTool : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CreationTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   CreationTool();
@@ -208,7 +208,7 @@ class ObjectConnectingTool : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectConnectingTool, TypeCopyMode::ReferenceType);
 
   ObjectConnectingTool();
 
@@ -254,7 +254,7 @@ class ParentingTool : public ObjectConnectingTool
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParentingTool, TypeCopyMode::ReferenceType);
 
   ParentingTool();
 

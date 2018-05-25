@@ -37,7 +37,7 @@ public:
 class TextureInfo : public ContentComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextureInfo, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Generate(ContentInitializer& initializer) override;
@@ -62,14 +62,14 @@ public:
 class ShowPremultipliedAlphaFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShowPremultipliedAlphaFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class ShowGammaCorrectionFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShowGammaCorrectionFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
@@ -77,7 +77,7 @@ public:
 class TextureBuilder : public BuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextureBuilder, TypeCopyMode::ReferenceType);
 
   // BuilderComponent Interface
 

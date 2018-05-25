@@ -18,7 +18,7 @@ namespace Zero
 class NetChannel : public SafeId32Object, public ReplicaChannel
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetChannel, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetChannel(const String& name, NetChannelType* netChannelType);
@@ -123,7 +123,7 @@ public:
 class NetChannelType : public SafeId32Object, public ReplicaChannelType
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetChannelType, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetChannelType(const String& name);
@@ -264,7 +264,7 @@ public:
 class NetChannelConfig : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetChannelConfig, TypeCopyMode::ReferenceType);
 
   //
   // Data Resource Interface

@@ -39,7 +39,7 @@ Plane& Frustum::Get(uint index)
   if(index >= 6)
   {
     String msg = String::Format("Index %d is invalid. Frustums only have 6 planes.", index);
-    Error("Invalid Index", msg);
+    Error("Invalid Index", msg.c_str());
     return Planes[0];
   }
 
@@ -51,7 +51,7 @@ void Frustum::Set(uint index, const Plane& plane)
   if(index >= 6)
   {
     String msg = String::Format("Index %d is invalid. Frustums only have 6 planes.", index);
-    Error("Invalid Index", msg);
+    Error("Invalid Index", msg.c_str());
     return;
   }
   Planes[index] = plane;
@@ -331,7 +331,7 @@ void Frustum::PointsAtDepth(Vec3 boxPoints[4], float depth) const
 
   // Compute the eye/center vector
   Vec3 centerDir = (farCenter - nearCenter);
-  float nearToFar = centerDir.Normalize();
+  centerDir.Normalize();
 
   // Build a view aligned plane at depth
   Plane plane(centerDir, nearCenter + centerDir * depth);
@@ -342,7 +342,7 @@ void Frustum::PointsAtDepth(Vec3 boxPoints[4], float depth) const
 
   // Intersect plane at depth with edge ray
   Intersection::IntersectionPoint point;
-  Intersection::Type type = Intersection::RayPlane(edgeStart, edgeDir, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::RayPlane(edgeStart, edgeDir, plane.GetNormal(), plane.GetDistance(), &point);
 
   // All edges have the same normalized t
   float t = point.T;

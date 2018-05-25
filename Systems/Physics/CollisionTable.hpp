@@ -18,7 +18,7 @@ DeclareEnum2(RegisteredGroupInstanceAccessMode, UseDefault, ReturnNull);
 class CollisionTable : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionTable, TypeCopyMode::ReferenceType);
   typedef CollisionFilter value_type;
 
   CollisionTable();

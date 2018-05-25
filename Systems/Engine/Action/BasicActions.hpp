@@ -18,7 +18,7 @@ namespace Zero
 class ActionDelay : public Action
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ActionDelay, TypeCopyMode::ReferenceType);
 
   ActionDelay(float duration)
     : mTimeLeft(duration)

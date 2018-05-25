@@ -18,7 +18,7 @@ namespace Zero
 class ImageContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ImageContent, TypeCopyMode::ReferenceType);
   ImageContent();
 
   void BuildContent(BuildOptions& options) override;

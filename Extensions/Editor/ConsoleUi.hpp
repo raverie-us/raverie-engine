@@ -22,7 +22,7 @@ namespace Events
 class ConsoleTextEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ConsoleTextEvent, TypeCopyMode::ReferenceType);
   String Text;
 };
 
@@ -31,8 +31,7 @@ public:
 class ConsoleUi : public TextEditor
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  typedef ConsoleUi ZilchSelf;
+  ZilchDeclareType(ConsoleUi, TypeCopyMode::ReferenceType);
 
   ConsoleUi(Composite* parent);
   ~ConsoleUi();

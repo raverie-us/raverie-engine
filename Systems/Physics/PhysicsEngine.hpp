@@ -24,7 +24,7 @@ System* CreatePhysicsSystem();
 class PhysicsEngine : public System
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsEngine, TypeCopyMode::ReferenceType);
 
   PhysicsEngine(void);
   virtual ~PhysicsEngine(void);

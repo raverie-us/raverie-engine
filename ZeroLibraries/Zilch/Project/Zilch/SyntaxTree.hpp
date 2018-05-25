@@ -96,7 +96,7 @@ namespace Zilch
   class ZeroShared SyntaxNode : public IZilchObject
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(SyntaxNode, TypeCopyMode::ReferenceType);
 
     // Constructor
     SyntaxNode();
@@ -161,7 +161,7 @@ namespace Zilch
   class ZeroShared SyntaxType : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(SyntaxType, TypeCopyMode::ReferenceType);
 
     // Constructor
     SyntaxType();
@@ -176,7 +176,7 @@ namespace Zilch
   class ZeroShared AnySyntaxType : public SyntaxType
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(AnySyntaxType, TypeCopyMode::ReferenceType);
     ZilchClonableNode(AnySyntaxType);
 
     // SyntaxType interface
@@ -186,7 +186,7 @@ namespace Zilch
   class ZeroShared IndirectionSyntaxType : public SyntaxType
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(IndirectionSyntaxType, TypeCopyMode::ReferenceType);
     ZilchClonableNode(IndirectionSyntaxType);
 
     // Constructor
@@ -197,13 +197,13 @@ namespace Zilch
 
     // SyntaxType interface
     String ToString() const override;
-    virtual void PopulateChildren(NodeChildren& childrenOut);
+    virtual void PopulateChildren(NodeChildren& childrenOut) override;
   };
 
   class ZeroShared BoundSyntaxType : public SyntaxType
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(BoundSyntaxType, TypeCopyMode::ReferenceType);
     ZilchClonableNode(BoundSyntaxType);
 
     // Store the name of the type
@@ -216,7 +216,7 @@ namespace Zilch
     // SyntaxType interface
     bool IsTemplateInstantiation() const override;
     String ToString() const override;
-    virtual void PopulateChildren(NodeChildren& childrenOut);
+    virtual void PopulateChildren(NodeChildren& childrenOut) override;
   };
 
   // A parameter that belongs inside of a delegate declaration
@@ -236,7 +236,7 @@ namespace Zilch
   class ZeroShared DelegateSyntaxType : public SyntaxType
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DelegateSyntaxType, TypeCopyMode::ReferenceType);
     ZilchClonableNode(DelegateSyntaxType);
 
     // Constructor
@@ -254,7 +254,7 @@ namespace Zilch
     // SyntaxType interface
     bool IsTemplateInstantiation() const override;
     String ToString() const override;
-    virtual void PopulateChildren(NodeChildren& childrenOut);
+    virtual void PopulateChildren(NodeChildren& childrenOut) override;
   };
 
   // Whether or not we're virtual or overriding
@@ -272,7 +272,7 @@ namespace Zilch
   class ZeroShared RootNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(RootNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(RootNode);
 
     // SyntaxNode interface
@@ -292,7 +292,7 @@ namespace Zilch
   class ZeroShared AttributeNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(AttributeNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(AttributeNode);
 
     // Default constructor
@@ -312,7 +312,7 @@ namespace Zilch
   class ZeroShared StatementNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(StatementNode, TypeCopyMode::ReferenceType);
 
     // Returns if the given node is used as a statement
     // For example: Expressions are statements, but are only considered
@@ -327,7 +327,7 @@ namespace Zilch
   class ZeroShared ExpressionNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ExpressionNode, TypeCopyMode::ReferenceType);
 
     // Constructor
     ExpressionNode();
@@ -362,7 +362,7 @@ namespace Zilch
   class ZeroShared BinaryOperatorNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(BinaryOperatorNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(BinaryOperatorNode);
 
     // Constructor
@@ -387,7 +387,7 @@ namespace Zilch
   class ZeroShared UnaryOperatorNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(UnaryOperatorNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(UnaryOperatorNode);
 
     // Constructor
@@ -411,7 +411,7 @@ namespace Zilch
   class ZeroShared PropertyDelegateOperatorNode : public UnaryOperatorNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(PropertyDelegateOperatorNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(PropertyDelegateOperatorNode);
 
     // Constructor
@@ -425,7 +425,7 @@ namespace Zilch
   class ZeroShared TypeCastNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(TypeCastNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(TypeCastNode);
 
     // Constructor
@@ -450,7 +450,7 @@ namespace Zilch
   class ZeroShared PostExpressionNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(PostExpressionNode, TypeCopyMode::ReferenceType);
 
     // Constructor
     PostExpressionNode();
@@ -466,7 +466,7 @@ namespace Zilch
   class ZeroShared IndexerCallNode : public PostExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(IndexerCallNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(IndexerCallNode);
     
     // Constructor
@@ -493,7 +493,7 @@ namespace Zilch
   class ZeroShared FunctionCallNode : public PostExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(FunctionCallNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(FunctionCallNode);
 
     // Constructor
@@ -536,7 +536,7 @@ namespace Zilch
   class ZeroShared MemberAccessNode : public PostExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(MemberAccessNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(MemberAccessNode);
 
     // Constructor
@@ -578,7 +578,7 @@ namespace Zilch
   class ZeroShared TypeIdNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(TypeIdNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(TypeIdNode);
 
     // Constructor
@@ -605,7 +605,7 @@ namespace Zilch
   class ZeroShared MemberIdNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(MemberIdNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(MemberIdNode);
 
     // Constructor
@@ -632,7 +632,7 @@ namespace Zilch
   class ZeroShared StaticTypeNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(StaticTypeNode,TypeCopyMode::ReferenceType);
     ZilchClonableNode(StaticTypeNode);
 
     // Constructor
@@ -664,7 +664,7 @@ namespace Zilch
   class ZeroShared ExpressionInitializerMemberNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ExpressionInitializerMemberNode,TypeCopyMode::ReferenceType);
     ZilchClonableNode(ExpressionInitializerMemberNode);
 
     // Constructor
@@ -684,7 +684,7 @@ namespace Zilch
   class ZeroShared ExpressionInitializerAddNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ExpressionInitializerAddNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ExpressionInitializerAddNode);
     
     // SyntaxNode interface
@@ -698,7 +698,7 @@ namespace Zilch
   class ZeroShared ExpressionInitializerNode : public PostExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ExpressionInitializerNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ExpressionInitializerNode);
 
     // Constructor
@@ -725,7 +725,7 @@ namespace Zilch
   class ZeroShared MultiExpressionNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(MultiExpressionNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(MultiExpressionNode);
 
     // Constructor
@@ -750,7 +750,7 @@ namespace Zilch
   class ZeroShared VariableNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(VariableNode, TypeCopyMode::ReferenceType);
 
     // Constructor
     VariableNode();
@@ -779,7 +779,7 @@ namespace Zilch
   class ZeroShared LocalVariableNode : public VariableNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(LocalVariableNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(LocalVariableNode);
 
     // Constructor
@@ -805,7 +805,7 @@ namespace Zilch
   class ZeroShared ParameterNode : public LocalVariableNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ParameterNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ParameterNode);
 
     // Constructor
@@ -819,7 +819,7 @@ namespace Zilch
   class ZeroShared MemberVariableNode : public VariableNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(MemberVariableNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(MemberVariableNode);
     
     // Constructor
@@ -862,7 +862,7 @@ namespace Zilch
   class ZeroShared ValueNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ValueNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ValueNode);
 
     // Constructor
@@ -882,7 +882,7 @@ namespace Zilch
   class ZeroShared StringInterpolantNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(StringInterpolantNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(StringInterpolantNode);
 
     // Constructor
@@ -900,7 +900,7 @@ namespace Zilch
   class ZeroShared DeleteNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DeleteNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(DeleteNode);
 
     // Constructor
@@ -917,7 +917,7 @@ namespace Zilch
   class ZeroShared ReturnNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ReturnNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ReturnNode);
 
     // Constructor
@@ -937,7 +937,7 @@ namespace Zilch
   class ZeroShared ScopeNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ScopeNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ScopeNode);
 
     // Constructor
@@ -964,7 +964,7 @@ namespace Zilch
   class ZeroShared TimeoutNode : public ScopeNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(TimeoutNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(TimeoutNode);
 
     // Constructor
@@ -978,7 +978,7 @@ namespace Zilch
   class ZeroShared IfNode : public ScopeNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(IfNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(IfNode);
 
     // Constructor
@@ -999,7 +999,7 @@ namespace Zilch
   class ZeroShared IfRootNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(IfRootNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(IfRootNode);
 
     // Constructor
@@ -1019,7 +1019,7 @@ namespace Zilch
   class ZeroShared SendsEventNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(SendsEventNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(SendsEventNode);
 
     // Constructor
@@ -1045,7 +1045,7 @@ namespace Zilch
   class ZeroShared BreakNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(BreakNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(BreakNode);
 
     // Constructor
@@ -1067,7 +1067,7 @@ namespace Zilch
   class ZeroShared DebugBreakNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DebugBreakNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(DebugBreakNode);
   };
 
@@ -1075,7 +1075,7 @@ namespace Zilch
   class ZeroShared ContinueNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ContinueNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ContinueNode);
 
     // Constructor
@@ -1094,7 +1094,7 @@ namespace Zilch
   class ZeroShared ThrowNode : public StatementNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ThrowNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ThrowNode);
 
     // Constructor
@@ -1111,7 +1111,7 @@ namespace Zilch
   class ZeroShared LoopScopeNode : public ScopeNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(LoopScopeNode, TypeCopyMode::ReferenceType);
 
     // Default constructor
     LoopScopeNode();
@@ -1130,7 +1130,7 @@ namespace Zilch
   class ZeroShared ConditionalLoopNode : public LoopScopeNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ConditionalLoopNode, TypeCopyMode::ReferenceType);
 
     // Constructor
     ConditionalLoopNode();
@@ -1146,7 +1146,7 @@ namespace Zilch
   class ZeroShared WhileNode : public ConditionalLoopNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(WhileNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(WhileNode);
   };
 
@@ -1154,7 +1154,7 @@ namespace Zilch
   class ZeroShared DoWhileNode : public ConditionalLoopNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DoWhileNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(DoWhileNode);
   };
 
@@ -1162,7 +1162,7 @@ namespace Zilch
   class ZeroShared ForNode : public ConditionalLoopNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ForNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ForNode);
 
     // Constructor
@@ -1188,7 +1188,7 @@ namespace Zilch
   class ZeroShared ForEachNode : public ForNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ForEachNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ForEachNode);
 
     // Constructor
@@ -1210,7 +1210,7 @@ namespace Zilch
   class ZeroShared LoopNode : public LoopScopeNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(LoopNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(LoopNode);
   };
 
@@ -1218,7 +1218,7 @@ namespace Zilch
   class ZeroShared GenericFunctionNode : public ScopeNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(GenericFunctionNode, TypeCopyMode::ReferenceType);
 
     // Constructor
     GenericFunctionNode();
@@ -1252,7 +1252,7 @@ namespace Zilch
   class ZeroShared FunctionNode : public GenericFunctionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(FunctionNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(FunctionNode);
 
     // Constructor
@@ -1279,7 +1279,7 @@ namespace Zilch
   class ZeroShared InitializerNode : public ExpressionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(InitializerNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(InitializerNode);
 
     // Constructor
@@ -1296,7 +1296,7 @@ namespace Zilch
   class ZeroShared ConstructorNode : public GenericFunctionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ConstructorNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ConstructorNode);
 
     // Constructor
@@ -1314,7 +1314,7 @@ namespace Zilch
   class ZeroShared DestructorNode : public GenericFunctionNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DestructorNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(DestructorNode);
   };
 
@@ -1323,7 +1323,7 @@ namespace Zilch
   class ZeroShared ClassNode : public ScopeNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ClassNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(ClassNode);
 
     // Constructor
@@ -1386,7 +1386,7 @@ namespace Zilch
   class ZeroShared EnumValueNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(EnumValueNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(EnumValueNode);
 
     // Constructor
@@ -1412,7 +1412,7 @@ namespace Zilch
   class ZeroShared EnumNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(EnumNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(EnumNode);
 
     // Constructor
@@ -1443,11 +1443,11 @@ namespace Zilch
     NodeList<AttributeNode> Attributes;
   };
 
-  // A type-define node represnts 
+  // A type-define node represents 
   class ZeroShared TypeDefineNode : public SyntaxNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(TypeDefineNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(TypeDefineNode);
 
     // Constructor
@@ -1468,7 +1468,7 @@ namespace Zilch
   class ZeroShared LocalVariableReferenceNode : public ValueNode
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(LocalVariableReferenceNode, TypeCopyMode::ReferenceType);
     ZilchClonableNode(LocalVariableReferenceNode);
 
     // Constructor

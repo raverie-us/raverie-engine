@@ -30,7 +30,7 @@ class WebBrowser;
 class WebBrowserManager : public ExplicitSingleton<WebBrowserManager, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserManager, TypeCopyMode::ReferenceType);
 
   WebBrowserManager();
   ~WebBrowserManager();
@@ -48,7 +48,7 @@ extern const Vec2 cWebBrowserDefaultScrollSpeed;
 class WebBrowserSetup : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserSetup, TypeCopyMode::ReferenceType);
   WebBrowserSetup
   (
     StringParam url = cWebBrowserDefaultUrl,
@@ -68,7 +68,7 @@ public:
 class WebBrowser : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowser, TypeCopyMode::ReferenceType);
 
   WebBrowser();
   WebBrowser(const WebBrowserSetup& setup);
@@ -150,7 +150,7 @@ private:
 class WebBrowserEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserEvent, TypeCopyMode::ReferenceType);
 
   /// The web browser that spawned the event
   WebBrowser* GetWebBrowser();
@@ -160,7 +160,7 @@ public:
 class WebBrowserPopupCreateEvent : public WebBrowserEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserPopupCreateEvent, TypeCopyMode::ReferenceType);
 
   String mName;
   String mUrl;
@@ -169,7 +169,7 @@ public:
 class WebBrowserCursorEvent : public WebBrowserEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserCursorEvent, TypeCopyMode::ReferenceType);
   WebBrowserCursorEvent();
 
   /// The mouse cursor that we should be displaying (for Zero.Mouse.Cursor)
@@ -179,7 +179,7 @@ public:
 class WebBrowserPointQueryEvent : public WebBrowserEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserPointQueryEvent, TypeCopyMode::ReferenceType);
   WebBrowserPointQueryEvent();
 
   /// The position on the browser that we're querying for
@@ -192,7 +192,7 @@ public:
 class WebBrowserConsoleEvent : public WebBrowserEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserConsoleEvent, TypeCopyMode::ReferenceType);
   WebBrowserConsoleEvent();
 
   /// The console message that was written
@@ -211,7 +211,7 @@ public:
 class WebBrowserTextEvent : public WebBrowserEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserTextEvent, TypeCopyMode::ReferenceType);
 
   /// The status or title of the browser
   String mText;
@@ -220,7 +220,7 @@ public:
 class WebBrowserUrlEvent : public WebBrowserEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserUrlEvent, TypeCopyMode::ReferenceType);
   WebBrowserUrlEvent();
 
   /// The url that we are navigating to
@@ -233,7 +233,7 @@ public:
 class WebBrowserDownloadEvent : public WebBrowserEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebBrowserDownloadEvent, TypeCopyMode::ReferenceType);
   WebBrowserDownloadEvent();
 
   /// If we set this to true, then we cancel the event

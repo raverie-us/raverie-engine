@@ -41,11 +41,11 @@ namespace Zilch
 
   //***************************************************************************
   ErrorEvent::ErrorEvent(const ErrorInfo& info, const CodeLocation& location, ErrorCode::Enum code, va_list args) :
-    Reason(info.Reason),
-    Examples(info.Examples),
+    ErrorCode(code),
     Location(location),
+    Reason(info.Reason),
     ExactError(String::FormatArgs(info.Error.c_str(), args)),
-    ErrorCode(code)
+    Examples(info.Examples)
   {
   }
 

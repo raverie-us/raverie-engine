@@ -16,7 +16,7 @@ DeclareBitField4(MassOverrideStates, Active, AutoComputeCenterOfMass, AutoComput
 class MassOverride : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MassOverride, TypeCopyMode::ReferenceType);
 
   MassOverride();
 

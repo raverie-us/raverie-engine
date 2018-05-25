@@ -196,7 +196,7 @@ void Gizmo::SetActive(bool state)
     GizmoSpace* gizmoSpace = GetSpace()->has(GizmoSpace);
     if(gizmoSpace->mMouseOverGizmo == GetOwner()->GetId())
     {
-      gizmoSpace->mMouseOverGizmo = nullptr;
+      gizmoSpace->mMouseOverGizmo = CogId();
 
       GizmoEvent eventToSend(GetOwner(), nullptr);
       GetOwner()->DispatchEvent(Events::MouseExitGizmo, &eventToSend);
@@ -297,7 +297,7 @@ void GizmoSpace::OnMouseUpdate(ViewportMouseEvent* e)
     oldGizmoCog->DispatchEvent(Events::MouseExitGizmo, &newGizmoEvent);
     oldGizmoCog->DispatchEvent(Events::MouseExitGizmoHierarchy, &newGizmoEvent);
     oldGizmoCog->DispatchUp(Events::MouseExitGizmoHierarchy, &newGizmoEvent);
-    mMouseOverGizmo = nullptr;
+    mMouseOverGizmo = CogId();
   }
 }
 

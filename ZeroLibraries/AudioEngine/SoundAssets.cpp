@@ -16,9 +16,9 @@ namespace Audio
   //************************************************************************************************
   SoundAsset::SoundAsset(ExternalNodeInterface* externalInterface, const bool threaded) :
     ThreadedAsset(nullptr),
-    mReferenceCount(0), 
     Threaded(threaded), 
-    ExternalData(externalInterface)
+    ExternalData(externalInterface),
+    mReferenceCount(0)
   {
     // If not threaded, add to the system's list
     if (!Threaded)
@@ -105,8 +105,8 @@ namespace Audio
   SoundAssetFromFile::SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, 
     const bool streaming, ExternalNodeInterface* extInt, const bool isThreaded) :
     SoundAsset(extInt, isThreaded), 
-    mHasStreamingInstance(false), 
     mStreaming(streaming),
+    mHasStreamingInstance(false), 
     mFileLength(0),
     mChannels(0),
     mFrameCount(0),
@@ -135,7 +135,7 @@ namespace Audio
       if (!status.Failed())
       {
         // Set the variables
-        mFileLength = (float)Decoder->mSamplesPerChannel / SystemSampleRate;
+        mFileLength = (float)Decoder->mSamplesPerChannel / cSystemSampleRate;
         mChannels = Decoder->mChannels;
         mFrameCount = Decoder->mSamplesPerChannel;
 
@@ -422,8 +422,8 @@ namespace Audio
   GeneratedWaveSoundAsset::GeneratedWaveSoundAsset(const OscillatorTypes::Enum waveType, 
       const float frequency, ExternalNodeInterface* extInt, const bool isThreaded) :
     SoundAsset(extInt, isThreaded),
-    mFrequency(frequency), 
-    WaveData(nullptr)
+    WaveData(nullptr),
+    mFrequency(frequency)
   {
     if (!Threaded)
       ThreadedAsset = new GeneratedWaveSoundAsset(waveType, frequency, extInt, true);
@@ -457,7 +457,7 @@ namespace Audio
 
     for (unsigned i = startingIndex; i < startingIndex + numberOfSamples; ++i)
     {
-      (*buffer)[i] = WaveData->GetNextSample() * GeneratedWaveVolume;
+      (*buffer)[i] = WaveData->GetNextSample() * cGeneratedWaveVolume;
 
       if (!FrequencyInterpolator.Finished())
       {
@@ -470,7 +470,7 @@ namespace Audio
   //************************************************************************************************
   unsigned GeneratedWaveSoundAsset::GetNumberOfFrames()
   {
-    return SystemSampleRate;
+    return cSystemSampleRate;
   }
 
   //************************************************************************************************
@@ -504,7 +504,7 @@ namespace Audio
       }
       else
         FrequencyInterpolator.SetValues(mFrequency, newFrequency,
-          (unsigned)(time * SystemSampleRate));
+          (unsigned)(time * cSystemSampleRate));
     }
   }
 

@@ -9,6 +9,9 @@
 namespace Zero
 {
 
+//------------------------------------------------------------------------------------------ Proxy Objects
+DeclareEnum2(ProxyReason, TypeDidntExist, AllocationException);
+
 //------------------------------------------------------------------------------------------ Actions
 DeclareEnum2(EnumerateAction,
   // All Components that could ever be dynamically added to the object type
@@ -31,7 +34,7 @@ DeclareEnum4(SetupMode,
 class CogComponentMeta : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogComponentMeta, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   CogComponentMeta(BoundType* owner);
@@ -67,7 +70,7 @@ struct AddInfo
 class MetaComposition : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaComposition, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   MetaComposition(BoundType* componentType);
@@ -172,7 +175,7 @@ typedef Handle(*GetOwnerFunction)(HandleParam object);
 class MetaOwner : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaOwner, TypeCopyMode::ReferenceType);
   MetaOwner(GetOwnerFunction func) : mGetOwner(func) {}
 
   Handle GetOwner(HandleParam object);

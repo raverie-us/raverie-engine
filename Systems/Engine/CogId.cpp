@@ -36,8 +36,8 @@ CogId::CogId(Cog* object)
   }
   else
   {
-   Id = cInvalidObjectRawId;
-   Slot = cInvalidObjectRawId;
+    Id = cInvalidObjectRawId;
+    Slot = cInvalidObjectRawId;
   }
 }
 

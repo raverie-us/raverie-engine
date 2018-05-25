@@ -323,7 +323,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
             // If we failed to create the object (should only happen on Script Components where
             // an exception was thrown in the constructor), proxy the object and re-create it
             // under the proxy
-            if(component == nullptr && componentMeta->HasAttribute(ObjectAttributes::cProxy) == false)
+            if(component == nullptr && componentMeta->HasAttribute(ObjectAttributes::cProxy) == nullptr)
             {
               componentMeta = ProxyObject<Component>::CreateProxyMetaFromFile(componentNode.TypeName, ProxyReason::AllocationException);
               component = ZilchAllocate(Component, componentMeta, HeapFlags::NonReferenceCounted);

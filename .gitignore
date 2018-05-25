@@ -39,5 +39,7 @@ AudioTest/*
 enc_temp_folder/
 *.ide
 .arcconfig
-
+*.cache
+*.TMP
+*.d
 DevTools/

@@ -15,12 +15,12 @@ namespace Audio
   RecordNode::RecordNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
       bool isThreaded) :
     SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
-    MaxValue((float)((1 << 15) - 1)),
     FileName("RecordedOutput.wav"),
+    MaxValue((float)((1 << 15) - 1)),
     Recording(false),
+    Paused(false),
     Channels(0),
-    Streaming(true),
-    Paused(false)
+    Streaming(true)
   {
     if (!Threaded)
       SetSiblingNodes(new RecordNode(name, ID, nullptr, true));
@@ -115,8 +115,8 @@ namespace Audio
             16, // fmt chunk size
             1, // audio format
             (unsigned short)Channels, // number of channels
-            SystemSampleRate, // sampling rate
-            SystemSampleRate * Channels * 16 / 8, // bytes per second
+            cSystemSampleRate, // sampling rate
+            cSystemSampleRate * Channels * 16 / 8, // bytes per second
             2 * 16 / 8, // bytes per sample
             16, // bits per sample
             { 'd', 'a', 't', 'a' },

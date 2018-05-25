@@ -16,7 +16,7 @@ namespace Events
 class ShaderInputsEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShaderInputsEvent, TypeCopyMode::ReferenceType);
   BoundType* mType;
 };
 
@@ -32,7 +32,7 @@ public:
 class GraphicsStatics
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicsStatics, TypeCopyMode::ReferenceType);
 
   /// Information about the active graphics hardware.
   static GraphicsDriverSupport* GetDriverSupport();
@@ -51,7 +51,7 @@ public:
 class GraphicsEngine : public System
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicsEngine, TypeCopyMode::ReferenceType);
 
   GraphicsEngine();
   ~GraphicsEngine();

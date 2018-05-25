@@ -287,7 +287,8 @@ bool Message::IsFinalFragment() const
   return mIsFinalFragment;
 }
 
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Message& message)
+template <>
+Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream, Message& message)
 {
   // Write operation?
   if(direction == SerializeDirection::Write)
@@ -382,58 +383,58 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Message
     //
 
     // Read message type
-    ReturnIf(!bitStream.ReadQuantized(message.mType, MessageTypeMin, MessageTypeMax), 0);
+    ReturnIf(!bitStream.ReadQuantized(message.mType, MessageTypeMin, MessageTypeMax), 0, "");
 
     // Read message sequence ID
-    ReturnIf(!bitStream.Read(message.mSequenceId), 0);
+    ReturnIf(!bitStream.Read(message.mSequenceId), 0, "");
 
     // Read message data size
     Bits dataSize = 0;
-    ReturnIf(!bitStream.ReadQuantized(dataSize, MinMessageDataBits, MaxMessageDataBits), 0);
+    ReturnIf(!bitStream.ReadQuantized(dataSize, MinMessageDataBits, MaxMessageDataBits), 0, "");
 
     // Read 'Has timestamp?' flag
     bool hasTimestamp;
-    ReturnIf(!bitStream.Read(hasTimestamp), 0);
+    ReturnIf(!bitStream.Read(hasTimestamp), 0, "");
 
     // Timestamped?
     if(hasTimestamp)
     {
       // Read timestamp
-      ReturnIf(!bitStream.ReadQuantized(message.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0);
+      ReturnIf(!bitStream.ReadQuantized(message.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
     }
 
     // Read 'Is channeled?' flag
     bool isChanneled;
-    ReturnIf(!bitStream.Read(isChanneled), 0);
+    ReturnIf(!bitStream.Read(isChanneled), 0, "");
 
     // Channeled?
     if(isChanneled)
     {
       // Read channel ID
-      ReturnIf(!bitStream.Read(message.mChannelId), 0);
+      ReturnIf(!bitStream.Read(message.mChannelId), 0, "");
     }
 
     // Has Data?
     if(dataSize)
     {
       // Read 'Is fragment?' flag
-      ReturnIf(!bitStream.Read(message.mIsFragment), 0);
+      ReturnIf(!bitStream.Read(message.mIsFragment), 0, "");
 
       // Fragmented?
       if(message.mIsFragment)
       {
         // Read FragmentIndex
-        ReturnIf(!bitStream.Read(message.mFragmentIndex), 0);
+        ReturnIf(!bitStream.Read(message.mFragmentIndex), 0, "");
 
         // Read 'Is final fragment?' flag
-        ReturnIf(!bitStream.Read(message.mIsFinalFragment), 0);
+        ReturnIf(!bitStream.Read(message.mIsFinalFragment), 0, "");
       }
 
       //
       // Read Message Data
       //
       Assert(message.mData.GetBitsWritten() == 0);
-      ReturnIf(message.mData.Append(bitStream, dataSize) != dataSize, 0);
+      ReturnIf(message.mData.Append(bitStream, dataSize) != dataSize, 0, "");
     }
 
     // Success

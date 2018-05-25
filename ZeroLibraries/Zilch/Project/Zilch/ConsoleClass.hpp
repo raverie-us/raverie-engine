@@ -23,7 +23,7 @@ namespace Zilch
   class ZeroShared ConsoleEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ConsoleEvent, TypeCopyMode::ReferenceType);
 
     // The state invoking the console event
     ExecutableState* State;
@@ -43,7 +43,7 @@ namespace Zilch
   class ZeroShared Console
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Console, TypeCopyMode::ReferenceType);
 
     // Write to the console (not bound to Zilch)
     static void Write(AnyParam value0);

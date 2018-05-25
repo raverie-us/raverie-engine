@@ -29,7 +29,7 @@ DeclareEnum3(CastFilterState, Accept, Reject, DefaultBehavior);
 /// Allows a user to filter out an object during any cast in physics.
 struct CastFilterEvent : public Event
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CastFilterEvent, TypeCopyMode::ReferenceType);
 
   CastFilterEvent();
   /// The object being tested in this cast.
@@ -48,7 +48,7 @@ struct CastFilterEvent : public Event
 /// custom filters via an event callback.
 struct CastFilter : public BaseCastFilter
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CastFilter, TypeCopyMode::ReferenceType);
 
   CastFilter();
 
@@ -76,7 +76,7 @@ struct CastFilter : public BaseCastFilter
 /// A result from a cast operation on a PhysicsSpace.
 struct CastResult
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CastResult, TypeCopyMode::ReferenceType);
 
   CastResult();
   CastResult(const CastResult& rhs);
@@ -119,7 +119,7 @@ typedef Array<CastResult> CastResultArray;
 class CastResults
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CastResults, TypeCopyMode::ReferenceType);
   typedef CastResultArray::range range;
   typedef CastFilter Filter;
 

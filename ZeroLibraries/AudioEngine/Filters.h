@@ -151,7 +151,7 @@ namespace Audio
     float SqRoot2;
     float HalfPI;
 
-    BiQuad BiQuadsPerChannel[MaxChannels];
+    BiQuad BiQuadsPerChannel[cMaxChannels];
 
     void SetCutoffValues();
   };
@@ -173,7 +173,7 @@ namespace Audio
     float SqRoot2;
     float HalfPI;
 
-    BiQuad BiQuadsPerChannel[MaxChannels];
+    BiQuad BiQuadsPerChannel[cMaxChannels];
 
     void SetCutoffValues();
   };
@@ -198,9 +198,9 @@ namespace Audio
     float HighPassCutoff;
     float AlphaLP;
     float AlphaHP;
-    float PreviousInput[MaxChannels];
-    float PreviousOutput1[MaxChannels];
-    float PreviousOutput2[MaxChannels];
+    float PreviousInput[cMaxChannels];
+    float PreviousOutput1[cMaxChannels];
+    float PreviousOutput2[cMaxChannels];
 
     void ResetFrequencies();
 
@@ -276,7 +276,7 @@ namespace Audio
     // Wet level value (0 - 1.0f)
     float WetLevel;
     // Array of delay buffers per channel
-    float* BuffersPerChannel[MaxChannels];
+    float* BuffersPerChannel[cMaxChannels];
     // Current read position in the buffers
     int ReadIndex;
     // Current write position in the buffers
@@ -380,7 +380,7 @@ namespace Audio
     float mExpanderRatio;
     float mHalfKnee;
 
-    EnvelopeDetector Detectors[MaxChannels];
+    EnvelopeDetector Detectors[cMaxChannels];
 
     static double LagrangeInterpolation(double *x, double *y, int howMany, double xBar);
   };
@@ -486,7 +486,7 @@ namespace Audio
     // The current length of reverb in milliseconds
     float TimeMSec;
     // Maximum reverb data channels
-    static const int ChannelCount = MaxChannels - 1;
+    static const int ChannelCount = cMaxChannels - 1;
     // Data per channel
     ReverbData Data[ChannelCount];
     // The low pass gain value

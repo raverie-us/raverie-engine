@@ -107,7 +107,7 @@ extern String NamedMouseClick[3];
 class HandleableEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HandleableEvent, TypeCopyMode::ReferenceType);
   HandleableEvent()
     :Handled(false){};
   /// Set to true to signify that you have responded to this event, and that other
@@ -121,7 +121,7 @@ class Widget;
 class FocusEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FocusEvent, TypeCopyMode::ReferenceType);
 
   FocusEvent(Widget* focusGained, Widget* focusLost)
     : ReceivedFocus(focusGained), LostFocus(focusLost)
@@ -151,7 +151,7 @@ public:
 class MouseEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MouseEvent, TypeCopyMode::ReferenceType);
 
   MouseEvent();
 
@@ -194,7 +194,7 @@ public:
 class MouseDragEvent : public MouseEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MouseDragEvent, TypeCopyMode::ReferenceType);
   Vec2 StartPosition;
 };
 
@@ -203,7 +203,7 @@ public:
 class MouseFileDropEvent : public MouseEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MouseFileDropEvent, TypeCopyMode::ReferenceType);
 
   MouseFileDropEvent();
   MouseFileDropEvent(const MouseEvent& rhs);

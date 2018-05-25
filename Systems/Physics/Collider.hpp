@@ -25,7 +25,7 @@ DeclareBitField8(ColliderFlags, Ghost,
 class Collider : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Collider, TypeCopyMode::ReferenceType);
   /// All possible collider types. Needed mostly for collision detection.
   /// The order is somewhat important as collision detection currently assumes
   /// that all simple shapes (primitive types) are before the complex shapes.

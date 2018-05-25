@@ -14,7 +14,7 @@ namespace Zero
 class EditorPropertyExtension : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorPropertyExtension, TypeCopyMode::ReferenceType);
 
   virtual ~EditorPropertyExtension() {};
 };
@@ -26,7 +26,7 @@ extern const String StringArrayEdit;
 class EditorIndexedStringArray : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorIndexedStringArray, TypeCopyMode::ReferenceType);
 
   EditorIndexedStringArray(GetStringsFunc sourceArray);
   ~EditorIndexedStringArray() {}
@@ -43,7 +43,7 @@ public:
 class EditorRange : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorRange, TypeCopyMode::ReferenceType);
 
   EditorRange();
   EditorRange(float minValue, float maxValue, float increment);
@@ -59,7 +59,7 @@ public:
 class EditorSlider : public EditorRange
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorSlider, TypeCopyMode::ReferenceType);
 
   EditorSlider();
 
@@ -73,7 +73,7 @@ public:
 class EditorRotationBasis : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorRotationBasis, TypeCopyMode::ReferenceType);
 
   EditorRotationBasis();
   EditorRotationBasis(StringParam archetypeName);
@@ -88,7 +88,7 @@ public:
 class EditorResource : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorResource, TypeCopyMode::ReferenceType);
 
   EditorResource(bool allowAdd = false, bool allowNone = false,
                  StringParam filterTag = "", bool forceCompact = false);
@@ -106,7 +106,7 @@ public:
 class MetaPropertyFilter : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaPropertyFilter, TypeCopyMode::ReferenceType);
 
   virtual ~MetaPropertyFilter() {}
 
@@ -162,7 +162,7 @@ public:
 class MetaPropertyBasicFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaPropertyBasicFilter, TypeCopyMode::ReferenceType);
 
   MetaPropertyBasicFilter(TemplateFilterBase* filter = nullptr) : mActualFilter(filter) {}
   ~MetaPropertyBasicFilter() { if (mActualFilter) delete mActualFilter; }
@@ -179,7 +179,7 @@ public:
 class MetaShaderInput : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaShaderInput, TypeCopyMode::ReferenceType);
   
   String mFragmentName;
   String mInputName;
@@ -189,7 +189,7 @@ public:
 class MetaEditorGizmo : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaEditorGizmo, TypeCopyMode::ReferenceType);
   String mGizmoArchetype;
 };
 
@@ -207,7 +207,7 @@ public:
 class MetaGroup : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaGroup, TypeCopyMode::ReferenceType);
   MetaGroup(StringParam name = String());
   String mName;
 };
@@ -218,7 +218,7 @@ public:
 class MetaCustomUi : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaCustomUi, TypeCopyMode::ReferenceType);
   virtual void CreateUi(void* parentComposite, HandleParam object) = 0;
 };
 
@@ -227,7 +227,7 @@ public:
 class MetaPropertyRename : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaPropertyRename, TypeCopyMode::ReferenceType);
 
   MetaPropertyRename() {}
   MetaPropertyRename(StringParam oldName);

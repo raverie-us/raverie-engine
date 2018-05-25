@@ -19,7 +19,7 @@ struct JointNode;
 class JointSpring : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointSpring, TypeCopyMode::ReferenceType);
 
   JointSpring();
   ~JointSpring();

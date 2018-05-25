@@ -15,7 +15,7 @@ namespace Zero
 class SimpleSound : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SimpleSound, TypeCopyMode::ReferenceType);
 
   SimpleSound();
   ~SimpleSound();

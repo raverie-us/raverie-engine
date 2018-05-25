@@ -10,7 +10,7 @@ namespace Zero
 class ShaderInputs : public ReferenceCountedThreadSafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShaderInputs, TypeCopyMode::ReferenceType);
 
   /// Add an input value for a specific fragment.
   void Add(String fragmentName, String inputName, bool input);
@@ -55,7 +55,7 @@ public:
 class GraphicsBlendSettings : public BlendSettings
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BlendSettings, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandleNoData(GraphicsBlendSettings);
 
   static void ConstructedStatic(BlendSettings* settings);
@@ -68,7 +68,7 @@ public:
 class GraphicsDepthSettings : public DepthSettings
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DepthSettings, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandleNoData(GraphicsDepthSettings);
 
   static void ConstructedStatic(DepthSettings* settings);
@@ -81,7 +81,7 @@ public:
 class GraphicsRenderSettings : public RenderSettings
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RenderSettings, TypeCopyMode::ReferenceType);
 
   GraphicsRenderSettings();
 
@@ -124,7 +124,7 @@ public:
 class ColorTargetMrt : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ColorTargetMrt, TypeCopyMode::ReferenceType);
 
   ColorTargetMrt(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings) {}
 
@@ -138,7 +138,7 @@ public:
 class BlendSettingsMrt : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BlendSettingsMrt, TypeCopyMode::ReferenceType);
 
   BlendSettingsMrt(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings) {}
 
@@ -154,7 +154,7 @@ public:
 class MultiRenderTarget : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiRenderTarget, TypeCopyMode::ReferenceType);
 
   MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings);
 
@@ -167,7 +167,7 @@ public:
   type* Get##name##index()                                                                     \
   {                                                                                            \
     if (mRenderSettings.IsNull())                                                              \
-      return DoNotifyException("Error", "Attempting to call member on null object."), nullptr; \
+    { DoNotifyException("Error", "Attempting to call member on null object."); return nullptr; }\
     return mRenderSettings->Get##name##Mrt(index);                                             \
   }
 

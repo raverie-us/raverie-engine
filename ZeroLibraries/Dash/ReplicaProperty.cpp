@@ -756,6 +756,15 @@ void ReplicaProperty::SnapNow()
   SetValue(targetValue);
 }
 
+/// (Floating-point primitive type behavior)
+template<typename PrimitiveType, TF_ENABLE_IF(is_floating_point<PrimitiveType>::value)>
+inline PrimitiveType ConvergePrimitiveValue(PrimitiveType currentValue, PrimitiveType targetValue, float targetWeight)
+{
+  // Average current, target, w/ specified target weight
+  return Average(currentValue, targetValue, targetWeight);
+}
+
+
 /// (Integral primitive type behavior)
 template<typename PrimitiveType, TF_ENABLE_IF(is_integral<PrimitiveType>::value)>
 inline PrimitiveType ConvergePrimitiveValue(PrimitiveType currentValue, PrimitiveType targetValue, float targetWeight)
@@ -771,13 +780,6 @@ inline PrimitiveType ConvergePrimitiveValue(PrimitiveType currentValue, Primitiv
 
   // Return converged value as result
   return convergedValue;
-}
-/// (Floating-point primitive type behavior)
-template<typename PrimitiveType, TF_ENABLE_IF(is_floating_point<PrimitiveType>::value)>
-inline PrimitiveType ConvergePrimitiveValue(PrimitiveType currentValue, PrimitiveType targetValue, float targetWeight)
-{
-  // Average current, target, w/ specified target weight
-  return Average(currentValue, targetValue, targetWeight);
 }
 
 /// (Arithmetic property type behavior)

@@ -29,7 +29,7 @@ public:
 class OsShell : public System
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OsShell, TypeCopyMode::ReferenceType);
 
   OsShell();
 
@@ -112,7 +112,7 @@ public:
 class OsFileSelection : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OsFileSelection, TypeCopyMode::ReferenceType);
   bool Success;
   Array<String> Files;
 };

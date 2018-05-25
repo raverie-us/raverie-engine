@@ -27,7 +27,7 @@ namespace Audio
       mCounter(0),
       mType(type)
     {}
-    GrainWindow(GrainWindow& other) { CopySettings(&other); }
+    GrainWindow(GrainWindow& other) { /*CopySettings(&other); PLATFORMREFACTOR It is NOT legal to call a pure virtual from a constructor! */ }
     
     virtual float GetNextValue() = 0;
     virtual void Reset(unsigned length, unsigned attack, unsigned release) = 0;
@@ -231,8 +231,8 @@ namespace Audio
     unsigned GetValue(unsigned base, unsigned variance);
     float GetValue(float base, float variance);
 
-    static unsigned MsToFrames(int msValue) { return (unsigned)(msValue * 0.001f * SystemSampleRate); }
-    static int FramesToMs(unsigned frames) { return (int)(frames / SystemSampleRate * 1000.0f); }
+    static unsigned MsToFrames(int msValue) { return (unsigned)(msValue * 0.001f * cSystemSampleRate); }
+    static int FramesToMs(unsigned frames) { return (int)(frames / cSystemSampleRate * 1000.0f); }
 
     // Only spawns new grains when this is true
     bool mActive;

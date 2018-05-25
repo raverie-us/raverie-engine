@@ -29,7 +29,7 @@ class ICodeInspector;
 class Document : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Document, TypeCopyMode::ReferenceType);
 
   Document(u64 id);
   Document();
@@ -75,7 +75,7 @@ private:
 class DocumentManager : public ExplicitSingleton<DocumentManager, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DocumentManager, TypeCopyMode::ReferenceType);
 
   DocumentManager();
   ~DocumentManager();

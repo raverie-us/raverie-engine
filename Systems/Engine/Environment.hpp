@@ -13,7 +13,7 @@ namespace Zero
 class Environment : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Environment, TypeCopyMode::ReferenceType);
 
   static Environment* GetInstance();
 

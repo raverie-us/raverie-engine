@@ -16,7 +16,7 @@ struct BaseCastFilter;
 class HeightMapCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapCollider, TypeCopyMode::ReferenceType);
 
   HeightMapCollider();
 

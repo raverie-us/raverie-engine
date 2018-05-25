@@ -138,7 +138,7 @@ PreSolveBlock::PreSolveBlock()
 }
 
 //-------------------------------------------------------------------CollisionFilterFactory
-ZilchDefineType(CollisionFilterMetaComposition, builder, type)
+ZilchDefineTemplateType(CollisionFilterMetaComposition, builder, type)
 {
 }
 

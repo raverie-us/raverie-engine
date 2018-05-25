@@ -16,7 +16,7 @@ namespace Zero
 class ParticleAnimator : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ParticleAnimator, TypeCopyMode::ReferenceType);
 
   ParticleAnimator();
 

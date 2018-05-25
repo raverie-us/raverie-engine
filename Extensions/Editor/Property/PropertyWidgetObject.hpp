@@ -30,7 +30,7 @@ namespace NodeState
 class PropertyWidgetObject : public PropertyWidget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyWidgetObject, TypeCopyMode::ReferenceType);
 
   PropertyWidgetObject(PropertyWidgetInitializer& initializer, PropertyWidgetObject* parentNode,
                        StringParam removedTypeName = "");

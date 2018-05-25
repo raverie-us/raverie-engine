@@ -12,13 +12,25 @@
 #include <xmmintrin.h>
 #include <emmintrin.h>
 
+#if defined COMPILER_MICROSOFT
+#define ZeroPreAlign16 __declspec(align(16))
+#define ZeroPostAlign16 
+#else
+#define ZeroPreAlign16
+#define ZeroPostAlign16 __attribute__((__aligned__(16)))
+#endif
+
 namespace Math
 {
 
 namespace Simd
 {
 
-#define SimInline __forceinline
+#ifdef _MSC_VER
+  #define SimInline __forceinline
+#else
+  #define SimInline inline //__attribute__((always_inline))
+#endif
 
 //wrapper for the shuffle intrinsic so that the rest
 //of the library can be platform independent.
@@ -31,8 +43,32 @@ namespace Simd
 #define VecShuffle(v1,v2,v2Index1,v2Index2,v1Index1,v1Index2) \
   _mm_shuffle_ps(v1,v2,_MM_SHUFFLE(v2Index1,v2Index2,v1Index1,v1Index2))
 
+// Alias class to hold __m128 union to compile union
+// operator overloads with Clang/LLVM
+ZeroPreAlign16 class M128
+{
+public:
+  M128() : mValue() {}
+  M128(const M128& rhs) : mValue(rhs.mValue) {}
+  M128(__m128 value) : mValue(value) {}
+
+  operator __m128&()
+  {
+    return mValue;
+  }
+
+  operator const __m128&() const
+  {
+    return mValue;
+  }
+
+  __m128 mValue;
+};
+
 typedef float scalar;
-typedef __m128 SimVector;
+
+//typedef __m128 SimVector;
+typedef M128 SimVector;
 typedef SimVector SimVec;
 typedef SimVec& SimVecRef;
 typedef const SimVec& SimVecParam;
@@ -57,34 +93,27 @@ typedef SimMatrix3 SimMat3;
 typedef SimMat3& SimMatRef3;
 typedef const SimMat3& SimMat3Param;
 
-
-#define SimVecGlobalConstant extern const __declspec(selectany)
-
 inline uint& MaskInt()
 {
   static uint maskInt = 0xffffffff;
   return maskInt;
 }
 
-const static scalar gMaskScalar = *reinterpret_cast<const float*>(&MaskInt());
-
-SimVecGlobalConstant SimVec gSimOne = { 1.0f, 1.0f, 1.0f, 1.0f};
-SimVecGlobalConstant SimVec gSimOneVec3 = _mm_setr_ps(1.0f, 1.0f, 1.0f, 0.0f);
-SimVecGlobalConstant SimVec gSimZero = { 0.0f, 0.0f, 0.0f, 0.0f};
-SimVecGlobalConstant SimVec gSimNegativeOne = { -1.0f, -1.0f, -1.0f, -1.0f};
-SimVecGlobalConstant SimVec gSimOneHalf = { 0.5f, 0.5f, 0.5f, 0.5f};
-SimVecGlobalConstant SimVec gSimVec3Mask = {gMaskScalar, gMaskScalar, gMaskScalar, 0x00000000};
-SimVecGlobalConstant SimVec gSimFullMask = {gMaskScalar, gMaskScalar, gMaskScalar, gMaskScalar};
-SimVecGlobalConstant SimVec gSimBasisX = _mm_setr_ps(1.0f, 0.0f, 0.0f, 0.0f);
-SimVecGlobalConstant SimVec gSimBasisY = _mm_setr_ps(0.0f, 1.0f, 0.0f, 0.0f);
-SimVecGlobalConstant SimVec gSimBasisZ = _mm_setr_ps(0.0f, 0.0f, 1.0f, 0.0f);
-SimVecGlobalConstant SimVec gSimBasisW = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
-SimVecGlobalConstant SimVec gSimMaskX = _mm_setr_ps(gMaskScalar, 0x00000000, 0x00000000, 0x00000000);
-SimVecGlobalConstant SimVec gSimMaskY = _mm_setr_ps(0x00000000,gMaskScalar, 0x00000000, 0x00000000);
-SimVecGlobalConstant SimVec gSimMaskZ = _mm_setr_ps(0x00000000, 0x00000000, gMaskScalar, 0x00000000);
-SimVecGlobalConstant SimVec gSimMaskW = _mm_setr_ps(0x00000000, 0x00000000, 0x00000000, gMaskScalar);
-
-#undef SimVecGlobalConstant
+extern const SimVec gSimOne;
+extern const SimVec gSimOneVec3;
+extern const SimVec gSimZero;
+extern const SimVec gSimNegativeOne;
+extern const SimVec gSimOneHalf;
+extern const SimVec gSimVec3Mask;
+extern const SimVec gSimFullMask;
+extern const SimVec gSimBasisX;
+extern const SimVec gSimBasisY;
+extern const SimVec gSimBasisZ;
+extern const SimVec gSimBasisW;
+extern const SimVec gSimMaskX;
+extern const SimVec gSimMaskY;
+extern const SimVec gSimMaskZ;
+extern const SimVec gSimMaskW;
 
 }//namespace Simd
 

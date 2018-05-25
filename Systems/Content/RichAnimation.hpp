@@ -54,7 +54,7 @@ String GetObjectPath(Cog* object, Cog* root);
 class KeyFrameEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(KeyFrameEvent, TypeCopyMode::ReferenceType);
   KeyFrame* mKeyFrame;
 };
 
@@ -63,7 +63,7 @@ public:
 class TrackEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TrackEvent, TypeCopyMode::ReferenceType);
   TrackNode* mTrack;
 };
 
@@ -137,7 +137,7 @@ DeclareEnum5(TrackType, Object, Component, Property, SubProperty, Invalid);
 class TrackNode : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TrackNode, TypeCopyMode::ReferenceType);
   typedef ArrayMultiMap<float, KeyFrame*> KeyFrames;
 
   /// Constructors.
@@ -291,7 +291,7 @@ public:
 class RichAnimation : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RichAnimation, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   RichAnimation();
@@ -409,7 +409,7 @@ private:
 class RichAnimationBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RichAnimationBuilder, TypeCopyMode::ReferenceType);
 
   RichAnimationBuilder();
 

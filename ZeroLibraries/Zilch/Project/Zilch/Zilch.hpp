@@ -4,10 +4,16 @@
 \**************************************************************/
 
 // Note: This header is typically used as a precompiled header
-
 #pragma once
 #ifndef ZILCH_PRECOMPILED_HPP
 #define ZILCH_PRECOMPILED_HPP
+
+#ifdef COMPILER_CLANG
+  #pragma clang diagnostic ignored "-Wunused-parameter"
+  #pragma clang diagnostic ignored "-Wlogical-op-parentheses"
+  #pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+  #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 // This needs to be included before anything else
 // since it disables warnings and defines macros we use

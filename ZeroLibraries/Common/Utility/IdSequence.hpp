@@ -58,7 +58,7 @@ public:
     else if(id < mNext)
     {
       // Not Missing?
-      ArraySet<Id>::const_iterator iter = mMissing.FindIterator(id);
+      typename ArraySet<Id>::const_iterator iter = mMissing.FindIterator(id);
       if(iter == mMissing.End())
         return true;
     }
@@ -83,7 +83,8 @@ public:
     else if(id < mNext)
     {
       // Not Missing?
-      ArraySet<Id>::iterator iter = mMissing.FindIterator(id);
+      typedef typename ArraySet<Id>::iterator iterator;
+      iterator iter = mMissing.FindIterator(id);
       if(iter == mMissing.End())
         return false; /// Duplicate
       // Otherwise,

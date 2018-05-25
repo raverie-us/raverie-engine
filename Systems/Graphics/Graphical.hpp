@@ -33,7 +33,7 @@ public:
 class GraphicalEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicalEvent, TypeCopyMode::ReferenceType);
   /// The viewing CameraViewport for EnterView/ExitView.
   HandleOf<Cog> mViewingObject;
 };
@@ -42,7 +42,7 @@ public:
 class Graphical : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Graphical, TypeCopyMode::ReferenceType);
 
   // Component Interface
 

@@ -44,7 +44,7 @@ DeclareEnum6(ToolTipColorScheme, Default, Gray, Red, Yellow, Green, Orange);
 class ToolTip : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ToolTip, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ToolTip(Widget* source);

@@ -29,7 +29,7 @@ typedef Physics::LinearAxisJoint LinearAxisJoint;
 class DynamicMotor : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DynamicMotor, TypeCopyMode::ReferenceType);
 
   DynamicMotor();
   virtual ~DynamicMotor();

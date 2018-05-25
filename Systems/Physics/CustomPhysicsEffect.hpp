@@ -23,7 +23,7 @@ class RigidBody;
 class CustomPhysicsEffectEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CustomPhysicsEffectEvent, TypeCopyMode::ReferenceType);
 
   CustomPhysicsEffectEvent();
 
@@ -40,7 +40,7 @@ public:
 class CustomPhysicsEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CustomPhysicsEffect, TypeCopyMode::ReferenceType);
 
   CustomPhysicsEffect();
 

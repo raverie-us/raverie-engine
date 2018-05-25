@@ -22,7 +22,7 @@ DeclareEnum2(TextBoxStyle, Classic, Modern);
 class TextBox : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextBox, TypeCopyMode::ReferenceType);
 
   TextBox(Composite* parent, StringParam style = String());
   ~TextBox();
@@ -104,7 +104,7 @@ public:
 class MultiLineText : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiLineText, TypeCopyMode::ReferenceType);
 
   MultiLineText(Composite* parent, StringParam textClass = String());
   MultiLineText(Composite* parent, StringParam font, uint fontSize);

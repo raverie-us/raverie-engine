@@ -250,7 +250,7 @@ template <typename T, typename UnqualifiedType,
 PrimitiveType* Variant::GetPrimitiveMemberOrNull(size_t index) const
 {
   // Primitive member info
-  static const size_t PrimitiveCount = BasicNativeTypePrimitiveMembers<Decay<T>::Type>::Count;
+  static const size_t PrimitiveCount = BasicNativeTypePrimitiveMembers<typename Decay<T>::Type>::Count;
 
   // (Specified index should not be out of bounds)
   ErrorIf(index >= PrimitiveCount, "Specified index is out of bounds while attempting to access a primitive member on variant's stored value");

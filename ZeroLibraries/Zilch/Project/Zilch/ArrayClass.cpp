@@ -128,9 +128,6 @@ namespace Zilch
     //***************************************************************************
     static void ArrayGet(Call& call, ExceptionReport& report)
     {
-      // Read the element size from the current function's user-data
-      ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
-
       // Get ourselves (the array)
       ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
@@ -151,9 +148,6 @@ namespace Zilch
     //***************************************************************************
     static void ArraySet(Call& call, ExceptionReport& report)
     {
-      // Read the element size from the current function's user-data
-      ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
-
       // Get ourselves (the array)
       ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
@@ -207,9 +201,6 @@ namespace Zilch
     //***************************************************************************
     static void ArrayPop(Call& call, ExceptionReport& report)
     {
-      // Read the element size from the current function's user-data
-      ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
-
       // Get ourselves (the array)
       ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
 
@@ -384,9 +375,6 @@ namespace Zilch
     //***************************************************************************
     static void ArrayResizeConstructorHelper(Call& call, ExceptionReport& report, byte* defaultValue)
     {
-      // Read the element size from the current function's user-data
-      ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
-
       // Get ourselves (the array)
       byte* memory = call.GetHandle(Call::This).Dereference();
 
@@ -471,8 +459,6 @@ namespace Zilch
     {
       // Get ourselves (the array)
       ArrayTemplate* self = (ArrayTemplate*)call.GetHandle(Call::This).Dereference();
-
-      ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
 
       // Read the value to find
       T value = ArrayReadValue(call, self, 0);
@@ -773,9 +759,6 @@ namespace Zilch
     //***************************************************************************
     static void ArrayRangeCurrent(Call& call, ExceptionReport& report)
     {
-      // Read the element size from the current function's user-data
-      ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
-
       // Get this object
       ArrayRangeTemplate* self = (ArrayRangeTemplate*)call.GetHandle(Call::This).Dereference();
     

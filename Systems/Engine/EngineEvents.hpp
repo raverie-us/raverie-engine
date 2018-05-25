@@ -22,7 +22,7 @@ namespace Events
 class TextEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextEvent, TypeCopyMode::ReferenceType);
   TextEvent(StringParam text) : Text(text) {}
   String Text;
 };
@@ -31,7 +31,7 @@ public:
 class TextErrorEvent : public TextEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextErrorEvent, TypeCopyMode::ReferenceType);
   TextErrorEvent(StringParam text, int code) : TextEvent(text), Code(code) {}
   int Code;
 };
@@ -41,7 +41,7 @@ public:
 class ProgressEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ProgressEvent, TypeCopyMode::ReferenceType);
   ProgressEvent();
   ProgressType::Enum ProgressType;
   String Operation;
@@ -54,7 +54,7 @@ public:
 class BlockingTaskEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BlockingTaskEvent, TypeCopyMode::ReferenceType);
 
   BlockingTaskEvent(StringParam taskName = String()) : mTaskName(taskName) {}
   String mTaskName;

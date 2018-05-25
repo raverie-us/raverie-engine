@@ -85,7 +85,7 @@ DeclareEnum3(SizePolicy, Auto, Fixed, Flex);
 class SizePolicies
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(SizePolicies, TypeCopyMode::ValueType);
 
   SizePolicies()
   {
@@ -147,7 +147,7 @@ public:
 class Widget : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Widget, TypeCopyMode::ReferenceType);
 
   Widget(Composite* parent, AttachType::Enum attachType = AttachType::Normal);
   virtual ~Widget();

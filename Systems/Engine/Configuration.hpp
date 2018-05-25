@@ -22,7 +22,7 @@ DeclareEvent(RecentProjectsUpdated);
 class MainConfig : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MainConfig, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -57,7 +57,7 @@ public:
 class EditorConfig : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorConfig, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -76,7 +76,7 @@ public:
 class UserConfig : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UserConfig, TypeCopyMode::ReferenceType);
 
   UserConfig();
 
@@ -113,7 +113,7 @@ public:
 class ContentConfig : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentConfig, TypeCopyMode::ReferenceType);
   void Serialize(Serializer& stream) override;
 
   /// Content output directory.
@@ -135,7 +135,7 @@ public:
 class DeveloperConfig : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DeveloperConfig, TypeCopyMode::ReferenceType);
 
   DeveloperConfig();
 
@@ -161,7 +161,7 @@ public:
 class ZilchPluginConfig : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchPluginConfig, TypeCopyMode::ReferenceType);
 
   ZilchPluginConfig();
   void Serialize(Serializer& stream) override;
@@ -177,7 +177,7 @@ DeclareEnum2(TabWidth, TwoSpaces, FourSpaces);
 class TextEditorConfig : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextEditorConfig, TypeCopyMode::ReferenceType);
   void Serialize(Serializer& stream) override;
 
   /// Default Font Size
@@ -218,7 +218,7 @@ public:
 class RecentProjects : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RecentProjects, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -262,7 +262,7 @@ private:
 class BuildInfo : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BuildInfo, TypeCopyMode::ReferenceType);
   void Serialize(Serializer& stream) override;
 
   String ProjectName;

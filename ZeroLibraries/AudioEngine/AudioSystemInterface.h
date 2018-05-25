@@ -58,6 +58,7 @@ namespace Audio
   //------------------------------------------------------------------------- Audio System Interface
 
   class PacketEncoder;
+  class AudioSystemInternal;
 
   // Provides interface functions for accessing API, interacts with internal system
   class AudioSystemInterface

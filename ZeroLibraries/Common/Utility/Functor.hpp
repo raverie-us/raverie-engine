@@ -32,7 +32,7 @@ public:
 template <typename ReturnType>
 Functor* CreateFunctor(ReturnType(*functionPointer)())
 {
-  ErrorIf(instance == nullptr);
+  ErrorIf(functionPointer == nullptr);
 
   auto functor = new FunctorStatic0<ReturnType>();
   functor->mFunctionPointer = functionPointer;
@@ -109,7 +109,7 @@ public:
 template <typename ReturnType, typename P0>
 Functor* CreateFunctor(ReturnType (*functionPointer)(P0), P0 p0)
 {
-  ErrorIf(instance == nullptr);
+  ErrorIf(functionPointer == nullptr);
 
   auto functor = new FunctorStatic1<ReturnType, P0>();
   functor->mFunctionPointer = functionPointer;
@@ -193,7 +193,7 @@ public:
 template <typename ReturnType, typename P0, typename P1>
 Functor* CreateFunctor(ReturnType (*functionPointer)(P0, P1), P0 p0, P1 p1)
 {
-  ErrorIf(instance == nullptr);
+  ErrorIf(functionPointer == nullptr);
 
   auto functor = new FunctorStatic2<ReturnType, P0, P1>();
   functor->mFunctionPointer = functionPointer;
@@ -283,7 +283,7 @@ public:
 template <typename ReturnType, typename P0, typename P1, typename P2>
 Functor* CreateFunctor(ReturnType(*functionPointer)(P0, P1, P2), P0 p0, P1 p1, P2 p2)
 {
-  ErrorIf(instance == nullptr);
+  ErrorIf(functionPointer == nullptr);
 
   auto functor = new FunctorStatic3<ReturnType, P0, P1, P2>();
   functor->mFunctionPointer = functionPointer;

@@ -84,7 +84,7 @@ void DebugBreak()
   if (IsDebuggerAttached() == true)
   {
     // Trigger a break point!
-    ZERO_DEBUG_BREAK;
+    ZeroDebugBreak();
   }
 }
 

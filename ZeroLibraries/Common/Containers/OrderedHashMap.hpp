@@ -16,7 +16,7 @@ namespace Zero
 /// Currently implemented as a hashmap of linked list nodes. Can be optimized later, meant as a quick and easy solution for now.
 template <typename KeyType, 
           typename ValueType,
-          typename SubSorter = less<KeyType>>
+          typename SubSorter = less<KeyType> >
 class OrderedHashMap
 {
 public:
@@ -34,7 +34,7 @@ public:
     Link<Node> link;
   };
 
-  template <typename SubSorter>
+  template <typename SubSorterType = SubSorter>
   struct NodeSortPolicy
   {
     bool operator()(const Node& rhs, const Node& lhs)
@@ -42,13 +42,13 @@ public:
       return mSubSorter(rhs.mPair.first, lhs.mPair.first);
     }
 
-    SubSorter mSubSorter;
+    SubSorterType mSubSorter;
   };
 
   typedef NodeSortPolicy<SubSorter> Sorter;
-  typedef HashMap<KeyType, Node*> MapType;
-  typedef InList<Node> ListType;
-  typedef typename ListType::range ListTypeRange;
+  typedef HashMap<KeyType, Node*>   MapType;
+  typedef InList<Node>              ListType;
+  typedef typename ListType::range  ListTypeRange;
 
   OrderedHashMap() : mSorter()
   {

@@ -17,7 +17,7 @@ template<typename KeyType, typename DataType>
 struct PairSortPolicy
 {
   /// Typedefs
-  typedef typename Pair<KeyType, DataType> value_type;
+  typedef struct Pair<KeyType, DataType> value_type;
   typedef KeyType  key_type;
   typedef DataType data_type;
 
@@ -56,23 +56,26 @@ class ArrayMap : public ArraySet<Pair<KeyType, DataType>, Sorter, Allocator>
 {
 public:
   /// Typedefs
-  typedef ArrayMap<KeyType, DataType, Sorter, Allocator>       this_type;
-  typedef ArraySet<Pair<KeyType, DataType>, Sorter, Allocator> array_set_type;
-  typedef array_set_type                                       base_type;
-  typedef KeyType                                              key_type;
-  typedef key_type*                                            key_pointer;
-  typedef const key_type*                                      const_key_pointer;
-  typedef key_type&                                            key_reference;
-  typedef const key_type&                                      const_key_reference;
-  typedef DataType                                             data_type;
-  typedef data_type*                                           data_pointer;
-  typedef const data_type*                                     const_data_pointer;
-  typedef data_type&                                           data_reference;
-  typedef const data_type&                                     const_data_reference;
-  typedef typename base_type::range range;
-  typedef typename base_type::size_type size_type;
-  typedef typename base_type::pointer_bool_pair pointer_bool_pair;
-  typedef typename base_type::iterator iterator;
+  typedef ArrayMap<KeyType, DataType, Sorter, Allocator>        this_type;
+  typedef ArraySet<Pair<KeyType, DataType>, Sorter, Allocator>  array_set_type;
+  typedef array_set_type                                        base_type;
+  typedef KeyType                                               key_type;
+  typedef key_type*                                             key_pointer;
+  typedef const key_type*                                       const_key_pointer;
+  typedef key_type&                                             key_reference;
+  typedef const key_type&                                       const_key_reference;
+  typedef DataType                                              data_type;
+  typedef data_type*                                            data_pointer;
+  typedef const data_type*                                      const_data_pointer;
+  typedef data_type&                                            data_reference;
+  typedef const data_type&                                      const_data_reference;
+  typedef typename base_type::value_type                        value_type;
+  typedef typename base_type::range                             range;
+  typedef typename base_type::size_type                         size_type;
+  typedef typename base_type::pointer_bool_pair                 pointer_bool_pair;
+  typedef typename base_type::iterator                          iterator;
+  typedef typename base_type::pointer                           pointer;
+  typedef typename base_type::const_reference                   const_reference;
 
   /// Range adapter that presents only the key members in a key-data pair range, intended for convenience
   struct key_range : public range
@@ -87,8 +90,8 @@ public:
     key_reference       Front()                           { return range::Front().first;         }
     key_reference       Back()                            { return range::Back().first;          }
     key_range&          All()                             { return *this; }
-    key_reference       operator[](size_type index)       { return range::operator[index].first; }
-    const_key_reference operator[](size_type index) const { return range::operator[index].first; }
+    key_reference       operator[](size_type index)       { return range::operator[](index).first; }
+    const_key_reference operator[](size_type index) const { return range::operator[](index).first; }
   };
 
   /// Range adapter that presents only the data members in a key-data pair range, intended for convenience
@@ -104,8 +107,8 @@ public:
     data_reference       Front()                           { return range::Front().second;         }
     data_reference       Back()                            { return range::Back().second;          }
     data_range&          All()                             { return *this; }
-    data_reference       operator[](size_type index)       { return range::operator[index].second; }
-    const_data_reference operator[](size_type index) const { return range::operator[index].second; }
+    data_reference       operator[](size_type index)       { return range::operator[](index).second; }
+    const_data_reference operator[](size_type index) const { return range::operator[](index).second; }
   };
 
   //
@@ -183,11 +186,11 @@ public:
   key_pointer FindKeyPointer(const KeyCompareType& searchKey) const
   {
     // Find instance
-    size_type index = FindIndex(searchKey);
-    if(index == InvalidIndex) // Unable?
+    size_type index = base_type::FindIndex(searchKey);
+    if(index == base_type::InvalidIndex) // Unable?
       return nullptr;
     else
-      return &(mData[index].first);
+      return &(base_type::mData[index].first);
   }
 
   /// Returns the key of the equivalent element in the array, else ifNotFound
@@ -195,11 +198,11 @@ public:
   const_key_reference FindKeyValue(const KeyCompareType& searchKey, const_key_reference ifNotFound) const
   {
     // Find instance
-    size_type index = FindIndex(searchKey);
-    if(index == InvalidIndex) // Unable?
+    size_type index = base_type::FindIndex(searchKey);
+    if(index == base_type::InvalidIndex) // Unable?
       return ifNotFound;
     else
-      return mData[index].first;
+      return base_type::mData[index].first;
   }
 
   /// Returns a pointer to the data of the equivalent element in the array, else nullptr
@@ -207,11 +210,11 @@ public:
   data_pointer FindPointer(const KeyCompareType& searchKey) const
   {
     // Find instance
-    size_type index = FindIndex(searchKey);
-    if(index == InvalidIndex) // Unable?
+    size_type index = base_type::FindIndex(searchKey);
+    if(index == base_type::InvalidIndex) // Unable?
       return nullptr;
     else
-      return &(mData[index].second);
+      return &(base_type::mData[index].second);
   }
 
   /// Returns the data of the equivalent element in the array, else ifNotFound
@@ -219,11 +222,11 @@ public:
   const_data_reference FindValue(const KeyCompareType& searchKey, const_data_reference ifNotFound) const
   {
     // Find instance
-    size_type index = FindIndex(searchKey);
-    if(index == InvalidIndex) // Unable?
+    size_type index = base_type::FindIndex(searchKey);
+    if(index == base_type::InvalidIndex) // Unable?
       return ifNotFound;
     else
-      return mData[index].second;
+      return base_type::mData[index].second;
   }
 
   //
@@ -236,33 +239,33 @@ public:
   pointer_bool_pair FindOrInsert(const_key_reference key, const_data_reference data)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), key, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, key)) // Found?
+    && base_type::mSorter.Equal(*position, key)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       value_type newValue = value_type(key, data);
       base_type::Insert(position, ZeroMove(newValue));
-      return pointer_bool_pair(mData + index, true);
+      return pointer_bool_pair(base_type::mData + index, true);
     }
   }
   pointer_bool_pair FindOrInsert(const_key_reference key, MoveReference<data_type> data)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), key, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, key)) // Found?
+    && base_type::mSorter.Equal(*position, key)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       value_type newValue = value_type(key, ZeroMove(data));
       base_type::Insert(position, ZeroMove(newValue));
-      return pointer_bool_pair(mData + index, true);
+      return pointer_bool_pair(base_type::mData + index, true);
     }
   }
   /// Inserts a new element if an equivalent element does not already exist
@@ -270,17 +273,17 @@ public:
   data_reference FindOrInsert(const_key_reference key)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), key, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), key, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, key)) // Found?
+    && base_type::mSorter.Equal(*position, key)) // Found?
       return position->second;
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       value_type newValue = value_type(key);
       base_type::Insert(position, ZeroMove(newValue));
-      return mData[index].second;
+      return base_type::mData[index].second;
     }
   }
 
@@ -323,10 +326,10 @@ public:
   bool EraseData(const DataCompareType& searchData)
   {
     // Erase first instance
-    for(size_type i = 0; i < Size(); ++i)
+    for(size_type i = 0; i < base_type::Size(); ++i)
     {
       // Found?
-      if(mData[i].second == searchData)
+      if(base_type::mData[i].second == searchData)
       {
         // Erase and return
         base_type::EraseAt(i);
@@ -344,10 +347,10 @@ public:
   void EraseAllData(const DataCompareType& searchData)
   {
     // Erase all instances
-    for(size_type i = 0; i < Size(); )
+    for(size_type i = 0; i < base_type::Size(); )
     {
       // Found?
-      if(mData[i].second == searchData)
+      if(base_type::mData[i].second == searchData)
         base_type::EraseAt(i); // Erase and advance
       else
         ++i; // Advance

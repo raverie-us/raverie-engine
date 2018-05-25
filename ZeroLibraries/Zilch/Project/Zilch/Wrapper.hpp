@@ -16,7 +16,7 @@ namespace Zilch
   class ZeroShared Wrapper : public IZilchObject
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Wrapper, TypeCopyMode::ReferenceType);
 
     // Generates a new type that wraps the passed in type (with an optional base that that our new type will inherit from)
     // The newly generated type will always be a class

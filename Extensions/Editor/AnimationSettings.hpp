@@ -24,7 +24,7 @@ class AnimationSettings
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationSettings, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   AnimationSettings();

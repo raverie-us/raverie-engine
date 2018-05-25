@@ -10,7 +10,7 @@ namespace Zero
 class Material : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Material, TypeCopyMode::ReferenceType);
 
   Material();
   ~Material();
@@ -83,7 +83,7 @@ public:
 class CompositionLabelExtension : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CompositionLabelExtension, TypeCopyMode::ReferenceType);
 };
 
 } // namespace Zero

@@ -20,7 +20,7 @@ namespace Physics
 /// WARNING: Do not hold onto this after an event is sent out.
 struct ContactPoint
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContactPoint, TypeCopyMode::ReferenceType);
 
   ContactPoint();
 

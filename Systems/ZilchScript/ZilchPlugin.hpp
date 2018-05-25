@@ -12,14 +12,15 @@ namespace Zero
 {
 //-------------------------------------------------------------------ZilchPluginSource
 class BackgroundTask;
-class ZilchPluginConfig;
 class UpdateEvent;
+class ZilchPluginConfig;
+class ZilchPluginLibrary;
 class BackgroundTaskEvent;
 
 class ZilchPluginSource : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchPluginSource, TypeCopyMode::ReferenceType);
 
   ZilchPluginSource();
   ~ZilchPluginSource();
@@ -106,7 +107,7 @@ public:
 class ZilchPluginLibrary : public ZilchLibraryResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchPluginLibrary, TypeCopyMode::ReferenceType);
 
   ZilchPluginLibrary();
   ~ZilchPluginLibrary();

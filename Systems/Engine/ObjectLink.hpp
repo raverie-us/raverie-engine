@@ -24,7 +24,7 @@ class ObjectLinkRange;
 class ObjectLinkEdge
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectLinkEdge, TypeCopyMode::ReferenceType);
 
   ObjectLinkEdge();
 
@@ -86,7 +86,7 @@ private:
 class ObjectLinkAnchor : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectLinkAnchor, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void OnDestroy(uint flags) override;
@@ -109,7 +109,7 @@ public:
 class ObjectLink : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectLink, TypeCopyMode::ReferenceType);
 
   ObjectLink();
 
@@ -192,7 +192,7 @@ public:
 class ObjectLinkEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectLinkEvent, TypeCopyMode::ReferenceType);
 
   ObjectLinkEvent();
 
@@ -210,7 +210,7 @@ public:
 class ObjectLinkPointChangedEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectLinkPointChangedEvent, TypeCopyMode::ReferenceType);
 
   ObjectLinkPointChangedEvent();
 

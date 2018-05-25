@@ -20,7 +20,7 @@ namespace Events
 class FileEditEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FileEditEvent, TypeCopyMode::ReferenceType);
   /// If it was a rename, this should be set to the old file name
   String OldFileName;
   String FileName;
@@ -33,7 +33,7 @@ public:
 class EventDirectoryWatcher : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EventDirectoryWatcher, TypeCopyMode::ReferenceType);
 
   EventDirectoryWatcher(StringParam directory);
 

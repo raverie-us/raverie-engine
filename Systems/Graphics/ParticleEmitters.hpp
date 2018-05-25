@@ -18,7 +18,7 @@ namespace Zero
 class SphericalParticleEmitter : public ParticleEmitterShared
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SphericalParticleEmitter, TypeCopyMode::ReferenceType);
 
   SphericalParticleEmitter();
   ~SphericalParticleEmitter();
@@ -38,7 +38,7 @@ private:
 class BoxParticleEmitter : public ParticleEmitterShared
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BoxParticleEmitter, TypeCopyMode::ReferenceType);
 
   BoxParticleEmitter();
   ~BoxParticleEmitter();
@@ -59,7 +59,7 @@ DeclareEnum3(MeshEmitMode, Vertex, Edge, Face);
 class MeshParticleEmitter : public ParticleEmitterShared
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MeshParticleEmitter, TypeCopyMode::ReferenceType);
 
   MeshParticleEmitter();
   ~MeshParticleEmitter();

@@ -475,8 +475,8 @@ ZilchDefineType(ResourceTemplateSearch, builder, type)
 //**************************************************************************************************
 ResourceTemplateSearch::ResourceTemplateSearch(Composite* parent)
   : ColoredComposite(parent, Vec4(0.22f, 0.22f, 0.22f, 1.0f))
-  , mManager(nullptr)
   , mTemplateCount(0)
+  , mManager(nullptr)
 {
   SetLayout(CreateStackLayout());
 

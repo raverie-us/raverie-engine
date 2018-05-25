@@ -14,7 +14,7 @@ class ReactiveViewport;
 class ViewportMouseEvent : public MouseEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ViewportMouseEvent, TypeCopyMode::ReferenceType);
 
   ViewportMouseEvent();
   ViewportMouseEvent(MouseEvent* event);
@@ -60,7 +60,7 @@ class ReactiveViewport : public Viewport
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ReactiveViewport, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ReactiveViewport(Composite* parent, Space* space, Camera* camera, CameraViewport* cameraViewport);
@@ -118,7 +118,7 @@ public:
 class GameWidget : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GameWidget, TypeCopyMode::ReferenceType);
 
   GameWidget(Composite* composite);
   ~GameWidget();

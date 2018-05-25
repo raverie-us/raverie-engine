@@ -15,7 +15,7 @@ namespace Zero
 class SampleCurve : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SampleCurve, TypeCopyMode::ReferenceType);
 
   struct ControlPoint;
   typedef Array<ControlPoint> ControlPointArray;

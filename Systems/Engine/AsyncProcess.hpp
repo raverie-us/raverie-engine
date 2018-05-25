@@ -25,7 +25,7 @@ DeclareEnum3(StreamType, StandardOutput, StandardError, StandardInput);
 class AsyncProcessEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AsyncProcessEvent, TypeCopyMode::ReferenceType);
 
   /// Bytes being read from a stream. Note: These bytes may not form a
   /// valid string if the stream type was non ascii (e.g. utf-8).
@@ -42,7 +42,7 @@ public:
 class AsyncProcess : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AsyncProcess, TypeCopyMode::ReferenceType);
 
   /// Construct a new process. This does not start the process.
   static AsyncProcess* Create();

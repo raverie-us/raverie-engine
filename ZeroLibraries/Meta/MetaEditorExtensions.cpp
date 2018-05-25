@@ -99,24 +99,24 @@ ZilchDefineType(EditorRotationBasis, builder, type)
 
 //**************************************************************************************************
 EditorRotationBasis::EditorRotationBasis()
-  : mGizmoName("EditorGizmo")
-  , mIntData(0)
+  : mIntData(0)
+  , mGizmoName("EditorGizmo")
 {
 }
 
 //**************************************************************************************************
 EditorRotationBasis::EditorRotationBasis(StringParam archetypeName)
-  : mArchetypeName(archetypeName)
+  : mIntData(0)
   , mGizmoName("EditorGizmo")
-  , mIntData(0)
+  , mArchetypeName(archetypeName)
 {
 }
 
 //**************************************************************************************************
 EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam gizmoName, int intData)
-  : mArchetypeName(archetypeName)
+  : mIntData(intData)
   , mGizmoName(gizmoName)
-  , mIntData(intData)
+  , mArchetypeName(archetypeName)
 {
 }
 
@@ -131,9 +131,9 @@ ZilchDefineType(EditorResource, builder, type)
 
 //**************************************************************************************************
 EditorResource::EditorResource(bool allowAdd, bool allowNone, StringParam filterTag, bool forceCompact)
-  : AllowAdd(allowAdd)
+  : FilterTag(filterTag)
+  , AllowAdd(allowAdd)
   , AllowNone(allowNone)
-  , FilterTag(filterTag)
   , ForceCompact(forceCompact)
 {
 

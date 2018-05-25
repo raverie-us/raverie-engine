@@ -10,7 +10,7 @@ namespace Zero
 class Texture : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Texture, TypeCopyMode::ReferenceType);
 
   /// Makes an anonymous Texture resource that can be defined by script and uploaded to the gpu.
   static HandleOf<Texture> CreateRuntime();

@@ -29,7 +29,7 @@ namespace Zero
   ///// HELPERS ///// 
 
   /// Find the method doc in a list that has the same parameters as the meta method passed in
-  MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Function* metaMeth);
+  MethodDoc *MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Function* metaMeth);
 
 
   /// Loads from zilch, saves to data file, then safe deletes
@@ -255,7 +255,7 @@ namespace Zero
     void FillDocumentation(BoundType* classType);
 
     PropertyDoc* GetPropertyDoc(StringParam propertyName);
-    MethodDoc* GetMethodDoc(Function* function);
+    MethodDoc* GetMethodDoc(Zilch::Function* function);
 
     /// Helper for CreateClassDocFromBoundType to load events
     void CreateEventDocFromBoundType(SendsEvent* eventSent);
@@ -314,7 +314,7 @@ namespace Zero
   class DocumentationLibrary : public LazySingleton<DocumentationLibrary, EventObject>
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DocumentationLibrary, TypeCopyMode::ReferenceType);
 
     ~DocumentationLibrary();
 

@@ -17,7 +17,7 @@ class SoundSpace;
 class SoundListener : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundListener, TypeCopyMode::ReferenceType);
 
   SoundListener();
   ~SoundListener();

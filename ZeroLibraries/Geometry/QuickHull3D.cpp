@@ -15,7 +15,7 @@ template <typename ListType>
 size_t CountInList(ListType& list)
 {
   size_t count = 0;
-  for(ListType::range range = list.All(); !range.Empty(); range.PopFront())
+  for(typename ListType::range range = list.All(); !range.Empty(); range.PopFront())
     ++count;
   return count;
 }

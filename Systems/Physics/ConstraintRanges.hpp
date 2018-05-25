@@ -97,7 +97,7 @@ protected:
 /// Exposes some internals to Contact which currently can't be exposed.
 struct ContactGraphEdge : public BaseConstraintGraphEdge<Physics::Contact, Physics::ContactEdge>
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContactGraphEdge, TypeCopyMode::ReferenceType);
   typedef Physics::Contact Contact;
   typedef Physics::ContactEdge EdgeType;
   typedef BaseConstraintGraphEdge<Contact, EdgeType> BaseType;
@@ -160,7 +160,7 @@ struct BaseJointGraphEdge : public BaseConstraintGraphEdge<JointType, JointEdge>
 /// Exposes convenience functions for iterating over the graph.
 struct JointGraphEdge : public BaseJointGraphEdge<Joint>
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointGraphEdge, TypeCopyMode::ReferenceType);
 
   typedef BaseJointGraphEdge<Joint> BaseType;
   JointGraphEdge() {}
@@ -336,17 +336,17 @@ struct BaseConstraintRange
 {
   typedef BaseConstraintRange<BaseConstraintType, FilterConstraintType, PolicyType> self_type;
 
-  typedef BaseConstraintType BaseConstraintTypeDef;
-  typedef FilterConstraintType ConstraintType;
-  typedef PolicyType PolicyTypeDef;
+  typedef BaseConstraintType    BaseConstraintTypeDef;
+  typedef FilterConstraintType  ConstraintType;
+  typedef PolicyType            PolicyTypeDef;
 
-  typedef typename PolicyType::GraphEdgeType GraphEdgeType;
-  typedef GraphEdgeType value_type;
-  typedef typename PolicyType::EdgeType EdgeType;
-  typedef InList<EdgeType, &EdgeType::ColliderLink> EdgeList;
-  typedef typename EdgeList::range JointRangeType;
+  typedef typename PolicyType::GraphEdgeType            GraphEdgeType;
+  typedef typename BaseConstraintRange::GraphEdgeType&  FrontResult;
+  typedef typename PolicyType::EdgeType                 EdgeType;
+  typedef InList<EdgeType, &EdgeType::ColliderLink>     EdgeList;
+  typedef typename EdgeList::range                      JointRangeType;
+  typedef GraphEdgeType                                 value_type;
 
-  typedef typename GraphEdgeType& FrontResult;
 
   BaseConstraintRange(){}
   BaseConstraintRange(const BaseConstraintRange& rhs)

@@ -27,7 +27,7 @@ class GizmoUpdateEvent : public GizmoEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GizmoUpdateEvent, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e);
@@ -50,7 +50,7 @@ class TranslateGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TranslateGizmoUpdateEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   TranslateGizmoUpdateEvent(GizmoUpdateEvent* e);
@@ -64,7 +64,7 @@ class ScaleGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ScaleGizmoUpdateEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ScaleGizmoUpdateEvent(GizmoUpdateEvent* e);
@@ -79,7 +79,7 @@ class RotateGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotateGizmoUpdateEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   RotateGizmoUpdateEvent(GizmoUpdateEvent* e);
@@ -98,7 +98,7 @@ class GizmoDrag : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GizmoDrag, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;

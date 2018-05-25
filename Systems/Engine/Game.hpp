@@ -42,7 +42,7 @@ typedef ArrayMultiMap<String, Space*> SpaceMap;
 class GameEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GameEvent, TypeCopyMode::ReferenceType);
 
   GameEvent();
 
@@ -63,7 +63,7 @@ public:
 class GameSession : public Cog
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GameSession, TypeCopyMode::ReferenceType);
 
   GameSession();
   ~GameSession();

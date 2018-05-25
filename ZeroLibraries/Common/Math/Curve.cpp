@@ -290,7 +290,6 @@ void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, real er
       PointData data0 = stack[size - 1];
       PointData data1 = stack[size - 2];
 
-      Vec3 movement = data1.Point - data0.Point;
       //calculate the point half-way in-between the two points on the stack
       real midT = (data0.T + data1.T) * real(0.5);
       PointData midData = ComputePointData<Policy>(midT, cp0, cp1, cp2, cp3);

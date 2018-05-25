@@ -468,7 +468,7 @@ public:
   {
     /// Typedefs
     typedef Variant                             Item;
-    typedef typename ItemCache<Variant, Id>     ItemCache;
+    typedef class ItemCache<Variant, Id>        ItemCache;
     typedef typename ItemCache::item_id_range   item_id_range;
     typedef typename ItemCache::item_id_pointer item_id_pointer;
 
@@ -597,7 +597,8 @@ public:
       BitStream& bitStream = message.GetData();
 
       // For all items
-      forRange(item_id_range::value_type& item, items)
+      typedef typename item_id_range::value_type value_type;
+      forRange(value_type& item, items)
       {
         // Write item ID
         if(!bitStream.Write(item.second)) // Unable?

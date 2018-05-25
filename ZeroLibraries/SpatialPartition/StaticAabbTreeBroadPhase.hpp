@@ -17,7 +17,7 @@ namespace Zero
 class StaticAabbTreeBroadPhase : public IBroadPhase
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(StaticAabbTreeBroadPhase, TypeCopyMode::ReferenceType);
 
   virtual void Serialize(Serializer& stream);
 

@@ -33,9 +33,9 @@ namespace Audio
   //************************************************************************************************
   ListenerNodeData::ListenerNodeData(ListenerWorldPositionInfo& positionInfo) :
     InterpolatingVolume(false),
-    Deactivating(false),
     PositionWorld(positionInfo.Position),
-    VelocityWorld(positionInfo.Velocity)
+    VelocityWorld(positionInfo.Velocity),
+    Deactivating(false)
   {
     Math::Vec3 right = positionInfo.ForwardDirection.Cross(positionInfo.UpDirection);
 
@@ -189,7 +189,7 @@ namespace Audio
         ThreadedData->Deactivating = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          0.0f, PropertyChangeFrames);
+          0.0f, cPropertyChangeFrames);
       }
       // If currently not active and setting to active
       else if ((!Active || ThreadedData->Deactivating) && active)
@@ -198,7 +198,7 @@ namespace Audio
         Active = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          1.0f, PropertyChangeFrames);
+          1.0f, cPropertyChangeFrames);
       }
     }
   }

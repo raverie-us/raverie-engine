@@ -1,15 +1,10 @@
-/**************************************************************\
-* Author: Trevor Sundberg
-* Copyright 2016, DigiPen Institute of Technology
-\**************************************************************/
-
 template <typename Class>
 static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
 {
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class();
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class>
 static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
@@ -51,7 +46,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0);
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0>
 static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
@@ -99,7 +94,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1);
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0, typename Arg1>
 static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
@@ -153,7 +148,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2);
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0, typename Arg1, typename Arg2>
 static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
@@ -213,7 +208,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3);
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
@@ -279,7 +274,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3, arg4);
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
@@ -351,7 +346,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3, arg4, arg5);
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)
@@ -429,7 +424,7 @@ static void BoundConstructorVirtual(Call& call, ExceptionReport& report)
   Handle& handle = call.GetHandle(Call::This);
   byte* data = handle.Dereference();
   new (data) Class(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.Type);
+  call.GetState()->UpdateCppVirtualTable(data, ZilchTypeId(Class), handle.StoredType);
 }
 template <typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 static Function* FromConstructorVirtual(LibraryBuilder& builder, BoundType* classBoundType, StringRange spaceDelimitedNames)

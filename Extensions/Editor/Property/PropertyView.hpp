@@ -32,7 +32,7 @@ namespace Events
 class ContextMenuEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContextMenuEvent, TypeCopyMode::ReferenceType);
   ContextMenu* mMenu;
   Property* mProperty;
   Handle mInstance;
@@ -46,7 +46,7 @@ typedef Widget* (*CustomIconCreatorFunction)(Composite* parent, HandleParam obje
 class PropertyView : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyView, TypeCopyMode::ReferenceType);
 
   PropertyView(Composite* parent);
   virtual ~PropertyView();

@@ -14,19 +14,19 @@ namespace Zero
 
 //--------------------------------------------------------- Object Property Node
 //******************************************************************************
-ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty) :
-  mParent(parent),
-  mProperty(objectProperty),
-  mObject(object)
+ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty) 
+  : mParent(parent)
+  , mObject(object)
+  , mProperty(objectProperty)
 {
   
 }
 
 //******************************************************************************
-ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, Property* property) :
-  mParent(parent),
-  mProperty(property),
-  mObject(nullptr)
+ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, Property* property)
+  : mParent(parent)
+  , mObject(nullptr)
+  , mProperty(property)
 {
 
 }

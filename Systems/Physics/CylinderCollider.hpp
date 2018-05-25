@@ -13,7 +13,7 @@ namespace Zero
 class CylinderCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CylinderCollider, TypeCopyMode::ReferenceType);
 
   CylinderCollider();
 

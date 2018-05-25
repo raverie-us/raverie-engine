@@ -29,7 +29,7 @@ DeclareEnum4(InputDevice, Keyboard, Mouse, Gamepad, Joystick);
 class Engine : public EngineObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Engine, TypeCopyMode::ReferenceType);
 
   Engine();
   ~Engine();
@@ -138,7 +138,7 @@ private:
 class EngineMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EngineMetaComposition, TypeCopyMode::ReferenceType);
 
   EngineMetaComposition();
 
@@ -159,7 +159,7 @@ type* Engine::Has()
 class InputDeviceEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(InputDeviceEvent, TypeCopyMode::ReferenceType);
 
   InputDevice::Enum mDevice;
   InputDevice::Enum mLastDevice;

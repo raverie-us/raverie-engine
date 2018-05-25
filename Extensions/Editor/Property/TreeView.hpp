@@ -135,7 +135,7 @@ namespace Events
 class TreeEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TreeEvent, TypeCopyMode::ReferenceType);
   TreeRow* Row;
 };
 
@@ -146,7 +146,7 @@ DeclareEnum3(HighlightType, None, Selected, Preview);
 class TreeRow : public TreeBase
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TreeRow, TypeCopyMode::ReferenceType);
   typedef InListBaseLink<TreeRow, TreeBase> TreeRowList;
 
   TreeRow(TreeView* grid, TreeRow* rowparent, DataEntry* entry);

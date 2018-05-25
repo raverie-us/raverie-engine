@@ -13,7 +13,7 @@ namespace Zero
 class SphereCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SphereCollider, TypeCopyMode::ReferenceType);
 
   SphereCollider();
 

@@ -19,7 +19,7 @@ ZilchDeclareStaticLibraryAndPlugin(SampleLibrary, SamplePlugin);
 class Sample
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Sample, TypeCopyMode::ReferenceType);
   static void Run(StringBuilderExtended* builder, ArrayClass<Byte>* bytes);
 };
 

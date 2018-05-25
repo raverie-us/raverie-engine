@@ -19,7 +19,7 @@ DeclareEnum2(CapsuleScalingMode, PreserveHeight, PreserveScale);
 class CapsuleCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CapsuleCollider, TypeCopyMode::ReferenceType);
 
   CapsuleCollider();
   

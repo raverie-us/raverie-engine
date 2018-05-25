@@ -32,7 +32,7 @@ typedef AvlDynamicAabbTree<Graphical*> GraphicsBroadPhase;
 class GraphicsSpace : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicsSpace, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Initialize(CogInitializer& initializer) override;

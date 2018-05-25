@@ -17,25 +17,25 @@ namespace Zilch
 
   //***************************************************************************
   Operand::Operand() :
+    Type(OperandType::NotSet),
     HandleConstantLocal(0),
-    FieldOffset(0),
-    Type(OperandType::NotSet)
+    FieldOffset(0)
   {
   }
 
   //***************************************************************************
   Operand::Operand(OperandIndex local) :
+    Type(OperandType::Local),
     HandleConstantLocal(local),
-    FieldOffset(0),
-    Type(OperandType::Local)
+    FieldOffset(0)
   {
   }
 
   //***************************************************************************
   Operand::Operand(OperandIndex handleConstantLocal, size_t field, OperandType::Enum type) :
+    Type(type),
     HandleConstantLocal(handleConstantLocal),
-    FieldOffset(field),
-    Type(type)
+    FieldOffset(field)
   {
   }
 

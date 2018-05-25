@@ -73,7 +73,7 @@ class Cog : public BaseCog
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Cog, TypeCopyMode::ReferenceType);
 
   /// Memory Allocation  
   OverloadedNew();
@@ -440,7 +440,7 @@ inline type* Cog::Has()
 }
 
 template<typename type>
-type* HasOrAdd(Cog* cog)
+inline type* HasOrAdd(Cog* cog)
 {
   type* component = cog->Has<type>();
   if (component == nullptr)
@@ -453,7 +453,7 @@ type* HasOrAdd(Cog* cog)
 }
 
 template <typename T>
-void SetUpObject(T* object)
+inline void SetUpObject(T* object)
 {
   BoundType* type = ZilchVirtualTypeId(object);
   CogComponentMeta* metaComponent = type->HasInherited<CogComponentMeta>();

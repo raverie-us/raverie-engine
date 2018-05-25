@@ -19,7 +19,7 @@ ZilchDeclareEvent(TranslationError, TranslationErrorEvent);
 class TranslationErrorEvent : public Zilch::EventData
 {
 public:
-  ZilchDeclareType(Zilch::TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TranslationErrorEvent, Zilch::TypeCopyMode::ReferenceType);
   String GetFormattedMessage(Zilch::MessageFormat::Enum format);
 
   String mShortMessage;

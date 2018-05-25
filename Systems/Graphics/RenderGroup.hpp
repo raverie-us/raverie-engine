@@ -10,7 +10,7 @@ namespace Zero
 class RenderGroup : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RenderGroup, TypeCopyMode::ReferenceType);
 
   RenderGroup();
 

@@ -66,7 +66,10 @@ DeclareBitField4(PolymorphicFlags,
 //------------------------------------------------------------- Polymorphic Node
 struct PolymorphicNode
 {
-  PolymorphicNode() : mAttributes(nullptr), UniqueNodeId(cInvalidUniqueNodeId) {}
+  PolymorphicNode()
+    : UniqueNodeId(cInvalidUniqueNodeId)
+    , mAttributes(nullptr)
+    {}
 
   StringRange TypeName;
   StringRange Name;
@@ -353,8 +356,8 @@ void Serializer::SerializeFieldRename(cstr oldFieldName, type& instance)
 template<typename type>
 void Serializer::SerializePolymorphic(type& instance)
 {
-  BoundType* type = ZilchVirtualTypeId(&instance);
-  StartPolymorphic(type);
+  BoundType* boundType = ZilchVirtualTypeId(&instance);
+  StartPolymorphic(boundType);
   instance.Serialize(*this);
   EndPolymorphic();
 }

@@ -25,7 +25,7 @@ namespace Events
 class ProjectSettings : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ProjectSettings, TypeCopyMode::ReferenceType);
 
   /// Constructor / Destructor.
   ProjectSettings();
@@ -112,7 +112,7 @@ private:
 class ContentLibraryReference : public SafeId32Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentLibraryReference, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
   void SetDefaults() {}
@@ -125,7 +125,7 @@ public:
 class SharedContent : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SharedContent, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -137,7 +137,7 @@ public:
 class ProjectDescription : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ProjectDescription, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -157,7 +157,7 @@ public:
 class WindowLaunchSettings : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WindowLaunchSettings, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -173,7 +173,7 @@ public:
 class FrameRateSettings : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FrameRateSettings, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -191,7 +191,7 @@ public:
 class LauncherProjectInfoProxy : public ProxyObject<Component>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherProjectInfoProxy, TypeCopyMode::ReferenceType);
 };
 
 }//namespace Zero

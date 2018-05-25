@@ -39,7 +39,7 @@ DeclareBitField8(JointFlags, OnIsland, Ghost, Valid, Active,
 /// terms of the position and velocities of the objects involved.
 struct Joint : public Component
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Joint, TypeCopyMode::ReferenceType);
   typedef JointEdge EdgeType;
 
   Joint();
@@ -285,7 +285,7 @@ struct Joint : public Component
 // This interface is called by certain solvers to avoid as much virtual function
 // overhead as possible.
 #define DeclareJointType(jointType)                                                            \
-  ZilchDeclareType(TypeCopyMode::ReferenceType);                                               \
+  ZilchDeclareType(jointType, TypeCopyMode::ReferenceType);                                               \
   static cstr JointName;                                                                       \
   static const JointEnums::JointTypes mJointType;                                              \
   static cstr StaticGetJointName();                                                            \

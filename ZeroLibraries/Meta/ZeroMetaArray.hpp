@@ -17,7 +17,7 @@ class ZeroMetaArray : public MetaArray
 public:
   // We don't initialize a type for MetaContainer because we never
   // explicitly look for MetaContainer, but we do Has<MetaComposition>...
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZeroMetaArray, TypeCopyMode::ReferenceType);
 
   typedef typename ArrayType::value_type ContainedType;
 
@@ -40,7 +40,6 @@ public:
   void Add(HandleParam instance, AnyParam value) override
   {
     ArrayType& container = *instance.Get<ArrayType*>(GetOptions::AssertOnNull);
-    ContainedType* element = value.Get<ContainedType*>(GetOptions::AssertOnNull);
     container.PushBack();
     container.Back().SetDefaults();
   }

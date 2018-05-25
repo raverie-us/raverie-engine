@@ -27,7 +27,7 @@ class HeightMapSubTool : public Object
 {
 public:
   /// Meta
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapSubTool, TypeCopyMode::ReferenceType);
 
   /// Virtual destructor
   virtual ~HeightMapSubTool(){}
@@ -56,7 +56,7 @@ class HeightManipulationTool : public HeightMapSubTool
 {
 public:
   /// Meta
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightManipulationTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   HeightManipulationTool();
@@ -108,7 +108,7 @@ class RaiseLowerTool : public HeightManipulationTool
 {
 public:
   /// Meta
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RaiseLowerTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   RaiseLowerTool();
@@ -131,7 +131,7 @@ class SmoothSharpenTool : public HeightManipulationTool
 {
 public:
   /// Meta
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SmoothSharpenTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   SmoothSharpenTool();
@@ -179,7 +179,7 @@ class FlattenTool : public HeightManipulationTool
 {
 public:
   /// Meta
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FlattenTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   FlattenTool();
@@ -215,7 +215,7 @@ class CreateDestroyTool : public HeightMapSubTool
 {
 public:
   /// Meta
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CreateDestroyTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   CreateDestroyTool();
@@ -253,7 +253,7 @@ class WeightPainterTool : public HeightMapSubTool
 {
 public:
   /// Meta
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WeightPainterTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   WeightPainterTool();
@@ -355,7 +355,7 @@ class HeightMapTool : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapTool, TypeCopyMode::ReferenceType);
 
   /// Constructor and destructor
   HeightMapTool();

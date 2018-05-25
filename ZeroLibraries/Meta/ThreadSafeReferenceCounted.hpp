@@ -148,7 +148,7 @@ public:
 class ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ThreadSafeReferenceCounted, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandle(ThreadSafeReferenceCounted);
 
   ThreadSafeReferenceCounted();

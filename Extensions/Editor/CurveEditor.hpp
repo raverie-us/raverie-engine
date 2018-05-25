@@ -59,7 +59,7 @@ class Tangent;
 class CurveEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CurveEvent, TypeCopyMode::ReferenceType);
   CurveEvent() : mControlPoint(NULL){};
 
   /// The curve that was modified.
@@ -298,7 +298,7 @@ public:
   void OnYChanged(Event* e);
 
 private:
-  friend class CurveEditor;
+  friend class Zero::CurveEditor;
 
   //---------------------------------------------------------------------- range
   /// Filters out tangents in the selection.
@@ -333,7 +333,7 @@ class Draggable : public Widget
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Draggable, TypeCopyMode::ReferenceType);
 
   Draggable(CurveObject* curveObject);
   ~Draggable();
@@ -370,7 +370,7 @@ class ControlPoint : public Draggable
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ControlPoint, TypeCopyMode::ReferenceType);
 
   /// Constructor / destructor.
   ControlPoint(CurveObject* parent, Vec2Param pos, 
@@ -439,7 +439,7 @@ class Tangent : public Draggable
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Tangent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   Tangent(CurveObject* curve, ControlPoint* controlPoint, Vec2Param direction,

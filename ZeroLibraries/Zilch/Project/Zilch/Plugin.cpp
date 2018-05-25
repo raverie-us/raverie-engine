@@ -5,6 +5,10 @@
 
 #include "Zilch.hpp"
 
+#ifdef COMPILER_CLANG
+#pragma clang diagnostic ignored "-Wlogical-op-parentheses"
+#endif
+
 // Set this to true this to get asserts for plugin types and functions not linking
 static const bool ZilchDebugPluginLinking = false;
 
@@ -61,8 +65,8 @@ namespace Zilch
 
   //***************************************************************************
   Plugin::Plugin() :
-    Initialized(false),
     UserData(nullptr),
+    Initialized(false),
     SharedLibrary(nullptr)
   {
   }
@@ -454,8 +458,6 @@ namespace Zilch
   //***************************************************************************
   void NativeStubCode::WriteParameters(ZilchCodeBuilder& builder, DelegateType* delegateType)
   {
-    Library* library = delegateType->GetOwningLibrary();
-
     builder.Write("(");
 
     size_t lastIndex = delegateType->Parameters.Size() - 1;

@@ -112,12 +112,15 @@ public:
   {
     WatchEntry* entry = (WatchEntry*)dataEntry;
     
+    static const String ItemIcon("ItemIcon");
+    static const String Model("Model");
+
     if(column == "Icon")
     {
       if(entry->Children.Empty())
-        variant = "ItemIcon";
+        variant = ItemIcon;
       else
-        variant = "Model";
+        variant = Model;
     }
     if(column == "Name")
     {

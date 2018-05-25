@@ -40,7 +40,7 @@ DeclareEnum3(SpriteFill, Stretch, NineSlice, Tiled);
 class SpriteData
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpriteData, TypeCopyMode::ReferenceType);
  
   void Serialize(Serializer& stream);
   SpriteDataMembers();
@@ -51,7 +51,7 @@ public:
 class SpriteSourceBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpriteSourceBuilder, TypeCopyMode::ReferenceType);
   SpriteDataMembers();
 
   void Serialize(Serializer& stream) override;

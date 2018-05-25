@@ -17,7 +17,7 @@ class TcpSocket;
 class SimpleSocket : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SimpleSocket, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   SimpleSocket();

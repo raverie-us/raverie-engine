@@ -17,24 +17,24 @@ namespace Audio
 
   //************************************************************************************************
   AudioSystemInternal::AudioSystemInternal(ExternalSystemInterface* extInterface) : 
-    ExternalInterface(extInterface), 
-    MinimumVolumeThresholdThreaded(0.015f),
-    ShuttingDownThreaded(false), 
-    SystemVolumeThreaded(1.0f),
     SystemChannelsThreaded(2),
-    Volume(1.0f), 
     ResetPA(false), 
     MixVersionNumber(0), 
     FinalOutputNode(nullptr), 
     FinalOutputNodeThreaded(nullptr),
+    ExternalInterface(extInterface), 
+    MinimumVolumeThresholdThreaded(0.015f),
+    SendMicrophoneInputData(false),
+    ShuttingDownThreaded(false), 
+    SystemVolumeThreaded(1.0f),
+    Volume(1.0f), 
+    LowPass(nullptr),
     PeakVolumeLastMix(0.0f),
     RmsVolumeLastMix(0.0f),
     NodeCount(0),
-    LowPass(nullptr),
     PreviousPeakVolumeThreaded(0),
     PreviousRMSVolumeThreaded(0),
     Resampling(false),
-    SendMicrophoneInputData(false),
     Muted(false),
     MutedThreaded(false),
     MutingThreaded(false)
@@ -171,7 +171,7 @@ namespace Audio
   {
 #ifdef TRACK_TIME 
     double maxTime = (double)InputOutputInterface->OutputBufferSizeThreaded / (double)InputOutputInterface->GetOutputChannels() 
-      / (double)SystemSampleRate;
+      / (double)cSystemSampleRate;
 #endif
     
     bool running = true;
@@ -475,12 +475,12 @@ namespace Audio
     if (muteAudio && !MutedThreaded && !MutingThreaded)
     {
       MutingThreaded = true;
-      VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, PropertyChangeFrames);
+      VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, cPropertyChangeFrames);
     }
     else if (!muteAudio && MutedThreaded)
     {
       MutedThreaded = false;
-      VolumeInterpolatorThreaded.SetValues(0.0f, 1.0f, PropertyChangeFrames);
+      VolumeInterpolatorThreaded.SetValues(0.0f, 1.0f, cPropertyChangeFrames);
     }
   }
 
@@ -543,12 +543,12 @@ namespace Audio
   {
     unsigned outputSampleRate = InputOutputInterface.GetStreamSampleRate(StreamTypes::Output);
 
-    if (SystemSampleRate != outputSampleRate)
+    if (cSystemSampleRate != outputSampleRate)
     {
       Resampling = true;
-      OutputResampling.SetFactor((double)SystemSampleRate / (double)outputSampleRate);
+      OutputResampling.SetFactor((double)cSystemSampleRate / (double)outputSampleRate);
     }
-    else if (SystemSampleRate == outputSampleRate)
+    else if (cSystemSampleRate == outputSampleRate)
     {
       Resampling = false;
     }
@@ -564,7 +564,7 @@ namespace Audio
       return;
 
     // Channels and sample rates match, don't need to process anything
-    if (inputChannels == SystemChannelsThreaded && inputRate == SystemSampleRate)
+    if (inputChannels == SystemChannelsThreaded && inputRate == cSystemSampleRate)
     {
       InputOutputInterface.GetInputDataThreaded(InputBuffer, howManySamples);
     }
@@ -572,8 +572,8 @@ namespace Audio
     {
       // Save the number of frames of input to get, adjusting for resampling if necessary
       unsigned inputFrames = howManySamples / SystemChannelsThreaded;
-      if (inputRate != SystemSampleRate)
-        inputFrames = (unsigned)(inputFrames * (float)inputRate / (float)SystemSampleRate);
+      if (inputRate != cSystemSampleRate)
+        inputFrames = (unsigned)(inputFrames * (float)inputRate / (float)cSystemSampleRate);
 
       // Need to adjust channels
       if (inputChannels != SystemChannelsThreaded)
@@ -599,12 +599,12 @@ namespace Audio
         InputOutputInterface.GetInputDataThreaded(InputBuffer, inputFrames * SystemChannelsThreaded);
 
       // Need to resample
-      if (inputRate != SystemSampleRate)
+      if (inputRate != cSystemSampleRate)
       {
         // Temporary array for resampled data
         Zero::Array<float> resampledInput;
         // Set the resampling factor on the resampler object
-        InputResampling.SetFactor((double)inputRate / (double)SystemSampleRate);
+        InputResampling.SetFactor((double)inputRate / (double)cSystemSampleRate);
         // Set the buffer on the resampler
         InputResampling.SetInputBuffer(InputBuffer.Data(), InputBuffer.Size() 
           / SystemChannelsThreaded, SystemChannelsThreaded);
@@ -648,7 +648,7 @@ namespace Audio
   AudioFrame::AudioFrame() :
     mStoredChannels(1)
   {
-    memset(mSamples, 0, sizeof(float) * MaxChannels);
+    memset(mSamples, 0, sizeof(float) * cMaxChannels);
 
     Matrices[0] = nullptr;
     Matrices[1] = ChannelMatrix1;
@@ -665,7 +665,7 @@ namespace Audio
   AudioFrame::AudioFrame(const AudioFrame& copy) :
     mStoredChannels(copy.mStoredChannels)
   {
-    memcpy(mSamples, copy.mSamples, sizeof(float) * MaxChannels);
+    memcpy(mSamples, copy.mSamples, sizeof(float) * cMaxChannels);
 
     Matrices[0] = nullptr;
     Matrices[1] = ChannelMatrix1;
@@ -683,16 +683,16 @@ namespace Audio
   {
     if (outputChannels != mStoredChannels)
     {
-      float output[MaxChannels] = { 0 };
+      float output[cMaxChannels] = { 0 };
 
       // Down-mixing
       if (outputChannels < mStoredChannels)
       {
         for (unsigned outChannel = 0; outChannel < outputChannels; ++outChannel)
         {
-          for (unsigned i = 0; i < MaxChannels; ++i)
+          for (unsigned i = 0; i < cMaxChannels; ++i)
           {
-            output[outChannel] += mSamples[i] * Matrices[outputChannels][i + (outChannel * MaxChannels)];
+            output[outChannel] += mSamples[i] * Matrices[outputChannels][i + (outChannel * cMaxChannels)];
           }
         }
       }
@@ -741,7 +741,7 @@ namespace Audio
   {
     mStoredChannels = Math::Max(channels, (unsigned)1);
 
-    memset(mSamples, 0, sizeof(float) * MaxChannels);
+    memset(mSamples, 0, sizeof(float) * cMaxChannels);
 
     switch (channels)
     {
@@ -780,7 +780,7 @@ namespace Audio
   //************************************************************************************************
   void AudioFrame::Clamp()
   {
-    for (unsigned i = 0; i < MaxChannels; ++i)
+    for (unsigned i = 0; i < cMaxChannels; ++i)
       mSamples[i] = Math::Clamp(mSamples[i], -1.0f, 1.0f);
   }
 
@@ -789,7 +789,7 @@ namespace Audio
   {
     float value = Math::Abs(mSamples[0]);
 
-    for (unsigned i = 1; i < MaxChannels; ++i)
+    for (unsigned i = 1; i < cMaxChannels; ++i)
     {
       float newValue = Math::Abs(mSamples[i]);
       if (newValue > value)
@@ -807,7 +807,7 @@ namespace Audio
 
     float value = mSamples[0];
 
-    for (unsigned i = 1; i < MaxChannels; ++i)
+    for (unsigned i = 1; i < cMaxChannels; ++i)
       value += mSamples[i];
 
     value /= mStoredChannels;
@@ -818,7 +818,7 @@ namespace Audio
   //************************************************************************************************
   void AudioFrame::operator*=(float multiplier)
   {
-    for (unsigned i = 0; i < MaxChannels; ++i)
+    for (unsigned i = 0; i < cMaxChannels; ++i)
       mSamples[i] *= multiplier;
   }
 
@@ -826,7 +826,7 @@ namespace Audio
   void AudioFrame::operator=(const AudioFrame& copy)
   {
     mStoredChannels = copy.mStoredChannels;
-    memcpy(mSamples, copy.mSamples, sizeof(float) * MaxChannels);
+    memcpy(mSamples, copy.mSamples, sizeof(float) * cMaxChannels);
   }
 
   //************************************************************************************************

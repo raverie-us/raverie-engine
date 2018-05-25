@@ -403,7 +403,7 @@ public:
 
   void GetVariant(Any& variant) override
   {
-    variant = "";
+    variant = String("");
   }
 };
 

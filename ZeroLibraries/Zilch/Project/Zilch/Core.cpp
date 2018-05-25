@@ -60,30 +60,33 @@ namespace Zilch
   //***************************************************************************
   Core::Core() :
     StaticLibrary("Core"),
-    IntegerType(nullptr),
-    DoubleIntegerType(nullptr),
-    RealType(nullptr),
-    DoubleRealType(nullptr),
+    ByteType(nullptr),
     BooleanType(nullptr),
-    Real2Type(nullptr),
-    Real3Type(nullptr),
-    Real4Type(nullptr),
-    Integer2Type(nullptr),
-    Integer3Type(nullptr),
-    Integer4Type(nullptr),
     Boolean2Type(nullptr),
     Boolean3Type(nullptr),
     Boolean4Type(nullptr),
+    IntegerType(nullptr),
+    Integer2Type(nullptr),
+    Integer3Type(nullptr),
+    Integer4Type(nullptr),
+    RealType(nullptr),
+    Real2Type(nullptr),
+    Real3Type(nullptr),
+    Real4Type(nullptr),
     QuaternionType(nullptr),
     Real2x2Type(nullptr),
     Real3x3Type(nullptr),
     Real4x4Type(nullptr),
+    DoubleIntegerType(nullptr),
+    DoubleRealType(nullptr),
     StringType(nullptr),
+    StringRangeType(nullptr),
     ExceptionType(nullptr),
     MathType(nullptr),
     VoidType(nullptr),
     NullType(nullptr),
     ErrorType(nullptr),
+    OverloadedMethodsType(nullptr),
     AnyDelegateType(nullptr),
     AnyHandleType(nullptr),
     AnythingType(nullptr)
@@ -672,9 +675,6 @@ namespace Zilch
   template <size_t Components, typename ComponentType>
   void GenerateVectorSwizzles(LibraryBuilder& builder, BoundType* type, BoundType* componentTypes[Core::MaxComponents])
   {
-    // Get a reference to the core so we can access all the vector/real types
-    Core& core = Core::GetInstance();
-
     char componentNamesSet[2][4] = {{'X', 'Y', 'Z', 'W'}, {'R', 'G', 'B', 'A'}};
 
     // For now only bind the XYZW components (until code completion is better)
@@ -802,10 +802,7 @@ namespace Zilch
   template <size_t Components, typename ComponentType>
   void GenerateVectorComponentConstructors(LibraryBuilder& builder, BoundType* type, BoundType* componentTypes[Core::MaxComponents])
   {
-    // Get a reference to the core so we can access all the vector/real types
-    Core& core = Core::GetInstance();
-
-    // We're generating constructors for a fixed number of components (a specific vector type)
+      // We're generating constructors for a fixed number of components (a specific vector type)
     for (size_t count = Components; count > 0; --count)
     {
       // Only ever index up to 'count' in size
@@ -906,13 +903,7 @@ namespace Zilch
       return;
 
     String result(start.mRange.Begin(), end.mRange.Begin());
-    
-    if(result.Empty() < 0)
-    {
-      call.GetState()->ThrowException(report, "A negative substring length is not supported.");
-      return;
-    }
-    
+
     call.Set(Call::Return, &result);
   }
 
@@ -3539,7 +3530,6 @@ namespace Zilch
     // Quaternion static bindings
     {
       Property* prop = nullptr;
-      Function* fn = nullptr;
 
       // Add a get property for the number of elements in the vector
       prop = builder.AddBoundGetterSetter(quaternionType, "Count", integerType, nullptr, VectorCount, FunctionOptions::Static);

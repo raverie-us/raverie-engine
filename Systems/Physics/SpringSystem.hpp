@@ -61,7 +61,7 @@ DeclareEnum3(SpringSortOrder, None, TopDown, BottomUp);
 class SpringSystem : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpringSystem, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -262,7 +262,7 @@ public:
 class DecorativeCloth : public SpringSystem
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DecorativeCloth, TypeCopyMode::ReferenceType);
 
   // Component interface
   void Serialize(Serializer& stream) override;
@@ -309,7 +309,7 @@ public:
 class DecorativeRope : public SpringSystem
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DecorativeRope, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;

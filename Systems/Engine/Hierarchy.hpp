@@ -33,7 +33,7 @@ namespace Events
 class HierarchyEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HierarchyEvent, TypeCopyMode::ReferenceType);
 
   Cog* Parent;
   Cog* Child;
@@ -45,7 +45,7 @@ public:
 class Hierarchy : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Hierarchy, TypeCopyMode::ReferenceType);
 
   Hierarchy();
   ~Hierarchy();
@@ -72,7 +72,7 @@ public:
 class HierarchyComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HierarchyComposition, TypeCopyMode::ReferenceType);
 
   HierarchyComposition();
 

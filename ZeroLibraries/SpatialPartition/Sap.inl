@@ -307,7 +307,7 @@ void Sap<ClientDataType>::Validate()
   {
     BoxType& box = mBoxes[i];
     if(i == 0)
-      ErrorIf(box.mObj != (void*)cSentinelPattern,"Sentinel object pointer has been modified");
+      ErrorIf(box.mObj != (void*)SapInternal::cSentinelPattern,"Sentinel object pointer has been modified");
 
     if(box.mObj == nullptr)
       continue;

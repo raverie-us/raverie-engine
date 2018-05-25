@@ -21,7 +21,7 @@ namespace Events
 class TextUpdatedEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextUpdatedEvent, TypeCopyMode::ReferenceType);
 
   TextUpdatedEvent(Object* source) : mSource(source), mChangeAccepted(false) {};
   
@@ -36,7 +36,7 @@ DeclareBitField1(InPlaceTextEditorFlags, EditOnDoubleClick);
 class FormattedInPlaceText
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FormattedInPlaceText, TypeCopyMode::ReferenceType);
 
   FormattedInPlaceText()
   {
@@ -77,7 +77,7 @@ public:
 class InPlaceTextEditor : public ValueEditor
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(InPlaceTextEditor, TypeCopyMode::ReferenceType);
   InPlaceTextEditor(Composite* parent, u32 flags);
 
   /// Widget Interface.
@@ -121,7 +121,7 @@ public:
   typedef ValueEditor* (*ValueEditorCreator)(Composite* parent, AnyParam data, u32 flags);
 
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ValueEditorFactory, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ValueEditorFactory();

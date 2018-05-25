@@ -17,7 +17,7 @@ namespace Zero
 class Revision : public IZilchObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Revision, TypeCopyMode::ReferenceType);
 
   String Date;
   String User;

@@ -104,7 +104,8 @@ namespace Zero
 //  ------------------ Archive
 
 Archive::Archive(ArchiveMode::Enum mode, uint compressionLevel)
-  :mMode(mode), mCompressionLevel(compressionLevel)
+  : mCompressionLevel(compressionLevel),
+    mMode(mode)
 {
 
 }

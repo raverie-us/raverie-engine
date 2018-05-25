@@ -27,10 +27,12 @@ public:
   typedef SortedArray<ValueType, Sorter, Allocator> sorted_array_type;
   typedef sorted_array_type                         base_type;
 
-  typedef typename base_type::reference reference;
-  typedef typename base_type::const_reference const_reference;
-  typedef typename base_type::value_type value_type;
-  typedef typename base_type::pointer_bool_pair pointer_bool_pair;
+  typedef typename base_type::reference             reference;
+  typedef typename base_type::const_reference       const_reference;
+  typedef typename base_type::value_type            value_type;
+  typedef typename base_type::pointer_bool_pair     pointer_bool_pair;
+  typedef typename base_type::iterator              iterator;
+  typedef typename base_type::size_type             size_type;
 
 protected:
   /// Base methods hidden to provide container behavior
@@ -85,31 +87,31 @@ public:
   reference FindOrInsert(const_reference value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), value, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, value)) // Found?
+    && base_type::mSorter.Equal(*position, value)) // Found?
       return *position;
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       base_type::Insert(position, value);
-      return mData[index];
+      return base_type::mData[index];
     }
   }
   reference FindOrInsert(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), *value, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, *value)) // Found?
+    && base_type::mSorter.Equal(*position, *value)) // Found?
       return *position;
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       base_type::Insert(position, *value);
-      return mData[index];
+      return base_type::mData[index];
     }
   }
 
@@ -119,31 +121,31 @@ public:
   pointer_bool_pair Insert(const_reference value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), value, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, value)) // Found?
+    && base_type::mSorter.Equal(*position, value)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       base_type::Insert(position, value);
-      return pointer_bool_pair(mData + index, true);
+      return pointer_bool_pair(base_type::mData + index, true);
     }
   }
   pointer_bool_pair Insert(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), *value, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, *value)) // Found?
+    && base_type::mSorter.Equal(*position, *value)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       base_type::Insert(position, ZeroMove(value));
-      return pointer_bool_pair(mData + index, true);
+      return pointer_bool_pair(base_type::mData + index, true);
     }
   }
 
@@ -153,9 +155,9 @@ public:
   pointer_bool_pair InsertOrAssign(const_reference value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), value, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, value)) // Found?
+    && base_type::mSorter.Equal(*position, value)) // Found?
     {
       // Assign over equivalent element
       *position = value;
@@ -164,17 +166,17 @@ public:
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       base_type::Insert(position, value);
-      return pointer_bool_pair(mData + index, true);
+      return pointer_bool_pair(base_type::mData + index, true);
     }
   }
   pointer_bool_pair InsertOrAssign(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), *value, mSorter).Begin();
+    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
     if(position != base_type::End()
-    && mSorter.Equal(*position, *value)) // Found?
+    && base_type::mSorter.Equal(*position, *value)) // Found?
     {
       // Assign over equivalent element
       *position = ZeroMove(value);
@@ -183,9 +185,9 @@ public:
     else
     {
       // Insert unique element
-      size_type index = position - mData;
+      size_type index = position - base_type::mData;
       base_type::Insert(position, ZeroMove(value));
-      return pointer_bool_pair(mData + index, true);
+      return pointer_bool_pair(base_type::mData + index, true);
     }
   }
 
@@ -214,19 +216,19 @@ public:
   template<typename iteratorType>
   void Assign(iteratorType begin, iteratorType end)
   {
-    Clear();
+    base_type::Clear();
     Insert(BuildRange(begin, end));
   }
   template<typename inputRangeType>
   void Assign(inputRangeType range)
   {
-    Clear();
+    base_type::Clear();
     Insert(range);
   }
   template<typename inputRangeType>
   void Assign(MoveReference<inputRangeType> range)
   {
-    Clear();
+    base_type::Clear();
     Insert(ZeroMove(range));
   }
 };

@@ -873,7 +873,9 @@ const float ListColumnHeader::cColumnSeparatorColor = 47.0f/255.0f;
 
 //******************************************************************************
 ListColumnHeader::ListColumnHeader(ListView* list, ColumnFormat* format)
-  : Composite(list), mList(list), mFormat(format)
+  : Composite(list)
+  , mFormat(format)
+  , mList(list)
 {
   Vec4 color = FloatColorRGBA(28, 60, 80, 255);//(cHeaderColor, cHeaderColor, cHeaderColor, 1.0f);
 

@@ -15,7 +15,7 @@ namespace Zero
 class TileMapSource : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileMapSource, TypeCopyMode::ReferenceType);
 
   TileMapSource();
   ~TileMapSource();

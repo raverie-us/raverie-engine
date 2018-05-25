@@ -13,7 +13,7 @@ namespace Zero
 class MetaCompositionWrapper : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaCompositionWrapper, TypeCopyMode::ReferenceType);
 
   MetaCompositionWrapper(BoundType* typeToWrap) : 
     MetaComposition(nullptr)

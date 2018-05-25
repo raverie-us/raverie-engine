@@ -24,7 +24,7 @@ class WebResponseEvent;
 class BlockingWebRequest : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BlockingWebRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   BlockingWebRequest();
@@ -95,7 +95,7 @@ class WebRequestJob;
 class ThreadedWebRequest : public ThreadSafeId32EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ThreadedWebRequest, TypeCopyMode::ReferenceType);
 
   ThreadedWebRequest();
   ~ThreadedWebRequest();
@@ -115,7 +115,7 @@ private:
 class WebResponseEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebResponseEvent, TypeCopyMode::ReferenceType);
 
   /// The response code we received from the server.
   Os::WebResponseCode::Type ResponseCode;
@@ -131,7 +131,7 @@ public:
 class WebRequester : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebRequester, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
@@ -172,7 +172,7 @@ private:
 class WebRequestJob : public Job
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WebRequestJob, TypeCopyMode::ReferenceType);
 
   int Execute();
 

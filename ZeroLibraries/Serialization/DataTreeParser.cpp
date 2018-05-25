@@ -18,10 +18,10 @@ bool DataTreeParser::BuildTree(DataTreeContext& context, StringRange data, DataN
 }
 
 //*************************************************************************************************
-DataTreeParser::DataTreeParser(DataTreeContext& context) : 
-  mContext(context),
-  mCurrentIndex(0),
-  mLastPoppedNode(nullptr)
+DataTreeParser::DataTreeParser(DataTreeContext& context) 
+  : mLastPoppedNode(nullptr)
+  , mCurrentIndex(0)
+  , mContext(context)
 {
 
 }

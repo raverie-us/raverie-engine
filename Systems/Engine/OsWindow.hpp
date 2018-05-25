@@ -56,7 +56,7 @@ public:
 class OsWindow : public ThreadSafeId32EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OsWindow, TypeCopyMode::ReferenceType);
 
   OsWindow(
     OsShell* shell,
@@ -191,7 +191,7 @@ public:
 class OsWindowEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OsWindowEvent, TypeCopyMode::ReferenceType);
   OsWindowEvent();
 
   void Serialize(Serializer& stream);
@@ -206,7 +206,7 @@ public:
 class OsMouseEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OsMouseEvent, TypeCopyMode::ReferenceType);
 
   OsMouseEvent();
   void Clear();
@@ -231,7 +231,7 @@ public:
 class OsMouseDropEvent : public OsMouseEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OsMouseDropEvent, TypeCopyMode::ReferenceType);
   OsMouseDropEvent() {}
 
   void Serialize(Serializer& stream);

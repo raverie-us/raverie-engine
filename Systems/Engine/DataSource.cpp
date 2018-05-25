@@ -71,7 +71,7 @@ bool DataSource::Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMo
 u32 ArrayDataSource::DataEntryToArrayIndex(DataEntry* entry)
 {
   u32 index = (u32)entry;
-  if(index == RootIndex)
+  if (index == RootIndex)
     return (u32)-1;
 
   return index - 1;
@@ -80,7 +80,7 @@ u32 ArrayDataSource::DataEntryToArrayIndex(DataEntry* entry)
 u32 ArrayDataSource::DataIndexToArrayIndex(DataIndex dataIndex)
 {
   u32 index = (u32)dataIndex.Id;
-  if(index == RootIndex)
+  if (index == RootIndex)
     return (u32)-1;
   return index - 1;
 }

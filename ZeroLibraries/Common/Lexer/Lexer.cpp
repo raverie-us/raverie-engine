@@ -175,23 +175,23 @@ bool Character::operator>=(const Character& rhs) const
 
 //***************************************************************************
 Token::Token() :
+  mEnd(true),
+  mError(false),
   mRule(nullptr),
   mStartInclusive(0),
   mEndExclusive(0),
-  mStream(nullptr),
-  mEnd(true),
-  mError(false)
+  mStream(nullptr)
 {
 }
 
 //***************************************************************************
 Token::Token(GrammarRule<Character>* rule) :
+  mEnd(false),
+  mError(false),
   mRule(rule),
   mStartInclusive(0),
   mEndExclusive(0),
-  mStream(nullptr),
-  mEnd(false),
-  mError(false)
+  mStream(nullptr)
 {
 }
 
@@ -363,8 +363,6 @@ GrammarNode<Character>& T(StringRange rangeSet)
   }
 
   node.mType = GrammarNodeType::RangeSet;
-
-  bool firstCharacter = true;
 
   // If this is an 'inverse' range
   if (rangeSet.Front() == '^')

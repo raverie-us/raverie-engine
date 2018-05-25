@@ -670,7 +670,6 @@ String String::Join(StringRangeParam separator, StringRangeParam string1, String
 
 String String::Join(StringRangeParam separator, const String* strings, size_t stringCount)
 {
-  size_t bytesToAlloc = sizeof(StringRange) * stringCount;
   Array<StringRange> values;
   values.Resize(stringCount);
 

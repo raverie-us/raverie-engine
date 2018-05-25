@@ -20,7 +20,7 @@ namespace Events
 class LauncherBuildEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LauncherBuildEvent, TypeCopyMode::ReferenceType);
 
   ZeroBuild* mBuild;
 };

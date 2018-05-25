@@ -84,7 +84,7 @@ public:
 class RaycastProvider : public SafeId32Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RaycastProvider, TypeCopyMode::ReferenceType);
 
   RaycastProvider() {mActive = true;}
   virtual ~RaycastProvider() {};
@@ -108,7 +108,7 @@ public:
 class Raycaster : public SafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Raycaster, TypeCopyMode::ReferenceType);
   ~Raycaster();
 
   void Serialize(Serializer& stream);
@@ -132,7 +132,7 @@ public:
 class RaycasterMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RaycasterMetaComposition, TypeCopyMode::ReferenceType);
 
   RaycasterMetaComposition();
 

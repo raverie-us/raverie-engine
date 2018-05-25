@@ -23,9 +23,9 @@ void GetResourcesFromProperties(HandleParam object,
   forRange(Property* metaProperty, objectType->GetProperties())
   {
     // We're only looking for dependencies that are serialized. Any runtime references don't matter.
-    if(metaProperty->HasAttribute(PropertyAttributes::cProperty) == false &&
-      metaProperty->HasAttribute(PropertyAttributes::cSerialize) == false &&
-      metaProperty->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == false)
+    if(metaProperty->HasAttribute(PropertyAttributes::cProperty) == nullptr &&
+      metaProperty->HasAttribute(PropertyAttributes::cSerialize) == nullptr &&
+      metaProperty->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == nullptr)
       continue;
 
     Type* propType = metaProperty->PropertyType;

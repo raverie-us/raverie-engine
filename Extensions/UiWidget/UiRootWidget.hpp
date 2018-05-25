@@ -24,7 +24,7 @@ class UiRootWidget : public UiWidget
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UiRootWidget, TypeCopyMode::ReferenceType);
 
   UiRootWidget();
 

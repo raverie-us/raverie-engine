@@ -28,7 +28,7 @@ namespace Zilch
   class ZeroShared DebuggerEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(DebuggerEvent, TypeCopyMode::ReferenceType);
 
     // The debugger we're currently paused inside of
     Debugger* RunningDebugger;

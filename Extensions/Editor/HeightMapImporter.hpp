@@ -23,7 +23,7 @@ DeclareEnum2(ImportMode, MaintainAspectRatio, FitToPatches);
 class HeightMapImporter : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HeightMapImporter, TypeCopyMode::ReferenceType);
 
   /// Constructor
   HeightMapImporter(Composite* parent, Editor* editor);

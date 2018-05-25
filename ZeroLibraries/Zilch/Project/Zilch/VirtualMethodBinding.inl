@@ -9,13 +9,13 @@ void VirtualThunk()
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   ExceptionReport report;
@@ -45,7 +45,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0>
@@ -59,13 +59,13 @@ void VirtualThunk(Arg0 arg0)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -98,7 +98,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1>
@@ -112,13 +112,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -154,7 +154,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2>
@@ -168,13 +168,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -213,7 +213,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
@@ -227,13 +227,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -275,7 +275,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
@@ -289,13 +289,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -340,7 +340,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
@@ -354,13 +354,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 ar
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -408,7 +408,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
@@ -422,13 +422,13 @@ void VirtualThunk(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 ar
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -479,7 +479,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return>
@@ -493,13 +493,13 @@ Return VirtualThunkReturn()
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   ExceptionReport report;
@@ -529,7 +529,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0>
@@ -543,13 +543,13 @@ Return VirtualThunkReturn(Arg0 arg0)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -582,7 +582,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1>
@@ -596,13 +596,13 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -638,7 +638,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2>
@@ -652,13 +652,13 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -697,7 +697,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
@@ -711,13 +711,13 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -759,7 +759,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
@@ -773,13 +773,13 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -824,7 +824,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
@@ -838,13 +838,13 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4,
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -892,7 +892,7 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
@@ -906,13 +906,13 @@ Return VirtualThunkReturn(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4,
   GuidType virtualId = type->Hash() ^ TypeBinding::GetFunctionUniqueId<FunctionType, function>();
   Function* functionToCall = state->ThunksToFunctions.FindValue(virtualId, nullptr);
   ErrorIf(functionToCall == nullptr,
-    "There was no function found by the guid, what happened?");
+          "There was no function found by the guid, what happened?");
   HandleManagers& managers = HandleManagers::GetInstance();
-  HandleManager* pointerManager = managers.GetSharedManager(ZilchManagerId(PointerManager));
+  HandleManager* pointerManager = managers.GetManager(ZilchManagerId(PointerManager));
   Handle thisHandle;
   thisHandle.Manager = pointerManager;
-  thisHandle.Type = type;
-  pointerManager->ObjectToHandle((byte*)this, thisHandle);
+  thisHandle.StoredType = type;
+  pointerManager->ObjectToHandle((byte*)this, type, thisHandle);
   Call call(functionToCall, state);
   call.SetHandle(Call::This, thisHandle);
   call.Set<Arg0>(0, arg0);
@@ -963,6 +963,6 @@ static Function* FromVirtual(LibraryBuilder& builder, BoundType* classBoundType,
   );
   ++classBoundType->BoundNativeVirtualCount;
   ErrorIf(classBoundType->BoundNativeVirtualCount > classBoundType->RawNativeVirtualCount,
-    "The number of bound virtual functions must never exceed the actual v-table count");
+          "The number of bound virtual functions must never exceed the actual v-table count");
   return functionRef;
 }

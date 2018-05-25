@@ -29,7 +29,7 @@ namespace Events
 class ColorEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ColorEvent, TypeCopyMode::ReferenceType);
   ColorEvent(Vec4Param color){Color = color;}
   Vec4 Color;
 };

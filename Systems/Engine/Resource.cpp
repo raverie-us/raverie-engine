@@ -559,7 +559,7 @@ void DataResource::Save(StringParam filename)
 
 HandleOf<Resource> DataResource::Clone()
 {
-  HandleOf<DataResource> resourceHandle = mManager->CreateRuntimeInternal();
+  HandleOf<DataResource> resourceHandle(mManager->CreateRuntimeInternal());
   DataResource* resource = resourceHandle;
 
   // Save ourself to a buffer

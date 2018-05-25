@@ -45,9 +45,18 @@ public:
 // typedefs. This should never be called outside this file.
 #define DeclareReferenceCountedHandleInternals()                                                   \
   ReferenceCountData mZeroHandleReferenceCount;                                                    \
-  void AddReference();                                                                             \
-  int Release();
-
+  void AddReference()                                                                              \
+  {                                                                                                \
+    ++mZeroHandleReferenceCount.mCount;                                                            \
+  }                                                                                                \
+  int Release()                                                                                    \
+  {                                                                                                \
+    ErrorIf(mZeroHandleReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");    \
+    int referenceCount = --mZeroHandleReferenceCount.mCount;                                       \
+    if (referenceCount == 0) delete this;                                                          \
+    return referenceCount;                                                                         \
+  }
+   
 #define DeclareSafeIdHandle(idType)                                                                \
   typedef idType HandleIdType;                                                                     \
   HandleIdData<HandleIdType> mZeroHandleId;                                                        \
@@ -67,20 +76,6 @@ public:
   DeclareThreadSafeIdHandle(idType)
 
 //------------------------------------------------------------------------------------------- Define
-// Call in the cpp file next to the class implementation
-#define DefineReferenceCountedHandle(type)                                                         \
-  void type::AddReference()                                                                        \
-  {                                                                                                \
-    ++mZeroHandleReferenceCount.mCount;                                                            \
-  }                                                                                                \
-  int type::Release()                                                                              \
-  {                                                                                                \
-    ErrorIf(mZeroHandleReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");    \
-    int referenceCount = --mZeroHandleReferenceCount.mCount;                                       \
-    if (referenceCount == 0) delete this;                                                          \
-    return referenceCount;                                                                         \
-  }
-
 #define DefineSafeIdHandle(type)                                                                   \
   type::HandleIdType type::mZeroHandleCurrentId = 1;                                               \
   HashMap<type::HandleIdType, type*> type::mZeroHandleLiveObjects;
@@ -352,7 +347,7 @@ template <typename Base = EmptyClass>
 class ReferenceCounted : public Base
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ReferenceCounted, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedHandle();
 
   //************************************************************************************************
@@ -374,12 +369,18 @@ public:
   }
 };
 
+template <typename Base>
+void ReferenceCounted<Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+{
+  ZeroBindHandle();
+}
+
 //------------------------------------------------------------------------------------------ Safe Id
 template <typename idType, typename Base = EmptyClass>
 class SafeId : public Base
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SafeId, TypeCopyMode::ReferenceType);
   DeclareSafeIdHandle(idType);
 
   //************************************************************************************************
@@ -407,12 +408,24 @@ public:
   }
 };
 
+//**************************************************************************************************
+template <typename idType, typename Base>
+typename SafeId<idType, Base>::HandleIdType SafeId<idType, Base>::mZeroHandleCurrentId = 1;
+template <typename idType, typename Base>
+HashMap<typename SafeId<idType, Base>::HandleIdType, SafeId<idType, Base>*> SafeId<idType, Base>::mZeroHandleLiveObjects;
+
+template <typename idType, typename Base>
+void SafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+{
+  ZeroBindHandle();
+}
+
 //----------------------------------------------------------------------------------- Thread Safe Id
 template <typename idType, typename Base = EmptyClass>
 class ThreadSafeId : public Base
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ThreadSafeId, TypeCopyMode::ReferenceType);
   DeclareThreadSafeIdHandle(idType);
 
   //************************************************************************************************
@@ -440,12 +453,25 @@ public:
   }
 };
 
+//**************************************************************************************************
+template <typename idType, typename Base>
+typename ThreadSafeId<idType, Base>::HandleIdType ThreadSafeId<idType, Base>::mZeroHandleCurrentId = 1;
+template <typename idType, typename Base>
+HashMap<typename ThreadSafeId<idType, Base>::HandleIdType, ThreadSafeId<idType, Base>*> ThreadSafeId<idType, Base>::mZeroHandleLiveObjects;
+template <typename idType, typename Base>
+ThreadLock ThreadSafeId<idType, Base>::mZeroHandleLock;
+
+template <typename idType, typename Base>
+void ThreadSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+{
+  ZeroBindHandle();
+}
 //------------------------------------------------------------------------ Reference Counted Safe Id
 template <typename idType, typename Base = EmptyClass>
 class ReferenceCountedSafeId : public Base
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ReferenceCountedSafeId, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedSafeIdHandle(idType);
 
   //************************************************************************************************
@@ -473,12 +499,23 @@ public:
   }
 };
 
+//**************************************************************************************************
+template <typename idType, typename Base>
+typename ReferenceCountedSafeId<idType, Base>::HandleIdType ReferenceCountedSafeId<idType, Base>::mZeroHandleCurrentId = 1;
+template <typename idType, typename Base>
+HashMap<typename ReferenceCountedSafeId<idType, Base>::HandleIdType, ReferenceCountedSafeId<idType, Base>*> ReferenceCountedSafeId<idType, Base>::mZeroHandleLiveObjects;
+
+template <typename idType, typename Base>
+void ReferenceCountedSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+{
+  ZeroBindHandle();
+}
 //----------------------------------------------------------------- Reference Counted Thread Safe Id
 template <typename idType, typename Base = EmptyClass>
 class ReferenceCountedThreadSafeId : public Base
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ReferenceCountedThreadSafeId, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedThreadSafeIdHandle(idType);
 
   //************************************************************************************************
@@ -506,4 +543,17 @@ public:
   }
 };
 
+//**************************************************************************************************
+template <typename idType, typename Base>
+typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleCurrentId = 1;
+template <typename idType, typename Base>
+HashMap<typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType, ReferenceCountedThreadSafeId<idType, Base>*> ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleLiveObjects;
+template <typename idType, typename Base>
+ThreadLock ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleLock;
+
+template <typename idType, typename Base>
+void ReferenceCountedThreadSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+{
+  ZeroBindHandle();
+}
 } // namespace Zero

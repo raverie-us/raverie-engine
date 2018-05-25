@@ -16,7 +16,7 @@ namespace Zero
 class Tracker : public System
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Tracker, TypeCopyMode::ReferenceType);
 
   Tracker();
   ~Tracker();

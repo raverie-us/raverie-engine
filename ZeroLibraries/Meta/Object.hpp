@@ -19,7 +19,7 @@ class Actions;
 class Object : public IZilchObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Object, TypeCopyMode::ReferenceType);
 
   OverloadedNew();
 

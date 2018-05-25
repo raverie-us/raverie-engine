@@ -369,8 +369,8 @@ namespace Zilch
 
   //***************************************************************************
   Member::Member() :
-    IsStatic(false),
-    Owner(nullptr)
+    Owner(nullptr),
+    IsStatic(false)
   {
   }
 
@@ -422,10 +422,10 @@ namespace Zilch
 
   //***************************************************************************
   Property::Property() :
-    PropertyType(nullptr),
+    IsHiddenWhenNull(false),
     Get(nullptr),
     Set(nullptr),
-    IsHiddenWhenNull(false)
+    PropertyType(nullptr)
   {
   }
   
@@ -541,9 +541,9 @@ namespace Zilch
 
   //***************************************************************************
   Variable::Variable() :
+    Owner(nullptr),
     Local(0),
-    ResultType(Core::GetInstance().ErrorType),
-    Owner(nullptr)
+    ResultType(Core::GetInstance().ErrorType)
   {
   }
 
@@ -561,17 +561,17 @@ namespace Zilch
 
   //***************************************************************************
   SendsEvent::SendsEvent() :
-    Owner(Core::GetInstance().ErrorType),
     SentType(Core::GetInstance().ErrorType),
+    Owner(Core::GetInstance().ErrorType),
     EventProperty(nullptr)
   {
   }
 
   //***************************************************************************
   SendsEvent::SendsEvent(BoundType* owner, StringParam name, BoundType* sentType) :
-    Owner(owner),
     Name(name),
     SentType(sentType),
+    Owner(owner),
     EventProperty(nullptr)
   {
   }

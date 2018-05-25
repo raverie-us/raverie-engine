@@ -183,7 +183,6 @@ SimInline SimMat4 Multiply(SimMat4Param lhs, SimMat4Param rhs)
 
 SimInline SimMat4 Scale(SimMat4Param mat, scalar scale)
 {
-  SimVec vec = Set(scale);
   SimMat4 result;
   result.columns[0] = Scale(mat.columns[0],scale);
   result.columns[1] = Scale(mat.columns[1],scale);

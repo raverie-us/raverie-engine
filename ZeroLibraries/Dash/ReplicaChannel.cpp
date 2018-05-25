@@ -394,7 +394,7 @@ bool ReplicaChannel::RemoveReplicaProperty(const String& replicaPropertyName)
   {
     // Unable to modify replica property configuration
     Error("Replica channel is already valid, unable to modify replica property configuration");
-    return nullptr;
+    return false;
   }
 
   // Remove replica property

@@ -28,7 +28,7 @@ public:
 class VertexBuffer : public SafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(VertexBuffer, TypeCopyMode::ReferenceType);
 
   VertexBuffer();
   ~VertexBuffer();
@@ -143,7 +143,7 @@ T VertexBuffer::GetData(uint vertexIndex, VertexSemantic::Enum semantic)
 class IndexBuffer : public SafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexBuffer, TypeCopyMode::ReferenceType);
 
   IndexBuffer();
   ~IndexBuffer();
@@ -174,7 +174,7 @@ public:
 class Mesh : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Mesh, TypeCopyMode::ReferenceType);
 
   /// Makes an anonymous Mesh resource that can be defined by script and uploaded to the gpu.
   static HandleOf<Mesh> CreateRuntime();

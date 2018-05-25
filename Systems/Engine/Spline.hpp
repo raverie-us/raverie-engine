@@ -24,7 +24,7 @@ DeclareEvent(QuerySpline);
 class SplineEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SplineEvent, TypeCopyMode::ReferenceType);
   
   Spline* GetSpline() const;
   void SetSpline(Spline* spline);
@@ -37,7 +37,7 @@ public:
 class SplineControlPoint
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(SplineControlPoint, TypeCopyMode::ValueType);
 
   SplineControlPoint();
   SplineControlPoint(Vec3Param position);
@@ -52,7 +52,7 @@ public:
 class SplineControlPoints : public SafeId32Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SplineControlPoints, TypeCopyMode::ReferenceType);
 
   SplineControlPoints();
   ~SplineControlPoints();
@@ -81,7 +81,7 @@ public:
 class SplineBakedPoint
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(SplineBakedPoint, TypeCopyMode::ValueType);
 
   SplineBakedPoint();
   SplineBakedPoint(Vec3Param position);
@@ -95,7 +95,7 @@ public:
 class SplineBakedPoints : SafeId32Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SplineBakedPoints, TypeCopyMode::ReferenceType);
 
   SplineBakedPoints();
   ~SplineBakedPoints();
@@ -111,7 +111,7 @@ public:
 class SplineSampleData
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(SplineSampleData, TypeCopyMode::ValueType);
 
   SplineSampleData();
 
@@ -128,7 +128,7 @@ public:
 class Spline : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Spline, TypeCopyMode::ReferenceType);
 
   Spline();
 

@@ -77,7 +77,7 @@ namespace Zilch
   {
   public:
     template <typename TokenType, typename StreamType, typename ParseHandlerType>
-    friend class RecursiveDescentParser;
+    friend class Zero::RecursiveDescentParser;
 
     void Parse(StringParam input, GrammarSet<Character>& tokenGrammar, GrammarSet<Token>& parserGrammar);
 

@@ -10,7 +10,7 @@ namespace Zero
 class MaterialBlock
 {
 public:
-  ZilchDeclareInheritableType(TypeCopyMode::ReferenceType);
+  ZilchDeclareInheritableType(MaterialBlock, TypeCopyMode::ReferenceType);
 
   MaterialBlock();
   virtual ~MaterialBlock() {}

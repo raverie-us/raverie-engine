@@ -18,7 +18,7 @@ class SoundInstance;
 class SoundSpace : public Component, public Audio::ExternalNodeInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundSpace, TypeCopyMode::ReferenceType);
 
   SoundSpace();
   ~SoundSpace();

@@ -610,9 +610,6 @@ namespace Zilch
   //***************************************************************************
   void KeyValueGetKey(Call& call, ExceptionReport& report)
   {
-    // The user data Contains information about the types used in the hash map
-    KeyValueUserData& userData = call.GetFunction()->Owner->ComplexUserData.ReadObject<KeyValueUserData>(0);
-
     // Get ourselves (the key-value pair)
     AnyKeyValue* self = (AnyKeyValue*)call.GetHandle(Call::This).Dereference();
 
@@ -641,9 +638,6 @@ namespace Zilch
   //***************************************************************************
   void KeyValueGetValue(Call& call, ExceptionReport& report)
   {
-    // The user data Contains information about the types used in the hash map
-    KeyValueUserData& userData = call.GetFunction()->Owner->ComplexUserData.ReadObject<KeyValueUserData>(0);
-
     // Get ourselves (the key-value pair)
     AnyKeyValue* self = (AnyKeyValue*)call.GetHandle(Call::This).Dereference();
 

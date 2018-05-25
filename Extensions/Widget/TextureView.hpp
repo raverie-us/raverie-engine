@@ -20,7 +20,7 @@ DeclareEnum2(TextureUvMode, Normal, RenderTarget);
 class TextureView : public Widget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextureView, TypeCopyMode::ReferenceType);
 
   TextureView(Composite* composite);
 

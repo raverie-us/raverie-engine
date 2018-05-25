@@ -98,7 +98,7 @@ DeclareEnum2(AnimationNodeState, Running, Finished);
 class AnimationNode : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationNode, TypeCopyMode::ReferenceType);
 
   typedef Array<AnimationGraphEvent*>& EventList;
 
@@ -172,7 +172,7 @@ protected:
 class PoseNode : public AnimationNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PoseNode, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   PoseNode(AnimationFrame& pose);
@@ -189,7 +189,7 @@ public:
 class BasicAnimation : public AnimationNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BasicAnimation, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   BasicAnimation();
@@ -237,7 +237,7 @@ template <typename DerivedType>
 class DualBlend : public AnimationNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DualBlend, TypeCopyMode::ReferenceType);
   typedef DualBlend<DerivedType> self_type;
 
   /// Constructors.
@@ -273,7 +273,7 @@ public:
 class DirectBlend : public DualBlend<DirectBlend>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DirectBlend, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   DirectBlend();
@@ -306,7 +306,7 @@ DeclareEnum2(AnimationBlendMode,
 class CrossBlend : public DualBlend<CrossBlend>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CrossBlend, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   CrossBlend();
@@ -340,7 +340,7 @@ public:
 class SelectiveNode : public DualBlend<SelectiveNode>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SelectiveNode, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   SelectiveNode();
@@ -363,7 +363,7 @@ public:
 class ChainNode : public DualBlend<ChainNode>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ChainNode, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   ChainNode();
@@ -376,5 +376,3 @@ public:
 };
 
 }// namespace Zero
-
-#include "AnimationNode.inl"

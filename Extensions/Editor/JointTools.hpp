@@ -19,7 +19,7 @@ DeclareEnum16(JointToolTypes, StickJoint, PositionJoint, PrismaticJoint, WeldJoi
 class JointTool : public ObjectConnectingTool
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointTool, TypeCopyMode::ReferenceType);
 
   JointTool();
 

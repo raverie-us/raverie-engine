@@ -1621,7 +1621,7 @@ bool NetObject::AddNetPropertyToChannel(Component* component, Property* property
   {
     DoNotifyError("Unable To Add NetProperty",
                   String::Format("Unable to add NetProperty '%s' declared in Component '%s' to the NetChannel '%s' on the NetObject '%s' - Error adding NetChannel",
-                  property->Name.c_str(), ZilchVirtualTypeId(component)->Name, netChannelName.c_str(), owner->GetDescription().c_str()));
+                  property->Name.c_str(), ZilchVirtualTypeId(component)->Name.c_str(), netChannelName.c_str(), owner->GetDescription().c_str()));
     return false;
   }
 
@@ -1631,7 +1631,7 @@ bool NetObject::AddNetPropertyToChannel(Component* component, Property* property
   {
     DoNotifyError("Unable To Add NetProperty",
                   String::Format("Unable to add NetProperty '%s' declared in Component '%s' to the NetChannel '%s' on the NetObject '%s' - Error adding NetProperty",
-                  property->Name.c_str(), ZilchVirtualTypeId(component)->Name, netChannelName.c_str(), owner->GetDescription().c_str()));
+                  property->Name.c_str(), ZilchVirtualTypeId(component)->Name.c_str(), netChannelName.c_str(), owner->GetDescription().c_str()));
 
     // Net channel was added as a result of this property?
     if(addedNetChannel)

@@ -14,7 +14,7 @@ namespace Zero
 class PhysicsMaterial : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsMaterial, TypeCopyMode::ReferenceType);
 
   PhysicsMaterial();
 

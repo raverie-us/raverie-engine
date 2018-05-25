@@ -167,7 +167,7 @@ namespace Audio
   //************************************************************************************************
   unsigned AudioSystemInterface::GetSampleRate()
   {
-    return SystemSampleRate;
+    return cSystemSampleRate;
   }
 
   //************************************************************************************************

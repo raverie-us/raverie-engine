@@ -8,7 +8,7 @@
 
 // Includes
 #include "Containers/ArraySet.hpp"
-#include "UintN.hpp"
+#include "UintNType.hpp"
 
 namespace Zero
 {

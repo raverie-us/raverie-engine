@@ -649,6 +649,8 @@ public:
   //Data Base Cell Modification and Inspection
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
+    static const String objectString("Object");
+
     Object* object = (Object*)dataEntry;
     if(Cog* cog = Type::DynamicCast<Cog*>(object))
     {
@@ -695,7 +697,7 @@ public:
       }
       if(column == CommonColumns::Type)
       {
-        variant = "Object";
+        variant = objectString;
       }
       if(column == cHiddenColumn)
       {

@@ -14,7 +14,7 @@ namespace Zero
 class MainWindow : public RootWidget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MainWindow, TypeCopyMode::ReferenceType);
 
   MainWindow(OsWindow* window);
 

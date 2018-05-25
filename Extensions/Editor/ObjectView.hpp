@@ -26,7 +26,7 @@ void RegisterObjectViewEditors();
 class ObjectView : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectView, TypeCopyMode::ReferenceType);
 
   ObjectView(Composite* parent);
   ~ObjectView();
@@ -72,7 +72,7 @@ private:
 class RemovedEntry : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RemovedEntry, TypeCopyMode::ReferenceType);
 
   RemovedEntry(Cog* parent, Guid childId);
 

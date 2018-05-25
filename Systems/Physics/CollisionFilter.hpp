@@ -26,7 +26,7 @@ String GroupFilterDisplay(CollisionFilter* filter);
 /// send out and to whom.
 struct CollisionFilter : public SafeId32EventObject
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionFilter, TypeCopyMode::ReferenceType);
 
   CollisionFilter() {}
   CollisionFilter(ResourceId first, ResourceId second);
@@ -102,6 +102,7 @@ struct HashPolicy<CollisionFilter*>
     return (*left) == (*right); 
   }
 };
-typedef typename HashPolicy<CollisionFilter*> CollisionFilterHashPolicy;
+
+typedef struct HashPolicy<CollisionFilter*> CollisionFilterHashPolicy;
 
 }//namespace Zero

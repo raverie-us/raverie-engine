@@ -68,7 +68,7 @@ typedef uint BroadPhaseId;
 class BroadPhaseTracker : public BroadPhasePackage
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BroadPhaseTracker, TypeCopyMode::ReferenceType);
   typedef Array<BroadPhaseHandle*> BroadPhaseVec;
   BroadPhaseTracker();
   ~BroadPhaseTracker();

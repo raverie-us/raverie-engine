@@ -25,7 +25,7 @@ const float AreaThickness = 0.001f;
 class AreaEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AreaEvent, TypeCopyMode::ReferenceType);
 
   /// The area component that triggered this event.
   Area* mArea;
@@ -34,7 +34,7 @@ public:
 class Area : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Area, TypeCopyMode::ReferenceType);
   
   //Component Interface
   void Serialize(Serializer& stream) override;

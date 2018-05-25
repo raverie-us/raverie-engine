@@ -63,7 +63,7 @@ DeclareEvent(DataReplaced);
 class DataEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DataEvent, TypeCopyMode::ReferenceType);
   DataIndex Index;
   String Command;
 };
@@ -71,7 +71,7 @@ public:
 class DataReplaceEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DataReplaceEvent, TypeCopyMode::ReferenceType);
   DataIndex mOldIndex;
   DataIndex mNewIndex;
 };

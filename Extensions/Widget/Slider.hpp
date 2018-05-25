@@ -28,7 +28,7 @@ namespace Events
 class ProgressBar : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ProgressBar, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ProgressBar(Composite* parent);
@@ -75,7 +75,7 @@ DeclareEnum3(SliderType, Number, Percentage, Degree);
 class Slider : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Slider, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   Slider(Composite* parent, SliderType::Type sliderType);

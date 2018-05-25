@@ -20,7 +20,7 @@ class UpdateEvent;
 class RootWidget : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RootWidget, TypeCopyMode::ReferenceType);
 
   RootWidget(OsWindow* osWindow);
   ~RootWidget();

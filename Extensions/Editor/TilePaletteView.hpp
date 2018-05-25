@@ -44,7 +44,7 @@ typedef Array<TilePaletteChange> TilePaletteChangeList;
 class TilePaletteSprite : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TilePaletteSprite, TypeCopyMode::ReferenceType);
   
   TilePaletteSprite(Composite* parent);
   ~TilePaletteSprite();
@@ -89,7 +89,7 @@ public:
 
   static const String mCollisionTextureName;
 
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TilePaletteView, TypeCopyMode::ReferenceType);
 
   TilePaletteView(Composite* parent, TileEditor2D* editor);
   ~TilePaletteView();

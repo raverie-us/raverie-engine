@@ -10,7 +10,7 @@ namespace Zero
 class GraphicsRaycastProvider : public RaycastProvider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicsRaycastProvider, TypeCopyMode::ReferenceType);
 
   GraphicsRaycastProvider();
   //This function currently only returns 1 result (2 if you get a display

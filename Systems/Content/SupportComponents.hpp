@@ -13,7 +13,7 @@ namespace Zero
   class ContentCopyright : public ContentComponent
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ContentCopyright, TypeCopyMode::ReferenceType);
 
     String Owner;
     String Date;
@@ -25,7 +25,7 @@ namespace Zero
   class ContentHistory : public ContentComponent
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ContentHistory, TypeCopyMode::ReferenceType);
 
     Array<Revision> mRevisions;
 
@@ -36,7 +36,7 @@ namespace Zero
   class ContentNotes : public ContentComponent
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ContentNotes, TypeCopyMode::ReferenceType);
 
     String Notes;
 
@@ -47,7 +47,7 @@ namespace Zero
   class ResourceTemplate : public ContentComponent
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ResourceTemplate, TypeCopyMode::ReferenceType);
 
     void Serialize(Serializer& stream);
 

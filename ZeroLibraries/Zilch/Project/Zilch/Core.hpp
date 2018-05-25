@@ -16,7 +16,7 @@ namespace Zilch
   class ZeroShared Enum
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ValueType);
+    ZilchDeclareType(Enum, TypeCopyMode::ValueType);
     Integer Value;
   };
 
@@ -222,7 +222,7 @@ namespace Zilch
   class ZeroShared Exception
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Exception, TypeCopyMode::ReferenceType);
 
     // Default constructor
     Exception();

@@ -23,7 +23,7 @@ DeclareEvent(RotationBasisAabbQuery);
 class RotationBasisGizmoInitializationEvent : public ObjectEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotationBasisGizmoInitializationEvent, TypeCopyMode::ReferenceType);
 
   RotationBasisGizmoInitializationEvent();
 
@@ -35,7 +35,7 @@ public:
 class RotationBasisGizmoAabbQueryEvent: public ObjectEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotationBasisGizmoAabbQueryEvent, TypeCopyMode::ReferenceType);
 
   RotationBasisGizmoAabbQueryEvent();
 
@@ -46,7 +46,7 @@ public:
 /// Allows a rotation basis gizmo to override the transform data (for selection).
 class RotationBasisGizmoMetaTransform : public MetaTransform
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotationBasisGizmoMetaTransform, TypeCopyMode::ReferenceType);
   MetaTransformInstance GetInstance(HandleParam object) override;
 };
 
@@ -55,7 +55,7 @@ class RotationBasisGizmoMetaTransform : public MetaTransform
 class RotationBasisGizmo : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RotationBasisGizmo, TypeCopyMode::ReferenceType);
 
   RotationBasisGizmo();
 
@@ -114,7 +114,7 @@ public:
 class OrientationBasisGizmo : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(OrientationBasisGizmo, TypeCopyMode::ReferenceType);
 
   OrientationBasisGizmo();
   void Initialize(CogInitializer& initializer) override;
@@ -163,7 +163,7 @@ public:
 class PhysicsCarWheelBasisGizmo : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsCarWheelBasisGizmo, TypeCopyMode::ReferenceType);
 
   PhysicsCarWheelBasisGizmo();
   void Initialize(CogInitializer& initializer) override;
@@ -196,7 +196,7 @@ public:
 class RevoluteBasisGizmo : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RevoluteBasisGizmo, TypeCopyMode::ReferenceType);
 
   /// A revolute needs to store 2 bases that can be independently
   /// reverted, hence we need a special class.

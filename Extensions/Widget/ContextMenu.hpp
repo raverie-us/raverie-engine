@@ -155,8 +155,8 @@ private:
 class MenuBarItem : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  typedef MenuBarItem ZilchSelf;
+  ZilchDeclareType(MenuBarItem, TypeCopyMode::ReferenceType);
+
   MenuBarItem(Composite* widget);
   void UpdateTransform() override;
   Vec2 GetMinSize() override;
@@ -178,8 +178,8 @@ public:
 class MenuBar : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  typedef MenuBar ZilchSelf;
+  ZilchDeclareType(MenuBar, TypeCopyMode::ReferenceType);
+
   MenuBar(Composite* widget);
   
   void LoadMenu(StringParam name);

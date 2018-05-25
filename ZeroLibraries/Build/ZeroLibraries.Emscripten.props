@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Configuration">
+    <PlatformToolset>emcc</PlatformToolset>
+    <ConfigurationType>HTMLPage</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>$(ZERO_OUTPUT)\Out\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(ZERO_OUTPUT)\Int\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <EmsdkInclude>$(EmscriptenDir)\system\include\AL\;$(EmscriptenDir)\system\include\compat\;$(EmscriptenDir)\system\include\EGL\;$(EmscriptenDir)\system\include\emscripten\;$(EmscriptenDir)\system\include\GL\;$(EmscriptenDir)\system\include\GLES\;$(EmscriptenDir)\system\include\GLES2\;$(EmscriptenDir)\system\include\GLES3\;$(EmscriptenDir)\system\include\GLFW\;$(EmscriptenDir)\system\include\KHR\;$(EmscriptenDir)\system\include\libc\;$(EmscriptenDir)\system\include\libcxx\;$(EmscriptenDir)\system\include\SDL\;$(EmscriptenDir)\system\include\SSE\;$(EmscriptenDir)\system\include\uuid\;$(EmscriptenDir)\system\include\X11\;</EmsdkInclude>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(ZERO_SHARED_WARNINGS)'!=''">
+    <ClCompile>
+      <PreprocessorDefinitions>ZeroSharedWarnings;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <ExceptionHandling>true</ExceptionHandling>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ShowIncludes>false</ShowIncludes>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;ZeroExportDll;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(EmsdkInclude);$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName)$(Configuration)$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <AdditionalOptions>-s WASM=1 -msse -msse2 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>%(AdditionalLibraryDirectories)</AdditionalDependencies>
+    </Lib>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

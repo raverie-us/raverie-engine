@@ -15,7 +15,7 @@ namespace Zero
 class NSquaredBroadPhase : public IBroadPhase
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NSquaredBroadPhase, TypeCopyMode::ReferenceType);
 
   typedef NSquared<void*> BroadPhaseType;
   typedef NSquaredRange<void*> range;

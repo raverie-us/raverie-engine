@@ -32,7 +32,7 @@ DeclareBitField8(BaseCastFilterFlags,
 /// Used to filter objects during cast operations.
 struct BaseCastFilter
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BaseCastFilter, TypeCopyMode::ReferenceType);
 
   BaseCastFilter();
   BaseCastFilter(const BaseCastFilter& rhs);

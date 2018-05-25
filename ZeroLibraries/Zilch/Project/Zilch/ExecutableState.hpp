@@ -37,7 +37,7 @@ namespace Zilch
   class ZeroShared MemoryLeakEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(MemoryLeakEvent, TypeCopyMode::ReferenceType);
 
     MemoryLeakEvent();
     ExecutableState* State;
@@ -49,7 +49,7 @@ namespace Zilch
   class ZeroShared OpcodeEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(OpcodeEvent, TypeCopyMode::ReferenceType);
 
     OpcodeEvent();
     ExecutableState* State;
@@ -63,7 +63,7 @@ namespace Zilch
   class ZeroShared ExceptionEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ExceptionEvent, TypeCopyMode::ReferenceType);
     ExceptionEvent();
     ExecutableState* State;
     Exception* ThrownException;
@@ -84,7 +84,7 @@ namespace Zilch
   class ZeroShared FatalErrorEvent : public EventData
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(FatalErrorEvent, TypeCopyMode::ReferenceType);
 
     FatalErrorEvent();
     FatalError::Enum ErrorCode; 
@@ -334,7 +334,7 @@ namespace Zilch
   class ZeroShared ExecutableState : public EventHandler
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ExecutableState, TypeCopyMode::ReferenceType);
 
     // Friends
     friend class VirtualMachine;
@@ -765,55 +765,9 @@ namespace Zilch
   ZeroSharedTemplate class CallHelper
   {
   public:
-    static T Get(Call& call, size_t index)
-    {
-      // If the type is a reference type... (this is always a handle)
-      if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
-      {
-        return call.GetHandle<T>(index);
-      }
-      // Otherwise it must be a value type...
-      else
-      {
-        return call.GetValue<T>(index);
-      }
-    }
-
-    static void Set(Call& call, size_t index, const T& value)
-    {
-      // If the type is a reference type... (this is always a handle)
-      if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
-      {
-        call.SetHandle<T>(index, value);
-      }
-      // Otherwise it must be a value type...
-      else
-      {
-        call.SetValue<T>(index, value);
-      }
-    }
-
-    static byte* GetArgumentPointer(Call& call, size_t index)
-    {
-      if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
-      {
-        // Read the handle from the stack
-        Handle& handle = *(Handle*)call.GetHandlePointer<T>(index);
-
-        // Read the data from the handle by dereferencing it
-        byte* stackPointer = handle.Dereference();
-
-        // Throw exception if there's null for a value or reference type
-        if (stackPointer == nullptr && !Zero::is_pointer<T>::value)
-          ExecutableState::GetCallingState()->ThrowException(String::Format("Error: Argument %d cannot be null.", index));
-
-        return stackPointer;
-      }
-      else
-      {
-        return call.GetValuePointer<T>(index);
-      }
-    }
+    static T Get(Call& call, size_t index);
+    static void Set(Call& call, size_t index, const T& value);
+    static byte* GetArgumentPointer(Call& call, size_t index);
 
     static T CastArgumentPointer(byte* stackPointer)
     {
@@ -1094,6 +1048,59 @@ namespace Zilch
     // Every call corresponds with per frame data
     PerFrameData* Data;
   };
+
+  template <typename T>
+  T CallHelper<T>::Get(Call& call, size_t index)
+  {
+    // If the type is a reference type... (this is always a handle)
+    if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
+    {
+      return call.GetHandle<T>(index);
+    }
+    // Otherwise it must be a value type...
+    else
+    {
+      return call.GetValue<T>(index);
+    }
+  }
+
+  template <typename T>
+  void CallHelper<T>::Set(Call& call, size_t index, const T& value)
+  {
+    // If the type is a reference type... (this is always a handle)
+    if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
+    {
+      call.SetHandle<T>(index, value);
+    }
+    // Otherwise it must be a value type...
+    else
+    {
+      call.SetValue<T>(index, value);
+    }
+  }
+
+  template <typename T>
+  byte* CallHelper<T>::GetArgumentPointer(Call& call, size_t index)
+  {
+    if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
+    {
+      // Read the handle from the stack
+      Handle& handle = *(Handle*)call.GetHandlePointer<T>(index);
+
+      // Read the data from the handle by dereferencing it
+      byte* stackPointer = handle.Dereference();
+
+      // Throw exception if there's null for a value or reference type
+      if (stackPointer == nullptr && !Zero::is_pointer<T>::value)
+        ExecutableState::GetCallingState()->ThrowException(String::Format("Error: Argument %d cannot be null.", index));
+
+      return stackPointer;
+    }
+    else
+    {
+      return call.GetValuePointer<T>(index);
+    }
+  }
 
   // A helper for allocating a type within Zilch using the current executable state
   #define ZilchAllocate(T, ...) (ZZ::ExecutableState::GetCallingState()->AllocateDefaultConstructed<T>(__VA_ARGS__))

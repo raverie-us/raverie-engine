@@ -49,7 +49,7 @@ void SaveRangeOfObjects(Serializer& saver, uint objectCount, rangeType range)
   while(!range.Empty())
   {
     Cog* cog = ResolveCog(range.Front());
-    if(ShouldSave(*cog))
+    if(CogSerialization::ShouldSave(*cog))
       ++shouldSaveCount;
     range.PopFront();
   }

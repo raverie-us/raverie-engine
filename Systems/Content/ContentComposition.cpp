@@ -11,6 +11,7 @@
 
 namespace Zero
 {
+
 ZilchDefineType(ContentComponent, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);

@@ -33,7 +33,7 @@ class GameSession;
 struct ConnectionData
 {
   // Connection data requires a meta so it can be attached as a component to events
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ConnectionData, TypeCopyMode::ReferenceType);
 
   // A constant that is set when a connection index is not initialized
   static const uint InvalidIndex = (uint)-1;
@@ -55,7 +55,7 @@ struct ConnectionData
 class ConnectionEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ConnectionEvent, TypeCopyMode::ReferenceType);
 
   // Constructor
   ConnectionEvent(const ConnectionData* connectionInfo);
@@ -72,7 +72,7 @@ public:
 class ReceivedDataEvent : public ConnectionEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ReceivedDataEvent, TypeCopyMode::ReferenceType);
 
   // Constructor
   ReceivedDataEvent(const ConnectionData* connectionInfo, const byte* data, size_t size);
@@ -166,7 +166,7 @@ DeclareEnum2(TcpSocketBind, Any, Loopback);
 class TcpSocket : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TcpSocket, TypeCopyMode::ReferenceType);
 
   /// Constants.
   static const uint MaxPossibleConnections = (uint)-1;

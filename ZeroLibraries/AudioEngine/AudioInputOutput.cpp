@@ -13,8 +13,8 @@ namespace Audio
 
   //************************************************************************************************
   AudioIOInterface::AudioIOInterface() :
-    mOutputStreamLatency(LatencyValues::LowLatency),
-    MixedOutputBuffer(nullptr)
+    MixedOutputBuffer(nullptr),
+    mOutputStreamLatency(LatencyValues::LowLatency)
   {
     memset(OutputBufferSizePerLatency, 0, sizeof(unsigned) * LatencyValues::Size);
 

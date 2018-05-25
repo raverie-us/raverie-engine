@@ -14,7 +14,7 @@ namespace Zero
 class CollisionGroup : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CollisionGroup, TypeCopyMode::ReferenceType);
 
   CollisionGroup();
   ~CollisionGroup();

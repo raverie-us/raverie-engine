@@ -18,7 +18,7 @@ namespace Zero
 class NetSpace : public NetObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetSpace, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetSpace();

@@ -85,7 +85,7 @@ public:
 class ResourceDisplayFunctions : public MetaDisplay
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceDisplayFunctions, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -95,7 +95,7 @@ public:
 class Resource : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Resource, TypeCopyMode::ReferenceType);
 
   /// Memory heap for all resources
   static Memory::Heap* sHeap;
@@ -234,7 +234,7 @@ private:
 class ResourceMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceMetaSerialization, TypeCopyMode::ReferenceType);
   void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
 };
@@ -247,7 +247,7 @@ class DataResource : public Resource
 {
 public:
   /// Meta Initialization
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DataResource, TypeCopyMode::ReferenceType);
 
   ResourceEditType::Type GetEditType() override { return ResourceEditType::Data; }
   void Save(StringParam filename) override;
@@ -261,7 +261,7 @@ public:
 class DataResourceInheritance : public MetaDataInheritanceRoot
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DataResourceInheritance, TypeCopyMode::ReferenceType);
   String GetInheritId(HandleParam object, InheritIdContext::Enum context) override;
   void SetInheritId(HandleParam object, StringParam inheritId) override;
   bool ShouldStoreLocalModifications(HandleParam object) override;
@@ -272,7 +272,7 @@ public:
 class ResourceMetaOperations : public MetaOperations
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceMetaOperations, TypeCopyMode::ReferenceType);
 
   u64 GetUndoHandleId(HandleParam object) override;
   Any GetUndoData(HandleParam object);

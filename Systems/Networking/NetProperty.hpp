@@ -18,7 +18,7 @@ namespace Zero
 class NetProperty : public SafeId32Object, public ReplicaProperty
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetProperty, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetProperty(const String& name, NetPropertyType* netPropertyType, const Variant& propertyData);
@@ -55,7 +55,7 @@ public:
 class NetPropertyType : public SafeId32Object, public ReplicaPropertyType
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPropertyType, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPropertyType(const String& name, NativeType* nativeType, SerializeValueFn serializeValueFn, GetValueFn getValueFn, SetValueFn setValueFn);
@@ -88,8 +88,9 @@ public:
 //---------------------------------------------------------------------------------//
 
 // Variant Configuration Helper Macros
+// TODO PLATFORM further investigate this macros usage, static constexpr float does not compile on clang 3.7 so for now was changed to an int
 #define DeclareVariantGetSetForArithmeticTypes(property, defaultFloat, defaultInt) \
-static constexpr float DefaultFloat##property = defaultFloat;                      \
+static constexpr int   DefaultFloat##property = defaultFloat;                      \
 static constexpr int   DefaultInt##property   = defaultInt;                        \
 DeclareVariantGetSetForType(property, Integer,       int);                         \
 DeclareVariantGetSetForType(property, DoubleInteger, s64);                         \
@@ -112,7 +113,7 @@ type Get##property##typeName() const
 class NetPropertyConfig : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPropertyConfig, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPropertyConfig();
@@ -147,7 +148,7 @@ public:
   bool GetUseDeltaThreshold() const;
 
   /// Controls the delta threshold at which a net property's primitive-components are considered changed during change detection.
-  DeclareVariantGetSetForArithmeticTypes(DeltaThreshold, float(1), int(1));
+  DeclareVariantGetSetForArithmeticTypes(DeltaThreshold, (1), int(1));
 
   /// Controls how net properties are serialized.
   void SetSerializationMode(SerializationMode::Enum serializationMode);
@@ -165,10 +166,10 @@ public:
   bool GetUseQuantization() const;
 
   /// Controls the minimum, inclusive value at which a net property's primitive-components may be quantized during serialization.
-  DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMin, float(-1), int(-1));
+  DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMin, (-1), int(-1));
 
   /// Controls the maximum, inclusive value at which a net property's primitive-components may be quantized during serialization.
-  DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMax, float(+1), int(+1));
+  DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMax, (+1), int(+1));
 
   /// Controls whether or not to interpolate a net property's received authoritative values before sampling them locally.
   /// (Enable to improve changing value smoothness, at the expense of some small CPU and memory impact)
@@ -215,7 +216,7 @@ public:
   uint GetConvergenceInterval() const;
 
   /// Controls the threshold at which to snap a net property's locally simulated values to sampled authoritative values instead of gradually converging.
-  DeclareVariantGetSetForArithmeticTypes(SnapThreshold, float(10), int(10));
+  DeclareVariantGetSetForArithmeticTypes(SnapThreshold, (10), int(10));
 
   // Data
   BasicNetType::Enum      mBasicNetType;                  ///< Target basic property type.
@@ -266,7 +267,7 @@ public:
 class NetPropertyInfo : public SafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetPropertyInfo, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   NetPropertyInfo();
@@ -328,7 +329,7 @@ typedef Array<NetPropertyInfo> NetPropertyInfoArray;
 class PropertyFilter##typeName : public MetaPropertyFilter                            \
 {                                                                                     \
 public:                                                                               \
-  ZilchDeclareType(TypeCopyMode::ReferenceType);                                      \
+  ZilchDeclareType(PropertyFilter##typeName, TypeCopyMode::ReferenceType);            \
   bool Filter(Member* prop, HandleParam instance) override;                           \
 }
 
@@ -351,21 +352,21 @@ DeclarePropertyFilterForType(String);
 class PropertyFilterMultiPrimitiveTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyFilterMultiPrimitiveTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterFloatingPointTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyFilterFloatingPointTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterArithmeticTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PropertyFilterArithmeticTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 

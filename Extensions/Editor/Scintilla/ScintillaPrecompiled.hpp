@@ -2,6 +2,9 @@
 
 #include <assert.h>
 #include <map>
+#include <vector>
+#include <string>
+
 #define ScString std::string
 #define ScVector std::vector
 #define ScMap std::map

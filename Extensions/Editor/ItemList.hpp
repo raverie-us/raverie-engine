@@ -16,7 +16,7 @@ class ItemGroup;
 class ItemList : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ItemList, TypeCopyMode::ReferenceType);
   ItemList(Composite* parent, float itemHeight, uint columns);
 
   void UpdateTransform() override;
@@ -52,7 +52,7 @@ private:
 class WeightedComposite : public ColoredComposite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WeightedComposite, TypeCopyMode::ReferenceType);
   WeightedComposite(Composite* parent, StringParam displayName, uint weight, Vec4Param color);
   bool operator<(const WeightedComposite& rhs);
   uint mWeight;
@@ -62,7 +62,7 @@ public:
 class ItemGroup : public WeightedComposite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ItemGroup, TypeCopyMode::ReferenceType);
   ItemGroup(Composite* parent, StringParam name, uint weight, float itemHeight, uint columns);
 
   Item* AddItem(StringParam name, StringParam displayName, uint weight);
@@ -78,7 +78,7 @@ public:
 class Item : public WeightedComposite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Item, TypeCopyMode::ReferenceType);
   Item(Composite* parent, StringParam itemName, StringParam displayName, uint weight);
 
   void OnMouseEnter(Event*);

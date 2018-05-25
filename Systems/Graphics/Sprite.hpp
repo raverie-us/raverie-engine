@@ -10,7 +10,7 @@ namespace Zero
 class BaseSprite : public Graphical
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BaseSprite, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -41,7 +41,7 @@ public:
 class Sprite : public BaseSprite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Sprite, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -99,7 +99,7 @@ public:
 class SpriteText : public BaseSprite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpriteText, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -159,7 +159,7 @@ const uint cMultiSpriteCellSize = 8;
 class MultiSpriteEntry
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiSpriteEntry, TypeCopyMode::ReferenceType);
 
   IntVec2 GetIndex();
   SpriteSource* GetSpriteSource();
@@ -202,7 +202,7 @@ public:
 class MultiSprite : public BaseSprite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiSprite, TypeCopyMode::ReferenceType);
 
   // Component Interface
 

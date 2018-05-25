@@ -21,7 +21,7 @@ namespace Events
 class BugReporterResponse : public Event
 {
 public:
-	ZilchDeclareType(TypeCopyMode::ReferenceType);
+	ZilchDeclareType(BugReporterResponse, TypeCopyMode::ReferenceType);
 	BugReporterResponse();
 	BugReporterResponse(String response);
 	String mResponse;
@@ -30,7 +30,7 @@ public:
 class BugReporter : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BugReporter, TypeCopyMode::ReferenceType);
   typedef BugReporter ZilchSelf;
 
   BugReporter(Composite* parent);

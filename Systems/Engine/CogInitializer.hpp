@@ -20,7 +20,7 @@ typedef InList<Cog, &Cog::SpaceLink> SpaceCogList;
 class CogInitializerEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogInitializerEvent, TypeCopyMode::ReferenceType);
 
   CogInitializer* mCogInitializer;
 };
@@ -30,7 +30,7 @@ public:
 class CogInitializer : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogInitializer, TypeCopyMode::ReferenceType);
 
   CogInitializer(Space* space, GameSession* gameSession = nullptr);
   ~CogInitializer();

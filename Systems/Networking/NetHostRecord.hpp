@@ -15,7 +15,7 @@ namespace Zero
 class NetHostRecord : public SafeId32
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NetHostRecord, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   NetHostRecord();

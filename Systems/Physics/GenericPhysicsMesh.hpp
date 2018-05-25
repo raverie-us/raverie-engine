@@ -35,7 +35,7 @@ typedef HashMap<uint, MeshTriangleInfo> TriangleInfoMap;
 class GenericPhysicsMesh : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GenericPhysicsMesh, TypeCopyMode::ReferenceType);
   typedef Array<Vec3> VertexArray;
   typedef Array<uint> IndexArray;
 

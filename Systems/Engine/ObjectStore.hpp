@@ -18,7 +18,7 @@ DeclareEnum3(StoreResult, Added, Replaced, Failed);
 class ObjectStore : public ExplicitSingleton<ObjectStore>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectStore, TypeCopyMode::ReferenceType);
   
   /// Set the object store name. This is to prevent
   /// store name conflicts.

@@ -317,7 +317,7 @@ struct IteratorRange
   typedef typename containerType::reference reference;
 
   IteratorRange(iterator pbegin, iterator pend)
-    : Begin(pbegin) , End(pend)
+    : begin(pbegin) , end(pend)
   {
   }
 
@@ -347,7 +347,7 @@ struct IteratorTypedRange
   typedef typename iteratorType::reference reference;
 
   IteratorTypedRange(iterator pbegin, iterator pend)
-    : Begin(pbegin), End(pend)
+    : begin(pbegin), end(pend)
   {
   }
 
@@ -526,6 +526,15 @@ struct ZeroSharedTemplate has_equality_operator : public integral_constant<bool,
 template <typename T, typename Enable = void>
 struct ZeroSharedTemplate ComparePolicy
 {
+  inline bool Equal(const T&, const T&) const
+  {
+    return false;
+  }
+  template<typename T2>
+  inline bool Equal(const T&, const T2&) const
+  {
+    return false;
+  }
 };
 
 /// Default compare policy
@@ -570,10 +579,10 @@ struct ZeroShared ComparePolicy<const char*>
 template<typename T>
 struct ZeroSharedTemplate has_valid_compare_policy_helper
 {
-  typedef typename ComparePolicy<T> ComparePolicyT;
+  typedef struct ComparePolicy<T> ComparePolicyT;
 
   template<typename T2>
-  static inline yes Test(static_verify_function_signature< typename bool(ComparePolicyT::*)(const T2&, const T2&) const, &ComparePolicyT::Equal >*);
+  static inline yes Test(static_verify_function_signature<bool(ComparePolicyT::*)(const T2&, const T2&) const, &ComparePolicyT::Equal >*);
   template<typename T2>
   static inline no Test(...);
 

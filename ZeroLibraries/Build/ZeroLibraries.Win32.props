@@ -27,7 +27,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName)$(Configuration)$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
-	<Lib>
+    <Lib>
       <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>

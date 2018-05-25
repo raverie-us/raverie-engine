@@ -295,7 +295,7 @@ ZilchDefineType(PropertyFilter##typeName, builder, type)                        
 }                                                                                         \
 bool PropertyFilter##typeName::Filter(Member* prop, HandleParam instance)                 \
 {                                                                                         \
-  return (instance.Get<NetPropertyConfig*>()->mBasicNetType == BasicNetType::##typeName); \
+  return (instance.Get<NetPropertyConfig*>()->mBasicNetType == BasicNetType::typeName); \
 }
 
 // Variant Configuration Property Filters

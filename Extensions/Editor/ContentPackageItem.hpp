@@ -21,7 +21,7 @@ DeclareEvent(TextureLoaded);
 class ContentPackage : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentPackage, TypeCopyMode::ReferenceType);
 
   ContentPackage();
   ~ContentPackage();

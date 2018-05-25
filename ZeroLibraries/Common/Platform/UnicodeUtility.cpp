@@ -88,7 +88,7 @@ uint Utf8ToUtf32(Rune utf8)
 
   int totalBytesToRead = UnpackUtf8RuneIntoBufferInternal(utf8, utf8Bytes);
 
-  char currentByteToRead = totalBytesToRead - 1;
+  byte currentByteToRead = totalBytesToRead - 1;
   // this switch case falling through is intended behavior, it is simply an
   // unwrapped while loop with the removed case of not bit shifting on the first byte
   switch (currentByteToRead)
@@ -111,7 +111,7 @@ size_t UnpackUtf8RuneIntoBufferInternal(Rune uft8Rune, byte (&utf8Bytes)[4])
 {
   memcpy(utf8Bytes, &uft8Rune.value, sizeof(uint));
 
-  for (uint i = 3; i >= 0; --i)
+  for (int i = 3; i >= 0; --i)
   {
     // either we found the leading byte value or reached the end of the codepoint
     if (utf8Bytes[i] || i == 0)

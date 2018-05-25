@@ -58,6 +58,8 @@ typedef Array<CommandEntry> CommandSet;
 class HotKeyCommands : public ExplicitSingleton<HotKeyCommands, DataSource>
 {
 public:
+  ZilchDeclareType(HotKeyCommands, TypeCopyMode::ReferenceType);
+
   HotKeyCommands( );
 
   void CopyCommandData(Array<Command*>& commands);
@@ -87,7 +89,7 @@ public:
 class HotKeyEditor : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HotKeyEditor, TypeCopyMode::ReferenceType);
 
   HotKeyEditor(Composite* parent);
   void BuildFormat(TreeFormatting& formatting);
@@ -138,7 +140,7 @@ public:
 class HotKeyBinding : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HotKeyBinding, TypeCopyMode::ReferenceType);
 
   unsigned mModifier1;
   unsigned mModifier2;

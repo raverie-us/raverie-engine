@@ -61,13 +61,13 @@ namespace Zilch
     IsValid(false),
     Lhs(nullptr),
     Rhs(nullptr),
+    CastLhsTo(nullptr),
+    CastRhsTo(nullptr),
     Result(nullptr),
     Operator(Grammar::Invalid),
     Instruction(Instruction::InvalidInstruction),
     FlipArguments(false),
-    Io(IoMode::NotSet),
-    CastLhsTo(nullptr),
-    CastRhsTo(nullptr)
+    Io(IoMode::NotSet)
   {
   }
 

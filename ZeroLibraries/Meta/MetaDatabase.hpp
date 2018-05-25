@@ -19,7 +19,7 @@ namespace Events
 class MetaLibraryEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaLibraryEvent, TypeCopyMode::ReferenceType);
   LibraryRef mLibrary;
 };
 
@@ -27,7 +27,7 @@ public:
 class MetaSerializedProperty : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaSerializedProperty, TypeCopyMode::ReferenceType);
 
   MetaSerializedProperty();
   MetaSerializedProperty(AnyParam defaultValue);

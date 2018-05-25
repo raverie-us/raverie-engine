@@ -32,23 +32,26 @@ namespace Zilch
     // Constructor
     CompilationErrors();
 
+    // Enum values are not valid to pass to a variadic function and fail default argument promotions
+    // ErrorCode::Enum values are casted to and passed in as an integer to the following functions for this reason
+
     // Print out an error message with extra context (one extra location, given a va_list)
-    void RaiseArgs(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, ErrorCode::Enum errorCode, va_list args);
+    void RaiseArgs(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, va_list args);
 
     // Print out an error message (given a va_list)
-    void RaiseArgs(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, ErrorCode::Enum errorCode, va_list args);
+    void RaiseArgs(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, va_list args);
 
     // Print out an error message with extra context (multiple locations, given a va_list)
-    void RaiseArgs(const CodeLocation& location, ErrorCode::Enum errorCode, va_list args);
+    void RaiseArgs(const CodeLocation& location, int errorCode, va_list args);
 
     // Print out an error message with extra context (one extra location)
-    void Raise(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, ErrorCode::Enum errorCode, ...);
+    void Raise(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, ...);
 
     // Print out an error message with extra context (multiple locations)
-    void Raise(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, ErrorCode::Enum errorCode, ...);
+    void Raise(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, ...);
 
     // Print out an error message
-    void Raise(const CodeLocation& location, ErrorCode::Enum errorCode, ...);
+    void Raise(const CodeLocation& location, int errorCode, ...);
 
     // A pointer to any data the user wants to attach
     mutable const void* UserData;

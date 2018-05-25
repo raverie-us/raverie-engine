@@ -22,7 +22,7 @@ namespace Zero
 class GeometryImport : public ContentComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeometryImport, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream)  override;
   void Generate(ContentInitializer& initializer) override;
@@ -45,7 +45,7 @@ public:
 class GeometryResourceEntry : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeometryResourceEntry, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
   void SetDefaults();
@@ -62,7 +62,7 @@ public:
 class PhysicsMeshBuilder : public BuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsMeshBuilder, TypeCopyMode::ReferenceType);
 
   PhysicsMeshBuilder(){};
 
@@ -86,7 +86,7 @@ public:
 class AnimationClip : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationClip, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
   void SetDefaults();
@@ -101,7 +101,7 @@ public:
 class AnimationBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AnimationBuilder, TypeCopyMode::ReferenceType);
 
   AnimationBuilder()
     : DirectBuilderComponent(10, ".animset.data", "AnimationSet")
@@ -122,7 +122,7 @@ public:
 class GeneratedArchetype : public ContentComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeneratedArchetype, TypeCopyMode::ReferenceType);
 
   GeneratedArchetype();
 
@@ -137,7 +137,7 @@ public:
 class TextureContent : public ContentComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TextureContent, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream)  override;
   void Generate(ContentInitializer& initializer) override;
@@ -149,7 +149,7 @@ public:
 class GeometryContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeometryContent, TypeCopyMode::ReferenceType);
 
   GeometryContent();
   GeometryContent(StringParam inputFilename);

@@ -1720,7 +1720,6 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter, Vec3Param obbHalfExtents,
   {
     //Create the box's orientation matrix as if the box's face normal was the
     //z-axis. This is probably a good place to start optimizing.
-    real sign = Math::GetSign(boxNormal[boxAxis]);
     Vec3 faceCenter = obbCenter + obbAxes[boxAxis] * obbHalfExtents[boxAxis];
 
     Vec2 boxPlanePoints[7];

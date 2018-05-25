@@ -29,7 +29,7 @@ void FindNextFocus(Widget* widget, FocusDirection::Enum direction);
 class Spacer : public Widget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Spacer, TypeCopyMode::ReferenceType);
 
   Spacer(Composite* parent);
   Spacer(Composite* parent, SizePolicy::Enum policy, Vec2Param size);
@@ -43,7 +43,7 @@ public:
 class Splitter : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Splitter, TypeCopyMode::ReferenceType);
 
   Splitter(Composite* parent);
   ~Splitter();

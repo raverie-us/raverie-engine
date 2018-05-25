@@ -384,9 +384,6 @@ namespace Zilch
   {
     ErrorIf(this->StoredType == nullptr, "The any does not contain a type!");
 
-    // Get the size of the handle, delegate, or entire value type (copyable size)
-    size_t copyableSize = this->StoredType->GetCopyableSize();
-
     // Where we store the memory that needs to be copied from
     const byte* data = this->GetData();
 

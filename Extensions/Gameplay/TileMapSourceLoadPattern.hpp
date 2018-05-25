@@ -103,8 +103,6 @@ struct TileMapSourceLoadPattern
 
     u32 mapStart = file.StartChunk('full');
 
-    uint size = source->mData.Size();
-
     Array<IntVec2> position;
     Array<Guid> archetype;
     Array<Guid> sprite;

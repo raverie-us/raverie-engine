@@ -15,7 +15,7 @@ namespace Zero
 class PhysicsMesh : public GenericPhysicsMesh
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsMesh, TypeCopyMode::ReferenceType);
   typedef StaticAabbTree<uint> AabbTree;
 
   //-------------------------------------------------------------------Resource Interface

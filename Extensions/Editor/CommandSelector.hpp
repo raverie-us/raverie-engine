@@ -19,7 +19,7 @@ class SearchViewEvent;
 class GeneralSearchView : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeneralSearchView, TypeCopyMode::ReferenceType);
 
   GeneralSearchView(Composite* parent, Widget* returnFocus);
 

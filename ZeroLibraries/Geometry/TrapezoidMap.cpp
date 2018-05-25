@@ -68,9 +68,9 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
                            const Array<uint>& contours, 
                            s32 edgeCount, 
                            s32 seed)
-  : mRandom(seed)
+  : mNodes(vertices.Size() * 4 + 1 + vertices.Size() * 2)
   , mRegions(vertices.Size() * 2 + 1 + 1)
-  , mNodes(vertices.Size() * 4 + 1 + vertices.Size() * 2)
+  , mRandom(seed)
   , mIsValid(true)
 {
   // Total number of graph regions is n + k + 1
@@ -791,9 +791,9 @@ bool TrapezoidMap::UpdateAbove(Region* O,
     //                A                                        A                    
     //                                                                        
     // --------------(x)--------------   --->   --------------(x)--------------
-    //                 \                                      + \                  
-    //        O         \       Q                            +   \   
-    //                   \                            L     +  R  \     Q                     
+    //                 \                                      + \
+    //        O         \       Q                            +   \
+    //                   \                            L     +  R  \     Q
     //                    \                                +       \
     //
     RegionId indexQ = A->BotNeighbor[1];
@@ -1236,8 +1236,6 @@ TrapezoidMap::NodeId TrapezoidMap::MergeAbove(RegionId regionId, RegionId* paren
 
 void TrapezoidMap::InsertVertex(NodeId rootId, VertexId vertexId)
 {
-  Vec2 vertex = mVertices[vertexId];
-
   // Traverse the tree until we hit the leaf region that Contains this vertex
   NodeId nodeId = QueryInternal(rootId, vertexId)->NodeIndex;
   Node* node = mNodes.GetElement(nodeId);

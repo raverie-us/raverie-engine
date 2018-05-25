@@ -15,7 +15,7 @@ ContentItem* MakeZilchPluginContent(ContentInitializer& initializer);
 class ZilchPluginBuilder : public DataBuilder
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchPluginBuilder, TypeCopyMode::ReferenceType);
   ZilchPluginBuilder();
 
   ResourceId mSharedLibraryResourceId;

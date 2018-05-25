@@ -24,7 +24,7 @@ DeclareEnum2(SoundSelectMode, Random, Sequential);
 class SoundEntry : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundEntry, TypeCopyMode::ReferenceType);
 
   SoundEntry();
 
@@ -71,7 +71,7 @@ private:
 
 class SoundEntryDisplay : public MetaDisplay
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundEntryDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -83,7 +83,7 @@ class SoundEntryDisplay : public MetaDisplay
 class SoundTagEntry : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundTagEntry, TypeCopyMode::ReferenceType);
 
   SoundTagEntry();
 
@@ -100,7 +100,7 @@ private:
 
 class SoundTagEntryDisplay : public MetaDisplay
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundTagEntryDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -113,7 +113,7 @@ typedef Array<SoundTag*> SoundTagList;
 class SoundCueDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundCueDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -123,7 +123,7 @@ public:
 class SoundCue : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundCue, TypeCopyMode::ReferenceType);
 
   SoundCue();
   ~SoundCue();

@@ -23,7 +23,7 @@ DeclareTag(Physics);
 /// Cast result from performing a sweep test.
 struct SweepResult
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SweepResult, TypeCopyMode::ReferenceType);
 
   friend bool operator<(const SweepResult& lhs, const SweepResult& rhs)
   {
@@ -84,7 +84,7 @@ struct SweepResultRange
 class PhysicsSpace : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PhysicsSpace, TypeCopyMode::ReferenceType);
   friend class RigidBody;
 
   PhysicsSpace();

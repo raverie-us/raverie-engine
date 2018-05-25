@@ -34,11 +34,11 @@ const Guid PolymorphicNode::cInvalidUniqueNodeId = (Guid)-1;
 
 //------------------------------------------------------------- Polymorphic Info
 //******************************************************************************
-PolymorphicInfo::PolymorphicInfo() : 
-  mTypeName(nullptr),
-  mFieldName(nullptr),
-  mFlags(0),
-  mUniqueNodeId(PolymorphicNode::cInvalidUniqueNodeId)
+PolymorphicInfo::PolymorphicInfo() 
+  : mTypeName(nullptr)
+  , mUniqueNodeId(PolymorphicNode::cInvalidUniqueNodeId)
+  , mFieldName(nullptr)
+  , mFlags(0)
 {
 
 }

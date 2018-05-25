@@ -31,11 +31,10 @@ namespace Audio
       ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(name, ID, extInt, true, false, isThreaded), 
     AttenStartDist(data.StartDistance), 
-    UseLowPass(false), 
-    LowPassDistance(data.EndDistance / 2.0f),
     AttenEndDist(data.EndDistance), 
     MinimumVolume(data.MinimumVolume), 
-    Position(position),
+    UseLowPass(false), 
+    LowPassDistance(data.EndDistance / 2.0f),
     LowPassCutoffStartValue(15000.0f)
   {
     if (!Threaded)

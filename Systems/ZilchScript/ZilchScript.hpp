@@ -14,7 +14,7 @@ namespace Zero
 class ZilchScript : public ZilchDocumentResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZilchScript, TypeCopyMode::ReferenceType);
 
   // DocumentResource Interface.
   void ReloadData(StringRange data) override;

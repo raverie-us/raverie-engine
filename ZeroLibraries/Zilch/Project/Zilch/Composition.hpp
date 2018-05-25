@@ -18,7 +18,7 @@ namespace Zilch
   {
   public:
     Composition();
-    ~Composition();
+    ~Composition(); 
 
     // When adding, this will overwrite any component that already exists by the same type
     // The last added component will overwrite any components in its place (as well as base types of the component)
@@ -27,14 +27,13 @@ namespace Zilch
     Composition* Add(const T* component)
     {
       Type* type = ZilchVirtualTypeId(component);
-      
+
       do
       {
         // Map the component's most derived type all the way up to its root base type
         this->Components[type] = component;
         type = Type::GetBaseType(type);
-      }
-      while (type != nullptr);
+      } while (type != nullptr);
       return this;
     }
 
@@ -88,7 +87,7 @@ namespace Zilch
     T* HasInheritedOrAdd()
     {
       // Attempt to get the component, and if we fail then create it immediately
-      T* component = this->GetInherited<T>();
+      T* component = this->HasInherited<T>();
       if (component == nullptr)
       {
         component = new T();
@@ -126,10 +125,10 @@ namespace Zilch
       {
         this->Components.Erase(type);
         type = Type::GetBaseType(type);
-      }
-      while (type != nullptr);
+      } while (type != nullptr);
       return this;
     }
+
 
     // Returns a range of all components on this, and all base compositions
     template <typename T>

@@ -18,7 +18,7 @@ typedef void (*EditResourceFunction)(Editor*,Resource*);
 class ResourceEditors : public ExplicitSingleton<ResourceEditors, Object>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceEditors, TypeCopyMode::ReferenceType);
   typedef HashMap<BoundType*, EditResourceFunction> ResourceEditorMap;
   ResourceEditorMap Editors;
 

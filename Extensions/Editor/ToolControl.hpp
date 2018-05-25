@@ -37,7 +37,7 @@ namespace Events
 class ToolUiEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ToolUiEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ToolUiEvent(Composite* parent);
@@ -110,7 +110,7 @@ public:
 class ToolControl : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ToolControl, TypeCopyMode::ReferenceType);
 
   ToolControl(Composite* parent);
   ~ToolControl();

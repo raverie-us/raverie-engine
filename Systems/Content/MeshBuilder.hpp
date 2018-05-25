@@ -38,7 +38,7 @@ public:
 class MeshBuilder : public BuilderComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MeshBuilder, TypeCopyMode::ReferenceType);
 
   MeshBuilder();
 

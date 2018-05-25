@@ -13,7 +13,7 @@ namespace Zilch
   class ZeroShared Random
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Random, TypeCopyMode::ReferenceType);
 
      /// Default constructor (grabs the random seed)
     Random();

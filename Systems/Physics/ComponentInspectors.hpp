@@ -14,7 +14,7 @@ namespace Zero
 class ColliderInspector : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ColliderInspector, TypeCopyMode::ReferenceType);
 
   Vec3 GetColliderLocalCenterOfMass() const;
   real ComputeMass() const;

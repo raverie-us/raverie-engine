@@ -27,7 +27,7 @@ namespace Events
 class CogReplaceEvent : public DataReplaceEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogReplaceEvent, TypeCopyMode::ReferenceType);
   CogReplaceEvent(Cog* oldCog, Cog* newCog);
   Cog* mOldCog;
   Cog* mNewCog;

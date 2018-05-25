@@ -14,7 +14,7 @@ namespace Zero
 class NodePrintInfo
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(NodePrintInfo, TypeCopyMode::ReferenceType);
   NodePrintInfo(int level, const String& name, int ID, bool hasOutput, Audio::SoundNode* node) : 
     mLevel(level),
     mName(name),

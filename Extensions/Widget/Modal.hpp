@@ -25,7 +25,7 @@ namespace Events
 class ModalConfirmEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ModalConfirmEvent, TypeCopyMode::ReferenceType);
   ModalConfirmEvent();
 
   /// Whether or not confirmed was pressed.
@@ -40,7 +40,7 @@ public:
 class ModalButtonEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ModalButtonEvent, TypeCopyMode::ReferenceType);
   String mButtonName;
 
   /// The user data from the modal (the modal could be closed)
@@ -54,7 +54,7 @@ DeclareEnum2(ModalSizeMode, Fixed, Percentage);
 class Modal : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Modal, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   Modal(Composite* parent, float fadeInTime = 0.25f);

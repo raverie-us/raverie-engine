@@ -195,21 +195,21 @@ public:
   /// Returns the stored value's primitive member at the specified index if the variant stored type is T, else asserts and returns an invalid primitive
   template <typename T, typename UnqualifiedType = typename Decay<T>::Type,
             TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType = BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
+            typename PrimitiveType = typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
   PrimitiveType& GetPrimitiveMemberOrError(size_t index) const;
 
   /// (Only defined for arithmetic types)
   /// Returns the stored value's primitive member at the specified index if the variant stored type is T, else defaultValue
   template <typename T, typename UnqualifiedType = typename Decay<T>::Type,
             TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType = BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
+            typename PrimitiveType = typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
   PrimitiveType& GetPrimitiveMemberOrDefault(size_t index, const PrimitiveType& defaultValue = PrimitiveType()) const;
 
   /// (Only defined for arithmetic types)
   /// Returns a pointer to the stored value's primitive member at the specified index if the variant stored type is T, else nullptr
   template <typename T, typename UnqualifiedType = typename Decay<T>::Type,
             TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType = BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
+            typename PrimitiveType = typename BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
   PrimitiveType* GetPrimitiveMemberOrNull(size_t index) const;
 
 private:

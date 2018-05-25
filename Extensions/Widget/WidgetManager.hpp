@@ -14,7 +14,7 @@ class RootWidget;
 class WidgetManager : public ExplicitSingleton<WidgetManager, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WidgetManager, TypeCopyMode::ReferenceType);
 
   WidgetManager();
   ~WidgetManager();

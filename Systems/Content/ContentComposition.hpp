@@ -21,7 +21,7 @@ void SerializeComponents(Serializer& stream, ContentComposition* contentItem);
 class ContentComponent : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentComponent, TypeCopyMode::ReferenceType);
   ContentComponent(){};
   virtual ~ContentComponent(){};
   ContentComposition* mOwner;
@@ -43,7 +43,7 @@ public:
 class ContentMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentMetaComposition, TypeCopyMode::ReferenceType);
 
   ContentMetaComposition();
 
@@ -64,7 +64,7 @@ public:
 class ContentComposition : public ContentItem
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentComposition, TypeCopyMode::ReferenceType); 
   DeclareSafeIdHandle(u64);
 
   ContentComposition();
@@ -105,7 +105,7 @@ public:
 class BuilderComponent : public ContentComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BuilderComponent, TypeCopyMode::ReferenceType);
   //ContentComponent Interface
   void Initialize(ContentComposition* item) override;
 

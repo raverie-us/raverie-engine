@@ -71,15 +71,15 @@ public:
   Bytes GetMaxReceivedPacketBytes() const  { return mReceivedPacketBytesMax; }
 
   /// Returns the total number of packets ever sent (unaffected by ResetStats)
-  uintmax GetTotalPacketsSent() const     { return mTotalPacketsSent; }
+  uintmax GetTotalPacketsSent() const     { return mPacketsSent; }
   /// Returns the total number of packets ever received (unaffected by ResetStats)
-  uintmax GetTotalPacketsReceived() const { return mTotalPacketsReceived; }
+  uintmax GetTotalPacketsReceived() const { return mPacketsReceived; }
 
   /// Returns a summary of all peer statistics as an array of pairs containing the property name and array of minimum, average, and maximum values
-  Array< Pair< String, Array<String> > > GetStatsSummary() const
+  Array< Pair< String, Array<String> > >GetStatsSummary() const
   {
     // TODO
-    return Array< Pair< String, Array<String> > ();
+    return Array< Pair< String, Array<String> > >();
   }
   /// Returns a summary of all peer statistics as a single multi-line string (intended for debugging convenience)
   String GetStatsSummaryString() const
@@ -264,6 +264,10 @@ private:
   Kbps_type    mIncomingBandwidthUsageMin;     /// Minimum incoming bandwidth usage
   Kbps_type    mIncomingBandwidthUsageAvg;     /// Average incoming bandwidth usage
   Kbps_type    mIncomingBandwidthUsageMax;     /// Maximum incoming bandwidth usage
+
+  Kbps_type mTotalBandwidthUsageMin;           /// Minimum total bandwidth usage
+  Kbps_type mTotalBandwidthUsageAvg;           /// Average total bandwidth usage
+  Kbps_type mTotalBandwidthUsageMax;           /// Maximum total bandwidth usage
 
   bool_type    mSendRateUpdated;               /// Packet send rate updated?
   uint32_type  mSendRateMin;                   /// Minimum packet send rate

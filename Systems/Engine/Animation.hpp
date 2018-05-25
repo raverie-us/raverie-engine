@@ -58,7 +58,7 @@ struct ScalingKey
 class ObjectTrack
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ObjectTrack, TypeCopyMode::ReferenceType);
 
   /// Constructor / destructor
   ObjectTrack();
@@ -102,7 +102,7 @@ class AnimationGraph;
 class Animation : public Resource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Animation, TypeCopyMode::ReferenceType);
 
   Animation();
   ~Animation();

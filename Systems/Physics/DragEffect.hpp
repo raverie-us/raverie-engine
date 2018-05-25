@@ -16,7 +16,7 @@ namespace Zero
 class DragEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DragEffect, TypeCopyMode::ReferenceType);
 
   DragEffect();
 

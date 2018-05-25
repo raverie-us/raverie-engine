@@ -26,7 +26,7 @@ extern const String cKeyboardEventsFromState[3];
 class Keyboard : public ExplicitSingleton<Keyboard, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Keyboard, TypeCopyMode::ReferenceType);
 
   Keyboard();
 
@@ -71,7 +71,7 @@ DeclareEnum3(KeyState, Up, Down, Repeated);
 class KeyboardEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(KeyboardEvent, TypeCopyMode::ReferenceType);
 
   KeyboardEvent();
 
@@ -114,7 +114,7 @@ public:
 class KeyboardTextEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(KeyboardTextEvent, TypeCopyMode::ReferenceType);
 
   KeyboardTextEvent();
 

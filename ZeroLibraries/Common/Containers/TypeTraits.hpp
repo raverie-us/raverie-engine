@@ -232,10 +232,10 @@ struct is_enum : public integral_constant<bool, (!is_void< T >::value
 
 /// Use SFINAE to detect if we have a member
 /// This must be a macro because the name of the member cannot be provided as a template argument
-#define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                          \
-  template <typename T> static ::Zero::true_type  check_##TypeTraitName(decltype(&T::MemberName)*);   \
-  template <typename T> static ::Zero::false_type check_##TypeTraitName(...);                         \
-  template <typename T> struct TypeTraitName : public decltype(check_##TypeTraitName<T>(nullptr)) {};
+#define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                                    \
+  template <typename ZilchT> static ::Zero::true_type  check_##TypeTraitName(decltype(&ZilchT::MemberName)*);   \
+  template <typename ZilchT> static ::Zero::false_type check_##TypeTraitName(...);                              \
+  template <typename ZilchT> struct TypeTraitName : public decltype(check_##TypeTraitName<ZilchT>(nullptr)) {};
 
 /// Provides a constant defined as true if T is an enum or integral type, else defined as false
 template<typename T>
@@ -338,10 +338,10 @@ struct disable_if<false, Type>
 #define TC_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
 
 /// Enable If via Function Template Parameter (Declaration)
-#define TF_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = nullptr
-#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
-#define TF_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = nullptr
-#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define TF_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = (void*)nullptr
+#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = (void*)nullptr
+#define TF_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = (void*)nullptr
+#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = (void*)nullptr
 
 /// Enable If via Function Template Parameter (Definition)
 #define TF_ENABLE_IF_DEF(Condition)             typename Zero::enable_if<(Condition)>::type*
@@ -354,10 +354,10 @@ struct disable_if<false, Type>
 #define R_DISABLE_IF(Condition, ReturnType) typename Zero::disable_if<(Condition), ReturnType>::type
 
 /// Enable If via Function Parameter (Declaration)
-#define P_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = nullptr
-#define P_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
-#define P_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = nullptr
-#define P_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define P_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = (void*)nullptr
+#define P_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = (void*)nullptr
+#define P_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = (void*)nullptr
+#define P_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = (void*)nullptr
 
 /// Enable If via Function Parameter (Definition)
 #define P_ENABLE_IF_DEF(Condition)             typename Zero::enable_if<(Condition)>::type*
@@ -646,6 +646,22 @@ public:
 private:
   /// Underlying type_info
   const std::type_info* mTypeInfo;
+};
+
+// GCC and Clang attempt to compile templates that aren't instantiated if their
+// code does not depend on template parameters. This helper allows us to define
+// a constant and force a dependency on a template parameter, allowing things like
+// static assert to be used in a non-compiling template, for example:
+// StaticAssert(MissingSpecialization, False<T>::Value, "Must be specialized (non-generic T version)");
+template <typename T, typename V, V value>
+struct ConstantTValue
+{
+  static const V Value = value;
+};
+
+template <typename T>
+struct False : ConstantTValue<T, bool, false>
+{
 };
 
 } // namespace Zero

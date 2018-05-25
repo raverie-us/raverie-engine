@@ -210,7 +210,7 @@ Vec2 FillLayout::Measure(Composite* widget, LayoutArea data)
 Vec2 FillLayout::DoLayout(Composite* widget, LayoutArea data)
 {
   if (mDebug)
-    __debugbreak();
+    ZeroDebugBreak();
 
   WidgetListRange children = widget->GetChildren();
 
@@ -338,7 +338,7 @@ float StackLayout::ComputeFlexRatio(float fixedSize, float totalFlex, float flex
 Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
 {
   if (mDebug)
-    __debugbreak();
+    ZeroDebugBreak();
 
   // Get all children of the widget
   UpdateNotInLayout(widget);

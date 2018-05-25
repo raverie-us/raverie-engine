@@ -13,7 +13,7 @@ namespace Zero
 class CogSerializationFilter : public SerializationFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogSerializationFilter, TypeCopyMode::ReferenceType);
   bool ShouldSerialize(Object* object) override;
 };
 
@@ -21,7 +21,7 @@ public:
 class CogMetaOperations : public MetaOperations
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogMetaOperations, TypeCopyMode::ReferenceType);
 
   u64 GetUndoHandleId(HandleParam object) override;
 
@@ -36,7 +36,7 @@ public:
 class CogMetaDataInheritance : public MetaDataInheritanceRoot
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogMetaDataInheritance, TypeCopyMode::ReferenceType);
   CogMetaDataInheritance() {}
 
   /// MetaDataInheritanceRoot Interface.
@@ -58,7 +58,7 @@ public:
 class CogMetaTransform : public MetaTransform
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogMetaTransform, TypeCopyMode::ReferenceType);
 
   MetaTransformInstance GetInstance(HandleParam object) override;
 };
@@ -68,14 +68,14 @@ public:
 class CogArchetypeExtension : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogArchetypeExtension, TypeCopyMode::ReferenceType);
 };
 
 //--------------------------------------------------------------------------------- Cog Meta Display
 class CogMetaDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogMetaDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -87,7 +87,7 @@ public:
 class CogMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogMetaSerialization, TypeCopyMode::ReferenceType);
 
   bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value,
                                   Serializer& serializer) override;
@@ -102,7 +102,7 @@ public:
 class CogArchetypePropertyFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogArchetypePropertyFilter, TypeCopyMode::ReferenceType);
 
   bool Filter(Member* prop, HandleParam instance) override;
 };

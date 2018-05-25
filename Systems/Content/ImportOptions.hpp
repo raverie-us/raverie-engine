@@ -24,7 +24,7 @@ DeclareEnum2(ImageImport, Textures, Sprites);
 class ImageOptions : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ImageOptions, TypeCopyMode::ReferenceType);
 
   ImageOptions(ImportOptions* owner);
 
@@ -52,7 +52,7 @@ const float cMetersToInchesScaleFactor = 39.37f;
 class GeometryOptions : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeometryOptions, TypeCopyMode::ReferenceType);
 
   GeometryOptions(ImportOptions* owner);
   ImportOptions* mOwner;
@@ -91,7 +91,7 @@ public:
 class ShowNormalGenerationOptionsFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShowNormalGenerationOptionsFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
@@ -100,7 +100,7 @@ DeclareEnum3(AudioCueImport, None, PerSound, Grouped);
 class AudioOptions : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AudioOptions, TypeCopyMode::ReferenceType);
 
   AudioOptions(ImportOptions* owner);
 
@@ -114,7 +114,7 @@ DeclareEnum2(ConflictAction, Skip, Replace);
 class ConflictOptions : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ConflictOptions, TypeCopyMode::ReferenceType);
 
   ConflictOptions(ImportOptions* owner);
 
@@ -134,7 +134,7 @@ namespace Events
 class ImportOptions : public EventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ImportOptions, TypeCopyMode::ReferenceType);
 
   ImportOptions();
   ~ImportOptions();

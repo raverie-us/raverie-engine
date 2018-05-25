@@ -27,7 +27,7 @@ typedef EventArray::range EventRange;
 class EventBundleMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EventBundleMetaComposition, TypeCopyMode::ReferenceType);
 
   EventBundleMetaComposition();
 
@@ -53,7 +53,7 @@ public:
 class EventBundle : public Object
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EventBundle, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   EventBundle();

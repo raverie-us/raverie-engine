@@ -14,7 +14,7 @@ class SlicedDefinition;
 class ImageWidget : public Widget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ImageWidget, TypeCopyMode::ReferenceType);
 
   SlicedDefinition* mDef;
   ImageWidget(Composite* parent, StringParam style, AttachType::Enum attachType = AttachType::Normal);

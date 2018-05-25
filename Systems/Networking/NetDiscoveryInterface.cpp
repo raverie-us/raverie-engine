@@ -351,7 +351,7 @@ namespace Zero
 
   IpAddress NetDiscoveryInterface::PongHelper(IpAddress const & theirIpAddress, NetHostPongData & netHostPongData, PendingHostPing & pendingHostPing)
   {
-  if ( mOpenHostRequests.Size() < 0 )
+  if ( mOpenHostRequests.Empty() )
     return IpAddress(); //we have no open host requests. so ignore pongs.
 
   if ( !PongIsForThisProject(netHostPongData, pendingHostPing) )

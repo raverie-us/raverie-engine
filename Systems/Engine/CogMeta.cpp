@@ -18,7 +18,8 @@ ZilchDefineType(CogSerializationFilter, builder, type)
 //**************************************************************************************************
 bool CogSerializationFilter::ShouldSerialize(Object* object)
 {
-  ReturnIf(!ZilchVirtualTypeId(object)->IsA(ZilchTypeId(Cog)), false, "Invalid object given for filter");
+  bool isCog = !ZilchVirtualTypeId(object)->IsA(ZilchTypeId(Cog));
+  ReturnIf(isCog, false, "Invalid object given for filter");
 
   return CogSerialization::ShouldSave(object);
 }

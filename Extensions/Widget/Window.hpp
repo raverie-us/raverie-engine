@@ -53,7 +53,7 @@ namespace Events
 class HighlightBorderEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HighlightBorderEvent, TypeCopyMode::ReferenceType);
   /// Whether or not the border is visible.
   bool mState;
 
@@ -76,7 +76,7 @@ class MessageBoxEvent;
 class WindowTabEvent : public HandleableEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(WindowTabEvent, TypeCopyMode::ReferenceType);
   WindowTabEvent()
   {
     TabAreaFound = nullptr;
@@ -97,7 +97,7 @@ public:
 class TabModifiedEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TabModifiedEvent, TypeCopyMode::ReferenceType);
   TabModifiedEvent(bool modified) : Modified(modified) {}
   bool Modified;
 };
@@ -105,7 +105,7 @@ public:
 class TabRenamedEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TabRenamedEvent, TypeCopyMode::ReferenceType);
   TabRenamedEvent(StringParam name) : Name(name) {}
   String Name;
 };
@@ -113,7 +113,7 @@ public:
 class QueryModifiedSaveEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(QueryModifiedSaveEvent, TypeCopyMode::ReferenceType);
   QueryModifiedSaveEvent() : Modified(false) {};
   bool Modified;
   String Title;
@@ -172,7 +172,7 @@ private:
 class TabArea : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TabArea, TypeCopyMode::ReferenceType);
 
   TabArea(Composite* parent, Window* window);
 
@@ -233,7 +233,7 @@ Thickness GetTotalWindowPadding();
 class Window : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Window, TypeCopyMode::ReferenceType);
 
   Window(Composite* parent);
   ~Window();

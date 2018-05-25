@@ -224,7 +224,7 @@ float Joystick::GetAxisValue(int index)
 
 String Joystick::GetAxisName(int index)
 {
-  ReturnIf(index >= int(mRawMapping->mAxes.Size()), "Invalid"
+  ReturnIf(index >= int(mRawMapping->mAxes.Size()), "Invalid",
     "Joystick axis index was out of bounds");
 
   return mRawMapping->mAxes[index].Name;

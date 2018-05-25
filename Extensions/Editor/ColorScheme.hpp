@@ -21,7 +21,7 @@ DeclareEvent(ColorSchemeChanged);
 class ColorScheme : public ExplicitSingleton<ColorScheme, EventObject>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ColorScheme, TypeCopyMode::ReferenceType);
 
   ColorScheme();
   ~ColorScheme();

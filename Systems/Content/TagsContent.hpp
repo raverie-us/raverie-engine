@@ -16,7 +16,7 @@ namespace Zero
 class ContentTags : public ContentComponent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ContentTags, TypeCopyMode::ReferenceType);
 
   /// Constructor
   ContentTags(){}

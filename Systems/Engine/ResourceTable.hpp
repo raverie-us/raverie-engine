@@ -18,7 +18,7 @@ class RandomContext;
 class ResourceTableEntry
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceTableEntry, TypeCopyMode::ReferenceType);
 
   ResourceTableEntry();
 
@@ -56,7 +56,7 @@ typedef Array<ResourceTableEntry*> ResourceTableEntryList;
 class ResourceTable : public DataResource
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ResourceTable, TypeCopyMode::ReferenceType);
   static String mStringType;
 
   typedef String ValueType;

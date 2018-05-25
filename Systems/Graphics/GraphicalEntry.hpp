@@ -36,7 +36,7 @@ public:
 class GraphicalEntry
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicalEntry, TypeCopyMode::ReferenceType);
 
   bool operator<(const GraphicalEntry& other) const;
 
@@ -61,7 +61,7 @@ typedef Array<GraphicalEntry>::range GraphicalEntryRange;
 class GraphicalSortEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GraphicalSortEvent, TypeCopyMode::ReferenceType);
 
   /// Range of Graphicals that can have their sort values set.
   GraphicalEntryRange GetGraphicalEntries() { return mGraphicalEntries; }

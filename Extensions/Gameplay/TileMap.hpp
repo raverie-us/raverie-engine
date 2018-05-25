@@ -96,7 +96,7 @@ public:
 
   HashMap<Tile, TileStatus::Enum> mValidTileTests;
 
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TileMap, TypeCopyMode::ReferenceType);
 
   typedef HashMap<IntVec2, Tile> TileHashMap;
   typedef TileHashMap::range TileRange;

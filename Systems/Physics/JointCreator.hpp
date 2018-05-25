@@ -15,7 +15,7 @@ DeclareBitField5(JointCreatorFlags, UseCenter, OverrideLength, AutoSnaps, Attach
 /// two points. Any other specific joint properties are calculated from these two points.
 struct JointCreator
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointCreator, TypeCopyMode::ReferenceType);
 
   struct ConnectionInfo
   {

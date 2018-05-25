@@ -39,7 +39,7 @@ class UnitTestSystem;
 class UnitTestEvent : public IZilchObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestEvent, TypeCopyMode::ReferenceType);
 
   virtual void Serialize(Serializer& stream) = 0;
   virtual ~UnitTestEvent();
@@ -49,7 +49,7 @@ public:
 class UnitTestEndFrameEvent : public UnitTestEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestEndFrameEvent, TypeCopyMode::ReferenceType);
 
   // UnitTestEvent interface
   void Serialize(Serializer& stream) override;
@@ -59,7 +59,7 @@ public:
 class UnitTestBaseMouseEvent : public UnitTestEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestBaseMouseEvent, TypeCopyMode::ReferenceType);
 
   // UnitTestEvent interface
   void Serialize(Serializer& stream) override;
@@ -71,7 +71,7 @@ public:
 class UnitTestMouseEvent : public UnitTestBaseMouseEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestMouseEvent, TypeCopyMode::ReferenceType);
 
   // UnitTestEvent interface
   void Serialize(Serializer& stream) override;
@@ -83,7 +83,7 @@ public:
 class UnitTestMouseDropEvent : public UnitTestBaseMouseEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestMouseDropEvent, TypeCopyMode::ReferenceType);
 
   // UnitTestEvent interface
   void Serialize(Serializer& stream) override;
@@ -96,7 +96,7 @@ public:
 class UnitTestKeyboardEvent : public UnitTestEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestKeyboardEvent, TypeCopyMode::ReferenceType);
 
   // UnitTestEvent interface
   void Serialize(Serializer& stream) override;
@@ -108,7 +108,7 @@ public:
 class UnitTestKeyboardTextEvent : public UnitTestEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestKeyboardTextEvent, TypeCopyMode::ReferenceType);
 
   // UnitTestEvent interface
   void Serialize(Serializer& stream) override;
@@ -120,7 +120,7 @@ public:
 class UnitTestWindowEvent : public UnitTestEvent
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestWindowEvent, TypeCopyMode::ReferenceType);
 
   // UnitTestEvent interface
   void Serialize(Serializer& stream) override;
@@ -134,7 +134,7 @@ DeclareEnum5(UnitTestMode, Stopped, StartRecording, Recording, StartPlaying, Pla
 class UnitTestSystem : public System, public OsShellHook, public OsInputHook
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(UnitTestSystem, TypeCopyMode::ReferenceType);
 
   UnitTestSystem();
 

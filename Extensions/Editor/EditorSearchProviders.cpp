@@ -290,7 +290,7 @@ public:
         // Gray-scale with less alpha to inherit some of the parent's display color.
         Vec4 overlayColor(1, 1, 1, 0.35f);
 
-        if(text = (MultiLineText*)CreateTextPreview(group, description))
+        if((text = (MultiLineText*)CreateTextPreview(group, description)))
         {
           text->mTextField->SetColor(overlayColor);
           // Defer border-display to the parent's border.

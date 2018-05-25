@@ -42,7 +42,7 @@ class ManipulatorTool : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ManipulatorTool, TypeCopyMode::ReferenceType);
 
   ManipulatorTool();
 

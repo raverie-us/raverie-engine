@@ -22,7 +22,7 @@ class MetaEventConnection;
 class Factory : public System
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Factory, TypeCopyMode::ReferenceType);
 
   Factory(Engine* engine, Tracker* tracker);
   ~Factory();

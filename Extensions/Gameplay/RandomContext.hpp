@@ -16,7 +16,7 @@ namespace Zero
 class RandomContext : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RandomContext, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
 

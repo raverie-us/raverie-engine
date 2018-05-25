@@ -29,11 +29,11 @@ ZilchDefineType(Material, builder, type)
 //**************************************************************************************************
 Material::Material()
   : mRenderData(nullptr)
+  , mSerializedList(this)
+  , mReferencedByList(this)
   , mCompositionChanged(false)
   , mPropertiesChanged(true)
   , mInputRangeVersion(-1)
-  , mSerializedList(this)
-  , mReferencedByList(this)
 {
   mSerializedList.mDisplayName = "RenderGroups";
   mReferencedByList.mDisplayName = "ReferencedBy";

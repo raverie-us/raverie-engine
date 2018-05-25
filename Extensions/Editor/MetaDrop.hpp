@@ -26,7 +26,7 @@ class ViewportMouseEvent;
 class MetaDropEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaDropEvent, TypeCopyMode::ReferenceType);
 
   MetaDropEvent(MouseEvent* e);
 

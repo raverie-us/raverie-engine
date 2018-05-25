@@ -30,10 +30,6 @@ struct ConnectRequestData
   BitStream mExtraData;
 };
 
-/// Serializes connect request data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestData& connectRequestData);
-
 //---------------------------------------------------------------------------------//
 //                              ConnectResponseData                                //
 //---------------------------------------------------------------------------------//
@@ -53,20 +49,12 @@ struct ConnectResponseData
   BitStream             mExtraData;
 };
 
-/// Serializes connect response data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectResponseData& connectResponseData);
-
 //---------------------------------------------------------------------------------//
 //                           PacketSequenceHistoryData                             //
 //---------------------------------------------------------------------------------//
 
 /// Packet sequence history protocol message data
 typedef PacketSequenceHistory PacketSequenceHistoryData;
-
-/// Serializes packet sequence history protocol message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, PacketSequenceHistoryData& connectResponseData);
 
 //---------------------------------------------------------------------------------//
 //                               ChannelOpenedData                                 //
@@ -78,10 +66,6 @@ struct ChannelOpenedData
   /// Message channel transfer mode
   TransferMode::Enum mTransferMode;
 };
-
-/// Serializes channel opened data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ChannelOpenedData& channelOpenedData);
 
 //---------------------------------------------------------------------------------//
 //                              DisconnectNoticeData                               //
@@ -95,10 +79,6 @@ struct DisconnectNoticeData
   /// Optional, user provided extra data
   BitStream              mExtraData;
 };
-
-/// Serializes disconnect notice data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticeData& disconnectNoticeData);
 
 //
 // Peer Event Message Types
@@ -115,10 +95,6 @@ struct IncomingLinkCreatedData
   IpAddress mIpAddress;
 };
 
-/// Serializes peer incoming link created event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingLinkCreatedData& incomingLinkCreatedData);
-
 //---------------------------------------------------------------------------------//
 //                               FatalErrorData                                    //
 //---------------------------------------------------------------------------------//
@@ -129,10 +105,6 @@ struct FatalErrorData
   /// Error description string
   String mErrorString;
 };
-
-/// Serializes peer fatal error event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, FatalErrorData& fatalErrorData);
 
 //
 // Link Event Message Types
@@ -151,10 +123,6 @@ struct ConnectRequestedData
   ConnectRequestData          mConnectRequestData;
 };
 
-/// Serializes link connect requested event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestedData& connectRequestedData);
-
 //---------------------------------------------------------------------------------//
 //                              ConnectRespondedData                               //
 //---------------------------------------------------------------------------------//
@@ -167,10 +135,6 @@ struct ConnectRespondedData
   /// Connect response data
   ConnectResponseData         mConnectResponseData;
 };
-
-/// Serializes link connect responded event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRespondedData& connectRespondedData);
 
 //---------------------------------------------------------------------------------//
 //                              DisconnectNoticedData                              //
@@ -185,10 +149,6 @@ struct DisconnectNoticedData
   DisconnectNoticeData        mDisconnectNoticeData;
 };
 
-/// Serializes link disconnect noticed event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticedData& disconnectNoticedData);
-
 //---------------------------------------------------------------------------------//
 //                           IncomingChannelOpenedData                             //
 //---------------------------------------------------------------------------------//
@@ -202,10 +162,6 @@ struct IncomingChannelOpenedData
   TransferMode::Enum mTransferMode;
 };
 
-/// Serializes link incoming channel opened event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelOpenedData& incomingChannelOpenedData);
-
 //---------------------------------------------------------------------------------//
 //                           IncomingChannelClosedData                             //
 //---------------------------------------------------------------------------------//
@@ -216,10 +172,6 @@ struct IncomingChannelClosedData
   /// Message channel ID
   MessageChannelId mChannelId;
 };
-
-/// Serializes link incoming channel closed event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelClosedData& incomingChannelClosedData);
 
 //---------------------------------------------------------------------------------//
 //                                StateChangeData                                  //
@@ -232,10 +184,6 @@ struct StateChangeData
   LinkState::Enum mNewState;
 };
 
-/// Serializes link state change event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, StateChangeData& stateChangeData);
-
 //---------------------------------------------------------------------------------//
 //                                StatusChangeData                                 //
 //---------------------------------------------------------------------------------//
@@ -246,10 +194,6 @@ struct StatusChangeData
   /// New link status
   LinkStatus::Enum mNewStatus;
 };
-
-/// Serializes link status change event message data
-/// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, StatusChangeData& statusChangeData);
 
 //---------------------------------------------------------------------------------//
 //                                  ReceiptData                                    //
@@ -264,8 +208,415 @@ struct ReceiptData
   Receipt::Enum    mReceipt;
 };
 
-/// Serializes receipt event message data
+//
+// Protocol Message Types
+//
+
+//---------------------------------------------------------------------------------//
+//                               ConnectRequestData                                //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<ConnectRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestData& connectRequestData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write IP address
+    bitStream.Write(connectRequestData.mIpAddress);
+
+    // Write timestamp
+    bitStream.WriteQuantized(connectRequestData.mTimestamp, MessageTimestampMin, MessageTimestampMax);
+
+    // Write extra data (if any)
+    bitStream.AppendAll(connectRequestData.mExtraData);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read IP address
+    ReturnIf(!bitStream.Read(connectRequestData.mIpAddress), 0, "");
+
+    // Read timestamp
+    ReturnIf(!bitStream.ReadQuantized(connectRequestData.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
+
+    // Read extra data (if any)
+    connectRequestData.mExtraData.AssignRemainder(bitStream);
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
+
+//---------------------------------------------------------------------------------//
+//                              ConnectResponseData                                //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<ConnectResponseData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectResponseData& connectResponseData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write IP address
+    bitStream.Write(connectResponseData.mIpAddress);
+
+    // Write timestamp
+    bitStream.WriteQuantized(connectResponseData.mTimestamp, MessageTimestampMin, MessageTimestampMax);
+
+    // Write connect response
+    bitStream.WriteQuantized(connectResponseData.mConnectResponse, ConnectResponseMin, ConnectResponseMax);
+
+    // Write extra data (if any)
+    bitStream.AppendAll(connectResponseData.mExtraData);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read IP address
+    ReturnIf(!bitStream.Read(connectResponseData.mIpAddress), 0, "");
+
+    // Read timestamp
+    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
+
+    // Read connect response
+    ReturnIf(!bitStream.ReadQuantized(connectResponseData.mConnectResponse, ConnectResponseMin, ConnectResponseMax), 0, "");
+
+    // Read extra data (if any)
+    connectResponseData.mExtraData.AssignRemainder(bitStream);
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
+
+//---------------------------------------------------------------------------------//
+//                           PacketSequenceHistoryData                             //
+//---------------------------------------------------------------------------------//
+
+/// Serializes packet sequence history protocol message data
 /// Returns the number of bits serialized if successful, else 0
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, ReceiptData& receiptData);
+template <>
+inline Bits Serialize<PacketSequenceHistoryData>(SerializeDirection::Enum direction, BitStream& bitStream, PacketSequenceHistoryData& packetSequenceHistoryData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write next
+    bitStream.Write(packetSequenceHistoryData.mNext);
+
+    // Write history
+    bitStream.AppendAll(packetSequenceHistoryData.mHistory);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read next
+    ReturnIf(!bitStream.Read(packetSequenceHistoryData.mNext), 0, "");
+
+    // Read history
+    packetSequenceHistoryData.mHistory.AssignRemainder(bitStream);
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
+
+//---------------------------------------------------------------------------------//
+//                               ChannelOpenedData                                 //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<ChannelOpenedData>(SerializeDirection::Enum direction, BitStream& bitStream, ChannelOpenedData& channelOpenedData)
+{
+  return bitStream.SerializeQuantized(direction, channelOpenedData.mTransferMode, TransferModeMin, TransferModeMax);
+};
+
+//---------------------------------------------------------------------------------//
+//                              DisconnectNoticeData                               //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<DisconnectNoticeData>(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticeData& disconnectNoticeData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write disconnect reason
+    bitStream.WriteQuantized(disconnectNoticeData.mDisconnectReason, DisconnectReasonMin, DisconnectReasonMax);
+
+    // Write extra data (if any)
+    bitStream.AppendAll(disconnectNoticeData.mExtraData);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read disconnect reason
+    ReturnIf(!bitStream.ReadQuantized(disconnectNoticeData.mDisconnectReason, DisconnectReasonMin, DisconnectReasonMax), 0, "");
+
+    // Read extra data (if any)
+    disconnectNoticeData.mExtraData.AssignRemainder(bitStream);
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
+
+//
+// Peer Event Message Types
+//
+
+//---------------------------------------------------------------------------------//
+//                           IncomingLinkCreatedData                               //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<IncomingLinkCreatedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingLinkCreatedData& incomingLinkCreatedData)
+{
+  return bitStream.Serialize(direction, incomingLinkCreatedData.mIpAddress);
+};
+
+//---------------------------------------------------------------------------------//
+//                               FatalErrorData                                    //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<FatalErrorData>(SerializeDirection::Enum direction, BitStream& bitStream, FatalErrorData& fatalErrorData)
+{
+  return bitStream.Serialize(direction, fatalErrorData.mErrorString);
+};
+
+//
+// Link Event Message Types
+//
+
+//---------------------------------------------------------------------------------//
+//                              ConnectRequestedData                               //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<ConnectRequestedData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRequestedData& connectRequestedData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write direction
+    bitStream.Write(connectRequestedData.mDirection);
+
+    // Write connect request data
+    bitStream.Write(connectRequestedData.mConnectRequestData);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read direction
+    ReturnIf(!bitStream.Read(connectRequestedData.mDirection), 0, "");
+
+    // Read connect request data
+    ReturnIf(!bitStream.Read(connectRequestedData.mConnectRequestData), 0, "");
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
+
+//---------------------------------------------------------------------------------//
+//                              ConnectRespondedData                               //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<ConnectRespondedData>(SerializeDirection::Enum direction, BitStream& bitStream, ConnectRespondedData& connectRespondedData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write direction
+    bitStream.Write(connectRespondedData.mDirection);
+
+    // Write connect response data
+    bitStream.Write(connectRespondedData.mConnectResponseData);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read direction
+    ReturnIf(!bitStream.Read(connectRespondedData.mDirection), 0, "");
+
+    // Read connect response data
+    ReturnIf(!bitStream.Read(connectRespondedData.mConnectResponseData), 0, "");
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
+
+//---------------------------------------------------------------------------------//
+//                              DisconnectNoticedData                              //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<DisconnectNoticedData>(SerializeDirection::Enum direction, BitStream& bitStream, DisconnectNoticedData& disconnectNoticedData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write direction
+    bitStream.Write(disconnectNoticedData.mDirection);
+
+    // Write disconnect notice data
+    bitStream.Write(disconnectNoticedData.mDisconnectNoticeData);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read direction
+    ReturnIf(!bitStream.Read(disconnectNoticedData.mDirection), 0, "");
+
+    // Read disconnect notice data
+    ReturnIf(!bitStream.Read(disconnectNoticedData.mDisconnectNoticeData), 0, "");
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
+
+//---------------------------------------------------------------------------------//
+//                           IncomingChannelOpenedData                             //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<IncomingChannelOpenedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelOpenedData& incomingChannelOpenedData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write message channel ID
+    bitStream.Write(incomingChannelOpenedData.mChannelId);
+
+    // Write message channel transfer mode
+    bitStream.Write(incomingChannelOpenedData.mTransferMode);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read message channel ID
+    ReturnIf(!bitStream.Read(incomingChannelOpenedData.mChannelId), 0, "");
+
+    // Read message channel transfer mode
+    ReturnIf(!bitStream.Read(incomingChannelOpenedData.mTransferMode), 0, "");
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
+
+//---------------------------------------------------------------------------------//
+//                           IncomingChannelClosedData                             //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<IncomingChannelClosedData>(SerializeDirection::Enum direction, BitStream& bitStream, IncomingChannelClosedData& incomingChannelClosedData)
+{
+  return bitStream.Serialize(direction, incomingChannelClosedData.mChannelId);
+};
+
+//---------------------------------------------------------------------------------//
+//                                StateChangeData                                  //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<StateChangeData>(SerializeDirection::Enum direction, BitStream& bitStream, StateChangeData& stateChangeData)
+{
+  return bitStream.Serialize(direction, stateChangeData.mNewState);
+};
+
+//---------------------------------------------------------------------------------//
+//                                StatusChangeData                                 //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<StatusChangeData>(SerializeDirection::Enum direction, BitStream& bitStream, StatusChangeData& statusChangeData)
+{
+  return bitStream.Serialize(direction, statusChangeData.mNewStatus);
+};
+
+//---------------------------------------------------------------------------------//
+//                                  ReceiptData                                    //
+//---------------------------------------------------------------------------------//
+template <>
+inline Bits Serialize<ReceiptData>(SerializeDirection::Enum direction, BitStream& bitStream, ReceiptData& receiptData)
+{
+  // Write operation?
+  if (direction == SerializeDirection::Write)
+  {
+    const Bits bitsWrittenStart = bitStream.GetBitsWritten();
+
+    // Write receipt ID
+    bitStream.Write(receiptData.mReceiptId);
+
+    // Write receipt result
+    bitStream.Write(receiptData.mReceipt);
+
+    // Success
+    return bitStream.GetBitsWritten() - bitsWrittenStart;
+  }
+  // Read operation?
+  else
+  {
+    const Bits bitsReadStart = bitStream.GetBitsRead();
+
+    // Read receipt ID
+    ReturnIf(!bitStream.Read(receiptData.mReceiptId), 0, "");
+
+    // Read receipt result
+    ReturnIf(!bitStream.Read(receiptData.mReceipt), 0, "");
+
+    // Success
+    return bitStream.GetBitsRead() - bitsReadStart;
+  }
+};
 
 } // namespace Zero

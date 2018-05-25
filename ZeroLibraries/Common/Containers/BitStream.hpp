@@ -9,7 +9,7 @@
 // Includes
 #include "Utility/EnumDeclaration.hpp"
 #include "Utility/BitMath.hpp"
-#include "Utility/UintN.hpp"
+#include "Utility/UintNType.hpp"
 #include "String/String.hpp"
 
 //---------------------------------------------------------------------------------//
@@ -45,26 +45,6 @@ DeclareEnum2(SerializeDirection,
 
 /// Forward Declarations
 class BitStream;
-
-/// Measures data
-/// Returns the number of bits required to serialize the specified value
-template<typename T>
-Bits Measure(T& value);
-
-/// Measures data bound within an inclusive range discretized to the nearest quantum interval value (using only the bits necessary to represent all possible values)
-/// Returns the number of bits required to serialize the specified value
-template<typename R>
-Bits MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_);
-
-/// Serializes data
-/// Returns the number of bits serialized if successful, else 0
-template<typename T>
-Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, T& value);
-
-/// Serializes data bound within an inclusive range discretized to the nearest quantum interval value (using only the bits necessary to represent all possible values)
-/// Returns the number of bits serialized if successful, else 0
-template<typename T, typename R>
-Bits SerializeQuantized(SerializeDirection::Enum direction, BitStream& bitStream, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_);
 
 //---------------------------------------------------------------------------------//
 //                                  BitStream                                      //

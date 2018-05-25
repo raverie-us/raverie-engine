@@ -25,7 +25,7 @@ class Collider;
 class JointEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointEvent, TypeCopyMode::ReferenceType);
 
   JointEvent();
 

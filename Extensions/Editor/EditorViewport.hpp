@@ -36,7 +36,7 @@ DeclareEnum4(MouseMode, Default, Select, Camera, Drag);
 class EditorViewport : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorViewport, TypeCopyMode::ReferenceType);
 
   EditorViewport(Composite* parent, OwnerShip::Enum ownership);
 

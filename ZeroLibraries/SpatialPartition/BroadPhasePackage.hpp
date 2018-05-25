@@ -18,7 +18,7 @@ namespace Zero
 class BroadPhasePackage
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BroadPhasePackage, TypeCopyMode::ReferenceType);
   BroadPhasePackage();
   virtual ~BroadPhasePackage();
 

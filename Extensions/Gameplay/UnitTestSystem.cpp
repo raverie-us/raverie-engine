@@ -298,11 +298,11 @@ ZilchDefineType(UnitTestSystem, builder, type)
 }
 
 //**************************************************************************************************
-UnitTestSystem::UnitTestSystem() :
-  mMode(UnitTestMode::Stopped),
-  mEmulatedCursor(nullptr),
-  mEventIndex(0),
-  mFilesIndex(0)
+UnitTestSystem::UnitTestSystem() 
+  : mEmulatedCursor(nullptr)
+  , mMode(UnitTestMode::Stopped)
+  , mEventIndex(0)
+  , mFilesIndex(0)
 {
   ConnectThisTo(this, Events::UnitTestRecordFileSelected, OnUnitTestRecordFileSelected);
   ConnectThisTo(this, Events::UnitTestPlayFileSelected, OnUnitTestPlayFileSelected);

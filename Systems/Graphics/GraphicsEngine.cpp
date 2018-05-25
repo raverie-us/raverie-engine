@@ -44,9 +44,9 @@ ZilchDefineType(GraphicsEngine, builder, type)
 
 //**************************************************************************************************
 GraphicsEngine::GraphicsEngine()
-  : mRenderGroupCount(0)
+  : mNewLibrariesCommitted(false)
+  , mRenderGroupCount(0)
   , mUpdateRenderGroupCount(false)
-  , mNewLibrariesCommitted(false)
 {
   mEngineShutdown = false;
 }

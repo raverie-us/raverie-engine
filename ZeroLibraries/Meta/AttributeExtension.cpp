@@ -295,7 +295,7 @@ Any GetValueFromParameter(AttributeParameter* parameter)
   case ConstantType::Boolean:
     return parameter->BooleanValue;
   case ConstantType::Type:
-    return parameter->TypeValue;
+    return Any(parameter->TypeValue);
   }
 
   Error("Invalid constant");
@@ -456,7 +456,7 @@ void AttributeExtension::ValidateParameters(Status& status, HandleParam componen
       }
     }
     // If it's a required property, it should be an error
-    else if (property->HasAttribute(PropertyAttributes::cOptional) == false)
+    else if (property->HasAttribute(PropertyAttributes::cOptional) == nullptr)
     {
       String message = String::Format("Attribute '%s' must have a parameter called '%s' of type '%s'.",
                                   attribute.Name.c_str(), name.c_str(), propertyType->Name.c_str());

@@ -66,7 +66,7 @@ void MetaDatabase::AddLibrary(LibraryParam library, bool sendModifiedEvent)
         ErrorIf(mTypeMap[type->Name] != nullptr, "The proxy type should have been erased");
       }
       // Exception proxies can replace current types
-      else if (type->HasAttribute(ObjectAttributes::cExceptionProxy) == false)
+      else if (type->HasAttribute(ObjectAttributes::cExceptionProxy) == nullptr)
       {
         Error(
           "A bound type is replacing another by the same name, "

@@ -22,7 +22,7 @@ struct SystemInitializer
 class System : public EngineObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(System, TypeCopyMode::ReferenceType);
 
   /// All systems need a virtual destructor to have their destructor called.
   virtual ~System() {}

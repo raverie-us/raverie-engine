@@ -22,7 +22,7 @@ namespace Events
 class CustomAudioNodeEvent : public Event 
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CustomAudioNodeEvent, TypeCopyMode::ReferenceType);
 
   CustomAudioNodeEvent(unsigned samples) :
     SamplesNeeded(samples)
@@ -36,7 +36,7 @@ public:
 class SoundNode : public ReferenceCountedEventObject, public Audio::ExternalNodeInterface
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundNode, TypeCopyMode::ReferenceType);
 
   SoundNode();
   virtual ~SoundNode();
@@ -96,7 +96,7 @@ public:
 class SoundBuffer : public ReferenceCountedObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SoundBuffer, TypeCopyMode::ReferenceType);
 
   /// Adds a new audio sample to the end of the buffer.
   void AddSampleToBuffer(float sample);
@@ -122,7 +122,7 @@ private:
 class CustomAudioNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CustomAudioNode, TypeCopyMode::ReferenceType);
 
   CustomAudioNode();
   ~CustomAudioNode();
@@ -169,7 +169,7 @@ DeclareEnum5(SynthWaveType, SineWave, SquareWave, SawWave, TriangleWave, Noise);
 class GeneratedWaveNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeneratedWaveNode, TypeCopyMode::ReferenceType);
 
   GeneratedWaveNode();
   ~GeneratedWaveNode();
@@ -229,7 +229,7 @@ private:
 class VolumeNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(VolumeNode, TypeCopyMode::ReferenceType);
 
   VolumeNode();
 
@@ -260,7 +260,7 @@ private:
 class PanningNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PanningNode, TypeCopyMode::ReferenceType);
 
   PanningNode();
 
@@ -296,7 +296,7 @@ private:
 class PitchNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PitchNode, TypeCopyMode::ReferenceType);
 
   PitchNode();
 
@@ -329,7 +329,7 @@ private:
 class LowPassNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LowPassNode, TypeCopyMode::ReferenceType);
 
   LowPassNode();
 
@@ -348,7 +348,7 @@ private:
 class HighPassNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(HighPassNode, TypeCopyMode::ReferenceType);
 
   HighPassNode();
 
@@ -367,7 +367,7 @@ private:
 class BandPassNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BandPassNode, TypeCopyMode::ReferenceType);
 
   BandPassNode();
 
@@ -389,7 +389,7 @@ private:
 class EqualizerNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EqualizerNode, TypeCopyMode::ReferenceType);
 
   EqualizerNode();
 
@@ -428,7 +428,7 @@ private:
 class ReverbNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ReverbNode, TypeCopyMode::ReferenceType);
 
   ReverbNode();
 
@@ -458,7 +458,7 @@ private:
 class DelayNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DelayNode, TypeCopyMode::ReferenceType);
 
   DelayNode();
 
@@ -494,7 +494,7 @@ private:
 class FlangerNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(FlangerNode, TypeCopyMode::ReferenceType);
 
   FlangerNode();
 
@@ -522,7 +522,7 @@ private:
 class ChorusNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ChorusNode, TypeCopyMode::ReferenceType);
 
   ChorusNode();
 
@@ -556,7 +556,7 @@ private:
 class CompressorNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CompressorNode, TypeCopyMode::ReferenceType);
 
   CompressorNode();
 
@@ -591,7 +591,7 @@ private:
 class ExpanderNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ExpanderNode, TypeCopyMode::ReferenceType);
 
   ExpanderNode();
 
@@ -627,7 +627,7 @@ private:
 class RecordingNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(RecordingNode, TypeCopyMode::ReferenceType);
 
   RecordingNode();
   ~RecordingNode();
@@ -659,7 +659,7 @@ private:
 class AddNoiseNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AddNoiseNode, TypeCopyMode::ReferenceType);
 
   AddNoiseNode();
 
@@ -686,7 +686,7 @@ private:
 class AdsrEnvelope
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(AdsrEnvelope, TypeCopyMode::ValueType);
 
   AdsrEnvelope() :
     DelayTime(0.0f),
@@ -720,7 +720,7 @@ public:
 class AdditiveSynthNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AdditiveSynthNode, TypeCopyMode::ReferenceType);
 
   AdditiveSynthNode();
 
@@ -749,7 +749,7 @@ private:
 class ModulationNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ModulationNode, TypeCopyMode::ReferenceType);
 
   ModulationNode();
 
@@ -778,7 +778,7 @@ private:
 class MicrophoneInputNode : public SoundNode
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MicrophoneInputNode, TypeCopyMode::ReferenceType);
 
   MicrophoneInputNode();
 
@@ -806,7 +806,7 @@ DeclareEnum4(GranularSynthWindows, Linear, Parabolic, RaisedCosine, Trapezoid);
 class SaveAudioNode : public SoundNode 
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SaveAudioNode, TypeCopyMode::ReferenceType);
 
   SaveAudioNode();
 
@@ -830,7 +830,7 @@ private:
 class GranularSynthNode : public SoundNode 
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GranularSynthNode, TypeCopyMode::ReferenceType);
 
   GranularSynthNode();
 

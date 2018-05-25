@@ -96,7 +96,7 @@ public:
   {
     // Don't fail more than once
     if (State == StatusState::Failure)
-      return false;
+      return;
 
     Context = context;
     State = StatusState::Success;

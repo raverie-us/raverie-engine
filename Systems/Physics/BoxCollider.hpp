@@ -13,7 +13,7 @@ namespace Zero
 class BoxCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BoxCollider, TypeCopyMode::ReferenceType);
 
   BoxCollider();
 

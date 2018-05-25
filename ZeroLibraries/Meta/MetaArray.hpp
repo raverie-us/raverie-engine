@@ -14,7 +14,7 @@ namespace Zero
 class MetaArray : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaArray, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   MetaArray(BoundType* containedType);
@@ -62,7 +62,7 @@ public:
 class MetaArrayWrapper : public MetaArray
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaArrayWrapper, TypeCopyMode::ReferenceType);
 
   MetaArrayWrapper(BoundType* typeToWrap) : 
     MetaArray(nullptr)

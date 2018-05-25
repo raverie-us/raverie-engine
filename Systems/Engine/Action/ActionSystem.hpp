@@ -22,7 +22,7 @@ class UpdateEvent;
 class ActionSpace : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ActionSpace, TypeCopyMode::ReferenceType);
 
   ActionSpace();
   ~ActionSpace();
@@ -46,7 +46,7 @@ public:
 class ActionSystem : public System
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ActionSystem, TypeCopyMode::ReferenceType);
   
   ActionSystem();
   ~ActionSystem();

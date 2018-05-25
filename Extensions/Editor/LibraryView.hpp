@@ -52,7 +52,7 @@ class LibraryView : public Composite
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LibraryView, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   LibraryView(Composite* parent);

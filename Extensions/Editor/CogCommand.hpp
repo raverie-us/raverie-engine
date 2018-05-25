@@ -17,7 +17,7 @@ class CogCommand : public Command
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogCommand, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   CogCommand(Archetype* archetype);
@@ -48,7 +48,7 @@ class CogCommandManager : public EditorScriptObjects<CogCommand>
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CogCommandManager, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   CogCommandManager();

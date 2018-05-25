@@ -15,7 +15,7 @@ namespace Zero
 class ZeroBuildContent : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZeroBuildContent, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -44,7 +44,7 @@ public:
 class ZeroBuildReleaseNotes : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZeroBuildReleaseNotes, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -56,7 +56,7 @@ public:
 class ZeroBuildDeprecated : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZeroBuildDeprecated, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -71,7 +71,7 @@ public:
 class ZeroTemplate : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ZeroTemplate, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;

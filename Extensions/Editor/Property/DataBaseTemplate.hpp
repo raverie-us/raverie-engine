@@ -230,7 +230,7 @@ public:
 
     if(node->Flags.IsSet(NodeFlags::Folder))
     {
-      serializer.StartPolymorphic("Folder", 0, 0);
+      serializer.StartPolymorphic("Folder");
       serializer.SerializeField("Name", node->Name); 
       for(uint i=0;i<node->Children.Size();++i)
       {
@@ -240,7 +240,7 @@ public:
     }
     else
     {
-      serializer.StartPolymorphic("Node", 0, 0);
+      serializer.StartPolymorphic("Node");
       MapType mapType = Policy::Map(node->Object);
       serializer.SerializeField("Value", mapType);
       serializer.EndPolymorphic();

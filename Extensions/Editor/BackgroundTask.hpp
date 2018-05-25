@@ -33,7 +33,7 @@ DeclareEnum5(BackgroundTaskState, NotStarted, Running, Completed,
 class BackgroundTaskEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BackgroundTaskEvent, TypeCopyMode::ReferenceType);
   BackgroundTaskEvent(BackgroundTask* task) : mTask(task){}
   BackgroundTask* mTask;
 
@@ -161,7 +161,7 @@ class BackgroundTasks : public ExplicitSingleton<BackgroundTasks, EventObject>
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(BackgroundTasks, TypeCopyMode::ReferenceType);
 
   BackgroundTasks();
   ~BackgroundTasks();

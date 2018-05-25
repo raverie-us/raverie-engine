@@ -7,6 +7,11 @@
 #pragma once
 
 #include "Engine/EngineStandard.hpp"
+
+#include "ZilchScript.hpp"
+#include "ZilchZero.hpp"
+#include "ZilchPlugin.hpp"
+
 #include "Editor/EditorStandard.hpp"
 
 namespace Zero
@@ -25,7 +30,3 @@ public:
 };
 
 }//namespace Zero
-
-#include "ZilchScript.hpp"
-#include "ZilchZero.hpp"
-#include "ZilchPlugin.hpp"

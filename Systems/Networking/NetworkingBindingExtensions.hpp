@@ -13,7 +13,7 @@ namespace Zero
 class MetaNetProperty : public MetaAttribute
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaNetProperty, TypeCopyMode::ReferenceType);
 
   /// The net property type name.
   String mNetPropertyConfig;

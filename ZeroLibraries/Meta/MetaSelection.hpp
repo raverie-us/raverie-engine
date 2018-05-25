@@ -21,7 +21,7 @@ namespace Events
 /// Sent with the SelectionChanged event
 struct SelectionChangedEvent : public Event
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SelectionChangedEvent, TypeCopyMode::ReferenceType);
   SelectionChangedEvent() : Updated(false) {}
   MetaSelection* Selection;
 
@@ -41,7 +41,7 @@ DeclareEnum2(SendsEvents, False, True);
 class MetaSelection : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MetaSelection, TypeCopyMode::ReferenceType);
 
   typedef Array<MetaSelection*> MetaSelectionArray;
 
@@ -169,7 +169,7 @@ public:
       if (selected != nullptr)
       {
         // If this object has the component type we're looking for then return it
-        ComponentType* component = selected->has(ComponentType);
+        ComponentType* component = selected->template has(ComponentType);
         if (component != nullptr)
           return component;
       }
@@ -223,7 +223,7 @@ void MetaSelection::FilterComponentType(Array<type*>& destination)
     if(composition == NULL)
       continue;
 
-    Handle component = composition->GetComponentId(object.Get<Object>(), componentType);
+    Handle component = composition->GetComponent(object.Get<Object>(), componentType);
 
     // Add it if it's valid
     if(component.IsNotNull())

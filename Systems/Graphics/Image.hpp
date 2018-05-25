@@ -34,7 +34,7 @@ enum eImageMode
 class SlicedDefinition : public BaseDefinition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SlicedDefinition, TypeCopyMode::ReferenceType);
 
   // BaseDefinition Interface
   void Initialize() override;
@@ -57,7 +57,7 @@ public:
 class ImageDefinition : public SlicedDefinition
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ImageDefinition, TypeCopyMode::ReferenceType);
 
   // BaseDefinition Interface
   void Initialize() override;

@@ -314,7 +314,7 @@ void ZilchDocumentResource::ValidateScriptName(Status& status, StringParam name)
   if(BoundType* existingType = MetaDatabase::GetInstance()->FindType(name))
   {
     // We can replace proxies
-    if(existingType->HasAttribute(ObjectAttributes::cProxy) == false)
+    if(existingType->HasAttribute(ObjectAttributes::cProxy) == nullptr)
       status.SetFailed("A type already exists by that name");
   }
 

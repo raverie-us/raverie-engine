@@ -15,7 +15,7 @@ namespace Zero
 class SapBroadPhase : public IBroadPhase
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SapBroadPhase, TypeCopyMode::ReferenceType);
 
   typedef Sap<void*> BroadPhaseType;
   typedef SapRange<void*,Aabb> DefaultRange;

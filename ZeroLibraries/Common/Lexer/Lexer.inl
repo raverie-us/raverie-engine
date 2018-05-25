@@ -295,9 +295,9 @@ TokenType Capture<TokenType>::GetFirstToken(StringParam name, const TokenType& f
 //***************************************************************************
 template <typename TokenType>
 ParseNodeInfo<TokenType>::ParseNodeInfo() :
+  mRule(nullptr),
   mStartInclusive(0),
   mEndExclusive(0),
-  mRule(nullptr),
   mAccepted(false),
   mFailed(false),
   mCapture(nullptr)
@@ -330,7 +330,7 @@ ParseNode<TokenType>::ParseNode() :
 //***************************************************************************
 template <typename TokenType>
 ParseNode<TokenType>::ParseNode(const ParseNodeInfo<TokenType>& info) :
-  ParseNodeInfo(info),
+  ParseNodeInfo<TokenType>(info),
   mParent(nullptr)
 {
 }
@@ -347,7 +347,7 @@ ParseNode<TokenType>::~ParseNode()
 template <typename TokenType>
 ParseNode<TokenType>& ParseNode<TokenType>::operator=(const ParseNodeInfo<TokenType>& rhs)
 {
-  *static_cast<ParseNodeInfo*>(this) = rhs;
+  *static_cast<ParseNodeInfo<TokenType>*>(this) = rhs;
   return *this;
 }
 
@@ -1315,8 +1315,8 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::SetErrorAn
 //***************************************************************************
 template <typename ParseHandlerType>
 TokenRange<ParseHandlerType>::TokenRange() :
-  mHasRunFirstIteration(false),
-  mSet(nullptr)
+  mSet(nullptr),
+  mHasRunFirstIteration(false)
 {
   this->mSet = nullptr;
   this->mParser.mStream = &this->mStream;
@@ -1326,8 +1326,8 @@ TokenRange<ParseHandlerType>::TokenRange() :
 //***************************************************************************
 template <typename ParseHandlerType>
 TokenRange<ParseHandlerType>::TokenRange(GrammarSet<Character>& set, GrammarRule<Character>& rule, StringParam input, bool debug) :
-  mHasRunFirstIteration(false),
-  mSet(&set)
+  mSet(&set),
+  mHasRunFirstIteration(false)
 {
   this->mParser.mDebug = debug;
   this->mParser.mStream = &this->mStream;
@@ -1341,8 +1341,8 @@ template <typename ParseHandlerType>
 TokenRange<ParseHandlerType>::TokenRange(const TokenRange& rhs) :
   mParser(rhs.mParser),
   mStream(rhs.mStream),
-  mHasRunFirstIteration(rhs.mHasRunFirstIteration),
-  mSet(rhs.mSet)
+  mSet(rhs.mSet),
+  mHasRunFirstIteration(rhs.mHasRunFirstIteration)
 {
   this->mParser.mStream = &this->mStream;
 }

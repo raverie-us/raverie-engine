@@ -145,7 +145,7 @@ namespace Zilch
   class ZeroShared ReflectionObject : public Composition
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(ReflectionObject, TypeCopyMode::ReferenceType);
 
     // Constructor
     ReflectionObject();
@@ -220,7 +220,7 @@ namespace Zilch
   class ZeroShared Member : public ReflectionObject
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Member, TypeCopyMode::ReferenceType);
 
     // Default constructor
     Member();
@@ -248,7 +248,7 @@ namespace Zilch
   class ZeroShared Property : public Member
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Property, TypeCopyMode::ReferenceType);
 
     // Constructor
     Property();
@@ -281,14 +281,14 @@ namespace Zilch
   class ZeroShared GetterSetter : public Property
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(GetterSetter, TypeCopyMode::ReferenceType);
   };
 
   // A class field basically consists of the type, as well as the offset into the memory block
   class ZeroShared Field : public Property
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Field, TypeCopyMode::ReferenceType);
 
     // Constructor
     Field();
@@ -309,7 +309,7 @@ namespace Zilch
   class ZeroShared Variable : public ReflectionObject
   {
   public:
-    ZilchDeclareType(TypeCopyMode::ReferenceType);
+    ZilchDeclareType(Variable, TypeCopyMode::ReferenceType);
 
     // Constructor
     Variable();

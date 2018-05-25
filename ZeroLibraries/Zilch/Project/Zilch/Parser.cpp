@@ -35,7 +35,6 @@ namespace Zilch
 
   //***************************************************************************
   Parser::Parser(Project& project) :
-    TokenIndex(0),
     Errors(*(CompilationErrors*)&project),
     ParentProject(&project),
     Tree(nullptr)
@@ -471,7 +470,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void Parser::ErrorHere(ErrorCode::Enum errorCode, ...)
+  void Parser::ErrorHere(int errorCode, ...)
   {
     // Start a variadic argument list
     va_list argList;
@@ -485,7 +484,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void Parser::ErrorHereArgs(ErrorCode::Enum errorCode, StringParam extra, va_list argList)
+  void Parser::ErrorHereArgs(int errorCode, StringParam extra, va_list argList)
   {
     // When raising an error 'here', we don't actually want the current token,
     // but rather the last token since our token index always points at the next token
@@ -516,7 +515,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void Parser::ErrorHereArgs(ErrorCode::Enum errorCode, va_list argList)
+  void Parser::ErrorHereArgs(int errorCode, va_list argList)
   {
     return ErrorHereArgs(errorCode, String(), argList);
   }
@@ -666,7 +665,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  bool Parser::Expect(Grammar::Enum grammarConstant, ErrorCode::Enum errorCode, ...)
+  bool Parser::Expect(Grammar::Enum grammarConstant, int errorCode, ...)
   {
     // Create a variadic argument list to read the extra arguments
     va_list vl;
@@ -682,7 +681,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  bool Parser::ExpectAndRetrieveArgs(Grammar::Enum grammarConstant, const UserToken*& outToken, ErrorCode::Enum errorCode, va_list vl)
+  bool Parser::ExpectAndRetrieveArgs(Grammar::Enum grammarConstant, const UserToken*& outToken, int errorCode, va_list vl)
   {
     // Retrieve the next token from the stream and store it
     const UserToken* userToken = &(*this->TokenStream)[this->TokenIndex];
@@ -755,7 +754,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  bool Parser::ExpectAndRetrieve(Grammar::Enum grammarConstant, const UserToken*& outToken, ErrorCode::Enum errorCode, ...)
+  bool Parser::ExpectAndRetrieve(Grammar::Enum grammarConstant, const UserToken*& outToken, int errorCode, ...)
   {
     // Create a variadic argument list to read the extra arguments
     va_list vl;
@@ -1849,7 +1848,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  bool Parser::AcceptOptionalTypeSpecifier(SyntaxType*& outSyntaxType, ErrorCode::Enum notFound, ...)
+  bool Parser::AcceptOptionalTypeSpecifier(SyntaxType*& outSyntaxType, int notFound, ...)
   {
     // Start a variadic argument list
     va_list vl;
@@ -1864,7 +1863,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  bool Parser::AcceptOptionalTypeSpecifierArgs(SyntaxType*& outSyntaxType, ErrorCode::Enum notFound, va_list args)
+  bool Parser::AcceptOptionalTypeSpecifierArgs(SyntaxType*& outSyntaxType, int notFound, va_list args)
   {
     // Look for the type specifier for the return types
     if (Accept(1, Grammar::TypeSpecifier))

@@ -6,6 +6,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wunused-const-variable"
+#endif
+
 #include "Widget/WidgetStandard.hpp"
 #include "Networking/NetworkingStandard.hpp"
 #include "Gameplay/GameplayStandard.hpp"
@@ -33,7 +39,6 @@ public:
 // Misc.
 #include "LauncherCommunicationEvent.hpp"
 #include "NetOperations.hpp"
-#include "EditorScriptObject.hpp"
 #include "BackgroundTask.hpp"
 #include "Downloads.hpp"
 #include "EditorSearchProviders.hpp"
@@ -45,7 +50,6 @@ public:
 // Commands
 #include "CommandSelector.hpp"
 #include "AllCommands.hpp"
-#include "CogCommand.hpp"
 #include "EditorCommands.hpp"
 #include "GraphicsCommands.hpp"
 
@@ -82,6 +86,10 @@ public:
 #include "EditorProject.hpp"
 #include "EditorUtility.hpp"
 #include "MainPropertyView.hpp"
+
+// Depends on Editor.hpp
+#include "EditorScriptObject.hpp"
+#include "CogCommand.hpp"
 
 // Scintilla
 #include "ColorScheme.hpp"

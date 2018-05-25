@@ -26,7 +26,7 @@ namespace Events
 class DocumentEditor : public TextEditor
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DocumentEditor, TypeCopyMode::ReferenceType);
 
   DocumentEditor(Composite* parent);
   ~DocumentEditor();
@@ -81,7 +81,7 @@ public:
 class AutoCompletePopUp : public PopUp
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(AutoCompletePopUp, TypeCopyMode::ReferenceType);
 
   AutoCompletePopUp(Widget* source);
   
@@ -111,7 +111,7 @@ public:
 class CallTipPopUp : public PopUp
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(CallTipPopUp, TypeCopyMode::ReferenceType);
 
   CallTipPopUp(Widget* source);
 

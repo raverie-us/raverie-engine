@@ -20,7 +20,7 @@ DeclareBitField5(JointLimitState, Active, AtLowerLimit, WasAtLowerLimit, AtUpper
 /// See each joint for a description of how it reacts to a limit.
 struct JointLimit : public Component
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(JointLimit, TypeCopyMode::ReferenceType);
 
   JointLimit();
   virtual ~JointLimit();

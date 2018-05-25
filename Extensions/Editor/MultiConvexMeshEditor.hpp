@@ -46,7 +46,7 @@ public:
 class MultiConvexMeshPoint : public Widget
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMeshPoint, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor);
   MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor, Vec3Param worldPoint);
@@ -129,7 +129,7 @@ DeclareEnum2(MultiConvexMeshAutoComputeMode, Alpha, Intensity);
 /// Contains the different settings that the user can modify.
 struct MultiConvexMeshPropertyViewInfo : public EventObject
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMeshPropertyViewInfo, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshPropertyViewInfo();
 
@@ -182,7 +182,7 @@ struct MultiConvexMeshPropertyViewInfo : public EventObject
 class MultiConvexMeshEditor : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMeshEditor, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshEditor(Composite* parent, MultiConvexMesh* mesh);
 

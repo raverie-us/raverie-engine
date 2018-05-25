@@ -24,8 +24,7 @@ namespace Events
 class FloatingComposite : public Composite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-  typedef FloatingComposite ZilchSelf;
+  ZilchDeclareType(FloatingComposite, TypeCopyMode::ReferenceType);
   FloatingComposite(Composite* parent, StringParam className = PopUpNormal);
 
   void UpdateTransform() override;
@@ -47,7 +46,7 @@ DeclareEnum3(PopUpCloseMode, MouseOutTarget, MouseDistance, DisableClose);
 class PopUp : public FloatingComposite
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(PopUp, TypeCopyMode::ReferenceType);
   /// Popup will attach to the root widget of the target and disappear if
   /// the mouse moves outside the target, or the mouse moves away from the popup
   PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className = PopUpNormal);

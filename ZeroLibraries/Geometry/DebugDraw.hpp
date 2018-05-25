@@ -94,7 +94,13 @@ class DebugDrawObjectBase
 {
 public:
   DebugDrawObjectBase()
-    : mColor(Vec4(1.0f)), mViewScaleOffset(Vec3::cZero), mDuration(0.0f), mWidth(1.0f), mDrawFlags(0) {}
+    : mViewScaleOffset(Vec3::cZero),
+      mColor(Vec4(1.0f)),
+      mDuration(0.0f),
+      mWidth(1.0f),
+      mDrawFlags(0)
+      {}
+
   virtual ~DebugDrawObjectBase() {}
 
   virtual DebugType::Enum GetDebugType() { return DebugType::None; }
@@ -186,7 +192,7 @@ public:
 class Arc : public DebugDrawObject<Arc>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Arc, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override { return DebugType::Arc; }
   void GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices) override;
@@ -209,7 +215,7 @@ public:
 class Box : public DebugDrawObject<Box>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Box, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Box; }
@@ -251,7 +257,7 @@ public:
 class Capsule : public DebugDrawObject<Capsule>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Capsule, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Capsule; }
@@ -282,7 +288,7 @@ public:
 class Circle : public DebugDrawObject<Circle>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Circle, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Circle; }
@@ -307,7 +313,7 @@ public:
 class Cone : public DebugDrawObject<Cone>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Cone, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Cone; }
@@ -334,7 +340,7 @@ public:
 class Cylinder : public DebugDrawObject<Cylinder>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Cylinder, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Cylinder; }
@@ -365,7 +371,7 @@ public:
 class Frustum : public DebugDrawObject<Frustum>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Frustum, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Frustum; }
@@ -395,7 +401,7 @@ public:
 class Line : public DebugDrawObject<Line>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Line, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Line; }
@@ -432,7 +438,7 @@ public:
 class LineCross : public DebugDrawObject<LineCross>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(LineCross, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::LineCross; }
@@ -455,7 +461,7 @@ public:
 class Obb : public DebugDrawObject<Obb>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Obb, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Obb; }
@@ -500,7 +506,7 @@ public:
 class Sphere : public DebugDrawObject<Sphere>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Sphere, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Sphere; }
@@ -530,7 +536,7 @@ class Text : public DebugDrawObject<Text>
 public:
   // This has to be a reference type for now since this contains a string.
   // If copy constructors ever get implemented then this can return to a value type.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Text, TypeCopyMode::ReferenceType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Text; }
@@ -558,7 +564,7 @@ public:
 class Triangle : public DebugDrawObject<Triangle>
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Triangle, TypeCopyMode::ValueType);
   
 
   DebugType::Enum GetDebugType() override { return DebugType::Triangle; }

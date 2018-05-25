@@ -105,11 +105,16 @@ HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(uint width, uint hei
 HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(HandleOf<Texture> texture)
 {
   if (texture == nullptr)
-    return DoNotifyException("Error", "Null Texture."), nullptr;
+  {
+    DoNotifyException("Error", "Null Texture.");
+    return nullptr;
+  }
 
   if (texture->mProtected)
-    return DoNotifyException("Error", "Cannot create RenderTarget from a non-runtime Texture."), nullptr;
-
+  {
+    DoNotifyException("Error", "Cannot create RenderTarget from a non-runtime Texture.");
+    return nullptr;
+  }
   RenderTarget* renderTarget = new RenderTarget(this);
   mRenderTargets.PushBack(renderTarget);
 

@@ -27,11 +27,6 @@ ThreadDispatch::~ThreadDispatch()
 
 void ThreadDispatch::DispatchOn(HandleParam object, EventDispatcher* eventDispatcher, StringParam eventId, Event* event)
 {
-  //If this is null, ThreadDispatch has been shutdown. To prevent
-  //crashes with destruction order just do nothing.
-  if(this == nullptr)
-    return;
-
   QueuedEvent queuedEvent;
   queuedEvent.Object = object;
   queuedEvent.EventToSend = event;

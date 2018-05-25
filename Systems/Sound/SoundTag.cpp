@@ -82,8 +82,8 @@ ZilchDefineType(SoundTag, builder, type)
 
 //**************************************************************************************************
 SoundTag::SoundTag() :
-  mCompressorTag(nullptr),
-  mTagObject(nullptr)
+  mTagObject(nullptr),
+  mCompressorTag(nullptr)
 {
   Z::gSound->mSoundTags.PushBack(this);
 

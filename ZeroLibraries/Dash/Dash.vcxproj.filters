@@ -87,9 +87,6 @@
     <ClCompile Include="MessageChannel.cpp">
       <Filter>Peer\PeerLink\MessageChannel</Filter>
     </ClCompile>
-    <ClCompile Include="ProtocolMessageData.cpp">
-      <Filter>Packet\Message\ProtocolMessageData</Filter>
-    </ClCompile>
     <ClCompile Include="Replicator.cpp">
       <Filter>Plugins\Replicator</Filter>
     </ClCompile>

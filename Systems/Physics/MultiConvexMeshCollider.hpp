@@ -54,7 +54,7 @@ struct MultiConvexMeshRange
 class MultiConvexMeshCollider : public Collider
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MultiConvexMeshCollider, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshCollider();
 

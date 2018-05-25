@@ -24,7 +24,7 @@ DeclareEnum2(BroadPhase, Dynamic, Static);
 class IBroadPhase : public IZilchObject
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IBroadPhase, TypeCopyMode::ReferenceType);
 
   IBroadPhase();
   virtual ~IBroadPhase(){}

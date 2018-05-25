@@ -53,7 +53,7 @@ class LinkId : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(LinkId, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -68,7 +68,7 @@ public:
 class Named : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Named, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -80,7 +80,7 @@ public:
 class Archetyped : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(Archetyped, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -92,7 +92,7 @@ public:
 class EditorFlags : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(EditorFlags, TypeCopyMode::ReferenceType);
 
   EditorFlags() {}
   ~EditorFlags() {}
@@ -108,7 +108,7 @@ public:
 class SpaceObjects : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpaceObjects, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -121,7 +121,7 @@ public:
 class ArchetypeInstance
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ArchetypeInstance, TypeCopyMode::ReferenceType);
   String Name;
   uint Version;
 };
