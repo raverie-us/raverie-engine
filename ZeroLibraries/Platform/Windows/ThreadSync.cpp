@@ -38,38 +38,43 @@ void ThreadLock::Unlock()
 }
 
 OsEvent::OsEvent()
-:mHandle(NULL)
 {
+  ZeroConstructPrivateData(HANDLE);
 }
 
 OsEvent::~OsEvent()
 {
   Close();
+  ZeroDestructPrivateData(HANDLE);
 }
 
 void OsEvent::Initialize(bool manualReset, bool startSignaled)
 {
-  mHandle = CreateEvent(NULL, manualReset, startSignaled, NULL);
-  CheckWin(mHandle!=INVALID_HANDLE_VALUE, "Failed to create event.");
+  ZeroGetPrivateData(HANDLE);
+  *self = CreateEvent(NULL, manualReset, startSignaled, NULL);
+  CheckWin(*self != INVALID_HANDLE_VALUE, "Failed to create event.");
 }
 
 void OsEvent::Close()
 {
-  if(mHandle!=NULL)
+  ZeroGetPrivateData(HANDLE);
+  if (*self != nullptr)
   {
-    VerifyWin(CloseHandle(mHandle), "Failed to close event.");
+    VerifyWin(CloseHandle(*self), "Failed to close event.");
   }
 }
 
 void OsEvent::Signal()
 {
-  VerifyWin(SetEvent(mHandle), "Failed to Signal event.");
+  ZeroGetPrivateData(HANDLE);
+  VerifyWin(SetEvent(*self), "Failed to Signal event.");
 }
 
 void OsEvent::Wait()
 {
-  DWORD result = WaitForSingleObject(mHandle, INFINITE);
-  if(result == WAIT_FAILED)
+  ZeroGetPrivateData(HANDLE);
+  DWORD result = WaitForSingleObject(*self, INFINITE);
+  if (result == WAIT_FAILED)
   {
     VerifyWin(0, "Failed to Signal event.");
   }
@@ -77,8 +82,16 @@ void OsEvent::Wait()
 
 void OsEvent::Reset()
 {
-  VerifyWin(ResetEvent(mHandle), "Failed to Reset event.");
+  ZeroGetPrivateData(HANDLE);
+  VerifyWin(ResetEvent(*self), "Failed to Reset event.");
 }
+
+OsHandle OsEvent::GetHandle()
+{
+  ZeroGetPrivateData(HANDLE);
+  return *self;
+}
+
 
 Semaphore::Semaphore()
 {
@@ -114,12 +127,12 @@ void Semaphore::WaitAndDecrement()
   }
 }
 
-Mutex::Mutex()
+InterprocessMutex::InterprocessMutex()
 {
   ZeroConstructPrivateData(HANDLE);
 }
 
-Mutex::~Mutex()
+InterprocessMutex::~InterprocessMutex()
 {
   ZeroGetPrivateData(HANDLE);
   CloseHandle(*self);
@@ -127,7 +140,7 @@ Mutex::~Mutex()
   ZeroDestructPrivateData(HANDLE);
 }
 
-void Mutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
+void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
 {
   ZeroGetPrivateData(HANDLE);
   *self = CreateMutex(NULL, FALSE, Widen(mutexName).c_str());

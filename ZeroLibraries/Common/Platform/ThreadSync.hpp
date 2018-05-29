@@ -36,9 +36,9 @@ public:
   void Signal();
   void Reset();
   void Wait();
-  OsHandle GetHandle() { return mHandle; }
+  OsHandle GetHandle();
 private:
-  OsHandle mHandle;
+  ZeroDeclarePrivateData(OsEvent, 8);
 };
 
 const int MaxSemaphoreCount = 0x0FFFFFFF;
@@ -60,16 +60,16 @@ private:
 };
 
 /// Not fully implemented as it's currently only needed for interprocess communication
-class ZeroShared Mutex
+class ZeroShared InterprocessMutex
 {
 public:
-  Mutex();
-  ~Mutex();
+  InterprocessMutex();
+  ~InterprocessMutex();
 
   void Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists = false);
 
 private:
-  ZeroDeclarePrivateData(Mutex, 8);
+  ZeroDeclarePrivateData(InterprocessMutex, 8);
 };
 
 class CountdownEvent
