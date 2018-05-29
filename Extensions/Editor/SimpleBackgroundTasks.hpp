@@ -43,6 +43,7 @@ public:
   int Execute() override;
 
   String mProcess;
+  int mExitCode;
 };
 
 }//namespace Zero

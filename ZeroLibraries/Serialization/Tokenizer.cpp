@@ -248,6 +248,7 @@ bool Tokenizer::ReadStringConstant(TempToken& token)
   SkipWhiteSpace();
 
   StringRange& text = mPosition;
+  StringBuilder builder;
   if(text == '"')
   {
     //remove the quote
@@ -264,18 +265,11 @@ bool Tokenizer::ReadStringConstant(TempToken& token)
       if (*it == '"')
       {
         StringIterator next = it + 1;
-        // If there is another quote directly in front of us (and we're not heading off the end of the string)
+        // If there is another quote directly in front of us (and we're not
+        // heading off the end of the string) then skip the first quote
         if (next != textEnd && *next == '"')
         {
-          // Move all data from here backwards by one (basically, make the second quote go away)
-          for (char* j = (char*)next.Data(); j != text.mEnd; ++j)
-          {
-            // Copy the data one to the left (we need to cast since it's a const char*)
-            // Technically, we shouldn't be modifying this without knowing what it is!!!
-            // Despite switching to UTF8 we know a quote is 1 byte so this is "Safe"
-            *(j - 1) = *j;
-          }
-
+          ++it;
         }
         else
         {
@@ -283,13 +277,13 @@ bool Tokenizer::ReadStringConstant(TempToken& token)
           break;
         }
       }
+      builder.Append(*it);
       // Increment the iterator in the string to the next character
       ++it;
     }
 
-    // Create a string range that starts from the beginning of the text to the last quote 
-    StringRange tokenString(text.Begin(), it);
-    token.Assign(TempToken::String, tokenString);
+    // Create a string range from the built string
+    token.Assign(TempToken::String, builder.ToString());
 
     // Finally, the position is now past the quoted string
     text.mBegin = it.Data();

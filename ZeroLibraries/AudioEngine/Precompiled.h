@@ -32,6 +32,7 @@
 #include "AdditiveSynthNode.h"
 #include "GranularSynthNode.h"
 #include "DynamicsProcessorNode.h"
+#include "VBAP.h"
 #include "Emitter.h"
 #include "Attenuator.h"
 #include "MicrophoneInputNode.h"

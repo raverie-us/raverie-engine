@@ -48,6 +48,8 @@ public:
   EditorRange();
   EditorRange(float minValue, float maxValue, float increment);
 
+  void PostProcess(Status& status, ReflectionObject* owner) override;
+
   float Min;
   float Max;
   float Increment;

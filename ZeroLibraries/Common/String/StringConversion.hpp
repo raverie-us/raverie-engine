@@ -16,20 +16,20 @@ namespace Zero
 {
 
 // Convert Integers into hexadecimal format "4a34"
-uint WriteToHex(char* buffer, uint bufferSize, u64 integerValue, bool exclude0x = false);
-uint WriteToHex(char* buffer, uint bufferSize, u32 integerValue, bool exclude0x = false);
-StringRange StripHex0x(const StringRange& hexString);
-bool StringStartsWith0x(const StringRange& hexString);
+ZeroShared uint WriteToHex(char* buffer, uint bufferSize, u64 integerValue, bool exclude0x = false);
+ZeroShared uint WriteToHex(char* buffer, uint bufferSize, u32 integerValue, bool exclude0x = false);
+ZeroShared StringRange StripHex0x(const StringRange& hexString);
+ZeroShared bool StringStartsWith0x(const StringRange& hexString);
 const uint cHex64Size = 16;
 
 // Write out 'places' number of hex digits from integerValue
-uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue, bool exclude0x = false);
+ZeroShared uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue, bool exclude0x = false);
 
 // Read 64 bit hex string
 Guid ReadHexString(const StringRange& range);
 
 //Basic conversion function (input must be UTF-16/2) DestAscii must unicodeLength +1 (for null terminator)
-void ConvertUnicodeToAscii(char* destAscii, uint destAsciiLength, const wchar_t* unicodeData, size_t unicodeLength);
+ZeroShared void ConvertUnicodeToAscii(char* destAscii, uint destAsciiLength, const wchar_t* unicodeData, size_t unicodeLength);
 
 //
 // ToValue Functions
@@ -37,27 +37,27 @@ void ConvertUnicodeToAscii(char* destAscii, uint destAsciiLength, const wchar_t*
 
 /// Reads a value from a character buffer
 /// (Takes value by reference so functions can be overloaded)
-void ToValue(StringRangeParam range, String& value);
-void ToValue(StringRangeParam range, StringRange& value);
+ZeroShared void ToValue(StringRangeParam range, String& value);
+ZeroShared void ToValue(StringRangeParam range, StringRange& value);
 
-void ToValue(StringRangeParam range, bool& value);
+ZeroShared void ToValue(StringRangeParam range, bool& value);
 
-void ToValue(StringRangeParam range, char& value);
+ZeroShared void ToValue(StringRangeParam range, char& value);
 
-void ToValue(StringRangeParam range, int8& value, int base = 0);
-void ToValue(StringRangeParam range, int16& value, int base = 0);
-void ToValue(StringRangeParam range, int32& value, int base = 0);
-void ToValue(StringRangeParam range, int64& value, int base = 0);
+ZeroShared void ToValue(StringRangeParam range, int8& value, int base = 0);
+ZeroShared void ToValue(StringRangeParam range, int16& value, int base = 0);
+ZeroShared void ToValue(StringRangeParam range, int32& value, int base = 0);
+ZeroShared void ToValue(StringRangeParam range, int64& value, int base = 0);
 
-void ToValue(StringRangeParam range, uint8& value, int base = 0);
-void ToValue(StringRangeParam range, uint16& value, int base = 0);
-void ToValue(StringRangeParam range, uint32& value, int base = 0);
-void ToValue(StringRangeParam range, uint64& value, int base = 0);
+ZeroShared void ToValue(StringRangeParam range, uint8& value, int base = 0);
+ZeroShared void ToValue(StringRangeParam range, uint16& value, int base = 0);
+ZeroShared void ToValue(StringRangeParam range, uint32& value, int base = 0);
+ZeroShared void ToValue(StringRangeParam range, uint64& value, int base = 0);
 
-void ToValue(StringRangeParam range, float& value);
-void ToValue(StringRangeParam range, double& value);
+ZeroShared void ToValue(StringRangeParam range, float& value);
+ZeroShared void ToValue(StringRangeParam range, double& value);
 
-void ToValue(StringRangeParam range, Guid& value);
+ZeroShared void ToValue(StringRangeParam range, Guid& value);
 
 //
 // ToBuffer Functions
@@ -65,27 +65,27 @@ void ToValue(StringRangeParam range, Guid& value);
 
 /// Writes a value to a character buffer
 /// Returns the number of bytes written to the buffer
-uint ToBuffer(char* buffer, uint bufferSize, String value, bool shortFormat = false);
-uint ToBuffer(char* buffer, uint bufferSize, StringRange value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, String value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, StringRange value, bool shortFormat = false);
 
-uint ToBuffer(char* buffer, uint bufferSize, bool value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, bool value, bool shortFormat = false);
 
-uint ToBuffer(char* buffer, uint bufferSize, char value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, char value, bool shortFormat = false);
 
-uint ToBuffer(char* buffer, uint bufferSize, int8 value, bool shortFormat = false);
-uint ToBuffer(char* buffer, uint bufferSize, int16 value, bool shortFormat = false);
-uint ToBuffer(char* buffer, uint bufferSize, int32 value, bool shortFormat = false);
-uint ToBuffer(char* buffer, uint bufferSize, int64 value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, int8 value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, int16 value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, int32 value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, int64 value, bool shortFormat = false);
 
-uint ToBuffer(char* buffer, uint bufferSize, uint8 value, bool shortFormat = false);
-uint ToBuffer(char* buffer, uint bufferSize, uint16 value, bool shortFormat = false);
-uint ToBuffer(char* buffer, uint bufferSize, uint32 value, bool shortFormat = false);
-uint ToBuffer(char* buffer, uint bufferSize, uint64 value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, uint8 value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, uint16 value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, uint32 value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, uint64 value, bool shortFormat = false);
 
-uint ToBuffer(char* buffer, uint bufferSize, float value, bool shortFormat = false);
-uint ToBuffer(char* buffer, uint bufferSize, double value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, float value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, double value, bool shortFormat = false);
 
-uint ToBuffer(char* buffer, uint bufferSize, Guid value, bool shortFormat = false);
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, Guid value, bool shortFormat = false);
 
 //
 // has_global_to_value

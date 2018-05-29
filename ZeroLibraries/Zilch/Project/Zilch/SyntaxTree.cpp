@@ -1225,7 +1225,7 @@ namespace Zilch
 
   //***************************************************************************
   GenericFunctionNode::GenericFunctionNode() :
-    Type(nullptr),
+    Type(Core::GetInstance().ErrorDelegateType),
     DefinedFunction(nullptr)
   {
   }

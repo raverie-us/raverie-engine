@@ -663,12 +663,6 @@ float Random(Vec2 uv)
 }
 
 //**************************************************************************************************
-float Luminance(Vec3 linearColor)
-{
-  return Math::Dot(linearColor, Vec3(0.2126f, 0.7152f, 0.0722f));
-}
-
-//**************************************************************************************************
 Vec3 SampleEnvMap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, uint pixelSize, uint index, Vec3 dir)
 {
   TextureFace::Enum face;

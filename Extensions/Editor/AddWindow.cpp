@@ -748,8 +748,10 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
     mNameField = new TextBox(name);
     mNameField->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
     mNameField->SetEditable(true);
-    ConnectThisTo(mNameField, Events::TextTyped, OnTextTypedName);
+    mNameField->SetEnterLoseFocus(false);
+
     ConnectThisTo(mNameField, Events::KeyDown, OnKeyDownNameField);
+    ConnectThisTo(mNameField, Events::KeyUp, OnKeyUpNameField);
   }
 
   new Spacer(this, SizePolicy::Fixed, Pixels(0, 2));
@@ -956,6 +958,7 @@ void ResourceTemplateDisplay::CreateNameToolTip(StringParam message)
   mNameField->mBackgroundColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
   mNameField->mBorderColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
   mNameField->mFocusBorderColor = ToByteColor(Vec4(0.625f, 0.256f, 0.256f, 1));
+  MarkAsNeedsUpdate();
 }
 
 //**************************************************************************************************
@@ -1005,12 +1008,6 @@ void ResourceTemplateDisplay::RemoveTagToolTip()
 }
 
 //**************************************************************************************************
-void ResourceTemplateDisplay::OnTextTypedName(Event*)
-{
-  ValidateName(false);
-}
-
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnTextTypedTag(Event*)
 {
   ValidateTags();
@@ -1026,6 +1023,13 @@ void ResourceTemplateDisplay::OnKeyDownNameField(KeyboardEvent* e)
     mNameField->LoseFocus();
     mPreviousFocus->TakeFocus();
   }
+}
+
+//**************************************************************************************************
+void ResourceTemplateDisplay::OnKeyUpNameField(KeyboardEvent* e)
+{
+  if (e->Key != Keys::Enter)
+    ValidateName(false);
 }
 
 //**************************************************************************************************
@@ -1186,6 +1190,7 @@ void ResourceTemplateDisplay::OnCreate(Event*)
 
   Z::gEditor->GetCenterWindow()->TryTakeFocus();
 
+  RemoveTagToolTip();
   CloseTabContaining(this);
 }
 

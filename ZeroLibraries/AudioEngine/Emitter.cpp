@@ -9,6 +9,17 @@
 
 namespace Audio
 {
+  // The minimum volume of audio applied to all channels
+  static const float MinimumVolume = 0.2f;
+  // Minimum position change to recalculate data
+  static const float MinimumPositionChange = 0.01f;
+  // The lowest value for the low pass cutoff frequency (for sounds behind listener)
+  static const float LowPassCutoffBase = 5000.0f;
+  // The additional value added to the low pass cutoff depending on angle
+  static const float LowPassCutoffAdditional = 15000.0f;
+  // The maximum change allowed in the low pass cutoff frequency
+  static const float MaxLowPassDifference = 1000.0f;
+
   //---------------------------------------------------------------------- Emitter Data Per Listener
 
   // Stores data for each listener
@@ -16,38 +27,24 @@ namespace Audio
   {
   public:
     EmitterDataPerListener() :
-      PreviousGain1(0),
-      PreviousGain2(0),
       PreviousRelativePosition(Math::Vec3(FLT_MAX, FLT_MAX, FLT_MAX)),
       DirectionalVolume(1.0f),
-      UseLowPass(false),
-      Gain1(1.0f),
-      Gain2(1.0f),
-      Channel1(0),
-      Channel2(0)
-    {}
+      UseLowPass(false)
+    {
+      memset(PreviousGains, 0, sizeof(float) * MaxChannels);
+    }
 
     // Low pass filter for sounds behind listener
     LowPassFilter LowPass;
-
-    // Previous gain for speaker 1
-    float PreviousGain1;
-    // Previous gain for speaker 2 from the last mix
-    float PreviousGain2;
-    // Interpolated gain for speaker 1 
-    InterpolatingObject Gain1Interpolator;
-    // Interpolated gain for speaker 2 
-    InterpolatingObject Gain2Interpolator;
+    // Previous gain values
+    float PreviousGains[MaxChannels];
     // The previous relative position of this listener
     Math::Vec3 PreviousRelativePosition;
 
     // These values are only re-calculated when the relative position changes
     float DirectionalVolume;
     bool UseLowPass;
-    float Gain1;
-    float Gain2;
-    int Channel1;
-    int Channel2;
+    float GainValues[MaxChannels];
   };
 
   //----------------------------------------------------------------------------------- Emitter Node
@@ -58,15 +55,19 @@ namespace Audio
     SimpleCollapseNode(name, ID, extInt, true, false, isThreaded),
     Position(position),
     Velocity(velocity),
-    FacingDirection(0, 0, 0),
-    InterpolatingVolume(false),
+    FacingDirection(1.0f, 0.0f, 0.0f),
     Pausing(false),
     Paused(false),
-    MinimumVolume(0.2f),
-    DirectionalAngleRadians(0)
+    DirectionalAngleRadians(0),
+    PanningObject(nullptr)
   {
     if (!Threaded)
       SetSiblingNodes(new EmitterNode(name, ID, position, velocity, nullptr, true));
+    else
+    {
+      PanningObject = new VBAP();
+      PanningObject->Initialize(gAudioSystem->SystemChannelsThreaded);
+    }
   }
 
   //************************************************************************************************
@@ -76,6 +77,8 @@ namespace Audio
     {
       forRange(EmitterDataPerListener* data, DataPerListener.Values())
         delete data;
+
+      delete PanningObject;
     }
   }
 
@@ -84,15 +87,13 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::Pause, (EmitterNode*)GetSiblingNode()));
+      AddTaskForSibling(&EmitterNode::Pause);
     }
     else
     {
       if (!Paused && !Pausing)
       {
         Pausing = true;
-        InterpolatingVolume = true;
         VolumeInterpolator.SetValues(1.0f, 0.0f, PropertyChangeFrames);
       }
     }
@@ -103,8 +104,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::Resume, (EmitterNode*)GetSiblingNode()));
+      AddTaskForSibling(&EmitterNode::Resume);
     }
     else
     {
@@ -112,7 +112,6 @@ namespace Audio
       {
         Paused = false;
         Pausing = false;
-        InterpolatingVolume = true;
         VolumeInterpolator.SetValues(VolumeInterpolator.GetCurrentValue(), 1.0f, 
           PropertyChangeFrames);
       }
@@ -124,9 +123,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::SetPosition, 
-            (EmitterNode*)GetSiblingNode(), newPosition, newVelocity));
+      AddTaskForSibling(&EmitterNode::SetPosition, newPosition, newVelocity);
     }
     else
     {
@@ -139,11 +136,7 @@ namespace Audio
   void EmitterNode::SetForwardDirection(const Math::Vec3 forwardDirection)
   {
     if (!Threaded)
-    {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::SetForwardDirection, 
-            (EmitterNode*)GetSiblingNode(), forwardDirection));
-    }
+      AddTaskForSibling(&EmitterNode::SetForwardDirection, forwardDirection);
     else
       FacingDirection = forwardDirection;
   }
@@ -153,9 +146,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&EmitterNode::SetDirectionalAngle, 
-            (EmitterNode*)GetSiblingNode(), angleInDegrees, reducedVolume));
+      AddTaskForSibling(&EmitterNode::SetDirectionalAngle, angleInDegrees, reducedVolume);
     }
     else
     {
@@ -173,11 +164,11 @@ namespace Audio
     if (!Threaded)
       return false;
 
-    unsigned bufferSize = outputBuffer->Size();
-
     // If paused, do nothing
     if (Paused)
       return false;
+
+    unsigned bufferSize = outputBuffer->Size();
 
     // Get input and return if there is no data
     if (!AccumulateInputSamples(bufferSize, numberOfChannels, listener))
@@ -201,74 +192,77 @@ namespace Audio
     // Save reference for ease of use
     EmitterDataPerListener& listenerData = *DataPerListener[listener];
 
-    // Check if the listener or emitter has moved
-    if (!IsWithinLimit(relativePosition.x, listenerData.PreviousRelativePosition.x, 0.01f) 
-        || !IsWithinLimit(relativePosition.y, listenerData.PreviousRelativePosition.y, 0.01f)
-        || !IsWithinLimit(relativePosition.z, listenerData.PreviousRelativePosition.z, 0.01f))
+    // Check if the listener or emitter has moved (don't care about up/down changes)
+    bool valuesChanged = false;
+    if (!IsWithinLimit(relativePosition.x, listenerData.PreviousRelativePosition.x, MinimumPositionChange)
+      || !IsWithinLimit(relativePosition.z, listenerData.PreviousRelativePosition.z, MinimumPositionChange))
+    {
       CalculateData(&listenerData, relativePosition, listener, numberOfChannels);
+      valuesChanged = true;
+    }
 
+    // Save the relative position
     listenerData.PreviousRelativePosition = relativePosition;
-    unsigned numberOfFrames = bufferSize / numberOfChannels;
-
-    // Set the gain interpolators
-    listenerData.Gain1Interpolator.SetValues(listenerData.PreviousGain1, listenerData.Gain1, numberOfFrames);
-    listenerData.Gain2Interpolator.SetValues(listenerData.PreviousGain2, listenerData.Gain2, numberOfFrames);
-
-    // Store this mix's gain values
-    listenerData.PreviousGain1 = listenerData.Gain1;
-    listenerData.PreviousGain2 = listenerData.Gain2;
+    // Save a pointer to the input samples
+    float* inputSamples = InputSamples.Data();
 
     // Apply low pass filter to output (if turned on)
     if (listenerData.UseLowPass)
     {
-      // Copy input samples to output buffer while applying filter
-      for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
-        listenerData.LowPass.ProcessFrame(InputSamples.Data() + i, outputBuffer->Data() + i, numberOfChannels);
+      listenerData.LowPass.ProcessBuffer(InputSamples.Data(), outputBuffer->Data(), numberOfChannels,
+        bufferSize);
+
+      // Input samples are now in the outputBuffer
+      inputSamples = outputBuffer->Data();
     }
 
-    // Adjust with gain values
+    // Adjust each frame with gain values
     for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
     {
       float volume = 1.0f;
       // If interpolating volume, get new volume value
-      if (InterpolatingVolume)
+      if (!VolumeInterpolator.Finished())
       {
         volume = VolumeInterpolator.NextValue();
-        if (VolumeInterpolator.Finished())
-        {
-          InterpolatingVolume = false;
-
-          if (Pausing)
-            Paused = true;
-        }
+        if (Pausing && VolumeInterpolator.Finished())
+          Paused = true;
       }
 
       // Adjust the volume if this is a directional emitter
       volume *= listenerData.DirectionalVolume;
 
-      // If using low pass filter, value was already copied from InputSamples to outputBuffer
-      float* buffer;
-      if (listenerData.UseLowPass)
-        buffer = outputBuffer->Data();
-      // Otherwise, need to copy input samples
-      else
-        buffer = InputSamples.Data();
-
       // Combine all channels into one value
-      float monoValue = buffer[i];
+      float monoValue = inputSamples[i];
       for (unsigned j = 1; j < numberOfChannels; ++j)
-        monoValue += buffer[i + j];
+        monoValue += inputSamples[i + j];
       monoValue /= numberOfChannels;
       monoValue *= volume;
 
       // Unspatialized audio to all channels at minimum volume
       for (unsigned j = 0; j < numberOfChannels; ++j)
-        (*outputBuffer)[i + j] = buffer[i + j] * MinimumVolume * volume;
+        (*outputBuffer)[i + j] = inputSamples[i + j] * MinimumVolume * volume;
 
-      // Spatialized gain to two channels
-      (*outputBuffer)[i + listenerData.Channel1] += monoValue * listenerData.Gain1Interpolator.NextValue();
-      (*outputBuffer)[i + listenerData.Channel2] += monoValue * listenerData.Gain2Interpolator.NextValue();
+      // Spatialized audio using gain values
+      float percent = (float)i / (float)bufferSize;
+      if (valuesChanged)
+      {
+        // If the gain values changed, interpolate from old to new value
+        for (unsigned j = 0; j < numberOfChannels; ++j)
+        {
+          (*outputBuffer)[i + j] += monoValue * (listenerData.PreviousGains[j] + 
+            ((listenerData.GainValues[j] - listenerData.PreviousGains[j]) * percent));
+        }
+      }
+      else
+      {
+        for (unsigned j = 0; j < numberOfChannels; ++j)
+          (*outputBuffer)[i + j] += monoValue * listenerData.PreviousGains[j];
+      }
     }
+
+    // If gain values changed, copy new ones to previous values
+    if (valuesChanged)
+      memcpy(listenerData.PreviousGains, listenerData.GainValues, sizeof(float) * MaxChannels);
 
     AddBypass(outputBuffer);
 
@@ -291,7 +285,7 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void EmitterNode::CalculateData(EmitterDataPerListener* data, Math::Vec3& relativePosition,
+  void EmitterNode::CalculateData(EmitterDataPerListener* data, const Math::Vec3& relativePosition,
     ListenerNode* listener, const unsigned numberOfChannels)
   {
     if (!Threaded)
@@ -300,11 +294,14 @@ namespace Audio
     // Save reference for ease of use
     EmitterDataPerListener& listenerData = *data;
 
-    // Get the squared length
-    float distanceSq = relativePosition.LengthSq();
+    // Don't need to use the height difference for positional calculations
+    Math::Vec2 relativePosition2D(relativePosition.x, relativePosition.z);
 
-    // Check if the emitter should be limited by direction and is not too close
-    if (DirectionalAngleRadians > 0.0f && distanceSq > 0.01f)
+    // Get the squared length
+    float distanceSq = relativePosition2D.LengthSq();
+
+    // Check if the emitter should be limited by direction 
+    if (DirectionalAngleRadians > 0.0f)
     {
       // Get the emitter's facing direction relative to the listener
       Math::Vec3 relativeFacing = listener->GetRelativeFacing(FacingDirection);
@@ -320,7 +317,7 @@ namespace Audio
       listenerData.DirectionalVolume = 1.0f;
 
     // Check for sounds behind listener
-    if (relativePosition.x < 0)
+    if (relativePosition2D.x < 0)
     {
       // Get the angle to the listener
       float angle = Math::ArcTan2(relativePosition.z, -relativePosition.x);
@@ -328,80 +325,38 @@ namespace Audio
       // emitter is directly behind the listener and 0.0 when off to the side)
       float percent = Math::Abs(angle) / (Math::cPi / 2.0f);
 
-      // The low pass cutoff frequency ranges from 5000.0 to 20000.0 depending on the angle
+      // The low pass cutoff frequency ranges from min to max depending on the angle
       // percentage, using a squared curve
-      float frequency = 5000.0f + (15000.0f * percent * percent);
+      float frequency = LowPassCutoffBase + (LowPassCutoffAdditional * percent * percent);
 
       // Check if the difference between this frequency and the last frequency used is large
-      float maxDifferenceAllowed = 1000.0f;
-      if (!IsWithinLimit(frequency, listenerData.LowPass.GetCutoffFrequency(), maxDifferenceAllowed))
+      if (!IsWithinLimit(frequency, listenerData.LowPass.GetCutoffFrequency(), MaxLowPassDifference))
       {
         // Set frequency to be only maxDifferenceAllowed away from the last frequency used
         if (frequency > listenerData.LowPass.GetCutoffFrequency())
-          frequency = listenerData.LowPass.GetCutoffFrequency() + maxDifferenceAllowed;
+          frequency = listenerData.LowPass.GetCutoffFrequency() + MaxLowPassDifference;
         else
-          frequency = listenerData.LowPass.GetCutoffFrequency() - maxDifferenceAllowed;
+          frequency = listenerData.LowPass.GetCutoffFrequency() - MaxLowPassDifference;
       }
 
       // Set the cutoff frequency on the low pass filter
       listenerData.LowPass.SetCutoffFrequency(frequency);
-
-      // Mirror source to front for stereo
-      if (numberOfChannels < 4)
-        relativePosition.x *= -1;
 
       listenerData.UseLowPass = true;
     }
     else
     {
       // Make sure the cutoff frequency is set to the maximum value
-      listenerData.LowPass.SetCutoffFrequency(20000.0f);
+      listenerData.LowPass.SetCutoffFrequency(LowPassCutoffBase + LowPassCutoffAdditional);
 
       listenerData.UseLowPass = false;
     }
 
-    // If emitter and listener are very close or emitter is directly above or below listener, skip calculations
-    if (relativePosition.LengthSq() < 0.01f || (relativePosition.x == 0.0f && relativePosition.z == 0.0f))
-    {
-      listenerData.Gain1 = 1.0f;
-      listenerData.Gain2 = 1.0f;
-      listenerData.Channel1 = 0;
-      listenerData.Channel2 = 1;
-    }
-    else
-    {
-      // Get normalized vector to sound source
-      Math::Vec2 source = Math::Vec2(relativePosition.x, relativePosition.z);
-      source.Normalize();
+    // Check if we need to re-initialize for a different number of channels
+    if (numberOfChannels != PanningObject->GetNumberOfChannels())
+      PanningObject->Initialize(numberOfChannels);
 
-      // Get gain values and which channels to apply them to
-      gAudioSystem->ChannelsManager.GetClosestSpeakerValues(source, numberOfChannels, listenerData.Gain1,
-        listenerData.Gain2, listenerData.Channel1, listenerData.Channel2);
-
-      // If a gain is less than zero, full volume goes to the other speaker
-      if (listenerData.Gain1 < 0)
-      {
-        listenerData.Gain1 = 0;
-        listenerData.Gain2 = 1.0f;
-      }
-      else if (listenerData.Gain2 < 0)
-      {
-        listenerData.Gain2 = 0;
-        listenerData.Gain1 = 1.0f;
-      }
-
-      // Make sure the gain is at least the minimum
-      if (listenerData.Gain1 < MinimumVolume)
-        listenerData.Gain1 = MinimumVolume;
-      if (listenerData.Gain2 < MinimumVolume)
-        listenerData.Gain2 = MinimumVolume;
-
-      // Normalize
-      float scaleFactor = 1.0f / Math::Sqrt(listenerData.Gain1 * listenerData.Gain1
-        + listenerData.Gain2 * listenerData.Gain2);
-      listenerData.Gain1 *= scaleFactor;
-      listenerData.Gain2 *= scaleFactor;
-    }
+    PanningObject->ComputeGains(relativePosition2D, 0.0f, listenerData.GainValues);
   }
 
 }

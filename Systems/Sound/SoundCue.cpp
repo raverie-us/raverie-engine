@@ -52,9 +52,9 @@ ZilchDefineType(SoundEntry, builder, type)
   ZilchBindGetterSetterProperty(Sound);
   ZilchBindFieldProperty(mWeight);
   ZilchBindFieldProperty(mStartTime);
-  ZilchBindFieldProperty(mEndTime);
+  ZilchBindGetterSetterProperty(EndTime);
   ZilchBindFieldProperty(mLoopStartTime);
-  ZilchBindFieldProperty(mLoopEndTime);
+  ZilchBindGetterSetterProperty(LoopEndTime);
   ZilchBindFieldProperty(mLoopTailLength);
   ZilchBindFieldProperty(mCrossFadeLoopTail);
   ZilchBindMethodProperty(Preview);
@@ -143,6 +143,36 @@ void SoundEntry::Preview()
 void SoundEntry::StopPreview()
 {
   Z::gSound->StopPreview();
+}
+
+//**************************************************************************************************
+float SoundEntry::GetEndTime()
+{
+  return mEndTime;
+}
+
+//**************************************************************************************************
+void SoundEntry::SetEndTime(float time)
+{
+  if (mSound && (time == 0.0f || time > mSound->GetLength()))
+    mEndTime = mSound->GetLength();
+  else
+    mEndTime = time;
+}
+
+//**************************************************************************************************
+float SoundEntry::GetLoopEndTime()
+{
+  return mLoopEndTime;
+}
+
+//**************************************************************************************************
+void SoundEntry::SetLoopEndTime(float time)
+{
+  if (mSound && (time == 0.0f || time > mSound->GetLength()))
+    mLoopEndTime = mSound->GetLength();
+  else
+    mLoopEndTime = time;
 }
 
 //---------------------------------------------------------------------------------- Sound Tag Entry 
@@ -532,11 +562,11 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
   // Set the time settings on the instance
   Audio::SoundInstanceNode* instanceNode = (Audio::SoundInstanceNode*)instance->mSoundNode->mNode;
   instanceNode->SetStartTime(entry->mStartTime);
-  instanceNode->SetEndTime(entry->mEndTime);
+  instanceNode->SetEndTime(entry->GetEndTime());
   if (mPlayMode == SoundPlayMode::Looping)
   {
     instanceNode->SetLoopStartTime(entry->mLoopStartTime);
-    instanceNode->SetLoopEndTime(entry->mLoopEndTime);
+    instanceNode->SetLoopEndTime(entry->GetLoopEndTime());
     instanceNode->SetLoopTailTime(entry->mLoopTailLength);
     instanceNode->SetCrossFadeTail(entry->mCrossFadeLoopTail);
   }

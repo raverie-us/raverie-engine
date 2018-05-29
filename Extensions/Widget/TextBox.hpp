@@ -34,7 +34,11 @@ public:
   void SetEditable(bool editable);
   bool GetEditable();
 
-  //Set the text on the text box.
+  //Will the text box lose focus on hitting enter when editing the text box
+  void SetEnterLoseFocus(bool losesFocus);
+  bool GetEnterLoseFocus();
+
+  //What text is being displayed in the text box
   void SetText(StringParam text);
   String GetText();
 

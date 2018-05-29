@@ -88,6 +88,8 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
   else if (value == ':' || (value == ' ' && currentLine.FindLastNonWhitespaceRune() == ':'))
   {
     Array<Completion> completions;
+    // The any keyword is special. Just force add it to our possible completion list.
+    completions.PushBack(Completion("any"));
 
     Array<LibraryRef> libraries;
     GetLibraries(libraries);
@@ -223,8 +225,9 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, 
 
   StringIterator start = allText.Begin();
   StringIterator end = start + caret;
-  StringRange function = allText.SubString(start, end).FindLastOf("function");
 
+  // Check to make sure this is being connected inside a function
+  StringRange function = allText.SubString(start, end).FindLastOf("function");
   if (function.Empty())
     return;
 
@@ -232,13 +235,18 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, 
 
   if (newlineBeforeFunction.Empty())
     return;
-
+  
+  // Increment past the newline character to be at the beginning of the line the function declaration is on
   newlineBeforeFunction.IncrementByRune();
+  
+  // Find the indent space leading up the start of non-whitespace text to account for
+  // potential attribute tags and get the correct indent size
+  StringRange textBeforeFunction = allText.SubString(newlineBeforeFunction.Begin(), function.End());
+  Rune indentEndRune = textBeforeFunction.FindFirstNonWhitespaceRune();
+  StringRange indentEnd = textBeforeFunction.FindFirstOf(indentEndRune);
 
-  indent = allText.SubString(newlineBeforeFunction.Begin(), function.Begin());
-
+  indent = allText.SubString(newlineBeforeFunction.Begin(), indentEnd.Begin());
   size_t bracesCount = 0;
-
   StringIterator endIndex;
 
   // The entire idea here is that we scanned up until we found the function we were calling Zero.Connect in

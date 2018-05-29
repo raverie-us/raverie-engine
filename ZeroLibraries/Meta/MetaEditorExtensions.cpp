@@ -62,6 +62,21 @@ EditorRange::EditorRange(float minValue, float maxValue, float increment)
 
 }
 
+//**************************************************************************************************
+void EditorRange::PostProcess(Status& status, ReflectionObject* owner)
+{
+  if(Increment == 0)
+  {
+    status.SetFailed("'Increment' cannot be 0.");
+    return;
+  }
+  if(Min >= Max)
+  {
+    status.SetFailed("'Max' must be greater than or equal to 'Min'.");
+    return;
+  }
+}
+
 //------------------------------------------------------------------------------------ Editor Slider
 //**************************************************************************************************
 ZilchDefineType(EditorSlider, builder, type)

@@ -71,7 +71,7 @@ int ExecuteProcessTaskJob::Execute()
 
   String name = GetName();
   process.ExecProcess(name.c_str(), mProcess.c_str(), &debugPrint, false);
-  process.WaitForClose();
+  mExitCode = process.WaitForClose();
   ZPrintFilter(Filter::DefaultFilter, "\n*** Finished %s ***\n", name.c_str());
 
   mState = BackgroundTaskState::Completed;

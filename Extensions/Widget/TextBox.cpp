@@ -175,6 +175,17 @@ bool TextBox::GetEditable()
   return mAllowEdit;
 }
 
+void TextBox::SetEnterLoseFocus(bool losesFocus)
+{
+  if (mEditTextField)
+    mEditTextField->mEnterClearFocus = losesFocus;
+}
+
+bool TextBox::GetEnterLoseFocus()
+{
+  return mEditTextField->mEnterClearFocus;
+}
+
 void TextBox::SetText(StringParam text)
 {
   mEditTextField->SetText(text);

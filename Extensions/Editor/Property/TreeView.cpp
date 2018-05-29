@@ -1574,7 +1574,7 @@ void TreeView::ShowRow(DataIndex& index)
   {
     uint rowIndex = dataRow->mVisibleRowIndex;
     float yPos = rowIndex * mRowHeight;
-    mArea->ScrollAreaToView(Vec2(0, yPos), Vec2(0, yPos + mRowHeight));
+    mArea->ScrollAreaToView(Vec2(0, yPos - mRowHeight), Vec2(0, yPos + mRowHeight));
   }
 
 

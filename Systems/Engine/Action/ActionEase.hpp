@@ -27,7 +27,7 @@ struct Lerp<Quat>
 {
   static inline Quat Interpolate(Quat& t0, Quat& t1, float t)
   {
-    return Slerp(t0, t1, t);
+    return Quat::SlerpUnnormalized(t0, t1, t);
   }
 };
 

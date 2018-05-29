@@ -229,7 +229,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "SelectGame",
-		string Description = "Select space",
+		string Description = "Select game",
 		string IconName = "",
 		string Shortcut = "Shift+G",
 		string Tags = "Select",

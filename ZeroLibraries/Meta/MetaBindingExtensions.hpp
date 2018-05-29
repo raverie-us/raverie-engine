@@ -133,6 +133,7 @@ extern const String cInvalidTypeName;
 
 void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType);
 #define ZeroBindEvent(EventName, EventType)  BindEventSent(builder, type, (EventName), ZilchTypeId(EventType))
+#define ZeroBindExternalEvent(EventName, EventType, SenderType)  BindEventSent(builder, ZilchTypeId(SenderType), (EventName), ZilchTypeId(EventType))
 
 //------------------------------------------------------------------------------------------- Events
 namespace Events

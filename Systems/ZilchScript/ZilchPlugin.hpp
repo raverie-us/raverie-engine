@@ -14,6 +14,7 @@ namespace Zero
 class BackgroundTask;
 class ZilchPluginConfig;
 class UpdateEvent;
+class BackgroundTaskEvent;
 
 class ZilchPluginSource : public DataResource
 {
@@ -49,6 +50,8 @@ public:
   void CompileConfiguration(StringParam configuration);
   void Clean();
   void InstallIdeTools();
+
+  void OnCompilationCompleted(BackgroundTaskEvent* e);
 
   bool CheckIdeAndInformUser();
   bool IsIdeInstalled();

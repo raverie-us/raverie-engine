@@ -424,7 +424,14 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
 {
   // Attempt to grab the object from the undo map
   Handle object = MetaOperation::GetUndoObject();
-  ReturnIf(object == NULL, , "Invalid undo object handle.");
+  ReturnIf(object == nullptr, , "Invalid undo object handle.");
+
+  // Check if the component type meta is still valid
+  if (mComponentType == nullptr)
+  {
+    DoNotifyWarning("Invalid Undo/Redo Operation", "Attempting to add a component type that has been deleted from the project.");
+    return;
+  }
 
   // Create the component
   BoundType* componentType = mComponentType;

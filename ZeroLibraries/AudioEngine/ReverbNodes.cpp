@@ -46,9 +46,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ReverbNode::SetTime, (ReverbNode*)GetSiblingNode(),
-          newTime));
+      AddTaskForSibling(&ReverbNode::SetTime, newTime);
     }
     else
     {
@@ -70,9 +68,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ReverbNode::SetWetLevel,
-        (ReverbNode*)GetSiblingNode(), wetLevel));
+      AddTaskForSibling(&ReverbNode::SetWetLevel, wetLevel);
     }
     else
     {
@@ -88,9 +84,7 @@ namespace Audio
 
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&ReverbNode::InterpolateWetLevel,
-        (ReverbNode*)GetSiblingNode(), newWetLevel, time));
+      AddTaskForSibling(&ReverbNode::InterpolateWetLevel, newWetLevel, time);
     }
     else
     {

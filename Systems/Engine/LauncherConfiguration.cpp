@@ -126,12 +126,21 @@ void LauncherLegacySettings::Serialize(Serializer& stream)
 void SaveLauncherConfig(Cog* launcherConfigCog)
 {
   LauncherConfig* launcherConfig = launcherConfigCog->has(LauncherConfig);
+  String configFilePath = launcherConfig->mSavePath;
+
+  // If the config file doesn't exist for some reason then create it (and any parent directories needed)
+  if(!FileExists(configFilePath))
+  {
+    String configFileDirectoryPath = FilePath::GetDirectoryPath(configFilePath);
+    CreateDirectoryAndParents(configFileDirectoryPath);
+    WriteStringRangeToFile(configFilePath, String());
+  }
 
   // We have to save to the legacy format for now because old versions of
   // zero try to open the launcher's config to find where the launcher is.
   Status status;
   ObjectSaver saver;
-  saver.Open(status, launcherConfig->mSavePath.c_str());
+  saver.Open(status, configFilePath.c_str());
   saver.SaveDefinition(launcherConfigCog);
 }
 

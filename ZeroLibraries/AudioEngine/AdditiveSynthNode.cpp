@@ -147,9 +147,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AdditiveSynthNode::AddHarmonic,
-        (AdditiveSynthNode*)GetSiblingNode(), harmonic));
+      AddTaskForSibling(&AdditiveSynthNode::AddHarmonic, harmonic);
     }
     else
     {
@@ -162,9 +160,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AdditiveSynthNode::RemoveAllHarmonics,
-        (AdditiveSynthNode*)GetSiblingNode()));
+      AddTaskForSibling(&AdditiveSynthNode::RemoveAllHarmonics);
     }
     else
     {
@@ -180,9 +176,7 @@ namespace Audio
       if (note < 0 || note > 127)
         return;
 
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AdditiveSynthNode::NoteOn,
-        (AdditiveSynthNode*)GetSiblingNode(), note, volume));
+      AddTaskForSibling(&AdditiveSynthNode::NoteOn, note, volume);
     }
     else
     {
@@ -211,9 +205,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AdditiveSynthNode::NoteOff,
-        (AdditiveSynthNode*)GetSiblingNode(), note));
+      AddTaskForSibling(&AdditiveSynthNode::NoteOff, note);
     }
     else
     {
@@ -230,9 +222,7 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (GetSiblingNode())
-        gAudioSystem->AddTask(Zero::CreateFunctor(&AdditiveSynthNode::StopAll,
-        (AdditiveSynthNode*)GetSiblingNode()));
+      AddTaskForSibling(&AdditiveSynthNode::StopAll);
     }
     else
     {
