@@ -21,7 +21,7 @@ class UiWidget;
 typedef Array<UiWidget*> UiWidgetArray;
 
 //-------------------------------------------------------------------------------------------- Focus
-DeclareEnum2(UiFocusDirection, Forward, Backwards);
+DeclareEnum2(UiFocusDirection, Forward, Backward);
 void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction);
 
 //------------------------------------------------------------------------------------------- Events

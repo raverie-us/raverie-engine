@@ -71,7 +71,7 @@ float GetViewDistance(Aabb& aabb)
 void DisplayCodeDefinition(CodeDefinition& definition)
 {
   // Check that the code definition is valid otherwise return
-  if (!definition.NameLocation.IsValid())
+  if (!definition.NameLocation.IsValid() && !definition.NameLocation.CodeUserData)
     return;
 
   Resource* resource = (Resource*)definition.NameLocation.CodeUserData;
