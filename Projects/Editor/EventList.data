@@ -71,6 +71,50 @@ EventList
 		}
 		Object
 		{
+			var Name = "PartialStandardErrorResponse"
+			var Type = "AsyncProcessEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "PartialStandardOutputResponse"
+			var Type = "AsyncProcessEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "MicrophoneCompressedByteData"
+			var Type = "AudioByteDataEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "MicrophoneUncompressedFloatData"
+			var Type = "AudioFloatDataEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
 			var Name = "CastFilterCallback"
 			var Type = "CastFilterEvent"
 			var Senders = Array
@@ -236,6 +280,17 @@ EventList
 		}
 		Object
 		{
+			var Name = "CustomAudioNodeSamplesNeeded"
+			var Type = "CustomAudioNodeEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
 			var Name = "ComputeCustomJointInfo"
 			var Type = "CustomJointEvent"
 			var Senders = Array
@@ -324,17 +379,6 @@ EventList
 		}
 		Object
 		{
-			var Name = "MouseDragEnd"
-			var Type = "Event"
-			var Senders = Array
-			{
-			}
-			var Listeners = Array
-			{
-			}
-		}
-		Object
-		{
 			var Name = "RotationBasisGizmoBegin"
 			var Type = "Event"
 			var Senders = Array
@@ -380,6 +424,28 @@ EventList
 		Object
 		{
 			var Name = "SelectionFinal"
+			var Type = "Event"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "StandardErrorFinished"
+			var Type = "Event"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "StandardOutputFinished"
 			var Type = "Event"
 			var Senders = Array
 			{
@@ -1765,17 +1831,6 @@ EventList
 		}
 		Object
 		{
-			var Name = "NeedMoreSamples"
-			var Type = "ObjectEvent"
-			var Senders = Array
-			{
-			}
-			var Listeners = Array
-			{
-			}
-		}
-		Object
-		{
 			var Name = "ParticlesExhausted"
 			var Type = "ObjectEvent"
 			var Senders = Array
@@ -1941,8 +1996,30 @@ EventList
 		}
 		Object
 		{
+			var Name = "RotateGizmoModified"
+			var Type = "RotateGizmoUpdateEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
 			var Name = "RotationBasisAabbQuery"
 			var Type = "RotationBasisGizmoAabbQueryEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "ScaleGizmoModified"
+			var Type = "ScaleGizmoUpdateEvent"
 			var Senders = Array
 			{
 			}
@@ -2172,6 +2249,17 @@ EventList
 		}
 		Object
 		{
+			var Name = "TranslateGizmoModified"
+			var Type = "TranslateGizmoUpdateEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
 			var Name = "UiFocusGained"
 			var Type = "UiFocusEvent"
 			var Senders = Array
@@ -2238,18 +2326,7 @@ EventList
 		}
 		Object
 		{
-			var Name = "UiSliderChanged"
-			var Type = "UiSliderEvent"
-			var Senders = Array
-			{
-			}
-			var Listeners = Array
-			{
-			}
-		}
-		Object
-		{
-			var Name = "PostTransformUpdate"
+			var Name = "UiPostUpdate"
 			var Type = "UiTransformUpdateEvent"
 			var Senders = Array
 			{
@@ -2260,7 +2337,7 @@ EventList
 		}
 		Object
 		{
-			var Name = "PreTransformUpdate"
+			var Name = "UiPreUpdate"
 			var Type = "UiTransformUpdateEvent"
 			var Senders = Array
 			{
@@ -2315,6 +2392,17 @@ EventList
 		}
 		Object
 		{
+			var Name = "MouseDragEnd"
+			var Type = "ViewportMouseEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
 			var Name = "MouseDragMove"
 			var Type = "ViewportMouseEvent"
 			var Senders = Array
@@ -2327,6 +2415,17 @@ EventList
 		Object
 		{
 			var Name = "MouseDragStart"
+			var Type = "ViewportMouseEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "MouseDragUpdate"
 			var Type = "ViewportMouseEvent"
 			var Senders = Array
 			{
@@ -2449,6 +2548,17 @@ EventList
 		{
 			var Name = "WebResponse"
 			var Type = "WebResponseEvent"
+			var Senders = Array
+			{
+			}
+			var Listeners = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "ZUiSliderChanged"
+			var Type = "ZUiSliderEvent"
 			var Senders = Array
 			{
 			}

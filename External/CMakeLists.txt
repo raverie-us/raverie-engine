@@ -1,0 +1,190 @@
+################################################################################
+# Author: Joshua Shlemmer
+# Copyright 2017, DigiPen Institute of Technology
+#
+# The way that this is implemented, adding or changing libraries in exising
+# dependencies will require a force generation, and the addition of new deps
+# will require modification of this file.
+################################################################################
+# get our parent directory
+get_filename_component(ParentDirectory ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+
+# get our current directory
+set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
+
+################################################################################
+# Specify our list of StaticExternals (use the same name as the folder in External/)
+################################################################################
+# list of statics
+set(StaticExternals 
+    Assimp 
+    CEF 
+    Curl 
+    Freetype 
+    GL 
+    GLEW 
+    Libpng 
+    MemoryDebugger 
+    MemoryTracker 
+    Nvtt 
+    Opus 
+    PortAudio 
+    WinHid 
+    ZLib 
+)
+
+# list of shared
+set(SharedExternals
+    Assimp
+    CEF
+    Freetype
+    GLEW
+    MemoryDebugger
+    MemoryTracker
+    Nvtt
+    PortAudio
+)
+
+################################################################################
+# specify the include directories for each of the dependencies.
+# use parent scope so the folders are accessible anywhere
+################################################################################
+
+foreach(externLib ${StaticExternals})
+    set(${externLib}Headers ${CurrentDirectory}/${externLib}/include PARENT_SCOPE)
+endforeach()
+
+################################################################################
+# Set path to library folders
+################################################################################
+
+# set lib paths
+set(AssimpPath ${CurrentDirectory}/Assimp)
+set(CEFPath ${CurrentDirectory}/CEF)
+set(CurlPath ${CurrentDirectory}/Curl)
+set(FreetypePath ${CurrentDirectory}/Freetype)
+set(GLPath ${CurrentDirectory}/GL)
+set(GLEWPath ${CurrentDirectory}/GLEW)
+set(LibpngPath ${CurrentDirectory}/libpng)
+set(MemoryDebuggerPath ${CurrentDirectory}/MemoryDebugger)
+set(MemoryTrackerPath ${CurrentDirectory}/MemoryTracker)
+set(NvttPath ${CurrentDirectory}/Nvtt)
+set(OpusPath ${CurrentDirectory}/Opus)
+set(PortAudioPath ${CurrentDirectory}/PortAudio)
+set(WinHidPath ${CurrentDirectory}/WinHid)
+set(ZLibPath ${CurrentDirectory}/ZLib)
+
+
+################################################################################
+# Find all libraries from listed dependencies and make them globally available
+################################################################################
+
+foreach(libStatic ${StaticExternals})
+    # get lists of libraries
+    file(GLOB ${libStatic}StaticPath ${${libStatic}Path}/lib/${platform}/${bit}/*.[Ll][Ii][Bb])
+    file(GLOB ${libStatic}StaticDebugPath ${${libStatic}Path}/lib/${platform}/${bit}/Debug/*.[Ll][Ii][Bb])
+    file(GLOB ${libStatic}StaticReleasePath ${${libStatic}Path}/lib/${platform}/${bit}/Release/*.[Ll][Ii][Bb])
+
+
+
+    if ("${${libStatic}StaticPath}"        STRGREATER "" 
+     OR "${${libStatic}StaticDebugPath}"   STRGREATER ""
+     OR "${${libStatic}StaticReleasePath}" STRGREATER "")
+        #set(${libStatic}Static)
+        # COMMON
+        foreach(libPath ${${libStatic}StaticPath})
+            #get name of library
+            get_filename_component(libName ${libPath} NAME_WE)
+
+            
+            #create library using that name
+            #insert into list of libraries under this name
+            add_library(${libName} STATIC IMPORTED GLOBAL) 
+            set_target_properties(${libName} PROPERTIES
+                IMPORTED_LOCATION ${libPath}
+            )
+            set(${libStatic}Static ${${libStatic}Static} ${libName})
+            set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
+        endforeach()
+
+        # DEBUG
+        foreach(libPath ${${libStatic}StaticDebugPath})
+            #get name of library
+            get_filename_component(libNameDebug ${libPath} NAME_WE)
+            set(libNameDebug ${libNameDebug}Debug)
+
+            #create library using that name
+            #insert into list of libraries under this name
+            add_library(${libNameDebug} STATIC IMPORTED GLOBAL) 
+            set_target_properties(${libNameDebug} PROPERTIES
+                IMPORTED_LOCATION ${libPath}
+            )
+            set(${libStatic}Static ${${libStatic}Static} $<$<CONFIG:Debug>:${libNameDebug}>)
+            set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
+        endforeach()
+
+        # RELEASE
+        foreach(libPath ${${libStatic}StaticReleasePath})
+            #get name of library
+            get_filename_component(libNameRelease ${libPath} NAME_WE)
+            set(libNameRelease ${libNameRelease}Release)
+
+            #create library using that name
+            #insert into list of libraries under this name
+            add_library(${libNameRelease} STATIC IMPORTED GLOBAL) 
+            set_target_properties(${libNameRelease} PROPERTIES
+                IMPORTED_LOCATION ${libPath}
+            )
+            set(${libStatic}Static ${${libStatic}Static} $<$<CONFIG:Release>:${libNameRelease}>)
+            set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
+        endforeach()
+    else()
+        message("THE PATH: ${${libStatic}Path}/${platform}/${bit}/*.lib")
+        message("${${libStatic}StaticPath}")
+        message(FATAL_ERROR "Unable to find any static libraries in the '${libStatic}/lib' folder in the External folder.\
+         \nCheck specified path in the CMakeLists.txt file in the 'External' folder of ZeroCore.")
+    endif()
+endforeach()
+
+foreach(libShared ${SharedExternals})
+    # get list of shared libraries
+    file(GLOB ${libShared}SharedPath ${${libShared}Path}/bin/*.dll)
+
+    # add the path to parent scope since we are gonna have to move them to executable directory
+    set(${libShared}SharedPath ${${libShared}SharedPath} PARENT_SCOPE)
+
+    # make sure we actually found anything
+    if ("${${libShared}SharedPath}" STRGREATER "")
+
+        set(${libShared}Shared)
+
+        foreach(libPath ${${libShared}SharedPath})
+            get_filename_component(libName ${libPath} NAME_WE)
+
+            set(libName ${libName}Shared)
+
+            add_library(${libName} SHARED IMPORTED GLOBAL)
+
+            set_target_properties(
+                ${libName} PROPERTIES
+                IMPORTED_LOCATION ${libPath}
+            )
+
+            # set the libraries that can be added by targets
+            set(${libShared}Shared ${libShared}Shared ${libName})
+            set(${libShared}Shared ${libShared}Shared PARENT_SCOPE)
+
+        endforeach()
+
+    else()
+        message("DLL PATH: ${${libShared}Path}/bin/*.dll")
+        message("${${libShared}SharedPath}")
+        message(FATAL_ERROR "Unable to find any shared libraries in the '${libShared}/bin' folder in the External folder.\
+        \n Check specified path in the CMakeLists.txt file in the 'External' folder of ZeroCore.")
+    endif()
+endforeach()
+
+if (${platform} STREQUAL Windows)
+    # set any platform libraries here
+    set(PlatformSoundLibrary avrt.lib PARENT_SCOPE)
+endif()

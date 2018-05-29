@@ -1,0 +1,118 @@
+################################################################################
+# Generated using Joshua T. Fisher's 'CMake Builder'.
+# Link: https://github.com/playmer/CmakeBuilder 
+################################################################################
+include(${CMAKE_CURRENT_LIST_DIR}/Generated.cmake)
+
+# these will have the wrong target
+#include(${CMAKE_CURRENT_LIST_DIR}/Property/Generated.cmake)
+#include(${CMAKE_CURRENT_LIST_DIR}/Scintilla/Generated.cmake)
+target_sources(Editor
+  PRIVATE
+  ${CMAKE_CURRENT_LIST_DIR}/Property/BasicPropertyEditors.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/EnginePropertyEditors.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/GraphView.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/PropertyView.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/PropertyWidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/PropertyWidgetObject.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/PropertyWidgets.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/TileView.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/TreeView.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/VariantEditor.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/BasicPropertyEditors.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/DataBaseTemplate.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/GraphView.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/Precompiled.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/PropertyView.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/PropertyWidget.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/PropertyWidgetObject.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/PropertyWidgets.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/TileView.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/TreeView.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Property/VariantEditor.hpp
+
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/ScintillaPlatformZero.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexers/LexCPP.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexers/LexPython.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/Accessor.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/CharacterSet.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexerBase.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexerModule.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexerNoExceptions.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexerSimple.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/PropSetSimple.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/StyleContext.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/WordList.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/AutoComplete.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/CallTip.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Catalogue.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/CellBuffer.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/CharClassify.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ContractionState.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Decoration.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ExternalLexer.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Indicator.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/KeyMap.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/LineMarker.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/PerLine.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/PositionCache.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/RESearch.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/RunStyles.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ScintillaBase.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ScintillaDocument.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ScintillaEditor.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Selection.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Style.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/UniConversion.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ViewStyle.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/XPM.cxx
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/ScintillaPlatformZero.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/ScintillaPrecompiled.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/include/ILexer.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/include/Platform.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/include/SciLexer.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/include/Scintilla.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/include/ScintillaWidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexers/Precompiled.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/Accessor.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/CharacterSet.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexAccessor.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexerBase.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexerModule.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexerNoExceptions.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/LexerSimple.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/OptionSet.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/Precompiled.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/PropSetSimple.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/SparseState.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/StyleContext.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/lexlib/WordList.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/AutoComplete.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/CallTip.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Catalogue.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/CellBuffer.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/CharClassify.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ContractionState.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Decoration.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ExternalLexer.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/FontQuality.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Indicator.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/KeyMap.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/LineMarker.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Partitioning.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/PerLine.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/PositionCache.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Precompiled.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/RESearch.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/RunStyles.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ScintillaBase.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ScintillaDocument.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ScintillaEditor.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Selection.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/SplitVector.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/Style.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/SVector.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/UniConversion.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/ViewStyle.h
+  ${CMAKE_CURRENT_LIST_DIR}/Scintilla/src/XPM.h
+)

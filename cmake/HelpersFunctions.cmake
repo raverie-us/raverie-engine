@@ -1,5 +1,3 @@
-# Most of these helper "functions" are macros because I don't know how to return values from a function
-
 # Iterates through a directory and gets all subdirectory names
 macro(BuildSubDirectoryList result curdir)
   FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
