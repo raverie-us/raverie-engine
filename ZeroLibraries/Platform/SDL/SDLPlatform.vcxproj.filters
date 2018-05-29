@@ -14,6 +14,8 @@
     <ClCompile Include="File.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="ExternalLibrary.cpp" />
+    <ClCompile Include="Peripherals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">

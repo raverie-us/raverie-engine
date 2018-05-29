@@ -63,6 +63,8 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ExternalLibrary.cpp" />
+    <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ThreadSync.cpp" />

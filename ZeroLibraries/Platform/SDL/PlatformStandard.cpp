@@ -12,22 +12,42 @@
 namespace Zero
 {
 
+SDL_GameController* cSDLGamePads[cMaxGamepads];
+SDL_Haptic* cSDLHapticDevices[cMaxGamepads];
+
 //**************************************************************************************************
 void PlatformLibrary::Initialize()
 {
-  // Initialize platform socket library
-  Zero::Status socketLibraryInitStatus;
-  Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
-  Assert(Zero::Socket::IsSocketLibraryInitialized());
+  // Initialize all connected gamepads for use
+  for (int i = 0; i < cMaxGamepads; ++i)
+    cSDLGamePads[i] = nullptr;
+
+  int activeGamepads = Math::Clamp(SDL_NumJoysticks(), 0, (int)cMaxGamepads);
+  for (int i = 0; i < activeGamepads; ++i)
+  {
+    // Open all currently connected game controllers
+    cSDLGamePads[i] = SDL_GameControllerOpen(i);
+  }
+
+  // Attempt to initialize all haptic feedback devices on the gamepads
+  for (int i = 0; i < cMaxGamepads; ++i)
+    cSDLHapticDevices[i] = nullptr;
+  
+  for (int i = 0; i < cMaxGamepads; ++i)
+  {
+    SDL_GameController* gamepad = cSDLGamePads[i];
+    if (gamepad)
+    {
+      SDL_Joystick* joystick = SDL_GameControllerGetJoystick(gamepad);
+      cSDLHapticDevices[i] = SDL_HapticOpenFromJoystick(joystick);
+    }
+  }
 }
 
 //**************************************************************************************************
 void PlatformLibrary::Shutdown()
 {
-  // Uninitialize platform socket library
-  Zero::Status socketLibraryUninitStatus;
-  Zero::Socket::UninitializeSocketLibrary(socketLibraryUninitStatus);
-  //Assert(!Zero::Socket::IsSocketLibraryInitialized());
+
 }
 
 }//namespace Zero
