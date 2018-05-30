@@ -51,7 +51,7 @@ namespace Audio
     bool Read(T& result)
     {
       // Check if there is anything on the queue
-      if (!Zero::AtomicCompareExchangeBool((void**)&First, (void*)Last, (void*)Last))
+      if (!Zero::AtomicCompareExchange((void**)&First, (void*)Last, (void*)Last))
       {
         // Store the pointers
         Node* firstNode = First;

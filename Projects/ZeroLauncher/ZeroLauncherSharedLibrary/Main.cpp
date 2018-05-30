@@ -82,7 +82,7 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   // Check and see if another launcher is already open (has to happen after startup)
   Status status;
   String mutexId = BuildString("ZeroLauncherMutex:{", GetLauncherGuidString(), "}");
-  Mutex mutex;
+  InterprocessMutex mutex;
   mutex.Initialize(status, mutexId.c_str(), true);
   if(status.Failed())
   {

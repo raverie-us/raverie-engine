@@ -227,15 +227,14 @@
     <ClCompile Include="Platform\Intrinsics.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\Atomic.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\Web.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="Platform\Renderer.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\ForEachRange.cpp" />
+    <ClCompile Include="Utility\NativeType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">
@@ -408,9 +407,6 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Utility\IdSequence.hpp">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\UintN.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Utility\ItemCache.hpp">
@@ -734,6 +730,7 @@
     <ClInclude Include="Platform\Audio.hpp">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\UintNType.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="ZeroVisualizers.natvis" />

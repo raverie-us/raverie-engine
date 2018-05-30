@@ -16,6 +16,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="Peripherals.cpp" />
+    <ClCompile Include="Atomic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">

@@ -85,6 +85,55 @@ long    __cdecl _InterlockedDecrement  (long volatile*    target);
 namespace Zero
 {
 
+// AtomicStore
+void AtomicStore(volatile s8*  target, s8  value)
+{
+  AtomicExchange(target, value);
+}
+void AtomicStore(volatile s16* target, s16 value)
+{
+  AtomicExchange(target, value);
+}
+void AtomicStore(volatile s32* target, s32 value)
+{
+  AtomicExchange(target, value);
+}
+void AtomicStore(volatile s64* target, s64 value)
+{
+  AtomicExchange(target, value);
+}
+void AtomicStore(void* volatile* target, void* value)
+{
+  AtomicExchange(target, value);
+}
+
+// AtomicLoad
+s8 AtomicLoad(volatile s8*  target)
+{
+  AtomicCompareExchange(target, s8(0), s8(0));
+  return *target;
+}
+s16 AtomicLoad(volatile s16* target)
+{
+  AtomicCompareExchange(target, s16(0), s16(0));
+  return *target;
+}
+s32 AtomicLoad(volatile s32* target)
+{
+  AtomicCompareExchange(target, s32(0), s32(0));
+  return *target;
+}
+s64 AtomicLoad(volatile s64* target)
+{
+  AtomicCompareExchange(target, s64(0), s64(0));
+  return *target;
+}
+void* AtomicLoad(void* volatile* target)
+{
+  AtomicCompareExchange(target, nullptr, nullptr);
+  return *target;
+}
+
 // AtomicExchange
 s8  AtomicExchange(volatile s8*  target, s8  value)
 {
@@ -108,45 +157,23 @@ void* AtomicExchange(void* volatile* target, void* value)
 }
 
 // AtomicCompareExchange
-s8  AtomicCompareExchange(volatile s8*  target, s8  value, s8  comparison)
-{
-  return (s8)::_InterlockedCompareExchange8((char volatile*)target, (char)value, (char)comparison);
-}
-s16 AtomicCompareExchange(volatile s16* target, s16 value, s16 comparison)
-{
-  return (s16)::_InterlockedCompareExchange16((short volatile*)target, (short)value, (short)comparison);
-}
-s32 AtomicCompareExchange(volatile s32* target, s32 value, s32 comparison)
-{
-  return (s32)::_InterlockedCompareExchange((long volatile*)target, (long)value, (long)comparison);
-}
-s64 AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison)
-{
-  return (s64)::_InterlockedCompareExchange64((__int64 volatile*)target, (__int64)value, (__int64)comparison);
-}
-void* AtomicCompareExchange(void* volatile* target, void* value, void* comparison)
-{
-  return _InterlockedCompareExchangePointer(target, value, comparison);
-}
-
-// AtomicCompareExchangeBool
-bool AtomicCompareExchangeBool(volatile s8*  target, s8  value, s8  comparison)
+bool AtomicCompareExchange(volatile s8*  target, s8  value, s8  comparison)
 {
   return (s8)::_InterlockedCompareExchange8((char volatile*)target, (char)value, (char)comparison) == comparison;
 }
-bool AtomicCompareExchangeBool(volatile s16* target, s16 value, s16 comparison)
+bool AtomicCompareExchange(volatile s16* target, s16 value, s16 comparison)
 {
   return (s16)::_InterlockedCompareExchange16((short volatile*)target, (short)value, (short)comparison) == comparison;
 }
-bool AtomicCompareExchangeBool(volatile s32* target, s32 value, s32 comparison)
+bool AtomicCompareExchange(volatile s32* target, s32 value, s32 comparison)
 {
   return (s32)::_InterlockedCompareExchange((long volatile*)target, (long)value, (long)comparison) == comparison;
 }
-bool AtomicCompareExchangeBool(volatile s64* target, s64 value, s64 comparison)
+bool AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison)
 {
   return (s64)::_InterlockedCompareExchange64((__int64 volatile*)target, (__int64)value, (__int64)comparison) == comparison;
 }
-bool AtomicCompareExchangeBool(void* volatile* target, void* value, void* comparison)
+bool AtomicCompareExchange(void* volatile* target, void* value, void* comparison)
 {
   return _InterlockedCompareExchangePointer(target, value, comparison) == comparison;
 }

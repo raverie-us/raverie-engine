@@ -63,6 +63,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
