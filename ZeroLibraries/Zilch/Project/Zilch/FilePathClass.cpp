@@ -235,7 +235,7 @@ namespace Zilch
 
     // If the current file system is case insensative, then technically "Player.png" should compare the same as "player.PNG"
     // To make strings properly comparable, we make them all lowercase
-    if (Zero::cFileSystemCaseInsensitive)
+    if (!Zero::cFileSystemCaseSensitive)
       comparablePath = comparablePath.ToLower();
     return comparablePath;
   }

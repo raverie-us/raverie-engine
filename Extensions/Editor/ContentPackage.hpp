@@ -18,7 +18,7 @@ struct ContentPackageEntry
   // Name of the content file
   String File;
   // Size of the content item
-  uint Size;
+  u64 Size;
   bool Conflicted;
 };
 

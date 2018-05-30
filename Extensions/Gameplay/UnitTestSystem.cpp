@@ -682,7 +682,7 @@ void UnitTestSystem::EnumerateFiles(StringParam directory, StringParam relativeP
     String relativePath = FilePath::Combine(relativeParentPath, fileName);
     String fullPath = FilePath::Combine(directory, fileName);
 
-    if (IsDirectory(fullPath))
+    if (DirectoryExists(fullPath))
       EnumerateFiles(fullPath, relativePath, relativePaths);
     else
       relativePaths->Insert(relativePath);

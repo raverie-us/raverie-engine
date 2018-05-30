@@ -145,7 +145,7 @@ void Archive::ArchiveDirectory(Status& status, StringParam path, StringParam par
     if(filterResult == FilterResult::Ignore)
       continue;
 
-    if(IsDirectory(fullPath))
+    if(DirectoryExists(fullPath))
     {
       ArchiveDirectory(status, FilePath::Combine(path, localPath), relativePath, filter);
     }

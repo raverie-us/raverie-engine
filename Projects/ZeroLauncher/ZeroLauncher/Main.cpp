@@ -39,8 +39,8 @@ Zero::String GetLauncherDownloadedPath()
   FileRange range(searchLocation);
   for(; !range.Empty(); range.PopFront())
   {
-    FileEntry entry = range.frontEntry();
-    if(!IsDirectory(entry.GetFullPath()))
+    FileEntry entry = range.FrontEntry();
+    if(!DirectoryExists(entry.GetFullPath()))
       continue;
 
     int id = -1;

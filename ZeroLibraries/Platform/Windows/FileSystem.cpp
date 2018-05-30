@@ -9,18 +9,8 @@
 namespace Zero
 {
 const Rune  cDirectorySeparatorRune = Rune('\\');
-const char* cDirectorySeparatorCstr = "\\";
-bool cFileSystemCaseInsensitive = true;
-
-void InitFileSystem()
-{
-
-}
-
-void ShutdownFileSystem()
-{
-
-}
+const char cDirectorySeparatorCstr[] = "\\";
+bool cFileSystemCaseSensitive = false;
 
 String GetWorkingDirectory()
 {
@@ -98,7 +88,7 @@ String GetTemporaryDirectory()
 bool FileExists(StringParam filePath)
 {
   DWORD attributes = GetFileAttributes(Widen(filePath).c_str());
-  return (attributes!=INVALID_FILE_ATTRIBUTES);
+  return (attributes!=INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_DIRECTORY) == 0;
 }
 
 bool FileWritable(StringParam filePath)
@@ -113,13 +103,7 @@ bool FileWritable(StringParam filePath)
 bool DirectoryExists(StringParam filePath)
 {
   DWORD attributes = GetFileAttributes(Widen(filePath).c_str());
-  return (attributes != INVALID_FILE_ATTRIBUTES);
-}
-
-bool IsDirectory(StringParam filePath)
-{
-  DWORD attributes = GetFileAttributes(Widen(filePath).c_str());
-  return (attributes & FILE_ATTRIBUTE_DIRECTORY)!=0;
+  return (attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
 String CanonicalizePath(StringParam directoryPath)
@@ -174,23 +158,6 @@ void CreateDirectoryAndParents(StringParam directory)
   //directories no longer have a trailing '/' so we have to
   //explicitly create the final directory
   CreateDirectory(directory);
-}
-
-String FindFirstMissingDirectory(StringParam directory)
-{
-  // Keep iterating over the parent directories until we find one that does exist.
-  // When we do return the previous path as this was the first one to not exist.
-  String subPath = directory;
-  do
-  {
-    String sourceDirPath = FilePath::GetDirectoryPath(subPath);
-    if(DirectoryExists(sourceDirPath))
-      return subPath;
-    subPath = sourceDirPath;
-  } while(!subPath.Empty());
-
-  // Otherwise all of the parent directories don't exist so return an empty string
-  return subPath;
 }
 
 bool CopyFileInternal(StringParam dest, StringParam source)
@@ -258,7 +225,7 @@ TimeType GetFileModifiedTime(StringParam filename)
   return SystemTimeToTimeType(modifiedSystemTime);
 }
 
-int SetFileToCurrentTime(StringParam filename)
+bool SetFileToCurrentTime(StringParam filename)
 {
   // Need a file handle to do file time operations
   StackHandle sourceFile;
@@ -283,63 +250,17 @@ int SetFileToCurrentTime(StringParam filename)
 
   VerifyWin(result, "Failed to set file time.");
 
-  return result;
+  return result != 0;
 }
 
-u32 GetFileSize(StringParam fileName)
+u64 GetFileSize(StringParam fileName)
 {
   WIN32_FILE_ATTRIBUTE_DATA fileInfo;
   BOOL success = GetFileAttributesEx(Widen(fileName).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
   CheckWin(success, "Failed to get GetFileAttributesEx.");
   if(!success)
     return 0;
-  return (u32)fileInfo.nFileSizeLow;
-}
-
-int CheckFileTime(StringParam dest, StringParam source)
-{
-  // Source should always exist
-  WIN32_FILE_ATTRIBUTE_DATA sourceInfo;
-  BOOL success = GetFileAttributesEx(Widen(source).c_str(), GetFileExInfoStandard, (void*)&sourceInfo);
-  // If their was some error still return dest is older
-  if(!success) return -1;
-
-  WIN32_FILE_ATTRIBUTE_DATA destInfo;
-  success = GetFileAttributesEx(Widen(dest).c_str(), GetFileExInfoStandard, (void*)&destInfo);
-  // If dest does not exist it is older
-  if(!success) return -1;
-
-  // Do file time comparison
-  int result = CompareFileTime(&destInfo.ftLastWriteTime, &sourceInfo.ftLastWriteTime);
-
-  return result;
-}
-
-bool GetFileDateTime(StringParam filePath, CalendarDateTime& result)
-{
-  if(!FileExists(filePath))
-    return false;
-
-  //get the file time
-  WIN32_FILE_ATTRIBUTE_DATA sourceInfo;
-  BOOL success = GetFileAttributesEx(Widen(filePath).c_str(), GetFileExInfoStandard, (void*)&sourceInfo);
-
-  //convert that to the system time (which has the year, months, day, etc...)
-  SYSTEMTIME systemTime;
-  FileTimeToSystemTime(&sourceInfo.ftLastWriteTime, &systemTime);
-
-  //gotta convert to the local time zone (should really convert to pacific time, but it's too much work)
-  SYSTEMTIME localSystemTime;
-  SystemTimeToTzSpecificLocalTime(NULL, &systemTime, &localSystemTime);
-
-  result.Year = localSystemTime.wYear;
-  result.Month = localSystemTime.wMonth;
-  result.Day = localSystemTime.wDay;
-  result.Hour = localSystemTime.wHour;
-  result.Minutes = localSystemTime.wMinute;
-  result.Seconds = localSystemTime.wSecond;
-  
-  return true;
+  return ((u64)fileInfo.nFileSizeHigh * ((u64)MAXDWORD + (u64)1)) + (u64)fileInfo.nFileSizeLow;
 }
 
 struct FileRangePrivateData
@@ -348,7 +269,6 @@ struct FileRangePrivateData
   HANDLE mHandle;
   WIN32_FIND_DATA mFindData;
 };
-
 
 FileRange::FileRange(StringParam filePath)
 {
@@ -412,7 +332,7 @@ String FileRange::Front()
   return Narrow(self->mFindData.cFileName);
 }
 
-FileEntry FileRange::frontEntry()
+FileEntry FileRange::FrontEntry()
 {
   ZeroGetPrivateData(FileRangePrivateData);
 

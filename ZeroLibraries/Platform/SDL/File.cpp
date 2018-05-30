@@ -5,8 +5,6 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/File.hpp"
-#include "SDL_rwops.h"
 
 namespace Zero
 {
@@ -230,7 +228,7 @@ void File::Duplicate(Status& status, File& destinationFile)
   // Get this files data size in bytes
   size_t fileSizeInBytes = (size_t)SDL_RWsize(self->mFileData);
   byte* buffer = new byte[fileSizeInBytes];
-  
+
   // Read this files data
   Read(status, buffer, fileSizeInBytes);
   if (status.Failed())
@@ -243,11 +241,6 @@ void File::Duplicate(Status& status, File& destinationFile)
   size_t ret = destinationFile.Write(buffer, fileSizeInBytes);
   delete buffer;
   WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
-}
-
-void File::Duplicate(Status& status, File& destinationFile) const
-{
-  Error("For SLD to support const we need a const version of File.Read()");
 }
 
 }//namespace Zero

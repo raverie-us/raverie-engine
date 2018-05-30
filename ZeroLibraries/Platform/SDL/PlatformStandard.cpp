@@ -12,22 +12,20 @@
 namespace Zero
 {
 
+SDL_Cursor* gSDLCursors[SDL_NUM_SYSTEM_CURSORS] = { 0 };
+
 //**************************************************************************************************
 void PlatformLibrary::Initialize()
 {
-  // Initialize platform socket library
-  Zero::Status socketLibraryInitStatus;
-  Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
-  Assert(Zero::Socket::IsSocketLibraryInitialized());
+  for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
+    gSDLCursors[i] = SDL_CreateSystemCursor((SDL_SystemCursor)i);
 }
 
 //**************************************************************************************************
 void PlatformLibrary::Shutdown()
 {
-  // Uninitialize platform socket library
-  Zero::Status socketLibraryUninitStatus;
-  Zero::Socket::UninitializeSocketLibrary(socketLibraryUninitStatus);
-  //Assert(!Zero::Socket::IsSocketLibraryInitialized());
+  for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
+    SDL_FreeCursor(gSDLCursors[i]);
 }
 
 }//namespace Zero

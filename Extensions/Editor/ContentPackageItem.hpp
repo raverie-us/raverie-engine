@@ -49,7 +49,7 @@ public:
   String mTags;
 
   /// Size in bytes.
-  uint mSize;
+  u64 mSize;
 
   /// Which version the package was built in (not the required version).
   uint mVersionBuilt;

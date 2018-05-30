@@ -8,8 +8,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "SDL_thread.h"
-#include "SDL_mutex.h"
 
 namespace Zero
 {

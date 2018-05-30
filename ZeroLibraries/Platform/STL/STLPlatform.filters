@@ -14,15 +14,10 @@
     <ClCompile Include="File.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Shell.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">
       <Filter>Precompiled</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Keys.inl" />
-    <None Include="MouseButtons.inl" />
   </ItemGroup>
 </Project>

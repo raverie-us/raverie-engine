@@ -1466,6 +1466,7 @@ ShellWindow::ShellWindow(
   mProgress(0),
   mClientSize(clientSize),
   mClientMousePosition(IntVec2(-1, -1)),
+  mCapture(false),
   mUserData(nullptr),
   mOnClose(nullptr),
   mOnFocusChanged(nullptr),
@@ -1576,7 +1577,7 @@ void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
 
   SetWindowPos((HWND)mHandle, 0, rect.left, rect.top, RectWidth(rect), RectHeight(rect), SWP_NOZORDER | SWP_NOCOPYBITS);
 
-  mClientSize = IntVec2(rect.right - rect.left, rect.bottom - rect.top);
+  mClientSize = monitorRectangle.Size();
 }
 
 IntRect ShellWindow::GetMonitorBorderedRectangle()
@@ -1803,6 +1804,8 @@ void ShellWindow::SetMouseCapture(bool capture)
     ::SetCapture((HWND)mHandle);
   else
     ::ReleaseCapture();
+
+  mCapture = capture;
 }
 
 bool ShellWindow::GetMouseCapture()

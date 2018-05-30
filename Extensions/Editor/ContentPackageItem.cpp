@@ -63,7 +63,7 @@ void ContentPackage::Serialize(Serializer& stream)
   SerializeNameDefault(mDate, String());
   SerializeNameDefault(mDescription, String());
   SerializeNameDefault(mTags, String());
-  SerializeNameDefault(mSize, (uint)0);
+  SerializeNameDefault(mSize, (u64)0);
   SerializeNameDefault(mVersionBuilt, (uint)9147);
 }
 
