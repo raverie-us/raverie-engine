@@ -306,8 +306,8 @@ void AutoCompletePopUp::ShowToolTip()
 
   tooltip->SetSize(size);
 
-  Resource* resource = completion->AssociatedResource;
-  AppendResourcePreviewToToolTip(tooltip, resource, borderThickness.Top);
+  if (Resource* resource = Z::gResources->GetResource(completion->AssociatedResourceId))
+    AppendResourcePreviewToToolTip(tooltip, resource, borderThickness.Top);
 
   mLastCompletion = completion;
 }
