@@ -19,41 +19,49 @@ struct TimerPrivateData
 Timer::Timer()
 {
   Error("Not implemented");
-  ZeroConstructPrivateData(TimerPrivateData);
 }
 
 Timer::~Timer()
 {
-  ZeroGetPrivateData(TimerPrivateData);
-  // Destruction logic
-  ZeroDestructPrivateData(TimerPrivateData);
+  Error("Not implemented");
+}
+
+Timer::Timer(const Timer& rhs)
+{
+  Error("Not implemented");
+}
+
+Timer& Timer::operator=(const Timer& rhs)
+{
+  Error("Not implemented");
+  return *this;
 }
 
 void Timer::Reset()
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  Error("Not implemented");
 }
 
 void Timer::Update()
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  Error("Not implemented");
 }
 
 double Timer::Time() const
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  Error("Not implemented");
   return 0.0;
 }
 
 double Timer::TimeDelta() const
 {
-  ZeroGetPrivateData(TimerPrivateData);
-  return 1.0 / 60.0;
+  Error("Not implemented");
+  return 0.0;
 }
 
 double Timer::UpdateAndGetTime()
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  Error("Not implemented");
   return 0.0;
 }
 
@@ -74,19 +82,19 @@ TimeMs Timer::UpdateAndGetTimeMilliseconds()
 
 double Timer::TimeNoUpdate() const
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  Error("Not implemented");
   return 0.0;
 }
 
 Timer::TickType Timer::GetTickTime() const
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  Error("Not implemented");
   return 0;
 }
 
 double Timer::TicksToSeconds(TickType ticks) const
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  Error("Not implemented");
   return 0.0;
 }
 

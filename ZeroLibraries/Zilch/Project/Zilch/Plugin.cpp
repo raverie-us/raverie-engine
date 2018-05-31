@@ -177,7 +177,7 @@ namespace Zilch
     while (range.Empty() == false)
     {
       // If this file has the .zilchPlugin extension
-      Zero::FileEntry fileEntry = range.frontEntry();
+      Zero::FileEntry fileEntry = range.FrontEntry();
       String filePath = fileEntry.GetFullPath();
       if (Zero::FilePath::GetExtension(fileEntry.mFileName) == PluginExtension)
       {

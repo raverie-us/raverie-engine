@@ -217,6 +217,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="CommonStandard.cpp" />
     <ClCompile Include="Containers\BitStream.cpp" />
     <ClCompile Include="Containers\ByteBuffer.cpp" />

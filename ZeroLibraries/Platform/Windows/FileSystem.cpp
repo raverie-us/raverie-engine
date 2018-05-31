@@ -412,7 +412,7 @@ String FileRange::Front()
   return Narrow(self->mFindData.cFileName);
 }
 
-FileEntry FileRange::frontEntry()
+FileEntry FileRange::FrontEntry()
 {
   ZeroGetPrivateData(FileRangePrivateData);
 

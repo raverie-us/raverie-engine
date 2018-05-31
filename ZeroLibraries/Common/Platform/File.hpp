@@ -103,7 +103,6 @@ public:
   /// Duplicates this file into the destination file. Assumes that this file handle is valid.
   /// Also assumes both files were created in this application's process.
   void Duplicate(Status& status, File& destinationFile);
-  void Duplicate(Status& status, File& destinationFile) const;
 private:
   ZeroDeclarePrivateData(File, 50);
 

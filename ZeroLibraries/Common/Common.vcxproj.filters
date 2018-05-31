@@ -235,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="Utility\ForEachRange.cpp" />
     <ClCompile Include="Utility\NativeType.cpp" />
+    <ClCompile Include="CommandLineSupport.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">

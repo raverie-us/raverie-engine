@@ -98,7 +98,7 @@ void FindFilesRecursively(StringParam path, Array<String>& foundFiles)
   FileRange fileRange(path);
   for(; !fileRange.Empty(); fileRange.PopFront())
   {
-    FileEntry entry = fileRange.frontEntry();
+    FileEntry entry = fileRange.FrontEntry();
     String filePath = entry.GetFullPath();
     FindFilesRecursively(filePath, foundFiles);
   }
@@ -118,7 +118,7 @@ void FindFilesRecursively(StringParam path, Array<String>& foundFiles, FileFilte
   FileRange fileRange(path);
   for(; !fileRange.Empty(); fileRange.PopFront())
   {
-    FileEntry entry = fileRange.frontEntry();
+    FileEntry entry = fileRange.FrontEntry();
     String filePath = entry.GetFullPath();
     FindFilesRecursively(filePath, foundFiles, filter);
   }
@@ -221,7 +221,7 @@ u64 ComputeFolderSizeRecursive(StringParam folder)
   FileRange range(folder);
   for(; !range.Empty(); range.PopFront())
   {
-    FileEntry entry = range.frontEntry();
+    FileEntry entry = range.FrontEntry();
     String filePath = FilePath::Combine(entry.mPath, entry.mFileName);
     // If this is a directory then recurse
     if(IsDirectory(filePath))
