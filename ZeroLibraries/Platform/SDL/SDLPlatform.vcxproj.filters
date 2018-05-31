@@ -18,6 +18,7 @@
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="Audio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">
