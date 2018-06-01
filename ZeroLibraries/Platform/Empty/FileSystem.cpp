@@ -13,18 +13,8 @@ namespace Zero
 {
 //----------------------------------------------------------- File System Functions
 const Rune  cDirectorySeparatorRune = Rune('/');
-const char* cDirectorySeparatorCstr = "/";
+const char cDirectorySeparatorCstr[] = "/";
 bool cFileSystemCaseInsensitive = false;
-
-void InitFileSystem()
-{
-  Error("Not implemented");
-}
-
-void ShutdownFileSystem()
-{
-  Error("Not implemented");
-}
 
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
@@ -78,10 +68,10 @@ int CheckFileTime(StringParam dest, StringParam source)
   return 0;
 }
 
-int SetFileToCurrentTime(StringParam filename)
+bool SetFileToCurrentTime(StringParam filename)
 {
   Error("Not implemented");
-  return 0;
+  return false;
 }
 
 TimeType GetFileModifiedTime(StringParam filename)
@@ -90,7 +80,7 @@ TimeType GetFileModifiedTime(StringParam filename)
   return 0;
 }
 
-u32 GetFileSize(StringParam fileName)
+u64 GetFileSize(StringParam fileName)
 {
   Error("Not implemented");
   return 0;
