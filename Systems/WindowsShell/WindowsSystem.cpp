@@ -1081,17 +1081,17 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
     // Mouse has moved on the window
     case WM_MOUSEMOVE:
     {
-      IntVec2 screen = PositionFromLParam(lParam);
+      IntVec2 clientPos = PositionFromLParam(lParam);
       
       // WM_MOUSEMOVE can be sent as a side effect of many other windows messages and 
       // OS operations even if the mouse has not moved. Check against the previous position
       // and only process the event if the mouse has moved since the last time this
       // message was recieved
-      if (mPreviousMousePosition == screen)
+      if (mPreviousMousePosition == clientPos)
         return MessageHandled;
 
       OsMouseEvent mouseEvent;
-      FillMouseEventData(screen, MouseButtons::None, mouseEvent);
+      FillMouseEventData(clientPos, MouseButtons::None, mouseEvent);
 
       // If the mouse is trapped, move it back to the trap position.
       // Or, mark that it's already there.
@@ -1106,7 +1106,8 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
 
         // Set the mouse position to the trap position if it isn't already there.
         IntVec2 mouseTrapPointScreen = GetMouseTrapScreenPosition();
-        if(screen.x != mouseTrapPointScreen.x || screen.y != mouseTrapPointScreen.y)
+        IntVec2 screenPos = ClientToScreen(clientPos);
+        if(screenPos.x != mouseTrapPointScreen.x || screenPos.y != mouseTrapPointScreen.y)
         {
           // The call to '::ClipCursor' above sets an internal state to ensure
           // the mouse's position stays inside the client area.  Even if the
