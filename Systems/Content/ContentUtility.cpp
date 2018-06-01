@@ -72,8 +72,8 @@ bool CheckToolFile(BuildOptions& options, StringParam outputFile, StringParam to
 
 bool FileSizeDiffers(cstr destination, cstr source)
 {
-  u32 sizeA = GetFileSize(destination);
-  u32 sizeB = GetFileSize(source);
+  u64 sizeA = GetFileSize(destination);
+  u64 sizeB = GetFileSize(source);
   return sizeA != sizeB;
 }
 

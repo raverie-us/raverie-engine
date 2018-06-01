@@ -17,6 +17,8 @@ using Math::IntVec2;
 /// Integer rectangle where the origin is the top left.
 struct IntRect
 {
+  IntRect() {}
+  IntRect(int x, int y, int sx, int sy) : X(x), Y(y), SizeX(sx), SizeY(sy) {}
   IntVec2 TopLeft() const {return IntVec2(X, Y);}
   IntVec2 Size() const {return IntVec2(SizeX, SizeY); }
   int Left() const {return X;}

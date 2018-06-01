@@ -101,7 +101,7 @@ void VersionSelector::FindInstalledVersions(StringParam searchPath)
     FileEntry entry = range.FrontEntry();
     String fullDirName = entry.GetFullPath();
     // We only care about folders
-    if(IsDirectory(fullDirName))
+    if(DirectoryExists(fullDirName))
     {
       // Add checksum logic to validate installs here?
 
@@ -521,7 +521,7 @@ void VersionSelector::FindDownloadedTemplatesRecursive(StringParam searchPath)
   {
     FileEntry entry = range.FrontEntry();
     String fullDirName = entry.GetFullPath();
-    if(IsDirectory(fullDirName))
+    if(DirectoryExists(fullDirName))
       FindDownloadedTemplatesRecursive(fullDirName);
     else
     {

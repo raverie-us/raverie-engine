@@ -461,12 +461,6 @@ void WebRequest(
 }
 
 cwstr windowsVerbNames[] = {NULL, L"open", L"edit", L"run"};
-void SystemOpenFile(cstr file, uint verb, cstr parameters,
-  cstr workingDirectory)
-{
-  Status status;
-  SystemOpenFile(status, file, verb, parameters, workingDirectory);
-}
 
 bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
@@ -482,12 +476,6 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
   status.SetFailed(message, errorCode);
 
   return false;
-}
-
-void SystemOpenNetworkFile(cstr file, uint verb, cstr parameters, cstr workingDirectory)
-{
-  Status status;
-  SystemOpenNetworkFile(status, file, verb, parameters, workingDirectory);
 }
 
 bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)

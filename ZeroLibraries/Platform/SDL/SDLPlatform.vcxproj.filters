@@ -14,15 +14,42 @@
     <ClCompile Include="File.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Timer.cpp" />
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{0c2cbabe-7802-4beb-80c2-0184760d09bb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadSync.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="PlatformStandard.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="Atomic.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
+    <ClCompile Include="OpenglRendererSDL.cpp" />
     <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="FpControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">
       <Filter>Precompiled</Filter>
     </ClInclude>
+    <ClInclude Include="..\OpenGL\OpenglRenderer.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Keys.inl" />
+    <None Include="MouseButtons.inl" />
   </ItemGroup>
 </Project>

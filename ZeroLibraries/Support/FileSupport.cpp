@@ -41,7 +41,7 @@ void MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter
     if(filterResult == FilterResult::Ignore)
       continue;
 
-    if(IsDirectory(sourceFile))
+    if(DirectoryExists(sourceFile))
     {
       CreateDirectory(dest);
 
@@ -74,7 +74,7 @@ void CopyFolderContents(StringParam dest, StringParam source, FileFilter* filter
     if(filterResult == FilterResult::Ignore)
       continue;
 
-    if(IsDirectory(sourceFile))
+    if(DirectoryExists(sourceFile))
     {
       CopyFolderContents(destFile, sourceFile, filter);
     }
@@ -88,7 +88,7 @@ void CopyFolderContents(StringParam dest, StringParam source, FileFilter* filter
 void FindFilesRecursively(StringParam path, Array<String>& foundFiles)
 {
   // If this is a file then just add this to the results and return
-  if(!IsDirectory(path))
+  if(!DirectoryExists(path))
   {
     foundFiles.PushBack(path);
     return;
@@ -107,7 +107,7 @@ void FindFilesRecursively(StringParam path, Array<String>& foundFiles)
 void FindFilesRecursively(StringParam path, Array<String>& foundFiles, FileFilter* filter)
 {
   // If this is a file then just add this to the results and return
-  if(!IsDirectory(path))
+  if(!DirectoryExists(path))
   {
     if(filter->Filter(path) == FilterResult::Include)
       foundFiles.PushBack(path);
@@ -224,7 +224,7 @@ u64 ComputeFolderSizeRecursive(StringParam folder)
     FileEntry entry = range.FrontEntry();
     String filePath = FilePath::Combine(entry.mPath, entry.mFileName);
     // If this is a directory then recurse
-    if(IsDirectory(filePath))
+    if(DirectoryExists(filePath))
       totalSize += ComputeFolderSizeRecursive(filePath);
     else
       totalSize += entry.mSize;

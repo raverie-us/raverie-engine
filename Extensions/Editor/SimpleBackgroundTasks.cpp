@@ -40,7 +40,7 @@ void DirectorySizeJob::ComputeSizeRecursive(StringParam dir)
     FileEntry entry = range.FrontEntry();
     String filePath = FilePath::Combine(entry.mPath, entry.mFileName);
     // If this is a directory then recurse
-    if(IsDirectory(filePath))
+    if(DirectoryExists(filePath))
       ComputeSizeRecursive(filePath);
     else
       mCurrentSize += entry.mSize;

@@ -15,20 +15,6 @@ namespace Zero
 // Is threading enabled on this platform?
 ZeroShared extern const bool ThreadingEnabled;
 
-/// Thread config for setting platform specific options
-class ZeroShared ThreadConfig
-{
-public:
-  ThreadConfig();
-  ~ThreadConfig();
-
-  void SetParameter(StringParam name, void* value);
-  void* GetParameter(StringParam name);
-
-private:
-  HashMap<String,void*> mConfigValues;
-};
-
 /// Thread class manages Os threads.
 class ZeroShared Thread
 {
@@ -44,7 +30,7 @@ public:
   bool IsValid();
 
   // Initializes the thread but does not run it.
-  bool Initialize(EntryFunction entryFunction, void* instance, StringParam threadName, ThreadConfig* config = nullptr);
+  bool Initialize(EntryFunction entryFunction, void* instance, StringParam threadName);
 
   // Resume the thread.
   void Resume();

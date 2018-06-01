@@ -12,12 +12,19 @@
 namespace Zero
 {
 
+SDL_Cursor* gSDLCursors[SDL_NUM_SYSTEM_CURSORS] = { 0 };
+
 SDL_GameController* cSDLGamePads[cMaxGamepads];
 SDL_Haptic* cSDLHapticDevices[cMaxGamepads];
 
 //**************************************************************************************************
 void PlatformLibrary::Initialize()
 {
+  SDL_Init(SDL_INIT_EVERYTHING);
+
+  for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
+    gSDLCursors[i] = SDL_CreateSystemCursor((SDL_SystemCursor)i);
+
   // Initialize all connected gamepads for use
   for (int i = 0; i < cMaxGamepads; ++i)
     cSDLGamePads[i] = nullptr;
@@ -47,7 +54,10 @@ void PlatformLibrary::Initialize()
 //**************************************************************************************************
 void PlatformLibrary::Shutdown()
 {
+  for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
+    SDL_FreeCursor(gSDLCursors[i]);
 
+  SDL_Quit();
 }
 
 }//namespace Zero

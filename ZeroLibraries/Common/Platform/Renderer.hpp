@@ -6,10 +6,9 @@
 namespace Zero
 {
 
-// Implemented by api specific renderer
+// Implemented by api specific renderer (just call C++ delete on the renderer to destroy it)
 class Renderer;
 Renderer* CreateRenderer(OsHandle windowHandle, String& error);
-void DestroyRenderer(Renderer* renderer);
 
 // Base types for renderer to implement resource render data
 class MaterialRenderData {};

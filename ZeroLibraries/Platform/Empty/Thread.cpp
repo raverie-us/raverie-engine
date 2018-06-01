@@ -36,7 +36,7 @@ bool Thread::IsValid()
   return false;
 }
 
-bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName, ThreadConfig* config )
+bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName)
 {
   Error("Not implemented");
   return false;

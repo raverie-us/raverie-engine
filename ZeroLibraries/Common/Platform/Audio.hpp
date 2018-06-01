@@ -42,7 +42,7 @@ public:
   unsigned GetStreamSampleRate(StreamTypes::Enum whichStream);
 
 private:
-  void* PlatformData;
+  OsHandle PlatformData;
 };
 
 DeclareEnum7(MidiEventType, MidiNoteOn, MidiNoteOff, MidiPitchWheel, MidiVolume, MidiModWheel, MidiControl, NotSet);

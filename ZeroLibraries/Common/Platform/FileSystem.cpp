@@ -90,13 +90,68 @@ bool DeleteDirectoryContents(StringParam directory)
   {
     String name = range.Front();
     String fullName = BuildString(directory, cDirectorySeparatorCstr, name);
-    if (IsDirectory(fullName))
+    if (DirectoryExists(fullName))
       success &= DeleteDirectory(fullName);
     else
       success &= DeleteFile(fullName);
   }
 
   return success;
+}
+
+int CheckFileTime(StringParam dest, StringParam source)
+{
+  if (!FileExists(dest))
+    return -1;
+  if (!FileExists(source))
+    return +1;
+
+  TimeType destTime = GetFileModifiedTime(dest);
+  TimeType sourceTime = GetFileModifiedTime(source);
+
+  if (destTime < sourceTime)
+    return -1;
+  if (destTime > sourceTime)
+    return +1;
+  return 0;
+}
+
+bool GetFileDateTime(StringParam filePath, CalendarDateTime& result)
+{
+  if (!FileExists(filePath))
+    return false;
+
+  TimeType time = GetFileModifiedTime(filePath);
+  tm localTm = *localtime(&time);
+
+  result.Year = localTm.tm_year;
+  result.Month = localTm.tm_mon;
+  result.Day = localTm.tm_mday;
+  result.Hour = localTm.tm_hour;
+  result.Minutes = localTm.tm_min;
+  result.Seconds = localTm.tm_sec;
+  result.Weekday = localTm.tm_wday;
+  result.Yearday = localTm.tm_yday;
+  result.IsDaylightSavings = localTm.tm_isdst;
+
+  return true;
+}
+
+String FindFirstMissingDirectory(StringParam directory)
+{
+  // Keep iterating over the parent directories until we find one that does exist.
+  // When we do return the previous path as this was the first one to not exist.
+  String subPath = directory;
+  do
+  {
+    String sourceDirPath = FilePath::GetDirectoryPath(subPath);
+    if (DirectoryExists(sourceDirPath))
+      return subPath;
+    subPath = sourceDirPath;
+  } while (!subPath.Empty());
+
+  // Otherwise all of the parent directories don't exist so return an empty string
+  return subPath;
 }
 
 }//namespace Zero

@@ -365,6 +365,9 @@ public:
   /// Get an image of the entire desktop (primary monitor).
   bool GetPrimaryMonitorImage(Image* image);
 
+  /// Does this platform supoprt file dialogs?
+  bool SupportsFileDialogs();
+
   /// Show the file open dialog. Results are returned via mCallback or mFiles.
   bool OpenFile(FileDialogInfo& config);
 
@@ -587,8 +590,8 @@ public:
   void(*mOnMouseDown)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
   void(*mOnMouseUp)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
   void(*mOnMouseMove)(Math::IntVec2Param clientPosition, ShellWindow* window);
-  void(*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   void(*mOnMouseScrollX)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
+  void(*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
 
   /// Called when any hardware devices change.
   void(*mOnDevicesChanged)(ShellWindow* window);
@@ -616,6 +619,9 @@ public:
   /// Should be initialized to the passed in clientSize.
   /// Only should be used to track the last set client size (detect changes).
   IntVec2 mClientSize;
+
+  /// If this window has captured the mouse.
+  bool mCapture;
 
   /// Should be initialized to (-1, -1)
   /// Only should be used to track the last set mouse position (detect changes).

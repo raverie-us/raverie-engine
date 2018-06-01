@@ -744,7 +744,7 @@ void ContentSystem::EnumerateLibrariesInPath(StringParam path)
   {
     //If the path is a directory, enumerate it
     String directoryPath = FilePath::Combine(path, files.Front());
-    if(IsDirectory(directoryPath))
+    if(DirectoryExists(directoryPath))
     {
       String name = files.Front();
       Status status;

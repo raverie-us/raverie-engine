@@ -547,40 +547,43 @@ void ScanDevice(Array<PlatformInputDevice>& devices, HANDLE deviceHandle, RID_DE
     }
 
     // Value caps
-    HIDP_VALUE_CAPS* valueCaps = (PHIDP_VALUE_CAPS)alloca(sizeof(HIDP_VALUE_CAPS) * caps.NumberInputValueCaps);
-    capsLength = caps.NumberInputValueCaps;
-    ReturnIf(HidP_GetValueCaps(HidP_Input, valueCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS, ,
-      "Unable to get value capabilities");
-
-    HashMap<uint, String>& usageNames = GetUsageNames();
-    
-    for (uint i = 0; i < caps.NumberInputValueCaps; i++)
+    if (caps.NumberInputValueCaps != 0)
     {
-      auto& valueCap = valueCaps[i];
+      HIDP_VALUE_CAPS* valueCaps = (PHIDP_VALUE_CAPS)alloca(sizeof(HIDP_VALUE_CAPS) * caps.NumberInputValueCaps);
+      capsLength = caps.NumberInputValueCaps;
+      ReturnIf(HidP_GetValueCaps(HidP_Input, valueCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS, ,
+        "Unable to get value capabilities");
 
-      PlatformAxis& axis = device.mAxes.PushBack();
-      axis.mOffset = valueCap.Range.UsageMin;
-      axis.mSize = valueCap.Range.UsageMax - valueCap.Range.UsageMin;
-      axis.mMax = valueCap.LogicalMax + 1;
+      HashMap<uint, String>& usageNames = GetUsageNames();
 
-      if (valueCap.LogicalMax == -1)
+      for (uint i = 0; i < caps.NumberInputValueCaps; i++)
       {
-        if (valueCap.BitSize == 8)
-        {
-          axis.mMax = 0xFF;
-        }
-        else if (valueCap.BitSize == 16)
-        {
-          axis.mMax = 0xFFFF;
-        }
-        else if (valueCap.BitSize == 32)
-        {
-          axis.mMax = 0xFFFFFFFF;
-        }
-      }
+        auto& valueCap = valueCaps[i];
 
-      axis.mMin = valueCap.LogicalMin;
-      axis.mName = usageNames.FindValue(valueCap.Range.UsageMin, "Unknown");
+        PlatformAxis& axis = device.mAxes.PushBack();
+        axis.mOffset = valueCap.Range.UsageMin;
+        axis.mSize = valueCap.Range.UsageMax - valueCap.Range.UsageMin;
+        axis.mMax = valueCap.LogicalMax + 1;
+
+        if (valueCap.LogicalMax == -1)
+        {
+          if (valueCap.BitSize == 8)
+          {
+            axis.mMax = 0xFF;
+          }
+          else if (valueCap.BitSize == 16)
+          {
+            axis.mMax = 0xFFFF;
+          }
+          else if (valueCap.BitSize == 32)
+          {
+            axis.mMax = 0xFFFFFFFF;
+          }
+        }
+
+        axis.mMin = valueCap.LogicalMin;
+        axis.mName = usageNames.FindValue(valueCap.Range.UsageMin, "Unknown");
+      }
     }
 
     // Build a guid using the name hash, and vendor / product / version info
@@ -1466,6 +1469,7 @@ ShellWindow::ShellWindow(
   mProgress(0),
   mClientSize(clientSize),
   mClientMousePosition(IntVec2(-1, -1)),
+  mCapture(false),
   mUserData(nullptr),
   mOnClose(nullptr),
   mOnFocusChanged(nullptr),
@@ -1576,7 +1580,7 @@ void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
 
   SetWindowPos((HWND)mHandle, 0, rect.left, rect.top, RectWidth(rect), RectHeight(rect), SWP_NOZORDER | SWP_NOCOPYBITS);
 
-  mClientSize = IntVec2(rect.right - rect.left, rect.bottom - rect.top);
+  mClientSize = monitorRectangle.Size();
 }
 
 IntRect ShellWindow::GetMonitorBorderedRectangle()
@@ -1803,6 +1807,8 @@ void ShellWindow::SetMouseCapture(bool capture)
     ::SetCapture((HWND)mHandle);
   else
     ::ReleaseCapture();
+
+  mCapture = capture;
 }
 
 bool ShellWindow::GetMouseCapture()

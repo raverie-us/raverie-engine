@@ -1,10 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// \file Precompiled.hpp
-/// Precompiled header for windows library.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
+/// Authors: Trevor Sundberg
+/// Copyright 2018, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
@@ -12,10 +9,14 @@
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
-#include "SDL.h"
+#include <filesystem>
 
-// Include glew before OpenGl
-#include <GL/glew.h>
+namespace std
+{
+  namespace experimental
+  {
+  }
+  using namespace experimental;
+}
 
-// Include OpenGl
-#include <GL/GL.h>
+namespace fs = std::filesystem;

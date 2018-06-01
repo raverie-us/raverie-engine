@@ -45,7 +45,7 @@ void AddFilesHelper(StringParam directory, StringParam relativePathFromStart, Fi
     String newRelativePath = FilePath::Combine(relativePathFromStart, fileName);
 
     String fullPath = FilePath::Combine(directory, fileName);
-    if (IsDirectory(fullPath))
+    if (DirectoryExists(fullPath))
     {
       AddFilesHelper(fullPath, newRelativePath, callback, userData);
     }

@@ -131,8 +131,6 @@ extern "C"
 #include "ThreadIo.hpp"
 #include "WString.hpp"
 #include "WinUtility.hpp"
-#include "StreamedVertexBuffer.hpp"
-#include "OpenglRenderer.hpp"
 
 #ifdef RunVld
 #include <vld.h>

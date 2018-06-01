@@ -17,13 +17,8 @@ DeclareEnum4(FileSystemErrors,
 );
 
 ZeroShared extern const Rune  cDirectorySeparatorRune;
-ZeroShared extern const char* cDirectorySeparatorCstr;
-ZeroShared extern bool cFileSystemCaseInsensitive;
-
-/// Initialize the file system
-/// Some file systems have startup/shutdown steps that need to be taken.
-ZeroShared void InitFileSystem();
-ZeroShared void ShutdownFileSystem();
+ZeroShared extern const char cDirectorySeparatorCstr[];
+ZeroShared extern bool cFileSystemCaseSensitive;
 
 /// Copies a file. Will spin lock if fails up to a max number of iterations. (Calls CopyFileInternal)
 ZeroShared bool CopyFile(StringParam dest, StringParam source);
@@ -69,13 +64,13 @@ ZeroShared inline bool DestinationIsOlder(StringParam dest, StringParam source)
 }
 
 /// Update file time to current time.
-ZeroShared int SetFileToCurrentTime(StringParam filename);
+ZeroShared bool SetFileToCurrentTime(StringParam filename);
 
 /// Get the file last modified time.
 ZeroShared TimeType GetFileModifiedTime(StringParam filename);
 
 /// Get Size of file zero if not found
-ZeroShared u32 GetFileSize(StringParam fileName);
+ZeroShared u64 GetFileSize(StringParam fileName);
 
 //Does the file exist?
 ZeroShared bool FileExists(StringParam filePath);
@@ -85,9 +80,6 @@ ZeroShared bool FileWritable(StringParam filePath);
 
 //Does the directory exist?
 ZeroShared bool DirectoryExists(StringParam directoryPath);
-
-//Is this path a directory?
-ZeroShared bool IsDirectory(StringParam directoryPath);
 
 // Use OS dependent behavior to strip the path of redundancies (such as .., and . where they are redundant)
 // Side note: Windows has a few mechanisms that are partially incorrect in different places, so it is 
