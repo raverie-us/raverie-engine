@@ -126,7 +126,7 @@ zero_multitarget_output_directories(CodeTranslator
 ################################################################################
 # Specify any additional target options such as pdb locations
 ################################################################################
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     zero_multitarget_output_settings(
         CodeTranslator
         Editor
@@ -148,7 +148,7 @@ endif()
 ################################################################################
 # set flags and definitions
 ################################################################################
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     zero_multitarget_compile_options(  
         CodeTranslator
         Editor
@@ -182,7 +182,7 @@ endif()
 ################################################################################
 # Set linker flags
 ################################################################################
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     # set the correct subsystems for executable targets, and set stack size for the editor
     set_target_properties(
         CodeTranslator

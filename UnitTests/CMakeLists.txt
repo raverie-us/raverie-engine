@@ -237,7 +237,7 @@ endif()
 # Specify any additional target options such as pdb locations
 ################################################################################
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     zero_multitarget_output_settings(
         ContainersTests
         CppUnitLite2
@@ -275,7 +275,7 @@ endif()
 ################################################################################
 # set flags and definitions
 ################################################################################
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
 
     zero_multitarget_compile_options( 
         ContainersTests

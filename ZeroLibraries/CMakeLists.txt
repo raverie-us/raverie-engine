@@ -27,18 +27,18 @@ add_library(Zilch "")
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
-set_target_properties(AudioEngine      PROPERTIES FOLDER "Libraries")
-set_target_properties(Common           PROPERTIES FOLDER "Libraries")
-set_target_properties(Dash             PROPERTIES FOLDER "Libraries")
-set_target_properties(Geometry         PROPERTIES FOLDER "Libraries")
-set_target_properties(Math             PROPERTIES FOLDER "Libraries")
-set_target_properties(Meta             PROPERTIES FOLDER "Libraries")
-#set_target_properties(Posix            PROPERTIES FOLDER "Libraries/Platform")
-set_target_properties(Windows          PROPERTIES FOLDER "Libraries/Platform")
-set_target_properties(Serialization    PROPERTIES FOLDER "Libraries")
-set_target_properties(SpatialPartition PROPERTIES FOLDER "Libraries")
-set_target_properties(Support          PROPERTIES FOLDER "Libraries")
-set_target_properties(Zilch            PROPERTIES FOLDER "Libraries")
+set_target_properties(AudioEngine      PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Common           PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Dash             PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Geometry         PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Math             PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Meta             PROPERTIES FOLDER "ZeroLibraries")
+#set_target_properties(Posix            PROPERTIES FOLDER "ZeroLibraries/Platform")
+set_target_properties(Windows          PROPERTIES FOLDER "ZeroLibraries/Platform")
+set_target_properties(Serialization    PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(SpatialPartition PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Support          PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Zilch            PROPERTIES FOLDER "ZeroLibraries")
 
 ################################################################################
 # include filelists for each library
@@ -208,7 +208,7 @@ zero_multitarget_output_directories(
 # Specify any additional target options such as pdb locations
 ################################################################################
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     zero_multitarget_output_settings(
         Common 
         Dash 
@@ -269,7 +269,7 @@ endif()
 ################################################################################
 # set flags and definitions
 ################################################################################
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     zero_multitarget_compile_options(  
         Common 
         Dash 
@@ -330,7 +330,7 @@ endif()
 ################################################################################
 # Set linker flags
 ################################################################################
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     # set the correct subsystems for executable targets, and set stack size for the editor
     set_target_properties(
         AudioEngine

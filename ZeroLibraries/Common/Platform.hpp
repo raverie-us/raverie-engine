@@ -260,7 +260,6 @@
 #pragma clang diagnostic ignored "-Wunused-value"
 #pragma clang diagnostic ignored "-Wtautological-pointer-compare"
 #pragma clang diagnostic ignored "-Wnonportable-include-path"
-
 #undef __STDC__
 #endif
 

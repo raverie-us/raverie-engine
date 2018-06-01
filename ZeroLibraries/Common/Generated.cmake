@@ -36,7 +36,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Containers/OrderedHashMap.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/OrderedHashSet.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/OwnedArray.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/SlotMap.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/SortedArray.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/TypeTraits.hpp
@@ -132,7 +131,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Memory/Memory.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Memory/Pool.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Memory/Pool.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Memory/Stack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Memory/Stack.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Memory/ZeroAllocator.hpp
@@ -193,7 +191,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/String/CharacterTraits.cpp
     ${CMAKE_CURRENT_LIST_DIR}/String/CharacterTraits.hpp
     ${CMAKE_CURRENT_LIST_DIR}/String/FixedString.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/String/Rune.cpp
     ${CMAKE_CURRENT_LIST_DIR}/String/Rune.hpp
     ${CMAKE_CURRENT_LIST_DIR}/String/String.cpp

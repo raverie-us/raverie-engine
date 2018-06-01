@@ -6,3 +6,5 @@
 include(${cmake_os_dir}/Windows.cmake)
 include(${cmake_compiler_dir}/Clang.cmake)
 include(${cmake_flags_dir}/MSVC_FLAGS.cmake)
+
+add_compile_options(-FIPrecompiled.hpp)
