@@ -70,10 +70,10 @@ function(editor_post_build_step aTarget aZeroCoreDirectory aLibOutputDirectory a
         ${pluginDir}/${aTarget}.lib
     )
 
-    #"$(SolutionDir)\Tools\ZilchToOneCpp.exe" -Zero "$(SolutionDir)\." "$(SolutionDir)\Data\ZilchCustomPluginShared\$(OS)-$(PlatformShortName)\Zilch.hpp"
-    add_custom_command(TARGET ${aTarget} POST_BUILD
-        COMMAND CALL "\"${aZeroCoreDirectory}/Tools/ZilchToOneCpp.exe\"" -Zero "\"${aZeroCoreDirectory}/.\"" "\"${pluginDir}/Zilch.hpp\""
-    )
+    ##"$(SolutionDir)\Tools\ZilchToOneCpp.exe" -Zero "$(SolutionDir)\." "$(SolutionDir)\Data\ZilchCustomPluginShared\$(OS)-$(PlatformShortName)\Zilch.hpp"
+    #add_custom_command(TARGET ${aTarget} POST_BUILD
+    #    COMMAND CALL "\"${aZeroCoreDirectory}/Tools/ZilchToOneCpp.exe\"" -Zero "\"${aZeroCoreDirectory}/.\"" "\"${pluginDir}/Zilch.hpp\""
+    #)
 
     add_custom_command(TARGET ${aTarget} POST_BUILD
         # executes "cmake -E copy_if_different

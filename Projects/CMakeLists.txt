@@ -12,8 +12,8 @@ add_executable(GeometryProcessor "")
 add_executable(ImageProcessor "")
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
-add_executable(ChromeSubProcess "")
-add_library(ZeroLauncherDll SHARED "")
+add_executable(BrowserSubProcess "")
+add_library(ZeroLauncherSharedLibrary SHARED "")
 
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
@@ -22,8 +22,8 @@ set_target_properties(GeometryProcessor PROPERTIES FOLDER "Projects")
 set_target_properties(ImageProcessor    PROPERTIES FOLDER "Projects")
 set_target_properties(ZeroEditor       PROPERTIES FOLDER "Projects")
 set_target_properties(ZeroLauncher     PROPERTIES FOLDER "Projects")
-set_target_properties(ZeroLauncherDll  PROPERTIES FOLDER "Projects")
-set_target_properties(ChromeSubProcess  PROPERTIES FOLDER "Projects")
+set_target_properties(ZeroLauncherSharedLibrary  PROPERTIES FOLDER "Projects")
+set_target_properties(BrowserSubProcess  PROPERTIES FOLDER "Projects")
 
 ################################################################################
 # include filelists for each library
@@ -31,9 +31,9 @@ set_target_properties(ChromeSubProcess  PROPERTIES FOLDER "Projects")
 include(GeometryProcessor/CMakeLists.txt)
 include(ImageProcessor/CMakeLists.txt)
 include(ZeroEditor/CMakeLists.txt)
-include(ZeroLauncher/CMakeLists.txt)
-include(ZeroLauncherDll/CMakeLists.txt)
-include(ChromeSubProcess/CMakeLists.txt)
+include(ZeroLauncher/ZeroLauncher/CMakeLists.txt)
+include(ZeroLauncher/ZeroLauncherSharedLibrary/CMakeLists.txt)
+include(BrowserSubProcess/CMakeLists.txt)
 
 ################################################################################
 # define include directories for all of our libraries
@@ -60,27 +60,29 @@ target_include_directories(ZeroEditor
         ${PortAudioHeaders}
         ${OpusHeaders}
         ${FreetypeHeaders}
+        ${WinHidHeaders}
         ${CurrentDirectory}/ZeroEditor 
         ${CurrentDirectory}
 )
 target_include_directories(ZeroLauncher 
     PUBLIC 
         ${CurrentDirectory}
-        ${CurrentDirectory}/ZeroLauncher
-        ${CurrentDirectory}/ZeroLauncherDll
+        ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
+        ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
         ${ZLibHeaders}
         ${CurlHeaders}
 )
-target_include_directories(ZeroLauncherDll 
+target_include_directories(ZeroLauncherSharedLibrary 
     PUBLIC 
         ${CurrentDirectory}
+        ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
         ${Dependencies_Root}
         ${Source_Root}
         ${CurlHeaders}
 )
-target_include_directories(ChromeSubProcess
+target_include_directories(BrowserSubProcess
     PUBLIC 
-        ${CurrentDirectory}/ChromeSubProcess    
+        ${CurrentDirectory}/BrowserSubProcess    
         ${CurrentDirectory}
         ${CEFHeaders}
 )
@@ -98,13 +100,13 @@ target_link_libraries(GeometryProcessor
                       Geometry
                       Meta
                       Engine
-                      Platform
                       Windows
                       Content
                       Zilch
                       AudioEngine
                       ${AssimpStatic}
                       ${PortAudioStatic}
+                      ${FreetypeStatic}
 ) 
 target_link_libraries(ImageProcessor
                       PUBLIC
@@ -116,7 +118,6 @@ target_link_libraries(ImageProcessor
                       Geometry
                       Meta
                       Engine
-                      Platform
                       Windows
                       Content
                       Zilch
@@ -124,6 +125,7 @@ target_link_libraries(ImageProcessor
                       ${PortAudioStatic}
                       ${OpusStatic}
                       ${NvttStatic}
+                      ${FreetypeStatic}
 ) 
 target_link_libraries(ZeroEditor
                       PUBLIC
@@ -141,16 +143,13 @@ target_link_libraries(ZeroEditor
                       Editor 
                       ZilchScript 
                       Networking 
-                      OpenglRenderer 
                       Meta 
                       Physics 
-                      Platform 
                       Sound 
                       Windows 
                       Content 
                       Dash 
                       AudioEngine 
-                      WindowsShell 
                       UiWidget
                       Startup
                       Zilch
@@ -183,11 +182,9 @@ target_link_libraries(ZeroLauncher
                       ZilchScript 
                       Graphics 
                       Networking 
-                      OpenglRenderer
                       Meta 
                       Engine 
                       Physics 
-                      Platform 
                       Sound 
                       Startup 
                       Windows 
@@ -195,11 +192,10 @@ target_link_libraries(ZeroLauncher
                       Dash 
                       Zilch 
                       AudioEngine 
-                      WindowsShell 
                       UiWidget 
                       CodeTranslator
 ) 
-target_link_libraries(ZeroLauncherDll
+target_link_libraries(ZeroLauncherSharedLibrary
                       PUBLIC
                       Common
                       Gameplay
@@ -214,11 +210,9 @@ target_link_libraries(ZeroLauncherDll
                       ZilchScript 
                       Graphics 
                       Networking 
-                      OpenglRenderer
                       Meta 
                       Engine 
                       Physics 
-                      Platform 
                       Sound 
                       Startup 
                       Windows 
@@ -226,19 +220,18 @@ target_link_libraries(ZeroLauncherDll
                       Dash 
                       Zilch 
                       AudioEngine 
-                      WindowsShell 
                       UiWidget 
                       CodeTranslator
 ) 
 # the launcher is going to need the chrome subprocess to run correctly
-add_dependencies(ZeroLauncherDll
-    ChromeSubProcess
+add_dependencies(ZeroLauncherSharedLibrary
+    BrowserSubProcess
 )
 # launcher needs the dll to run
 add_dependencies(ZeroLauncher
-    ZeroLauncherDll
+    ZeroLauncherSharedLibrary
 )
-target_link_libraries(ChromeSubProcess
+target_link_libraries(BrowserSubProcess
                       PUBLIC
                       ${CEFStatic}
 ) 
@@ -249,8 +242,8 @@ zero_multitarget_output_directories(GeometryProcessor
                       ImageProcessor
                       ZeroEditor
                       ZeroLauncher 
-                      ZeroLauncherDll
-                      ChromeSubProcess
+                      ZeroLauncherSharedLibrary
+                      BrowserSubProcess
                       LIBRARY_DIRECTORY ${zero_library_dir}
                       RUNTIME_DIRECTORY ${zero_binary_dir}
 )
@@ -268,8 +261,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         GeometryProcessor
         ImageProcessor
         ZeroEditor
-        ZeroLauncher 
-        ZeroLauncherDll
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
@@ -281,7 +272,20 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     )
 
     zero_multitarget_output_settings(
-        ChromeSubProcess
+        ZeroLauncher 
+        ZeroLauncherSharedLibrary
+        CONFIGS ${supported_configs}
+        BASEPATH ${zero_build_out}
+        PLATFORM ${platform}
+        BITS ${bit}
+        TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
+        PRECOMPILED_HEADER_NAME "Precompiled.hpp"
+        PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
+        TARGET_SUBFOLDER ZeroLauncher
+    )
+
+    zero_multitarget_output_settings(
+        BrowserSubProcess
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
@@ -320,7 +324,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     )
 
     target_compile_options(
-        ZeroLauncherDll
+        ZeroLauncherSharedLibrary
         PRIVATE
          
         PUBLIC
@@ -332,15 +336,15 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         "-D \"WIN32\"" 
         "-D \"_WINDOWS\"" 
         "-D \"_USRDLL\"" 
-        "-D \"ZEROLAUNCHERDLL_EXPORTS\"" 
+        "-D \"ZeroLauncherSharedLibrary_EXPORTS\"" 
         "-D \"_WINDLL\"" 
         "-D \"_CRT_SECURE_NO_WARNINGS\"" 
         "-D \"ZeroExportDll\"" 
     )
 
-    # have to set flags for ChromeSubProcess seperatly because it has very different settings
+    # have to set flags for BrowserSubProcess seperatly because it has very different settings
     zero_multitarget_compile_options(
-        ChromeSubProcess
+        BrowserSubProcess
         PRIVATE
         PUBLIC
         PRIVATE
@@ -397,15 +401,15 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set_target_properties(
         ZeroLauncher 
         ZeroEditor 
-        ZeroLauncherDll 
+        ZeroLauncherSharedLibrary 
         PROPERTIES 
         LINK_FLAGS_RELEASE "/LTCG"
     )
     
     set_target_properties(
         ZeroLauncher 
-        ZeroLauncherDll 
-        ChromeSubProcess
+        ZeroLauncherSharedLibrary 
+        BrowserSubProcess
         PROPERTIES 
         LINK_FLAGS "/SUBSYSTEM:WINDOWS /DEBUG ${common_linker_flags}"
     )
@@ -427,9 +431,9 @@ endif()
 zero_subfolder_source_group(${zero_core_path} Projects GeometryProcessor "")
 zero_subfolder_source_group(${zero_core_path} Projects ImageProcessor "")
 zero_subfolder_source_group(${zero_core_path} Projects ZeroEditor "${zero_core_path}/Projects")
-zero_subfolder_source_group(${zero_core_path} Projects ZeroLauncher "")
-zero_subfolder_source_group(${zero_core_path} Projects ZeroLauncherDll "")
-zero_subfolder_source_group(${zero_core_path} Projects ChromeSubProcess "")
+zero_subfolder_source_group(${zero_core_path} Projects/ZeroLauncher ZeroLauncher "${zero_core_path}/Projects")
+zero_subfolder_source_group(${zero_core_path} Projects/ZeroLauncher ZeroLauncherSharedLibrary "${zero_core_path}/Projects")
+zero_subfolder_source_group(${zero_core_path} Projects BrowserSubProcess "")
 
 
 
@@ -494,18 +498,18 @@ processor_post_build(
 )
 ####
 
-#### ZeroLauncherDll
+#### ZeroLauncherSharedLibrary
 # launcher_post_build(aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
 launcher_post_build(
-    ZeroLauncherDll 
+    ZeroLauncherSharedLibrary 
     ${zero_core_path}
-    ${CurrentDirectory}/ZeroLauncherDll
+    ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
     ${zero_binary_dir}
 )
 
 #copy_cef_bin_post_build(aTarget aZeroCoreDirectory aBuildOutputDirectory)
 copy_cef_bin_post_build(
-    ChromeSubProcess
+    BrowserSubProcess
     ${zero_core_path}
     ${zero_binary_dir}
 )
@@ -514,7 +518,7 @@ copy_cef_bin_post_build(
 #### ZeroLauncher
 create_build_info(
     ZeroLauncher
-    ${CurrentDirectory}/ZeroLauncher
+    ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
     ${zero_core_path}
     ${zero_binary_dir}
     ${zero_binary_dir}

@@ -2,55 +2,52 @@
 # Generated using Joshua T. Fisher's 'CMake Builder'.
 # Link: https://github.com/playmer/CmakeBuilder 
 ################################################################################
-target_sources(ZeroLauncherDll
+target_sources(ZeroLauncherSharedLibrary
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/ActiveProjectMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildsMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildStatus.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/DeveloperNotes.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/DiscoverMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/DllMain.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Eula.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Exporter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ExtraModals.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Launcher.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherComponents.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherCrashCallbacks.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherDllStandard.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherStartup.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherTasks.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherWindow.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/NewProjectMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ProjectCache.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/RecentProjectsMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SettingsMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Standalone.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/VersionSelector.cpp
-#  PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/ActiveProjectMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BuildsMenu.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BuildsMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BuildStatus.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BuildStatus.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/DeveloperNotes.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DeveloperNotes.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/DiscoverMenu.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DiscoverMenu.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/DllMain.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Eula.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Eula.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ExtraModals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ExtraModals.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ForwardDeclarations.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Launcher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Launcher.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/LauncherComponents.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherComponents.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/LauncherCrashCallbacks.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherCrashCallbacks.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/LauncherDllStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherDllStandard.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/LauncherStartup.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherStartup.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/LauncherTasks.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherTasks.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/LauncherWindow.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LauncherWindow.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/MiscHelpers.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Main.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/NewProjectMenu.cpp
     ${CMAKE_CURRENT_LIST_DIR}/NewProjectMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ProjectCache.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ProjectCache.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/RecentProjectsMenu.cpp
     ${CMAKE_CURRENT_LIST_DIR}/RecentProjectsMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/SettingsMenu.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SettingsMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Standalone.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Standalone.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TagFiltering.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/VersionSelector.cpp
     ${CMAKE_CURRENT_LIST_DIR}/VersionSelector.hpp
 )

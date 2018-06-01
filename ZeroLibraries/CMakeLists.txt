@@ -17,7 +17,6 @@ add_library(Dash "")
 add_library(Geometry "")
 add_library(Math "")
 add_library(Meta "")
-add_library(Platform "")
 #add_library(Posix "")
 add_library(Windows "")
 add_library(Serialization "")
@@ -34,7 +33,6 @@ set_target_properties(Dash             PROPERTIES FOLDER "Libraries")
 set_target_properties(Geometry         PROPERTIES FOLDER "Libraries")
 set_target_properties(Math             PROPERTIES FOLDER "Libraries")
 set_target_properties(Meta             PROPERTIES FOLDER "Libraries")
-set_target_properties(Platform         PROPERTIES FOLDER "Libraries/Platform")
 #set_target_properties(Posix            PROPERTIES FOLDER "Libraries/Platform")
 set_target_properties(Windows          PROPERTIES FOLDER "Libraries/Platform")
 set_target_properties(Serialization    PROPERTIES FOLDER "Libraries")
@@ -51,7 +49,6 @@ include(Dash/CMakeLists.txt)
 include(Geometry/CMakeLists.txt)
 include(Math/CMakeLists.txt)
 include(Meta/CMakeLists.txt)
-include(Platform/CMakeLists.txt)
 #include(Platform/Posix/CMakeLists.txt)
 include(Platform/Windows/CMakeLists.txt)
 include(Serialization/CMakeLists.txt)
@@ -93,11 +90,6 @@ target_include_directories(Meta
         ${CurrentDirectory}/Meta 
         ${CurrentDirectory}
 )
-target_include_directories(Platform
-    PUBLIC
-        ${CurrentDirectory}/Platform 
-        ${CurrentDirectory}
-)
 #target_include_directories(Posix
 #    PUBLIC
 #        ${CurrentDirectory}/Posix 
@@ -107,6 +99,8 @@ target_include_directories(Windows
     PUBLIC
         ${CurrentDirectory}/Windows 
         ${WinHidHeaders}
+        ${GLEWHeaders}
+        ${CEFHeaders}
 )
 target_include_directories(Serialization
     PUBLIC
@@ -183,15 +177,12 @@ target_link_libraries(Support
                       ${ZLibStatic}
                       ${LibpngStatic}
 )
-target_link_libraries(Platform
-                      PUBLIC
-                      Common
-                      ${WinHidStatic}
-)
 target_link_libraries(Windows
                       PUBLIC
                       Common
                       ${WinHidStatic}
+                      ${GLEWStatic}
+                      ${CEFStatic}
 )
 
 ################################################################################
@@ -204,7 +195,6 @@ zero_multitarget_output_directories(
     Geometry
     Math
     Meta
-    Platform
     Windows
     Serialization
     SpatialPartition
@@ -223,9 +213,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         Common 
         Dash 
         Geometry
-        Math 
         Meta 
-        Platform
         #Posix 
         Windows
         Serialization
@@ -233,7 +221,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         Support
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
-        PLATFORM ${Platform}
+        PLATFORM ${platform}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
@@ -245,7 +233,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         Windows
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
-        PLATFORM ${Platform}
+        PLATFORM ${platform}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
@@ -257,7 +245,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         AudioEngine 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
-        PLATFORM ${Platform}
+        PLATFORM ${platform}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.h"
@@ -266,9 +254,10 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     )
     zero_multitarget_output_settings(
         Zilch 
+        Math 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
-        PLATFORM ${Platform}
+        PLATFORM ${platform}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME ""
@@ -287,7 +276,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         Geometry
         Math 
         Meta 
-        Platform
         #Posix 
         Windows
         Serialization
@@ -329,7 +317,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     )
 
     zero_multitarget_compile_options(  
-        Platform
         Windows
         PRIVATE
         PUBLIC
@@ -352,7 +339,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         Geometry
         Math
         Meta
-        Platform
         Windows
         Serialization
         SpatialPartition
@@ -372,7 +358,6 @@ zero_subfolder_source_group(${zero_core_path} ZeroLibraries Dash "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Geometry "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Math "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Meta "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Platform "")
 #zero_subfolder_source_group(${zero_core_path} ZeroLibraries/Platform Posix "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries/Platform Windows "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Serialization "")

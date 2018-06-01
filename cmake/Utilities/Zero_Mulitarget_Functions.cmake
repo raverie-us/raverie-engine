@@ -6,8 +6,7 @@
 ################################################################################
 # Includes for any other functions used in this file
 ################################################################################
-include(${cmake_include}/zero_target_precompiled_headers.cmake)
-
+include(${cmake_utilities_dir}/zero_target_precompiled_headers.cmake)
 
 ################################################################################
 # Functions

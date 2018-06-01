@@ -4,8 +4,5 @@
 ################################################################################
 target_sources(Win32Shared
   PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/Importer.cpp
-#  PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/Importer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/resource.h
 )

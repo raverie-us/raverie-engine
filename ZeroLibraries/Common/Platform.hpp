@@ -8,94 +8,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-//-----------------------------------------------------------------------------Platform
-// Detect 32 or 64 bit
-// If this is a windows platform...
-#if defined(_WIN32) || defined(_WIN64)
-  #if defined(_WIN64) || defined(_M_X64) || defined(_M_IA64)
-    #define PLATFORM_64 1
-    #define PLATFORM_BITS "64"
-  #else
-    #define PLATFORM_32 1
-    #define PLATFORM_BITS "32"
-  #endif
-#else
-  // If this is a gcc or clang platforms...
-  #if defined(__x86_64__) || defined(__ppc64__)
-    #define PLATFORM_64 1
-    #define PLATFORM_BITS "64"
-  #else
-    #define PLATFORM_32 1
-    #define PLATFORM_BITS "32"
-  #endif
-#endif
-
-// Detect the Windows platform
-#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-  #define PLATFORM_WINDOWS 1
-  #define PLATFORM_HARDWARE 1
-  #define PLATFORM_NAME "Win"
-// Detect all Apple platforms
-#elif defined(__APPLE__)
-  // This header Contains defines that tell us the current platform
-  #include <TargetConditionals.h>
-  #if TARGET_IPHONE_SIMULATOR
-    #define PLATFORM_IPHONE 1
-    #define PLATFORM_VIRTUAL 1
-    #define PLATFORM_NAME "iPhoneSimulator"
-  #elif TARGET_OS_IPHONE
-    #define PLATFORM_IPHONE 1
-#define PLATFORM_HARDWARE 1
-#define PLATFORM_NAME "iPhone"
-  #elif TARGET_OS_MAC
-    #define PLATFORM_MAC 1
-    #define PLATFORM_POSIX 1
-    #define PLATFORM_HARDWARE 1
-    #define PLATFORM_NAME "MacOs"
-  #else
-    #error "Unsupported platform"
-  #endif
-
-#elif defined(EMSCRIPTEN)
-  #define PLATFORM_EMSCRIPTEN 1
-  #define PLATFORM_HARDWARE 1
-  #define PLATFORM_NAME "Emscripten"
-
-// Linux, which is a POSIX platform
-#elif defined(__linux) || defined(__linux__)
-  #define PLATFORM_LINUX 1
-  #define PLATFORM_POSIX 1
-  #define PLATFORM_HARDWARE 1
-  #define PLATFORM_NAME "Linux"
-
-// Unix, which is a POSIX platform
-#elif defined(__unix) || defined(__unix__)
-  #define PLATFORM_UNIX 1
-  #define PLATFORM_POSIX 1
-  #define PLATFORM_HARDWARE 1
-  #define PLATFORM_NAME "Unix"
-
-// Catch all for other POSIX compatible platforms
-#elif defined(__posix)
-  #define PLATFORM_POSIX 1
-  #define PLATFORM_HARDWARE 1
-  #define PLATFORM_NAME "Posix"
-#else
-  #error "Unknown Platform"
-#endif
-
-// Detect compilers
-#if defined(_MSC_VER)
-  #define COMPILER_MICROSOFT 1
-#elif defined(__clang__)
-  #define COMPILER_CLANG 1
-#elif defined(__GNUC__)
-  #define COMPILER_GCC 1
-#elif defined(__llvm__)
-  #define COMPILER_LLVM 1
-#else
-  #error "Unknown Compiler"
-#endif
 
 //-----------------------------------------------------------------------------Debug
 // Detect debug or release settings.
@@ -347,6 +259,7 @@
 #pragma clang diagnostic ignored "-Wunused-const-variable"
 #pragma clang diagnostic ignored "-Wunused-value"
 #pragma clang diagnostic ignored "-Wtautological-pointer-compare"
+#pragma clang diagnostic ignored "-Wnonportable-include-path"
 
 #undef __STDC__
 #endif

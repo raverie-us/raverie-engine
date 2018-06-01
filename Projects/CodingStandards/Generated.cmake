@@ -4,6 +4,5 @@
 ################################################################################
 target_sources(CodingStandards
   PRIVATE
-#  PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/ExampleClass.hpp
 )

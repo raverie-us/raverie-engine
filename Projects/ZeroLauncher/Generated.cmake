@@ -1,0 +1,57 @@
+################################################################################
+# Generated using Joshua T. Fisher's 'CMake Builder'.
+# Link: https://github.com/playmer/CmakeBuilder 
+################################################################################
+target_sources(ZeroLauncher
+  PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncher/Main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncher/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncher/Precompiled.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncher/WinMain.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/ActiveProjectMenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/ActiveProjectMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/BuildsMenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/BuildsMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/BuildStatus.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/BuildStatus.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/DeveloperNotes.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/DeveloperNotes.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/DiscoverMenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/DiscoverMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Eula.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Eula.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/ExtraModals.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/ExtraModals.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/ForwardDeclarations.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Launcher.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Launcher.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherComponents.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherComponents.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherCrashCallbacks.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherCrashCallbacks.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherDllStandard.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherDllStandard.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherStartup.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherStartup.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherTasks.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherTasks.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherWindow.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/LauncherWindow.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Main.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/NewProjectMenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/NewProjectMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Precompiled.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/ProjectCache.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/ProjectCache.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/RecentProjectsMenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/RecentProjectsMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/SettingsMenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/SettingsMenu.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Standalone.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/Standalone.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/TagFiltering.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/VersionSelector.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary/VersionSelector.hpp
+)

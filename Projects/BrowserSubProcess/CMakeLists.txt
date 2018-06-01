@@ -4,6 +4,6 @@
 ################################################################################
 include(${CMAKE_CURRENT_LIST_DIR}/Generated.cmake)
 
-target_sources(ChromeSubProcess
+target_sources(BrowserSubProcess
     PRIVATE
 )

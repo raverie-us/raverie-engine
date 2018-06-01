@@ -4,8 +4,7 @@
 ################################################################################
 target_sources(ZeroLauncher
   PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/Main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/WinMain.cpp
-#  PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
