@@ -35,6 +35,8 @@ public:
 
   virtual void AddCustomAttributes(HandleParam object, TextSaver* saver){}
 
+  // If the type being serialized is a primitive serialization type,
+  // then this must be overridden in a derived class.
   virtual String ConvertToString(AnyParam input);
 
   // Overload this if the value can be converted from a string and return true
