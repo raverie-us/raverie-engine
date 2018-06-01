@@ -2,6 +2,7 @@
 // Copyright 2015, DigiPen Institute of Technology
 
 #include "Precompiled.hpp"
+#include "OpenGLRenderer.hpp"
 
 // As Of NVidia Driver 302 exporting this symbol will enable GPU hardware accelerated 
 // graphics when using Optimus (Laptop NVidia gpu / Intel HD auto switching). 
@@ -9,7 +10,7 @@
 // since Intel seems to have a fair amount of bugs and crashes in their OpenGl drivers
 extern "C" 
 { 
-  _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+  ZeroExport int NvOptimusEnablement = 0x00000001;
 }
 
 // temporary to prevent string constructions every frame
@@ -46,134 +47,6 @@ namespace Zero
 void GLAPIENTRY EmptyUniformFunc(GLint, GLsizei, const void*) {}
 
 const bool cTransposeMatrices = !(ColumnBasis == 1);
-
-//**************************************************************************************************
-OpenglRenderer* CreateOpenglRenderer(OsHandle windowHandle, String& error)
-{
-  HWND window = (HWND)windowHandle;
-  HDC deviceContext = GetDC(window);
-
-  PIXELFORMATDESCRIPTOR pfd =
-  {
-    sizeof(PIXELFORMATDESCRIPTOR), // size of this pfd
-    1,                             // version number
-    PFD_DRAW_TO_WINDOW |           // support window
-    PFD_SUPPORT_OPENGL |           // support OpenGL
-    PFD_DOUBLEBUFFER,              // double buffered
-    PFD_TYPE_RGBA,                 // RGBA type
-    32,                            // 32-bit color depth
-    0, 0, 0, 0, 0, 0,              // color bits ignored
-    0,                             // no alpha buffer
-    0,                             // shift bit ignored
-    0,                             // no accumulation buffer
-    0, 0, 0, 0,                    // accum bits ignored
-    0,                             // no z-buffer
-    0,                             // no stencil buffer
-    0,                             // no auxiliary buffer
-    PFD_MAIN_PLANE,                // main layer
-    0,                             // reserved
-    0, 0, 0                        // layer masks ignored
-  };
-
-  int pixelFormat = ChoosePixelFormat(deviceContext, &pfd);
-  BOOL success = SetPixelFormat(deviceContext, pixelFormat, &pfd);
-  ErrorIf(!success, "Failed to set pixel format.");
-
-  HGLRC renderContext = wglCreateContext(deviceContext);
-  wglMakeCurrent(deviceContext, renderContext);
-
-  // Read the OpenGL version support
-  const char* gl_version = (const char*)glGetString(GL_VERSION);
-  if (gl_version == NULL)
-  {
-    error = "Unable to query OpenGL version. "
-      "Please update your computer's graphics drivers or verify that your graphics card supports OpenGL 2.0.";
-    return nullptr;
-  }
-
-  const char* gl_sl_version = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
-  const char* gl_vendor = (const char*)glGetString(GL_VENDOR);
-  const char* gl_renderer = (const char*)glGetString(GL_RENDERER);
-  const char* gl_extensions = (const char*)glGetString(GL_EXTENSIONS);
-
-  ZPrint("OpenGL Version          : %s\n", gl_version ? gl_version : "(no data)");
-  ZPrint("OpenGL Shading Language : %s\n", gl_sl_version ? gl_sl_version : "(no data)");
-  ZPrint("OpenGL Vendor           : %s\n", gl_vendor ? gl_vendor : "(no data)");
-  ZPrint("OpenGL Renderer         : %s\n", gl_renderer ? gl_renderer : "(no data)");
-
-  // Initialize glew
-  GLenum glewInitStatus = glewInit();
-  if (glewInitStatus != GLEW_OK)
-  {
-    error = String::Format("GLEW failed to initialize with error: %d", glewInitStatus);
-    return nullptr;
-  }
-
-  bool version_2_0 = glewIsSupported("GL_VERSION_2_0");
-  bool framebuffer_object = glewIsSupported("GL_ARB_framebuffer_object");
-  bool texture_compression = glewIsSupported("GL_ARB_texture_compression");
-  bool draw_buffers_blend = glewIsSupported("GL_ARB_draw_buffers_blend");
-  bool sampler_objects = glewIsSupported("GL_ARB_sampler_objects");
-
-  ZPrint("OpenGL *Required Extensions\n");
-  ZPrint("OpenGL *(GL_VERSION_2_0) Shader Program support                 : %s\n", version_2_0 ? "True" : "False");
-  ZPrint("OpenGL *(GL_ARB_framebuffer_object) Deferred Rendering support  : %s\n", framebuffer_object ? "True" : "False");
-
-  ZPrint("OpenGL (GL_ARB_texture_compression) Texture Compression support : %s\n", texture_compression ? "True" : "False");
-  ZPrint("OpenGL (GL_ARB_draw_buffers_blend) Multi Target Blend support   : %s\n", draw_buffers_blend ? "True" : "False");
-  ZPrint("OpenGL (GL_ARB_sampler_objects) Sampler Object support          : %s\n", sampler_objects ? "True" : "False");
-
-  ZPrint("OpenGL All Extensions : %s\n", gl_extensions ? gl_extensions : "(no data)");
-
-  // Required OpenGL extensions
-  if (!version_2_0 || !framebuffer_object)
-  {
-    String failedExtensions = BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
-                                          framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
-    error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
-      "Please update your computer's graphics drivers or verify that your graphics card supports the listed features.", failedExtensions.c_str());
-    return nullptr;
-  }
-
-  OpenglRenderer* renderer = new OpenglRenderer();
-  renderer->mWindow = windowHandle;
-  renderer->mDeviceContext = deviceContext;
-  renderer->mRenderContext = renderContext;
-
-  renderer->mDriverSupport.mTextureCompression = texture_compression;
-  renderer->mDriverSupport.mMultiTargetBlend = draw_buffers_blend;
-  renderer->mDriverSupport.mSamplerObjects = sampler_objects;
-
-  // Intel integrated graphics does not render correctly with borderless Window's aero on OpenGL.
-  String vendorString = gl_vendor;
-  if (vendorString.Contains("Intel"))
-    renderer->mDriverSupport.mIntel = true;
-
-  return renderer;
-}
-
-//**************************************************************************************************
-void DestroyOpenglRenderer(OpenglRenderer* renderer)
-{
-  HGLRC renderContext = (HGLRC)renderer->mRenderContext;
-
-  delete renderer;
-
-  wglMakeCurrent(NULL, NULL);
-  wglDeleteContext(renderContext);
-}
-
-//**************************************************************************************************
-Renderer* CreateRenderer(OsHandle windowHandle, String& error)
-{
-  return CreateOpenglRenderer(windowHandle, error);
-}
-
-//**************************************************************************************************
-void DestroyRenderer(Renderer* renderer)
-{
-  DestroyOpenglRenderer((OpenglRenderer*)renderer);
-}
 
 struct GlTextureEnums
 {
@@ -715,11 +588,210 @@ void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Textu
   CheckFramebufferStatus();
 }
 
+
 //**************************************************************************************************
-OpenglRenderer::OpenglRenderer()
+void StreamedVertexBuffer::Initialize()
 {
+  mBufferSize = 1 << 18; // 256Kb, 1213 sprites at 216 bytes per sprite
+  mCurrentBufferOffset = 0;
+
+  glGenVertexArrays(1, &mVertexArray);
+  glBindVertexArray(mVertexArray);
+
+  glGenBuffers(1, &mVertexBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+  glBufferData(GL_ARRAY_BUFFER, mBufferSize, nullptr, GL_STREAM_DRAW);
+
+  glEnableVertexAttribArray(VertexSemantic::Position);
+  glVertexAttribPointer(VertexSemantic::Position, 3, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mPosition));
+  glEnableVertexAttribArray(VertexSemantic::Uv);
+  glVertexAttribPointer(VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mUv));
+  glEnableVertexAttribArray(VertexSemantic::Color);
+  glVertexAttribPointer(VertexSemantic::Color, 4, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mColor));
+  glEnableVertexAttribArray(VertexSemantic::UvAux);
+  glVertexAttribPointer(VertexSemantic::UvAux, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mUvAux));
+
+  glBindVertexArray(0);
+
+  mPrimitiveType = PrimitiveType::Triangles;
+  mActive = false;
+}
+
+//**************************************************************************************************
+void StreamedVertexBuffer::Destroy()
+{
+  glDeleteBuffers(1, &mVertexBuffer);
+  glDeleteVertexArrays(1, &mVertexArray);
+}
+
+//**************************************************************************************************
+void StreamedVertexBuffer::AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType)
+{
+  if (!mActive)
+  {
+    glBindVertexArray(mVertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+    mActive = true;
+  }
+
+  if (primitiveType != mPrimitiveType)
+  {
+    FlushBuffer(false);
+    mPrimitiveType = primitiveType;
+  }
+
+  uint uploadSize = sizeof(StreamedVertex) * count;
+  if (mCurrentBufferOffset + uploadSize > mBufferSize)
+  {
+    FlushBuffer(false);
+    // If upload size is larger than the entire buffer then break it into multiple draws
+    while (uploadSize > mBufferSize)
+    {
+      uint verticesPerPrimitive = primitiveType + 1;
+      uint primitiveSize = sizeof(StreamedVertex) * verticesPerPrimitive;
+      uint maxPrimitiveCount = mBufferSize / primitiveSize;
+      uint maxByteCount = maxPrimitiveCount * primitiveSize;
+
+      mCurrentBufferOffset = maxByteCount;
+      glBufferSubData(GL_ARRAY_BUFFER, 0, mCurrentBufferOffset, vertices);
+      FlushBuffer(false);
+      // Move pointer forward by byte count, below condition will grab this new value
+      vertices = (StreamedVertex*)((char*)vertices + maxByteCount);
+      uploadSize -= maxByteCount;
+    }
+  }
+
+  glBufferSubData(GL_ARRAY_BUFFER, mCurrentBufferOffset, uploadSize, vertices);
+  mCurrentBufferOffset += uploadSize;
+}
+
+//**************************************************************************************************
+void StreamedVertexBuffer::AddVertices(StreamedVertexArray& vertices, uint start, uint count, PrimitiveType::Enum primitiveType)
+{
+  while (count > 0)
+  {
+    uint verticesPerPrimitive = primitiveType + 1;
+
+    // Get the maximum number of contiguous whole primitives.
+    uint indexInBucket = start & StreamedVertexArray::BucketMask;
+    uint contiguousCount = StreamedVertexArray::BucketSize - indexInBucket;
+    uint uploadCount = Math::Min(contiguousCount, count);
+
+    uint remainder = uploadCount % verticesPerPrimitive;
+    uploadCount -= remainder;
+
+    AddVertices(&vertices[start], uploadCount, primitiveType);
+    start += uploadCount;
+    count -= uploadCount;
+
+    if (remainder != 0)
+    {
+      ErrorIf(count < verticesPerPrimitive, "Bad count if it does not have a whole number of primitives.");
+      // Manually populate one primitive over the block array boundary.
+      StreamedVertex primitive[3];
+      for (uint i = 0; i < verticesPerPrimitive; ++i)
+        primitive[i] = vertices[start + i];
+
+      AddVertices(primitive, verticesPerPrimitive, primitiveType);
+      start += verticesPerPrimitive;
+      count -= verticesPerPrimitive;
+    }
+  }
+}
+
+//**************************************************************************************************
+void StreamedVertexBuffer::FlushBuffer(bool deactivate)
+{
+  if (mCurrentBufferOffset > 0)
+  {
+    if (mPrimitiveType == PrimitiveType::Triangles)
+      glDrawArrays(GL_TRIANGLES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
+    else if (mPrimitiveType == PrimitiveType::Lines)
+      glDrawArrays(GL_LINES, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
+    else if (mPrimitiveType == PrimitiveType::Points)
+      glDrawArrays(GL_POINTS, 0, mCurrentBufferOffset / sizeof(StreamedVertex));
+    mCurrentBufferOffset = 0;
+  }
+
+  if (deactivate && mActive)
+  {
+    glBindVertexArray(0);
+    glLineWidth(1.0f);
+    mActive = false;
+  }
+}
+
+//**************************************************************************************************
+void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, OsHandle renderContext, String& error)
+{
+  mWindow = windowHandle;
+  mDeviceContext = deviceContext;
+  mRenderContext = renderContext;
+
+  // Read the OpenGL version support
+  const char* gl_version = (const char*)glGetString(GL_VERSION);
+  if (gl_version == NULL)
+  {
+    error = "Unable to query OpenGL version. "
+      "Please update your computer's graphics drivers or verify that your graphics card supports OpenGL 2.0.";
+    return;
+  }
+
+  const char* gl_sl_version = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+  const char* gl_vendor = (const char*)glGetString(GL_VENDOR);
+  const char* gl_renderer = (const char*)glGetString(GL_RENDERER);
+  const char* gl_extensions = (const char*)glGetString(GL_EXTENSIONS);
+
+  ZPrint("OpenGL Version          : %s\n", gl_version ? gl_version : "(no data)");
+  ZPrint("OpenGL Shading Language : %s\n", gl_sl_version ? gl_sl_version : "(no data)");
+  ZPrint("OpenGL Vendor           : %s\n", gl_vendor ? gl_vendor : "(no data)");
+  ZPrint("OpenGL Renderer         : %s\n", gl_renderer ? gl_renderer : "(no data)");
+
+  // Initialize glew
+  GLenum glewInitStatus = glewInit();
+  if (glewInitStatus != GLEW_OK)
+  {
+    error = String::Format("GLEW failed to initialize with error: %d", glewInitStatus);
+    return;
+  }
+
+  bool version_2_0 = glewIsSupported("GL_VERSION_2_0");
+  bool framebuffer_object = glewIsSupported("GL_ARB_framebuffer_object");
+  bool texture_compression = glewIsSupported("GL_ARB_texture_compression");
+  bool draw_buffers_blend = glewIsSupported("GL_ARB_draw_buffers_blend");
+  bool sampler_objects = glewIsSupported("GL_ARB_sampler_objects");
+
+  ZPrint("OpenGL *Required Extensions\n");
+  ZPrint("OpenGL *(GL_VERSION_2_0) Shader Program support                 : %s\n", version_2_0 ? "True" : "False");
+  ZPrint("OpenGL *(GL_ARB_framebuffer_object) Deferred Rendering support  : %s\n", framebuffer_object ? "True" : "False");
+
+  ZPrint("OpenGL (GL_ARB_texture_compression) Texture Compression support : %s\n", texture_compression ? "True" : "False");
+  ZPrint("OpenGL (GL_ARB_draw_buffers_blend) Multi Target Blend support   : %s\n", draw_buffers_blend ? "True" : "False");
+  ZPrint("OpenGL (GL_ARB_sampler_objects) Sampler Object support          : %s\n", sampler_objects ? "True" : "False");
+
+  ZPrint("OpenGL All Extensions : %s\n", gl_extensions ? gl_extensions : "(no data)");
+
+  // Required OpenGL extensions
+  if (!version_2_0 || !framebuffer_object)
+  {
+    String failedExtensions = BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
+      framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
+    error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
+      "Please update your computer's graphics drivers or verify that your graphics card supports the listed features.", failedExtensions.c_str());
+    return;
+  }
+
+  mDriverSupport.mTextureCompression = texture_compression;
+  mDriverSupport.mMultiTargetBlend = draw_buffers_blend;
+  mDriverSupport.mSamplerObjects = sampler_objects;
+
+  // Intel integrated graphics does not render correctly with borderless Window's aero on OpenGL.
+  String vendorString = gl_vendor;
+  if (vendorString.Contains("Intel"))
+    mDriverSupport.mIntel = true;
+
   // V-Sync off by default
-  wglSwapIntervalEXT(0);
+  zglSetSwapInterval(this, 0);
 
   // No padding
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -809,12 +881,36 @@ OpenglRenderer::OpenglRenderer()
 
   mStreamedVertexBuffer.Initialize();
 
-  #include "LoadingShader.inl"
-  CreateShader(LoadingShaderVertex, String(), LoadingShaderPixel, mLoadingShader);
+  String loadingShaderVertex =
+    "#version 150\n\
+    uniform mat4x4 Transform;\n\
+    uniform mat3x3 UvTransform;\n\
+    in vec3 attLocalPosition;\n\
+    in vec2 attUv;\n\
+    out vec2 psInUv;\n\
+    void main(void)\n\
+    {\n\
+      psInUv = (vec3(attUv, 1.0) * UvTransform).xy;\n\
+      gl_Position = vec4(attLocalPosition, 1.0) * Transform;\n\
+    }";
+
+  String loadingShaderPixel =
+    "#version 150\n\
+    uniform sampler2D Texture;\n\
+    uniform float Alpha;\n\
+    in vec2 psInUv;\n\
+    void main(void)\n\
+    {\n\
+      vec2 uv = vec2(psInUv.x, 1.0 - psInUv.y);\n\
+      gl_FragColor = texture(Texture, uv);\n\
+      gl_FragColor.xyz *= Alpha;\n\
+    }";
+
+  CreateShader(loadingShaderVertex, String(), loadingShaderPixel, mLoadingShader);
 }
 
 //**************************************************************************************************
-OpenglRenderer::~OpenglRenderer()
+void OpenglRenderer::Shutdown()
 {
   ErrorIf(mGlShaders.Empty() == false, "Not all shaders were deleted.");
   ErrorIf(mShaderEntries.Empty() == false, "Not all shaders were deleted.");
@@ -1128,7 +1224,7 @@ void OpenglRenderer::RemoveShaders(Array<ShaderEntry>& entries)
 void OpenglRenderer::SetVSync(bool vsync)
 {
   int swapInterval = vsync ? 1 : 0;
-  wglSwapIntervalEXT(swapInterval);
+  zglSetSwapInterval(this, swapInterval);
 }
 
 //**************************************************************************************************
@@ -1181,10 +1277,7 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   bool splashMode = info->mSplashMode;
   float alpha = splashMode ? info->mSplashFade : 1.0f;
 
-  RECT rect;
-  GetClientRect((HWND)mWindow, &rect);
-  IntVec2 size = IntVec2(rect.right - rect.left, rect.bottom - rect.top);
-  glViewport(0, 0, size.x, size.y);
+  IntVec2 size = zglGetWindowRenderableSize(this);
 
   Mat4 viewportToNdc;
   viewportToNdc.BuildTransform(Vec3(-1.0f, 1.0f, 0.0f), Mat3::cIdentity, Vec3(2.0f / size.x, -2.0f / size.y, 1.0f));
@@ -1306,7 +1399,7 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   glDisable(GL_BLEND);
   glUseProgram(0);
 
-  SwapBuffers((HDC)mDeviceContext);
+  zglSwapBuffers(this);
 }
 
 //**************************************************************************************************
@@ -1340,7 +1433,7 @@ void OpenglRenderer::DoRenderTasks(RenderTasks* renderTasks, RenderQueues* rende
   forRange (RenderTaskRange& taskRange, mRenderTasks->mRenderTaskRanges.All())
     DoRenderTaskRange(taskRange);
 
-  SwapBuffers((HDC)mDeviceContext);
+  zglSwapBuffers(this);
 
   DelayedRenderDataDestruction();
 

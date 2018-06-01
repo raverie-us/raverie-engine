@@ -17,10 +17,15 @@
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="Atomic.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
+    <ClCompile Include="OpenglRendererSDL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">
       <Filter>Precompiled</Filter>
     </ClInclude>
+    <ClInclude Include="..\OpenGL\OpenglRenderer.hpp" />
   </ItemGroup>
 </Project>

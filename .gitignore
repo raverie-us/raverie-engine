@@ -18,6 +18,8 @@ syntax: glob
 *.idb
 *.cd
 *.opendb
+*.db-shm
+*.db-wal
 
 LocalBuildEnvironment.cmd
 LocalPaths.props

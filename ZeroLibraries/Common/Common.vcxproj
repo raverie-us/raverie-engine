@@ -262,6 +262,7 @@
     <ClCompile Include="Platform\Renderer.cpp" />
     <ClCompile Include="Platform\Shell.cpp" />
     <ClCompile Include="Platform\UnicodeUtility.cpp" />
+    <ClCompile Include="Platform\Utilities.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>

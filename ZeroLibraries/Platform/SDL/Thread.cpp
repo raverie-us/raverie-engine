@@ -39,7 +39,7 @@ OsHandle Thread::GetThreadHandle()
   return self->mHandle;
 }
 
-bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadName, ThreadConfig* config)
+bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadName)
 {
   ZeroGetPrivateData(ThreadPrivateData);
 
@@ -107,26 +107,6 @@ bool Thread::IsCompleted()
     return true;
 
   return false;
-}
-
-ThreadConfig::ThreadConfig()
-{
-
-}
-
-ThreadConfig::~ThreadConfig()
-{
-
-}
-
-void ThreadConfig::SetParameter(StringParam name, void* value)
-{
-  mConfigValues.Insert(name, value);
-}
-
-void* ThreadConfig::GetParameter(StringParam name)
-{
-  return mConfigValues.FindValue(name, nullptr);
 }
 
 }//namespace Zero

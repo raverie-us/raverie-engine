@@ -77,19 +77,6 @@ inline void SetupStandardHandle(Status& status, StackHandle& writeHandle, StackH
   }
 }
 
-void Process::Start(Status& status, StringRange commandLine, bool redirectOut, bool redirectError, bool redirectIn, bool showWindow)
-{
-  ProcessStartInfo info;
-  info.mArguments = commandLine;
-  info.mShowWindow = showWindow;
-  info.mRedirectStandardOutput = redirectOut;
-  info.mRedirectStandardError = redirectError;
-  info.mRedirectStandardInput = redirectIn;
-  info.mSearchPath = false;
-
-  Start(status, info);
-}
-
 void SetUpStartInfo(ProcessStartInfo &info)
 {
   // The application name always has to be the first argument, even if it's passed

@@ -55,7 +55,7 @@ public:
   //  Returns if the process is running or not.
   bool IsRunning();
 
-  // Close the process handle. This does not force the process to exit.
+  // Close the process handle. This does not force the process to exit or wait for the process.
   void Close();
 
   // Terminate the process (unsafe)
