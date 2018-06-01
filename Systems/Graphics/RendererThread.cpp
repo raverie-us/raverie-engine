@@ -99,7 +99,7 @@ void CreateRendererJob::Execute()
 //**************************************************************************************************
 void DestroyRendererJob::Execute()
 {
-  DestroyRenderer(Z::gRenderer);
+  delete Z::gRenderer;
   mRendererJobQueue->mExitThread = true;
   mWaitEvent.Signal();
 }

@@ -13,3 +13,9 @@
 #include "Platform/PlatformStandard.hpp"
 
 #include "SDL.h"
+
+// Include glew before OpenGl
+#include <GL/glew.h>
+
+// Include OpenGl
+#include <GL/GL.h>

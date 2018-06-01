@@ -42,20 +42,12 @@ s64 AtomicExchange(volatile s64* target, s64 value);
 void* AtomicExchange(void* volatile* target, void* value);
 
 /// Sets the value stored in target if target is bit-wise equal to comparison
-/// Returns the previous value stored in target
-s8  AtomicCompareExchange(volatile s8*  target, s8  value, s8  comparison);
-s16 AtomicCompareExchange(volatile s16* target, s16 value, s16 comparison);
-s32 AtomicCompareExchange(volatile s32* target, s32 value, s32 comparison);
-s64 AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison);
-void* AtomicCompareExchange(void* volatile* target, void* value, void* comparison);
-
-/// Sets the value stored in target if target is bit-wise equal to comparison
 /// Returns true if the exchange took place, else false
-bool AtomicCompareExchangeBool(volatile s8*  target, s8  value, s8  comparison);
-bool AtomicCompareExchangeBool(volatile s16* target, s16 value, s16 comparison);
-bool AtomicCompareExchangeBool(volatile s32* target, s32 value, s32 comparison);
-bool AtomicCompareExchangeBool(volatile s64* target, s64 value, s64 comparison);
-bool AtomicCompareExchangeBool(void* volatile* target, void* value, void* comparison);
+bool AtomicCompareExchange(volatile s8*  target, s8  value, s8  comparison);
+bool AtomicCompareExchange(volatile s16* target, s16 value, s16 comparison);
+bool AtomicCompareExchange(volatile s32* target, s32 value, s32 comparison);
+bool AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison);
+bool AtomicCompareExchange(void* volatile* target, void* value, void* comparison);
 
 /// Adds the specified value to the value stored in target
 /// Returns the previous value stored in target
@@ -149,13 +141,8 @@ public:
 
   /// Sets the current value if it is bit-wise equal to comparison
   /// Returns the previous value
-  value_type CompareExchange(value_type value, value_type comparison)          { underlying_type result = AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); return reinterpret_cast<value_type&>(result); }
-  value_type CompareExchange(value_type value, value_type comparison) volatile { underlying_type result = AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); return reinterpret_cast<value_type&>(result); }
-
-  /// Sets the current value if it is bit-wise equal to comparison
-  /// Returns true if the exchange took place, else false
-  bool CompareExchangeBool(value_type value, value_type comparison)          { return AtomicCompareExchangeBool(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
-  bool CompareExchangeBool(value_type value, value_type comparison) volatile { return AtomicCompareExchangeBool(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
+  value_type CompareExchange(value_type value, value_type comparison)          { return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
+  value_type CompareExchange(value_type value, value_type comparison) volatile { return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
 
   //
   // Arithmetic Operations
@@ -246,13 +233,8 @@ public:
 
   /// Sets the current value if it is bit-wise equal to comparison
   /// Returns the previous value
-  value_type CompareExchange(value_type value, value_type comparison)          { underlying_type result = AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); return reinterpret_cast<value_type&>(result); }
-  value_type CompareExchange(value_type value, value_type comparison) volatile { underlying_type result = AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); return reinterpret_cast<value_type&>(result); }
-
-  /// Sets the current value if it is bit-wise equal to comparison
-  /// Returns true if the exchange took place, else false
-  bool CompareExchangeBool(value_type value, value_type comparison)          { return AtomicCompareExchangeBool(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
-  bool CompareExchangeBool(value_type value, value_type comparison) volatile { return AtomicCompareExchangeBool(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
+  bool CompareExchange(value_type value, value_type comparison) { return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
+  bool CompareExchange(value_type value, value_type comparison) volatile { return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
 
 private:
   /// No Copy Constructor

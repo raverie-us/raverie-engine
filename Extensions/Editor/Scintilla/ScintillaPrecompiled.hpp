@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <memory>
 
 #define ScString std::string
 #define ScVector std::vector

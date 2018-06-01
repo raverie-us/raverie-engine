@@ -1997,7 +1997,7 @@ bool ScintillaZero::FindTextNotSelected(int start, int end, const char* text, Se
   while (start < end)
   {
     int lengthFound = length;
-    int pos = pdoc->FindText(start, end, text, true, false, false, false, 0, &lengthFound, std::auto_ptr<CaseFolder>(CaseFolderForEncoding()).get());
+    int pos = pdoc->FindText(start, end, text, true, false, false, false, 0, &lengthFound, std::unique_ptr<CaseFolder>(CaseFolderForEncoding()).get());
     if (pos == -1)
       return false;
 

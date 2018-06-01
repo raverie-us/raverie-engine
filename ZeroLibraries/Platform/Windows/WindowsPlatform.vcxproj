@@ -119,6 +119,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
     <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Browser.cpp" />
@@ -133,7 +134,6 @@
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="FpControl.cpp" />
     <ClCompile Include="Intrinsics.cpp" />
-    <ClCompile Include="OpenglRenderer.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Process.cpp" />
@@ -142,7 +142,6 @@
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="StackWalker.cpp" />
-    <ClCompile Include="StreamedVertexBuffer.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ThreadSync.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -153,13 +152,13 @@
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="OpenglRendererWindows.cpp" />
     <ClCompile Include="WinUtility.cpp" />
     <ClCompile Include="WString.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OpenglRenderer.hpp" />
+    <ClInclude Include="..\OpenGL\OpenglRenderer.hpp" />
     <ClInclude Include="StackWalker.hpp" />
-    <ClInclude Include="StreamedVertexBuffer.hpp" />
     <ClInclude Include="ThreadIo.hpp" />
     <ClInclude Include="WindowsError.hpp" />
     <ClInclude Include="Precompiled.hpp" />
@@ -168,7 +167,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Keys.inl" />
-    <None Include="LoadingShader.inl" />
     <None Include="MouseButtons.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

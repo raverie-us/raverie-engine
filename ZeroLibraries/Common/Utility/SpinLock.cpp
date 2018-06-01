@@ -11,7 +11,7 @@ namespace Zero
 //******************************************************************************
 void SpinLock::Lock()
 {
-  while (!mLocked.CompareExchangeBool(true, false));
+  while (!mLocked.CompareExchange(true, false));
 }
 
 //******************************************************************************

@@ -21,7 +21,6 @@ struct ThreadPrivateData
 Thread::Thread()
 {
   Error("Not implemented");
-  ZeroConstructPrivateData(ThreadPrivateData);
 }
 
 Thread::~Thread()
@@ -33,53 +32,59 @@ Thread::~Thread()
 
 bool Thread::IsValid()
 {
-  ZeroGetPrivateData(Thread);
+  Error("Not implemented");
   return false;
 }
 
-bool Thread::Initialize(EntryFunction entry, void* instance, cstr threadName)
+bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName)
 {
-  ZeroGetPrivateData(Thread);
+  Error("Not implemented");
   return false;
 }
 
 void Thread::Resume()
 {
-  ZeroGetPrivateData(Thread);
+  Error("Not implemented");
 }
 
 void Thread::Suspend()
 {
-  ZeroGetPrivateData(Thread);
+  Error("Not implemented");
 }
 
 void Thread::Close()
 {
-  ZeroGetPrivateData(Thread);
+  Error("Not implemented");
 }
 
 OsInt Thread::WaitForCompletion()
 {
-  ZeroGetPrivateData(Thread);
+  Error("Not implemented");
+  return 0;
+}
+
+OsInt Thread::WaitForCompletion(unsigned long milliseconds)
+{
+  Error("Not implemented");
   return 0;
 }
 
 bool Thread::IsCompleted()
 {
-  ZeroGetPrivateData(Thread);
-  return true;
+  Error("Not implemented");
+  return false;
 }
 
 OsHandle Thread::Detach()
 {
-  ZeroGetPrivateData(Thread);
-  return NULL;
+  Error("Not implemented");
+  return nullptr;
 }
 
 OsHandle Thread::GetThreadHandle()
 {
-  ZeroGetPrivateData(Thread);
-  return NULL;
+  Error("Not implemented");
+  return nullptr;
 }
 
 }//namespace Zero

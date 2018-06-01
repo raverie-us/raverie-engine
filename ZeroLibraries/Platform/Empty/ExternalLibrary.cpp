@@ -8,44 +8,44 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/ExternalLibrary.hpp"
 
 namespace Zero
 {
 
 ExternalLibrary::ExternalLibrary()
 {
-  mHandle = nullptr;
-  mUnloadOnDestruction = true;
+  Error("Not implemented");
 }
 
 ExternalLibrary::~ExternalLibrary()
 {
-  if(mUnloadOnDestruction)
-    Unload();
+  Error("Not implemented");
 }
 
 bool ExternalLibrary::IsValid()
 {
-  return mHandle != nullptr;
+  Error("Not implemented");
+  return false;
 }
 
-void ExternalLibrary::Load(cstr filePath)
+void ExternalLibrary::Load(Status& status, cstr filePath)
 {
   Error("Not implemented");
 }
 
 void ExternalLibrary::Unload()
 {
-  if(mHandle == nullptr)
-    return;
   Error("Not implemented");
-  mHandle = nullptr;
 }
 
 void* ExternalLibrary::GetFunctionByName(cstr name)
 {
-  ReturnIf(mHandle == nullptr, nullptr, "Attempting to get a function from an invalid library");
+  Error("Not implemented");
+  return nullptr;
+}
+
+void* ExternalLibrary::Patch(void* oldFunctionPointer, void* newFunctionPointer)
+{
   Error("Not implemented");
   return nullptr;
 }

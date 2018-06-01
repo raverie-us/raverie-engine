@@ -8,7 +8,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/Process.hpp"
 
 namespace Zero
 {
@@ -20,53 +19,98 @@ struct ProcessPrivateData
 Process::Process()
 {
   Error("Not implemented");
-  ZeroConstructPrivateData(ProcessPrivateData);
 }
 
 Process::~Process()
 {
-  ZeroGetPrivateData(ProcessPrivateData);
-  // Destruction logic
-  ZeroDestructPrivateData(ProcessPrivateData);
+  Error("Not implemented");
 }
 
-uint Process::ExecProcess(cstr debugName, cstr commandLine, 
-                          TextStream* stream, bool showWindow)
+void Process::Start(Status& status, ProcessStartInfo& info)
 {
-  ZeroGetPrivateData(ProcessPrivateData);
+  Error("Not implemented");
+}
+
+void Process::Start(Status& status, StringRange commandLine, bool redirectOut,
+                      bool redirectError, bool redirectIn, bool showWindow)
+{
+  Error("Not implemented");
+}
+
+int Process::WaitForClose()
+{
+  Error("Not implemented");
   return 0;
 }
 
-void Process::WriteToStdIn(cstr text, int size)
+int Process::WaitForClose(unsigned long milliseconds)
 {
-  ZeroGetPrivateData(ProcessPrivateData);
-}
-
-void Process::Shutdown()
-{
-  ZeroGetPrivateData(ProcessPrivateData);
-}
-
-void Process::WaitForClose()
-{
-  ZeroGetPrivateData(ProcessPrivateData);
-}
-
-int Process::GetExitCode()
-{
-  ZeroGetPrivateData(ProcessPrivateData);
+  Error("Not implemented");
   return 0;
+}
+
+bool Process::IsRunning()
+{
+  Error("Not implemented");
+  return false;
+}
+
+void Process::Close()
+{
+  Error("Not implemented");
 }
 
 void Process::Terminate()
 {
-  ZeroGetPrivateData(ProcessPrivateData);
+  Error("Not implemented");
 }
 
-OsInt Process::ReadThreadEntryPoint()
+void Process::OpenStandardOut(File& fileStream)
 {
-  ZeroGetPrivateData(ProcessPrivateData);
-  return 0;
+  Error("Not implemented");
+}
+
+void Process::OpenStandardError(File& fileStream)
+{
+  Error("Not implemented");
+}
+
+void Process::OpenStandardIn(File& fileStream)
+{
+  Error("Not implemented");
+}
+
+bool Process::IsStandardOutRedirected()
+{
+  Error("Not implemented");
+  return false;
+}
+
+bool Process::IsStandardErrorRedirected()
+{
+  Error("Not implemented");
+  return false;
+}
+
+bool Process::IsStandardInRedirected()
+{
+  Error("Not implemented");
+  return false;
+}
+
+void GetProcesses(Array<ProcessInfo>& results)
+{
+  Error("Not implemented");
+}
+
+void KillProcess(OsInt processId, int exitCode)
+{
+  Error("Not implemented");
+}
+
+void RegisterApplicationRestartCommand(StringParam commandLineArgs, uint flags)
+{
+  Error("Not implemented");
 }
 
 }

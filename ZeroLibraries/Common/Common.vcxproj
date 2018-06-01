@@ -217,6 +217,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="CommonStandard.cpp" />
     <ClCompile Include="Containers\BitStream.cpp" />
     <ClCompile Include="Containers\ByteBuffer.cpp" />
@@ -252,7 +253,6 @@
     <ClCompile Include="Memory\Graph.cpp" />
     <ClCompile Include="Memory\Heap.cpp" />
     <ClCompile Include="Memory\Pool.cpp" />
-    <ClCompile Include="Platform\Atomic.cpp" />
     <ClCompile Include="Platform\File.cpp" />
     <ClCompile Include="Platform\FileEvents.cpp" />
     <ClCompile Include="Platform\FilePath.cpp" />
@@ -263,6 +263,7 @@
     <ClCompile Include="Platform\Renderer.cpp" />
     <ClCompile Include="Platform\Shell.cpp" />
     <ClCompile Include="Platform\UnicodeUtility.cpp" />
+    <ClCompile Include="Platform\Utilities.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>

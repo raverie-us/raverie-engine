@@ -207,7 +207,7 @@ namespace Audio
       DecodingSemaphore.WaitAndDecrement();
 
       // Check if we are supposed to shut down
-      if (Zero::AtomicCompareExchange(&ShutDownSignal, 0, 0) != 0)
+      if (!Zero::AtomicCompareExchange(&ShutDownSignal, 0, 0))
         return;
 
       // Decode a packet and check if we should keep looping

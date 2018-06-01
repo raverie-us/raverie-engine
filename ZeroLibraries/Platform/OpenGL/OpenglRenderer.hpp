@@ -1,15 +1,40 @@
 // Authors: Nathan Carlson
 // Copyright 2015, DigiPen Institute of Technology
 
-#pragma once
-
 namespace Zero
 {
+// These functions must be defined by the platform (as well as CreateRenderer)
+// These could be virtual functions on the OpenglRenderer, however there should only be
+// one implementation of OpenGL per platform, so we can avoid the virtual overhead.
+class OpenglRenderer;
+extern void zglSetSwapInterval(OpenglRenderer* renderer, int interval);
+extern IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer);
+extern void zglSwapBuffers(OpenglRenderer* renderer);
 
 // Links regarding the portability of GLAPIENTRY:
 // http://lists.openscenegraph.org/pipermail/osg-users-openscenegraph.org/2007-October/003023.html
 // http://sourceforge.net/p/glew/bugs/227/
 typedef void (GLAPIENTRY *UniformFunction)(GLint, GLsizei, const void*);
+
+class StreamedVertexBuffer
+{
+public:
+  void Initialize();
+  void Destroy();
+
+  void AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType);
+  void AddVertices(StreamedVertexArray& vertices, uint start, uint count, PrimitiveType::Enum primitiveType);
+  void FlushBuffer(bool deactivate);
+
+  uint mBufferSize;
+  GLuint mVertexArray;
+  GLuint mVertexBuffer;
+
+  uint mCurrentBufferOffset;
+
+  PrimitiveType::Enum mPrimitiveType;
+  bool mActive;
+};
 
 class GlShader
 {
@@ -49,8 +74,11 @@ public:
 class OpenglRenderer : public Renderer
 {
 public:
-  OpenglRenderer();
-  ~OpenglRenderer();
+  // This must be called by the derived class after the OpenGL context has been created.
+  void Initialize(OsHandle windowHandle, OsHandle deviceContext, OsHandle renderContext, String& error);
+
+  // This must be called by the derived class before the OpenGL context has been destroyed.
+  void Shutdown();
 
   void BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) override;
   void BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane) override;
