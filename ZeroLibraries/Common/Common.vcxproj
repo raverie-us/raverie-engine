@@ -223,7 +223,6 @@
     <ClCompile Include="Containers\ByteBuffer.cpp" />
     <ClCompile Include="Diagnostic\Console.cpp" />
     <ClCompile Include="Diagnostic\Diagnostic.cpp" />
-    <ClCompile Include="DirectoryWatcher.cpp" />
     <ClCompile Include="Guid.cpp" />
     <ClCompile Include="Lexer\Lexer.cpp" />
     <ClCompile Include="Math\BlockVector3.cpp" />
@@ -254,6 +253,7 @@
     <ClCompile Include="Memory\Graph.cpp" />
     <ClCompile Include="Memory\Heap.cpp" />
     <ClCompile Include="Memory\Pool.cpp" />
+    <ClCompile Include="Platform\DirectoryWatcher.cpp" />
     <ClCompile Include="Platform\File.cpp" />
     <ClCompile Include="Platform\FileEvents.cpp" />
     <ClCompile Include="Platform\FilePath.cpp" />

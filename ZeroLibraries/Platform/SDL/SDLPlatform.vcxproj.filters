@@ -18,7 +18,6 @@
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Resolution.cpp" />
-    <ClCompile Include="DirectoryWatcher.cpp" />
     <ClCompile Include="FpControl.cpp" />
   </ItemGroup>
   <ItemGroup>

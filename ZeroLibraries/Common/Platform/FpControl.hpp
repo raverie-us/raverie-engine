@@ -22,7 +22,7 @@ struct ZeroShared ScopeFpuExceptionsEnabler
   ScopeFpuExceptionsEnabler();
   ~ScopeFpuExceptionsEnabler();
 
-  unsigned int mOldState;
+  ZeroDeclarePrivateData(ScopeFpuExceptionsEnabler, 8);
 };
 
 /// Temporarily disables all fpu exception masks. Used primarily
@@ -33,7 +33,7 @@ struct ZeroShared ScopeFpuExceptionsDisabler
   ScopeFpuExceptionsDisabler();
   ~ScopeFpuExceptionsDisabler();
 
-  unsigned int mOldState;
+  ZeroDeclarePrivateData(ScopeFpuExceptionsDisabler, 8);
 };
 
 /// System to store the mask and active flag for floating point exceptions.

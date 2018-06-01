@@ -15,17 +15,20 @@ uint FpuControlSystem::DefaultMask = FE_INEXACT | FE_UNDERFLOW;
 ///Stores that by default floating point exceptions are enabled
 bool FpuControlSystem::Active = true;
 
-std::fexcept_t gOldStateEnabler;
-std::fexcept_t gOldStateDisabler;
+struct FpuPrivateData
+{
+  std::fexcept_t mOldState;
+};
 
 ScopeFpuExceptionsEnabler::ScopeFpuExceptionsEnabler()
 {
+  ZeroConstructPrivateData(FpuPrivateData);
   ///only scope change if the fpu control system is active
   if (FpuControlSystem::Active == false)
     return;
 
   //get the old state so we know what to go back to
-  fegetexceptflag(&gOldStateEnabler, FE_ALL_EXCEPT);
+  fegetexceptflag(&(self->mOldState), FE_ALL_EXCEPT);
   feclearexcept(FE_ALL_EXCEPT);
   //set the new state
   std::fexcept_t currState;
@@ -34,23 +37,27 @@ ScopeFpuExceptionsEnabler::ScopeFpuExceptionsEnabler()
 
 ScopeFpuExceptionsEnabler::~ScopeFpuExceptionsEnabler()
 {
+  ZeroGetPrivateData(FpuPrivateData);
   ///only scope change if the fpu control system is active
   if (FpuControlSystem::Active == false)
     return;
 
   //set the old state back
   feclearexcept(FE_ALL_EXCEPT);
-  fesetexceptflag(&gOldStateEnabler, FE_ALL_EXCEPT);
+  fesetexceptflag(&(self->mOldState), FE_ALL_EXCEPT);
+
+  ZeroDestructPrivateData(FpuPrivateData);
 }
 
 ScopeFpuExceptionsDisabler::ScopeFpuExceptionsDisabler()
 {
+  ZeroConstructPrivateData(FpuPrivateData);
   ///only scope change if the fpu control system is active
   if (FpuControlSystem::Active == false)
     return;
 
   //get the old state
-  fegetexceptflag(&gOldStateDisabler, FE_ALL_EXCEPT);
+  fegetexceptflag(&(self->mOldState), FE_ALL_EXCEPT);
   //set all of the exception flags which disables all fp exceptions.
   std::fexcept_t currState = FE_ALL_EXCEPT;
   fesetexceptflag(&currState, FE_ALL_EXCEPT);
@@ -58,6 +65,7 @@ ScopeFpuExceptionsDisabler::ScopeFpuExceptionsDisabler()
 
 ScopeFpuExceptionsDisabler::~ScopeFpuExceptionsDisabler()
 {
+  ZeroGetPrivateData(FpuPrivateData);
   ///only scope change if the fpu control system is active
   if (FpuControlSystem::Active == false)
     return;
@@ -67,7 +75,9 @@ ScopeFpuExceptionsDisabler::~ScopeFpuExceptionsDisabler()
   feclearexcept(FE_ALL_EXCEPT);
 
   //now reset the exceptions to what they were
-  fesetexceptflag(&gOldStateDisabler, FE_ALL_EXCEPT);
+  fesetexceptflag(&(self->mOldState), FE_ALL_EXCEPT);
+
+  ZeroDestructPrivateData(FpuPrivateData);
 }
 
 }// namespace Zero

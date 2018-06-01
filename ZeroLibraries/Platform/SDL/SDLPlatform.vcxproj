@@ -64,7 +64,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Atomic.cpp" />
-    <ClCompile Include="DirectoryWatcher.cpp" />
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="FpControl.cpp" />
     <ClCompile Include="Peripherals.cpp" />

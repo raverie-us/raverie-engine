@@ -238,7 +238,7 @@
     <ClCompile Include="CommandLineSupport.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="DirectoryWatcher.cpp">
+    <ClCompile Include="Platform\DirectoryWatcher.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
   </ItemGroup>

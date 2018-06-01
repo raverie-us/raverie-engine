@@ -19,8 +19,14 @@ uint FpuControlSystem::DefaultMask = _EM_INEXACT | _EM_UNDERFLOW;
 ///Stores that by default floating point exceptions are enabled
 bool FpuControlSystem::Active = true;
 
+struct FpuPrivateData
+{
+  unsigned int mOldState;
+};
+
 ScopeFpuExceptionsEnabler::ScopeFpuExceptionsEnabler()
 {
+  ZeroConstructPrivateData(FpuPrivateData);
   ///only scope change if the fpu control system is active
   if(FpuControlSystem::Active == false)
     return;
@@ -34,7 +40,7 @@ ScopeFpuExceptionsEnabler::ScopeFpuExceptionsEnabler()
   unsigned int currState;
   //get the old state so we know what to go back to
   _clearfp();
-  _controlfp_s(&mOldState, _MCW_EM, _MCW_EM);
+  _controlfp_s(&(self->mOldState), _MCW_EM, _MCW_EM);
   //set the new state
   _clearfp();
   _controlfp_s(&currState,FpuControlSystem::DefaultMask, _MCW_EM);
@@ -42,6 +48,7 @@ ScopeFpuExceptionsEnabler::ScopeFpuExceptionsEnabler()
 
 ScopeFpuExceptionsEnabler::~ScopeFpuExceptionsEnabler()
 {
+  ZeroGetPrivateData(FpuPrivateData);
   ///only scope change if the fpu control system is active
   if(FpuControlSystem::Active == false)
     return;
@@ -49,23 +56,27 @@ ScopeFpuExceptionsEnabler::~ScopeFpuExceptionsEnabler()
   //set the old state back
   unsigned int currState;
   _clearfp();
-  _controlfp_s(&currState,mOldState, _MCW_EM);
+  _controlfp_s(&currState, self->mOldState, _MCW_EM);
+
+  ZeroDestructPrivateData(FpuPrivateData);
 }
 
 ScopeFpuExceptionsDisabler::ScopeFpuExceptionsDisabler()
 {
+  ZeroConstructPrivateData(FpuPrivateData);
   ///only scope change if the fpu control system is active
   if(FpuControlSystem::Active == false)
     return;
 
   //get the old state
-  _controlfp_s(&mOldState, _MCW_EM, _MCW_EM);
+  _controlfp_s(&(self->mOldState), _MCW_EM, _MCW_EM);
   //set all of the exception flags which disables all fp exceptions.
   _controlfp_s(0, _MCW_EM, _MCW_EM);
 }
 
 ScopeFpuExceptionsDisabler::~ScopeFpuExceptionsDisabler()
 {
+  ZeroGetPrivateData(FpuPrivateData);
   ///only scope change if the fpu control system is active
   if(FpuControlSystem::Active == false)
     return;
@@ -75,7 +86,9 @@ ScopeFpuExceptionsDisabler::~ScopeFpuExceptionsDisabler()
   _clearfp();
 
   //now reset the exceptions to what they were
-  _controlfp_s(0, mOldState, _MCW_EM);
+  _controlfp_s(0, self->mOldState, _MCW_EM);
+
+  ZeroDestructPrivateData(FpuPrivateData);
 }
 
 }//namespace Zero
