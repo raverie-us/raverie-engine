@@ -146,7 +146,11 @@ void LoadResource(HandleParam instance, Property* property, Type* resourceType, 
 {
   // If it's null, do not default 
   if (resourceIdName == cNullResource)
+  {
+    // Set property to null resource.
+    property->SetValue(instance, Any(resourceType));
     return;
+  }
 
   Resource* resource;
 
