@@ -238,6 +238,9 @@
     <ClCompile Include="CommandLineSupport.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="DirectoryWatcher.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">

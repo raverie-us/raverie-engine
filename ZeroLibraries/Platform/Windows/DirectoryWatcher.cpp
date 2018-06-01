@@ -9,29 +9,6 @@
 namespace Zero
 {
 
-DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch, CallbackFunction callback, void* callbackInstance)
-{
-  ZeroCStringCopy(mDirectoryToWatch, File::MaxPath, directoryToWatch, strlen(directoryToWatch));
-
-  mCallbackInstance = callbackInstance;
-  mCallback = callback;
-
-  mWorkThread.Initialize(Thread::ObjectEntryCreator<DirectoryWatcher, &DirectoryWatcher::RunThreadEntryPoint>, this, "DirectoryWatcherWorker");
-  mWorkThread.Resume();
-  mCancelEvent.Initialize(true, false);
-}
-
-DirectoryWatcher::~DirectoryWatcher()
-{
-  Shutdown();
-}
-
-void DirectoryWatcher::Shutdown()
-{
-  mCancelEvent.Signal();
-  mWorkThread.WaitForCompletion();
-}
-
 OsInt DirectoryWatcher::RunThreadEntryPoint()
 {
   //Do not prevent others from using the directory.

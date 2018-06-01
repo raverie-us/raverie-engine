@@ -223,6 +223,7 @@
     <ClCompile Include="Containers\ByteBuffer.cpp" />
     <ClCompile Include="Diagnostic\Console.cpp" />
     <ClCompile Include="Diagnostic\Diagnostic.cpp" />
+    <ClCompile Include="DirectoryWatcher.cpp" />
     <ClCompile Include="Guid.cpp" />
     <ClCompile Include="Lexer\Lexer.cpp" />
     <ClCompile Include="Math\BlockVector3.cpp" />
