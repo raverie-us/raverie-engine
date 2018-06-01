@@ -526,12 +526,12 @@ struct ZeroSharedTemplate has_equality_operator : public integral_constant<bool,
 template <typename T, typename Enable = void>
 struct ZeroSharedTemplate ComparePolicy
 {
-  inline bool Equal(const T&, const T&) const
+  inline bool Equal(const T& left, const T& right) const
   {
     return false;
   }
   template<typename T2>
-  inline bool Equal(const T&, const T2&) const
+  inline bool Equal(const T& left, const T2& right) const
   {
     return false;
   }

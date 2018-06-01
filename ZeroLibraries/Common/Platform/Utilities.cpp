@@ -6,6 +6,8 @@
 
 namespace Zero
 {
+namespace Os
+{
 void SystemOpenFile(cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   Status status;
@@ -17,5 +19,5 @@ void SystemOpenNetworkFile(cstr file, uint verb, cstr parameters, cstr workingDi
   Status status;
   SystemOpenNetworkFile(status, file, verb, parameters, workingDirectory);
 }
-
+}// namespace Os
 }// namespace Zero
