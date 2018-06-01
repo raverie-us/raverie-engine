@@ -152,7 +152,7 @@ public:
   bool Empty();
   String Front();
   // This function should be used over front (and should eventually replace it)
-  FileEntry frontEntry();
+  FileEntry FrontEntry();
 
   void PopFront();
 

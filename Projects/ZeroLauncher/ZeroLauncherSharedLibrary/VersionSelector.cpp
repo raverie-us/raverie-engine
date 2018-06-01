@@ -98,7 +98,7 @@ void VersionSelector::FindInstalledVersions(StringParam searchPath)
   FileRange range(searchPath);
   for(; !range.Empty(); range.PopFront())
   {
-    FileEntry entry = range.frontEntry();
+    FileEntry entry = range.FrontEntry();
     String fullDirName = entry.GetFullPath();
     // We only care about folders
     if(IsDirectory(fullDirName))
@@ -519,7 +519,7 @@ void VersionSelector::FindDownloadedTemplatesRecursive(StringParam searchPath)
   FileRange range(searchPath);
   for(; !range.Empty(); range.PopFront())
   {
-    FileEntry entry = range.frontEntry();
+    FileEntry entry = range.FrontEntry();
     String fullDirName = entry.GetFullPath();
     if(IsDirectory(fullDirName))
       FindDownloadedTemplatesRecursive(fullDirName);

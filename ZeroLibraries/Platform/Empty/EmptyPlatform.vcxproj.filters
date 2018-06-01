@@ -21,7 +21,21 @@
     <ClCompile Include="CrashHandler.cpp" />
     <ClCompile Include="DirectoryWatcher.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Socket.cpp" />
+    <ClCompile Include="Atomic.cpp" />
+    <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Browser.Cpp" />
+    <ClCompile Include="CommandLineSupport.cpp" />
+    <ClCompile Include="ComPort.cpp" />
+    <ClCompile Include="ExecutableResource.cpp" />
+    <ClCompile Include="ExternalLibrary.cpp" />
+    <ClCompile Include="Intrinsics.cpp" />
+    <ClCompile Include="Peripherals.cpp" />
+    <ClCompile Include="Shell.cpp" />
+    <ClCompile Include="DebugSymbolInformation.cpp" />
+    <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">

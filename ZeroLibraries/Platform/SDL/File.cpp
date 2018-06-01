@@ -245,9 +245,4 @@ void File::Duplicate(Status& status, File& destinationFile)
   WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
 }
 
-void File::Duplicate(Status& status, File& destinationFile) const
-{
-  Error("For SLD to support const we need a const version of File.Read()");
-}
-
 }//namespace Zero

@@ -73,7 +73,7 @@ void ZilchShaderSettingsLoader::LoadSettings(ZilchShaderSettings* settings, Stri
   FileRange fileRange(settingsDirectoryPath);
   for(; !fileRange.Empty(); fileRange.PopFront())
   {
-    FileEntry entry = fileRange.frontEntry();
+    FileEntry entry = fileRange.FrontEntry();
     String filePath = entry.GetFullPath();
     String fileExt = FilePath::GetExtension(filePath);
     settingsProject.AddCodeFromFile(filePath, nullptr);

@@ -8,32 +8,25 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/CrashHandler.hpp"
 
 namespace Zero
 {
 
-
 void RunEngine(RunEngineFunction runFn, void* engine)
 {
   Error("Not implemented");
-  //runFn(engine);
 };
 
 //-------------------------------------------------------------------CrashHandlerParameters
-void CrashHandlerParameters::AddParameter(StringRange name, StringRange value)
+void CrashHandlerParameters::AddParameter(cstr name, cstr value)
 {
-  mParameters.Append("\"--");
-  mParameters.Append(name);
-  mParameters.Append("\" ");
-  mParameters.Append("\"");
-  mParameters.Append(value);
-  mParameters.Append("\" ");
+  Error("Not implemented");
 }
 
 String CrashHandlerParameters::GetParameterString()
 {
-  return mParameters.ToString();
+  Error("Not implemented");
+  return String();
 }
 
 //-------------------------------------------------------------------CrashHandler
@@ -132,25 +125,25 @@ void CrashHandler::RestartOnCrash(bool state)
   Error("Not implemented");
 }
 
-CrashHandler::RunCrashHandlerCallback CrashHandler::mRunCrashHandlerCallback = NULL;
-void* CrashHandler::mRunCrashHandlerUserData = NULL;
+CrashHandler::RunCrashHandlerCallback CrashHandler::mRunCrashHandlerCallback = nullptr;
+void* CrashHandler::mRunCrashHandlerUserData = nullptr;
 
-CrashHandler::CrashStartCallback CrashHandler::mCrashStartCallback = NULL;
-void* CrashHandler::mCrashStartUserData = NULL;
+CrashHandler::CrashStartCallback CrashHandler::mCrashStartCallback = nullptr;
+void* CrashHandler::mCrashStartUserData = nullptr;
 
-CrashHandler::PreMemoryDumpCallback CrashHandler::mPreMemoryDumpCallback = NULL;
-void* CrashHandler::mPreMemoryDumpUserData = NULL;
+CrashHandler::PreMemoryDumpCallback CrashHandler::mPreMemoryDumpCallback = nullptr;
+void* CrashHandler::mPreMemoryDumpUserData = nullptr;
 
-CrashHandler::CustomMemoryCallback CrashHandler::mCustomMemoryCallback = NULL;
-void* CrashHandler::mCustomMemoryUserData = NULL;
+CrashHandler::CustomMemoryCallback CrashHandler::mCustomMemoryCallback = nullptr;
+void* CrashHandler::mCustomMemoryUserData = nullptr;
 
-CrashHandler::LoggingCallback CrashHandler::mLoggingCallback = NULL;
-void* CrashHandler::mLoggingUserData = NULL;
+CrashHandler::LoggingCallback CrashHandler::mLoggingCallback = nullptr;
+void* CrashHandler::mLoggingUserData = nullptr;
 
-CrashHandler::SendCrashReportCallback CrashHandler::mSendCrashReportCallback = NULL;
-void* CrashHandler::mSendCrashReportUserData = NULL;
+CrashHandler::SendCrashReportCallback CrashHandler::mSendCrashReportCallback = nullptr;
+void* CrashHandler::mSendCrashReportUserData = nullptr;
 
-CrashHandler::FinalRescueCall CrashHandler::mRescueCallback = NULL;
-void* CrashHandler::mRescueUserData = NULL;
+CrashHandler::FinalRescueCall CrashHandler::mRescueCallback = nullptr;
+void* CrashHandler::mRescueUserData = nullptr;
 
 }//namespace Zero

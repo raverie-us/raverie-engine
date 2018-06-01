@@ -21,6 +21,8 @@
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
     <ClCompile Include="OpenglRendererSDL.cpp" />
+    <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="Audio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">

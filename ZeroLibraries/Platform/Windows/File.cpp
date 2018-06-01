@@ -380,7 +380,7 @@ void File::Flush()
   FlushFileBuffers(self->mHandle);
 }
 
-void File::Duplicate(Status& status, File& destinationFile) const
+void File::Duplicate(Status& status, File& destinationFile)
 {
   ZeroGetPrivateData(FilePrivateData);
   ZeroGetObjectPrivateData(FilePrivateData, &destinationFile, other);

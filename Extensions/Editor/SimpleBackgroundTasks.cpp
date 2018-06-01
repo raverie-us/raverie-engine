@@ -37,7 +37,7 @@ void DirectorySizeJob::ComputeSizeRecursive(StringParam dir)
     if(mState == BackgroundTaskState::Canceled)
       break;
 
-    FileEntry entry = range.frontEntry();
+    FileEntry entry = range.FrontEntry();
     String filePath = FilePath::Combine(entry.mPath, entry.mFileName);
     // If this is a directory then recurse
     if(IsDirectory(filePath))

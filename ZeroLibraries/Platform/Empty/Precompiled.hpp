@@ -1,19 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Precompiled.hpp
-/// Precompiled header for posix library.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
+/// Authors: Dane Curbow
+/// Copyright 2018, DigiPen Institute of Technology
+////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
-#include "Utility/Standard.hpp"
-#include "String/FixedString.hpp"
-#include "Memory/Memory.hpp"
 
 #include <new>
 #include <cstdlib>
@@ -21,4 +13,16 @@
 #include <ctime>
 #include <cctype>
 #include <sys/stat.h>
-using namespace std;
+
+#pragma comment(lib, "freetype28.lib")
+#pragma comment(lib, "libcef.lib")
+
+#if ZeroRelease
+#pragma comment(lib, "zlib.lib")
+#pragma comment(lib, "libpng.lib")
+#pragma comment(lib, "libcef_dll_wrapper_release.lib")
+#else
+#pragma comment(lib, "zlibd.lib")
+#pragma comment(lib, "libpngd.lib")
+#pragma comment(lib, "libcef_dll_wrapper_debug.lib")
+#endif

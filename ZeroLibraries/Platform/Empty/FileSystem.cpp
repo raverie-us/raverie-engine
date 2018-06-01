@@ -8,91 +8,119 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/FileSystem.hpp"
 
 namespace Zero
 {
 //----------------------------------------------------------- File System Functions
-const char  cDirectorySeparatorChar = '/';
+const Rune  cDirectorySeparatorRune = Rune('/');
 const char* cDirectorySeparatorCstr = "/";
+bool cFileSystemCaseInsensitive = false;
 
-bool CopyFileInternal(StringRef dest, StringRef source)
+void InitFileSystem()
+{
+  Error("Not implemented");
+}
+
+void ShutdownFileSystem()
+{
+  Error("Not implemented");
+}
+
+bool CopyFileInternal(StringParam dest, StringParam source)
 {
   Error("Not implemented");
   return false;
 }
 
-bool MoveFileInternal(StringRef dest, StringRef source)
+bool MoveFileInternal(StringParam dest, StringParam source)
 {
   Error("Not implemented");
   return false;
 }
 
-bool DeleteFileInternal(StringRef file)
+bool DeleteFileInternal(StringParam file)
 {
   Error("Not implemented");
   return false;
 }
 
-void CreateDirectory(StringRef dest)
+bool DeleteDirectory(StringParam directory)
+{
+  Error("Not implemented");
+  return false;
+}
+
+bool PathIsRooted(StringParam directoryPath)
+{
+  Error("Not implemented");
+  return false;
+}
+
+void CreateDirectory(StringParam dest)
 {
   Error("Not implemented");
 }
 
-void CreateDirectoryAndParents(StringRef directory)
+void CreateDirectoryAndParents(StringParam directory)
 {
   Error("Not implemented");
 }
 
-int CheckFileTime(StringRef dest, StringRef source)
+String FindFirstMissingDirectory(StringParam directory)
+{
+  Error("Not implemented");
+  return String();
+}
+
+int CheckFileTime(StringParam dest, StringParam source)
 {
   Error("Not implemented");
   return 0;
 }
 
-int SetFileToCurrentTime(StringRef filename)
+int SetFileToCurrentTime(StringParam filename)
 {
   Error("Not implemented");
   return 0;
 }
 
-TimeType GetFileModifiedTime(StringRef filename)
+TimeType GetFileModifiedTime(StringParam filename)
 {
   Error("Not implemented");
   return 0;
 }
 
-u32 GetFileSize(StringRef fileName)
+u32 GetFileSize(StringParam fileName)
 {
   Error("Not implemented");
   return 0;
 }
 
-bool FileExists(StringRef filePath)
+bool FileExists(StringParam filePath)
 {
   Error("Not implemented");
   return false;
 }
 
-bool FileWritable(StringRef filePath)
+bool FileWritable(StringParam filePath)
 {
   Error("Not implemented");
   return false;
 }
 
-bool DirectoryExists(StringRef directoryPath)
+bool DirectoryExists(StringParam directoryPath)
 {
   Error("Not implemented");
   return false;
 }
 
-bool IsDirectory(StringRef directoryPath)
+bool IsDirectory(StringParam directoryPath)
 {
   Error("Not implemented");
   return false;
 }
 
-String CanonicalizePath(StringRef directoryPath)
+String CanonicalizePath(StringParam directoryPath)
 {
   Error("Not implemented");
   return directoryPath;
@@ -104,7 +132,7 @@ String GetWorkingDirectory()
   return String();
 }
 
-void SetWorkingDirectory(String path)
+void SetWorkingDirectory(StringParam path)
 {
   Error("Not implemented");
 }
@@ -139,10 +167,10 @@ String GetTemporaryDirectory()
   return String();
 }
 
-String UniqueFileId(StringRef fullpath)
+String UniqueFileId(StringParam fullpath)
 {
   Error("Not implemented");
-  return fullpath;
+  return String();
 }
 
 //----------------------------------------------------------- File Range
@@ -150,34 +178,37 @@ struct FileRangePrivateData
 {
 };
 
-FileRange::FileRange(StringRef path)
+FileRange::FileRange(StringParam path)
 {
   Error("Not implemented");
-  ZeroConstructPrivateData(FileRangePrivateData);
 }
 
 FileRange::~FileRange()
 {
-  ZeroGetPrivateData(FileRangePrivateData);
-  // Destructor logic
-  ZeroDestructPrivateData(FileRangePrivateData);
+  Error("Not implemented");
 }
 
-bool FileRange::empty()
+bool FileRange::Empty()
 {
-  ZeroGetPrivateData(FileRangePrivateData);
+  Error("Not implemented");
   return true;
 }
 
-cstr FileRange::front()
+String FileRange::Front()
 {
-  ZeroGetPrivateData(FileRangePrivateData);
-  return "";
+  Error("Not implemented");
+  return String();
 }
 
-void FileRange::popFront()
+FileEntry FileRange::FrontEntry()
 {
-  ZeroGetPrivateData(FileRangePrivateData);
+  Error("Not implemented");
+  return FileEntry();
+}
+
+void FileRange::PopFront()
+{
+  Error("Not implemented");
 }
 
 }//namespace Zero
