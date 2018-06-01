@@ -9,13 +9,7 @@
     <ClCompile Include="Precompiled.cpp">
       <Filter>Precompiled</Filter>
     </ClCompile>
-    <ClCompile Include="File.cpp" />
     <ClCompile Include="FileSystem.cpp" />
-    <ClCompile Include="FpControl.cpp" />
-    <ClCompile Include="Process.cpp" />
-    <ClCompile Include="Resolution.cpp" />
-    <ClCompile Include="Thread.cpp" />
-    <ClCompile Include="ThreadSync.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Socket.cpp" />
@@ -25,6 +19,5 @@
       <Filter>Precompiled</Filter>
     </ClInclude>
     <ClInclude Include="OpenGl.hpp" />
-    <ClInclude Include="Shared.hpp" />
   </ItemGroup>
 </Project>

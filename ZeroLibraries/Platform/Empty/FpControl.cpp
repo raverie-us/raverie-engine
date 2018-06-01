@@ -18,7 +18,6 @@ bool FpuControlSystem::Active = false;
 
 ScopeFpuExceptionsEnabler::ScopeFpuExceptionsEnabler()
 {
-  Error("Not implemented");
 }
 
 ScopeFpuExceptionsEnabler::~ScopeFpuExceptionsEnabler()
@@ -27,7 +26,6 @@ ScopeFpuExceptionsEnabler::~ScopeFpuExceptionsEnabler()
 
 ScopeFpuExceptionsDisabler::ScopeFpuExceptionsDisabler()
 {
-  Error("Not implemented");
 }
 
 ScopeFpuExceptionsDisabler::~ScopeFpuExceptionsDisabler()

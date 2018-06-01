@@ -9,193 +9,169 @@
 namespace Zero
 {
 
-Browser::Browser(const BrowserSetup& setup)
+Browser::Browser(const BrowserSetup& setup) :
+  mUserData(nullptr),
+  mLastSetUrl(setup.mUrl),
+  mScrollSpeed(setup.mScrollSpeed),
+  mBackgroundColor(setup.mBackgroundColor),
+  mTransparent(setup.mTransparent),
+  mSize(setup.mSize)
 {
-  Error("Not implemented");
 }
 
 Browser::~Browser()
 {
-  Error("Not implemented");
 }
 
 Math::IntVec2 Browser::GetSize()
 {
-  Error("Not implemented");
-  return Math::IntVec2::cZero;
+  return mSize;
 }
 
 void Browser::SetSize(Math::IntVec2Param size)
 {
-  Error("Not implemented");
+  mSize = size;
 }
 
 bool Browser::GetCanGoForward()
 {
-  Error("Not implemented");
   return false;
 }
 
 bool Browser::GetCanGoBackward()
 {
-  Error("Not implemented");
   return false;
 }
 
 void Browser::GoForward()
 {
-  Error("Not implemented");
 }
 
 void Browser::GoBackward()
 {
-  Error("Not implemented");
 }
 
 bool Browser::GetIsLoading()
 {
-  Error("Not implemented");
   return false;
 }
 
 void Browser::Reload(bool useCache)
 {
-  Error("Not implemented");
 }
 
 void Browser::SetFocus(bool focus)
 {
-  Error("Not implemented");
 }
 
 bool Browser::GetFocus()
 {
-  Error("Not implemented");
   return false;
 }
 
 void Browser::SetVisible(bool visible)
 {
-  Error("Not implemented");
 }
 
 bool Browser::GetVisible()
 {
-  Error("Not implemented");
   return false;
 }
 
 Math::Vec4 Browser::GetBackgroundColor()
 {
-  Error("Not implemented");
-  return Math::Vec4::cZero;
+  return mBackgroundColor;
 }
 
 void Browser::SetBackgroundColor(Math::Vec4Param color)
 {
-  Error("Not implemented");
+  mBackgroundColor = color;
 }
 
 bool Browser::GetTransparent()
 {
-  Error("Not implemented");
-  return false;
+  return mTransparent;
 }
 
 void Browser::SetTransparent(bool transparent)
 {
-  Error("Not implemented");
+  mTransparent = transparent;
 }
 
 String Browser::GetStatus()
 {
-  Error("Not implemented");
-  return String();
+  return mStatus;
 }
 
 String Browser::GetTitle()
 {
-  Error("Not implemented");
-  return String();
+  return mTitle;
 }
 
 Math::Vec2 Browser::GetScrollSpeed()
 {
-  Error("Not implemented");
-  return Math::Vec2::cZero;
+  return mScrollSpeed;
 }
 
 void Browser::SetScrollSpeed(Math::Vec2Param pixelsPerScroll)
 {
-  Error("Not implemented");
+  mScrollSpeed = pixelsPerScroll;
 }
 
 void Browser::SetUrl(StringParam url)
 {
-  Error("Not implemented");
+  mLastSetUrl = url;
 }
 
 String Browser::GetUrl()
 {
-  Error("Not implemented");
-  return String();
+  return mLastSetUrl;
 }
 
 void Browser::ExecuteScriptFromLocation(StringParam script, StringParam url, int line)
 {
-  Error("Not implemented");
 }
 
 void Browser::SimulateKey(int key, bool down, BrowserModifiers::Enum modifiers)
 {
-  Error("Not implemented");
 }
 
 void Browser::SimulateTextTyped(int character, BrowserModifiers::Enum modifiers)
 {
-  Error("Not implemented");
 }
 
 void Browser::SimulateMouseMove(Math::IntVec2Param localPosition, BrowserModifiers::Enum modifiers)
 {
-  Error("Not implemented");
 }
 
 void Browser::SimulateMouseClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, bool down, BrowserModifiers::Enum modifiers)
 {
-  Error("Not implemented");
 }
 
 void Browser::SimulateMouseDoubleClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, BrowserModifiers::Enum modifiers)
 {
-  Error("Not implemented");
 }
 
 void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition, Math::Vec2Param delta, BrowserModifiers::Enum modifiers)
 {
-  Error("Not implemented");
 }
 
 // This must be called before any browsers are created
 void Browser::PlatformCreate() 
 {
-  Error("Not implemented");
 }
 
 void Browser::PlatformDestroy()
 {
-  Error("Not implemented");
 }
 
 void Browser::PlatformUpdate()
 {
-  Error("Not implemented");
 }
 
 //------------------------------------------------------------------------------ BrowserSubProcess
 int BrowserSubProcess::Execute()
 {
-  Error("Not implemented");
   return 0;
 }
 

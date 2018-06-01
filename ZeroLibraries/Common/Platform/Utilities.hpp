@@ -148,9 +148,6 @@ ZeroShared void GetMemoryStatus(MemoryInfo& memoryInfo);
 // Get an Environmental variable
 ZeroShared String GetEnvironmentalVariable(StringParam variable);
 
-// Translate a OS error code.
-ZeroShared String TranslateErrorCode(int errorCode);
-
 // Get a string describing the current operating system version.
 ZeroShared String GetVersionString();
 

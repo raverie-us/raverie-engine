@@ -527,19 +527,6 @@ void GetMemoryStatus(MemoryInfo& data)
   }
 }
 
-
-String TranslateErrorCode(int errorCode)
-{
-  //Try exception codes
-  cstr exceptionCode = GetWindowsExceptionCode(errorCode);
-  if(exceptionCode)
-    return exceptionCode;
-
-  //Try windows formatting
-  String errorString = ToErrorString(errorCode);
-  return errorString;
-}
-
 typedef void (WINAPI *GetNativeSystemInfoPtr)(LPSYSTEM_INFO);
 
 String GetVersionString()

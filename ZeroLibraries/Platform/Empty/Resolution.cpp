@@ -8,13 +8,12 @@ namespace Zero
 {
 Resolution GetDesktopResolution()
 {
-  Error("Not implemented");
-  return Resolution();
+  return Resolution(800, 600);
 }
 
 void Enumerate(Array<Resolution>& resolutions, int bitDepth, Resolution aspect)
 {
-  Error("Not implemented");
+  resolutions.PushBack(Resolution(800, 600));
 }
 
 }//namespace Zero

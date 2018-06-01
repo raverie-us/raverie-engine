@@ -25,7 +25,6 @@
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="Browser.Cpp" />
     <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="ComPort.cpp" />
     <ClCompile Include="ExecutableResource.cpp" />
@@ -36,6 +35,7 @@
     <ClCompile Include="DebugSymbolInformation.cpp" />
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Browser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">

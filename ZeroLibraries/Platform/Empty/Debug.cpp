@@ -15,7 +15,6 @@ namespace Zero
 
 void CheckClassMemory(cstr className, byte* classMemory)
 {
-  Error("Not implemented");
 }
 
 }//namespace Zero

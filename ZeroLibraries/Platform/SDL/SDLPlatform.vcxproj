@@ -65,14 +65,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
-    <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="OpenglRendererSDL.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Shell.cpp" />
-    <ClCompile Include="Process.cpp" />
     <ClCompile Include="Resolution.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ThreadSync.cpp" />

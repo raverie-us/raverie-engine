@@ -19,7 +19,7 @@
   <ItemGroup>
     <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="Browser.Cpp" />
+    <ClCompile Include="Browser.cpp" />
     <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="ComPort.cpp" />
     <ClCompile Include="CrashHandler.cpp" />

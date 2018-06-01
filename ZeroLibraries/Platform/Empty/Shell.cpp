@@ -7,160 +7,137 @@
 namespace Zero
 {
 
+String gClipboardText;
+
 //-------------------------------------------------------------------- Shell
 Shell::Shell() :
   mCursor(Cursor::Arrow),
   mMainWindow(nullptr),
   mUserData(nullptr)
 {
-  Error("Not implemented");
 }
 
 Shell::~Shell()
 {
-  Error("Not implemented");
 }
 
 String Shell::GetOsName()
 {
-  Error("Not implemented");
-  return String();
+  return "Empty";
 }
 
 uint Shell::GetScrollLineCount()
 {
-  Error("Not implemented");
-  return -1;
+  return 3;
 }
 
 IntRect Shell::GetPrimaryMonitorRectangle()
 {
-  Error("Not implemented");
-  return IntRect();
+  return IntRect(0, 0, 800, 600);
 }
 
 IntVec2 Shell::GetPrimaryMonitorSize()
 {
-  Error("Not implemented");
-  return IntVec2::cZero;
+  return IntVec2(800, 600);
 }
 
 ByteColor Shell::GetColorAtMouse()
 {
-  Error("Not implemented");
-  return -1;
+  return 0;
 }
 
 void Shell::SetMonitorCursorClip(const IntRect& monitorRectangle)
 {
-  Error("Not implemented");
 }
 
 void Shell::ClearMonitorCursorClip()
 {
-  Error("Not implemented");
 }
 
 Cursor::Enum Shell::GetMouseCursor()
 {
-  Error("Not implemented");
   return mCursor;
 }
 
 void Shell::SetMonitorCursorPosition(Math::IntVec2Param monitorPosition)
 {
-  Error("Not implemented");
 }
 
 Math::IntVec2 Shell::GetMonitorCursorPosition()
 {
-  Error("Not implemented");
   return IntVec2::cZero;
 }
 
 bool Shell::IsKeyDown(Keys::Enum key)
 {
-  Error("Not implemented");
   return false;
 }
 
 bool Shell::IsMouseDown(MouseButtons::Enum button)
 {
-  Error("Not implemented");
   return false;
 }
 
 void Shell::SetMouseCursor(Cursor::Enum cursor)
 {
-  Error("Not implemented");
+  mCursor = cursor;
 }
 
 ShellWindow* Shell::FindWindowAt(Math::IntVec2Param monitorPosition)
 {
-  Error("Not implemented");
   return nullptr;
 }
 
 bool Shell::IsClipboardText()
 {
-  Error("Not implemented");
-  return false;
+  return true;
 }
 
 String Shell::GetClipboardText()
 {
-  Error("Not implemented");
-  return String();
+  return gClipboardText;
 }
 
 void Shell::SetClipboardText(StringParam text)
 {
-  Error("Not implemented");
+  gClipboardText = text;
 }
 
 bool Shell::IsClipboardImage()
 {
-  Error("Not implemented");
   return false;
 }
 
 bool Shell::GetClipboardImage(Image* image)
 {
-  Error("Not implemented");
   return false;
 }
 
 bool Shell::GetPrimaryMonitorImage(Image* image)
 {
-  Error("Not implemented");
   return false;
 }
 
 bool Shell::OpenFile(FileDialogInfo& config)
 {
-  Error("Not implemented");
   return false;
 }
 
 bool Shell::SaveFile(FileDialogInfo& config)
 {
-  Error("Not implemented");
   return false;
 }
 
 void Shell::ShowMessageBox(StringParam title, StringParam message)
 {
-  Error("Not implemented");
 }
 
 void Shell::Update()
 {
-  Error("Not implemented");
 }
 
 const Array<PlatformInputDevice>& Shell::ScanInputDevices()
 {
-  Error("Not implemented");
   return mInputDevices;
 }
 
@@ -178,7 +155,7 @@ ShellWindow::ShellWindow(
   mHandle(nullptr),
   mStyle(flags),
   mProgress(0),
-  mClientSize(clientSize),
+  mClientSize(IntVec2(800, 600)),
   mClientMousePosition(IntVec2(-1, -1)),
   mUserData(nullptr),
   mOnClose(nullptr),
@@ -200,125 +177,104 @@ ShellWindow::ShellWindow(
   mOnRawMouseChanged(nullptr),
   mOnInputDeviceChanged(nullptr)
 {
-  Error("Not implemented");
 }
 
 ShellWindow::~ShellWindow()
 {
-  Error("Not implemented");
 }
 
 void ShellWindow::Destroy()
 {
-  Error("Not implemented");
 }
 
 IntRect ShellWindow::GetMonitorClientRectangle()
 {
-  Error("Not implemented");
-  return IntRect();
+  return IntRect(0, 0, 800, 600);
 }
 
 void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
 {
-  Error("Not implemented");
 }
 
 IntRect ShellWindow::GetMonitorBorderedRectangle()
 {
-  Error("Not implemented");
-  return IntRect();
+  return IntRect(0, 0, 800, 600);
 }
 
 void ShellWindow::SetMonitorBorderedRectangle(const IntRect& monitorRectangle)
 {
-  Error("Not implemented");
 }
 
 IntVec2 ShellWindow::GetMinClientSize()
 {
-  Error("Not implemented");
-  return IntVec2::cZero;
+  return mMinClientSize;
 }
 
 void ShellWindow::SetMinClientSize(Math::IntVec2Param minSize)
 {
-  Error("Not implemented");
+  mMinClientSize = minSize;
 }
 
 ShellWindow* ShellWindow::GetParent()
 {
-  Error("Not implemented");
   return nullptr;
 }
 
 IntVec2 ShellWindow::MonitorToClient(Math::IntVec2Param monitorPosition)
 {
-  Error("Not implemented");
-  return IntVec2::cZero;
+  return monitorPosition;
 }
 
 IntVec2 ShellWindow::MonitorToBordered(Math::IntVec2Param monitorPosition)
 {
-  Error("Not implemented");
-  return IntVec2::cZero;
+  return monitorPosition;
 }
 
 IntVec2 ShellWindow::ClientToMonitor(Math::IntVec2Param clientPosition)
 {
-  Error("Not implemented");
-  return IntVec2::cZero;
+  return clientPosition;
 }
 
 IntVec2 ShellWindow::ClientToBordered(Math::IntVec2Param clientPosition)
 {
-  Error("Not implemented");
-  return IntVec2::cZero;
+  return clientPosition;
 }
 
 IntVec2 ShellWindow::BorderedToMonitor(Math::IntVec2Param borderedPosition)
 {
-  Error("Not implemented");
-  return IntVec2::cZero;
+  return borderedPosition;
 }
 
 IntVec2 ShellWindow::BorderedToClient(Math::IntVec2Param borderedPosition)
 {
-  Error("Not implemented");
-  return IntVec2::cZero;
+  return borderedPosition;
 }
 
 WindowStyleFlags::Enum ShellWindow::GetStyle()
 {
-  Error("Not implemented");
   return WindowStyleFlags::NotVisible;
 }
 
 void ShellWindow::SetStyle(WindowStyleFlags::Enum style)
 {
-  Error("Not implemented");
 }
 
 bool ShellWindow::GetVisible()
 {
-  Error("Not implemented");
   return false;
 }
 
 void ShellWindow::SetVisible(bool visible)
 {
-  Error("Not implemented");
 }
 
 String ShellWindow::GetTitle()
 {
-  Error("Not implemented");
-  return String();
+  return "Window";
 }
 
 void ShellWindow::SetTitle(StringParam title)
 {
-  Error("Not implemented");
 }
 
 WindowState::Enum ShellWindow::GetState()
@@ -329,61 +285,51 @@ WindowState::Enum ShellWindow::GetState()
 
 void ShellWindow::SetState(WindowState::Enum windowState)
 {
-  Error("Not implemented");
 }
 
 void ShellWindow::SetMouseCapture(bool capture)
 {
-  Error("Not implemented");
 }
 
 bool ShellWindow::GetMouseCapture()
 {
-  Error("Not implemented");
   return false;
 }
 
 void ShellWindow::TakeFocus()
 {
-  Error("Not implemented");
 }
 
 bool ShellWindow::HasFocus()
 {
-  Error("Not implemented");
   return false;
 }
 
 bool ShellWindow::GetImage(Image* image)
 {
-  Error("Not implemented");
   return false;
 }
 
 void ShellWindow::Close()
 {
-  Error("Not implemented");
 }
 
 void ShellWindow::ManipulateWindow(WindowBorderArea::Enum area)
 {
-  Error("Not implemented");
 }
 
 float ShellWindow::GetProgress()
 {
-  Error("Not implemented");
-  return 0.0f;
+  return mProgress;
 }
 
 void ShellWindow::SetProgress(ProgressType::Enum progressType, float progress)
 {
-  Error("Not implemented");
+  mProgress = progress;
 }
 
 void ShellWindow::PlatformSpecificFixup()
 {
-  Error("Not implemented");
 }
 
 }// namespace Zero

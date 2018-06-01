@@ -11,39 +11,34 @@ namespace Zero
 
 String CallStackSymbolInfos::ToString() const
 {
-  Error("Not implemented");
   return String();
 }
 
 void GetSymbolInfo(OsInt processHandle, SymbolInfo& symbolInfo)
 {
-  Error("Not implemented");
+  symbolInfo.mAddress = nullptr;
+  symbolInfo.mLineNumber = 0;
 }
 
 size_t GetStackAddresses(CallStackAddresses& callStack, size_t stacksToCapture, size_t framesToSkip)
 {
-  Error("Not implemented");
   return -1;
 }
 
 void GetStackInfo(CallStackAddresses& callStackAddresses, CallStackSymbolInfos& callStackSymbols)
 {
-  Error("Not implemented");
 }
 
 void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPaths, int stacksToSkip)
 {
-  Error("Not implemented");
 }
 
 void SimpleStackWalker::AddSymbolInformation(SymbolInfo& symbolInfo)
 {
-  Error("Not implemented");
 }
 
 String SimpleStackWalker::GetFinalOutput()
 {
-  Error("Not implemented");
   return String();
 }
 

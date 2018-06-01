@@ -10,9 +10,8 @@
 
 #pragma once
 
-#include "Utility/Standard.hpp"
-#include "String/FixedString.hpp"
-#include "Memory/Memory.hpp"
+#include "Common/CommonStandard.hpp"
+#include "Platform/PlatformStandard.hpp"
 
 #ifdef __APPLE__
 #include <CoreServices/CoreServices.h>

@@ -194,12 +194,6 @@ void GetMemoryStatus(MemoryInfo& data)
   data.Reserve = 0;
 }
 
-String TranslateErrorCode(int errorCode)
-{
-  // Not supported by SDL.
-  return "Unknown error";
-}
-
 String GetVersionString()
 {
   SDL_version version;

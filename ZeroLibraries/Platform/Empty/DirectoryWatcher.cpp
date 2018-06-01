@@ -15,7 +15,6 @@ namespace Zero
 
 DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch, CallbackFunction callback, void* callbackInstance)
 {
-  Error("Not implemented");
 }
 
 DirectoryWatcher::~DirectoryWatcher()

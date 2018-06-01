@@ -20,70 +20,58 @@ struct ThreadPrivateData
 
 Thread::Thread()
 {
-  Error("Not implemented");
+  ZeroConstructPrivateData(ThreadPrivateData);
 }
 
 Thread::~Thread()
 {
-  ZeroGetPrivateData(ThreadPrivateData);
-  // Destruction logic
   ZeroDestructPrivateData(ThreadPrivateData);
 }
 
 bool Thread::IsValid()
 {
-  Error("Not implemented");
   return false;
 }
 
 bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName)
 {
-  Error("Not implemented");
   return false;
 }
 
 void Thread::Resume()
 {
-  Error("Not implemented");
 }
 
 void Thread::Suspend()
 {
-  Error("Not implemented");
 }
 
 void Thread::Close()
 {
-  Error("Not implemented");
 }
 
 OsInt Thread::WaitForCompletion()
 {
-  Error("Not implemented");
   return 0;
 }
 
 OsInt Thread::WaitForCompletion(unsigned long milliseconds)
 {
-  Error("Not implemented");
   return 0;
 }
 
 bool Thread::IsCompleted()
 {
-  Error("Not implemented");
-  return false;
+  return true;
 }
 
 OsHandle Thread::Detach()
 {
-  Error("Not implemented");
   return nullptr;
 }
 
 OsHandle Thread::GetThreadHandle()
 {
-  Error("Not implemented");
   return nullptr;
 }
 

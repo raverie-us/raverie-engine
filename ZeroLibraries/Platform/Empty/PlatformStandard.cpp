@@ -11,19 +11,16 @@ namespace Zero
 extern void InitializeGamepad();
 void PlatformLibrary::Initialize()
 {
-  Error("Not implemented");
 }
 
 //**************************************************************************************************
 void PlatformLibrary::Shutdown()
 {
-  Error("Not implemented");
 }
 
 //**************************************************************************************************
 void StackHandle::Close()
 {
-  Error("Not implemented");
 }
 
 }//namespace Zero

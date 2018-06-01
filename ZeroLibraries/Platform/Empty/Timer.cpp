@@ -18,51 +18,42 @@ struct TimerPrivateData
 
 Timer::Timer()
 {
-  Error("Not implemented");
 }
 
 Timer::~Timer()
 {
-  Error("Not implemented");
 }
 
 Timer::Timer(const Timer& rhs)
 {
-  Error("Not implemented");
 }
 
 Timer& Timer::operator=(const Timer& rhs)
 {
-  Error("Not implemented");
   return *this;
 }
 
 void Timer::Reset()
 {
-  Error("Not implemented");
 }
 
 void Timer::Update()
 {
-  Error("Not implemented");
 }
 
 double Timer::Time() const
 {
-  Error("Not implemented");
   return 0.0;
 }
 
 double Timer::TimeDelta() const
 {
-  Error("Not implemented");
-  return 0.0;
+  return 1.0 / 60.0;
 }
 
 double Timer::UpdateAndGetTime()
 {
-  Error("Not implemented");
-  return 0.0;
+  return 1.0 / 60.0;
 }
 
 TimeMs Timer::TimeMilliseconds() const
@@ -82,20 +73,17 @@ TimeMs Timer::UpdateAndGetTimeMilliseconds()
 
 double Timer::TimeNoUpdate() const
 {
-  Error("Not implemented");
   return 0.0;
 }
 
 Timer::TickType Timer::GetTickTime() const
 {
-  Error("Not implemented");
   return 0;
 }
 
 double Timer::TicksToSeconds(TickType ticks) const
 {
-  Error("Not implemented");
-  return 0.0;
+  return (double)ticks;
 }
 
 }//namespace Zero

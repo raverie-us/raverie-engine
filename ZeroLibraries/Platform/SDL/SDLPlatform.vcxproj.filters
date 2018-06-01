@@ -17,9 +17,7 @@
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="Peripherals.cpp" />
-    <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Utilities.cpp" />
-    <ClCompile Include="Process.cpp" />
     <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
     <ClCompile Include="OpenglRendererSDL.cpp" />
     <ClCompile Include="Resolution.cpp" />

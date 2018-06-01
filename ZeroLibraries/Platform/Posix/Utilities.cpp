@@ -1,8 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// \file Timer.cpp
-/// Declaration of the Os High precision Timer class.
-/// 
 /// Authors: Chris Peters
 /// Copyright 2010-2011, DigiPen Institute of Technology
 ///
@@ -39,11 +36,6 @@ void SystemOpenFile(cstr file, uint verb, cstr workingDirectory)
   system(file);
 }
 
-String TranslateErrorCode(int errorCode)
-{
-  return "None";
-}
-
 String GetEnvironmentalVariable(StringRef variable)
 {
   return getenv(variable.c_str());
@@ -51,12 +43,12 @@ String GetEnvironmentalVariable(StringRef variable)
 
 bool IsDebuggerAttached()
 {
-  return true;
+  return false;
 }
 
 void SystemOpenFile(cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
-    
+  
 }
 
 String UserName()
@@ -83,7 +75,7 @@ void SetTimerFrequency(uint ms)
   // Not available on linux
 }
 
-}//End os
+}//namespace Os
 
 u64 GenerateUniqueId64()
 {
