@@ -203,20 +203,17 @@ namespace Audio
 
     // Save the relative position
     listenerData.PreviousRelativePosition = relativePosition;
-    // Save a pointer to the input samples
-    float* inputSamples = InputSamples.Data();
 
     // Apply low pass filter to output (if turned on)
     if (listenerData.UseLowPass)
-    {
       listenerData.LowPass.ProcessBuffer(InputSamples.Data(), outputBuffer->Data(), numberOfChannels,
         bufferSize);
-
-      // Input samples are now in the outputBuffer
-      inputSamples = outputBuffer->Data();
-    }
+    // Otherwise move the input into the output buffer
+    else
+      outputBuffer->Swap(InputSamples);
 
     // Adjust each frame with gain values
+    BufferRange outputRange1 = outputBuffer->All(), outputRange2 = outputBuffer->All();
     for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
     {
       float volume = 1.0f;
@@ -232,31 +229,26 @@ namespace Audio
       volume *= listenerData.DirectionalVolume;
 
       // Combine all channels into one value
-      float monoValue = inputSamples[i];
-      for (unsigned j = 1; j < numberOfChannels; ++j)
-        monoValue += inputSamples[i + j];
+      // Leave unspatialized audio in all channels at minimum volume
+      float monoValue = 0.0f;
+      for (unsigned j = 0; j < numberOfChannels; ++j, outputRange1.PopFront())
+      {
+        monoValue += outputRange1.Front();
+        outputRange1.Front() *= MinimumVolume * volume;
+      }
       monoValue /= numberOfChannels;
       monoValue *= volume;
 
-      // Unspatialized audio to all channels at minimum volume
-      for (unsigned j = 0; j < numberOfChannels; ++j)
-        (*outputBuffer)[i + j] = inputSamples[i + j] * MinimumVolume * volume;
+      // Add spatialized audio using gain values
+      for (unsigned j = 0; j < numberOfChannels; ++j, outputRange2.PopFront())
+      {
+        float multiplier = listenerData.PreviousGains[j];
 
-      // Spatialized audio using gain values
-      float percent = (float)i / (float)bufferSize;
-      if (valuesChanged)
-      {
         // If the gain values changed, interpolate from old to new value
-        for (unsigned j = 0; j < numberOfChannels; ++j)
-        {
-          (*outputBuffer)[i + j] += monoValue * (listenerData.PreviousGains[j] + 
-            ((listenerData.GainValues[j] - listenerData.PreviousGains[j]) * percent));
-        }
-      }
-      else
-      {
-        for (unsigned j = 0; j < numberOfChannels; ++j)
-          (*outputBuffer)[i + j] += monoValue * listenerData.PreviousGains[j];
+        if (valuesChanged)
+          multiplier += (listenerData.GainValues[j] - listenerData.PreviousGains[j]) * ((float)i / (float)bufferSize);
+
+        outputRange2.Front() += monoValue * multiplier;
       }
     }
 

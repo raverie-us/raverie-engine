@@ -213,13 +213,13 @@ namespace Audio
     // Apply volume adjustment to each frame of samples
     InterpolatingObject volume;
     volume.SetValues(listenerData.PreviousVolume, attenuatedVolume, bufferSize / numberOfChannels);
-    for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
+    for (BufferRange outputRange = outputBuffer->All(), inputRange = InputSamples.All(); !outputRange.Empty(); )
     {
       float frameVolume = volume.NextValue();
 
       // Copy samples from input buffer and apply volume adjustment
-      for (unsigned j = 0; j < numberOfChannels; ++j)
-        (*outputBuffer)[i + j] = InputSamples[i + j] * frameVolume;
+      for (unsigned j = 0; j < numberOfChannels; ++j, outputRange.PopFront(), inputRange.PopFront())
+        outputRange.Front() = inputRange.Front() * frameVolume;
     }
 
     // Store the previous volume
