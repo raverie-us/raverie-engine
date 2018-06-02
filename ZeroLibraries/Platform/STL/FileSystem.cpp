@@ -6,6 +6,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#include <filesystem>
+
+namespace std
+{
+  namespace experimental
+  {
+  }
+  using namespace experimental;
+}
+
+namespace fs = std::filesystem;
+
 namespace Zero
 {
 const Rune  cDirectorySeparatorRune = Rune(fs::path::preferred_separator);
@@ -38,13 +50,13 @@ String GetUserDocumentsDirectory()
 
 String GetApplicationDirectory()
 {
-  Warn("This is only correct if the working directory is the executable directory");
+  // This is only correct if the working directory is the executable directory
   return GetWorkingDirectory();
 }
 
 String GetApplication()
 {
-  Warn("This is only correct if the working directory is the executable directory and the executable name is ZeroEditor.exe");
+  // This is only correct if the working directory is the executable directory and the executable name is ZeroEditor.exe
   std::error_code error;
   return fs::current_path(error).append("ZeroEditor.exe").u8string().c_str();
 }
@@ -65,7 +77,7 @@ bool FileWritable(StringParam filePath)
 {
   // Not the greatest way to check for writable...
   // We can use permissions, but we still don't know if we have the ability to write to a file.
-  FILE* file = fopen(filePath.c_str(), "w");
+  FILE* file = fopen(filePath.c_str(), "a");
   if (file)
   {
     fclose(file);
@@ -142,7 +154,7 @@ TimeType GetFileModifiedTime(StringParam filename)
 bool SetFileToCurrentTime(StringParam filename)
 {
   // Not the greatest way to set the last write time...
-  FILE* file = fopen(filename.c_str(), "w");
+  FILE* file = fopen(filename.c_str(), "a");
   if (file)
   {
     fclose(file);

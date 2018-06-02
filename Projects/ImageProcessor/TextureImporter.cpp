@@ -667,9 +667,9 @@ void TextureImporter::ProcessTexture(Status& status)
 void TextureImporter::LoadImageData(Status& status, StringParam extension)
 {
   File file;
-  file.Open(mInputFile.c_str(), FileMode::Read, FileAccessPattern::Sequential);
+  bool result = file.Open(mInputFile.c_str(), FileMode::Read, FileAccessPattern::Sequential);
 
-  ReturnStatusIf(!file.IsOpen(), String::Format("Can't open image file '%s'", mInputFile.c_str()));
+  ReturnStatusIf(!result, String::Format("Can't open image file '%s'", mInputFile.c_str()));
 
   unsigned fileSize = file.Size();
   byte* fileData = new byte[fileSize];

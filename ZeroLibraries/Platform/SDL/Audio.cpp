@@ -206,4 +206,14 @@ unsigned AudioInputOutput::GetStreamSampleRate(StreamTypes::Enum whichStream)
   return ((AudioIoSdlData*)PlatformData)->Streams[whichStream].mSampleRate;
 }
 
+//************************************************************************************************
+MidiInput::MidiInput()
+{
+}
+
+//************************************************************************************************
+MidiInput::~MidiInput()
+{
+}
+
 }

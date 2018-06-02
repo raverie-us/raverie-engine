@@ -8,6 +8,85 @@
 
 namespace Zero
 {
+
+
+byte* ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
+{
+  File file;
+  if (!file.Open(filePath, FileMode::Read, FileAccessPattern::Sequential, FileShare::Read))
+    return nullptr;
+
+  size_t fileSizeInBytes = (size_t)file.CurrentFileSize();
+
+  byte* fileBuffer = (byte*)zAllocate(fileSizeInBytes + extra);
+  if (fileBuffer == nullptr)
+  {
+    ErrorIf(fileBuffer == nullptr, "Could not allocate enough memory for file '%s' into memory.", filePath);
+    return nullptr;
+  }
+  else
+  {
+    fileSize = fileSizeInBytes;
+
+    byte* buffer = fileBuffer;
+    while (fileSizeInBytes != 0)
+    {
+      Status status;
+      size_t amountRead = file.Read(status, buffer, fileSizeInBytes);
+
+      if (status.Failed() || amountRead == 0)
+        break;
+
+      buffer += amountRead;
+      fileSizeInBytes -= amountRead;
+    }
+  }
+
+  return fileBuffer;
+}
+
+size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize)
+{
+  File file;
+  if (!file.Open(filePath, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified))
+    return 0;
+
+  FileModifiedState::BeginFileModified(filePath);
+
+  while (bufferSize != 0)
+  {
+    size_t amountWritten = file.Write(const_cast<byte*>(data), bufferSize);
+
+    if (amountWritten == 0)
+      break;
+
+    data += amountWritten;
+    bufferSize -= amountWritten;
+  }
+
+  FileModifiedState::EndFileModified(filePath);
+
+  return bufferSize;
+}
+
+DataBlock ReadFileIntoDataBlock(cstr path)
+{
+  DataBlock block;
+  block.Data = ReadFileIntoMemory(path, block.Size, 0);
+  return block;
+}
+
+String ReadFileIntoString(StringParam path)
+{
+  Zero::DataBlock block = Zero::ReadFileIntoDataBlock(path.c_str());
+  if (block.Data == nullptr)
+    return String();
+
+  Zero::String dataFormat((char*)block.Data, block.Size);
+  delete block.Data;
+  return dataFormat;
+}
+
 bool CompareFile(Status& status, StringParam filePath1, StringParam filePath2)
 {
   File file1;
@@ -95,24 +174,6 @@ bool CompareFileAndString(Status& status, StringParam filePath, StringParam stri
   }
 
   return true;
-}
-
-DataBlock ReadFileIntoDataBlock(cstr path)
-{
-  DataBlock block;
-  block.Data = ReadFileIntoMemory(path, block.Size, 0);
-  return block;
-}
-
-String ReadFileIntoString(StringParam path)
-{
-  Zero::DataBlock block = Zero::ReadFileIntoDataBlock(path.c_str());
-  if (block.Data == nullptr)
-    return String();
-
-  Zero::String dataFormat((char*)block.Data, block.Size);
-  delete block.Data;
-  return dataFormat;
 }
 
 }//namespace Zero

@@ -487,7 +487,7 @@ ShellWindow::ShellWindow(
   mOnRawMouseChanged(nullptr),
   mOnInputDeviceChanged(nullptr)
 {
-  Uint32 sdlFlags = SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS;
+  Uint32 sdlFlags = SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_OPENGL;
   if (flags & WindowStyleFlags::NotVisible)
     sdlFlags |= SDL_WINDOW_HIDDEN;
   if (flags & WindowStyleFlags::Resizable)

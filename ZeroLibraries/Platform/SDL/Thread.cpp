@@ -43,7 +43,6 @@ bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadN
 
   mThreadName = threadName;
 
-  const int cStackSize = 65536;
   self->mHandle = SDL_CreateThread((SDL_ThreadFunction)entry, threadName.c_str(), instance);
 
   if (self->mHandle == nullptr)
@@ -57,6 +56,14 @@ bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadN
   return true;
 }
 
+void Thread::Resume()
+{
+}
+
+void Thread::Suspend()
+{
+}
+
 bool Thread::IsValid()
 {
   ZeroGetPrivateData(ThreadPrivateData);
@@ -68,7 +75,7 @@ bool Thread::IsValid()
 void Thread::Close()
 {
   ZeroGetPrivateData(ThreadPrivateData);
-  if(IsValid())
+  if (IsValid())
     SDL_DetachThread(self->mHandle);
 
   self->mHandle = nullptr;
@@ -95,6 +102,7 @@ OsInt Thread::WaitForCompletion(unsigned long milliseconds)
 
   int result;
   SDL_WaitThread(self->mHandle, &result);
+  self->mHandle = nullptr;
   return result;
 }
 

@@ -32,7 +32,7 @@ const char* GetEnvironmentList(const char* defaultValue, const char* names[], si
     const char* name = names[i];
     const char* result = getenv(name);
 
-    if (result != nullptr || strlen(result) != 0)
+    if (result != nullptr && strlen(result) != 0)
       return result;
   }
 

@@ -20,7 +20,6 @@ void CommonLibrary::Initialize()
   // Initialize platform socket library
   Zero::Status socketLibraryInitStatus;
   Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
-  Assert(Zero::Socket::IsSocketLibraryInitialized());
 
   // Setup keyboard enumerations
   InitializeKeyboard();

@@ -45,6 +45,24 @@ void Process::Start(Status &status, ProcessStartInfo &info)
   if (!info.mApplicationName.Empty())
     commandLine = String::Format("%s\"%s\" %s", gProcessEmulator, info.mApplicationName.c_str(), info.mArguments.c_str());
 
+  // For some strange reason, 'system' doesn't work if the executable
+  // is quoted, even though that properly works in the shell.
+  if (commandLine.Front() == Rune('"'))
+  {
+    size_t foundQuotes = 0;
+    StringBuilder builder;
+    forRange(Rune rune, commandLine)
+    {
+      if (foundQuotes >= 2)
+        builder.Append(rune);
+      else if (rune == Rune('"'))
+        ++foundQuotes;
+      else
+        builder.Append(rune);
+    }
+    commandLine = builder.ToString();
+  }
+
   self->mCommandLine = commandLine;
   self->mThread.Initialize(&ProcessThread, (void*)commandLine.c_str(), "Process");
 }

@@ -28,10 +28,7 @@ ThreadLock::ThreadLock()
 
   self->mMutex = SDL_CreateMutex();
   if (self->mMutex == nullptr)
-  {
-    String errorMessage = String::Format("Failed to create mutex: %s", SDL_GetError());
-    Error(errorMessage.c_str());
-  }
+    Warn(SDL_GetError());
 }
 
 ThreadLock::~ThreadLock()
@@ -44,33 +41,27 @@ ThreadLock::~ThreadLock()
 void ThreadLock::Lock()
 {
   ZeroGetPrivateData(ThreadLockData);
-  int ret = SDL_LockMutex(self->mMutex);
-  if (ret != 0)
-  {
-    String errorMessage = String::Format("Failed to lock mutex: %s", SDL_GetError());
-    Warn(errorMessage.c_str());
-  }
+  int result = SDL_LockMutex(self->mMutex);
+  if (result != 0)
+    Warn(SDL_GetError());
 }
 
 void ThreadLock::Unlock()
 {
   ZeroGetPrivateData(ThreadLockData);
-  int ret = SDL_UnlockMutex(self->mMutex);
-  if (ret != 0)
-  {
-    String errorMessage = String::Format("Failed to unlock mutex: %s", SDL_GetError());
-    Warn(errorMessage.c_str());
-  }
+  int result = SDL_UnlockMutex(self->mMutex);
+  if (result != 0)
+    Warn(SDL_GetError());
 }
 
 struct OsEventPrivateData
 {
   OsEventPrivateData()
   {
-    mConditional = nullptr;
   }
 
-  SDL_cond* mConditional;
+  bool mManualReset;
+  Atomic<bool> mIsGateOpen;
 };
 
 OsEvent::OsEvent()
@@ -86,55 +77,47 @@ OsEvent::~OsEvent()
 void OsEvent::Initialize(bool manualReset, bool startSignaled)
 {
   ZeroGetPrivateData(OsEventPrivateData);
-  self->mConditional = SDL_CreateCond();
+  self->mManualReset = manualReset;
+  self->mIsGateOpen = startSignaled;
 }
 
 void OsEvent::Close()
 {
   ZeroGetPrivateData(OsEventPrivateData);
-  if (self->mConditional)
-  {
-    SDL_DestroyCond(self->mConditional);
-    self->mConditional = nullptr;
-  }
+  self->mManualReset = true;
+  self->mIsGateOpen = true;
 }
 
 void OsEvent::Signal()
 {
   ZeroGetPrivateData(OsEventPrivateData);
-  int ret = SDL_CondSignal(self->mConditional);
-  if (ret != 0)
-  {
-    String errorMessage = String::Format("Failed to signal OsEvent: %s", SDL_GetError());
-    Warn(errorMessage.c_str());
-  }
+  self->mIsGateOpen = true;
 }
 
 void OsEvent::Reset()
 {
-  Close();
-  Initialize();
+  ZeroGetPrivateData(OsEventPrivateData);
+  self->mIsGateOpen = false;
 }
 
 void OsEvent::Wait()
 {
   ZeroGetPrivateData(OsEventPrivateData);
-  SDL_mutex* mutex = SDL_CreateMutex();
-  SDL_LockMutex(mutex);
-  int result = SDL_CondWait(self->mConditional, mutex);
-  if (result != 0)
+
+  if (self->mManualReset)
   {
-    String errorMessage = String::Format("Failed to signal OsEvent: %s", SDL_GetError());
-    Warn(errorMessage.c_str());
+    while (!self->mIsGateOpen);
   }
-  SDL_UnlockMutex(mutex);
-  SDL_DestroyMutex(mutex);
+  else
+  {
+    while (!self->mIsGateOpen.CompareExchange(false, true));
+  }
 }
 
 OsHandle OsEvent::GetHandle()
 {
   ZeroGetPrivateData(OsEventPrivateData);
-  return self->mConditional;
+  return this;
 }
 
 struct SemaphorePrivateData
@@ -150,12 +133,9 @@ struct SemaphorePrivateData
 Semaphore::Semaphore()
 {
   ZeroConstructPrivateData(SemaphorePrivateData);
-  self->mSemaphore = SDL_CreateSemaphore(MaxSemaphoreCount);
+  self->mSemaphore = SDL_CreateSemaphore(0);
   if (self->mSemaphore == nullptr)
-  {
-    String errorString = SDL_GetError();
-    Warn("Failed to create semaphore");
-  }
+    Warn(SDL_GetError());
 }
 
 Semaphore::~Semaphore()
@@ -168,57 +148,41 @@ Semaphore::~Semaphore()
 void Semaphore::Increment()
 {
   ZeroGetPrivateData(SemaphorePrivateData)
-  int ret = SDL_SemPost(self->mSemaphore);
-  if (ret != 0)
-  {
-    String errorString = SDL_GetError();
-    Warn("Failed to increment semaphore: %s", errorString.c_str());
-  }
+  int result = SDL_SemPost(self->mSemaphore);
+  if (result != 0)
+    Warn(SDL_GetError());
 }
 
 void Semaphore::Decrement()
 {
   ZeroGetPrivateData(SemaphorePrivateData);
-  int ret = SDL_SemTryWait(self->mSemaphore);
-  if (ret != 0)
-  {
-    String errorString = SDL_GetError();
-    Warn("Failed to decrement on semaphore: %s", errorString.c_str());
-  }
+  int result = SDL_SemTryWait(self->mSemaphore);
+  if (result != 0)
+    Warn(SDL_GetError());
 }
 
 void Semaphore::Reset()
 {
-  ZeroGetPrivateData(SemaphorePrivateData)
-  SDL_DestroySemaphore(self->mSemaphore);
+  ZeroGetPrivateData(SemaphorePrivateData);
 
-  self->mSemaphore = SDL_CreateSemaphore(0);
-  if (self->mSemaphore == nullptr)
-  {
-    String errorString = SDL_GetError();
-    Warn("Failed to create semaphore");
-  }
+  while (SDL_SemValue(self->mSemaphore) != 0)
+    Decrement();
 }
 
 void Semaphore::WaitAndDecrement()
 {
   ZeroGetPrivateData(SemaphorePrivateData);
-  int ret = SDL_SemWait(self->mSemaphore);
-  if (ret != 0)
-  {
-    String errorString = SDL_GetError();
-    Warn("Failed to wait on semaphore: %s", errorString.c_str());
-  }
+  int result = SDL_SemWait(self->mSemaphore);
+  if (result != 0)
+    Warn(SDL_GetError());
 }
 
 InterprocessMutex::InterprocessMutex()
 {
-  Error("Not Implemented. Potentially use a file opened for writing as as global mutex lock");
 }
 
 InterprocessMutex::~InterprocessMutex()
 {
-  Error("Not Implemented. Potentially use a file opened for writing as as global mutex lock");
 }
 
 void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)

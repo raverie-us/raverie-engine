@@ -16,8 +16,4 @@ void GetCommandLineStringArray(Array<String>& strings)
 {
 }
 
-void CommandLineToStringArray(Array<String>& strings, wchar_t** argv, int numberOfParameters)
-{
-}
-
 }// namespace Zero

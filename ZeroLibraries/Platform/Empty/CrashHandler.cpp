@@ -32,6 +32,10 @@ void CrashHandler::Enable()
 {
 }
 
+void CrashHandler::AppendToExtraSymbolPath(StringParam path)
+{
+}
+
 void CrashHandler::SetRunCrashHandlerCallback(RunCrashHandlerCallback callback, void* userData)
 {
 }

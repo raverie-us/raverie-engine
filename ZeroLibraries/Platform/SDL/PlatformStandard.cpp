@@ -60,4 +60,9 @@ void PlatformLibrary::Shutdown()
   SDL_Quit();
 }
 
+//**************************************************************************************************
+void StackHandle::Close()
+{
+}
+
 }//namespace Zero

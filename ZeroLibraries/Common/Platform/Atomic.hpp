@@ -232,7 +232,7 @@ public:
   value_type Exchange(value_type value) volatile { underlying_type result = AtomicExchange(&mValue, reinterpret_cast<underlying_type&>(value)); return reinterpret_cast<value_type&>(result); }
 
   /// Sets the current value if it is bit-wise equal to comparison
-  /// Returns the previous value
+  /// Returns true if the exchange took place, else false
   bool CompareExchange(value_type value, value_type comparison) { return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
   bool CompareExchange(value_type value, value_type comparison) volatile { return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison)); }
 

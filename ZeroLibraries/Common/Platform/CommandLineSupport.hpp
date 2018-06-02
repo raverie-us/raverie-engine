@@ -10,7 +10,6 @@ typedef HashMap<String, String> StringMap;
 
 ZeroShared String GetFullCommandLine();
 ZeroShared void GetCommandLineStringArray(Array<String>& strings);
-void CommandLineToStringArray(Array<String>& strings, wchar_t** argv, int numberOfParameters);
 
 // Not platform specific
 void CommandLineToStringArray(Array<String>& strings, cstr* argv, int numberOfParameters);

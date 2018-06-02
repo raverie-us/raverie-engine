@@ -21,10 +21,7 @@ struct FilePrivateData
 
   bool IsValidFile()
   {
-    if (mFileData == nullptr || mFileData->type == SDL_RWOPS_UNKNOWN)
-      return false;
-    
-    return true;
+    return mFileData != nullptr && mFileData->type != SDL_RWOPS_UNKNOWN;
   }
 
   SDL_RWops* mFileData;
@@ -33,16 +30,16 @@ struct FilePrivateData
 String FileModeToString(FileMode::Enum fileMode)
 {
   if (fileMode == FileMode::Read)
-    return String("r");
+    return String("rb");
 
   if (fileMode == FileMode::Write)
-    return String("w");
+    return String("wb");
 
   if (fileMode == FileMode::Append)
-    return String("a");
+    return String("ab");
 
   if (fileMode == FileMode::ReadWrite)
-    return String("rw");
+    return String("w+b");
 
   return String();
 }
@@ -118,19 +115,21 @@ bool File::IsOpen()
 void File::Close()
 {
   ZeroGetPrivateData(FilePrivateData);
-  if (self->mFileData != nullptr || self->mFileData->type != SDL_RWOPS_UNKNOWN)
+  if (self->IsValidFile())
   {
     if (mFileMode != FileMode::Read)
       FileModifiedState::EndFileModified(mFilePath);
 
     SDL_RWclose(self->mFileData);
+    self->mFileData = nullptr;
   }
 }
 
 FilePosition File::Tell()
 {
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(!self->IsValidFile(), "File is not valid. Open a valid file before attemping file operations.");
+  if (!self->IsValidFile())
+    return 0;
 
   return SDL_RWtell(self->mFileData);
 }
@@ -138,7 +137,8 @@ FilePosition File::Tell()
 bool File::Seek(FilePosition pos, FileOrigin::Enum rel)
 {
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(!self->IsValidFile(), "File is not valid. Open a valid file before attemping file operations.");
+  if (!self->IsValidFile())
+    return false;
   
   int sdlWhence;
   switch (rel)
@@ -159,7 +159,8 @@ bool File::Seek(FilePosition pos, FileOrigin::Enum rel)
 size_t File::Write(byte* data, size_t sizeInBytes)
 {
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(!self->IsValidFile(), "File is not valid. Open a valid file before attemping file operations.");
+  if (!self->IsValidFile())
+    return 0;
 
   size_t bytesWritten = 0;
   bytesWritten = SDL_RWwrite(self->mFileData, data, 1, sizeInBytes);
@@ -169,25 +170,24 @@ size_t File::Write(byte* data, size_t sizeInBytes)
 size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
 {
   ZeroGetPrivateData(FilePrivateData);
-  // We don't assert here because its legal to close the handle from another thread,
-  // and attempt a read operation (which will fail, expectedly)
-  size_t bytesRead = 0;
-  bool result = SDL_RWread(self->mFileData, data, 1, sizeInBytes);
-  if (result)
-    status.SetSucceeded();
-  else
+  if (!self->IsValidFile())
   {
-    String errorString = SDL_GetError();
-    String message = String::Format("Failed to read file '%s': %s", mFilePath.c_str(), errorString.c_str());
-    status.SetFailed(message);
+    status.SetFailed("No file was open");
+    return 0;
   }
-  return bytesRead;
+
+  // SDL incorrectly throws an error when it's at the end of the file.
+  return SDL_RWread(self->mFileData, data, 1, sizeInBytes);
 }
 
 bool File::HasData(Status& status)
 {
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(!self->IsValidFile(), "File is not valid. Open a valid file before attemping file operations.");
+  if (!self->IsValidFile())
+  {
+    status.SetFailed("No file was open");
+    return false;
+  }
 
   if (self->mFileData->type != SDL_RWOPS_UNKNOWN)
   {
@@ -212,33 +212,36 @@ bool File::HasData(Status& status)
 
 void File::Flush()
 {
-  //TODO DANE
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(!self->IsValidFile(), "File is not valid. Open a valid file before attemping file operations.");
-  //FlushFileBuffers(self->mHandle);
+  // SDL has no flush...
 }
 
 void File::Duplicate(Status& status, File& destinationFile)
 {
   ZeroGetPrivateData(FilePrivateData);
   ZeroGetObjectPrivateData(FilePrivateData, &destinationFile, other);
-  ErrorIf(!self->IsValidFile(), "File is not valid. Open a valid file before attemping file operations.");
-  ErrorIf(!other->IsValidFile(), "File is not valid. Open a valid file before attemping file operations.");
+
+  if (!self->IsValidFile() || !other->IsValidFile())
+  {
+    status.SetFailed("File is not valid. Open a valid file before attemping file operations.");
+    return;
+  }
 
   // Get this files data size in bytes
   size_t fileSizeInBytes = (size_t)SDL_RWsize(self->mFileData);
   byte* buffer = new byte[fileSizeInBytes];
 
   // Read this files data
-  Read(status, buffer, fileSizeInBytes);
+  size_t ret = Read(status, buffer, fileSizeInBytes);
+  WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
   if (status.Failed())
   {
     delete buffer;
-    Warn(status.Message.c_str());
+    return;
   }
 
   // Write the duplicate data into the other file
-  size_t ret = destinationFile.Write(buffer, fileSizeInBytes);
+  ret = destinationFile.Write(buffer, fileSizeInBytes);
   delete buffer;
   WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
 }
