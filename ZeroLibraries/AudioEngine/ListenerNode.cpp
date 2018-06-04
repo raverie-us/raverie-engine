@@ -113,6 +113,7 @@ namespace Audio
       else
       {
         // Step through each audio frame
+        BufferRange outputRange = outputBuffer->All();
         for (unsigned i = 0; i < outputBuffer->Size(); i += numberOfChannels)
         {
           float volume = ThreadedData->VolumeInterpolator.NextValue();
@@ -136,8 +137,8 @@ namespace Audio
           }
 
           // Modify volume on all channels
-          for (unsigned j = 0; j < numberOfChannels; ++j)
-            (*outputBuffer)[i + j] *= volume;
+          for (unsigned j = 0; j < numberOfChannels; ++j, outputRange.PopFront())
+            outputRange.Front() *= volume;
         }
       }
     }

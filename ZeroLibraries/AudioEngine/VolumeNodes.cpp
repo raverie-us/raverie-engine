@@ -48,7 +48,7 @@ namespace Audio
       return false;
 
     // Apply volume adjustment
-    for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
+    for (BufferRange outputRange = outputBuffer->All(), inputRange = InputSamples.All(); !outputRange.Empty(); )
     {
       // Check if the volume is being interpolated
       if (CurrentData.Interpolating)
@@ -72,8 +72,8 @@ namespace Audio
       }
 
       // Apply the volume multiplier to all samples
-      for (unsigned j = 0; j < numberOfChannels; ++j)
-        (*outputBuffer)[i + j] = InputSamples[i + j] * Volume;
+      for (unsigned j = 0; j < numberOfChannels; ++j, outputRange.PopFront(), inputRange.PopFront())
+        outputRange.Front() = inputRange.Front() * Volume;
     }
 
     AddBypass(outputBuffer);

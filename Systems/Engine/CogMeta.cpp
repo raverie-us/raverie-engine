@@ -296,13 +296,13 @@ String CogMetaDisplay::GetName(HandleParam object)
 {
   Cog* cog = (Cog*)object.Dereference();
 
-  if(!cog->GetName().Empty( ))
-    return cog->GetName( );
+  if(!cog->GetName().Empty())
+    return cog->GetName();
 
-  if(Archetype* archetype = cog->GetArchetype( ))
-    return String::Format("(%s)[%d]", archetype->Name.c_str( ), cog->GetId( ).Id);
+  if(Archetype* archetype = cog->GetArchetype())
+    return String::Format("(%s)[%d]", archetype->Name.c_str(), cog->GetId().Id);
   else
-    return String::Format("(%s)[%d]", ZilchTypeId(Cog)->Name.c_str( ), cog->GetId( ).Id);
+    return String::Format("(%s)[%d]", ZilchTypeId(Cog)->Name.c_str(), cog->GetId().Id);
 }
 
 //**************************************************************************************************
@@ -351,7 +351,6 @@ void CogMetaSerialization::AddCustomAttributes(HandleParam object, TextSaver* sa
     }
   }
 }
-
 
 //**************************************************************************************************
 ZilchDefineType(CogArchetypePropertyFilter, builder, type)

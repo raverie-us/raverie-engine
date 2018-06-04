@@ -106,6 +106,7 @@ namespace Audio
     float firstSample, secondSample;
 
     // Step through all frames in the output buffer
+    BufferRange outputRange = outputBuffer->All();
     for (unsigned outputFrameIndex = 0; outputFrameIndex + mChannels <= outputBufferSize;
       outputFrameIndex += mChannels)
     {
@@ -124,7 +125,7 @@ namespace Audio
       }
 
       // Go through all samples in this frame
-      for (unsigned channel = 0; channel < mChannels; ++channel)
+      for (unsigned channel = 0; channel < mChannels; ++channel, outputRange.PopFront())
       {
         // First sample is from the previous frame
         if (previousFrameStart < 0)
@@ -139,7 +140,7 @@ namespace Audio
           secondSample = (*inputBuffer)[sourceFrameStart + channel];
 
         // Interpolate between the two samples for the output sample
-        (*outputBuffer)[outputFrameIndex + channel] = firstSample + ((secondSample - firstSample)
+        outputRange.Front() = firstSample + ((secondSample - firstSample)
           * ((float)CurrentData.mPitchFrameIndex - frameIndex));
       }
 

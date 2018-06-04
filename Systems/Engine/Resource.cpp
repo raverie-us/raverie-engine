@@ -211,6 +211,21 @@ void ResourceMetaSerialization::SetDefault(Type* type, Any& any)
     any = (Resource*)nullptr;
 }
 
+String ResourceMetaSerialization::ConvertToString(AnyParam input)
+{
+  if(Resource* resource = input.Get<Resource*>())
+    return resource->ResourceIdName;
+
+  return String();
+}
+
+bool ResourceMetaSerialization::ConvertFromString(StringParam input, Any& output)
+{
+  // 'output' can be null, but null is a valid result so return true.
+  output = Z::gResources->GetResourceByName(input);
+  return true;
+}
+
 String ResourceToString(const BoundType* type, const byte* value)
 {
   // Convert a Resource to a String

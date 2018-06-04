@@ -139,7 +139,7 @@ void MetaSerialization::SetDefault(Type* type, Any& any)
 //**************************************************************************************************
 String MetaSerialization::ConvertToString(AnyParam input)
 {
-  ErrorIf("This method MUST be implemented on any class inheriting from MetaSerialization.");
+  Error("Convert to string is required for serialization primitives. If a new type was added, this must be implemented for that primitive type.");
   return String();
 }
 

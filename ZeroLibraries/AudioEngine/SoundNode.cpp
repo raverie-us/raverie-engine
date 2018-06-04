@@ -230,13 +230,10 @@ namespace Audio
       return;
 
     // Add all inputs to all outputs
-    for (unsigned i = 0; i < Inputs.Size(); ++i)
+    forRange(SoundNode* input, Inputs.All())
     {
-      SoundNode* inputNode = Inputs[i];
-      for (unsigned j = 0; j < Outputs.Size(); ++j)
-      {
-        Outputs[j]->AddInput(inputNode);
-      }
+      forRange(SoundNode* output, Outputs.All())
+        output->AddInput(input);
     }
 
     DisconnectOutputs();
@@ -505,9 +502,9 @@ namespace Audio
       // (if any inputs can't be saved, neither can this node)
       if (OkayToSave)
       {
-        for (unsigned i = 0; i < Inputs.Size(); ++i)
+        forRange(SoundNode* input, Inputs.All())
         {
-          if (!Inputs[i]->OkayToSave)
+          if (!input->OkayToSave)
           {
             OkayToSave = false;
             break;
@@ -555,18 +552,28 @@ namespace Audio
 
     // Reset buffer
     InputSamples.Resize(howManySamples);
-    memset(InputSamples.Data(), 0, sizeof(float) * howManySamples);
 
     // Get samples from all inputs
-    for (unsigned i = 0; i < Inputs.Size(); ++i)
+    forRange(SoundNode* input, Inputs.All())
     {
       // Check if this input has actual output data
-      if (Inputs[i]->Evaluate(&tempBuffer, numberOfChannels, listener))
+      if (input->Evaluate(&tempBuffer, numberOfChannels, listener))
       {
-        for (unsigned j = 0; j < howManySamples; ++j)
-          InputSamples[j] += tempBuffer[j];
-
-        isThereInput = true;
+        // If this is the first input data, just swap the buffers
+        if (!isThereInput)
+        {
+          isThereInput = true;
+          InputSamples.Swap(tempBuffer);
+        }
+        // Otherwise add the new samples to the existing ones
+        else
+        {
+          for (BufferRange myData = InputSamples.All(), newData = tempBuffer.All(); !myData.Empty(); 
+            myData.PopFront(), newData.PopFront())
+          {
+            myData.Front() += newData.Front();
+          }
+        }
       }
     }
 
@@ -609,11 +616,12 @@ namespace Audio
     // with a percentage of the input buffer
     if (BypassValue > 0.0f)
     {
-      unsigned bufferSize = outputBuffer->Size();
-
-      for (unsigned i = 0; i < bufferSize; ++i)
-        (*outputBuffer)[i] = (InputSamples[i] * BypassValue) + ((*outputBuffer)[i]
-          * (1.0f - BypassValue));
+      for (BufferRange outputRange = outputBuffer->All(), inputRange = InputSamples.All();
+        !outputRange.Empty(); outputRange.PopFront(), inputRange.PopFront())
+      {
+        outputRange.Front() = (inputRange.Front() * BypassValue) 
+          + (outputRange.Front() * (1.0f - BypassValue));
+      }
     }
   }
 
@@ -797,13 +805,14 @@ namespace Audio
       {
         // Apply volume adjustment
         float volume;
+        BufferRange inputRange = InputSamples.All();
         for (unsigned i = 0; i < outputBuffer->Size(); i += numberOfChannels)
         {
           volume = VolumeInterpolator.NextValue();
 
           // Apply the volume multiplier to all samples
-          for (unsigned j = 0; j < numberOfChannels; ++j)
-            InputSamples[i + j] *= volume;
+          for (unsigned j = 0; j < numberOfChannels; ++j, inputRange.PopFront())
+            inputRange.Front() *= volume;
         }
 
         // Check if we're done interpolating

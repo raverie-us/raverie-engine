@@ -330,12 +330,13 @@ namespace Audio
     if (!VolumeInterpolatorThreaded.Finished())
     {
       // Apply the interpolated volume to each frame
-      for (unsigned i = 0; i < MixedOutput.Size(); i += outputChannels)
+      BufferRange outputRange = MixedOutput.All();
+      while (!outputRange.Empty())
       {
         float volume = VolumeInterpolatorThreaded.NextValue();
 
-        for (unsigned j = 0; j < outputChannels; ++j)
-          MixedOutput[i + j] *= volume;
+        for (unsigned j = 0; j < outputChannels; ++j, outputRange.PopFront())
+          outputRange.Front() *= volume;
       }
     }
 
@@ -344,12 +345,13 @@ namespace Audio
     {
       // Ramp the volume down to zero
       VolumeInterpolatorThreaded.SetValues(1.0f, 0.0f, outputFrames);
-      for (unsigned i = 0; i < MixedOutput.Size(); i += outputChannels)
+      BufferRange outputRange = MixedOutput.All();
+      while (!outputRange.Empty())
       {
         float volume = VolumeInterpolatorThreaded.NextValue();
 
-        for (unsigned j = 0; j < outputChannels; ++j)
-          MixedOutput[i + j] *= volume;
+        for (unsigned j = 0; j < outputChannels; ++j, outputRange.PopFront())
+          outputRange.Front() *= volume;
       }
 
       // Copy the data to the ring buffer
@@ -791,9 +793,7 @@ namespace Audio
 
     for (unsigned i = 1; i < cMaxChannels; ++i)
     {
-      float newValue = Math::Abs(mSamples[i]);
-      if (newValue > value)
-        value = newValue;
+      value = Math::Max(value, Math::Abs(mSamples[i]));
     }
 
     return value;
@@ -807,9 +807,11 @@ namespace Audio
 
     float value = mSamples[0];
 
+    // Need to add all values together because samples are not necessarily stored sequentially
     for (unsigned i = 1; i < cMaxChannels; ++i)
       value += mSamples[i];
 
+    // Divide by number of channels stored because other values will be zero
     value /= mStoredChannels;
 
     return value;
