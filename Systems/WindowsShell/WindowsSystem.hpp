@@ -69,6 +69,8 @@ public:
 
   bool GetMouseTrap() override;
   void SetMouseTrap(bool mouseTrapped) override;
+
+  void SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition) override;
   
   void SetMouseCursor(Cursor::Enum cursorId) override;
   
@@ -112,6 +114,8 @@ private:
   uint mTaskBarButtonCreated;
   WindowsOsWindow* mParent;
   IntVec2 mPreviousMousePosition;
+  IntVec2 mCustomMouseTrapClientPosition;
+  bool mUseCustomMouseTrapClientPosition;
 };
 
 //-------------------------------------------------------------------WindowsShellSystem

@@ -400,6 +400,12 @@ WidgetRect Widget::GetScreenRect() const
   return rect;
 }
 
+Vec2 Widget::GetClientCenterPosition() const
+{
+  WidgetRect clientRect = GetScreenRect();
+  return Vec2(clientRect.X + clientRect.SizeX / 2.0f, clientRect.Y + clientRect.SizeY / 2.0f);
+}
+
 bool Widget::Contains(Vec2 screenPoint)
 {
   WidgetRect localRect = GetLocalRect();
