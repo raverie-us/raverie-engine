@@ -96,7 +96,6 @@ target_link_libraries(GeometryProcessor
                       SpatialPartition
                       Serialization
                       Support
-                      Math
                       Geometry
                       Meta
                       Engine
@@ -114,7 +113,6 @@ target_link_libraries(ImageProcessor
                       SpatialPartition 
                       Serialization 
                       Support 
-                      Math
                       Geometry
                       Meta
                       Engine
@@ -137,7 +135,6 @@ target_link_libraries(ZeroEditor
                       Serialization
                       Support
                       Engine 
-                      Math 
                       Geometry 
                       Widget 
                       Editor 
@@ -175,7 +172,6 @@ target_link_libraries(ZeroLauncher
                       ZilchShaders
                       Serialization 
                       Support 
-                      Math 
                       Geometry 
                       Widget 
                       Editor 
@@ -203,7 +199,6 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       ZilchShaders
                       Serialization 
                       Support 
-                      Math 
                       Geometry 
                       Widget 
                       Editor 
@@ -361,8 +356,8 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
 
         $<$<CONFIG:Debug>:-ZI>
         $<$<CONFIG:Release>:-Zi>
-        $<$<CONFIG:Debug>:-Gm>
-        $<$<CONFIG:Release>:-Gm->
+        #$<$<CONFIG:Debug>:-Gm>
+        #$<$<CONFIG:Release>:-Gm->
         $<$<CONFIG:Debug>:-Od>
         $<$<CONFIG:Release>:-O2>
 

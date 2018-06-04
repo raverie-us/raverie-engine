@@ -15,7 +15,6 @@ add_library(AudioEngine "")
 add_library(Common "") 
 add_library(Dash "")
 add_library(Geometry "")
-add_library(Math "")
 add_library(Meta "")
 #add_library(Posix "")
 add_library(Windows "")
@@ -31,7 +30,6 @@ set_target_properties(AudioEngine      PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Common           PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Dash             PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Geometry         PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Math             PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Meta             PROPERTIES FOLDER "ZeroLibraries")
 #set_target_properties(Posix            PROPERTIES FOLDER "ZeroLibraries/Platform")
 set_target_properties(Windows          PROPERTIES FOLDER "ZeroLibraries/Platform")
@@ -47,7 +45,6 @@ include(AudioEngine/CMakeLists.txt)
 include(Common/CMakeLists.txt)
 include(Dash/CMakeLists.txt)
 include(Geometry/CMakeLists.txt)
-include(Math/CMakeLists.txt)
 include(Meta/CMakeLists.txt)
 #include(Platform/Posix/CMakeLists.txt)
 include(Platform/Windows/CMakeLists.txt)
@@ -79,10 +76,6 @@ target_include_directories(Dash
 target_include_directories(Geometry
     PUBLIC
         ${CurrentDirectory}/Geometry 
-        ${CurrentDirectory}
-)
-target_include_directories(Math
-    PUBLIC
         ${CurrentDirectory}
 )
 target_include_directories(Meta
@@ -134,7 +127,6 @@ target_link_libraries(AudioEngine
                       PUBLIC
                       ${OpusStatic}
                       Common 
-                      Math 
                       ${PlatformSoundLibrary}
 ) 
 target_link_libraries(Dash
@@ -148,10 +140,6 @@ target_link_libraries(Geometry
                       Common
                       Zilch
 ) 
-target_link_libraries(Math
-                      PUBLIC
-                      Common
-) 
 target_link_libraries(Zilch
                       PUBLIC
                       Common
@@ -159,7 +147,6 @@ target_link_libraries(Zilch
 )
 target_link_libraries(Meta
                       PUBLIC
-                      Math
                       Zilch
 )
 target_link_libraries(Serialization
@@ -193,7 +180,6 @@ zero_multitarget_output_directories(
     Common
     Dash
     Geometry
-    Math
     Meta
     Windows
     Serialization
@@ -254,15 +240,14 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
     )
     zero_multitarget_output_settings(
         Zilch 
-        Math 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
-        PRECOMPILED_HEADER_NAME ""
-        PRECOMPILED_SOURCE_NAME ""
-        TARGET_SUBFOLDER
+        PRECOMPILED_HEADER_NAME "Zilch.hpp"
+        PRECOMPILED_SOURCE_NAME "Zilch.cpp"
+        TARGET_SUBFOLDER "Zilch/Project"
     )
 endif()
 
@@ -274,7 +259,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         Common 
         Dash 
         Geometry
-        Math 
         Meta 
         #Posix 
         Windows
@@ -291,18 +275,45 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
             -W3 -wd"4302"
             ${common_flags}
     )
+    if (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014")
+        zero_multitarget_compile_options(  
+            AudioEngine 
+            PRIVATE
 
-    zero_multitarget_compile_options(  
-        AudioEngine 
-        PRIVATE
-         
-        PUBLIC
-            -GS -analyze-  -Zc:wchar_t
-            
-        PRIVATE
-            -W3 -wd"4302"
-            ${common_flags}
-    )
+            PUBLIC
+                -GS -analyze-  -Zc:wchar_t
+
+            PRIVATE
+            $<$<CONFIG:Debug>:-GS>
+            $<$<CONFIG:Release>:-GS->
+            $<$<CONFIG:Release>:-GL>
+            -analyze-
+            -W3 
+            -wd"4302"
+            -Zc:wchar_t
+            $<$<CONFIG:Debug>:-Od>
+            $<$<CONFIG:Release>:-O2>
+            -Zc:inline 
+            -fp:fast 
+            -errorReport:prompt 
+            -WX 
+            -Zc:forScope 
+            -GR- 
+            -Gd
+            $<$<CONFIG:Release>:-arch:SSE2>
+            -Oy-
+            $<$<CONFIG:Debug>:-MDd>
+            $<$<CONFIG:Release>:-Oi>
+            $<$<CONFIG:Release>:-MT>
+            -EHsc 
+            -nologo
+            -DDEBUG  
+            "-D \"_CRT_SECURE_NO_WARNINGS\"" 
+            "-Wno-unused-command-line-argument"
+            "-Wno-undefined-inline"
+            -FIPrecompiled.h
+        )
+    endif()
 
     zero_multitarget_compile_options(  
         Zilch 
@@ -337,7 +348,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         Common
         Dash
         Geometry
-        Math
         Meta
         Windows
         Serialization
@@ -356,7 +366,6 @@ zero_subfolder_source_group(${zero_core_path} ZeroLibraries AudioEngine "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Common "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Dash "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Geometry "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Math "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Meta "")
 #zero_subfolder_source_group(${zero_core_path} ZeroLibraries/Platform Posix "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries/Platform Windows "")

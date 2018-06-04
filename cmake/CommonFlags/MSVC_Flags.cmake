@@ -33,7 +33,7 @@ set(common_flags
     $<$<CONFIG:Release>:-MT>
     -EHsc 
     -nologo
-    -DEBUG  
+    -DDEBUG  
     "-D \"_CRT_SECURE_NO_WARNINGS\"" 
 )
 

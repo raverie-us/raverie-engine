@@ -111,7 +111,6 @@ target_link_libraries(Networking
 ) 
 target_link_libraries(Physics
                       PUBLIC
-                      Math
                       Zilch
 ) 
 target_link_libraries(Sound
@@ -159,6 +158,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         Sound
         Startup
         ZilchScript
+        Networking
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
@@ -168,18 +168,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
         TARGET_SUBFOLDER
     )
-
-    zero_multitarget_output_settings(
-    Networking
-    CONFIGS ${supported_configs}
-    BASEPATH ${zero_build_out}
-    PLATFORM ${platform}
-    BITS ${bit}
-    TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
-    PRECOMPILED_HEADER_NAME ""
-    PRECOMPILED_SOURCE_NAME ""
-    TARGET_SUBFOLDER
-)
 endif()
 
 ################################################################################
