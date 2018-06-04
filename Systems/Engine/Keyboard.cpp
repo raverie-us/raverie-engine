@@ -309,6 +309,8 @@ ZilchDefineType(Keyboard, builder, type)
   ZeroBindDocumented();
   type->HandleManager = ZilchManagerId(PointerManager);
 
+  ZilchBindMethod(IsAnyKeyDown);
+  ZilchBindMethod(IsAnyNonModifierDown);
   ZilchBindMethod(KeyIsDown);
   ZilchBindMethod(KeyIsUp);
   ZilchBindMethod(KeyIsPressed);
@@ -333,6 +335,20 @@ Keyboard::Keyboard()
 {
   Keyboard::Instance = this;
   Clear();
+}
+
+bool Keyboard::IsAnyKeyDown()
+{
+  return mStateDownCount > 0;
+}
+
+bool Keyboard::IsAnyNonModifierDown()
+{
+  uint modifierCount = KeyIsDown(Keys::Control);
+  modifierCount += KeyIsDown(Keys::Shift);
+  modifierCount += KeyIsDown(Keys::Alt);
+
+  return (mStateDownCount != 0 && modifierCount != mStateDownCount);
 }
 
 bool Keyboard::KeyIsDown(Keys::Enum key)
@@ -428,7 +444,12 @@ void Keyboard::Update()
     if(state == KeyPressed)
       state = KeyHeld;
     else if(state == KeyReleased)
+    {
       state = KeyNotHeld;
+
+      if(i != Keys::Unknown)
+        --mStateDownCount;
+    }
   }
 }
 
@@ -439,6 +460,8 @@ void Keyboard::Clear()
     byte& state = States[i];
     state = KeyNotHeld;
   }
+
+  mStateDownCount = 0;
 }
 
 void Keyboard::UpdateKeys(KeyboardEvent& event)
@@ -456,6 +479,8 @@ void Keyboard::UpdateKeys(KeyboardEvent& event)
     case KeyReleased:
     case KeyNotHeld:
       state = KeyPressed;
+      if(event.Key != Keys::Unknown)
+        ++mStateDownCount;
       break;
     case KeyPressed: state = KeyHeld; break;
     case KeyHeld: break;

@@ -167,6 +167,13 @@ public:
     KeyNotHeld
   };
 
+  /// Is any key in the 'Keys' enum down (not including 'Keys::Unknown', e.g. PrintScreen).
+  bool IsAnyKeyDown();
+
+  /// Excluding Ctrl, Shift, and Alt - is any key in the 'Keys' enum down
+  /// (not including 'Keys::Unknown', e.g. PrintScreen).
+  bool IsAnyNonModifierDown();
+
   /// Is the particular currently down.
   bool KeyIsDown(Keys::Enum key);
 
@@ -207,6 +214,7 @@ public:
   static Keyboard* Instance;
 
 private:
+  uint mStateDownCount;
   byte States[Keys::KeyMax];
 };
 
