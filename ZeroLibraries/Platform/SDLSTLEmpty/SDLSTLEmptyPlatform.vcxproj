@@ -61,8 +61,6 @@
     <ClCompile Include="..\SDL\OpenglRendererSDL.cpp" />
     <ClCompile Include="..\SDL\Peripherals.cpp" />
     <ClCompile Include="..\SDL\PlatformStandard.cpp" />
-    <ClCompile Include="..\SDL\Precompiled.cpp"><PrecompiledHeader>Create</PrecompiledHeader></ClCompile>
-    <ClCompile Include="..\SDL\Precompiled.hpp" />
     <ClCompile Include="..\SDL\Resolution.cpp" />
     <ClCompile Include="..\SDL\Shell.cpp" />
     <ClCompile Include="..\SDL\Thread.cpp" />
@@ -75,6 +73,8 @@
     <ClCompile Include="..\STL\Process.cpp" />
     <None Include="..\SDL\Keys.inl" />
     <None Include="..\SDL\MouseButtons.inl" />
+    <ClCompile Include="Precompiled.cpp"><PrecompiledHeader>Create</PrecompiledHeader></ClCompile>
+    <ClInclude Include="Precompiled.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

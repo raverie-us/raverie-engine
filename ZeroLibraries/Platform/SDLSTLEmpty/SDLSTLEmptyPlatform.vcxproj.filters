@@ -25,8 +25,6 @@
     <ClCompile Include="..\SDL\OpenglRendererSDL.cpp" />
     <ClCompile Include="..\SDL\Peripherals.cpp" />
     <ClCompile Include="..\SDL\PlatformStandard.cpp" />
-    <ClCompile Include="..\SDL\Precompiled.cpp" />
-    <ClCompile Include="..\SDL\Precompiled.hpp" />
     <ClCompile Include="..\SDL\Resolution.cpp" />
     <ClCompile Include="..\SDL\Shell.cpp" />
     <ClCompile Include="..\SDL\Thread.cpp" />
@@ -39,5 +37,7 @@
     <ClCompile Include="..\STL\Process.cpp" />
     <None Include="..\SDL\Keys.inl" />
     <None Include="..\SDL\MouseButtons.inl" />
+    <ClCompile Include="Precompiled.cpp" />
+    <ClInclude Include="Precompiled.hpp" />
   </ItemGroup>
 </Project>
