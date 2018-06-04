@@ -69,7 +69,6 @@
     <ClCompile Include="ExternalLibrary.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="OpenglRendererSDL.cpp" />
-    <ClCompile Include="FpControl.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="PlatformStandard.cpp" />
     <ClCompile Include="Shell.cpp" />

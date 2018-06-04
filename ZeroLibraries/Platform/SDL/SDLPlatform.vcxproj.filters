@@ -23,7 +23,6 @@
     <ClCompile Include="Resolution.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="FpControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">

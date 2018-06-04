@@ -98,6 +98,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "STLPlatform", "ZeroLibrarie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EmptyPlatform", "ZeroLibraries\Platform\Empty\EmptyPlatform.vcxproj", "{ABE8E03A-7570-406C-BCF6-D1EAEE23AA10}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDLSTLEmptyPlatform", "ZeroLibraries\Platform\SDLSTLEmpty\SDLSTLEmptyPlatform.vcxproj", "{19DC9885-E310-4335-CB87-2EF32E753398}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		ClangDebug|Emscripten = ClangDebug|Emscripten
@@ -1095,6 +1097,33 @@ Global
 		{ABE8E03A-7570-406C-BCF6-D1EAEE23AA10}.Scons|Win32.Build.0 = Release|Win32
 		{ABE8E03A-7570-406C-BCF6-D1EAEE23AA10}.Scons|x64.ActiveCfg = Release|Win32
 		{ABE8E03A-7570-406C-BCF6-D1EAEE23AA10}.Scons|x64.Build.0 = Release|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.ClangDebug|Emscripten.ActiveCfg = Release|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.ClangDebug|Emscripten.Build.0 = Release|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.ClangDebug|Win32.ActiveCfg = Debug|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.ClangDebug|Win32.Build.0 = Debug|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.ClangDebug|x64.ActiveCfg = Debug|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.ClangDebug|x64.Build.0 = Debug|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Debug|Emscripten.ActiveCfg = Debug|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Debug|Win32.ActiveCfg = Debug|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Debug|Win32.Build.0 = Debug|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Debug|x64.ActiveCfg = Debug|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Debug|x64.Build.0 = Debug|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Production|Emscripten.ActiveCfg = Production|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Production|Win32.ActiveCfg = Production|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Production|Win32.Build.0 = Production|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Production|x64.ActiveCfg = Production|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Production|x64.Build.0 = Production|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Release|Emscripten.ActiveCfg = Release|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Release|Win32.ActiveCfg = Release|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Release|Win32.Build.0 = Release|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Release|x64.ActiveCfg = Release|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Release|x64.Build.0 = Release|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Scons|Emscripten.ActiveCfg = Release|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Scons|Emscripten.Build.0 = Release|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Scons|Win32.ActiveCfg = Release|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Scons|Win32.Build.0 = Release|Win32
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Scons|x64.ActiveCfg = Release|x64
+		{19DC9885-E310-4335-CB87-2EF32E753398}.Scons|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1134,5 +1163,6 @@ Global
 		{00DC9885-E310-4335-AB87-4EF32E723399} = {BFA616BA-20B4-4210-A078-840A6BBC6F62}
 		{10DC9889-C310-2335-BB87-4EF32E721541} = {BFA616BA-20B4-4210-A078-840A6BBC6F62}
 		{ABE8E03A-7570-406C-BCF6-D1EAEE23AA10} = {BFA616BA-20B4-4210-A078-840A6BBC6F62}
+		{19DC9885-E310-4335-CB87-2EF32E753398} = {BFA616BA-20B4-4210-A078-840A6BBC6F62}
 	EndGlobalSection
 EndGlobal
