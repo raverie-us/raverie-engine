@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{19DC9885-E310-4335-CB87-2EF32E753398}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the environment paths needed to find all our different repositories-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props" Condition="exists('$(ZeroStandardLibrariesSource)\Build\ZeroLibraries.$(Configuration).props')" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ZeroSource)\External\SDL\include;$(ZeroStandardLibrariesSource);$(ZeroStandardLibrariesSource)\Common;$(ZERO_SOURCE)\External\GLEW\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Lib>
+    <AdditionalLibraryDirectories>$(ZeroSource)\External\SDL\lib;C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Empty\Browser.cpp" />
+    <ClCompile Include="..\Empty\ComPort.cpp" />
+    <ClCompile Include="..\Empty\CrashHandler.cpp" />
+    <ClCompile Include="..\Empty\Debug.cpp" />
+    <ClCompile Include="..\Empty\DebugSymbolInformation.cpp" />
+    <ClCompile Include="..\Empty\DirectoryWatcher.cpp" />
+    <ClCompile Include="..\Empty\ExecutableResource.cpp" />
+    <ClCompile Include="..\Empty\Intrinsics.cpp" />
+    <ClCompile Include="..\Empty\Registry.cpp" />
+    <ClCompile Include="..\Empty\Socket.cpp" />
+    <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
+    <ClInclude Include="..\OpenGL\OpenglRenderer.hpp" />
+    <ClCompile Include="..\SDL\Audio.cpp" />
+    <ClCompile Include="..\SDL\ExternalLibrary.cpp" />
+    <ClCompile Include="..\SDL\File.cpp" />
+    <ClCompile Include="..\SDL\Main.cpp" />
+    <ClCompile Include="..\SDL\OpenglRendererSDL.cpp" />
+    <ClCompile Include="..\SDL\Peripherals.cpp" />
+    <ClCompile Include="..\SDL\PlatformStandard.cpp" />
+    <ClCompile Include="..\SDL\Precompiled.cpp"><PrecompiledHeader>Create</PrecompiledHeader></ClCompile>
+    <ClCompile Include="..\SDL\Precompiled.hpp" />
+    <ClCompile Include="..\SDL\Resolution.cpp" />
+    <ClCompile Include="..\SDL\Shell.cpp" />
+    <ClCompile Include="..\SDL\Thread.cpp" />
+    <ClCompile Include="..\SDL\ThreadSync.cpp" />
+    <ClCompile Include="..\SDL\Timer.cpp" />
+    <ClCompile Include="..\SDL\Utilities.cpp" />
+    <ClCompile Include="..\STL\Atomic.cpp" />
+    <ClCompile Include="..\STL\FileSystem.cpp" />
+    <ClCompile Include="..\STL\FpControl.cpp" />
+    <ClCompile Include="..\STL\Process.cpp" />
+    <None Include="..\SDL\Keys.inl" />
+    <None Include="..\SDL\MouseButtons.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

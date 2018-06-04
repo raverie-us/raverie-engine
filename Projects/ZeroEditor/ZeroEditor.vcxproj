@@ -408,9 +408,6 @@ COPY /Y "$(OutDir)\..\BrowserSubProcess\BrowserSubProcess.exe" "$(OutDir)\Browse
     <ProjectReference Include="..\..\Systems\Sound\Sound.vcxproj">
       <Project>{ca0735f3-8ce7-4663-bfe5-96fef5ea0880}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\GeometryProcessor\GeometryProcessor.vcxproj">
-      <Project>{8f553e34-1239-42b2-a136-f05e719f6c43}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Win32Shared\ZeroEditor.rc" />

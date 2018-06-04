@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{5c2cbabe-7805-4bec-80c2-0184760d09bb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Empty\Browser.cpp" />
+    <ClCompile Include="..\Empty\ComPort.cpp" />
+    <ClCompile Include="..\Empty\CrashHandler.cpp" />
+    <ClCompile Include="..\Empty\Debug.cpp" />
+    <ClCompile Include="..\Empty\DebugSymbolInformation.cpp" />
+    <ClCompile Include="..\Empty\DirectoryWatcher.cpp" />
+    <ClCompile Include="..\Empty\ExecutableResource.cpp" />
+    <ClCompile Include="..\Empty\Intrinsics.cpp" />
+    <ClCompile Include="..\Empty\Registry.cpp" />
+    <ClCompile Include="..\Empty\Socket.cpp" />
+    <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
+    <ClInclude Include="..\OpenGL\OpenglRenderer.hpp" />
+    <ClCompile Include="..\SDL\Audio.cpp" />
+    <ClCompile Include="..\SDL\ExternalLibrary.cpp" />
+    <ClCompile Include="..\SDL\File.cpp" />
+    <ClCompile Include="..\SDL\Main.cpp" />
+    <ClCompile Include="..\SDL\OpenglRendererSDL.cpp" />
+    <ClCompile Include="..\SDL\Peripherals.cpp" />
+    <ClCompile Include="..\SDL\PlatformStandard.cpp" />
+    <ClCompile Include="..\SDL\Precompiled.cpp" />
+    <ClCompile Include="..\SDL\Precompiled.hpp" />
+    <ClCompile Include="..\SDL\Resolution.cpp" />
+    <ClCompile Include="..\SDL\Shell.cpp" />
+    <ClCompile Include="..\SDL\Thread.cpp" />
+    <ClCompile Include="..\SDL\ThreadSync.cpp" />
+    <ClCompile Include="..\SDL\Timer.cpp" />
+    <ClCompile Include="..\SDL\Utilities.cpp" />
+    <ClCompile Include="..\STL\Atomic.cpp" />
+    <ClCompile Include="..\STL\FileSystem.cpp" />
+    <ClCompile Include="..\STL\FpControl.cpp" />
+    <ClCompile Include="..\STL\Process.cpp" />
+    <None Include="..\SDL\Keys.inl" />
+    <None Include="..\SDL\MouseButtons.inl" />
+  </ItemGroup>
+</Project>
