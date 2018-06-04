@@ -34,62 +34,6 @@ SECURITY_ATTRIBUTES* NOSECURITY = NULL;
 
 cstr cBadFileMessage = "The file is missing, not in that location, or is protected.";
 
-byte * ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
-{
-  HANDLE fileHandle = ::CreateFileW(Widen(filePath).c_str(), GENERIC_READ, FILE_SHARE_READ, 
-                                    NOSECURITY, OPEN_EXISTING, 0, 0);
-  
-  CheckWin(fileHandle != INVALID_HANDLE_VALUE, "Failed to open file %s.", filePath);
-
-  ReturnIf(fileHandle == INVALID_HANDLE_VALUE, NULL, 
-           "Failed to open file '%s'. %s", filePath, cBadFileMessage);
-
-  DWORD fileSizeInBytes = ::GetFileSize(fileHandle, NULL);
-  byte* fileBuffer = (byte*)zAllocate(fileSizeInBytes+extra);
-  if (fileBuffer == NULL)
-  {
-    ErrorIf(fileBuffer == NULL, 
-            "Could not allocate enough memory for file '%s' into memory.", 
-            filePath); 
-
-    delete fileBuffer;
-    ::CloseHandle(fileHandle);
-    return NULL;
-  }
-  else
-  {
-    fileSize = fileSizeInBytes;
-    DWORD bytesRead;
-    BOOL readResult = ::ReadFile(fileHandle, fileBuffer, (DWORD)fileSize, 
-                                 &bytesRead, NULL);
-    ErrorIf(!readResult, "Could not Read file '%s'.", filePath); 
-  }
-  ::CloseHandle(fileHandle);
-  return fileBuffer;
-}
-
-size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize)
-{
-  HANDLE fileHandle = ::CreateFileW(Widen(filePath).c_str(), GENERIC_WRITE, FILE_NO_SHARING,
-                                    NOSECURITY, CREATE_ALWAYS, 0, 0); 
-  ReturnIf(fileHandle == INVALID_HANDLE_VALUE, 0, "Failed to open destination "
-           "file '%s'. %s", filePath, cBadFileMessage);
-
-  FileModifiedState::BeginFileModified(filePath);
-
-  DWORD bytesWritten = 0;
-  BOOL writeResult = WriteFile(fileHandle, data, (DWORD)bufferSize,
-                               &bytesWritten, 0);
-  ::CloseHandle(fileHandle);
-
-  FileModifiedState::EndFileModified(filePath);
-
-  ReturnIf(writeResult == 0, 0, "Failed to write to destination file '%s'.", 
-           filePath);
-
-  return bufferSize;
-}
-
 DWORD ToWindowsFileMode(FileMode::Enum mode)
 {
   switch(mode)
