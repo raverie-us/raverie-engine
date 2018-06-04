@@ -241,6 +241,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="Platform\DirectoryWatcher.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagnostic\Diagnostic.hpp">

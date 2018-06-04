@@ -253,6 +253,7 @@
     <ClCompile Include="Memory\Graph.cpp" />
     <ClCompile Include="Memory\Heap.cpp" />
     <ClCompile Include="Memory\Pool.cpp" />
+    <ClCompile Include="Platform\DirectoryWatcher.cpp" />
     <ClCompile Include="Platform\File.cpp" />
     <ClCompile Include="Platform\FileEvents.cpp" />
     <ClCompile Include="Platform\FilePath.cpp" />
