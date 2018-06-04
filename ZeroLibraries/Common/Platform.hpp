@@ -85,10 +85,10 @@
 #endif
 
 // Detect compilers
-#if defined(_MSC_VER)
-  #define COMPILER_MICROSOFT 1
-#elif defined(__clang__)
+#if defined(__clang__)
   #define COMPILER_CLANG 1
+#elif defined(_MSC_VER)
+  #define COMPILER_MICROSOFT 1
 #elif defined(__GNUC__)
   #define COMPILER_GCC 1
 #elif defined(__llvm__)
