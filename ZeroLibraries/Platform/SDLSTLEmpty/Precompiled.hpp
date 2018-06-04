@@ -6,5 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "../STL/Precompiled.hpp"
 #include "../SDL/Precompiled.hpp"
+#include "../STL/Precompiled.hpp"
+#include "../Empty/Precompiled.hpp"
