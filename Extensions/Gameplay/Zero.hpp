@@ -50,6 +50,7 @@ class ZilchScriptConnection : public EventConnection
 {
 public:
   ZilchScriptConnection(DelegateParam delagate);
+  ~ZilchScriptConnection();
 
   void RaiseError(StringParam message) override;
   void Invoke(Event* event) override;
