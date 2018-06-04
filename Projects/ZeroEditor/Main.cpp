@@ -15,17 +15,13 @@ namespace Zero
 //Application Startup Function
 bool Startup(Engine* engine, StringMap& parameters, String projectFile);
 
-}
-
 void DebugRunEngine(void* voidEngine)
 {
   Zero::Engine* engine = (Zero::Engine*)voidEngine;
   engine->Run();
 }
 
-using namespace Zero;
-
-ZeroGuiMain()
+int PlatformMain(const Array<String>& arguments)
 {
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
@@ -55,13 +51,9 @@ ZeroGuiMain()
   if(importResult == ImporterResult::ExecutedAnotherProcess)
     return 1;
 
-  // Get the command line
-  Array<String> commandLineArray;
-  GetCommandLineStringArray(commandLineArray);
-
   // Initialize environments
   Environment* environment = Environment::GetInstance();
-  environment->ParseCommandArgs(commandLineArray);
+  environment->ParseCommandArgs(arguments);
 
   // Add stdout listener (requires engine initialization to get the Environment object)
   StdOutListener stdoutListener;
@@ -112,3 +104,4 @@ ZeroGuiMain()
 
   return 0;
 }
+} // namespace Zero

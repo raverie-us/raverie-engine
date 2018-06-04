@@ -39,7 +39,6 @@
     <ClCompile Include="DebugSymbolInformation.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="WString.cpp" />
-    <ClCompile Include="CommandLineSupport.cpp" />
     <ClCompile Include="Peripherals.cpp" />
     <ClCompile Include="ExecutableResource.cpp" />
     <ClCompile Include="Shell.cpp" />
@@ -51,6 +50,7 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="..\OpenGL\OpenglRenderer.cpp" />
     <ClCompile Include="OpenglRendererWindows.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.hpp">

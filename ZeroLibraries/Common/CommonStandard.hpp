@@ -220,7 +220,7 @@ namespace Zero
 #include "Platform/DirectoryWatcher.hpp"
 #include "Platform/Peripherals.hpp"
 #include "Platform/ExecutableResource.hpp"
-#include "Platform/CommandLineSupport.hpp"
+#include "Platform/Main.hpp"
 #include "Platform/Shell.hpp"
 #include "Platform/ComPort.hpp"
 #include "Platform/Intrinsics.hpp"

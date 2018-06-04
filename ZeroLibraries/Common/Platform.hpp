@@ -105,18 +105,6 @@
 #define ZeroDebug 1
 #endif
 
-//-----------------------------------------------------------------------------Main
-// Main is different depending on the OS
-#if defined(PLATFORM_WINDOWS)
-#define ZeroConsoleMain(argc, argv)       int main(int argc, char** argv)
-#define ZeroGuiMain()                     int __stdcall WinMain(void*, void*, char*, int)
-#define ZeroSharedLibraryMain()           int __stdcall DllMain(void*, unsigned long, void*)
-#else
-#define ZeroConsoleMain(argc, argv)       int main(int argc, char** argv)
-#define ZeroGuiMain()                     int main(int, char**)
-#define ZeroSharedLibraryMain(argc, argv) int main(int, char**)
-#endif
-
 //-----------------------------------------------------------------------------Warnings
 #if defined(PLATFORM_WINDOWS)
 #define _SECURE_SCL 0

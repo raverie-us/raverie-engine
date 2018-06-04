@@ -151,7 +151,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <DelayLoadDLLs>freetype28.dll;dbghelp.dll;libcef.dll;libcef.dll</DelayLoadDLLs>
-      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;Winmm.lib;Avrt.lib;opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;Winmm.lib;Avrt.lib;opus.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>CALL CreateBuildInfo.cmd $(ProjectName) "$(ZeroSource)" "$(ZERO_OUTPUT)" &gt; "$(OutDir)BuildInfo.data"

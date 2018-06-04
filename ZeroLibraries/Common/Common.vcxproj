@@ -217,7 +217,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CommandLineSupport.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="CommonStandard.cpp" />
     <ClCompile Include="Containers\BitStream.cpp" />
     <ClCompile Include="Containers\ByteBuffer.cpp" />
@@ -352,7 +352,7 @@
     <ClInclude Include="Platform.hpp" />
     <ClInclude Include="Platform\Atomic.hpp" />
     <ClInclude Include="Platform\Audio.hpp" />
-    <ClInclude Include="Platform\CommandLineSupport.hpp" />
+    <ClInclude Include="Platform\Main.hpp" />
     <ClInclude Include="Platform\ComPort.hpp" />
     <ClInclude Include="Platform\CrashHandler.hpp" />
     <ClInclude Include="Platform\Debug.hpp" />

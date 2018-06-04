@@ -8,7 +8,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-using namespace Zero;
+namespace Zero
+{
 
 const String UrlRoot = "https://builds.zeroengine.io";
 
@@ -64,7 +65,7 @@ String ChooseDllPath(Zero::StringParam localDllPath, int localDllVersionId, Zero
   return downloadedDllPath;
 }
 
-ZeroGuiMain()
+int PlatformMain(const Array<String>& arguments)
 {
   int restart = 1;
   ExternalLibrary library;
@@ -143,3 +144,4 @@ ZeroGuiMain()
   //MetaDatabase::Shutdown();
   return 0;
 }
+} // namespace Zero

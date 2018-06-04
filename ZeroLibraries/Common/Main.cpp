@@ -8,10 +8,17 @@
 
 namespace Zero
 {
+Array<String> gCommandLineArguments;
+
 void CommandLineToStringArray(Array<String>& strings, cstr* argv, int numberOfParameters)
 {
   for (int i = 0; i < numberOfParameters; ++i)
     strings.PushBack(argv[i]);
+}
+
+void CommandLineToStringArray(Array<String>& strings, char** argv, int numberOfParameters)
+{
+  return CommandLineToStringArray(strings, const_cast<cstr*>(argv), numberOfParameters);
 }
 
 bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments)

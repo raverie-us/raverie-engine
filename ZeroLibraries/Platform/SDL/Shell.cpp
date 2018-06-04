@@ -178,8 +178,7 @@ bool Shell::IsKeyDown(Keys::Enum key)
 
 bool Shell::IsMouseDown(MouseButtons::Enum button)
 {
-  Error("Not implemented");
-  return false;
+  return (SDL_GetGlobalMouseState(nullptr, nullptr) & SDL_BUTTON(MouseButtonToSDL(button))) != 0;
 }
 
 void Shell::SetMouseCursor(Cursor::Enum cursor)
@@ -783,7 +782,7 @@ void ShellWindow::Close()
 
 void ShellWindow::ManipulateWindow(WindowBorderArea::Enum area)
 {
-  Error("Not implemented");
+  SDL_SetWindowGrab((SDL_Window*)mHandle, SDL_TRUE);
 }
 
 float ShellWindow::GetProgress()

@@ -6,12 +6,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Common/CommonStandard.hpp"
 
-using namespace Zero;
+namespace Zero
+{
 
-ZeroGuiMain()
+int PlatformMain(const Array<String>& arguments)
 {
   CommonLibrary::Initialize();
   int result =  BrowserSubProcess::Execute();
   CommonLibrary::Shutdown();
   return result;
 }
+
+} // namespace Zero

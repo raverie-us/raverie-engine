@@ -45,10 +45,6 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
 
   ZPrint("Loading ZeroLauncher %d.0.\n", GetLauncherMajorVersion());
 
-  //Get the command line
-  Array<String> commandLineArray;
-  GetCommandLineStringArray(commandLineArray);
-
   // Initialize platform socket library
   Zero::Status socketLibraryInitStatus;
   Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
@@ -67,7 +63,7 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   }
 
   Environment* environment = Environment::GetInstance();
-  environment->ParseCommandArgs(commandLineArray);
+  environment->ParseCommandArgs(gCommandLineArguments);
 
   // Startup the engine
   ZeroLauncherStartupSettings settings;

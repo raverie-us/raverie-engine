@@ -136,6 +136,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>libcef.dll</DelayLoadDLLs>
+      <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -149,6 +150,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
+      <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -162,6 +164,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
       <AdditionalDependencies>Avrt.lib;nvtt.lib;opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>libcef.dll</DelayLoadDLLs>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -172,6 +175,7 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
       <AdditionalDependencies>Avrt.lib;nvtt.lib;opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <DelayLoadDLLs>libcef.dll</DelayLoadDLLs>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|x64'">

@@ -3,10 +3,10 @@
 
 #include "Precompiled.hpp"
 
-using namespace Zero;
-
+namespace Zero
+{
 //**************************************************************************************************
-int main(int argc, char** argv)
+int PlatformMain(const Array<String>& arguments)
 {
   DebuggerListener debuggerListener;
   StdOutListener stdListener;
@@ -14,11 +14,8 @@ int main(int argc, char** argv)
   Zero::Console::Add(&stdListener);
   ZPrint("Running Image Processor\n");
 
-  Array<String> commandLine;
-  CommandLineToStringArray(commandLine, (cstr*)argv, argc);
-
   Environment environment;
-  environment.ParseCommandArgs(commandLine);
+  environment.ParseCommandArgs(arguments);
 
   String inputFile = environment.GetParsedArgument("in");
   String outputFile = environment.GetParsedArgument("out");
@@ -73,3 +70,4 @@ int main(int argc, char** argv)
 
   return returnCode;
 }
+} // namespace Zero

@@ -238,7 +238,7 @@
     <ClCompile Include="Platform\Utilities.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="CommandLineSupport.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
   </ItemGroup>
@@ -482,9 +482,6 @@
     </ClInclude>
     <ClInclude Include="Utility\SpinLock.hpp">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\CommandLineSupport.hpp">
-      <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="Platform\CrashHandler.hpp">
       <Filter>Platform</Filter>
@@ -737,6 +734,9 @@
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="Utility\UintNType.hpp" />
+    <ClInclude Include="Platform\Main.hpp">
+      <Filter>Platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="ZeroVisualizers.natvis" />

@@ -50,15 +50,16 @@ String GetUserDocumentsDirectory()
 
 String GetApplicationDirectory()
 {
-  // This is only correct if the working directory is the executable directory
-  return GetWorkingDirectory();
+  // The first entry in the command line arguments should be our executable.
+  // Use the parent directory of the executable as the application directory.
+  return FilePath::GetDirectoryPath(GetApplication());
 }
 
 String GetApplication()
 {
-  // This is only correct if the working directory is the executable directory and the executable name is ZeroEditor.exe
-  std::error_code error;
-  return fs::current_path(error).append("ZeroEditor.exe").u8string().c_str();
+  // The first entry in the command line arguments should be our executable.
+  ReturnIf(gCommandLineArguments.Empty(), "Unknown", "The command line arguments should not be empty, were they set?");
+  return gCommandLineArguments.Front();
 }
 
 String GetTemporaryDirectory()

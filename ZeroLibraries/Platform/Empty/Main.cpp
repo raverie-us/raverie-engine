@@ -1,19 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
+/// Authors: Trevor Sundberg
 /// Copyright 2018, DigiPen Institute of Technology
 ////////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-namespace Zero
+int main(int argc, char* argv[])
 {
-
-String GetFullCommandLine()
-{
-  return String();
+  using namespace Zero;
+  CommandLineToStringArray(gCommandLineArguments, argv, argc);
+  return PlatformMain(gCommandLineArguments);
 }
-
-void GetCommandLineStringArray(Array<String>& strings)
-{
-}
-
-}// namespace Zero

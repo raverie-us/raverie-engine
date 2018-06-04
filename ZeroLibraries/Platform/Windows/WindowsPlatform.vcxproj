@@ -123,7 +123,7 @@
     <ClCompile Include="Atomic.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Browser.cpp" />
-    <ClCompile Include="CommandLineSupport.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="ComPort.cpp" />
     <ClCompile Include="CrashHandler.cpp" />
     <ClCompile Include="DebugClassMap.cpp" />
