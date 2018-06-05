@@ -129,10 +129,10 @@ namespace Audio
           // If samples are being saved, write them to the file
           if (!Streaming)
           {
-            for (unsigned i = 0; i < SavedSamples.Size(); ++i)
+            forRange(float& sample, SavedSamples.All())
             {
               // Convert from float to short
-              short shortValue = (short)(SavedSamples[i] * MaxValue);
+              short shortValue = (short)(sample * MaxValue);
 
               FileStream.Write(reinterpret_cast<byte*>(&shortValue), sizeof(short));
             }
@@ -192,10 +192,9 @@ namespace Audio
     {
       if (Streaming)
       {
-        unsigned bufferSize = buffer->Size();
-        for (unsigned i = 0; i < bufferSize; ++i)
+        forRange(float& sample, buffer->All())
         {
-          short shortValue = (short)((*buffer)[i] * MaxValue);
+          short shortValue = (short)(sample * MaxValue);
 
           FileStream.Write(reinterpret_cast<byte*>(&shortValue), sizeof(short));
           ++SamplesRecorded;

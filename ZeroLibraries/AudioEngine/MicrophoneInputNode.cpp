@@ -124,7 +124,8 @@ namespace Audio
     if (!VolumeInterpolator.Finished() || !IsWithinLimit(CurrentVolume, 1.0f, 0.01f))
     {
       // Step through output buffer
-      for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
+      BufferRange outputRange = outputBuffer->All();
+      while (!outputRange.Empty())
       {
         // Check if volume is interpolating
         if (!VolumeInterpolator.Finished())
@@ -137,8 +138,8 @@ namespace Audio
         }
 
         // Apply volume to all channels in this frame
-        for (unsigned channel = 0; channel < numberOfChannels; ++channel)
-          (*outputBuffer)[i + channel] *= CurrentVolume;
+        for (unsigned channel = 0; channel < numberOfChannels; ++channel, outputRange.PopFront())
+          outputRange.Front() *= CurrentVolume;
       }
     }
 

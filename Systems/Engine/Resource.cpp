@@ -146,7 +146,11 @@ void LoadResource(HandleParam instance, Property* property, Type* resourceType, 
 {
   // If it's null, do not default 
   if (resourceIdName == cNullResource)
+  {
+    // Set property to null resource.
+    property->SetValue(instance, Any(resourceType));
     return;
+  }
 
   Resource* resource;
 
@@ -209,6 +213,21 @@ void ResourceMetaSerialization::SetDefault(Type* type, Any& any)
   }
   else
     any = (Resource*)nullptr;
+}
+
+String ResourceMetaSerialization::ConvertToString(AnyParam input)
+{
+  if(Resource* resource = input.Get<Resource*>())
+    return resource->ResourceIdName;
+
+  return String();
+}
+
+bool ResourceMetaSerialization::ConvertFromString(StringParam input, Any& output)
+{
+  // 'output' can be null, but null is a valid result so return true.
+  output = Z::gResources->GetResourceByName(input);
+  return true;
 }
 
 String ResourceToString(const BoundType* type, const byte* value)

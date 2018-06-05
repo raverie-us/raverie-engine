@@ -193,14 +193,24 @@ public:
   PrimitiveType::Enum mPrimitiveType;
 
   /// Upload vertex buffer and index buffer data to the gpu.
+  /// This will also build the aabb and information needed for raycasting. 
   void Upload();
-
+  /// Same as Upload except raycasting information will not be built.
+  /// This avoids a possible spike when a custom mesh will never need to be raycasted against.
+  void UploadNoRayCastInfo();
+  /// Same as Upload except raycasting information and the aabb will not be built.
+  /// This should be used when the user is manually setting an aabb or frustum culling is disabled.
+  void UploadNoRayCastInfoOrAabb();
+  
   // Internal
+
+  void UploadInternal(bool updateAabb, bool updateTree);
 
   uint GetPrimitiveCount();
   uint GetVerticesPerPrimitive();
 
-  void BuildTree();
+  template <bool BuildTree>
+  void BuildAabbAndTree();
   bool TestRay(GraphicsRayCast& raycast, Mat4 worldTransform);
   bool TestFrustum(const Frustum& frustum);
 
@@ -213,7 +223,6 @@ public:
   Mat4 mBindOffsetInv;
   Array<MeshBone> mBones;
   AvlDynamicAabbTree<uint> mTree;
-  bool mBuildTree;
 };
 
 //**************************************************************************************************

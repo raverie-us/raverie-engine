@@ -80,7 +80,7 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
       completion.Description = entry.Description;
       completion.Name = entry.Name;
       completion.SignaturePathType = entry.Type;
-      completion.AssociatedResource = (Resource*)entry.CodeUserData;
+      completion.AssociatedResourceId = entry.CodeUserDataU64;
     }
 
     editor->ShowAutoComplete(completions, CompletionConfidence::Perfect);

@@ -234,9 +234,8 @@ void GenerateInternalEdgeInfo(PhysicsMesh* mesh, TriangleInfoMap* infoMap)
     for(; !range.Empty(); range.PopFront())
     //forRangeBroadphaseTree(StaticAabbTree<uint>, tree, Aabb, triAabb)
     {
-      //aabb tree stores the index in the index buffer, so divide by 3,
-      //would like to fix this but saved meshes would cause problems
-      uint indexB = range.Front() / 3;
+      //Get the triangle index
+      uint indexB = range.Front();
       //if not the same triangle, try to compute the voronoi edge info for the pair.
       if(indexA != indexB)
       {

@@ -377,17 +377,17 @@ namespace Audio
     DecodedPacket newPacket(numberOfFrames * mChannels);
 
     // Step through each frame of samples
+    BufferRange packetSampleRange = newPacket.Samples.All();
     for (unsigned frame = 0, index = 0; frame < numberOfFrames; ++frame)
     {
       // Copy the sample from each channel to the interleaved sample buffer
-      for (short channel = 0; channel < mChannels; ++channel, ++index)
+      for (short channel = 0; channel < mChannels; ++channel, ++index, packetSampleRange.PopFront())
       {
-        float sample = DecodedPackets[channel][frame];
-        newPacket.Samples[index] = sample;
+        packetSampleRange.Front() = DecodedPackets[channel][frame];
 
         // Samples should be between [-1, +1] but it's possible
         // encoding caused the sample to jump beyond 1
-        ErrorIf(sample < -2.0f || sample > 2.0f);
+        ErrorIf(packetSampleRange.Front() < -2.0f || packetSampleRange.Front() > 2.0f);
       }
     }
 
