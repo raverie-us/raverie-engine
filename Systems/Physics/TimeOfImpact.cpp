@@ -501,8 +501,8 @@ void SetComplexVsComplexLookups(uint colliderId)
   SetLookup(TimeOfImpactComplexVsComplex<ComplexType, MeshCollider>, colliderId, Collider::cMesh);
   SetLookup(TimeOfImpactComplexVsComplex<MeshCollider, ComplexType>, Collider::cMesh, colliderId);
 
-  //SetLookup(TimeOfImpactComplexVsComplex<ComplexType, HeightMapCollider>, colliderId, Collider::cHeightMap);
-  //SetLookup(TimeOfImpactComplexVsComplex<HeightMapCollider, ComplexType>, Collider::cHeightMap, colliderId);
+  SetLookup(TimeOfImpactComplexVsComplex<ComplexType, HeightMapCollider>, colliderId, Collider::cHeightMap);
+  SetLookup(TimeOfImpactComplexVsComplex<HeightMapCollider, ComplexType>, Collider::cHeightMap, colliderId);
 }
 
 void InitTimeOfImpactLookup()
@@ -516,7 +516,7 @@ void InitTimeOfImpactLookup()
 
   SetComplexLookups<MultiConvexMeshCollider>(Collider::cMultiConvexMesh);
   SetComplexLookups<MeshCollider>(Collider::cMesh);
-  //SetComplexLookups<HeightMapCollider>(Collider::cHeightMap);
+  SetComplexLookups<HeightMapCollider>(Collider::cHeightMap);
 
   SetComplexVsComplexLookups<MultiConvexMeshCollider>(Collider::cMultiConvexMesh);
 }
