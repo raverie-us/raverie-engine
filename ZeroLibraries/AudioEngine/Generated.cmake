@@ -1,0 +1,73 @@
+################################################################################
+# Generated using Joshua T. Fisher's 'CMake Builder'.
+# Link: https://github.com/playmer/CmakeBuilder 
+################################################################################
+target_sources(AudioEngine
+  PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/AdditiveSynthNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/AdditiveSynthNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/Attenuator.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Attenuator.h
+    ${CMAKE_CURRENT_LIST_DIR}/AudioInputOutput.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/AudioInputOutput.h
+    ${CMAKE_CURRENT_LIST_DIR}/AudioSystemInterface.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/AudioSystemInterface.h
+    ${CMAKE_CURRENT_LIST_DIR}/AudioSystemInternal.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/AudioSystemInternal.h
+    ${CMAKE_CURRENT_LIST_DIR}/CustomDataNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/CustomDataNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/Definitions.h
+    ${CMAKE_CURRENT_LIST_DIR}/DynamicsProcessorNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/DynamicsProcessorNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/Emitter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Emitter.h
+    ${CMAKE_CURRENT_LIST_DIR}/EqualizerNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/EqualizerNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/FileDecoder.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/FileDecoder.h
+    ${CMAKE_CURRENT_LIST_DIR}/FileEncoder.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/FileEncoder.h
+    ${CMAKE_CURRENT_LIST_DIR}/FilterNodes.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/FilterNodes.h
+    ${CMAKE_CURRENT_LIST_DIR}/Filters.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Filters.h
+    ${CMAKE_CURRENT_LIST_DIR}/GranularSynthNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/GranularSynthNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/Interpolator.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Interpolator.h
+    ${CMAKE_CURRENT_LIST_DIR}/ListenerNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ListenerNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/LockFreeQueue.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/MicrophoneInputNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/MicrophoneInputNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/Modifiers.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Modifiers.h
+    ${CMAKE_CURRENT_LIST_DIR}/PitchChange.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/PitchChange.h
+    ${CMAKE_CURRENT_LIST_DIR}/PitchNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/PitchNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.h
+    ${CMAKE_CURRENT_LIST_DIR}/RecordNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/RecordNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/Resampler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Resampler.h
+    ${CMAKE_CURRENT_LIST_DIR}/ReverbNodes.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ReverbNodes.h
+    ${CMAKE_CURRENT_LIST_DIR}/RingBuffer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/RingBuffer.h
+    ${CMAKE_CURRENT_LIST_DIR}/SoundAssets.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/SoundAssets.h
+    ${CMAKE_CURRENT_LIST_DIR}/SoundInstances.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/SoundInstances.h
+    ${CMAKE_CURRENT_LIST_DIR}/SoundNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/SoundNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.h
+    ${CMAKE_CURRENT_LIST_DIR}/Tags.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Tags.h
+    ${CMAKE_CURRENT_LIST_DIR}/VBAP.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/VBAP.h
+    ${CMAKE_CURRENT_LIST_DIR}/VolumeNodes.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/VolumeNodes.h
+)

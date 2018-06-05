@@ -758,6 +758,7 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
   {
     OsWindow* window = osMouseEvent->Window;
     if(window)
+      mouseMovement = ToVec2(osMouseEvent->ClientPosition - window->ScreenToClient(window->GetMouseTrapScreenPosition()));
       mouseMovement = ToVec2(osMouseEvent->ClientPosition - window->MonitorToClient(window->GetMouseTrapMonitorPosition()));
   }
   else

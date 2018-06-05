@@ -464,7 +464,8 @@ void NetPropertyConfig::Serialize(Serializer& stream)
   // Serialize data members
   SerializeEnumNameDefault(BasicNetType, mBasicNetType, BasicNetType::Real);
   SerializeNameDefault(mUseDeltaThreshold, false);
-  SerializeNameDefault(mDeltaThreshold, Variant(DefaultFloatDeltaThreshold));
+  auto localTempVariant = Variant(DefaultFloatDeltaThreshold);
+  SerializeNameDefault(mDeltaThreshold, localTempVariant);
   SerializeEnumNameDefault(SerializationMode, mSerializationMode, SerializationMode::All);
   SerializeNameDefault(mUseHalfFloats, false);
   SerializeNameDefault(mUseQuantization, false);

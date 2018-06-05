@@ -273,6 +273,15 @@ CommandList
 		}
 		Object
 		{
+			var Name = "CreateSpline"
+			var Description = "Create Spline"
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Object
+		{
 			var Name = "CreateSplineParticleSystem"
 			var Description = "Create SplineParticleSystem"
 			var Shortcut = ""
@@ -818,16 +827,6 @@ CommandList
 		}
 		Object
 		{
-			var Name = "OperationHistory"
-			var Description = "Show the Operation Queue"
-			var Shortcut = "Ctrl+Shift+O"
-			var Tags = Array
-			{
-				"Windows"
-			}
-		}
-		Object
-		{
 			var Name = "ParentToPrimary"
 			var Description = "Parents all selected objects to the primary selected object (highlighted in orange)"
 			var Shortcut = ""
@@ -897,6 +896,15 @@ CommandList
 		}
 		Object
 		{
+			var Name = "PlayUnitTestFile"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Object
+		{
 			var Name = "PreviousSelection"
 			var Description = ""
 			var Shortcut = "Alt+Left"
@@ -913,6 +921,15 @@ CommandList
 			var Tags = Array
 			{
 				"Windows"
+			}
+		}
+		Object
+		{
+			var Name = "RecordUnitTestFile"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
 			}
 		}
 		Object
@@ -958,7 +975,7 @@ CommandList
 		Object
 		{
 			var Name = "ReportBug"
-			var Description = "Report a bug to our website"
+			var Description = "Report a bug"
 			var Shortcut = ""
 			var Tags = Array
 			{
@@ -1335,6 +1352,15 @@ CommandList
 		Object
 		{
 			var Name = "WriteBuildInfo"
+			var Description = ""
+			var Shortcut = ""
+			var Tags = Array
+			{
+			}
+		}
+		Object
+		{
+			var Name = "ZeroHub"
 			var Description = ""
 			var Shortcut = ""
 			var Tags = Array

@@ -1,0 +1,63 @@
+################################################################################
+# Generated using Joshua T. Fisher's 'CMake Builder'.
+# Link: https://github.com/playmer/CmakeBuilder 
+################################################################################
+target_sources(SpatialPartition
+  PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/AvlDynamicAabbTreeBroadPhase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BoundingBoxBroadPhase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BoundingSphereBroadPhase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseCreator.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhasePackage.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseTracker.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/DynamicAabbTreeBroadPhase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/NSquaredBroadPhase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ProxyCast.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/SapBroadPhase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/SpatialPartitionStandard.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/StaticAabbTreeBroadPhase.cpp
+#  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/AabbTreeMethods.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/AabbTreeMethods.inl
+    ${CMAKE_CURRENT_LIST_DIR}/AabbTreeNode.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/AabbTreeNode.inl
+    ${CMAKE_CURRENT_LIST_DIR}/AvlDynamicAabbTree.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/AvlDynamicAabbTree.inl
+    ${CMAKE_CURRENT_LIST_DIR}/AvlDynamicAabbTreeBroadPhase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BaseDynamicAabbTree.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BaseDynamicAabbTree.inl
+    ${CMAKE_CURRENT_LIST_DIR}/BaseDynamicAabbTreeBroadPhase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BaseDynamicAabbTreeBroadPhase.inl
+    ${CMAKE_CURRENT_LIST_DIR}/BaseNSquared.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BaseNSquared.inl
+    ${CMAKE_CURRENT_LIST_DIR}/BoundingBox.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BoundingBoxBroadPhase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BoundingSphere.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BoundingSphereBroadPhase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseCreator.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhasePackage.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseProxy.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseRanges.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseRangeTransformations.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BroadPhaseTracker.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/DynamicAabbTree.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/DynamicAabbTree.inl
+    ${CMAKE_CURRENT_LIST_DIR}/DynamicAabbTreeBroadPhase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/DynamicTreeHelpers.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/NSquared.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/NSquaredBroadPhase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ProxyCast.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Sap.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Sap.inl
+    ${CMAKE_CURRENT_LIST_DIR}/SapBroadPhase.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/SapContainers.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/SimpleCastCallbacks.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/SpatialPartitionStandard.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StaticAabbTree.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StaticAabbTree.inl
+    ${CMAKE_CURRENT_LIST_DIR}/StaticAabbTreeBroadPhase.hpp
+)

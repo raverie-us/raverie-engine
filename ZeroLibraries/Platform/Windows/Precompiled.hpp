@@ -117,7 +117,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 extern "C"
 {
 // This should probably be setup to not use ..
-#include "../External/WinHid/include/hidsdi.h"
+#include "hidsdi.h"
 }
 
 //Undef windows defines that overlap with core functions

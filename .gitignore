@@ -45,3 +45,19 @@ enc_temp_folder/
 *.TMP
 *.d
 DevTools/
+
+# ignore the whole CMake Build directory
+CMakeBuild/
+
+# ...Except these file types since a user might have added source in this folder in error
+!CMakeBuild/*.cmd
+!CMakeBuild/*.sh
+!CMakeBuild/*.bat
+!CMakeBuild/*.md
+!CMakeBuild/*/*.cpp
+!CMakeBuild/*/*.c
+!CMakeBuild/*/*.hpp
+!CMakeBuild/*/*.h
+!CMakeBuild/*/*.inl
+!CMakeBuild/*/*.zilchscript
+
