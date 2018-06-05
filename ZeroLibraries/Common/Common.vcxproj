@@ -263,6 +263,7 @@
     <ClCompile Include="Platform\Process.cpp" />
     <ClCompile Include="Platform\Renderer.cpp" />
     <ClCompile Include="Platform\Shell.cpp" />
+    <ClCompile Include="Platform\Thread.cpp" />
     <ClCompile Include="Platform\UnicodeUtility.cpp" />
     <ClCompile Include="Platform\Utilities.cpp" />
     <ClCompile Include="Precompiled.cpp">
