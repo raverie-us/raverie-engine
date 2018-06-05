@@ -41,7 +41,7 @@ function(zero_target_precompiled_headers aTarget aIntPath aHeaderName aSourceNam
     endif()
   endforeach()
 
-  if (${MSVC})
+  if (${MSVC} OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     target_compile_options(${aTarget} PRIVATE #"/Yc${aHeaderName}"
                                               "/Yu${aHeaderName}"
                                               "/Fp${precompiledObj}")

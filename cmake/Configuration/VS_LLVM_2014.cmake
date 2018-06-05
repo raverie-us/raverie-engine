@@ -38,7 +38,6 @@ set(common_flags
     -DDEBUG  
     "-D \"_CRT_SECURE_NO_WARNINGS\"" 
     "-Wno-unused-command-line-argument"
-    "-Wno-undefined-inline"
     -FIPrecompiled.hpp
 )
 

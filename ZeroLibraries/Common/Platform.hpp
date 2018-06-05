@@ -301,7 +301,11 @@
 #define ZeroExportC extern "C" __declspec(dllexport)
 #define ZeroDebugBreak() __debugbreak()
 #define ZeroTodo(text) /* __pragma(message(__FILE__ "(" ZeroStringize(__LINE__) ") : Todo: " text)) */
+#if defined(COMPILER_MICROSOFT)
 #define ZeroForceInline inline __forceinline
+#else
+#define ZeroForceInline inline
+#endif
 #define ZeroNoInline __declspec(noinline)
 #else
 #define ZeroThreadLocal __thread
