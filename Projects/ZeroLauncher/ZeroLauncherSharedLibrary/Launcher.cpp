@@ -116,7 +116,12 @@ void Launcher::Initialize()
   IntVec2 monitorClientPos = monitorRect.Center(clientSize);
 
   BitField<WindowStyleFlags::Enum> mainStyle;
-  mainStyle.U32Field = WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly;
+  mainStyle.U32Field =
+    WindowStyleFlags::OnTaskBar |
+    WindowStyleFlags::TitleBar |
+    WindowStyleFlags::Close |
+    WindowStyleFlags::ClientOnly |
+    WindowStyleFlags::Resizable;
 
   if(mainWindow)
     mainStyle.SetFlag(WindowStyleFlags::MainWindow);
@@ -197,39 +202,6 @@ bool Launcher::ShouldOpenEula()
 {
   UserConfig* userConfig = HasOrAdd<UserConfig>(mConfigCog);
   return userConfig->LastAcceptedEulaHash != GetEulaHash();
-}
-
-//******************************************************************************
-MainWindow* Launcher::CreateOsWindow(Cog* configCog, const IntVec2& minWindowSize,
-                                     StringParam windowName, bool mainWindow,
-                                     bool visible)
-{
-  OsShell* osShell = Z::gEngine->has(OsShell);
-  IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
-
-  IntVec2 clientSize = minWindowSize;
-  IntVec2 monitorClientPosition = monitorRect.Center(clientSize);
-
-  BitField<WindowStyleFlags::Enum> mainStyle;
-  mainStyle.SetFlag(WindowStyleFlags::OnTaskBar);
-  mainStyle.SetFlag(WindowStyleFlags::Close);
-  mainStyle.SetFlag(WindowStyleFlags::ClientOnly);
-  mainStyle.SetFlag(WindowStyleFlags::Resizable);
-
-  if(mainWindow)
-    mainStyle.SetFlag(WindowStyleFlags::MainWindow);
-
-  if(!visible)
-    mainStyle.SetFlag(WindowStyleFlags::NotVisible);
-
-  OsWindow* window = osShell->CreateOsWindow(windowName, clientSize, monitorClientPosition, nullptr, mainStyle.Field);
-  window->SetMinClientSize(minWindowSize);
-
-  MainWindow* rootWidget = new MainWindow(window);
-  rootWidget->SetTitle("");
-  window->SetTitle(windowName);
-
-  return rootWidget;
 }
 
 }//namespace Zero

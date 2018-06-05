@@ -33,9 +33,6 @@ private:
 
   size_t GetEulaHash();
   bool ShouldOpenEula();
-  MainWindow* CreateOsWindow(Cog* configCog, const IntVec2& minWindowSize,
-                             StringParam windowName, bool mainWindow,
-                             bool visible);
 
   OsWindow* mOsWindow;
   MainWindow* mMainWindow;
