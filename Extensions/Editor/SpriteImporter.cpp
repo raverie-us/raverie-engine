@@ -1046,8 +1046,8 @@ int SpriteSheetImporter::GetFrameCount()
   return mFrames.Size();
 }
 
-ImportFrames::Type SpriteSheetImporter::GetImportFrames(){return mImportFrames;}
-void SpriteSheetImporter::SetImportFrames(ImportFrames::Type newMode)
+ImportFrames::Enum SpriteSheetImporter::GetImportFrames(){return mImportFrames;}
+void SpriteSheetImporter::SetImportFrames(ImportFrames::Enum newMode)
 {
   //redundant set
   if(mImportFrames == newMode)

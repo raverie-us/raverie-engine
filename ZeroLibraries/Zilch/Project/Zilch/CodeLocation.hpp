@@ -103,6 +103,7 @@ namespace Zilch
     // they have the option of providing user-data. This user-data is the
     // same data that they passed in
     mutable const void* CodeUserData;
+    u64 CodeUserDataU64;
   };
 
   // Every time we add code to the project we do it through this

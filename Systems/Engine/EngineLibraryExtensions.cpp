@@ -141,10 +141,11 @@ void EngineLibraryExtensions::AddResourceExtensions(LibraryBuilder& builder, Res
 
     // By setting all of these, we ensure that Go-To-Definition will
     // select our resource (see EditorUtility/DisplayCodeDefinition)
-    property->Location.CodeUserData = resource;
-    property->NameLocation.CodeUserData = resource;
-    property->Get->Location.CodeUserData = resource;
-    property->Get->NameLocation.CodeUserData = resource;
+    u64 resourceId = (u64)resource->mResourceId;
+    property->Location.CodeUserDataU64 = resourceId;
+    property->NameLocation.CodeUserDataU64 = resourceId;
+    property->Get->Location.CodeUserDataU64 = resourceId;
+    property->Get->NameLocation.CodeUserDataU64 = resourceId;
   }
 }
 

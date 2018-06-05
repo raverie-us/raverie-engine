@@ -122,8 +122,8 @@ public:
 
   int GetFrameCount();
 
-  ImportFrames::Type GetImportFrames();
-  void SetImportFrames(ImportFrames::Type newMode);
+  ImportFrames::Enum GetImportFrames();
+  void SetImportFrames(ImportFrames::Enum newMode);
 
   bool GetPreviewAnimate();
   void SetPreviewAnimate(bool state);
@@ -156,7 +156,7 @@ public:
   //Settings
   String Name;
   SpriteOrigin::Enum mOrigin;
-  ImportFrames::Type mImportFrames;
+  ImportFrames::Enum mImportFrames;
 
   int FrameSizeX;
   int FrameSizeY;
