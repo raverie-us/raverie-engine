@@ -69,6 +69,7 @@ private:
   void OnOsMouseMoved(OsMouseEvent* mouseEvent);
   void OnOsMouseScroll(OsMouseEvent* mouseEvent);
   void OnOsMouseDrop(OsMouseDropEvent* mouseDrop);
+  void OnOsWindowBorderHitTest(OsWindowBorderHitTest* event);
 
   void OnOsKeyDown(KeyboardEvent* keyboardEvent);
   void OnOsKeyUp(KeyboardEvent* keyboardEvent);

@@ -187,7 +187,7 @@ InterprocessMutex::~InterprocessMutex()
 
 void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
 {
-  Error("Not Implemented. Potentially use a file opened for writing as as global mutex lock");
+  Error("InterprocessMutex not implemented. Potentially use a file opened for writing as as global mutex lock");
 }
 
 CountdownEvent::CountdownEvent()

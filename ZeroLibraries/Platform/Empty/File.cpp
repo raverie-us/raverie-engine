@@ -34,7 +34,7 @@ File::~File()
 bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share, Status* status)
 {
   if (status)
-    status->SetFailed("Not implemented");
+    status->SetFailed("File not implemented");
   return false;
 }
 
@@ -44,7 +44,7 @@ void File::Open(OsHandle handle, FileMode::Enum mode)
 
 void File::Open(Status& status, FILE* file, FileMode::Enum mode)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("File not implemented");
 }
 
 void File::Close()
@@ -68,13 +68,13 @@ size_t File::Write(byte* data, size_t sizeInBytes)
 
 size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("File not implemented");
   return 0;
 }
 
 bool File::HasData(Status& status)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("File not implemented");
   return false;
 }
 
@@ -99,7 +99,7 @@ bool File::IsOpen()
 
 void File::Duplicate(Status& status, File& destinationFile)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("File not implemented");
 }
 
 }//namespace Zero

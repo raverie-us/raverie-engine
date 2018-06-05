@@ -59,6 +59,9 @@ Zero::String GetLauncherDownloadedPath()
 
 String ChooseDllPath(Zero::StringParam localDllPath, int localDllVersionId, Zero::StringParam downloadedDllPath, int downloadedDllVersionId)
 {
+  if (downloadedDllPath.Empty())
+    return localDllPath;
+
   //choose which dll path based upon which one is newer
   if(localDllVersionId > downloadedDllVersionId)
     return localDllPath;
@@ -73,11 +76,6 @@ int PlatformMain(const Array<String>& arguments)
   // Register that we can be restarted. This is primarily so an installer can
   // restart the launcher if it was already running.
   RegisterApplicationRestartCommand(String(), 0);
-
-  // Initialize platform socket library
-  Zero::Status socketLibraryInitStatus;
-  Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
-  Assert(Zero::Socket::IsSocketLibraryInitialized());
 
   // As long as the program wants to restart keep trying to load a new dll and running it
   while(restart)
@@ -132,11 +130,6 @@ int PlatformMain(const Array<String>& arguments)
     // Make sure to free the module (otherwise the statics don't get cleaned up)
     library.Unload();
   }
-
-  // Uninitialize platform socket library
-  Zero::Status socketLibraryUninitStatus;
-  Zero::Socket::UninitializeSocketLibrary(socketLibraryUninitStatus);
-  Assert(!Zero::Socket::IsSocketLibraryInitialized());
 
   // METAREFACTOR - What do here?
   // Because of the blocking web request (which tries to send events)

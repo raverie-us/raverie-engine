@@ -14,7 +14,7 @@ Resolution GetDesktopResolution()
   {
     String errorString = SDL_GetError();
     Warn("Failed to get desktop display info: %s", errorString.c_str());
-    return Resolution();
+    return Resolution(cMinimumMonitorSize.x, cMinimumMonitorSize.y);
   }
 
   return Resolution(displayInfo.w, displayInfo.h);;

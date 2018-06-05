@@ -20,10 +20,12 @@ void Sleep(uint ms)
   SDL_Delay((Uint32)ms);
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 void SetTimerFrequency(uint ms)
 {
   // Not supported by SDL.
 }
+#endif
 
 const char* GetEnvironmentList(const char* defaultValue, const char* names[], size_t length)
 {
@@ -39,46 +41,56 @@ const char* GetEnvironmentList(const char* defaultValue, const char* names[], si
   return defaultValue;
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 String UserName()
 {
   // There is no portable way to get the user name
   const char* names[] = { "USER", "USERNAME", "LOGNAME", "COMPUTERNAME", "HOSTNAME" };
   return GetEnvironmentList("User", names, SDL_arraysize(names));
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 String ComputerName()
 {
   // There is no portable way to get the computer/host name
   const char* names[] = { "COMPUTERNAME", "HOSTNAME", "USER", "USERNAME", "LOGNAME" };
   return GetEnvironmentList("Computer", names, SDL_arraysize(names));
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 bool IsDebuggerAttached()
 {
   // SDL cannot detect whether a debugger is attached.
   return false;
 }
+#endif
 
 ZeroShared void DebuggerOutput(const char* message)
 {
   SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 u64 GetMacAddress()
 {
   // Not supported by SDL.
   return 0;
 }
+#endif
 
 void DebugBreak()
 {
   SDL_TriggerBreakpoint();
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 void EnableMemoryLeakChecking(int breakOnAllocation)
 {
   // Not supported by SDL.
 }
+#endif
 
 DeclareEnum4(ReturnCode, Continue, DebugBreak, Terminate, Ignore);
 
@@ -155,6 +167,7 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   }
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 void WebRequest(
   Status& status,
   StringParam url,
@@ -164,9 +177,11 @@ void WebRequest(
   WebRequestDataFn onDataReceived,
   void* userData)
 {
-  status.SetFailed("Not supported by SDL");
+  status.SetFailed("WebRequest not supported by SDL");
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   // Unfortunately we have no portable way of using the working directory.
@@ -174,11 +189,14 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
   int result = system(commandLine.c_str());
   return result != 0;
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   return SystemOpenFile(status, file, verb, parameters, workingDirectory);
 }
+#endif
 
 String GetEnvironmentalVariable(StringParam variable)
 {
@@ -186,6 +204,7 @@ String GetEnvironmentalVariable(StringParam variable)
 }
 
 //---------------------------------------------------------------- Memory Status 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 void GetMemoryStatus(MemoryInfo& data)
 {
   // Not supported by SDL.
@@ -193,6 +212,7 @@ void GetMemoryStatus(MemoryInfo& data)
   data.Free = 0;
   data.Reserve = 0;
 }
+#endif
 
 String GetVersionString()
 {

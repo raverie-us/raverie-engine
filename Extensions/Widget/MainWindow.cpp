@@ -253,29 +253,29 @@ void MainWindow::UpdateTransform()
   RootWidget::UpdateTransform();
 }
 
-bool OsDocker::StartManipulation(Widget* widget, DockMode::Enum direction)
+WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget, DockMode::Enum direction)
 {
   RootWidget* rootWidget = widget->GetRootWidget();
   OsWindow* window = rootWidget->GetOsWindow();
   if(direction ==  DockMode::DockFill)
-    window->ManipulateWindow(WindowBorderArea::Title);
+    return WindowBorderArea::Title;
   else if(direction ==  DockMode::DockTop)
-    window->ManipulateWindow(WindowBorderArea::Top);
+    return WindowBorderArea::Top;
   else if(direction ==  DockMode::DockLeft)
-    window->ManipulateWindow(WindowBorderArea::Left);
+    return WindowBorderArea::Left;
   else if(direction ==  DockMode::DockRight)
-    window->ManipulateWindow(WindowBorderArea::Right);
+    return WindowBorderArea::Right;
   else if(direction ==  DockMode::DockBottom)
-    window->ManipulateWindow(WindowBorderArea::Bottom);
+    return WindowBorderArea::Bottom;
   else if(direction == (DockMode::DockBottom | DockMode::DockRight))
-    window->ManipulateWindow(WindowBorderArea::BottomRight);
+    return WindowBorderArea::BottomRight;
   else if(direction == (DockMode::DockBottom | DockMode::DockLeft))
-    window->ManipulateWindow(WindowBorderArea::BottomLeft);
+    return WindowBorderArea::BottomLeft;
   else if(direction == (DockMode::DockTop | DockMode::DockRight))
-    window->ManipulateWindow(WindowBorderArea::TopRight);
+    return WindowBorderArea::TopRight;
   else if(direction == (DockMode::DockTop | DockMode::DockLeft))
-    window->ManipulateWindow(WindowBorderArea::TopLeft);
-  return true;
+    return WindowBorderArea::TopLeft;
+  return WindowBorderArea::None;
 }
 
 void OsDocker::Show(Widget* widget)

@@ -110,24 +110,26 @@ String Shell::GetOsName()
   return name;
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 uint Shell::GetScrollLineCount()
 {
   // Pick a good default since SDL has no query for this.
   return 3;
 }
+#endif
 
 IntRect Shell::GetPrimaryMonitorRectangle()
 {
-  SDL_DisplayMode mode;
-  if (SDL_GetCurrentDisplayMode(0, &mode) == 0)
-  {
-    // The display mode doesn't return the monitor coordinates, however we're going to
-    // assume that these coordinates are 0, 0 since this is the primary monitor.
-    return IntRect(0, 0, mode.w, mode.h);
-  }
+  int displayIndex = 0;
+  if (mMainWindow != nullptr)
+    displayIndex = SDL_GetWindowDisplayIndex((SDL_Window*)mMainWindow->mHandle);
+
+  SDL_Rect monitorRectangle;
+  if (SDL_GetDisplayUsableBounds(displayIndex, &monitorRectangle) == 0)
+    return IntRect(monitorRectangle.x, monitorRectangle.y, monitorRectangle.w, monitorRectangle.h);
 
   // Return a default monitor size since we failed.
-  return IntRect(0, 0, 1024, 768);
+  return IntRect(0, 0, cMinimumMonitorSize.x, cMinimumMonitorSize.y);
 }
 
 IntVec2 Shell::GetPrimaryMonitorSize()
@@ -136,20 +138,26 @@ IntVec2 Shell::GetPrimaryMonitorSize()
   return IntVec2(rect.X, rect.Y);
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 ByteColor Shell::GetColorAtMouse()
 {
   // We can either attempt to use SDL_RenderReadPixels or the Renderer API to
   // grab this color this won't work for the rest of the desktop, however.
   return 0;
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 void Shell::SetMonitorCursorClip(const IntRect& monitorRectangle)
 {
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 void Shell::ClearMonitorCursorClip()
 {
 }
+#endif
 
 Cursor::Enum Shell::GetMouseCursor()
 {
@@ -172,13 +180,24 @@ bool Shell::IsKeyDown(Keys::Enum key)
 {
   int numKeys = 0;
   const Uint8* keys = SDL_GetKeyboardState(&numKeys);
-  SDL_Scancode code = KeyToSDLScancode(key);
-  return keys[code] != 0;
+
+  switch (key)
+  {
+    case Keys::Control:
+      return keys[SDL_SCANCODE_LCTRL] || keys[SDL_SCANCODE_RCTRL];
+    case Keys::Shift:
+      return keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT];
+    case Keys::Alt:
+      return keys[SDL_SCANCODE_LALT] || keys[SDL_SCANCODE_RALT];
+      
+    default:
+      return keys[KeyToSDLScancode(key)] != 0;
+  }
 }
 
 bool Shell::IsMouseDown(MouseButtons::Enum button)
 {
-  return (SDL_GetGlobalMouseState(nullptr, nullptr) & SDL_BUTTON(MouseButtonToSDL(button))) != 0;
+  return (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(MouseButtonToSDL(button))) != 0;
 }
 
 void Shell::SetMouseCursor(Cursor::Enum cursor)
@@ -207,13 +226,6 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
   SDL_SetCursor(sdlCursor);
 }
 
-ShellWindow* Shell::FindWindowAt(Math::IntVec2Param monitorPosition)
-{
-  // Loop through all the windows and do rectangle checks?
-  Error("Not implemented");
-  return nullptr;
-}
-
 bool Shell::IsClipboardText()
 {
   return SDL_HasClipboardText() == SDL_TRUE;
@@ -229,41 +241,102 @@ void Shell::SetClipboardText(StringParam text)
   SDL_SetClipboardText(text.c_str());
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 bool Shell::IsClipboardImage()
 {
   // SDL has no way of grabbing images from the clipboard.
   return false;
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 bool Shell::GetClipboardImage(Image* image)
 {
   // SDL has no way of grabbing images from the clipboard.
+  // We could possibly translate base64 encoded text images into an image.
   return false;
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 bool Shell::GetPrimaryMonitorImage(Image* image)
 {
   // SDL cannot take a screen-shot of the entire monitor.
   // We could attempt to grab the renderer and just take a screenshot of the engine, but not the monitor...
   return false;
 }
+#endif
 
-bool Shell::SupportsFileDialogs()
+#if !defined(ZeroPlatformNoIncompleteImplementations)
+// SDL has no open file dialog. We could maybe revert to using our own custom dialog that uses the file system API.
+// This method uses a very poor message box + clipboard approach.
+bool FileDialog(FileDialogInfo& config, bool isOpen)
 {
-  return false;
-}
+  const SDL_MessageBoxButtonData buttons[] =
+  {
+    { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Clipboard" },
+    { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel" },
+  };
 
+  const char* title = isOpen ? "Open File - " : "Save File - ";
+  const char* message =
+    "SDL does not support file open/save dialogs.\n"
+    "As a workaround, you can copy a file path and click Clipboard.\n"
+    "You can use the bar | to separate multiple files.\n";
+
+  String fullTitle = BuildString(title, config.Title);
+  String fullMessage = message;
+  
+  forRange(FileDialogFilter& filter, config.mSearchFilters)
+    fullMessage = BuildString(fullMessage, "(", filter.mFilter, ") ", filter.mDescription);
+
+  const SDL_MessageBoxData messageboxdata =
+  {
+    SDL_MESSAGEBOX_INFORMATION,
+    nullptr,
+    fullTitle.c_str(),
+    fullMessage.c_str(),
+    SDL_arraysize(buttons),
+    buttons,
+    nullptr,
+  };
+
+  int buttonid = 0;
+
+  // Show the message box, and if it failed or they click cancel, early out
+  if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0 || buttonid == 0)
+    return false;
+
+  const char* text = SDL_GetClipboardText();
+  if (text == nullptr)
+    return false;
+
+  String files = text;
+  forRange(StringRange fileRange, files.Split("|"))
+  {
+    config.mFiles.PushBack(fileRange.Trim());
+  }
+
+  if (config.mCallback)
+    config.mCallback(config.mFiles, config.mUserData);
+
+  return !config.mFiles.Empty();
+}
+#endif
+
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 bool Shell::OpenFile(FileDialogInfo& config)
 {
-  // SDL has no open file dialog. We should revert to using our own custom dialog that uses the file system API.
-  return false;
+  return FileDialog(config, true);
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 bool Shell::SaveFile(FileDialogInfo& config)
 {
-  // SDL has no open file dialog. We should revert to using our own custom dialog that uses the file system API.
-  return false;
+  return FileDialog(config, false);
 }
+#endif
 
 void Shell::ShowMessageBox(StringParam title, StringParam message)
 {
@@ -288,7 +361,7 @@ PlatformInputDevice* PlatformInputDeviceFromSDL(SDL_JoystickID id)
 
 void Shell::Update()
 {
-  ShellWindow* main = mMainWindow;
+  ShellWindow* mainWindow = mMainWindow;
 
   SDL_Event e;
   while (SDL_PollEvent(&e))
@@ -297,8 +370,8 @@ void Shell::Update()
     {
       case SDL_QUIT:
       {
-        if (main && main->mOnClose)
-          main->mOnClose(main);
+        if (mainWindow && mainWindow->mOnClose)
+          mainWindow->mOnClose(mainWindow);
         break;
       }
 
@@ -425,8 +498,8 @@ void Shell::Update()
       case SDL_AUDIODEVICEADDED:
       case SDL_AUDIODEVICEREMOVED:
       {
-        if (main && main->mOnDevicesChanged)
-          main->mOnDevicesChanged(main);
+        if (mainWindow && mainWindow->mOnDevicesChanged)
+          mainWindow->mOnDevicesChanged(mainWindow);
         break;
       }
 
@@ -434,8 +507,8 @@ void Shell::Update()
       {
         Error("Not implemented");
         PlatformInputDevice* device = PlatformInputDeviceFromSDL(e.jaxis.which);
-        if (device && main && main->mOnInputDeviceChanged)
-          main->mOnInputDeviceChanged(*device, 0, Array<uint>(), DataBlock(), main);
+        if (device && mainWindow && mainWindow->mOnInputDeviceChanged)
+          mainWindow->mOnInputDeviceChanged(*device, 0, Array<uint>(), DataBlock(), mainWindow);
         break;
       }
     }
@@ -447,6 +520,32 @@ const Array<PlatformInputDevice>& Shell::ScanInputDevices()
   mInputDevices.Clear();
 
   return mInputDevices;
+}
+
+SDL_HitTestResult ShellWindowSDLHitTest(SDL_Window* window, const SDL_Point* clientPoint, void* userData)
+{
+  ShellWindow* shellWindow = (ShellWindow*)userData;
+
+  WindowBorderArea::Enum result = WindowBorderArea::None;
+  if (shellWindow->mOnHitTest)
+    result = shellWindow->mOnHitTest(IntVec2(clientPoint->x, clientPoint->y), shellWindow);
+
+  SDL_HitTestResult hitTestResult = SDL_HITTEST_NORMAL;
+
+  switch (result)
+  {
+    case WindowBorderArea::Title:       hitTestResult = SDL_HITTEST_DRAGGABLE; break;
+    case WindowBorderArea::TopLeft:     hitTestResult = SDL_HITTEST_RESIZE_TOPLEFT; break;
+    case WindowBorderArea::Top:         hitTestResult = SDL_HITTEST_RESIZE_TOP; break;
+    case WindowBorderArea::TopRight:    hitTestResult = SDL_HITTEST_RESIZE_TOPRIGHT; break;
+    case WindowBorderArea::Left:        hitTestResult = SDL_HITTEST_RESIZE_LEFT; break;
+    case WindowBorderArea::Right:       hitTestResult = SDL_HITTEST_RESIZE_RIGHT; break;
+    case WindowBorderArea::BottomLeft:  hitTestResult = SDL_HITTEST_RESIZE_BOTTOMLEFT; break;
+    case WindowBorderArea::Bottom:      hitTestResult = SDL_HITTEST_RESIZE_BOTTOM; break;
+    case WindowBorderArea::BottomRight: hitTestResult = SDL_HITTEST_RESIZE_BOTTOMRIGHT; break;
+  }
+
+  return hitTestResult;
 }
 
 //----------------------------------------------------------------ShellWindow
@@ -484,6 +583,7 @@ ShellWindow::ShellWindow(
   mOnMouseScrollX(nullptr),
   mOnDevicesChanged(nullptr),
   mOnRawMouseChanged(nullptr),
+  mOnHitTest(nullptr),
   mOnInputDeviceChanged(nullptr)
 {
   Uint32 sdlFlags = SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_OPENGL;
@@ -493,12 +593,6 @@ ShellWindow::ShellWindow(
     sdlFlags |= SDL_WINDOW_RESIZABLE;
   if (flags & WindowStyleFlags::ClientOnly)
     sdlFlags |= SDL_WINDOW_BORDERLESS;
-
-  // ??
-  if (!(flags & WindowStyleFlags::TitleBar))
-    sdlFlags |= SDL_WINDOW_UTILITY;
-  if (!(flags & WindowStyleFlags::Close))
-    sdlFlags |= SDL_WINDOW_TOOLTIP;
 
   if (!(flags & WindowStyleFlags::OnTaskBar))
     sdlFlags |= SDL_WINDOW_SKIP_TASKBAR;
@@ -512,6 +606,8 @@ ShellWindow::ShellWindow(
     clientSize.y,
     sdlFlags);
   mHandle = sdlWindow;
+
+  SDL_SetWindowHitTest(sdlWindow, &ShellWindowSDLHitTest, this);
 
   SDL_SetWindowData(sdlWindow, cShellWindow, this);
 
@@ -778,11 +874,6 @@ void ShellWindow::Close()
   e.window.event = SDL_WINDOWEVENT_CLOSE;
   e.window.windowID = SDL_GetWindowID((SDL_Window*)mHandle);
   SDL_PushEvent(&e);
-}
-
-void ShellWindow::ManipulateWindow(WindowBorderArea::Enum area)
-{
-  SDL_SetWindowGrab((SDL_Window*)mHandle, SDL_TRUE);
 }
 
 float ShellWindow::GetProgress()

@@ -30,47 +30,6 @@ uint GetFileSize(FILE* file)
   return (uint)st.st_size;
 }
 
-DataBlock ReadFileIntoDataBlock(cstr filePath)
-{
-  FILE* file = fopen (filePath, "rb");
-  if(file)
-  {
-    uint fileSize = GetFileSize(file);
-    byte* buffer = (byte*)zAllocate(fileSize);
-    fread(buffer, 1, fileSize, file);
-    fclose(file);
-    return DataBlock(buffer, fileSize);
-  }
-
-  return DataBlock();
-}
-
-byte * ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
-{
-  FILE* file = fopen (filePath, "rb");
-  if(file)
-  {
-    fileSize = GetFileSize(file);
-    byte* buffer = (byte*)zAllocate(fileSize+extra);
-    fread(buffer, 1, fileSize, file);
-    fclose(file);
-    return buffer;
-  }
-  return NULL;
-}
-
-size_t WriteToFile(cstr filePath, byte* buffer, size_t bufferSize)
-{
-  FILE* file = fopen (filePath, "wb");
-  if(file)
-  {
-    fwrite(buffer, 1, bufferSize,  file);
-    fclose(file);
-    return bufferSize;
-  }
-  return 0;
-}
-
 cstr ToFileMode(FileMode::Enum mode)
 {
   switch(mode)

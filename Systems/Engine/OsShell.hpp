@@ -43,9 +43,6 @@ public:
   /// OS specific line-scroll setting when using the mouse scroll wheel.
   uint GetScrollLineCount();
 
-  /// Find what OsWindow is underneath the given screen position.
-  OsWindow* FindWindowAt(IntVec2Param screenPosition);
-
   /// Get the rectangle of the primary monitor (desktop size).
   IntRect GetPrimaryMonitorRectangle();
 

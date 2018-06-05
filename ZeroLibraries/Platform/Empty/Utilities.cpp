@@ -58,18 +58,18 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 void WebRequest(Status& status, StringParam url, const Array<WebPostData>& postData, const Array<String>& additionalRequestHeaders,
                   WebRequestHeadersFn onHeadersReceived, WebRequestDataFn onDataReceived, void* userData)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("WebRequest not implemented");
 }
 
 bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("SystemOpenFile not implemented");
   return false;
 }
 
 bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("SystemOpenNetworkFile not implemented");
   return false;
 }
 

@@ -88,14 +88,6 @@ uint OsShell::GetScrollLineCount()
   return mShell.GetScrollLineCount();
 }
 
-OsWindow* OsShell::FindWindowAt(IntVec2Param screenPosition)
-{
-  ShellWindow* window = mShell.FindWindowAt(screenPosition);
-  if (window)
-    return (OsWindow*)window->mUserData;
-  return nullptr;
-}
-
 IntRect OsShell::GetPrimaryMonitorRectangle()
 {
   return mShell.GetPrimaryMonitorRectangle();

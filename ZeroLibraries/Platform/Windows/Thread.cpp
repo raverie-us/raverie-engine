@@ -71,6 +71,17 @@ OsHandle Thread::GetThreadHandle()
   return self->mHandle;
 }
 
+size_t Thread::GetThreadId()
+{
+  ZeroGetPrivateData(ThreadPrivateData);
+  return ::GetThreadId(self->mHandle);
+}
+
+size_t Thread::GetCurrentThreadId()
+{
+  return ::GetCurrentThreadId();
+}
+
 bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadName)
 {
   ZeroGetPrivateData(ThreadPrivateData);

@@ -30,11 +30,6 @@ public:
   // Read a function out of the external library by name
   void* GetFunctionByName(cstr name);
 
-  // Redirect one function pointer to another
-  // This function may return null, and is typically only for testing / advanced platform details
-  // Returns the original callable version of the function
-  void* Patch(void* oldFunctionPointer, void* newFunctionPointer);
-
   // Whether we unload the library when we're destructed (default true)
   bool mUnloadOnDestruction;
 

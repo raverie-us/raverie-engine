@@ -59,7 +59,8 @@ public:
   virtual void Zoom(Widget* widget){};
   virtual void Show(Widget* widget){};
   virtual void WidgetDestroyed(Widget* widget){};
-  virtual bool StartManipulation(Widget* widget, DockMode::Enum direction) = 0;
+  virtual bool StartManipulation(Widget* widget, DockMode::Enum direction) { return false; }
+  virtual WindowBorderArea::Enum GetWindowBorderArea(Widget* widget, DockMode::Enum direction) { return WindowBorderArea::None; }
   virtual ~Docker() {}
 };
 

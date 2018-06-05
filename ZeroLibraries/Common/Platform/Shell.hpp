@@ -14,6 +14,8 @@ extern bool gIntelGraphics;
 //-----------------------------------------------------------FileDialogFilter
 DeclareBitField2(FileDialogFlags, MultiSelect, Folder);
 
+static const IntVec2 cMinimumMonitorSize(800, 600);
+
 struct FileDialogFilter
 {
   FileDialogFilter();
@@ -344,9 +346,6 @@ public:
   /// Checks if a mouse button is down
   bool IsMouseDown(MouseButtons::Enum button);
 
-  /// Find what ShellWindow is underneath the given monitor position.
-  ShellWindow* FindWindowAt(Math::IntVec2Param monitorPosition);
-
   /// Check if the current clipboard holds plain-text.
   bool IsClipboardText();
 
@@ -364,9 +363,6 @@ public:
 
   /// Get an image of the entire desktop (primary monitor).
   bool GetPrimaryMonitorImage(Image* image);
-
-  /// Does this platform supoprt file dialogs?
-  bool SupportsFileDialogs();
 
   /// Show the file open dialog. Results are returned via mCallback or mFiles.
   bool OpenFile(FileDialogInfo& config);
@@ -433,7 +429,7 @@ DeclareEnum5(WindowState,
   Restore);
 
 /// Border of the window for manipulation
-DeclareEnum9(WindowBorderArea,
+DeclareEnum10(WindowBorderArea,
   Title,
   TopLeft,
   Top,
@@ -442,7 +438,8 @@ DeclareEnum9(WindowBorderArea,
   Right,
   BottomLeft,
   Bottom,
-  BottomRight);
+  BottomRight,
+  None);
 
 DeclareEnum3(ProgressType, Normal, Indeterminate, None);
 
@@ -598,6 +595,9 @@ public:
 
   /// Called when a mouse moves (raw input without pointer balistics applied).
   void(*mOnRawMouseChanged)(Math::IntVec2Param movement, ShellWindow* window);
+
+  /// Called when the window is asking if a position should result in dragging or resizing the window.
+  WindowBorderArea::Enum(*mOnHitTest)(Math::IntVec2Param clientPosition, ShellWindow* window);
 
   /// Called when an input device is updated.
   void(*mOnInputDeviceChanged)(PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);

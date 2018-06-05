@@ -128,6 +128,7 @@ Cog* ZeroLauncherStartupSettings::LoadConfig()
 {
   Environment* environment = Environment::GetInstance();
   Cog* launcherConfigCog = LoadLauncherConfig(nullptr, environment->mParsedCommandLineArguments, true);
+  ErrorIf(launcherConfigCog == nullptr, "Unable to load the launcher config");
 
   MainConfig* mainConfig = launcherConfigCog->has(MainConfig);
   mainConfig->ApplicationDirectory = mDllPath;

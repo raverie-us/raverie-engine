@@ -102,6 +102,8 @@ public:
   void OnMouseDown(MouseEvent* event);
   void OnMouseDrag(MouseEvent* event);
 
+  void OnOsWindowBorderHitTest(OsWindowBorderHitTest* event);
+
 private:
   Cursor::Enum GetMouseCursor();
 };

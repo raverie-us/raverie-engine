@@ -144,7 +144,8 @@ bool FileDialog(FileDialogInfo& config, bool opening)
   //We assume that the first item is the path if we were multi selecting, but if the user
   //types in a random string then we can get something that looks like a path (no extension)
   //and then get no files. So if we didn't get any files for some reason then mark that we actually failed.
-  config.mCallback(config.mFiles, config.mUserData);
+  if (config.mCallback)
+    config.mCallback(config.mFiles, config.mUserData);
   return !config.mFiles.Empty();
 }
 
@@ -285,6 +286,35 @@ RECT ToRECT(const IntRect& rect)
 IntVec2 ToIntVec2(POINT& point)
 {
   return IntVec2(point.x, point.y);
+}
+
+
+void ManipulateWindow(ShellWindow* window, WindowBorderArea::Enum area)
+{
+  WPARAM param = 0;
+  switch (area)
+  {
+    case WindowBorderArea::Title:       param = SC_MOVE | HTCAPTION; break;
+    case WindowBorderArea::TopLeft :    param = SC_SIZE | SC_SIZE_HTTOPLEFT; break;
+    case WindowBorderArea::Top:         param = SC_SIZE | SC_SIZE_HTTOP; break;
+    case WindowBorderArea::TopRight:    param = SC_SIZE | SC_SIZE_HTTOPRIGHT; break;
+    case WindowBorderArea::Left:        param = SC_SIZE | SC_SIZE_HTLEFT; break;
+    case WindowBorderArea::Right:       param = SC_SIZE | SC_SIZE_HTRIGHT; break;
+    case WindowBorderArea::BottomLeft:  param = SC_SIZE | SC_SIZE_HTBOTTOMLEFT; break;
+    case WindowBorderArea::Bottom:      param = SC_SIZE | SC_SIZE_HTBOTTOM; break;
+    case WindowBorderArea::BottomRight: param = SC_SIZE | SC_SIZE_HTBOTTOMRIGHT; break;
+    case WindowBorderArea::None:        return;
+  }
+
+  SendMessage((HWND)window->mHandle, WM_SYSCOMMAND, param, 0);
+
+  // The window procedure never gets a mouse up after dragging
+  // so send one now for double click to work
+  POINT monitorCursorPos;
+  GetCursorPos(&monitorCursorPos);
+  IntVec2 clientPosition = window->MonitorToClient(ToIntVec2(monitorCursorPos));
+  if (window->mOnMouseUp)
+    window->mOnMouseUp(clientPosition, MouseButtons::Left, window);
 }
 
 DWORD Win32StyleFromWindowStyle(WindowStyleFlags::Enum styleFlags)
@@ -982,8 +1012,16 @@ LRESULT CALLBACK ShellWindowWndProc(ShellWindow* window, HWND hwnd, UINT msg, WP
     // Mouse Button Down
     case WM_LBUTTONDOWN:
     {
+      IntVec2 clientPosition = ClientPositionFromLParam(lParam);
       if (window->mOnMouseDown)
-        window->mOnMouseDown(ClientPositionFromLParam(lParam), MouseButtons::Left, window);
+        window->mOnMouseDown(clientPosition, MouseButtons::Left, window);
+
+      if (window->mOnHitTest)
+      {
+        WindowBorderArea::Enum result = window->mOnHitTest(clientPosition, window);
+        if (result != WindowBorderArea::None)
+          ManipulateWindow(window, result);
+      }
       return MessageHandled;
     }
     case WM_RBUTTONDOWN:
@@ -1256,23 +1294,6 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
 
   SetCursor(hCursor);
   mCursor = cursor;
-}
-
-ShellWindow* Shell::FindWindowAt(Math::IntVec2Param monitorPosition)
-{
-  HWND windowHandle = WindowFromPoint(*(POINT*)&monitorPosition);
-
-  if (windowHandle == nullptr)
-    return nullptr;
-
-  // Is this window a zero window?
-  // Check its class name 
-  wchar_t className[MAX_PATH];
-  GetClassName(windowHandle, className, MAX_PATH);
-  if (wcscmp(className, cWindowClassName) != 0)
-    return nullptr;
-
-  return (ShellWindow*)PointerFromWindow(windowHandle);
 }
 
 bool Shell::IsClipboardText()
@@ -1847,33 +1868,6 @@ bool ShellWindow::GetImage(Image* image)
 void ShellWindow::Close()
 {
   SendMessage((HWND)mHandle, WM_SYSCOMMAND, SC_CLOSE, 0);
-}
-
-void ShellWindow::ManipulateWindow(WindowBorderArea::Enum area)
-{
-  WPARAM param = 0;
-  switch (area)
-  {
-    case WindowBorderArea::Title:       param = SC_MOVE | HTCAPTION; break;
-    case WindowBorderArea::TopLeft :    param = SC_SIZE | SC_SIZE_HTTOPLEFT; break;
-    case WindowBorderArea::Top:         param = SC_SIZE | SC_SIZE_HTTOP; break;
-    case WindowBorderArea::TopRight:    param = SC_SIZE | SC_SIZE_HTTOPRIGHT; break;
-    case WindowBorderArea::Left:        param = SC_SIZE | SC_SIZE_HTLEFT; break;
-    case WindowBorderArea::Right:       param = SC_SIZE | SC_SIZE_HTRIGHT; break;
-    case WindowBorderArea::BottomLeft:  param = SC_SIZE | SC_SIZE_HTBOTTOMLEFT; break;
-    case WindowBorderArea::Bottom:      param = SC_SIZE | SC_SIZE_HTBOTTOM; break;
-    case WindowBorderArea::BottomRight: param = SC_SIZE | SC_SIZE_HTBOTTOMRIGHT; break;
-  }
-
-  SendMessage((HWND)mHandle, WM_SYSCOMMAND, param, 0);
-
-  // The window procedure never gets a mouse up after dragging
-  // so send one now for double click to work
-  POINT monitorCursorPos;
-  GetCursorPos(&monitorCursorPos);
-  IntVec2 clientPosition = MonitorToClient(ToIntVec2(monitorCursorPos));
-  if (mOnMouseUp)
-    mOnMouseUp(clientPosition, MouseButtons::Left, this);
 }
 
 float ShellWindow::GetProgress()

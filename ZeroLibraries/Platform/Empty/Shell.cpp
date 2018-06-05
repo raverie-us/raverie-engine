@@ -33,12 +33,12 @@ uint Shell::GetScrollLineCount()
 
 IntRect Shell::GetPrimaryMonitorRectangle()
 {
-  return IntRect(0, 0, 800, 600);
+  return IntRect(0, 0, cMinimumMonitorSize.x, cMinimumMonitorSize.y);
 }
 
 IntVec2 Shell::GetPrimaryMonitorSize()
 {
-  return IntVec2(800, 600);
+  return cMinimumMonitorSize;
 }
 
 ByteColor Shell::GetColorAtMouse()
@@ -81,11 +81,6 @@ bool Shell::IsMouseDown(MouseButtons::Enum button)
 void Shell::SetMouseCursor(Cursor::Enum cursor)
 {
   mCursor = cursor;
-}
-
-ShellWindow* Shell::FindWindowAt(Math::IntVec2Param monitorPosition)
-{
-  return nullptr;
 }
 
 bool Shell::IsClipboardText()
@@ -155,7 +150,7 @@ ShellWindow::ShellWindow(
   mHandle(nullptr),
   mStyle(flags),
   mProgress(0),
-  mClientSize(IntVec2(800, 600)),
+  mClientSize(cMinimumMonitorSize),
   mClientMousePosition(IntVec2(-1, -1)),
   mUserData(nullptr),
   mOnClose(nullptr),
@@ -189,7 +184,7 @@ void ShellWindow::Destroy()
 
 IntRect ShellWindow::GetMonitorClientRectangle()
 {
-  return IntRect(0, 0, 800, 600);
+  return IntRect(0, 0, cMinimumMonitorSize.x, cMinimumMonitorSize.y);
 }
 
 void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
@@ -198,7 +193,7 @@ void ShellWindow::SetMonitorClientRectangle(const IntRect& monitorRectangle)
 
 IntRect ShellWindow::GetMonitorBorderedRectangle()
 {
-  return IntRect(0, 0, 800, 600);
+  return IntRect(0, 0, cMinimumMonitorSize.x, cMinimumMonitorSize.y);
 }
 
 void ShellWindow::SetMonitorBorderedRectangle(const IntRect& monitorRectangle)
@@ -311,10 +306,6 @@ bool ShellWindow::GetImage(Image* image)
 }
 
 void ShellWindow::Close()
-{
-}
-
-void ShellWindow::ManipulateWindow(WindowBorderArea::Enum area)
 {
 }
 

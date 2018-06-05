@@ -16,7 +16,7 @@ bool GetExecutableResource(const char* name, const char* type, ByteBufferBlock& 
 
 ExecutableResourceUpdater::ExecutableResourceUpdater(Status& status, const char* fileName)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("ExecutableResourceUpdater not implemented");
 }
 
 ExecutableResourceUpdater::~ExecutableResourceUpdater()

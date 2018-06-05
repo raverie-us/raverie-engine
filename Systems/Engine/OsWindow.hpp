@@ -30,6 +30,10 @@ DeclareEvent(OsPaint);
 DeclareEvent(OsMouseFileDrop);
 DeclareEvent(OsWindowMinimized);
 DeclareEvent(OsWindowRestored);
+
+// Checking if we're over one of the grip borders of a window.
+DeclareEvent(OsWindowBorderHitTest);
+
 }//namespace Events
 
 extern const String cOsKeyboardEventsFromState[3];
@@ -120,9 +124,6 @@ public:
   /// Destroy the window
   void Destroy();
 
-  /// Resize or move the window using the default OS method
-  void ManipulateWindow(WindowBorderArea::Enum borderArea);
-
   /// Capturing the mouse prevents messages from being sent to other windows and
   /// getting mouse movements outside the window (e.g. dragging).
   void SetMouseCapture(bool enabled);
@@ -177,6 +178,7 @@ public:
   static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnDevicesChanged(ShellWindow* window);
   static void ShellWindowOnRawMouseChanged(Math::IntVec2Param movement, ShellWindow* window);
+  static WindowBorderArea::Enum OsWindow::ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window);
   static void ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
 
   // If the mouse is currently trapped (not visible and centered on the window).
@@ -201,7 +203,7 @@ public:
   IntVec2 WindowSize;
 };
 
-//-------------------------------------------------------------------OsMouseDropEvent
+//-------------------------------------------------------------------OsMouseEvent
 /// Mouse Events on the main window.
 class OsMouseEvent : public Event
 {
@@ -224,6 +226,24 @@ public:
   byte ButtonDown[MouseButtons::Size];
 
   void Serialize(Serializer& stream);
+};
+
+
+//-------------------------------------------------------------------OsMouseDropEvent
+/// An even that we send when we want to check if we're over a window border gripper
+/// such as the title bar for dragging or an edge/corner for resizing.
+class OsWindowBorderHitTest : public Event
+{
+public:
+  ZilchDeclareType(OsWindowBorderHitTest, TypeCopyMode::ReferenceType);
+
+  OsWindowBorderHitTest();
+
+  OsWindow* Window;
+  IntVec2 ClientPosition;
+
+  // This should be set by the receiver of the event.
+  WindowBorderArea::Enum mWindowBorderArea;
 };
 
 //-------------------------------------------------------------------OsMouseDropEvent

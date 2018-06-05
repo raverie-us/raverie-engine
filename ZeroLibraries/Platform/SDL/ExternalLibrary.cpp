@@ -31,11 +31,7 @@ void ExternalLibrary::Load(Status& status, cstr filePath)
 {
   mHandle = (void*)SDL_LoadObject(filePath);
   if(mHandle == nullptr)
-  {
-    String errorString = SDL_GetError();
-    String message = String::Format("Failed to load external library: %s, %s", filePath, errorString.c_str());
-    status.SetFailed(message);
-  }
+    status.SetFailed(SDL_GetError());
 }
 
 void ExternalLibrary::Unload()
@@ -52,12 +48,6 @@ void* ExternalLibrary::GetFunctionByName(cstr name)
   ReturnIf(mHandle == nullptr, nullptr, "Attempting to get a function from an invalid library");
 
   return SDL_LoadFunction(mHandle, name);
-}
-
-// TODO PLATFORM
-void* ExternalLibrary::Patch(void* oldFunctionPointer, void* newFunctionPointer)
-{
-  return nullptr;
 }
 
 }//namespace Zero

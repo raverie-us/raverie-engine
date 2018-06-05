@@ -75,4 +75,14 @@ OsHandle Thread::GetThreadHandle()
   return nullptr;
 }
 
+size_t Thread::GetThreadId()
+{
+  return 0;
+}
+
+size_t Thread::GetCurrentThreadId()
+{
+  return 0;
+}
+
 }//namespace Zero

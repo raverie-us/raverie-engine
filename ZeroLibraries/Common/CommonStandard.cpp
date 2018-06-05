@@ -14,6 +14,8 @@ void InitializeKeyboard();
 //**************************************************************************************************
 void CommonLibrary::Initialize()
 {
+  Thread::MainThreadId = Thread::GetCurrentThreadId();
+
   //Start the memory system used for all systems and containers.
   Memory::Root::Initialize();
 
@@ -23,6 +25,7 @@ void CommonLibrary::Initialize()
 
   // Setup keyboard enumerations
   InitializeKeyboard();
+
 }
 
 //**************************************************************************************************

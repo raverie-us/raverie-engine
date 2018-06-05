@@ -36,17 +36,21 @@ void SetWorkingDirectory(StringParam path)
   fs::current_path(fs::path(path.c_str()), error);
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 String GetUserLocalDirectory()
 {
   std::error_code error;
   return fs::temp_directory_path(error).append("LocalDirectory").u8string().c_str();
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 String GetUserDocumentsDirectory()
 {
   std::error_code error;
   return fs::temp_directory_path(error).append("DocumentsDirectory").u8string().c_str();
 }
+#endif
 
 String GetApplicationDirectory()
 {
@@ -55,12 +59,14 @@ String GetApplicationDirectory()
   return FilePath::GetDirectoryPath(GetApplication());
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 String GetApplication()
 {
   // The first entry in the command line arguments should be our executable.
   ReturnIf(gCommandLineArguments.Empty(), "Unknown", "The command line arguments should not be empty, were they set?");
   return gCommandLineArguments.Front();
 }
+#endif
 
 String GetTemporaryDirectory()
 {

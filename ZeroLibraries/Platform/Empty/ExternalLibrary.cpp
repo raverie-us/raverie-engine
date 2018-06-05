@@ -27,7 +27,7 @@ bool ExternalLibrary::IsValid()
 
 void ExternalLibrary::Load(Status& status, cstr filePath)
 {
-  status.SetFailed("Not implemented");
+  status.SetFailed("ExternalLibrary not implemented");
 }
 
 void ExternalLibrary::Unload()
@@ -35,11 +35,6 @@ void ExternalLibrary::Unload()
 }
 
 void* ExternalLibrary::GetFunctionByName(cstr name)
-{
-  return nullptr;
-}
-
-void* ExternalLibrary::Patch(void* oldFunctionPointer, void* newFunctionPointer)
 {
   return nullptr;
 }

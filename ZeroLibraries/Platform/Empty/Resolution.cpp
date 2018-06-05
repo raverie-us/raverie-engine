@@ -8,12 +8,12 @@ namespace Zero
 {
 Resolution GetDesktopResolution()
 {
-  return Resolution(800, 600);
+  return Resolution(cMinimumMonitorSize.x, cMinimumMonitorSize.y);
 }
 
 void Enumerate(Array<Resolution>& resolutions, int bitDepth, Resolution aspect)
 {
-  resolutions.PushBack(Resolution(800, 600));
+  resolutions.PushBack(Resolution(cMinimumMonitorSize.x, cMinimumMonitorSize.y));
 }
 
 }//namespace Zero

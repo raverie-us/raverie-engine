@@ -37,6 +37,17 @@ OsHandle Thread::GetThreadHandle()
   return self->mHandle;
 }
 
+size_t Thread::GetThreadId()
+{
+  ZeroGetPrivateData(ThreadPrivateData);
+  return SDL_GetThreadID(self->mHandle);
+}
+
+size_t Thread::GetCurrentThreadId()
+{
+  return SDL_GetThreadID(nullptr);
+}
+
 bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadName)
 {
   ZeroGetPrivateData(ThreadPrivateData);
@@ -56,13 +67,17 @@ bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadN
   return true;
 }
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 void Thread::Resume()
 {
 }
+#endif
 
+#if !defined(ZeroPlatformNoIncompleteImplementations)
 void Thread::Suspend()
 {
 }
+#endif
 
 bool Thread::IsValid()
 {

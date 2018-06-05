@@ -107,7 +107,7 @@ void Launcher::Initialize()
 
   String windowName = "Zero Launcher";
   bool mainWindow = true;
-  bool visible = false;
+  bool visible = true;
 
   OsShell* osShell = Z::gEngine->has(OsShell);
   IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();

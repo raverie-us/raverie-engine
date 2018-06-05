@@ -28,6 +28,7 @@ namespace Events
   DefineEvent(OsMouseFileDrop);
   DefineEvent(OsWindowMinimized);
   DefineEvent(OsWindowRestored);
+  DefineEvent(OsWindowBorderHitTest);
 }//namespace Events
 
 const String cOsKeyboardEventsFromState[] =
@@ -91,6 +92,7 @@ OsWindow::OsWindow(
   mWindow.mOnMouseScrollX = &ShellWindowOnMouseScrollX;
   mWindow.mOnDevicesChanged = &ShellWindowOnDevicesChanged;
   mWindow.mOnRawMouseChanged = &ShellWindowOnRawMouseChanged;
+  mWindow.mOnHitTest = &ShellWindowOnHitTest;
   mWindow.mOnInputDeviceChanged = &ShellWindowOnInputDeviceChanged;
 
   // Since we're creating the main window, do a single scan for input devices (they rely on a main window)
@@ -213,11 +215,6 @@ void OsWindow::Close()
 void OsWindow::Destroy()
 {
   return mWindow.Destroy();
-}
-
-void OsWindow::ManipulateWindow(WindowBorderArea::Enum borderArea)
-{
-  return mWindow.ManipulateWindow(borderArea);
 }
 
 void OsWindow::SetMouseCapture(bool enabled)
@@ -559,6 +556,17 @@ void OsWindow::ShellWindowOnRawMouseChanged(Math::IntVec2Param movement, ShellWi
   Z::gMouse->mRawMovement += ToVec2(movement);
 }
 
+WindowBorderArea::Enum OsWindow::ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window)
+{
+  OsWindow* self = (OsWindow*)window->mUserData;
+
+  OsWindowBorderHitTest event;
+  event.Window = self;
+  event.ClientPosition = clientPosition;
+  self->DispatchEvent(Events::OsWindowBorderHitTest, &event);
+  return event.mWindowBorderArea;
+}
+
 void OsWindow::ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
@@ -643,6 +651,18 @@ void OsMouseEvent::Serialize(Serializer& stream)
   SerializeNameDefault(MiddleButton, false);
   SerializeNameDefault(XOneBackButton, false);
   SerializeNameDefault(XTwoForwardButton, false);
+}
+
+//-------------------------------------------------------------------OsWindowBorderHitTest
+ZilchDefineType(OsWindowBorderHitTest, builder, type)
+{
+}
+
+OsWindowBorderHitTest::OsWindowBorderHitTest() :
+  Window(nullptr),
+  ClientPosition(IntVec2::cZero),
+  mWindowBorderArea(WindowBorderArea::None)
+{
 }
 
 //-------------------------------------------------------------------OsMouseDropEvent

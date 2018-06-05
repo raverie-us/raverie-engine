@@ -202,6 +202,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(GamepadEvent);
   ZilchInitializeType(OperationQueueEvent);
   ZilchInitializeType(OsWindowEvent);
+  ZilchInitializeType(OsWindowBorderHitTest);
   ZilchInitializeType(OsMouseDropEvent);
   ZilchInitializeType(SavingEvent);
   ZilchInitializeType(DebugEngineEvent);

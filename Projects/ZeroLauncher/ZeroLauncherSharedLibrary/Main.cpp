@@ -18,6 +18,10 @@ using namespace Zero;
 
 extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
 {
+  // This is not quite correct, but since we don't have a
+  // typical platform main we don't get everything initialized.
+  Zero::gCommandLineArguments.PushBack(FilePath::Combine(dllPath, "ZeroLauncherSharedLibrary.dll"));
+
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
   DebuggerListener debuggerOutput;
@@ -44,11 +48,6 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   CrashHandler::SetCrashStartCallback(Zero::LauncherCrashStartCallback, NULL);
 
   ZPrint("Loading ZeroLauncher %d.0.\n", GetLauncherMajorVersion());
-
-  // Initialize platform socket library
-  Zero::Status socketLibraryInitStatus;
-  Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
-  Assert(Zero::Socket::IsSocketLibraryInitialized());
 
   // For some reason, old launcher exes will have a giant hang on load with newer dlls
   // unless a webrequest successfully runs first. No idea why this happens but this at
@@ -112,12 +111,7 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   SafeDelete(Z::gLauncher);
 
   startup.Shutdown();
-  // Uninitialize platform socket library
-  Zero::Status socketLibraryUninitStatus;
-  Zero::Socket::UninitializeSocketLibrary(socketLibraryUninitStatus);
-  
-  //Assert(!Zero::Socket::IsSocketLibraryInitialized());
-  
+
   ZPrint("Terminated\n");
 
   return returnCode;

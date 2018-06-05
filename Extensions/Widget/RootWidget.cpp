@@ -73,6 +73,8 @@ RootWidget::RootWidget(OsWindow* osWindow)
   ConnectThisTo(osWindow, Events::OsMouseUp, OnOsMouseUp);
   ConnectThisTo(osWindow, Events::OsMouseMove, OnOsMouseMoved);
 
+  ConnectThisTo(osWindow, Events::OsWindowBorderHitTest, OnOsWindowBorderHitTest);
+
   ConnectThisTo(osWindow, Events::OsMouseScroll, OnOsMouseScroll);
 
   ConnectThisTo(osWindow, Events::OsKeyTyped, OnOsKeyTyped);
@@ -594,6 +596,13 @@ void RootWidget::OnOsMouseDown(OsMouseEvent* mouseEvent)
 void RootWidget::OnOsMouseUp(OsMouseEvent* mouseEvent)
 {
   OnOsMouseButton(mouseEvent, false);
+}
+
+void RootWidget::OnOsWindowBorderHitTest(OsWindowBorderHitTest* event)
+{
+  Widget* overObject = HitTest(ToVec2(event->ClientPosition), nullptr);
+  if (overObject)
+    overObject->DispatchBubble(event->EventId, event);
 }
 
 void RootWidget::BuildMouseEvent(MouseEvent& event, OsMouseEvent* mouseEvent)

@@ -6,7 +6,7 @@
 
 namespace Zero
 {
-extern Array<String> gCommandLineArguments;
+extern ZeroShared Array<String> gCommandLineArguments;
 
 // Not platform specific
 typedef HashMap<String, String> StringMap;

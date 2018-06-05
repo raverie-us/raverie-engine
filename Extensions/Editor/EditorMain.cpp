@@ -804,7 +804,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable | WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
 
   OsWindow* mainWindow = osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
-  mainWindow->SetMinClientSize(IntVec2(800, 600));
+  mainWindow->SetMinClientSize(cMinimumMonitorSize);
   mainWindow->SetState(WindowState::Maximized);
 
   // Pass window handle to initialize the graphics api
