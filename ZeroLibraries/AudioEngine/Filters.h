@@ -324,8 +324,8 @@ namespace Audio
     bool mAnalogTC;
     bool mLogDetector;
 
-    const float DIGITAL_TC = -4.60517019; // ln(1%)
-    const float ANALOG_TC = -1.00239343; // ln(36.7%)
+    const float DIGITAL_TC = -4.60517019f; // ln(1%)
+    const float ANALOG_TC = -1.00239343f; // ln(36.7%)
     //const float METER_UPDATE_INTERVAL_MSEC = 50.0;
     //const float METER_MIN_DB = -60.0;
   };

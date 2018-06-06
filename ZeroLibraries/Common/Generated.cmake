@@ -102,16 +102,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Math/Reals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Math/Reals.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Math/SharedVectorFunctions.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimConversion.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimMath.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimMatrix3.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimMatrix3.inl
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimMatrix4.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimMatrix4.inl
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimpleCgPolicies.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimVectors.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimVectors.inl
-    ${CMAKE_CURRENT_LIST_DIR}/Math/SimVectorSpecific.inl
     ${CMAKE_CURRENT_LIST_DIR}/Math/Vector2.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Math/Vector2.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Math/Vector3.cpp
