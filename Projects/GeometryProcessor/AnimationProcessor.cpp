@@ -126,8 +126,8 @@ void GetClipTrack(SceneTrack& sceneTrack, SceneTrack& clipTrack, float startTime
   // Find begin and end range for sub-track.
   KeyType startKey = {startTime};
   KeyType endKey = {endTime};
-  Array<KeyType>::iterator lower = UpperBound(sceneKeys->All(), startKey, TransformKeyLessThan<KeyType>).Begin();
-  Array<KeyType>::iterator upper = UpperBound(sceneKeys->All(), endKey, TransformKeyLessThan<KeyType>).Begin();
+  typename Array<KeyType>::iterator lower = UpperBound(sceneKeys->All(), startKey, TransformKeyLessThan<KeyType>).Begin();
+  typename Array<KeyType>::iterator upper = UpperBound(sceneKeys->All(), endKey, TransformKeyLessThan<KeyType>).Begin();
 
   // Guarantee that at least one key is assigned.
   if (lower == upper)
