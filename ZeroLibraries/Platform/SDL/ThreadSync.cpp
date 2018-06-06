@@ -177,17 +177,61 @@ void Semaphore::WaitAndDecrement()
     Warn(SDL_GetError());
 }
 
+struct InterprocessMutexPrivateData
+{
+  InterprocessMutexPrivateData()
+  {
+    mFile = nullptr;
+  }
+
+  File* mFile;
+};
+
 InterprocessMutex::InterprocessMutex()
 {
+  ZeroConstructPrivateData(InterprocessMutexPrivateData);
+  self->mFile = new File();
 }
 
 InterprocessMutex::~InterprocessMutex()
 {
+  ZeroGetPrivateData(SemaphorePrivateData)
+  delete self->mFile;
+  ZeroDestructPrivateData(SemaphorePrivateData);
 }
 
 void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
 {
-  Error("InterprocessMutex not implemented. Potentially use a file opened for writing as as global mutex lock");
+  // This approach is a bit silly, but instead of using an actual inter process mutex we
+  // open a common file for write access. We use the temp directory because we know it will
+  // be shared between all running instances and it is guaranteed writable.
+  // We also keep the file open for write until the InterprocessMutex is destructed.
+  if (!failIfAlreadyExists)
+    return;
+
+  // Sanitize the mutex name for files. We guarantee uniqueness because we don't allow the '-' character
+  // even though it is legal in file names, and any illegal character we find we replace with -XX where XX is the hex code.
+  StringBuilder builder;
+  while (*mutexName != '\0')
+  {
+    char c = *mutexName;
+
+    if (isalnum(c))
+    {
+      builder.Append(c);
+    }
+    else
+    {
+      builder.Append('-');
+      builder.Append(ToString((int)c));
+    }
+
+    ++mutexName;
+  }
+
+  String sharedMutexPathName = FilePath::Combine(GetTemporaryDirectory(), builder.ToString());
+
+  mFile->Open(sharedMutexPathName, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status);
 }
 
 CountdownEvent::CountdownEvent()

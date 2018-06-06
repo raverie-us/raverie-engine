@@ -1964,7 +1964,7 @@ namespace Audio
       break;
     }
 
-    mCurrentTime += cSystemTimeIncrement;
+    mCurrentTime += (float)cSystemTimeIncrement;
     mLastAmplitude = amplitude;
 
     return amplitude;
