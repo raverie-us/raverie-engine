@@ -178,7 +178,7 @@ public:
   static void ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
   static void ShellWindowOnDevicesChanged(ShellWindow* window);
   static void ShellWindowOnRawMouseChanged(Math::IntVec2Param movement, ShellWindow* window);
-  static WindowBorderArea::Enum OsWindow::ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window);
+  static WindowBorderArea::Enum ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window);
   static void ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
 
   // If the mouse is currently trapped (not visible and centered on the window).
