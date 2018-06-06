@@ -55,6 +55,7 @@ ZilchDefineType(GeometryOptions, builder, type)
   ZilchBindFieldProperty(mFlipWindingOrder)->ZeroFilterBool(mImportMeshes);
   ZilchBindFieldProperty(mPhysicsImport)->ZeroFilterBool(mImportMeshes);
   
+  ZilchBindFieldProperty(mCollapsePivots);
   ZilchBindFieldProperty(mImportAnimations);
   ZilchBindFieldProperty(mCreateArchetype);
   ZilchBindFieldProperty(mImportTextures);
@@ -86,6 +87,7 @@ GeometryOptions::GeometryOptions(ImportOptions* owner)
     mInvertUvYAxis(false),
     mFlipWindingOrder(false),
     mPhysicsImport(PhysicsImport::NoMesh),
+    mCollapsePivots(false),
     mImportAnimations(false),
     mCreateArchetype(true),
     mImportTextures(false)

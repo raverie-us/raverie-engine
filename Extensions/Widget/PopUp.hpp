@@ -12,8 +12,8 @@
 namespace Zero
 {
 
-extern const String PopUpNormal;
-extern const String PopUpLight;
+extern const String cPopUpNormal;
+extern const String cPopUpLight;
 
 namespace Events
 {
@@ -25,7 +25,7 @@ class FloatingComposite : public Composite
 {
 public:
   ZilchDeclareType(FloatingComposite, TypeCopyMode::ReferenceType);
-  FloatingComposite(Composite* parent, StringParam className = PopUpNormal);
+  FloatingComposite(Composite* parent, StringParam className = cPopUpNormal);
 
   void UpdateTransform() override;
   //Fade in the PopUp
@@ -49,7 +49,7 @@ public:
   ZilchDeclareType(PopUp, TypeCopyMode::ReferenceType);
   /// Popup will attach to the root widget of the target and disappear if
   /// the mouse moves outside the target, or the mouse moves away from the popup
-  PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className = PopUpNormal);
+  PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className = cPopUpNormal);
 
   //Position the PopUp below the mouse.
   void SetBelowMouse(Mouse* mouse, Vec2 offset);
@@ -59,9 +59,9 @@ public:
   //Events
   void OnMouseMove(MouseEvent* event);
   void OnKeyDown(KeyboardEvent* event);
-  void OnFocusOut(FocusEvent* event);
-  void OnMouseDown(MouseEvent* event);
-  void OnAnyGained(FocusEvent* event);
+  virtual void OnFocusOut(FocusEvent* event);
+  virtual void OnMouseDown(MouseEvent* event);
+  virtual void OnAnyGained(FocusEvent* event);
   void OnTargetMouseExit(MouseEvent* event);
 
   //Internals

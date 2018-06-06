@@ -284,7 +284,7 @@ void AnimationEditor::UpdateTransform()
 void AnimationEditor::SetPropertyView(MainPropertyView* view)
 {
   mPropertyView = view;
-  ConnectThisTo(view, Events::PropertyContextMenu, OnPropertyContextMenu);
+  ConnectThisTo(view, Events::ContextMenuCreated, OnPropertyContextMenu);
 }
 
 //******************************************************************************
@@ -990,15 +990,20 @@ void AnimationEditor::UpdateArrowMovement(KeyboardEvent* e)
 //******************************************************************************
 void AnimationEditor::OnPropertyContextMenu(ContextMenuEvent* e)
 {
+  DirectProperty* property = e->Source.Get<DirectProperty*>();
+  if (property == nullptr)
+    return;
+
   if(mErrorState == ErrorState::None)
   {
     // Do nothing if the property is not supported by the animation system
-    if(!ValidPropertyTrack(e->mProperty))
+    if(!ValidPropertyTrack(property->mProperty))
       return;
 
-    mContextMenuProperty = e->mProperty;
-    mContextMenuInstance = e->mInstance;
-    ConnectMenu(e->mMenu, "Key Frame", OnCreateKeyFrame);
+    mContextMenuProperty = property->mProperty;
+    mContextMenuInstance = property->mInstance;
+    ContextMenuEntry* keyFrameCreate = e->RootEntry->AddEntry("Key Frame");
+    ConnectThisTo(keyFrameCreate, Zero::Events::MenuItemSelected, OnCreateKeyFrame);
   }
 }
 

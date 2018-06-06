@@ -205,6 +205,16 @@ ZilchScriptConnection::ZilchScriptConnection(DelegateParam delagate)
 }
 
 //**************************************************************************************************
+ZilchScriptConnection::~ZilchScriptConnection()
+{
+  // Since ZilchScriptConnections contain a handle in the delegate, it is possible for the event
+  // connection to be the only thing keeping an object alive. Cannot destruct the object during the
+  // event connection destruction because it will also invoke destruction of the event connection
+  // being destructed right now.
+  sDelayDestructDelegates.PushBack(mDelegate);
+}
+
+//**************************************************************************************************
 void ZilchScriptConnection::RaiseError(StringParam message)
 {
   Function* function = mDelegate.BoundFunction;

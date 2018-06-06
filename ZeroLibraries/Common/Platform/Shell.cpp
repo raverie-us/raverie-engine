@@ -47,6 +47,7 @@ void InitializeKeyboard()
   SetKeyName(F10);
   SetKeyName(F11);
   SetKeyName(F12);
+  SetKeyName(Insert);
   SetKeyName(Delete);
   SetKeyName(Back);
   SetKeyName(Home);

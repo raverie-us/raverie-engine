@@ -405,8 +405,7 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   RegisterClassAttributeType(ObjectAttributes::cComponentInterface, MetaInterface)->TypeMustBe(Component);
 
   RegisterPropertyAttributeType(PropertyAttributes::cDependency, MetaDependency)->TypeMustBe(Component);
-
-  RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty, EditorResource)->TypeMustBe(Resource);
+  RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty, MetaEditorResource)->TypeMustBe(Resource);
 
   ZPrintFilter(Filter::DefaultFilter, "Engine Initialize...\n");
 

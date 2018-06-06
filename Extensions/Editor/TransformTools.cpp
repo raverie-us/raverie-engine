@@ -9,13 +9,51 @@
 namespace Zero
 {
 
+// ManipulatorTool Events
+namespace Events
+{
+DefineEvent(ManipulatorToolStart);
+DefineEvent(ManipulatorToolModified);
+DefineEvent(ManipulatorToolEnd);
+}
+
+//----------------------------------------------------- ManipulatorToolEvent ---
+ZilchDefineType(ManipulatorToolEvent, builder, type)
+{
+  ZilchBindGetter(OperationQueue);
+  ZilchBindGetter(Finished);
+
+  ZilchBindFieldGetter(mGrabLocation);
+  ZilchBindFieldGetter(mStartWorldRectangle);
+  ZilchBindField(mEndWorldRectangle);
+}
+
+//******************************************************************************
+ManipulatorToolEvent::ManipulatorToolEvent(ViewportMouseEvent* event)
+  : ViewportMouseEvent(*event), mOperationQueue(nullptr),
+    mStartWorldRectangle(Rectangle::cZero), mEndWorldRectangle(Rectangle::cZero)
+{
+}
+
+//******************************************************************************
+OperationQueue* ManipulatorToolEvent::GetOperationQueue()
+{
+  return mOperationQueue;
+}
+
+//******************************************************************************
+bool ManipulatorToolEvent::GetFinished()
+{
+  return mOperationQueue.IsNotNull();
+}
+
 //------------------------------------------------------------- Manipulator Tool
 DeclareBitField4(DirectionFlags, Left, Right, Top, Bottom);
 
-const uint MiddlePoint = 8;
-const uint PointCount = 9;
+static const uint cMiddlePoint = 8;
+static const uint cPointCount = 9;
 
-const uint GrabPoints[] =
+static const uint cGrabPoints[] =
 {
   DirectionFlags::Left,
   DirectionFlags::Left | DirectionFlags::Top,
@@ -28,7 +66,21 @@ const uint GrabPoints[] =
   0,
 };
 
-const float GripSize = 0.05f;
+static const Location::Enum cLocations[] =
+{
+  Location::CenterLeft,
+  Location::TopLeft,
+  Location::TopCenter,
+  Location::TopRight,
+  Location::CenterRight,
+  Location::BottomRight,
+  Location::BottomCenter,
+  Location::BottomLeft,
+  Location::Center,
+};
+
+static const float cGripSize = 0.075f;
+static const float cToolEpsilon = 0.0001f;
 
 //******************************************************************************
 ZilchDefineType(ManipulatorTool, builder, type)
@@ -37,6 +89,10 @@ ZilchDefineType(ManipulatorTool, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDependency(MouseCapture);
   type->AddAttribute(ObjectAttributes::cTool);
+
+  ZeroBindEvent(Events::ManipulatorToolStart, ManipulatorToolEvent);
+  ZeroBindEvent(Events::ManipulatorToolModified, ManipulatorToolEvent);
+  ZeroBindEvent(Events::ManipulatorToolEnd, ManipulatorToolEvent);
 
   ZilchBindFieldProperty(mGrabMode);
   ZilchBindFieldProperty(mSnapping);
@@ -57,6 +113,7 @@ ManipulatorTool::ManipulatorTool()
   mGrabMode = GizmoGrab::Hold;
   
   mSelectedPoint = -1;
+  mLocation = Location::Center;
 }
 
 //******************************************************************************
@@ -101,10 +158,11 @@ void ManipulatorTool::SetSnapDistance(float distance)
 }
 
 //******************************************************************************
-bool ManipulatorTool::OnGizmo( )
+bool ManipulatorTool::IsActiveAndHasValidSelection( )
 {
-  if (mValidSelection == false)
+  if(mValidSelection == false)
     return false;
+
   MetaSelection* selection = Z::gEditor->GetSelection( );
   return selection->Count( ) > 0 && Active( );
 }
@@ -112,7 +170,7 @@ bool ManipulatorTool::OnGizmo( )
 //******************************************************************************
 bool ManipulatorTool::CheckMouseManipulation(ViewportMouseEvent* e)
 {
-  if(OnGizmo( ))
+  if(IsActiveAndHasValidSelection( ))
   {
     MouseCapture* capture = GetOwner( )->has(MouseCapture);
     capture->Capture(e);
@@ -140,7 +198,7 @@ void ManipulatorTool::OnLeftMouseDown(ViewportMouseEvent* e)
   if(mGrabMode == GizmoGrab::Hold)
     e->Handled = CheckMouseManipulation(e);
   else
-    e->Handled = OnGizmo( );
+    e->Handled = IsActiveAndHasValidSelection( );
 }
 
 //******************************************************************************
@@ -162,42 +220,41 @@ void ManipulatorTool::TestMouseMove(ViewportMouseEvent* e)
 {
   MetaSelection* selection = Z::gEditor->mSelection;
   Cog* primary = selection->GetPrimaryAs<Cog>();
-  Aabb aabb = mActiveAabb;
-  Vec3 center = aabb.GetCenter();
-  Vec3 size = aabb.GetHalfExtents();
-  Quat rot = Quat::cIdentity;
 
-  mSelectedPoint = -1;
+  Vec3 center = mActiveAabb.GetCenter();
+  Vec3 size = mActiveAabb.GetHalfExtents();
+
+  Camera* camera = e->GetViewport()->GetCamera();
+  Ray mouseRay = e->mWorldRay;
 
   mValidSelection = false;
-  for(uint i=0;i<PointCount;++i)
+  mSelectedPoint = -1;
+
+  for(uint i = 0; i < cPointCount; ++i)
   {
     Vec3 point = center;
+    mLocation = Location::Center;
 
-    if( GrabPoints[i] & DirectionFlags::Left )
+    if(cGrabPoints[i] & DirectionFlags::Left)
       point -= Vec3(size.x, 0, 0);
-
-    if( GrabPoints[i] & DirectionFlags::Top )
-      point += Vec3(0, size.y, 0);
-
-    if( GrabPoints[i] & DirectionFlags::Right )
+    else if(cGrabPoints[i] & DirectionFlags::Right)
       point += Vec3(size.x, 0, 0);
 
-    if( GrabPoints[i] & DirectionFlags::Bottom )
+    if(cGrabPoints[i] & DirectionFlags::Top)
+      point += Vec3(0, size.y, 0);
+    else if(cGrabPoints[i] & DirectionFlags::Bottom)
       point -= Vec3(0, size.y, 0);
-    
-    Camera* camera = e->GetViewport()->GetCamera();
-    float scaledGripSize = GizmoHelpers::GetViewScale(camera, point) * 0.1f;
 
+    float scaledGripSize = GizmoHelpers::GetViewScale(camera, point) * 0.1f;
     Vec3 boxSize(scaledGripSize, scaledGripSize, scaledGripSize);
 
-    Mat3 noRot = Mat3::cIdentity;
-    Ray mouseRay = e->mWorldRay;
-    Intersection::Type result = Intersection::RayObb(mouseRay.Start, mouseRay.Direction, point, boxSize, noRot);
+    Intersection::Type result =
+      Intersection::RayObb(mouseRay.Start, mouseRay.Direction, point, boxSize, Mat3::cIdentity);
 
     if(result != Intersection::None)
     {
       mSelectedPoint = i;
+      mLocation = cLocations[i];
       mValidSelection = true;
       return;
     }
@@ -221,10 +278,16 @@ void ManipulatorTool::OnMouseDragStart(ViewportMouseEvent* e)
   FilterChildrenAndProtected(cogs, selection);
   mTransformingObjects.Clear( );
 
+  ManipulatorToolEvent eventToSend(e);
+  eventToSend.mGrabLocation = mLocation;
+  eventToSend.mStartWorldRectangle = Rectangle::MinAndMax(mStartAabb.mMin, mStartAabb.mMax);
+  eventToSend.mEndWorldRectangle = eventToSend.mStartWorldRectangle;
+
   Array<Cog*>::range r = cogs.All( );
   while(!r.Empty( ))
   {
     Cog* target = r.Front( );
+    target->DispatchEvent(Events::ManipulatorToolStart, &eventToSend);
 
     //Store the staring values for transformations
     if(Transform* tx = target->has(Transform))
@@ -238,12 +301,16 @@ void ManipulatorTool::OnMouseDragStart(ViewportMouseEvent* e)
       data.EndTranslation = data.StartTranslation;
       data.EndRotation = data.StartRotation;
       data.EndScale = data.StartScale;
-      data.WorldAabb = GetAabb(target);
 
       if(Area* area = target->has(Area))
       {
         data.StartSize = area->mSize;
         data.EndSize = area->mSize;
+
+        if(BoxCollider* collider = target->has(BoxCollider))
+          data.StartColliderSize = collider->GetSize();
+
+        data.StartRect = area->GetWorldRectangle();
       }
       else
       {
@@ -253,6 +320,7 @@ void ManipulatorTool::OnMouseDragStart(ViewportMouseEvent* e)
 
       mTransformingObjects.PushBack(data);
     }
+
     r.PopFront( );
   }
 
@@ -263,103 +331,156 @@ void ManipulatorTool::OnMouseDragStart(ViewportMouseEvent* e)
 //******************************************************************************
 void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* e)
 {
-  Viewport* viewport = e->GetViewport();
-  Camera* camera = viewport->GetCamera();
-  float viewDepth = 0.0f;
+  Vec3 startExtents = mStartAabb.GetExtents();
+  Vec3 startCenter = mStartAabb.GetCenter();
 
-  Vec3 startExtents = mStartAabb.GetExtents( );
-  Vec3 startCenter = mStartAabb.GetCenter( );
-
-  if(camera != nullptr)
-    viewDepth = (startCenter - camera->GetWorldTranslation( )).Length();
+  Rectangle toolStartRect = Rectangle::MinAndMax(mStartAabb.mMin, mStartAabb.mMax);
+  Rectangle toolUpdateRect = toolStartRect;
 
   // Compute plane movement
-  Vec3 oldPosition = viewport->ScreenToWorldZPlane(mMouseDragStart, viewDepth);
-  Vec3 newPosition = viewport->ScreenToWorldZPlane(e->Position, viewDepth);
-
-  // All movement computed relative to bottom left of staring aabb.
-  Vec3 worldOrigin = mStartAabb.mMin;
-  Vec3 movementInPlane = newPosition - oldPosition;
-  Vec3 orginMovement = Vec3(0,0,0);
+  Viewport* viewport = e->GetViewport();
+  Vec3 oldPosition = viewport->ScreenToWorldPlane(mMouseDragStart, Vec3::cZAxis, startCenter);
+  Vec3 newPosition = viewport->ScreenToWorldPlane(e->Position, Vec3::cZAxis, startCenter);
+  Vec3 movement = newPosition - oldPosition;
+  Vec2 move2D(movement.x, movement.y);
 
   if(mSnapping)
-    movementInPlane = Snap(movementInPlane, mSnapDistance);
+    move2D = Snap(move2D, mSnapDistance);
 
-  // Determine the movement of tool-origin and update the 'movementInPlane'
-  // to be relative.
-  if(mSelectedPoint != MiddlePoint)
+  Vec3 translationChange;
+
+  // Translation only.
+  if(mSelectedPoint == cMiddlePoint)
   {
-    uint grabFlags = GrabPoints[mSelectedPoint];
-
-    if( !( grabFlags & (DirectionFlags::Left | DirectionFlags::Right) ) )
-      movementInPlane[0] = 0.0f;
-
-    if( !(grabFlags & (DirectionFlags::Top | DirectionFlags::Bottom) ) )
-      movementInPlane[1] = 0.0f;
-
-    if( grabFlags & DirectionFlags::Left )
-    {
-      orginMovement.x = movementInPlane.x;
-      movementInPlane.x = -movementInPlane.x;
-    }
-
-    if( grabFlags & DirectionFlags::Bottom )
-    {
-      orginMovement.y = movementInPlane.y;
-      movementInPlane.y = -movementInPlane.y;
-    }
+    translationChange = Vec3(move2D, 0);
   }
   else
   {
-    // Middle mode just translate
-    orginMovement = movementInPlane;
-    movementInPlane = Vec3(0,0,0);
+    uint grabFlags = cGrabPoints[mSelectedPoint];
+
+    // If true:  1 * value = value [ie, use movement on axis].
+    // If false: 0 * value =     0 [ie, no movement on axis].
+    Vec2 moveOnAxis;
+    moveOnAxis.x = (bool)(grabFlags & (DirectionFlags::Left | DirectionFlags::Right));
+    moveOnAxis.y = (bool)(grabFlags & (DirectionFlags::Top | DirectionFlags::Bottom));
+
+    move2D.x = moveOnAxis.x * move2D.x;
+    move2D.y = moveOnAxis.y * move2D.y;
+
+    // Maintain aspect ratio.
+    if(e->ShiftPressed && moveOnAxis.x && moveOnAxis.y)
+    {
+      Vec2 grabPosition = toolStartRect.GetLocation(mLocation);
+      Vec2 axis = grabPosition - toolStartRect.GetCenter();
+      float length = axis.AttemptNormalize();
+
+      // Prevent sizer gizmo not being able to recover from a "zero-size" state.
+      if(length >= Math::Epsilon() * Math::Epsilon())
+        move2D = axis * axis.Dot(move2D);
+    }
+
+    Vec2 startSize = toolStartRect.GetSize();
+
+    // Moving left is negative on the x-axis, but the size needs to increase
+    // [ie, move the min farther from the max]. So, flip the sign of the move.
+    if(grabFlags & DirectionFlags::Left)
+      toolUpdateRect.SetSize(Location::CenterRight, startSize - move2D);
+    else
+      toolUpdateRect.SetSize(Location::CenterLeft, startSize + move2D);
+
+    // Moving down is negative on the y-axis, but the size needs to increase
+    // [ie, move the max farther from the min]. So, flip the sign of the move.
+    if(grabFlags & DirectionFlags::Bottom)
+      toolUpdateRect.SetSize(Location::TopCenter, startSize - move2D);
+    else
+      toolUpdateRect.SetSize(Location::BottomCenter, startSize + move2D);
+
+    translationChange = Vec3(toolUpdateRect.GetCenter() - toolStartRect.GetCenter(), 0);
   }
 
   // Compute the new tool-aabb.
-  Vec3 newExtents = startExtents + movementInPlane;
-  Vec3 scaleChange = newExtents / startExtents;
-  Vec3 aabbOffset = startCenter - worldOrigin;
-  Vec3 newCenter = worldOrigin + aabbOffset * scaleChange + orginMovement;
+  Vec3 newCenter = startCenter + translationChange;
+  Vec3 newExtents = Vec3(toolUpdateRect.GetSize(), startExtents.z);
 
   mActiveAabb.SetCenter(newCenter);
   mActiveAabb.SetExtents(newExtents);
 
-  // Compute all updated transform on the objects the tool is affecting.
-  Array<TransformingObject>::range r = mTransformingObjects.All();
-  for(;!r.Empty();r.PopFront())
+  Vec3 toolOrigin = Vec3(toolStartRect.GetLocation(Location::GetOpposite(mLocation)), startCenter.z);
+
+  ManipulatorToolEvent eventToSend(e);
+  eventToSend.mGrabLocation = mLocation;
+  eventToSend.mStartWorldRectangle = toolStartRect;
+  eventToSend.mEndWorldRectangle = toolUpdateRect;
+
+  // Compute updated transforms for the objects the tool is affecting.
+  forRange(TransformingObject& object, mTransformingObjects.All())
   {
-    Cog* target = r.Front().ObjectId;
-    if(target)
+    Cog* cog = object.ObjectId;
+    if(cog == nullptr)
+      continue;
+
+    // Reset for each object in case 'EndWorldRectangle' was modified, or
+    // 'HandledEventScript' was set.
+    eventToSend.mEndWorldRectangle = toolUpdateRect;
+    eventToSend.HandledEventScript = false;
+
+    cog->DispatchEvent(Events::ManipulatorToolModified, &eventToSend);
+
+    cog->DispatchEvent(Events::ManipulatorToolModified, &eventToSend);
+    if(eventToSend.Handled || eventToSend.HandledEventScript)
+      continue;
+
+    Vec2 returnedCenter = eventToSend.mEndWorldRectangle.GetCenter();
+    Vec2 returnedSize = eventToSend.mEndWorldRectangle.GetSize();
+
+    // Update values to conform to modifications a user may have made to
+    // 'EndWorldRectangle' when handling 'ManipulatorToolModified'.
+    translationChange = Vec3(returnedCenter - toolStartRect.GetCenter(), 0);
+    newExtents = Vec3(returnedSize, startExtents.z);
+
+    Vec3 scaleChange = newExtents / startExtents;
+
+    Transform* tf = cog->has(Transform);
+    Vec3 newTranslation = object.StartWorldTranslation + translationChange;
+
+    if(mSelectedPoint != cMiddlePoint)
     {
-      TransformingObject& transformObject = r.Front();
-      Transform* tf = target->has(Transform);
-      Area* area = target->has(Area);
+      Vec3 originalOffset = object.StartWorldTranslation - toolOrigin;
+      newTranslation = toolOrigin + scaleChange * originalOffset;
+    }
 
-      Vec3 worldOffset = transformObject.StartWorldTranslation - worldOrigin;
-      Vec3 newTranslation = worldOrigin + worldOffset * scaleChange + orginMovement;
+    // Change to local
+    if(tf->TransformParent)
+      newTranslation = tf->TransformParent->TransformPointInverse(newTranslation);
 
-      // Change to local
-      if(tf->TransformParent)
-        newTranslation = tf->TransformParent->TransformPointInverse(newTranslation);
+    // Change Translation
+    object.EndTranslation = newTranslation;
+    tf->SetTranslation(object.EndTranslation);
 
-      transformObject.EndTranslation = newTranslation;
+    Area* area = cog->has(Area);
+    if(area != nullptr)
+    {
+      object.EndSize = object.StartSize * ToVector2(scaleChange);
+      area->SetSize(object.EndSize);
 
-      if(area)
+      // No need to update an object's BoxCollider if there isn't one, or if
+      // that option isn't enabled.
+      BoxCollider* collider = cog->has(BoxCollider);
+      if(collider != nullptr && mSizeBoxCollider)
       {
-        // Change Size
-        transformObject.EndSize = transformObject.StartSize * Vec2(scaleChange.x, scaleChange.y);
+        Vec3 endOffset(area->OffsetOfOffset(Location::Center) * area->GetSize());
+        collider->SetOffset(endOffset);
 
-        area->SetSize(transformObject.EndSize);
-      }
-      else
-      {
-        // Change Scale
-        transformObject.EndScale = transformObject.StartScale * scaleChange;
-        tf->SetScale(transformObject.EndScale);
+        Vec3 endSize = Vec3(object.EndSize.x, object.EndSize.y, object.StartColliderSize.z);
+        collider->SetSize(endSize);
       }
 
-      tf->SetTranslation(transformObject.EndTranslation);
+    }
+    else
+    {
+      // Change Scale
+      object.EndScale = object.StartScale * scaleChange;
+      tf->SetScale(object.EndScale);
     }
 
   }
@@ -368,111 +489,107 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* e)
 }
 
 //******************************************************************************
-void ManipulatorTool::OnMouseDragEnd(Event*)
+void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* e)
 {
   BoundType* transformType = ZilchTypeId(Transform);
   Property* translationProperty = transformType->GetProperty("Translation");
   Property* rotationProperty = transformType->GetProperty("Rotation");
   Property* scaleProperty = transformType->GetProperty("Scale");
 
-  String toolName = ZilchVirtualTypeId(this)->Name;
+  Property* areaSizeProperty = ZilchTypeId(Area)->GetProperty("Size");
 
-  OperationQueue* queue = Z::gEditor->GetOperationQueue( );
+  Property* colliderOffsetProperty = ZilchTypeId(BoxCollider)->GetProperty("Offset");
+  Property* colliderSizeProperty = ZilchTypeId(BoxCollider)->GetProperty("Size");
 
-  queue->BeginBatch( );
-  queue->SetActiveBatchName("ManipulatorTool_OnMouseDragEnd");
+  MetaDisplay* cogDisplay = ZilchTypeId(Cog)->HasInherited<MetaDisplay>();
 
-  Array<TransformingObject>::range r = mTransformingObjects.All( );
-  while(!r.Empty( ))
+  OperationQueue* queue = Z::gEditor->GetOperationQueue();
+
+  ManipulatorToolEvent eventToSend(e);
+  eventToSend.mGrabLocation = mLocation;
+  eventToSend.mOperationQueue = queue;
+  eventToSend.mStartWorldRectangle = Rectangle::MinAndMax(mStartAabb.mMin, mStartAabb.mMax);
+  eventToSend.mEndWorldRectangle = Rectangle::MinAndMax(mActiveAabb.mMin, mActiveAabb.mMax);
+
+  queue->BeginBatch();
+  queue->SetActiveBatchName("MultiObjectManipulation");
+
+  forRange(TransformingObject& object, mTransformingObjects.All())
   {
-    Cog* target = r.Front( ).ObjectId;
-    if(target)
+    Cog* cog = object.ObjectId;
+    if(cog == nullptr)
+      continue;
+
+    cog->DispatchEvent(Events::ManipulatorToolEnd, &eventToSend);
+    if(eventToSend.Handled || eventToSend.HandledEventScript)
+      continue;
+
+    Transform* transform = cog->has(Transform);
+    transform->GetSpace()->MarkModified();
+
+    String name = cogDisplay->GetName(cog);
+
+    queue->BeginBatch();
+    queue->SetActiveBatchName(BuildString(name, "Manipulation"));
+
+    // Send the final GizmoFinish transform update
+    uint flag = 0;
+
+    // When manipulating multiple objects, translation might have changed.
+    if((object.StartTranslation - object.EndTranslation).LengthSq() != 0.0f)
     {
-      TransformingObject& transformObject = r.Front( );
-      Transform* transform = target->has(Transform);
+      flag |= TransformUpdateFlags::Translation;
+      transform->SetLocalTranslationInternal(object.StartTranslation);
 
-      transform->GetSpace( )->MarkModified( );
-
-      queue->BeginBatch( );
-      queue->SetActiveBatchName("ManipulatorTool");
-
-      // Send the final GizmoFinish transform update
-      uint flag = 0;
-
-      // When scaling or rotating multiple objects translation may changed so just check
-      if((transformObject.StartTranslation - transformObject.EndTranslation).LengthSq( )!=0.0f)
-      {
-        flag |= TransformUpdateFlags::Translation;
-        transform->SetLocalTranslationInternal(transformObject.StartTranslation);
-        PropertyPath propertyPath(transform, translationProperty);
-        ChangeAndQueueProperty(queue,
-          target,
-          propertyPath,
-          transformObject.EndTranslation);
-      }
-
-      if((transformObject.StartScale - transformObject.EndScale).LengthSq( )!=0.0f)
-      {
-        flag |= TransformUpdateFlags::Scale;
-        transform->SetLocalScaleInternal(transformObject.StartScale);
-        PropertyPath propertyPath(transform, scaleProperty);
-        ChangeAndQueueProperty(queue,
-          target,
-          propertyPath,
-          transformObject.EndScale);
-      }
-
-      if((transformObject.StartSize - transformObject.EndSize).LengthSq( )!=0.0f)
-      {
-        Area* area = target->has(Area);
-        if(area)
-        {
-          Property* sizeProperty = ZilchVirtualTypeId(area)->GetProperty("Size");
-          area->SetSize(transformObject.StartSize);
-          PropertyPath areaPath(area, sizeProperty);
-          ChangeAndQueueProperty(queue, target, areaPath,
-            transformObject.EndSize);
-
-          if(mSizeBoxCollider)
-          {
-            BoxCollider* collider = target->has(BoxCollider);
-
-            if(collider)
-            {
-              Vec3 startOffset = collider->GetOffset( );
-              Vec3 startSize = collider->GetSize( );
-              Vec3 endOffset = Vec3(Location::GetDirection(area->GetOrigin( ), Location::Center) * area->GetSize( ), 0);
-
-              Property* offsetProperty = ZilchVirtualTypeId(collider)->GetProperty("Offset");
-              collider->SetOffset(startOffset);
-
-              PropertyPath offsetPath(collider, offsetProperty);
-              ChangeAndQueueProperty(queue, target, offsetPath,
-                endOffset);
-
-              Vec3 endSize = Vec3(transformObject.EndSize.x, transformObject.EndSize.y, startSize.z);
-
-              Property* sizeProperty = ZilchVirtualTypeId(collider)->GetProperty("Size");
-              collider->SetSize(startSize);
-              PropertyPath sizePath(collider, offsetProperty);
-              ChangeAndQueueProperty(queue, target, sizePath, endSize);
-            }
-
-          }
-
-        }
-
-      }
-
-      queue->EndBatch( );
-
-      transform->Update(flag | TransformUpdateFlags::GizmoFinish);
+      PropertyPath propertyPath(transform, translationProperty);
+      ChangeAndQueueProperty(queue, cog, propertyPath, object.EndTranslation);
     }
 
-    r.PopFront( );
+    // Scale might have changed.
+    if((object.StartScale - object.EndScale).LengthSq() != 0.0f)
+    {
+      flag |= TransformUpdateFlags::Scale;
+      transform->SetLocalScaleInternal(object.StartScale);
+
+      PropertyPath propertyPath(transform, scaleProperty);
+      ChangeAndQueueProperty(queue, cog, propertyPath, object.EndScale);
+    }
+
+    // Area might have changed.
+    Area* area = cog->has(Area);
+    if(area && (object.StartSize - object.EndSize).LengthSq() != 0.0f)
+    {
+      area->SetSize(object.StartSize);
+
+      PropertyPath areaPath(area, areaSizeProperty);
+      ChangeAndQueueProperty(queue, cog, areaPath, object.EndSize);
+
+      // No need to update an object's BoxCollider if there isn't one, or if
+      // that option isn't enabled.
+      BoxCollider* collider = cog->has(BoxCollider);
+      if(collider != nullptr && mSizeBoxCollider)
+      {
+        collider->SetOffset(collider->GetOffset());
+
+        Vec3 endOffset(area->OffsetOfOffset(Location::Center) * area->GetSize());
+        PropertyPath offsetPath(collider, colliderOffsetProperty);
+        ChangeAndQueueProperty(queue, cog, offsetPath, endOffset);
+
+        collider->SetSize(collider->GetSize());
+
+        Vec3 endSize = Vec3(object.EndSize.x, object.EndSize.y, object.StartColliderSize.z);
+        PropertyPath sizePath(collider, colliderSizeProperty);
+        ChangeAndQueueProperty(queue, cog, sizePath, endSize);
+      }
+
+    }
+
+    queue->EndBatch();  // end specific object Manipulation
+
+    transform->Update(flag | TransformUpdateFlags::GizmoFinish);
   }
 
-  queue->EndBatch( );
+  queue->EndBatch();  // end MultiObjectManipulation
 
   mGizmoMode = GizmoMode::Active;
 }
@@ -502,31 +619,32 @@ void ManipulatorTool::OnToolDraw(Event*)
   Vec3 size = aabb.GetHalfExtents();
   Quat rotation = Quat::cIdentity;
 
-  Vec3 gripSize(GripSize, GripSize, GripSize * 0.1f);
+  Vec3 gripSize(cGripSize, cGripSize, cGripSize * 0.1f);
 
   gDebugDraw->Add(Debug::Obb(center, size, rotation).Color(Color::Red));
 
-  for(uint i=0;i<PointCount;++i)
+  for(uint i=0;i<cPointCount;++i)
   {
     Vec3 point = center;
 
-    if( GrabPoints[i] & DirectionFlags::Left )
+    if( cGrabPoints[i] & DirectionFlags::Left )
       point -= Vec3(size.x, 0, 0);
 
-    if( GrabPoints[i] & DirectionFlags::Top )
+    if( cGrabPoints[i] & DirectionFlags::Top )
       point += Vec3(0, size.y, 0);
 
-    if( GrabPoints[i] & DirectionFlags::Right )
+    if( cGrabPoints[i] & DirectionFlags::Right )
       point += Vec3(size.x, 0, 0);
 
-    if( GrabPoints[i] & DirectionFlags::Bottom )
+    if( cGrabPoints[i] & DirectionFlags::Bottom )
       point -= Vec3(0, size.y, 0);
 
     if(i == mSelectedPoint)
-      gDebugDraw->Add(Debug::Box(point, gripSize, rotation).ViewScaled(true).Color(Color::Green).OnTop(true));
+      gDebugDraw->Add(Debug::Box(point, gripSize, rotation).Filled(true).ViewScaled(true).Color(Color::Green).OnTop(true));
     else
-      gDebugDraw->Add(Debug::Box(point, gripSize, rotation).ViewScaled(true).Color(Color::Red).OnTop(true));
+      gDebugDraw->Add(Debug::Box(point, gripSize, rotation).Filled(true).ViewScaled(true).Color(Color::Red).OnTop(true));
   }
 }
+
 
 }//namespace Zero

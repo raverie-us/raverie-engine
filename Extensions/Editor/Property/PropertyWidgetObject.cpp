@@ -906,13 +906,24 @@ void PropertyWidgetObject::OnRightClick(MouseEvent* event)
 {
   ContextMenu* menu = new ContextMenu(this);
   Mouse* mouse = Z::gMouse;
-  menu->SetBelowMouse(mouse, Pixels(0,0) );
+  menu->SetBelowMouse(mouse, Pixels(0, 0));
 
   if(mLocallyRemoved)
   {
-    ConnectMenu(menu, "Restore", OnRestore);
+    Handle parentObject = GetParentObject();
+    BoundType* childType = MetaDatabase::FindType(mLocallyRemovedTypeName);
+    MetaComposition* composition = parentObject.StoredType->HasInherited<MetaComposition>();
+    AddInfo addInfo;
+
+    ContextMenuEntry* entry = menu->AddEntry("Restore");
+    ConnectThisTo(entry, Events::MenuItemSelected, OnRestore);
+    
+    // If the component can't be added disable the menu entry and provide the reason why
+    // which will grey out the restore button and create a tooltip displaying the reason
+    if(!composition->CanAddComponent(parentObject, childType, &addInfo))
+      entry->SetEnabled(false, addInfo.Reason);
   }
-  else
+  else if(!mLocallyRemoved)
   {
     ConnectMenu(menu, "Remove", OnRemove);
     ConnectMenu(menu, "View Docs", OnViewDoc);

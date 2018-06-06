@@ -1,0 +1,16 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "UiScrollArea"
+		var ResourceId = 0x5a730da183236aa7
+		var LoaderType = "Cog"
+		var Version = 0
+		var ShowInEditor = true
+	}
+	ContentNotes 
+	{
+		var Notes = "Horizontal scroll area"
+	}
+}

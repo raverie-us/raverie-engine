@@ -83,6 +83,7 @@ struct Rectangle
   static Rectangle PointAndSize(Vec2Param point, Vec2Param size);
   static Rectangle CenterAndSize(Vec2Param point, Vec2Param size);
   static Rectangle MinAndMax(Vec2Param min, Vec2Param max);
+  static Rectangle MinAndMax(Vec3Param min, Vec3Param max);
 
   bool operator==(RectangleParam rhs) const;
   
@@ -123,7 +124,13 @@ struct Rectangle
   
   void Expand(Vec2Param point);
 
+  /// Returns true if the given point is inside the Rectangle.
   bool Contains(Vec2Param point) const;
+
+  /// Returns true if this Rectangle completely contains the given Rectangle.
+  bool Contains(RectangleParam other) const;
+
+  /// Returns true if this Rectangle and the given Rectangle overlap in any way.
   bool Overlap(RectangleParam other) const;
 
   void RemoveThickness(const Thickness& thickness);
@@ -150,7 +157,7 @@ struct Rectangle
 
   float GetCardinalLocation(Location::Enum location);
   void SetLocation(Location::Enum location, float value);
-  Vec2 GetLocation(Location::Enum location);
+  Vec2 GetLocation(Location::Enum location) const;
   void SetLocation(Location::Enum location, Vec2Param value);
 
   Vec2 Min;

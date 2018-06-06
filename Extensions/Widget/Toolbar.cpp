@@ -334,9 +334,6 @@ void ToolBar::AddCommand(Command* command)
 }
 
 //******************************************************************************
-
-Composite* CreateLineDivider(Composite* parent, Vec4 color);
-
 void ToolBar::LoadMenu(StringParam menuName)
 {
   CommandManager* commandManager = CommandManager::GetInstance();
@@ -371,7 +368,7 @@ void ToolBar::LoadMenu(StringParam menuName)
     // Also can be a divider
     if(name == Divider)
     {
-      CreateLineDivider(this, ToolbarUi::DividerColor);
+      new ContextMenuDivider(this, ToolbarUi::DividerColor);
       continue;
     }
 

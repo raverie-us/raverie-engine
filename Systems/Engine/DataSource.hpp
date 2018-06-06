@@ -126,6 +126,11 @@ public:
   virtual uint ChildCount(DataEntry* dataEntry) = 0;
   virtual DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) = 0;
 
+  /// Query to see if the data source has need for expandable rows.
+  ///   Ex: The TreeView can check it's associated data source, and if this
+  ///       returns false - each TreeRow's UI will not reserve an area in their
+  ///       row to display the expand/collapse icon.
+  virtual bool IsExpandable() { return true; }
   /// Tree expanding
   virtual bool IsExpandable(DataEntry* dataEntry) = 0;
   virtual void Expand(DataEntry* dataEntry) {}

@@ -8,6 +8,9 @@
 
 namespace Zero
 {
+
+static const bool cAllowUndo = false;
+
 /// The default name we give any created height maps
 const String cHeightMapName("HeightMap");
 const String cHeightMapArchetype("DefaultHeightMap");
@@ -67,26 +70,29 @@ void HeightManipulationTool::PerformQuery(HeightMap* map, ViewportMouseEvent* e)
 {
   HeightMapCellRange range(map, mLocalToolPosition, mRadius, mFeatherRadius);
 
-  HeightMapStateManager* state;
-
-  if(mOperation == nullptr)
+  if(cAllowUndo)
   {
-    mOperation = new HeightMapUndoRedo(map);
-    mOperation->SetAABB(range);
+    HeightMapStateManager* state;
 
-    HashMap<HeightMap*, HeightMapStateManager>::InsertResult result = 
-      mAlteredMaps.InsertNoOverwrite(map, HeightMapStateManager(map));
+    if(mOperation == nullptr)
+    {
+      mOperation = new HeightMapUndoRedo(map);
+      mOperation->SetAABB(range);
 
-    state = &result.mValue->second;
-    state->StartBrushStroke(mRadius, mFeatherRadius);
+      HashMap<HeightMap*, HeightMapStateManager>::InsertResult result = 
+        mAlteredMaps.InsertNoOverwrite(map, HeightMapStateManager(map));
+
+      state = &result.mValue->second;
+      state->StartBrushStroke(mRadius, mFeatherRadius);
+    }
+    else
+    {
+      mOperation->UpdateAABB(range);
+      state = &mAlteredMaps[map];
+    }
+
+    state->AddPointToStroke(mLocalToolPosition);
   }
-  else
-  {
-    mOperation->UpdateAABB(range);
-    state = &mAlteredMaps[map];
-  }
-
-  state->AddPointToStroke(mLocalToolPosition);
 
   ApplyToCells(range, e);
   range.SignalPatchesModified();
@@ -94,13 +100,16 @@ void HeightManipulationTool::PerformQuery(HeightMap* map, ViewportMouseEvent* e)
 
 bool HeightManipulationTool::LeftMouseUp(HeightMap* map, ViewportMouseEvent* e)
 {
-  OperationQueue* queue = Z::gEditor->GetOperationQueue( );
-  queue->Queue(mOperation);
+  if(cAllowUndo)
+  {
+    OperationQueue* queue = Z::gEditor->GetOperationQueue( );
+    queue->Queue(mOperation);
 
-    // Operation committed, prep for next OnMouseDown.
-  mOperation = nullptr;
+      // Operation committed, prep for next OnMouseDown.
+    mOperation = nullptr;
 
-  mAlteredMaps[map].EndBrushStroke();
+    mAlteredMaps[map].EndBrushStroke();
+  }
 
   return true;
 }
@@ -199,13 +208,15 @@ void RaiseLowerTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent*
 {
   // By default, we are raising the height map
   float direction = 1.0f;
-  mOperation->mName = "HeightMapRaise";
+  if(cAllowUndo)
+    mOperation->mName = "HeightMapRaise";
 
   if(e->ShiftPressed)
   {
     // We are lowering the height map
     direction = -1.0f;
-    mOperation->mName = "HeightMapLower";
+    if(cAllowUndo)
+      mOperation->mName = "HeightMapLower";
   }
 
   forRange(HeightMapCell cell, range)
@@ -217,7 +228,8 @@ void RaiseLowerTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent*
     // Raise or lower the height map and apply influence
     height += direction * mStrength * cell.Influence;
 
-    mOperation->AddCell(cell, preDeltaHeight, height);
+    if(cAllowUndo)
+      mOperation->AddCell(cell, preDeltaHeight, height);
   }
 
 }
@@ -326,7 +338,8 @@ void SmoothSharpenTool::OnRadiusChanged()
 
 void SmoothSharpenTool::Smooth(HeightMapCellRange& range)
 {
-  mOperation->mName = "HeightMapSmooth";
+  if(cAllowUndo)
+    mOperation->mName = "HeightMapSmooth";
 
   // Compute the max distance that random samples can go
   int randomDistance = this->mRandomSampleDistance;
@@ -399,7 +412,8 @@ void SmoothSharpenTool::Smooth(HeightMapCellRange& range)
       float preDeltaHeight = height;
       height = Math::Lerp(height, smoothedHeight, cell.Influence);
 
-      mOperation->AddCell(cell, preDeltaHeight, height);
+      if(cAllowUndo)
+        mOperation->AddCell(cell, preDeltaHeight, height);
     }
 
   }
@@ -412,7 +426,8 @@ void SmoothSharpenTool::Sharpen(HeightMapCellRange& range)
   float totalHeight = 0.0f;
   float totalWeight = 0.0f;
 
-  mOperation->mName = "HeightMapSharpen";
+  if(cAllowUndo)
+    mOperation->mName = "HeightMapSharpen";
 
   forRange (HeightMapCell cell, range)
   {
@@ -442,7 +457,8 @@ void SmoothSharpenTool::Sharpen(HeightMapCellRange& range)
       const float SharpenScale = 0.2f;
       height += diff * cell.Influence * SharpenScale;
 
-      mOperation->AddCell(cell, preDeltaHeight, height);
+      if(cAllowUndo)
+        mOperation->AddCell(cell, preDeltaHeight, height);
     }
 
   }
@@ -479,7 +495,8 @@ FlattenTool::FlattenTool()
 
 void FlattenTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent* e)
 {
-  mOperation->mName = "HeightMapFlatten";
+  if(cAllowUndo)
+    mOperation->mName = "HeightMapFlatten";
 
   forRange (HeightMapCell cell, range)
   {
@@ -493,7 +510,8 @@ void FlattenTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent* e)
     float preDeltaHeight = height;
     height = Math::Lerp(height, smoothedHeight, cell.Influence);
 
-    mOperation->AddCell(cell, preDeltaHeight, height);
+    if(cAllowUndo)
+      mOperation->AddCell(cell, preDeltaHeight, height);
   }
 
 }
@@ -546,10 +564,13 @@ CreateDestroyTool::CreateDestroyTool()
 
 bool CreateDestroyTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
 {
-  if(mOperation == nullptr)
-    mOperation = new HeightPatchUndoRedo(map);
+  if(cAllowUndo)
+  {
+    if(mOperation == nullptr)
+      mOperation = new HeightPatchUndoRedo(map);
 
-  mOperation->SetNoise(mUsePerlinNoise, mBaseHeight, mPerlinFrequency, mPerlinAmplitude);
+    mOperation->SetNoise(mUsePerlinNoise, mBaseHeight, mPerlinFrequency, mPerlinAmplitude);
+  }
 
   //Create with click destroy with shift click
   if(!e->ShiftPressed)
@@ -560,8 +581,11 @@ bool CreateDestroyTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
 
     auto patch = map->CreatePatchAtIndex(patchIndex);
 
-    mOperation->mName = "CreateHeightPatch";
-    mOperation->AddPatch(true, patchIndex);
+    if(cAllowUndo)
+    {
+      mOperation->mName = "CreateHeightPatch";
+      mOperation->AddPatch(true, patchIndex);
+    }
 
     if (mUsePerlinNoise)
     {
@@ -582,8 +606,12 @@ bool CreateDestroyTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
     auto patchIndex = map->GetPatchIndexFromLocal(mLocalToolPosition);
     map->DestroyPatchAtIndex(patchIndex);
 
-    mOperation->mName = "DestroyHeightPatch";
-    mOperation->AddPatch(false, patchIndex);
+    if(cAllowUndo)
+    {
+      mOperation->mName = "DestroyHeightPatch";
+      mOperation->AddPatch(false, patchIndex);
+    }
+
   }
   
   return true;
@@ -596,10 +624,13 @@ void CreateDestroyTool::LeftMouseMove(HeightMap* map, ViewportMouseEvent* e)
 
 bool CreateDestroyTool::LeftMouseUp(HeightMap* map, ViewportMouseEvent* e)
 {
-  OperationQueue* queue = Z::gEditor->GetOperationQueue( );
-  queue->Queue(mOperation);
-    // Operation committed, prep for next OnMouseDown.
-  mOperation = nullptr;
+  if(cAllowUndo)
+  {
+    OperationQueue* queue = Z::gEditor->GetOperationQueue( );
+    queue->Queue(mOperation);
+      // Operation committed, prep for next OnMouseDown.
+    mOperation = nullptr;
+  }
 
   return true;
 }
@@ -632,8 +663,11 @@ WeightPainterTool::WeightPainterTool()
 
 bool WeightPainterTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
 {
-  if(mOperation == nullptr)
-    mOperation = new WeightMapUndoRedo(map);
+  if(cAllowUndo)
+  {
+    if(mOperation == nullptr)
+      mOperation = new WeightMapUndoRedo(map);
+  }
 
   Paint(map);
   return true;
@@ -648,10 +682,13 @@ void WeightPainterTool::LeftMouseMove(HeightMap* map, ViewportMouseEvent* e)
 
 bool WeightPainterTool::LeftMouseUp(HeightMap* map, ViewportMouseEvent* e)
 {
-  OperationQueue* queue = Z::gEditor->GetOperationQueue( );
-  queue->Queue(mOperation);
-    // Operation committed, prep for next OnMouseDown.
-  mOperation = nullptr;
+  if(cAllowUndo)
+  {
+    OperationQueue* queue = Z::gEditor->GetOperationQueue( );
+    queue->Queue(mOperation);
+      // Operation committed, prep for next OnMouseDown.
+    mOperation = nullptr;
+  }
 
   return true;
 }
@@ -793,7 +830,9 @@ void WeightPainterTool::Paint(HeightMap* map)
               currentW = ChangeWeights(currentW, mTextureChannel, influence * mStrength);
 
               graphicalPatch->mWeightTexture->SetPixel(x, y, currentW);
-              mOperation->AddPixel(patch->Index, x, y, preDeltaWeight, currentW);
+
+              if(cAllowUndo)
+                mOperation->AddPixel(patch->Index, x, y, preDeltaWeight, currentW);
             }
 
           }
@@ -909,7 +948,6 @@ void HeightMapTool::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner(), Events::ToolActivate,   OnToolActivate);
   ConnectThisTo(GetOwner(), Events::ToolDeactivate, OnToolDeactivate);
   ConnectThisTo(GetOwner(), Events::LeftMouseDown, OnLeftMouseDown);
-  ConnectThisTo(GetOwner(), Events::LeftMouseDrag, OnLeftMouseDrag);
   ConnectThisTo(GetOwner(), Events::LeftMouseUp, OnLeftMouseUp);
   ConnectThisTo(GetOwner(), Events::MouseMove, OnMouseMove);
   ConnectThisTo(GetOwner(), Events::MouseScroll, OnMouseScroll);
@@ -1012,14 +1050,6 @@ void HeightMapTool::OnLeftMouseDown(ViewportMouseEvent* e)
   // Capture/Claim the mouse
   if(e->Handled)
     mMouseCapture = new HeightMapMouseCapture(e->GetMouse( ), viewport, this);
-}
-
-void HeightMapTool::OnLeftMouseDrag(ViewportMouseEvent* e)
-{
-  if(mMouseCapture.IsNull( ))
-    return;
-
-  e->Handled = true;
 }
 
 void HeightMapTool::OnLeftMouseUp(ViewportMouseEvent* e)
@@ -1226,6 +1256,8 @@ HeightMapMouseCapture::HeightMapMouseCapture(Mouse* mouse, Viewport* viewport, H
 {
   mViewport = (ReactiveViewport*)viewport;
   mHeightMapTool = tool;
+
+  ConnectThisTo(this, Events::LeftMouseUp, OnMouseUp);
 }
 
 /******************************************************************************/
@@ -1234,7 +1266,7 @@ HeightMapMouseCapture::~HeightMapMouseCapture( )
 }
 
 /******************************************************************************/
-void HeightMapMouseCapture::OnLeftMouseUp(MouseEvent* event)
+void HeightMapMouseCapture::OnMouseUp(MouseEvent* event)
 {
   if(mViewport.IsNull())
     return;
@@ -1242,6 +1274,8 @@ void HeightMapMouseCapture::OnLeftMouseUp(MouseEvent* event)
   ViewportMouseEvent e(event);
   mViewport->InitViewportEvent(e);
   mHeightMapTool->OnLeftMouseUp(&e);
+
+  CloseAndReturnFocus();
 }
 
 /******************************************************************************/
@@ -1266,15 +1300,5 @@ void HeightMapMouseCapture::OnMouseMove(MouseEvent* event)
   mHeightMapTool->OnMouseMove(&e);
 }
 
-/******************************************************************************/
-void HeightMapMouseCapture::OnLeftMouseDrag(MouseEvent* event)
-{
-  if(mViewport.IsNull( ))
-    return;
-
-  ViewportMouseEvent e(event);
-  mViewport->InitViewportEvent(e);
-  mHeightMapTool->OnLeftMouseDrag(&e);
-}
 
 }//namespace Zero

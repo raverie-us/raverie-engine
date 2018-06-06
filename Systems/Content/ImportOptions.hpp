@@ -72,6 +72,8 @@ public:
     PhysicsImport::Enum mPhysicsImport;
   // end sub mesh import options
   
+  /// Warning: When collapsing pivots on models non-embedded animations may not remain compatible
+  bool mCollapsePivots;
   bool mImportAnimations;
   bool mCreateArchetype;
   bool mImportTextures;

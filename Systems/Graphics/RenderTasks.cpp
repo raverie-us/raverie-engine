@@ -224,6 +224,8 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
 
   String renderPassName = ZilchVirtualTypeId(&renderPass)->Name;
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskRenderPass(renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
+
+  mCamera->mUsedRenderGroupIds.Insert(renderGroup.mSortId);
 }
 
 //**************************************************************************************************
@@ -272,6 +274,8 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
 
   String renderPassName = ZilchVirtualTypeId(&renderPass)->Name;
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskRenderPass(renderSettings, groupId, renderPassName, shaderInputsId);
+
+  mCamera->mUsedRenderGroupIds.Insert(groupId);
 }
 
 //**************************************************************************************************
@@ -560,6 +564,8 @@ void RenderTasksUpdateHelper(RenderTasksUpdateData& update)
   range.mTaskIndex = renderTaskBuffer.mCurrentIndex;
 
   uint startingTaskCount = renderTaskBuffer.mTaskCount;
+
+  update.mCamera->mUsedRenderGroupIds.Clear();
 
   // get tasks from renderer script
   update.mDispatcher->Dispatch(Events::RenderTasksUpdate, update.mEvent);

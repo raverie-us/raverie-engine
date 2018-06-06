@@ -92,7 +92,7 @@ String CompletionDataSource::GetStringValueAt(DataIndex index)
 }
 
 AutoCompletePopUp::AutoCompletePopUp(Widget* source)
-  : PopUp(source, PopUpCloseMode::MouseDistance, PopUpLight)
+  : PopUp(source, PopUpCloseMode::MouseDistance, cPopUpLight)
 {
   mConfidence = CompletionConfidence::Unsure;
   mManualSelection = false;
@@ -279,7 +279,7 @@ void AutoCompletePopUp::ShowToolTip()
   if (tipText.Empty())
     return;
 
-  auto tooltip = new PopUp(this, PopUpCloseMode::MouseDistance, PopUpLight);
+  auto tooltip = new PopUp(this, PopUpCloseMode::MouseDistance, cPopUpLight);
   mToolTip = tooltip;
   
   tooltip->FadeIn();
@@ -364,7 +364,7 @@ void AutoCompletePopUp::OnItemDoubleClicked(ObjectEvent* event)
 }
 
 CallTipPopUp::CallTipPopUp(Widget* source)
-  :PopUp( source, PopUpCloseMode::MouseDistance, PopUpLight)
+  :PopUp( source, PopUpCloseMode::MouseDistance, cPopUpLight)
 {
   mIndex = 0;
   mParameterIndex = 0;

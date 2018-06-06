@@ -86,6 +86,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   // Events
   ZilchInitializeType(BackgroundTaskEvent);
   ZilchInitializeType(ToolGizmoEvent);
+  ZilchInitializeType(ManipulatorToolEvent);
   ZilchInitializeType(TreeEvent);
   ZilchInitializeType(ValueEvent);
   ZilchInitializeType(ContextMenuEvent);
@@ -281,6 +282,8 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(PropertyWidgetObject);
   ZilchInitializeType(AddObjectWidget);
   ZilchInitializeType(UiLegacyToolTip);
+
+  ZilchInitializeType(DirectProperty);
   
   // Animator
   ZilchInitializeType(AnimationEditorData);

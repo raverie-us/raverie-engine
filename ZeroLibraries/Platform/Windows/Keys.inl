@@ -19,6 +19,7 @@ ProcessInput(VK_F10, Keys::F10)
 ProcessInput(VK_F11, Keys::F11)
 ProcessInput(VK_F12, Keys::F12)
 
+ProcessInput(VK_INSERT, Keys::Insert)
 ProcessInput(VK_DELETE, Keys::Delete)
 ProcessInput(VK_HOME, Keys::Home)
 ProcessInput(VK_END, Keys::End)
