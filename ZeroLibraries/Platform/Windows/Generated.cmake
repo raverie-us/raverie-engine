@@ -7,7 +7,6 @@ target_sources(Windows
     ${CMAKE_CURRENT_LIST_DIR}/Atomic.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Browser.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/CommandLineSupport.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ComPort.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CrashHandler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DebugClassMap.cpp
@@ -20,10 +19,9 @@ target_sources(Windows
     ${CMAKE_CURRENT_LIST_DIR}/FpControl.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Keys.inl
-    ${CMAKE_CURRENT_LIST_DIR}/LoadingShader.inl
+    ${CMAKE_CURRENT_LIST_DIR}/Main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MouseButtons.inl
-    ${CMAKE_CURRENT_LIST_DIR}/OpenglRenderer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/OpenglRenderer.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/OpenglRendererWindows.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PlatformStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
@@ -35,8 +33,6 @@ target_sources(Windows
     ${CMAKE_CURRENT_LIST_DIR}/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/StackWalker.cpp
     ${CMAKE_CURRENT_LIST_DIR}/StackWalker.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/StreamedVertexBuffer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/StreamedVertexBuffer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Thread.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ThreadIo.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ThreadSync.cpp

@@ -134,15 +134,16 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Memory/Stack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Memory/Stack.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Memory/ZeroAllocator.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/Atomic.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Atomic.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Audio.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Browser.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/CommandLineSupport.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Main.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/ComPort.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/CrashHandler.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Debug.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/DebugSymbolInformation.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/DirectoryWatcher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/DirectoryWatcher.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/ExecutableResource.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/ExternalLibrary.hpp
@@ -176,12 +177,14 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Socket.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/SocketConstants.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/SocketEnums.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Thread.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Thread.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/ThreadSync.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Timer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/TimerBlock.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/UnicodeUtility.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/UnicodeUtility.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Utilities.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Utilities.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Regex/Regex.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Regex/Regex.hpp

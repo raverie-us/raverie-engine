@@ -4,7 +4,7 @@
 /// Copyright 2018, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-#include "Common/CommonStandard.hpp"
+#include "CommonStandard.hpp"
 
 namespace Zero
 {
@@ -12,7 +12,7 @@ namespace Zero
 int PlatformMain(const Array<String>& arguments)
 {
   CommonLibrary::Initialize();
-  int result =  BrowserSubProcess::Execute();
+  int result = BrowserSubProcess::Execute();
   CommonLibrary::Shutdown();
   return result;
 }

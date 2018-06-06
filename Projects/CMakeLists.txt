@@ -228,6 +228,11 @@ add_dependencies(ZeroLauncher
 )
 target_link_libraries(BrowserSubProcess
                       PUBLIC
+                      Common
+                      Windows
+                      ${FreetypeStatic}
+                      ${ZLibStatic}
+                      ${LibpngStatic}
                       ${CEFStatic}
 ) 
 ################################################################################
