@@ -49,6 +49,9 @@ target_include_directories(Content
     PUBLIC 
         ${CurrentDirectory}/Content
         ${CurrentDirectory}
+        ${AssimpHeaders}
+        ${NvttHeaders}
+
 )
 target_include_directories(Engine 
     PUBLIC 
@@ -89,6 +92,8 @@ target_link_libraries(Content
                       PUBLIC
                       Common
                       Zilch
+                      ${AssimpStatic}
+                      ${NvttStatic}
 )
 target_link_libraries(Engine
                       PUBLIC
