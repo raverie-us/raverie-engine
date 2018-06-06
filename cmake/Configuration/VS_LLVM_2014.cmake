@@ -12,6 +12,7 @@ include(${cmake_flags_dir}/MSVC_FLAGS.cmake)
 unset(common_flags)
 # override the flags because clangs hates some of the normal msvc flags
 set(common_flags     
+    -MP
     $<$<CONFIG:Debug>:-GS>
     $<$<CONFIG:Release>:-GS->
     $<$<CONFIG:Release>:-GL>
