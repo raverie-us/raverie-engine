@@ -1936,10 +1936,15 @@ void Cog::DispatchDown(StringParam eventId, Event* event)
   Hierarchy* hierarchy = this->has(Hierarchy);
   if (hierarchy)
   {
+    // Hierarchy can be modified during any event, copy the list of children before dispatching.
+    Array<Cog*> children;
     forRange(HierarchyList::sub_reference child, hierarchy->GetChildren())
+      children.PushBack(&child);
+
+    forRange(Cog* child, children.All())
     {
-      child.DispatchEvent(eventId, event);
-      child.DispatchDown(eventId, event);
+      child->DispatchEvent(eventId, event);
+      child->DispatchDown(eventId, event);
     }
   }
 }

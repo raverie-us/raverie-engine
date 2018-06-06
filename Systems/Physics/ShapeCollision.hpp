@@ -91,7 +91,7 @@ void GenerateArrayCastLookup(ArrayType& array)
 #define GenerateComplexCollisionTables(FunctionName, table)                 \
   FunctionName<MultiConvexMeshCollider>(table[Collider::cMultiConvexMesh]); \
   FunctionName<MeshCollider>(table[Collider::cMesh]);                       \
-  /*FunctionName<HeightMapCollider>(table[Collider::cHeightMap]);*/             \
+  FunctionName<HeightMapCollider>(table[Collider::cHeightMap]);             \
 
 //generate the collision table for checking collision between two colliders
 template <typename TableType>

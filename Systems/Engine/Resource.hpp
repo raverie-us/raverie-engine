@@ -237,6 +237,9 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
+
+  String ConvertToString(AnyParam input) override;
+  bool ConvertFromString(StringParam input, Any& output) override;
 };
 
 extern const String DataResourceExtension;

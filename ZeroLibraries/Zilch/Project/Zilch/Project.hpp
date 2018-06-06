@@ -64,6 +64,7 @@ namespace Zilch
     // Note that if we remove duplicates upon request, then this
     // may only be the first one sorted by the 'operator<' above
     const void* CodeUserData;
+    u64 CodeUserDataU64;
   };
 
   // A parameter in a function overload

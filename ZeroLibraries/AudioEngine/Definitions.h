@@ -33,6 +33,7 @@ namespace Audio
   };
 
   typedef Zero::Array<float> BufferType;
+  typedef Zero::Array<float>::range BufferRange;
 
   namespace AudioEventTypes
   {

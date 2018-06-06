@@ -189,9 +189,8 @@ namespace Audio
       CurrentNotes[note]->PushBack(newNote);
       newNote->Volume = volume;
 
-      for (unsigned i = 0; i < Harmonics.Size(); ++i)
+      forRange(HarmonicData& data, Harmonics.All())
       {
-        HarmonicData& data = Harmonics[i];
         newNote->AddHarmonic(frequency * data.FrequencyMultiplier, data.Volume, data.Envelope,
           data.WaveType);
       }
@@ -211,8 +210,8 @@ namespace Audio
     {
       if (CurrentNotes.FindValue(note, nullptr))
       {
-        for (unsigned i = 0; i < CurrentNotes[note]->Size(); ++i)
-          (*CurrentNotes[note])[i]->Stop();
+        forRange(AdditiveNote* note, CurrentNotes[note]->All())
+          note->Stop();
       }
     }
   }
@@ -228,9 +227,8 @@ namespace Audio
     {
       for (NotesMapType::valuerange allLists = CurrentNotes.Values(); !allLists.Empty(); allLists.PopFront())
       {
-        NotesListType& list = *allLists.Front();
-        for (unsigned i = 0; i < list.Size(); ++i)
-          list[i]->Stop();
+        forRange(AdditiveNote* note, allLists.Front()->All())
+          note->Stop();
       }
     }
   }
@@ -269,12 +267,13 @@ namespace Audio
         // If not finished, add samples from this note into the buffer
         else
         {
-          for (unsigned frame = 0; frame < bufferSize; frame += numberOfChannels)
+          BufferRange outputRange = outputBuffer->All();
+          while (!outputRange.Empty())
           {
             float sample = (*list[i])();
             // Copy sample to all channels
-            for (unsigned channel = 0; channel < numberOfChannels; ++channel)
-              (*outputBuffer)[frame + channel] += sample;
+            for (unsigned channel = 0; channel < numberOfChannels; ++channel, outputRange.PopFront())
+              outputRange.Front() += sample;
           }
         }
       }

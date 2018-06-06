@@ -585,6 +585,7 @@ namespace Zilch
       entry.Type = property->PropertyType->ToString();
       entry.ShortType = AutoCompleteInfo::GetShortTypeName(entry.Type);
       entry.CodeUserData = property->NameLocation.CodeUserData;
+      entry.CodeUserDataU64 = property->NameLocation.CodeUserDataU64;
       return false;
     }
     
@@ -598,6 +599,7 @@ namespace Zilch
       entry.Type = function->FunctionType->ToString();
       entry.ShortType = AutoCompleteInfo::GetShortTypeName(entry.Type);
       entry.CodeUserData = function->NameLocation.CodeUserData;
+      entry.CodeUserDataU64 = function->NameLocation.CodeUserDataU64;
       return false;
     }
   };

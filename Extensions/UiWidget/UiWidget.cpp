@@ -899,7 +899,7 @@ bool UiWidget::TabJump(KeyboardEvent* e)
   if(e->Key == Keys::Tab)
   {
     if(e->ShiftPressed)
-      TabJumpDirection(UiFocusDirection::Backwards);
+      TabJumpDirection(UiFocusDirection::Backward);
     else
       TabJumpDirection(UiFocusDirection::Forward);
 

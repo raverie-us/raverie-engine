@@ -94,11 +94,12 @@ namespace Audio
           else
           {
             // Translate samples to mono
+            BufferRange sampleRange = PreviousInputSamples.All();
             for (unsigned i = 0; i < totalPacketSamples; i += SystemOutputChannels)
             {
               float monoValue(0.0f);
-              for (unsigned j = 0; j < SystemOutputChannels; ++j)
-                monoValue += PreviousInputSamples[i + j];
+              for (unsigned j = 0; j < SystemOutputChannels; ++j, sampleRange.PopFront())
+                monoValue += sampleRange.Front();
               monoValue /= SystemOutputChannels;
               monoSamples.PushBack(monoValue);
             }

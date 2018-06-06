@@ -106,6 +106,11 @@ public:
   BoundType* EventType;
   /// Name identifier of the event, used by receiver since its connections aren't mapped
   String mEventId;
+
+  // Keeps handles alive until a safe time for destruction.
+  static Array<Delegate> sDelayDestructDelegates;
+  // Clears static array of delegates.
+  static void DelayDestructDelegates();
 };
 
 typedef InList<EventConnection, &EventConnection::DispatcherLink> DispatchList;

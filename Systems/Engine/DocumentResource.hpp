@@ -31,7 +31,7 @@ struct Completion
   String Name;
   String Description;
   String SignaturePathType;
-  Resource* AssociatedResource;
+  ResourceId AssociatedResourceId;
 };
 
 struct ParameterTip

@@ -913,7 +913,8 @@ namespace Audio
     // Check if we need to apply a volume change
     if (mInterpolatingVolume || !IsWithinLimit(mVolume, 1.0f, 0.01f))
     {
-      for (unsigned i = 0; i < samples.Size(); i += outputChannels)
+      BufferRange sampleRange = samples.All();
+      while (!sampleRange.Empty())
       {
         // If interpolating volume, get new value
         if (mInterpolatingVolume)
@@ -928,8 +929,8 @@ namespace Audio
         }
 
         // Adjust volume for all samples on this frame
-        for (unsigned j = 0; j < outputChannels; ++j)
-          samples[i + j] *= mVolume;
+        for (unsigned j = 0; j < outputChannels; ++j, sampleRange.PopFront())
+          sampleRange.Front() *= mVolume;
       }
     }
 
@@ -1083,12 +1084,12 @@ namespace Audio
     if (!Threaded)
       return nullptr;
 
-    for (unsigned i = 0; i < VolumeModList.Size(); ++i)
+    forRange(InstanceVolumeModifier* modifier, VolumeModList.All())
     {
-      if (!VolumeModList[i]->Active)
+      if (!modifier->Active)
       {
-        VolumeModList[i]->Reset(1.0f, 1.0f, (unsigned)0, (unsigned)0);
-        return VolumeModList[i];
+        modifier->Reset(1.0f, 1.0f, (unsigned)0, (unsigned)0);
+        return modifier;
       }
     }
 

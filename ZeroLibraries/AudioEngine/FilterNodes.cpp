@@ -465,9 +465,12 @@ namespace Audio
     // Apply filter
     bool outputCheck(false);
     filter->ProcessBuffer(InputSamples.Data(), outputBuffer->Data(), numberOfChannels, outputBufferSize);
-    for (unsigned i = 0; i < outputBufferSize && !outputCheck; ++i)
+
+    // Check for samples that are not zero
+    for (BufferRange outputRange = outputBuffer->All(); !outputRange.Empty() && !outputCheck; 
+      outputRange.PopFront())
     {
-      if ((*outputBuffer)[i] != 0.0f)
+      if (outputRange.Front() != 0.0f)
         outputCheck = true;
     }
 
@@ -986,12 +989,13 @@ namespace Audio
     if (!AccumulateInputSamples(bufferSize, numberOfChannels, listener))
       return false;
 
-    for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
+    BufferRange outputRange = outputBuffer->All(), inputRange = InputSamples.All();
+    while (!outputRange.Empty())
     {
-      for (unsigned j = 0; j < numberOfChannels; ++j)
+      for (unsigned j = 0; j < numberOfChannels; ++j, outputRange.PopFront(), inputRange.PopFront())
       {
-        (*outputBuffer)[i + j] = (InputSamples[i + j] * (1.0f - MultiplyGain
-          + (MultiplyGain * MultiplyNoise))) + (AddGain * AddNoise);
+        outputRange.Front() = (inputRange.Front() * (1.0f - MultiplyGain + 
+          (MultiplyGain * MultiplyNoise))) + (AddGain * AddNoise);
       }
 
       ++AddCount;
@@ -1135,14 +1139,15 @@ namespace Audio
     }
 
     // Go through all frames
-    for (unsigned frame = 0; frame < bufferSize; frame += numberOfChannels)
+    BufferRange outputRange = outputBuffer->All(), inputRange = InputSamples.All();
+    while (!outputRange.Empty())
     {
       float waveValue = sineWave->GetNextSample();
 
       // Multiply signal with modulator wave, taking into account gain and wet percent
-      for (unsigned channel = 0; channel < numberOfChannels; ++channel)
-        (*outputBuffer)[frame + channel] = (InputSamples[frame + channel] * waveValue * WetLevelValue)
-        + (InputSamples[frame + channel] * (1.0f - WetLevelValue));
+      for (unsigned channel = 0; channel < numberOfChannels; ++channel, outputRange.PopFront(), inputRange.PopFront())
+        outputRange.Front() = (inputRange.Front() * waveValue * WetLevelValue) + (inputRange.Front() 
+          * (1.0f - WetLevelValue));
     }
 
     AddBypass(outputBuffer);
