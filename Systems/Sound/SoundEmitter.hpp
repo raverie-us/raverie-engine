@@ -103,8 +103,8 @@ public:
   /// Within the EmitAngle the sound will be at full volume. The volume interpolates 
   /// logarithmically until it reaches the RearVolume value directly behind the object.
   bool mDirectional;
-  /// The angle of full volume sound for a directional SoundEmitter. An angle of 90, for example, 
-  /// will be centered at the object's front, extending 45 degrees to the left and right. 
+  /// The angle of full volume sound for a directional SoundEmitter, from 1 to 360. An angle of 90, 
+  /// for example, will be centered at the object's front, extending 45 degrees to the left and right. 
   float GetEmitAngle();
   void SetEmitAngle(float angleInDegrees);
   /// The volume of sound heard directly behind a directional SoundEmitter. It will only reach 
@@ -150,6 +150,7 @@ private:
   float mRearVolume;
   bool mIsPaused;
   unsigned mNodeID;
+  float mDebugArcDistance;
 
   HandleOf<SoundAttenuator> mAttenuator;
   SoundAttenuatorNode* mAttenuatorNode;
