@@ -1376,8 +1376,14 @@ void OpenglRenderer::DoRenderTaskRange(RenderTaskRange& taskRange)
       break;
 
       case RenderTaskType::RenderPass:
-      DoRenderTaskRenderPass((RenderTaskRenderPass*)task);
-      taskIndex += sizeof(RenderTaskRenderPass);
+      {
+        RenderTaskRenderPass* renderPass = (RenderTaskRenderPass*)task;
+        DoRenderTaskRenderPass(renderPass);
+        // RenderPass tasks can have multiple following task entries for sub RenderGroup settings.
+        // Have to index past all sub tasks.
+        taskIndex += sizeof(RenderTaskRenderPass) * (renderPass->mSubRenderGroupCount + 1);
+        i += renderPass->mSubRenderGroupCount;
+      }
       break;
 
       case RenderTaskType::PostProcess:
@@ -1424,23 +1430,24 @@ void OpenglRenderer::DoRenderTaskClearTarget(RenderTaskClearTarget* task)
 //**************************************************************************************************
 void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
 {
-  mViewportSize = IntVec2(task->mRenderSettings.mTargetsWidth, task->mRenderSettings.mTargetsHeight);
-  if (mViewportSize.x == 0 || mViewportSize.y == 0)
-    return;
+  // Create a map of RenderGroup id to task memory index for every sub group entry.
+  HashMap<int, size_t> taskIndexMap;
+  while (taskIndexMap.Size() < task->mSubRenderGroupCount)
+  {
+    size_t index = taskIndexMap.Size() + 1;
+    RenderTaskRenderPass* subTask = task + index;
+    if (taskIndexMap.ContainsKey(subTask->mRenderGroupIndex))
+    {
+      Error("Duplicate RenderGroup added.");
+      break;
+    }
+    taskIndexMap[subTask->mRenderGroupIndex] = index;
+  }
 
-  mShaderInputsId = task->mShaderInputsId;
-  mRenderPassName = task->mRenderPassName;
+  // Initialize to invalid index so state is set for the first object.
+  int currentTaskIndex = -1;
 
-  SetRenderSettings(task->mRenderSettings, mDriverSupport.mMultiTargetBlend);
-  mClipMode = task->mRenderSettings.mScissorMode == ScissorMode::Enabled;
-
-  // For easily resetting blend settings after overriding
-  mCurrentBlendSettings = task->mRenderSettings.mBlendSettings[0];
-
-  SetRenderTargets(task->mRenderSettings);
-
-  glViewport(0, 0, mViewportSize.x, mViewportSize.y);
-
+  // All ViewNodes under the base RenderGroup.
   IndexRange viewNodeRange = mViewBlock->mRenderGroupRanges[task->mRenderGroupIndex];
 
   for (uint i = viewNodeRange.start; i < viewNodeRange.end; ++i)
@@ -1448,6 +1455,43 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
     ViewNode& viewNode = mViewBlock->mViewNodes[i];
     FrameNode& frameNode = mFrameBlock->mFrameNodes[viewNode.mFrameNodeIndex];
 
+    // Get the index for this object's RenderGroup settings. Always default to the base task entry.
+    size_t index = taskIndexMap.FindValue(viewNode.mRenderGroupId, 0);
+
+    // Sub RenderGroups have unique render settings when a different task index is encountered.
+    // Or this is just the first set.
+    if (index != currentTaskIndex)
+    {
+      // Offsets to sub RenderGroup settings or just the base task.
+      RenderTaskRenderPass* subTask = task + index;
+
+      // Different RenderPass tasks are also made to denote RenderGroups to not render.
+      // Don't change state or render the object.
+      if (subTask->mRender == false)
+        continue;
+
+      currentTaskIndex = index;
+
+      // Flush potential pending draw call before changing state.
+      mStreamedVertexBuffer.FlushBuffer(true);
+
+      mViewportSize = IntVec2(subTask->mRenderSettings.mTargetsWidth, subTask->mRenderSettings.mTargetsHeight);
+
+      mShaderInputsId = subTask->mShaderInputsId;
+      mRenderPassName = subTask->mRenderPassName;
+
+      SetRenderSettings(subTask->mRenderSettings, mDriverSupport.mMultiTargetBlend);
+      mClipMode = subTask->mRenderSettings.mScissorMode == ScissorMode::Enabled;
+
+      // For easily resetting blend settings after overriding.
+      mCurrentBlendSettings = subTask->mRenderSettings.mBlendSettings[0];
+
+      SetRenderTargets(subTask->mRenderSettings);
+
+      glViewport(0, 0, mViewportSize.x, mViewportSize.y);
+    }
+
+    // Render the object.
     switch (frameNode.mRenderingType)
     {
       case RenderingType::Static:

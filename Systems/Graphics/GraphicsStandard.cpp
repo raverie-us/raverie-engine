@@ -142,11 +142,15 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeType(SpriteParticleSystem);
   ZilchInitializeType(SpriteSource);
   ZilchInitializeType(SpriteText);
+  ZilchInitializeType(SubRenderGroupPass);
   ZilchInitializeType(TextDefinition);
   ZilchInitializeType(Texture);
   ZilchInitializeType(TextureData);
   ZilchInitializeType(VertexBuffer);
   ZilchInitializeType(ZilchFragment);
+
+  // Dependent on RenderGroupList
+  ZilchInitializeType(ChildRenderGroupList);
 
   ZilchInitializeTypeAs(GraphicsStatics, "Graphics");
 

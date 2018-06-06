@@ -60,9 +60,19 @@ class RenderTaskRenderPass : public RenderTask
 {
 public:
   RenderSettings mRenderSettings;
+  // Index or id of the RenderGroup that these settings are for.
   uint mRenderGroupIndex;
+  // Name of the RenderPass fragment for shader lookups. Inputs are mapped when creating this task.
   String mRenderPassName;
+  // Id used to lookup all shader input data for the RenderPass fragment and all Materials
+  // that will be used in this render task.
   uint mShaderInputsId;
+  // If not zero, this is the number of contiguous RenderTaskRenderPass objects in memory
+  // after this one. The renderer must account for this.
+  uint mSubRenderGroupCount;
+  // Allows sub RenderGroups to be set as excluded from rendering.
+  // Only mRenderGroupIndex is valid when this is false.
+  bool mRender;
 };
 
 class RenderTaskPostProcess : public RenderTask
@@ -112,7 +122,7 @@ public:
   T* NewRenderTask();
 
   void AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
-  void AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputRangesId);
+  void AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputsId, uint subRenderGroupCount = 0, bool render = true);
   void AddRenderTaskPostProcess(RenderSettings& renderSettings, StringParam postProcessName, uint shaderInputsId);
   void AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialRenderData* materialRenderData, uint shaderInputsId);
   void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport);
@@ -150,6 +160,43 @@ public:
   uint mShaderInputsVersion;
 };
 
+/// Interface used to define unique render settings for a base RenderGroup and its sub RenderGroups.
+class SubRenderGroupPass : public SafeId32
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  SubRenderGroupPass(RenderTasksEvent* renderTasksEvent, RenderGroup& baseRenderGroup);
+
+  /// Resets interface back to the initial creation state with a given base RenderGroup.
+  void Reset(RenderGroup& baseRenderGroup);
+  /// Settings to use for the base or all sub RenderGroups that do not have specified settings.
+  /// Without defaults, the base or any sub RenderGroup without settings will not render.
+  void SetDefaultSettings(RenderSettings& defaultSettings, MaterialBlock& defaultPass);
+  /// Define the settings to use for a specific RenderGroup.
+  /// Given RenderGroup must be a child of the base RenderGroup, or the base itself, that this was initialized with.
+  void AddSubSettings(RenderSettings& subSettings, RenderGroup& subGroup, MaterialBlock& subPass);
+  /// Explicitely exclude a RenderGroup from rendering when there are default settings.
+  /// Given RenderGroup must be a child of the base RenderGroup, or the base itself, that this was initialized with.
+  void ExcludeSubRenderGroup(RenderGroup& subGroup);
+
+  // Internal
+  bool ValidateSettings(RenderSettings& renderSettings, MaterialBlock& renderPass);
+  bool ValidateRenderGroup(RenderGroup& renderGroup);
+
+  struct SubData
+  {
+    RenderSettings mRenderSettings;
+    HandleOf<RenderGroup> mRenderGroup;
+    MaterialBlock mRenderPass;
+    bool mRender;
+  };
+
+  RenderTasksEvent* mRenderTasksEvent;
+  HandleOf<RenderGroup> mBaseRenderGroup;
+  Array<SubData> mSubData;
+};
+
 /// Interface for adding tasks for the renderer, essentially defining a rendering pipeline.
 class RenderTasksEvent : public Event
 {
@@ -157,6 +204,7 @@ public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
   RenderTasksEvent();
+  ~RenderTasksEvent();
 
   /// Object with the CameraViewport component that this event is getting tasks for.
   Cog* GetCameraViewportCog();
@@ -171,6 +219,12 @@ public:
   /// Returns a RenderTarget for use when adding render tasks. Target only valid during this event.
   /// Will render to the given texture instead of an internally managed texture.
   HandleOf<RenderTarget> GetRenderTarget(HandleOf<Texture> texture);
+
+  /// Creates the interface used to define unique render settings for a base RenderGroup and its sub RenderGroups.
+  /// The given RenderGroup is used to define the hierarchy, or sub hierarchy, that should be rendered.
+  /// The given RenderGroup also defines the sort order for all objects that are within its hierarchy.
+  /// Returned SubRenderGroupPass is only valid during this event.
+  HandleOf<SubRenderGroupPass> CreateSubRenderGroupPass(RenderGroup& baseGroup);
 
   /// Initializes all the internal texture data for the given RenderTargets.
   void AddRenderTaskClearTarget(RenderTarget* colorTarget, Vec4 color);
@@ -199,6 +253,10 @@ public:
   void AddRenderTaskRenderPass(RenderSettings& renderSettings, RenderGroup& renderGroup, MaterialBlock& renderPass);
   /// Renders a group of objects with the given settings. The RenderPass fragment defines what data is written to RenderTargets.
   void AddRenderTaskRenderPass(RenderSettings& renderSettings, GraphicalRangeInterface& graphicalRange, MaterialBlock& renderPass);
+
+  /// Renders all objects within a RenderGroup hierarchy, sorted in the order defined by the base RenderGroup,
+  /// and can use unique render settings for each RenderGroup in the hierarchy.
+  void AddRenderTaskSubRenderGroupPass(SubRenderGroupPass& subRenderGroupPass);
 
   /// Invokes the pixel shader for every pixel of the RenderTargets.
   void AddRenderTaskPostProcess(RenderTarget* renderTarget, Material& material);
@@ -231,6 +289,9 @@ public:
   
   GraphicsSpace* mGraphicsSpace;
   Camera* mCamera;
+
+  // All created SubRenderGroupPasses have to be destroyed when the event is done.
+  Array<SubRenderGroupPass*> mSubRenderGroupPasses;
 };
 
 //**************************************************************************************************

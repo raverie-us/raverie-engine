@@ -63,7 +63,10 @@ public:
   // Use for Extract only
   GraphicalEntry* mGraphicalEntry;
 
+  // Index in the FrameBlock for this object's FrameNode.
   int mFrameNodeIndex;
+  // Id used to map unique render settings for sub groups.
+  int mRenderGroupId;
 
   // View dependent transforms
   Mat4 mLocalToView;
