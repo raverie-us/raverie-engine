@@ -1799,11 +1799,11 @@ void Tangent::OnRightMouseUp(MouseEvent* e)
   menu->SetBelowMouse(mouse, Pixels(0,0));
 
   // Create the split button
-  ContextMenuItem* itemSplit = new ContextMenuItem(menu);
+  ContextMenuEntry* itemSplit;
   if(mControlPoint->TangentsSplit())
-    itemSplit->SetName("Join");
+    itemSplit = menu->AddEntry("Join");
   else
-    itemSplit->SetName("Split");
+    itemSplit = menu->AddEntry("Split");
   Zero::Connect(itemSplit, Events::MenuItemSelected, mControlPoint, 
                 &ControlPoint::OnSplitTangents);
 

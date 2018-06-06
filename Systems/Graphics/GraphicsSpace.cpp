@@ -278,22 +278,59 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
     // get view block data
     camera.GetViewData(viewBlock);
 
-    uint totalCounts = 0;
-    // setup ranges for accessing render groups
+    uint totalViewNodesNeeded = 0;
+    Array<IndexRange> groupRanges;
+    size_t indexRangeIndex = 0;
+    IndexRange indexRange(0, 0);
+    if (camera.mGraphicalIndexRanges.Size())
+      indexRange = camera.mGraphicalIndexRanges[indexRangeIndex];
+
+    // Setup ranges for accessing RenderGroup entries.
     for (uint i = 0, rangeStart = 0; i < camera.mRenderGroupCounts.Size(); ++i)
     {
-      totalCounts += camera.mRenderGroupCounts[i];
+      size_t groupCount = camera.mRenderGroupCounts[i];
+      uint rangeEnd = rangeStart;
 
-      uint rangeEnd = rangeStart + camera.mRenderGroupCounts[i];
+      // Graphical entries are guaranteed in RenderGroup order within mGraphicalIndexRanges,
+      // but the index ranges do not have to be adjacent with each other.
+      // If the current range is depleted then the RenderGroup entries are in the next range.
+      // This is a loop so that empty ranges in mGraphicalIndexRanges do not cause problems,
+      // even though there aren't any cases where they should be added.
+      while (indexRange.start + groupCount > indexRange.end)
+      {
+        // This case will never happen unless something is implemented incorrectly.
+        // Setting groupCount to 0 will allow viewBlock.mRenderGroupRanges to have the
+        // correct number of entries, preventing the renderer from accessing out of bounds.
+        if (indexRangeIndex + 1 >= camera.mGraphicalIndexRanges.Size())
+        {
+          Error("Camera has missing or corrupted index ranges for graphical entries.");
+          groupCount = 0;
+          break;
+        }
+        ++indexRangeIndex;
+        indexRange = camera.mGraphicalIndexRanges[indexRangeIndex];
+      }
+
+      // If there are entries for this RenderGroup and this camera's render tasks are using it.
+      // If not used, no unneeded data will be extraced for these entries.
+      if (groupCount > 0 && camera.mUsedRenderGroupIds.Contains(i))
+      {
+        rangeEnd += groupCount;
+        totalViewNodesNeeded += groupCount;
+        groupRanges.PushBack(IndexRange(indexRange.start, indexRange.start + groupCount));
+      }
+
+      indexRange.start += groupCount;
+
       viewBlock.mRenderGroupRanges.PushBack(IndexRange(rangeStart, rangeEnd));
       rangeStart = rangeEnd;
     }
 
     // allocate view nodes
-    viewBlock.mViewNodes.Reserve(totalCounts);
+    viewBlock.mViewNodes.Reserve(totalViewNodesNeeded);
 
     // make nodes for every graphical entry
-    forRange (IndexRange& indexRange, camera.mGraphicalIndexRanges.All())
+    forRange (IndexRange& indexRange, groupRanges.All())
     {
       uint start = indexRange.start;
       uint size = indexRange.end - indexRange.start;

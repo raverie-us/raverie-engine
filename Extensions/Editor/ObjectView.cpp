@@ -91,10 +91,12 @@ ValueEditor* CreateLockEditor(Composite* parent, AnyParam data, u32 flags)
 }
 
 
-DeclareEnum3(FilterSearchMode,
+DeclareEnum5(FilterSearchMode,
+  BroadSearch,
   ObjectName,
   ComponentName,
-  ResourceName);
+  ResourceName,
+  ArchetypeName);
 
 class ObjectViewFilter : public DataSourceFilter
 {
@@ -104,7 +106,7 @@ public:
 
   ObjectViewFilter()
   {
-    mSearchMode = FilterSearchMode::ObjectName;
+    mSearchMode = FilterSearchMode::BroadSearch;
   }
 
   void Filter(StringParam filterString) override
@@ -124,16 +126,26 @@ public:
     FilterSearchMode::Enum searchMode = mSearchMode;
 
     Rune rune = SubFilterString.Front();
-    if(rune == '.')
+
+    if(rune == '#')
+    {
+      SubFilterString.PopFront();
+      searchMode = FilterSearchMode::ObjectName;
+    }
+    else if(rune == '.')
     {
       SubFilterString.PopFront();
       searchMode = FilterSearchMode::ComponentName;
     }
-
-    if(rune == '$')
+    else if(rune == '$')
     {
       SubFilterString.PopFront();
       searchMode = FilterSearchMode::ResourceName;
+    }
+    else if(rune == '@')
+    {
+      SubFilterString.PopFront( );
+      searchMode = FilterSearchMode::ArchetypeName;
     }
 
     if(SubFilterString.Empty())
@@ -142,25 +154,54 @@ public:
     // Perform the search
     switch(searchMode)
     {
-    case FilterSearchMode::ObjectName:
+      case FilterSearchMode::BroadSearch:
+      {
+        BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::BroadSearch> filter(this);
+        FilterNodes(filter, root);
+        return;
+      }
+      case FilterSearchMode::ObjectName:
       {
         BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterNames> filter(this);
         FilterNodes(filter, root);
         return;
       }
-    case FilterSearchMode::ComponentName:
+      case FilterSearchMode::ComponentName:
       {
         BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterComponentTypes> filter(this);
         FilterNodes(filter, root);
         return;
       }
-    case FilterSearchMode::ResourceName:
+      case FilterSearchMode::ResourceName:
       {
         BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterResourceUsage> filter(this);
         FilterNodes(filter, root);
         return;
       }
+      case FilterSearchMode::ArchetypeName:
+      {
+        BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterArchetypeHierarchy> filter(this);
+        FilterNodes(filter, root);
+        return;
+      }
     }
+  }
+
+  bool BroadSearch(DataEntry* entry)
+  {
+    return FilterNames(entry) || FilterArchetypeHierarchy(entry);
+  }
+
+  bool FilterNames(DataEntry* entry)
+  {
+    Object* object = (Object*)entry;
+    Cog* cog = Type::DynamicCast<Cog*>(object);
+
+    if(cog == nullptr)
+      return false;
+
+    int priority = PartialMatch(SubFilterString, cog->GetName( ).All( ), CaseInsensitiveCompare);
+    return priority != cNoMatch;
   }
 
   bool FilterComponentTypes(DataEntry* entry)
@@ -213,20 +254,36 @@ public:
         }
       }
     }
-
     return false;
   }
 
-  bool FilterNames(DataEntry* entry)
+  bool FilterArchetypeHierarchy(DataEntry* entry)
   {
     Object* object = (Object*)entry;
     Cog* cog = Type::DynamicCast<Cog*>(object);
 
-    if (cog == nullptr)
+    Archetype* archetype;
+    if(cog == nullptr || (archetype = cog->GetArchetype()) == nullptr)
       return false;
 
-    int priority = PartialMatch(SubFilterString, cog->GetName().All(), CaseInsensitiveCompare);
-    return priority != cNoMatch;
+    int priority = PartialMatch(SubFilterString, archetype->Name.All(), CaseInsensitiveCompare);
+    bool result = (priority != cNoMatch);
+
+    // No need to walk through archetype inheritance if the object's
+    // archetype already matches.
+    if(result)
+      return true;
+
+    forRange(Resource* baseResource, archetype->GetBaseResources())
+    {
+      priority = PartialMatch(SubFilterString, baseResource->Name.All(), CaseInsensitiveCompare);
+      result |= (priority != cNoMatch);
+
+      if(result)
+        break;
+    }
+
+    return result;
   }
 
 };
@@ -242,7 +299,7 @@ public:
   {
     mObjectFilter = new ObjectViewFilter();
     mFiltered = mObjectFilter;
-    mSearchField->SetHintText("Search by object name... ");
+    mSearchField->SetHintText("Search by name or archetype... ");
     ConnectThisTo(mIcon, Events::LeftClick, OnMouseClick);
     ConnectThisTo(mIcon, Events::RightClick, OnMouseClick);
     mIcon->SetColor(ObjectViewUi::SearchIconColor);
@@ -259,31 +316,47 @@ public:
     ContextMenu* menu = new ContextMenu(this);
     Mouse* mouse = Z::gMouse;
     menu->SetBelowMouse(mouse, Pixels(0,0) );
-
-    ConnectMenu(menu, "By Name", OnName);
+ 
+    ConnectMenu(menu, "Broad Search", OnBroadSearch);
+    ConnectMenu(menu, "By Name (#)", OnName);
     ConnectMenu(menu, "By Component (.)", OnComponent);
     ConnectMenu(menu, "By Resource ($)", OnResource);
+    ConnectMenu(menu, "By Archetype (@)", OnArchetype);
+  }
+
+  void OnBroadSearch(Event* event)
+  {
+    mSearchField->SetText(String());
+    mSearchField->SetHintText("Search by name or archetype...");
+    mObjectFilter->mSearchMode = FilterSearchMode::BroadSearch;
   }
 
   void OnName(Event* event)
   {
     mSearchField->SetText(String());
-    mSearchField->SetHintText("Search by object name..");
+    mSearchField->SetHintText("Search by name...");
     mObjectFilter->mSearchMode = FilterSearchMode::ObjectName;
   }
 
   void OnComponent(Event* event)
   {
     mSearchField->SetText(String());
-    mSearchField->SetHintText("Search by component name..");
+    mSearchField->SetHintText("Search by component...");
     mObjectFilter->mSearchMode = FilterSearchMode::ComponentName;
   }
 
   void OnResource(Event* event)
   {
     mSearchField->SetText(String());
-    mSearchField->SetHintText("Search by resource name..");
+    mSearchField->SetHintText("Search by resource...");
     mObjectFilter->mSearchMode = FilterSearchMode::ResourceName;
+  }
+
+  void OnArchetype(Event* event)
+  {
+    mSearchField->SetText(String());
+    mSearchField->SetHintText("Search by archetype...");
+    mObjectFilter->mSearchMode = FilterSearchMode::ArchetypeName;
   }
 };
 
@@ -1415,10 +1488,11 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
     if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
       ConnectMenu(menu, "Restore Child Order", OnRestoreChildOrder);
 
+
     menu->AddDivider();
     // Set our icon to the arrow indicating a sub menu
-    ContextMenuItem* createSubMenu = menu->CreateContextItem("Create", "PropArrowRight");
-    createSubMenu->LoadMenu("Create");
+    ContextMenuEntry* createSubMenu = menu->AddEntry("Create");
+    createSubMenu->AddEntry(new ContextMenuEntryMenu("Create"));
 
     MetaSelection* selection = Z::gEditor->GetSelection();
     // Don't create objects as children if multiple objects are selected
@@ -1427,6 +1501,12 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
       ConnectThisTo(createSubMenu, Events::MouseEnter, OnMenuMouseEnter);
       ConnectThisTo(createSubMenu, Events::FocusLost, OnMenuFocusLost);
     }
+
+    // Send out the ContextMenuEntry tree root to potentially alter the context menus structure/items
+    ContextMenuEvent event(menu->GetRootEntry());
+    cog->DispatchEvent(Events::ContextMenuCreated, &event);
+    cog->DispatchUp(Events::ContextMenuCreated, &event);
+    this->DispatchEvent(Events::ContextMenuCreated, &event);
   }
   else
   {
@@ -1442,7 +1522,7 @@ void ObjectView::OnRightMouseUp(MouseEvent* event)
     return;
 
   ContextMenu* menu = new ContextMenu(this);
-  menu->LoadMenu("Create");
+  menu->AddZeroContextMenu("Create");
   menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 

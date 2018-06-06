@@ -171,7 +171,7 @@ void PoseNode::PrintNode(uint tabs)
 //-------------------------------------------------------------- Basic Animation
 ZilchDefineType(BasicAnimation, builder, type)
 {
-  ZilchBindGetterSetterProperty(Animation)->Add(new EditorResource());
+  ZilchBindGetterSetterProperty(Animation)->Add(new MetaEditorResource());
   ZilchBindFieldProperty(mPlayMode);
 }
 

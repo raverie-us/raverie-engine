@@ -27,7 +27,7 @@ public:
   void Generate(ContentInitializer& initializer) override;
 
   void ComputeTransforms();
-
+  bool mCollapsePivots;
   Vec3 mOriginOffset;
   float mScaleFactor;
   bool mChangeBasis;

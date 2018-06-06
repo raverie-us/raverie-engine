@@ -1742,7 +1742,7 @@ ZilchDefineType(RichAnimationBuilder, builder, type)
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::CallSetDefaults);
 
-  ZilchBindGetterSetterProperty(PreviewArchetype)->Add(new EditorResource(false, true));
+  ZilchBindGetterSetterProperty(PreviewArchetype)->Add(new MetaEditorResource(false, true));
 }
 
 //******************************************************************************

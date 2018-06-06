@@ -165,13 +165,13 @@ ZilchDefineType(TilePaletteView, builder, type)
   // Can't bind base or composite properties will be exposed
   //BindBase(EventObject);
 
-  ZilchBindGetterSetterProperty(TilePalette)->Add(new EditorResource(true, false));
+  ZilchBindGetterSetterProperty(TilePalette)->Add(new MetaEditorResource(true, false));
 
   ZilchBindGetterSetterProperty(Archetype);
 
-  ZilchBindGetterSetterProperty(Sprite)->Add(new EditorResource(true, true));
+  ZilchBindGetterSetterProperty(Sprite)->Add(new MetaEditorResource(true, true));
 
-  ZilchBindGetterSetterProperty(Collision)->Add(new EditorResource(true, true, "TileMesh"));
+  ZilchBindGetterSetterProperty(Collision)->Add(new MetaEditorResource(true, true, "TileMesh"));
 
   ZilchBindGetterSetterProperty(Mergeable);
 }

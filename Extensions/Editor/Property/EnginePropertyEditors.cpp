@@ -1591,7 +1591,7 @@ class PropertyEditorResource : public DirectProperty
 public:
   typedef PropertyEditorResource ZilchSelf;
   Any mVariantValue;
-  EditorResource* mMetaEdit;
+  MetaEditorResource* mMetaEdit;
   ResourceManager* mResourceManager;
   ResourceEditor* mEditor;
   // Storing a pointer to this is safe because when meta is changed, the entire property grid
@@ -1606,7 +1606,7 @@ public:
     mDefSet = initializer.Parent->GetDefinitionSet();
     mDefSet = mDefSet->GetDefinitionSet("PropertyGrid");
 
-    mMetaEdit = mProperty->HasInherited<EditorResource>();
+    mMetaEdit = mProperty->HasInherited<MetaEditorResource>();
 
     mResourceType = Type::GetBoundType(initializer.Property->PropertyType);
     mResourceManager = Z::gResources->Managers.FindValue(mResourceType->Name, nullptr);
@@ -1837,6 +1837,13 @@ public:
     }
   }
 
+  bool OnSearchFilter(SearchViewResult& result)
+  {
+    Handle object = mNode->mObject;
+    Resource* resource = (Resource*)result.Data;
+    return mMetaEdit->FilterPropertySearchResult(object, mProperty, resource, result.mStatus);
+  }
+
   void OnLeftClick(Event* event)
   {
     if(mProperty->IsReadOnly())
@@ -1859,12 +1866,16 @@ public:
       if(mMetaEdit && !mMetaEdit->FilterTag.Empty())
         searchView->AddTag(mMetaEdit->FilterTag);
 
-      searchView->mSearch->SearchProviders.PushBack(GetResourceSearchProvider());
+      SearchProvider* searchProvider = GetResourceSearchProvider();
+      if(mMetaEdit)
+        searchProvider->SetCallbackFilter<ZilchSelf, &ZilchSelf::OnSearchFilter>(this);
+      searchView->mSearch->SearchProviders.PushBack(searchProvider);
 
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
       searchView->Search(String());
-      ConnectThisTo(searchView, Events::SearchPreview, OnSearchPreview);
+      if(mMetaEdit == nullptr || mMetaEdit->SearchPreview)
+        ConnectThisTo(searchView, Events::SearchPreview, OnSearchPreview);
       ConnectThisTo(searchView, Events::SearchCompleted, OnSearchCompleted);
       ConnectThisTo(searchView, Events::SearchCanceled, OnSearchCanceled);
 
@@ -1879,12 +1890,18 @@ public:
     if (mDestroyed)
       return;
 
+    if (event->Element->mStatus.Failed())
+      return;
+
     bool preview = true;
     SetResource((Resource*)event->Element->Data, preview);
   }
 
   void OnSearchCompleted(SearchViewEvent* event)
   {
+    if (event->Element->mStatus.Failed())
+      return;
+
     EndPreviewChanges();
     SetResource((Resource*)event->Element->Data);
     mActiveSearch.SafeDestroy();
@@ -2507,7 +2524,7 @@ void RegisterEngineEditors()
   //PropEditors->PropertyEditorMap["Cog"] = new PropertyGridTypeData(&CreateProperty<PropertyEditorCogRef>);
 
   ZilchTypeId(Resource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
-  ZilchTypeId(EditorResource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
+  ZilchTypeId(MetaEditorResource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
   ZilchTypeId(CogArchetypeExtension)->Add(new MetaPropertyEditor(&CreateProperty<PropertyArchetype>));
   ZilchTypeId(RenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty< ResourceListEditor<RenderGroupList> >));
   ZilchTypeId(MaterialList)->Add(new MetaPropertyEditor(&CreateProperty< ResourceListEditor<MaterialList> >));

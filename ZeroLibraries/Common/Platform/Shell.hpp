@@ -138,6 +138,7 @@ namespace Keys
     F12,
 
     //Special Keys
+    Insert,
     Delete,
     Back,
     Home,

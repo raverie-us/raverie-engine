@@ -90,7 +90,7 @@ ZilchDefineType(Cog, builder, type)
   // Properties
   ZilchBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
   ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension())->Add(new CogArchetypePropertyFilter());
-  ZilchBindGetterProperty(BaseArchetype)->Add(new EditorResource(false, false, "", true));
+  ZilchBindGetterProperty(BaseArchetype)->Add(new MetaEditorResource(false, false, "", true));
 
   ZilchBindGetter(Space);
   ZilchBindGetter(LevelSettings);

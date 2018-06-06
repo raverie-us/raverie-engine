@@ -23,6 +23,7 @@ public:
   String ExtractDataFromNodesRescursive(aiNode* node, String parentName);
   void SingleMeshHierarchyEntry(HierarchyData& hierarchyData, uint meshIndex);
   void MultipleMeshsHierarchicalEntry(HierarchyData& hierarchyData, aiNode* node);
+  void FindAnimationNodes();
 
   void ComputeMeshTransforms();
   bool UpdateBuilderMetaData();
@@ -49,7 +50,7 @@ public:
   String mBaseMeshName;
   MeshDataMap mMeshDataMap;
   HierarchyDataMap mHierarchyDataMap;
-
+  AnimationNodeRedirectMap mAnimationRedirectMap;
   // An every increasing value appended to node names to result in unique names in the hierarchy
   uint mUniquifyingIndex;
 };

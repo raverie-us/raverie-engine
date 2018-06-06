@@ -21,7 +21,7 @@ ZilchDefineType(DefaultGameSetup, builder, type)
   ZeroBindDocumented();
   ZeroBindSetup(SetupMode::CallSetDefaults);
 
-  EditorResource* editorResource = new EditorResource();
+  MetaEditorResource* editorResource = new MetaEditorResource();
   editorResource->FilterTag = ZilchTypeId(Space)->Name;
   ZilchBindGetterSetterProperty(StartingSpace)->Add(editorResource);
 

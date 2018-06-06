@@ -57,6 +57,7 @@ ProcessInput(SDL_SCANCODE_F10, SDLK_F10,Keys::F10)
 ProcessInput(SDL_SCANCODE_F11, SDLK_F11,Keys::F11)
 ProcessInput(SDL_SCANCODE_F12, SDLK_F12,Keys::F12)
 
+ProcessInput(SDL_SCANCODE_INSERT, SDLK_INSERT, Keys::Insert)
 ProcessInput(SDL_SCANCODE_DELETE, SDLK_DELETE, Keys::Delete)
 ProcessInput(SDL_SCANCODE_HOME, SDLK_HOME, Keys::Home)
 ProcessInput(SDL_SCANCODE_END, SDLK_END, Keys::End)

@@ -716,6 +716,7 @@ void LibraryView::OnTileViewRightClick(TileViewEvent* event)
 void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex index)
 {
   mCommandIndices.Clear();
+
   ContextMenu* menu = new ContextMenu(objectToAttachTo);
   Mouse* mouse = Z::gMouse;
 
@@ -784,7 +785,7 @@ void LibraryView::OnRightMouseUp(MouseEvent* event)
   }
 
   // If a specific resource is not found pop up the generic add resources menu
-  menu->LoadMenu("Resources");
+  menu->AddZeroContextMenu("Resources");
   menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 
@@ -1250,9 +1251,9 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
       buttonTitle.Append("Add ");
       buttonTitle.Append(boundType->Name);
 
-      ContextMenuItem* item = new ContextMenuItem(menu, buttonTitle.ToString());
-      ConnectThisTo(item, Zero::Events::MenuItemSelected, OnAddResource);
-      item->mContextData = Any(static_cast<ReflectionObject*>(boundType));
+      ContextMenuEntry* entry = menu->AddEntry(buttonTitle.ToString());
+      ConnectThisTo(entry, Zero::Events::MenuItemSelected, OnAddResource);
+      entry->mContextData = Any(static_cast<ReflectionObject*>(boundType));
       return true;
      }
    }
@@ -1263,11 +1264,11 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
 //******************************************************************************
 void LibraryView::OnAddResource(ObjectEvent* event)
 {
-  ContextMenuItem* item = (ContextMenuItem*)event->Source;
+  ContextMenuEntry* entry = (ContextMenuEntry*)event->Source;
   AddResourceWindow* resourceWindow = OpenAddWindow(nullptr);
-  if (item->mContextData.IsNotNull())
+  if (entry->mContextData.IsNotNull())
   {
-    BoundType* resource = item->mContextData.Get<BoundType*>();
+    BoundType* resource = entry->mContextData.Get<BoundType*>();
     resourceWindow->SelectResourceType(resource);
 
     TagList tags = mSearch->ActiveTags;

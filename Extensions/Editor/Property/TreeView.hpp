@@ -33,27 +33,31 @@ DeclareEnum3(ColumnType,
              Sizeable); // The size will remain unchanged unless 
                         // the user resizes it by dragging the header
 
+DeclareEnum2(ColumnIconSizePolicy,
+             // Icon size will fill the header
+             Auto,
+             // Icon size will fill the specified size [ie, independent of header size]
+             Custom);
+
+//---------------------------------------------------------------- Column Format
 /// Format for each Column in each Row
 struct ColumnFormat
 {
-  ColumnFormat()
-  {
-    ColumnType = ColumnType::Flex;
-    Index = 0;
-    FlexSize = 1.0;
-    MinWidth = Pixels(16.0f);
-    Editable = false;
-    StartX = 0.0f;
-    FixedSize = Pixels(1, 1);
-    CurrSize = Pixels(1, 1);
-    Flags = 0;
-  }
+  ColumnFormat();
 
   /// Column Index
   int Index;
 
   // The first column that is not Fixed size will absorb the hierarchy
   ColumnType::Type ColumnType;
+
+  ColumnIconSizePolicy::Type IconSizePolicy;
+
+  /// If ColumnIconSizePolicy is custom, then this size will be clamped to the
+  /// column's FixedSize.
+  Vec2 IconSize;
+
+  Vec4 IconColor;
 
   /// Fixed size of the Column.
   Vec2 FixedSize;
@@ -244,7 +248,7 @@ public:
   ColumnHeader(TreeView* tree, ColumnFormat* format);
 
   void SetText(StringParam name);
-  void SetIcon(StringParam iconName);
+  void SetIcon(ColumnFormat& format);
 
   void UpdateTransform();
 

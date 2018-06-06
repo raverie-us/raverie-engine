@@ -55,7 +55,8 @@ public:
 class DirectProperty : public PropertyWidget
 {
 public:
-  typedef DirectProperty ZilchSelf;
+  ZilchDeclareType(DirectProperty, TypeCopyMode::ReferenceType);
+
   DirectProperty(PropertyWidgetInitializer& initializer);
 
   /// Returns whether or not the value is valid. For example, it could be

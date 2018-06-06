@@ -39,14 +39,40 @@ public:
   SearchViewResult* Element;
 };
 
+class SearchProviderFilter
+{
+public:
+  virtual bool FilterResult(SearchViewResult& result) = 0;
+};
+
+template <typename T, bool (T::*Func)(SearchViewResult& result)>
+class SearchProviderFilterMethod : public SearchProviderFilter
+{
+public:
+  SearchProviderFilterMethod(T* instance)
+    : mInstance(instance)
+  {
+
+  }
+
+  bool FilterResult(SearchViewResult& result) override
+  {
+    return (mInstance->*Func)(result);
+  }
+
+  T* mInstance;
+};
+
 /// Interface to providing search elements and execute matching.
 class SearchProvider
 {
 public:
+  SearchProvider() : mFilter(nullptr) {}
+
   //Virtual Destructor for cleanup 
-  virtual ~SearchProvider(){};    
+  virtual ~SearchProvider(){}
   //Collect Search Results
-  virtual void Search(SearchData& search){};
+  virtual void Search(SearchData& search){}
   //Get a type to display
   virtual String GetType(SearchViewResult& element){return String();}
   //Get an small icon to display
@@ -57,6 +83,17 @@ public:
   virtual void RunCommand(SearchView* searchView, SearchViewResult& element){};
   //Create a preview widget
   virtual Composite* CreatePreview(Composite* parent, SearchViewResult& element){return NULL;}
+
+  virtual bool FilterResult(SearchViewResult& result);
+
+  template <typename T, bool (T::*Func)(SearchViewResult& result)>
+  void SetCallbackFilter(T* instance)
+  {
+    mFilter = new SearchProviderFilterMethod<T, Func>(instance);
+  }
+
+  // This allows for an extra step that filters what a search provider would normally return.
+  SearchProviderFilter* mFilter;
 };
 
 /// Possible search match element

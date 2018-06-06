@@ -790,6 +790,10 @@ ResourceTablePreview::ResourceTablePreview(PreviewWidgetInitializer& initializer
   mGroup = new PreviewWidgetGroup(this);
   ResourceTable* table = initializer.Object.Get<ResourceTable*>();
 
+  // Prevent infinite loops of resource tables of resource tables
+  if(table->mResourceType == ZilchTypeId(ResourceTable)->Name)
+    return;
+
   uint size = table->Size();
   size = Math::Min(size, (uint)9);
   for (uint i = 0; i < size; ++i)
@@ -943,7 +947,7 @@ void RegisterEditorTileViewWidgets()
   previewFactory->Creators["NetChannelConfig"] =  PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<NetworkingPreview>);
 
   //Cog Object
-  previewFactory->Creators["Cog"] =             PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<CogPreview>);
+  previewFactory->Creators["Cog"] =               PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<CogPreview>);
 }
 
 }//namespace Zero

@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "UiScrollArea"
+		var ResourceId = 0x59af23a7ee82aa49
+	}
+}

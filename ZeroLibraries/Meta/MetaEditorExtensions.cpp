@@ -122,21 +122,46 @@ EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam 
 
 //---------------------------------------------------------------------------------- Editor Resource
 //**************************************************************************************************
-ZilchDefineType(EditorResource, builder, type)
+ZilchDefineType(MetaEditorResource, builder, type)
 {
   ZilchBindField(FilterTag)->AddAttribute(PropertyAttributes::cOptional);
   ZilchBindField(AllowAdd)->AddAttribute(PropertyAttributes::cOptional);
   ZilchBindField(AllowNone)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindField(SearchPreview)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 //**************************************************************************************************
-EditorResource::EditorResource(bool allowAdd, bool allowNone, StringParam filterTag, bool forceCompact)
+MetaEditorResource::MetaEditorResource(bool allowAdd, bool allowNone, StringParam filterTag,
+                                       bool forceCompact, bool searchPreview)
   : FilterTag(filterTag)
   , AllowAdd(allowAdd)
   , AllowNone(allowNone)
   , ForceCompact(forceCompact)
+  , SearchPreview(searchPreview)
+  , Filter(nullptr)
 {
 
+}
+
+//**************************************************************************************************
+MetaEditorResource::MetaEditorResource(SearchFilter filter)
+  : AllowAdd(false)
+  , AllowNone(false)
+  , FilterTag("")
+  , ForceCompact(false)
+  , SearchPreview(true)
+  , Filter(filter)
+{
+
+}
+
+//**************************************************************************************************
+bool MetaEditorResource::FilterPropertySearchResult(HandleParam object, Property* property,
+                                                    HandleParam result, Status& status)
+{
+  if (Filter)
+    return Filter(object, property, result, status);
+  return true;
 }
 
 //----------------------------------------------------------------------------- Meta Property Filter
