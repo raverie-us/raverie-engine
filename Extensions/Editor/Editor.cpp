@@ -1523,13 +1523,13 @@ bool Editor::RequestQuit(bool isRestart)
     MessageBox* box;
     if (isRestart)
     {
-      const cstr MBSaveRestartCancel[] = { "Save and Restart", "Restart without Saving", "Cancel", "\0" };
+      const cstr MBSaveRestartCancel[] = { "Save and Restart", "Restart without Saving", "Cancel", nullptr };
       box = MessageBox::Show("Restart Confirmation", "Save all changes to levels, scripts, and resources?", MBSaveRestartCancel);
       ConnectThisTo(box, Events::MessageBoxResult, OnSaveRestartMessageBox);
     }
     else
     {
-      const cstr MBSaveQuitCancel[] = { "Save and Quit", "Quit without Saving", "Cancel", "\0" };
+      const cstr MBSaveQuitCancel[] = { "Save and Quit", "Quit without Saving", "Cancel", nullptr };
       box = MessageBox::Show("Quit Confirmation", "Save all changes to levels, scripts, and resources?", MBSaveQuitCancel);
       ConnectThisTo(box, Events::MessageBoxResult, OnSaveQuitMessageBox);
     }
