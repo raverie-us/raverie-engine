@@ -146,6 +146,12 @@ static int gConditionalFalseConstant = 0;
     return whatToReturn;                         \
   } } while(gConditionalFalseConstant)
 
+#define ContinueIf(Expression, ...)              \
+  { if(Expression) { WarnIf(Expression, __VA_ARGS__); continue; } }
+
+#define BreakIf(Expression, ...)                 \
+  { if(Expression) { WarnIf(Expression, __VA_ARGS__); break; } }
+
 #define ReturnFileErrorIf(Expression , whatToReturn , file , Line , ...)  \
   do { if(Expression) {                                                   \
     FileErrorIf(Expression, file , Line , __VA_ARGS__);                   \

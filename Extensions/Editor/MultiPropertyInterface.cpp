@@ -24,6 +24,7 @@ Handle GetActingObject(HandleParam componentOrSelection, HandleParam object)
   BoundType* objectType = componentOrSelection.StoredType;
 
   MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
+  ReturnIf(composition == nullptr, Handle(), "The object that was selected had no Composition. Currently this is only ever be called with a MetaSelection because it's only used in MultiPropertyInterface.");
   return composition->GetComponent(object, objectType);
 }
 
@@ -110,6 +111,8 @@ void MultiPropertyInterface::ChangeProperty(HandleParam object,
     // Get the acting object (either cog or component)
     Handle actingObject = GetActingObject(object, instance);
 
+    ContinueIf(actingObject.IsNull(), "The actingObject was null");
+
     Property* metaProp = property.GetPropertyFromRoot(actingObject);
 
     // Rotations may be given to use as a Vec4 (in Euler Angles format), so we
@@ -146,6 +149,7 @@ void MultiPropertyInterface::MarkPropertyModified(HandleParam object, PropertyPa
   forRange(Handle instance, mSelection->All())
   {
     Handle actingObject = GetActingObject(object, instance);
+    ContinueIf(actingObject.IsNull(), "The actingObject was null");
     PropertyToUndo::MarkPropertyModified(actingObject, property);
   }
   mOperationQueue->EndBatch();
@@ -158,6 +162,7 @@ void MultiPropertyInterface::RevertProperty(HandleParam object, PropertyPathPara
   forRange(Handle instance, mSelection->All())
   {
     Handle actingObject = GetActingObject(object, instance);
+    ContinueIf(actingObject.IsNull(), "The actingObject was null");
     PropertyToUndo::RevertProperty(actingObject, property);
   }
   mOperationQueue->EndBatch();
@@ -199,6 +204,7 @@ PropertyState GetVectorValue(MetaSelection* selection, AnyParam firstValue,
   forRange(Object* instance, selection->AllOfType<Object>())
   {
     Handle actingObject = GetActingObject(object, instance);
+    ContinueIf(actingObject.IsNull(), "The actingObject was null");
 
     // Get the value of the current object
     Any currValue = property.GetValue(actingObject);
@@ -231,6 +237,7 @@ PropertyState GetRotationValue(MetaSelection* selection,Any& firstValue,
   forRange(Object* instance, selection->AllOfType<Object>())
   {
     Handle actingObject = GetActingObject(object, instance);
+    ContinueIf(actingObject.IsNull(), "The actingObject was null");
 
     // Get the value of the current object
     Any currValue = property.GetValue(actingObject);
@@ -281,6 +288,7 @@ PropertyState MultiPropertyInterface::GetValue(HandleParam multiObject,  Propert
   forRange(Object* subObject, mSelection->AllOfType<Object>())
   {
     actingObject = GetActingObject(multiObject, subObject);
+    ContinueIf(actingObject.IsNull(), "The actingObject was null");
 
     // Get the value of the current object
     Any currValue = property.GetValue(actingObject);
@@ -316,6 +324,7 @@ void MultiPropertyInterface::InvokeFunction(HandleParam object, Function* functi
   forRange(Object* instance, mSelection->AllOfType<Object>())
   {
     Handle actingObject = GetActingObject(object, instance);
+    ContinueIf(actingObject.IsNull(), "The actingObject was null");
 
     Any returnValue = function->Invoke(actingObject, nullptr);
   }
@@ -442,6 +451,7 @@ void MultiPropertyInterface::CaptureState(PropertyStateCapture& capture, HandleP
   {
     // Get the component selected
     Handle actingObject = GetActingObject(multiObject, objectInstance);
+    ContinueIf(actingObject.IsNull(), "The actingObject was null");
 
     // Add state to the capture
     PropertyInterface::CaptureState(capture, actingObject, property);
