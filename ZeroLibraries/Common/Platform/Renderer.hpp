@@ -638,7 +638,10 @@ public:
   // Use for Extract only
   void* mGraphicalEntry;
 
+  // Index in the FrameBlock for this object's FrameNode.
   int mFrameNodeIndex;
+  // Id used to map unique render settings for sub groups.
+  int mRenderGroupId;
 
   // View dependent transforms
   Mat4 mLocalToView;
@@ -742,9 +745,19 @@ class RenderTaskRenderPass : public RenderTask
 {
 public:
   RenderSettings mRenderSettings;
+  // Index or id of the RenderGroup that these settings are for.
   uint mRenderGroupIndex;
+  // Name of the RenderPass fragment for shader lookups. Inputs are mapped when creating this task.
   String mRenderPassName;
+  // Id used to lookup all shader input data for the RenderPass fragment and all Materials
+  // that will be used in this render task.
   uint mShaderInputsId;
+  // If not zero, this is the number of contiguous RenderTaskRenderPass objects in memory
+  // after this one. The renderer must account for this.
+  uint mSubRenderGroupCount;
+  // Allows sub RenderGroups to be set as excluded from rendering.
+  // Only mRenderGroupIndex is valid when this is false.
+  bool mRender;
 };
 
 class RenderTaskPostProcess : public RenderTask

@@ -1839,7 +1839,7 @@ public:
 
   bool OnSearchFilter(SearchViewResult& result)
   {
-    Handle object = mNode->mObject;
+    Handle object = mNode->mParent->mObject;
     Resource* resource = (Resource*)result.Data;
     return mMetaEdit->FilterPropertySearchResult(object, mProperty, resource, result.mStatus);
   }
@@ -2075,12 +2075,12 @@ public:
     Composite::UpdateTransform();
   }
 
-  void OnMouseEnterBackground(MouseEvent* event)
+  virtual void OnMouseEnterBackground(MouseEvent* event)
   {
     mBackground->SetColor(ComponentUi::TitleHighlight);
   }
 
-  void OnMouseExitBackground(MouseEvent* event)
+  virtual void OnMouseExitBackground(MouseEvent* event)
   {
     mBackground->SetColor(ComponentUi::TitleColor);
   }
@@ -2260,11 +2260,16 @@ public:
   ResourceList* mResourceList;
   String mResourceIdName;
 
+  Element* mInvalidIcon;
+  String mInvalidMessage;
+  HandleOf<ToolTip> mToolTip;
+
   ResourceListItem(Composite* parent, PropertyWidget* propertyWidget, ResourceList* resourceList, StringParam listName, StringParam resourceIdName)
     : ListItem(parent, listName, false, !resourceList->GetReadOnly())
     , mPropertyWidget(propertyWidget)
     , mResourceList(resourceList)
     , mResourceIdName(resourceIdName)
+    , mInvalidIcon(nullptr)
   {
     ConnectThisTo(mBackground, Events::LeftClick, OnSelect);
     ConnectThisTo(mRemoveIcon, Events::LeftClick, OnRemove);
@@ -2272,7 +2277,8 @@ public:
 
   void OnSelect(MouseEvent* event)
   {
-    Resource* resource = Z::gResources->GetResourceByName(mResourceIdName);
+    Zilch::BoundType* type = ZilchTypeId(ResourceList::ManagerType::ResourceType);
+    Resource* resource = Z::gResources->GetResourceByTypeAndName(type->Name, mResourceIdName);
     if (resource != nullptr)
       Z::gEditor->EditResource(resource);
   }
@@ -2285,6 +2291,58 @@ public:
     PropertyToUndo* undoProp = (PropertyToUndo*)mPropertyWidget->mProp;
     undoProp->mOperationQueue->Queue(operation);
     operation->Redo();
+  }
+
+  void UpdateTransform() override
+  {
+    ListItem::UpdateTransform();
+
+    if (mInvalidIcon != nullptr)
+    {
+      Vec3 iconPos = mRemoveIcon->GetTranslation();
+      iconPos.x -= mInvalidIcon->mSize.x + 2;
+      mInvalidIcon->SetTranslation(iconPos);
+    }
+
+    Composite::UpdateTransform();
+  }
+
+  void MarkInvalid(String invalidMessage)
+  {
+    mInvalidIcon = CreateAttached<Element>("Warning");
+    mInvalidIcon->SetSize(Vec2(GetSize().y - 2.0f));
+    mInvalidIcon->SetInteractive(false);
+    mInvalidMessage = invalidMessage;
+  }
+
+  void OnMouseEnterBackground(MouseEvent* event) override
+  {
+    ListItem::OnMouseEnterBackground(event);
+
+    if (mInvalidIcon != nullptr)
+    {
+      mToolTip = new ToolTip(this);
+      mToolTip->SetDestroyOnMouseExit(false);
+      mToolTip->mContentPadding = Thickness(2, 2, 2, 2);
+      mToolTip->SetColorScheme(ToolTipColorScheme::Red);
+
+      ToolTipPlacement placement;
+      placement.SetScreenRect(this->GetScreenRect());
+      placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
+      mToolTip->SetArrowTipTranslation(placement);
+
+      TextBox* text = new TextBox(mToolTip);
+      text->SetText(mInvalidMessage);
+      mToolTip->SetContent(text);
+    }
+  }
+
+  void OnMouseExitBackground(MouseEvent* event) override
+  {
+    ListItem::OnMouseExitBackground(event);
+
+    if (mInvalidIcon != nullptr)
+      mToolTip.SafeDestroy();
   }
 };
 
@@ -2331,6 +2389,16 @@ public:
   {
     return mResourceList->GetResourceTypeName();
   }
+
+  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override
+  {
+    if (!element.mStatus.Failed())
+      return nullptr;
+
+    TextBox* textBox = new TextBox(parent);
+    textBox->SetText(element.mStatus.Message);
+    return textBox;
+  }
 };
 
 // Interface required of ResourceList:
@@ -2345,6 +2413,8 @@ public:
 // void AddResource(StringParam resourceIdName, uint index);
 // void RemoveResource(StringParam resourceIdName);
 // Array<String>::range GetIdNames();
+// typedef void (*ListItemCallback)(GraphicsResourceList* resourceList, String entryIdName, Status& status);
+// ListItemCallback mListItemCallback;
 template <typename ResourceList>
 class ResourceListEditor : public PropertyWidget
 {
@@ -2410,6 +2480,13 @@ public:
       Resource* resource = ResourceList::ManagerType::FindOrNull(resourceIdName);
       if (resource == nullptr)
         listItem->mLabel->SetColor(ToFloatColor(Color::Gray));
+      else if (mResourceList->mListItemCallback != nullptr)
+      {
+        Status status;
+        mResourceList->mListItemCallback(mResourceList, resourceIdName, status);
+        if (status.Failed())
+          listItem->MarkInvalid(status.Message);
+      }
     }
 
     if (!mResourceList->GetReadOnly())
@@ -2527,6 +2604,7 @@ void RegisterEngineEditors()
   ZilchTypeId(MetaEditorResource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
   ZilchTypeId(CogArchetypeExtension)->Add(new MetaPropertyEditor(&CreateProperty<PropertyArchetype>));
   ZilchTypeId(RenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty< ResourceListEditor<RenderGroupList> >));
+  ZilchTypeId(ChildRenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty< ResourceListEditor<ChildRenderGroupList> >));
   ZilchTypeId(MaterialList)->Add(new MetaPropertyEditor(&CreateProperty< ResourceListEditor<MaterialList> >));
   ZilchTypeId(CompositionLabelExtension)->Add(new MetaPropertyEditor(&CreateProperty<CompositionLabel>));
 }

@@ -45,6 +45,105 @@ uint GraphicalRangeInterface::GetCount()
 }
 
 //**************************************************************************************************
+ZilchDefineType(SubRenderGroupPass, builder, type)
+{
+  ZeroBindDocumented();
+  ZilchBindMethod(Reset);
+  ZilchBindMethod(SetDefaultSettings);
+  ZilchBindMethod(AddSubSettings);
+  ZilchBindMethod(ExcludeSubRenderGroup);
+}
+
+//**************************************************************************************************
+SubRenderGroupPass::SubRenderGroupPass(RenderTasksEvent* renderTasksEvent, RenderGroup& baseRenderGroup)
+  : mRenderTasksEvent(renderTasksEvent)
+{
+  Reset(baseRenderGroup);
+}
+
+//**************************************************************************************************
+void SubRenderGroupPass::Reset(RenderGroup& baseRenderGroup)
+{
+  mBaseRenderGroup = baseRenderGroup;
+  mSubData.Clear();
+
+  // Must always have a base entry at index 0, also serves as defaults if set.
+  SubRenderGroupPass::SubData& subData = mSubData.PushBack();
+  subData.mRenderGroup = mBaseRenderGroup;
+  subData.mRender = false;
+}
+
+//**************************************************************************************************
+void SubRenderGroupPass::SetDefaultSettings(GraphicsRenderSettings& defaultSettings, MaterialBlock& defaultPass)
+{
+  if (mSubData[0].mRender)
+    return DoNotifyException("Error", "Defaults have already been set.");
+
+  if (!ValidateSettings(defaultSettings, defaultPass))
+    return;
+
+  SubRenderGroupPass::SubData& subData = mSubData[0];
+  subData.mRenderSettings = defaultSettings;
+  subData.mRenderPass = defaultPass;
+  subData.mRender = true;
+}
+
+//**************************************************************************************************
+void SubRenderGroupPass::AddSubSettings(GraphicsRenderSettings& subSettings, RenderGroup& subGroup, MaterialBlock& subPass)
+{
+  if (!ValidateRenderGroup(subGroup))
+    return;
+
+  if (!ValidateSettings(subSettings, subPass))
+    return;
+
+  SubRenderGroupPass::SubData& subData = mSubData.PushBack();
+  subData.mRenderSettings = subSettings;
+  subData.mRenderGroup = &subGroup;
+  subData.mRenderPass = subPass;
+  subData.mRender = true;
+}
+
+//**************************************************************************************************
+void SubRenderGroupPass::ExcludeSubRenderGroup(RenderGroup& subGroup)
+{
+  if (!ValidateRenderGroup(subGroup))
+    return;
+
+  SubRenderGroupPass::SubData& subData = mSubData.PushBack();
+  subData.mRenderGroup = &subGroup;
+  subData.mRender = false;
+}
+
+//**************************************************************************************************
+bool SubRenderGroupPass::ValidateSettings(GraphicsRenderSettings& renderSettings, MaterialBlock& renderPass)
+{
+  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
+  if (fragmentType != ZilchFragmentType::RenderPass)
+    return DoNotifyException("Error", "Fragment is not a [RenderPass]"), false;
+
+  if (!RenderTaskHelper(mRenderTasksEvent->mRenderTasks->mRenderTaskBuffer).ValidateRenderTargets(renderSettings))
+    return false;
+
+  return true;
+}
+
+//**************************************************************************************************
+bool SubRenderGroupPass::ValidateRenderGroup(RenderGroup& renderGroup)
+{
+  if (!mBaseRenderGroup->IsSubRenderGroup(&renderGroup))
+    return DoNotifyException("Error", String::Format("'%s' is not a child of the base RenderGroup '%s'.", renderGroup.Name.c_str(), mBaseRenderGroup->Name.c_str())), false;
+
+  for (size_t i = 1; i < mSubData.Size(); ++i)
+  {
+    if (&renderGroup == *mSubData[i].mRenderGroup)
+      return DoNotifyException("Error", String::Format("Settings or exclusion for '%s' have already been added.", renderGroup.Name.c_str())), false;
+  }
+
+  return true;
+}
+
+//**************************************************************************************************
 ZilchDefineType(RenderTasksEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -56,6 +155,8 @@ ZilchDefineType(RenderTasksEvent, builder, type)
   ZilchBindOverloadedMethod(GetRenderTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
   ZilchBindOverloadedMethod(GetRenderTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
   ZilchBindOverloadedMethod(GetRenderTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, HandleOf<Texture>));
+
+  ZilchBindMethod(CreateSubRenderGroupPass);
 
   ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, Vec4));
   ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, float));
@@ -71,6 +172,8 @@ ZilchDefineType(RenderTasksEvent, builder, type)
 
   ZilchBindOverloadedMethod(AddRenderTaskRenderPass, ZilchInstanceOverload(void, GraphicsRenderSettings&, RenderGroup&, MaterialBlock&));
   ZilchBindOverloadedMethod(AddRenderTaskRenderPass, ZilchInstanceOverload(void, GraphicsRenderSettings&, GraphicalRangeInterface&, MaterialBlock&));
+
+  ZilchBindMethod(AddRenderTaskSubRenderGroupPass);
 
   ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderTarget*, Material&));
   ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderTarget*, MaterialBlock&));
@@ -89,6 +192,13 @@ RenderTasksEvent::RenderTasksEvent()
   , mGraphicsSpace(nullptr)
   , mCamera(nullptr)
 {
+}
+
+//**************************************************************************************************
+RenderTasksEvent::~RenderTasksEvent()
+{
+  for (size_t i = 0; i < mSubRenderGroupPasses.Size(); ++i)
+    delete mSubRenderGroupPasses[i];
 }
 
 //**************************************************************************************************
@@ -122,6 +232,14 @@ HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(IntVec2 size, TextureFo
 HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(HandleOf<Texture> texture)
 {
   return Z::gEngine->has(GraphicsEngine)->GetRenderTarget(texture);
+}
+
+//**************************************************************************************************
+HandleOf<SubRenderGroupPass> RenderTasksEvent::CreateSubRenderGroupPass(RenderGroup& baseGroup)
+{
+  SubRenderGroupPass* subRenderGroupPass = new SubRenderGroupPass(this, baseGroup);
+  mSubRenderGroupPasses.PushBack(subRenderGroupPass);
+  return subRenderGroupPass;
 }
 
 //**************************************************************************************************
@@ -214,10 +332,13 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
   if (fragmentType != ZilchFragmentType::RenderPass)
     return DoNotifyException("Error", "Fragment is not a [RenderPass]");
 
+  HashSet<Material*> materials;
+  renderGroup.GetMaterials(materials);
+
   uint shaderInputsId = GetUniqueShaderInputsId();
 
   AddShaderInputs(&renderPass, shaderInputsId);
-  forRange (Material* material, renderGroup.mActiveResources.All())
+  forRange (Material* material, materials.All())
     AddShaderInputs(material, shaderInputsId);
 
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
@@ -226,6 +347,47 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskRenderPass(renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
 
   mCamera->mUsedRenderGroupIds.Insert(renderGroup.mSortId);
+}
+
+//**************************************************************************************************
+void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(SubRenderGroupPass& subRenderGroupPass)
+{
+  // Index 0 is always the base task entry and/or the defaults.
+  // The base task needs to know how many other tasks proceed it for sub RenderGroup settings,
+  // which is all the elements minus the one base task.
+  uint subGroupCount = subRenderGroupPass.mSubData.Size() - 1;
+
+  HashSet<Material*> materials;
+  subRenderGroupPass.mBaseRenderGroup->GetMaterials(materials);
+
+  RenderTaskHelper renderTaskHelper(mRenderTasks->mRenderTaskBuffer);
+
+  for (size_t i = 0; i < subRenderGroupPass.mSubData.Size(); ++i)
+  {
+    SubRenderGroupPass::SubData& subData = subRenderGroupPass.mSubData[i];
+
+    // Don't process shader inputs for non render entries.
+    uint shaderInputsId = GetUniqueShaderInputsId();
+    if (subData.mRender)
+    {
+      AddShaderInputs(&subData.mRenderPass, shaderInputsId);
+      // Okay to use the whole Material set from the base RenderGroup because inputs will just be cached
+      // but we need an input range entry for each unique shaderInputsId to find the inputs.
+      forRange (Material* material, materials.All())
+        AddShaderInputs(material, shaderInputsId);
+
+      AddShaderInputs(subData.mRenderSettings.mGlobalShaderInputs, shaderInputsId);
+    }
+
+    String renderPassName = ZilchVirtualTypeId(&subData.mRenderPass)->Name;
+    renderTaskHelper.AddRenderTaskRenderPass(subData.mRenderSettings, subData.mRenderGroup->mSortId, renderPassName, shaderInputsId, subGroupCount, subData.mRender);
+
+    // Only set the sub count for the first task.
+    subGroupCount = 0;
+  }
+
+  // Sub RenderGroups are sorted as the base group, only set the base as being used.
+  mCamera->mUsedRenderGroupIds.Insert(subRenderGroupPass.mBaseRenderGroup->mSortId);
 }
 
 //**************************************************************************************************
@@ -426,9 +588,10 @@ void RenderTaskHelper::AddRenderTaskClearTarget(RenderSettings& renderSettings, 
 }
 
 //**************************************************************************************************
-void RenderTaskHelper::AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputsId)
+void RenderTaskHelper::AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputsId, uint subRenderGroupCount, bool render)
 {
-  if (!ValidateRenderTargets(renderSettings))
+  // Don't validate targets if not rendering this group, none of the settings are made or used in this case.
+  if (render && !ValidateRenderTargets(renderSettings))
     return;
 
   RenderTaskRenderPass* renderTask = NewRenderTask<RenderTaskRenderPass>();
@@ -437,6 +600,8 @@ void RenderTaskHelper::AddRenderTaskRenderPass(RenderSettings& renderSettings, u
   renderTask->mRenderGroupIndex = renderGroupIndex;
   renderTask->mRenderPassName = renderPassName;
   renderTask->mShaderInputsId = shaderInputsId;
+  renderTask->mSubRenderGroupCount = subRenderGroupCount;
+  renderTask->mRender = render;
 }
 
 //**************************************************************************************************

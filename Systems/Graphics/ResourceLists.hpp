@@ -31,14 +31,15 @@ public:
   /// Returns the IdName of all resources in the list.
   Array<String>::range GetIdNames();
   uint GetResourceIndex(StringParam resourceIdName);
-  void CheckForAddition(Status& status, Resource* resource);
+  virtual void CheckForAddition(Status& status, Resource* resource);
   void AddResource(StringParam resourceIdName, uint index = -1);
   void RemoveResource(StringParam resourceIdName);
-
   String GetDisplayName() { return mDisplayName; }
   bool GetReadOnly() { return mReadOnly; }
   bool GetExpanded() { return mExpanded ? *mExpanded : true; }
   void SetExpanded(bool expanded) { if (mExpanded) *mExpanded = expanded; }
+  typedef void (*ListItemCallback)(GraphicsResourceList* resourceList, String entryIdName, Status& status);
+  ListItemCallback mListItemCallback;
 
   Array<String> mResourceIdNames;
   String mDisplayName;
@@ -52,6 +53,7 @@ public:
   static bool mMaterialRuntimeExpanded;
   static bool mRenderGroupSerializedExpanded;
   static bool mRenderGroupRuntimeExpanded;
+  static bool mChildRenderGroupListExpanded;
 };
 
 class RenderGroupList : public GraphicsResourceList
@@ -72,6 +74,16 @@ public:
   void Remove(RenderGroup& renderGroup);
   /// Range of all resources in the list.
   Array<HandleOf<RenderGroup>> All();
+};
+
+class ChildRenderGroupList : public RenderGroupList
+{
+public:
+  ZilchDeclareType(ChildRenderGroupList, TypeCopyMode::ReferenceType);
+
+  ChildRenderGroupList(Resource* owner);
+
+  void CheckForAddition(Status& status, Resource* resource) override;
 };
 
 class MaterialList : public GraphicsResourceList
@@ -218,5 +230,7 @@ void ResourceListRemove(RenderGroup* renderGroup);
 void ResourceListResolveReferences(Material* material);
 // Should be called on every RenderGroup after any Materials are added to the engine
 void ResourceListResolveReferences(RenderGroup* renderGroup);
+// Should be called when a RenderGroup is added or renamed to resolve and update idNames.
+void ResolveRenderGroupHierarchies();
 
 } // namespace Zero

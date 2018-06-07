@@ -343,6 +343,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
         Graphical* graphical = data->mGraphical;
         ViewNode& viewNode = viewBlock.mViewNodes.PushBack();
         viewNode.mGraphicalEntry = &entry;
+        viewNode.mRenderGroupId = entry.mRenderGroupId;
 
         // no frame node made for this entry yet
         if (data->mFrameNodeIndex == -1)
@@ -408,18 +409,35 @@ void GraphicsSpace::AddToVisibleGraphicals(Graphical& graphical, Camera& camera,
   forRange (GraphicalEntry& entry, entries.All())
   {
     Vec3 pos = entry.mData->mPosition;
-    // Make entry for each RenderGroup associated with this graphical's material
-    // Can maybe skip some RenderGroups if we know that no render passes use them
+    // Make entry for each RenderGroup associated with this Graphical's Material.
     forRange (RenderGroup* renderGroup, graphical.mMaterial->mActiveResources.All())
     {
-      entry.SetRenderGroupSortValue(renderGroup->mSortId);
-      s32 graphicalSortValue = GetGraphicalSortValue(graphical, renderGroup->mGraphicalSortMethod, pos, cameraPos, cameraDir);
-      entry.SetGraphicalSortValue(graphicalSortValue);
+      // Must be able to identify a sub RenderGroup on a ViewNode (created from GraphicalEntries).
+      // For all entries made by the following loop, this id must be the id of the actual assigned RenderGroup.
+      RenderGroup* assignedGroup = renderGroup;
+      entry.mRenderGroupId = assignedGroup->mSortId;
 
-      // Materials will not refer to RenderGroups that have not been given an id
-      mVisibleGraphicals.PushBack(entry);
-      // Add to RenderGroup counters so they can be accessed by index later
-      ++camera.mRenderGroupCounts[renderGroup->mSortId];
+      // In order to support RenderGroup hierarchies, and requesting rendering of any arbitrary sub
+      // tree in the hierarchy, we need to add an entry at every level of the tree starting with
+      // the assigned RenderGroup and going all the way up to the parent most RenderGroup.
+      // At each level, the entry is sorted how the RenderGroup at that level is sorted.
+      // This allows for any sub hierarchy to have all RenderGroups under it sorted together by its sort method.
+      do
+      {
+        entry.SetRenderGroupSortValue(renderGroup->mSortId);
+        s32 graphicalSortValue = GetGraphicalSortValue(graphical, renderGroup->mGraphicalSortMethod, pos, cameraPos, cameraDir);
+        entry.SetGraphicalSortValue(graphicalSortValue);
+
+        // Materials will not refer to RenderGroups that have not been given an id.
+        mVisibleGraphicals.PushBack(entry);
+        // Add to RenderGroup counters so they can be accessed by index later.
+        ++camera.mRenderGroupCounts[renderGroup->mSortId];
+
+        renderGroup = renderGroup->GetParentRenderGroup();
+
+        // In the case of a cyclic reference not being prevented,
+        // loop will terminate preventing a crash.
+      } while (renderGroup != nullptr && renderGroup != assignedGroup);
     }
   }
 }

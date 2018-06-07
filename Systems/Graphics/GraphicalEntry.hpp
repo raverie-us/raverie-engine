@@ -53,6 +53,8 @@ public:
   GraphicalEntryData* mData;
   // Used to account for all sorting requirements
   u64 mSort;
+  // Used to identify sub RenderGroups.
+  int mRenderGroupId;
 };
 
 typedef Array<GraphicalEntry>::range GraphicalEntryRange;
