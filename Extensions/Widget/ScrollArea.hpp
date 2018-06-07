@@ -125,10 +125,10 @@ public:
   Vec2 ClampClientOffset(Vec2Param offset);
   void UpdateScrollBars();
 
-protected:
   bool mModernStyle;
   float mScrollSpeedScalar;
-  
+
+protected:
   ScrollBar* mScrollBar[2];
 
   Vec2 mScrollSlideRoom;
