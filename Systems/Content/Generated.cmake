@@ -51,6 +51,8 @@ target_sources(Content
     ${CMAKE_CURRENT_LIST_DIR}/MeshProcessor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/PhysicsMeshProcessor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PhysicsMeshProcessor.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/PivotProcessor.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/PivotProcessor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ResourceLoaderTemplates.hpp

@@ -26,6 +26,7 @@
 #include "PhysicsMeshProcessor.hpp"
 #include "SkeletonProcessor.hpp"
 #include "TextureProcessor.hpp"
+#include "PivotProcessor.hpp"
 
 // ImageProcessor is privately included because it directly references nvtt
 #include "nvtt/nvtt.h"
