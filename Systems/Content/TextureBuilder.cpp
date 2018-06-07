@@ -189,26 +189,15 @@ void TextureBuilder::BuildListing(ResourceListing& listing)
 
 void TextureBuilder::BuildContent(BuildOptions& buildOptions)
 {
-  String destFile = FilePath::Combine(buildOptions.OutputPath, GetOutputFile());
+  String inputFile = FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
+  String outputFile = FilePath::Combine(buildOptions.OutputPath, GetOutputFile());
 
-  #ifdef ZeroDebug
-  static cstr sConfigurationPath = "Debug";
-  #elif ZeroRelease
-  static cstr sConfigurationPath = "Release";
-  #endif
+  TextureImporter importer(inputFile, outputFile, String());
 
-  StringBuilder builder;
-  builder << "\"" << FilePath::Combine(buildOptions.ToolPath, "ImageProcessor", sConfigurationPath, "ImageProcessor.exe\"");
-  builder << " -in \"" << FilePath::Combine(buildOptions.SourcePath, mOwner->Filename) << "\"";
-  builder << " -out \"" << destFile << "\"";
-
-  String commandLine = builder.ToString();
   Status status;
-  SimpleProcess process;
-  process.ExecProcess("Process Texture", commandLine.c_str(), buildOptions.BuildTextStream);
-  int exitCode = process.WaitForClose();
+  ImageProcessorCodes::Enum result = importer.ProcessTexture(status);
 
-  switch (exitCode)
+  switch (result)
   {
     case ImageProcessorCodes::Success:
       break;

@@ -519,33 +519,12 @@ void GeometryContent::BuildContent(BuildOptions& options)
   bool needToBuild = ContentComposition::AnyNeedsBuilding(options);
   if(needToBuild)
   {
-    // "Because this is specific to windows, I left ZFS in because the
-    //  usage here is super confusing and I don't want to break it"
-    //                                                          -Trevor
-    #define ZFS "\\"
-    cstr cmd = "\"%s%s" ZFS "GeometryProcessor.exe\" -in \"%s\" -out \"%s\" -metaFile \"%s\"";
-    #ifdef ZeroDebug
-    static cstr sProcessorPath = ZFS "GeometryProcessor" ZFS "Debug";
-    #elif ZeroRelease
-    static cstr sProcessorPath = ZFS "GeometryProcessor" ZFS "Release";
-    #endif
-    #undef ZFS
     String fullFilePath = FilePath::Combine(options.SourcePath, Filename);
-    String commandLine = String::Format(cmd, 
-                                        options.ToolPath.c_str(),
-                                        sProcessorPath,
-                                        fullFilePath.c_str(),
-                                        options.OutputPath.c_str(),
-                                        "");
-
-    SimpleProcess process;
-    process.ExecProcess("Process Geometry", commandLine.c_str(), 
-                        options.BuildTextStream);
-    int exitCodeInt = process.WaitForClose();
-    GeometryProcessorCodes::Enum exitCode = (GeometryProcessorCodes::Enum)exitCodeInt;
+    GeometryImporter importer(fullFilePath, options.OutputPath, String());
+    GeometryProcessorCodes::Enum result = importer.ProcessModelFiles();
 
     bool needsLoading = false;
-    switch (exitCode)
+    switch (result)
     {
       // no content was present in the file
       case Zero::GeometryProcessorCodes::NoContent:

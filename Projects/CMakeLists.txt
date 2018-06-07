@@ -8,8 +8,6 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 ################################################################################
 # define all of the targets that are in this folder
 ################################################################################
-add_executable(GeometryProcessor "")
-add_executable(ImageProcessor "")
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
 add_executable(BrowserSubProcess "")
@@ -18,8 +16,6 @@ add_library(ZeroLauncherSharedLibrary SHARED "")
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
-set_target_properties(GeometryProcessor PROPERTIES FOLDER "Projects")
-set_target_properties(ImageProcessor    PROPERTIES FOLDER "Projects")
 set_target_properties(ZeroEditor       PROPERTIES FOLDER "Projects")
 set_target_properties(ZeroLauncher     PROPERTIES FOLDER "Projects")
 set_target_properties(ZeroLauncherSharedLibrary  PROPERTIES FOLDER "Projects")
@@ -28,8 +24,6 @@ set_target_properties(BrowserSubProcess  PROPERTIES FOLDER "Projects")
 ################################################################################
 # include filelists for each library
 ################################################################################
-include(GeometryProcessor/CMakeLists.txt)
-include(ImageProcessor/CMakeLists.txt)
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/ZeroLauncher/CMakeLists.txt)
 include(ZeroLauncher/ZeroLauncherSharedLibrary/CMakeLists.txt)
@@ -38,21 +32,6 @@ include(BrowserSubProcess/CMakeLists.txt)
 ################################################################################
 # define include directories for all of our libraries
 ################################################################################
-target_include_directories(GeometryProcessor 
-    PUBLIC 
-        ${Dependencies_Root}
-        ${Source_Root}
-        ${PortAudioHeaders}
-        ${AssimpHeaders}
-)
-target_include_directories(ImageProcessor 
-    PUBLIC 
-        ${Dependencies_Root}
-        ${Source_Root}
-        ${PortAudioHeaders}
-        ${OpusHeaders}
-        ${NvttHeaders}
-)
 target_include_directories(ZeroEditor 
     PUBLIC 
         ${Source_Root}
@@ -90,41 +69,6 @@ target_include_directories(BrowserSubProcess
 ################################################################################
 # set the linked libraries for all of our targets
 ################################################################################
-target_link_libraries(GeometryProcessor
-                      PUBLIC
-                      Common
-                      SpatialPartition
-                      Serialization
-                      Support
-                      Geometry
-                      Meta
-                      Engine
-                      Windows
-                      Content
-                      Zilch
-                      AudioEngine
-                      ${AssimpStatic}
-                      ${PortAudioStatic}
-                      ${FreetypeStatic}
-) 
-target_link_libraries(ImageProcessor
-                      PUBLIC
-                      Common
-                      SpatialPartition 
-                      Serialization 
-                      Support 
-                      Geometry
-                      Meta
-                      Engine
-                      Windows
-                      Content
-                      Zilch
-                      AudioEngine
-                      ${PortAudioStatic}
-                      ${OpusStatic}
-                      ${NvttStatic}
-                      ${FreetypeStatic}
-) 
 target_link_libraries(ZeroEditor
                       PUBLIC
                       Common
@@ -156,12 +100,6 @@ target_link_libraries(ZeroEditor
                       ${OpusStatic}
                       ${FreetypeStatic}
                       ${ZLibStatic}
-)
-
-# Zero is going to run the processor tools on startup so they have to build first
-add_dependencies(ZeroEditor
-    ImageProcessor
-    GeometryProcessor
 )
 
 target_link_libraries(ZeroLauncher
@@ -238,8 +176,7 @@ target_link_libraries(BrowserSubProcess
 ################################################################################
 # set the output directories for all of our targets
 ################################################################################
-zero_multitarget_output_directories(GeometryProcessor
-                      ImageProcessor
+zero_multitarget_output_directories(
                       ZeroEditor
                       ZeroLauncher 
                       ZeroLauncherSharedLibrary
@@ -258,8 +195,6 @@ zero_multitarget_output_directories(GeometryProcessor
 ################################################################################
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     zero_multitarget_output_settings(
-        GeometryProcessor
-        ImageProcessor
         ZeroEditor
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
@@ -305,8 +240,6 @@ endif()
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
 
     zero_multitarget_compile_options(
-        ImageProcessor
-        GeometryProcessor
         ZeroEditor
         ZeroLauncher
         PRIVATE
@@ -413,23 +346,12 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         PROPERTIES 
         LINK_FLAGS "/SUBSYSTEM:WINDOWS /DEBUG ${common_linker_flags}"
     )
-    
-    set_target_properties(
-        ImageProcessor 
-        GeometryProcessor 
-        PROPERTIES 
-        LINK_FLAGS "/SUBSYSTEM:CONSOLE /DEBUG ${common_linker_flags}"
-        LINK_FLAGS_RELEASE "/LTCG"
-    )
-    
 
 endif()
 
 ################################################################################
 # Group source into folders
 ################################################################################
-zero_subfolder_source_group(${zero_core_path} Projects GeometryProcessor "")
-zero_subfolder_source_group(${zero_core_path} Projects ImageProcessor "")
 zero_subfolder_source_group(${zero_core_path} Projects ZeroEditor "${zero_core_path}/Projects")
 zero_subfolder_source_group(${zero_core_path} Projects/ZeroLauncher ZeroLauncher "${zero_core_path}/Projects")
 zero_subfolder_source_group(${zero_core_path} Projects/ZeroLauncher ZeroLauncherSharedLibrary "${zero_core_path}/Projects")
@@ -476,26 +398,6 @@ editor_post_build_step(
     ${bit}
 )
 
-####
-
-#### Geometry Processor
-processor_post_build(
-    GeometryProcessor
-    ZERO_CORE_DIR ${zero_core_path}
-    PROCESSOR_OUTPUT_LOCATION ${zero_binary_dir}
-    CONFIGURATION ${supported_configs}
-    DLL_LOCATIONS ${AssimpSharedPath}
-)
-####
-
-#### Image Processor
-processor_post_build(
-    ImageProcessor
-    ZERO_CORE_DIR ${zero_core_path}
-    PROCESSOR_OUTPUT_LOCATION ${zero_binary_dir}
-    CONFIGURATION ${supported_configs}
-    DLL_LOCATIONS ${NvttSharedPath}
-)
 ####
 
 #### ZeroLauncherSharedLibrary

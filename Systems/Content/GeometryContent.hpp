@@ -17,7 +17,6 @@ namespace Zero
 {
 
 //-------------------------------------------------------------- Geometry Import
-
 /// General import settings for Geometry scene.
 class GeometryImport : public ContentComponent
 {
