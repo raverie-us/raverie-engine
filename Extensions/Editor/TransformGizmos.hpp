@@ -22,25 +22,56 @@ class UpdateEvent;
 namespace Events
 {
   DeclareEvent(GizmoObjectsDuplicated);
+  DeclareEvent(ObjectTransformGizmoStart);
+  DeclareEvent(ObjectTranslateGizmoModified);
+  DeclareEvent(ObjectScaleGizmoModified);
+  DeclareEvent(ObjectRotateGizmoModified);
+  DeclareEvent(ObjectTransformGizmoEnd);
 }
 
-//---------------------------------------------------------- Transforming Object
-class ObjectTransformState
+//------------------------------------------------- Object Transform Gizmo Event
+class ObjectTransformGizmoEvent : public GizmoEvent
 {
 public:
-  ObjectTransformState( )
-  {
-    StartWorldTranslation = Vec3::cZero;
-    StartTranslation = Vec3::cZero;
-    StartRotation = Quat::cIdentity;
-    StartScale = Vec3::cZero;
-    StartSize = Vec2::cZero;
+  /// Meta Initialization.
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-    EndTranslation = Vec3::cZero;
-    EndRotation = Quat::cIdentity;
-    EndScale = Vec3::cZero;
-    EndSize = Vec2::cZero;
-  }
+  /// Constructor.
+  ObjectTransformGizmoEvent(Component* sourceGizmo, Cog* owner, ViewportMouseEvent* base);
+
+  Vec3 GetFinalLocalTranslation();
+  Vec3 GetFinalLocalScale();
+  Quat GetFinalLocalRotation();
+
+  void SetFinalLocalTranslation(Vec3Param translation);
+  void SetFinalLocalScale(Vec3Param scale);
+  void SetFinalLocalRotation(QuatParam rotation);
+
+public:
+  /// Type of the gizmo affecting the object this event is sent on.
+  BoundType* mGizmoType;
+
+  /// Translation applied to the object this event was dispatched on.
+  /// Can be overridden/re-computed in script by a user.
+  Vec3 mFinalLocalTranslation;
+  /// Scale applied to the object this event was dispatched on.
+  /// Can be overridden/re-computed in script by a user.
+  Vec3 mFinalLocalScale;
+  /// Rotation applied to the object this event was dispatched on.
+  /// Can be overridden/re-computed in script by a user.
+  Quat mFinalLocalRotation;
+
+  // Internals, not bound/accessible in script.
+  //   - Note: All transform gizmo's can alter translation.
+  bool mCanAlterScale;
+  bool mCanAlterRotation;
+};
+
+//------------------------------------------------------- Object Transform State
+class ObjectTransformState : public SafeId32EventObject
+{
+public:
+  ObjectTransformState();
 
   Handle MetaObject;
 
@@ -99,20 +130,20 @@ public:
   void ToggleCoordinateMode();
   
   /// Store the state of every object.
-  virtual void OnMouseDragStart(ViewportMouseEvent* e);
+  virtual void OnMouseDragStart(ViewportMouseEvent* event);
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(GizmoUpdateEvent* e);
+  void OnGizmoModified(GizmoUpdateEvent* event);
 
   /// Queue the final changes to the objects in the given operation queue.
-  void OnMouseDragEnd(Event* e);
+  void OnMouseDragEnd(ViewportMouseEvent* event);
 
   /// Updates the position of the gizmo based on the current list of objects.
   virtual void UpdateGizmoBasis();
 
   /// We want to update the gizmo basis every frame to reflect any
   /// changes made to the objects we're modifying.
-  void OnFrameUpdate(UpdateEvent* e);
+  void OnFrameUpdate(UpdateEvent* event);
 
   /// Setters / Getters.
   void SetBasis(GizmoBasis::Enum basis);
@@ -156,13 +187,13 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   /// If they're holding down ctrl, we want to duplicate the objects.
-  void OnMouseDragStart(ViewportMouseEvent* e) override;
+  void OnMouseDragStart(ViewportMouseEvent* event) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(TranslateGizmoUpdateEvent* e);
+  void OnGizmoModified(TranslateGizmoUpdateEvent* event);
 
   /// Special command to place an object on the surface of another object.
-  void SnapToSurface(GizmoUpdateEvent* e, Vec3* movementOut);
+  void SnapToSurface(GizmoUpdateEvent* event, Vec3* movementOut);
 
   Vec3 mStartPosition;
 
@@ -181,10 +212,10 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   /// If they're holding down ctrl, we want to duplicate the objects.
-  void OnMouseDragStart(ViewportMouseEvent* e) override;
+  void OnMouseDragStart(ViewportMouseEvent* event) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(ScaleGizmoUpdateEvent* e);
+  void OnGizmoModified(ScaleGizmoUpdateEvent* event);
 
   /// With multiple objects selected, allow their spacial-offest to be affected
   /// about the chosen pivot point, while being locally scaled with 'mAffectScale'.
@@ -208,10 +239,10 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  void OnMouseDragStart(ViewportMouseEvent* e) override;
+  void OnMouseDragStart(ViewportMouseEvent* event) override;
 
   /// As the gizmo is being dragged, we want to update all objects.
-  void OnGizmoModified(RotateGizmoUpdateEvent* e);
+  void OnGizmoModified(RotateGizmoUpdateEvent* event);
 
   /// With multiple objects selected, allow their spacial-offest to be rotated
   /// about the chosen pivot point, while being locally rotated with 'mAffectRotation'.

@@ -31,6 +31,50 @@ namespace Zero
 namespace Events
 {
   DefineEvent(RingGizmoModified);
+  DefineEvent(TranslateGizmoModified);
+  DefineEvent(ScaleGizmoModified);
+  DefineEvent(RotateGizmoModified);
+}
+
+//------------------------------------------------- Transform Gizmo Update Event
+ZilchDefineType(TranslateGizmoUpdateEvent, builder, type)
+{
+  ZilchBindFieldProperty(mGizmoWorldTranslation);
+}
+
+//******************************************************************************
+TranslateGizmoUpdateEvent::TranslateGizmoUpdateEvent(GizmoUpdateEvent* e)
+  : GizmoUpdateEvent(e)
+{
+  mGizmoWorldTranslation = Vec3::cZero;
+}
+
+//----------------------------------------------------- Scale Gizmo Update Event
+ZilchDefineType(ScaleGizmoUpdateEvent, builder, type)
+{
+  ZilchBindFieldProperty(mGizmoWorldScale);
+}
+
+//******************************************************************************
+ScaleGizmoUpdateEvent::ScaleGizmoUpdateEvent(GizmoUpdateEvent* e)
+  : GizmoUpdateEvent(e)
+{
+  mGizmoWorldScale = Vec3::cZero;
+}
+
+//---------------------------------------------------- Rotate Gizmo Update Event
+ZilchDefineType(RotateGizmoUpdateEvent, builder, type)
+{
+  ZilchBindFieldProperty(mGizmoRotation);
+  ZilchBindFieldProperty(mGizmoWorldRotationAxis);
+}
+
+//******************************************************************************
+RotateGizmoUpdateEvent::RotateGizmoUpdateEvent(GizmoUpdateEvent* e)
+  : GizmoUpdateEvent(e)
+{
+  mGizmoRotation = 0.0f;
+  mGizmoWorldRotationAxis = Vec3::cZero;
 }
 
 //----------------------------------------------------------------- GizmoHelpers
@@ -872,6 +916,8 @@ ZilchDefineType(TranslateGizmo, builder, type)
 
   ZeroBindDependency(Transform);
 
+  ZeroBindEvent(Events::TranslateGizmoModified, TranslateGizmoUpdateEvent);
+
   ZilchBindFieldProperty(mUpdateMode);
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindFieldProperty(mSnapMode);
@@ -950,7 +996,7 @@ void TranslateGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     e->mConstrainedWorldMovement, t->GetWorldRotation( ));
 
   TranslateGizmoUpdateEvent eventToSend(e);
-  eventToSend.mProcessedMovement = newPosition - mStartPosition;
+  eventToSend.mGizmoWorldTranslation = newPosition - mStartPosition;
 
   DispatchEvent(Events::TranslateGizmoModified, &eventToSend);
 }
@@ -989,6 +1035,8 @@ ZilchDefineType(ScaleGizmo, builder, type)
   ZeroBindDocumented( );
 
   ZeroBindDependency(Transform);
+
+  ZeroBindEvent(Events::ScaleGizmoModified, ScaleGizmoUpdateEvent);
 
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindFieldProperty(mSnapMode);
@@ -1100,10 +1148,9 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
     worldMovement, startScale, transform);
 
   ScaleGizmoUpdateEvent eventToSend(e);
-  eventToSend.mProcessedScale = newScale - startScale;
+  eventToSend.mGizmoWorldScale = newScale - startScale;
 
   DispatchEvent(Events::ScaleGizmoModified, &eventToSend);
-
 }
 
 //******************************************************************************
@@ -1229,6 +1276,8 @@ ZilchDefineType(RotateGizmo, builder, type)
 
   ZeroBindDependency(Transform);
 
+  ZeroBindEvent(Events::RotateGizmoModified, RotateGizmoUpdateEvent);
+
   ZilchBindGetterSetterProperty(Snapping);
   ZilchBindFieldProperty(mSnapAngle);
 }
@@ -1306,8 +1355,8 @@ void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
   t->RotateWorld(deltaRotation);
 
   RotateGizmoUpdateEvent eventToSend(e);
-  eventToSend.mProcessedRotation = delta;
-  eventToSend.mSelectedAxis = selectedAxis;
+  eventToSend.mGizmoRotation = delta;
+  eventToSend.mGizmoWorldRotationAxis = selectedAxis;
   
   DispatchEvent(Events::RotateGizmoModified, &eventToSend);
 }

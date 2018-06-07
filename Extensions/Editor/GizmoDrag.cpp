@@ -19,8 +19,8 @@ namespace Events
 ZilchDefineType(GizmoUpdateEvent, builder, type)
 {
   ZilchBindFieldProperty(mConstrainedWorldMovement);
-  ZilchBindFieldProperty(mInitialGrabPoint);
   ZilchBindFieldProperty(mConstrainedWorldDelta);
+  ZilchBindFieldProperty(mInitialGrabPoint);
 
   ZilchBindFieldPropertyAs(mConstrainedWorldMovement, "MouseWorldMovement")->AddAttribute(DeprecatedAttribute);
   ZilchBindFieldPropertyAs(mConstrainedWorldDelta, "MouseWorldDelta")->AddAttribute(DeprecatedAttribute);
@@ -42,47 +42,6 @@ GizmoUpdateEvent::GizmoUpdateEvent(GizmoUpdateEvent* rhs) :
   mInitialGrabPoint = rhs->mInitialGrabPoint;
 }
 
-//------------------------------------------------- Transform Gizmo Update Event
-ZilchDefineType(TranslateGizmoUpdateEvent, builder, type)
-{
-  ZilchBindFieldProperty(mProcessedMovement);
-}
-
-//******************************************************************************
-TranslateGizmoUpdateEvent::TranslateGizmoUpdateEvent(GizmoUpdateEvent* e)
-  : GizmoUpdateEvent(e)
-{
-  mProcessedMovement = Vec3::cZero;
-}
-
-//----------------------------------------------------- Scale Gizmo Update Event
-ZilchDefineType(ScaleGizmoUpdateEvent, builder, type)
-{
-  ZilchBindFieldProperty(mProcessedScale);
-}
-
-//******************************************************************************
-ScaleGizmoUpdateEvent::ScaleGizmoUpdateEvent(GizmoUpdateEvent* e)
-  : GizmoUpdateEvent(e)
-{
-  mProcessedScale = Vec3::cZero;
-}
-
-//---------------------------------------------------- Rotate Gizmo Update Event
-ZilchDefineType(RotateGizmoUpdateEvent, builder, type)
-{
-  ZilchBindFieldProperty(mProcessedRotation);
-  ZilchBindFieldProperty(mSelectedAxis);
-}
-
-//******************************************************************************
-RotateGizmoUpdateEvent::RotateGizmoUpdateEvent(GizmoUpdateEvent* e)
-  : GizmoUpdateEvent(e)
-{
-  mProcessedRotation = 0.0f;
-  mSelectedAxis = Vec3::cZero;
-}
-
 //------------------------------------------------------------------- Gizmo Drag
 ZilchDefineType(GizmoDrag, builder, type)
 {
@@ -94,9 +53,6 @@ ZilchDefineType(GizmoDrag, builder, type)
   ZeroBindDependency(MouseCapture);
 
   ZeroBindEvent(Events::GizmoModified, GizmoUpdateEvent);
-  ZeroBindEvent(Events::TranslateGizmoModified, TranslateGizmoUpdateEvent);
-  ZeroBindEvent(Events::ScaleGizmoModified, ScaleGizmoUpdateEvent);
-  ZeroBindEvent(Events::RotateGizmoModified, RotateGizmoUpdateEvent);
   ZeroBindEvent(Events::GizmoPreDrag, GizmoEvent);
 
   ZilchBindFieldProperty(mDragMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
