@@ -54,6 +54,8 @@ public:
   void SetUnicodeMode(bool unicodeMode_) override;
   void SetDBCSMode(int codePage) override;
 
+  void RoundedLineRectHelper(PRectangle rc, int cornerEmulation, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags);
+
   enum DrawType { Lines, Quads, Text };
 
   Zero::Widget* mWidget;

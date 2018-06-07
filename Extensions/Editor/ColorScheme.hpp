@@ -66,6 +66,9 @@ public:
   Vec4 Gutter;
   Vec4 GutterText;
   Vec4 Link;
+  Vec4 TextMatchIndicator;
+  Vec4 TextMatchHighlight;
+  float TextMatchOutlineAlpha;
 };
 
 //Get the global color scheme object

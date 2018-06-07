@@ -29,8 +29,9 @@ namespace UTF8
   bool IsUpper(Rune rune);
   bool IsWhiteSpace(Rune rune);
   bool IsAlphaNumeric(Rune rune);
-  Rune  ToLower(Rune rune);
-  Rune  ToUpper(Rune rune);
+  bool IsPunctuation(Rune rune);
+  Rune ToLower(Rune rune);
+  Rune ToUpper(Rune rune);
 
   uint Utf8ToUtf32(Rune utf8);
   size_t UnpackUtf8RuneIntoBuffer(Rune uft8Rune, byte(&utf8Bytes)[4]);

@@ -45,9 +45,32 @@ public:
 };
 
 //------------------------------------------------------------ ScintillaZero
+
+// To prevent interference the set of indicators is divided up into
+// a range for use by lexers: [0 .. 7], a range for use by containers: 
+// [8 = INDIC_CONTAINER .. 31 = INDIC_IME-1], and a range for IME
+// indicators: [32 = INDIC_IME .. 35 = INDIC_IME_MAX].
+//
+//  - Note: "Container" refers to a class of type 'ScintillaBase'.
+//          So, 'ScintillaZero' is a container.
+namespace ScintillaCustomIndicators
+{
+
+enum
+{
+  TextMatchHighlight = INDIC_CONTAINER
+};
+
+}
+
 class ScintillaZero : public ScintillaBase
 {
 public:
+  friend class TextEditor;
+  friend class ScintillaWidget;
+
+  
+
   ScintillaZero();
   virtual ~ScintillaZero();
   // Method to skip Scintilla's AutoComplete logic
@@ -80,20 +103,38 @@ public:
                        bool isRectangular, bool isLine);
   uint SendEditor(unsigned int Msg, unsigned long wParam = 0, long lParam = 0);
   void InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset);
+
+public:
   TextEditor* mOwner;
   bool mMouseCapture;
-  friend class TextEditor;
-  friend class ScintillaWidget;
+
+  ScVector<SelectionRange> mHighlightRanges;
+
+  Array<Rectangle> mHighlightIndicators;
+  Array<Rectangle> mCursorIndicators;
+
 protected:
   void Clear();
   void NewLine();
   void MoveSelectedLinesUp();
   void MoveSelectedLinesDown();
+
 private:
   void MoveSelection(SelectionRange& selection, int dir, bool extend);
+
+  bool IsSelected(SelectionRange& range, int* endSelectionOut);
   bool FindTextNotSelected(int start, int end, const char* text, SelectionRange& newSel);
+
+  void ClearHighlightRanges();
+  void UpdateHighlightIndicators();
+  void ProcessTextMatch(char*& text, int* begin, int* end);
+  void HighlightMatchingText(int begin, int end, const char* text);
+  void HighlightAllTextInstances(int begin, int end, const char* text);
+
   ScintillaZero& operator = (const ScintillaZero &);
 };
+
+void TextFromSelectionRange(int start, int end, char bufferOut[]);
 
 //------------------------------------------------------------- Scintilla Widget
 ScintillaWidget::ScintillaWidget(Composite* parent)
@@ -156,6 +197,15 @@ const int FoldingMargin = 2;
 const int DebugInstructionIndex = 2;
 const int DebugBreakPointIndex = 1;
 
+const float cTextEditorVScrollWellWidth = 9.0f;
+const float cTextEditorVScrollSliderWidth = 6.0f;
+const float cTextEditorVScrollIndicatorWidth = 2.0f;
+
+const float cTextEditorVScrollIndicatorMinHeight = 4.0f;
+const float cTextEditorVScrollCursorHeight = 2.0f;
+
+const float cTextEditorVScrollSliderOffset = 2.0f;
+const float cTextEditorVScrollIndicatorOffset = 0.0f;
 
 //------------------------------------------------------------------ Text Editor
 ZilchDefineType(TextEditor, builder, type)
@@ -182,7 +232,17 @@ TextEditor::TextEditor(Composite* parent)
   mSendEvents = true;
   mLineNumberMargin = true;
   mFolding = false;
+  mTextMatchHighlighting = true;
+  mHighlightPartialTextMatch = false;
   mMinSize = Vec2(50, 50);
+
+  mIndicators = new PixelBuffer();
+  mIndicatorDisplay = new TextureView(this);
+  mIndicatorDisplay->SetTexture(mIndicators->Image);
+
+  SetScrollWellSize(0, cTextEditorVScrollWellWidth);
+  SetScrollSliderSize(0, cTextEditorVScrollSliderWidth);
+  SetScrollSliderOffset(0, cTextEditorVScrollSliderOffset);
 
   Cog* configCog = Z::gEngine->GetConfigCog();
   TextEditorConfig* textConfig = configCog->has(TextEditorConfig);
@@ -207,6 +267,8 @@ TextEditor::TextEditor(Composite* parent)
   ConnectThisTo(mScinWidget, Events::TextTyped, OnTextTyped);
 
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
+
+  ConnectThisTo(textConfig, Events::PropertyModified, OnConfigPropertyChanged);
 
   // Clear margins
   SendEditor(SCI_SETMARGINWIDTHN, LineNumberMargin, 0);
@@ -550,6 +612,27 @@ void TextEditor::OnConfigChanged(PropertyEvent* event)
   this->UpdateConfig(config);
 }
 
+void TextEditor::OnConfigPropertyChanged(PropertyEvent* event)
+{
+  // All text editors use text match highlighting settings.  If the the text
+  // editor needs to use ALL TextEditorConfig properties, then 'UseTextEditorConfig'
+  // should be called after text editor init/construction.
+  String name = event->mProperty.GetLeafPropertyName();
+  if(name != "TextMatchHighlighting" && name != "HighlightPartialTextMatch")
+    return;
+
+  TextEditorConfig* config = GetConfig();
+
+  mTextMatchHighlighting = config->TextMatchHighlighting;
+  mHighlightPartialTextMatch = config->HighlightPartialTextMatch;
+  if(!mTextMatchHighlighting)
+  {
+    mScintilla->ClearHighlightRanges();
+    mScintilla->mHighlightIndicators.Clear();
+    mScintilla->mCursorIndicators.Clear();
+  }
+}
+
 void TextEditor::OnColorSchemeChanged(ObjectEvent* event)
 {
   SetColorScheme(*GetColorScheme());
@@ -569,6 +652,15 @@ void TextEditor::UpdateConfig(TextEditorConfig* textConfig)
   mFontSize = textConfig->FontSize;
   mFolding = textConfig->CodeFolding;
   mLineNumberMargin = textConfig->LineNumbers;
+
+  mTextMatchHighlighting = textConfig->TextMatchHighlighting;
+  mHighlightPartialTextMatch = textConfig->HighlightPartialTextMatch;
+  if(!mTextMatchHighlighting)
+  {
+    mScintilla->ClearHighlightRanges();
+    mScintilla->mHighlightIndicators.Clear();
+    mScintilla->mCursorIndicators.Clear();
+  }
 
   SetLexer(mLexer);
   SetColorScheme(*GetColorScheme());
@@ -593,6 +685,40 @@ void TextEditor::OnTextTyped(KeyboardTextEvent* event)
     byte utf8Bytes[4];
     int bytesRead = UTF8::UnpackUtf8RuneIntoBuffer(r, utf8Bytes);
     mScintilla->AddCharUTF((char*)utf8Bytes, bytesRead);
+  }
+  else if(Keyboard::Instance->KeyIsDown(Keys::Shift))
+  {
+    // Note: Ctrl + A to select all text will not result in useful highlight
+    //       criteria.  So, no need to check for it.  Additionally, for text
+    //       highlighting criteria, Shift +: Up, Down, PageUp, and PageDown 
+    //       produces invalid text selections.  If the selection anchor and 
+    //       caret are on different lines, then highlight criteria is invalid.
+    bool usingHighlightModifier = Keyboard::Instance->KeyIsDown(Keys::Left);
+    usingHighlightModifier |= Keyboard::Instance->KeyIsDown(Keys::Right);
+    usingHighlightModifier |= Keyboard::Instance->KeyIsDown(Keys::Home);
+    usingHighlightModifier |= Keyboard::Instance->KeyIsDown(Keys::End);
+
+    if(usingHighlightModifier)
+      return;
+  }
+
+  byte* states = Keyboard::Instance->States;
+
+  uint keyDownCount = 0;
+  for(int i = 0; i < Keys::KeyMax; ++i)
+    keyDownCount += ((states[i] == Keyboard::KeyPressed) | (states[i] == Keyboard::KeyHeld));
+
+  uint modifierCount = Keyboard::Instance->KeyIsDown(Keys::Control);
+  modifierCount += Keyboard::Instance->KeyIsDown(Keys::Shift);
+  modifierCount += Keyboard::Instance->KeyIsDown(Keys::Alt);
+
+  bool isAnyNonModifierKeyDown = (keyDownCount != 0 && modifierCount != keyDownCount);
+
+  // Text selection was cancelled.
+  if(isAnyNonModifierKeyDown)
+  {
+    mScintilla->ClearHighlightRanges();
+    mScintilla->mHighlightIndicators.Clear();
   }
 }
 
@@ -644,7 +770,7 @@ uint TextEditor::GetLineHeight()
 
 Vec2 TextEditor::GetClientSize()
 {
-  uint lines = SendEditor(SCI_GETLINECOUNT);
+  uint lines = GetClientLineCount();
   uint size = SendEditor(SCI_TEXTHEIGHT);
   uint width = mScintilla->scrollWidth;
 
@@ -652,11 +778,12 @@ Vec2 TextEditor::GetClientSize()
   // space size of the scroll area
   width += mTotalMargins + Pixels(20);
 
-  uint additionalLineCount = mScintilla->endAtLastLine ? 0 : (uint)mVisibleSize.y / size;
-
-  return Pixels(width, (lines + additionalLineCount) * size);
+  return Pixels(width, lines * size);
 }
 
+// 'OnUpdate' ticks will cause 'mScinWidget' to get marked for updating.
+// So, as intended, 'UpdateTransform' will be triggered at least every tick,
+// besides normal triggered updates due to resizing, scrolling, etc...
 void TextEditor::UpdateTransform()
 {
   UpdateScrollBars();
@@ -664,6 +791,8 @@ void TextEditor::UpdateTransform()
   mScinWidget->SetSize( mVisibleSize );
 
   mScinWidget->mScintilla->ChangeSize();
+
+  UpdateTextMatchHighlighting();
 
   BaseScrollArea::UpdateTransform();
 }
@@ -893,7 +1022,6 @@ void TextEditor::SetFontSize(int size)
 
 void TextEditor::OnKeyUp(KeyboardEvent* event)
 {
-  //
 }
 
 void TextEditor::OnMouseScroll(MouseEvent* event)
@@ -1088,6 +1216,78 @@ void TextEditor::OnUpdate(UpdateEvent* event)
     //tick to blink caret
     mScintilla->Tick();
     mTickTime = 0;
+  } 
+}
+
+void TextEditor::UpdateTextMatchHighlighting()
+{
+  ScrollBar* verticalBar = GetVerticalScrollBar();
+  Vec2 bufferSize = verticalBar->mSize + verticalBar->mBackground->mSize;
+  Vec3 position = verticalBar->mBackground->mTranslation;
+  ByteColor color = ToByteColor(verticalBar->mBackground->GetColor());
+
+  if(verticalBar->mVisible)
+  {
+    mIndicators->Resize(verticalBar->mSize.x + bufferSize.x, bufferSize.y, false, false);
+
+    mIndicatorDisplay->SetTranslation(Pixels(position.x + 1, position.y, position.z));
+    mIndicatorDisplay->SetSize(Pixels(bufferSize.x, bufferSize.y));
+  }
+
+  mIndicators->Clear(byte(0));
+  mScintilla->UpdateHighlightIndicators();
+
+  // Call after 'UpdateHighlightIndicators' so that cursor indicators
+  // draw on top of the highlight indicators.
+  UpdateIndicators(mScintilla->mCursorIndicators, mScintilla->sel.GetRanges(),
+                   Vec4(1, 1, 1, 0.85f), Vec2(cTextEditorVScrollCursorHeight, 0), 0, 0);
+
+  mIndicators->Upload();
+}
+
+void TextEditor::UpdateIndicators(Array<Rectangle>& indicators,
+                                  const ScVector<SelectionRange>& ranges,
+                                  Vec4Param indicatorColor,
+                                  Vec2Param minIndicatorHeight,
+                                  float indicatorWidth,
+                                  float indicatorOffsetX)
+{
+  ScrollBar* verticalBar = GetVerticalScrollBar();
+  if(!verticalBar->mVisible)
+    return;
+
+  indicators.Clear();
+
+  // No indicators?  Then don't do anything.
+  if(ranges.empty() || !mTextMatchHighlighting)
+    return;
+
+  float lineCount = GetClientLineCount();
+  float barHeight = verticalBar->mBackground->mSize.y;
+
+  Vec2 size;
+  if(indicatorWidth == 0)
+    size.x = Math::Floor(verticalBar->mSize.x + verticalBar->mBackground->mSize.x);
+  else
+    size.x = indicatorWidth;
+
+  // If minIndicatorHeight.y == 0, then the height will default to
+  // minIndicatorHeight.x, which is intended behavior.
+  float indicatorHeight = minIndicatorHeight.y * (barHeight * 1.0f / lineCount);
+  size.y = Math::Floor(Math::Max(minIndicatorHeight.x, indicatorHeight));
+
+  float top;
+
+  int count = ranges.size();
+  for(int i = 0; i < count; ++i)
+  {
+    top = Math::Floor(barHeight * GetLineFromPosition(ranges[i].anchor.Position()) / lineCount);
+
+    Rectangle& rect = indicators.PushBack();
+    rect.Min = Vec2(indicatorOffsetX, top);
+    rect.Max = Vec2(indicatorOffsetX + size.x, top + size.y - 1.0f);  // - 1 to make it zero-indexed
+
+    mIndicators->FillRect(rect.Min, rect.Max, ToByteColor(indicatorColor));
   }
 }
 
@@ -1260,6 +1460,18 @@ void TextEditor::AdvanceCaretsToEnd()
 int TextEditor::GetLineCount()
 {
   return SendEditor(SCI_GETLINECOUNT);
+}
+
+int TextEditor::GetClientLineCount()
+{
+  // Editable line count of document.
+  int lineCount = GetLineCount();
+  // Current height of text.
+  int textHeight = SendEditor(SCI_TEXTHEIGHT);
+  // If enabled, additional line count that would fit in the over-scroll client area.
+  lineCount += !mScintilla->endAtLastLine * mVisibleSize.y / textHeight;
+
+  return lineCount;
 }
 
 int TextEditor::GetCurrentPosition()
@@ -1991,6 +2203,21 @@ void ScintillaZero::MoveSelection(SelectionRange& selection, int pos, bool exten
     selection.anchor = selection.caret;
 }
 
+bool ScintillaZero::IsSelected(SelectionRange& range, int* endSelectionOut)
+{
+  for(size_t i = 0; i < sel.Count(); ++i)
+  {
+    SelectionRange& current = sel.Range(i);
+    if(range == current)
+    {
+      *endSelectionOut = std::max(current.caret.Position(), current.anchor.Position());
+      return true;
+    }
+  }
+
+  return false;
+}
+
 bool ScintillaZero::FindTextNotSelected(int start, int end, const char* text, SelectionRange& newSel)
 {
   int length = strlen(text);
@@ -2003,20 +2230,7 @@ bool ScintillaZero::FindTextNotSelected(int start, int end, const char* text, Se
 
     newSel = SelectionRange(pos + lengthFound, pos);
 
-    bool notSelected = true;
-    for (size_t i = 0; i < sel.Count(); ++i)
-    {
-      SelectionRange& selection = sel.Range(i);
-
-      if (newSel == selection)
-      {
-        notSelected = false;
-        start = std::max(selection.caret.Position(), selection.anchor.Position());
-        break;
-      }
-    }
-
-    if (notSelected)
+    if(!IsSelected(newSel, &start))
       return true;
   }
 
@@ -2175,6 +2389,284 @@ void ScintillaZero::ClaimSelection()
 {
 }
 
+void ScintillaZero::ClearHighlightRanges()
+{
+  if(mHighlightRanges.empty())
+    return;
+
+  const uint indicator = ScintillaCustomIndicators::TextMatchHighlight;
+  const uint LexerAgnosticDefaultStyle = 0;
+
+  // Select the custom indicator.
+  SendEditor(SCI_SETINDICATORCURRENT, indicator);
+
+  // SCI_INDICATORCLEARRANGE, reset the value over the entire document body to 0.
+  //   - Note1: A rangeValue == 0, regardless of lexer type, is the default value for
+  //           the entire document.
+  //   - Note2: Filling a range that is the entire document body, doesn't actually
+  //           walk the entire document's text.  Rather, all non-zero style
+  //           ranges [ie, previous highlight indicators] are set to a style of
+  //           0.  Then they are all collapsed to a single range as they are
+  //           now all the same style, 0.
+  pdoc->DecorationFillRange(0, LexerAgnosticDefaultStyle, pdoc->Length());
+
+  mHighlightRanges.clear();
+}
+
+void ScintillaZero::UpdateHighlightIndicators()
+{
+  // Cleanup old highlighting incase main selection has changed.
+  ClearHighlightRanges();
+
+  SelectionRange& main = sel.RangeMain();
+
+  int lineAnchor = SendEditor(SCI_LINEFROMPOSITION, main.anchor.Position());
+  int lineCaret = SendEditor(SCI_LINEFROMPOSITION, main.caret.Position());
+
+  SelectionRange& rectangle = sel.Rectangular();
+  int rectAnchor = SendEditor(SCI_LINEFROMPOSITION, rectangle.anchor.Position());
+  int rectCaret = SendEditor(SCI_LINEFROMPOSITION, rectangle.caret.Position());
+
+  // 1) Text matching is globally disabled.
+  // 2) Nothing in selection.
+  // 3) Selection line-wraps.
+  // 4) Selection is rectangular.
+  // 5) Selection has virtual space.
+  if(!mOwner->mTextMatchHighlighting || main.Empty()
+  || lineAnchor != lineCaret || rectAnchor != rectCaret
+  || main.anchor.VirtualSpace() || main.caret.VirtualSpace())
+  {
+    mHighlightIndicators.Clear();
+    return;
+  }
+  
+  int begin = std::min(main.caret.Position(), main.anchor.Position());
+  int end = std::max(main.caret.Position(), main.anchor.Position());
+  int size  = end - begin;
+
+  // All white space is not valid criteria for text highlighting.
+  bool isWhiteSpace = true;
+  for(int i = 0; i < size; ++i)
+  {
+    Rune r = (char)SendEditor(SCI_GETCHARAT, begin + i);
+    isWhiteSpace &= UTF8::IsWhiteSpace(r);
+  }
+
+  if(isWhiteSpace)
+  {
+    mHighlightIndicators.Clear();
+    return;
+  }
+
+  // +1 for null terminator.
+  char* text = (char*)alloca(size + 1);
+
+  pdoc->GetCharRange(text, begin, size);
+  text[size] = 0;
+
+  // Remove white space, determine if partial text or whole text match, etc...
+  ProcessTextMatch(text, &begin, &end);
+  // Invalid partial or whole text
+  if(text == nullptr)
+    return;
+
+  HighlightMatchingText(begin, end, text);
+  mOwner->UpdateIndicators(mHighlightIndicators, mHighlightRanges,
+                           GetColorScheme()->TextMatchIndicator,
+                           Vec2(cTextEditorVScrollIndicatorMinHeight, 1),
+                           cTextEditorVScrollIndicatorWidth,
+                           cTextEditorVScrollIndicatorOffset);
+}
+
+void ScintillaZero::ProcessTextMatch(char*& text, int* begin, int* end)
+{
+  // Partial text match requires no processing.
+  if(mOwner->mHighlightPartialTextMatch)
+  {
+    int size = *end - *begin;
+    pdoc->GetCharRange(text, *begin, size);
+    text[size] = 0;
+
+    return;
+  }
+
+  String string(text);
+
+  StringRange trimmed = string.TrimStart();
+  trimmed = trimmed.TrimEnd();
+
+  int startDelta = trimmed.Begin().Data() - string.Begin().Data();
+
+  *begin += startDelta;
+  *end -= string.End().Data() - trimmed.End().Data();
+
+  int start = *begin;
+  int stop = *end;
+  int size = stop - start;
+
+  text = &text[startDelta];
+
+  Rune first = (char)SendEditor(SCI_GETCHARAT, start);
+
+  bool isAlphaNumeric = true;
+  bool isOperator = true;
+
+  for(int i = 0; i < size; ++i)
+  {
+    Rune r = (char)SendEditor(SCI_GETCHARAT, start + i);
+
+    // isalnum, Note: isalnum != !ispunct
+    isAlphaNumeric &= UTF8::IsAlphaNumeric(r);
+    // isgraph && !isalnum
+    isOperator &= UTF8::IsPunctuation(r);
+  }
+
+  int lineBegin = SendEditor(SCI_LINEFROMPOSITION, start);
+  int lineEnd = SendEditor(SCI_LINEFROMPOSITION, stop - 1);
+  int lineBeginNeighbor = SendEditor(SCI_LINEFROMPOSITION, start - 1);
+  int lineEndNeighbor = SendEditor(SCI_LINEFROMPOSITION, stop);
+
+  Rune a = (char)SendEditor(SCI_GETCHARAT, start - 1);
+  Rune b = (char)SendEditor(SCI_GETCHARAT, stop);
+
+  // 1) Is 'begin' at the start of the document?
+  // 2) Is begin at the start of a line?
+  bool beginValid = start == 0 || lineBegin != lineBeginNeighbor;
+  // 3) Is begin's previous char whitespace or an alpha numeric?
+  bool opBeginValid = start > 0 && (UTF8::IsWhiteSpace(a) || UTF8::IsAlphaNumeric(a));
+
+  // 1) Is 'end' at the end of the document?
+  // 2) Is end at the end of a line?
+  bool endValid = stop == pdoc->Length() || lineEnd != lineEndNeighbor;
+  // 3) Is end whitespace or alpha numeric?
+  bool opEndValid = stop < pdoc->Length() && (UTF8::IsWhiteSpace(b) || UTF8::IsAlphaNumeric(b));
+
+  // Check for chained operator chars surrounded by either whitespace or alpha numerics.
+  if(isOperator && (beginValid || opBeginValid) && (endValid || opEndValid))
+  {
+    pdoc->GetCharRange(text, start, size);
+    text[size] = 0;
+
+    return;
+  }
+
+  // Mix of operators and alpha-numerics not allowed.
+  if(!isAlphaNumeric)
+  {
+    text = nullptr;
+    return;
+  }
+
+  // 3) Is begin's previous char whitespace or an operator?
+  beginValid |= (start > 0 && (UTF8::IsWhiteSpace(a) || UTF8::IsPunctuation(a)));
+  // 3) Is end whitespace or an operator?
+  endValid |= (stop < pdoc->Length() && (UTF8::IsWhiteSpace(b) || UTF8::IsPunctuation(b)));
+
+  if(!beginValid || !endValid)
+  {
+    text = nullptr;
+    return;
+  }
+
+  pdoc->GetCharRange(text, start, size);
+  text[size] = 0;
+}
+
+void ScintillaZero::HighlightMatchingText(int begin, int end, const char* text)
+{
+  const uint indicator = ScintillaCustomIndicators::TextMatchHighlight;
+
+  int outlineAlpha = GetColorScheme()->TextMatchOutlineAlpha * CS::MaxByte;
+  Vec4 matchColor = GetColorScheme()->TextMatchHighlight * CS::MaxByte;
+  ColourDesired color(matchColor.x, matchColor.y, matchColor.z);
+
+  // Select the custom indicator.
+  SendEditor(SCI_SETINDICATORCURRENT, indicator);
+
+  // Note: the following lines, with appended comments, could be
+  // done with a call to 'SendEditor' using the defined symbol
+  // in each line's respective comment.  However, they all call
+  // 'InvalidateStyleRedraw'.  Yet, it only needs to be called once
+  // after setting all desired indicator params.
+  vs.indicators[indicator].style = (s64)IndicatorStyle::Roundbox;     // SCI_INDICSETSTYLE
+  vs.indicators[indicator].under = true;                              // SCI_INDICSETUNDER
+  vs.indicators[indicator].fore = color;                              // SCI_INDICSETFORE
+  vs.indicators[indicator].outlineAlpha = outlineAlpha;               // SCI_INDICSETOUTLINEALPHA
+  vs.indicators[indicator].fillAlpha = matchColor.w;                  // SCI_INDICSETALPHA
+  InvalidateStyleRedraw();
+
+  // Search the document
+  HighlightAllTextInstances(begin, end, text);
+}
+
+void ScintillaZero::HighlightAllTextInstances(int begin, int end, const char* text)
+{
+  // rangeValue == 0 is reserved as the default value for the entire document.
+  // rangeValue == 1 is reserved for the main 'text' selected.
+  int rangeValue = 2;
+
+  // Document portion before 'text'.
+  int start = 0;
+  int stop = begin;
+
+  int length = strlen(text);
+  
+  // +1 for null terminator.
+  char* match = (char*)alloca(length + 1);
+  memcpy(match, text, length + 1);
+
+  const uint indicator = ScintillaCustomIndicators::TextMatchHighlight;
+
+  // There is the portion of the document to search before 'text',
+  // and the portion of the document to search after 'text'.
+  for(int portion = 0; portion < 2; ++portion)
+  {
+    while(start < stop)
+    {
+      int lengthFound = length;
+      int pos = pdoc->FindText(start, stop, text, true, false, false, false, 0, &lengthFound, std::auto_ptr<CaseFolder>(CaseFolderForEncoding()).get());
+      if(pos == -1)
+        break;
+
+      int anchor = std::min(pos, pos + lengthFound);
+      int caret = std::max(pos, pos + lengthFound);
+      
+      // Adhere to partial vs whole match, 'FindText' returns only partial matches.
+      char* candidate = match;
+      ProcessTextMatch(candidate, &anchor, &caret);
+      if(candidate == nullptr)
+      {
+        // Next search position.
+        start = caret;
+        continue;
+      }
+
+      SelectionRange range(caret, anchor);
+
+      if(!IsSelected(range, &caret))
+      {
+        // Select the custom indicator.
+        SendEditor(SCI_SETINDICATORCURRENT, indicator);
+
+        // Assign a value to this instance of 'text'.  Useful if needed
+        // to recall/find this instance later.
+        SendEditor(SCI_SETINDICATORVALUE, rangeValue++);
+        // Decorate the the instance of the text range with the current, internal, indicator style.
+        SendEditor(SCI_INDICATORFILLRANGE, anchor, lengthFound);
+
+        mHighlightRanges.push_back(range);
+      }
+
+      // Next search position.
+      start = caret;
+    }
+
+    // Document portion after 'text'.
+    start = end;
+    stop = pdoc->Length();
+  }
+}
+
 void ScintillaZero::NotifyChange()
 {
   mOwner->mScinWidget->MarkAsNeedsUpdate();
@@ -2298,5 +2790,6 @@ void ScintillaZero::CopyToClipboard(const SelectionText &selectedText)
 void ScintillaZero::NotifyDoubleClick(Point pt, bool shift, bool ctrl, bool alt)
 {
 }
+
 
 }

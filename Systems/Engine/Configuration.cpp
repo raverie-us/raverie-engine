@@ -172,6 +172,8 @@ ZilchDefineType(TextEditorConfig, builder, type)
   ZilchBindFieldProperty(ShowWhiteSpace);
   ZilchBindFieldProperty(LineNumbers);
   ZilchBindFieldProperty(CodeFolding);
+  ZilchBindFieldProperty(TextMatchHighlighting);
+  ZilchBindFieldProperty(HighlightPartialTextMatch);
   ZilchBindFieldProperty(ConfidentAutoCompleteOnSymbols);
   ZilchBindFieldProperty(LocalWordCompletion);
   ZilchBindFieldProperty(KeywordAndTypeCompletion);
@@ -197,6 +199,8 @@ void TextEditorConfig::Serialize(Serializer& stream)
   SerializeNameDefault(ColorScheme, String("DarkZero"));
   SerializeNameDefault(LineNumbers, true);
   SerializeNameDefault(CodeFolding, false);
+  SerializeNameDefault(TextMatchHighlighting, true);
+  SerializeNameDefault(HighlightPartialTextMatch, false);
   SerializeEnumNameDefault(TabWidth, TabWidth, TabWidth::TwoSpaces);
 }
 

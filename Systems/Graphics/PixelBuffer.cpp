@@ -147,6 +147,26 @@ void PixelBuffer::Clear(byte grayScaleColor)
   memset(Data, grayScaleColor, Total * sizeof(ByteColor));
 }
 
+// Set a color on an area of pixels in the buffer.
+void PixelBuffer::FillRect(Vec2Param topLeft, Vec2Param bottomRight, ByteColor color)
+{
+  uint index = Width * (uint)topLeft.y + (uint)topLeft.x;
+  ReturnIf(index >= Total, , "TopLeft coordinate out of PixelBuffer bounds.");
+
+  index = Width * (uint)bottomRight.y + (uint)bottomRight.x;
+  ReturnIf(index >= Total, , "BottomRight coordinate out of PixelBuffer bounds.");
+
+  for(int y = (int)topLeft.y; y <= bottomRight.y; ++y)
+  {
+    for(int x = (int)topLeft.x; x <= bottomRight.x; ++x)
+    {
+      index = Width * y + x;
+      Data[index] = color;
+    }
+  }
+
+}
+
 // Set a pixel in the buffer.
 void PixelBuffer::SetPixel(uint x, uint y, ByteColor color)
 {

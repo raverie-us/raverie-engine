@@ -489,9 +489,13 @@ void Keyboard::UpdateKeys(KeyboardEvent& event)
   else
   {
     if(state == KeyReleased)
+    {
       state = KeyNotHeld;
+    }
     else if(state != KeyNotHeld)
+    {
       state = KeyReleased;
+    }
   }
 }
 

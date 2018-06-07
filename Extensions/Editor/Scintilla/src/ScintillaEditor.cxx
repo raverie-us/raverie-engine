@@ -2689,13 +2689,72 @@ void Editor::DrawIndicators(Surface *surface, ViewStyle &vsDraw, int line, int x
 			if (!deco->rs.ValueAt(startPos)) {
 				startPos = deco->rs.EndRun(startPos);
 			}
-			while ((startPos < posLineEnd) && (deco->rs.ValueAt(startPos))) {
+			// ZERO EDIT:
+			//   Previous code was:
+			//
+			//     while ((startPos < posLineEnd) && (deco->rs.ValueAt(startPos))) {
+			//
+			//   Changed to:
+			//
+			//     while ((startPos < posLineEnd)) {
+			//       if (!deco->rs.ValueAt(startPos)) {
+			//         startPos = deco->rs.EndRun(startPos);
+			//         continue;
+			//       }
+			//
+			//   It is ABSOLUTELY valid to have a style value of 0.  0 is the default
+			//   style value, independent of lexer, for each character in a text body.
+			//   Indicators, on a single line of text, can be separated by a style run
+			//   of 0 [ie, no indicators].  The loop should not exit on these indicator
+			//   gaps.  It should simply skip over the call to 'DrawIndicator'.
+			while ((startPos < posLineEnd)) {
+				if(!deco->rs.ValueAt(startPos)) {
+					startPos = deco->rs.EndRun(startPos);
+					continue;
+				}
 				int endPos = deco->rs.EndRun(startPos);
 				if (endPos > posLineEnd)
 					endPos = posLineEnd;
 				DrawIndicator(deco->indicator, startPos - posLineStart, endPos - posLineStart,
 					surface, vsDraw, xStart, rcLine, ll, subLine);
-				startPos = deco->rs.EndRun(endPos);
+
+				// ZERO EDIT:
+				//   Previous code:
+				//
+				//     startPos = deco->rs.EndRun(endPos);
+				//
+				//   Changed to:
+				//
+				//     startPos = deco->rs.EndRun(startPos);
+				//
+				//   In a document, a run of chars occurs between two caret positions.
+				//   Thus an end-run occurs on the same caret position as the next
+				//   run's start-run.
+				//
+				//   'EndRun' fn implementation:
+				//
+				//     starts->PositionFromPartition(starts->PartitionFromPosition(endPos) + 1)
+				//
+				//   Ex: Let run/partition index 0 be caret positions [0-1] (run of 1 char).
+				//       Let run/partition index 1 be caret positions [1-5] (run of 4 chars).
+				//       Let run/partition index 2 be caret positions [5-7] (run of 2 chars).
+				//
+				//       --> On the first pass in this loop, the above nested call of
+				//           'starts->PartitionFromPosition(endPos)' in 'EndRun(endPos)',
+				//           returns a run/partition of index 1. The run/partition
+				//           with a starting caret position of 1 is at run-index 1.
+				//
+				//       --> Next the outer call of 'starts->PositionFromPartition' in
+				//           'EndRun(endPos)' receives an input of 1 + 1, due to the
+				//           nested 'starts->PartitionFromPosition(endPos)' returning 1.
+				//
+				//       --> The output, then, of 'PositionFromPartition(2)' is the
+				//           position of the caret at the start of the run with
+				//           run/partition index 2, which is caret position 5.
+				//
+				//       --> So, the next loop pass will start at caret position 5,
+				//           completely bypassing the run/partition [1-5].
+				startPos = deco->rs.EndRun(startPos);
 			}
 		}
 	}

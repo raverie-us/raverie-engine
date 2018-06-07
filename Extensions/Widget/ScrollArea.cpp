@@ -72,7 +72,7 @@ struct ScrollManipulation : public MouseManipulation
     Vec2 mouseDelta = event->Position - mMouseStartPosition;
 
     //Divide by the size of the of the area can scroll in (the scroll area)
-    Vec2 scrollRoom = mScrollArea->SliderRoom();
+    Vec2 scrollRoom = mScrollArea->GetSliderRoom();
     scrollRoom.x = Math::Max(0.01f, scrollRoom.x);
     scrollRoom.y = Math::Max(0.01f, scrollRoom.y);
 
@@ -116,7 +116,7 @@ ScrollBar::ScrollBar(BaseScrollArea* scrollparent, uint orientation)
   mDoNotShow = false;
 
   mSlider->SetColor((Vec4)ScrollBarUi::SliderColor);
-  if (mScrollParent->mModernStyle)
+  if (mScrollParent->IsModernStyle())
   {
     mSlider->SetColor(Vec4(1, 1, 1, 0.45f));
     mBackground->SetColor(Vec4(0, 0, 0, 0.4f));
@@ -152,7 +152,7 @@ void ScrollBar::MouseDownSlider(MouseEvent* event)
 
 void ScrollBar::MouseEnterSlider(MouseEvent* event)
 {
-  if (mScrollParent->mModernStyle)
+  if (mScrollParent->IsModernStyle())
     mSlider->SetColor(Vec4(1, 1, 1, 0.55f));
   else
     mSlider->SetColor(ScrollBarUi::MouseOverSlider);
@@ -160,7 +160,7 @@ void ScrollBar::MouseEnterSlider(MouseEvent* event)
 
 void ScrollBar::MouseExitSlider(MouseEvent* event)
 {
-  if (mScrollParent->mModernStyle)
+  if (mScrollParent->IsModernStyle())
     mSlider->SetColor(Vec4(1, 1, 1, 0.45f));
   else
     mSlider->SetColor(ScrollBarUi::SliderColor);
@@ -221,6 +221,13 @@ BaseScrollArea::BaseScrollArea(Composite* parent, bool modernStyle)
   mAnimatingToClientOffset = mClientOffset;
   mScrollSpeedScalar = 1.0f;
 
+  if(modernStyle)
+    mScrollWellSize = mSliderSize = Vec2(7.0f);
+  else
+    mScrollWellSize = mSliderSize = Vec2(ScrollBarUi::Width, ScrollBarUi::Width);
+
+  mSliderOffset = Vec2(0.0f);
+
   for(uint i = 0; i < 2; ++i)
     mScrollBar[i] = new ScrollBar(this, i);
 }
@@ -260,14 +267,66 @@ void BaseScrollArea::OnMouseScroll(MouseEvent* event)
   }
 }
 
+bool BaseScrollArea::IsModernStyle()
+{
+  return mModernStyle;
+}
+
+Vec2 BaseScrollArea::GetSliderRoom()
+{
+  return mScrollSlideRoom;
+}
+
+ScrollBar* BaseScrollArea::GetVerticalScrollBar()
+{
+  return mScrollBar[1];
+}
+
+float BaseScrollArea::GetScrollBarWidth()
+{
+  return mScrollWellSize.x;
+}
+
+void BaseScrollArea::SetScrollWellSize(int axis, float size)
+{
+  ReturnIf(mModernStyle, , "Cannot set scroll well size on modern style");
+  mScrollWellSize[axis] = (size < Pixels(1)) ? mScrollWellSize[axis] : size;
+}
+
+void BaseScrollArea::SetScrollSliderSize(int axis, float size)
+{
+  ReturnIf(mModernStyle, , "Cannot set scroll slider size on modern style");
+  mSliderSize[axis] = (size < Pixels(1)) ? mSliderSize[axis] : size;
+}
+
+void BaseScrollArea::SetScrollSliderOffset(int axis, float offset)
+{
+  ReturnIf(mModernStyle, , "Cannot set scroll slider offset on modern style");
+  mSliderOffset[axis] = offset;
+}
+
+Vec2 BaseScrollArea::ClampClientOffset(Vec2Param offset)
+{
+  Vec2 clientOffset = offset;
+  Vec2 clientSize = GetClientSize();
+  Vec2 scollingArea = clientSize - mVisibleSize;
+
+  // If scroll area is negative there is already enough room
+  scollingArea.x = Math::Max(scollingArea.x, 0.0f);
+  scollingArea.y = Math::Max(scollingArea.y, 0.0f);
+
+  // Limit client offset from 0 to negative scroll area 
+  clientOffset.x = Math::Clamp(clientOffset.x, -scollingArea.x, 0.0f);
+  clientOffset.y = Math::Clamp(clientOffset.y, -scollingArea.y, 0.0f);
+
+  return clientOffset;
+}
+
 void BaseScrollArea::UpdateScrollBars()
 {
   Vec2 newSize = mSize;
   Vec2 newVisibleSize = mSize;
   Vec2 scrollBarMinSize = Pixels(10,10);
-  Vec2 scrollButtonSize = Vec2(ScrollBarUi::Width, ScrollBarUi::Width);
-  if (mModernStyle)
-    scrollButtonSize = Vec2(7.0f);
 
   mScrollBar[0]->mVisible = false;
   mScrollBar[1]->mVisible = false;
@@ -278,15 +337,15 @@ void BaseScrollArea::UpdateScrollBars()
   Vec2 clientSize = this->GetClientSize();
 
   //Determining if scroll bars are needed requires more than one pass
-  UpdateVisible(newVisibleSize, clientSize, scrollButtonSize, mScrollBar);
+  UpdateVisible(newVisibleSize, clientSize, mScrollWellSize, mScrollBar);
   //Intentional second call (not a bug)
-  UpdateVisible(newVisibleSize, clientSize, scrollButtonSize, mScrollBar);
+  UpdateVisible(newVisibleSize, clientSize, mScrollWellSize, mScrollBar);
 
-  Vec2 totalScrollSize = mSize - scrollButtonSize * 2;
+  Vec2 totalScrollSize = mSize - mScrollWellSize * 2;
 
   //The vertical scroll bar shrinks when both are visible
   if(mScrollBar[1]->mVisible && mScrollBar[0]->mVisible)
-    totalScrollSize.x = totalScrollSize.x - scrollButtonSize.x;
+    totalScrollSize.x = totalScrollSize.x - mScrollWellSize.x;
 
   clientSize.x = Math::Max(Pixels(1), clientSize.x);
   clientSize.y = Math::Max(Pixels(1), clientSize.y);
@@ -313,7 +372,7 @@ void BaseScrollArea::UpdateScrollBars()
   mVisibleSize = newVisibleSize;
 
   // Size may have changed so clamp the offset
-  mClientOffset = ClampOffset(mClientOffset);
+  mClientOffset = ClampClientOffset(mClientOffset);
 
   for(uint i = 0; i < 2; ++i)
   {
@@ -324,7 +383,7 @@ void BaseScrollArea::UpdateScrollBars()
       uint oi = !i;
 
       Vec3 bgPos = Vec3::cZero;
-      bgPos[oi] = newSize[oi] - scrollButtonSize[oi];
+      bgPos[oi] = newSize[oi] - mScrollWellSize[oi];
 
       if (mModernStyle)
         bgPos[oi] -= Pixels(6);
@@ -332,25 +391,25 @@ void BaseScrollArea::UpdateScrollBars()
       //Position the up button
       bar.mUp->SetVisible(true);
       bar.mUp->SetTranslation(bgPos);
-      bar.mUp->SetSize(scrollButtonSize);
+      bar.mUp->SetSize(mScrollWellSize);
 
       //Position the slider background
       bar.mBackground->SetVisible(true);
-      bgPos[i] = scrollButtonSize[i];
+      bgPos[i] = mScrollWellSize[i];
       bar.mBackground->SetTranslation(bgPos);
 
       //Size the slider background
       Vec2 backSize;
       backSize[i] = totalScrollSize[i];
-      backSize[oi] = scrollButtonSize[oi];
+      backSize[oi] = mScrollWellSize[oi];
 
       bar.mBackground->SetSize(backSize);
 
       //Position the down button
-      bgPos[i] = scrollButtonSize[i] + totalScrollSize[i];
+      bgPos[i] = mScrollWellSize[i] + totalScrollSize[i];
       bar.mDown->SetVisible(true);
       bar.mDown->SetTranslation(bgPos);
-      bar.mDown->SetSize(scrollButtonSize);
+      bar.mDown->SetSize(mScrollWellSize);
 
       if(bar.mSliderVisible)
       {
@@ -359,18 +418,20 @@ void BaseScrollArea::UpdateScrollBars()
 
         //Slider position
         Vec3 sliderPos = Vec3::cZero;
-        sliderPos[oi] = newSize[oi] - scrollButtonSize[oi];
+        sliderPos[oi] = newSize[oi] - mScrollWellSize[oi];
 
         if (mModernStyle)
           sliderPos[oi] -= Pixels(6);
 
-        sliderPos[i] = scrollButtonSize[i] + scrolledPercentage[i] * scrollRoom[i];
+        sliderPos[oi] += mSliderOffset[oi];
+
+        sliderPos[i] = mScrollWellSize[i] + scrolledPercentage[i] * scrollRoom[i];
         bar.mSlider->SetTranslation(sliderPos);
 
         //Slider size
         Vec2 sliderSize;
         sliderSize[i] = scollerSize[i];
-        sliderSize[oi] = scrollButtonSize[oi];
+        sliderSize[oi] = mSliderSize[oi];
         bar.mSlider->SetSize(sliderSize);
       }
       else
@@ -465,23 +526,6 @@ void BaseScrollArea::ScrollPixels(Vec2 additivePixels)
                             ScrollUpdate::External, true);
 }
 
-Vec2 BaseScrollArea::ClampOffset(Vec2Param offset)
-{
-  Vec2 clientOffset = offset;
-  Vec2 clientSize = GetClientSize();
-  Vec2 scollingArea = clientSize - mVisibleSize;
-
-  // If scroll area is negative there is already enough room
-  scollingArea.x = Math::Max(scollingArea.x, 0.0f);
-  scollingArea.y = Math::Max(scollingArea.y, 0.0f);
-
-  // Limit client offset from 0 to negative scroll area 
-  clientOffset.x = Math::Clamp(clientOffset.x, -scollingArea.x, 0.0f);
-  clientOffset.y = Math::Clamp(clientOffset.y, -scollingArea.y, 0.0f);
-
-  return clientOffset;
-}
-
 void BaseScrollArea::SetScrolledPercentageInternal(Vec2 scrollPercentage, 
                                                  ScrollUpdate::Enum updateType,
                                                  bool generateMessages)
@@ -507,7 +551,7 @@ void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset, ScrollUpd
   if(generateMessages)
     MarkAsNeedsUpdate();
 
-  Vec2 clampedOffset = ClampOffset(clientOffset);
+  Vec2 clampedOffset = ClampClientOffset(clientOffset);
 
   mClientOffset = mAnimatingToClientOffset;
   mAnimatingToClientOffset = clampedOffset;
@@ -625,9 +669,7 @@ void ScrollArea::UpdateArea(ScrollUpdate::Enum updateType)
 
 float ScrollArea::GetScrollBarSize()
 {
-  if (mModernStyle)
-    return Pixels(7.0f);
-  return ScrollBarUi::Width;
+  return GetScrollBarWidth();
 }
 
 }//namespace Zero

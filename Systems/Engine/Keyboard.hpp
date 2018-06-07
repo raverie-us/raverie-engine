@@ -211,9 +211,8 @@ public:
   void Update();
   void Clear();
   void UpdateKeys(KeyboardEvent& event);
-  static Keyboard* Instance;
 
-private:
+  static Keyboard* Instance;
   uint mStateDownCount;
   byte States[Keys::KeyMax];
 };
