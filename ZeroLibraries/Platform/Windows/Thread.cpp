@@ -117,22 +117,6 @@ bool Thread::IsValid()
   return self->mHandle != NULL;
 }
 
-void Thread::Resume()
-{
-  ZeroGetPrivateData(ThreadPrivateData);
-  if(IsValid())
-    VerifyWin(ResumeThread(self->mHandle), "Failed to resume thread. Thread name: %", 
-              mThreadName.c_str());
-}
-
-void Thread::Suspend()
-{
-  ZeroGetPrivateData(ThreadPrivateData);
-  if(IsValid())
-    VerifyWin(SuspendThread(self->mHandle),
-              "Failed to suspend thread. Thread name: %", mThreadName.c_str());
-}
-
 //Close the thread handle. 
 void Thread::Close()
 {
