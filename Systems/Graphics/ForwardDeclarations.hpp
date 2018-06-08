@@ -77,6 +77,7 @@ class Skeleton;
 class Sprite;
 class SpriteSource;
 class StreamedVertex;
+class SubRenderGroupPass;
 class Texture;
 class TextureData;
 class TextureLoader;

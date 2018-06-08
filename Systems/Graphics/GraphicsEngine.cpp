@@ -715,6 +715,8 @@ void GraphicsEngine::OnRenderGroupModified(ResourceEvent* event)
     Array<Resource*> materials;
     MaterialManager::GetInstance()->EnumerateResources(materials);
     ResourceListResetIdNames<Material, RenderGroupManager>(materials);
+
+    ResolveRenderGroupHierarchies();
   }
 }
 
@@ -724,6 +726,12 @@ void GraphicsEngine::OnRenderGroupRemoved(ResourceEvent* event)
   RenderGroup* renderGroup = (RenderGroup*)event->EventResource;
 
   ResourceListRemove(renderGroup);
+
+  // Remove hierarchy connections.
+  renderGroup->SetParentInternal(nullptr);
+  Array<RenderGroup*> children = renderGroup->mChildrenInternal;
+  forRange (RenderGroup* child, children.All())
+    child->SetParentInternal(nullptr);
 
   mUpdateRenderGroupCount = true;
 }
@@ -851,6 +859,8 @@ void GraphicsEngine::OnResourcesAdded(ResourceEvent* event)
   {
     forRange (Resource* resource, MaterialManager::GetInstance()->AllResources())
       ResourceListResolveReferences((Material*)resource);
+
+    ResolveRenderGroupHierarchies();
   }
 
   // Materials could be added in a non compiling state

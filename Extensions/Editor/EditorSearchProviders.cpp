@@ -119,6 +119,9 @@ public:
         result.Interface = this;
         result.Name = resource->Name;
         result.Priority = priority;
+
+        if (FilterResult(result) == false)
+          search.Results.PopBack();
       }
     }
   }
@@ -127,10 +130,38 @@ public:
   {
     // Use the general resource preview
     Resource* resource = (Resource*)element.Data;
-    PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(parent, resource->Name, resource);
+    PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(parent, resource->Name, resource, PreviewImportance::High);
+    
     if (preview)
+    {
       preview->AnimatePreview(PreviewAnimate::Always);
-    return preview;
+
+      if (element.mStatus.Failed())
+      {
+        // Group the error text and the preview widget
+        Composite* group = new Composite(parent);
+        group->SetLayout(CreateStackLayout());
+
+        // Create the error text on top
+        MultiLineText* text = (MultiLineText*)CreateTextPreview(group, element.mStatus.Message);
+
+        // Defer border-display to the parent's border
+        if (text != nullptr)
+          text->mBorder->SetVisible(false);
+
+        group->AttachChildWidget(preview);
+
+        return group;
+      }
+
+      return preview;
+    }
+    else if(element.mStatus.Failed())
+    {
+      return CreateTextPreview(parent, element.mStatus.Message);
+    }
+
+    return nullptr;
   }
 
   String GetType(SearchViewResult& element) override

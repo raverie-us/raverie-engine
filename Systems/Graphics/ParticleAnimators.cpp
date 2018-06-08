@@ -210,8 +210,8 @@ ZilchDefineType(ParticleColorAnimator, builder, type)
   ZeroBindDependency(ParticleSystem);
   ZeroBindDocumented();
 
-  ZilchBindFieldProperty(mTimeGradient)->Add(new EditorResource(false, true));
-  ZilchBindFieldProperty(mVelocityGradient)->Add(new EditorResource(false, true));
+  ZilchBindFieldProperty(mTimeGradient)->Add(new MetaEditorResource(false, true));
+  ZilchBindFieldProperty(mVelocityGradient)->Add(new MetaEditorResource(false, true));
   ZilchBindFieldProperty(mMaxParticleSpeed);
 }
 

@@ -17,7 +17,6 @@ namespace Zero
 {
 
 //-------------------------------------------------------------- Geometry Import
-
 /// General import settings for Geometry scene.
 class GeometryImport : public ContentComponent
 {
@@ -28,7 +27,7 @@ public:
   void Generate(ContentInitializer& initializer) override;
 
   void ComputeTransforms();
-
+  bool mCollapsePivots;
   Vec3 mOriginOffset;
   float mScaleFactor;
   bool mChangeBasis;

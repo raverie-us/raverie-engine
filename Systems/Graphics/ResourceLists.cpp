@@ -22,12 +22,14 @@ bool GraphicsResourceList::mMaterialSerializedExpanded = false;
 bool GraphicsResourceList::mMaterialRuntimeExpanded = false;
 bool GraphicsResourceList::mRenderGroupSerializedExpanded = false;
 bool GraphicsResourceList::mRenderGroupRuntimeExpanded = false;
+bool GraphicsResourceList::mChildRenderGroupListExpanded = false;
 
 //**************************************************************************************************
 GraphicsResourceList::GraphicsResourceList(Resource* owner)
   : mReadOnly(false)
   , mOwner(owner)
   , mExpanded(nullptr)
+  , mListItemCallback(nullptr)
 {
 }
 
@@ -61,7 +63,7 @@ void GraphicsResourceList::CheckForAddition(Status& status, Resource* resource)
 {
   // If id part is not up to date this will query incorrectly
   if (mResourceIdNames.Contains(resource->ResourceIdName))
-    status.SetFailed("Resource already added");
+    status.SetFailed("Resource already added.");
 }
 
 //**************************************************************************************************
@@ -119,8 +121,10 @@ void RenderGroupList::Add(RenderGroup& renderGroup)
   if (!mOwner->IsRuntime())
     return DoNotifyException("Error", "Cannot modify non-runtime resource.");
 
-  if (mResourceIdNames.Contains(renderGroup.ResourceIdName))
-    return;
+  Status status;
+  CheckForAddition(status, &renderGroup);
+  if (status.Failed())
+    return DoNotifyException("Error", status.Message);
 
   AddResource(renderGroup.ResourceIdName);
 }
@@ -155,6 +159,49 @@ Array<HandleOf<RenderGroup>> RenderGroupList::All()
 }
 
 //**************************************************************************************************
+ZilchDefineType(ChildRenderGroupList, builder, type)
+{
+}
+
+//**************************************************************************************************
+ChildRenderGroupList::ChildRenderGroupList(Resource* owner)
+  : RenderGroupList(owner)
+{
+}
+
+//**************************************************************************************************
+void ChildRenderGroupList::CheckForAddition(Status& status, Resource* resource)
+{
+  GraphicsResourceList::CheckForAddition(status, resource);
+  if (status.Failed())
+    return;
+
+  RenderGroup* owner = (RenderGroup*)mOwner;
+  RenderGroup* renderGroup = (RenderGroup*)resource;
+
+  // Self check.
+  if (renderGroup == owner)
+  {
+    status.SetFailed("RenderGroup cannot be a parent of itself.");
+    return;
+  }
+
+  // Already assigned a parent.
+  if (RenderGroup* parentGroup = renderGroup->GetParentRenderGroup())
+  {
+    status.SetFailed(String::Format("RenderGroup is already a child of '%s'.", parentGroup->Name.c_str()));
+    return;
+  }
+
+  // Self is already a sub group.
+  if (owner->IsSubRenderGroupOf(renderGroup))
+  {
+    status.SetFailed("Cannot set a parent RenderGroup as a child.");
+    return;
+  }
+}
+
+//**************************************************************************************************
 ZilchDefineType(MaterialList, builder, type)
 {
   ZeroBindDocumented();
@@ -185,8 +232,10 @@ void MaterialList::Add(Material& material)
   if (!mOwner->IsRuntime())
     return DoNotifyException("Error", "Cannot modify non-runtime resource.");
 
-  if (mResourceIdNames.Contains(material.ResourceIdName))
-    return;
+  Status status;
+  CheckForAddition(status, &material);
+  if (status.Failed())
+    return DoNotifyException("Error", status.Message);
 
   AddResource(material.ResourceIdName);
 }
@@ -293,6 +342,46 @@ void ResourceListResolveReferences(RenderGroup* renderGroup)
       if (material->mReferencedByList.mResourceIdNames.Contains(renderGroup->ResourceIdName) == false)
         ResourceListResourceAdded(renderGroup, material, &resourceIdName);
     }
+  }
+}
+
+//**************************************************************************************************
+void ResolveRenderGroupHierarchy(RenderGroup* renderGroup)
+{
+  // For valid entries the idName is reassigned to resolve resource renames or new resources
+  // matching an old entry by name. Also sets internal pointers in case it's newly resolved.
+  // Redundantly setting is okay.
+
+  // Resolve parent if valid.
+  RenderGroup* parentGroup = RenderGroupManager::Instance->FindOrNull(renderGroup->mParentRenderGroup);
+  if (parentGroup != nullptr && !renderGroup->IsSubRenderGroup(parentGroup))
+  {
+    renderGroup->mParentRenderGroup = parentGroup->ResourceIdName;
+    renderGroup->SetParentInternal(parentGroup);
+  }
+
+  for (size_t i = 0; i < renderGroup->mChildRenderGroups.mResourceIdNames.Size(); ++i)
+  {
+    // Resolve child if valid.
+    String& idName = renderGroup->mChildRenderGroups.mResourceIdNames[i];
+    RenderGroup* childGroup = RenderGroupManager::Instance->FindOrNull(idName);
+    if (childGroup != nullptr && !renderGroup->IsSubRenderGroupOf(childGroup))
+    {
+      idName = childGroup->ResourceIdName;
+      childGroup->SetParentInternal(renderGroup);
+    }
+  }
+}
+
+//**************************************************************************************************
+void ResolveRenderGroupHierarchies()
+{
+  Array<Resource*> renderGroups;
+  RenderGroupManager::Instance->EnumerateResources(renderGroups);
+  forRange (Resource* resource, renderGroups.All())
+  {
+    RenderGroup* group = (RenderGroup*)resource;
+    ResolveRenderGroupHierarchy(group);
   }
 }
 

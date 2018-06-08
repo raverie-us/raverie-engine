@@ -369,7 +369,7 @@ Commands commands =
 		string Name = "Console",
 		string Description = "Toggle the Console Window",
 		string IconName = "Console",
-		string Shortcut = "Tilde",
+		string Shortcut = "~",
 		string Tags = "Windows",
 	},
 
@@ -757,7 +757,6 @@ Commands commands =
 		string Name = "TakeProjectScreenshot",
 		string Description = "Takes a screen shot for the project. Disables automatically taking a project screen shot every time you save.",
 		string Tags = "",
-		string Shortcut = "",
 	},
 
 	Command =
@@ -765,7 +764,6 @@ Commands commands =
 		string Name = "EnableAutoProjectScreenshot",
 		string Description = "Enables automatically taking a project screen shot every time you save.",
 		string Tags = "",
-		string Shortcut = "",
 	},
 
 	Command =
@@ -773,7 +771,6 @@ Commands commands =
 		string Name = "DisableAutoProjectScreenshot",
 		string Description = "Disables automatically taking a project screen shot every time you save. Use the 'TakeProjectScreenshot' command to take the screen shot manually.",
 		string Tags = "",
-		string Shortcut = "",
 	},
 
 },

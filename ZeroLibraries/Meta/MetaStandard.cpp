@@ -123,7 +123,7 @@ ZilchDefineStaticLibrary(MetaLibrary)
   ZilchInitializeType(EditorRange);
   ZilchInitializeType(EditorSlider);
   ZilchInitializeType(EditorRotationBasis);
-  ZilchInitializeType(EditorResource);
+  ZilchInitializeType(MetaEditorResource);
   ZilchInitializeType(MetaDataInheritance);
   ZilchInitializeType(MetaDataInheritanceRoot);
   ZilchInitializeType(MetaSerializedProperty);

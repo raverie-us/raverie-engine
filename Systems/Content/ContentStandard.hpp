@@ -11,6 +11,7 @@
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 #include "Engine/EngineStandard.hpp"
+#include "SpatialPartition/SpatialPartitionStandard.hpp"
 
 namespace Zero
 {

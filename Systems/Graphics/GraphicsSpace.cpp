@@ -278,22 +278,59 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
     // get view block data
     camera.GetViewData(viewBlock);
 
-    uint totalCounts = 0;
-    // setup ranges for accessing render groups
+    uint totalViewNodesNeeded = 0;
+    Array<IndexRange> groupRanges;
+    size_t indexRangeIndex = 0;
+    IndexRange indexRange(0, 0);
+    if (camera.mGraphicalIndexRanges.Size())
+      indexRange = camera.mGraphicalIndexRanges[indexRangeIndex];
+
+    // Setup ranges for accessing RenderGroup entries.
     for (uint i = 0, rangeStart = 0; i < camera.mRenderGroupCounts.Size(); ++i)
     {
-      totalCounts += camera.mRenderGroupCounts[i];
+      size_t groupCount = camera.mRenderGroupCounts[i];
+      uint rangeEnd = rangeStart;
 
-      uint rangeEnd = rangeStart + camera.mRenderGroupCounts[i];
+      // Graphical entries are guaranteed in RenderGroup order within mGraphicalIndexRanges,
+      // but the index ranges do not have to be adjacent with each other.
+      // If the current range is depleted then the RenderGroup entries are in the next range.
+      // This is a loop so that empty ranges in mGraphicalIndexRanges do not cause problems,
+      // even though there aren't any cases where they should be added.
+      while (indexRange.start + groupCount > indexRange.end)
+      {
+        // This case will never happen unless something is implemented incorrectly.
+        // Setting groupCount to 0 will allow viewBlock.mRenderGroupRanges to have the
+        // correct number of entries, preventing the renderer from accessing out of bounds.
+        if (indexRangeIndex + 1 >= camera.mGraphicalIndexRanges.Size())
+        {
+          Error("Camera has missing or corrupted index ranges for graphical entries.");
+          groupCount = 0;
+          break;
+        }
+        ++indexRangeIndex;
+        indexRange = camera.mGraphicalIndexRanges[indexRangeIndex];
+      }
+
+      // If there are entries for this RenderGroup and this camera's render tasks are using it.
+      // If not used, no unneeded data will be extraced for these entries.
+      if (groupCount > 0 && camera.mUsedRenderGroupIds.Contains(i))
+      {
+        rangeEnd += groupCount;
+        totalViewNodesNeeded += groupCount;
+        groupRanges.PushBack(IndexRange(indexRange.start, indexRange.start + groupCount));
+      }
+
+      indexRange.start += groupCount;
+
       viewBlock.mRenderGroupRanges.PushBack(IndexRange(rangeStart, rangeEnd));
       rangeStart = rangeEnd;
     }
 
     // allocate view nodes
-    viewBlock.mViewNodes.Reserve(totalCounts);
+    viewBlock.mViewNodes.Reserve(totalViewNodesNeeded);
 
     // make nodes for every graphical entry
-    forRange (IndexRange& indexRange, camera.mGraphicalIndexRanges.All())
+    forRange (IndexRange& indexRange, groupRanges.All())
     {
       uint start = indexRange.start;
       uint size = indexRange.end - indexRange.start;
@@ -306,6 +343,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
         Graphical* graphical = data->mGraphical;
         ViewNode& viewNode = viewBlock.mViewNodes.PushBack();
         viewNode.mGraphicalEntry = &entry;
+        viewNode.mRenderGroupId = entry.mRenderGroupId;
 
         // no frame node made for this entry yet
         if (data->mFrameNodeIndex == -1)
@@ -371,18 +409,35 @@ void GraphicsSpace::AddToVisibleGraphicals(Graphical& graphical, Camera& camera,
   forRange (GraphicalEntry& entry, entries.All())
   {
     Vec3 pos = entry.mData->mPosition;
-    // Make entry for each RenderGroup associated with this graphical's material
-    // Can maybe skip some RenderGroups if we know that no render passes use them
+    // Make entry for each RenderGroup associated with this Graphical's Material.
     forRange (RenderGroup* renderGroup, graphical.mMaterial->mActiveResources.All())
     {
-      entry.SetRenderGroupSortValue(renderGroup->mSortId);
-      s32 graphicalSortValue = GetGraphicalSortValue(graphical, renderGroup->mGraphicalSortMethod, pos, cameraPos, cameraDir);
-      entry.SetGraphicalSortValue(graphicalSortValue);
+      // Must be able to identify a sub RenderGroup on a ViewNode (created from GraphicalEntries).
+      // For all entries made by the following loop, this id must be the id of the actual assigned RenderGroup.
+      RenderGroup* assignedGroup = renderGroup;
+      entry.mRenderGroupId = assignedGroup->mSortId;
 
-      // Materials will not refer to RenderGroups that have not been given an id
-      mVisibleGraphicals.PushBack(entry);
-      // Add to RenderGroup counters so they can be accessed by index later
-      ++camera.mRenderGroupCounts[renderGroup->mSortId];
+      // In order to support RenderGroup hierarchies, and requesting rendering of any arbitrary sub
+      // tree in the hierarchy, we need to add an entry at every level of the tree starting with
+      // the assigned RenderGroup and going all the way up to the parent most RenderGroup.
+      // At each level, the entry is sorted how the RenderGroup at that level is sorted.
+      // This allows for any sub hierarchy to have all RenderGroups under it sorted together by its sort method.
+      do
+      {
+        entry.SetRenderGroupSortValue(renderGroup->mSortId);
+        s32 graphicalSortValue = GetGraphicalSortValue(graphical, renderGroup->mGraphicalSortMethod, pos, cameraPos, cameraDir);
+        entry.SetGraphicalSortValue(graphicalSortValue);
+
+        // Materials will not refer to RenderGroups that have not been given an id.
+        mVisibleGraphicals.PushBack(entry);
+        // Add to RenderGroup counters so they can be accessed by index later.
+        ++camera.mRenderGroupCounts[renderGroup->mSortId];
+
+        renderGroup = renderGroup->GetParentRenderGroup();
+
+        // In the case of a cyclic reference not being prevented,
+        // loop will terminate preventing a crash.
+      } while (renderGroup != nullptr && renderGroup != assignedGroup);
     }
   }
 }

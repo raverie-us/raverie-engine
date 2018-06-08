@@ -21,6 +21,9 @@ namespace Events
 
 extern const String cKeyboardEventsFromState[3];
 
+/// Set all of the default key names. Should be called once before the Keys enum is bound
+void SetUpKeyNames();
+
 //-------------------------------------------------------------------Keyboard
 /// Keyboard representing the physical keyboard.
 class Keyboard : public ExplicitSingleton<Keyboard, EventObject>
@@ -38,6 +41,13 @@ public:
     KeyNotHeld
   };
 
+  /// Is any key in the 'Keys' enum down (not including 'Keys::Unknown', e.g. PrintScreen).
+  bool IsAnyKeyDown();
+
+  /// Excluding Ctrl, Shift, and Alt - is any key in the 'Keys' enum down
+  /// (not including 'Keys::Unknown', e.g. PrintScreen).
+  bool IsAnyNonModifierDown();
+
   /// Is the particular currently down.
   bool KeyIsDown(Keys::Enum key);
 
@@ -53,12 +63,32 @@ public:
   /// Gets a string name of a particular key.
   String GetKeyName(Keys::Enum key);
 
+  /// Validate that the key is a Keys::Enum that is not 'Unknown', or 'None', or
+  /// an integer value that doesn't map to a known Keys::Enum value.
+  bool Valid(Keys::Enum key);
+
+  /// Validate that the input string can be mapped back to an enum.
+  bool Valid(StringParam key);
+
+  /// Convert key value to it's actual name or keyboard symbol, if it has one.
+  /// Returns "Unknown" String if key is not found.
+  String ToSymbol(Keys::Enum key);
+
+  /// Convert a key name to it's keyboard symbol, if it has one.
+  /// Returns input String if key is not found.
+  String ToSymbol(StringParam keyName);
+
+  /// Counterpart to 'ToSymbol'.  Converts a key's name or symbol to the key value.
+  /// Returns Keys::Unknown if key is not found.
+  Keys::Enum ToKey(StringParam key);
+
   void Update();
   void Clear();
   void UpdateKeys(KeyboardEvent& event);
   static Keyboard* Instance;
 
 private:
+  uint mStateDownCount;
   byte States[Keys::KeyMax];
 };
 

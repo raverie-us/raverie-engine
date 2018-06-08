@@ -26,7 +26,7 @@ ZilchDefineType(SelectionIcon, builder, type)
   ZilchBindGetterSetter(ShaderInputs);
 
   // SelectionIcon data
-  ZilchBindGetterSetterProperty(SpriteSource)->Add(new EditorResource(true, false, "SelectionIcon"));
+  ZilchBindGetterSetterProperty(SpriteSource)->Add(new MetaEditorResource(true, false, "SelectionIcon"));
   ZilchBindFieldProperty(mViewScale);
   ZilchBindGetterSetterProperty(OverrideSelections);
 }

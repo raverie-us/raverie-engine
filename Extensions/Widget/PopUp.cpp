@@ -12,8 +12,8 @@
 namespace Zero
 {
 
-const String PopUpNormal = "ItemPopUp";
-const String PopUpLight =  "ItemPopUpLight";
+const String cPopUpNormal = "ItemPopUp";
+const String cPopUpLight =  "ItemPopUpLight";
 
 namespace PopUpUi
 {
@@ -72,7 +72,7 @@ void FloatingComposite::FadeOut(float time)
   seq->Add( Fade(this, Vec4(1,1,1,0), time) );
   seq->Add( DestroyAction(this) );
 
-  Event eventToSend;
+  ObjectEvent eventToSend(this);
   DispatchEvent(Events::PopUpClosed, &eventToSend);
 }
 
@@ -82,12 +82,12 @@ void FloatingComposite::Slide(Vec3Param offset, float time)
   AnimateTo(this, destinatino, GetSize(), time);
 }
 
-PopUp::PopUp(Widget* target, PopUpCloseMode::Enum closeMode, StringParam className)
+PopUp::PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className)
  : FloatingComposite(target->GetRootWidget()->GetPopUp(), className )
 {
-  mTarget = target;
-  mCloseMode = closeMode;
   mMoved = false;
+  mCloseMode = popCloseMode;
+  mTarget = target;
 
   Keyboard* keyboard = Keyboard::GetInstance();
 
@@ -101,7 +101,6 @@ PopUp::PopUp(Widget* target, PopUpCloseMode::Enum closeMode, StringParam classNa
   ConnectThisTo(root, Events::MouseMove, OnMouseMove);
   ConnectThisTo(root, Events::MouseDown, OnMouseDown);
 }
-
 
 void PopUp::SetBelowMouse(Mouse* mouse, Vec2 offset)
 {

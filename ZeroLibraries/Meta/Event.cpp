@@ -96,6 +96,8 @@ Object* ObjectEvent::GetSource()
 }
 
 //------------------------------------------------------------- Event Connection
+Array<Delegate> EventConnection::sDelayDestructDelegates;
+
 EventConnection::EventConnection()
   :ThisObject(NULL),
    EventType(NULL)
@@ -161,6 +163,11 @@ void EventConnection::ConnectToReceiverAndDispatcher(
   mEventId = eventId;
   dispatcher->Connect(eventId, this);
   receiver->Connect(this);
+}
+
+void EventConnection::DelayDestructDelegates()
+{
+  sDelayDestructDelegates.Clear();
 }
 
 //----------------------------------------------------------------- Event Signal
@@ -316,6 +323,7 @@ void EventReceiver::DestroyConnections()
 EventReceiver::~EventReceiver()
 {
   DestroyConnections();
+  EventConnection::DelayDestructDelegates();
 }
 
 ReceiverList::range EventReceiver::GetConnections()
@@ -349,6 +357,7 @@ EventDispatcher::~EventDispatcher()
 {
   //Detach all listening objects
   DeleteObjectsInContainer(mEvents);
+  EventConnection::DelayDestructDelegates();
 }
 
 void EventDispatcher::DisconnectEvent(StringParam eventId, ObjPtr thisObject)

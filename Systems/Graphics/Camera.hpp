@@ -102,6 +102,9 @@ public:
 
   Array<uint> mRenderTaskRangeIndices;
   bool mRenderQueuesDataNeeded;
+
+  // Id's of all requested RenderGroups during this Camera's RenderTasksEvent. Reset every frame before the event.
+  HashSet<int> mUsedRenderGroupIds;
 };
 
 } // namespace Zero

@@ -226,8 +226,14 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindGetterSetterProperty(Top);
   ZilchBindGetterSetterProperty(Bottom);
 
-  ZilchBindMethod(Contains);
-  ZilchBindMethod(Overlap);
+  ZilchBindOverloadedMethod(Contains, ZilchConstInstanceOverload(bool, Vec2Param));
+  ZilchBindOverloadedMethod(Contains, ZilchConstInstanceOverload(bool, RectangleParam));
+  ZilchBindMethodAs(Overlap, "Overlaps");
+
+  Zilch::Function* overlapFn = ZilchBindMethodAs(Overlap, "Overlap");
+  overlapFn->Description = "This function is deprecated. Use Overlaps instead";
+  overlapFn->AddAttribute(DeprecatedAttribute);
+
   ZilchBindMethod(RemoveThickness);
 
   ZilchBindMethod(GetCardinalLocation);
@@ -257,6 +263,15 @@ Rectangle Rectangle::MinAndMax(Vec2Param min, Vec2Param max)
   Rectangle r;
   r.Min = min;
   r.Max = max;
+  return r;
+}
+
+//**************************************************************************************************
+Rectangle Rectangle::MinAndMax(Vec3Param min, Vec3Param max)
+{
+  Rectangle r;
+  r.Min = Vec2(min.x, min.y);
+  r.Max = Vec2(max.x, max.y);
   return r;
 }
 
@@ -306,7 +321,7 @@ void Rectangle::Transform(Mat4Param transform)
 {
   Aabb aabb;
   aabb.SetMinAndMax(Vec3(Min), Vec3(Max));
-  aabb.Transform(transform);
+  aabb = aabb.TransformAabb(transform);
   Min = ToVector2(aabb.mMin);
   Max = ToVector2(aabb.mMax);
 }
@@ -494,11 +509,20 @@ void Rectangle::Expand(Vec2Param point)
 //**************************************************************************************************
 bool Rectangle::Contains(Vec2Param point) const
 {
-  if (point.x < Min.x)return false;
+  if (point.x < Min.x) return false;
   if (point.x > Max.x) return false;
   if (point.y < Min.y) return false;
   if (point.y > Max.y) return false;
   return true;
+}
+
+//**************************************************************************************************
+bool Rectangle::Contains(RectangleParam other) const
+{
+  return (Min.x <= other.Min.x) &&
+         (Min.y <= other.Min.y) &&
+         (Max.x >= other.Max.x) &&
+         (Max.y >= other.Max.y);
 }
 
 //**************************************************************************************************
@@ -680,7 +704,7 @@ void Rectangle::SetLocation(Location::Enum location, float value)
 }
 
 //**************************************************************************************************
-Vec2 Rectangle::GetLocation(Location::Enum location)
+Vec2 Rectangle::GetLocation(Location::Enum location) const
 {
   Vec2 bottomLeft = GetBottomLeft();
   Vec2 size = GetSize();
