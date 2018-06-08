@@ -10,5 +10,6 @@
 add_definitions(-DPLATFORM_WINDOWS=1 -DPLATFORM_HARDWARE=1 -DPLATFORM_NAME="Win" -D_UNICODE -DUNICODE)
 
 set(platform "Windows")
+set(platform_library "Windows")
 
 remove_definitions(-DMBCS -D_MBCS)

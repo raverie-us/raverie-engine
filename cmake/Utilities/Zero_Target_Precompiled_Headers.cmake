@@ -4,14 +4,21 @@
 ################################################################################
 
 # Should be run after all link targets are defined, and all sources are added.
-function(zero_target_precompiled_headers aTarget aIntPath aHeaderName aSourceName aSubFolder)
+function(zero_target_precompiled_headers aTarget aIntPath aHeaderName aSourceName aSubFolder aIgnoreTarget)
 
   get_target_property(sourceDir ${aTarget} SOURCE_DIR)
-
   if ("${aSubFolder}" STREQUAL "")
-    set(sourceDir ${sourceDir}/${aTarget})
+    if (aIgnoreTarget)
+      set(sourceDir ${sourceDir})
+    else()
+      set(sourceDir ${sourceDir}/${aTarget})
+    endif()
   else()
-    set(sourceDir ${sourceDir}/${aSubFolder}/${aTarget})
+    if (aIgnoreTarget)
+      set(sourceDir ${sourceDir}/${aSubFolder})
+    else()
+      set(sourceDir ${sourceDir}/${aSubFolder}/${aTarget})
+    endif()
   endif()
 
   set(sourceName ${aSourceName})

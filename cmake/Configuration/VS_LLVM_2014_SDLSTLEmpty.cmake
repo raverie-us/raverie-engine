@@ -1,22 +1,24 @@
 ################################################################################
 # Author: Joshua Shlemmer
 # Copyright 2017, DigiPen Institute of Technology
-# MSVC flags (These also work when generating with LLVN_vs2014)
+# configuration for using the LLVM_2014 toolset on the windows platform
 ################################################################################
+include(${cmake_os_dir}/Windows.cmake)
+include(${cmake_compiler_dir}/Clang.cmake)
+include(${cmake_flags_dir}/MSVC_FLAGS.cmake)
+include(${cmake_os_dir}/SDLSTLEmpty.cmake)
 
+unset(common_flags)
+# override the flags because clangs hates some of the normal msvc flags
 set(common_flags     
+    -MP
     $<$<CONFIG:Debug>:-GS>
-    $<$<CONFIG:Release>:-MP>
     $<$<CONFIG:Release>:-GS->
     $<$<CONFIG:Release>:-GL>
     -analyze-
     -W3 
     -wd"4302"
     -Zc:wchar_t
-    $<$<CONFIG:Debug>:-Zi>
-    $<$<CONFIG:Release>:-Zi>
-    $<$<CONFIG:Debug>:-Gm>
-    $<$<CONFIG:Release>:-Gm->
     $<$<CONFIG:Debug>:-Od>
     $<$<CONFIG:Release>:-O2>
     -Zc:inline 
@@ -33,10 +35,9 @@ set(common_flags
     $<$<CONFIG:Release>:-MT>
     -EHsc 
     -nologo
-    $<$<CONFIG:Debug>:-DDEBUG>
-    $<$<CONFIG:Release>:-DNDEBUG>
+    -DDEBUG  
     "-D \"_CRT_SECURE_NO_WARNINGS\"" 
+    "-Wno-unused-command-line-argument"
+    -FIPrecompiled.hpp
 )
 
-set(common_library_flags "/ignore:4099,4221,4075")
-set(common_linker_flags "${common_library_flags} /SAFESEH:NO")
