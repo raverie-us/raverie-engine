@@ -1,0 +1,22 @@
+Cog  = 
+{
+	MainConfig  = 
+	{
+		string ApplicationName = "ZeroEditor",
+	},
+	ContentConfig = 
+	{
+		string ContentOutput = "",
+		string ToolsDirectory = "",
+		string ScratchLibrary = "",
+		Array LibraryDirectories = [],
+	}
+	TextEditorConfig =
+	{
+		bool ShowWhiteSpace = true,
+		bool AutoCompleteOnEnter = true,
+	}
+  EditorSettings = 
+  {
+  }
+}

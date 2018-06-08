@@ -34,8 +34,13 @@ endfunction()
 function(zero_multitarget_output_settings)
 
     # set arguments
-    set(oneValueArgs CONFIGS BASEPATH PLATFORM BITS TOOLSET PRECOMPILED_HEADER_NAME PRECOMPILED_SOURCE_NAME TARGET_SUBFOLDER)
+    set(oneValueArgs CONFIGS BASEPATH PLATFORM BITS TOOLSET PRECOMPILED_HEADER_NAME PRECOMPILED_SOURCE_NAME TARGET_SUBFOLDER IGNORE_TARGET)
     cmake_parse_arguments(PARSED "" "${oneValueArgs}" "" ${ARGN})
+
+    if("${PARSED_IGNORE_TARGET}" STREQUAL "")
+        set(PARSED_IGNORE_TARGET OFF)
+    endif()
+
 
     set(PARSED_TARGETS ${PARSED_UNPARSED_ARGUMENTS})
 
@@ -48,9 +53,9 @@ function(zero_multitarget_output_settings)
         )
         # if we were passed values for the precompiled headers, set the target precompiled headers
         if (NOT ("${PARSED_PRECOMPILED_HEADER_NAME}" STREQUAL ""))
-            zero_target_precompiled_headers(${target} ${intOutputDirectory} ${PARSED_PRECOMPILED_HEADER_NAME} ${PARSED_PRECOMPILED_SOURCE_NAME} "${PARSED_TARGET_SUBFOLDER}")
+            zero_target_precompiled_headers(${target} ${intOutputDirectory} ${PARSED_PRECOMPILED_HEADER_NAME} ${PARSED_PRECOMPILED_SOURCE_NAME} "${PARSED_TARGET_SUBFOLDER}" ${PARSED_IGNORE_TARGET})
         else()
-            #message("<><><> Skipped precompiled for target: ${target}\n")
+            message("<><><> Skipped precompiled for target: ${target}\n")
         endif()
 
     endforeach()

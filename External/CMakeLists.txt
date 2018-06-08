@@ -30,7 +30,8 @@ set(StaticExternals
     Opus 
     PortAudio 
     WinHid 
-    ZLib 
+    ZLib
+    SDL 
 )
 
 # list of shared
@@ -43,6 +44,7 @@ set(SharedExternals
     MemoryTracker
     Nvtt
     PortAudio
+    SDL
 )
 
 ################################################################################
@@ -73,7 +75,7 @@ set(OpusPath ${CurrentDirectory}/Opus)
 set(PortAudioPath ${CurrentDirectory}/PortAudio)
 set(WinHidPath ${CurrentDirectory}/WinHid)
 set(ZLibPath ${CurrentDirectory}/ZLib)
-
+set(SDLPath ${CurrentDirectory}/SDL)
 
 ################################################################################
 # Find all libraries from listed dependencies and make them globally available
@@ -121,6 +123,8 @@ foreach(libStatic ${StaticExternals})
             )
             set(${libStatic}Static ${${libStatic}Static} $<$<CONFIG:Debug>:${libNameDebug}>)
             set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
+            set(${libStatic}StaticDebug ${${libStatic}StaticDebug} ${libNameDebug})
+            set(${libStatic}StaticDebug ${${libStatic}StaticDebug} PARENT_SCOPE)
         endforeach()
 
         # RELEASE
@@ -137,6 +141,8 @@ foreach(libStatic ${StaticExternals})
             )
             set(${libStatic}Static ${${libStatic}Static} $<$<CONFIG:Release>:${libNameRelease}>)
             set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
+            set(${libStatic}StaticRelease ${${libStatic}StaticRelease} ${libNameRelease})
+            set(${libStatic}StaticRelease ${${libStatic}StaticRelease} PARENT_SCOPE)
         endforeach()
     else()
         message("THE PATH: ${${libStatic}Path}/${platform}/${bit}/*.lib")
@@ -160,7 +166,6 @@ foreach(libShared ${SharedExternals})
 
         foreach(libPath ${${libShared}SharedPath})
             get_filename_component(libName ${libPath} NAME_WE)
-
             set(libName ${libName}Shared)
 
             add_library(${libName} SHARED IMPORTED GLOBAL)
@@ -171,7 +176,7 @@ foreach(libShared ${SharedExternals})
             )
 
             # set the libraries that can be added by targets
-            set(${libShared}Shared ${libShared}Shared ${libName})
+            set(${libShared}Shared ${${libShared}Shared} ${libName})
             set(${libShared}Shared ${libShared}Shared PARENT_SCOPE)
 
         endforeach()

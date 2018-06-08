@@ -99,7 +99,7 @@ target_link_libraries(GeometryProcessor
                       Geometry
                       Meta
                       Engine
-                      Windows
+                      Platform
                       Content
                       Zilch
                       AudioEngine
@@ -116,7 +116,7 @@ target_link_libraries(ImageProcessor
                       Geometry
                       Meta
                       Engine
-                      Windows
+                      Platform
                       Content
                       Zilch
                       AudioEngine
@@ -143,7 +143,7 @@ target_link_libraries(ZeroEditor
                       Meta 
                       Physics 
                       Sound 
-                      Windows 
+                      Platform 
                       Content 
                       Dash 
                       AudioEngine 
@@ -183,7 +183,7 @@ target_link_libraries(ZeroLauncher
                       Physics 
                       Sound 
                       Startup 
-                      Windows 
+                      Platform 
                       Content 
                       Dash 
                       Zilch 
@@ -210,7 +210,7 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       Physics 
                       Sound 
                       Startup 
-                      Windows 
+                      Platform 
                       Content 
                       Dash 
                       Zilch 
@@ -229,7 +229,7 @@ add_dependencies(ZeroLauncher
 target_link_libraries(BrowserSubProcess
                       PUBLIC
                       Common
-                      Windows
+                      Platform
                       ${FreetypeStatic}
                       ${ZLibStatic}
                       ${LibpngStatic}
@@ -359,10 +359,10 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         -wd"4305"
         -Zc:wchar_t
 
-        $<$<CONFIG:Debug>:-ZI>
+        $<$<CONFIG:Debug>:-Zi>
         $<$<CONFIG:Release>:-Zi>
-        #$<$<CONFIG:Debug>:-Gm>
-        #$<$<CONFIG:Release>:-Gm->
+        $<$<CONFIG:Debug>:-Gm>
+        $<$<CONFIG:Release>:-Gm->
         $<$<CONFIG:Debug>:-Od>
         $<$<CONFIG:Release>:-O2>
 
@@ -457,6 +457,19 @@ copy_multiple_dlls(
     ${PortAudioSharedPath}
 )
 
+if ((${platform} STREQUAL "Windows") AND ((${platform_library} STREQUAL "SDL") OR (${platform_library} STREQUAL "SDLSTLEmpty")))
+    copy_multiple_dlls(
+        ZeroEditor
+        ZeroLauncher
+        ImageProcessor
+        GeometryProcessor
+        OUTPUT_DIRECTORY ${zero_binary_dir}
+        DLL_LOCATIONS
+        ## setup all dll locations
+        ${SDLSharedPath}
+    )
+endif()
+
 #function(create_build_info aTarget aSourceDir aBuildOutDir aOutputLocation)
 create_build_info(
     ZeroEditor
@@ -478,26 +491,45 @@ editor_post_build_step(
 
 ####
 
-#### Geometry Processor
-processor_post_build(
-    GeometryProcessor
-    ZERO_CORE_DIR ${zero_core_path}
-    PROCESSOR_OUTPUT_LOCATION ${zero_binary_dir}
-    CONFIGURATION ${supported_configs}
-    DLL_LOCATIONS ${AssimpSharedPath}
-)
-####
-
-#### Image Processor
-processor_post_build(
-    ImageProcessor
-    ZERO_CORE_DIR ${zero_core_path}
-    PROCESSOR_OUTPUT_LOCATION ${zero_binary_dir}
-    CONFIGURATION ${supported_configs}
-    DLL_LOCATIONS ${NvttSharedPath}
-)
-####
-
+if ((${platform_library} STREQUAL "SDL") OR (${platform_library} STREQUAL "SDLSTLEmpty"))
+    #### Geometry Processor
+    processor_post_build(
+        GeometryProcessor
+        ZERO_CORE_DIR ${zero_core_path}
+        PROCESSOR_OUTPUT_LOCATION ${zero_binary_dir}
+        CONFIGURATION ${supported_configs}
+        DLL_LOCATIONS ${AssimpSharedPath} ${SDLSharedPath}
+    )
+    ####
+    #### Image Processor
+    processor_post_build(
+        ImageProcessor
+        ZERO_CORE_DIR ${zero_core_path}
+        PROCESSOR_OUTPUT_LOCATION ${zero_binary_dir}
+        CONFIGURATION ${supported_configs}
+        DLL_LOCATIONS ${NvttSharedPath} ${SDLSharedPath}
+    )
+    ####
+else()
+    #### Geometry Processor
+    processor_post_build(
+        GeometryProcessor
+        ZERO_CORE_DIR ${zero_core_path}
+        PROCESSOR_OUTPUT_LOCATION ${zero_binary_dir}
+        CONFIGURATION ${supported_configs}
+        DLL_LOCATIONS ${AssimpSharedPath} 
+    )
+    ####
+    #### Image Processor
+    processor_post_build(
+        ImageProcessor
+        ZERO_CORE_DIR ${zero_core_path}
+        PROCESSOR_OUTPUT_LOCATION ${zero_binary_dir}
+        CONFIGURATION ${supported_configs}
+        DLL_LOCATIONS ${NvttSharedPath}
+    )
+    ####
+endif()
 #### ZeroLauncherSharedLibrary
 # launcher_post_build(aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
 launcher_post_build(

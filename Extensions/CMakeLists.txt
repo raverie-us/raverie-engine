@@ -59,7 +59,8 @@ target_include_directories(Gameplay
     PUBLIC 
         ${CurrentDirectory}
         ${CEFHeaders}
-
+        Platform
+        BrowserSubProcess
 )
 
 target_include_directories(UiWidget 

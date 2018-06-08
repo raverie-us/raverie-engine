@@ -121,9 +121,8 @@ target_link_libraries(ContainersTests
                       PUBLIC
                       Common
                       Math
-                      Platform
                       CppUnitLite2
-                      Windows
+                      Platform
 )
 
 target_link_libraries(CppUnitLite2
@@ -137,9 +136,8 @@ target_link_libraries(FilePathTests
                       Serialization
                       Support
                       Math
-                      Platform
                       CppUnitLite2
-                      Windows
+                      Platform
 )
 
 target_link_libraries(IntersectionTests
@@ -149,9 +147,8 @@ target_link_libraries(IntersectionTests
                       Math
                       Geometry
                       Meta
-                      Platform
                       CppUnitLite2
-                      Windows
+                      Platform
                       Zilch
 )
 
@@ -159,9 +156,8 @@ target_link_libraries(LcpSolvers
                       PUBLIC
                       Common
                       Math
-                      Platform
                       CppUnitLite2
-                      Windows
+                      Platform
 )
 
 target_link_libraries(MathTests
@@ -170,7 +166,6 @@ target_link_libraries(MathTests
                       Math
                       Platform
                       CppUnitLite2
-                      Windows
 )
 
 target_link_libraries(SerializationTests
@@ -182,7 +177,6 @@ target_link_libraries(SerializationTests
                       Meta
                       Platform
                       CppUnitLite2
-                      Windows
                       Zilch
 )
 
@@ -192,7 +186,6 @@ target_link_libraries(SSETests
                       Math
                       Platform
                       CppUnitLite2
-                      Windows
 )
 
 if(${generate_with_zilch_shader_tests})
@@ -206,7 +199,6 @@ if(${generate_with_zilch_shader_tests})
                           Geometry
                           Meta
                           Platform
-                          Windows
                           Zilch
     )
 endif()
