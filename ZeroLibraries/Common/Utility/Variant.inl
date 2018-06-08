@@ -193,7 +193,7 @@ void Variant::Assign(MoveReference<T> rhs)
   typedef typename Decay<T>::Type UnqualifiedType;
 
   // (Verify type is copy constructible and destructible, else fail to compile)
-  static_assert(,
+  static_assert(
                has_copy_constructor<UnqualifiedType>::value && has_destructor<UnqualifiedType>::value,
                "Types assigned to variant must have both an accessible copy constructor and destructor.");
 

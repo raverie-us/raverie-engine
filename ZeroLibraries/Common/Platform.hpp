@@ -252,6 +252,7 @@
 #pragma clang diagnostic ignored "-Wunused-value"
 #pragma clang diagnostic ignored "-Wtautological-pointer-compare"
 #pragma clang diagnostic ignored "-Wnonportable-include-path"
+#pragma clang diagnostic ignored "-Wc++11-extensions"
 #undef __STDC__
 #endif
 
@@ -306,7 +307,11 @@
 #define ZeroExportC extern "C" __attribute__((visibility("default")))
 #define ZeroDebugBreak() asm("int $3")
 #define ZeroTodo(text)
+#if defined(PLATFORM_EMSCRIPTEN)
+#define ZeroForceInline
+#else
 #define ZeroForceInline /* GCC has issues with __attribute__((always_inline)) */ inline
+#endif
 #define ZeroNoInline
 #endif
 

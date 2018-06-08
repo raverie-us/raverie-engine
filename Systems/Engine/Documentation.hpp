@@ -261,7 +261,7 @@ namespace Zero
     void CreateEventDocFromBoundType(SendsEvent* eventSent);
 
     /// Helper for CreateClassDocFromBoundType to load methods
-    void CreateMethodDocFromBoundType(Function* method, TypeReplacementMap *replacements, bool exportDoc);
+    void CreateMethodDocFromBoundType(Zilch::Function* method, TypeReplacementMap *replacements, bool exportDoc);
 
     /// Helper for CreateClassDocFromBoundType to load properties
     void CreatePropertyDocFromBoundType(Property* metaProperty, TypeReplacementMap *replacements, bool exportDoc);

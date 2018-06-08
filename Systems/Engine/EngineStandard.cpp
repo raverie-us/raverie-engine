@@ -49,11 +49,8 @@ ZilchDefineEnum(Verbosity);
 ZilchDefineEnum(WindowState);
 ZilchDefineEnum(WindowStyleFlags);
 
-ZilchDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, type)
+void LocationBind(LibraryBuilder& builder, BoundType* type)
 {
-  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
-  ZilchBindEnumValues(Location);
-  
   // We need to alias ZilchSelf for the method binding macros
   namespace ZilchSelf = Location;
 
@@ -62,6 +59,14 @@ ZilchDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, ty
   ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum));
   ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum, Location::Enum));
   ZilchBindMethod(GetOpposite);
+}
+
+ZilchDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, type)
+{
+  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
+  ZilchBindEnumValues(Location);
+  
+  LocationBind(builder, type);
 }
 
 // Arrays

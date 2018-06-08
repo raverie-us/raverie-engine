@@ -9,6 +9,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#if defined(PLATFORM_EMSCRIPTEN)
+typedef size_t rsize_t;
+typedef int errno_t;
+
+extern int     vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list argptr);
+extern int     sprintf_s(char* buffer, size_t sizeOfBuffer, const char* format, ...);
+extern int     swprintf_s(wchar_t* buffer, size_t sizeOfBuffer, const wchar_t* format, ...);
+extern errno_t strcat_s(char* dest, rsize_t destsz, const char* src);
+extern errno_t wcscat_s(wchar_t* dest, rsize_t destsz, const wchar_t* src);
+extern errno_t strcpy_s(char* dest, rsize_t destsz, const char* src);
+extern errno_t wcscpy_s(wchar_t* dest, rsize_t destsz, const wchar_t* src);
+extern errno_t strncpy_s(char *dest, rsize_t destsz, const char *src, rsize_t count);
+#endif
+
 // A temporary non-thread safe buffer that is only used for counting the lengths of printfs
 extern char gDiscardBuffer[2];
 

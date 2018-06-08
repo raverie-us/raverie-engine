@@ -22,7 +22,7 @@ inline Bits Measure(T& value)
 template<typename R>
 inline Bits MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_)
 {
-  static_assert(False<T>::Value, "Requires a user-defined MeasureQuantized function");
+  static_assert(False<R>::Value, "Requires a user-defined MeasureQuantized function");
   return 0;
 }
 

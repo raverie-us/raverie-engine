@@ -31,7 +31,6 @@ class BugReporter : public Composite
 {
 public:
   ZilchDeclareType(BugReporter, TypeCopyMode::ReferenceType);
-  typedef BugReporter ZilchSelf;
 
   BugReporter(Composite* parent);
   ~BugReporter();
