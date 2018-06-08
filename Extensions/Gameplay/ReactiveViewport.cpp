@@ -568,7 +568,7 @@ void GameWidget::OnKeyDown(KeyboardEvent* event)
 ReactiveViewport* GameWidget::GetViewportUnder(ReactiveViewport* current)
 {
   // We use previous because widgets draw back to front
-  Widget* currentWidget = PreviousSibling(current);
+  Widget* currentWidget = PreviousSibling(current, false);
 
   while (currentWidget)
   {
@@ -576,7 +576,7 @@ ReactiveViewport* GameWidget::GetViewportUnder(ReactiveViewport* current)
     if (nextViewport)
       return nextViewport;
 
-    currentWidget = PreviousSibling(currentWidget);
+    currentWidget = PreviousSibling(currentWidget, false);
   }
 
   return nullptr;

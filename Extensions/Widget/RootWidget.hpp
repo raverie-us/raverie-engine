@@ -108,9 +108,9 @@ private:
 };
 
 // Get the previous sibling in the tree
-Widget* PreviousSibling(Widget* object);
+Widget* PreviousSibling(Widget* object, bool ignoreInactive);
 
 // Get the next sibling in the tree
-Widget* NextSibling(Widget* object);
+Widget* NextSibling(Widget* object, bool ignoreInactive);
 
 }//namespace Zero
