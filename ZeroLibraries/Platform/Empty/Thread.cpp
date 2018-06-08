@@ -16,11 +16,13 @@ const bool ThreadingEnabled = false;
 
 struct ThreadPrivateData
 {
+  OsInt mResult;
 };
 
 Thread::Thread()
 {
   ZeroConstructPrivateData(ThreadPrivateData);
+  self->mResult = 0;
 }
 
 Thread::~Thread()
@@ -30,12 +32,16 @@ Thread::~Thread()
 
 bool Thread::IsValid()
 {
-  return false;
+  return true;
 }
 
 bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName)
 {
-  return false;
+  ZeroGetPrivateData(ThreadPrivateData);
+  ZPrint("Starting thread '%s' (single threaded)", threadName.c_str());
+  self->mResult = entryFunction(instance);
+  ZPrint("Finished thread '%s'", threadName.c_str());
+  return true;
 }
 
 void Thread::Resume()
@@ -52,12 +58,12 @@ void Thread::Close()
 
 OsInt Thread::WaitForCompletion()
 {
-  return 0;
+  return self->mResult;
 }
 
 OsInt Thread::WaitForCompletion(unsigned long milliseconds)
 {
-  return 0;
+  return self->mResult;
 }
 
 bool Thread::IsCompleted()

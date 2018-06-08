@@ -192,6 +192,8 @@ public:
 
   HashMap<u32, GLuint> mSamplers;
   HashSet<u32> mUnusedSamplers;
+
+  bool mVsync;
 };
 
 } // namespace Zero

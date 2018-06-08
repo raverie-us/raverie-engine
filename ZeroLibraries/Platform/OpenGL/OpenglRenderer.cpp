@@ -724,6 +724,8 @@ void StreamedVertexBuffer::FlushBuffer(bool deactivate)
 //**************************************************************************************************
 void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, OsHandle renderContext, String& error)
 {
+  mVsync = false;
+
   mWindow = windowHandle;
   mDeviceContext = deviceContext;
   mRenderContext = renderContext;
@@ -1225,6 +1227,7 @@ void OpenglRenderer::SetVSync(bool vsync)
 {
   int swapInterval = vsync ? 1 : 0;
   zglSetSwapInterval(this, swapInterval);
+  mVsync = vsync;
 }
 
 //**************************************************************************************************
@@ -1399,7 +1402,14 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
   glDisable(GL_BLEND);
   glUseProgram(0);
 
+  // Disable v-sync so we don't wait on frames (mostly for single threaded mode)
+  // This could cause tearing, but it's the loading screen.
+  zglSetSwapInterval(this, 0);
+
   zglSwapBuffers(this);
+
+  int swapInterval = mVsync ? 1 : 0;
+  zglSetSwapInterval(this, swapInterval);
 }
 
 //**************************************************************************************************

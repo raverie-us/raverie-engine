@@ -152,7 +152,8 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   mShowProgressJob = new ShowProgressJob(mRendererJobQueue);
   mShowProgressJob->mDelayTerminate = true;
 
-  mRendererThread.Initialize(RendererThreadMain, mRendererJobQueue, "RendererThread");
+  if (ThreadingEnabled)
+    mRendererThread.Initialize(RendererThreadMain, mRendererJobQueue, "RendererThread");
   ErrorIf(mRendererThread.IsValid() == false, "RendererThread failed to initialize.");
   mRendererThread.Resume();
 
@@ -163,7 +164,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
 void GraphicsEngine::Update()
 {
   // Do not try to run rendering while this job is going.
-  if (mShowProgressJob->IsRunning())
+  if (ThreadingEnabled && mShowProgressJob->IsRunning())
     return;
 
   ProfileScopeTree("GraphicsSystem", "Engine", Color::Blue);
@@ -352,6 +353,17 @@ void GraphicsEngine::UpdateProgress(ProgressEvent* event)
   mShowProgressJob->mFontTexture = renderFont->mTexture->mRenderData;
   mShowProgressJob->mProgressText = fontProcessor.mVertices;
   mShowProgressJob->Unlock();
+
+  // When not threaded, we want to update the progress, but we don't
+  // want to do a full render for every single resource that is loaded.
+  if (!ThreadingEnabled)
+  {
+    static const size_t cProgressUpdateInterval = 5;
+    static size_t sProgressUpdateFrame = 0;
+    if (sProgressUpdateFrame % cProgressUpdateInterval == 0)
+      RendererThreadMain(mRendererJobQueue);
+    ++sProgressUpdateFrame;
+  }
 }
 
 //**************************************************************************************************
@@ -389,6 +401,9 @@ void GraphicsEngine::EndProgressDelayTerminate()
   mShowProgressJob->Lock();
   mShowProgressJob->mDelayTerminate = false;
   mShowProgressJob->Unlock();
+
+  if (!ThreadingEnabled)
+    return;
 
   // Block until job completes.
   // Important for exports to not run engine update until job fully exits.
@@ -504,6 +519,9 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
 void GraphicsEngine::AddRendererJob(RendererJob* rendererJob)
 {
   mRendererJobQueue->AddJob(rendererJob);
+
+  if (!ThreadingEnabled)
+    RendererThreadMain(mRendererJobQueue);
 }
 
 //**************************************************************************************************

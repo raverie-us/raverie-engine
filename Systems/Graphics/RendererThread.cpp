@@ -25,6 +25,9 @@ OsInt RendererThreadMain(void* rendererThreadJobQueue)
       job->Execute();
     rendererJobs.Clear();
 
+    if (!ThreadingEnabled)
+      break;
+
     running = !jobQueue->ShouldExitThread();
   }
 
@@ -290,7 +293,10 @@ void RepeatingJob::Execute()
   if (ShouldRun())
   {
     OnExecute();
-    Os::Sleep(mExecuteDelay);
+
+    if (ThreadingEnabled)
+      Os::Sleep(mExecuteDelay);
+
     mRendererJobQueue->AddJob(this);
   }
   else
