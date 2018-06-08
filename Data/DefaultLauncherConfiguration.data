@@ -1,0 +1,28 @@
+Cog = 
+{
+	LauncherConfig = 
+	{
+		LauncherAutoRunMode AutoRunMode = None,
+		bool DisplayBuildOnProjects = false,
+		bool ShowDevelopmentBuilds = false,
+		bool AutoCheckForMajorUpdates = true,
+		bool ShowExperimentalBranches = false,
+		int ForcedUpdateVersion = 1,
+	},
+	MainConfig = 
+	{
+		string ApplicationName = "ZeroLauncher",
+	},
+	TextEditorConfig = 
+	{
+	},
+	RecentProjects = 
+	{
+	},
+	UserConfig = 
+	{
+	},
+	ContentConfig = 
+	{
+	},
+},

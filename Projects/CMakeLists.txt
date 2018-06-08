@@ -383,8 +383,6 @@ if ((${platform} STREQUAL "Windows") AND ((${platform_library} STREQUAL "SDL") O
     copy_multiple_dlls(
         ZeroEditor
         ZeroLauncher
-        ImageProcessor
-        GeometryProcessor
         OUTPUT_DIRECTORY ${zero_binary_dir}
         DLL_LOCATIONS
         ## setup all dll locations
@@ -415,7 +413,7 @@ editor_post_build_step(
 
 #### ZeroLauncherSharedLibrary
 # launcher_post_build(aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
-launcher_post_build(
+launcher_shared_post_build(
     ZeroLauncherSharedLibrary 
     ${zero_core_path}
     ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
@@ -431,17 +429,24 @@ copy_cef_bin_post_build(
 ####
 
 #### ZeroLauncher
-create_build_info(
-    ZeroLauncher
-    ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
+launcher_post_build(
+    ZeroLauncher 
     ${zero_core_path}
-    ${zero_binary_dir}
+    ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
     ${zero_binary_dir}
 )
 
-copy_cef_bin_post_build(
-    ZeroLauncher
-    ${zero_core_path}
-    ${zero_binary_dir}
-)
+#create_build_info(
+#    ZeroLauncher
+#    ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
+#    ${zero_core_path}
+#    ${zero_binary_dir}
+#    ${zero_binary_dir}
+#)
+#
+#copy_cef_bin_post_build(
+#    ZeroLauncher
+#    ${zero_core_path}
+#    ${zero_binary_dir}
+#)
 ####

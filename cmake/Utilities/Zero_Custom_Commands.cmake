@@ -163,11 +163,47 @@ endfunction()
 ####
 
 #### moves CEF binaries into the bin folder and runs Launcher postbuild script
-function(launcher_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
+
+function(copy_launcher_files aTarget aZeroCoreDirectory aBuildOutputDirectory)
     copy_cef_bin_post_build(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
+
+    # copy the configuration file
+    add_custom_command(TARGET ${aTarget} POST_BUILD
+    # executes "cmake -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  
+    # input file
+    ${aZeroCoreDirectory}/Data/Configuration.data
+    #output file
+    ${aBuildOutputDirectory}/${aTarget}/Configuration.data
+    )
+
+    add_custom_command(TARGET ${aTarget} POST_BUILD
+    # executes "cmake -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  
+    # input file
+    ${aZeroCoreDirectory}/Data/DefaultLauncherConfiguration.data
+    #output file
+    ${aBuildOutputDirectory}/${aTarget}/DefaultLauncherConfiguration.data
+    )
+endfunction()
+
+function(launcher_shared_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
+    copy_launcher_files(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
 
     add_custom_command(TARGET ${aTarget} POST_BUILD
         COMMAND CALL "\"${aProjectDirectory}/PostBuild.cmd\"" "\"${aBuildOutputDirectory}\""
+    )
+endfunction()
+
+function(launcher_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
+    copy_launcher_files(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
+
+    create_build_info(
+        ${aTarget}
+        ${CurrentDirectory}/${aTarget}/${aTarget}
+        ${aZeroCoreDirectory}
+        ${aBuildOutputDirectory}
+        ${aBuildOutputDirectory}
     )
 endfunction()
 ####
