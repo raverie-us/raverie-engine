@@ -153,9 +153,10 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   mShowProgressJob->mDelayTerminate = true;
 
   if (ThreadingEnabled)
+  {
     mRendererThread.Initialize(RendererThreadMain, mRendererJobQueue, "RendererThread");
-  ErrorIf(mRendererThread.IsValid() == false, "RendererThread failed to initialize.");
-  mRendererThread.Resume();
+    ErrorIf(mRendererThread.IsValid() == false, "RendererThread failed to initialize.");
+  }
 
   mVerticalSync = false;
 }

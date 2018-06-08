@@ -44,14 +44,17 @@ namespace Z
 JobSystem::JobSystem()
 {
   mWorkerThreadsActive = true;
-  Workers.Resize(10);
 
-  for(uint i=0;i<Workers.Size();++i)
+  if (ThreadingEnabled)
   {
-    Workers[i] = new Thread();
-    Thread& thread = *Workers[i];
-    thread.Initialize(&Thread::ObjectEntryCreator<JobSystem,&JobSystem::WorkerThreadEntry>, this, "Background");
-    thread.Resume();
+    Workers.Resize(10);
+
+    for (uint i = 0; i < Workers.Size(); ++i)
+    {
+      Workers[i] = new Thread();
+      Thread& thread = *Workers[i];
+      thread.Initialize(&Thread::ObjectEntryCreator<JobSystem, &JobSystem::WorkerThreadEntry>, this, "Background");
+    }
   }
 }
 

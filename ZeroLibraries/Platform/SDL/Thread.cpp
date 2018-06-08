@@ -67,18 +67,6 @@ bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadN
   return true;
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
-void Thread::Resume()
-{
-}
-#endif
-
-#if !defined(ZeroPlatformNoIncompleteImplementations)
-void Thread::Suspend()
-{
-}
-#endif
-
 bool Thread::IsValid()
 {
   ZeroGetPrivateData(ThreadPrivateData);

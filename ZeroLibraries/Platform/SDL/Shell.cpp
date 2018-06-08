@@ -282,7 +282,7 @@ bool FileDialog(FileDialogInfo& config, bool isOpen)
   const char* message =
     "SDL does not support file open/save dialogs.\n"
     "As a workaround, you can copy a file path and click Clipboard.\n"
-    "You can use the bar | to separate multiple files.\n";
+    "You can use newlines to separate multiple files.\n";
 
   String fullTitle = BuildString(title, config.Title);
   String fullMessage = message;
@@ -312,7 +312,7 @@ bool FileDialog(FileDialogInfo& config, bool isOpen)
     return false;
 
   String files = text;
-  forRange(StringRange fileRange, files.Split("|"))
+  forRange(StringRange fileRange, files.Split("\n"))
   {
     config.mFiles.PushBack(fileRange.Trim());
   }

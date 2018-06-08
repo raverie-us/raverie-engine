@@ -109,7 +109,6 @@ void AsyncProcess::Start(Status& status, ProcessStartInfo& startInfo)
     threadInfo.mIsRunning = true;
     mProcess.OpenStandardOut(threadInfo.mFileStream);
     threadInfo.mThread.Initialize(AsyncProcess::StandardOutputThreadFn, this, "StandardOutputThread");
-    threadInfo.mThread.Resume();
   }
   // Start the standard error thread if necessary
   if(startInfo.mRedirectStandardError)
@@ -118,7 +117,6 @@ void AsyncProcess::Start(Status& status, ProcessStartInfo& startInfo)
     threadInfo.mIsRunning = true;
     mProcess.OpenStandardError(threadInfo.mFileStream);
     threadInfo.mThread.Initialize(AsyncProcess::StandardErrorThreadFn, this, "StandardErrorThread");
-    threadInfo.mThread.Resume();
   }
   // Redirect standard input if necessary
   if(startInfo.mRedirectStandardInput)

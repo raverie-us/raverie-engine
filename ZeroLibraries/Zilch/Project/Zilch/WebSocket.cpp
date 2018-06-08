@@ -596,10 +596,6 @@ namespace Zilch
     // Initialize all of our threads
     this->ReceiveThread.Initialize(ReceiveEntryPoint, this, "WebSocketReceive");
     this->SendThread.Initialize(SendEntryPoint, this, "WebSocketSend");
-
-    // Start the send and recieve threads
-    this->SendThread.Resume();
-    this->ReceiveThread.Resume();
   }
 
   //***************************************************************************
@@ -732,9 +728,6 @@ namespace Zilch
 
     // Create the web socket accepting thread
     this->AcceptThread.Initialize(AcceptEntryPoint, this, "WebSocketAccept");
-
-    // Start the accepting thread
-    this->AcceptThread.Resume();
   }
 
   //***************************************************************************

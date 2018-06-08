@@ -32,12 +32,6 @@ public:
   // Initializes the thread but does not run it.
   bool Initialize(EntryFunction entryFunction, void* instance, StringParam threadName);
 
-  // Resume the thread.
-  void Resume();
-
-  // Suspend the thread.
-  void Suspend();
-
   // Close the thread handle. The thread should have been shut down before calling this function.
   void Close();
 

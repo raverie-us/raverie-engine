@@ -57,6 +57,11 @@ void OsEvent::Wait()
 {
 }
 
+OsHandle OsEvent::GetHandle()
+{
+  return nullptr;
+}
+
 //----------------------------------------------------------- Semaphore
 Semaphore::Semaphore()
 {

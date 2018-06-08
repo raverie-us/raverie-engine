@@ -1,14 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// \file Thread.cpp
-/// Declaration of the Thread class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
+/// Authors: Dane Curbow, Trevor Sundberg
+/// Copyright 2018, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/Thread.hpp"
 
 namespace Zero
 {
@@ -16,13 +12,11 @@ const bool ThreadingEnabled = false;
 
 struct ThreadPrivateData
 {
-  OsInt mResult;
 };
 
 Thread::Thread()
 {
   ZeroConstructPrivateData(ThreadPrivateData);
-  self->mResult = 0;
 }
 
 Thread::~Thread()
@@ -32,24 +26,13 @@ Thread::~Thread()
 
 bool Thread::IsValid()
 {
-  return true;
+  return false;
 }
 
 bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName)
 {
-  ZeroGetPrivateData(ThreadPrivateData);
-  ZPrint("Starting thread '%s' (single threaded)", threadName.c_str());
-  self->mResult = entryFunction(instance);
-  ZPrint("Finished thread '%s'", threadName.c_str());
-  return true;
-}
-
-void Thread::Resume()
-{
-}
-
-void Thread::Suspend()
-{
+  Error("Cannot initialize threads on a single threaded platform (check Zero::ThreadingEnabled)");
+  return false;
 }
 
 void Thread::Close()
@@ -58,12 +41,12 @@ void Thread::Close()
 
 OsInt Thread::WaitForCompletion()
 {
-  return self->mResult;
+  return 0;
 }
 
 OsInt Thread::WaitForCompletion(unsigned long milliseconds)
 {
-  return self->mResult;
+  return 0;
 }
 
 bool Thread::IsCompleted()

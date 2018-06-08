@@ -91,7 +91,6 @@ namespace Audio
 
     // Start up the mix thread
     MixThread.Initialize(StartMix, this, "Audio mix");
-    MixThread.Resume();
     if (!MixThread.IsValid())
     {
       ZPrint("Error creating audio mix thread\n");

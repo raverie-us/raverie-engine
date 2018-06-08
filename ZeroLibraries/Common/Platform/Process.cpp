@@ -71,8 +71,6 @@ void SimpleProcess::ExecProcess(StringParam debugName, StringParam commandLine, 
   OpenStandardOut(mStandardOut);
 
   mReadThread.Initialize(ReadThreadEntryPoint, this, debugName);
-  mReadThread.Resume();
-  
 }
 
 OsInt SimpleProcess::ReadThreadEntryPoint(void* data)

@@ -92,7 +92,6 @@ namespace Audio
 
     // Start the decoding thread
     DecodeThread.Initialize(StartDecodeThread, this, "Audio decoding");
-    DecodeThread.Resume();
 
     // If not streaming, start decoding immediately
     if (!mStreaming)
@@ -166,7 +165,6 @@ namespace Audio
 
     // Restart the decoding thread
     DecodeThread.Initialize(StartDecodeThread, this, "Audio decoding");
-    DecodeThread.Resume();
     // Signal the thread to decode a packet
     DecodingSemaphore.Increment();
   }

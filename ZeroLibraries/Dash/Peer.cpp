@@ -285,7 +285,6 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
       Close();
       return;
     }
-    mIpv4ReceiveThread.Resume();
   }
 
   // Using IPv6 socket?
@@ -300,7 +299,6 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
       Close();
       return;
     }
-    mIpv6ReceiveThread.Resume();
   }
 
   // Update once to initialize links and plugins

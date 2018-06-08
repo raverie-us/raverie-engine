@@ -15,7 +15,6 @@ DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch, CallbackFunction callb
   mCallback = callback;
 
   mWorkThread.Initialize(Thread::ObjectEntryCreator<DirectoryWatcher, &DirectoryWatcher::RunThreadEntryPoint>, this, "DirectoryWatcherWorker");
-  mWorkThread.Resume();
   mCancelEvent.Initialize(true, false);
 }
 
