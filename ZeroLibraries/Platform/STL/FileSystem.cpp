@@ -6,7 +6,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#if defined(PLATFORM_EMSCRIPTEN)
+#include <experimental/filesystem>
+#else
 #include <filesystem>
+#endif
+
 
 namespace std
 {

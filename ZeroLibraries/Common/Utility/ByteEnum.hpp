@@ -19,8 +19,7 @@ public:
   ByteEnum(EnumType value) : mValue(value) {}
   ByteEnum& operator=(EnumType value) {mValue = value; return *this;}
 
-  operator EnumType() {return (EnumType)mValue;}
-  operator const EnumType() const {return (const EnumType)mValue;}
+  operator EnumType() const { return (const EnumType)mValue; }
 
   byte mValue;
 };

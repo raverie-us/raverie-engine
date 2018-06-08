@@ -7,8 +7,9 @@
 # Configuration
 option(VS_LLVM_2014 "If set to 'ON', project will be configured for using the LLVM_2014 toolset for VS 2015." OFF)
 option(Windows_VS_2015 "If set to 'ON', project will be configured for using the v140 Visual C++ toolset for VS 2015." OFF)
+option(Windows_Emscripten "If set to 'ON', project will be configured for using the emsdk emscripten toolset with Mingw makefiles." OFF)
 
-set(options_list "Windows_VS_2015 VS_LLVM_2014")
+set(options_list "Windows_VS_2015 VS_LLVM_2014 Windows_Emscripten")
 
 option(Bits_32 "If set to 'ON' the project generated will be for 32bit builds" OFF)
 option(Bits_64 "If set to 'ON' the project generated will be for 64bit builds" OFF)
@@ -47,6 +48,8 @@ if(VS_LLVM_2014)
     include(${cmake_config_dir}/VS_LLVM_2014.cmake)
 elseif(Windows_VS_2015)
     include(${cmake_config_dir}/Windows_VS_2015.cmake)
+elseif(Windows_Emscripten)
+    include(${cmake_config_dir}/Windows_Emscripten.cmake)
 else()
     message(FATAL_ERROR "No supported platform option given and no supported config for current platform found.")
 endif()

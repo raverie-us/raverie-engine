@@ -195,13 +195,15 @@ InterprocessMutex::InterprocessMutex()
 
 InterprocessMutex::~InterprocessMutex()
 {
-  ZeroGetPrivateData(SemaphorePrivateData)
+  ZeroGetPrivateData(InterprocessMutexPrivateData)
   delete self->mFile;
-  ZeroDestructPrivateData(SemaphorePrivateData);
+  ZeroDestructPrivateData(InterprocessMutexPrivateData);
 }
 
 void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
 {
+  ZeroGetPrivateData(InterprocessMutexPrivateData)
+
   // This approach is a bit silly, but instead of using an actual inter process mutex we
   // open a common file for write access. We use the temp directory because we know it will
   // be shared between all running instances and it is guaranteed writable.
@@ -231,7 +233,7 @@ void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool f
 
   String sharedMutexPathName = FilePath::Combine(GetTemporaryDirectory(), builder.ToString());
 
-  mFile->Open(sharedMutexPathName, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status);
+  self->mFile->Open(sharedMutexPathName, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status);
 }
 
 CountdownEvent::CountdownEvent()

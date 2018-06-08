@@ -687,7 +687,7 @@ MethodDoc* ClassDoc::GetMethodDoc(Function* function)
   return nullptr;
 }
 
-void ClassDoc::CreateMethodDocFromBoundType(Function* method,TypeReplacementMap *replacements
+void ClassDoc::CreateMethodDocFromBoundType(Zilch::Function* method, TypeReplacementMap *replacements
   , bool exportDoc)
 {
 

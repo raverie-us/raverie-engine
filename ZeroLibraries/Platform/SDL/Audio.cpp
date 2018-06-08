@@ -72,7 +72,7 @@ AudioInputOutput::AudioInputOutput()
 //************************************************************************************************
 AudioInputOutput::~AudioInputOutput()
 {
-  delete PlatformData;
+  delete (AudioIoSdlData*)PlatformData;
 }
 
 //************************************************************************************************
@@ -159,7 +159,7 @@ StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
   }
   else
   {
-    LogAudioIoError(String::Format("Unable to start audio %s stream", data.mStreamTypeName), resultMessage);
+    LogAudioIoError(String::Format("Unable to start audio %s stream", data.mStreamTypeName.c_str()), resultMessage);
     
     return StreamStatus::Uninitialized;
   }

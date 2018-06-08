@@ -2,7 +2,7 @@
 // Copyright 2015, DigiPen Institute of Technology
 
 #include "Precompiled.hpp"
-#include "OpenGLRenderer.hpp"
+#include "OpenglRenderer.hpp"
 
 // As Of NVidia Driver 302 exporting this symbol will enable GPU hardware accelerated 
 // graphics when using Optimus (Laptop NVidia gpu / Intel HD auto switching). 
