@@ -254,6 +254,7 @@ void ScanDevice(HANDLE deviceHandle, RID_DEVICE_INFO& ridDeviceInfo, Joysticks* 
       axis.DeadZonePercent = 0.16f;
       axis.CanCalibrate = true;
       axis.UseMid = true;
+      axis.CanBeDisabled = (valueCap.HasNull != 0);
 
       // If this is a hat, we need to make sure it doesn't get calibrated
       if (valueCap.Range.UsageMin == UsbUsage::HatSwitch)
@@ -416,13 +417,16 @@ void PreParsed(Joystick* joystick, RAWINPUT* pRawInput)
   {
     auto& axis = map->mAxes[i];
 
-    ULONG value;
+    ULONG value = 0;
     
-	ReturnIf(HidP_GetUsageValue(HidP_Input, pValueCaps[i].UsagePage, 0, axis.Offset, &value, pPreparsedData,
+	  ReturnIf(HidP_GetUsageValue(HidP_Input, pValueCaps[i].UsagePage, 0, axis.Offset, &value, pPreparsedData,
                                 (PCHAR)pRawInput->data.hid.bRawData, pRawInput->data.hid.dwSizeHid) != HIDP_STATUS_SUCCESS,,
       "Unable to get input value");
     
-    joystick->RawSetAxis(i, value);
+    if (pValueCaps[i].HasNull && value == 0)
+      joystick->RawSetAxisDisabled(i);
+    else
+      joystick->RawSetAxis(i, value);
 
    // ZPrint("Axis with usage %x is %d\n", pValueCaps[i].Range.UsageMin, value);
   }
