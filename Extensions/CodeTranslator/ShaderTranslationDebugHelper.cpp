@@ -11,6 +11,7 @@ namespace Zero
 
 //-------------------------------------------------------------------FragmentSearchProvider
 FragmentSearchProvider::FragmentSearchProvider(StringParam attribute)
+  : SearchProvider("Fragment")
 {
   mAttribute = attribute;
 }

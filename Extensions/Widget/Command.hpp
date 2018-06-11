@@ -122,13 +122,10 @@ public:
 class CommandSearchProvider : public SearchProvider
 {
 public:
-  /// Boost priority to make commands appear above results with the same
-  /// name (like script commands over script files).
-  static const int sCommandPriorityBoost = 10;
-
+  CommandSearchProvider();
   // Search Provider Interface
   void Search(SearchData& search) override;
-  String GetType(SearchViewResult& element) override;
+  String GetElementType(SearchViewResult& element) override;
   void RunCommand(SearchView* searchView, SearchViewResult& element) override;
   Composite* CreatePreview(Composite* parent, SearchViewResult& element) override;
 

@@ -256,7 +256,7 @@ bool LoadEditorContent(Cog* configCog)
   //MeshManager::Find("Cube")->PrimitiveShape = MeshPrimitiveShape::Box;
   //MeshManager::Find("Sphere")->PrimitiveShape = MeshPrimitiveShape::Sphere;
   //MeshManager::Find("Cylinder")->PrimitiveShape = MeshPrimitiveShape::Cylinder;
-  
+
   //To move to data files
   ShowBuiltInResource<ArchetypeManager>("Sprite");
   ShowBuiltInResource<ArchetypeManager>("Cube");
@@ -363,7 +363,6 @@ bool LoadEditorContent(Cog* configCog)
   ShowBuiltInResource<PhysicsSolverConfigManager>("PostStabilization");
 
   ShowBuiltInResource<SoundAttenuatorManager>("DefaultAttenuation");
-
 
   float time = (float)timer.UpdateAndGetTime();
   ZPrint("Finished Loading Editor Content in %.2f\n", time);

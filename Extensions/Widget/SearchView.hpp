@@ -16,6 +16,7 @@ namespace Zero
 struct SearchViewResult;
 struct SearchData;
 class ScrollArea;
+class SearchProvider;
 class SearchViewElement;
 class TextBox;
 class KeyboardEvent;
@@ -37,6 +38,43 @@ public:
 
   SearchView* View;
   SearchViewResult* Element;
+};
+
+// Boost priority to make differing result types appear above other result types.
+// The higher the range boost value, the higher the sort priority order.
+namespace SearchViewResultPriority
+{
+
+enum PriorityRange
+{
+  CommandBegin = 1000,
+  LibraryBegin = 2000,
+  TagBegin = 3000
+};
+
+}
+
+/// Possible search match element
+struct SearchViewResult
+{
+public:
+  SearchViewResult()
+    : Data(nullptr)
+  {
+
+  }
+  // Provider that added this result
+  SearchProvider* Interface;
+  // Name match Priority
+  int Priority;
+  // Match User Data
+  void* Data;
+  // Handle to object
+  Handle ObjectHandle;
+  // Name of the Match
+  String Name;
+  // Whether or not the result is considered valid (displayed grayed out if not)
+  Status mStatus;
 };
 
 class SearchProviderFilter
@@ -67,15 +105,17 @@ public:
 class SearchProvider
 {
 public:
-  SearchProvider() : mFilter(nullptr) {}
+  SearchProvider(StringParam providerType = "TypeInvalid") : mFilter(nullptr), mProviderType(providerType) {}
 
   //Virtual Destructor for cleanup 
   virtual ~SearchProvider(){}
   //Collect Search Results
   virtual void Search(SearchData& search){}
-  //Get a type to display
-  virtual String GetType(SearchViewResult& element){return String();}
-  //Get an small icon to display
+  //Get an element's display type
+  virtual String GetElementType(SearchViewResult& element){return String();}
+  //Get an element's display name
+  virtual String GetElementName(SearchViewResult& element) { return element.Name; }
+  //Get a small icon to display
   virtual String GetIcon(SearchViewResult& element){return String();}
   //Used for tags element does not end search
   virtual bool OnMatch(SearchView* searchView, SearchViewResult& element){return true;}
@@ -86,48 +126,38 @@ public:
 
   virtual bool FilterResult(SearchViewResult& result);
 
+  //Get an element's display name with its provider's display type
+  String GetElementNameAndSearchType(SearchViewResult& element)
+  {
+    ReturnIf(mProviderType == "TypeInvalid", mProviderType, "Provider type must be specified.");
+    return BuildString(GetElementName(element), "(", mProviderType, ")");
+  }
+
   template <typename T, bool (T::*Func)(SearchViewResult& result)>
   void SetCallbackFilter(T* instance)
   {
     mFilter = new SearchProviderFilterMethod<T, Func>(instance);
   }
 
+  // Helps differentiate name-collisions on list items.
+  String mProviderType;
+
   // This allows for an extra step that filters what a search provider would normally return.
   SearchProviderFilter* mFilter;
 };
 
-/// Possible search match element
-struct SearchViewResult
-{
-public:
-  SearchViewResult()
-    : Data(nullptr)
-  {
-
-  }
-  // Provider that added this result
-  SearchProvider* Interface;
-  // Name match Priority
-  int Priority;
-  // Match User Data
-  void* Data;
-  // Handle to object
-  Handle ObjectHandle;
-  // Name of the Match
-  String Name;
-  // Whether or not the result is considered valid (displayed grayed out if not)
-  Status mStatus;
-};
-
-typedef Array<SearchViewResult> SearchElements;
-
+//--------------------------------------------------------------- Search Data
 /// All data needed to preform a search 
 struct SearchData
 {
-  ~SearchData()
-  {
-    ClearSearchProviders();
-  }
+  ~SearchData();
+
+  void Search();
+
+  // Output Data
+  void AddAvailableTagsToResults();
+  void Sort();
+  void ClearSearchProviders();
 
   // Search Providers
   Array<SearchProvider*> SearchProviders;
@@ -138,13 +168,6 @@ struct SearchData
   TagList ActiveTags;
   // Meta types active for this search
   Array<BoundType*> ActiveMeta;
-
-  void Search();
-
-  // Output Data
-  void AddAvailableTagsToResults();
-  void Sort();
-  void ClearSearchProviders();
 
   // Tags found in this search
   TagList AvailableTags;

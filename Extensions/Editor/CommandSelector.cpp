@@ -40,9 +40,6 @@ GeneralSearchView::GeneralSearchView(Composite* parent, Widget* returnFocus)
 
   AddEditorProviders(*mSearch);
 
-  CommandManager* commandManager = CommandManager::GetInstance();
-  mSearch->SearchProviders.PushBack(commandManager->GetCommandSearchProvider());
-
   Window* window = GetWindowContaining(this);
   ConnectThisTo(window, Events::FocusLostHierarchy, OnFocusOut);
   ConnectThisTo(window, Events::FocusReset, OnFocusOut);

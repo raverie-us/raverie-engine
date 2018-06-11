@@ -146,7 +146,7 @@ public:
   SelectionHistory* mHistory;
 
   SelectionSearch(SelectionHistory* history)
-    : mHistory(history)
+    : SearchProvider("SelectionSearch"), mHistory(history)
   {
 
   }
@@ -185,7 +185,7 @@ public:
     return true;
   }
 
-  String GetType(SearchViewResult& element) override
+  String GetElementType(SearchViewResult& element) override
   {
     return element.ObjectHandle.StoredType->Name;
   }

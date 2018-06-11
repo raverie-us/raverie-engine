@@ -498,7 +498,7 @@ void PopulateGroup(PreviewWidgetGroup* group, SearchData* searchData,
   {
     SearchViewResult& result = searchData->Results[i];
 
-    String resultType = result.Interface->GetType(result);
+    String resultType = result.Interface->GetElementType(result);
     if(resultType != "Tag")
     {
       Resource* resource = (Resource*)result.Data;
@@ -593,7 +593,7 @@ void LibraryView::UpdateVisibleResources()
   {
     forRange(SearchViewResult& result, mSearch->Results.All())
     {
-      String resultType = result.Interface->GetType(result);
+      String resultType = result.Interface->GetElementType(result);
       if(resultType != "Tag")
       {
         Resource* resource = (Resource*)result.Data;

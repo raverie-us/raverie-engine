@@ -190,6 +190,11 @@ String SeperateWords(StringParam sourceString)
 }
 
 //-------------------------------------------------------------------CommandSearchProvider
+CommandSearchProvider::CommandSearchProvider()
+  : SearchProvider("Command")
+{
+}
+
 void CommandSearchProvider::Search(SearchData& search)
 {
   DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig);
@@ -205,7 +210,7 @@ void CommandSearchProvider::Search(SearchData& search)
   }
 }
 
-String CommandSearchProvider::GetType(SearchViewResult& element)
+String CommandSearchProvider::GetElementType(SearchViewResult& element)
 {
   const String CommandName = "Command";
   return CommandName;
@@ -235,7 +240,7 @@ void CommandSearchProvider::FilterAddCommand(SearchData& search, Command* comman
     result.Data = command;
     result.Interface = this;
     result.Name = command->Name;
-    result.Priority = priority + sCommandPriorityBoost;
+    result.Priority = priority + SearchViewResultPriority::CommandBegin;
   }
 }
 
