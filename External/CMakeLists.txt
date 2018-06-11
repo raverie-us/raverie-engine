@@ -83,9 +83,15 @@ set(SDLPath ${CurrentDirectory}/SDL)
 
 foreach(libStatic ${StaticExternals})
     # get lists of libraries
-    file(GLOB ${libStatic}StaticPath ${${libStatic}Path}/lib/${platform}/${bit}/*.[Ll][Ii][Bb])
-    file(GLOB ${libStatic}StaticDebugPath ${${libStatic}Path}/lib/${platform}/${bit}/Debug/*.[Ll][Ii][Bb])
-    file(GLOB ${libStatic}StaticReleasePath ${${libStatic}Path}/lib/${platform}/${bit}/Release/*.[Ll][Ii][Bb])
+    if ("${bit}" STREQUAL "")
+        file(GLOB ${libStatic}StaticPath ${${libStatic}Path}/lib/${platform}/*.*)
+        file(GLOB ${libStatic}StaticDebugPath ${${libStatic}Path}/lib/${platform}/Debug/*.*)
+        file(GLOB ${libStatic}StaticReleasePath ${${libStatic}Path}/lib/${platform}/Release/*.*)
+    else()
+        file(GLOB ${libStatic}StaticPath ${${libStatic}Path}/lib/${platform}/${bit}/*.*)
+        file(GLOB ${libStatic}StaticDebugPath ${${libStatic}Path}/lib/${platform}/${bit}/Debug/*.*)
+        file(GLOB ${libStatic}StaticReleasePath ${${libStatic}Path}/lib/${platform}/${bit}/Release/*.*)
+    endif()
 
 
 
