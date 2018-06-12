@@ -344,10 +344,6 @@ namespace Zilch
   // Maps the line that a node occurs on to the node itself
   void MapLinesToNodes(HashMap<String, OriginInfo>& info, SyntaxNode* node)
   {
-    // Skip attribute nodes, they are attached in a similar fashion to comments
-    if (Type::DynamicCast<AttributeNode*>(node) != nullptr)
-      return;
-
     // Populate all the children of the current node
     NodeChildren children;
     node->PopulateChildren(children);
@@ -357,7 +353,7 @@ namespace Zilch
 
     // Map the current node's line to the node itself
     // If another node exists under that same line, keep the first one
-    // This is so that comments get attached to the highest parent node occuring on that line
+    // This is so that comments get attached to the highest parent node occurring on that line
     // (eg for 'var i = 5;' to the 'var' statement instead of the '5' expression);
     origin.LineToNode.InsertNoOverwrite(node->Location.StartLine, node);
 
@@ -395,14 +391,19 @@ namespace Zilch
       OriginInfo& origin = info[comment.Location.Origin];
 
       // Check only if it's on the same line or the next line (don't attach comments if they have one line space in between)
-      for (size_t j = comment.Location.StartLine; j <= origin.MaxLine && j <= comment.Location.EndLine + 1; ++j)
+      size_t endLine = comment.Location.EndLine + 1;
+      for (size_t line = comment.Location.StartLine; line <= origin.MaxLine && line <= endLine; ++line)
       {
         // Attempt to find a node at the current line
-        SyntaxNode* node = origin.LineToNode.FindValue(j, nullptr);
+        SyntaxNode* node = origin.LineToNode.FindValue(line, nullptr);
 
         // If we found a node and that node's primary location is the line we're attaching to...
-        if (node != nullptr && node->Location.PrimaryLine == j)
+        if (node != nullptr && node->Location.PrimaryLine == line)
         {
+          // If this is an attribute, then instead attach it to the parent of the attribute (class, function, property, etc)
+          if (AttributeNode* attributeNode = node->FindParentOrSelf<AttributeNode>())
+            node = attributeNode->Parent;
+
           // Append the comment to the node
           node->Comments.PushBack(comment.Token);
 
@@ -416,11 +417,30 @@ namespace Zilch
             SyntaxNode* child = *childPtr;
 
             // Append the comment to the child also if the child has the same primary line and start position
-            if (child->Location.StartPosition == node->Location.StartPosition && child->Location.PrimaryLine == j)
+            if (child->Location.StartPosition == node->Location.StartPosition && child->Location.PrimaryLine == line)
               child->Comments.PushBack(comment.Token);
           }
 
           break;
+        }
+
+        // If we got here and it's the end line, then we didn't attach the comment
+        if (line == endLine)
+        {
+          // If there's a comment on this line, then extend our end line
+          for (size_t k = i; k < comments.Size(); ++k)
+          {
+            UserToken& nextComment = comments[k];
+
+            // If the line is before the next comment, then we're done searching...
+            if (line < nextComment.Location.StartLine)
+              break;
+
+            // If the line is within the end line of the next comment,
+            // then we should keep searching past the end of that comment!
+            if (line <= nextComment.Location.EndLine)
+              endLine = nextComment.Location.EndLine + 1;
+          }
         }
       }
     }
@@ -429,7 +449,7 @@ namespace Zilch
   //***************************************************************************
   bool Project::CompileUncheckedSyntaxTree(SyntaxTree& syntaxTreeOut, Array<UserToken>& tokensOut, EvaluationMode::Enum evaluation)
   {
-    // Reset the unique variable-id counter (ensures determanistic behavior)
+    // Reset the unique variable-id counter (ensures deterministic behavior)
     this->VariableUniqueIdCounter = 0;
 
     // Store all the parsed comment tokens

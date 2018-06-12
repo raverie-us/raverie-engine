@@ -1114,7 +1114,7 @@ namespace Zilch
       this->SetNodeLocationStartToLastSave(node);
 
       // Attach any attributes we parsed for this member variable
-      this->AttachLastAttributeToNode(node->Attributes);
+      this->AttachLastAttributeToNode(node, node->Attributes);
       
       // If this is a static variable...
       if (GetAttribute(node->Attributes, StaticAttribute) != nullptr)
@@ -1274,7 +1274,7 @@ namespace Zilch
       this->SetNodeLocationStartToLastSave(node);
 
       // Attach any attributes we parsed for this member variable
-      this->AttachLastAttributeToNode(node->Attributes);
+      this->AttachLastAttributeToNode(node, node->Attributes);
 
       // The name token we attempt to read
       const UserToken* nameToken = nullptr;
@@ -1485,10 +1485,13 @@ namespace Zilch
   }
   
   //***************************************************************************
-  void Parser::AttachLastAttributeToNode(NodeList<AttributeNode>& attributes)
+  void Parser::AttachLastAttributeToNode(SyntaxNode* node, NodeList<AttributeNode>& attributes)
   {
     // Output the list of attributes
     attributes = this->LastAttributes;
+
+    ZilchForEach(AttributeNode* attribute, attributes)
+      attribute->Parent = node;
 
     // Clear out the last attributes
     this->LastAttributes.Clear();
@@ -1562,7 +1565,7 @@ namespace Zilch
 
       // We read the class or struct keyword, it's safe to assume no other node type could be here
       // Attach the attributes we read above to the class node
-      this->AttachLastAttributeToNode(node->Attributes);
+      this->AttachLastAttributeToNode(node, node->Attributes);
 
       // Mark if this is considered a flags enum or not...
       node->IsFlags = (enumType->TokenId == Grammar::Flags);
@@ -1672,7 +1675,7 @@ namespace Zilch
 
       // We read the class or struct keyword, it's safe to assume no other node type could be here
       // Attach the attributes we read above to the class node
-      this->AttachLastAttributeToNode(node->Attributes);
+      this->AttachLastAttributeToNode(node, node->Attributes);
 
       // Set if we are a value type or not
       if (objectType->TokenId == Grammar::Struct)
@@ -2145,7 +2148,7 @@ namespace Zilch
       this->SetNodeLocationStartToLastSave(node);
 
       // Attach any attributes to this function node
-      this->AttachLastAttributeToNode(node->Attributes);
+      this->AttachLastAttributeToNode(node, node->Attributes);
 
       // Get the name of the function
       const UserToken* functionName = nullptr;
@@ -2274,7 +2277,7 @@ namespace Zilch
           this->AcceptTokenPosition();
 
           // Attach any attributes to this function node
-          this->AttachLastAttributeToNode(node->Attributes);
+          this->AttachLastAttributeToNode(node, node->Attributes);
           return node;
         }
       }
@@ -2413,7 +2416,7 @@ namespace Zilch
       this->SetNodeLocationStartToLastSave(node);
 
       // Attach any attributes we parsed for this member variable
-      this->AttachLastAttributeToNode(node->Attributes);
+      this->AttachLastAttributeToNode(node, node->Attributes);
 
       // Get the name of the variable
       if (ExpectAndRetrieve(Grammar::UpperIdentifier, node->Name, ErrorCode::SendsEventStatementNameNotFound))

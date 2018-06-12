@@ -132,7 +132,7 @@ namespace Zilch
     bool ParseOneOptionalAttribute();
 
     // Apply the last attribute to a node
-    void AttachLastAttributeToNode(NodeList<AttributeNode>& attributes);
+    void AttachLastAttributeToNode(SyntaxNode* node, NodeList<AttributeNode>& attributes);
 
     // Accept a type specifier (return type for a function)
     // Returns true if it parses successfully, false otherwise (note that no type specifier will return true!)
