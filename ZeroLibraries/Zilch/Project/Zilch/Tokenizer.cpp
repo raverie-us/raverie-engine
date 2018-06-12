@@ -151,6 +151,8 @@ namespace Zilch
   {
     // The next token that will be parsed as we move along
     UserToken nextToken;
+    
+    CodeLocation multiLineCommentStart;
 
     // Loop and read tokens until we get an error or reach the end
     while (this->ReadToken(&nextToken))
@@ -162,6 +164,9 @@ namespace Zilch
         // If we get a comment start symbol, continue on into block comment testing
         case Grammar::CommentStart:
         {
+          if (this->CommentDepth == 0)
+            multiLineCommentStart = nextToken.Location;
+
           // Since we just hit a comment start, increment the comment depth
           ++this->CommentDepth;
         }
@@ -175,6 +180,19 @@ namespace Zilch
           {
             // Since we just hit a comment end, decrement the comment depth
             --this->CommentDepth;
+
+            // If we ended the multi-line comment, create a single token for it
+            if (this->CommentDepth == 0)
+            {
+              // We use the end position of the start, and the start position of the end to strip the /* and */
+              nextToken.Start = multiLineCommentStart.EndPosition;
+              nextToken.Length = nextToken.Location.StartPosition - nextToken.Start;
+              nextToken.Token = this->Data.SubStringFromByteIndices(nextToken.Start, nextToken.Location.StartPosition);
+              nextToken.Location.StartPosition = multiLineCommentStart.StartPosition;
+              nextToken.Location.StartLine = multiLineCommentStart.StartLine;
+              nextToken.Location.StartCharacter = multiLineCommentStart.StartCharacter;
+              commentsOut.PushBack(nextToken);
+            }
           }
           else
           {
