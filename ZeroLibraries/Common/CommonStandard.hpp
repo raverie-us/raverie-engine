@@ -180,7 +180,7 @@ namespace Math
 
 // Currently the SIMD extensions are not technically platform agnostic and need to be revisited.
 // It may be acceptable to include the intrinsic headers on multiple platforms, but it's unknown.
-#if defined(SIM_MATH)
+#if defined(USESSE)
 #include "Math/SimMath.hpp"
 #include "Math/SimVectors.hpp"
 #include "Math/SimMatrix3.hpp"

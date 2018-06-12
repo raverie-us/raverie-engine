@@ -347,7 +347,25 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         LINK_FLAGS "/SUBSYSTEM:WINDOWS /DEBUG ${common_linker_flags}"
     )
 
+else()
+    zero_multitarget_compile_options(
+        ZeroEditor
+        ZeroLauncher
+        BrowserSubProcess
+        PRIVATE
+        PUBLIC
+        PRIVATE
+        ${common_flags}
+    )
+    set_target_properties(
+        ZeroEditor
+        ZeroLauncher
+        BrowserSubProcess
+        PROPERTIES
+        LINK_FLAGS "${common_linker_flags}"
+    )
 endif()
+
 
 ################################################################################
 # Group source into folders

@@ -305,12 +305,13 @@
 #define ZeroImport __attribute__((visibility("default")))
 #define ZeroExport __attribute__((visibility("default")))
 #define ZeroExportC extern "C" __attribute__((visibility("default")))
-#define ZeroDebugBreak() asm("int $3")
 #define ZeroTodo(text)
 #if defined(PLATFORM_EMSCRIPTEN)
 #define ZeroForceInline
+#define ZeroDebugBreak()
 #else
 #define ZeroForceInline /* GCC has issues with __attribute__((always_inline)) */ inline
+#define ZeroDebugBreak() asm("int $3")
 #endif
 #define ZeroNoInline
 #endif

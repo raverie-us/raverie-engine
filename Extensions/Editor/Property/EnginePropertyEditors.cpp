@@ -2277,7 +2277,7 @@ public:
 
   void OnSelect(MouseEvent* event)
   {
-    Zilch::BoundType* type = ZilchTypeId(ResourceList::ManagerType::ResourceType);
+    Zilch::BoundType* type = ZilchTypeId(typename ResourceList::ManagerType::ResourceType);
     Resource* resource = Z::gResources->GetResourceByTypeAndName(type->Name, mResourceIdName);
     if (resource != nullptr)
       Z::gEditor->EditResource(resource);

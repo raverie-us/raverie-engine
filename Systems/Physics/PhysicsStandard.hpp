@@ -122,7 +122,6 @@ public:
 
 // Misc Joints Stuff
 #include "JointCreator.hpp"
-#include "Joints/ConstraintFragmentsSse.hpp"
 #include "Joints/DebugDrawFragments.hpp"
 #include "Joints/ConstraintFragments.hpp"
 #include "Joints/ConstraintHelpers.hpp"

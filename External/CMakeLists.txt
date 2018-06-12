@@ -151,7 +151,7 @@ foreach(libStatic ${StaticExternals})
             set(${libStatic}StaticRelease ${${libStatic}StaticRelease} PARENT_SCOPE)
         endforeach()
     else()
-        message("THE PATH: ${${libStatic}Path}/${platform}/${bit}/*.lib")
+        message("THE PATH: ${${libStatic}Path}/lib/${platform}/${bit}/")
         message("${${libStatic}StaticPath}")
         message(FATAL_ERROR "Unable to find any static libraries in the '${libStatic}/lib' folder in the External folder.\
          \nCheck specified path in the CMakeLists.txt file in the 'External' folder of ZeroCore.")

@@ -108,8 +108,8 @@ Vec3 Inertia::ApplyInverted(Vec3Param vector) const
   Vec3 result = Vec3::cZero;
 
   // Solve the LCP up to a max of 7 iterations
-  IndexDim3Policy policy;
-  SimpleErrorCallback errCallback;
+  Math::IndexDim3Policy policy;
+  Math::SimpleErrorCallback errCallback;
   Math::GaussSeidelSolver solver;
   solver.mMaxIterations = 7;
   solver.Solve(inertiaTensorW, input, result, policy, errCallback);

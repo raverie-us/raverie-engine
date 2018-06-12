@@ -178,6 +178,29 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
             -WX
             ${common_flags}
     )
+else()
+    zero_multitarget_compile_options(
+        CodeTranslator
+        Editor
+        Gameplay
+        UiWidget
+        Widget
+        ZilchShaders
+        PRIVATE
+        PUBLIC
+        PRIVATE
+        ${common_flags}
+    )
+    set_target_properties(
+        CodeTranslator
+        Editor
+        Gameplay
+        UiWidget
+        Widget
+        ZilchShaders
+        PROPERTIES
+        LINK_FLAGS ${common_linker_flags}
+    )
 endif()
 
 ################################################################################

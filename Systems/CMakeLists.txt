@@ -221,7 +221,35 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         STATIC_LIBRARY_FLAGS ${common_library_flags}
         STATIC_LIBRARY_FLAGS_RELEASE "/LTCG"
     )
+else()
+    zero_multitarget_compile_options(
+        Content
+        Engine
+        Graphics
+        Networking
+        Physics
+        Sound
+        Startup
+        ZilchScript
+        PRIVATE
+        PUBLIC
+        PRIVATE
+        ${common_flags}
+    )
+    set_target_properties(
+        Content
+        Engine
+        Graphics
+        Networking
+        Physics
+        Sound
+        Startup
+        ZilchScript
+        PROPERTIES
+        LINK_FLAGS "${common_linker_flags}"
+    )
 endif()
+
 ################################################################################
 # Group source into folders
 ################################################################################
