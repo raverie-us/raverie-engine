@@ -16,37 +16,54 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 # Specify our list of StaticExternals (use the same name as the folder in External/)
 ################################################################################
 # list of statics
-set(StaticExternals 
-    Assimp 
-    CEF 
-    Curl 
-    Freetype 
-    GL 
-    GLEW 
-    Libpng 
-    MemoryDebugger 
-    MemoryTracker 
-    Nvtt 
-    Opus 
-    PortAudio 
-    WinHid 
-    ZLib
-    SDL 
-)
-
-# list of shared
-set(SharedExternals
-    Assimp
-    CEF
-    Freetype
-    GLEW
-    MemoryDebugger
-    MemoryTracker
-    Nvtt
-    PortAudio
-    SDL
-)
-
+if (${platform} STREQUAL Emscripten)
+  set(StaticExternals 
+      Assimp 
+      Freetype 
+      Libpng 
+      Nvtt 
+      Opus 
+      ZLib
+  )
+  
+  # list of shared
+  set(SharedExternals
+      Assimp
+      Freetype
+      Nvtt
+  )
+else()
+  set(StaticExternals 
+      Assimp 
+      CEF 
+      Curl 
+      Freetype 
+      GL 
+      GLEW 
+      Libpng 
+      MemoryDebugger 
+      MemoryTracker 
+      Nvtt 
+      Opus 
+      PortAudio 
+      WinHid 
+      ZLib
+      SDL 
+  )
+  
+  # list of shared
+  set(SharedExternals
+      Assimp
+      CEF
+      Freetype
+      GLEW
+      MemoryDebugger
+      MemoryTracker
+      Nvtt
+      PortAudio
+      SDL
+  )
+endif()
 ################################################################################
 # specify the include directories for each of the dependencies.
 # use parent scope so the folders are accessible anywhere

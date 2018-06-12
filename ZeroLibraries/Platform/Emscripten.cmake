@@ -16,17 +16,15 @@ set_target_properties(Platform PROPERTIES FOLDER "ZeroLibraries/Platform")
 ################################################################################
 # include filelists for each library
 ################################################################################
-include(Empty/CMakeLists.txt)
+include(Emscripten/CMakeLists.txt)
 
 ################################################################################
 # define include directories for all of our libraries
 ################################################################################
 target_include_directories(Platform
     PUBLIC
-        ${CurrentDirectory}/Empty 
-        ${WinHidHeaders}
+        ${CurrentDirectory}/Emscripten 
         ${GLEWHeaders}
-        ${CEFHeaders}
 )
 
 ################################################################################
@@ -35,9 +33,7 @@ target_include_directories(Platform
 target_link_libraries(Platform
                       PUBLIC
                       Common
-                      ${WinHidStatic}
                       ${GLEWStatic}
-                      ${CEFStatic}
 )
 
 ################################################################################
@@ -48,51 +44,41 @@ zero_multitarget_output_directories(
     LIBRARY_DIRECTORY ${zero_library_dir}
     RUNTIME_DIRECTORY ${zero_binary_dir}
 )
+
 ################################################################################
 # Specify any additional target options such as pdb locations
 ################################################################################
-zero_multitarget_output_settings(
-    Platform
-    CONFIGS ${supported_configs}
-    BASEPATH ${zero_build_out}
-    PLATFORM ${platform}
-    BITS ${bit}
-    TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
-    PRECOMPILED_HEADER_NAME "Precompiled.hpp"
-    PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
-    TARGET_SUBFOLDER "Platform"
-)
+#zero_multitarget_output_settings(
+#    Platform
+#    CONFIGS ${supported_configs}
+#    BASEPATH ${zero_build_out}
+#    PLATFORM ${platform}
+#    BITS ${bit}
+#    TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
+#    PRECOMPILED_HEADER_NAME "Precompiled.hpp"
+#    PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
+#    TARGET_SUBFOLDER "Platform"
+#)
 
 
 ################################################################################
 # set flags and definitions
 ################################################################################
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
-    zero_multitarget_compile_options(  
-        Platform
-        PRIVATE
-         
-        PUBLIC
-            -GS -analyze-  -Zc:wchar_t
-            
-        PRIVATE
-            -W3 -wd"4302"
-            ${common_flags}
-    )
-endif()
+zero_multitarget_compile_options(
+    Platform
+    PRIVATE
+    ${common_flags}
+)
 
 ################################################################################
 # Set linker flags
 ################################################################################
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
-    # set the correct subsystems for executable targets, and set stack size for the editor
-    set_target_properties(
-        Platform
-        PROPERTIES 
-        STATIC_LIBRARY_FLAGS "${common_library_flags}"
-        STATIC_LIBRARY_FLAGS_RELEASE "/LTCG"
-    )
-endif()
+# set the correct subsystems for executable targets, and set stack size for the editor
+set_target_properties(
+    Platform
+    PROPERTIES 
+    STATIC_LIBRARY_FLAGS "${common_library_flags}"
+)
 
 ################################################################################
 # Group source into folders

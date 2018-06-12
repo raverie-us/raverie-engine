@@ -16,8 +16,6 @@ add_library(Common "")
 add_library(Dash "")
 add_library(Geometry "")
 add_library(Meta "")
-#add_library(Posix "")
-add_library(Platform "")
 add_library(Serialization "")
 add_library(SpatialPartition  "")
 add_library(Support "")
@@ -31,7 +29,6 @@ set_target_properties(Common           PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Dash             PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Geometry         PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Meta             PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Platform         PROPERTIES FOLDER "ZeroLibraries/Platform")
 set_target_properties(Serialization    PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(SpatialPartition PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Support          PROPERTIES FOLDER "ZeroLibraries")
@@ -82,7 +79,6 @@ target_include_directories(Meta
     PUBLIC
         ${CurrentDirectory}/Meta 
         ${CurrentDirectory}
-)
 )
 target_include_directories(Serialization
     PUBLIC
@@ -153,7 +149,6 @@ target_link_libraries(Support
                       ${ZLibStatic}
                       ${LibpngStatic}
 )
-)
 
 ################################################################################
 # set the output directories for all of our targets
@@ -164,7 +159,6 @@ zero_multitarget_output_directories(
     Dash
     Geometry
     Meta
-    Windows
     Serialization
     SpatialPartition
     Support
@@ -183,8 +177,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         Dash 
         Geometry
         Meta 
-        #Posix 
-        Platform
         Serialization
         SpatialPartition
         Support
@@ -334,30 +326,12 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         )
     endif()
 else()
-    zero_multitarget_compile_options( 
-        AudioEngine
-        Common
-        Dash
-        Geometry
-        Meta
-        Serialization
-        SpatialPartition
-        Support
-        Zilch
-        PRIVATE
-        PUBLIC
-        PRIVATE
-        ${common_flags}
-    )
-else()
     zero_multitarget_compile_options(
         AudioEngine
         Common 
         Dash 
         Geometry
         Meta 
-        #Posix
-        Platform
         Serialization
         SpatialPartition
         Support
@@ -373,8 +347,6 @@ else()
         Dash 
         Geometry
         Meta 
-        #Posix
-        Platform
         Serialization
         SpatialPartition
         Support
@@ -412,7 +384,6 @@ zero_subfolder_source_group(${zero_core_path} ZeroLibraries Common "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Dash "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Geometry "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Meta "")
-zero_subfolder_source_group_ignore_target_folder(${zero_core_path} ZeroLibraries/Platform Platform "${zero_core_path}/Platform")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Serialization "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries SpatialPartition "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Support "")

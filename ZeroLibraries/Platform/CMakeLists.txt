@@ -18,6 +18,8 @@ elseif ("${platform_library}" STREQUAL "STL")
     include(STL.cmake)
 elseif ("${platform_library}" STREQUAL "SDLSTLEmpty")
     include(SDLSTLEmpty.cmake)
+elseif ("${platform_library}" STREQUAL "Emscripten")
+    include(Emscripten.cmake)
 # if we are not given a known platform (or empty is selected) try the empty platform
 else()
     include(Empty.cmake)

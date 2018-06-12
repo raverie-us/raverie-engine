@@ -9,3 +9,4 @@
 add_definitions(-DPLATFORM_EMSCRIPTEN=1 -DPLATFORM_HARDWARE=1 -DPLATFORM_NAME="Emscripten")
 
 set(platform "Emscripten")
+set(platform_library "Emscripten")
