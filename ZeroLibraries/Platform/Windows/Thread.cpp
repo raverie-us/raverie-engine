@@ -93,7 +93,7 @@ bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadN
                            cStackSize,
                            (LPTHREAD_START_ROUTINE)entry,
                            (LPVOID)instance, 
-                           CREATE_SUSPENDED,
+                           0,
                            &self->mThreadId);
 
   CheckWin(self->mHandle != INVALID_HANDLE_VALUE, 

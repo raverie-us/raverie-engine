@@ -267,8 +267,14 @@ RenderFont* FontManager::GetRenderFont(StringParam face, uint size, uint flags)
 //------------------------------------------------------------ FontRasterizer
 struct FontRasterizerData
 {
+  ~FontRasterizerData()
+  {
+    zDeallocate(LoadedFont.Data);
+  }
+
   FT_Library Library;
   FT_Face FontFace;
+  DataBlock LoadedFont;
 };
 
 FontRasterizer::FontRasterizer(Font* fontObject)
@@ -377,8 +383,11 @@ void FontRasterizer::LoadFontFace(int fontHeight)
   //Always face index zero for now.
   uint faceIndex = 0;
 
-  //Load the font from the font file
-  int errorCode = FT_New_Face(mData->Library, mFontObject->LoadPath.c_str(), faceIndex, &mData->FontFace);
+  // Load the font from the font file
+  // We don't use the freetype file API because it doens't use our internal File wrapper.
+  // We CANNOT deallocate this file block here because freetype continues to reference it.
+  mData->LoadedFont = ReadFileIntoDataBlock(mFontObject->LoadPath.c_str());
+  int errorCode = FT_New_Memory_Face(mData->Library, mData->LoadedFont.Data, mData->LoadedFont.Size, faceIndex, &mData->FontFace);
 
   ErrorIf(errorCode == FT_Err_Unknown_File_Format, nullptr, "File is not a valid font file.");
   ErrorIf(errorCode != 0, nullptr, "Bad file or path.");

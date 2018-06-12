@@ -8,8 +8,7 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Debug.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DirectoryWatcher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ExternalLibrary.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/File.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/FileSystem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/VirtualFileAndFileSytem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/FpControl.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp

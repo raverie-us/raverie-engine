@@ -513,20 +513,26 @@ void String::release()
 
 StringNode* String::AllocateNode(size_type size)
 {
+  return AllocateNode(size, size);
+}
+
+StringNode* String::AllocateNode(size_type memorySize, size_t subStringSize)
+{
+  ErrorIf(subStringSize > memorySize, "Memory must be greater or equal to the sub-string");
   const size_type nodeSize = 
                              sizeof(StringNode) //size of the string node
                            - sizeof(value_type);//remove the extra
 
   //size of buffer is string size plus once extra buffer
   //for null terminator '\0'
-  const size_type bufferSize = size + sizeof(value_type);
+  const size_type bufferSize = memorySize + sizeof(value_type);
 
   //Make new string node
   StringNode* newNode = (StringNode*)zAllocate(nodeSize + bufferSize);
   newNode->RefCount = 1;
-  newNode->Size = size;
+  newNode->Size = subStringSize;
   newNode->HashCode = 0;
-  newNode->Data[size] = '\0';
+  newNode->Data[subStringSize] = '\0';
 
   return newNode;
 }

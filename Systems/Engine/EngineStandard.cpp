@@ -547,4 +547,51 @@ void EngineLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
+//**************************************************************************************************
+void EngineLibrary::PopulateVirtualFileSystem(void* userData)
+{
+  // It's very important that this uses C's FILE instead of our File since our File could be virtual.
+  // Attempt to load the file system either relative to our working directory or at the root.
+  FILE* file = fopen("C:/Sandbox/ZeroGit/FileSystem.zip", "rb");
+  if (!file)
+    file = fopen("/FileSystem.zip", "rb");
+
+  // If we failed to open the archive, early out...
+  if (!file)
+    return;
+
+  // We successfully opened the file so read it in as an archive.
+  // Get the size of the file first.
+  fseek(file, 0L, SEEK_END);
+  size_t size = (size_t)ftell(file);
+  fseek(file, 0L, SEEK_SET);
+
+  // Read the entire contents of the file into memory
+  ByteBufferBlock block(size);
+  byte* writeTo = block.GetBegin();
+  while (size != 0)
+  {
+    size_t dataRead = fread(writeTo, 1, size, file);
+    if (dataRead == 0)
+      break;
+
+    size -= dataRead;
+    writeTo += dataRead;
+  }
+  ErrorIf(size != 0, "We didn't read all of the file");
+  fclose(file);
+
+  // Now open the file as an archive
+  Archive archive(ArchiveMode::Decompressing);
+  archive.ReadBuffer(ArchiveReadFlags::All, block);
+
+  // Populate file system entries based on what's in the archive
+  forRange(ArchiveEntry& archiveEntry, archive.GetEntries())
+  {
+    // Create our entries for our files based on name, data, and modified time
+    String absolutePath = BuildString("/", archiveEntry.Name);
+    AddVirtualFileSystemEntry(absolutePath, &archiveEntry.Full, archiveEntry.ModifiedTime);
+  }
+}
+
 }//namespace Zero

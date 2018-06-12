@@ -46,6 +46,8 @@ int PlatformMain(const Array<String>& arguments)
   CrashHandler::SetSendCrashReportCallback(Zero::SendCrashReport, NULL);
   CrashHandler::SetCrashStartCallback(Zero::CrashStartCallback, NULL);
 
+  FileSystemInitializer fileSystemInitializer(&EngineLibrary::PopulateVirtualFileSystem);
+
   Importer importer;
   ImporterResult::Type importResult = importer.CheckForImport();
   if(importResult == ImporterResult::ExecutedAnotherProcess)

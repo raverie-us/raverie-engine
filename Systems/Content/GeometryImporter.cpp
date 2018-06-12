@@ -91,8 +91,11 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   // set the flags for post process we want to run
   uint flags = SetupAssimpPostProcess();
 
-  // load in the file
-  mScene = mAssetImporter.ReadFile(mInputFile.c_str(), flags);
+  // Load the file into Assimp. We must use memory because their
+  // file functions do not call into our File wrappers.
+  DataBlock block = ReadFileIntoDataBlock(mInputFile.c_str());
+  mScene = mAssetImporter.ReadFileFromMemory(block.Data, block.Size, flags);
+  zDeallocate(block.Data);
   ZPrint("Processing model: %s\n", FilePath::GetFileNameWithoutExtension(mInputFile).Data());
 
   // An error has occurred, no scene imported

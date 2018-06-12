@@ -62,6 +62,10 @@ public:
   static bool Initialize(ZeroStartupSettings& settings);
   static void Shutdown();
 
+  // A callback that we use with the Platform FileSystemInitializer for
+  // platforms that don't have an actual file system, so we use memory instead.
+  static void PopulateVirtualFileSystem(void* userData);
+
 private:
 };
 

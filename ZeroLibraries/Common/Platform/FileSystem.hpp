@@ -20,6 +20,21 @@ ZeroShared extern const Rune  cDirectorySeparatorRune;
 ZeroShared extern const char cDirectorySeparatorCstr[];
 ZeroShared extern bool cFileSystemCaseSensitive;
 
+/// Some platforms require initialization of thier file system (mounting devices, virtual files, etc).
+/// Create this object on the stack and keep it alive until you're done (with scopes).
+class FileSystemInitializer
+{
+public:
+  typedef void(*PopulateVirtualFileSystem)(void* userData);
+  FileSystemInitializer(PopulateVirtualFileSystem callback = nullptr, void* userData = nullptr);
+  ~FileSystemInitializer();
+};;
+
+/// Creates a virtual file or directory (only when running in virtual mode).
+/// An empty/0-size or null data block indicates a directory rather than a file.
+/// Only called during the PopulateVirtualFileSystem callback.
+ZeroShared void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime);
+
 /// Copies a file. Will spin lock if fails up to a max number of iterations. (Calls CopyFileInternal)
 ZeroShared bool CopyFile(StringParam dest, StringParam source);
 /// The actual platform specific file copy function.

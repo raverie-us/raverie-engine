@@ -74,6 +74,9 @@ public:
   //Get buffer as a string
   String ToString() const;
 
+  //Get buffer as a string with a custom size (substring of the buffer).
+  String ToString(size_t subStringSizeBytes) const;
+
   //Extract into a raw memory buffer
   void ExtractInto(byteType* buffer, size_t bufferSizeInBytes) const;
 

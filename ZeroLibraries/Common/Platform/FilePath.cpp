@@ -135,8 +135,9 @@ String FilePath::Normalize(StringRange path)
   // (we can only have 1 at the end due to the normalization part of the code)
   if (buffer.GetSize() > 0 && buffer[buffer.GetSize() - 1] == cDirectorySeparatorRune)
   {
-    buffer[buffer.GetSize() - 1] = '\0';
-    return buffer.ToString();
+    size_t newSize = buffer.GetSize() - 1;
+    buffer[newSize] = '\0';
+    return buffer.ToString(newSize);
   }
 
   return buffer.ToString();

@@ -213,6 +213,7 @@ public:
   // Internally allocates a node
   // This should never be called by the user except in rare optimization cases
   static StringNode* AllocateNode(size_type size);
+  static StringNode* AllocateNode(size_type memorySize, size_t subStringSize);
 
   ///////Primary equal operator for strings///////
   friend bool operator==(const String& left, const String& right)

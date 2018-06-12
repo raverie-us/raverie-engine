@@ -361,4 +361,18 @@ String ByteBuffer::ToString() const
   return String(node);
 }
 
+String ByteBuffer::ToString(size_t subStringSizeBytes) const
+{
+  size_t bufferSize = GetSize();
+
+  // A string nodes already Contains (and sets) the last null terminator
+  StringNode* node = String::AllocateNode(bufferSize, subStringSizeBytes);
+
+  //Copy data into buffer
+  ExtractInto((byte*)node->Data, bufferSize);
+  node->Data[subStringSizeBytes] = '\0';
+
+  return String(node);
+}
+
 }
