@@ -240,6 +240,8 @@ TextEditor::TextEditor(Composite* parent)
   mIndicatorDisplay = new TextureView(this);
   mIndicatorDisplay->SetTexture(mIndicators->Image);
 
+  mIndicatorDisplay->SizeToContents();
+
   SetScrollWellSize(0, cTextEditorVScrollWellWidth);
   SetScrollSliderSize(0, cTextEditorVScrollSliderWidth);
   SetScrollSliderOffset(0, cTextEditorVScrollSliderOffset);
