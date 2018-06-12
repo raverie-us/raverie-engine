@@ -7,7 +7,6 @@ DataContent
 		var ResourceId = 0x4e1bd44008b4dc2a
 		var LoaderType = "SoundCue"
 		var Version = 0
-		var ShowInEditor = true
 	}
 	ResourceTemplate 
 	{

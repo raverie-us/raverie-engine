@@ -7,7 +7,6 @@ DataContent
 		var ResourceId = 0x4de020863e872da8
 		var LoaderType = "PhysicsMaterial"
 		var Version = 0
-		var ShowInEditor = true
 	}
 	ResourceTemplate 
 	{

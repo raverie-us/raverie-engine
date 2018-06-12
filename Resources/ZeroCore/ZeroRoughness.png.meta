@@ -22,4 +22,8 @@ ImageContent
 		var Dimensions = "2048 x 2048"
 		var Size = "2.667 MB"
 	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
+	}
 }

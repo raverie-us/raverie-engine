@@ -39,4 +39,8 @@ GeometryContent
 		}
 		var MeshBuilt = PhysicsMeshType.ConvexMesh
 	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
+	}
 }

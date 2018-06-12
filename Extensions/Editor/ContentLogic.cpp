@@ -97,7 +97,12 @@ bool LoadContentLibrary(StringParam name, bool isCore)
         forRange(ResourceEntry& entry, package.Resources.All())
         {
           if(entry.mLibrarySource)
-            entry.mLibrarySource->ShowInEditor = false;
+          {
+            if(ContentEditorOptions* options = entry.mLibrarySource->has(ContentEditorOptions))
+              entry.mLibrarySource->ShowInEditor = options->mShowInEditor;
+            else
+              entry.mLibrarySource->ShowInEditor = false;
+          }
         }
       }
 
@@ -256,113 +261,6 @@ bool LoadEditorContent(Cog* configCog)
   //MeshManager::Find("Cube")->PrimitiveShape = MeshPrimitiveShape::Box;
   //MeshManager::Find("Sphere")->PrimitiveShape = MeshPrimitiveShape::Sphere;
   //MeshManager::Find("Cylinder")->PrimitiveShape = MeshPrimitiveShape::Cylinder;
-
-  //To move to data files
-  ShowBuiltInResource<ArchetypeManager>("Sprite");
-  ShowBuiltInResource<ArchetypeManager>("Cube");
-  ShowBuiltInResource<ArchetypeManager>("Sphere");
-  ShowBuiltInResource<ArchetypeManager>("Camera");
-  ShowBuiltInResource<ArchetypeManager>("Cylinder");
-  ShowBuiltInResource<ArchetypeManager>("DefaultTile");
-
-  ShowBuiltInResource<MaterialManager>("AdditiveSprite");
-  ShowBuiltInResource<MaterialManager>("AlphaCut");
-  ShowBuiltInResource<MaterialManager>("AlphaSprite");
-  ShowBuiltInResource<MaterialManager>("DebugDraw");
-  ShowBuiltInResource<MaterialManager>("DebugDrawOnTop");
-  ShowBuiltInResource<MaterialManager>("DefaultHeightMapMaterial");
-  ShowBuiltInResource<MaterialManager>("DirectionalLight");
-  ShowBuiltInResource<MaterialManager>("DirectionalLightShadows");
-  ShowBuiltInResource<MaterialManager>("EmptyMaterial");
-  ShowBuiltInResource<MaterialManager>("OpaqueFlat");
-  ShowBuiltInResource<MaterialManager>("PointLight");
-  ShowBuiltInResource<MaterialManager>("ZeroMaterial");
-
-  ShowBuiltInResource<RenderGroupManager>("AdditiveBlend");
-  ShowBuiltInResource<RenderGroupManager>("AlphaBlend");
-  ShowBuiltInResource<RenderGroupManager>("DebugDraw");
-  ShowBuiltInResource<RenderGroupManager>("DebugDrawOnTop");
-  ShowBuiltInResource<RenderGroupManager>("Lights");
-  ShowBuiltInResource<RenderGroupManager>("Opaque");
-  ShowBuiltInResource<RenderGroupManager>("OpaqueDoubleSided");
-  ShowBuiltInResource<RenderGroupManager>("ShadowCasters");
-  ShowBuiltInResource<RenderGroupManager>("ZSort");
-
-  ShowBuiltInResource<MeshManager>("Cube");
-  ShowBuiltInResource<MeshManager>("Cylinder");
-  ShowBuiltInResource<MeshManager>("Quad");
-  ShowBuiltInResource<MeshManager>("Sphere");
-  ShowBuiltInResource<MeshManager>("Triangle");
-  ShowBuiltInResource<MeshManager>("Wedge");
-
-  ShowBuiltInResource<TextureManager>("Black");
-  ShowBuiltInResource<TextureManager>("BlueNoise");
-  ShowBuiltInResource<TextureManager>("EnvironmentBrdfLut");
-  ShowBuiltInResource<TextureManager>("FlatNormal");
-  ShowBuiltInResource<TextureManager>("Grey");
-  ShowBuiltInResource<TextureManager>("SimpleSkybox");
-  ShowBuiltInResource<TextureManager>("SsaoRandom4x4");
-  ShowBuiltInResource<TextureManager>("White");
-  ShowBuiltInResource<TextureManager>("WhiteSkybox");
-  ShowBuiltInResource<TextureManager>("ZeroAlbedo");
-  ShowBuiltInResource<TextureManager>("ZeroMetallic");
-  ShowBuiltInResource<TextureManager>("ZeroNormal");
-  ShowBuiltInResource<TextureManager>("ZeroRoughness");
-
-  ShowBuiltInResource<FontManager>("NotoSans-Bold");
-  ShowBuiltInResource<FontManager>("Inconsolata");
-
-  ShowBuiltInResource<ColorGradientManager>("FadeIn");
-  ShowBuiltInResource<ColorGradientManager>("FadeOut");
-  ShowBuiltInResource<ColorGradientManager>("FadeInOut");
-
-  // NetChannelConfigs
-  ShowBuiltInResource<NetChannelConfigManager>("Transform");
-  ShowBuiltInResource<NetChannelConfigManager>("ClientAuthority");
-
-  //tiles...
-  ShowBuiltInResource<PhysicsMeshManager>("Box");
-  ShowBuiltInResource<PhysicsMeshManager>("DoubleSlopeLeft1");
-  ShowBuiltInResource<PhysicsMeshManager>("DoubleSlopeLeft2");
-  ShowBuiltInResource<PhysicsMeshManager>("DoubleSlopeLeftInv1");
-  ShowBuiltInResource<PhysicsMeshManager>("DoubleSlopeLeftInv2");
-  ShowBuiltInResource<PhysicsMeshManager>("DoubleSlopeRight1");
-  ShowBuiltInResource<PhysicsMeshManager>("DoubleSlopeRight2");
-  ShowBuiltInResource<PhysicsMeshManager>("DoubleSlopeRightInv1");
-  ShowBuiltInResource<PhysicsMeshManager>("DoubleSlopeRightInv2");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfBoxBottom");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfBoxLeft");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfBoxRight");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfBoxTop");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfSlopeLeft1");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfSlopeLeft2");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfSlopeLeftInv1");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfSlopeLeftInv2");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfSlopeRight1");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfSlopeRight2");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfSlopeRightInv1");
-  ShowBuiltInResource<PhysicsMeshManager>("HalfSlopeRightInv2");
-  ShowBuiltInResource<PhysicsMeshManager>("SlopeLeft");
-  ShowBuiltInResource<PhysicsMeshManager>("SlopeLeftInv");
-  ShowBuiltInResource<PhysicsMeshManager>("SlopeRight");
-  ShowBuiltInResource<PhysicsMeshManager>("SlopeRightInv");
-
-  ShowBuiltInResource<SpriteSourceManager>("CameraIcon");
-  ShowBuiltInResource<SpriteSourceManager>("Circle");
-  ShowBuiltInResource<SpriteSourceManager>("CircleBordered");
-  ShowBuiltInResource<SpriteSourceManager>("ConnectionIcon");
-  ShowBuiltInResource<SpriteSourceManager>("LightIcon");
-  ShowBuiltInResource<SpriteSourceManager>("ParticleIcon");
-  ShowBuiltInResource<SpriteSourceManager>("PixelBorder");
-  ShowBuiltInResource<SpriteSourceManager>("SelectIcon");
-  ShowBuiltInResource<SpriteSourceManager>("SoftCircle");
-  ShowBuiltInResource<SpriteSourceManager>("Square");
-  ShowBuiltInResource<SpriteSourceManager>("SquareBordered");
-
-  ShowBuiltInResource<PhysicsSolverConfigManager>("Baumgarte");
-  ShowBuiltInResource<PhysicsSolverConfigManager>("PostStabilization");
-
-  ShowBuiltInResource<SoundAttenuatorManager>("DefaultAttenuation");
 
   float time = (float)timer.UpdateAndGetTime();
   ZPrint("Finished Loading Editor Content in %.2f\n", time);

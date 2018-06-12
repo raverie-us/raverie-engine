@@ -60,6 +60,25 @@ void ContentNotes::Serialize(Serializer& stream)
   SerializeName(Notes);
 }
 
+ZilchDefineType(ContentEditorOptions, builder, type)
+{
+  ZeroBindComponent();
+  ZeroBindSetup(SetupMode::CallSetDefaults);
+
+  ZilchBindFieldProperty(mShowInEditor);
+}
+
+void ContentEditorOptions::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(mShowInEditor, false);
+}
+
+void ContentEditorOptions::Initialize(ContentComposition* item)
+{
+  mOwner = item;
+  item->ShowInEditor = mShowInEditor;
+}
+
 ZilchDefineType(ResourceTemplate, builder, type)
 {
   ZeroBindComponent();
@@ -87,6 +106,7 @@ void CreateSupportContent(ContentSystem* system)
   AddContentComponent<ContentCopyright>(system);
   AddContentComponent<ContentHistory>(system);
   AddContentComponent<ContentNotes>(system);
+  AddContentComponent<ContentEditorOptions>(system);
   AddContentComponent<ResourceTemplate>(system);
 }
 

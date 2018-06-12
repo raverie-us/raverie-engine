@@ -18,4 +18,8 @@ ImageContent
 		var Slices = Real4{1, 1, 1, 1}
 		var Fill = SpriteFill.NineSlice
 	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
+	}
 }

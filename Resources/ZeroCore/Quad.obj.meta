@@ -27,4 +27,8 @@ GeometryContent
 			}
 		}
 	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
+	}
 }

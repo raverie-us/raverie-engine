@@ -22,4 +22,8 @@ ImageContent
 		var PremultipliedAlpha = true
 		var GammaCorrection = true
 	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
+	}
 }

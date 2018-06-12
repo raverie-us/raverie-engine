@@ -7,6 +7,9 @@ DataContent
 		var ResourceId = 0x58f4ed78bda39ec5
 		var LoaderType = "RenderGroup"
 		var Version = 0
+	}
+	ContentEditorOptions
+	{
 		var ShowInEditor = true
 	}
 }

@@ -7,7 +7,6 @@ DataContent
 		var ResourceId = 0x50a5ee1707f0fb60
 		var LoaderType = "ColorGradient"
 		var Version = 0
-		var ShowInEditor = true
 	}
 	ResourceTemplate 
 	{

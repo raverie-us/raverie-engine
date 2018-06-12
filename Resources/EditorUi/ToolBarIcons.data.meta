@@ -7,6 +7,5 @@ DataContent
 		var ResourceId = 0x4e6eb9ea4c90305c
 		var LoaderType = "DefinitionSet"
 		var Version = 0
-		var ShowInEditor = true
 	}
 }

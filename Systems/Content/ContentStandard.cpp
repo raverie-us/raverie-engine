@@ -103,6 +103,7 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeType(ContentCopyright);
   ZilchInitializeType(ContentHistory);
   ZilchInitializeType(ContentNotes);
+  ZilchInitializeType(ContentEditorOptions);
   ZilchInitializeType(ResourceTemplate);
   ZilchInitializeType(RichAnimation);
   ZilchInitializeType(RichAnimationBuilder);
