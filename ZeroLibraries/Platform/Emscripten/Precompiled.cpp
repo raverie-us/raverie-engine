@@ -6,35 +6,36 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include "..\Empty\Browser.cpp"
-#include "..\Empty\ComPort.cpp"
-#include "..\Empty\CrashHandler.cpp"
-#include "..\Empty\Debug.cpp"
-#include "..\Empty\DebugSymbolInformation.cpp"
-#include "..\Empty\DirectoryWatcher.cpp"
-#include "..\Empty\ExecutableResource.cpp"
-#include "..\Empty\FileSystem.cpp"
-#include "..\Empty\Intrinsics.cpp"
-#include "..\Empty\Registry.cpp"
-#include "..\Empty\Socket.cpp"
-#include "..\Empty\Thread.cpp"
-#include "..\Empty\ThreadSync.cpp"
-#include "..\STL\Atomic.cpp"
-#include "..\STL\FpControl.cpp"
-#include "..\STL\Process.cpp"
-#include "..\SDL\Audio.cpp"
-#include "..\SDL\ExternalLibrary.cpp"
-#include "..\SDL\File.cpp"
-#include "..\SDL\Main.cpp"
-#include "..\SDL\OpenglRendererSDL.cpp"
-#include "..\SDL\Peripherals.cpp"
-#include "..\SDL\PlatformStandard.cpp"
-#include "..\SDL\Resolution.cpp"
-#include "..\SDL\Shell.cpp"
-#include "..\SDL\Timer.cpp"
-#include "..\SDL\Utilities.cpp"
-#include "..\OpenGL\OpenglRenderer.cpp"
-#include "..\OpenGL\OpenglRenderer.hpp"
+#include "../Empty/Browser.cpp"
+#include "../Empty/ComPort.cpp"
+#include "../Empty/CrashHandler.cpp"
+#include "../Empty/Debug.cpp"
+#include "../Empty/DebugSymbolInformation.cpp"
+#include "../Empty/DirectoryWatcher.cpp"
+#include "../Empty/ExecutableResource.cpp"
+#include "../Empty/VirtualFileAndFileSystem.cpp"
+#include "../Empty/Intrinsics.cpp"
+#include "../Empty/Registry.cpp"
+#include "../Empty/Socket.cpp"
+#include "../Empty/Thread.cpp"
+#include "../Empty/ThreadSync.cpp"
+#include "../STL/Atomic.cpp"
+#include "../STL/FpControl.cpp"
+#include "../STL/Process.cpp"
+#include "../SDL/Audio.cpp"
+#include "../SDL/ExternalLibrary.cpp"
+#include "../SDL/Main.cpp"
+#include "../SDL/OpenglRendererSDL.cpp"
+#include "../SDL/Peripherals.cpp"
+#include "../SDL/PlatformStandard.cpp"
+#include "../SDL/Resolution.cpp"
+#include "../SDL/Shell.cpp"
+#include "../SDL/Timer.cpp"
+#include "../SDL/Utilities.cpp"
+#include "../OpenGL/OpenglRenderer.cpp"
+#include "../OpenGL/OpenglRenderer.hpp"
+
+#include <emscripten.h>
 
 int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
 {
@@ -161,3 +162,9 @@ void glDisablei(GLenum cap, GLuint index)
 {
   Error("This function should not be called when running the Emscripten ZeroEditor, WebGL functioanlity was not properly queried");
 };
+
+bool Zero::SetMainLoopFunction(int fps, Zero::MainLoopFn callback, void* userData)
+{
+  emscripten_set_main_loop_arg(callback, userData, fps, 0);
+  return true;
+}

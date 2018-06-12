@@ -17,4 +17,8 @@ bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<St
 // Everyone implements this main instead of int main or platform specific mains like WinMain.
 extern int PlatformMain(const Array<String>& arguments);
 
+// Some platforms do have their own loop that must run your application.
+typedef void (*MainLoopFn)(void* userData);
+bool SetMainLoopFunction(int fps, MainLoopFn callback, void* userData = nullptr);
+
 }// namespace Zero
