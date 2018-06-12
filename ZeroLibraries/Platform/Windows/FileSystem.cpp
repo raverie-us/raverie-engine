@@ -12,6 +12,19 @@ const Rune  cDirectorySeparatorRune = Rune('\\');
 const char cDirectorySeparatorCstr[] = "\\";
 bool cFileSystemCaseSensitive = false;
 
+// There is no initialization or virtual file system on this platform
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
+{
+}
+
+FileSystemInitializer::~FileSystemInitializer()
+{
+}
+
+void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
+{
+}
+
 String GetWorkingDirectory()
 {
   char temp[MAX_PATH+1];

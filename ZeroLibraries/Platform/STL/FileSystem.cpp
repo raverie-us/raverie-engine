@@ -29,6 +29,19 @@ const Rune  cDirectorySeparatorRune = Rune(fs::path::preferred_separator);
 const char cDirectorySeparatorCstr[] = { (char)fs::path::preferred_separator, '\0' };
 bool cFileSystemCaseSensitive = true;
 
+// There is no initialization or virtual file system on this platform
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
+{
+}
+
+FileSystemInitializer::~FileSystemInitializer()
+{
+}
+
+void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
+{
+}
+
 String GetWorkingDirectory()
 {
   std::error_code error;
