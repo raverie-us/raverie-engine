@@ -216,6 +216,9 @@ void Cog::Destroy()
 //**************************************************************************************************
 void Cog::ForceDestroy()
 {
+  if (mFlags.IsSet(CogFlags::Destroyed))
+    return;
+
   // First queue up any children to be destroyed.
   if (Hierarchy* hierarchy = this->has(Hierarchy))
     hierarchy->DestroyChildren();
