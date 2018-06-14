@@ -11393,6 +11393,14 @@ DocumentationLibrary
 				}
 				Property
 				{
+					var Name = "MuteAllAudio"
+					var Type = "Boolean"
+					var Description = "When true, audio will be processed normally but will be silent."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
 					var Name = "SystemVolume"
 					var Type = "Real"
 					var Description = "An overall volume modifier that is applied to all audio produced by Zero."
@@ -11473,7 +11481,7 @@ DocumentationLibrary
 				{
 					var Name = "IgnoreChildren"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "This flag is currently only used for SweepCollider tests on PhysicsSpace. This is used to ignore all objects that are a child of the Collider that is being swept."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -11481,7 +11489,7 @@ DocumentationLibrary
 				{
 					var Name = "IgnoreDynamic"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Should Colliders with RigidBodies marked Dynamic be ignored during casts?"
 					var ReadOnly = false
 					var Static = false
 				}
@@ -11489,7 +11497,7 @@ DocumentationLibrary
 				{
 					var Name = "IgnoreGhost"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Should Colliders marked Ghost be ignored during casts?"
 					var ReadOnly = false
 					var Static = false
 				}
@@ -11497,7 +11505,7 @@ DocumentationLibrary
 				{
 					var Name = "IgnoreKinematic"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Should Colliders with RigidBodies marked Kinematic be ignored during casts?"
 					var ReadOnly = false
 					var Static = false
 				}
@@ -11505,7 +11513,7 @@ DocumentationLibrary
 				{
 					var Name = "IgnoreStatic"
 					var Type = "Boolean"
-					var Description = ""
+					var Description = "Should Colliders with RigidBodies marked Static be ignored during casts? Note: Collider's with no RigidBody are treated as static."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -30577,7 +30585,7 @@ DocumentationLibrary
 				Property
 				{
 					var Name = "All"
-					var Type = "Delegate"
+					var Type = "delegate()"
 					var Description = ""
 					var ReadOnly = true
 					var Static = false
@@ -30585,7 +30593,7 @@ DocumentationLibrary
 				Property
 				{
 					var Name = "Current"
-					var Type = "Delegate"
+					var Type = "delegate()"
 					var Description = ""
 					var ReadOnly = true
 					var Static = false
@@ -30628,13 +30636,13 @@ DocumentationLibrary
 					var Name = "DelegateParameterRange"
 					var Description = ""
 					var ReturnType = "Void"
-					var Parameters = "(Delegate p0)"
+					var Parameters = "(delegate() p0)"
 					var ParameterList = Array
 					{
 						Parameter
 						{
 							var Name = "p0"
-							var Type = "Delegate"
+							var Type = "delegate()"
 							var Description = ""
 						}
 					}
@@ -30677,7 +30685,7 @@ DocumentationLibrary
 				Property
 				{
 					var Name = "Parameters"
-					var Type = "Delegate"
+					var Type = "delegate()"
 					var Description = ""
 					var ReadOnly = true
 					var Static = false
@@ -31316,6 +31324,14 @@ DocumentationLibrary
 			}
 			var Properties = Array
 			{
+				Property
+				{
+					var Name = "ZeroHubUsername"
+					var Type = "String"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
 			}
 			var Methods = Array
 			{
@@ -35154,26 +35170,26 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "SetSound"
-					var Description = ""
+					var Description = "Sets the Sound resource that will be used for the grains, along with an optional start and stop time. If the stopTime is 0.0, all audio from the Sound will be used."
 					var ReturnType = "Void"
-					var Parameters = "(Sound, Real, Real)"
+					var Parameters = "(Sound sound, Real startTime, Real stopTime)"
 					var ParameterList = Array
 					{
 						Parameter
 						{
-							var Name = ""
+							var Name = "sound"
 							var Type = "Sound"
 							var Description = ""
 						}
 						Parameter
 						{
-							var Name = ""
+							var Name = "startTime"
 							var Type = "Real"
 							var Description = ""
 						}
 						Parameter
 						{
-							var Name = ""
+							var Name = "stopTime"
 							var Type = "Real"
 							var Description = ""
 						}
@@ -44648,7 +44664,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "SerializedList"
+					var Name = "RenderGroups"
 					var Type = "RenderGroupList"
 					var Description = ""
 					var ReadOnly = true
@@ -44668,6 +44684,90 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					}
 					var PossibleExceptionThrows = Array
 					{
+					}
+					var Static = false
+				}
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
+			var Name = "MaterialList"
+			var BaseClass = "SafeId32EventObject"
+			var Library = "GraphicsLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+			}
+			var Properties = Array
+			{
+			}
+			var Methods = Array
+			{
+				Method
+				{
+					var Name = "Add"
+					var Description = "Adds the Material to this RenderGroups's list. Runtime resources only."
+					var ReturnType = "Void"
+					var Parameters = "(Material material)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "material"
+							var Type = "Material"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+						Exception
+						{
+							var Title = "Error"
+							var Message = "[variable]"
+						}
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "All"
+					var Description = "Range of all resources in the list."
+					var ReturnType = "ArrayHandleOfMaterial"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "Remove"
+					var Description = "Removes the Material from this RenderGroups's list. Runtime resources only."
+					var ReturnType = "Void"
+					var Parameters = "(Material material)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "material"
+							var Type = "Material"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+						Exception
+						{
+							var Title = "Error"
+							var Message = "[variable]"
+						}
 					}
 					var Static = false
 				}
@@ -63099,6 +63199,70 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Method
 				{
+					var Name = "SlerpUnnormalized"
+					var Description = "Spherical linear interpolation. Used to interpolate between two vectors by the parameter t. This is the 'pure' mathematical Slerp function that works on un-normalized input. This effectively traces along an ellipse defined by the two input vectors."
+					var ReturnType = "Real2"
+					var Parameters = "(Real2 start, Real2 end, Real t)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "start"
+							var Type = "Real2"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "end"
+							var Type = "Real2"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "t"
+							var Type = "Real"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = true
+				}
+				Method
+				{
+					var Name = "SlerpUnnormalized"
+					var Description = "Spherical linear interpolation. Used to interpolate between two vectors by the parameter t. This is the 'pure' mathematical Slerp function that works on un-normalized input. This effectively traces along an ellipse defined by the two input vectors."
+					var ReturnType = "Real3"
+					var Parameters = "(Real3 start, Real3 end, Real t)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "start"
+							var Type = "Real3"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "end"
+							var Type = "Real3"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "t"
+							var Type = "Real"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = true
+				}
+				Method
+				{
 					var Name = "SmoothStep"
 					var Description = "Returns a smooth Hermite interpolation between 0 and 1 if x is in-between min and max."
 					var ReturnType = "Real"
@@ -67715,7 +67879,35 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "Upload"
-					var Description = "Upload vertex buffer and index buffer data to the gpu."
+					var Description = "Upload vertex buffer and index buffer data to the gpu. This will also build the aabb and information needed for raycasting."
+					var ReturnType = "Void"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "UploadNoRayCastInfo"
+					var Description = "Same as Upload except raycasting information will not be built. This avoids a possible spike when a custom mesh will never need to be raycasted against."
+					var ReturnType = "Void"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "UploadNoRayCastInfoOrAabb"
+					var Description = "Same as Upload except raycasting information and the aabb will not be built. This should be used when the user is manually setting an aabb or frustum culling is disabled."
 					var ReturnType = "Void"
 					var Parameters = "()"
 					var ParameterList = Array
@@ -76158,7 +76350,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "SizeVariance"
 					var Type = "Real"
-					var Description = "How much the emit can vary per sample."
+					var Description = "How much the size can vary from the base size per particle."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -86494,7 +86686,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "ReferencedByList"
+					var Name = "Materials"
 					var Type = "MaterialList"
 					var Description = ""
 					var ReadOnly = true
@@ -86502,7 +86694,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "SerializedList"
+					var Name = "ReferencedByList"
 					var Type = "MaterialList"
 					var Description = ""
 					var ReadOnly = true
@@ -86511,6 +86703,90 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			}
 			var Methods = Array
 			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
+			var Name = "RenderGroupList"
+			var BaseClass = "SafeId32EventObject"
+			var Library = "GraphicsLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+			}
+			var Properties = Array
+			{
+			}
+			var Methods = Array
+			{
+				Method
+				{
+					var Name = "Add"
+					var Description = "Adds the RenderGroup to this Material's list. Runtime resources only."
+					var ReturnType = "Void"
+					var Parameters = "(RenderGroup renderGroup)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "renderGroup"
+							var Type = "RenderGroup"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+						Exception
+						{
+							var Title = "Error"
+							var Message = "[variable]"
+						}
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "All"
+					var Description = "Range of all resources in the list."
+					var ReturnType = "ArrayHandleOfRenderGroup"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "Remove"
+					var Description = "Removes the RenderGroup from this Material's list. Runtime resources only."
+					var ReturnType = "Void"
+					var Parameters = "(RenderGroup renderGroup)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "renderGroup"
+							var Type = "RenderGroup"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+						Exception
+						{
+							var Title = "Error"
+							var Message = "[variable]"
+						}
+					}
+					var Static = false
+				}
 			}
 			var EventsSent = Array
 			{
@@ -87338,7 +87614,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "GetRenderTarget"
-					var Description = ""
+					var Description = "Returns a RenderTarget for use when adding render tasks. Target only valid during this event. Will render to the given texture instead of an internally managed texture."
 					var ReturnType = "RenderTarget"
 					var Parameters = "(Integer2, TextureFormat)"
 					var ParameterList = Array
@@ -87364,7 +87640,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "GetRenderTarget"
-					var Description = ""
+					var Description = "Returns a RenderTarget for use when adding render tasks. Target only valid during this event. Will render to the given texture instead of an internally managed texture."
 					var ReturnType = "RenderTarget"
 					var Parameters = "(Integer2, TextureFormat, SamplerSettings)"
 					var ParameterList = Array
@@ -87396,14 +87672,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "GetRenderTarget"
-					var Description = ""
+					var Description = "Returns a RenderTarget for use when adding render tasks. Target only valid during this event. Will render to the given texture instead of an internally managed texture."
 					var ReturnType = "RenderTarget"
-					var Parameters = "(Texture)"
+					var Parameters = "(Texture texture)"
 					var ParameterList = Array
 					{
 						Parameter
 						{
-							var Name = ""
+							var Name = "texture"
 							var Type = "Texture"
 							var Description = ""
 						}
@@ -91792,9 +92068,25 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
+					var Name = "LoopEndTime"
+					var Type = "Real"
+					var Description = "The time in seconds from the beginning of the file that the instance will stop and jump back when looping."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
 					var Name = "Looping"
 					var Type = "Boolean"
 					var Description = "When this Property is true the SoundInstance will loop indefinitely. If changed to false while a SoundInstance is looping the SoundInstance will continue playing to its EndTime and then stop."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LoopStartTime"
+					var Type = "Real"
+					var Description = "The time in seconds from the beginning of the file that the instance will jump back to when it loops."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -102287,7 +102579,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			var Name = "Zero"
 			var BaseClass = ""
 			var Library = "GameplayLibrary"
-			var Description = ""
+			var Description = "Global functionality exposed to Zilch script. Bound as \"Zero\" to script (e.g. Zero.Keyboard) ZeroStatic was used to avoid the conflict with namespace Zero)."
 			var Tags = Array
 			{
 			}
@@ -102387,26 +102679,26 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "Connect"
-					var Description = ""
+					var Description = "Connection invokes the given delegate when sender dispatches the specified event."
 					var ReturnType = "Void"
-					var Parameters = "(Object, String, delegate())"
+					var Parameters = "(Object sender, String eventId, delegate() receiverDelegate)"
 					var ParameterList = Array
 					{
 						Parameter
 						{
-							var Name = ""
+							var Name = "sender"
 							var Type = "Object"
 							var Description = ""
 						}
 						Parameter
 						{
-							var Name = ""
+							var Name = "eventId"
 							var Type = "String"
 							var Description = ""
 						}
 						Parameter
 						{
-							var Name = ""
+							var Name = "receiverDelegate"
 							var Type = "delegate()"
 							var Description = ""
 						}
@@ -102419,26 +102711,26 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "Disconnect"
-					var Description = ""
+					var Description = "Removes specified event connection, if connection delegate was a component method then receiver object is just the component."
 					var ReturnType = "Void"
-					var Parameters = "(Object, String, Object)"
+					var Parameters = "(Object sender, String eventId, Object receiver)"
 					var ParameterList = Array
 					{
 						Parameter
 						{
-							var Name = ""
+							var Name = "sender"
 							var Type = "Object"
 							var Description = ""
 						}
 						Parameter
 						{
-							var Name = ""
+							var Name = "eventId"
 							var Type = "String"
 							var Description = ""
 						}
 						Parameter
 						{
-							var Name = ""
+							var Name = "receiver"
 							var Type = "Object"
 							var Description = ""
 						}
@@ -102473,6 +102765,41 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					{
 					}
 					var Static = true
+				}
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
+			var Name = "ZilchComponent"
+			var BaseClass = "Component"
+			var Library = "ZilchScriptLibrary"
+			var Description = "A base class for all Zilch components defined in script."
+			var Tags = Array
+			{
+				"Component"
+			}
+			var Properties = Array
+			{
+			}
+			var Methods = Array
+			{
+				Method
+				{
+					var Name = "ZilchComponent"
+					var Description = ""
+					var ReturnType = "Void"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
 				}
 			}
 			var EventsSent = Array
@@ -103783,49 +104110,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "Days"
-			var EnumValues = Map
-			{
-				Object
-				{
-					var key = "Friday"
-					var value = ""
-				}
-				Object
-				{
-					var key = "Monday"
-					var value = ""
-				}
-				Object
-				{
-					var key = "Saturday"
-					var value = ""
-				}
-				Object
-				{
-					var key = "Sunday"
-					var value = ""
-				}
-				Object
-				{
-					var key = "Thursday"
-					var value = ""
-				}
-				Object
-				{
-					var key = "Tuesday"
-					var value = ""
-				}
-				Object
-				{
-					var key = "Wednesday"
-					var value = ""
-				}
-			}
-			var Description = ""
-		}
-		Object
-		{
 			var Name = "DefaultAddOnFilters"
 			var EnumValues = Map
 			{
@@ -104640,6 +104924,24 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "Textures"
+					var value = ""
+				}
+			}
+			var Description = ""
+		}
+		Object
+		{
+			var Name = "ImportFrames"
+			var EnumValues = Map
+			{
+				Object
+				{
+					var key = "AllFrames"
+					var value = ""
+				}
+				Object
+				{
+					var key = "SelectedFrames"
 					var value = ""
 				}
 			}
@@ -107881,7 +108183,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			{
 				Object
 				{
-					var key = "Backwards"
+					var key = "Backward"
 					var value = ""
 				}
 				Object
