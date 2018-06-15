@@ -631,7 +631,7 @@ Commands commands =
 	{
 		string Name = "SelectTool",
 		string Description = "Picks objects in the scene.",
-		string Shortcut = "1",
+		string Shortcut = "",
 		string IconName = "SelectTool",
 		string Tags = "Tool",
 	},
@@ -640,7 +640,7 @@ Commands commands =
 	{
 		string Name = "TranslateTool",
 		string Description = "Enables the Translate Tool",
-		string Shortcut = "2",
+		string Shortcut = "",
 		string IconName = "TranslateGizmo",
 		string Tags = "Tool",
 	},
@@ -649,7 +649,7 @@ Commands commands =
 	{
 		string Name = "RotateTool",
 		string Description = "Enables the Rotate Tool",
-		string Shortcut = "3",
+		string Shortcut = "",
 		string IconName = "RotateGizmo",
 		string Tags = "Tool",
 	},
@@ -658,7 +658,7 @@ Commands commands =
 	{
 		string Name = "ScaleTool",
 		string Description = "Enables the Scale Tool",
-		string Shortcut = "4",
+		string Shortcut = "",
 		string IconName = "ScaleGizmo",
 		string Tags = "Tool",
 	},
@@ -666,7 +666,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "ManipulatorTool",
-		string Shortcut = "5",
+		string Shortcut = "",
 		string Description = "Enables the Manipulator Tool",
 		string IconName = "ManipulatorGizmo",
 		string Tags = "Tool",
@@ -675,7 +675,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "TileEditor2D",
-		string Shortcut = "6",
+		string Shortcut = "",
 		string Description = "Enables the TileEditor2D tool",
 		string IconName = "TileEditor2D",
 		string Tags = "Tool",
@@ -684,7 +684,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "HeightMapTool",
-		string Shortcut = "7",
+		string Shortcut = "",
 		string Description = "Enables the HeightMapTool tool",
 		string IconName = "HeightMapTool",
 		string Tags = "Tool",
@@ -693,7 +693,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "JointTool",
-		string Shortcut = "8",
+		string Shortcut = "",
 		string Description = "Enables the JointTool tool",
 		string IconName = "JointTool",
 		string Tags = "Tool",
@@ -702,7 +702,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "CreationTool",
-		string Shortcut = "9",
+		string Shortcut = "",
 		string Description = "Enables the CreationTool tool",
 		string IconName = "CreationTool",
 		string Tags = "Tool",
@@ -711,7 +711,7 @@ Commands commands =
   Command =
 	{
 		string Name = "ParentingTool",
-		string Shortcut = "0",
+		string Shortcut = "",
 		string Description = "Enables the ParentingTool tool",
 		string IconName = "ParentingTool",
 		string Tags = "Tool",
