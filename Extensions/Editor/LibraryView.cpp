@@ -1264,7 +1264,9 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
 //******************************************************************************
 void LibraryView::OnAddResource(ObjectEvent* event)
 {
-  ContextMenuEntry* entry = (ContextMenuEntry*)event->Source;
+  ContextMenuItem* item = (ContextMenuItem*)event->Source;
+  ContextMenuEntry* entry = item->mEntry;
+
   AddResourceWindow* resourceWindow = OpenAddWindow(nullptr);
   if (entry->mContextData.IsNotNull())
   {
