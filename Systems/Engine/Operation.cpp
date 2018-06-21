@@ -50,7 +50,7 @@ ZilchDefineType(Operation, builder, type)
   ZeroBindEvent(Events::OperationRedo, OperationQueueEvent);
 }
 
-Memory::Heap* Operation::sHeap = new Memory::Heap("Operations", nullptr);
+Memory::Heap* Operation::sHeap = new Memory::Heap("Operations", NULL);
 
 //******************************************************************************
 void* Operation::operator new(size_t size)
@@ -177,8 +177,7 @@ ZilchDefineType(OperationQueue, builder, type)
 //******************************************************************************
 OperationQueue::OperationQueue()
 {
-  ActiveBatch = nullptr;
-  ConnectThisTo(Z::gEngine, Events::EngineShutdown, OnEngineShutdown);
+  ActiveBatch = NULL;
 }
 
 //******************************************************************************
@@ -504,7 +503,7 @@ void OperationQueue::EndBatch()
       sListeningForSideEffects = prevSideEffects;
     }
 
-    ActiveBatch = nullptr;
+    ActiveBatch = NULL;
   }
 
 }
@@ -797,13 +796,6 @@ void OperationQueue::QueueChanges(MetaProxy* proxy)
   {
     QueueChanges(childProxy);
   }
-}
-
-//******************************************************************************
-void OperationQueue::OnEngineShutdown(Event* event)
-{
-  // Clear the operations currently in the queue
-  ClearAll();
 }
 
 //------------------------------------------------------------------------------------- Side Effects

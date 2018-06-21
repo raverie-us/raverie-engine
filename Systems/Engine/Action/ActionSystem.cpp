@@ -26,14 +26,12 @@ ActionSpace::ActionSpace()
 }
 ActionSpace::~ActionSpace()
 {
-  ClearActions();
 }
 
 void ActionSpace::Initialize(CogInitializer& initializer)
 {
   ConnectThisTo(GetOwner(), Events::ActionFrameUpdate, OnActionFrameUpdate);
   ConnectThisTo(GetOwner(), Events::ActionLogicUpdate, OnActionLogicUpdate);
-  ConnectThisTo(Z::gEngine, Events::EngineShutdown, OnEngineShutdown);
 }
 
 void ActionSpace::OnActionFrameUpdate(UpdateEvent* updateEvent)
@@ -59,17 +57,6 @@ void ActionSpace::UpdateActions(UpdateEvent* updateEvent, ActionExecuteMode::Enu
     actionListIt->Update(dt, rDt, mode);
     actionListIt = next;
   }
-}
-
-void ActionSpace::OnEngineShutdown(Event* event)
-{
-  ClearActions();
-}
-
-void ActionSpace::ClearActions()
-{
-  OnlyDeleteObjectIn(ActiveLists);
-  OnlyDeleteObjectIn(ScheduledLists);
 }
 
 //-------------------------------------------------------------------ActionSystem

@@ -35,10 +35,6 @@ public:
   void OnActionLogicUpdate(UpdateEvent* updateEvent);
   void UpdateActions(UpdateEvent* updateEvent, ActionExecuteMode::Enum mode);
 
-  void OnEngineShutdown(Event* event);
-  // Removes all actions from the action space
-  void ClearActions();
-
   ActiveListsType ActiveLists;
   ActiveListsType ScheduledLists;
 
@@ -58,6 +54,8 @@ public:
   // System Interface
   cstr GetName() override { return "Action"; }
   void Initialize(SystemInitializer& initializer) override;
+  
+  InList<ActionSpace> ActionsSpaces;
 };
 
 System* CreateActionSystem();

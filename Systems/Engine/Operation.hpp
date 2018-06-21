@@ -202,8 +202,6 @@ public:
 
   HashSet<Cog*> mDestroyedObjects;
 
-  void OnEngineShutdown(Event* event);
-
   //----------------------------------------------------------------------------------- Side Effects
   static void StartListeningForSideEffects();
   static bool IsListeningForSideEffects();
