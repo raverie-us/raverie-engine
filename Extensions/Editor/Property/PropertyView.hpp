@@ -94,6 +94,10 @@ public:
   // Rebuild all property widgets.
   void Rebuild();
 
+  // Internal
+  /// The scroll area that all property widgets are attached to
+  ScrollArea* mScrollArea;
+
 protected:
   friend class PropertyWidget;
   friend class PropertyWidgetObject;
@@ -124,9 +128,6 @@ protected:
   
   /// The current property interface. Could point to the default interface.
   PropertyInterface* mPropertyInterface;
-
-  /// The scroll area that all property widgets are attached to
-  ScrollArea* mScrollArea;
 
   /// Collection of additional widgets attached to this control
   Array<Widget*> mAddtionalWidgets;
