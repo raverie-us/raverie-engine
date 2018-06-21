@@ -239,7 +239,7 @@ TextEditor::TextEditor(Composite* parent)
   mIndicators = new PixelBuffer();
   mIndicatorDisplay = new TextureView(this);
   mIndicatorDisplay->SetTexture(mIndicators->Image);
-
+  mIndicatorDisplay->SetInteractive(false);
   mIndicatorDisplay->SizeToContents();
 
   SetScrollWellSize(0, cTextEditorVScrollWellWidth);
@@ -704,20 +704,8 @@ void TextEditor::OnTextTyped(KeyboardTextEvent* event)
       return;
   }
 
-  byte* states = Keyboard::Instance->States;
-
-  uint keyDownCount = 0;
-  for(int i = 0; i < Keys::KeyMax; ++i)
-    keyDownCount += ((states[i] == Keyboard::KeyPressed) | (states[i] == Keyboard::KeyHeld));
-
-  uint modifierCount = Keyboard::Instance->KeyIsDown(Keys::Control);
-  modifierCount += Keyboard::Instance->KeyIsDown(Keys::Shift);
-  modifierCount += Keyboard::Instance->KeyIsDown(Keys::Alt);
-
-  bool isAnyNonModifierKeyDown = (keyDownCount != 0 && modifierCount != keyDownCount);
-
   // Text selection was cancelled.
-  if(isAnyNonModifierKeyDown)
+  if(Keyboard::Instance->IsAnyNonModifierDown())
   {
     mScintilla->ClearHighlightRanges();
     mScintilla->mHighlightIndicators.Clear();
