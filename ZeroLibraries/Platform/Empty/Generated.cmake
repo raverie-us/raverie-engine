@@ -4,6 +4,7 @@
 ################################################################################
 target_sources(Platform
   PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/Browser.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CrashHandler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Debug.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DirectoryWatcher.cpp
