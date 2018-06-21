@@ -65,9 +65,6 @@ ZilchManager::ZilchManager() :
   mShouldAttemptCompile(true),
   mLastCompileResult(CompileResult::CompilationSucceeded)
 {
-  // Add the single executable state to the debugger
-  mDebugger.AddState(ExecutableState::CallingState);
-
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
 }
 
@@ -145,6 +142,14 @@ void ZilchManager::OnEngineUpdate(UpdateEvent* event)
   InternalCompile();
 
   mDebugger.Update();
+}
+
+//**************************************************************************************************
+void ZilchManager::HostDebugger()
+{
+  // Add the single executable state to the debugger (will ignore if it's already added)
+  mDebugger.AddState(ExecutableState::CallingState);
+  mDebugger.Host(8000);
 }
 
 }//namespace Zero
