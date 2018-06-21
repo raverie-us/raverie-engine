@@ -767,16 +767,16 @@ static void AddHierarchyIntoSet(Cog* cog, HashSet<Cog*>& set)
 //******************************************************************************
 void ObjectTranslateGizmo::SnapToSurface(GizmoUpdateEvent* event, Vec3* movementOut)
 {
-  ViewportMouseEvent* vpEvent = event->GetViewportMouseEvent( );
+  ViewportMouseEvent* vpEvent = event->GetViewportMouseEvent();
   if(vpEvent == nullptr)
     return;
 
     // Ignore all selected objects and their children
   HashSet<Cog*> ignoredObjects;
-  forRange(ObjectTransformState& objectState, mObjectStates.All( ))
+  forRange(ObjectTransformState& objectState, mObjectStates.All())
   {
     Handle target = objectState.MetaObject;
-    if(target.IsNull( ))
+    if(target.IsNull())
       continue;
 
     //@RYAN: COG_NOT_GENERIC
@@ -786,19 +786,19 @@ void ObjectTranslateGizmo::SnapToSurface(GizmoUpdateEvent* event, Vec3* movement
       AddHierarchyIntoSet(object, ignoredObjects);
   }
 
-  RaycastResultList results(ignoredObjects.Size( ) + 1);
+  RaycastResultList results(ignoredObjects.Size() + 1);
 
-  Space* space = GetSpace( );
+  Space* space = GetSpace();
   CameraViewport* viewport = vpEvent->GetCameraViewport();
   Vec2 mousePosition = vpEvent->Position;
 
-  CastInfo castInfo(space, viewport->GetCameraCog( ), mousePosition);
+  CastInfo castInfo(space, viewport->GetCameraCog(), mousePosition);
   Ray ray = vpEvent->mWorldRay;
 
   // Raycast into both physics and graphics
   Raycaster rayCaster;
-  rayCaster.AddProvider(new PhysicsRaycastProvider( ));
-  rayCaster.AddProvider(new GraphicsRaycastProvider( ));
+  rayCaster.AddProvider(new PhysicsRaycastProvider());
+  rayCaster.AddProvider(new GraphicsRaycastProvider());
   rayCaster.RayCast(ray, castInfo, results);
 
   for(uint i = 0; i < results.mSize; ++i)
@@ -933,12 +933,9 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
     if(dispatcher != nullptr)
       dispatcher->Dispatch(Events::ObjectScaleGizmoModified, &secondEvent);
 
-    // User modified?
-    objectState.EndScale = secondEvent.mFinalLocalScale;
-    objectState.EndTranslation = secondEvent.mFinalLocalTranslation;
-
     if(mAffectScale || !multiTransform)
     {
+      objectState.EndScale = secondEvent.mFinalLocalScale;
       transform.SetLocalScale(objectState.EndScale);
 
       if(dispatcher != nullptr)
@@ -950,14 +947,18 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
       }
     }
 
-    transform.SetLocalTranslation(objectState.EndTranslation);
-
-    if(dispatcher != nullptr)
+    if(multiTransform && mAffectTranslation)
     {
-      PropertyEvent propertyEvent(transform.mInstance, transform.mLocalTranslation,
-                                  objectState.StartTranslation, objectState.EndTranslation);
+      objectState.EndTranslation = secondEvent.mFinalLocalTranslation;
+      transform.SetLocalTranslation(objectState.EndTranslation);
 
-      dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
+      if(dispatcher != nullptr)
+      {
+        PropertyEvent propertyEvent(transform.mInstance, transform.mLocalTranslation,
+                                    objectState.StartTranslation, objectState.EndTranslation);
+
+        dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
+      }
     }
   }
 }
@@ -1090,28 +1091,33 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
     if(dispatcher != nullptr)
       dispatcher->Dispatch(Events::ObjectRotateGizmoModified, &secondEvent);
 
-    // User modified?
-    objectState.EndRotation = secondEvent.mFinalLocalRotation;
-    objectState.EndTranslation = secondEvent.mFinalLocalTranslation;
-
-    transform.SetLocalRotation(objectState.EndRotation);
-
-    if(dispatcher != nullptr)
+    if(mAffectRotation || !multiTransform)
     {
-      PropertyEvent propertyEvent(transform.mInstance, transform.mLocalRotation,
-                                  objectState.StartRotation, objectState.EndRotation);
+      objectState.EndRotation = secondEvent.mFinalLocalRotation;
+      transform.SetLocalRotation(objectState.EndRotation);
 
-      dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
+      if(dispatcher != nullptr)
+      {
+        PropertyEvent propertyEvent(transform.mInstance, transform.mLocalRotation,
+                                    objectState.StartRotation, objectState.EndRotation);
+
+        dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
+      }
+
     }
 
-    transform.SetLocalTranslation(objectState.EndTranslation);
-
-    if(dispatcher != nullptr)
+    if(multiTransform && mAffectTranslation)
     {
-      PropertyEvent propertyEvent(transform.mInstance, transform.mLocalTranslation,
-                                  objectState.StartTranslation, objectState.EndTranslation);
+      objectState.EndTranslation = secondEvent.mFinalLocalTranslation;
+      transform.SetLocalTranslation(objectState.EndTranslation);
 
-      dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
+      if(dispatcher != nullptr)
+      {
+        PropertyEvent propertyEvent(transform.mInstance, transform.mLocalTranslation,
+                                    objectState.StartTranslation, objectState.EndTranslation);
+
+        dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
+      }
     }
   }
 }
