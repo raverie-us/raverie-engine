@@ -157,28 +157,20 @@ Vec3 GetMovementDirection(Vec3Param movement, Mat3Param bases)
 
 //******************************************************************************
 // Input 'scaleDirection' is [-1, 1].  ie, up, down, none
-//  - Note: 'WorldToParent' & 'ParentToLocal' are not concatenated as object local
-//          scale & translation are undesired in final calculation.
 Vec3 MovementToUniformSignedLocalScale(float scaleDirection,
-  Vec3Param worldMovement, Mat4 worldToParent, QuatParam parentToLocal)
+  Vec3Param worldMovement, QuatParam worldToLocal)
 {
   Vec3 d(scaleDirection);
-  return MovementToUniformSignedLocalScale(d, worldMovement, worldToParent, parentToLocal);
+  return MovementToUniformSignedLocalScale(d, worldMovement, worldToLocal);
 }
 
 //******************************************************************************
 // Input 'scaleDirection' is [-1, 1] on each axis (x, y, z).  ie, up, down, none
-//  - Note: 'WorldToParent' & 'ParentToLocal' are not concatenated as object local
-//          scale & translation are undesired in final calculation.
 Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection,
-  Vec3Param worldMovement, Mat4 worldToParent, QuatParam parentToLocal)
+  Vec3Param worldMovement, QuatParam worldToLocal)
 {
-  Vec3 v(worldMovement);
-
-  // Movement in parent's space (if applicable).
-  v = Math::TransformNormal(worldToParent, v);
   // Movement in local orientation.
-  v = Math::Multiply(parentToLocal, v);
+  Vec3 v = Math::Multiply(worldToLocal, worldMovement);
 
   // Non-uniform-signed scales are not allowed. 'scaleDirection' will dictate
   // uniformly signed values.
@@ -187,41 +179,6 @@ Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection,
   v *= scaleDirection;
 
   return v;
-}
-
-//******************************************************************************
-// Expects 'vector0' to be normalized.
-Vec3 NormalToLocal(Vec3Param vector0, Transform* transform)
-{
-  if(transform->TransformParent)
-  {
-    //Transform into local space
-    Mat4 parentWorldInverse = transform->TransformParent->GetWorldMatrix( );
-    parentWorldInverse.Invert( );
-    return TransformNormal(parentWorldInverse, vector0);
-  }
-
-  return vector0;
-}
-
-//******************************************************************************
-void SetLocalPositionFromWorld(ObjectTransformState& object, Vec3Param worldTranslation,
-  Transform* transform)
-{
-  //if the object has a parent and is not in world
-  //then transform the world translation into local space
-  if(transform->TransformParent && !transform->GetInWorld( ))
-  {
-    Mat4 parentWorldInverse = transform->TransformParent->GetWorldMatrix( );
-    parentWorldInverse.Invert( );
-    transform->SetTranslation(TransformPoint(parentWorldInverse, worldTranslation));
-  }
-  else
-  {
-    transform->SetTranslation(worldTranslation);
-  }
-
-  object.EndTranslation = transform->GetTranslation( );
 }
 
 //******************************************************************************
@@ -1175,8 +1132,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, flo
   else
   {
     Vec3 localMovement = movement;
-    Mat4 worldToParent = transform.GetParentWorldMatrix( ).Inverted( );
-    Quat parentToLocal = transform.GetLocalRotation( ).Inverted( );
+    Quat worldToLocal = transform.GetWorldRotation().Inverted();
 
     if(singleAxis)
     {
@@ -1194,7 +1150,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, flo
         localMovement = GizmoHelpers::SingleAxisToOffAxesScale(axis, localMovement);
 
       localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection[axis],
-        localMovement, worldToParent, parentToLocal);
+        localMovement, worldToLocal);
 
       // If in local, post-process off-axis conversion after transform.
       //
@@ -1213,7 +1169,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, flo
       if(basis ==  GizmoBasis::Local)
       {
         localMovement = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection,
-          localMovement, worldToParent, parentToLocal);
+          localMovement, worldToLocal);
       }
       else  // basis ==  GizmoBasis::World
       {
@@ -1234,7 +1190,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, flo
           // after transformation, yet needs to remain singularly/uniformly
           // directed after transformation.
           v = GizmoHelpers::MovementToUniformSignedLocalScale(mDirection[axis],
-            v, worldToParent, parentToLocal);
+            v, worldToLocal);
 
           localMovement += v;
         }
