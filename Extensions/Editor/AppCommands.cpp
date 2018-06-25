@@ -182,7 +182,7 @@ void PlayUnitTestFile()
 void HostZilchDebugger()
 {
   ZilchManager* manager = ZilchManager::GetInstance();
-  manager->mDebugger.Host(8000);
+  manager->HostDebugger();
 }
 
 void RunZilchDebugger()

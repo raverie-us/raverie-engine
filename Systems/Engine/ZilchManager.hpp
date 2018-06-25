@@ -59,6 +59,9 @@ public:
   // If dirtied we attempt to compile every engine update (checks dirty flag)
   void OnEngineUpdate(UpdateEvent* event);
 
+  // Tells the debugger to start hosting.
+  void HostDebugger();
+
   // The last library we properly built (set inside CompileLoadedScriptsIntoLibrary)
   // Once this library becomes in use by an executable state, we CANNOT update it, or any ZilchMeta types
   LibraryRef mCurrentFragmentProjectLibrary;
