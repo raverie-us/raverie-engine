@@ -35,8 +35,6 @@ include(BrowserSubProcess/CMakeLists.txt)
 target_include_directories(ZeroEditor 
     PUBLIC 
         ${Source_Root}
-        ${CurlHeaders}
-        ${PortAudioHeaders}
         ${OpusHeaders}
         ${FreetypeHeaders}
         ${WinHidHeaders}
@@ -49,7 +47,6 @@ target_include_directories(ZeroLauncher
         ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
         ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
         ${ZLibHeaders}
-        ${CurlHeaders}
 )
 target_include_directories(ZeroLauncherSharedLibrary 
     PUBLIC 
@@ -57,7 +54,6 @@ target_include_directories(ZeroLauncherSharedLibrary
         ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
         ${Dependencies_Root}
         ${Source_Root}
-        ${CurlHeaders}
 )
 target_include_directories(BrowserSubProcess
     PUBLIC 
@@ -95,8 +91,6 @@ target_link_libraries(ZeroEditor
                       Startup
                       Zilch
                       Graphics
-                      ${CurlStatic}
-                      ${PortAudioStatic}
                       ${OpusStatic}
                       ${FreetypeStatic}
                       ${ZLibStatic}

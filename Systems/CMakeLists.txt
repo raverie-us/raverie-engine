@@ -67,7 +67,6 @@ target_include_directories(Networking
     PUBLIC 
         ${CurrentDirectory}/Networking
         ${CurrentDirectory}
-        ${CurlHeaders}
 )
 target_include_directories(Physics 
     PUBLIC 
@@ -110,7 +109,6 @@ target_link_libraries(Graphics
 ) 
 target_link_libraries(Networking
                       PUBLIC
-                      ${CurlStatic}
                       Common
                       Geometry
 ) 
