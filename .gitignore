@@ -47,7 +47,7 @@ enc_temp_folder/
 DevTools/
 
 # ignore the whole CMake Build directory
-CMakeBuild/
+CMakeBuild/*
 
 # ...Except these file types since a user might have added source in this folder in error
 !CMakeBuild/*.cmd
