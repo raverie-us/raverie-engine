@@ -36,6 +36,8 @@ public:
 
   /// Initializes all systems in the engine.
   void Initialize(SystemInitializer& initializer);
+  // Updates the engine once and is intended to be used by SetMainLoopFunction. Userdata is a pointer to the Engine.
+  static void MainLoopFunction(void* userData);
   /// Update all the systems until the engine is no longer active.
   void Run(bool autoShutdown = true);
   /// Update all owned systems.

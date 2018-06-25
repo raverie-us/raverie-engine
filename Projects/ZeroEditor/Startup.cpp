@@ -29,6 +29,10 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
 {
   TimerBlock startUp("Engine Startup");
 
+  // On some platforms (Emscripten), the engine loop must be set before initializing the renderer.
+  // However, we do not want this to terminate execution here so we pass false.
+  SetMainLoopFunction(60, &Engine::MainLoopFunction, engine, false);
+
   String project = GetStringValue<String>(arguments, "file", String());
   bool playGame = GetStringValue<bool>(arguments, "play", false);
   bool defaultConfig = GetStringValue<bool>(arguments, "safe", false);
@@ -43,7 +47,7 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
     playGame = true;
 
   // Load config object
-  Cog* configCog = Z::gEngine->GetConfigCog();
+  Cog* configCog = engine->GetConfigCog();
 
   {
     TimerBlock block("Initializing core systems.");
@@ -71,7 +75,7 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
   if(playGame)
   {
     // Creating project cog outside of CreateGame() so that launcher can make changes if needed.
-    Cog* projectCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(),  projectFile, 0, nullptr);
+    Cog* projectCog = Z::gFactory->Create(engine->GetEngineSpace(),  projectFile, 0, nullptr);
     if(projectCog == nullptr)
     {
       FatalEngineError("Failed load project '%s'", projectFile.c_str());

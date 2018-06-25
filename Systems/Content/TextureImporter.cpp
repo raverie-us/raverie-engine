@@ -622,7 +622,16 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
       outputOptions.setContainer(nvtt::Container_DDS10);
 
       nvtt::Context context;
+
+      // NVidia texture tools uses threads (pthreads on Emscripten) and
+      // since threads are disabled, this unfortunately just freezes in browsers.
+      // For now, we actually support not having compressed textures.
+#if defined(PLATFORM_EMSCRIPTEN)
+      bool result = true;
+#else
       bool result = context.compress(surface, 0, 0, compressionOptions, outputOptions);
+#endif
+
       if (!result)
       {
         mBuilder = nullptr;

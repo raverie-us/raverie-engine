@@ -132,8 +132,16 @@ void Engine::Initialize(SystemInitializer& initializer)
 }
 
 //******************************************************************************
+void Engine::MainLoopFunction(void* userData)
+{
+  ((Engine*)userData)->Update();
+}
+
+//******************************************************************************
 void Engine::Run(bool autoShutdown)
 {
+  SetMainLoopFunction(60, &Engine::MainLoopFunction, this, true);
+
   while(mEngineActive)
   {
     Update();

@@ -93,7 +93,7 @@ SystemEntry* SystemEntry::FindChild(StringParam name)
 
 SystemEntry* SystemEntry::FindOrAddChild(StringParam name, EntryType::Enum type)
 {
-  // If we have double slashes with nothing inbetween, or the starting root / then
+  // If we have double slashes with nothing in between, or the starting root / then
   // there will be an empty entry before it (just return itself always).
   if (name.Empty())
     return this;
