@@ -389,18 +389,8 @@ copy_multiple_dlls(
     ${MemoryTrackerSharedPath}
     ${NvttSharedPath}
     ${PortAudioSharedPath}
+    ${SDLSharedPath}
 )
-
-if ((${platform} STREQUAL "Windows") AND ((${platform_library} STREQUAL "SDL") OR (${platform_library} STREQUAL "SDLSTLEmpty")))
-    copy_multiple_dlls(
-        ZeroEditor
-        ZeroLauncher
-        OUTPUT_DIRECTORY ${zero_binary_dir}
-        DLL_LOCATIONS
-        ## setup all dll locations
-        ${SDLSharedPath}
-    )
-endif()
 
 #function(create_build_info aTarget aSourceDir aBuildOutDir aOutputLocation)
 create_build_info(

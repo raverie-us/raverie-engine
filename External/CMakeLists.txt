@@ -15,52 +15,49 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 ################################################################################
 # Specify our list of StaticExternals (use the same name as the folder in External/)
 ################################################################################
-# list of statics
-if (${platform} STREQUAL Emscripten)
-  set(StaticExternals 
-      Assimp 
-      Freetype 
-      Libpng 
-      Nvtt 
-      Opus 
-      ZLib
-  )
-  
-  # list of shared
-  set(SharedExternals
-      Assimp
-      Freetype
-      Nvtt
-  )
-else()
-  set(StaticExternals 
-      Assimp 
-      CEF 
-      Freetype 
-      GL 
-      GLEW 
-      Libpng 
-      MemoryDebugger 
-      MemoryTracker 
-      Nvtt 
-      Opus 
-      WinHid 
-      ZLib
-      SDL 
-  )
-  
-  # list of shared
-  set(SharedExternals
-      Assimp
-      CEF
-      Freetype
-      GLEW
-      MemoryDebugger
-      MemoryTracker
-      Nvtt
-      SDL
-  )
-endif()
+set(AllPossibleStaticExternals 
+    Assimp 
+    CEF 
+    Freetype 
+    GL 
+    GLEW 
+    Libpng 
+    MemoryDebugger 
+    MemoryTracker 
+    Nvtt 
+    Opus 
+    WinHid 
+    ZLib
+    SDL 
+)
+
+# list of shared
+set(AllPossibleSharedExternals
+    Assimp
+    CEF
+    Freetype
+    GLEW
+    MemoryDebugger
+    MemoryTracker
+    Nvtt
+    SDL
+)
+
+# define empty values for all externals so if they don't exist they will just result in an empty string
+foreach(possibleStaticLib ${AllPossibleStaticExternals})
+    set(${possibleStaticLib}Static "")
+    set(${possibleStaticLib}Static "" PARENT_SCOPE)
+    set(${possibleStaticLib}Headers "" PARENT_SCOPE)
+endforeach()
+
+foreach(possibleSharedLib ${AllPossibleSharedExternals})
+set(${possibleSharedLib}Shared "")
+set(${possibleSharedLib}Shared "" PARENT_SCOPE)
+set(${possibleSharedLib}Headers "" PARENT_SCOPE)
+endforeach()
+
+
+#endif()
 ################################################################################
 # specify the include directories for each of the dependencies.
 # use parent scope so the folders are accessible anywhere

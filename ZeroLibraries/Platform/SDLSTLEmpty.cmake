@@ -24,7 +24,7 @@ include(SDLSTLEmpty/CMakeLists.txt)
 target_include_directories(Platform
     PUBLIC
         ${CurrentDirectory}/SDLSTLEmpty 
-        #${WinHidHeaders}
+        ${WinHidHeaders}
         ${GLEWHeaders}
         ${CEFHeaders}
         ${SDLHeaders}
@@ -36,7 +36,7 @@ target_include_directories(Platform
 target_link_libraries(Platform
                       PUBLIC
                       Common
-                      #${WinHidStatic}
+                      ${WinHidStatic}
                       ${GLEWStaticRelease}
                       ${CEFStatic}
                       ${SDLStatic}
