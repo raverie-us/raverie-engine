@@ -174,6 +174,7 @@ void SaveSelectionToClipboard(Editor* editor, Space* space)
   MetaSelection* selection = editor->GetSelection();
   editor->mLastCopiedParent = GetSharedParent(selection);
   editor->mPasteHierarchyIndex = GetFirstHierarchyIndex(selection);
+  editor->mLastSpaceCopiedFrom = space->GetId();
 
   CogSavingContext context;
 
@@ -265,7 +266,8 @@ void LoadObjectFromClipboard(Editor* editor, Space* space)
           // This object was created
           ObjectCreated(queue, object);
 
-          if(editor->mPasteHierarchyIndex != uint(-1))
+          // Only move the index if it was copied from the same space it's being pasted into
+          if(editor->mPasteHierarchyIndex != uint(-1) && editor->mLastSpaceCopiedFrom == space->GetId())
             MoveObjectIndex(queue, object, editor->mPasteHierarchyIndex);
 
           // Add the object to the selection, wait until the end to push changes

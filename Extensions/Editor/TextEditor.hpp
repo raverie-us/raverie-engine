@@ -115,6 +115,10 @@ public:
   //Goes to a line scrolling it into view.
   void GoToLine(int line);
 
+  //Scrolls the view until the line is visible
+  void MakePositionVisible(int position);
+  void MakeLineVisible(int line);
+
   //Get the line that the text position is on.
   int GetLineFromPosition(int position);
 

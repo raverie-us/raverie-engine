@@ -132,6 +132,8 @@ public:
   bool GetMouseTrap();
   void SetMouseTrap(bool trapped);
   IntVec2 GetMouseTrapMonitorPosition();
+  /// Used to override the trapped position.
+  virtual void SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition) {}
 
   OsHandle GetWindowHandle();
 

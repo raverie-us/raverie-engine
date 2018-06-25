@@ -1309,7 +1309,7 @@ public:
       mEditButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(24));
     }
 
-    if(mResourceManager->mCanDuplicate == false)
+    if(mResourceManager && mResourceManager->mCanDuplicate == false)
     {
       mCloneButton->mIconColor = ToByteColor(Vec4(1, 1, 1, 0.3f));
       mCloneButton->SetIgnoreInput(true);
@@ -1318,7 +1318,7 @@ public:
       mCloneButton->mToolTipColor = ToolTipColorScheme::Yellow;
     }
 
-    if(mResourceManager->mCanCreateNew == false)
+    if(mResourceManager && mResourceManager->mCanCreateNew == false)
     {
       mNewButton->mIconColor = ToByteColor(Vec4(1, 1, 1, 0.3f));
       mNewButton->SetIgnoreInput(true);
@@ -1467,6 +1467,12 @@ public:
       DisconnectAll(oldResource, this);
 
     mDisplayedResource = resource;
+    
+    // When setting a resource in the property grid update the manager
+    // to cover the case where a "Resource" has been made a property
+    // and can be set to different resource types with different managers
+    if (resource)
+      mResourceManager = resource->GetManager();
 
     // Destroy the old preview
     if (mResourcePreview && !(oldResource == nullptr && resource == nullptr))
@@ -1502,12 +1508,22 @@ public:
     if (mResourceType->IsA(ZilchTypeId(ColorGradient)))
       mNameArea->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(22));
 
-    if(mResourceManager->mCanDuplicate)
+    if(mResourceManager && mResourceManager->mCanDuplicate)
     {
       mCloneButton->mIconColor = ToByteColor(Vec4(1));
-      mCloneButton->mTabFocusStop = true;
       mCloneButton->SetIgnoreInput(false);
+      mCloneButton->mTabFocusStop = true;
+      mCloneButton->SetToolTip("");
     }
+    else
+    {
+      mCloneButton->mIconColor = ToByteColor(Vec4(1, 1, 1, 0.3f));
+      mCloneButton->SetIgnoreInput(true);
+      mCloneButton->mTabFocusStop = false;
+      mCloneButton->SetToolTip("Cannot clone this Resource type");
+      mCloneButton->mToolTipColor = ToolTipColorScheme::Yellow;
+    }
+
     mEditButton->SetIgnoreInput(false);
     mEditButton->mIconColor = ToByteColor(Vec4(1));
     mEditButton->mTabFocusStop = true;
@@ -1611,7 +1627,8 @@ public:
     mResourceType = Type::GetBoundType(initializer.Property->PropertyType);
     mResourceManager = Z::gResources->Managers.FindValue(mResourceType->Name, nullptr);
 
-    ConnectThisTo(mResourceManager, Events::ResourceAdded, OnResourceAdded);
+    if (mResourceManager)
+      ConnectThisTo(mResourceManager, Events::ResourceAdded, OnResourceAdded);
     
     bool forceCompact = false;
     if (mMetaEdit)
@@ -1859,7 +1876,8 @@ public:
       viewPopUp->UpdateTransformExternal();
 
       searchView->AddHiddenTag("Resources");
-      searchView->AddHiddenTag(mResourceManager->GetResourceType()->Name);
+      if (mResourceManager)
+        searchView->AddHiddenTag(mResourceManager->GetResourceType()->Name);
 
       searchView->AddMetaType(Type::GetBoundType(mProperty->PropertyType));
 
@@ -1940,8 +1958,13 @@ public:
   {
     mTooltip.SafeDestroy();
     Window* window = NULL;
-    AddResourceWindow* addWidget = OpenAddWindow(mResourceType, &window);
-    addWidget->ShowResourceTypeSearch(false);
+    BoundType* resourceType = nullptr;
+    if (mResourceManager)
+      resourceType = mResourceType;
+
+    AddResourceWindow* addWidget = OpenAddWindow(resourceType, &window);
+    if (resourceType)
+      addWidget->ShowResourceTypeSearch(false);
 
     WidgetRect rect = mEditor->GetScreenRect();
     Vec3 topRight = ToVector3(rect.TopRight());

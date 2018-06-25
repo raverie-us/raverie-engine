@@ -181,9 +181,8 @@ void PlayUnitTestFile()
 
 void HostZilchDebugger()
 {
-  // METAREFACTOR - Removed until ZilchScript compiles
-  //ZilchScriptManager* manager = ZilchScriptManager::GetInstance();
-  //manager->mDebugger.Host(8000);
+  ZilchManager* manager = ZilchManager::GetInstance();
+  manager->HostDebugger();
 }
 
 void RunZilchDebugger()
@@ -212,10 +211,10 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   {
     commands->AddCommand("OpenTestWidgets", BindCommandFunction(OpenTestWidgetsCommand));
     commands->AddCommand("CrashEngine", BindCommandFunction(CrashEngine));
+
+    commands->AddCommand("HostZilchDebugger", BindCommandFunction(HostZilchDebugger));
+    commands->AddCommand("RunZilchDebugger", BindCommandFunction(RunZilchDebugger));
   }
-  // These commands functionality does not work at the moment and can result in an engine hang
-  //commands->AddCommand("HostZilchDebugger", BindCommandFunction(HostZilchDebugger));
-  //commands->AddCommand("RunZilchDebugger", BindCommandFunction(RunZilchDebugger));
   commands->AddCommand("Help", BindCommandFunction(OpenHelp));
   commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub));
   commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation));

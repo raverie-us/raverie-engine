@@ -175,6 +175,12 @@ namespace Zilch
   }
 
   //***************************************************************************
+  Type* Type::GenericGetSameVirtualTypeExceptAny(const byte* value) const
+  {
+    return GenericGetVirtualType(value);
+  }
+
+  //***************************************************************************
   bool Type::IsIndirectionType(Type* type)
   {
     // See if the type is an indirection type...
@@ -614,6 +620,34 @@ namespace Zilch
   }
 
   //***************************************************************************
+  Type* IndirectionType::GenericGetSameVirtualTypeExceptAny(const byte* value) const
+  {
+    // We override this functionality because our GenericGetVirtualType may return a BoundType/
+    // Since this is supposed to be the 'SameType' we want to preserve the IndirectionType.
+    // We know that any virtual type will be a ValueType/struct so we know that it will have a
+    // corresponding IndirectType field on the BoundType
+
+    // Grab the handle
+    Handle* handle = ((Handle*)value);
+
+    // If it has no type, then return our own type (still an IndirectType!)
+    if (handle->StoredType == nullptr)
+      return (Type*)(this);
+
+    // We should always have an 'IndirectType', but check anyways
+    IndirectionType* indirectType = handle->StoredType->IndirectType;
+    if (indirectType)
+      return indirectType;
+
+    Error(
+      "The virtual type had a BoundType whose 'IndirectType' field "
+      "was not set, yet it should have been a ValueType/struct");
+
+    // Fallback to returning ourselves
+    return (Type*)(this);
+  }
+
+  //***************************************************************************
   Composition* IndirectionType::GetBaseComposition()
   {
     return this->ReferencedType;
@@ -703,12 +737,9 @@ namespace Zilch
     // Get access to the any primitive
     Any* any = ((Any*)value);
 
-    // Get the data pointed at by the any
-    const byte* storedValue = any->GetData();
-
     // If we have a valid stored type... recursively get its memory
     if (any->StoredType != nullptr)
-      return any->StoredType->GenericGetMemory(storedValue);
+      return any->StoredType->GenericGetMemory(any->GetData());
 
     // Otherwise we had nothing stored... just return ourselves
     // This MUST match the 'GenericGetVirtualType' behavior!
@@ -723,7 +754,7 @@ namespace Zilch
 
     // If we have a valid stored type... recursively get its memory
     if (any->StoredType != nullptr)
-      return any->StoredType->GenericGetVirtualType(value);
+      return any->StoredType->GenericGetVirtualType(any->GetData());
 
     // Otherwise we had nothing stored... just return ourselves
     // This MUST match the 'GenericGetMemory' behavior!

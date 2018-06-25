@@ -153,6 +153,7 @@ public:
   ZilchDeclareType(ResourceLibrary, TypeCopyMode::ReferenceType);
 
   ResourceLibrary();
+  ~ResourceLibrary();
 
   // Add a resource to this set
   void Add(Resource* resource, bool isNew);
@@ -192,6 +193,7 @@ public:
   bool CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrariesOut);
 
   void OnScriptProjectPreParser(ParseEvent* e);
+  void OnScriptProjectPostSyntaxer(ParseEvent* e);
 
   // Only called once all libraries within Zero are fully compiled
   // Turns each pending library into the current library
@@ -222,6 +224,10 @@ public:
 
   // The fragment library that this resource library has built (may be null if it hasn't compiled yet)
   SwapLibrary mSwapFragment;
+
+  // A project we use for the scripts (we clear it and re-add all code files)
+  // We need this to stick around for the Zilch debugger
+  Project mScriptProject;
 
   // All loaded resources. These handles are the ones in charge of keeping the Resources in this
   // library alive.

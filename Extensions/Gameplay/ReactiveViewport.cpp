@@ -115,6 +115,8 @@ ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* came
   mGameWidget = Type::DynamicCast<GameWidget*>(parent);
   mName = camera->GetOwner()->GetName();
 
+  mMouseOver = false;
+
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
   ConnectThisTo(this, Events::MouseUpdate, OnMouseGeneric);
@@ -137,6 +139,15 @@ ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* came
   ConnectThisTo(this, Events::RightMouseUp, OnMouseGeneric);
   ConnectThisTo(this, Events::MiddleMouseDown, OnMouseGenericDown);
   ConnectThisTo(this, Events::MiddleMouseUp, OnMouseGeneric);
+}
+
+//******************************************************************************
+void ReactiveViewport::UpdateTransform()
+{
+  Composite::UpdateTransform();
+
+  if (mMouseOver)
+    SetMouseTrapPosition(true);
 }
 
 //******************************************************************************
@@ -163,6 +174,9 @@ ReactiveSpace* ReactiveViewport::GetReactiveSpace()
 //******************************************************************************
 void ReactiveViewport::OnMouseEnter(MouseEvent* e)
 {
+  SetMouseTrapPosition(true);
+  mMouseOver = true;
+
   ReactiveSpace* reactiveSpace = GetReactiveSpace();
   if(!reactiveSpace)
     return;
@@ -178,6 +192,9 @@ void ReactiveViewport::OnMouseEnter(MouseEvent* e)
 //******************************************************************************
 void ReactiveViewport::OnMouseExit(MouseEvent* e)
 {
+  SetMouseTrapPosition(false);
+  mMouseOver = false;
+
   ReactiveSpace* reactiveSpace = GetReactiveSpace();
   if (!reactiveSpace)
     return;
@@ -455,6 +472,13 @@ void ReactiveViewport::InitViewportEvent(ViewportMouseEvent& viewportEvent)
   viewportEvent.Handled = false;
 
   viewportEvent.mCameraViewportCog = mViewportInterface->GetOwner();
+}
+
+//******************************************************************************
+void ReactiveViewport::SetMouseTrapPosition(bool useMouseTrapPosition)
+{
+  if (OsWindow* window = mRootWidget->GetOsWindow())
+    window->SetMouseTrapClientPosition(Math::ToIntVec2(GetClientCenterPosition()), useMouseTrapPosition);
 }
 
 Widget* ReactiveViewport::HitTest(Vec2 screenPoint, Widget* skip)

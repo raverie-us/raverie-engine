@@ -216,6 +216,9 @@ void Cog::Destroy()
 //**************************************************************************************************
 void Cog::ForceDestroy()
 {
+  if (mFlags.IsSet(CogFlags::Destroyed))
+    return;
+
   // First queue up any children to be destroyed.
   if (Hierarchy* hierarchy = this->has(Hierarchy))
     hierarchy->DestroyChildren();
@@ -1555,6 +1558,7 @@ void Cog::PlaceInHierarchy(uint destinationIndex)
   else
   {
     size_t currentIndex = 0;
+    bool inserted = false;
     forRange(Cog& cog, list->All())
     {
       // Don't account for Cogs marked for destruction
@@ -1566,8 +1570,15 @@ void Cog::PlaceInHierarchy(uint destinationIndex)
       if (currentIndex == destinationIndex)
       {
         list->InsertAfter(&cog, this);
+        inserted = true;
         break;
       }
+    }
+
+    if (!inserted)
+    {
+      Error("Didn't find appropriate index when placing object in hierarchy");
+      list->PushBack(this);
     }
   }
 

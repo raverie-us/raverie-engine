@@ -418,6 +418,7 @@ public:
 
     ConnectThisTo(mSelectBox, Events::ItemSelected, OnIndexChanged);
     ConnectThisTo(mSelectorButton, Events::ItemSelected, OnSelectorIndexChanged);
+    ConnectThisTo(mGrid->mScrollArea, Events::ScrollUpdated, OnScrollUpdated);
   }
 
   void Refresh() override
@@ -468,6 +469,12 @@ public:
     CommitValue(newValue);
     if(mProperty->HasAttribute(PropertyAttributes::cInvalidatesObject))
       mGrid->Invalidate();
+  }
+
+  void OnScrollUpdated(ObjectEvent* event)
+  {
+    if (mSelectBox->IsOpen())
+      mSelectBox->CloseList();
   }
 
   void UpdateTransform() override

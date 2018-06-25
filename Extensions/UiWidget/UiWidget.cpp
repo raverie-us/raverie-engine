@@ -210,6 +210,12 @@ UiWidget::~UiWidget()
 {
   // This will remove us from the the root widget on top list if we're in it
   SetOnTop(false);
+
+  if (GetOnTop())
+  {
+    if (UiRootWidget* rootWidget = GetRoot())
+      rootWidget->mOnTopWidgets.EraseValue(this);
+  }
 }
 
 //**************************************************************************************************
@@ -278,6 +284,12 @@ void UiWidget::AttachTo(AttachmentInfo& info)
 
   if(mParent)
     mParent->MarkAsNeedsUpdate();
+
+  if (GetOnTop())
+  {
+    if (UiRootWidget* rootWidget = GetRoot())
+      rootWidget->mOnTopWidgets.PushBack(this);
+  }
 }
 
 //**************************************************************************************************
@@ -286,6 +298,12 @@ void UiWidget::Detached(AttachmentInfo& info)
   // Notify our old parent that it needs to be updated before
   if(mParent)
     mParent->MarkAsNeedsUpdate();
+
+  if(GetOnTop())
+  {
+    if (UiRootWidget* rootWidget = GetRoot())
+      rootWidget->mOnTopWidgets.EraseValue(this);
+  }
 
   ComponentHierarchy::Detached(info);
 }
@@ -1139,6 +1157,13 @@ void UiWidget::SetOnTop(bool state)
   // Add / remove ourself from the root on top list for picking
   if(UiRootWidget* rootWidget = GetRoot())
   {
+    // The root widget cannot be on top
+    if (rootWidget->GetOwner() == GetOwner())
+    {
+      DoNotifyWarning("Cannot set OnTop", "The root widget cannot be set to on top");
+      return;
+    }
+
     if (state)
       rootWidget->mOnTopWidgets.PushBack(this);
     else

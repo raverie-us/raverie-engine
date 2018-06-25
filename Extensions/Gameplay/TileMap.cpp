@@ -504,10 +504,6 @@ void TileMap::OnAllObjectsInitialized(CogInitializerEvent* event)
     if (!cog->has(Transform))
       cog->AddComponentByName("Transform");
 
-    Transform* transform = cog->has(Transform);
-    // Set local translation for child object
-    transform->SetLocalTranslation(Vec3::cZero);
-
     if (processCollision)
     {
       if (!cog->has(MeshCollider))
@@ -558,7 +554,14 @@ void TileMap::OnAllObjectsInitialized(CogInitializerEvent* event)
       }
     }
 
-    transform->UpdateAll();
+    Transform* transform = cog->has(Transform);
+
+    // If using tilemap physics or graphics, object construction assumes relative to local origin.
+    if (processCollision || processSprites)
+      transform->SetLocalTranslation(Vec3::cZero);
+    // Otherwise set the position to the center of the tile.
+    else
+      transform->SetLocalTranslation(mergeObj.position + Vec3(0.5f, 0.5f, 0.0f));
 
     cog->AttachToPreserveLocal(GetOwner());
   }
@@ -755,7 +758,14 @@ TileStatus::Enum TileMap::ValidTile(Tile tile)
   if (tile.SpriteResource.IsNotNullAndCantResolve())
     return TileStatus::MissingSpriteSource;
   */
-  return ValidArchetype(tile.GetArchetypeResource(), tile.GetCollisionResource() != nullptr, tile.GetSpriteResource() != nullptr);
+
+  bool tilemapCollision = tile.GetCollisionResource() != nullptr;
+  bool tilemapSprites = tile.GetSpriteResource() != nullptr;
+
+  if (tile.Merge && !tilemapCollision && !tilemapSprites)
+    return TileStatus::InvalidMerge;
+
+  return ValidArchetype(tile.GetArchetypeResource(), tilemapCollision, tilemapSprites);
 }
 
 TileStatus::Enum TileMap::ValidArchetype(Archetype* archetype, bool tilemapCollision, bool tilemapSprites)
@@ -777,16 +787,24 @@ TileStatus::Enum TileMap::ValidConfiguration(Cog* cog, bool tilemapCollision, bo
   forRange (Component* component, cog->GetComponents())
   {
     BoundType* componentType = ZilchVirtualTypeId(component);
-    if (tilemapCollision && componentType->IsA(ZilchTypeId(Collider)))
+
+    if (componentType->IsA(ZilchTypeId(Collider)))
     {
-      Collider* collider = (Collider*)component;
-      if (collider->mType != Collider::cMesh)
+      // Using tilemap collision and archetype has wrong component.
+      if (tilemapCollision && !componentType->IsA(ZilchTypeId(MeshCollider)))
         return TileStatus::ConflictMeshCollider;
+      // Using collision from archetype and sprite from tilemap.
+      else if (!tilemapCollision && tilemapSprites)
+        return TileStatus::ConflictColliderGraphical;
     }
-    else if (tilemapSprites && componentType->IsA(ZilchTypeId(Graphical)))
+    else if (componentType->IsA(ZilchTypeId(Graphical)))
     {
-      if (!componentType->IsA(ZilchTypeId(MultiSprite)))
+      // Using tilemap sprite and archetype has wrong component.
+      if (tilemapSprites && !componentType->IsA(ZilchTypeId(MultiSprite)))
         return TileStatus::ConflictMultiSprite;
+      // Using graphical from archetype and collision from tilemap.
+      else if (!tilemapSprites && tilemapCollision)
+        return TileStatus::ConflictColliderGraphical;
     }
   }
 
@@ -1010,6 +1028,12 @@ String TileMap::FormatTileError(TileStatus::Enum status, IntVec2 pos, Tile tile)
     break;
     case TileStatus::ConflictMultiSprite:
       error = "Archetype has a graphical component that is not of type 'MultiSprite'";
+    break;
+    case TileStatus::ConflictColliderGraphical:
+      error = "Cannot mix physics/graphics between Archetype and tile properties.";
+    break;
+    case TileStatus::InvalidMerge:
+      error = "Invalid to merge tiles that do not use the collider or sprite property that's used by the TileMap.";
     break;
   }
 

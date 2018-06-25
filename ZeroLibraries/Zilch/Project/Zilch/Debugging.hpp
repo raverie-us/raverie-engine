@@ -115,6 +115,9 @@ namespace Zilch
 
   private:
 
+    // Updates the view of executable states and their files
+    void UpdateExplorerView();
+
     // Send a single message
     void SendPacket(StringParam message);
 
@@ -126,9 +129,6 @@ namespace Zilch
 
     // When we resume execution, we want to tell the remote client to clear the execution point
     void ClearExecutionPoint();
-
-    // Updates the view of executable states and their files
-    void UpdateExplorerView();
 
     // The break loop will pause all execution on this thread, only processing debugger messages
     void PauseExecution(CodeLocation* codeLocation, ExecutableState* state);

@@ -197,6 +197,19 @@ ZilchDefineType(ResourceLibrary, builder, type)
 ResourceLibrary::ResourceLibrary()
 {
   Resources.Reserve(256);
+
+  // When the project is compiled, we want to add extensions to it
+  EventConnect(&mScriptProject, Zilch::Events::PreParser, &ResourceLibrary::OnScriptProjectPreParser, this);
+  EventConnect(&mScriptProject, Zilch::Events::PostSyntaxer, &ResourceLibrary::OnScriptProjectPostSyntaxer, this);
+  EventConnect(&mScriptProject, Zilch::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
+
+  ZilchManager::GetInstance()->mDebugger.AddProject(&mScriptProject);
+}
+
+//**************************************************************************************************
+ResourceLibrary::~ResourceLibrary()
+{
+  ZilchManager::GetInstance()->mDebugger.RemoveProject(&mScriptProject);
 }
 
 //**************************************************************************************************
@@ -477,7 +490,7 @@ void ResourceLibrary::OnScriptProjectPreParser(ParseEvent* e)
 }
 
 //**************************************************************************************************
-void OnScriptProjectPostSyntaxer(ParseEvent* e)
+void ResourceLibrary::OnScriptProjectPostSyntaxer(ParseEvent* e)
 {
   EngineLibraryExtensions::AddExtensionsPostCompilation(*e->Builder);
 }
@@ -530,17 +543,13 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   // By this point, we've already compiled all our dependencies
   ZPrint("  Compiling %s Scripts\n", this->Name.c_str());
 
-  Project project;
-
-  // When the project is compiled, we want to add extensions to it
-  EventConnect(&project, Zilch::Events::PreParser, &ResourceLibrary::OnScriptProjectPreParser, this);
-  EventConnect(&project, Zilch::Events::PostSyntaxer, &OnScriptProjectPostSyntaxer);
-  EventConnect(&project, Zilch::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
+  // Clear the project out since it may have files from before
+  mScriptProject.Clear();
 
   // Dispatch an event allowing specific resource managers to do whatever they want with the project
   // This was added so that ZilchPlugins can listen for compilation errors 
   ZilchPreCompilationEvent e;
-  e.mProject = &project;
+  e.mProject = &mScriptProject;
   Z::gResources->DispatchEvent(Events::PreScriptSetCompile, &e);
 
   // Add all scripts
@@ -549,10 +558,10 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
     // Templates shouldn't be compiled. They contain potentially invalid code and identifiers
     // such as RESOURCE_NAME_ that are replaced when a new resource is created from the template
     if(script->GetResourceTemplate() == nullptr)
-      project.AddCodeFromString(script->mText, script->GetNameOrFilePath(), script);
+      mScriptProject.AddCodeFromString(script->mText, script->GetNameOrFilePath(), script);
   }
 
-  mSwapScript.mPendingLibrary = project.Compile(this->Name, dependencies, EvaluationMode::Project);
+  mSwapScript.mPendingLibrary = mScriptProject.Compile(this->Name, dependencies, EvaluationMode::Project);
 
   if(mSwapScript.mPendingLibrary != nullptr)
   {

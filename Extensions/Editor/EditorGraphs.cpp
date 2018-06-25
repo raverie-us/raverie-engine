@@ -138,10 +138,13 @@ void AddMemory(Editor* editor)
 
 void AddPerformance(Editor* editor)
 {
-  PerformanceGraphWidget* graphWidget = new PerformanceGraphWidget(editor);
-  graphWidget->SetName("Performance");
-  graphWidget->SetSize(Pixels(400, 200));
-  editor->AddManagedWidget(graphWidget, DockArea::Bottom, true);
+  if (!editor->mManager->FindWidget("Performance"))
+  {
+    PerformanceGraphWidget* graphWidget = new PerformanceGraphWidget(editor);
+    graphWidget->SetName("Performance");
+    graphWidget->SetSize(Pixels(400, 200));
+    editor->AddManagedWidget(graphWidget, DockArea::Bottom, true);
+  }
 }
 
 void AddGraph(Editor* editor)

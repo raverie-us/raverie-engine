@@ -16,7 +16,7 @@ class PhysicsMesh;
 class Archetype;
 class TileMapSource;
 
-DeclareEnum6(TileStatus, Valid, MissingArchetype, MissingPhysicsMesh, MissingSpriteSource, ConflictMeshCollider, ConflictMultiSprite);
+DeclareEnum8(TileStatus, Valid, MissingArchetype, MissingPhysicsMesh, MissingSpriteSource, ConflictMeshCollider, ConflictMultiSprite, ConflictColliderGraphical, InvalidMerge);
 
 template<>
 struct HashPolicy<Vec2>

@@ -86,7 +86,7 @@ void RawAxis::Serialize(Serializer& stream)
   SerializeNameDefault(CanCalibrate, true);
   SerializeNameDefault(UseMid, true);
   SerializeNameDefault(Reversed, false);
-
+  SerializeNameDefault(CanBeDisabled, false);
 }
 
 void RawButton::Serialize(Serializer& stream)
@@ -162,6 +162,8 @@ ZilchDefineType(Joystick, builder, type)
   ZilchBindMethod(GetAxisIndex);
   ZilchBindMethod(GetAxisValueByName);
 
+  ZilchBindGetter(DisabledValue);
+
   ZilchBindMethod(GetButtonValue);
 
   ZilchBindGetterProperty(ButtonCount);
@@ -205,7 +207,10 @@ void Joystick::InactiveClear()
   // Clear out all the axes
   for(size_t i = 0; i < mAxes.Size(); ++i)
   {
-    mAxes[i] = 0.0f;
+    if (mRawMapping && mRawMapping->mAxes[i].CanBeDisabled)
+      mAxes[i] = GetDisabledValue();
+    else
+      mAxes[i] = 0.0f;
   }
 }
 
@@ -220,6 +225,11 @@ float Joystick::GetAxisValue(int index)
     "Joystick axis index was out of bounds");
 
   return mAxes[index];
+}
+
+float Joystick::GetDisabledValue()
+{
+  return FLT_MAX;
 }
 
 String Joystick::GetAxisName(int index)
@@ -406,6 +416,11 @@ void Joystick::RawSetAxis(uint index, uint rawValue)
     value = -value;
 
   this->mAxes[index] = value;
+}
+
+void Joystick::RawSetAxisDisabled(uint index)
+{
+  this->mAxes[index] = GetDisabledValue();
 }
 
 void Joystick::RawSetButtons(uint newState)

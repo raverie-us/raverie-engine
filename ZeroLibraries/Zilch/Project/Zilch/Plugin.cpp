@@ -610,11 +610,8 @@ namespace Zilch
           builder.WriteLineIndented();
         }
 
-        if (Type::IsEnumOrFlagsType(type))
-        {
-          builder.WriteLineIndented("int mValue;");
-        }
-        else
+        // An enums base class already has an 'Integer' for the value
+        if (!Type::IsEnumOrFlagsType(type))
         {
           size_t size = type->GetAllocatedSize();
           if (type->BaseType != nullptr)

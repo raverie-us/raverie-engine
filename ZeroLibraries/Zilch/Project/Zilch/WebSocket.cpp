@@ -370,9 +370,9 @@ namespace Zilch
               StringRange httpHeaderKey(range.Begin(), foundDivider.Begin());
               StringRange httpHeaderValue(foundDivider.End(), range.End());
 
-              // Trim the trailing '\r' if it exists (it should, but some non-compliant browsers don't send it)
-              if (httpHeaderValue.Back() == '\r')
-                httpHeaderValue.PopBack();
+              // Trim any whitespace (including \r and spaces)
+              httpHeaderKey = httpHeaderKey.Trim();
+              httpHeaderValue = httpHeaderValue.Trim();
 
               // Finally, map the key to the value so we can lookup any header values later
               connectionOut.Headers.Insert(httpHeaderKey, httpHeaderValue);
