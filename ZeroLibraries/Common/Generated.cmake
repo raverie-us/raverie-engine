@@ -129,6 +129,7 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Browser.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Main.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/MainLoop.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/ComPort.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/CrashHandler.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Debug.hpp

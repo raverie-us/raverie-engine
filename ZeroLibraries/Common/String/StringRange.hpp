@@ -344,7 +344,15 @@ String String::JoinRange(StringRangeParam separator, RangeType range, PolicyType
     ++i;
   }
 
-  return JoinInternal(separator, values, count);
+  String result = JoinInternal(separator, values, count);
+
+  // Have to manually call the destructor on every string range since we called placement new
+  for (size_t i = 0; i < count; ++i)
+  {
+    values[i].~StringRange();
+  }
+
+  return result;
 }
 
 } // namespace Zero
