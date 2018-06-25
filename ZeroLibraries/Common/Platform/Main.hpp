@@ -19,6 +19,6 @@ extern int PlatformMain(const Array<String>& arguments);
 
 // Some platforms do have their own loop that must run your application.
 typedef void (*MainLoopFn)(void* userData);
-bool SetMainLoopFunction(int fps, MainLoopFn callback, void* userData = nullptr);
+bool SetMainLoopFunction(int fps, MainLoopFn callback, void* userData, bool stopExecutionHere);
 
 }// namespace Zero

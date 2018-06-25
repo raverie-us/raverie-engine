@@ -119,6 +119,12 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   if (whichStream == StreamTypes::Input)
     capture = 1;
 
+  if (SDL_GetNumAudioDevices(capture) == 0)
+  {
+    LogAudioIoError("No audio devices were available", resultMessage);
+    return StreamStatus::DeviceProblem;
+  }
+
   data.mDeviceID = SDL_OpenAudioDevice(nullptr, capture, &want, &have, 
     SDL_AUDIO_ALLOW_CHANNELS_CHANGE || SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
 
@@ -131,7 +137,11 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   data.mChannels = have.channels;
   data.mSampleRate = have.freq;
 
-  ZPrint("Device name : %s\n", SDL_GetAudioDeviceName(data.mDeviceID, capture));
+  const char* name = SDL_GetAudioDeviceName(data.mDeviceID, capture);
+  if (!name)
+    name = "Audio";
+
+  ZPrint("Device name : %s\n", name);
   ZPrint("Channels    : %d\n", data.mChannels);
   ZPrint("Sample rate : %d\n", data.mSampleRate);
 

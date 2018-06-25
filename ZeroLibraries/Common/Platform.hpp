@@ -253,6 +253,8 @@
 #pragma clang diagnostic ignored "-Wtautological-pointer-compare"
 #pragma clang diagnostic ignored "-Wnonportable-include-path"
 #pragma clang diagnostic ignored "-Wc++11-extensions"
+#pragma clang diagnostic ignored "-Waddress-of-packed-member"
+
 #undef __STDC__
 #endif
 
