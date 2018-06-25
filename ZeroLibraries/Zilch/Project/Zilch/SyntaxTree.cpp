@@ -425,29 +425,16 @@ namespace Zilch
       // Get the current comment
       String& comment = this->Comments[i];
 
-      // Get a string range for the comment, since we're going to trim starting white space
-      StringRange range = comment.All();
-      
-      // While we're reading a space...
-      while (range.Front() == ' ')
+      ZilchForEach(String line, comment.Split("\n"))
       {
-        // Move the range start forward
-        range.PopFront();
-      }
-      
-      // Append the string range for the comment
-      builder.Append(range);
-
-      // Checks if this is not the last comment...
-      bool isNotLast = (i != (this->Comments.Size() - 1));
-      if (isNotLast)
-      {
+        // Append the string range for the comment
+        builder.Append(line.Trim());
         builder.Append("\n");
       }
     }
 
     // Return the merged comments
-    return builder.ToString();
+    return builder.ToString().Trim();
   }
 
   //***************************************************************************

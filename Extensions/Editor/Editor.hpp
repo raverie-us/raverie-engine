@@ -171,6 +171,7 @@ public:
   // For re-parenting on copy and paste
   CogId mLastCopiedParent;
   String mLastCopy;
+  CogId mLastSpaceCopiedFrom;
   // For now, we're only storing the first copied objects
   // location in the hierarchy. The reason for this is I'm not exactly sure
   // what would be best when copying multiple objects.

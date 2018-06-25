@@ -140,6 +140,9 @@ namespace Zilch
     // For the AnyType, this will recursively call GenericGetVirtualType on the value stored within the Any (if none, it will return itself)
     virtual Type* GenericGetVirtualType(const byte* value) const = 0;
 
+    // Same as the above, except we attempt to return the same type as ourselves (except in the case of Any)
+    virtual Type* GenericGetSameVirtualTypeExceptAny(const byte* value) const;
+
     // Hashes an object of this type
     virtual Integer GenericHash(const byte* value) const = 0;
 
@@ -314,6 +317,7 @@ namespace Zilch
     bool GenericEquals(const byte* lhs, const byte* rhs) const override;
     byte* GenericGetMemory(const byte* value) const override;
     Type* GenericGetVirtualType(const byte* value) const override;
+    Type* GenericGetSameVirtualTypeExceptAny(const byte* value) const override;
 
     // Composition interface
     Composition* GetBaseComposition() override;

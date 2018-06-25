@@ -243,6 +243,7 @@ public:
   WidgetRect GetRectInParent();
   WidgetRect GetLocalRect() const;
   WidgetRect GetScreenRect() const;
+  Vec2 GetClientCenterPosition() const;
   Vec2 ToLocal(Vec2Param screenPoint);
   Vec3 ToLocal(Vec3Param screenPoint);
   Vec2 ToScreen(Vec2Param localPoint);

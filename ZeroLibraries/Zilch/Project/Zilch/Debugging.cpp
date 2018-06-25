@@ -928,33 +928,6 @@ END:
             AddCodeEntryToExplorerviewUpdate(processedCodeHashes, builder, entry);
           }
         }
-
-        // Loop through all the states
-        for (size_t i = 0; i < this->States.Size(); ++i)
-        {
-          // Grab the current executable state
-          ExecutableState* state = this->States[i];
-
-          // Loop through all dependent libraries so we can get the original source code files
-          for (size_t j = 0; j < state->Dependencies.Size(); ++j)
-          {
-            // Get the current dependent library
-            LibraryRef& library = state->Dependencies[j];
-                
-            // We only process this library if it has any entries (otheriwse we would always show core!)
-            if (library->Entries.Empty())
-              continue;
-
-            // Loop through the original source code entries that built this library
-            // Note: The entries may be empty if it was a generated library
-            for (size_t k = 0; k < library->Entries.Size(); ++k)
-            {
-              // Grab the current code entry
-              CodeEntry& entry = library->Entries[k];
-              AddCodeEntryToExplorerviewUpdate(processedCodeHashes, builder, entry);
-            }
-          }
-        }
       }
       builder.End();
     }

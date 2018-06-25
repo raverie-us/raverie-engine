@@ -180,6 +180,8 @@ public:
   virtual bool GetMouseTrap() = 0;
   virtual void SetMouseTrap(bool trapped) = 0;
   virtual IntVec2 GetMouseTrapScreenPosition() = 0;
+  /// Used to override the trapped position.
+  virtual void SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition) {}
 
   /// Set the cursor for the mouse.
   virtual void SetMouseCursor(Cursor::Enum cursorId) = 0;

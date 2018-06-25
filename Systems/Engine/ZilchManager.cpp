@@ -131,6 +131,8 @@ void ZilchManager::InternalCompile()
 
   mPendingLibraries.Clear();
 
+  mDebugger.Update();
+
   mLastCompileResult = CompileResult::CompilationSucceeded;
 }
 
@@ -138,6 +140,16 @@ void ZilchManager::InternalCompile()
 void ZilchManager::OnEngineUpdate(UpdateEvent* event)
 {
   InternalCompile();
+
+  mDebugger.Update();
+}
+
+//**************************************************************************************************
+void ZilchManager::HostDebugger()
+{
+  // Add the single executable state to the debugger (will ignore if it's already added)
+  mDebugger.AddState(ExecutableState::CallingState);
+  mDebugger.Host(8000);
 }
 
 }//namespace Zero

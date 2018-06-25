@@ -82,7 +82,8 @@ SoundEmitter::SoundEmitter() :
   mEmitAngle(90.0f), 
   mRearVolume(0.2f), 
   mSoundNodeInput(nullptr), 
-  mSoundNodeOutput(nullptr)
+  mSoundNodeOutput(nullptr),
+  mDebugArcDistance(1.0f)
 {
   mAttenuator = SoundAttenuatorManager::GetDefault();
 }
@@ -225,22 +226,48 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
 //**************************************************************************************************
 void SoundEmitter::DebugDraw()
 {
-  // If directional, draw a cone in the forward direction
-  if (mDirectional)
+  Transform* t = GetOwner()->has(Transform);
+  Vec3 pos = t->GetWorldTranslation();
+  Vec3 scale = t->GetScale();
+  float multiplier = Math::Max(scale.x, scale.z);
+  float spacing = 0.3f * multiplier;
+  float minDist = 1.0f * multiplier;
+  float maxDist = 2.5f * multiplier;
+
+  mDebugArcDistance += 0.01f;
+  if (mDebugArcDistance > maxDist)
+    mDebugArcDistance = minDist;
+
+  float distance = mDebugArcDistance * multiplier;
+
+  Mat4 worldMat = t->GetWorldMatrix();
+  Vec3 axisZ = Math::TransformNormal(worldMat, Vec3::cZAxis);
+  Vec3 axisY = Math::TransformNormal(worldMat, Vec3::cYAxis);
+  
+  // Draw three lines
+  for (int i = 0; i < 3; ++i)
   {
-    Transform* t = GetOwner()->has(Transform);
-    Vec3 pos = t->GetWorldTranslation();
-    Vec3 scale = t->GetScale();
+    // Only draw this line if it's above the minimum distance
+    if (distance > minDist)
+    {
+      // If directional, draw an arc indicating the EmitAngle of the emitter
+      if (mDirectional)
+      {
+        float radians = Math::DegToRad(mEmitAngle * 0.5f);
 
-    Mat4 matrix = mTransform->GetWorldMatrix();
-    Vec4 bx = matrix.BasisX();
-    Vec4 by = matrix.BasisY();
+        Vec3 endPoint = Math::RotateVector(-axisZ * distance, axisY, radians);
+        Vec3 startPoint = Math::RotateVector(-axisZ * distance, axisY, -radians);
+        Vec3 midPoint = pos - (axisZ * distance);
 
-    Vec3 x = Vec3(bx.x, bx.y, bx.z);
-    Vec3 y = Vec3(by.x, by.y, by.z);
-    Vec3 forward = x.Cross(y);
+        gDebugDraw->Add(Debug::Arc(pos + startPoint, midPoint, pos + endPoint).Color(Color::Blue));
+      }
+      // If not directional, draw a circle
+      else
+        gDebugDraw->Add(Debug::Circle(pos, axisY, distance).Color(Color::Blue));
+    }
 
-    gDebugDraw->Add(Debug::Cone(pos, -forward, 2.0f, scale.x).Color(Color::Red));
+    // Move the distance down for the next line
+    distance -= spacing;
   }
 }
 
@@ -405,9 +432,9 @@ float SoundEmitter::GetEmitAngle()
 //**************************************************************************************************
 void SoundEmitter::SetEmitAngle(float angleInDegrees)
 {
-  mEmitAngle = angleInDegrees;
+  mEmitAngle = Math::Clamp(angleInDegrees, 1.0f, 360.0f);
   if (mEmitterObject)
-    mEmitterObject->SetDirectionalAngle(angleInDegrees, mRearVolume);
+    mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
 }
 
 //**************************************************************************************************

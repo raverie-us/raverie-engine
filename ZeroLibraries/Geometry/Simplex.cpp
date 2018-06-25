@@ -209,6 +209,7 @@ void Simplex::ComputeSupportVector(void)
   if (mCount == 1)
   {
     mSupportVector = -mPoints[0].cso;
+    mSupportVector.AttemptNormalize();
   }
   // Support is perpendicular to the line segment
   else if (mCount == 2)
@@ -216,7 +217,9 @@ void Simplex::ComputeSupportVector(void)
     Vec3 lineDir = mPoints[1].cso - mPoints[0].cso;
     Vec3 originDir = -mPoints[0].cso;
     Vec3 perpendicular = lineDir.Cross(originDir);
+    perpendicular.AttemptNormalize();
     mSupportVector = perpendicular.Cross(lineDir);
+    mSupportVector.AttemptNormalize();
   }
   // Support is normal to the triangle
   else if (mCount == 3)
@@ -228,6 +231,7 @@ void Simplex::ComputeSupportVector(void)
 
     real distance = normal.Dot(-mPoints[0].cso);
     mSupportVector = normal * distance;
+    mSupportVector.AttemptNormalize();
 
     // Correct triangle winding order when origin is on the wrong side
     if (distance < 0.0f)

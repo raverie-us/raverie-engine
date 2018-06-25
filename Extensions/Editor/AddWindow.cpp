@@ -1159,7 +1159,7 @@ void ResourceTemplateDisplay::OnCreate(Event*)
       {
         Property* property = mPostAdd.mProperty.GetPropertyFromRoot(instance);
 
-        if (property && property->PropertyType == ZilchVirtualTypeId(resourceAdd.SourceResource))
+        if (property && ZilchVirtualTypeId(resourceAdd.SourceResource)->IsA(property->PropertyType))
           ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(), instance, mPostAdd.mProperty, resourceAdd.SourceResource);
       }
     }

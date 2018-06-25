@@ -128,6 +128,26 @@ namespace Zilch
     // Get the merged/trimmed comments for this node
     String GetMergedComments();
 
+    template <typename T>
+    T* FindParent()
+    {
+      if (this->Parent)
+        return this->Parent->FindParentOrSelf<T>();
+      return nullptr;
+    }
+
+    template <typename T>
+    T* FindParentOrSelf()
+    {
+      if (T* result = Type::DynamicCast<T*>(this))
+        return result;
+
+      if (this->Parent)
+        return this->Parent->FindParentOrSelf<T>();
+
+      return nullptr;
+    }
+
   protected:
 
     // Destroys all the children (used for cleanup)

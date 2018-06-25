@@ -1357,10 +1357,13 @@ namespace Zilch
 
     // This function will access the primitive and attempt to get the most derived type from it
     // For the 'any' type, this will get the type stored inside
-    // Note: We MUST be sure that the Syntaxer set the actual expresion result type to the correct type
-    // eg: any -> Type (because it could be anything!), bound types -> BoundType, delegates -> DelegateType
+    // Note: We MUST be sure that the Syntaxer set the actual expression result type to the correct type
+    // eg: any -> Type (because it could be anything!), bound types -> BoundType, delegates -> DelegateType, indirect -> IndirectionType
+    // We call 'GenericGetSameVirtualTypeExceptAny' because normally GenericGetVirtualType on an IndirectionType may return
+    // a BoundType instead of an IndirectionType. GenericGetSameVirtualTypeExceptAny ensures it always returns IndirectionType.
+    // This behavior matches that of the Syntaxer for TypeIdNode.
     byte* expressionResult = &GetOperand<byte>(ourFrame, ourFrame, op.Expression);
-    const Type* virtualType = op.CompileTimeType->GenericGetVirtualType(expressionResult);
+    const Type* virtualType = op.CompileTimeType->GenericGetSameVirtualTypeExceptAny(expressionResult);
 
     // This may not be necessary, but just in case we don't get a valid type returned, assume its the compile time type
     if (virtualType == nullptr)

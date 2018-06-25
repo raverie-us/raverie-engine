@@ -168,6 +168,9 @@ WindowsOsWindow::WindowsOsWindow()
   mWindowStyle = (WindowStyleFlags::Enum)WindowStyleFlags::None;
   mBorderless = false;
   mPreviousMousePosition = IntVec2::cZero;
+
+  mCustomMouseTrapClientPosition = IntVec2(0, 0);
+  mUseCustomMouseTrapClientPosition = false;
 }
 
 WindowsOsWindow::~WindowsOsWindow()
@@ -466,6 +469,12 @@ void WindowsOsWindow::SetMouseTrap(bool mouseTrapped)
   }
 }
 
+void WindowsOsWindow::SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition)
+{
+  mCustomMouseTrapClientPosition = clientPosition;
+  mUseCustomMouseTrapClientPosition = useCustomPosition;
+}
+
 void WindowsOsWindow::SetMouseCursor(Cursor::Enum cursorId)
 {
   if(cursorId == Cursor::Invisible)
@@ -635,6 +644,9 @@ RECT WindowsOsWindow::GetDesktopClientRect()
 
 IntVec2 WindowsOsWindow::GetMouseTrapScreenPosition()
 {
+  if (mUseCustomMouseTrapClientPosition)
+    return ClientToScreen(mCustomMouseTrapClientPosition);
+
   // Trap the mouse in the center of the window
   RECT clientRect = this->GetDesktopClientRect();
   int sizeX = clientRect.right - clientRect.left;
