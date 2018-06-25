@@ -36,7 +36,6 @@ else()
   set(StaticExternals 
       Assimp 
       CEF 
-      Curl 
       Freetype 
       GL 
       GLEW 
@@ -45,7 +44,6 @@ else()
       MemoryTracker 
       Nvtt 
       Opus 
-      PortAudio 
       WinHid 
       ZLib
       SDL 
@@ -60,7 +58,6 @@ else()
       MemoryDebugger
       MemoryTracker
       Nvtt
-      PortAudio
       SDL
   )
 endif()
@@ -80,7 +77,6 @@ endforeach()
 # set lib paths
 set(AssimpPath ${CurrentDirectory}/Assimp)
 set(CEFPath ${CurrentDirectory}/CEF)
-set(CurlPath ${CurrentDirectory}/Curl)
 set(FreetypePath ${CurrentDirectory}/Freetype)
 set(GLPath ${CurrentDirectory}/GL)
 set(GLEWPath ${CurrentDirectory}/GLEW)
@@ -89,7 +85,6 @@ set(MemoryDebuggerPath ${CurrentDirectory}/MemoryDebugger)
 set(MemoryTrackerPath ${CurrentDirectory}/MemoryTracker)
 set(NvttPath ${CurrentDirectory}/Nvtt)
 set(OpusPath ${CurrentDirectory}/Opus)
-set(PortAudioPath ${CurrentDirectory}/PortAudio)
 set(WinHidPath ${CurrentDirectory}/WinHid)
 set(ZLibPath ${CurrentDirectory}/ZLib)
 set(SDLPath ${CurrentDirectory}/SDL)
