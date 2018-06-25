@@ -71,7 +71,9 @@ OsWindow::OsWindow(
   mWindow(&shell->mShell, windowName, clientSize, monitorClientPos, parentWindow ? &parentWindow->mWindow : nullptr, flags),
   mOsInputHook(nullptr),
   mBlockUserInput(false),
-  mMouseTrapped(false)
+  mMouseTrapped(false),
+  mCustomMouseTrapClientPosition(IntVec2(0, 0)),
+  mUseCustomMouseTrapClientPosition(false)
 {
   mWindow.mUserData = this;
 
@@ -246,8 +248,17 @@ void OsWindow::SetMouseTrap(bool mouseTrapped)
   }
 }
 
+void OsWindow::SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition)
+{
+  mCustomMouseTrapClientPosition = clientPosition;
+  mUseCustomMouseTrapClientPosition = useCustomPosition;
+}
+
 IntVec2 OsWindow::GetMouseTrapMonitorPosition()
 {
+  if (mUseCustomMouseTrapClientPosition)
+    return ClientToMonitor(mCustomMouseTrapClientPosition);
+
   // Trap the mouse in the center of the window
   IntRect monitorClientRectangle = mWindow.GetMonitorClientRectangle();
   IntVec2 clientSize = monitorClientRectangle.Size();
@@ -580,7 +591,19 @@ void OsWindow::ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint
   joystick->RawSetButtons(buttons);
 
   for (size_t i = 0; i < axes.Size(); ++i)
-    joystick->RawSetAxis(i, axes[i]);
+  {
+    if (i >= device.mAxes.Size())
+    {
+      Error("We should be getting the same number of axes as was registered with the device, unless an error occurred");
+      break;
+    }
+
+    uint value = axes[i];
+    if (device.mAxes[i].mCanBeDisabled && value == 0)
+      joystick->RawSetAxisDisabled(i);
+    else
+      joystick->RawSetAxis(i, axes[i]);
+  }
   
   // Tell everyone we updated this joystick
   joystick->SignalUpdated();

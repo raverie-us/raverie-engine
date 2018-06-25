@@ -276,6 +276,7 @@ public:
   uint mMin;
   uint mMax;
   uint mUsbUsage; // 0 if this is not available
+  bool mCanBeDisabled;
 };
 
 class ZeroShared PlatformButton

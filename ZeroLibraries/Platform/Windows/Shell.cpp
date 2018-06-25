@@ -613,6 +613,7 @@ void ScanDevice(Array<PlatformInputDevice>& devices, HANDLE deviceHandle, RID_DE
 
         axis.mMin = valueCap.LogicalMin;
         axis.mName = usageNames.FindValue(valueCap.Range.UsageMin, "Unknown");
+        axis.mCanBeDisabled = (valueCap.HasNull != 0);
       }
     }
 
@@ -738,7 +739,7 @@ void RawInputMessage(ShellWindow* window, WPARAM wParam, LPARAM lParam)
 
             PlatformAxis& axis = inputDevice.mAxes[i];
 
-            ULONG value;
+            ULONG value = 0;
 
             ReturnIf(HidP_GetUsageValue(HidP_Input, pValueCaps[i].UsagePage, 0, axis.mOffset, &value, pPreparsedData,
               (PCHAR)rawInput->data.hid.bRawData, rawInput->data.hid.dwSizeHid) != HIDP_STATUS_SUCCESS, ,

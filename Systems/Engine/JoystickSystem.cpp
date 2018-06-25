@@ -55,6 +55,7 @@ RawControlMapping::RawControlMapping(const PlatformInputDevice& device)
     rawAxis.CanCalibrate = true;
     rawAxis.UseMid = true;
     rawAxis.Reversed = false;
+    rawAxis.CanBeDisabled = platformAxis.mCanBeDisabled;
 
     // If this is a hat, we need to make sure it doesn't get calibrated
     if (platformAxis.mUsbUsage == UsbUsage::HatSwitch)

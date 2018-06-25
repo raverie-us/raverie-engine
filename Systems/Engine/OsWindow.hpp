@@ -133,7 +133,7 @@ public:
   void SetMouseTrap(bool trapped);
   IntVec2 GetMouseTrapMonitorPosition();
   /// Used to override the trapped position.
-  virtual void SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition) {}
+  void SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition);
 
   OsHandle GetWindowHandle();
 
@@ -185,6 +185,9 @@ public:
 
   // If the mouse is currently trapped (not visible and centered on the window).
   bool mMouseTrapped;
+
+  IntVec2 mCustomMouseTrapClientPosition;
+  bool mUseCustomMouseTrapClientPosition;
 
   // The platform shell window.
   ShellWindow mWindow;
