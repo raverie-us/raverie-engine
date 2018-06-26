@@ -63,7 +63,7 @@ endforeach()
 # use parent scope so the folders are accessible anywhere
 ################################################################################
 
-foreach(externLib ${StaticExternals})
+foreach(externLib ${AllPossibleStaticExternals})
     set(${externLib}Headers ${CurrentDirectory}/${externLib}/include PARENT_SCOPE)
 endforeach()
 
