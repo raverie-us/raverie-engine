@@ -36,6 +36,7 @@ public:
   virtual DataType* GetObject(StringParam objectName) = 0;
   virtual uint GetObjectCount() = 0;
   virtual DataType* GetObject(uint index) = 0;
+  virtual DataType* UpdateData(StringParam objectName) = 0;
   virtual Space* GetSpace(DataType* object) = 0;
 
   DataType* AddOrUpdate(Archetype* archetype);
@@ -116,21 +117,14 @@ DataType* EditorScriptObjects<DataType>::AddOrUpdate(BoundType* componentType)
   if(componentType == nullptr)
     return nullptr;
 
-  // If there was already an object for this archetype, update
-  // it with the new object
-  uint objectCount = GetObjectCount();
-  for(uint i = 0; i < objectCount; ++i)
-  {
-    DataType* currObject = GetObject(i);
+  // If the object exists, then all necessary data should be updated.
+  DataType* object = UpdateData(componentType->Name);
 
-    if(currObject == nullptr || currObject->GetName() != componentType->Name)
-      continue;
-
-    // There's already an object for this meta type and we don't have to do
-    // anything because script re-initialization should handle the updating
-    // of the script component on the object
-    return currObject;
-  }
+  // There's already an object for this meta type and we don't have to do
+  // anything because script re-initialization should handle the updating
+  // of the script component on the object.
+  if(object != nullptr)
+    return object;
 
   // Create a new object
   DataType* newObject = new DataType(componentType);
@@ -147,12 +141,15 @@ void EditorScriptObjects<DataType>::CreateOrUpdateCog(DataType* object)
   Space* space = GetSpace(object);
 
   // Destroy the old one if it exists
-  object->mCog.SafeDestroy();
+  if(Cog* toDestroy = object->mCog)
+    toDestroy->ForceDestroy();
 
   if(Archetype* archetype = object->mArchetype)
   {
     Cog* cog = space->Create(archetype);
     cog->ClearArchetype();
+    cog->mFlags.SetFlag(CogFlags::Protected);
+
     object->mCog = cog;
   }
   else if(object->mScriptComponentType)
@@ -164,6 +161,7 @@ void EditorScriptObjects<DataType>::CreateOrUpdateCog(DataType* object)
     cog->AddComponentByType(componentType);
     cog->SetName(componentType->Name);
     cog->ClearArchetype();
+    cog->mFlags.SetFlag(CogFlags::Protected);
 
     Component* component = cog->QueryComponentType(componentType);
 
@@ -186,7 +184,7 @@ void EditorScriptObjects<DataType>::RemoveObject(Archetype* archetype)
     if(currObject && (Archetype*)currObject->mArchetype == archetype)
     {
       if(Cog* cog = currObject->mCog)
-        cog->Destroy();
+        cog->ForceDestroy();
 
       bool removeObject = true;
 

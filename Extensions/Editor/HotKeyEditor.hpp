@@ -33,10 +33,14 @@ class ModalConfirmEvent;
 struct CommandEntry
 {
   bool operator<(const CommandEntry& rhs) const;
+  bool operator==(const Command& rhs) const;
 
+  bool mIsACogCommand;
   bool mDevOnly;
 
   unsigned mIndex;
+
+  Command* mZeroCommand;
 
   String mName;
   String mDescription;
@@ -61,6 +65,9 @@ public:
   HotKeyCommands( );
 
   void CopyCommandData(Array<Command*>& commands);
+
+  void AddCommand(Command* command, bool checkForDuplicate = false);
+  void RemoveCommand(Command* command);
 
   DataEntry* GetRoot( ) override;
 
@@ -94,6 +101,7 @@ public:
   void BuildFormat(TreeFormatting& formatting);
 
   void UpdateTransform( ) override;
+  void Refresh( );
 
   void DisplayResource( );
  
@@ -101,6 +109,9 @@ public:
 
   void AutoClose( );
   void OnCancel(SearchViewEvent* event);
+
+  void OnScriptsCompiled(Event* event);
+  void Sort(bool updateIndexes);
   
   void OnCommandRename(ObjectEvent* event);
   void OnCommandRebind(ObjectEvent* event);
@@ -108,8 +119,10 @@ public:
   void OnCommandRightClick(TreeEvent* event);
 
   void OnKeyDown(KeyboardEvent* event);
-  
-  void OnSelectionChanged(Event* event);
+
+  void OnGlobalCommandAdded(CommandUpdateEvent* event);
+  void OnGlobalCommandRemoved(CommandUpdateEvent* event);
+  void OnGlobalCommandUpdated(CommandUpdateEvent* event);
 
   void OnRenamedCommand(ObjectEvent* event);
   void OnAddCommand(MouseEvent* event);  /// Add button call back
@@ -124,7 +137,7 @@ public:
 public:
   static HashMap<unsigned, String> sKeyMap;  // <Keys::Enum, "CommandName">
 
-  DataIndex mRowIndex;
+  DataIndex mRightClickedRowIndex;
 
   TreeView* mTreeView;
   TextButton* mAddCommand;
@@ -154,7 +167,6 @@ public:
 
 //------------------------------------------------------------------------------
 
-void HotKeySortHelper(bool updateIndexes, CommandSet& set);
 void RegisterHotKeyEditors( );
 
 

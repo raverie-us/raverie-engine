@@ -20,6 +20,9 @@ namespace Events
   DeclareEvent(CommandStateChange);
   DeclareEvent(CommandCaptureContext);
   DeclareEvent(CommandExecute);
+  DeclareEvent(CommandAdded);
+  DeclareEvent(CommandRemoved);
+  DeclareEvent(CommandUpdated);
 }//namespace Events
 
 //------------------------------------------------------------------------- Tags
@@ -27,6 +30,17 @@ namespace Tags
 {
   DeclareTag(Command);
 }//namespace Tags
+
+//--------------------------------------------------------- Command Update Event
+class CommandUpdateEvent : public ObjectEvent
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  CommandUpdateEvent(Command* commmand);
+
+  Command* mCommand;
+};
 
 //---------------------------------------------------------------- Command Event
 class CommandEvent : public ObjectEvent
@@ -64,7 +78,7 @@ CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction);
 
 //---------------------------------------------------------------------- Command
 // Command that is available in the search list and tool bars.
-class Command : public EventObject
+class Command : public SafeId32EventObject
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -182,6 +196,8 @@ public:
   
   /// Check to see if a command's shortcut hot-key has been pressed.
   bool TestCommandKeyboardShortcuts(KeyboardEvent* event);
+  /// Check to see if command has already registered a valid shortcut by string.
+  bool IsShortcutReserved(StringParam validShortcut);
 
   SearchProvider* GetCommandSearchProvider();
   
@@ -190,14 +206,14 @@ public:
   void ValidateCommands();
 
   typedef HashMap<String, Handle> ContextMapType;
-  ContextMapType ContextMap;
+  ContextMapType mContextMap;
 
   typedef HashMap<String, Command*> CommandMapType;
   Array<Command*> mCommands;
 
   HashMap<String, MenuDefinition*> mMenus;
-  CommandMapType NamedCommands;
-  CommandMapType ShortCuts;
+  CommandMapType mNamedCommands;
+  CommandMapType mShortcuts;
 };
 
 template<typename ContextType>
