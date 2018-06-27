@@ -172,6 +172,10 @@ s32 AtomicExchange(volatile s32* target, s32 value)
 {
   return (s32)::_InterlockedExchange((long volatile*)target, (long)value);
 }
+u32 AtomicExchange(volatile u32* target, u32 value)
+{
+  return (u32)::_InterlockedExchange((unsigned long volatile*)target, (unsigned long)value);
+}
 s64 AtomicExchange(volatile s64* target, s64 value)
 {
   return (s64)::InterlockedExchange64((__int64 volatile*)target, (__int64)value); // _InterlockedExchange64 Unavailable

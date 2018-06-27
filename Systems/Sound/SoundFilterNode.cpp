@@ -10,770 +10,7 @@
 namespace Zero
 {
 
-namespace Events
-{
-  DefineEvent(CustomAudioNodeSamplesNeeded);
-  DefineEvent(AudioInterpolationDone);
-  DefineEvent(SoundNodeDisconnected);
-}
 
-//-------------------------------------------------------------------------- Custom Audio Node Event
-
-//**************************************************************************************************
-ZilchDefineType(CustomAudioNodeEvent, builder, type)
-{
-  ZeroBindDocumented();
-
-  ZilchBindField(SamplesNeeded);
-}
-
-//--------------------------------------------------------------------------------------- Sound Node
-
-//**************************************************************************************************
-ZilchDefineType(SoundNode, builder, type)
-{
-  ZeroBindDocumented();
-
-  ZilchBindMethod(AddInputNode);
-  ZilchBindMethod(InsertNodeAfter);
-  ZilchBindMethod(InsertNodeBefore);
-  ZilchBindMethod(ReplaceWith);
-  ZilchBindMethod(RemoveInputNode);
-  ZilchBindMethod(RemoveAllInputs);
-  ZilchBindMethod(RemoveAllOutputs);
-  ZilchBindMethod(RemoveAndAttachInputsToOutputs);
-  ZilchBindGetterSetter(AutoCollapse);
-  ZilchBindGetter(HasInputs);
-  ZilchBindGetter(HasOutputs);
-  ZilchBindGetter(InputCount);
-  ZilchBindGetter(OutputCount);
-  ZilchBindGetterSetter(BypassPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetterSetter(BypassValue);
-
-  ZeroBindEvent(Events::AudioInterpolationDone, SoundEvent);
-  ZeroBindEvent(Events::SoundNodeDisconnected, SoundEvent);
-}
-
-//**************************************************************************************************
-SoundNode::SoundNode() :
-  mNode(nullptr),
-  mCanInsertAfter(true),
-  mCanInsertBefore(true),
-  mCanRemove(true),
-  mCanReplace(true)
-{
-
-}
-
-//**************************************************************************************************
-SoundNode::~SoundNode()
-{
-  if (mNode)
-    mNode->SetExternalInterface(nullptr);
-
-}
-
-//**************************************************************************************************
-void SoundNode::AddInputNode(SoundNode* node)
-{
-  if (!node)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to add SoundNode to null object");
-    return;
-  }
-
-  if (node == this)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to add SoundNode to itself as input");
-    return;
-  }
-
-  ErrorIf(!mNode || !node->mNode, "SoundNode data is null");
-
-  mNode->AddInput(node->mNode);
-}
-
-//**************************************************************************************************
-void SoundNode::InsertNodeAfter(SoundNode* node)
-{
-  if (!node)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to add sound node to null object");
-    return;
-  }
-
-  if (node == this)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to insert SoundNode after itself");
-    return;
-  }
-
-  // Make sure insertion is allowed
-  if (!mCanInsertAfter || !node->mCanInsertBefore)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", 
-      String::Format("InsertNodeAfter method not allowed with %s and %s", mNode->Name.c_str(), node->mNode->Name.c_str()));
-    return;
-  }
-
-  ErrorIf(!mNode || !node->mNode, "SoundNode data is null");
-
-  mNode->InsertNodeAfter(node->mNode);
-}
-
-//**************************************************************************************************
-void SoundNode::InsertNodeBefore(SoundNode* node)
-{
-  if (!node)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to add sound node to null object");
-    return;
-  }
-
-  if (node == this)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to insert SoundNode before itself");
-    return;
-  }
-
-  // Make sure insertion is allowed
-  if (!mCanInsertBefore || !node->mCanInsertAfter)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", 
-      String::Format("InsertNodeBefore method not allowed with %s and %s", mNode->Name.c_str(), node->mNode->Name.c_str()));
-    return;
-  }
-
-  ErrorIf(!mNode || !node->mNode, "SoundNode data is null");
-
-  mNode->InsertNodeBefore(node->mNode);
-}
-
-//**************************************************************************************************
-void SoundNode::ReplaceWith(SoundNode* node)
-{
-  if (!node)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to replace sound node with null object");
-    return;
-  }
-
-  if (node == this)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to replace SoundNode with itself");
-    return;
-  }
-
-  // Make sure this operation is allowed
-  if (!mCanReplace)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", 
-      String::Format("ReplaceWith method not allowed with %s", mNode->Name.c_str()));
-    return;
-  }
-
-  ErrorIf(!mNode || !node->mNode, "SoundNode data is null");
-
-  mNode->ReplaceWith(node->mNode);
-}
-
-//**************************************************************************************************
-void SoundNode::RemoveInputNode(SoundNode* node)
-{
-  if (!node)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation", "Attempted to remove a null object from sound node input");
-    return;
-  }
-
-  ErrorIf(!mNode || !node->mNode, "SoundNode data is null");
-
-  mNode->RemoveInput(node->mNode);
-}
-
-//**************************************************************************************************
-void SoundNode::RemoveAllInputs()
-{
-  // Make sure this operation is allowed
-  if (!mCanInsertBefore)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-      String::Format("RemoveAllInputs method not allowed with %s", mNode->Name.c_str()));
-    return;
-  }
-
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  mNode->DisconnectInputs();
-}
-
-//**************************************************************************************************
-void SoundNode::RemoveAllOutputs()
-{
-  // Make sure this operation is allowed
-  if (!mCanInsertAfter)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-      String::Format("RemoveAllOutputs method not allowed with %s", mNode->Name.c_str()));
-    return;
-  }
-
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  mNode->DisconnectOutputs();
-}
-
-//**************************************************************************************************
-void SoundNode::RemoveAndAttachInputsToOutputs()
-{
-  // Make sure this operation is allowed
-  if (!mCanRemove)
-  {
-    DoNotifyWarning("Incorrect SoundNode Operation",
-      String::Format("RemoveAndAttachInputsToOutputs method not allowed with %s", mNode->Name.c_str()));
-    return;
-  }
-
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  mNode->DisconnectOnlyThis();
-}
-
-//**************************************************************************************************
-bool SoundNode::GetAutoCollapse()
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  return mNode->GetCollapse();
-}
-
-//**************************************************************************************************
-void SoundNode::SetAutoCollapse(bool willCollapse)
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  mNode->SetCollapse(willCollapse);
-}
-
-//**************************************************************************************************
-bool SoundNode::GetHasInputs()
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  return mNode->HasInputs();
-}
-
-//**************************************************************************************************
-bool SoundNode::GetHasOutputs()
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  return mNode->HasOutputs();
-}
-
-//**************************************************************************************************
-int SoundNode::GetInputCount()
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  return mNode->GetInputs()->Size();
-}
-
-//**************************************************************************************************
-int SoundNode::GetOutputCount()
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  return mNode->GetOutputs()->Size();
-}
-
-//**************************************************************************************************
-float SoundNode::GetBypassPercent()
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  return mNode->GetBypassValue() * 100.0f;
-}
-
-//**************************************************************************************************
-void SoundNode::SetBypassPercent(float percent)
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  mNode->SetBypassValue(Math::Clamp(percent, 0.0f, 100.0f) / 100.0f);
-}
-
-//**************************************************************************************************
-float SoundNode::GetBypassValue()
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  return mNode->GetBypassValue();
-}
-
-//**************************************************************************************************
-void SoundNode::SetBypassValue(float value)
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  mNode->SetBypassValue(Math::Clamp(value, 0.0f, 1.0f));
-}
-
-//**************************************************************************************************
-void SoundNode::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType)
-{
-  if (eventType == Audio::AudioEventTypes::InterpolationDone)
-  {
-    SoundEvent event;
-    DispatchEvent(Events::AudioInterpolationDone, &event);
-  }
-  else if (eventType == Audio::AudioEventTypes::NodeDisconnected)
-  {
-    SoundEvent event;
-    DispatchEvent(Events::SoundNodeDisconnected, &event);
-  }
-}
-
-//------------------------------------------------------------------------------------- Sound Buffer
-
-//**************************************************************************************************
-ZilchDefineType(SoundBuffer, builder, type)
-{
-  ZeroBindDocumented();
-
-  ZilchBindGetter(SampleCount);
-  ZilchBindMethod(AddSampleToBuffer);
-  ZilchBindMethod(GetSampleAtIndex);
-  ZilchBindMethod(Reset);
-  ZilchBindMethod(AddMicUncompressedData);
-}
-
-//**************************************************************************************************
-void SoundBuffer::AddSampleToBuffer(float value)
-{
-  mBuffer.PushBack(Math::Clamp(value, -1.0f, 1.0f));
-}
-
-//**************************************************************************************************
-int SoundBuffer::GetSampleCount()
-{
-  return mBuffer.Size();
-}
-
-//**************************************************************************************************
-float SoundBuffer::GetSampleAtIndex(int index)
-{
-  if ((unsigned)index < mBuffer.Size())
-    return mBuffer[index];
-  else
-    return 0.0f;
-}
-
-//**************************************************************************************************
-void SoundBuffer::Reset()
-{
-  mBuffer.Clear();
-}
-
-//**************************************************************************************************
-void SoundBuffer::AddMicUncompressedData(const HandleOf<ArrayClass<float>>& buffer)
-{
-  mBuffer.Append(buffer->NativeArray.All());
-} 
-
-//-------------------------------------------------------------------------------- Custom Audio Node
-
-//**************************************************************************************************
-ZilchDefineType(CustomAudioNode, builder, type)
-{
-  ZeroBindDocumented();
-
-  ZilchBindGetterSetter(Channels);
-  ZilchBindGetter(MinimumBufferSize);
-  ZilchBindGetter(SystemSampleRate);
-  ZilchBindMethod(SendBuffer);
-  ZilchBindMethod(SendPartialBuffer);
-  ZilchBindMethod(SendMicUncompressedData);
-  ZilchBindMethod(SendMicCompressedData);
-
-  ZeroBindEvent(Events::CustomAudioNodeSamplesNeeded, CustomAudioNodeEvent);
-}
-
-//**************************************************************************************************
-CustomAudioNode::CustomAudioNode() :
-  AudioDecoder(nullptr)
-{
-  mNode = new Audio::CustomDataNode("CustomAudioNode", Z::gSound->mCounter++, this);
-}
-
-//**************************************************************************************************
-CustomAudioNode::~CustomAudioNode()
-{
-  GetNode()->DeleteThisNode();
-  mNode = nullptr;
-}
-
-//**************************************************************************************************
-int CustomAudioNode::GetMinimumBufferSize()
-{
-  return (int)GetNode()->GetMinimumBufferSize();
-}
-
-//**************************************************************************************************
-int CustomAudioNode::GetSystemSampleRate()
-{
-  return (int)GetNode()->GetSystemSampleRate();
-}
-
-//**************************************************************************************************
-int CustomAudioNode::GetChannels()
-{
-  return GetNode()->GetNumberOfChannels();
-}
-
-//**************************************************************************************************
-void CustomAudioNode::SetChannels(int channels)
-{
-  GetNode()->SetNumberOfChannels(Math::Clamp(channels, 0, (int)Audio::MaxChannels));
-}
-
-//**************************************************************************************************
-void CustomAudioNode::SendBuffer(SoundBuffer* buffer)
-{
-  if (!buffer)
-    DoNotifyException("Audio Error", "Called SendBuffer on CustomAudioNode with a null SoundBuffer");
-  
-  SendToAudioEngine(buffer->mBuffer.Data(), buffer->mBuffer.Size());
-}
-
-//**************************************************************************************************
-void CustomAudioNode::SendPartialBuffer(SoundBuffer* buffer, int startAtIndex, int howManySamples)
-{
-  if (!buffer)
-    DoNotifyException("Audio Error", "Called SendPartialBuffer on CustomAudioNode with a null SoundBuffer");
-  else if (startAtIndex < 0 || ((startAtIndex + howManySamples) > (int)buffer->mBuffer.Size()))
-    DoNotifyException("Audio Error", "SendPartialBuffer parameters exceed size of the SoundBuffer");
-  
-  SendToAudioEngine(buffer->mBuffer.Data() + startAtIndex, howManySamples);
-}
-
-//**************************************************************************************************
-void CustomAudioNode::SendMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData)
-{
-  SendToAudioEngine(audioData->NativeArray.Data(), audioData->NativeArray.Size());
-}
-
-//**************************************************************************************************
-void CustomAudioNode::SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData)
-{
-  // If we haven't created the decoder yet, create it
-  if (!AudioDecoder)
-    AudioDecoder = new Audio::AudioStreamDecoder();
-
-  // Decode the compressed data
-  float* decodedSamples;
-  unsigned sampleCount;
-  AudioDecoder->DecodeCompressedPacket(audioData->NativeArray.Data(), audioData->NativeArray.Size(), 
-    decodedSamples, sampleCount);
-
-  // Send the array (will be deleted by the audio engine)
-  GetNode()->AddSamples(decodedSamples, sampleCount);
-}
-
-//**************************************************************************************************
-void CustomAudioNode::SendAudioEventData(Audio::EventData* data)
-{
-  if (data->mEventType == Audio::AudioEventTypes::NeedInputSamples)
-  {
-    CustomAudioNodeEvent event(((Audio::EventData1<unsigned>*)data)->mData);
-    mDispatcher.Dispatch(Events::CustomAudioNodeSamplesNeeded, &event);
-  }
-
-  delete data;
-}
-
-//**************************************************************************************************
-void CustomAudioNode::SendToAudioEngine(float* samples, unsigned howManySamples)
-{
-  // Create the array to send
-  float* newBuffer = new float[howManySamples];
-  // Copy the data into the array
-  memcpy(newBuffer, samples, sizeof(float) * howManySamples);
-  // Send the array (will be deleted by the audio engine)
-  GetNode()->AddSamples(newBuffer, howManySamples);
-}
-
-//**************************************************************************************************
-Audio::CustomDataNode* CustomAudioNode::GetNode()
-{
-  ErrorIf(!mNode, "SoundNode data is null");
-
-  return (Audio::CustomDataNode*)mNode;
-}
-
-//------------------------------------------------------------------------------ Generated Wave Node
-
-//**************************************************************************************************
-ZilchDefineType(GeneratedWaveNode, builder, type)
-{
-  ZeroBindDocumented();
-
-  ZilchBindGetterSetter(WaveType); 
-  ZilchBindGetterSetter(WaveFrequency);
-  ZilchBindGetterSetter(Volume);
-  ZilchBindGetterSetter(Decibels);
-  ZilchBindGetterSetter(SquareWavePulseValue);
-  ZilchBindMethod(Play);
-  ZilchBindMethod(Stop);
-  ZilchBindMethod(InterpolateVolume);
-  ZilchBindMethod(InterpolateDecibels);
-  ZilchBindMethod(InterpolateWaveFrequency);
-}
-
-//**************************************************************************************************
-GeneratedWaveNode::GeneratedWaveNode() :
-  mWaveType(SynthWaveType::SineWave),
-  mWaveFrequency(440.0f), 
-  mAsset(nullptr), 
-  mVolume(1.0f),
-  mSquareWavePulseValue(0.5f)
-{
-  CreateInstance(true);
-}
-
-//**************************************************************************************************
-GeneratedWaveNode::~GeneratedWaveNode()
-{
-  ReleaseInstance();
-  ReleaseAsset();
-}
-
-//**************************************************************************************************
-SynthWaveType::Enum GeneratedWaveNode::GetWaveType()
-{
-  return mWaveType;
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::SetWaveType(SynthWaveType::Enum newType)
-{
-  mWaveType = newType;
-
-  // If there is already an asset, release it and create a new one
-  if (mAsset)
-  {
-    ReleaseAsset();
-    CreateAsset();
-  }
-  
-  // Check if there is a SoundInstance
-  if (mNode)
-  {
-    // If not paused, stop the SoundInstance and create one which is not paused
-    if (!((Audio::SoundInstanceNode*)mNode)->GetPaused())
-    {
-      ((Audio::SoundInstanceNode*)mNode)->Stop();
-      CreateInstance(false);
-    }
-    // Otherwise create one which is paused
-    else
-      CreateInstance(true);
-  }
-}
-
-//**************************************************************************************************
-float GeneratedWaveNode::GetWaveFrequency()
-{
-  return mWaveFrequency;
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::SetWaveFrequency(float frequency)
-{
-  InterpolateWaveFrequency(frequency, 0.0f);
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::InterpolateWaveFrequency(float frequency, float time)
-{
-  mWaveFrequency = Math::Max(frequency, 0.0f);
-
-  if (mAsset)
-    mAsset->SetFrequency(mWaveFrequency, time);
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::Play()
-{
-  // If there is a SoundInstance and it's paused, resume it
-  if (mNode && ((Audio::SoundInstanceNode*)mNode)->GetPaused())
-    ((Audio::SoundInstanceNode*)mNode)->SetPaused(false);
-  // Otherwise create a new SoundInstance
-  else
-    CreateInstance(false);
-
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::Stop()
-{
-  if (mNode)
-  {
-    ((Audio::SoundInstanceNode*)mNode)->Stop();
-  }
-}
-
-//**************************************************************************************************
-float GeneratedWaveNode::GetVolume()
-{
-  return mVolume;
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::SetVolume(float volume)
-{
-  InterpolateVolume(volume, 0.0f);
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::InterpolateVolume(float volume, float time)
-{
-  mVolume = Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue);
-
-  if (mNode)
-    ((Audio::SoundInstanceNode*)mNode)->SetVolume(mVolume, time);
-}
-
-//**************************************************************************************************
-float GeneratedWaveNode::GetDecibels()
-{
-  return Z::gSound->VolumeToDecibels(mVolume);
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::SetDecibels(float decibels)
-{
-  InterpolateDecibels(decibels, 0.0f);
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::InterpolateDecibels(float decibels, float time)
-{
-  mVolume = Math::Clamp(Z::gSound->DecibelsToVolume(decibels), 0.0f, Audio::MaxVolumeValue);
-
-  if (mNode)
-    ((Audio::SoundInstanceNode*)mNode)->SetVolume(mVolume, time);
-}
-
-//**************************************************************************************************
-float GeneratedWaveNode::GetSquareWavePulseValue()
-{
-  return mSquareWavePulseValue;
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::SetSquareWavePulseValue(float value)
-{
-  mSquareWavePulseValue = Math::Clamp(value, 0.0f, 1.0f);
-
-  if (mAsset)
-    mAsset->SetSquareWavePositiveFraction(mSquareWavePulseValue);
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::CreateAsset()
-{
-  if (mAsset)
-    ReleaseAsset();
-
-  Audio::OscillatorTypes::Enum waveType;
-
-  switch (mWaveType)
-  {
-  case SynthWaveType::SineWave:
-    waveType = Audio::OscillatorTypes::Sine;
-    break;
-  case SynthWaveType::SawWave:
-    waveType = Audio::OscillatorTypes::Saw;
-    break;
-  case SynthWaveType::SquareWave:
-    waveType = Audio::OscillatorTypes::Square;
-    break;
-  case SynthWaveType::TriangleWave:
-    waveType = Audio::OscillatorTypes::Triangle;
-    break;
-  case SynthWaveType::Noise:
-    waveType = Audio::OscillatorTypes::Noise;
-    break;
-  }
-
-  mAsset = new Audio::GeneratedWaveSoundAsset(waveType, mWaveFrequency, this);
-  if (mWaveType == SynthWaveType::SquareWave)
-    mAsset->SetSquareWavePositiveFraction(mSquareWavePulseValue);
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::ReleaseAsset()
-{
-  if (mAsset)
-  {
-    mAsset->SetExternalInterface(nullptr);
-    mAsset = nullptr;
-  }
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::CreateInstance(bool paused)
-{
-  // If there currently is a node, stop it 
-  if (mNode)
-    Stop();
-
-  // If there is no asset, create it
-  if (!mAsset)
-    CreateAsset();
-
-  // Create the new sound instance
-  Status status;
-  Audio::SoundInstanceNode* newNode = new Audio::SoundInstanceNode(status, "GeneratedWaveInstance", 
-    Z::gSound->mCounter++, mAsset, true, true, this);
-  // If it wasn't successful delete the new node
-  if (status.Failed())
-  {
-    if (newNode)
-      newNode->DeleteThisNode();
-
-    DoNotifyWarning("Audio Error", "GeneratedWaveNode could not be created with current settings");
-  }
-  else
-  {
-    // If there currently is a node, swap it with the new one in the graph
-    if (mNode)
-    {
-      mNode->ReplaceWith(newNode);
-      ReleaseInstance();
-    }
-
-    mNode = newNode;
-
-    // Set the volume on the new node
-    ((Audio::SoundInstanceNode*)mNode)->SetVolume(mVolume, 0.0f);
-    // If it shouldn't be paused, resume it
-    if (!paused)
-      ((Audio::SoundInstanceNode*)mNode)->SetPaused(false);
-  }
-}
-
-//**************************************************************************************************
-void GeneratedWaveNode::ReleaseInstance()
-{
-  if (mNode)
-  {
-    ((Audio::SoundInstanceNode*)mNode)->Stop();
-    mNode->DeleteThisNode();
-    mNode = nullptr;
-  }
-}
 
 //-------------------------------------------------------------------------------------- Volume Node
 
@@ -809,7 +46,7 @@ void VolumeNode::SetVolume(float volume)
 //**************************************************************************************************
 void VolumeNode::InterpolateVolume(float volume, float time)
 {
-  GetNode()->SetVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue), time);
+  GetNode()->SetVolume(Math::Max(volume, 0.0f), time);
 }
 
 //**************************************************************************************************
@@ -827,7 +64,7 @@ void VolumeNode::SetDecibels(float volumeDB)
 //**************************************************************************************************
 void VolumeNode::InterpolateDecibels(float volumeDB, float time)
 {
-  GetNode()->SetVolume(Math::Clamp(Z::gSound->DecibelsToVolume(volumeDB), 0.0f, Audio::MaxVolumeValue), time);
+  GetNode()->SetVolume(Z::gSound->DecibelsToVolume(volumeDB), time);
 }
 
 //**************************************************************************************************
@@ -886,7 +123,7 @@ void PanningNode::SetLeftVolume(float volume)
 //**************************************************************************************************
 void PanningNode::InterpolateLeftVolume(float volume, float time)
 {
-  GetNode()->SetLeftVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue), time);
+  GetNode()->SetLeftVolume(Math::Max(volume, 0.0f), time);
 }
 
 //**************************************************************************************************
@@ -904,14 +141,14 @@ void PanningNode::SetRightVolume(float volume)
 //**************************************************************************************************
 void PanningNode::InterpolateRightVolume(float volume, float time)
 {
-  GetNode()->SetRightVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue), time);
+  GetNode()->SetRightVolume(Math::Max(volume, 0.0f), time);
 }
 
 //**************************************************************************************************
 void PanningNode::InterpolateVolumes(float leftVolume, float rightVolume, float time)
 {
-  GetNode()->SetLeftVolume(Math::Clamp(leftVolume, 0.0f, Audio::MaxVolumeValue), time);
-  GetNode()->SetRightVolume(Math::Clamp(rightVolume, 0.0f, Audio::MaxVolumeValue), time);
+  GetNode()->SetLeftVolume(Math::Max(leftVolume, 0.0f), time);
+  GetNode()->SetRightVolume(Math::Max(rightVolume, 0.0f), time);
 }
 
 //**************************************************************************************************
@@ -956,8 +193,7 @@ void PitchNode::SetPitch(float pitchRatio)
 //**************************************************************************************************
 void PitchNode::InterpolatePitch(float pitchRatio, float time)
 {
-  GetNode()->SetPitch(Math::Clamp(Z::gSound->PitchToSemitones(pitchRatio), Audio::MinSemitonesValue,
-    Audio::MaxSemitonesValue), time);
+  GetNode()->SetPitch(Z::gSound->PitchToSemitones(pitchRatio), time);
 }
 
 //**************************************************************************************************
@@ -975,7 +211,7 @@ void PitchNode::SetSemitones(float pitchSemitones)
 //**************************************************************************************************
 void PitchNode::InterpolateSemitones(float pitchSemitones, float time)
 {
-  GetNode()->SetPitch(Math::Clamp(pitchSemitones, Audio::MinSemitonesValue, Audio::MaxSemitonesValue), time);
+  GetNode()->SetPitch(pitchSemitones, time);
 }
 
 //**************************************************************************************************
@@ -1137,7 +373,7 @@ float EqualizerNode::GetLowPassGain()
 //**************************************************************************************************
 void EqualizerNode::SetLowPassGain(float gain)
 {
-  GetNode()->SetBelow80HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->SetBelow80HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -1149,7 +385,7 @@ float EqualizerNode::GetHighPassGain()
 //**************************************************************************************************
 void EqualizerNode::SetHighPassGain(float gain)
 {
-  GetNode()->SetAbove5000HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->SetAbove5000HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -1161,7 +397,7 @@ float EqualizerNode::GetBand1Gain()
 //**************************************************************************************************
 void EqualizerNode::SetBand1Gain(float gain)
 {
-  GetNode()->Set150HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->Set150HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -1173,7 +409,7 @@ float EqualizerNode::GetBand2Gain()
 //**************************************************************************************************
 void EqualizerNode::SetBand2Gain(float gain)
 {
-  GetNode()->Set600HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->Set600HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
@@ -1185,17 +421,15 @@ float EqualizerNode::GetBand3Gain()
 //**************************************************************************************************
 void EqualizerNode::SetBand3Gain(float gain)
 {
-  GetNode()->Set2500HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->Set2500HzGain(Math::Max(gain, 0.0f));
 }
 
 //**************************************************************************************************
 void EqualizerNode::InterpolateAllBands(float lowPass, float band1, float band2, float band3, 
   float highPass, float timeToInterpolate)
 {
-  GetNode()->InterpolateBands(Audio::EqualizerBandGains(Math::Clamp(lowPass, 0.0f, Audio::MaxVolumeValue), 
-    Math::Clamp(band1, 0.0f, Audio::MaxVolumeValue), Math::Clamp(band2, 0.0f, Audio::MaxVolumeValue), 
-    Math::Clamp(band3, 0.0f, Audio::MaxVolumeValue), Math::Clamp(highPass, 0.0f, Audio::MaxVolumeValue)), 
-    timeToInterpolate);
+  GetNode()->InterpolateBands(Audio::EqualizerBandGains(Math::Max(lowPass, 0.0f), Math::Max(band1, 0.0f), 
+    Math::Max(band2, 0.0f), Math::Max(band3, 0.0f), Math::Max(highPass, 0.0f)), timeToInterpolate);
 }
 
 //**************************************************************************************************
@@ -1235,7 +469,7 @@ float ReverbNode::GetLength()
 //**************************************************************************************************
 void ReverbNode::SetLength(float time)
 {
-  GetNode()->SetTime(Math::Clamp(time, 0.0f, 100.0f) * 1000);
+  GetNode()->SetTime(Math::Max(time, 0.0f) * 1000);
 }
 
 //**************************************************************************************************
@@ -1711,7 +945,7 @@ float ExpanderNode::GetInputGainDecibels()
 //**************************************************************************************************
 void ExpanderNode::SetInputGainDecibels(float dB)
 {
-  GetNode()->SetInputGain(Math::Clamp(dB, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
+  GetNode()->SetInputGain(dB);
 }
 
 //**************************************************************************************************
@@ -1723,7 +957,7 @@ float ExpanderNode::GetThresholdDecibels()
 //**************************************************************************************************
 void ExpanderNode::SetThresholdDecibels(float dB)
 {
-  GetNode()->SetThreshold(Math::Clamp(dB, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
+  GetNode()->SetThreshold(dB);
 }
 
 //**************************************************************************************************
@@ -1759,7 +993,7 @@ float ExpanderNode::GetRatio()
 //**************************************************************************************************
 void ExpanderNode::SetRatio(float ratio)
 {
-  GetNode()->SetRatio(Math::Clamp(ratio, -10.0f, 10.0f));
+  GetNode()->SetRatio(ratio);
 }
 
 //**************************************************************************************************
@@ -1771,7 +1005,7 @@ float ExpanderNode::GetOutputGainDecibels()
 //**************************************************************************************************
 void ExpanderNode::SetOutputGainDecibels(float dB)
 {
-  GetNode()->SetOutputGain(Math::Clamp(dB, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
+  GetNode()->SetOutputGain(dB);
 }
 
 //**************************************************************************************************
@@ -1783,7 +1017,7 @@ float ExpanderNode::GetKneeWidth()
 //**************************************************************************************************
 void ExpanderNode::SetKneeWidth(float knee)
 {
-  GetNode()->SetKneeWidth(Math::Clamp(knee, 0.0f, 100.0f));
+  GetNode()->SetKneeWidth(knee);
 }
 
 //**************************************************************************************************
@@ -1904,7 +1138,7 @@ float AddNoiseNode::GetAdditiveGain()
 //**************************************************************************************************
 void AddNoiseNode::SetAdditiveGain(float decibels)
 {
-  GetNode()->SetAdditiveNoiseGainDB(Math::Clamp(decibels, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
+  GetNode()->SetAdditiveNoiseGainDB(decibels);
 }
 
 //**************************************************************************************************
@@ -1916,7 +1150,7 @@ float AddNoiseNode::GetMultiplicativeGain()
 //**************************************************************************************************
 void AddNoiseNode::SetMultiplicativeGain(float decibels)
 {
-  GetNode()->SetMultipleNoiseGainDB(Math::Clamp(decibels, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
+  GetNode()->SetMultipleNoiseGainDB(decibels);
 }
 
 //**************************************************************************************************
@@ -2034,7 +1268,7 @@ void AdditiveSynthNode::RemoveAllHarmonics()
 //**************************************************************************************************
 void AdditiveSynthNode::NoteOn(float midiNote, float volume)
 {
-  GetNode()->NoteOn((int)midiNote, Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->NoteOn((int)midiNote, Math::Max(volume, 0.0f));
 }
 
 //**************************************************************************************************
@@ -2147,9 +1381,6 @@ ZilchDefineType(MicrophoneInputNode, builder, type)
 MicrophoneInputNode::MicrophoneInputNode()
 {
   mNode = new Audio::MicrophoneInputNode("MicrophoneInputNode", Z::gSound->mCounter++, this);
-
-  if (!GetNode()->GetActive())
-    DoNotifyWarning("No Microphone Available", "No microphone input is available for the MicrophoneInputNode");
 }
 
 //**************************************************************************************************
@@ -2161,7 +1392,7 @@ float MicrophoneInputNode::GetVolume()
 //**************************************************************************************************
 void MicrophoneInputNode::SetVolume(float volume)
 {
-  GetNode()->SetVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->SetVolume(Math::Max(volume, 0.0f));
 }
 
 //**************************************************************************************************
@@ -2174,9 +1405,6 @@ bool MicrophoneInputNode::GetActive()
 void MicrophoneInputNode::SetActive(bool active)
 {
   GetNode()->SetActive(active);
-
-  if (active && !GetNode()->GetActive())
-    DoNotifyWarning("No Microphone Available", "No microphone input is available for the MicrophoneInputNode");
 }
 
 //**************************************************************************************************
@@ -2235,7 +1463,7 @@ void GranularSynthNode::Stop()
 //**************************************************************************************************
 void GranularSynthNode::SetSound(HandleOf<Sound> sound, float startTime, float stopTime)
 {
-  GetNode()->SetAsset(sound->mSoundAsset, Math::Max(startTime, 0.0f), Math::Max(stopTime, 0.0f));
+  GetNode()->SetAsset(sound->mSoundAsset, startTime, stopTime);
 }
 
 //**************************************************************************************************
@@ -2247,7 +1475,7 @@ float GranularSynthNode::GetGrainVolume()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainVolume(float volume)
 {
-  GetNode()->SetGrainVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->SetGrainVolume(volume);
 }
 
 //**************************************************************************************************
@@ -2259,7 +1487,7 @@ float GranularSynthNode::GetGrainVolumeVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainVolumeVariance(float variance)
 {
-  GetNode()->SetGrainVolumeVariance(Math::Clamp(variance, 0.0f, Audio::MaxVolumeValue));
+  GetNode()->SetGrainVolumeVariance(variance);
 }
 
 //**************************************************************************************************
@@ -2271,7 +1499,7 @@ int GranularSynthNode::GetGrainDelay()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainDelay(int delayMS)
 {
-  GetNode()->SetGrainDelay(Math::Max(delayMS, 0));
+  GetNode()->SetGrainDelay(delayMS);
 }
 
 //**************************************************************************************************
@@ -2283,7 +1511,7 @@ int GranularSynthNode::GetGrainDelayVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainDelayVariance(int delayVarianceMS)
 {
-  GetNode()->SetGrainDelayVariance(Math::Max(delayVarianceMS, 0));
+  GetNode()->SetGrainDelayVariance(delayVarianceMS);
 }
 
 //**************************************************************************************************
@@ -2295,7 +1523,7 @@ int GranularSynthNode::GetGrainLength()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainLength(int lengthMS)
 {
-  GetNode()->SetGrainLength(Math::Max(lengthMS, 0));
+  GetNode()->SetGrainLength(lengthMS);
 }
 
 //**************************************************************************************************
@@ -2307,7 +1535,7 @@ int GranularSynthNode::GetGrainLengthVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainLengthVariance(int lengthVarianceMS)
 {
-  GetNode()->SetGrainLengthVariance(Math::Max(lengthVarianceMS, 0));
+  GetNode()->SetGrainLengthVariance(lengthVarianceMS);
 }
 
 //**************************************************************************************************
@@ -2319,7 +1547,7 @@ float GranularSynthNode::GetGrainResampleRate()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainResampleRate(float resampleRate)
 {
-  GetNode()->SetGrainResampleRate(Math::Clamp(resampleRate, -mMaxResampleValue, mMaxResampleValue));
+  GetNode()->SetGrainResampleRate(resampleRate);
 }
 
 //**************************************************************************************************
@@ -2331,7 +1559,7 @@ float GranularSynthNode::GetGrainResampleRateVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainResampleRateVariance(float resampleVariance)
 {
-  GetNode()->SetGrainResampleRateVariance(Math::Clamp(resampleVariance, 0.0f, mMaxResampleValue));
+  GetNode()->SetGrainResampleRateVariance(resampleVariance);
 }
 
 //**************************************************************************************************
@@ -2343,7 +1571,7 @@ float GranularSynthNode::GetBufferScanRate()
 //**************************************************************************************************
 void GranularSynthNode::SetBufferScanRate(float bufferRate)
 {
-  GetNode()->SetBufferScanRate(Math::Clamp(bufferRate, -mMaxResampleValue, mMaxResampleValue));
+  GetNode()->SetBufferScanRate(bufferRate);
 }
 
 //**************************************************************************************************
@@ -2355,7 +1583,7 @@ float GranularSynthNode::GetGrainPanningValue()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainPanningValue(float panValue)
 {
-  GetNode()->SetGrainPanningValue(Math::Clamp(panValue, -1.0f, 1.0f));
+  GetNode()->SetGrainPanningValue(panValue);
 }
 
 //**************************************************************************************************
@@ -2367,7 +1595,7 @@ float GranularSynthNode::GetGrainPanningVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainPanningVariance(float panValueVariance)
 {
-  GetNode()->SetGrainPanningVariance(Math::Clamp(panValueVariance, 0.0f, 1.0f));
+  GetNode()->SetGrainPanningVariance(panValueVariance);
 }
 
 //**************************************************************************************************
@@ -2379,7 +1607,7 @@ float GranularSynthNode::GetRandomLocationValue()
 //**************************************************************************************************
 void GranularSynthNode::SetRandomLocationValue(float randomLocationValue)
 {
-  GetNode()->SetRandomLocationValue(Math::Clamp(randomLocationValue, 0.0f, 1.0f));
+  GetNode()->SetRandomLocationValue(randomLocationValue);
 }
 
 //**************************************************************************************************
@@ -2420,7 +1648,7 @@ int GranularSynthNode::GetWindowAttack()
 //**************************************************************************************************
 void GranularSynthNode::SetWindowAttack(int attackMS)
 {
-  GetNode()->SetWindowAttack(Math::Max(attackMS, 0));
+  GetNode()->SetWindowAttack(attackMS);
 }
 
 //**************************************************************************************************
@@ -2432,7 +1660,7 @@ int GranularSynthNode::GetWindowRelease()
 //**************************************************************************************************
 void GranularSynthNode::SetWindowRelease(int releaseMS)
 {
-  GetNode()->SetWindowRelease(Math::Max(releaseMS, 0));
+  GetNode()->SetWindowRelease(releaseMS);
 }
 
 //**************************************************************************************************

@@ -52,39 +52,82 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AttenuatorNode.cpp" />
+    <ClCompile Include="AudioIOInterface.cpp" />
+    <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="AudioMixer.cpp" />
+    <ClCompile Include="CustomAudioNode.cpp" />
+    <ClCompile Include="Definitions.cpp" />
+    <ClCompile Include="EmitterNode.cpp" />
+    <ClCompile Include="FileDecoder.cpp" />
+    <ClCompile Include="FileEncoder.cpp" />
+    <ClCompile Include="Filters.cpp" />
+    <ClCompile Include="GeneratedAudio.cpp" />
+    <ClCompile Include="Interpolator.cpp" />
+    <ClCompile Include="ListenerNode.cpp" />
+    <ClCompile Include="PitchChange.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Recording.cpp" />
+    <ClCompile Include="Resampler.cpp" />
+    <ClCompile Include="RingBuffer.cpp" />
     <ClCompile Include="SimpleSound.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SoundAsset.cpp" />
     <ClCompile Include="SoundAttenuator.cpp" />
     <ClCompile Include="SoundCue.cpp" />
     <ClCompile Include="SoundEmitter.cpp" />
-    <ClCompile Include="SoundFilterNode.cpp" />
+    <ClCompile Include="DspFilterNodes.cpp" />
     <ClCompile Include="SoundInstance.cpp" />
     <ClCompile Include="SoundListener.cpp" />
+    <ClCompile Include="SoundNode.cpp" />
     <ClCompile Include="SoundNodeGraph.cpp" />
     <ClCompile Include="SoundSpace.cpp" />
     <ClCompile Include="SoundStandard.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="SoundTag.cpp" />
+    <ClCompile Include="VBAP.cpp" />
+    <ClCompile Include="VolumeModifier.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttenuatorNode.hpp" />
+    <ClInclude Include="AudioIOInterface.hpp" />
+    <ClInclude Include="Audio.hpp" />
+    <ClInclude Include="AudioMixer.hpp" />
+    <ClInclude Include="CustomAudioNode.hpp" />
+    <ClInclude Include="Definitions.hpp" />
+    <ClInclude Include="EmitterNode.hpp" />
+    <ClInclude Include="FileDecoder.hpp" />
+    <ClInclude Include="FileEncoder.hpp" />
+    <ClInclude Include="Filters.hpp" />
+    <ClInclude Include="GeneratedAudio.hpp" />
+    <ClInclude Include="Interpolator.hpp" />
+    <ClInclude Include="ListenerNode.hpp" />
+    <ClInclude Include="LockFreeQueue.hpp" />
+    <ClInclude Include="PitchChange.hpp" />
     <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="Recording.hpp" />
+    <ClInclude Include="Resampler.hpp" />
+    <ClInclude Include="RingBuffer.hpp" />
     <ClInclude Include="SimpleSound.hpp" />
     <ClInclude Include="Sound.hpp" />
+    <ClInclude Include="SoundAsset.hpp" />
     <ClInclude Include="SoundAttenuator.hpp" />
     <ClInclude Include="SoundCue.hpp" />
     <ClInclude Include="SoundEmitter.hpp" />
-    <ClInclude Include="SoundFilterNode.hpp" />
+    <ClInclude Include="DspFilterNodes.hpp" />
     <ClInclude Include="SoundInstance.hpp" />
     <ClInclude Include="SoundListener.hpp" />
+    <ClInclude Include="SoundNode.hpp" />
     <ClInclude Include="SoundNodeGraph.hpp" />
     <ClInclude Include="SoundSpace.hpp" />
     <ClInclude Include="SoundStandard.hpp" />
     <ClInclude Include="SoundSystem.hpp" />
     <ClInclude Include="SoundTag.hpp" />
+    <ClInclude Include="VBAP.hpp" />
+    <ClInclude Include="VolumeModifier.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(ZeroLibraries)\AudioEngine\AudioEngine.vcxproj">

@@ -9,16 +9,125 @@
 
 namespace Zero
 {
-class SoundInstance;
-typedef Array<HandleOf<SoundInstance>> InstanceList;
+typedef Array<HandleOf<SoundInstance>> InstanceListType;
 
 namespace Events
 {
-  DeclareEvent(AddedInstanceToTag);
-  DeclareEvent(TagHasNoInstances);
-}
 
-//---------------------------------------------------------------------------------------- Sound Tag
+DeclareEvent(AddedInstanceToTag);
+DeclareEvent(TagHasNoInstances);
+
+} // namespace Events
+
+//--------------------------------------------------------------------------------------- Tag Object
+
+class TagObject : public ReferenceCountedObject
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  TagObject();
+  ~TagObject();
+
+  // Add a new instance to this tag
+  void AddInstanceThreaded(SoundInstance* instance);
+  // Remove and instance from this tag
+  void RemoveInstanceThreaded(SoundInstance* instance);
+  // Returns the current volume modification
+  float GetVolume();
+  // Set the volume modification of this tag
+  void SetVolume(float volume, float time);
+  // Returns the current gain level of a frequency band
+  float GetEQBandGain(EqualizerBands::Enum whichBand);
+  // Sets the gain level of a frequency band
+  void SetEQBandGain(EqualizerBands::Enum whichBand, float gain);
+  // Sets the gain level of all bands over the specified number of seconds
+  void InterpolateEQBandsThreaded(float* values, float timeToInterpolate);
+  // Returns the current compressor threshold, in decibels
+  float GetCompressorThresholdDb();
+  // Sets the compressor threshold, in decibels
+  void SetCompressorThresholdDb(float decibels);
+  // Returns the current compressor attack time, in milliseconds
+  float GetCompressorAttackMs();
+  // Sets the compressor attack time, in milliseconds
+  void SetCompressorAttackMs(float milliseconds);
+  // Returns the current compressor release time, in milliseconds
+  float GetCompressorReleaseMs();
+  // Sets the compressor release time, in milliseconds
+  void SetCompressorReleaseMs(float milliseconds);
+  // Returns the current compressor ratio
+  float GetCompresorRatio();
+  // Sets the compressor ratio
+  void SetCompressorRatio(float ratio);
+  // Returns the current compressor knee width
+  float GetCompresorKneeWidth();
+  // Sets the compressor knee width
+  void SetCompressorKneeWidth(float knee);
+  // Removes this tag object from the system and all associated sound instances
+  void RemoveTag();
+  // Called by each tagged sound instance
+  void ProcessInstanceThreaded(BufferType* instanceOutput, unsigned channels, SoundInstance* instance);
+  // Accumulates audio output from all tagged sound instances into the mTotalInstanceOutput buffer
+  BufferType* GetTotalInstanceOutputThreaded(unsigned howManyFrames, unsigned channels);
+
+  // The maximum number of instances that can be played with this tag
+  int mInstanceLimit;
+  // If true, all associated sound instances are currently paused
+  Threaded<bool> mPaused;
+  // If true, the equalizer filter will be applied to tagged instances
+  Threaded<bool> mUseEqualizer;
+  // If true, the compressor filter will be applied
+  Threaded<bool> mUseCompressor;
+  // A tag whose audio will be used for the compressor input
+  Threaded<TagObject*> mCompressorInputTag;
+
+private:
+  void UpdateForMixThreaded(unsigned howManyFrames, unsigned channels);
+  void SetVolumeThreaded(float volume, float time);
+  void SetEQBandGainThreaded(EqualizerBands::Enum whichBand, float gain);
+
+  // Keeps track of whether this tag has updated for the current mix
+  unsigned mMixVersionThreaded;
+  // Used to hold the total audio output of all associated sound instances
+  BufferType mTotalInstanceOutputThreaded;
+  // Current volume adjustment
+  Threaded<float> mVolume;
+  // If true, volume adjustment should be applied to tagged instances
+  bool mModifyingVolumeThreaded;
+  // Used to store equalizer settings
+  float mEqualizerGainValues[EqualizerBands::Count];
+  float mEqualizerGainValuesThreaded[EqualizerBands::Count];
+  // The compressor filter applied to tagged instances
+  DynamicsProcessor CompressorObjectThreaded;
+  // The volume adjustment per sample created by the compressor filter
+  BufferType mCompressorVolumesThreaded;
+
+  float mCompressorThreshold;
+  float mCompressorAttackMs;
+  float mCompressorReleaseMs;
+  float mCompressorRatio;
+  float mCompressorKnee;
+
+  // Stores data for each tagged sound instance
+  struct InstanceData
+  {
+    InstanceData();
+    ~InstanceData();
+
+    // The volume modifier on the instance which is being used by the tag
+    InstanceVolumeModifier* mVolumeModifier;
+    // Equalizer filters for each tagged instance (relies on history of samples)
+    Equalizer* mEqualizer;
+  };
+
+  // Map of instance pointers to data objects
+  typedef Zero::HashMap<SoundInstance*, InstanceData*> InstanceDataMapType;
+  InstanceDataMapType DataPerInstanceThreaded;
+
+  Link<TagObject> link;
+};
+
+//-------------------------------------------------------------------------------- Sound Tag Display
 
 class SoundTagDisplay : public MetaDisplay
 {
@@ -28,15 +137,17 @@ class SoundTagDisplay : public MetaDisplay
   String GetDebugText(HandleParam object) override;
 };
 
+//---------------------------------------------------------------------------------------- Sound Tag
+
 /// Controls settings on all tagged SoundInstances
-class SoundTag : public DataResource, public Audio::ExternalNodeInterface
+class SoundTag : public DataResource
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   SoundTag();
   ~SoundTag();
 
-  void Serialize(Zero::Serializer &) override {}
+  void Serialize(Serializer &) override {}
   void Unload() override;
 
   /// Adds a new SoundInstance to this SoundTag.
@@ -50,7 +161,7 @@ public:
   void SetPaused(bool pause);
   /// This allows you to get all currently tagged SoundInstances. Using a foreach loop, 
   /// you can access any SoundInstance functionality on each of the tagged instances.
-  InstanceList::range GetInstances();
+  InstanceListType::range GetInstances();
   /// The number of SoundInstances currently associated with this SoundTag. 
   int GetInstanceCount();
   /// The volume adjustment applied to all tagged instances. 
@@ -120,11 +231,10 @@ public:
   void SetInstanceLimit(float limit);
     
 // Internals
-  Audio::TagObject* mTagObject;
-  InstanceList SoundInstanceList;
+  HandleOf<TagObject> mTagObject;
+  InstanceListType SoundInstanceList;
   Link<SoundTag> link;
 
-  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
   void CreateTag();
   void ReleaseTag();
 
@@ -142,4 +252,4 @@ public:
   SoundTagManager(BoundType* resourceType);
 };
 
-}
+} // namespace Zero

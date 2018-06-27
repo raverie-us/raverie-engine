@@ -28,7 +28,7 @@ struct InstanceAttenuation
   Link<InstanceAttenuation> link;
 };
 
-//------------------------------------------------------------------------------------ Sound Emitter
+//---------------------------------------------------------------------------- Sound Emitter Display
 
 class SoundEmitterDisplay : public MetaDisplay
 {
@@ -39,8 +39,10 @@ public:
   String GetDebugText(HandleParam object) override;
 };
 
+//------------------------------------------------------------------------------------ Sound Emitter
+
 /// Allows 3D positioning of sounds relative to SoundListeners
-class SoundEmitter : public Component, public Audio::ExternalNodeInterface
+class SoundEmitter : public Component
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -137,11 +139,11 @@ public:
 
 private:
   // Input node if no attenuation
-  Audio::EmitterNode* mEmitterObject;
+  HandleOf<EmitterNode> mEmitterObject;
   // After emitter node in graph
-  Audio::PitchNode* mPitchNode;
+  HandleOf<PitchNode> mPitchNode;
   // After pitch node in graph (this one is output)
-  Audio::VolumeNode* mVolumeNode;
+  HandleOf<VolumeNode> mVolumeNode;
   HandleOf<SoundNode> mSoundNodeInput;
   HandleOf<SoundNode> mSoundNodeOutput;
   float mPitch;
@@ -160,7 +162,6 @@ private:
 
   bool CheckAttenuatorInputs();
   void SetUpAttenuatorNode(SoundAttenuator* attenuator);
-  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
   SoundAttenuatorNode* IsAttenuatorInList(SoundAttenuator* attenuator);
 };
 

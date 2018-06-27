@@ -4,6 +4,12 @@
     <Filter Include="System">
       <UniqueIdentifier>{fc75caad-9a39-4e9b-9170-e342d5020f2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SoundNodes">
+      <UniqueIdentifier>{da0642bb-e999-4e78-99aa-c22b19252f43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{463711e1-7a08-4609-ae0a-e61d11fb6df5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Precompiled.cpp">
@@ -36,9 +42,6 @@
     <ClCompile Include="SoundAttenuator.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="SoundFilterNode.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="SoundListener.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -46,6 +49,72 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="SoundStandard.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="RingBuffer.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Resampler.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundAsset.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundNode.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumeModifier.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioMixer.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="AttenuatorNode.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterNode.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenerNode.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolator.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="PitchChange.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="VBAP.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomAudioNode.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedAudio.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="FileDecoder.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioIOInterface.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="FileEncoder.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Recording.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="DspFilterNodes.cpp">
+      <Filter>SoundNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Definitions.cpp">
       <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,14 +152,80 @@
     <ClInclude Include="SoundAttenuator.hpp">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="SoundFilterNode.hpp">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="SoundListener.hpp">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="SoundNodeGraph.hpp">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioMixer.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="FileDecoder.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="LockFreeQueue.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="FileEncoder.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuffer.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Resampler.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolator.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="PitchChange.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundAsset.hpp">
+      <Filter>SoundNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundNode.hpp">
+      <Filter>SoundNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeModifier.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AttenuatorNode.hpp">
+      <Filter>SoundNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterNode.hpp">
+      <Filter>SoundNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="VBAP.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerNode.hpp">
+      <Filter>SoundNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomAudioNode.hpp">
+      <Filter>SoundNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedAudio.hpp">
+      <Filter>SoundNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioIOInterface.hpp">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Recording.hpp">
+      <Filter>SoundNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="DspFilterNodes.hpp">
+      <Filter>SoundNodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -34,7 +34,7 @@ ZilchDefineType(SimpleSound, builder, type)
 
 //**************************************************************************************************
 SimpleSound::SimpleSound() : 
-  mInstance(NULL), 
+  mInstance(nullptr), 
   mStartPlaying(true), 
   mPositional(false)
 {
@@ -129,4 +129,4 @@ bool SimpleSound::GetIsPlaying()
     return false;
 }
 
-}//namespace Zero
+} // namespace Zero

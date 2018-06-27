@@ -9,36 +9,23 @@
 
 namespace Zero
 {
-/// The type of curve used for attenuating volume by SoundAttenuators.
-/// <param name="Linear">Volume reduces linearly with distance.</param>
-/// <param name="Squared">Volume reduces slowly at first then linearly.</param>
-/// <param name="Sine">Volume reduces linearly at first then slowly.</param>
-/// <param name="SquareRoot">Volume reduces quickly at first then linearly.</param>
-/// <param name="Log">Volume reduces logarithmically, mimicking sound in real life.</param>
-/// <param name="Custom">Sets the volume reduction using a SampleCurve resource.</param>
-DeclareEnum6(FalloffCurveType, Linear, Squared, Sine, SquareRoot, Log, Custom);
 
 //---------------------------------------------------------------------------- Sound Attenuator Node
 
 class SoundAttenuatorNode
 {
 public:
-  SoundAttenuatorNode(Audio::AttenuatorNode* node) : mNode(node) {}
+  SoundAttenuatorNode(AttenuatorNode* node) : mNode(node) {}
 
-  Audio::AttenuatorNode* mNode;
+  HandleOf<AttenuatorNode> mNode;
 
   Link<SoundAttenuatorNode> link;
-
-private:
-  ~SoundAttenuatorNode();
-
-  friend class SoundAttenuator;
 };
 
 //--------------------------------------------------------------------------------- Sound Attenuator 
 
 /// Decreases a positional sound's volume as the SoundEmitter gets further away from a SoundListener.
-class SoundAttenuator : public DataResource, public Audio::ExternalNodeInterface
+class SoundAttenuator : public DataResource
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);

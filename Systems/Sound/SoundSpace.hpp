@@ -9,13 +9,11 @@
 
 namespace Zero
 {
-class SoundSystem;
-class SoundInstance;
 
 //-------------------------------------------------------------------------------------- Sound Space
 
 /// Sound functionality associated with a Space
-class SoundSpace : public Component, public Audio::ExternalNodeInterface
+class SoundSpace : public Component
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -88,19 +86,15 @@ public:
   InList<SoundListener>* GetListeners();
 
 private:
-  Audio::PitchNode* mPitchNode;
-  Audio::VolumeNode* mVolumeNode;
-  float mVolume;
-  float mPitch;
-  bool mPause;
   bool mLevelPaused;
   bool mEditorMode;
-  HandleOf<SoundNode> mSoundNodeInput;
-  HandleOf<SoundNode> mSoundNodeOutput;
+  HandleOf<CombineAndPauseNode> mSoundNodeInput;
+  HandleOf<VolumeNode> mSoundNodeOutput;
+  HandleOf<PitchNode> mPitchNode;
   unsigned mSpaceNodeID;
 
   friend class SoundSystem;
   friend class SoundNodeGraph;
 };
 
-}
+} // namespace Zero

@@ -15,7 +15,7 @@ class NodePrintInfo
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
-  NodePrintInfo(int level, const String& name, int ID, bool hasOutput, Audio::SoundNode* node) : 
+  NodePrintInfo(int level, const String& name, int ID, bool hasOutput, HandleOf<SoundNode> node) : 
     mLevel(level),
     mName(name),
     mHasOutput(hasOutput),
@@ -37,7 +37,7 @@ public:
   bool mMoved;
   bool mPositionSet;
   int mID;
-  Audio::SoundNode* mNode;
+  HandleOf<SoundNode> mNode;
 };
 
 typedef Array<NodePrintInfo*> NodeInfoListType;
@@ -64,7 +64,7 @@ private:
   unsigned mNodeHeight;
   int mMaxLevel;
 
-  void CreateInfo(Audio::SoundNode* node, Audio::SoundNode* outputNode, int level);
+  void CreateInfo(HandleOf<SoundNode> node, HandleOf<SoundNode> outputNode, int level);
   void CheckForCollision(NodeInfoListType& list, bool checkOrphanNodes);
   void AddSpacePadding(NodePrintInfo* node, float addToXPos);
   void FirstPassPositioning(Array<NodeInfoListType>& infoByLevel, int largestLevel);
@@ -72,4 +72,4 @@ private:
   void PositionCleanUp(Array<NodeInfoListType>& infoByLevel, int largestLevel);
 };
 
-}
+} // namespace Zero

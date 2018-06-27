@@ -832,6 +832,8 @@ namespace Audio
       inputFrames = Pitch.GetInputFrameCount();
     }
 
+    // Check if mFrameIndex < starting frame
+
     // Store the starting frame
     unsigned startingFrameIndex = mFrameIndex;
     // Move the frame index forward

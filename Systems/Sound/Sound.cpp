@@ -12,24 +12,6 @@ namespace Zero
 //-------------------------------------------------------------------------------------------- Sound
 
 //**************************************************************************************************
-ZilchDefineType(SoundDisplay, builder, type)
-{
-}
-
-//**************************************************************************************************
-String SoundDisplay::GetName(HandleParam object)
-{
-  Sound* sound = object.Get<Sound*>(GetOptions::AssertOnNull);
-  return BuildString("Sound: ", sound->Name);
-}
-
-//**************************************************************************************************
-String SoundDisplay::GetDebugText(HandleParam object)
-{
-  return GetName(object);
-}
-
-//**************************************************************************************************
 String SoundToString(const BoundType* type, const byte* instance)
 {
   Sound* sound = (Sound*)instance;
@@ -48,13 +30,6 @@ ZilchDefineType(Sound, builder, type)
 }
 
 //**************************************************************************************************
-Sound::~Sound()
-{
-  if (mSoundAsset)
-    mSoundAsset->SetExternalInterface(nullptr);
-}
-
-//**************************************************************************************************
 void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileName, 
   AudioFileLoadType::Enum loadType)
 {
@@ -67,51 +42,44 @@ void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileN
     if (audioFile.IsOpen())
     {
       // Read in the header data
-      Audio::FileHeader header;
-      Status tempStatus;
-      audioFile.Read(tempStatus, (byte*)&header, sizeof(header));
+      FileHeader header;
+      audioFile.Read(status, (byte*)&header, sizeof(header));
       // Close the file so it doesn't interfere with creating the asset
       audioFile.Close();
 
-      float fileLength = (float)header.SamplesPerChannel / (float)Audio::SystemSampleRate;
+      if (status.Succeeded())
+      {
+        float fileLength = (float)header.SamplesPerChannel / (float)AudioConstants::cSystemSampleRate;
 
-      if (fileLength < mStreamFromMemoryLength)
-        loadType = AudioFileLoadType::Uncompressed;
-      else if (fileLength < mStreamFromFileLength)
-        loadType = AudioFileLoadType::StreamFromMemory;
-      else
-        loadType = AudioFileLoadType::StreamFromFile;
+        if (fileLength < mStreamFromMemoryLength)
+          loadType = AudioFileLoadType::Uncompressed;
+        else if (fileLength < mStreamFromFileLength)
+          loadType = AudioFileLoadType::StreamFromMemory;
+        else
+          loadType = AudioFileLoadType::StreamFromFile;
+      }
     }
   }
 
-  if (loadType == AudioFileLoadType::StreamFromFile)
-    mSoundAsset = new Audio::StreamingSoundAsset(status, fileName, Audio::FileLoadType::StreamedFromFile, this);
-  else if (loadType == AudioFileLoadType::StreamFromMemory)
-    mSoundAsset = new Audio::StreamingSoundAsset(status, fileName, Audio::FileLoadType::StreamedFromMemory, this);
+  if (loadType == AudioFileLoadType::StreamFromFile || loadType == AudioFileLoadType::StreamFromMemory)
+    mAsset = new StreamingSoundAsset(status, fileName, loadType, Name);
   else
-    mSoundAsset = new Audio::DecompressedSoundAsset(status, fileName, this);
-  
-  if (status.Succeeded())
-  {
-    mSoundAsset->mName = assetName;
-  }
-  else
+    mAsset = new DecompressedSoundAsset(status, fileName, Name);
+
+  if (status.Failed())
   {
     DoNotifyError("Error Creating Sound", status.Message);
 
-    if (mSoundAsset)
-    {
-      mSoundAsset->SetExternalInterface(nullptr);
-      mSoundAsset = nullptr;
-    }
+    if (mAsset)
+      SafeDelete(mAsset);
   }
 }
 
 //**************************************************************************************************
 float Sound::GetLength()
 {
-  if (mSoundAsset)
-    return mSoundAsset->GetLengthOfFile();
+  if (mAsset)
+    return mAsset->mFileLength;
   else
     return 0.0f;
 }
@@ -119,8 +87,8 @@ float Sound::GetLength()
 //**************************************************************************************************
 int Sound::GetChannels()
 {
-  if (mSoundAsset)
-    return mSoundAsset->GetChannels();
+  if (mAsset)
+    return mAsset->mChannels;
   else
     return 0;
 }
@@ -128,10 +96,30 @@ int Sound::GetChannels()
 //**************************************************************************************************
 bool Sound::GetStreaming()
 {
-  if (mSoundAsset)
-    return mSoundAsset->GetStreaming();
+  if (mAsset)
+    return mAsset->mStreaming;
   else
     return false;
+}
+
+//------------------------------------------------------------------------------------ Sound Display
+
+//**************************************************************************************************
+ZilchDefineType(SoundDisplay, builder, type)
+{
+}
+
+//**************************************************************************************************
+String SoundDisplay::GetName(HandleParam object)
+{
+  Sound* sound = object.Get<Sound*>(GetOptions::AssertOnNull);
+  return BuildString("Sound: ", sound->Name);
+}
+
+//**************************************************************************************************
+String SoundDisplay::GetDebugText(HandleParam object)
+{
+  return GetName(object);
 }
 
 //------------------------------------------------------------------------------------- Sound Loader
@@ -164,9 +152,6 @@ HandleOf<Resource> SoundLoader::LoadFromFile(ResourceEntry& entry)
 void SoundLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 {
   Sound* sound = (Sound*)resource;
-
-  if (sound->mSoundAsset)
-    sound->mSoundAsset->SetExternalInterface(nullptr);
 
   LoadSound(sound, entry);
 }
@@ -204,12 +189,6 @@ SoundManager::SoundManager(BoundType* resourceType)
   mOpenFileFilters.PushBack(FileDialogFilter("*.ogg"));
   mCanReload = true;
   DefaultResourceName = "DefaultSound";
-}
-
-//**************************************************************************************************
-void SoundManager::SetSystem(Audio::AudioSystemInterface* system)
-{
-  mSystem = system;
 }
 
 }//namespace Zero

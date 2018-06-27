@@ -11,7 +11,7 @@ namespace Zero
 {
 
 // Ranges
-ZilchDefineRange(InstanceList::range);
+ZilchDefineRange(InstanceListType::range);
 ZilchDefineRange(NodeInfoListType::range);
 
 // Enums
@@ -33,7 +33,7 @@ ZilchDefineStaticLibrary(SoundLibrary)
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRangeAs(InstanceList::range, "SoundInstanceRange");
+  ZilchInitializeRangeAs(InstanceListType::range, "SoundInstanceRange");
   ZilchInitializeRangeAs(NodeInfoListType::range, "NodeInfoListRange");
 
   // Enums
@@ -57,14 +57,20 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeType(CustomAudioNodeEvent);
   ZilchInitializeType(AudioByteDataEvent);
 
-  ZilchInitializeType(SoundListener);
   ZilchInitializeTypeAs(SoundSystem, "Audio");
+  ZilchInitializeType(SoundNode);
+  ZilchInitializeType(SimpleCollapseNode);
+  ZilchInitializeType(SoundAsset);
+  ZilchInitializeType(SoundListener);
+  ZilchInitializeType(ListenerNode);
   ZilchInitializeType(AudioSettings);
   ZilchInitializeType(SoundSpace);
   ZilchInitializeType(SoundAttenuatorDisplay);
   ZilchInitializeType(SoundAttenuator);
+  ZilchInitializeType(AttenuatorNode);
   ZilchInitializeType(SoundEmitterDisplay);
   ZilchInitializeType(SoundEmitter);
+  ZilchInitializeType(EmitterNode);
   ZilchInitializeType(SoundInstance);
   ZilchInitializeType(SoundEntryDisplay);
   ZilchInitializeType(SoundEntry);
@@ -75,7 +81,6 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeType(SoundDisplay);
   ZilchInitializeType(Sound);
   ZilchInitializeType(SimpleSound);
-  ZilchInitializeType(SoundNode);
   ZilchInitializeType(SoundBuffer);
   ZilchInitializeType(CustomAudioNode);
   ZilchInitializeType(GeneratedWaveNode);
@@ -103,7 +108,15 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeType(SaveAudioNode);
   ZilchInitializeType(SoundTagDisplay);
   ZilchInitializeType(SoundTag);
+  ZilchInitializeType(TagObject);
   ZilchInitializeType(NodePrintInfo);
+  ZilchInitializeType(SimpleCollapseNode);
+  ZilchInitializeType(OutputNode);
+  ZilchInitializeType(CombineNode);
+  ZilchInitializeType(CombineAndPauseNode);
+  ZilchInitializeType(SoundAsset);
+  ZilchInitializeType(DecompressedSoundAsset);
+  ZilchInitializeType(StreamingSoundAsset);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }

@@ -13,13 +13,12 @@ namespace Zero
 //-------------------------------------------------------------------------------------------- Sound
 
 /// The resource for a single audio file.
-class Sound : public Resource, Audio::ExternalNodeInterface
+class Sound : public Resource
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   
-  Sound() :mSoundAsset(nullptr) {}
-  ~Sound();
+  Sound() : mAsset(nullptr) {}
 
   /// The length of the audio file, in seconds.
   float GetLength();
@@ -29,13 +28,16 @@ public:
   bool GetStreaming();
 
 // Internals
-  Audio::SoundAsset* mSoundAsset;
+  HandleOf<SoundAsset> mAsset;
+  
   const float mStreamFromMemoryLength = 30.0f;
   const float mStreamFromFileLength = 60.0f;
 
   void CreateAsset(Status& status, StringParam assetName, StringParam fileName, 
     AudioFileLoadType::Enum loadType);
 };
+
+//------------------------------------------------------------------------------------ Sound Display
 
 class SoundDisplay : public MetaDisplay
 {
@@ -68,8 +70,6 @@ public:
   DeclareResourceManager(SoundManager, Sound);
   SoundManager(BoundType* resourceType);
 
-  Audio::AudioSystemInterface* mSystem;
-  void SetSystem(Audio::AudioSystemInterface *system);
 };  
 
 

@@ -12,20 +12,22 @@ namespace Zero
 namespace Tags
 {
 DeclareTag(Sound);
-}
+} // namespace Tags
 
 namespace Events
 {
-  DeclareEvent(MIDINoteOn);
-  DeclareEvent(MIDINoteOff);
-  DeclareEvent(MIDIPitchWheel);
-  DeclareEvent(MIDIVolume);
-  DeclareEvent(MIDIModWheel);
-  DeclareEvent(MIDIOtherControl);
-  DeclareEvent(SoundInstancePlayed);
-  DeclareEvent(MicrophoneUncompressedFloatData);
-  DeclareEvent(MicrophoneCompressedByteData);
-}
+
+DeclareEvent(MIDINoteOn);
+DeclareEvent(MIDINoteOff);
+DeclareEvent(MIDIPitchWheel);
+DeclareEvent(MIDIVolume);
+DeclareEvent(MIDIModWheel);
+DeclareEvent(MIDIOtherControl);
+DeclareEvent(SoundInstancePlayed);
+DeclareEvent(MicrophoneUncompressedFloatData);
+DeclareEvent(MicrophoneCompressedByteData);
+
+} // namespace Events
 
 //-------------------------------------------------------------------------------------- Sound Event
 
@@ -35,6 +37,10 @@ class SoundEvent : public Event
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  SoundEvent() : mPointer(nullptr) {}
+  SoundEvent(void* pointer) : mPointer(pointer) {}
+
+  void* mPointer;
 };
 
 //--------------------------------------------------------------------------------------- MIDI Event
@@ -96,15 +102,10 @@ public:
 /// <param name="SevenOne">Audio will be produced using a typical 7.1 speaker configuration.</param>
 DeclareEnum6(AudioMixTypes, AutoDetect, Mono, Stereo, Quad, FiveOne, SevenOne);
 
-/// The latency setting used by the audio system.
-/// <param name="Low">The default setting, where audio will have a low amount of latency.</param>
-/// <param name="High">Audio will have a higher latency. This can fix some audio problems in some cases.</param>
-DeclareEnum2(AudioLatency, Low, High);
-
 //------------------------------------------------------------------------------------- Sound System
 
 ///SoundSystem manages audio for the engine.
-class SoundSystem : public System, Audio::ExternalSystemInterface
+class SoundSystem : public System
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -147,75 +148,75 @@ public:
   int GetOutputChannels();
 
   /// Creates a new VolumeNode object
-  static VolumeNode* VolumeNode() { return new Zero::VolumeNode(); }
+  static VolumeNode* VolumeNode();
   /// Creates a new PanningNode object
-  static PanningNode* PanningNode() { return new Zero::PanningNode(); }
+  static PanningNode* PanningNode();
   /// Creates a new PitchNode object
-  static PitchNode* PitchNode() { return new Zero::PitchNode(); }
+  static PitchNode* PitchNode();
   /// Creates a new LowPassNode object
-  static LowPassNode* LowPassNode() { return new Zero::LowPassNode(); }
+  static LowPassNode* LowPassNode();
   /// Creates a new HighPassNode object
-  static HighPassNode* HighPassNode() { return new Zero::HighPassNode(); }
+  static HighPassNode* HighPassNode();
   /// Creates a new BandPassNode object
-  static BandPassNode* BandPassNode() { return new Zero::BandPassNode(); }
+  static BandPassNode* BandPassNode();
   /// Creates a new EqualizerNode object
-  static EqualizerNode* EqualizerNode() { return new Zero::EqualizerNode(); }
+  static EqualizerNode* EqualizerNode();
   /// Creates a new ReverbNode object
-  static ReverbNode* ReverbNode() { return new Zero::ReverbNode(); }
+  static ReverbNode* ReverbNode();
   /// Creates a new DelayNode object
-  static DelayNode* DelayNode() { return new Zero::DelayNode(); }
+  static DelayNode* DelayNode();
   /// Creates a new FlangerNode object
-  static FlangerNode* FlangerNode() { return new Zero::FlangerNode(); }
+  static FlangerNode* FlangerNode();
   /// Creates a new ChorusNode object
-  static ChorusNode* ChorusNode() { return new Zero::ChorusNode(); }
+  static ChorusNode* ChorusNode();
   /// Creates a new CompressorNode object
-  static CompressorNode* CompressorNode() { return new Zero::CompressorNode(); }
+  static CompressorNode* CompressorNode();
   /// Creates a new ExpanderNode object
-  static ExpanderNode* ExpanderNode() { return new Zero::ExpanderNode(); }
+  static ExpanderNode* ExpanderNode();
   /// Creates a new CustomAudioNode object
-  static CustomAudioNode* CustomAudioNode() { return new Zero::CustomAudioNode(); }
+  static CustomAudioNode* CustomAudioNode();
   /// Creates a new SoundBuffer object
-  static SoundBuffer* SoundBuffer() { return new Zero::SoundBuffer(); }
+  static SoundBuffer* SoundBuffer();
   /// Creates a new GeneratedWaveNode object
-  static GeneratedWaveNode* GeneratedWaveNode() { return new Zero::GeneratedWaveNode(); }
+  static GeneratedWaveNode* GeneratedWaveNode();
   /// Creates a new RecordingNode object
-  static RecordingNode* RecordingNode() { return new Zero::RecordingNode(); }
+  static RecordingNode* RecordingNode();
   /// Creates a new AddNoiseNode object
-  static AddNoiseNode* AddNoiseNode() { return new Zero::AddNoiseNode(); }
+  static AddNoiseNode* AddNoiseNode();
   /// Creates a new AdditiveSynthNode object
-  static AdditiveSynthNode* AdditiveSynthNode() { return new Zero::AdditiveSynthNode(); }
+  static AdditiveSynthNode* AdditiveSynthNode();
   /// Creates a new ModulationNode object
-  static ModulationNode* ModulationNode() { return new Zero::ModulationNode(); }
+  static ModulationNode* ModulationNode();
   /// Creates a new MicrophoneInputNode object
-  static MicrophoneInputNode* MicrophoneInputNode() { return new Zero::MicrophoneInputNode(); }
+  static MicrophoneInputNode* MicrophoneInputNode();
   /// Creates a new SaveAudioNode object
-  static SaveAudioNode* SaveAudioNode() { return new Zero::SaveAudioNode(); }
+  static SaveAudioNode* SaveAudioNode();
   /// Creates a new GranularSynthNode object
-  static GranularSynthNode* GranularSynthNode() { return new Zero::GranularSynthNode(); }
+  static GranularSynthNode* GranularSynthNode();
+
+  /// If true, the random number generator used by audio objects in this SoundSpace will be seeded randomly.
+  bool mUseRandomSeed;
+  /// Value to seed the random number generator with.
+  uint mSeed;
 
 //Internals
   void Update();
   void StopPreview();
-  float PitchToSemitones(float pitch);
-  float SemitonesToPitch(float semitones);
-  float VolumeToDecibels(float volume);
-  float DecibelsToVolume(float decibels);
-  void SendAudioEvent(Audio::AudioEventTypes::Enum eventType) override;
-  void SendAudioEventData(Audio::EventData* data) override;
-  void SendAudioError(const Zero::String message) override;
   void AddSoundSpace(SoundSpace* space, bool isEditor);
   void RemoveSoundSpace(SoundSpace* space, bool isEditor);
+
+  AudioMixer Mixer;
 
   unsigned mCounter;
   InList<SoundTag> mSoundTags;
   HandleOf<SoundInstance> mPreviewInstance;
   String mAudioMessage;
   SoundNodeGraph NodeGraph;
-  HandleOf<SoundNode> mOutputNode;
+  HandleOf<CombineNode> mOutputNode;
   int mSoundSpaceCounter;
+  Math::Random mRandom;
 
 private:
-  Audio::AudioSystemInterface* mAudioSystem;
   AudioLatency::Enum mLatency;
   bool mSendMicEvents;
   bool mSendCompressedMicEvents;
@@ -231,7 +232,7 @@ System* CreateSoundSystem();
 namespace Z
 {
   extern SoundSystem* gSound;
-}
+} // namespace Z
 
 //----------------------------------------------------------------------------------- Sound Settings
 
@@ -240,10 +241,7 @@ class AudioSettings : public Component
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-  AudioSettings() : 
-    mSystemVolume(1.0f), 
-    mMixType(AudioMixTypes::AutoDetect)
-  {}
+  AudioSettings();
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -268,12 +266,20 @@ public:
   /// but can lead to a slight delay in the audio
   AudioLatency::Enum GetLatencySetting();
   void SetLatencySetting(AudioLatency::Enum latency);
+  /// If true, the random number generator used by audio objects in this SoundSpace will be seeded randomly.
+  bool GetUseRandomSeed();
+  void SetUseRandomSeed(bool useRandom);
+  /// Value to seed the random number generator with.
+  uint GetSeed();
+  void SetSeed(uint seed);
 
 private:
   float mSystemVolume;
   float mMinVolumeThreshold;
   AudioMixTypes::Enum mMixType;
   AudioLatency::Enum mLatency;
+  bool mUseRandomSeed;
+  uint mSeed;
 };
 
 }//namespace Zero

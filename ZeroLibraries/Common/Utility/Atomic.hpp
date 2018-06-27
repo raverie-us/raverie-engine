@@ -41,6 +41,7 @@ void* AtomicLoad(void* volatile* target);
 s8  AtomicExchange(volatile s8*  target, s8  value);
 s16 AtomicExchange(volatile s16* target, s16 value);
 s32 AtomicExchange(volatile s32* target, s32 value);
+u32 AtomicExchange(volatile u32* target, u32 value);
 s64 AtomicExchange(volatile s64* target, s64 value);
 void* AtomicExchange(void* volatile* target, void* value);
 

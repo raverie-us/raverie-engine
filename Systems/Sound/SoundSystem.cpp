@@ -9,28 +9,35 @@
 
 namespace Zero
 {
+
 namespace Tags
 {
-  DefineTag(Sound);
-}
+
+DefineTag(Sound);
+
+} // namespace Tags
 
 namespace Events
 {
-  DefineEvent(MIDINoteOn);
-  DefineEvent(MIDINoteOff);
-  DefineEvent(MIDIPitchWheel);
-  DefineEvent(MIDIVolume);
-  DefineEvent(MIDIModWheel);
-  DefineEvent(MIDIOtherControl);
-  DefineEvent(SoundInstancePlayed);
-  DefineEvent(MicrophoneUncompressedFloatData);
-  DefineEvent(MicrophoneCompressedByteData);
-}
+
+DefineEvent(MIDINoteOn);
+DefineEvent(MIDINoteOff);
+DefineEvent(MIDIPitchWheel);
+DefineEvent(MIDIVolume);
+DefineEvent(MIDIModWheel);
+DefineEvent(MIDIOtherControl);
+DefineEvent(SoundInstancePlayed);
+DefineEvent(MicrophoneUncompressedFloatData);
+DefineEvent(MicrophoneCompressedByteData);
+
+} // namespace Events
 
 namespace Z
 {
-  SoundSystem* gSound;
-}
+
+SoundSystem* gSound;
+
+} // namespace Z
 
 System* CreateSoundSystem()
 {
@@ -134,7 +141,9 @@ SoundSystem::SoundSystem() :
   mLatency(AudioLatency::Low),
   mSendMicEvents(false),
   mSendCompressedMicEvents(false),
-  mSoundSpaceCounter(0)
+  mSoundSpaceCounter(0),
+  mUseRandomSeed(true),
+  mSeed(0)
 {
 
 }
@@ -147,15 +156,9 @@ SoundSystem::~SoundSystem()
   if (previewInstance)
   {
     previewInstance->Stop();
-    previewInstance->mSoundNode->mNode = nullptr;
-    mPreviewInstance = nullptr;
   }
 
-  mOutputNode->mNode = nullptr;
-
-  Zero::Status status;
-  mAudioSystem->StopSystem(status);
-  SafeDelete(mAudioSystem);
+  Mixer.ShutDown();
 }
 
 //**************************************************************************************************
@@ -165,21 +168,20 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
 
   //Create a System object and initialize.
   Zero::Status status;
-  mAudioSystem = new Audio::AudioSystemInterface(this);
-  mAudioSystem->StartSystem(status);
+  Mixer.StartMixing(status);
   if (status.Failed())
     DoNotifyWarning("Audio Initialization Unsuccessful", status.Message);
 
-  SoundNode* node = new SoundNode();
-  node->mNode = new Audio::CombineNode("AudioOutput", mCounter++, nullptr);
-  mAudioSystem->AddNodeToOutput(node->mNode);
-  mOutputNode = node;
+  mOutputNode = new CombineNode("AudioOutput", mCounter++);
+  Mixer.FinalOutputNode->AddInputNode(mOutputNode);
   
   InitializeResourceManager(SoundManager);
-  SoundManager::GetInstance()->SetSystem(mAudioSystem);
   InitializeResourceManager(SoundCueManager);
   InitializeResourceManager(SoundTagManager);
   InitializeResourceManager(SoundAttenuatorManager);
+
+  if (!mUseRandomSeed)
+    mRandom.SetSeed(mSeed);
 }
 
 //**************************************************************************************************
@@ -191,53 +193,47 @@ NodeInfoListType::range SoundSystem::GetNodeGraphInfo()
 //**************************************************************************************************
 float SoundSystem::GetSystemVolume()
 {
-  return mAudioSystem->GetVolume();
+  return Mixer.GetVolume();
 }
 
 //**************************************************************************************************
 void SoundSystem::SetSystemVolume(float volume)
 {
-  mAudioSystem->SetVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue));
+  Mixer.SetVolume(Math::Max(volume, 0.0f));
 }
 
 //**************************************************************************************************
 bool SoundSystem::GetMuteAllAudio()
 {
-  return mAudioSystem->GetMuteAllAudio();
+  return Mixer.GetMuteAllAudio();
 }
 
 //**************************************************************************************************
 void SoundSystem::SetMuteAllAudio(bool muteAudio)
 {
-  mAudioSystem->SetMuteAllAudio(muteAudio);
+  Mixer.SetMuteAllAudio(muteAudio);
 }
 
 //**************************************************************************************************
 float SoundSystem::GetPeakOutputLevel()
 {
-  return mAudioSystem->GetPeakOutputVolume();
+  return Mixer.GetPeakOutputVolume();
 }
 
 //**************************************************************************************************
 float SoundSystem::GetRMSOutputLevel()
 {
-  return mAudioSystem->GetRMSOutputVolume();
+  return Mixer.GetRMSOutputVolume();
 }
 
 //**************************************************************************************************
 float SoundSystem::GetPeakInputLevel()
 {
-  Status status;
-  float volume = mAudioSystem->GetPeakInputVolume(status);
-  
-  if (status.Failed())
-    DoNotifyException("Audio Error", status.Message);
-
-  return volume;
+  return Mixer.GetPeakInputVolume();
 }
 
 //**************************************************************************************************
-Zero::AudioLatency::Enum SoundSystem::GetLatencySetting()
+AudioLatency::Enum SoundSystem::GetLatencySetting()
 {
   return mLatency;
 }
@@ -247,10 +243,7 @@ void SoundSystem::SetLatencySetting(AudioLatency::Enum latency)
 {
   mLatency = latency;
 
-  if (latency == AudioLatency::High)
-    mAudioSystem->UseHighLatency(true);
-  else
-    mAudioSystem->UseHighLatency(false);
+  Mixer.SetLatency(latency);
 }
 
 //**************************************************************************************************
@@ -263,7 +256,7 @@ bool SoundSystem::GetDispatchMicrophoneUncompressedFloatData()
 void SoundSystem::SetDispatchMicrophoneUncompressedFloatData(bool dispatchData)
 {
   mSendMicEvents = dispatchData;
-  mAudioSystem->SetSendUncompressedMicInput(dispatchData);
+  Mixer.SetSendUncompressedMicInput(dispatchData);
 }
 
 //**************************************************************************************************
@@ -276,24 +269,185 @@ bool SoundSystem::GetDispatchMicrophoneCompressedByteData()
 void SoundSystem::SetDispatchMicrophoneCompressedByteData(bool dispatchData)
 {
   mSendCompressedMicEvents = dispatchData;
-  mAudioSystem->SetSendCompressedMicInput(dispatchData);
+  Mixer.SetSendCompressedMicInput(dispatchData);
 }
 
 //**************************************************************************************************
 int SoundSystem::GetOutputChannels()
 {
-  return mAudioSystem->GetOutputChannels();
+  return Mixer.GetOutputChannels();
+}
+
+//**************************************************************************************************
+VolumeNode* SoundSystem::VolumeNode()
+{
+  Zero::VolumeNode* node = new Zero::VolumeNode("VolumeNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+PanningNode* SoundSystem::PanningNode()
+{
+  Zero::PanningNode* node = new Zero::PanningNode("PanningNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+PitchNode* SoundSystem::PitchNode()
+{
+  Zero::PitchNode* node = new Zero::PitchNode("PitchNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+LowPassNode* SoundSystem::LowPassNode()
+{
+  Zero::LowPassNode* node = new Zero::LowPassNode("LowPassNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+HighPassNode* SoundSystem::HighPassNode()
+{
+  Zero::HighPassNode* node = new Zero::HighPassNode("HighPassNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+BandPassNode* SoundSystem::BandPassNode()
+{
+  Zero::BandPassNode* node = new Zero::BandPassNode("BandPassNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+EqualizerNode* SoundSystem::EqualizerNode()
+{
+  Zero::EqualizerNode* node = new Zero::EqualizerNode("EqualizerNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+ReverbNode* SoundSystem::ReverbNode()
+{
+  Zero::ReverbNode* node = new Zero::ReverbNode("ReverbNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+DelayNode* SoundSystem::DelayNode()
+{
+  Zero::DelayNode* node = new Zero::DelayNode("DelayNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+FlangerNode* SoundSystem::FlangerNode()
+{
+  Zero::FlangerNode* node = new Zero::FlangerNode("FlangerNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+ChorusNode* SoundSystem::ChorusNode()
+{
+  Zero::ChorusNode* node = new Zero::ChorusNode("ChorusNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+CompressorNode* SoundSystem::CompressorNode()
+{
+  Zero::CompressorNode* node = new Zero::CompressorNode("CompressorNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+ExpanderNode* SoundSystem::ExpanderNode()
+{
+  Zero::ExpanderNode* node = new Zero::ExpanderNode("ExpanderNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+CustomAudioNode* SoundSystem::CustomAudioNode()
+{
+  Zero::CustomAudioNode* node = new Zero::CustomAudioNode("CustomAudioNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+SoundBuffer* SoundSystem::SoundBuffer()
+{
+  Zero::SoundBuffer* buffer = new Zero::SoundBuffer();
+  return buffer;
+}
+
+//**************************************************************************************************
+GeneratedWaveNode* SoundSystem::GeneratedWaveNode()
+{
+  Zero::GeneratedWaveNode* node = new Zero::GeneratedWaveNode("GeneratedWaveNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+RecordingNode* SoundSystem::RecordingNode()
+{
+  Zero::RecordingNode* node = new Zero::RecordingNode("RecordingNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+AddNoiseNode* SoundSystem::AddNoiseNode()
+{
+  Zero::AddNoiseNode* node = new Zero::AddNoiseNode("AddNoiseNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+AdditiveSynthNode* SoundSystem::AdditiveSynthNode()
+{
+  Zero::AdditiveSynthNode* node = new Zero::AdditiveSynthNode("AdditiveSynthNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+ModulationNode* SoundSystem::ModulationNode()
+{
+  Zero::ModulationNode* node = new Zero::ModulationNode("ModulationNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+MicrophoneInputNode* SoundSystem::MicrophoneInputNode()
+{
+  Zero::MicrophoneInputNode* node = new Zero::MicrophoneInputNode("MicrophoneInputNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+SaveAudioNode* SoundSystem::SaveAudioNode()
+{
+  Zero::SaveAudioNode* node = new Zero::SaveAudioNode("SaveAudioNode", Z::gSound->mCounter++);
+  return node;
+}
+
+//**************************************************************************************************
+GranularSynthNode* SoundSystem::GranularSynthNode()
+{
+  Zero::GranularSynthNode* node = new Zero::GranularSynthNode("GranularSynthNode", Z::gSound->mCounter++);
+  return node;
 }
 
 //**************************************************************************************************
 void SoundSystem::Update()
 {
-  // Update audio system 
-  mAudioSystem->Update();
-
   // Update spaces (also updates emitters)
   forRange(SoundSpace& space, mSpaces.All())
     space.Update();
+
+  // Update audio system 
+  Mixer.Update();
 }
 
 //**************************************************************************************************
@@ -305,114 +459,6 @@ void SoundSystem::StopPreview()
     sound->Stop();
     mPreviewInstance = nullptr;
   }
-}
-
-//**************************************************************************************************
-float SoundSystem::PitchToSemitones(float pitch)
-{
-  if (pitch == 0)
-    return 0;
-  else
-    return 3986.0f * Math::Log10(Math::Exp2(pitch)) / 100.0f;
-}
-
-//**************************************************************************************************
-float SoundSystem::SemitonesToPitch(float semitone)
-{
-  return Math::Log2(Math::Exp2(semitone / 12.0f));
-}
-
-//**************************************************************************************************
-float SoundSystem::VolumeToDecibels(float volume)
-{
-  if (volume == 0.0f)
-    return -100.0f;
-  else
-  {
-    float decibels = 20.0f * Math::Log10(volume);
-    if (decibels < -100.0f)
-      decibels = -100.0f;
-    return decibels;
-  }
-}
-
-//**************************************************************************************************
-float SoundSystem::DecibelsToVolume(float decibels)
-{
-  return Math::Pow(10.0f, decibels / 20.0f);
-}
-
-//**************************************************************************************************
-void SoundSystem::SendAudioEvent(const Audio::AudioEventTypes::Enum eventType)
-{
-  if (eventType == Audio::AudioEventTypes::AudioClipping)
-    DoNotifyWarning("Audio Error", "Audio is too loud and is being clipped. Reduce volume or number of sounds to avoid audio problems.");
-}
-
-//**************************************************************************************************
-void SoundSystem::SendAudioEventData(Audio::EventData* data)
-{
-  if (data->mEventType == Audio::AudioEventTypes::MidiNoteOn)
-  {
-    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
-    MidiEvent event((float)midiData->mData1, midiData->mData2, midiData->mData3);
-    DispatchEvent(Events::MIDINoteOn, &event);
-  }
-  else if (data->mEventType == Audio::AudioEventTypes::MidiNoteOff)
-  {
-    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
-    MidiEvent event((float)midiData->mData1, midiData->mData2, 0);
-    DispatchEvent(Events::MIDINoteOff, &event);
-  }
-  else if (data->mEventType == Audio::AudioEventTypes::MidiPitchWheel)
-  {
-    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
-    MidiEvent event((float)midiData->mData1, 0, midiData->mData2);
-    DispatchEvent(Events::MIDIPitchWheel, &event);
-  }
-  else if (data->mEventType == Audio::AudioEventTypes::MidiVolume)
-  {
-    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
-    MidiEvent event((float)midiData->mData1, 0, midiData->mData2);
-    DispatchEvent(Events::MIDIVolume, &event);
-  }
-  else if (data->mEventType == Audio::AudioEventTypes::MidiModWheel)
-  {
-    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
-    MidiEvent event((float)midiData->mData1, 0, midiData->mData2);
-    DispatchEvent(Events::MIDIModWheel, &event);
-  }
-  else if (data->mEventType == Audio::AudioEventTypes::MidiControl)
-  {
-    Audio::EventData3<int, float, float>* midiData = (Audio::EventData3<int, float, float>*)data;
-    MidiEvent event((float)midiData->mData1, midiData->mData2, midiData->mData3);
-    DispatchEvent(Events::MIDIOtherControl, &event);
-  }
-  else if (data->mEventType == Audio::AudioEventTypes::MicInputData)
-  {
-    Array<float>* buffer = ((Audio::EventData1<Array<float>*>*)data)->mData;
-    AudioFloatDataEvent event;
-    event.Channels = 2;
-    event.AudioData = ZilchAllocate(ArrayClass<float>);
-    event.AudioData->NativeArray = *buffer;
-    DispatchEvent(Events::MicrophoneUncompressedFloatData, &event);
-  }
-  else if (data->mEventType == Audio::AudioEventTypes::CompressedMicInputData)
-  {
-    Array<byte>* buffer = ((Audio::EventData1<Array<byte>*>*)data)->mData;
-    AudioByteDataEvent event;
-    event.AudioData = ZilchAllocate(ArrayClass<byte>);
-    event.AudioData->NativeArray = *buffer;
-    DispatchEvent(Events::MicrophoneCompressedByteData, &event);
-  }
-
-  delete data;
-}
-
-//**************************************************************************************************
-void SoundSystem::SendAudioError(const Zero::String message)
-{
-  DoNotifyWarning("Audio Error", message.c_str());
 }
 
 //**************************************************************************************************
@@ -465,9 +511,23 @@ ZilchDefineType(AudioSettings, builder, type)
 
   ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
   ZilchBindGetterSetterProperty(MuteAllAudio);
+  ZilchBindGetterSetterProperty(UseRandomSeed)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(Seed)->ZeroFilterEquality(mUseRandomSeed, bool, false);
   ZilchBindGetterSetterProperty(MixType); 
   ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
   ZilchBindGetterSetterProperty(LatencySetting);
+}
+
+//**************************************************************************************************
+AudioSettings::AudioSettings() :
+  mSystemVolume(1.0f),
+  mMinVolumeThreshold(0.015f),
+  mMixType(AudioMixTypes::AutoDetect),
+  mLatency(AudioLatency::Low),
+  mUseRandomSeed(true),
+  mSeed(0)
+{
+
 }
 
 //**************************************************************************************************
@@ -477,30 +537,36 @@ void AudioSettings::Serialize(Serializer& stream)
   SerializeEnumNameDefault(AudioMixTypes, mMixType, AudioMixTypes::AutoDetect);
   SerializeNameDefault(mMinVolumeThreshold, 0.015f);
   SerializeEnumNameDefault(AudioLatency, mLatency, AudioLatency::Low);
+  SerializeNameDefault(mUseRandomSeed, true);
+  SerializeNameDefault(mSeed, 0u);
 }
 
 //**************************************************************************************************
 void AudioSettings::Initialize(CogInitializer& initializer)
 {
-  Z::gSound->mAudioSystem->SetVolume(mSystemVolume);
+  Z::gSound->Mixer.SetVolume(mSystemVolume);
   SetMixType(mMixType);
-  Z::gSound->mAudioSystem->SetMinimumVolumeThreshold(mMinVolumeThreshold);
+  Z::gSound->Mixer.SetMinimumVolumeThreshold(mMinVolumeThreshold);
   Z::gSound->SetLatencySetting(mLatency);
+  Z::gSound->mUseRandomSeed = mUseRandomSeed;
+  Z::gSound->mSeed = mSeed;
+  if (mUseRandomSeed)
+    Z::gSound->mRandom.SetSeed(mSeed);
 }
 
 //**************************************************************************************************
 float AudioSettings::GetSystemVolume()
 {
-  mSystemVolume = Z::gSound->mAudioSystem->GetVolume();
+  mSystemVolume = Z::gSound->Mixer.GetVolume();
   return mSystemVolume;
 }
 
 //**************************************************************************************************
 void AudioSettings::SetSystemVolume(float volume)
 {
-  mSystemVolume = Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue);
+  mSystemVolume = Math::Clamp(volume, 0.0f, AudioConstants::cMaxVolumeValue);
 
-  Z::gSound->mAudioSystem->SetVolume(mSystemVolume);
+  Z::gSound->Mixer.SetVolume(mSystemVolume);
 }
 
 //**************************************************************************************************
@@ -529,25 +595,25 @@ void AudioSettings::SetMixType(AudioMixTypes::Enum mixType)
   switch (mixType)
   {
   case AudioMixTypes::AutoDetect:
-    Z::gSound->mAudioSystem->SetOutputChannels(0);
+    Z::gSound->Mixer.SetOutputChannels(0);
     break;
   case AudioMixTypes::Mono:
-    Z::gSound->mAudioSystem->SetOutputChannels(1);
+    Z::gSound->Mixer.SetOutputChannels(1);
     break;
   case AudioMixTypes::Stereo:
-    Z::gSound->mAudioSystem->SetOutputChannels(2);
+    Z::gSound->Mixer.SetOutputChannels(2);
     break;
   case AudioMixTypes::Quad:
-    Z::gSound->mAudioSystem->SetOutputChannels(4);
+    Z::gSound->Mixer.SetOutputChannels(4);
     break;
   case AudioMixTypes::FiveOne:
-    Z::gSound->mAudioSystem->SetOutputChannels(6);
+    Z::gSound->Mixer.SetOutputChannels(6);
     break;
   case AudioMixTypes::SevenOne:
-    Z::gSound->mAudioSystem->SetOutputChannels(8);
+    Z::gSound->Mixer.SetOutputChannels(8);
     break;
   default:
-    Z::gSound->mAudioSystem->SetOutputChannels(2);
+    Z::gSound->Mixer.SetOutputChannels(2);
     break;
   }
 }
@@ -562,7 +628,7 @@ float AudioSettings::GetMinVolumeThreshold()
 void AudioSettings::SetMinVolumeThreshold(float volume)
 {
   mMinVolumeThreshold = Math::Clamp(volume, 0.0f, 0.5f);
-  Z::gSound->mAudioSystem->SetMinimumVolumeThreshold(mMinVolumeThreshold);
+  Z::gSound->Mixer.SetMinimumVolumeThreshold(mMinVolumeThreshold);
 }
 
 //**************************************************************************************************
@@ -576,6 +642,44 @@ void AudioSettings::SetLatencySetting(AudioLatency::Enum latency)
 {
   mLatency = latency;
   Z::gSound->SetLatencySetting(latency);
+}
+
+//**************************************************************************************************
+bool AudioSettings::GetUseRandomSeed()
+{
+  return mUseRandomSeed;
+}
+
+//**************************************************************************************************
+void AudioSettings::SetUseRandomSeed(bool useRandom)
+{
+  if (useRandom && !mUseRandomSeed)
+  {
+    Z::gSound->mRandom.SetSeed(Z::gSound->mRandom.mGlobalSeed);
+  }
+  else if (!useRandom && mUseRandomSeed)
+  {
+    Z::gSound->mRandom.SetSeed(mSeed);
+  }
+
+  mUseRandomSeed = useRandom;
+  Z::gSound->mUseRandomSeed = useRandom;
+}
+
+//**************************************************************************************************
+uint AudioSettings::GetSeed()
+{
+  return mSeed;
+}
+
+//**************************************************************************************************
+void AudioSettings::SetSeed(uint seed)
+{
+  if (!mUseRandomSeed)
+    Z::gSound->mRandom.SetSeed(seed);
+
+  mSeed = seed;
+  Z::gSound->mSeed = seed;
 }
 
 }//namespace Zero
