@@ -162,8 +162,7 @@ function(processor_post_build)
 endfunction()
 ####
 
-#### moves CEF binaries into the bin folder and runs Launcher postbuild script
-
+#### Moves CEF binaries into the bin folder and runs Launcher postbuild script
 function(copy_launcher_files aTarget aZeroCoreDirectory aBuildOutputDirectory)
     copy_cef_bin_post_build(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
 
@@ -187,6 +186,7 @@ function(copy_launcher_files aTarget aZeroCoreDirectory aBuildOutputDirectory)
     )
 endfunction()
 
+#### Copies launcher files to output directory and calls the postbuild script for the shared launcher
 function(launcher_shared_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
     copy_launcher_files(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
 
@@ -194,7 +194,9 @@ function(launcher_shared_post_build aTarget aZeroCoreDirectory aProjectDirectory
         COMMAND CALL "\"${aProjectDirectory}/PostBuild.cmd\"" "\"${aBuildOutputDirectory}\""
     )
 endfunction()
+####
 
+#### Copies launcher files to output directory then calls the create_build_info custom command for ZeroLauncher
 function(launcher_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
     copy_launcher_files(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
 
@@ -204,6 +206,21 @@ function(launcher_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuild
         ${aZeroCoreDirectory}
         ${aBuildOutputDirectory}
         ${aBuildOutputDirectory}
+    )
+endfunction()
+####
+
+#### Zips up the files in the given directory and puts the resulting zip in the given output file
+function(zip_directory aTarget aFolderToZip aOutputFile)
+    add_custom_command(TARGET ${aTarget} PRE_LINK 
+        # command
+        COMMAND ${CMAKE_COMMAND} -E tar 
+        "cvf"
+        # output
+        "${aOutputFile}"
+        --format=7zip
+        # input
+        ${aFolderToZip}
     )
 endfunction()
 ####
