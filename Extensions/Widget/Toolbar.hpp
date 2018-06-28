@@ -91,7 +91,7 @@ public:
   void SetMode(ToolBarMode::Type mode){mToolBarMode = mode;}
   void OnMouseDown(MouseEvent* event);
 
-  void AddCommand(Command* command);
+  void AddCommand(Command* command, Command* secondaryCommand);
   ToolBarGroup* AddGroup(StringParam icon);
   void LoadMenu(StringParam menuName);
 

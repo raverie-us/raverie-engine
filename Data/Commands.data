@@ -302,7 +302,7 @@ Commands commands =
 	Command =
 	{
 		string Name = "PlayNewGame",
-		string Description = "Play game in additional window",
+		string Description = "Play the game in an additional window",
 		string IconName = "PlayGame",
 		string Shortcut = "Ctrl+F5",
 		string Function = "Editor.PlayNewGame",

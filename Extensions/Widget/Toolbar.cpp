@@ -322,14 +322,17 @@ ToolBar::~ToolBar()
 }
 
 //******************************************************************************
-void ToolBar::AddCommand(Command* command)
+void ToolBar::AddCommand(Command* command, Command* secondaryCommand)
 {
   if(command)
   {
     IconButton* button = new IconButton(this);
-    button->SetCommand(command);
+    button->AddCommand(command);
     button->SetName(BuildString(command->Name, "Command"));
     button->SetSizing(SizeAxis::Y, SizePolicy::Fixed, mSize.y);
+
+    if(secondaryCommand)
+      button->AddCommand(secondaryCommand);
   }
 }
 
@@ -343,30 +346,38 @@ void ToolBar::LoadMenu(StringParam menuName)
   // Add all entries
   forRange(String& name, menuDef->Entries.All())
   {
+    StringTokenRange tokens(name.All(), '#');
+
+    String main = tokens.Front();
+    tokens.PopFront();
+
+    String secondary = tokens.Front();
+
     // Entry is a valid command
-    Command* command = commandManager->GetCommand(name);
+    Command* command = commandManager->GetCommand(main);
     if(command)
     {
       // If the command is dev only and they don't have dev config, skip it
       if(command->DevOnly && !Z::gEngine->GetConfigCog()->has(DeveloperConfig))
         continue;
 
-      this->AddCommand(command);
+      Command* other = (secondary.Empty()) ? nullptr : commandManager->GetCommand(secondary);
+
+      this->AddCommand(command, other);
       continue;
     }
 
-    // Entry also be a tool bar group that Contains other
-    // commands
-    MenuDefinition* menuDef = commandManager->mMenus.FindValue(name, NULL);
+    // Entry might also be a tool bar group that contains other commands
+    MenuDefinition* menuDef = commandManager->mMenus.FindValue(main, NULL);
     if(menuDef != NULL)
     {
       ToolBarGroup* toolBarGroup = this->AddGroup(menuDef->Icon);
-      toolBarGroup->LoadMenu(name);
+      toolBarGroup->LoadMenu(main);
       continue;
     }
 
-    // Also can be a divider
-    if(name == Divider)
+    // Is the entry a divider?
+    if(main == Divider)
     {
       new ContextMenuDivider(this, ToolbarUi::DividerColor);
       continue;

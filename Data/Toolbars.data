@@ -87,7 +87,7 @@ Menus menus =
 		string Name = "GameToolbar",
 		Array Entries = 
 		[
-			"PlayGame",
+			"PlayGame#PlayNewGame",
 			"PauseGame",
 			"StepGame",
 			"StopGame",
